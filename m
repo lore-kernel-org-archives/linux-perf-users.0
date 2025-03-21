@@ -1,240 +1,190 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33706224259;
-	Fri, 21 Mar 2025 11:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403451E98EB
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Mar 2025 12:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742557355; cv=none; b=RXg5aTV+JS3CiQSVYYBeQj0QDQXzGxZLMWI7jfXORmdvvG9wGzfSl/Wz4ZugSomuk1zzpJbyxwYYc/FIl4wVyD6nYXTn24iKVIdh3A1M638WjgPgTKGBbVPmWZkLVMt4NxTIRBkr6bW7q0pEIQvYXjVhFseXZySwHxibG57PSwI=
+	t=1742560179; cv=none; b=OGTiWH1dO44qOslaQUU11mR0vIJxbyy51P99A6yzsN5Uj14gpZBVljSuXV2yEfOnBiEFG0qqDk6T4sprrbBXJBoK2QbTouU5H932IHH2K+oLRQztMew/gUxbGTT/YD9lhE13z5xvWoLr1IZyOheT6nTs4mxnGIa67nj8VRu59A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742557355; c=relaxed/simple;
-	bh=SDCIlfafWBMvWzNiE3MHOiQ22Bn3e+yP/64zuKHxYjA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cmUT+3J/L31hdU2lJf03FrQN/axRvmpoQmT91IHLBGm95DJLy3VmTEbfuCNKxIBkxuUGC92VSLZ2I8mtFcWA2icgOwvdkLqd9L+K3RqVqchS/CHXHyjpluY7Mf0xNsgQm8mw5JAYjmmn0/svTeR1s+n3tBkoIVY2UFXRXQiu+8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y8hrAs+p; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742560179; c=relaxed/simple;
+	bh=PF0H1yleBcdzKQCUKN2tjThzP3QOfirGFp2mYWdYP2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2XW84qsAkvC7Xh8PwbSzJGPsw6pEV3wAVdSzIja6iieiPcdN4ZjQUCI0iZotygVCWt1GFeoyZ6bhu+LumL3V7oSvzGijgbl5PdV/pQjZ6q8+kUtxyXdfHmFcFmOYWcZaHpFmf77pawOBxd+cPA0AQvHM5zCO8uGmWUjZKD9fV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Py/SqAmk; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y8hrAs+p"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATcLe014247;
-	Fri, 21 Mar 2025 11:42:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=HxEUrF
-	SkwvtTHGZsRrcYMHupA72KBahfp9Or61L+rwM=; b=Y8hrAs+pldr03rjzo+WhAy
-	U52ZrtB+IqpzlWD9UpaK9zugv90jFOORN2zkELt6EwBYrXFWIcZS7T1RujhRR0LQ
-	3Nf9j8Yjpxk3xB9bYRq14TwB/gDfnvtsM98c0oASGAYIbK/QB4X9zQZqm+IkjRDE
-	ribkrbF5GRfCwv50NtewtRkh8OhPtU6xy8rSO7LnT8LIX56v3qdxJjHbPqxbZAph
-	BD+5t5VtF45BpBRp3FPz6zlw4+LuZ5Jdm7JFgVBVk7SG8v/GkVL/roGm5XjcQs+L
-	s7rfJ8QPLxW6fTafqX2ZQ1y2WOGXHcm336io/OvsUF3QmYmLAdMZqov2l5nbldnw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gt80u9xe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 11:42:15 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52LBY281031415;
-	Fri, 21 Mar 2025 11:42:14 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gt80u9x5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 11:42:14 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52LB0iUw019218;
-	Fri, 21 Mar 2025 11:42:14 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dmvpd2m9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 11:42:14 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52LBgCoH31654592
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Mar 2025 11:42:13 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E184158067;
-	Fri, 21 Mar 2025 11:42:12 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B8DF85805D;
-	Fri, 21 Mar 2025 11:42:04 +0000 (GMT)
-Received: from [9.43.64.160] (unknown [9.43.64.160])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Mar 2025 11:42:04 +0000 (GMT)
-Message-ID: <31a3d76b-617b-4c97-b83d-2cd47fabbf02@linux.ibm.com>
-Date: Fri, 21 Mar 2025 17:12:01 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Py/SqAmk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742560176;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JH1JMEX1U03GwFlhmPqH+QBmMArUZbpV1nyS6EyqGXg=;
+	b=Py/SqAmkC5IZv0Gj2okceuz+O8Gitsk0sFsEjzEf0GL1oE/+cjRXbnkqCAIy16owkmzAZx
+	los4vYC/dRcXvoDysobNN5/rtMyDTXFxvIDDUyuKBxaweoi+jKXYJa74UXvtHARkOwrUPe
+	9byn7dzxXOVDAjUN1LlbTJbf77TC9UI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-117-khO1C2dVOFKOcwOL3oRfBg-1; Fri,
+ 21 Mar 2025 08:29:33 -0400
+X-MC-Unique: khO1C2dVOFKOcwOL3oRfBg-1
+X-Mimecast-MFC-AGG-ID: khO1C2dVOFKOcwOL3oRfBg_1742560171
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0349C190308B;
+	Fri, 21 Mar 2025 12:29:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.60])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 82168195609D;
+	Fri, 21 Mar 2025 12:29:24 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 21 Mar 2025 13:28:58 +0100 (CET)
+Date: Fri, 21 Mar 2025 13:28:50 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Penglei Jiang <superman.xpt@gmail.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprop: Add new verification condition to verify_opcode
+Message-ID: <20250321122850.GA4776@redhat.com>
+References: <20250321105652.21711-1-superman.xpt@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] tools/perf/powerpc/util: Add support to handle
- compatible mode PVR for perf json events
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, irogers@google.com,
-        akanksha@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, acme@kernel.org, hbathini@linux.ibm.com,
-        adrian.hunter@intel.com, jolsa@kernel.org
-References: <20241010145107.51211-1-atrajeev@linux.vnet.ibm.com>
- <20241010145107.51211-2-atrajeev@linux.vnet.ibm.com>
- <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: TxLlLE1cX4Hnb4p2JPivH8_9XWPO13lL
-X-Proofpoint-GUID: 3Jh4cugb2FdlH5bhaW77yb4YKss_41FL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_04,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2503210085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321105652.21711-1-superman.xpt@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+Hi Penglei,
 
+On 03/21, Penglei Jiang wrote:
+>
+> If, during probe registration, the instruction at the probe point
+> differs between the file and memory (due to self-modifying code),
+> and the probe registration succeeds, the following errors occur:
 
-On 3/21/25 4:04 PM, Christophe Leroy wrote:
-> Hi,
-> 
-> Le 10/10/2024 à 16:51, Athira Rajeev a écrit :
->> perf list picks the events supported for specific platform
->> from pmu-events/arch/powerpc/<platform>. Example power10 events
->> are in pmu-events/arch/powerpc/power10, power9 events are part
->> of pmu-events/arch/powerpc/power9. The decision of which
->> platform to pick is determined based on PVR value in powerpc.
->> The PVR value is matched from pmu-events/arch/powerpc/mapfile.csv
->>
->> Example:
->>
->> Format:
->>     PVR,Version,JSON/file/pathname,Type
->>
->> 0x004[bcd][[:xdigit:]]{4},1,power8,core
->> 0x0066[[:xdigit:]]{4},1,power8,core
->> 0x004e[[:xdigit:]]{4},1,power9,core
->> 0x0080[[:xdigit:]]{4},1,power10,core
->> 0x0082[[:xdigit:]]{4},1,power10,core
->>
->> The code gets the PVR from system using get_cpuid_str function
->> in arch/powerpc/util/headers.c ( from SPRN_PVR ) and compares
->> with value from mapfile.csv
->> In case of compat mode, say when partition is booted in a power9
->> mode when the system is a power10, this picks incorrectly. Because
->> PVR will point to power10 where as it should pick events from power9
->> folder. To support generic events, add new folder
->> pmu-events/arch/powerpc/compat to contain the ISA architected events
->> which is supported in compat mode. Also return 0x00ffffff as pvr
->> when booted in compat mode. Based on this pvr value, json will
->> pick events from pmu-events/arch/powerpc/compat
->>
->> Suggested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> 
-> I see this patch was merged into mainline allthough it had CI failures and still has.
-> 
-> Could you please fix it ?
+Thanks for the patch, but I'd say we do not care.
 
-We already have a fix patch posted for this issue 
+uprobes.c assumes that user-space should not modify the probed memory.
 
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20250321100726.699956-1-likhitha@linux.ibm.com/
+And I don't think your patch can really help. What if user-space
+modifies the probed insn right after verify_opcode() succeeds?
 
-Maddy
+Oleg.
 
-
+>   1. When unregistering the probe, it restores the wrong original
+>      instruction.
+>      - If the instruction crosses a page boundary: it restores only
+>        part of the instruction fetched from the file (the part saved
+>        in the first page) to the probe point, and does not restore
+>        the remaining part that crosses the page boundary, which can
+>        lead to unknown instruction.
+>      - If the instruction does not cross a page boundary: it restores
+>        the instruction fetched from the file to the probe point.
 > 
-> arch/powerpc/util/header.c: In function 'is_compat_mode':
-> Error: arch/powerpc/util/header.c:20:14: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->    20 |  if (!strcmp((char *)platform, (char *)base_platform))
->       |              ^
-> Error: arch/powerpc/util/header.c:20:32: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->    20 |  if (!strcmp((char *)platform, (char *)base_platform))
->       |                                ^
-> cc1: all warnings being treated as errors
-> make[6]: *** [/linux/tools/build/Makefile.build:86: /output/arch/powerpc/util/header.o] Error 1
+>   2. The code logic changes because the saved original instruction
+>      is fetched from the file.
 > 
+> Fix:
 > 
-> The following fix but is maybe not the right one as in reality getauxval() seems to return a long not a u64.
+>   Add an extra check in the registration branch of verify_opcode.
+>   If the instruction at the probe point differs between the file
+>   and memory, the verification fails.
 > 
-> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-> index c7df534dbf8f..1b045d410f31 100644
-> --- a/tools/perf/arch/powerpc/util/header.c
-> +++ b/tools/perf/arch/powerpc/util/header.c
-> @@ -17,7 +17,7 @@ static bool is_compat_mode(void)
->      u64 base_platform = getauxval(AT_BASE_PLATFORM);
->      u64 platform = getauxval(AT_PLATFORM);
+> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+> ---
+>  kernel/events/uprobes.c | 47 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
 > 
-> -    if (!strcmp((char *)platform, (char *)base_platform))
-> +    if (!strcmp((char *)(long)platform, (char *)(long)base_platform))
->          return false;
-> 
->      return true;
-> 
-> 
-> Thanks
-> Christophe
-> 
->> ---
->> changelog:
->> V1 -> V2:
->> Corrected commit message and subject line
->>
->>   tools/perf/arch/powerpc/util/header.c | 32 ++++++++++++++++++++++++++-
->>   1 file changed, 31 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
->> index 6b00efd53638..adc82c479443 100644
->> --- a/tools/perf/arch/powerpc/util/header.c
->> +++ b/tools/perf/arch/powerpc/util/header.c
->> @@ -10,6 +10,18 @@
->>   #include "utils_header.h"
->>   #include "metricgroup.h"
->>   #include <api/fs/fs.h>
->> +#include <sys/auxv.h>
->> +
->> +static bool is_compat_mode(void)
->> +{
->> +    u64 base_platform = getauxval(AT_BASE_PLATFORM);
->> +    u64 platform = getauxval(AT_PLATFORM);
->> +
->> +    if (!strcmp((char *)platform, (char *)base_platform))
->> +        return false;
->> +
->> +    return true;
->> +}
->>     int
->>   get_cpuid(char *buffer, size_t sz)
->> @@ -33,8 +45,26 @@ char *
->>   get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
->>   {
->>       char *bufp;
->> +    unsigned long pvr;
->> +
->> +    /*
->> +     * IBM Power System supports compatible mode. That is
->> +     * Nth generation platform can support previous generation
->> +     * OS in a mode called compatibile mode. For ex. LPAR can be
->> +     * booted in a Power9 mode when the system is a Power10.
->> +     *
->> +     * In the compatible mode, care must be taken when generating
->> +     * PVR value. When read, PVR will be of the AT_BASE_PLATFORM
->> +     * To support generic events, return 0x00ffffff as pvr when
->> +     * booted in compat mode. Based on this pvr value, json will
->> +     * pick events from pmu-events/arch/powerpc/compat
->> +     */
->> +    if (!is_compat_mode())
->> +        pvr = mfspr(SPRN_PVR);
->> +    else
->> +        pvr = 0x00ffffff;
->>   -    if (asprintf(&bufp, "0x%.8lx", mfspr(SPRN_PVR)) < 0)
->> +    if (asprintf(&bufp, "0x%.8lx", pvr) < 0)
->>           bufp = NULL;
->>         return bufp;
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index b4ca8898fe17..580dd9fe4015 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -264,10 +264,46 @@ static void copy_to_page(struct page *page, unsigned long vaddr, const void *src
+>  	kunmap_atomic(kaddr);
+>  }
+>  
+> -static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode)
+> +static int copy_insn_from_mem(struct page *p, unsigned long vaddr,
+> +		struct arch_uprobe *dst, struct mm_struct *mm)
+> +{
+> +	pgoff_t offset = offset_in_page(vaddr);
+> +	void *dst_insn = &dst->insn;
+> +	size_t size = sizeof(dst->insn);
+> +	size_t first_size;
+> +	int err;
+> +
+> +	first_size = min_t(size_t, size, PAGE_SIZE - offset);
+> +	copy_from_page(p, offset, dst_insn, first_size);
+> +	vaddr += first_size;
+> +	dst_insn += first_size;
+> +	size -= first_size;
+> +
+> +	/*
+> +	 * If the instruction spans the page boundary, continue copying
+> +	 * the remaining instruction from the second page.
+> +	 */
+> +	if (size) {
+> +		err = get_user_pages_remote(mm, vaddr, 1, FOLL_FORCE, &p, NULL);
+> +		if (err < 0)
+> +			return err;
+> +		if (err == 0)
+> +			return -EBUSY;
+> +
+> +		copy_from_page(p, 0, dst_insn, size);
+> +		put_page(p);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int verify_opcode(struct page *page, unsigned long vaddr,
+> +		uprobe_opcode_t *new_opcode, const struct arch_uprobe *auprobe,
+> +		struct mm_struct *mm)
+>  {
+>  	uprobe_opcode_t old_opcode;
+>  	bool is_swbp;
+> +	struct arch_uprobe current_insn;
+>  
+>  	/*
+>  	 * Note: We only check if the old_opcode is UPROBE_SWBP_INSN here.
+> @@ -284,6 +320,13 @@ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t
+>  	if (is_swbp_insn(new_opcode)) {
+>  		if (is_swbp)		/* register: already installed? */
+>  			return 0;
+> +
+> +		if (copy_insn_from_mem(page, vaddr, &current_insn, mm))
+> +			return 0;
+> +					/* register: was it changed by self-modifying code? */
+> +		if (memcmp(&current_insn.insn, &auprobe->insn,
+> +			sizeof(current_insn.insn)))
+> +			return 0;
+>  	} else {
+>  		if (!is_swbp)		/* unregister: was it changed by us? */
+>  			return 0;
+> @@ -491,7 +534,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  	if (IS_ERR(old_page))
+>  		return PTR_ERR(old_page);
+>  
+> -	ret = verify_opcode(old_page, vaddr, &opcode);
+> +	ret = verify_opcode(old_page, vaddr, &opcode, auprobe, mm);
+>  	if (ret <= 0)
+>  		goto put_old;
+>  
+> -- 
+> 2.17.1
 > 
 
