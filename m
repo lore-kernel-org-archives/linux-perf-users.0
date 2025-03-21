@@ -1,40 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E001E98E1
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Mar 2025 06:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8171E3DDE;
+	Fri, 21 Mar 2025 06:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742537095; cv=none; b=OZfcQ2ogN0n2osgHpV84mYAb6CteOMZ0LJYLdpjYbVR1NgBJTToCDIXZxJsEfiC4r5CybmsjTwpp4Bn5ymYJ+HVqhqo3fXit4aSg8Qk4+IYTw1VEHr8w6VCSm6XDmhhCVixXUsKcgSaSJnaqTRpTAOhD0VOHXihV3QQB9LgRZHc=
+	t=1742537698; cv=none; b=osXkjpOHQey6yXhvJkUkaMiD/6BJKhtX2fpPskj87dGsm8tI7ZGXquQ2noNUfe03FDLeFpdpORlf7+OjQYnV8nRvZ32PYwq0GLTxfwle4nHbm7NFbtpXCTd2QtORmgT+uKv2TRmZ3huPtVU6Y6z/gtLoEedzkyKBiZawcD1uaoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742537095; c=relaxed/simple;
-	bh=YTOfT2AgvJ3xym+OkMxs576dW5ZyAjVozPTJ372YQ+U=;
+	s=arc-20240116; t=1742537698; c=relaxed/simple;
+	bh=GeHxnMpO/kJTQB/m559nonG3wanc6brHcCgWWhiY8v8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJstft1a/dz2NaUjcQBBW7adgOo0YBAXTFgY+eNEx1rJnQ0NfYvXQU30zRWCxi8dkz6g1f2QuROgaLsCNEzQMjDyBbhUy6tDF+qB4r1ooSwdupY9LWRBhxF57r7thxKcbWbHAfv6oAwoAFYGtJKXq8GHZfuORZ+EMXsHnZtw6Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yp6ekipl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mHP6BjCTaJHFkaqFNfgC/+5jAUx1HAIr3I0cDtTMYJLgfAYL18+Nfjdvzx8rB2GXmhealADGZvqM+70g5qAh+HWX4IeZIZ0APo8J2z0zZpiVlQrWCdRFw8Z9xbeOEQOAA0476jcFPISxVByOR63TZZds/taCFTfWB62K/lC7q5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iU5s7Bk6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yp6ekipl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E474C4CEE8;
-	Fri, 21 Mar 2025 06:04:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iU5s7Bk6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF530C4CEE8;
+	Fri, 21 Mar 2025 06:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742537094;
-	bh=YTOfT2AgvJ3xym+OkMxs576dW5ZyAjVozPTJ372YQ+U=;
+	s=k20201202; t=1742537698;
+	bh=GeHxnMpO/kJTQB/m559nonG3wanc6brHcCgWWhiY8v8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yp6ekipl41EwEE06dN2slt0SblXzUl5GHuaxN/ANkrGsK0n7FM3NhRksCmAeCOolL
-	 bUpxWojQoG3iNWFC9eK+dGM4Q/6F/1kVsbW25CvObh8S0VfMxA6yfXEX4UWL/7+DUm
-	 MsbKvyUJJUPeHl2qBJYplqwU/JiqJvLB0ShaAN0IMDzQl8L57QNquVcR6G0ffQkN/S
-	 A2su16HOB9gLHCPTHslIulMAx2C+6CmSvrpOg9DU9YdKUiF9VkrhDcj/11d1lyKazD
-	 ZR9TqYyMLyCGV9wwrwZ6luv3usvMmBaCg8nMnQFW4Lk08fgWFo2hZdcKSPgOC12eHR
-	 4adqg6QsQUvPQ==
-Date: Thu, 20 Mar 2025 23:04:53 -0700
+	b=iU5s7Bk6bTvi84fGqNPSpQ1cXhxhWm0sBWVz8CuB1HKRkxQXZzSbKah77wpw0R2GZ
+	 3b2COcFmo/VsoqbcbELAg6fRTGfPA+nDb47ZMBJjR7Pv2F80i9lS0+v8Kyo4YZpfBR
+	 NCtMs6bSz9OimHV8tFrURBZUkh50PSg0+gu+IbpImaKJxvny04041Y6D5bHmHWcXcj
+	 wfYBecXhXEzm3q9H++hgDcwW9RlFYc9SMCK5Buzk9jPlmES8vh6lu2TYkqRHzWH5Fr
+	 cGIonwFentL21UBvuuuze6LCut2OaJlbf/gEilKQs4CbN+xLSBDubfNoWZoVe9s/pD
+	 E+N4uGhd1F5Xg==
+Date: Thu, 20 Mar 2025 23:14:56 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aditya Bodkhe <adityab1@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, Disha Goel <Disha.Goel@ibm.com>,
-	Aditya Bodkhe <aditya.b1@linux.ibm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH] perf script: perf script tests fails with segfault
-Message-ID: <Z90BhWbDJjR15_6q@google.com>
-References: <20250320091551.17846-1-adityab1@linux.ibm.com>
+To: Holger =?utf-8?Q?Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Guilherme Amadio <amadio@gentoo.org>
+Subject: Re: [PATCH RESEND] perf build: filter all combinations of -flto for
+ libperl
+Message-ID: <Z90D4DaG93BfHi8g@google.com>
+References: <fa1c3b38-6a23-af22-0e5e-280fa523d06a@applied-asynchrony.com>
+ <c5640c73-944d-5de1-a0bf-7e6769c1542f@applied-asynchrony.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,80 +54,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250320091551.17846-1-adityab1@linux.ibm.com>
+In-Reply-To: <c5640c73-944d-5de1-a0bf-7e6769c1542f@applied-asynchrony.com>
 
-CC-ing Adrian,
+Hello,
 
-On Thu, Mar 20, 2025 at 02:45:51PM +0530, Aditya Bodkhe wrote:
-> perf script: pert script tests fails with segmentation fault as below:
+On Wed, Mar 19, 2025 at 12:10:59AM +0100, Holger Hoffstätte wrote:
+> [Not a peep of feedback - if I'm doing something wrong here please let me know;
+>  the patch fixes a real bug someone reported in Gentoo.]
 > 
-> 1. Run perf test -vvv 'perf script tests'
+> When enabling the libperl feature the build uses perl's build flags
+> (ccopts) but filters out various flags, e.g. for LTO.
+> While this is conceptually correct, it is insufficient in practice,
+> since only "-flto=auto" is filtered out. When perl itself is built with
+> "-flto" this can cause parts of perf being built with LTO and others
+> without, giving exciting build errors like e.g.:
 > 
-> 	 92: perf script tests:
-> 	--- start ---
-> 	test child forked, pid 103769
-> 	DB test
-> 	[ perf record: Woken up 1 times to write data ]
-> 	[ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
-> 	/usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
-> 	--- Cleaning up ---
-> 	---- end(-1) ----
->  	92: perf script tests                                               : FAILED!
+>   ../tools/perf/pmu-events/pmu-events.c:72851:(.text+0xb79): undefined
+>   reference to `strcmp_cpuid_str' collect2: error: ld returned 1 exit status
 > 
-> Backtrace pointed to :
-> 	#0  0x0000000010247dd0 in maps.machine ()
-> 	#1  0x00000000101d178c in db_export.sample ()
-> 	#2  0x00000000103412c8 in python_process_event ()
-> 	#3  0x000000001004eb28 in process_sample_event ()
-> 	#4  0x000000001024fcd0 in machines.deliver_event ()
-> 	#5  0x000000001025005c in perf_session.deliver_event ()
-> 	#6  0x00000000102568b0 in __ordered_events__flush.part.0 ()
-> 	#7  0x0000000010251618 in perf_session.process_events ()
-> 	#8  0x0000000010053620 in cmd_script ()
-> 	#9  0x00000000100b5a28 in run_builtin ()
-> 	#10 0x00000000100b5f94 in handle_internal_command ()
-> 	#11 0x0000000010011114 in main ()
+> Fix this by filtering all matching flag values of -flto{=n,auto,..}.
 > 
-> Further investigation reveals that this occurs in the `perf script tests`,
-> because it uses `db_test.py` script. This script sets `perf_db_export_mode = True`.
-> 
-> With `perf_db_export_mode` enabled, if a sample originates from a hypervisor,
-> perf doesn't set maps for “[H]” sample in the code. Consequently, `al->maps` remains NULL
-> when `maps__machine(al->maps)` is called from `db_export__sample`.
-> 
-> To prevent this NULL pointer dereference, add a check for `al->maps == NULL`
-> before calling `maps__machine()`. If `al->maps` is NULL, return `-1` to avoid
-> the segmentation fault.
-> 
-> Reported-by: Disha Goel <Disha.Goel@ibm.com>
-> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-> ---
->  tools/perf/util/db-export.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-> index 50f916374d87..f355878a8c82 100644
-> --- a/tools/perf/util/db-export.c
-> +++ b/tools/perf/util/db-export.c
-> @@ -365,6 +365,11 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
->         if (err)
->                 return err;
-> 
-> +       if (!al->maps) {
-> +          err = -1;
-> +          goto out_put;
-> +       }
+> Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
 
-Maybe better to check it before db_export__evsel().  Also it seems it
-should not goto out_put as it doesn't get the main_thread yet.
+Thanks for the fix but the patch is not applying.  Can you please check
+and resend?
 
 Thanks,
 Namhyung
 
-> +
->         machine = maps__machine(al->maps);
->         err = db_export__machine(dbe, machine);
->         if (err)
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index a148ca9ef..4f5a40ab8 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -820,7 +820,7 @@ else
+>    PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
+>    PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
+>    PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
+> -  PERL_EMBED_CCOPTS := $(filter-out -flto=auto -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
+> +  PERL_EMBED_CCOPTS := $(filter-out -flto% -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
+>    PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
+>    FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
 > -- 
-> 2.43.0
+> 2.48.1
 > 
