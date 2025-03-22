@@ -1,254 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2040.outbound.protection.outlook.com [40.107.93.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64ECA1EFF83;
-	Sat, 22 Mar 2025 09:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742636475; cv=none; b=hEj0Jh7haRMvt8vD3iX95ooB0RjgFcl4Z2czoxVD/MAb6Tzy/nk1p0fr+5MpBXoCbmrBd4tht9/gmktmIkRVgUH6vKMghzBpL3V0TEV3TRDf/UhCpK02G0HSU4KhRkGNstVz3CcHLALk79BPZGLHHABtgzg/QslHE31pX6MQRVo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742636475; c=relaxed/simple;
-	bh=iXMIPygKJ25u2KdQtxqoiIo/7MwxxyAmIz4/PNK1aFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hC/rpGO5Wt1+z/tMpB7lyCmwWHYWA2HQh47dJWanLfS54/TSxmGshl/sIk4AHCwONx8m16uk/RnAqZr2iqNVQUv546/pMskW5+TxQPNv3e88n4GGBy0NukPdpBnBHAQ1P8CShdYlbLOiwINoQxiFdt52kTMpvGgZQ0WrAhI4wfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqJuaZl2; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CD41F63CD;
+	Sat, 22 Mar 2025 10:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742638546; cv=fail; b=H68jqm6hQ2d+PKKFJarZuKA1nljcuJDGerXfFs978f7yhe00UjtsNaTolcC9ba8/qE1dUQxic0lChvIF+Whbc/JbVPSoQ9MIjqdW+aUgA6BTMXDihvFKA3rnuvVmYJFJ5niuXscXzv2N0YGIW3mEXuC2xcCPUJB33cUVmTOPCj4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742638546; c=relaxed/simple;
+	bh=dJh8ZYs0F/yRaEEKJmS+bhv43t6arvFyhrlr2EHNUVc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=c94CuiGApoNeJLXr3f0jaksCBgilOAoGMuprVOPOXt5HWFkFNnQB2KrDa1ECrv76ytwq6C+32ju+F5XIRWRHgFOHdVnMHaRzzks9smbdrYfTK1a4N3yl6lLwh30N7BecOnb3IR9BujA7Y45FvPRJY0jynmpVpTqLQIYnY2am/LU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a6ilJdy7; arc=fail smtp.client-ip=40.107.93.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqJuaZl2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C0FC4CEDD;
-	Sat, 22 Mar 2025 09:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742636475;
-	bh=iXMIPygKJ25u2KdQtxqoiIo/7MwxxyAmIz4/PNK1aFs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=eqJuaZl2bGlaJWlIvvsvIS8OBgMj+8m4enhwnYjS1/ItV8hjNoF5dIKLdegFfgXfE
-	 ZKhDQVlN6vCyx50TMgPkIkoexpoi/eG4Ya00URrBOeCF786whaHX1A0DqSlbYCm6xy
-	 uVJVI1oYHLe4mZmTAMDwtXGZ10RbalgHQU7CY2kjwC6Bgr2Ohc2iUyHGcy0+JJk/oA
-	 axs0hxp48ij3tbEuNOXmPWFWPm05iAzxCkH6ByVcEtGNCd0diHTnpKel0erG5Ivfot
-	 e7kk8zMVQNBsdsdQsH0tVs1sJJN1RF1IvXqpps4VYsmGiSb2m3YhVM0Yh3bun+cw5o
-	 BJNPL5hrbFI6Q==
-Date: Sat, 22 Mar 2025 10:41:10 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] Performance events updates for v6.15
-Message-ID: <Z96FtpuyGXHbvKKS@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a6ilJdy7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LhZR1hlzgvVdACoH4jYB4dnjlYNoDQA6v0OVe2QihEaWfDSkiNHnN96/ZK4b53zMUFjbb79XLd+LGpGxB62mm1jkdGez5Wvj51/w9QPmG+09EnyZpV+9+9poLJv1NjK42rRIwjrfszL9/trDubb3ypTywWtitgzEJt8qulrftImiJ+1tmM9hH38bRoyEFljTUEDYrgdVtcEvg57YRci5Lzmiw0YHby/mt57DlME91Qgz5lfA8rK0FBRN3Bc0QUL1DIb7at0HudMMBv55IGg9LYe3ajzLCiDSXise7cQBGgkPjQp9Kg7HnbiV++Ajz271xK7niudwgy33BzTXxLoqNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lFJ4H/lJ45nEA5CdS5l/ZkESgzXuYcRtdbnOt243OoQ=;
+ b=vyt78AztgGQ5BI5eFuFdqFRHmW807ANbo6BeLb/wC6n0GJINB+vPSuSr+4BkCF67GQaF+YJcbmdsqbfmuvw85R526tn28bgfkY3D2kDY7VJofBX/aZ11W67s638e9ppJQayp6/BDWeLzv25QZIL7z/HRY+tOqoF6haxGYdVLfd36dlsI70WSyvJcZTYtwrfU5uo0QV3pgKd0MniBFpaYLQDw8e261yMiJ2PErpskLfmy99erZ1fmDKG84borGNd7RihKxlfuLqSXPf5UmipkbSQNLs+yrfmoZ5upulAQGDX3lxkqDfoPbK1z3PUiyLftjyysCUaUf2JaT17KSSeKWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lFJ4H/lJ45nEA5CdS5l/ZkESgzXuYcRtdbnOt243OoQ=;
+ b=a6ilJdy7B6esHtlpnTReh0E+gfThjgm1nSaVXttWHFarDzNTDMWH5YfJlHxFSqs1pUChzc2eZqRM9S3jSzgCg94+6/DRbB52zFxLXgOo3s89V8qTLhoiiaGrQcSrVBKs+c96fGpOVuiYT/xAjo+z9PfBk3pg/iiMAQritmhvNvk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CH3PR12MB7642.namprd12.prod.outlook.com (2603:10b6:610:14a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Sat, 22 Mar
+ 2025 10:15:38 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.8534.036; Sat, 22 Mar 2025
+ 10:15:38 +0000
+Message-ID: <7c9a00c3-b2a0-4f8a-945b-cc90e492988a@amd.com>
+Date: Sat, 22 Mar 2025 15:45:28 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 tip:perf/core] perf/amd/ibs: Prevent leaking sensitive
+ data to userspace
+To: Ingo Molnar <mingo@kernel.org>
+Cc: peterz@infradead.org, namhyung@kernel.org, mingo@redhat.com,
+ acme@kernel.org, kan.liang@linux.intel.com, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+ matteorizzo@google.com, linux-perf-users@vger.kernel.org,
+ santosh.shukla@amd.com, ananth.narayan@amd.com, sandipan.das@amd.com,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250321161251.1033-1-ravi.bangoria@amd.com>
+ <Z95lo6J37emCRvme@gmail.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <Z95lo6J37emCRvme@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BMXP287CA0008.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:b00:2c::22) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CH3PR12MB7642:EE_
+X-MS-Office365-Filtering-Correlation-Id: e28e0a26-f00c-44c6-3814-08dd692a7df3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dFE0eTIxekdlcEpyVXF1U3d2WWtZSmNPbWFJVC9mVnNHMlZ6Vkgxenp6dEIx?=
+ =?utf-8?B?d2dmRUowcDhraWJ6amNVVkpNLzlsV1RvdGcyMTQ0OGZsRng3cGUvc2pnSnJQ?=
+ =?utf-8?B?c05iNDRaeXA1ZlZYSnpFY1Y4eDduL2hja0lSZXJpVjRma0c1THM1K2RiUzdL?=
+ =?utf-8?B?QkNaOTJLUjN1ZGNFd0dYeWtSNk51NmNGdWxkUzBja0RNaVhrR3poNG90Yi9V?=
+ =?utf-8?B?NWxyL01rMG8wV2FDemRvZ3lzemJEK3JmV1dOSkhOMzdnS20rWDdOVG1WSWdz?=
+ =?utf-8?B?RHVPUyt6UnJVWFBRRllKZTQwSnVTMDRwd21XMTdOYkdEM1VZL1RRQkoxM0t1?=
+ =?utf-8?B?bDA1Y1BPMXZPMHVOelUvN20xeVNrUldoWk5hL09wNElvYTV5NVRibmJNZkxQ?=
+ =?utf-8?B?SzFFVUgvZDRNNW4xNHB4VTYrY21yNWc2cDlZUmphUHNSQlJMZXlBbmFtSkx2?=
+ =?utf-8?B?MTFweUxyYk02UE9xT3V1RHczMlB5R1dVNXVwTjVuOTIyY2kxWGRTQ0duMHVi?=
+ =?utf-8?B?dE5YTTVBRWtGTHZZREh3Mm1xdWR6THFHck1Xa3hHZ0cyRjVMcHNoaHgzTGpy?=
+ =?utf-8?B?NE82Q1hmVFZ1ZDdtRFAyRlh0bkZiQkJOYlFpenducmJGd29QRW5yLzdSM1lr?=
+ =?utf-8?B?V2VoUWptT2o1b2RSb2NKR3R4ZTVQaFpFOWJ0TERHc3JLTXZZWlpsRjJnREpK?=
+ =?utf-8?B?UFU2QkZZWDhoNlloYVpVc2pMNzdUWStQc2ZrS0FJSDVPYWhqUkdaalVYL2hj?=
+ =?utf-8?B?Q3VYS0N3ZC8rVmZzMXB6TWp0TmhnVmlSaTdMbnpuMWFMcEczUUVXaU9pVTZs?=
+ =?utf-8?B?aC9nTm5OcEVpNzllZ1NUbkErTG0rZFJSV0ExSHZlUlVIL3E2cU5NVjdpK3pG?=
+ =?utf-8?B?dERZdU0zTUZwUXQ3QlJmd3lxOFRwdUgwL3d3M3dXRUh2eWpmTzNib3I2Vkoz?=
+ =?utf-8?B?QzhoTFFvSVJDZ1lpWWJaOUtGeDlRdFBnUmFEQTU1dmZGTmZ5K2lHMUE1NWp0?=
+ =?utf-8?B?c2cyYTVQU055NEZYSUx3SGwraVQ1UExwbG1HK0FyQnJWMHBHSm9RWHpkTThW?=
+ =?utf-8?B?STROOXE3elNhb3hJbVVOQnc5dXcxRit3NC81RlE1d3hoSlRZTm5pMEl1Yys0?=
+ =?utf-8?B?S0tFamd1NW1hUE9vdlQ2bCtyVkJvaktHU282UTBBWndWNm9kU0h0R1c1dEhr?=
+ =?utf-8?B?d2pvdGlyYVpXRmhjelV6SE1yRitCN2UxKzBKRWJaZUtPT2FPTmV6Wm40WFIy?=
+ =?utf-8?B?djlBUDI4Mlk3VlB6OUl6YTVmNTRiOU9ZeGlPMmx1SVNBL3grWStnQmQxOHVK?=
+ =?utf-8?B?aVJtWndpM0J6SzBjcHVsVU00RHNxK04xUFd6YXgvZEtIc0I2eVo2eEZiOGY4?=
+ =?utf-8?B?dUtYM0ROd21ubTU4OXBqVVI3dXJuNVdONWw4ejdrakJtaUk1YXU5dFJvTWh3?=
+ =?utf-8?B?R3ZWdDZYSDRGR3BwaXZZUWJMVVFEejRNOGYwUkZuMUFxNFRZb0lWOWYrSHpP?=
+ =?utf-8?B?VVBaVzJvbkdpR2dJakx0M3FocnB1Qzh6ckM5L3pwakVGaWZ6c0VBbjNaZTdD?=
+ =?utf-8?B?cDZwOEdOeXJ6djRBZnBFNXJSdlVtQ1VmRGQvUFVheVNLOUViUlRVZGFVQmR2?=
+ =?utf-8?B?bmJ3L3ZDQmRRL25Sc0dpZmlCeEZveUVEeTQ1MkNxdmIrejVvdklLaU9UaHpJ?=
+ =?utf-8?B?dkt1dWV2WWVnMFkwM0pnMFNJWS8vQk9yM1I0YjZZNEJrVDBjenYrdGgwVStE?=
+ =?utf-8?B?bDdSVENKRWRlN3E0ZHlrM0hEcVNFZllXbVduSHlQdUtmdUR0aTJldlh0RGht?=
+ =?utf-8?B?UGpTbU9oZWtUcTZ1SkJHNXVrR0xlUFh2YVNQVlpnakdaOHIvVldRTXMvSTZM?=
+ =?utf-8?Q?h3Ez1B8SJKScJ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?blhxTUhrc2RLTFcrZmlNWFlzejJoN3F2aG1DNlg0N2s2Rjk4MzF0cFVEeUg2?=
+ =?utf-8?B?cjhVM2FNL29CZDZaV3JvNVY0SVdEZzR3bVFYV0gvMWxZc2laQzRZZFFza2NL?=
+ =?utf-8?B?bWRvSW1adUtoUHZzSWJsbjBucjZRaVIwSnpFcXlJaTZSTlpwLzlmekJZTEdF?=
+ =?utf-8?B?dTRmVFYza2lQdEhxeWNlK1FKUmhQUzk1YWlmeEpVaFNOcmtpU0o4dVI4NW5I?=
+ =?utf-8?B?VVhvL3kzNnI3SndZVGVCMEtzTllPM05IanExTmxwT01jUllFTGN2YThmUkhQ?=
+ =?utf-8?B?bmJ5Z0VhZXJVUWVyeEFjT0c3TzFIb1pLY0ZRWDV5c1phUm4zTTlFcGJnTjdl?=
+ =?utf-8?B?dUp4akRpZ2Q3UmFEdTV0c2xiRHJIeGdOUmxRN25SOVJDMVJ1NlNnR3Y1aC9F?=
+ =?utf-8?B?dVRkcFdIeFZLNXZCZUFpc3MvUFEyRkN6S0hzR3pGQlA0aGNWdW4vNXJLVzUr?=
+ =?utf-8?B?M1EwTW5wYVpnS0JzK3UzNlhTQzU3eE9za1hxcU9PRktyTTcxZTdLZFdEam1m?=
+ =?utf-8?B?a3JrVnNkZlNvMjNNUjlFMENwNHJoSWRKU28yYUpjVld2c2t3UjRwOTN0eVJW?=
+ =?utf-8?B?QnlaZG1uUFZOcDBGaG1uWW5RTTBNREZQMlVVM01JNzFUdjM0RVd2cjZ1ZHEv?=
+ =?utf-8?B?TnFJL1lONWRIUXM2Y1krRGt2TWhVcitFU0crb0M4S1pjaC9Pc295SURUZUg4?=
+ =?utf-8?B?d2xoNU5YQnZTOWhsalV5bkY2RFRGT0V0dnk2clNhSFZGbkZqdiswNWZSb1JN?=
+ =?utf-8?B?Q1hjVDhwZ1dHR3FhZ25NNVNtQURqQ2Y1RnIweEFoWEdQbTlzRkRhWERkdXAr?=
+ =?utf-8?B?UVZEc2JtNG1jSG9LaXF1eWVGWHI0elkvcTBybWlYRjViZjVVTVZJZnk2TWEz?=
+ =?utf-8?B?ZWdXVVhkSEg0Q2JaSWlRRVJFTFp3MlkxT0xsMDNlczRyZTN6OUpnVGRlMW9q?=
+ =?utf-8?B?T0tHVUQ3YmZ2TmNXYkt1VWdZdHZlYUpGeUVEb1pTdWlIQlRsb2dIUlZ5NjhK?=
+ =?utf-8?B?UHBuUmtTRVNONGw1VEp3YXhNTmlwUnM2Z2RjMERXUXRUNm5zejNqcUFaY3FR?=
+ =?utf-8?B?MXJiendvWDNDQjZGdCtRWWdXYUFzdDBSZE5tVXdZNGJ5cmdGR0p3WWNVWTd2?=
+ =?utf-8?B?NE5YeWJid3gzOWRzelRkZmg1NXNkLzJwdnRqZ2ltckxwSUlmR1p3dlA2NG5J?=
+ =?utf-8?B?ZnFqQ3lib3J6MWp6Ulg4aG9CeGhTUkhZTm1aYTJTMzBCbW1MaGF2dDlCazl6?=
+ =?utf-8?B?WGliVm1mYVYyWUd4bEl4RGZpa3pwaHd5Y2FLTlN1SnQzWGtiV1NFQTBEUmpB?=
+ =?utf-8?B?UW5CRWNOa1JuOSswTzJxV283MzZtbENBZEFUcG52S3ZML0JIRVlSSW0rbXlq?=
+ =?utf-8?B?UVNvZFhudVVCdHdYMW9ubHF3MkNlMFVEQkswM2ZpbFdDSG9Xaks0NlNBY1ha?=
+ =?utf-8?B?ckVwT0V3WEZaV0lIbVV0VjRqWjgvSXlXTDR2SHhaMHpBc3pDMVNXMFpCelFO?=
+ =?utf-8?B?cnVMRFRhdVZzMlYrVHU3LzFRVDBVbFBubm5XY2loZGdwejRxbjR0QS8xUXRW?=
+ =?utf-8?B?cFpQZ29FYmsweTlmTVFSaHBGVUt1aVR3VHhwM2prcnJnVkpsTHVtTlJ3ZVRC?=
+ =?utf-8?B?RFRobGVsWkwwMSs4NytLUXAzZXJaV3F3elFrUFJKSGJDRENBbGtuY2pXQVJz?=
+ =?utf-8?B?bjNyZ3RxUU9MT1VBekJxeFJnN2lQTkpiU21aWGlDL0J3Q1N3TlNDdTYrY2NK?=
+ =?utf-8?B?S0JPUUQwczd4QVpQNjNYT0p2bjFLKzZGRCttQmdtOE5jVm1GUytWTDFpaGJ6?=
+ =?utf-8?B?a2Rnd1VtTnVJVktMZkpKdzVOazAzaDBINTNObWZEMkFxc3NrSXBBWmFZVExr?=
+ =?utf-8?B?dk9EaEVqTkNybW9RZWdBemRIdExxa0ZsQzBCc05XUVV3L09Vc09xM0t4QWs2?=
+ =?utf-8?B?dUIwbGFJcmVaOGRRbFNtRE52cDd4cWdMTTlNdVd2OEIzSWNDY2w4dkFpSWdx?=
+ =?utf-8?B?Y2lnTlVENHR1SllnU0xkdUdpbVN5am1ULy9hNkhpVkNCU054bkx3NE5jeFp1?=
+ =?utf-8?B?NEVkanYzRzZDaTducFlhSTNqcHM0TTlWSkEvcmRReUMwc0N3b3I4eXExamZV?=
+ =?utf-8?Q?jr+nzE8XyUzNVks2GYLvYv6U8?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e28e0a26-f00c-44c6-3814-08dd692a7df3
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2025 10:15:38.2913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QSbZFjUXpNZpL38lsoA0pIGsq4ZL4ErY3w7gCiSSfHGYhG2C+rczUWA1rR3AkpQl1SVOpfjl3I/KmfcH6WwafA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7642
 
-Linus,
+Hi Ingo,
 
-Please pull the latest perf/core Git tree from:
+>> Although IBS "swfilt" can prevent leaking samples with kernel RIP to the
+>> userspace, there are few subtle cases where a 'data' address and/or a
+>> 'branch target' address can fall under kernel address range although RIP
+>> is from userspace. Prevent leaking kernel 'data' addresses by discarding
+>> such samples when {exclude_kernel=1,swfilt=1}.
+>>
+>> IBS can now be invoked by unprivileged user with the introduction of
+>> "swfilt". However, this creates a loophole in the interface where an
+>> unprivileged user can get physical address of the userspace virtual
+>> addresses through IBS register raw dump (PERF_SAMPLE_RAW). Prevent this
+>> as well.
+>>
+>> Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD IBS")
+>> Suggested-by: Matteo Rizzo <matteorizzo@google.com>
+>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>> Co-developed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>> ---
+>> v2: https://lore.kernel.org/r/20250317163755.1842589-1-namhyung@kernel.org
+>>
+>>  arch/x86/events/amd/ibs.c | 76 ++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 75 insertions(+), 1 deletion(-)
+> 
+> Since the initial fix is already upstream, I created a delta fix below 
+> for the PERF_SAMPLE_RAW fixes in -v3.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2025-03-22
+Thanks! The delta looks good.
 
-   # HEAD: 12e766d16814808b6a581597cef6ce9fc029e917 perf: Fix __percpu annotation
+> How well was this tested? v6.14 will be released tomorrow most likely, 
+> so it's a bit risky to apply such a large patch so late. Applying the 
+> -v1 fix was a bit risky already.
 
-Performance events updates for v6.15:
+I understand. Although I've done a fair bit of testing and ran perf-
+fuzzer for few hours before posting, I'm also not in favor of rushing.
+I think it's safe to defer it to 6.15.
 
-Core:
-
-  - Move perf_event sysctls into kernel/events/ (Joel Granados)
-  - Use POLLHUP for pinned events in error (Namhyung Kim)
-  - Avoid the read if the count is already updated (Peter Zijlstra)
-  - Allow the EPOLLRDNORM flag for poll (Tao Chen)
-
-  - locking/percpu-rwsem: Add guard support (Peter Zijlstra)
-    [ NOTE: this got (mis-)merged into the perf tree due to related work. ]
-
-perf_pmu_unregister() related improvements: (Peter Zijlstra)
-
-  - Simplify the perf_event_alloc() error path
-  - Simplify the perf_pmu_register() error path
-  - Simplify perf_pmu_register()
-  - Simplify perf_init_event()
-  - Simplify perf_event_alloc()
-  - Merge struct pmu::pmu_disable_count into struct perf_cpu_pmu_context::pmu_disable_count
-  - Add this_cpc() helper
-  - Introduce perf_free_addr_filters()
-  - Robustify perf_event_free_bpf_prog()
-  - Simplify the perf_mmap() control flow
-  - Further simplify perf_mmap()
-  - Remove retry loop from perf_mmap()
-  - Lift event->mmap_mutex in perf_mmap()
-  - Detach 'struct perf_cpu_pmu_context' and 'struct pmu' lifetimes
-  - Fix perf_mmap() failure path
-
-Uprobes:
-
-  - Harden x86 uretprobe syscall trampoline check (Jiri Olsa)
-  - Remove redundant spinlock in uprobe_deny_signal() (Liao Chang)
-  - Remove the spinlock within handle_singlestep() (Liao Chang)
-
-x86 Intel PMU enhancements:
-
-  - Support PEBS counters snapshotting (Kan Liang)
-  - Fix intel_pmu_read_event() (Kan Liang)
-  - Extend per event callchain limit to branch stack (Kan Liang)
-  - Fix system-wide LBR profiling (Kan Liang)
-  - Allocate bts_ctx only if necessary (Li RongQing)
-  - Apply static call for drain_pebs (Peter Zijlstra)
-
-x86 AMD PMU enhancements: (Ravi Bangoria)
-
-  - Remove pointless sample period check
-  - Fix ->config to sample period calculation for OP PMU
-  - Fix perf_ibs_op.cnt_mask for CurCnt
-  - Don't allow freq mode event creation through ->config interface
-  - Add PMU specific minimum period
-  - Add ->check_period() callback
-  - Ceil sample_period to min_period
-  - Add support for OP Load Latency Filtering
-  - Update DTLB/PageSize decode logic
-
-Hardware breakpoints:
-
-  - Return EOPNOTSUPP for unsupported breakpoint type (Saket Kumar Bhaskar)
-
-Hardlockup detector improvements: (Li Huafei)
-
-  - perf_event memory leak
-  - Warn if watchdog_ev is leaked
-
-Fixes and cleanups:
-
-  - Misc fixes and cleanups (Andy Shevchenko, Kan Liang, Peter Zijlstra,
-    Ravi Bangoria, Thorsten Blum, XieLudan)
-
- Thanks,
-
-	Ingo
-
------------------->
-Andy Shevchenko (1):
-      x86/events/amd/iommu: Increase IOMMU_NAME_SIZE
-
-Jiri Olsa (1):
-      uprobes/x86: Harden uretprobe syscall trampoline check
-
-Joel Granados (1):
-      perf/core: Move perf_event sysctls into kernel/events
-
-Kan Liang (9):
-      perf/x86/intel: Avoid disable PMU if !cpuc->enabled in sample read
-      perf/x86/intel: Support PEBS counters snapshotting
-      perf: Extend per event callchain limit to branch stack
-      perf: Save PMU specific data in task_struct
-      perf: attach/detach PMU specific data
-      perf: Supply task information to sched_task()
-      perf/x86/lbr: Fix shorter LBRs call stacks for the system-wide mode
-      perf/x86: Remove swap_task_ctx()
-      perf: Clean up pmu specific data
-
-Li Huafei (2):
-      watchdog/hardlockup/perf: Fix perf_event memory leak
-      watchdog/hardlockup/perf: Warn if watchdog_ev is leaked
-
-Li RongQing (2):
-      perf/x86/intel/bts: Allocate bts_ctx only if necessary
-      perf/x86/intel/bts: Check if bts_ctx is allocated when calling BTS functions
-
-Liao Chang (2):
-      uprobes: Remove redundant spinlock in uprobe_deny_signal()
-      uprobes: Remove the spinlock within handle_singlestep()
-
-Namhyung Kim (1):
-      perf/core: Use POLLHUP for pinned events in error
-
-Peter Zijlstra (17):
-      perf/core: Simplify the perf_event_alloc() error path
-      perf/core: Simplify the perf_pmu_register() error path
-      perf/core: Simplify perf_pmu_register()
-      perf/core: Simplify perf_init_event()
-      perf/core: Simplify perf_event_alloc()
-      perf/core: Merge struct pmu::pmu_disable_count into struct perf_cpu_pmu_context::pmu_disable_count
-      perf/core: Add this_cpc() helper
-      perf/core: Introduce perf_free_addr_filters()
-      perf/bpf: Robustify perf_event_free_bpf_prog()
-      perf/core: Simplify the perf_mmap() control flow
-      perf/core: Further simplify perf_mmap()
-      perf/core: Remove retry loop from perf_mmap()
-      perf/core: Lift event->mmap_mutex in perf_mmap()
-      perf/core: Detach 'struct perf_cpu_pmu_context' and 'struct pmu' lifetimes
-      perf/core: Fix perf_mmap() failure path
-      perf/core: Clean up perf_try_init_event()
-      perf: Fix __percpu annotation
-
-Peter Zijlstra (Intel) (3):
-      perf/x86/intel: Apply static call for drain_pebs
-      perf: Avoid the read if the count is already updated
-      locking/percpu-rwsem: Add guard support
-
-Ravi Bangoria (11):
-      perf/amd/ibs: Remove IBS_{FETCH|OP}_CONFIG_MASK macros
-      perf/amd/ibs: Remove pointless sample period check
-      perf/amd/ibs: Fix ->config to sample period calculation for OP PMU
-      perf/amd/ibs: Fix perf_ibs_op.cnt_mask for CurCnt
-      perf/amd/ibs: Don't allow freq mode event creation through ->config interface
-      perf/amd/ibs: Add PMU specific minimum period
-      perf/amd/ibs: Add ->check_period() callback
-      perf/amd/ibs: Ceil sample_period to min_period
-      perf/amd/ibs: Add support for OP Load Latency Filtering
-      perf/amd/ibs: Update DTLB/PageSize decode logic
-      perf amd ibs: Sync arch/x86/include/asm/amd-ibs.h header with the kernel
-
-Saket Kumar Bhaskar (1):
-      perf/hw_breakpoint: Return EOPNOTSUPP for unsupported breakpoint type
-
-Tao Chen (1):
-      perf/ring_buffer: Allow the EPOLLRDNORM flag for poll
-
-Thorsten Blum (2):
-      perf/x86: Annotate struct bts_buffer::buf with __counted_by()
-      perf/core: Remove optional 'size' arguments from strscpy() calls
-
-XieLudan (1):
-      perf/core: Use sysfs_emit() instead of scnprintf()
-
-
- arch/powerpc/perf/core-book3s.c      |    8 +-
- arch/s390/kernel/perf_pai_crypto.c   |    3 +-
- arch/s390/kernel/perf_pai_ext.c      |    3 +-
- arch/x86/events/amd/brs.c            |    3 +-
- arch/x86/events/amd/ibs.c            |  206 ++++++-
- arch/x86/events/amd/iommu.c          |    2 +-
- arch/x86/events/amd/lbr.c            |    3 +-
- arch/x86/events/core.c               |   27 +-
- arch/x86/events/intel/bts.c          |   43 +-
- arch/x86/events/intel/core.c         |  123 ++--
- arch/x86/events/intel/ds.c           |  204 ++++++-
- arch/x86/events/intel/lbr.c          |   73 ++-
- arch/x86/events/perf_event.h         |   42 +-
- arch/x86/events/perf_event_flags.h   |    2 +-
- arch/x86/include/asm/amd-ibs.h       |    3 +-
- arch/x86/include/asm/perf_event.h    |   20 +
- arch/x86/kernel/uprobes.c            |   14 +-
- include/linux/idr.h                  |   17 +
- include/linux/nmi.h                  |    4 -
- include/linux/percpu-rwsem.h         |    8 +
- include/linux/perf_event.h           |   92 +--
- include/linux/sched.h                |    2 +
- include/linux/uprobes.h              |    3 +
- include/uapi/linux/perf_event.h      |    2 +
- kernel/cpu.c                         |    5 -
- kernel/events/callchain.c            |   38 +-
- kernel/events/core.c                 | 1062 ++++++++++++++++++++++------------
- kernel/events/hw_breakpoint.c        |    5 +-
- kernel/events/ring_buffer.c          |    3 +-
- kernel/events/uprobes.c              |   12 +-
- kernel/sysctl.c                      |   64 --
- kernel/watchdog.c                    |   25 -
- kernel/watchdog_perf.c               |   29 +-
- tools/arch/x86/include/asm/amd-ibs.h |    3 +-
- 34 files changed, 1416 insertions(+), 737 deletions(-)
+Thanks,
+Ravi
