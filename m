@@ -1,260 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E06D189F3B;
-	Sat, 22 Mar 2025 07:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC2E1372
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Mar 2025 08:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742628265; cv=none; b=Y/75peuG8WWbeTctOgdZuLRs7KXiZu3tdTNW1z3XY4gOtp6RW/oIf7yfb4MMkUwirec4eJaHu8IJchVixm59HCT1T4TI8FONtFLu5s/bQq3miCHRGhSvkznYViXlvMd4mJbJZ0P5nq0s8nyz+2K9zEldzyIWVEMM+VrByEk9hoQ=
+	t=1742630788; cv=none; b=Dv1Wee0b3uWpsWWLyWtqW7CdZfhyO7xQo35hKlz+kaiass//o18S2so1+z2VTz87DfCDODSKv2BOeNV24GpsflpGr+kj4b45zVNQLwQ01rpu/yvFUKhXyyUOe8CDG0OCdasi3ZaNhTO5S5EnA9KRUJIu3gN7xYf+dyouVx/GGds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742628265; c=relaxed/simple;
-	bh=2mH3DfhF8nEJy0oHLRCB3ZZUif9mdKrgzPAnKF/tj6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uRxxgUM0XKSrr37zX5/eP/RBzxqyzdWg4Z2e7Yh9GFesw7KAAMboWEnVODHdPeSaSPAMAIXYOTDXc8arhM3HxV+9jSU3vdpEw5F9iQ8u1cRFXbpY3W+NHG5sQfwmy8wqxaibNZVbyx/i797edZn0zqblCKj5jxqF0s0R8FLXQTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOYz/J+Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742630788; c=relaxed/simple;
+	bh=QCohz+Z09lHNeaj0NBH3GCU5saL80AcJx3UHc7p72ks=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ESumKOirn+EIkX9ap6XKJp98h5UqpqnJsPy3ZH0tEuXT0MFBCtI/bezMwTlq/+douB223tILnbssXMZSstifonWzjN80pVAeJXUsFCNW2fZlzb3rR0FWca4+IsTubdhren1jRgAqTOCneTZ22h6ZKsSl+noeWnBfr+ye/NdM8Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hRjU5uzW; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOYz/J+Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8566DC4CEDD;
-	Sat, 22 Mar 2025 07:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742628264;
-	bh=2mH3DfhF8nEJy0oHLRCB3ZZUif9mdKrgzPAnKF/tj6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BOYz/J+Q06r8oxS+1mL0t4Xy+3bJl7nMZaST+5kzuKGDziUiJgB5mx/YxeNeyR1BP
-	 yVTTNtIf7b0Gk9URcVLiBxHkXrgmx2WqiN8g4HEbZxzHn3ezzF90970SH4P26vT9c3
-	 OLNBJ0m52aMf7UIvvpMc5jAs4Ga/ZeZ6SwIpeYGlVvp6zijWPXLDkOynWsmGP821bG
-	 pK557hg4JeRBRf6CL6nfm8CHShS4L93mP6yoWfM3izvq65iuebs+OxvKogArWHoUL9
-	 LSSJQ61rK7LPdo6GfxElwWrw4Yo3RqgFsI2/ftpUQ8xm6SVvVq23WN3V5fFYFSgIXI
-	 ZrSGjhO92Zd+A==
-Date: Sat, 22 Mar 2025 08:24:19 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: peterz@infradead.org, namhyung@kernel.org, mingo@redhat.com,
-	acme@kernel.org, kan.liang@linux.intel.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-	matteorizzo@google.com, linux-perf-users@vger.kernel.org,
-	santosh.shukla@amd.com, ananth.narayan@amd.com,
-	sandipan.das@amd.com
-Subject: Re: [PATCH v3 tip:perf/core] perf/amd/ibs: Prevent leaking sensitive
- data to userspace
-Message-ID: <Z95lo6J37emCRvme@gmail.com>
-References: <20250321161251.1033-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hRjU5uzW"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52M3grr1030610;
+	Sat, 22 Mar 2025 08:06:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=HDF6RB
+	kHi6jkmsGpsNlDQxqjfPEGr06K1bqndAdkZrE=; b=hRjU5uzWlzcuzH8MODT3qe
+	fKxnjokaZhPxJs7KJlwaSj6OejNWtTv4ZumW730bPpuxCwO80gLamlooJicO+yn5
+	VnDfupzgMxKWLXCbk4oJRHQWAYITC1Sxt4vT5zw2nQjzaRXe8x2XIZeayDwxeMdQ
+	otVZxJN0MM2zOkqrG4mFBSjvuCEHBHZdhoOdPHH33frOidtJS8Pp5z95NpDgLK+u
+	hLS18CSkGJUH25Yg6XxD0IXCIKUSm++kVrEzfOMbEDbmO4W+USwJHuTSnmaTFQo2
+	yB/X84lQkzY2cuCv4/ENMWfCMNfqBMb/z4V6+cbNSBWypTLCVsdPmWU8oOr/TBPA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45hngm8nk4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Mar 2025 08:06:15 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52M86Frf020527;
+	Sat, 22 Mar 2025 08:06:15 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45hngm8nk1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Mar 2025 08:06:15 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52M3JT4n009157;
+	Sat, 22 Mar 2025 08:06:14 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45hn6grrn7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Mar 2025 08:06:14 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52M86B3C40042902
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 22 Mar 2025 08:06:11 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 15D6520043;
+	Sat, 22 Mar 2025 08:06:11 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BD63A20040;
+	Sat, 22 Mar 2025 08:06:06 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.245.171])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat, 22 Mar 2025 08:06:06 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321161251.1033-1-ravi.bangoria@amd.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH] tools/perf/arch/powerpc/util: Fix is_compat_mode build
+ break  in ppc64
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <20250321100726.699956-1-likhitha@linux.ibm.com>
+Date: Sat, 22 Mar 2025 13:35:52 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <22675B19-F5B4-4CAE-A320-58F42107FE44@linux.ibm.com>
+References: <20250321100726.699956-1-likhitha@linux.ibm.com>
+To: Likhitha Korrapati <likhitha@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 2JNeXZHijJWmfC985k7YiPTooY6kTnLa
+X-Proofpoint-GUID: kzU3Inqd7PhIS0v3e2c2d-QdoJ4TDbCi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-22_03,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ malwarescore=0 mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503220056
 
 
-* Ravi Bangoria <ravi.bangoria@amd.com> wrote:
 
-> From: Namhyung Kim <namhyung@kernel.org>
-> 
-> Although IBS "swfilt" can prevent leaking samples with kernel RIP to the
-> userspace, there are few subtle cases where a 'data' address and/or a
-> 'branch target' address can fall under kernel address range although RIP
-> is from userspace. Prevent leaking kernel 'data' addresses by discarding
-> such samples when {exclude_kernel=1,swfilt=1}.
-> 
-> IBS can now be invoked by unprivileged user with the introduction of
-> "swfilt". However, this creates a loophole in the interface where an
-> unprivileged user can get physical address of the userspace virtual
-> addresses through IBS register raw dump (PERF_SAMPLE_RAW). Prevent this
-> as well.
-> 
-> Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD IBS")
-> Suggested-by: Matteo Rizzo <matteorizzo@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> Co-developed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> On 21 Mar 2025, at 3:37=E2=80=AFPM, Likhitha Korrapati =
+<likhitha@linux.ibm.com> wrote:
+>=20
+> Commit 54f9aa1092457 ("tools/perf/powerpc/util: Add support to
+> handle compatible mode PVR for perf json events") introduced
+> to select proper JSON events in case of compat mode using
+> auxiliary vector. But this caused a compilation error in ppc64
+> Big Endian.
+>=20
+> arch/powerpc/util/header.c: In function 'is_compat_mode':
+> arch/powerpc/util/header.c:20:21: error: cast to pointer from
+> integer of different size [-Werror=3Dint-to-pointer-cast]
+>   20 |         if (!strcmp((char *)platform, (char *)base_platform))
+>      |                     ^
+> arch/powerpc/util/header.c:20:39: error: cast to pointer from
+> integer of different size [-Werror=3Dint-to-pointer-cast]
+>   20 |         if (!strcmp((char *)platform, (char *)base_platform))
+>      |
+>=20
+> Commit saved the getauxval(AT_BASE_PLATFORM) and =
+getauxval(AT_PLATFORM)
+> return values in u64 which causes the compilation error.
+>=20
+> Patch fixes this issue by changing u64 to "unsigned long".
+>=20
+> Fixes: 54f9aa1092457 ("tools/perf/powerpc/util: Add support to handle =
+compatible mode PVR for perf json events")
+> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
+
+Hi Likhitha,
+Thanks for the fix.=20
+
+Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
+
+Thanks
+Athira
 > ---
-> v2: https://lore.kernel.org/r/20250317163755.1842589-1-namhyung@kernel.org
-> 
->  arch/x86/events/amd/ibs.c | 76 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 75 insertions(+), 1 deletion(-)
+> tools/perf/arch/powerpc/util/header.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/tools/perf/arch/powerpc/util/header.c =
+b/tools/perf/arch/powerpc/util/header.c
+> index c7df534dbf8f..0be74f048f96 100644
+> --- a/tools/perf/arch/powerpc/util/header.c
+> +++ b/tools/perf/arch/powerpc/util/header.c
+> @@ -14,8 +14,8 @@
+>=20
+> static bool is_compat_mode(void)
+> {
+> - u64 base_platform =3D getauxval(AT_BASE_PLATFORM);
+> - u64 platform =3D getauxval(AT_PLATFORM);
+> + unsigned long base_platform =3D getauxval(AT_BASE_PLATFORM);
+> + unsigned long platform =3D getauxval(AT_PLATFORM);
+>=20
+> if (!strcmp((char *)platform, (char *)base_platform))
+> return false;
+> --=20
+> 2.43.5
+>=20
 
-Since the initial fix is already upstream, I created a delta fix below 
-for the PERF_SAMPLE_RAW fixes in -v3.
-
-How well was this tested? v6.14 will be released tomorrow most likely, 
-so it's a bit risky to apply such a large patch so late. Applying the 
--v1 fix was a bit risky already.
-
-Thanks,
-
-	Ingo
-
-====================>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Sat, 22 Mar 2025 08:13:01 +0100
-Subject: [PATCH] perf/amd/ibs: Prevent leaking sensitive data to userspace
-
-Although IBS "swfilt" can prevent leaking samples with kernel RIP to the
-userspace, there are few subtle cases where a 'data' address and/or a
-'branch target' address can fall under kernel address range although RIP
-is from userspace. Prevent leaking kernel 'data' addresses by discarding
-such samples when {exclude_kernel=1,swfilt=1}.
-
-IBS can now be invoked by unprivileged user with the introduction of
-"swfilt". However, this creates a loophole in the interface where an
-unprivileged user can get physical address of the userspace virtual
-addresses through IBS register raw dump (PERF_SAMPLE_RAW). Prevent this
-as well.
-
-This upstream commit fixed the most obvious leak:
-
-  65a99264f5e5 perf/x86: Check data address for IBS software filter
-
-Follow that up with a more complete fix.
-
-Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD IBS")
-Suggested-by: Matteo Rizzo <matteorizzo@google.com>
-Co-developed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250321161251.1033-1-ravi.bangoria@amd.com
----
- arch/x86/events/amd/ibs.c | 84 +++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 78 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index c46500592002..e36c9c63c97c 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -941,6 +941,8 @@ static void perf_ibs_get_mem_lock(union ibs_op_data3 *op_data3,
- 		data_src->mem_lock = PERF_MEM_LOCK_LOCKED;
- }
- 
-+/* Be careful. Works only for contiguous MSRs. */
-+#define ibs_fetch_msr_idx(msr)	(msr - MSR_AMD64_IBSFETCHCTL)
- #define ibs_op_msr_idx(msr)	(msr - MSR_AMD64_IBSOPCTL)
- 
- static void perf_ibs_get_data_src(struct perf_ibs_data *ibs_data,
-@@ -1036,6 +1038,67 @@ static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs, u64 sample_type,
- 	return 1;
- }
- 
-+static bool perf_ibs_is_kernel_data_addr(struct perf_event *event,
-+					 struct perf_ibs_data *ibs_data)
-+{
-+	u64 sample_type_mask = PERF_SAMPLE_ADDR | PERF_SAMPLE_RAW;
-+	union ibs_op_data3 op_data3;
-+	u64 dc_lin_addr;
-+
-+	op_data3.val = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
-+	dc_lin_addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCLINAD)];
-+
-+	return unlikely((event->attr.sample_type & sample_type_mask) &&
-+			op_data3.dc_lin_addr_valid && kernel_ip(dc_lin_addr));
-+}
-+
-+static bool perf_ibs_is_kernel_br_target(struct perf_event *event,
-+					 struct perf_ibs_data *ibs_data,
-+					 int br_target_idx)
-+{
-+	union ibs_op_data op_data;
-+	u64 br_target;
-+
-+	op_data.val = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA)];
-+	br_target = ibs_data->regs[br_target_idx];
-+
-+	return unlikely((event->attr.sample_type & PERF_SAMPLE_RAW) &&
-+			op_data.op_brn_ret && kernel_ip(br_target));
-+}
-+
-+static bool perf_ibs_swfilt_discard(struct perf_ibs *perf_ibs, struct perf_event *event,
-+				    struct pt_regs *regs, struct perf_ibs_data *ibs_data,
-+				    int br_target_idx)
-+{
-+	if (perf_exclude_event(event, regs))
-+		return true;
-+
-+	if (perf_ibs != &perf_ibs_op || !event->attr.exclude_kernel)
-+		return false;
-+
-+	if (perf_ibs_is_kernel_data_addr(event, ibs_data))
-+		return true;
-+
-+	if (br_target_idx != -1 &&
-+	    perf_ibs_is_kernel_br_target(event, ibs_data, br_target_idx))
-+		return true;
-+
-+	return false;
-+}
-+
-+static void perf_ibs_phyaddr_clear(struct perf_ibs *perf_ibs,
-+				   struct perf_ibs_data *ibs_data)
-+{
-+	if (perf_ibs == &perf_ibs_op) {
-+		ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)] &= ~(1ULL << 18);
-+		ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)] = 0;
-+		return;
-+	}
-+
-+	ibs_data->regs[ibs_fetch_msr_idx(MSR_AMD64_IBSFETCHCTL)] &= ~(1ULL << 52);
-+	ibs_data->regs[ibs_fetch_msr_idx(MSR_AMD64_IBSFETCHPHYSAD)] = 0;
-+}
-+
- static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- {
- 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
-@@ -1048,6 +1111,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 	int offset, size, check_rip, offset_max, throttle = 0;
- 	unsigned int msr;
- 	u64 *buf, *config, period, new_config = 0;
-+	int br_target_idx = -1;
- 
- 	if (!test_bit(IBS_STARTED, pcpu->state)) {
- fail:
-@@ -1102,6 +1166,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		if (perf_ibs == &perf_ibs_op) {
- 			if (ibs_caps & IBS_CAPS_BRNTRGT) {
- 				rdmsrl(MSR_AMD64_IBSBRTARGET, *buf++);
-+				br_target_idx = size;
- 				size++;
- 			}
- 			if (ibs_caps & IBS_CAPS_OPDATA4) {
-@@ -1128,16 +1193,20 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		regs.flags |= PERF_EFLAGS_EXACT;
- 	}
- 
--	if (perf_ibs == &perf_ibs_op)
--		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
--
- 	if ((event->attr.config2 & IBS_SW_FILTER_MASK) &&
--	    (perf_exclude_event(event, &regs) ||
--	     ((data.sample_flags & PERF_SAMPLE_ADDR) &&
--	      event->attr.exclude_kernel && kernel_ip(data.addr)))) {
-+	    perf_ibs_swfilt_discard(perf_ibs, event, &regs, &ibs_data, br_target_idx)) {
- 		throttle = perf_event_account_interrupt(event);
- 		goto out;
- 	}
-+	/*
-+	 * Prevent leaking physical addresses to unprivileged users. Skip
-+	 * PERF_SAMPLE_PHYS_ADDR check since generic code prevents it for
-+	 * unprivileged users.
-+	 */
-+	if ((event->attr.sample_type & PERF_SAMPLE_RAW) &&
-+	    perf_allow_kernel(&event->attr)) {
-+		perf_ibs_phyaddr_clear(perf_ibs, &ibs_data);
-+	}
- 
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW) {
- 		raw = (struct perf_raw_record){
-@@ -1149,6 +1218,9 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		perf_sample_save_raw_data(&data, event, &raw);
- 	}
- 
-+	if (perf_ibs == &perf_ibs_op)
-+		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
-+
- 	/*
- 	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
- 	 * recorded as part of interrupt regs. Thus we need to use rip from
