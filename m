@@ -1,57 +1,57 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66F726771E
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 17:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D03F264632
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 17:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837602; cv=none; b=QmGYVXPwQBNcjMcoQhbPkgcY7Jj3kG/RW1rWQnTQVJgn57MY9ajIW7cLGuP2T+eyqxLR00FUqHMU8pjdYesM+h+IVwrrFvhRgQwLg/Ec0U3rj6K2vrcqCOkLdk3H0ObXvJ3SG07CzKiIJz3f9EsaxaVVsxesoH5RwJBl0xLgbw8=
+	t=1742837604; cv=none; b=VTiQMB9hksFhPHN2DNF3oLIRvHBoj1wHkRBMeBOXkFKUl7STCfUOpmvyuNmY9fElxZuWr65JX9hkUrKV03j5Qwdf2EIzK2uY1eRlwzE4Vs8XOazuJ5P2ai7leaUG/9awKvY5Fa5Jd+qe9Ct48v/bed0kErooFxtQYpMt3vxbRIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837602; c=relaxed/simple;
-	bh=5qOPwwrxnQsx7uNK7PsLpk4FpylCW4KwiTr6opmkLZA=;
+	s=arc-20240116; t=1742837604; c=relaxed/simple;
+	bh=H5dpimzCkTLaGElT4g2IUO6VSSp4QnkSLT93PRKHBOc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LU+/SjYz2MOi8dS3oHOkM7mm2PiwVvq6BUXSqFi3KhpokegEWfKAQIkOCxFNFbHAo6taBoDBoz0F0LGbyJM2YtkEPkp0Vzu6LCD8lDDrpKkeZBKiBuBdHX/r8yzMIkZDD+y4BfL2x6qdNoLZl3TrRrd/gFMZU5A4FHTwW3krUDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tof9gi2O; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=kx+SAASqD2OgdA2sYpWFHdAVxV3CAWcDcyWXAxWTqaIuWDRpdw2Oe8peJ+tpQUH1i78CfXYz97GpFTV+quXLvd+G7amirPLtoFhZqo09cnRZxVwsRbtE9rr2vBrOsD/yQfJnhBdw+LDvq2Uj/PieJJ0sc/DVSDcxQsQCoXn8SnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b9PutlaE; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tof9gi2O"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224191d9228so98043975ad.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 10:33:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9PutlaE"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff64898e2aso8502891a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 10:33:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837600; x=1743442400; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742837601; x=1743442401; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=rcOpnJuyQafXKIM3t3NDl4D1Wy5EWhwivUY6bQgJ2Ig=;
-        b=tof9gi2O6OfpkkQ4puiCPlL7wXk6OiiPSypGup2WLbU+MQUMSoDWfvLu7Y/k2CN98A
-         dsuL+tJYvGP+yreT79YQ6HlPtbzav2CfQkLkst6x7mBkF50LH/RGffacg1h+BUM3IgTc
-         JbNWabJOmL04gQglarcV6dok2K3Lh/TKonwpbMc6W9JDQ6olnnFy6dGLnrcw93zAUpDp
-         O/qSu1QhbJ1MI/tmYVfYVPERPj5EP24+jAO+YXki5yFxWnCnLnbe/Ajn0hcprBRWkB07
-         hrdBKN8NvXPoUys2Qt/BvFMh+CQeZm2U5EHZ5e7sVQk8FEIOw6bJ3jtdWZ6QNqnGsX7m
-         GOpQ==
+        bh=4s4fj12+7LYXYBlMzf4tcSXF30o33nLdQg99nDxRYP4=;
+        b=b9PutlaEQ9XT396KBS5OuPYvvYN0WVVeZX/LNwa85upj9K0u0ZAWOdo08KPCvyT0Gh
+         8yptVP6LUROFUyxQEAAiINE+IytoffXL1nJvPiWFcuW2I4VJi8n4+s2HD6Mbx04tEfyI
+         XuifVd1jZIEHdX5curGtrQfF4Gu5Fv2v0TvKPawveyg+gfHEqU/x65fNkjBrTEJelA1u
+         T1VLYzeB5oWu3omP/hkRbsgUSf/+2kdJ+m7gZduQfDiqsqLyY4GSsGqtD9JVfE80I0cB
+         mguvJ4/G0dU9+qEm6D6A/jIsiKr597VsDoxHiyvNCJXhRZJseseWh5WTf2mXRz1rwqX4
+         x/pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837600; x=1743442400;
+        d=1e100.net; s=20230601; t=1742837601; x=1743442401;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rcOpnJuyQafXKIM3t3NDl4D1Wy5EWhwivUY6bQgJ2Ig=;
-        b=JLr169gfb6Jg2ICn6/dsgjk8lkdeXaJr64ZtJIf/zl9hWtZRYOFe7q3tSyPNG9+gvi
-         U2VtJMQ+MrKol5S4wUFhb2HbgsVujgPCmfyCm5166UPl/OzSsLUmvU4dBhhJHEwp9n41
-         7fEGN93rGY1AqMlCH/OWQege9Dc2LmuNXoPUk0VBAtJPYxIB9KUeBgXqGUOGvWKfpLgA
-         RcPNiv9Owcs4CuAUcyRVFd69iAFiQgd5yxZSlTDVq0CiejiXsCVxX+FUObL1wsXTNBfU
-         QIgGRgK4XG12DlvXaIjHbqbTg1KAD3LIwSMmhY7xAW0kDO05peiriES4s/s+aFgnWa4J
-         85aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMzmIp+bjkgryFjcnLYqSxt67l45+I7fNMdnz6KwE7RpQ16KR9hz2cDHTcslcmr5P1SMIYC8yijXoshBuXzGGy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCnniM7iqp5DivD7+gYDrsNfun4Bf9DHEoffuuUh6JIdd1LsGT
-	pqyZU5jvw20XP3eLUqcvQep9lW2xV1EYZZozMFrbnV6S8BPOPgFPxwJVpHlMV6JLzT5cXjsLz8D
-	tLNlb3w==
-X-Google-Smtp-Source: AGHT+IHUO+nVYTje/CxANJJGo3on5RcFF6XTIavPoEExwPpO1NjAc4cYfof26CrUOcsMjaHQJm3pjkVgG3XW
-X-Received: from plho1.prod.google.com ([2002:a17:903:23c1:b0:223:49cb:8f99])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:4403:b0:223:4bd6:3869
- with SMTP id d9443c01a7336-22780c7ba5bmr212349475ad.15.1742837600009; Mon, 24
- Mar 2025 10:33:20 -0700 (PDT)
+        bh=4s4fj12+7LYXYBlMzf4tcSXF30o33nLdQg99nDxRYP4=;
+        b=uE9BehfEL8Pg4bLAcprOmX37t4po8G06/DY4oXEJ1GQq0q4myZjS+v/UnC3e4MOUqg
+         QQ9f1NVfmn2zLuLRxFL94Ak8bLjGcVZ9VGpV9IRbW5IdTm7yyweb4ehSlxT2fVSqwON0
+         vGcIQY+Ena65bN8zozo3eMVCuLA54x+yXZhUPGwhPr6aFSLnVOonXu+xardFP5XwgSPl
+         omFVGSa7oSXVeT0G4zlJncVmGH97gep3xYkI10abuSi8Vg0JbSQ305QgcCb+oXPtdY+I
+         ZCVSCueKmpUZgrU1Nll3zwYtnpzODc/z87hkowVUXpBYWEqrqP7mxGC+ANR4PKyvmix1
+         5JIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwAmNufrbs0LqKuRczOFoShJwoZdlGBHL8lnlx+it5rebJRd5n9NEGNwjNEsLwLxSuuoXEFUsEBh2yK076xGgH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHOVGZG4jyz7DFqv66KrN1bclgP5HDAwLSeaQBWVKrVXNsusL8
+	qHM0BGtK+u//w2D8ok28MGuXrZB2hFjvugztFBdzMGrgIesY+SnfFcLbOR9RbmL+3gqWMuyTVo+
+	uQKJf5w==
+X-Google-Smtp-Source: AGHT+IF3eAhtbr/aKZMsOSHh6EvPm40FhM3S3reS/zODf44Xe9H+4QBhRWOx5GA3LttXrkzjAl5B1PQqv1BM
+X-Received: from pjbmf11.prod.google.com ([2002:a17:90b:184b:b0:2ef:d283:5089])
+ (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2cb:b0:2fa:42f3:e3e4
+ with SMTP id 98e67ed59e1d1-301d426aa83mr27441767a91.3.1742837601440; Mon, 24
+ Mar 2025 10:33:21 -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:30:57 +0000
+Date: Mon, 24 Mar 2025 17:30:58 +0000
 In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250324173121.1275209-1-mizhang@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-18-mizhang@google.com>
-Subject: [PATCH v4 17/38] KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
+Message-ID: <20250324173121.1275209-19-mizhang@google.com>
+Subject: [PATCH v4 18/38] KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into
+ msr-index.h header
 From: Mingwei Zhang <mizhang@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -83,80 +84,126 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Add perf_capabilities in kvm_host_values{} structure to record host perf
-capabilities. KVM needs to know if host supports some PMU capabilities
-and then decide if passthrough or intercept some PMU MSRs or instruction
-like rdpmc, e.g. If host supports PERF_METRICES, but guest is configured
-not to support it, then rdpmc instruction needs to be intercepted.
+Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h and rename them with
+PERF_CAP prefix to keep consistent with other perf capabilities macros.
 
-Co-developed-by: Mingwei Zhang <mizhang@google.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+No functional change intended.
+
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 8 ++------
- arch/x86/kvm/x86.c     | 3 +++
- arch/x86/kvm/x86.h     | 1 +
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/msr-index.h | 15 +++++++++------
+ arch/x86/kvm/vmx/capabilities.h  |  3 ---
+ arch/x86/kvm/vmx/pmu_intel.c     |  4 ++--
+ arch/x86/kvm/vmx/vmx.c           | 12 ++++++------
+ 4 files changed, 17 insertions(+), 17 deletions(-)
 
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 72765b2fe0d8..ca70846ffd55 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -305,12 +305,15 @@
+ #define PERF_CAP_PT_IDX			16
+ 
+ #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
+-#define PERF_CAP_PEBS_TRAP             BIT_ULL(6)
+-#define PERF_CAP_ARCH_REG              BIT_ULL(7)
+-#define PERF_CAP_PEBS_FORMAT           0xf00
+-#define PERF_CAP_PEBS_BASELINE         BIT_ULL(14)
+-#define PERF_CAP_PEBS_MASK	(PERF_CAP_PEBS_TRAP | PERF_CAP_ARCH_REG | \
+-				 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE)
++
++#define PERF_CAP_LBR_FMT		0x3f
++#define PERF_CAP_PEBS_TRAP		BIT_ULL(6)
++#define PERF_CAP_ARCH_REG		BIT_ULL(7)
++#define PERF_CAP_PEBS_FORMAT		0xf00
++#define PERF_CAP_FW_WRITES		BIT_ULL(13)
++#define PERF_CAP_PEBS_BASELINE		BIT_ULL(14)
++#define PERF_CAP_PEBS_MASK		(PERF_CAP_PEBS_TRAP | PERF_CAP_ARCH_REG | \
++					 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE)
+ 
+ #define MSR_IA32_RTIT_CTL		0x00000570
+ #define RTIT_CTL_TRACEEN		BIT(0)
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index fac2c80ddbab..013536fde10b 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -21,9 +21,6 @@ extern int __read_mostly pt_mode;
+ #define PT_MODE_SYSTEM		0
+ #define PT_MODE_HOST_GUEST	1
+ 
+-#define PMU_CAP_FW_WRITES	(1ULL << 13)
+-#define PMU_CAP_LBR_FMT		0x3f
+-
+ struct nested_vmx_msrs {
+ 	/*
+ 	 * We only store the "true" versions of the VMX capability MSRs. We
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 425e93d4b1c6..fc017e9a6a0c 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -118,7 +118,7 @@ static inline u64 vcpu_get_perf_capabilities(struct kvm_vcpu *vcpu)
+ 
+ static inline bool fw_writes_is_enabled(struct kvm_vcpu *vcpu)
+ {
+-	return (vcpu_get_perf_capabilities(vcpu) & PMU_CAP_FW_WRITES) != 0;
++	return (vcpu_get_perf_capabilities(vcpu) & PERF_CAP_FW_WRITES) != 0;
+ }
+ 
+ static inline struct kvm_pmc *get_fw_gp_pmc(struct kvm_pmu *pmu, u32 msr)
+@@ -543,7 +543,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 
+ 	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
+ 	if (cpuid_model_is_consistent(vcpu) &&
+-	    (perf_capabilities & PMU_CAP_LBR_FMT))
++	    (perf_capabilities & PERF_CAP_LBR_FMT))
+ 		memcpy(&lbr_desc->records, &vmx_lbr_caps, sizeof(vmx_lbr_caps));
+ 	else
+ 		lbr_desc->records.nr = 0;
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index acd3582874b9..ca1c53f855e0 100644
+index ca1c53f855e0..9c4b3c2b1d65 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7908,14 +7908,10 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+@@ -2188,7 +2188,7 @@ static u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated
+ 	    (host_initiated || guest_cpu_cap_has(vcpu, X86_FEATURE_BUS_LOCK_DETECT)))
+ 		debugctl |= DEBUGCTLMSR_BUS_LOCK_DETECT;
+ 
+-	if ((kvm_caps.supported_perf_cap & PMU_CAP_LBR_FMT) &&
++	if ((kvm_caps.supported_perf_cap & PERF_CAP_LBR_FMT) &&
+ 	    (host_initiated || intel_pmu_lbr_is_enabled(vcpu)))
+ 		debugctl |= DEBUGCTLMSR_LBR | DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
+ 
+@@ -2464,9 +2464,9 @@ int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			vmx->pt_desc.guest.addr_a[index / 2] = data;
+ 		break;
+ 	case MSR_IA32_PERF_CAPABILITIES:
+-		if (data & PMU_CAP_LBR_FMT) {
+-			if ((data & PMU_CAP_LBR_FMT) !=
+-			    (kvm_caps.supported_perf_cap & PMU_CAP_LBR_FMT))
++		if (data & PERF_CAP_LBR_FMT) {
++			if ((data & PERF_CAP_LBR_FMT) !=
++			    (kvm_caps.supported_perf_cap & PERF_CAP_LBR_FMT))
+ 				return 1;
+ 			if (!cpuid_model_is_consistent(vcpu))
+ 				return 1;
+@@ -7907,7 +7907,7 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 
  static __init u64 vmx_get_perf_capabilities(void)
  {
- 	u64 perf_cap = PMU_CAP_FW_WRITES;
--	u64 host_perf_cap = 0;
+-	u64 perf_cap = PMU_CAP_FW_WRITES;
++	u64 perf_cap = PERF_CAP_FW_WRITES;
  
  	if (!enable_pmu)
  		return 0;
- 
--	if (boot_cpu_has(X86_FEATURE_PDCM))
--		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
--
- 	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
- 	    !enable_mediated_pmu) {
- 		x86_perf_get_lbr(&vmx_lbr_caps);
-@@ -7928,11 +7924,11 @@ static __init u64 vmx_get_perf_capabilities(void)
+@@ -7924,7 +7924,7 @@ static __init u64 vmx_get_perf_capabilities(void)
  		if (!vmx_lbr_caps.has_callstack)
  			memset(&vmx_lbr_caps, 0, sizeof(vmx_lbr_caps));
  		else if (vmx_lbr_caps.nr)
--			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
-+			perf_cap |= kvm_host.perf_capabilities & PMU_CAP_LBR_FMT;
+-			perf_cap |= kvm_host.perf_capabilities & PMU_CAP_LBR_FMT;
++			perf_cap |= kvm_host.perf_capabilities & PERF_CAP_LBR_FMT;
  	}
  
  	if (vmx_pebs_supported()) {
--		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
-+		perf_cap |= kvm_host.perf_capabilities & PERF_CAP_PEBS_MASK;
- 
- 		/*
- 		 * Disallow adaptive PEBS as it is functionally broken, can be
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 1ebe169b88b6..578e5f110b6c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9786,6 +9786,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
- 	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
- 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, kvm_host.arch_capabilities);
- 
-+	if (boot_cpu_has(X86_FEATURE_PDCM))
-+		rdmsrl(MSR_IA32_PERF_CAPABILITIES, kvm_host.perf_capabilities);
-+
- 	r = ops->hardware_setup();
- 	if (r != 0)
- 		goto out_mmu_exit;
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index dbf9973b3d09..b1df4ad2341b 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -46,6 +46,7 @@ struct kvm_host_values {
- 	u64 xcr0;
- 	u64 xss;
- 	u64 arch_capabilities;
-+	u64 perf_capabilities;
- };
- 
- void kvm_spurious_fault(void);
 -- 
 2.49.0.395.g12beb8f557-goog
 
