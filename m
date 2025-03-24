@@ -1,188 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33992628C
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 14:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC50525F7BC
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 14:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742827541; cv=none; b=Hk0lEf1GRUSIU82KzZ1HOSDdQol5eruTJSh7OLhq1cf4D81lx4/ihg2tIMa3c17oCf4GTb4L1j1JdFpHTq8t1v8Pr69Q6gROcIvHYfR8j0880RD1WNWDh6cUvwo/xGUdzkl2e0fwFoHJuDvdln6y4OFSI46ct+F0416nz6L43Rs=
+	t=1742827953; cv=none; b=fHbNh3+X3AdFViDEyV9nTKorFlBH9RopwquNMG9pYN8rY1cMh/Qrz0dMHuWOZcz3G9CaZTH5WXZ7FRG6QtTO3K54QndOUjn6I0ENgsrEI4ltznWLHiKnUgnkwTUHD372wh0FuetSYg89y+Mge+rNaEpvY7fL7Lf5NB9bFK/lFjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742827541; c=relaxed/simple;
-	bh=M1hWD/oSou+r5X9ScN+rHnKhewbykMu1plQom+IBOPI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKyq5osu67faVfnk07f83WniCf8t8mepA9JxLuHHpHQB70B8M21KdoIVT3pgi4ZbeKDz3qnrEfC45QPaYl2UfHGt37b5XzzARJxQzHrAAqZ/A4/OUBe0lrsTVEvwx+Q28X8QMjAHK/PjYLImy2IM6PkgofDeg7l2oJGYp/T7X9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQ5YVIIS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742827953; c=relaxed/simple;
+	bh=nD/Dn1FXRe/gRT9ezb+krNed0FvxLmf7DtmDXLb5T7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=od5h+V7WbNK9PhiM3eHdgx4JftBNIodXWbw46bAI2LHtr7UPUkeJp2QidvOPWYCGIXBw7phwbVIqdcaFESDwGUzeUgUXrnLO7xbFVbDRb78MHTJmxTU2BEsjpc92FShLkUELpK/0yRlhWeIHSnsQHYexQ0wrZRkvGMVk43/wWCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yhasYz0H; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQ5YVIIS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742827538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ECA6zhUqnyZiEyBYCMUo+zUIFQyB0/m7K5nNM3gOBd8=;
-	b=PQ5YVIISV7GTa8IHJlvbbds7oCD5btkyP+6ALsH78mbSxdA0ww2OPtVLQIJHwgdxhHd25/
-	lKg76ew9ppRZxqDKayfd3n2FnvUOgLJBsr/xh7nVpqw25gy22xh6EkCbcfVnjIQN/AuLkT
-	kDvqpcWeaoMnFE5kuZT8WwbEAXRoMtc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-BAnIxituMdOFwTuiTKpHiA-1; Mon,
- 24 Mar 2025 10:45:33 -0400
-X-MC-Unique: BAnIxituMdOFwTuiTKpHiA-1
-X-Mimecast-MFC-AGG-ID: BAnIxituMdOFwTuiTKpHiA_1742827531
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0BF5618001FC;
-	Mon, 24 Mar 2025 14:45:31 +0000 (UTC)
-Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.43.17.192])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35794180A802;
-	Mon, 24 Mar 2025 14:45:25 +0000 (UTC)
-From: Jakub Brnak <jbrnak@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	mpetlan@redhat.com,
-	tglozar@redhat.com,
-	jbrnak@redhat.com,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v3] perf test probe_vfs_getname: Skip if no suitable line detected
-Date: Mon, 24 Mar 2025 15:45:23 +0100
-Message-ID: <20250324144523.597557-1-jbrnak@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yhasYz0H"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39130ee05b0so4245677f8f.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 07:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742827949; x=1743432749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=exBH9+0EKJsJU5vfoNtnKHgSzJ0TgqGbPxyoWRS+XAk=;
+        b=yhasYz0HU4YzW2JGRcXL0JPtLhT6L/NQ/Nv69TiQ2w+v1B3nOqBVb/Ggv9R9k+k7gO
+         vAL8X+p88vofiE4qUv7ktyAlDriw6ecbLueJxXbVj5hxNIBMKEJqGSJPHOlh/F3i2Ka7
+         tEz9o6AbYWqrtdzP2fx2TPRDG/8afvttgtClFRyh5qBV/5mvuTPiDADreoUJHxwwtcUj
+         MSaU7InqTfvE5IcSiYGFZDRRUmartQOUQ6Tol6h4Qbj2pt2MrKFRFxIexPSC19e6K4hu
+         RZAjtfBGWaa0jgc/LmGyQpKObJG4MMUyK+EbXiFL/vt7aVReu2H1xO9SQKyPP9jCEVOQ
+         ZeyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742827949; x=1743432749;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=exBH9+0EKJsJU5vfoNtnKHgSzJ0TgqGbPxyoWRS+XAk=;
+        b=ZLaD5g6rDnzAzqyBhbJ3YCZ0i3GUo8KGCCA9KSPo3nK5Erb4OKSwFcerJR/H20imJK
+         n8xd3LGx7hZt0iBmzh9jN1n/pl+XoPKFu0ymtEAvx3QAU2akp9CKqKbbQ43bAPYHNOpG
+         kVcACL1iH5+yXh+4OGZO6zMAhoahLJstQTycpu6D7FeAHHgmbg8PNfik1sVxjN5oMkPY
+         rE4Vl1BCb3AzkvNY4s7crS+rEEP+BszjQETM7W3vEmCiQd6NNBWeFqLRRKnp/ywuFObY
+         0Bd74D8ucS9JTRnVgW5s7JKplpZcor1FpW7hX7f6qRh9YPQhXe56ia+qnvPBt8cPY8zH
+         w2Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUseVXixtfIToq8OzRCwvT+KYmed0/eR7oYgQHmBrYhwT2U/m/UwJGmX27s3KiC7jAHhArDWcnXCC1YIBoyy1ul@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8jrcCksuvlW68lzpVN5hCHufHCjO1EjYzgAQxXnpRv0VGlKpk
+	OLwQst+vTJtZA5fD83rmlT4TGleOsrkgWMrV2KYgvZah3EDNZtEyOMHE6hY3LBo=
+X-Gm-Gg: ASbGncs0bfil4XmZc/5xRAQK/tlMZ1cYCLNVPy1bd1wEOOSgv0Uon2dfaWJl2OoDYbC
+	v08B6refZFce57F+4AVT+JytDh8VCIVKg3ISPHjU9XnVa4/npNLLvyOxlYua8buwFOV/WWxnH0v
+	r1OXL3VxfWl69o2KhAXetHSdAzbkXkOJSskPKolThjqBQgd4Vo78/vovTmIGDzBcAeFQDexrjJ7
+	6bzAoasa4XnIKbscDotUa1ENIjARUtD6mdBncmynroefcjD3MqsqkRvyfOdm9tfsA8/8zkI+tRX
+	6ycgKyusotMQZnh8/1cwjFv7gwnBf36duu5hwFTeGcSsYGo3LRVwcQ==
+X-Google-Smtp-Source: AGHT+IFTBMeJe4wjjtoaON7OuOYX1jtnqozAP2nBEU07iBzqR9DmsR32rxUII8xRcaN91P8qiaEz3g==
+X-Received: by 2002:a5d:5f96:0:b0:391:fcc:9ee8 with SMTP id ffacd0b85a97d-3997f912529mr11083564f8f.23.1742827948855;
+        Mon, 24 Mar 2025 07:52:28 -0700 (PDT)
+Received: from [192.168.1.247] ([145.224.90.136])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9957c3sm11448421f8f.18.2025.03.24.07.52.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 07:52:28 -0700 (PDT)
+Message-ID: <8450a182-5c62-4546-ab91-5d39eb252254@linaro.org>
+Date: Mon, 24 Mar 2025 14:52:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 7/8] perf: arm_pmuv3: Keep out of guest counter
+ partition
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250213180317.3205285-1-coltonlewis@google.com>
+ <20250213180317.3205285-8-coltonlewis@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250213180317.3205285-8-coltonlewis@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In some cases when calling function add_probe_vfs_getname, line number
-can't be detected by perf probe -L getname_flags:
 
-  78         atomic_set(&result->refcnt, 1);
 
-	     // one of the following lines should have line number
-	     // but sometimes it does not because of optimization
-	     result->uptr = filename;
-             result->aname = NULL;
+On 13/02/2025 6:03 pm, Colton Lewis wrote:
+> If the PMU is partitioned, keep the driver out of the guest counter
+> partition and only use the host counter partition. Partitioning is
+> defined by the MDCR_EL2.HPMN register field and saved in
+> cpu_pmu->hpmn. The range 0..HPMN-1 is accessible by EL1 and EL0 while
+> HPMN..PMCR.N is reserved for EL2.
+> 
+> Define some macros that take HPMN as an argument and construct
+> mutually exclusive bitmaps for testing which partition a particular
+> counter is in. Note that despite their different position in the
+> bitmap, the cycle and instruction counters are always in the guest
+> partition.
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>   arch/arm/include/asm/arm_pmuv3.h |  2 +
+>   arch/arm64/include/asm/kvm_pmu.h |  5 +++
+>   arch/arm64/kvm/pmu-part.c        | 16 +++++++
+>   drivers/perf/arm_pmuv3.c         | 73 +++++++++++++++++++++++++++-----
+>   include/linux/perf/arm_pmuv3.h   |  8 ++++
+>   5 files changed, 94 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
+> index 2ec0e5e83fc9..dadd4ddf51af 100644
+> --- a/arch/arm/include/asm/arm_pmuv3.h
+> +++ b/arch/arm/include/asm/arm_pmuv3.h
+> @@ -227,6 +227,8 @@ static inline bool kvm_set_pmuserenr(u64 val)
+>   }
+>   
+>   static inline void kvm_vcpu_pmu_resync_el0(void) {}
+> +static inline void kvm_pmu_host_counters_enable(void) {}
+> +static inline void kvm_pmu_host_counters_disable(void) {}
+>   
+>   /* PMU Version in DFR Register */
+>   #define ARMV8_PMU_DFR_VER_NI        0
+> diff --git a/arch/arm64/include/asm/kvm_pmu.h b/arch/arm64/include/asm/kvm_pmu.h
+> index 174b7f376d95..8f25754fde47 100644
+> --- a/arch/arm64/include/asm/kvm_pmu.h
+> +++ b/arch/arm64/include/asm/kvm_pmu.h
+> @@ -25,6 +25,8 @@ void kvm_host_pmu_init(struct arm_pmu *pmu);
+>   u8 kvm_pmu_get_reserved_counters(void);
+>   u8 kvm_pmu_hpmn(u8 nr_counters);
+>   void kvm_pmu_partition(struct arm_pmu *pmu);
+> +void kvm_pmu_host_counters_enable(void);
+> +void kvm_pmu_host_counters_disable(void);
+>   
+>   #else
+>   
+> @@ -37,6 +39,9 @@ static inline bool kvm_set_pmuserenr(u64 val)
+>   static inline void kvm_vcpu_pmu_resync_el0(void) {}
+>   static inline void kvm_host_pmu_init(struct arm_pmu *pmu) {}
+>   
+> +static inline void kvm_pmu_host_counters_enable(void) {}
+> +static inline void kvm_pmu_host_counters_disable(void) {}
+> +
+>   #endif
+>   
+>   #endif
+> diff --git a/arch/arm64/kvm/pmu-part.c b/arch/arm64/kvm/pmu-part.c
+> index e74fecc67e37..51da65c678f9 100644
+> --- a/arch/arm64/kvm/pmu-part.c
+> +++ b/arch/arm64/kvm/pmu-part.c
+> @@ -45,3 +45,19 @@ void kvm_pmu_partition(struct arm_pmu *pmu)
+>   		pmu->partitioned = false;
+>   	}
+>   }
+> +
+> +void kvm_pmu_host_counters_enable(void)
+> +{
+> +	u64 mdcr = read_sysreg(mdcr_el2);
+> +
+> +	mdcr |= MDCR_EL2_HPME;
+> +	write_sysreg(mdcr, mdcr_el2);
+> +}
+> +
+> +void kvm_pmu_host_counters_disable(void)
+> +{
+> +	u64 mdcr = read_sysreg(mdcr_el2);
+> +
+> +	mdcr &= ~MDCR_EL2_HPME;
+> +	write_sysreg(mdcr, mdcr_el2);
+> +}
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 0e360feb3432..442dcff56d5b 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -730,15 +730,19 @@ static void armv8pmu_disable_event_irq(struct perf_event *event)
+>   	armv8pmu_disable_intens(BIT(event->hw.idx));
+>   }
+>   
+> -static u64 armv8pmu_getreset_flags(void)
+> +static u64 armv8pmu_getreset_flags(struct arm_pmu *cpu_pmu)
+>   {
+>   	u64 value;
+>   
+>   	/* Read */
+>   	value = read_pmovsclr();
+>   
+> +	if (cpu_pmu->partitioned)
+> +		value &= ARMV8_PMU_HOST_CNT_PART(cpu_pmu->hpmn);
+> +	else
+> +		value &= ARMV8_PMU_OVERFLOWED_MASK;
+> +
+>   	/* Write to clear flags */
+> -	value &= ARMV8_PMU_OVERFLOWED_MASK;
+>   	write_pmovsclr(value);
+>   
+>   	return value;
+> @@ -765,6 +769,18 @@ static void armv8pmu_disable_user_access(void)
+>   	update_pmuserenr(0);
+>   }
+>   
+> +static bool armv8pmu_is_guest_part(struct arm_pmu *cpu_pmu, u8 idx)
+> +{
+> +	return cpu_pmu->partitioned &&
+> +		(BIT(idx) & ARMV8_PMU_GUEST_CNT_PART(cpu_pmu->hpmn));
+> +}
+> +
+> +static bool armv8pmu_is_host_part(struct arm_pmu *cpu_pmu, u8 idx)
+> +{
+> +	return !cpu_pmu->partitioned ||
+> +		(BIT(idx) & ARMV8_PMU_HOST_CNT_PART(cpu_pmu->hpmn));
+> +}
+> +
+>   static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
+>   {
+>   	int i;
+> @@ -773,6 +789,8 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
+>   	if (is_pmuv3p9(cpu_pmu->pmuver)) {
+>   		u64 mask = 0;
+>   		for_each_set_bit(i, cpuc->used_mask, ARMPMU_MAX_HWEVENTS) {
+> +			if (armv8pmu_is_guest_part(cpu_pmu, i))
+> +				continue;
 
-  81         audit_getname(result);
+Hi Colton,
 
-To prevent false failures, skip the affected tests
-if no suitable line numbers can be detected.
+Is it possible to keep the guest bits out of used_mask and cntr_mask in 
+the first place? Then all these loops don't need to have the logic for 
+is_guest_part()/is_host_part().
 
-Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
----
-v3:
-- ensure POSIX compliance
+That leads me to wonder about updating the printout:
 
-v2: 
-https://lore.kernel.org/linux-perf-users/Z9tKat6vvC1XUj0U@google.com/
-- check if return from add_vfs_getname equals to 1
-sice it is only option in case of fail 
+  hw perfevents: enabled with armv8_pmuv3_0 PMU driver, 7 (0,8000003f)
+    counters available
 
-v1:
- https://lore.kernel.org/linux-perf-users/Z8pAep0GJsMFTyEi@google.com/T/#t
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh          | 8 +++++++-
- tools/perf/tests/shell/probe_vfs_getname.sh              | 8 +++++++-
- .../perf/tests/shell/record+script_probe_vfs_getname.sh  | 8 +++++++-
- tools/perf/tests/shell/trace+probe_vfs_getname.sh        | 9 +++++++--
- 4 files changed, 28 insertions(+), 5 deletions(-)
+It might be a bit confusing if that doesn't quite reflect reality anymore.
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 5c33ec7a5a63..89f72a4c818c 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -19,8 +19,14 @@ add_probe_vfs_getname() {
- 			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
- 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
- 		fi
-+
-+		if [ -z "$line" ] ; then
-+			echo "Could not find probeable line"
-+			return 2
-+		fi
-+
- 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-+		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
- 	fi
- }
- 
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index c51a32931af6..0f52654c914a 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -13,7 +13,13 @@ skip_if_no_perf_probe || exit 2
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname $0)"/lib/probe_vfs_getname.sh
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [ $err -eq 1 ] ; then
-+	skip_if_no_debuginfo
-+	err=$?
-+fi
-+
- cleanup_probe_vfs_getname
- exit $err
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index fd5b10d46915..1ad252f0d36e 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -35,8 +35,14 @@ perf_script_filenames() {
- 	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
- }
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [ $err -eq 1 ] ; then
-+        skip_if_no_debuginfo
-+        err=$?
-+fi
-+
- if [ $err -ne 0 ] ; then
- 	exit $err
- fi
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 60fccb62c540..5d5019988d61 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -25,9 +25,14 @@ trace_open_vfs_getname() {
- 	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
- }
- 
--
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [ $err -eq 1 ] ; then
-+        skip_if_no_debuginfo
-+        err=$?
-+fi
-+
- if [ $err -ne 0 ] ; then
- 	exit $err
- fi
--- 
-2.48.1
+Thanks
+James
 
