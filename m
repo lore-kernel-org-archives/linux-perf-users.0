@@ -1,165 +1,268 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7301826E171
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 17:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7D4746E;
+	Mon, 24 Mar 2025 19:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837636; cv=none; b=Zw3YWBQE4l/NuuAU8rMEkR9PCt73rH49TjqI3mzAJZPi0BNY4S8yVnq671UQ9ORinPM7AxuUNAcAXMx11r/5gVRSX5n9bh0zCGQGYosSySHHzoAZew9h07+NH2va3IKEAN6iTY1u6y/96ERaXu7Hblo6bVioLdRzhDKJ4dewYdM=
+	t=1742845689; cv=none; b=KSoqXeNDeHfHG9jyKE3Lh/3SvtVSQkoHvprOKnnhZAd2oyFYZIqikTqD3QkLyrgBxOZj9gqpiaf+UC0OpoJBG0jMk9kRcqhlERb172lbGeX3a6pr7ydJ+nYEhg0zr0L5p4vRVShkn2KEOoy+ncrCVodwvZIngU3pMyrk27ZvGmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837636; c=relaxed/simple;
-	bh=Fzdu3CbhlWwdv5ErNtNQUvoyT6udvNORVBxBG5rpyUw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gp1AjqZ3Mlc+5UIj4mpx3jTahkmHdMTqfKhK3zkxfguVUGGIFTsI4IwjVihkUk5kwggeG4lqRlBk8HsAOes490vh7WkS1ghZvNafzDMzPLkzamp9EHESFb7axilY4hQvvkySg5XM8UgWNeuDTxs0McaFIsDoNafo9hEIibdKWpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0XyQvbI1; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0XyQvbI1"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2264e5b2b7cso69870205ad.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 10:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837634; x=1743442434; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=88C2UbjNetqKIudE+7P6t/BsF0Q2P+IjVPGB7Q/ZhWo=;
-        b=0XyQvbI1xqPbubC9grfv9wVTIfiSKn6Cv4HPN/QlYcOEVHj20FFrced+pBcJIs57jW
-         qM5RNvPwkJQpBrFw587YcjBbkb9N5N4m8K7fg02ocXD7zZqXMDNtj9cp6NzKGvx3WjUr
-         Q//l+Bxtli4E3tLhtubZqN/g7WToDWDk37y95nzMXPBcl3+q7D31sd+qXwx0e520h9e2
-         HYbuI5tWpkje9sPpiUMfslRRgDavvufOSWQfvIBQ+w+ghZ/QsAOYTTLeIQOcJ8LKDQua
-         dL1VzyqC2HLA/Yol00qB687zYIsAht8eWGgucc/B4wR/qLTZROc2J6BNyp3mhpLOgNni
-         2png==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837634; x=1743442434;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=88C2UbjNetqKIudE+7P6t/BsF0Q2P+IjVPGB7Q/ZhWo=;
-        b=NChyGo6UhhMfgp298zqw0oOraOFYx3bjm9Eiz6cCaZaUDDJo151XRcjguxqzaExaB2
-         PP3dFUCgF8WkDaSLJOxJhxNnRGn5hSkhoYBbuHxb47crtA1ZibQvy0Cg2nKPis4SyO4V
-         zKmRlaTuEV3VBsdVeAZJ7h4behH2p7cUJDTqrnjfr10v/v+qWeq0AMPl8mZStHydG/gD
-         f1QwMz30SDUzvS8mwjX1EE1hc/gumdngqDpg3F+um3akIc/a/zEeBm59wZqLgut9ixwQ
-         TwkKZDpu9WVPBVqYSaJK+PhlHtU+RW+z9R6KRQBc1cLJR2AhHTQeYzUO6oHrTmc5QC6U
-         QtmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTTkd2MdSzO8rfLtQZjaZ2x/uv+U3U0WSoK7WAUCjfPwWJqG08ByMNkoKMAPxKuk8eKL4hq49QtWfVcW+aq78P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw1dcejJtd6CkR3HnfjiPKNDknFlLQaNA7WaxfsGWe1V9aVMTR
-	udCpxtcbEWfwSrSzycDlJtTMcqsylYvKV/vZ1WppWZDLknM8szipDFoRfJF8E1pZ8AVIlG3PS2p
-	qxXeBZw==
-X-Google-Smtp-Source: AGHT+IFbsFBFAVlfGnjEPNOWOEliKW5tmQpe2OOWwOf9zNzJ3tQktbRTua3NsLOUyOjEGtnHL9GXrfWkJCng
-X-Received: from plbmg13.prod.google.com ([2002:a17:903:348d:b0:220:efca:379c])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c40a:b0:223:fabd:4f99
- with SMTP id d9443c01a7336-22780c529ffmr247929475ad.5.1742837633604; Mon, 24
- Mar 2025 10:33:53 -0700 (PDT)
-Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:31:18 +0000
-In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
+	s=arc-20240116; t=1742845689; c=relaxed/simple;
+	bh=E56yXudRMn4CnBQsOnMzIwpbSLLijU+XGcqTLunaYcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5nfa8+fUvNC8SfPnUoTgV2KMqwvtx9lLF/HJ7uqA+/i843AQ1QPaOKIFpuiglbkXz2Gb1LDfXTZCdqOuZXSBOY1PBdZpFOuaSNz4HAayYu0NdFd5i1fBjVTcQ2c15NpJCgdGiGe5WqbhsPAPvlyyaZhy6Onzbt/W/3WNEXnbEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FCAD16F3;
+	Mon, 24 Mar 2025 12:48:11 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B31D3F694;
+	Mon, 24 Mar 2025 12:48:04 -0700 (PDT)
+Date: Mon, 24 Mar 2025 19:47:58 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: mingo@kernel.org, peterz@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, Mark.Rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] events/core: fix acoount failure for event's
+ child_total_enable_time at task exit
+Message-ID: <20250324194758.GB604566@e132581.arm.com>
+References: <20250306123350.1650114-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-39-mizhang@google.com>
-Subject: [PATCH v4 38/38] KVM: Selftests: Fix pmu_counters_test error for
- mediated vPMU
-From: Mingwei Zhang <mizhang@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306123350.1650114-1-yeoreum.yun@arm.com>
 
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Hi Levi,
 
-As previous patch commit 'f8905c638eb7 ("KVM: x86/pmu: Check PMU cpuid
-configuration from user space")', KVM would check if user space configured
-pmu version is larger than KVM supported maximum pmu version for
-mediated vPMU, or if fixed counter bitmap is configured incorrectly,
-if so, KVM would return an error.
+I tested this patch and it works for me.
 
-This enhanced check would lead to pmu_counters_test fails, thus limit
-pmu_counters_test only validate KVM supported pmu versions for mediated
-vPMU and only validate 0 fixed counter bitmap if pmu version is less than
-5.
+I would suggestion to improve a bit commit log for easier understanding.
+And a minor comment for the code, otherwise, LGTM.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
----
- .../selftests/kvm/include/x86/processor.h     |  8 ++++++++
- .../selftests/kvm/x86/pmu_counters_test.c     | 20 ++++++++++++++++---
- 2 files changed, 25 insertions(+), 3 deletions(-)
+On Thu, Mar 06, 2025 at 12:33:50PM +0000, Yeoreum Yun wrote:
+> The perf core code fails to account for total_enable_time of event
+> when its state is inactive.
+> 
+> Here is the error case for failure to account for total_enable_time for
+> core event:
 
-diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
-index d60da8966772..7db34f48427a 100644
---- a/tools/testing/selftests/kvm/include/x86/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86/processor.h
-@@ -1311,6 +1311,14 @@ static inline bool kvm_is_pmu_enabled(void)
- 	return get_kvm_param_bool("enable_pmu");
- }
- 
-+static inline bool kvm_is_mediated_pmu_enabled(void)
-+{
-+	if (host_cpu_is_intel)
-+		return get_kvm_intel_param_bool("enable_mediated_pmu");
-+	else
-+		return get_kvm_amd_param_bool("enable_mediated_pmu");
-+}
-+
- static inline bool kvm_is_forced_emulation_enabled(void)
- {
- 	return !!get_kvm_param_integer("force_emulation_prefix");
-diff --git a/tools/testing/selftests/kvm/x86/pmu_counters_test.c b/tools/testing/selftests/kvm/x86/pmu_counters_test.c
-index 441c66f314fb..4745f82ce860 100644
---- a/tools/testing/selftests/kvm/x86/pmu_counters_test.c
-+++ b/tools/testing/selftests/kvm/x86/pmu_counters_test.c
-@@ -564,8 +564,14 @@ static void test_intel_counters(void)
- 	 * Test up to PMU v5, which is the current maximum version defined by
- 	 * Intel, i.e. is the last version that is guaranteed to be backwards
- 	 * compatible with KVM's existing behavior.
-+	 *
-+	 * Whereas for mediated vPMU, limit max_pmu_version to KVM supported
-+	 * maximum pmu version since KVM rejects PMU versions larger than KVM
-+	 * supported maximum PMU version to avoid guest to manipulate unsupported
-+	 * or unallowed PMU MSRs directly.
- 	 */
--	uint8_t max_pmu_version = max_t(typeof(pmu_version), pmu_version, 5);
-+	uint8_t max_pmu_version = kvm_is_mediated_pmu_enabled() ?
-+				  pmu_version : max_t(typeof(pmu_version), pmu_version, 5);
- 
- 	/*
- 	 * Detect the existence of events that aren't supported by selftests.
-@@ -622,8 +628,16 @@ static void test_intel_counters(void)
- 			pr_info("Testing fixed counters, PMU version %u, perf_caps = %lx\n",
- 				v, perf_caps[i]);
- 			for (j = 0; j <= nr_fixed_counters; j++) {
--				for (k = 0; k <= (BIT(nr_fixed_counters) - 1); k++)
--					test_fixed_counters(v, perf_caps[i], j, k);
-+				/*
-+				 * pmu version less than 5 doesn't support fixed counter
-+				 * bitmap, so only set fixed counter bitamp to 0.
-+				 */
-+				if (v < 5) {
-+					test_fixed_counters(v, perf_caps[i], j, 0);
-+				} else {
-+					for (k = 0; k <= (BIT(nr_fixed_counters) - 1); k++)
-+						test_fixed_counters(v, perf_caps[i], j, k);
-+				}
- 			}
- 		}
- 	}
--- 
-2.49.0.395.g12beb8f557-goog
+Here is a failure case for accouting total_enable_time for CPU PMU
+events:
 
+> sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
+> ...
+> 
+> /*
+>  * three number represetns each
+>  *   scaled count / total_enable_time / total_total_running_time
+>  */
+> armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
+>                                       ^^^^^^^^^^
+> armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
+>                                       ^^^^^^^^^^
+
+You could use below syntax like:
+
+  armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
+  armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
+                              `          `          `> child_total_time_running
+                               `          `> child_total_time_enabled
+                                `> child_count
+> 
+>  Performance counter stats for 'stress-ng --pthread=2 -t 2s':
+> 
+>      1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
+>      1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
+> 
+> Since above two events are belong to the same task context and
+> mutually-exclusive per cpu (they couldn't be active at the same time on the same cpu),
+> the total_enable_time should be the same (marked with ^^^^^^^^^^^)
+> and the summation of ratio should be 100%.
+
+The two events above are opened on two different CPU PMUs, for example,
+each event is opened for a cluster in an Arm big.LITTLE system, they
+will never run on the same CPU.  In theory, the total enabled time should
+be same for both events, as two events are opened and closed together.
+
+> This account failure of total_enable_time because of
+> account failure of child_total_enable_time of child event when
+> child task exit.
+
+As the result show, the two events' child total enabled time are
+different (2289429840 vs 1950025700).  This is because child events
+are not accounted properly if a event is INACTIVE state when the
+task exits.
+
+> Below table explains how the child_total_enable_time is failed to account at
+> exiting child task which switch cpus as time passes by (CPU0 -> CPU1 -> CPU0)
+> 
+>  - in means sched_in.
+>  - out means sched_out.
+>  - exit means at the exit of child task.
+>    NOTE: the value is before calling list_del_event(). which mean
+>          the value at exit column will be added at parent event's
+>           child_total_enable_time when child task exit.
+>  - ctx is the child_task_ctx,
+>  - e0 is the child_event which set with cpu == -1 and opened with pmu0 only
+>    added in CPU0,
+>  - e1 is the child_event which set with cpu == -1 and opened with pmu1 only
+>    added in CPU1,
+>  - e0 and e1 belongs to same child_task_ctx.
+> 
+>           CPU0 (run t1)        CPU1 (run t2)          CPU0 (run t3)
+>           |  in | out |       | in  | out     |       | in      | exit        |
+> ------------------------------------------------------------------------------
+> ctx->time |  0  | t1  |       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2 + t3|
+> ------------------------------------------------------------------------------
+> e0->ena   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t2 + t3|
+> ------------------------------------------------------------------------------
+> e0->run   |  0  | t1  |       | t1  | t1     *|       | t1      | t1 + t3     |
+> ------------------------------------------------------------------------------
+> e1->ena   |  0  | 0  *|       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2    X|
+> ------------------------------------------------------------------------------
+> e1->run   |  0  | 0  *|       | 0   | t2      |       | t2      | t2         X|
+> ------------------------------------------------------------------------------
+> 
+> The value marked with * means it doesn't updates since event->state was
+> INACTIVE.
+> 
+> Please see the last CPU0's column with exit (marked with X).
+> Since e1's state is INACTIVE its total_enable_time doesn't update
+> and it remains with former value without accounting t3 time.
+> 
+> In this situation, at __perf_remove_from_context() while exit child_task,
+> sync_child_event() where adds child_event's total_enable_time to
+> parent event's child_total_enable_time in perf_child_detach() is called
+> before list_del_event() in which event time is updated by setting
+> the event state as OFF.
+
+In this case, the call sequence is:
+
+  perf_event_exit_event()
+    `> perf_remove_from_context()
+         `> __perf_remove_from_context()
+              `> perf_child_detach()   -> Accumulate child_total_time_enabled
+              `> list_del_event()      -> Update child event's time
+
+The problem is the time accumulation happens prior to child event's time
+updating.  Thus, it misses to account the last period's time when event
+exits.
+
+> That means child_total_enable_time is added with missing
+> amount of last enable time -- t3.
+> 
+> In case of parent event's total_enable_time is updated properly in
+> list_del_event() when the task exit.
+> However, the child_total_enable_time is missed when child_task exited,
+> the perf prints error amount of enable_time (which is summation of
+> total_enable_time + child_total_enable_time).
+> 
+> To address this, update event state via perf_event_state() in
+> __perf_remove_from_context() and call it before perf_child_detach()
+> where parent's total_enable_time is updated.
+> 
+
+The perf core layer follows the rule that timekeeping is tied to state
+change.  To address the issue, invokes perf_event_state() for updating
+state alongside with accouting the time.  Then, perf_child_detach()
+populates the time into parent's time metrics.
+
+> After this patch, this problem is gone like:
+> 
+> sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
+> ...
+> armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
+> armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
+> 
+>  Performance counter stats for 'stress-ng --pthread=2 -t 10s':
+> 
+>     15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
+>     22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
+> 
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> Suggsted-by: Peter Zijlstra <peterz@infradead.org>
+
+/Suggsted-by/Suggested-by/
+
+> ---
+>  kernel/events/core.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 6364319e2f88..058533a50493 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2407,6 +2407,7 @@ ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
+>  #define DETACH_GROUP	0x01UL
+>  #define DETACH_CHILD	0x02UL
+>  #define DETACH_DEAD	0x04UL
+> +#define DETACH_EXIT	0x08UL
+> 
+>  /*
+>   * Cross CPU call to remove a performance event
+> @@ -2421,6 +2422,7 @@ __perf_remove_from_context(struct perf_event *event,
+>  			   void *info)
+>  {
+>  	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
+> +	enum perf_event_state state = PERF_EVENT_STATE_OFF;
+>  	unsigned long flags = (unsigned long)info;
+> 
+>  	ctx_time_update(cpuctx, ctx);
+> @@ -2429,16 +2431,19 @@ __perf_remove_from_context(struct perf_event *event,
+>  	 * Ensure event_sched_out() switches to OFF, at the very least
+>  	 * this avoids raising perf_pending_task() at this time.
+>  	 */
+> -	if (flags & DETACH_DEAD)
+> +	if (flags & DETACH_EXIT)
+> +		state = PERF_EVENT_STATE_EXIT;
+> +	if (flags & DETACH_DEAD) {
+>  		event->pending_disable = 1;
+> +		state = PERF_EVENT_STATE_DEAD;
+> +	}
+>  	event_sched_out(event, ctx);
+> +	perf_event_set_state(event, min(event->state, state));
+
+Nitpick: can we move perf_event_set_state() before event_sched_out()?
+
+So the function handles the state machine ahead, then proceed for
+other operations.
+
+Thanks,
+Leo
+
+>  	if (flags & DETACH_GROUP)
+>  		perf_group_detach(event);
+>  	if (flags & DETACH_CHILD)
+>  		perf_child_detach(event);
+>  	list_del_event(event, ctx);
+> -	if (flags & DETACH_DEAD)
+> -		event->state = PERF_EVENT_STATE_DEAD;
+> 
+>  	if (!pmu_ctx->nr_events) {
+>  		pmu_ctx->rotate_necessary = 0;
+> @@ -13424,12 +13429,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+>  		mutex_lock(&parent_event->child_mutex);
+>  	}
+> 
+> -	perf_remove_from_context(event, detach_flags);
+> -
+> -	raw_spin_lock_irq(&ctx->lock);
+> -	if (event->state > PERF_EVENT_STATE_EXIT)
+> -		perf_event_set_state(event, PERF_EVENT_STATE_EXIT);
+> -	raw_spin_unlock_irq(&ctx->lock);
+> +	perf_remove_from_context(event, detach_flags | DETACH_EXIT);
+> 
+>  	/*
+>  	 * Child events can be freed.
+> --
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> 
