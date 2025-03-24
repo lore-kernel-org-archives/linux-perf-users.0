@@ -1,165 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F7526280C;
-	Mon, 24 Mar 2025 16:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AB6261596
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 17:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742835509; cv=none; b=X+3Gnc8FXMFGOu1Zo11OEJHFbp4ZebQyBmZ64TQ1qd1uHlwUxO+pr63Y7z8hN21LzWsuLn/TR6zNbywSWj8anwKB+69Sd0Kbw7QWCswq2Q5YJ0UPqrlDsLtB1GAhPeUkPtoDyk1vM0KFLar8cMliHoQsGWA6GAAWS/V8cxa5xN0=
+	t=1742837575; cv=none; b=GjkGUSekViP7fXtRCRuyqr/WhVTFCfI0kDrUs9phYVtpMta7qckkzPDOx1lFI3ygZNTGgaE5CYBehLX5X4Ak517zV2Lpm/i1ASw/+iN4kmLQiENkmcWZ6QQdCuSxfbOhKEgRHDFQbxSBuLYqJNti/CmzufdCOswU82a2CnjpjV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742835509; c=relaxed/simple;
-	bh=0GCORFHkVl27DtJY6Jv2rIfJjLLMApRij6IOFjOqViE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bx2VJFH3u6/OOifEVdb7+9+wYY3Jn0I0j9e1d2S+DQe3irYBcUwHdku+rPS09AsvUf2XTKOAc0mHJ/yqLA1Ssa6bJMSfj05sAcStZ2wX2H2BDXv/7dfyuQtdM5l5LGvkjJr7AHT1Xl3meQeDDCOOoH3ZT1OK0RwKWLD62sAyhtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRfGRLdp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742837575; c=relaxed/simple;
+	bh=ns6IVR+9eS1Ct7L+hYF/H0j1VWw1/j+2M8bSahnNIo0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fbQj/q10RJJZ13N1nKFKUgiaAYhmBqi9yOJpFrctakSiSYTAGFx6aRZCmIrDhlNdmBrmDDAsfwdRI16kq/ECi6h+X7W+p97QAesyFSmTpL3IPTNhZmI8k3N1IdZHoGOJ2gCuoaU+ZJ7K+jUHwLN65Cvr2UUuTMzHm/4TPScXpgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IHbEn9wx; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRfGRLdp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB86FC4CEDD;
-	Mon, 24 Mar 2025 16:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742835509;
-	bh=0GCORFHkVl27DtJY6Jv2rIfJjLLMApRij6IOFjOqViE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VRfGRLdpyFsAKuU4ileaRuVt0Ly46qv9vql6J0mJShYM799VhYF4d3McqNDTXh6Ke
-	 PwA6RmO5UZQt4a+juKSBNq7vS6+RicEyLEV+YqTY5jS4dRKjNlPu5QE7HlUeLCd7Yl
-	 0bdcSGAoaS1rFJ/AzaC/QwKtZ7erMrxBjwocXNfAEDgMDlgX/4ZRjxlX1W8lKnVoB5
-	 8o33Bv835TVkSxODQwSzZkFlCtOyWJQHubfiHgjmrWhcehEpi+lAjayF7xtQuSXwdw
-	 V/Q+xA93BtJrXpIW7CVmndWwj8HEeJbjMCEhnrkn0Gj8I9IZ4K3YRP30DPKXJjABxP
-	 o7ID4uR5CI/Zw==
-Date: Mon, 24 Mar 2025 09:58:23 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	acme@kernel.org, james.clark@linaro.org, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf trace: Fix wrong size to bpf_map__update_elem call
-Message-ID: <Z-GPLzaCxboJXAkT@google.com>
-References: <20250324152756.3879571-1-tmricht@linux.ibm.com>
- <CAP-5=fXPgoocDSRxzYpkzcLsPwKsp9b80b1KPDWv-obkmiX-fA@mail.gmail.com>
- <CAP-5=fU+9EQKT2fOuBQ5ds6s4Bh6rWrvco1ow6B-CQ92XuO1kQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IHbEn9wx"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff799be8f5so8222062a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 10:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742837571; x=1743442371; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JfMLH3rqgleI/aBZTARPJu5z53tR8J9ShVcEnY7ciB4=;
+        b=IHbEn9wxtHYYyNrU5sinD9c546/hY+hfOYBlXJFwHW68nifrlW5SwuLO8oENutyiha
+         QLpx2n3jU7fIwpKQup384plT/C/0ENtmgOp3V8VSQTV4thQji7eh1RMcDp5gyRzIQhvv
+         T9TmNglJFsBPJZbwBquR+krxv1usUD5OEhYhJBwmyBVzteDzkmC3PAFOAG8ROzJQmyNX
+         riSq67NAsUlfI+hDNR0jKvwIdWC+4HKkJX3wlgVPusXo+JH/gpuiVO3r0OD0GO7U5/9r
+         vlcnXlmI+f1azEtKIX1UO+Db3ydkl207KpNLh0RrcyjG6njziXpz0PTYWpzlE+2PggdV
+         hqXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742837571; x=1743442371;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JfMLH3rqgleI/aBZTARPJu5z53tR8J9ShVcEnY7ciB4=;
+        b=RBAt7Q7fgbx3YJvXXWIP9o4tCELspW7MnW0hUiMmon0QwVBdvbJqt0IvjkUIyp371m
+         /sYxMlcB/AWAZqPEjjLx1ESf6evGR91YBqVqqv42r0jWWnhd35uR4bILx/XrjtTXgjpj
+         SjY7xNheyP0o3OU/bwpk34gkCHHiG8xRFpv4cUIH5sBKFg/zq4uYOi38oo0XHszmUl8t
+         IUCcvsJ5ewrD6UEeEDXYul1drEFTdiN86lu89nNmIrfDlCGiCQQU7Bq/yEcZsgk88ynz
+         EbOC3LXzE15lPAJfc/CIZLWIzJLllVhARgRv47hV510twAlxnWN4PLVURA2/rYw1MwT9
+         mBQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSRsCYRpeJtNu/kfjAI5DdRP9grwZA5vLS3cGaiwZAGGUbiSNOWA8EyADABhX1ZJ8whu2ArpyIu6MYMy1IA2iH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyuozqAJW/QP0VXdkm94sSHDaUVUkPZbdnKBtZhbrR35cshEom
+	6G7eXqQ09Jg0hTJVWKrzpw7WFyV9cR/F8e6pKfZUzTv8jHsS3oSfiB996nl4TYRrAqK8t1HKoqx
+	0/4gGrg==
+X-Google-Smtp-Source: AGHT+IEn90T9acZBPXafH0WAWPaP+EENE+9xcIlkfTKHALEEiO8S7Jq+19E4fERk3XoFCcctM65dSpY6ReuU
+X-Received: from pgbcr9.prod.google.com ([2002:a05:6a02:4109:b0:af2:5c9b:c55d])
+ (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:1707:b0:1f5:889c:3cdb
+ with SMTP id adf61e73a8af0-1fe42f2a1fbmr24139144637.8.1742837571368; Mon, 24
+ Mar 2025 10:32:51 -0700 (PDT)
+Reply-To: Mingwei Zhang <mizhang@google.com>
+Date: Mon, 24 Mar 2025 17:30:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU+9EQKT2fOuBQ5ds6s4Bh6rWrvco1ow6B-CQ92XuO1kQ@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250324173121.1275209-1-mizhang@google.com>
+Subject: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+From: Mingwei Zhang <mizhang@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+With joint effort from the upstream KVM community, we come up with the
+4th version of mediated vPMU for x86. We have made the following changes
+on top of the previous RFC v3.
 
-On Mon, Mar 24, 2025 at 08:50:36AM -0700, Ian Rogers wrote:
-> On Mon, Mar 24, 2025 at 8:38 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Mar 24, 2025 at 8:28 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > >
-> > > In linux-next
-> > > commit c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
-> > > causes the perf tests 100 126 to fail on s390:
-> > >
-> > > Output before:
-> > >  # ./perf test 100
-> > >  100: perf trace BTF general tests         : FAILED!
-> > >  #
-> > >
-> > > The root cause is the change from int to int16_t for the
-> > > cpu maps. The size of the CPU key value pair changes from
-> > > four bytes to two bytes. However a two byte key size is
-> > > not supported for bpf_map__update_elem().
-> >
-> > Nice catch!
-> >
-> > > Note: validate_map_op() in libbpf.c emits warning
-> > >  libbpf: map '__augmented_syscalls__': \
-> > >          unexpected key size 2 provided, expected 4
-> > > when key size is set to int16_t.
-> >
-> > Wow, weird.
-> 
-> Ah, I guess it is a mismatch with the declaration in
-> tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c?h=perf-tools-next#n31
-> ```
-> /* bpf-output associated map */
-> struct __augmented_syscalls__ {
->        __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
->        __type(key, int);
->        __type(value, __u32);
->        __uint(max_entries, MAX_CPUS);
-> } __augmented_syscalls__ SEC(".maps");
-> ```
-> but this looks wrong. The values are file descriptors, so should be
-> ints. I think it should be:
-> ```
-> struct __augmented_syscalls__ {
->        __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
->        __type(key, int16_t);
->        __type(value, int);
->        __uint(max_entries, MAX_CPUS);
-> } __augmented_syscalls__ SEC(".maps");
-> ```
-> I'm not sure if max_entries can be a uint16_t too. I suspect this may
-> well interfere with BPF_MAP_TYPE_PERF_EVENT_ARRAY and its use by
-> bpf_perf_event_output. Probably best to keep things in the BPF code as
-> they are and do your builtin-trace.c fix. Perhaps someone else can
-> clean this up.
+v3 -> v4
+ - Rebase whole patchset on 6.14-rc3 base.
+ - Address Peter's comments on Perf part.
+ - Address Sean's comments on KVM part.
+   * Change key word "passthrough" to "mediated" in all patches
+   * Change static enabling to user space dynamic enabling via KVM_CAP_PMU_CAPABILITY.
+   * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+     save/retore list support for GLOBAL_CTRL, thus the support of mediated
+     vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+   * Merge some small changes into a single patch.
+ - Address Sandipan's comment on invalid pmu pointer.
+ - Add back "eventsel_hw" and "fixed_ctr_ctrl_hw" to avoid to directly
+   manipulate pmc->eventsel and pmu->fixed_ctr_ctrl.
 
-I don't think max_entries can be uint16_t.  Also I'm skeptical to change
-the key type to int16_t as you said.  I'll pick Thomas's patch up.
 
-Thanks,
-Namhyung
+Testing (Intel side):
+ - Perf-based legacy vPMU (force emulation on/off)
+   * Kselftests pmu_counters_test, pmu_event_filter_test and
+     vmx_pmu_caps_test pass.
+   * KUT PMU tests pmu, pmu_lbr, pmu_pebs pass.
+   * Basic perf counting/sampling tests in 3 scenarios, guest-only,
+     host-only and host-guest coexistence all pass.
 
-> 
-> > > Therefore change to variable size back to 4 bytes for
-> > > invocation of bpf_map__update_elem().
-> > >
-> > > Output after:
-> > >  # ./perf test 100
-> > >  100: perf trace BTF general tests         : Ok
-> > >  #
-> > >
-> > > Fixes: c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
-> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > Cc: Ian Rogers <irogers@google.com>
-> > > Cc: James Clark <james.clark@linaro.org>
-> > > ---
-> > >  tools/perf/builtin-trace.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > > index 092c5f6404ba..464c97a11852 100644
-> > > --- a/tools/perf/builtin-trace.c
-> > > +++ b/tools/perf/builtin-trace.c
-> > > @@ -4375,10 +4375,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
-> > >                  * CPU the bpf-output event's file descriptor.
-> > >                  */
-> > >                 perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
-> > > +                       int mycpu = cpu.cpu;
-> > > +
-> > >                         bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
-> > > -                                       &cpu.cpu, sizeof(int),
-> > > +                                       &mycpu, sizeof(int),
-> >
-> > nit: It is usually preferred to do "sizeof(mycpu)" to avoid the
-> > problems like the one this fix is fixing. And I'm blamed for the bad
-> > code in:
-> > 5e6da6be3082 perf trace: Migrate BPF augmentation to use a skeleton
-> >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> >
-> > Thanks for the fixes!
-> > Ian
-> >
-> > >                                         xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
-> > > -                                                      cpu.cpu, 0),
-> > > +                                                      mycpu, 0),
-> > >                                         sizeof(__u32), BPF_ANY);
-> > >                 }
-> > >         }
-> > > --
-> > > 2.48.1
-> > >
+ - Mediated vPMU (force emulation on/off)
+   * Kselftests pmu_counters_test, pmu_event_filter_test and
+     vmx_pmu_caps_test pass.
+   * KUT PMU tests pmu, pmu_lbr, pmu_pebs pass.
+   * Basic perf counting/sampling tests in 3 scenarios, guest-only,
+     host-only and host-guest coexistence all pass.
+
+ - Failures. All above tests passed on Intel Granite Rapids as well
+   except a failure on KUT/pmu_pebs.
+   * GP counter 0 (0xfffffffffffe): PEBS record (written seq 0)
+     is verified (including size, counters and cfg).
+   * The pebs_data_cfg (0xb500000000) doesn't match with the
+     effective MSR_PEBS_DATA_CFG (0x0).
+   * This failure has nothing to do with this mediated vPMU patch set. The
+     failure is caused by Granite Rapids supported timed PEBS which needs
+     extra support on Qemu and KUT/pmu_pebs. These extra support would be
+     sent in separate patches later.
+
+
+Testing (AMD side):
+ - Kselftests pmu_counters_test, pmu_event_filter_test and
+   vmx_pmu_caps_test all pass
+
+ - legacy guest with KUT/pmu:
+   * qmeu option: -cpu host, -perfctr-core
+   * when set force_emulation_prefix=1, passes
+   * when set force_emulation_prefix=0, passes
+ - perfmon-v1 guest with KUT/pmu:
+   * qmeu option: -cpu host, -perfmon-v2
+   * when set force_emulation_prefix=1, passes
+   * when set force_emulation_prefix=0, passes
+ - perfmon-v2 guest with KUT/pmu:
+   * qmeu option: -cpu host
+   * when set force_emulation_prefix=1, passes
+   * when set force_emulation_prefix=0, passes
+
+ - perf_fuzzer (perfmon-v2):
+   * fails with soft lockup in guest in current version.
+   * culprit could be between 6.13 ~ 6.14-rc3 within KVM
+   * Series tested on 6.12 and 6.13 without issue.
+
+Note: a QEMU series is needed to run mediated vPMU v4:
+ - https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel.com/
+
+History:
+ - RFC v3: https://lore.kernel.org/all/20240801045907.4010984-1-mizhang@google.com/
+ - RFC v2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com/
+ - RFC v1: https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com/
+
+
+Dapeng Mi (18):
+  KVM: x86/pmu: Introduce enable_mediated_pmu global parameter
+  KVM: x86/pmu: Check PMU cpuid configuration from user space
+  KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+  KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
+  KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+  KVM: VMX: Add macros to wrap around
+    {secondary,tertiary}_exec_controls_changebit()
+  KVM: x86/pmu: Check if mediated vPMU can intercept rdpmc
+  KVM: x86/pmu/vmx: Save/load guest IA32_PERF_GLOBAL_CTRL with
+    vm_exit/entry_ctrl
+  KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
+  KVM: x86/pmu: Setup PMU MSRs' interception mode
+  KVM: x86/pmu: Handle PMU MSRs interception and event filtering
+  KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
+  KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+  KVM: nVMX: Add macros to simplify nested MSR interception setting
+  KVM: selftests: Add mediated vPMU supported for pmu tests
+  KVM: Selftests: Support mediated vPMU for vmx_pmu_caps_test
+  KVM: Selftests: Fix pmu_counters_test error for mediated vPMU
+  KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
+
+Kan Liang (8):
+  perf: Support get/put mediated PMU interfaces
+  perf: Skip pmu_ctx based on event_type
+  perf: Clean up perf ctx time
+  perf: Add a EVENT_GUEST flag
+  perf: Add generic exclude_guest support
+  perf: Add switch_guest_ctx() interface
+  perf/x86: Support switch_guest_ctx interface
+  perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
+
+Mingwei Zhang (5):
+  perf/x86: Forbid PMI handler when guest own PMU
+  perf/x86/core: Plumb mediated PMU capability from x86_pmu to
+    x86_pmu_cap
+  KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+  KVM: x86/pmu: introduce eventsel_hw to prepare for pmu event filtering
+  KVM: nVMX: Add nested virtualization support for mediated PMU
+
+Sandipan Das (4):
+  perf/x86/core: Do not set bit width for unavailable counters
+  KVM: x86/pmu: Add AMD PMU registers to direct access list
+  KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
+    write to event selectors
+  perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
+
+Xiong Zhang (3):
+  x86/irq: Factor out common code for installing kvm irq handler
+  perf: core/x86: Register a new vector for KVM GUEST PMI
+  KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
+
+ arch/x86/events/amd/core.c                    |   2 +
+ arch/x86/events/core.c                        |  40 +-
+ arch/x86/events/intel/core.c                  |   5 +
+ arch/x86/include/asm/hardirq.h                |   1 +
+ arch/x86/include/asm/idtentry.h               |   1 +
+ arch/x86/include/asm/irq.h                    |   2 +-
+ arch/x86/include/asm/irq_vectors.h            |   5 +-
+ arch/x86/include/asm/kvm-x86-pmu-ops.h        |   2 +
+ arch/x86/include/asm/kvm_host.h               |  10 +
+ arch/x86/include/asm/msr-index.h              |  18 +-
+ arch/x86/include/asm/perf_event.h             |   1 +
+ arch/x86/include/asm/vmx.h                    |   1 +
+ arch/x86/kernel/idt.c                         |   1 +
+ arch/x86/kernel/irq.c                         |  39 +-
+ arch/x86/kvm/cpuid.c                          |  15 +
+ arch/x86/kvm/pmu.c                            | 254 ++++++++-
+ arch/x86/kvm/pmu.h                            |  45 ++
+ arch/x86/kvm/svm/pmu.c                        | 148 ++++-
+ arch/x86/kvm/svm/svm.c                        |  26 +
+ arch/x86/kvm/svm/svm.h                        |   2 +-
+ arch/x86/kvm/vmx/capabilities.h               |  11 +-
+ arch/x86/kvm/vmx/nested.c                     |  68 ++-
+ arch/x86/kvm/vmx/pmu_intel.c                  | 224 ++++++--
+ arch/x86/kvm/vmx/vmx.c                        |  89 +--
+ arch/x86/kvm/vmx/vmx.h                        |  11 +-
+ arch/x86/kvm/x86.c                            |  63 ++-
+ arch/x86/kvm/x86.h                            |   2 +
+ include/linux/perf_event.h                    |  47 +-
+ kernel/events/core.c                          | 519 ++++++++++++++----
+ .../beauty/arch/x86/include/asm/irq_vectors.h |   5 +-
+ .../selftests/kvm/include/kvm_test_harness.h  |  13 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   3 +
+ .../selftests/kvm/include/x86/processor.h     |   8 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  23 +
+ .../selftests/kvm/x86/pmu_counters_test.c     |  24 +-
+ .../selftests/kvm/x86/pmu_event_filter_test.c |   8 +-
+ .../selftests/kvm/x86/vmx_pmu_caps_test.c     |   2 +-
+ 37 files changed, 1480 insertions(+), 258 deletions(-)
+
+
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+-- 
+2.49.0.395.g12beb8f557-goog
+
