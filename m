@@ -1,210 +1,188 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CCF25E808
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 12:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33992628C
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 14:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742818893; cv=none; b=ufI9YkitDaGmJTJL36b9/BZhARrZEEVxZWaoj+/LRFfNsG1+LqZlYVjbSEeq74lUlHzD4ALe2BGWwPrhclcz20o8v/XDaXtBb3UX+AcIQBFYKbVSGNJnhRMUk9DLhF62fVhcttFzw1OvaW56g/lVJAdIA4FONAhdbZppVPddGl0=
+	t=1742827541; cv=none; b=Hk0lEf1GRUSIU82KzZ1HOSDdQol5eruTJSh7OLhq1cf4D81lx4/ihg2tIMa3c17oCf4GTb4L1j1JdFpHTq8t1v8Pr69Q6gROcIvHYfR8j0880RD1WNWDh6cUvwo/xGUdzkl2e0fwFoHJuDvdln6y4OFSI46ct+F0416nz6L43Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742818893; c=relaxed/simple;
-	bh=XfSzOEXbICbXQzEAg1uZwrEUv9wXqfSx7h4bZuVb4gc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UJOwOq5ZSvdWoL9j8RLUQYtJLYa3ktThqkmhbFJuQd61yFT1Tgq3MhaDkWtY0D6g+AP5Yzc0nFzQNhl3tsgadKTv0phFM3TLFssDObGoIQOmRPgQLHDR5ZF1u+gx8rNVIDKXH/tDnWuw5vwwtUKKE3Nm1nBQXch9xvB8O1XRdk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TY/KIMlg; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742827541; c=relaxed/simple;
+	bh=M1hWD/oSou+r5X9ScN+rHnKhewbykMu1plQom+IBOPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKyq5osu67faVfnk07f83WniCf8t8mepA9JxLuHHpHQB70B8M21KdoIVT3pgi4ZbeKDz3qnrEfC45QPaYl2UfHGt37b5XzzARJxQzHrAAqZ/A4/OUBe0lrsTVEvwx+Q28X8QMjAHK/PjYLImy2IM6PkgofDeg7l2oJGYp/T7X9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQ5YVIIS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TY/KIMlg"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O3jqLd013503;
-	Mon, 24 Mar 2025 12:21:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=tKK4zF
-	NmSkotRsLjuamNDkRJDfPiuLV/EgikorDCUjE=; b=TY/KIMlg1GOE/AyU9TMNTJ
-	5hea6QwYj8HhwUsYRiQbm4aj44RJ6L7HnHbKElzRhJDYyLhf22JjNvX21cLysX/c
-	f6eugF/nHIknF7PxzR6ysUiX6AoWYBq0dnirlZF5Rociz/GYvz9AD6Gz2Yi2G+XS
-	nxLZibyAA3jc4UIBs2JjhhzM49Hgu+TQJoJzI8Nu/z+PhFqwCf+c8RmDiT53HuaG
-	FeCaIusBBw98I5zlAKUsc/8KkFg5e1uqt4+HVepB7v+VoFlGh2XUx4kMp35Aq/vw
-	QDjXihrtiKH7V62XMo3TWiA+XRWhP5ESgglekwrZHmw8bw93NiuyDQSfKm+H+1BA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jys92acx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 12:21:24 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52OCDiXH004835;
-	Mon, 24 Mar 2025 12:21:24 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jys92acu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 12:21:24 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52OCGYDQ020101;
-	Mon, 24 Mar 2025 12:21:23 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45j8hnp4wk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 12:21:23 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52OCLLrY29164210
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Mar 2025 12:21:21 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D71A25805F;
-	Mon, 24 Mar 2025 12:21:21 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DDED758060;
-	Mon, 24 Mar 2025 12:21:18 +0000 (GMT)
-Received: from [9.61.251.240] (unknown [9.61.251.240])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 24 Mar 2025 12:21:18 +0000 (GMT)
-Message-ID: <37a5a63f-9a75-4196-bf5e-2106bccab18f@linux.ibm.com>
-Date: Mon, 24 Mar 2025 17:51:17 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQ5YVIIS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742827538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ECA6zhUqnyZiEyBYCMUo+zUIFQyB0/m7K5nNM3gOBd8=;
+	b=PQ5YVIISV7GTa8IHJlvbbds7oCD5btkyP+6ALsH78mbSxdA0ww2OPtVLQIJHwgdxhHd25/
+	lKg76ew9ppRZxqDKayfd3n2FnvUOgLJBsr/xh7nVpqw25gy22xh6EkCbcfVnjIQN/AuLkT
+	kDvqpcWeaoMnFE5kuZT8WwbEAXRoMtc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-BAnIxituMdOFwTuiTKpHiA-1; Mon,
+ 24 Mar 2025 10:45:33 -0400
+X-MC-Unique: BAnIxituMdOFwTuiTKpHiA-1
+X-Mimecast-MFC-AGG-ID: BAnIxituMdOFwTuiTKpHiA_1742827531
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0BF5618001FC;
+	Mon, 24 Mar 2025 14:45:31 +0000 (UTC)
+Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.43.17.192])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35794180A802;
+	Mon, 24 Mar 2025 14:45:25 +0000 (UTC)
+From: Jakub Brnak <jbrnak@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	mpetlan@redhat.com,
+	tglozar@redhat.com,
+	jbrnak@redhat.com,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v3] perf test probe_vfs_getname: Skip if no suitable line detected
+Date: Mon, 24 Mar 2025 15:45:23 +0100
+Message-ID: <20250324144523.597557-1-jbrnak@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/perf/arch/powerpc/util: Fix is_compat_mode build
- break in ppc64
-To: Likhitha Korrapati <likhitha@linux.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.ibm.com
-References: <20250321100726.699956-1-likhitha@linux.ibm.com>
-Content-Language: en-GB
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <20250321100726.699956-1-likhitha@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 8yvRVcxq_rl9a2331xDOSLMSqXJmL2CU
-X-Proofpoint-GUID: azvKXTimYo6zs6OFCzhYKi_aEIc7bLuz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 adultscore=0 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240087
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+In some cases when calling function add_probe_vfs_getname, line number
+can't be detected by perf probe -L getname_flags:
 
-On 21/03/25 3:37 pm, Likhitha Korrapati wrote:
-> Commit 54f9aa1092457 ("tools/perf/powerpc/util: Add support to
-> handle compatible mode PVR for perf json events") introduced
-> to select proper JSON events in case of compat mode using
-> auxiliary vector. But this caused a compilation error in ppc64
-> Big Endian.
->
-> arch/powerpc/util/header.c: In function 'is_compat_mode':
-> arch/powerpc/util/header.c:20:21: error: cast to pointer from
-> integer of different size [-Werror=int-to-pointer-cast]
->     20 |         if (!strcmp((char *)platform, (char *)base_platform))
->        |                     ^
-> arch/powerpc/util/header.c:20:39: error: cast to pointer from
-> integer of different size [-Werror=int-to-pointer-cast]
->     20 |         if (!strcmp((char *)platform, (char *)base_platform))
->        |
->
-> Commit saved the getauxval(AT_BASE_PLATFORM) and getauxval(AT_PLATFORM)
-> return values in u64 which causes the compilation error.
->
-> Patch fixes this issue by changing u64 to "unsigned long".
->
-> Fixes: 54f9aa1092457 ("tools/perf/powerpc/util: Add support to handle compatible mode PVR for perf json events")
-> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
-> ---
->   tools/perf/arch/powerpc/util/header.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-> index c7df534dbf8f..0be74f048f96 100644
-> --- a/tools/perf/arch/powerpc/util/header.c
-> +++ b/tools/perf/arch/powerpc/util/header.c
-> @@ -14,8 +14,8 @@
->   
->   static bool is_compat_mode(void)
->   {
-> -	u64 base_platform = getauxval(AT_BASE_PLATFORM);
-> -	u64 platform = getauxval(AT_PLATFORM);
-> +	unsigned long base_platform = getauxval(AT_BASE_PLATFORM);
-> +	unsigned long platform = getauxval(AT_PLATFORM);
->   
->   	if (!strcmp((char *)platform, (char *)base_platform))
->   		return false;
+  78         atomic_set(&result->refcnt, 1);
 
-Applied this patch on the powerpc kernel and it fixes the issue.
+	     // one of the following lines should have line number
+	     // but sometimes it does not because of optimization
+	     result->uptr = filename;
+             result->aname = NULL;
 
+  81         audit_getname(result);
 
-Without this patch:
+To prevent false failures, skip the affected tests
+if no suitable line numbers can be detected.
 
-   INSTALL libsubcmd_headers
-   INSTALL libsymbol_headers
-   INSTALL libperf_headers
-   INSTALL libapi_headers
-   CC      /output/arch/powerpc/util/header.o
-   CC      /output/arch/powerpc/util/perf_regs.o
-   CC      /output/arch/powerpc/util/mem-events.o
-   CC      /output/arch/powerpc/util/pmu.o
-   CC      /output/arch/powerpc/util/sym-handling.o
-   CC      /output/arch/powerpc/util/evsel.o
-   CC      /output/arch/powerpc/util/event.o
-arch/powerpc/util/header.c: In function 'is_compat_mode':
-arch/powerpc/util/header.c:20:21: error: cast to pointer from integer of 
-different size [-Werror=int-to-pointer-cast]
-    20 |         if (!strcmp((char *)platform, (char *)base_platform))
-       |                     ^
-arch/powerpc/util/header.c:20:39: error: cast to pointer from integer of 
-different size [-Werror=int-to-pointer-cast]
-    20 |         if (!strcmp((char *)platform, (char *)base_platform))
-       |                                       ^
-cc1: all warnings being treated as errors
-make[6]: *** [/linux/tools/build/Makefile.build:85: 
-/output/arch/powerpc/util/header.o] Error 1
-make[6]: *** Waiting for unfinished jobs....
-make[5]: *** [/linux/tools/build/Makefile.build:138: util] Error 2
-make[4]: *** [/linux/tools/build/Makefile.build:138: powerpc] Error 2
-make[3]: *** [/linux/tools/build/Makefile.build:138: arch] Error 2
-make[3]: *** Waiting for unfinished jobs....
-make[2]: *** [Makefile.perf:781: /output/perf-util-in.o] Error 2
-make[1]: *** [Makefile.perf:280: sub-make] Error 2
-make: *** [Makefile:76: all] Error 2
-make: Leaving directory '/linux/tools/perf'
+Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+---
+v3:
+- ensure POSIX compliance
 
+v2: 
+https://lore.kernel.org/linux-perf-users/Z9tKat6vvC1XUj0U@google.com/
+- check if return from add_vfs_getname equals to 1
+sice it is only option in case of fail 
 
-With this patch:
+v1:
+ https://lore.kernel.org/linux-perf-users/Z8pAep0GJsMFTyEi@google.com/T/#t
+---
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh          | 8 +++++++-
+ tools/perf/tests/shell/probe_vfs_getname.sh              | 8 +++++++-
+ .../perf/tests/shell/record+script_probe_vfs_getname.sh  | 8 +++++++-
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh        | 9 +++++++--
+ 4 files changed, 28 insertions(+), 5 deletions(-)
 
-   PERF_VERSION = 6.14.rc4.gbdfd7b9150f1
-   INSTALL libapi_headers
-   GEN     perf-archive
-   GEN     perf-iostat
-   INSTALL libperf_headers
-   CC      /output/arch/powerpc/util/header.o
-   LD      /output/arch/powerpc/util/perf-util-in.o
-   LD      /output/arch/powerpc/perf-util-in.o
-   LD      /output/arch/perf-util-in.o
-   CC      /output/util/header.o
-   LD      /output/util/perf-util-in.o
-   LD      /output/perf-util-in.o
-   AR      /output/libperf-util.a
-   LINK    /output/perf
-make: Leaving directory '/linux/tools/perf'
-## tools/perf build completed rc = 0
-## Build completed OK
-
-
-Please add below tag:
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-Regards,
-
-Venkat.
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 5c33ec7a5a63..89f72a4c818c 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -19,8 +19,14 @@ add_probe_vfs_getname() {
+ 			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
+ 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
+ 		fi
++
++		if [ -z "$line" ] ; then
++			echo "Could not find probeable line"
++			return 2
++		fi
++
+ 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
++		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
+ 	fi
+ }
+ 
+diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+index c51a32931af6..0f52654c914a 100755
+--- a/tools/perf/tests/shell/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+@@ -13,7 +13,13 @@ skip_if_no_perf_probe || exit 2
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname $0)"/lib/probe_vfs_getname.sh
+ 
+-add_probe_vfs_getname || skip_if_no_debuginfo
++add_probe_vfs_getname
+ err=$?
++
++if [ $err -eq 1 ] ; then
++	skip_if_no_debuginfo
++	err=$?
++fi
++
+ cleanup_probe_vfs_getname
+ exit $err
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index fd5b10d46915..1ad252f0d36e 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -35,8 +35,14 @@ perf_script_filenames() {
+ 	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
+ }
+ 
+-add_probe_vfs_getname || skip_if_no_debuginfo
++add_probe_vfs_getname
+ err=$?
++
++if [ $err -eq 1 ] ; then
++        skip_if_no_debuginfo
++        err=$?
++fi
++
+ if [ $err -ne 0 ] ; then
+ 	exit $err
+ fi
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 60fccb62c540..5d5019988d61 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -25,9 +25,14 @@ trace_open_vfs_getname() {
+ 	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+ }
+ 
+-
+-add_probe_vfs_getname || skip_if_no_debuginfo
++add_probe_vfs_getname
+ err=$?
++
++if [ $err -eq 1 ] ; then
++        skip_if_no_debuginfo
++        err=$?
++fi
++
+ if [ $err -ne 0 ] ; then
+ 	exit $err
+ fi
+-- 
+2.48.1
 
