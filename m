@@ -1,74 +1,210 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1C671E633C;
-	Mon, 24 Mar 2025 11:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CCF25E808
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 12:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742816091; cv=none; b=CXp7I2I/XKGqF/1XIL138Eq7u7pTav2/plSh6lGUf29PCpTiKs7/HzRHKXfnBWp0Out8qRswv3eqDQwd7XnmuKclQ/r+6giSiIw9gzc+oCNOZL9GyqASZ2jrAT7y1ygqzS3WR4u1Ey1Bul6XI2Rp3TPNsAwTwFJ3LfoZIFfz70s=
+	t=1742818893; cv=none; b=ufI9YkitDaGmJTJL36b9/BZhARrZEEVxZWaoj+/LRFfNsG1+LqZlYVjbSEeq74lUlHzD4ALe2BGWwPrhclcz20o8v/XDaXtBb3UX+AcIQBFYKbVSGNJnhRMUk9DLhF62fVhcttFzw1OvaW56g/lVJAdIA4FONAhdbZppVPddGl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742816091; c=relaxed/simple;
-	bh=pI8OV3S5gqKdPxqh70UVk+GABqcMT3BDTM73LIZiSdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKWnB3V4iw7AFXelliDvUGWHoLIL6UOLpNtkHtafxYkkoHzn5Rd/WUjy+yn5ZzzjRr+8tWKEL87NyhxV/zV9fXCqrMM6FToHEAXRLPoiRmplWrmeaWfs6BLlQIe+/cNVDLDm7kIq/gTiRUurhBamHoJovWSZ7Tsr7xvoW1CYMVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDF831C14;
-	Mon, 24 Mar 2025 04:34:53 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 362633F58B;
-	Mon, 24 Mar 2025 04:34:47 -0700 (PDT)
-Date: Mon, 24 Mar 2025 11:34:45 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Marcus Meissner <meissner@suse.de>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, carsten.haitzler@arm.com,
-	james.clark@linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: annotate asm_pure_loop.S
-Message-ID: <20250324113445.GA604566@e132581.arm.com>
-References: <20250323085410.23751-1-meissner@suse.de>
+	s=arc-20240116; t=1742818893; c=relaxed/simple;
+	bh=XfSzOEXbICbXQzEAg1uZwrEUv9wXqfSx7h4bZuVb4gc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UJOwOq5ZSvdWoL9j8RLUQYtJLYa3ktThqkmhbFJuQd61yFT1Tgq3MhaDkWtY0D6g+AP5Yzc0nFzQNhl3tsgadKTv0phFM3TLFssDObGoIQOmRPgQLHDR5ZF1u+gx8rNVIDKXH/tDnWuw5vwwtUKKE3Nm1nBQXch9xvB8O1XRdk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TY/KIMlg; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TY/KIMlg"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O3jqLd013503;
+	Mon, 24 Mar 2025 12:21:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=tKK4zF
+	NmSkotRsLjuamNDkRJDfPiuLV/EgikorDCUjE=; b=TY/KIMlg1GOE/AyU9TMNTJ
+	5hea6QwYj8HhwUsYRiQbm4aj44RJ6L7HnHbKElzRhJDYyLhf22JjNvX21cLysX/c
+	f6eugF/nHIknF7PxzR6ysUiX6AoWYBq0dnirlZF5Rociz/GYvz9AD6Gz2Yi2G+XS
+	nxLZibyAA3jc4UIBs2JjhhzM49Hgu+TQJoJzI8Nu/z+PhFqwCf+c8RmDiT53HuaG
+	FeCaIusBBw98I5zlAKUsc/8KkFg5e1uqt4+HVepB7v+VoFlGh2XUx4kMp35Aq/vw
+	QDjXihrtiKH7V62XMo3TWiA+XRWhP5ESgglekwrZHmw8bw93NiuyDQSfKm+H+1BA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jys92acx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 12:21:24 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52OCDiXH004835;
+	Mon, 24 Mar 2025 12:21:24 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jys92acu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 12:21:24 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52OCGYDQ020101;
+	Mon, 24 Mar 2025 12:21:23 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45j8hnp4wk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 12:21:23 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52OCLLrY29164210
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Mar 2025 12:21:21 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D71A25805F;
+	Mon, 24 Mar 2025 12:21:21 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DDED758060;
+	Mon, 24 Mar 2025 12:21:18 +0000 (GMT)
+Received: from [9.61.251.240] (unknown [9.61.251.240])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 24 Mar 2025 12:21:18 +0000 (GMT)
+Message-ID: <37a5a63f-9a75-4196-bf5e-2106bccab18f@linux.ibm.com>
+Date: Mon, 24 Mar 2025 17:51:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250323085410.23751-1-meissner@suse.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/perf/arch/powerpc/util: Fix is_compat_mode build
+ break in ppc64
+To: Likhitha Korrapati <likhitha@linux.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.ibm.com
+References: <20250321100726.699956-1-likhitha@linux.ibm.com>
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250321100726.699956-1-likhitha@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8yvRVcxq_rl9a2331xDOSLMSqXJmL2CU
+X-Proofpoint-GUID: azvKXTimYo6zs6OFCzhYKi_aEIc7bLuz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 adultscore=0 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240087
 
-On Sun, Mar 23, 2025 at 09:53:45AM +0100, Marcus Meissner wrote:
-> Annotate so it is built with non-executable stack.
-> 
-> Fixes: 8b97519711c3a0f9eb8274a227dff3fe4f0f72a2
 
-Fixes: 8b97519711c3 ("perf test: Add asm pureloop test tool")
-
-> Signed-off-by: Marcus Meissner <meissner@suse.de>
+On 21/03/25 3:37 pm, Likhitha Korrapati wrote:
+> Commit 54f9aa1092457 ("tools/perf/powerpc/util: Add support to
+> handle compatible mode PVR for perf json events") introduced
+> to select proper JSON events in case of compat mode using
+> auxiliary vector. But this caused a compilation error in ppc64
+> Big Endian.
+>
+> arch/powerpc/util/header.c: In function 'is_compat_mode':
+> arch/powerpc/util/header.c:20:21: error: cast to pointer from
+> integer of different size [-Werror=int-to-pointer-cast]
+>     20 |         if (!strcmp((char *)platform, (char *)base_platform))
+>        |                     ^
+> arch/powerpc/util/header.c:20:39: error: cast to pointer from
+> integer of different size [-Werror=int-to-pointer-cast]
+>     20 |         if (!strcmp((char *)platform, (char *)base_platform))
+>        |
+>
+> Commit saved the getauxval(AT_BASE_PLATFORM) and getauxval(AT_PLATFORM)
+> return values in u64 which causes the compilation error.
+>
+> Patch fixes this issue by changing u64 to "unsigned long".
+>
+> Fixes: 54f9aa1092457 ("tools/perf/powerpc/util: Add support to handle compatible mode PVR for perf json events")
+> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
 > ---
->  tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> index 75cf084a927d..577760046772 100644
-> --- a/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> +++ b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> @@ -26,3 +26,5 @@ skip:
->  	mov	x0, #0
->  	mov	x8, #93 // __NR_exit syscall
->  	svc	#0
-> +
-> +.section .note.GNU-stack, "", @progbits
+>   tools/perf/arch/powerpc/util/header.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+> index c7df534dbf8f..0be74f048f96 100644
+> --- a/tools/perf/arch/powerpc/util/header.c
+> +++ b/tools/perf/arch/powerpc/util/header.c
+> @@ -14,8 +14,8 @@
+>   
+>   static bool is_compat_mode(void)
+>   {
+> -	u64 base_platform = getauxval(AT_BASE_PLATFORM);
+> -	u64 platform = getauxval(AT_PLATFORM);
+> +	unsigned long base_platform = getauxval(AT_BASE_PLATFORM);
+> +	unsigned long platform = getauxval(AT_PLATFORM);
+>   
+>   	if (!strcmp((char *)platform, (char *)base_platform))
+>   		return false;
 
-With the fix tag change:
+Applied this patch on the powerpc kernel and it fixes the issue.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-I found actually Jan Stancek has submitted a similiar patch [1]
-~2 years ago but we missed, sorry for that.
+Without this patch:
 
-[1] https://lore.kernel.org/linux-perf-users/e79288922fbd0bad6facf06488735ec74f811d1b.1689588798.git.jstancek@redhat.com/
+   INSTALL libsubcmd_headers
+   INSTALL libsymbol_headers
+   INSTALL libperf_headers
+   INSTALL libapi_headers
+   CC      /output/arch/powerpc/util/header.o
+   CC      /output/arch/powerpc/util/perf_regs.o
+   CC      /output/arch/powerpc/util/mem-events.o
+   CC      /output/arch/powerpc/util/pmu.o
+   CC      /output/arch/powerpc/util/sym-handling.o
+   CC      /output/arch/powerpc/util/evsel.o
+   CC      /output/arch/powerpc/util/event.o
+arch/powerpc/util/header.c: In function 'is_compat_mode':
+arch/powerpc/util/header.c:20:21: error: cast to pointer from integer of 
+different size [-Werror=int-to-pointer-cast]
+    20 |         if (!strcmp((char *)platform, (char *)base_platform))
+       |                     ^
+arch/powerpc/util/header.c:20:39: error: cast to pointer from integer of 
+different size [-Werror=int-to-pointer-cast]
+    20 |         if (!strcmp((char *)platform, (char *)base_platform))
+       |                                       ^
+cc1: all warnings being treated as errors
+make[6]: *** [/linux/tools/build/Makefile.build:85: 
+/output/arch/powerpc/util/header.o] Error 1
+make[6]: *** Waiting for unfinished jobs....
+make[5]: *** [/linux/tools/build/Makefile.build:138: util] Error 2
+make[4]: *** [/linux/tools/build/Makefile.build:138: powerpc] Error 2
+make[3]: *** [/linux/tools/build/Makefile.build:138: arch] Error 2
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [Makefile.perf:781: /output/perf-util-in.o] Error 2
+make[1]: *** [Makefile.perf:280: sub-make] Error 2
+make: *** [Makefile:76: all] Error 2
+make: Leaving directory '/linux/tools/perf'
+
+
+With this patch:
+
+   PERF_VERSION = 6.14.rc4.gbdfd7b9150f1
+   INSTALL libapi_headers
+   GEN     perf-archive
+   GEN     perf-iostat
+   INSTALL libperf_headers
+   CC      /output/arch/powerpc/util/header.o
+   LD      /output/arch/powerpc/util/perf-util-in.o
+   LD      /output/arch/powerpc/perf-util-in.o
+   LD      /output/arch/perf-util-in.o
+   CC      /output/util/header.o
+   LD      /output/util/perf-util-in.o
+   LD      /output/perf-util-in.o
+   AR      /output/libperf-util.a
+   LINK    /output/perf
+make: Leaving directory '/linux/tools/perf'
+## tools/perf build completed rc = 0
+## Build completed OK
+
+
+Please add below tag:
+
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Regards,
+
+Venkat.
+
