@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB83F26AA9A
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 17:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48AC26AA86
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 17:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837624; cv=none; b=r9XFWkiErlZdxLJ289cQORemvjgQIDOwzRvH6UqD4zedkF1rdw6KsMJs0SbdJocDYoRLkwMKvDS/D2nkOZDs1L5HeDbOcsZWLwJh/nlpdzCnEKwfBZjR4aYe/8QYVEO1EQr8SYf3nNBDvFR9QmFO07LVDLUvQ0v1tKQPiPeBuM0=
+	t=1742837627; cv=none; b=p8ppyvMo66c6Qn+CJF21+884qQz8T0VO9os+C7Qa9EvDCkdoYgfspEH6XMBi2FfhE8WzpmkYsFtlNcrmRGl/zrl86YVFfODtpvTRvlXSXH5l0pYuHzvJadms1GJoODr2vn+MAucIazK5uIt81bfktpe4Kxql+cDX6SbJ1++4caA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837624; c=relaxed/simple;
-	bh=s6ocOzT71CXmbbBcXEYyjJ6D7W58hm1QwCnGVXZRsjo=;
+	s=arc-20240116; t=1742837627; c=relaxed/simple;
+	bh=tLEAHwFsGl0uTcmsj5p4KoOmnVEl0UIhLCLr4C2CpFE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=q10bY8QrAyTVVz2tOJI+DYbYnq8yCFnD+ECT0Hs2Ti8nbfUJ38SvPuSwQmZDg4PDVLMCH09EzKdzUSgn6C6aUL/vkwDkyUqnhtTtkjF/PDTvCvHxVN7RhzVTYKI9Hj1wMqsVXc5BEgwUg9TZq5snPnvl/TRVcQTAI/MN0Pftvmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B7bVphVA; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=BGaO5uRbZm0sOJ0xAhB0nHBUEm8DdAtBjBqrRnlOVf7hqu2GGQumGn8PXBezFEN94TOW20hBEoM54IbdqrgeDemlFpPqxQoWyarWHzYPo9Jjh3wYQ/xEZ+YnSISzuFrysdvrLwRLgdLWWeZn1nMA/h5r6lBd3fI27BvXtdubkJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F4W15rJ1; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7bVphVA"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3011bee1751so7280120a91.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 10:33:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F4W15rJ1"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8c5d185aso14010766a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Mar 2025 10:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837622; x=1743442422; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742837624; x=1743442424; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+V904KeUQ21IQza0CY3IXyrVqbjYbDjSx/YwFPJNc8=;
-        b=B7bVphVAKFRdiBLk/ckAzE4Qx7EgpIr9Drzsub9aImOB15uXfu5cq6x3VZcPjcgyzh
-         T0GgLWUC73LaQQ18uLZUuu1Cv4bj1Cg2mK7j08qz1AY3/nthuPlfwaMtvtbxMi/pFCMW
-         HNhBp9trPImqUCmXXXsOlV1e+fvv0KzWYvciAAULcL/9uCxmS+vJw3GqEUxqi9OS4QPG
-         b/EFHRA0bfkquAYPiqE6sFIYh/Jpk5CphwhHU7biwF7gU5e7feFl2h6IE/nM+FQisE7V
-         95pNjnrFN/nAGzGmRSrFwmNUmvxlouitFMEdwxulh++RW/qsvDLJk/DB5mVV9PN53PDW
-         i9zQ==
+        bh=m1dzEiSB0TnXn8z4Uk//mVwwzT73iVmqUPR4PdJQimU=;
+        b=F4W15rJ1e5GDeU2KQ6J2Oll+Q8qMM+n1Fh+ORwztJO5KFMVFq1Qy52AYYVvsNd8NFB
+         Bpn4iTmZYBO6KfInuyVkyX8V9I+HNHPlbb9rPvYiok+YH4+s+0wWISnw6ycpxiVD0GOF
+         LvTl8ZNzpR7kok49Yyb+NbSbTqtbIXenAx8h51zakBenBS8GGFo6iwKyNDdpGEjTopTJ
+         hAHJ2877fpwvEqpmC/RI4UTZs1FS2oiophBlFXGuZYn2LwaxrLWTDsnl+Z5vrZzvcV61
+         mbYUAEMvI/RCqgF5icfblfuuP8aRgJZWvyAm2bscqWymtMAYKFKLbhmXCbXbpMTuI+Hs
+         MtKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837622; x=1743442422;
+        d=1e100.net; s=20230601; t=1742837624; x=1743442424;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6+V904KeUQ21IQza0CY3IXyrVqbjYbDjSx/YwFPJNc8=;
-        b=uMKkELme/5NjNEmT7s+nmqCDBT+usoO+aSXZGH2CVAKYW+Bf8RJQm94j+64v9lyxkc
-         VTxdUbdcCHRZkeBi18PsY6WZlYYUqGvyseiwvAxJ806PHmmP6aF57M+ZL4laAZ/OdpbA
-         ehX40iassnTwfpoNZBowY8Ubo7+1glfjqS188DqFBQHY2yQReh8CDZVVoYsUQZv42825
-         +CzrOSAQY9y3OtHhjWi+Lg12A/jPb7OuSCxlK7duv1v3M/XDSzCF0ZemjHShY9+7wLE3
-         VtoUdyoAy+yMjK7Ib5x8dS5in7RtauYGKxlQedPqCzUN8argyERa6td8UgEph7WNiP7O
-         RbZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJVTp2qzvKvZhEyNRAtVXE/DG279NcHtTE0zgDDEbMfhlQue9AWbnDN8CrwBF0Jdl4nolC95imZ1Nwh8EGENfA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4IqAIGK3nhR7eGJZKhVpuGpq+b1Yo2J/QXPNhUmxVNiOuNYcj
-	WXj7G1PAmLmwXAc06ZSh8u2pILTTUcZwTqmgPjL+0c3D4D0aaLeUWjm85++D8Kz5TfCxkFdzpd0
-	PNYXSRw==
-X-Google-Smtp-Source: AGHT+IHIqBrwCBT2VgNzdu6a3SRF1WZmbb7R9Sly1cPBTsCVjyp/BdAE9Odk3iiE+395mJznbAYwK1AFqmr6
-X-Received: from pjyd8.prod.google.com ([2002:a17:90a:dfc8:b0:2ff:5516:6add])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:45:b0:2ff:58a4:9db3
- with SMTP id 98e67ed59e1d1-3030ff0b351mr22679948a91.35.1742837622350; Mon, 24
- Mar 2025 10:33:42 -0700 (PDT)
+        bh=m1dzEiSB0TnXn8z4Uk//mVwwzT73iVmqUPR4PdJQimU=;
+        b=ur/+NYMGDJiPfC0TakX/kS9kI+eFDtbSzNNSRn3fnJ5UTJM4sIvL0xqrV8EzYiKev0
+         EdyJOuE9pd7iQJgc3IRx3KJ1cX46h8JJMcyox0rXGrCPNLiYMcH/+GcfaHVxsMIWpbXS
+         dWohLehmIoSW5QOZAN3YfxPGdK164hXGH9vW/1vCogu+edp95PdGeh7bE4Ni//sENCad
+         LNLi6ZuPsNqtNDwQ3ggJUtvNWIGwJA+NFHKUfIGDK31FiJpfH7y2pUtJ0qFpBuNqobJf
+         4Qq6wiUFY2cdC9G/6Aop0yqvjns94T12G83x3hk9xqC+wQn9ifhZ/HUos/0caRlb0A6n
+         rOMA==
+X-Forwarded-Encrypted: i=1; AJvYcCV90GxnEXyAloOzMIVc+mmc7iVYZzgP8AiJtkTmwe0XnZ2eO29J6p4/uGfiyIeIZiYz0/NJ3fVudOCXlTroziCj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeKH6ubefGooPsO6VxZg4EUxRot1fDCfiU2R4jyjNIRw8XN6xj
+	DSaGb/b2MYEB61M3P26gxAzdITu32Q0v/Wha2rKwTsqm+YirUWYnTLf6FlW/0rWD8e1H9cTXU92
+	vCUeegw==
+X-Google-Smtp-Source: AGHT+IGHdqNaZHSbA93dO3we1p4to3OBaAJ87qlwbaP5lP7uoA4gJwD6qAmceHmEt8Oo8wq8FMI7Brlio3aM
+X-Received: from pgkk2.prod.google.com ([2002:a63:2402:0:b0:af1:dadf:28e7])
+ (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:168e:b0:1f5:709d:e0cb
+ with SMTP id adf61e73a8af0-1fe43437231mr23271595637.39.1742837624000; Mon, 24
+ Mar 2025 10:33:44 -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:31:11 +0000
+Date: Mon, 24 Mar 2025 17:31:12 +0000
 In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250324173121.1275209-1-mizhang@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-32-mizhang@google.com>
-Subject: [PATCH v4 31/38] KVM: nVMX: Add macros to simplify nested MSR
- interception setting
+Message-ID: <20250324173121.1275209-33-mizhang@google.com>
+Subject: [PATCH v4 32/38] KVM: nVMX: Add nested virtualization support for
+ mediated PMU
 From: Mingwei Zhang <mizhang@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -82,72 +82,82 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Nikunj Dadhania <nikunj.dadhania@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Add nested virtualization support for mediated PMU by combining the MSR
+interception bitmaps of vmcs01 and vmcs12. Readers may argue even without
+this patch, nested virtualization works for mediated PMU because L1 will
+see Perfmon v2 and will have to use legacy vPMU implementation if it is
+Linux. However, any assumption made on L1 may be invalid, e.g., L1 may not
+even be Linux.
 
-Add macros nested_vmx_merge_msr_bitmaps_xxx() to simplify nested MSR
-interception setting. No function change intended.
+If both L0 and L1 pass through PMU MSRs, the correct behavior is to allow
+MSR access from L2 directly touch HW MSRs, since both L0 and L1 passthrough
+the access.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+However, in current implementation, if without adding anything for nested,
+KVM always set MSR interception bits in vmcs02. This leads to the fact that
+L0 will emulate all MSR read/writes for L2, leading to errors, since the
+current mediated vPMU never implements set_msr() and get_msr() for any
+counter access except counter accesses from the VMM side.
+
+So fix the issue by setting up the correct MSR interception for PMU MSRs.
+
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index ecf72394684d..cf557acf91f8 100644
+index cf557acf91f8..dbec40cb55bc 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -613,6 +613,19 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
- 						   msr_bitmap_l0, msr);
- }
+@@ -626,6 +626,36 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
+ #define nested_vmx_merge_msr_bitmaps_rw(msr) \
+ 	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_RW)
  
-+#define nested_vmx_merge_msr_bitmaps(msr, type)	\
-+	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,	\
-+					 msr_bitmap_l0, msr, type)
++/*
++ * Disable PMU MSRs interception for nested VM if L0 and L1 are
++ * both mediated vPMU.
++ */
++static void nested_vmx_merge_pmu_msr_bitmaps(struct kvm_vcpu *vcpu,
++					     unsigned long *msr_bitmap_l1,
++					     unsigned long *msr_bitmap_l0)
++{
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	int i;
 +
-+#define nested_vmx_merge_msr_bitmaps_read(msr) \
-+	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_R)
++	if (!kvm_mediated_pmu_enabled(vcpu))
++		return;
 +
-+#define nested_vmx_merge_msr_bitmaps_write(msr) \
-+	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_W)
++	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
++		nested_vmx_merge_msr_bitmaps_rw(MSR_ARCH_PERFMON_EVENTSEL0 + i);
++		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PERFCTR0 + i);
++		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PMC0 + i);
++	}
 +
-+#define nested_vmx_merge_msr_bitmaps_rw(msr) \
-+	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_RW)
++	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
++		nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR0 + i);
++
++	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR_CTRL);
++	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_GLOBAL_CTRL);
++	nested_vmx_merge_msr_bitmaps_read(MSR_CORE_PERF_GLOBAL_STATUS);
++	nested_vmx_merge_msr_bitmaps_write(MSR_CORE_PERF_GLOBAL_OVF_CTRL);
++}
 +
  /*
   * Merge L0's and L1's MSR bitmap, return false to indicate that
   * we do not use the hardware.
-@@ -696,23 +709,13 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
- 	 * other runtime changes to vmcs01's bitmap, e.g. dynamic pass-through.
- 	 */
- #ifdef CONFIG_X86_64
--	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
--					 MSR_FS_BASE, MSR_TYPE_RW);
--
--	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
--					 MSR_GS_BASE, MSR_TYPE_RW);
--
--	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
--					 MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-+	nested_vmx_merge_msr_bitmaps_rw(MSR_FS_BASE);
-+	nested_vmx_merge_msr_bitmaps_rw(MSR_GS_BASE);
-+	nested_vmx_merge_msr_bitmaps_rw(MSR_KERNEL_GS_BASE);
- #endif
--	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
--					 MSR_IA32_SPEC_CTRL, MSR_TYPE_RW);
--
--	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
--					 MSR_IA32_PRED_CMD, MSR_TYPE_W);
--
--	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
--					 MSR_IA32_FLUSH_CMD, MSR_TYPE_W);
-+	nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_SPEC_CTRL);
-+	nested_vmx_merge_msr_bitmaps_write(MSR_IA32_PRED_CMD);
-+	nested_vmx_merge_msr_bitmaps_write(MSR_IA32_FLUSH_CMD);
+@@ -717,6 +747,8 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
+ 	nested_vmx_merge_msr_bitmaps_write(MSR_IA32_PRED_CMD);
+ 	nested_vmx_merge_msr_bitmaps_write(MSR_IA32_FLUSH_CMD);
  
++	nested_vmx_merge_pmu_msr_bitmaps(vcpu, msr_bitmap_l1, msr_bitmap_l0);
++
  	kvm_vcpu_unmap(vcpu, &map);
  
+ 	vmx->nested.force_msr_bitmap_recalc = false;
 -- 
 2.49.0.395.g12beb8f557-goog
 
