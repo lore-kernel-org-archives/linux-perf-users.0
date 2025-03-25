@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719901F37D4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AA11F3FD9;
 	Tue, 25 Mar 2025 19:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742932172; cv=none; b=JZ+KbWT6pR1uc4AJ5x9h79hOUIl6dgixNOKQs3uRNUonv8KYscpEVEmIuF7KqxEgitgXwE/vSSu3gUKMEc6VopcMUjWbYjRGiynvAPaW0GbrbKjdVuO3gE7bd/swJnxkQLUe2j0Mck0VB7b9HcOQ+8XUYjwBD7O5n2Nxx3Pe/bM=
+	t=1742932173; cv=none; b=NdlX4RmSRk2EyjwQqRAf35LZ1PN8hiVrXisHvQgNYYbwjk348scy4JsxXXKnjgP847PUMJSgHerwv1NE5oxKmEGsAt5QqG6SsyKert+iVKr1zmFQDt8C7dL4ir/f9U8g3D7etORLT1iduYdnzrdLyXGQZqqd51cNDbfmNiWekf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742932172; c=relaxed/simple;
-	bh=WN/vIZnTAni/Kcv320+OOiwXIbkEBKtVO+kineL3pMg=;
+	s=arc-20240116; t=1742932173; c=relaxed/simple;
+	bh=PBdlfqXugO2BiYFTNYFV+vhtp4+EVWOejcXfNbvjCx0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cZhrTydGKth4Ozj+vM9Qr+jSTOMUBHCoeh0JvsxwO57LuNztEgIVa1D4PcbNG/xhjsk2Rrb9ysNy6ZgeK2d1AcAskGx5xMJhjmvQPlf4qJBWz1rl7ELgxSVyJ5PEfquv1EqRH48ib1gz0sf+48yq8SB5yQ4L3LQGjSLyjPLZVdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNnitOg3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Uz+joF04UJeqULK3g9z2sYPfUMTUcQipaU6ZfMzt8iFpf1nw7kNSEris1MGi3ot2GpHX2YS6iMO6uAWWLz2t8olTWr31da2o1BRMs5OmIKVaLEfuN4wtRzSEA/fDjpJ+gRGiVsijbC1S++pNCyp+M0Xzo68/CaFwEzkTudr0iB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEMT7v/u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNnitOg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0EA4C4CEEE;
-	Tue, 25 Mar 2025 19:49:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEMT7v/u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E26C4CEEF;
+	Tue, 25 Mar 2025 19:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742932172;
-	bh=WN/vIZnTAni/Kcv320+OOiwXIbkEBKtVO+kineL3pMg=;
+	bh=PBdlfqXugO2BiYFTNYFV+vhtp4+EVWOejcXfNbvjCx0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FNnitOg3ypdMqo0HLIK7ioS6vHg5zowNTg8FXYWT9gQ7YDQ805apMkrfyXiszLx/g
-	 sm60XlYn+l4AAmXT5ATSE71WueShOQ1fqeV6kh1ytvNxNvs42HiAFNj8p3IQOUmFwn
-	 UJj1KqQiDUAGW2z3ux55FOIk5851rD9EO7yQ13ESvWvkcZnXT578siEl4KxtnAsY7B
-	 5i7i+rNprzol1zhShI0BF/DBX22rTMaaZl0SsDlxGt/0gYxi436LdU69quq+FtIGEU
-	 7xg15K528byLWBBM+oGgNaKZEeGngeQfWwne7fzEk/pKrlPOx4mq2Y8+9YrnvWbvzS
-	 u1WXSXxWDLDgg==
+	b=tEMT7v/ubC9X7+xm89kaiOUC2rk9SvDYlDw8IEd7l+83f2r+pEdnjinYE3wxaOfI4
+	 PNrSGnONQchrnc4VAz35TSJ3wdtbwFzhR1uiDDlGy+ZfH5HJpA8isIKgs4otYvEaYM
+	 8AVka+xbBaPHwe2XkbabWeu044wfsCP+oiJooEb8CJYOxLchKzkJHVbHmCMGg02jAv
+	 XFI+a4G8C6RByyzYyJglK3p5DRO4wZRDAnOV1pdgrK6CtLaFJhJQiKyCT5psBWDhb2
+	 vQZLJD60DjuNyjjmTLvfeQaSaF44EWlQuJqYC5M7lhaonAHQ2O/ojE0O7YFsAk0GGF
+	 Lf/zGr/gPtvUg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
@@ -33,12 +33,12 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
  LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
- Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20250311000416.817631-1-namhyung@kernel.org>
-References: <20250311000416.817631-1-namhyung@kernel.org>
-Subject: Re: [PATCH] perf report: Fix a memory leak for perf_env on AMD
-Message-Id: <174293217194.2401011.17122687947274846781.b4-ty@kernel.org>
-Date: Tue, 25 Mar 2025 12:49:31 -0700
+ Sally Shi <sshii@google.com>
+In-Reply-To: <20250307220922.434319-1-namhyung@kernel.org>
+References: <20250307220922.434319-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf bpf-filter: Fix a parsing error with comma
+Message-Id: <174293217243.2401011.8039718227768171802.b4-ty@kernel.org>
+Date: Tue, 25 Mar 2025 12:49:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,16 +49,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 10 Mar 2025 17:04:16 -0700, Namhyung Kim wrote:
-> The env.pmu_mapping can be leaked when it reads data from a pipe on AMD.
-> For a pipe data, it reads the header data including pmu_mapping from
-> PERF_RECORD_HEADER_FEATURE runtime.  But it's already set in:
+On Fri, 07 Mar 2025 14:09:21 -0800, Namhyung Kim wrote:
+> The previous change to support cgroup filters introduced a bug that
+> pathname can include commas.  It confused the lexer to treat an item and
+> the trailing comma as a single token.  And it resulted in a parse error:
 > 
->   perf_session__new()
->     __perf_session__new()
->       evlist__init_trace_event_sample_raw()
->         evlist__has_amd_ibs()
->           perf_env__nr_pmu_mappings()
+>   $ sudo perf record -e cycles:P --filter 'period > 0, ip > 64' -- true
+>   perf_bpf_filter: Error: Unexpected item: 0,
+>   perf_bpf_filter: syntax error, unexpected BFT_ERROR, expecting BFT_NUM
 > 
 > [...]
 Applied to perf-tools-next, thanks!
