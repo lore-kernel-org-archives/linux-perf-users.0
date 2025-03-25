@@ -1,203 +1,136 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B589925DD07
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 16:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1896313633F;
+	Tue, 25 Mar 2025 17:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742921085; cv=none; b=CQfHX2QTU6kTPwDznTK1pnrdefy16vgyOcLMlYQLyVdcq6HVz/PoqDzqxOp2MACPBeE49I4u0Q9ZDbooJZZdZozBWSL1Kq4iHfwlZI9iyYum/V6UdGeNkF7flFBqLUYr2K+mtO245wV7xd6npOrg1nCiSTMikBqE3/TJCQWdKrA=
+	t=1742923195; cv=none; b=JVnlwqVX6P2mPQEyZ+/VCGqJ4P18sGpLohEiLA42NvMdcuwFnvm6Gts6MotbeIPjngeCkr7IXavTEdHtxZ54NYjKzjnieHJbw52OYu20xq+NTnzQV8+qEdFr9x29mvagLSgEdt93kTrsER3utBA5TBu0NaZouBObCpg2MWJ/vlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742921085; c=relaxed/simple;
-	bh=ldgIIS6qJKA4PqUti5NYcAmN4SsICYce46h1OQ5emEo=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=mpVRbLg6qEDW5OqKB9TR79O4fNo9usmnJr6pV6/KMRcXYlYXhfz3twkcI/IpOKrq90OYgJLjhrmb+vP/pxLAoVqTSFw0xwEsIUXapprS0X0Ki0mqUhZzURjav7CZF9B0lVmQ4Sqpb/itRgrwt0m1PbrXpk3j4E8DVYmIYRHJWdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lWtccts0; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWtccts0"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ff4d1b7490so67729707b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 09:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742921082; x=1743525882; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XET9HH8V4TfXAFNsd7WcnaOZ0oJ/0MNCJs/F3W4WSf4=;
-        b=lWtccts0dL+YJnuM/8VT/h/fygadsZeenHdBwFq7HpZXEV7xV5GwYQbDO9CFDu1RP1
-         bDxsVm0jXFFXsRwyFUnGpUhGfUgnqkb4ND77PveOn0S6mFVEh313LaMW+gAIMH+85FsW
-         fRLoV4+JtW/TZRf7rQEAwkY/JOtf9FOhYAXEVziRnOEbB092SxAj0EavGDIfKwesHBDA
-         9Q/Ho1/41AoN28Ew9LTLW2zFMXDyITCxkbpf3DYfGIo/RdjwvWXjc7jD1kPRjnLoSqA9
-         bn8N6Y85hbTfbcCFuJ2O4MRfSlARdUHcImC9t8IwFe+MSqK4ip+ZNshLsRyfgEGe5BN0
-         WSZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742921082; x=1743525882;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XET9HH8V4TfXAFNsd7WcnaOZ0oJ/0MNCJs/F3W4WSf4=;
-        b=nP9ePwoz2BDvKHDgVuudrAinNBJP0cDkmh9q/CpR2nWUW3zPXNV9khhEGJO1XEpglU
-         J37Q+eRvBTHeeHJeg/MYln/mzZvrs7YlBQgW/qupmJPG5ChBrpqErzcHuggpQe5rrLzm
-         QQIL5hPpD68P+DAGwQ/BMYoOL07zbpiZ3kSh+1d3JY3jsan0kg2/fDILq9C8BeGcUYOB
-         6Md/BcrGV0THfpaLxhvQMi2g8qlIcZ1vXcrZm/vdSbay4Pjdk4LJSVIHW0RxyCM5N3Bo
-         9VdkAtKuNGsdsFvWTy78aJo/B9H908a+MPmAYUiILZ5tDftaVKiENFQ31t5kb1vVmqi9
-         I29g==
-X-Forwarded-Encrypted: i=1; AJvYcCVV5FhGGi555bXWyXZQBL4ETeMO6Kg3wettYY5Qlo9GC45+zlHHJnAeilZtR1c1bJwIpEvfcbTxOuJgmFfJbqNZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6qYmr4GiwTpjf48J46z5+D1UeFCZf9TIpfAeWL2/eOyLWOt+k
-	xk+uo19yM+iK1rmJj3sVOnZ5AcVnoNyga1/ErAtkZsjmeIi6mZS+NRoElB469matE+4rYAEBuwh
-	7peykuA==
-X-Google-Smtp-Source: AGHT+IFloyMlyCTYkwI5WNoUbnxC0ZXTQTcaUnQn1S1VFEt9qidMOh9dB+WPksPMbdNJDXCSbcL7SI63H4uU
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a05:690c:3383:b0:6fb:8461:e7f4 with SMTP
- id 00721157ae682-700bacc218dmr488617b3.3.1742921082187; Tue, 25 Mar 2025
- 09:44:42 -0700 (PDT)
-Date: Tue, 25 Mar 2025 08:15:11 -0700
-In-Reply-To: <20250325151511.13628-1-irogers@google.com>
-Message-Id: <20250325151511.13628-36-irogers@google.com>
+	s=arc-20240116; t=1742923195; c=relaxed/simple;
+	bh=XhmLROfnnL3FtaOH27gIOe9sbljr3QNEJt4khOaoGEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=thXfkLpcysvlslOLNwAsjXCeCS6JfK6KctSbO2VGPV3RuKnyk0b5C13uS18qMml/OaXFTQll1YJumJb0xtEBlz6OVXMzXwT+u0OP1YIXmFUMXF7N6mj6jdKsM0A+dPbTQIyLF0c2blFZmvdsLhtgQIwwYgh2AD86/cle9R4yFAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.136.199) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 25 Mar
+ 2025 20:19:41 +0300
+Message-ID: <05fec753-cdaa-45a5-a029-b6435c30eb07@omp.ru>
+Date: Tue, 25 Mar 2025 20:19:39 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325151511.13628-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v2 35/35] perf vendor events: Update westmereep-dp events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH V3 25/43] rv64ilp32_abi: exec: Adapt 64lp64 env and
+ argv
+To: <guoren@kernel.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+	<torvalds@linux-foundation.org>, <paul.walmsley@sifive.com>,
+	<palmer@dabbelt.com>, <anup@brainfault.org>, <atishp@atishpatra.org>,
+	<oleg@redhat.com>, <kees@kernel.org>, <tglx@linutronix.de>,
+	<will@kernel.org>, <mark.rutland@arm.com>, <brauner@kernel.org>,
+	<akpm@linux-foundation.org>, <rostedt@goodmis.org>, <edumazet@google.com>,
+	<unicorn_wang@outlook.com>, <inochiama@outlook.com>, <gaohan@iscas.ac.cn>,
+	<shihua@iscas.ac.cn>, <jiawei@iscas.ac.cn>, <wuwei2016@iscas.ac.cn>,
+	<drew@pdp7.com>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	<ctsai390@andestech.com>, <wefu@redhat.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
+	<mingo@redhat.com>, <peterz@infradead.org>, <boqun.feng@gmail.com>,
+	<xiao.w.wang@intel.com>, <qingfang.deng@siflower.com.cn>,
+	<leobras@redhat.com>, <jszhang@kernel.org>, <conor.dooley@microchip.com>,
+	<samuel.holland@sifive.com>, <yongxuan.wang@sifive.com>,
+	<luxu.kernel@bytedance.com>, <david@redhat.com>, <ruanjinjie@huawei.com>,
+	<cuiyunhui@bytedance.com>, <wangkefeng.wang@huawei.com>,
+	<qiaozhe@iscas.ac.cn>
+CC: <ardb@kernel.org>, <ast@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
+	<kvm-riscv@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-input@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <maple-tree@lists.infradead.org>,
+	<linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-atm-general@lists.sourceforge.net>, <linux-btrfs@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+	<linux-nfs@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>, <linux-media@vger.kernel.org>
+References: <20250325121624.523258-1-guoren@kernel.org>
+ <20250325121624.523258-26-guoren@kernel.org>
+Content-Language: en-US
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+In-Reply-To: <20250325121624.523258-26-guoren@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/25/2025 16:50:54
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 192097 [Mar 25 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
+ 68896fb0083a027476849bf400a331a2d5d94398
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.136.199
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 03/25/2025 16:52:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 3/25/2025 3:18:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Update event topic moving other topic events to cache and virtual
-memory.
+On 3/25/25 3:16 PM, guoren@kernel.org wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../pmu-events/arch/x86/westmereex/cache.json | 32 +++++++++++++++
- .../pmu-events/arch/x86/westmereex/other.json | 40 -------------------
- .../arch/x86/westmereex/virtual-memory.json   |  8 ++++
- 3 files changed, 40 insertions(+), 40 deletions(-)
+> From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
+> 
+> The rv64ilp32 abi reuses the env and argv memory layout of the
+> lp64 abi, so leave the space to fit the lp64 struct layout.
+> 
+> Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+> ---
+>  fs/exec.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 506cd411f4ac..548d18b7ae92 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -424,6 +424,10 @@ static const char __user *get_user_arg_ptr(struct user_arg_ptr argv, int nr)
+>  	}
+>  #endif
+>  
+> +#if defined(CONFIG_64BIT) && (BITS_PER_LONG == 32)
 
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/cache.json b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
-index 9f922370ee8b..2a677d10f688 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
-@@ -119,6 +119,38 @@
-         "SampleAfterValue": "100000",
-         "UMask": "0x2"
-     },
-+    {
-+        "BriefDescription": "L1I instruction fetch stall cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.CYCLES_STALLED",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "L1I instruction fetch hits",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.HITS",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "L1I instruction fetch misses",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.MISSES",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "L1I Instruction fetches",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.READS",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x3"
-+    },
-     {
-         "BriefDescription": "All L2 data requests",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/other.json b/tools/perf/pmu-events/arch/x86/westmereex/other.json
-index bcf5bcf637c0..c0cf8bae8074 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/other.json
-@@ -15,46 +15,6 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "L1I instruction fetch stall cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.CYCLES_STALLED",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x4"
--    },
--    {
--        "BriefDescription": "L1I instruction fetch hits",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.HITS",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "L1I instruction fetch misses",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.MISSES",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "L1I Instruction fetches",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.READS",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x3"
--    },
--    {
--        "BriefDescription": "Large ITLB hit",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x82",
--        "EventName": "LARGE_ITLB.HIT",
--        "SampleAfterValue": "200000",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Loads that partially overlap an earlier store",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
-index 0c3501e6e5a3..1800c6ecbf80 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
-@@ -152,6 +152,14 @@
-         "SampleAfterValue": "200000",
-         "UMask": "0x20"
-     },
-+    {
-+        "BriefDescription": "Large ITLB hit",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x82",
-+        "EventName": "LARGE_ITLB.HIT",
-+        "SampleAfterValue": "200000",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
-         "Counter": "0,1,2,3",
--- 
-2.49.0.395.g12beb8f557-goog
+   Parens don't seem necessary...
+
+> +	nr = nr * 2;
+
+   Why not nr *= 2?
+
+[...]
+
+MBR, Sergey
 
