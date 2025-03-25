@@ -1,194 +1,245 @@
-Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4124255E30;
-	Tue, 25 Mar 2025 13:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D706A25A349
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 15:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742908715; cv=none; b=OV+1a+U0blzJP2PP4eTRXfJoZpEH9j6pdlAMoNuSf59C81XafWKZUS6gSVGb0xHzsGcRozZDOT/SSLS5Ggm+7YDIlTHhgyh3Rt34Rj7NsTdVPb7N9f6RKz66we2EVukSyIce+kViQhmsflfdH9H+E5fuUvACopN6rc1vvZaWlkk=
+	t=1742915389; cv=none; b=M+pU2h7blofye+MY5mXSBhaDmoP9tWxWuISzu8XPQFCHn2mflHWvSbfrbABGs3cF2Rq3Q2jxDoXyxb4s/q0sGEQcwG0ak0wfARzxIpFiV4HSwB1h+W6u9NW1wGrylZqoGyeqFuji8GptvOa0Po/vOddVnP17fgMiFAIwf20Rr4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742908715; c=relaxed/simple;
-	bh=C5mrfP7F3Jg/lt8fV5RKe+diz2c9+8VrzuXO+lZEKsk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ucXm544baYho5mQ9Sf7OzrqWrpDva+0+aS/QQ/vnRT+bvsQPMB4gtIhGwvq3/9ExszTdSWCScWJziH0SqAE9b/ftR1wVYgYxOH52lD7vogrD+3XZf9T51lPbqM57E6DyBZ3aW9Es7LoHpI0du1iVOXuCokmybN0yEcBoSrdkV4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ImDeFIUl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AJbcpvEt; arc=none smtp.client-ip=202.12.124.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1742915389; c=relaxed/simple;
+	bh=adrV/Tb1NJvVkg7GbovqjunHFyvYZNN9pXpHCiYM3xg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S0EyXnDIKzE4V5fLMk93JlZ4e6xcpHXY/YRTYlQxaOOmp+Tup+XFX/1583bJV/h64rgROhJXTI0TOGZGc9H2AmoEWBi0O8W7r7x5bkhFTTFi3CcAbHIVF24jxPWNqev0Ppye56z3EppR+0UZzjjDYBxIjlYtbyyXVlwAa7367hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ie3vFuTD; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ImDeFIUl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AJbcpvEt"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.stl.internal (Postfix) with ESMTP id 145781D41618;
-	Tue, 25 Mar 2025 09:18:31 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Tue, 25 Mar 2025 09:18:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742908710;
-	 x=1742915910; bh=7uJCsElQFNSpp9yzC8ZbXV0umGMGK1SA9vUHShT/4EA=; b=
-	ImDeFIUlaPDd5ArnPxULaKFYin+F0C7Ltwhhbiw4k7YJ41vuGpa4S0yQgq9xPsTe
-	uJRvlxGtCeN8CpZuIT8pDsErIP9+bN/T8wL1tp/ARdfFsLcv8Sc8Rcm2AAGU22J+
-	QDfsMB27MlJ7Fh/RgFUJCVCjIT3YZoGmX8veA4VhtWah8Pa2dOJDZNENO5efOhCF
-	m3Aj/gZEic8zK7xg5Ge5VcUq9SwT677DKgbhu4s+jchHqDCVBX26EBF+Jyr1L5C7
-	63jXD83O9CYKFI6eG//84unPYNTVnG6PBAwgNm0MSU3dz67bgY73jNJFOhGYl0LB
-	s8TJP3x2kc2XfX0NxWNPbA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1742908710; x=
-	1742915910; bh=7uJCsElQFNSpp9yzC8ZbXV0umGMGK1SA9vUHShT/4EA=; b=A
-	JbcpvEtDY5GIbS4yWE3NXqHeL6XvezyIp78DhI5UvjpRspYi/G9CdSAwYSUCtNWb
-	yZCSTBsfwYT3pBmPHiX1MLdzsCwNGdqTg8pOqvQ1H2TQErjO20YnrvBIqr/9DMiS
-	N/aEn/bfBhxGa3yoge377x6x7UBRw+o2D2Qg6mmJ3KKWHRDwG4n8FjXRe5ziwEm/
-	wUGvAXF0t7FBZIYI28jJqmK/q7kzLry7J34szfZlVS+GOBQDtwkcol+hbMPCqvOl
-	aXXG9vwK4i1gpOxa8dIUlIDZzNMjb3dauDasxJL1NU5UvnvM0wrjeuV397H1C8sF
-	5R0FPcBeip3Dcp0RsoYDg==
-X-ME-Sender: <xms:Jq3iZ2T8JTz-jbX0ypdu8XvymSl6Ha60DCRSyE3kfaeDEsEdhgXRHQ>
-    <xme:Jq3iZ7xqFGmiYIgqeQgAYIE6NT795DUlcZ5oRdxvyZLcCtNjxwf5apWHvH69UlzU0
-    90ZNR5B4xx83SxrA2s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvjeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    vddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeihohhnghiguhgrnhdrfigrnh
-    hgsehsihhfihhvvgdrtghomhdprhgtphhtthhopehqihhnghhfrghnghdruggvnhhgsehs
-    ihhflhhofigvrhdrtghomhdrtghnpdhrtghpthhtohepughsthgvrhgsrgesshhushgvrd
-    gtohhmpdhrtghpthhtohepjhhoshgvfhesthhogihitghprghnuggrrdgtohhmpdhrtghp
-    thhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrtghhsehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqsghtrhhfshesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohes
-    vhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Jq3iZz2yRnqhHEw1IF85xMNxg4AIr2suK_Z7V6TXceVVmAzSa6K9mA>
-    <xmx:Jq3iZyAeXA8oa-5WGTCdkkC63QtF5vTYRHuh5qi7ccyHz9ZFy6uGWQ>
-    <xmx:Jq3iZ_hXDQ-VIXP0Zn7YnVUgAq0b19IaMLt4GaWKi3jJzguZr_HdUA>
-    <xmx:Jq3iZ-rgPQ_c8apCNrICWaw237kvlBRA58SynDoqVL6QMmwWVWyA2Q>
-    <xmx:Jq3iZ-U7_q_MN5COfgfdsTStOp5gWRt0SJfrgmunU_hcwDOxH-bYhAym>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DF35E2220071; Tue, 25 Mar 2025 09:18:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ie3vFuTD"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so275985ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 08:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742915387; x=1743520187; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O25tyu9grQRrZmiolUDiiMq1n9JgUYAqthBzADNM90g=;
+        b=ie3vFuTDetxGtaLSf6M2rooPtZd4zodDPvtVg4TJboEqlFtTLkTrgRhw7ZZI6fC0QL
+         8xe4UdYrVMenMtXZTE8dIGUwYL1MmG5EhZEV4VVeU0QEYBH76mnwGXQoBEFXL/DzDZKQ
+         seOlvcFZaDV71mn4txAjrH6/BGQrfeZsWetLgCW3stMf7CfQBtxKtES0geb5H0Qvh8zI
+         W6sj5pDkq/UK6JpXj7fGZXlxllyXlJ9g+o9F1BB2LQ5tF6Z4T+16M6bTq8tCmXbnIPd6
+         mn/xkkiUmnYQzYY1qcNzRkwM1Iaomkr1+RxldAWbSYp0h9snnKW/NCSkMdgWHDrh89na
+         JTzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742915387; x=1743520187;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O25tyu9grQRrZmiolUDiiMq1n9JgUYAqthBzADNM90g=;
+        b=bxkbbJKvVRZGKU71Rp892X3RRBQRxq3T5pirOUJyd9110Fb5jYDpicIn5QHQ+rRrlo
+         i5cj4z1X+8h5Hr5CFEvEII76TnCjw8RK57fYtoqnry26jxksG7ZN1JKPLlqbCuCkqBls
+         yo5URYOE9d6iuu3YQLLYfM8WDuLvkwKXXtXt+G1+cjSUR4wBHN/jR34KCr5rJV9bUez3
+         9JtFSCMLlI88CiA/pEn3TblX4Ev3sngaQsQ4nrNyxRfNvyU5LL9CNVuTJd+yJuvWtMAD
+         WbU3RIbKDtBM1i3NsWSZQZBFGJgnwbfCtsX+2jKfIJ/C9Gyxg3uXsdMHpqwWI19pSF/S
+         HeWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjMklOSHje4SEl7mOGKQGx7ftbZNNcpGgF/a6R/npsC/h/k7YzZ2/kCvcYFrqWZbCVVG2uh2KkRMsnUGg56c6J@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0JFHFI7tEJOtYtcuAWJE9nfU3pyhHbFK5uURHJtPcXuV0hu0D
+	24igcB0EENyb+83ryTMTDkNg0njjXdVLa+3BBnH1GwBGf//Lw2G01Kr8BcxQ64dVBg694P8mZUB
+	JS0+Z2krb1/Qi7kQQt317G2bTxNUKzoPfcCGS
+X-Gm-Gg: ASbGncsZpZImD0mZQrFHObTyWNdpC/2HeFddvwcyMBdVMD3EglcKnuPBMRrDvXIONgl
+	IZNI1Kr8o2uEy/AciETAcyhkaYtUjvVn3qrFMvBaypC1gWvWst7UU0uYviluvzAHv+Iu7TYm5Dn
+	LQ2iWbj8/CX51H97K0mFjNQrj/40ikbgwaDSKOMDwOwIcSX+CHPpxfui8=
+X-Google-Smtp-Source: AGHT+IGH02pIpw9ePhkURA/abBLjMSfBXIamJu/AUquADH/jXaYNbZMwBF8js8MWvLkmEh6Du9SL1Deh8tN2ZpBhOo0=
+X-Received: by 2002:a17:902:ce11:b0:224:a93:704d with SMTP id
+ d9443c01a7336-227982a7faamr7964675ad.2.1742915386672; Tue, 25 Mar 2025
+ 08:09:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T218a0d8b70d1a53d
-Date: Tue, 25 Mar 2025 14:17:44 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Peter Zijlstra" <peterz@infradead.org>, guoren <guoren@kernel.org>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Anup Patel" <anup@brainfault.org>,
- "Atish Patra" <atishp@atishpatra.org>, "Oleg Nesterov" <oleg@redhat.com>,
- "Kees Cook" <kees@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- "Will Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Christian Brauner" <brauner@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Eric Dumazet" <edumazet@google.com>,
- "Chen Wang" <unicorn_wang@outlook.com>,
- "Inochi Amaoto" <inochiama@outlook.com>, gaohan@iscas.ac.cn,
- shihua@iscas.ac.cn, jiawei@iscas.ac.cn, wuwei2016@iscas.ac.cn,
- "Drew Fustini" <drew@pdp7.com>, "Lad,
- Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- ctsai390@andestech.com, wefu@redhat.com,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Josef Bacik" <josef@toxicpanda.com>, "David Sterba" <dsterba@suse.com>,
- "Ingo Molnar" <mingo@redhat.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Xiao W Wang" <xiao.w.wang@intel.com>, qingfang.deng@siflower.com.cn,
- "Leonardo Bras" <leobras@redhat.com>,
- "Jisheng Zhang" <jszhang@kernel.org>,
- "Conor.Dooley" <conor.dooley@microchip.com>,
- "Samuel Holland" <samuel.holland@sifive.com>, yongxuan.wang@sifive.com,
- "Xu Lu" <luxu.kernel@bytedance.com>,
- "David Hildenbrand" <david@redhat.com>,
- "Ruan Jinjie" <ruanjinjie@huawei.com>,
- "Yunhui Cui" <cuiyunhui@bytedance.com>,
- "Kefeng Wang" <wangkefeng.wang@huawei.com>, qiaozhe@iscas.ac.cn,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, bpf@vger.kernel.org,
- linux-input@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, maple-tree@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-media@vger.kernel.org
-Message-Id: <db3c9923-8800-4ed3-a352-4ee9ef79c0b7@app.fastmail.com>
-In-Reply-To: <20250325122640.GK36322@noisy.programming.kicks-ass.net>
-References: <20250325121624.523258-1-guoren@kernel.org>
- <20250325122640.GK36322@noisy.programming.kicks-ass.net>
-Subject: Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT kernel-self with
- ILP32 ABI
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250322063403.364981-1-irogers@google.com> <20250322063403.364981-4-irogers@google.com>
+ <48eb46bce14d895b61560907cb7f0df9038df57d.camel@intel.com>
+In-Reply-To: <48eb46bce14d895b61560907cb7f0df9038df57d.camel@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 25 Mar 2025 08:09:35 -0700
+X-Gm-Features: AQ5f1JpEGGA-ok2ErrBCy0AI6IuEEiiZNC5YMor8Ed02ipPGWm0vrAgaGC1v2kg
+Message-ID: <CAP-5=fU2OhLBF9GdLngUVq00T1h38deLj7oDrWNc6fYckjpuWg@mail.gmail.com>
+Subject: Re: [PATCH v1 03/35] perf vendor events: Update arrowlake events/metrics
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"Biggers, Caleb" <caleb.biggers@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"Taylor, Perry" <perry.taylor@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, 
+	"alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, 
+	"namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025, at 13:26, Peter Zijlstra wrote:
-> On Tue, Mar 25, 2025 at 08:15:41AM -0400, guoren@kernel.org wrote:
->> From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
->> 
->> Since 2001, the CONFIG_64BIT kernel has been built with the LP64 ABI,
->> but this patchset allows the CONFIG_64BIT kernel to use an ILP32 ABI
+On Mon, Mar 24, 2025 at 5:17=E2=80=AFPM Falcon, Thomas <thomas.falcon@intel=
+.com> wrote:
 >
-> Please, don't do this. This adds a significant maintenance burden on all
-> of us.
+> On Fri, 2025-03-21 at 23:33 -0700, Ian Rogers wrote:
+> > Update events from v1.07 to v1.08.
+> > Update event topics, metrics to be generated from the TMA spreadsheet
+> > and other small clean ups.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  .../arch/x86/arrowlake/arl-metrics.json       | 566 +++++++++---------
+> >  .../pmu-events/arch/x86/arrowlake/cache.json  | 148 +++++
+> >  .../pmu-events/arch/x86/arrowlake/memory.json |  11 +
+> >  .../pmu-events/arch/x86/arrowlake/other.json  | 193 ------
+> >  .../arch/x86/arrowlake/pipeline.json          | 163 ++++-
+> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
+> >  6 files changed, 608 insertions(+), 475 deletions(-)
+> >
+> >
+> ...
+>
+> > @@ -1086,18 +1086,18 @@
+> >          "MetricExpr": "cpu_core@MEMORY_STALLS.MEM@ / tma_info_thread_c=
+lks",
+> >          "MetricGroup": "MemoryBound;TmaL3mem;TopdownL3;tma_L3_group;tm=
+a_memory_bound_group",
+> >          "MetricName": "tma_dram_bound",
+> > -        "MetricThreshold": "tma_dram_bound > 0.1 & tma_memory_bound > =
+0.2 & tma_backend_bound > 0.2",
+> > +        "MetricThreshold": "tma_dram_bound > 0.1 & (tma_memory_bound >=
+ 0.2 & tma_backend_bound > 0.2)",
+> >          "PublicDescription": "This metric estimates how often the CPU =
+was stalled on accesses to external memory (DRAM) by loads. Better caching =
+can improve the latency and increase performance. Sample with: MEM_LOAD_RET=
+IRED.L3_MISS",
+> >          "ScaleUnit": "100%",
+> >          "Unit": "cpu_core"
+> >      },
+> >      {
+> >          "BriefDescription": "This metric represents Core fraction of c=
+ycles in which CPU was likely limited due to DSB (decoded uop cache) fetch =
+pipeline",
+> > -        "MetricExpr": "(cpu_core@IDQ.DSB_UOPS\\,cmask\\=3D0x8\\,inv\\=
+=3D0x1@ + cpu_core@IDQ.DSB_UOPS@ / (cpu_core@IDQ.DSB_UOPS@ + cpu_core@IDQ.M=
+ITE_UOPS@) * (cpu_core@IDQ_BUBBLES.CYCLES_0_UOPS_DELIV.CORE@ - cpu_core@IDQ=
+_BUBBLES.FETCH_LATENCY@)) / tma_info_thread_clks",
+> > +        "MetricExpr": "(cpu@IDQ.DSB_UOPS\\,cmask\\=3D0x8\\,inv\\=3D0x1=
+@ + cpu_core@IDQ.DSB_UOPS@ / (cpu_core@IDQ.DSB_UOPS@ + cpu_core@IDQ.MITE_UO=
+PS@) * (cpu_core@IDQ_BUBBLES.CYCLES_0_UOPS_DELIV.CORE@ - cpu_core@IDQ_BUBBL=
+ES.FETCH_LATENCY@)) / tma_info_thread_clks",
+> >          "MetricGroup": "DSB;FetchBW;TopdownL3;tma_L3_group;tma_fetch_b=
+andwidth_group",
+> >          "MetricName": "tma_dsb",
+> >          "MetricThreshold": "tma_dsb > 0.15 & tma_fetch_bandwidth > 0.2=
+",
+> > -        "PublicDescription": "This metric represents Core fraction of =
+cycles in which CPU was likely limited due to DSB (decoded uop cache) fetch=
+ pipeline.  For example; inefficient utilization of the DSB cache structure=
+ or bank conflict when reading from it; are categorized here",
+> > +        "PublicDescription": "This metric represents Core fraction of =
+cycles in which CPU was likely limited due to DSB (decoded uop cache) fetch=
+ pipeline.  For example; inefficient utilization of the DSB cache structure=
+ or bank conflict when reading from it; are categorized here.",
+> >          "ScaleUnit": "100%",
+> >          "Unit": "cpu_core"
+> >      },
+> >
+>
+> I'm seeing some errors for metrics tma_dsb, tma_lsd, and tma_mite on arro=
+wlake. I think cpu should
+> be cpu_core here
+>
+> $ sudo ./perf stat -M tma_dsb
+> event syntax error: '...THREAD!3/,cpu/IDQ.DSB_UOPS,cmask=3D0x8,inv=3D0x1,=
+metric-
+> id=3Dcpu!3IDQ.DSB_UOPS!0cmask!20x8!0inv!20x1!3/,cpu_core/topdown-fe-bound=
+,metric-id=3Dcpu_core!3t..'
+>                                   \___ Bad event or PMU
+>
+> Unable to find PMU or event on a PMU of 'cpu'
+>
+>
+> >          "BriefDescription": "This metric represents Core fraction of c=
+ycles in which CPU was likely limited due to LSD (Loop Stream Detector) uni=
+t",
+> > -        "MetricExpr": "cpu_core@LSD.UOPS\\,cmask\\=3D0x8\\,inv\\=3D0x1=
+@ / tma_info_thread_clks",
+> > +        "MetricExpr": "cpu@LSD.UOPS\\,cmask\\=3D0x8\\,inv\\=3D0x1@ / t=
+ma_info_thread_clks",
+> >          "MetricGroup": "FetchBW;LSD;TopdownL3;tma_L3_group;tma_fetch_b=
+andwidth_group",
+> >          "MetricName": "tma_lsd",
+> >          "MetricThreshold": "tma_lsd > 0.15 & tma_fetch_bandwidth > 0.2=
+",
+> > -        "PublicDescription": "This metric represents Core fraction of =
+cycles in which CPU was likely limited due to LSD (Loop Stream Detector) un=
+it.  LSD typically does well sustaining Uop supply. However; in some rare c=
+ases; optimal uop-delivery could not be reached for small loops whose size =
+(in terms of number of uops) does not suit well the LSD structure",
+> > +        "PublicDescription": "This metric represents Core fraction of =
+cycles in which CPU was likely limited due to LSD (Loop Stream Detector) un=
+it.  LSD typically does well sustaining Uop supply. However; in some rare c=
+ases; optimal uop-delivery could not be reached for small loops whose size =
+(in terms of number of uops) does not suit well the LSD structure.",
+> >          "ScaleUnit": "100%",
+> >          "Unit": "cpu_core"
+> >      },
+> >
+>
+> ...here
+>
+> $ sudo ./perf stat -M tma_lsd
+> event syntax error: '...THREAD!3/,cpu/LSD.UOPS,cmask=3D0x8,inv=3D0x1,metr=
+ic-
+> id=3Dcpu!3LSD.UOPS!0cmask!20x8!0inv!20x1!3/,cpu_core/topdown-fe-bound,met=
+ric-id=3Dcpu_core!3topdown!1..'
+>                                   \___ Bad event or PMU
+>
+> Unable to find PMU or event on a PMU of 'cpu'
+>
+>
+> >      },
+> >      {
+> >          "BriefDescription": "This metric represents Core fraction of c=
+ycles in which CPU was likely limited due to the MITE pipeline (the legacy =
+decode pipeline)",
+> > -        "MetricExpr": "(cpu_core@IDQ.MITE_UOPS\\,cmask\\=3D0x8\\,inv\\=
+=3D0x1@ / tma_info_thread_clks + cpu_core@IDQ.MITE_UOPS@ / (cpu_core@IDQ.DS=
+B_UOPS@ + cpu_core@IDQ.MITE_UOPS@) * (cpu_core@IDQ_BUBBLES.CYCLES_0_UOPS_DE=
+LIV.CORE@ - cpu_core@IDQ_BUBBLES.FETCH_LATENCY@)) / tma_info_thread_clks",
+> > +        "MetricExpr": "(cpu@IDQ.MITE_UOPS\\,cmask\\=3D0x8\\,inv\\=3D0x=
+1@ / 2 + cpu_core@IDQ.MITE_UOPS@ / (cpu_core@IDQ.DSB_UOPS@ + cpu_core@IDQ.M=
+ITE_UOPS@) * (cpu_core@IDQ_BUBBLES.CYCLES_0_UOPS_DELIV.CORE@ - cpu_core@IDQ=
+_BUBBLES.FETCH_LATENCY@)) / tma_info_thread_clks",
+> >          "MetricGroup": "DSBmiss;FetchBW;TopdownL3;tma_L3_group;tma_fet=
+ch_bandwidth_group",
+> >          "MetricName": "tma_mite",
+> >          "MetricThreshold": "tma_mite > 0.1 & tma_fetch_bandwidth > 0.2=
+",
+>
+> ...and here?
+>
+> $ sudo ./perf stat -M tma_mite
+> event syntax error: '..etiring!3/,cpu/IDQ.MITE_UOPS,cmask=3D0x8,inv=3D0x1=
+,metric-
+> id=3Dcpu!3IDQ.MITE_UOPS!0cmask!20x8!0inv!20x1!3/,cpu_core/topdown-bad-spe=
+c,metric-id=3Dcpu_core!..'
+>                                   \___ Bad event or PMU
+>
+> Unable to find PMU or event on a PMU of 'cpu'
 
-It would be easier to this with CONFIG_64BIT disabled and continue
-treating CONFIG_64BIT to be the same as BITS_PER_LONG=64, but I still
-think it's fundamentally a bad idea to support this in mainline
-kernels in any variation, other than supporting regular 32-bit
-compat mode tasks on a regular 64-bit kernel.
+Thanks Tom, I'll post a fix in v2.
 
->> The patchset targets RISC-V and is built on the RV64ILP32 ABI, which
->> was introduced into RISC-V's psABI in January 2025 [1]. This patchset
->> equips an rv64ilp32-abi kernel with all the functionalities of a
->> traditional lp64-abi kernel, yet restricts the address space to 2GiB.
->> Hence, the rv64ilp32-abi kernel simultaneously supports lp64-abi
->> userspace and ilp32-abi (compat) userspace, the same as the
->> traditional lp64-abi kernel.
+Ian
 
-You declare the syscall ABI to be the native 64-bit ABI, but this
-is fundamentally not true because a many uapi structures are
-defined in terms of 'long' or pointer values, in particular in
-the ioctl call. This might work for an rv64ilp32 userspace that
-uses the same headers and the same types, but you explicitly
-say that the goal is to run native rv64 or compat rv32 tasks,
-not rv64ilp32 (thanks!).
-
-As far as I can tell, there is no way to rectify this design flaw
-other than to drop support for 64-bit userspace and only support
-regular rv32 userspace. I'm also skeptical that supporting rv64
-userspace helps in practice other than for testing, since
-generally most memory overhead is in userspace rather than the
-kernel, and there is much more to gain from shrinking the larger
-userspace by running rv32 compat mode binaries on a 64-bit kernel
-than the other way round.
-
-If you remove the CONFIG_64BIT changes that Peter mentioned and
-the support for ilp64 userland from your series, you end up
-with a kernel that is very similar to a native rv32 kernel
-but executes as rv64ilp32 and runs rv32 userspace. I don't have
-any objections to that approach, and the same thing has come
-up on arm64 as a possible idea as well, but I don't know if
-that actually brings any notable advantage over an rv32 kernel.
-
-Are there CPUs that can run rv64 kernels and rv32 userspace
-but not rv32 kernels, similar to what we have on Arm Cortex-A76
-and Cortex-A510?
-
-       Arnd
+>
+> Thanks,
+> Tom
+>
+>
