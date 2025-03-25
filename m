@@ -1,136 +1,263 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1896313633F;
-	Tue, 25 Mar 2025 17:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361591F463F
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 17:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742923195; cv=none; b=JVnlwqVX6P2mPQEyZ+/VCGqJ4P18sGpLohEiLA42NvMdcuwFnvm6Gts6MotbeIPjngeCkr7IXavTEdHtxZ54NYjKzjnieHJbw52OYu20xq+NTnzQV8+qEdFr9x29mvagLSgEdt93kTrsER3utBA5TBu0NaZouBObCpg2MWJ/vlo=
+	t=1742924690; cv=none; b=qR4TaT40LZFnZdVZ86I8lCLY4l6Gga3l813xZgmC2UOgDjJenbuXNUMBwMZmhmgX9a/Yxb2mPVNeVy3r+9j5HBsyB8keZsRwml/HQPn3UIxI+uAKUAUvKSmPNG+Gd6LKoy3BIgfbLiQ4DnyS/3vA7qRHCA0+HPzTwWsd9MS98vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742923195; c=relaxed/simple;
-	bh=XhmLROfnnL3FtaOH27gIOe9sbljr3QNEJt4khOaoGEw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=thXfkLpcysvlslOLNwAsjXCeCS6JfK6KctSbO2VGPV3RuKnyk0b5C13uS18qMml/OaXFTQll1YJumJb0xtEBlz6OVXMzXwT+u0OP1YIXmFUMXF7N6mj6jdKsM0A+dPbTQIyLF0c2blFZmvdsLhtgQIwwYgh2AD86/cle9R4yFAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.102] (213.87.136.199) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 25 Mar
- 2025 20:19:41 +0300
-Message-ID: <05fec753-cdaa-45a5-a029-b6435c30eb07@omp.ru>
-Date: Tue, 25 Mar 2025 20:19:39 +0300
+	s=arc-20240116; t=1742924690; c=relaxed/simple;
+	bh=o6g5HoC32I+6BiDO8vCfhv3kf+WezCmeDCwVZM3gAjo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=XvWNR2x0eMZ4TkswFLmOELyuslZeSaG7X6R2xCDRSiWR2b8aheImsNhpWGJqyD64Z8NdBDkXfUvOtgkrRDzbmwzlWxCBjuAHUQwbytHTXiAndyI3G+i2D1oaxcQP564q4kTACJYN3AFpjjPz3/KBJ2qFYmU+ReqQwLMzrG3LSlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQkSHL1J; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQkSHL1J"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2240aad70f2so18535ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 10:44:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742924687; x=1743529487; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C557zFYMQNx6YZaNFk9a2tG90MlGVtliFmUOKVTtxbE=;
+        b=rQkSHL1JHmNlhh0a1ZWsWrS999xui5awFO7BqNybosaOIJkRSHoufCZWqAwL5S6AS5
+         waRJ/Abd9VjTSU2xFn5DNNCxCteivYlWCvsF+QbpfCjLB+31YxihfXUmJFRpIqKiJw7R
+         hVtTQUDvrJbnbSkACK4QT9Wspv5WeolxnfXYwVD9zT0zGD9e+jOYRt+angMGN3vEuG0m
+         QJeqI1pcc8uUnQ6RV7cDgyrzNA9H6xH1zdeA9PbS5Ushbk6/pamcxu7PfSSJxA/z0rig
+         30aVkBQKVQRjZZHcGUN41wcme+ClwhGrczWAEtatTyzSqEBKup4x31schAjjWRPUzPHG
+         QxsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742924687; x=1743529487;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C557zFYMQNx6YZaNFk9a2tG90MlGVtliFmUOKVTtxbE=;
+        b=wD5oDYQSLUlsMonndfwh63pigOW8ZECkO6hBMA4+dAJACQPMo5CCHEut4BI6rFgzDv
+         4txyHyoU/qAkB2FHVbfOgENIOsz2tjFZ8y65r7PUW33bk48yAbDthCIZs4ZXiCARF3qP
+         MPg7sJL69uv1qnofpQhI3++XdCw08Y8RNhNv+ZTn5rk9ZWhX8pTnRK1XQAI/Ar3yspow
+         yF1P9JnJV+olUE4FFZwcPWJMsHAUgm8B5uD6UK28iWr3O08EfafBWC3V7EBtnN0aYk0c
+         ytzaXhMgwuuIPD6J5pT3KkZOIxpm+FW0IBBFsSau/0MF/+tiouvU38mmaSP1XS0r/pbL
+         aBrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgqNL1rcpHF/B+MTnaPABOO4tdkGyticb1FrnYGtkFVKDi+D7rfpLIVL/mu0M+bfEzWwyrH/RF25iZZjcwacbg@vger.kernel.org
+X-Gm-Message-State: AOJu0YyigzeG0rJbMeq34u/01bEO/CFbvYBH739u6k7+kupNoN3si8TH
+	GkSXcr9VG/jjDBSL8dak88nLoTVr2Q9Wg603sjFAjsk9eYlGpVXm/ThTNsJAFCctQyqpxn0URzI
+	2Is5XORVu9k9vrdbKaxmKzEzDluucxXRaS7QE
+X-Gm-Gg: ASbGncttvotKZBNAuqiq9OxxF+Iu9kMDqXEmHkK3j7HQIk48GyQ/CK9vzzqPyQNSQ1g
+	mf0PGFoYESedas3WVxqFjTN1e+FwafS2EftuT8pLtimqzdQhMyt8lNNFwSM/k/oysfWnL/JxXFv
+	b8CRRLO42ucxOsH9n0/bWoaZJK1ym/MLfqRk2MfuJdJVt5eChrz8elXw==
+X-Google-Smtp-Source: AGHT+IHPelgDScufsa6zAdrdNBGBs5B6xqAFz7eUGQGOmOqHwOhJ5MfpsvqJ85TCgQC7BKeJ/DkvYhul0b9i7GXTf4c=
+X-Received: by 2002:a17:903:2c6:b0:21f:2ded:bfa0 with SMTP id
+ d9443c01a7336-22799f80a6bmr9127625ad.25.1742924687095; Tue, 25 Mar 2025
+ 10:44:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH V3 25/43] rv64ilp32_abi: exec: Adapt 64lp64 env and
- argv
-To: <guoren@kernel.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-	<torvalds@linux-foundation.org>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <anup@brainfault.org>, <atishp@atishpatra.org>,
-	<oleg@redhat.com>, <kees@kernel.org>, <tglx@linutronix.de>,
-	<will@kernel.org>, <mark.rutland@arm.com>, <brauner@kernel.org>,
-	<akpm@linux-foundation.org>, <rostedt@goodmis.org>, <edumazet@google.com>,
-	<unicorn_wang@outlook.com>, <inochiama@outlook.com>, <gaohan@iscas.ac.cn>,
-	<shihua@iscas.ac.cn>, <jiawei@iscas.ac.cn>, <wuwei2016@iscas.ac.cn>,
-	<drew@pdp7.com>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	<ctsai390@andestech.com>, <wefu@redhat.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
-	<mingo@redhat.com>, <peterz@infradead.org>, <boqun.feng@gmail.com>,
-	<xiao.w.wang@intel.com>, <qingfang.deng@siflower.com.cn>,
-	<leobras@redhat.com>, <jszhang@kernel.org>, <conor.dooley@microchip.com>,
-	<samuel.holland@sifive.com>, <yongxuan.wang@sifive.com>,
-	<luxu.kernel@bytedance.com>, <david@redhat.com>, <ruanjinjie@huawei.com>,
-	<cuiyunhui@bytedance.com>, <wangkefeng.wang@huawei.com>,
-	<qiaozhe@iscas.ac.cn>
-CC: <ardb@kernel.org>, <ast@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
-	<kvm-riscv@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <maple-tree@lists.infradead.org>,
-	<linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-atm-general@lists.sourceforge.net>, <linux-btrfs@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-	<linux-nfs@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <linux-media@vger.kernel.org>
-References: <20250325121624.523258-1-guoren@kernel.org>
- <20250325121624.523258-26-guoren@kernel.org>
-Content-Language: en-US
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-In-Reply-To: <20250325121624.523258-26-guoren@kernel.org>
+References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-11-irogers@google.com>
+In-Reply-To: <20250122174308.350350-11-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 25 Mar 2025 10:44:34 -0700
+X-Gm-Features: AQ5f1JpIGP8wbMVFe85DxBTilH4hLmUR3dv-unPSph-h7lFMwMVjU6DwDza6nuM
+Message-ID: <CAP-5=fUt4rvEWRY=O6-EM0GGgOxz3VL933OgSYET2HxCi8fsCA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/18] perf dso: Support BPF programs in dso__read_symbol
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/25/2025 16:50:54
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 192097 [Mar 25 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.136.199
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/25/2025 16:52:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/25/2025 3:18:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Transfer-Encoding: quoted-printable
 
-On 3/25/25 3:16 PM, guoren@kernel.org wrote:
+On Wed, Jan 22, 2025 at 9:43=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Set the buffer to the code in the BPF linear info. This enables BPF
+> JIT code disassembly by LLVM and capstone. Move the disassmble_bpf
+> calls to disassemble_objdump so that they are only called after
+> falling back to the objdump option.
 
-> From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
-> 
-> The rv64ilp32 abi reuses the env and argv memory layout of the
-> lp64 abi, so leave the space to fit the lp64 struct layout.
-> 
-> Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+It would be nice to land this series in part because of supporting BPF
+disassembly with LLVM and capstone, possible because of the cleanups
+and refactorings.
+
+Thanks,
+Ian
+
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  fs/exec.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 506cd411f4ac..548d18b7ae92 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -424,6 +424,10 @@ static const char __user *get_user_arg_ptr(struct user_arg_ptr argv, int nr)
->  	}
->  #endif
->  
-> +#if defined(CONFIG_64BIT) && (BITS_PER_LONG == 32)
-
-   Parens don't seem necessary...
-
-> +	nr = nr * 2;
-
-   Why not nr *= 2?
-
-[...]
-
-MBR, Sergey
-
+>  tools/perf/util/disasm.c | 12 +++---
+>  tools/perf/util/dso.c    | 85 +++++++++++++++++++++++++---------------
+>  2 files changed, 60 insertions(+), 37 deletions(-)
+>
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index a9cc588a3006..99b9c21e02b0 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -1500,6 +1500,12 @@ static int symbol__disassemble_objdump(const char =
+*filename, struct symbol *sym,
+>         struct child_process objdump_process;
+>         int err;
+>
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO)
+> +               return symbol__disassemble_bpf(sym, args);
+> +
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAGE)
+> +               return symbol__disassemble_bpf_image(sym, args);
+> +
+>         err =3D asprintf(&command,
+>                  "%s %s%s --start-address=3D0x%016" PRIx64
+>                  " --stop-address=3D0x%016" PRIx64
+> @@ -1681,11 +1687,7 @@ int symbol__disassemble(struct symbol *sym, struct=
+ annotate_args *args)
+>
+>         pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_nam=
+e(dso), sym, sym->name);
+>
+> -       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO) =
+{
+> -               return symbol__disassemble_bpf(sym, args);
+> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAG=
+E) {
+> -               return symbol__disassemble_bpf_image(sym, args);
+> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUN=
+D) {
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
+>                 return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE=
+;
+>         } else if (dso__is_kcore(dso)) {
+>                 kce.addr =3D map__rip_2objdump(map, sym->start);
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 0285904ed26d..a90799bed230 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1686,48 +1686,69 @@ const u8 *dso__read_symbol(struct dso *dso, const=
+ char *symfs_filename,
+>                            const struct map *map, const struct symbol *sy=
+m,
+>                            u8 **out_buf, u64 *out_buf_len, bool *is_64bit=
+)
+>  {
+> -       struct nscookie nsc;
+>         u64 start =3D map__rip_2objdump(map, sym->start);
+>         u64 end =3D map__rip_2objdump(map, sym->end);
+> -       int fd, count;
+> -       u8 *buf =3D NULL;
+> -       size_t len;
+> -       struct find_file_offset_data data =3D {
+> -               .ip =3D start,
+> -       };
+> +       const u8 *buf;
+> +       size_t len =3D end - start;
+>
+>         *out_buf =3D NULL;
+>         *out_buf_len =3D 0;
+>         *is_64bit =3D false;
+>
+> -       nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> -       fd =3D open(symfs_filename, O_RDONLY);
+> -       nsinfo__mountns_exit(&nsc);
+> -       if (fd < 0)
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAGE) {
+> +               pr_debug("No BPF image disassembly support\n");
+>                 return NULL;
+> +       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG=
+_INFO) {
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +               struct bpf_prog_info_node *info_node;
+> +               struct perf_bpil *info_linear;
+> +
+> +               *is_64bit =3D sizeof(void *) =3D=3D sizeof(u64);
+> +               info_node =3D perf_env__find_bpf_prog_info(dso__bpf_prog(=
+dso)->env,
+> +                                                        dso__bpf_prog(ds=
+o)->id);
+> +               if (!info_node) {
+> +                       errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+> +                       return NULL;
+> +               }
+> +               info_linear =3D info_node->info_linear;
+> +               buf =3D (const u8 *)(uintptr_t)(info_linear->info.jited_p=
+rog_insns);
+> +               assert(len <=3D info_linear->info.jited_prog_len);
+> +#else
+> +               pr_debug("No BPF program disassembly support\n");
+> +               return NULL;
+> +#endif
+> +       } else {
+> +               struct nscookie nsc;
+> +               int fd;
+> +               ssize_t count;
+> +               struct find_file_offset_data data =3D {
+> +                       .ip =3D start,
+> +               };
+> +               u8 *code_buf =3D NULL;
+>
+> -       if (file__read_maps(fd, /*exe=3D*/true, find_file_offset, &data, =
+is_64bit) =3D=3D 0)
+> -               goto err;
+> -
+> -       len =3D end - start;
+> -       buf =3D malloc(len);
+> -       if (buf =3D=3D NULL)
+> -               goto err;
+> -
+> -       count =3D pread(fd, buf, len, data.offset);
+> -       close(fd);
+> -       fd =3D -1;
+> -
+> -       if ((u64)count !=3D len)
+> -               goto err;
+> +               nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> +               fd =3D open(symfs_filename, O_RDONLY);
+> +               nsinfo__mountns_exit(&nsc);
+> +               if (fd < 0)
+> +                       return NULL;
+>
+> -       *out_buf =3D buf;
+> +               if (file__read_maps(fd, /*exe=3D*/true, find_file_offset,=
+ &data, is_64bit) =3D=3D 0) {
+> +                       close(fd);
+> +                       return NULL;
+> +               }
+> +               buf =3D code_buf =3D malloc(len);
+> +               if (buf =3D=3D NULL) {
+> +                       close(fd);
+> +                       return NULL;
+> +               }
+> +               count =3D pread(fd, code_buf, len, data.offset);
+> +               close(fd);
+> +               if ((u64)count !=3D len) {
+> +                       free(code_buf);
+> +                       return NULL;
+> +               }
+> +               *out_buf =3D code_buf;
+> +       }
+>         *out_buf_len =3D len;
+>         return buf;
+> -
+> -err:
+> -       if (fd >=3D 0)
+> -               close(fd);
+> -       free(buf);
+> -       return NULL;
+>  }
+> --
+> 2.48.1.262.g85cc9f2d1e-goog
+>
