@@ -1,263 +1,178 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361591F463F
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 17:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FA5263F4E
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 17:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742924690; cv=none; b=qR4TaT40LZFnZdVZ86I8lCLY4l6Gga3l813xZgmC2UOgDjJenbuXNUMBwMZmhmgX9a/Yxb2mPVNeVy3r+9j5HBsyB8keZsRwml/HQPn3UIxI+uAKUAUvKSmPNG+Gd6LKoy3BIgfbLiQ4DnyS/3vA7qRHCA0+HPzTwWsd9MS98vs=
+	t=1742925164; cv=none; b=I4Y0R+zMWn2wPwaqWc8/VsCuDBbb1YZMXAKyeARV2XWM+4JfRxt2MVORgpvMJLcsAX2QZg+2W0chIeOYk9xuFzx7aJWx8uIYBvtEsJCE1TE/QAAo/bFni1neks1uuzikKGrGTmK2b9geYmJaJCOCix2ebowgdpYSEwt3ei2KeMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742924690; c=relaxed/simple;
-	bh=o6g5HoC32I+6BiDO8vCfhv3kf+WezCmeDCwVZM3gAjo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=XvWNR2x0eMZ4TkswFLmOELyuslZeSaG7X6R2xCDRSiWR2b8aheImsNhpWGJqyD64Z8NdBDkXfUvOtgkrRDzbmwzlWxCBjuAHUQwbytHTXiAndyI3G+i2D1oaxcQP564q4kTACJYN3AFpjjPz3/KBJ2qFYmU+ReqQwLMzrG3LSlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQkSHL1J; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742925164; c=relaxed/simple;
+	bh=rqgWaiOeIHt4zG94xEwnMSEUgdwajlC/lHAStnrVhlo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ugw9+a9OdEhfHl8RgI0bAhsGBBpZlN+AjxHHNQG3S6PP4Rx2u7IoBpWZqkjPfIrMw166bXAmkagWQYJ8R2a1/tCh4YY+ONIjkbogqkd5Nguwhm1U2OYZNjD/IjVuWMplAQzqgYajTPfLMm5fKy4Wub+et2UyjXIl1HaYSsoR+dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G12cdrLZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQkSHL1J"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2240aad70f2so18535ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 10:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742924687; x=1743529487; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C557zFYMQNx6YZaNFk9a2tG90MlGVtliFmUOKVTtxbE=;
-        b=rQkSHL1JHmNlhh0a1ZWsWrS999xui5awFO7BqNybosaOIJkRSHoufCZWqAwL5S6AS5
-         waRJ/Abd9VjTSU2xFn5DNNCxCteivYlWCvsF+QbpfCjLB+31YxihfXUmJFRpIqKiJw7R
-         hVtTQUDvrJbnbSkACK4QT9Wspv5WeolxnfXYwVD9zT0zGD9e+jOYRt+angMGN3vEuG0m
-         QJeqI1pcc8uUnQ6RV7cDgyrzNA9H6xH1zdeA9PbS5Ushbk6/pamcxu7PfSSJxA/z0rig
-         30aVkBQKVQRjZZHcGUN41wcme+ClwhGrczWAEtatTyzSqEBKup4x31schAjjWRPUzPHG
-         QxsQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G12cdrLZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742925161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=58+r+FAQ5TTby/P3+2e15XArHywgR9oB31F4zzKw58o=;
+	b=G12cdrLZiH2O0I4Fg9LV2QgbNKilLkFryvzQoZqQyrdz4IU7BXV+H8AgVX+ixYY3mzjs0J
+	pr8rcxZr3R2Od8PodkTO80jh4WHY8KNzNIjFL+0u585isJEqAChbTEthKR4TJWoPYyrqkh
+	Lpm5nAIXo8zJzGyw9V+1NuhsjdY9mtU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-93-_eUO-pdrPiaQEyz5Rf7iag-1; Tue, 25 Mar 2025 13:52:40 -0400
+X-MC-Unique: _eUO-pdrPiaQEyz5Rf7iag-1
+X-Mimecast-MFC-AGG-ID: _eUO-pdrPiaQEyz5Rf7iag_1742925159
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so39098465e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 10:52:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742924687; x=1743529487;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C557zFYMQNx6YZaNFk9a2tG90MlGVtliFmUOKVTtxbE=;
-        b=wD5oDYQSLUlsMonndfwh63pigOW8ZECkO6hBMA4+dAJACQPMo5CCHEut4BI6rFgzDv
-         4txyHyoU/qAkB2FHVbfOgENIOsz2tjFZ8y65r7PUW33bk48yAbDthCIZs4ZXiCARF3qP
-         MPg7sJL69uv1qnofpQhI3++XdCw08Y8RNhNv+ZTn5rk9ZWhX8pTnRK1XQAI/Ar3yspow
-         yF1P9JnJV+olUE4FFZwcPWJMsHAUgm8B5uD6UK28iWr3O08EfafBWC3V7EBtnN0aYk0c
-         ytzaXhMgwuuIPD6J5pT3KkZOIxpm+FW0IBBFsSau/0MF/+tiouvU38mmaSP1XS0r/pbL
-         aBrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgqNL1rcpHF/B+MTnaPABOO4tdkGyticb1FrnYGtkFVKDi+D7rfpLIVL/mu0M+bfEzWwyrH/RF25iZZjcwacbg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyigzeG0rJbMeq34u/01bEO/CFbvYBH739u6k7+kupNoN3si8TH
-	GkSXcr9VG/jjDBSL8dak88nLoTVr2Q9Wg603sjFAjsk9eYlGpVXm/ThTNsJAFCctQyqpxn0URzI
-	2Is5XORVu9k9vrdbKaxmKzEzDluucxXRaS7QE
-X-Gm-Gg: ASbGncttvotKZBNAuqiq9OxxF+Iu9kMDqXEmHkK3j7HQIk48GyQ/CK9vzzqPyQNSQ1g
-	mf0PGFoYESedas3WVxqFjTN1e+FwafS2EftuT8pLtimqzdQhMyt8lNNFwSM/k/oysfWnL/JxXFv
-	b8CRRLO42ucxOsH9n0/bWoaZJK1ym/MLfqRk2MfuJdJVt5eChrz8elXw==
-X-Google-Smtp-Source: AGHT+IHPelgDScufsa6zAdrdNBGBs5B6xqAFz7eUGQGOmOqHwOhJ5MfpsvqJ85TCgQC7BKeJ/DkvYhul0b9i7GXTf4c=
-X-Received: by 2002:a17:903:2c6:b0:21f:2ded:bfa0 with SMTP id
- d9443c01a7336-22799f80a6bmr9127625ad.25.1742924687095; Tue, 25 Mar 2025
- 10:44:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742925159; x=1743529959;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=58+r+FAQ5TTby/P3+2e15XArHywgR9oB31F4zzKw58o=;
+        b=ct2kJoU6hGW7fq/c8nm0DivLn4pLYf2z8jKEQd4/j3JK24/BWHDbODsbg+mZiGqUfh
+         skeNAIwcQ/wZKOo9wHi+r7mHyn0f05ElrJYg/BY1tBb7dijkW09zXniC+qo+FdG5M8ne
+         GA0F8MCq5bDY8Vpho2/KyVfOv3VqIZtcNMge9fJBfIFGHRukckEQm/CDd3FvXjHpNkjR
+         yncA9y6LJ7eh3PhfyyIcp9x3mYp9ujl7aJLddoh91U26P7yT2ttK2mA1niyN7Ny3Iobo
+         k7IphQeYKCt1FXbzu2WsogZT809MWourw/T21f0ayaJrS2OhlU1oI8k36FzgJy4l3mVe
+         6qaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCfhx/fKHxgCCAx6ZXqZNxsy4uxuxVO9p0qolEUMIRb+0TU0q8S7Tx+DFMScNb3ogS7Tj/g/DYdfwoeNEJmLcN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOqlqX6J+KghZxrzgyVhqoEI4bL0vqkUSsCx5dQM1wsuWNv02B
+	f9QwxHnPm1tyI1xJ3TpSHmmXI+Tz7VLh24ZD3C/HhUvoiVrBKNL/iDXsyXFbZDhLnZQYt582tVD
+	5PlaGMpWOjOudDHDoUt0ks6ur83GIqtSv4hi1dHEy5MEzvFBniKE2QoiK3U7gXZRXrsQ=
+X-Gm-Gg: ASbGncvDPB5yAr4kDShUmyTa4ZzOTP7Ow1rI55SumlryTNnXu0gOJckflC/PM6asa8v
+	/RfXUitds1GE7VelRn8bIPPnmVjQpJaIW0TFcZazFcW3HrzUtWLBIcRfuvxi4k//EJd7SRLfEsJ
+	1KsJvUAUNdGi1jdAhDcmQa64RPA6N/ERrYt85nkDGgtKjPERPfhwnxGl5GswGedY2OEad+TOq+P
+	1Crm+/PsgfFC7yNc7pry+deO5MABhHUh1dIidupvNf//TQnl+zR5NvPD8/7EfNcXsKvchUdaqyk
+	F9NrCvK/cWvtRrSHObuJM0t1Nk/HoGeJzpw286eGhUNN59vN10OIlu7EILFYry491aXqgwjndau
+	/
+X-Received: by 2002:a05:600c:4584:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43d509f4b25mr191666595e9.15.1742925159180;
+        Tue, 25 Mar 2025 10:52:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFE+waNkOHjpFuU78xXxVfBVrthL7+/n2itqapsAHnKkAlkbjOyC6OGUhEtlUEcPF/6kvS3dA==
+X-Received: by 2002:a05:600c:4584:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43d509f4b25mr191665765e9.15.1742925158655;
+        Tue, 25 Mar 2025 10:52:38 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9b409fsm14543767f8f.50.2025.03.25.10.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 10:52:37 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
+ <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
+ <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
+ <xhsmhfrk84k5k.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+Date: Tue, 25 Mar 2025 18:52:34 +0100
+Message-ID: <xhsmhy0wtngkd.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-11-irogers@google.com>
-In-Reply-To: <20250122174308.350350-11-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 25 Mar 2025 10:44:34 -0700
-X-Gm-Features: AQ5f1JpIGP8wbMVFe85DxBTilH4hLmUR3dv-unPSph-h7lFMwMVjU6DwDza6nuM
-Message-ID: <CAP-5=fUt4rvEWRY=O6-EM0GGgOxz3VL933OgSYET2HxCi8fsCA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/18] perf dso: Support BPF programs in dso__read_symbol
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jan 22, 2025 at 9:43=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Set the buffer to the code in the BPF linear info. This enables BPF
-> JIT code disassembly by LLVM and capstone. Move the disassmble_bpf
-> calls to disassemble_objdump so that they are only called after
-> falling back to the objdump option.
+On 20/02/25 09:38, Dave Hansen wrote:
+> But, honestly, I'm still not sure this is worth all the trouble. If
+> folks want to avoid IPIs for TLB flushes, there are hardware features
+> that *DO* that. Just get new hardware instead of adding this complicated
+> pile of software that we have to maintain forever. In 10 years, we'll
+> still have this software *and* 95% of our hardware has the hardware
+> feature too.
 
-It would be nice to land this series in part because of supporting BPF
-disassembly with LLVM and capstone, possible because of the cleanups
-and refactorings.
+Sorry, you're going to have to deal with my ignorance a little bit longer...
 
-Thanks,
-Ian
+Were you thinking x86 hardware specifically, or something else?
+AIUI things like arm64's TLBIVMALLE1IS can do what is required without any
+IPI:
 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/disasm.c | 12 +++---
->  tools/perf/util/dso.c    | 85 +++++++++++++++++++++++++---------------
->  2 files changed, 60 insertions(+), 37 deletions(-)
->
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index a9cc588a3006..99b9c21e02b0 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -1500,6 +1500,12 @@ static int symbol__disassemble_objdump(const char =
-*filename, struct symbol *sym,
->         struct child_process objdump_process;
->         int err;
->
-> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO)
-> +               return symbol__disassemble_bpf(sym, args);
-> +
-> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAGE)
-> +               return symbol__disassemble_bpf_image(sym, args);
-> +
->         err =3D asprintf(&command,
->                  "%s %s%s --start-address=3D0x%016" PRIx64
->                  " --stop-address=3D0x%016" PRIx64
-> @@ -1681,11 +1687,7 @@ int symbol__disassemble(struct symbol *sym, struct=
- annotate_args *args)
->
->         pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_nam=
-e(dso), sym, sym->name);
->
-> -       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO) =
-{
-> -               return symbol__disassemble_bpf(sym, args);
-> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAG=
-E) {
-> -               return symbol__disassemble_bpf_image(sym, args);
-> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUN=
-D) {
-> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
->                 return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE=
-;
->         } else if (dso__is_kcore(dso)) {
->                 kce.addr =3D map__rip_2objdump(map, sym->start);
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 0285904ed26d..a90799bed230 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -1686,48 +1686,69 @@ const u8 *dso__read_symbol(struct dso *dso, const=
- char *symfs_filename,
->                            const struct map *map, const struct symbol *sy=
-m,
->                            u8 **out_buf, u64 *out_buf_len, bool *is_64bit=
-)
->  {
-> -       struct nscookie nsc;
->         u64 start =3D map__rip_2objdump(map, sym->start);
->         u64 end =3D map__rip_2objdump(map, sym->end);
-> -       int fd, count;
-> -       u8 *buf =3D NULL;
-> -       size_t len;
-> -       struct find_file_offset_data data =3D {
-> -               .ip =3D start,
-> -       };
-> +       const u8 *buf;
-> +       size_t len =3D end - start;
->
->         *out_buf =3D NULL;
->         *out_buf_len =3D 0;
->         *is_64bit =3D false;
->
-> -       nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-> -       fd =3D open(symfs_filename, O_RDONLY);
-> -       nsinfo__mountns_exit(&nsc);
-> -       if (fd < 0)
-> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAGE) {
-> +               pr_debug("No BPF image disassembly support\n");
->                 return NULL;
-> +       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG=
-_INFO) {
-> +#ifdef HAVE_LIBBPF_SUPPORT
-> +               struct bpf_prog_info_node *info_node;
-> +               struct perf_bpil *info_linear;
-> +
-> +               *is_64bit =3D sizeof(void *) =3D=3D sizeof(u64);
-> +               info_node =3D perf_env__find_bpf_prog_info(dso__bpf_prog(=
-dso)->env,
-> +                                                        dso__bpf_prog(ds=
-o)->id);
-> +               if (!info_node) {
-> +                       errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
-> +                       return NULL;
-> +               }
-> +               info_linear =3D info_node->info_linear;
-> +               buf =3D (const u8 *)(uintptr_t)(info_linear->info.jited_p=
-rog_insns);
-> +               assert(len <=3D info_linear->info.jited_prog_len);
-> +#else
-> +               pr_debug("No BPF program disassembly support\n");
-> +               return NULL;
-> +#endif
-> +       } else {
-> +               struct nscookie nsc;
-> +               int fd;
-> +               ssize_t count;
-> +               struct find_file_offset_data data =3D {
-> +                       .ip =3D start,
-> +               };
-> +               u8 *code_buf =3D NULL;
->
-> -       if (file__read_maps(fd, /*exe=3D*/true, find_file_offset, &data, =
-is_64bit) =3D=3D 0)
-> -               goto err;
-> -
-> -       len =3D end - start;
-> -       buf =3D malloc(len);
-> -       if (buf =3D=3D NULL)
-> -               goto err;
-> -
-> -       count =3D pread(fd, buf, len, data.offset);
-> -       close(fd);
-> -       fd =3D -1;
-> -
-> -       if ((u64)count !=3D len)
-> -               goto err;
-> +               nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-> +               fd =3D open(symfs_filename, O_RDONLY);
-> +               nsinfo__mountns_exit(&nsc);
-> +               if (fd < 0)
-> +                       return NULL;
->
-> -       *out_buf =3D buf;
-> +               if (file__read_maps(fd, /*exe=3D*/true, find_file_offset,=
- &data, is_64bit) =3D=3D 0) {
-> +                       close(fd);
-> +                       return NULL;
-> +               }
-> +               buf =3D code_buf =3D malloc(len);
-> +               if (buf =3D=3D NULL) {
-> +                       close(fd);
-> +                       return NULL;
-> +               }
-> +               count =3D pread(fd, code_buf, len, data.offset);
-> +               close(fd);
-> +               if ((u64)count !=3D len) {
-> +                       free(code_buf);
-> +                       return NULL;
-> +               }
-> +               *out_buf =3D code_buf;
-> +       }
->         *out_buf_len =3D len;
->         return buf;
-> -
-> -err:
-> -       if (fd >=3D 0)
-> -               close(fd);
-> -       free(buf);
-> -       return NULL;
->  }
-> --
-> 2.48.1.262.g85cc9f2d1e-goog
->
+C5.5.78
+"""
+The invalidation applies to all PEs in the same Inner Shareable shareability domain as the PE that
+executes this System instruction.
+"""
+
+But for (at least) these architectures:
+
+  alpha
+  x86
+  loongarch
+  mips
+  (non-freescale 8xx) powerpc
+  riscv
+  xtensa
+
+flush_tlb_kernel_range() has a path with a hardcoded use of on_each_cpu(),
+so AFAICT for these the IPIs will be sent no matter the hardware.
+
+
