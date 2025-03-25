@@ -1,183 +1,228 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720D31F4183
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 18:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F37119E994
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 18:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742928717; cv=none; b=HIgmp+bE5RdC9MUz774qrfwupAxPCg+J//Qge05Px1G/UJuYuJrkjy3VemPs66o9zn+7Jp1ZyLDfMuJyk9HXidxEoJsh8KkJZ4ZwljLnx7/WZJyMdkQ2xX3HOghr9fBiO9kw7aJIWnvw+7wiAbGCe0llZif3X5wHiQEZYXsG1cs=
+	t=1742928763; cv=none; b=K1luMPwaZruMaKeuA6BOyh147wPpdX6V2eCKQOVxf8HRUxDESniXXRZiTxyFEBlTezZ+qtzkR2VeUldZvefXMT+a1daAiBeV7MDNfO0KmtCxCuWCahd4qfwL1+NqzZyAsdsNuHuh1H9HTQbtt+CfsGQCXpAhE4yLl1dHIvsXev8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742928717; c=relaxed/simple;
-	bh=2xXGFLVwkInmobcJUBE5/1UQyq/cvN0CxyPECWhZDZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ISwhFp2DNpPUjhzCm+j1pRPv9S62ne2A7DXQ4wpvMuKD8JU34lBwr6H/iTQqfnX5gr37vVXT4kqDAb5azO4ifmzp5o5mnJ0eHeXNaaSMkMRCtxcVu2sAnijqYRMmoxFVyEkRARouZmP4pD47RpL8ql+BuICwHnTwuX9Ow9vxzg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IfOPRDuI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742928763; c=relaxed/simple;
+	bh=mjUlY3jFSJjaOKRM/bqH7VbePb3z1ii+rpI0lBwhP68=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=e54I5UnbmSjS3APWd52p0jfJZFly9LYrZhmzpLSnfhQs5HnK3hJFX3SiRWXVYX48/g430/eLo0KoK+bPEi0jS3xJvuuobNeu3nO4N36v8x6RbTppKJgSM0/2SFGuv/cWxCaVBVfLzRCNWJnmR7suhTtJoXhrUbglOpMP3QHexYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=13wNtudt; arc=none smtp.client-ip=209.85.166.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IfOPRDuI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742928713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=t8j8FcQOo2vXT0+x/EC8FM0KhlfrmjmrMAU0Mg5SiOs=;
-	b=IfOPRDuIJb6mcD26eVv03HxOHVXjlqMmW0qdvja63G+EVtDAVTS+71vN8WxEgkUXbDe99M
-	F67N3MqKl7LwUKqlMCtKh+lQlo/4gADy46882U41Z5/rvMgl+tWjJ2qPpXZZMw7G37rYlA
-	IDue9AQ4G+f8s20KPbZEqVHW7WgO2E8=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-xs_jFRRPM2iQY8_GSVrkOg-1; Tue, 25 Mar 2025 14:51:52 -0400
-X-MC-Unique: xs_jFRRPM2iQY8_GSVrkOg-1
-X-Mimecast-MFC-AGG-ID: xs_jFRRPM2iQY8_GSVrkOg_1742928711
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e8feea216aso2613206d6.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 11:51:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="13wNtudt"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3d43d333855so55799725ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 11:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742928759; x=1743533559; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nH4P9eJG9ixX5QbX8zMqKoULuBPy5l5wVy3PBOk0b0g=;
+        b=13wNtudt0qEtd4TWuza1iSfb4nWqnBZBclPosKMI9tpwnNj3XiWh82wK2wpnDwQR1H
+         z0Ro7vOMEhI7nBGi1kLpVPxdhH53Z5e5e7wvE8rKhRtg+z3dDWvpET5BlDChhUviM+aM
+         gDdM0nIGkHrNUM/pB8V3vFyR5oUVGLbOHXUskmMGbKJJyYNQyzK/xKx0BfCNaM32MX6V
+         ee82p37rOyGD3jAo69WPD7BAB00ZYkV5JklFuNmpVe8uutPw6hbroHAyxvkhV83u5m1t
+         qHPZR6rXQyUwKjllUmHwx/P4/C6YNQ+lQUfLfTsSHzaKsyHpBJ+iOC0H9cd/w90nX/xn
+         tBLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742928711; x=1743533511;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=t8j8FcQOo2vXT0+x/EC8FM0KhlfrmjmrMAU0Mg5SiOs=;
-        b=dJsU9Ueie4Wr1sBQEZz0xaZnILpIX3OUM95pHMtD1mUNHdM5RvNpqrr6slvXhtXYO5
-         4ejrRBT6rG/2BjTBKZwMWtHNASsQI2PTI6TybISFEtJrlkFqLhqs/INFKyf0+9zfpXyR
-         OybKQrwFHGGuTHAmmakbcpdkqhuT7RTLKe9JWX83x2YEwRZ+FsiRt7VkQosJubzUNpHA
-         0ufdEqgS33KNBAEp/igkmBDbIL+1hsNlXEJokeZnnDGTcmhkG4oDzJkDeEH57FNGEk/w
-         GMeynVtcu1gbTlvcoRa+UC4oSG4nex1vFOft39Rfrkdu6qKMCvPa1uhr9V35HfZdaIcp
-         wdWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQhBB5T62LvPYuS5n93MDP4uKP8wnnscsTeN2LWuPOmEChoxl8g0nVxdVjPUJANo7uXuFlrGlOYWvxHHxq1UNZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgzTfKzfrtRoHqy5QTDNtY43qbKhrDq6gEUF4Vs4d4zHddC4W6
-	BFkD4EUymGeukFUg7DrRb+f0Vcrca5uPuhjShjxLV6NJT6Mhz40Bey76einabdEq0KkfB/7qOdT
-	X2K5aeOCr8HQ7ovAIHkJ12WpnL7sUaXNF6FpxubsEoc7kO5Ru6h6uib0jF4eIZFHbuVA=
-X-Gm-Gg: ASbGncuJ3fUsTqx+MDSbK4Y55qDmC5SH0hkGutN5Q2Hw9x7A+XeJi3EH6CUifpk1Yv0
-	03Lcm3UyLPnU7E8Pwk3Fas1J02uYOOz9JJ9fY1SN1ijptJXPtay3MeWTc4vpDFqt/Y+1mA3quLF
-	3J1xqZ5l/JVYFdk7m843aPb0I1t81ouWSDa07w0uEjgXhC+xGi0lpEMwNYc7wRd911GrDXtlJ/a
-	uPqkYujB4f5w2zdCUquKQyphZfK5E3RZIxYjnkdiTyUxY5RwBASE6dElTC0YfbpqEo3Vkrh6XXB
-	8dbe/TrTRtCs
-X-Received: by 2002:a0c:eb46:0:b0:6ea:d503:6cfd with SMTP id 6a1803df08f44-6ed16cde3f6mr12230636d6.19.1742928711432;
-        Tue, 25 Mar 2025 11:51:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFqYQjFn4K1j4fuehDL2vDnCV4xeKoEsPSC3k3g7nw2h2mfdx1DkNTmzNbOxS9v9bBBC08uag==
-X-Received: by 2002:a0c:eb46:0:b0:6ea:d503:6cfd with SMTP id 6a1803df08f44-6ed16cde3f6mr12229966d6.19.1742928710955;
-        Tue, 25 Mar 2025 11:51:50 -0700 (PDT)
-Received: from [172.20.3.205] ([99.209.85.25])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3efc5952sm58924306d6.83.2025.03.25.11.51.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 11:51:50 -0700 (PDT)
-Message-ID: <0e1d8823-620f-420c-86a5-35495ccbd10f@redhat.com>
-Date: Tue, 25 Mar 2025 19:51:47 +0100
+        d=1e100.net; s=20230601; t=1742928759; x=1743533559;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nH4P9eJG9ixX5QbX8zMqKoULuBPy5l5wVy3PBOk0b0g=;
+        b=USCGsb375/VFdTF5h32X5NptlantJUWOeDfj946SIxikn5IwFnjSed/78xrUXJ51u9
+         /04BAgUC1kdy2FoeFS7Fqfc/ps24u5X7nouacqyYOMXMFNO0YmGL5yFsXmsWHSSnNePp
+         x+DujFD78AlgsABMqYfSQ03pFDVE4psCsBBWB9Nzz+0Vb9R3LS9+GyhcH/g3Kp1MjzXg
+         fR4XHLSNRlNBfuuDFz3/jwTfDSzDod6uNGCaQsPZjUomWJqQkXW3lczFdMFP8an6Hc7G
+         ouLMeP4KrHz+qJOX7I3KaIt1WZVB2l8e9ZDegLiLhO+g4pztRxhLUvaBOjF+XacP4cQ6
+         4gJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkgILApV5BkfIHyvQp6Ru5ekosF6cekkTRi0jLxow29U8zJGQqm0Y7mGwKSjez4svL9Aw1V683QjfRrAC70urr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJA9m9ipX7pkVyDvYTkhGC4ipHYet10+77C26JTaye1OI0H9Dn
+	GsUFcau5r/eoxkZvnaxTdHYmYVmm+eifYDKD/RRQ6FiEwPvCV6mAFre0a42ftBJc6R/n9P4e7tq
+	mECTnEwcRlQFPHTB4ew6egg==
+X-Google-Smtp-Source: AGHT+IFihTn29mkx1GCcsdzB1BWaATm719zstIXb77dxFcanWyTVCgHo5XFcuAcWL7Ck6Mq9GEViCbd4LSLj7nsAJQ==
+X-Received: from ilbcp4.prod.google.com ([2002:a05:6e02:3984:b0:3d2:ad2f:c829])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:3d86:b0:3d0:443d:a5c3 with SMTP id e9e14a558f8ab-3d5960c1226mr193021365ab.3.1742928759319;
+ Tue, 25 Mar 2025 11:52:39 -0700 (PDT)
+Date: Tue, 25 Mar 2025 18:52:38 +0000
+In-Reply-To: <8450a182-5c62-4546-ab91-5d39eb252254@linaro.org> (message from
+ James Clark on Mon, 24 Mar 2025 14:52:26 +0000)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT
- kernel-self with ILP32 ABI
-To: Peter Zijlstra <peterz@infradead.org>, guoren@kernel.org
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, anup@brainfault.org,
- atishp@atishpatra.org, oleg@redhat.com, kees@kernel.org, tglx@linutronix.de,
- will@kernel.org, mark.rutland@arm.com, brauner@kernel.org,
- akpm@linux-foundation.org, rostedt@goodmis.org, edumazet@google.com,
- unicorn_wang@outlook.com, inochiama@outlook.com, gaohan@iscas.ac.cn,
- shihua@iscas.ac.cn, jiawei@iscas.ac.cn, wuwei2016@iscas.ac.cn,
- drew@pdp7.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
- ctsai390@andestech.com, wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com,
- josef@toxicpanda.com, dsterba@suse.com, mingo@redhat.com,
- boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn,
- leobras@redhat.com, jszhang@kernel.org, conor.dooley@microchip.com,
- samuel.holland@sifive.com, yongxuan.wang@sifive.com,
- luxu.kernel@bytedance.com, ruanjinjie@huawei.com, cuiyunhui@bytedance.com,
- wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn, ardb@kernel.org,
- ast@kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, bpf@vger.kernel.org,
- linux-input@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, maple-tree@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-media@vger.kernel.org
-References: <20250325121624.523258-1-guoren@kernel.org>
- <20250325122640.GK36322@noisy.programming.kicks-ass.net>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250325122640.GK36322@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Message-ID: <gsnty0wtlz7t.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [RFC PATCH v3 7/8] perf: arm_pmuv3: Keep out of guest counter partition
+From: Colton Lewis <coltonlewis@google.com>
+To: James Clark <james.clark@linaro.org>
+Cc: kvm@vger.kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, 
+	pbonzini@redhat.com, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On 25.03.25 13:26, Peter Zijlstra wrote:
-> On Tue, Mar 25, 2025 at 08:15:41AM -0400, guoren@kernel.org wrote:
->> From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
->>
->> Since 2001, the CONFIG_64BIT kernel has been built with the LP64 ABI,
->> but this patchset allows the CONFIG_64BIT kernel to use an ILP32 ABI
-> 
-> I'm thinking you're going to be finding a metric ton of assumptions
-> about 'unsigned long' being 64bit when 64BIT=y throughout the kernel.
-> 
-> I know of a couple of places where 64BIT will result in different math
-> such that a 32bit 'unsigned long' will trivially overflow.
-> 
-> Please, don't do this. This adds a significant maintenance burden on all
-> of us.
-> 
+James Clark <james.clark@linaro.org> writes:
 
-Fully agreed.
+> On 13/02/2025 6:03 pm, Colton Lewis wrote:
+>> If the PMU is partitioned, keep the driver out of the guest counter
+>> partition and only use the host counter partition. Partitioning is
+>> defined by the MDCR_EL2.HPMN register field and saved in
+>> cpu_pmu->hpmn. The range 0..HPMN-1 is accessible by EL1 and EL0 while
+>> HPMN..PMCR.N is reserved for EL2.
 
--- 
-Cheers,
+>> Define some macros that take HPMN as an argument and construct
+>> mutually exclusive bitmaps for testing which partition a particular
+>> counter is in. Note that despite their different position in the
+>> bitmap, the cycle and instruction counters are always in the guest
+>> partition.
 
-David / dhildenb
+>> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+>> ---
+>>    arch/arm/include/asm/arm_pmuv3.h |  2 +
+>>    arch/arm64/include/asm/kvm_pmu.h |  5 +++
+>>    arch/arm64/kvm/pmu-part.c        | 16 +++++++
+>>    drivers/perf/arm_pmuv3.c         | 73 +++++++++++++++++++++++++++-----
+>>    include/linux/perf/arm_pmuv3.h   |  8 ++++
+>>    5 files changed, 94 insertions(+), 10 deletions(-)
 
+>> diff --git a/arch/arm/include/asm/arm_pmuv3.h  
+>> b/arch/arm/include/asm/arm_pmuv3.h
+>> index 2ec0e5e83fc9..dadd4ddf51af 100644
+>> --- a/arch/arm/include/asm/arm_pmuv3.h
+>> +++ b/arch/arm/include/asm/arm_pmuv3.h
+>> @@ -227,6 +227,8 @@ static inline bool kvm_set_pmuserenr(u64 val)
+>>    }
+
+>>    static inline void kvm_vcpu_pmu_resync_el0(void) {}
+>> +static inline void kvm_pmu_host_counters_enable(void) {}
+>> +static inline void kvm_pmu_host_counters_disable(void) {}
+
+>>    /* PMU Version in DFR Register */
+>>    #define ARMV8_PMU_DFR_VER_NI        0
+>> diff --git a/arch/arm64/include/asm/kvm_pmu.h  
+>> b/arch/arm64/include/asm/kvm_pmu.h
+>> index 174b7f376d95..8f25754fde47 100644
+>> --- a/arch/arm64/include/asm/kvm_pmu.h
+>> +++ b/arch/arm64/include/asm/kvm_pmu.h
+>> @@ -25,6 +25,8 @@ void kvm_host_pmu_init(struct arm_pmu *pmu);
+>>    u8 kvm_pmu_get_reserved_counters(void);
+>>    u8 kvm_pmu_hpmn(u8 nr_counters);
+>>    void kvm_pmu_partition(struct arm_pmu *pmu);
+>> +void kvm_pmu_host_counters_enable(void);
+>> +void kvm_pmu_host_counters_disable(void);
+
+>>    #else
+
+>> @@ -37,6 +39,9 @@ static inline bool kvm_set_pmuserenr(u64 val)
+>>    static inline void kvm_vcpu_pmu_resync_el0(void) {}
+>>    static inline void kvm_host_pmu_init(struct arm_pmu *pmu) {}
+
+>> +static inline void kvm_pmu_host_counters_enable(void) {}
+>> +static inline void kvm_pmu_host_counters_disable(void) {}
+>> +
+>>    #endif
+
+>>    #endif
+>> diff --git a/arch/arm64/kvm/pmu-part.c b/arch/arm64/kvm/pmu-part.c
+>> index e74fecc67e37..51da65c678f9 100644
+>> --- a/arch/arm64/kvm/pmu-part.c
+>> +++ b/arch/arm64/kvm/pmu-part.c
+>> @@ -45,3 +45,19 @@ void kvm_pmu_partition(struct arm_pmu *pmu)
+>>    		pmu->partitioned = false;
+>>    	}
+>>    }
+>> +
+>> +void kvm_pmu_host_counters_enable(void)
+>> +{
+>> +	u64 mdcr = read_sysreg(mdcr_el2);
+>> +
+>> +	mdcr |= MDCR_EL2_HPME;
+>> +	write_sysreg(mdcr, mdcr_el2);
+>> +}
+>> +
+>> +void kvm_pmu_host_counters_disable(void)
+>> +{
+>> +	u64 mdcr = read_sysreg(mdcr_el2);
+>> +
+>> +	mdcr &= ~MDCR_EL2_HPME;
+>> +	write_sysreg(mdcr, mdcr_el2);
+>> +}
+>> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+>> index 0e360feb3432..442dcff56d5b 100644
+>> --- a/drivers/perf/arm_pmuv3.c
+>> +++ b/drivers/perf/arm_pmuv3.c
+>> @@ -730,15 +730,19 @@ static void armv8pmu_disable_event_irq(struct  
+>> perf_event *event)
+>>    	armv8pmu_disable_intens(BIT(event->hw.idx));
+>>    }
+
+>> -static u64 armv8pmu_getreset_flags(void)
+>> +static u64 armv8pmu_getreset_flags(struct arm_pmu *cpu_pmu)
+>>    {
+>>    	u64 value;
+
+>>    	/* Read */
+>>    	value = read_pmovsclr();
+
+>> +	if (cpu_pmu->partitioned)
+>> +		value &= ARMV8_PMU_HOST_CNT_PART(cpu_pmu->hpmn);
+>> +	else
+>> +		value &= ARMV8_PMU_OVERFLOWED_MASK;
+>> +
+>>    	/* Write to clear flags */
+>> -	value &= ARMV8_PMU_OVERFLOWED_MASK;
+>>    	write_pmovsclr(value);
+
+>>    	return value;
+>> @@ -765,6 +769,18 @@ static void armv8pmu_disable_user_access(void)
+>>    	update_pmuserenr(0);
+>>    }
+
+>> +static bool armv8pmu_is_guest_part(struct arm_pmu *cpu_pmu, u8 idx)
+>> +{
+>> +	return cpu_pmu->partitioned &&
+>> +		(BIT(idx) & ARMV8_PMU_GUEST_CNT_PART(cpu_pmu->hpmn));
+>> +}
+>> +
+>> +static bool armv8pmu_is_host_part(struct arm_pmu *cpu_pmu, u8 idx)
+>> +{
+>> +	return !cpu_pmu->partitioned ||
+>> +		(BIT(idx) & ARMV8_PMU_HOST_CNT_PART(cpu_pmu->hpmn));
+>> +}
+>> +
+>>    static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
+>>    {
+>>    	int i;
+>> @@ -773,6 +789,8 @@ static void armv8pmu_enable_user_access(struct  
+>> arm_pmu *cpu_pmu)
+>>    	if (is_pmuv3p9(cpu_pmu->pmuver)) {
+>>    		u64 mask = 0;
+>>    		for_each_set_bit(i, cpuc->used_mask, ARMPMU_MAX_HWEVENTS) {
+>> +			if (armv8pmu_is_guest_part(cpu_pmu, i))
+>> +				continue;
+
+> Hi Colton,
+
+> Is it possible to keep the guest bits out of used_mask and cntr_mask in
+> the first place? Then all these loops don't need to have the logic for
+> is_guest_part()/is_host_part().
+
+It should be possible.
+
+> That leads me to wonder about updating the printout:
+
+>    hw perfevents: enabled with armv8_pmuv3_0 PMU driver, 7 (0,8000003f)
+>      counters available
+
+> It might be a bit confusing if that doesn't quite reflect reality anymore.
+
+Good point.
