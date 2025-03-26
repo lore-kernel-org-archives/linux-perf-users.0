@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8576E1F8BCD;
-	Wed, 26 Mar 2025 18:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBC21F7561;
+	Wed, 26 Mar 2025 18:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743012894; cv=none; b=NmQT11jEC9ZPKMhdQwfll5X4NDLuSSbnUruKkYiOpPF0VmOTaGB+UeeVPaE0EDejvWL6zh3AoAFQCuFmVb29/j51+afwcCWpX5nBfxflRbaopHx/PwWY6LOXM5Gd4lXYQW6qesjjf0Klg5ga9Z13G116mGg/IDK7025jtCLSh5E=
+	t=1743013310; cv=none; b=hZ3F03S6lDUXAIDn0ZyqDr03aWargiK51A1hiRmSIKV2pRs6Z4IZjnJNGeWDHXG9nsjrIwuxEwoXRHXOYp+AF3k5pwMdYhcdr3cO54XgwFDVY5x3EC65S3c4zftRDcqxLWZGrcXbyP8+5wdlHtvj/mAMzCWuscsV1WTDqcoXu6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743012894; c=relaxed/simple;
-	bh=cd7EYHFEFbA7MQbzFPnhq7BpVfRthx6uK+y6bly3n58=;
+	s=arc-20240116; t=1743013310; c=relaxed/simple;
+	bh=KzXSavSeEQvSYOYQr3q8Tb6HTNl/rJqVxIkNxLAVrV0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pj4HL9K3B3VmcFL6FkZ2PYbvuQNuu++RoTZ0Wm2WOW1eCjFm17ywDpyG7SwOqteqr3s1ybI7kbp9vf5LYyVq6rzWUOOjQZzPl/mIbIRQtVzxgG5bx32pxVXQ03qfqB/0Fowhbu4zTYFaFDuGDQj69SfX7Y/0SD/WaOg5nuit/I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7AjiESS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=G+MMgrR5byfp7BoyRksbkkduvlbSTkevXGtNxT+ShzUInXOSh4P79+25yhvNtLPNBvSlKUOHSo6g9Otj9QxrSv8zwn0jblmno54pS2jkomZivqRfnE3YioWbHZP235t7ipQGm5zNcpEuKr91azzZ3WcDp6eRRICOWOXX+WtP+Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBlAVG0w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7AjiESS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73932C4CEE2;
-	Wed, 26 Mar 2025 18:14:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBlAVG0w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5A2C4CEE2;
+	Wed, 26 Mar 2025 18:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743012894;
-	bh=cd7EYHFEFbA7MQbzFPnhq7BpVfRthx6uK+y6bly3n58=;
+	s=k20201202; t=1743013309;
+	bh=KzXSavSeEQvSYOYQr3q8Tb6HTNl/rJqVxIkNxLAVrV0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W7AjiESSnKTCkRD23VAAdVgS+p1U9DyzVly9BjXM9Pg1mCZJ7KXNsnNCjpjK+ptrY
-	 xTCkvNjtbNGsziQbwCoPZ63NGmlkhREmB5v7bOxa8CJ+g5HLF/sZUu2Dpvk1ws1piB
-	 t1NsQmGvMDbYf0kduPS9huNHw2HpiIfw7A1PWBZOokQM6y36bahpGl++gM0nrWQFCq
-	 pMgiA/JS89kVjqjgNp4vMeNkDeZXrLyF7WA3khkxDZ6uVpsxZU97zBaOEOEgbx4yZi
-	 Ru+uxLhvNNKK6AOGZZYnFoHfymaHSSt4Ijm8VpfHhsHXxFXY0fUVJ0GSW6S0jYeKOQ
-	 FNiFwksIrSGSA==
-Date: Wed, 26 Mar 2025 11:14:51 -0700
+	b=vBlAVG0wBZM7HF9+mEoNEcVtcrgGer1vv+lAbs+H57fQy+LRHpt9LGCB1h5UrrB3t
+	 fVNF+hyWjEo7LBywTU7CSmfv660NbadZllILZgr6ghpdRF3lybdO25La4elmQirge6
+	 iTy7AtT4j043KvIs9VfUGcMMJb5iHZpiKuSFOljQHHkIiMURhCoi58/SOO/feoj0FH
+	 G3wygWD5pjaqdTqwIXcUPCZx7NsAou+eIeBHUL7Qg99reIe/TR831/lRXxleRW0oZ0
+	 NRrk3rZRicbA8ljqs/+mbKdghedRT9T6pttbWK3tFtTiFTxg4+iG6q0mnIkEIWxLAa
+	 7wwP+/aZnvDAA==
+Date: Wed, 26 Mar 2025 11:21:47 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Howard Chu <howardchu95@gmail.com>
 Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
@@ -34,10 +34,10 @@ Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
 	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf doc: Improve perf trace's doc on --force-btf
- option
-Message-ID: <Z-REG5kkE1RahBW2@google.com>
-References: <20250326160416.1725322-1-howardchu95@gmail.com>
+Subject: Re: [PATCH v1] perf trace: Fix possible insufficient allocation of
+ argument formats
+Message-ID: <Z-RFu_PLmKMq8YFU@google.com>
+References: <20250324235245.613063-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,48 +46,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250326160416.1725322-1-howardchu95@gmail.com>
+In-Reply-To: <20250324235245.613063-1-howardchu95@gmail.com>
 
-Hello,
-
-On Wed, Mar 26, 2025 at 09:04:16AM -0700, Howard Chu wrote:
-> As mentioned by Arnaldo in a past discussion (Link:
-> https://lore.kernel.org/linux-perf-users/Z2m0pWiQgZNXhvxK@x1/), the
-> current documentation on --force-btf is vague and inaccurate, this patch
-> aims to provide a clearer explanation of the option.
+On Mon, Mar 24, 2025 at 04:52:45PM -0700, Howard Chu wrote:
+> In my previous fix of runtime error(Link:
+> https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
+> I made a mistake of decrementing one unconditionally, regardless of
+> whether an extra 'syscall_nr' or 'nr' field was present in
+> libtraceevent's tp_format. This may cause perf trace to allocate one
+> fewer arg_fmt entry than needed for the accurate representation of syscall
+> arguments.
 > 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> ---
->  tools/perf/Documentation/perf-trace.txt | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-> index 887dc37773d0..cf2445d2ba3d 100644
-> --- a/tools/perf/Documentation/perf-trace.txt
-> +++ b/tools/perf/Documentation/perf-trace.txt
-> @@ -246,10 +246,10 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
->  	arguments to strings (pid to comm, syscall id to syscall name, etc).
->  
->  --force-btf::
-> -	Use btf_dump to pretty print syscall argument data, instead of using hand-crafted pretty
-> -	printers. This option is intended for testing BTF integration in perf trace. btf_dump-based
-> -	pretty-printing serves as a fallback to hand-crafted pretty printers, as the latter can
-> -	better pretty-print integer flags and struct pointers.
-> +	Use libbpf's btf_dump to pretty print syscall arguments, utilizing only the debug
-> +	information from BTF. This option is intended for testing BTF integration in perf
-> +	trace. Using libbpf is a fallback to perf trace's own prettifiers generated from the
-> +	kernel source, as the latter can better pretty-print integer flags and struct members.
+> This patch corrects the mistake by checking the presence of'syscall_nr' or
+> 'nr', and adjusting the length of arg_fmt[] accordingly.
 
-"the latter" means our own prettifier, right?  Then why do we need the
-fallback as it's better and always works?
+Thanks for the fix.  I've noticed this too but I feel like we can make
+syscall__alloc_arg_fmts() a bit simpler.
+
+How about this?
 
 Thanks,
 Namhyung
 
->  
->  PAGEFAULTS
->  ----------
-> -- 
-> 2.45.2
-> 
+
+---8<---
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6ac51925ea4249c2..b9bdab52f5801c3a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ {
+ 	int idx;
+ 
+-	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+-		nr_args = sc->fmt->nr_args;
+-
+ 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+ 	if (sc->arg_fmt == NULL)
+ 		return -1;
+@@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ 			sc->arg_fmt[idx] = sc->fmt->arg[idx];
+ 	}
+ 
+-	sc->nr_args = nr_args;
+ 	return 0;
+ }
+ 
+@@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		return err;
+ 	}
+ 
+-	/*
+-	 * The tracepoint format contains __syscall_nr field, so it's one more
+-	 * than the actual number of syscall arguments.
+-	 */
+-	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+-		return -ENOMEM;
+-
+ 	sc->args = sc->tp_format->format.fields;
++	sc->nr_args = sc->tp_format->format.nr_fields;
++
+ 	/*
+ 	 * We need to check and discard the first variable '__syscall_nr'
+ 	 * or 'nr' that mean the syscall number. It is needless here.
+@@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		--sc->nr_args;
+ 	}
+ 
++	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
++		return -ENOMEM;
++
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-- 
+2.49.0.395.g12beb8f557-goog
+
