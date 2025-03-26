@@ -1,50 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA7B1F426F;
-	Wed, 26 Mar 2025 16:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A52E23E23F
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Mar 2025 17:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743007900; cv=none; b=tP9OMkuSoUyPADDH+vTd0XSYE1BEW/IUCL8RsYWdsQXYF4AOABK13NWWgDkZ28hd02RC1wnUVhX1OX+Pk47F++bT7hATi6gBaj45+Y0pbKvzi4z9IZ4M0PXrkX9NEkOGYkF9Jm79NO6QXVB7EpneqaoH8XVxYN2atRUdyHMpQeE=
+	t=1743010720; cv=none; b=cqRiBfOMHMGzNct8ZekvtdZa7Vg1Lq2u/Xn+uj7WtVDalugCoNatPB7ez3TpyY1abVcmV4MoGEKwUtOiOCStX1WTCd8+Z+9wJfDP6gwcA8qZJ0PT6aukDiDHyMx+RRVQBo0Vfetui/Nd1m2WEWhKr03Ds8cXoG934Y4NzexpgJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743007900; c=relaxed/simple;
-	bh=7j+q7Ip4w28ml5S4azRv6bFIOG02D9D0SEfk4jQx5Vs=;
+	s=arc-20240116; t=1743010720; c=relaxed/simple;
+	bh=2oIE0G5XW4T1LPwCREw3CNOAFjNp0UmQyd+rq0p3SvM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qxqTKsdCq/klvQrmR2AhLvZMtGk3zxrPVzNH4foBYNKaqWS0dMqe8r49hLpMGZp6DjU2wZYOn77iYDZcbacktjGfpv9BGP7psQhHn0rJTqs8RcjJgiJ5ip1UVSv9ACL2Q1jFXwtIiZ92tvljLOg996fvdL4aPkHUtwMgChXMdKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cRElibuu; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=tuGEM5oby90YMubdOEOkuGINiPxRMXZbFecnZAQOYBlLCIIUqoSjDHfCZLgnnO60I79QBvPx8Ajj2RqnEw6X6T4tDOxlauDbF5cNwCw9LREz/OdII4zhLtYn+XUhZWejvRZJPs9mW/n1a87UCSg9ErT+qQU9GhjW+9Woon0rtmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qAf8GKhs; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRElibuu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743007899; x=1774543899;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7j+q7Ip4w28ml5S4azRv6bFIOG02D9D0SEfk4jQx5Vs=;
-  b=cRElibuuoVMeB1KSQdgWMe8vd68RE81a6X2NGwv1eYsfFuEm6y9wNCkW
-   vUfbPHyDcdIP7ciJvo1tZIZulVRBPo7zAk3AZR4iHab+Ct4ohsK3RxEKh
-   V9icSc6pLG+4uAwEkw35cScLap1Dd+siORiIAdWF+KWtNen/VYJjxaioX
-   Gr0PwWTaA8jx3iGz5M1xxCFAjfTOkdxQIYj30/0PveyQKeEqXzhquV9gQ
-   DzJTRpAPdqbbEaBlB8HCveiDmimRe87B1njYSZmvyz06cV+74h+1sk3uk
-   OYVdmcTQ5ll5oNmQ9sYX7qMY/hD16ODSfDqx4m3gY6bZxrIFh6v8JPNoy
-   w==;
-X-CSE-ConnectionGUID: gbbbdIpPRseuweL/hMqYyQ==
-X-CSE-MsgGUID: LnzZ/21LTWeMU5ICSXBvyQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44327857"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="44327857"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:51:38 -0700
-X-CSE-ConnectionGUID: +ykqutRUQQO5WLB5sfJ9FQ==
-X-CSE-MsgGUID: xAKLT0LhRbSwZiHzTrbc0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="124751954"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.24.8.106]) ([10.24.8.106])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:51:36 -0700
-Message-ID: <4d55c919-92ab-4bfe-a8c2-c0a756546f7c@intel.com>
-Date: Wed, 26 Mar 2025 09:51:36 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qAf8GKhs"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0618746bso838035e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Mar 2025 10:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743010716; x=1743615516; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8qVND4tenJBQx/xK/Ve6LMeZrg3oeI6UK9LzOuingT0=;
+        b=qAf8GKhs0mwZ5APlu1v6/MlD3HXENHCsRwusJcb2T7JaxMCsb20kceDcdrvEyfYgJf
+         zAEynptz/CFcxNrXFHvTQXP3Q1HoP8n5CwBEvhY2vHmbeIwVPzm0LOrGb4Xg4q8zAgLb
+         fpH25XTmjLsrkFDyGb1gjjWqi7T7p3BYlFW8R4MWW50qZCu7VRZ8vCgVlYC1N82glLW3
+         QqK/G2jFgfSEJ3jpJusF6XYYiWqRCXiQDDxXg/4DTd7f+BG6l/6iGNX0tJY1XYdFDj9d
+         Ww5h9TAekOIIeCo+wgdQoEN8m4yH4Q3DAgAqfEo9oOFHcetzq4ViBfy10+m9j+hqG6/i
+         k8+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743010716; x=1743615516;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8qVND4tenJBQx/xK/Ve6LMeZrg3oeI6UK9LzOuingT0=;
+        b=dCfbvLaGzB1msrRBzb8LNEhwJNnAKpWr9lDM7kmjA9QHN5XZTYaPTROf8seTe4iWNv
+         LIq48LhbLzEMA8DgMVlKxkPPCkEBKmOwugW4HrAAavxHCiOFpvfYB1LqpOzItJ0wMbzX
+         7mW2rBdUmOrLEh/HNm/Bh7zkq9grmGtfljrjTUk9KBmXmVS/t1q5izj/gjw5oMBUc04J
+         9NkEE/NdqBVij79fgxVo006UvPvMBnHarKgWPVHEq3NE4MkFa/WDVtgKz65GHxQWMHkT
+         Vs0HyaE9UmdDLydNbiG8V6toSU5TuVox6QJbltRm7z9KN1y3RF5Klok/u0zKC2Ctw5XH
+         5NHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEXPzlMcUlPjLnduKmyxrVexhVQ+u/5UUS22zpzlfJTeo9ZU2kqID93BkhpVAU1uoJN4K58tW0S1Oet3JmpaoD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxquM4AlcdSUX+YHEDZSIR023JspBKaUyGNk6D2yAD4f6pOitt+
+	d2XhQ1fBB2E1XhRpgIECQSL4cf80E5aDPkUd+jcqYUktvSIox0PvD8XJ4NQcoJM=
+X-Gm-Gg: ASbGncsxRAWRmdH0HDKgUBGIH+zXQ0cHjFo3Xr1EkuNvxk6yQ6lkcPU6uWT4HnVk+fl
+	OtzdOdSNSLV3ExV19+ci81sZd0Q1A4ng6JiIdw+FvY0kf1dEGwgz2EGPDrDFwYJWO3zvmlk0pIJ
+	uaX+YARGqEWbVLGrdWvkxKRqnjJj91slEYWC+JNMHXP0GUCCa2demuuLcalYbO3nwnkKbNhGiHz
+	u2p4R6JXaa75zoqV9rvKHsXrfJzCmIEACrJzd4trT2JbVjZ7ezOIHKWdYBXvTH4DS2tu9RgcqLw
+	p28Z9NYPiCHY8IkW/k41lPrEHYodwzbOxyGZjMy5oYXNo4cRtQ==
+X-Google-Smtp-Source: AGHT+IFWImSgAxE2tnY9m2ZViZ+epH+rNo6E42n/cKyi3Pxy880VgCejpCzrgRBe13sBLMsd3ILXAQ==
+X-Received: by 2002:a05:600c:1e0d:b0:43d:10c:2f60 with SMTP id 5b1f17b1804b1-43d8524f43cmr2296105e9.24.1743010716400;
+        Wed, 26 Mar 2025 10:38:36 -0700 (PDT)
+Received: from [192.168.1.247] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm17050515f8f.29.2025.03.26.10.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 10:38:36 -0700 (PDT)
+Message-ID: <f7d543f6-2660-460f-88ac-741dd47ed440@linaro.org>
+Date: Wed, 26 Mar 2025 17:38:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,336 +66,148 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 21/38] KVM: x86/pmu/vmx: Save/load guest
- IA32_PERF_GLOBAL_CTRL with vm_exit/entry_ctrl
-To: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-22-mizhang@google.com>
+Subject: Re: [RFC PATCH v3 5/8] KVM: arm64: Introduce module param to
+ partition the PMU
+To: Colton Lewis <coltonlewis@google.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: kvm@vger.kernel.org, robh@kernel.org, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
+ oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, mark.rutland@arm.com, pbonzini@redhat.com,
+ shuah@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <gsnt1pulnepv.fsf@coltonlewis-kvm.c.googlers.com>
 Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20250324173121.1275209-22-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <gsnt1pulnepv.fsf@coltonlewis-kvm.c.googlers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 3/24/2025 10:31 AM, Mingwei Zhang wrote:
-> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On 25/03/2025 6:32 pm, Colton Lewis wrote:
+> Hi James,
 > 
-> Intel processor (vmx) provides capability to save/load guest
-> IA32_PERF_GLOBAL_CTRL at vm-exit/vm-entry by setting
-> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL bit in VM-exit-ctrl or
-> VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL bit in VM-entry-ctrl.
+> Thanks for the review.
 > 
-> Mediated vPMU leverages both capabilities to save/load guest
-> IA32_PERF_GLOBAL_CTRL automatically at vm-exit/vm-entry. Note that the
-> former was introduced in SapphireRapids and later Intel CPUs.
+> James Clark <james.clark@linaro.org> writes:
 > 
-> If VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is unavailable, mediated PMU will be
-> disabled. Note that mediated PMU can be enabled by falling back to atomic
-> msr save/retore list. However, that would cause extra overhead per
-> VM-enter/exit.
+>> On 13/02/2025 6:03 pm, Colton Lewis wrote:
+>>> For PMUv3, the register MDCR_EL2.HPMN partitiones the PMU counters
+>>> into two ranges where counters 0..HPMN-1 are accessible by EL1 and, if
+>>> allowed, EL0 while counters HPMN..N are only accessible by EL2.
 > 
-> Since these VMX capability bits perform automatic saving/restoring of the
-> PMU global ctrl between VMCS and the HW MSR. No synchronization was
-> performed betwen HW MSR and pmu->global_ctrli, the KVM cached value .
-> Therefore, whenever KVM needs to use this variable, it will need to
-> explicitly read the value from MSR to pmu->global_ctrl. This is especially
-> so when guest doesn't own all PMU counters, i.e., when
-> IA32_PERF_GLOBAL_CTRL is interceped by mediated PMU.
+>>> Introduce a module parameter in KVM to set this register. The name
+>>> reserved_host_counters reflects the intent to reserve some counters
+>>> for the host so the guest may eventually be allowed direct access to a
+>>> subset of PMU functionality for increased performance.
 > 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Co-developed-by: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  4 ++++
->  arch/x86/include/asm/vmx.h      |  1 +
->  arch/x86/kvm/pmu.c              | 30 ++++++++++++++++++++++++-
->  arch/x86/kvm/vmx/capabilities.h |  5 +++++
->  arch/x86/kvm/vmx/nested.c       |  3 ++-
->  arch/x86/kvm/vmx/pmu_intel.c    | 39 ++++++++++++++++++++++++++++++++-
->  arch/x86/kvm/vmx/vmx.c          | 22 ++++++++++++++++++-
->  arch/x86/kvm/vmx/vmx.h          |  3 ++-
->  8 files changed, 102 insertions(+), 5 deletions(-)
+>>> Track HPMN and whether the pmu is partitioned in struct arm_pmu
+>>> because both KVM and the PMUv3 driver will need to know that to handle
+>>> guests correctly.
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 0b7af5902ff7..4b3bfefc2d05 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -553,6 +553,10 @@ struct kvm_pmu {
->  	unsigned available_event_types;
->  	u64 fixed_ctr_ctrl;
->  	u64 fixed_ctr_ctrl_rsvd;
-> +	/*
-> +	 * kvm_pmu_sync_global_ctrl_from_vmcs() must be called to update
-> +	 * this SW-maintained global_ctrl for mediated vPMU before accessing it.
-> +	 */
->  	u64 global_ctrl;
->  	u64 global_status;
->  	u64 counter_bitmask[2];
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index f7fd4369b821..48e137560f17 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -106,6 +106,7 @@
->  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
->  #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
->  #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-> +#define VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL	0x40000000
->  
->  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
->  
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 6ad71752be4b..4e8cefcce7ab 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -646,6 +646,30 @@ void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
->  	}
->  }
->  
-> +static void kvm_pmu_sync_global_ctrl_from_vmcs(struct kvm_vcpu *vcpu)
-> +{
-> +	struct msr_data msr_info = { .index = MSR_CORE_PERF_GLOBAL_CTRL };
-> +
-> +	if (!kvm_mediated_pmu_enabled(vcpu))
-> +		return;
-> +
-> +	/* Sync pmu->global_ctrl from GUEST_IA32_PERF_GLOBAL_CTRL. */
-> +	kvm_pmu_call(get_msr)(vcpu, &msr_info);
-> +}
-> +
-> +static void kvm_pmu_sync_global_ctrl_to_vmcs(struct kvm_vcpu *vcpu, u64 global_ctrl)
-> +{
-> +	struct msr_data msr_info = {
-> +		.index = MSR_CORE_PERF_GLOBAL_CTRL,
-> +		.data = global_ctrl };
-> +
-> +	if (!kvm_mediated_pmu_enabled(vcpu))
-> +		return;
-> +
-> +	/* Sync pmu->global_ctrl to GUEST_IA32_PERF_GLOBAL_CTRL. */
-> +	kvm_pmu_call(set_msr)(vcpu, &msr_info);
-> +}
-> +
->  bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
->  {
->  	switch (msr) {
-> @@ -680,7 +704,6 @@ int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		msr_info->data = pmu->global_status;
->  		break;
->  	case MSR_AMD64_PERF_CNTR_GLOBAL_CTL:
-> -	case MSR_CORE_PERF_GLOBAL_CTRL:
->  		msr_info->data = pmu->global_ctrl;
->  		break;
->  	case MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR:
-> @@ -731,6 +754,9 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>> Due to the difficulty this feature would create for the driver running
+>>> at EL1 on the host, partitioning is only allowed in VHE mode. Working
+>>> on nVHE mode would require a hypercall for every register access
+>>> because the counters reserved for the host by HPMN are now only
+>>> accessible to EL2.
+> 
+>>> The parameter is only configurable at boot time. Making the parameter
+>>> configurable on a running system is dangerous due to the difficulty of
+>>> knowing for sure no counters are in use anywhere so it is safe to
+>>> reporgram HPMN.
+> 
+> 
+>> Hi Colton,
+> 
+>> For some high level feedback for the RFC, it probably makes sense to
+>> include the other half of the feature at the same time. I think there is
+>> a risk that it requires something slightly different than what's here
+>> and there ends up being some churn.
+> 
+> I agree. That's what I'm working on now. I justed wanted an iteration or
+> two in public so I'm not building on something that needs drastic change
+> later.
+> 
+>> Other than that I think it looks ok apart from some minor code review 
+>> nits.
+> 
+> Thank you
+> 
+>> I was also thinking about how BRBE interacts with this. Alex has done
+>> some analysis that finds that it's difficult to use BRBE in guests with
+>> virtualized counters due to the fact that BRBE freezes on any counter
+>> overflow, rather than just guest ones. That leaves the guest with branch
+>> blackout windows in the delay between a host counter overflowing and the
+>> interrupt being taken and BRBE being restarted.
+> 
+>> But with HPMN, BRBE does allow freeze on overflow of only one partition
+>> or the other (or both, but I don't think we'd want that) e.g.:
+> 
+>>    RNXCWF: If EL2 is implemented, a BRBE freeze event occurs when all of
+>>    the following are true:
+> 
+>>    * BRBCR_EL1.FZP is 1.
+>>    * Generation of Branch records is not paused.
+>>    * PMOVSCLR_EL0[(MDCR_EL2.HPMN-1):0] is nonzero.
+>>    * The PE is in a BRBE Non-prohibited region.
+> 
+>> Unfortunately that means we could only let guests use BRBE with a
+>> partitioned PMU, which would massively reduce flexibility if hosts have
+>> to lose counters just so the guest can use BRBE.
+> 
+>> I don't know if this is a stupid idea, but instead of having a fixed
+>> number for the partition, wouldn't it be nice if we could trap and
+>> increment HPMN on the first guest use of a counter, then decrement it on
+>> guest exit depending on what's still in use? The host would always
+>> assign its counters from the top down, and guests go bottom up if they
+>> want PMU passthrough. Maybe it's too complicated or won't work for
+>> various reasons, but because of BRBE the counter partitioning changes go
+>> from an optimization to almost a necessity.
+> 
+> This is a cool idea that would enable useful things. I can think of a
+> few potential problems.
+> 
+> 1. Partitioning will give guests direct access to some PMU counter
+> registers. There is no reliable way for KVM to determine what is in use
+> from that state. A counter that is disabled guest at exit might only be
+> so temporarily, which could lead to a lot of thrashing allocating and
+> deallocating counters.
+> 
+> 2. HPMN affects reads of PMCR_EL0.N, which is the standard way to
+> determine how many counters there are. If HPMN starts as a low number,
+> guests have no way of knowing there are more counters
+> available. Dynamically changing the counters available could be
+> confusing for guests.
+> 
 
+Yes I was expecting that PMCR would have to be trapped and N reported to 
+be the number of physical counters rather than how many are in the guest 
+partition.
 
-pmu->global_ctrl doesn't always have the up-to-date guest value, need to
-sync from vmcs/vmbc before comparing it against 'data'.
+> 3. If guests were aware they could write beyond HPMN and get the
+> counters allocated to them, nothing stops them from writing at counter
+> N and taking as many counters as possible to starve the host.
+> 
 
-+               kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
-                if (pmu->global_ctrl != data) {
+Is that much different than how it is now with virtualized PMUs? As in, 
+the guest can use all of the counters and the host's events will have to 
+contend with them.
 
->  			diff = pmu->global_ctrl ^ data;
->  			pmu->global_ctrl = data;
->  			reprogram_counters(pmu, diff);
-> +
-> +			/* Propagate guest global_ctrl to GUEST_IA32_PERF_GLOBAL_CTRL. */
-> +			kvm_pmu_sync_global_ctrl_to_vmcs(vcpu, data);
->  		}
->  		break;
->  	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
-> @@ -907,6 +933,8 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel)
->  
->  	BUILD_BUG_ON(sizeof(pmu->global_ctrl) * BITS_PER_BYTE != X86_PMC_IDX_MAX);
->  
-> +	kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
-> +
->  	if (!kvm_pmu_has_perf_global_ctrl(pmu))
->  		bitmap_copy(bitmap, pmu->all_valid_pmc_idx, X86_PMC_IDX_MAX);
->  	else if (!bitmap_and(bitmap, pmu->all_valid_pmc_idx,
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index 013536fde10b..cc63bd4ab87c 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -101,6 +101,11 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
->  	return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
->  }
->  
-> +static inline bool cpu_has_save_perf_global_ctrl(void)
-> +{
-> +	return vmcs_config.vmexit_ctrl & VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
-> +}
-> +
->  static inline bool cpu_has_vmx_mpx(void)
->  {
->  	return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS;
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 8a7af02d466e..ecf72394684d 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -7004,7 +7004,8 @@ static void nested_vmx_setup_exit_ctls(struct vmcs_config *vmcs_conf,
->  		VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
->  		VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
->  		VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT |
-> -		VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
-> +		VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> +		VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
->  
->  	/* We support free control of debug control saving. */
->  	msrs->exit_ctls_low &= ~VM_EXIT_SAVE_DEBUG_CONTROLS;
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 2a5f79206b02..04a893e56135 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -294,6 +294,11 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	u32 msr = msr_info->index;
->  
->  	switch (msr) {
-> +	case MSR_CORE_PERF_GLOBAL_CTRL:
-> +		if (kvm_mediated_pmu_enabled(vcpu))
-> +			pmu->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
-> +		msr_info->data = pmu->global_ctrl;
-> +		break;
->  	case MSR_CORE_PERF_FIXED_CTR_CTRL:
->  		msr_info->data = pmu->fixed_ctr_ctrl;
->  		break;
-> @@ -339,6 +344,11 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	u64 reserved_bits, diff;
->  
->  	switch (msr) {
-> +	case MSR_CORE_PERF_GLOBAL_CTRL:
-> +		if (kvm_mediated_pmu_enabled(vcpu))
-> +			vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
-> +				     pmu->global_ctrl);
-> +		break;
->  	case MSR_CORE_PERF_FIXED_CTR_CTRL:
->  		if (data & pmu->fixed_ctr_ctrl_rsvd)
->  			return 1;
-> @@ -558,10 +568,37 @@ static void __intel_pmu_refresh(struct kvm_vcpu *vcpu)
->  
->  static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	bool mediated;
-> +
->  	__intel_pmu_refresh(vcpu);
->  
-> -	exec_controls_changebit(to_vmx(vcpu), CPU_BASED_RDPMC_EXITING,
-> +	exec_controls_changebit(vmx, CPU_BASED_RDPMC_EXITING,
->  				!kvm_rdpmc_in_guest(vcpu));
-> +
-> +	mediated = kvm_mediated_pmu_enabled(vcpu);
-> +	if (cpu_has_load_perf_global_ctrl()) {
-> +		vm_entry_controls_changebit(vmx,
-> +			VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, mediated);
-> +		/*
-> +		 * Initialize guest PERF_GLOBAL_CTRL to reset value as SDM rules.
-> +		 *
-> +		 * Note: GUEST_IA32_PERF_GLOBAL_CTRL must be initialized to
-> +		 * "BIT_ULL(pmu->nr_arch_gp_counters) - 1" instead of pmu->global_ctrl
-> +		 * since pmu->global_ctrl is only be initialized when guest
-> +		 * pmu->version > 1. Otherwise if pmu->version is 1, pmu->global_ctrl
-> +		 * is 0 and guest counters are never really enabled.
-> +		 */
-> +		if (mediated)
-> +			vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
-> +				     BIT_ULL(pmu->nr_arch_gp_counters) - 1);
-> +	}
-> +
-> +	if (cpu_has_save_perf_global_ctrl())
-> +		vm_exit_controls_changebit(vmx,
-> +			VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> +			VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, mediated);
->  }
->  
->  static void intel_pmu_init(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ff66f17d6358..38ecf3c116bd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4390,6 +4390,13 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
->  
->  	if (cpu_has_load_ia32_efer())
->  		vmcs_write64(HOST_IA32_EFER, kvm_host.efer);
-> +
-> +	/*
-> +	 * Initialize host PERF_GLOBAL_CTRL to 0 to disable all counters
-> +	 * immediately once VM exits. Mediated vPMU then call perf_guest_exit()
-> +	 * to re-enable host perf events.
-> +	 */
-> +	vmcs_write64(HOST_IA32_PERF_GLOBAL_CTRL, 0);
->  }
->  
->  void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-> @@ -4457,7 +4464,8 @@ static u32 vmx_get_initial_vmexit_ctrl(void)
->  				 VM_EXIT_CLEAR_IA32_RTIT_CTL);
->  	/* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
->  	return vmexit_ctrl &
-> -		~(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL | VM_EXIT_LOAD_IA32_EFER);
-> +		~(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL | VM_EXIT_LOAD_IA32_EFER |
-> +		  VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL);
->  }
->  
->  void vmx_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
-> @@ -7196,6 +7204,9 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->  	struct perf_guest_switch_msr *msrs;
->  	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
->  
-> +	if (kvm_mediated_pmu_enabled(&vmx->vcpu))
-> +		return;
-> +
->  	pmu->host_cross_mapped_mask = 0;
->  	if (pmu->pebs_enable & pmu->global_ctrl)
->  		intel_pmu_cross_mapped_check(pmu);
-> @@ -8451,6 +8462,15 @@ __init int vmx_hardware_setup(void)
->  		enable_sgx = false;
->  #endif
->  
-> +	/*
-> +	 * All CPUs that support a mediated PMU are expected to support loading
-> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
-> +	 */
-> +	if (enable_mediated_pmu &&
-> +	    (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
-> +			  !cpu_has_save_perf_global_ctrl())))
-> +		enable_mediated_pmu = false;
-> +
->  	/*
->  	 * set_apic_access_page_addr() is used to reload apic access
->  	 * page upon invalidation.  No need to do anything if not
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 5c505af553c8..b282165f98a6 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -510,7 +510,8 @@ static inline u8 vmx_get_rvi(void)
->  	       VM_EXIT_LOAD_IA32_EFER |					\
->  	       VM_EXIT_CLEAR_BNDCFGS |					\
->  	       VM_EXIT_PT_CONCEAL_PIP |					\
-> -	       VM_EXIT_CLEAR_IA32_RTIT_CTL)
-> +	       VM_EXIT_CLEAR_IA32_RTIT_CTL |				\
-> +	       VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL)
->  
->  #define KVM_REQUIRED_VMX_PIN_BASED_VM_EXEC_CONTROL			\
->  	(PIN_BASED_EXT_INTR_MASK |					\
+You can still have a module param, except it's more of a limit to the 
+size of the partition rather than fixing it upfront. The default value 
+would be the max number of counters, allowing the most flexibility for 
+the common use case where it's unlikely that both host and guests are 
+contending for all counters. But if you really want to make sure the 
+host doesn't get starved you can set it to a lower value.
+
+All this does sound a bit like it could be done on top of the simple 
+partitioning though. And it's mainly for making BRBE more accessible, 
+which I'm not 100% convinced that the blackout windows are that big of a 
+problem. We could say BRBE may have some holes if the host happens to be 
+using counters at the same time, and if you want to be certain of no 
+holes, use a host with partitioned counters.
+
+James
 
