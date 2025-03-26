@@ -1,145 +1,256 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B4D42A82
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 20:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4754322A
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Mar 2025 00:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742935762; cv=none; b=Ccf7I5k00BxYOYD9knsjheitWCQurKDC9bYx5x4v5FPaeQLX3/YVyGeWh4U1caz6RDAsyw19FGsIpoVY/1QJQ2lzxl20zzbhu081YbMhkMOC2JqTxwnkxeHsYbj+94T0zEctj1LU/LIGr9ZDo2zpnsM2QRklygHe58jC76VS86A=
+	t=1742947492; cv=none; b=hcKa9wKv//7iXIDXSYOJPuZdajhSGqgzjW2neSwAB1ALl+5ay/wx47ZYuwiL87xnxRYAzbrB+fTjXZUXcIqcoi03G71G2pt5If9kglbp73st28NfXDmuW48XwycN/YP8VsuJwdxAyjBWS4slmNgxZjd7avYYGPk8rSkGmWGSMgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742935762; c=relaxed/simple;
-	bh=GCAhGVtueceq1ubCUXU7aIifbCxnCpAKEuI8oUAtt/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qj/68HgUxORY5RPoS5K+9TfdCYeCkPDv+kKSIOhHZn6Snl6721AFwr7tCWpAszRjEq+7If9KqDugmepAtL/9Z83gd/sOkYA7J+/bTGu9Cd00u7VLNj+4Gsj06OzyNaFb3JYnC9jSmFMnIgCxFd8QtDwQqO0IOd8MExe5SvZdamU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ffg9DM7X; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1742947492; c=relaxed/simple;
+	bh=KGzHV4AGIWKrWBs1lNyAyJSkG6Kr/7d+ZtUTrUzoltM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=V1yEcRr9GXjaxq62xIFBAEiBjiFDRMNeuo8M6ljsjau+WCa8UUuzqnAuoWB0ibrUrQgtFbg3YTRrTLzvYnqjMvB95+WdJbLyQw+UWfUn0+kP9u3ha0RmGXBBCtOh0Kcq6+WoVjZtzYUk38NdY+ldS8AAMDNcYRJzKbHXO9D69Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zp5PeogA; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ffg9DM7X"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54af20849bbso2161531e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 13:49:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zp5PeogA"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-223fd6e9408so4586095ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 17:04:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1742935759; x=1743540559; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K52xAWNW5IEkY2W6yv56tbrXz/O78EY3OFwe6Kmcp1A=;
-        b=ffg9DM7XyO1TjKbhsBpYGnBOLY1HFkTSg9XlgOfVXr5nTmJqGt8oc6LT2RiKGtVO+f
-         fpjrxTa1pCNWUKZ+dTOFrI8YTyFr4CeB7+n6yQWGR5+/U6FoZN1E7P5HY3icoqDbU955
-         asf/U3FoSfV5niFlAfRPWT3RWHqhYTJc2KHxg=
+        d=google.com; s=20230601; t=1742947490; x=1743552290; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uBgRAC9f4JnjWelcmYNHs7Pp0auWj+zKsfRjzsiOuOE=;
+        b=Zp5PeogASBOltRn5tdc4+72bLHjB17ncym0Iw4vnl0mxqnHQNmqUYc04zgt/y724qX
+         PpvBWr1d/BvPl3HSbo9TF06OrKIY/ULIrMOelaW9VXvKxszKSRAE0Ymeg+PNkvqLjnwF
+         26hb4UoYJp9cE1WHfdv25nZl36z4oOh8QBoBPJYNdMobkPUJydFJmnPaxgKEnvunrsSE
+         VsIniS1ih8S5C2w3KvFN/wEifFZlWoyeLQQS5EVFCJdQOzDfqjjSEdgMaa7MSYobEpWD
+         9Jq4/JyWFLYXIhIgXOBfXxeikqx4pCusSHWveI7u16+kiPQeeBZ2gykmOECWiFUxIEHx
+         fgQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742935759; x=1743540559;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K52xAWNW5IEkY2W6yv56tbrXz/O78EY3OFwe6Kmcp1A=;
-        b=obVxDQ7AZxgE5JrxgpEj7DIWSidGhB3uPyiupHKji0wLe0WUfEkEodB7kfZ4vrJA+B
-         qTFuChkpYGDodCoyelS5i0KcFHCcT80mNgftL3mBtXsxn9Ss0zBko8G+OJ98J/kRiVes
-         Kihz4Nd2e4K3rs6jhRyYJ7nTBObDhZ7o0RXF8To1KF7n10kMPcgkxN0qcjJfAS78XLkZ
-         oZfQywozyA7BXs4A8jy9sHbinW4eu3cYYwtWPVl0cOcycVwK6iEnfcA/qA7YEi0DEvRx
-         TpGy9auDILxbsi4DGdrNeQDInQnK04hOS4cJbX/DYuox8zQZykK+mgM9FZeauBII0qBA
-         GelA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtd8bQnNcR+dv28iCehAnTiK6DWVpxZVoiWKR2OxJzfoIvpLfeO5Iv7aV0ZAe5qLYaxhvyCatgF0lQG151q5gR@vger.kernel.org
-X-Gm-Message-State: AOJu0YygU11zBlxGceMyrejNX5f6gAe9FjWSyzMLEAs4cyDWxIfmu4S/
-	iZ3uYR3IAD20M0HPCW6XoCQa42UXi61ASUtqJSXaU8qftewmUGQm3wpS2lng73M9Noz9fXyv5+u
-	OXfhkPg==
-X-Gm-Gg: ASbGncvWddV61liJBVo5rWSOKA9aI0a0UBOj5qSsBt1etijR4MCsGMf5EjpMqRrZ1j2
-	HwUDkaPCaTbpsrHoUy+i9pL8GP7p/2q34sFAjsdIXYB5RUo2B0+wtC9blqqWk3MhAvWSPdjfpMV
-	Z5iTusWXbtt6hFWJRWfhqXoKhtz4BQiQ2lSihd/Fn9lss/g3NheT+AmhI7JFFAR0fbFFWmsAlL+
-	N6lfTydjKUKXK3zyzg57YQ2Ge3ZTNDQDC4PJR+Yp9PWxariSXOAYKknUTFzYQcr+onfMxFprxaC
-	nePPjcXHFl7lTu3Tv/iFIfkI/7PRggG4zblrg598ycgjS9XprbSjhHfk6ZsdEMjvH4knCVX8hdY
-	xY2a/Qk7frlMNJY9/6tw=
-X-Google-Smtp-Source: AGHT+IFf1zxacEYeu+yFVIAeNOEpi6zEe06rX5lt5NGePkLj8NvbmrmI98f8K/nHi/Ge6MlKlBK+aQ==
-X-Received: by 2002:a05:6512:3b9d:b0:549:8537:79d5 with SMTP id 2adb3069b0e04-54ad64868acmr7140344e87.20.1742935758624;
-        Tue, 25 Mar 2025 13:49:18 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54af62dbe50sm310157e87.197.2025.03.25.13.49.17
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 13:49:18 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-549b159c84cso6816069e87.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Mar 2025 13:49:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXfIHtAwBdVSTZKdbe6i310Wf8ALiRvN1xFBKU6ES7b331ugXw14sNf9BKrZrLwXI75hSSXVrLpoKZczYNFplSc@vger.kernel.org
-X-Received: by 2002:a17:907:95a4:b0:ac3:48e4:f8bc with SMTP id
- a640c23a62f3a-ac3f27fd3b3mr1859596466b.48.1742935307883; Tue, 25 Mar 2025
- 13:41:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742947490; x=1743552290;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uBgRAC9f4JnjWelcmYNHs7Pp0auWj+zKsfRjzsiOuOE=;
+        b=C2nNSLqgRoz85wgnkJV6csWBZoZ2FPQIpqL09wQNxAZZ4HLnG3xfSScIYO3ix178Ml
+         sv4HbyUiiVFe6peTxGY4Yk4pbz8jq+c6vO6gKLrtplZA3jNoJAN6rrYjZGoRXPsjqGgG
+         k34FQL6WTLTFLKiURpIVc0RJygC3+tt4bUEiJ/h+Nujx/PU06z0upVQPj0kI8rgiw/uQ
+         W0cqv3PtAGucd8hV6T26IjadMDejYzcYIOSFXIQZ0DwmSsd4yyRs0+tyu9qIlUP3zFzB
+         t3e5meTU2bx8h+UT29We4CM3RyvktqzbSyrM1YHhuu1Ys0S7nKFeulMIT5BJ1Tyr3fro
+         SwQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSU/0nzEmT+Bh/GueXnGLjhJ5vP+eeu/Oi85x+PvohG+gJ8NGynxybYYJbKv6hlXkH6cc+OChb5wxTcQXnWiDT@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqu5CD0XaQp/fucVXAvznrGt7aD5iV5R2bCLa2pJ2hB+6wLUfa
+	f74+XoH56eHYJQ7NeGUdFV387k1Q8BVpRfJJo+1lSX1Aa7dt4WWxZN/NzBOM89FMCqAEY+uB8Tj
+	jiBq92w==
+X-Google-Smtp-Source: AGHT+IFYn0vhdUq73ST9sk7J3tpV3lwCQ3yKsd8Sphul7ktFkIEx+T2jX4W7QVs0GoawvHfJJ+scZhTQmxBH
+X-Received: from pfbcz18.prod.google.com ([2002:aa7:9312:0:b0:736:ae72:7543])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:22cd:b0:736:b400:b58f
+ with SMTP id d2e1a72fcca58-7395134cddfmr2600227b3a.0.1742947489921; Tue, 25
+ Mar 2025 17:04:49 -0700 (PDT)
+Date: Tue, 25 Mar 2025 17:03:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250325121624.523258-1-guoren@kernel.org> <20250325121624.523258-2-guoren@kernel.org>
-In-Reply-To: <20250325121624.523258-2-guoren@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 25 Mar 2025 13:41:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVgTJpSxrQbEi28pUOmuWXrox45vV9kPhe9q5CcRxEbw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpwFc7ifwGuAhyrs4E5qPgHx1McCR38KFycRhkLFRMKTveHrmoaWi4zba4
-Message-ID: <CAHk-=wiVgTJpSxrQbEi28pUOmuWXrox45vV9kPhe9q5CcRxEbw@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 01/43] rv64ilp32_abi: uapi: Reuse lp64 ABI interface
-To: guoren@kernel.org
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, anup@brainfault.org, atishp@atishpatra.org, 
-	oleg@redhat.com, kees@kernel.org, tglx@linutronix.de, will@kernel.org, 
-	mark.rutland@arm.com, brauner@kernel.org, akpm@linux-foundation.org, 
-	rostedt@goodmis.org, edumazet@google.com, unicorn_wang@outlook.com, 
-	inochiama@outlook.com, gaohan@iscas.ac.cn, shihua@iscas.ac.cn, 
-	jiawei@iscas.ac.cn, wuwei2016@iscas.ac.cn, drew@pdp7.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com, 
-	wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com, 
-	dsterba@suse.com, mingo@redhat.com, peterz@infradead.org, 
-	boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn, 
-	leobras@redhat.com, jszhang@kernel.org, conor.dooley@microchip.com, 
-	samuel.holland@sifive.com, yongxuan.wang@sifive.com, 
-	luxu.kernel@bytedance.com, david@redhat.com, ruanjinjie@huawei.com, 
-	cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn, 
-	ardb@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-mm@kvack.org, 
-	linux-crypto@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, maple-tree@lists.infradead.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-media@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250326000434.83325-1-irogers@google.com>
+Subject: [PATCH v3 00/35] GNR retirement latencies, topic and metric updates
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Mar 2025 at 05:17, <guoren@kernel.org> wrote:
->
-> The rv64ilp32 abi kernel accommodates the lp64 abi userspace and
-> leverages the lp64 abi Linux interface. Hence, unify the
-> BITS_PER_LONG = 32 memory layout to match BITS_PER_LONG = 64.
+Add default mean, min and max retirement latency values to GNR
+events. Update the topics on a number of events previously
+"other". Switch TMA metrics to the generated version. Add TMA 5.02
+metrics for sandybridge, ivytown, ivybridge and jaketown.
 
-No.
+Events and metrics generated from the data and scripts in:
+https://github.com/intel/perfmon
+and:
+https://github.com/intel/perfmon/pull/298
 
-This isn't happening.
+v3: Generate sierraforest metrics from the spreadsheet using
+    conversion with the core type of crestmont.
 
-You can't do crazy things in the RISC-V code and then expect the rest
-of the kernel to just go "ok, we'll do crazy things".
+v2: Fix arrowlake PMU/cpu prefixes.
 
-We're not doing crazy __riscv_xlen hackery with random structures
-containing 64-bit values that the kernel then only looks at the low 32
-bits. That's wrong on *so* many levels.
+Ian Rogers (35):
+  perf vendor events: Update alderlake events/metrics
+  perf vendor events: Update AlderlakeN events/metrics
+  perf vendor events: Update arrowlake events/metrics
+  perf vendor events: Update bonnell events
+  perf vendor events: Update broadwell metrics
+  perf vendor events: Update broadwellde metrics
+  perf vendor events: Update broadwellx metrics
+  perf vendor events: Update cascadelakex events/metrics
+  perf vendor events: Update clearwaterforest events
+  perf vendor events: Update elkhartlake events
+  perf vendor events: Update emeraldrapids events/metrics
+  perf vendor events: Update grandridge events/metrics
+  perf vendor events: Add graniterapids retirement latencies
+  perf vendor events: Update haswell metrics
+  perf vendor events: Update haswellx metrics
+  perf vendor events: Update icelake events/metrics
+  perf vendor events: Update icelakex events/metrics
+  perf vendor events: Update ivybridge metrics
+  perf vendor events: Update ivytown metrics
+  perf vendor events: Update jaketown metrics
+  perf vendor events: Update lunarlake events/metrics
+  perf vendor events: Update meteorlake events/metrics
+  perf vendor events: Update nehalemep events
+  perf vendor events: Update nehalemex events
+  perf vendor events: Update rocketlake events/metrics
+  perf vendor events: Update sandybridge metrics
+  perf vendor events: Update sapphirerapids events/metrics
+  perf vendor events: Update sierraforest events/metrics
+  perf vendor events: Update skylake metrics
+  perf vendor events: Update skylakex events/metrics
+  perf vendor events: Update snowridgex events
+  perf vendor events: Update tigerlake metrics
+  perf vendor events: Update westmereep-dp events
+  perf vendor events: Update westmereep-dp events
+  perf vendor events: Update westmereep-dp events
 
-I'm willing to say "big-endian is dead", but I'm not willing to accept
-this kind of crazy hackery.
+ .../arch/x86/alderlake/adl-metrics.json       | 485 ++++++++-------
+ .../pmu-events/arch/x86/alderlake/cache.json  |  77 +++
+ .../pmu-events/arch/x86/alderlake/memory.json |  55 ++
+ .../pmu-events/arch/x86/alderlake/other.json  | 196 ------
+ .../arch/x86/alderlake/pipeline.json          |  67 ++-
+ .../arch/x86/alderlaken/adln-metrics.json     |  54 +-
+ .../pmu-events/arch/x86/alderlaken/cache.json |  50 ++
+ .../arch/x86/alderlaken/memory.json           |  40 ++
+ .../pmu-events/arch/x86/alderlaken/other.json |  98 ---
+ .../arch/x86/alderlaken/pipeline.json         |  11 +-
+ .../arch/x86/arrowlake/arl-metrics.json       | 562 +++++++++---------
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 148 +++++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  11 +
+ .../pmu-events/arch/x86/arrowlake/other.json  | 193 ------
+ .../arch/x86/arrowlake/pipeline.json          | 163 ++++-
+ .../pmu-events/arch/x86/bonnell/other.json    |   8 -
+ .../pmu-events/arch/x86/bonnell/pipeline.json |   8 +
+ .../arch/x86/broadwell/bdw-metrics.json       | 256 ++++----
+ .../arch/x86/broadwellde/bdwde-metrics.json   | 180 +++---
+ .../arch/x86/broadwellx/bdx-metrics.json      | 268 +++++----
+ .../arch/x86/cascadelakex/cache.json          | 404 +++++++++++++
+ .../arch/x86/cascadelakex/clx-metrics.json    | 389 ++++++------
+ .../arch/x86/cascadelakex/other.json          | 404 -------------
+ .../arch/x86/clearwaterforest/cache.json      |  20 +
+ .../arch/x86/clearwaterforest/other.json      |  22 -
+ .../arch/x86/elkhartlake/cache.json           | 192 ++++++
+ .../arch/x86/elkhartlake/memory.json          | 202 +++++++
+ .../arch/x86/elkhartlake/other.json           | 394 ------------
+ .../arch/x86/emeraldrapids/cache.json         | 100 ++++
+ .../arch/x86/emeraldrapids/emr-metrics.json   | 471 ++++++++-------
+ .../arch/x86/emeraldrapids/memory.json        | 170 ++++++
+ .../arch/x86/emeraldrapids/other.json         | 328 ----------
+ .../arch/x86/emeraldrapids/pipeline.json      |  58 ++
+ .../pmu-events/arch/x86/grandridge/cache.json | 150 ++++-
+ .../arch/x86/grandridge/counter.json          |   2 +-
+ .../arch/x86/grandridge/frontend.json         |   8 +
+ .../arch/x86/grandridge/grr-metrics.json      | 521 +---------------
+ .../pmu-events/arch/x86/grandridge/other.json |  28 -
+ .../arch/x86/grandridge/pipeline.json         |  51 +-
+ .../arch/x86/grandridge/uncore-cache.json     |  45 +-
+ .../arch/x86/grandridge/uncore-memory.json    | 338 +++++++++++
+ .../arch/x86/graniterapids/cache.json         | 122 ++++
+ .../arch/x86/graniterapids/counter.json       |   5 +
+ .../arch/x86/graniterapids/frontend.json      |  21 +
+ .../arch/x86/graniterapids/gnr-metrics.json   | 483 ++++++++-------
+ .../arch/x86/graniterapids/memory.json        | 130 ++++
+ .../arch/x86/graniterapids/other.json         | 237 --------
+ .../arch/x86/graniterapids/pipeline.json      |  52 ++
+ .../arch/x86/graniterapids/uncore-cache.json  |  42 ++
+ .../graniterapids/uncore-interconnect.json    |  90 ++-
+ .../arch/x86/graniterapids/uncore-memory.json | 240 ++++++++
+ .../arch/x86/haswell/hsw-metrics.json         | 206 ++++---
+ .../arch/x86/haswellx/hsx-metrics.json        | 222 ++++---
+ .../pmu-events/arch/x86/icelake/cache.json    |  60 ++
+ .../arch/x86/icelake/icl-metrics.json         | 385 ++++++------
+ .../pmu-events/arch/x86/icelake/memory.json   | 160 +++++
+ .../pmu-events/arch/x86/icelake/other.json    | 220 -------
+ .../pmu-events/arch/x86/icelakex/cache.json   | 273 +++++++++
+ .../arch/x86/icelakex/icx-metrics.json        | 399 +++++++------
+ .../pmu-events/arch/x86/icelakex/memory.json  | 190 ++++++
+ .../pmu-events/arch/x86/icelakex/other.json   | 463 ---------------
+ .../arch/x86/ivybridge/ivb-metrics.json       |  76 ++-
+ .../arch/x86/ivybridge/metricgroups.json      |   5 +
+ .../arch/x86/ivytown/ivt-metrics.json         |  80 ++-
+ .../arch/x86/ivytown/metricgroups.json        |   5 +
+ .../arch/x86/jaketown/frontend.json           |   8 +
+ .../arch/x86/jaketown/jkt-metrics.json        |  40 +-
+ .../arch/x86/jaketown/metricgroups.json       |   5 +
+ .../pmu-events/arch/x86/jaketown/other.json   |   8 -
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 122 ++++
+ .../arch/x86/lunarlake/lnl-metrics.json       | 556 +++++++++--------
+ .../pmu-events/arch/x86/lunarlake/memory.json |  44 ++
+ .../pmu-events/arch/x86/lunarlake/other.json  | 353 -----------
+ .../arch/x86/lunarlake/pipeline.json          | 187 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json | 179 ++++++
+ .../arch/x86/meteorlake/memory.json           |  44 ++
+ .../arch/x86/meteorlake/mtl-metrics.json      | 549 +++++++++--------
+ .../pmu-events/arch/x86/meteorlake/other.json | 140 -----
+ .../arch/x86/meteorlake/pipeline.json         |  44 +-
+ .../arch/x86/meteorlake/uncore-memory.json    |  18 +
+ .../pmu-events/arch/x86/nehalemep/cache.json  |  32 +
+ .../pmu-events/arch/x86/nehalemep/other.json  |  40 --
+ .../arch/x86/nehalemep/virtual-memory.json    |   8 +
+ .../pmu-events/arch/x86/nehalemex/cache.json  |  32 +
+ .../pmu-events/arch/x86/nehalemex/other.json  |  40 --
+ .../arch/x86/nehalemex/virtual-memory.json    |   8 +
+ .../pmu-events/arch/x86/rocketlake/cache.json |  60 ++
+ .../arch/x86/rocketlake/memory.json           | 160 +++++
+ .../pmu-events/arch/x86/rocketlake/other.json | 220 -------
+ .../arch/x86/rocketlake/rkl-metrics.json      | 385 ++++++------
+ .../arch/x86/sandybridge/frontend.json        |   8 +
+ .../arch/x86/sandybridge/metricgroups.json    |   5 +
+ .../arch/x86/sandybridge/other.json           |   8 -
+ .../arch/x86/sandybridge/snb-metrics.json     |  36 +-
+ .../arch/x86/sapphirerapids/cache.json        | 150 +++++
+ .../arch/x86/sapphirerapids/memory.json       | 170 ++++++
+ .../arch/x86/sapphirerapids/other.json        | 378 ------------
+ .../arch/x86/sapphirerapids/pipeline.json     |  58 ++
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 465 ++++++++-------
+ .../arch/x86/sierraforest/cache.json          |  20 +
+ .../arch/x86/sierraforest/memory.json         |  20 +
+ .../arch/x86/sierraforest/other.json          |  48 --
+ .../arch/x86/sierraforest/pipeline.json       |   8 +
+ .../arch/x86/sierraforest/srf-metrics.json    | 204 ++++---
+ .../arch/x86/sierraforest/uncore-cache.json   |  32 +
+ .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++
+ .../arch/x86/skylake/skl-metrics.json         | 367 ++++++------
+ .../pmu-events/arch/x86/skylakex/cache.json   |  74 +++
+ .../pmu-events/arch/x86/skylakex/other.json   |  74 ---
+ .../arch/x86/skylakex/skx-metrics.json        | 385 ++++++------
+ .../pmu-events/arch/x86/snowridgex/cache.json | 192 ++++++
+ .../arch/x86/snowridgex/memory.json           | 202 +++++++
+ .../pmu-events/arch/x86/snowridgex/other.json | 394 ------------
+ .../arch/x86/tigerlake/tgl-metrics.json       | 383 ++++++------
+ .../arch/x86/westmereep-dp/cache.json         |  32 +
+ .../arch/x86/westmereep-dp/other.json         |  40 --
+ .../x86/westmereep-dp/virtual-memory.json     |   8 +
+ .../arch/x86/westmereep-sp/cache.json         |  32 +
+ .../arch/x86/westmereep-sp/other.json         |  40 --
+ .../x86/westmereep-sp/virtual-memory.json     |   8 +
+ .../pmu-events/arch/x86/westmereex/cache.json |  32 +
+ .../pmu-events/arch/x86/westmereex/other.json |  40 --
+ .../arch/x86/westmereex/virtual-memory.json   |   8 +
+ 124 files changed, 9983 insertions(+), 8867 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
 
-Not today, not ever.
+-- 
+2.49.0.395.g12beb8f557-goog
 
-If you want to run a ilp32 kernel on 64-bit hardware (and support
-64-bit ABI just in a 32-bit virtual memory size), I would suggest you
-
- (a) treat the kernel as natively 32-bit (obviously you can then tell
-the compiler to use the rv64 instructions, which I presume you're
-already doing - I didn't look)
-
- (b) look at making the compat stuff do the conversion the "wrong way".
-
-And btw, that (b) implies *not* just ignoring the high bits. If
-user-space gives 64-bit pointer, you don't just treat it as a 32-bit
-one by dropping the high bits. You add some logic to convert it to an
-invalid pointer so that user space gets -EFAULT.
-
-            Linus
