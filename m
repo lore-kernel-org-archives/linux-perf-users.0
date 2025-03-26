@@ -1,239 +1,177 @@
-Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83704A29;
-	Wed, 26 Mar 2025 06:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C40C61993B9;
+	Wed, 26 Mar 2025 08:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742972186; cv=none; b=eVgwYbyzVaKqByt6dsOo2RFAw0OJUvB1JB+rxA3CBUIllQG0PI4rBzapVkjgu6K+r5ZiXlwhWHADjvsjXw95lji4jhZCuoQo+K7gRdUbwWeCChlftQURQ+a7ync5+1bcDOTaX2ze0ZH5ZVVDPV9+kJ3du/rxGQkFPGbDbnVJTfc=
+	t=1742977211; cv=none; b=DjGTcsXutNzoOqdp1HMWP2A+JP2Xy3GEU0cmB0otc076xLu9jndghSIMkLuZFRAQv+84pqal/t7glEIBGPr39IzrFmc3Z5dWIF50xjs1OhNYj/GLYmqI61ehIZMEBU/zlvPYmpssDyy217EHbCInMWtMKW4MNPk3xcuS79CoAFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742972186; c=relaxed/simple;
-	bh=ZcAFJrQbbKIem4eNtWw3oLhqPmvDEs7Nba9AnPq9pQY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Gc7j2SLq44o9/Ksni6hb54uUo1It6zn1urKbIjLZrPUiIHFiueXftOmT6ABhkfO6S11XpwmTXWJhwyYk6CvyXNjajnodLISIxV0CM70aA+6/tj/xOnslhvkOttFHLIjEkE8/JxoJ6GuzUYDHcacVm/QcgXWjfd8duPWM8uOcBSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=RfzR1uEn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gYnqao2r; arc=none smtp.client-ip=202.12.124.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="RfzR1uEn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gYnqao2r"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.stl.internal (Postfix) with ESMTP id 1DE6A1D414F3;
-	Wed, 26 Mar 2025 02:56:21 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Wed, 26 Mar 2025 02:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742972180;
-	 x=1742979380; bh=ECmdnGpGt7R784A69CvkoNMp+aXiuLAMl/bxf3OLtmI=; b=
-	RfzR1uEnzuIhYupQbRLI+t6oD3s5flwg37XUBK1TKTl7jUzDLK53c269/4po+kWE
-	T6qwedPUcgiN2GV+jWlQJ5lajxSVtI9ACkVCTV4sHtzhp0xkVuOIxEao3qH87ENC
-	kVg9hTNedZNDfzUbSAuNT7mcFz0h5QO8ykZym3mRFDAFqKLTqloW33OahrucaK+b
-	P3LrHLXJKyiFe6tn7RboE7xMbRj85ez+WILF2Qs6B4i6jZFiWu9JPcZK/6gbLj03
-	c4xQhgU0ZFxWSyOjDy3ba2ofduCyAHN7FWLBP2Q4XhHYaOOcRmSl1AuJhJWnxOQK
-	27dpe9yy8fAecOL+iMZPcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1742972180; x=
-	1742979380; bh=ECmdnGpGt7R784A69CvkoNMp+aXiuLAMl/bxf3OLtmI=; b=g
-	Ynqao2rMNXNJWY51guszo0nI0tNF47omPFyN1uI7U4D+iD7kLt7kFBDCjKeE55sZ
-	gBca+k+hzsx1OnS77ApTw+K2kJllSfqWkSAhiRvax9sXj6q+MAkhvAkyU4zOzzmZ
-	I3rtMPo41pI86aZlACoC1a0HH9j/UmCqQlcH0mo7n588xEKa13NNdqcWw5KbcBJ3
-	zy0Zfiz28FcL2jNzEd5A/teVhLgIz1MX2ZIkED3an241RCIt7rtO++A2dEk/V6nh
-	ijGIZ2f1Mw7v3ksd/5HFlc+qg0puMl/6G62vIZGE37II+E+lNHMtf4jwtV9XfRTA
-	yczIABDyB67Rl5wWM9TXg==
-X-ME-Sender: <xms:FKXjZ47JqwKD1MMrx_9I06vXKPEfU2tweDnovrjptC1d9dD1GDyAIw>
-    <xme:FKXjZ56BGLV-HkBA5qzXgicwMiP5GSS5I5PXkjP5GUBpEbgIdrbpVEA0zl_Szlmde
-    vYwckN0l7pLjbv5krg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieegkeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegohfhorhgsihguuggvnhffohhmrghinhculdehtddtmden
-    ucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrh
-    hnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrght
-    thgvrhhnpeffffeghffftdejvddutefhfeetiedthfegfeekheekhfejvefhleejhedvke
-    ehteenucffohhmrghinhepgihrvhhmrdgtohhmnecuhfhorhgsihguuggvnhffohhmrghi
-    nhepgihrvhhmrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddupdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopeihohhnghiguhgrnhdrfigrnhhgsehsih
-    hfihhvvgdrtghomhdprhgtphhtthhopehqihhnghhfrghnghdruggvnhhgsehsihhflhho
-    figvrhdrtghomhdrtghnpdhrtghpthhtohepughsthgvrhgsrgesshhushgvrdgtohhmpd
-    hrtghpthhtohepjhhoshgvfhesthhogihitghprghnuggrrdgtohhmpdhrtghpthhtohep
-    sghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmsehvghgvrh
-    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqsghtrhhfshesvhhgvghrrd
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohesvhhgvghr
-    rdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:FKXjZ3d865jUDOU_P3FqbCph211xhmVC-jXyhH2KvvXElZTeQSCrgA>
-    <xmx:FKXjZ9JUruLpX2ktbpsTrhMOW6uVWlJG98VBhg4xjYQ7DuQLuO7Xew>
-    <xmx:FKXjZ8KNSq7i3QUHAn7c2JfEirLmIp-ywXOibEmSzqsyHEY4iBPGiA>
-    <xmx:FKXjZ-xD2Zzof1B-aLRUAWZXdTsQSFSDERd7iaO-s9v57_uaLtvrLg>
-    <xmx:FKXjZ1d3DtOU1G9qLwQ1zQD4PKXh2AexxJg74oQHx5WEvNy6MmnL8Dh->
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DB88E2220072; Wed, 26 Mar 2025 02:56:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1742977211; c=relaxed/simple;
+	bh=qfShk4bhL7iYGDRb7/pk26sSvncKfUcnktfK3iLgfGw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qz1xbii5BwiXuOO5baNOp8hmFF0zjXqoBW4PuH5RYCtFmA/vAH4O36X1wiRqMZp6JrM1/+OlXR0V7zZaT7KaYtykXGYNsh5WFTQ4p5zV9k/Yas0bLryFJL1lG5OxF2OpdCJnJmFAcpp47qUdJ+b8znZdDNsQMmeCRASMsvwjLsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A95991596;
+	Wed, 26 Mar 2025 01:20:14 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 604933F63F;
+	Wed, 26 Mar 2025 01:20:06 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	mingo@kernel.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	elver@google.com,
+	leo.yan@arm.com,
+	james.clark@linaro.org,
+	suzuki.poulose@arm.com,
+	mike.leach@arm.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v5 1/1] events/core: fix failure case for accounting child_total_enable_time at task exit
+Date: Wed, 26 Mar 2025 08:20:03 +0000
+Message-Id: <20250326082003.1630986-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T218a0d8b70d1a53d
-Date: Wed, 26 Mar 2025 07:55:17 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: guoren <guoren@kernel.org>
-Cc: "Peter Zijlstra" <peterz@infradead.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Anup Patel" <anup@brainfault.org>,
- "Atish Patra" <atishp@atishpatra.org>, "Oleg Nesterov" <oleg@redhat.com>,
- "Kees Cook" <kees@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- "Will Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Christian Brauner" <brauner@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Eric Dumazet" <edumazet@google.com>,
- "Chen Wang" <unicorn_wang@outlook.com>,
- "Inochi Amaoto" <inochiama@outlook.com>, gaohan@iscas.ac.cn,
- shihua@iscas.ac.cn, jiawei@iscas.ac.cn, wuwei2016@iscas.ac.cn,
- "Drew Fustini" <drew@pdp7.com>, "Lad,
- Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- ctsai390@andestech.com, wefu@redhat.com,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Josef Bacik" <josef@toxicpanda.com>, "David Sterba" <dsterba@suse.com>,
- "Ingo Molnar" <mingo@redhat.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Xiao W Wang" <xiao.w.wang@intel.com>, qingfang.deng@siflower.com.cn,
- "Leonardo Bras" <leobras@redhat.com>,
- "Jisheng Zhang" <jszhang@kernel.org>,
- "Conor.Dooley" <conor.dooley@microchip.com>,
- "Samuel Holland" <samuel.holland@sifive.com>, yongxuan.wang@sifive.com,
- "Xu Lu" <luxu.kernel@bytedance.com>,
- "David Hildenbrand" <david@redhat.com>,
- "Ruan Jinjie" <ruanjinjie@huawei.com>,
- "Yunhui Cui" <cuiyunhui@bytedance.com>,
- "Kefeng Wang" <wangkefeng.wang@huawei.com>, qiaozhe@iscas.ac.cn,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, bpf@vger.kernel.org,
- linux-input@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, maple-tree@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-media@vger.kernel.org
-Message-Id: <a9dddc3d-d03d-4614-9d55-1ce48c6ad5ef@app.fastmail.com>
-In-Reply-To: 
- <CAJF2gTSHpZMyUk+8HL0=bevCd4XZYRAkrPM600qLPCKxG+bfrg@mail.gmail.com>
-References: <20250325121624.523258-1-guoren@kernel.org>
- <20250325122640.GK36322@noisy.programming.kicks-ass.net>
- <db3c9923-8800-4ed3-a352-4ee9ef79c0b7@app.fastmail.com>
- <CAJF2gTSHpZMyUk+8HL0=bevCd4XZYRAkrPM600qLPCKxG+bfrg@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT kernel-self with
- ILP32 ABI
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025, at 07:07, Guo Ren wrote:
-> On Tue, Mar 25, 2025 at 9:18=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Tue, Mar 25, 2025, at 13:26, Peter Zijlstra wrote:
->> > On Tue, Mar 25, 2025 at 08:15:41AM -0400, guoren@kernel.org wrote:
->>
->> You declare the syscall ABI to be the native 64-bit ABI, but this
->> is fundamentally not true because a many uapi structures are
->> defined in terms of 'long' or pointer values, in particular in
->> the ioctl call.
->
-> I modified uapi with
-> void __user *msg_name;
-> ->
-> union {void __user *msg_name; u64 __msg_name;};
-> to make native 64-bit ABI.
->
-> I would look at compat stuff instead of using __riscv_xlen macro.
+The perf core code fails to account for total_enable_time of event
+when its state is inactive.
 
-The problem I see here is that there are many more drivers
-that you did not modify than drivers that you did change this
-way.  The union is particularly ugly, but even if you find
-a nicer method of doing this, you now also put the burden
-on future driver writers to do this right for your platform.
+Here is a failure case for accounting total_enable_time for
+CPU PMU events:
 
->> As far as I can tell, there is no way to rectify this design flaw
->> other than to drop support for 64-bit userspace and only support
->> regular rv32 userspace. I'm also skeptical that supporting rv64
->> userspace helps in practice other than for testing, since
->> generally most memory overhead is in userspace rather than the
->> kernel, and there is much more to gain from shrinking the larger
->> userspace by running rv32 compat mode binaries on a 64-bit kernel
->> than the other way round.
->
-> The lp64-abi userspace rootfs works fine in this patch set, which
-> proves the technique is valid. But the modification on uapi is raw,
-> and I'm looking at compat stuff.
+sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
+...
 
-There is a big difference between making it work for a particular
-set of userspace binaries and making it correct for the entire
-kernel ABI.
+armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
+armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
+                           `          `          `
+                           `          `          > total_time_running with child
+                           `          > total_time_enabled with child
+                           > count with child
 
-I agree that limiting the hacks to the compat side while keeping
-the native ABI as ilp32 as in your previous versions is better,
-but I also don't think this can be easily done without major
-changes to how compat mode works in general, and that still
-seems like a show-stopper for two reasons:
+Performance counter stats for 'stress-ng --pthread=2 -t 2s':
 
-- it still puts the burden on driver writers to get it right
-  for your platform. The scope is a bit smaller than in the
-  current version because that would be limited to the compat
-  handlers and not change the native codepath, but that's
-  still a lot of drivers.
+     1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
+     1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
 
-- the way that I would imagine this to be implemented in
-  practice would require changing the compat code in a way that
-  allows multiple compat ABIs, so drivers can separate the
-  normal 32-on-64 handling from the 64-on-32 version you need.
-  We have discussed something like this in the past, but Linus
-  has already made it very clear that he doesn't want it done
-  that way. Whichever way you do it, this is unlikely to
-  find consensus. =20
+The two events above are opened on two different CPU PMUs, for example,
+each event is opened for a cluster in an Arm big.LITTLE system, they
+will never run on the same CPU.  In theory, the total enabled time should
+be same for both events, as two events are opened and closed together.
 
-> Supporting lp64-abi userspace is essential because riscv lp64-abi and
-> ilp32-abi userspace are hybrid deployments when the target is
-> ilp32-abi userspace. The lp64-abi provides a good supplement to
-> ilp32-abi which eases the development.
+As the result show, the two events' total enabled time including
+child event are different (2289429840 vs 1950025700).
+This is because child events are not accounted properly
+if a event is INACTIVE state when the task exits:
 
-I'm not following here, please clarify. I do understand that
-having a mixed 32/64 userspace can help for development, but
-that can already be done on a 64-bit kernel and it doesn't
-seem to be useful for deployment because having two sets of
-support libraries makes this counterproductive for the goal
-of saving RAM.
+perf_event_exit_event()
+ `> perf_remove_from_context()
+   `> __perf_remove_from_context()
+     `> perf_child_detach()   -> Accumulate child_total_time_enabled
+       `> list_del_event()    -> Update child event's time
 
->> If you remove the CONFIG_64BIT changes that Peter mentioned and
->> the support for ilp64 userland from your series, you end up
->> with a kernel that is very similar to a native rv32 kernel
->> but executes as rv64ilp32 and runs rv32 userspace. I don't have
->> any objections to that approach, and the same thing has come
->> up on arm64 as a possible idea as well, but I don't know if
->> that actually brings any notable advantage over an rv32 kernel.
->>
->> Are there CPUs that can run rv64 kernels and rv32 userspace
->> but not rv32 kernels, similar to what we have on Arm Cortex-A76
->> and Cortex-A510?
->
-> Yes, there is, and it only supports rv32 userspace, not rv32 kernel.
-> https://www.xrvm.com/product/xuantie/C908
+The problem is the time accumulation happens prior to child event's time
+updating. Thus, it misses to account the last period's time when event
+exits.
 
-Ok, thanks for the link.
+The perf core layer follows the rule that timekeeping is tied to state
+change. To address the issue, make __perf_remove_from_context() to
+handle task exit case by passing the 'DETACH_EXIT' to it and
+invokes perf_event_state() for state alongside with accouting the time.
+Then, perf_child_detach() populates the time into parent's time metrics.
 
-       Arnd
+After this patch, this problem is gone like:
+
+sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
+...
+armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
+armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
+
+ Performance counter stats for 'stress-ng --pthread=2 -t 10s':
+
+    15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
+    22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
+
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Fixes: ef54c1a476aef ("perf: Rework perf_event_exit_event()")
+---
+ kernel/events/core.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 823aa0824916..f191e92c2f48 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2407,6 +2407,7 @@ ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
+ #define DETACH_GROUP	0x01UL
+ #define DETACH_CHILD	0x02UL
+ #define DETACH_DEAD	0x04UL
++#define DETACH_EXIT	0x08UL
+ 
+ /*
+  * Cross CPU call to remove a performance event
+@@ -2421,6 +2422,7 @@ __perf_remove_from_context(struct perf_event *event,
+ 			   void *info)
+ {
+ 	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
++	enum perf_event_state state = PERF_EVENT_STATE_OFF;
+ 	unsigned long flags = (unsigned long)info;
+ 
+ 	ctx_time_update(cpuctx, ctx);
+@@ -2429,16 +2431,19 @@ __perf_remove_from_context(struct perf_event *event,
+ 	 * Ensure event_sched_out() switches to OFF, at the very least
+ 	 * this avoids raising perf_pending_task() at this time.
+ 	 */
+-	if (flags & DETACH_DEAD)
++	if (flags & DETACH_EXIT)
++		state = PERF_EVENT_STATE_EXIT;
++	if (flags & DETACH_DEAD) {
+ 		event->pending_disable = 1;
++		state = PERF_EVENT_STATE_DEAD;
++	}
+ 	event_sched_out(event, ctx);
++	perf_event_set_state(event, min(event->state, state));
+ 	if (flags & DETACH_GROUP)
+ 		perf_group_detach(event);
+ 	if (flags & DETACH_CHILD)
+ 		perf_child_detach(event);
+ 	list_del_event(event, ctx);
+-	if (flags & DETACH_DEAD)
+-		event->state = PERF_EVENT_STATE_DEAD;
+ 
+ 	if (!pmu_ctx->nr_events) {
+ 		pmu_ctx->rotate_necessary = 0;
+@@ -13448,12 +13453,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		mutex_lock(&parent_event->child_mutex);
+ 	}
+ 
+-	perf_remove_from_context(event, detach_flags);
+-
+-	raw_spin_lock_irq(&ctx->lock);
+-	if (event->state > PERF_EVENT_STATE_EXIT)
+-		perf_event_set_state(event, PERF_EVENT_STATE_EXIT);
+-	raw_spin_unlock_irq(&ctx->lock);
++	perf_remove_from_context(event, detach_flags | DETACH_EXIT);
+ 
+ 	/*
+ 	 * Child events can be freed.
+-- 
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
