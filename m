@@ -1,71 +1,72 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9C8251790;
-	Wed, 26 Mar 2025 18:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD97D24EA8B;
+	Wed, 26 Mar 2025 18:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743013355; cv=none; b=uTQ5gZpY6DfKiyJQbhvwW16l8ylE4LW9V0Wji6D4By3YykZmEjV8JDjxdFUnyLLgY7ZI7yaoGbY9jdWGlWm9n7cbN5fsBz/6rEfyPkZj7kNGNIE6i7fr9f6GkPi9jONPVNqkQ76lbHdMzlHRJWD9+FSbzHFHNelQpPwfzrc7Vec=
+	t=1743013826; cv=none; b=P9YLqPjvNfxKiGy+lAKzhH6LTtS1vCB5qRaq2u/emUOjgyWFJKRJyz8BEPkumybtibXTfS1kA83et/OKv8s4xQ5jZ2Z7hCUg9OhjJsHi/Tl04F5xHBr61vdL5z0YMtRvFdb2npBawLSxUk2y1WQsrzNAJE4/V8RHwcN3sgooQH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743013355; c=relaxed/simple;
-	bh=KZtT5LRAw5rpKbF4crJUt08eImhcbbKcHJdsfaQmyhY=;
+	s=arc-20240116; t=1743013826; c=relaxed/simple;
+	bh=YYt6gJMffULnt4QDShgCB06vVikqmoye837uD5CHh8c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JUnmcX8kfTVRVorHAjeLKBEnqyurwKbfjA2+juRX0ltApivwCWgAtHxjDnt98JO9bUIRsRGtIkSxLsNon8Y1gbj9Lz+CYiz9kwS5nI4DDZbsEYxnN71BRX2RsqDm4Kx2LQ65+veMHn5tZ/sU8F6l4xx8QIrxLBF+mGmtfRV6wzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KbkFmqlz; arc=none smtp.client-ip=209.85.219.170
+	 To:Cc:Content-Type; b=bU1ebJIm3ooax0uQg6HiszNqc9BDLQouGa5NkJvjcs5lKUkPL+T2K3EYN4Mpy7n0qmlW8Lhxig0w8J4rg9uEZ2QzQoUrJkkUOnM+1dOWNi6zdiAHVLArI6PKmpkBJROmqr/q2fp2JIMyRH8tz+/6v4O6CqXrPMibh+DWHE1lvLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijv/CK89; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbkFmqlz"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e589c258663so197026276.1;
-        Wed, 26 Mar 2025 11:22:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijv/CK89"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e6582542952so157938276.3;
+        Wed, 26 Mar 2025 11:30:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743013353; x=1743618153; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743013824; x=1743618624; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DUlliuzKe24ABM+zYuZbagEPiXi19b5EkOBKxUSW2YE=;
-        b=KbkFmqlzjAC+VYp5WVVtwjVGzmdf2kDSiFkQmP37OObf00UdBEUPzKT20pzLMe6hFY
-         5ELysLHZC5gGg9b4w/hX0HNawRYJL+v3F0XsU3Y1fntMcL1sCmUzkTkRq2Tqiar7+kQ9
-         M8eYCQyClbzPCQjWfuUGAg9tXKNQtFmorNBGFqOtK0mnhEbn5sYVrYGbZFs4atWqXLUu
-         6w3Ntc4veUNBn53eoexUIh6OZTewAjGt9+JQr1q1JOa9YOE7BAdFCMwaR271OK9o06sn
-         uEr6Tz4opBb7wsONGYf37TuDAPY5STLm29UK6xnQ4wUKXWRKHLptr8LBXffGlrSqJYFp
-         9+1A==
+        bh=fSo75ysSYfpqVeAiF/C0jwrxlqsNzz3MNPDa+DBosDk=;
+        b=ijv/CK89pNdhXWZFOejFIVVAjVN6JDGPow57kbwiG2K0cGHYB6F5yEpmUm+aVhKZ7v
+         1HVgsSiTXvhd8JXfs9UP8LGAgbMPlu6gc9nL3VWQUY91ho2EeZUHcPYWmIhORjrNklHb
+         bSipbvjYgeYfYi4hWG2qz10V5wF9qgGD/bcbdZ2A9KnZJBcW3dPmsweZrz5NY379sV7Z
+         Yb9vy3+T6UBwxVKkeOD+x7DHsTX4ZJvLLtuN06dagut8Tkjka/3aetFx8FgUCJSVyb2L
+         yshieuanjDzrgi6m2LK+vyhBbwCjmjuwIrcUxuZV/oMogu/YczsFCUJjTTWZJ8biJo9J
+         TBcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743013353; x=1743618153;
+        d=1e100.net; s=20230601; t=1743013824; x=1743618624;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DUlliuzKe24ABM+zYuZbagEPiXi19b5EkOBKxUSW2YE=;
-        b=k66tn5dboOg15/ge9kHDb+PfOc+o7IodmeErnux2da3Byke9IU5uV8HjWa/8KUje1/
-         GYnrTVtBlzjq+pmujXFYBstzllhaEVkbPqf0elzE27qN+LtMGvb7/qFoscXPlRWbLo2F
-         tdm0mBsiYelKldZg7pf2tWpm9KA6kZ+vyd4i2gmQogjNTcP8gXLNqUA51FyWX9tlgpIT
-         xVGnqvI0kAO4kazFRJUPO6/wmFC8lgX6FlLKpWUNInRTuSpDCJXbGUjUZ5kg8JGvdgqP
-         pjn8AGP4cGRM7dsofyK6+qZhxVN2n84F0WGLtvWcDFLip8Uw8RkjtGPPON9Fxuv53zsY
-         oJmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzA1mINTV6OLbjCDBXUvEIyHFT6FH4zpu1YWhwzBJW1/FhXv1hv0Ve3zs6vGoddXG1j507nRM1mGZBbHk=@vger.kernel.org, AJvYcCXa5NHCc2OvIsZayQ3AQQCeFc867Yi+3r17kTrFeo4oh5UzD9mH1Itf3WqCtsA9/J7ux2HV2sf8Qj+9TRYBPQNI/Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGRr/Xh3VV9rjA3J7fW6hJMGOt/ekcVsOKDPbR5A5PzG5hByWm
-	Vuypve/9XJsHLqiRWqWC2Nwco6PtEiy15aZSdmqL0an+WOd0fngfDQ8FNcITz7zEds4yKQyhQ29
-	mnLJKso9lcgWoD/F3umh/x+O9IqjoMy/08Ns=
-X-Gm-Gg: ASbGncuzuT4rROzbF7ehUvsV/Bx2WfjtTVEs9MQGUS5nVD5P5VFFg+PNcu3QytuBF17
-	U6jYKUs8oA0p2ghos6AWDUBXSo7PlZ72V532tiT+W7JObzadCaharaVnfKO44hdNoBOGTCrv6m+
-	wCw+hD42LX+wtTcR3WPt+WScJP
-X-Google-Smtp-Source: AGHT+IGPYYMuvK5C7/xVgSnuNXK23FQILjnYloV1i3xR1JNstY300wsAj0214yXKKp+tDUoKdbW+pQWL9R5Tn0L7DAk=
-X-Received: by 2002:a05:6902:1183:b0:e65:c4be:6faf with SMTP id
- 3f1490d57ef6-e694358e57dmr990053276.21.1743013352979; Wed, 26 Mar 2025
- 11:22:32 -0700 (PDT)
+        bh=fSo75ysSYfpqVeAiF/C0jwrxlqsNzz3MNPDa+DBosDk=;
+        b=MdfwIv2t+ghho48aaaUO8MrJIBGRuOOQ/NLr9ST9R8gLAjAnVczXqtpLHpp93eYOdU
+         UK9E+dr1RQRreifcN90+TZZECCOt0R0K9AlLhUJZYNVq6eUFSmuKUXkE1g2WBLqtHOfv
+         Ar1rph4mshjKuorms1VK2ostGw17e3huGT6ltP8t8GFW90UcRyUuLxNg84UW6L13kE7x
+         aRXdHQpqRZ7+ymB1EzFzX/bhb3mxKO/sOTc+DpMrkV5tGCrUqW9flwYzaeYvoSZyigN/
+         +jBJvltbH4bYqbVAoKLnoiImAV5+usbiZmf0b6PWwc4HIjbL6T7uICDQtcX+gfxn4kjp
+         eHTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnF8s5SsFn2++9dHDqLrR1h9ie+mBjlm0JeTNDcUA1GdaGDK2EkmsccVUyzaCMMiCruXSOmQrn4ruZPjEolQPk1A==@vger.kernel.org, AJvYcCXRsaX1siePhKSJKE8gigYZP4QpqQxSSosOtM5MnNLvB2qBNG1gbEDDrs7ROKemn0x87S6IUYZb8p4sRcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9NKuFKYH/cDc1ddYxojjyXy1qDWiMf3E46W9JlVszsYv9F6nV
+	8lHYma7aJxhmuJiCsNxEDwt2Pa5MCRSa2kS1E8Lhd/wI0fQvJPYWOdl5IJCvRUsW1RZFP7XlXBY
+	mcX1bDzyVuUipfp7Buaoe5qZYPYs=
+X-Gm-Gg: ASbGncutUMh+zwR/WeHDeCL2PbVXNIqyUAWsymNHXTEqg8iNbGagWPCW5d38EunxUOK
+	f7KhmRQGziYUPBOXimDDT/GLr2jM1evoALUMZOnVEoiWDbW1n58LJjZVilLhnFUVEQalbwSYmkZ
+	CzszXC9xvTCZTXY67zjIfDCB3a
+X-Google-Smtp-Source: AGHT+IEzCosq3qsKQupSo2wD7I8cFb64KsFmE0stNqv7unOq7R9lALuGlVPhJ0bnf6cH3rAD1JLXly/IzfATFg43PPI=
+X-Received: by 2002:a05:6902:2509:b0:e5b:3de2:ce95 with SMTP id
+ 3f1490d57ef6-e694350955emr889046276.9.1743013822119; Wed, 26 Mar 2025
+ 11:30:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326160416.1725322-1-howardchu95@gmail.com> <Z-REG5kkE1RahBW2@google.com>
-In-Reply-To: <Z-REG5kkE1RahBW2@google.com>
+References: <20250324235245.613063-1-howardchu95@gmail.com> <Z-RFu_PLmKMq8YFU@google.com>
+In-Reply-To: <Z-RFu_PLmKMq8YFU@google.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 26 Mar 2025 11:22:22 -0700
-X-Gm-Features: AQ5f1JohIGRHpnehwKfT5JlO1KShBVjVlK6jtXAp0OENm6OJE-DVbmm1SAJfeAo
-Message-ID: <CAH0uvojANF=3y252epqFaxB5FXQ36-UrBnJ63bY6Wwr6BAxCZA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf doc: Improve perf trace's doc on --force-btf option
+Date: Wed, 26 Mar 2025 11:30:11 -0700
+X-Gm-Features: AQ5f1Jqylku7SJA6ma0x5MrUSl63xzrXcR7ONHw0NZgO5gKcAmaqGEA-ylamBoM
+Message-ID: <CAH0uvoi-uxLNOoZ8P1g--jBZUnax_1vCu42SjFCNS7mdAH6Ozg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf trace: Fix possible insufficient allocation of
+ argument formats
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com, 
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
@@ -76,69 +77,96 @@ Content-Transfer-Encoding: quoted-printable
 
 Hello Namhyung,
 
-On Wed, Mar 26, 2025 at 11:14=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hello,
->
-> On Wed, Mar 26, 2025 at 09:04:16AM -0700, Howard Chu wrote:
-> > As mentioned by Arnaldo in a past discussion (Link:
-> > https://lore.kernel.org/linux-perf-users/Z2m0pWiQgZNXhvxK@x1/), the
-> > current documentation on --force-btf is vague and inaccurate, this patc=
-h
-> > aims to provide a clearer explanation of the option.
-> >
-> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > ---
-> >  tools/perf/Documentation/perf-trace.txt | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Docum=
-entation/perf-trace.txt
-> > index 887dc37773d0..cf2445d2ba3d 100644
-> > --- a/tools/perf/Documentation/perf-trace.txt
-> > +++ b/tools/perf/Documentation/perf-trace.txt
-> > @@ -246,10 +246,10 @@ the thread executes on the designated CPUs. Defau=
-lt is to monitor all CPUs.
-> >       arguments to strings (pid to comm, syscall id to syscall name, et=
-c).
-> >
-> >  --force-btf::
-> > -     Use btf_dump to pretty print syscall argument data, instead of us=
-ing hand-crafted pretty
-> > -     printers. This option is intended for testing BTF integration in =
-perf trace. btf_dump-based
-> > -     pretty-printing serves as a fallback to hand-crafted pretty print=
-ers, as the latter can
-> > -     better pretty-print integer flags and struct pointers.
-> > +     Use libbpf's btf_dump to pretty print syscall arguments, utilizin=
-g only the debug
-> > +     information from BTF. This option is intended for testing BTF int=
-egration in perf
-> > +     trace. Using libbpf is a fallback to perf trace's own prettifiers=
- generated from the
-> > +     kernel source, as the latter can better pretty-print integer flag=
-s and struct members.
->
-> "the latter" means our own prettifier, right?  Then why do we need the
-> fallback as it's better and always works?
-
-Honestly, for debugging=E2=80=94if BTF exists, it always works, yes. I don'=
-t
-know if libbpf is 'better' because our prettifiers are prettier :),
-yet there are so few of them.
+LGTM. This is better. :)
 
 Thanks,
 Howard
 
+On Wed, Mar 26, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Mon, Mar 24, 2025 at 04:52:45PM -0700, Howard Chu wrote:
+> > In my previous fix of runtime error(Link:
+> > https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howard=
+chu95@gmail.com/),
+> > I made a mistake of decrementing one unconditionally, regardless of
+> > whether an extra 'syscall_nr' or 'nr' field was present in
+> > libtraceevent's tp_format. This may cause perf trace to allocate one
+> > fewer arg_fmt entry than needed for the accurate representation of sysc=
+all
+> > arguments.
+> >
+> > This patch corrects the mistake by checking the presence of'syscall_nr'=
+ or
+> > 'nr', and adjusting the length of arg_fmt[] accordingly.
+>
+> Thanks for the fix.  I've noticed this too but I feel like we can make
+> syscall__alloc_arg_fmts() a bit simpler.
+>
+> How about this?
 >
 > Thanks,
 > Namhyung
 >
-> >
-> >  PAGEFAULTS
-> >  ----------
-> > --
-> > 2.45.2
-> >
+>
+> ---8<---
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 6ac51925ea4249c2..b9bdab52f5801c3a 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *=
+sc, int nr_args)
+>  {
+>         int idx;
+>
+> -       if (nr_args =3D=3D RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr=
+_args !=3D 0)
+> -               nr_args =3D sc->fmt->nr_args;
+> -
+>         sc->arg_fmt =3D calloc(nr_args, sizeof(*sc->arg_fmt));
+>         if (sc->arg_fmt =3D=3D NULL)
+>                 return -1;
+> @@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *=
+sc, int nr_args)
+>                         sc->arg_fmt[idx] =3D sc->fmt->arg[idx];
+>         }
+>
+> -       sc->nr_args =3D nr_args;
+>         return 0;
+>  }
+>
+> @@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, =
+struct trace *trace)
+>                 return err;
+>         }
+>
+> -       /*
+> -        * The tracepoint format contains __syscall_nr field, so it's one=
+ more
+> -        * than the actual number of syscall arguments.
+> -        */
+> -       if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields -=
+ 1))
+> -               return -ENOMEM;
+> -
+>         sc->args =3D sc->tp_format->format.fields;
+> +       sc->nr_args =3D sc->tp_format->format.nr_fields;
+> +
+>         /*
+>          * We need to check and discard the first variable '__syscall_nr'
+>          * or 'nr' that mean the syscall number. It is needless here.
+> @@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, s=
+truct trace *trace)
+>                 --sc->nr_args;
+>         }
+>
+> +       if (syscall__alloc_arg_fmts(sc, sc->nr_args))
+> +               return -ENOMEM;
+> +
+>         sc->is_exit =3D !strcmp(name, "exit_group") || !strcmp(name, "exi=
+t");
+>         sc->is_open =3D !strcmp(name, "open") || !strcmp(name, "openat");
+>
+> --
+> 2.49.0.395.g12beb8f557-goog
+>
