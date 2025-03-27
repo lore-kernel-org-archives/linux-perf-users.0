@@ -1,63 +1,68 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3F01DE88C
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 22:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAB11DF27F
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 22:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743114217; cv=none; b=ZfZclEst8J67/GaQ94xic4mZnp23RZTOQIv6A0vO97vytnUrd2QbNL22pJOGCjVJgYmF/30GKCraGVoqcjVVt8Eq2SYsM1lN91q8Ndy5+LC4ybhXmLrY8hwCW6YGi/GPwaS75W0E8IOJbm95C7CskJb3tjFTRAFDHeknLEOPbBs=
+	t=1743114222; cv=none; b=QidmrZJ+jPfvaFoPbtWipVnRGwCnV6aAB+1gT3kmrLGCRclT87ohy23PIMAAp0FXxC5r0+s9vBMVl96EysVmAuBwum4C4YyqWZ2S5tHphKXBV4IupYrqyH03qnSesBxN378u40qp4pZJE76WVX+CRdslIz0/rq1uhRV9cU6rNz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743114217; c=relaxed/simple;
-	bh=XydhDz+BIPrxsLLbvq5ID/CfikyqFSMR0tXeOEHxYjA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=rOkfqoAb5aWVUhwxh0u1JbNjQ7+Bxumgg1/Rsy8BdlwNlWWtkvynnK8IhLC+b0uzq8PfERJJfHCUwbjaaQ5vo2jc1MdmPpDx6+OLpmET0rVvRNPqtzum97BvGPuMY3w1mYKTPIJ1zmd5sqtKJ84sI4oXxL083/w/WFWdUGnfDYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RAUBNeNk; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1743114222; c=relaxed/simple;
+	bh=1ZjFOlxTlPfuZjPvLneQZmqIZkr8a7b04ak6788ovdY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=JWDJwR5fJn5vxD4DpUF6eQ2vjWDazhLCwqFGMjvKR8sRjHZK4urOuNyod8v2gj3l7kiaKPvOM/tZR1VTsTLEnY0cAGz7PatD+ssGwPoabcxeJVjtasDGebvP0zyXX8rXF6PEJku0AtnX3S41ipg0v8IvHsPKePfRWbTJvO2Ky2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JJfavSNC; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RAUBNeNk"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2240a96112fso43836175ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 15:23:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JJfavSNC"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6af1e264so3918103a91.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 15:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743114215; x=1743719015; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Wg1zdt0Jf9m1LN6z0a6fmW3NbiI25JaibtI5z1STgAY=;
-        b=RAUBNeNkVcO1iKyu1OAkdiCdEiO//IsONweC3znI+Qe342rhgW2gLYrKB4be5adTWl
-         HRPs66N1Dq3ZhQCXtok+2VveKlGm4Ry7ypq/QTSE44B3IHfbZlLEnpvgxFkvRmhk0fcm
-         NW39mqmF/K7Jpca6fKB70eiXGIWH7vaDxMNXBcFln18otrI2t9mmjxJ8IDVsQlb3gGFu
-         sa6OAAIeocCe3/Yb3JLBZ8TYbVELQz+hEjV9lp2Y/nKRG/1/weylEBp0c12pYaEA8wvk
-         sP9lAPX1/W6WwD5KylnmN+iDt7U/JIYBTGUqx1k4H4yAc9SjBhkpXSGuyvbdLcQWOJDe
-         mtcQ==
+        d=google.com; s=20230601; t=1743114220; x=1743719020; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xwyt9QpX5lEKZpVaYHwmBtOr+9FZHlv0uN/xVzi/7RQ=;
+        b=JJfavSNC9yBrcSldoUHehJC4UUF5M/jj5JKUPVGEqw8A+ccLnkyBcvRveCaFq8E287
+         YsAs/+WUsor4pEr+G+A0t5l4sn5p5p/tH/nDtO8jRyo6uf9V/XqjCF3LTdUM8NcMDfrN
+         FZ4F0let1Hc5M54SWrjEYWH21Ri0tNgRDuVALkMnIQqOBb41H1XsMFse8GzNX5GYfqMg
+         C5dg/MmkvNFDpJ7eBtT+AXGC8Tz4uwMiXLPAZ24Z+Hjv2H8WKIxhLCx1mi3BKsueISBp
+         ujjXUCCPKxv+DBCUBPvlutzD94Qkg7cyEhjd+hmylNIUd5q7ehWZZOuXfYWfsiW2Mh4O
+         mgCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743114215; x=1743719015;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wg1zdt0Jf9m1LN6z0a6fmW3NbiI25JaibtI5z1STgAY=;
-        b=JCBR/w316mHDSckvH8TveJi9Kb5pqPbJ2dRRtwK2Jx6uHr2y2gLYY2LxYrz089dbA6
-         gRt/NpCgww8wnJ1RqyDRdce7Clgzz4UvKFfdqbxY1IBYE0Q6lqY30TYj2OhqH0N4nTbH
-         2PAxPuR8TTkbVu7E9XIYcK53sMTRho2z+FaXKWIhmYQmUhwWVDS+ZJpkC4oeQgzHY0Ul
-         3gKgpDwbAXr++HF2836KHPHxEOXiKyXpIhFHJkxkQd1T6y8YlE5ePBpBoW4weZoCn4eU
-         KEJJvv40ETvqwppkjB5/tHWiB/o3A4hRSC77lpqVdmO2p9Nc+nXvhCj35MIKcW0uLCPh
-         N+IA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj132l0GRVEgXHx5bWJJh9UqIX8kjWPIOl8M866ucfXSaJf2RI7c2rPm9piQ2rZWpyHLedy6WJEr0+Cs/rkXsj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLMlmv4JEJ+gEu/UnC1YI5eRuv8qXOFJgzMSZWuqRAV+XRNqw2
-	P0GeeFs8USWUa8SzuX8BdLtqEqm46mk7plzYYcqUp7c8TXaEBQ97vZiLMCrVRMYlP0CfgBR5WOd
-	ntwdg6w==
-X-Google-Smtp-Source: AGHT+IHCojnxEvBte98tLEtUs4XRhUGZjiYK/dPAgNMLdEh3/5kb1BGoL3bMrYS9p/UriKk9+TULpYWpbnjY
-X-Received: from plrf20.prod.google.com ([2002:a17:902:ab94:b0:220:c871:3b01])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cece:b0:224:255b:c92e
- with SMTP id d9443c01a7336-2280481d10cmr68276335ad.3.1743114215323; Thu, 27
- Mar 2025 15:23:35 -0700 (PDT)
-Date: Thu, 27 Mar 2025 15:22:55 -0700
+        d=1e100.net; s=20230601; t=1743114220; x=1743719020;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xwyt9QpX5lEKZpVaYHwmBtOr+9FZHlv0uN/xVzi/7RQ=;
+        b=naKyyj6a1hnbfcwsAaDtrwXDTvy6XEsY9WWBIO7H7a5W1l9F4gBJJxxm6U8krFUcpr
+         Ba03ADSGfP5wtETTcfpTy1f+OgdUpg9GNhpgnOLmutvnNfTV8Qqn8PgXfYgl0iPdbLmC
+         nTINnIMN9qz9wrOvv28IaUQQk2CjG6TBXySe18GSshmuwfWt6OZVqZuLkdbCL22sKu2X
+         CriPtJmjO35/u6xa7JlIL3d55Jsk+n0iQGixvOrPQ5mUnEXd01LqUc8h1voF7IAEqflF
+         svJvWUni4k0Ie3us/jPrWfX3XB+eZid0gXud7nkfjUUbqgAg2AaN82V/JYd2StdRkk8T
+         b2mA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0HaLy5Y0+4HUhS8vQk/pc8pUQsJbzEJLHtgLIwTy249xTgKa0OlXQmSyMZHPA0NXVo5J1sksvSMPcenl5MnnI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvkYJFUOGQYOSZ0dWM6X9smGNJ3KYdFw/gfn0HBbeRtQVmxdQw
+	4QbXF4MqaJJkSPhjlG9Gn29RSF8X0+Q+zBkBUi29LNgdvSkqgsbM8wmA+4BSPeMlRC7SSza9L3C
+	021FZmw==
+X-Google-Smtp-Source: AGHT+IGBpOBTgt6gI0NcT8irQ8WkaxgxWPzcaPp9JBA+O3tvMSuBYc9yA6ZXV1wEzvxCb8bPXjNM7Gt+nM5k
+X-Received: from pga13.prod.google.com ([2002:a05:6a02:4f8d:b0:af5:f114:fbff])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d08:b0:1f5:64fd:68ea
+ with SMTP id adf61e73a8af0-1fea2d13aadmr9664278637.4.1743114219739; Thu, 27
+ Mar 2025 15:23:39 -0700 (PDT)
+Date: Thu, 27 Mar 2025 15:22:57 -0700
+In-Reply-To: <20250327222331.117701-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250327222331.117701-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250327222331.117701-1-irogers@google.com>
-Subject: [PATCH v4 00/35] GNR retirement latencies, topic and metric updates
+Message-ID: <20250327222331.117701-3-irogers@google.com>
+Subject: [PATCH v4 02/35] perf vendor events: Update AlderlakeN events/metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,189 +76,727 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add default mean, min and max retirement latency values to GNR
-events. Update the topics on a number of events previously
-"other". Switch TMA metrics to the generated version. Add TMA 5.02
-metrics for sandybridge, ivytown, ivybridge and jaketown.
+Update events from v1.28 to v1.29.
+Update event topics, metrics to be generated from the TMA spreadsheet
+and other small clean ups.
 
-Events and metrics generated from the data and scripts in:
-https://github.com/intel/perfmon
-and:
-https://github.com/intel/perfmon/pull/298
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../arch/x86/alderlaken/adln-metrics.json     | 54 +++++-----
+ .../pmu-events/arch/x86/alderlaken/cache.json | 50 ++++++++++
+ .../arch/x86/alderlaken/memory.json           | 40 ++++++++
+ .../pmu-events/arch/x86/alderlaken/other.json | 98 -------------------
+ .../arch/x86/alderlaken/pipeline.json         | 11 ++-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ 6 files changed, 128 insertions(+), 127 deletions(-)
 
-v4: Generate grandridge metrics from the spreadsheet using conversion
-    with the core type of crestmont.
-
-v3: Generate sierraforest metrics from the spreadsheet using
-    conversion with the core type of crestmont.
-
-v2: Fix arrowlake PMU/cpu prefixes.
-
-Ian Rogers (35):
-  perf vendor events: Update alderlake events/metrics
-  perf vendor events: Update AlderlakeN events/metrics
-  perf vendor events: Update arrowlake events/metrics
-  perf vendor events: Update bonnell events
-  perf vendor events: Update broadwell metrics
-  perf vendor events: Update broadwellde metrics
-  perf vendor events: Update broadwellx metrics
-  perf vendor events: Update cascadelakex events/metrics
-  perf vendor events: Update clearwaterforest events
-  perf vendor events: Update elkhartlake events
-  perf vendor events: Update emeraldrapids events/metrics
-  perf vendor events: Update grandridge events/metrics
-  perf vendor events: Add graniterapids retirement latencies
-  perf vendor events: Update haswell metrics
-  perf vendor events: Update haswellx metrics
-  perf vendor events: Update icelake events/metrics
-  perf vendor events: Update icelakex events/metrics
-  perf vendor events: Update ivybridge metrics
-  perf vendor events: Update ivytown metrics
-  perf vendor events: Update jaketown metrics
-  perf vendor events: Update lunarlake events/metrics
-  perf vendor events: Update meteorlake events/metrics
-  perf vendor events: Update nehalemep events
-  perf vendor events: Update nehalemex events
-  perf vendor events: Update rocketlake events/metrics
-  perf vendor events: Update sandybridge metrics
-  perf vendor events: Update sapphirerapids events/metrics
-  perf vendor events: Update sierraforest events/metrics
-  perf vendor events: Update skylake metrics
-  perf vendor events: Update skylakex events/metrics
-  perf vendor events: Update snowridgex events
-  perf vendor events: Update tigerlake metrics
-  perf vendor events: Update westmereep-dp events
-  perf vendor events: Update westmereep-dp events
-  perf vendor events: Update westmereep-dp events
-
- .../arch/x86/alderlake/adl-metrics.json       | 485 ++++++++-------
- .../pmu-events/arch/x86/alderlake/cache.json  |  77 +++
- .../pmu-events/arch/x86/alderlake/memory.json |  55 ++
- .../pmu-events/arch/x86/alderlake/other.json  | 196 ------
- .../arch/x86/alderlake/pipeline.json          |  67 ++-
- .../arch/x86/alderlaken/adln-metrics.json     |  54 +-
- .../pmu-events/arch/x86/alderlaken/cache.json |  50 ++
- .../arch/x86/alderlaken/memory.json           |  40 ++
- .../pmu-events/arch/x86/alderlaken/other.json |  98 ---
- .../arch/x86/alderlaken/pipeline.json         |  11 +-
- .../arch/x86/arrowlake/arl-metrics.json       | 562 +++++++++---------
- .../pmu-events/arch/x86/arrowlake/cache.json  | 148 +++++
- .../pmu-events/arch/x86/arrowlake/memory.json |  11 +
- .../pmu-events/arch/x86/arrowlake/other.json  | 193 ------
- .../arch/x86/arrowlake/pipeline.json          | 163 ++++-
- .../pmu-events/arch/x86/bonnell/other.json    |   8 -
- .../pmu-events/arch/x86/bonnell/pipeline.json |   8 +
- .../arch/x86/broadwell/bdw-metrics.json       | 256 ++++----
- .../arch/x86/broadwellde/bdwde-metrics.json   | 180 +++---
- .../arch/x86/broadwellx/bdx-metrics.json      | 268 +++++----
- .../arch/x86/cascadelakex/cache.json          | 404 +++++++++++++
- .../arch/x86/cascadelakex/clx-metrics.json    | 389 ++++++------
- .../arch/x86/cascadelakex/other.json          | 404 -------------
- .../arch/x86/clearwaterforest/cache.json      |  20 +
- .../arch/x86/clearwaterforest/other.json      |  22 -
- .../arch/x86/elkhartlake/cache.json           | 192 ++++++
- .../arch/x86/elkhartlake/memory.json          | 202 +++++++
- .../arch/x86/elkhartlake/other.json           | 394 ------------
- .../arch/x86/emeraldrapids/cache.json         | 100 ++++
- .../arch/x86/emeraldrapids/emr-metrics.json   | 471 ++++++++-------
- .../arch/x86/emeraldrapids/memory.json        | 170 ++++++
- .../arch/x86/emeraldrapids/other.json         | 328 ----------
- .../arch/x86/emeraldrapids/pipeline.json      |  58 ++
- .../pmu-events/arch/x86/grandridge/cache.json | 150 ++++-
- .../arch/x86/grandridge/counter.json          |   2 +-
- .../arch/x86/grandridge/frontend.json         |   8 +
- .../arch/x86/grandridge/grr-metrics.json      | 204 ++++---
- .../pmu-events/arch/x86/grandridge/other.json |  28 -
- .../arch/x86/grandridge/pipeline.json         |  51 +-
- .../arch/x86/grandridge/uncore-cache.json     |  45 +-
- .../arch/x86/grandridge/uncore-memory.json    | 338 +++++++++++
- .../arch/x86/graniterapids/cache.json         | 122 ++++
- .../arch/x86/graniterapids/counter.json       |   5 +
- .../arch/x86/graniterapids/frontend.json      |  21 +
- .../arch/x86/graniterapids/gnr-metrics.json   | 483 ++++++++-------
- .../arch/x86/graniterapids/memory.json        | 130 ++++
- .../arch/x86/graniterapids/other.json         | 237 --------
- .../arch/x86/graniterapids/pipeline.json      |  52 ++
- .../arch/x86/graniterapids/uncore-cache.json  |  42 ++
- .../graniterapids/uncore-interconnect.json    |  90 ++-
- .../arch/x86/graniterapids/uncore-memory.json | 240 ++++++++
- .../arch/x86/haswell/hsw-metrics.json         | 206 ++++---
- .../arch/x86/haswellx/hsx-metrics.json        | 222 ++++---
- .../pmu-events/arch/x86/icelake/cache.json    |  60 ++
- .../arch/x86/icelake/icl-metrics.json         | 385 ++++++------
- .../pmu-events/arch/x86/icelake/memory.json   | 160 +++++
- .../pmu-events/arch/x86/icelake/other.json    | 220 -------
- .../pmu-events/arch/x86/icelakex/cache.json   | 273 +++++++++
- .../arch/x86/icelakex/icx-metrics.json        | 399 +++++++------
- .../pmu-events/arch/x86/icelakex/memory.json  | 190 ++++++
- .../pmu-events/arch/x86/icelakex/other.json   | 463 ---------------
- .../arch/x86/ivybridge/ivb-metrics.json       |  76 ++-
- .../arch/x86/ivybridge/metricgroups.json      |   5 +
- .../arch/x86/ivytown/ivt-metrics.json         |  80 ++-
- .../arch/x86/ivytown/metricgroups.json        |   5 +
- .../arch/x86/jaketown/frontend.json           |   8 +
- .../arch/x86/jaketown/jkt-metrics.json        |  40 +-
- .../arch/x86/jaketown/metricgroups.json       |   5 +
- .../pmu-events/arch/x86/jaketown/other.json   |   8 -
- .../pmu-events/arch/x86/lunarlake/cache.json  | 122 ++++
- .../arch/x86/lunarlake/lnl-metrics.json       | 556 +++++++++--------
- .../pmu-events/arch/x86/lunarlake/memory.json |  44 ++
- .../pmu-events/arch/x86/lunarlake/other.json  | 353 -----------
- .../arch/x86/lunarlake/pipeline.json          | 187 ++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
- .../pmu-events/arch/x86/meteorlake/cache.json | 179 ++++++
- .../arch/x86/meteorlake/memory.json           |  44 ++
- .../arch/x86/meteorlake/mtl-metrics.json      | 549 +++++++++--------
- .../pmu-events/arch/x86/meteorlake/other.json | 140 -----
- .../arch/x86/meteorlake/pipeline.json         |  44 +-
- .../arch/x86/meteorlake/uncore-memory.json    |  18 +
- .../pmu-events/arch/x86/nehalemep/cache.json  |  32 +
- .../pmu-events/arch/x86/nehalemep/other.json  |  40 --
- .../arch/x86/nehalemep/virtual-memory.json    |   8 +
- .../pmu-events/arch/x86/nehalemex/cache.json  |  32 +
- .../pmu-events/arch/x86/nehalemex/other.json  |  40 --
- .../arch/x86/nehalemex/virtual-memory.json    |   8 +
- .../pmu-events/arch/x86/rocketlake/cache.json |  60 ++
- .../arch/x86/rocketlake/memory.json           | 160 +++++
- .../pmu-events/arch/x86/rocketlake/other.json | 220 -------
- .../arch/x86/rocketlake/rkl-metrics.json      | 385 ++++++------
- .../arch/x86/sandybridge/frontend.json        |   8 +
- .../arch/x86/sandybridge/metricgroups.json    |   5 +
- .../arch/x86/sandybridge/other.json           |   8 -
- .../arch/x86/sandybridge/snb-metrics.json     |  36 +-
- .../arch/x86/sapphirerapids/cache.json        | 150 +++++
- .../arch/x86/sapphirerapids/memory.json       | 170 ++++++
- .../arch/x86/sapphirerapids/other.json        | 378 ------------
- .../arch/x86/sapphirerapids/pipeline.json     |  58 ++
- .../arch/x86/sapphirerapids/spr-metrics.json  | 465 ++++++++-------
- .../arch/x86/sierraforest/cache.json          |  20 +
- .../arch/x86/sierraforest/memory.json         |  20 +
- .../arch/x86/sierraforest/other.json          |  48 --
- .../arch/x86/sierraforest/pipeline.json       |   8 +
- .../arch/x86/sierraforest/srf-metrics.json    | 204 ++++---
- .../arch/x86/sierraforest/uncore-cache.json   |  32 +
- .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++
- .../arch/x86/skylake/skl-metrics.json         | 367 ++++++------
- .../pmu-events/arch/x86/skylakex/cache.json   |  74 +++
- .../pmu-events/arch/x86/skylakex/other.json   |  74 ---
- .../arch/x86/skylakex/skx-metrics.json        | 385 ++++++------
- .../pmu-events/arch/x86/snowridgex/cache.json | 192 ++++++
- .../arch/x86/snowridgex/memory.json           | 202 +++++++
- .../pmu-events/arch/x86/snowridgex/other.json | 394 ------------
- .../arch/x86/tigerlake/tgl-metrics.json       | 383 ++++++------
- .../arch/x86/westmereep-dp/cache.json         |  32 +
- .../arch/x86/westmereep-dp/other.json         |  40 --
- .../x86/westmereep-dp/virtual-memory.json     |   8 +
- .../arch/x86/westmereep-sp/cache.json         |  32 +
- .../arch/x86/westmereep-sp/other.json         |  40 --
- .../x86/westmereep-sp/virtual-memory.json     |   8 +
- .../pmu-events/arch/x86/westmereex/cache.json |  32 +
- .../pmu-events/arch/x86/westmereex/other.json |  40 --
- .../arch/x86/westmereex/virtual-memory.json   |   8 +
- 124 files changed, 10099 insertions(+), 8434 deletions(-)
- delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
-
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json b/=
+tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
+index ad04b1e3881e..ce93648043ef 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
+@@ -75,7 +75,7 @@
+         "MetricExpr": "tma_core_bound",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_core_bound_group",
+         "MetricName": "tma_allocation_restriction",
+-        "MetricThreshold": "(tma_allocation_restriction >0.10) & ((tma_cor=
+e_bound >0.10) & ((tma_backend_bound >0.10)))",
++        "MetricThreshold": "tma_allocation_restriction > 0.1 & (tma_core_b=
+ound > 0.1 & tma_backend_bound > 0.1)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -84,7 +84,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
+,
+         "MetricGroup": "Default;TopdownL1;tma_L1_group",
+         "MetricName": "tma_backend_bound",
+-        "MetricThreshold": "(tma_backend_bound >0.10)",
++        "MetricThreshold": "tma_backend_bound > 0.1",
+         "MetricgroupNoGroup": "TopdownL1;Default",
+         "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend due to backend stalls. Note that uops must=
+ be available for consumption in order for this event to count. If a uop is=
+ not available (IQ is empty), this event will not count",
+         "ScaleUnit": "100%"
+@@ -95,7 +95,7 @@
+         "MetricExpr": "(5 * CPU_CLK_UNHALTED.CORE - (TOPDOWN_FE_BOUND.ALL =
++ TOPDOWN_BE_BOUND.ALL + TOPDOWN_RETIRING.ALL)) / (5 * CPU_CLK_UNHALTED.COR=
+E)",
+         "MetricGroup": "Default;TopdownL1;tma_L1_group",
+         "MetricName": "tma_bad_speculation",
+-        "MetricThreshold": "(tma_bad_speculation >0.15)",
++        "MetricThreshold": "tma_bad_speculation > 0.15",
+         "MetricgroupNoGroup": "TopdownL1;Default",
+         "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window including r=
+elevant microcode flows and while uops are not yet available in the instruc=
+tion queue (IQ). Also includes the issue slots that were consumed by the ba=
+ckend but were thrown away because they were younger than the mispredict or=
+ machine clear.",
+         "ScaleUnit": "100%"
+@@ -105,7 +105,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_DETECT / (5 * CPU_CLK_UNHAL=
+TED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
+         "MetricName": "tma_branch_detect",
+-        "MetricThreshold": "(tma_branch_detect >0.05) & ((tma_ifetch_laten=
+cy >0.15) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_branch_detect > 0.05 & (tma_ifetch_latency=
+ > 0.15 & tma_frontend_bound > 0.2)",
+         "PublicDescription": "Counts the number of issue slots that were n=
+ot delivered by the frontend due to BACLEARS, which occurs when the Branch =
+Target Buffer (BTB) prediction or lack thereof, was corrected by a later br=
+anch predictor in the frontend. Includes BACLEARS due to all branch types i=
+ncluding conditional and unconditional jumps, returns, and indirect branche=
+s.",
+         "ScaleUnit": "100%"
+     },
+@@ -114,7 +114,7 @@
+         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MISPREDICT / (5 * CPU_CLK_U=
+NHALTED.CORE)",
+         "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
+         "MetricName": "tma_branch_mispredicts",
+-        "MetricThreshold": "(tma_branch_mispredicts >0.05) & ((tma_bad_spe=
+culation >0.15))",
++        "MetricThreshold": "tma_branch_mispredicts > 0.05 & tma_bad_specul=
+ation > 0.15",
+         "MetricgroupNoGroup": "TopdownL2",
+         "ScaleUnit": "100%"
+     },
+@@ -123,7 +123,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_RESTEER / (5 * CPU_CLK_UNHA=
+LTED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
+         "MetricName": "tma_branch_resteer",
+-        "MetricThreshold": "(tma_branch_resteer >0.05) & ((tma_ifetch_late=
+ncy >0.15) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_branch_resteer > 0.05 & (tma_ifetch_latenc=
+y > 0.15 & tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -131,7 +131,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.CISC / (5 * CPU_CLK_UNHALTED.CORE)=
+",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
+,
+         "MetricName": "tma_cisc",
+-        "MetricThreshold": "(tma_cisc >0.05) & ((tma_ifetch_bandwidth >0.1=
+0) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_cisc > 0.05 & (tma_ifetch_bandwidth > 0.1 =
+& tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -139,7 +139,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS / (5 * CPU_CLK_=
+UNHALTED.CORE)",
+         "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
+         "MetricName": "tma_core_bound",
+-        "MetricThreshold": "(tma_core_bound >0.10) & ((tma_backend_bound >=
+0.10))",
++        "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.1=
+",
+         "MetricgroupNoGroup": "TopdownL2",
+         "ScaleUnit": "100%"
+     },
+@@ -148,7 +148,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.DECODE / (5 * CPU_CLK_UNHALTED.COR=
+E)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
+,
+         "MetricName": "tma_decode",
+-        "MetricThreshold": "(tma_decode >0.05) & ((tma_ifetch_bandwidth >0=
+.10) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_decode > 0.05 & (tma_ifetch_bandwidth > 0.=
+1 & tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -156,7 +156,7 @@
+         "MetricExpr": "TOPDOWN_BAD_SPECULATION.FASTNUKE / (5 * CPU_CLK_UNH=
+ALTED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
+         "MetricName": "tma_fast_nuke",
+-        "MetricThreshold": "(tma_fast_nuke >0.05) & ((tma_machine_clears >=
+0.05) & ((tma_bad_speculation >0.15)))",
++        "MetricThreshold": "tma_fast_nuke > 0.05 & (tma_machine_clears > 0=
+.05 & tma_bad_speculation > 0.15)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -165,7 +165,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
+,
+         "MetricGroup": "Default;TopdownL1;tma_L1_group",
+         "MetricName": "tma_frontend_bound",
+-        "MetricThreshold": "(tma_frontend_bound >0.20)",
++        "MetricThreshold": "tma_frontend_bound > 0.2",
+         "MetricgroupNoGroup": "TopdownL1;Default",
+         "ScaleUnit": "100%"
+     },
+@@ -174,7 +174,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.ICACHE / (5 * CPU_CLK_UNHALTED.COR=
+E)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
+         "MetricName": "tma_icache_misses",
+-        "MetricThreshold": "(tma_icache_misses >0.05) & ((tma_ifetch_laten=
+cy >0.15) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_icache_misses > 0.05 & (tma_ifetch_latency=
+ > 0.15 & tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -182,7 +182,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH / (5 * CPU_CLK_=
+UNHALTED.CORE)",
+         "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
+         "MetricName": "tma_ifetch_bandwidth",
+-        "MetricThreshold": "(tma_ifetch_bandwidth >0.10) & ((tma_frontend_=
+bound >0.20))",
++        "MetricThreshold": "tma_ifetch_bandwidth > 0.1 & tma_frontend_boun=
+d > 0.2",
+         "MetricgroupNoGroup": "TopdownL2",
+         "ScaleUnit": "100%"
+     },
+@@ -191,7 +191,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_LATENCY / (5 * CPU_CLK_UN=
+HALTED.CORE)",
+         "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
+         "MetricName": "tma_ifetch_latency",
+-        "MetricThreshold": "(tma_ifetch_latency >0.15) & ((tma_frontend_bo=
+und >0.20))",
++        "MetricThreshold": "tma_ifetch_latency > 0.15 & tma_frontend_bound=
+ > 0.2",
+         "MetricgroupNoGroup": "TopdownL2",
+         "ScaleUnit": "100%"
+     },
+@@ -473,7 +473,7 @@
+         "BriefDescription": "PerfMon Event Multiplexing accuracy indicator=
+",
+         "MetricExpr": "CPU_CLK_UNHALTED.CORE_P / CPU_CLK_UNHALTED.CORE",
+         "MetricName": "tma_info_system_mux",
+-        "MetricThreshold": "((tma_info_system_mux > 1.1)|(tma_info_system_=
+mux < 0.9))"
++        "MetricThreshold": "tma_info_system_mux > 1.1 | tma_info_system_mu=
+x < 0.9"
+     },
+     {
+         "BriefDescription": "Average Frequency Utilization relative nomina=
+l frequency",
+@@ -506,7 +506,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.ITLB / (5 * CPU_CLK_UNHALTED.CORE)=
+",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
+         "MetricName": "tma_itlb_misses",
+-        "MetricThreshold": "(tma_itlb_misses >0.05) & ((tma_ifetch_latency=
+ >0.15) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_itlb_misses > 0.05 & (tma_ifetch_latency >=
+ 0.15 & tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -514,7 +514,7 @@
+         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS / (5 * CPU_C=
+LK_UNHALTED.CORE)",
+         "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
+         "MetricName": "tma_machine_clears",
+-        "MetricThreshold": "(tma_machine_clears >0.05) & ((tma_bad_specula=
+tion >0.15))",
++        "MetricThreshold": "tma_machine_clears > 0.05 & tma_bad_speculatio=
+n > 0.15",
+         "MetricgroupNoGroup": "TopdownL2",
+         "ScaleUnit": "100%"
+     },
+@@ -523,7 +523,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.MEM_SCHEDULER / (5 * CPU_CLK_UNHAL=
+TED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
+         "MetricName": "tma_mem_scheduler",
+-        "MetricThreshold": "(tma_mem_scheduler >0.10) & ((tma_resource_bou=
+nd >0.20) & ((tma_backend_bound >0.10)))",
++        "MetricThreshold": "tma_mem_scheduler > 0.1 & (tma_resource_bound =
+> 0.2 & tma_backend_bound > 0.1)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -531,7 +531,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER / (5 * CPU_CLK_U=
+NHALTED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
+         "MetricName": "tma_non_mem_scheduler",
+-        "MetricThreshold": "(tma_non_mem_scheduler >0.10) & ((tma_resource=
+_bound >0.20) & ((tma_backend_bound >0.10)))",
++        "MetricThreshold": "tma_non_mem_scheduler > 0.1 & (tma_resource_bo=
+und > 0.2 & tma_backend_bound > 0.1)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -539,7 +539,7 @@
+         "MetricExpr": "TOPDOWN_BAD_SPECULATION.NUKE / (5 * CPU_CLK_UNHALTE=
+D.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
+         "MetricName": "tma_nuke",
+-        "MetricThreshold": "(tma_nuke >0.05) & ((tma_machine_clears >0.05)=
+ & ((tma_bad_speculation >0.15)))",
++        "MetricThreshold": "tma_nuke > 0.05 & (tma_machine_clears > 0.05 &=
+ tma_bad_speculation > 0.15)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -547,7 +547,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.OTHER / (5 * CPU_CLK_UNHALTED.CORE=
+)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
+,
+         "MetricName": "tma_other_fb",
+-        "MetricThreshold": "(tma_other_fb >0.05) & ((tma_ifetch_bandwidth =
+>0.10) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_other_fb > 0.05 & (tma_ifetch_bandwidth > =
+0.1 & tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -555,7 +555,7 @@
+         "MetricExpr": "TOPDOWN_FE_BOUND.PREDECODE / (5 * CPU_CLK_UNHALTED.=
+CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
+,
+         "MetricName": "tma_predecode",
+-        "MetricThreshold": "(tma_predecode >0.05) & ((tma_ifetch_bandwidth=
+ >0.10) & ((tma_frontend_bound >0.20)))",
++        "MetricThreshold": "tma_predecode > 0.05 & (tma_ifetch_bandwidth >=
+ 0.1 & tma_frontend_bound > 0.2)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -563,7 +563,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.REGISTER / (5 * CPU_CLK_UNHALTED.C=
+ORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
+         "MetricName": "tma_register",
+-        "MetricThreshold": "(tma_register >0.10) & ((tma_resource_bound >0=
+.20) & ((tma_backend_bound >0.10)))",
++        "MetricThreshold": "tma_register > 0.1 & (tma_resource_bound > 0.2=
+ & tma_backend_bound > 0.1)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -571,7 +571,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.REORDER_BUFFER / (5 * CPU_CLK_UNHA=
+LTED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
+         "MetricName": "tma_reorder_buffer",
+-        "MetricThreshold": "(tma_reorder_buffer >0.10) & ((tma_resource_bo=
+und >0.20) & ((tma_backend_bound >0.10)))",
++        "MetricThreshold": "tma_reorder_buffer > 0.1 & (tma_resource_bound=
+ > 0.2 & tma_backend_bound > 0.1)",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -579,7 +579,7 @@
+         "MetricExpr": "tma_backend_bound - tma_core_bound",
+         "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
+         "MetricName": "tma_resource_bound",
+-        "MetricThreshold": "(tma_resource_bound >0.20) & ((tma_backend_bou=
+nd >0.10))",
++        "MetricThreshold": "tma_resource_bound > 0.2 & tma_backend_bound >=
+ 0.1",
+         "MetricgroupNoGroup": "TopdownL2",
+         "ScaleUnit": "100%"
+     },
+@@ -589,7 +589,7 @@
+         "MetricExpr": "TOPDOWN_RETIRING.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
+,
+         "MetricGroup": "Default;TopdownL1;tma_L1_group",
+         "MetricName": "tma_retiring",
+-        "MetricThreshold": "(tma_retiring >0.75)",
++        "MetricThreshold": "tma_retiring > 0.75",
+         "MetricgroupNoGroup": "TopdownL1;Default",
+         "ScaleUnit": "100%"
+     },
+@@ -598,7 +598,7 @@
+         "MetricExpr": "TOPDOWN_BE_BOUND.SERIALIZATION / (5 * CPU_CLK_UNHAL=
+TED.CORE)",
+         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
+         "MetricName": "tma_serialization",
+-        "MetricThreshold": "(tma_serialization >0.10) & ((tma_resource_bou=
+nd >0.20) & ((tma_backend_bound >0.10)))",
++        "MetricThreshold": "tma_serialization > 0.1 & (tma_resource_bound =
+> 0.2 & tma_backend_bound > 0.1)",
+         "ScaleUnit": "100%"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/p=
+erf/pmu-events/arch/x86/alderlaken/cache.json
+index fd9ed58c2f90..605d56311dfc 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+@@ -396,6 +396,26 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x6"
+     },
++    {
++        "BriefDescription": "Counts modified writebacks from L1 cache and =
+L2 cache that have any type of response.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10008",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that have any type of response.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10004",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that were supplied by the L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+@@ -436,6 +456,16 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+@@ -476,6 +506,16 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
+f response.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y the L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+@@ -516,6 +556,16 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts L1 data cache software prefetches whic=
+h include T0/T1/T2 and NTA (except PREFETCHW) that have any type of respons=
+e.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.SWPF_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x14000",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts L1 data cache software prefetches whic=
+h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by the L3 =
+cache.",
+         "Counter": "0,1,2,3,4,5",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json b/tools/=
+perf/pmu-events/arch/x86/alderlaken/memory.json
+index 3b46b048dfb2..06eca0a45c18 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
+@@ -56,6 +56,16 @@
+         "SampleAfterValue": "20003",
+         "UMask": "0x2"
+     },
++    {
++        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that were supplied by DRAM.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x784000004",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that were not supplied by the L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+@@ -66,6 +76,16 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts demand data reads that were supplied b=
+y DRAM.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x784000001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+@@ -86,6 +106,16 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y DRAM.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x784000002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
+ed by the L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+@@ -106,6 +136,16 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts L1 data cache software prefetches whic=
+h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by DRAM.",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0xB7",
++        "EventName": "OCR.SWPF_RD.DRAM",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x784004000",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts L1 data cache software prefetches whic=
+h include T0/T1/T2 and NTA (except PREFETCHW) that were not supplied by the=
+ L3 cache.",
+         "Counter": "0,1,2,3,4,5",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/other.json b/tools/p=
+erf/pmu-events/arch/x86/alderlaken/other.json
+index f8c21b7f8f40..0ebcb3e20e1d 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/other.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/other.json
+@@ -8,76 +8,6 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "Counts modified writebacks from L1 cache and =
+L2 cache that have any type of response.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10008",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that have any type of response.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10004",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand instruction fetches and L1 inst=
+ruction cache prefetches that were supplied by DRAM.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x784000004",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10001",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand data reads that were supplied b=
+y DRAM.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x784000001",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
+f response.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x10002",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y DRAM.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.DEMAND_RFO.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x784000002",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Counts streaming stores which modify a full 6=
+4 byte cacheline that have any type of response.",
+         "Counter": "0,1,2,3,4,5",
+@@ -107,33 +37,5 @@
+         "MSRValue": "0x10800",
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts L1 data cache software prefetches whic=
+h include T0/T1/T2 and NTA (except PREFETCHW) that have any type of respons=
+e.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.SWPF_RD.ANY_RESPONSE",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x14000",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts L1 data cache software prefetches whic=
+h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by DRAM.",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0xB7",
+-        "EventName": "OCR.SWPF_RD.DRAM",
+-        "MSRIndex": "0x1a6,0x1a7",
+-        "MSRValue": "0x784004000",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "Counts the number of issue slots in a UMWAIT =
+or TPAUSE instruction where no uop issues due to the instruction putting th=
+e CPU into the C0.1 activity state. For Tremont, UMWAIT and TPAUSE will onl=
+y put the CPU into C0.1 activity state (not C0.2 activity state)",
+-        "Counter": "0,1,2,3,4,5",
+-        "EventCode": "0x75",
+-        "EventName": "SERIALIZATION.C01_MS_SCB",
+-        "SampleAfterValue": "200003",
+-        "UMask": "0x4"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+index 713ebc21cec0..0cc8cd203fc3 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+@@ -399,8 +399,9 @@
+         "UMask": "0x20"
+     },
+     {
+-        "BriefDescription": "Counts the number of machine clears that flus=
+h the pipeline and restart the machine with the use of microcode due to SMC=
+, MEMORY_ORDERING, FP_ASSISTS, PAGE_FAULT, DISAMBIGUATION, and FPC_VIRTUAL_=
+TRAP.",
++        "BriefDescription": "This event is deprecated.",
+         "Counter": "0,1,2,3,4,5",
++        "Deprecated": "1",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.SLOW",
+         "SampleAfterValue": "20003",
+@@ -423,6 +424,14 @@
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Counts the number of issue slots in a UMWAIT =
+or TPAUSE instruction where no uop issues due to the instruction putting th=
+e CPU into the C0.1 activity state. For Tremont, UMWAIT and TPAUSE will onl=
+y put the CPU into C0.1 activity state (not C0.2 activity state)",
++        "Counter": "0,1,2,3,4,5",
++        "EventCode": "0x75",
++        "EventName": "SERIALIZATION.C01_MS_SCB",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4"
++    },
+     {
+         "BriefDescription": "Counts the number of issue slots not consumed=
+ by the backend due to a micro-sequencer (MS) scoreboard, which stalls the =
+front-end from issuing from the UROM until a specified older uop retires.",
+         "Counter": "0,1,2,3,4,5",
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 881f418137fd..0ef31b65f8df 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -1,6 +1,6 @@
+ Family-model,Version,Filename,EventType
+ GenuineIntel-6-(97|9A|B7|BA|BF),v1.29,alderlake,core
+-GenuineIntel-6-BE,v1.28,alderlaken,core
++GenuineIntel-6-BE,v1.29,alderlaken,core
+ GenuineIntel-6-C[56],v1.07,arrowlake,core
+ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+ GenuineIntel-6-(3D|47),v30,broadwell,core
+--=20
 2.49.0.472.ge94155a9ec-goog
 
