@@ -1,168 +1,221 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AD914AD0D
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 15:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3098D126BFA;
+	Thu, 27 Mar 2025 15:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743088285; cv=none; b=nPSmN9GU2kqj7H4rWRR/vLiVK74AvyDbmDJjxIF5d8Sx+UEXIl966lP3dAtQ06r35cjH91eTgPMfaAdwWpE9ctJOvNyKYhOP0g/WH9JrkrCtMT6XnVX5zlh2ReyAXR0nx4re+lUqN5adMQVv3SXVAgW22DDlCXhB6pW9daiKrDo=
+	t=1743089738; cv=none; b=s3LfcEcFMdUYlwGUdQJ0FH143bIhzBtg1X9CZAIdNFdK2rGvjdVhCH42QJ5vz6/Gw9Vh0ljbyNofLAYXO2F60S56cgO21qSp6SC4fb9o0gWVApoxvOXrI/O/AiFHFxnMwiIuUrpQQgmSYihjuSXjJax14jdMkb4KRqIumtsdYv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743088285; c=relaxed/simple;
-	bh=wBQJ8H0SYNkyT4BaoNXsacSzvU3YkFd6/mC/KCirIW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CSANdm1cZLGCzPN4ITv6opkdKSIg/JZQbuVY4v7CO5yRx809VlA0Nh9ern8n+N0zZT+10f4o8HgS3/roNeVC+GLTCirZZTqR6xTZHbsXWBIcXWIm0j86FL6xaVvHSgEgiesDuFGxf+bvNE4N5BnK4mhrN4b4L2+D+t23QrLTZ5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2lmFiB0k; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2lmFiB0k"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2263428c8baso187195ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 08:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743088283; x=1743693083; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UFT0Tlu/Hika32/TdgxS6ejrdxXM/PdIfs46XY+0fN0=;
-        b=2lmFiB0kBiK4M5R5qEBwL84qb0r8rkr5FUolhL6/2IBqGAYBZ2ISOW54WERe5mfZyq
-         LfMfJWE2VrJUeb9B29mF2fRJ6Uum+9IgX2aQeJSvwukMFJGGZ1juJcohIESdMEYFs0uW
-         /Ff+XXwn8fuz9rYCaQz4JgF50I4LOzRE81GErWCmkrdvM6DbaQK4+BJ0kGmoIjdM9ljh
-         7feniihItcGyjjwTdBSz26gvKTEeHGUw+KtujVt/3pfufYoYZM0x1zdKE6tG4eIPz1Kk
-         Zh3fN8EU2Vq3ssfxob1QAq4x/DITX3/J31ryEm45OXJlZAmvK6BRqCvxcNHZevWQmYml
-         OBLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743088283; x=1743693083;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UFT0Tlu/Hika32/TdgxS6ejrdxXM/PdIfs46XY+0fN0=;
-        b=gMHWFLNuyWOtroIotC8MVL79Pfvb6aExFOjobJ+g4HsKDu8jQEMHpB7LggQNxcEGig
-         naG61cawH/eE1OzkO8VuX0somOXa/4aqkCENB2hceKFI0CO3YmAD5T3lVgDR/U7HExic
-         7GptKhmZtbayiO+n2jkcZ8glZmha11ZSir5sDTCZWPV0X9eAy1FLoN87pz+nTLLSem55
-         rG/6XXL7qx8dBH9Fil4TA1rBUyAuieohVoRLu3j0n/6EFnvyfSBkTJzKZodqz1Q/ZwNZ
-         T9SNlWX3BTcE7QKBYu+A594U0WkYif3JCNpbrTeP+Wug9Wjv6sduLsIUGFZYfVJJJ36B
-         MzWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAYtr0yFEwMhb2SnTkFY9KtumJOGb5A717IBS3PgvkNiKFPCEHVEX+jsnZQy//pfBQo0a7yAeXRJ1w2GqoHpDH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN1Z9oxxauuH3rCQ0ywxV1BjnAzYAKE6lsCAiwzqMjniIrC0KU
-	i//XVqudtLBWA3am9Cwu4cYd+QIeUye+M3BkhWXN3ZArJqmmja+7DndhJ0Sb/MbPKkK0/rrBWl0
-	G05w1Z+OG7AW+hmWf8ECYHnCP9KRyGjFIoewpiCSgy/VE1lG5UtDnLcc=
-X-Gm-Gg: ASbGnctnpFHYQBGXoza3aQlmteMt2t9vD+DR1DF42SAA602+gzgJ+YkUl+p20rT2u8+
-	+3leqF43m5E3xbmK3JHxX0BYLPnTCDHmTpD7nPe9TO98R/B+mwYlB2zlEDasSGx5DggBc6grDGS
-	ObwwoBCeLNJ5sPm/WmY4GaNdSbfVZcb/XWtKagmj2pVQVQaRAkthKRq0Q=
-X-Google-Smtp-Source: AGHT+IEmUlg8vfNHKdNwRJgEYBStuk1Iqnk9Tb7Rh3F1o2XWlpyWwxqPnTAeqSUMln3x+u0VE3DK2iGVOFMpNM/Zimg=
-X-Received: by 2002:a17:902:ac95:b0:215:8232:5596 with SMTP id
- d9443c01a7336-22806bdf663mr2614605ad.16.1743088283014; Thu, 27 Mar 2025
- 08:11:23 -0700 (PDT)
+	s=arc-20240116; t=1743089738; c=relaxed/simple;
+	bh=nT1B1mPebWIpYxQofVLlfS4I0Rkxf+rG+96hm/nsg6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RM6EIrYJmBFkk3dTMwIgjV0flWPPwjuliqMgQcjp1UojHz/XQDB8L/ubXID6UmGnGB0puXpyov4hJOMsgRaIPg8ixtWZ50JzuYNiUsYxEBpfWypXWi/OPoC5OdcGbUsemQn62OwuB3TWNP+bHSFmgOitKyN5WWgL++EUGD3Hz4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 890D91063;
+	Thu, 27 Mar 2025 08:35:40 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E98CF3F694;
+	Thu, 27 Mar 2025 08:35:34 -0700 (PDT)
+Date: Thu, 27 Mar 2025 15:35:30 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Tanmay Jagdale <tanmay@marvell.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
+	john.g.garry@oracle.com, leo.yan@linux.dev, will@kernel.org,
+	acme@kernel.org, adrian.hunter@intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+	linux-kernel@vger.kernel.org, sgoutham@marvell.com,
+	gcherian@marvell.com
+Subject: Re: [PATCH V3 1/2] perf: cs-etm: Fixes in instruction sample
+ synthesis
+Message-ID: <20250327153530.GF604566@e132581.arm.com>
+References: <20250327111149.461012-1-tanmay@marvell.com>
+ <20250327111149.461012-2-tanmay@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326234758.480431-1-ctshao@google.com>
-In-Reply-To: <20250326234758.480431-1-ctshao@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Mar 2025 08:11:11 -0700
-X-Gm-Features: AQ5f1JrUNgyp-Ys5KZ-MHxFkmzlIa7yR9ImeiDhqzkOC5aDhHZD6RX-sIVZhKqw
-Message-ID: <CAP-5=fUAd5rjXp7evGLqm+gk4yjq+eoGaHNCkaAYNEcKonb4gA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Fix incorrect counts when count the same uncore
- event multiple times
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
-	linux@treblig.org, yeoreum.yun@arm.com, ak@linux.intel.com, 
-	weilin.wang@intel.com, asmadeus@codewreck.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327111149.461012-2-tanmay@marvell.com>
 
-On Wed, Mar 26, 2025 at 4:49=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
-rote:
->
-> Let's take a look an example, the machine is SKX with 6 IMC devices.
->
->   perf stat -e clockticks,clockticks -I 1000
->   #           time             counts unit events
->        1.001127430      6,901,503,174      uncore_imc_0/clockticks/
->        1.001127430      3,940,896,301      uncore_imc_0/clockticks/
->        2.002649722        988,376,876      uncore_imc_0/clockticks/
->        2.002649722        988,376,141      uncore_imc_0/clockticks/
->        3.004071319      1,000,292,675      uncore_imc_0/clockticks/
->        3.004071319      1,000,294,160      uncore_imc_0/clockticks/
->
-> 1) The events name should not be uniquified.
-> 2) The initial count for the first `clockticks` is doubled.
-> 3) Subsequent count only report for the first IMC device.
->
-> The first patch fixes 1) and 3), and the second patch fixes 2).
->
-> After these fix:
->
->   perf stat -e clockticks,clockticks -I 1000
->   #           time             counts unit events
->        1.001127586      4,126,938,857      clockticks
->        1.001127586      4,121,564,277      clockticks
->        2.001686014      3,953,806,350      clockticks
->        2.001686014      3,953,809,541      clockticks
->        3.003121403      4,137,750,252      clockticks
->        3.003121403      4,137,749,048      clockticks
->
-> I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
-> looks good.
+Hi Tanmay,
 
-Thanks CT, I tested on hybrid and it looks good. I did notice a
-regression with hwmon:
+On Thu, Mar 27, 2025 at 04:41:48PM +0530, Tanmay Jagdale wrote:
+> The existing method to synthesize instruction samples has the
+> following issues:
+> 1. Branch instruction mnemonics were being added to non-branch
+>    instructions too.
+> 2. Branch target address was missing
+> 
+> To fix the issues, start synthesizing the instructions from the
+> previous packet (tidq->prev_packet) instead of current packet
+> (tidq->packet). This way it's easy to figure out the target
+> address of the branch instruction in tidq->prev_packet which
+> is the current packet's (tidq->packet) first executed instruction.
+> 
+> Since we have now switched to processing the previous packet
+> first, we need not swap the packets during cs_etm__flush().
+> 
+> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-Before:
-```
-$ perf stat -e data_read,temp1 -a sleep 0.1
+I saw James's reviewed tag.  However, I have several comments.
 
-Performance counter stats for 'system wide':
+Sorry I jumped in too late.
 
-           212.12 MiB  data_read
-18,446,744,073,709,284.00 'C   hwmon_acpitz/temp1/
-            46.00 'C   hwmon_coretemp/temp1/
-            32.00 'C   hwmon_iwlwifi_1/temp1/
-            40.85 'C   hwmon_nvme/temp1/
-            47.00 'C   hwmon_spd5118/temp1/
-```
+> ---
+>  tools/perf/util/cs-etm.c | 32 +++++++++++++++++++++++++-------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 0bf9e5c27b59..ebed5b98860e 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1576,10 +1576,26 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
 
-After:
-```
-$  perf stat -e data_read,temp1 -a sleep 0.1
+Seems to me, the problem is cs_etm__synth_instruction_sample() is
+invoked from multiple callers.
 
-Performance counter stats for 'system wide':
+Both the previous packet and packet are valid fo the flow:
+  cs_etm__sample()
+    `> cs_etm__synth_instruction_sample()
 
-           213.08 MiB  data_read
-18,446,744,073,709,448.00 'C   temp1
-```
+Only the previous packet is valid and the current packet stores stale
+data for the flows:
 
-So we're not uniquifying the hwmon events any more, I'll look into a
-fix. I also need to open a bug to use my acptiz device to solve the
-world's energy problems as it is currently running with 5% of the
-surface temperature of the Sun.
+  cs_etm__flush()
+    `> cs_etm__synth_instruction_sample()
+
+  cs_etm__end_block()
+    `> cs_etm__synth_instruction_sample()
+
+First, as a prerequisite, I think we should resolve the stale data in
+the packet.  So we need a fix like:
+
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c                
+index 0bf9e5c27b59..b7b17c0e4806 100644                                         
+--- a/tools/perf/util/cs-etm.c                                                  
++++ b/tools/perf/util/cs-etm.c                                                  
+@@ -741,6 +741,9 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+                                                                                
+        if (etm->synth_opts.branches || etm->synth_opts.last_branch ||          
+            etm->synth_opts.instructions) {                                     
++               /* The previous packet will not be used, cleanup it */          
++               memset(tidq->prev_packet, 0x0, sizeof(*tidq->packet));          
++                                                                               
+                /*                                                              
+                 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for 
+                 * the next incoming packet.                                    
+
+>  	sample.stream_id = etmq->etm->instructions_id;
+>  	sample.period = period;
+>  	sample.cpu = tidq->packet->cpu;
+
+Should we use "prev_packet->cpu" at here?
+
+Even for a branch instruction, as its IP address is from the previous
+packet, we should use "prev_packet->cpu" for CPU ID as well.
+
+> -	sample.flags = tidq->prev_packet->flags;
+>  	sample.cpumode = event->sample.header.misc;
+>  
+> -	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
+> +	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet, &sample);
+> +
+> +	/* Populate branch target information only when we encounter
+> +	 * branch instruction, which is at the end of tidq->prev_packet.
+> +	 */
+> +	if (addr == (tidq->prev_packet->end_addr - 4)) {
+
+  if (!addr && addr == cs_etm__last_executed_instr(tidq->prev_packet))
+
+> +		/* Update the perf_sample flags using the prev_packet
+> +		 * since that is the queue we are synthesizing.
+> +		 */
+> +		sample.flags = tidq->prev_packet->flags;
+> +
+> +		/* The last instruction of the previous queue would be a
+> +		 * branch operation. Get the target of that branch by looking
+> +		 * into the first executed instruction of the current packet
+> +		 * queue.
+> +		 */
+> +		sample.addr = cs_etm__first_executed_instr(tidq->packet);
+
+If connected to the change suggested for cleaning up packet in
+cs_etm__packet_swap(), when run at here, if "tidq->packet" is a valid
+packet, then it will return a branch target address, otherwise, it
+will return 0.
+
+> +	}
+>  
+>  	if (etm->synth_opts.last_branch)
+>  		sample.branch_stack = tidq->last_branch;
+> @@ -1771,7 +1787,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+>  	/* Get instructions remainder from previous packet */
+>  	instrs_prev = tidq->period_instructions;
+>  
+> -	tidq->period_instructions += tidq->packet->instr_count;
+> +	tidq->period_instructions += tidq->prev_packet->instr_count;
+
+A side effect for this change is we will defer to synthesize instruction
+samples for _current_ packet, either the packet will be handled after
+a new packet incoming, or at the end of a trace chunk.
+
+The problem is for the later one, we can see cs_etm__end_block() and
+cs_etm__flush() both only handle the previous packet. As a result, the
+last packet will be ignored.
+
+I would suggest we need to firstly fix this issue in
+cs_etm__end_block() and cs_etm__flush() (maybe we need to consider to
+consolidate the code with cs_etm__sample()).
+
+>  	/*
+>  	 * Record a branch when the last instruction in
+> @@ -1851,8 +1867,11 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+>  			 * been executed, but PC has not advanced to next
+>  			 * instruction)
+>  			 */
+> +			/* Get address from prev_packet since we are synthesizing
+> +			 * that in cs_etm__synth_instruction_sample()
+> +			 */
+>  			addr = cs_etm__instr_addr(etmq, trace_chan_id,
+> -						  tidq->packet, offset - 1);
+> +						  tidq->prev_packet, offset - 1);
+>  			ret = cs_etm__synth_instruction_sample(
+>  				etmq, tidq, addr,
+>  				etm->instructions_sample_period);
+> @@ -1916,7 +1935,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>  
+>  	/* Handle start tracing packet */
+>  	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
+> -		goto swap_packet;
+> +		goto reset_last_br;
+>  
+>  	if (etmq->etm->synth_opts.last_branch &&
+>  	    etmq->etm->synth_opts.instructions &&
+> @@ -1952,8 +1971,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>  			return err;
+>  	}
+>  
+> -swap_packet:
+> -	cs_etm__packet_swap(etm, tidq);
+> +reset_last_br:
+
+As said, if we consolidate cs_etm__flush() for processing both
+previous packet and current packet, then we don't need to remove
+cs_etm__packet_swap() at here, right?
 
 Thanks,
-Ian
+Leo
 
-> Ian Rogers (2):
->   perf evlist: Make uniquifying counter names consistent
->   perf parse-events: Use wildcard processing to set an event to merge
->     into
->
->  tools/perf/builtin-record.c    |   7 +-
->  tools/perf/builtin-top.c       |   7 +-
->  tools/perf/util/evlist.c       |  66 +++++++++-----
->  tools/perf/util/evlist.h       |   3 +-
->  tools/perf/util/evsel.c        | 116 ++++++++++++++++++++++++-
->  tools/perf/util/evsel.h        |  11 ++-
->  tools/perf/util/parse-events.c |  45 ++++++----
->  tools/perf/util/stat-display.c | 151 +--------------------------------
->  tools/perf/util/stat.c         |  40 +--------
->  9 files changed, 214 insertions(+), 232 deletions(-)
->
-> --
-> 2.49.0.472.ge94155a9ec-goog
->
+>  
+>  	/* Reset last branches after flush the trace */
+>  	if (etm->synth_opts.last_branch)
+> -- 
+> 2.43.0
+> 
