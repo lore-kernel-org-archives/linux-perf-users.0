@@ -1,202 +1,298 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0512915533F
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 19:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7665518FC84
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 19:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743102839; cv=none; b=fKhOQlAwWVGC/f87kB5gQjpR4xQwcuC3sNZJmOekrbaY3pqIP0qc6pPzfyvu1Ks35UfuwTeII+ytIjciPU+dHv2PFEjYoiS8tB7kM8HAliNckPgqb0A6S5Mas31qpMQW7J5qx0oSWGNHG8kdzwLV5Vz7fgDb4qp32sMWUxQi4T0=
+	t=1743104174; cv=none; b=juihhJzYzOVwhUy1Oh8EE25VkRzvePR7j+UanVSQuYe1TuZbPXwpL92AF+18s83G+t2Rvp9yVR2QqS4nc4kUe2iqFVP0kTl+xoZsBqu6e76tS3a0HtGXT7NxvKWIckY3E4tX0lnUG0FWONFFL4el2k/Xlc+w6rxO3Spe8drIIrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743102839; c=relaxed/simple;
-	bh=hh/VQK/Xetz3rf5KW/ZpVNh5HJlX1LtlVn5UOEhuUgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tKKkqKIe2VGZyEJjg30rt8/0b33ecrawrswEstIqGEiT3aM+6bFN51qxtqh0qob5FGsg0duHDPAchNQc/nevIreUg9DpH58Vflyr1F7y6Uek7UdDdKuzy7xgk+NoTPrr+umZnM8+RZYSlkxMTCpdqtXaVYnXL3ysO2nq22tnqd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j64nZna3; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743104174; c=relaxed/simple;
+	bh=Bu9SBXLCsqxc/K2zhuGDke0dHkcDbp3VE+p2w+FdrN4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c6Q3eS+CszlXaCpufW/572wrruqq6LxqepIFWqFferpyIceeJhmgtp4XXvbsx87gCcE9HUIE52mUzdv7Fvav9xgGG8f4CwZ4d0zks+MFWMUl8Ym0LWhtQsLKAsmcp5TMe8f1idGyDp9KophG/VDjYOONQ9c/IChOdMIGC4kv4zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ZIZ4kYhY; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j64nZna3"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2264c9d0295so39285ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 12:13:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ZIZ4kYhY"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2260c915749so21886585ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 12:36:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743102837; x=1743707637; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UnOFmUEgN1tAjvwdzmU7V69QQB8mSVp/gwZR2GHxM7Y=;
-        b=j64nZna3W/CU8+ELupqIVuDyeMl8AdZowZwwcJy7qLzKQnaSZ1aZraR7iMhD2P8EjU
-         WaQOtyaNRlpvQ9AvVSVfZZahl5YCxvcjhnUM1e+OWbBCmCZDi/Zkfyjd4+AgDLTOjRI9
-         IU/7nS9Hec/gZlsywDhlURaeeA88ag33gCBssHwAt/rlsDl7DfA4AGoZNK1dI5WNqb8d
-         woZFiahiBNRES/icDNKAikd7hniNTlXkiMJwaODayr9AA8+md/ZHnTibeLzlhCh4WghC
-         TUStaZaOODb+E7wOizp4hoI4xRX7jA1sZw4F4ovac8YMwbz0C6kjb4PLzLdvDNw82Htw
-         ENaQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743104171; x=1743708971; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jAY+Cg5HQZMci06K15j1dCXU1uO31X3ZHDkdY1vsxDU=;
+        b=ZIZ4kYhYI4QcCSg+mLhGblZcnzlIsOr0ECh1RTLPVhuOD6LOu61dkphdl4i3py+AIO
+         hJssVpAFVWqWrpT4pfuPQElg0SwHq1WFWyOfTdqOLDCf8MXQnTBHVOuVBP68/NO5d8E7
+         RzENl40MST/c/PXuuh/XcvjcICaY0IB8vcczgvR2opKIjcPzovp8OV8kv2CfW+Qbkfn/
+         rZq1nIMat4fntbyBSFej6uRpSH8JXl43ZSnAppQqSPVSkg6rTcMIPS0NCkRsLy67hx9x
+         2TfbuNrUVHLwt+zxhrmGfD8LQ5lcSiS1MqabnyFD0pgNW27/KfqtThk5mLzRsxsrJypv
+         5axw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743102837; x=1743707637;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UnOFmUEgN1tAjvwdzmU7V69QQB8mSVp/gwZR2GHxM7Y=;
-        b=DguKwERWGIyE/LsgWgkkPKykafLOCcC8YecYfeDnnKMCwoX4M0zZvorARN1ZcOW6fG
-         ezODMdek9Hc6aZrrcI+3fiRYR054VNCJtQlifkWrtJwFVLFK7CKeaQhMJKZXidP3A+Qr
-         4gdhzDvxnkKLMO1zB/sIhvlb/gZ8KDr6J/9TpHx9PMP1Y5iBMhFVSkLE+Qak7q6YGv/T
-         bLbE3KXsT7ea5vnJOFauqGNtIe6mjzHOPEShOz02JbFmhKAMIA8RRq5MJEyKILVaSbrJ
-         a25Cn1U6Z62RCIYVthBW74w5HqaURj8pseUNsAvfJiekDtpkXjtHQohmpnjJFDjOQB+V
-         V1Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpvYFiVhqw4k3TNJB2uoNQszb37FM99Purq/yfJfevUt3VG6647E8H6Yuoc+8iwongsoT25FvoFQxbZPSb6/8H@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc1JXxdUYGPVxDXC4DewXl4cPWawLEB7UiUt/6hEGt7GdTNdKJ
-	8d00JpV4BixC55r7XVCtUvn4XZt+XNyTlVZaLRRzc2O9DXgYEyGA/eqINvyj2nyO737wmG7y7kW
-	omlqRIRmKyPLUmtI+XdWxKStmiDJDLZ/qf0fj
-X-Gm-Gg: ASbGncsNUThfuhB9AYLn78+Cdk6y+hmjhNPVErNmZ1nTv9u+qFQTsrF+AJSzwvvTbVG
-	jZCelfK8M17rC1OQ7XNEmcfwPmHwUy8iTN4eUQFnqyYG/m93x4WHdlDTtDnjrOWhTuByKTA9GRF
-	p/nZZdtouFoVnxjS4/dF3NpYVOIDc+M0sLgJPjWS8g27j1rcDXQLJuKOk=
-X-Google-Smtp-Source: AGHT+IGBRbFyYUB2Vr/yTuISyABvJclwetdAehk9rr0dNRdaF2BlgmVj4U4jVsqQ/N/bApYGl6IcTDFbuP4adTp3aSI=
-X-Received: by 2002:a17:903:c08:b0:220:c905:689f with SMTP id
- d9443c01a7336-22920f444f1mr349155ad.25.1743102836749; Thu, 27 Mar 2025
- 12:13:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743104171; x=1743708971;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jAY+Cg5HQZMci06K15j1dCXU1uO31X3ZHDkdY1vsxDU=;
+        b=Jxso9PoeAPU6z4zYpH7DJXiOW63Pf9WgRm5xzGCJXjX52GAS5rGBh6xK2DbiXQRmtj
+         7T9rK5erJKUZqOjdET7x/qmUYkiu5NZQVOP6k2ljPLZOGQKrxFeTgJoV+KWl9VAAIc9d
+         uBEpGHiO27alcnf+aNXTuFy3kw9dJoUUb22fhUFTwxQQzlTfSJ2NrMcRaktp/4QqqCYy
+         O9mJrWZQNbHx+wBQ515yxrdFzahE7Ownqt7efGOMimdT2++5YgjlCl2U3tyJVljxbVxq
+         1YdLVkMDo3owsWhYhRCvV2A9UVpl+PhNNLHyKZrtyTM8/htPs7/kHfDOdsprTdu7ALEA
+         YaJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwS/6bhw2xCX1lvjWdO5IKLsHjXGl+lm+TFvojiRNrLCva1pAYZAiPctzN7oDczS4y8v8tTUNBGr9DSG3/4+ta@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/XZB5n+ZBN4B09vuIsJUtikgZK7V/jpXyTKMwnFogU768DIUU
+	qGezNn6RaNbWvR2ZzvD7Yb2XA0mPDjaqaLab/00KShIPenS5gV3QgLpOTVSlL08=
+X-Gm-Gg: ASbGncvAg/St+U5tAEk7dasfrjhpBAqqVJSgOASuLgyxztd+8l0SEINb6RRtReraZku
+	V1s3QiKH0ki46DA8MlPVI52Psl59HlbHThrpWbVsZEcGFCMsVY02Cj+TQkN9kjEsf05vKzFkMs3
+	aQ7DxXTTRaoqQUYyvJRDD09uL3MZSCB9RI+1D9zqUQiRmdukBuIKcOMJpW28tkx84zxFPGhZOP+
+	Ey9FjM+TC0TN4TFetojVNlk7HenxxwTtE7CeVcOenZTiHaMWVhsEhRm/npk4OMqRKYln6eSWG//
+	dqOHbC7pJvpi8823Mg5h28RFoxXHJgAdcDR7wUnJTp/GL/lagA60PeNs6g==
+X-Google-Smtp-Source: AGHT+IG3jSHF5jFLlVLycbj1Jf3RB9Ho77/qkuBJy49ZMZVDs34odX6i7mszuOua7lZd9PrWcxgbeQ==
+X-Received: by 2002:a17:90b:514b:b0:2ee:dd9b:e402 with SMTP id 98e67ed59e1d1-303a7d6a9a7mr8534491a91.12.1743104171302;
+        Thu, 27 Mar 2025 12:36:11 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b638csm2624220a91.44.2025.03.27.12.36.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 12:36:11 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v5 00/21] Add Counter delegation ISA extension support
+Date: Thu, 27 Mar 2025 12:35:41 -0700
+Message-Id: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324164543.62574-1-irogers@google.com>
-In-Reply-To: <20250324164543.62574-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Mar 2025 12:13:45 -0700
-X-Gm-Features: AQ5f1JqARfOJjp7cH3_mePJVpMcG2u9oleFxHG7NMH3xqmsS7lzAQhyNRkCtfIQ
-Message-ID: <CAP-5=fWr8EUyro8ckxfMYWR3BhiXgzkjejTjmTb=8PR1p+wvWA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] Prefer sysfs/JSON events also when no PMU is provided
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI2o5WcC/23QwWoEIQwG4FdZPNfFRB3dPfU9SimOZnaEdlx0K
+ i3LvHudLaWlePxD8iXkxgrlSIWdDzeWqcYS09KCfjgwP7vlQjyGlhkKVMKA5j69Lyvll0CvdHF
+ ra+cDWidxsv7kPWuD10xT/LijT88tz7GsKX/ed1TYq98cghFCG2mP0igFCBx4E8t8fcyxphIXf
+ /Tpje1GxZ85LQBU74yKXHA7OqN8GK2GsaPIPwqariKbMih7UsEQDEF3FPWroOi+pKr9Fqn95Kw
+ lOcI/Zdu2LwUgSlt7AQAA
+X-Change-ID: 20240715-counter_delegation-628a32f8c9cc
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>, 
+ Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, 
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ Atish Patra <atishp@rivosinc.com>, Kaiwen Xue <kaiwenx@rivosinc.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.15-dev-42535
 
-On Mon, Mar 24, 2025 at 9:46=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> At the RISC-V summit the topic of avoiding event data being in the
-> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
-> events being the priority when no PMU is provided so that legacy
-> events maybe supported via json. Originally Mark Rutland also
-> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
-> M? processors, but James Clark more recently tested this and believes
-> the driver issues there may not have existed or have been resolved. In
-> any case, it is inconsistent that with a PMU event names avoid legacy
-> encodings, but when wildcarding PMUs (ie without a PMU with the event
-> name) the legacy encodings have priority.
->
-> The patch doing this work was reverted in a v6.10 release candidate
-> as, even though the patch was posted for weeks and had been on
-> linux-next for weeks without issue, Linus was in the habit of using
-> explicit legacy events with unsupported precision options on his
-> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
-> where ARM decided to call the events bus_cycles and cycles, the latter
-> being also a legacy event name. ARM haven't renamed the cycles event
-> to a more consistent cpu_cycles and avoided the problem. With these
-> changes the problematic event will now be skipped, a large warning
-> produced, and perf record will continue for the other PMU events. This
-> solution was proposed by Arnaldo.
->
-> v6: Rebase of v5 (dropping already merged patches):
->     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.c=
-om/
->     that unusually had an RFC posted for it:
->     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
->     Note, this patch conflicts/contradicts:
->     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.=
-com/
->     that I posted so that we could either consistently prioritize
->     sysfs/json (these patches) or legacy events (the other
->     patches). That lack of event printing and encoding inconsistency
->     is most prominent in the encoding of events like "instructions"
->     which on hybrid are reported as "cpu_core/instructions/" but
->     "instructions" before these patches gets a legacy encoding while
->     "cpu_core/instructions/" gets a sysfs/json encoding. These patches
->     make "instructions" always get a sysfs/json encoding while the
->     alternate patches make it always get a legacy encoding.
+This series adds the counter delegation extension support. It is based on
+very early PoC work done by Kevin Xue and mostly rewritten after that.
+The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
+on multiple ISA extensions.
 
-So another fun finding. Sysfs and json events are case insensitive:
-```
-$ perf stat -e 'inst_retired.any,INST_RETIRED.ANY' true
+1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
+   5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
+   RISC-V CSR address space.
+2. Smstateen: The stateen bit[60] controls the access to the registers
+   indirectly via the above indirect registers.
+3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
 
-Performance counter stats for 'true':
+The counter delegation extension allows Supervisor mode to program the
+hpmevent and hpmcounters directly without needing the assistance from the
+M-mode via SBI calls. This results in a faster perf profiling and very
+few traps. This extension also introduces a scountinhibit CSR which allows
+to stop/start any counter directly from the S-mode. As the counter
+delegation extension potentially can have more than 100 CSRs, the specification
+leverages the indirect CSR extension to save the precious CSR address range.
 
-          129,134      cpu_atom/inst_retired.any:u/
-    <not counted>      cpu_core/inst_retired.any:u/
-                        (0.00%)
-          129,134      cpu_atom/INST_RETIRED.ANY:u/
-    <not counted>      cpu_core/INST_RETIRED.ANY:u/
-                        (0.00%)
+Due to the dependency of these extensions, the following extensions must be
+enabled in qemu to use the counter delegation feature in S-mode.
 
-      0.002193191 seconds time elapsed
+"smstateen=true,sscofpmf=true,ssccfg=true,smcdeleg=true,smcsrind=true,sscsrind=true"
+or Virt machine users can just "max" cpu instead.
 
-      0.002354000 seconds user
-      0.000000000 seconds sys
-```
-But legacy events match in lex code that is case sensitive. This means
-(on x86) the event 'instructions' is currently legacy, but the event
-'INSTRUCTIONS' is a sysfs event. The event CYCLES is a parse error as
-there is no sysfs/json version. Given legacy events don't follow the
-case insensitivity norm this is more evidence we need to reduce their
-priority by merging these patches.
+When we access the counters directly in S-mode, we also need to solve the
+following problems.
 
-Thanks,
-Ian
+1. Event to counter mapping
+2. Event encoding discovery
 
+The RISC-V ISA doesn't define any standard either for event encoding or the
+event to counter mapping rules. Until now, the SBI PMU implementation relies
+on device tree binding[3] to discover the event to counter mapping in RISC-V
+platform in the firmware. The SBI PMU specification[4] defines event encoding
+for standard perf events as well. Thus, the kernel can query the appropriate
+counter for an given event from the firmware.
 
+However, the kernel doesn't need any firmware interaction for hardware
+counters if counter delegation is available in the hardware. Thus, the driver
+needs to discover the above mappings/encodings by itself without any assistance
+from firmware.
 
-> v5: Follow Namhyung's suggestion and ignore the case where command
->     line dummy events fail to open alongside other events that all
->     fail to open. Note, the Tested-by tags are left on the series as
->     v4 and v5 were changing an error case that doesn't occur in
->     testing but was manually tested by myself.
->
-> v4: Rework the no events opening change from v3 to make it handle
->     multiple dummy events. Sadly an evlist isn't empty if it just
->     contains dummy events as the dummy event may be used with "perf
->     record -e dummy .." as a way to determine whether permission
->     issues exist. Other software events like cpu-clock would suffice
->     for this, but the using dummy genie has left the bottle.
->
->     Another problem is that we appear to have an excessive number of
->     dummy events added, for example, we can likely avoid a dummy event
->     and add sideband data to the original event. For auxtrace more
->     dummy events may be opened too. Anyway, this has led to the
->     approach taken in patch 3 where the number of dummy parsed events
->     is computed. If the number of removed/failing-to-open non-dummy
->     events matches the number of non-dummy events then we want to
->     fail, but only if there are no parsed dummy events or if there was
->     one then it must have opened. The math here is hard to read, but
->     passes my manual testing.
->
-> v3: Make no events opening for perf record a failure as suggested by
->     James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
->     rebase.
->
-> v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
->     Patra who have tested on RISC-V and ARM CPUs, including the
->     problem case from before.
->
-> Ian Rogers (2):
->   perf record: Skip don't fail for events that don't open
->   perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
->     legacy"
->
->  tools/perf/builtin-record.c    | 47 ++++++++++++++++++---
->  tools/perf/util/parse-events.c | 26 +++++++++---
->  tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
->  tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
->  4 files changed, 139 insertions(+), 70 deletions(-)
->
-> --
-> 2.49.0.395.g12beb8f557-goog
->
+Solution to Problem #1:
+This patch series solves the above problem #1 by extending the perf tool in a
+way so that event json file can specify the counter constraints of each event
+and that can be passed to the driver to choose the best counter for a given
+event. The perf stat metric series[5] from Weilin already extend the perf tool
+to parse "Counter" property to specify the hardware counter restriction.
+As that series was not revised in a while, I have rebased it and included in
+this series. I can only include the necessary parts from that patch required
+for this series if required.
+
+This series extends that support by converting comma separated string to a
+bitmap. The counter constraint bitmap is passed to the perf driver via
+newly introduced "counterid_mask" property set in "config2".
+However, it results in the following event string which has repeated information
+about the counters both in list and bitmask format. I am not sure how I can pass
+the list information to the driver directly. That's why I added a
+counterid_mask property.
+
+Additionaly, the PATCH5 in [5] parses the bitmask information from the
+string and puts it into the metric group structure. We can just convert it in
+python easily and pass it to the metric group instead. The PATCH19 does exactly
+that and sets the counterid_mask property.
+
+@Weilin @Ian : Please let me know if there is a better way to solve the problem I
+described.
+
+Due to the new counterid_mask property, the layout in empty-pmu-events.c got
+changed which is patched in PATCH 21 based on existing script.
+
+Possible solutions to Problem #2:
+
+1. Extend the PMU DT parsing support to kernel as well. However, that requires
+additional support in ACPI based system. It also needs more infrastructure in
+the virtualization as well.
+
+2. Rename perf legacy events to riscv specific names. This will require users to
+use perf differently than other ISAs which is not ideal.
+
+3. Define a architecture specific override function for legacy events. Earlier
+RFC version did that but it is not preferred as arch specific behavior in perf
+tool has other ramifications on the tests.
+
+4. Ian graciously helped and sent a generic fix[6] for #3 that prefers json
+over legacy encoding. Unfortunately, it had some regressions and the discussions
+are ongoing if it is a viable solution.
+
+5. Specify the encodings in the driver. There were earlier concerns of managing
+these in the driver as these encodings are vendor specific in absence of an ISA
+guidelines. However, we also need to support counter virtualization and legacy
+event users (without perf tool) as described in [7]. That's why, this series
+adapts this solution similar to other ISAs. The vendors can define their pmu
+event encoding and event to counter mapping in the driver.
+
+Note: This solution is still compatible with solution #4 by Ian. It gives vendors
+flexibility to define legacy event encoding in either the driver or json file
+if Ian's series [6] is merged. If we can get rid of the legacy events in the
+future, we can just rely on the json encodings. I have not added a json file for
+qemu as I have not included Ian's patches in this series. But I have verified them
+with a virt machine specific json file.
+
+The Qemu patches are available in upstream now.
+
+The Linux kernel patches can be found here:
+https://github.com/atishp04/linux/tree/b4/counter_delegation_v4
+
+[1] https://github.com/riscv/riscv-indirect-csr-access
+[2] https://github.com/riscv/riscv-smcdeleg-ssccfg
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/perf/riscv%2Cpmu.yaml
+[4] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc
+[5] https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
+[6] https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
+[7] https://lore.kernel.org/lkml/20241026121758.143259-1-irogers@google.com/T/#m653a6b98919a365a361a698032502bd26af9f6ba
+
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+Changes in v5:
+- Fixed dt_binding_check errors.
+- Added the ISA extension dependancy for counter delegation extensions. 
+- Replaced the boolean variables with static key conditional check required at boot time.
+- Miscellaneous minor code restructuring. 
+- Link to v4: https://lore.kernel.org/r/20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com
+
+Changes in v4:
+- Added ISA dependencies as per dt schema instead of description.
+- Fixed few compilation issues due to patch reordering in v3.
+- Link to v3: https://lore.kernel.org/r/20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com
+
+Changes in v3:
+- Fixed the dtb binding check failures.
+- Inlcuded the fix reported by Rajnesh Kanwal for guest counter overflow.
+- Rearranged the overflow handling more efficiently for better modularity.
+- Link to v2: https://lore.kernel.org/r/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com
+
+Changes in v2:
+- Dropped architecture specific overrides for event encoding.
+- Dropped hwprobe bits.
+- Added a vendor specific event encoding table to support vendor specific event
+  encoding and counter mapping.
+- Fixed few bugs and cleanup.
+- Link to v1: https://lore.kernel.org/r/20240217005738.3744121-1-atishp@rivosinc.com
+
+---
+Atish Patra (17):
+      RISC-V: Add Sxcsrind ISA extension definition and parsing
+      dt-bindings: riscv: add Sxcsrind ISA extension description
+      RISC-V: Define indirect CSR access helpers
+      RISC-V: Add Smcntrpmf extension parsing
+      dt-bindings: riscv: add Smcntrpmf ISA extension description
+      RISC-V: Add Ssccfg/Smcdeleg ISA extension definition and parsing
+      dt-bindings: riscv: add Counter delegation ISA extensions description
+      RISC-V: perf: Restructure the SBI PMU code
+      RISC-V: perf: Modify the counter discovery mechanism
+      RISC-V: perf: Add a mechanism to defined legacy event encoding
+      RISC-V: perf: Implement supervisor counter delegation support
+      RISC-V: perf: Use config2/vendor table for event to counter mapping
+      RISC-V: perf: Add legacy event encodings via sysfs
+      RISC-V: perf: Add Qemu virt machine events
+      tools/perf: Support event code for arch standard events
+      tools/perf: Pass the Counter constraint values in the pmu events
+      Sync empty-pmu-events.c with autogenerated one
+
+Charlie Jenkins (1):
+      RISC-V: perf: Skip PMU SBI extension when not implemented
+
+Kaiwen Xue (2):
+      RISC-V: Add Sxcsrind ISA extension CSR definitions
+      RISC-V: Add Sscfg extension CSR definition
+
+Weilin Wang (1):
+      perf pmu-events: Add functions in jevent.py to parse counter and event info for hardware aware grouping
+
+ .../devicetree/bindings/riscv/extensions.yaml      |  67 ++
+ MAINTAINERS                                        |   4 +-
+ arch/riscv/include/asm/csr.h                       |  57 ++
+ arch/riscv/include/asm/csr_ind.h                   |  42 +
+ arch/riscv/include/asm/hwcap.h                     |   8 +
+ arch/riscv/include/asm/kvm_vcpu_pmu.h              |   4 +-
+ arch/riscv/include/asm/kvm_vcpu_sbi.h              |   2 +-
+ arch/riscv/include/asm/vendorid_list.h             |   4 +
+ arch/riscv/kernel/cpufeature.c                     |  27 +
+ arch/riscv/kvm/Makefile                            |   4 +-
+ arch/riscv/kvm/vcpu_sbi.c                          |   2 +-
+ drivers/perf/Kconfig                               |  16 +-
+ drivers/perf/Makefile                              |   4 +-
+ drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}   |   0
+ drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c}  | 982 +++++++++++++++++----
+ include/linux/perf/riscv_pmu.h                     |  26 +-
+ .../perf/pmu-events/arch/riscv/arch-standard.json  |  10 +
+ tools/perf/pmu-events/empty-pmu-events.c           | 299 ++++---
+ tools/perf/pmu-events/jevents.py                   | 218 ++++-
+ tools/perf/pmu-events/pmu-events.h                 |  32 +-
+ 20 files changed, 1490 insertions(+), 318 deletions(-)
+---
+base-commit: 74e48c9286409128a3dccd0efd4b83b3f9ef95fd
+change-id: 20240715-counter_delegation-628a32f8c9cc
+--
+Regards,
+Atish patra
+
