@@ -1,221 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3098D126BFA;
-	Thu, 27 Mar 2025 15:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC3C19F489
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 16:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743089738; cv=none; b=s3LfcEcFMdUYlwGUdQJ0FH143bIhzBtg1X9CZAIdNFdK2rGvjdVhCH42QJ5vz6/Gw9Vh0ljbyNofLAYXO2F60S56cgO21qSp6SC4fb9o0gWVApoxvOXrI/O/AiFHFxnMwiIuUrpQQgmSYihjuSXjJax14jdMkb4KRqIumtsdYv0=
+	t=1743092414; cv=none; b=DHatAPDFb16DMKNlo6QL4+sRyXsd47B7BJ/Vo0SVrxN7RdHBxehRmrlytJpVdMZFqrcAbnbbgrn/Qg/vwtiOGcf9Qnhl0vMqsKCgOXKK5kHmIPCas5dGBtLYtGTAo7t/IvCzalDbHmdHiKu2m7SIudCvjxCOZv6+T68dKup+StU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743089738; c=relaxed/simple;
-	bh=nT1B1mPebWIpYxQofVLlfS4I0Rkxf+rG+96hm/nsg6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RM6EIrYJmBFkk3dTMwIgjV0flWPPwjuliqMgQcjp1UojHz/XQDB8L/ubXID6UmGnGB0puXpyov4hJOMsgRaIPg8ixtWZ50JzuYNiUsYxEBpfWypXWi/OPoC5OdcGbUsemQn62OwuB3TWNP+bHSFmgOitKyN5WWgL++EUGD3Hz4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 890D91063;
-	Thu, 27 Mar 2025 08:35:40 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E98CF3F694;
-	Thu, 27 Mar 2025 08:35:34 -0700 (PDT)
-Date: Thu, 27 Mar 2025 15:35:30 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Tanmay Jagdale <tanmay@marvell.com>
-Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
-	john.g.garry@oracle.com, leo.yan@linux.dev, will@kernel.org,
-	acme@kernel.org, adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
-	linux-kernel@vger.kernel.org, sgoutham@marvell.com,
-	gcherian@marvell.com
-Subject: Re: [PATCH V3 1/2] perf: cs-etm: Fixes in instruction sample
- synthesis
-Message-ID: <20250327153530.GF604566@e132581.arm.com>
-References: <20250327111149.461012-1-tanmay@marvell.com>
- <20250327111149.461012-2-tanmay@marvell.com>
+	s=arc-20240116; t=1743092414; c=relaxed/simple;
+	bh=d7ElXG12q67ts9hPo9D4cCi81eQhC4QyN/csAlxbkk8=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=DA99Nw5NNFKroq+bZq/9dQfffZBBhtg/uVfvxkzRW7lf99C2RBwV5guYj38Xu802JHhKeoEA8yuVXntpIxncze++yxtlyBBpoE8b4ud2U7ZbY8Ulfy6Q7KMLhYGfa16gaSUnZBsUGBZ+UsMEoKloH8u4Nwk1o+Mu7JuySpX4Cac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kOYAPj8Z; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kOYAPj8Z"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22398e09e39so27896895ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743092410; x=1743697210; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hQcfqS6ONRy4v+VAuw1r1bUFP3B6ufIgzXQvK3yZp0M=;
+        b=kOYAPj8ZAlZLOFNhrs9mchTgodx5+USr5guYG8Kx5M0JP8ixbwK1esti7rpswrGb06
+         rZ8bzKVq45I+F4VCYLj8Uyzv45ccDb4WFH942uFTDyknzHTy0czdcynotfuRLD2wg5js
+         9s1l+cPdq9QnkCuoEXgL6Mm+Oiy+oFZf5Yo4i+Q7RKiBePhd2E17Wv2UbwxAi5DtKxTB
+         JsVtgXqlomwNDp5h8fp8aMZdPPnYqZCWtkFo/vCEykJ/kRXGKYKXo+g3PrjhCX/nSS1t
+         FI5ZCmh2PQ14BKCflq1wX58jeyx9oUNg0aEAG1kI4tifINMvDnXCesxjzWtQG7O/35PI
+         ZZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743092410; x=1743697210;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hQcfqS6ONRy4v+VAuw1r1bUFP3B6ufIgzXQvK3yZp0M=;
+        b=hoyzblV8opAwkGoIK4+w2aj9dOjmc3cTsW1AzWloMt4eda2ccPaBuCdY1OBcnZJNG7
+         c0ZR/PN/ha6p+TVx3kbLH+BeiWq8JVZ5Qa2UC4DdlF/KwK2d3/ibOCBykiRXSGCJR4AH
+         zN2qF9oYWUYCWOZzILQjl3f2uhW4PnzluP1HFWYHcycdftfCyUAE1KzHXhTrIkBHI8Hb
+         etDaBIc88iqdazFQFUqdTNM3qXUxpJlVuK5KE730mlc9ocZZkJAcficS2puZBGrFhhjD
+         fSeYVbMwyCYXP/bI9JSp3DSD2sJLjF31BW/fEdtHBIaAmreQwO7dBPyiwwBvnw7nRTcr
+         l1Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo8JR8J65QemTyTLta70++Z4AOv5kJIo2mf/kqufod5g9v01VWAgl5siECzBBas2xlH/30T3TI4ljCbQqZdB5f@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo1p+U3l9IM1MP56a3b0kZItlkXfaKgElRYF+J5O6SautUy8Qo
+	kHNfU+QPufJ6gKLKSTol3XcfgsZJ6LzAaTVpbai7liMDmaVoDis4IqwM75CNoZ4=
+X-Gm-Gg: ASbGncuh4mkpAP7iFV8N4D3WwB9VjfwJfsTLNMfq3TXCwxGQ8A50Ss4HZ9gsF7EBxGF
+	zAVRr+0eMUk7bnvZjaq4j9kDo/zE7LvTrVOAqR+L0pa5xIRCbYerT/dL04nLzE8LAXBAqkL+Iv1
+	pf+viME8RSzM0eEro7/JtWH1CYdVvEXk8UVcYX8q1utlVOFjgR0mBKC2BM0EPA4oJWZLgURe4ii
+	vEEpf77aP0CwGQNEW55CTcKdGWBMeMsk7MJTuW6WJEf7xzMtacwciQkT9frCPBHoHbJEpHeQYpn
+	WGWLOE6GeIYN99n5KCogM5eYjMjB9gyiR7Nxyg==
+X-Google-Smtp-Source: AGHT+IGhXmi8JOjZOP3Ikj3wo/1uBU9qt49Ql5SLHckRbeVG8HWYg9iWFYIxA94kzN1K7mL9F21TaQ==
+X-Received: by 2002:a17:903:22d2:b0:223:4816:3e9e with SMTP id d9443c01a7336-22804857854mr57168615ad.13.1743092410377;
+        Thu, 27 Mar 2025 09:20:10 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618e4b6sm14534202b3a.180.2025.03.27.09.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 09:20:09 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:20:09 -0700 (PDT)
+X-Google-Original-Date: Thu, 27 Mar 2025 09:20:00 PDT (-0700)
+Subject:     Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT kernel-self with ILP32 ABI
+In-Reply-To: <svu4xdeo7a7ve3vorvgbkjxzrqmqk5oztgtfpbg556wjw4x7vc@yg4esoipmt7g>
+CC: david@redhat.com, peterz@infradead.org, guoren@kernel.org,
+  Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>,
+  Linus Torvalds <torvalds@linux-foundation.org>, Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+  atishp@atishpatra.org, oleg@redhat.com, kees@kernel.org, tglx@linutronix.de,
+  Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, brauner@kernel.org,
+  akpm@linux-foundation.org, rostedt@goodmis.org, edumazet@google.com, unicorn_wang@outlook.com,
+  inochiama@outlook.com, gaohan@iscas.ac.cn, shihua@iscas.ac.cn, jiawei@iscas.ac.cn,
+  wuwei2016@iscas.ac.cn, drew@pdp7.com, prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com,
+  wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com, dsterba@suse.com,
+  mingo@redhat.com, boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn,
+  leobras@redhat.com, jszhang@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
+  samuel.holland@sifive.com, yongxuan.wang@sifive.com, luxu.kernel@bytedance.com, ruanjinjie@huawei.com,
+  cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn,
+  Ard Biesheuvel <ardb@kernel.org>, ast@kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+  kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
+  linux-crypto@vger.kernel.org, bpf@vger.kernel.org, linux-input@vger.kernel.org,
+  linux-perf-users@vger.kernel.org, linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+  linux-arch@vger.kernel.org, maple-tree@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+  netdev@vger.kernel.org, linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
+  netfilter-devel@vger.kernel.org, coreteam@netfilter.org, linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
+  linux-usb@vger.kernel.org, linux-media@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Liam.Howlett@oracle.com
+Message-ID: <mhng-e8248074-b79c-42f6-986f-9993851b6be2@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327111149.461012-2-tanmay@marvell.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Tanmay,
+On Tue, 25 Mar 2025 12:23:39 PDT (-0700), Liam.Howlett@oracle.com wrote:
+> * David Hildenbrand <david@redhat.com> [250325 14:52]:
+>> On 25.03.25 13:26, Peter Zijlstra wrote:
+>> > On Tue, Mar 25, 2025 at 08:15:41AM -0400, guoren@kernel.org wrote:
+>> > > From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
+>> > >
+>> > > Since 2001, the CONFIG_64BIT kernel has been built with the LP64 ABI,
+>> > > but this patchset allows the CONFIG_64BIT kernel to use an ILP32 ABI
+>> >
+>> > I'm thinking you're going to be finding a metric ton of assumptions
+>> > about 'unsigned long' being 64bit when 64BIT=y throughout the kernel.
+>> >
+>> > I know of a couple of places where 64BIT will result in different math
+>> > such that a 32bit 'unsigned long' will trivially overflow.
 
-On Thu, Mar 27, 2025 at 04:41:48PM +0530, Tanmay Jagdale wrote:
-> The existing method to synthesize instruction samples has the
-> following issues:
-> 1. Branch instruction mnemonics were being added to non-branch
->    instructions too.
-> 2. Branch target address was missing
-> 
-> To fix the issues, start synthesizing the instructions from the
-> previous packet (tidq->prev_packet) instead of current packet
-> (tidq->packet). This way it's easy to figure out the target
-> address of the branch instruction in tidq->prev_packet which
-> is the current packet's (tidq->packet) first executed instruction.
-> 
-> Since we have now switched to processing the previous packet
-> first, we need not swap the packets during cs_etm__flush().
-> 
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
-> Reviewed-by: James Clark <james.clark@arm.com>
+Ya, I write code that assumes "unsigned long" is the size of a register 
+pretty regularly.
 
-I saw James's reviewed tag.  However, I have several comments.
+>> >
+>> > Please, don't do this. This adds a significant maintenance burden on all
+>> > of us.
+>> >
+>>
+>> Fully agreed.
+>
+> I would go further and say I do not want this to go in.
 
-Sorry I jumped in too late.
+Seems reasonable to me, and I think it's also been the general sentiment 
+when this stuff comes up.  This specific implementation seems 
+particularly clunky, but I agree that it's going to be painful to do 
+this sort of thing.
 
-> ---
->  tools/perf/util/cs-etm.c | 32 +++++++++++++++++++++++++-------
->  1 file changed, 25 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 0bf9e5c27b59..ebed5b98860e 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1576,10 +1576,26 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+> The open ended maintenance burden is not worth extending hardware life
+> of a board with 16mb of ram (If I understand your 2023 LPC slides
+> correctly).
 
-Seems to me, the problem is cs_etm__synth_instruction_sample() is
-invoked from multiple callers.
+We can already run full 32-bit kernels on 64-bit hardware.  The hardware 
+needs to support configurable XLEN, but there's systems out there that 
+do already.
 
-Both the previous packet and packet are valid fo the flow:
-  cs_etm__sample()
-    `> cs_etm__synth_instruction_sample()
+It's not like any of the existing RISC-V stuff ships in meaningful 
+volumes.  So I think it's fine to just say that vendors who want tiny 
+memories should build hardware that plays nice with those constraints, 
+and vendors who build hardware that doesn't make any sense get to pick 
+up the pieces.
 
-Only the previous packet is valid and the current packet stores stale
-data for the flows:
+I get RISC-V is where people go to have crazy ideas, but there's got to 
+be a line somewhere...
 
-  cs_etm__flush()
-    `> cs_etm__synth_instruction_sample()
-
-  cs_etm__end_block()
-    `> cs_etm__synth_instruction_sample()
-
-First, as a prerequisite, I think we should resolve the stale data in
-the packet.  So we need a fix like:
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c                
-index 0bf9e5c27b59..b7b17c0e4806 100644                                         
---- a/tools/perf/util/cs-etm.c                                                  
-+++ b/tools/perf/util/cs-etm.c                                                  
-@@ -741,6 +741,9 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
-                                                                                
-        if (etm->synth_opts.branches || etm->synth_opts.last_branch ||          
-            etm->synth_opts.instructions) {                                     
-+               /* The previous packet will not be used, cleanup it */          
-+               memset(tidq->prev_packet, 0x0, sizeof(*tidq->packet));          
-+                                                                               
-                /*                                                              
-                 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for 
-                 * the next incoming packet.                                    
-
->  	sample.stream_id = etmq->etm->instructions_id;
->  	sample.period = period;
->  	sample.cpu = tidq->packet->cpu;
-
-Should we use "prev_packet->cpu" at here?
-
-Even for a branch instruction, as its IP address is from the previous
-packet, we should use "prev_packet->cpu" for CPU ID as well.
-
-> -	sample.flags = tidq->prev_packet->flags;
->  	sample.cpumode = event->sample.header.misc;
->  
-> -	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
-> +	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet, &sample);
-> +
-> +	/* Populate branch target information only when we encounter
-> +	 * branch instruction, which is at the end of tidq->prev_packet.
-> +	 */
-> +	if (addr == (tidq->prev_packet->end_addr - 4)) {
-
-  if (!addr && addr == cs_etm__last_executed_instr(tidq->prev_packet))
-
-> +		/* Update the perf_sample flags using the prev_packet
-> +		 * since that is the queue we are synthesizing.
-> +		 */
-> +		sample.flags = tidq->prev_packet->flags;
-> +
-> +		/* The last instruction of the previous queue would be a
-> +		 * branch operation. Get the target of that branch by looking
-> +		 * into the first executed instruction of the current packet
-> +		 * queue.
-> +		 */
-> +		sample.addr = cs_etm__first_executed_instr(tidq->packet);
-
-If connected to the change suggested for cleaning up packet in
-cs_etm__packet_swap(), when run at here, if "tidq->packet" is a valid
-packet, then it will return a branch target address, otherwise, it
-will return 0.
-
-> +	}
->  
->  	if (etm->synth_opts.last_branch)
->  		sample.branch_stack = tidq->last_branch;
-> @@ -1771,7 +1787,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->  	/* Get instructions remainder from previous packet */
->  	instrs_prev = tidq->period_instructions;
->  
-> -	tidq->period_instructions += tidq->packet->instr_count;
-> +	tidq->period_instructions += tidq->prev_packet->instr_count;
-
-A side effect for this change is we will defer to synthesize instruction
-samples for _current_ packet, either the packet will be handled after
-a new packet incoming, or at the end of a trace chunk.
-
-The problem is for the later one, we can see cs_etm__end_block() and
-cs_etm__flush() both only handle the previous packet. As a result, the
-last packet will be ignored.
-
-I would suggest we need to firstly fix this issue in
-cs_etm__end_block() and cs_etm__flush() (maybe we need to consider to
-consolidate the code with cs_etm__sample()).
-
->  	/*
->  	 * Record a branch when the last instruction in
-> @@ -1851,8 +1867,11 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->  			 * been executed, but PC has not advanced to next
->  			 * instruction)
->  			 */
-> +			/* Get address from prev_packet since we are synthesizing
-> +			 * that in cs_etm__synth_instruction_sample()
-> +			 */
->  			addr = cs_etm__instr_addr(etmq, trace_chan_id,
-> -						  tidq->packet, offset - 1);
-> +						  tidq->prev_packet, offset - 1);
->  			ret = cs_etm__synth_instruction_sample(
->  				etmq, tidq, addr,
->  				etm->instructions_sample_period);
-> @@ -1916,7 +1935,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->  
->  	/* Handle start tracing packet */
->  	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
-> -		goto swap_packet;
-> +		goto reset_last_br;
->  
->  	if (etmq->etm->synth_opts.last_branch &&
->  	    etmq->etm->synth_opts.instructions &&
-> @@ -1952,8 +1971,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->  			return err;
->  	}
->  
-> -swap_packet:
-> -	cs_etm__packet_swap(etm, tidq);
-> +reset_last_br:
-
-As said, if we consolidate cs_etm__flush() for processing both
-previous packet and current packet, then we don't need to remove
-cs_etm__packet_swap() at here, right?
-
-Thanks,
-Leo
-
->  
->  	/* Reset last branches after flush the trace */
->  	if (etm->synth_opts.last_branch)
-> -- 
-> 2.43.0
-> 
+>
+> Thank you,
+> Liam
