@@ -1,138 +1,202 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B3E1A3150
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 16:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0512915533F
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 19:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743092416; cv=none; b=SW5qeCPJn8JEtKOjMCYtKOrExqEqLb4TdZEsJz1aVg/J7m9ralz9XCd7Sz1UWUEl/pU5shH/o9cZDsdk9gDOBGcMNSUUZ46aTYlwCUJfSU/AQblKO5+rM1HFLiVLSppPMuUQYxuXG/IGA3Puf7PTDpdoEkxuHOIozE9Vm5ZRutY=
+	t=1743102839; cv=none; b=fKhOQlAwWVGC/f87kB5gQjpR4xQwcuC3sNZJmOekrbaY3pqIP0qc6pPzfyvu1Ks35UfuwTeII+ytIjciPU+dHv2PFEjYoiS8tB7kM8HAliNckPgqb0A6S5Mas31qpMQW7J5qx0oSWGNHG8kdzwLV5Vz7fgDb4qp32sMWUxQi4T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743092416; c=relaxed/simple;
-	bh=NVwNdpFq+nrFVf9YMmHiCb/6V19g4IwZkEMgGwL2onM=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=S6ouRGhExQO39a66hxeaCp21af3BYaMamaXlWeO1+QfPytMRAYE2Yjuyx8SehNTMjVMRCufGqcnBrmmwFyKl+b0cCZ5lR1kbNPp8fvpzSMzKr41dh8Uf0frBf2Bd0vxrrQJikJTlzeAEsON8QixrrM6uaKKKbCRh7vhjETqdT1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kYpVbHXO; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1743102839; c=relaxed/simple;
+	bh=hh/VQK/Xetz3rf5KW/ZpVNh5HJlX1LtlVn5UOEhuUgU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=tKKkqKIe2VGZyEJjg30rt8/0b33ecrawrswEstIqGEiT3aM+6bFN51qxtqh0qob5FGsg0duHDPAchNQc/nevIreUg9DpH58Vflyr1F7y6Uek7UdDdKuzy7xgk+NoTPrr+umZnM8+RZYSlkxMTCpdqtXaVYnXL3ysO2nq22tnqd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j64nZna3; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kYpVbHXO"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224341bbc1dso25552185ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 09:20:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j64nZna3"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2264c9d0295so39285ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 12:13:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743092412; x=1743697212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kX05jx75Xb8+ENPYRjK+Gc3Ht1e9kjVMOGIod7/HdTg=;
-        b=kYpVbHXOgUpLRMTokda7b4lmD2DDWFPI2/1xILmmVtvv2Uw2c425hHMb6Mh3XvOHcy
-         nP8Sil2DtAmwEzSGosSFOLRmQxPK0h32eU2gWjNMDVPHCiA1hN9BeUxBlsKxkGufn3G3
-         TcU/USq5mdFBfH0YQ84YyaDyymgPlO23ua3WuznzjPqV//xHsgEpA/FAqpZZiXhxdgRb
-         dM7o2SRY3KiDdmyuRpL0DXg5EldGGr7oEX4+yMoTg1p2xyBHS0DPepwNmXiT2Elk7/6w
-         gzIfRy2jc5Y2IQle7KV3aoz4JzA3VybBDskwGHOBLoZbb2KnEXpw4TivDslOd9+I6MHq
-         GV+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743092412; x=1743697212;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1743102837; x=1743707637; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kX05jx75Xb8+ENPYRjK+Gc3Ht1e9kjVMOGIod7/HdTg=;
-        b=nQk/e7TAl+LJwVHsjIw1a3TCNpj/NP0Dvgr7pL9PACjffwkJKK+At9Yt3GLgMSdJsu
-         as4rDcCIvq+wveY6N+N37eWnGZZi9F6yZoHeakm/k/T16oSB9aFqhadYJvIz2WJV/lBb
-         hPuQLLMLFoHoPad8qBFOhckW1y1gZHt27uwOGJnXgnCS686FyzIbLb36633jAZoQjfKF
-         gK5lu7IKetUkhFN09I9NX7HUSgkg20GFdsDOSi7aLaPph4KHYMpldXiy+/djbmuo7UXs
-         lHKzcPrTRDOqoTCu1oIgruQKmqRsYkhHd2aZlG+IJv05OzmWhwpEOltl8eRAsAXB9T9r
-         izxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyVCvhUKVzpl6iBmJRP6+qkjqF10G9uYzwFwgWLX0lhHkhnC8bKUxxIWPFSkRm+qobQlAwvHIPXqbKlbiiUJLM@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXwKHrhLmL/nDENefhCNljQSaxkabYOrrIFEWtIxRKM2eSfWfx
-	7LeFuNVfADdKV2Q9amAsUfth+0cPCna81kpgs9wy/SBwzNKrdstRg7hZluYm6OU=
-X-Gm-Gg: ASbGncu6+b+juBK7ADX6PjiprzuP7NwtOgUUhfl5DeFXZIJvOTDhZAsPSZ9nnMl/x3U
-	Zyj2TzCTQzP2WbWGXMddQKn+wq9QR5Yj0+jrTjgddiYdwrGHNOwj1F7Q2n0QuTb6C/VPuxXg75S
-	KXSYQs0hm0Ri1CrqZRyr1NqGEP5MQ2SqsFNmCrGEnqvi+MQhfzIGok9qBet2SyMaxpuF9Mzl8o/
-	JTWx+bIe6w0pcI532a5Gh9RqNAxUbI9PQ2OQkkDteQqmS5W000hyaCbZD1OqFklJxxLYOe46ovs
-	iVoXN9aXxLkMpNKTe0fR/prSTHtXtRSZtAK/ag==
-X-Google-Smtp-Source: AGHT+IGClNJzmnXOK1L/PFNFl5ogZb2gMU/Eqg4X3l9WVxApkZth9g72YE2t9vJ4dK3KZhjxhfYK+Q==
-X-Received: by 2002:a17:903:228c:b0:224:216e:332f with SMTP id d9443c01a7336-22804968a3cmr61064755ad.48.1743092411962;
-        Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec780bsm1682245ad.19.2025.03.27.09.20.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
-Date: Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
-X-Google-Original-Date: Thu, 27 Mar 2025 09:20:02 PDT (-0700)
-Subject:     Re: [RFC PATCH V3 01/43] rv64ilp32_abi: uapi: Reuse lp64 ABI interface
-In-Reply-To: <CAHk-=wiVgTJpSxrQbEi28pUOmuWXrox45vV9kPhe9q5CcRxEbw@mail.gmail.com>
-CC: guoren@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-  Greg KH <gregkh@linuxfoundation.org>, Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
-  atishp@atishpatra.org, oleg@redhat.com, kees@kernel.org, tglx@linutronix.de,
-  Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, brauner@kernel.org,
-  akpm@linux-foundation.org, rostedt@goodmis.org, edumazet@google.com, unicorn_wang@outlook.com,
-  inochiama@outlook.com, gaohan@iscas.ac.cn, shihua@iscas.ac.cn, jiawei@iscas.ac.cn,
-  wuwei2016@iscas.ac.cn, drew@pdp7.com, prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com,
-  wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com, dsterba@suse.com,
-  mingo@redhat.com, peterz@infradead.org, boqun.feng@gmail.com, xiao.w.wang@intel.com,
-  qingfang.deng@siflower.com.cn, leobras@redhat.com, jszhang@kernel.org,
-  Conor Dooley <conor.dooley@microchip.com>, samuel.holland@sifive.com, yongxuan.wang@sifive.com, luxu.kernel@bytedance.com,
-  david@redhat.com, ruanjinjie@huawei.com, cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com,
-  qiaozhe@iscas.ac.cn, Ard Biesheuvel <ardb@kernel.org>, ast@kernel.org, linux-kernel@vger.kernel.org,
-  linux-riscv@lists.infradead.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
-  linux-crypto@vger.kernel.org, bpf@vger.kernel.org, linux-input@vger.kernel.org,
-  linux-perf-users@vger.kernel.org, linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-  linux-arch@vger.kernel.org, maple-tree@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-  netdev@vger.kernel.org, linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
-  netfilter-devel@vger.kernel.org, coreteam@netfilter.org, linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
-  linux-usb@vger.kernel.org, linux-media@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-16d3c75b-cf60-499e-98b0-098d630874b4@palmer-ri-x1c9a>
+        bh=UnOFmUEgN1tAjvwdzmU7V69QQB8mSVp/gwZR2GHxM7Y=;
+        b=j64nZna3W/CU8+ELupqIVuDyeMl8AdZowZwwcJy7qLzKQnaSZ1aZraR7iMhD2P8EjU
+         WaQOtyaNRlpvQ9AvVSVfZZahl5YCxvcjhnUM1e+OWbBCmCZDi/Zkfyjd4+AgDLTOjRI9
+         IU/7nS9Hec/gZlsywDhlURaeeA88ag33gCBssHwAt/rlsDl7DfA4AGoZNK1dI5WNqb8d
+         woZFiahiBNRES/icDNKAikd7hniNTlXkiMJwaODayr9AA8+md/ZHnTibeLzlhCh4WghC
+         TUStaZaOODb+E7wOizp4hoI4xRX7jA1sZw4F4ovac8YMwbz0C6kjb4PLzLdvDNw82Htw
+         ENaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743102837; x=1743707637;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UnOFmUEgN1tAjvwdzmU7V69QQB8mSVp/gwZR2GHxM7Y=;
+        b=DguKwERWGIyE/LsgWgkkPKykafLOCcC8YecYfeDnnKMCwoX4M0zZvorARN1ZcOW6fG
+         ezODMdek9Hc6aZrrcI+3fiRYR054VNCJtQlifkWrtJwFVLFK7CKeaQhMJKZXidP3A+Qr
+         4gdhzDvxnkKLMO1zB/sIhvlb/gZ8KDr6J/9TpHx9PMP1Y5iBMhFVSkLE+Qak7q6YGv/T
+         bLbE3KXsT7ea5vnJOFauqGNtIe6mjzHOPEShOz02JbFmhKAMIA8RRq5MJEyKILVaSbrJ
+         a25Cn1U6Z62RCIYVthBW74w5HqaURj8pseUNsAvfJiekDtpkXjtHQohmpnjJFDjOQB+V
+         V1Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpvYFiVhqw4k3TNJB2uoNQszb37FM99Purq/yfJfevUt3VG6647E8H6Yuoc+8iwongsoT25FvoFQxbZPSb6/8H@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc1JXxdUYGPVxDXC4DewXl4cPWawLEB7UiUt/6hEGt7GdTNdKJ
+	8d00JpV4BixC55r7XVCtUvn4XZt+XNyTlVZaLRRzc2O9DXgYEyGA/eqINvyj2nyO737wmG7y7kW
+	omlqRIRmKyPLUmtI+XdWxKStmiDJDLZ/qf0fj
+X-Gm-Gg: ASbGncsNUThfuhB9AYLn78+Cdk6y+hmjhNPVErNmZ1nTv9u+qFQTsrF+AJSzwvvTbVG
+	jZCelfK8M17rC1OQ7XNEmcfwPmHwUy8iTN4eUQFnqyYG/m93x4WHdlDTtDnjrOWhTuByKTA9GRF
+	p/nZZdtouFoVnxjS4/dF3NpYVOIDc+M0sLgJPjWS8g27j1rcDXQLJuKOk=
+X-Google-Smtp-Source: AGHT+IGBRbFyYUB2Vr/yTuISyABvJclwetdAehk9rr0dNRdaF2BlgmVj4U4jVsqQ/N/bApYGl6IcTDFbuP4adTp3aSI=
+X-Received: by 2002:a17:903:c08:b0:220:c905:689f with SMTP id
+ d9443c01a7336-22920f444f1mr349155ad.25.1743102836749; Thu, 27 Mar 2025
+ 12:13:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250324164543.62574-1-irogers@google.com>
+In-Reply-To: <20250324164543.62574-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 27 Mar 2025 12:13:45 -0700
+X-Gm-Features: AQ5f1JqARfOJjp7cH3_mePJVpMcG2u9oleFxHG7NMH3xqmsS7lzAQhyNRkCtfIQ
+Message-ID: <CAP-5=fWr8EUyro8ckxfMYWR3BhiXgzkjejTjmTb=8PR1p+wvWA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Prefer sysfs/JSON events also when no PMU is provided
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 25 Mar 2025 13:41:30 PDT (-0700), Linus Torvalds wrote:
-> On Tue, 25 Mar 2025 at 05:17, <guoren@kernel.org> wrote:
->>
->> The rv64ilp32 abi kernel accommodates the lp64 abi userspace and
->> leverages the lp64 abi Linux interface. Hence, unify the
->> BITS_PER_LONG = 32 memory layout to match BITS_PER_LONG = 64.
+On Mon, Mar 24, 2025 at 9:46=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> No.
+> At the RISC-V summit the topic of avoiding event data being in the
+> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
+> events being the priority when no PMU is provided so that legacy
+> events maybe supported via json. Originally Mark Rutland also
+> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+> M? processors, but James Clark more recently tested this and believes
+> the driver issues there may not have existed or have been resolved. In
+> any case, it is inconsistent that with a PMU event names avoid legacy
+> encodings, but when wildcarding PMUs (ie without a PMU with the event
+> name) the legacy encodings have priority.
 >
-> This isn't happening.
+> The patch doing this work was reverted in a v6.10 release candidate
+> as, even though the patch was posted for weeks and had been on
+> linux-next for weeks without issue, Linus was in the habit of using
+> explicit legacy events with unsupported precision options on his
+> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+> where ARM decided to call the events bus_cycles and cycles, the latter
+> being also a legacy event name. ARM haven't renamed the cycles event
+> to a more consistent cpu_cycles and avoided the problem. With these
+> changes the problematic event will now be skipped, a large warning
+> produced, and perf record will continue for the other PMU events. This
+> solution was proposed by Arnaldo.
 >
-> You can't do crazy things in the RISC-V code and then expect the rest
-> of the kernel to just go "ok, we'll do crazy things".
->
-> We're not doing crazy __riscv_xlen hackery with random structures
-> containing 64-bit values that the kernel then only looks at the low 32
-> bits. That's wrong on *so* many levels.
+> v6: Rebase of v5 (dropping already merged patches):
+>     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.c=
+om/
+>     that unusually had an RFC posted for it:
+>     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
+>     Note, this patch conflicts/contradicts:
+>     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.=
+com/
+>     that I posted so that we could either consistently prioritize
+>     sysfs/json (these patches) or legacy events (the other
+>     patches). That lack of event printing and encoding inconsistency
+>     is most prominent in the encoding of events like "instructions"
+>     which on hybrid are reported as "cpu_core/instructions/" but
+>     "instructions" before these patches gets a legacy encoding while
+>     "cpu_core/instructions/" gets a sysfs/json encoding. These patches
+>     make "instructions" always get a sysfs/json encoding while the
+>     alternate patches make it always get a legacy encoding.
 
-FWIW: this has come up a few times and we've generally said "nobody 
-wants this", but that doesn't seem to stick...
+So another fun finding. Sysfs and json events are case insensitive:
+```
+$ perf stat -e 'inst_retired.any,INST_RETIRED.ANY' true
 
-> I'm willing to say "big-endian is dead", but I'm not willing to accept
-> this kind of crazy hackery.
->
-> Not today, not ever.
+Performance counter stats for 'true':
 
-OK, maybe that will stick ;)
+          129,134      cpu_atom/inst_retired.any:u/
+    <not counted>      cpu_core/inst_retired.any:u/
+                        (0.00%)
+          129,134      cpu_atom/INST_RETIRED.ANY:u/
+    <not counted>      cpu_core/INST_RETIRED.ANY:u/
+                        (0.00%)
 
-> If you want to run a ilp32 kernel on 64-bit hardware (and support
-> 64-bit ABI just in a 32-bit virtual memory size), I would suggest you
+      0.002193191 seconds time elapsed
+
+      0.002354000 seconds user
+      0.000000000 seconds sys
+```
+But legacy events match in lex code that is case sensitive. This means
+(on x86) the event 'instructions' is currently legacy, but the event
+'INSTRUCTIONS' is a sysfs event. The event CYCLES is a parse error as
+there is no sysfs/json version. Given legacy events don't follow the
+case insensitivity norm this is more evidence we need to reduce their
+priority by merging these patches.
+
+Thanks,
+Ian
+
+
+
+> v5: Follow Namhyung's suggestion and ignore the case where command
+>     line dummy events fail to open alongside other events that all
+>     fail to open. Note, the Tested-by tags are left on the series as
+>     v4 and v5 were changing an error case that doesn't occur in
+>     testing but was manually tested by myself.
 >
->  (a) treat the kernel as natively 32-bit (obviously you can then tell
-> the compiler to use the rv64 instructions, which I presume you're
-> already doing - I didn't look)
+> v4: Rework the no events opening change from v3 to make it handle
+>     multiple dummy events. Sadly an evlist isn't empty if it just
+>     contains dummy events as the dummy event may be used with "perf
+>     record -e dummy .." as a way to determine whether permission
+>     issues exist. Other software events like cpu-clock would suffice
+>     for this, but the using dummy genie has left the bottle.
 >
->  (b) look at making the compat stuff do the conversion the "wrong way".
+>     Another problem is that we appear to have an excessive number of
+>     dummy events added, for example, we can likely avoid a dummy event
+>     and add sideband data to the original event. For auxtrace more
+>     dummy events may be opened too. Anyway, this has led to the
+>     approach taken in patch 3 where the number of dummy parsed events
+>     is computed. If the number of removed/failing-to-open non-dummy
+>     events matches the number of non-dummy events then we want to
+>     fail, but only if there are no parsed dummy events or if there was
+>     one then it must have opened. The math here is hard to read, but
+>     passes my manual testing.
 >
-> And btw, that (b) implies *not* just ignoring the high bits. If
-> user-space gives 64-bit pointer, you don't just treat it as a 32-bit
-> one by dropping the high bits. You add some logic to convert it to an
-> invalid pointer so that user space gets -EFAULT.
+> v3: Make no events opening for perf record a failure as suggested by
+>     James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
+>     rebase.
 >
->             Linus
+> v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
+>     Patra who have tested on RISC-V and ARM CPUs, including the
+>     problem case from before.
+>
+> Ian Rogers (2):
+>   perf record: Skip don't fail for events that don't open
+>   perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
+>     legacy"
+>
+>  tools/perf/builtin-record.c    | 47 ++++++++++++++++++---
+>  tools/perf/util/parse-events.c | 26 +++++++++---
+>  tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
+>  tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
+>  4 files changed, 139 insertions(+), 70 deletions(-)
+>
+> --
+> 2.49.0.395.g12beb8f557-goog
+>
