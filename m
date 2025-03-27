@@ -1,65 +1,66 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0301A23498F
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 19:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752D82356B9
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 19:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104203; cv=none; b=sfFuqGE0AGiQ7Jo2SRp+9/JLvuwmdgHchehvcqejcw7SM01ZMls43IJRmPMxoCMXVSOK/iIvR8wU8PoaeVNaWst+llxqn37nC92Yx1xUIfxYc6u032gxGkd1mz+JcafRA/uRAJsnQ2PWgul4ViuD6PHC6rLdM5re4r2tRNYTeyM=
+	t=1743104205; cv=none; b=fhtGh3IBBfdS7eguVKWXkPvXG8KNLAxFcf67km51mQ17ygcAwjRRfomGlSR04dFcBDvTmz6dfeXQJczSr+Oi0gQyW1pjdafBCGUwUKmSIhPAkzVnwUHCKWFdT1yrI/W3EveVgYxhmUhCAJp4I6Soin2CijbPVAUkroJabG6tsuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104203; c=relaxed/simple;
-	bh=auE616haf3BtwIVYBeV0AcKnHT3Mx+z984kGPzp89Eg=;
+	s=arc-20240116; t=1743104205; c=relaxed/simple;
+	bh=kRGau/48mTGJ2xTWuPcdi0eoSaf9cQvclbky87zpLn4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JLHgqNK3nP4IyYssARWqlwWhwn0zUUE7wPQR1QBsCsb2KjI3T51uZKoZt/Bk0TSUk13uNdRmSOgku089cblkkMIP95fuOU2OsmtZY4AUX26IVZXeGZULIl3nfQpYGvOaJmO4/R87ZeYCF1Cc7/dxiuKcGJVHJQeEFyCtgsgOmaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=cJ/kO0gA; arc=none smtp.client-ip=209.85.216.45
+	 In-Reply-To:To:Cc; b=j6leNU55Tx3AwmsHEKg/QEd/3CFHSGU216HNc2OnwBy3BjzVOydBTh+da22uwVAfY+qPOkGyhJv1Q+RCgsYahz5fFAR24Lr1m+37+OUyc7+AnQfG099CUqV4Y2raVqv5wt4SePCiZ4Zbum9qzS91gLov7dcX0p9ZoVlj7naMz3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aKcPq3io; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="cJ/kO0gA"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ff615a114bso3964141a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 12:36:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aKcPq3io"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-301d6cbbd5bso2242375a91.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 12:36:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743104201; x=1743709001; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743104203; x=1743709003; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nKAfCqQ7Qjy4MJYkAdCHV9zfU4kl+sMGOwwGVOQa3Ms=;
-        b=cJ/kO0gAi7z7HWIG7rx7grjO6H/Gh9NbN5D+9TGxlsb+3ib1284fXRG92JKLrMtonO
-         E/VWMpx46kllUvnoIdyMQTvHC/1OpAK26DFzSZ4uufcnfuOHsKp9irDNFH0LXwzZAv22
-         JkB2BdoW8mLb+Y4G2sXD3ksFWbuY8utEYPjwQaqEEsdbRWVmG9v5ypS2jCGm0f0kCbaO
-         zSoVt0tTOX2JHh0qQTek1GVLrMZa0jLPKjprW14/6Bs2r2fw6p9iTk/69JyQYi87fc/Q
-         qnZbJcksN+ppX2Jaj2E24mw8g6lWG4MoXTPIhYjD0A4vtMAvc6Zc9DIQjKvxIX5liPtF
-         fJuA==
+        bh=KJwNDXXlYjKjGqwwgKGhwlhZINc8dMq3L7uwB92VzFc=;
+        b=aKcPq3io0myLMqyKgCWWNP9yJlar9YDkGvBa0uOQjm4sUHv/aptzwVzJSeH7pM01Zb
+         NdMgKR6Lu1yBRE8AVe83m1OmwlcqcKxAFTIbhVoNp1PwqJzJHsEjtuhVILUCIs1049Rp
+         ohpVcIMAYHCKafBE3BQzN7T676Ohomioza+WuPi5sKD3TYv/8ijFiuKWK7pw/LnoErPP
+         jCHzTvT9ydfaXHTXajxqmxY805k6lZNxejOHESIuvY0VZWaYxryqFmNvppUsbko/s6mm
+         K5to8GXAExmOdE3eBKoFN6qNnNKhyGzUIKlWzQAoBcj6pM+eR9A4kFZZpGOIk2ZVfIS9
+         2LeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743104201; x=1743709001;
+        d=1e100.net; s=20230601; t=1743104203; x=1743709003;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nKAfCqQ7Qjy4MJYkAdCHV9zfU4kl+sMGOwwGVOQa3Ms=;
-        b=tDRErMd1hqdW6Rild/uDBK+58/IUvD0QfqVNbdU5T4eoAvDToUOlvZsBBJl4Hxy8ur
-         qnTcNJBVI31NMcBzv2/Os7S1L35eStnxoSh2GpV14wGGSb5Myx0adpIimdni4DCdqg29
-         zmXvV9svAIEz02pUc3yVZDiB95EgfH9SPcJeM5Xd/dBAvNyLZn6nmsSWXNKn5sLWHo8i
-         zXzVfnouiYqN2K4cuD4NMEkDeyUG59GcjmLw8HivvrH1PQj4X8eJiB0VBGOoNQWE2ZLb
-         fxaOTrtv7qVkJcAwBbX91F/qXf6Vrc7mSqRAfFC18gWGd+hiin1ltB3yNNL2Jw8GTKwI
-         0HZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJtTJg/Y+S5CCOraNeMEw2veFM9uKECHfJ7yUpbso4FT+qkX2RiwH0f4PrEWewyQgjEggFwfd3y64VKiMp13Yy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxNKgW9+Zezo8dx10lFS1mAeiJb+5SRKtHN4Tnw1Gu97+/2800
-	iAG5rGw+mRKNo3cSkMy2CAisJvbhnkcUxGRikmlV8rHGHtHnTumqbkT/pITiDsU=
-X-Gm-Gg: ASbGnctABAWwyeab+WLt/h79w0Bec/Zq+fAl7v+Rcf3g5tHRLdQuIEEcvS+97keP/GJ
-	tl7ejRJaC96I/Mg8Sz45fVdyM4Ii6Gkxs03GSingJm6J24tbn4SLWveXnhp4bTNeDryFPN7TQrb
-	ECH1kTsHI9hEC7NeRJ+gKpS2Yzneubd+8Lx9qfJyaPxqnIA1xYCml2SR4ePlGlpDIotbp9H+HTI
-	rCPRlRPVOFiknBOOtTZXz+ta2zEdTG6kWxHYJUU541a12VmsLLr4sAhffJSbg6lBhxMyaL3cTHC
-	Cz/za89iM2gBGtRbb3tH3ot+P5pdm7p/4MjzgPzfKB6pYlxVRYppZT0ySQ==
-X-Google-Smtp-Source: AGHT+IHMf2f5UBv5DVE142wh0oBPFx9moUIGj7INCFxWN59jTOUXk2pfw5aEvm/YJFqWLspysjUW3w==
-X-Received: by 2002:a17:90a:dfc7:b0:2fa:42f3:e3e4 with SMTP id 98e67ed59e1d1-3051c85e607mr159363a91.3.1743104201222;
-        Thu, 27 Mar 2025 12:36:41 -0700 (PDT)
+        bh=KJwNDXXlYjKjGqwwgKGhwlhZINc8dMq3L7uwB92VzFc=;
+        b=LnZaPZ3vjYKM8IRM+kD8w8r6lDgKeBwL7ns6sxmzmwEiVuFdNRYD/5HZCLqKbgjbJP
+         kNjz5nOJqNND62DZjPezGoqjb/4+zZjGfnqy/Lu4KNgAj9q5I4pkoCxfdgnVnfTNJ/H2
+         0fbbLXuGt2EnxBreUA7ozTlg1TdpsY84GbUvlS1T2sfbn22L/GK296cDH70URbJC/muE
+         aH+JqqrdOc1Fu6lkG9WbBRSMxyfvmcqTI4SaVQKKlwYUnikJfOMg4JGx2JeMxi4mAXZT
+         xA0OW27C06++D8UVv0JUuGAr75FAWuz130hqtPGBQcGQ4Pu7sBzCQaobyj9p8baN0JwC
+         vq8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXZV6FkZbllYOhrfJgtjwgCI2Z7HpGlEBjZKCUjmX0kNfwmgbfCeBBw+HszOPKyoZr3sTltW+yv14BeO188vkfQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM0RYxQGjFIiWYRNiq10y3agq8qzc5YembzLC4xHkFLRsbSHpa
+	uIfx4HbqW4kruHkpz/J2CvmKAvz3W68i96gN0k1Ei8HZzg9082htcm0/PN6uZWY=
+X-Gm-Gg: ASbGncsde4/3bBhS0xCre5V/muL59UT/sP0YBYjQdPdkfoTwuMUmzBuHVjqwJa8BeT5
+	puCAOBVXaXid1hry753FqfFscz/WBu46UdRm9TcOf7UFsc/onH52Dw9XVtJ3CQk85pcO7m6v5BB
+	x6HStfaM8zDUj8swUVFzrfiDcsImm6TTgcXdpV5OCVw6OOp01vt8XNRHS/VWd4PiWb1ViBQY9MT
+	dxqVaPin5UmYflixvfsmX5RNAeQ6yOH1blIrmdFmgiOcMzmTjqve8MYgf52RU2MxGRdGbqlFbLp
+	BKoJ+plOpxzAE2pYl27xejXVzwsIAvfThBY/A0wive2AXJgNHbu8gRdDAg==
+X-Google-Smtp-Source: AGHT+IHr9lkacen5G6bNal8x27vd0zlzKk1gXvQpJoZ6ZU4fSbwcKifIx6nJFU8JTt0ZbyyT81dbnQ==
+X-Received: by 2002:a17:90b:4d05:b0:2ee:b8ac:73b0 with SMTP id 98e67ed59e1d1-303a7c5b9eemr7219789a91.2.1743104202835;
+        Thu, 27 Mar 2025 12:36:42 -0700 (PDT)
 Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b638csm2624220a91.44.2025.03.27.12.36.39
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b638csm2624220a91.44.2025.03.27.12.36.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 12:36:40 -0700 (PDT)
+        Thu, 27 Mar 2025 12:36:42 -0700 (PDT)
 From: Atish Patra <atishp@rivosinc.com>
-Date: Thu, 27 Mar 2025 12:35:59 -0700
-Subject: [PATCH v5 18/21] RISC-V: perf: Add Qemu virt machine events
+Date: Thu, 27 Mar 2025 12:36:00 -0700
+Subject: [PATCH v5 19/21] tools/perf: Support event code for arch standard
+ events
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250327-counter_delegation-v5-18-1ee538468d1b@rivosinc.com>
+Message-Id: <20250327-counter_delegation-v5-19-1ee538468d1b@rivosinc.com>
 References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
 In-Reply-To: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -89,84 +90,48 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Atish Patra <atishp@rivosinc.com>
 X-Mailer: b4 0.15-dev-42535
 
-Qemu virt machine supports a very minimal set of legacy perf events.
-Add them to the vendor table so that users can use them when
-counter delegation is enabled.
+RISC-V relies on the event encoding from the json file. That includes
+arch standard events. If event code is present, event is already updated
+with correct encoding. No need to update it again which results in losing
+the event encoding.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- arch/riscv/include/asm/vendorid_list.h |  4 ++++
- drivers/perf/riscv_pmu_dev.c           | 36 ++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+ tools/perf/pmu-events/arch/riscv/arch-standard.json | 10 ++++++++++
+ tools/perf/pmu-events/jevents.py                    |  4 +++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/asm/vendorid_list.h
-index a5150cdf34d8..0eefc844923e 100644
---- a/arch/riscv/include/asm/vendorid_list.h
-+++ b/arch/riscv/include/asm/vendorid_list.h
-@@ -10,4 +10,8 @@
- #define SIFIVE_VENDOR_ID	0x489
- #define THEAD_VENDOR_ID		0x5b7
- 
-+#define QEMU_VIRT_VENDOR_ID		0x000
-+#define QEMU_VIRT_IMPL_ID		0x000
-+#define QEMU_VIRT_ARCH_ID		0x000
-+
- #endif
-diff --git a/drivers/perf/riscv_pmu_dev.c b/drivers/perf/riscv_pmu_dev.c
-index 8a079949e3a4..cd2ac4cf34f1 100644
---- a/drivers/perf/riscv_pmu_dev.c
-+++ b/drivers/perf/riscv_pmu_dev.c
-@@ -26,6 +26,7 @@
- #include <asm/sbi.h>
- #include <asm/cpufeature.h>
- #include <asm/vendor_extensions.h>
-+#include <asm/vendorid_list.h>
- #include <asm/vendor_extensions/andes.h>
- #include <asm/hwcap.h>
- #include <asm/csr_ind.h>
-@@ -391,7 +392,42 @@ struct riscv_vendor_pmu_events {
- 	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map, \
- 	  .attrs_events = _attrs },
- 
-+/* QEMU virt PMU events */
-+static const struct riscv_pmu_event qemu_virt_hw_event_map[PERF_COUNT_HW_MAX] = {
-+	PERF_MAP_ALL_UNSUPPORTED,
-+	[PERF_COUNT_HW_CPU_CYCLES]		= {0x01, 0xFFFFFFF8},
-+	[PERF_COUNT_HW_INSTRUCTIONS]		= {0x02, 0xFFFFFFF8}
-+};
-+
-+static const struct riscv_pmu_event qemu_virt_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
-+						[PERF_COUNT_HW_CACHE_OP_MAX]
-+						[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+	PERF_CACHE_MAP_ALL_UNSUPPORTED,
-+	[C(DTLB)][C(OP_READ)][C(RESULT_MISS)]	= {0x10019, 0xFFFFFFF8},
-+	[C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)]	= {0x1001B, 0xFFFFFFF8},
-+
-+	[C(ITLB)][C(OP_READ)][C(RESULT_MISS)]	= {0x10021, 0xFFFFFFF8},
-+};
-+
-+RVPMU_EVENT_CMASK_ATTR(cycles, cycles, 0x01, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(instructions, instructions, 0x02, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(dTLB-load-misses, dTLB_load_miss, 0x10019, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(dTLB-store-misses, dTLB_store_miss, 0x1001B, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(iTLB-load-misses, iTLB_load_miss, 0x10021, 0xFFFFFFF8);
-+
-+static struct attribute *qemu_virt_event_group[] = {
-+	RVPMU_EVENT_ATTR_PTR(cycles),
-+	RVPMU_EVENT_ATTR_PTR(instructions),
-+	RVPMU_EVENT_ATTR_PTR(dTLB_load_miss),
-+	RVPMU_EVENT_ATTR_PTR(dTLB_store_miss),
-+	RVPMU_EVENT_ATTR_PTR(iTLB_load_miss),
-+	NULL,
-+};
-+
- static struct riscv_vendor_pmu_events pmu_vendor_events_table[] = {
-+	RISCV_VENDOR_PMU_EVENTS(QEMU_VIRT_VENDOR_ID, QEMU_VIRT_ARCH_ID, QEMU_VIRT_IMPL_ID,
-+				qemu_virt_hw_event_map, qemu_virt_cache_event_map,
-+				qemu_virt_event_group)
- };
- 
- const struct riscv_pmu_event *current_pmu_hw_event_map;
+diff --git a/tools/perf/pmu-events/arch/riscv/arch-standard.json b/tools/perf/pmu-events/arch/riscv/arch-standard.json
+new file mode 100644
+index 000000000000..96e21f088558
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/arch-standard.json
+@@ -0,0 +1,10 @@
++[
++  {
++    "EventName": "cycles",
++    "BriefDescription": "cycle executed"
++  },
++  {
++    "EventName": "instructions",
++    "BriefDescription": "instruction retired"
++  }
++]
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index fa7c466a5ef3..fdb7ddf093d2 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -417,7 +417,9 @@ class JsonEvent:
+       self.long_desc += extra_desc
+     if arch_std:
+       if arch_std.lower() in _arch_std_events:
+-        event = _arch_std_events[arch_std.lower()].event
++        # No need to replace as evencode would have updated the event before
++        if not eventcode:
++          event = _arch_std_events[arch_std.lower()].event
+         # Copy from the architecture standard event to self for undefined fields.
+         for attr, value in _arch_std_events[arch_std.lower()].__dict__.items():
+           if hasattr(self, attr) and not getattr(self, attr):
 
 -- 
 2.43.0
