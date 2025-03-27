@@ -1,163 +1,168 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92AB155C83;
-	Thu, 27 Mar 2025 15:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AD914AD0D
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 15:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743088040; cv=none; b=c4HUW9VbOT5aJ0LacaoT2KICSCtiw7OH3jZcX9uaqvYbE/cxzaKCpDKRBSkYzqu6H+4hquxSYtv6InPlgCVH5WfyqnsWSco+apVTRoBsH5k7J+Z6BisYrSN30FXfkW0HZZQTWy8ziVTll0GCavjVz2/n7tJwrwo7JGK865y9Hk0=
+	t=1743088285; cv=none; b=nPSmN9GU2kqj7H4rWRR/vLiVK74AvyDbmDJjxIF5d8Sx+UEXIl966lP3dAtQ06r35cjH91eTgPMfaAdwWpE9ctJOvNyKYhOP0g/WH9JrkrCtMT6XnVX5zlh2ReyAXR0nx4re+lUqN5adMQVv3SXVAgW22DDlCXhB6pW9daiKrDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743088040; c=relaxed/simple;
-	bh=IGOlgbMnyFjkmCr7mrACZlNpeHBjA6HM1S444NLVEa0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FUxsTIWgHcA+97W/msfKRGAHdHs9qrinLt9qI+BWDdAsp7M42c90aw6TK62DILjnmTiBD4uGrR+Hv9Cx4v5IIbHDWDqBg2M5idcqiXb3+ld2d97La6OS+QVUjfgMn2OPXwL7Ae/67A81qbTZ+sQ481PiDKT1WffSy58eiFlktGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ntCX2k47; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743088285; c=relaxed/simple;
+	bh=wBQJ8H0SYNkyT4BaoNXsacSzvU3YkFd6/mC/KCirIW4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CSANdm1cZLGCzPN4ITv6opkdKSIg/JZQbuVY4v7CO5yRx809VlA0Nh9ern8n+N0zZT+10f4o8HgS3/roNeVC+GLTCirZZTqR6xTZHbsXWBIcXWIm0j86FL6xaVvHSgEgiesDuFGxf+bvNE4N5BnK4mhrN4b4L2+D+t23QrLTZ5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2lmFiB0k; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntCX2k47"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22401f4d35aso26633015ad.2;
-        Thu, 27 Mar 2025 08:07:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2lmFiB0k"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2263428c8baso187195ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 08:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743088038; x=1743692838; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QSnBFPCz6EJRCbgAs1hUwvMtKdYF2dHvHQTAU0FhBus=;
-        b=ntCX2k476oVP0dkVEFl6ftmw6mEnHZudai6WekoJOUtZvNRLVUUHXwEApHKiyIwMLi
-         OAmHjRvJA07jHpQdoxWq0ApOex1+QM2JT0Rd4Y2hMpz338hVPeGr2dLG5qRBGK1b0RQ7
-         8Hgi/cZl3/DKUaI/ToAGBZ7g79wLO3y7U+svgH9tHFXGHF0phfOALdetaMXeNhix7J5z
-         Jti4gAaIu92GkQy0xH4H64xa4KazgbNCP+p1Y+dKMiCETMHLBR1GXEWv0LCgEvXnzSnJ
-         w+5INFCKLYSAeZ7a7UvlHMZF947vUtSKYcD8InZdYhdLfYhGErqOjJGIZVz1ZKM/pb1s
-         hS+Q==
+        d=google.com; s=20230601; t=1743088283; x=1743693083; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UFT0Tlu/Hika32/TdgxS6ejrdxXM/PdIfs46XY+0fN0=;
+        b=2lmFiB0kBiK4M5R5qEBwL84qb0r8rkr5FUolhL6/2IBqGAYBZ2ISOW54WERe5mfZyq
+         LfMfJWE2VrJUeb9B29mF2fRJ6Uum+9IgX2aQeJSvwukMFJGGZ1juJcohIESdMEYFs0uW
+         /Ff+XXwn8fuz9rYCaQz4JgF50I4LOzRE81GErWCmkrdvM6DbaQK4+BJ0kGmoIjdM9ljh
+         7feniihItcGyjjwTdBSz26gvKTEeHGUw+KtujVt/3pfufYoYZM0x1zdKE6tG4eIPz1Kk
+         Zh3fN8EU2Vq3ssfxob1QAq4x/DITX3/J31ryEm45OXJlZAmvK6BRqCvxcNHZevWQmYml
+         OBLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743088038; x=1743692838;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QSnBFPCz6EJRCbgAs1hUwvMtKdYF2dHvHQTAU0FhBus=;
-        b=JWnQXcUvSgPHKQdXyg68NGGRNEgeOPBRJAVTJFluQn5ahLuc/DsMVIyMFvUKtdif0d
-         LmOyLXCuJWCvpHc/v+i5uPD6kAL+xC+NZkHJ4Q0jw2EfizcRQumtWzOD0j3OJYB/slq3
-         hh8S2JpGBI1gu2HQ0zYIYLVJpZvQ1fsaOjxrYe3f/oGVS+3w6MVU+OAUltEEUQiI6Ghf
-         yh6HFzL3kgsosC2J6PV+4RSvsYoHl02h+TL6hb4/JU+spd9HhdSVkfz8Pj/Rs/5iQ1Rr
-         eRNIN7PQ7qkKl8szbPl1zfDOanTRHv/x1dDmTZqR2tF/ov8Cd5nfzDPap/opqGLc+Gl9
-         MWSA==
-X-Forwarded-Encrypted: i=1; AJvYcCX41kzbJQ1uDwOK2wS1dvTFERn/KCxi/QKOShWHXhJA3lBfxlfj1gFY0FnCpDzSf2Ekl87O7UyWT1eWuCYChYeyXQ==@vger.kernel.org, AJvYcCXoc3z3kzcPQkqI+Jr/qVrQYTtztZMlc1dTBHXrQDlcJstjma8j+vFCQJZtoObTRFg9ijjKwUaqOqFUeOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRV+GrghVGZxuytiXOyBrlmXm20+1dJAdRPfAdwPTtabfKjwEJ
-	bgm2m+tQItiCqGYS0E79nuTQS5zHrt7GWR3Q8rUvQUs0kBt8FxGp
-X-Gm-Gg: ASbGncuppzc5in7hY/FKr3ZAh1kZ461Cy2X/I1ai9CKlufSQWLa5wFPON4AjvaTcBDh
-	mMoLP0xc0/HLK6NN6ptVASXWosnBnbGJ8EpyRKJkf6f36cy9qbfVJ2W60+ZROTbQlSVM1Ulyhfl
-	+KEy7zQLk6Ry7p2O6TZpFGJFsOPFo6eRRPfOk3n8bH65qdjgjmeTYL/TR/tpMV5X54Ir+EBx5B4
-	pgwRHUQIgyXD4Vk6ntDxCM0FJZrGQC4UCcUAIIQELOhcLIBgNP34ShfBfdwoN2ZAZfSmAXMHsSz
-	E8buL1/TD+YZNKb+Vqv9yqf30bEpruFgSYyWWMKy1Gv19nf8P7RLOV5VV/P+37/WHkVzXuKICyf
-	K/JLF
-X-Google-Smtp-Source: AGHT+IHQoplcEatDuFtcOhE2bWxxvWKhWtII0JknPc4UIIl7hdymWZ+PnM1/9vGYGnqb7EbmmsAikg==
-X-Received: by 2002:a17:903:1988:b0:223:325c:89f6 with SMTP id d9443c01a7336-2280488be77mr58686565ad.10.1743088037862;
-        Thu, 27 Mar 2025 08:07:17 -0700 (PDT)
-Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedea0asm670635ad.73.2025.03.27.08.07.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 08:07:17 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	peterz@infradead.org,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v4] perf trace: Fix possible insufficient allocation of argument formats
-Date: Thu, 27 Mar 2025 08:07:12 -0700
-Message-ID: <20250327150712.1966188-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1743088283; x=1743693083;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UFT0Tlu/Hika32/TdgxS6ejrdxXM/PdIfs46XY+0fN0=;
+        b=gMHWFLNuyWOtroIotC8MVL79Pfvb6aExFOjobJ+g4HsKDu8jQEMHpB7LggQNxcEGig
+         naG61cawH/eE1OzkO8VuX0somOXa/4aqkCENB2hceKFI0CO3YmAD5T3lVgDR/U7HExic
+         7GptKhmZtbayiO+n2jkcZ8glZmha11ZSir5sDTCZWPV0X9eAy1FLoN87pz+nTLLSem55
+         rG/6XXL7qx8dBH9Fil4TA1rBUyAuieohVoRLu3j0n/6EFnvyfSBkTJzKZodqz1Q/ZwNZ
+         T9SNlWX3BTcE7QKBYu+A594U0WkYif3JCNpbrTeP+Wug9Wjv6sduLsIUGFZYfVJJJ36B
+         MzWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAYtr0yFEwMhb2SnTkFY9KtumJOGb5A717IBS3PgvkNiKFPCEHVEX+jsnZQy//pfBQo0a7yAeXRJ1w2GqoHpDH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN1Z9oxxauuH3rCQ0ywxV1BjnAzYAKE6lsCAiwzqMjniIrC0KU
+	i//XVqudtLBWA3am9Cwu4cYd+QIeUye+M3BkhWXN3ZArJqmmja+7DndhJ0Sb/MbPKkK0/rrBWl0
+	G05w1Z+OG7AW+hmWf8ECYHnCP9KRyGjFIoewpiCSgy/VE1lG5UtDnLcc=
+X-Gm-Gg: ASbGnctnpFHYQBGXoza3aQlmteMt2t9vD+DR1DF42SAA602+gzgJ+YkUl+p20rT2u8+
+	+3leqF43m5E3xbmK3JHxX0BYLPnTCDHmTpD7nPe9TO98R/B+mwYlB2zlEDasSGx5DggBc6grDGS
+	ObwwoBCeLNJ5sPm/WmY4GaNdSbfVZcb/XWtKagmj2pVQVQaRAkthKRq0Q=
+X-Google-Smtp-Source: AGHT+IEmUlg8vfNHKdNwRJgEYBStuk1Iqnk9Tb7Rh3F1o2XWlpyWwxqPnTAeqSUMln3x+u0VE3DK2iGVOFMpNM/Zimg=
+X-Received: by 2002:a17:902:ac95:b0:215:8232:5596 with SMTP id
+ d9443c01a7336-22806bdf663mr2614605ad.16.1743088283014; Thu, 27 Mar 2025
+ 08:11:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250326234758.480431-1-ctshao@google.com>
+In-Reply-To: <20250326234758.480431-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 27 Mar 2025 08:11:11 -0700
+X-Gm-Features: AQ5f1JrUNgyp-Ys5KZ-MHxFkmzlIa7yR9ImeiDhqzkOC5aDhHZD6RX-sIVZhKqw
+Message-ID: <CAP-5=fUAd5rjXp7evGLqm+gk4yjq+eoGaHNCkaAYNEcKonb4gA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] Fix incorrect counts when count the same uncore
+ event multiple times
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
+	linux@treblig.org, yeoreum.yun@arm.com, ak@linux.intel.com, 
+	weilin.wang@intel.com, asmadeus@codewreck.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In my previous fix of runtime error(Link:
-https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
-I made a mistake of decrementing one unconditionally, regardless of
-whether an extra 'syscall_nr' or 'nr' field was present in
-libtraceevent's tp_format. This may cause perf trace to allocate one
-fewer arg_fmt entry than needed for the accurate representation of syscall
-arguments.
+On Wed, Mar 26, 2025 at 4:49=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> Let's take a look an example, the machine is SKX with 6 IMC devices.
+>
+>   perf stat -e clockticks,clockticks -I 1000
+>   #           time             counts unit events
+>        1.001127430      6,901,503,174      uncore_imc_0/clockticks/
+>        1.001127430      3,940,896,301      uncore_imc_0/clockticks/
+>        2.002649722        988,376,876      uncore_imc_0/clockticks/
+>        2.002649722        988,376,141      uncore_imc_0/clockticks/
+>        3.004071319      1,000,292,675      uncore_imc_0/clockticks/
+>        3.004071319      1,000,294,160      uncore_imc_0/clockticks/
+>
+> 1) The events name should not be uniquified.
+> 2) The initial count for the first `clockticks` is doubled.
+> 3) Subsequent count only report for the first IMC device.
+>
+> The first patch fixes 1) and 3), and the second patch fixes 2).
+>
+> After these fix:
+>
+>   perf stat -e clockticks,clockticks -I 1000
+>   #           time             counts unit events
+>        1.001127586      4,126,938,857      clockticks
+>        1.001127586      4,121,564,277      clockticks
+>        2.001686014      3,953,806,350      clockticks
+>        2.001686014      3,953,809,541      clockticks
+>        3.003121403      4,137,750,252      clockticks
+>        3.003121403      4,137,749,048      clockticks
+>
+> I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
+> looks good.
 
-This patch corrects the mistake by checking the presence of'syscall_nr' or
-'nr', and adjusting the length of arg_fmt[] accordingly.
+Thanks CT, I tested on hybrid and it looks good. I did notice a
+regression with hwmon:
 
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
-Fixes: c7b87ce0dd10 ("perf trace: Fix runtime error of index out of bounds")
+Before:
+```
+$ perf stat -e data_read,temp1 -a sleep 0.1
 
-Changes in v4:
-- Make the patch apply
+Performance counter stats for 'system wide':
 
-Changes in v3:
-- Add 'Fixes:' tag
+           212.12 MiB  data_read
+18,446,744,073,709,284.00 'C   hwmon_acpitz/temp1/
+            46.00 'C   hwmon_coretemp/temp1/
+            32.00 'C   hwmon_iwlwifi_1/temp1/
+            40.85 'C   hwmon_nvme/temp1/
+            47.00 'C   hwmon_spd5118/temp1/
+```
 
-Changes in v2:
-- Simplify the code (written by Namhyung)
+After:
+```
+$  perf stat -e data_read,temp1 -a sleep 0.1
 
- tools/perf/builtin-trace.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+Performance counter stats for 'system wide':
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a102748bd0c9..439e152186da 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
- {
- 	int idx;
- 
--	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
--		nr_args = sc->fmt->nr_args;
--
- 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
- 	if (sc->arg_fmt == NULL)
- 		return -1;
-@@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
- 			sc->arg_fmt[idx] = sc->fmt->arg[idx];
- 	}
- 
--	sc->nr_args = nr_args;
- 	return 0;
- }
- 
-@@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
- 		return err;
- 	}
- 
--	/*
--	 * The tracepoint format contains __syscall_nr field, so it's one more
--	 * than the actual number of syscall arguments.
--	 */
--	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
--		return -ENOMEM;
--
- 	sc->args = sc->tp_format->format.fields;
-+	sc->nr_args = sc->tp_format->format.nr_fields;
-+
- 	/*
- 	 * We need to check and discard the first variable '__syscall_nr'
- 	 * or 'nr' that mean the syscall number. It is needless here.
-@@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
- 		--sc->nr_args;
- 	}
- 
-+	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
-+		return -ENOMEM;
-+
- 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
- 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
- 
--- 
-2.45.2
+           213.08 MiB  data_read
+18,446,744,073,709,448.00 'C   temp1
+```
 
+So we're not uniquifying the hwmon events any more, I'll look into a
+fix. I also need to open a bug to use my acptiz device to solve the
+world's energy problems as it is currently running with 5% of the
+surface temperature of the Sun.
+
+Thanks,
+Ian
+
+> Ian Rogers (2):
+>   perf evlist: Make uniquifying counter names consistent
+>   perf parse-events: Use wildcard processing to set an event to merge
+>     into
+>
+>  tools/perf/builtin-record.c    |   7 +-
+>  tools/perf/builtin-top.c       |   7 +-
+>  tools/perf/util/evlist.c       |  66 +++++++++-----
+>  tools/perf/util/evlist.h       |   3 +-
+>  tools/perf/util/evsel.c        | 116 ++++++++++++++++++++++++-
+>  tools/perf/util/evsel.h        |  11 ++-
+>  tools/perf/util/parse-events.c |  45 ++++++----
+>  tools/perf/util/stat-display.c | 151 +--------------------------------
+>  tools/perf/util/stat.c         |  40 +--------
+>  9 files changed, 214 insertions(+), 232 deletions(-)
+>
+> --
+> 2.49.0.472.ge94155a9ec-goog
+>
