@@ -1,118 +1,104 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-ot1-f74.google.com (mail-ot1-f74.google.com [209.85.210.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6E11DE2B9
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Mar 2025 20:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE94814D70E
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Mar 2025 23:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743192339; cv=none; b=Z7lwCJMDBJ36VWuGNaX2G27+mSwm11251HzPpADzChMJ9qD1UlSCMeSZvGSyzpXKo6fUr7TGv5en3q92/WLZKkqeAfiGXyCyIOV0Vv44KoR/UScoUWhOqabitXQ0tnpJhXvj1ai167w9H9xqPide8vGVxqJZ1WvGEiu+kR9VesM=
+	t=1743202947; cv=none; b=dY0+b00L9RDYPblUqJpC/A8FUEkOlRcJeIYfkc5koMS4xHjl6lsVWTK3XcfKLoR8iFTRrcHTV6qWEqO8KLHs3Yc14C3izZQCIz6CZWGIXvSwpS3ZUUMerSHKH2s1uhsvF007wPUBiHTt8rjcjKdhh3fGKU1Etx6cD7jwv6bZ39U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743192339; c=relaxed/simple;
-	bh=fZ3Pf+DoM9iEVqsujQTttx6bjnT/PN/295/nQ+aSoNg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rF1z5CyCS6C/m9p6HgvtfoUoKFsS3nM9V1Z0k5yY1ilLxRNPvQODgTUgMc8VwCPEW3rzVXHUL3ffCkAPuuUs8tLcOLoMu29U8/5GPPezC1QR779QIiTZGHn2ImiB28EYj66/a0wisss/Ws+fZ9n8/MgwybVTFXvaqFmgl3N0ZGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sAAv99hK; arc=none smtp.client-ip=209.85.160.181
+	s=arc-20240116; t=1743202947; c=relaxed/simple;
+	bh=ZN6wVVCMEhcmzcXonAZh+haaH/EN1Xdf3JTE+MN9W0Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=I0+oKN7Y+vBuNydt9MyCy8yI/sZsmGEHsgQ2mEHWvKWQG/W/ZUTJOLaj/r3DiXpJLljMYf1NtF0w6YldJwJonORbn4wraJCd03xr83bDFl8rCnKFVOM8OlRO7vK/sww98XOlkqhTo3Pfx1qy5Rjt0YQYARxK6qEfIYFeVZw4th8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fCwZdV6Q; arc=none smtp.client-ip=209.85.210.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sAAv99hK"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47666573242so97081cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Mar 2025 13:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fCwZdV6Q"
+Received: by mail-ot1-f74.google.com with SMTP id 46e09a7af769-72c40592a9aso796283a34.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Mar 2025 16:02:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743192337; x=1743797137; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fZ3Pf+DoM9iEVqsujQTttx6bjnT/PN/295/nQ+aSoNg=;
-        b=sAAv99hKGqkWpyFD7dY3JRxpSQlar446opEHO0pWqBsaaa1EQ6eHSxP2d0UnGYlh+s
-         +rLH+w3J2MxcefsK2AYD93E2QCcbE03JICOUzK6PvkwMZbf02K/hyPHqCPSbSodj4qos
-         idTO+ox0ksfQ6X7ivCjFOwsUtNK+UM5/H45KD50cix9fQSpQv5fF2C+aeLoBwCA8gevz
-         OPOEI2C0waRK/VNVzlhkeCqlqkMrDMnOhLBuNQk4aDowqKSMMhMe2QTZUvWlrlei5eky
-         QfLdD8PgyvMN/kq4dbWZsS5NkXZCGPPlBhlq128/RgRYTyFmQuLPdY/GsV1IL+h0XZ9p
-         dpZQ==
+        d=google.com; s=20230601; t=1743202945; x=1743807745; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nJtcLwv+MoOAs6aXYFtFBeMD1903rPNKE/DweqmvEKw=;
+        b=fCwZdV6QEms/Uh/sK+gKAaMMo9euaguJXyUz7xoeXgtPwpz51DH2tZlFSOSrUqJsgu
+         7t2+OozJMq3xP6b9cs9go/06s0Ks/tDbPMDHwGjcyWHQDyN//lAYz3gjgOi7BDGz48KK
+         HZF+pj+xBUNBDNXuTQWreqjORfsDC/iogmc69N8I8LttwtKn6+KCjwF94eE5RfhXKH27
+         df0kW2Lj9o6Z/cJHxE3qMeDnCYH/sCxal6Am+tHUgUAyw5ghsiSsEyfDnJTJGnGMZ382
+         zaNj7SU5AxSLNVcTXvKU9NSZriF/AW96WRKtHQiOUceS9p55mI8YOxQMDqmG7ibMQgOp
+         s9dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743192337; x=1743797137;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fZ3Pf+DoM9iEVqsujQTttx6bjnT/PN/295/nQ+aSoNg=;
-        b=fadpILJbXcEbHC9asY9qmn7XZ5bekLunfysXCk/HtgAgVMpfqImwEAJONnZCFKM2pt
-         QFbWxti02ZpFVpO9is4/kZhvXO1YYN9KcicOZtJTkTR6RmCxeus0leYFuY6X3DOcS5zE
-         mZN4k4Wd/D0rDvD7PA4bpqS/9mxHNEzQlAgMzL1CW33KNIZmJrFlU9McfXfO4Ij0+8bk
-         IVcZ77nvIGgrKkHusmdsCuxP9NYu7Yx2sckQ6W4Cv1Mv2Sep5r2Wso4forETuLXxB5jZ
-         NuOpvG2YBxeLTgjGeg9WF14Us63YXSarxheIFqPxcyWAP0x7HGNe7pajIRzeJ7cRMsVc
-         svfg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBbVGBMrchlnLv/US3Zk4xyD/xEDEE+4gUOf3TUQvQbJNFaua3xWD7xipnJoHN+IVG0u1465Qci5gxU8s+dzLf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHd5D0n0c0d+OmJVVzDxzAxvS4AaJqt3Ntyse2if92qdQyK/Rk
-	hxBviD+UNUbEnZzMtdAgTsn0LNgZVGiT0TdrQEz2VZtcA1VrQsBabmcibnN0ZEMManXp8NAVCp+
-	b+Ocyygf7kJamKRezszHiseFpRc8Ra0RtnWve
-X-Gm-Gg: ASbGncvhZHEl+ty9wimXvLjdx+AcidpJjflPw7PxM0FToh4LtkIrb2SgjAnHGLaaXPG
-	w4YabWmTM88u9861e+WIygo0JG8He038YKvBx/3fJJc1+13KbpyD/ymC02ZSlVORVDLIaXYeCpV
-	RS0vLaBSQp9TYHmwx41EhOsJhQEYMRH326Gqlyd5x/UYweTpy8YXSpuJufHw==
-X-Google-Smtp-Source: AGHT+IGrxZNNiHvYHqH2odQT34847aiPbk5DRohCJ1jq0PV6GxQy2MURsax6DFZvPXwGATnS+7s0LvXvnQi6ttbMc90=
-X-Received: by 2002:a05:622a:4cf:b0:466:8887:6751 with SMTP id
- d75a77b69052e-4780b1a4647mr416171cf.23.1743192335400; Fri, 28 Mar 2025
- 13:05:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743202945; x=1743807745;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nJtcLwv+MoOAs6aXYFtFBeMD1903rPNKE/DweqmvEKw=;
+        b=enTgckY+6h8Q3hl14UnqS/sGZyHuvPSddARQZlujPyY2y93j2U2yIBQ+NhMe+C+ugK
+         dhMJzKmXUNhvut9jov0vYUygulSqLjC5hcdj1zfDpcpWmOE5kfYbm9eADMpyTlydsBU6
+         STPlgu66yLXT3191IrcJAnILYx3UBgOshFTN+LLonjNV4kXodC5t/SlLRYRBgRwigPb2
+         gRX2SVnUdmIT2uVd/+5aG5V92/uLNBrNLXdH0vqC55pVilECDruQNJHr/nrcSheY9MuE
+         ht1ZIknALM2DizZs+Vs3tx36qH1MboYfA1RIwIS5fFn1W/+VDDVYNi2ZJLKLBNVK0TkV
+         gyzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWaDD0XZNoq2HqJzD7DzPmYDC3885SHA6b3IhuOfvOmpcBHJiKZFqOcQgwy240rTrw1sibelaXh++mGjv9n0twj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiGNWfuMb0T/aNuphTd77NKqku4BeIsGbQpyc7Q9tEIsZI8p+I
+	smgHcnvwJ4ORPjCZWuGnL+zGaBlYlnW2RrdH4aIYRtsANllSPr8dizLnFO85RRlZS5PyC5ibRwf
+	szA==
+X-Google-Smtp-Source: AGHT+IFpLYIxrftQ/0+0eBQlsDTFykw3trImfr8UrBCqDF49M09kMBcewWjMvKsU0DvJa2TVW7yllpVk8Zs=
+X-Received: from oabpl2.prod.google.com ([2002:a05:6870:4e02:b0:2ba:487b:683e])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:41d3:b0:2c2:416e:cf43
+ with SMTP id 586e51a60fabf-2cbcf4e87e9mr595378fac.12.1743202944879; Fri, 28
+ Mar 2025 16:02:24 -0700 (PDT)
+Date: Fri, 28 Mar 2025 16:01:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <815e95e9-5a2d-4ef7-96bf-321fb57f42e7@linux.ibm.com> <20250328182752.769662-1-ctshao@google.com>
-In-Reply-To: <20250328182752.769662-1-ctshao@google.com>
-From: Stephane Eranian <eranian@google.com>
-Date: Fri, 28 Mar 2025 13:05:23 -0700
-X-Gm-Features: AQ5f1JrNUjBcJAke7k1ikFexUQiFHRNjn5nN4ZlvMROniw1uFYbevMqQFKoLSf0
-Message-ID: <CABPqkBQzCMNS_PfLZBWVuX9o8Z55PovwJvpVWMWzyeExFJ5R4Q@mail.gmail.com>
-Subject: Re: [PATCH] perf/test: Skip leader sampling for s390
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: tmricht@linux.ibm.com, acme@kernel.org, agordeev@linux.ibm.com, 
-	gor@linux.ibm.com, hca@linux.ibm.com, irogers@google.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com, 
-	Peter Zijlstra <peterz@infradead.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250328230219.826726-1-ctshao@google.com>
+Subject: [PATCH v1] perf report: Skip unsupported new event types
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dvyukov@google.com, ben.gainey@arm.com, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+`perf report` currently halts with an error when encountering
+unsupported new event types (`event.type >= PERF_RECORD_HEADER_MAX`).
+This patch modifies the behavior to skip these samples and continue
+processing the remaining events.
 
-Thanks CT for the post. Indeed this is a long-standing bug impacting
-(most likely)
-all architectures. The rate throttling code does not consider event groupin=
-g. It
-stops the sampling event in place (on x86) at the hardware level, not
-the generic
-scheduling layer. But if the event is in a group, it may make sense to also=
- stop
-all the other events in the group, i.e., stop the group. Otherwise you may =
-get
-discrepancies between samples of the "slave events". Similarly, the time_ru=
-nning
-and time_enable logic is not modified during throttling.
-Interested in hearing potential ways of solving this in a portable manner.
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/session.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-On Fri, Mar 28, 2025 at 11:27=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> =
-wrote:
->
-> We believe we know the problem, appreciate Stephan Eranian's investigatio=
-n.
-> It comes from throttling. While the sampling is too high, the generic cod=
-e
-> does not modify event scheduling. `perf_event_overflow()` simply returns =
-1,
-> and subsequently, `pmu_stop()` only stops the leader event, not the slave
-> events because the arch layer does not consider groups. Also, the
-> `event_stop()` callback only operates on a single event, not the siblings=
-.
->
-> This would impact all architectures. Perhaps we can extend the
-> `evnet_stop()` callback to include a new argument to also stop the siblin=
-gs.
-> We also welcome all suggestions and open to discuss any potential solutio=
-ns.
->
-> Thanks,
-> CT
->
-> Cc: Stephane Eranian <eranian@google.com>
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 60fb9997ea0d..d58fc1ed2fdf 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1639,8 +1639,13 @@ static s64 perf_session__process_event(struct perf_session *session,
+ 	if (session->header.needs_swap)
+ 		event_swap(event, evlist__sample_id_all(evlist));
+ 
+-	if (event->header.type >= PERF_RECORD_HEADER_MAX)
+-		return -EINVAL;
++	if (event->header.type >= PERF_RECORD_HEADER_MAX) {
++		/* This perf is outdated and does not support the latest event type. */
++		ui__warning("Unsupported type %u, please considering update perf.\n",
++			    event->header.type);
++		/* Skip the supported event by returning its size. */
++		return event->header.size;
++	}
+ 
+ 	events_stats__inc(&evlist->stats, event->header.type);
+ 
+-- 
+2.49.0.472.ge94155a9ec-goog
+
