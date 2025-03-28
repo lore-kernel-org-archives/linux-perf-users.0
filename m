@@ -1,162 +1,153 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9C718309C
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 23:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A861B4A21
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Mar 2025 04:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743116463; cv=none; b=jy8lrMvQSplVcp6Hgz/fghEFeJJT9vn4a9kyEnQof5Ql3TGGZ5Hca62QhxL7uYKQENpiax3HrDKTrFyYG0y3VZSzdHIkPTOFBtyx0Oz0Uq5wEA5AEBAJHa4qOlCAeHIcti+1YQxaOv5XcJDm7Cqa+eq0JxUFVu3gwtz4NUK5C6M=
+	t=1743135650; cv=none; b=jr4+pOOFh+um54mRefRq3zNd7MlzUB5FaNjljzMZOb1ZOt6n1+2xAOLO6SioYufGUggYZnNi2HoYDb0mjWSCwon3y160QRHQUrMTxvQDR8lVYGukcq92ry9p489kUFcBoBGdQPhj2Z2QWOcpvoNr0M7csLLlz3edGrRf1pxNtAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743116463; c=relaxed/simple;
-	bh=waogitL51eHuaNon/BmGUZu6ef5FFSSmiVwnjx/u5lk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=vACYMU/Osx+E1nXAJL1aReLH+GgpvzpnWxp3HQhL35I2LU+rT8q0+BM56tQiy9HS4d5jfFruptbUVXyMOkNU2WAqaFZys+HSiSENpwhlGnZKWMTKfJVne5Iza8W0PUEryIWki48QB75bwqo0Go7l0RIF2fU2oc9ypgU//7qxGd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pEXkDcWU; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1743135650; c=relaxed/simple;
+	bh=4VvG6x9EQmUnaPxos72iekLFHhrDTBgN8+Z3RX8VReY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GiN8xqgjjzFIY06RZ1JZs9XCBObgnaOzCSkSQj9zCkA6TGgjU9L33lp1Oj3oM9JUXmDnXYs3HwJceFnug/a0p7rbKovlqaZhhw9aNaX//UkfA4qndI3CBrdmyVXpRv5l/Z2gax1Vb1vs1Yg6LIwlKXBMnXrECGgjO+mz7317s3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xMt/zlAd; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pEXkDcWU"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff58318acaso4079916a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 16:01:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xMt/zlAd"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240aad70f2so136525ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Mar 2025 21:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743116461; x=1743721261; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VwjNlJIwQzHOvZ74oRYXcY0TykbuQC3F2uOP0mvJUZA=;
-        b=pEXkDcWUdKL1UMYgpgwSalp6OjL+HG/tfC/HxuzDHMwbnfiGVczvTscwLlyYLDzNgL
-         RzDFhBCC0zmrlPZpwLm5I8XdJHrj27oJu0uhpjS6TV6INXiCB/I9hJCdtAIuoD0elZNh
-         plgbAeQqbXiUP44HiGxx457bIDvvKQ/clxJhisGBOKHNv3x1oS5+YYp0R46Vc4W/3qWR
-         qB+Yy7fbCvSylCHqvA+hVhaZ7jSpqQvXLUUqKkPuz0mSGAhyl6FrD3N8b6zJP9O40gXW
-         FhLM4SObfxDEddsfV/MyQp/PY64la1enRRWpS95e7yd1odQxgBa4NGSBqs6j4CcsieHL
-         0/Yg==
+        d=google.com; s=20230601; t=1743135648; x=1743740448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mjI8M30yNl0TGEXappoLSH56B+TzI7ZNLtph3A+iHC0=;
+        b=xMt/zlAdBdheORVJK5vhKWsABpJg3PfuMivCRVav+JcMFxeefcoNwy3LCMnvPg6wtH
+         URboOSEgDZSF7gUhYfPyaTa9HnxNMWUC319yNP1uVk42zDk2gmcb9NTI+LIaI8Gvg+bs
+         05be0x26cgRwd5g2fZspeY5rJR+a9yCE0ZDnXToHAsKt9Fwu3d4+x+nOxRsvWz7OEXeX
+         4SXLt41Ugyktr+i2kDiJdcUFeKOVhFevteOSez4UXVtzaSPGVnSCkaMR6ezccSv27Sg/
+         bAuGE6kEQ3VF4NN3eJnCacs+B+mywzykIS9YnVs6PWJK74+kdLc1sSqFxJK+ZCJAgQqo
+         NIZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743116461; x=1743721261;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VwjNlJIwQzHOvZ74oRYXcY0TykbuQC3F2uOP0mvJUZA=;
-        b=wCYu//ELj0XAuXoDPvhkmn3mF+ftHOB74BNCOCdLAxO+VAtJJMMkFxxdabvIgANG9/
-         TKm1KfPKFrVomAZQ56w+pJanywmXaP8DMFvNqP9EbyKdSSMhVqyOHq4U+pbGy7BmHedM
-         hZssEy/q66zxpopcscmmvoAKiLNObgWnene1uT8CHTWN4Cxb4Nw0/7HVOl0zccVPwBnj
-         DwacAtwtypxFu4RgTbTeN6EIZcPCQSnISIfHBXlha5uqtpI8yDZZJH34x9E5QJhfs4K5
-         bmSp1dyzDDfGpcCKMBYfWszdxOSlST6ZuLkXoZJKGDkzN7gSYSF17FDnoDJSPTB1t6zH
-         RUIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURXFvQwjOU2NQegUps1+Rec95l1epm/bWZceUVFHrK2mHYriuvR0nVj04uuEiQmy/iRoFC5HuzJE0SQNZbJQYw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRGBjdvy5o/cNoNxX+4MqZEiNxb6q11VciKP+oyQU36yxan3Nf
-	ZosQcdyjTEzh5nIVUcIafJ8CQC9rFC/lcRHxdHAVlzMLeP9sni0+Vq10wfpVouwk1cc0YmStmBC
-	gQg==
-X-Google-Smtp-Source: AGHT+IEJImFJpf2gC6jGlLVpvY94WlXVA/jYO/cstjWAnHq9R2xWY4MKdztDxgrVGWB7rKXNaWXsyLHhodk=
-X-Received: from pjur15.prod.google.com ([2002:a17:90a:d40f:b0:301:b354:8d63])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d43:b0:2ee:fa0c:cebc
- with SMTP id 98e67ed59e1d1-303a8159f06mr7273786a91.20.1743116461541; Thu, 27
- Mar 2025 16:01:01 -0700 (PDT)
-Date: Thu, 27 Mar 2025 15:48:18 -0700
-In-Reply-To: <20250327225651.642965-1-ctshao@google.com>
+        d=1e100.net; s=20230601; t=1743135648; x=1743740448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mjI8M30yNl0TGEXappoLSH56B+TzI7ZNLtph3A+iHC0=;
+        b=D+4ID3dUmagIhnqdh43jLyHL3LTdHMFoVxKuQxGAQ3hnU/U+LxlczNEK1LoD55aC3j
+         sJQAgwPvFfUfBM/SOmkjNeFXkHcW2cmwcWD3yzPP8ax8qusCbHzKRhy/WmJaDRKN745j
+         8acL2NQjU1+llyvt74qO13i5wM1gITnmOLxgqezimN1Swrq63IVc0y3pIY1tb0Joo19S
+         sOJfHWP6/Je0bTUCyxXfXbUfYvN6YXJzsBVZdymCqnz+gORzW7diUHbjc9KTi5FdVg4N
+         nt8OrZW22Uq3RzJ9pLiI0Hu5wOp9K/K6RMmMb3j7jzGVou+grxy2DQOiwyDIZOKm9s+E
+         Butw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvVuw0MVYeGvj/y6mTeVqPp2/INLlStOWEikrPswfj6gWl9V5B/QZsB2Q0r/nEmfcsIXWY3hIuMCzA7wKZXgdj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHcLKS2gAdtNgC5JHqKCBE79uotwq7ZtXNHP7G/6CLAmvJbgtw
+	dJFR3KkqylDIXYOa7ZGqP5nA4cn+EhxbOMftq6xB8PqBkuFqI8ad61zOHJo1DZFUxeVxPG2ldk+
+	/2Uf+iWCz5Ro/NID6wD8el9omMRnqIcR3bAOT
+X-Gm-Gg: ASbGncsD/nY+96UKonlnyLfz3ng5TO0XfX5yTtIi3GAyiPnKnjPbL2xluquElVZcV+h
+	ZZw2xeIEibFk5xl3dJtuW2bz5Fs0lOr/uDsJWDzVLOp76Hk1qTnCrckql4437jAnAAeMR95/5+h
+	XH2c8ExwEQpuh5LAHT4/JT4HvJljk=
+X-Google-Smtp-Source: AGHT+IFm9BzGAaqh6rhMTsdvArk8QYfZ4BiD7DS9eqvAjwM3xXPk4D7Y8NsBIWa8UBrfMNcPdTlEOa2Co9SOW5Szdy4=
+X-Received: by 2002:a17:902:ee02:b0:224:6c8:8d84 with SMTP id
+ d9443c01a7336-22920ad2e6amr1747645ad.4.1743135647450; Thu, 27 Mar 2025
+ 21:20:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 References: <20250327225651.642965-1-ctshao@google.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250327225651.642965-4-ctshao@google.com>
-Subject: [PATCH v2 3/3] perf test: Add stat uniquifying test
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+In-Reply-To: <20250327225651.642965-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 27 Mar 2025 21:20:36 -0700
+X-Gm-Features: AQ5f1Jr-scFYaP9RajDzeU_599eda8QGvwnthEF_v8Ujb_R1wC0Ccyq38bdPe6s
+Message-ID: <CAP-5=fWv4=8Uq8jDbqNR3O+JAw-T0OUGoj5o=pMHxyFKsbEDyw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Fix incorrect counts when count the same uncore
+ event multiple times
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
 	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, ak@linux.intel.com, 
-	howardchu95@gmail.com, linux@treblig.org, yeoreum.yun@arm.com, 
-	james.clark@linaro.org, weilin.wang@intel.com, asmadeus@codewreck.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
+	yeoreum.yun@arm.com, linux@treblig.org, ak@linux.intel.com, 
+	weilin.wang@intel.com, asmadeus@codewreck.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The `stat+uniquify.sh` test retrieves all uniquified `clockticks` events
-from `perf list -v clockticks` and check if `perf stat -e clockticks -A`
-contains all of them.
+On Thu, Mar 27, 2025 at 3:56=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> Let's take a look an example, the machine is SKX with 6 IMC devices.
+>
+>   perf stat -e clockticks,clockticks -I 1000
+>   #           time             counts unit events
+>        1.001127430      6,901,503,174      uncore_imc_0/clockticks/
+>        1.001127430      3,940,896,301      uncore_imc_0/clockticks/
+>        2.002649722        988,376,876      uncore_imc_0/clockticks/
+>        2.002649722        988,376,141      uncore_imc_0/clockticks/
+>        3.004071319      1,000,292,675      uncore_imc_0/clockticks/
+>        3.004071319      1,000,294,160      uncore_imc_0/clockticks/
+>
+> 1) The events name should not be uniquified.
+> 2) The initial count for the first `clockticks` is doubled.
+> 3) Subsequent count only report for the first IMC device.
+>
+> The first patch fixes 1) and 3), and the second patch fixes 2).
+>
+> After these fix:
+>
+>   perf stat -e clockticks,clockticks -I 1000
+>   #           time             counts unit events
+>        1.001127586      4,126,938,857      clockticks
+>        1.001127586      4,121,564,277      clockticks
+>        2.001686014      3,953,806,350      clockticks
+>        2.001686014      3,953,809,541      clockticks
+>        3.003121403      4,137,750,252      clockticks
+>        3.003121403      4,137,749,048      clockticks
+>
+> I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
+> looks good.
+>
+> Ian tested `hybrid-merge` and `hwmon`, all looks good as well.
+>
+> Chun-Tse Shao (1):
+>   perf test: Add stat uniquifying test
+>
+> Ian Rogers (2):
+>   perf evlist: Make uniquifying counter names consistent
+>   perf parse-events: Use wildcard processing to set an event to merge
+>     into
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- .../tests/shell/stat+event_uniquifying.sh     | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+Tested-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
-new file mode 100755
-index 000000000000..5ec35c52b7d9
---- /dev/null
-+++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-@@ -0,0 +1,69 @@
-+#!/bin/bash
-+# perf stat events uniquifying
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-+perf_tool=perf
-+err=0
-+
-+test_event_uniquifying() {
-+  # We use `clockticks` to verify the uniquify behavior.
-+  event="clockticks"
-+
-+  # If the `-A` option is added, the event should be uniquified.
-+  #
-+  # $perf list -v clockticks
-+  #
-+  # List of pre-defined events (to be used in -e or -M):
-+  #
-+  #   uncore_imc_0/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_1/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_2/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_3/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_4/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_5/clockticks/                           [Kernel PMU event]
-+  #
-+  #   ...
-+  #
-+  # $perf stat -e clockticks -A -- true
-+  #
-+  #  Performance counter stats for 'system wide':
-+  #
-+  # CPU0            3,773,018      uncore_imc_0/clockticks/
-+  # CPU0            3,609,025      uncore_imc_1/clockticks/
-+  # CPU0                    0      uncore_imc_2/clockticks/
-+  # CPU0            3,230,009      uncore_imc_3/clockticks/
-+  # CPU0            3,049,897      uncore_imc_4/clockticks/
-+  # CPU0                    0      uncore_imc_5/clockticks/
-+  #
-+  #        0.002029828 seconds time elapsed
-+
-+  echo "stat event uniquifying test"
-+  uniquified_event_array=()
-+
-+  # Check how many uniquified events.
-+  while IFS= read -r line; do
-+    uniquified_event=$(echo "$line" | awk '{print $1}')
-+    uniquified_event_array+=("${uniquified_event}")
-+  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]")
-+
-+  perf_command="${perf_tool} stat -e $event -A -o ${stat_output} -- true"
-+  $perf_command
-+
-+  # Check the output contains all uniquified events.
-+  for uniquified_event in "${uniquified_event_array[@]}"; do
-+    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
-+      echo "Event is not uniquified [Failed]"
-+      echo "${perf_command}"
-+      cat "${stat_output}"
-+      err=1
-+      break
-+    fi
-+  done
-+}
-+
-+test_event_uniquifying
-+rm -f "${stat_output}"
-+exit $err
--- 
-2.49.0.472.ge94155a9ec-goog
+There could be minor conflict with this unreviewed series:
+https://lore.kernel.org/lkml/20250318041442.321230-1-irogers@google.com/
 
+Thanks,
+Ian
+
+>  tools/perf/builtin-record.c                   |   7 +-
+>  tools/perf/builtin-top.c                      |   7 +-
+>  .../tests/shell/stat+event_uniquifying.sh     |  69 ++++++++
+>  tools/perf/util/evlist.c                      |  66 +++++---
+>  tools/perf/util/evlist.h                      |   3 +-
+>  tools/perf/util/evsel.c                       | 119 ++++++++++++-
+>  tools/perf/util/evsel.h                       |  11 +-
+>  tools/perf/util/parse-events.c                |  86 +++++++---
+>  tools/perf/util/stat-display.c                | 160 ++----------------
+>  tools/perf/util/stat.c                        |  40 +----
+>  10 files changed, 329 insertions(+), 239 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+>
+> --
+> v2:
+>   - Fixes for `hwmon` and `--hybrid-merge`.
+>   - Add a test for event uniquifying.
+>
+> v1: lore.kernel.org/20250326234758.480431-1-ctshao@google.com
+> 2.49.0.472.ge94155a9ec-goog
+>
