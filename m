@@ -1,48 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6E621B9FD;
-	Mon, 31 Mar 2025 14:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCBE2139C9;
+	Mon, 31 Mar 2025 14:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431676; cv=none; b=BxjOW8IpRKbhhtGcrhqVMnLar111crxdCkQOxpsKw18cTRD2N/oBl1waTQnXFTVaEqmJXYmYOwvBV47OuoNQMbygET4Ve+wQrzIu+JHo3UT7ZGg3BNGrSPA8tY6AahUi2leIdB3vY4H6z4+JvE8TJQpZeLLUvuXFzzQh4EssoiU=
+	t=1743431711; cv=none; b=bA1DCxOdwxz4CF8BxxKDZQhs3+Pn3fMECyq1A4aiEVGkiKJxvXZyU/nYkDfcfPiwUWqXGBMrJcVtgwOKAEhA7fxWaOCQEcitptZZikSADsvf8oErDch1rIz5fywgdUvn50pi3ERiY/eLbZlpmuzszCNyow+Dg6n3hTTXhRBI7t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431676; c=relaxed/simple;
-	bh=RbGuvqY2Py6/CSNYRkaEEr45J/MeGhBOFxWvpr/kSLI=;
+	s=arc-20240116; t=1743431711; c=relaxed/simple;
+	bh=RxXN5ImDkHlxqQmfInHiKTyFOrz987IzeR6333NbSJ8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DBjiwpyl9lw/UlK/RzklNMHQEK8SEwyGKSjbRdJUA9qkm0xJqWTTHMWelOUKdRoA4BgxsqRDqB3iM8ibqH/RWvD4rwaobvl+t2ckR1jiUF76zxvQ5yliubrX69mZxgExwD0kLvmbdKJ+YbiFMucMtHW6kaxKeNf92rM9CYIRkyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0+5UDXH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ByV5gHXIxjClqILIdXchbcd4aeQLo11jxwz0gqaL18z1EqsZu2Fu4xThKAmUTNYFMfRkprCWed8cjUc/anDOMaYUI/8o9Gcd5OFtL+TV8raJ9YYDb7wUm+B6EjzrBt+LdycgDSI8r198Q3FXqcjg5IycbDSmcOfo6ZlVhV6dU5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VN3X0c5J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0+5UDXH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84580C4CEE9;
-	Mon, 31 Mar 2025 14:34:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VN3X0c5J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED90C4CEE3;
+	Mon, 31 Mar 2025 14:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431674;
-	bh=RbGuvqY2Py6/CSNYRkaEEr45J/MeGhBOFxWvpr/kSLI=;
+	s=k20201202; t=1743431711;
+	bh=RxXN5ImDkHlxqQmfInHiKTyFOrz987IzeR6333NbSJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J0+5UDXHwMCgTgrY5WglDTyvRcFJA9xJe8BV6Jr53vHp3dfrrz8mx7zSjA9LKDZL6
-	 enuzTGydy3mzZlGK5vOZAOvEsCs0zWI7FL0/pL2AnXuHESJHNmCrHWRK2bqQsKEU6M
-	 t1jEixFknVoAAc7OiGo9Xb69vEMSPpARvYiwB8li5O0vSt+8eh5rBe0efrA8GOYd7p
-	 pCvPXYFbRNU5cizwtprolbFmMVhCZxERPn0uRdpfDGukl8IES6C8fKEa6wcnRxaakt
-	 VarJg8dx3Sne/gxiw9HwtIsdHPMLw83Oogs+E4/hpQN0yhvqFGN+ePFeEkypDnqPEX
-	 LUnuIwes+/+DQ==
+	b=VN3X0c5JEX1KzMRilhCNXpB8HDzItTArlYw2Zeb7nlHlMU8j1P/osSrhXmLZb+azj
+	 MlfjKG+bjmpHAwhvF4RGAWrZbBNuu1Li4xRQj6GIECVWBYW/1SP7o/JokLBXHpwWU4
+	 4+sjRwlo0IsqmcuGCvN5VdSmIzIs/cDhWVDGn+B0ioHsXKFui3rBwm6eO8bipB9jKW
+	 2tdDLFPhqLaFvimb1xsc+V0hgSSwX+66AeM4bdLJxTqKxmILhp1/dyWW4oiYvvIYSN
+	 IW4ecB4zoIM8sWWfoMvF8q207Z4wcyHpbF5LTnPr9IzS7ngae2zPQ3JyBRjI+iMPzz
+	 5ervVB8Rr72Og==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	James Clark <james.clark@linaro.org>,
 	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	renyu.zj@linux.alibaba.com,
-	mark.rutland@arm.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 10/18] perf/dwc_pcie: fix duplicate pci_dev devices
-Date: Mon, 31 Mar 2025 10:34:00 -0400
-Message-Id: <20250331143409.1682789-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 08/16] perf: arm_pmu: Don't disable counter in armpmu_add()
+Date: Mon, 31 Mar 2025 10:34:42 -0400
+Message-Id: <20250331143450.1685242-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331143409.1682789-1-sashal@kernel.org>
-References: <20250331143409.1682789-1-sashal@kernel.org>
+In-Reply-To: <20250331143450.1685242-1-sashal@kernel.org>
+References: <20250331143450.1685242-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,80 +51,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
+X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
-From: Yunhui Cui <cuiyunhui@bytedance.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 7f35b429802a8065aa61e2a3f567089649f4d98e ]
+[ Upstream commit dcca27bc1eccb9abc2552aab950b18a9742fb8e7 ]
 
-During platform_device_register, wrongly using struct device
-pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
-still, accessing the duplicated device leads to list corruption as its
-mutex content (e.g., list, magic) remains the same as the original.
+Currently armpmu_add() tries to handle a newly-allocated counter having
+a stale associated event, but this should not be possible, and if this
+were to happen the current mitigation is insufficient and potentially
+expensive. It would be better to warn if we encounter the impossible
+case.
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20250220121716.50324-3-cuiyunhui@bytedance.com
+Calls to pmu::add() and pmu::del() are serialized by the core perf code,
+and armpmu_del() clears the relevant slot in pmu_hw_events::events[]
+before clearing the bit in pmu_hw_events::used_mask such that the
+counter can be reallocated. Thus when armpmu_add() allocates a counter
+index from pmu_hw_events::used_mask, it should not be possible to observe
+a stale even in pmu_hw_events::events[] unless either
+pmu_hw_events::used_mask or pmu_hw_events::events[] have been corrupted.
+
+If this were to happen, we'd end up with two events with the same
+event->hw.idx, which would clash with each other during reprogramming,
+deletion, etc, and produce bogus results. Add a WARN_ON_ONCE() for this
+case so that we can detect if this ever occurs in practice.
+
+That possiblity aside, there's no need to call arm_pmu::disable(event)
+for the new event. The PMU reset code initialises the counter in a
+disabled state, and armpmu_del() will disable the counter before it can
+be reused. Remove the redundant disable.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Tested-by: James Clark <james.clark@linaro.org>
+Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-2-4e9922fc2e8e@kernel.org
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/dwc_pcie_pmu.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/perf/arm_pmu.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index 19fa2ba8dd670..f851e070760c5 100644
---- a/drivers/perf/dwc_pcie_pmu.c
-+++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
- 	u32 sbdf;
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 398cce3d76fc4..2f33e69a8caf2 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -342,12 +342,10 @@ armpmu_add(struct perf_event *event, int flags)
+ 	if (idx < 0)
+ 		return idx;
  
- 	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
--	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
--						 pdev, sizeof(*pdev));
--
-+	plat_dev = platform_device_register_simple("dwc_pcie_pmu", sbdf, NULL, 0);
- 	if (IS_ERR(plat_dev))
- 		return PTR_ERR(plat_dev);
- 
-@@ -616,18 +614,26 @@ static struct notifier_block dwc_pcie_pmu_nb = {
- 
- static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
- {
--	struct pci_dev *pdev = plat_dev->dev.platform_data;
-+	struct pci_dev *pdev;
- 	struct dwc_pcie_pmu *pcie_pmu;
- 	char *name;
- 	u32 sbdf;
- 	u16 vsec;
- 	int ret;
- 
-+	sbdf = plat_dev->id;
-+	pdev = pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf & 0xffff),
-+					   sbdf & 0xff);
-+	if (!pdev) {
-+		pr_err("No pdev found for the sbdf 0x%x\n", sbdf);
-+		return -ENODEV;
-+	}
+-	/*
+-	 * If there is an event in the counter we are going to use then make
+-	 * sure it is disabled.
+-	 */
++	/* The newly-allocated counter should be empty */
++	WARN_ON_ONCE(hw_events->events[idx]);
 +
- 	vsec = dwc_pcie_des_cap(pdev);
- 	if (!vsec)
- 		return -ENODEV;
+ 	event->hw.idx = idx;
+-	armpmu->disable(event);
+ 	hw_events->events[idx] = event;
  
--	sbdf = plat_dev->id;
-+	pci_dev_put(pdev);
- 	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
- 	if (!name)
- 		return -ENOMEM;
-@@ -642,7 +648,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
- 	pcie_pmu->on_cpu = -1;
- 	pcie_pmu->pmu = (struct pmu){
- 		.name		= name,
--		.parent		= &pdev->dev,
-+		.parent		= &plat_dev->dev,
- 		.module		= THIS_MODULE,
- 		.attr_groups	= dwc_pcie_attr_groups,
- 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+ 	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
 -- 
 2.39.5
 
