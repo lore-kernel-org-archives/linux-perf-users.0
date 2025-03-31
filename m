@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B5C227EA8;
-	Mon, 31 Mar 2025 14:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7C622A7F4;
+	Mon, 31 Mar 2025 14:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431802; cv=none; b=OPk4g5C0+RlhlDJi0nrYARD4ieijLE79Q5pcMjQyooFWjzPuuv76dA8MAKM698Z48fcp2JlPRVKOiHtEpc2q6gEzp0trlm1vH2U8ssPZ5t2Ql6XiQwQICALKYoQz9Y1wdy98efmnATGPL6yIEpqlYyE4OynEVxsppvgFqxm2HYs=
+	t=1743431821; cv=none; b=pyp2pMxLiNMnFYAL5x5OXtpsrPgnUWO13yDpkIRekqH7DDYPH5gy+HON2WRCFV3n1XUXG+grBmYAM4rb5WFCCzpYcPd9oE7s8ToNytLPXmpahaT8+JhdtJCrAvaOTVSJ5ldtHrEbVXvNHHDFo9xVYbbGWRxExKyoLU3BReHDpAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743431802; c=relaxed/simple;
-	bh=tXp53M/DQEszJ5FiqgiA/vrwjXNm856YthAXtnLNLBs=;
+	s=arc-20240116; t=1743431821; c=relaxed/simple;
+	bh=Mrkmm/WQy8xWlZ3PJCNVTkQAE+1FHm1PWKynJDds2t4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aR8f+FUuULgxWrf570kxL3jFKw2A1zT+CZ0PMg0/1YM6PfH4YAeDJSbKt/W+qK5b5ZD05SQRLAzORwJcDWp4c052a2LVlirn2iQfTKvbGbowkSEQvsnY4hFirPS7vLOs/xDfMgTjwOvQU50U7H3A1BuEekvIYwUh646M4MVAQX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJpWECEF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Fiz6kVyQE6OtAsQqFLcc1SXaIW6VJdaPPPGZeUN9TpqjACcozF+0eAUYsSD0ZJTLO+fMrEcoQZWVbNZLtReGWIsc+IUWG0LYAC+mFamz/0XE/a2N2eFP6Kc267NjG/DYNmPtduZohCzJdUcgWMhFrcr4tjaL2sAiDRzRdCGQ7qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOqZba4t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJpWECEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51811C4CEE4;
-	Mon, 31 Mar 2025 14:36:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOqZba4t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 467F9C4CEEB;
+	Mon, 31 Mar 2025 14:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743431802;
-	bh=tXp53M/DQEszJ5FiqgiA/vrwjXNm856YthAXtnLNLBs=;
+	s=k20201202; t=1743431820;
+	bh=Mrkmm/WQy8xWlZ3PJCNVTkQAE+1FHm1PWKynJDds2t4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PJpWECEFwu3f+NRkWzDCNcR8djWfxehnjiI2T1kfh/CbXfJz9dbqsgMzr2zCtMuAb
-	 xKqtoA68HGCKYb1SubTXbRXCUF8GdYVHyiO7cDN6DejSnQPPUjjakIjgU5LGn3Zf5A
-	 7s7MiPvHSAhwwvgGj+TO/PMBLxq+XDijyjTykuPzD0mptfhiLbj97EDOehk5pN+kpD
-	 jGyvABCA8NzLP3/v02M45TFx/XYWXPZk6BLoCAieh+Wk7/4Ti4djLhR6ZJXnbTsace
-	 Tpmimnd2GYCbyTTcUjw3MnRll6tPKe8a14WQRbumdqmDp81dqs8BkijdoZbjZZ5a7q
-	 3YWEOA+h4tDIw==
+	b=pOqZba4ti7phEoGdJ0gx6ObU1SC2XqOwTz9uH41W1Bq4wf0LIrNFERiRAxB5UoSIf
+	 QWloVCeeVac7xtq/FzaBUehsTxlaNYkV5Kkv1oveNPmkU0atT2a4CGDehqVHiS3CCI
+	 /w5sz81q0yES5eQ88diQ2EmntAtO7QT09oa+Zh2ND6enojeJWbWGuflgQ7EEvzlDtV
+	 NsHS4gDXs61IfHqBR/AL/wujFidSb2mhH/ChlLhonl3qwTPhr4JdaNfB9xZLRd1SUa
+	 grMzkVjAL3IoL84WwplydWdnTP5rktVwTooLHpBJdr9dCF/O2NNpTL+9I+YE0qgbp8
+	 qBdgke6trKW+A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,12 +37,12 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 3/6] perf: arm_pmu: Don't disable counter in armpmu_add()
-Date: Mon, 31 Mar 2025 10:36:29 -0400
-Message-Id: <20250331143634.1686409-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 3/6] perf: arm_pmu: Don't disable counter in armpmu_add()
+Date: Mon, 31 Mar 2025 10:36:48 -0400
+Message-Id: <20250331143652.1686503-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250331143634.1686409-1-sashal@kernel.org>
-References: <20250331143634.1686409-1-sashal@kernel.org>
+In-Reply-To: <20250331143652.1686503-1-sashal@kernel.org>
+References: <20250331143652.1686503-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,7 +51,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.132
+X-stable-base: Linux 5.15.179
 Content-Transfer-Encoding: 8bit
 
 From: Mark Rutland <mark.rutland@arm.com>
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 3f07df5a7e950..d351d6ce750bf 100644
+index 57d20cf3da7a3..fd59f40f74435 100644
 --- a/drivers/perf/arm_pmu.c
 +++ b/drivers/perf/arm_pmu.c
-@@ -340,12 +340,10 @@ armpmu_add(struct perf_event *event, int flags)
+@@ -338,12 +338,10 @@ armpmu_add(struct perf_event *event, int flags)
  	if (idx < 0)
  		return idx;
  
