@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03301D54D8;
-	Mon, 31 Mar 2025 07:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD401D63F2;
+	Mon, 31 Mar 2025 07:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743406645; cv=none; b=b9M5HgWXg6IDvUVwHjA3sgJDVvBLHoXVpajQqRIASETZheK2pr7g6FR3mz9mKv1vosY/RmveQBApZoN+lTR7prh6a2DgNo6Tq5UG40XLM/jJfGdmT/GZ+k7cLQBDyzbivkNE8PwzTBwepZbn97BsE12txtnDS3J5fHgfO/NHsco=
+	t=1743406645; cv=none; b=kb5vav163NsdOPZVHd4QH3JwdGcDJHL+eUGwloZKUkLQIU5HHcRViw0sDIPooVpTv2Lg+iTX0ntdFgnk+PAWNWgHZkIHRikG2oyardNQFY1SbCqL1I/iBTlgmlV9jyVFREfMtJzwFORfvFCK3FhwNdv4tjDTRbZirMTjcwSwJmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743406645; c=relaxed/simple;
-	bh=+g9pedH9vn7fn6iV8pHdDuF77nHGCBMjaxZvpLdqowI=;
+	bh=FGQlRy0zRUTKNA+1bPygSP1h5Y217grg79LHT1F5Luc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BtKSJN3lR1dCSW8xjAQ5fwjBjVRiPN14dcQmHQTVz2S84cpXlVswn2UT8jCrLJw3EeuTnRmG/yArDtDzIwwRO05S6yDYPpiK1IjPYS+Mqn6mScMclGoc2dUgsglBC2u1l46/8bcW0pi/MOlkhvqSO7DHi/ZLGHsL376ZL0+L+sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvuvJCCM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aDWlPrGbpMyURv+XM5VfAaR6B7hMpQKjSM2IPiuMjWSFv2XA8/za07LPkiCa53w6JKR60dp0EPjzQGrTi+INUAyPkU9U8TQyo5d1y7RZcAxQrv6Y7sUEnPeTYm7qR247armggWWDspUXIG1RYNLCXDGA68u6omjLoOAxuK4cOfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUBq7jzJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvuvJCCM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68126C4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUBq7jzJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7C8FC4CEEA;
 	Mon, 31 Mar 2025 07:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743406644;
-	bh=+g9pedH9vn7fn6iV8pHdDuF77nHGCBMjaxZvpLdqowI=;
+	s=k20201202; t=1743406645;
+	bh=FGQlRy0zRUTKNA+1bPygSP1h5Y217grg79LHT1F5Luc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QvuvJCCM8oYGbTNFptF8rvVEhpVLAPfE9BZK+3b5tQpdXruaWwp1YQQJ0s7JUrNQ6
-	 Ge2upvcdO0dPJ5HnsK7/uiTBqafLw59g/bhFj9oBUQEORbBbMxzxqYWQBdaHHkKess
-	 2fF7Tlq5/U3IGdX6UgHNRijpiOt8X163jBSSOQ+PSQngwOeJ5J5QoNTjvjTLdJcuZo
-	 6ZI5JRk1pA+Ire8IDPs47XRW431h6XcjRoAvfz3v4pJfOslR4oCMXRrFbGd8pwb5Bl
-	 PB9+khE7MKkAXzHfw2/LGMlAqTWE2p2TXk98f5XUDqYNzwlaHxUUQTa0ozEesdcDKP
-	 FXeJq4tK2PZFQ==
+	b=AUBq7jzJud0p164Rf3NDPYx0HUcd+5PubfSmpo6NNeC53L36F140K94kVj7VO6w23
+	 34CldD5bhAgotpakGhErRZ7zK9wxk0mTsAywFKQV+OUCLthDvHwY3U4VUjd3axvTLE
+	 YIadcjwcWotY4/dRvaCApl6CSH4xS5HdXq22TijOyR14xi4iapsx36F3+w40nUJrHV
+	 Fmwuhs0WLGZFYhBnRO38DJ/1i5cbbwzgXGwfMKuiciIbYFxhkcmDb1pHdPfkADGR9o
+	 nenDDRFR3B1tOIDVvIxTcU5Q4vcR3Htj2xp79Xp+7j6h4agHLyskbv4zviAbQnAG0H
+	 OxoTi84cXi9KA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/4] perf hist: Set levels in output_field_add()
-Date: Mon, 31 Mar 2025 00:37:21 -0700
-Message-ID: <20250331073722.4695-4-namhyung@kernel.org>
+Subject: [PATCH 4/4] perf hist: Allow custom output fields in hierarchy mode
+Date: Mon, 31 Mar 2025 00:37:22 -0700
+Message-ID: <20250331073722.4695-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331073722.4695-1-namhyung@kernel.org>
 References: <20250331073722.4695-1-namhyung@kernel.org>
@@ -50,174 +50,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It turns out that the output fields didn't consider the hierarchy mode
-and put all the fields in the same level.  To support hierarchy, each
-non-output field should be in a separate level.  Pass a pointer to level
-to output_field_add() and make it increase the level when it sees non-
-output fields.
+Now it can handle multiple output fields and sort keys in separate
+levels, so it should be ok to use it in the hierarchy mode.  This
+allows fully customized output format.
+
+  $ perf report -F latency,comm,parallelism -H --stdio
+  ...
+  #     Latency  Command / Parallelism
+  # ...........  .....................
+  #
+      31.84%     cc1
+         29.96%     5
+          1.24%     4
+          0.37%     6
+          0.26%     3
+          0.02%     2
+      24.68%     as
+         22.39%     5
+          1.12%     2
+          0.98%     4
+          0.12%     3
+          0.07%     6
+          ...
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-c2c.c |  3 ++-
- tools/perf/util/sort.c   | 36 +++++++++++++++++++++++-------------
- tools/perf/util/sort.h   |  2 +-
- 3 files changed, 26 insertions(+), 15 deletions(-)
+ tools/perf/builtin-report.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 5d5bb0f32334a975..e2e257bcc461fbdb 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -1969,10 +1969,11 @@ static struct c2c_fmt *get_format(const char *name)
- static int c2c_hists__init_output(struct perf_hpp_list *hpp_list, char *name)
- {
- 	struct c2c_fmt *c2c_fmt = get_format(name);
-+	int level = 0;
- 
- 	if (!c2c_fmt) {
- 		reset_dimensions();
--		return output_field_add(hpp_list, name);
-+		return output_field_add(hpp_list, name, &level);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index c207aaed7ae5fc2b..f0299c7ee0254a37 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1672,14 +1672,10 @@ int cmd_report(int argc, const char **argv)
  	}
  
- 	perf_hpp_list__column_register(hpp_list, &c2c_fmt->fmt);
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index c51049087e4ebb6c..594b75ca95bf72b2 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2884,9 +2884,10 @@ static int __sort_dimension__add_hpp_sort(struct sort_dimension *sd,
- }
- 
- static int __sort_dimension__add_hpp_output(struct sort_dimension *sd,
--					    struct perf_hpp_list *list)
-+					    struct perf_hpp_list *list,
-+					    int level)
- {
--	struct hpp_sort_entry *hse = __sort_dimension__alloc_hpp(sd, 0);
-+	struct hpp_sort_entry *hse = __sort_dimension__alloc_hpp(sd, level);
- 
- 	if (hse == NULL)
- 		return -1;
-@@ -3495,12 +3496,13 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
- }
- 
- static int __sort_dimension__add_output(struct perf_hpp_list *list,
--					struct sort_dimension *sd)
-+					struct sort_dimension *sd,
-+					int level)
- {
- 	if (sd->taken)
- 		return 0;
- 
--	if (__sort_dimension__add_hpp_output(sd, list) < 0)
-+	if (__sort_dimension__add_hpp_output(sd, list, level) < 0)
- 		return -1;
- 
- 	sd->taken = 1;
-@@ -3508,14 +3510,15 @@ static int __sort_dimension__add_output(struct perf_hpp_list *list,
- }
- 
- static int __hpp_dimension__add_output(struct perf_hpp_list *list,
--				       struct hpp_dimension *hd)
-+				       struct hpp_dimension *hd,
-+				       int level)
- {
- 	struct perf_hpp_fmt *fmt;
- 
- 	if (hd->taken)
- 		return 0;
- 
--	fmt = __hpp_dimension__alloc_hpp(hd, 0);
-+	fmt = __hpp_dimension__alloc_hpp(hd, level);
- 	if (!fmt)
- 		return -1;
- 
-@@ -3532,7 +3535,7 @@ int hpp_dimension__add_output(unsigned col, bool implicit)
- 	hd = &hpp_sort_dimensions[col];
- 	if (implicit && !hd->was_taken)
- 		return 0;
--	return __hpp_dimension__add_output(&perf_hpp_list, hd);
-+	return __hpp_dimension__add_output(&perf_hpp_list, hd, /*level=*/0);
- }
- 
- int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
-@@ -4000,7 +4003,7 @@ void sort__setup_elide(FILE *output)
- 	}
- }
- 
--int output_field_add(struct perf_hpp_list *list, const char *tok)
-+int output_field_add(struct perf_hpp_list *list, const char *tok, int *level)
- {
- 	unsigned int i;
- 
-@@ -4013,16 +4016,22 @@ int output_field_add(struct perf_hpp_list *list, const char *tok)
- 		if (!strcasecmp(tok, "weight"))
- 			ui__warning("--fields weight shows the average value unlike in the --sort key.\n");
- 
--		return __hpp_dimension__add_output(list, hd);
-+		return __hpp_dimension__add_output(list, hd, *level);
+ 	if (symbol_conf.report_hierarchy) {
+-		/* disable incompatible options */
+-		if (field_order) {
+-			pr_err("Error: --hierarchy and --fields options cannot be used together\n");
+-			parse_options_usage(report_usage, options, "F", 1);
+-			parse_options_usage(NULL, options, "hierarchy", 0);
+-			goto error;
+-		}
+-
++		/*
++		 * The hist entries in hierarchy are added during the collpase
++		 * phase.  Let's enable it even if no sort keys require it.
++		 */
+ 		perf_hpp_list.need_collapse = true;
  	}
  
-+	/*
-+	 * A non-output field will increase level so that it can be in a
-+	 * different hierarchy.
-+	 */
-+	(*level)++;
-+
- 	for (i = 0; i < ARRAY_SIZE(common_sort_dimensions); i++) {
- 		struct sort_dimension *sd = &common_sort_dimensions[i];
- 
- 		if (!sd->name || strncasecmp(tok, sd->name, strlen(tok)))
- 			continue;
- 
--		return __sort_dimension__add_output(list, sd);
-+		return __sort_dimension__add_output(list, sd, *level);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(bstack_sort_dimensions); i++) {
-@@ -4034,7 +4043,7 @@ int output_field_add(struct perf_hpp_list *list, const char *tok)
- 		if (sort__mode != SORT_MODE__BRANCH)
- 			return -EINVAL;
- 
--		return __sort_dimension__add_output(list, sd);
-+		return __sort_dimension__add_output(list, sd, *level);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(memory_sort_dimensions); i++) {
-@@ -4046,7 +4055,7 @@ int output_field_add(struct perf_hpp_list *list, const char *tok)
- 		if (sort__mode != SORT_MODE__MEMORY)
- 			return -EINVAL;
- 
--		return __sort_dimension__add_output(list, sd);
-+		return __sort_dimension__add_output(list, sd, *level);
- 	}
- 
- 	return -ESRCH;
-@@ -4056,10 +4065,11 @@ static int setup_output_list(struct perf_hpp_list *list, char *str)
- {
- 	char *tmp, *tok;
- 	int ret = 0;
-+	int level = 0;
- 
- 	for (tok = strtok_r(str, ", ", &tmp);
- 			tok; tok = strtok_r(NULL, ", ", &tmp)) {
--		ret = output_field_add(list, tok);
-+		ret = output_field_add(list, tok, &level);
- 		if (ret == -EINVAL) {
- 			ui__error("Invalid --fields key: `%s'", tok);
- 			break;
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 180d36a2bea355da..6e92ac62b9c80a0b 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -146,7 +146,7 @@ void reset_dimensions(void);
- int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
- 			struct evlist *evlist,
- 			int level);
--int output_field_add(struct perf_hpp_list *list, const char *tok);
-+int output_field_add(struct perf_hpp_list *list, const char *tok, int *level);
- int64_t
- sort__iaddr_cmp(struct hist_entry *left, struct hist_entry *right);
- int64_t
 -- 
 2.49.0
 
