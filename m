@@ -1,53 +1,71 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25EF1D54F7
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Mar 2025 12:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766D120296C;
+	Mon, 31 Mar 2025 13:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424295; cv=none; b=X4Bl2p/Y7NPsbt4djbohdGO/gw2AMbaZfsdxnkf4IfAGkQMNJ6kJy99yXQFV7JZnKdB3jYKAvtWpvMnpisw/GlNsjWRkL31yLJ7OWGat+Nt+YtO/4NXe8vIA8OnL2/+W1/20i+GZhteTu+B8i8ZHqDc7v7gZWeHbfJ2SgSm7TRY=
+	t=1743429103; cv=none; b=mU/qoEmpMKgD2TTdQygQwcKHBGazz9rq2Gy9CCPz1K9hsf8IDkgGk8Dk80qtwO7A0fldtqCNB2YRFJ8ohCKA5opxOFYxXu6ytkpuhp3Wx2xcPLDsUNi6HaIQmvpqkPCOlAmDHyT5tehE6xu78tEDUKhINgB8a0c8G8AFNvnTatc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424295; c=relaxed/simple;
-	bh=xqAtN/TbCCA7DKGAfkHpOId1GLziI/YG+jt+tgsCs0E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EhAsz/v0M2dMz2fEQYKKE41KF3PWh2Zj7Fu20E50mxSuAOwBMO36mcmhb8Eiv/XyxOUfy8vwzcmegppN7ptDlil9eQc8m5SJ+OkpELIh0yNVR6urfsE/4FBO1jsKjltREQEQPpEcoD36hF+NZrfSCZdzurZXcVOmO1lRsk7Uyok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Oa0MvpIp; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743429103; c=relaxed/simple;
+	bh=/xOFCnCl1bp2H1lBSRP52BzGu4qzWa8zmSC42c8Mfu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=agpXWJ7v8/ufO4ueD03P87B3PzfTZ/TrMjiMVJVFYwfDQm5NOilIZN61ozzNedrIhsGFgsWjaZic2c9HvzDtxXX4ySv6VjCg8J8SEFyX6VzQZzJC2gQHx3WiOukjFuTP5t5AmaZyNdQdPJkM9AHzn7Vh/w18D4XV5NPVJ69EeUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAd0qmJw; arc=none smtp.client-ip=209.85.216.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Oa0MvpIp"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743424281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7XEWEmd5LWdFQWEvEb923ykZHXXlz1bJMpcel5KSrlk=;
-	b=Oa0MvpIpXxMjZP67+MGyMm07znRrgBk/7woerEUR91JCGfKX0ao4riXEcBgUZKdL4eJmlK
-	HLRw0sZrKd4OLPCwGa5kEdoVSsLOWBZyX9gFj4LpumWBEOOCEEHaW662OW8IBnZguoYSpj
-	xXGFfPlRfH9Vpg5iTewB44kqgOqpEFE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Ingo Molnar <mingo@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAd0qmJw"
+Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so9785070a91.3;
+        Mon, 31 Mar 2025 06:51:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743429102; x=1744033902; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PInnCdBKi8aM4fbhPrQJn45/zC9pgXXJe6ZpEybvC+M=;
+        b=gAd0qmJwyVsgYYBToS8t2vhg8Q0ztFc91Vvr2Wih/BXprFTR3cryBqRfGrBukAJ18i
+         uueJpkkKpg4wRpzoeas+xz3CJYL7xuS07aaN7RtCzCGuGuqRw4kHcwHRKUgKw9gBQ5rV
+         ZL8ehrH3jtXs//8IO/RPN63Al1F2g1OGxfsvbWWH7z6LvmdIQ9Y6af3jPKQl9rQr6U25
+         qKSNeXUJ0TklmHI3Y2SJnqLlC2EdzrPZuLWHHXlfTg6liFrXDU9JN0/S/TYV3MwSC5Ps
+         1uLqDzlHuPndu/p8bi7jd9KT4p0BMjrQbCYTvZFYkcdVeNTuEYJCiCxXgaC9Md3ZVEYn
+         Yj1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743429102; x=1744033902;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PInnCdBKi8aM4fbhPrQJn45/zC9pgXXJe6ZpEybvC+M=;
+        b=V3HmJTBSVODSZrZHlA8O9JfUHU0F6y3A2NzU7V6m/onK0tWbme9LKi9RtNk+6lxx4G
+         kF+QNBeHNHrfjvInnGs0EsikyDiH5lx+ntdD8NKuuf09tgaX+GwtDIn5QINZSFeACX3J
+         c3iubdBA2vtyxEaoEInBVuhVKXgP2tWVU3e7k+vnkLley6nrMpRbe7oAVCyIzk75h+cJ
+         cQRxPeca6LPpcXE2nSk34EPEWOYTiRHPxYlyaCh6vsf5/Fi+w3AUWp/emCrcNSbTQHXT
+         SxgBYW27ljvoYtiExLGvZRrFipAv7ljVHZlEYgFvJjkZQwLe+cEYpo56nvs/PZ2Sl2Ya
+         +14w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+FbzizYR4BD3/CCM1Flg6P9XXm9p5JsGLGXvWDhiPLx1eTYQblkCl51DlNx0zHiRROp9/NwaNO++esbk=@vger.kernel.org, AJvYcCWPQ4ZwT1mw/0AGsSmipAlYaV6bKk6dUBgh/8wYDPTlyIMgKSDvwDNQY2S/jV3ww3p7+Po+DMs1f9rjS6vM1ryvPQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvgDFGTy9gU1yqBt0xwhoOO4QtW8c9bNWX3s7AbwrgwtQh/g8w
+	7VsR+8gB1r2GTLF7pDtkdW5O71HSyMV8MH5MlazjYo8FyYrVVy/v
+X-Gm-Gg: ASbGncuT70schKag1tDa8S6P0el0jKgUFox44s0lerozgN7s7ZU5emEV0lfSVq5+zKe
+	UJ3kvDqNZ4MDr6wKySGIjY0ttjsTZbSZpSYTDcE0q8N0kcePTonHqYPnTConvvJBHppNSKcooCg
+	MoCafR+Si+uL5wHV/H/qutjcrhi3Rd9/tINa47GRAaUaWAsanmFB/9aa/2PR5HpoWcKGfjxe+yO
+	VVpZBxCoSYvCmkYVvjghXzcF6eo432eN95GvIpQXSMiAMdXDZLZaFw4wro+EVk+67GU1bM4eP6R
+	Zmh44t8av1ZMq2mOSdlGhEqbnhmJK2DLzkSVUMCc8fCO7ip/Ep2UGmlf8vh6UzrI8b/qi7g=
+X-Google-Smtp-Source: AGHT+IHa8yleu6Tesplwr+MK7f1aRyjHejZjDckNp6dbjCL/LDmj1X0vASxGTqF38/Sw39ZjVBBpbQ==
+X-Received: by 2002:a17:90b:2dc2:b0:2ee:5958:828 with SMTP id 98e67ed59e1d1-30531f9fb9dmr14645807a91.9.1743429101645;
+        Mon, 31 Mar 2025 06:51:41 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b70b4sm9513637a91.48.2025.03.31.06.51.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 06:51:41 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: will@kernel.org,
+	mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86: Rename bts_buffer variables and use struct_size()
-Date: Mon, 31 Mar 2025 14:29:38 +0200
-Message-ID: <20250331122938.1837255-2-thorsten.blum@linux.dev>
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v2] driver: tx2: Add NULL check in tx2_uncore_pmu_register
+Date: Mon, 31 Mar 2025 21:51:28 +0800
+Message-Id: <20250331135128.11881-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,375 +73,36 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Rename struct bts_buffer objects from 'buf' to 'bb' to improve the
-readability when accessing the structure's 'buf' member. For example,
-'buf->buf[]' becomes 'bb->buf[]'.
+devm_kasprintf() return NULL if memory allocation fails. Currently,
+tx2_uncore_pmu_register() does not check for this case, leading to a
+possible NULL pointer dereference.
 
-Use struct_size() to calculate the number of bytes to allocate for a new
-bts_buffer. Compared to offsetof(), struct_size() provides additional
-compile-time checks (e.g., __must_be_array()).
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-Indent line 327 using tabs to silence a checkpatch warning.
-
-No functional changes intended.
-
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Fixes: 69c32972d593 ("drivers/perf: Add Cavium ThunderX2 SoC UNCORE PMU driver")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
- arch/x86/events/intel/bts.c | 146 ++++++++++++++++++------------------
- 1 file changed, 72 insertions(+), 74 deletions(-)
+V1 -> V2: Fix commit message to use imperative mood and wrap lines to 75
+characters.
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index a95e6c91c4d7..bbc7d914050c 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -80,54 +78,54 @@ static void *
- bts_buffer_setup_aux(struct perf_event *event, void **pages,
- 		     int nr_pages, bool overwrite)
- {
--	struct bts_buffer *buf;
-+	struct bts_buffer *bb;
- 	struct page *page;
- 	int cpu = event->cpu;
- 	int node = (cpu == -1) ? cpu : cpu_to_node(cpu);
- 	unsigned long offset;
- 	size_t size = nr_pages << PAGE_SHIFT;
--	int pg, nbuf, pad;
-+	int pg, nr_buf, pad;
+ drivers/perf/thunderx2_pmu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+index 6ed4707bd6bb..24443ab5d998 100644
+--- a/drivers/perf/thunderx2_pmu.c
++++ b/drivers/perf/thunderx2_pmu.c
+@@ -738,7 +738,8 @@ static int tx2_uncore_pmu_register(
  
- 	/* count all the high order buffers */
--	for (pg = 0, nbuf = 0; pg < nr_pages;) {
-+	for (pg = 0, nr_buf = 0; pg < nr_pages;) {
- 		page = virt_to_page(pages[pg]);
- 		pg += buf_nr_pages(page);
--		nbuf++;
-+		nr_buf++;
- 	}
- 
- 	/*
- 	 * to avoid interrupts in overwrite mode, only allow one physical
- 	 */
--	if (overwrite && nbuf > 1)
-+	if (overwrite && nr_buf > 1)
- 		return NULL;
- 
--	buf = kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), GFP_KERNEL, node);
--	if (!buf)
-+	bb = kzalloc_node(struct_size(bb, buf, nr_buf), GFP_KERNEL, node);
-+	if (!bb)
- 		return NULL;
- 
--	buf->nr_pages = nr_pages;
--	buf->nr_bufs = nbuf;
--	buf->snapshot = overwrite;
--	buf->data_pages = pages;
--	buf->real_size = size - size % BTS_RECORD_SIZE;
-+	bb->nr_pages = nr_pages;
-+	bb->nr_bufs = nr_buf;
-+	bb->snapshot = overwrite;
-+	bb->data_pages = pages;
-+	bb->real_size = size - size % BTS_RECORD_SIZE;
- 
--	for (pg = 0, nbuf = 0, offset = 0, pad = 0; nbuf < buf->nr_bufs; nbuf++) {
-+	for (pg = 0, nr_buf = 0, offset = 0, pad = 0; nr_buf < bb->nr_bufs; nr_buf++) {
- 		unsigned int __nr_pages;
- 
- 		page = virt_to_page(pages[pg]);
- 		__nr_pages = buf_nr_pages(page);
--		buf->buf[nbuf].page = page;
--		buf->buf[nbuf].offset = offset;
--		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
--		buf->buf[nbuf].size = buf_size(page) - buf->buf[nbuf].displacement;
--		pad = buf->buf[nbuf].size % BTS_RECORD_SIZE;
--		buf->buf[nbuf].size -= pad;
-+		bb->buf[nr_buf].page = page;
-+		bb->buf[nr_buf].offset = offset;
-+		bb->buf[nr_buf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
-+		bb->buf[nr_buf].size = buf_size(page) - bb->buf[nr_buf].displacement;
-+		pad = bb->buf[nr_buf].size % BTS_RECORD_SIZE;
-+		bb->buf[nr_buf].size -= pad;
- 
- 		pg += __nr_pages;
- 		offset += __nr_pages << PAGE_SHIFT;
- 	}
- 
--	return buf;
-+	return bb;
+ 	tx2_pmu->pmu.name = devm_kasprintf(dev, GFP_KERNEL,
+ 			"%s", name);
+-
++	if (!tx2_pmu->pmu.name)
++		return -ENOMEM;
+ 	return perf_pmu_register(&tx2_pmu->pmu, tx2_pmu->pmu.name, -1);
  }
  
- static void bts_buffer_free_aux(void *data)
-@@ -135,25 +133,25 @@ static void bts_buffer_free_aux(void *data)
- 	kfree(data);
- }
- 
--static unsigned long bts_buffer_offset(struct bts_buffer *buf, unsigned int idx)
-+static unsigned long bts_buffer_offset(struct bts_buffer *bb, unsigned int idx)
- {
--	return buf->buf[idx].offset + buf->buf[idx].displacement;
-+	return bb->buf[idx].offset + bb->buf[idx].displacement;
- }
- 
- static void
--bts_config_buffer(struct bts_buffer *buf)
-+bts_config_buffer(struct bts_buffer *bb)
- {
- 	int cpu = raw_smp_processor_id();
- 	struct debug_store *ds = per_cpu(cpu_hw_events, cpu).ds;
--	struct bts_phys *phys = &buf->buf[buf->cur_buf];
-+	struct bts_phys *phys = &bb->buf[bb->cur_buf];
- 	unsigned long index, thresh = 0, end = phys->size;
- 	struct page *page = phys->page;
- 
--	index = local_read(&buf->head);
-+	index = local_read(&bb->head);
- 
--	if (!buf->snapshot) {
--		if (buf->end < phys->offset + buf_size(page))
--			end = buf->end - phys->offset - phys->displacement;
-+	if (!bb->snapshot) {
-+		if (bb->end < phys->offset + buf_size(page))
-+			end = bb->end - phys->offset - phys->displacement;
- 
- 		index -= phys->offset + phys->displacement;
- 
-@@ -168,7 +166,7 @@ bts_config_buffer(struct bts_buffer *buf)
- 	ds->bts_buffer_base = (u64)(long)page_address(page) + phys->displacement;
- 	ds->bts_index = ds->bts_buffer_base + index;
- 	ds->bts_absolute_maximum = ds->bts_buffer_base + end;
--	ds->bts_interrupt_threshold = !buf->snapshot
-+	ds->bts_interrupt_threshold = !bb->snapshot
- 		? ds->bts_buffer_base + thresh
- 		: ds->bts_absolute_maximum + BTS_RECORD_SIZE;
- }
-@@ -184,16 +182,16 @@ static void bts_update(struct bts_ctx *bts)
- {
- 	int cpu = raw_smp_processor_id();
- 	struct debug_store *ds = per_cpu(cpu_hw_events, cpu).ds;
--	struct bts_buffer *buf = perf_get_aux(&bts->handle);
-+	struct bts_buffer *bb = perf_get_aux(&bts->handle);
- 	unsigned long index = ds->bts_index - ds->bts_buffer_base, old, head;
- 
--	if (!buf)
-+	if (!bb)
- 		return;
- 
--	head = index + bts_buffer_offset(buf, buf->cur_buf);
--	old = local_xchg(&buf->head, head);
-+	head = index + bts_buffer_offset(bb, bb->cur_buf);
-+	old = local_xchg(&bb->head, head);
- 
--	if (!buf->snapshot) {
-+	if (!bb->snapshot) {
- 		if (old == head)
- 			return;
- 
-@@ -205,9 +203,9 @@ static void bts_update(struct bts_ctx *bts)
- 		 * old and head are always in the same physical buffer, so we
- 		 * can subtract them to get the data size.
- 		 */
--		local_add(head - old, &buf->data_size);
-+		local_add(head - old, &bb->data_size);
- 	} else {
--		local_set(&buf->data_size, head);
-+		local_set(&bb->data_size, head);
- 	}
- 
- 	/*
-@@ -218,7 +216,7 @@ static void bts_update(struct bts_ctx *bts)
- }
- 
- static int
--bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle);
-+bts_buffer_reset(struct bts_buffer *bb, struct perf_output_handle *handle);
- 
- /*
-  * Ordering PMU callbacks wrt themselves and the PMI is done by means
-@@ -232,17 +230,17 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle);
- static void __bts_event_start(struct perf_event *event)
- {
- 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
--	struct bts_buffer *buf = perf_get_aux(&bts->handle);
-+	struct bts_buffer *bb = perf_get_aux(&bts->handle);
- 	u64 config = 0;
- 
--	if (!buf->snapshot)
-+	if (!bb->snapshot)
- 		config |= ARCH_PERFMON_EVENTSEL_INT;
- 	if (!event->attr.exclude_kernel)
- 		config |= ARCH_PERFMON_EVENTSEL_OS;
- 	if (!event->attr.exclude_user)
- 		config |= ARCH_PERFMON_EVENTSEL_USR;
- 
--	bts_config_buffer(buf);
-+	bts_config_buffer(bb);
- 
- 	/*
- 	 * local barrier to make sure that ds configuration made it
-@@ -261,13 +259,13 @@ static void bts_event_start(struct perf_event *event, int flags)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
--	struct bts_buffer *buf;
-+	struct bts_buffer *bb;
- 
--	buf = perf_aux_output_begin(&bts->handle, event);
--	if (!buf)
-+	bb = perf_aux_output_begin(&bts->handle, event);
-+	if (!bb)
- 		goto fail_stop;
- 
--	if (bts_buffer_reset(buf, &bts->handle))
-+	if (bts_buffer_reset(bb, &bts->handle))
- 		goto fail_end_stop;
- 
- 	bts->ds_back.bts_buffer_base = cpuc->ds->bts_buffer_base;
-@@ -306,27 +304,27 @@ static void bts_event_stop(struct perf_event *event, int flags)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
--	struct bts_buffer *buf = NULL;
-+	struct bts_buffer *bb = NULL;
- 	int state = READ_ONCE(bts->state);
- 
- 	if (state == BTS_STATE_ACTIVE)
- 		__bts_event_stop(event, BTS_STATE_STOPPED);
- 
- 	if (state != BTS_STATE_STOPPED)
--		buf = perf_get_aux(&bts->handle);
-+		bb = perf_get_aux(&bts->handle);
- 
- 	event->hw.state |= PERF_HES_STOPPED;
- 
- 	if (flags & PERF_EF_UPDATE) {
- 		bts_update(bts);
- 
--		if (buf) {
--			if (buf->snapshot)
-+		if (bb) {
-+			if (bb->snapshot)
- 				bts->handle.head =
--					local_xchg(&buf->data_size,
--						   buf->nr_pages << PAGE_SHIFT);
-+					local_xchg(&bb->data_size,
-+						   bb->nr_pages << PAGE_SHIFT);
- 			perf_aux_output_end(&bts->handle,
--			                    local_xchg(&buf->data_size, 0));
-+					    local_xchg(&bb->data_size, 0));
- 		}
- 
- 		cpuc->ds->bts_index = bts->ds_back.bts_buffer_base;
-@@ -382,19 +380,19 @@ void intel_bts_disable_local(void)
- }
- 
- static int
--bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
-+bts_buffer_reset(struct bts_buffer *bb, struct perf_output_handle *handle)
- {
- 	unsigned long head, space, next_space, pad, gap, skip, wakeup;
- 	unsigned int next_buf;
- 	struct bts_phys *phys, *next_phys;
- 	int ret;
- 
--	if (buf->snapshot)
-+	if (bb->snapshot)
- 		return 0;
- 
--	head = handle->head & ((buf->nr_pages << PAGE_SHIFT) - 1);
-+	head = handle->head & ((bb->nr_pages << PAGE_SHIFT) - 1);
- 
--	phys = &buf->buf[buf->cur_buf];
-+	phys = &bb->buf[bb->cur_buf];
- 	space = phys->offset + phys->displacement + phys->size - head;
- 	pad = space;
- 	if (space > handle->size) {
-@@ -403,10 +401,10 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
- 	}
- 	if (space <= BTS_SAFETY_MARGIN) {
- 		/* See if next phys buffer has more space */
--		next_buf = buf->cur_buf + 1;
--		if (next_buf >= buf->nr_bufs)
-+		next_buf = bb->cur_buf + 1;
-+		if (next_buf >= bb->nr_bufs)
- 			next_buf = 0;
--		next_phys = &buf->buf[next_buf];
-+		next_phys = &bb->buf[next_buf];
- 		gap = buf_size(phys->page) - phys->displacement - phys->size +
- 		      next_phys->displacement;
- 		skip = pad + gap;
-@@ -431,8 +429,8 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
- 				 * anymore, so we must not be racing with
- 				 * bts_update().
- 				 */
--				buf->cur_buf = next_buf;
--				local_set(&buf->head, head);
-+				bb->cur_buf = next_buf;
-+				local_set(&bb->head, head);
- 			}
- 		}
- 	}
-@@ -445,7 +443,7 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
- 		space -= space % BTS_RECORD_SIZE;
- 	}
- 
--	buf->end = head + space;
-+	bb->end = head + space;
- 
- 	/*
- 	 * If we have no space, the lost notification would have been sent when
-@@ -462,7 +460,7 @@ int intel_bts_interrupt(void)
- 	struct debug_store *ds = this_cpu_ptr(&cpu_hw_events)->ds;
- 	struct bts_ctx *bts;
- 	struct perf_event *event;
--	struct bts_buffer *buf;
-+	struct bts_buffer *bb;
- 	s64 old_head;
- 	int err = -ENOSPC, handled = 0;
- 
-@@ -485,8 +483,8 @@ int intel_bts_interrupt(void)
- 	if (READ_ONCE(bts->state) == BTS_STATE_STOPPED)
- 		return handled;
- 
--	buf = perf_get_aux(&bts->handle);
--	if (!buf)
-+	bb = perf_get_aux(&bts->handle);
-+	if (!bb)
- 		return handled;
- 
- 	/*
-@@ -494,26 +492,26 @@ int intel_bts_interrupt(void)
- 	 * there's no other way of telling, because the pointer will
- 	 * keep moving
- 	 */
--	if (buf->snapshot)
-+	if (bb->snapshot)
- 		return 0;
- 
--	old_head = local_read(&buf->head);
-+	old_head = local_read(&bb->head);
- 	bts_update(bts);
- 
- 	/* no new data */
--	if (old_head == local_read(&buf->head))
-+	if (old_head == local_read(&bb->head))
- 		return handled;
- 
--	perf_aux_output_end(&bts->handle, local_xchg(&buf->data_size, 0));
-+	perf_aux_output_end(&bts->handle, local_xchg(&bb->data_size, 0));
- 
--	buf = perf_aux_output_begin(&bts->handle, event);
--	if (buf)
--		err = bts_buffer_reset(buf, &bts->handle);
-+	bb = perf_aux_output_begin(&bts->handle, event);
-+	if (bb)
-+		err = bts_buffer_reset(bb, &bts->handle);
- 
- 	if (err) {
- 		WRITE_ONCE(bts->state, BTS_STATE_STOPPED);
- 
--		if (buf) {
-+		if (bb) {
- 			/*
- 			 * BTS_STATE_STOPPED should be visible before
- 			 * cleared handle::event
+-- 
+2.34.1
+
