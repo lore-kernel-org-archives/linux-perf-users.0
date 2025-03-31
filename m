@@ -1,63 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE70155725;
-	Mon, 31 Mar 2025 17:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78BAB1F5F6;
+	Mon, 31 Mar 2025 17:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743440855; cv=none; b=suR5ikZPQLd4wh9j4IB2OtkRkJCKXrmdxDcvNxDSm8GrL4a42adf+8pximoUg27Hho4EIWnD/OArweqi7qk4r9lV5X1OGh3nZa1QrYwzeiah2nmvb9gmVhK2h+30d4UmdFI8aliefd1ul1qhNjId/gZaqGpgWJKBG4I+CeNoxDc=
+	t=1743442117; cv=none; b=EJ6KowIiLtY+gw9DbExWPL1wwcRxmUjGZwNjfx3lR6Ek8h7QGEqfuLQV/9bv7M3dEsvQ70plfWxV09KaaZOt4ShadI1WRoJ9scM360OyHHiLQxBgfKV2ktpVuFBJ15xqJJKgB4EFVxNDjUbQl5zgZjpf/zyCbYNAfG5UdSoZpDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743440855; c=relaxed/simple;
-	bh=1Nk0JxPo3IrWyqDWIESPIvocBYdWxLmAxDWkJ1OndHI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VknTYBmDDAZnmCC4GfNn43Y1fXgmFKVo7+/qptO8zKAFGA9469yW5HkypQF31I2bo74PLf3R6LO3/f59cJRIm2C+jTLM3AbwOzy73ycW2A49jJm0WCVCZAlcyEXi5P0PTw7mNRaS4l7PHLQEr3MHbVd7vUcRRMD/Sl0TCt53Pak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ox0NIZSP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ox0NIZSP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6430C4CEE3;
-	Mon, 31 Mar 2025 17:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743440854;
-	bh=1Nk0JxPo3IrWyqDWIESPIvocBYdWxLmAxDWkJ1OndHI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ox0NIZSP087PvOMptGPCL2xFsSWvnHcaOTSQLDyU/+Zcn8yiQ78zjCUjhcNSKZNVk
-	 IU+GV+1XSUO3C8RNf3dTtmeYLQViOhoJn8tFoOxd0tV973rcOsYuybQwY5FtNFelq3
-	 pMx+cPFmJt4arfoz8YwiQEEx5xPGj9IQVdaX7Rdh3hpJAaPfUXhtNBzkfE7ZVkb9d6
-	 8heD5X+aG9WGLGBt5RIeFRdC3oI0PB+3aWhvvhTPw5UkoHLcB/IjEzpxMFxHucMoVz
-	 w4hVFm5nSov1ysaTuWN0DxqyXbQO3VJqWB0midi/DdrgsOfRjp+VnFzviVgMxPEnqC
-	 tXO11yGsYyfUw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AEBE4380AA7A;
-	Mon, 31 Mar 2025 17:08:12 +0000 (UTC)
-Subject: Re: [GIT PULL] perf-tools updates for v6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250328063228.3824573-1-namhyung@kernel.org>
-References: <20250328063228.3824573-1-namhyung@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250328063228.3824573-1-namhyung@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.15-2025-03-27
-X-PR-Tracked-Commit-Id: 35d13f841a3d8159ef20d5e32a9ed3faa27875bc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 802f0d58d52e8e34e08718479475ccdff0caffa0
-Message-Id: <174344089132.63132.13406299838665692519.pr-tracker-bot@kernel.org>
-Date: Mon, 31 Mar 2025 17:08:11 +0000
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+	s=arc-20240116; t=1743442117; c=relaxed/simple;
+	bh=NsI1KtOwBbKNwb0DsinyTWOjTdcvIwsDOB7PZDjA8iI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uaS2tqA8b7FTXuzZywzY02BTI1UPasC4R3L45UdL1duWKnQ6DvqCGmWY3bNLxwlt0/NEv/m3HlaDy1lSjD+zReCbx4i8cLtAWYrjf0MRFicVBHS9EL8/bdbaxJJYAvGt2rakmF0kGgXFDSBjmsBquAqosX56F+YHtJCMKr3OFHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B1F11692;
+	Mon, 31 Mar 2025 10:28:38 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EB5283F59E;
+	Mon, 31 Mar 2025 10:28:32 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH] perf tests switch-tracking: Fix timestamp comparison
+Date: Mon, 31 Mar 2025 18:27:59 +0100
+Message-Id: <20250331172759.115604-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Thu, 27 Mar 2025 23:32:24 -0700:
+The test might fail on the Arm64 platform with the error:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.15-2025-03-27
+  perf test -vvv "Track with sched_switch"
+  Missing sched_switch events
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/802f0d58d52e8e34e08718479475ccdff0caffa0
+The issue is caused by incorrect handling of timestamp comparisons. The
+comparison result, a signed 64-bit value, was being directly cast to an
+int, leading to incorrect sorting for sched events.
 
-Thank you!
+Fix this by explicitly returning 0, 1, or -1 based on whether the result
+is zero, positive, or negative.
 
+Fixes: d44bc5582972 ("perf tests: Add a test for tracking with sched_switch")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/tests/switch-tracking.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+index 8df3f9d9ffd2..6b3aac283c37 100644
+--- a/tools/perf/tests/switch-tracking.c
++++ b/tools/perf/tests/switch-tracking.c
+@@ -264,7 +264,7 @@ static int compar(const void *a, const void *b)
+ 	const struct event_node *nodeb = b;
+ 	s64 cmp = nodea->event_time - nodeb->event_time;
+ 
+-	return cmp;
++	return cmp < 0 ? -1 : (cmp > 0 ? 1 : 0);
+ }
+ 
+ static int process_events(struct evlist *evlist,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
