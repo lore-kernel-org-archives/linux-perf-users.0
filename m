@@ -1,151 +1,195 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F2821660F
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Mar 2025 21:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D357EACE;
+	Tue,  1 Apr 2025 02:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743457550; cv=none; b=etd0ipM6gxRB8uV7JJi2BUC5SMa04hKt+X6Ehtg+s5LIQ4x5pZsTgs6UnK0gZ0xrupQMztuacnK5JHhzz9bnUMGrLKntPD9DLJqFVU1OY/HjuDUPo4FBOokQ280RUd0baiIc1zqVoAIn9Kpp2bwF9u3dSwLMMzKudHbZgS6kVs0=
+	t=1743473293; cv=none; b=M5CVG5yz/fG6KZ3hH4Ckchqc7OEeVedjOPoE1T7IpenGyGSA9G8IQF9Cs6Q7ETjOAOYVv2nrjESqTF2hM+py+Sw3eD2TVKf+Tx/99YFglobzwTsjoIc84e55eQEsMUOlbfMLBRz7PggIv7xskhAWLxmUii4p3DI3VojPXyKQnUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743457550; c=relaxed/simple;
-	bh=5Idp/e1CX6KvP46H/IAQSzNlFEJZHJleXvMU+UGEsKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MguGCs6JeHSZbLa3Eb4i7R4NVF090rw2bvN2ciL2F53ja8o8ep85vMrW2PKaRDUrJBjEsWSKqXtD7RuwL4ZbSpy4Wpwvo8fd8Cm4xtDSlrLXDuoFRqJmxg+uJP4DKUAuJqUl+NM2Db/FS8brrSUt6/pvGw3ebmck1KZqdbrTMyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=hYn56Aiy; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1743473293; c=relaxed/simple;
+	bh=lCssQdZbCquHUtvBNwAYmoP4TXmIpPQYUK8Wv0tAJiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RZ1I0y7mxJi19hi+66c8He1cyDIudNaWkxKL1EGopjc2NjhiXg6DrV5kyvk9XKZelktqz0GimtCEh+kbqWqdhtnGWzoHRzi0LW/kiOGF06nVxiN6B1DB6jR4Zgy/XxoA5m/WzhcT0Jip5RyY559JPLXJwasF4U+Pl7BbJko3nws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMF71JTL; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="hYn56Aiy"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso46171375e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Mar 2025 14:45:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMF71JTL"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6df83fd01cbso24762056d6.2;
+        Mon, 31 Mar 2025 19:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743457546; x=1744062346; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=mlR2/wtGl27sbeVJieM7lcGEWWY98/3HknehfYFQ3N0=;
-        b=hYn56Aiyv02GdoPo4uBxbrlSGBdGlo4UgbwTUBDbw47O/0LcemMuI87AokxOcGJGdn
-         0e39lV85rffVM8FNIbbgBJ69W9BbIL4mmodsu36fr9Z3QVXKnItvyCzxM8ajdlDib5Z4
-         oBoYsA+pEJuUCgXPLyAQ3Sgu03XmGCTzJ/qNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743457546; x=1744062346;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743473291; x=1744078091; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mlR2/wtGl27sbeVJieM7lcGEWWY98/3HknehfYFQ3N0=;
-        b=XUTZlwPszk3VSLAQ9PwVixFUC46ShH/FBJvoxnrmLGn53D63w5RTlY+pMwUCgLvuMR
-         zTXenNMG29I871VG1Qym6lFDFhY1h+NkluiUID5Z/s/n8G775c+94ttIxp0mZZusVvNU
-         fUjetDVmtzA9oOCt5MWo3P144+W/ouFYXj+4EDEeAcx9sTMhU6OEFRdDDUHkUZj9ScGR
-         8Cy+B5KOhHTmbGVy89vCloQx6BNPYdfHCUFiuD+xUyqzs6LK+7ipViiK+OrzHOctYfuB
-         LtgrAThA9ci51oW5XcubnHmD3u7wC+6NP7JEkA8PdxC/si85lO1mcGR3jWwkfl0KY0yE
-         iu+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVGzT50+G+ajWWssCKM3fPiUBdK+84xVLdO23pCy+E9EMwBZj9f3fRcSmBiNZzNy6lpNmAaODCFOVsuiu3MWO/2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+I+gxAA/t65AddKo5dNYxFb6zYpIs301rt96PLe1DXoLEfOFV
-	0F/VAhvKhbiGO75RaYI0imeuNT3vGMNxFOJzbRgl8Wxm/Ut1cFz317ghOx17fe4=
-X-Gm-Gg: ASbGncvo7YdmZ5Enl7hf6vjZYW5ZDYTvCl3YfR3gO2Wx/EUZQefi/zIlTAPxadWEskS
-	194vD/84pOfraNUIZekhEQ9/DhjD0HQOjopuGcdMf2w0nPgAldUvF9JsqK4zPPBVAlnZ+jt31v2
-	lt2YOfIvgxUKE+7NUEg8MhGLyb+CrKGwssfDST5cU0zVl86HrVV9iHKIMA7ct56IGWPbekZPL9Q
-	vjHB8Iykxz2dLIjQSlH6Z5iPi0Hrba0Swqp79+DTHcYTquXV8tc4Y4W2Ak/wNULwFoVblFjuXN9
-	5anLSvbMKf46FUm5aH7dzphvADmhdRRHc7wFhb5ypwHXQ9Avdzi2UJP11VDG8jGOsmW4iMHX583
-	B6+JzSSyBMQ==
-X-Google-Smtp-Source: AGHT+IEht0ibCOVwapLKQorYkWh1tvEc+BCDGhekq3S+vwpg3hG7nDeUzCkmGMWNB+hguSfQi069kg==
-X-Received: by 2002:a05:600c:314b:b0:43c:ea1a:720c with SMTP id 5b1f17b1804b1-43db624b452mr113357845e9.18.1743457546422;
-        Mon, 31 Mar 2025 14:45:46 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efeacasm177430295e9.23.2025.03.31.14.45.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 14:45:45 -0700 (PDT)
-Message-ID: <0da43a86-81b0-4388-b47b-3a76b15f2a4c@citrix.com>
-Date: Mon, 31 Mar 2025 22:45:43 +0100
+        bh=Ms0+har1C2wQOkI4KlWfLkswK693L/k5CGR6bBU56S4=;
+        b=jMF71JTLjftCdg1qAKo173fCZUSB1GCB9KmL8YbtkYL4oQdy7sFZbCe37qWoelNw44
+         AYWMsnpW4BdjcXiC70OvE/xS4ttYdaxWDt4OdRtLRNFUUDsJVCBCo0hG52N5V4413DYu
+         Yh1ZjIh9uTHI9m6LGOi2fiRiWR3cfXfHHSKOwVGhJmyS+OY1X2vM8HI7O5Zp+SdxEGAu
+         s4cMwX95a/FLN5FlorquBubevT4Jl8RJMMv3xcIC/75lWY+xS/l7vlLr5IQO3bIxGok3
+         8Hsiuwawu9TLNUQ071UJ0KMYlrrPjHCpJYbvWWIzF6nQssaVVUVx1dIEKibG1J8ySxbq
+         BtiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743473291; x=1744078091;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ms0+har1C2wQOkI4KlWfLkswK693L/k5CGR6bBU56S4=;
+        b=AqMAYvHJiggNzO/VFWd+H6pzRK5Z/tfWljFoIvRLyUxGm1UTDHGCYb/4b82q7H6vu9
+         AJotx5/A9yVu0bDRASsRVfSZvQnBNLJoKVC5e7eecbOpuyB6l76zGhagSZZZHC1Vk2+G
+         hWN5cAzzD2UiFa2NhABWxZUKb/+V2kf/FQgyv2EJXqGQQoL1pFkYMa5DJX16NZpt3v3z
+         yPOi8EkqDL2T1r69QeFDDbP/LV+CtEKbGofpq7e4YpOHC4vHryqGtzDr/bjBWGkvDS4G
+         iTeAQwd2zEJslAL125VEmuLSXenHuHQs/pMD5Yq58sdD80oJwwAvCnT7phFIj81aAgK4
+         nbbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdpLuS0k2Q73boVKJO4DwIQqCHi06Wcse3oVQMt89pFYPCytwjhjM9DEauvTTYFnAIQMk=@vger.kernel.org, AJvYcCWSVlnEt2S8nhF5q7PKPRaZ4Ucq7POdaeizLi2SUJtaKBlFwuRXoJIs7u5rLHIgoGALV4AypWTr9wYCPiIwYQ==@vger.kernel.org, AJvYcCWiEsEBy0fZd1waMQOPsd/1KmNALiOA7me8D9bcqJd3HFwBYJUBjB9OGjO+g+mbaKzCCYZRoN4PiEmvDJF5KIhsbw==@vger.kernel.org, AJvYcCXXgCQLxt2IJwUzVBp1EqgFGZgDrkVllHx3qj0+XJLc/DVCZ4Ya4ADTFl0aG7LfnA91/Jb0cryv2rgJbxT0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/6yPRF9fJCJqMmmm86IlLXsc+CHFjXwrs4fGO6/UKaGikqKcK
+	FXADhDiYY9MdMX6EyQWoK7u6h9lcrdvM9Yl97wDc/p0KjY4ySFD9EYv/uHL+hKbn8PO27LiR825
+	9RdO6jRmOZzHkRuIkrfTzcRTOsHM=
+X-Gm-Gg: ASbGncudYgBUrr88ebnw38owqbfYa4opTUO2KGLpt46UzQ/qlYkc25INaK4RSS+mJTK
+	rxUAgSfVtiP2nATAjPGaDWYfX5aI95176unMagKSygHcwEFsdUCwjCW2cFBpz22Q4Z/9qdFcGrJ
+	e6nkN4UftE7baAwmMOjvluAoLsIM0=
+X-Google-Smtp-Source: AGHT+IEwVwo9jlkAbUXTU14Qfh3LA01iPKDDWMjUrm4tnGQHU4i3QsPK8QEDaJfFZ5Z8PEovYhXsWbFiclds5IHQi9M=
+X-Received: by 2002:ad4:4ea8:0:b0:6e8:9a55:824f with SMTP id
+ 6a1803df08f44-6eed5f60fddmr145906786d6.6.1743473290823; Mon, 31 Mar 2025
+ 19:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
- native_wrmsrl()
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
- kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-ide@vger.kernel.org, linux-pm@vger.kernel.org, bpf@vger.kernel.org,
- llvm@lists.linux.dev
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, jgross@suse.com,
- peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-2-xin@zytor.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20250331082251.3171276-2-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250331121820.455916-1-bhupesh@igalia.com> <20250331121820.455916-2-bhupesh@igalia.com>
+In-Reply-To: <20250331121820.455916-2-bhupesh@igalia.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Tue, 1 Apr 2025 10:07:34 +0800
+X-Gm-Features: AQ5f1Jogo27TUblm0QChMfxpov615glFLI-myzoObvnllqhLHnsXspUqCVEi74w
+Message-ID: <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+To: Bhupesh <bhupesh@igalia.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com, 
+	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org, 
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com, 
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de, 
+	vschneid@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 31/03/2025 9:22 am, Xin Li (Intel) wrote:
-> __wrmsr() is the lowest level primitive MSR write API, and its direct
-> use is NOT preferred.  Use its wrapper function native_wrmsrl() instead.
+On Mon, Mar 31, 2025 at 8:18=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wrote:
 >
-> No functional change intended.
+> Provide a parallel implementation for get_task_comm() called
+> get_task_full_name() which allows the dynamically allocated
+> and filled-in task's full name to be passed to interested
+> users such as 'gdb'.
 >
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Currently while running 'gdb', the 'task->comm' value of a long
+> task name is truncated due to the limitation of TASK_COMM_LEN.
+>
+> For example using gdb to debug a simple app currently which generate
+> threads with long task names:
+>   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>   # cat log
+>
+>   NameThatIsTooLo
+>
+> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+> that all the legacy / existing ABI, continue to work as before using
+> '/proc/$pid/task/$tid/comm'.
+>
+> This patch only adds a parallel, dynamically-allocated
+> 'task->full_name' which can be used by interested users
+> via '/proc/$pid/task/$tid/full_name'.
+>
+> After this change, gdb is able to show full name of the task:
+>   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>   # cat log
+>
+>   NameThatIsTooLongForComm[4662]
+>
+> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> ---
+>  fs/exec.c             | 21 ++++++++++++++++++---
+>  include/linux/sched.h |  9 +++++++++
+>  2 files changed, 27 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/exec.c b/fs/exec.c
+> index f45859ad13ac..4219d77a519c 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  {
+>         struct task_struct *me =3D current;
+>         int retval;
+> +       va_list args;
+> +       char *name;
+> +       const char *fmt;
+>
+>         /* Once we are committed compute the creds */
+>         retval =3D bprm_creds_from_file(bprm);
+> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+>                  * detecting a concurrent rename and just want a terminat=
+ed name.
+>                  */
+>                 rcu_read_lock();
+> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_path.=
+dentry->d_name.name),
+> -                               true);
+> +               fmt =3D smp_load_acquire(&bprm->file->f_path.dentry->d_na=
+me.name);
+> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
+> +               if (!name)
+> +                       return -ENOMEM;
+> +
+> +               me->full_name =3D name;
+> +               __set_task_comm(me, fmt, true);
+>                 rcu_read_unlock();
+>         } else {
+> -               __set_task_comm(me, kbasename(bprm->filename), true);
+> +               fmt =3D kbasename(bprm->filename);
+> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
+> +               if (!name)
+> +                       return -ENOMEM;
+> +
+> +               me->full_name =3D name;
+> +               __set_task_comm(me, fmt, true);
+>         }
+>
+>         /* An exec changes our domain. We are no longer part of the threa=
+d
+> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>         return 0;
+>
+>  out_unlock:
+> +       kfree(me->full_name);
+>         up_write(&me->signal->exec_update_lock);
+>         if (!bprm->cred)
+>                 mutex_unlock(&me->signal->cred_guard_mutex);
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 56ddeb37b5cd..053b52606652 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1166,6 +1166,9 @@ struct task_struct {
+>          */
+>         char                            comm[TASK_COMM_LEN];
+>
+> +       /* To store the full name if task comm is truncated. */
+> +       char                            *full_name;
+> +
 
-The critical piece of information you're missing from the commit message
-is that the MSR_IMM instructions take a single u64.
+Adding another field to store the task name isn=E2=80=99t ideal. What about
+combining them into a single field, as Linus suggested [0]?
 
-Therefore to use them, you've got to arrange for all callers to provide
-a single u64, rather than a split u32 pair.
+[0]. https://lore.kernel.org/all/CAHk-=3DwjAmmHUg6vho1KjzQi2=3DpsR30+CogFd4=
+aXrThr2gsiS4g@mail.gmail.com/
 
-~Andrew
+--=20
+Regards
+Yafang
