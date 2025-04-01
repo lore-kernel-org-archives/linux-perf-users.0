@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1573B224AF0
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F86E224B14
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531945; cv=none; b=sdwotiyBnrq1V7kkYCBO/EeI2nxyEo0JFsHFQjgJBlLuWE1X21kV8m1s62aY64RUJvkbitQVNzqHyPDh9LebI/7GCaB0C37hU8MU0xavZA4IYDQPsD7Pu+dgi9IMbLgAneutfV3C7TM4G7Jah0oAnUEyE5YQ8Prn6X1WITMCOos=
+	t=1743531947; cv=none; b=n9RFBJfT/DAnYBzENapykMYRqWFyMvvLgKzhgouQzyqlOEbG1ABaIqaChB4PIPdwlLj+5XtzNbYaXeeoW45yzE2uTv5FqO0Vq7t2tjGERpvqd5Lbo62rHLb7gbSmlhOxXMPe9021rafMSg0AXmi6ZiEkux3XmsY6RAvWbT7TNw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531945; c=relaxed/simple;
-	bh=al5Mxt8nXAS1u6U/cGK5MI8j815Cmws4dfAODtLpLL8=;
+	s=arc-20240116; t=1743531947; c=relaxed/simple;
+	bh=Qu3ENIwjPtRUy2H8z/5cBW7sG1RGzLF/ISAym7rxPVQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=WfVqtr+Z6rs6AQr9ojACZr6vnDC6VrWhDGIk3TLt95HQolcgwEetqR4+BPm3WE2spFAhGJmOSFOd5GqKgMnxnhvRAGEBbffcLZ3E2PNbwn2BtpyUGw1us9d3POVLExFa1OZ97rCyd4wgFiuDPnlbr+gLEgugTJ8JssRx/0gT97Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZdwFdBgF; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=hp8+a7dleokv6Pd9A6F/EQsy6Es0h+STiQiL1XS4RQUiLtA63fnCON306C0v7t6quZwsBPD2kTlRMXI6ECNd1s0M/qmuAZ6/MtAXoVVgHR3r2l7gELlAPv/G7gdGL+Sa/dDvLPU7knUJIbcUqrmdDTMe7ISu9/oDNTy1eMIHoW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=onOvRPbn; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZdwFdBgF"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2255ae39f8fso1763525ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="onOvRPbn"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2264e5b2b7cso106885665ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531942; x=1744136742; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531945; x=1744136745; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rm6T1zPzmDTC1F8AVzBi/d+/IoyjicMPmiE+ir3anfM=;
-        b=ZdwFdBgFmWA0jnU1RCroKP8akNX1CkuxpiBGjdDZ4b3I7A3OTh43xwkDnmjgeV8qf+
-         9q+FBzCJJpFkHuXT+rr1rx9x8pQrYy31hAoLoj2Jj2cRsZTrQDVZpz/MZYn456+gyfev
-         +HmrspJRZ4vx9IaeyHyNrWb3WV0d/V0aGsb7B8EoO3BtNK8A1kCqp6NwCyVV/2SII6up
-         5MkMcC9zFtMZTlYTJ2dP9joDfRTrhGwZmlaS4tuAQoWeCZwH9sKt9KP/LooC0ZXWLAnX
-         kev8ziROVDuATKkT7GyCNkCE6MXVZb+j9c/QCoHcjD9hb6rFrqDPVtHuTZf0bTw/nNXx
-         tFSQ==
+        bh=vvFsqXOQnMSY0FwcqTPMe5NcrPZKJkPdo6X7LXEIfzg=;
+        b=onOvRPbnefm7XS3Bg/t+kW0L/KEFZzgttCvOrDb/1AKfj3Z13BPlJwBjlM4FdXFxIG
+         fjMPaz/DM9ALlR5JK7yTc6FFdS/BI4hLEguIgwZJlGnNvK8sCz+x02UpSjXGKU0qtpkR
+         10Y5+2GVMy9p/+VKGiR3Fw3i1Jvjd+JtKfBjAreEKXq1OyKVTpOiFhRVAqq3qHl0gMxV
+         NwoTCTUi59/gqg6BlSZ4Yviy9QsffYSYNqocmhygcwkvUY3b41e4Fm7ki5Q9EgX+Mm/J
+         9dhApM/EqyhekHu6q5kQv9ZpEsSoYpH5D6+pFPMzkD19f9KE7XLwwEDAS1WNmD/qjS/K
+         qOXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531942; x=1744136742;
+        d=1e100.net; s=20230601; t=1743531945; x=1744136745;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rm6T1zPzmDTC1F8AVzBi/d+/IoyjicMPmiE+ir3anfM=;
-        b=IXxlF/jJaqJzgr9awJR6CRmr+Og+numSpFgG6OP2a8iSyyzTrfhwG5kkXvHOzQl9Kn
-         h616ZH9RMlBNs5wXyBS7ENFt3VRAHJ2pYSAJr06Np2eoKoXjw3tsXYIn2vHRcVEYDJIf
-         OH0z1oH2iyWvnC8sGacJrl0IrL3fDWkjm3JvEyIyLpOxBTiCR62ZgIjaLHMIJspmKKEj
-         0WFoLsXQBOEmbdL3+wPqYSU3ALAj9lrtbV4AkC1Pdkrdojv3dcxbwWBF8KPFtVONg9G0
-         TknKnqsvN8AQ3DycErnV7UTwnnOu56aDc27yVsr+WN6SbcNRCba5X/NMQ9O7s1AsOBdI
-         VAdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxG1q4yDTEQJL6sidt/wD1aNwZPIJbUGRr5ZM1FbQgmT8933cUofaD8i3nIbB52jqjLcVqPLLFf9SuT0nQq9oQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoqweOosIsv29fLRhI0iejnuSD/5+8RtBI0uz4ZwDZKVeIibXn
-	AgRTi7poRK3qkRoLpdxo3nMzK5hC7klSzMjvqvJJXhYb9X4ytLp88B/OJqe+yKxXsKlqCUDecuc
-	C/j0pxA==
-X-Google-Smtp-Source: AGHT+IHKVFE7gUqlBrBiDOADaQ8FyWydoZ9FtAQo/eYfkCA1HXkf5tOSXncxrIuq49BPlqeHQvnDd3W85GCd
-X-Received: from plps15.prod.google.com ([2002:a17:902:988f:b0:223:fab5:e761])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1cf:b0:21f:6ce8:29df
- with SMTP id d9443c01a7336-2296828f748mr12279175ad.3.1743531942438; Tue, 01
- Apr 2025 11:25:42 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:31 -0700
+        bh=vvFsqXOQnMSY0FwcqTPMe5NcrPZKJkPdo6X7LXEIfzg=;
+        b=w0gOkPfKRmDarj/vMSQ3Z0cKFbtxU/ZjTpp8ao39wXVq+6OsilfKziUZMdO8hAuh+m
+         CMWQ4949K20MscwVYm22i+OSM4Ri8//IaWjBH2xuY5XK8s/JzdxV6AnC9nHygO2FLZGM
+         GaU0pI1ejtbCVwdLAUsjzACBWre6CzagsLZ9H4O1ejiwSBNpzf4ZiIwN+llJJ3Jo4T7K
+         YczDNRIeJLsQ76NGpiKo1hZWLUzIK/pHIZRo47nsaSqhKn+esgKx5VO+BsEn+n+O0Kya
+         QIU6v6sf9HOOeCYmns64PHsW7MJTHqw2gnZ94pFf4ULLMP1le9sHzK/iSo4vw0WkNMZJ
+         5mfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVN0Qs3+PQWcNyKBAyFhDbUmE/NFRRWPYe+bGJOIoT2BIgSbNlY7V7NKmuZwUIXi/vCv6Ctw+xTE/YlS5mA4cif@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuNC9523nEKNdjOEMbkftdtZ+BxHjKPcAvTWpkmfEcnPiaDfJC
+	u9kawalw4t8f/FptzwAFRLrFrNtX6SIdWt4pb+wl1dzltTPtBbUJSEqPanVC9alj/S528aREjFv
+	TSUKlXg==
+X-Google-Smtp-Source: AGHT+IHW/4wmxkq4+EIq5aHOMrmtVB2GZ7+Z/8jfNXSu21JgnRUTXtDc8Kcd6rJ8130lmEAYOc9SAvaid5cP
+X-Received: from pfgs4.prod.google.com ([2002:a05:6a00:1784:b0:736:451f:b9f4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ebc7:b0:224:160d:3f54
+ with SMTP id d9443c01a7336-2292f97caa0mr233931205ad.31.1743531944799; Tue, 01
+ Apr 2025 11:25:44 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:32 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-34-irogers@google.com>
-Subject: [PATCH v1 33/48] perf evlist: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-35-irogers@google.com>
+Subject: [PATCH v1 34/48] perf bpf_counter: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,272 +114,52 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-evlist.c |  2 +-
- tools/perf/util/evlist.c    | 29 +++++++++++++++--------------
- tools/perf/util/evsel.c     | 35 ++++++++++++++---------------------
- 3 files changed, 30 insertions(+), 36 deletions(-)
+ tools/perf/util/bpf_counter.c        | 6 +++---
+ tools/perf/util/bpf_counter_cgroup.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
-index a9bd7bbef5a9..d8888c46238a 100644
---- a/tools/perf/builtin-evlist.c
-+++ b/tools/perf/builtin-evlist.c
-@@ -44,7 +44,7 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
- 	tool.feature = process_header_feature;
- 	session = perf_session__new(&data, &tool);
- 	if (IS_ERR(session))
--		return PTR_ERR(session);
-+		return (int)PTR_ERR(session);
- 
- 	if (data.is_pipe)
- 		perf_session__process_events(session);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index c1a04141aed0..5692ea9f5717 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -920,7 +920,7 @@ int __evlist__parse_mmap_pages(unsigned int *mmap_pages, const char *str)
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index 73fcafbffc6a..3b1dbf1f5f66 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -177,7 +177,7 @@ static int bpf_program_profiler__load(struct evsel *evsel, struct target *target
  		return -1;
+ 
+ 	while ((tok = strtok_r(bpf_str, ",", &saveptr)) != NULL) {
+-		prog_id = strtoul(tok, &p, 10);
++		prog_id = (unsigned int)strtoul(tok, &p, 10);
+ 		if (prog_id == 0 || prog_id == UINT_MAX ||
+ 		    (*p != '\0' && *p != ',')) {
+ 			pr_err("Failed to parse bpf prog ids %s\n",
+@@ -418,7 +418,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
+ 	link = bpf_program__attach(skel->progs.on_switch);
+ 	if (IS_ERR(link)) {
+ 		pr_err("Failed to attach leader program\n");
+-		err = PTR_ERR(link);
++		err = (int)PTR_ERR(link);
+ 		goto out;
  	}
  
--	*mmap_pages = pages;
-+	*mmap_pages = (unsigned int)pages;
- 	return 0;
- }
- 
-@@ -1442,7 +1442,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+@@ -459,7 +459,7 @@ static int bperf_attach_follower_program(struct bperf_follower_bpf *skel,
+ 	else {
+ 		link = bpf_program__attach(skel->progs.fexit_XXX);
+ 		if (IS_ERR(link))
+-			err = PTR_ERR(link);
++			err = (int)PTR_ERR(link);
  	}
  
- 	if (!evlist->workload.pid) {
--		int ret;
-+		ssize_t ret;
- 
- 		if (pipe_output)
- 			dup2(2, 1);
-@@ -1482,7 +1482,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
- 		if (ret != 1) {
- 			if (ret == -1)
- 				perror("unable to read pipe");
--			exit(ret);
-+			exit((int)ret);
- 		}
- 
- 		execvp(argv[0], (char **)argv);
-@@ -1543,7 +1543,7 @@ int evlist__start_workload(struct evlist *evlist)
- {
- 	if (evlist->workload.cork_fd >= 0) {
- 		char bf = 0;
--		int ret;
-+		ssize_t ret;
- 		/*
- 		 * Remove the cork, let it rip!
- 		 */
-@@ -1553,7 +1553,7 @@ int evlist__start_workload(struct evlist *evlist)
- 
- 		close(evlist->workload.cork_fd);
- 		evlist->workload.cork_fd = -1;
--		return ret;
-+		return (int)ret;
- 	}
- 
- 	return 0;
-@@ -1656,7 +1656,8 @@ int evlist__strerror_open(struct evlist *evlist, int err, char *buf, size_t size
- int evlist__strerror_mmap(struct evlist *evlist, int err, char *buf, size_t size)
- {
- 	char sbuf[STRERR_BUFSIZE], *emsg = str_error_r(err, sbuf, sizeof(sbuf));
--	int pages_attempted = evlist->core.mmap_len / 1024, pages_max_per_user, printed = 0;
-+	int pages_attempted = (int)evlist->core.mmap_len / 1024;
-+	int pages_max_per_user, printed = 0;
- 
- 	switch (err) {
- 	case EPERM:
-@@ -1941,7 +1942,7 @@ int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *c
- 	if (strncmp(str, "fd:", 3))
- 		return evlist__parse_control_fifo(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
- 
--	*ctl_fd = strtoul(&str[3], &endptr, 0);
-+	*ctl_fd = (int)strtoul(&str[3], &endptr, 0);
- 	if (endptr == &str[3])
- 		return -EINVAL;
- 
-@@ -1950,7 +1951,7 @@ int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *c
- 		if (endptr != comma)
- 			return -EINVAL;
- 
--		*ctl_fd_ack = strtoul(comma + 1, &endptr, 0);
-+		*ctl_fd_ack = (int)strtoul(comma + 1, &endptr, 0);
- 		if (endptr == comma + 1 || *endptr != '\0')
- 			return -EINVAL;
- 	}
-@@ -2016,7 +2017,7 @@ int evlist__finalize_ctlfd(struct evlist *evlist)
- static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
- 			      char *cmd_data, size_t data_size)
- {
--	int err;
-+	ssize_t err;
- 	char c;
- 	size_t bytes_read = 0;
- 
-@@ -2070,12 +2071,12 @@ static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
- 		}
- 	}
- 
--	return bytes_read ? (int)bytes_read : err;
-+	return bytes_read ? (int)bytes_read : (int)err;
- }
- 
- int evlist__ctlfd_ack(struct evlist *evlist)
- {
--	int err;
-+	ssize_t err;
- 
- 	if (evlist->ctl_fd.ack == -1)
- 		return 0;
-@@ -2085,7 +2086,7 @@ int evlist__ctlfd_ack(struct evlist *evlist)
- 	if (err == -1)
- 		pr_err("failed to write to ctl_ack_fd %d: %m\n", evlist->ctl_fd.ack);
- 
--	return err;
-+	return (int)err;
- }
- 
- static int get_cmd_arg(char *cmd_data, size_t cmd_size, char **arg)
-@@ -2305,7 +2306,7 @@ static int str_to_delay(const char *str)
- 	d = strtol(str, &endptr, 10);
- 	if (*endptr || d > INT_MAX || d < -1)
- 		return 0;
--	return d;
-+	return (int)d;
- }
- 
- int evlist__parse_event_enable_time(struct evlist *evlist, struct record_opts *opts,
-@@ -2326,7 +2327,7 @@ int evlist__parse_event_enable_time(struct evlist *evlist, struct record_opts *o
- 
- 	ret = parse_event_enable_times(str, NULL);
- 	if (ret < 0)
--		return ret;
-+		return (int)ret;
- 
- 	times_cnt = ret;
- 	if (times_cnt == 0)
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 1974395492d7..8b0a3cbb16a0 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -655,12 +655,12 @@ struct tep_event *evsel__tp_format(struct evsel *evsel)
- 		return NULL;
- 
- 	if (!evsel->tp_sys)
--		tp_format = trace_event__tp_format_id(evsel->core.attr.config);
-+		tp_format = trace_event__tp_format_id((int)evsel->core.attr.config);
- 	else
- 		tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
- 
- 	if (IS_ERR(tp_format)) {
--		int err = -PTR_ERR(evsel->tp_format);
-+		int err = (int)-PTR_ERR(evsel->tp_format);
- 
- 		pr_err("Error getting tracepoint format '%s' '%s'(%d)\n",
- 			evsel__name(evsel), strerror(err), err);
-@@ -688,7 +688,7 @@ char *evsel__bpf_counter_events;
- 
- bool evsel__match_bpf_counter_events(const char *name)
- {
--	int name_len;
-+	size_t name_len;
- 	bool match;
- 	char *ptr;
- 
-@@ -1154,7 +1154,7 @@ static void evsel__apply_config_terms(struct evsel *evsel,
- 				evsel__reset_sample_bit(evsel, BRANCH_STACK);
- 			break;
- 		case EVSEL__CONFIG_TERM_STACK_USER:
--			dump_size = term->val.stack_user;
-+			dump_size = (u32)term->val.stack_user;
- 			break;
- 		case EVSEL__CONFIG_TERM_MAX_STACK:
- 			max_stack = term->val.max_stack;
-@@ -1772,7 +1772,7 @@ static u64 evsel__group_read_size(struct evsel *leader)
- 	u64 read_format = leader->core.attr.read_format;
- 	int entry = sizeof(u64); /* value */
- 	int size = 0;
--	int nr = 1;
-+	u64 nr = 1;
- 
- 	if (!evsel__group_has_tpebs(leader))
- 		return perf_evsel__read_size(&leader->core);
-@@ -1836,7 +1836,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
- {
- 	struct perf_stat_evsel *ps = leader->stats;
- 	u64 read_format = leader->core.attr.read_format;
--	int size = evsel__group_read_size(leader);
-+	size_t size = evsel__group_read_size(leader);
- 	u64 *data = ps->group_data;
- 
- 	if (!(read_format & PERF_FORMAT_ID))
-@@ -2178,31 +2178,27 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- static bool __has_attr_feature(struct perf_event_attr *attr,
- 			       struct perf_cpu cpu, unsigned long flags)
- {
--	int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
--			 /*group_fd=*/-1, flags);
-+	int fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
- 	close(fd);
- 
- 	if (fd < 0) {
- 		attr->exclude_kernel = 1;
- 
--		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
--			     /*group_fd=*/-1, flags);
-+		fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
- 		close(fd);
- 	}
- 
- 	if (fd < 0) {
- 		attr->exclude_hv = 1;
- 
--		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
--			     /*group_fd=*/-1, flags);
-+		fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
- 		close(fd);
- 	}
- 
- 	if (fd < 0) {
- 		attr->exclude_guest = 1;
- 
--		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
--			     /*group_fd=*/-1, flags);
-+		fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
- 		close(fd);
- 	}
- 
-@@ -3488,7 +3484,7 @@ char evsel__taskstate(struct evsel *evsel, struct perf_sample *sample, const cha
- 	 * We can change this if we have a good reason in the future.
- 	 */
- 	val = evsel__intval(evsel, sample, name);
--	bit = val ? ffs(val) : 0;
-+	bit = val ? ffs((int)val) : 0;
- 	state = (!bit || bit > strlen(states)) ? 'R' : states[bit-1];
- 	return state;
- }
-@@ -3833,18 +3829,15 @@ struct perf_env *evsel__env(struct evsel *evsel)
- 
- static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
- {
--	int cpu_map_idx, thread;
--
- 	if (evsel__is_retire_lat(evsel))
- 		return 0;
- 
--	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
--		     thread++) {
-+	for (size_t cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
-+		for (size_t thread = 0; thread < xyarray__max_y(evsel->core.fd); thread++) {
- 			int fd = FD(evsel, cpu_map_idx, thread);
- 
- 			if (perf_evlist__id_add_fd(&evlist->core, &evsel->core,
--						   cpu_map_idx, thread, fd) < 0)
-+						   (int)cpu_map_idx, (int)thread, fd) < 0)
- 				return -1;
+ 	return err;
+diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+index 6ff42619de12..35d1b950e803 100644
+--- a/tools/perf/util/bpf_counter_cgroup.c
++++ b/tools/perf/util/bpf_counter_cgroup.c
+@@ -98,7 +98,7 @@ static int bperf_load_program(struct evlist *evlist)
+ 						      FD(cgrp_switch, i));
+ 		if (IS_ERR(link)) {
+ 			pr_err("Failed to attach cgroup program\n");
+-			err = PTR_ERR(link);
++			err = (int)PTR_ERR(link);
+ 			goto out;
  		}
  	}
 -- 
