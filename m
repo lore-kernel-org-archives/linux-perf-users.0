@@ -1,63 +1,66 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C8A20CCF3
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEC420F081
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531879; cv=none; b=nzReEiUBy91EZrwhKgDK8NMvfeKdrsLSKV2IV5jpjXHBdaumQCv2cd24+99sLyYA/KHi1bX4zHpVC7mTc1NBL/rhgeks2i4tPKtsE3PV5i6RMmiwUjYVEeuGJKSEo98dYYiids+QtK/wuQdfcS+tHDv784jD7ENlSsDUgsJPEv4=
+	t=1743531881; cv=none; b=AtkCGcv0LnOfsK3Wo0Lme+f5CG2sEcVMYdbFKm/LRZbvWwz/B6aqO4rZQlRQEEOPCR6qoT8Avl8NjS2JaGYoxZcQGLEagbfRFtEk98BvWCA0NBjMh55CUpI5WgoLh6OgYVgEfHxOoTRb0kQAfcjtcPY/dp9UmdYbEikQTtnicF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531879; c=relaxed/simple;
-	bh=WTlgiqtILtElgx2C4CRYE5VLjq3rkaGtRt+t2yVpKFg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=CwmMwxdMy/HZptGPb+S9m/BnO2ygKb13sRw79UN6+2uMILb2vro1QXtgTHovTnsrgCCH3rI9HhkvD2X9C4lSz4dSDBy07bmSffUm+8v3i+85AesZyZmJMSkmGwzC44JaT++ns+opJlrl2HPFYJVvgCCKfKGJz2n1UmoTtpPxyn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wZoA+lvd; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1743531881; c=relaxed/simple;
+	bh=49l7ADb3p3Yt9ABBM2gRd7j5skKd2Ri396uT1ankTM4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=UilFP2EzY1KMoS39Cj0BxLQ3xVgSe/sQvN29wB0hVWucugntsPE2Vy1KMCnRddDpYRzooaTY3OhEITCQ6yEcnmK1/06vKCNPigC6xtndaIDwwqsLzYoU8w+HHgSrB7HB9+m2OgQlGWOx/ZslzFRGKGdD3/NNpz0RJNcIvi5g+R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uGE+Y1Cy; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wZoA+lvd"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff52e1c56fso14486469a91.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:24:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uGE+Y1Cy"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032f4ea8cfso10907869a91.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:24:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531877; x=1744136677; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZndOAunkgHQpnAjyeqNBN4E5BF+aytXPh1Eu/w1WhIo=;
-        b=wZoA+lvdX7jKKFYbRwQsKsjlXaevyzAQIUCwhYKAUmUCksVNm93Hrne6Yw5+fQD7cr
-         I9Q1ETLgEU8k+4kkStqxqobHLMI4EnAPBkU8tv1BmgLo2o+7MiZix4+aGefM7hmuSSMm
-         Xm9EZMPaAS7zH7xRhUlReio6+76zMhGUBCaWQhFLoh8C1zxH0uHMRbmpB9cPWqhGTAC8
-         znJJCIcMb3OYt5zV9uUowglFqw/McSK9brjPslg7Cj0CvN8HQmwIcGTrCtoqB6qyUV83
-         +5NYUtCaEa5YgVuH7wD9gt1qnJmxK+oWPuPYz65sxzSFUBsMhej5w0OGTHDRk9eyfbWp
-         CYBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531877; x=1744136677;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1743531879; x=1744136679; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZndOAunkgHQpnAjyeqNBN4E5BF+aytXPh1Eu/w1WhIo=;
-        b=UnaXgxZjOY0adOk5vaz8dHo4JVMTkGqAnDue2XMeV2ieRUaMvAr2Mu7O21PWCSgOXS
-         9WVlowl8cpmPgD7YIofoog5Pz7JUrDQFy3KwiKdDgKEwzw7MRY5ZQwnm/htC7EftIvNW
-         CgbbKGkeCcEY3vzrOzn5K3VMI9v7X/cUWZebn3Aupq44HSPmfsVNRlPQC8DSJNzvRRP8
-         IaBeOrlqR4TJ2dJQk/tI5mILg/f6BRVcVbpk9eA+e2mkKBkquw5drPKd7xUFgn6mlws2
-         5MF5Vr6K24U6sZGCwAq6WpRLvvaTLssg6Md3EV8wTFfCL/0XI0XJgnhhz7bWHohU4tHR
-         UjVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTQQsFWa3chBuLWYizZ5CAxmDpaRDqSigba/emvi9FQC/W+38tPvaJlSoBTFzxXLF2UD7gbC+zy6Ldtt9DCnDp@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl3IAQtDPhuI/ELfXkVGwTcrx8MEuGDkqXfknnWQoOrxC4IT7X
-	bbJHDVx6/d0kFy1AKvx71DYkfLWyimsL1EytR26uH/7sJPghKBedIPHOsy3B+km+dAltO9iCu+g
-	NHGAbQA==
-X-Google-Smtp-Source: AGHT+IEW32my6pc0ZJfPHCZQ9qes4Xrj0ziWH8cCPcToryXdz2JMgTX7KocL6iqmoGsCBE8KoqKG82DaTklj
-X-Received: from pjboi12.prod.google.com ([2002:a17:90b:3a0c:b0:2fb:fac8:f45b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b06:b0:301:98fc:9b5a
- with SMTP id 98e67ed59e1d1-30531f7a6cemr16050173a91.6.1743531877123; Tue, 01
- Apr 2025 11:24:37 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:22:58 -0700
+        bh=iRjxFcSihUrg8jPg2GdkHyPzaMHS3sRgicHABls9JzI=;
+        b=uGE+Y1CyHlU6vPvG/vQ+HZ/px+f+YNO6Niiel2RnrwBskXw05u7vH92y8w+gKjOJXv
+         cVi+53nvBZseB+Djvidubkg1QYpstRqaSkHtM4ozn1j3xchsMDhf6B5d2w2EMV7Qqk2i
+         ggEcx2wn6M2o+UBnO185ClH4nXIp8vaw4sJ1uwX051KSN+Vdki3kyDOWf0ekEoJjrK1v
+         OpKZZTZHhdQ16ldvXx9zI5KXhU+M/kPjt7axDjjt7crhkprGS75NnxQ8QFr3wA6e59Y0
+         zwfXvJdVd+YMGr8CeGDabCfZNPNO/Hyihw/WxidYm8ZkhaW+qh1asQjRiIfoTsOHQ1fC
+         nZrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743531879; x=1744136679;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iRjxFcSihUrg8jPg2GdkHyPzaMHS3sRgicHABls9JzI=;
+        b=Q5fIi+lGSxiwIBZnnpEZemzf53n/2/eBM1JvoiOZUiuEJX7X2Sq7qdA3eeLJoZeF40
+         tpN/FuXy9cqtJNq0+s64QaaUCruSvOFm2EgkQvyk+jheSJ3MQwZ0OBxPA5HUKJ9zD6H7
+         hKlh/gGN18vXRDpmD4hULI5YZqqDNO+nWyZWIdIR8rU67VYVlceSoNbTEdqm9/wjcglH
+         7t/1bAX54+3pmx/el3nYPmHOlXaEr7OnLV/FlPBuv672pFxfG1FaEhsdodhdbOGDSOua
+         KWopCMnHn4omg8aTfPrE/vSDOk47E+kR0ce58NF7n0wR1SvZXNa7zsnC6Qe1jvUCv/v4
+         xhcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCJ3DTGGFu7Skg7hdxhMYK+6Werj51Fyo7Mo7OohZGyG/HaW0nQE1UT0Eq52krqZ9E2vbyZC7QMlrrz/VRnMnG@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHDmhXNb8WAF9B0MF/x9mFWZhKGC+YfQbItlQd2SBMc2mzmKBm
+	Zb9nN0R+vWc5usOab74Pm3lc5BkjZ6ZC6+qe7Nrl+YF+/TeUJFdWu3S2IP9d5UXIC+OdUnaEdwN
+	EvaMqrA==
+X-Google-Smtp-Source: AGHT+IEFoEdW54+8IzXF8SrRli8AZBce5TP8glO5taNb/WkCtgqcwxjpvN6TkKqQcxglUuElnk9l67f2Meoj
+X-Received: from pjvf3.prod.google.com ([2002:a17:90a:da83:b0:2f9:dc36:b11])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2704:b0:2fa:13d9:39c
+ with SMTP id 98e67ed59e1d1-30531fa6be2mr25430589a91.14.1743531879230; Tue, 01
+ Apr 2025 11:24:39 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:22:59 -0700
+In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-1-irogers@google.com>
-Subject: [PATCH v1 00/48] Perf build support for -Wshorten-64-to-32
+Message-ID: <20250401182347.3422199-2-irogers@google.com>
+Subject: [PATCH v1 01/48] perf build: Avoid building libbpf/bpftool with LIBBPF_DYNAMIC
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -103,280 +106,68 @@ To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.d
 	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-The clang warning -Wshorten-64-to-32 can be useful to catch
-inadvertent truncation. In some instances this truncation can lead to
-changing the sign of a result, for example, truncation to return an
-int to fit a sort routine. Leo Yan found an issue here:
-https://lore.kernel.org/lkml/20250331172759.115604-1-leo.yan@arm.com/
-and so it is worthwhile doing a round to clean up all these warnings.
-So that libbpf and bpftool aren't also cleaned up the first patch
-makes these more optional within the build. The rest of the patches
-try to do the right thing in silencing the warning, generally making
-the implicit casts explicit. Some issues similar to Leo's were
-discovered in this process.
+Building with LIBBPF_DYNAMIC still requires building libbpf as part of
+bpftool, but the build also still accidentally builds it. Make the
+parts of the build bringing in libbpf conditional. Don't build bpftool
+is a bpftool exists from the which command.
 
-Ian Rogers (48):
-  perf build: Avoid building libbpf/bpftool with LIBBPF_DYNAMIC
-  tools headers: Silence -Wshorten-64-to-32 warnings
-  arm64: cputype: Silence -Wshorten-64-to-32 warnings
-  x86/insn: Silence -Wshorten-64-to-32 warnings
-  tools lib: Silence -Wshorten-64-to-32 warnings
-  libperf: Silence -Wshorten-64-to-32 warnings
-  tools subcmd: Silence -Wshorten-64-to-32 warnings
-  perf bench: Silence -Wshorten-64-to-32 warnings
-  perf tests: Silence -Wshorten-64-to-32 warnings
-  perf arch x86: Silence -Wshorten-64-to-32 warnings
-  perf arm-spe: Silence -Wshorten-64-to-32 warnings
-  perf trace: Silence -Wshorten-64-to-32 warnings
-  perf trace-event: Silence -Wshorten-64-to-32 warnings
-  perf jvmti: Silence -Wshorten-64-to-32 warnings
-  perf pmu: Silence -Wshorten-64-to-32 warnings
-  perf annotate powerpc: Silence -Wshorten-64-to-32 warnings
-  perf s390: Silence -Wshorten-64-to-32 warnings
-  perf cs-etm: Silence -Wshorten-64-to-32 warnings
-  perf stat: Silence -Wshorten-64-to-32 warnings
-  perf dlfilter: Silence -Wshorten-64-to-32 warnings
-  perf demangle: Silence -Wshorten-64-to-32 warnings
-  perf ui: Silence -Wshorten-64-to-32 warnings
-  perf annotate: Silence -Wshorten-64-to-32 warnings
-  perf report: Silence -Wshorten-64-to-32 warnings
-  perf help: Silence -Wshorten-64-to-32 warnings
-  perf hisi-ptt: Silence -Wshorten-64-to-32 warnings
-  perf probe: Silence -Wshorten-64-to-32 warnings
-  perf kwork: Silence -Wshorten-64-to-32 warnings
-  perf buildid: Silence -Wshorten-64-to-32 warnings
-  perf lock: Silence -Wshorten-64-to-32 warnings
-  perf mem: Silence -Wshorten-64-to-32 warnings
-  perf script: Silence -Wshorten-64-to-32 warnings
-  perf evlist: Silence -Wshorten-64-to-32 warnings
-  perf bpf_counter: Silence -Wshorten-64-to-32 warnings
-  perf ftrace: Silence -Wshorten-64-to-32 warnings
-  perf record: Silence -Wshorten-64-to-32 warnings
-  perf inject: Silence -Wshorten-64-to-32 warnings
-  perf sched: Silence -Wshorten-64-to-32 warnings
-  perf timechart: Silence -Wshorten-64-to-32 warnings
-  perf list: Silence -Wshorten-64-to-32 warnings
-  perf kvm: Silence -Wshorten-64-to-32 warnings
-  perf diff: Silence -Wshorten-64-to-32 warnings
-  perf daemon: Silence -Wshorten-64-to-32 warnings
-  perf zlib: Silence -Wshorten-64-to-32 warnings
-  perf symbol: Silence -Wshorten-64-to-32 warnings
-  perf util: Silence -Wshorten-64-to-32 warnings
-  perf hashmap: Silence -Wshorten-64-to-32 warnings
-  perf: Silence -Wshorten-64-to-32 warnings
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.perf | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
- tools/arch/arm64/include/asm/cputype.h        |  2 +-
- tools/arch/x86/lib/insn.c                     |  2 +-
- tools/include/asm-generic/bitops/fls64.h      |  2 +-
- tools/include/linux/bitfield.h                |  2 +-
- tools/include/linux/bitmap.h                  |  2 +-
- tools/include/linux/err.h                     |  2 +-
- tools/include/linux/hash.h                    |  2 +-
- tools/include/linux/math64.h                  |  2 +-
- tools/lib/api/fs/fs.c                         |  4 +-
- tools/lib/bitmap.c                            |  2 +-
- tools/lib/perf/cpumap.c                       | 18 ++--
- tools/lib/perf/evsel.c                        | 40 +++-----
- tools/lib/perf/include/internal/cpumap.h      |  2 +-
- tools/lib/perf/include/internal/evsel.h       |  2 +-
- tools/lib/perf/include/internal/lib.h         |  2 +-
- tools/lib/perf/include/internal/mmap.h        |  4 +-
- tools/lib/perf/include/internal/threadmap.h   |  2 +-
- tools/lib/perf/include/internal/xyarray.h     |  8 +-
- tools/lib/perf/include/perf/cpumap.h          |  3 +-
- tools/lib/perf/lib.c                          |  2 +-
- tools/lib/perf/mmap.c                         | 13 ++-
- tools/lib/perf/threadmap.c                    |  4 +-
- tools/lib/perf/xyarray.c                      |  2 +-
- tools/lib/string.c                            |  6 +-
- tools/lib/subcmd/help.c                       | 28 +++---
- tools/lib/subcmd/help.h                       |  6 --
- tools/lib/subcmd/parse-options.c              | 16 +--
- tools/lib/vsprintf.c                          |  6 +-
- tools/perf/Makefile.perf                      | 13 ++-
- .../perf/arch/powerpc/annotate/instructions.c |  2 +-
- tools/perf/arch/x86/tests/bp-modify.c         |  2 +-
- tools/perf/arch/x86/util/intel-bts.c          |  4 +-
- tools/perf/arch/x86/util/intel-pt.c           | 10 +-
- tools/perf/arch/x86/util/iostat.c             |  2 +-
- tools/perf/arch/x86/util/kvm-stat.c           |  6 +-
- tools/perf/arch/x86/util/perf_regs.c          |  3 +-
- tools/perf/arch/x86/util/topdown.c            |  2 +-
- tools/perf/bench/breakpoint.c                 |  8 +-
- tools/perf/bench/epoll-wait.c                 |  3 +-
- tools/perf/bench/evlist-open-close.c          |  8 +-
- tools/perf/bench/find-bit-bench.c             |  5 +-
- tools/perf/bench/futex.h                      |  4 +-
- tools/perf/bench/inject-buildid.c             |  8 +-
- tools/perf/bench/mem-functions.c              |  2 +-
- tools/perf/bench/pmu-scan.c                   | 12 +--
- tools/perf/bench/sched-messaging.c            |  4 +-
- tools/perf/bench/sched-pipe.c                 | 15 +--
- tools/perf/bench/sched-seccomp-notify.c       |  2 +-
- tools/perf/bench/synthesize.c                 |  6 +-
- tools/perf/builtin-annotate.c                 |  4 +-
- tools/perf/builtin-bench.c                    |  2 +-
- tools/perf/builtin-buildid-cache.c            |  2 +-
- tools/perf/builtin-buildid-list.c             |  2 +-
- tools/perf/builtin-c2c.c                      | 21 ++--
- tools/perf/builtin-daemon.c                   |  5 +-
- tools/perf/builtin-diff.c                     | 10 +-
- tools/perf/builtin-evlist.c                   |  2 +-
- tools/perf/builtin-ftrace.c                   | 17 ++--
- tools/perf/builtin-help.c                     |  4 +-
- tools/perf/builtin-inject.c                   | 28 +++---
- tools/perf/builtin-kmem.c                     | 39 ++++----
- tools/perf/builtin-kvm.c                      |  8 +-
- tools/perf/builtin-kwork.c                    | 11 +--
- tools/perf/builtin-list.c                     |  4 +-
- tools/perf/builtin-lock.c                     | 16 +--
- tools/perf/builtin-mem.c                      |  2 +-
- tools/perf/builtin-record.c                   | 66 +++++++------
- tools/perf/builtin-report.c                   |  4 +-
- tools/perf/builtin-sched.c                    | 56 +++++------
- tools/perf/builtin-script.c                   | 39 ++++----
- tools/perf/builtin-stat.c                     |  6 +-
- tools/perf/builtin-timechart.c                | 60 ++++++------
- tools/perf/builtin-top.c                      |  4 +-
- tools/perf/builtin-trace.c                    | 98 ++++++++++---------
- tools/perf/dlfilters/dlfilter-test-api-v0.c   |  4 +-
- tools/perf/jvmti/jvmti_agent.c                |  6 +-
- tools/perf/perf-sys.h                         |  3 +-
- tools/perf/perf.c                             |  2 +-
- tools/perf/tests/api-io.c                     |  2 +-
- tools/perf/tests/bp_signal.c                  |  6 +-
- tools/perf/tests/bp_signal_overflow.c         |  6 +-
- tools/perf/tests/builtin-test.c               |  9 +-
- tools/perf/tests/code-reading.c               |  4 +-
- tools/perf/tests/dso-data.c                   | 10 +-
- tools/perf/tests/mmap-thread-lookup.c         |  2 +-
- tools/perf/tests/openat-syscall-tp-fields.c   |  2 +-
- tools/perf/tests/pmu-events.c                 |  2 +-
- tools/perf/tests/sigtrap.c                    |  4 +-
- tools/perf/tests/switch-tracking.c            | 11 ++-
- tools/perf/tests/vmlinux-kallsyms.c           |  4 +-
- tools/perf/tests/wp.c                         |  4 +-
- tools/perf/trace/beauty/arch_prctl.c          |  2 +-
- tools/perf/trace/beauty/eventfd.c             |  2 +-
- tools/perf/trace/beauty/fcntl.c               |  5 +-
- tools/perf/trace/beauty/flock.c               |  2 +-
- tools/perf/trace/beauty/fs_at_flags.c         |  4 +-
- tools/perf/trace/beauty/futex_op.c            |  2 +-
- tools/perf/trace/beauty/futex_val3.c          |  2 +-
- tools/perf/trace/beauty/ioctl.c               |  2 +-
- tools/perf/trace/beauty/kcmp.c                |  8 +-
- tools/perf/trace/beauty/mmap.c                |  2 +-
- tools/perf/trace/beauty/mode_t.c              |  2 +-
- tools/perf/trace/beauty/msg_flags.c           |  2 +-
- tools/perf/trace/beauty/open_flags.c          |  2 +-
- tools/perf/trace/beauty/perf_event_open.c     |  4 +-
- tools/perf/trace/beauty/pid.c                 |  2 +-
- tools/perf/trace/beauty/pkey_alloc.c          |  2 +-
- tools/perf/trace/beauty/prctl.c               | 10 +-
- tools/perf/trace/beauty/sched_policy.c        |  2 +-
- tools/perf/trace/beauty/seccomp.c             |  4 +-
- tools/perf/trace/beauty/signum.c              |  2 +-
- tools/perf/trace/beauty/socket.c              |  6 +-
- tools/perf/trace/beauty/socket_type.c         |  2 +-
- tools/perf/trace/beauty/statx.c               |  2 +-
- .../beauty/tracepoints/x86_irq_vectors.c      |  3 +-
- tools/perf/trace/beauty/tracepoints/x86_msr.c |  3 +-
- tools/perf/trace/beauty/waitid_options.c      |  2 +-
- tools/perf/ui/hist.c                          | 18 ++--
- tools/perf/ui/stdio/hist.c                    |  5 +-
- tools/perf/util/annotate.c                    | 22 ++---
- .../util/arm-spe-decoder/arm-spe-decoder.c    |  4 +-
- .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  2 +-
- tools/perf/util/arm-spe.c                     | 24 ++---
- tools/perf/util/auxtrace.c                    |  8 +-
- tools/perf/util/bpf-event.c                   |  2 +-
- tools/perf/util/bpf-filter.c                  | 20 ++--
- tools/perf/util/bpf_counter.c                 |  6 +-
- tools/perf/util/bpf_counter_cgroup.c          |  2 +-
- tools/perf/util/bpf_ftrace.c                  |  4 +-
- tools/perf/util/bpf_kwork_top.c               |  2 +-
- tools/perf/util/bpf_lock_contention.c         | 17 ++--
- tools/perf/util/bpf_off_cpu.c                 |  4 +-
- tools/perf/util/build-id.c                    |  2 +-
- tools/perf/util/cacheline.c                   |  5 +-
- tools/perf/util/callchain.c                   | 12 +--
- tools/perf/util/callchain.h                   |  2 +-
- tools/perf/util/cgroup.c                      |  4 +-
- tools/perf/util/comm.c                        |  2 +-
- tools/perf/util/config.c                      |  6 +-
- tools/perf/util/cpumap.c                      |  4 +-
- tools/perf/util/cs-etm-base.c                 |  4 +-
- tools/perf/util/debug.c                       |  7 +-
- tools/perf/util/demangle-java.c               |  4 +-
- tools/perf/util/demangle-ocaml.c              |  3 +-
- tools/perf/util/disasm.c                      | 11 ++-
- tools/perf/util/dlfilter.c                    | 10 +-
- tools/perf/util/env.c                         |  2 +-
- tools/perf/util/event.c                       |  4 +-
- tools/perf/util/evlist.c                      | 29 +++---
- tools/perf/util/evsel.c                       | 35 +++----
- tools/perf/util/genelf.c                      |  2 +-
- tools/perf/util/hashmap.c                     | 10 +-
- tools/perf/util/header.c                      | 54 +++++-----
- tools/perf/util/help-unknown-cmd.c            | 14 +--
- tools/perf/util/hisi-ptt.c                    |  8 +-
- tools/perf/util/hist.c                        |  7 +-
- tools/perf/util/hwmon_pmu.c                   |  8 +-
- tools/perf/util/intel-bts.c                   |  4 +-
- .../util/intel-pt-decoder/intel-pt-decoder.c  | 30 +++---
- .../intel-pt-decoder/intel-pt-insn-decoder.c  |  2 +-
- .../perf/util/intel-pt-decoder/intel-pt-log.c |  2 +-
- .../intel-pt-decoder/intel-pt-pkt-decoder.c   |  2 +-
- tools/perf/util/intel-pt.c                    | 38 +++----
- tools/perf/util/intel-tpebs.c                 |  6 +-
- tools/perf/util/jitdump.c                     | 24 ++---
- tools/perf/util/levenshtein.c                 | 18 ++--
- tools/perf/util/machine.c                     | 14 +--
- tools/perf/util/map.c                         |  4 +-
- tools/perf/util/maps.c                        |  6 +-
- tools/perf/util/mem-events.c                  | 12 +--
- tools/perf/util/mem2node.c                    |  2 +-
- tools/perf/util/memswap.c                     |  4 +-
- tools/perf/util/memswap.h                     |  4 +-
- tools/perf/util/metricgroup.c                 | 15 ++-
- tools/perf/util/mmap.c                        |  6 +-
- tools/perf/util/parse-events.c                | 16 +--
- tools/perf/util/pmu.c                         |  9 +-
- tools/perf/util/pmus.c                        | 16 +--
- tools/perf/util/print_binary.c                | 13 ++-
- tools/perf/util/probe-event.c                 |  9 +-
- tools/perf/util/probe-file.c                  | 12 ++-
- tools/perf/util/python.c                      |  4 +-
- tools/perf/util/s390-sample-raw.c             |  4 +-
- .../scripting-engines/trace-event-python.c    | 13 +--
- tools/perf/util/session.c                     | 29 +++---
- tools/perf/util/sort.c                        | 20 ++--
- tools/perf/util/srccode.c                     |  6 +-
- tools/perf/util/srcline.c                     |  2 +-
- tools/perf/util/stat-display.c                | 10 +-
- tools/perf/util/strfilter.c                   |  2 +-
- tools/perf/util/string.c                      | 11 ++-
- tools/perf/util/svghelper.c                   | 23 ++---
- tools/perf/util/symbol-elf.c                  | 33 ++++---
- tools/perf/util/symbol.c                      | 10 +-
- tools/perf/util/synthetic-events.c            | 22 ++---
- tools/perf/util/target.c                      |  2 +-
- tools/perf/util/thread-stack.c                |  2 +-
- tools/perf/util/thread.c                      |  4 +-
- tools/perf/util/thread_map.c                  |  6 +-
- tools/perf/util/time-utils.c                  |  9 +-
- tools/perf/util/tool.c                        |  2 +-
- tools/perf/util/tool_pmu.c                    |  2 +-
- tools/perf/util/trace-event-info.c            |  3 +-
- tools/perf/util/trace-event-parse.c           |  2 +-
- tools/perf/util/trace-event-read.c            | 23 +++--
- tools/perf/util/trace-event-scripting.c       |  2 +-
- tools/perf/util/util.c                        |  9 +-
- tools/perf/util/util.h                        |  2 +-
- tools/perf/util/values.c                      |  4 +-
- tools/perf/util/zlib.c                        |  2 +-
- 210 files changed, 970 insertions(+), 929 deletions(-)
-
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d335151736ed..c836e01c8279 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1001,10 +1001,12 @@ $(LIBAPI)-clean:
+ 	$(call QUIET_CLEAN, libapi)
+ 	$(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
+ 
++ifndef LIBBPF_DYNAMIC
+ $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
+ 	$(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=$(FEATURE_DUMP_EXPORT) \
+ 		O= OUTPUT=$(LIBBPF_OUTPUT)/ DESTDIR=$(LIBBPF_DESTDIR) prefix= subdir= \
+ 		EXTRA_CFLAGS="-fPIC" $@ install_headers
++endif
+ 
+ $(LIBBPF)-clean:
+ 	$(call QUIET_CLEAN, libbpf)
+@@ -1224,7 +1226,11 @@ $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_
+ 	$(Q)$(MKDIR) -p $@
+ 
+ ifeq ($(CONFIG_PERF_BPF_SKEL),y)
++BPFTOOL := $(shell which bpftool)
++ifeq ($(BPFTOOL),)
+ BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
++BUILD_BPFTOOL := y
++endif
+ # Get Clang's default includes on this system, as opposed to those seen by
+ # '--target=bpf'. This fixes "missing" files on some architectures/distros,
+ # such as asm/byteorder.h, asm/socket.h, asm/sockios.h, sys/cdefs.h etc.
+@@ -1243,16 +1249,21 @@ endif
+ 
+ CLANG_OPTIONS = -Wall
+ CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG),$(CLANG_TARGET_ARCH))
+-BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES)
++BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. $(CLANG_SYS_INCLUDES)
++ifneq ($(LIBBPF_INCLUDE),)
++  BPF_INCLUDE += -I$(LIBBPF_INCLUDE)
++endif
+ TOOLS_UAPI_INCLUDE := -I$(srctree)/tools/include/uapi
+ 
+ ifneq ($(WERROR),0)
+   CLANG_OPTIONS += -Werror
+ endif
+ 
++ifneq ($(BUILD_BPFTOOL),)
+ $(BPFTOOL): | $(SKEL_TMP_OUT)
+ 	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
+ 		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
++endif
+ 
+ # Paths to search for a kernel to generate vmlinux.h from.
+ VMLINUX_BTF_ELF_PATHS ?= $(if $(O),$(O)/vmlinux)			\
 -- 
 2.49.0.504.g3bcea36a83-goog
 
