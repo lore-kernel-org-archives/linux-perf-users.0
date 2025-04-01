@@ -1,101 +1,79 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790451DF25C;
-	Tue,  1 Apr 2025 14:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0880202F67;
+	Tue,  1 Apr 2025 14:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743517120; cv=none; b=TNXAeOW515KmuIy6sJWDQ/Qar3xL4ih5+v0nSttdckSTtiI0Yp7yVkHwJ7iK6JosWXd/+Kr7/UrCh+E4OYoolUeN/ioO5qMfvaeGeDvpNWvFS9SINIPKCxPEKoFr0U8VOST+s643GKSCuiU0FKwzO/GFZAbx7M/QElhRcrcUp70=
+	t=1743517220; cv=none; b=R+IM7A3XU7W7dLfUjhfCgeuJ2E+ycmQ1fnsHt1j/tTyxnHtMdAq4pXqLla8OBwod87P25UL69UPjgOOSzhiOa1HAkxP9Wn+sEOsMgiZGBfk6m9YRcR6iIWggTVLcFlprJB6Vd5pOJ3HkZsgXwnqv6Posn8f7nv99nsaduTOLhvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743517120; c=relaxed/simple;
-	bh=+H8Y4inqSqA/NnBib4Aj5cYm+YX0DahBQFwcHapTRR0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K+Sdlai1FG04SLxxrq183TTPvv0o3+Vf9LAKsIjV0qSEMQ/3nDynWJ7tOuHJAAIAG+0F4uSqAApEcBreM39lvTV+mpb73ipkAkCBCj5BPFuZAZMYxiCdNto2KvoOyOyKYjPBeT8dvk4Ita0sNMi83Zl7MB+8B4OIPWdgWLMXQRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowACn5g6W9etnbEPBBA--.49542S2;
-	Tue, 01 Apr 2025 22:18:00 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: Add error handling for uncore_msr_box_ctl()
-Date: Tue,  1 Apr 2025 22:17:41 +0800
-Message-ID: <20250401141741.2705-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743517220; c=relaxed/simple;
+	bh=mRIBKcBVbGppx74YoEbo3iWRgTc8Hy63ntijK5V2KcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/fVXItgQDtif6a30wyZxF9VFEdSnIDI0vMVpaX+cfp5V/lNeLHQFh0XcBGQ0bU1eJm3hKrD+UN3Cj+9D2/nM8trVhbsfkgKof766AOA2bJYNhg1+q+ut2BQqcnngAie6n3cn8sJf/amN2xR3qiyn/m7KdnkUw3VKFgQPSPC+qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Amg8tzAj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Amg8tzAj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BbOt8uPg4MQ5ULTpBSXlv+eys0/YbsgiMNxX/LarGTQ=; b=Amg8tzAjZSvGLYXW3j8wk4gcxF
+	IG+dUXapqgDFQkVq14akqVm3zJrRIdUBngzfGDXCFBlJlpw3ji/m9DmiE9IlT4O7BzQw437DD8x6T
+	jX5uM9l4Iw95c5/LNuPKtys5qqHYOcCfoBMz09ieNBlvH7rQDpDaWelu+G7Bl2oLKQFBZtgXOZ4kW
+	tHE+E+PeMzGkZbCgwLHadLpCnN8ajLwgrbPoYs+AAPf+Lpuj1SKmBUqw5nKsjHhQRU5iYv7UswSVs
+	CNwPo6DAv3UMpNqu01U02LCHKxkK4AuSbgF+27zBVY5XXA6uyLfxw5AJbYBfQmbmgYNHQSfddQn/A
+	QVN0arVQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tzcTG-00000006pW2-3wd7;
+	Tue, 01 Apr 2025 14:20:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6384830049D; Tue,  1 Apr 2025 16:20:06 +0200 (CEST)
+Date: Tue, 1 Apr 2025 16:20:06 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86: Rename bts_buffer variables and use
+ struct_size()
+Message-ID: <20250401142006.GF5880@noisy.programming.kicks-ass.net>
+References: <20250331122938.1837255-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowACn5g6W9etnbEPBBA--.49542S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrZw4xGrWrJF1rKFyUGFW7Jwb_yoW8JF1Dpr
-	W29r9Iqry3ua95WayDGF18ArWayFWrGas8Wr4DG34fCrn8Jr13Gr47K3Waka95Gry8KFyx
-	Zr18Xr4UGayDAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7sRE2Q6tUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRETA2fr2Lpa7gAAsS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331122938.1837255-2-thorsten.blum@linux.dev>
 
-In mtl_uncore_msr_init_box(), the return value of uncore_msr_box_ctl()
-needs to be checked before being used as the parameter of wrmsrl().
-A proper implementation can be found in ivbep_uncore_msr_init_box().
+On Mon, Mar 31, 2025 at 02:29:38PM +0200, Thorsten Blum wrote:
+> Rename struct bts_buffer objects from 'buf' to 'bb' to improve the
+> readability when accessing the structure's 'buf' member. For example,
+> 'buf->buf[]' becomes 'bb->buf[]'.
+> 
+> Use struct_size() to calculate the number of bytes to allocate for a new
+> bts_buffer. Compared to offsetof(), struct_size() provides additional
+> compile-time checks (e.g., __must_be_array()).
+> 
+> Indent line 327 using tabs to silence a checkpatch warning.
+> 
+> No functional changes intended.
 
-Add error handling for uncore_msr_box_ctl() to ensure the MSR write
-operation is only performed when a valid MSR address is returned.
-
-Fixes: c828441f21dd ("perf/x86/intel/uncore: Add Meteor Lake support")
-Cc: stable@vger.kernel.org # v6.3+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- arch/x86/events/intel/uncore_snb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 3934e1e4e3b1..84070388f495 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -691,7 +691,10 @@ static struct intel_uncore_type mtl_uncore_hac_cbox = {
- 
- static void mtl_uncore_msr_init_box(struct intel_uncore_box *box)
- {
--	wrmsrl(uncore_msr_box_ctl(box), SNB_UNC_GLOBAL_CTL_EN);
-+	unsigned int msr = uncore_msr_box_ctl(box);
-+
-+	if (msr)
-+		wrmsrl(msr, SNB_UNC_GLOBAL_CTL_EN);
- }
- 
- static struct intel_uncore_ops mtl_uncore_msr_ops = {
--- 
-2.42.0.windows.2
-
+This is two things, as such should be two patches. Also, meh. This is
+going to create extra work for the arch-pebs guys I suppose.
