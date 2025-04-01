@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA41E21C193
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B0321CC71
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531897; cv=none; b=jRyW21ycdReg6V6d65CgHHb5RogymIn6kudG83VyOlNwcAhYHiZ6mkA0Jl44eV17PCWnbPiZRfh9lkyFBkW4lwG1Klifz6FzPBOLeocDHGToCjI4cyDSosP3cLJluzJyqG+NGcoNTFkmMjKJ/KhlP3/lSk61jkouFkDVgfKN7NA=
+	t=1743531900; cv=none; b=KYOe3pQhvTmKm6K1b1VnpI0QEXnxiWKUavd3YPCuM6cHCKfNkucWfGeWAOMulR7B/jguDuNjU/y5OQtsq47AJK5IKrBX8s1a4SLOiPozsJaTphdDZwVnp/ZxnePrKRuoeq9Gs0SjhyNG5mNnWjiARVjN1PdNpwfQfspaewUj3j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531897; c=relaxed/simple;
-	bh=AORnD1om4C2sypJLzjCz8efPFZxPS6C3udp8jTr5i34=;
+	s=arc-20240116; t=1743531900; c=relaxed/simple;
+	bh=kmNVR4zeOOpO/adWGmYOhs1mY+UCF848xhXAeMRA2wo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=fkjc3MoyEVGkLc0AgbM2DpYhOJur9kLcUivuNej/SM44FwDTLrKOo2pPmPlG33aQRijwcIhIamKaTOXnCvn/p0WasjGI4IubZHZgNBwqpxB+HlQ0asyzwMLUPc+s+QbfO5sJMcXrcGXvr+BzRpd1oRP7Nq7Clp6WMFyXr9DbQEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=etnY6pWf; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=iMu6mN74TkPE2dTT9+TJLAwWxSPFoYOd1Woencld0nLUxOeBxRZc6Sy1t4EV8sTdzmPg0bRwMsb5x3uQoW+vehtT9eTa87lq+v4XDPH4qmouF7KrT95wiIhmO2aLV4cYkmdgG3Fj/1Q0IQGsP95w+9W3BzUlrQ4xPKz4LHtOJFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f/RNwTN4; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="etnY6pWf"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224347aef79so160782915ad.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:24:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/RNwTN4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff58318acaso1059421a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531895; x=1744136695; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531898; x=1744136698; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1ougT7jDU8A9cudDjFwokt57F5i+izAS3bT+Nyxperg=;
-        b=etnY6pWfB4PNfoe/W0mWeQxb0Uj4HpUj4DitoagiherBLjvNEG17F0xK3W6uv17P3U
-         mnMAYTjVf/Mm0QjgbT6pwQFm/f7Iq8eKqvq4P5eq/K7EeMlpoTFS8bDvp62BneWQdPvk
-         xCduFf6toPfK8vA07XxhTf6s1rFhQxJQhhbLtw+a7pwRmxde93K3bgIijXO0g3KrL/in
-         DVkOeUpwKL6TbIjZi6QVvjd3JWYVi75Ns4hIyhAVpio/UGxvHJc5URiHny98Sp2FvSnz
-         Ov5zdaJjRxWs+yZiopv7aQwWPuIw7pJ+NovItkPGEbcadZ+E5s7g8rBANNnkY0aNh/jL
-         cmeQ==
+        bh=KS6qg+8+wkhJeo4s42YYsDUvg3Cm4W0s8RV/R5t5q+Y=;
+        b=f/RNwTN4tx+GNOdhbETWCbNTZKBBNKYaX1+ObeZBlNkrIBL+KwFlmYw64Pt52JoPLE
+         T23EQrVm/jNIvKdE/KNku43Vn4W10/deL02VPNniZnaTj/xSyYQoXm1XzXiRs1R74x3I
+         1K6lB4xcqMSYiGp4/9Mk8+auThprhxNre3o4zZON5szYyPgUVF32wvdtLtt4krbPKCmw
+         aUQngX9H4j1aNpQk85d4oddtjd7qXpDH8xC1YEISXCGD2iEmHtnwv+u0lgyenPOAAQEe
+         HtxcQAmihBBSjuXhiY/eLDyGqzyKa3YcUC5FP0NrJqVMD/ClLctugQYYOx0vqhIdf0bK
+         aHRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531895; x=1744136695;
+        d=1e100.net; s=20230601; t=1743531898; x=1744136698;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ougT7jDU8A9cudDjFwokt57F5i+izAS3bT+Nyxperg=;
-        b=byyrwgT78TR6UXWbSoUvqZUghXFh5p0DQ54pCGYdtcDUkbWX4pqDZSKSUc0TECAlOb
-         7kbTfBzt5R298TMONv3mwcWFDVufoC+bA4GID+vByyo3zS3J0e42nDd7IAsI8JpJ+KlW
-         8+LI3jqbrbp9jTDwh48mcgHmnuZJ6Q4638BNBlm7Iyj3c6ngQGSCM12DBat039edtAm/
-         HJR6Dppwx8An2LHzl+ZN5p45eutG2uWQlOlmdVhyLwRCmRaAytGVMzOk+o5RZ8Ct43J1
-         PaSEkxDRgO9K4Z2exhgN6sQUkd3wJKjfYwjrxC1TZYX1ercJOfAcMELB72g1rsk7CTsl
-         qcBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtsxSK14zYInNxepjuyCnlWDYGtqFnb3Q8q19qxuyM14qgM1J44OBPvRO31GGK2j2nAkmzo3zuqoSfJOqmQkdC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoMH8rzZ0JkV+vr14THzF0XulcGoixjPZp7J1vXsGTjPs9R5Z5
-	OQ36PGhhcu44StyP6INiKR5qOjADidfc8Sm0EqQLuTfK24LkO3/zo8EldYK061m4mT05Of83LQu
-	5MgE34A==
-X-Google-Smtp-Source: AGHT+IHJykACnjjgWPAWibGCmtd45+SU33aGZAT7wMdq/fqMroEpb2uj9+hf6s6MhADeGdU+pE8Kf/7i45Xn
-X-Received: from plble11.prod.google.com ([2002:a17:902:fb0b:b0:220:e7dc:350d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:daca:b0:223:6180:1bea
- with SMTP id d9443c01a7336-2292f9e601emr208087855ad.37.1743531895008; Tue, 01
- Apr 2025 11:24:55 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:07 -0700
+        bh=KS6qg+8+wkhJeo4s42YYsDUvg3Cm4W0s8RV/R5t5q+Y=;
+        b=Z56V7kMOx/pumOyKFGQfnHbNrKS7lw1g1qbSJfAVZvDJRzzd1/cT3ilAtgHicauhID
+         fbvgvnZPA8aNDwJ4dLvnKG+AbZEvJ1GuhdAoqO//u0AkQagU6OLhQHjY1RM6yWiWPpRE
+         V+8YL4zyc9j+wIumwwXZ5VX4pErDm7H97g3nNZJORdiJTJdw8IHBJwGI2JAfSaQmoH0e
+         5q4ZjrNQ/+qHT+HdEwUS/M/1an6DlmzSYvQ6RI+6gWj344pzC4kKnx0vME5jnWRRLCyh
+         dRs03kYjc72gXbgBfJRZ/lzBlhzvI79LQr3haGV2M2pXYk0TW21TD0neWSB9TjOxt8HY
+         1UuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkNmTbRcHKbYO07SUsKpX32a03+hUrZDmIJPyNg9/r12X9fTAgxjG+DKP8Bm+epPo1tRirFKz8zfRMyw5qhPa5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1rxb2e6s9UJ5MeT4jVSE1Y2ZPb+m86ZurDOIvDwNnSMaP5ejI
+	z3RpPEWFnYH2Y2VwLEVYg5R+o3ZB0E7rueXcl4Hf1APRaxYeFU2lw9vOPIZ8mi8MGJstxjMJoMp
+	uTgC+tA==
+X-Google-Smtp-Source: AGHT+IHTEehxHw2PCChqQgDiqY6du8NDpeM+ZHytwu6pJ7Rh5TrWdgqkwtyEAaElPPm068GquggpCYI6Fs3g
+X-Received: from pjboi14.prod.google.com ([2002:a17:90b:3a0e:b0:2e5:5ffc:1c36])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4d09:b0:2ff:7b28:a51c
+ with SMTP id 98e67ed59e1d1-305321701e5mr15551772a91.34.1743531897419; Tue, 01
+ Apr 2025 11:24:57 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:08 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-10-irogers@google.com>
-Subject: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-11-irogers@google.com>
+Subject: [PATCH v1 10/48] perf arch x86: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,325 +114,541 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/api-io.c                   |  2 +-
- tools/perf/tests/bp_signal.c                |  6 +++---
- tools/perf/tests/bp_signal_overflow.c       |  6 +++---
- tools/perf/tests/builtin-test.c             |  9 +++++----
- tools/perf/tests/code-reading.c             |  4 ++--
- tools/perf/tests/dso-data.c                 | 10 +++++-----
- tools/perf/tests/mmap-thread-lookup.c       |  2 +-
- tools/perf/tests/openat-syscall-tp-fields.c |  2 +-
- tools/perf/tests/pmu-events.c               |  2 +-
- tools/perf/tests/sigtrap.c                  |  4 ++--
- tools/perf/tests/switch-tracking.c          | 11 ++++++-----
- tools/perf/tests/vmlinux-kallsyms.c         |  4 ++--
- tools/perf/tests/wp.c                       |  4 ++--
- 13 files changed, 34 insertions(+), 32 deletions(-)
+ tools/perf/arch/x86/tests/bp-modify.c         |  2 +-
+ tools/perf/arch/x86/util/intel-bts.c          |  4 +-
+ tools/perf/arch/x86/util/intel-pt.c           | 10 ++---
+ tools/perf/arch/x86/util/iostat.c             |  2 +-
+ tools/perf/arch/x86/util/kvm-stat.c           |  6 +--
+ tools/perf/arch/x86/util/perf_regs.c          |  3 +-
+ tools/perf/arch/x86/util/topdown.c            |  2 +-
+ tools/perf/util/intel-bts.c                   |  4 +-
+ .../util/intel-pt-decoder/intel-pt-decoder.c  | 30 +++++++--------
+ .../intel-pt-decoder/intel-pt-insn-decoder.c  |  2 +-
+ .../perf/util/intel-pt-decoder/intel-pt-log.c |  2 +-
+ .../intel-pt-decoder/intel-pt-pkt-decoder.c   |  2 +-
+ tools/perf/util/intel-pt.c                    | 38 +++++++++----------
+ tools/perf/util/intel-tpebs.c                 |  6 +--
+ 14 files changed, 57 insertions(+), 56 deletions(-)
 
-diff --git a/tools/perf/tests/api-io.c b/tools/perf/tests/api-io.c
-index 0ba3d5ccebcf..4aee1cff062e 100644
---- a/tools/perf/tests/api-io.c
-+++ b/tools/perf/tests/api-io.c
-@@ -74,7 +74,7 @@ static int setup_test(char path[PATH_MAX], const char *contents,
- 		unlink(path);
+diff --git a/tools/perf/arch/x86/tests/bp-modify.c b/tools/perf/arch/x86/tests/bp-modify.c
+index 0924ccd9e36d..0bbc81fe9b1d 100644
+--- a/tools/perf/arch/x86/tests/bp-modify.c
++++ b/tools/perf/arch/x86/tests/bp-modify.c
+@@ -37,7 +37,7 @@ static int spawn_child(void)
+ 		 * waits in signal for parent to trace it,
+ 		 * then it calls bp_1 and quits.
+ 		 */
+-		int err = ptrace(PTRACE_TRACEME, 0, NULL, NULL);
++		int err = (int)ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+ 
+ 		if (err) {
+ 			pr_debug("failed to PTRACE_TRACEME\n");
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index 85c8186300c8..1692ee735109 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -169,7 +169,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
+ 			size_t sz = opts->auxtrace_snapshot_size;
+ 
+ 			sz = round_up(sz, page_size) / page_size;
+-			opts->auxtrace_mmap_pages = roundup_pow_of_two(sz);
++			opts->auxtrace_mmap_pages = (unsigned int)roundup_pow_of_two(sz);
+ 		}
+ 		if (opts->auxtrace_snapshot_size >
+ 				opts->auxtrace_mmap_pages * (size_t)page_size) {
+@@ -347,7 +347,7 @@ static int intel_bts_snapshot_finish(struct auxtrace_record *itr)
+ 
+ static bool intel_bts_first_wrap(u64 *data, size_t buf_size)
+ {
+-	int i, a, b;
++	size_t i, a, b;
+ 
+ 	b = buf_size >> 3;
+ 	a = b - 512;
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index 8f235d8b67b6..842dba02f082 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -418,7 +418,7 @@ static int intel_pt_track_switches(struct evlist *evlist)
+ 
+ 	evsel = evlist__add_sched_switch(evlist, true);
+ 	if (IS_ERR(evsel)) {
+-		err = PTR_ERR(evsel);
++		err = (int)PTR_ERR(evsel);
+ 		pr_debug2("%s: failed to create %s, error = %d\n",
+ 			  __func__, sched_switch, err);
+ 		return err;
+@@ -692,7 +692,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 			size_t sz = opts->auxtrace_snapshot_size;
+ 
+ 			sz = round_up(sz, page_size) / page_size;
+-			opts->auxtrace_mmap_pages = roundup_pow_of_two(sz);
++			opts->auxtrace_mmap_pages = (unsigned int)roundup_pow_of_two(sz);
+ 		}
+ 		if (opts->auxtrace_snapshot_size >
+ 				opts->auxtrace_mmap_pages * (size_t)page_size) {
+@@ -726,7 +726,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 		if (!opts->auxtrace_mmap_pages) {
+ 			size_t sz = round_up(max_sz, page_size) / page_size;
+ 
+-			opts->auxtrace_mmap_pages = roundup_pow_of_two(sz);
++			opts->auxtrace_mmap_pages = (unsigned int)roundup_pow_of_two(sz);
+ 		}
+ 		if (max_sz > opts->auxtrace_mmap_pages * (size_t)page_size) {
+ 			pr_err("Sample size %zu must not be greater than AUX area tracing mmap size %zu\n",
+@@ -772,7 +772,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 
+ 	if (!opts->auxtrace_snapshot_mode && !opts->auxtrace_sample_mode) {
+ 		size_t aw = opts->auxtrace_mmap_pages * (size_t)page_size / 4;
+-		u32 aux_watermark = aw > UINT_MAX ? UINT_MAX : aw;
++		u32 aux_watermark = aw > UINT_MAX ? UINT_MAX : (u32)aw;
+ 
+ 		intel_pt_evsel->core.attr.aux_watermark = aux_watermark;
+ 	}
+@@ -1093,7 +1093,7 @@ static bool intel_pt_wrapped(struct intel_pt_recording *ptr, int idx,
+ 
+ static bool intel_pt_first_wrap(u64 *data, size_t buf_size)
+ {
+-	int i, a, b;
++	size_t i, a, b;
+ 
+ 	b = buf_size >> 3;
+ 	a = b - 512;
+diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+index 7442a2cd87ed..ed508698dc22 100644
+--- a/tools/perf/arch/x86/util/iostat.c
++++ b/tools/perf/arch/x86/util/iostat.c
+@@ -305,7 +305,7 @@ static int iostat_event_group(struct evlist *evl,
+ 	  uncore_iio_%x/event=0x83,umask=0x01,ch_mask=0xF,fc_mask=0x07/,\
+ 	  uncore_iio_%x/event=0xc0,umask=0x04,ch_mask=0xF,fc_mask=0x07/,\
+ 	  uncore_iio_%x/event=0xc0,umask=0x01,ch_mask=0xF,fc_mask=0x07/}";
+-	const int len_template = strlen(iostat_cmd_template) + 1;
++	const size_t len_template = strlen(iostat_cmd_template) + 1;
+ 	struct evsel *evsel = NULL;
+ 	int metrics_count = iostat_metrics_count();
+ 	char *iostat_cmd = calloc(len_template, 1);
+diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
+index 424716518b75..6e97198b055a 100644
+--- a/tools/perf/arch/x86/util/kvm-stat.c
++++ b/tools/perf/arch/x86/util/kvm-stat.c
+@@ -31,7 +31,7 @@ static void mmio_event_get_key(struct evsel *evsel, struct perf_sample *sample,
+ 			       struct event_key *key)
+ {
+ 	key->key  = evsel__intval(evsel, sample, "gpa");
+-	key->info = evsel__intval(evsel, sample, "type");
++	key->info = (int)evsel__intval(evsel, sample, "type");
+ }
+ 
+ #define KVM_TRACE_MMIO_READ_UNSATISFIED 0
+@@ -94,7 +94,7 @@ static void ioport_event_get_key(struct evsel *evsel,
+ 				 struct event_key *key)
+ {
+ 	key->key  = evsel__intval(evsel, sample, "port");
+-	key->info = evsel__intval(evsel, sample, "rw");
++	key->info = (int)evsel__intval(evsel, sample, "rw");
+ }
+ 
+ static bool ioport_event_begin(struct evsel *evsel,
+@@ -138,7 +138,7 @@ static void msr_event_get_key(struct evsel *evsel,
+ 				 struct event_key *key)
+ {
+ 	key->key  = evsel__intval(evsel, sample, "ecx");
+-	key->info = evsel__intval(evsel, sample, "write");
++	key->info = (int)evsel__intval(evsel, sample, "write");
+ }
+ 
+ static bool msr_event_begin(struct evsel *evsel,
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index 12fd93f04802..ed0c564dad7e 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -195,7 +195,8 @@ static void sdt_rename_register(char *sdt_reg, int sdt_len, char *uprobe_reg)
+ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+ {
+ 	char new_reg[SDT_REG_NAME_SIZE] = {0};
+-	int new_len = 0, ret;
++	int ret;
++	size_t new_len = 0;
+ 	/*
+ 	 * rm[0]:  +/-NUM(REG)
+ 	 * rm[1]:  +/-
+diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+index d1c654839049..c93c35c46145 100644
+--- a/tools/perf/arch/x86/util/topdown.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -43,7 +43,7 @@ bool arch_is_topdown_slots(const struct evsel *evsel)
+ 
+ bool arch_is_topdown_metrics(const struct evsel *evsel)
+ {
+-	int config = evsel->core.attr.config;
++	__u64 config = evsel->core.attr.config;
+ 	const char *name_from_config;
+ 	struct perf_pmu *pmu;
+ 
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 3625c6224750..2598df776d4e 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -850,9 +850,9 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
+ 	bts->session = session;
+ 	bts->machine = &session->machines.host; /* No kvm support */
+ 	bts->auxtrace_type = auxtrace_info->type;
+-	bts->pmu_type = auxtrace_info->priv[INTEL_BTS_PMU_TYPE];
++	bts->pmu_type = (u32)auxtrace_info->priv[INTEL_BTS_PMU_TYPE];
+ 	bts->tc.time_shift = auxtrace_info->priv[INTEL_BTS_TIME_SHIFT];
+-	bts->tc.time_mult = auxtrace_info->priv[INTEL_BTS_TIME_MULT];
++	bts->tc.time_mult = (u32)auxtrace_info->priv[INTEL_BTS_TIME_MULT];
+ 	bts->tc.time_zero = auxtrace_info->priv[INTEL_BTS_TIME_ZERO];
+ 	bts->cap_user_time_zero =
+ 			auxtrace_info->priv[INTEL_BTS_CAP_USER_TIME_ZERO];
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index e733f6b1f7ac..abb891f778cb 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -841,7 +841,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
+ 		if (!data->have_tma)
+ 			return 0;
+ 
+-		mtc = pkt_info->packet.payload;
++		mtc = (uint32_t)pkt_info->packet.payload;
+ 		if (decoder->mtc_shift > 8 && data->fixup_last_mtc) {
+ 			data->fixup_last_mtc = false;
+ 			intel_pt_fixup_last_mtc(mtc, decoder->mtc_shift,
+@@ -904,7 +904,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
+ 		if (!decoder->tsc_ctc_ratio_d)
+ 			return 0;
+ 
+-		ctc = pkt_info->packet.payload;
++		ctc = (uint32_t)pkt_info->packet.payload;
+ 		fc = pkt_info->packet.count;
+ 		ctc_rem = ctc & decoder->ctc_rem_mask;
+ 
+@@ -930,7 +930,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
+ 		return 0;
+ 
+ 	case INTEL_PT_CBR:
+-		cbr = pkt_info->packet.payload;
++		cbr = (uint32_t)pkt_info->packet.payload;
+ 		if (data->cbr && data->cbr != cbr)
+ 			return 1;
+ 		data->cbr = cbr;
+@@ -1268,7 +1268,7 @@ static void intel_pt_mode_exec_status(struct intel_pt_decoder *decoder)
+ {
+ 	bool iflag = decoder->packet.count & INTEL_PT_IFLAG;
+ 
+-	decoder->exec_mode = decoder->packet.payload;
++	decoder->exec_mode = (int)decoder->packet.payload;
+ 	decoder->iflag = iflag;
+ 	decoder->next_iflag = iflag;
+ 	decoder->state.from_iflag = iflag;
+@@ -1279,7 +1279,7 @@ static void intel_pt_mode_exec(struct intel_pt_decoder *decoder)
+ {
+ 	bool iflag = decoder->packet.count & INTEL_PT_IFLAG;
+ 
+-	decoder->exec_mode = decoder->packet.payload;
++	decoder->exec_mode = (int)decoder->packet.payload;
+ 	decoder->next_iflag = iflag;
+ }
+ 
+@@ -1331,7 +1331,7 @@ static bool intel_pt_fup_event(struct intel_pt_decoder *decoder, bool no_tip)
+ 		if (!ip && decoder->pge)
+ 			decoder->state.type |= INTEL_PT_BRANCH;
+ 		decoder->state.cfe_type = decoder->fup_cfe_pkt.count;
+-		decoder->state.cfe_vector = decoder->fup_cfe_pkt.payload;
++		decoder->state.cfe_vector = (int)decoder->fup_cfe_pkt.payload;
+ 		decoder->state.evd_cnt = decoder->evd_cnt;
+ 		decoder->state.evd = decoder->evd;
+ 		decoder->evd_cnt = 0;
+@@ -1906,7 +1906,7 @@ static inline void intel_pt_mtc_cyc_cnt_upd(struct intel_pt_decoder *decoder)
+ 
+ static void intel_pt_calc_tma(struct intel_pt_decoder *decoder)
+ {
+-	uint32_t ctc = decoder->packet.payload;
++	uint32_t ctc = (uint32_t)decoder->packet.payload;
+ 	uint32_t fc = decoder->packet.count;
+ 	uint32_t ctc_rem = ctc & decoder->ctc_rem_mask;
+ 
+@@ -1943,7 +1943,7 @@ static void intel_pt_calc_mtc_timestamp(struct intel_pt_decoder *decoder)
+ 	if (!decoder->have_tma)
+ 		return;
+ 
+-	mtc = decoder->packet.payload;
++	mtc = (uint32_t)decoder->packet.payload;
+ 
+ 	if (decoder->mtc_shift > 8 && decoder->fixup_last_mtc) {
+ 		decoder->fixup_last_mtc = false;
+@@ -2044,7 +2044,7 @@ static void intel_pt_bbp(struct intel_pt_decoder *decoder)
+ 		memset(decoder->state.items.mask, 0, sizeof(decoder->state.items.mask));
+ 		decoder->state.items.is_32_bit = false;
+ 	}
+-	decoder->blk_type = decoder->packet.payload;
++	decoder->blk_type = (enum intel_pt_blk_type)decoder->packet.payload;
+ 	decoder->blk_type_pos = intel_pt_blk_type_pos(decoder->blk_type);
+ 	if (decoder->blk_type == INTEL_PT_GP_REGS)
+ 		decoder->state.items.is_32_bit = decoder->packet.count;
+@@ -2488,12 +2488,12 @@ static uint64_t intel_pt_calc_expected_tsc(struct intel_pt_decoder *decoder,
+ static uint64_t intel_pt_expected_tsc(struct intel_pt_decoder *decoder,
+ 				      struct intel_pt_vm_tsc_info *data)
+ {
+-	uint32_t ctc = data->tma_packet.payload;
++	uint32_t ctc = (uint32_t)data->tma_packet.payload;
+ 	uint32_t fc = data->tma_packet.count;
+ 
+ 	return intel_pt_calc_expected_tsc(decoder, ctc, fc,
+ 					  decoder->ctc_timestamp,
+-					  data->ctc_delta, data->last_ctc);
++					  data->ctc_delta, (uint32_t)data->last_ctc);
+ }
+ 
+ static void intel_pt_translate_vm_tsc(struct intel_pt_decoder *decoder,
+@@ -2889,7 +2889,7 @@ static int intel_pt_vm_time_correlation(struct intel_pt_decoder *decoder)
+ 			break;
+ 
+ 		case INTEL_PT_BBP:
+-			decoder->blk_type = decoder->packet.payload;
++			decoder->blk_type = (enum intel_pt_blk_type)decoder->packet.payload;
+ 			break;
+ 
+ 		case INTEL_PT_BIP:
+@@ -3825,7 +3825,7 @@ static int intel_pt_part_psb(struct intel_pt_decoder *decoder)
+ 		if (i > decoder->len)
+ 			continue;
+ 		if (!memcmp(end - i, INTEL_PT_PSB_STR, i))
+-			return i;
++			return (int)i;
+ 	}
+ 	return 0;
+ }
+@@ -3839,7 +3839,7 @@ static int intel_pt_rest_psb(struct intel_pt_decoder *decoder, int part_psb)
+ 	    memcmp(decoder->buf, psb + part_psb, rest_psb))
+ 		return 0;
+ 
+-	return rest_psb;
++	return (int)rest_psb;
+ }
+ 
+ static int intel_pt_get_split_psb(struct intel_pt_decoder *decoder,
+@@ -3898,7 +3898,7 @@ static int intel_pt_scan_for_psb(struct intel_pt_decoder *decoder)
+ 			continue;
+ 		}
+ 
+-		decoder->pkt_step = next - decoder->buf;
++		decoder->pkt_step = (int)(next - decoder->buf);
+ 		return intel_pt_get_next_packet(decoder);
+ 	}
+ }
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+index 8fabddc1c0da..03e34afb69a3 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+@@ -193,7 +193,7 @@ int intel_pt_get_insn(const unsigned char *buf, size_t len, int x86_64,
+ 	struct insn insn;
+ 	int ret;
+ 
+-	ret = insn_decode(&insn, buf, len,
++	ret = insn_decode(&insn, buf, (int)len,
+ 			  x86_64 ? INSN_MODE_64 : INSN_MODE_32);
+ 	if (ret < 0 || insn.length > len)
  		return -1;
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-log.c b/tools/perf/util/intel-pt-decoder/intel-pt-log.c
+index ef55d6232cf0..324692a45d42 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-log.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-log.c
+@@ -232,7 +232,7 @@ void __intel_pt_log_insn(struct intel_pt_insn *intel_pt_insn, uint64_t ip)
+ 
+ 	if (len > INTEL_PT_INSN_BUF_SZ)
+ 		len = INTEL_PT_INSN_BUF_SZ;
+-	intel_pt_print_data(intel_pt_insn->buf, len, ip, 8);
++	intel_pt_print_data(intel_pt_insn->buf, (int)len, ip, 8);
+ 	if (intel_pt_insn_desc(intel_pt_insn, desc, INTEL_PT_INSN_DESC_MAX) > 0)
+ 		fprintf(f, "%s\n", desc);
+ 	else
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+index 94fb16cf9e0c..8f2d7aab9ca4 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+@@ -713,7 +713,7 @@ int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf,
+ 		if (ret < 0)
+ 			return ret;
+ 		blen -= ret;
+-		return buf_len - blen;
++		return (int)(buf_len - blen);
  	}
--	io__init(io, io->fd, io->buf, buf_size);
-+	io__init(io, io->fd, io->buf, (unsigned int)buf_size);
+ 	case INTEL_PT_TIP_PGD:
+ 	case INTEL_PT_TIP_PGE:
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 4e8a9b172fbc..037ccedf5d89 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -557,7 +557,7 @@ static int intel_pt_config_div(const char *var, const char *value, void *data)
+ 	if (!strcmp(var, "intel-pt.cache-divisor")) {
+ 		val = strtol(value, NULL, 0);
+ 		if (val > 0 && val <= INT_MAX)
+-			*d = val;
++			*d = (int)val;
+ 	}
+ 
+ 	return 0;
+@@ -589,7 +589,7 @@ static unsigned int intel_pt_cache_size(struct dso *dso,
+ 		return 10;
+ 	if (size > (1 << 21))
+ 		return 21;
+-	return 32 - __builtin_clz(size);
++	return 32 - __builtin_clz((unsigned int)size);
+ }
+ 
+ static struct auxtrace_cache *intel_pt_cache(struct dso *dso,
+@@ -635,7 +635,7 @@ static int intel_pt_cache_add(struct dso *dso, struct machine *machine,
+ 	e->rel = intel_pt_insn->rel;
+ 	memcpy(e->insn, intel_pt_insn->buf, INTEL_PT_INSN_BUF_SZ);
+ 
+-	err = auxtrace_cache__add(c, offset, &e->entry);
++	err = auxtrace_cache__add(c, (u32)offset, &e->entry);
+ 	if (err)
+ 		auxtrace_cache__free_entry(c, e);
+ 
+@@ -650,7 +650,7 @@ intel_pt_cache_lookup(struct dso *dso, struct machine *machine, u64 offset)
+ 	if (!c)
+ 		return NULL;
+ 
+-	return auxtrace_cache__lookup(dso__auxtrace_cache(dso), offset);
++	return auxtrace_cache__lookup(dso__auxtrace_cache(dso), (u32)offset);
+ }
+ 
+ static void intel_pt_cache_invalidate(struct dso *dso, struct machine *machine,
+@@ -661,7 +661,7 @@ static void intel_pt_cache_invalidate(struct dso *dso, struct machine *machine,
+ 	if (!c)
+ 		return;
+ 
+-	auxtrace_cache__remove(dso__auxtrace_cache(dso), offset);
++	auxtrace_cache__remove(dso__auxtrace_cache(dso), (u32)offset);
+ }
+ 
+ static inline bool intel_pt_guest_kernel_ip(uint64_t ip)
+@@ -1101,7 +1101,7 @@ static unsigned int intel_pt_mtc_period(struct intel_pt *pt)
+ 
+ 	evlist__for_each_entry(pt->session->evlist, evsel) {
+ 		if (intel_pt_get_config(pt, &evsel->core.attr, &config))
+-			return (config & pt->mtc_freq_bits) >> shift;
++			return (unsigned int)((config & pt->mtc_freq_bits) >> shift);
+ 	}
  	return 0;
  }
+@@ -2424,7 +2424,7 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+ 	struct intel_pt_pebs_event *pe;
+ 	struct intel_pt *pt = ptq->pt;
+ 	int err = -EINVAL;
+-	int hw_id;
++	size_t hw_id;
  
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 3faeb5b6fe0b..5ecac6c2d8b6 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -64,7 +64,7 @@ static noinline int test_function(void)
- {
- 	__test_function(&the_var);
- 	the_var++;
--	return time(NULL);
-+	return (int)time(NULL);
- }
+ 	if (!items->has_applicable_counters || !items->applicable_counters) {
+ 		if (!pt->single_pebs)
+@@ -2435,9 +2435,10 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+ 	for_each_set_bit(hw_id, (unsigned long *)&items->applicable_counters, INTEL_PT_MAX_PEBS) {
+ 		pe = &ptq->pebs[hw_id];
+ 		if (!pe->evsel) {
+-			if (!pt->single_pebs)
+-				pr_err("PEBS-via-PT record with no matching event, hw_id %d\n",
++			if (!pt->single_pebs) {
++				pr_err("PEBS-via-PT record with no matching event, hw_id %zu\n",
+ 				       hw_id);
++			}
+ 			return intel_pt_synth_single_pebs_sample(ptq);
+ 		}
+ 		err = intel_pt_do_synth_pebs_sample(ptq, pe->evsel, pe->id);
+@@ -3272,7 +3273,7 @@ static int intel_pt_process_switch(struct intel_pt *pt,
+ 	if (evsel != pt->switch_evsel)
+ 		return 0;
  
- static void sig_handler_2(int signum __maybe_unused,
-@@ -151,11 +151,11 @@ static int wp_event(void *addr, int sig)
- static long long bp_count(int fd)
- {
- 	long long count;
--	int ret;
-+	ssize_t ret;
+-	tid = evsel__intval(evsel, sample, "next_pid");
++	tid = (pid_t)evsel__intval(evsel, sample, "next_pid");
+ 	cpu = sample->cpu;
  
- 	ret = read(fd, &count, sizeof(long long));
- 	if (ret != sizeof(long long)) {
--		pr_debug("failed to read: %d\n", ret);
-+		pr_debug("failed to read: %zd\n", ret);
- 		return TEST_FAIL;
+ 	intel_pt_log("sched_switch: cpu %d tid %d time %"PRIu64" tsc %#"PRIx64"\n",
+@@ -4258,14 +4259,14 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	pt->session = session;
+ 	pt->machine = &session->machines.host; /* No kvm support */
+ 	pt->auxtrace_type = auxtrace_info->type;
+-	pt->pmu_type = auxtrace_info->priv[INTEL_PT_PMU_TYPE];
++	pt->pmu_type = (u32)auxtrace_info->priv[INTEL_PT_PMU_TYPE];
+ 	pt->tc.time_shift = auxtrace_info->priv[INTEL_PT_TIME_SHIFT];
+-	pt->tc.time_mult = auxtrace_info->priv[INTEL_PT_TIME_MULT];
++	pt->tc.time_mult = (u32)auxtrace_info->priv[INTEL_PT_TIME_MULT];
+ 	pt->tc.time_zero = auxtrace_info->priv[INTEL_PT_TIME_ZERO];
+ 	pt->cap_user_time_zero = auxtrace_info->priv[INTEL_PT_CAP_USER_TIME_ZERO];
+ 	pt->tsc_bit = auxtrace_info->priv[INTEL_PT_TSC_BIT];
+ 	pt->noretcomp_bit = auxtrace_info->priv[INTEL_PT_NORETCOMP_BIT];
+-	pt->have_sched_switch = auxtrace_info->priv[INTEL_PT_HAVE_SCHED_SWITCH];
++	pt->have_sched_switch = (int)auxtrace_info->priv[INTEL_PT_HAVE_SCHED_SWITCH];
+ 	pt->snapshot_mode = auxtrace_info->priv[INTEL_PT_SNAPSHOT_MODE];
+ 	pt->per_cpu_mmaps = auxtrace_info->priv[INTEL_PT_PER_CPU_MMAPS];
+ 	intel_pt_print_info(&auxtrace_info->priv[0], INTEL_PT_PMU_TYPE,
+@@ -4274,8 +4275,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	if (intel_pt_has(auxtrace_info, INTEL_PT_CYC_BIT)) {
+ 		pt->mtc_bit = auxtrace_info->priv[INTEL_PT_MTC_BIT];
+ 		pt->mtc_freq_bits = auxtrace_info->priv[INTEL_PT_MTC_FREQ_BITS];
+-		pt->tsc_ctc_ratio_n = auxtrace_info->priv[INTEL_PT_TSC_CTC_N];
+-		pt->tsc_ctc_ratio_d = auxtrace_info->priv[INTEL_PT_TSC_CTC_D];
++		pt->tsc_ctc_ratio_n = (u32)auxtrace_info->priv[INTEL_PT_TSC_CTC_N];
++		pt->tsc_ctc_ratio_d = (u32)auxtrace_info->priv[INTEL_PT_TSC_CTC_D];
+ 		pt->cyc_bit = auxtrace_info->priv[INTEL_PT_CYC_BIT];
+ 		intel_pt_print_info(&auxtrace_info->priv[0], INTEL_PT_MTC_BIT,
+ 				    INTEL_PT_CYC_BIT);
+@@ -4283,7 +4284,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 
+ 	if (intel_pt_has(auxtrace_info, INTEL_PT_MAX_NONTURBO_RATIO)) {
+ 		pt->max_non_turbo_ratio =
+-			auxtrace_info->priv[INTEL_PT_MAX_NONTURBO_RATIO];
++			(unsigned int)auxtrace_info->priv[INTEL_PT_MAX_NONTURBO_RATIO];
+ 		intel_pt_print_info(&auxtrace_info->priv[0],
+ 				    INTEL_PT_MAX_NONTURBO_RATIO,
+ 				    INTEL_PT_MAX_NONTURBO_RATIO);
+@@ -4418,12 +4419,11 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		u64 tsc_freq = intel_pt_ns_to_ticks(pt, 1000000000);
+ 
+ 		if (!pt->max_non_turbo_ratio)
+-			pt->max_non_turbo_ratio =
+-					(tsc_freq + 50000000) / 100000000;
++			pt->max_non_turbo_ratio = (unsigned int)((tsc_freq + 50000000) / 100000000);
+ 		intel_pt_log("TSC frequency %"PRIu64"\n", tsc_freq);
+ 		intel_pt_log("Maximum non-turbo ratio %u\n",
+ 			     pt->max_non_turbo_ratio);
+-		pt->cbr2khz = tsc_freq / pt->max_non_turbo_ratio / 1000;
++		pt->cbr2khz = (unsigned int)(tsc_freq / pt->max_non_turbo_ratio / 1000);
  	}
  
-diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
-index ee560e156be6..eb9021ad8177 100644
---- a/tools/perf/tests/bp_signal_overflow.c
-+++ b/tools/perf/tests/bp_signal_overflow.c
-@@ -33,7 +33,7 @@ static int overflows;
+ 	err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 2c421b475b3b..27916368a0c7 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -235,7 +235,7 @@ int tpebs_start(struct evlist *evsel_list)
+ 			continue;
  
- static noinline int test_function(void)
- {
--	return time(NULL);
-+	return (int)time(NULL);
- }
+ 		pr_debug("tpebs: Retire_latency of event %s is required\n", evsel->name);
+-		for (i = strlen(evsel->name) - 1; i > 0; i--) {
++		for (i = (int)strlen(evsel->name) - 1; i > 0; i--) {
+ 			if (evsel->name[i] == 'R')
+ 				break;
+ 		}
+@@ -293,7 +293,7 @@ int tpebs_start(struct evlist *evsel_list)
+ 		}
+ 		/* Wait for perf record initialization.*/
+ 		len = strlen(EVLIST_CTL_CMD_ENABLE_TAG);
+-		ret = write(control_fd[1], EVLIST_CTL_CMD_ENABLE_TAG, len);
++		ret = (int)write(control_fd[1], EVLIST_CTL_CMD_ENABLE_TAG, len);
+ 		if (ret != len) {
+ 			pr_err("perf record control write control message failed\n");
+ 			goto out;
+@@ -319,7 +319,7 @@ int tpebs_start(struct evlist *evsel_list)
+ 			goto out;
+ 		}
  
- static void sig_handler(int signum __maybe_unused,
-@@ -46,11 +46,11 @@ static void sig_handler(int signum __maybe_unused,
- static long long bp_count(int fd)
- {
- 	long long count;
--	int ret;
-+	ssize_t ret;
- 
- 	ret = read(fd, &count, sizeof(long long));
- 	if (ret != sizeof(long long)) {
--		pr_debug("failed to read: %d\n", ret);
-+		pr_debug("failed to read: %zd\n", ret);
- 		return TEST_FAIL;
- 	}
- 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 14d30a5053be..4ea840580876 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -301,7 +301,7 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
- 	return 0;
- }
- 
--static void finish_test(struct child_test **child_tests, int running_test, int child_test_num,
-+static void finish_test(struct child_test **child_tests, size_t running_test, size_t child_test_num,
- 		int width)
- {
- 	struct child_test *child_test = child_tests[running_test];
-@@ -349,7 +349,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
- 		if (perf_use_color_default) {
- 			int running = 0;
- 
--			for (int y = running_test; y < child_test_num; y++) {
-+			for (size_t y = running_test; y < child_test_num; y++) {
- 				if (child_tests[y] == NULL)
- 					continue;
- 				if (check_if_command_finished(&child_tests[y]->process) == 0)
-@@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 	int err = 0;
- 
- 	for (struct test_suite **t = suites; *t; t++) {
--		int i, len = strlen(test_description(*t, -1));
-+		int i;
-+		int len = (int)strlen(test_description(*t, -1));
- 
- 		if (width < len)
- 			width = len;
- 
- 		test_suite__for_each_test_case(*t, i) {
--			len = strlen(test_description(*t, i));
-+			len = (int)strlen(test_description(*t, i));
- 			if (width < len)
- 				width = len;
- 			num_tests += runs_per_test;
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index cf6edbe697b2..0c31d5ff77e2 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -188,7 +188,7 @@ static int objdump_version(void)
- 	char *line = NULL;
- 	const char *fmt;
- 	FILE *f;
--	int ret;
-+	ssize_t ret;
- 
- 	int version_tmp, version_num = 0;
- 	char *version = 0, *token;
-@@ -295,7 +295,7 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
- 	if (len) {
- 		pr_debug("objdump read too few bytes: %zd\n", len);
- 		if (!ret)
--			ret = len;
-+			ret = (int)len;
- 	}
- 
- 	pclose(f);
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index a1fff4203b75..2954e06ae5b3 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -233,14 +233,14 @@ static int dsos__create(int cnt, int size, struct dsos *dsos)
- 	return 0;
- }
- 
--static int set_fd_limit(int n)
-+static int set_fd_limit(long n)
- {
- 	struct rlimit rlim;
- 
- 	if (getrlimit(RLIMIT_NOFILE, &rlim))
- 		return -1;
- 
--	pr_debug("file limit %ld, new %d\n", (long) rlim.rlim_cur, n);
-+	pr_debug("file limit %ld, new %ld\n", (long) rlim.rlim_cur, n);
- 
- 	rlim.rlim_cur = n;
- 	return setrlimit(RLIMIT_NOFILE, &rlim);
-@@ -249,8 +249,8 @@ static int set_fd_limit(int n)
- static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct machine machine;
--	long nr_end, nr = open_files_cnt();
--	int dso_cnt, limit, i, fd;
-+	long dso_cnt, limit, nr_end, nr = open_files_cnt();
-+	int i, fd;
- 
- 	/* Rest the internal dso open counter limit. */
- 	reset_fd_limit();
-@@ -264,7 +264,7 @@ static int test__dso_data_cache(struct test_suite *test __maybe_unused, int subt
- 	/* and this is now our dso open FDs limit */
- 	dso_cnt = limit / 2;
- 	TEST_ASSERT_VAL("failed to create dsos\n",
--			!dsos__create(dso_cnt, TEST_FILE_SIZE, &machine.dsos));
-+			!dsos__create((int)dso_cnt, TEST_FILE_SIZE, &machine.dsos));
- 
- 	for (i = 0; i < (dso_cnt - 1); i++) {
- 		struct dso *dso = machine.dsos.dsos[i];
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index 446a3615d720..b328ad6973a3 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -45,7 +45,7 @@ static int thread_init(struct thread_data *td)
- 	}
- 
- 	td->map = map;
--	td->tid = syscall(SYS_gettid);
-+	td->tid = (pid_t)syscall(SYS_gettid);
- 
- 	pr_debug("tid = %d, map = %p\n", td->tid, map);
- 	return 0;
-diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
-index 0ef4ba7c1571..68f1498d0a47 100644
---- a/tools/perf/tests/openat-syscall-tp-fields.c
-+++ b/tools/perf/tests/openat-syscall-tp-fields.c
-@@ -119,7 +119,7 @@ static int test__syscall_openat_tp_fields(struct test_suite *test __maybe_unused
- 					goto out_delete_evlist;
- 				}
- 
--				tp_flags = evsel__intval(evsel, &sample, "flags");
-+				tp_flags = (int)evsel__intval(evsel, &sample, "flags");
- 				perf_sample__exit(&sample);
- 				if (flags != tp_flags) {
- 					pr_debug("%s: Expected flags=%#x, got %#x\n",
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index db004d26fcb0..2762794827ce 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -609,7 +609,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
- 	pmu_add_sys_aliases(pmu);
- 
- 	/* Count how many aliases we generated */
--	alias_count = perf_pmu__num_events(pmu);
-+	alias_count = (int)perf_pmu__num_events(pmu);
- 
- 	/* Count how many aliases we expect from the known table */
- 	for (table = &test_pmu->aliases[0]; *table; table++)
-diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-index a67c756f90b8..b7d7735f8a72 100644
---- a/tools/perf/tests/sigtrap.c
-+++ b/tools/perf/tests/sigtrap.c
-@@ -154,13 +154,13 @@ sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __may
- {
- 	if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
- 		ctx.first_siginfo = *info;
--	__atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
-+	__atomic_fetch_sub(&ctx.tids_want_signal, (pid_t)syscall(SYS_gettid), __ATOMIC_RELAXED);
- }
- 
- static void *test_thread(void *arg)
- {
- 	pthread_barrier_t *barrier = (pthread_barrier_t *)arg;
--	pid_t tid = syscall(SYS_gettid);
-+	pid_t tid = (pid_t)syscall(SYS_gettid);
- 	int i;
- 
- 	pthread_barrier_wait(barrier);
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 8df3f9d9ffd2..1f0f8321ae40 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -140,8 +140,8 @@ static int process_sample_event(struct evlist *evlist,
- 
- 	evsel = evlist__id2evsel(evlist, sample.id);
- 	if (evsel == switch_tracking->switch_evsel) {
--		next_tid = evsel__intval(evsel, &sample, "next_pid");
--		prev_tid = evsel__intval(evsel, &sample, "prev_pid");
-+		next_tid = (int)evsel__intval(evsel, &sample, "next_pid");
-+		prev_tid = (int)evsel__intval(evsel, &sample, "prev_pid");
- 		cpu = sample.cpu;
- 		pr_debug3("sched_switch: cpu: %d prev_tid %d next_tid %d\n",
- 			  cpu, prev_tid, next_tid);
-@@ -262,9 +262,10 @@ static int compar(const void *a, const void *b)
- {
- 	const struct event_node *nodea = a;
- 	const struct event_node *nodeb = b;
--	s64 cmp = nodea->event_time - nodeb->event_time;
- 
--	return cmp;
-+	if (nodea->event_time == nodeb->event_time)
-+		return 0;
-+	return nodea->event_time < nodeb->event_time ? -1 : 1;
- }
- 
- static int process_events(struct evlist *evlist,
-@@ -398,7 +399,7 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
- 
- 	switch_evsel = evlist__add_sched_switch(evlist, true);
- 	if (IS_ERR(switch_evsel)) {
--		err = PTR_ERR(switch_evsel);
-+		err = (int)PTR_ERR(switch_evsel);
- 		pr_debug("Failed to create event %s\n", sched_switch);
- 		goto out_err;
- 	}
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 74cdbd2ce9d0..fbdb463e965d 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -82,7 +82,7 @@ static bool is_ignored_symbol(const char *name, char type)
- 			return true;
- 
- 	for (p = ignored_suffixes; *p; p++) {
--		int l = strlen(name) - strlen(*p);
-+		ssize_t l = strlen(name) - strlen(*p);
- 
- 		if (l >= 0 && !strcmp(name + l, *p))
- 			return true;
-@@ -313,7 +313,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 				 * _really_ have a problem.
- 				 */
- 				s64 skew = mem_end - UM(pair->end);
--				if (llabs(skew) >= page_size)
-+				if (llabs(skew) >= (s64)page_size)
- 					pr_debug("WARN: %#" PRIx64 ": diff end addr for %s v: %#" PRIx64 " k: %#" PRIx64 "\n",
- 						 mem_start, sym->name, mem_end,
- 						 UM(pair->end));
-diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-index 6c178985e37f..d5dd17eb5c05 100644
---- a/tools/perf/tests/wp.c
-+++ b/tools/perf/tests/wp.c
-@@ -31,10 +31,10 @@ volatile u8 data2[3];
- #ifndef __s390x__
- static int wp_read(int fd, long long *count, int size)
- {
--	int ret = read(fd, count, size);
-+	ssize_t ret = read(fd, count, size);
- 
- 	if (ret != size) {
--		pr_debug("failed to read: %d\n", ret);
-+		pr_debug("failed to read: %zd\n", ret);
- 		return -1;
- 	}
- 	return 0;
+-		ret = read(ack_fd[0], ack_buf, sizeof(ack_buf));
++		ret = (int)read(ack_fd[0], ack_buf, sizeof(ack_buf));
+ 		if (ret > 0)
+ 			ret = strcmp(ack_buf, EVLIST_CTL_CMD_ACK_TAG);
+ 		else {
 -- 
 2.49.0.504.g3bcea36a83-goog
 
