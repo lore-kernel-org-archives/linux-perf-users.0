@@ -1,55 +1,55 @@
-Received: from mail-ot1-f74.google.com (mail-ot1-f74.google.com [209.85.210.74])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43B62288FE
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA38228CB7
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531972; cv=none; b=XG8Vn9ROmjUmW0ON0qzv4pLvKk0tMcCIY3qrsx2jWEzFJm6uyb7LaQkJtIsJEszxchni2HeT3AzSFpzl6H3GhCttlS1AKlVjoRIjtdok4kSfWNIzALx3KPBpPe0W5IyqWks1wqa/uqV636MedoA08fqSLKXIwCVVctmghG7H6dg=
+	t=1743531972; cv=none; b=CwdRS2yObEgrUewp+HuLaTxe+nLzq3xcgCXCJ+LDCmyZxNTWj2kot5zongLuFIvzWLzUDXIjPM4/UDOz0zGUbRCmB889JvmiBI30zTio4C/MAVtHbYIAxUI/9tUbwZcooVLRfzA8BLv/w84ZMlTcdMd6Dp91vnLcIbCtwdyZ8EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743531972; c=relaxed/simple;
-	bh=loSeINwlbc6XnjqNUnme9Ii2wesULU3u9gelnKxDOWo=;
+	bh=s717chdg+kUkOKWgech/40orJr8HpUqoe1xLZ+drgUo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ulYbcgLT8/5NisyNFiOkWl8bP+5FPdcWRfgJPLnXAlXRaMpunfZXBVOF1xAhKQxbwLLg6wwGSdNuVYm2ivIq8NWyGIzaB1B5T34TMMS1DFLv33y02BsYN6bEyR+QAdrbcqaQm+owOjq2+6a5LgTzTY2+uCNHSo3p+NQBld0PXqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R5Q1a0IW; arc=none smtp.client-ip=209.85.210.74
+	 To:Content-Type; b=B9oE8k5dv6cKKHrpYRhSWNdWFmHYbgYYzLe/kOqdA6d+vZowOB614rnYd728LtbfoTGq7Wab9d65BE2jqjp26Hz5mW3CK9gu+Lq1V0sPZNFg/ryZRTXafKgUiFqewiXvFyDtkl8mRA6AE0wGCb4tjxWx5uYDFQuHEKVvH/NlxaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YqVaU0O5; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R5Q1a0IW"
-Received: by mail-ot1-f74.google.com with SMTP id 46e09a7af769-72bd7984706so310600a34.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:26:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YqVaU0O5"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-229668c8659so5269625ad.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531968; x=1744136768; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531970; x=1744136770; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iXDN2IiTwXgBiyK9J/TipFHWdZHNwXGG7JKhdVlTKrc=;
-        b=R5Q1a0IWGzWlzo1JrDWeQpmAxwp3pvpMSCmVoqBOjPORBBD/6971t7w+R7QUnfPrbC
-         AZfBS8j8Dsp8Zf6wMOZNxeN3kyfqph9rTUDss1DVv4QZqRoAkQxoy04NzCSh8tE+iC+s
-         fa4M4YTEqzy+tkmQk4C1pZ6pdvIzhdjO07iByhHK14VreN7XVMFLZFhEw0qpxS4o7IL1
-         nQwESGL/w+oXvvdf++hSwmYwodPUtWgIFTmP/k6p7cSDzSWcQrDrXs4Icj1sXi+mlpPV
-         M2AuA2xNyZ5T00r7H3iqXyhWWLgkGVRRigRQfDKhAgqn+sBZicJR/aDpFk5L8T53Kbu7
-         dw8Q==
+        bh=Uf82K12GlQ/n7riesGFWT8XnJRxl30Twhf4yK1Xn0q4=;
+        b=YqVaU0O5yaEbd2b5vN388AxmKocEzGjzAzoIkdTud1rvkhj4NW8NnSSFgTu17heGf+
+         Xx1lKiWMy+7DYbtOh+ElETSylpWxHzb1cJHHgw+5Eerg2TC3cuNmcFptbnEicf8xFLq8
+         OFD0JRTrxpPSTpXHrLWIkCcbVlT3XlB7XpOLge/05AQ2okcu+gIIx1fQNwTIuZyqbw1k
+         nvY/9s6oxoH2n7/8Up6svz3r1kOQ3os0A5SGIpBQ+z10nc6G2xIgvxi7ufNCW63Kwr/E
+         xFBxj3GxVc3z1FmGefaUfjOdd6TyVhl7FTmhNgTSAe5XtSwxmleRymHcwSjEVaTKSBPZ
+         P4AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531968; x=1744136768;
+        d=1e100.net; s=20230601; t=1743531970; x=1744136770;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iXDN2IiTwXgBiyK9J/TipFHWdZHNwXGG7JKhdVlTKrc=;
-        b=LmM+i0hBe7LvmnrdEPWWzJWBozMQ5hoZqcaiJAxhYS9zKTEdu5/nbAIw36R20651zy
-         Gttsb09hLpHcZ4FHNMzbZbZl75Sz3rytZI5I5VQHEA1cX61j3W1ztESc7umL4QA6HOUl
-         ZEuCq8Goos9wdtLR1Sgw/B1HcWjZ9O/u1aoWUBC/RBpWQoRawyZ3k1bjwOjfwj8hnSzw
-         LouUEDUzDGfeLcOgJ3biq35YQWqkC0NOMAPOyvFbR+W40MfBoY6bjiRTC6qB6NpyIfUB
-         d6psSOsj+i76vYBkMARK9e4LiKkF96SA8ZjZe1VeucW1CvuG1HuWFISZk0UJK+U2osF7
-         j6Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCV66VybpYgnegjfRTFXJ8x9+bl+YLPQD03RPRO6Jh/4/jIoMln6+wcWEnVO0Cq/kg/zVZFHbpJ9ztCtk1et8JXk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJjgg+W/bziYs0LfBI6v7tvkKR0aNJ5Ms2r28rLJMRFt5/Fzqw
-	Mq9aAiMRD0mE2DeB+5M4I55Q+7WmPV8SG1ftITPK9eqMmzuHoh7nYZLWUubqKp+aJdDqfx7mtk8
-	wkI1+uw==
-X-Google-Smtp-Source: AGHT+IHUffenbdrxtR2eLoeeVEpZywaWbKXEVYkXtogEfzNSPRpDS6P26p637BPNcEuYtvO3lbjegNy1msNO
-X-Received: from oabhi26.prod.google.com ([2002:a05:6870:c99a:b0:2c1:5c70:acac])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6830:2808:b0:72a:f44b:13ed
- with SMTP id 46e09a7af769-72c637771c3mr8057489a34.2.1743531968061; Tue, 01
- Apr 2025 11:26:08 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:43 -0700
+        bh=Uf82K12GlQ/n7riesGFWT8XnJRxl30Twhf4yK1Xn0q4=;
+        b=a+I2Dh0pn8HA/n/Eze1u6G35uDst1y/OWsGWxsAxbkqc589QdE+iBlx5NxboDKV3v6
+         0aggFRAZShATfz+1keTWN+qa1BcZtNDBh/dts3se/XtvTbD86OVL0broyiCvc55Ysz+S
+         NfDBgC3xqVhBKVAuADkHyENmw8twmTH8HMFGbnj5dPfuzFjIbPdvenYxYfESOTcK0i9c
+         PFzidQqkg2D8Zvgvr3ypPxKyWE1WNsEg5qfjf2hTDy0QtHtN7gzscIgKvSim4VmA7wdV
+         SyhKFIfOMEi+69m909SF0ukMT2IGSui/16le3+0tt6Ay+dfOhGm4wMivccSIANnKg+Po
+         K8hA==
+X-Forwarded-Encrypted: i=1; AJvYcCUadCPs9+AmWaCHKMwM4WBUx8At2AHN5XPgMmaq6g+36KzSJPLUQotp3sV63Sm+eVX/kvSc2PD+pFT+aHujVM2G@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6RD6yT6kWgefA7SAmcc23Q2ltfqg0PyjnszLxXmIrvKu4m1eS
+	c13mLTXRESqTqrXPeCI5sBgW4W9poS2Y8Myr4vAj+EPZmsMONpq252w5X8ZlXTlPHHqw4n/5LPI
+	SUaQ1Lw==
+X-Google-Smtp-Source: AGHT+IER4xC3pb/cBZi0Xgwt4i8RZtO+p4l4gcTF5gsnxGo5ob1iymplbCkmr8xH6eC77SkY7Tl6nBneD8IY
+X-Received: from plcn5.prod.google.com ([2002:a17:902:d2c5:b0:223:8244:94f6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f64e:b0:223:669f:ca2d
+ with SMTP id d9443c01a7336-2292f9d67e9mr257670695ad.35.1743531969969; Tue, 01
+ Apr 2025 11:26:09 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:44 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-46-irogers@google.com>
-Subject: [PATCH v1 45/48] perf symbol: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-47-irogers@google.com>
+Subject: [PATCH v1 46/48] perf util: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,177 +114,398 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol-elf.c | 33 +++++++++++++++++----------------
- tools/perf/util/symbol.c     | 10 +++++-----
- 2 files changed, 22 insertions(+), 21 deletions(-)
+ tools/perf/perf-sys.h        |  3 +--
+ tools/perf/util/cacheline.c  |  5 ++++-
+ tools/perf/util/cgroup.c     |  4 ++--
+ tools/perf/util/comm.c       |  2 +-
+ tools/perf/util/config.c     |  6 +++---
+ tools/perf/util/cpumap.c     |  4 ++--
+ tools/perf/util/debug.c      |  7 +++----
+ tools/perf/util/memswap.c    |  4 ++--
+ tools/perf/util/memswap.h    |  4 ++--
+ tools/perf/util/strfilter.c  |  2 +-
+ tools/perf/util/string.c     | 11 ++++++-----
+ tools/perf/util/svghelper.c  | 23 ++++++++++++-----------
+ tools/perf/util/time-utils.c |  9 +++++----
+ tools/perf/util/util.c       |  9 +++++----
+ tools/perf/util/util.h       |  2 +-
+ 15 files changed, 50 insertions(+), 45 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index fbf6d0f73af9..9de6e963ca79 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -261,7 +261,7 @@ static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
+diff --git a/tools/perf/perf-sys.h b/tools/perf/perf-sys.h
+index 7a2264e1e4e1..89e44798ed2b 100644
+--- a/tools/perf/perf-sys.h
++++ b/tools/perf/perf-sys.h
+@@ -14,8 +14,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
+ 		      pid_t pid, int cpu, int group_fd,
+ 		      unsigned long flags)
+ {
+-	return syscall(__NR_perf_event_open, attr, pid, cpu,
+-		       group_fd, flags);
++	return (int)syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
+ }
+ 
+ #endif /* _PERF_SYS_H */
+diff --git a/tools/perf/util/cacheline.c b/tools/perf/util/cacheline.c
+index e98b5250a517..6d4505aeaa5f 100644
+--- a/tools/perf/util/cacheline.c
++++ b/tools/perf/util/cacheline.c
+@@ -3,7 +3,10 @@
+ #include <unistd.h>
+ 
+ #ifdef _SC_LEVEL1_DCACHE_LINESIZE
+-#define cache_line_size(cacheline_sizep) *cacheline_sizep = sysconf(_SC_LEVEL1_DCACHE_LINESIZE)
++static void cache_line_size(int *cacheline_sizep)
++{
++	*cacheline_sizep = (int)sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
++}
+ #else
+ #include <api/fs/fs.h>
+ #include "debug.h"
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index fbcc0626f9ce..30c7f60048b7 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -310,7 +310,7 @@ static int match_cgroups(const char *str)
  		return -1;
  
- 	for (i = 0; i < phdrnum; i++) {
--		if (gelf_getphdr(elf, i, phdr) == NULL)
-+		if (gelf_getphdr(elf, (int)i, phdr) == NULL)
- 			return -1;
+ 	/* cgroup_name will have a full path, skip the root directory */
+-	prefix_len = strlen(mnt);
++	prefix_len = (int)strlen(mnt);
  
- 		if (phdr->p_type != PT_LOAD)
-@@ -550,7 +550,7 @@ static void get_rela_dyn_info(Elf *elf, GElf_Ehdr *ehdr, struct rela_dyn_info *d
- 	if (!scn || !rela_dyn_shdr.sh_link || !rela_dyn_shdr.sh_entsize)
+ 	/* collect all cgroups in the cgroup_list */
+ 	if (nftw(mnt, add_cgroup_name, 20, 0) < 0)
+@@ -607,7 +607,7 @@ void read_all_cgroups(struct rb_root *root)
+ {
+ 	char mnt[PATH_MAX];
+ 	struct cgroup_name *cn;
+-	int prefix_len;
++	size_t prefix_len;
+ 
+ 	if (cgroupfs_find_mountpoint(mnt, sizeof(mnt), "perf_event"))
  		return;
- 
--	di->nr_entries = rela_dyn_shdr.sh_size / rela_dyn_shdr.sh_entsize;
-+	di->nr_entries = (u32)(rela_dyn_shdr.sh_size / rela_dyn_shdr.sh_entsize);
- 	di->rela_dyn_data = elf_getdata(scn, NULL);
- 
- 	scn = elf_getscn(elf, rela_dyn_shdr.sh_link);
-@@ -789,7 +789,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 	if (symstrs->d_size == 0)
- 		goto out_elf_end;
- 
--	ri.nr_entries = shdr_rel_plt.sh_size / shdr_rel_plt.sh_entsize;
-+	ri.nr_entries = (u32)(shdr_rel_plt.sh_size / shdr_rel_plt.sh_entsize);
- 
- 	ri.is_rela = shdr_rel_plt.sh_type == SHT_RELA;
- 
-@@ -925,7 +925,7 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
- 				size_t sz = min(size, descsz);
- 				memcpy(bf, ptr, sz);
- 				memset(bf + sz, 0, size - sz);
--				err = sz;
-+				err = (int)sz;
- 				break;
- 			}
- 		}
-@@ -1066,14 +1066,14 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
- 			} else if (read(fd, bf, descsz) != (ssize_t)descsz)
- 				break;
- 		} else {
--			int n = namesz + descsz;
-+			size_t n = namesz + descsz;
- 
--			if (n > (int)sizeof(bf)) {
-+			if (n > sizeof(bf)) {
- 				n = sizeof(bf);
- 				pr_debug("%s: truncating reading of build id in sysfs file %s: n_namesz=%u, n_descsz=%u.\n",
- 					 __func__, filename, nhdr.n_namesz, nhdr.n_descsz);
- 			}
--			if (read(fd, bf, n) != n)
-+			if (read(fd, bf, n) != (ssize_t)n)
- 				break;
- 		}
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index 8aa456d7c2cd..3d8f30ddcac1 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -111,7 +111,7 @@ static void comm_strs__remove_if_last(struct comm_str *cs)
+ 		entry = bsearch(comm_str__str(cs), comm_strs->strs, comm_strs->num_strs,
+ 				sizeof(struct comm_str *), comm_str__search);
+ 		comm_str__put(*entry);
+-		for (int i = entry - comm_strs->strs; i < comm_strs->num_strs - 1; i++)
++		for (long i = entry - comm_strs->strs; i < comm_strs->num_strs - 1; i++)
+ 			comm_strs->strs[i] = comm_strs->strs[i + 1];
+ 		comm_strs->num_strs--;
  	}
-@@ -1426,7 +1426,7 @@ static u64 max_text_section(Elf *elf, GElf_Ehdr *ehdr)
- 		if (!gelf_getshdr(sec, &shdr))
- 			break;
- 
--		if (!is_exe_text(shdr.sh_flags))
-+		if (!is_exe_text((int)shdr.sh_flags))
- 			continue;
- 
- 		/* .init and .exit sections are not placed with .text */
-@@ -1546,7 +1546,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 	 * perf does not record module section addresses except for .text, but
- 	 * some sections can use the same mapping as .text.
- 	 */
--	if (kmodule && adjust_kernel_syms && is_exe_text(shdr->sh_flags) &&
-+	if (kmodule && adjust_kernel_syms && is_exe_text((int)shdr->sh_flags) &&
- 	    shdr->sh_offset <= max_text_sh_offset) {
- 		dso__put(*curr_dsop);
- 		*curr_dsop = dso__get(dso);
-@@ -1672,7 +1672,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	if (secstrs_sym == NULL)
- 		goto out_elf_end;
- 
--	nr_syms = shdr.sh_size / shdr.sh_entsize;
-+	nr_syms = (uint32_t)(shdr.sh_size / shdr.sh_entsize);
- 
- 	memset(&sym, 0, sizeof(sym));
- 
-@@ -1734,7 +1734,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		}
- 
- 		if (runtime_ss->opdsec && sym.st_shndx == runtime_ss->opdidx) {
--			u32 offset = sym.st_value - syms_ss->opdshdr.sh_addr;
-+			u32 offset = (u32)(sym.st_value - syms_ss->opdshdr.sh_addr);
- 			u64 *opd = opddata->d_buf + offset;
- 			sym.st_value = DSO__SWAP(dso, u64, *opd);
- 			sym.st_shndx = elf_addr_to_index(runtime_ss->elf,
-@@ -1946,7 +1946,7 @@ static int elf_read_maps(Elf *elf, bool exe, mapfn_t mapfn, void *data)
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index ae72b66b6ded..5fd20776e6bb 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -388,7 +388,7 @@ int perf_config_int(int *dest, const char *name, const char *value)
+ 		bad_config(name);
  		return -1;
+ 	}
+-	*dest = ret;
++	*dest = (int)ret;
+ 	return 0;
+ }
  
- 	for (i = 0; i < phdrnum; i++) {
--		if (gelf_getphdr(elf, i, &phdr) == NULL)
-+		if (gelf_getphdr(elf, (int)i, &phdr) == NULL)
- 			return -1;
- 		if (phdr.p_type != PT_LOAD)
+@@ -454,10 +454,10 @@ static int perf_buildid_config(const char *var, const char *value)
+ static int perf_default_core_config(const char *var, const char *value)
+ {
+ 	if (!strcmp(var, "core.proc-map-timeout"))
+-		proc_map_timeout = strtoul(value, NULL, 10);
++		proc_map_timeout = (int)strtoul(value, NULL, 10);
+ 
+ 	if (!strcmp(var, "core.addr2line-timeout"))
+-		addr2line_timeout_ms = strtoul(value, NULL, 10);
++		addr2line_timeout_ms = (int)strtoul(value, NULL, 10);
+ 
+ 	/* Add other config variables here. */
+ 	return 0;
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 89570397a4b3..7a8bf6843362 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -107,14 +107,14 @@ static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_
+ 
+ 	for (int i = 0, j = 0; i < mask_nr; i++) {
+ 		int cpus_per_i = (i * data->mask32_data.long_size  * BITS_PER_BYTE);
+-		int cpu;
++		size_t cpu;
+ 
+ 		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
+ 		for_each_set_bit(cpu, local_copy, 64) {
+ 			if (cpu + cpus_per_i < INT16_MAX) {
+ 				RC_CHK_ACCESS(map)->map[j++].cpu = cpu + cpus_per_i;
+ 			} else {
+-				pr_err("Invalid cpumap entry %d\n", cpu + cpus_per_i);
++				pr_err("Invalid cpumap entry %zu\n", cpu + cpus_per_i);
+ 				perf_cpu_map__put(map);
+ 				return NULL;
+ 			}
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index f9ef7d045c92..3027477652b6 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -303,13 +303,12 @@ void perf_debug_setup(void)
+ void dump_stack(void)
+ {
+ 	void *array[16];
+-	size_t size = backtrace(array, ARRAY_SIZE(array));
++	int size = backtrace(array, ARRAY_SIZE(array));
+ 	char **strings = backtrace_symbols(array, size);
+-	size_t i;
+ 
+-	printf("Obtained %zd stack frames.\n", size);
++	printf("Obtained %d stack frames.\n", size);
+ 
+-	for (i = 0; i < size; i++)
++	for (int i = 0; i < size; i++)
+ 		printf("%s\n", strings[i]);
+ 
+ 	free(strings);
+diff --git a/tools/perf/util/memswap.c b/tools/perf/util/memswap.c
+index c1317e4983bc..68f9b3f72812 100644
+--- a/tools/perf/util/memswap.c
++++ b/tools/perf/util/memswap.c
+@@ -3,7 +3,7 @@
+ #include "memswap.h"
+ #include <linux/types.h>
+ 
+-void mem_bswap_32(void *src, int byte_size)
++void mem_bswap_32(void *src, size_t byte_size)
+ {
+ 	u32 *m = src;
+ 	while (byte_size > 0) {
+@@ -13,7 +13,7 @@ void mem_bswap_32(void *src, int byte_size)
+ 	}
+ }
+ 
+-void mem_bswap_64(void *src, int byte_size)
++void mem_bswap_64(void *src, size_t byte_size)
+ {
+ 	u64 *m = src;
+ 
+diff --git a/tools/perf/util/memswap.h b/tools/perf/util/memswap.h
+index 2c38e8c2d548..956de6b014f8 100644
+--- a/tools/perf/util/memswap.h
++++ b/tools/perf/util/memswap.h
+@@ -9,7 +9,7 @@ union u64_swap {
+ 	u32 val32[2];
+ };
+ 
+-void mem_bswap_64(void *src, int byte_size);
+-void mem_bswap_32(void *src, int byte_size);
++void mem_bswap_64(void *src, size_t byte_size);
++void mem_bswap_32(void *src, size_t byte_size);
+ 
+ #endif /* PERF_MEMSWAP_H_ */
+diff --git a/tools/perf/util/strfilter.c b/tools/perf/util/strfilter.c
+index 02807b9d4122..d09523712138 100644
+--- a/tools/perf/util/strfilter.c
++++ b/tools/perf/util/strfilter.c
+@@ -287,7 +287,7 @@ static int strfilter_node__sprint(struct strfilter_node *node, char *buf)
+ 		len += rlen;
+ 		break;
+ 	default:
+-		len = strlen(node->p);
++		len = (int)strlen(node->p);
+ 		if (buf)
+ 			strcpy(buf, node->p);
+ 	}
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index c0e927bbadf6..cfc8f4d07abb 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -199,8 +199,9 @@ bool strlazymatch(const char *str, const char *pat)
+  */
+ int strtailcmp(const char *s1, const char *s2)
+ {
+-	int i1 = strlen(s1);
+-	int i2 = strlen(s2);
++	size_t i1 = strlen(s1);
++	size_t i2 = strlen(s2);
++
+ 	while (--i1 >= 0 && --i2 >= 0) {
+ 		if (s1[i1] != s2[i2])
+ 			return s1[i1] - s2[i2];
+@@ -331,7 +332,7 @@ char *strdup_esc(const char *str)
+ }
+ 
+ /* Remove backslash right before quote and return next quote address. */
+-static char *remove_consumed_esc(char *str, int len, int quote)
++static char *remove_consumed_esc(char *str, size_t len, int quote)
+ {
+ 	char *ptr = str, *end = str + len;
+ 
+@@ -373,7 +374,7 @@ char *strdup_esq(const char *str)
+ 		if (*d == '"' || *d == '\'') {
+ 			/* This is non-escaped quote */
+ 			int quote = *d;
+-			int len = strlen(d + 1) + 1;
++			size_t len = strlen(d + 1) + 1;
+ 
+ 			/*
+ 			 * Remove the start quote and remove consumed escape (backslash
+@@ -420,7 +421,7 @@ unsigned int hex(char c)
+  */
+ char *strreplace_chars(char needle, const char *haystack, const char *replace)
+ {
+-	int replace_len = strlen(replace);
++	size_t replace_len = strlen(replace);
+ 	char *new_s, *to;
+ 	const char *loc = strchr(haystack, needle);
+ 	const char *from = haystack;
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index b1d259f590e9..487860f557ac 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -100,7 +100,7 @@ void open_svg(const char *filename, int cpus, int rows, u64 start, u64 end)
+ 	 * if the recording is short, we default to a width of 1000, but
+ 	 * for longer recordings we want at least 200 units of width per second
+ 	 */
+-	new_width = (last_time - first_time) / 5000000;
++	new_width = (int)((last_time - first_time) / 5000000);
+ 
+ 	if (new_width > svg_page_width)
+ 		svg_page_width = new_width;
+@@ -344,7 +344,8 @@ static char *cpu_model(void)
+ 	file = fopen("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies", "r");
+ 	if (file) {
+ 		while (fgets(buf, 255, file)) {
+-			unsigned int freq;
++			unsigned long long freq;
++
+ 			freq = strtoull(buf, NULL, 10);
+ 			if (freq > max_freq)
+ 				max_freq = freq;
+@@ -698,12 +699,11 @@ struct topology {
+ };
+ 
+ static void scan_thread_topology(int *map, struct topology *t, int cpu,
+-				 int *pos, int nr_cpus)
++				 int *pos, size_t nr_cpus)
+ {
+-	int i;
+-	int thr;
++	for (int i = 0; i < t->sib_thr_nr; i++) {
++		size_t thr;
+ 
+-	for (i = 0; i < t->sib_thr_nr; i++) {
+ 		if (!test_bit(cpu, cpumask_bits(&t->sib_thr[i])))
  			continue;
-@@ -2767,14 +2767,15 @@ static void sdt_adjust_loc(struct sdt_note *tmp, GElf_Addr base_off)
- 	if (!base_off)
- 		return;
  
--	if (tmp->bit32)
-+	if (tmp->bit32) {
- 		tmp->addr.a32[SDT_NOTE_IDX_LOC] =
--			tmp->addr.a32[SDT_NOTE_IDX_LOC] + base_off -
--			tmp->addr.a32[SDT_NOTE_IDX_BASE];
--	else
-+			(Elf32_Addr)(tmp->addr.a32[SDT_NOTE_IDX_LOC] + base_off -
-+				     tmp->addr.a32[SDT_NOTE_IDX_BASE]);
-+	} else {
- 		tmp->addr.a64[SDT_NOTE_IDX_LOC] =
- 			tmp->addr.a64[SDT_NOTE_IDX_LOC] + base_off -
- 			tmp->addr.a64[SDT_NOTE_IDX_BASE];
+@@ -713,15 +713,16 @@ static void scan_thread_topology(int *map, struct topology *t, int cpu,
+ 	}
+ }
+ 
+-static void scan_core_topology(int *map, struct topology *t, int nr_cpus)
++static void scan_core_topology(int *map, struct topology *t, size_t nr_cpus)
+ {
+ 	int pos = 0;
+-	int i;
+-	int cpu;
+ 
+-	for (i = 0; i < t->sib_core_nr; i++)
++	for (int i = 0; i < t->sib_core_nr; i++) {
++		size_t cpu;
++
+ 		for_each_set_bit(cpu, cpumask_bits(&t->sib_core[i]), nr_cpus)
+-			scan_thread_topology(map, t, cpu, &pos, nr_cpus);
++			scan_thread_topology(map, t, (int)cpu, &pos, nr_cpus);
 +	}
  }
  
- static void sdt_adjust_refctr(struct sdt_note *tmp, GElf_Addr base_addr,
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 11540219481b..7eceb6679ed5 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -111,7 +111,7 @@ static int prefix_underscores_count(const char *str)
- 	while (*tail == '_')
- 		tail++;
+ static int str_to_bitmap(char *s, cpumask_t *b, int nr_cpus)
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 1b91ccd4d523..8579c2800ceb 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -25,7 +25,6 @@ int parse_nsec_time(const char *str, u64 *ptime)
+ 		return -1;
  
--	return tail - str;
-+	return (int)(tail - str);
+ 	if (*end == '.') {
+-		int i;
+ 		char nsec_buf[10];
+ 
+ 		if (strlen(++end) > 9)
+@@ -35,7 +34,7 @@ int parse_nsec_time(const char *str, u64 *ptime)
+ 		nsec_buf[9] = '\0';
+ 
+ 		/* make it nsec precision */
+-		for (i = strlen(nsec_buf); i < 9; i++)
++		for (size_t i = strlen(nsec_buf); i < 9; i++)
+ 			nsec_buf[i] = '0';
+ 
+ 		time_nsec = strtoull(nsec_buf, &end, 10);
+@@ -284,7 +283,8 @@ static int percent_comma_split(struct perf_time_interval *ptime_buf, int num,
+ 			       time_pecent_split func)
+ {
+ 	char *str, *p1, *p2;
+-	int len, ret, i = 0;
++	int ret, i = 0;
++	size_t len;
+ 
+ 	str = strdup(ostr);
+ 	if (str == NULL)
+@@ -328,7 +328,8 @@ static int one_percent_convert(struct perf_time_interval *ptime_buf,
+ 			       const char *ostr, u64 start, u64 end, char *c)
+ {
+ 	char *str;
+-	int len = strlen(ostr), ret;
++	size_t len = strlen(ostr);
++	int ret;
+ 
+ 	/*
+ 	 * c points to '%'.
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 0f031eb80b4c..85bb8049ce65 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -360,7 +360,7 @@ int perf_tip(char **strp, const char *dirpath)
+ 	if (strlist__nr_entries(tips) == 0)
+ 		goto out;
+ 
+-	node = strlist__entry(tips, random() % strlist__nr_entries(tips));
++	node = strlist__entry(tips, (unsigned int)random() % strlist__nr_entries(tips));
+ 	if (asprintf(strp, "Tip: %s", node->s) < 0)
+ 		ret = -ENOMEM;
+ 
+@@ -370,9 +370,10 @@ int perf_tip(char **strp, const char *dirpath)
+ 	return ret;
  }
  
- const char * __weak arch__normalize_symbol_name(const char *name)
-@@ -481,10 +481,10 @@ int symbol__match_symbol_name(const char *name, const char *str,
- 
- 	if (includes == SYMBOL_TAG_INCLUDE__DEFAULT_ONLY &&
- 	    (versioning = strstr(name, "@@"))) {
--		int len = strlen(str);
-+		int len = (int)strlen(str);
- 
- 		if (len < versioning - name)
--			len = versioning - name;
-+			len = (int)(versioning - name);
- 
- 		return arch__compare_symbol_names_n(name, str, len);
- 	} else
-@@ -638,7 +638,7 @@ void dso__sort_by_name(struct dso *dso)
-  * While we find nice hex chars, build a long_val.
-  * Return number of chars processed.
-  */
--static int hex2u64(const char *ptr, u64 *long_val)
-+static size_t hex2u64(const char *ptr, u64 *long_val)
+-char *perf_exe(char *buf, int len)
++char *perf_exe(char *buf, size_t len)
  {
- 	char *p;
+-	int n = readlink("/proc/self/exe", buf, len);
++	ssize_t n = readlink("/proc/self/exe", buf, len);
++
+ 	if (n > 0) {
+ 		buf[n] = 0;
+ 		return buf;
+@@ -409,7 +410,7 @@ char *filename_with_chroot(int pid, const char *filename)
+ 	char buf[PATH_MAX];
+ 	char proc_root[32];
+ 	char *new_name = NULL;
+-	int ret;
++	ssize_t ret;
  
-@@ -1532,7 +1532,7 @@ static int dso__load_perf_map(const char *map_path, struct dso *dso)
- 	while (!feof(file)) {
- 		u64 start, size;
- 		struct symbol *sym;
--		int line_len, len;
-+		size_t line_len, len;
+ 	scnprintf(proc_root, sizeof(proc_root), "/proc/%d/root", pid);
+ 	ret = readlink(proc_root, buf, sizeof(buf) - 1);
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 3423778e39a5..f0057d8410ff 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -64,7 +64,7 @@ extern bool perf_singlethreaded;
+ void perf_set_singlethreaded(void);
+ void perf_set_multithreaded(void);
  
- 		line_len = getline(&line, &n, file);
- 		if (line_len < 0)
+-char *perf_exe(char *buf, int len);
++char *perf_exe(char *buf, size_t len);
+ 
+ #ifndef O_CLOEXEC
+ #ifdef __sparc__
 -- 
 2.49.0.504.g3bcea36a83-goog
 
