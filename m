@@ -1,55 +1,55 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33572135DE
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DAC2222D2
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531924; cv=none; b=nCaVj5eGL4wHpb240nPHdaQMl1OCua7aRX6wN3bzDSj6U7TTn+R4UdOpIzlvrr7w+UeZbvbARc24NZRgczxhAOR0g7oHrt1hc+IUgr2MMVITJ5CU+tWMuEKCadx0xumEAVPaN1Q+he63XLwUrODcz4h9Bnw5/3mrv8FTsLM4BqE=
+	t=1743531925; cv=none; b=Yi1TFqNYnjuG3XHqN66tLIP30SNf2aQxPfciPn/vj93vvbp2FDxU+dFM+u3vlZOGPwCftAV1uAfFheW9si+ZQiINxZt2K9PE6WXQOcezvPGz1f8jdrIxUuP/OZL8eLcbw98oeZ620Pf+lAUMwf+L75gut6iOurHhYwa+WUwGR7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531924; c=relaxed/simple;
-	bh=4RVSKWGtcfQih+UknNAMb9Mk513Qf/LPLfe1Z5Wk/Hs=;
+	s=arc-20240116; t=1743531925; c=relaxed/simple;
+	bh=t4HpEKSieHMVUwdEDlATrqBNHL+SdNbdZvpQJmyECXc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Eze9JLw4cLkc7/fLjsGrTY5wLWLjpfj5/8JpFxDJ1x5F0eb6qae5hEyR3e3i7BX7ShpDel6Swrg8ndTHL58D22x39kXUJsxTqoJShhmZPaf2l3vCpTqRoqx4FRQmn2BT72RezhoJlFnry/uQ3s477+FIPrWgzqkc0BkPsdvKPlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ufSITaLf; arc=none smtp.client-ip=209.85.160.74
+	 To:Content-Type; b=R/baiCA4AISL9Kkn2Fn751QSfBRzl5/fmhyJb5IOVsAZcttHIBYgoobsiD59LOq6gexEZp+Z40ZpGim5ZKZ8t4Bnc4AuPa81KRA0FXUwnE2s+ttG/WGRKbOEYNp4Lwut1T3IXk3D3w9tPOBqHLC9ZcLlLOPQUrIQkzG56K02fG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eDTy+s3f; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ufSITaLf"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2c2339b26fcso4672452fac.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eDTy+s3f"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-224347aef79so160799065ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531921; x=1744136721; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531923; x=1744136723; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=N34/+E3ZGw12pVAa/alsyA6/izX5NgJHni0nGvXBgPQ=;
-        b=ufSITaLfG1CDAZox6mIuEzrAfrQdC2t+8zHbe3lb6I6lmxl5VswSTWCoWKNYYuQMEZ
-         XlTTlasHPq3W5DFgkubQ99e26ntSSdLND9NgMPKCeOUR3WYM2mtYE2JLRi1Q1BpEMxXN
-         Lw8IxXjd9ytuFVWbmpqIJ/EFVXsgkXWPaN9jwZbGMWbIKbH6mg20BrIwXPqE5867sNTR
-         fVnbgQChUqLmd5EpviC/neCxkCSm+Hu05Iu1Zhb5yCR6p1oAfTglPUkilOZ30NoaJOZq
-         Stqa4uZWOJj8xwn7+fcwHlVCTO2X53NywdsbFtyCyFLAGH588i4+KaClYqP2ZC0fcWv9
-         sj0g==
+        bh=823XinDHeG+XrMmCNIY0vqG2lfpNgcB8RbHYxnOFvTw=;
+        b=eDTy+s3fzmOm8hepPkwF8/U42Jjv4qDw39kiYqJlcYvqH8LhvzNdqR938TXElFVRqs
+         JK3FFkgHjzIiGPs9uPj/XWo2uZvL0mjQg3wZcWWEzdVJUlZAFr0ucQJnBF8RiEZ95h3B
+         uuIAdQWip6ekK0iI+I0j6Zh6myRO28zHqHFx1Jd8FjSN8FBLU2ko4p8qibuZWufBv0Ic
+         osEUR1M0q4pz/Bjvvs+e47onnkDW+MNE/pgUQU+kUGSlYawuC0dLRmZcil5m7OHMRJqI
+         dp3/1soK6qMWROgXV8RnuQ6EjfRUB9sEQBWT2xWQ5xhXqoIBHEcZZjDVP4GjwsdAo6ed
+         PcbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531921; x=1744136721;
+        d=1e100.net; s=20230601; t=1743531923; x=1744136723;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N34/+E3ZGw12pVAa/alsyA6/izX5NgJHni0nGvXBgPQ=;
-        b=fMeY8/aTt9Qkt86PcexPJeKHPr9YVMevsaHsY2HAQIQ1zlAlGtz1e0Ybu34IQw5S1e
-         qduZBGNTuFdy5UU7bjyVfemyWaqKW3UZRVZeEzR5zMRCJmzfTXAE3+5k7Dklm28uzyEd
-         f5BBSU84BLAn/V33axutouVSainb/jHBb6uo7uzU4S7TVXbR6j57GI0Gr4KON4X9yB1h
-         Ge4vE7m1tPviviZRvPPo32JPviuxF7wi6t1nA3dQ2JHGuyWtTFQMpqTv4yD6j14wZVGW
-         SckRzNRXIPyvWsUyt5eQj3yAqF1/AEitwx0/11JaTUVC3m2ZkSw2vD26ykhLaPNvNp9P
-         L0sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxdH66LpWelwljswxpGMr32Z4MnImtOuvFkg6SDZI8xeGmRxlXUdk+4ixLnJyIhHRtjIwYmEYXKW8Ei4FGQlx4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzaELkh4g40R8cG6/YVwllowsUso4+4TRidpjRQTjWKLl96ddP
-	MIK7cqhuF1/wfxLoXruocn2HHTVCREVT2+WeVe3ocuNpsN6/OrwAT8DZvwYJADcRJjslcQrl9ig
-	oR6Mx+A==
-X-Google-Smtp-Source: AGHT+IHZQN/TkPazOpz69O2OfTzOMRhutI7f6IM7JKtjYAx4h6Oo/m6aJeCrTVl4+t7sC7yi/LtnKHYPftrK
-X-Received: from oachx16.prod.google.com ([2002:a05:6871:5310:b0:2c2:5922:a060])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:6f14:b0:2a3:832e:5492
- with SMTP id 586e51a60fabf-2cc3822669emr2359419fac.25.1743531921129; Tue, 01
- Apr 2025 11:25:21 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:20 -0700
+        bh=823XinDHeG+XrMmCNIY0vqG2lfpNgcB8RbHYxnOFvTw=;
+        b=tLi7UdBwmDNUK0cWbiqMTsI9HjCEKEsLaUgiXbI9WlHYkRvv+EN7+jNfZHA4ufM815
+         IvdTT4S2jJWZZrvybWbziXRnWY1z/ftE1vnMXYEAK4QkjzCk1RVG7bxWQLY2sR5jBRSH
+         lu6YhgXwitJlNJqtK4zo1JZSl+yfGHtFbQatCUtUiWyBzFU7kaxyOxEKgSv0EF9UoVFp
+         4q8XWxiz5irprxIgg82SXVsHG8JW8dFY0lFQDSPuVl20jckqWzQdBiUkwL8LwCzgQaWN
+         JfG+QljWB88X6BoHOOCuCOlZ0QTrHpkioK2jYwsURaYm952Dq/ErC7hsqUNRcmeKBeFO
+         IZSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBOmD1ZtFaYCK1Fq8I4CAuAKWmGKao40Jo+UiE7YgPooeanQ4iWpPRhJDiGA7KfyUKPI/z+9pKuIJOVZqXMzGF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6yfApbH7RyNfa85IeWVzVjOHZFJoh+jhYiuTOljRBdgOCNZLd
+	CEJNltXZ6Cdj8KiyyOJqneoaMS0+EjuxtLAPsTH5XxCMXz8Or5tJlX4KzT321AyxdZl9b0QvfV1
+	DfOZl5A==
+X-Google-Smtp-Source: AGHT+IHEy9LXSmI9P8wsEmOpH7R+FJ1KOlnv6WssH2meAhH8o5gBcQQpgs70KPc3GeKjqcWiFTxuiUNmdeE4
+X-Received: from plgb17.prod.google.com ([2002:a17:902:d511:b0:223:faee:f527])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:da91:b0:220:f795:5f14
+ with SMTP id d9443c01a7336-2292f974a45mr190872445ad.27.1743531922818; Tue, 01
+ Apr 2025 11:25:22 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:21 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-23-irogers@google.com>
-Subject: [PATCH v1 22/48] perf ui: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-24-irogers@google.com>
+Subject: [PATCH v1 23/48] perf annotate: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,111 +114,176 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/hist.c       | 18 ++++++++----------
- tools/perf/ui/stdio/hist.c |  5 ++---
- 2 files changed, 10 insertions(+), 13 deletions(-)
+ tools/perf/builtin-annotate.c |  4 ++--
+ tools/perf/util/annotate.c    | 22 +++++++++++-----------
+ tools/perf/util/disasm.c      | 11 ++++++-----
+ 3 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index ae3b7fe1dadc..72f40984e2d3 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -233,7 +233,7 @@ static int __hpp__group_sort_idx(struct hist_entry *a, struct hist_entry *b,
- static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
- 		       hpp_field_fn get_field)
- {
--	s64 ret;
-+	int ret;
- 	int i, nr_members;
- 	struct evsel *evsel;
- 	u64 *fields_a, *fields_b;
-@@ -272,7 +272,7 @@ static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
- static int __hpp__sort_acc(struct hist_entry *a, struct hist_entry *b,
- 			   hpp_field_fn get_field)
- {
--	s64 ret = 0;
-+	int ret = 0;
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 9833c2c82a2f..97943a12b6c9 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -157,7 +157,7 @@ static void process_branch_stack(struct branch_stack *bs, struct addr_location *
+ 	if (!bi)
+ 		return;
  
- 	if (symbol_conf.cumulate_callchain) {
+-	for (i = bs->nr - 1; i >= 0; i--) {
++	for (i = (int)bs->nr - 1; i >= 0; i--) {
  		/*
-@@ -287,7 +287,7 @@ static int __hpp__sort_acc(struct hist_entry *a, struct hist_entry *b,
- 		    !hist_entry__has_callchains(a) || !symbol_conf.use_callchain)
- 			return 0;
+ 		 * XXX filter against symbol
+ 		 */
+@@ -880,7 +880,7 @@ int cmd_annotate(int argc, const char **argv)
  
--		ret = b->callchain->max_depth - a->callchain->max_depth;
-+		ret = field_cmp(b->callchain->max_depth, a->callchain->max_depth);
- 		if (callchain_param.order == ORDER_CALLER)
- 			ret = -ret;
- 	}
-@@ -299,6 +299,7 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
- 			 struct hists *hists)
+ 	annotate.session = perf_session__new(&data, &annotate.tool);
+ 	if (IS_ERR(annotate.session))
+-		return PTR_ERR(annotate.session);
++		return (int)PTR_ERR(annotate.session);
+ 
+ 	annotate.session->itrace_synth_opts = &itrace_synth_opts;
+ 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 1e59b9e5339d..c582e0ecb86f 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -337,7 +337,8 @@ static int symbol__account_br_cntr(struct annotated_branch *branch,
+ 	unsigned int base = evsel__leader(evsel)->br_cntr_idx;
+ 	unsigned int off = offset * evsel->evlist->nr_br_cntr;
+ 	u64 *branch_br_cntr = branch->br_cntr;
+-	unsigned int i, mask, width;
++	unsigned int i, width;
++	u64 mask;
+ 
+ 	if (!br_cntr || !branch_br_cntr)
+ 		return 0;
+@@ -360,7 +361,7 @@ static int symbol__account_cycles(u64 addr, u64 start, struct symbol *sym,
+ 				  u64 br_cntr)
  {
- 	int len = fmt->user_len ?: fmt->len;
-+	int fmt_len = (int)strlen(fmt->name);
- 	struct evsel *evsel = hists_to_evsel(hists);
+ 	struct annotated_branch *branch;
+-	unsigned offset;
++	unsigned int offset;
+ 	int ret;
  
- 	if (symbol_conf.event_group) {
-@@ -314,10 +315,7 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
- 		len = max(len, nr * fmt->len);
+ 	if (sym == NULL)
+@@ -377,7 +378,7 @@ static int symbol__account_cycles(u64 addr, u64 start, struct symbol *sym,
+ 		if (start >= addr)
+ 			start = 0;
+ 	}
+-	offset = addr - sym->start;
++	offset = (unsigned int)(addr - sym->start);
+ 	ret = __symbol__account_cycles(branch->cycles_hist,
+ 					start ? start - sym->start : 0,
+ 					offset, cycles,
+@@ -1563,7 +1564,7 @@ static int annotation__max_ins_name(struct annotation *notes)
+ 		if (al->offset == -1)
+ 			continue;
+ 
+-		len = strlen(disasm_line(al)->ins.name);
++		len = (int)strlen(disasm_line(al)->ins.name);
+ 		if (max_name < len)
+ 			max_name = len;
+ 	}
+@@ -2183,20 +2184,20 @@ static int annotation_options__add_disassemblers_str(struct annotation_options *
+ {
+ 	while (str && *str != '\0') {
+ 		const char *comma = strchr(str, ',');
+-		int len = comma ? comma - str : (int)strlen(str);
++		size_t len = comma ? comma - str : strlen(str);
+ 		bool match = false;
+ 
+ 		for (u8 i = 0; i < ARRAY_SIZE(perf_disassembler__strs); i++) {
+ 			const char *dis_str = perf_disassembler__strs[i];
+ 
+-			if (len == (int)strlen(dis_str) && !strncmp(str, dis_str, len)) {
++			if (len == strlen(dis_str) && !strncmp(str, dis_str, len)) {
+ 				annotation_options__add_disassembler(options, i);
+ 				match = true;
+ 				break;
+ 			}
+ 		}
+ 		if (!match) {
+-			pr_err("Invalid disassembler '%.*s'\n", len, str);
++			pr_err("Invalid disassembler '%.*s'\n", (int)len, str);
+ 			return -1;
+ 		}
+ 		str = comma ? comma + 1 : NULL;
+@@ -2405,7 +2406,7 @@ static int extract_reg_offset(struct arch *arch, const char *str,
+ 			str++;
  	}
  
--	if (len < (int)strlen(fmt->name))
--		len = strlen(fmt->name);
--
--	return len;
-+	return len < fmt_len ? fmt_len : len;
+-	op_loc->offset = strtol(str, &p, 0);
++	op_loc->offset = (int)strtol(str, &p, 0);
+ 
+ 	p = strchr(p, arch->objdump.register_char);
+ 	if (p == NULL)
+@@ -2515,8 +2516,7 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
+ 				/* FIXME: Handle other segment registers */
+ 				if (!strncmp(insn_str, "%gs:", 4)) {
+ 					op_loc->segment = INSN_SEG_X86_GS;
+-					op_loc->offset = strtol(insn_str + 4,
+-								&p, 0);
++					op_loc->offset = (int)strtol(insn_str + 4, &p, 0);
+ 					if (p && p != insn_str + 4)
+ 						op_loc->imm = true;
+ 					continue;
+@@ -2530,7 +2530,7 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
+ 			if (*s == arch->objdump.register_char)
+ 				op_loc->reg1 = get_dwarf_regnum(s, arch->e_machine, arch->e_flags);
+ 			else if (*s == arch->objdump.imm_char) {
+-				op_loc->offset = strtol(s + 1, &p, 0);
++				op_loc->offset = (int)strtol(s + 1, &p, 0);
+ 				if (p && p != s + 1)
+ 					op_loc->imm = true;
+ 			}
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 8f0eb56c6fc6..7e24851a3934 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -856,7 +856,7 @@ static int ins__cmp(const void *a, const void *b)
+ 
+ static void ins__sort(struct arch *arch)
+ {
+-	const int nmemb = arch->nr_instructions;
++	const size_t nmemb = arch->nr_instructions;
+ 
+ 	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
  }
+@@ -864,7 +864,7 @@ static void ins__sort(struct arch *arch)
+ static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
+ {
+ 	struct ins *ins;
+-	const int nmemb = arch->nr_instructions;
++	const size_t nmemb = arch->nr_instructions;
  
- static int hpp__header_fn(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-@@ -341,7 +339,7 @@ int hpp_color_scnprintf(struct perf_hpp *hpp, const char *fmt, ...)
- 	ret = percent_color_len_snprintf(hpp->buf, hpp->size, fmt, len, percent);
- 	va_end(args);
+ 	if (arch__is(arch, "powerpc")) {
+ 		/*
+@@ -1263,7 +1263,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 	char *build_id_filename;
+ 	char *build_id_path = NULL;
+ 	char *pos;
+-	int len;
++	size_t len;
  
--	return (ret >= ssize) ? (ssize - 1) : ret;
-+	return (ret >= ssize) ? (int)(ssize - 1) : ret;
- }
+ 	if (dso__symtab_type(dso) == DSO_BINARY_TYPE__KALLSYMS &&
+ 	    !dso__is_kcore(dso))
+@@ -1754,7 +1754,8 @@ static int symbol__disassemble_raw(char *filename, struct symbol *sym,
+ 	u64 end = map__rip_2objdump(map, sym->end);
+ 	u64 len = end - start;
+ 	u64 offset;
+-	int i, count;
++	int i;
++	ssize_t count;
+ 	u8 *buf = NULL;
+ 	char disasm_buf[512];
+ 	struct disasm_line *dl;
+@@ -1823,7 +1824,7 @@ static int symbol__disassemble_raw(char *filename, struct symbol *sym,
  
- static int hpp_entry_scnprintf(struct perf_hpp *hpp, const char *fmt, ...)
-@@ -354,7 +352,7 @@ static int hpp_entry_scnprintf(struct perf_hpp *hpp, const char *fmt, ...)
- 	ret = vsnprintf(hpp->buf, hpp->size, fmt, args);
- 	va_end(args);
+ out:
+ 	free(buf);
+-	return count < 0 ? count : 0;
++	return count < 0 ? (int)count : 0;
  
--	return (ret >= ssize) ? (ssize - 1) : ret;
-+	return (ret >= ssize) ? (int)(ssize - 1) : ret;
- }
- 
- #define __HPP_COLOR_PERCENT_FN(_type, _field, _fmttype)				\
-@@ -914,7 +912,7 @@ void perf_hpp__set_user_width(const char *width_list_str)
- 	perf_hpp_list__for_each_format(&perf_hpp_list, fmt) {
- 		char *p;
- 
--		int len = strtol(ptr, &p, 10);
-+		int len = (int)strtol(ptr, &p, 10);
- 		fmt->user_len = len;
- 
- 		if (*p == ',')
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 7ac4b98e28bc..6a981f95b4ec 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -450,7 +450,7 @@ int __hist_entry__snprintf(struct hist_entry *he, struct perf_hpp *hpp,
- 		advance_hpp(hpp, ret);
- 	}
- 
--	return hpp->buf - start;
-+	return (int)(hpp->buf - start);
- }
- 
- static int hist_entry__snprintf(struct hist_entry *he, struct perf_hpp *hpp)
-@@ -612,8 +612,7 @@ static int hist_entry__fprintf(struct hist_entry *he, size_t size,
- 	ret = fprintf(fp, "%s\n", bf);
- 
- 	if (hist_entry__has_callchains(he) && !ignore_callchains)
--		callchain_ret = hist_entry_callchain__fprintf(he, total_period,
--							      0, fp);
-+		callchain_ret = (int)hist_entry_callchain__fprintf(he, total_period, 0, fp);
- 
- 	ret += callchain_ret;
- 
+ err:
+ 	count = -1;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
