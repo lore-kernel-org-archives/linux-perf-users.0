@@ -1,158 +1,105 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0871E7C2B
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 19:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC02A1DBB2E
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 19:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743537125; cv=none; b=qasVc4EEpbXMNDZYKmuEhNJze4zxz78g39BYOeMaEXyvjYawJdprRwhR0f7iGe5B5S/2Us3zHr1OQ8DB+Wp+XwpBEujyT/L5+atsYMvrEP8snTXHK9JIDHL4kHBJe5MMvuQy1S1ZCdo9qWcsbDCAmglJFp0bGU+8wGLrQWNC5HY=
+	t=1743537266; cv=none; b=M87UseoGhSGdawKrg+XpntZbsOdjnd8ArCkFk1kWrsAxgt5rH+B+Zp0J6wMzk2yvEPQdEdHgfsSAQcpdPxH1yG6fjPUa2OVcvnK1kryxtDTdDxBehLVP6cUK8YN/6cEQnJ+4+U8IM8yq5OEFFh+magENsqwDqhuX62Rahjm6jpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743537125; c=relaxed/simple;
-	bh=HBVCsMjwhagVF9bHprIKvy3EcALit1txGQEuXfYmHJo=;
+	s=arc-20240116; t=1743537266; c=relaxed/simple;
+	bh=de/BtIj5To60CHP517asQruuMVZmw7HGpY7NsHjlU38=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n2wQ5sEZYgzVq9ZLuEvm92hie0017UNNkj4TwtFXow6OXGiqoGM+Skvp/3S+CQRwx3652WaBtkbSNb6f5f741EJvAtJEWAfBGxPT9bc62YtoLyo6yk+J/BQD5WMp9DZpiKS2wtIP+4MJXZVasx8IoEGS0eIQRRraFvBsds9jq0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=whVtvD9b; arc=none smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=U2lpJaAwhc9nAy+8n10RXExdXuZDu2E4iwSmM/RV/8ORhSgKJ5SQ2uxE0o/3ANYaG6ftpvnDhrhgH15/8ZxP90rieyS8PfGl/4JG+FZS+bufnkOFlxbMRCinS4jwhfArcVCwEPjHLvvLh6to80KQVr9/kR8dpJFAu4lUROBAAcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RNt2fYjy; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="whVtvD9b"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2264c9d0295so44045ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 12:52:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RNt2fYjy"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2263428c8baso3005ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 12:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743537123; x=1744141923; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743537264; x=1744142064; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wvg7AtAX1KW+3uuTaJxVJWtdk1rMU/xzREvyAUI5nAk=;
-        b=whVtvD9bfGPC3aOoQUXc8c4fd8FaneFBwth+ITz7R8DOwFKYRo4GYZGcRBYI7vlT3o
-         slJ8Gb6MdfiIDVCq9YeyHTe3nBMu5BYh98+IkwGT1WDdfElRmHUbkL4kGA3ZDPaEvvyd
-         brQr9ziTl3ud41X5l37rrOyPaYNk2yX+om9rT4f34AHk3tu0/kx1+4mJikZhDfBvRCAz
-         8+Or+JYCEQTmUcRZ64Xa60+IV4CL8oT7UTAFVnCa9BqqHap8HHX6qdqrnu+ar8M2ti9S
-         YXSsabYVvzTG/xHXSkawZxaNcglzRmTokFOsSRvXZ1T37yb+On+zvubRQcftpfOvshRe
-         Lq0w==
+        bh=de/BtIj5To60CHP517asQruuMVZmw7HGpY7NsHjlU38=;
+        b=RNt2fYjysvv6091cvCbVZTN0pSs9MX3rbcwS+FXf0TvTyPYMttWIIJvfak1180Ew41
+         iCfsUt0Uk0u1JnypaXVNgkoUSkA91yPeOxCxvcrfWJn6r8C+OhIGfWb5+KRMtcXC6q2f
+         /iKUHB7bRIMw1Qzx8vXfhjzDWAdVrpRPY4X/mEmezU+xLKMsc8cg820LJSKsd6b3mcYm
+         /OuiIYZxD2mTrhfbJtTEi6WZRVCI3pHtMoF4oB0ocoixH+mGpVb4ETNFvGkoLIA/HF8e
+         iTCs7v0bzEG+/Kyuu7jTFFieSfv+3f69F1RrwM2eNO7cah/89yGg5O80ptNEzvaAqkbx
+         sWpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743537123; x=1744141923;
+        d=1e100.net; s=20230601; t=1743537264; x=1744142064;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wvg7AtAX1KW+3uuTaJxVJWtdk1rMU/xzREvyAUI5nAk=;
-        b=iFdul6AbjFc5/R5MIH8RLltyoE0uGuuPL+ncEBW55f1n6hRoenRvYFtIKVc4HGxxOT
-         yULCDISeDNzFePRU1fGldwufWBLQoexaKD7V9aizSFHCIexY2XyGPmQjGqM4caMZg1kz
-         wkvutQMi+FvzMghQfXowyrNA8EgCe7LTvI3Jf8Qhup+1x3R5f6tNSsSsbIIUs4dzbyIs
-         qHAt4beWPu6Bm97lQrWPKMX6wQXyG7z0U45R49a3HFeoXjY/XJbGF7uCz5TX5kG7cNDu
-         goVBc6/zU/2oNgoiAv+L42llrFqIeu9qd7pdS0+3aitN6jZnAkltyYarIaRlah0ROYsn
-         g8dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtZelhgTuz0f2i68XDmLICDVEEVag9QBR9khftM9T5m+UU+ysVaRGuqa/EJs2D4+KbSRpgVg9DKyby1eb50UaN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMZwgVwZZKLkgVrknNIJ4LwWBioV1MCYs1yONDgeYiIB72IeeJ
-	yYLr/lrd7y1NarLk9CyxDIfzIy74n9Q1yfummEfh6upu8ObDCAwTx6UofDyNSJvyzHnTaWlKDZH
-	PbVZWdkdOhE5wySY7tUvAQ/WYC+iFEJCFUzvT
-X-Gm-Gg: ASbGncu3SaiWmFKwyzs9NgKVFB3nlfKwD7/vrLIckA9CgNrvUJBXrpvzrM1lJAp0ghh
-	wb8eP8RGjJqEkuZ5t4WUSXq0jzYGRKUM5yiCONI6S1ZJVru8wAOjUYcGWOmz24yQ6n+8Dcd0GQS
-	BbGcPclew83fNSUUOczQ8Ly6iwzsMRfV9jLMbE+1THyY08E9/vGnCwOBc=
-X-Google-Smtp-Source: AGHT+IGJwpO5MFkGmODN4+fl3eKclN0wl04AX7pwf3uDmTFIP7WHazairBkwm0ouKuZDFtC1BPI7YXp/fWA0dcFcFPs=
-X-Received: by 2002:a17:902:e5ca:b0:223:37ec:63be with SMTP id
- d9443c01a7336-22969dce57cmr591885ad.4.1743537122821; Tue, 01 Apr 2025
- 12:52:02 -0700 (PDT)
+        bh=de/BtIj5To60CHP517asQruuMVZmw7HGpY7NsHjlU38=;
+        b=Lkv5n1BFw52/YUGGvqFgTmmyJx4SoA6sBmaPSDrlF6oQU2lYltLFQI7TqhuxtbRPAw
+         kF9cNTsnEoKyeMKwglvYp+04NY1oqxGBtuO7l0svwYhc9OF4vT284ZQ4Mf87bCMNAH0w
+         JyVJ2P3kSljnGBFEVvSdkytnHO88Hl58FqA9+xsOajFcp211oLWXm8IOMx8Sof5A5cu/
+         H+TwVsiJklHKn01dmyff/YwNYvxe5INTCIcJ//RA6D9vjGYluxRnpdazwCaEH4Bfwgj4
+         JCxLm66376chl+E/f4M0S60Wm+xKkmysaZU8UwyL64yj7sAcGALlPci6iCRbgW/JjGv2
+         sL4A==
+X-Forwarded-Encrypted: i=1; AJvYcCU53iuboA9P0tR7vFMLJmv8/JbDfVVs9Jhn1ZIMi1ny8yTPmJEiiJn6bJzx5Wo5NCbWHeA+Oxn4e3MMAvs9gEij@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIGGk/c96aESsiHI2dyl3ObKx3Jg5ka58a/xwSSZ5lRwQzP1YH
+	LmhnIzcep6XFO4OZobtaMPcmcaTQmNmflFEGXMcsmhba/+lO3GT5nVfywSC9O3upV1S3xxVUZCX
+	4aT84SLRuarHkBA3J1HLpe55VoncAlLAUyQOQ5KetNgqSnrP8qpYXkwE=
+X-Gm-Gg: ASbGncvwgCP454XTG2MrGdZxGLrLTOwmor6Kr8QNBjIZRcWR6TW4AQbKQAM8/2boKcl
+	HQR4XLI8v7CEmsv+946bDH8+yl+7VWy7J+SHNaMdUqTBLH4S34ej6Zwe2wc4rhZWlmwlyM8ag5h
+	AWNkeh6M6E9ON38gr+j+q+h81dFGCeVuBxPZpqVP5nsjKaKQXLmBCkDiMaDGBK3U3yoA==
+X-Google-Smtp-Source: AGHT+IHOs9BdqrTvFPQWqJzaQfsrpiXeP0qaabdPaOzhGdnfECmfbLNE+FP+wHg/1tSnxeoJnrwfErtVjaEBIcva9iE=
+X-Received: by 2002:a17:902:b68e:b0:224:1fb:7b65 with SMTP id
+ d9443c01a7336-22969e99900mr464395ad.22.1743537263944; Tue, 01 Apr 2025
+ 12:54:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401172302.1442092-1-ctshao@google.com>
-In-Reply-To: <20250401172302.1442092-1-ctshao@google.com>
+References: <20250331172759.115604-1-leo.yan@arm.com> <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+ <20250401091422.GA115840@e132581.arm.com>
+In-Reply-To: <20250401091422.GA115840@e132581.arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Apr 2025 12:51:50 -0700
-X-Gm-Features: AQ5f1JpuuG3D6JpgPsqnmjovFyCHoGPB3Yi-_Icuq4yhjlMw7AEJLyPkno8ZWfY
-Message-ID: <CAP-5=fUXV0f9n2T-V14ZWeqX9POY5VJOdMdJwYpD+GhO60CcYw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Allow tolerance for leader sampling test
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
-	dapeng1.mi@linux.intel.com, vmolnaro@redhat.com, 
-	linux-perf-users@vger.kernel.org
+Date: Tue, 1 Apr 2025 12:54:12 -0700
+X-Gm-Features: AQ5f1JrOuWrNQZJezs0L3XR8GhYfLpTvpu06rrvr2p2w6K3tJeuVBfouNq8Z_vk
+Message-ID: <CAP-5=fUGLy9xGmMO+6PXvfviB4U8Q8O7H3iTSSqEf72vin8gDA@mail.gmail.com>
+Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 10:23=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> w=
-rote:
+On Tue, Apr 1, 2025 at 2:14=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> There is a known issue that the leader sampling is inconsistent, since
-> throttle only affect leader, not the slave. The detail is in [1]. To
-> maintain test coverage, this patch sets a tolerance rate of 80% to
-> accommodate the throttled samples and prevent test failures due to
-> throttling.
+> On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
 >
-> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+> [...]
 >
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> > I'm reminded of a Java check I wrote for this:
+>
+> Nice short article.
+>
+> > In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
+> > clean those warnings up a bit.
+>
+> I checked a bit and seems GCC has no this flag, but it makes sense for
+> me to enable the flag for Clang.
+>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Thanks a lot, Ian.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I made a small variation to the change in:
+https://lore.kernel.org/lkml/20250401182347.3422199-10-irogers@google.com/
+to avoid a subtract and just directly compare the values.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/tests/shell/record.sh | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/re=
-cord.sh
-> index ba8d873d3ca7..1bbe16fb3420 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -238,22 +238,35 @@ test_leader_sampling() {
->      err=3D1
->      return
->    fi
-> +  perf script -i "${perfdata}" | grep brstack > $script_output
-> +  # Check if the two instruction counts are equal in each record.
-> +  # However, the throttling code doesn't consider event grouping. During=
- throttling, only the
-> +  # leader is stopped, causing the slave's counts significantly higher. =
-To temporarily solve this,
-> +  # let's set the tolerance rate to 80%.
-> +  # TODO: Revert the code for tolerance once the throttling mechanism is=
- fixed.
->    index=3D0
-> -  perf script -i "${perfdata}" > $script_output
-> +  valid_counts=3D0
-> +  invalid_counts=3D0
-> +  tolerance_rate=3D0.8
->    while IFS=3D read -r line
->    do
-> -    # Check if the two instruction counts are equal in each record
->      cycles=3D$(echo $line | awk '{for(i=3D1;i<=3DNF;i++) if($i=3D=3D"cyc=
-les:") print $(i-1)}')
->      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x !=3D ${prev_cycles}x ]
->      then
-> -      echo "Leader sampling [Failed inconsistent cycles count]"
-> -      err=3D1
-> -      return
-> +      invalid_counts=3D$(($invalid_counts+1))
-> +    else
-> +      valid_counts=3D$(($valid_counts+1))
->      fi
->      index=3D$(($index+1))
->      prev_cycles=3D$cycles
->    done < $script_output
-> -  echo "Basic leader sampling test [Success]"
-> +  if [[ "$(echo "scale=3D2; $invalid_counts/($invalid_counts+$valid_coun=
-ts)" | bc)" > 1-$tolerance_rate ]]
-> +  then
-> +      echo "Leader sampling [Failed inconsistent cycles count]"
-> +      err=3D1
-> +  else
-> +    echo "Basic leader sampling test [Success]"
-> +  fi
->  }
->
->  test_topdown_leader_sampling() {
-> --
-> 2.49.0.472.ge94155a9ec-goog
->
+> Leo
