@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD7E22687A
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BAB226D04
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531960; cv=none; b=HkyXC5TCyOjGAvpneusUeeN750/vW3Ox/xUuWgSqBRqtJNxO3KvJ6D5KZFtGI3ZdM3llLypxvuHokzSS1kRbIQFTDPKyiOnXrGUbe0Y/7HUbYWERKARSjlO0K1SzO+yG3wvn2Jt8aFgCxUVQoWgyX3nkwPU2C/50K9eAiexqJZQ=
+	t=1743531962; cv=none; b=cGvOa/Wu6UQpKIBB9o5DCEZCljz3CZH+Rq3pgEsByU+V7pAjqNGX8Rg7RdZy8rolVCeJ16MrIy8pb/Cpu8OQNpwVXGOXS4E7rNZtDT1TqG2T/b9hceCKMpV5VOKMroy738TtQGx4//e+YdTUMlCm0F42VsUE5bTDl48al9j0y5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531960; c=relaxed/simple;
-	bh=W6yinm4HkHn1me23Ec0J0FcyIK2+wzf4A7dc5FyKbDc=;
+	s=arc-20240116; t=1743531962; c=relaxed/simple;
+	bh=ISIPur5EdG5VT16W+y596XtyvQru1DN+JSFfJcpaQKc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=tIs89N45dSD5isnP1wYF3MhOEZaAZkL2EhtMETDiXzy93RE/Iv6EbqbNIBNUN4FQ4/NjEUVtnkP4dzghzyGEqpeCt9TnP0TwyK2XWXYZm885LzVEdNbTf4+FPgCiJ6Em6+9qNu1BcuZTfrv95rqGq/dLG56BmD+iTu0zC//Juxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A/zpJM4v; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=Hy3EknpKvnyPXRbhRy2hkWYJlsLyMmsG2wryEkiDGF93VM8F6NNJWfCq92a4FQzf1cnmq5d62/wyKV0gmrJuq3pfUd9g825piZcNy1FZdXiSICXskt58EFnf4d2qTQTlMcARxtsDBTyoOO54nDJFuqDCbZakF1fRnYPDXFNv6Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y3RU7P2h; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A/zpJM4v"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2240c997059so134742855ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y3RU7P2h"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2240a96112fso186793435ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531958; x=1744136758; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531960; x=1744136760; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=C5U3R/UrwewYisfEOqePuN2BIRCQ22drd6rnFQ3244c=;
-        b=A/zpJM4v7ol28qip48DatWK6Dp4l9JzoVHrlhT0+D24iABis88HOG/Dg509G7NigA6
-         O6T0k7tLJGJf0Ws8naJkhWobbfIcuABLMYciaamuSpjM52cxwlfoPfXGxvV9N/g1dwHe
-         JudXWochbLXaqt1MKheBUJtCk6MCAVBJA/8dn1TS7xsrNi4tqZm6ptnm4KK/AcpDz+Lt
-         fxTtc+HAXB0zyC1ufVG0NrLT2FDOQ/1iuGWeT88IzDZKN0p2upgZr83XNuHna7CejvDy
-         lLwK8ABQvORjJHJCa8zI2oVBB8e3JAjDQMWCME9gFFglKjIpOSclyCZnd7YUZWNdy+Oi
-         +53Q==
+        bh=o8D2NdkIniQBtVAV1aGO9PS+E4EWZci4xwBtgznKQxc=;
+        b=Y3RU7P2hKmjWgLpMOqNwHUEK2LOTBMYayHx9qgSbYAgu+61U2g8MSNpmO4QSnBROxf
+         wfJYytweIU4W14tN5qZ21/Xk1SulGadoyqP3RoRC99sHjuhqaTUUzbjdHWK5O/umGosG
+         GhKqmARW/AMP2KmvhgYrYpn7sC4WaYnbURS6TF90klmiFbvF+0f+XyyDAy6B3ql/WO8M
+         Vz2YihCJbxhFiagQTuBM10UBktTJn42S5moq3UNqbQM2upMltwUHkEJ7r7glIh1V02GU
+         u1ydB5lAy9wlfTfOv1ZtpSqkGn7qglxx4Q+rXnREnUh4orhMESouk3wlvQFfBrUUbCE2
+         f0FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531958; x=1744136758;
+        d=1e100.net; s=20230601; t=1743531960; x=1744136760;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C5U3R/UrwewYisfEOqePuN2BIRCQ22drd6rnFQ3244c=;
-        b=Rb18X8HI7h1N54jlNIrVFCvgGYVO9A4XxCv4uKD46z7uKyLAu0ccnMFOVe5LqLxu4l
-         48LaUFhIOuVgcSFhght1xg3ETCSR3+0r5RMqJhDo8ByvVBWKLCE3qUE5628Ls0VGZW2B
-         oZCDcCXyBxKq/Y7t9Iy6CsjaeqEdZHxqM6Y+MTDm43Eg+QTP8p1WW9KDV+QJvMtUz646
-         ljlMXhoTyThN89UZmkkCIKRVcmH/Gi/Vxrz6Wzu0wcMB8lBU2VLV1dv+isPZlkPevN0y
-         TtlpRANqdOsRXg/AN1nLaWQkwBOgxvoahgIAObpa8Wb+lUwhzd8PiOqUOBxyGvrHnwDY
-         czXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFoxkG7K/84DOVfiArquhNVKezuqTDvsHs4KK8DcHP4nzLSInuHvsBcJBTMeuKmHCPWFC9A8MG1HbxhBFFZB5F@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0hRCmruV3Lkt160TQcgD7v6rDLhj82sCPMRCHYlC3UWIwmXXY
-	fq/EGRgcKS6Qe3SR5IPtZVUsJCozT4BRUVBp0TapN77RRYPezwjxMuwXCcZ+86jGDWM8KSH+rWx
-	sNnwTaQ==
-X-Google-Smtp-Source: AGHT+IGqboy2GJ8KcKXgHvINA6kBdII8ptQNXP56vNZrZaxnHdkJFqlrjLnbAqPsXDoTdL86TSRYYNPIfspz
-X-Received: from pfbho20.prod.google.com ([2002:a05:6a00:8814:b0:736:af6b:e58d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:8890:0:b0:736:52d7:daca
- with SMTP id d2e1a72fcca58-7398042a376mr23457517b3a.18.1743531957749; Tue, 01
- Apr 2025 11:25:57 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:38 -0700
+        bh=o8D2NdkIniQBtVAV1aGO9PS+E4EWZci4xwBtgznKQxc=;
+        b=VNz2+2TsKKhnoqqY2Urqv/MY0uyzsBdoFXtYoUHdCBWNZ8SKrz0Z2XnKCcjMjPUhGy
+         G7z3zfrN53M294YP0OlLGFgBgYjEQPgFlZfcDBcCwDvOhA5gZBzbO28/ZZ5KhjlhyNp/
+         IjV6+4JawPEulcfI78IOyvLpd6gf1BO8hRcda11c7KK0cRDBCbHBL4B+UwpKwBDOQ1Po
+         JBFM1U/LVf/uVnWnQSdrgzOluk8UDWQmmOqUHWJb83dPp/VHgnbi51bsIEH1JFTd8PS4
+         +/ozEcU7SMQ2AHfKOc5eAOzwAYmnuUziVuZ+wgBDy4IsbFDXx4awbaG4mkAHfNNHkMB6
+         kSFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTTiaAlLbIyv/kWMtJDifPFSM0+eylYU9Y9ir1d6YvHxTrbXvrnEGLFVHPTTNZ0h1IyQATRPEKW8U+Q2o8LinS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC5AVxN/vVl26VKF9Pjj9IFiGcnHwR2dM7pf9VraCLNJXvEEay
+	7OS0ObX7Q9FQarJMkfIfAVO/QttF290QNuEuB2FDx2hWAQUc7/pwA5yYwWWu8ovZktHigMOK7q1
+	qPI5b7g==
+X-Google-Smtp-Source: AGHT+IHOfHQYMPSlb929fAQLYUOR8MaSQ47qaoqjl5CBh3biX9RHBcWbfOEBlIWhvTFZDEluJlrFNHckgCuo
+X-Received: from plrb1.prod.google.com ([2002:a17:902:a9c1:b0:220:c59b:c80d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e541:b0:221:7b4a:475a
+ with SMTP id d9443c01a7336-2292fa0af62mr156962715ad.52.1743531959784; Tue, 01
+ Apr 2025 11:25:59 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:39 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-41-irogers@google.com>
-Subject: [PATCH v1 40/48] perf list: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-42-irogers@google.com>
+Subject: [PATCH v1 41/48] perf kvm: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,31 +114,49 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-list.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-kvm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index fed482adb039..ffe2e972e3f2 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -93,7 +93,7 @@ static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
- 	bool comma = false;
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 67fd2b006b0b..a81874b7f2d3 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -928,7 +928,7 @@ struct vcpu_event_record *per_vcpu_record(struct thread *thread,
+ 			return NULL;
+ 		}
  
- 	while (*s) {
--		int wlen = strcspn(s, " ,\t\n");
-+		int wlen = (int)strcspn(s, " ,\t\n");
- 		const char *sep = comma ? "," : " ";
+-		vcpu_record->vcpu_id = evsel__intval(evsel, sample, vcpu_id_str);
++		vcpu_record->vcpu_id = (int)evsel__intval(evsel, sample, vcpu_id_str);
+ 		thread__set_priv(thread, vcpu_record);
+ 	}
  
- 		if ((column + wlen >= max && column > start) || saw_newline) {
-@@ -171,7 +171,7 @@ static void default_print_event(void *ps, const char *topic, const char *pmu_nam
- 		int desc_len = -1;
+@@ -1337,7 +1337,7 @@ static int perf_kvm__handle_timerfd(struct perf_kvm_stat *kvm)
+ 	uint64_t c;
+ 	int rc;
  
- 		if (pmu_name && strcmp(pmu_name, "default_core")) {
--			desc_len = strlen(desc);
-+			desc_len = (int)strlen(desc);
- 			desc_len = asprintf(&desc_with_unit,
- 					    desc_len > 0 && desc[desc_len - 1] != '.'
- 					      ? "%s. Unit: %s" : "%s Unit: %s",
+-	rc = read(kvm->timerfd, &c, sizeof(uint64_t));
++	rc = (int)read(kvm->timerfd, &c, sizeof(uint64_t));
+ 	if (rc < 0) {
+ 		if (errno == EAGAIN)
+ 			return 0;
+@@ -1558,7 +1558,7 @@ static int read_events(struct perf_kvm_stat *kvm)
+ 	kvm->session = perf_session__new(&file, &kvm->tool);
+ 	if (IS_ERR(kvm->session)) {
+ 		pr_err("Initializing perf session failed\n");
+-		return PTR_ERR(kvm->session);
++		return (int)PTR_ERR(kvm->session);
+ 	}
+ 
+ 	symbol__init(&kvm->session->header.env);
+@@ -1924,7 +1924,7 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
+ 	 */
+ 	kvm->session = perf_session__new(&data, &kvm->tool);
+ 	if (IS_ERR(kvm->session)) {
+-		err = PTR_ERR(kvm->session);
++		err = (int)PTR_ERR(kvm->session);
+ 		goto out;
+ 	}
+ 	kvm->session->evlist = kvm->evlist;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
