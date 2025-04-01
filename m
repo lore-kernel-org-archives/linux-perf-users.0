@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA29522332A
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516562236E3
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531931; cv=none; b=oii7KjYNTEJuiJQPCsVnqfmUn2PFksGboB1/SModTfzVLuvsOq1NF0de3ShP+2SA0Nm8P2OHCV6oNEz5qfMvAiHeZdRLBcLRwWWWlbQPsn0Ssk2MgTN6ucIA/OMOxM8TgTYy0Vk5KRj1G7kMC9gk4mE4yx49IH00xTHoeikbY50=
+	t=1743531932; cv=none; b=QgncIHpXShOQD038rN7CrQAShMZ30aWX3AaFtg65novqgxfOvw3eQ49LNvlWetcyZG1APFCgNkte8vRWrkskt9M2/5qrjS8WUAvh8mwfOJ7x9fthbe/ypJVldk2ebohgfuFOiMUbHn0W1KL6TWE7Zz9KdlN6IwUuzp3AC00hA+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531931; c=relaxed/simple;
-	bh=TQeWDd/yYWGLnY1+2vrH/bkxiRy1g+kcbMr3spHf3Ik=;
+	s=arc-20240116; t=1743531932; c=relaxed/simple;
+	bh=sWUkx042vT7q8/Tf+yhfO6vzKLFI6jKaDXPP/t59N9U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=VL9xaoTL/mEhuICpKJx8vhZFU9Zqd2/x/7wsf5+hfe6hEUN4hh9sfynxUFwC7KYOEXFepYDpHMe+1U0l9nMopPnmibr6sgSq8vbzPklAamZWaEdduMgJqBRZO11AHyLJ/yoLyG9TmgZFhxEBToAWkxXnLtw3ZLE8m4NAe1WFpGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tjRh0XX7; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=Xf4kkgaGEU2hLBIbva/tHgIeJo+6ZubqVWBf3yzLTs5zeNaa+wJBPgn9RkNPsi1vaibKied7WWS8JbKHjyFkdB0t7UwDNNCZedIQbUvUhxO5tieT56EsctdH7bolCbmIAK647K5otW/A2NMq8fbAY+gszEzyLbsafz1MjIbTLuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MroGomDx; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tjRh0XX7"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-229668c8659so5258875ad.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MroGomDx"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff798e8c93so9974713a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531929; x=1744136729; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531931; x=1744136731; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7SpygHYpX3V6G/Y3lvn2849/ZYwPsF/CjG3vk8gdf8c=;
-        b=tjRh0XX7J6eqS8zUzNYKOI8cruIrm+facOdIIPneshXkW3MSKgsEvdACUoVfMZP8ml
-         PI5KfO24Udn3wiusTCluCh6oJ+fzudR9KQnrO1Z0lANFdQH0C58FIPfL7LKxCba+DEV/
-         tqPAusq9y3TxC29EX8wqoSQ7d3vBhFzctl2D0qqVxrJ8V5hTxpSyuN6PIQ5uVcU3/S/4
-         N/2dByzMNfHpVFp4kpB0XhY1rPWcuIiqF/3nlxgQpipQVwG3iSJKSbwjFAxcXZYsz/Xl
-         fXukrmdzNeJt5fT8lFgCDmts4rE5RbcVVpa3OqMX3FNpZ2pkJBjn3NXuRLpf7IeLEAQ6
-         HZJQ==
+        bh=zjYwyfzWpXgW9pBn6lh1KuK7zJm8s0w53QTMpIqZFFg=;
+        b=MroGomDxcLFSu01m/QjLk/slMk07bWJlZwaYJzNavqUPXsvqQnax1DT/rQbTR+Rxf8
+         11HeYPSrpDJTGTf42B7Bs+PBgts6ylSzQtAA+V6EfxdUwN3n4RYBG6ugO3FAVLuKxj6N
+         uccluZDFyJK44+JVCdd8nOwUX+GBz6T/RjF0IPnwFQ623QbhzyL17HZ8irzgT5kKv5Nk
+         9eUwfE+ETdv05k5bLR1lrUR01HQ98Zed7H1ZzA2tkUcThZXThK0r6aO/nN4Iq8j1zgqt
+         cy3iRbJ9GjFHvjOJlzeqIbRpeL86C5GCm6J04Caz+iofzKwxPfs5N3zrVrK8qsLcDsCE
+         KO3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531929; x=1744136729;
+        d=1e100.net; s=20230601; t=1743531931; x=1744136731;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7SpygHYpX3V6G/Y3lvn2849/ZYwPsF/CjG3vk8gdf8c=;
-        b=I5byldtFv2po6PJXFEOF0NMoMU7xKAMiqK3qOJQjugBlrb7PqgjrTQgzNqs8unnqE6
-         J5XT+EnbVY+h9AYz8NMap5YvgWkn8EwS6EgqWiEmwTvneoo5w1qVOnb874HtjbUpAIaT
-         VP5XqoS+r7bVoiCskBnMyzN8YQP1uJydjoYK3IIjq7R0ue4x9Df9sI40Po7ITnQhDzTr
-         lgrZCygohIQYP9ZqnNgU/u78x5fT2MUs/OQwR+oBR6w6oGwvfitjg6ytDnyMTlJPiwQF
-         rHXPTu5w5oX63qm/Kv5JKJ+3Gx++evy1zc3O1khcCRpNKagjqTTxw1xLXFqTKF0kgNG4
-         iPeA==
-X-Forwarded-Encrypted: i=1; AJvYcCX69dGHGCv+KhwBy8vCtYnxGBxZbD6eTvkn/vkJ1KwQjZ2DJQYdMeX+U7Cqn6aRN71r9mNhjr5o1aU4qH0TV+I9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUeOiuRZknqSw0RxOxCwUdEoiWi2BjYPtE5juDhASm8YwK2EvM
-	RkrsPQuCGY4pUWyTxgxwHleaiN4GzQVbm/Z1Tu13gQfe8BLYlbLMV53bBorGnI/tnxNfrgSjecJ
-	4eVKN7Q==
-X-Google-Smtp-Source: AGHT+IHidRh8ZohN9BAfCZsioNhjrSQYSS/qtPWBESRb2scl+HVatDzDtqJLadMCQ/s9lEK/qcgJBOyqMu08
-X-Received: from plps15.prod.google.com ([2002:a17:902:988f:b0:223:fab5:e761])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32cd:b0:224:2207:5130
- with SMTP id d9443c01a7336-2292fa00e0cmr186146635ad.45.1743531928693; Tue, 01
- Apr 2025 11:25:28 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:24 -0700
+        bh=zjYwyfzWpXgW9pBn6lh1KuK7zJm8s0w53QTMpIqZFFg=;
+        b=smQ16QDAYBpuFpo673JBpphuxx1RETUVovsedxSOl1oOst8ydpqGDWdt01CDwuTUK3
+         bnOS/mBSD6hKb0uq1MbwHFlP1ELXhxbJ0x/iyoQjJCZDpgg8YaDwXgzQ8mw1p+puTnBD
+         mnMPHfQw0UMxyOIywTo8+dUMhrlKYW2CMqaatsnSi1l9jmNI2pqnnmW5fgtIB1bSbe+e
+         Y6g5Wg2DRMY4NlOJ/Vpp3VC70xMfkB4CYfcyObjVmnExmlFzmAYy9qDc0OUEprqyyaPh
+         +vEYSETAn2ve/oVum0nnIuPUVuFORxMuEgzFxU8bD1vgEbhVnnDBzp5bw711y/B/WZ17
+         Y2Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCWG/ro/Eaj4wijjZkwBcCL7/IBATHP/67pIZQ8RFGqcyfr7qDlDp0o8CNbweFTCFi/w7X4JK3sc/kUMzjJCskQ/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3xslUebPxJrzYyHUnP8/RikH1zqTeoBC7xrgQUlmrVOSAk8Be
+	4dP6lOoy8PTPMMVJ74gIaq5a9HQk/ZkPdqeNTUkqi34mG/qXIiiy+LaFfiBkXq0Am70RX1trgg1
+	dRY/lXA==
+X-Google-Smtp-Source: AGHT+IG4Kf2Zybdapo7zsLm0EDlW1RPSa/moYNMFk0l2bCivrxDDEmzqMRibCQWMjdxRJDlbVEv7HYK4KZth
+X-Received: from pjbhl3.prod.google.com ([2002:a17:90b:1343:b0:2f4:4222:ebba])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:384d:b0:2ff:7b28:a519
+ with SMTP id 98e67ed59e1d1-30532158ee8mr19553046a91.30.1743531930453; Tue, 01
+ Apr 2025 11:25:30 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:25 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-27-irogers@google.com>
-Subject: [PATCH v1 26/48] perf hisi-ptt: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-28-irogers@google.com>
+Subject: [PATCH v1 27/48] perf probe: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,44 +114,110 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/hisi-ptt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/probe-event.c |  9 +++++----
+ tools/perf/util/probe-file.c  | 12 +++++++-----
+ 2 files changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
-index e4cc4785f744..978f5781c990 100644
---- a/tools/perf/util/hisi-ptt.c
-+++ b/tools/perf/util/hisi-ptt.c
-@@ -59,7 +59,7 @@ static void hisi_ptt_dump(struct hisi_ptt *ptt __maybe_unused,
- 		      len);
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 307ad6242a4e..a733dc59c3ca 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1336,7 +1336,7 @@ static int parse_line_num(char **ptr, int *val, const char *what)
+ 	const char *start = *ptr;
  
- 	while (len > 0) {
--		pkt_len = hisi_ptt_pkt_desc(buf, pos, type);
-+		pkt_len = hisi_ptt_pkt_desc(buf, (int)pos, type);
- 		if (!pkt_len)
- 			color_fprintf(stdout, color, " Bad packet!\n");
+ 	errno = 0;
+-	*val = strtol(*ptr, ptr, 0);
++	*val = (int)strtol(*ptr, ptr, 0);
+ 	if (errno || *ptr == start) {
+ 		semantic_error("'%s' is not a valid number.\n", what);
+ 		return -EINVAL;
+@@ -1620,7 +1620,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
+ 		}
+ 		switch (c) {
+ 		case ':':	/* Line number */
+-			pp->line = strtoul(arg, &tmp, 0);
++			pp->line = (int)strtoul(arg, &tmp, 0);
+ 			if (*tmp != '\0') {
+ 				semantic_error("There is non-digit char"
+ 					       " in line number.\n");
+@@ -2066,7 +2066,7 @@ static char *synthesize_perf_probe_point(struct perf_probe_point *pp)
+ {
+ 	struct strbuf buf;
+ 	char *tmp, *ret = NULL;
+-	int len, err = 0;
++	int err = 0;
  
-@@ -91,10 +91,10 @@ static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
- 	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
- 					    auxtrace);
- 	int fd = perf_data__fd(session->data);
--	int size = event->auxtrace.size;
-+	u64 size = event->auxtrace.size;
- 	void *data = malloc(size);
- 	off_t data_offset;
--	int err;
-+	ssize_t err;
+ 	if (strbuf_init(&buf, 64) < 0)
+ 		return NULL;
+@@ -2084,8 +2084,9 @@ static char *synthesize_perf_probe_point(struct perf_probe_point *pp)
+ 			goto out;
+ 	}
+ 	if (pp->file) {
++		size_t len = strlen(tmp);
++
+ 		tmp = pp->file;
+-		len = strlen(tmp);
+ 		if (len > 30) {
+ 			tmp = strchr(pp->file + len - 30, '/');
+ 			tmp = tmp ? tmp + 1 : pp->file + len - 30;
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index ec8ac242fedb..2d84002710f3 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -167,7 +167,7 @@ int probe_file__open_both(int *kfd, int *ufd, int flag)
+ /* Get raw string list of current kprobe_events  or uprobe_events */
+ struct strlist *probe_file__get_rawlist(int fd)
+ {
+-	int ret, idx, fddup;
++	int ret, fddup;
+ 	FILE *fp;
+ 	char buf[MAX_CMDLEN];
+ 	char *p;
+@@ -189,6 +189,8 @@ struct strlist *probe_file__get_rawlist(int fd)
+ 		goto out_close_fddup;
  
- 	if (!data)
- 		return -errno;
-@@ -174,7 +174,7 @@ int hisi_ptt_process_auxtrace_info(union perf_event *event,
- 	ptt->session = session;
- 	ptt->machine = &session->machines.host; /* No kvm support */
- 	ptt->auxtrace_type = auxtrace_info->type;
--	ptt->pmu_type = auxtrace_info->priv[0];
-+	ptt->pmu_type = (unsigned int)auxtrace_info->priv[0];
+ 	while (!feof(fp)) {
++		size_t idx;
++
+ 		p = fgets(buf, MAX_CMDLEN, fp);
+ 		if (!p)
+ 			break;
+@@ -307,7 +309,7 @@ static int __del_trace_probe_event(int fd, struct str_node *ent)
+ 	*p = '/';
  
- 	ptt->auxtrace.process_event = hisi_ptt_process_event;
- 	ptt->auxtrace.process_auxtrace_event = hisi_ptt_process_auxtrace_event;
+ 	pr_debug("Writing event: %s\n", buf);
+-	ret = write(fd, buf, strlen(buf));
++	ret = (int)write(fd, buf, strlen(buf));
+ 	if (ret < 0) {
+ 		ret = -errno;
+ 		goto error;
+@@ -962,7 +964,7 @@ static int probe_cache_entry__write(struct probe_cache_entry *entry, int fd)
+ 	iov[0].iov_base = (void *)prefix; iov[0].iov_len = 1;
+ 	iov[1].iov_base = entry->spev; iov[1].iov_len = strlen(entry->spev);
+ 	iov[2].iov_base = (void *)"\n"; iov[2].iov_len = 1;
+-	ret = writev(fd, iov, 3);
++	ret = (int)writev(fd, iov, 3);
+ 	if (ret < (int)iov[1].iov_len + 2)
+ 		goto rollback;
+ 
+@@ -970,7 +972,7 @@ static int probe_cache_entry__write(struct probe_cache_entry *entry, int fd)
+ 		iov[0].iov_base = (void *)snode->s;
+ 		iov[0].iov_len = strlen(snode->s);
+ 		iov[1].iov_base = (void *)"\n"; iov[1].iov_len = 1;
+-		ret = writev(fd, iov, 2);
++		ret = (int)writev(fd, iov, 2);
+ 		if (ret < (int)iov[0].iov_len + 1)
+ 			goto rollback;
+ 	}
+@@ -992,7 +994,7 @@ int probe_cache__commit(struct probe_cache *pcache)
+ 	int ret = 0;
+ 
+ 	/* TBD: if we do not update existing entries, skip it */
+-	ret = lseek(pcache->fd, 0, SEEK_SET);
++	ret = (int)lseek(pcache->fd, 0, SEEK_SET);
+ 	if (ret < 0)
+ 		goto out;
+ 
 -- 
 2.49.0.504.g3bcea36a83-goog
 
