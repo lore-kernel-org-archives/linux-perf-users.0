@@ -1,62 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E0D72AEFE;
-	Tue,  1 Apr 2025 09:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790451DF25C;
+	Tue,  1 Apr 2025 14:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498869; cv=none; b=MeUiOFaeVfgvNg1rDzBnHqG/o6zUgq/HZ8sHtrbDMu0+MKVDHmr7/0U/K+HrXkdhH6ZrkmKWAfxbk3dhMQeekrYbpaME6k1eZzFaMyPQjyEof15khBG61WmU/NVEd31jOezoaI8CRoNH+cAvEk5tnlq0u5dVK7uR43suxFCi19w=
+	t=1743517120; cv=none; b=TNXAeOW515KmuIy6sJWDQ/Qar3xL4ih5+v0nSttdckSTtiI0Yp7yVkHwJ7iK6JosWXd/+Kr7/UrCh+E4OYoolUeN/ioO5qMfvaeGeDvpNWvFS9SINIPKCxPEKoFr0U8VOST+s643GKSCuiU0FKwzO/GFZAbx7M/QElhRcrcUp70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498869; c=relaxed/simple;
-	bh=4A3rvVF9aE2vaR2QWrgljQmOr0ua8PY3wrAprQQTqac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JME3KEG+hO4RUvtbHTEibOkmBblESLATPgbTkm2h5Pi9jPDwCGwrZFkdMSPwoxmaJOYYMCA1vofObJ9nvrrVb8d7LKkb802HH1H196NCMeajuDj8ggHjM99vqXOem0ET0SCESQ2x6n8Skn3GUiJd0PXY7XfpDlp+WFxu1JgLYvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14EAF14BF;
-	Tue,  1 Apr 2025 02:14:31 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 367B13F694;
-	Tue,  1 Apr 2025 02:14:27 -0700 (PDT)
-Date: Tue, 1 Apr 2025 10:14:22 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-Message-ID: <20250401091422.GA115840@e132581.arm.com>
-References: <20250331172759.115604-1-leo.yan@arm.com>
- <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+	s=arc-20240116; t=1743517120; c=relaxed/simple;
+	bh=+H8Y4inqSqA/NnBib4Aj5cYm+YX0DahBQFwcHapTRR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K+Sdlai1FG04SLxxrq183TTPvv0o3+Vf9LAKsIjV0qSEMQ/3nDynWJ7tOuHJAAIAG+0F4uSqAApEcBreM39lvTV+mpb73ipkAkCBCj5BPFuZAZMYxiCdNto2KvoOyOyKYjPBeT8dvk4Ita0sNMi83Zl7MB+8B4OIPWdgWLMXQRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowACn5g6W9etnbEPBBA--.49542S2;
+	Tue, 01 Apr 2025 22:18:00 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/x86/intel/uncore: Add error handling for uncore_msr_box_ctl()
+Date: Tue,  1 Apr 2025 22:17:41 +0800
+Message-ID: <20250401141741.2705-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACn5g6W9etnbEPBBA--.49542S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrZw4xGrWrJF1rKFyUGFW7Jwb_yoW8JF1Dpr
+	W29r9Iqry3ua95WayDGF18ArWayFWrGas8Wr4DG34fCrn8Jr13Gr47K3Waka95Gry8KFyx
+	Zr18Xr4UGayDAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7sRE2Q6tUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRETA2fr2Lpa7gAAsS
 
-On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
+In mtl_uncore_msr_init_box(), the return value of uncore_msr_box_ctl()
+needs to be checked before being used as the parameter of wrmsrl().
+A proper implementation can be found in ivbep_uncore_msr_init_box().
 
-[...]
+Add error handling for uncore_msr_box_ctl() to ensure the MSR write
+operation is only performed when a valid MSR address is returned.
 
-> I'm reminded of a Java check I wrote for this:
+Fixes: c828441f21dd ("perf/x86/intel/uncore: Add Meteor Lake support")
+Cc: stable@vger.kernel.org # v6.3+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ arch/x86/events/intel/uncore_snb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Nice short article.
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index 3934e1e4e3b1..84070388f495 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -691,7 +691,10 @@ static struct intel_uncore_type mtl_uncore_hac_cbox = {
+ 
+ static void mtl_uncore_msr_init_box(struct intel_uncore_box *box)
+ {
+-	wrmsrl(uncore_msr_box_ctl(box), SNB_UNC_GLOBAL_CTL_EN);
++	unsigned int msr = uncore_msr_box_ctl(box);
++
++	if (msr)
++		wrmsrl(msr, SNB_UNC_GLOBAL_CTL_EN);
+ }
+ 
+ static struct intel_uncore_ops mtl_uncore_msr_ops = {
+-- 
+2.42.0.windows.2
 
-> In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
-> clean those warnings up a bit.
-
-I checked a bit and seems GCC has no this flag, but it makes sense for
-me to enable the flag for Clang.
-
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks a lot, Ian.
-
-Leo
