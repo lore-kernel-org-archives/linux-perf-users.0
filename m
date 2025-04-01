@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E042253B2
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054F8225785
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531951; cv=none; b=Uw5CY2zsucz2C1GPH9IMKU4ap2Hgr32KFRUTWb6Qn+fnevzb79L8tJmOHc8TnxtDoQz6Uc/yrAEiLf1+l8F1u/VbdwHoSU/2Y3YW21asxGx9M/h84muXFu2phmCmf+pEiP8+4qf6vaxBn1QZT+g1Jcc2KtWza1yI8SVNWY7ebyg=
+	t=1743531953; cv=none; b=LcIDxQ4inzWdvb8+TqY0XCFKNLWgvdWv08cwTUA9rhJ9ABq6keAO/A5guCc8J8tsslE8h7o1C4V1NlKgrNW4o+BxOMXgrZ2IqomWbnFsMYehNNb3woXWdJ3XrpMm1vWyAUzyxvkSuQ849O5DO8XqwY2h/wGSAvIFIv4vP7kCJVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531951; c=relaxed/simple;
-	bh=GsrS8qeXzKP0b1swozMr7frMzZ7NnLPbjichf6bGlrk=;
+	s=arc-20240116; t=1743531953; c=relaxed/simple;
+	bh=jNRHk+HoP4LC7aVMHfDNdLRSleTyuQPlCBkTlkM17/o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=W7ZBKn1JXxFYimeVufIwAFz9sBYtBdD1Jwt3sQ4oiQRpcL34Qtc8hyUtd+c9Z/GjOqSM/UHHtXwj92MaKkIpI2zPlyFUu2wHKJbvRJQPQsB4r1qAeB1ENjwvTdcA1Ex+bk+8v1wWJEV3C4IZIAnCkHz3r3JOiTBiScQTsWARpNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eaB/Rxma; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=bKAkeBy3C46TR8MToK/sowwwcclRlDfCJAbaj3cDjIf09ua/GOFjQ8BQRdAWU2ktH7pqEIKDghxgqWGHu+tWDdueD6VDMY3q6r40FKBNmlG+2UYcePZVvJJLIsEMN83YfQNPeMXdwu0sSlYRf49pifqJaiqBin1T6XoMWYtzvxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OZAL0I5V; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eaB/Rxma"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227ed471999so94010435ad.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OZAL0I5V"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2242ce15cc3so109584665ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531949; x=1744136749; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531951; x=1744136751; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vDLj0IQP1yVrki1oH90jQ2DyuMuIrwQsIyowp6t+/y4=;
-        b=eaB/RxmagxqkxnhxUBQTkgXMNOdh7bKC4wtSZhAD/jxSy48KOYMux1gbnPjzIlEEBT
-         5MNjfXKE2v/GL66QzVHeyB8a0SdJ8r+xMHXGT0XkbtCBhEe+xr6lSGNlOCSOClJWujpC
-         1QJ1wifpG/8Ko9Kkom4+F6c1fWvs3KGYIz9f75SLJt+2dXlk9dovdKAVD+JtogWkP9t8
-         wE4ElA4IOrziseEz0kjX3ylpxYpuPk5fp/TQwnUSB9s4yaU/NZhTXCAo0Ry+4ygfxpey
-         uvore3CIkfzc9D+IGRQPHYLKWdvWmNPEFKPqagiI6D4B03N36o3505+iz5Lw37LLzgkg
-         gI6Q==
+        bh=KR8kCL7xwq040/uGoJTgKcPRCll2n3dLmKu7Yyfytk4=;
+        b=OZAL0I5Vh5pH7sRW+IHFGAHSxo+YguZKtm+OtFOqIGyCsZmBTloOPvvWazpRjfpzKk
+         gyTElXirTYGmhSMZpnYwgKy6iH4n+VRuNsc1eZDBgvsnkgHOUaq9vuajqIPX/Rca8YPS
+         RBSQ5A1QgSntWGKtC+WB6eb9yiWy5TINSf32yhA0Q2uL2PSQ9ziVDPlovluTqexY0FU4
+         zPQRpa9D9dKSTctwbFWQeapVrJIl8aKf9VBH+3+rTTbNQ+KCBAkQz/7KUsmuMUctucNA
+         KZCaCBy50d0p6B6RSNGDS/zkQ2kS7eNAmcmetI+bymx5yur8+MzTlwozu16Q5NxYp8I0
+         p1Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531949; x=1744136749;
+        d=1e100.net; s=20230601; t=1743531951; x=1744136751;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vDLj0IQP1yVrki1oH90jQ2DyuMuIrwQsIyowp6t+/y4=;
-        b=JAo4xWdA3M6GUHdaI2l3XPsw4meBfghj7BeeXBJuNyThAXvVztEIL/0X6pUI2aemqy
-         Z61hxsYO6vyP9DiWmhz5I6FgdwqZIHNI3vMtvfAAS2G9DwTPmnZOV6BrZvqvBe7/zIQo
-         R4K+wsTK1xCCtsu2vw2DtF2iu9BCr3g3oUbIiw7GuyWVyHMVqAx+cSA8S34Wj1h07mn6
-         Y4tHlbvMWkUEosxw+zfYjtvkvF+fLO1NkOrkM8WaxfjmO60dSlSnyWDOmP3gp9hsyqw6
-         63pkvO97Q7kQCg5hrsi3U57u4GWhO89UtzM/Tm6/aGdOpdgJvxLrjzyvT6eAJoXK1MKg
-         3yMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiUjAXG+Du23mbgelEW3YKuX9eVW+dZjNDq1MM17sLfFRGbAuLK0W9Q0gDU4f5eSV9HcW2FxVGx3e0CzjbjWtw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo3HqmwVM3OuplPgAZcFG5Ju0FoELv9fLiLvaQ5OsbMqDnVXGf
-	r8QFZo5bmLjg0VBMRxrjAI+GyklyWoxFrLvvU0hO90kw9kjxKtggOFhG72/dnyBGx3UOjpDU9Rj
-	2LG8v0A==
-X-Google-Smtp-Source: AGHT+IEZJuX4TsFr7l6BizC2eFmbDLvOe6bGybp18hF5q6m28rSw2y+Y5UI0Uvd4tqhCEc8kI2jIBn3sitnR
-X-Received: from plrf10.prod.google.com ([2002:a17:902:ab8a:b0:21f:56e1:c515])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef44:b0:223:66bb:8995
- with SMTP id d9443c01a7336-2295be94340mr55875045ad.20.1743531949041; Tue, 01
- Apr 2025 11:25:49 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:34 -0700
+        bh=KR8kCL7xwq040/uGoJTgKcPRCll2n3dLmKu7Yyfytk4=;
+        b=OqipqUuGo66LrDggItf36oNMzRY12T+268kRDt5V+h6wW/3B4ugla8cKZDkPbw2mfM
+         QtfQRmh+5EnJIqyprpO/OI3Z0ylAiVbie0LdCqFQYuTleEtCGXF42QXOK+oatTVdH/WT
+         e+jzIAb+SAGnZV1MKfbl9MiQqIJb778ruzgTj3exuhphWD0ic3b/xKXiNmZRaNXq9WXN
+         zs9lZeHjU6o89Kn6qg1uH9tYQMomjBi2q1Jx2ZtNVa3YDcHx5xt3fm/RpLsJix/Nifdi
+         XKySVTV4fPEdw7v8dbT2rOfFXVgFDPE3kJtrJp0QzRAuGlxwacfa0XNijO+0Q63PliLn
+         yueQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1DTW1TdfyVGqyrefuOtWT5BgytH0EIOhKgmff8lE8kMAVwlDcWM2PKXjCyrc502rPoSjKorI5gN/8IaKX0YwD@vger.kernel.org
+X-Gm-Message-State: AOJu0YypnHm47wDFvHTRU+r9gLjme5KMUr8x+nMC7dycHhhpVYoV/0OL
+	Ldtvf8JE442AlfFmbt4EytxeUKN3QOHLgHkZhguwqX2LdayPJRm9Dx5IVILutIzssl59ePmfBxG
+	WsffvGw==
+X-Google-Smtp-Source: AGHT+IEPqgz+rFeXBdNtdF9MopmgtL+fIX9Z60fCNyZbM/1JhnyjvKKLZ8SDjN8bE87gqdGCj1ypt69T/4tz
+X-Received: from pfblb4.prod.google.com ([2002:a05:6a00:4f04:b0:730:96d1:c213])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f54a:b0:223:432b:593d
+ with SMTP id d9443c01a7336-2292f9f3b90mr199136565ad.42.1743531951082; Tue, 01
+ Apr 2025 11:25:51 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:35 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-37-irogers@google.com>
-Subject: [PATCH v1 36/48] perf record: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-38-irogers@google.com>
+Subject: [PATCH v1 37/48] perf inject: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,432 +114,147 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c   | 66 ++++++++++++++++++-----------------
- tools/perf/builtin-top.c      |  4 +--
- tools/perf/util/auxtrace.c    |  8 ++---
- tools/perf/util/bpf-filter.c  | 20 +++++------
- tools/perf/util/bpf_off_cpu.c |  4 +--
- tools/perf/util/mmap.c        |  6 ++--
- 6 files changed, 55 insertions(+), 53 deletions(-)
+ tools/perf/builtin-inject.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index ba20bf7c011d..e524b9cae531 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -443,7 +443,7 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
- 
- 	aio->size += size;
- 
--	return size;
-+	return (int)size;
- }
- 
- static int record__aio_push(struct record *rec, struct mmap *map, off_t *off)
-@@ -523,7 +523,7 @@ static int record__aio_parse(const struct option *opt,
- 		opts->nr_cblocks = 0;
- 	} else {
- 		if (str)
--			opts->nr_cblocks = strtol(str, NULL, 0);
-+			opts->nr_cblocks = (int)strtol(str, NULL, 0);
- 		if (!opts->nr_cblocks)
- 			opts->nr_cblocks = nr_cblocks_default;
- 	}
-@@ -577,15 +577,15 @@ static int record__mmap_flush_parse(const struct option *opt,
- 		return 0;
- 
- 	if (str) {
--		opts->mmap_flush = parse_tag_value(str, tags);
-+		opts->mmap_flush = (int)parse_tag_value(str, tags);
- 		if (opts->mmap_flush == (int)-1)
--			opts->mmap_flush = strtol(str, NULL, 0);
-+			opts->mmap_flush = (int)strtol(str, NULL, 0);
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 11e49cafa3af..09a99cec8f78 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -390,7 +390,7 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
+ 	if (inject->itrace_synth_opts.set && sample->aux_sample.size) {
+ 		event = perf_inject__cut_auxtrace_sample(inject, event, sample);
+ 		if (IS_ERR(event))
+-			return PTR_ERR(event);
++			return (int)PTR_ERR(event);
  	}
  
- 	if (!opts->mmap_flush)
- 		opts->mmap_flush = MMAP_FLUSH_DEFAULT;
- 
--	flush_max = evlist__mmap_size(opts->mmap_pages);
-+	flush_max = (int)evlist__mmap_size(opts->mmap_pages);
- 	flush_max /= 4;
- 	if (opts->mmap_flush > flush_max)
- 		opts->mmap_flush = flush_max;
-@@ -604,7 +604,7 @@ static int record__parse_comp_level(const struct option *opt, const char *str, i
- 		opts->comp_level = 0;
- 	} else {
- 		if (str)
--			opts->comp_level = strtol(str, NULL, 0);
-+			opts->comp_level = (unsigned int)strtol(str, NULL, 0);
- 		if (!opts->comp_level)
- 			opts->comp_level = comp_level_default;
- 	}
-@@ -1080,11 +1080,12 @@ static int record__thread_data_init_maps(struct record_thread *thread_data, stru
- 	struct perf_cpu_map *cpus = evlist->core.all_cpus;
- 	bool per_thread = evlist__per_thread(evlist);
- 
--	if (per_thread)
-+	if (per_thread) {
- 		thread_data->nr_mmaps = nr_mmaps;
--	else
--		thread_data->nr_mmaps = bitmap_weight(thread_data->mask->maps.bits,
--						      thread_data->mask->maps.nbits);
-+	} else {
-+		thread_data->nr_mmaps = (int)bitmap_weight(thread_data->mask->maps.bits,
-+						(unsigned int)thread_data->mask->maps.nbits);
-+	}
- 	if (mmap) {
- 		thread_data->maps = zalloc(thread_data->nr_mmaps * sizeof(struct mmap *));
- 		if (!thread_data->maps)
-@@ -1519,10 +1520,11 @@ static void record__adjust_affinity(struct record *rec, struct mmap *map)
+ 	return perf_event__repipe_synth(tool, event);
+@@ -697,13 +697,13 @@ static struct strlist *perf_inject__parse_known_build_ids(
  {
- 	if (rec->opts.affinity != PERF_AFFINITY_SYS &&
- 	    !bitmap_equal(thread->mask->affinity.bits, map->affinity_mask.bits,
--			  thread->mask->affinity.nbits)) {
--		bitmap_zero(thread->mask->affinity.bits, thread->mask->affinity.nbits);
-+			 (unsigned int)thread->mask->affinity.nbits)) {
-+		bitmap_zero(thread->mask->affinity.bits,
-+			    (unsigned int)thread->mask->affinity.nbits);
- 		bitmap_or(thread->mask->affinity.bits, thread->mask->affinity.bits,
--			  map->affinity_mask.bits, thread->mask->affinity.nbits);
-+			  map->affinity_mask.bits, (unsigned int)thread->mask->affinity.nbits);
- 		sched_setaffinity(0, MMAP_CPU_MASK_BYTES(&thread->mask->affinity),
- 					(cpu_set_t *)thread->mask->affinity.bits);
- 		if (verbose == 2) {
-@@ -1688,7 +1690,7 @@ static void *record__thread(void *arg)
- 	thread = arg;
- 	thread->tid = gettid();
+ 	struct str_node *pos, *tmp;
+ 	struct strlist *known_build_ids;
+-	int bid_len;
  
--	err = write(thread->pipes.ack[1], &msg, sizeof(msg));
-+	err = (int)write(thread->pipes.ack[1], &msg, sizeof(msg));
- 	if (err == -1)
- 		pr_warning("threads[%d]: failed to notify on start: %s\n",
- 			   thread->tid, strerror(errno));
-@@ -1732,7 +1734,7 @@ static void *record__thread(void *arg)
- 	}
- 	record__mmap_read_all(thread->rec, true);
+ 	known_build_ids = strlist__new(known_build_ids_string, NULL);
+ 	if (known_build_ids == NULL)
+ 		return NULL;
+ 	strlist__for_each_entry_safe(pos, tmp, known_build_ids) {
+ 		const char *build_id, *dso_name;
++		size_t bid_len;
  
--	err = write(thread->pipes.ack[1], &msg, sizeof(msg));
-+	err = (int)write(thread->pipes.ack[1], &msg, sizeof(msg));
- 	if (err == -1)
- 		pr_warning("threads[%d]: failed to notify on termination: %s\n",
- 			   thread->tid, strerror(errno));
-@@ -1958,8 +1960,8 @@ static void record__read_lost_samples(struct record *rec)
+ 		build_id = skip_spaces(pos->s);
+ 		dso_name = strchr(build_id, ' ');
+@@ -717,7 +717,7 @@ static struct strlist *perf_inject__parse_known_build_ids(
+ 			strlist__remove(known_build_ids, pos);
  			continue;
  		}
+-		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
++		for (size_t ix = 0; 2 * ix + 1 < bid_len; ++ix) {
+ 			if (!isxdigit(build_id[2 * ix]) ||
+ 			    !isxdigit(build_id[2 * ix + 1])) {
+ 				strlist__remove(known_build_ids, pos);
+@@ -732,10 +732,10 @@ static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
+ 					       struct dso *dso)
+ {
+ 	struct str_node *pos;
+-	int bid_len;
  
--		for (int x = 0; x < xyarray__max_x(xy); x++) {
--			for (int y = 0; y < xyarray__max_y(xy); y++) {
-+		for (int x = 0; x < (int)xyarray__max_x(xy); x++) {
-+			for (int y = 0; y < (int)xyarray__max_y(xy); y++) {
- 				struct perf_counts_values count;
+ 	strlist__for_each_entry(pos, inject->known_build_ids) {
+ 		const char *build_id, *dso_name;
++		size_t bid_len;
  
- 				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
-@@ -2246,7 +2248,7 @@ static int record__terminate_thread(struct record_thread *thread_data)
- 
- 	close(thread_data->pipes.msg[1]);
- 	thread_data->pipes.msg[1] = -1;
--	err = read(thread_data->pipes.ack[0], &ack, sizeof(ack));
-+	err = (int)read(thread_data->pipes.ack[0], &ack, sizeof(ack));
- 	if (err > 0)
- 		pr_debug2("threads[%d]: sent %s\n", tid, thread_msg_tags[ack]);
- 	else
-@@ -2294,7 +2296,7 @@ static int record__start_threads(struct record *rec)
- 			goto out_err;
+ 		build_id = skip_spaces(pos->s);
+ 		dso_name = strchr(build_id, ' ');
+@@ -743,7 +743,7 @@ static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
+ 		dso_name = skip_spaces(dso_name);
+ 		if (strcmp(dso__long_name(dso), dso_name))
+ 			continue;
+-		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
++		for (size_t ix = 0; 2 * ix + 1 < bid_len; ++ix) {
+ 			dso__bid(dso)->data[ix] = (hex(build_id[2 * ix]) << 4 |
+ 						  hex(build_id[2 * ix + 1]));
  		}
+@@ -1006,7 +1006,7 @@ static int perf_inject__sched_stat(const struct perf_tool *tool,
+ 	union perf_event *event_sw;
+ 	struct perf_sample sample_sw;
+ 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+-	u32 pid = evsel__intval(evsel, sample, "pid");
++	u32 pid = (u32)evsel__intval(evsel, sample, "pid");
  
--		err = read(thread_data[t].pipes.ack[0], &msg, sizeof(msg));
-+		err = (int)read(thread_data[t].pipes.ack[0], &msg, sizeof(msg));
- 		if (err > 0)
- 			pr_debug2("threads[%d]: sent %s\n", rec->thread_data[t].tid,
- 				  thread_msg_tags[msg]);
-@@ -2409,7 +2411,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	session = perf_session__new(data, tool);
- 	if (IS_ERR(session)) {
- 		pr_err("Perf session creation failed.\n");
+ 	list_for_each_entry(ent, &inject->samples, node) {
+ 		if (pid == ent->tid)
+@@ -1038,7 +1038,7 @@ static int guest_session__output_bytes(struct guest_session *gs, void *buf, size
+ {
+ 	ssize_t ret = writen(gs->tmp_fd, buf, sz);
+ 
+-	return ret < 0 ? ret : 0;
++	return ret < 0 ? (int)ret : 0;
+ }
+ 
+ static int guest_session__repipe(const struct perf_tool *tool,
+@@ -1444,7 +1444,7 @@ static int guest_session__start(struct guest_session *gs, const char *name, bool
+ 
+ 	session = perf_session__new(&gs->data, &gs->tool);
+ 	if (IS_ERR(session))
 -		return PTR_ERR(session);
 +		return (int)PTR_ERR(session);
- 	}
+ 	gs->session = session;
  
- 	if (record__threads_enabled(rec)) {
-@@ -2495,7 +2497,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	}
- 	/* Debug message used by test scripts */
- 	pr_debug3("perf record done opening and mmapping events\n");
--	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
-+	session->header.env.comp_mmap_len = (u32)session->evlist->core.mmap_len;
- 
- 	if (rec->opts.kcore) {
- 		err = record__kcore_copy(&session->machines.host, data);
-@@ -2713,7 +2715,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 
- 			/* re-arm the alarm */
- 			if (rec->switch_output.time)
--				alarm(rec->switch_output.time);
-+				alarm((unsigned int)rec->switch_output.time);
- 		}
- 
- 		if (hits == thread->samples) {
-@@ -2976,7 +2978,7 @@ static int perf_record_config(const char *var, const char *value, void *cb)
- 	}
- #ifdef HAVE_AIO_SUPPORT
- 	if (!strcmp(var, "record.aio")) {
--		rec->opts.nr_cblocks = strtol(value, NULL, 0);
-+		rec->opts.nr_cblocks = (int)strtol(value, NULL, 0);
- 		if (!rec->opts.nr_cblocks)
- 			rec->opts.nr_cblocks = nr_cblocks_default;
- 	}
-@@ -3016,7 +3018,7 @@ static int record__parse_affinity(const struct option *opt, const char *str, int
- static int record__mmap_cpu_mask_alloc(struct mmap_cpu_mask *mask, int nr_bits)
+ 	/*
+@@ -1518,7 +1518,7 @@ static void guest_session__exit(struct guest_session *gs)
+ static void get_tsc_conv(struct perf_tsc_conversion *tc, struct perf_record_time_conv *time_conv)
  {
- 	mask->nbits = nr_bits;
--	mask->bits = bitmap_zalloc(mask->nbits);
-+	mask->bits = bitmap_zalloc((int)mask->nbits);
- 	if (!mask->bits)
- 		return -ENOMEM;
+ 	tc->time_shift		= time_conv->time_shift;
+-	tc->time_mult		= time_conv->time_mult;
++	tc->time_mult		= (u32)time_conv->time_mult;
+ 	tc->time_zero		= time_conv->time_zero;
+ 	tc->time_cycles		= time_conv->time_cycles;
+ 	tc->time_mask		= time_conv->time_mask;
+@@ -1578,7 +1578,7 @@ static int guest_session__fetch(struct guest_session *gs)
+ 	hdr = buf;
+ 	ret = readn(gs->tmp_fd, buf, hdr_sz);
+ 	if (ret < 0)
+-		return ret;
++		return (int)ret;
  
-@@ -3604,7 +3606,7 @@ static int record__mmap_cpu_mask_init_spec(struct mmap_cpu_mask *mask, const cha
- 	if (!cpus)
- 		return -ENOMEM;
+ 	if (!ret) {
+ 		/* Zero size means EOF */
+@@ -1590,7 +1590,7 @@ static int guest_session__fetch(struct guest_session *gs)
  
--	bitmap_zero(mask->bits, mask->nbits);
-+	bitmap_zero(mask->bits, (unsigned int)mask->nbits);
- 	if (record__mmap_cpu_mask_init(mask, cpus))
- 		return -ENODEV;
+ 	ret = readn(gs->tmp_fd, buf, hdr->size - hdr_sz);
+ 	if (ret < 0)
+-		return ret;
++		return (int)ret;
  
-@@ -3722,13 +3724,13 @@ static int record__init_thread_masks_spec(struct record *rec, struct perf_cpu_ma
- 
- 		/* ignore invalid CPUs but do not allow empty masks */
- 		if (!bitmap_and(thread_mask.maps.bits, thread_mask.maps.bits,
--				cpus_mask.bits, thread_mask.maps.nbits)) {
-+				cpus_mask.bits, (unsigned int)thread_mask.maps.nbits)) {
- 			pr_err("Empty maps mask: %s\n", maps_spec[s]);
- 			ret = -EINVAL;
- 			goto out_free;
- 		}
- 		if (!bitmap_and(thread_mask.affinity.bits, thread_mask.affinity.bits,
--				cpus_mask.bits, thread_mask.affinity.nbits)) {
-+				cpus_mask.bits, (unsigned int)thread_mask.affinity.nbits)) {
- 			pr_err("Empty affinity mask: %s\n", affinity_spec[s]);
- 			ret = -EINVAL;
- 			goto out_free;
-@@ -3736,22 +3738,22 @@ static int record__init_thread_masks_spec(struct record *rec, struct perf_cpu_ma
- 
- 		/* do not allow intersection with other masks (full_mask) */
- 		if (bitmap_intersects(thread_mask.maps.bits, full_mask.maps.bits,
--				      thread_mask.maps.nbits)) {
-+				      (unsigned int)thread_mask.maps.nbits)) {
- 			pr_err("Intersecting maps mask: %s\n", maps_spec[s]);
- 			ret = -EINVAL;
- 			goto out_free;
- 		}
- 		if (bitmap_intersects(thread_mask.affinity.bits, full_mask.affinity.bits,
--				      thread_mask.affinity.nbits)) {
-+				      (unsigned int)thread_mask.affinity.nbits)) {
- 			pr_err("Intersecting affinity mask: %s\n", affinity_spec[s]);
- 			ret = -EINVAL;
- 			goto out_free;
- 		}
- 
- 		bitmap_or(full_mask.maps.bits, full_mask.maps.bits,
--			  thread_mask.maps.bits, full_mask.maps.nbits);
-+			  thread_mask.maps.bits, (unsigned int)full_mask.maps.nbits);
- 		bitmap_or(full_mask.affinity.bits, full_mask.affinity.bits,
--			  thread_mask.affinity.bits, full_mask.maps.nbits);
-+			  thread_mask.affinity.bits, (unsigned int)full_mask.maps.nbits);
- 
- 		thread_masks = realloc(rec->thread_masks, (t + 1) * sizeof(struct thread_mask));
- 		if (!thread_masks) {
-@@ -4101,7 +4103,7 @@ int cmd_record(int argc, const char **argv)
- 
- 	if (rec->switch_output.time) {
- 		signal(SIGALRM, alarm_sig_handler);
--		alarm(rec->switch_output.time);
-+		alarm((unsigned int)rec->switch_output.time);
+ 	gs->ev.event = (union perf_event *)gs->ev.event_buf;
+ 	gs->ev.sample.time = 0;
+@@ -1603,7 +1603,7 @@ static int guest_session__fetch(struct guest_session *gs)
+ 	ret = evlist__parse_sample(gs->session->evlist, gs->ev.event, &gs->ev.sample);
+ 	if (ret) {
+ 		pr_err("Parse failed fetching guest event");
+-		return ret;
++		return (int)ret;
  	}
  
- 	if (rec->switch_output.num_files) {
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1061f4eebc3f..b5924724fc74 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -375,7 +375,7 @@ static void prompt_integer(int *target, const char *msg)
- 			goto out_free;
- 		p++;
+ 	if (!gs->have_tc) {
+@@ -1982,7 +1982,7 @@ static int parse_guest_data(const struct option *opt, const char *str, int unset
+ 	tok = strsep(&s, ",");
+ 	if (!tok)
+ 		goto bad_args;
+-	gs->machine_pid = strtoul(tok, NULL, 0);
++	gs->machine_pid = (u32)strtoul(tok, NULL, 0);
+ 	if (!inject->guest_session.machine_pid)
+ 		goto bad_args;
+ 
+@@ -2535,7 +2535,7 @@ int cmd_inject(int argc, const char **argv)
+ 					     /*trace_event_repipe=*/inject.output.is_pipe);
+ 
+ 	if (IS_ERR(inject.session)) {
+-		ret = PTR_ERR(inject.session);
++		ret = (int)PTR_ERR(inject.session);
+ 		goto out_close_output;
  	}
--	tmp = strtoul(buf, NULL, 10);
-+	tmp = (int)strtoul(buf, NULL, 10);
- 	*target = tmp;
- out_free:
- 	free(buf);
-@@ -1817,7 +1817,7 @@ int cmd_top(int argc, const char **argv)
- 
- 	top.session = perf_session__new(NULL, NULL);
- 	if (IS_ERR(top.session)) {
--		status = PTR_ERR(top.session);
-+		status = (int)PTR_ERR(top.session);
- 		top.session = NULL;
- 		goto out_delete_evlist;
- 	}
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 03211c2623de..0caacd38b538 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -780,7 +780,7 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 		if (evsel__is_group_leader(evsel)) {
- 			has_aux_leader = evsel__is_aux_event(evsel);
- 		} else if (has_aux_leader) {
--			evsel->core.attr.aux_sample_size = sz;
-+			evsel->core.attr.aux_sample_size = (__u32)sz;
- 		}
- 	}
- no_opt:
-@@ -1647,7 +1647,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 			if (isdigit(*p)) {
- 				unsigned int val;
- 
--				val = strtoul(p, &endptr, 10);
-+				val = (unsigned int)strtoul(p, &endptr, 10);
- 				p = endptr;
- 				if (!val || val > PERF_ITRACE_MAX_CALLCHAIN_SZ)
- 					goto out_err;
-@@ -1667,7 +1667,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 			if (isdigit(*p)) {
- 				unsigned int val;
- 
--				val = strtoul(p, &endptr, 10);
-+				val = (unsigned int)strtoul(p, &endptr, 10);
- 				p = endptr;
- 				if (!val ||
- 				    val > PERF_ITRACE_MAX_LAST_BRANCH_SZ)
-@@ -2300,7 +2300,7 @@ static int parse_sym_idx(char **inp, int *idx)
- 		if (endptr == *inp || num > INT_MAX)
- 			return -EINVAL;
- 		*inp = endptr;
--		*idx = num;
-+		*idx = (int)num;
- 	}
- 
- 	return 0;
-diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index a4fdf6911ec1..7ad4d5e8fa49 100644
---- a/tools/perf/util/bpf-filter.c
-+++ b/tools/perf/util/bpf-filter.c
-@@ -217,7 +217,7 @@ static int convert_to_tgid(int tid)
- 		return -1;
- 	}
- 
--	tgid = strtol(p + 6, &q, 0);
-+	tgid = (int)strtol(p + 6, &q, 0);
- 	free(buf);
- 	if (*q != '\n')
- 		return -1;
-@@ -284,7 +284,7 @@ static void destroy_event_hash(u64 event_id)
-  */
- static u64 create_event_hash(struct evsel *evsel)
- {
--	int x, y, fd;
-+	int fd;
- 	u64 the_id = 0, id;
- 
- 	fd = get_pinned_fd("event_hash");
-@@ -293,8 +293,8 @@ static u64 create_event_hash(struct evsel *evsel)
- 		return 0;
- 	}
- 
--	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
--		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-+	for (size_t x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
-+		for (size_t y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
- 			int ret = ioctl(FD(evsel, x, y), PERF_EVENT_IOC_ID, &id);
- 
- 			if (ret < 0) {
-@@ -444,7 +444,7 @@ static int create_idx_hash(struct evsel *evsel, struct perf_bpf_filter_entry *en
- 
- int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
- {
--	int i, x, y, fd, ret;
-+	int i, fd, ret;
- 	struct sample_filter_bpf *skel = NULL;
- 	struct bpf_program *prog;
- 	struct bpf_link *link;
-@@ -485,8 +485,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
- 			goto err;
- 		}
- 
--		for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
--			for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-+		for (size_t x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
-+			for (size_t y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
- 				ret = ioctl(FD(evsel, x, y), PERF_EVENT_IOC_SET_BPF, fd);
- 				if (ret < 0) {
- 					pr_err("Failed to attach perf sample-filter\n");
-@@ -519,12 +519,12 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
- 	}
- 
- 	prog = skel->progs.perf_sample_filter;
--	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
--		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-+	for (size_t x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
-+		for (size_t y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
- 			link = bpf_program__attach_perf_event(prog, FD(evsel, x, y));
- 			if (IS_ERR(link)) {
- 				pr_err("Failed to attach perf sample-filter program\n");
--				ret = PTR_ERR(link);
-+				ret = (int)PTR_ERR(link);
- 				goto err;
- 			}
- 		}
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 4269b41d1771..3f0a65fb987d 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -164,7 +164,7 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		ntasks = 0;
- 		strlist__for_each_entry(pos, pid_slist) {
- 			char *end_ptr;
--			int pid = strtol(pos->s, &end_ptr, 10);
-+			int pid = (int)strtol(pos->s, &end_ptr, 10);
- 
- 			if (pid == INT_MIN || pid == INT_MAX ||
- 			    (*end_ptr != '\0' && *end_ptr != ','))
-@@ -234,7 +234,7 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		strlist__for_each_entry(pos, pid_slist) {
- 			char *end_ptr;
- 			u32 tgid;
--			int pid = strtol(pos->s, &end_ptr, 10);
-+			int pid = (int)strtol(pos->s, &end_ptr, 10);
- 
- 			if (pid == INT_MIN || pid == INT_MAX ||
- 			    (*end_ptr != '\0' && *end_ptr != ','))
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index a34726219af3..b8e8865aeb22 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -31,7 +31,7 @@ void mmap_cpu_mask__scnprintf(struct mmap_cpu_mask *mask, const char *tag)
- 	char buf[MASK_SIZE + 1];
- 	size_t len;
- 
--	len = bitmap_scnprintf(mask->bits, mask->nbits, buf, MASK_SIZE);
-+	len = bitmap_scnprintf(mask->bits, (unsigned int)mask->nbits, buf, MASK_SIZE);
- 	buf[len] = '\0';
- 	pr_debug("%p: %s mask[%zd]: %s\n", mask, tag, mask->nbits, buf);
- }
-@@ -165,7 +165,7 @@ static int perf_mmap__aio_mmap(struct mmap *map, struct mmap_params *mp)
- 			pr_debug2("failed to allocate data buffer, error %m\n");
- 			return -1;
- 		}
--		delta_max = sysconf(_SC_AIO_PRIO_DELTA_MAX);
-+		delta_max = (int)sysconf(_SC_AIO_PRIO_DELTA_MAX);
- 		for (i = 0; i < map->aio.nr_cblocks; ++i) {
- 			ret = perf_mmap__aio_alloc(map, i);
- 			if (ret == -1) {
-@@ -261,7 +261,7 @@ static void build_node_mask(int node, struct mmap_cpu_mask *mask)
- static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
- {
- 	map->affinity_mask.nbits = cpu__max_cpu().cpu;
--	map->affinity_mask.bits = bitmap_zalloc(map->affinity_mask.nbits);
-+	map->affinity_mask.bits = bitmap_zalloc((int)map->affinity_mask.nbits);
- 	if (!map->affinity_mask.bits)
- 		return -1;
  
 -- 
 2.49.0.504.g3bcea36a83-goog
