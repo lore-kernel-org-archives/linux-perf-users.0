@@ -1,55 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953C1220685
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AEC220685
+	for <linux-perf-users@vger.kernel.org>; Tue,  1 Apr 2025 18:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743531919; cv=none; b=HVPqiDm0VQ0hf0a455iU38QohAZb6TUazuJeWWGYhy26W7bYNQkby2ZwEMs9H+KUoIvoXuYxsEqJcr6vsw/93a4vmFYRdAyzRWq5jrYnAPyk22OiHpQwu7qd23M3PsqTf0qM2pVWDkoYV6lFPWCARiCWyeWPL55SL+zJFIi80EI=
+	t=1743531920; cv=none; b=ApZ6/0PHBWp50BcnyQTHwhNW5RLEk60e7/gwS4IvThzjMMeOy/zXsqeNhf6GGaMCpJFKjtLZ6WauTWrdTdnXpmBaQqlanV5mY24V1A1SDNDpum8ngudIMnzD76GRXAFLrAWYgQIRI6nSTS4RUOsb+Iqk9fiMw9Nx9KMQMsO79YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743531919; c=relaxed/simple;
-	bh=3ipXD9lA5krXojMgzTZJeNFbDoGDG3hIVLo9GFGHUwM=;
+	s=arc-20240116; t=1743531920; c=relaxed/simple;
+	bh=aWhjaWaNDxw7ETA3oWWKbhRWDFg1+yjRGI+RbsdYOsU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=QuCeStcn0Pr9Jp6koxc8m74QAw1Y/Tk8Y3JAZpHk4hj47EBIkLXBfLahdB5/as3NomaimLjxm2tcolYzP4dZc3Qlv9XJlHs3D17G5eHlegrb48i8ARSDNTG2Yi6+R/qn1cLA7osj20oCd/KkSjxNJNV+ZF9RP8DIPWgQ25H1vK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AVcGA6ZV; arc=none smtp.client-ip=209.85.216.74
+	 To:Content-Type; b=thgN/C9JkxssrGIrpI1sbiNo2W7d6Wzcu0eluvZKBUX8tOkCbmYL0yUQQ95HEEpgYq4pbGhGmswnbph7ApGMCOmtFEH7sHi9CxgvVEvdAHChxvX9BGeAhw1/yL0pyB0j/chSi4Wewi8vUzeXrkKMniN7MAMK7iIAT+Ab0oH+aFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SC83FC0z; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AVcGA6ZV"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30364fc706fso10157661a91.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SC83FC0z"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so9669530a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Apr 2025 11:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743531917; x=1744136717; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743531919; x=1744136719; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qbFOgtsegWIP33hU2q1VfvbvAOcEKBmypAgL+fgEkks=;
-        b=AVcGA6ZVORQ3ZCOyq2ThYmZfrRW33AvYDpM8Lq5jXeYMIiUtULtuREmCGtCjHtYKP0
-         kTSW/4SbRqKm42KRvB6ZKDG1dY1FAyikiMarp04ldKAsWXcjHmF1gIKqP2vb+b7H2Ws4
-         vzzomoqYT7+Oys5VmQ1DXXEmMjl3wihAfaxhUpMI9QflevBJX962stDv3AMq0t0oiTsJ
-         ZsI2wWwpCq7iAd8SAe9e7qw35bzO5rLm4VUhOL6xw0PPIl8VkLztGhUpL6ShWxTw6qVt
-         Rzxdex2fWoPlmH8yTvAb/1VzQrZJyzVFrrIkbM/GnDGRQ6gxT0+ByQxD0OF/8NYLX3HY
-         D8kQ==
+        bh=PrYWWuE6sPSS+h6suzb5zsvazVTJqNriEiozkF9ksBc=;
+        b=SC83FC0zD+JMeZrWLPf7cI24ZcrzVLovtDdmBXH5U85+Ae3X53z6Zq8os+g9TyQqGO
+         YHwkqWHFdCnPb98e0QaDdBBoYKinvOFYpk0L1hhj1R72hwL4wpDrdWMt6E8Xw+uinnEd
+         c8Y1tZ/9FBIic2+egYjG7drpGlZxCRHKzDtKZvAxI10Tedyzg2mR4h7qax9B5dIbcOJc
+         gZZ4cstG97xG5bywZWULDVqq57SpP8jEXsgIl+k/+qRcUO/t0aZhwgaK3Lh/4y1pJT6v
+         rZIvvYhtQ72ZG/q9xHibM33F3NusqBzFHFH0LN9oSfBTdg2kd9ueCPmZgYMI3Yc5+iO1
+         LwHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743531917; x=1744136717;
+        d=1e100.net; s=20230601; t=1743531919; x=1744136719;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qbFOgtsegWIP33hU2q1VfvbvAOcEKBmypAgL+fgEkks=;
-        b=JSKYedH4aHx3gOgi6WNu3mcndaicN3orGNovmb5laRErlSfNdHzwWRj0kR/UvTCFdO
-         U+z4kPYCqMURBxm19E4C4940ZaNhg/ygQvdbWqINtcH/xRxhuR35kwiwb8yoIIKv+q3L
-         xPSJsQIBr+/tfRaJmVWUx1IgjF0Cb+juqXpy8VPVdOiQ6YsUZ+ZN3oZ9qeNdFeE1b3Ar
-         /OyTmanID8MlrtxcgL7J1yL92jR1An9DRRKuozsw5560TiPUsEJQp3fT5aFFpsTITRwz
-         Zg4hGllK6Ut8E4plzo50CZX30PJWVuQpewm08x56emqOVe4kUN8CSWwqCpmtKbji41xa
-         YmVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQPeQAFQqp4fnVMYc3FZcWzPtqLnDY2/hJlKPztVc/yKMYLoJ2oik14epSrKR8x6yWFc4mhfb7b2aELaw5+8nn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXeQR38Xg+lfK0sQi6+IoD8akcqIQaHh/ta/QwtUO4HTHHIt+P
-	V27B582ipGRb6+T9g3H4hi4KdCTzUdbvmCmCtqxXUT2aIAWXuaNRl9f2UdPNVZMBxIPxfwJMWpW
-	Vd9YXQg==
-X-Google-Smtp-Source: AGHT+IHS8CwqpCMF7HFeq4dKWZ9ly2piLbucMCbuAUmYD9n4d1+U+fgWdEeYJVD2NQ881z/O0fjUe65Qoc4e
-X-Received: from pjl14.prod.google.com ([2002:a17:90b:2f8e:b0:2fa:26f0:c221])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:264d:b0:305:5f55:899
- with SMTP id 98e67ed59e1d1-305608774f4mr6510152a91.11.1743531916860; Tue, 01
- Apr 2025 11:25:16 -0700 (PDT)
-Date: Tue,  1 Apr 2025 11:23:18 -0700
+        bh=PrYWWuE6sPSS+h6suzb5zsvazVTJqNriEiozkF9ksBc=;
+        b=Hu5b2gp1HtvI6JoR+6vUhgTKrf5y/1PmXbJviw0Og+dWPkF/TFJzP4FBChQ+Qym49k
+         r450ZIhFnduyq0EnewtvYf4uaGh+zwx6SQVb4ojHdmSO1mUsFrkaPeLaAXm+HBSXHFCz
+         Ic8NIyfB1PTymhBUowiYKhR4hX8ar4jLWj2yJWPeKczWtfrOvFDmhqVnWd8BZ/VFjjiV
+         gZTpiBn7rpTNJfGj3fyUdilhGdd6XwntPxF6jdD4Q1FrqosOphPbhVslWRYGtynLGnYf
+         L3co2b41PfYO5U751/LxNzsUsqJLGVMSzzE6k5g+1hbQDk3nFxKNkGBKwxEcCcrSnhfQ
+         dFMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlTktjG1iOm3SNFxLpbTa+VejdDGscmk+BB6qtRS+Qhgl/A+JF26ZflvnDw0fOcKj/7qJ5rkHc7upOkOP3OSBF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsKswcX+6kmJGGLqDDIPnEEd5408yxK0uBZvnNOVKesc5A7rAi
+	Ml4e7O5VxjJxypuay5RT6BmBhiPS4zhcLEq26RX7IX9L57c3KS8vMEhIsdIDWZCrQ0K8+Qmaqm6
+	zEyPhnA==
+X-Google-Smtp-Source: AGHT+IE1i0iieUCDh7eWrhy6Ik1SYOR9eTB7LYFda3ROvNxcBt4D/jdzBlQzp5ihSJVDTMonP2rg4A/ftUf8
+X-Received: from pfbdf3.prod.google.com ([2002:a05:6a00:4703:b0:739:4820:6f18])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:668c:b0:1f5:97c3:41b9
+ with SMTP id adf61e73a8af0-2009f5c4a5emr19263259637.5.1743531918807; Tue, 01
+ Apr 2025 11:25:18 -0700 (PDT)
+Date: Tue,  1 Apr 2025 11:23:19 -0700
 In-Reply-To: <20250401182347.3422199-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250401182347.3422199-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250401182347.3422199-21-irogers@google.com>
-Subject: [PATCH v1 20/48] perf dlfilter: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250401182347.3422199-22-irogers@google.com>
+Subject: [PATCH v1 21/48] perf demangle: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -114,64 +114,40 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/dlfilters/dlfilter-test-api-v0.c |  4 ++--
- tools/perf/util/dlfilter.c                  | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/util/demangle-java.c  | 4 ++--
+ tools/perf/util/demangle-ocaml.c | 3 +--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-index 4ca2d7b2ea6c..bf2a1a7b3c71 100644
---- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
-+++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-@@ -166,10 +166,10 @@ int start(void **data, void *ctx)
+diff --git a/tools/perf/util/demangle-java.c b/tools/perf/util/demangle-java.c
+index ddf33d58bcd3..ee20f4d08765 100644
+--- a/tools/perf/util/demangle-java.c
++++ b/tools/perf/util/demangle-java.c
+@@ -42,9 +42,9 @@ static const char *base_types['Z' - 'A' + 1] = {
+  *	error  : NULL
+  */
+ static char *
+-__demangle_java_sym(const char *str, const char *end, char *buf, int maxlen, int mode)
++__demangle_java_sym(const char *str, const char *end, char *buf, size_t maxlen, int mode)
+ {
+-	int rlen = 0;
++	size_t rlen = 0;
+ 	int array = 0;
+ 	int narg = 0;
+ 	const char *q;
+diff --git a/tools/perf/util/demangle-ocaml.c b/tools/perf/util/demangle-ocaml.c
+index 9d707bb60b4b..25fe755df5ab 100644
+--- a/tools/perf/util/demangle-ocaml.c
++++ b/tools/perf/util/demangle-ocaml.c
+@@ -30,8 +30,7 @@ ocaml_demangle_sym(const char *sym)
+ {
+ 	char *result;
+ 	int j = 0;
+-	int i;
+-	int len;
++	size_t i, len;
  
- 	CHECK(dlargc == 6);
- 	CHECK(!strcmp(dlargv[0], "first"));
--	verbose = strtol(dlargv[1], NULL, 0);
-+	verbose = (int)strtol(dlargv[1], NULL, 0);
- 	d->ip = strtoull(dlargv[2], NULL, 0);
- 	d->addr = strtoull(dlargv[3], NULL, 0);
--	d->do_early = strtol(dlargv[4], NULL, 0);
-+	d->do_early = (int)strtol(dlargv[4], NULL, 0);
- 	CHECK(!strcmp(dlargv[5], "last"));
- 
- 	pr_debug("%s API\n", __func__);
-diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
-index ddacef881af2..0e513ac7feae 100644
---- a/tools/perf/util/dlfilter.c
-+++ b/tools/perf/util/dlfilter.c
-@@ -38,7 +38,7 @@ static void al_to_d_al(struct addr_location *al, struct perf_dlfilter_al *d_al)
- 		else
- 			d_al->dso = dso__name(dso);
- 		d_al->is_64_bit = dso__is_64_bit(dso);
--		d_al->buildid_size = dso__bid(dso)->size;
-+		d_al->buildid_size = (__u32)dso__bid(dso)->size;
- 		d_al->buildid = dso__bid(dso)->data;
- 	} else {
- 		d_al->dso = NULL;
-@@ -51,9 +51,9 @@ static void al_to_d_al(struct addr_location *al, struct perf_dlfilter_al *d_al)
- 		d_al->sym_start = sym->start;
- 		d_al->sym_end = sym->end;
- 		if (al->addr < sym->end)
--			d_al->symoff = al->addr - sym->start;
-+			d_al->symoff = (__u32)(al->addr - sym->start);
- 		else if (al->map)
--			d_al->symoff = al->addr - map__start(al->map) - sym->start;
-+			d_al->symoff = (__u32)(al->addr - map__start(al->map) - sym->start);
- 		else
- 			d_al->symoff = 0;
- 		d_al->sym_binding = sym->binding;
-@@ -290,9 +290,9 @@ static __s32 code_read(__u64 ip, struct map *map, struct machine *machine, void
- 	u64 offset = map__map_ip(map, ip);
- 
- 	if (ip + len >= map__end(map))
--		len = map__end(map) - ip;
-+		len = (__u32)(map__end(map) - ip);
- 
--	return dso__data_read_offset(map__dso(map), machine, offset, buf, len);
-+	return (__s32)dso__data_read_offset(map__dso(map), machine, offset, buf, len);
- }
- 
- static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32 len)
+ 	if (!ocaml_is_mangled(sym)) {
+ 		return NULL;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
