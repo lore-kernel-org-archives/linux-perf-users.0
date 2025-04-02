@@ -1,129 +1,95 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9360780B;
-	Wed,  2 Apr 2025 01:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890B810A1E;
+	Wed,  2 Apr 2025 01:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743556049; cv=none; b=lzoVLpp7zdGke0otlX+c+51sHCxNPS6MkwRn2KgIOlO9UoTa/xCR4+6dcaA4JZ+5kLQCCUmcJ/YH8GYDePe7Ydjm7lRF3rBkhPmeTHnyjVwzlPqEhysAkDw91t36K2Y5KVmsCdjjbi7XTr2CfGlzib7ZZkS2gq27ZY5rfTFThvw=
+	t=1743556632; cv=none; b=UucDMTDrDHW0HPOGXC9a6M6iEQ/eX/eUDUQYRxrnwi1y+LFgMfqqFIJqfOUv03Z4kls3JHtmoLv4vWDKJhE3buMLFrSqFKN6kNaAa7KW2h09TWsdr4GzzXwDKmIwy2qsM17cfBH1CgpgfFE02qnTWi6lEIsa9nIJ2RTtUs1cYNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743556049; c=relaxed/simple;
-	bh=5PZesHeW3FmH0zI46qagmvpB3+cAWyaw3+Q+BiOdv20=;
+	s=arc-20240116; t=1743556632; c=relaxed/simple;
+	bh=swipl5oxE4ODEOIlrmHfcaSGqYf7QFc1E+yw39UEO5M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6o3++RXWYL4HL2oUOdHVrXFmKqXkfcNx2vexRtK0idc2ZEWYTkdycsB2T4iYz077/s4Bvk7nji94iielOie1nF/4zVJTLzZOaRMA1fL2DvT7WBlVeCBssfGIAWH3xg/F3nFk59PUhUby7hmwjiPRBmDRguuEw60JsKpHJlwLhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQPOsnGS; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=KqvgdkjX3/REykpPjCTDHMdbH/0bvJSfHnD7u1lyjxwBtKWQgnVsnJexfcI4T5llbhHQoi2OBUeVe8iH0Z9BEzO6oBzBpStzMMPm6sY4h5u7bfgdQ05MJUi0eyv73n8Em998bahh2CcCundAEQBBKoDQCQGqE4RDUw9FcTB1gR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E6ZFr4Dy; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQPOsnGS"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f74b78df93so70874457b3.0;
-        Tue, 01 Apr 2025 18:07:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6ZFr4Dy"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e6df4507690so184245276.0;
+        Tue, 01 Apr 2025 18:17:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743556046; x=1744160846; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743556628; x=1744161428; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/oxF+p5em2VYpqRHWZtHX7g5OjoPMVbjbFeP48P7SxY=;
-        b=gQPOsnGS2sCUEE4wTvFZvGDH04QfBzyHJONXs4poQQpzLgpOzDaAHQb7k/mdsTe2d4
-         gWfjin16k2wZmKpoSbRHTMXkjOx1K3f0VlBPVQXl7AZXBDR9b2fB7/Xytxs7R1VYcgps
-         beVpxZqA/am+nUCQ1ioRcBwqK/pJcq66looj/TmT4PA/ieaq+ZZvky+ipnq5ynh0eZHF
-         kK59zVJRQ0+VqA6/NuyyiFfyt8yo7o5VlfbomZB9e3lJyO3roYVLEuWnj9M79P30i+DP
-         q1yuswtBHE/bbxRl+Vn20Wyp1Nl5CUWHcafP5oqIkqeUwA+S1Utrcns0paOcL+qOycrS
-         WrcA==
+        bh=swipl5oxE4ODEOIlrmHfcaSGqYf7QFc1E+yw39UEO5M=;
+        b=E6ZFr4Dy4COhYgcavOpQKMhOFiUc/+VRLktfpK08+l35vl8BLsqrXEqTNIMUM8Eos2
+         hGzpXcQr44ZqMPNd27NRSdgRSjMlLQKvX1IMWrxWajNC+6lbULr23XmOO8+4DRh2kRy/
+         bIOJ6jK/z3L5gP3lndH7pUGzAWNFuVRjZYlf5h+dN6ODnSluUdMVYAkdq2i7CD38sugm
+         Ce8QRJvsmBRsB6yWt2dAIJxJAVPoTvcfrsb2BhPaSLlE2doTsBqzNVs/dgM2TVIIX9DI
+         XUgxG0fnaQaAwxZnpkaPCVErMewHx+B2G9IJIdYIkcfybVVkB1IqxF51MOuZB+WKgBZx
+         jw4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743556046; x=1744160846;
+        d=1e100.net; s=20230601; t=1743556628; x=1744161428;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/oxF+p5em2VYpqRHWZtHX7g5OjoPMVbjbFeP48P7SxY=;
-        b=L+1f1juCbFizwtAcHhmcHipjJK1UgIjiFCsEVtB6/cx4Gtk80GCehVKWJN7ZCDBiXB
-         +YRuaB3Wb8ytBCQ8wAp1Frb4qGbrcwsG40DvQs16d1DZkqMvbrPu86jbP2rFaLZZaOvC
-         cs2ZQBKynUr4UDUw78ge9j1EGbqxzWCMY5fXTws6g1IfcU+viExFX3OB6BXmtfb20wDI
-         526vs2blJWx0jYE5dPg8EGGJ+O8I28dUK2lKj5eiOFiXzKfQ8+2upBH8HxypKnqVmfH5
-         anR+cQyXpBto/LEjP5coGmNFHYFl15fLPaDqnMr6am+94JEeQof25ZeibdPP/a+0scSv
-         Rhlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDnG/zLAprHJAINz7FLZcWfjyPhGdicvbwt3HTkVpenUbmbSjYxFVEd2m7lhZOmEPz0vinriqZXxlU2a4=@vger.kernel.org, AJvYcCXL+5rtGzsYfkrTg6cIlshjzIGUcH+l1/LJ14EU3unefszyj1k1VUrajYKAj5CoS2YhLJYs+UO2zN2zI9f0GFcNcA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZuiCPj6VfryMhnvi6+s+D6JFXTWai6sk0fRGFxa7hcgYYOS2f
-	e3jhvyxgy5KkmfMBdOtCq19Mh33GstCTVp/ASFSCIBoI6PewngBn6G9qufUZ2x9xHGJvuJ5l8Br
-	v8z6CbI6wKMJJ+sKDsD282sPB+Es=
-X-Gm-Gg: ASbGnctgolvKA3ThPk84eRexJVvDWnGXy5kVg63VsWpyk+o8DG4HyfNwL5TLzwSU6Rv
-	+K+Y8DAdu1E24M7SdVRVRU2cTrl0o2nQAeCGKVfKAqL/YCOULX1BnxppBqlwbjs8UX+kX/rxxOP
-	e1GxdaQMz1pTsKtPiUm8457p4E
-X-Google-Smtp-Source: AGHT+IGHdyt7ATG8saEPHInkDsfS2SbzdYlFSB9ZTEx7N29oPWAzPreH+Xdjio/K7RgguyLPJxjDyW69EylaCYAoStY=
-X-Received: by 2002:a05:690c:6e08:b0:6fd:34c7:280b with SMTP id
- 00721157ae682-702570df85cmr198241777b3.5.1743556046330; Tue, 01 Apr 2025
- 18:07:26 -0700 (PDT)
+        bh=swipl5oxE4ODEOIlrmHfcaSGqYf7QFc1E+yw39UEO5M=;
+        b=C5tncW7a/FBKRjyhPPVrWwZ8+8/F6VtHYCbRWa5hGQenTjf9ZKYwJogDvEtR8Mjdwd
+         JkxwFwQnoOuEFfyp6AjBTLSD4qvNqcmlkw6PqYx9dKBgOOroOfc55xpbnvbfxJ5RE3lN
+         1l5Ntcg8b2xP2Ak9orrfrCIPDAanO0Xx+dyuWibbsHBO0TJi/0EzKJ2RbpA777Z3dG7i
+         393+Pv8ggv6dbDJpza4+pM9fUBuyD5+q5d1Muo9AuuHWa1dKWOsCWI5MMhP9dr0Xp93y
+         5cXNuELkPpHahVyfY7MOgyPZH6OFDEQEzFqxCOtgfZhU1tyV3lj26vCSQqRd6Tpg0zGn
+         jZHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUikdyv0ErbWYotjRhiZzoF8qLGh6/icC51WLdAVfyP3PoTDExHaAugpQn9RacFAH9k2+WZfOx7l2CsJi0VpZnyqg==@vger.kernel.org, AJvYcCVZo53lzMxR9PkK7rWcLWxBbvN2Zr1GoOxylmRPGjq/jj42ZVNi4sLXoz23vurKRsV954QoimtKNfJy7eA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPtEx2KOknxjiwADrTmDv7C1FzR8HDjcRvRuXvJV/yATm52ZHy
+	b9/A2VynVl2oK2akW6ddIk0gb2LQqpmQbVxYZJKscVmcqXz4Fpj7o8nfpxByZVPkHDnCkO7i3vd
+	2I+mzoVnwEtDCsPspYQDj72C3P4s=
+X-Gm-Gg: ASbGncvocP+l52yhsadsXACHDNpTl3EewSrp7a1UBAWpMh0nIGbXdahPeceTb7rFAPf
+	icv8x3TIN6ED3BpDjUldwC2VUVvKCI1Q5h/n5grJhWoyrdZCngCa7xrWC+Cn0tKGY6MEZ5fDFcN
+	uc1BVI6Tbk038SKyozUp8IyOZi
+X-Google-Smtp-Source: AGHT+IG/91ENxbepjMyxtVQqTL6BDvXW5rqrjR2a9fCTAq97ARvcFIwCflHMx5r0fT1XfCqD6gLbcT7ErRutUlwnAhc=
+X-Received: by 2002:a05:6902:2e09:b0:e5d:c1b9:4a7 with SMTP id
+ 3f1490d57ef6-e6df77d72c0mr385260276.23.1743556628355; Tue, 01 Apr 2025
+ 18:17:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331184638.3856982-1-namhyung@kernel.org>
-In-Reply-To: <20250331184638.3856982-1-namhyung@kernel.org>
+References: <20250401202715.3493567-1-irogers@google.com>
+In-Reply-To: <20250401202715.3493567-1-irogers@google.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 1 Apr 2025 18:07:15 -0700
-X-Gm-Features: AQ5f1JoORAAUrvTsmhzebYXpG_ZOK_mFZj1KngdWpqGDjQqPlObv2dxbUQOZF6A
-Message-ID: <CAH0uvohL4cFXukxhY6G4WfAWXqPOi3HbEHv=_KWixBQmgon2KQ@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Fix some leaks of struct thread
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+Date: Tue, 1 Apr 2025 18:16:57 -0700
+X-Gm-Features: AQ5f1JraaChHXxTubylT8V4ERwaiHvVI9vcdLb6sgZ45sMybzjbrEN0dV1VfQtM
+Message-ID: <CAH0uvoiChpJS9Px0rQW0yRvHq7UjVauxH+5tRZ_Lt5V=yrAPiQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf trace: Fix some more memory leaks
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
+Hello Ian,
 
-On Mon, Mar 31, 2025 at 11:46=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Tue, Apr 1, 2025 at 1:27=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> I've found some leaks from 'perf trace -a'.  It seems there are more
-> leaks but this is what I can find for now.
+> The files.max is the maximum valid fd in the files array and so
+> freeing the values needs to be inclusive of the max value.
 >
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-trace.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Add missing thread__put of the found parent thread in
+> thread__e_machine.
 >
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 3d0c0076884d34cb..10cd99888a9a11b5 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2835,7 +2835,7 @@ static int trace__fprintf_sys_enter(struct trace *t=
-race, struct evsel *evsel,
->         e_machine =3D thread__e_machine(thread, trace->host);
->         sc =3D trace__syscall_info(trace, evsel, e_machine, id);
->         if (sc =3D=3D NULL)
-> -               return -1;
-> +               goto out_put;
->         ttrace =3D thread__trace(thread, trace);
->         /*
->          * We need to get ttrace just to make sure it is there when sysca=
-ll__scnprintf_args()
-> @@ -4123,8 +4123,10 @@ static int trace__set_filter_loop_pids(struct trac=
-e *trace)
->                         pids[nr++] =3D thread__tid(parent);
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I suggest adding a:
-thread_put(parent);
-here, just before the break.
-
->                         break;
->                 }
-> +               thread__put(thread);
->                 thread =3D parent;
->         }
-> +       thread__put(thread);
->
->         err =3D evlist__append_tp_filter_pids(trace->evlist, nr, pids);
->         if (!err && trace->filter_pids.map)
-> --
-> 2.49.0.472.ge94155a9ec-goog
->
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
 Howard
