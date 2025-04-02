@@ -1,184 +1,181 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C91E1F4C8D
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 22:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0434B1F3B82
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 22:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743633191; cv=none; b=p3xKRi3hoQ1Pcv73IrXyJ1Nb/QsBLcw8XqbFxSOE5CMiPoi2s24dkmhF3hbvRozi9+zeD5SgJ1WW1lHVUKfgFcCzYnipCIqy3Uqbxt3Vw3SVzqQ2AC5KQFDDvPqHwE2T/sjsL/+6Dy4JctwQzwDz1UTnbidWSJSu/oGarNGRNxQ=
+	t=1743634061; cv=none; b=ViGc3M7w3bQJWXxRdwnDy20Bl5dv/n8P4qpEsY3pOz1Ddlc5A69n+yJqpZfcRAWp1U/v10ReLNGfiir3AUBq9u68GQT9QakhnyqHsWjO33EclEOTw4cqbTGwTOXTdsc7hYTUKGOO4LIjtamAwcKqGjZuqv4wFAPSN7774xEKDtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743633191; c=relaxed/simple;
-	bh=vpL5MYiXWzk/TTfDMt9SK1ICgCeny9hniT1+NGgwpEY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LyV6JMnXy3WS4s35sJ33zbOHschZ9wVY5zezfq6P6KGOyOWbm7qb1LW0g770GvINf3SoPZR1WOwObiB9zWMTojpvkyF/W6NXi7JkHnoRuvZhOWeTs8rVrVyqIsye8tD8tC1wPQIUh5GUoeMB8dLZPyfHjPDBIm3nFe9oAmSNGUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PLZmRflq; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1743634061; c=relaxed/simple;
+	bh=Ru4BtfRe0+B+AhvIy0A0rpVg8flFQ1mMl/i+zMrdb/Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=YSqRuHEE2vmIorfQKfUbDWxChT/isbjki/qPo/5RyZfcdosbo70bNzAlxqxZ/3jjm6z9Ypi4gg01VmrGjn0DEixVXD8DAu7KR2exxz3edhwcylG8Sxc6EaZYQ1GsaAjZDzOlvw6NLrRrmt6Xd3bH28KQC45BUEVBqUuO0KeAxcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WT2SO4lc; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PLZmRflq"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240aad70f2so373935ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 15:33:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WT2SO4lc"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22403329f9eso2500985ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 15:47:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743633189; x=1744237989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VFoV6Jzg/d3+puQvt+e32UWddq8Y5WjF4RLVz5wXa1A=;
-        b=PLZmRflqZNKR48f5DMfuCIbGW+t668Er49MVhY8AqRb1GnvlZzHRK6xt2viSpiw1Vr
-         oa3sfV8SMn+ZgDZtqpLXwh0vuVFwiVIVTBL6HqK4tnxP+oQotEZDBLIqQVluuEqyrm5V
-         5V1H1lyzXqGN3IZ7LRI1Z/OSmQs/UVsFqazfVAQGgeLWDas+h3KmG+rXQzqPsCGcYP0J
-         dzswTDSXfVBgWAFY673zu+oSHaCMEO4TuccBWohpPc0UqdOyV8oTzbBiEzf7/dozHmq1
-         qfaxe8GgEsOHJq/FP/YPvNpdTNB+P8w33kRLohHJrLd/1ax5pXhyb2zdF6mUn3yjgtHJ
-         CVKQ==
+        d=google.com; s=20230601; t=1743634059; x=1744238859; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=p0XfgBiQEup7soca2GQu1jS4gphlsvFj7U02mWvvqnM=;
+        b=WT2SO4lcHB6k+VZwe6iVDjeOWSodvqU11puDNM0ZrFDQLQnsBSOQkE0vcya/ndsRd2
+         l7C0rY8DYaQnmwCS5faQ8t2iayqkJ0ZsmoNwBJKKsvecFX50yyISdgJfIKja5932CuHc
+         B+s03DDiFv73AFvU3X1p92m50uHez0jnpwTgetJTS/bANI8/8EGlVTR3wNss8X5PB8EH
+         2A2uFI/HVp6BzLxHahWp3RFL8Obk/XZs+Bngx95EiTNIVEnrhUcvc0xDCqlL9T7xUFXd
+         UuilacOebv/jn99Od9QFbO9aQG4mJsEG0LgY6nf9PEw6suuXU7xhTTEzcXuVaMj5M9eh
+         +i9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743633189; x=1744237989;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VFoV6Jzg/d3+puQvt+e32UWddq8Y5WjF4RLVz5wXa1A=;
-        b=PcosC0xUs+IkrpR3cBdblpdrrYu2KmFPqNOFcymSTNbNS/x9y2fC0kiBmo+cMHIf5/
-         l+oWu9UlVHB4vHagNekFm1K1vwyXx8fMsTfX4ejaJtmxtwSp31Kd5IGXA9oqn5b/kjhu
-         /xsD7lTJxEeBP0zQLDZQopiQ0MxKRc/v+EGl+Tn4JRcveF34Wac+cUMHMwMgYz0eeoqc
-         wCc+3jhdLEiADDT1n8znCtuNaWTywz41bREH3r79Qagn6+XmgmfXsoabAC5iiNKHEcaL
-         Bvhf05YFQz9okfVDnT0Q/PlaZk7iWgsCCt6nDZhTST6TDa4xiT6W6QoVoJjdOW290cVy
-         8wvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyiI9NAZxu0ISDFY78P8C8B+eT/R4d9NhyoUlj01hXrlXy49QNRYiD08mbIytwGYg2jCJPYcJ94/7KE5zcF8cE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyaj5NI6l7jqJNJd86KB8xdHCyq1m/70u+MeLNbn86Nj+NiSpRC
-	eID/BpNT/1ol3VumsfACRYEOhHMLYxnPKKDRBbvNZc7Uf3dBpiy9O02wzakLSd3Z83I8w+spMaY
-	JJKOcus1Z0if1xxUV+BnYjmECMKbzzQuFAHVp
-X-Gm-Gg: ASbGncujsrOrgnEJbun6BM0wiIzOw9rZWoqAg1br6oASXt76wZ3bxZ3wT1AQNOmWm+G
-	RvOhjFOdpplDKTTCob8l9qTwuX2Wr4OWfLzaJRytig4iL9/NYlQZ9WObOECTPgv6C2hk6sOUQsl
-	ysj/tKKikixAlxd80VKF9cwYCbvuigiM6EYuXesHoSSXO6xCfWukcqoKi4tgAegqg=
-X-Google-Smtp-Source: AGHT+IGeD+R7itL1TPM9ELId2uzX7pKMbUUuKfNfuvM39HjMgfv4HNBG65B/Era82HmhwK2fm9Jftl72TclUySUeWKE=
-X-Received: by 2002:a17:902:ecc5:b0:215:65f3:27ef with SMTP id
- d9443c01a7336-22977502490mr1273235ad.12.1743633188346; Wed, 02 Apr 2025
- 15:33:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743634059; x=1744238859;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p0XfgBiQEup7soca2GQu1jS4gphlsvFj7U02mWvvqnM=;
+        b=Q4hooOt+tZkvu6082De7xIKs6bpaP0+dA/NL0YJ0ERC7k02N3U+I0feMMNSEPxd+33
+         aXVUjEY55OjucZfaFn/a+z7WxvwgmENwktlkTIMiKGQAzNRHmx8ts+v2VoZk001Y1MRo
+         M/813uCQ1uKEXd5KOlqzLIbATvJUt7+3aIzZMb6lvKz6tWuglmc0DKYzSIcfzRqYnu+n
+         bSDxk185IhTbBY0hHp5mEk7dO57H2bMXk9hs7T0KB/w2SB1NBWat4Avv3aCQ9ntKdJ5P
+         3lIQYn8pfkupVhMmAeCi7nMClH2FOZUs85gF2cxSehpkrvBpBtXKhdwgovcZBr3WIXGn
+         3FQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsmnUYi9ZqTyZKI0/S/snFjoUWngW/2cu6Q7g9eV/+2rytQLEIOp7FSg7WDJmKB5mT8g9HsZHYvY5p9R1S6WhY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybh57DZSGfBboDWERgTzUwlxWGJdXFpK+GQTOAvAejDfyG68Sj
+	PRpZzMce9SKl6YCKVK+oruzRiZ6W0nLAirFy+jJTPaHiXsH74vXvcse3/q6mJP4rtDTBgXlnuy+
+	ZwBiVNA==
+X-Google-Smtp-Source: AGHT+IF0Vjt6VVHETz8kshE5LncADXihIg29Va9KdRuVYgUjgV6CB7EP15IrICdtzLpP1VDf5PAxLTAA4v5y
+X-Received: from plpm12.prod.google.com ([2002:a17:903:3dec:b0:220:dc21:7a39])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:11c7:b0:224:1ec0:8a16
+ with SMTP id d9443c01a7336-2292f9622b5mr265565235ad.21.1743634059263; Wed, 02
+ Apr 2025 15:47:39 -0700 (PDT)
+Date: Wed,  2 Apr 2025 15:47:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250401182347.3422199-1-irogers@google.com> <20250401182347.3422199-10-irogers@google.com>
- <20250402143541.GM115840@e132581.arm.com> <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
- <20250402163807.GP115840@e132581.arm.com> <20250402230125.366ac21c@pumpkin>
-In-Reply-To: <20250402230125.366ac21c@pumpkin>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250402224722.88740-1-irogers@google.com>
+Subject: [PATCH v7 0/2] Prefer sysfs/JSON events also when no PMU is provided
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Apr 2025 15:32:57 -0700
-X-Gm-Features: AQ5f1JoGDdvG3SyzAeolredX1Q4rcDlM_rn1uPkwDSeBGYU8h0-XIsAUN3GlKck
-Message-ID: <CAP-5=fVMk+1+Jv3OavMwHmm1b0YNZPnmETOW7nTbW9-7tS4MNw@mail.gmail.com>
-Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Leo Yan <leo.yan@arm.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey <ben.gainey@arm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Eder Zulian <ezulian@redhat.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
-	He Zhe <zhe.he@windriver.com>, Dirk Gouders <dirk@gouders.net>, 
-	Brian Geffon <bgeffon@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Howard Chu <howardchu95@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jann Horn <jannh@google.com>, Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Yang Jihong <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Hao Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Casey Chen <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Andrew Kreimer <algonell@gmail.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, 
 	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Atish Patra <atishp@rivosinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 3:01=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Wed, 2 Apr 2025 17:38:07 +0100
-> Leo Yan <leo.yan@arm.com> wrote:
->
-> > Hi Ian,
-> ...
-> > If we use casts just to silence warnings, we also lose the opportunity
-> > to improve code quality.  The changes in this series that fix type
-> > mismatches are good, but I think the use of casts is not particularly
-> > helpful - we're simply switching from implicit compiler casts to
-> > explicit ones.
->
-> It is certainly my experience (a lot of years) that casts between
-> integers of different sizes just make code harder to read and possibly
-> even more buggy.
->
-> If the compiler really knew the valid range of the value (rather than
-> just the type) then perhaps a warning that significant bits were being
-> discarded might be more reasonable.
-> But even then you don't want anything for code like:
->         hi_32 =3D val_64 >> 32;
->         lo_32 =3D val_64;
+At the RISC-V summit the topic of avoiding event data being in the
+RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
+events being the priority when no PMU is provided so that legacy
+events maybe supported via json. Originally Mark Rutland also
+expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+M? processors, but James Clark more recently tested this and believes
+the driver issues there may not have existed or have been resolved. In
+any case, it is inconsistent that with a PMU event names avoid legacy
+encodings, but when wildcarding PMUs (ie without a PMU with the event
+name) the legacy encodings have priority.
 
-There is an instance of this in:
-https://lore.kernel.org/lkml/20250401182347.3422199-3-irogers@google.com/
+The situation is further inconsistent as legacy events are case
+sensitive, so on Intel that provides a sysfs instructions event, the
+instructions event without a PMU and lowercase is legacy while with
+uppercase letters it matches with sysfs which is case insensitive. Are
+there legacy events with upper case letters? Yes there are, the cache
+ones mix case freely:
 
-The particular problem that Leo Yan [1] found in the code base is if a
-compare function like:
+L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|node
 
-  int cmp(long *a, long *b)
-  {
-      return *a - *b;
-  }
+meaning LLC that means L2 (which is wrong) both match as part of a
+legacy cache name but llc and l2 would only match sysfs/json
+events. The whole thing just points at the ridiculous nature of legacy
+events and why we'd want them to be preffered I don't know. Why should
+case of a letter or having a PMU prefix impact the encoding in the
+perf_event_attr?
 
-which are typically passed to routines like list_sort, qsort or
-bsearch. The subtract is potentially 64-bit and the implicit cast to
-32-bit loses the sign information. Generally the problem is more
-opaque than this as here you can quite easily see the types of "a" and
-"b". If we say we don't warn for implicit truncating assignments then:
+The patch doing this work was reverted in a v6.10 release candidate
+as, even though the patch was posted for weeks and had been on
+linux-next for weeks without issue, Linus was in the habit of using
+explicit legacy events with unsupported precision options on his
+Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+where ARM decided to call the events bus_cycles and cycles, the latter
+being also a legacy event name. ARM haven't renamed the cycles event
+to a more consistent cpu_cycles and avoided the problem. With these
+changes the problematic event will now be skipped, a large warning
+produced, and perf record will continue for the other PMU events. This
+solution was proposed by Arnaldo.
 
-  int cmp(long *a, long *b)
-  {
-      int ret =3D *a - *b;
-      return ret;
-  }
+v7: Expand cover letter, fix a missed core_ok check in the v6
+    rebase. Note, as with v6 there is an alternate series that
+    prioritizes legacy events but that is silly and I'd prefer we
+    didn't do it.
 
-becomes valid, but it is identical and as broken as the code before.
-I'm happy for a better alternative than clang's `-Wshorten-64-to-32`
-but haven't found it and I agree it's unfortunate for the churn it
-kicks up.
+v6: Rebase of v5 (dropping already merged patches):
+    https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
+    that unusually had an RFC posted for it:
+    https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
+    Note, this patch conflicts/contradicts:
+    https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
+    that I posted so that we could either consistently prioritize
+    sysfs/json (these patches) or legacy events (the other
+    patches). That lack of event printing and encoding inconsistency
+    is most prominent in the encoding of events like "instructions"
+    which on hybrid are reported as "cpu_core/instructions/" but
+    "instructions" before these patches gets a legacy encoding while
+    "cpu_core/instructions/" gets a sysfs/json encoding. These patches
+    make "instructions" always get a sysfs/json encoding while the
+    alternate patches make it always get a legacy encoding.
 
-As an aside, I wrote a Java check for this as I found a similar bug in
-Android. That check found instances where the subtract and truncate
-were happening in a cache that would sort elements deleting the
-oldest. Unfortunately the truncation meant it could also be deleting
-the newest elements. In Java lossy conversions require a cast so I
-could target the warning on casts within compare routines. C of course
-has given us a good way to shoot ourselves in the foot with implicit
-conversion and -Wshorten-64-to-32 seems to be a good way of avoiding
-that particular foot cannon. Making ordering routines use a less-than
-comparison avoids the problem in C++.
+v5: Follow Namhyung's suggestion and ignore the case where command
+    line dummy events fail to open alongside other events that all
+    fail to open. Note, the Tested-by tags are left on the series as
+    v4 and v5 were changing an error case that doesn't occur in
+    testing but was manually tested by myself.
 
-Thanks,
-Ian
+v4: Rework the no events opening change from v3 to make it handle
+    multiple dummy events. Sadly an evlist isn't empty if it just
+    contains dummy events as the dummy event may be used with "perf
+    record -e dummy .." as a way to determine whether permission
+    issues exist. Other software events like cpu-clock would suffice
+    for this, but the using dummy genie has left the bottle.
 
-[1] https://lore.kernel.org/lkml/20250331172759.115604-1-leo.yan@arm.com/
->     David
+    Another problem is that we appear to have an excessive number of
+    dummy events added, for example, we can likely avoid a dummy event
+    and add sideband data to the original event. For auxtrace more
+    dummy events may be opened too. Anyway, this has led to the
+    approach taken in patch 3 where the number of dummy parsed events
+    is computed. If the number of removed/failing-to-open non-dummy
+    events matches the number of non-dummy events then we want to
+    fail, but only if there are no parsed dummy events or if there was
+    one then it must have opened. The math here is hard to read, but
+    passes my manual testing.
+
+v3: Make no events opening for perf record a failure as suggested by
+    James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
+    rebase.
+
+v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
+    Patra who have tested on RISC-V and ARM CPUs, including the
+    problem case from before.
+
+Ian Rogers (2):
+  perf record: Skip don't fail for events that don't open
+  perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
+    legacy"
+
+ tools/perf/builtin-record.c    | 47 ++++++++++++++++++---
+ tools/perf/util/parse-events.c | 27 +++++++++---
+ tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
+ tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
+ 4 files changed, 140 insertions(+), 70 deletions(-)
+
+-- 
+2.49.0.504.g3bcea36a83-goog
+
