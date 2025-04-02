@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBF5194A75
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 16:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCF519E826
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 16:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612451; cv=none; b=PyXk6DsVHPcXpYGuj8rk6A5giWkK+2NFHsBgma5cRH28EEbtEFyLOHqhgzQt2EbZiLKKWcKMJjowDYyE8t2xuzUW/I9MPSHLF3Pu3+sp40IRPqvRRAbnHw0Rvzf/CNzGoQiOvFBWJdHDNo0jMaRQGAinI2aKyTfGSZXHUa8rbuw=
+	t=1743612453; cv=none; b=Vu2Mwf/MRW2Ir8G0dD+jf0CeA9pY+VR29tHlch4kHrM4syt0Qa6fOFh0XKwXyfCni8VsHodf0X1pHL9Aa4/OBYJcX5zHu/DKP26q0LlsN/3YCLpfJDoxZcnE4TNTnzhM8EPrLdpqj+X4fCVyJIt00t2vgYKyvnCbuVkhqiUE9ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612451; c=relaxed/simple;
-	bh=NqnWpcdFkNGPmqWCPNT6GGaIm7Gc0q9VpwYczE12dRI=;
+	s=arc-20240116; t=1743612453; c=relaxed/simple;
+	bh=ceFQQBDmr9eZ5yU3Gt86zh2f8+RxL6DcgnNhvGpxxF4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=bx4oQynfo5NXb5x7PjglUcYy1z8kIsLTFU15eBQT7aOuV6Fn3IBVFhreWff60qVORJ9CwWO5EqGBBiTPY1dpUnuXPLz3vw3AnVzm/Zt096RhgFxcLCGLPpj/ovFfUCzOKVtPa3AAs8L0JCU9444OFlE/khzOqYD9WgS9HK1T3p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DZtx6scp; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=Ar19cLu2NWM0RJKvpDDNe9JdOjFiOJHwWH+vqIyALGmi79/3iLniCQrtMPDScqEkZfWU3Jk+lVKrvIDQPqV34WEGaeel6GzYHrka+SvpzdYVrijd87qaaLLCUsfmpNZ5v3dns0AnBFOD1rS6PYV5kYFua6WtJpBnzao2aWu33Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BEgWd9gA; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DZtx6scp"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3011bee1751so11457225a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 09:47:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BEgWd9gA"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225ab228a37so466985ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 09:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743612449; x=1744217249; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743612451; x=1744217251; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GVMZzaRI0SYaZ9HIFXqjbn9kAaASuQl6uCuXVUyZL/Q=;
-        b=DZtx6scpFfBz8rSgUPbSLmPQCvHPoa6efBBrD7egb8evAyZ1DXZOmunPS+VQ5SV528
-         5XESpzmHGrRoeKqXwBXfFOKKtg7TbqUVbCjIVo0YL55ArhNXNULC3oE72CxNOXd4uMJ8
-         KjoPSvmxSHQmuxSqossSOe2VA6Li+4SK7hKcAP1MCZVrB4+vgCACIxpeK19MIobPn170
-         qpxqRyuZ642Vwfq2m2hfw3MyAvQkl+aDbBbVOUaRgu3C6yR/TrivX+SIwubPZVUF/Hc+
-         E054taC6TgALqAuSRi3yZkL4lO98cIgKt2TSHqxWJH0Idkv9oyBOrpL6QVFab/3sjd6V
-         ZbOw==
+        bh=d/Qfr113zCIU5rUe0KDXRj0KUMUinv6gA3VPY5V4Jtk=;
+        b=BEgWd9gAjpDfrKcn45x/GdeERHbjnDcCKqTXhkASChHioy0u9mDuzdcXPtPmOyMS+H
+         eCcA8C7l149W1Di8+zEHsj6kdPcIKfpK1YqDw/ioyotbhoEGvisNx9WTeSYlGBrphEMY
+         97LTh6AMlP6NXWXj7hP7Nkx/yBVVFVOVjW0kcfjP63ZN5VBM45n2qEnu/vR1IiSJMy8i
+         NXGh4p98qEdIcZ7on8UwFd1qiAXlnVdDdMWUSy21gQ89NnDg3sKM3E9pRXNo/XBtlXNy
+         C30WilYH1P7HXUJjM8Z68VAl9VW2krwWW2gmNMFYvce1KodyLuKLfUiI9MqqlAYBoDUU
+         znPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743612449; x=1744217249;
+        d=1e100.net; s=20230601; t=1743612451; x=1744217251;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GVMZzaRI0SYaZ9HIFXqjbn9kAaASuQl6uCuXVUyZL/Q=;
-        b=xKkeAyQo453GiivVjz5AKD0q8bb0MepvwPjsL6mKSlyVleQsgvgX5E1UTKoks4Ck+W
-         U14YtN114yJvQq3l5p4oP+XDZ2oVuoyG58X/HI2Pz9hR7C34lWC0Xs5/iio+lARcVyQI
-         sZFSMFBN+GVXs8wAD7VSvVLyK4X653Yp3+NFvuI4a+nq6xtSkR7YuK7i39/O1bCZ0UCd
-         Eb/HMEeEt3212wfTiezuFOeEYeOEdTOflkEbLMV165n6lk8MyQK6EQPOxa1/sNlpeCzP
-         u25vBqhd+3JIyp+ZHG40gLc/j/QpXVYZgTffU12TNj5Nt0YcY2wkosiRzXt+fwhz3TcJ
-         tU8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUwDsYdmupL4s6gcmt7cCb6sKtvNvljKkjompr2o3lGIR45wJaDymNwNYOhyDMBpcktkqg4k5MzEl8dE3sKeqiG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDJy7E6mULWEMExMHcX2F43VainoU/bMPZ0Ky9hPd5Bx8p9dEp
-	I+vkOlKncP2VTgICWugOtYZEZfK2Bv7pnOewmSsk2zWDD2PQCdGN3Pa2UY+jaSqH9PA5ExzL3IK
-	ygaBwUA==
-X-Google-Smtp-Source: AGHT+IGGJmZgIYf85aQoyCz2a/j1TJQUoHxYvSUmi17IBOewaANMK1sOAl6iEA30oqxeC5Z9G95o7Gt5xxAV
-X-Received: from pjbqj14.prod.google.com ([2002:a17:90b:28ce:b0:301:1bf5:2f07])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e4e:b0:2ee:e518:c1d8
- with SMTP id 98e67ed59e1d1-3053215ce9bmr27226504a91.30.1743612448791; Wed, 02
- Apr 2025 09:47:28 -0700 (PDT)
-Date: Wed,  2 Apr 2025 09:47:17 -0700
+        bh=d/Qfr113zCIU5rUe0KDXRj0KUMUinv6gA3VPY5V4Jtk=;
+        b=Iy5bQrk3BgTnMyzU7SJs9S2mbOJQPCbrLZGhefyX1CdSWOVh3zxUffmnT+x4roPj9a
+         6GnM7GT2Jjomazp4zHoYumBv90AGwlVQt8qbzWq7CsjEjXb1ymrKj4jzDEl0lSIhDkAo
+         girVWdTnRifkB9dgodDjfg7MKBukvWnc57vCGQWliaGJok/1Q3Faa886x0wBLksAgeBA
+         Ghhh9BaS6Hi9WUtCIhjJy05j3if6afBI3rII00WXUb0wHoO37hAckaDOYGWKBFUMduxK
+         fMIHHVZ2rJmtAR1y3eHG5XobXnOuw8YSkz7sxJXp8DR4SsVuHWHhSHJ2z68LyZJZC0dS
+         5Oeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWX1Unum/121kfGm7tOWNPl5umJ+qoEJG8p8/LkQW2yJt2AyuH5zvjTYQW49RympfZsSYqMQvaNZmfDSQo61r/Q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu1/P9ToD6mdb7FaByh0D02LBk3ByYz8Bm0zLl4VH5G1/UlCMU
+	aznLBAMs2I75AmGa77WYaVyYtgfrliELRnEECMYXiL2dNoQLMeIPL0yQEG5bTjwnrncxXpIEKWg
+	WRBInHA==
+X-Google-Smtp-Source: AGHT+IGhP8qElqcgJ4MyrXLm/aqq5o3XDeP+tTGfLtkiObvCW5hiKCTE3Ib7sJkQCsyZ3WFMN/lFRTtR3cPJ
+X-Received: from pjd15.prod.google.com ([2002:a17:90b:54cf:b0:2fc:aac:e580])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f60c:b0:223:5e76:637a
+ with SMTP id d9443c01a7336-2296c688a9dmr40198615ad.23.1743612451174; Wed, 02
+ Apr 2025 09:47:31 -0700 (PDT)
+Date: Wed,  2 Apr 2025 09:47:18 -0700
 In-Reply-To: <20250402164720.3847573-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250402164720.3847573-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250402164720.3847573-3-irogers@google.com>
-Subject: [PATCH v2 2/5] perf stat: Remove print_mixed_hw_group_error
+Message-ID: <20250402164720.3847573-4-irogers@google.com>
+Subject: [PATCH v2 3/5] perf evlist: Refactor evlist__scnprintf_evsels
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,90 +74,116 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-print_mixed_hw_group_error will print a warning when a group of events
-uses different PMUs. This isn't possible to happen as
-parse_events__sort_events_and_fix_groups will break groups when this
-happens, adding the warning at the start of perf of:
-
-  WARNING: events were regrouped to match PMUs
-
-As the previous mixed group warning can never happen, remove the
-associated code.
+Switch output to using a strbuf so the storage can be resized. Add a
+maximum size argument to avoid too much output that may happen for
+uncore events. Rename as scnprintf is no longer used.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 31 -------------------------------
- tools/perf/util/stat.h         |  1 -
- 2 files changed, 32 deletions(-)
+ tools/perf/builtin-record.c |  9 ++++++---
+ tools/perf/util/evlist.c    | 21 ++++++++++++---------
+ tools/perf/util/evlist.h    |  3 ++-
+ 3 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 1115efb380fb..aab3697aed63 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -798,30 +798,6 @@ static void abs_printout(struct perf_stat_config *config,
- 	print_cgroup(config, os, evsel->cgrp);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ba20bf7c011d..9a3f7d9f881d 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -51,6 +51,7 @@
+ #include "util/clockid.h"
+ #include "util/off_cpu.h"
+ #include "util/bpf-filter.h"
++#include "util/strbuf.h"
+ #include "asm/bug.h"
+ #include "perf.h"
+ #include "cputopo.h"
+@@ -2784,13 +2785,15 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		record__auxtrace_snapshot_exit(rec);
+ 
+ 	if (forks && workload_exec_errno) {
+-		char msg[STRERR_BUFSIZE], strevsels[2048];
++		char msg[STRERR_BUFSIZE];
+ 		const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
++		struct strbuf sb = STRBUF_INIT;
+ 
+-		evlist__scnprintf_evsels(rec->evlist, sizeof(strevsels), strevsels);
++		evlist__format_evsels(rec->evlist, &sb, 2048);
+ 
+ 		pr_err("Failed to collect '%s' for the '%s' workload: %s\n",
+-			strevsels, argv[0], emsg);
++			sb.buf, argv[0], emsg);
++		strbuf_release(&sb);
+ 		err = -1;
+ 		goto out_child;
+ 	}
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c1a04141aed0..ffb5be41a465 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -35,6 +35,7 @@
+ #include "util/util.h"
+ #include "util/env.h"
+ #include "util/intel-tpebs.h"
++#include "util/strbuf.h"
+ #include <signal.h>
+ #include <unistd.h>
+ #include <sched.h>
+@@ -2468,23 +2469,25 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx)
+ 	return NULL;
  }
  
--static bool is_mixed_hw_group(struct evsel *counter)
--{
--	struct evlist *evlist = counter->evlist;
--	u32 pmu_type = counter->core.attr.type;
--	struct evsel *pos;
--
--	if (counter->core.nr_members < 2)
--		return false;
--
--	evlist__for_each_entry(evlist, pos) {
--		/* software events can be part of any hardware group */
--		if (pos->core.attr.type == PERF_TYPE_SOFTWARE)
--			continue;
--		if (pmu_type == PERF_TYPE_SOFTWARE) {
--			pmu_type = pos->core.attr.type;
--			continue;
--		}
--		if (pmu_type != pos->core.attr.type)
--			return true;
--	}
--
--	return false;
--}
--
- static bool evlist__has_hybrid_pmus(struct evlist *evlist)
+-int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf)
++void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb, size_t max_length)
  {
  	struct evsel *evsel;
-@@ -886,8 +862,6 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 		if (counter->supported) {
- 			if (!evlist__has_hybrid_pmus(counter->evlist)) {
- 				config->print_free_counters_hint = 1;
--				if (is_mixed_hw_group(counter))
--					config->print_mixed_hw_group_error = 1;
- 			}
+-	int printed = 0;
++	bool first = true;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (evsel__is_dummy_event(evsel))
+ 			continue;
+-		if (size > (strlen(evsel__name(evsel)) + (printed ? 2 : 1))) {
+-			printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "," : "", evsel__name(evsel));
+-		} else {
+-			printed += scnprintf(bf + printed, size - printed, "%s...", printed ? "," : "");
+-			break;
++
++		if (!first)
++			strbuf_addch(sb, ',');
++
++		if (sb->len > max_length) {
++			strbuf_addstr(sb, "...");
++			return;
  		}
++		strbuf_addstr(sb, evsel__name(evsel));
++		first = false;
  	}
-@@ -1587,11 +1561,6 @@ static void print_footer(struct perf_stat_config *config)
- "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
- "	perf stat ...\n"
- "	echo 1 > /proc/sys/kernel/nmi_watchdog\n");
 -
--	if (config->print_mixed_hw_group_error)
--		fprintf(output,
--			"The events in group usually have to be from "
--			"the same PMU. Try reorganizing the group.\n");
+-	return printed;
  }
  
- static void print_percore(struct perf_stat_config *config,
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 2fda9acd7374..1bcd7634bf47 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -100,7 +100,6 @@ struct perf_stat_config {
- 	int			 times;
- 	int			 run_count;
- 	int			 print_free_counters_hint;
--	int			 print_mixed_hw_group_error;
- 	const char		*csv_sep;
- 	struct stats		*walltime_nsecs_stats;
- 	struct rusage		 ru_data;
+ void evlist__check_mem_load_aux(struct evlist *evlist)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index edcbf1c10e92..21f6bff319fd 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -20,6 +20,7 @@ struct pollfd;
+ struct thread_map;
+ struct perf_cpu_map;
+ struct record_opts;
++struct strbuf;
+ struct target;
+ 
+ /*
+@@ -430,7 +431,7 @@ int event_enable_timer__process(struct event_enable_timer *eet);
+ 
+ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
+ 
+-int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
++void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb, size_t max_length);
+ void evlist__check_mem_load_aux(struct evlist *evlist);
+ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
+ void evlist__uniquify_name(struct evlist *evlist);
 -- 
 2.49.0.504.g3bcea36a83-goog
 
