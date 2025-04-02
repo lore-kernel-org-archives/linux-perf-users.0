@@ -1,73 +1,72 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30DA1DFF0
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 15:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D1E1DFF0
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 15:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743608971; cv=none; b=XU2v47cxGbrrDU74P97an/ADi3Y0nSy0AuYUEjM5v8GNKD2BfuK6nNb3no331XGERSAuSSIjwrE9kzwn6wGs5wAlwz9d1JqrfoQ+yN1k+sUvgU5m0mBjh3WI66f5uLVTiAGMfWJt0PqC5gDfxdZc7udow1455fgR7MVZjv8fo5E=
+	t=1743609369; cv=none; b=QYwDgZ7WJGZLCumhwl/qO+3aRqHtr01iexwPIPMcO3FC181xaccCJEKU7PGJk7mwHd3/RbYYiUj4W5HwGzaDAoEOvfoTESETHoWKUHt6MYMbQEu9G9KcvndOWR83cfXh4JCJBfZSGCD0Dx7UeyhwpAdEwPA4K65c+SQaOT04Nj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743608971; c=relaxed/simple;
-	bh=6Ut/cxV+1k+mMg16QR1xNb0eR0mJR8T1x3alISxrsuA=;
+	s=arc-20240116; t=1743609369; c=relaxed/simple;
+	bh=XyKWvti3hY0z1mAL7iZwtV9RhqKk9pL7yLKr6k17Vo0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qC6nBIA7JonfizdY47H2qPAZgP+ViEtmMfo31QSbN+dDFdMSNKBgGv95SbMe1sQ6X6mKB35FmLZ8SxSUZREqdX8e+cYv5UenZk/x5PzfWQs6xWc8PorWkt4tej8m4fP/ZtxZBSMHWaK/+6JKHKgwPlIpQcgmDTu/0BrYOM3yPT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MpYc9hYC; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=RTeNL+UsvMeVZvTQzqDXIsl0E/8u2qUQdQujRG3sVDlnerqmkfed97+u0mWpOYldYAcIRucky0aa34msK/saAT501OIUjSy0cAL5338nhRIz0ul9OIXbxqHIA9x4iy1rV5/XMMaWkX9oEYUtiIEkBF1DVMRiW11GGpBx5WaDg9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EZGwfC3C; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MpYc9hYC"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2240aad70f2so279605ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 08:49:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZGwfC3C"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2263428c8baso207235ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 08:56:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743608969; x=1744213769; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743609367; x=1744214167; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+IHTKGBDG1tL7KtJr5lbczP6OiCQttkkS8rRMUhy8do=;
-        b=MpYc9hYCWv1rbSMrz+YC9x63GJf0EOLkY8/Vk73jaArkh+p1bj3Wfoxg7dDz+wblVc
-         Mf7sPqxVYqbVNx0IJxcfT+hhEYwb/2fd2b6Jm6gppupdDiaUcODulHzVUwpEvvfqkuGb
-         FlhTgjkTH91eIs/S+09SEBQTCbYDvUyZLOxs7mtMLip6ikW07QQCp9FD26KCbCvgSKRd
-         RAnJ6uhZ8mAq0oxv6bxuCfgtoEZ1VVV0CEOlZC8yaZHnFs5onRaTLiOs7tGfR/nlXlad
-         0uzI/lgeDlUUs/0QdiH1TmOsx7gbWJoauMgWoPnTfukDTrkGQq5YBYWiObSV+NvwQzMG
-         geBQ==
+        bh=PNIV6sAGnQHOVULr8YLORl8QJ6tuDPUwRvq/LUw32V4=;
+        b=EZGwfC3CWr0bFnLkj71GDCVXohUy0Lyzpbh+Wt0p2YE8iXpV+qcIP4G5bhPjcYIC3C
+         Ov+763Vqckbys6cyVSXAIgDoJALTg+NU79lONSHocojDjV5P4EOy1VqpAfzoQQn73sF3
+         gNwGRSGgnw44XTxNHcl5LrBQ8h7SrG3TtwZRC9VKxFCqawB8SEAaqUgFPblp0gVYTMDq
+         tu8lb6GevrEWh+YLs+rTzi4Rv42l5IyrBp6+zQ4t8OTbc898xMZKOOZRMQztesAqagwq
+         n9rudgiKhl3gZhB9FXvyzgSPkm8Le2OKeWHFRTTLmB31rudZBS0R0Ehgdfh9oBAV4OS6
+         XJyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743608969; x=1744213769;
+        d=1e100.net; s=20230601; t=1743609367; x=1744214167;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+IHTKGBDG1tL7KtJr5lbczP6OiCQttkkS8rRMUhy8do=;
-        b=TbUFetuYMcs9KoORJo1L/jumAjVabspgaTcUuVjDhyp/IBvqagjURjQmSVM06sjRMP
-         4Q2JJQ9bjFgV2CMwTHg1vsNiE7QJE3tUaWmcGByQfJY1bqwqjJSIW9ZF99dRvgYOX5Ry
-         xecQ7A8+CrhnsWupHDGiuBovcKJLa78moyP4+GYxRfXm/GhJgps9LvL/Yp2lYfPRjR3A
-         OyLngBbrls2c9dK/TplGnnGmg5uBCBNy61TiXZzJiqLXBfLM/tjfvnKaq3K1FJkRKDDq
-         GNju3uLJ7Jd7L/rIL1K7Bcf08L6rsNlBbStGQIasFs8wjpD770r8xzdQ/qjthrLJgHwT
-         5QvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlDtt3GnLLYh8p2hIjVLSZJFi6nQB3gYBj46H9cpdIETAhqrNkiS367W9XBHIqRyu8hwFORPsReNsf5vU3sQZR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGT5+IgsYgwvt3sN/vDH7YqmTIb3mWm1DavAeR1eTv0+8lXX71
-	2AvIt7FPNb7lPF0OUfCXwdtGV8keG8Kq3wgz1arcDuUAc6OIhAZncsokXpWyd31jPiF/CvcaP8A
-	uoO7BnSmMIBWsI1hjOLm43o2XPgHEUmdmmqQz
-X-Gm-Gg: ASbGncv3JPkUbvH/tltqLYr/7egx+bDGLGqQ9Rs6YJcEQ4nstcrwWJpFZG1tozqnlLt
-	12fvccaDViDaAc/iTMdLJiccZpQX3qNhtRPDV8DOEsfg+HbWV+gVVU8nFMzupucCSoSIC/q5hVD
-	J9pQyV6PBlTyGtns6wrvAWY8zXGJSzB8GAmyouNJg8AQcVRQukktfNyg==
-X-Google-Smtp-Source: AGHT+IExsoUmdM23Q1D/YLx8O4wuDufR1G6fK8eyvYNjtBDUzTicQjnkOegdTzdtcaUf/k57Fsc+dCi/WVW1TekL2jo=
-X-Received: by 2002:a17:902:d2c8:b0:216:21cb:2e14 with SMTP id
- d9443c01a7336-2296bdaea5dmr2668875ad.21.1743608968491; Wed, 02 Apr 2025
- 08:49:28 -0700 (PDT)
+        bh=PNIV6sAGnQHOVULr8YLORl8QJ6tuDPUwRvq/LUw32V4=;
+        b=OO2mODp9oJYItgqlA43JYi8B4EWoJcTbibgALe9XzN/a4ky83Wdu6oj2uY5LJTFLic
+         J6ZmazKt2uB3PhIY4RzRRjCBAt3m0VqfbtYtdXsbeqCW1CYeVmEMpyguatAp+KI7qoIw
+         YugJ+rqWM3PKOAko6Pnv6jPp7bCzyIcaBM+9fc0mdVyFxK+5NNaJPMRZQpFLqxTTapXc
+         RCRGKojFfYkQzrMEaWvJuDOMFsNg+GhPSKm3OcK/pXmo15xwbpFl1g+QV73k/O23Baox
+         XgDlRMr8AmQbp1R4ZaWG/g6pXbFi2LYyYcAtv75TM4o7Iwmdrc8XtxT/KLPQGSCM8Nyz
+         sGHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeBz3Yr8ohCwF3fJjA5Puv/a8MCKmmryZrd7AF8+9HS/y+QfQe2JFOaNLZRA2WaFRktB41esereRHLchfixNau@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTndVB6as/2Sw5SCwXkRhCDdeTjnd1gylsReEi0J/8JpEOw5BM
+	6da5O8jrRsjahHaFqbFQ13n18kwYDF6zFIB2IAPfjOkOoEc6Ws9rrmKALPJkw8Y3Ww6ykGXAoY3
+	j75YHXXPSxLugtqxIVD/2EMlnietQyfzOuJZL
+X-Gm-Gg: ASbGncu5YrVK8HcesLnNV/AnuzvJBUnHl6eD8faXGYj7bwJ22a7MQTGN8Lq7nibk+L8
+	Al3mQjzjvCM7A99Nyhl2OfPkc1ujSVKlJB/Tdcf5nu3K3aHHysfHB/UZXkFEe9oIFo27amZOBmg
+	SPtvbr+hu3PFi16rqPD5QdeT3uAMbKs40oO3IwzXpItsZTUI4Xqy3EAw==
+X-Google-Smtp-Source: AGHT+IFzrgWVYDk+TtJJE6DjKy6EC96iuo5v0H9HJQj8F7da7ncAwuctzGF+VTodNwtBQT2yGiZ9Bh8gH2JawBjPj6Y=
+X-Received: by 2002:a17:902:ccd1:b0:215:9ab0:402 with SMTP id
+ d9443c01a7336-22969e8bbcdmr4328925ad.18.1743609366923; Wed, 02 Apr 2025
+ 08:56:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318041442.321230-1-irogers@google.com> <20250318041442.321230-2-irogers@google.com>
- <28016335-385c-48b9-8767-9b087a0ec4cc@linux.intel.com>
-In-Reply-To: <28016335-385c-48b9-8767-9b087a0ec4cc@linux.intel.com>
+References: <20250318041442.321230-1-irogers@google.com> <20250318041442.321230-4-irogers@google.com>
+ <a1d59121-f56d-409d-88e9-32fe0b748aa2@linux.intel.com>
+In-Reply-To: <a1d59121-f56d-409d-88e9-32fe0b748aa2@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Apr 2025 08:49:17 -0700
-X-Gm-Features: AQ5f1Jq796U52_aSe_Kn7pKTK2dssVS2u53PYYYmR2NIr6w3FH4-0stY0FgCoDY
-Message-ID: <CAP-5=fXJ9pi+B_ppA93mE6gd8XYP4TDJThUreZeZxQtGwQ7Fug@mail.gmail.com>
-Subject: Re: [PATCH v1 1/5] perf stat: Better hybrid support for the NMI
- watchdog warning
+Date: Wed, 2 Apr 2025 08:55:55 -0700
+X-Gm-Features: AQ5f1Jo2iRe2Ngg7VrH4fUw31urDjxhb_isUqel5DFqkmdjYPwU52b61WPr6uCU
+Message-ID: <CAP-5=fWdvhoiKd41PUewR5TaaYOcuUPp5WThoOzt0rDrjTfruQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] perf evlist: Refactor evlist__scnprintf_evsels
 To: "Liang, Kan" <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,99 +80,142 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 8:23=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+On Wed, Apr 2, 2025 at 8:26=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
 m> wrote:
 >
 >
 >
 > On 2025-03-18 12:14 a.m., Ian Rogers wrote:
-> > Prior to this patch evlist__has_hybrid would return false if the
-> > processor wasn't hybrid or the evlist didn't contain any core
-> > events. If the only PMU used by events was cpu_core then it would
-> > true even though there are no cpu_atom events. For example:
+> > Switch output to using a strbuf so the storage can be resized. Rename
+> > as scnprintf is no longer used.
 > >
-> > ```
-> > $ perf stat --cputype=3Dcpu_core -e '{cycles,cycles,cycles,cycles,cycle=
-s,cycles,cycles,cycles,cycles}' true
-> >
-> >  Performance counter stats for 'true':
-> >
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >      <not counted>      cpu_core/cycles/                               =
-                         (0.00%)
-> >
-> >        0.001981900 seconds time elapsed
-> >
-> >        0.002311000 seconds user
-> >        0.000000000 seconds sys
-> > ```
-> >
-> > This patch changes evlist__has_hybrid to return true only if the
-> > evlist contains events from >1 core PMU. This means the NMI watchdog
-> > warning is shown for the case above.
->
-> Nit:
-> The function name may still bring confusions.
-> It may be better to change the function name as well, e.g.,
-> evlist__has_hybrid_pmus()? It implies more than one PMU.
-
-Thanks, I'll change in v2.
-
-Ian
-
-> Thanks,
-> Kan>
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/stat-display.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >  tools/perf/builtin-record.c |  9 ++++++---
+> >  tools/perf/util/evlist.c    | 19 +++++++++----------
+> >  tools/perf/util/evlist.h    |  3 ++-
+> >  3 files changed, 17 insertions(+), 14 deletions(-)
 > >
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-disp=
-lay.c
-> > index e852ac0d9847..f311f1960e29 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -825,13 +825,25 @@ static bool is_mixed_hw_group(struct evsel *count=
-er)
-> >  static bool evlist__has_hybrid(struct evlist *evlist)
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index ba20bf7c011d..cea5959adadc 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -51,6 +51,7 @@
+> >  #include "util/clockid.h"
+> >  #include "util/off_cpu.h"
+> >  #include "util/bpf-filter.h"
+> > +#include "util/strbuf.h"
+> >  #include "asm/bug.h"
+> >  #include "perf.h"
+> >  #include "cputopo.h"
+> > @@ -2784,13 +2785,15 @@ static int __cmd_record(struct record *rec, int=
+ argc, const char **argv)
+> >               record__auxtrace_snapshot_exit(rec);
+> >
+> >       if (forks && workload_exec_errno) {
+> > -             char msg[STRERR_BUFSIZE], strevsels[2048];
+> > +             char msg[STRERR_BUFSIZE];
+> >               const char *emsg =3D str_error_r(workload_exec_errno, msg=
+, sizeof(msg));
+> > +             struct strbuf sb =3D STRBUF_INIT;
+> >
+> > -             evlist__scnprintf_evsels(rec->evlist, sizeof(strevsels), =
+strevsels);
+> > +             evlist__format_evsels(rec->evlist, &sb);
+> >
+> >               pr_err("Failed to collect '%s' for the '%s' workload: %s\=
+n",
+> > -                     strevsels, argv[0], emsg);
+> > +                     sb.buf, argv[0], emsg);
+> > +             strbuf_release(&sb);
+> >               err =3D -1;
+> >               goto out_child;
+> >       }
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index 49e10d6981ad..96cfc7ed1512 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -35,6 +35,7 @@
+> >  #include "util/util.h"
+> >  #include "util/env.h"
+> >  #include "util/intel-tpebs.h"
+> > +#include "util/strbuf.h"
+> >  #include <signal.h>
+> >  #include <unistd.h>
+> >  #include <sched.h>
+> > @@ -2468,23 +2469,21 @@ struct evsel *evlist__find_evsel(struct evlist =
+*evlist, int idx)
+> >       return NULL;
+> >  }
+> >
+> > -int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char =
+*bf)
+> > +void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb)
 > >  {
 > >       struct evsel *evsel;
-> > +     struct perf_pmu *last_core_pmu =3D NULL;
-> >
-> >       if (perf_pmus__num_core_pmus() =3D=3D 1)
-> >               return false;
+> > -     int printed =3D 0;
+> > +     bool first =3D true;
 > >
 > >       evlist__for_each_entry(evlist, evsel) {
-> > -             if (evsel->core.is_pmu_core)
-> > +             if (evsel->core.is_pmu_core) {
-> > +                     struct perf_pmu *pmu =3D evsel__find_pmu(evsel);
-> > +
-> > +                     if (pmu =3D=3D last_core_pmu)
-> > +                             continue;
-> > +
-> > +                     if (last_core_pmu =3D=3D NULL) {
-> > +                             last_core_pmu =3D pmu;
-> > +                             continue;
-> > +                     }
-> > +                     /* A distinct core PMU. */
-> >                       return true;
-> > +             }
-> >       }
+> >               if (evsel__is_dummy_event(evsel))
+> >                       continue;
+> > -             if (size > (strlen(evsel__name(evsel)) + (printed ? 2 : 1=
+))) {
+> > -                     printed +=3D scnprintf(bf + printed, size - print=
+ed, "%s%s", printed ? "," : "", evsel__name(evsel));
+> > -             } else {
+> > -                     printed +=3D scnprintf(bf + printed, size - print=
+ed, "%s...", printed ? "," : "");
+> > -                     break;
+> > -             }
+> > -     }
 > >
-> >       return false;
+> > -     return printed;
+> > +             if (!first)
+> > +                     strbuf_addch(sb, ',');
+> > +> +          strbuf_addstr(sb, evsel__name(evsel));
+>
+> The evlist may include hundreds of events. The error msg will be too
+> huge for the case.
+
+I hear you, lots of uncore PMUs :-) I keep wanting to the PMU with an
+evsel to be a list. As you suggest in the next feedback, let's add an
+option to have some maximum for the perf record use case.
+
+Thanks,
+Ian
+
+
+> Thanks,
+> Kan
+>
+> > +             first =3D false;
+> > +     }
+> >  }
+> >
+> >  void evlist__check_mem_load_aux(struct evlist *evlist)
+> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> > index edcbf1c10e92..5fe5cfbbebb1 100644
+> > --- a/tools/perf/util/evlist.h
+> > +++ b/tools/perf/util/evlist.h
+> > @@ -20,6 +20,7 @@ struct pollfd;
+> >  struct thread_map;
+> >  struct perf_cpu_map;
+> >  struct record_opts;
+> > +struct strbuf;
+> >  struct target;
+> >
+> >  /*
+> > @@ -430,7 +431,7 @@ int event_enable_timer__process(struct event_enable=
+_timer *eet);
+> >
+> >  struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
+> >
+> > -int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char =
+*bf);
+> > +void evlist__format_evsels(struct evlist *evlist, struct strbuf *sb);
+> >  void evlist__check_mem_load_aux(struct evlist *evlist);
+> >  void evlist__warn_user_requested_cpus(struct evlist *evlist, const cha=
+r *cpu_list);
+> >  void evlist__uniquify_name(struct evlist *evlist);
 >
