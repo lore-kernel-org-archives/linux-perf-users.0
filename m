@@ -1,164 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E88136E37;
-	Wed,  2 Apr 2025 16:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EFF13957E
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 16:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611894; cv=none; b=HqbWteaZ2DjQDlwSLmcWD+h+Ruf+biTKqGlMOu1qIlrOf+VSS2FUptCckaMsIdx0s2zEx9bxo04ipvMIO1p+MpY107C2kDO11sDej44DD1G+8Q+Rb//ShliYUcEeBZ9c2QzvidlRsGoJvyv6Im0L1noJfGGwO7rA51mCaI/Tk0s=
+	t=1743612447; cv=none; b=OdCBTRqmZoRHftq6JtgibcW35lriC0puNQ4tft9JfW1hw0D46nuaZejbzScKvzsS7X3qOdvu4paj385/HlJp8p7P4QFAvcgYisM3mSKxfH/AUVrxA4qmoPk2oqfDBVCv8GBNhrJNk5nMMFtnCkl5C+DEdM+Tif1Hl4BPIdkHb14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611894; c=relaxed/simple;
-	bh=PiLjoXvQRf2kVr7SQ6qTUAAZ0gGf8NJL48KaDm/P/wQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ni3K7J2SR1dEikusrJ9uVwV55bnQqjo4hagQmo88+k/mHAALzgdBrFEvBbH4VIU77CTFKkdbbuATQZK+8K/kPOQBFWMTP7UnhcdJmEzb5dSgXTLcEZuf+YSRze/49859FiJonqB49wBuFm3fqPZr8WjDDQppAjkb+gEivL/uyyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D59091F91;
-	Wed,  2 Apr 2025 09:38:14 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89AE93F63F;
-	Wed,  2 Apr 2025 09:38:11 -0700 (PDT)
-Date: Wed, 2 Apr 2025 17:38:07 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
-Message-ID: <20250402163807.GP115840@e132581.arm.com>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-10-irogers@google.com>
- <20250402143541.GM115840@e132581.arm.com>
- <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
+	s=arc-20240116; t=1743612447; c=relaxed/simple;
+	bh=8uZrNecXdf9WMTuxk6LZlsdLmuyrTIq1kpqDpzaDdh4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=FxTB7vLk1x6AnBUJGmjWy55LB42cG1Wy2kfjFSe6GnceffrO7f3irpFCJF+Xtr+fSqNgTD+3f5ivfYWV2HBV2lIsF5z/4EfsL/k3D7GB5JGns7zsJ15LDDTDyjjY0q/RvgfLqEMptYhmvy/agGX85uGSjDGxiFwSMVYAdJXpxGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EsSODmUJ; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsSODmUJ"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7395095a505so3441b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 09:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743612445; x=1744217245; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PVnv1ifk/rRII3YKtoo3yxRHMTzfbahaxqJkJewxpwQ=;
+        b=EsSODmUJvDQXtWXBuZ0ePbkBEmlQp4xH1iFsDDRqvYxQ7kJj/w0XNKy/xObI2yQa/g
+         iGKS4tkMvPwljwtwaO10QJFCps7XfdyRHsEjy6GU2hKUaIBSPXKRJ90jPbp8kxTXbUoo
+         2JuNhvSHZtcemg7FgECUP4Vf9iyCl1Ej4Yj0zAz/B7kzlEHn8W5m1mBgIMronHebI+zL
+         orxfytBLFyukp1oL6Qj9ueKPxy9hTJYf1KlsVXDUtQbxTtiZoUMLOQzKborkFGRnvB65
+         DksqQX8QlXO4+cwc3EIG7y4o9jIJCUcW9fakHJxOIN/qx5EUZq3ee3Ws9nq7B4tlYvgS
+         lt0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743612445; x=1744217245;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PVnv1ifk/rRII3YKtoo3yxRHMTzfbahaxqJkJewxpwQ=;
+        b=m6Pv91CV/075WaB8Jfj/7M1PNuJTict9yBPrelbKSIX9pPDn83r4xnF9xCKEpsf/51
+         I2qGCAj9XyZVApbZXtJbp/5CF/+ZsCUYCL8a2KGtx4SykSzs3M2e7B5zwJ4THxsoDL25
+         Ja0dYy+7GQ9rE3Szg9HTMXLh4wPs6EgTYgSAPL1DaVZ5uf8QezGEIWMx04m2/DXwOw+K
+         NAlTtkkjg8rUzOCvlyOv6p36DW62AXhZ7yOXo9EsVNLund2syNnhFhjzZJAgjfwp+0qq
+         s1PXkdhqsfI9HfkW4uAQas1VI+16pgE+3bmwNOPLGnYhyC/yck8qAiju41hgRWQH3aJU
+         n2DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkqz3Mo7IlZqy3vFN9JosyqMz4agudxROhdEWeBw1FtLFWPYMmR6xC0F+SeHFjcO2J800fyGsEKZAaTmj/w783@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDMHN4eBSxF4GrTBVpJp8tEJZVy/hxNUJa7qgf1+3LNhQWmF3Y
+	L29JGTOR8+O9nFFctP3TWgV7VC1uHrZ532aQBxaosM589RnBgo6mnAl0UlE656fWaQ6L/fP0L7l
+	4v2ChSw==
+X-Google-Smtp-Source: AGHT+IFbMkJj9ne/OwXFL6hbxTJviKMau0ZrjEO9my5uifu4AeWO0qy/X/nYCmeUaICKAHkEaZqh7otMMDef
+X-Received: from pfbei43.prod.google.com ([2002:a05:6a00:80eb:b0:736:46a8:452d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1251:b0:736:34a2:8a20
+ with SMTP id d2e1a72fcca58-739804356e6mr25656621b3a.21.1743612445110; Wed, 02
+ Apr 2025 09:47:25 -0700 (PDT)
+Date: Wed,  2 Apr 2025 09:47:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250402164720.3847573-1-irogers@google.com>
+Subject: [PATCH v2 0/5] NMI warning and debug improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ian,
+The NMI warning wouldn't fire even if all the events were for one PMU
+type. Remove a nearby, and no longer useful, mixed hardware event
+group function. Improve the evlist to string function and dump it in
+verbose mode after the reordered events warning.
 
-On Wed, Apr 02, 2025 at 08:42:58AM -0700, Ian Rogers wrote:
+As commonly happens legacy events like instructions will be uniquified
+to hybrid events like cpu_core/instructions/, even though the
+encodings differ. To make this correct either:
+https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
+or:
+https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-irogers@google.com/
+needs merging.
 
-[...]
+v2: Rename evlist__has_hybrid to evlist__has_hybrid_pmus and add a
+    max_length parameter to evlist__format_evsels as suggested by Kan
+    Liang.
 
-> On Wed, Apr 2, 2025 at 7:35 AM Leo Yan <leo.yan@arm.com> wrote:
-> >
-> > On Tue, Apr 01, 2025 at 11:23:07AM -0700, Ian Rogers wrote:
-> >
-> > [...]
-> >
-> > > @@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
-> > >       int err = 0;
-> > >
-> > >       for (struct test_suite **t = suites; *t; t++) {
-> > > -             int i, len = strlen(test_description(*t, -1));
-> > > +             int i;
-> > > +             int len = (int)strlen(test_description(*t, -1));
-> >
-> > Thanks for huge polish.
-> >
-> > Just a concern from me.  Throughout this patch, the methodology is not
-> > consistent.  Some changes update variable types which is fine for me.
-> >
-> > But the case above it simply cast size_t to int.  Should we update the
-> > variable type as 'size_t' at here?
-> 
-> Thanks Leo, I played around with it, but don't mind if someone wants
-> to do it a different way. I was trying to make the changes minimal.
-> The problem typically with size_t is we then use the value, for
-> example, as a printf size modifier and need to introduce lots of casts
-> back to being an int.
+Ian Rogers (5):
+  perf stat: Better hybrid support for the NMI watchdog warning
+  perf stat: Remove print_mixed_hw_group_error
+  perf evlist: Refactor evlist__scnprintf_evsels
+  perf evlist: Add groups to evlist__format_evsels
+  perf parse-events: Add debug dump of evlist if reordered
 
-This conclusion is not quite right, see:
-https://stackoverflow.com/questions/2524611/how-can-one-print-a-size-t-variable-portably-using-the-printf-family
+ tools/perf/builtin-record.c    |  9 ++++---
+ tools/perf/util/evlist.c       | 34 ++++++++++++++++-------
+ tools/perf/util/evlist.h       |  3 ++-
+ tools/perf/util/parse-events.c | 16 ++++++++---
+ tools/perf/util/stat-display.c | 49 +++++++++++-----------------------
+ tools/perf/util/stat.h         |  1 -
+ 6 files changed, 60 insertions(+), 52 deletions(-)
 
-> When this isn't too great I've done it, but in
-> this case I think keeping the int, the lack of casts but a cast here
-> to capture that we expect test descriptions to fit in the size of an
-> int is the least worst option.
+-- 
+2.49.0.504.g3bcea36a83-goog
 
-I would say in another way.  After we enabled a compiler warning
-option, this will give us a chance to improve code by dismissing
-the warnings (and avoid potential bugs).
-
-If we use casts just to silence warnings, we also lose the opportunity
-to improve code quality.  The changes in this series that fix type
-mismatches are good, but I think the use of casts is not particularly
-helpful - we're simply switching from implicit compiler casts to
-explicit ones.
-
-Thanks,
-Leo
