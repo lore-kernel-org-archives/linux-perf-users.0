@@ -1,132 +1,124 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F358A1F417D
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 20:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEA62E3360;
+	Wed,  2 Apr 2025 20:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743624986; cv=none; b=PLjNwUJBy7XKu2Wv1lQnhkdPLH+0Xj7HorRi+/qCYc9eHV74EN2iTYezv5lJupl3o4XTw8DCEMMBjiCWCl6sSCKC1ZcQ+dRH/Tyq72kpJPbg68o4KHKywuTSlRCoEa3C/czSCzZC/rd7/lKwC6T+C8yMJMNSdeYpF1ikmJaP4DE=
+	t=1743626011; cv=none; b=IhGfMegeuFuR47UZ5ACH2fWKjIXspPzMqR8RAyqWjA4bri+9Z5PP1TttgzqUqa31nbEt6MozZfAKeKUH/JoR2/1hR5MTIL82IfxUzEoq9VANiit3AIjSM0Fopu6TjTMhsM+vwci7V/IQnXKjIpPFTsstI/DNyIJaX5fj+zZoCuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743624986; c=relaxed/simple;
-	bh=XJNVlfb9B6e09OVvYHlLgV02vSfa13DfWe+IMu0BsHw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=hXid6aMff4bLu9CPEtozTPLmY7pkjuirq2zXpy/YooN5fWtdnWvmfbNLdmEaMzaV7mBEemGoORFe426ur/CE+1phSMTZ0Ad9m65XmmNW3peFIOITCapANjMtR0lrc7q6dJ20FGXIKip8u9Lod1ipR0bHuCjU5QUPjt7loEaEbhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p2EsBXdq; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1743626011; c=relaxed/simple;
+	bh=Ky2oDARbnBISRNFB24tJGN0+lhE4zfoNlYttXQ5NtRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=c5UA2CFdoFf3MeG7JZ5InDcL5m622eow7L+7W60eqLeJ3wfvCqCf3rWbB8qVBQedWNL4ZAutGX3Fqwkeu5aGFfrCx7sA1FmGuUC4CuJt43YB0pmOjvwMi7G4ppTLEOfyzFSqgjcVmrWf9MJbyDj2ZgiH47KpDI/YZi3cxxx7uSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VDDYmRCY; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2EsBXdq"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7aecba07so160666a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 13:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743624984; x=1744229784; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B2hDS3YsXTlEuSmhORL5o7layHPktsvi9Jj/B/AMxqI=;
-        b=p2EsBXdq+WB49CIJz7a4CEZ/iN451SQ15WCnD8Ws39ZCa4ED37hwZtn41CMRTSa50q
-         STB6GmuXsBffgZr0cFyYbUP+Hql/6APVSpdqspqSyp2oOlBWw3OL7YPqATp6th3+6MYG
-         AJE772kpDtSTkosM6Tw4y1hv+BIFKwId18DgA3KkyhHoRhuz+TBmnxDxj5up5+RwjPYR
-         7+CdWs8i8mWDIjncbHn/OI51owo7QbvGd2/3Tvv3orivDa+L2DMvxntbFPR1vDI1/gQZ
-         1G7lzM/ErCVt1BaPpegr3Yuz6lHDzSqObpjUnuXcbEtP5x9Z1U1FZXKWVWgWfdOgx4uB
-         OASw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743624984; x=1744229784;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B2hDS3YsXTlEuSmhORL5o7layHPktsvi9Jj/B/AMxqI=;
-        b=JXWq7qSqvCW6Wm1Xe8umzaWRwy3Yaa9vzi7HUhPA+XNO9hoLfEwSmz23292ZVjD4gu
-         SpN2mg1P/rfEtsP/aRcOlwcu8UuCcg66R1ei+Bsr7VIrrJr1YI3tMzd2FPQlRD3fX6PW
-         qvDjBVDgyD8iMDo50fQEzDqUHiEUfc8oxeYjPfmhTjw8Fmru9fIh1ZSeuQaK+D3ZPAoC
-         3e4WDCJzSRC6xRgKxwpRrPBIRzyFx+DFMR8VmWyxl8JWrAv0Rqz4s8ynrygUD8cUiHtk
-         QCncKDjaebtsS+lp5jq3RnCJ6+SP6WS0ifsoPBxRY5A/5v82BEezVWKUUd+CU6/cw+uz
-         ddsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUW2X+SLWXDVblFIjPh5/1Kbalu7zDR0xsIr8ioIFuvT411i3lZcO6Oq7Zaon/tv4ODa4kxCpkAu6zcnOGNNhIq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXzKhjgMH2Xj7f5GOtYGkiNZGC1wyk0eHkuMnkmPXWHHHssN/p
-	UkOrYsOOWQgaE1t8aeO5cBoZAXCyEGHHqms8w6onhvFVSbTTwvCinmfXNS0OzYbBjLBPmB9lAYv
-	r1JvUbw==
-X-Google-Smtp-Source: AGHT+IGWRDhVif65PZjK6L6tokXcwfnxg3KYz2H32NL1j6yAsld5CATaklhVtmImMk0tbsc8phvPpUNyY8GA
-X-Received: from pjd11.prod.google.com ([2002:a17:90b:54cb:b0:2ff:5752:a78f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f92:b0:2f7:e201:a8cc
- with SMTP id 98e67ed59e1d1-305320b1002mr31454142a91.18.1743624984352; Wed, 02
- Apr 2025 13:16:24 -0700 (PDT)
-Date: Wed,  2 Apr 2025 13:15:49 -0700
-In-Reply-To: <20250402201549.4090305-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VDDYmRCY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743626010; x=1775162010;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=Ky2oDARbnBISRNFB24tJGN0+lhE4zfoNlYttXQ5NtRY=;
+  b=VDDYmRCYXGm4NjoCo569UUQkbsKUBAuygV5z7WheTfUfNr90jd7GaJr1
+   GQAPnihFbaTrzmzQzWsWmKLkC2US5OyhwXnicCtibZ7p6cDcBLIP26X4Y
+   Paqnlj65+S5UMx0iaEfNmmHCp5Xq2qejAXB8aaqoZcJwT431Gu/9vi5+u
+   sUwcIqduL+1loaM4bcUwcOVu7BrRsZiLOmyy2rOpIvzYxAsZcediGQrhZ
+   IOkoz8tdaREGOULGmPbd9svhQTjrxOHdArqasy+CQywtlED7JQm7Jg0FS
+   lfsox2zmlKS1gGmdyhVDXdS3bPv9Gs8yBDvvXS33Eyovbgu2nadZjHNcZ
+   g==;
+X-CSE-ConnectionGUID: Ay3Zd135QMa1s+OYe3ring==
+X-CSE-MsgGUID: rJHJWE+TSkuX8DaghCohEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55207241"
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="55207241"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 13:33:29 -0700
+X-CSE-ConnectionGUID: pC++GfITSmSZ+9DVxlAD3Q==
+X-CSE-MsgGUID: sqitUD0ZTlWA5WrYeIByVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="157799585"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 13:33:28 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 5199B20B5736;
+	Wed,  2 Apr 2025 13:33:26 -0700 (PDT)
+Message-ID: <18c2fb33-2b3a-4ebe-ab26-8cebe0b6b94c@linux.intel.com>
+Date: Wed, 2 Apr 2025 16:33:25 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] NMI warning and debug improvements
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Howard Chu <howardchu95@gmail.com>,
+ Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>,
+ "Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen
+ <ak@linux.intel.com>, James Clark <james.clark@linaro.org>,
+ Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 References: <20250402201549.4090305-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250402201549.4090305-6-irogers@google.com>
-Subject: [PATCH v3 5/5] perf parse-events: Add debug dump of evlist if reordered
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250402201549.4090305-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add debug verbose output to show how evsels were reordered by
-parse_events__sort_events_and_fix_groups. For example:
-```
-$ perf record -v -e '{instructions,cycles}' true
-Using CPUID GenuineIntel-6-B7-1
-WARNING: events were regrouped to match PMUs
-evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
-```
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5152fd5a6ead..7952f431f82b 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -28,6 +28,7 @@
- #include "util/evsel_config.h"
- #include "util/event.h"
- #include "util/bpf-filter.h"
-+#include "util/stat.h"
- #include "util/util.h"
- #include "tracepoint.h"
- 
-@@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 	if (ret2 < 0)
- 		return ret;
- 
--	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
--		pr_warning("WARNING: events were regrouped to match PMUs\n");
--
- 	/*
- 	 * Add list to the evlist even with errors to allow callers to clean up.
- 	 */
- 	evlist__splice_list_tail(evlist, &parse_state.list);
- 
-+	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
-+		pr_warning("WARNING: events were regrouped to match PMUs\n");
-+
-+		if (verbose > 0) {
-+			struct strbuf sb = STRBUF_INIT;
-+
-+			evlist__uniquify_name(evlist);
-+			evlist__format_evsels(evlist, &sb, 2048);
-+			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
-+			strbuf_release(&sb);
-+		}
-+	}
- 	if (!ret) {
- 		struct evsel *last;
- 
--- 
-2.49.0.504.g3bcea36a83-goog
+On 2025-04-02 4:15 p.m., Ian Rogers wrote:
+> The NMI warning wouldn't fire even if all the events were for one PMU
+> type. Remove a nearby, and no longer useful, mixed hardware event
+> group function. Improve the evlist to string function and dump it in
+> verbose mode after the reordered events warning.
+> 
+> As commonly happens legacy events like instructions will be uniquified
+> to hybrid events like cpu_core/instructions/, even though the
+> encodings differ. To make this correct either:
+> https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
+> or:
+> https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-irogers@google.com/
+> needs merging.
+> 
+> v3: Increase the verbose dump length from 1024 to 2048 as requested by
+>     Kan Liang.
+> 
+> v2: Rename evlist__has_hybrid to evlist__has_hybrid_pmus and add a
+>     max_length parameter to evlist__format_evsels as suggested by Kan
+>     Liang.
+> 
+> Ian Rogers (5):
+>   perf stat: Better hybrid support for the NMI watchdog warning
+>   perf stat: Remove print_mixed_hw_group_error
+>   perf evlist: Refactor evlist__scnprintf_evsels
+>   perf evlist: Add groups to evlist__format_evsels
+>   perf parse-events: Add debug dump of evlist if reordered
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> 
+>  tools/perf/builtin-record.c    |  9 ++++---
+>  tools/perf/util/evlist.c       | 34 ++++++++++++++++-------
+>  tools/perf/util/evlist.h       |  3 ++-
+>  tools/perf/util/parse-events.c | 16 ++++++++---
+>  tools/perf/util/stat-display.c | 49 +++++++++++-----------------------
+>  tools/perf/util/stat.h         |  1 -
+>  6 files changed, 60 insertions(+), 52 deletions(-)
+> 
 
