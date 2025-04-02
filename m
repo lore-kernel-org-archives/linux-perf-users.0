@@ -1,32 +1,32 @@
 Received: from mx10.gouders.net (mx10.gouders.net [202.61.206.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2B478C91;
-	Wed,  2 Apr 2025 21:37:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0286C1F4282;
+	Wed,  2 Apr 2025 21:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.206.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743629851; cv=none; b=K/YRQ3snpJhLcmySVxEWB0YZbKeBGI6iSlAXcshKGjRfGz9qCtscGKwu9w96Qxk4IFb2dWIC2Qev2GrDpM/8dJYMSbFB6BIE0q7ZDTWN+fFuKAGsy0cevyuv6X0klvv5MmR05JFAVexgHo4M2fvTfr1bPR19Fv0/CMBKnNkqMWU=
+	t=1743629853; cv=none; b=VROuYveHGb+3yNIb6PrOWJ97gU8y+1VIcrjqvyc5SxABQATBPjUYITiKsElZPaFxTk1QuMBKEgqV5Wo56j8Pz++xV8ewfJh4OJceGCxJDvZ2oOfVLkF5JbrVAM/veXhR8hODm6KCoTth0CsOXt0Z0RWEmh5wTGTEuvH+NlqTZkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743629851; c=relaxed/simple;
-	bh=AUCydmqSmVOFaOQ2zh4o1+wyn38LB7IyJpt6YlS8YA8=;
+	s=arc-20240116; t=1743629853; c=relaxed/simple;
+	bh=fJ5TqShwUQ6IugRAtIpS4YeDiS7gskEmIXAXiTFahNA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lUNfUU5JWnFUd8y8SVAiS4R0WyAbSR3xgvzCZVlxNKTZzAWl3pMuf2J1XX3JmiVm5NG+nHMPJw8yWLa2Q6ABlR+ixa4V0i2D1jxtvFFuIrsScRUk9X3Tw2UmsUQGp6WV7AKxPuS5tz3vVhLtSlgRV4THpYMWLtveGVwgzOEAIjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net; spf=pass smtp.mailfrom=gouders.net; dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b=t/ESMrOg; arc=none smtp.client-ip=202.61.206.94
+	 MIME-Version; b=B+V4TxrAWjyjqKX8ESogztbpo9l9S0KHOogSbeHsECQQT0Q/m6G2T1pmnOrYkBRUQNecl2sWmNZsI3qT4hJuDl82OdEUQz3Ve3mupKNdm25F+SMslIjV1FGr/GlAedLsRJmjL5tFjKHb5NpKksmkR9ynqHPF3zpw6VJyh3rL7CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net; spf=pass smtp.mailfrom=gouders.net; dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b=tzUXNfrq; arc=none smtp.client-ip=202.61.206.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gouders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b="t/ESMrOg"
+	dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b="tzUXNfrq"
 Received: from localhost (ip-109-42-179-236.web.vodafone.de [109.42.179.236])
 	(authenticated bits=0)
-	by mx10.gouders.net (8.17.1.9/8.17.1.9) with ESMTPSA id 532LPLq1030794
+	by mx10.gouders.net (8.17.1.9/8.17.1.9) with ESMTPSA id 532LP6Vx030779
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 2 Apr 2025 23:25:21 +0200
+	Wed, 2 Apr 2025 23:25:06 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gouders.net; s=gnet;
-	t=1743629121; bh=AUCydmqSmVOFaOQ2zh4o1+wyn38LB7IyJpt6YlS8YA8=;
+	t=1743629107; bh=fJ5TqShwUQ6IugRAtIpS4YeDiS7gskEmIXAXiTFahNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=t/ESMrOgBxbLcv78M+ChSoLvK0CA+TcGc58RevoTHS8y59Po0jJTRUEDwH+YlRDqX
-	 jw6QDM/2nkestVDvMidjFDdqsC48vPRW7HZGI7lRSfe4qeTz8YGBRmW/6aeXFd7kA7
-	 mo1I4jVsd/VUqMpAGH8A43lPY4SlOViiPdw2CyfQ=
+	b=tzUXNfrq01jfWT586TdsvyIZSUX9z2HruBuqtWKWmU20juMY4R79v87FXhM+XfcwC
+	 kCatDuz3fdiVXeDHxOME7q73xq73j9Wo9QCZgomjOqr3kt1WHe8CU2UShofo8Q4soy
+	 BUQT+dBL3th+gotpKw+KvUPouFtiKWHZMqGAhL8U=
 From: Dirk Gouders <dirk@gouders.net>
 To: Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -34,9 +34,9 @@ To: Namhyung Kim <namhyung@kernel.org>,
 Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
         Dirk Gouders <dirk@gouders.net>, LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf bench sched pipe: introduce multipliers for number of processes
-Date: Wed,  2 Apr 2025 23:15:28 +0200
-Message-ID: <20250402212402.15658-4-dirk@gouders.net>
+Subject: [PATCH 2/3] perf bench sched pipe: add complete graph simulation
+Date: Wed,  2 Apr 2025 23:15:27 +0200
+Message-ID: <20250402212402.15658-3-dirk@gouders.net>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <20250402212402.15658-2-dirk@gouders.net>
 References: <20250402212402.15658-2-dirk@gouders.net>
@@ -48,203 +48,181 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce multipliers to specify the number of processes to run:
+Currently, we have only one worker function: the simulation of a ring
+for token traversal.
 
-K|K|m|M: multiply leading number by 2^10 or 2^20, respectively
+Add another worker to simulate a complete graph (Kn) for token
+traversal.  A new option -K/--Kn can be used to use the new worker.
 
-p|P: multiply intermediate result by number of online processors
+Different workers could be interesting, because they seem to realize
+workload varieties noticeable by perf-report(1), for example:
 
-Examples:
+(booted with mitigations=off, 6 processes)
 
--p  2K = 2048
--p 10p = 10 * number of online processors
--p 1kp = 1024 * number of online processors
+Ring simulation:
+
+Samples: 92K of event 'cycles:P', Event count (approx.): 18690208287
+Overhead  Command     Shared Object         Symbol
+  13.16%  sched-pipe  [kernel.kallsyms]     [k] timerqueue_add
+   7.10%  sched-pipe  [kernel.kallsyms]     [k] read_hpet
+   3.36%  sched-pipe  [kernel.kallsyms]     [k] _copy_from_iter
+   3.23%  sched-pipe  [kernel.kallsyms]     [k] _copy_to_iter
+   2.64%  sched-pipe  [kernel.kallsyms]     [k] vfs_write
+   2.55%  sched-pipe  [kernel.kallsyms]     [k] vfs_read
+
+Kn simulation:
+
+Samples: 163K of event 'cycles:P', Event count (approx.): 100366721164
+Overhead  Command     Shared Object         Symbol
+   5.11%  sched-pipe  [kernel.kallsyms]     [k] _copy_from_iter
+   4.90%  sched-pipe  [kernel.kallsyms]     [k] queued_spin_lock_slowpath
+   3.99%  sched-pipe  [kernel.kallsyms]     [k] _copy_to_iter
+   3.35%  sched-pipe  [kernel.kallsyms]     [k] timerqueue_add
+   2.80%  sched-pipe  [kernel.kallsyms]     [k] check_preemption_disabled
+   2.56%  sched-pipe  [kernel.kallsyms]     [k] vfs_write
+   2.40%  sched-pipe  [kernel.kallsyms]     [k] vfs_read
 
 Signed-off-by: Dirk Gouders <dirk@gouders.net>
 ---
- tools/perf/Documentation/perf-bench.txt | 14 ++++++
- tools/perf/bench/sched-pipe.c           | 32 ++++++++++++++
- tools/perf/util/string.c                | 58 +++++++++++++++++++++++++
- tools/perf/util/string2.h               |  1 +
- 4 files changed, 105 insertions(+)
+ tools/perf/Documentation/perf-bench.txt |  5 ++
+ tools/perf/bench/sched-pipe.c           | 62 +++++++++++++++++++++++--
+ 2 files changed, 63 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index c1f479de9ded..ed74532ee28d 100644
+index 5c8dc99e1c57..c1f479de9ded 100644
 --- a/tools/perf/Documentation/perf-bench.txt
 +++ b/tools/perf/Documentation/perf-bench.txt
-@@ -149,6 +149,20 @@ make sure that the cgroups exist and are accessible before use.
- -p::
- --nprocs=::
- Number of processes to use for sending tokens along the pipes.
-+This option accepts a number follwed by optional (case insensitive)
-+multipliers in this order:
-+
-+- k, m
-++
-+Multipliers 1024 and 1048576 for the leading number.
-+
-+- p
-++
-+Multiplier replaced by the number of online processors.
-+
-+Example:
-+
-+        -p 1kP means: 1024 * number of online processors
+@@ -130,6 +130,11 @@ process).
  
- Example of *pipe*
+ Options of *pipe*
  ^^^^^^^^^^^^^^^^^
++-K::
++--Kn::
++Simulate a complete graph instead of a ring for sending tokens.
++Each process sends and receives tokens to/from every other process.
++
+ -l::
+ --loop=::
+ Specify number of loops.
 diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-index 553e5ead254f..1540cf46290a 100644
+index 89a54d33eee0..553e5ead254f 100644
 --- a/tools/perf/bench/sched-pipe.c
 +++ b/tools/perf/bench/sched-pipe.c
-@@ -47,6 +47,8 @@ struct thread_data {
- #define LOOPS_DEFAULT 1000000
- static	unsigned int		loops = LOOPS_DEFAULT;
+@@ -12,7 +12,8 @@
+ #include <subcmd/parse-options.h>
+ #include <api/fs/fs.h>
+ #include "bench.h"
+-#include "util/cgroup.h"
++#include <util/cgroup.h>
++#include <util/string2.h>
  
-+static const char *nproc_str;	/* String that specifies a number of processes. */
-+
- /* Use processes by default: */
- static bool			threaded;
+ #include <unistd.h>
+ #include <stdio.h>
+@@ -51,6 +52,7 @@ static bool			threaded;
  static unsigned int		nr_threads = 2;
-@@ -91,6 +93,8 @@ static int parse_two_cgroups(const struct option *opt __maybe_unused,
  
- static const struct option options[] = {
+ static bool			nonblocking;
++static bool			Kn_mode;	/* Toggle for ring mode -> complete graph mode */
+ static char			**cgrp_names;
+ static struct cgroup		**cgrps;
+ 
+@@ -91,6 +93,7 @@ static const struct option options[] = {
  	OPT_BOOLEAN('n', "nonblocking",	&nonblocking,	"Use non-blocking operations"),
-+	OPT_STRING('p', "nprocs",	&nproc_str,	"2P",
-+		   "Number of processes (2P := 2 * online processors)"),
  	OPT_UINTEGER('p', "nprocs",	&nr_threads,    "Number of processes"),
  	OPT_UINTEGER('l', "loop",	&loops,		"Specify number of loops"),
- 	OPT_BOOLEAN('K', "Kn",		&Kn_mode,	"Send tokens in a complete graph instead of a ring."),
-@@ -279,6 +283,31 @@ static void *worker_thread_ring(void *__tdata)
- /* Ring mode is the default. */
- void * (*worker_thread)(void *) = worker_thread_ring;
++	OPT_BOOLEAN('K', "Kn",		&Kn_mode,	"Send tokens in a complete graph instead of a ring."),
+ 	OPT_BOOLEAN('T', "threaded",	&threaded,	"Specify threads/process based task setup"),
+ 	OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
+ 		     "Put sender and receivers in given cgroups",
+@@ -189,11 +192,55 @@ static inline int read_pipe(struct thread_data *td)
+ 	return ret;
+ }
  
 +/*
-+ * Get number of processes from the given string,
-+ * e.g. "1k" => 1024 or
-+ *      "8p" => 8 * number of online processors.
++ * Worker thread for processes forming a complete graph,
++ * sending tokens one to each other.
 + */
-+static unsigned int get_nprocs(const char *np_str)
++static void *worker_thread_kn(void *__tdata)
 +{
-+	unsigned int np;
++	struct thread_data *this_thread = __tdata;
++	struct thread_data *threads_all = this_thread->td;
 +
-+	np = (unsigned int)perf_nptou(np_str);
++	int ret, m = 0;
++	unsigned int i;
++	unsigned int t;
 +
-+	if (np == -1U) {
-+		fprintf(stderr, "Cannot parse number of processes/threads: %s\n",
-+			nproc_str);
-+		exit(1);
++	ret = enter_cgroup(this_thread->nr);
++	if (ret < 0) {
++		this_thread->cgroup_failed = true;
++		return NULL;
 +	}
 +
-+	if (np < 2) {
-+		fprintf(stderr, "Two processes are the minimum requirement.\n");
-+		exit(1);
++	if (nonblocking) {
++		this_thread->epoll_ev.events = EPOLLIN;
++		this_thread->epoll_fd = epoll_create(1);
++		BUG_ON(this_thread->epoll_fd < 0);
++		BUG_ON(epoll_ctl(this_thread->epoll_fd, EPOLL_CTL_ADD, this_thread->pipe_read, &this_thread->epoll_ev) < 0);
 +	}
 +
-+	return np;
++	for (i = 0; i < loops; i++) {
++		/* First: feed all other workers. */
++		for (t = 0; t < nr_threads; t++)
++			if (t != this_thread->nr) {
++				ret = write(threads_all[t].pipe_write, &m, sizeof(int));
++				BUG_ON(ret != sizeof(int));
++			}
++
++		/* Read a token from all other workers. */
++		for (t = 1; t < nr_threads; t++) {
++			ret = read_pipe(this_thread);
++			BUG_ON(ret != sizeof(int));
++		}
++	}
++
++	return NULL;
 +}
++
+ /*
+  * Worker thread for nodes forming a ring, receiving tokens from the left
+  * neighbor and sending them to the right one.
+  */
+-static void *worker_thread(void *__tdata)
++static void *worker_thread_ring(void *__tdata)
+ {
+ 	struct thread_data *this_thread = __tdata;
+ 	struct thread_data *threads_all = this_thread->td;
+@@ -229,6 +276,9 @@ static void *worker_thread(void *__tdata)
+ 	return NULL;
+ }
+ 
++/* Ring mode is the default. */
++void * (*worker_thread)(void *) = worker_thread_ring;
 +
  static int create_pipes(struct thread_data *tdata)
  {
  	int __maybe_unused flags = 0;
-@@ -338,6 +367,9 @@ int bench_sched_pipe(int argc, const char **argv)
+@@ -288,6 +338,9 @@ int bench_sched_pipe(int argc, const char **argv)
  
  	argc = parse_options(argc, argv, options, bench_sched_pipe_usage, 0);
  
-+	if (nproc_str)
-+		nr_threads = get_nprocs(nproc_str);
++	if (Kn_mode)
++		worker_thread = worker_thread_kn;
 +
- 	if (Kn_mode)
- 		worker_thread = worker_thread_kn;
+ 	threads = create_thread_data();
  
-diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-index c0e927bbadf6..72deb3df9c99 100644
---- a/tools/perf/util/string.c
-+++ b/tools/perf/util/string.c
-@@ -3,6 +3,7 @@
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <stdlib.h>
-+#include <unistd.h>
+ 	cgrp_names = calloc(nr_threads, sizeof(char *));
+@@ -343,8 +396,9 @@ int bench_sched_pipe(int argc, const char **argv)
  
- #include <linux/ctype.h>
+ 	switch (bench_format) {
+ 	case BENCH_FORMAT_DEFAULT:
+-		printf("# Executed %d pipe operations between %u %s\n\n", loops,
+-		       nr_threads, threaded ? "threads" : "processes");
++		printf("# Executed %d pipe operations (%s) between %u %s\n\n", loops,
++		       Kn_mode ? "Kn" : "ring", nr_threads,
++		       threaded ? "threads" : "processes");
  
-@@ -68,6 +69,63 @@ s64 perf_atoll(const char *str)
- 	return -1;
- }
- 
-+/*
-+ * perf_nptou()
-+ *
-+ * Parse given string to a number of processes and return that number.
-+ * Multipliers up to 'm' are accepted, and an optional final unit suffix
-+ * 'p' meaning "number of online processors".
-+ *
-+ * str must match: (\d+)(k|K|m|M)?(p|P)?
-+ *
-+ * (e.g. "8P" meaning "8 * number of online processors",
-+ *  or   "1k" meaning "1024",
-+ *  or   "1Kp" meaning "1024 * number of online processors")
-+ */
-+u32 perf_nptou(const char *str)
-+{
-+	s32 length;
-+	char *p;
-+	char c;
-+
-+	if (!isdigit(str[0]))
-+		goto out_err;
-+
-+	length = strtol(str, &p, 10);
-+
-+	switch (c = *p++) {
-+		case 'p': case 'P':
-+			if (*p)
-+				goto out_err;
-+			goto handle_p;
-+		case '\0':
-+			return length;
-+		default:
-+			goto out_err;
-+
-+		/* Multipliers */
-+		case 'k': case 'K':
-+			length <<= 10;
-+			break;
-+		case 'm': case 'M':
-+			length <<= 20;
-+			break;
-+	}
-+
-+	if (*p == '\0')
-+		return length;
-+
-+	if (strcmp(p, "p") != 0 && strcmp(p, "P") != 0)
-+		goto out_err;
-+
-+handle_p:
-+	length *= sysconf(_SC_NPROCESSORS_ONLN);
-+	return length;
-+
-+out_err:
-+	return -1U;
-+}
-+
- /* Character class matching */
- static bool __match_charclass(const char *pat, char c, const char **npat)
- {
-diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
-index 4c8bff47cfd3..bca2c1687924 100644
---- a/tools/perf/util/string2.h
-+++ b/tools/perf/util/string2.h
-@@ -12,6 +12,7 @@ extern const char *graph_dotted_line;
- extern const char *dots;
- 
- s64 perf_atoll(const char *str);
-+u32 perf_nptou(const char *str);
- bool strglobmatch(const char *str, const char *pat);
- bool strglobmatch_nocase(const char *str, const char *pat);
- bool strlazymatch(const char *str, const char *pat);
+ 		result_usec = diff.tv_sec * USEC_PER_SEC;
+ 		result_usec += diff.tv_usec;
 -- 
 2.45.3
 
