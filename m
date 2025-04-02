@@ -1,122 +1,144 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B733993
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 16:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4852217C21C;
+	Wed,  2 Apr 2025 17:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743612927; cv=none; b=m0cNMeTdmNGfL6cMQGbvBHba15D05fQDp26wdXDVirxFr6BtC/RBLd76FtlqLTwBNYOADNKHt/RWwKZ57apNcrQIhcBnupjwEFiJwalbXA12Q0hE6wsIXALMYluE5N6Nt4lw94YIHzAAhuYER03RxdZZ5dH4JBLDrD1h6Ur3i4A=
+	t=1743616372; cv=none; b=fSZ5MUQ0zLhtVdvPafDGV3ri7HM89SCQsbyrUZGggUlmRnSZ5JUMI+I1ohYI6Xw0V2kyi4+BruYoSV/tzcIET108a58h3TLLBRiz3mRzP+b+PIFJ155YjwbB99MJ4C7nHbnRu0eB5sSs0we1jqiS3hbCNxGje6s1KcxIFdh+rYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743612927; c=relaxed/simple;
-	bh=ulrdwPEfmjUk8IT8rXc1Llbn11efOcN2yH0jBBhPp3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NuwFpjrLY6SGpIG4KSaYTCRoTtdvnr/KvCyAt323f/lPDXjgUJ62vp4VlxZ9RqkboOISo+kYIIhcriVvrKbjtMmNtDqu5t1brmeh9pj2O4vfOnlS/iDV+lsWmGsHp7pBGZ0EtbfQ+vooVAg7825XeK44SkrvQG/zCe1uO9s6Bj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SYvGSHae; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743616372; c=relaxed/simple;
+	bh=h5NICahV7JeZ491aP7VXdSMuYMNaZpCrLTP/wgrYg5M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Phxe+UxPbDEAUqApvyxHHDjQEJJKf7f3T0q9OPtSkTnbQhnyEoLgYqAzzrP5yDUrikJm0kO0OUCia2ZyUxro9C+zo3DNXDlm1mh7CCMM/1lL1FvWA5dqcmxm0Qm1BLioEry/McIiR4lWXKFuuRaYym9o4t8o8Q28IXDYQTvITGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiGc7SML; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SYvGSHae"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2242ac37caeso178845ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Apr 2025 09:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743612925; x=1744217725; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g1+p+u7oJ2fOG6rupJyrqrL/J3r7aOOvHki3BBz9/Y4=;
-        b=SYvGSHaexKJ9udT1dfaiiML5+yF5J/wlcE1Gy1wLZ+Q6Sz6tc88yKJYOTXXI5dXhd6
-         x5T+T2IlNiaAsXCsV/ZoTnWIOfSgqDR8dFA1nM2bd0mk24x0B09gSGzrHtYDMoQaNBPp
-         ZRKTULvv59Ud2b/ecsLh5yvuHO8FtXIZnuw0AHIXeoB22VNmje7K05qpJcQgZDwl033r
-         /63YLyWVyS3GibvbEdI213zS8XYCw+6ztVPxPH1v4iI1QUUf52/XnQ0lSIaqLkmPM/OT
-         QKRNx/7iR0+wBfM14ZqovkBknHAN7rSwonKop+tojhGBmPyjgQV+BL3RrQ1qAKX7n+jO
-         8h2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743612925; x=1744217725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g1+p+u7oJ2fOG6rupJyrqrL/J3r7aOOvHki3BBz9/Y4=;
-        b=tllZaand4rdDOBcdetzJFv/khf8eHJPB4NxTa8DLS/2zZjnkHVd3uDNvvws+tFsWJN
-         FgF8Ayzr8d39S26PUY9gjBA4YZh4Zq4O9Eh8TrNd5LmMzMp+l1cHrqRF9XnMBxjlZhr/
-         LHoGUoqMCTdWWge7QsDnTpBCVcJIbF0MHnv43wTvv1BOIiaYDTsIPrq/gYM301G3QheH
-         nxiM5dfvcItudNdi6Mj3qKcz2VDa3c6yqLeMRRSHkZJ1I4x/wHCFCn6/hnyTmIWc1ngq
-         NMIReW2bo1ldaS1X6NLzo3E6o6TNc0GBKA6FA4EWpv+m5CoFBsD93BGPDSQlk5Unq5mR
-         dEsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWuP1H0uQElVDcrklAcDcRs7PSErJJOTK7/Ca3vtcmg7ldeBF3B4zk21nfs03Q7gOVWC6nzXT/i3uPFZhF3Cxt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsRFQkKxtWTVk5F+2Ldzv2ZkMl1Dd4AEytg/pyt9BiMaBIlrLp
-	GBu2XNUqW0YJeg/7pdmuySm6MMTzcZRi0+3XClE9pF5+4iNS/smwZWuP3XHofwsYvkXvDV55enV
-	EudkF5lf8VXhR+682r0j8Moznx4rnmi8tV+vZ
-X-Gm-Gg: ASbGncu2mTzgvgExjk0NnJfLYSWdhLMCEP+oXM3/Zqd10Zqmni0Xymleb5Ab2uc+C93
-	e549X3tS5233KaAhcHtnxLbEIEe90OEztgvr2Nt6bWXkyqjgyjrz98XQJydTmpwA4uxbpc9N79P
-	Yvcs0s7Z17uuFAr9owDg/vwVRnl4/wIYCQYW+MeJ0UmCDwNRx0qIuI2g==
-X-Google-Smtp-Source: AGHT+IFxeDB0yIrClam9o1iXY8gJunDBb+Z/vkv/PhtQ8HyON4Llg9ykIV90m3xXDAPGCFc76xoWv1HznNT8aLnAlQ4=
-X-Received: by 2002:a17:903:3dc8:b0:216:21cb:2e06 with SMTP id
- d9443c01a7336-2296bdaebffmr2098315ad.19.1743612924583; Wed, 02 Apr 2025
- 09:55:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiGc7SML"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743616371; x=1775152371;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=h5NICahV7JeZ491aP7VXdSMuYMNaZpCrLTP/wgrYg5M=;
+  b=fiGc7SMLapDFt6FB01Or5x/qQ71JZaCNd9GO9JEUWoKQuwGdYl83vjeW
+   n4kkhaiWURbZ5gkI1ulFq/HKY0A+ohT+FZ3E0p+haGRamwMzxnbHD/ksV
+   Sqddc/hRVT9RbI0eWatMIwa0e9NYW0ADR++7MmkWj2kEu+R0+SYFacQf5
+   5xKePhTGUkBoZfD/Tz/yEyP0r74v16g9UibVTmfWb43CiXkgrjjTNxbRQ
+   By+qHw8hUxgfByU0PuU4Vi1i8iB7TMliyNBguMMGmHDpLhIgk7fNTRhKU
+   26sXBkqO/+mC3wJ248OlnrUl6V0wDWGE+z0tP1Fd1Q7B/N4Qo6Rx7tFjC
+   Q==;
+X-CSE-ConnectionGUID: HkAmmnU3QVuBoy0pAY10+Q==
+X-CSE-MsgGUID: +qNlenhFSGmBzdhhDpn6gw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55192707"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="55192707"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:52:48 -0700
+X-CSE-ConnectionGUID: NK7C53LZTdSPdr1T9NjyMQ==
+X-CSE-MsgGUID: o6X37gn4SDuQW65LRVBieQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="126730347"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 10:52:48 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 56B3720B5736;
+	Wed,  2 Apr 2025 10:52:45 -0700 (PDT)
+Message-ID: <6ba85605-39ea-40e0-a6f6-379deec30db7@linux.intel.com>
+Date: Wed, 2 Apr 2025 13:52:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402082106.103318-1-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250402082106.103318-1-dapeng1.mi@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Apr 2025 09:55:13 -0700
-X-Gm-Features: AQ5f1Jrf4VkU9NzoUMTfo2fkSLhuzPQGMbEaKh67unWrJZb2x80Qvws2gcP6TGc
-Message-ID: <CAP-5=fU3Tam3PXd94ibVQZU=Kk4Q_=z0i9o7kx-Vgm9qwK-mHA@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Fix incorrect --user-regs comments
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] perf parse-events: Add debug dump of evlist if
+ reordered
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Howard Chu <howardchu95@gmail.com>,
+ Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>,
+ "Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen
+ <ak@linux.intel.com>, James Clark <james.clark@linaro.org>,
+ Weilin Wang <weilin.wang@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250402164720.3847573-1-irogers@google.com>
+ <20250402164720.3847573-6-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250402164720.3847573-6-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 1, 2025 at 8:58=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.co=
-m> wrote:
->
-> The comment of "--user-regs" option is not correct, fix it.
->
-> "on interrupt," -> "on user space,"
 
-nit: I think "in user space" is more grammatical.
 
-> Fixes: 84c417422798 ("perf record: Support direct --user-regs arguments")
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On 2025-04-02 12:47 p.m., Ian Rogers wrote:
+> Add debug verbose output to show how evsels were reordered by
+> parse_events__sort_events_and_fix_groups. For example:
+> ```
+> $ perf record -v -e '{instructions,cycles}' true
+> Using CPUID GenuineIntel-6-B7-1
+> WARNING: events were regrouped to match PMUs
+> evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-record.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index ba20bf7c011d..f21b133691d7 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3480,7 +3480,7 @@ static struct option __record_options[] =3D {
->                     "sample selected machine registers on interrupt,"
->                     " use '-I?' to list register names", parse_intr_regs)=
-,
->         OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs=
-, NULL, "any register",
-> -                   "sample selected machine registers on interrupt,"
-> +                   "sample selected machine registers on user space,"
+>  tools/perf/util/parse-events.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 5152fd5a6ead..0f8fd5bee3a7 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -28,6 +28,7 @@
+>  #include "util/evsel_config.h"
+>  #include "util/event.h"
+>  #include "util/bpf-filter.h"
+> +#include "util/stat.h"
+>  #include "util/util.h"
+>  #include "tracepoint.h"
+>  
+> @@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
+>  	if (ret2 < 0)
+>  		return ret;
+>  
+> -	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
+> -		pr_warning("WARNING: events were regrouped to match PMUs\n");
+> -
+>  	/*
+>  	 * Add list to the evlist even with errors to allow callers to clean up.
+>  	 */
+>  	evlist__splice_list_tail(evlist, &parse_state.list);
+>  
+> +	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
+> +		pr_warning("WARNING: events were regrouped to match PMUs\n");
+> +
+> +		if (verbose > 0) {
+> +			struct strbuf sb = STRBUF_INIT;
+> +
+> +			evlist__uniquify_name(evlist);
+> +			evlist__format_evsels(evlist, &sb, 1024);
 
-nit: "sample selected machine registers in user space"
+Why is the size even less than the one in pr_err?
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The user probably prefer to get the complete list in the debug.
 
 Thanks,
-Ian
+Kan> +			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
+> +			strbuf_release(&sb);
+> +		}
+> +	}
+>  	if (!ret) {
+>  		struct evsel *last;
+>  
 
->                     " use '--user-regs=3D?' to list register names", pars=
-e_user_regs),
->         OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
->                     "Record running/enabled time of read (:S) events"),
->
-> base-commit: 35d13f841a3d8159ef20d5e32a9ed3faa27875bc
-> --
-> 2.40.1
->
