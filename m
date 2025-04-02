@@ -1,48 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D6B2376E1
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Apr 2025 11:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D475F23814A;
+	Wed,  2 Apr 2025 14:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743592264; cv=none; b=Ls7TuN5lx+KKZfSvCJNgQ93k4QkZOWTzrhubss8fFhgaDeicaGJaRRr65ruc/mXrCMHCVBdnTwq15WUNIpdZNsXNyIgXrcPZisUINNA8lSCANbM0qfhdwKco/YmbfU61UWr0wkIRmBvnQsNupUW2VPyMJBlwQQqtow9KCPMi7NY=
+	t=1743604549; cv=none; b=jQnsfKKPzPjW73lKrgW22o1K2bKI2L3FDE66CI5VI+nOqMMXz/Dx25ISj1uEbc2prGY3aCDSqXQcYCff37rgyc8fKCc+a6Dod4uxiAaMSP+DdR3wTwyJMSaB8mMtHIuC+6/P5CEg+jdgVlunfW2+lJTJo22jVJKgk+9HSzqJsyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743592264; c=relaxed/simple;
-	bh=EWrgD18r2nfU1tBqbRK5IiJug7+Vse8FsJKY0eEvPCg=;
+	s=arc-20240116; t=1743604549; c=relaxed/simple;
+	bh=ICFQu9uatwHq5mRLnVZDPfIvCDIZp3w6Sx8ogDkBt3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbQjRDptNeliA54cIQlOIzCElF/Vz1HOEXJcLlhNB8geEILKXTmNInfmyoquWrtX9oRx6nMJJeJ/6EGSGMpIuOUSKlnbsPQxRO7ZgfEI75yOhH2FE+iNKw/sFABdRMNU8ggLpfkGwTi11a8aV4cf0PTFecmv8mlYV9iDX28i7Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RdpBNLJt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RdpBNLJt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743592261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VgTSlcWUxY8a6JwJYyv7GJqNtqyp4QlKElc3qaVOgZs=;
-	b=RdpBNLJtMz+CqExgkcU/O4oEhRp8xvPjA0Q8RFLy+Bo9sdMaHk6u7U4GDlK04jc6jGTR2D
-	n3lGYzyPw/mDlvqAKGeajmbE52H4V9juzCe+/nmAKaSfhi2kwacMki4Mvg7IspGNt1jHWJ
-	Lf7zvfRUgJhKgaFRIckxNjLlvHsB7h4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-457-xDKcHiZ4NxqXSrHBPqvjqA-1; Wed,
- 02 Apr 2025 07:10:56 -0400
-X-MC-Unique: xDKcHiZ4NxqXSrHBPqvjqA-1
-X-Mimecast-MFC-AGG-ID: xDKcHiZ4NxqXSrHBPqvjqA_1743592253
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70F521809CA6;
-	Wed,  2 Apr 2025 11:10:51 +0000 (UTC)
-Received: from f39 (unknown [10.45.225.130])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 738421828A80;
-	Wed,  2 Apr 2025 11:10:25 +0000 (UTC)
-Date: Wed, 2 Apr 2025 13:10:22 +0200
-From: Eder Zulian <ezulian@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJ1FX1ivRle/3GI8lSpFQbvjKi0edinTzrOEowJsLKPLZ0QjhHHJ+kfWs8UmFRRYo+6IHDPN08jA6Bo5itmqz5sIwblRMwP9JojUvIzE/1iG1UI6x/KquX7qZGBxHSxFTLp0S54W+2TrTK/vyf+jSklHTlTGHUKsW40LWXBFalM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDCA31F91;
+	Wed,  2 Apr 2025 07:35:48 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99FAA3F63F;
+	Wed,  2 Apr 2025 07:35:45 -0700 (PDT)
+Date: Wed, 2 Apr 2025 15:35:41 +0100
+From: Leo Yan <leo.yan@arm.com>
 To: Ian Rogers <irogers@google.com>
 Cc: Yury Norov <yury.norov@gmail.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
@@ -73,6 +50,7 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
 	Kajol Jain <kjain@linux.ibm.com>,
 	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
 	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
@@ -113,10 +91,10 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 04/48] x86/insn: Silence -Wshorten-64-to-32 warnings
-Message-ID: <Z-0bHg4aX5uX33CU@f39>
+Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250402143541.GM115840@e132581.arm.com>
 References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-5-irogers@google.com>
+ <20250401182347.3422199-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -125,53 +103,187 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401182347.3422199-5-irogers@google.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250401182347.3422199-10-irogers@google.com>
 
-Hello, apologies if I'm missing something, but
+On Tue, Apr 01, 2025 at 11:23:07AM -0700, Ian Rogers wrote:
 
-On Tue, Apr 01, 2025 at 11:23:02AM -0700, Ian Rogers wrote:
-> The clang warning -Wshorten-64-to-32 can be useful to catch
-> inadvertent truncation. In some instances this truncation can lead to
-> changing the sign of a result, for example, truncation to return an
-> int to fit a sort routine. Silence the warning by making the implicit
-> truncation explicit.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/arch/x86/lib/insn.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
-> index e91d4c4e1c16..5fa8697498fe 100644
-> --- a/tools/arch/x86/lib/insn.c
-> +++ b/tools/arch/x86/lib/insn.c
-> @@ -92,7 +92,7 @@ static int __insn_get_emulate_prefix(struct insn *insn,
->  			goto err_out;
+[...]
+
+> @@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+>  	int err = 0;
+>  
+>  	for (struct test_suite **t = suites; *t; t++) {
+> -		int i, len = strlen(test_description(*t, -1));
+> +		int i;
+> +		int len = (int)strlen(test_description(*t, -1));
+
+Thanks for huge polish.
+
+Just a concern from me.  Throughout this patch, the methodology is not
+consistent.  Some changes update variable types which is fine for me.
+
+But the case above it simply cast size_t to int.  Should we update the
+variable type as 'size_t' at here?
+
+>  		if (width < len)
+>  			width = len;
+>  
+>  		test_suite__for_each_test_case(*t, i) {
+> -			len = strlen(test_description(*t, i));
+> +			len = (int)strlen(test_description(*t, i));
+>  			if (width < len)
+>  				width = len;
+>  			num_tests += runs_per_test;
+> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+> index cf6edbe697b2..0c31d5ff77e2 100644
+> --- a/tools/perf/tests/code-reading.c
+> +++ b/tools/perf/tests/code-reading.c
+> @@ -188,7 +188,7 @@ static int objdump_version(void)
+>  	char *line = NULL;
+>  	const char *fmt;
+>  	FILE *f;
+> -	int ret;
+> +	ssize_t ret;
+>  
+>  	int version_tmp, version_num = 0;
+>  	char *version = 0, *token;
+> @@ -295,7 +295,7 @@ static int read_via_objdump(const char *filename, u64 addr, void *buf,
+>  	if (len) {
+>  		pr_debug("objdump read too few bytes: %zd\n", len);
+>  		if (!ret)
+> -			ret = len;
+> +			ret = (int)len;
+
+A proper change is to update the function type to:
+
+  size_t read_via_objdump(...)
+
+[...]
+
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index db004d26fcb0..2762794827ce 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -609,7 +609,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
+>  	pmu_add_sys_aliases(pmu);
+>  
+>  	/* Count how many aliases we generated */
+> -	alias_count = perf_pmu__num_events(pmu);
+> +	alias_count = (int)perf_pmu__num_events(pmu);
+
+Could we change the variable 'alias_count' to size_t type?
+
+Or in another way, we need to update perf_pmu__num_events() with
+returning int type.
+
+My understanding is rather than using cast, we should polish code for
+using consistent type for both variables and return values.
+
+>  	/* Count how many aliases we expect from the known table */
+>  	for (table = &test_pmu->aliases[0]; *table; table++)
+> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> index a67c756f90b8..b7d7735f8a72 100644
+> --- a/tools/perf/tests/sigtrap.c
+> +++ b/tools/perf/tests/sigtrap.c
+> @@ -154,13 +154,13 @@ sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __may
+>  {
+>  	if (!__atomic_fetch_add(&ctx.signal_count, 1, __ATOMIC_RELAXED))
+>  		ctx.first_siginfo = *info;
+> -	__atomic_fetch_sub(&ctx.tids_want_signal, syscall(SYS_gettid), __ATOMIC_RELAXED);
+> +	__atomic_fetch_sub(&ctx.tids_want_signal, (pid_t)syscall(SYS_gettid), __ATOMIC_RELAXED);
+>  }
+>  
+>  static void *test_thread(void *arg)
+>  {
+>  	pthread_barrier_t *barrier = (pthread_barrier_t *)arg;
+> -	pid_t tid = syscall(SYS_gettid);
+> +	pid_t tid = (pid_t)syscall(SYS_gettid);
+>  	int i;
+>  
+>  	pthread_barrier_wait(barrier);
+> diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
+> index 8df3f9d9ffd2..1f0f8321ae40 100644
+> --- a/tools/perf/tests/switch-tracking.c
+> +++ b/tools/perf/tests/switch-tracking.c
+> @@ -140,8 +140,8 @@ static int process_sample_event(struct evlist *evlist,
+>  
+>  	evsel = evlist__id2evsel(evlist, sample.id);
+>  	if (evsel == switch_tracking->switch_evsel) {
+> -		next_tid = evsel__intval(evsel, &sample, "next_pid");
+> -		prev_tid = evsel__intval(evsel, &sample, "prev_pid");
+> +		next_tid = (int)evsel__intval(evsel, &sample, "next_pid");
+> +		prev_tid = (int)evsel__intval(evsel, &sample, "prev_pid");
+
+Change 'prev_tid' and 'next_tid' to pid_t type?
+
+Thanks,
+Leo
+
+>  		cpu = sample.cpu;
+>  		pr_debug3("sched_switch: cpu: %d prev_tid %d next_tid %d\n",
+>  			  cpu, prev_tid, next_tid);
+> @@ -262,9 +262,10 @@ static int compar(const void *a, const void *b)
+>  {
+>  	const struct event_node *nodea = a;
+>  	const struct event_node *nodeb = b;
+> -	s64 cmp = nodea->event_time - nodeb->event_time;
+>  
+> -	return cmp;
+> +	if (nodea->event_time == nodeb->event_time)
+> +		return 0;
+> +	return nodea->event_time < nodeb->event_time ? -1 : 1;
+>  }
+>  
+>  static int process_events(struct evlist *evlist,
+> @@ -398,7 +399,7 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
+>  
+>  	switch_evsel = evlist__add_sched_switch(evlist, true);
+>  	if (IS_ERR(switch_evsel)) {
+> -		err = PTR_ERR(switch_evsel);
+> +		err = (int)PTR_ERR(switch_evsel);
+>  		pr_debug("Failed to create event %s\n", sched_switch);
+>  		goto out_err;
 >  	}
+> diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+> index 74cdbd2ce9d0..fbdb463e965d 100644
+> --- a/tools/perf/tests/vmlinux-kallsyms.c
+> +++ b/tools/perf/tests/vmlinux-kallsyms.c
+> @@ -82,7 +82,7 @@ static bool is_ignored_symbol(const char *name, char type)
+>  			return true;
 >  
-> -	insn->emulate_prefix_size = len;
-> +	insn->emulate_prefix_size = (int)len;
-
-wouldn't something like 
-+ insn->emulate_prefix_size = !!len;
-be preferable in this case?
-
-Apparently the 'insn->emulate_prefix_size' is only used in
-'insn_has_emulate_prefix()'. Perhaps both the flag 'emulate_prefix_size'
-(currently an 'int') and the 'insn_has_emulate_prefix()' function return
-type could be changed to boolean?
-
->  	insn->next_byte += len;
-
-My knowledge of this part of the code is limited, however IMO it seems
-strange to have the 'emulate_prefix_size' flag affected implictly or
-explicitly by truncation and the pointer 'insn->next_byte' advanced
-regardless.
-
+>  	for (p = ignored_suffixes; *p; p++) {
+> -		int l = strlen(name) - strlen(*p);
+> +		ssize_t l = strlen(name) - strlen(*p);
 >  
->  	return 1;
+>  		if (l >= 0 && !strcmp(name + l, *p))
+>  			return true;
+> @@ -313,7 +313,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
+>  				 * _really_ have a problem.
+>  				 */
+>  				s64 skew = mem_end - UM(pair->end);
+> -				if (llabs(skew) >= page_size)
+> +				if (llabs(skew) >= (s64)page_size)
+>  					pr_debug("WARN: %#" PRIx64 ": diff end addr for %s v: %#" PRIx64 " k: %#" PRIx64 "\n",
+>  						 mem_start, sym->name, mem_end,
+>  						 UM(pair->end));
+> diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+> index 6c178985e37f..d5dd17eb5c05 100644
+> --- a/tools/perf/tests/wp.c
+> +++ b/tools/perf/tests/wp.c
+> @@ -31,10 +31,10 @@ volatile u8 data2[3];
+>  #ifndef __s390x__
+>  static int wp_read(int fd, long long *count, int size)
+>  {
+> -	int ret = read(fd, count, size);
+> +	ssize_t ret = read(fd, count, size);
+>  
+>  	if (ret != size) {
+> -		pr_debug("failed to read: %d\n", ret);
+> +		pr_debug("failed to read: %zd\n", ret);
+>  		return -1;
+>  	}
+>  	return 0;
 > -- 
 > 2.49.0.504.g3bcea36a83-goog
 > 
-
+> 
