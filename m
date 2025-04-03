@@ -1,199 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A287ACA64;
-	Thu,  3 Apr 2025 04:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D81418CC08;
+	Thu,  3 Apr 2025 05:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743656010; cv=none; b=Esxnz9ABar/09zNNhPI5ticu3Gj7Urvuaeg0J7LnIPX9boyyRG9GuY7attTVb5RCMI6Y2OQxoOBHAYIrlS42u2fnP4G2BgMMvIa/+h+ziCDqCPKhTScBH+IkGWFZ+ghRaNpwiR0EzDv6byzbwAQQ8uINLSLpybsRl7vemZw07ek=
+	t=1743657027; cv=none; b=hNwm+BioJTr4GOpkEK7MgRsY5MYL7kSHz/o1x2a38NbOvjeLtHPXI0Ek6k69E2PvZbpJj9dm4Y/IJOHnZfr414mwNzxBhTQyNENCJuhJ2jI6A/H4Ceo6lcps99Z91Fp1DlAbDnN/YoY5eQAvO0qfu036KilcdaqjU6TTTd/tshw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743656010; c=relaxed/simple;
-	bh=HBlgT8HObyk8EukKhLMvzWEvUxYyimaN545pPqCp4oA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g7I4QBSGAHHTTdfC1G4roRD9/MzY9zRMVUzoZNINTySLcoL6jWv3N5LBsHJhcwz6JepUvFmkmwz+WsCt11gh1zSh69fayHhspcIRlI+Ipa070UQrp0PrP54JYXOAuGlsAYrumeykFPoF8cZ+Xd/ayXr47jmoBwMlSmqT21wr6WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEchQTpJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743657027; c=relaxed/simple;
+	bh=MTxYIeG6rjC76KiaCXCUAaJgwwxt3fQ9t7T7cB6jvQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uWw4w9UmoLb4AOAcvHCup6+Ei75cX0CZoZQRUhBjiw6i3ThzWMXpmOQLrO6c3SoLAtISqCdYQ/6W7OI/Fou4ZThUvUSLkw9/CDs/kxNT5pNLtH1x2wm/t9OdTSjSI1asZ5BotTq2PEDUV1cMbKfp88+DMusIhQ9LqmzmO5BVuwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=V9uVTX4x; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEchQTpJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE9FC4CEE3;
-	Thu,  3 Apr 2025 04:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743656010;
-	bh=HBlgT8HObyk8EukKhLMvzWEvUxYyimaN545pPqCp4oA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WEchQTpJUyIdwpaTGznS1u7IIwZjR9qQHnzXHP4YoAADNqnxG++Lct79rpjdpvs6g
-	 chI7km80K6itmez01MCUz9kzljTCbpdQ/oDaekm9NpnDDPjfpNVmoG0ZQyTWXwKTtz
-	 48tvYm1yY8SEtEwBQ1V0efTtVlqc2dD+oQ0wKrZ6BoE7lXc7wg1udzqWxvWpTgEJ/4
-	 6ePXe+qPtCx3Vs4SDpCwfu0Vt4LsoC/S2a1VeEdSoDDYwo3uT86tbLCMUwSwQ+9fe1
-	 JEpL3ZnARNJRrWrajS8tbYfspojHF3BBSuL8E6Lp4gKapZoAPUKiQdTlDIpPwhpidR
-	 AMQgHVXMuJNpQ==
-Date: Wed, 2 Apr 2025 21:53:25 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Leo Yan <leo.yan@arm.com>, Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
-Message-ID: <Z-4URXOzsVHTY7zz@google.com>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-10-irogers@google.com>
- <20250402143541.GM115840@e132581.arm.com>
- <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
- <20250402163807.GP115840@e132581.arm.com>
- <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="V9uVTX4x"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53359MMx352770
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 2 Apr 2025 22:09:23 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53359MMx352770
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743656967;
+	bh=vsKRR0KcxHt+bY5piLdo+Eui94XS6wGecFObRFyi4AA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V9uVTX4xgBbACAe/f7Zrx5r+z9b4d1DfYgbNIB8wYvA68c1uxe0ihfeMYGbviPIoI
+	 wTMFzQg2Fid5gHaVjQFISDACPHyspg7RzwHijSy6/ZmCrt/DlP4GvTHPiqGcB/4cvd
+	 AXYWHXLY7oKRr3YH+gVlWe8bvGTKcZn6fFapbQodpDHtCHy2EbuxOzLWKaU/ptKGkZ
+	 YqGfSlTUalEu5dyJYTz3tBI0kwslGoJnWU1+IYMdKiUnn8nJQY3z4rbePe1d1wtRq2
+	 Ft7OOFI4h7fGZ1G8M4ScF2LdGFEFm/MkylKdAYsHDEPOzjpBz+P8h/DypI1JQXduc+
+	 RpGH73LFcK3gg==
+Message-ID: <c316a6c6-b97c-48b2-9598-d44e2ec72fbc@zytor.com>
+Date: Wed, 2 Apr 2025 22:09:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <Z-ubVFyoOzwKhI53@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 09:53:57AM -0700, Ian Rogers wrote:
-> On Wed, Apr 2, 2025 at 9:38 AM Leo Yan <leo.yan@arm.com> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Wed, Apr 02, 2025 at 08:42:58AM -0700, Ian Rogers wrote:
-> >
-> > [...]
-> >
-> > > On Wed, Apr 2, 2025 at 7:35 AM Leo Yan <leo.yan@arm.com> wrote:
-> > > >
-> > > > On Tue, Apr 01, 2025 at 11:23:07AM -0700, Ian Rogers wrote:
-> > > >
-> > > > [...]
-> > > >
-> > > > > @@ -478,13 +478,14 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
-> > > > >       int err = 0;
-> > > > >
-> > > > >       for (struct test_suite **t = suites; *t; t++) {
-> > > > > -             int i, len = strlen(test_description(*t, -1));
-> > > > > +             int i;
-> > > > > +             int len = (int)strlen(test_description(*t, -1));
-> > > >
-> > > > Thanks for huge polish.
-> > > >
-> > > > Just a concern from me.  Throughout this patch, the methodology is not
-> > > > consistent.  Some changes update variable types which is fine for me.
-> > > >
-> > > > But the case above it simply cast size_t to int.  Should we update the
-> > > > variable type as 'size_t' at here?
-> > >
-> > > Thanks Leo, I played around with it, but don't mind if someone wants
-> > > to do it a different way. I was trying to make the changes minimal.
-> > > The problem typically with size_t is we then use the value, for
-> > > example, as a printf size modifier and need to introduce lots of casts
-> > > back to being an int.
-> >
-> > This conclusion is not quite right, see:
-> > https://stackoverflow.com/questions/2524611/how-can-one-print-a-size-t-variable-portably-using-the-printf-family
-> >
-> > > When this isn't too great I've done it, but in
-> > > this case I think keeping the int, the lack of casts but a cast here
-> > > to capture that we expect test descriptions to fit in the size of an
-> > > int is the least worst option.
-> >
-> > I would say in another way.  After we enabled a compiler warning
-> > option, this will give us a chance to improve code by dismissing
-> > the warnings (and avoid potential bugs).
-> >
-> > If we use casts just to silence warnings, we also lose the opportunity
-> > to improve code quality.  The changes in this series that fix type
-> > mismatches are good, but I think the use of casts is not particularly
-> > helpful - we're simply switching from implicit compiler casts to
-> > explicit ones.
+On 4/1/2025 12:52 AM, Ingo Molnar wrote:
+>> Should we rename the *msrl() functions to *msrq() as part of this
+>> overhaul?
+> Yeah, that's a good idea, and because talk is cheap I just implemented
+> this in the tip:WIP.x86/msr branch with a couple of other cleanups in
+> this area (see the shortlog & diffstat below), but the churn is high:
 > 
-> Right, but I think changing function parameters, return types would
-> turn into an epic refactor and the patch series is already unwieldy.
+>    144 files changed, 1034 insertions(+), 1034 deletions(-)
 
-Yep, it's important to reduce the number and the size of patches from
-the reviewer's pespective. :)
+Hi Ingo,
 
+I noticed that you keep the type of MSR index in these patches as
+"unsigned int".
 
-> With the casts we can see the behavior is deliberate but that's not to
-> say it couldn't be better. With the warnings gone it allows
-> -Wshorten-64-to-32 to find the truly errant 64 to 32 bit implicit
+I'm thinking would it be better to standardize it as "u32"?
 
-Do we want to enable this warning?  Is it only available on clang?
+Because:
+1) MSR index is placed in ECX to execute MSR instructions, and the
+    high-order 32 bits of RCX are ignored on 64-bit.
+2) MSR index is encoded as a 32-bit immediate in the new immediate form
+    MSR instructions.
 
-
-> casts. Anyway, I don't have time to do such a larger refactor so
-> somebody else is going to need to pick that up. I did refactor the
-> cases where I thought it mattered more, but as you say that does lead
-> to a feeling of inconsistency in the series.
-
-I'm curious there are any actual errorenous cases other than the return
-type of comparisons from Leo.
-
-Thnaks,
-Namhyung
-
+Thanks!
+     Xin
