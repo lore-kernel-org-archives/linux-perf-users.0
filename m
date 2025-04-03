@@ -1,62 +1,62 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1F17BB6;
-	Thu,  3 Apr 2025 14:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB23433D1;
+	Thu,  3 Apr 2025 14:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689322; cv=none; b=DWHY+FmL6wl47hYLOMWXCt7BqtBpN4KGL7GGZ4qm3touoz/BrCTHTNMVcNoex1LTRoOUwUUM9Gm1cgnuxM1kbF14UtiYSk5Dk61glzXzK8RDDjdCygFRNTRDYgwR+2BcyOl3bkfq1p3urgw/2Ab0JPHvI+yKqeE4u5a51JWN4JQ=
+	t=1743689958; cv=none; b=cychoOKjs3adroCMNDzke607mLSggZkt6f60uOgw4DqETHbt6zm/oXKyxrmZXstK8eyuTYnr/GhgE7yUkveT216amfXumYkyrAil4XufzEzja1EnKf2yAMbLkq/5lFCuEHV07tC3DUboIK8PO4wYgFw2WTIuhcHymPjFbqq1li4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689322; c=relaxed/simple;
-	bh=9dcfeCeE1zJuHl+VAQhSUpd8FuaX6Q5GQC5LBKig2kM=;
+	s=arc-20240116; t=1743689958; c=relaxed/simple;
+	bh=2r3U8ewcuEhS2Jqw1TNGNFLFh3bbW+ULJZIAPbc7h8g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Stjdv5ql0Pb+TuWXNT1CIxYXsFL2QQ3Dy8ehJWP5sdQBHLhouDDm7myjmzSSmgQtZHFvuU6N0BXFZTIMB24OJWd27ByKbvUySLMJj1aKB6LEbyAhhH/0aSHIPQsVFZ+faLZk+e6YlTtKGhKus81+LJQRtWwIAAmu3XMuoHQEzHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUl/77Zd; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWbIWT/a0hN0eYxjprsBbkF+1VV4nKb9gF34EE2da8F8apt85fOixkSPijgZPTswxN3grMeXv2ybH3oggXsO4IOYwZIZKPgJPyfE9hcukBxERXKhp+sykufjFLGZH/Jg2WET0dltF2KvzubDMmQ6KJfeTlaUZEhNdjOHAcmLvw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hF7daB+/; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUl/77Zd"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so1110953b3a.0;
-        Thu, 03 Apr 2025 07:08:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hF7daB+/"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso713238a12.2;
+        Thu, 03 Apr 2025 07:19:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743689319; x=1744294119; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743689957; x=1744294757; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfGO2uEq0sNbHAyaLZMcu3eXezuzk8aNgQwqdy8WsyA=;
-        b=iUl/77ZdiCyBafiLuiJbWm2Z3L8GuAzC9Muny+H8kvxc9G8RuhDH3LyDYyt0lss675
-         HpDeyHTUW7hkf+VFSquVKR6QSiWfNJC2cKlXRFFW6jCTd9X74kxr3IGcsJ8Q2YQZ2ISK
-         B4RxUC9vdmUvrMlUb2GQSjbS5+34Qlwld7MYUt1OojycjIGimUOnxTuePzRhmaTCzfEZ
-         popxbtdmdw2mfrn5kza79CCY+J7DpNXTJvauP7GZangQ/sMJwUV0QtmBrN7jVLNIvSdh
-         +xnHneKBsshpYD5F9rlrA5Kx2WIfs9c2l0OVCq4ZXkdiwKB4xWEXHhzIf1s0MoFSV3TZ
-         zk1g==
+        bh=khXp6kOEsTlpiucdkkgdxNh1P5TojGz8UwRxJaqxnCw=;
+        b=hF7daB+/AkE7Y2g16TF5zbyArB4MzOAuBkkO44kfT6BhW1Z5GY18WT2QrEaG5w21zs
+         FFPdqxshRfvceHjLvRoO1d2v3z8MocHaEIfIC3NlHJGMFcVpXueyEjSa9TqTqXWO3BzS
+         LiFIJhGy7M0xfUvYpBPoYnyEV9falFc8Y+wfYkiSvN/7tF0Ckt4lizw5IX5uAQcps8Ev
+         PThT606dq79RCheV3ENBMcbWII2GFc+OcxNw6EVrr5dBpcF3MwpK7DcSDC56rHfZv3k1
+         d9KKkEo8xG3z3qRAdLsj8U2f2GG+nXiK4Q4e3sDwLOjqxVSbuQY1B+v1PriP53eIaWVs
+         C7Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743689319; x=1744294119;
+        d=1e100.net; s=20230601; t=1743689957; x=1744294757;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BfGO2uEq0sNbHAyaLZMcu3eXezuzk8aNgQwqdy8WsyA=;
-        b=KHuiycnBlqmB17Cuagkd7/pvoIzffUxK6RJ4yGEogUbJdfEfpwTnNeDk8raa8zyD2s
-         tYb9TL0dXg3+IFkko45EXmW12gs68hLE/tX75nFcCJgez8fjJxOiRom2UdqrkKGYddaQ
-         XgcbcsbIfODRNvH+3hfiMXyKscJuKTwGWMlRjCorVnDplbGM6OPMAasM9vJYafNNI0Li
-         CL9nXevI+hybadmFF7PS0tBRT3JQKOgqAgRn4Su5TnbvYKD8XZe8yumN/OA2B8frpqwo
-         0/MQ1TnfJfJwyS7J2sT8usLrj0Yn9kitoYwovCctwpiRhLPtlVD8RCDUtoTyjoAnI+5q
-         LjIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdE4F/IBRgx/Kdw+L7PzAMOP7O+3BMXdegyJ1VSsVmRplY87juZsGXo3ytnbbxi5BhYwtQnEtPP6a+/m4=@vger.kernel.org, AJvYcCWs+kvxoYeAu2YoaY/e9u/RsSuY/5/mICm0zvOj/H7pM/hQwzZCHRLM9o8xeHU2/oA3FDEZobXVOXp2dBOjAIt2nA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP4dazdaKRcBZD3SVpW+aRJOm2/dyizWvEY2pYeojdqR1z7Q+a
-	y04R76m9kuC9P5YHdI5mc+J6piierJS7fTeTeVZXJ5Iz22Tl5laB
-X-Gm-Gg: ASbGnct9fERSIjmto4ENTmG53Y2ysRPLFLvSjG485Xm0oxHmVgZ0QUvbO6C9LRuu+t3
-	hJjfvPAcRu7r111POnRRQYJpDl3nWDkW8SloJxv/A3JI8WA9Y0Q0G+G6sAtoKy/yFkJCEyMDOmX
-	PhtjEGUnzgMhPS039iFw0k85YUWqDRurtESIx7FcrSlsN6lo9PCB6bOPVuX8EI8VGJNyOW9Cv7k
-	LIlr7nTT0Jd0boFG7ncpuH2AsFeAd5vUP5rVnNRkBCUka/IbE8cdLkOROi6QYlP1ImGX3SN5+Di
-	eBUwNzPxuOI10cRAVbrM3fB3947LUT3oVTUPp3Ic4fkx
-X-Google-Smtp-Source: AGHT+IESFH2BfJradcXyDEA6WsbY4YNZaHB7XbGRtTQE3cZsPLyZsGet5PS6i5piNyf/zmEAFWMv1g==
-X-Received: by 2002:a05:6a00:179e:b0:725:41c4:dbc7 with SMTP id d2e1a72fcca58-739d636e2bamr5120001b3a.4.1743689319132;
-        Thu, 03 Apr 2025 07:08:39 -0700 (PDT)
+        bh=khXp6kOEsTlpiucdkkgdxNh1P5TojGz8UwRxJaqxnCw=;
+        b=kaj1L3CbVw7OJ3ayx9+2QKLj9JIMb9nIkMR3msDPqGIGdAD3TXst34iPiry/IpUMSS
+         MjIZ+MfDRlib+gdsYWYO8rY2nwIHC1ohYhfZuG77zVAfAC7HPefrCAK/aqrAS6+VIaK4
+         w5DMexMya7DiB+YbznZ5kXzwSHwwxOheO5M1IFXxtO1wiouU9jr/wmAIzCnEdCE0HqtK
+         Twc1d3lQ+nWCwWM5g0Yr/iSCWi6eZpecytTHoCQmH+ur+XARwWg09vuQve8KJ1bsIrHV
+         6DP6yUaGwjY3Cu6OD94+XSYkAGLoGxVjWiq4C8qkCT+B1rBmxlOWNNHPZYqDnCFE7S1w
+         LUyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPuofHEHrnn29czEaeixg7exqoattSwXXGlYyncr3S0gNo9q61pEDOcNHX+VKrK3pu43piR7vAtyR+jOl1oQEkfA==@vger.kernel.org, AJvYcCW0opmxmHgLx+fATb8U+ryVxxjAmPhhD3/HWsk5pjc0CFDc7xidBXN8KERW0ERKoUklr+lCGbzpPAOFTuU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznAqhxPRBj+ixIBVGAoS9fcTVT6a/xpah+9WbkGeY7AQIXoC53
+	W5x0/YeMxzO+fOA1KCBiILhz8ajWJmt2e1XLUKoN8S/o+0rM4+98
+X-Gm-Gg: ASbGncucOyZnU5eJAhOxuZAed+rMcgrdvcrjZGR5fbk5NRFPxaKnvM7rRMPdScJqI8W
+	Un1XrF4yrWFQLD+728MpwMo8mg0eqeRTEFtiBBxAdSUeKCDmG5+3fMqpB2FTv5ai5dMYnT+JQvs
+	o5QbcEu5BPX07wTxg7VFaehZsmGzfmHGITpR985BsyJ+l2pWyWyEbFOpluF+wDJUyzVitZ+HSii
+	uAXfWSQQLVajUOH5y949RLIiZHE3O0I/x2f4aCc1pYLsJyFVqZLPmqWTKbRJsSkYmiIl61W7hZF
+	f0d1QgHniqBGq9bsyjJC6SKs71bqNcSJc3774vQ5o66x
+X-Google-Smtp-Source: AGHT+IFsE/53OqOyMfyP3T9KIucSDYD9e9PKK/5G+B7y8ncBc+uPWVYiOMM6K5nKTFIC+KJNWKGDsg==
+X-Received: by 2002:a05:6a20:9f4e:b0:1f5:8126:8a5d with SMTP id adf61e73a8af0-2009f5fdf88mr29869754637.17.1743689956462;
+        Thu, 03 Apr 2025 07:19:16 -0700 (PDT)
 Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1a83sm1556086b3a.13.2025.04.03.07.08.37
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc2d331csm1252459a12.12.2025.04.03.07.19.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:08:38 -0700 (PDT)
-Date: Thu, 3 Apr 2025 10:08:35 -0400
+        Thu, 03 Apr 2025 07:19:15 -0700 (PDT)
+Date: Thu, 3 Apr 2025 10:19:13 -0400
 From: Yury Norov <yury.norov@gmail.com>
 To: Ian Rogers <irogers@google.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
@@ -128,11 +128,10 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32
- warnings
-Message-ID: <Z-6WY4a6RV1bEbNU@thinkpad>
+Subject: Re: [PATCH v1 05/48] tools lib: Silence -Wshorten-64-to-32 warnings
+Message-ID: <Z-6Y4dH0bhs6VXmj@thinkpad>
 References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-3-irogers@google.com>
+ <20250401182347.3422199-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -141,9 +140,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401182347.3422199-3-irogers@google.com>
+In-Reply-To: <20250401182347.3422199-6-irogers@google.com>
 
-On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
+On Tue, Apr 01, 2025 at 11:23:03AM -0700, Ian Rogers wrote:
 > The clang warning -Wshorten-64-to-32 can be useful to catch
 > inadvertent truncation. In some instances this truncation can lead to
 > changing the sign of a result, for example, truncation to return an
@@ -152,102 +151,24 @@ On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/include/asm-generic/bitops/fls64.h | 2 +-
->  tools/include/linux/bitfield.h           | 2 +-
->  tools/include/linux/bitmap.h             | 2 +-
->  tools/include/linux/err.h                | 2 +-
->  tools/include/linux/hash.h               | 2 +-
->  tools/include/linux/math64.h             | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/include/asm-generic/bitops/fls64.h b/tools/include/asm-generic/bitops/fls64.h
-> index 866f2b2304ff..9ad3ff12f454 100644
-> --- a/tools/include/asm-generic/bitops/fls64.h
-> +++ b/tools/include/asm-generic/bitops/fls64.h
-> @@ -21,7 +21,7 @@ static __always_inline int fls64(__u64 x)
->  	__u32 h = x >> 32;
->  	if (h)
->  		return fls(h) + 32;
-> -	return fls(x);
-> +	return fls((__u32)x);
 
-Can you keep kernel and tools sources synchronized?
+...
 
->  }
->  #elif BITS_PER_LONG == 64
->  static __always_inline int fls64(__u64 x)
-> diff --git a/tools/include/linux/bitfield.h b/tools/include/linux/bitfield.h
-> index 6093fa6db260..aa0b8e52214f 100644
-> --- a/tools/include/linux/bitfield.h
-> +++ b/tools/include/linux/bitfield.h
-> @@ -146,7 +146,7 @@ static __always_inline __##type type##_encode_bits(base v, base field)	\
->  {									\
->  	if (__builtin_constant_p(v) && (v & ~field_mask(field)))	\
->  		__field_overflow();					\
-> -	return to((v & field_mask(field)) * field_multiplier(field));	\
-> +	return to((__##type)((v & field_mask(field)) * field_multiplier(field))); \
->  }									\
->  static __always_inline __##type type##_replace_bits(__##type old,	\
->  					base val, base field)		\
-> diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
-> index 2a7f260ef9dc..b7a7c752e4f2 100644
-> --- a/tools/include/linux/bitmap.h
-> +++ b/tools/include/linux/bitmap.h
-> @@ -63,7 +63,7 @@ static inline bool bitmap_full(const unsigned long *src, unsigned int nbits)
->  	return find_first_zero_bit(src, nbits) == nbits;
->  }
->  
-> -static inline unsigned int bitmap_weight(const unsigned long *src, unsigned int nbits)
-> +static inline unsigned long bitmap_weight(const unsigned long *src, unsigned int nbits)
+> diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
+> index 2178862bb114..87bd15e3968e 100644
+> --- a/tools/lib/bitmap.c
+> +++ b/tools/lib/bitmap.c
+> @@ -32,7 +32,7 @@ size_t bitmap_scnprintf(unsigned long *bitmap, unsigned int nbits,
+>  			char *buf, size_t size)
 >  {
->  	if (small_const_nbits(nbits))
->  		return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
+>  	/* current bit is 'cur', most recently seen range is [rbot, rtop] */
+> -	unsigned int cur, rbot, rtop;
+> +	size_t cur, rbot, rtop;
+>  	bool first = true;
+>  	size_t ret = 0;
 
-Oh no... bitmap_weight() is used in printk(), and you'll get tons of
-warnings because, say %x should be replaced with %lx. 
+Maybe instead typecast find_next_bit()? We don't expect any of those
+to overflow the 'unsigned int'.
 
-> diff --git a/tools/include/linux/err.h b/tools/include/linux/err.h
-> index 332b983ead1e..9c1746e3696d 100644
-> --- a/tools/include/linux/err.h
-> +++ b/tools/include/linux/err.h
-
-I don't maintain the this and the following subsystems. Can you make
-it a separate patch?
-
-> @@ -55,7 +55,7 @@ static inline bool __must_check IS_ERR_OR_NULL(__force const void *ptr)
->  static inline int __must_check PTR_ERR_OR_ZERO(__force const void *ptr)
->  {
->  	if (IS_ERR(ptr))
-> -		return PTR_ERR(ptr);
-> +		return (int)PTR_ERR(ptr);
->  	else
->  		return 0;
->  }
-> diff --git a/tools/include/linux/hash.h b/tools/include/linux/hash.h
-> index 38edaa08f862..ecc8296cb397 100644
-> --- a/tools/include/linux/hash.h
-> +++ b/tools/include/linux/hash.h
-> @@ -75,7 +75,7 @@ static __always_inline u32 hash_64_generic(u64 val, unsigned int bits)
->  {
->  #if BITS_PER_LONG == 64
->  	/* 64x64-bit multiply is efficient on all 64-bit processors */
-> -	return val * GOLDEN_RATIO_64 >> (64 - bits);
-> +	return (u32)(val * GOLDEN_RATIO_64 >> (64 - bits));
->  #else
->  	/* Hash 64 bits using only 32x32-bit multiply. */
->  	return hash_32((u32)val ^ __hash_32(val >> 32), bits);
-> diff --git a/tools/include/linux/math64.h b/tools/include/linux/math64.h
-> index 4ad45d5943dc..03d6c5220957 100644
-> --- a/tools/include/linux/math64.h
-> +++ b/tools/include/linux/math64.h
-> @@ -48,7 +48,7 @@ static inline u64 mul_u64_u32_shr(u64 a, u32 b, unsigned int shift)
->  	u32 ah, al;
->  	u64 ret;
->  
-> -	al = a;
-> +	al = (u32)a;
->  	ah = a >> 32;
->  
->  	ret = mul_u32_u32(al, b) >> shift;
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
+Thanks,
+Yury
