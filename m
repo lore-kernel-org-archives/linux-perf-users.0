@@ -1,182 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18FF2D052;
-	Thu,  3 Apr 2025 16:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A562528EA
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Apr 2025 18:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697827; cv=none; b=NCFcR5R8mu/Rxs0RMXBtHdwNLFyxaIMWoHLK/xyDT+VJekOWCvO9R+Itogmh2WW9mXJmyrB4AYNujdNsm8Dbd5kzDY+zNiIp++CHRIlCYzcTz72XeNkbAjK4BlQXCJffQQpqGULSmCJSrpTsA4jT5n5w2U4J4wwmJR4TDSYjgzk=
+	t=1743703964; cv=none; b=VPg8HThxnleWZpsSsSoQydQ5LiWWGZhuSecYQ4fG4odPSa8Z2Q5zp4BgOtGDny+KTW+40H82YNifecCCmS7SvdbyB1K/6FD5pZWvWr+B7MCxQ8SPCRQWifhUxee7n1DXNBjZeV/Ck616LxHLopkrq4c3CqQrGZr6AjDOo5guC5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697827; c=relaxed/simple;
-	bh=od+jl7zVZvKgoDBSmlp+LMyewxJFQr/Zo9tM+HJKCps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X34KOPXMWGCBMPecgu0koci/QUgC/I4hl57miQoA3ZasNdiDwpVsQ2uo8mz0XFluXKee69wHVRS2ibCKsmMFZ71eNKILUGzP3ouQp8RZ1Ea5k/IsuaBbAlS9RvheaFXEzjBIqU4RCRk9tUW2PfR8KYRaU2opLzL2n+LovlI6n4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJxNpYzI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743703964; c=relaxed/simple;
+	bh=xqmZIdIHJa6CMtzPsjIfg+cOQUO+/dCkkINkrtFyZow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DkhGV4/W6zHvR2i9rroP4csFhLAgfLLCVmToQQ7VVpjgOppn5GpwpoKMEqQSQplqos4cAZQk44FDlhVMfzZJZ+RPE94fN3T9RNJSnjH1mUpKxWIv6/HU2a2Wg3t77DbeA67HlFZknzuf98+GvLWoYMXRpbrrBNg9iISvvOktWck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yCUEgSKq; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJxNpYzI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184DDC4CEE3;
-	Thu,  3 Apr 2025 16:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743697826;
-	bh=od+jl7zVZvKgoDBSmlp+LMyewxJFQr/Zo9tM+HJKCps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bJxNpYzI0tSBL5Fd29YBqt79bpQuPHJNkgU4HWnA1ipoJVQQZT04gS6GlTXUNKCwy
-	 3rcJdbbtZ1g5w0e2VEc4waAwbeLBmoazhpr56/B+rqY2+09YmOSm3SK7rhCp68n+Lr
-	 R3G+z+RTFDsgCo2N5w5VeWUNyc9m/eisSE7A4xc0VMJ4DNcGiXJgqitCxfSFpKrmqM
-	 lpbZ7wkGZQgQbumA5YCATMoACJohz5/36tiJVZuB6+isXlsuNB3XJ80QqhbjYcEkut
-	 buu/3pAZLr+gH0MryQDouwotjTR47MnGIKmSAPS7JraCOv/Tq9a4zA0NG4H1RtoHU7
-	 yE9OI/ry0AzBg==
-Date: Thu, 3 Apr 2025 09:30:22 -0700
-From: Kees Cook <kees@kernel.org>
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
-	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com
-Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
- full name
-Message-ID: <202504030924.50896AD12@keescook>
-References: <20250331121820.455916-1-bhupesh@igalia.com>
- <20250331121820.455916-2-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yCUEgSKq"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2264c9d0295so28575ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Apr 2025 11:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743703962; x=1744308762; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9aLP0XLlIdOnfz+6gWQTE3JCu4R0hFMgWBr7Hokz1iU=;
+        b=yCUEgSKqd0FLu3O4PGsatMDtm1gXabrYIpnZpbJTrlj4MN7xILJcEik4WG/0RXYWDC
+         Od+u03UuDCQLfWlrsTG5X+3+frTmgkoT60/4OnyBkJbi4GOstQiMd46PpyAyTC8+t+lZ
+         56SAv/OUDTbw4Yyv3gPd212o8aKf9Rpr/C50ITjWNaA+fZLVU5Asg3BxLenYSFDoBaT8
+         p/s2Oz8jh74FFIJaIbAP3iZNdujrlXahIKIZx+F3LtYL89IAGtrO47nnWieavk1JnTBO
+         HBmWuo4wuu469MoMWQh+XzZpv3nRZ8e65ufp9bHDWEaOr0fQpEblHg/tAKX3JWLcNg3d
+         iFsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743703962; x=1744308762;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9aLP0XLlIdOnfz+6gWQTE3JCu4R0hFMgWBr7Hokz1iU=;
+        b=WsNd6GT1q1C4TZIpjs/uZO2/txhqOoc4g601Tgg4ehWNYdIYJlKZ0/hs1Xt2EjRthp
+         7Vs/8nB275RbJWSMO3IYUoqH18gndW9jvcA95v/aoCSeBV7IokUzE+u4VPbn69VXFCFN
+         ojvIfRTpPn4zAarB50wEBNdI/FPMVJ/k+MvWr2oemWwH6c1Za7r/yuOuCDQvBvT/Jhwi
+         QSlQ11CYA+tyn5ftGAnNHuENdsZ73kB6ebdEbw2L0HrH1F7XdwcvsGuKZ22n6Gj0KflX
+         MgWn1rRLZz7JcteWvPBTI/g1zPu9luXSBSrshZN1Bj/k/V4yoWtPaCQDhAlfmQ5Sh8EL
+         a1sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLy2lbv2t3jPGD9BxC9TgwEKMKRc87wC8ZQ73TOFqSYEmT9lXB8xvRty/uHtEJdCUR1Qhmlqr16helRuxOPokh@vger.kernel.org
+X-Gm-Message-State: AOJu0YydYTbGLV1Q1qOhViCqLQOL2hRGl88zBdk/dLe2q6Ym7IozY2RL
+	9OoTotZ1NG+vD7W0kpQjxn5GOy6KfrLf5Vd3oqImJL3V8Iz8ogG8szCQKvOMjdSYp8xzcOctjj0
+	di5u/8Tr2UDXngtaERkUweK34/SwRerjn9f3l
+X-Gm-Gg: ASbGnctwvkOoGGoqqn5qHc3kshA4R6bsp6+6wcQMO0L+/X5iNCIoq0qB6zHyeAaEHCx
+	fgkfRPIbrBbvIZ9g0na8JC23UBvQx7hlZdDIvrG388YV6DR/X6GZQI5iIbB9l9Kp05RF+Kh3bQR
+	9bgdugnzo8RWHfHbvpmOokYcCvXQlTtrJThXDvjzZ339UhFC9lLjhtxRY4SsoOpOw=
+X-Google-Smtp-Source: AGHT+IFmS4SSl/bqVH8xj8Ga3H3gxrU9ep4gALw80cbCtv3Re7uJHItC77oB0uDI52Su41KeNV8B0zO5PSa27BbQYG4=
+X-Received: by 2002:a17:902:b117:b0:223:5696:44f5 with SMTP id
+ d9443c01a7336-22a89ea9b2amr232425ad.12.1743703961391; Thu, 03 Apr 2025
+ 11:12:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331121820.455916-2-bhupesh@igalia.com>
+References: <20250401182347.3422199-1-irogers@google.com> <20250401182347.3422199-3-irogers@google.com>
+ <Z-6WY4a6RV1bEbNU@thinkpad> <Z-6aoJ3ohVHPsF0A@thinkpad> <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
+ <Z-6n-3ObiNNLQzFw@thinkpad> <CAP-5=fUg_QmWBRUM4tc7zF-rCP9D5+=AqP_FPPYiFEybhcvbhA@mail.gmail.com>
+In-Reply-To: <CAP-5=fUg_QmWBRUM4tc7zF-rCP9D5+=AqP_FPPYiFEybhcvbhA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 3 Apr 2025 11:12:30 -0700
+X-Gm-Features: AQ5f1Jq6jyhFEA6uwJS18mW1i1oQqxvGXhODTfWOqlCuAbO-N4Tt_U86tEKeiKg
+Message-ID: <CAP-5=fUkoiZXL3J7A_pjP07fY+vv3Gs0BHXMXxpo1NOngXKtrA@mail.gmail.com>
+Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32 warnings
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey <ben.gainey@arm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Eder Zulian <ezulian@redhat.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
+	He Zhe <zhe.he@windriver.com>, Dirk Gouders <dirk@gouders.net>, 
+	Brian Geffon <bgeffon@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Howard Chu <howardchu95@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jann Horn <jannh@google.com>, Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Yang Jihong <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Hao Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, 
+	Gabriele Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Casey Chen <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, Levi Yun <yeoreum.yun@arm.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Andrew Kreimer <algonell@gmail.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 05:48:18PM +0530, Bhupesh wrote:
-> Provide a parallel implementation for get_task_comm() called
-> get_task_full_name() which allows the dynamically allocated
-> and filled-in task's full name to be passed to interested
-> users such as 'gdb'.
-> 
-> Currently while running 'gdb', the 'task->comm' value of a long
-> task name is truncated due to the limitation of TASK_COMM_LEN.
-> 
-> For example using gdb to debug a simple app currently which generate
-> threads with long task names:
->   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->   # cat log
-> 
->   NameThatIsTooLo
-> 
-> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
-> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
-> that all the legacy / existing ABI, continue to work as before using
-> '/proc/$pid/task/$tid/comm'.
-> 
-> This patch only adds a parallel, dynamically-allocated
-> 'task->full_name' which can be used by interested users
-> via '/proc/$pid/task/$tid/full_name'.
-> 
-> After this change, gdb is able to show full name of the task:
->   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->   # cat log
-> 
->   NameThatIsTooLongForComm[4662]
-> 
-> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> ---
->  fs/exec.c             | 21 ++++++++++++++++++---
->  include/linux/sched.h |  9 +++++++++
->  2 files changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index f45859ad13ac..4219d77a519c 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
->  {
->  	struct task_struct *me = current;
->  	int retval;
-> +	va_list args;
-> +	char *name;
-> +	const char *fmt;
->  
->  	/* Once we are committed compute the creds */
->  	retval = bprm_creds_from_file(bprm);
-> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
->  		 * detecting a concurrent rename and just want a terminated name.
->  		 */
->  		rcu_read_lock();
-> -		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
-> -				true);
-> +		fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
-> +		name = kvasprintf(GFP_KERNEL, fmt, args);
-> +		if (!name)
-> +			return -ENOMEM;
-> +
-> +		me->full_name = name;
-> +		__set_task_comm(me, fmt, true);
+On Thu, Apr 3, 2025 at 8:45=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Thu, Apr 3, 2025 at 8:23=E2=80=AFAM Yury Norov <yury.norov@gmail.com> =
+wrote:
+> >
+> > On Thu, Apr 03, 2025 at 07:52:45AM -0700, Ian Rogers wrote:
+> > > On Thu, Apr 3, 2025 at 7:26=E2=80=AFAM Yury Norov <yury.norov@gmail.c=
+om> wrote:
+> > > >
+> > > > On Thu, Apr 03, 2025 at 10:08:39AM -0400, Yury Norov wrote:
+> > > > > On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
+> > > > > > The clang warning -Wshorten-64-to-32 can be useful to catch
+> > > > > > inadvertent truncation. In some instances this truncation can l=
+ead to
+> > > > > > changing the sign of a result, for example, truncation to retur=
+n an
+> > > > > > int to fit a sort routine. Silence the warning by making the im=
+plicit
+> > > > > > truncation explicit.
+> > > > > >
+> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > >
+> > > > I'm the first person in the To list, but only a couple patches in t=
+he
+> > > > series are related to my area. If you want to move it with me, can =
+you
+> > > > send bitmaps, bitfields etc. separately?
+> > >
+> > > Hi Yury,
+> > >
+> > > If you think it is worthwhile. I did the series to see how prevalent =
+a
+> > > bug was in perf's code - inspired by Leo Yan fixing an instance of it=
+.
+> > > I would prefer not to be on the hook for all the kernel warnings :-)
+> > > Perhaps casts to avoid changing bitmap_weight's type. Unfortunately t=
+o
+> > > get to where the perf issues were I needed to clean up header files.
+> > > In the bitmap cases the change is just to make implicit casts explici=
+t
+> > > and I don't know how much value you see in that.
+> >
+> > Your changes  are technically correct (except for non-synced kernel and
+> > tools), make the code cleaner, at least to me, and address pretty valid
+> > compiler's concerns. To me, it's worth to apply.
+>
+> Ok cool. I'll make a separate patch series for them. Sorry for giving
+> you such a long patch series with limited signal to noise.
 
-I don't want to add new allocations to the default exec path unless we
-absolutely must.
+Posted here:
+https://lore.kernel.org/lkml/20250403165702.396388-1-irogers@google.com/
 
-In the original proposal this was about setting thread names (after
-exec), and I think that'll be fine.
+Thanks,
+Ian
 
->  		rcu_read_unlock();
->  	} else {
-> -		__set_task_comm(me, kbasename(bprm->filename), true);
-> +		fmt = kbasename(bprm->filename);
-> +		name = kvasprintf(GFP_KERNEL, fmt, args);
-> +		if (!name)
-> +			return -ENOMEM;
-> +
-> +		me->full_name = name;
-> +		__set_task_comm(me, fmt, true);
->  	}
-
-I think we can just set me->full_name = me->comm by default.
-
->  
->  	/* An exec changes our domain. We are no longer part of the thread
-> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
->  	return 0;
->  
->  out_unlock:
-> +	kfree(me->full_name);
->  	up_write(&me->signal->exec_update_lock);
->  	if (!bprm->cred)
->  		mutex_unlock(&me->signal->cred_guard_mutex);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 56ddeb37b5cd..053b52606652 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1166,6 +1166,9 @@ struct task_struct {
->  	 */
->  	char				comm[TASK_COMM_LEN];
->  
-> +	/* To store the full name if task comm is truncated. */
-> +	char				*full_name;
-> +
->  	struct nameidata		*nameidata;
->  
->  #ifdef CONFIG_SYSVIPC
-> @@ -2007,6 +2010,12 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
->  	buf;						\
->  })
->  
-> +#define get_task_full_name(buf, buf_size, tsk) ({	\
-> +	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
-> +	strscpy_pad(buf, (tsk)->full_name, buf_size);	\
-> +	buf;						\
-> +})
-
-I think it should be possible to just switch get_task_comm() to use
-(tsk)->full_name.
-
--- 
-Kees Cook
+>
+> Thanks,
+> Ian
+>
+> > Thanks,
+> > Yury
