@@ -1,126 +1,253 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7403E23F26A;
-	Thu,  3 Apr 2025 07:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1F17BB6;
+	Thu,  3 Apr 2025 14:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664475; cv=none; b=RIzIufsVYgXIuRanLibrvbBN2E2AI+btWro1mNEcKFwPh24PTpYsg+o/8oWR80POCUObE8qNcExOof4fvmdWI7PegAxRCbHX22dGBUkGOivs9gTv7peDlPQzsPpiCrAutm6dsp8JUoGZmOTk3dxqfJA4bB0ZhdIwk+tB1+Fj0Hs=
+	t=1743689322; cv=none; b=DWHY+FmL6wl47hYLOMWXCt7BqtBpN4KGL7GGZ4qm3touoz/BrCTHTNMVcNoex1LTRoOUwUUM9Gm1cgnuxM1kbF14UtiYSk5Dk61glzXzK8RDDjdCygFRNTRDYgwR+2BcyOl3bkfq1p3urgw/2Ab0JPHvI+yKqeE4u5a51JWN4JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664475; c=relaxed/simple;
-	bh=i9chyyVVA4u/5n6H3ot6TYnyHk7hwD1gNPF2JpU27pA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WkU2IsrT/hmZ9X+Bd+CrarCA2ohHSGeVZ6+1vgiUctvz44RXKveLgFSEmA4GUSbN2hmRBdWraJi67fXZkJqAFqSi2GD9++vRuEvvCbv8dx30yyisz1gyG6mf6DFTSNlIEXYVGbtf44TcvWw5kwK+vPo4NYueqsAOOU+Xs8SAXi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LvUp7AXA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1743689322; c=relaxed/simple;
+	bh=9dcfeCeE1zJuHl+VAQhSUpd8FuaX6Q5GQC5LBKig2kM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Stjdv5ql0Pb+TuWXNT1CIxYXsFL2QQ3Dy8ehJWP5sdQBHLhouDDm7myjmzSSmgQtZHFvuU6N0BXFZTIMB24OJWd27ByKbvUySLMJj1aKB6LEbyAhhH/0aSHIPQsVFZ+faLZk+e6YlTtKGhKus81+LJQRtWwIAAmu3XMuoHQEzHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUl/77Zd; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LvUp7AXA"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5337DaOj395784
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 3 Apr 2025 00:13:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5337DaOj395784
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743664419;
-	bh=dud2+LDxOfaRRcFmlvhcB6Zv69u4yGoWIvsFJ3yQaXY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LvUp7AXAlEO7ZIoS25ITyVlvXptK8gf870o88D54rWCbMQJtullUs6cSr27rMyA/c
-	 e00XhjujppWmi0xvi52Gm5YkQ9UqdP9DhcXE4mt5uG56eLAwJBxdh7bKLKbRIqR2p0
-	 hxKa4VWv19GOJTD4k62M7VFYmdH3jsk65f7uqAnVJxOmWHStXYZEEGIcS6Niv2j2w8
-	 IpwtqFX6o9BUdi073LOjU6OWdKPza4N1Bv/d9TXdnTnKbzJm97DWYQJKY13xLxauZ1
-	 08EiDBm8bzmIvt+yzgcbSw7C5JTPomxa++o0v4ZpnafbOTywuWRfv+qFdLQxvDDbc8
-	 M3z/FLprqi4PA==
-Message-ID: <9618fccf-3620-4395-bdac-aa8999fe2437@zytor.com>
-Date: Thu, 3 Apr 2025 00:13:35 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUl/77Zd"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so1110953b3a.0;
+        Thu, 03 Apr 2025 07:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743689319; x=1744294119; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfGO2uEq0sNbHAyaLZMcu3eXezuzk8aNgQwqdy8WsyA=;
+        b=iUl/77ZdiCyBafiLuiJbWm2Z3L8GuAzC9Muny+H8kvxc9G8RuhDH3LyDYyt0lss675
+         HpDeyHTUW7hkf+VFSquVKR6QSiWfNJC2cKlXRFFW6jCTd9X74kxr3IGcsJ8Q2YQZ2ISK
+         B4RxUC9vdmUvrMlUb2GQSjbS5+34Qlwld7MYUt1OojycjIGimUOnxTuePzRhmaTCzfEZ
+         popxbtdmdw2mfrn5kza79CCY+J7DpNXTJvauP7GZangQ/sMJwUV0QtmBrN7jVLNIvSdh
+         +xnHneKBsshpYD5F9rlrA5Kx2WIfs9c2l0OVCq4ZXkdiwKB4xWEXHhzIf1s0MoFSV3TZ
+         zk1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743689319; x=1744294119;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BfGO2uEq0sNbHAyaLZMcu3eXezuzk8aNgQwqdy8WsyA=;
+        b=KHuiycnBlqmB17Cuagkd7/pvoIzffUxK6RJ4yGEogUbJdfEfpwTnNeDk8raa8zyD2s
+         tYb9TL0dXg3+IFkko45EXmW12gs68hLE/tX75nFcCJgez8fjJxOiRom2UdqrkKGYddaQ
+         XgcbcsbIfODRNvH+3hfiMXyKscJuKTwGWMlRjCorVnDplbGM6OPMAasM9vJYafNNI0Li
+         CL9nXevI+hybadmFF7PS0tBRT3JQKOgqAgRn4Su5TnbvYKD8XZe8yumN/OA2B8frpqwo
+         0/MQ1TnfJfJwyS7J2sT8usLrj0Yn9kitoYwovCctwpiRhLPtlVD8RCDUtoTyjoAnI+5q
+         LjIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdE4F/IBRgx/Kdw+L7PzAMOP7O+3BMXdegyJ1VSsVmRplY87juZsGXo3ytnbbxi5BhYwtQnEtPP6a+/m4=@vger.kernel.org, AJvYcCWs+kvxoYeAu2YoaY/e9u/RsSuY/5/mICm0zvOj/H7pM/hQwzZCHRLM9o8xeHU2/oA3FDEZobXVOXp2dBOjAIt2nA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP4dazdaKRcBZD3SVpW+aRJOm2/dyizWvEY2pYeojdqR1z7Q+a
+	y04R76m9kuC9P5YHdI5mc+J6piierJS7fTeTeVZXJ5Iz22Tl5laB
+X-Gm-Gg: ASbGnct9fERSIjmto4ENTmG53Y2ysRPLFLvSjG485Xm0oxHmVgZ0QUvbO6C9LRuu+t3
+	hJjfvPAcRu7r111POnRRQYJpDl3nWDkW8SloJxv/A3JI8WA9Y0Q0G+G6sAtoKy/yFkJCEyMDOmX
+	PhtjEGUnzgMhPS039iFw0k85YUWqDRurtESIx7FcrSlsN6lo9PCB6bOPVuX8EI8VGJNyOW9Cv7k
+	LIlr7nTT0Jd0boFG7ncpuH2AsFeAd5vUP5rVnNRkBCUka/IbE8cdLkOROi6QYlP1ImGX3SN5+Di
+	eBUwNzPxuOI10cRAVbrM3fB3947LUT3oVTUPp3Ic4fkx
+X-Google-Smtp-Source: AGHT+IESFH2BfJradcXyDEA6WsbY4YNZaHB7XbGRtTQE3cZsPLyZsGet5PS6i5piNyf/zmEAFWMv1g==
+X-Received: by 2002:a05:6a00:179e:b0:725:41c4:dbc7 with SMTP id d2e1a72fcca58-739d636e2bamr5120001b3a.4.1743689319132;
+        Thu, 03 Apr 2025 07:08:39 -0700 (PDT)
+Received: from localhost ([216.228.125.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1a83sm1556086b3a.13.2025.04.03.07.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:08:38 -0700 (PDT)
+Date: Thu, 3 Apr 2025 10:08:35 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32
+ warnings
+Message-ID: <Z-6WY4a6RV1bEbNU@thinkpad>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
- native_wrmsrl()
-To: Andrew Cooper <andrew.cooper3@citrix.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, peterz@infradead.org, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-2-xin@zytor.com>
- <0da43a86-81b0-4388-b47b-3a76b15f2a4c@citrix.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <0da43a86-81b0-4388-b47b-3a76b15f2a4c@citrix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401182347.3422199-3-irogers@google.com>
 
-On 3/31/2025 2:45 PM, Andrew Cooper wrote:
-> On 31/03/2025 9:22 am, Xin Li (Intel) wrote:
->> __wrmsr() is the lowest level primitive MSR write API, and its direct
->> use is NOT preferred.  Use its wrapper function native_wrmsrl() instead.
->>
->> No functional change intended.
->>
->> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
+> The clang warning -Wshorten-64-to-32 can be useful to catch
+> inadvertent truncation. In some instances this truncation can lead to
+> changing the sign of a result, for example, truncation to return an
+> int to fit a sort routine. Silence the warning by making the implicit
+> truncation explicit.
 > 
-> The critical piece of information you're missing from the commit message
-> is that the MSR_IMM instructions take a single u64.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/include/asm-generic/bitops/fls64.h | 2 +-
+>  tools/include/linux/bitfield.h           | 2 +-
+>  tools/include/linux/bitmap.h             | 2 +-
+>  tools/include/linux/err.h                | 2 +-
+>  tools/include/linux/hash.h               | 2 +-
+>  tools/include/linux/math64.h             | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> Therefore to use them, you've got to arrange for all callers to provide
-> a single u64, rather than a split u32 pair.
+> diff --git a/tools/include/asm-generic/bitops/fls64.h b/tools/include/asm-generic/bitops/fls64.h
+> index 866f2b2304ff..9ad3ff12f454 100644
+> --- a/tools/include/asm-generic/bitops/fls64.h
+> +++ b/tools/include/asm-generic/bitops/fls64.h
+> @@ -21,7 +21,7 @@ static __always_inline int fls64(__u64 x)
+>  	__u32 h = x >> 32;
+>  	if (h)
+>  		return fls(h) + 32;
+> -	return fls(x);
+> +	return fls((__u32)x);
 
-You definitely caught me on how I was thinking it ;)
+Can you keep kernel and tools sources synchronized?
 
-Sometimes it is nice to see a change log with a thinking process.
+>  }
+>  #elif BITS_PER_LONG == 64
+>  static __always_inline int fls64(__u64 x)
+> diff --git a/tools/include/linux/bitfield.h b/tools/include/linux/bitfield.h
+> index 6093fa6db260..aa0b8e52214f 100644
+> --- a/tools/include/linux/bitfield.h
+> +++ b/tools/include/linux/bitfield.h
+> @@ -146,7 +146,7 @@ static __always_inline __##type type##_encode_bits(base v, base field)	\
+>  {									\
+>  	if (__builtin_constant_p(v) && (v & ~field_mask(field)))	\
+>  		__field_overflow();					\
+> -	return to((v & field_mask(field)) * field_multiplier(field));	\
+> +	return to((__##type)((v & field_mask(field)) * field_multiplier(field))); \
+>  }									\
+>  static __always_inline __##type type##_replace_bits(__##type old,	\
+>  					base val, base field)		\
+> diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+> index 2a7f260ef9dc..b7a7c752e4f2 100644
+> --- a/tools/include/linux/bitmap.h
+> +++ b/tools/include/linux/bitmap.h
+> @@ -63,7 +63,7 @@ static inline bool bitmap_full(const unsigned long *src, unsigned int nbits)
+>  	return find_first_zero_bit(src, nbits) == nbits;
+>  }
+>  
+> -static inline unsigned int bitmap_weight(const unsigned long *src, unsigned int nbits)
+> +static inline unsigned long bitmap_weight(const unsigned long *src, unsigned int nbits)
+>  {
+>  	if (small_const_nbits(nbits))
+>  		return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
 
-Thanks!
-     Xin
+Oh no... bitmap_weight() is used in printk(), and you'll get tons of
+warnings because, say %x should be replaced with %lx. 
+
+> diff --git a/tools/include/linux/err.h b/tools/include/linux/err.h
+> index 332b983ead1e..9c1746e3696d 100644
+> --- a/tools/include/linux/err.h
+> +++ b/tools/include/linux/err.h
+
+I don't maintain the this and the following subsystems. Can you make
+it a separate patch?
+
+> @@ -55,7 +55,7 @@ static inline bool __must_check IS_ERR_OR_NULL(__force const void *ptr)
+>  static inline int __must_check PTR_ERR_OR_ZERO(__force const void *ptr)
+>  {
+>  	if (IS_ERR(ptr))
+> -		return PTR_ERR(ptr);
+> +		return (int)PTR_ERR(ptr);
+>  	else
+>  		return 0;
+>  }
+> diff --git a/tools/include/linux/hash.h b/tools/include/linux/hash.h
+> index 38edaa08f862..ecc8296cb397 100644
+> --- a/tools/include/linux/hash.h
+> +++ b/tools/include/linux/hash.h
+> @@ -75,7 +75,7 @@ static __always_inline u32 hash_64_generic(u64 val, unsigned int bits)
+>  {
+>  #if BITS_PER_LONG == 64
+>  	/* 64x64-bit multiply is efficient on all 64-bit processors */
+> -	return val * GOLDEN_RATIO_64 >> (64 - bits);
+> +	return (u32)(val * GOLDEN_RATIO_64 >> (64 - bits));
+>  #else
+>  	/* Hash 64 bits using only 32x32-bit multiply. */
+>  	return hash_32((u32)val ^ __hash_32(val >> 32), bits);
+> diff --git a/tools/include/linux/math64.h b/tools/include/linux/math64.h
+> index 4ad45d5943dc..03d6c5220957 100644
+> --- a/tools/include/linux/math64.h
+> +++ b/tools/include/linux/math64.h
+> @@ -48,7 +48,7 @@ static inline u64 mul_u64_u32_shr(u64 a, u32 b, unsigned int shift)
+>  	u32 ah, al;
+>  	u64 ret;
+>  
+> -	al = a;
+> +	al = (u32)a;
+>  	ah = a >> 32;
+>  
+>  	ret = mul_u32_u32(al, b) >> shift;
+> -- 
+> 2.49.0.504.g3bcea36a83-goog
