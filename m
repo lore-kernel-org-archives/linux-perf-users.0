@@ -1,183 +1,224 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0300A2505D6;
-	Thu,  3 Apr 2025 15:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42945223708
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Apr 2025 15:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693825; cv=none; b=LDOwPLVG0kGytA2AceMewtQSaXL7D0Ml1qFJQuJspmlsngUzfsIiLAHGV8wMOfvIdf/tFElAqaw4GSPalmTedxyv04e+i30aYC2I9izs++rOUfHwDxmzKH5frXOTIY8/K939ETjlMtIg4FQGIq+xdUcqK6SSMb6EbNL0FrO5M8Q=
+	t=1743695069; cv=none; b=JWZEGK9R5cjch7+RXhWT3mDZYUPByTEvaMc2LuQguYD9UCiU0iCK8IJ0wR0Pbu++UjGT+gaKtzaPJ1DQne8X0RxXPhegTOy7rzL+F01kxBM8YIs0wP4n7NO6kMNGfSg7qyltmBjxLNphNcu6auf8c1DyZgYREtUoBmr6xJEvF9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693825; c=relaxed/simple;
-	bh=0rzr3+1EKy2s0lYSqwKrAgJ24jrlfxrDyurHnT3rTjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MryQ+NkAHwaR+Xe29tYbpBeFqT72LI+vMlK/PmmHxPZzoTfsiUtbmwtk+G08JdFh+gO1Lz5gjF2ENHktA5efVYQqo+ejEejIa0BvP8myQgm8MGnnNw9IwnW51o4Ii3Aa4L9JcKTEp2AJLq3G1m39dBzjY/Nxm8Nm69xPPicV2eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=is4MODbn; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743695069; c=relaxed/simple;
+	bh=Yyd/ed5MMi60QGFdrAdj3VAxV/SgI8NOXxsuylawCw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jti0pb46Gign0HdzRU3+mWxiEfKNC99GlEex3SF+ykXaFYLfId+0ea9AumGDglgEjoEFM5IyEUrmhDx+IjCD4zKsLCIX6Gs++Ybe9p1kAhhUkore67cvq3OeghocUgAar1J1nOhhJvi6CvM8QZXX8RjSc5UqN7irkzmb4eAiCE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e5DmTfts; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="is4MODbn"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3032aa1b764so829962a91.1;
-        Thu, 03 Apr 2025 08:23:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e5DmTfts"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2263428c8baso446835ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Apr 2025 08:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743693823; x=1744298623; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rdXwfXpVZ0DoDhTpXcomK86T+y8d/zsLL6G5IX+ENN4=;
-        b=is4MODbnqJ+hsJMF2UHBZ7ho+9pmNGZ3GBJDNATGBVzskn99ZW+OLsA16s7zRf15yC
-         60bFYIGR6ybMow7IfNT4FXJjabu1sP7BFbbDWal9XQzleOm54OIFhz8OqBrArKZaz1UE
-         uJpEq6OzLykGYpT4ddu8xNWZ0drcU9HIEdolSPdrCzF+4/pmZMjcTs6U4B7YlthgFej4
-         K06L+hYgnoaEfB+APAmSO7KEB+R3wdfbjf/1Yw1lAWuyWuv8Dr25vGknNZuWzpPwG0BO
-         CKEE8QQ+CChNVv0jJxFMdYdCbn/OkxTdypR1oJRkPgU1xllc20UOL68kIb1QWRykkJhb
-         vVxw==
+        d=google.com; s=20230601; t=1743695067; x=1744299867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SRSsOtJbLuqCXK/bn2iwJ7kzAyxalKjfc0jwC9PmH0E=;
+        b=e5DmTftsY1JPC8l8qk2BdZd7FoC2opFVyXmh2jwBUiO7iHT5DmYjXjdENty6lduDtf
+         aNXR7L+2RhuOQCkOEeoN4pfC8IBghm6UjrhLfspJKjRPcWnoIyUe52d1SYG4Xm3jywEB
+         breYUWtkVpeAZUEb483xhy0tPUAsTOgpHgWBw7CKxZ0Hiphluq/YaVC+g5xMFCFLgGXy
+         yrdf5Ba6hlxVyBF/F4YNTUzZcFA6R8jJNSGFG9TOGxhdqZfQP35i6m61uIz2pid4bADA
+         iFyzpyifvMauGuz0+hLE2td2YEtTK54PBtDIXBDdjoxHVngUgN/FDVyD/LWrNkbno/d1
+         6DJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743693823; x=1744298623;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rdXwfXpVZ0DoDhTpXcomK86T+y8d/zsLL6G5IX+ENN4=;
-        b=VoP4RaYgWDgXOtRo6EWWN/b7BvBRHKgGuuTbi/Cqe3QHRwXAbaBnyjFkdGIuqoLBOE
-         PylH8DnzwoVzCam+XtT5cRXInIonw6I9UG0BH+VbLSmyq/PcwofypF4c7BCukr0rdUd/
-         RI67LareNnpSqYBR/ve0J5FSx7ZFH7v0rkPW0SJFHzPWw6l4K4+r3LV3wWyaqjR0uRU8
-         BuhD7ds0RUBSUZy0FYnr9EuspNNnRvEND7j0506YtuqAistHa3VfauWZFSajHjRRDb0p
-         wfFL3YDckDF1nITancoDtQ73jH/ML7XFyMgG9y83WGS6t/RFPMR/ah/FJsOBbA3q3coj
-         q65g==
-X-Forwarded-Encrypted: i=1; AJvYcCVo68Zun7MpjCqjawH5YNaEO+rQaftRxeJQ2HTroEHBG818CtxCv1MRIeI5psT0vBfxc+5lfhXSu/CFW7I=@vger.kernel.org, AJvYcCWYROlh6WUcG1sHFPR4qrufuf7I7pdYJ87QTd39bZb/pnzY9syJXFIYQ9D8+5bc9DRWFfBHDTrJX0UFRlkspAZ3Mw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZprdn++pvrnxXzGHiDyIm7Lv9lH60/kg51C5K6jfxvHvj7suv
-	WLZSqMQDxpBbqUKkN8udDACyC+NICPPmNmLvRuEybyMWjZWBP1am
-X-Gm-Gg: ASbGncsBwhC4Kw43Qi+iABHWRuFotSoXXFuZXqAf4jij9RXrFDw8LWxsHWT2+1HLMNx
-	wEdPUQu4WwDBlHPUULu2Xe0xBMvTyYlkz5sGg1l78zEQSKGdA2MUJRu0GQ6kmBj4WwUtZV2LbkB
-	rOwvzCvZpDMe61g7mm0/XBJcdKkpaBYf6ckVTAWHNxUrfnNUU5AWDLxsoyKMrmtCD3HgAr94TFm
-	vXNRyRWNhrSeZOgs9dR/h7xtvY6bgokGdPQFcfk9eMKm8Vam5GXtt78LnxSCom7suOmOyn2WmAw
-	maB9zkMu+4VEKR6yfnthXTk7nGyoOaxwDfonQKoxa3qQ
-X-Google-Smtp-Source: AGHT+IGgDqNSkiZ/1y0n4ex34i9tdTgxiA1kQ24PuisY0GpK5fEv6qK05oKY6Sj+Y5rZ3NPeA8r9JQ==
-X-Received: by 2002:a17:90b:35c2:b0:2ee:d63f:d8f with SMTP id 98e67ed59e1d1-30531fa5fbcmr30989502a91.13.1743693822517;
-        Thu, 03 Apr 2025 08:23:42 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a30f00sm1638289a91.26.2025.04.03.08.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 08:23:41 -0700 (PDT)
-Date: Thu, 3 Apr 2025 11:23:39 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32
- warnings
-Message-ID: <Z-6n-3ObiNNLQzFw@thinkpad>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-3-irogers@google.com>
- <Z-6WY4a6RV1bEbNU@thinkpad>
- <Z-6aoJ3ohVHPsF0A@thinkpad>
- <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1743695067; x=1744299867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SRSsOtJbLuqCXK/bn2iwJ7kzAyxalKjfc0jwC9PmH0E=;
+        b=UMUN+4J2dqpWcyf7GuBz2TixZGGxXxTA4uLPK3EaZle55SoXiB7qxYc+2kH1juavne
+         xLmzTwBcTPOTVp7tQJ4lJ6IhQa+Xm4sc1pDV9oKTpowtySaF7tIOur7VA8Ix/NnBnVg3
+         FzTy5/sT3XEfqfyJgUuVqtfoKEtvrNx9zxKPCABjYcxnuL2DneX5bxruW+GmXdAZ68Bp
+         QAFBkhlGgGXsexRw2KLbdMJ4AO6P9pbKCGw536JsZa1yCIWyvS4HzmerL+UW4rcznQn7
+         d2p5jLGuByfos7tWdsPnfufXXWBk9ETB/ExzxAdTDb1CIRAkzYK3eqy8sCCSpEWqLbte
+         krzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSNerQfHTVOpCF4tos2USVuL6WSzbfe75OxZWzNJOYJA7FlkXzN2MQUlwJVMiBLOm7mMwam/8oLOvvh3bvteJP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3r24qYjLmBLljVSU76hzWgzwTMLpWUi+aaxb1I8czZWcTiHxx
+	qsYZpbPTeZFmOvF0DDHyRne3RRZcsd+VGuccLtEMG1JeH6CydA9yOCMKC9o/igX8NGrFNA274l8
+	uC+fyCEWKOmeO392AfratwFXThtvVkNLdvUlI
+X-Gm-Gg: ASbGnct+z/9Q9pUmpZdvUHv5QnPNHzBgF1jhD8I35aQEvShJrorPgFhWDIWc604FqCU
+	T0qzHE4BXSieowMyOtRLARYs4oFsp1YPrFiWbMs8vBKDNowuRIXfdnFFKWqgXkpWit0ANXh5cH+
+	xnp9Zk+HrLwEeMYVABgTDLuRBvUAI4e27J5gbW+3QUkfqussEaVonG
+X-Google-Smtp-Source: AGHT+IH1OdpqAVIacr6SreqhmQIb5Gyz1kDthHsyWP+8fBn7wfz4hYn2ND1JF//5xT5witqTgGYCFp2tsSYtL9c8LT4=
+X-Received: by 2002:a17:902:7288:b0:223:37ec:63be with SMTP id
+ d9443c01a7336-22977510221mr2961035ad.4.1743695066631; Thu, 03 Apr 2025
+ 08:44:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
+References: <20250210183808.130522-1-irogers@google.com> <20250210183808.130522-4-irogers@google.com>
+ <0924de97-67ec-4c8a-8c5c-66264bdd2748@linux.intel.com>
+In-Reply-To: <0924de97-67ec-4c8a-8c5c-66264bdd2748@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 3 Apr 2025 08:44:15 -0700
+X-Gm-Features: AQ5f1JpG2arv6ejbPWf41WWNLCaRuWta19Ou2Q1F6cdO7-CMAV62aBVNOfR_PEo
+Message-ID: <CAP-5=fVU1A+faRRCJjNsZuO5-0ifpT1C=846qpL_fjfUgVO1bw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] perf parse-events: Set is_pmu_core for legacy
+ hardware events
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 07:52:45AM -0700, Ian Rogers wrote:
-> On Thu, Apr 3, 2025 at 7:26 AM Yury Norov <yury.norov@gmail.com> wrote:
+On Thu, Apr 3, 2025 at 8:17=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2025-02-10 1:38 p.m., Ian Rogers wrote:
+> > Also set the CPU map to all online CPU maps. This is done so the
+> > behavior of legacy hardware and hardware cache events better matches
+> > that of sysfs and json events during
+> > __perf_evlist__propagate_maps. Fix missing cpumap put in "Synthesize
+> > attr update" test.
 > >
-> > On Thu, Apr 03, 2025 at 10:08:39AM -0400, Yury Norov wrote:
-> > > On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
-> > > > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > > > inadvertent truncation. In some instances this truncation can lead to
-> > > > changing the sign of a result, for example, truncation to return an
-> > > > int to fit a sort routine. Silence the warning by making the implicit
-> > > > truncation explicit.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/event_update.c |  1 +
+> >  tools/perf/util/parse-events.c  | 37 ++++++++++++++++++++-------------
+> >  2 files changed, 24 insertions(+), 14 deletions(-)
 > >
-> > I'm the first person in the To list, but only a couple patches in the
-> > series are related to my area. If you want to move it with me, can you
-> > send bitmaps, bitfields etc. separately?
-> 
-> Hi Yury,
-> 
-> If you think it is worthwhile. I did the series to see how prevalent a
-> bug was in perf's code - inspired by Leo Yan fixing an instance of it.
-> I would prefer not to be on the hook for all the kernel warnings :-)
-> Perhaps casts to avoid changing bitmap_weight's type. Unfortunately to
-> get to where the perf issues were I needed to clean up header files.
-> In the bitmap cases the change is just to make implicit casts explicit
-> and I don't know how much value you see in that.
+> > diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_u=
+pdate.c
+> > index d6b4ce3ef4ee..9301fde11366 100644
+> > --- a/tools/perf/tests/event_update.c
+> > +++ b/tools/perf/tests/event_update.c
+> > @@ -109,6 +109,7 @@ static int test__event_update(struct test_suite *te=
+st __maybe_unused, int subtes
+> >       TEST_ASSERT_VAL("failed to synthesize attr update name",
+> >                       !perf_event__synthesize_event_update_name(&tmp.to=
+ol, evsel, process_event_name));
+> >
+> > +     perf_cpu_map__put(evsel->core.own_cpus);
+> >       evsel->core.own_cpus =3D perf_cpu_map__new("1,2,3");
+> >
+> >       TEST_ASSERT_VAL("failed to synthesize attr update cpus",
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 6c36b98875bc..8cccf1e22cdf 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -231,21 +231,30 @@ __add_event(struct list_head *list, int *idx,
+> >           struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
+> >  {
+> >       struct evsel *evsel;
+> > -     struct perf_cpu_map *cpus =3D perf_cpu_map__is_empty(cpu_list) &&=
+ pmu ? pmu->cpus : cpu_list;
+> > +     bool is_pmu_core;
+> > +     struct perf_cpu_map *cpus;
+> >
+> > -     cpus =3D perf_cpu_map__get(cpus);
+> > -     if (pmu)
+> > +     if (pmu) {
+> > +             is_pmu_core =3D pmu->is_core;
+> > +             cpus =3D perf_cpu_map__get(perf_cpu_map__is_empty(cpu_lis=
+t) ? pmu->cpus : cpu_list);
+> >               perf_pmu__warn_invalid_formats(pmu);
+> > -
+> > -     if (pmu && (attr->type =3D=3D PERF_TYPE_RAW || attr->type >=3D PE=
+RF_TYPE_MAX)) {
+> > -             perf_pmu__warn_invalid_config(pmu, attr->config, name,
+> > -                                           PERF_PMU_FORMAT_VALUE_CONFI=
+G, "config");
+> > -             perf_pmu__warn_invalid_config(pmu, attr->config1, name,
+> > -                                           PERF_PMU_FORMAT_VALUE_CONFI=
+G1, "config1");
+> > -             perf_pmu__warn_invalid_config(pmu, attr->config2, name,
+> > -                                           PERF_PMU_FORMAT_VALUE_CONFI=
+G2, "config2");
+> > -             perf_pmu__warn_invalid_config(pmu, attr->config3, name,
+> > -                                           PERF_PMU_FORMAT_VALUE_CONFI=
+G3, "config3");
+> > +             if (attr->type =3D=3D PERF_TYPE_RAW || attr->type >=3D PE=
+RF_TYPE_MAX) {
+> > +                     perf_pmu__warn_invalid_config(pmu, attr->config, =
+name,
+> > +                                             PERF_PMU_FORMAT_VALUE_CON=
+FIG, "config");
+> > +                     perf_pmu__warn_invalid_config(pmu, attr->config1,=
+ name,
+> > +                                             PERF_PMU_FORMAT_VALUE_CON=
+FIG1, "config1");
+> > +                     perf_pmu__warn_invalid_config(pmu, attr->config2,=
+ name,
+> > +                                             PERF_PMU_FORMAT_VALUE_CON=
+FIG2, "config2");
+> > +                     perf_pmu__warn_invalid_config(pmu, attr->config3,=
+ name,
+> > +                                             PERF_PMU_FORMAT_VALUE_CON=
+FIG3, "config3");
+> > +             }
+> > +     } else {
+> > +             is_pmu_core =3D (attr->type =3D=3D PERF_TYPE_HARDWARE ||
+> > +                            attr->type =3D=3D PERF_TYPE_HW_CACHE);
+> > +             if (perf_cpu_map__is_empty(cpu_list))
+> > +                     cpus =3D is_pmu_core ? perf_cpu_map__new_online_c=
+pus() : NULL;
+>
+> All online CPUs? Is there a problem for hybrid?
 
-Your changes  are technically correct (except for non-synced kernel and
-tools), make the code cleaner, at least to me, and address pretty valid
-compiler's concerns. To me, it's worth to apply.
+For hybrid if you do cpu_atom/cycles/ then the PMU is found by
+perf_pmus__find here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n1651
+
+The wildcard case (e.g. perf stat -e cycles ...) scans all the PMUs
+passing the respective pmu into __add_event:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/parse-events.c?h=3Dperf-tools-next#n1382
+
+For non-hybrid the PMU is given by perf_pmus__find_by_type which only
+returns a PMU if there is an exact match on the type, ie it won't
+return perf_pmus__find_core_pmu  when asked to lookup the PMU for a
+legacy type, evsel__find_pmu will do this though.
+
+Anyway, the assumption in this legacy configuration no PMU case is
+that the event is heading to all CPUs, which is true for software and
+tracepoint. For hybrid we could get into this kind of problem is sysfs
+isn't mounted, but I think we're pretty generally broken in that case
+anyway.
+
+Fwiw, I'm carrying these changes in google's tree and test it on my
+hybrid desktop:
+https://github.com/googleprodkernel/linux-perf
 
 Thanks,
-Yury
+Ian
+
+> Thanks,
+> Kan> +          else
+> > +                     cpus =3D perf_cpu_map__get(cpu_list);
+> >       }
+> >       if (init_attr)
+> >               event_attr_init(attr);
+> > @@ -260,7 +269,7 @@ __add_event(struct list_head *list, int *idx,
+> >       evsel->core.cpus =3D cpus;
+> >       evsel->core.own_cpus =3D perf_cpu_map__get(cpus);
+> >       evsel->core.requires_cpu =3D pmu ? pmu->is_uncore : false;
+> > -     evsel->core.is_pmu_core =3D pmu ? pmu->is_core : false;
+> > +     evsel->core.is_pmu_core =3D is_pmu_core;
+> >       evsel->auto_merge_stats =3D auto_merge_stats;
+> >       evsel->pmu =3D pmu;
+> >       evsel->alternate_hw_config =3D alternate_hw_config;
+>
