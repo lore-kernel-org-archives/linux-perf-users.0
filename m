@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A9D190679;
-	Thu,  3 Apr 2025 16:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18FF2D052;
+	Thu,  3 Apr 2025 16:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697457; cv=none; b=DH/GGeA+1QAXVkKcPVIDXmXUr+DZFZSqBGMOc2rKIh6fv3RTde1AFin0qq9W+ROGgZXfpGRIPr5Twn4rURoscKpveXSCynm85ZyRlTZN9SIrs1QIY3RY+4h3SupwB2MwImewRzd5JvRQd/SbQojZJaVg0vDK1ziKKAo/wzaGQ8o=
+	t=1743697827; cv=none; b=NCFcR5R8mu/Rxs0RMXBtHdwNLFyxaIMWoHLK/xyDT+VJekOWCvO9R+Itogmh2WW9mXJmyrB4AYNujdNsm8Dbd5kzDY+zNiIp++CHRIlCYzcTz72XeNkbAjK4BlQXCJffQQpqGULSmCJSrpTsA4jT5n5w2U4J4wwmJR4TDSYjgzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697457; c=relaxed/simple;
-	bh=vhrl4p3qftt6QxANAuIi+azQRkD9hhqzoqCdg7PCsT8=;
+	s=arc-20240116; t=1743697827; c=relaxed/simple;
+	bh=od+jl7zVZvKgoDBSmlp+LMyewxJFQr/Zo9tM+HJKCps=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBAWPdu7cXR40ujx2OejRXRWSG01FXlBSheePfNW1Ct+FsHW/f8EPDIGSgsmfcEBadP0accwsCSGkxpQRwj5fBVBxfiR5qCX2h1ohpuLTTNKhSpdDwMydZxu5Y8sEgjrnVpD9a+PYXnL5UiytEawGIKigvMBUjllHV+iKoceFG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rbbT45SN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X34KOPXMWGCBMPecgu0koci/QUgC/I4hl57miQoA3ZasNdiDwpVsQ2uo8mz0XFluXKee69wHVRS2ibCKsmMFZ71eNKILUGzP3ouQp8RZ1Ea5k/IsuaBbAlS9RvheaFXEzjBIqU4RCRk9tUW2PfR8KYRaU2opLzL2n+LovlI6n4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJxNpYzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rbbT45SN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D490C4CEE3;
-	Thu,  3 Apr 2025 16:24:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJxNpYzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184DDC4CEE3;
+	Thu,  3 Apr 2025 16:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743697457;
-	bh=vhrl4p3qftt6QxANAuIi+azQRkD9hhqzoqCdg7PCsT8=;
+	s=k20201202; t=1743697826;
+	bh=od+jl7zVZvKgoDBSmlp+LMyewxJFQr/Zo9tM+HJKCps=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rbbT45SNiUqNV3TyRh2EOo0pHftvGWFWRH6vBPJudMPmwiLb6WS7wgiK5Q59kVq/l
-	 /YJb64mzcTT2KqJ9UYP5d2xZ5n9/Jvr/cWUkrkbGnIXzQjEBIO38AGnM9vTtABopU/
-	 YAJHsePiJIqDiBQELEuWxMPSSa2HKRV53DWvBXptAhBL1IgRu2Lxwm90pLLwMLv38o
-	 ONUPyD3uH/jCdrUJkyhbEpCcdp2Ys7NwBdEd1sF/A4gIxp7Hoyh0Cl3b9gddvXT4lz
-	 XKzokxWQ8vKM0QK/Wccns5rkNWZemPG6vH3fGD9ZTEESdQgFsLCw6SC2OTh/RL0pZI
-	 yU+rwKUcUY4TA==
-Date: Thu, 3 Apr 2025 09:24:13 -0700
+	b=bJxNpYzI0tSBL5Fd29YBqt79bpQuPHJNkgU4HWnA1ipoJVQQZT04gS6GlTXUNKCwy
+	 3rcJdbbtZ1g5w0e2VEc4waAwbeLBmoazhpr56/B+rqY2+09YmOSm3SK7rhCp68n+Lr
+	 R3G+z+RTFDsgCo2N5w5VeWUNyc9m/eisSE7A4xc0VMJ4DNcGiXJgqitCxfSFpKrmqM
+	 lpbZ7wkGZQgQbumA5YCATMoACJohz5/36tiJVZuB6+isXlsuNB3XJ80QqhbjYcEkut
+	 buu/3pAZLr+gH0MryQDouwotjTR47MnGIKmSAPS7JraCOv/Tq9a4zA0NG4H1RtoHU7
+	 yE9OI/ry0AzBg==
+Date: Thu, 3 Apr 2025 09:30:22 -0700
 From: Kees Cook <kees@kernel.org>
 To: Bhupesh <bhupesh@igalia.com>
 Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
@@ -41,11 +41,11 @@ Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
 	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
 	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
 	vschneid@redhat.com
-Subject: Re: [PATCH v2 3/3] kthread: Use 'task_struct->full_name' to store
- kthread's full name
-Message-ID: <202504030923.1FE7874F@keescook>
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+Message-ID: <202504030924.50896AD12@keescook>
 References: <20250331121820.455916-1-bhupesh@igalia.com>
- <20250331121820.455916-4-bhupesh@igalia.com>
+ <20250331121820.455916-2-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,77 +54,129 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250331121820.455916-4-bhupesh@igalia.com>
+In-Reply-To: <20250331121820.455916-2-bhupesh@igalia.com>
 
-On Mon, Mar 31, 2025 at 05:48:20PM +0530, Bhupesh wrote:
-> Commit 6986ce24fc00 ("kthread: dynamically allocate memory to store
-> kthread's full name"), added 'full_name' in parallel to 'comm' for
-> kthread names.
+On Mon, Mar 31, 2025 at 05:48:18PM +0530, Bhupesh wrote:
+> Provide a parallel implementation for get_task_comm() called
+> get_task_full_name() which allows the dynamically allocated
+> and filled-in task's full name to be passed to interested
+> users such as 'gdb'.
 > 
-> Now that we have added 'full_name' added to 'task_struct' itself,
-> drop the additional 'full_name' entry from 'struct kthread' and also
-> its usage.
+> Currently while running 'gdb', the 'task->comm' value of a long
+> task name is truncated due to the limitation of TASK_COMM_LEN.
+> 
+> For example using gdb to debug a simple app currently which generate
+> threads with long task names:
+>   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>   # cat log
+> 
+>   NameThatIsTooLo
+> 
+> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+> that all the legacy / existing ABI, continue to work as before using
+> '/proc/$pid/task/$tid/comm'.
+> 
+> This patch only adds a parallel, dynamically-allocated
+> 'task->full_name' which can be used by interested users
+> via '/proc/$pid/task/$tid/full_name'.
+> 
+> After this change, gdb is able to show full name of the task:
+>   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>   # cat log
+> 
+>   NameThatIsTooLongForComm[4662]
 > 
 > Signed-off-by: Bhupesh <bhupesh@igalia.com>
-
-I'd like to see this patch be the first patch in the series. This show
-the existing use for "full_name". (And as such it'll probably need bits
-from patch 1.)
-
--Kees
-
 > ---
->  kernel/kthread.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  fs/exec.c             | 21 ++++++++++++++++++---
+>  include/linux/sched.h |  9 +++++++++
+>  2 files changed, 27 insertions(+), 3 deletions(-)
 > 
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index 5dc5b0d7238e..46fe19b7ef76 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -66,8 +66,6 @@ struct kthread {
->  #ifdef CONFIG_BLK_CGROUP
->  	struct cgroup_subsys_state *blkcg_css;
->  #endif
-> -	/* To store the full name if task comm is truncated. */
-> -	char *full_name;
->  	struct task_struct *task;
->  	struct list_head hotplug_node;
->  	struct cpumask *preferred_affinity;
-> @@ -108,12 +106,12 @@ void get_kthread_comm(char *buf, size_t buf_size, struct task_struct *tsk)
+> diff --git a/fs/exec.c b/fs/exec.c
+> index f45859ad13ac..4219d77a519c 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
 >  {
->  	struct kthread *kthread = to_kthread(tsk);
+>  	struct task_struct *me = current;
+>  	int retval;
+> +	va_list args;
+> +	char *name;
+> +	const char *fmt;
 >  
-> -	if (!kthread || !kthread->full_name) {
-> +	if (!kthread || !tsk->full_name) {
->  		strscpy(buf, tsk->comm, buf_size);
->  		return;
+>  	/* Once we are committed compute the creds */
+>  	retval = bprm_creds_from_file(bprm);
+> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  		 * detecting a concurrent rename and just want a terminated name.
+>  		 */
+>  		rcu_read_lock();
+> -		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
+> -				true);
+> +		fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
+> +		name = kvasprintf(GFP_KERNEL, fmt, args);
+> +		if (!name)
+> +			return -ENOMEM;
+> +
+> +		me->full_name = name;
+> +		__set_task_comm(me, fmt, true);
+
+I don't want to add new allocations to the default exec path unless we
+absolutely must.
+
+In the original proposal this was about setting thread names (after
+exec), and I think that'll be fine.
+
+>  		rcu_read_unlock();
+>  	} else {
+> -		__set_task_comm(me, kbasename(bprm->filename), true);
+> +		fmt = kbasename(bprm->filename);
+> +		name = kvasprintf(GFP_KERNEL, fmt, args);
+> +		if (!name)
+> +			return -ENOMEM;
+> +
+> +		me->full_name = name;
+> +		__set_task_comm(me, fmt, true);
 >  	}
+
+I think we can just set me->full_name = me->comm by default.
+
 >  
-> -	strscpy_pad(buf, kthread->full_name, buf_size);
-> +	strscpy_pad(buf, tsk->full_name, buf_size);
->  }
+>  	/* An exec changes our domain. We are no longer part of the thread
+> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  	return 0;
 >  
->  bool set_kthread_struct(struct task_struct *p)
-> @@ -153,7 +151,6 @@ void free_kthread_struct(struct task_struct *k)
->  	WARN_ON_ONCE(kthread->blkcg_css);
->  #endif
->  	k->worker_private = NULL;
-> -	kfree(kthread->full_name);
->  	kfree(kthread);
->  }
+>  out_unlock:
+> +	kfree(me->full_name);
+>  	up_write(&me->signal->exec_update_lock);
+>  	if (!bprm->cred)
+>  		mutex_unlock(&me->signal->cred_guard_mutex);
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 56ddeb37b5cd..053b52606652 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1166,6 +1166,9 @@ struct task_struct {
+>  	 */
+>  	char				comm[TASK_COMM_LEN];
 >  
-> @@ -430,7 +427,7 @@ static int kthread(void *_create)
->  		kthread_exit(-EINTR);
->  	}
+> +	/* To store the full name if task comm is truncated. */
+> +	char				*full_name;
+> +
+>  	struct nameidata		*nameidata;
 >  
-> -	self->full_name = create->full_name;
-> +	self->task->full_name = create->full_name;
->  	self->threadfn = threadfn;
->  	self->data = data;
+>  #ifdef CONFIG_SYSVIPC
+> @@ -2007,6 +2010,12 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
+>  	buf;						\
+>  })
 >  
-> -- 
-> 2.38.1
-> 
+> +#define get_task_full_name(buf, buf_size, tsk) ({	\
+> +	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
+> +	strscpy_pad(buf, (tsk)->full_name, buf_size);	\
+> +	buf;						\
+> +})
+
+I think it should be possible to just switch get_task_comm() to use
+(tsk)->full_name.
 
 -- 
 Kees Cook
