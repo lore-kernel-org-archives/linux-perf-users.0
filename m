@@ -1,152 +1,190 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA76D14A4C7;
-	Fri,  4 Apr 2025 04:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5A72E62C0;
+	Fri,  4 Apr 2025 05:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743740218; cv=none; b=GqIUJ+wPDdb7FEVUbCfZcIgIIURM4yzVeeZkoV3S4S0NBRGYpzNHqe5zCwcQh4ESCIO5ymQhf4N0WTywbqVtctJJAGShe/8rdGO/qalulReqzbthUjyglpK36dfQk0VUoppglj6dv7NwKB6N/B/mwS01QxW0M71PWvoXeP+FD6U=
+	t=1743744702; cv=none; b=ExgHfS1++KRJJiuBOrmfYrTQmRMEatR0nnNOhRFTtCF/Xhqunme6jR6d1vEWm7+skdr1S/AGapyNUqE4z5JSvDUq3z8ssCkQisTbknI+RuaUct8H1jKyoilBjzcXX0r9GdQHZ5cdscI6IeTn2me6hxqQAgsNpDmLiU5FNZ33Trw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743740218; c=relaxed/simple;
-	bh=y+pQ0N2FyDmDFD1EqNWG0arm7ZC8meGCYxaKT3eCFWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FqihtQBHQ6Y2BhIlxACLGvsJRDVpIV6H6lpiod3PZT/OS7D8bqeaLaLGng0K3MgrUfr5lc2ygNGiUz8tc6Uz1bQP1mBSj2RROEzV1jNDHPkib86iyrS4JZ7xiCZxZepZBS6u78xi5zKlPBLln7MEH3irvqWKnTlh8AWoZYWsiHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XM4PeyfU; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743744702; c=relaxed/simple;
+	bh=BvmulAeaabO85X4ftFXFh02y82mIVRxbrUS0v/w2564=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h+/hF+RAhYcGRaYHxEVhuDf8V+d5MHXQMP97Yj/F8KSG4LRn5PJ299jqWXe0U6AIXQuoWXRsdcsLM8QAU69ucY4prlbMLSnESntDCWdDjOoMDCCW3wEGn3tamcJEfZrBNH0XiOagIfYMaGE25lt8w9eNUZmRqNux0v2arBgde8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Q9kDdsYy; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XM4PeyfU"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso1937993b3a.2;
-        Thu, 03 Apr 2025 21:16:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743740216; x=1744345016; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m5agAZSfSkx9AY9eawF+jGKK/rmtQCgnrXpeJjF2DZY=;
-        b=XM4PeyfUDfXU/BAv+rLpjSZHL4X6HYBLhCqEd5HklNfrWeXXqMcoQP7bq1TewDKtDr
-         oX7RvhDkwzfG0i6xuriwWeB4PiBHEiOph3D/yb451JuEiQzSSC67Ru+KZz+2RzKa1XQX
-         1TA4RBehLKXI/LpjKh0tycWrOei4GCw2LYxmDq59VSBGvZRlqzu3jTCiZqyte47JEmDF
-         m0Y8NI0mhvTGkocLjqzy7M8feDjGF/EKo7/g8cI6Gmcj3YknDuTrvfx9Mk2U6ekv4FQC
-         ZfB3xUJXuSLQaC7SEXSEgfdICAZWZtGZWpbtt94PsfcjMYt6LHI01zS1rIItbnMXCxxI
-         gitQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743740216; x=1744345016;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m5agAZSfSkx9AY9eawF+jGKK/rmtQCgnrXpeJjF2DZY=;
-        b=vfrg8Y0TiSo2hvzHNRQGysHEwoTcIlCoi2kjjuiCO12AwhCGsZqCXuj/ABCrqh2i+0
-         unjPziaB2SA+YnQSlrbZ01mCZ79DSwUyQE4thoW8KKlQ90uhE9OW1bNpzpmOkEB3Y/ky
-         hwHIV1y/lPRLJmskHPfDF/C0RzH/uluGdK8A1+ArVp/YUjdy5ZoMub+ZOjxAf4tc/PoP
-         wcw5iqidxg3l7UHX26sZ/Hopj+MJc9xVrIOIx7KPAjfFoRdU//0QUdMquYz/kGQLglvJ
-         SEAB9ccuiySRAht0QV5VHaQTJFbor89bz0WpALSKRyXNfgpDpjEj/UwGLmAYcTusgYTT
-         NMRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZgtu7D92pOHnT1Ooy39s+HfCnUfZYHhFYAPxiIYCjLjxu43Nmovo+fFHo5z4RT2BNUvc8u6BE1uFOaOc=@vger.kernel.org, AJvYcCXc6f0zaYtQL11IP6HQb6ScZmCgPd1JnB0t+FW3HKY/AkqhUWYGvgvtLxprwoJvacl/ynxVsZ+WLb4rnurYJsDkUw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8qiW3AG1RNsziSqGYro8PJNp41xNuKCG2l8PuFcSyDXCmtf/k
-	H+zsmeaUb8jcxY8whaHPeR7klkTUZ1U4neR/3179iitpXnlFNGf+
-X-Gm-Gg: ASbGncv4sYPt8wVcYiALGRO4CEqmGCsQWL9i3nd1SDSOeIfdIkr3DWyPFL041Nl4q/P
-	HAiwflCQeYvaMgc0Ajg+qxalTjMMeW6hkrVmU2U/fJFa0bwkBfYHanrzkZhNOOroMI31rN708RH
-	XERv8bP5/DbWreVn+bpJB/J51nbwyYBhCNcHq0mGdYOaiKxQrVanoYVOXgpONnAQRLC1v3Lizcl
-	hps7tP9ktaJ85h8DSSCheI6fmvgB2cc2G+QPz6cuGO6+QUukbEQQ1PQ+93N6WX2j+VLEfXzyqh7
-	SmGzfVRDhKhe/PpcLytpWiY7EEIGNHB/9dUudNihIUU5H0aMsLHLOOW2cRvCENU6oVeFUNSbf+p
-	0RQUP
-X-Google-Smtp-Source: AGHT+IEBFglo8zSnDqo8NPVmUw2iSuO6FsxUTQvbgHpZJGKLGRVHiLEibhujjeh38Hlx0NyPFVaEAg==
-X-Received: by 2002:a05:6a00:3ccd:b0:736:55ec:ea94 with SMTP id d2e1a72fcca58-739e4c2ee0fmr2714016b3a.20.1743740215755;
-        Thu, 03 Apr 2025 21:16:55 -0700 (PDT)
-Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1810sm2357431b3a.24.2025.04.03.21.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 21:16:55 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	peterz@infradead.org,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's tests
-Date: Thu,  3 Apr 2025 21:16:52 -0700
-Message-ID: <20250404041652.329340-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Q9kDdsYy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=m0feoZm9sH9aLLi6evQGqxqekCHH6wsr0FesFAZnxp4=; b=Q9kDdsYyKLrg2ePBI8QxjnP7KP
+	GOYdGm5/f7zZ9ffUbfAV7N69r5XFuMhC0InQJnxVvTa/PfYKsiQRphAmszK5f5NB/1nTNjxKg8I36
+	85ajkImalrnc+KtkGTFiEwriI/+NKUzAvxV9hHZrH8L78oN2JIktMfZKPA3/BaiiF6zarJzhKCJds
+	hV6i9URQjew2dz59SGm+BKyxl68ginscXCoyWXF+X224TiObOnGYGbKpCkewaHMiDuyWbsdKNlGy5
+	ZTx3qWo+X9YOhDJIonXIKRLzeJi6eso0wFUH0Md/m9vj6RJFbFv37WzZTOtfGr+AfVuG+vjd79dAo
+	fXZTxY2A==;
+Received: from [223.233.74.223] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u0Ze9-00BBxp-Gj; Fri, 04 Apr 2025 07:31:17 +0200
+Message-ID: <daa87c96-546d-c3c1-ef45-9213959ae629@igalia.com>
+Date: Fri, 4 Apr 2025 11:01:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+Content-Language: en-US
+To: Harry Yoo <harry.yoo@oracle.com>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
+ ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+ juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com
+References: <20250331121820.455916-1-bhupesh@igalia.com>
+ <20250331121820.455916-2-bhupesh@igalia.com> <Z-tlVsM2Dq70gC4r@harry>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <Z-tlVsM2Dq70gC4r@harry>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There are two failures that frequently occur in perf trace's tests. One
-is the failure of 'perf trace BTF general tests'; The other one is the
-failure of 'perf trace record and replay', which, when run independently,
-always succeeds.
+On 4/1/25 9:32 AM, Harry Yoo wrote:
+> On Mon, Mar 31, 2025 at 05:48:18PM +0530, Bhupesh wrote:
+>> Provide a parallel implementation for get_task_comm() called
+>> get_task_full_name() which allows the dynamically allocated
+>> and filled-in task's full name to be passed to interested
+>> users such as 'gdb'.
+>>
+>> Currently while running 'gdb', the 'task->comm' value of a long
+>> task name is truncated due to the limitation of TASK_COMM_LEN.
+>>
+>> For example using gdb to debug a simple app currently which generate
+>> threads with long task names:
+>>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>>    # cat log
+>>
+>>    NameThatIsTooLo
+>>
+>> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+>> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+>> that all the legacy / existing ABI, continue to work as before using
+>> '/proc/$pid/task/$tid/comm'.
+>>
+>> This patch only adds a parallel, dynamically-allocated
+>> 'task->full_name' which can be used by interested users
+>> via '/proc/$pid/task/$tid/full_name'.
+>>
+>> After this change, gdb is able to show full name of the task:
+>>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>>    # cat log
+>>
+>>    NameThatIsTooLongForComm[4662]
+>>
+>> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+>> ---
+>>   fs/exec.c             | 21 ++++++++++++++++++---
+>>   include/linux/sched.h |  9 +++++++++
+>>   2 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index f45859ad13ac..4219d77a519c 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>   {
+>>   	struct task_struct *me = current;
+>>   	int retval;
+>> +	va_list args;
+>> +	char *name;
+>> +	const char *fmt;
+>>   
+>>   	/* Once we are committed compute the creds */
+>>   	retval = bprm_creds_from_file(bprm);
+>> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>   		 * detecting a concurrent rename and just want a terminated name.
+>>   		 */
+>>   		rcu_read_lock();
+>> -		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
+>> -				true);
+>> +		fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
+>> +		name = kvasprintf(GFP_KERNEL, fmt, args);
+>> +		if (!name)
+>> +			return -ENOMEM;
+> Is it safe to return error here, instead of jumping to 'out_unlock' label
+> and then releasing locks?
 
-The root cause of the first failure, is that perf trace may give two types
-of output, depending on whether the comm of a process can be parsed, for
-example:
+Ok, let me modify this in v3 to ensure that locks are released properly.
 
-mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOREPLACE) = 0
-:312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE", NOREPLACE) = 0
+>> +		me->full_name = name;
+>> +		__set_task_comm(me, fmt, true);
+>>   		rcu_read_unlock();
+>>   	} else {
+>> -		__set_task_comm(me, kbasename(bprm->filename), true);
+>> +		fmt = kbasename(bprm->filename);
+>> +		name = kvasprintf(GFP_KERNEL, fmt, args);
+>> +		if (!name)
+>> +			return -ENOMEM;
+>> +
+>> +		me->full_name = name;
+>> +		__set_task_comm(me, fmt, true);
+>>   	}
+>>   
+>>   	/* An exec changes our domain. We are no longer part of the thread
+>> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>   	return 0;
+>>   
+>>   out_unlock:
+>> +	kfree(me->full_name);
+>>   	up_write(&me->signal->exec_update_lock);
+>>   	if (!bprm->cred)
+>>   		mutex_unlock(&me->signal->cred_guard_mutex);
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index 56ddeb37b5cd..053b52606652 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1166,6 +1166,9 @@ struct task_struct {
+>>   	 */
+>>   	char				comm[TASK_COMM_LEN];
+>>   
+>> +	/* To store the full name if task comm is truncated. */
+>> +	char				*full_name;
+>> +
+>>   	struct nameidata		*nameidata;
+>>   
+>>   #ifdef CONFIG_SYSVIPC
+>> @@ -2007,6 +2010,12 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
+>>   	buf;						\
+>>   })
+>>   
+>> +#define get_task_full_name(buf, buf_size, tsk) ({	\
+>> +	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
+>> +	strscpy_pad(buf, (tsk)->full_name, buf_size);	\
+>> +	buf;						\
+>> +})
+>> +
+>>   #ifdef CONFIG_SMP
+>>   static __always_inline void scheduler_ipi(void)
+>>   {
+>> -- 
+>> 2.38.1
+>>
+>>
 
-In the test, however, grep is always looking for the comm 'mv', which
-sometimes may not be present.
-
-The cause of the second failure is that 'perf trace BTF general tests'
-modifies the perf config, and because tests are run concurrently,
-subsequent tests use the modified perf config before the BTF general
-test can restore the original config. Mark the BTF general tests as
-exclusive will solve the failure.
-
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
----
- tools/perf/tests/shell/trace_btf_general.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-index a25d8744695e..4833618a116b 100755
---- a/tools/perf/tests/shell/trace_btf_general.sh
-+++ b/tools/perf/tests/shell/trace_btf_general.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf trace BTF general tests
-+# perf trace BTF general tests (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
- err=0
-@@ -29,7 +29,7 @@ check_vmlinux() {
- trace_test_string() {
-   echo "Testing perf trace's string augmentation"
-   if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
--    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-+    grep -q -E "^.*/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-   then
-     echo "String augmentation test failed"
-     err=1
-@@ -40,7 +40,7 @@ trace_test_buffer() {
-   echo "Testing perf trace's buffer augmentation"
-   # echo will insert a newline (\10) at the end of the buffer
-   if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
--    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-+    grep -q -E "^.*/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-   then
-     echo "Buffer augmentation test failed"
-     err=1
-@@ -50,7 +50,7 @@ trace_test_buffer() {
- trace_test_struct_btf() {
-   echo "Testing perf trace's struct augmentation"
-   if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
--    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-+    grep -q -E "^.*/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-   then
-     echo "BTF struct augmentation test failed"
-     err=1
--- 
-2.45.2
-
+Thanks.
