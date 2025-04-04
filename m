@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AD320E33E;
-	Fri,  4 Apr 2025 18:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D5D166F1A;
+	Fri,  4 Apr 2025 18:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743789750; cv=none; b=VDIcxSJf31aM3k0GiwIyb5xDOvQdLfIjwzgkr6fDyCJg0L83XS46MYNjaazcjKgc6+SqxH+YQKHqS6i5EgaGfNIqQE7Wq5drxLHKfTyynQiCXoOzRkvQJIsbWuELEH59s/izV1Fm76JpV1NaIQ6j3eQM349W7P8JPu44reeF3Jk=
+	t=1743790074; cv=none; b=FU67pk8Qz1EzUqoMzKHH4PIxpo6IJ3ZV6YMIWSur2KC/IR9KqcJrXfzpC+53n18oZQNXje1vZQEO/P45trlX8aK9oPBNnUNLGxUSxvcB6bZRSUT19w5P87WMPyKqu8VFPms8KXcdmFd9WBoVnsVr1qoVTghv/H8kASdf30F6/Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743789750; c=relaxed/simple;
-	bh=5bKVYp6tBNwdr8sgZ0U9e8u6ORf1X05snObhsyXiobo=;
+	s=arc-20240116; t=1743790074; c=relaxed/simple;
+	bh=5A4Gil0R3dVEPHFfgjiq6p1ds6V6qLfy5+KX6+GMF/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqzYcoucXaGiuhQDW+S1LmPQqO9FPzcbI36IoXFOb5GwI5ELXDh1KXQjoRhgWAYn4m1nSpqMjBYRTjvbLkSukaxBYSsrt7SAsW0QMXXQmYIxhd6Zfat6X4Kmju/geS4vh8HAq8EHGR+ATRijX7U14h88EFgoQcpuK+Pq40gCC/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXn3kcS3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UrT48d13sfzjdKimYon9/X/MBVheCGexlcouk9uQrO2/TIhq3GVmTDo3+r5WbtrCnYHgwz0upXbe1sEjahk8mLmtohFWLIQ0tqlQBULYxWFTyDxYsKstzYFyEAyzig3B+1xex/oFHFWGnqgR80IbNaKd5W2M45mfC8Wrsl9cJcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExMOkc60; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXn3kcS3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6368C4CEDD;
-	Fri,  4 Apr 2025 18:02:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExMOkc60"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B191C4CEDD;
+	Fri,  4 Apr 2025 18:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743789749;
-	bh=5bKVYp6tBNwdr8sgZ0U9e8u6ORf1X05snObhsyXiobo=;
+	s=k20201202; t=1743790074;
+	bh=5A4Gil0R3dVEPHFfgjiq6p1ds6V6qLfy5+KX6+GMF/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bXn3kcS3vzSNMwtLarNiOBfwO58rPmknbpijd8Uv+ITAAXbmwAiwsjIwQysWMkFO3
-	 7mMeGTOYwceb2UcShFbfLMgOEV+VyiYPYNp2TTkWbYLtRBF+eKxZRqoex6Aqw4Ol8t
-	 gD3sNPmlePpvvu1nPiiT0j0/hyE+n+kLTRhmiNTJutHlurS45WtHDvJInmXQe93J1I
-	 FPfb468LRXcoKBQy5Attz9hk+p53sp7KGsALKD/J+DSSXXKvN5T7RK0Kvu7PKh9nln
-	 dx0l75EIzRAjZK4TZvTHb25qmjoTtrfofJhxPwq4jmn0GKEs3/HMeKVrGiFgr6uwgg
-	 MNhqV4l2Ixp+A==
-Date: Fri, 4 Apr 2025 11:02:27 -0700
+	b=ExMOkc60NdrVXR4jPCihV69dKydt9eN8FSPvK54VLyKPLUISUWSMJOBglyFpK0BD/
+	 8sccD5soDSobTkk3WTykxuWlMQHCAp/kllnVFt4FByNSj6AIgtRRptCaHLBavGoe4M
+	 M1eewQ2Bx7ozT4Wskj2S0fJLumOhQOPTDebHqia/GJDJUne3Qqu69O6qf2PVecicG6
+	 e3nuNGUFHaaOegyFnrttPJ9FmJkJ2ShELEOI4om2/PVG2xOG6ethbJ+atWJSQKsBvh
+	 lWiDJSxbuh1eRqj5XD2TIePU5aNuLAGdf+E233EGcn/109W2QuBFturZ8cWtnPmb8u
+	 IRUpQfrxbpt9g==
+Date: Fri, 4 Apr 2025 11:07:52 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's
- tests
-Message-ID: <Z_AeswETE5xLcPT8@google.com>
-References: <20250404041652.329340-1-howardchu95@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf pmu: Avoid segv for missing name/alias_name in
+ wildcarding
+Message-ID: <Z_Af-KAKuOlqALH6@google.com>
+References: <20250402211301.4153441-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,89 +50,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250404041652.329340-1-howardchu95@gmail.com>
+In-Reply-To: <20250402211301.4153441-1-irogers@google.com>
 
-On Thu, Apr 03, 2025 at 09:16:52PM -0700, Howard Chu wrote:
-> There are two failures that frequently occur in perf trace's tests. One
-> is the failure of 'perf trace BTF general tests'; The other one is the
-> failure of 'perf trace record and replay', which, when run independently,
-> always succeeds.
+On Wed, Apr 02, 2025 at 02:13:01PM -0700, Ian Rogers wrote:
+> The pmu name or alias_name fields may be NULL and should be skipped if
+> so. This is done in all loops of perf_pmu___name_match except the
+> final wildcard loop which was an oversight.
 > 
-> The root cause of the first failure, is that perf trace may give two types
-> of output, depending on whether the comm of a process can be parsed, for
-> example:
-> 
-> mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOREPLACE) = 0
-> :312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE", NOREPLACE) = 0
-> 
-> In the test, however, grep is always looking for the comm 'mv', which
-> sometimes may not be present.
-> 
-> The cause of the second failure is that 'perf trace BTF general tests'
-> modifies the perf config, and because tests are run concurrently,
-> subsequent tests use the modified perf config before the BTF general
-> test can restore the original config. Mark the BTF general tests as
-> exclusive will solve the failure.
+> Fixes: c786468a3585 ("perf pmu: Rename name matching for no suffix or wildcard variants")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I'm not sure if the config is the cause of the failure.  Also I don't
-see it restored.
-
-IIUC the export only affects child processes from the current shell.
-So other tests running in parallel won't see the config change.
-
-But still, there should be something to affect the behavior.  It's
-strange to miss the task name in COMM record.
-
-I also confirm that running the test serially fixes it.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
 > ---
->  tools/perf/tests/shell/trace_btf_general.sh | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  tools/perf/util/pmu.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> index a25d8744695e..4833618a116b 100755
-> --- a/tools/perf/tests/shell/trace_btf_general.sh
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -1,5 +1,5 @@
->  #!/bin/bash
-> -# perf trace BTF general tests
-> +# perf trace BTF general tests (exclusive)
->  # SPDX-License-Identifier: GPL-2.0
->  
->  err=0
-> @@ -29,7 +29,7 @@ check_vmlinux() {
->  trace_test_string() {
->    echo "Testing perf trace's string augmentation"
->    if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
-> -    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-> +    grep -q -E "^.*/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
->    then
->      echo "String augmentation test failed"
->      err=1
-> @@ -40,7 +40,7 @@ trace_test_buffer() {
->    echo "Testing perf trace's buffer augmentation"
->    # echo will insert a newline (\10) at the end of the buffer
->    if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
-> -    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-> +    grep -q -E "^.*/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
->    then
->      echo "Buffer augmentation test failed"
->      err=1
-> @@ -50,7 +50,7 @@ trace_test_buffer() {
->  trace_test_struct_btf() {
->    echo "Testing perf trace's struct augmentation"
->    if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
-> -    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-> +    grep -q -E "^.*/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
->    then
->      echo "BTF struct augmentation test failed"
->      err=1
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 31f1e617eb20..d27bdf421c19 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -2060,7 +2060,9 @@ static bool perf_pmu___name_match(const struct perf_pmu *pmu, const char *to_mat
+>  	}
+>  	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
+>  		const char *name = names[i];
+> -		
+> +
+> +		if (!name)
+> +			continue;
+>  		if (wildcard && perf_pmu__match_wildcard_uncore(name, to_match))
+>  			return true;
+>  		if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(name, to_match))
 > -- 
-> 2.45.2
+> 2.49.0.504.g3bcea36a83-goog
 > 
