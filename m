@@ -1,149 +1,110 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7139A18CBFB
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Apr 2025 21:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053DBDF59
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Apr 2025 03:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743717251; cv=none; b=Jckl1uS3Y00aMONnlUQXiNeCUQpEJ3S/5QavfTGIA2ghG+rtYgoHAYDDuwkwJQT8tBAy1fpJwZxuTb3PbxoR4fIiQTBqfyp4D2GoavsDj4vUjCjp9KF0lW9i72JggRgJDPXWkXQXUq3BH2bQTEvi93NV69SIJ8wdizKp7e5ALRk=
+	t=1743737226; cv=none; b=imdSA+Fv3epfHkIfmSpo/rJWJOWTZn7IPANFu63KW960pg+/PeQju1n84jC5x3ya3gBEQViwGjHr1h3Udqpvnmwy1HJOL69a70hbOmy8sqB27k706RkH/gkYMyXSMy2funW1w3tMd1xLlHtEj2OUl4J5TFwS6jN02+SHD4PVg/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743717251; c=relaxed/simple;
-	bh=Zorq4tfBnBxbbHts98Mgzhn0BJooRVRBhU2HN84gMNA=;
+	s=arc-20240116; t=1743737226; c=relaxed/simple;
+	bh=0N4PLvPPXqq5As7/vex4mwOKOOj90h90YY8balvvxks=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GGui+Ka4QbkzzpOPa0qReycwqQJ63/NuhbSIFbKGByiua9sIxMW25C0JHIegQFqVKACwGRaZKgPWKwTdbTxyY12w9ZOat1ZHsLVu5K6tBOgdSlbclxs8am4x8RQ0p0+2WbWp6i/ld0cWC+iZDG8K3uAiY7DJxho1AAhyDhUTp0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D1qUld2N; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=M9UK4/sZQ7BmBpW+Q4UDbXZNcktm7zY+liakMWMgLhThAnlnmv3fDXebYJ4PMDYMDv6LNKFGhdvBPitpDwCOGTiEpvQrhIBTFhtMIMqbzmpaJvvYb2l11f20FTvz5Rg/psuKTcfgU3qESxSAlmyYI9RgQ7PqtKnGUfCb/qqy4jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QMCSNf9U; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1qUld2N"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so77625ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 03 Apr 2025 14:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMCSNf9U"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e6cea43bb31so1261772276.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Apr 2025 20:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743717249; x=1744322049; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1743737224; x=1744342024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rK5qPDgvAhys1k6qbeaADQ2R+ajOm7raTMVCCFCPI54=;
-        b=D1qUld2NzKCb7N0R4rIe4cXsdon/8P10mrEVoErI97B4EsoCcLZByNmPhAK/26XWRD
-         BKbtLTCOF0YsSuoyvJc9ff6oo9eSjs1DJviLl9g+3S/1FjBZZDC1M8G0nKOcyuQ29Il8
-         ++sAgS7BYMesMXM3n/glZQrESXKN7BrjxgzIacklra7uI/IzZ9SdtLOZyFelIDdoUtxS
-         vPZxR4DMDT+SbRtugXLKPfn2iaOoez5SnRIMVhN5dxu9iDvU/fUoA1yCedOw8Xmrubya
-         Y98lxUFZcdkXmcJAZOZKJPNdHaYIRyNvBFUAKFan7RmLgDMB0yuADqRQ63nbXKM69SY9
-         +j1Q==
+        bh=nqFB6oux9OyKXMdob0oD6bucO8UVkTxN/DF+rAzGCyM=;
+        b=QMCSNf9U2kLdp6dj61wmLe5tgkd46JvFAYYOyi0omNaSYL1Xm6LGbch5izW9LbOX5/
+         nVrJj5fD7swkjLyCh973obG8hnSGgBQw9Q5KYL8YNAm8C99EIflryLEAAXVvlO4IrNCA
+         nBESwpGXZStSQwlPyCeiiv52pF7LGl2NwhQ5SOn848kHwqrjMAHllTT7Xx7DZybbwmhS
+         YtaIt03V3BHudYuhe7/PmUVaGxx742ILHNIYF4TZ5JSXTCIOgAHfEV2TQa5Wp5Y9e2XO
+         EwbflfJAxyGA7bAQ1OV6wPdlEWtrie+GnVZEvs8I6/IN57N7Jg9vm1fLvGCmWf5rKcFC
+         BnVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743717249; x=1744322049;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1743737224; x=1744342024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rK5qPDgvAhys1k6qbeaADQ2R+ajOm7raTMVCCFCPI54=;
-        b=sLZ18SPS6ahFw8mdDCPdoA4eZAiORPmy1Ep/akthGRtII/+1KEwMuY+lKLybv4cRIc
-         C65jWPB0SfztWy7Ny5mIN3difdajDQ7NcnaGKZkI9Jt4BesCsH/uDIAKONBGr6btiI3q
-         DG/YLGrxtxCt/vnuiPHNYMc5WggQqdRUbiiniafmDVHQ+VpvSpNPcE4wxdB+s+R+sccu
-         DfKw4vwGKGlP+xEbR/6tky8TXR8gEHHjslOvk1qWPcolI6Ft3p/waLT9IJYdmaR/gOq4
-         axFfzMeEodbfpQTqkwDymHyciqkfO7kWrXDwtcKjYWeXd9l/jU5/WZEIl+Ny1FyLprPb
-         Kheg==
-X-Forwarded-Encrypted: i=1; AJvYcCVy2+kD1GG8jK610m3zbtVFH1FFubvYOiq1iPkhZe5i46jFl3bZPuIVm1xe6U4yX91UatFbzd9ufopVJQJyMmuB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjMlqV9/L/KcGxF8BB9BH21vo3JbWjqZ6Yw7kAwQWanXCzAMP+
-	feb5lp9MLUuIx0KEdvGiblsbpZHuoXDW124lbZRbIL/1ZHD7UnctUOSzi5Y4gA5uJU8U/qWPX/I
-	xEgAAJQ2Lk8kZJro4SxOaDr9gWKQVf7FWvQ4u
-X-Gm-Gg: ASbGncvjcqVSH2q3y2NpikoexP3dp0XcR2+mYqT6LsQcW+7mXrnLbyiRkSGqJUwL3K+
-	S3Ip6+JvM6YSmk5gXj6c6vQM/46sbLC6bc5egOjN7m5PdjpuUoW9wbk3Zk0imyVeGAoQKLL6kY2
-	JSErqvWwG81Wjc/8aVT0bEzZlL5lqT7N5IbNzyoSL9y5ymroc8qckIVQ==
-X-Google-Smtp-Source: AGHT+IE8hli2cwmBOYnuZl9Y0z26+XxYb00ecwO3Bhyit5DVDAbl0YKGDMXKsyg9+8mpPQKFlW8YJydvxUYSO/TEbt8=
-X-Received: by 2002:a17:903:1c9:b0:21f:3e29:9cd1 with SMTP id
- d9443c01a7336-22a8b6b2aa4mr342215ad.1.1743717249394; Thu, 03 Apr 2025
- 14:54:09 -0700 (PDT)
+        bh=nqFB6oux9OyKXMdob0oD6bucO8UVkTxN/DF+rAzGCyM=;
+        b=WUH3UEm7OklcX9gKwmTYk8EVaC8M15lxGunSmyqMHg+L1ueJ+is4cvqqRbv0BHXGs4
+         KBhDq0It0jIniLs9MmNIX9zUjU1xXM7JlvGMMz4ae2sOGQmTHZmmBX7vTSYYVvbvYirn
+         SOQAAG0hEuHgb+HHz0EYPiIVODt8b1eMn4iGHGUVRgMJWvdYNGgM/xGuKmJcQY/KCl5/
+         diKSJLMZf4r9w9LXTIFlwBhpkNMycDkDqs7aNi4mnjtGwztzACLcX3Wk7z81N1f7gnoI
+         XJAJUOeIDxiL9N5M9/7ZA5++fsASfHmFZhR62gwGD1dPJFOkqtp62d7Ncm8uad1rkUtD
+         kgoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcriXT12ikGV457cqr61LSzYMy8OtHhTlJnbwd6Vj3CfBXuSUmMzlEwz7M3ifNhThMK5ct4DSGBM2rs4OSsM5s@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHVY2cpkfmeHCgj5PvkHW4I3AbBr/da19fWSF0LIMNMRDM9o+O
+	pxaKSpnwtyL4ogn0Wi1hkCzH5a4Ndl2fFZlHHIuHbIqgXubcEateUUxbbyG7djy2p7pr7P3Kphc
+	hTk88TDSu0en9b738zXqwe7aABFI=
+X-Gm-Gg: ASbGnctX/7a8GsqSp/WNiY6lybWWYn1GSPqOEm+JD7gRUDaWXffxq6z3YCFOvJSJASC
+	c5c3f7VOmECFhqXz+Z+1BJbuZgHggNwav2uMK8gyEViTCC3LwMBNkitFHcxHUzM/m5CNMokZlnT
+	WEncKrAeJGP1ASmFFzaCa54vt0
+X-Google-Smtp-Source: AGHT+IH8oJgl1yJWCwqTfMCz7ZgVnaEPqMNE1AfLmgSVF2IltKCdv1zBMZaYXBQJ1N+WrePYG64etHcQwTDfJSEOxAU=
+X-Received: by 2002:a05:6902:1b0c:b0:e69:371d:677a with SMTP id
+ 3f1490d57ef6-e6e1c26e4bfmr3288618276.1.1743737223783; Thu, 03 Apr 2025
+ 20:27:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402183806.3947021-1-irogers@google.com>
-In-Reply-To: <20250402183806.3947021-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 3 Apr 2025 14:53:58 -0700
-X-Gm-Features: AQ5f1Jqda-Rwv-Gl_E_R0J0SF5BsOC2s-WrgNbz21Q4xNj59MZ8sxSLFfcgno6Q
-Message-ID: <CAP-5=fW5XP23KsF3VGp-xRutkbfk2a66h92jx9d6=ocf69FV=Q@mail.gmail.com>
-Subject: Re: [PATCH v1] perf jevents: Allow duplicate metrics with different PMUs
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Falcon <thomas.falcon@intel.com>, Weilin Wang <weilin.wang@intel.com>
+References: <20250403160411.159238-2-ashelat@redhat.com>
+In-Reply-To: <20250403160411.159238-2-ashelat@redhat.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 3 Apr 2025 20:26:52 -0700
+X-Gm-Features: ATxdqUHW28bVDKEI2sX0MzZtIKdz0Me0Z6YNYByyHyNbWRFL9clqYGGWi5UFiTU
+Message-ID: <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: always print return value for syscalls with
+ set errpid
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 2, 2025 at 11:38=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On hybrid machines the same metric may appear for cpu_atom and
-> cpu_core as well as being referenced from other metrics. The same
-> named metrics are required but on differing PMUs are required. Update
-> the jevents.py to handle this.
->
-> On (hybrid) Alderlake before:
-> ```
-> $ perf stat -M tma_fp_divider -a sleep 1
-> event syntax error: '.._ACTIVE!3/,tma_core_bound/metric-id=3Dtma_core_bou=
-nd/,tma_backend_bound/metric-id=3Dtma_..'
->                                   \___ Bad event or PMU
-> ```
->
-> After:
-> ```
-> $ perf stat -M tma_fp_divider -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->      1,257,833,472      cpu_core/TOPDOWN.SLOTS/          #      0.0 %  tm=
-a_fp_divider
->             45,870      cpu_core/ARITH.FPDIV_ACTIVE/
->        187,096,541      cpu_core/topdown-retiring/
->        199,533,380      cpu_core/topdown-mem-bound/
->        107,164,806      cpu_core/topdown-bad-spec/
->        214,281,782      cpu_core/CPU_CLK_UNHALTED.THREAD/
->          1,588,539      cpu_core/ARITH.DIV_ACTIVE/
->        538,842,818      cpu_core/topdown-fe-bound/
->        431,005,264      cpu_core/topdown-be-bound/
-> ```
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/jevents.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 36a5e5fa2a54..89f1ace2a697 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -481,7 +481,8 @@ def add_events_table_entries(item: os.DirEntry, topic=
-: str) -> None:
->    for e in read_json_events(item.path, topic):
->      if e.name:
->        _pending_events.append(e)
-> -    if e.metric_name and not any(e.metric_name =3D=3D x.metric_name for =
-x in _pending_metrics):
-> +    if e.metric_name and not any(e.metric_name =3D=3D x.metric_name and
-> +                                 e.pmu =3D=3D x.pmu for x in _pending_me=
-trics):
+[Resend due to rejection by mailing list]
 
-This was triggered by this patch carried in Google's tree but not yet
-merged into perf-tools-next:
-https://lore.kernel.org/lkml/20240926173554.404411-10-irogers@google.com/
-So please ignore.
+Hello Anubhav,
+
+Thanks for doing this :)
+
+On Thu, Apr 3, 2025 at 9:06=E2=80=AFAM Anubhav Shelat <ashelat@redhat.com> =
+wrote:
+>
+> Currently some syscalls that have errpid set to true do not print a
+> return value in perf trace. The syscalls that were consistently
+> observed were set_robust_list and rseq. This is because perf cannot find
+> their child process. This change ensures that the return value is always
+> printed.
+>
+> Before:
+>      0.256 ( 0.001 ms): set_robust_list(head: 0x7f09c77dba20, len: 24)   =
+                     =3D
+>      0.259 ( 0.001 ms): rseq(rseq: 0x7f09c77dc0e0, rseq_len: 32, sig: 139=
+2848979)             =3D
+> After:
+>      0.270 ( 0.002 ms): set_robust_list(head: 0x7f0bb14a6a20, len: 24)   =
+                     =3D 0
+>      0.273 ( 0.002 ms): rseq(rseq: 0x7f0bb14a70e0, rseq_len: 32, sig: 139=
+2848979)             =3D 0
+>
+> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
-Ian
-
->        _pending_metrics.append(e)
->
->
-> --
-> 2.49.0.504.g3bcea36a83-goog
->
+Howard
