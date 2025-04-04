@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C433188580
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Apr 2025 17:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AD320E33E;
+	Fri,  4 Apr 2025 18:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743787689; cv=none; b=qWwOXuLDjcrfUihEedQrd+5+T8qLMwh1NsStAWBvcrW2ebrhxlab0BCS4J+oKE2/jPnOagFdoBmyiSXmbF4Dh1YR6UAvjBTbgBgMu5zyGDSjbbrsDERW98Xf3HhqziZCsJ3vON9QIVTJtQDTL/W9zMwXbezIzc7j+BmbD1Pa9so=
+	t=1743789750; cv=none; b=VDIcxSJf31aM3k0GiwIyb5xDOvQdLfIjwzgkr6fDyCJg0L83XS46MYNjaazcjKgc6+SqxH+YQKHqS6i5EgaGfNIqQE7Wq5drxLHKfTyynQiCXoOzRkvQJIsbWuELEH59s/izV1Fm76JpV1NaIQ6j3eQM349W7P8JPu44reeF3Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743787689; c=relaxed/simple;
-	bh=ST0EDhO0Qxg5UJPiqj4Kwgm3MZyl8QtUrH5NxGholfk=;
+	s=arc-20240116; t=1743789750; c=relaxed/simple;
+	bh=5bKVYp6tBNwdr8sgZ0U9e8u6ORf1X05snObhsyXiobo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JejK4nbz/PpnxljItxxMIvkBTn9PPsVvWkuNjuLssba1/O/vdwOa1zyVxCcUw2k4QzpPgPTsnoAMuPmSqY1nxYiZa06BUCAzN4VSqE69vbyNozSqMYdnpp1eAnqHSiETnmu3GJFWO8XPKDEX5oi3YdmuOjUNPjLdgI1Jizz1vnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPfmalgz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqzYcoucXaGiuhQDW+S1LmPQqO9FPzcbI36IoXFOb5GwI5ELXDh1KXQjoRhgWAYn4m1nSpqMjBYRTjvbLkSukaxBYSsrt7SAsW0QMXXQmYIxhd6Zfat6X4Kmju/geS4vh8HAq8EHGR+ATRijX7U14h88EFgoQcpuK+Pq40gCC/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXn3kcS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPfmalgz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A52C4CEE8;
-	Fri,  4 Apr 2025 17:28:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXn3kcS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6368C4CEDD;
+	Fri,  4 Apr 2025 18:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743787688;
-	bh=ST0EDhO0Qxg5UJPiqj4Kwgm3MZyl8QtUrH5NxGholfk=;
+	s=k20201202; t=1743789749;
+	bh=5bKVYp6tBNwdr8sgZ0U9e8u6ORf1X05snObhsyXiobo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hPfmalgzpSZou3vvhOgI4n8vPfbJk7FZcVbBmbfQ2jX29oXbmhr8BRq7JBK6xCNML
-	 AqXI6BrC2zX4Cq6KHiIcJLIS+4aBAMArdtT9wMVh4cWqFIY4PK93Ar1k+r4ESt4sYu
-	 snTaCI7rjfaJCx6/LLZKpze4TTRSRoY6CTxHLpOpXuvmv6hy0OADs2Pcy6X+S1zpEg
-	 wKp3tZSmdjIKqc5H2YPe0Pcm8XZ9MRQWhzfNxIdq3kZcKDem8U72vMVdw0PDjYLGca
-	 Nr/cAVw/J9kR5wgjxlH9jaQy75vVdP5CGIoOHUjLZXlGmWgHYVvulk1iSU3i2iG7fq
-	 959m8CATrcvXQ==
-Date: Fri, 4 Apr 2025 10:28:06 -0700
+	b=bXn3kcS3vzSNMwtLarNiOBfwO58rPmknbpijd8Uv+ITAAXbmwAiwsjIwQysWMkFO3
+	 7mMeGTOYwceb2UcShFbfLMgOEV+VyiYPYNp2TTkWbYLtRBF+eKxZRqoex6Aqw4Ol8t
+	 gD3sNPmlePpvvu1nPiiT0j0/hyE+n+kLTRhmiNTJutHlurS45WtHDvJInmXQe93J1I
+	 FPfb468LRXcoKBQy5Attz9hk+p53sp7KGsALKD/J+DSSXXKvN5T7RK0Kvu7PKh9nln
+	 dx0l75EIzRAjZK4TZvTHb25qmjoTtrfofJhxPwq4jmn0GKEs3/HMeKVrGiFgr6uwgg
+	 MNhqV4l2Ixp+A==
+Date: Fri, 4 Apr 2025 11:02:27 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-Message-ID: <Z_AWpgne5108xqlc@google.com>
-References: <20250307080829.354947-1-namhyung@kernel.org>
- <Z9tjKcKvjYgbR6hb@google.com>
- <Z9vgt1pjiNbDBDbM@gmail.com>
- <Z9w_aFlzOkoCTSqK@google.com>
- <Z-EJnye74la1triY@gmail.com>
- <Z--pWmTHGb62_83e@gmail.com>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's
+ tests
+Message-ID: <Z_AeswETE5xLcPT8@google.com>
+References: <20250404041652.329340-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,100 +46,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z--pWmTHGb62_83e@gmail.com>
+In-Reply-To: <20250404041652.329340-1-howardchu95@gmail.com>
 
-Hi Ingo,
+On Thu, Apr 03, 2025 at 09:16:52PM -0700, Howard Chu wrote:
+> There are two failures that frequently occur in perf trace's tests. One
+> is the failure of 'perf trace BTF general tests'; The other one is the
+> failure of 'perf trace record and replay', which, when run independently,
+> always succeeds.
+> 
+> The root cause of the first failure, is that perf trace may give two types
+> of output, depending on whether the comm of a process can be parsed, for
+> example:
+> 
+> mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOREPLACE) = 0
+> :312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE", NOREPLACE) = 0
+> 
+> In the test, however, grep is always looking for the comm 'mv', which
+> sometimes may not be present.
+> 
+> The cause of the second failure is that 'perf trace BTF general tests'
+> modifies the perf config, and because tests are run concurrently,
+> subsequent tests use the modified perf config before the BTF general
+> test can restore the original config. Mark the BTF general tests as
+> exclusive will solve the failure.
 
-On Fri, Apr 04, 2025 at 11:41:46AM +0200, Ingo Molnar wrote:
-> 
-> BTW., here's a few other 'perf' annoyances I have, if anyone's 
-> listening :-)
+I'm not sure if the config is the cause of the failure.  Also I don't
+see it restored.
 
-Thanks for the report.  Glad to hear from you.
+IIUC the export only affects child processes from the current shell.
+So other tests running in parallel won't see the config change.
 
-> 
-> 
-> 1)
-> 
-> I cannot get the libunwind build-feature failure to go away:
-> 
-> ...                               libcrypto: [ on  ]
-> ...                               libunwind: [ OFF ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> 
-> I do have libunwind-dev installed:
-> 
-> ii  libunwind-dev:amd64                                         1.6.2-3.1                                           amd64        library to determine the call-chain of a program - development
-> ii  libunwind8:amd64                                            1.6.2-3.1                                           amd64        library to determine the call-chain of a program - runtime
-> 
-> but it fails to link:
-> 
->  kepler:~/tip/tools/build/feature> cat test-libunwind.make.output
->  /usr/bin/ld: /tmp/cc2BfaNM.o: in function `main':
->  test-libunwind.c:(.text+0x1c): undefined reference to `_Ux86_64_create_addr_space'
->  /usr/bin/ld: test-libunwind.c:(.text+0x44): undefined reference to `_Ux86_64_init_remote'
->  /usr/bin/ld: test-libunwind.c:(.text+0x6b): undefined reference to `_Ux86_64_dwarf_search_unwind_table'
->  collect2: error: ld returned 1 exit status
-> 
-> I tried to install the libunwind-19-dev package, I tried to 
-> uninstall/reinstall - no combination seems to work.
-> 
-> perf is also totally unhelpful about resolving such issues - it used to 
-> issue tips about what packages to install, but those tips are not 
-> present anymore, for this one at least.
+But still, there should be something to affect the behavior.  It's
+strange to miss the task name in COMM record.
 
-Since v6.13, we switched to disable libunwind by default and used
-unwinding in libdw.
-
-commit 13e17c9ff491 ("perf build: Make libunwind opt-in rather than opt-out")
-
-You need to pass LIBUNWIND=1 to build with it.
-
-> 
-> 2)
-> 
-> More annoyingly, I cannot get source code annotation of the kernel to 
-> work - this might be related to the libunwind build failure (or not).
-
-I don't think it's related.  Anyway do you see the same for user
-binaries or is it only for the kernel?
-
-> 
-> Within 'perf top' I go into a function, and I press 's', which is 
-> supposed to toggle the source code annotation ... but nothing happens.
-> 
-> 'nothing happens' is perhaps the most passive-aggressive reaction a 
-> tool can give to a user. I'd prefer a *crash* to ignoring the keypress 
-> ...
-
-Oh ok.  I prefer a warning. :)
-
-> 
-> There's no error printed anywhere - just the color of the hexadecimal 
-> labels changes, nothing else.
-> 
-> 'perf top' won't annotate kernel functions (despite me having a 
-> DEBUGINFO kernel package installed and booted), nor will it even 
-> annotate its own functions within 'perf', in a similar fashion.
-
-I see.  So the problem is not specific to the kernel.
-
-> 
-> It's similar for 'perf report' too, although that's not a surprise, 
-> they share much of the codebase.
-
-Yep, of course.
-
-> 
-> 'perf annotate --stdio' only shows an objdump --disassemble style 
-> output, but without any source annotations either.
-> 
-> This is a rather frustrating user experience. :-/
-
-Sorry about that.  I suspect that I made a mistake when I was working on
-the data type profiling.  I'll take a look.
+I also confirm that running the test serially fixes it.
 
 Thanks,
 Namhyung
 
+> 
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
+> ---
+>  tools/perf/tests/shell/trace_btf_general.sh | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+> index a25d8744695e..4833618a116b 100755
+> --- a/tools/perf/tests/shell/trace_btf_general.sh
+> +++ b/tools/perf/tests/shell/trace_btf_general.sh
+> @@ -1,5 +1,5 @@
+>  #!/bin/bash
+> -# perf trace BTF general tests
+> +# perf trace BTF general tests (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  err=0
+> @@ -29,7 +29,7 @@ check_vmlinux() {
+>  trace_test_string() {
+>    echo "Testing perf trace's string augmentation"
+>    if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
+> -    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
+> +    grep -q -E "^.*/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
+>    then
+>      echo "String augmentation test failed"
+>      err=1
+> @@ -40,7 +40,7 @@ trace_test_buffer() {
+>    echo "Testing perf trace's buffer augmentation"
+>    # echo will insert a newline (\10) at the end of the buffer
+>    if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
+> -    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+> +    grep -q -E "^.*/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+>    then
+>      echo "Buffer augmentation test failed"
+>      err=1
+> @@ -50,7 +50,7 @@ trace_test_buffer() {
+>  trace_test_struct_btf() {
+>    echo "Testing perf trace's struct augmentation"
+>    if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
+> -    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
+> +    grep -q -E "^.*/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
+>    then
+>      echo "BTF struct augmentation test failed"
+>      err=1
+> -- 
+> 2.45.2
+> 
