@@ -1,95 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885101EE7B1;
-	Fri,  4 Apr 2025 13:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B3028E8;
+	Fri,  4 Apr 2025 14:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774587; cv=none; b=YnIbFiUWRnno4nUWaeuQARUTk5BUiP6bTUqQjSs8UYSoCFl8HND+QIEsIXEzMcICjgyj/FUGEV6of1EYfoBKh5SH8QE8rsulBPcsl1Ejy56Dn3K7iioccT6yS9ouwtwslVDM8ZIpqV/Hpsxss/75onMkZQtnfNiOzfnH7zemdpA=
+	t=1743775772; cv=none; b=VItF61+DSOnLM0AzXo4afGqi62EjOMvbiAYvD1MM6gNvS0prkMjfJzcAUeiYoB239MUfjlvkaXgatTsBp7AJKrbluUSVBPdD+JlrgsYAOkvEMMazuVkEcuOEsIg0jb40TpbutjVW40aWOKNZCqhtNpDCFroQEclzceNyqTrVg+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774587; c=relaxed/simple;
-	bh=InZ0uos7yT9Kf1hkWBsUYLcrp43412OOZl/bw7DO4Uw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s96M4KrC64Vco9R1GnQka/0yUFW4lJcJRJ7l9XubQCQGHC0s1xlC/bG4ktNYOBb/LogqNTfYRvWcmSegS04rFbO12+3V/6fTg9uCqwGt8Ht/gLnCXoe93+Yz8gZZwHnf9ddTRlT+7DKN4q9V82Mfw4+i3huUJdYxSF5ZVbLlztU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USi10D+n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743775772; c=relaxed/simple;
+	bh=7vkatnzzxhhVFbD4HxLrh/KjbSJzy28SNpvsJYk/8oM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=S1iRFfvZa2Uf91lkNj77jVv3hTlZ+bU5n5K1ZsEJGcoNRMgasnK4RUHpR1ztLhT2iF/BbYDq4Ef6S6fow6eKVjaHyJdeO6KjyGkcY/xsi3fXAvUq2Wwh9s85iFQVX82LYicvu0lvNsMExkN1RZoDL154Psvb11nw9rsKJsGwcq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6kk7GVy; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USi10D+n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E89C4CEDD;
-	Fri,  4 Apr 2025 13:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743774586;
-	bh=InZ0uos7yT9Kf1hkWBsUYLcrp43412OOZl/bw7DO4Uw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=USi10D+naSHmsOpLEbclvvoUV8OCZArB3n9xpGD99on1UMZaLkaUh+brOpqRUHjUM
-	 z0XibKT/P/RSxfymt/L40cXSF8H9LKoNMf1OFTMr2U3NQCMAR2Ux6Hm3enCUZmWiNX
-	 3VMeGo/FM5zIrC468kOaLBCkZyOEsCxCJ1pPuSBWPFOVfilk0ZeJkRltCqUO5YRa0R
-	 4uhZNjLKNaCACgVmbORjBmkJlsqgdEBlTEA1QHIUiVg/sY8PhuaW1352AymUDAS/jD
-	 TIwikh2QEHHjedoxXiB3TpY2lpVaofO50dMmp1j9XakRekMytpGDUvOeLbL8RA9l7S
-	 F9qLsRuerEHMw==
-Date: Fri, 4 Apr 2025 14:49:38 +0100
-From: Will Deacon <will@kernel.org>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Subject: Re: [PATCH v5 11/21] RISC-V: perf: Restructure the SBI PMU code
-Message-ID: <20250404134937.GA29394@willie-the-truck>
-References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
- <20250327-counter_delegation-v5-11-1ee538468d1b@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6kk7GVy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743775771; x=1775311771;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=7vkatnzzxhhVFbD4HxLrh/KjbSJzy28SNpvsJYk/8oM=;
+  b=m6kk7GVywsxUTuy8/ypS/ZLA3XODO/YPN061DVJySXVgbA+fs+mw0oz/
+   kcradNcEB0KxGIrBj80m0ljttrGkEiIbOJ4AFN/TYxTyPK99EHKKsS0UB
+   2/vo/Cxg/QipJ/Ib5Th36ixs7tHdmFs4az4p8qmFs+ikT2jYu1oQo2eu0
+   HjA3HfS7/clT99hQXFwSsidZqNySTxrk8yKXZtU3XF5AXZgtLbBtwmJlo
+   7dorC7ORm2+osMl3mA6jGddVojCw1b5P4LtTgQ3c96wR/8CgbjPxcT2Wj
+   TnMtOKMpzgBdyg7BfSHhLkwKN9bzTdfhK4c/krJozgKxr7yKm19MBvhwf
+   g==;
+X-CSE-ConnectionGUID: lEmXnVm9TLCDG7/xy6O7/A==
+X-CSE-MsgGUID: sp6jpCHvTi6rLAtooiFf/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45389891"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="45389891"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:09:30 -0700
+X-CSE-ConnectionGUID: 0qZXDAKJT0y/buDtFmkciQ==
+X-CSE-MsgGUID: PO7ncICxSzGAixNyMY1Wxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="158308246"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:09:30 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 10E0120B5736;
+	Fri,  4 Apr 2025 07:09:27 -0700 (PDT)
+Message-ID: <c21d05c6-d71c-47e3-b4a2-e275d9d487f2@linux.intel.com>
+Date: Fri, 4 Apr 2025 10:09:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250327-counter_delegation-v5-11-1ee538468d1b@rivosinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/4] Add support for cpu event term
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250403194337.40202-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250403194337.40202-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 12:35:52PM -0700, Atish Patra wrote:
-> With Ssccfg/Smcdeleg, we no longer need SBI PMU extension to program/
-> access hpmcounter/events. However, we do need it for firmware counters.
-> Rename the driver and its related code to represent generic name
-> that will handle both sbi and ISA mechanism for hpmcounter related
-> operations. Take this opportunity to update the Kconfig names to
-> match the new driver name closely.
+
+
+On 2025-04-03 3:43 p.m., Ian Rogers wrote:
+> Being able to set the cpu mask per event was discussed in the context
+> of a sysfs event.cpus file is discussed here:
+> https://lore.kernel.org/lkml/CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com/
+> Ultimately Kan preferred to have multiple PMUs with a cpumask each
+> rather than an event.cpus file per event. It is still useful to have
+> the cpu event term and so the sysfs part of the original patch series
+> is dropped.
 > 
-> No functional change intended.
+> v6: Purely a rebase.
+> v5: Purely a rebase.
+> v4: Add the stat-display output change for zero counters Namhyung
+>     requested as part of the series:
+>     https://lore.kernel.org/lkml/Zvx9VbJWtmkcuSBs@google.com/
+>     This skips zero values for CPUs not in the evsel's cpumask rather
+>     than the evsel's PMU's cpumask.
+> v3: Drop sysfs event.cpus file support patch from series.  Reference
+>     to using cpu to modify uncore events is dropped from the commit
+>     message. Reference counting issues on the cpumap are addressed.
+> v2: Add support for multiple cpu terms on an event that are
+>     merged. For example, an event of "l1d-misses/cpu=4,cpu=5/" will
+>     now be opened on both CPU 4 and 5 rather than just CPU 4.
 > 
-> Reviewed-by: Clément Léger <cleger@rivosinc.com>
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  MAINTAINERS                                       |   4 +-
->  arch/riscv/include/asm/kvm_vcpu_pmu.h             |   4 +-
->  arch/riscv/include/asm/kvm_vcpu_sbi.h             |   2 +-
->  arch/riscv/kvm/Makefile                           |   4 +-
->  arch/riscv/kvm/vcpu_sbi.c                         |   2 +-
->  drivers/perf/Kconfig                              |  16 +-
->  drivers/perf/Makefile                             |   4 +-
->  drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}  |   0
->  drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} | 214 +++++++++++++---------
+> Ian Rogers (4):
+>   libperf cpumap: Add ability to create CPU from a single CPU number
+>   perf stat: Use counter cpumask to skip zero values
+>   perf parse-events: Set is_pmu_core for legacy hardware events
+>   perf parse-events: Add "cpu" term to set the CPU an event is recorded
+>     on
 
-I'm still against this renaming churn. It sucks for backporting and
-you're also changing the name of the driver, which could be used by
-scripts in userspace (e.g. module listings, udev rules, cmdline options)
+Tried on a Hybrid platform. Everything looks good.
 
-Will
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan>
+>  tools/lib/perf/cpumap.c                |  10 +++
+>  tools/lib/perf/include/perf/cpumap.h   |   2 +
+>  tools/perf/Documentation/perf-list.txt |   9 ++
+>  tools/perf/util/evsel_config.h         |   1 +
+>  tools/perf/util/parse-events.c         | 113 ++++++++++++++++++-------
+>  tools/perf/util/parse-events.h         |   3 +-
+>  tools/perf/util/parse-events.l         |   1 +
+>  tools/perf/util/pmu.c                  |   3 +-
+>  tools/perf/util/stat-display.c         |  21 +++--
+>  9 files changed, 124 insertions(+), 39 deletions(-)
+> 
+
