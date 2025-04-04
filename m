@@ -1,121 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02A21ACEAF
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Apr 2025 09:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885101EE7B1;
+	Fri,  4 Apr 2025 13:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743759711; cv=none; b=hB/jAqyf/y4LNlhY40RYB88z83Ca+6Z319gNsP5wQAIj+EAor3UX8uu0ALjrirWa4TqDGe/DEpC78LsiunSFV2SynrBp+ut0s0EBIiqFLksbW/GObDFTcXyfoALkYf5h5bc4k2NNIRXu1HR7jIhn7S7AMtcoPNw4fKVrOPhALBQ=
+	t=1743774587; cv=none; b=YnIbFiUWRnno4nUWaeuQARUTk5BUiP6bTUqQjSs8UYSoCFl8HND+QIEsIXEzMcICjgyj/FUGEV6of1EYfoBKh5SH8QE8rsulBPcsl1Ejy56Dn3K7iioccT6yS9ouwtwslVDM8ZIpqV/Hpsxss/75onMkZQtnfNiOzfnH7zemdpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743759711; c=relaxed/simple;
-	bh=WSaKWPVykFgAN579KG6427N+YbW9Z75CnLnQrCQHyYc=;
+	s=arc-20240116; t=1743774587; c=relaxed/simple;
+	bh=InZ0uos7yT9Kf1hkWBsUYLcrp43412OOZl/bw7DO4Uw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iHjL0WpW6cz6ECSdwxZ6GrlEab2xphi4VtrOCa4j2yIYW+8RXBs/ZXZamaeHbyoKQEzWD9JwiUbbcXLzhTP6oe5Cofc0GyzAQFaRnTnXX41PmEFBqRjXEEnldKSu7MDOi0h1WH6BhZfZsFM0zNnY7h3O9gYVUrWksw1qxj5OIB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4tKG5vc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s96M4KrC64Vco9R1GnQka/0yUFW4lJcJRJ7l9XubQCQGHC0s1xlC/bG4ktNYOBb/LogqNTfYRvWcmSegS04rFbO12+3V/6fTg9uCqwGt8Ht/gLnCXoe93+Yz8gZZwHnf9ddTRlT+7DKN4q9V82Mfw4+i3huUJdYxSF5ZVbLlztU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USi10D+n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4tKG5vc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF147C4CEE5;
-	Fri,  4 Apr 2025 09:41:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USi10D+n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E89C4CEDD;
+	Fri,  4 Apr 2025 13:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743759711;
-	bh=WSaKWPVykFgAN579KG6427N+YbW9Z75CnLnQrCQHyYc=;
+	s=k20201202; t=1743774586;
+	bh=InZ0uos7yT9Kf1hkWBsUYLcrp43412OOZl/bw7DO4Uw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q4tKG5vcQXx2f/VFNEBZisLanO+iBcOdK3naFzM1I+qZzFEKOHHO5DAfvd8LY8xui
-	 b2ruBGFt7xFxVgOJ0nI7plpTiItPVoppVoLnCQLrqGYC5efJ7vn/daE7VyTaqjRk1A
-	 9uoTqU5V65G1S/DBgZoaqFei/qioAo6FMmsVE6lOObBGG1648teIIgtFfwXRL1w/QE
-	 dNQUMq4bY/eQtaFwo+fvNsoU0bKGTx1BlcyhxwKNRtlnhR5ht8GNDheA71bP/W0HGu
-	 Cew6u7kDHOenVu5aBYJHcgMTZetZS0VQp8PpYpk+m3hU4AEQYy6PHoazPOYEEl9qW9
-	 rSUMAl2emXUDg==
-Date: Fri, 4 Apr 2025 11:41:46 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	b=USi10D+naSHmsOpLEbclvvoUV8OCZArB3n9xpGD99on1UMZaLkaUh+brOpqRUHjUM
+	 z0XibKT/P/RSxfymt/L40cXSF8H9LKoNMf1OFTMr2U3NQCMAR2Ux6Hm3enCUZmWiNX
+	 3VMeGo/FM5zIrC468kOaLBCkZyOEsCxCJ1pPuSBWPFOVfilk0ZeJkRltCqUO5YRa0R
+	 4uhZNjLKNaCACgVmbORjBmkJlsqgdEBlTEA1QHIUiVg/sY8PhuaW1352AymUDAS/jD
+	 TIwikh2QEHHjedoxXiB3TpY2lpVaofO50dMmp1j9XakRekMytpGDUvOeLbL8RA9l7S
+	 F9qLsRuerEHMw==
+Date: Fri, 4 Apr 2025 14:49:38 +0100
+From: Will Deacon <will@kernel.org>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-Message-ID: <Z--pWmTHGb62_83e@gmail.com>
-References: <20250307080829.354947-1-namhyung@kernel.org>
- <Z9tjKcKvjYgbR6hb@google.com>
- <Z9vgt1pjiNbDBDbM@gmail.com>
- <Z9w_aFlzOkoCTSqK@google.com>
- <Z-EJnye74la1triY@gmail.com>
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Subject: Re: [PATCH v5 11/21] RISC-V: perf: Restructure the SBI PMU code
+Message-ID: <20250404134937.GA29394@willie-the-truck>
+References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
+ <20250327-counter_delegation-v5-11-1ee538468d1b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <Z-EJnye74la1triY@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250327-counter_delegation-v5-11-1ee538468d1b@rivosinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+On Thu, Mar 27, 2025 at 12:35:52PM -0700, Atish Patra wrote:
+> With Ssccfg/Smcdeleg, we no longer need SBI PMU extension to program/
+> access hpmcounter/events. However, we do need it for firmware counters.
+> Rename the driver and its related code to represent generic name
+> that will handle both sbi and ISA mechanism for hpmcounter related
+> operations. Take this opportunity to update the Kconfig names to
+> match the new driver name closely.
+> 
+> No functional change intended.
+> 
+> Reviewed-by: Clément Léger <cleger@rivosinc.com>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  MAINTAINERS                                       |   4 +-
+>  arch/riscv/include/asm/kvm_vcpu_pmu.h             |   4 +-
+>  arch/riscv/include/asm/kvm_vcpu_sbi.h             |   2 +-
+>  arch/riscv/kvm/Makefile                           |   4 +-
+>  arch/riscv/kvm/vcpu_sbi.c                         |   2 +-
+>  drivers/perf/Kconfig                              |  16 +-
+>  drivers/perf/Makefile                             |   4 +-
+>  drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}  |   0
+>  drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c} | 214 +++++++++++++---------
 
-BTW., here's a few other 'perf' annoyances I have, if anyone's 
-listening :-)
+I'm still against this renaming churn. It sucks for backporting and
+you're also changing the name of the driver, which could be used by
+scripts in userspace (e.g. module listings, udev rules, cmdline options)
 
-
-1)
-
-I cannot get the libunwind build-feature failure to go away:
-
-...                               libcrypto: [ on  ]
-...                               libunwind: [ OFF ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-
-I do have libunwind-dev installed:
-
-ii  libunwind-dev:amd64                                         1.6.2-3.1                                           amd64        library to determine the call-chain of a program - development
-ii  libunwind8:amd64                                            1.6.2-3.1                                           amd64        library to determine the call-chain of a program - runtime
-
-but it fails to link:
-
- kepler:~/tip/tools/build/feature> cat test-libunwind.make.output
- /usr/bin/ld: /tmp/cc2BfaNM.o: in function `main':
- test-libunwind.c:(.text+0x1c): undefined reference to `_Ux86_64_create_addr_space'
- /usr/bin/ld: test-libunwind.c:(.text+0x44): undefined reference to `_Ux86_64_init_remote'
- /usr/bin/ld: test-libunwind.c:(.text+0x6b): undefined reference to `_Ux86_64_dwarf_search_unwind_table'
- collect2: error: ld returned 1 exit status
-
-I tried to install the libunwind-19-dev package, I tried to 
-uninstall/reinstall - no combination seems to work.
-
-perf is also totally unhelpful about resolving such issues - it used to 
-issue tips about what packages to install, but those tips are not 
-present anymore, for this one at least.
-
-2)
-
-More annoyingly, I cannot get source code annotation of the kernel to 
-work - this might be related to the libunwind build failure (or not).
-
-Within 'perf top' I go into a function, and I press 's', which is 
-supposed to toggle the source code annotation ... but nothing happens.
-
-'nothing happens' is perhaps the most passive-aggressive reaction a 
-tool can give to a user. I'd prefer a *crash* to ignoring the keypress 
-...
-
-There's no error printed anywhere - just the color of the hexadecimal 
-labels changes, nothing else.
-
-'perf top' won't annotate kernel functions (despite me having a 
-DEBUGINFO kernel package installed and booted), nor will it even 
-annotate its own functions within 'perf', in a similar fashion.
-
-It's similar for 'perf report' too, although that's not a surprise, 
-they share much of the codebase.
-
-'perf annotate --stdio' only shows an objdump --disassemble style 
-output, but without any source annotations either.
-
-This is a rather frustrating user experience. :-/
-
-Thanks,
-
-	Ingo
+Will
