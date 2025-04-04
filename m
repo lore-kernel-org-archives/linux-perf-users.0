@@ -1,209 +1,159 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6ED13CA9C;
-	Fri,  4 Apr 2025 06:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8896413BAE3
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Apr 2025 07:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743749354; cv=none; b=m6cIHpVfdHyALRcrzhGy5E3BSqYWXDToHUtMntMmzoevTtVyKs+IONurpXwjBSQrNyfBdlJy5NmtBrdvwPDhNtuP92CuR5VyLy3YBsLgEYFFfpv6MSHgptThkV2ajXH18VpARYkmajczo2hHEWh3bfkP1YQCbr2Xx4GDFLWH7fU=
+	t=1743750145; cv=none; b=lPGOm0MTaOsdFQ7MxdwU7wSz53i47Q+tIxi8y3RNfdl3hFgIYdTmdwY073wlwnz/4KaEOBu75l1cInl32iyPAX3PBF6wXr6rSKPB/KW34rAQlhDt16H+WnW8XL4mcjc2iafXPNbeSuWbGRXoegt3QNe1FnF4F9VFWGed5WCxp1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743749354; c=relaxed/simple;
-	bh=kELR835UCWCK7OY1En5387hJQdIbvGqYSUGhSzutYM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T/Ng78hZiNkWe4MyDN9dlcw+ApUghVoBfChpeTqcBlXAM0+N8u/R7SX0XCTmaHelWqMA4pziYM2+2Q0vmt2hjWtct6nVC7gP7o8JQ/7xPgBV742N64xMDx0Jb2q2YIReUuWKY6HbEpBbasPhSzrr0mraVV2au1NQB6KdnJx0k2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=MyU3z52G; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="MyU3z52G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZQQetR+xc2zZIjsgAF6hLgPLxVn2j39ULjiJ2InxQX0=; b=MyU3z52G1+KtUQ6PCH08uwLVGE
-	mtNllg/HfLXAlicIuUuukxuO5PzUux0ZSBoNgfAkU27/L+6GoEn9SQjg5q543gJI2m5QLTsLobUIe
-	YOBObsFHoI+HhezX1HDjCUvKEsbiTSm9v7MQ2QeaH7iT+yhovEZ/JM6Of3YkNBg8QEdO+ujEB81A7
-	32uV12gGW3Mff5+7s++370dOnTGFsFNSxr7eHhjqOH3GSSWkOSgz0Yvz8UeZ774bG/yb1f0Y0j9wh
-	NqSPDnmnIigBz0r+aJQgGXPd1EPOEKlCL/1JFZNg6S6/rA9yZRm6uAq8fVQMam/CFR3B9yJpG2pTp
-	OwckH4Cw==;
-Received: from [223.233.74.223] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u0arM-00BDu0-W2; Fri, 04 Apr 2025 08:49:01 +0200
-Message-ID: <3202d24e-b155-ab0a-86cd-0a3204ec52dd@igalia.com>
-Date: Fri, 4 Apr 2025 12:18:56 +0530
+	s=arc-20240116; t=1743750145; c=relaxed/simple;
+	bh=CG4w7wuAcBlHVA0LcWfHljDBiHRuBnpN7MvyZSm7Wuk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=p8AK0hXdPjMmNFH98K/LWB9U3iF/KHnKiWPKNvTkmdsYghNWKhDMXgZLqV0hIZohWVRijA6IgOy68n2shstIJdCzmOCOLPCd8sxWh+PlBwXckGM8vQvQPVJniC1yhdobM36I8E8AAMIOCiXCe+YU7ALakjIvepMRn72nBOqwdzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d43621bb7eso30211345ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Apr 2025 00:02:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743750142; x=1744354942;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=07He3MW0nab6whk26QqMphpP5i0LVPgzc6I53O4nkPw=;
+        b=DPr86JGtWAwx5YZRBgFa9Ql8Db6H5KOR6c4ZrtgTz4KIHJzwCOwrcUsxIPOEROKj34
+         ZczdcZji1ujz9neh1ySvqps/NunGofMfffQoUes6FbTKwoRw2sB+b4EWfsso0fEtiqyr
+         iIqfxbfJfLwWr1LAI1po9Mw5reg100vgB5IhNUEFiyfsqGgUQTHqBA+pcZ8AwdECCfB1
+         3//tVkVO6CNB6ecMHADZzsAdv1UxK+DDm+g1fz+jeotyIxtlyx7oIV6IhZwJag/rzGA8
+         UKyxQelBx1doDXziEs5q+cPDKJnyp8UqBCBMjOJgoBjtjo2EN9FICwY9S6oxgqfZdBi1
+         ZYsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNJ61YwYj6Z/YiFZz3bbDVOk9wV53NiZnasQh+VX7lRo1kzQ4yRzaxsvzuuHw57IstC9GzjxEOeLd4VjpK/cJ3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvYlk526ClrqnAItBcEt5cSxqoEYVWaoXHqoHdyQx0iwWWw7iW
+	tqRG+wqXB1fZdcGaeLiRdFwJXcr6XPU7mF79MTCpGtN5tureu4SKBDaR41dHGkIlf+XhnhSoCNv
+	0eP0Wk6qtrRuCyov+Ayd4SW5ojvR49QRyLLDPQp41lfJB368EAzvQhnk=
+X-Google-Smtp-Source: AGHT+IEckqlCfcYHd05IAyBuG5vtuEy9BXLpfqJ6h/iWwrojXjk8qvRZ03CHc0/6ILBbo/a+6pChEclTXc1h/eTg+Wh/3384mQVZ
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
- full name
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
-References: <20250331121820.455916-1-bhupesh@igalia.com>
- <20250331121820.455916-2-bhupesh@igalia.com>
- <202504030924.50896AD12@keescook>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202504030924.50896AD12@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:cda7:0:b0:3d3:f15e:8e23 with SMTP id
+ e9e14a558f8ab-3d6e40209e6mr20821955ab.10.1743750142644; Fri, 04 Apr 2025
+ 00:02:22 -0700 (PDT)
+Date: Fri, 04 Apr 2025 00:02:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ef83fe.050a0220.9040b.0366.GAE@google.com>
+Subject: [syzbot] [perf?] WARNING in __free_event
+From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, edumazet@google.com, irogers@google.com, 
+	jolsa@kernel.org, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, netdev@vger.kernel.org, peterz@infradead.org, 
+	sven@narfation.org, sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Kees,
+Hello,
 
-On 4/3/25 10:00 PM, Kees Cook wrote:
-> On Mon, Mar 31, 2025 at 05:48:18PM +0530, Bhupesh wrote:
->> Provide a parallel implementation for get_task_comm() called
->> get_task_full_name() which allows the dynamically allocated
->> and filled-in task's full name to be passed to interested
->> users such as 'gdb'.
->>
->> Currently while running 'gdb', the 'task->comm' value of a long
->> task name is truncated due to the limitation of TASK_COMM_LEN.
->>
->> For example using gdb to debug a simple app currently which generate
->> threads with long task names:
->>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->>    # cat log
->>
->>    NameThatIsTooLo
->>
->> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
->> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
->> that all the legacy / existing ABI, continue to work as before using
->> '/proc/$pid/task/$tid/comm'.
->>
->> This patch only adds a parallel, dynamically-allocated
->> 'task->full_name' which can be used by interested users
->> via '/proc/$pid/task/$tid/full_name'.
->>
->> After this change, gdb is able to show full name of the task:
->>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->>    # cat log
->>
->>    NameThatIsTooLongForComm[4662]
->>
->> Signed-off-by: Bhupesh <bhupesh@igalia.com>
->> ---
->>   fs/exec.c             | 21 ++++++++++++++++++---
->>   include/linux/sched.h |  9 +++++++++
->>   2 files changed, 27 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/exec.c b/fs/exec.c
->> index f45859ad13ac..4219d77a519c 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
->>   {
->>   	struct task_struct *me = current;
->>   	int retval;
->> +	va_list args;
->> +	char *name;
->> +	const char *fmt;
->>   
->>   	/* Once we are committed compute the creds */
->>   	retval = bprm_creds_from_file(bprm);
->> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
->>   		 * detecting a concurrent rename and just want a terminated name.
->>   		 */
->>   		rcu_read_lock();
->> -		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
->> -				true);
->> +		fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
->> +		name = kvasprintf(GFP_KERNEL, fmt, args);
->> +		if (!name)
->> +			return -ENOMEM;
->> +
->> +		me->full_name = name;
->> +		__set_task_comm(me, fmt, true);
-> I don't want to add new allocations to the default exec path unless we
-> absolutely must.
->
-> In the original proposal this was about setting thread names (after
-> exec), and I think that'll be fine.
->
+syzbot found the following issue on:
 
-Ok.
+HEAD commit:    0a87d6bb6fd2 Merge tag 'powerpc-6.15-2' of git://git.kerne..
+git tree:       bpf-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1780f7b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6631c78ce6cb228d
+dashboard link: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15440be4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12295404580000
 
->>   		rcu_read_unlock();
->>   	} else {
->> -		__set_task_comm(me, kbasename(bprm->filename), true);
->> +		fmt = kbasename(bprm->filename);
->> +		name = kvasprintf(GFP_KERNEL, fmt, args);
->> +		if (!name)
->> +			return -ENOMEM;
->> +
->> +		me->full_name = name;
->> +		__set_task_comm(me, fmt, true);
->>   	}
-> I think we can just set me->full_name = me->comm by default.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e5cffcf83e28/disk-0a87d6bb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/905e70de24af/vmlinux-0a87d6bb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5c28ed628313/bzImage-0a87d6bb.xz
 
-Sure.
+The issue was bisected to:
 
->>   
->>   	/* An exec changes our domain. We are no longer part of the thread
->> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
->>   	return 0;
->>   
->>   out_unlock:
->> +	kfree(me->full_name);
->>   	up_write(&me->signal->exec_update_lock);
->>   	if (!bprm->cred)
->>   		mutex_unlock(&me->signal->cred_guard_mutex);
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index 56ddeb37b5cd..053b52606652 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -1166,6 +1166,9 @@ struct task_struct {
->>   	 */
->>   	char				comm[TASK_COMM_LEN];
->>   
->> +	/* To store the full name if task comm is truncated. */
->> +	char				*full_name;
->> +
->>   	struct nameidata		*nameidata;
->>   
->>   #ifdef CONFIG_SYSVIPC
->> @@ -2007,6 +2010,12 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
->>   	buf;						\
->>   })
->>   
->> +#define get_task_full_name(buf, buf_size, tsk) ({	\
->> +	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
->> +	strscpy_pad(buf, (tsk)->full_name, buf_size);	\
->> +	buf;						\
->> +})
-> I think it should be possible to just switch get_task_comm() to use
-> (tsk)->full_name.
->
+commit 00b35530811f2aa3d7ceec2dbada80861c7632a8
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu Feb 6 14:04:22 2025 +0000
 
-In another review for this series, Yafang mentioned the following 
-cleanup + approach suggested by Linus (see [0]).
-Also I have summarized my understanding on the basis of the suggestions 
-Linus shared and the accompanying background threads (please see [1]).
+    batman-adv: adopt netdev_hold() / netdev_put()
 
-Kindly share your views on the same, so that I can change the 
-implementation in v3 series accordingly.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a7e94c580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=12a7e94c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a7e94c580000
 
-[0].https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
-[1]. https://lore.kernel.org/all/20250331121820.455916-1-bhupesh@igalia.com/T/#m7c163829440f2c98e64b475b7cdbc35ba4d613ca
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+Fixes: 00b35530811f ("batman-adv: adopt netdev_hold() / netdev_put()")
 
-Thanks,
-Bhupesh
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 6031 at kernel/events/core.c:5572 __free_event+0x50f/0x620 kernel/events/core.c:5572
+Modules linked in:
+CPU: 1 UID: 0 PID: 6031 Comm: syz-executor189 Not tainted 6.14.0-syzkaller-g0a87d6bb6fd2 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:__free_event+0x50f/0x620 kernel/events/core.c:5572
+Code: ff 48 c7 c7 a0 0c df 8e e8 6e a5 a6 ff 43 0f b6 44 25 00 84 c0 0f 85 f5 00 00 00 41 80 26 ef e9 ea fc ff ff e8 d2 46 cb ff 90 <0f> 0b 90 42 80 3c 3b 00 0f 85 2d fe ff ff e9 30 fe ff ff e8 b9 46
+RSP: 0018:ffffc9000461f858 EFLAGS: 00010293
+RAX: ffffffff81f8104e RBX: 1ffff110089a873c RCX: ffff88802f5dda00
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000001
+RBP: 0000000000000003 R08: ffffffff81f80e1b R09: 1ffff1100fc94b45
+R10: dffffc0000000000 R11: ffffed100fc94b46 R12: ffff888044d439d8
+R13: ffff888044d439e0 R14: 1ffff110089a873b R15: dffffc0000000000
+FS:  00007f1a7f6516c0(0000) GS:ffff888125099000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1a7f743320 CR3: 000000003461c000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ inherit_event+0x190/0x9d0 kernel/events/core.c:14036
+ inherit_group kernel/events/core.c:14110 [inline]
+ inherit_task_group+0x18d/0x4f0 kernel/events/core.c:14177
+ perf_event_init_context kernel/events/core.c:14226 [inline]
+ perf_event_init_task+0x244/0x650 kernel/events/core.c:14295
+ copy_process+0x151e/0x3d10 kernel/fork.c:2403
+ kernel_clone+0x242/0x930 kernel/fork.c:2844
+ __do_sys_clone kernel/fork.c:2987 [inline]
+ __se_sys_clone kernel/fork.c:2971 [inline]
+ __x64_sys_clone+0x268/0x2e0 kernel/fork.c:2971
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1a7f6b98d9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1a7f651218 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
+RAX: ffffffffffffffda RBX: 00007f1a7f743338 RCX: 00007f1a7f6b98d9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000ab009400
+RBP: 00007f1a7f743330 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1a7f710a94
+R13: affffff7ffffffff R14: 0000200000000180 R15: 00000000ab009400
+ </TASK>
 
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
