@@ -1,116 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB6714B092;
-	Sun,  6 Apr 2025 17:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176FA2E62C
+	for <linux-perf-users@vger.kernel.org>; Sun,  6 Apr 2025 18:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743961013; cv=none; b=VZil3y+wSffGy9uyjNJdXD+6LYy+S7q51dkjQB+Meqg5JfQ+xxpyQUi7u7bZec218chFcCGuHdTPbngX5+94RKKPV3z9PxpJVzEzB0qnSU7KRUvX2IyVHgXuknukbZZS3I+m+PpoeSevlPwpGnEgMQou/IGHQ3VXjF2shh7Lu5k=
+	t=1743964846; cv=none; b=HrVNPiJSh9/5iIHLJoSVIqLPQYgoQ3cwnTyGtZoW187AUPYj8sX5EPFd7jVHMJ7hDfTz9ITfj6lcZ8Sp6/O3Pcj6Yi+u7MaoDmapwPx7gsGVL+OHxVSDZ6MgqjQ4IPFXIXOQuHJ3+bf+ekgfGRKX6KK1vQjGDw0aH45kKJb3AFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743961013; c=relaxed/simple;
-	bh=1dSNAFo5GSL7d+r5bdIEpzCsGYMFrfwM6VtdmM+UiuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fkBRnHSjXP9sn5wMMA9mh85z2Hq4kpBFHkZl995diQY5dVN6pPLjLMmcLvmrAGQfA9Dex3VN+dMqlOg/BLdHO2EjK3tBX1ogaNp6clFz2wODOarZk9cNPjYQ+fF50r7rSXcWe/rwKYYZLhZ9ivzvMI3NpgH0dnZyxmKDxwmjyww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQr3BdA8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743964846; c=relaxed/simple;
+	bh=9Awsnvo1929RvB66THaRTJLr9X9KibhwNLSFNMjxEsE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=qOs2WY2d1nO/SqJTTz556YN+pyRALKqjvd4z+ZCFQk33dmA27SSaGc/swZFydAihafKdw0m/n5zdiB2WV/wInDCuwuEjQ7tvgKT1GvJ20XVwWbczE8b1okjHmKLWHa1Ronlibol9GY/s3OGhcTqlqyF87jVicT26XXkdzet5B6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F1fL5+SY; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQr3BdA8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BC7C4CEE3;
-	Sun,  6 Apr 2025 17:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743961012;
-	bh=1dSNAFo5GSL7d+r5bdIEpzCsGYMFrfwM6VtdmM+UiuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZQr3BdA8W46wzs/EphpeSe904lsF0AGIaIwm/GL1VyQW2xcAqmzBvp94RW+gjx9CU
-	 B7Iew9i5SK15x3fy4kOFAPY2qnkcFJcrw3A2AJGi8Lb3nbwxXgTE994cOvTVc+FCH0
-	 dRaqOToaiJfLEEZBCpQKhOe9hb8y+ljevhwT1zmFgek9BSSvrknRSxNUjMzi6e6VDJ
-	 qN3eZsrWEmrBJFjt2ebjEgnnDo2AI/aFwSlk3/O2Im4unQx6PWjMH3hT8Fs97qpFj9
-	 gKGToQcqGCMkA3mla5zyRsO1+dL3nuEZHQ86OxDZC5Skw6sxv6aQ+p2KhTQto0Pd/i
-	 OLX0RIf2IfdCA==
-Date: Sun, 6 Apr 2025 19:36:46 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] tools build: Don't set libunwind as available if
- test-all.c build succeeds
-Message-ID: <Z_K7ruz8hhvCTbL8@gmail.com>
-References: <Z_ArFrHU7hMNUOv3@x1>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F1fL5+SY"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 536HBT2p029560;
+	Sun, 6 Apr 2025 18:40:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Xl10n4
+	EfMGcz5yZJ50T336+BxH5qajS9T0JHC53F5jQ=; b=F1fL5+SYLXQRcIzIE3bG+z
+	17qWVFgCHHsS/kT9/Ih0tNwUysERJ3AaXrpb2NU7td0Fycwi0A7yUFKfrTdxxhB3
+	wVsixeM/wCBor5RTJQ82sI4HQNtHqCtchrDt99h0A1NkDz48HwSQNIpr8xN8t9id
+	BB9z+ujWFcht4yJZgRA3AuWWDQ+O9qHREYhLmLrRufPLFufHnvSSpyyJiEgXrCIZ
+	TspqeNFnrxPGrz1JmryZ9uGkaZwoxNeIO86cNDjZOYCK7B6dpTN9oK8Z1rpHF6Tr
+	XBH8FkzaPbBZrAruDFM3O8bnddD5qgoqpL3jIbELPr0pCnsgKtSGvnCGPZdkF82A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uwswr70x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 06 Apr 2025 18:40:33 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 536IeXHE028114;
+	Sun, 6 Apr 2025 18:40:33 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uwswr70v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 06 Apr 2025 18:40:33 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 536EFFNR017825;
+	Sun, 6 Apr 2025 18:40:32 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uh2kaebm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 06 Apr 2025 18:40:32 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 536IeSiR34275818
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 6 Apr 2025 18:40:28 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BAAE82004B;
+	Sun,  6 Apr 2025 18:40:28 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BD06B20049;
+	Sun,  6 Apr 2025 18:40:24 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.249.15])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sun,  6 Apr 2025 18:40:24 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_ArFrHU7hMNUOv3@x1>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
+ cpumap.c
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <20250406163412.897313-1-likhitha@linux.ibm.com>
+Date: Mon, 7 Apr 2025 00:10:10 +0530
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
+References: <20250406163412.897313-1-likhitha@linux.ibm.com>
+To: Likhitha Korrapati <likhitha@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7lJ4UcsV-HIAwTh8ZFgXypNSTl-whGHR
+X-Proofpoint-ORIG-GUID: qXiy8iHudRf1hA3t8OZmmbcQ2ADDUIS6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-06_05,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 mlxlogscore=999 spamscore=0 adultscore=0 clxscore=1015
+ phishscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504060135
 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> The tools/build/feature/test-all.c file tries to detect the expected,
-> most common set of libraries/features we expect to have available to
-> build perf with.
-> 
-> At some point libunwind was deemed not to be part of that set of
-> libraries, but the patches making it to be opt-in ended up forgetting
-> some details, fix one more.
-> 
-> Testing it:
-> 
->   $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
->   $ rpm -q libunwind-devel
->   libunwind-devel-1.8.0-3.fc40.x86_64
->   $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
->   ...                               libunwind: [ on  ]
->     CC      /tmp/build/perf-tools-next/arch/x86/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/arch/x86/util/unwind-libunwind.o
->     CC      /tmp/build/perf-tools-next/util/arm64-frame-pointer-unwind-support.o
->     CC      /tmp/build/perf-tools-next/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libunwind-local.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libunwind.o
-> 	  libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f615a549000)
-> 	  libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f615a52f000)
->   $ sudo rpm -e libunwind-devel
->   $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
->   $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
->   Makefile.config:653: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
->   ...                               libunwind: [ OFF ]
->     CC      /tmp/build/perf-tools-next/arch/x86/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/arch/x86/util/unwind-libdw.o
->     CC      /tmp/build/perf-tools-next/util/arm64-frame-pointer-unwind-support.o
->     CC      /tmp/build/perf-tools-next/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libdw.o
->   $
+> On 6 Apr 2025, at 10:04=E2=80=AFPM, Likhitha Korrapati =
+<likhitha@linux.ibm.com> wrote:
+>=20
+> perf build break observed when using gcc 13-3 (FC39 ppc64le)
+> with the following error.
+>=20
+> cpumap.c: In function 'perf_cpu_map__merge':
+> cpumap.c:414:20: error: argument 1 range [18446744069414584320, =
+18446744073709551614] exceeds maximum object size 9223372036854775807 =
+[-Werror=3Dalloc-size-larger-than=3D]
+>  414 |         tmp_cpus =3D malloc(tmp_len * sizeof(struct perf_cpu));
+>      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from cpumap.c:4:
+> /usr/include/stdlib.h:672:14: note: in a call to allocation function =
+'malloc' declared here
+>  672 | extern void *malloc (size_t __size) __THROW =
+__attribute_malloc__
+>      |              ^~~~~~
+> cc1: all warnings being treated as errors
+>=20
+> Error happens to be only in gcc13-3 and not in latest gcc 14.
+> Even though git-bisect pointed bad commit as:
+> 'commit f5b07010c13c ("libperf: Don't remove -g when EXTRA_CFLAGS are =
+used")',
+> issue is with tmp_len being "int". It holds number of cpus and making
+> it "unsigned int" fixes the issues.
+>=20
+> After the fix:
+>=20
+>  CC      util/pmu-flex.o
+>  CC      util/expr-flex.o
+>  LD      util/perf-util-in.o
+>  LD      perf-util-in.o
+>  AR      libperf-util.a
+>  LINK    perf
+>  GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
+>=20
+> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
+Looks good to me
 
-So I'm not sure whether this is related to my libunwind-OFF build 
-message bugreport, but in case it is, with this patch applied I still 
-get this message both before and after applying the patch:
+Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
 
-...                               libunwind: [ OFF ]
+Thanks
+Athira
+> ---
+> tools/lib/perf/cpumap.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 4454a5987570..c7c784e18225 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -398,7 +398,7 @@ bool perf_cpu_map__is_subset(const struct =
+perf_cpu_map *a, const struct perf_cpu
+> int perf_cpu_map__merge(struct perf_cpu_map **orig, struct =
+perf_cpu_map *other)
+> {
+> struct perf_cpu *tmp_cpus;
+> - int tmp_len;
+> + unsigned int tmp_len;
+> int i, j, k;
+> struct perf_cpu_map *merged;
+>=20
+> --=20
+> 2.43.5
+>=20
 
-Note: I did not add any LIBUNWIND parameters to the build, it's a 
-standard 'make clean install' perf build:
-
-  $ make clean install
-  ...
-  BUILD:   Doing 'make -j128' parallel build
-  ...
-  ...                               libunwind: [ OFF ]
-  ...
-
-All other feature messages indicate '[ on ]'.
-
-It's on a fairly standard x86-64 Ubuntu 24.10 installation, with 
-various development libraries installed. Let me know if you need
-any debug output or other information!
-
-Thanks,
-
-	Ingo
