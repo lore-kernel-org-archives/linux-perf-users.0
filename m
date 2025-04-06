@@ -1,244 +1,164 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EDD2E62BD;
-	Sun,  6 Apr 2025 02:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B30D145A05;
+	Sun,  6 Apr 2025 07:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743906555; cv=none; b=V49p0N1au/ltG5jZviEXDbUOWhXBmqiQ94lqxypuik4zWL3PQKFRcW5wZfqXczY9bJxYs0oddVUGcO2Wtb3SjYRn2L6RA+e7/fkzTAUcpslKJ9hZsnYNAUHztHjEM1tModyOKjo6sPW0pMlmznaJTj2lWzs4+2xeotSn7vKlDHo=
+	t=1743924056; cv=none; b=FxmnUcKYV9QwIfnRp4qwbLkN64EQDJSCjycINgxTJ81oS2+PlR7dJbclVZA7UMuZSc4Kt+WMPHq7EavTjuW/nn329xVmhkyXHe2bXKdx5AYCtmyocrzDV0bNM0IlvqFI5wb/aitibmRp6JdhC6W69ieBASZLL0nci6yOwVafOhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743906555; c=relaxed/simple;
-	bh=+cc9Wf+8QVea7RzuFaCWm/KHgmB6BfU8yHWa+l0lN+c=;
+	s=arc-20240116; t=1743924056; c=relaxed/simple;
+	bh=gOz7WzrVKVFjQogYNZGybSPujxfm5zi1yI/Mn2wZfLE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ixm1USB5ZKm4FteJW0YRYXWYWNLQmCDVd7RrMMISDHXzbfpXTDyOHNsdQOkNOLhr66jNL89zZV2/pw5+WotLXAwT4ntT8Iciu5kbENJn1tcf150zMwkL2P0CqxMjlm13wHzr+sluvlp5QdlydC5eCzPiTXpnQxENKr37xA8zeJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YA0z2bez; arc=none smtp.client-ip=209.85.219.48
+	 To:Cc:Content-Type; b=IBwpTcH+zgGWwTWIZHaynSkmy2v9sAgIJc33Z0D736Bune3ql4NHFsgFQsweEga3gw+3iNudnmmim7qS26AvWxeQwyRMEDGZy0NyyK+JfWm9T9PffgXFN48xNyiI2Fc2ujtqonbeQac2r77HtKI+h6GZEZGH9Vd8fyATE50R8cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFxXAmxF; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YA0z2bez"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ecfc2cb1aaso34978646d6.3;
-        Sat, 05 Apr 2025 19:29:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFxXAmxF"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47664364628so35615311cf.1;
+        Sun, 06 Apr 2025 00:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743906553; x=1744511353; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743924053; x=1744528853; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CIiylM2j9zQF/1YnJzm9yePwxAWbQcx1fkMSx40gJuk=;
-        b=YA0z2bezrjhK6QjxrsOBP/KQIa3E4FYSmcvveJ+Y400GzMFKRwn1IYImz2alYwwh5/
-         +y7ViSuEPusq8EaFupxvgDZhZxkMgEvkuZ3+W4uAyA1b/Ac0q7Cm/GCoECPN1hP7jVgu
-         3BGa4Bj70ni/bfl1xejkArotiiWcbCkNjWxeF7eXc3/lXCAe+sUA1GHES96Gwka/tXCp
-         F/lWzVMmjLlOi3m3P1i8YJyDRJzi+CMV8n3ms86af6lXHNT1Fy37Hc5efpRSOeaqKWMj
-         UdTufXGpOPptd2+fbotysQrhn2YX+l1UU+gW54T1ZunDLANLPumCFqWPUDYhpWbxA+NI
-         SWDA==
+        bh=CsjPYecOwi8hQj5aoNaycY/6PTPOmGRunWyU+08oUb8=;
+        b=LFxXAmxFuABJfrdNVZD1FAsTRBSafwfCQyhSeDVUOm70/qDmvUZx3aCl0wqFbTYjDR
+         kjqMZ5SuS+j0e9yBbEb6W2XxGYQ8LH7GAAa1p/UvGVPBN3Ep2+OQD3WAHAbl72uNciQj
+         X47qaDQZB8BwS9Teaw12ZkUZMIXnxojSsZ008cwDCR618kyopXAaZmiFc3YVo1I2gKxl
+         FGQV/b9zK/Ut7TRGiAcPyryraUyjr3ZAoPfXfBs+UceCcyOAvADr/3XsTmgxQmkQ1s6m
+         QzbE/GwAb8zaznk4WHKbGtYMnUFHrE6LUnM59O0WMCiO1dd37AiYj33v1SCiVddx2NOw
+         xzXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743906553; x=1744511353;
+        d=1e100.net; s=20230601; t=1743924053; x=1744528853;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CIiylM2j9zQF/1YnJzm9yePwxAWbQcx1fkMSx40gJuk=;
-        b=Sw6/9D42qjamRjddNvVHYa0N0hi0nJgGaLHAp73FzN7+dh2eALtBAR/+5CBZfL0tnP
-         4eyBnsfKAMp8b0KhgrfUfHOzTnJnmWbhf3t2GoeUhVjcA/x1DVby7vx28ZdvCkYDU2Ek
-         Vx65rvNTU7HE8wvOnfipazag735G8+IPqG0rn6Do265TUc+hURpGvDlzAoGVZ7CLY6xP
-         VrWoeZh5EVy8/O81ITEZhvgHMqw+bOf2dLZsYNv9BQs1d7KetNn70nQi/NEk+9Oetz/i
-         W9IUYQDj4gnvqDAdm/gu2ePiPfpYGOVRULhmlWVEziQRC7KWLhxpsa8velmfXzSGqfCn
-         h1jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/mlo4q4SkBi04s7E/SxGBgkXXtKSN46Wu0bT+2qTfGPrSyjlVAWX1RnQdQjGdb75LrUys6LjEKlopSnu/@vger.kernel.org, AJvYcCW/4MT/OhkHuNh9Sn20IK/3P8OulUwXGHfBBnxUJ1djSDABcS9x6TEj1iARIXlGg9Iw050=@vger.kernel.org, AJvYcCWz1xfN389EMLNvEfkgCgE1Iuf14um68aZQi4umlMrOFN0FhLysNLnHs0PWdAhY4MADO5E6gE/E6QxH3EvH2hc5pQ==@vger.kernel.org, AJvYcCXC6AHUuOK0h1FwY/GSnsUM8dXiegEIzxxtxv/wjQ3rVLbJpVng0NxjrehxelNxxU7xAjwgakRpHHKB/Q9I1w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyxLwO2rQO9wS8H/k9HMHPZJat+ezVF7kO1lLSj+R95YKu1HUk
-	wY43Swz3+4ZRwGzhS8F4e6KubtRdfOUhVyTqDyE+qs8hleGlkn1FocrA4gov9S0ySMhlhsKlcch
-	aF/rzX3o56403P+8kMTcG7Bl5YyE=
-X-Gm-Gg: ASbGncttAzEiNMM9ODVZJ2u9WvbNUFnSq7mFlrLyvYgxJ3loCZP+H+snVNBbH0ilUO6
-	EXJG235xnP/xvTlj1/GOw9DXVB6AXx2GYX5zn6drvHpdCZlLPCWYqgTKjymtoB6hiY67WhNCKBq
-	VvvCsoUyQjsntrzr4JMwZsAlY4mWQ=
-X-Google-Smtp-Source: AGHT+IGS6yvI0ZrRHzw3B/bNPjznQvxjxVF/nePT6AW/hLY+icoun8BTFzmTjAUxyoEUlJrRWte4+c8X7BaV5K1U6WI=
-X-Received: by 2002:ad4:5948:0:b0:6ea:d393:962c with SMTP id
- 6a1803df08f44-6f058535e23mr100523026d6.30.1743906552498; Sat, 05 Apr 2025
- 19:29:12 -0700 (PDT)
+        bh=CsjPYecOwi8hQj5aoNaycY/6PTPOmGRunWyU+08oUb8=;
+        b=s/OAsreH+AS/N0UKQfpSA3ZXeI4PoijLxlFuEH0mfeRrwwesD9M/JRRHKf56wtmsRW
+         ruywNCAXSu6F4med3Cinqigfs2bzMbPJZC0gY197BTsYu5kZGPzNT9/3F5sJH+/uqQ6/
+         zFKaW7FvQd6n4EBgydpuTT4xVPtWtm4LYskFqREiearKfhxzIKDuB3b+eOZaAC7eyx42
+         WS6sjcy2AEVKkye9UZgWZi22+DN225Ce19JzuKUOSAe1oQJeJctFdYP5zj6UoF3mvF8w
+         5Y8ssYAmj+NwY3nw6UaWuXbAG6hij1gcubiVFI+POFXvJD+fC8peAXVFIrnMqnLab6wv
+         YQRw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhExURLMDC6g3u5L/1GBvLrBK5TmA2IeDwqWtSizpFCejF3deiyE440C0mTNLe2RQXyIRNUOVowRitasNtNh2B@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ3fmHgDgOC9uc5EgbQIIBxjhefYdmbrlQOUeuTKMQSTMY67F8
+	rt2dpOEmudP6CYWbt/MJGdn9iU3hpQHtoCXLTPXsVTgsxRWEx4bcxsNB1gMoo7GZ8BEYrpbFQpA
+	chdKZstKxx55R9Lu4e70ubwaDa5M=
+X-Gm-Gg: ASbGncurxrB4P/D5VjAPxUatoLVjaO3tL22NrCL1kKBmuO1E4AIuiuw/KLEJnaLR04L
+	nk1vuwmSfq7dzFp2/e+TR7axe/T9j4a8fzOD8ro+iuA4gcLWD+Vc5SPHjrEPFbMFrOHvooLmv15
+	niv7MxRcATeT3njACdgDeIUv+deUyhrHxK5Ul7vMvlMgodDMaRKy1Ej98VsA==
+X-Google-Smtp-Source: AGHT+IEH037Fk40ggPFgWWQx+6QNlWtiRSd+WTm/tEXwShD9X4Cl0uf7VM7Wg13I2mwt/EV/fsG8++jMYskagKq7dZA=
+X-Received: by 2002:ac8:570a:0:b0:477:113e:1fb3 with SMTP id
+ d75a77b69052e-47916130d85mr160207961cf.3.1743924053394; Sun, 06 Apr 2025
+ 00:20:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331121820.455916-1-bhupesh@igalia.com> <20250331121820.455916-2-bhupesh@igalia.com>
- <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com> <6beead5a-8c21-af57-0304-1bf825588481@igalia.com>
-In-Reply-To: <6beead5a-8c21-af57-0304-1bf825588481@igalia.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Sun, 6 Apr 2025 10:28:36 +0800
-X-Gm-Features: ATxdqUEO5JDPKu66gRn-W6p4DyZydEyISAr6eMeFr_OFfhxP-niPWJgczuY4Eew
-Message-ID: <CALOAHbDE3ToDc0knbUtGu0on9n9uUiWfKZEb-bgm1mW57VTZvg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
- full name
-To: Bhupesh Sharma <bhsharma@igalia.com>
-Cc: Bhupesh <bhupesh@igalia.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	akpm@linux-foundation.org, kernel-dev@igalia.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com, 
-	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
-	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org, 
-	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com, 
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com
+References: <20250405203036.582721-1-gshahrouzi@gmail.com>
+In-Reply-To: <20250405203036.582721-1-gshahrouzi@gmail.com>
+From: Gabriel <gshahrouzi@gmail.com>
+Date: Sun, 6 Apr 2025 03:20:00 -0400
+X-Gm-Features: ATxdqUH0xUlfHS73rix1kl26hMdjVR8MUvx_Q8JTUzR4eSinZEmrrW8YuckWqU0
+Message-ID: <CAKUZ0zKwPoh6MrtpN+gM_rsKV7_+yy-MgWNU=fs98BhwWKa-qQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: Prevent WARN_ON(!ctx) in __free_event for
+ partial init
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel-mentees@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com, 
+	syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 4, 2025 at 2:35=E2=80=AFPM Bhupesh Sharma <bhsharma@igalia.com>=
- wrote:
+On Sat, Apr 5, 2025 at 4:30=E2=80=AFPM Gabriel Shahrouzi <gshahrouzi@gmail.=
+com> wrote:
 >
+> Move the get_ctx(child_ctx) call and the child_event->ctx assignment to
+> occur immediately after the child event is allocated. Ensure that
+> child_event->ctx is non-NULL before any subsequent error path within
+> inherit_event calls free_event(), satisfying the assumptions of the
+> cleanup code.
 >
-> On 4/1/25 7:37 AM, Yafang Shao wrote:
-> > On Mon, Mar 31, 2025 at 8:18=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wr=
-ote:
-> >> Provide a parallel implementation for get_task_comm() called
-> >> get_task_full_name() which allows the dynamically allocated
-> >> and filled-in task's full name to be passed to interested
-> >> users such as 'gdb'.
-> >>
-> >> Currently while running 'gdb', the 'task->comm' value of a long
-> >> task name is truncated due to the limitation of TASK_COMM_LEN.
-> >>
-> >> For example using gdb to debug a simple app currently which generate
-> >> threads with long task names:
-> >>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" >=
- log
-> >>    # cat log
-> >>
-> >>    NameThatIsTooLo
-> >>
-> >> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
-> >> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
-> >> that all the legacy / existing ABI, continue to work as before using
-> >> '/proc/$pid/task/$tid/comm'.
-> >>
-> >> This patch only adds a parallel, dynamically-allocated
-> >> 'task->full_name' which can be used by interested users
-> >> via '/proc/$pid/task/$tid/full_name'.
-> >>
-> >> After this change, gdb is able to show full name of the task:
-> >>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" >=
- log
-> >>    # cat log
-> >>
-> >>    NameThatIsTooLongForComm[4662]
-> >>
-> >> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> >> ---
-> >>   fs/exec.c             | 21 ++++++++++++++++++---
-> >>   include/linux/sched.h |  9 +++++++++
-> >>   2 files changed, 27 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/fs/exec.c b/fs/exec.c
-> >> index f45859ad13ac..4219d77a519c 100644
-> >> --- a/fs/exec.c
-> >> +++ b/fs/exec.c
-> >> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
-> >>   {
-> >>          struct task_struct *me =3D current;
-> >>          int retval;
-> >> +       va_list args;
-> >> +       char *name;
-> >> +       const char *fmt;
-> >>
-> >>          /* Once we are committed compute the creds */
-> >>          retval =3D bprm_creds_from_file(bprm);
-> >> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
-> >>                   * detecting a concurrent rename and just want a term=
-inated name.
-> >>                   */
-> >>                  rcu_read_lock();
-> >> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_pa=
-th.dentry->d_name.name),
-> >> -                               true);
-> >> +               fmt =3D smp_load_acquire(&bprm->file->f_path.dentry->d=
-_name.name);
-> >> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
-> >> +               if (!name)
-> >> +                       return -ENOMEM;
-> >> +
-> >> +               me->full_name =3D name;
-> >> +               __set_task_comm(me, fmt, true);
-> >>                  rcu_read_unlock();
-> >>          } else {
-> >> -               __set_task_comm(me, kbasename(bprm->filename), true);
-> >> +               fmt =3D kbasename(bprm->filename);
-> >> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
-> >> +               if (!name)
-> >> +                       return -ENOMEM;
-> >> +
-> >> +               me->full_name =3D name;
-> >> +               __set_task_comm(me, fmt, true);
-> >>          }
-> >>
-> >>          /* An exec changes our domain. We are no longer part of the t=
-hread
-> >> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
-> >>          return 0;
-> >>
-> >>   out_unlock:
-> >> +       kfree(me->full_name);
-> >>          up_write(&me->signal->exec_update_lock);
-> >>          if (!bprm->cred)
-> >>                  mutex_unlock(&me->signal->cred_guard_mutex);
-> >> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> >> index 56ddeb37b5cd..053b52606652 100644
-> >> --- a/include/linux/sched.h
-> >> +++ b/include/linux/sched.h
-> >> @@ -1166,6 +1166,9 @@ struct task_struct {
-> >>           */
-> >>          char                            comm[TASK_COMM_LEN];
-> >>
-> >> +       /* To store the full name if task comm is truncated. */
-> >> +       char                            *full_name;
-> >> +
-> > Adding another field to store the task name isn=E2=80=99t ideal. What a=
-bout
-> > combining them into a single field, as Linus suggested [0]?
-> >
-> > [0]. https://lore.kernel.org/all/CAHk-=3DwjAmmHUg6vho1KjzQi2=3DpsR30+Co=
-gFd4aXrThr2gsiS4g@mail.gmail.com/
-> >
+> Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3Dff3aa851d46ab82953a3
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  kernel/events/core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> Thanks for sharing Linus's suggestion. I went through the suggested
-> changes in the related threads and came up with the following set of poin=
-ts:
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 0bb21659e252..153ba622cfa0 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
+>         if (IS_ERR(child_event))
+>                 return child_event;
 >
-> 1. struct task_struct would contain both 'comm' and 'full_name',
-
-Correct.
-
-> 2. Remove the task_lock() inside __get_task_comm(),
-
-This has been implemented in the patch series titled "Improve the copy
-of task comm". For details, please refer to:
-https://lore.kernel.org/linux-mm/20240828030321.20688-1-laoar.shao@gmail.co=
-m/.
-
-> 3. Users of task->comm will be affected in the following ways:
-
-Correct.
-
->      (a). Printing with '%s' and tsk->comm would just continue to
-> work,but will get a longer max string.
->      (b). For users of memcpy.*->comm\>', we should change 'memcpy()' to
-> 'copy_comm()' which would look like:
+> +       get_ctx(child_ctx);
+> +       child_event->ctx =3D child_ctx;
+> +
+>         pmu_ctx =3D find_get_pmu_context(child_event->pmu, child_ctx, chi=
+ld_event);
+>         if (IS_ERR(pmu_ctx)) {
+>                 free_event(child_event);
+> @@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
+>                 return NULL;
+>         }
 >
->          memcpy(dst, src, TASK_COMM_LEN);
->          dst[TASK_COMM_LEN-1] =3D 0;
+> -       get_ctx(child_ctx);
+> -
+>         /*
+>          * Make the child state follow the state of the parent event,
+>          * not its attr.disabled bit.  We hold the parent's mutex,
+> @@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
+>                 local64_set(&hwc->period_left, sample_period);
+>         }
 >
->     (c). Users which use "sizeof(->comm)" will continue to get the old va=
-lue because of the hacky union.
-
-Using a separate pointer rather than a union could simplify the
-implementation. I=E2=80=99m open to introducing a new pointer if you believ=
-e
-it=E2=80=99s the better approach.
-
+> -       child_event->ctx =3D child_ctx;
+>         child_event->overflow_handler =3D parent_event->overflow_handler;
+>         child_event->overflow_handler_context
+>                 =3D parent_event->overflow_handler_context;
+> --
+> 2.43.0
 >
-> Am I missing something here. Please let me know your views.
+I want to clarify three things [1] why the Fixes: tag was not used;
+[2] what the author=E2=80=99s original intent was and how to maintain it; [=
+3]
+how to improve my patch.
 
+[1] This bug is a side-effect of multiple interacting commits over
+time (up to 15 years old), not a single regression. Bisection yielded
+a false positive
+(https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?i=
+d=3D00b35530811f2aa3d7ceec2dbada80861c7632a8),
+and testing on an earlier branch (6.14-c8) hit unrelated issues,
+confirming no single commit is responsible. A Fixes: tag is therefore
+unsuitable.
 
---=20
-Regards
-Yafang
+[2] The code initially incremented refcount then assigned context
+immediately after the child_event was created. Later, an early
+validity check for child_event was added before the
+refcount/assignment. Even later, a WARN_ON_ONCE cleanup check was
+added, assuming event->ctx is valid if the pmu_ctx is valid.
+The problem is that the WARN_ON_ONCE could trigger after the initial
+check passed but before child_event->ctx was assigned, violating its
+precondition. The solution is to assign child_event->ctx right after
+its initial validation. This ensures the context exists for any
+subsequent checks or cleanup routines, resolving the WARN_ON_ONCE.
+
+[3]. Defer the refcount update and child_event->ctx assignment
+directly after child_event->pmu_ctx is set but before checking if the
+parent event is orphaned. The cleanup routine depends on
+event->pmu_ctx being non-NULL before it verifies event->ctx is
+non-NULL. This also maintains the author's original intent of passing
+in child_ctx to find_get_pmu_context before its refcount/assignment.
