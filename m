@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F74120E02B;
-	Mon,  7 Apr 2025 16:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8023A20E333;
+	Mon,  7 Apr 2025 16:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042812; cv=none; b=NVBUaeY2ChxFmBSFwCsTQxCs7ncuuqqp45p4+JzV8NtpkELdJMgVo4j5iRi2ho9Bu8NyUzuOp2fo4TK9nRUXFPX+Y0WAhxckCv5yagCfSIOzRaeQu9INp2j5Di3t9uhDc//tznRwKNNJeoTqAzA8O2HXWIQmsSRfySm6ob/jx4Q=
+	t=1744042813; cv=none; b=n8Q4EKaqicWrAYYfHCQIRzuv7W7CiiYLwJAEklAWGD8eP61tKiedBI4TnngSNba3CQX80Q/BVtJVpYCGgDM146Pj73o+/IXwokOX7wnBmml+F3nPt8CAF0QRA0AA5ppSxLf5WR9gkLw+6MJ0ipXxQR8McWCYJoVz3+5WlxN2Gyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042812; c=relaxed/simple;
-	bh=sqMQDzvFmXnESvEW65BX+Gydje+6XtdWN5A4O+i9z+g=;
+	s=arc-20240116; t=1744042813; c=relaxed/simple;
+	bh=74l8WQJx+JHUOxctsCLtwn1uQDcdHtUHH9jZWyzig0g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EEp8ejS0UucPw1/WTYNhfvVSRQ23Ls6pCUB+vAPuvtjzVTDUwBMCwaNAUD0+10Oek6kfbhG8QItIP5sWc9xpYwfCSM/JWKaYEqZeJQci8EZzec73bqArH801u95wK+A181SD+pb9JhMjDzTLeyyFlgqMLFWF2bkFVBC8vpkw7ds=
+	 MIME-Version; b=FWOR9VhrDEqJbqWpANjk0acFFw/z12DpJ7frRG+pLchdxU+GJYt3eq+IGHZukFCKzomvYSv8acuQUZPjUa0PePcTohhzK4jyCdfP/TID0P4cWjEQ8+XyNllsCORWZq09Iiqv8ntwgc9s3nqHwoNP5V8qr8h1bm9nV9ubBsCh2MA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E04F21424;
-	Mon,  7 Apr 2025 09:20:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 006691BC0;
+	Mon,  7 Apr 2025 09:20:12 -0700 (PDT)
 Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 532783F694;
-	Mon,  7 Apr 2025 09:20:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68C763F694;
+	Mon,  7 Apr 2025 09:20:10 -0700 (PDT)
 From: Jeremy Linton <jeremy.linton@arm.com>
 To: linux-trace-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v2 2/6] arm64: probes: Break ret out from bl/blr
-Date: Mon,  7 Apr 2025 11:19:47 -0500
-Message-ID: <20250407161951.560865-3-jeremy.linton@arm.com>
+Subject: [PATCH v2 3/6] arm64: uaccess: Add additional userspace GCS accessors
+Date: Mon,  7 Apr 2025 11:19:48 -0500
+Message-ID: <20250407161951.560865-4-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250407161951.560865-1-jeremy.linton@arm.com>
 References: <20250407161951.560865-1-jeremy.linton@arm.com>
@@ -56,77 +56,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prepare for GCS by breaking RET out into its own function, where
-it makes more sense to encapsulate the new behavior independent
-from the branch instructions.
+Uprobes need more advanced read, push, and pop userspace GCS
+functionality. Implement those features using the existing gcsstr()
+and copy_from_user().
+
+Its important to note that GCS pages can be read by normal
+instructions, but the hardware validates that pages used by GCS
+specific operations, have a GCS privilege set. We aren't validating this
+in load_user_gcs because it requires stabilizing the VMA over the read
+which may fault.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 ---
- arch/arm64/kernel/probes/decode-insn.c   |  7 ++++---
- arch/arm64/kernel/probes/simulate-insn.c | 10 +++++++++-
- arch/arm64/kernel/probes/simulate-insn.h |  3 ++-
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/uaccess.h | 42 ++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-index 6438bf62e753..4137cc5ef031 100644
---- a/arch/arm64/kernel/probes/decode-insn.c
-+++ b/arch/arm64/kernel/probes/decode-insn.c
-@@ -108,9 +108,10 @@ arm_probe_decode_insn(u32 insn, struct arch_probe_insn *api)
- 	    aarch64_insn_is_bl(insn)) {
- 		api->handler = simulate_b_bl;
- 	} else if (aarch64_insn_is_br(insn) ||
--	    aarch64_insn_is_blr(insn) ||
--	    aarch64_insn_is_ret(insn)) {
--		api->handler = simulate_br_blr_ret;
-+		aarch64_insn_is_blr(insn)) {
-+		api->handler = simulate_br_blr;
-+	} else if (aarch64_insn_is_ret(insn)) {
-+		api->handler = simulate_ret;
- 	} else {
- 		/*
- 		 * Instruction cannot be stepped out-of-line and we don't
-diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-index 4c6d2d712fbd..09a0b36122d0 100644
---- a/arch/arm64/kernel/probes/simulate-insn.c
-+++ b/arch/arm64/kernel/probes/simulate-insn.c
-@@ -126,7 +126,7 @@ simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs)
+diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+index 5b91803201ef..34a8b2cc8935 100644
+--- a/arch/arm64/include/asm/uaccess.h
++++ b/arch/arm64/include/asm/uaccess.h
+@@ -20,6 +20,7 @@
+ 
+ #include <asm/asm-extable.h>
+ #include <asm/cpufeature.h>
++#include <asm/gcs.h>
+ #include <asm/mmu.h>
+ #include <asm/mte.h>
+ #include <asm/ptrace.h>
+@@ -539,6 +540,47 @@ static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
+ 	uaccess_ttbr0_disable();
  }
  
- void __kprobes
--simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
-+simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs)
- {
- 	int xn = (opcode >> 5) & 0x1f;
- 
-@@ -138,6 +138,14 @@ simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
- 		set_x_reg(regs, 30, addr + 4);
- }
- 
-+void __kprobes
-+simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
-+{
-+	int xn = (opcode >> 5) & 0x1f;
++static __always_inline unsigned long __must_check
++copy_from_user(void *to, const void __user *from, unsigned long n);
 +
-+	instruction_pointer_set(regs, get_x_reg(regs, xn));
++/*
++ * Unlike put_user_gcs() above, the use of copy_from_user() may provide
++ * an opening for non GCS pages to be used to source data. Therefore this
++ * should only be used in contexts where that is acceptable.
++ */
++static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
++{
++	unsigned long ret;
++	u64 load = 0;
++
++	gcsb_dsync();
++	ret = copy_from_user(&load, addr, sizeof(load));
++	if (ret != 0)
++		*err = ret;
++	return load;
 +}
 +
- void __kprobes
- simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs)
- {
-diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
-index efb2803ec943..9e772a292d56 100644
---- a/arch/arm64/kernel/probes/simulate-insn.h
-+++ b/arch/arm64/kernel/probes/simulate-insn.h
-@@ -11,7 +11,8 @@
- void simulate_adr_adrp(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_b_bl(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs);
--void simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_ret(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
++static inline void push_user_gcs(unsigned long val, int *err)
++{
++	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
++
++	gcspr -= sizeof(u64);
++	put_user_gcs(val, (unsigned long __user *)gcspr, err);
++	if (!*err)
++		write_sysreg_s(gcspr, SYS_GCSPR_EL0);
++}
++
++static inline u64 pop_user_gcs(int *err)
++{
++	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
++	u64 read_val;
++
++	read_val = load_user_gcs((unsigned long __user *)gcspr, err);
++	if (!*err)
++		write_sysreg_s(gcspr + sizeof(u64), SYS_GCSPR_EL0);
++
++	return read_val;
++}
+ 
+ #endif /* CONFIG_ARM64_GCS */
+ 
 -- 
 2.49.0
 
