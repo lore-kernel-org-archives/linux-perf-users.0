@@ -1,122 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4D721C163;
-	Mon,  7 Apr 2025 20:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830C62222B4
+	for <linux-perf-users@vger.kernel.org>; Mon,  7 Apr 2025 21:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744058444; cv=none; b=YquQbU/MB3FusqPg5oIKljXUSDJ7vnxrc6uUrtvujcpoWCTuuOwpBky55BEvrezMSKAs7jwdqI4EWSxGxPM1XG/zIx2eJdYElJqPOMZAFyW18Gypzy5WM/WGNmrc2A/qgwiHb2EPdE2tB71jik1//NUtIBNYuwW53O3xKQ/6YOE=
+	t=1744060221; cv=none; b=OD6DRnvgUR/8emJVgOuF5/4EoinboVBgKdzjR6ZQbgT9krVlO8WP+fcXS9szp4rFvYvxKlK2dEufhAqr5HDgPd4GwyYrkqdhjFriqWziKJ62sPFdiOG7ZyV0cFcQw4FTL+52Liiksb8ypGMA8GCSw2R2lZXxTm9ESbQ8bpQNmKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744058444; c=relaxed/simple;
-	bh=R/iykXm3KGSwjKZxScFlKn0pKd41QSyd1jKVT7l1uVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tGBqLCxUbja3pdfzW5HJvjbDuBqGZ9mllGqggz9MomZ3IRC8naEfI/70Wc39WJ7YTeAEZqO/yNjccSpXKdTi9SJaMkWzFhUlpArp8cFpOyHc80PrbWVSTnBsQs1KOwNKv6KuXfoI28lqrqe6ZLe8ND5c1TIOl/+Q5udqXdjBto4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PEHMXwVb; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744060221; c=relaxed/simple;
+	bh=9X96HmKAWEM4zBqkqwQy8V0Jw+GK5cr8MOnq9PKjuZ8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=NHl6ovnwP3aC+qpxSTl302cJkAy9es4quDn4lico8LSmDUSQz/mChTMRu3GWn0QwjBE/InOPm+Yq1hQMNuhk4O0S6Xk7F+mGcVjjB9Pn8U3uTRdH81ecwx2ILwm08F2yACpQSt7qSgfXRbsBCOfHjfZaabwZ/Zx7M8awcRMYcVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3r3a0Kij; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PEHMXwVb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744058440; x=1775594440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R/iykXm3KGSwjKZxScFlKn0pKd41QSyd1jKVT7l1uVc=;
-  b=PEHMXwVbPVT2GCFFjYeW01abyS9wmsHAw5WEarykR0fKXIHrMs5YDIdc
-   zLXa6XXrE+sq9l04FZaU6frGFaG9x/evw2yoDAq8QXIQh2KhS5meHDcU7
-   9w79b/yjQ3X8em3MAsAim/MPXcB1EKAbJPZb4BQJ+DSWaj+roYhum9iZI
-   8CYN3mQOZWmOyM56D8iETgx4AUK/uwZGZxLxegV1fBudojr7snPA6CS0M
-   sRtu2jR4X3HCL+fXRaG/7eZ690qikFx9QW57EgjVnwIypvd7Oba94pSU5
-   5M+OehoIsXZEXzhA1COirbU91cJowWG+mTJknOQi5VngH4jSUUz8qg8xp
-   g==;
-X-CSE-ConnectionGUID: 8BGuo6asSNe6u/XEuom6OA==
-X-CSE-MsgGUID: VJnFsI+nTM6Z7AfhuGfRfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44716111"
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="44716111"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 13:40:39 -0700
-X-CSE-ConnectionGUID: j/QaJQJ9SN+MJ1y7ziQY7A==
-X-CSE-MsgGUID: gaaAwajISzSKU7kGInRnZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="127929980"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 07 Apr 2025 13:40:34 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1tGh-0003ov-29;
-	Mon, 07 Apr 2025 20:40:31 +0000
-Date: Tue, 8 Apr 2025 04:39:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 13/16] perf intel-tpebs: Use stats for retirement
- latency statistics
-Message-ID: <202504080043.E3FPjBvv-lkp@intel.com>
-References: <20250407050101.1389825-14-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3r3a0Kij"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af5329791f1so3586809a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Apr 2025 14:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744060219; x=1744665019; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OljvANJsHobV72YfnacPOQcCYlCgGGmmSDxS5ifwPLg=;
+        b=3r3a0KijM2lKgaoh+0nBwS0OBytBoCnMGYTlJnj+v9JwaB/XwfWiS8jiZgtQ7ojd05
+         IXtcKgluV4SLykFPbpPrgl5JebXFyaczscOXdJ05NnC8/k+4/MefbtIaXVlf4+tQwHth
+         YRvx4Ok09gdpMTWdzjRSNs2z4T+cJ3Kde/xXoU9osJLdxf2SB4trf/vr1Ta9qzFdijz1
+         1h0L0obh4ZDhLSiVtZ9PcHJEOhwO8d8BK8Em8EYYSskHLFylGdP83nFGyEt/PLRlMehi
+         H56CR5/ss860qPrcKkBVr8GGzly75R4OYdbBRAG3KzH3lI3XZOeCl6253dqYzXtY92st
+         eSLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744060219; x=1744665019;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OljvANJsHobV72YfnacPOQcCYlCgGGmmSDxS5ifwPLg=;
+        b=JZ6+HIQD3BGFyZQJEJ885d8u6mFok16I9YioEgI13WyhbEjcvD3ZVFOP3c0YyuFdvs
+         bakrCmoaW8rmWJwFBREQNf+cgacqz5686/vG3y30jJ/yjQo8ZbxdixaiSzBeqdK5mOor
+         VnOPzyKHJAInSKhpR278j/goFjiMocrdn633IJriXXJ1y07pJzKPkv3y3cpLUowdKBeL
+         VjITpoYO33RUvfLR27O/5sxgtqpsgbmZ9FB9Cd+glfpfPqYFJlo3GUYNBtao8gx996dM
+         wdcb7t4n0x1pZpn/PrRlX6B8tuDkrauE4hqpXtQzabwAbPnqUjUdvOdCa6RuPjH7xTgm
+         B84w==
+X-Forwarded-Encrypted: i=1; AJvYcCVdyK6n8zWegSoLWjqwvqtl0OTUpEcSJntg/omsEjJDYVVlEw+GnSNInjijKcDQJHT7m/VwEmDVK2LNf3PXb5BG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw70BhEEFX/aV2NdlGJtdmFyJpfVvUO1it/MFh8MaBXY5FANGv7
+	+iNoFT31IY3yCUZmXotk4rEDDh6uiOfv9E1OIRbE7Qr24a9xgLx705o6d7Zczn+jkKySh+24ajv
+	6VnXXQg==
+X-Google-Smtp-Source: AGHT+IHTV5gOOrcC8/PeXpkTHvDGVUCqSu8LqpAAF0LopP3y5OdF26Xq/qem5MbyeB64xgBPH3bFzhYoeRrC
+X-Received: from pjf11.prod.google.com ([2002:a17:90b:3f0b:b0:305:2d68:2be6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:58c7:b0:2fa:6793:e860
+ with SMTP id 98e67ed59e1d1-306d0b5118amr1433588a91.0.1744060218804; Mon, 07
+ Apr 2025 14:10:18 -0700 (PDT)
+Date: Mon,  7 Apr 2025 14:09:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407050101.1389825-14-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250407210937.131681-1-irogers@google.com>
+Subject: [PATCH v3 00/16] Intel TPEBS min/max/mean/last support
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	John Garry <john.g.garry@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ian,
+The patches add support to computing the min, max, mean or last
+retirement latency and then using that value as the basis for metrics.
+When values aren't available, support is added to use the retirement
+latency as recorded for an event in the perf json.
 
-kernel test robot noticed the following build warnings:
+Support is added for reading the retirement latency from the forked
+perf command more than once. To avoid killing the process commands are
+sent through the control fd. Some name handling is changed to make it
+more robust.
 
-[auto build test WARNING on perf-tools-next/perf-tools-next]
-[also build test WARNING on perf-tools/perf-tools linus/master v6.15-rc1 next-20250407]
-[cannot apply to tip/perf/core acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Rather than retirement latency events having issues with perf record,
+make it so that the retirement latency modifier enables sample
+weights.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-intel-tpebs-Cleanup-header/20250407-130741
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/20250407050101.1389825-14-irogers%40google.com
-patch subject: [PATCH v2 13/16] perf intel-tpebs: Use stats for retirement latency statistics
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+v3: Two fixes from Kan Liang. Ensure min/max statistics don't vary
+    when real samples are encountered.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504080043.E3FPjBvv-lkp@intel.com/
+v2: Addition of header cleanup patch originally posted:
+    https://lore.kernel.org/lkml/20241210191823.612631-1-irogers@google.com/
+    as there are no arch specific reasons not to build this code.
+    Fix bug in "perf pmu-events: Add retirement latency to JSON events
+    inside of perf" where "t->stats.n != 0" should have been
+    "t->stats.n == 0".
+    Add patch so that perf record of a retirement latency event
+    doesn't crash but instead enables sample weights for the event.
 
-includecheck warnings: (new ones prefixed by >>)
->> tools/perf/util/intel-tpebs.c: stat.h is included more than once.
+Ian Rogers (16):
+  perf intel-tpebs: Cleanup header
+  perf intel-tpebs: Simplify tpebs_cmd
+  perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
+  perf intel-tpebs: Separate evsel__tpebs_prepare out of
+    evsel__tpebs_open
+  perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
+  perf intel-tpebs: Reduce scope of tpebs_events_size
+  perf intel-tpebs: Inline get_perf_record_args
+  perf intel-tpebs: Ensure events are opened, factor out finding
+  perf intel-tpebs: Refactor tpebs_results list
+  perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
+  perf intel-tpebs: Add mutex for tpebs_results
+  perf intel-tpebs: Don't close record on read
+  perf intel-tpebs: Use stats for retirement latency statistics
+  perf stat: Add mean, min, max and last --tpebs-mode options
+  perf pmu-events: Add retirement latency to JSON events inside of perf
+  perf record: Retirement latency cleanup in evsel__config
 
-vim +21 tools/perf/util/intel-tpebs.c
-
-  > 21	#include "stat.h"
-    22	#include "tool.h"
-    23	#include "cpumap.h"
-    24	#include "metricgroup.h"
-  > 25	#include "stat.h"
-  > 26	#include <sys/stat.h>
-    27	#include <sys/file.h>
-    28	#include <poll.h>
-    29	#include <math.h>
-    30	
+ tools/perf/Documentation/perf-stat.txt   |   7 +
+ tools/perf/builtin-stat.c                |  29 +-
+ tools/perf/pmu-events/empty-pmu-events.c | 216 +++----
+ tools/perf/pmu-events/jevents.py         |   6 +
+ tools/perf/pmu-events/pmu-events.h       |   3 +
+ tools/perf/util/Build                    |   2 +-
+ tools/perf/util/evlist.c                 |   1 -
+ tools/perf/util/evsel.c                  |  22 +-
+ tools/perf/util/evsel.h                  |   6 +
+ tools/perf/util/intel-tpebs.c            | 682 ++++++++++++++---------
+ tools/perf/util/intel-tpebs.h            |  40 +-
+ tools/perf/util/parse-events.c           |   4 +
+ tools/perf/util/pmu.c                    |  52 +-
+ tools/perf/util/pmu.h                    |   3 +
+ 14 files changed, 666 insertions(+), 407 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0.504.g3bcea36a83-goog
+
