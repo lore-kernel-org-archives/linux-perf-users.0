@@ -1,194 +1,151 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39821B4F0A
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Apr 2025 06:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD98219E0;
+	Mon,  7 Apr 2025 06:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744005758; cv=none; b=fNc9CpSKr2rJlUejpJSvVCJ0EiR/8dk9hDMtyxpvzWbSWRfk7zSJqYUkX6W8WEcVqibkn/dAY589oliFkhVnAJtPCSte1OekWAApZiveskRgnqrrOL9YM5pI7KL7RD9Ns7suj/c+Y0fUOgYN0KThfdHjYugfqzhLz3Rr3eKW/w8=
+	t=1744007556; cv=none; b=oZ/EfX4z1tSfJQu3JdmYmoZPH9NbvnxmyTCLM2P5ZNIxPWbnPsjUv+s4VQpP108kJCh4kWJczYpKpG/5tKjvYrRfxn6Z+2gpJpbsk1h6eJvNeImOg+ewQssSllYUKFLQ3c3j+wvWe0/9DSXjQKE0ZuaFzTEiYBt5uAuC3GuWbZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744005758; c=relaxed/simple;
-	bh=D9b4/gGBQHas3H4BpxL1TtToyw3tCTKzfitMjfeJox8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=maNJg9gUGPpE9UQy6B4fcxAOa9L4WXcIdE9Ax8hwjPKuSgWCHLYniss23gXSiYyOvwS13Yid1+/6BRDnfzpJzlPB43K4B/uW54fETc79HQbD31Afkde6fUnwZyHhgINbUDwF2p9tjeqnM3zRwASmLjl0lRbngFI9ipyzJEW3jb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFsI353d; arc=none smtp.client-ip=209.85.219.172
+	s=arc-20240116; t=1744007556; c=relaxed/simple;
+	bh=rgWmwjZniGKCkXyoowbdyQSPJAgjIxa6HwiniR6YaQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hHPrNsuUcpguiLF7hXbYklbQH0iYxCaOp9vIVi756nkzMTt82EniPRuEw28Fuva8AQQcyfNk5eUxcKKthbneamazEPuoDUPKPu/3U8fEsF7bVEtLbwmdY6J1oQP39cwLKMcjjCtv8YsAx9SdGr/OyX3t21Mp8R45xrOfBpaBMm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9VCdnuw; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFsI353d"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e6e50418da6so220423276.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 06 Apr 2025 23:02:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9VCdnuw"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2264aefc45dso49798295ad.0;
+        Sun, 06 Apr 2025 23:32:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744005755; x=1744610555; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ig4ialZg7LHojDgPuHoIWpgNP14xYntB99BIWw3Jyzo=;
-        b=LFsI353dx4aKTYcF1i/68tyZQee+rIzCyXyiHxkwYs5z5GFOk6TODnMCVHy5rxEk9v
-         YcgMmBlWBWZEmlzVTt6q5MQJUganv5xxFzVG1Q08L9LP6r7tCHw+ijhwNBBSvLTApfF4
-         E1ed/CHWcmHgEOZ2pK7D6Va1467iBaw2Laf3xz6SBXmdMc0PLu9GFyGrQ1oBHV28AV5Y
-         LMvTBHQzV4nRQm0HuFu8aEgHekkioHvXn3+BcSAX/16G/WLWTt55ts974y0fJ4dTK8OJ
-         wRQa0uF+t+o/kIvg+xT/EeC7/7Briqi/EdpUIdJiKf9VTPzFtVVu+wuFt0xeiu/01xxw
-         5xRQ==
+        d=gmail.com; s=20230601; t=1744007554; x=1744612354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p+FgwxOm7aFKO8+Yjp585HwY/8KQoU+DtbqgD3z9mVQ=;
+        b=A9VCdnuwZW4Q1NG49habGkgwf9CUuw2TiVd+pUvcSbyZ5cQ09Hp3czpHV1jZQJIDKI
+         zrWW59vIvpLIq3hWHJUE8pce7EPPjQ24VzQg4Q863rgAvcbk/cwu3JfPCVp67kg6GV2G
+         wEyqVxvUpdH5kEx9t95KHFm11D2hQQFaMzfSbGjrnLgA19ofq6XeTAGNxIJSnj+ykr26
+         mpykPLJYSd8fydQbCFlugoFlmHt3/a3u5BfQrJHGt0tnU+EvTg7I2uVL37ZXk+Kuv/GY
+         2hhRAL2nitnsVCMXekymusE0xn9s3S1zwMCjAyxkb2dM+yCx5f7lMd9ISx6QX2jFLi/c
+         teWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744005755; x=1744610555;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ig4ialZg7LHojDgPuHoIWpgNP14xYntB99BIWw3Jyzo=;
-        b=UThhinowaxFr2I1EvOLxRvdoXJliJRYiR0qu0s7O4EgYlkLuxuVHH2ctcf6hkinU4p
-         A5Y6OoIiywTX3Bpj78e6NzpgiGDrEUyoUAhstqIn4It9nzzu5RoPCBz2wXKUJiTHUhgB
-         qs97bN/AlzVcCaDll3Y0/ImpuOX+XEz+XJD5D0R4pld8hxPvdGNaKTGbMd71Vci3sPCk
-         WF3q43+mS/V11SLCFC+UWlHLSxaXbFhQmIJK10h2zRrRJVnnpxpGECXiLvzKkFbn0yti
-         8+VEGsaGzeR19AGBJZLZrtfEyq3v8PsaOhr6p3j0O/15SQ/OsNZaXqio6w8YBRk5crbl
-         k7lA==
-X-Forwarded-Encrypted: i=1; AJvYcCW559f7o9OzUGBfzkw5BAqIpSUj1HvlHyfOFWjR3AbhJW821FXgaHyUDeLK+04S6eOTUDySDKw8Bjz3CcgWqFwZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOy/ZS2ADZvz23MCsSNA5XHaQWz5bv5gu9HCr/zYOiNVjTaJTi
-	EOU5TqEuODGn1FVA1gw4XjHZRyZZhMWb17hrcGQEqK7eYW6K6Q+PnFotebgDkWmFioUGYcF8YOZ
-	58AdHvsbgrO6SH6KxTHSCobUz9xU=
-X-Gm-Gg: ASbGnctTSLSofgicC9CjLByy+S+XLGb5VNNf7nKYRDReOOkKhrQ64/Dy0+ipeu0GlR8
-	aY7w8pR1D/BJFB3I8SGrhwJZp5N60oBARi2An95BfrBQkOIvLxqFEzDL/AETzRnWPWxpgJYu5FG
-	2aiqbrp63Q9+ixvLnMao1ZiOXi
-X-Google-Smtp-Source: AGHT+IGOxfSVW0Y5YUuXLK2a3/Q7qUWs13r8P3pgz+GMamk6on1P/R3ydnlpmFXN3BH1dSOcp9wv8tBQnaFLyj7QELg=
-X-Received: by 2002:a05:6902:12ce:b0:e6e:1892:6288 with SMTP id
- 3f1490d57ef6-e6e1f9b147emr18591763276.16.1744005755580; Sun, 06 Apr 2025
- 23:02:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744007554; x=1744612354;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p+FgwxOm7aFKO8+Yjp585HwY/8KQoU+DtbqgD3z9mVQ=;
+        b=RGBKSwe+Q1Go5+3nw7li7Wbyet8F6k8HmvJ//A7N12V9b7LnL0ekgnh8Xo+EEmXhzE
+         wU8xdtYBHBgIFTLsQGOR3Fyz9TrN/QZFbqmuNxWq6p/Qk1nwESn4U8XhydAU7yCFu/ap
+         Q8QwezRxuJBwKR76IOcbMNy2/nj4lD1+OPALwwk/V5E0dkkt6q2alq7OvlSYRY9LW1IU
+         2dg5N0gfyGSZGZWtrzPzCeKKOmDEciAH8A3FEQUIdpXkWuyPyjDiVYP8AWbb/Lruwg7i
+         MGCeOTre+VoQ/aE0lKdqYO4OgGdSExi2XNqbq2X0dKk8v5GHWOb/UQ37DnSLDln2/msV
+         Fscg==
+X-Forwarded-Encrypted: i=1; AJvYcCVViiG+CzSj8IjIj32KewlkEc+zmMDDFIHPBocTFqVkUU5bjAvdKM0TL3gczjM3hnuAlmU530ZJcwYeKps=@vger.kernel.org, AJvYcCWobK6IRSql+6aWIv75uVyqVpMChUbGLQdFaoCYihM1HkeVbdVJ50tOtaOgK4H4jHdTsT9FKzN92qsP40KhT3Hhag==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpUqZvVNo+tlkk9uKzPAgETJQvXQDwmLbcWdW0Q9W2Op7QcrEK
+	+iX9QKv8J+YAp53H7Bp8NCGDAqu9kzpJb6WrzIrWpiYwW19Cdvu/
+X-Gm-Gg: ASbGnctZOBKCrECLcFczCkcQ93S3/mInx8RpsuJjxgbel3frK/aWhgfteUnjWtx+ix2
+	Cjl42vcUmm90NlEQm6uFD2Z+sJUFXo2VztqPhtNS1un/ER0ZWKmW3M4pokSLGKnAhZ1Vtp8JgTv
+	SuBcjNw1w1BmxJCAyZ32N/kXu3zvpba1LHQQUfHT+AqwPrIF8CLKglO7htksMqzVLMpMbBy/Yc7
+	Lme77kar/ok2SqcnXDLXHpi+Ly33pBnvXE/Yvp2c+DQI1ucrbbjRszFc26K7B9vodM5dKO2h8EQ
+	np1gTLKoX/xznBYj824KKsuVQ1gjxHNwi/GFq+PtkA0BBsFLV8ax8lyTXkw=
+X-Google-Smtp-Source: AGHT+IHqfdC2hAwF+iHvluludcTR0crAZTyeQqY1dFdw+RUMqBj5erLa4Mr2mQeYTN3YlEylkAXOrA==
+X-Received: by 2002:a17:902:cec2:b0:223:2aab:4626 with SMTP id d9443c01a7336-22a8a84ea52mr138936315ad.11.1744007554389;
+        Sun, 06 Apr 2025 23:32:34 -0700 (PDT)
+Received: from localhost.localdomain ([103.221.69.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d980598csm7694095b3a.77.2025.04.06.23.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 23:32:33 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-amlogic@lists.infradead.org (open list:AMLOGIC DDR PMU DRIVER),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING AND DEBUGGING),
+	linux-perf-users@vger.kernel.org (open list:ARM PMU PROFILING AND DEBUGGING),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v1] perf/amlogic: Replace smp_processor_id() with raw_smp_processor_id() in meson_ddr_pmu_create()
+Date: Mon,  7 Apr 2025 12:02:03 +0530
+Message-ID: <20250407063206.5211-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307080829.354947-1-namhyung@kernel.org> <Z9tjKcKvjYgbR6hb@google.com>
- <Z9vgt1pjiNbDBDbM@gmail.com> <Z9w_aFlzOkoCTSqK@google.com>
- <Z-EJnye74la1triY@gmail.com> <Z--pWmTHGb62_83e@gmail.com>
-In-Reply-To: <Z--pWmTHGb62_83e@gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Sun, 6 Apr 2025 23:02:24 -0700
-X-Gm-Features: ATxdqUHhkJJdWvs3K_gACfWJWp7sbQDpiJ0N2KjMbNZ0EY1gHWC1-KpWPn_T7LQ
-Message-ID: <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
-Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello Ingo,
+The Amlogic DDR PMU driver meson_ddr_pmu_create() function incorrectly uses
+smp_processor_id(), which assumes disabled preemption. This leads to kernel
+warnings during module loading because meson_ddr_pmu_create() can be called
+in a preemptible context.
 
-I use Ubuntu 24.10 too and my cpu is also x86_64, so I am taking a look.
+Following kernel warning and stack trace:
+[   31.745138] [   T2289] BUG: using smp_processor_id() in preemptible [00000000] code: (udev-worker)/2289
+[   31.745154] [   T2289] caller is debug_smp_processor_id+0x28/0x38
+[   31.745172] [   T2289] CPU: 4 UID: 0 PID: 2289 Comm: (udev-worker) Tainted: GW 6.14.0-0-MANJARO-ARM #1 59519addcbca6ba8de735e151fd7b9e97aac7ff0
+[   31.745181] [   T2289] Tainted: [W]=WARN
+[   31.745183] [   T2289] Hardware name: Hardkernel ODROID-N2Plus (DT)
+[   31.745188] [   T2289] Call trace:
+[   31.745191] [   T2289]  show_stack+0x28/0x40 (C)
+[   31.745199] [   T2289]  dump_stack_lvl+0x4c/0x198
+[   31.745205] [   T2289]  dump_stack+0x20/0x50
+[   31.745209] [   T2289]  check_preemption_disabled+0xec/0xf0
+[   31.745213] [   T2289]  debug_smp_processor_id+0x28/0x38
+[   31.745216] [   T2289]  meson_ddr_pmu_create+0x200/0x560 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
+[   31.745237] [   T2289]  g12_ddr_pmu_probe+0x20/0x38 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
+[   31.745246] [   T2289]  platform_probe+0x98/0xe0
+[   31.745254] [   T2289]  really_probe+0x144/0x3f8
+[   31.745258] [   T2289]  __driver_probe_device+0xb8/0x180
+[   31.745261] [   T2289]  driver_probe_device+0x54/0x268
+[   31.745264] [   T2289]  __driver_attach+0x11c/0x288
+[   31.745267] [   T2289]  bus_for_each_dev+0xfc/0x160
+[   31.745274] [   T2289]  driver_attach+0x34/0x50
+[   31.745277] [   T2289]  bus_add_driver+0x160/0x2b0
+[   31.745281] [   T2289]  driver_register+0x78/0x120
+[   31.745285] [   T2289]  __platform_driver_register+0x30/0x48
+[   31.745288] [   T2289]  init_module+0x30/0xfe0 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
+[   31.745298] [   T2289]  do_one_initcall+0x11c/0x438
+[   31.745303] [   T2289]  do_init_module+0x68/0x228
+[   31.745311] [   T2289]  load_module+0x118c/0x13a8
+[   31.745315] [   T2289]  __arm64_sys_finit_module+0x274/0x390
+[   31.745320] [   T2289]  invoke_syscall+0x74/0x108
+[   31.745326] [   T2289]  el0_svc_common+0x90/0xf8
+[   31.745330] [   T2289]  do_el0_svc+0x2c/0x48
+[   31.745333] [   T2289]  el0_svc+0x60/0x150
+[   31.745337] [   T2289]  el0t_64_sync_handler+0x80/0x118
+[   31.745341] [   T2289]  el0t_64_sync+0x1b8/0x1c0
 
-On Fri, Apr 4, 2025 at 2:42=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
-:
->
->
-> BTW., here's a few other 'perf' annoyances I have, if anyone's
-> listening :-)
->
->
-> 1)
->
-> I cannot get the libunwind build-feature failure to go away:
->
-> ...                               libcrypto: [ on  ]
-> ...                               libunwind: [ OFF ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
->
-> I do have libunwind-dev installed:
->
-> ii  libunwind-dev:amd64                                         1.6.2-3.1=
-                                           amd64        library to determin=
-e the call-chain of a program - development
-> ii  libunwind8:amd64                                            1.6.2-3.1=
-                                           amd64        library to determin=
-e the call-chain of a program - runtime
->
-> but it fails to link:
->
->  kepler:~/tip/tools/build/feature> cat test-libunwind.make.output
->  /usr/bin/ld: /tmp/cc2BfaNM.o: in function `main':
->  test-libunwind.c:(.text+0x1c): undefined reference to `_Ux86_64_create_a=
-ddr_space'
->  /usr/bin/ld: test-libunwind.c:(.text+0x44): undefined reference to `_Ux8=
-6_64_init_remote'
->  /usr/bin/ld: test-libunwind.c:(.text+0x6b): undefined reference to `_Ux8=
-6_64_dwarf_search_unwind_table'
->  collect2: error: ld returned 1 exit status
+Changes replaces smp_processor_id() with raw_smp_processor_id() to
+ensure safe CPU ID retrieval in preemptible contexts.
 
- $ make test-libunwind.bin
-gcc  -MD -Wall -Werror -o test-libunwind.bin test-libunwind.c  >
-test-libunwind.make.output 2>&1 -lelf -llzma
-make: *** [Makefile:212: test-libunwind.bin] Error 1
- $ cat test-libunwind.make.output
-/usr/bin/ld: /tmp/ccPpmuee.o: in function `main':
-test-libunwind.c:(.text+0x1c): undefined reference to
-`_Ux86_64_create_addr_space'
-/usr/bin/ld: test-libunwind.c:(.text+0x44): undefined reference to
-`_Ux86_64_init_remote'
-/usr/bin/ld: test-libunwind.c:(.text+0x6b): undefined reference to
-`_Ux86_64_dwarf_search_unwind_table'
-collect2: error: ld returned 1 exit status
+Cc: Jiucheng Xu <jiucheng.xu@amlogic.com>
+Fixes: 2016e2113d35 ("perf/amlogic: Add support for Amlogic meson G12 SoC DDR PMU driver")
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ drivers/perf/amlogic/meson_ddr_pmu_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You mentioned your machine is x86_64, I ran
- $ make test-libunwind-x86_64.bin
-gcc  -MD -Wall -Werror -o test-libunwind-x86_64.bin
-test-libunwind-x86_64.c  > test-libunwind-x86_64.make.output 2>&1
--lelf -llzma -lunwind-x86_64
- $
+diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
+index 07446d784a1a..c1e755c356a3 100644
+--- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
++++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
+@@ -511,7 +511,7 @@ int meson_ddr_pmu_create(struct platform_device *pdev)
+ 
+ 	fmt_attr_fill(pmu->info.hw_info->fmt_attr);
+ 
+-	pmu->cpu = smp_processor_id();
++	pmu->cpu = raw_smp_processor_id();
+ 
+ 	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, DDR_PERF_DEV_NAME);
+ 	if (!name)
 
-And it successfully built test-libunwind-x86_64.bin for me.
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.49.0
 
->
-> I tried to install the libunwind-19-dev package, I tried to
-> uninstall/reinstall - no combination seems to work.
-
- $ apt list --installed | grep libunwind
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scri=
-pts.
-
-libunwind-dev/oracular,now 1.6.2-3.1 amd64 [installed]
-libunwind8/oracular,now 1.6.2-3.1 amd64 [installed,automatic]
-
-Built perf with make clean install, my libunwind is on.
-
-...                               libunwind: [ on  ]
-
-But when I ran perf check,
-
- $ perf check feature libunwind
-             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
-
-libunwind is OFF.
-
-plot twist: I uninstalled libdw, now libunwind is OFF.
-...                                   libdw: [ OFF ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ OFF ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-
-So they are somehow tied together. Don't know how to fix it yet. So
-maybe try installing libdw for a usable perf annotate?
-
-Thanks,
-Howard
