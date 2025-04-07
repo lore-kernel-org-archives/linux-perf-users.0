@@ -1,67 +1,56 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD45C226520
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Apr 2025 12:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B5D1F63F0;
+	Mon,  7 Apr 2025 14:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744027728; cv=none; b=sVhtPz4msvlWpjZscbAoiqCpNKvl0y0t80SCaNqIRblX8t0+a/zaA0EirGVeEaIYO8WKy9mSiB0HFOKNMwAxUvlFDXJAaLN9HRrY+/sxO3Tx+jMnX5vyqOFo0ebsb3/9KT9rWxrdEXuIG+iUilNOJJ5HX1eJmJ2OkF1cLicUz7Y=
+	t=1744036738; cv=none; b=QxfaSpmB4Au0+oiQv66VEIrTvQMqhgU67MYiIzUKmVbAg+z0GOK9+Il/eY3i2/tvxFmINEoFRmK7n5lXpf17DD1ggj8/N4rd+Y2f31QPM9O0FKzGPvotpxuV69tnJWSaDb8eNM9wOKZS4Q12D76iqtWJSb7UOWTirMdWDZMPdz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744027728; c=relaxed/simple;
-	bh=vSczhStDWJTDkyryvBtdVcdkQFtNueJc4wph3Msl2/g=;
+	s=arc-20240116; t=1744036738; c=relaxed/simple;
+	bh=v0CkWDkwF9G6LUp8uQSKwk1DnyOq5vA/pKSgSCmoEmQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pzqRTIHCCIZ+BOQWkVA3tvaEjAtYgsFB9hOSuztd3UnvG3O3IsTq3lKOgIjux1M2u29ibkhv9Ayt27CmfcQvk2BkxfXLCO/VEtD3+5B1/wTti6ZCoEhzt1LVLa92F5nkmWyxnsvR4yE3sxgxWEuIQ4aXVYnYG7eKI5rGI3O7tdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d74wuq7M; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=ZGzC2zgQ49SBRL54ICpnSNUbfBvy56borXh9lbAiiMPR1TPKooRKFWzxnedFfNnc4s+NJeZwaqNL2H/hFQxGyP91bPIcw7vwaXOaOoaQgGWDANnBt74k5JJdbLYovxEDYr6Oi6i0V7TQ6r0wauR37/EzjRNjnGqs82uZFjpY7LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlBkOwui; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d74wuq7M"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5373jp4P007750;
-	Mon, 7 Apr 2025 12:08:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=uUtBZj
-	lU25r6sM+22jsuRQQkmxTm0zoP535SD0mY4H0=; b=d74wuq7Mh+EbuoXVeWjnCg
-	zxUl3UQpuRa8l62spykZvJhtW/hjGfoJx8LNOLgRALwPNUeV1de668vOcMWpaBTT
-	huxJusD26dw80wlG1O96HIw/cBZvOcKFSrnwotDjiatWOJqiQft5VQKV1OR6Y+pc
-	SPf1tTvXr+bI4cZP4KKhyy6WtUGIfyzxbAJxgupf7o/OYYqmpkV1MZeMAKjR+uE+
-	4TbYlV8lOHNa/+Zz71Z6z7Tb97h+hjEuJ//fa9wPgYiJNnEb9cxNh3CFucj0YVFK
-	IcwGrrVwn1nvOR+asZnXMhhGAWuJ0+oHtFhhiWKhptzZooTfVOM7XkqxbN0858xQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45v739j5dr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 12:08:39 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 537BUoKh028422;
-	Mon, 7 Apr 2025 12:08:38 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45v739j5dp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 12:08:38 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 537AUfMW025598;
-	Mon, 7 Apr 2025 12:08:37 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbknm4g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 12:08:37 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 537C8aqw42926420
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 12:08:36 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 18E4A58052;
-	Mon,  7 Apr 2025 12:08:36 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2AE3B5806A;
-	Mon,  7 Apr 2025 12:08:31 +0000 (GMT)
-Received: from [9.61.255.9] (unknown [9.61.255.9])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Apr 2025 12:08:30 +0000 (GMT)
-Message-ID: <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
-Date: Mon, 7 Apr 2025 17:38:28 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlBkOwui"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744036737; x=1775572737;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=v0CkWDkwF9G6LUp8uQSKwk1DnyOq5vA/pKSgSCmoEmQ=;
+  b=BlBkOwuicBYvi5J8rKtzpghkrOGuq7P4WsOBsCFj6SP0McE3PsfJGCuc
+   I4PjdpdeM0A21xjSA75+FGvJLnA/TQtsZ7+Ox15vEaJwzpai658JuY73N
+   WKpXtqDAF2Xm0fo9sIV+QzXRRMF1sjO2wVk9GpenaOM7fsaYM0TtiV0CL
+   ncY1wh5hbk0Khy01+b1yn8o/frTXBTLQC4tyqqSGCgDFB1LXgmYbyXmbf
+   2d+bylC0HSS9jYEZ6WkY6Zl1rmPHdyhY5majSXeS/brJpP+JSpweKA/jX
+   f1chs2eszW7QtqX2A+sJvd9rQ2rz7JEH7iDtDHCBwrtn6qTJU8Xt0AkzN
+   A==;
+X-CSE-ConnectionGUID: F+GnsYhKT3G0xNEDA92ksA==
+X-CSE-MsgGUID: axv900V4TGOnp11cnLc20g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45317020"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45317020"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:38:57 -0700
+X-CSE-ConnectionGUID: Gm/frhL9SNWGIx0q/Dk7nA==
+X-CSE-MsgGUID: iuYdIwZ3SeGfplcDZKcLUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127727480"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:38:56 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id F01AA20B5736;
+	Mon,  7 Apr 2025 07:38:54 -0700 (PDT)
+Message-ID: <f872c998-c076-4e09-8f7d-1ad29a065d4a@linux.intel.com>
+Date: Mon, 7 Apr 2025 10:38:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,105 +58,76 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
- cpumap.c
-Content-Language: en-GB
-To: Athira Rajeev <atrajeev@linux.ibm.com>,
-        Likhitha Korrapati <likhitha@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-References: <20250406163412.897313-1-likhitha@linux.ibm.com>
- <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ifLdxIWfGg5ReWAHUEyAlMZT8v466Gzj
-X-Proofpoint-ORIG-GUID: aOV48UOyaIGysoPZKNtLYw7igkNJDQDE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2504070086
+Subject: Re: [linus:master] [perf/x86] 88ec7eedbb: kvm-unit-tests.pmu_lbr.fail
+To: kernel test robot <oliver.sang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+ Ingo Molnar <mingo@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org
+References: <202504071232.3c2fa7d5-lkp@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <202504071232.3c2fa7d5-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On 07/04/25 12:10 am, Athira Rajeev wrote:
->
->> On 6 Apr 2025, at 10:04 PM, Likhitha Korrapati <likhitha@linux.ibm.com> wrote:
->>
->> perf build break observed when using gcc 13-3 (FC39 ppc64le)
->> with the following error.
->>
->> cpumap.c: In function 'perf_cpu_map__merge':
->> cpumap.c:414:20: error: argument 1 range [18446744069414584320, 18446744073709551614] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
->>   414 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
->>       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> In file included from cpumap.c:4:
->> /usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
->>   672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
->>       |              ^~~~~~
->> cc1: all warnings being treated as errors
->>
->> Error happens to be only in gcc13-3 and not in latest gcc 14.
->> Even though git-bisect pointed bad commit as:
->> 'commit f5b07010c13c ("libperf: Don't remove -g when EXTRA_CFLAGS are used")',
->> issue is with tmp_len being "int". It holds number of cpus and making
->> it "unsigned int" fixes the issues.
->>
->> After the fix:
->>
->>   CC      util/pmu-flex.o
->>   CC      util/expr-flex.o
->>   LD      util/perf-util-in.o
->>   LD      perf-util-in.o
->>   AR      libperf-util.a
->>   LINK    perf
->>   GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
->>
->> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
-> Looks good to me
->
-> Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
 
-Tested this patch on perf-tools-next repo, and this patch fixes the issue.
+On 2025-04-07 1:07 a.m., kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> kernel test robot noticed "kvm-unit-tests.pmu_lbr.fail" on:
+> 
+> commit: 88ec7eedbbd21cad38707620ad6c48a4e9a87c18 ("perf/x86: Fix low freqency setting issue")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linus/master      0a87d6bb6fd274cde3bf217a821153714374198f]
+> [test failed on linux-next/master fefb886b1344e222b3218f3c0165b0fd770e8b88]
+> 
+> in testcase: kvm-unit-tests
+> version: kvm-unit-tests-x86_64-69574079-1_20250322
+> with following parameters:
 
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+The one line patch only impacts the perf record.
+But the test case is for LBR on KVM. The case directly access the
+IA32_DEBUGCTLMSR to enable/disable LBRs. There is nothing related.
+It is probably a false alarm.
 
++ Dapeng
 
-Regards,
+Could you please take a look at the qemu test case?
 
-Venkat.
+Thanks,
+Kan>
+> 
+> config: x86_64-rhel-9.4-func
+> compiler: gcc-12
+> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (Haswell) with 8G memory
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202504071232.3c2fa7d5-lkp@intel.com
+> 
+> 
+> ...
+> [32mPASS[0m pmu (143 tests, 14 skipped)
+> [31mFAIL[0m pmu_lbr (2 tests, 1 unexpected failures)   <---
+> [33mSKIP[0m pmu_pebs (1 tests, 1 skipped)
+> ...
+> 
+> 
+> one log is attached.
+> 
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20250407/202504071232.3c2fa7d5-lkp@intel.com
+> 
+> 
+> 
 
->
-> Thanks
-> Athira
->> ---
->> tools/lib/perf/cpumap.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
->> index 4454a5987570..c7c784e18225 100644
->> --- a/tools/lib/perf/cpumap.c
->> +++ b/tools/lib/perf/cpumap.c
->> @@ -398,7 +398,7 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
->> int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
->> {
->> struct perf_cpu *tmp_cpus;
->> - int tmp_len;
->> + unsigned int tmp_len;
->> int i, j, k;
->> struct perf_cpu_map *merged;
->>
->> -- 
->> 2.43.5
->>
->
