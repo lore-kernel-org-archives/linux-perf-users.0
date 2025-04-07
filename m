@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B8A185B4C
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Apr 2025 05:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB04221569
+	for <linux-perf-users@vger.kernel.org>; Mon,  7 Apr 2025 05:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744002081; cv=none; b=hsefmYT5SY4Fzwpi4VHVfMVRSackiGlbo9tLXW/BhweaHw8aRRPGuDkg+csokzNCzOViD1e9B6dJAAQY2SiZq6mt/1PH/xGpWLb9mcaNLIfRqD9GNhASHq4dLEcBSmxvq5AzkRFyNIo4xIJ1eR/hPR8ERNBsTNX702LYbMNi2d0=
+	t=1744002082; cv=none; b=r66gEPd1dVA41b1T1SabZBKGgNrpeWr3m/SlE9r3ZYNP7eCGIlm8JGUsdeIAXXY7ryRd+x18qC2JTlSXxrDyzW4lj6J04tYSFHaKZpx65peRg40ieuSPez3mm5ShOy4/yEZNEo/bN0oRvCGhs6rvHexGfxqnW/XsVG4a0zB8syM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744002081; c=relaxed/simple;
-	bh=yUglDtEpwZVjaGPveMCOEFvdP87AB0tTSBss9c6TB98=;
+	s=arc-20240116; t=1744002082; c=relaxed/simple;
+	bh=uzrqNAXM/KeEjp8qWr6xTf3VLWW7e0MNaK/cvBjUNjU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=YLQjQf4ZE3L/tSBFvWnvblbQUmWl+tvliRKjbWcwR9hRhE21CIP2mR1cJzWe0PWTsy3Q+pull8EOH9NWpi7dhwJ1EerADxkYgSun9ra/i/Ag7u67WHaPsEgVU8DIfOYX4oyUypQC4V296BzbeEm0ynhDrHJ1RQCrxULsPzf2HLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v2CEREzz; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=M2DvU42Y3CudUL1zpqms/IL8JVQmr0Ri9AwIUfRnfMFsgYdluWZDKZXgsVlQSDkNpIybQ0+ZzhU9WmIs7mzCZIBQ1GSnY474/KIQCYxvBgqvN90fOe9xBQdYnBraZsfPOGnAjnzAdE6/dlUwFCgq5wPtkp4uF6lerr5d+3aICd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cTvnBtMd; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v2CEREzz"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af8f28f85a7so2489130a12.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 06 Apr 2025 22:01:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTvnBtMd"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3032f4eca83so3705359a91.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 06 Apr 2025 22:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744002078; x=1744606878; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744002080; x=1744606880; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XafRrptC07unstJw1HreG0n5lBFJ2gSj/BsZTF4fwvk=;
-        b=v2CEREzzT0G1l1d2+QGgLHi8m0SEY9N2AELXY5mu43Mv+FWyni+zta4CYXkciJCupH
-         AFdM6UBFYWE06GGGnpPXBAQq82y2RdBO0Burh7koshOdqnovR+R4p9/b5L7B1xOLN4Mq
-         GbyZP+BeiZ/LXBBkwTcY/3B/5B9DomNExkttKhTBusNxnPfiPy6Unn/A3BYNvYtWVltt
-         yciUT49BoaWgV3zg9qQVvqGvMqaQsyla+8KwPPy+Ux3AOn6O67UVYsdWHufLKAlE3MaB
-         kd+RYnCMnpy9pmBjA+w5Om5iieDzDJoJLNF87wWAvZET28GAi9sTNXne7yyQuI6Jts5k
-         1YNQ==
+        bh=fqf5UWKI2N4Og32+0x3lkK0y6IoadYAF1NX3nVy0tDA=;
+        b=cTvnBtMd2pCzZMYgbDbOFBMH53bcb3oZgfT1Q/FjpLlot9mZwTf4C1BmmhPx0hnAo1
+         FlIiD3+OfXicErPm6ayesfD5cMWAE6RJSQxon2hmd984XnVCGcjmi0WTSqmF1xDZ1DXV
+         cI+eruNWjKbAoff6hcIBOZcrx6mnxJy9iB9Rf/rFA861IjGEN+qIJml+pVZEhEBsbRuG
+         uL1aWTsJG+L5p7WHge2HLwMpilzFbOatmp96ZVMas+/ShIwNWvraEen9UEpTSN3+6Qis
+         85X6DZg9WavDPC+Fdw6j+uy1yEY783tztK2AGMOks/waC4Km/qnbyoHzhWoxHzk/yIDW
+         wfbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744002078; x=1744606878;
+        d=1e100.net; s=20230601; t=1744002080; x=1744606880;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XafRrptC07unstJw1HreG0n5lBFJ2gSj/BsZTF4fwvk=;
-        b=rBzEm9qoTOOAQvbvR3LiSHwr1f9B1uqXvSy1r2Zllpv6KxC6Qui/i1NYmpm33qtonN
-         Aj6XXf9TWXbzzptV4NCrvomtmHBNU9IRa2mI4SnfdKzx1UdpJN7n6O9WUfyKF4S4thJY
-         3DGBwJHt8bhZO6kWwVhgiINa/Rq/hWH5d9Wdiyt7fcp02PypxDVeUQC4Im87KukttH0v
-         UUCcc87jv6A0becxX5C2SHFiRUtEHY2tcCZ6RVEiHqurYKqIvf2ndzopLdiJFjWj1W8M
-         gpl0eLZZ2FAuQjwABD9Ir04E7KJATmtaxhnTygtkC7ufqmXjmLIokrQIsmuizpt9DmM/
-         EP3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMpmcMAyiQ6M5Y30tuBk58int7ESieEQpZNO5bsUGQYkzHL4NZc2U5PVuODkodiBG14v/ncsrcrVpsUM/rbJxZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOhVxLEHC9msDtrUkI2mHTtHxLkf6zkDUnk13NyLI+uul08SUS
-	6T2VGjF0gDLyM+wPWzAbAkrflqwsXeX3pW8m5FSIRVFesbMwu1rnNTzADwhrRTLnfdt/zMkAvjo
-	1nEEEOg==
-X-Google-Smtp-Source: AGHT+IH+ztOPbx3Kmwe9F+goW9ZQVGpeYeUrP+qUHa4YPTewYdbk5u8w73AsM92dGciR8tHBXeL8YUcOoDgw
-X-Received: from pjbsk12.prod.google.com ([2002:a17:90b:2dcc:b0:2ff:5516:6add])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d48d:b0:223:66bc:f1de
- with SMTP id d9443c01a7336-22a8a06b382mr147697185ad.21.1744002078144; Sun, 06
- Apr 2025 22:01:18 -0700 (PDT)
-Date: Sun,  6 Apr 2025 22:00:50 -0700
+        bh=fqf5UWKI2N4Og32+0x3lkK0y6IoadYAF1NX3nVy0tDA=;
+        b=YVhlQAFO7Opu1PuYNNldsBnei5V75v6R7N1Pa2GZRh6dlSSellZXNYGOR9KKj4rjsZ
+         9Otud8vBtNV9vRQujVAZDbeiHCi01901zrGy1QaBTSZ7aDMLGXsp9Gc4Bq6Uklps7hgx
+         aFyYkyH1YQZ3qyn639oa/jOS/cpipdRfX1Mx2WllLl8QLvClzBuFcCTRzYxTgJSbv3ZD
+         LcEXZ7z7twgLAvVNYP4aLDSsEJ6wHwUkcbpcR/Z9nKsM/GHgyzEn2j/vtHuVZhWarSjn
+         tYsKrqoRYlvWXs8ujmERSKj8th4rqdiAxfcHAutJLeYcZx6qVzkUj7SbRImQhjy699sy
+         dcTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyLM0WotzNfSXV/wtPzTJwPbTyvzn6906YrI5s/zJvhCMOHMgtIkLjPute2GmbZBokMGimWVhvJdI0DVb/Gzbd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBf1kdVS6CKsQCrTiddON3Eqf3nkyrS9Otz8StPqCNLcaGcJXj
+	ML2obLErnNdbH2A29YoMgYoiQPQxQlhJLfhdiVMLv4I0i32hGDi6CDOAuTIfQbW8pPBB3jgW5Ua
+	fpOs98w==
+X-Google-Smtp-Source: AGHT+IGmcAVt5EMV3QErs7No50mhGib7CCW7DyRluV6DypHgyQ+07hXaXEDAfyGrowz+s51DmBz1jIqqE+KR
+X-Received: from pjyp8.prod.google.com ([2002:a17:90a:e708:b0:2fc:2c9c:880])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a4e:b0:2ff:6fc3:79c4
+ with SMTP id 98e67ed59e1d1-306a4b70f41mr15349365a91.27.1744002080157; Sun, 06
+ Apr 2025 22:01:20 -0700 (PDT)
+Date: Sun,  6 Apr 2025 22:00:51 -0700
 In-Reply-To: <20250407050101.1389825-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250407050101.1389825-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250407050101.1389825-6-irogers@google.com>
-Subject: [PATCH v2 05/16] perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
+Message-ID: <20250407050101.1389825-7-irogers@google.com>
+Subject: [PATCH v2 06/16] perf intel-tpebs: Reduce scope of tpebs_events_size
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,58 +74,63 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The buffer holds the cpumap to pass to the perf record command, so
-move it down to the perf record function. Make this function an evsel
-function given the need for the evsel for the cpumap.
+Moved to record argument computation rather than being global.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/intel-tpebs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ tools/perf/util/intel-tpebs.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index 2186818b2c9b..2b04deaf66ff 100644
+index 2b04deaf66ff..e3bed86145b9 100644
 --- a/tools/perf/util/intel-tpebs.c
 +++ b/tools/perf/util/intel-tpebs.c
-@@ -83,12 +83,15 @@ static int get_perf_record_args(const char **record_argv, char buf[],
- 	return 0;
- }
+@@ -29,7 +29,6 @@
+ #define PERF_DATA		"-"
  
--static int start_perf_record(int control_fd[], int ack_fd[],
--				const char *cpumap_buf)
-+static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[], int ack_fd[])
+ bool tpebs_recording;
+-static size_t tpebs_event_size;
+ static LIST_HEAD(tpebs_results);
+ static pthread_t tpebs_reader_thread;
+ static struct child_process tpebs_cmd;
+@@ -86,15 +85,20 @@ static int get_perf_record_args(const char **record_argv, char buf[],
+ static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[], int ack_fd[])
  {
  	const char **record_argv;
++	size_t tpebs_event_size = 0;
  	int ret;
  	char buf[32];
-+	char cpumap_buf[50];
-+
-+	cpu_map__snprint(evsel->evlist->core.user_requested_cpus, cpumap_buf,
-+			 sizeof(cpumap_buf));
+ 	char cpumap_buf[50];
++	struct tpebs_retire_lat *t;
+ 
+ 	cpu_map__snprint(evsel->evlist->core.user_requested_cpus, cpumap_buf,
+ 			 sizeof(cpumap_buf));
  
  	scnprintf(buf, sizeof(buf), "--control=fd:%d,%d", control_fd[0], ack_fd[1]);
  
-@@ -287,8 +290,6 @@ int evsel__tpebs_open(struct evsel *evsel)
++	list_for_each_entry(t, &tpebs_results, nd)
++		tpebs_event_size++;
++
+ 	record_argv = calloc(12 + 2 * tpebs_event_size, sizeof(char *));
+ 	if (!record_argv)
+ 		return -ENOMEM;
+@@ -226,7 +230,6 @@ static struct tpebs_retire_lat *tpebs_retire_lat__new(struct evsel *evsel)
+ 		return NULL;
+ 	}
+ 	list_add_tail(&result->nd, &tpebs_results);
+-	tpebs_event_size++;
+ 	return result;
+ }
+ 
+@@ -289,7 +292,7 @@ int evsel__tpebs_open(struct evsel *evsel)
+ 	if (ret)
  		return ret;
  
- 	if (tpebs_event_size > 0) {
--		struct evlist *evsel_list = evsel->evlist;
--		char cpumap_buf[50];
+-	if (tpebs_event_size > 0) {
++	if (!list_empty(&tpebs_results)) {
  		struct pollfd pollfd = { .events = POLLIN, };
  		int control_fd[2], ack_fd[2], len;
  		char ack_buf[8];
-@@ -305,10 +306,7 @@ int evsel__tpebs_open(struct evsel *evsel)
- 			goto out;
- 		}
- 
--		cpu_map__snprint(evsel_list->core.user_requested_cpus, cpumap_buf,
--				 sizeof(cpumap_buf));
--
--		ret = start_perf_record(control_fd, ack_fd, cpumap_buf);
-+		ret = evsel__tpebs_start_perf_record(evsel, control_fd, ack_fd);
- 		if (ret)
- 			goto out;
- 
 -- 
 2.49.0.504.g3bcea36a83-goog
 
