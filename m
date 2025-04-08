@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1861423A99F;
-	Tue,  8 Apr 2025 17:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E32652356CC;
+	Tue,  8 Apr 2025 17:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132584; cv=none; b=ZAB5zeWbW8+Jrlxi2aP2VYHzCQqD7Ah70GoY49WNY8MAEwgL+l2lxB9Ah5vMRxx/rrCNFg1IyBD+wxzwKweN2J5rjTRdc057q+nT4bYKi2mr8/v+Q3O4rW4G4kx30kjhsE8i+7qKNon7ZUlNYbXymk44GH7bWJqNLsKmA/aCjUg=
+	t=1744132594; cv=none; b=d4xln2PIfqJfQprug/Y7IyjfQQKJhWbt/u0q6Whd0Wr89hSUUVCZA9bwJcfjTgt8NHVBWl8eAVM8zn+eJRXEWOr+v8KzcstBknyjwW0TO6iVlfXwWOajiNN8ypTxjHAA3kiUXxuYCdPg9oczLD75WD5KMsdWPXvk5Zu4uj7p5Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132584; c=relaxed/simple;
-	bh=HhiiV26Eyq2LUq6YKxY+qxDFYUBLI5AgAMAbAOeeP68=;
+	s=arc-20240116; t=1744132594; c=relaxed/simple;
+	bh=HzNfzNrhhEGtHEAmmwegS0Lov/OL0xRdpo39lr3yU7Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CIAcwAAAHm/bt3aIduSpZZoltpBhqYl6rOmbF6zhT5exoAt/Omu/zsKtU+2nrmmmUPb8ixxjFdmvy7SQE77ac+Dpmsi9GkmqkQBgvGe9V0zXhW3oGIe+rLquJ3pEJcdel83xRl6HitPakLtoelLDnclZBJ07tvREcV+VsBUoFko=
+	 MIME-Version; b=Y9d0MmogM5WLv9D4ZE+CG02o/vaFv3XYrCkRFqjxL6wx5EpuVNbclJYyburU1D3b1CHt1GnG2mGrQFBzonZogUq5xlD2X5rnQGvFRUuRS+QcXSyv52rBzr1VlvfrppihwSh8rz2zFtm9PnqunyXM4isW2KImJEV7uIapIfuFryY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0062A1688;
-	Tue,  8 Apr 2025 10:16:23 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08C241688;
+	Tue,  8 Apr 2025 10:16:33 -0700 (PDT)
 Received: from e128066.cambridge.arm.com (e128066.cambridge.arm.com [10.1.26.81])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7EA4F3F59E;
-	Tue,  8 Apr 2025 10:16:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 840AF3F59E;
+	Tue,  8 Apr 2025 10:16:28 -0700 (PDT)
 From: mark.barnett@arm.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -37,9 +37,9 @@ Cc: ben.gainey@arm.com,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	Mark Barnett <mark.barnett@arm.com>
-Subject: [PATCH v4 3/5] perf: Allow adding fixed random jitter to the sampling period
-Date: Tue,  8 Apr 2025 18:15:28 +0100
-Message-Id: <20250408171530.140858-4-mark.barnett@arm.com>
+Subject: [PATCH v4 4/5] tools/perf: Modify event parser to support hf-period term
+Date: Tue,  8 Apr 2025 18:15:29 +0100
+Message-Id: <20250408171530.140858-5-mark.barnett@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250408171530.140858-1-mark.barnett@arm.com>
 References: <20250408171530.140858-1-mark.barnett@arm.com>
@@ -53,108 +53,300 @@ Content-Transfer-Encoding: 8bit
 
 From: Ben Gainey <ben.gainey@arm.com>
 
-This change modifies the core perf overflow handler, adding some small
-random jitter to each sample period when the high-frequency sample
-period is in use. A new flag is added to perf_event_attr to opt into
-this behaviour.
-
-This change follows the discussion in [1], where it is recognized that it
-may be possible for certain patterns of execution to end up with biased
-results.
-
-[1] https://lore.kernel.org/linux-perf-users/Zc24eLqZycmIg3d2@tassilo/
+parse-events is modified, adding the "hf-period" term which can be used
+to specify the high-frequency sampling period.
 
 Signed-off-by: Ben Gainey <ben.gainey@arm.com>
 Signed-off-by: Mark Barnett <mark.barnett@arm.com>
 ---
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ tools/include/uapi/linux/perf_event.h             | 10 ++++++++++
+ tools/perf/tests/shell/attr/base-record           |  3 ++-
+ tools/perf/tests/shell/attr/base-record-spe       |  1 +
+ tools/perf/tests/shell/attr/base-stat             |  3 ++-
+ tools/perf/tests/shell/attr/system-wide-dummy     |  3 ++-
+ tools/perf/tests/shell/attr/test-record-dummy-C0  |  3 ++-
+ .../tests/shell/attr/test-record-hf-period-term   | 12 ++++++++++++
+ tools/perf/tests/shell/lib/attr.py                |  1 +
+ tools/perf/util/evsel.c                           |  1 +
+ tools/perf/util/parse-events.c                    | 15 +++++++++++++++
+ tools/perf/util/parse-events.h                    |  3 ++-
+ tools/perf/util/parse-events.l                    |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c         |  1 +
+ tools/perf/util/pmu.c                             |  3 ++-
+ 14 files changed, 54 insertions(+), 6 deletions(-)
+ create mode 100644 tools/perf/tests/shell/attr/test-record-hf-period-term
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index be006965054e..78a6fd14b412 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -233,6 +233,7 @@ struct hw_perf_event {
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 0524d541d4e3..2a6cc543df0e 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -379,6 +379,7 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+ #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+ #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
++#define PERF_ATTR_SIZE_VER9	144	/* add: hf_sample */
  
- #define PERF_SPS_HF_ON			0x00000001
- #define PERF_SPS_HF_SAMPLE		0x00000002
-+#define PERF_SPS_HF_RAND		0x00000004
- 	u32				sample_period_state;
+ /*
+  * Hardware event_id to monitor via a performance monitoring event:
+@@ -531,6 +532,15 @@ struct perf_event_attr {
+ 	__u64	sig_data;
  
- 	/*
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5752ac7408b1..bc6991a33048 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -56,6 +56,7 @@
- #include <linux/buildid.h>
- #include <linux/task_work.h>
- #include <linux/percpu-rwsem.h>
-+#include <linux/prandom.h>
- 
- #include "internal.h"
- 
-@@ -472,6 +473,8 @@ static int perf_sample_period_ns __read_mostly	= DEFAULT_SAMPLE_PERIOD_NS;
- static int perf_sample_allowed_ns __read_mostly =
- 	DEFAULT_SAMPLE_PERIOD_NS * DEFAULT_CPU_TIME_MAX_PERCENT / 100;
- 
-+static DEFINE_PER_CPU(struct rnd_state, sample_period_jitter_rnd);
+ 	__u64	config3; /* extension of config2 */
 +
- static void update_perf_cpu_limits(void)
- {
- 	u64 tmp = perf_sample_period_ns;
-@@ -10224,6 +10227,19 @@ static int __perf_event_overflow(struct perf_event *event,
- 	 *
- 	 * By ignoring the HF samples, we measure the actual period.
- 	 */
-+
-+	/*
-+	 * Apply optional jitter to the overall sample period
-+	 */
-+	if (hwc->sample_period_state & PERF_SPS_HF_RAND
-+			&& !(hwc->sample_period_state & PERF_SPS_HF_SAMPLE)) {
-+		struct rnd_state *state = &get_cpu_var(sample_period_jitter_rnd);
-+		u64 rand_period = 1 << event->attr.hf_sample_rand;
-+
-+		sample_period -= rand_period / 2;
-+		sample_period += prandom_u32_state(state) & (rand_period - 1);
-+	}
-+
- 	if (hwc->sample_period_state & PERF_SPS_HF_ON) {
- 		u64 hf_sample_period = event->attr.hf_sample_period;
++	union {
++		__u64 hf_sample;
++		struct {
++			__u64 hf_sample_period : 32,
++			      hf_sample_rand   :  4,
++			      __reserved_4     : 28;
++		};
++	};
+ };
  
-@@ -12756,6 +12772,14 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	if (attr->hf_sample_period)
- 		hwc->sample_period_state |= PERF_SPS_HF_ON;
- 
-+	if (attr->hf_sample_rand) {
-+		/* high-frequency jitter is only valid with a high-freq period */
-+		if (!attr->hf_sample_period)
-+			return ERR_PTR(-EINVAL);
+ /*
+diff --git a/tools/perf/tests/shell/attr/base-record b/tools/perf/tests/shell/attr/base-record
+index b44e4e6e4443..8369f505dfb2 100644
+--- a/tools/perf/tests/shell/attr/base-record
++++ b/tools/perf/tests/shell/attr/base-record
+@@ -5,7 +5,7 @@ group_fd=-1
+ flags=0|8
+ cpu=*
+ type=0|1
+-size=136
++size=144
+ config=0|1
+ sample_period=*
+ sample_type=263
+@@ -39,3 +39,4 @@ config2=0
+ branch_sample_type=0
+ sample_regs_user=0
+ sample_stack_user=0
++hf_sample_period=0
+diff --git a/tools/perf/tests/shell/attr/base-record-spe b/tools/perf/tests/shell/attr/base-record-spe
+index 08fa96b59240..2b4f051b6717 100644
+--- a/tools/perf/tests/shell/attr/base-record-spe
++++ b/tools/perf/tests/shell/attr/base-record-spe
+@@ -38,3 +38,4 @@ config2=*
+ branch_sample_type=*
+ sample_regs_user=*
+ sample_stack_user=*
++hf_sample_period=0
+diff --git a/tools/perf/tests/shell/attr/base-stat b/tools/perf/tests/shell/attr/base-stat
+index fccd8ec4d1b0..499c44c6216c 100644
+--- a/tools/perf/tests/shell/attr/base-stat
++++ b/tools/perf/tests/shell/attr/base-stat
+@@ -5,7 +5,7 @@ group_fd=-1
+ flags=0|8
+ cpu=*
+ type=0
+-size=136
++size=144
+ config=0
+ sample_period=0
+ sample_type=65536
+@@ -39,3 +39,4 @@ config2=0
+ branch_sample_type=0
+ sample_regs_user=0
+ sample_stack_user=0
++hf_sample_period=0
+diff --git a/tools/perf/tests/shell/attr/system-wide-dummy b/tools/perf/tests/shell/attr/system-wide-dummy
+index a1e1d6a263bf..1dad060d304a 100644
+--- a/tools/perf/tests/shell/attr/system-wide-dummy
++++ b/tools/perf/tests/shell/attr/system-wide-dummy
+@@ -7,7 +7,7 @@ cpu=*
+ pid=-1
+ flags=8
+ type=1
+-size=136
++size=144
+ config=9
+ sample_period=1
+ # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
+@@ -50,3 +50,4 @@ config2=0
+ branch_sample_type=0
+ sample_regs_user=0
+ sample_stack_user=0
++hf_sample_period=0
+diff --git a/tools/perf/tests/shell/attr/test-record-dummy-C0 b/tools/perf/tests/shell/attr/test-record-dummy-C0
+index 91499405fff4..18f0e3766389 100644
+--- a/tools/perf/tests/shell/attr/test-record-dummy-C0
++++ b/tools/perf/tests/shell/attr/test-record-dummy-C0
+@@ -10,7 +10,7 @@ cpu=0
+ pid=-1
+ flags=8
+ type=1
+-size=136
++size=144
+ config=9
+ sample_period=4000
+ # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
+@@ -53,3 +53,4 @@ config2=0
+ branch_sample_type=0
+ sample_regs_user=0
+ sample_stack_user=0
++hf_sample_period=0
+diff --git a/tools/perf/tests/shell/attr/test-record-hf-period-term b/tools/perf/tests/shell/attr/test-record-hf-period-term
+new file mode 100644
+index 000000000000..539b9946c8cc
+--- /dev/null
++++ b/tools/perf/tests/shell/attr/test-record-hf-period-term
+@@ -0,0 +1,12 @@
++[config]
++command = record
++args    = --no-bpf-event -e cycles/period=3,hf-period=2/ -- kill >/dev/null 2>&1
++ret     = 1
++kernel_since = 6.15
 +
-+		hwc->sample_period_state |= PERF_SPS_HF_RAND;
-+	}
++[event-10:base-record]
++sample_period=3
++hf_sample_period=2
 +
- 	/*
- 	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
- 	 * events (they don't make sense as the cgroup will be different
-@@ -14367,6 +14391,7 @@ static void __init perf_event_init_all_cpus(void)
- 	zalloc_cpumask_var(&perf_online_pkg_mask, GFP_KERNEL);
- 	zalloc_cpumask_var(&perf_online_sys_mask, GFP_KERNEL);
++freq=0
++sample_type=7
+diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
+index bfccc727d9b2..80c99758bd86 100644
+--- a/tools/perf/tests/shell/lib/attr.py
++++ b/tools/perf/tests/shell/lib/attr.py
+@@ -85,6 +85,7 @@ class Event(dict):
+         'branch_sample_type',
+         'sample_regs_user',
+         'sample_stack_user',
++        'hf_sample_period',
+     ]
  
-+	prandom_seed_full_state(&sample_period_jitter_rnd);
+     def add(self, data):
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 1974395492d7..6e8eb34ef957 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -180,6 +180,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
+ 	WRITE_ASS(branch_sample_type, "llu");
+ 	WRITE_ASS(sample_regs_user,   "llu");
+ 	WRITE_ASS(sample_stack_user,  PRIu32);
++	WRITE_ASS(hf_sample_period,  PRIu32);
  
- 	for_each_possible_cpu(cpu) {
- 		swhash = &per_cpu(swevent_htable, cpu);
-@@ -14384,6 +14409,7 @@ static void __init perf_event_init_all_cpus(void)
- 		cpuctx->online = cpumask_test_cpu(cpu, perf_online_mask);
- 		cpuctx->heap_size = ARRAY_SIZE(cpuctx->heap_default);
- 		cpuctx->heap = cpuctx->heap_default;
-+
- 	}
+ 	fclose(file);
+ 	return 0;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5152fd5a6ead..c0943eb7f171 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -805,6 +805,7 @@ const char *parse_events__term_type_str(enum parse_events__term_type term_type)
+ 		[PARSE_EVENTS__TERM_TYPE_RAW]                   = "raw",
+ 		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
+ 		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
++		[PARSE_EVENTS__TERM_TYPE_HF_PERIOD]		= "hf-period",
+ 	};
+ 	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
+ 		return "unknown term";
+@@ -833,6 +834,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
+ 	case PARSE_EVENTS__TERM_TYPE_NAME:
+ 	case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
+ 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
++	case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
+ 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
+ 		return true;
+ 	case PARSE_EVENTS__TERM_TYPE_USER:
+@@ -981,6 +983,16 @@ do {									   \
+ 			return -EINVAL;
+ 		}
+ 		break;
++	case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
++		CHECK_TYPE_VAL(NUM);
++		if (term->val.num == 0) {
++			parse_events_error__handle(err, term->err_val,
++						strdup("expected a non-zero value"),
++						NULL);
++			return -EINVAL;
++		}
++		attr->hf_sample_period = term->val.num;
++		break;
+ 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+ 	case PARSE_EVENTS__TERM_TYPE_USER:
+ 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+@@ -1108,6 +1120,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
+ 	case PARSE_EVENTS__TERM_TYPE_RAW:
+ 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+ 	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
++	case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
+ 	default:
+ 		if (err) {
+ 			parse_events_error__handle(err, term->err_term,
+@@ -1242,6 +1255,7 @@ do {								\
+ 		case PARSE_EVENTS__TERM_TYPE_RAW:
+ 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+ 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
++		case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
+ 		default:
+ 			break;
+ 		}
+@@ -1296,6 +1310,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
+ 		case PARSE_EVENTS__TERM_TYPE_RAW:
+ 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+ 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
++		case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
+ 		default:
+ 			break;
+ 		}
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index e176a34ab088..a6c4f81d5989 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -80,7 +80,8 @@ enum parse_events__term_type {
+ 	PARSE_EVENTS__TERM_TYPE_RAW,
+ 	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
+ 	PARSE_EVENTS__TERM_TYPE_HARDWARE,
+-#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_HARDWARE + 1)
++	PARSE_EVENTS__TERM_TYPE_HF_PERIOD,
++#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_HF_PERIOD + 1)
+ };
+ 
+ struct parse_events_term {
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 7ed86e3e34e3..482321ace228 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -335,6 +335,7 @@ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
+ aux-action		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_ACTION); }
+ aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
+ metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
++hf-period		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_HF_PERIOD); }
+ cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
+ stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+ stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 66b666d9ce64..c93904a299af 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -360,6 +360,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(aux_start_paused, p_unsigned);
+ 	PRINT_ATTRf(aux_pause, p_unsigned);
+ 	PRINT_ATTRf(aux_resume, p_unsigned);
++	PRINT_ATTRf(hf_sample_period, p_unsigned);
+ 
+ 	return ret;
  }
- 
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index b7ebac5ab1d1..f90c59e29371 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1429,7 +1429,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
+ 			return -EINVAL;
+-		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_HARDWARE:
++		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
+ 			/* Skip non-config terms. */
+ 			break;
+ 		default:
+@@ -1804,6 +1804,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
+ 		"aux-output",
+ 		"aux-action=(pause|resume|start-paused)",
+ 		"aux-sample-size=number",
++		"hf-period=number",
+ 	};
+ 	struct perf_pmu_format *format;
+ 	int ret;
 -- 
 2.43.0
 
