@@ -1,288 +1,120 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A8323C8C1;
-	Tue,  8 Apr 2025 17:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1167222B8D2;
+	Tue,  8 Apr 2025 17:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132602; cv=none; b=MjWjBjmH2ql3bu+BzmVisft1TbhBtcbW4ZR66g6T0AkVRK19CCiUj9dd6RNMBWr4kt5x4+m5EOkmVzeNjMsj0fXWxYIN0W0yEd/RXammT47tBWEXykSZ72ejeyuh9qtvOwkmDHMUVAIw5IcuQM2SbzXJbMrqZBhOCZrF1di9v0o=
+	t=1744133733; cv=none; b=aRBnG9Ei6nLT8ge1dxiRD+6WSlwic5JW9w3BeDTVQgrLd+ZmE6QeMQG0Zfp1Y93PQmeY/QN0KG4wfqt/tPS6z20GrxsRmbhyDuRmJNtC72SmJHD8k66Y0ydw/Zk9HulhTOtJpIXNGOXHDzn3BUyD4a56GZikjCGoW+L3GcYMExk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132602; c=relaxed/simple;
-	bh=JmMelrEjPWF3FZuZVbwJYwcQY5UYZuRHJy+E+JTBJ1A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c0R+5rG2cHGtNYnF219mNgYWjV9qopUzr05kQgiduxrheVZBgUMzHPs2Wt4GAwT7KGDUlVSEY/LN4evvsA2q+HvTSIHeOsO+c5HjQ273Skn1LsfSwkbMA16tM1uOsV7GCZzgkmuVJF6T3wjcXledUvqbs2DoC3wAnYlnck5q+dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 960591688;
-	Tue,  8 Apr 2025 10:16:40 -0700 (PDT)
-Received: from e128066.cambridge.arm.com (e128066.cambridge.arm.com [10.1.26.81])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E23EA3F59E;
-	Tue,  8 Apr 2025 10:16:35 -0700 (PDT)
-From: mark.barnett@arm.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com
-Cc: ben.gainey@arm.com,
-	deepak.surti@arm.com,
-	ak@linux.intel.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Mark Barnett <mark.barnett@arm.com>
-Subject: [PATCH v4 5/5] tools/perf: Modify event parser to support hf-rand term
-Date: Tue,  8 Apr 2025 18:15:30 +0100
-Message-Id: <20250408171530.140858-6-mark.barnett@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250408171530.140858-1-mark.barnett@arm.com>
-References: <20250408171530.140858-1-mark.barnett@arm.com>
+	s=arc-20240116; t=1744133733; c=relaxed/simple;
+	bh=voU6MwLZqCQnV0FdjD08dZZ9AHYyERMxnrmtBaVaoZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gyoBIaMRcfwuNKJ8Tz/6DJR/Y8vWGt//kzkV6B9maaOAG/ixieOMulh+I4UsDTmQkbqlvLXju9dJqagOaEJfG4CUepHwNulAdRfKYmWRQquVEyqkdCeSQYRJV/UbUcQUjywPORgRGmHJTYWShbdtE9C0sqA7oqkIP1xQquLaRjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=DGIa7MQr; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DGIa7MQr"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 538HYKRg3088620
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 8 Apr 2025 10:34:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 538HYKRg3088620
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744133664;
+	bh=WkvwYM1YWnU4TAJ+J/9Vt8/Lh0xsIqteV787gUNx/Oo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DGIa7MQrPXWSVvRWGj8J9I9uLnNFKLmCzMcxqp9sA7nAoJC1WJHTTBphRx8Kv8ojG
+	 TFKk4S0MJqG1qE6jdToL7U6LViQMYDTnT6XmG6GZ/+eQjdbb1OSynNFMrpEtzEVoKZ
+	 g0KcbVkw9oMHB5iu0Rp5BEfOt7OQlb08CtRaOpdIjsTXVHGAxBTuXCRraYO5P9wS94
+	 8v73kdOA2NdbUZ2X6Zw6P5nUDUF44s5P31zcgszZbitLnPnn1PucZbcA7gNJNvVE5d
+	 daoTYgTnVa8ixFIdolcOCNPBmW+yivuG8gYwjhDdkQiDgWmAvrkZdHD6C59UDRz+ez
+	 9U2wrN1TZ2BKQ==
+Message-ID: <3b91a47c-e453-406a-815d-67c438d73a4d@zytor.com>
+Date: Tue, 8 Apr 2025 10:34:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com>
+ <7a503d55-db41-42da-8133-4a3dbbd36c7e@zytor.com> <Z-y4pGxgiP55lpOj@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <Z-y4pGxgiP55lpOj@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ben Gainey <ben.gainey@arm.com>
+On 4/1/2025 9:10 PM, Ingo Molnar wrote:
+> Yeah, I moved it over to:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/msr
+> 
 
-parse-events is modified, adding the "hf-rand" term which can be used to
-enable enable random jitter of the sample period.
+Hi Ingo,
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
-Signed-off-by: Mark Barnett <mark.barnett@arm.com>
----
- tools/perf/tests/shell/attr/base-record           |  1 +
- tools/perf/tests/shell/attr/base-record-spe       |  1 +
- tools/perf/tests/shell/attr/base-stat             |  1 +
- tools/perf/tests/shell/attr/system-wide-dummy     |  1 +
- tools/perf/tests/shell/attr/test-record-dummy-C0  |  1 +
- .../tests/shell/attr/test-record-hf-period-rand   | 13 +++++++++++++
- tools/perf/tests/shell/lib/attr.py                |  1 +
- tools/perf/util/evsel.c                           |  1 +
- tools/perf/util/parse-events.c                    | 15 +++++++++++++++
- tools/perf/util/parse-events.h                    |  3 ++-
- tools/perf/util/parse-events.l                    |  1 +
- tools/perf/util/perf_event_attr_fprintf.c         |  1 +
- tools/perf/util/pmu.c                             |  3 ++-
- 13 files changed, 41 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/tests/shell/attr/test-record-hf-period-rand
+Are you going to merge it into tip in this development cycle for the
+v6.16 merge window?
 
-diff --git a/tools/perf/tests/shell/attr/base-record b/tools/perf/tests/shell/attr/base-record
-index 8369f505dfb2..f51a20abde2e 100644
---- a/tools/perf/tests/shell/attr/base-record
-+++ b/tools/perf/tests/shell/attr/base-record
-@@ -40,3 +40,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- hf_sample_period=0
-+hf_sample_rand=0
-diff --git a/tools/perf/tests/shell/attr/base-record-spe b/tools/perf/tests/shell/attr/base-record-spe
-index 2b4f051b6717..d8695abeb2b2 100644
---- a/tools/perf/tests/shell/attr/base-record-spe
-+++ b/tools/perf/tests/shell/attr/base-record-spe
-@@ -39,3 +39,4 @@ branch_sample_type=*
- sample_regs_user=*
- sample_stack_user=*
- hf_sample_period=0
-+hf_sample_rand=0
-diff --git a/tools/perf/tests/shell/attr/base-stat b/tools/perf/tests/shell/attr/base-stat
-index 499c44c6216c..11df6cb36b9a 100644
---- a/tools/perf/tests/shell/attr/base-stat
-+++ b/tools/perf/tests/shell/attr/base-stat
-@@ -40,3 +40,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- hf_sample_period=0
-+hf_sample_rand=0
-diff --git a/tools/perf/tests/shell/attr/system-wide-dummy b/tools/perf/tests/shell/attr/system-wide-dummy
-index 1dad060d304a..0439c81c5895 100644
---- a/tools/perf/tests/shell/attr/system-wide-dummy
-+++ b/tools/perf/tests/shell/attr/system-wide-dummy
-@@ -51,3 +51,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- hf_sample_period=0
-+hf_sample_rand=0
-diff --git a/tools/perf/tests/shell/attr/test-record-dummy-C0 b/tools/perf/tests/shell/attr/test-record-dummy-C0
-index 18f0e3766389..d9eecbd5d246 100644
---- a/tools/perf/tests/shell/attr/test-record-dummy-C0
-+++ b/tools/perf/tests/shell/attr/test-record-dummy-C0
-@@ -54,3 +54,4 @@ branch_sample_type=0
- sample_regs_user=0
- sample_stack_user=0
- hf_sample_period=0
-+hf_sample_rand=0
-diff --git a/tools/perf/tests/shell/attr/test-record-hf-period-rand b/tools/perf/tests/shell/attr/test-record-hf-period-rand
-new file mode 100644
-index 000000000000..517ff6cbc0e9
---- /dev/null
-+++ b/tools/perf/tests/shell/attr/test-record-hf-period-rand
-@@ -0,0 +1,13 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -e cycles/period=3,hf-period=2,hf-rand=7/ -- kill >/dev/null 2>&1
-+ret     = 1
-+kernel_since = 6.15
-+
-+[event-10:base-record]
-+sample_period=3
-+hf_sample_period=2
-+hf_sample_rand=7
-+
-+freq=0
-+sample_type=7
-diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index 80c99758bd86..a9600997a9ea 100644
---- a/tools/perf/tests/shell/lib/attr.py
-+++ b/tools/perf/tests/shell/lib/attr.py
-@@ -86,6 +86,7 @@ class Event(dict):
-         'sample_regs_user',
-         'sample_stack_user',
-         'hf_sample_period',
-+        'hf_sample_rand',
-     ]
- 
-     def add(self, data):
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 6e8eb34ef957..b0a54d64f616 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -181,6 +181,7 @@ static int store_event(struct perf_event_attr *attr, pid_t pid, struct perf_cpu
- 	WRITE_ASS(sample_regs_user,   "llu");
- 	WRITE_ASS(sample_stack_user,  PRIu32);
- 	WRITE_ASS(hf_sample_period,  PRIu32);
-+	WRITE_ASS(hf_sample_rand,	"d");
- 
- 	fclose(file);
- 	return 0;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c0943eb7f171..91e5a0d07d58 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -806,6 +806,7 @@ const char *parse_events__term_type_str(enum parse_events__term_type term_type)
- 		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
- 		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
- 		[PARSE_EVENTS__TERM_TYPE_HF_PERIOD]		= "hf-period",
-+		[PARSE_EVENTS__TERM_TYPE_HF_RAND]		= "hf-rand",
- 	};
- 	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
- 		return "unknown term";
-@@ -835,6 +836,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
- 	case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
- 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
- 	case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
-+	case PARSE_EVENTS__TERM_TYPE_HF_RAND:
- 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
- 		return true;
- 	case PARSE_EVENTS__TERM_TYPE_USER:
-@@ -993,6 +995,16 @@ do {									   \
- 		}
- 		attr->hf_sample_period = term->val.num;
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_HF_RAND:
-+		CHECK_TYPE_VAL(NUM);
-+		if ((unsigned int)term->val.num > 15) {
-+			parse_events_error__handle(err, term->err_val,
-+						strdup("expected a value between 0-15"),
-+						NULL);
-+			return -EINVAL;
-+		}
-+		attr->hf_sample_rand = (unsigned int)term->val.num;
-+		break;
- 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
- 	case PARSE_EVENTS__TERM_TYPE_USER:
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-@@ -1121,6 +1133,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 	case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
-+	case PARSE_EVENTS__TERM_TYPE_HF_RAND:
- 	default:
- 		if (err) {
- 			parse_events_error__handle(err, term->err_term,
-@@ -1256,6 +1269,7 @@ do {								\
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 		case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_HF_RAND:
- 		default:
- 			break;
- 		}
-@@ -1311,6 +1325,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
- 		case PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_HF_RAND:
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index a6c4f81d5989..4c2e950dcf81 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -81,7 +81,8 @@ enum parse_events__term_type {
- 	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
- 	PARSE_EVENTS__TERM_TYPE_HARDWARE,
- 	PARSE_EVENTS__TERM_TYPE_HF_PERIOD,
--#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_HF_PERIOD + 1)
-+	PARSE_EVENTS__TERM_TYPE_HF_RAND,
-+#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_HF_RAND + 1)
- };
- 
- struct parse_events_term {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 482321ace228..b60b5e796d3a 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -336,6 +336,7 @@ aux-action		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_ACTION); }
- aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
- metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
- hf-period		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_HF_PERIOD); }
-+hf-rand			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_HF_RAND); }
- cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
- stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
- stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index c93904a299af..3d769a10304b 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -361,6 +361,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 	PRINT_ATTRf(aux_pause, p_unsigned);
- 	PRINT_ATTRf(aux_resume, p_unsigned);
- 	PRINT_ATTRf(hf_sample_period, p_unsigned);
-+	PRINT_ATTRf(hf_sample_rand, p_unsigned);
- 
- 	return ret;
- }
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index f90c59e29371..f735216e88c1 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1429,7 +1429,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
- 			return -EINVAL;
--		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_HF_PERIOD:
-+		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_HF_RAND:
- 			/* Skip non-config terms. */
- 			break;
- 		default:
-@@ -1805,6 +1805,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
- 		"aux-action=(pause|resume|start-paused)",
- 		"aux-sample-size=number",
- 		"hf-period=number",
-+		"hf-period-rand=number",
- 	};
- 	struct perf_pmu_format *format;
- 	int ret;
--- 
-2.43.0
-
+Thanks!
+     Xin
