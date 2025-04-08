@@ -1,241 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25B51DF754;
-	Tue,  8 Apr 2025 16:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4FB2155C97;
+	Tue,  8 Apr 2025 17:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744131253; cv=none; b=XG0pkoeewm4h5OLtHFhbIuu8HfF8uFPlQ1xgTSUnpyzCqTtHfIsnmHCRYcbtjLYwfwFEu2cHzWY31BoNuCSPpR+KGsVxdNWDRjqppb3KxmJy8ycp5hbxBm0cdCB6XHpkXpWEVqQXGY4FyuWI9884URKDpz6lJnTOa/3qIwIkTbA=
+	t=1744132562; cv=none; b=Weuc8vR2ioF4AtidL3EoX/0U2HZp8hG/AbgEJYWwIsaD5IdDnc8Ybe8gUWNAJBnFNCBIVKD5v7YcQw2gvBrHDBsV4sN/tKZGG1hwANNqYr96Yk6ihopL/VBUpDnF7Mme08HsS/VQlR+yHMURI2wPcoUUatz0ahaslWTpP9pydK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744131253; c=relaxed/simple;
-	bh=k11y85anIUxaVdUyWTskfFr8geLdEXxtcqSuOAf3X5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LXL3TFGQMA8FN//6px2Hnl2QlWA8dF1AvmoAZbnOe0QKfRmExvOhNa56cNOkXsy6+yCd0EmF/YN+ccr/bfCs6cVcyT9xNHubQKYjjrQIJPtvXDveTz+7zj5H6U02VAUKmdv5WuhbO/bsDKo036/V5AChuPWr95YkxIKtBLcdpBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQr6zeER; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQr6zeER"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA875C4CEE5;
-	Tue,  8 Apr 2025 16:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744131253;
-	bh=k11y85anIUxaVdUyWTskfFr8geLdEXxtcqSuOAf3X5A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aQr6zeERt0iLP/IziVLHwH7jdSi7gtEWEqb8xdV2CTa2Z5MdeeA154PHGVSXXq/cB
-	 z45rVeii2Ex1hV0LQyPE4wmL3TFtWtpJ69blKEdsgGBXXua/sXJ9Aq7nhNX6whzavE
-	 j1VfzXTXbL88YYiFPSeBRVhkTAWFwE3vNysf4pCL588TrtrlQLQiFvVRr3MJmasnyZ
-	 hYWJoDuAuXfrC+qyOsOlvdZ3FlCurcL+K2ykKdrsihJupDtevHo2F9C2m9l9E9nDOb
-	 DxdXss5Sm4mFRPuyAUhTSEYvVy/kopQ7wULSpxyy1GxXuAqMpIewoy9n8u54KqNYIj
-	 nkLqSmLapGptA==
-Date: Tue, 8 Apr 2025 11:54:11 -0500
-From: Seth Forshee <sforshee@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: x86@kernel.org, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: kvm guests crash when running "perf kvm top"
-Message-ID: <Z_VUswFkWiTYI0eD@do-x1carbon>
+	s=arc-20240116; t=1744132562; c=relaxed/simple;
+	bh=q/y9b4nTvQuRJVg9VQ+MH/5niPPl/PqZ7nSzorf3IbY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P+se0PF1FlOHtVmeRq7Mrot32tl+5A/r8FY0KYJbb03wrmgEI9GVIiO8Vfaqmpm2j8W3Nsu1sF98UF4Av89I48/MzFuVpMJZc6dbM4Hj5joMY0chWZmwncF4MvyThN1lUZHR+GTjHE3kMQ41yx0bq+dupivq9SxKVt/v8Zl3cY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 732721688;
+	Tue,  8 Apr 2025 10:15:59 -0700 (PDT)
+Received: from e128066.cambridge.arm.com (e128066.cambridge.arm.com [10.1.26.81])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA1223F59E;
+	Tue,  8 Apr 2025 10:15:54 -0700 (PDT)
+From: mark.barnett@arm.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com
+Cc: ben.gainey@arm.com,
+	deepak.surti@arm.com,
+	ak@linux.intel.com,
+	will@kernel.org,
+	james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Mark Barnett <mark.barnett@arm.com>
+Subject: [PATCH v4 0/5] A mechanism for efficient support for per-function metrics
+Date: Tue,  8 Apr 2025 18:15:25 +0100
+Message-Id: <20250408171530.140858-1-mark.barnett@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-A colleague of mine reported kvm guest hangs when running "perf kvm top"
-with a 6.1 kernel. Initially it looked like the problem might be fixed
-in newer kernels, but it turned out to be perf changes which must avoid
-triggering the issue. I was able to reproduce the guest crashes with
-6.15-rc1 in both the host and the guest when using an older version of
-perf. A bisect of perf landed on 7b100989b4f6 "perf evlist: Remove
-__evlist__add_default", but this doesn't look to be fixing any kind of
-issue like this.
+From: Mark Barnett <mark.barnett@arm.com>
 
-This box has an Ice Lake CPU, and we can reproduce on other Ice Lakes
-but could not reproduce on another box with Broadwell. On Broadwell
-guests would crash with older kernels in the host, but this was fixed by
-971079464001 "KVM: x86/pmu: fix masking logic for
-MSR_CORE_PERF_GLOBAL_CTRL". That does not fix the issues we see on Ice
-Lake.
+This patch introduces the concept of an alternating sample rate to perf
+core and provides the necessary basic changes in the tools to activate
+that option.
 
-When the guests crash we aren't getting any output on the serial
-console, but I got this from a memory dump:
+The primary use case for this change is to be able to enable collecting
+per-function performance metrics using the Arm PMU, as per the following 
+approach:
 
-BUG: unable to handle page fault for address: fffffe76ffbaf00000
-BUG: unable to handle page fault for address: fffffe76ffbaf00000
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-BUG: unable to handle page fault for address: fffffe76ffbaf00000
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 2e044067 P4D 3ec42067 PUD 3ec41067 PMD 3ec40067 PTE ffffffffff120
-Oops: Oops: 0002 [#1] SMP NOPTI
-BUG: unable to handle page fault for address: fffffe76ffbaf00000
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 2e044067 P4D 3ec42067 PUD 3ec41067 PMD 3ec40067 PTE ffffffffff120
-Oops: Oops: 0002 [#2] SMP NOPTI
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1 #3 VOLUNTARY
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)/Incus, BIOS unknown 02/0=
-2/2022
-BUG: unable to handle page fault for address: fffffe76ffbaf00000
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 2e044067 P4D 3ec42067 PUD 3ec41067 PMD 3ec40067 PTE ffffffffff120
-Oops: Oops: 0002 [#3] SMP NOPTI
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1 #3 VOLUNTARY
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)/Incus, BIOS unknown 02/0=
-2/2022
+ * Starting with a simple periodic sampling (hotspot) profile,
+   augment each sample with PMU counters accumulated over a short window
+   up to the point the sample was taken.
+ * For each sample, perform some filtering to improve attribution of
+   the accumulated PMU counters (ensure they are attributed to a single
+   function)
+ * For each function accumulate a total for each PMU counter so that
+   metrics may be derived.
 
-We got something different though from an ubuntu VM running their 6.8
-kernel:
+Without modification, and sampling at a typical rate associated
+with hotspot profiling (~1mS) leads to poor results. Such an
+approach gives you a reasonable estimation of where the profiled
+application is spending time for relatively low overhead, but the
+PMU counters cannot easily be attributed to a single function as the
+window over which they are collected is too large. A modern CPU may
+execute many millions of instructions over many thousands of functions
+within 1mS window. With this approach, the per-function metrics tend
+to trend to some average value across the top N functions in the
+profile.
 
-BUG: kernel NULL pointer dereference, address: 000000000000002828
-BUG: kernel NULL pointer dereference, address: 000000000000002828
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 10336a067 P4D 0=20
-Oops: 0000 [#1] PREEMPT SMP NOPTI
-BUG: kernel NULL pointer dereference, address: 000000000000002828
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 10336a067 P4D 0=20
-Oops: 0000 [#2] PREEMPT SMP NOPTI
-BUG: kernel NULL pointer dereference, address: 000000000000002828
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 10336a067 P4D 0=20
-Oops: 0000 [#3] PREEMPT SMP NOPTI
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.8.0-56-generic #58-Ubuntu
-BUG: kernel NULL pointer dereference, address: 000000000000002828
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 10336a067 P4D 0=20
-Oops: 0000 [#4] PREEMPT SMP NOPTI
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.8.0-56-generic #58-Ubuntu
-BUG: kernel NULL pointer dereference, address: 000000000000002828
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 10336a067 P4D 0=20
-Oops: 0000 [#5] PREEMPT SMP NOPTI
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.8.0-56-generic #58-Ubuntu
-RIP: 0010:__sprint_symbol.isra.0+0x6/0x120
-Code: ff e8 0e 9d 00 01 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 90 90 90 =
-90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 55 <48> 89 e5 41 57 4=
-9 89 f7 41 56 4c 63 f2 4c 8d 45 b8 48 8d 55 c0 41
-RSP: 0018:ff25e52d000e6ff8 EFLAGS: 00000046
-BUG: #DF stack guard page was hit at 0000000040b441e1 (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
-BUG: #DF stack guard page was hit at 000000002fed44fb (stack is 00000000a17=
-88787..000000008e7f4216)
+In order to ensure a reasonable likelihood that the counters are
+attributed to a single function, the sampling window must be rather
+short; typically something in the order of a few hundred cycles proves
+well as tested on a range of aarch64 Cortex and Neoverse cores.
 
-CPU information from one of the boxes where we see this:
+As it stands, it is possible to achieve this with perf using a very high
+sampling rate (e.g ~300cy), but there are at least three major concerns
+with this approach:
 
-processor	: 0
-vendor_id	: GenuineIntel
-cpu family	: 6
-model		: 106
-model name	: Intel(R) Xeon(R) Gold 5318Y CPU @ 2.10GHz
-stepping	: 6
-microcode	: 0xd0003f5
-cpu MHz		: 800.000
-cache size	: 36864 KB
-physical id	: 0
-siblings	: 44
-core id		: 0
-cpu cores	: 22
-apicid		: 0
-initial apicid	: 0
-fpu		: yes
-fpu_exception	: yes
-cpuid level	: 27
-wp		: yes
-flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat =
-pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rd=
-tscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nons=
-top_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm=
-2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt =
-tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpui=
-d_fault epb cat_l3 intel_ppin ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_sh=
-adow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 e=
-rms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushop=
-t clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 x=
-saves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local split_lock_detect w=
-bnoinvd dtherm ida arat pln pts hwp hwp_act_window hwp_epp hwp_pkg_req vnmi=
- avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni av=
-x512_bitalg avx512_vpopcntdq la57 rdpid fsrm md_clear pconfig flush_l1d arc=
-h_capabilities
-vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept=
-_1gb ept_5level flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unres=
-tricted_guest vapic_reg vid ple shadow_vmcs pml ept_violation_ve ept_mode_b=
-ased_exec tsc_scaling
-bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs mmio_stale_data eibr=
-s_pbrsb gds bhi spectre_v2_user
-bogomips	: 4000.00
-clflush size	: 64
-cache_alignment	: 64
-address sizes	: 46 bits physical, 57 bits virtual
-power management:
+ * For speculatively executing, out of order cores, can the results be
+   accurately attributed to a give function or the given sample window?
+ * A short sample window is not guaranteed to cover a single function.
+ * The overhead of sampling every few hundred cycles is very high and
+   is highly likely to cause throttling which is undesirable as it leads
+   to patchy results; i.e. the profile alternates between periods of 
+   high frequency samples followed by longer periods of no samples. 
 
-Let me know if I can provide any additional information or testing.
+This patch does not address the first two points directly. Some means
+to address those are discussed on the RFC v2 cover letter. The patch
+focuses on addressing the final point, though happily this approach
+gives us a way to perform basic filtering on the second point.
 
-Thanks,
-Seth
+The alternating sample period allows us to do two things:
+
+ * We can control the risk of throttling and reduce overhead by
+   alternating between a long and short period. This allows us to
+   decouple the "periodic" sampling rate (as might be used for hotspot
+   profiling) from the short sampling window needed for collecting
+   the PMU counters.
+ * The sample taken at the end of the long period can be otherwise 
+   discarded (as the PMU data is not useful), but the
+   PERF_RECORD_CALLCHAIN information can be used to identify the current
+   function at the start of the short sample window. This is useful
+   for filtering samples where the PMU counter data cannot be attributed
+   to a single function.
+
+There are several reasons why it is desirable to reduce the overhead and
+risk of throttling:
+
+  * PMU counter overflow typically causes an interrupt into the kernel;
+    this affects program runtime, and can affect things like branch
+    prediction, cache locality and so on which can skew the metrics.
+  * The very high sample rate produces significant amounts of data.
+    Depending on the configuration of the profiling session and machine,
+    it is easily possible to produce many orders of magnitude more data
+    which is costly for tools to post-process and increases the chance
+    of data loss. This is especially relevant on larger core count
+    systems where it is very easy to produce massive recordings.
+    Whilst the kernel will throttle such a configuration,
+    which helps to mitigate a large portion of the bandwidth and capture
+    overhead, it is not something that can be controlled for on a per
+    event basis, or for non-root users, and because throttling is
+    controlled as a percentage of time its affects vary from machine to
+    machine. AIUI throttling may also produce an uneven temporal
+    distribution of samples. Finally, whilst throttling does a good job
+    at reducing the overall amount of data produced, it still leads to
+    much larger captures than with this method; typically we have
+    observed 1-2 orders of magnitude larger captures.
+
+This patch set modifies perf core to support alternating between two
+sample_period values, providing a simple and inexpensive way for tools
+to separate out the sample window (time over which events are
+counted) from the sample period (time between interesting samples). 
+
+It is expected to be used with the cycle counter event, alternating
+between a long and short period and subsequently discarding the counter
+data for samples with the long period. The combined long and short
+period gives the overall sampling period, and the short sample period 
+gives the sample window. The symbol taken from the sample at the end of
+the long period can be used by tools to ensure correct attribution as
+described previously. The cycle counter is recommended as it provides
+fair temporal distribution of samples as would be required for the
+per-symbol sample count mentioned previously, and because the PMU can
+be programmed to overflow after a sufficiently short window (which may
+not be possible with software timer, for example). This patch does not
+restrict to only the cycle counter, it is possible there could be other
+novel uses based on different events, or more appropriate counters on
+other architectures. This patch set does not modify or otherwise disable
+the kernel's existing throttling behaviour; if a configuration is given
+that would lead high CPU usage, then throttling still occurs.
+
+
+To test this a simple `perf script` based python script was developed.
+For a limited set of Arm PMU events it will post process a
+`perf record`-ing and generate a table of metrics. Along side this a
+benchmark application was developed that rotates through a sequence
+of different classes of behaviour that can be detected by the Arm PMU
+(eg. mispredicts, cache misses, different instruction mixes). The path
+through the benchmark can be rotated after each iteration so as to
+ensure the results don't land on some lucky harmonic with the sample
+period. The script can be used with and without this patch allowing
+comparison of the results. Testing was on Juno (A53+A57), N1SDP,
+Gravaton 2 and 3. In addition this approach has been applied to a few
+of Arm's tools projects and has correctly identified improvements and
+regressions.
+
+Headline results from testing indicate that ~300 cycles sample window
+gives good results with or without this patch. Typical output on N1SDP (Neoverse-N1)
+for the provided benchmark when run as:
+
+    perf record -T --sample-cpu --call-graph fp,4 --user-callchains \
+        -k CLOCK_MONOTONIC_RAW \
+        -e '{cycles/period=999700,alt-period=300/,instructions,branch-misses,cache-references,cache-misses}:uS' \
+        benchmark 0 1
+
+    perf script -s generate-function-metrics.py -- -s discard
+
+Looks like (reformatted for email brevity):
+
+    Symbol              #     CPI   BM/KI  CM/KI  %CM   %CY   %I    %BM   %L1DA  %L1DM
+    fp_divider_stalls   6553   4.9   0.0     0.0   0.0  41.8  22.9   0.1   0.6    0.0
+    int_divider_stalls  4741   3.5   0.0     0.0   1.1  28.3  21.5   0.1   1.9    0.2
+    isb                 3414  20.1   0.2     0.0   0.4  17.6   2.3   0.1   0.8    0.0
+    branch_mispredicts  1234   1.1  33.0     0.0   0.0   6.1  15.2  99.0  71.6    0.1
+    double_to_int        694   0.5   0.0     0.0   0.6   3.4  19.1   0.1   1.2    0.1
+    nops                 417   0.3   0.2     0.0   2.8   1.9  18.3   0.6   0.4    0.1
+    dcache_miss          185   3.6   0.4   184.7  53.8   0.7   0.5   0.0  18.4   99.1
+
+(CPI = Cycles/Instruction, BM/KI = Branch Misses per 1000 Instruction,
+ CM/KI = Cache Misses per 1000 Instruction, %CM = Percent of Cache
+ accesses that miss, %CY = Percentage of total cycles, %I = Percentage
+ of total instructions, %BM = Percentage of total branch mispredicts,
+ %L1DA = Percentage of total cache accesses, %L1DM = Percentage of total
+ cache misses)
+
+When the patch is used, the resulting `perf.data` files are typically
+between 25-50x smaller than without, and take ~25x less time for the
+python script to post-process. For example, running the following:
+
+    perf record -i -vvv -e '{cycles/period=1000000/,instructions}:uS' benchmark 0 1
+    perf record -i -vvv -e '{cycles/period=1000/,instructions}:uS' benchmark 0 1
+    perf record -i -vvv -e '{cycles/period=300/,instructions}:uS' benchmark 0 1
+
+produces captures on N1SDP (Neoverse-N1) of the following sizes:
+
+    * period=1000000: 2.601 MB perf.data (55780 samples), script time = 0m0.362s
+    * period=1000: 283.749 MB perf.data (6162932 samples), script time = 0m33.100s
+    * period=300: 304.281 MB perf.data (6614182 samples), script time = 0m35.826s
+
+The "script time" is the user time from running "time perf script -s generate-function-metrics.py"
+on the recording. Similar processing times were observed for "time perf report --stdio|cat"
+as well.
+
+By comparison, with the patch active:
+
+    perf record -i -vvv -e '{cycles/period=999700,alt-period=300/,instructions}:uS' benchmark 0 1
+
+produces 4.923 MB perf.data (107512 samples), and script time = 0m0.578s.
+Which is as expected ~2x the size and ~2x the number of samples as per
+the period=1000000 recording. When compared to the period=300 recording,
+the results from the provided post-processing script are (within margin
+of error) the same, but the data file is ~62x smaller. The same affect
+is seen for the post-processing script runtime.
+
+Notably, without the patch enable, L1D cache miss rates are often higher
+than with, which we attribute to increased impact on the cache that
+trapping into the kernel every 300 cycles has.
+
+These results are given with `perf_cpu_time_max_percent=25`. When tested
+with `perf_cpu_time_max_percent=100` the size and time comparisons are
+more significant. Disabling throttling did not lead to obvious
+improvements in the collected metrics, suggesting that the sampling
+approach is sufficient to collect representative metrics.
+
+Cursory testing on a Xeon(R) W-2145 with a 300 *instruction* sample
+window (with and without the patch) suggests this approach might work
+for some counters. Using the same test script, it was possible to identify
+branch mispredicts correctly. However, whilst the patch is functionally 
+correct, differences in the architectures may mean that this approach it
+enables does not apply as a means to collect per-function metrics on x86.
+
+Changes since v3:
+ - Rebased onto v6.15-rc1.
+ - Refactored to use 'high-frequency period' naming instead of
+   'alternate period', using interface changes suggested by Peter Zijlstra.
+   Note: 
+     This introduces a 'sample_period_state' field to hw_perf_event, rather than
+     making use of the 'state' field. I went this way because there was no clear
+     ownership for the the contents of 'state' - many drivers completely clear
+     and assign to the field without preserving existing bit flags set
+     elsewhere.
+ - eBPF handling in __perf_event_overflow moved to a later point in the function
+   so that sample period updates continue to happen, even if an eBPF filter is
+   active.
+ - hf-period injection now works with frequency-based sampling.
+ - Changed jitter functionality to use prandom_u32_state instead of
+   get_random_u32_below.
+
+Changes since v2:
+ - Rebased onto latest perf-tools-next.
+ - Reordered patch series so that "Record sample last_period before updating"
+   applies first.
+ - Addressed issue reported by LKP tests.
+ - Addressed review comments from Leo Yan.
+
+Changes since v1:
+ - Rebased onto perf-tools-next, as per request from Ian Rogers.
+ - Removed unnecessary code that truncated period_left to 0 and restarted
+   the PMU.
+ - Renamed variables to use the shorter 'alt_period' instead of 
+   'alterantive_period'.
+ - Addressed review comments from Leo Yan.
+ - Added patch #5 that addresses an issue in the x86 and PowerPC drivers that
+   caused the opposite period to be reported in the sample record.
+   
+Changes since RFC v2:
+ - Rebased on v6.12-rc6.
+
+Changes since RFC v1:
+ - Rebased on v6.9-rc1.
+ - Refactored from arm_pmu based extension to core feature
+ - Added the ability to jitter the sample window based on feedback
+   from Andi Kleen.
+ - Modified perf tool to parse the "alt-period" and "alt-period-jitter"
+   terms in the event specification.
+
+Ben Gainey (4):
+  perf: Allow periodic events to alternate between two sample periods
+  perf: Allow adding fixed random jitter to the sampling period
+  tools/perf: Modify event parser to support hf-period term
+  tools/perf: Modify event parser to support hf-rand term
+
+Mark Barnett (1):
+  perf: Record sample last_period before updating
+
+ arch/powerpc/perf/core-book3s.c               |  3 +-
+ arch/powerpc/perf/core-fsl-emb.c              |  3 +-
+ arch/x86/events/core.c                        |  4 +-
+ arch/x86/events/intel/core.c                  |  5 +-
+ arch/x86/events/intel/knc.c                   |  4 +-
+ include/linux/perf_event.h                    | 13 ++-
+ include/uapi/linux/perf_event.h               | 10 ++
+ kernel/events/core.c                          | 95 +++++++++++++++++--
+ tools/include/uapi/linux/perf_event.h         | 10 ++
+ tools/perf/tests/shell/attr/base-record       |  4 +-
+ tools/perf/tests/shell/attr/base-record-spe   |  2 +
+ tools/perf/tests/shell/attr/base-stat         |  4 +-
+ tools/perf/tests/shell/attr/system-wide-dummy |  4 +-
+ .../tests/shell/attr/test-record-dummy-C0     |  4 +-
+ .../shell/attr/test-record-hf-period-rand     | 13 +++
+ .../shell/attr/test-record-hf-period-term     | 12 +++
+ tools/perf/tests/shell/lib/attr.py            |  2 +
+ tools/perf/util/evsel.c                       |  2 +
+ tools/perf/util/parse-events.c                | 30 ++++++
+ tools/perf/util/parse-events.h                |  4 +-
+ tools/perf/util/parse-events.l                |  2 +
+ tools/perf/util/perf_event_attr_fprintf.c     |  2 +
+ tools/perf/util/pmu.c                         |  4 +-
+ 23 files changed, 216 insertions(+), 20 deletions(-)
+ create mode 100644 tools/perf/tests/shell/attr/test-record-hf-period-rand
+ create mode 100644 tools/perf/tests/shell/attr/test-record-hf-period-term
+
+-- 
+2.43.0
+
