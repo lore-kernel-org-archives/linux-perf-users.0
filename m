@@ -1,106 +1,351 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6783C2566F5
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Apr 2025 21:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AC8261587
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Apr 2025 00:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744060253; cv=none; b=fQfKIzlR39dS9C4JRy3Vom87iZRTOlKWMoeHXpOceHci0CnbXfV52Lf5EDRbU8KjAYx5i4akXjo9l4oot0j3LiLLCBQUR+4Af7iYm+HtfVSv6yofVDaiLKiOPGyoOqjiznJORoK0hUzOSleBwtS7RUYizgcxRM0yJjOjs4m99Cw=
+	t=1744073690; cv=none; b=NvWwr0dMSbq9PH2+Sq6pIg43/0DndOR+VLfedDe7wp5ZfsOwbjcHv+LSbTj1Rw9KM+Ba0BL92oYPbzvwSDGQjFuh1+YEKlZEOKG/Kg7bp4AzAHtePe3WnUX4ZyLhBUWiMLjfV4T8HqBixD6fVbrb0HZpxgTFZwN9GYFj+5GJZLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744060253; c=relaxed/simple;
-	bh=4/dJlTWkcf5FOf5+oh0Up7fh8r5QO82sMonPjvpz42s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=WKcGDWC03blFcw4OwoS0dnThrKBgZ7l+edfzxfbm0aKeadirGrCf4d/60+QleHIYlqYzJccPZuTBLQ2iX4RDF51WdkyvNqq1QHhMH8owezcGot74Xr6f7vfnIFOZzhRY6w3LLA/sDFs9Rqc860vmVA9gbYEzcQdyN4ucVQHcMUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k1xalQf+; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1744073690; c=relaxed/simple;
+	bh=ntLlfovVmK2mY5fHu+btcLbRa2J2lLVnmbW9p7mmYdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOQWj3QztEc+F8gR9Slia/YUHT1WGmVlb8aut2WxaV1CzHVxiQ59zjI4EzIb1E3tbdCfjt8zPtd8FVgSz1ZZuu+rdDvy3yZ0kLAjPzncTsNsGmMJbQ0ad5L+gws8T3sCsKTCZg4/8F9kvsPXLvkZmTBP3xYxG5aMRDZ2gc2M+cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgzbNrmr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k1xalQf+"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225429696a9so69192115ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Apr 2025 14:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744060251; x=1744665051; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AtCRHQR2grinPcYBxNOrxZNvf1a5RF1zR0pJL1Q63Gw=;
-        b=k1xalQf+IohWxoOhqhCy3+DOLKylYi0MuPRj4O1Nu9cBMY/h/vfcNuHPdUB7p2Or+I
-         YJGtkr2Qs+E+uYG4vCdmcIRXK0Em+F7KmIsgNcHKEj4O89xfI4Zl5eUweFcWTLpKgAXA
-         QExPa2fwACRqtsiMrpEnYmKCcySMphE3XC5e2MjRKGwkWHQayNUd6u6htNuIgc8cwTEL
-         ZWN8tHGFjRWpKktzOqcuskqq3EpswFrlfRRnMSA33Ns8IO1UMJ3nu48P5WHP9EtvO3Xi
-         btnM3b9S1YkJtaj8p4gGw6X6jcgaZhJkif+plbhREOwRi6op1W4fs5eaWGBjGE/9zgMd
-         SkWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744060251; x=1744665051;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AtCRHQR2grinPcYBxNOrxZNvf1a5RF1zR0pJL1Q63Gw=;
-        b=RVQEdFhn7WSq6FB8/sNM9DZgPnUo01OiAD+prYoT8EcQnfNTCNhewUFD6exbygEiAn
-         T3KsLlYMwhOkiRKKq1bntoAAxwf3Jj3JncZNh5Sl3GIMIzBh5sHSPCrSKTHAyYtPkVHt
-         JAQIpKGBAMO6DfkvMv3kQnlCL/YR1s54YaNY5BIWXpV1OM9hknHzb5dirUztdYM8R50X
-         dWRjOzmkvG4seDbFdjdfP+9+/wpa9sszGW7MJjFYq73C8aGFHF1cIczulhV6XYHmPi5U
-         wbvrVK2iyd6HjIPL13KVeibk+2fBdNrJwp8YqGXEFDGBwXzKMRVvqGsosVsYR03Inlv9
-         zxUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUVXDeJ6QZNL1Svp6C+JIXdh3q5D9IKGpu7Jc27zDFoF5l/maVDZQLAlkfkfLhDYmqWkW8Vc8BTzOQMj1ueHHg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyYmMF+r2eKFE7QOWnDDl/rDMikZ2kZ+cA/RwDc/IUffNNnADc
-	ODkUKr6Wn9fdD8y5TWmtBY+3odbTlv4z63QU0gvCyOI2kXbMy7144i9jNN8kJ/pn3d0At+PZEw9
-	ZmwwigQ==
-X-Google-Smtp-Source: AGHT+IGqB05o89f/GZLTfHiKkNCXx4VfitNRXgR4OWmwniHUHrAOl4AGxryB83reY0YfENZ/8BQg9qCCsrJy
-X-Received: from plgy12.prod.google.com ([2002:a17:903:22cc:b0:223:49cb:8f99])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d50e:b0:21f:85ee:f2df
- with SMTP id d9443c01a7336-22a8a05524fmr190586515ad.15.1744060250746; Mon, 07
- Apr 2025 14:10:50 -0700 (PDT)
-Date: Mon,  7 Apr 2025 14:09:37 -0700
-In-Reply-To: <20250407210937.131681-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgzbNrmr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A80C4CEDD;
+	Tue,  8 Apr 2025 00:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744073689;
+	bh=ntLlfovVmK2mY5fHu+btcLbRa2J2lLVnmbW9p7mmYdE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TgzbNrmrPF+KzlfZtg3jNyZF35Ctwsp7m66idILBLrFtWxWReOdvA1hF5FHAzDrbX
+	 TJgXLEWfPHLR+dD7PcyZ56uRtrY6esU7IYwFLHUivy1wi7a8qpP6fM2Y17iV2247KC
+	 pNYfPadyxmEQyFDPYHC3434qpRoQLmAJ1iLulBEhcm1yHfFBJAzIN4UPrYNpzXZW9u
+	 qKr1GGWu/ILZq34/uCBTi+T5r6uFdB3m4hDim7dj9SDVFJurbn5y6YfFxDSdt2gGce
+	 vQN2MSUxbclCJl1xnQKxuXjPrnNPkaXsWhcxU2RKw5mWLgnkSK+ho+v44974UcPGFn
+	 /mkUuRMII1Sug==
+Date: Mon, 7 Apr 2025 21:54:47 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
+ working either
+Message-ID: <Z_Rz10stoLzBocIO@x1>
+References: <20250307080829.354947-1-namhyung@kernel.org>
+ <Z9tjKcKvjYgbR6hb@google.com>
+ <Z9vgt1pjiNbDBDbM@gmail.com>
+ <Z9w_aFlzOkoCTSqK@google.com>
+ <Z-EJnye74la1triY@gmail.com>
+ <Z--pWmTHGb62_83e@gmail.com>
+ <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
+ <Z_QEND63LoxP0h9H@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250407210937.131681-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250407210937.131681-17-irogers@google.com>
-Subject: [PATCH v3 16/16] perf record: Retirement latency cleanup in evsel__config
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	John Garry <john.g.garry@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="ajxXnw0tIQNQ5Ajr"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_QEND63LoxP0h9H@gmail.com>
 
-Perf record will fail with retirement latency events as the open
-doesn't do a perf_event_open system call. Use evsel__config to set up
-such events for recording by removing the flag and enabling sample
-weights - the sample weights containing the retirement latency.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+--ajxXnw0tIQNQ5Ajr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 661a07cbdb25..6a84893e3c58 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1440,9 +1440,10 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		attr->branch_sample_type = opts->branch_stack;
- 	}
+On Mon, Apr 07, 2025 at 06:58:28PM +0200, Ingo Molnar wrote:
+> * Howard Chu <howardchu95@gmail.com> wrote:
  
--	if (opts->sample_weight)
-+	if (opts->sample_weight || evsel->retire_lat) {
- 		arch_evsel__set_sample_weight(evsel);
--
-+		evsel->retire_lat = false;
-+	}
- 	attr->task     = track;
- 	attr->mmap     = track;
- 	attr->mmap2    = track && !perf_missing_features.mmap2;
--- 
-2.49.0.504.g3bcea36a83-goog
+> > > I tried to install the libunwind-19-dev package, I tried to
+> > > uninstall/reinstall - no combination seems to work.
+> > 
+> >  $ apt list --installed | grep libunwind
+> > 
+> > WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+> > 
+> > libunwind-dev/oracular,now 1.6.2-3.1 amd64 [installed]
+> > libunwind8/oracular,now 1.6.2-3.1 amd64 [installed,automatic]
+> > 
+> > Built perf with make clean install, my libunwind is on.
+> > 
+> > ...                               libunwind: [ on  ]
+> 
+> I seem to have the exact same build environment:
+> 
+>   starship:~> apt list --installed | grep libunwind
+> 
+>   WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+> 
+>   libunwind-dev/oracular,now 1.6.2-3.1 amd64 [installed]
+>   libunwind8/oracular,now 1.6.2-3.1 amd64 [installed]
+> 
+> Yet:
+> 
+>   Makefile.config:1142: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>   Makefile.config:1155: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+>   Makefile.config:1187: libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
+> 
+>   Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libbfd: [ on  ]
+> ...                          libbfd-buildid: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                               libunwind: [ OFF ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+ 
+> > But when I ran perf check,
+ 
+> >  $ perf check feature libunwind
+> >              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
 
+> > libunwind is OFF.
+ 
+> Same here.
+
+So, with a patch I have (attached) here this turns into:
+
+⬢ [acme@toolbox perf-tools-next]$ perf check feature libunwind
+             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
+⬢ [acme@toolbox perf-tools-next]$
+
+Then I follow the suggestion and install libunwind-devel and build with
+LIBUNWIND=1:
+
+$ make -k LIBUNWIND=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+<SNIP>
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+⬢ [acme@toolbox perf-tools-next]$ ldd ~/bin/perf | grep unwind
+	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f434eaea000)
+	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f434ead0000)
+⬢ [acme@toolbox perf-tools-next]$
+
+I need to have that hooked up to tools/build/Makefile.feature, where it
+would find that tip somewhere, i.e. that "Deprecated, use LIBUNWIND=1
+and install libunwind-dev[el] to build with it".
+
+This all would not happen if when libunwind was turned into an opt-in
+the default output for it had been removed, so that OFF thing wouldn't
+appear on the screen.
+
+The annotate case is unrelated from what I can see, the preference for
+the disassembler (libcapstone, libllvm or the old method of parsing
+objdump output) has to start with the most capable, and the source code
+part shows that the current order isn't the best, I'll continue the
+investigation/tests tomorrow and will come up with a series of patches
+for the problems reported.
+
+For reference, from 'perf-config' man page:
+
+annotate.*::
+        These are in control of addresses, jump function, source code
+        in lines of assembly code from a specific program.
+
+        annotate.disassemblers::
+                Choose the disassembler to use: "objdump", "llvm",  "capstone",
+                if not specified it will first try, if available, the "llvm" one,
+                then, if it fails, "capstone", and finally the original "objdump"
+                based one.
+
+                Choosing a different one is useful when handling some feature that
+                is known to be best support at some point by one of the options,
+                to compare the output when in doubt about some bug, etc.
+
+                This can be a list, in order of preference, the first one that works
+                finishes the process.
+
+A quick test here with perf top without setting the above ends up with
+the behaviour that Ingo reported, no source code is shown and 's'
+doesn't work. Then if I set it to use objdump:
+
+root@number:~# perf config annotate.disassemblers=objdump
+root@number:~# perf config annotate.disassemblers
+annotate.disassemblers=objdump
+root@number:~# cat ~/.perfconfig 
+# this file is auto-generated.
+[annotate]
+	disassemblers = objdump
+root@number:~#
+
+It takes longer to show the annotated output but there is source code
+and 's' works.
+
+- Arnaldo
+
+--ajxXnw0tIQNQ5Ajr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename=tip-perf-version-build-options.patch
+
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 61a11a9b4e7594bf..e2cfff18de299367 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -43,7 +43,7 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
+ 	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
+ 	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
+-	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
++	FEATURE_STATUS_TIP("libunwind", HAVE_LIBUNWIND_SUPPORT, "Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it"),
+ 	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
+ 	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
+ 	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
+@@ -65,22 +65,17 @@ static void on_off_print(const char *status)
+ 	printf(" ]");
+ }
+ 
+-/* Helper function to print status of a feature along with name/macro */
+-static void status_print(const char *name, const char *macro,
+-			 const char *status)
++void feature_status__printf(const struct feature_status *feature)
+ {
+-	printf("%22s: ", name);
+-	on_off_print(status);
+-	printf("  # %s\n", macro);
+-}
++	printf("%22s: ", feature->name);
++	on_off_print(feature->is_builtin ? "on" : "OFF");
++	printf("  # %s", feature->macro);
++
++	if (!feature->is_builtin && feature->tip)
++		printf(" ( tip: %s )", feature->tip);
+ 
+-#define STATUS(feature)                                           \
+-do {                                                              \
+-	if (feature.is_builtin)                                   \
+-		status_print(feature.name, feature.macro, "on");  \
+-	else                                                      \
+-		status_print(feature.name, feature.macro, "OFF"); \
+-} while (0)
++	putchar('\n');
++}
+ 
+ /**
+  * check whether "feature" is built-in with perf
+@@ -95,7 +90,7 @@ static int has_support(const char *feature)
+ 		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
+ 		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
+ 			if (!quiet)
+-				STATUS(supported_features[i]);
++				feature_status__printf(&supported_features[i]);
+ 			return supported_features[i].is_builtin;
+ 		}
+ 	}
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index e149d96c6dc57c22..10f25c6705b117a2 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -26,38 +26,10 @@ static const char * const version_usage[] = {
+ 	NULL
+ };
+ 
+-static void on_off_print(const char *status)
+-{
+-	printf("[ ");
+-
+-	if (!strcmp(status, "OFF"))
+-		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
+-	else
+-		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
+-
+-	printf(" ]");
+-}
+-
+-static void status_print(const char *name, const char *macro,
+-			 const char *status)
+-{
+-	printf("%22s: ", name);
+-	on_off_print(status);
+-	printf("  # %s\n", macro);
+-}
+-
+-#define STATUS(feature)                                   \
+-do {                                                      \
+-	if (feature.is_builtin)                               \
+-		status_print(feature.name, feature.macro, "on");  \
+-	else                                                  \
+-		status_print(feature.name, feature.macro, "OFF"); \
+-} while (0)
+-
+ static void library_status(void)
+ {
+ 	for (int i = 0; supported_features[i].name; ++i)
+-		STATUS(supported_features[i]);
++		feature_status__printf(&supported_features[i]);
+ }
+ 
+ int cmd_version(int argc, const char **argv)
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index a07e93c5384878d3..51f8f1f26813fb32 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -5,6 +5,7 @@
+ struct feature_status {
+ 	const char *name;
+ 	const char *macro;
++	const char *tip;
+ 	int is_builtin;
+ };
+ 
+@@ -13,7 +14,16 @@ struct feature_status {
+ 	.macro = #macro_,                  \
+ 	.is_builtin = IS_BUILTIN(macro_) }
+ 
++#define FEATURE_STATUS_TIP(name_, macro_, tip_) { \
++	.name = name_,                     \
++	.macro = #macro_,                  \
++	.tip = tip_,			   \
++	.is_builtin = IS_BUILTIN(macro_) }
++
+ extern struct feature_status supported_features[];
++
++void feature_status__printf(const struct feature_status *feature);
++
+ struct cmdnames;
+ 
+ void list_common_cmds_help(void);
+
+--ajxXnw0tIQNQ5Ajr--
