@@ -1,118 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755D5217F5D;
-	Tue,  8 Apr 2025 07:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03287214813;
+	Tue,  8 Apr 2025 07:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095722; cv=none; b=pVycT+VB75Ae7XFO1joF52Q9TocIYIk54hLep+SOOydzydNy5tG7hoZCYzlqNm1kWUgf5aqkCGRrFqzLCUT20zTgB+4bTdL5tP+EvSESmv/+OuLsqzLtOWB304XH4m5UvBjZPlINSRgQSrcIzNDY/2kT6mZsUHhqUBEev5dq4f0=
+	t=1744098423; cv=none; b=VX5yh8tZpuzchEpC5BdTVNkCf2EztL3/jdEfrRloAmck5WQk1OzI9T1ldT09KAyEhv36Xl9BN+JVc3LWW477Xa0wl4JdBcb7GRlISiJ7K3wdA+SoovMWD7Car4his38J3J++2UHlM7yYI1VngcRS0Elz15Rgp0h0j+akGsOmBYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095722; c=relaxed/simple;
-	bh=+tfxm+SfKKlxKosdafiilbZqnnwKi8zzkXyQ0gko/Fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l4nzi8PIgMOtxE4YAhxMsbpGT8jqcpNg2UooheK2790PY0fQzoV4w6t614W0582kRLEdEziuznp00FsA2xaxBLVjK8rsql56w7ZlRM1WMTPOch5KmRAt3ir3IYmeeuDkBHVlXmGuDPdz7+Skvm4M9QownTMkH4zZl451tpjUBv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dn75adWC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744098423; c=relaxed/simple;
+	bh=OaoRGleOJMBsgBZS3p1bJ8GaQzCT4TbBrlI6cVkNSyQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SXrtbohrzCN1NCUkdxFg2Yaa5wOxLDhYWHIq3EuDTxgW+vFl+/7WULzz0X7KokFVV3RLy0/XqVaW2V8bFIG7TamIK9rpZWe/bImncAcwVOrYlIu5jd9I/If/cQRkjAA72vaptvxgCwWLYUJSgyTf3n9eey0qAZvzivSTUpubPxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e99RX80v; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dn75adWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0911C4CEE5;
-	Tue,  8 Apr 2025 07:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744095722;
-	bh=+tfxm+SfKKlxKosdafiilbZqnnwKi8zzkXyQ0gko/Fk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dn75adWC3cEK55T7bStyYazrChFs/opJjgJ9Vu1CVc9d4PdjDXQyCTc+m5kLOwcj3
-	 GyH7OFcCo/ro4xH9Ha3fMltT0Rn2PCFBMISxWohcqj7fhpyPfMgHzdH4yrF1yElP2g
-	 aa1P0MJ46gEnXdcPLZGtO0tdLhRVkeyMvGGrjn498sgQLm9G2AVqx4cq/S4UAc21gw
-	 MyJpNM7ky4lLebVV+EqIV3Z/i6DVrNm+MIato4OKDwjIu0NfjtkcO4Z+wjXew2jseo
-	 Oiy2Q/9y+WZw6hlyMlgZQIHyIHHJM2GWECxH8BJunquXQdGzJj9Nmqyev8mgj4LhQt
-	 uj0KWwBjhXuEQ==
-Date: Tue, 8 Apr 2025 00:02:00 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's
- tests
-Message-ID: <Z_TJ6NHZ1v4ucd8p@google.com>
-References: <20250404041652.329340-1-howardchu95@gmail.com>
- <Z_AeswETE5xLcPT8@google.com>
- <CAH0uvoiOA654mB-gjWTM8TTtVh+c6DvfgD6dh6VWkxrj7prPAA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e99RX80v"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537KcSt5027885;
+	Tue, 8 Apr 2025 07:46:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=zLV7/doQpEkhTR6ei1g5UJ/2k5+C2pZsALUCRt3FL
+	7Y=; b=e99RX80vsUuxq6VnQksfRpK/kj0C/YjqA+m+i66LLvcTy+0EdpsIgiZwk
+	Ph/dhcCX8QRDg+h/xPIyJtd+K2NsczCTXeOfJQC6lsyou4mm+JY6w8TMN7YKe+5/
+	LHjT9H0bFcRI2agws1B6XFrhqzFEUx1i4ERp7Z7jjUvFZ5aGLLL/BahXT3JVDSuz
+	yvDXC7expaYFvQJKcrTB5lA25xtsOMGvfCsts60tzcPg/cm1F2uPnZsqhHuDuoha
+	jEpek891Bq5NuyL1rSgNEYvbo3TF2y8CWhc4jiMUoc44o3gcshDb9BvsZWiswBLw
+	HyQuSPgomd2KpNd+gY2F3+rAavp3w==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnx0j84a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 07:46:58 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5387jvrI024572;
+	Tue, 8 Apr 2025 07:46:57 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnx0j849-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 07:46:57 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5387inrQ014404;
+	Tue, 8 Apr 2025 07:46:57 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunhn75-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 07:46:56 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5387krNP60162310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 07:46:53 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1233C2004B;
+	Tue,  8 Apr 2025 07:46:53 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AC5B520040;
+	Tue,  8 Apr 2025 07:46:52 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  8 Apr 2025 07:46:52 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com, ctshao@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf test: Allow tolerance for leader sampling test
+Date: Tue,  8 Apr 2025 09:46:41 +0200
+Message-ID: <20250408074641.1471473-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvoiOA654mB-gjWTM8TTtVh+c6DvfgD6dh6VWkxrj7prPAA@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3rjcWCOrPulP4NogmG6aFLQWFCe_OuEt
+X-Proofpoint-ORIG-GUID: mIy3X5RvafINGC6lTK0tsehKj-MZMfYk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_02,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=759 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 mlxscore=0 adultscore=0 spamscore=0
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504080052
 
-On Fri, Apr 04, 2025 at 07:12:26PM -0700, Howard Chu wrote:
-> Hello,
-> 
-> On Fri, Apr 4, 2025 at 11:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Thu, Apr 03, 2025 at 09:16:52PM -0700, Howard Chu wrote:
-> > > There are two failures that frequently occur in perf trace's tests. One
-> > > is the failure of 'perf trace BTF general tests'; The other one is the
-> > > failure of 'perf trace record and replay', which, when run independently,
-> > > always succeeds.
-> > >
-> > > The root cause of the first failure, is that perf trace may give two types
-> > > of output, depending on whether the comm of a process can be parsed, for
-> > > example:
-> > >
-> > > mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOREPLACE) = 0
-> > > :312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE", NOREPLACE) = 0
-> > >
-> > > In the test, however, grep is always looking for the comm 'mv', which
-> > > sometimes may not be present.
-> > >
-> > > The cause of the second failure is that 'perf trace BTF general tests'
-> > > modifies the perf config, and because tests are run concurrently,
-> > > subsequent tests use the modified perf config before the BTF general
-> > > test can restore the original config. Mark the BTF general tests as
-> > > exclusive will solve the failure.
-> 
-> Yeah, I was wrong — I now suspect it has something to do with two
-> augmented_syscall BPF programs running at the same time. I noticed the
-> offcpu test has '(exclusive)' too. Do you think it's a BPF triggering
-> issue? Like, if test A is trying to capture the clock_nanosleep
-> syscall and test B is also trying to capture it, could it be that A
-> ends up capturing both calls while B gets nothing? Just asking before
-> I dig in further. :)
+V2: Changed bc invocation to return 0 on success and 1 on error.
 
-I don't think that will happen.  I suspect it may have a timing issue
-like two threads are racing to setup BPF for syscall tracing and
-setting up the second thread's BPF will disable the first one for a
-short amount of time.  And 'mv' runs very shortly so it finished while
-it's disabled.  But it's just a wild guess.
+There is a known issue that the leader sampling is inconsistent, since
+throttle only affect leader, not the slave. The detail is in [1]. To
+maintain test coverage, this patch sets a tolerance rate of 80% to
+accommodate the throttled samples and prevent test failures due to
+throttling.
 
-Thanks,
-Namhyung
+[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
 
-> 
-> >
-> > I'm not sure if the config is the cause of the failure.  Also I don't
-> > see it restored.
-> >
-> > IIUC the export only affects child processes from the current shell.
-> > So other tests running in parallel won't see the config change.
-> >
-> > But still, there should be something to affect the behavior.  It's
-> > strange to miss the task name in COMM record.
-> 
-> I can look into that too.
-> 
-> >
-> > I also confirm that running the test serially fixes it.
-> >
-> > Thanks,
-> > Namhyung
-> 
-> Thanks,
-> Howard
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Suggested-by: Ian Rogers <irogers@google.com>
+Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index ba8d873d3ca7..b17e8b0680e2 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -238,22 +238,36 @@ test_leader_sampling() {
+     err=1
+     return
+   fi
++  perf script -i "${perfdata}" | grep brstack > $script_output
++  # Check if the two instruction counts are equal in each record.
++  # However, the throttling code doesn't consider event grouping. During throttling, only the
++  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
++  # let's set the tolerance rate to 80%.
++  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+   index=0
+-  perf script -i "${perfdata}" > $script_output
++  valid_counts=0
++  invalid_counts=0
++  tolerance_rate=0.8
+   while IFS= read -r line
+   do
+-    # Check if the two instruction counts are equal in each record
+     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+     then
+-      echo "Leader sampling [Failed inconsistent cycles count]"
+-      err=1
+-      return
++      invalid_counts=$(($invalid_counts+1))
++    else
++      valid_counts=$(($valid_counts+1))
+     fi
+     index=$(($index+1))
+     prev_cycles=$cycles
+   done < $script_output
+-  echo "Basic leader sampling test [Success]"
++  isok=$(echo "scale=2; val=$invalid_counts/($invalid_counts+$valid_counts); if (val < (1-$tolerance_rate)) { 0 } else { 1 };" | bc -q)
++  if [ $isok -eq 1 ]
++  then
++     echo "Leader sampling [Failed inconsistent cycles count]"
++     err=1
++  else
++    echo "Basic leader sampling test [Success]"
++  fi
+ }
+ 
+ test_topdown_leader_sampling() {
+-- 
+2.49.0
+
