@@ -1,351 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AC8261587
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Apr 2025 00:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B5EEEB1;
+	Tue,  8 Apr 2025 02:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744073690; cv=none; b=NvWwr0dMSbq9PH2+Sq6pIg43/0DndOR+VLfedDe7wp5ZfsOwbjcHv+LSbTj1Rw9KM+Ba0BL92oYPbzvwSDGQjFuh1+YEKlZEOKG/Kg7bp4AzAHtePe3WnUX4ZyLhBUWiMLjfV4T8HqBixD6fVbrb0HZpxgTFZwN9GYFj+5GJZLo=
+	t=1744078395; cv=none; b=t23fQZ0+KraT1rZuVit5NV37XqbkOO7o0PTfuGl25h/FoA2wpGlr6BGwIHIu4ZwM2AuHHtYvylIC076an/kHu0QgE7O4MG5kV3crLBKrNOw8+ifNhAEPhA0HXWJeQJ+CVCYQz/ZB9lZTAtvejZDxGm+6CHELXPXsPgnZN6vi6Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744073690; c=relaxed/simple;
-	bh=ntLlfovVmK2mY5fHu+btcLbRa2J2lLVnmbW9p7mmYdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eOQWj3QztEc+F8gR9Slia/YUHT1WGmVlb8aut2WxaV1CzHVxiQ59zjI4EzIb1E3tbdCfjt8zPtd8FVgSz1ZZuu+rdDvy3yZ0kLAjPzncTsNsGmMJbQ0ad5L+gws8T3sCsKTCZg4/8F9kvsPXLvkZmTBP3xYxG5aMRDZ2gc2M+cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgzbNrmr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744078395; c=relaxed/simple;
+	bh=9j44GVZXTsxQbV1gLmy2/Nifp26hHhQw0Oj1EkUngWk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WrotvIyogD3fjrfRVK3iurthsaL+42HbZrwdxxHhbKPAJuY1eC8FjM8lKD7eVuTzGDvblsTflCvHficBdPhacxVUofydbQSjWYACc52ppNOXDU3lboyHfNyD4nWHfANIhY148yNH0UYdckgVviXujnw5B/z93xL/mN89DVrlRe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kTyJ0lXn; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgzbNrmr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A80C4CEDD;
-	Tue,  8 Apr 2025 00:54:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744073689;
-	bh=ntLlfovVmK2mY5fHu+btcLbRa2J2lLVnmbW9p7mmYdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TgzbNrmrPF+KzlfZtg3jNyZF35Ctwsp7m66idILBLrFtWxWReOdvA1hF5FHAzDrbX
-	 TJgXLEWfPHLR+dD7PcyZ56uRtrY6esU7IYwFLHUivy1wi7a8qpP6fM2Y17iV2247KC
-	 pNYfPadyxmEQyFDPYHC3434qpRoQLmAJ1iLulBEhcm1yHfFBJAzIN4UPrYNpzXZW9u
-	 qKr1GGWu/ILZq34/uCBTi+T5r6uFdB3m4hDim7dj9SDVFJurbn5y6YfFxDSdt2gGce
-	 vQN2MSUxbclCJl1xnQKxuXjPrnNPkaXsWhcxU2RKw5mWLgnkSK+ho+v44974UcPGFn
-	 /mkUuRMII1Sug==
-Date: Mon, 7 Apr 2025 21:54:47 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-Message-ID: <Z_Rz10stoLzBocIO@x1>
-References: <20250307080829.354947-1-namhyung@kernel.org>
- <Z9tjKcKvjYgbR6hb@google.com>
- <Z9vgt1pjiNbDBDbM@gmail.com>
- <Z9w_aFlzOkoCTSqK@google.com>
- <Z-EJnye74la1triY@gmail.com>
- <Z--pWmTHGb62_83e@gmail.com>
- <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
- <Z_QEND63LoxP0h9H@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kTyJ0lXn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744078394; x=1775614394;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9j44GVZXTsxQbV1gLmy2/Nifp26hHhQw0Oj1EkUngWk=;
+  b=kTyJ0lXn8FggOkp9lJ5HQw7vSSSOIWxyjYdj4I7Akl/lttO9oK1tDstK
+   vIwNEn4khRca9ItczO0e3YuguS40+hInKB9tNjye29AIsBzVwJh+T4LFq
+   2fLkNFddJPPWI1VIY/nTNNDoTbZV0LcyaL5bje9L0apjiHlhPDjmaXz5/
+   TT5YOMFD8EhaPTTDEE83GwOb/dwz6VB5KAYdrNjEx5nbPsXkqEWla2n65
+   dstNzxybhKs2ZMm6WBdpx3xZSG7Vwe1japn/kQf5canEAWIsKp9WXEBCu
+   zq/xVh1O+6RnkyPn43K5iIBy8YxycSLm2Q28H/q9qtCJw/xa0+j0eUGAJ
+   g==;
+X-CSE-ConnectionGUID: NJdm06HDRhW2+yZeq6X/PA==
+X-CSE-MsgGUID: ar1qmPbcRx+1q4SI18zz0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56472615"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="56472615"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:13:13 -0700
+X-CSE-ConnectionGUID: KnRmpdJGTeC2IFq3rDHTbQ==
+X-CSE-MsgGUID: eK45jMtEQOuNMuBhEszB6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="127999199"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:13:11 -0700
+Message-ID: <418fff05-a0d9-4ead-b344-7b0b7fdb7f7f@linux.intel.com>
+Date: Tue, 8 Apr 2025 10:13:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ajxXnw0tIQNQ5Ajr"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_QEND63LoxP0h9H@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linus:master] [perf/x86] 88ec7eedbb: kvm-unit-tests.pmu_lbr.fail
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+ Ingo Molnar <mingo@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org
+References: <202504071232.3c2fa7d5-lkp@intel.com>
+ <f872c998-c076-4e09-8f7d-1ad29a065d4a@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <f872c998-c076-4e09-8f7d-1ad29a065d4a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---ajxXnw0tIQNQ5Ajr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+On 4/7/2025 10:38 PM, Liang, Kan wrote:
+>
+> On 2025-04-07 1:07 a.m., kernel test robot wrote:
+>>
+>> Hello,
+>>
+>> kernel test robot noticed "kvm-unit-tests.pmu_lbr.fail" on:
+>>
+>> commit: 88ec7eedbbd21cad38707620ad6c48a4e9a87c18 ("perf/x86: Fix low freqency setting issue")
+>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>
+>> [test failed on linus/master      0a87d6bb6fd274cde3bf217a821153714374198f]
+>> [test failed on linux-next/master fefb886b1344e222b3218f3c0165b0fd770e8b88]
+>>
+>> in testcase: kvm-unit-tests
+>> version: kvm-unit-tests-x86_64-69574079-1_20250322
+>> with following parameters:
+> The one line patch only impacts the perf record.
+> But the test case is for LBR on KVM. The case directly access the
+> IA32_DEBUGCTLMSR to enable/disable LBRs. There is nothing related.
+> It is probably a false alarm.
+>
+> + Dapeng
+>
+> Could you please take a look at the qemu test case?
 
-On Mon, Apr 07, 2025 at 06:58:28PM +0200, Ingo Molnar wrote:
-> * Howard Chu <howardchu95@gmail.com> wrote:
- 
-> > > I tried to install the libunwind-19-dev package, I tried to
-> > > uninstall/reinstall - no combination seems to work.
-> > 
-> >  $ apt list --installed | grep libunwind
-> > 
-> > WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-> > 
-> > libunwind-dev/oracular,now 1.6.2-3.1 amd64 [installed]
-> > libunwind8/oracular,now 1.6.2-3.1 amd64 [installed,automatic]
-> > 
-> > Built perf with make clean install, my libunwind is on.
-> > 
-> > ...                               libunwind: [ on  ]
-> 
-> I seem to have the exact same build environment:
-> 
->   starship:~> apt list --installed | grep libunwind
-> 
->   WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-> 
->   libunwind-dev/oracular,now 1.6.2-3.1 amd64 [installed]
->   libunwind8/oracular,now 1.6.2-3.1 amd64 [installed]
-> 
-> Yet:
-> 
->   Makefile.config:1142: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
->   Makefile.config:1155: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
->   Makefile.config:1187: libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
-> 
->   Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ on  ]
-> ...                                  libbfd: [ on  ]
-> ...                          libbfd-buildid: [ on  ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                                 libperl: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                               libcrypto: [ on  ]
-> ...                               libunwind: [ OFF ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                               get_cpuid: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
- 
-> > But when I ran perf check,
- 
-> >  $ perf check feature libunwind
-> >              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
+Sure. I would investigate it later.
 
-> > libunwind is OFF.
- 
-> Same here.
 
-So, with a patch I have (attached) here this turns into:
-
-⬢ [acme@toolbox perf-tools-next]$ perf check feature libunwind
-             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
-⬢ [acme@toolbox perf-tools-next]$
-
-Then I follow the suggestion and install libunwind-devel and build with
-LIBUNWIND=1:
-
-$ make -k LIBUNWIND=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
-<SNIP>
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-
-⬢ [acme@toolbox perf-tools-next]$ ldd ~/bin/perf | grep unwind
-	libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f434eaea000)
-	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f434ead0000)
-⬢ [acme@toolbox perf-tools-next]$
-
-I need to have that hooked up to tools/build/Makefile.feature, where it
-would find that tip somewhere, i.e. that "Deprecated, use LIBUNWIND=1
-and install libunwind-dev[el] to build with it".
-
-This all would not happen if when libunwind was turned into an opt-in
-the default output for it had been removed, so that OFF thing wouldn't
-appear on the screen.
-
-The annotate case is unrelated from what I can see, the preference for
-the disassembler (libcapstone, libllvm or the old method of parsing
-objdump output) has to start with the most capable, and the source code
-part shows that the current order isn't the best, I'll continue the
-investigation/tests tomorrow and will come up with a series of patches
-for the problems reported.
-
-For reference, from 'perf-config' man page:
-
-annotate.*::
-        These are in control of addresses, jump function, source code
-        in lines of assembly code from a specific program.
-
-        annotate.disassemblers::
-                Choose the disassembler to use: "objdump", "llvm",  "capstone",
-                if not specified it will first try, if available, the "llvm" one,
-                then, if it fails, "capstone", and finally the original "objdump"
-                based one.
-
-                Choosing a different one is useful when handling some feature that
-                is known to be best support at some point by one of the options,
-                to compare the output when in doubt about some bug, etc.
-
-                This can be a list, in order of preference, the first one that works
-                finishes the process.
-
-A quick test here with perf top without setting the above ends up with
-the behaviour that Ingo reported, no source code is shown and 's'
-doesn't work. Then if I set it to use objdump:
-
-root@number:~# perf config annotate.disassemblers=objdump
-root@number:~# perf config annotate.disassemblers
-annotate.disassemblers=objdump
-root@number:~# cat ~/.perfconfig 
-# this file is auto-generated.
-[annotate]
-	disassemblers = objdump
-root@number:~#
-
-It takes longer to show the annotated output but there is source code
-and 's' works.
-
-- Arnaldo
-
---ajxXnw0tIQNQ5Ajr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename=tip-perf-version-build-options.patch
-
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 61a11a9b4e7594bf..e2cfff18de299367 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -43,7 +43,7 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
- 	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
- 	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
--	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
-+	FEATURE_STATUS_TIP("libunwind", HAVE_LIBUNWIND_SUPPORT, "Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it"),
- 	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
- 	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
- 	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
-@@ -65,22 +65,17 @@ static void on_off_print(const char *status)
- 	printf(" ]");
- }
- 
--/* Helper function to print status of a feature along with name/macro */
--static void status_print(const char *name, const char *macro,
--			 const char *status)
-+void feature_status__printf(const struct feature_status *feature)
- {
--	printf("%22s: ", name);
--	on_off_print(status);
--	printf("  # %s\n", macro);
--}
-+	printf("%22s: ", feature->name);
-+	on_off_print(feature->is_builtin ? "on" : "OFF");
-+	printf("  # %s", feature->macro);
-+
-+	if (!feature->is_builtin && feature->tip)
-+		printf(" ( tip: %s )", feature->tip);
- 
--#define STATUS(feature)                                           \
--do {                                                              \
--	if (feature.is_builtin)                                   \
--		status_print(feature.name, feature.macro, "on");  \
--	else                                                      \
--		status_print(feature.name, feature.macro, "OFF"); \
--} while (0)
-+	putchar('\n');
-+}
- 
- /**
-  * check whether "feature" is built-in with perf
-@@ -95,7 +90,7 @@ static int has_support(const char *feature)
- 		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
- 		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
- 			if (!quiet)
--				STATUS(supported_features[i]);
-+				feature_status__printf(&supported_features[i]);
- 			return supported_features[i].is_builtin;
- 		}
- 	}
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index e149d96c6dc57c22..10f25c6705b117a2 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -26,38 +26,10 @@ static const char * const version_usage[] = {
- 	NULL
- };
- 
--static void on_off_print(const char *status)
--{
--	printf("[ ");
--
--	if (!strcmp(status, "OFF"))
--		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
--	else
--		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
--
--	printf(" ]");
--}
--
--static void status_print(const char *name, const char *macro,
--			 const char *status)
--{
--	printf("%22s: ", name);
--	on_off_print(status);
--	printf("  # %s\n", macro);
--}
--
--#define STATUS(feature)                                   \
--do {                                                      \
--	if (feature.is_builtin)                               \
--		status_print(feature.name, feature.macro, "on");  \
--	else                                                  \
--		status_print(feature.name, feature.macro, "OFF"); \
--} while (0)
--
- static void library_status(void)
- {
- 	for (int i = 0; supported_features[i].name; ++i)
--		STATUS(supported_features[i]);
-+		feature_status__printf(&supported_features[i]);
- }
- 
- int cmd_version(int argc, const char **argv)
-diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-index a07e93c5384878d3..51f8f1f26813fb32 100644
---- a/tools/perf/builtin.h
-+++ b/tools/perf/builtin.h
-@@ -5,6 +5,7 @@
- struct feature_status {
- 	const char *name;
- 	const char *macro;
-+	const char *tip;
- 	int is_builtin;
- };
- 
-@@ -13,7 +14,16 @@ struct feature_status {
- 	.macro = #macro_,                  \
- 	.is_builtin = IS_BUILTIN(macro_) }
- 
-+#define FEATURE_STATUS_TIP(name_, macro_, tip_) { \
-+	.name = name_,                     \
-+	.macro = #macro_,                  \
-+	.tip = tip_,			   \
-+	.is_builtin = IS_BUILTIN(macro_) }
-+
- extern struct feature_status supported_features[];
-+
-+void feature_status__printf(const struct feature_status *feature);
-+
- struct cmdnames;
- 
- void list_common_cmds_help(void);
-
---ajxXnw0tIQNQ5Ajr--
+>
+> Thanks,
+> Kan>
+>> config: x86_64-rhel-9.4-func
+>> compiler: gcc-12
+>> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (Haswell) with 8G memory
+>>
+>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <oliver.sang@intel.com>
+>> | Closes: https://lore.kernel.org/oe-lkp/202504071232.3c2fa7d5-lkp@intel.com
+>>
+>>
+>> ...
+>> [32mPASS[0m pmu (143 tests, 14 skipped)
+>> [31mFAIL[0m pmu_lbr (2 tests, 1 unexpected failures)   <---
+>> [33mSKIP[0m pmu_pebs (1 tests, 1 skipped)
+>> ...
+>>
+>>
+>> one log is attached.
+>>
+>>
+>> The kernel config and materials to reproduce are available at:
+>> https://download.01.org/0day-ci/archive/20250407/202504071232.3c2fa7d5-lkp@intel.com
+>>
+>>
+>>
