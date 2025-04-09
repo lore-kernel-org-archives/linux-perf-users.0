@@ -1,94 +1,99 @@
 Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6D3524F;
-	Wed,  9 Apr 2025 03:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC181DED56;
+	Wed,  9 Apr 2025 03:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744169680; cv=none; b=j82csWbpyI1whYxBWj7fbbfLd4zMstPvK4BR/HopSOmE89HxjXzOYb6HfHObftuHbD4uCkVs7xX8r+kutx9vtkA3nVfV2pRSOa4g98DswH+C0rDLWfDedOXisfg/LIDJnck+OZ3mdL+CYl3TdqF6rfkZBcEjbGeQIi5achLC73E=
+	t=1744169698; cv=none; b=kSjjEhUglY4AGnfKnJlgO90HAqMzAhh/8aSd/zt2d+WTcW7WY0OtAiAZaOSa8HpgB/6Py9/d43FtMUWixpNaECoTRJFNjT/aEl2p7OVH9zl3d+SgbZA2YJzxd1QyCnRSSdrBvOnmjZHxnea/6zhYmPYQXk46onj/Z2o1jLXnso4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744169680; c=relaxed/simple;
-	bh=b6zV8GOspPN/yp1UaoSQi7HmMP0SFPNWk+enfaKC0e0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Q0SLfrQ8gbpJxAyEGrIfsOibMnZgmEevN9Exgpqvf87lSYUuXdCOZpoTledwP/Ml7LqNU0OkuZvBXou8gTX0Ax8K92BkI3CZRN7woMOpv5whaj3RKeVq1JgGbmMXDHapOAldVqwCmvAfyPv1f8KkXYSUx3ey6Q2sf8jYLfpO8co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=JU3QQPb/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ljlxsW4z; arc=none smtp.client-ip=103.168.172.155
+	s=arc-20240116; t=1744169698; c=relaxed/simple;
+	bh=BM4ucfaSCyd4h7/irKImxABUrQPrN5JfhG7BMBvF5CQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OEa9BD69BbK0sAjw++mty1g9Z7s7zQpmOQWkwePZi3Go1iIEoHxZ2wCwJQDU6SAOKyXtp7gNSavgQE0+7qpzDArA5ZiF7oS50baTb3RoSTp9/XqdXt3nfiy3zVl/RRE1R4H1RvZc1Q80kyqGJEGP+mItw0SJLXTsHFrcupP4tGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=G9vvWjxI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NTqvM5EK; arc=none smtp.client-ip=103.168.172.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="JU3QQPb/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ljlxsW4z"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4DAFF11401EC;
-	Tue,  8 Apr 2025 23:34:35 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="G9vvWjxI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NTqvM5EK"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4B2611140256;
+	Tue,  8 Apr 2025 23:34:54 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Tue, 08 Apr 2025 23:34:35 -0400
+  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 23:34:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm1; t=1744169675; x=1744256075; bh=KgpeIAFHyGKVpKQfj8mF9
-	93N7YtyGNtKnt7Z58kWdLQ=; b=JU3QQPb/wN6HqjxOlGWZqrnhmlvF1faE0Zgdz
-	3CFe2Q+Cxm2IZn2E0vXdVcJ8wNhu75Au/Y/ExoZt6tTDJNbPNzrfOnL/yDC9v4nc
-	i1hCDGfw50sOnp+RmV8ALPhXNCwT/lnV+vfbxk/70Sgbu8vv4Ci1/sWUnB1iLg3y
-	4Fv7FjQQ+7Awl9PaumIjQ+qwEBedBaaBnVrFiSzbEc9Z4MqSzyEhwHiDdV9xRTHJ
-	+CF1Ab/I30CNq1BeNUpI6fQzI1bbs/66SPDg28hs/VpurNEZ/9a5LQ3RkdLRnlLH
-	6IHCz1FUX6b9MuQhPj5IEGYmMpgdDQvOJE8PLw98EAGuKTDQw==
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1744169694; x=
+	1744256094; bh=2ofeAZF/8FfFJRWxnBMYkuk948swu1mQfL37VFkVNsQ=; b=G
+	9vvWjxIifheFzjsi2gV0DgWF+FF6GHgo0arJ9XU9hj/xMZDdkWcq0zBan0zq4dpu
+	SPQTHQ1It/QpcUI7KxoeaasCvW+Sumrt7bJG//Sg3cjPoxL8h1UARvI7GJKunkYI
+	ENqRlP61agSm6kZoxqM92bCc6/hQtA8oUYFpUNt7Vg5MHthixpAVvjgPHyWSO9HQ
+	t96opSRvZ6XInoJ1eFxdan8VfJEwi3BRjieDh5MHPuyvoV30h6zm0yBDjwm94hy/
+	Yts63b2iH+f/Qfry7nswLCcM2NyHqOHyWV5iXrynhVhuV9Tdna92QbtuYPYEm0Og
+	YOyzcs2VhpY5pWKsm3+tw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:date:date:feedback-id:feedback-id:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744169675; x=1744256075; bh=KgpeIAFHyGKVpKQfj8mF993N7YtyGNtKnt7
-	Z58kWdLQ=; b=ljlxsW4zn2160lMrJTz+xXf8n8+EGpRB6HnSg9hVs8sJYIkOu+1
-	O3BKQ9A9XLS1dnYfxo42SMGSCc3vtmXj9EtsrifKGvtB1CfYJoG21Vm871O9M2/h
-	0DYuVp42/N8s9160n7BKZ7DYtykNDFrd3jWE7brW/yIcZldr/Pslqy0yO4GeEHwO
-	4crMURsOxvbJvQ5d1qj1pV+CWyGv2W7NIc0AvCwF2F4tGjSy9f4I9upViBcvvA8O
-	jLu2w7HYJx6lBGPgrKJnFGwyjdJVDCI9E0pO4lscn5CztpS5i0/jOT0LT5bAKwSk
-	a/DQFKrHFgM+hPBePNFwTmWfzdgwcTrev9A==
-X-ME-Sender: <xms:yur1ZyVdybc6G347olxo2AXEEYyK0_KETXUNYG2f5jQITFj_ay3d2g>
-    <xme:yur1Z-kCfmbzJvGo2hWJSkeeOusu31alVtVjEuNus85ayo6fpJ-ewTyNl_hIVPLKp
-    1ao1l08jXbxli8AXQ>
-X-ME-Received: <xmr:yur1Z2brcI4yuxbQCzXIsr1I-TajeI1pvOQuexI-BfLE2dWY3PSJ_F6z2b97RjwnrTWXOaeIdEQD4EIzVINPeY9Wwx5oOqd-AZ1Z_BxD85d8uVa7Z2cm>
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm2; t=1744169694; x=1744256094; bh=2
+	ofeAZF/8FfFJRWxnBMYkuk948swu1mQfL37VFkVNsQ=; b=NTqvM5EKESJ8UFvgn
+	DhLjznY1MB2qjsj2QgaW47y9tdzijCJmZMMQeGZvviiahKyjIvfSyNDZ/RRlO8CG
+	QPPBQ+seHOtZ2v+iTm9TRAvGWloFAkdaHt3cBOBnIkJdJSuI3+RvpZC5l7V6H7xi
+	yHu6o87K3Z9tnu/v5y48kB5zN+5EKoI2U5ZqQBWncKpEmD5Uf2hBJivC7r2NxTCc
+	Y1XAS/qEK+AOENN/0mfJiRTc9N4vFeYc59OcW64S5SuFeXtpq4uNQ5vRzC7Jwqoj
+	KdWUAOp3RuL7CTMPYvTwRKIlJf/mAo5XM5Ik4u9C1PpuLjqj2uhZMbSO+MOcs2O0
+	8XHtA==
+X-ME-Sender: <xms:3er1Z8_LLHCAaZWJO_jeWMAt89rFPXOmjDu3B8iWq5IJCRPk23WfTw>
+    <xme:3er1Z0vd-K4JJi7S686Ae88e7SoAl7NMYgf9qlW005nBl8DlnGjrRjjer9H3HFdSe
+    RQD9Ce_bEVbcMnvew>
+X-ME-Received: <xmr:3er1ZyDzSxmGGdzHqzHB6No9EoVW3nWoc5W18aXttWa8jo5fwrStiOmThmqTKAzR-XpzgHsQoEzJe9LvEkkHQW5oUm0PySVyPtb0HEbkoF3Jxg9mcXaq>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdegledvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffuc
-    dlvdefmdenogfuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffo
-    ggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguhesugiguh
-    huuhdrgiihiieqnecuggftrfgrthhtvghrnhephfeijeelueeuveekjeejteeitdegieff
-    gfeguefhjeeljedtiefgvdejkedtfeelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    dpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepugiguhesugiguhhuuhdrgiihiidpnhgspghrtghpthhtohepuddtpd
-    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqthhrrggtvgdqkh
-    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
-    phgvrhhfqdhushgvrhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqkhhsvghlfhhtvghsthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehnvghtfhhilhhtvghrqdguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegt
-    ohhrvghtvggrmhesnhgvthhfihhlthgvrhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
-    qdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:yur1Z5VKfdRnYV8i1TP-pNPD1hrrL4sDGE-uCU85kLjBqhXmeSGR-w>
-    <xmx:yur1Z8lj-j2S7pjQSdGbsOrX6betNOzEBXMmmyt-g_NluETEaFR74w>
-    <xmx:yur1Z-eudSUkuoxHlgCxyQm1envt8p4mI6Yf092RXw0eSvzGFAJePQ>
-    <xmx:yur1Z-GT0K-nfjfwuCknjUdWg-t1nGIg7jv9sjwnTEI957PzSviVNw>
-    <xmx:y-r1Z414n0pfTsw7uFuGS0gmgPBVKLECLJf69UAINXf9nxfcOeJSIIAA>
+    dljedtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
+    peffrghnihgvlhcuighuuceougiguhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvg
+    hrnhepgfefgfegjefhudeikedvueetffelieefuedvhfehjeeljeejkefgffeghfdttdet
+    necuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepugiguh
+    esugiguhhuuhdrgiihiidpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehnrghmhhihuhhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhf
+    rhgruggvrggurdhorhhgpdhrtghpthhtoheprggtmhgvsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomhdprhgtphhtthhopegr
+    lhgvgigrnhguvghrrdhshhhishhhkhhinheslhhinhhugidrihhnthgvlhdrtghomhdprh
+    gtphhtthhopehjohhlshgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehirhhoghgv
+    rhhssehgohhoghhlvgdrtghomhdprhgtphhtthhopegrughrihgrnhdrhhhunhhtvghrse
+    hinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:3er1Z8ewKCiOfm0iulUCFgENgfY_4pvaK_AYYEg59e1_tbWpQU3kcg>
+    <xmx:3er1ZxPT3W0kbZtoOuAODPQXA6YbDVVgUseUKYZ2yH-IEj5Sdrb7oA>
+    <xmx:3er1Z2mNgKOCjQkMk9O3mHpuxDz7kcN0ffOJWXF8XhGZpzc-lp57Ag>
+    <xmx:3er1ZzsdMvqkdV7gqOzseyqSg7nLHZqm0Rloc_QQou7jVqDmkFl5SQ>
+    <xmx:3ur1Z0JHDrFaNPku6zEWs-zypWWDJxrwLJs6ZughU-0cW5ypVI7_fLtE>
 Feedback-ID: i6a694271:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Apr 2025 23:34:33 -0400 (EDT)
+ 8 Apr 2025 23:34:52 -0400 (EDT)
 From: Daniel Xu <dxu@dxuuu.xyz>
-To: linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
+To: namhyung@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	acme@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	coreteam@netfilter.org,
 	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [RFC bpf-next 00/13] bpf: Introduce modular verifier
-Date: Tue,  8 Apr 2025 21:33:55 -0600
-Message-ID: <cover.1744169424.git.dxu@dxuuu.xyz>
+	bpf@vger.kernel.org
+Subject: [RFC bpf-next 09/13] perf: Export perf_snapshot_branch_stack static key
+Date: Tue,  8 Apr 2025 21:34:04 -0600
+Message-ID: <7503bb384aaeaf9a3b6f68c5347fd73f8e561cc6.1744169424.git.dxu@dxuuu.xyz>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <cover.1744169424.git.dxu@dxuuu.xyz>
+References: <cover.1744169424.git.dxu@dxuuu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -97,87 +102,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset adds the base infrastructure for modular BPF verifier.
-The motivation remains unchanged from the LSFMMBPF25 proposal [0].
+Export the static call so that the modularized BPF verifier can run
+static_call_query() against it.
 
-However, the design has diverged. Rather than immediately going for the
-facade described in [0], we instead make a stop first at the continously
-exported copies of the verifier in an out-of-tree repository, with a
-separate copy for each kernel release. Each copy will receive as many
-verifier backports as possible within the "boundary" of the modular
-portions.
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ kernel/events/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-For example, a patch that changes the verifier at the same time as one
-of the kernel symbols it depends on cannot be applied, as at runtime
-only the verifier portion can be updated. However, a patch that only
-changes verifier.c can be applied, as it's within the boundary.  Rough
-analysis of past data shows that most verifier changes fall within the
-latter category. The jupyter notebook for this can be found here [1].
-
-From here, we'll gradually enlarge the "boundary" to enable backports of
-more and more patches, with the north star being the facade as described
-in the proposal. Ideally, completion of the facade will render the
-out-of-tree repository useless.
-
-[0]: https://lore.kernel.org/bpf/nahst74z46ov7ii3vmriyhk25zo6tkf2f3hsulzjzselvobbbu@pqn6wfdibwqb/
-[1]: https://github.com/danobi/verifier-analysis/blob/master/analysis.ipynb
-
-Daniel Xu (13):
-  bpf: Move bpf_prog_ctx_arg_info_init() body into header
-  bpf: Move BTF related globals out of verifier.c
-  bpf: Move percpu memory allocator definition into core
-  bpf: Move bpf_check_attach_target() to core
-  bpf: Remove map_set_for_each_callback_args callback for maps
-  bpf: Move kfunc definitions out of verifier.c
-  bpf: Make bpf_free_kfunc_btf_tab() static in core
-  selftests: bpf: Avoid attaching to bpf_check()
-  perf: Export perf_snapshot_branch_stack static key
-  bpf: verifier: Add indirection to kallsyms_lookup_name()
-  treewide: bpf: Export symbols used by verifier
-  bpf: verifier: Make verifier loadable
-  bpf: Supporting building verifier.ko out-of-tree
-
- arch/x86/net/bpf_jit_comp.c                   |   2 +
- drivers/media/rc/bpf-lirc.c                   |   1 +
- fs/bpf_fs_kfuncs.c                            |   4 +
- include/linux/bpf.h                           |  82 ++-
- include/linux/bpf_verifier.h                  |   7 -
- include/linux/btf.h                           |   4 +
- kernel/bpf/Kbuild                             |   8 +
- kernel/bpf/Kconfig                            |  12 +
- kernel/bpf/Makefile                           |   3 +-
- kernel/bpf/arraymap.c                         |   2 -
- kernel/bpf/bpf_iter.c                         |   1 +
- kernel/bpf/bpf_lsm.c                          |   5 +
- kernel/bpf/bpf_struct_ops.c                   |   2 +
- kernel/bpf/btf.c                              |  61 +-
- kernel/bpf/cgroup.c                           |   4 +
- kernel/bpf/core.c                             | 463 ++++++++++++++++
- kernel/bpf/disasm.c                           |   4 +
- kernel/bpf/hashtab.c                          |   4 -
- kernel/bpf/helpers.c                          |   2 +
- kernel/bpf/local_storage.c                    |   2 +
- kernel/bpf/log.c                              |  12 +
- kernel/bpf/map_iter.c                         |   1 +
- kernel/bpf/memalloc.c                         |   3 +
- kernel/bpf/offload.c                          |  10 +
- kernel/bpf/syscall.c                          |  52 +-
- kernel/bpf/tnum.c                             |  20 +
- kernel/bpf/token.c                            |   1 +
- kernel/bpf/trampoline.c                       |   5 +
- kernel/bpf/verifier.c                         | 521 ++----------------
- kernel/events/callchain.c                     |   3 +
- kernel/events/core.c                          |   1 +
- kernel/trace/bpf_trace.c                      |   9 +
- lib/error-inject.c                            |   2 +
- net/core/filter.c                             |  26 +
- net/core/xdp.c                                |   2 +
- net/netfilter/nf_bpf_link.c                   |   1 +
- .../selftests/bpf/progs/exceptions_assert.c   |   2 +-
- .../selftests/bpf/progs/exceptions_fail.c     |   4 +-
- 38 files changed, 834 insertions(+), 514 deletions(-)
- create mode 100644 kernel/bpf/Kbuild
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0bb21659e252..b0449209275f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -14644,3 +14644,4 @@ struct cgroup_subsys perf_event_cgrp_subsys = {
+ #endif /* CONFIG_CGROUP_PERF */
+ 
+ DEFINE_STATIC_CALL_RET0(perf_snapshot_branch_stack, perf_snapshot_branch_stack_t);
++EXPORT_STATIC_CALL_GPL(perf_snapshot_branch_stack);
 -- 
 2.47.1
 
