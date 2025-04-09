@@ -1,105 +1,89 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EF526A1BA
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Apr 2025 15:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C18267391
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Apr 2025 15:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213923; cv=none; b=eyW5TXL03B1+sxgCg06PrtxjvVdeYUscNEDlMUiGur8m7tA03USZ3K/0NIBrql1BnOZHOvr/i1DHVr5gKSVkBeQ7b0hItA6s7QJXwCrgruatjN/FUAeCCi2LlqQbulxufDyYQH9vCUMpht8CGhl7e/BoboaIFSRJx2PfntFztm0=
+	t=1744214228; cv=none; b=Azy68vMz3IOEu+u46xYjhvbUuT1Uh62P2TpvvygRZ5+vS7FYAEv4BSwD6kWZYySb9qLY+1UFnjmQ41uGs7GxboVqtESDemGhp688ed2J0g3saf3o8qG2tNPJcevjBAp+1Txlyn5vms9bE2QHJ20GeLioUsXFYVIvOh7QsRkBNsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213923; c=relaxed/simple;
-	bh=ONPojdIjHrzChrGArc5TbNog7k3iE1RgJww1otzhUnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JMG2ebtPyg0+wxr+Dvh6GzJaMcZnqqKB8cmn1ieB6MJhlZlDYAQofbagjE+oYTBnHM9jD7OG9qnDwDYJjxyJHOvn33otWhar9ihRKuhc4A83H8zhVfMqmzsemeB5ZoIfLWKd9OXlur9jTyOTUWeTqOVKQ5HtjN8jyvIIw9NK5Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3LfF4NoW; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744214228; c=relaxed/simple;
+	bh=q5qzw8UpcZquc26QYItmGdz3XV702QjvXrDaRDiSDgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1rz1186LLCeBZCPl3dIL/Awk5vnno3Ljckugjs6ufCHdPbc+YHwlPqY0sg8vi7IwL7ZFaUR0uX9wf3wSJkgwI3/wy+jzSlixB4lyXPWAQRTbcpkLmgNLc6qZ+kiU7EDaDj0HUcvUvbMegF3279m6mxvpYpihHy0dBbDpmzXIEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6On7OHH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3LfF4NoW"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2242ac37caeso158505ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Apr 2025 08:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744213921; x=1744818721; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ONPojdIjHrzChrGArc5TbNog7k3iE1RgJww1otzhUnk=;
-        b=3LfF4NoW2Hy8cr3Rc1O5iLYzjM0eigTqpxsQAJiAWNa3OJhinVkWKdLuVhObguAng6
-         oA+ImSTo0C/Z39aNmrt/VUROMriGlV+vx5ekqc5hzCdjsIXQXHjqia6u1Xiv1DLACN1s
-         7Wy6NAoZshDlBokLvKbI7JccehUQQ/Emayzpf5T5XQRXk9O+Nsg987rFJIqQ7CErmV9K
-         FVNGO7Diu46aKNBME0wQdPA4DmlJ/1UKltePav7hZ63WA/oB6Kxcz6xyXkVARR/oToBG
-         MMwtHi5R3TMDNZ6otKRd9JUYtyqHwo/8uXMbJ+ia6l7Uxz5t5n0veguYpPJmRdGSEfBr
-         4Bbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744213921; x=1744818721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ONPojdIjHrzChrGArc5TbNog7k3iE1RgJww1otzhUnk=;
-        b=mJkGqG4QMIh1wvidUowuknWR46YWYbuZcrNdYUzXNTdIexJJGThO4K/8rd594ZGLE1
-         Jm1+djcnBUo41ukjVdFv/ecOCxJi5CrB8NjfaS/vnJUWl81Yr/K1E5BUeKb9NAwIv6Ia
-         cO55jxedxeYQL0yBVTIsOSNyKoh/ge6j+NC0AMkQFpuYfJQypPQQjuwv6/d+NOQjR18y
-         23mDoX2RcvtEc/W7UtVe5zFtp4mBLnRg0Ej54brKLDxul0VILK5YG3XCc4yxKZFNtU/B
-         paJOLiwrMcHAmP4IpNEvGYlVtghI1wlKYuIRjBAw8lH6hM6R28+JSXWfWXB1wvG6UQWc
-         kc6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXLqCBqI/Z0Gj74Iodtfu6jGkReyiHThGzUsTkUTOfIhXlBDRZ1F6ooVWPQ/jJBVkIEl+3OhL/oh968POS/Vge1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1S86mBqJxXFPV6HQqxRgMXgt+z5Xt5kil3I5CN5HzSpNADWOK
-	dI4hpKYRgIqnOKwkFT0F2QCvXJtIcoTxw+KeW106uuGylUaqrV7Gmh4+4JcwnTNliwsrRe2elG9
-	+O0tDSmAQu/iU+aJLwa7OUOILUbhIg0NmMfTu
-X-Gm-Gg: ASbGncv13+0QIb6+qNkn/8kbU4LL220xGgIMS+bytXrDaq8nkT7E4J/NpIk7a4m7Dh8
-	zI2gt5fcygCKY5MqxvPZDnnqWXWMGoBENXLI+BspYiNJE4Inh9jbmlX9D4PszFZFgz9HJ4+zgsX
-	FMiT7oyUurJmv9cmareKtQPtm9Z4/4oZgEzOpgT7cOik1U/Js4tLA=
-X-Google-Smtp-Source: AGHT+IF6yyCNdAKPOUGDf7tH/deR8OUSPsEKAyM/GcYg8ys3pJt4ve2skebZakAwf5x4d+dQfpAfsT+Mf6DXWvSfKCY=
-X-Received: by 2002:a17:902:b214:b0:224:38a:bd39 with SMTP id
- d9443c01a7336-22ac3063e0bmr2794735ad.20.1744213920688; Wed, 09 Apr 2025
- 08:52:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6On7OHH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9760CC4CEE2;
+	Wed,  9 Apr 2025 15:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744214228;
+	bh=q5qzw8UpcZquc26QYItmGdz3XV702QjvXrDaRDiSDgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m6On7OHHPO6mWxxMMNP+lVq/bNUdzdPWnAReH7ThiDVcz6Kn8+89rRJI9aIeIkuVK
+	 Tz/o9Tr52j65ZWZqibb6E3ADt9H/lEnwQlVOaaIW5bBakAyH4kaFqxz7txHnVguEu1
+	 BMxg+gzWoKIOswa+WIozoKjKJBL2S2sirSOfI0S/MY8Y6/zXmYA9l9JgGWbpKUAXFJ
+	 E7dsvNMzY0OG7CLYrttrk+wOkmsgWb3e9mrTd9NkWePLOxdTyJPQgJbtIc3zmkvnr1
+	 AgFLUph8g8D8AUSVmgE2mVPqQM4AUHYQpK2lYMWIYKhbNpm3Cljrom5uYpe3UUlx2O
+	 FaimAD89CzhgA==
+Date: Wed, 9 Apr 2025 12:57:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
+ working either
+Message-ID: <Z_aY0fTs53id77CS@x1>
+References: <Z9vgt1pjiNbDBDbM@gmail.com>
+ <Z9w_aFlzOkoCTSqK@google.com>
+ <Z-EJnye74la1triY@gmail.com>
+ <Z--pWmTHGb62_83e@gmail.com>
+ <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
+ <Z_QEND63LoxP0h9H@gmail.com>
+ <Z_Rz10stoLzBocIO@x1>
+ <Z_TYux5fUg2pW-pF@gmail.com>
+ <Z_XaOp4TCBKe-M0o@x1>
+ <Z_ZltdaHx9XuKcd9@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241106003007.2112584-1-ctshao@google.com> <20241106003007.2112584-2-ctshao@google.com>
- <Z32EFouwz3IHw8h0@x1> <CAP-5=fW+HDfNcpTkjPwSLezP-XTj9hkPLrwia_JryCr8+Ro0qA@mail.gmail.com>
-In-Reply-To: <CAP-5=fW+HDfNcpTkjPwSLezP-XTj9hkPLrwia_JryCr8+Ro0qA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 9 Apr 2025 08:51:49 -0700
-X-Gm-Features: ATxdqUFVim2h_otrX1XHuXbZPAT-44lJl9Ivy2fN6qb4M_vCGdOa-UQaqWaalt4
-Message-ID: <CAP-5=fVX2=iRumkAAUyeVoE-rveaYzUKokGB3g2H1ED4JK3Feg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] perf: Reveal PMU type in fdinfo
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_ZltdaHx9XuKcd9@x1>
 
-On Mon, Mar 17, 2025 at 8:42=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Tue, Jan 7, 2025 at 11:44=E2=80=AFAM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Wed, Nov 06, 2024 at 12:30:06AM +0000, Chun-Tse Shao wrote:
-> > > It gives useful info on knowing which PMUs are reserved by this proce=
-ss.
-> > > Also add config which would be useful.
-> > > Testing cycles:
-> >
-> > I applied the first patch in the series, that already helps, Peter, wha=
-t
-> > about this one for the kernel?
->
-> Peter, did you have any input on this? I think this is simple value
-> add with no real downside. I kind of wish the patch did more than just
-> dumping type and config in fdinfo, but getting those two is a big
-> start.
+On Wed, Apr 09, 2025 at 09:19:01AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Apr 08, 2025 at 11:23:54PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Apr 08, 2025 at 10:05:15AM +0200, Ingo Molnar wrote:
+> > >      - Yay! But very unintuitive. The intuitive step would have been 
+> > >        the left arrow key BTW. (with restoring the cursor position to 
+> > >        the cc1 entry I pressed 'Enter' on originally), but that doesn't 
+>  
+> > That is how I implemented it initially, yes, over 10 years ago.
+> 
+> I'll experiment with making the Left arrow key, if already on the first
+> column, to work as zoom out.
 
-Ping.
+Can you try this, on top of the series or even just this, pressing left
+should do what we want.
 
-Thanks,
-Ian
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index 115aa1af5a0218cd..dc88427b4ae5af4c 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -459,6 +459,8 @@ int ui_browser__run(struct ui_browser *browser, int delay_secs)
+ 				goto out;
+ 			if (browser->horiz_scroll != 0)
+ 				--browser->horiz_scroll;
++			else
++				goto out;
+ 			break;
+ 		case K_PGDN:
+ 		case ' ':
