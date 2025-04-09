@@ -1,43 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFC4263C88;
-	Wed,  9 Apr 2025 13:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC5115ECD7;
+	Wed,  9 Apr 2025 14:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744205735; cv=none; b=LM6HSOOtjE4B2HUFRGiHp+ycxJFmfskI8koRfTEITka8ILg325AHoc3eKxeEQnaCVrmh51q1j7lu8LUiwBHAUC/Kvg6ZzvzcRYB7ogHqAZClZlGFaKaTpZYU6RdXT+FwbP1Sc1376AF6v4WmIK+FalVVSsYgtDW0EnhR26PiEbo=
+	t=1744208667; cv=none; b=DWBfqMKOm5/rbD6tncRZY7Ov3d9YNdrKsZzPsEydI6zbZ2BiOpBfzsQhMXY7NZqIPk/OVlOym6RiwJkxida2xDxjoLnSJ5MU0ffMKzpRN7NcG0yUTDGvzL66HTU2+8sGMJQqW5Nv49qBUAQw8CnX2cbddK5zMNVlJlwwYX2aEMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744205735; c=relaxed/simple;
-	bh=ppKQBnSErD0/u0/gZkEC8eunlb+MMHTwKrkVtk5VMPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z5/GGDKyknzKhk/oE8HqjBMkGpQNQlhiUQnO7BFH/pCMY5JUlHUrhJokp+rpVES3sBQW94v3c4taV6OLR8rVwjaFE8BFbAWUyCUsvc8hLhOkJdvCvY9sW17FPfdhxITR8/kjITKnIm7LlkRl58ZsPqVASmPA41EAba4PR+oVeRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QH03iG4O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744208667; c=relaxed/simple;
+	bh=xjRcRXL5ATlpoMXpxbIOd/1cQN8m5nW34dkCBKaINjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ktSg7cSxfmBKSEM0Bxl0lv6EnftWrJE2hiz7jB2to/+Zc2OM6wNq35ufEXyEpROvX4GbZqWQ1LSgYelYTyIQ/sSnVlxmyV9hodQQxFcIA43Hje9n8M7acUeiI88k6N56nIvkgqSU2ZTAP2IwDZzvh35WLU1vVDdPdSFdx6Dyd7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KTfCf3c8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QH03iG4O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52D9C4CEE3;
-	Wed,  9 Apr 2025 13:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744205734;
-	bh=ppKQBnSErD0/u0/gZkEC8eunlb+MMHTwKrkVtk5VMPU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QH03iG4OIWAIrsxVDmqy27E/IdlvYOx2XBsEhPF0IzbGagUGr24twZ1wHu/uylC1Z
-	 kJoNnBtlH4MUHpn+qYMQb2gbior54U5n8REbI7dV3hJ3hoeOBc+R2OcWZHIwm2JmHY
-	 490pBrcTLLNLv3W+qWoOb2oogmvHr8z1/xz1LtZmtwowW5krsUyJ4l2QJVe6EgC3JO
-	 MZORVEV5zCfqiee0q/0LDQCHRWvVHuTDujlTjnHMNG5b/Dt88kbBkli+UOEnmAFSrE
-	 1lISCPfFQtzlNL404gLIXXUirGs9G/YUK8sZhZyy3CO6QTStn1EKeLvXrimBKdiS3x
-	 k70bsNjG4gXww==
-Date: Wed, 9 Apr 2025 10:35:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 v6.15-rc1] perf libunwind arm64: Fix missing close parens
- in an if statement
-Message-ID: <Z_Z3o8KvB2i5c6ab@x1>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KTfCf3c8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QDUIJBUfUWetOQ9XbfKqZntOyLdSRCgncZqRn4gs3n8=; b=KTfCf3c8JRBefviFsqU+m7kWm+
+	Sj2845Sdimp6jX0y275HopAZl44AeT36Kjv54ltI5NyUHgLevjKv43NxpThdXzfcHo9dRVHegRGjQ
+	e/NE9h96bkM/Acyq8fczLJQEcOuUn97dkCTfXG7hTbEcDIhuthdHfH8dcoL/N71Q5wLDKb57buzIq
+	rmobayGJc8GuAB2UIBPg3FxlodVRwWvCuyM98e+l/VJZv+EofA0bHMU/Lf57RjzSGKeyV1ToEDRQt
+	g/dwSgYjVfT5pI3LFuniTt+fzZBU460QxhVZO9GC26rF8xXLanqYRkDxKjzG9h80H4yPgiXsdtSBh
+	ODPFq3BQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2WLh-00000001ZhH-3Axy;
+	Wed, 09 Apr 2025 14:24:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E9B433003FA; Wed,  9 Apr 2025 16:24:17 +0200 (CEST)
+Date: Wed, 9 Apr 2025 16:24:17 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mark.barnett@arm.com
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, ben.gainey@arm.com, deepak.surti@arm.com,
+	ak@linux.intel.com, will@kernel.org, james.clark@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 3/5] perf: Allow adding fixed random jitter to the
+ sampling period
+Message-ID: <20250409142417.GC9833@noisy.programming.kicks-ass.net>
+References: <20250408171530.140858-1-mark.barnett@arm.com>
+ <20250408171530.140858-4-mark.barnett@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,36 +55,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250408171530.140858-4-mark.barnett@arm.com>
 
-While testing building with libunwind (using LIBUNWIND=1) in various
-arches I noticed a problem on arm64, on an rpi5 system, a missing close
-parens in a change related to dso__data_get_fd() usage, fix it.
+On Tue, Apr 08, 2025 at 06:15:28PM +0100, mark.barnett@arm.com wrote:
+> @@ -10224,6 +10227,19 @@ static int __perf_event_overflow(struct perf_event *event,
+>  	 *
+>  	 * By ignoring the HF samples, we measure the actual period.
+>  	 */
+> +
+> +	/*
+> +	 * Apply optional jitter to the overall sample period
+> +	 */
+> +	if (hwc->sample_period_state & PERF_SPS_HF_RAND
+> +			&& !(hwc->sample_period_state & PERF_SPS_HF_SAMPLE)) {
 
-Fixes: 5ac22c35aa8519f1 ("perf dso: Use lock annotations to fix asan deadlock")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/unwind-libunwind-local.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Coding style nit: when breaking lines, the operator goes on the end of
+the preceding line.
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 9fb2c1343c7fe205..0b037e7389a009f5 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -371,7 +371,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
- 	 *    has to be pointed by symsrc_filename
- 	 */
- 	if (ofs == 0) {
--		if (dso__data_get_fd(dso, machine, &fd) {
-+		if (dso__data_get_fd(dso, machine, &fd)) {
- 			ofs = elf_section_offset(fd, ".debug_frame");
- 			dso__data_put_fd(dso);
- 		}
--- 
-2.48.1
-
+> +		struct rnd_state *state = &get_cpu_var(sample_period_jitter_rnd);
+> +		u64 rand_period = 1 << event->attr.hf_sample_rand;
+> +
+> +		sample_period -= rand_period / 2;
+> +		sample_period += prandom_u32_state(state) & (rand_period - 1);
+> +	}
+> +
+>  	if (hwc->sample_period_state & PERF_SPS_HF_ON) {
+>  		u64 hf_sample_period = event->attr.hf_sample_period;
+>  
