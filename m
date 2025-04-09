@@ -1,38 +1,38 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC5115ECD7;
-	Wed,  9 Apr 2025 14:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB77B265CB0;
+	Wed,  9 Apr 2025 14:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208667; cv=none; b=DWBfqMKOm5/rbD6tncRZY7Ov3d9YNdrKsZzPsEydI6zbZ2BiOpBfzsQhMXY7NZqIPk/OVlOym6RiwJkxida2xDxjoLnSJ5MU0ffMKzpRN7NcG0yUTDGvzL66HTU2+8sGMJQqW5Nv49qBUAQw8CnX2cbddK5zMNVlJlwwYX2aEMA=
+	t=1744208950; cv=none; b=LkEaDvvleie52nY4F4eChrfIHLDOgjcI0bGYCkSYtDx4Uu84kz5dlnGNuWgHc0+bfjO8bz+FGvjEvKAdvNLnW4FbvEo4FpjnhrrBlj5Qimfl8EeAqbhAdNfTRyC6yfqrcnMO035a0QcAe9Npxe4ezsseeY6VgNGPMhjOBYM9BDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208667; c=relaxed/simple;
-	bh=xjRcRXL5ATlpoMXpxbIOd/1cQN8m5nW34dkCBKaINjc=;
+	s=arc-20240116; t=1744208950; c=relaxed/simple;
+	bh=n2ht8mjONbndvKewbWqCR1f/Qxe2MhaYKYQ8fab8Kck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktSg7cSxfmBKSEM0Bxl0lv6EnftWrJE2hiz7jB2to/+Zc2OM6wNq35ufEXyEpROvX4GbZqWQ1LSgYelYTyIQ/sSnVlxmyV9hodQQxFcIA43Hje9n8M7acUeiI88k6N56nIvkgqSU2ZTAP2IwDZzvh35WLU1vVDdPdSFdx6Dyd7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KTfCf3c8; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=h25Yw9/yxd+LRkxG3AGRHzORh9mkbtFI3ItDsTBHHC46iTzrS8MsJqGgRwLMha8gN2awodYg3FDU2ZJuO2sxkMz+CcW72l9+IjtKdWEjzxkhER4tdiDbArjuEkdM1TdJMyxlqvC03l6WVbxwXQ+aMDwLZUKm/nBmnl8nXzYVVyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VUfZDKMh; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KTfCf3c8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VUfZDKMh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QDUIJBUfUWetOQ9XbfKqZntOyLdSRCgncZqRn4gs3n8=; b=KTfCf3c8JRBefviFsqU+m7kWm+
-	Sj2845Sdimp6jX0y275HopAZl44AeT36Kjv54ltI5NyUHgLevjKv43NxpThdXzfcHo9dRVHegRGjQ
-	e/NE9h96bkM/Acyq8fczLJQEcOuUn97dkCTfXG7hTbEcDIhuthdHfH8dcoL/N71Q5wLDKb57buzIq
-	rmobayGJc8GuAB2UIBPg3FxlodVRwWvCuyM98e+l/VJZv+EofA0bHMU/Lf57RjzSGKeyV1ToEDRQt
-	g/dwSgYjVfT5pI3LFuniTt+fzZBU460QxhVZO9GC26rF8xXLanqYRkDxKjzG9h80H4yPgiXsdtSBh
-	ODPFq3BQ==;
+	bh=GfxegZ0KYTJ8SeY85RB4SV1VMpClIouJSyJAqXohpDM=; b=VUfZDKMhsTtFBu6EgVZG5tJoim
+	0nnQ8Cm4/YlWFxcQEeW39XR5+4L9v8zC95D6/xGnVxmqS2b5R26A3gUYFwlBuqNwUcFAs38t6+Znb
+	ihm3rIKycq9g6+P+OdvQTdOjFwe/psZEp9Uuar1e6+p7B8orKVx0ZKvDqo8M1wyQwG06aPOMLrZ8g
+	HzHUFO/rjAUDuZN+i+TcF8fPpHLnD7o4b/GhCKnUrDWaruTHCB9k70y7Dai2VDNp+NsDj/VjJhS4A
+	iFww5vvFO5p2g/5TScvmN6KUNeyUd25lKzjpkDhsbt/mJohLP5r0PQgKGMaQxvRt20HVlJFAZMXw0
+	VVT5zg4w==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2WLh-00000001ZhH-3Axy;
-	Wed, 09 Apr 2025 14:24:18 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2WQH-00000008dLA-0I5A;
+	Wed, 09 Apr 2025 14:29:01 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E9B433003FA; Wed,  9 Apr 2025 16:24:17 +0200 (CEST)
-Date: Wed, 9 Apr 2025 16:24:17 +0200
+	id 9DAC03003FA; Wed,  9 Apr 2025 16:29:00 +0200 (CEST)
+Date: Wed, 9 Apr 2025 16:29:00 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mark.barnett@arm.com
 Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
@@ -42,11 +42,10 @@ Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
 	jolsa@kernel.org, adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 3/5] perf: Allow adding fixed random jitter to the
- sampling period
-Message-ID: <20250409142417.GC9833@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v4 0/5] A mechanism for efficient support for
+ per-function metrics
+Message-ID: <20250409142900.GD9833@noisy.programming.kicks-ass.net>
 References: <20250408171530.140858-1-mark.barnett@arm.com>
- <20250408171530.140858-4-mark.barnett@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,30 +54,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408171530.140858-4-mark.barnett@arm.com>
+In-Reply-To: <20250408171530.140858-1-mark.barnett@arm.com>
 
-On Tue, Apr 08, 2025 at 06:15:28PM +0100, mark.barnett@arm.com wrote:
-> @@ -10224,6 +10227,19 @@ static int __perf_event_overflow(struct perf_event *event,
->  	 *
->  	 * By ignoring the HF samples, we measure the actual period.
->  	 */
-> +
-> +	/*
-> +	 * Apply optional jitter to the overall sample period
-> +	 */
-> +	if (hwc->sample_period_state & PERF_SPS_HF_RAND
-> +			&& !(hwc->sample_period_state & PERF_SPS_HF_SAMPLE)) {
+On Tue, Apr 08, 2025 at 06:15:25PM +0100, mark.barnett@arm.com wrote:
 
-Coding style nit: when breaking lines, the operator goes on the end of
-the preceding line.
+>     perf record -T --sample-cpu --call-graph fp,4 --user-callchains \
+>         -k CLOCK_MONOTONIC_RAW \
+>         -e '{cycles/period=999700,alt-period=300/,instructions,branch-misses,cache-references,cache-misses}:uS' \
+>         benchmark 0 1
 
-> +		struct rnd_state *state = &get_cpu_var(sample_period_jitter_rnd);
-> +		u64 rand_period = 1 << event->attr.hf_sample_rand;
-> +
-> +		sample_period -= rand_period / 2;
-> +		sample_period += prandom_u32_state(state) & (rand_period - 1);
-> +	}
-> +
->  	if (hwc->sample_period_state & PERF_SPS_HF_ON) {
->  		u64 hf_sample_period = event->attr.hf_sample_period;
->  
+>     perf record -i -vvv -e '{cycles/period=999700,alt-period=300/,instructions}:uS' benchmark 0 1
+
+Should be updated to read something like:
+
+	cycles/period=1000000,hf-period=300/
+
+right?
+
+Also, cycles/freq=1000,hf-period=300/ should now also work, right?
+
+Anyway, the kernel bits look good to me now (with the nits fixed), so:
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
