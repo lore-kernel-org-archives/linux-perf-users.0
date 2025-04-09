@@ -1,89 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C18267391
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Apr 2025 15:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF5526FA6E
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Apr 2025 17:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214228; cv=none; b=Azy68vMz3IOEu+u46xYjhvbUuT1Uh62P2TpvvygRZ5+vS7FYAEv4BSwD6kWZYySb9qLY+1UFnjmQ41uGs7GxboVqtESDemGhp688ed2J0g3saf3o8qG2tNPJcevjBAp+1Txlyn5vms9bE2QHJ20GeLioUsXFYVIvOh7QsRkBNsY=
+	t=1744218304; cv=none; b=T8hNDIUnb5caYILt7zCwEtPEEuDp+YDF/+uKMKSinn/1WosacIHnY8TtnxM+KEjSK6f22dKZhkFBmuWtPSY9Ghowop0DhZbdbfNkJvVXRvW2Jw51ZbsfXeycCLoiCt32g9MmxhQMZPmwBrlVKozpkUq6GC4hLXtfqzlvwDvR3U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214228; c=relaxed/simple;
-	bh=q5qzw8UpcZquc26QYItmGdz3XV702QjvXrDaRDiSDgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1rz1186LLCeBZCPl3dIL/Awk5vnno3Ljckugjs6ufCHdPbc+YHwlPqY0sg8vi7IwL7ZFaUR0uX9wf3wSJkgwI3/wy+jzSlixB4lyXPWAQRTbcpkLmgNLc6qZ+kiU7EDaDj0HUcvUvbMegF3279m6mxvpYpihHy0dBbDpmzXIEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6On7OHH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744218304; c=relaxed/simple;
+	bh=i8Zg1guA//+lhxQK2uTFZZPpwn6JYVZCVdGXPvWgvFc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VBf7DEOZw9DDCm5vycOQ++rMNMf9w+UNDOJ2lQoV3ujN0PcPFuZs6PJZOQJRT+gHwkdOJIz3eKJvp39e7718r3iPtvat18YCx9i6p/EcChyD9QjMMryU6Djoeq7waJ8KehX2K7Rnz8peEMRYkxtf6FlkAIP087Aj76s+e62MKzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0IsSIN+f; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6On7OHH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9760CC4CEE2;
-	Wed,  9 Apr 2025 15:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744214228;
-	bh=q5qzw8UpcZquc26QYItmGdz3XV702QjvXrDaRDiSDgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m6On7OHHPO6mWxxMMNP+lVq/bNUdzdPWnAReH7ThiDVcz6Kn8+89rRJI9aIeIkuVK
-	 Tz/o9Tr52j65ZWZqibb6E3ADt9H/lEnwQlVOaaIW5bBakAyH4kaFqxz7txHnVguEu1
-	 BMxg+gzWoKIOswa+WIozoKjKJBL2S2sirSOfI0S/MY8Y6/zXmYA9l9JgGWbpKUAXFJ
-	 E7dsvNMzY0OG7CLYrttrk+wOkmsgWb3e9mrTd9NkWePLOxdTyJPQgJbtIc3zmkvnr1
-	 AgFLUph8g8D8AUSVmgE2mVPqQM4AUHYQpK2lYMWIYKhbNpm3Cljrom5uYpe3UUlx2O
-	 FaimAD89CzhgA==
-Date: Wed, 9 Apr 2025 12:57:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-Message-ID: <Z_aY0fTs53id77CS@x1>
-References: <Z9vgt1pjiNbDBDbM@gmail.com>
- <Z9w_aFlzOkoCTSqK@google.com>
- <Z-EJnye74la1triY@gmail.com>
- <Z--pWmTHGb62_83e@gmail.com>
- <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
- <Z_QEND63LoxP0h9H@gmail.com>
- <Z_Rz10stoLzBocIO@x1>
- <Z_TYux5fUg2pW-pF@gmail.com>
- <Z_XaOp4TCBKe-M0o@x1>
- <Z_ZltdaHx9XuKcd9@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0IsSIN+f"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3032ea03448so7176585a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Apr 2025 10:05:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744218302; x=1744823102; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oX5AQF1CWc875K1riqzQPEOYHtRRRjW13afP6TGJ4O4=;
+        b=0IsSIN+foHLBkITJENDX/YJAi9MUPbipmO/Erfw8eJc3MdYMcX20am2zMClvksq+80
+         rNRDHrt8qHn3dOoufQWyxQBngufLqPPfW12kMCpl4P0av6ZFt+94srxwEvhmSyXv2tdI
+         xxsjvACiF6u8sAiT6twwjG1RwpplCq2WdIAHtN6onRsr9OCpQDisYqWyrGe08/Vt7qBn
+         C39Y0NXcjziMYmb7icAszXryAihzbHS3RMaAwxmIHGnA/LjFQjP/0CTlBHgTKxDDhsiN
+         Dbs1x2XD5KLxDs41GGeCk9424ssbLjg7DCxe8gJAHhAAxpB44nHu4qrPrY1zKr/ogSiB
+         UdKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744218302; x=1744823102;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oX5AQF1CWc875K1riqzQPEOYHtRRRjW13afP6TGJ4O4=;
+        b=r5MposQeoZum/vDSWtEVOmo125spy89j1aHONAzI+VWk2eKRRXePLhDX10Hl1ZzOV8
+         eW2QguB1+ozelBlTZam+evS0H4O4Yowjy4B5KRbgNFYLhn/Mn6nr/8kJqtsVg1WWqR6b
+         xqkUWQxnN8Mnq+/mN9wjuRL7H7bv/5fcY/zkzUDAiGiZBjX93H3MltupNP/fL21+KteJ
+         3nvbsgMuL9mqFhejz39uubrjV3MNa31KWfGs9PtT+nNZlME2fAyO3EZ1xWl75LjQ7v0v
+         g+d2uTlfUX/dI+Th4xjLG60GuXrqsO/qqKRTLc72Z8vLH/PEhigpqNf1X66ZP8dA719C
+         J78Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWHE5Mvg1NISgmoZcnbLU1btruSPN5LJdkHX2Y0PKgZfqiRNeGtOgOC1W9MeKWWb/xCWk3mk09ypI3XxeLJihOB@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl6NJ/bR5/epgntqt2ClaC7M2jutIJKO0YwBStXmhf7o1x6znA
+	Q7speyTz2wEFaSvaJQuBSLl0NHQYHXcdz3wRZEqrUUHcB8M1Glsx+FJfarIBaS+Ev0TNkPiIV9o
+	1Vg==
+X-Google-Smtp-Source: AGHT+IEem0Cj1DZoksj+te/q+i7fjk/ApWH/IZlQdD3zb/NnN621mHgFseqow65YuvbIXi3Fri1358Ay9cM=
+X-Received: from pjbqn13.prod.google.com ([2002:a17:90b:3d4d:b0:2ff:5752:a78f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2704:b0:2ff:52e1:c4b4
+ with SMTP id 98e67ed59e1d1-306dd5789d1mr3720511a91.32.1744218302030; Wed, 09
+ Apr 2025 10:05:02 -0700 (PDT)
+Date: Wed, 9 Apr 2025 10:05:00 -0700
+In-Reply-To: <Z_VUswFkWiTYI0eD@do-x1carbon>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_ZltdaHx9XuKcd9@x1>
+Mime-Version: 1.0
+References: <Z_VUswFkWiTYI0eD@do-x1carbon>
+Message-ID: <Z_aovIbwdKIIBMuq@google.com>
+Subject: Re: kvm guests crash when running "perf kvm top"
+From: Sean Christopherson <seanjc@google.com>
+To: Seth Forshee <sforshee@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Apr 09, 2025 at 09:19:01AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Apr 08, 2025 at 11:23:54PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Apr 08, 2025 at 10:05:15AM +0200, Ingo Molnar wrote:
-> > >      - Yay! But very unintuitive. The intuitive step would have been 
-> > >        the left arrow key BTW. (with restoring the cursor position to 
-> > >        the cc1 entry I pressed 'Enter' on originally), but that doesn't 
->  
-> > That is how I implemented it initially, yes, over 10 years ago.
+On Tue, Apr 08, 2025, Seth Forshee wrote:
+> A colleague of mine reported kvm guest hangs when running "perf kvm top"
+> with a 6.1 kernel. Initially it looked like the problem might be fixed
+> in newer kernels, but it turned out to be perf changes which must avoid
+> triggering the issue. I was able to reproduce the guest crashes with
+> 6.15-rc1 in both the host and the guest when using an older version of
+> perf. A bisect of perf landed on 7b100989b4f6 "perf evlist: Remove
+> __evlist__add_default", but this doesn't look to be fixing any kind of
+> issue like this.
 > 
-> I'll experiment with making the Left arrow key, if already on the first
-> column, to work as zoom out.
+> This box has an Ice Lake CPU, and we can reproduce on other Ice Lakes
+> but could not reproduce on another box with Broadwell. On Broadwell
+> guests would crash with older kernels in the host, but this was fixed by
+> 971079464001 "KVM: x86/pmu: fix masking logic for
+> MSR_CORE_PERF_GLOBAL_CTRL". That does not fix the issues we see on Ice
+> Lake.
+> 
+> When the guests crash we aren't getting any output on the serial
+> console, but I got this from a memory dump:
 
-Can you try this, on top of the series or even just this, pressing left
-should do what we want.
+...
 
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index 115aa1af5a0218cd..dc88427b4ae5af4c 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -459,6 +459,8 @@ int ui_browser__run(struct ui_browser *browser, int delay_secs)
- 				goto out;
- 			if (browser->horiz_scroll != 0)
- 				--browser->horiz_scroll;
-+			else
-+				goto out;
- 			break;
- 		case K_PGDN:
- 		case ' ':
+> Oops: 0000 [#1] PREEMPT SMP NOPTI
+> BUG: kernel NULL pointer dereference, address: 000000000000002828
+
+FWIW, this is probably slightly corrupted.  When I run with EPT disabled, to force
+KVM to intercept #PFs, the reported CR2 is 0x28.  Which is consistent with the
+guest having DS_AREA=0.  I.e. the CPU is attempting to store into the DS/PEBS
+buffer.
+
+As suspected, the issue is PEBS.  After adding a tracepoint to capture the MSRs
+that KVM loads as part of the perf transition, it's easy to see that PEBS_ENABLE
+gets loaded with a non-zero value immediate before death, doom, and destruction.
+
+  CPU 0: kvm_entry: vcpu 0, rip 0xffffffff81000aa0 intr_info 0x80000b0e error_code 0x00000000
+  CPU 0: kvm_perf_msr: MSR 38f: host 1000f000000fe guest 1000f000000ff
+  CPU 0: kvm_perf_msr: MSR 600: host fffffe57186af000 guest 0
+  CPU 0: kvm_perf_msr: MSR 3f2: host 0 guest 0
+  CPU 0: kvm_perf_msr: MSR 3f1: host 0 guest 1
+  CPU 0: kvm_exit: vcpu 0 reason EXCEPTION_NMI rip 0xffffffff81000aa0 info1 0x0000000000000028 intr_info 0x80000b0e error_code 0x00000000
+
+The underlying issue is that KVM's current PMU virtualization uses perf_events
+to proxy guest events, i.e. piggybacks intel_ctrl_guest_mask, which is also used
+by host userspace to communicate exclude_host/exclude_guest.  And so perf's
+intel_guest_get_msrs() allows using PEBS for guest events, but only if perf isn't
+using PEBS for host events.
+
+I didn't actually verify that "perf kvm top" generates for events, but I assuming
+it's creating a precise, a.k.a. PEBS, event that measures _only_ guest, i.e.
+excludes host.  That causes a false positive of sorts in intel_guest_get_msrs(),
+and ultimately results in KVM running the guest with a PEBS event enabled, even
+though the guest isn't using the (virtual) PMU.
+
+Pre-ICX CPUs don't isolate PEBS events across the guest/host boundary, and so
+perf/KVM hard disable PEBS on VM-Enter.  And a simple (well, simple for perf)
+precise event doesn't cause problems, because perf/KVM will disable PEBS events
+that are counting the host.  I.e. if a PEBS event counts host *and* guest, it's
+"fine".
+
+Long story short, masking PEBS_ENABLE with the guest's value (in addition to
+what perf allows) fixes the issue on my end.  Assuming testing goes well, I'll
+post this as a proper patch.
+
+--
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cdb19e3ba3aa..1d01fb43a337 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4336,7 +4336,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+        arr[pebs_enable] = (struct perf_guest_switch_msr){
+                .msr = MSR_IA32_PEBS_ENABLE,
+                .host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+-               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
++               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+        };
+ 
+        if (arr[pebs_enable].host) {
+--
+
+
+> Let me know if I can provide any additional information or testing.
+
+Uber nit: in the future, explicitly state whether a command is being run in the
+guest or host.  I had a brain fart and it took me an embarrasingly long time to
+grok that running "perf kvm top" in the guest would be nonsensical.
