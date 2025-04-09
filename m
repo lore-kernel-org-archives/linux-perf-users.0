@@ -1,96 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBB41E25F2
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Apr 2025 19:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CA7214A7F;
+	Wed,  9 Apr 2025 19:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226548; cv=none; b=Hnm8PIAiqF0SphLtVurRY8dHgYqO9GcDTi33QflHyfhuXoX9tq576E+/Nn5EWY2As/LZDNA54FFvMSKaJtrgJzgQdmkAUqmId9h8HrBgqPN2PsVKc1bH13aox470DBICol0mUTSmybxrXmJztduLXMDg6GD/KEA9Qw3wC4KDa5I=
+	t=1744228451; cv=none; b=WYahd8HijWGGgljQZwVoZI2y9iN7Yu25MdRJayLwzDJ0xXYr3kOsrgEFcbp0MEAI9L7VB/hPe03dIH33eeTOFrVLd7+KKMfihkmPm+KNMgUfyHh7OTG6mrgAfzL9H0JbKZhyMRsUyt6UdfJtcNbIv1IDNz2JS+no33SQ5YUsoyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226548; c=relaxed/simple;
-	bh=h+jPO0cnsRnc1NHKA7TCu+7++BbxwU/AKq/B2ZtyC4Q=;
+	s=arc-20240116; t=1744228451; c=relaxed/simple;
+	bh=q7KvwDfQqFDNGgQf6PyiHomLFAW6NL2n557EpD26id8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GB073oPtEalQ1Ft2TCw4wPR+ss6KLOBqODhEKjQi/Z6gmL616+iiwJt/PDfjloEdCstIAN+9Xl+OnBqz2cNDb1MQqU3cCXXGg9leQ6iQpgm9EbeAiezCILRkm5sxDM0byK3YglOHZfJ2rZXPH5HER2cP7u0th+VVM7q/eezcx8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NC7a9mNw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oy1/Yaw991znhwp5goXstaqIx3MSAul68EdkULkv06fub7A452cZfm2d1VFeXm8c1Ih6pxf3fij9Zu0Nk0uXQ8nrabO2A8y3aAJxh0RDq+tamaRNUbCt20kGjzAfweWC6OTatmjxnItm2Iu7FiAA/Sp0NrSMhPH5/3GAfhyiNfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VulSS1Yw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NC7a9mNw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B43EC4CEE2;
-	Wed,  9 Apr 2025 19:22:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VulSS1Yw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260C8C4CEE2;
+	Wed,  9 Apr 2025 19:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744226547;
-	bh=h+jPO0cnsRnc1NHKA7TCu+7++BbxwU/AKq/B2ZtyC4Q=;
+	s=k20201202; t=1744228450;
+	bh=q7KvwDfQqFDNGgQf6PyiHomLFAW6NL2n557EpD26id8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NC7a9mNw281j7CUJEVWS0urFJzUL9QRAGPJTk1yNAD1V2zrnW5X5wZy61w6rSy3aG
-	 sj+lNf9hoJxrSuPp6Jk/IewPPukYgoH+A/C0cIOnQaFD1H4AJF1XrTniLX4uhs2CqJ
-	 oSQjGHRcsVnSWa46yJSIMsRyD3OCWSnGPShSwCFyxCajMGLgW82DBVQgFLHerz6GNn
-	 ybmH2RXWmF4jOGuiPfVIBoE/vQoZHKMY42U2uPetOP1LN4bgHryEHLiSHHp39cOkRI
-	 98X5jsb9i0l+dohxamLmLU0chdMGmljufr0zWDXe+PMpFqXqNdacBv1IIDD7SB+81j
-	 pAJNMBTS9ja1w==
-Date: Wed, 9 Apr 2025 16:22:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-Message-ID: <Z_bI7wK8mJYVOWDH@x1>
-References: <Z-EJnye74la1triY@gmail.com>
- <Z--pWmTHGb62_83e@gmail.com>
- <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
- <Z_QEND63LoxP0h9H@gmail.com>
- <Z_Rz10stoLzBocIO@x1>
- <Z_TYux5fUg2pW-pF@gmail.com>
- <Z_XaOp4TCBKe-M0o@x1>
- <Z_ZltdaHx9XuKcd9@x1>
- <Z_aY0fTs53id77CS@x1>
- <Z_bHtD7umCsKeWJ6@x1>
+	b=VulSS1YwlnFjfym00iwjm8nZpYCyp06C0ojMIpSCSHZR4u0kCve/HPOLSpwGvY8u5
+	 pBTjBb/9vduXt1yHmPU9a+E8F7KAYhYpWKQEBBPX+/hfy20lXzFqyHyY8B+HK6sZUf
+	 xN3fYMEJoURP0ouK4XLhP558hxwDPdlv3j55wiCtlhRPkFu/TgXbgsw4c31dujDZWx
+	 WI68CmIsMMEvM72xxyr1xE96ssKn4YT5iCMXcjHWRmRp8UzErdBvMQgGb+caLf69ln
+	 4GvtnHjQrXPK2u6hCjNy/AUsgKBW8iPDB+syZsrtkVGFcuJdzKsEe35yQuSR5M6flU
+	 mNFGcP/z9LOpg==
+Date: Wed, 9 Apr 2025 21:53:59 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Xin Li <xin@zytor.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+	linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+	andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, wei.liu@kernel.org,
+	ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+	pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+Message-ID: <Z_bQV2oOnJlwbxnk@gmail.com>
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com>
+ <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
+ <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
+ <e5770add-9d18-40e1-929d-df7c40f3c7d1@intel.com>
+ <ADCFB190-A89A-460D-81A6-80E20AEFBFBC@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <Z_bHtD7umCsKeWJ6@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ADCFB190-A89A-460D-81A6-80E20AEFBFBC@zytor.com>
 
-On Wed, Apr 09, 2025 at 04:17:11PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 09, 2025 at 12:57:05PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Apr 09, 2025 at 09:19:01AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Tue, Apr 08, 2025 at 11:23:54PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Tue, Apr 08, 2025 at 10:05:15AM +0200, Ingo Molnar wrote:
-> > > > >      - Yay! But very unintuitive. The intuitive step would have been 
-> > > > >        the left arrow key BTW. (with restoring the cursor position to 
-> > > > >        the cc1 entry I pressed 'Enter' on originally), but that doesn't 
-> > >  
-> > > > That is how I implemented it initially, yes, over 10 years ago.
-> > > 
-> > > I'll experiment with making the Left arrow key, if already on the first
-> > > column, to work as zoom out.
-> > 
-> > Can you try this, on top of the series or even just this, pressing left
-> > should do what we want.
+
+* H. Peter Anvin <hpa@zytor.com> wrote:
+
+> On April 2, 2025 8:41:07 AM PDT, Dave Hansen <dave.hansen@intel.com> wrote:
+> >On 3/31/25 22:53, Xin Li wrote:
+> >> Per "struct msr" defined in arch/x86/include/asm/shared/msr.h:
+> >> 
+> >> struct msr {
+> >>         union {
+> >>                 struct {
+> >>                         u32 l;
+> >>                         u32 h;
+> >>                 };
+> >>                 u64 q;
+> >>         };
+> >> };
+> >> 
+> >> Probably *msrq() is what we want?
+> >
+> > What would folks think about "wrmsr64()"? It's writing a 64-bit 
+> > value to an MSR and there are a lot of functions in the kernel that 
+> > are named with the argument width in bits.
 > 
-> This is working for zooming into/out of a DSO, but for threads, which is
-> what you described, it is not working, checking that...
+> Personally, I hate the extra verbosity, mostly visual, since numerals 
+> are nearly as prominent as capital letters they tend to attract the 
+> eye. There is a reason why they aren't used this way in assembly 
+> languages.
 
-Using 't' to zoom into a thread and then LEFT to zoom out works, ditto
-for 'd' + LEFT, 'k' (zoom into the kernel) + LEFT its just 'm' + thread
-or ENTER + Zoom into Thread that isn't working...
+So what's the consensus here? Both work for me, but I have to pick one. :-)
 
-Not even that, there is something subtle, investigating.
+Thanks,
 
-But as a suggestion, pressing 't' zooms into a thread, pressing it again
-zooms out of that thread, rinse repeat.
-
-Ditto for 'd' for DSO and 'k' for the kernel DSO, 'S' for a CPU socket
-(Kan Liang implemented this, but not for 'c' CPU, will try to add that).
-
-Anyway, back to the bug.
-
-- Arnaldo
+	Ingo
