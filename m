@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3726D1A5BA9;
-	Thu, 10 Apr 2025 00:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64146647;
+	Thu, 10 Apr 2025 01:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744243893; cv=none; b=uwgmC2LZ7j/LuVPI+ryn/OhCd7enXwdi83/Ams3eEtQs7a9fZS+Wb1ADHovGHj64Ymj92krMuFheBJmqeY8n0EafnutrqAcIJZVHx+JI9EgK2sY5ktgHYGlWcXslQ24p+9RRRXXLDjLo0uu+Dvaj3FHWPGA1K8C7NYmf3AaxbGM=
+	t=1744246974; cv=none; b=UzP4uFNHJrx9fB9Hy9+qkxUr++vvYqhd0fmSaqGiavtpcib7P+1bxdb3Ezr9ln2nuRE2zycowcIsw5LuOHEyP0cmdRx0eDL7C1mcpSblX2HTevRS4oiZSeRnrxniUvx7aivS0jQSOL4NAvNccxTiqnqYujcZxe9qI9ac7ubOrrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744243893; c=relaxed/simple;
-	bh=T20OlLQN6t8NjiZOs1TLZ6/pvAdfjxkFgUg0j9VVE5A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qsbO6M72hViWzSsDMtOmnif9vxh+bi0heXgq3zkOQTjDaCyW2Q8s9oLl91ekHNwQanpypKqO9f4yDQwtUSjZetfprpDSQGPHrTpSdZIBysAE1gAyRkslGwEnSqQHtwOv867lO9JNZo9Pjdu2RpJvi/2EzcK3G7gUGuEpn92UfFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJZZ0T9k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744246974; c=relaxed/simple;
+	bh=GUHS/4Nkf7J6bc7/7YtgtSPyEUMQRZos6or8dxKDCvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JyXWvMAvizcBjgRrD41+7JSOI6dyUSf3NZbP+CuptArLzmtgiOcvrNXBvkh9MPuENd40/pKc3wo7qnOvnsl8y0hLvuJui8thXsRaxjMzQ9JCiDs45Zx8l7P7w/NBT0WxPJ76hBph/ft+YycLU4jrUULYR6MjizG1b618b7JK9uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCSrbdm8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJZZ0T9k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE7FC4CEE9;
-	Thu, 10 Apr 2025 00:11:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCSrbdm8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BDAEC4CEE2;
+	Thu, 10 Apr 2025 01:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744243892;
-	bh=T20OlLQN6t8NjiZOs1TLZ6/pvAdfjxkFgUg0j9VVE5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HJZZ0T9kWDDhzcxxLMi/YSws1E6k+9grd87wjHAw5SOJAypp52zS0vPRWfHBqSdLY
-	 GFeGIskvein8Gi9gWmX7w5TemRF66AwmUdjhIzKHywkv17VvwEY+WQn0+Zc7KJfvO6
-	 Zy3cpoRIVRWDwh/3/vWlY2ovhBRMFdqFO3j8qNGmiGuxKONjHSogZWYYFVta7irv/L
-	 wtk7WlL7PG9tSf053Pdc85osJt+atRtjLg8y+dVkaK7jBFkpLL0pxM4t3nc7ahy82J
-	 si85RUpVoiCq50v2XppQBSwOuuwF9QLWpqeCSvoFMsyDwRjS19VxExQliwJOpiz7Gw
-	 zrzZI2lXhYCtA==
+	s=k20201202; t=1744246973;
+	bh=GUHS/4Nkf7J6bc7/7YtgtSPyEUMQRZos6or8dxKDCvQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rCSrbdm8YmhBLINvMRhxVXHCpPNnvfykqKlQtSIHktdCfth7lajVgWPG3zsSD9Uvo
+	 ASE46zXUJeClhsnDjswyNvVEtnqEl6OkLS+FauYQb0Vb8gsiQxwdpxhjp+zo6E3NWa
+	 RemXsDCBo7aSgIMABbqxgvevCecfwSV0UcACo9598cRYzEYtmlLOEeTvT52JUA8Ib7
+	 QkZQFEAX+15BOjYDd7FuNkhcAW1/3KRJjxDb0IBYGUUBFGJk6TwCHSliI5nenqdvKu
+	 Azl3pukIGnawwxF+8BjHivYHrVEZkYFcEW55I3A1Ys0/Kr8rHDVP8H8AjMWTeB+NlT
+	 s3ldob5jriWbQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,13 +35,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH 10/10] tools headers: Update the arch/x86/lib/memset_64.S copy with the kernel sources
-Date: Wed,  9 Apr 2025 17:11:25 -0700
-Message-ID: <20250410001125.391820-11-namhyung@kernel.org>
+	Chun-Tse Shao <ctshao@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: [PATCH] perf tools: Remove evsel__handle_error_quirks()
+Date: Wed,  9 Apr 2025 18:02:52 -0700
+Message-ID: <20250410010252.402221-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-In-Reply-To: <20250410001125.391820-1-namhyung@kernel.org>
-References: <20250410001125.391820-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,113 +49,99 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To pick up the changes in:
+The evsel__handle_error_quirks() is to fixup invalid event attributes on
+some architecture based on the error code.  Currently it's only used for
+AMD to disable precise_ip not to use IBS which has more restrictions.
 
-  2981557cb0408e14 x86,kcfi: Fix EXPORT_SYMBOL vs kCFI
+But the commit c33aea446bf555ab changed call evsel__precise_ip_fallback
+for any errors so there's no difference with the above function.  To
+make matter worse, it caused a problem with branch stack on Zen3.
 
-That required adding a copy of include/linux/cfi_types.h and its checking
-in tools/perf/check-headers.h.
+The IBS doesn't support branch stack so it should use a regular core
+PMU event.  The default event is set precise_max and it starts with 3.
+And evsel__precise_ip_fallback() tries with it and reduces the level one
+by one.  At last it tries with 0 but it also failed on Zen3 since the
+branch stack is not supported for the cycles event.
 
-Addressing this perf tools build warning:
+At this point, evsel__precise_ip_fallback() restores the original
+precise_ip value (3) in the hope that it can succeed with other modifier
+(like exclude_kernel).  Then evsel__handle_error_quirks() see it has
+precise_ip != 0 and make it retry with 0.  This created an infinite
+loop.
 
-  Warning: Kernel ABI header differences:
-    diff -u tools/arch/x86/lib/memset_64.S arch/x86/lib/memset_64.S
+Before:
 
-Please see tools/include/uapi/README for further details.
+  $ perf record -b -vv |& grep removing
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  removing precise_ip on AMD
+  ...
 
-Cc: x86@kernel.org
+After:
+
+  $ perf record -b true
+  Error:
+  Failure to open event 'cycles:P' on PMU 'cpu' which will be removed.
+  Invalid event (cycles:P) in per-thread mode, enable system wide with '-a'.
+  Error:
+  Failure to open any events for recording.
+
+Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/x86/lib/memset_64.S  |  3 ++-
- tools/include/linux/cfi_types.h | 45 +++++++++++++++++++++++++++++++++
- tools/perf/check-headers.sh     |  1 +
- 3 files changed, 48 insertions(+), 1 deletion(-)
- create mode 100644 tools/include/linux/cfi_types.h
+ tools/perf/util/evsel.c | 22 ----------------------
+ 1 file changed, 22 deletions(-)
 
-diff --git a/tools/arch/x86/lib/memset_64.S b/tools/arch/x86/lib/memset_64.S
-index 0199d56cb479d88c..d66b710d628f8865 100644
---- a/tools/arch/x86/lib/memset_64.S
-+++ b/tools/arch/x86/lib/memset_64.S
-@@ -3,6 +3,7 @@
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 1974395492d7da5e..3c030da2e477c707 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2566,25 +2566,6 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+ 	return false;
+ }
  
- #include <linux/export.h>
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/cpufeatures.h>
- #include <asm/alternative.h>
+-static bool evsel__handle_error_quirks(struct evsel *evsel, int error)
+-{
+-	/*
+-	 * AMD core PMU tries to forward events with precise_ip to IBS PMU
+-	 * implicitly.  But IBS PMU has more restrictions so it can fail with
+-	 * supported event attributes.  Let's forward it back to the core PMU
+-	 * by clearing precise_ip only if it's from precise_max (:P).
+-	 */
+-	if ((error == -EINVAL || error == -ENOENT) && x86__is_amd_cpu() &&
+-	    evsel->core.attr.precise_ip && evsel->precise_max) {
+-		evsel->core.attr.precise_ip = 0;
+-		pr_debug2_peo("removing precise_ip on AMD\n");
+-		display_attr(&evsel->core.attr);
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		struct perf_thread_map *threads,
+ 		int start_cpu_map_idx, int end_cpu_map_idx)
+@@ -2730,9 +2711,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	if (evsel__precise_ip_fallback(evsel))
+ 		goto retry_open;
  
-@@ -28,7 +29,7 @@
-  * only for the return value that is the same as the source input,
-  * which the compiler could/should do much better anyway.
-  */
--SYM_FUNC_START(__memset)
-+SYM_TYPED_FUNC_START(__memset)
- 	ALTERNATIVE "jmp memset_orig", "", X86_FEATURE_FSRS
- 
- 	movq %rdi,%r9
-diff --git a/tools/include/linux/cfi_types.h b/tools/include/linux/cfi_types.h
-new file mode 100644
-index 0000000000000000..6b87136757655c05
---- /dev/null
-+++ b/tools/include/linux/cfi_types.h
-@@ -0,0 +1,45 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Clang Control Flow Integrity (CFI) type definitions.
-+ */
-+#ifndef _LINUX_CFI_TYPES_H
-+#define _LINUX_CFI_TYPES_H
-+
-+#ifdef __ASSEMBLY__
-+#include <linux/linkage.h>
-+
-+#ifdef CONFIG_CFI_CLANG
-+/*
-+ * Use the __kcfi_typeid_<function> type identifier symbol to
-+ * annotate indirectly called assembly functions. The compiler emits
-+ * these symbols for all address-taken function declarations in C
-+ * code.
-+ */
-+#ifndef __CFI_TYPE
-+#define __CFI_TYPE(name)				\
-+	.4byte __kcfi_typeid_##name
-+#endif
-+
-+#define SYM_TYPED_ENTRY(name, linkage, align...)	\
-+	linkage(name) ASM_NL				\
-+	align ASM_NL					\
-+	__CFI_TYPE(name) ASM_NL				\
-+	name:
-+
-+#define SYM_TYPED_START(name, linkage, align...)	\
-+	SYM_TYPED_ENTRY(name, linkage, align)
-+
-+#else /* CONFIG_CFI_CLANG */
-+
-+#define SYM_TYPED_START(name, linkage, align...)	\
-+	SYM_START(name, linkage, align)
-+
-+#endif /* CONFIG_CFI_CLANG */
-+
-+#ifndef SYM_TYPED_FUNC_START
-+#define SYM_TYPED_FUNC_START(name) 			\
-+	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+#endif
-+
-+#endif /* __ASSEMBLY__ */
-+#endif /* _LINUX_CFI_TYPES_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index a4499e5a6f9cb00c..857f6646cc23e949 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -20,6 +20,7 @@ FILES=(
-   "include/uapi/linux/stat.h"
-   "include/linux/bits.h"
-   "include/vdso/bits.h"
-+  "include/linux/cfi_types.h"
-   "include/linux/const.h"
-   "include/vdso/const.h"
-   "include/vdso/unaligned.h"
+-	if (evsel__handle_error_quirks(evsel, err))
+-		goto retry_open;
+-
+ out_close:
+ 	if (err)
+ 		threads->err_thread = thread;
 -- 
 2.49.0.504.g3bcea36a83-goog
 
