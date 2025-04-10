@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC605136E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADFA2114;
 	Thu, 10 Apr 2025 00:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744243887; cv=none; b=WCDDQy8bl022FTIVvwgLBgb2AjW19JuXzGn/0iGrWX+Mz6YJ3BU+jRe13bUZAeekRBDAvjEawKe2rNuxNLUamKady+umywRoFnG1nMItemntU0t8T+WNzvSor9RiSZxDgXcBW8WEJCZkFPX0znHruJQdnmjetu1fzNahsO/DCtA=
+	t=1744243888; cv=none; b=p3K5eKCOWUEyh/ymEkkJbYQVd60wyuxYfSZ6qZ38u3AoyjqYdnQofkfTDBn8a6CelZPk42FYwhrNfPPn8oo4m0ILesnihAYyovqg+6Gc9tyF8qD1IhhIzA2D2NbF1LoDpCSxQf0GmyXd9hAhLg4PNQIlC2oYsW1/hXiTUUewwAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744243887; c=relaxed/simple;
-	bh=6PX2y6AJPpGl3dKhFzuaAcuIp0YPP478TUGxJCS4N7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZHi9sivV+6ja2QsiDhlZMHj/LiolbpjZTL3SWluMVnpUkdDdCuOMzqGmWfYympJg/rMPnygS5WBKWnv2fW5EgSpp7FG/F/ilH+0i8cyZeUU/8l5tEf7s+s2fJt/QySRlyRaYrmnDQKM70kDH66/fJHfhtHhlR23fDxaiOgn8zTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDiXHPGj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744243888; c=relaxed/simple;
+	bh=5IDzi6FCSX8yvZjYvGsMcoY/WWOEXwW9nUi7OYzJos0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aBkHPPX2hINuIoTsrGgUMS3g93D79se1c+llshZt3CxsV5T4U7eXWQUwKi8TjrXIREb/CEK+pkUwmIZtVh0KyxfpYdDEHJjGA9MhGAKjjdWARG7224W8GItxRm+P+s7z6y/8a9S+sFZHvSCb8bRfGDstehU49APh5NkTQrXu38s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBBh/Wlo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDiXHPGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A95F3C4CEE2;
-	Thu, 10 Apr 2025 00:11:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBBh/Wlo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CDBC4CEEB;
+	Thu, 10 Apr 2025 00:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744243887;
-	bh=6PX2y6AJPpGl3dKhFzuaAcuIp0YPP478TUGxJCS4N7I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BDiXHPGj7FQuHNnFg+Y2RHhsOi+rdKDBGaXtN9tbpZhCBo5kbdxrl5aqZBkmyL3Rq
-	 1yyM2VRUKCDscrJ78v256Mj9d4WqIgBMPKk65w/0p/CuO9ZK2n0t4w2ErXEaNF4TDN
-	 pOcjY5J6EZKBH04eL6r3fUgjU2c0QWwaALxF/zM/8YGrdrIDFV8sr50KOjf0UdfKAc
-	 JRjmk/rWP+7iDmUPcoGb7fMAakJnhSYDuN+f3J6g/IzrjCDmMncfEZtRhmZXqeUn5B
-	 OzAgYdYquhSLVK+R/Q+9LWtS7U6Sfr8pVLSXB7IeRtKQbMp400fNk30lIgbPrGfteu
-	 AC7CxlTa+EN9g==
+	bh=5IDzi6FCSX8yvZjYvGsMcoY/WWOEXwW9nUi7OYzJos0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lBBh/Wlo58XFFa1aoFG0Wzl80tjDlb7cgliHkzKwS7SvJJyfDzrCe9pga2Gv35uSB
+	 jwM9PSAVSVZdqOdbuyGbUscjrYPQMeFmk9xiSMzuBZFkoe3n98bpHclExKMhlzg6Py
+	 Y7xnpVRlVwO96g0ZkZTe+17Rl6yOZ+2GaszkckKs4PTeq6YyE0Yy2O5QgxvDAliawS
+	 +BM+w1pty2tXWk+wgEd7X32OuJSNwxCQsA6WpO8NHu4fFrqdZEZQbh1A3VioWDbPIs
+	 Eat1fzvAXUeh1iW2c8yq0+8uada7gUe4Jjlkk5/80tEwRDM55M5jv+Ju6BM3pK4NH6
+	 88dsFc3l9U0kw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -34,11 +35,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCHSET 00/10] tools headers: Sync header files with the kernel
-Date: Wed,  9 Apr 2025 17:11:15 -0700
-Message-ID: <20250410001125.391820-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH 01/10] tools headers: Update the KVM headers with the kernel sources
+Date: Wed,  9 Apr 2025 17:11:16 -0700
+Message-ID: <20250410001125.391820-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+In-Reply-To: <20250410001125.391820-1-namhyung@kernel.org>
+References: <20250410001125.391820-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,73 +51,142 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+To pick up the changes in:
 
-FYI I'm carrying these changes in the perf tools tree so make perf trace
-beautifiers get the recent changes in syscall, ioctl, and so on.  For the
-background, please see tools/include/uapi/README.
+  af5366bea2cb9dfb KVM: x86: Drop the now unused KVM_X86_DISABLE_VALID_EXITS
+  915d2f0718a42ee0 KVM: Move KVM_REG_SIZE() definition to common uAPI header
+  5c17848134ab1ffb KVM: x86/xen: Restrict hypercall MSR to unofficial synthetic range
+  9364789567f9b492 KVM: x86: Add a VM type define for TDX
+  fa662c9080732b1f KVM: SVM: Add Idle HLT intercept support
+  3adaee78306148da KVM: arm64: Allow userspace to change the implementation ID registers
+  faf7714a47a25c62 KVM: arm64: nv: Allow userland to set VGIC maintenance IRQ
+  c0000e58c74eed07 KVM: arm64: Introduce KVM_REG_ARM_VENDOR_HYP_BMAP_2
+  f83c41fb3dddbf47 KVM: arm64: Allow userspace to limit NV support to nVHE
 
-Still there are some remaining items but it requires a bit more changes.
-So I'd like to leave them for the next cycle.
+Addressing this perf tools build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
-    diff -u tools/include/linux/bits.h include/linux/bits.h
-    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+    diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+    diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
+    diff -u tools/arch/x86/include/uapi/asm/svm.h arch/x86/include/uapi/asm/svm.h
+    diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
 
-Thanks,
-Namhyung
+Please see tools/include/uapi/README for further details.
 
+Cc: kvm@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/arch/arm64/include/uapi/asm/kvm.h | 5 ++---
+ tools/arch/x86/include/uapi/asm/kvm.h   | 4 ++++
+ tools/arch/x86/include/uapi/asm/svm.h   | 2 ++
+ tools/include/uapi/linux/kvm.h          | 9 +++++----
+ 4 files changed, 13 insertions(+), 7 deletions(-)
 
-Namhyung Kim (10):
-  tools headers: Update the KVM headers with the kernel sources
-  tools headers: Update the socket headers with the kernel sources
-  tools headers: Update the uapi/linux/perf_event.h copy with the kernel sources
-  tools headers: Update the VFS headers with the kernel sources
-  tools headers: Update the syscall table with the kernel sources
-  tools headers: Update the uapi/linux/prctl.h copy with the kernel sources
-  tools headers: Update the uapi/asm-generic/mman-common.h copy with the kernel sources
-  tools headers: Update the linux/unaligned.h copy with the kernel sources
-  tools headers: Update the x86 headers with the kernel sources
-  tools headers: Update the arch/x86/lib/memset_64.S copy with the kernel sources
-
- tools/arch/arm64/include/uapi/asm/kvm.h       |  5 +-
- tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +----
- tools/arch/x86/include/asm/cpufeatures.h      | 28 ++++--
- tools/arch/x86/include/asm/msr-index.h        | 31 +++---
- tools/arch/x86/include/uapi/asm/kvm.h         |  4 +
- tools/arch/x86/include/uapi/asm/svm.h         |  2 +
- tools/arch/x86/lib/memset_64.S                |  3 +-
- tools/include/linux/cfi_types.h               | 45 +++++++++
- tools/include/uapi/asm-generic/mman-common.h  |  1 +
- tools/include/uapi/asm-generic/unistd.h       |  4 +-
- tools/include/uapi/linux/in.h                 |  2 +
- tools/include/uapi/linux/kvm.h                |  9 +-
- tools/include/uapi/linux/perf_event.h         |  2 +
- tools/include/uapi/linux/stat.h               | 99 ++++++++++++++-----
- .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
- .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
- .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
- .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
- tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
- .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
- .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 +-
- .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
- .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
- tools/perf/check-headers.sh                   |  1 +
- .../perf/trace/beauty/include/linux/socket.h  |  2 +
- .../trace/beauty/include/uapi/linux/fcntl.h   |  4 +
- .../perf/trace/beauty/include/uapi/linux/fs.h | 21 +++-
- .../trace/beauty/include/uapi/linux/mount.h   | 10 +-
- .../trace/beauty/include/uapi/linux/prctl.h   | 11 +++
- .../trace/beauty/include/uapi/linux/stat.h    | 99 ++++++++++++++-----
- .../trace/beauty/include/uapi/sound/asound.h  |  8 +-
- tools/scripts/syscall.tbl                     |  1 +
- 32 files changed, 318 insertions(+), 109 deletions(-)
- create mode 100644 tools/include/linux/cfi_types.h
-
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
+index 6d44f8c8a18fd98e..af9d9acaf9975a88 100644
+--- a/tools/arch/arm64/include/uapi/asm/kvm.h
++++ b/tools/arch/arm64/include/uapi/asm/kvm.h
+@@ -43,9 +43,6 @@
+ #define KVM_COALESCED_MMIO_PAGE_OFFSET 1
+ #define KVM_DIRTY_LOG_PAGE_OFFSET 64
+ 
+-#define KVM_REG_SIZE(id)						\
+-	(1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
+-
+ struct kvm_regs {
+ 	struct user_pt_regs regs;	/* sp = sp_el0 */
+ 
+@@ -108,6 +105,7 @@ struct kvm_regs {
+ #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
+ #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
+ #define KVM_ARM_VCPU_HAS_EL2		7 /* Support nested virtualization */
++#define KVM_ARM_VCPU_HAS_EL2_E2H0	8 /* Limit NV support to E2H RES0 */
+ 
+ struct kvm_vcpu_init {
+ 	__u32 target;
+@@ -418,6 +416,7 @@ enum {
+ #define KVM_DEV_ARM_VGIC_GRP_CPU_SYSREGS 6
+ #define KVM_DEV_ARM_VGIC_GRP_LEVEL_INFO  7
+ #define KVM_DEV_ARM_VGIC_GRP_ITS_REGS 8
++#define KVM_DEV_ARM_VGIC_GRP_MAINT_IRQ  9
+ #define KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_SHIFT	10
+ #define KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_MASK \
+ 			(0x3fffffULL << KVM_DEV_ARM_VGIC_LINE_LEVEL_INFO_SHIFT)
+diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
+index 88585c1de416fa6f..460306b35a4bfee9 100644
+--- a/tools/arch/x86/include/uapi/asm/kvm.h
++++ b/tools/arch/x86/include/uapi/asm/kvm.h
+@@ -559,6 +559,9 @@ struct kvm_x86_mce {
+ #define KVM_XEN_HVM_CONFIG_PVCLOCK_TSC_UNSTABLE	(1 << 7)
+ #define KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA	(1 << 8)
+ 
++#define KVM_XEN_MSR_MIN_INDEX			0x40000000u
++#define KVM_XEN_MSR_MAX_INDEX			0x4fffffffu
++
+ struct kvm_xen_hvm_config {
+ 	__u32 flags;
+ 	__u32 msr;
+@@ -925,5 +928,6 @@ struct kvm_hyperv_eventfd {
+ #define KVM_X86_SEV_VM		2
+ #define KVM_X86_SEV_ES_VM	3
+ #define KVM_X86_SNP_VM		4
++#define KVM_X86_TDX_VM		5
+ 
+ #endif /* _ASM_X86_KVM_H */
+diff --git a/tools/arch/x86/include/uapi/asm/svm.h b/tools/arch/x86/include/uapi/asm/svm.h
+index 1814b413fd5783d2..ec1321248dac2ab5 100644
+--- a/tools/arch/x86/include/uapi/asm/svm.h
++++ b/tools/arch/x86/include/uapi/asm/svm.h
+@@ -95,6 +95,7 @@
+ #define SVM_EXIT_CR14_WRITE_TRAP		0x09e
+ #define SVM_EXIT_CR15_WRITE_TRAP		0x09f
+ #define SVM_EXIT_INVPCID       0x0a2
++#define SVM_EXIT_IDLE_HLT      0x0a6
+ #define SVM_EXIT_NPF           0x400
+ #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
+ #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS	0x402
+@@ -224,6 +225,7 @@
+ 	{ SVM_EXIT_CR4_WRITE_TRAP,	"write_cr4_trap" }, \
+ 	{ SVM_EXIT_CR8_WRITE_TRAP,	"write_cr8_trap" }, \
+ 	{ SVM_EXIT_INVPCID,     "invpcid" }, \
++	{ SVM_EXIT_IDLE_HLT,     "idle-halt" }, \
+ 	{ SVM_EXIT_NPF,         "npf" }, \
+ 	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
+ 	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "avic_unaccelerated_access" }, \
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 502ea63b5d2e7371..b6ae8ad8934b52c7 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -617,10 +617,6 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
+-#define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
+-                                              KVM_X86_DISABLE_EXITS_HLT | \
+-                                              KVM_X86_DISABLE_EXITS_PAUSE | \
+-                                              KVM_X86_DISABLE_EXITS_CSTATE)
+ 
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+@@ -933,6 +929,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_PRE_FAULT_MEMORY 236
+ #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
+ #define KVM_CAP_X86_GUEST_MODE 238
++#define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
+@@ -1070,6 +1067,10 @@ struct kvm_dirty_tlb {
+ 
+ #define KVM_REG_SIZE_SHIFT	52
+ #define KVM_REG_SIZE_MASK	0x00f0000000000000ULL
++
++#define KVM_REG_SIZE(id)		\
++	(1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
++
+ #define KVM_REG_SIZE_U8		0x0000000000000000ULL
+ #define KVM_REG_SIZE_U16	0x0010000000000000ULL
+ #define KVM_REG_SIZE_U32	0x0020000000000000ULL
 -- 
 2.49.0.504.g3bcea36a83-goog
 
