@@ -1,254 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9DE1E515;
-	Thu, 10 Apr 2025 14:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4527320469E
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Apr 2025 14:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744293802; cv=none; b=C7dEyGt3yWlw1RSuvJtyfW8mjbHRfLHuJt/cdEWVKuPecp/b2U1UHGgI1v2+nDXjMbrrdYj89VHGqOiZiLf8aEgvcfnB1Ur+OWYA57nPJpXaGFIJcGW7Qp7mFGMp4jWGU7PWXb/MhLBfofy15nsBvykoRPvLEEA6euOZP+W6jJg=
+	t=1744295585; cv=none; b=PKKuvslA6DEthP50Ay5mG3gC/jztDxs5fPeiaG3xdoHS2TX/uRhdczc0LxIvDpWKMZ1gqSTwiowqz4q5Btqe9lIHLU4M5n4NJTckC+PLIPT1ot1+dOpWRqDCc6yZmGO5VOFZe/RoH+iAV0ALdprkm2ccyH+Sz9yxdk6PH/MEwKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744293802; c=relaxed/simple;
-	bh=pBRvknAVUD0G3K153267322eDRSeCF9wcCoZODOKnYs=;
+	s=arc-20240116; t=1744295585; c=relaxed/simple;
+	bh=96mZD7Hb5Cr/y2Om1FHnmlg+eCGOwFTtldbBBPskmfg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQdWdBaKbjJzZKWan17p73FsD3G+Rwe63I3M9XIoIHEvoB436qKxlK2be4rX8UXn68aXDW3oH8PlNhMFQHnQQ+OcUFaTJrD8s3hptJexACMLw5PrHw8uq4Hc74wj9DcXiTrhB6rCY3c5v9jQKCkZGrBv2va15uWgSjfIsqrARBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hq7MFxXY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TbbjSNz8rkmZc1p5nEX4Jm1OJ0w+wVSuRAscL/y/C6TwrSG//scWboRHfb2094pv3zUvdkVAKsTCm/N8a6fIpq2E3lT5I0oJbPdepN3N2jdPdOhTya3A8kkhwwSnn9HDp9FOLDsTfxsoFcrgpqPfMqbG02qNO6OvajT+tMpBDno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ATbJczOw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hq7MFxXY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A21C4CEDD;
-	Thu, 10 Apr 2025 14:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744293801;
-	bh=pBRvknAVUD0G3K153267322eDRSeCF9wcCoZODOKnYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hq7MFxXYBX66LGaM4VQN7NGb6kNqa1n5Z42SucADWQULAttYry1XLDJvVrpnocxqr
-	 PgG66SvVdsYDKPIQWCoxU7j3sxusEB5W5NSr+5228TNuU8Oqk7mj21ieMXRhY3F1F2
-	 ebqLRGAivO/uTEFdPuu6ReRQ/Ff6kO1LV7Ww7L1kMY1nM0fpC1VkP8pslvWNyWW+aC
-	 QBFO2LlvglWcXHgDdloimnGf8vwu4LAD9Nd2gEH3SVefTIRxF7kLujFKwJj+E++lE0
-	 Uiz9ZRwq9QEBnh1zeREBanPB11g3sP+VXTn+1iVlSkGko9ordx7KF1PdJBFvzhii2w
-	 qiD//jRAt7tbA==
-Date: Thu, 10 Apr 2025 11:03:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Fixes for perf build system and TUI browsers was Re: [perf top]
- annotation doesn't work, libunwind doesn't seem to be working either
-Message-ID: <Z_fPpmHZu5ppip5V@x1>
-References: <Z_Rz10stoLzBocIO@x1>
- <Z_TYux5fUg2pW-pF@gmail.com>
- <Z_XaOp4TCBKe-M0o@x1>
- <Z_ZltdaHx9XuKcd9@x1>
- <Z_aY0fTs53id77CS@x1>
- <Z_bHtD7umCsKeWJ6@x1>
- <Z_bI7wK8mJYVOWDH@x1>
- <Z_bl8tabAwfqKuy-@gmail.com>
- <Z_chCGYb1_hMS1F9@x1>
- <Z_dkNDj9EPFwPqq1@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATbJczOw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744295583;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/A1JjAmWXNOwxvY9+1uvauQoaYmfejNlLeKdPfCV5CU=;
+	b=ATbJczOwzDO7vucofwqxKslN7ZjaAyEBqM87rfgHWRg/brNvGjPdcQ88XAwtMDxtxgs3G2
+	LIePt4HWa0qmIdK5mo4N5donkR8EEzbAHqVuRFJQ7jOqz9DJ6OUUjYA87RSGGMUzfhyGca
+	m8B3ogoYEIsIL9gyfwln87PRbPlnwJY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-171-PDFYeuplP66MG7qRxIZEow-1; Thu,
+ 10 Apr 2025 10:32:22 -0400
+X-MC-Unique: PDFYeuplP66MG7qRxIZEow-1
+X-Mimecast-MFC-AGG-ID: PDFYeuplP66MG7qRxIZEow_1744295540
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88AD4195605A;
+	Thu, 10 Apr 2025 14:32:19 +0000 (UTC)
+Received: from jbrnak-thinkpadx1carbongen9.tpbc.csb (unknown [10.44.34.6])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4518C1955BC1;
+	Thu, 10 Apr 2025 14:32:14 +0000 (UTC)
+Date: Thu, 10 Apr 2025 16:32:11 +0200
+From: Jakub Brnak <jbrnak@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+	mpetlan@redhat.com, tglozar@redhat.com,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3] perf test probe_vfs_getname: Skip if no suitable line
+ detected
+Message-ID: <Z_fWa093x33Wcwrw@jbrnak-thinkpadx1carbongen9.tpbc.csb>
+References: <20250324144523.597557-1-jbrnak@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_dkNDj9EPFwPqq1@gmail.com>
+In-Reply-To: <20250324144523.597557-1-jbrnak@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, Apr 10, 2025 at 08:24:52AM +0200, Ingo Molnar wrote:
-> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Wed, Apr 09, 2025 at 11:26:10PM +0200, Ingo Molnar wrote:
-> > > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > Anyway, back to the bug.
-
-> > > Thanks for having a look! :)
-
-> > I guess I found it, another one-liner (well, two if you count removing a
-> > comment line) with a long explanation, see below.
-
-> > There is a tidy up patch before this, all is at:
-
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-annotate+build
- 
-> Wow, that's quite a lot!
-
-You reported various problems that accumulated thru over a decade, which
-shows how difficult is to regression test TUIs :-\
-
-We have 'perf test' to test various aspects of the tools, with C ones
-testing APIs, shell ones running the tools and looking if they are
-generating expected results by grepping output and using other
-techniques, the perf test shell infrastructure is itself checked using
-ShellCheck, if installed:
-
-⬢ [acme@toolbox perf-tools-next]$ rpm -q --qf "%{description}\n" ShellCheck
-The goals of ShellCheck are:
-
-* To point out and clarify typical beginner's syntax issues,
-  that causes a shell to give cryptic error messages.
-
-* To point out and clarify typical intermediate level semantic problems,
-  that causes a shell to behave strangely and counter-intuitively.
-
-* To point out subtle caveats, corner cases and pitfalls, that may cause an
-  advanced user's otherwise working script to fail under future circumstances.
-⬢ [acme@toolbox perf-tools-next]$
-
-A big regression test suite that lived/lives inside Red Hat,
-created/maintained by Michael Petlan (and was continuosly used to test
-perf) is being merged with it over time.
-
-Ian did lots of work on making it parallel, with some tests needing to
-be run exclusively as it changes global state (perf probe adding stuff,
-etc).
-
-But one area we lack is to test things that interact with the user, like
-the TUI, something to improve!
-
-So I'm rather happy when someone that uses the TUI comes along and
-points out problems, as this isn't an area that we are automatically
-testing, it all depends on sheer code review, with corner case bugs
-living in the codebase for years, sometimes decades...
- 
-> So, I can confirm that the build warning is gone - as the libunwind 
-> entry is gone:
-
-Great!
- 
->  Auto-detecting system features:
->  ...                                   libdw: [ on  ]
->  ...                                   glibc: [ on  ]
->  ...                                  libelf: [ on  ]
->  ...                                 libnuma: [ on  ]
->  ...                  numa_num_possible_cpus: [ on  ]
->  ...                                 libperl: [ on  ]
->  ...                               libpython: [ on  ]
->  ...                               libcrypto: [ on  ]
->  ...                             libcapstone: [ on  ]
->  ...                               llvm-perf: [ on  ]
->  ...                                    zlib: [ on  ]
->  ...                                    lzma: [ on  ]
->  ...                               get_cpuid: [ on  ]
->  ...                                     bpf: [ on  ]
->  ...                                  libaio: [ on  ]
->  ...                                 libzstd: [ on  ]
+On Mon, Mar 24, 2025 at 03:45:23PM +0100, Jakub Brnak wrote:
+> In some cases when calling function add_probe_vfs_getname, line number
+> can't be detected by perf probe -L getname_flags:
 > 
-> And there's this second round of auto-detection:
- 
->  Auto-detecting system features:
->  ...                         clang-bpf-co-re: [ on  ]
->  ...                                    llvm: [ on  ]
->  ...                                  libcap: [ on  ]
->  ...                                  libbfd: [ on  ]
- 
-> which is all-green as well.
- 
-> I still have these dependency warnings:
- 
->   Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install elfutils-debuginfod-client-devel or equivalent
->   Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
->   Makefile.config:1191: libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
- 
-> The libtracefs one was resolved via 'apt install libtracefs-dev', 
-> leaving two:
- 
->  Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install elfutils-debuginfod-client-devel or equivalent
->  Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
- 
-> I cannot resolve the openjdk dependency warning, despite installing a 
-> plethora of packages:
-
-This one is a sore spot, I'll try to take a look.
- 
-> kepler:~/tip> dpkg -l | grep openjdk
-> rc  openjdk-14-jre-headless:amd64                               14.0.2+12-1                                         amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
-> ii  openjdk-17-jre:amd64                                        17.0.14+7-1~24.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT
-> ii  openjdk-17-jre-headless:amd64                               17.0.14+7-1~24.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
-> rc  openjdk-18-jre-headless:amd64                               18.0.2+9-2ubuntu1                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
-> ii  openjdk-21-jdk-headless:amd64                               21.0.6+7-1~24.10.1                                  amd64        OpenJDK Development Kit (JDK) (headless)
-> ii  openjdk-21-jre:amd64                                        21.0.6+7-1~24.10.1                                  amd64        OpenJDK Java runtime, using Hotspot JIT
-> ii  openjdk-21-jre-headless:amd64                               21.0.6+7-1~24.10.1                                  amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
-> ii  openjdk-8-jdk:amd64                                         8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Development Kit (JDK)
-> ii  openjdk-8-jdk-headless:amd64                                8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Development Kit (JDK) (headless)
-> ii  openjdk-8-jre:amd64                                         8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Java runtime, using Hotspot JIT
-> ii  openjdk-8-jre-headless:amd64                                8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
-
-> And I managed to resolve the elfutils/debuginfod.h warning via an 
-> apt-file search and installing the libdebuginfod-dev package, the 
-> warning message should probably be updated via the patch further below 
-> that gives a more specific package name to install.
-
-I've folded your patch in the patch I added in this series while
-addressing the other problems you pointed out with libunwind, ditto for
-libbfd.
-
-> With that resolved, I now have only a single dependency failure left:
- 
->   Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
-
-I'll work on that.
- 
-> On the UI front:
+>   78         atomic_set(&result->refcnt, 1);
 > 
->  - I can confirm that the left-arrow now works intuitively wrt. context 
->    zooming, thanks for implementing that!
+> 	     // one of the following lines should have line number
+> 	     // but sometimes it does not because of optimization
+> 	     result->uptr = filename;
+>              result->aname = NULL;
+> 
+>   81         audit_getname(result);
+> 
+> To prevent false failures, skip the affected tests
+> if no suitable line numbers can be detected.
+> 
+> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> ---
+> v3:
+> - ensure POSIX compliance
+> 
+> v2: 
+> https://lore.kernel.org/linux-perf-users/Z9tKat6vvC1XUj0U@google.com/
+> - check if return from add_vfs_getname equals to 1
+> sice it is only option in case of fail 
+> 
+> v1:
+>  https://lore.kernel.org/linux-perf-users/Z8pAep0GJsMFTyEi@google.com/T/#t
+> ---
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh          | 8 +++++++-
+>  tools/perf/tests/shell/probe_vfs_getname.sh              | 8 +++++++-
+>  .../perf/tests/shell/record+script_probe_vfs_getname.sh  | 8 +++++++-
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh        | 9 +++++++--
+>  4 files changed, 28 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 5c33ec7a5a63..89f72a4c818c 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -19,8 +19,14 @@ add_probe_vfs_getname() {
+>  			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
+>  			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
+>  		fi
+> +
+> +		if [ -z "$line" ] ; then
+> +			echo "Could not find probeable line"
+> +			return 2
+> +		fi
+> +
+>  		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> -		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
+> +		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
+>  	fi
+>  }
+>  
+> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+> index c51a32931af6..0f52654c914a 100755
+> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+> @@ -13,7 +13,13 @@ skip_if_no_perf_probe || exit 2
+>  # shellcheck source=lib/probe_vfs_getname.sh
+>  . "$(dirname $0)"/lib/probe_vfs_getname.sh
+>  
+> -add_probe_vfs_getname || skip_if_no_debuginfo
+> +add_probe_vfs_getname
+>  err=$?
+> +
+> +if [ $err -eq 1 ] ; then
+> +	skip_if_no_debuginfo
+> +	err=$?
+> +fi
+> +
+>  cleanup_probe_vfs_getname
+>  exit $err
+> diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> index fd5b10d46915..1ad252f0d36e 100755
+> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> @@ -35,8 +35,14 @@ perf_script_filenames() {
+>  	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
+>  }
+>  
+> -add_probe_vfs_getname || skip_if_no_debuginfo
+> +add_probe_vfs_getname
+>  err=$?
+> +
+> +if [ $err -eq 1 ] ; then
+> +        skip_if_no_debuginfo
+> +        err=$?
+> +fi
+> +
+>  if [ $err -ne 0 ] ; then
+>  	exit $err
+>  fi
+> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> index 60fccb62c540..5d5019988d61 100755
+> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> @@ -25,9 +25,14 @@ trace_open_vfs_getname() {
+>  	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+>  }
+>  
+> -
+> -add_probe_vfs_getname || skip_if_no_debuginfo
+> +add_probe_vfs_getname
+>  err=$?
+> +
+> +if [ $err -eq 1 ] ; then
+> +        skip_if_no_debuginfo
+> +        err=$?
+> +fi
+> +
+>  if [ $err -ne 0 ] ; then
+>  	exit $err
+>  fi
+> -- 
+> 2.48.1
+> 
 
-Great! the good thing was that minor changes were needed.
- 
->  - Likewise, the Esc key suggested in the 'h' screen now works 
->    intuitively as well.
+Hi, anyone interested in this patch?
 
-Right, I didn't even try to fix that one explicitely, it was that
-do_zoom_thread() (that does zoom in and out) not having act->thread set
-when handling the left arrow, that happens to also handle the ESC case.
- 
->  - When pressing an unbound key I now get a helpful message.
+Thanks,
+Jakub
 
-Great.
- 
->     - One small detail with the unbound key warning I noticed: it now 
->       says "'l' key not associated, use 'h'/'?'/F1 to see actions!", but 
->       pressing 'h' will only work after dismissing this window. It might 
->       be a nice little extra UI tweak to allow 'h/?/F1' to jump to the 
->       help window straight away from warning windows, instead of 
->       requiring two keys to be pressed?
-
-Sure, I'll add a patch on top of this series doing that.
- 
->  - I also see that 'P' now works in a broader context as well, saving 
->    the perf.hist.0 file.
-
-I did nothing in this regard, a good fallout from the other changes then.
- 
->     - A small observation with the 'P' key too: maybe the status line 
->       at the bottom should update with the action performed? I only see 
->       a small flash and the "Press '?' for help on key bindings" 
->       message is reprinted.
-
-Right, I think this is a case to use a popup window stating that the
-"screenshot" was produced and was saved in file xyz.bla
- 
-> Anyway, I'd say that the large majority of my TUI complaints were 
-> resolved by your changes, and I had no new problems, so for the
-> changes so far:
- 
->   Tested-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks, I added that to the patches and will use what I have right now
-to open the perf-tools-next.git tree, so that in addition to this work I
-start processing the many patches that are out there for 6.16!
-
-Please, if you have further comments, just send them my way but do not
-forget to CC perf's co-maintainer, reviewers and the mailing list, its
-not always that I can focus on something like this ;-)
-
-Cheers,
-
-- Arnaldo
