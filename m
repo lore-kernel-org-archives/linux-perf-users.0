@@ -1,165 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CB0293B61;
-	Thu, 10 Apr 2025 16:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AE61E7C10
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Apr 2025 17:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302666; cv=none; b=q0x9yQYkFixUFsdTWNwwp0M1zMdTZL7jdpy9mbMJJTb5+t7W/B/bOz1lFOmsU90ffh1IaT9VgSPNR80V7PMZwd+7T5f57f3dcF16w0GQvvPfxNQxFoI4Wlzr0OMy+iMuRVauGJalwh89+FSs0yO96g0o0TU128FQxaEfzwpPH7s=
+	t=1744306259; cv=none; b=Ax10KI/H2/daXR8Wh6tE5FpaW9IzwT6JvR+OihucPFijG36Yn0kgTuIbyDmis0DDtB+POiSOXjkCwZ58H6XgjfoMyybMfLHmIfJY1MwEV2pbqXx0k2bHgN0Ma5ES0dyD47hMdD4f5VNxdaiu0/AXfIjrRjooZIxx9/DQbgL5EcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302666; c=relaxed/simple;
-	bh=/6J5a/388DLFHMqzPccT2y2Pj4UzDqFXCQ23zqugdow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2EDIYIohmR2YH9Aypbk689pOhOvMZYGsomed/uaf0ex4cL4DelfI3laGqOq6C1Xbqfz01rAmMkOyHOvzM5aTpgxPkHCFreTAQM6Pc/4bB/60cTykKYzAihcG/cjhkUtT7X3N8XyCUuptXmPfAHkjQ5km5I5QzCynpDQZSCzFlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+y20LhU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744306259; c=relaxed/simple;
+	bh=5CYYrJD1PYEc8v13A26EEmpGoRj0xUIYoIwF293jrI8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ds961dR39WZwclLaQmwPZ5qDbic8k0cbtaf5KoXcEBYoNKunwERrxVvKjKyOiHd5sP4SuhxkWqVpWq1pzQIcgmMbmbyhZCUgcpTTHDGFdVLmT54BEFsDxIHqxoRdpZ+xDBhkxwTNQmPyV20fzuX7MWkV5olL5qe1DYzf1BuBLWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AbFSbj8H; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+y20LhU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DD46C4CEEA;
-	Thu, 10 Apr 2025 16:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744302665;
-	bh=/6J5a/388DLFHMqzPccT2y2Pj4UzDqFXCQ23zqugdow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V+y20LhUQL07cdE3bmS+dP6Tncub7K/a2+Im2bp+Fx7cr5FIj5BGZwOtfAIRJ0TqJ
-	 FCTis6aT+cWGyoSn706uL+nj6H15Ju9DDRvhLGdkAN3fbz+ZGnikDY3OjYoLkHrAgo
-	 I50zG5FugyR/5dYEraqMDkICxuIK+S/xfHMYu4rRzU6Gnb3BrlnRDZpIr+VJyaTHyO
-	 1nG0E8nqi1Qz1E9cJTN5wr54chtB9nE5zya7SsVSeVeG1CTDAViKJfss/Z9muk7Qqy
-	 VEknqYR8NPL4/FeY1/vXfq64FAc3vAPCVD1gcbXqR1EEBOqbcjPNwh1kwYwPjbvIhs
-	 gWy7G50YyRoBA==
-Date: Thu, 10 Apr 2025 09:31:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH] perf tools: Remove evsel__handle_error_quirks()
-Message-ID: <Z_fyRpjnXjXukLwM@google.com>
-References: <20250410010252.402221-1-namhyung@kernel.org>
- <CAJpZYjWTN09uXcArncRVXRRDcCH042MeN4UC1FAokoUNzsuG6A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AbFSbj8H"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac345bd8e13so189658866b.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Apr 2025 10:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744306255; x=1744911055; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4lvtyE0JEERYRxIgahoru2kYgvFfID/Ihnb06JIlXHc=;
+        b=AbFSbj8Hmp+qUC34mjKZ3tJbgxFKuPK1ru5cGT8fj6ZEpFyCvSH2TRkdYzxm1imcV4
+         LQJ47MXAK6SAYzmyg+14zdq6JhwIcQ6Qgm2Xsu/7oLVgqTDk001EDMzmOO5OYDv+cmAt
+         nDMDVIpJh44nMbQ7beqW+R9wRPjXuKPqiOUsjOYuLVvFvevkROr20rBr1CnbdJR+khZf
+         W1rXxbu77HtVZNUfBimE7+M8Xcbaym00UTq2pvwLkw9pKDOtE2nEILEERXRIVVRbRIyl
+         pkHW6kCYJNWtHaKFCYlxEKi0f7s5qQ5tBW3ScPVwEmjrCmgSjzo9O+bmcQFh9EX8eBYx
+         Zmsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744306255; x=1744911055;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4lvtyE0JEERYRxIgahoru2kYgvFfID/Ihnb06JIlXHc=;
+        b=BGQaGWWfDow6CL9dXc8izTMWYOarW82SZXJAMsqJLBriuBZNQvVcJmdiSiRe7PKjDC
+         b5LjyqS1HtM9hIKwzuIo4Bj920CUBiF04J6m4uIMgMMjZFtiz7uyjrcmlatifaZE//yW
+         bcFuh2fU+gUWVOuE5GopLY+o6CWHh5oxSECfbh07+6a5LIT5NGXZAgpqSr/k9EE+fuZ1
+         03V2rCDcPiTvD6/aoHh6Ua8NvzjeEsXyFs8usVwHZu2sxjj1OeJKEoPDsv66eyG/yz/Q
+         HHfJ386Ih55jHz6eWvg6bgUz4G1QmzAEUjKpOomtooUX+x+aQQX6dpqyQbRBM/HmqH+t
+         OlrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwKTQdBjqMAxoftVELyW4yy9KybDEMHwFRh9sYqTpAeuoS50m6lmJN5Qhg9R8JvmORZrAcBqZaPAs9AD7nkmt1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbhQVV6zRaiCqTm/W9zV82YiDR1qjWVQE6pQ/VkV3URpVkFA81
+	zhGr7FibvIJK5LJM545Ge/19Eba+a7fHictz/LGubYLFoLevUbZPPjEd454FzsU/22gnQbhiDp7
+	iM9B8VMlYv32qxEuRdsQ25eaMfeOfYc8qhP4a
+X-Gm-Gg: ASbGncs2K9xd5KgptHuyA/s9UTlgsgr7rMRWoJy87iInfEBjnVT65d01E+htAKF4anB
+	bL+k+m2Ktx+r7v3pZiVqELg5Q92lEz1mquY6vjJQ1QmlHHO2O3jDCZG0kOmJmfkGYbk9VexIAIf
+	7OVJFC2C52G91KxrdmYvrm6JkibLn4mAyo6eJXtMmaB0ef98MEuQ==
+X-Google-Smtp-Source: AGHT+IGIVRiw+Cv/qQwATtNJTY6pij2JQq0ZJjGjmjWzuhUbZKxnEfXvGQ1xO2Xzfi/rEZHAoJ61M3B4Nw6zY0b2QII=
+X-Received: by 2002:a17:907:868f:b0:ac7:cc21:48f9 with SMTP id
+ a640c23a62f3a-acabd181216mr355633766b.5.1744306255368; Thu, 10 Apr 2025
+ 10:30:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJpZYjWTN09uXcArncRVXRRDcCH042MeN4UC1FAokoUNzsuG6A@mail.gmail.com>
+References: <20250410085522.465401-1-tmricht@linux.ibm.com>
+In-Reply-To: <20250410085522.465401-1-tmricht@linux.ibm.com>
+From: Chun-Tse Shao <ctshao@google.com>
+Date: Thu, 10 Apr 2025 10:30:44 -0700
+X-Gm-Features: ATxdqUEoTmStIqytg6Rwh_dXa819gL78OYkSyS24dciTaQXPBOWtV4a_1OLJ-TA
+Message-ID: <CAJpZYjX=8SXaFU_gTJBhf6CD-CWPPL4kWVL3eFenskdoxB6ZUg@mail.gmail.com>
+Subject: Re: [PATCH v3] perf test: Allow tolerance for leader sampling test
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	rogers@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Wed, Apr 09, 2025 at 08:26:07PM -0700, Chun-Tse Shao wrote:
-> On Wed, Apr 9, 2025 at 6:02 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The evsel__handle_error_quirks() is to fixup invalid event attributes on
-> > some architecture based on the error code.  Currently it's only used for
-> > AMD to disable precise_ip not to use IBS which has more restrictions.
-> >
-> > But the commit c33aea446bf555ab changed call evsel__precise_ip_fallback
-> > for any errors so there's no difference with the above function.  To
-> > make matter worse, it caused a problem with branch stack on Zen3.
-> >
-> > The IBS doesn't support branch stack so it should use a regular core
-> > PMU event.  The default event is set precise_max and it starts with 3.
-> > And evsel__precise_ip_fallback() tries with it and reduces the level one
-> > by one.  At last it tries with 0 but it also failed on Zen3 since the
-> > branch stack is not supported for the cycles event.
-> >
-> > At this point, evsel__precise_ip_fallback() restores the original
-> > precise_ip value (3) in the hope that it can succeed with other modifier
-> > (like exclude_kernel).  Then evsel__handle_error_quirks() see it has
-> > precise_ip != 0 and make it retry with 0.  This created an infinite
-> > loop.
-> >
-> > Before:
-> >
-> >   $ perf record -b -vv |& grep removing
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   removing precise_ip on AMD
-> >   ...
-> >
-> > After:
-> >
-> >   $ perf record -b true
-> >   Error:
-> >   Failure to open event 'cycles:P' on PMU 'cpu' which will be removed.
-> >   Invalid event (cycles:P) in per-thread mode, enable system wide with '-a'.
-> >   Error:
-> >   Failure to open any events for recording.
-> >
-> > Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> > Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> Tested-by: Chun-Tse Shao <ctshao@google.com>
-
-Thanks for the test.
-
-Arnaldo, I think we can have this in the perf-tools tree.
-
-Thanks,
-Namhyung
-
-
-> > ---
-> >  tools/perf/util/evsel.c | 22 ----------------------
-> >  1 file changed, 22 deletions(-)
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 1974395492d7da5e..3c030da2e477c707 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -2566,25 +2566,6 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
-> >         return false;
-> >  }
-> >
-> > -static bool evsel__handle_error_quirks(struct evsel *evsel, int error)
-> > -{
-> > -       /*
-> > -        * AMD core PMU tries to forward events with precise_ip to IBS PMU
-> > -        * implicitly.  But IBS PMU has more restrictions so it can fail with
-> > -        * supported event attributes.  Let's forward it back to the core PMU
-> > -        * by clearing precise_ip only if it's from precise_max (:P).
-> > -        */
-> > -       if ((error == -EINVAL || error == -ENOENT) && x86__is_amd_cpu() &&
-> > -           evsel->core.attr.precise_ip && evsel->precise_max) {
-> > -               evsel->core.attr.precise_ip = 0;
-> > -               pr_debug2_peo("removing precise_ip on AMD\n");
-> > -               display_attr(&evsel->core.attr);
-> > -               return true;
-> > -       }
-> > -
-> > -       return false;
-> > -}
-> > -
-> >  static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-> >                 struct perf_thread_map *threads,
-> >                 int start_cpu_map_idx, int end_cpu_map_idx)
-> > @@ -2730,9 +2711,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-> >         if (evsel__precise_ip_fallback(evsel))
-> >                 goto retry_open;
-> >
-> > -       if (evsel__handle_error_quirks(evsel, err))
-> > -               goto retry_open;
-> > -
-> >  out_close:
-> >         if (err)
-> >                 threads->err_thread = thread;
-> > --
-> > 2.49.0.504.g3bcea36a83-goog
-> >
+On Thu, Apr 10, 2025 at 1:55=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> V3: Added check for missing samples as suggested by Chun-Tse.
+> V2: Changed bc invocation to return 0 on success and 1 on error.
+>
+> There is a known issue that the leader sampling is inconsistent, since
+> throttle only affect leader, not the slave. The detail is in [1]. To
+> maintain test coverage, this patch sets a tolerance rate of 80% to
+> accommodate the throttled samples and prevent test failures due to
+> throttling.
+>
+> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Chun-Tse Shao <ctshao@google.com>
+> ---
+>  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+>  1 file changed, 27 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/re=
+cord.sh
+> index ba8d873d3ca7..0075ffe783ad 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -238,22 +238,43 @@ test_leader_sampling() {
+>      err=3D1
+>      return
+>    fi
+> +  perf script -i "${perfdata}" | grep brstack > $script_output
+> +  # Check if the two instruction counts are equal in each record.
+> +  # However, the throttling code doesn't consider event grouping. During=
+ throttling, only the
+> +  # leader is stopped, causing the slave's counts significantly higher. =
+To temporarily solve this,
+> +  # let's set the tolerance rate to 80%.
+> +  # TODO: Revert the code for tolerance once the throttling mechanism is=
+ fixed.
+>    index=3D0
+> -  perf script -i "${perfdata}" > $script_output
+> +  valid_counts=3D0
+> +  invalid_counts=3D0
+> +  tolerance_rate=3D0.8
+>    while IFS=3D read -r line
+>    do
+> -    # Check if the two instruction counts are equal in each record
+>      cycles=3D$(echo $line | awk '{for(i=3D1;i<=3DNF;i++) if($i=3D=3D"cyc=
+les:") print $(i-1)}')
+>      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x !=3D ${prev_cycles}x ]
+>      then
+> -      echo "Leader sampling [Failed inconsistent cycles count]"
+> -      err=3D1
+> -      return
+> +      invalid_counts=3D$(($invalid_counts+1))
+> +    else
+> +      valid_counts=3D$(($valid_counts+1))
+>      fi
+>      index=3D$(($index+1))
+>      prev_cycles=3D$cycles
+>    done < $script_output
+> -  echo "Basic leader sampling test [Success]"
+> +  total_counts=3D$(bc <<< "$invalid_counts+$valid_counts")
+> +  if (( $(bc <<< "$total_counts <=3D 0") ))
+> +  then
+> +    echo "Leader sampling [No sample generated]"
+> +    err=3D1
+> +    return
+> +  fi
+> +  isok=3D$(bc <<< "scale=3D2; if (($invalid_counts/$total_counts) < (1-$=
+tolerance_rate)) { 0 } else { 1 };")
+> +  if [ $isok -eq 1 ]
+> +  then
+> +     echo "Leader sampling [Failed inconsistent cycles count]"
+> +     err=3D1
+> +  else
+> +    echo "Basic leader sampling test [Success]"
+> +  fi
+>  }
+>
+>  test_topdown_leader_sampling() {
+> --
+> 2.49.0
+>
