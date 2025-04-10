@@ -1,330 +1,254 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798401D89FD;
-	Thu, 10 Apr 2025 11:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9DE1E515;
+	Thu, 10 Apr 2025 14:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284688; cv=none; b=Oz1ml5Lv+Am/yMtpE4XbSB16GHN4WCtBnxJfO+HzGXm7o45C5xuaVbw9x2IIgI7WVolNMl8PP1WKknOJQCcZfQoptxBmJFxcBJHyvslQ6XUEaR3WpQklpjr31d+V5r/CUQsvZskDu2DaNzphHSsXUnRVgQxfwDYp/hQRvPA70Ns=
+	t=1744293802; cv=none; b=C7dEyGt3yWlw1RSuvJtyfW8mjbHRfLHuJt/cdEWVKuPecp/b2U1UHGgI1v2+nDXjMbrrdYj89VHGqOiZiLf8aEgvcfnB1Ur+OWYA57nPJpXaGFIJcGW7Qp7mFGMp4jWGU7PWXb/MhLBfofy15nsBvykoRPvLEEA6euOZP+W6jJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284688; c=relaxed/simple;
-	bh=YAbWMDqb6A/MktOyCsKaT7umT1NIMOnxoCuuD+8LUZw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=C9XaK6xxXseRXNHfyCtdl61v3R+3xkQHtGgqnLa1j4kG9qrLlCbfotXSyly+ZWNPU/YQEGW5CaboGQLAN3YcxIbVYTz8zWr4Zi926OSGnK01y8PPUTTxfJFVsymCcbi4ev2rsU+m/cylZh8UOPsC5lDAehSUsmQ6TxjxOG2EO6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FiMZpwon; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744293802; c=relaxed/simple;
+	bh=pBRvknAVUD0G3K153267322eDRSeCF9wcCoZODOKnYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQdWdBaKbjJzZKWan17p73FsD3G+Rwe63I3M9XIoIHEvoB436qKxlK2be4rX8UXn68aXDW3oH8PlNhMFQHnQQ+OcUFaTJrD8s3hptJexACMLw5PrHw8uq4Hc74wj9DcXiTrhB6rCY3c5v9jQKCkZGrBv2va15uWgSjfIsqrARBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hq7MFxXY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FiMZpwon"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A82lpA026359;
-	Thu, 10 Apr 2025 11:31:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=A0xZZt
-	8lP25cShHGZagWIGb2cnCUIRRznY2e5ZGnV6c=; b=FiMZpwonG9z4SOQbI7ZD9R
-	4020nGSpTxcA+hvIYVf1F67aXbn678iOqgeZDwSdXGZcnABxno8MnssQ357U1yKQ
-	4PEimAMsOtqBhDR6KD/jMccfq5ac9e57rWEaGC46wLq7ebOI599HYoiA6iDchUqn
-	bEAFmH/6622WkDR1Kl+R+boL23yBD7SPpIaz7g7r3A4zIrZalQ+2HsH6qtBQCEiC
-	F0qeV1GpIizN4oPsB4B+Pzy54ubnj7SjYDdCSAQpzf1N+1C0e9LkAS+OIVxGGtan
-	OGPGLyWKIFDzNMNODZMqFLkmkPzmJfT6D7gWdpHXI7aq3NuqYUBD4PTh/UtpLTIA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq6m69-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 11:31:20 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53ABTD3E003612;
-	Thu, 10 Apr 2025 11:31:20 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wtaq6m64-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 11:31:19 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53A85Fax011326;
-	Thu, 10 Apr 2025 11:31:18 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7ywwu1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 11:31:18 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ABVIw729295290
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 11:31:18 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4F2F258058;
-	Thu, 10 Apr 2025 11:31:18 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E8945805B;
-	Thu, 10 Apr 2025 11:31:15 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.204.204.179])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 10 Apr 2025 11:31:14 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hq7MFxXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A21C4CEDD;
+	Thu, 10 Apr 2025 14:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744293801;
+	bh=pBRvknAVUD0G3K153267322eDRSeCF9wcCoZODOKnYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hq7MFxXYBX66LGaM4VQN7NGb6kNqa1n5Z42SucADWQULAttYry1XLDJvVrpnocxqr
+	 PgG66SvVdsYDKPIQWCoxU7j3sxusEB5W5NSr+5228TNuU8Oqk7mj21ieMXRhY3F1F2
+	 ebqLRGAivO/uTEFdPuu6ReRQ/Ff6kO1LV7Ww7L1kMY1nM0fpC1VkP8pslvWNyWW+aC
+	 QBFO2LlvglWcXHgDdloimnGf8vwu4LAD9Nd2gEH3SVefTIRxF7kLujFKwJj+E++lE0
+	 Uiz9ZRwq9QEBnh1zeREBanPB11g3sP+VXTn+1iVlSkGko9ordx7KF1PdJBFvzhii2w
+	 qiD//jRAt7tbA==
+Date: Thu, 10 Apr 2025 11:03:18 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Fixes for perf build system and TUI browsers was Re: [perf top]
+ annotation doesn't work, libunwind doesn't seem to be working either
+Message-ID: <Z_fPpmHZu5ppip5V@x1>
+References: <Z_Rz10stoLzBocIO@x1>
+ <Z_TYux5fUg2pW-pF@gmail.com>
+ <Z_XaOp4TCBKe-M0o@x1>
+ <Z_ZltdaHx9XuKcd9@x1>
+ <Z_aY0fTs53id77CS@x1>
+ <Z_bHtD7umCsKeWJ6@x1>
+ <Z_bI7wK8mJYVOWDH@x1>
+ <Z_bl8tabAwfqKuy-@gmail.com>
+ <Z_chCGYb1_hMS1F9@x1>
+ <Z_dkNDj9EPFwPqq1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCHSET 00/10] tools headers: Sync header files with the kernel
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <20250410001125.391820-1-namhyung@kernel.org>
-Date: Thu, 10 Apr 2025 17:01:01 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com>
-References: <20250410001125.391820-1-namhyung@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Mc4vQUsr0RQgJsWEEyU4UIUgEdOzbkff
-X-Proofpoint-ORIG-GUID: bYxo1ZiWoHlXtOy6d9IPNd9829kldJMS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- spamscore=0 malwarescore=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2504100086
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_dkNDj9EPFwPqq1@gmail.com>
 
+On Thu, Apr 10, 2025 at 08:24:52AM +0200, Ingo Molnar wrote:
+> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Wed, Apr 09, 2025 at 11:26:10PM +0200, Ingo Molnar wrote:
+> > > * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > Anyway, back to the bug.
 
+> > > Thanks for having a look! :)
 
-> On 10 Apr 2025, at 5:41=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
-wrote:
->=20
-> Hello,
->=20
-> FYI I'm carrying these changes in the perf tools tree so make perf =
-trace
-> beautifiers get the recent changes in syscall, ioctl, and so on.  For =
-the
-> background, please see tools/include/uapi/README.
->=20
-> Still there are some remaining items but it requires a bit more =
-changes.
-> So I'd like to leave them for the next cycle.
->=20
->  Warning: Kernel ABI header differences:
->    diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
->    diff -u tools/include/linux/bits.h include/linux/bits.h
->    diff -u tools/arch/arm64/include/asm/cputype.h =
-arch/arm64/include/asm/cputype.h
->=20
-> Thanks,
-> Namhyung
->=20
->=20
-> Namhyung Kim (10):
->  tools headers: Update the KVM headers with the kernel sources
->  tools headers: Update the socket headers with the kernel sources
->  tools headers: Update the uapi/linux/perf_event.h copy with the =
-kernel sources
->  tools headers: Update the VFS headers with the kernel sources
->  tools headers: Update the syscall table with the kernel sources
->  tools headers: Update the uapi/linux/prctl.h copy with the kernel =
-sources
->  tools headers: Update the uapi/asm-generic/mman-common.h copy with =
-the kernel sources
->  tools headers: Update the linux/unaligned.h copy with the kernel =
-sources
->  tools headers: Update the x86 headers with the kernel sources
->  tools headers: Update the arch/x86/lib/memset_64.S copy with the =
-kernel sources
->=20
-> tools/arch/arm64/include/uapi/asm/kvm.h       |  5 +-
-> tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +----
-> tools/arch/x86/include/asm/cpufeatures.h      | 28 ++++--
-> tools/arch/x86/include/asm/msr-index.h        | 31 +++---
-> tools/arch/x86/include/uapi/asm/kvm.h         |  4 +
-> tools/arch/x86/include/uapi/asm/svm.h         |  2 +
-> tools/arch/x86/lib/memset_64.S                |  3 +-
-> tools/include/linux/cfi_types.h               | 45 +++++++++
-> tools/include/uapi/asm-generic/mman-common.h  |  1 +
-> tools/include/uapi/asm-generic/unistd.h       |  4 +-
-> tools/include/uapi/linux/in.h                 |  2 +
-> tools/include/uapi/linux/kvm.h                |  9 +-
-> tools/include/uapi/linux/perf_event.h         |  2 +
-> tools/include/uapi/linux/stat.h               | 99 ++++++++++++++-----
-> .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
-> .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
-> .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
-> .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
-> tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
-> .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
-> .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 +-
-> .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
-> .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
-> tools/perf/check-headers.sh                   |  1 +
-> .../perf/trace/beauty/include/linux/socket.h  |  2 +
-> .../trace/beauty/include/uapi/linux/fcntl.h   |  4 +
-> .../perf/trace/beauty/include/uapi/linux/fs.h | 21 +++-
-> .../trace/beauty/include/uapi/linux/mount.h   | 10 +-
-> .../trace/beauty/include/uapi/linux/prctl.h   | 11 +++
-> .../trace/beauty/include/uapi/linux/stat.h    | 99 ++++++++++++++-----
-> .../trace/beauty/include/uapi/sound/asound.h  |  8 +-
-> tools/scripts/syscall.tbl                     |  1 +
-> 32 files changed, 318 insertions(+), 109 deletions(-)
+> > I guess I found it, another one-liner (well, two if you count removing a
+> > comment line) with a long explanation, see below.
 
-Tested this patch series by applying on the base commit: =
-0af2f6be1b4281385b618cb86ad946eded089ac8 and it fixes the warnings.
+> > There is a tidy up patch before this, all is at:
 
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-annotate+build
+ 
+> Wow, that's quite a lot!
 
+You reported various problems that accumulated thru over a decade, which
+shows how difficult is to regression test TUIs :-\
 
+We have 'perf test' to test various aspects of the tools, with C ones
+testing APIs, shell ones running the tools and looking if they are
+generating expected results by grepping output and using other
+techniques, the perf test shell infrastructure is itself checked using
+ShellCheck, if installed:
 
-Before this patch:
+⬢ [acme@toolbox perf-tools-next]$ rpm -q --qf "%{description}\n" ShellCheck
+The goals of ShellCheck are:
 
- make
-  BUILD:   Doing 'make -j32' parallel build
-Warning: Kernel ABI header differences:
-  diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
-  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-  diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
-  diff -u tools/include/uapi/linux/perf_event.h =
-include/uapi/linux/perf_event.h
-  diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
-  diff -u tools/include/linux/bits.h include/linux/bits.h
-  diff -u tools/arch/x86/include/asm/cpufeatures.h =
-arch/x86/include/asm/cpufeatures.h
-  diff -u tools/arch/x86/include/asm/msr-index.h =
-arch/x86/include/asm/msr-index.h
-  diff -u tools/arch/x86/include/uapi/asm/kvm.h =
-arch/x86/include/uapi/asm/kvm.h
-  diff -u tools/arch/x86/include/uapi/asm/svm.h =
-arch/x86/include/uapi/asm/svm.h
-  diff -u tools/arch/arm64/include/uapi/asm/kvm.h =
-arch/arm64/include/uapi/asm/kvm.h
-  diff -u tools/arch/arm64/include/uapi/asm/unistd.h =
-arch/arm64/include/uapi/asm/unistd.h
-  diff -u tools/include/uapi/asm-generic/mman-common.h =
-include/uapi/asm-generic/mman-common.h
-  diff -u tools/include/uapi/asm-generic/unistd.h =
-include/uapi/asm-generic/unistd.h
-  diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
-  diff -u tools/arch/x86/lib/memset_64.S arch/x86/lib/memset_64.S
-  diff -u tools/arch/arm64/include/asm/cputype.h =
-arch/arm64/include/asm/cputype.h
-  diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl =
-arch/x86/entry/syscalls/syscall_32.tbl
-  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl =
-arch/x86/entry/syscalls/syscall_64.tbl
-  diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl =
-arch/powerpc/kernel/syscalls/syscall.tbl
-  diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl =
-arch/s390/kernel/syscalls/syscall.tbl
-  diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl =
-arch/mips/kernel/syscalls/syscall_n64.tbl
-  diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl =
-arch/arm/tools/syscall.tbl
-  diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl =
-arch/sh/kernel/syscalls/syscall.tbl
-  diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl =
-arch/sparc/kernel/syscalls/syscall.tbl
-  diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl =
-arch/xtensa/kernel/syscalls/syscall.tbl
-  diff -u tools/perf/trace/beauty/include/linux/socket.h =
-include/linux/socket.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h =
-include/uapi/linux/fcntl.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/fs.h =
-include/uapi/linux/fs.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h =
-include/uapi/linux/mount.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/prctl.h =
-include/uapi/linux/prctl.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/stat.h =
-include/uapi/linux/stat.h
-  diff -u tools/perf/trace/beauty/include/uapi/sound/asound.h =
-include/uapi/sound/asound.h
-Makefile.config:1093: No libcapstone found, disables disasm engine =
-support for 'perf script', please install libcapstone-dev/capstone-devel
-Makefile.config:1155: libpfm4 not found, disables libpfm4 support. =
-Please install libpfm4-dev
+* To point out and clarify typical beginner's syntax issues,
+  that causes a shell to give cryptic error messages.
 
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ OFF ]
-...                             libcapstone: [ OFF ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ OFF ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
+* To point out and clarify typical intermediate level semantic problems,
+  that causes a shell to behave strangely and counter-intuitively.
 
-  GEN     common-cmds.h
-  GEN     =
-/root/linux/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
-  PERF_VERSION =3D 6.15.rc1.g0af2f6be1b42
-  GEN     perf-archive
+* To point out subtle caveats, corner cases and pitfalls, that may cause an
+  advanced user's otherwise working script to fail under future circumstances.
+⬢ [acme@toolbox perf-tools-next]$
 
+A big regression test suite that lived/lives inside Red Hat,
+created/maintained by Michael Petlan (and was continuosly used to test
+perf) is being merged with it over time.
 
-After this patch:
+Ian did lots of work on making it parallel, with some tests needing to
+be run exclusively as it changes global state (perf probe adding stuff,
+etc).
 
- make
-  BUILD:   Doing 'make -j32' parallel build
-Warning: Kernel ABI header differences:
-  diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
-  diff -u tools/include/linux/bits.h include/linux/bits.h
-  diff -u tools/arch/arm64/include/asm/cputype.h =
-arch/arm64/include/asm/cputype.h
-Makefile.config:1093: No libcapstone found, disables disasm engine =
-support for 'perf script', please install libcapstone-dev/capstone-devel
-Makefile.config:1155: libpfm4 not found, disables libpfm4 support. =
-Please install libpfm4-dev
+But one area we lack is to test things that interact with the user, like
+the TUI, something to improve!
 
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ OFF ]
-...                             libcapstone: [ OFF ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ OFF ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
+So I'm rather happy when someone that uses the TUI comes along and
+points out problems, as this isn't an area that we are automatically
+testing, it all depends on sheer code review, with corner case bugs
+living in the codebase for years, sometimes decades...
+ 
+> So, I can confirm that the build warning is gone - as the libunwind 
+> entry is gone:
 
-  GEN     common-cmds.h
-  GEN     =
-/root/linux/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
-  PERF_VERSION =3D 6.15.rc1.g634c975b88f0
-  GEN     perf-archive
+Great!
+ 
+>  Auto-detecting system features:
+>  ...                                   libdw: [ on  ]
+>  ...                                   glibc: [ on  ]
+>  ...                                  libelf: [ on  ]
+>  ...                                 libnuma: [ on  ]
+>  ...                  numa_num_possible_cpus: [ on  ]
+>  ...                                 libperl: [ on  ]
+>  ...                               libpython: [ on  ]
+>  ...                               libcrypto: [ on  ]
+>  ...                             libcapstone: [ on  ]
+>  ...                               llvm-perf: [ on  ]
+>  ...                                    zlib: [ on  ]
+>  ...                                    lzma: [ on  ]
+>  ...                               get_cpuid: [ on  ]
+>  ...                                     bpf: [ on  ]
+>  ...                                  libaio: [ on  ]
+>  ...                                 libzstd: [ on  ]
+> 
+> And there's this second round of auto-detection:
+ 
+>  Auto-detecting system features:
+>  ...                         clang-bpf-co-re: [ on  ]
+>  ...                                    llvm: [ on  ]
+>  ...                                  libcap: [ on  ]
+>  ...                                  libbfd: [ on  ]
+ 
+> which is all-green as well.
+ 
+> I still have these dependency warnings:
+ 
+>   Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install elfutils-debuginfod-client-devel or equivalent
+>   Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>   Makefile.config:1191: libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
+ 
+> The libtracefs one was resolved via 'apt install libtracefs-dev', 
+> leaving two:
+ 
+>  Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install elfutils-debuginfod-client-devel or equivalent
+>  Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+ 
+> I cannot resolve the openjdk dependency warning, despite installing a 
+> plethora of packages:
 
+This one is a sore spot, I'll try to take a look.
+ 
+> kepler:~/tip> dpkg -l | grep openjdk
+> rc  openjdk-14-jre-headless:amd64                               14.0.2+12-1                                         amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> ii  openjdk-17-jre:amd64                                        17.0.14+7-1~24.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT
+> ii  openjdk-17-jre-headless:amd64                               17.0.14+7-1~24.10                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> rc  openjdk-18-jre-headless:amd64                               18.0.2+9-2ubuntu1                                   amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> ii  openjdk-21-jdk-headless:amd64                               21.0.6+7-1~24.10.1                                  amd64        OpenJDK Development Kit (JDK) (headless)
+> ii  openjdk-21-jre:amd64                                        21.0.6+7-1~24.10.1                                  amd64        OpenJDK Java runtime, using Hotspot JIT
+> ii  openjdk-21-jre-headless:amd64                               21.0.6+7-1~24.10.1                                  amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
+> ii  openjdk-8-jdk:amd64                                         8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Development Kit (JDK)
+> ii  openjdk-8-jdk-headless:amd64                                8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Development Kit (JDK) (headless)
+> ii  openjdk-8-jre:amd64                                         8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Java runtime, using Hotspot JIT
+> ii  openjdk-8-jre-headless:amd64                                8u442-b06~us1-0ubuntu1~24.10                        amd64        OpenJDK Java runtime, using Hotspot JIT (headless)
 
+> And I managed to resolve the elfutils/debuginfod.h warning via an 
+> apt-file search and installing the libdebuginfod-dev package, the 
+> warning message should probably be updated via the patch further below 
+> that gives a more specific package name to install.
 
->  create mode 100644 tools/include/linux/cfi_types.h
->=20
->=20
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> --=20
-> 2.49.0.504.g3bcea36a83-goog
->=20
->=20
+I've folded your patch in the patch I added in this series while
+addressing the other problems you pointed out with libunwind, ditto for
+libbfd.
 
+> With that resolved, I now have only a single dependency failure left:
+ 
+>   Makefile.config:1146: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+
+I'll work on that.
+ 
+> On the UI front:
+> 
+>  - I can confirm that the left-arrow now works intuitively wrt. context 
+>    zooming, thanks for implementing that!
+
+Great! the good thing was that minor changes were needed.
+ 
+>  - Likewise, the Esc key suggested in the 'h' screen now works 
+>    intuitively as well.
+
+Right, I didn't even try to fix that one explicitely, it was that
+do_zoom_thread() (that does zoom in and out) not having act->thread set
+when handling the left arrow, that happens to also handle the ESC case.
+ 
+>  - When pressing an unbound key I now get a helpful message.
+
+Great.
+ 
+>     - One small detail with the unbound key warning I noticed: it now 
+>       says "'l' key not associated, use 'h'/'?'/F1 to see actions!", but 
+>       pressing 'h' will only work after dismissing this window. It might 
+>       be a nice little extra UI tweak to allow 'h/?/F1' to jump to the 
+>       help window straight away from warning windows, instead of 
+>       requiring two keys to be pressed?
+
+Sure, I'll add a patch on top of this series doing that.
+ 
+>  - I also see that 'P' now works in a broader context as well, saving 
+>    the perf.hist.0 file.
+
+I did nothing in this regard, a good fallout from the other changes then.
+ 
+>     - A small observation with the 'P' key too: maybe the status line 
+>       at the bottom should update with the action performed? I only see 
+>       a small flash and the "Press '?' for help on key bindings" 
+>       message is reprinted.
+
+Right, I think this is a case to use a popup window stating that the
+"screenshot" was produced and was saved in file xyz.bla
+ 
+> Anyway, I'd say that the large majority of my TUI complaints were 
+> resolved by your changes, and I had no new problems, so for the
+> changes so far:
+ 
+>   Tested-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks, I added that to the patches and will use what I have right now
+to open the perf-tools-next.git tree, so that in addition to this work I
+start processing the many patches that are out there for 6.16!
+
+Please, if you have further comments, just send them my way but do not
+forget to CC perf's co-maintainer, reviewers and the mailing list, its
+not always that I can focus on something like this ;-)
+
+Cheers,
+
+- Arnaldo
