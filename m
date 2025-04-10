@@ -1,186 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE2318A6C4
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Apr 2025 01:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744249100; cv=none; b=uS2rFcqK6P7/aSDhzBp+pZTJt/DryTveu33iQ1qdyC3ugqLqnaxvCvaIP3W5VV1SvTCDBuLzsvwIqpexJC8p5rUvEBR47KPamci1fwD/t17Sn1RfFZEmRC+8TamR37YJW4ITsZ2rV5IolYDO+d5RqDCJ6ggnHHTZh2JE5WAcvik=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744249100; c=relaxed/simple;
-	bh=jqF90+SJIUh0pwpqcaxI1UtPq5M2zIwMZMhfr22J28U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q883x/GgzPUGgurGPvdfjF+EQVifYO1XPOXOQHkX1HTp6fC1kWoNBZS2sD3FFG8RXIG2lUG4diOnJs21VdW03kUkFlUHTn8gumAFJFJ8Q9T2FI6V6g2OQqBYlEQqHoH9OdR95ieD7WoHejv9GzOnz/MGGxbTShJMPfTax+7Hcvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVQOjMB6; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BEE1C862B;
+	Thu, 10 Apr 2025 03:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744254764; cv=fail; b=Fa/DgBuAuFg5NiX1WY8IhHdwZu8eanTw3Mj7ZdsP2/TF6GVIokRrZkTeC2FLvcbU2Wc+Y5o+1Hog6W6J4UhJ2qXZI0HulPxJfH0U+4CBmnR3QxtRZQBlDJ2D6UcSzJd1QuyDa+Z3v1SIEeAcJaWq7a2g5DEY8CvbiaoPMnYEXno=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744254764; c=relaxed/simple;
+	bh=QaajO8tWofrABryGCM91V4X7itPMiDoUPjnOXs7ZMPs=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=U5iftN7CgyvgsIF4JY/mHGTZAoW2x5HtDpL+XCi7s7lY25PVzFNXn0P9o/0vW4HLdWSLkwQlI5nv4FXK0bTGXPLmvEcHp7CWTdBU5Xe6J5jlKm1xMtA9/zoqDoEHCD5RXSU/0nvHNDjULK+cC3eO4cgVuer5Rn/zE2M0JUBhsFM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DyrQ2boL; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVQOjMB6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20B4BC4CEE7;
-	Thu, 10 Apr 2025 01:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744249099;
-	bh=jqF90+SJIUh0pwpqcaxI1UtPq5M2zIwMZMhfr22J28U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oVQOjMB6q7oJ5FfqTLqkcsZRuZMvgLSwJBzH+wmRvrAni9XI5kjMdZ6svaR2Fo1Hg
-	 F7xW+MGTvDprP71R61egcx4Ew+rIqQ7DboxbIPqwCEf57p+ShCCdSqRF9KKXIzW6Iy
-	 ecS0SANEnjRcXU23oVA7por8zfM7N5w/pUwVXxlRHbu0V39I2WGjQpEnw04A2fvYIx
-	 kK/r28runf8aYnG9j0fehiMfUhWo6z1vr1m86bOJ18pdccbotnlm54ImSb2HKFJiOf
-	 uHqAxQqiART6cI0eITO1pR+z0miBe9nGQlhIfkvukmO0d/deqsEg0VbJhKYB6ruUmW
-	 CQHtA9SPgBoMw==
-Date: Wed, 9 Apr 2025 22:38:16 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [perf top] annotation doesn't work, libunwind doesn't seem to be
- working either
-Message-ID: <Z_chCGYb1_hMS1F9@x1>
-References: <CAH0uvoi3oaZesWKLtaJRm3AkJx9j-G_Xm66Z276xH5+k11zisQ@mail.gmail.com>
- <Z_QEND63LoxP0h9H@gmail.com>
- <Z_Rz10stoLzBocIO@x1>
- <Z_TYux5fUg2pW-pF@gmail.com>
- <Z_XaOp4TCBKe-M0o@x1>
- <Z_ZltdaHx9XuKcd9@x1>
- <Z_aY0fTs53id77CS@x1>
- <Z_bHtD7umCsKeWJ6@x1>
- <Z_bI7wK8mJYVOWDH@x1>
- <Z_bl8tabAwfqKuy-@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DyrQ2boL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744254762; x=1775790762;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=QaajO8tWofrABryGCM91V4X7itPMiDoUPjnOXs7ZMPs=;
+  b=DyrQ2boLNfLN/oHjvvR28iRbImnBuFaZFGDCygcsuMen9J6UZPl6DAhk
+   L1oWdb/y2+8fSBZYc8laZJy+UZdzRsDR5143gc9W6Mq8vF62dfQnpDeU5
+   ahqhvGKg+w5WUWEquq4ggng955RxtNbVkzHt8df9eYu7qVKSR0uzzsUhZ
+   Js4YfQR7zjhYRFQ8pdcIv1EqzEsi5nL6+bRE9ANRORwT17jHfzGmdQj35
+   Y1kN0UibgNUPYQGJAK5IZNheJbn5Timm5R+L1ktX73+HJ2jbUYZgkzAXf
+   RypfiB7UdGor6njujNgzjuCfkirBHlnPze2o6hf7AYoFxB1unBh84rDpN
+   Q==;
+X-CSE-ConnectionGUID: Qp6/5JvtQaKavzZ3sqmwXw==
+X-CSE-MsgGUID: c/wDqjuESOOStVC1XHwFow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="57124788"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="57124788"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:12:41 -0700
+X-CSE-ConnectionGUID: Xax/PqaARWeVwLwthNsTaw==
+X-CSE-MsgGUID: Qd7VR+QzTiWEOX39XfynIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="151948562"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:12:40 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 9 Apr 2025 20:12:39 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 9 Apr 2025 20:12:39 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 9 Apr 2025 20:12:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=La6BmsiDYlVtimd/42AX9GdenT70SBg7lOlwzPJ56PXmhu/NQyd+cWrqWoqCCixo+l6fJ0uABPvCQy7xZQ7SU2xdOWQoRQYOxsS3Rs8ZpbFgsV8zsV+PULVrKJN9zFECXUqsaVT68RC0LefRJiC6mbvEGI10c9K/Wsk3mZOiWTclhqSM/Yojbem+mn9y7LE8W9h/CuPvEALmlo92odjDlfqlx18Q/AFSXmMQacnhkB8OtEF0UOUSNnjPrnI+/AihXPfz0lhcj/NxYE4lPdKQunmjB3zW/mkz/HKo96IQsbWoNYOZzQTz6rTzbPNcenOlYHOb541/7XY3omCcwucaNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QaajO8tWofrABryGCM91V4X7itPMiDoUPjnOXs7ZMPs=;
+ b=QcJA0eNI5VtdBD5B+D53OJvARwX+Y3h28duaEPH867T82FaiSrIx00/8cV5y2GX08FLbY7DsxiVAg8C4if9v5oD5YQhBbYvX9aP83o6H4UACBZNWEV8cLc+dGSxE8kkNNe/Kn1Aw/cAyoDBERyhNBaEz7yylpgZwqesJESRNuwmFDVupM2XtRY1Id5Br9iulyqEZhwSUZ5dYw9r4zJPMcb8LxQTO+3liMXuKJjQ9Tou7uFDgAvSDmOqwUXfArd3lFSGOlowuuvwY1BbcWl9WyRPFOhKwpLBnWPCLWFyZ359DoJSxx28zdIu9it6Z3SRsnrffQ2+PSvPxPyodiormqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CO6PR11MB5635.namprd11.prod.outlook.com (2603:10b6:5:35f::14)
+ by IA4PR11MB9106.namprd11.prod.outlook.com (2603:10b6:208:55f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
+ 2025 03:12:31 +0000
+Received: from CO6PR11MB5635.namprd11.prod.outlook.com
+ ([fe80::8cfa:1a7f:d9ee:42cf]) by CO6PR11MB5635.namprd11.prod.outlook.com
+ ([fe80::8cfa:1a7f:d9ee:42cf%6]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 03:12:31 +0000
+From: "Wang, Weilin" <weilin.wang@intel.com>
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang
+	<kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, Xu Yang
+	<xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, Howard Chu
+	<howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet
+	<asmadeus@codewreck.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 16/16] perf record: Retirement latency cleanup in
+ evsel__config
+Thread-Topic: [PATCH v4 16/16] perf record: Retirement latency cleanup in
+ evsel__config
+Thread-Index: AQHbqRY8GLbZ2NWmaUCgQrMLWgeDyLOcOg2g
+Date: Thu, 10 Apr 2025 03:12:31 +0000
+Message-ID: <CO6PR11MB5635677AA5BCAC3E65B1274BEEB72@CO6PR11MB5635.namprd11.prod.outlook.com>
+References: <20250409061043.700792-1-irogers@google.com>
+ <20250409061043.700792-17-irogers@google.com>
+In-Reply-To: <20250409061043.700792-17-irogers@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO6PR11MB5635:EE_|IA4PR11MB9106:EE_
+x-ms-office365-filtering-correlation-id: b45b9f14-a860-48af-b13b-08dd77dd886c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018|921020;
+x-microsoft-antispam-message-info: =?utf-8?B?NjRnM0t5SzJ0RnNKYlIzcHRvaEZVNWp2WnZWUU5rL1pkWkdVeWFVejRoMkFK?=
+ =?utf-8?B?NzQrVUFpV2M4S3NNdWpqMVBjZ3k5TVY3czJNN3YrQ3dNL1Q4VUdONFFCd0Ni?=
+ =?utf-8?B?bklWRDB5SjJFYTNTQ3BaUzJ5eTRFT2V4ZEpTRXlOV1YrNWR4dzZwRkQrdEZ4?=
+ =?utf-8?B?U0RaeTNaU0FaTmQ5RC93anVkTjR3MGNFOHVQaGx4UnU0dWkzSDNMVWlHdTkx?=
+ =?utf-8?B?dDB0OTVWckY1V2MwdHQ3cm92bDBZSmxmdkZDV3EyQjdCNGY3VjVjdVlLYk1j?=
+ =?utf-8?B?RmlZbWtvL2QvN0YwK2NZY3h5ZkNJVkFRWktaWlk0S0tScjlybHpYY29kYU9k?=
+ =?utf-8?B?NTI4SnpDc3FHT0RoWWllUEhObHQ1N1I2U0NDRE1DSjBvaXo1bzFNSXhMSVZ2?=
+ =?utf-8?B?QUdpTGYzb3p1RndBbE8vWUVRTHprTkNYdnppcDFWUW9KZDZUZjV0R09RdDhK?=
+ =?utf-8?B?aWF3dVZaTGZiL2gwV0tOTHRmelBrTzFiR1FDeFVFajM4c2FKTDdsUTIwaHFt?=
+ =?utf-8?B?WXlLZk0xT3hiUkxramRmUW12akQzeDVsVFE5bldqNGFmWDlyTW9IcEVXazZI?=
+ =?utf-8?B?aEN2U3h5M0RZUEs3aTV4Q01ZTXdSeTI3L0J4SnhoTktPQVdMa29PR2UyVUM2?=
+ =?utf-8?B?TEwzWWYxakhDZUhjSkNGVG5jUWtrU0hOMEJGY0JCVHovK1drSkV6UHNWTTc0?=
+ =?utf-8?B?MVo0OEQrTng4eEROOWNaODNLR05HanZBM0d4T1VMK0JnV0tVMERoYjhjWnRj?=
+ =?utf-8?B?Z2FEalhPb1h1WmFFdm9kbk1PbmZQcEJvMW9iSDF6MUlvQ3JRdmhsYVFpTnpK?=
+ =?utf-8?B?dGxSc3U4WEkycVdsL05YTE1qMDFISXgrSldHRW5BTm5HS1FFYjdpbnJTRmg4?=
+ =?utf-8?B?ZUJ1dXo0c3V0R3AveEo5RGlQdG1DRHBHUGNmaFFGbXI0SHhCRjkwRmhqMm1w?=
+ =?utf-8?B?ajRIUnN3NzRibTVRZkVCMFBoS3Uxb0RiVDBnU0hFdm1wQ2xQZjFENnJ6cEwv?=
+ =?utf-8?B?cXFUOGlodk5xNUdGOElEaXN3dVV0dzlCSjdmUSs2dEZmcDdIeTlwdmNncWZO?=
+ =?utf-8?B?ZEdjN1piOEVUdjNlVkgwcmw0VkNtVzc4ZmpzYzFlNmVhdVF1by92aURaeGd6?=
+ =?utf-8?B?UE5MT1FJUXBzVXZ0S1RQRU8yM2pQOFFOTmlLcXViVk1tMEkzMGdOS3N1cEYy?=
+ =?utf-8?B?dmNQbDU4T1JhVWQ0dDlTT1BmZHczR2cwRXpuOUU5aWM4Y3ptRk5aeDRqWnhm?=
+ =?utf-8?B?cFZRTSt0KzNTTXlzR01xU0pPRGZaMFFIaWViUWdGZkJUejlVQzBKWktsNHJ1?=
+ =?utf-8?B?UUltTkZQK2Y2aWxYS2Z5ajNFVkZmSFhDNFZCY2dOa0ZSSlB5WTFyZlBjZDFm?=
+ =?utf-8?B?ZTVHOUIwME9wVzZYOGxvZGNIRG9Hc05wSUUvRExXMjhYM2RpMCtFakkvU3R6?=
+ =?utf-8?B?TVFzS1MzZlNzSnBWTFRaOHY4L1psZzRBblhlMDB2YTVXNnFQUFJwQ3Z4SGJM?=
+ =?utf-8?B?bkM0aUVVSlQ0Vml6NlcyNzJabURxQmxTbytrWVBjaVRvVE5PQTNwenNxQnRt?=
+ =?utf-8?B?ZW9mb0ZoQUZlcy94L04vZ3YxdnRzMlROSHZOZnNUVTRLdkRvV25VMnNINi8w?=
+ =?utf-8?B?NmhxcGNwbUd4bjNVVExZZkhjNWV3SkZ5TzA5eFVGZVRYdXlack9LemxtQnBS?=
+ =?utf-8?B?cXdmZ3VHSm1HaXJ0MzN2ZStsM2NMbDlOci92R3FZQ0I4YWliMkdsSUoyUGov?=
+ =?utf-8?B?azFkTzBnOXhYT24xTktkaFNWMGhLaVFYSS94MVVvQXBYcFBabE45U0Y2TzZG?=
+ =?utf-8?B?WVZxaC9HUGpqRlBES2RTZVFPZ2kxM2FJc1lOL0pGYXZuYTl1R1MyeDJEVmZ1?=
+ =?utf-8?B?WGJ5R2xUL3NXV2pkMUt6MW9nWXUxMWQ4MzB3QWs4OUc3KzVmdjlhRlowZkhB?=
+ =?utf-8?B?d0tPeGJjOW91UDBWYXdOaFphL0d2MW52Q3QzSUhybU9zcjArdGZuUDJEME42?=
+ =?utf-8?Q?kyv1rNbQ0Mjy0fQQ+YevJNVe4wpHCY=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5635.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QlpJbFp0VUtjU3JORmlFYmFETHl1L2xablMvcUM5d1UwbHZJcDZzU095NnF6?=
+ =?utf-8?B?TllXQXBPM2ptOXVuQi9QV2FpbjdtUmllaU1OTGJrRkRWM2JPR1c5Q0U5TXFI?=
+ =?utf-8?B?amRBZll2L3pqc3NHQjVYcVNjNFFmQnRTNDNZU2YxaThEMnVBYkpwV1JPRjJ1?=
+ =?utf-8?B?cDk2TTNKRzdOVmI0WXNmY24yMlBrbzdmNm93V3doZFo3VnE4Ny91ZGtlWCt4?=
+ =?utf-8?B?TEhRRjNDd3NOODhDR1ZrWGpoS1BuWFg5VWNXeUV5anpFUlgvSWVBNTF1Wmw3?=
+ =?utf-8?B?ZXZIOUFudEJOTTNRWUdPTnVrQVVONm0zaVFjellLVGtpenI4dDd3U3NMOTBp?=
+ =?utf-8?B?Tko2bWozNGJLRXMrWlBxNnR4UXY3ZWlTcTRQTnhjNEVqSXlNZEY2NlJBWDBx?=
+ =?utf-8?B?ajJlMjFDVDRveEIyNkhwQ0FLMjhwK3ZqL3pYVlk0WVhVcHVPdHpBS3pYUDRw?=
+ =?utf-8?B?SmpMNUdHMWVOc3YzMnNTcnNobzF2dkhyb1NCSWhNTmhNVFJ4b1ZZeGlwUzRN?=
+ =?utf-8?B?TGVPUW5sWER0WE5aTDBPKzhBWWdObERzM1pYL0laSWtHMVZxU3QxaTBIMzlp?=
+ =?utf-8?B?WHBwQW12SU5GeWY2ZVI1VnNERWFXMWRBRTVzQVg2dmJhNlJCNXJVT3llZHRQ?=
+ =?utf-8?B?cWgxMmZqTytKUms3VjZOZEhCN2ZWSEtJb2p6dkgreTNwQWlyUFRwdnUzMk85?=
+ =?utf-8?B?aWhqRTA1N0ZpV3ljRE5nakltaFVON1UwOGd3VWloVVEzZWI3b05IQmRzK3ZJ?=
+ =?utf-8?B?MytjTmJydkxMaFlMbUVOWE5vU0pPRjNza2l5OTJNWGRTRFYrQzVlZU9JK3FB?=
+ =?utf-8?B?dXRVMDhiTjV2SFhHMHo1bllNYklIRmUrcEUwVkFWUHVqR2JNKzQxQ0x3NXNo?=
+ =?utf-8?B?ZDl1aERHWCs1QUpoNDZGN2lPSHlSTlRjQkpIOG9tV2ZyaUdmaklsV1ppYTFQ?=
+ =?utf-8?B?MVlvZm5pN3RjbnIxY2R6UnA2UjRTc2gwcHBlaEdUODBmek9kWGkrcXEzWW5t?=
+ =?utf-8?B?MlFMWmxyaFBxcWczWXhpYzdSalVaOURaOWZxVDlQUE9Ock1jcFFraGdXcTVn?=
+ =?utf-8?B?YmNuNWJFNmlZOXdPZktnZ2grTHFIM05NYkVNZUpVTDhPSTNINjNEUkFzQVBj?=
+ =?utf-8?B?TVhCbmtqSUFQV0xYQVFSRlJMZ3EyQ3k3enl1Q0tySld2N2J3OUViT25kRjhU?=
+ =?utf-8?B?eDh1YjlYVUM1dldrYmFpR1h6U3AraW9FeHE5aHVoVVhGbW10M3NVblJOdERH?=
+ =?utf-8?B?cVgzTW8ySnI4M3RoQ1JxcmRNWGtwZ1hBWXZaZEtRbXE2dkhYZGl4WkFMb0NM?=
+ =?utf-8?B?RHdoSHc0SGFKMGFmWU1tMURGcEEyM0pubTJWSDgxbTJ4WVdMcXBBT3hraHY3?=
+ =?utf-8?B?clFVQ2oxZTA2dzV6elVmOW9TZ1BmeUlyYVoxMUdXMEQvaVp5aE84ZzNnSks3?=
+ =?utf-8?B?QTNHaG9pQjZvUUJDaFMrMEpib3drUzZOQ3lpdGRXY3VtK1FDNm9lOHdVMUV6?=
+ =?utf-8?B?RGgxRUQwUkh3RHJMSDE1bXpzVkVKQjd4cW1iazA4azNMRDhBL2J2L2FCUU5T?=
+ =?utf-8?B?YWNQWlJ2RUNhU09OWXZxY1dTUVUzeWhTME1jcXFHVy9VVWtaWldGWjBTWXNL?=
+ =?utf-8?B?aHJXQkpUNDdKb0xWWGo5ckk4V0FHdlNSZit5ODMzdTdPaHdHaVBpTkxKRmE3?=
+ =?utf-8?B?QnhEczFsR2RzbXZzeHhXSU5IV1RTTTdWSnFWM2tld2dxVFc5WjVxb0t1ejIr?=
+ =?utf-8?B?RlFkazlhV2tablFnYnJzZ1ZYYUhKQ2ptSHByVVh2ZUNQQTNuQU56Zm15ZVd5?=
+ =?utf-8?B?Q09mUzJwL0JYNU43Q2g2UU9TOW1jSWdZWHdrZjIvTWtPK3YyblNJRmRNZlBR?=
+ =?utf-8?B?U3ZFd2NLTGtpQmRuQjFnenJURXdUellBS3BTUFY4MlJwenJQUzhWU0FkOEdH?=
+ =?utf-8?B?aGNYR3F5SWg3ZzlvRU9nbVByYTRKWEtlWCtsZmdlcVBBN29FVU5YYTVBQlU0?=
+ =?utf-8?B?R21jQVlpQy9UaEJ4dXR3QUNzbm5CYUtVa1hmd0paczFyejNMa2hMOUd3ZnpG?=
+ =?utf-8?B?UzUrSzE5bTgvUTVGS0IzTllST0RLSVR0eG9xOTB4cFB1dzhDOWVYZWw3MkVN?=
+ =?utf-8?Q?NQcdxRf+Mj5hzot/tAfVusn6T?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_bl8tabAwfqKuy-@gmail.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5635.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b45b9f14-a860-48af-b13b-08dd77dd886c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2025 03:12:31.6379
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NqxGnn7r7oeJDX+KBSM+WeSIYihM3dA2TRoyw0LJmO/igxjao6SzfjwX325pkynE4XFls72D+p3ktRkxgbTF3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9106
+X-OriginatorOrg: intel.com
 
-On Wed, Apr 09, 2025 at 11:26:10PM +0200, Ingo Molnar wrote:
-> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Using 't' to zoom into a thread and then LEFT to zoom out works, ditto
-> > for 'd' + LEFT, 'k' (zoom into the kernel) + LEFT its just 'm' + thread
-> > or ENTER + Zoom into Thread that isn't working...
-
-> > Not even that, there is something subtle, investigating.
-
-> > But as a suggestion, pressing 't' zooms into a thread, pressing it again
-> > zooms out of that thread, rinse repeat.
-
-> Indeed, this works it around. It's not *that* easy though: 't' goes 
-> into thread view, but has to be pressed another 3(?) times to get back 
-> to the previous non-threaded view again.
-
-> > Ditto for 'd' for DSO and 'k' for the kernel DSO, 'S' for a CPU socket
-> > (Kan Liang implemented this, but not for 'c' CPU, will try to add that).
-
-> > Anyway, back to the bug.
- 
-> Thanks for having a look! :)
-
-I guess I found it, another one-liner (well, two if you count removing a
-comment line) with a long explanation, see below.
-
-There is a tidy up patch before this, all is at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-annotate+build
-
-So far:
-
-⬢ [acme@toolbox perf-tools-next]$ git log --oneline v6.15-rc1..
-4af32d73e850cb2c (HEAD -> perf-tools-next) perf ui browser hists: Set actions->thread before calling do_zoom_thread()
-caab12ee523ccf7c perf ui browser hists: Simplify the routines that add entries to the popup menu
-dd2ca9ca0d76a04b perf ui browser: Accept the left arrow key as a Zoom out if done on the first column
-6b4e380deb02de46 perf ui browser annotate: Don't show the source code view status initially
-befd9928ac3b0914 perf ui browser annotate: Show in the title the source code view toggle
-6c557247d907487e perf ui browser map: Provide feedback on unhandled hotkeys
-dcee76bd1ef37cd5 perf ui browser hists: Provide feedback on unhandled hotkeys
-7cd3b61be22b6111 perf ui browser header: Provide feedback on unhandled hotkeys
-4226b944d6cfec62 perf ui browser annotate: Provide feedback on unhandled hotkeys
-96f43ea8e198b9cd perf ui browser annotate-data: Provide feedback on unhandled hotkeys
-1101a930a674936a perf ui browser: Add a warn on unhandled hotkey helper
-bdd6ce8eb8c2f2f7 perf ui browser: Add key_name() helper
-65185f2cf7af5026 tools build: Don't show libbfd build status as it is opt-in
-33da8804f7c00056 perf check: Add tip about building with libbfd using BUILD_NONDISTRO=1
-da4de82814f54c6c perf build: Warn when libdebuginfod devel files are not available
-d5f1c3eb842aaafe tools build: Don't show libunwind build status as it is opt-in
-6cf8fa4dcce720f9 perf check: Allow showing a tip for opt-in features not built into perf
-07f8bc136355d09a perf check: Move the FEATURE_STATUS() macro to its only user source file
-a3fb01a0d062d9f4 perf check: Share the feature status printing routine with 'perf version'
-c2bc1a34f2488b7f tools build: Don't set libunwind as available if test-all.c build succeeds
-⬢ [acme@toolbox perf-tools-next]$
-
-I'm starting to take a look at:
-
-⬢ [acme@toolbox git]$ head -5 ./llvm-project/llvm/tools/llvm-objdump/SourcePrinter.h
-//===-- SourcePrinter.h -  source interleaving utilities --------*- C++ -*-===//
-//
-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
-// See https://llvm.org/LICENSE.txt for license information.
-// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-⬢ [acme@toolbox git]$
-
-:-)
-
-- Arnaldo
-
-From 4af32d73e850cb2c0c1679a0d30a65d8d5f4222d Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Wed, 9 Apr 2025 21:58:19 -0300
-Subject: [PATCH 1/1] perf ui browser hists: Set actions->thread before calling
- do_zoom_thread()
-
-In 7cecb7fe8388d5c3 ("perf hists: Move sort__has_comm into struct
-perf_hpp_list") it assumes that act->thread is set prior to calling
-do_zoom_thread().
-
-This doesn't happen when we use ESC or the Left arrow key to Zoom out of
-a specific thread, making this operation not to work and we get stuck
-into the thread zoom.
-
-In 6422184b087ff435 ("perf hists browser: Simplify zooming code using
-pstack_peek()") it says no need to set actions->thread, and at that
-point that was true, but in 7cecb7fe8388d5c3 a actions->thread == NULL
-check was added before the zoom out of thread could kick in.
-
-We can zoom out using the alternative 't' thread zoom toggle hotkey to
-finally set actions->thread before calling do_zoom_thread() and zoom
-out, but lets also fix the ESC/Zoom out of thread case.
-
-Fixes: 7cecb7fe8388d5c3 ("perf hists: Move sort__has_comm into struct perf_hpp_list")
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/Z_TYux5fUg2pW-pF@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/ui/browsers/hists.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 0db2a3f06e23cc5a..cf022e92d06b9b28 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3264,10 +3264,10 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
- 				/*
- 				 * No need to set actions->dso here since
- 				 * it's just to remove the current filter.
--				 * Ditto for thread below.
- 				 */
- 				do_zoom_dso(browser, actions);
- 			} else if (top == &browser->hists->thread_filter) {
-+				actions->thread = thread;
- 				do_zoom_thread(browser, actions);
- 			} else if (top == &browser->hists->socket_filter) {
- 				do_zoom_socket(browser, actions);
--- 
-2.48.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSWFuIFJvZ2VycyA8aXJv
+Z2Vyc0Bnb29nbGUuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCA4LCAyMDI1IDExOjExIFBN
+DQo+IFRvOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+OyBJbmdvIE1vbG5h
+ciA8bWluZ29AcmVkaGF0LmNvbT47DQo+IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyA8YWNtZUBr
+ZXJuZWwub3JnPjsgTmFtaHl1bmcgS2ltDQo+IDxuYW1oeXVuZ0BrZXJuZWwub3JnPjsgTWFyayBS
+dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+IEFsZXhhbmRlciBTaGlzaGtpbiA8YWxl
+eGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbT47IEppcmkgT2xzYQ0KPiA8am9sc2FAa2Vy
+bmVsLm9yZz47IElhbiBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT47IEh1bnRlciwgQWRyaWFu
+DQo+IDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4
+LmludGVsLmNvbT47IFdhbmcsDQo+IFdlaWxpbiA8d2VpbGluLndhbmdAaW50ZWwuY29tPjsgSmFt
+ZXMgQ2xhcmsgPGphbWVzLmNsYXJrQGxpbmFyby5vcmc+OyBYdQ0KPiBZYW5nIDx4dS55YW5nXzJA
+bnhwLmNvbT47IEpvaG4gR2FycnkgPGpvaG4uZy5nYXJyeUBvcmFjbGUuY29tPjsgSG93YXJkDQo+
+IENodSA8aG93YXJkY2h1OTVAZ21haWwuY29tPjsgTGV2aSBZdW4gPHllb3JldW0ueXVuQGFybS5j
+b20+Ow0KPiBEb21pbmlxdWUgTWFydGluZXQgPGFzbWFkZXVzQGNvZGV3cmVjay5vcmc+OyBsaW51
+eC1wZXJmLQ0KPiB1c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmcNCj4gU3ViamVjdDogW1BBVENIIHY0IDE2LzE2XSBwZXJmIHJlY29yZDogUmV0aXJlbWVu
+dCBsYXRlbmN5IGNsZWFudXAgaW4NCj4gZXZzZWxfX2NvbmZpZw0KPiANCj4gUGVyZiByZWNvcmQg
+d2lsbCBmYWlsIHdpdGggcmV0aXJlbWVudCBsYXRlbmN5IGV2ZW50cyBhcyB0aGUgb3Blbg0KPiBk
+b2Vzbid0IGRvIGEgcGVyZl9ldmVudF9vcGVuIHN5c3RlbSBjYWxsLiBVc2UgZXZzZWxfX2NvbmZp
+ZyB0byBzZXQgdXANCj4gc3VjaCBldmVudHMgZm9yIHJlY29yZGluZyBieSByZW1vdmluZyB0aGUg
+ZmxhZyBhbmQgZW5hYmxpbmcgc2FtcGxlDQo+IHdlaWdodHMgLSB0aGUgc2FtcGxlIHdlaWdodHMg
+Y29udGFpbmluZyB0aGUgcmV0aXJlbWVudCBsYXRlbmN5Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+SWFuIFJvZ2VycyA8aXJvZ2Vyc0Bnb29nbGUuY29tPg0KVGVzdGVkLWJ5OiBXZWlsaW4gV2FuZyA8
+d2VpbGluLndhbmdAaW50ZWwuY29tPg0KDQo+IC0tLQ0KPiAgdG9vbHMvcGVyZi91dGlsL2V2c2Vs
+LmMgfCA1ICsrKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9ldnNlbC5jIGIvdG9v
+bHMvcGVyZi91dGlsL2V2c2VsLmMNCj4gaW5kZXggNjYxYTA3Y2JkYjI1Li42YTg0ODkzZTNjNTgg
+MTAwNjQ0DQo+IC0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9ldnNlbC5jDQo+ICsrKyBiL3Rvb2xzL3Bl
+cmYvdXRpbC9ldnNlbC5jDQo+IEBAIC0xNDQwLDkgKzE0NDAsMTAgQEAgdm9pZCBldnNlbF9fY29u
+ZmlnKHN0cnVjdCBldnNlbCAqZXZzZWwsIHN0cnVjdA0KPiByZWNvcmRfb3B0cyAqb3B0cywNCj4g
+IAkJYXR0ci0+YnJhbmNoX3NhbXBsZV90eXBlID0gb3B0cy0+YnJhbmNoX3N0YWNrOw0KPiAgCX0N
+Cj4gDQo+IC0JaWYgKG9wdHMtPnNhbXBsZV93ZWlnaHQpDQo+ICsJaWYgKG9wdHMtPnNhbXBsZV93
+ZWlnaHQgfHwgZXZzZWwtPnJldGlyZV9sYXQpIHsNCj4gIAkJYXJjaF9ldnNlbF9fc2V0X3NhbXBs
+ZV93ZWlnaHQoZXZzZWwpOw0KPiAtDQo+ICsJCWV2c2VsLT5yZXRpcmVfbGF0ID0gZmFsc2U7DQo+
+ICsJfQ0KPiAgCWF0dHItPnRhc2sgICAgID0gdHJhY2s7DQo+ICAJYXR0ci0+bW1hcCAgICAgPSB0
+cmFjazsNCj4gIAlhdHRyLT5tbWFwMiAgICA9IHRyYWNrICYmICFwZXJmX21pc3NpbmdfZmVhdHVy
+ZXMubW1hcDI7DQo+IC0tDQo+IDIuNDkuMC41MDQuZzNiY2VhMzZhODMtZ29vZw0KDQo=
