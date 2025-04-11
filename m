@@ -1,160 +1,140 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E767211713
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Apr 2025 23:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359DE36D;
+	Fri, 11 Apr 2025 00:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744327464; cv=none; b=a+1E4hHYBdAWvTmKqaUtRixpRWHJ3F5aDw6FIlY7tuGqpoJ/Bl8Fs2XWwv9ZwtbP558QO3qfxDMbdURFKQJ01iHYK6BQxuGF9AsnJr7NloIJ+17MwfwyFeCZuEX6u2OXg6+uRRrrL6OmRtwYDBIJg08xklmSgiK89P/LN0/EwDw=
+	t=1744331802; cv=none; b=rJbTg4oTAkUAgs0NmpGoy6oWKcE5qDCpFgelPutp9eAq3BL2F74epw/JtpMekAuRlouKFrzylUBPLptZVG+M+BAURN2aDw3zb+SBMiqZEVfj3D5hZppKO7jXvKOMDpu7FnodYhOPbkmdAr8r8brcEEuJQI0gbDSo0xwjzdRMK2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744327464; c=relaxed/simple;
-	bh=fRu1wIpBkqC/PAC+6Z3ide0GL77+kwaEESC4lKY2HQM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UgXT6jAsq77tfba6N5K7rzTjzMD/8GJkJYM6rT42JBtEgRJmBe+3kj1j0ZxBqY29uk+ty7lDANx8xAgrxRT5uBbDQ4bg5i7d/vVqp9svgf24RMIx6cyvdzk69wtQu+W7udMpT4nUaPGaEFzbtSVdsPLUzpyPqhq5QjNPXAhYv0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3u7Ky+9f; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744331802; c=relaxed/simple;
+	bh=lE4nTXO4MAppOW16nbEnxqr5/YrynS26YWxLS3vMqEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IMgvWdaQNScr+tRaCns8Z2HSE52PIOsGo+eiwRu1rQ0uY2vaIb9BhQw2kqsfZCIIbTCFt94ruhYIwMknHNGeJ88F/WiQAf67e9C7LMQ6JYKxUqzORR6/ZHDeko8YrtLz19iY/QNz5SqdXq+zciOULttdHsGGecM4KvrpoO9oFj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRt79iQh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3u7Ky+9f"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7369c5ed395so1486146b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Apr 2025 16:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744327461; x=1744932261; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8Hj0FhxYq298MEgk+A50ezX9To9apyasGONCk8/EIY=;
-        b=3u7Ky+9frkNfCSvunj3hgyXaCVhwQWpsJbi1kvWmQtcGe+GsRD598bauPycpTprcD6
-         XGD+aPRexvyp8B8N5R+Y40IN+xBJMgfvd2vo8wEWcDIFLVunLWkQCGQTP1OF8+5Of5tY
-         h4gTalndOQUdDo50dGBtpP9O9VAPvw2fFnSmo1ySO1fzEWNakHbU3PYx2wpMv1Ig9YW5
-         v06Qe7baAARVR3deBAk9aM2bEqc2ROzGrDzz6/tvmsLuBFYWsfqD3K2l1WKJX3SnbqDD
-         H7Sxc+25sn/E2kpmCWLuUQi/Iq7M8NHLMtgELvTYk+iLGHNJbb+0cw3ePrc8PkUVEz8J
-         Ij7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744327461; x=1744932261;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8Hj0FhxYq298MEgk+A50ezX9To9apyasGONCk8/EIY=;
-        b=bSgMw3wL9WB12lSR9A2O4yLqxRZwFaxdF5wPJSsUQQzFUsUMNbUiYCeOw7v8vcRkBH
-         zgJoO+PQQWZ2yDSAmWL6RZWs5tGrF4JuYdo0oOQlHYH7/R9V/ZOZfyE9zRqNIAAkk/yO
-         Hz299vBUTcGIWSnaulfnzXk9TRQlTMMdD2by+jpCFYFA/aQ+ZESuHGivjkp4ziaIVTBu
-         Cm9HMah9cZtHMFYNKVDFnppl0ivDMKaQCECVMr5hMmE+HYz9bX5F6AOEC1yfx6sbASet
-         UIb0FPjpJcvjXrWpllcCMP0SFOf90lrr0rj79BjZbUOcLRjfquYRpe1w9X71Vptbs5Ol
-         yyMg==
-X-Forwarded-Encrypted: i=1; AJvYcCX521hYiwgtAqcfEhzK9D1xoEKPzrbIbHEStRwrlJ2mCxk+85Q7zzGc0ene/SdQaDNUmbgcnkf4zzdXSMh62BYL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx71KNuqcdx111KIgEe74dmvPymAIdW1j0v0NnAZl5hZ5W5Rg/
-	jENlefMU5iyYiFJpUbSe3+G0c0+t1305GxU3EO7ej7uHkuudHGOl2ePVBtfRSZL/Ktke8Hwbziq
-	TKA==
-X-Google-Smtp-Source: AGHT+IHWYnK2BwFW7Mr5VmhaaxwX1jXjykj9i9MFxC3vV2mlnL+NePMyv0dJBUjVtFSac3MvKiuBJyLqfxA=
-X-Received: from pfbfj37.prod.google.com ([2002:a05:6a00:3a25:b0:730:8b4c:546c])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:21c7:b0:736:5c8e:baaa
- with SMTP id d2e1a72fcca58-73bd119427emr706022b3a.2.1744327460939; Thu, 10
- Apr 2025 16:24:20 -0700 (PDT)
-Date: Thu, 10 Apr 2025 16:24:19 -0700
-In-Reply-To: <20250331082251.3171276-11-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRt79iQh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C024C4CEDD;
+	Fri, 11 Apr 2025 00:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744331801;
+	bh=lE4nTXO4MAppOW16nbEnxqr5/YrynS26YWxLS3vMqEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NRt79iQh78Z3bTh6TAqfyhyc/h53ZY3cy/YNkdX9kEhiQ7/5qvPgoxYN+i8UG4X+y
+	 CRniUsv7TIqi2Uyy1M21DjCfg+Vvh1I+Z9d9SulMEpiwz9iggsK3hkBD+4SO/R4fAy
+	 N2uLAgCe76/V0LqJEsW43/RfKe1HcjcRuG0mTueKMAu9M3w5AbMEZrkOIuxt4nd9z3
+	 oNl5puzwmpg8/VAIMPxHuuFUjz4BOC6GZAlfs83+b03eD6Lyi2xMSNSzHOoeRUj3WU
+	 ZEsnmUvHeX31dg2jkXNmidKWCSY59kO+PxiH0rEudtZYf4s1m+uVHX+lxffJfoAKCY
+	 USBTI7RBq96Mw==
+Date: Thu, 10 Apr 2025 17:36:39 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, acme@kernel.org,
+	ctshao@google.com, rogers@google.com, agordeev@linux.ibm.com,
+	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v3] perf test: Allow tolerance for leader sampling test
+Message-ID: <Z_hkF6R9giaDGQZD@google.com>
+References: <20250410085522.465401-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250331082251.3171276-1-xin@zytor.com> <20250331082251.3171276-11-xin@zytor.com>
-Message-ID: <Z_hTI8ywa3rTxFaz@google.com>
-Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
- when available
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, 
-	linux-edac@vger.kernel.org, kvm@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org, 
-	linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, jgross@suse.com, 
-	andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
-	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com, 
-	haiyangz@microsoft.com, decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250410085522.465401-1-tmricht@linux.ibm.com>
 
-On Mon, Mar 31, 2025, Xin Li (Intel) wrote:
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->  arch/x86/include/asm/msr-index.h |  6 ++++++
->  arch/x86/kvm/vmx/vmenter.S       | 28 ++++++++++++++++++++++++----
->  2 files changed, 30 insertions(+), 4 deletions(-)
+Hello,
+
+On Thu, Apr 10, 2025 at 10:55:22AM +0200, Thomas Richter wrote:
+> V3: Added check for missing samples as suggested by Chun-Tse.
+> V2: Changed bc invocation to return 0 on success and 1 on error.
 > 
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index e6134ef2263d..04244c3ba374 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -1226,4 +1226,10 @@
->  						* a #GP
->  						*/
->  
-> +/* Instruction opcode for WRMSRNS supported in binutils >= 2.40 */
-> +#define ASM_WRMSRNS		_ASM_BYTES(0x0f,0x01,0xc6)
-> +
-> +/* Instruction opcode for the immediate form RDMSR/WRMSRNS */
-> +#define ASM_WRMSRNS_RAX		_ASM_BYTES(0xc4,0xe7,0x7a,0xf6,0xc0)
-> +
->  #endif /* _ASM_X86_MSR_INDEX_H */
-> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-> index f6986dee6f8c..9fae43723c44 100644
-> --- a/arch/x86/kvm/vmx/vmenter.S
-> +++ b/arch/x86/kvm/vmx/vmenter.S
-> @@ -64,6 +64,29 @@
->  	RET
->  .endm
->  
-> +/*
-> + * Write EAX to MSR_IA32_SPEC_CTRL.
-> + *
-> + * Choose the best WRMSR instruction based on availability.
-> + *
-> + * Replace with 'wrmsrns' and 'wrmsrns %rax, $MSR_IA32_SPEC_CTRL' once binutils support them.
-> + */
-> +.macro WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
-> +	ALTERNATIVE_2 __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;		\
-> +				  xor %edx, %edx;				\
-> +				  mov %edi, %eax;				\
-> +				  ds wrmsr),					\
-> +		      __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;		\
-> +				  xor %edx, %edx;				\
-> +				  mov %edi, %eax;				\
-> +				  ASM_WRMSRNS),					\
-> +		      X86_FEATURE_WRMSRNS,					\
-> +		      __stringify(xor %_ASM_AX, %_ASM_AX;			\
-> +				  mov %edi, %eax;				\
-> +				  ASM_WRMSRNS_RAX; .long MSR_IA32_SPEC_CTRL),	\
-> +		      X86_FEATURE_MSR_IMM
-> +.endm
+> There is a known issue that the leader sampling is inconsistent, since
+> throttle only affect leader, not the slave. The detail is in [1]. To
+> maintain test coverage, this patch sets a tolerance rate of 80% to
+> accommodate the throttled samples and prevent test failures due to
+> throttling.
+> 
+> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+> 
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+>  1 file changed, 27 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index ba8d873d3ca7..0075ffe783ad 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -238,22 +238,43 @@ test_leader_sampling() {
+>      err=1
+>      return
+>    fi
+> +  perf script -i "${perfdata}" | grep brstack > $script_output
+> +  # Check if the two instruction counts are equal in each record.
+> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
+> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
+> +  # let's set the tolerance rate to 80%.
+> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+>    index=0
+> -  perf script -i "${perfdata}" > $script_output
+> +  valid_counts=0
+> +  invalid_counts=0
+> +  tolerance_rate=0.8
+>    while IFS= read -r line
+>    do
+> -    # Check if the two instruction counts are equal in each record
+>      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>      then
+> -      echo "Leader sampling [Failed inconsistent cycles count]"
+> -      err=1
+> -      return
+> +      invalid_counts=$(($invalid_counts+1))
+> +    else
+> +      valid_counts=$(($valid_counts+1))
+>      fi
+>      index=$(($index+1))
+>      prev_cycles=$cycles
+>    done < $script_output
+> -  echo "Basic leader sampling test [Success]"
+> +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
+> +  if (( $(bc <<< "$total_counts <= 0") ))
+> +  then
+> +    echo "Leader sampling [No sample generated]"
+> +    err=1
+> +    return
+> +  fi
+> +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
 
-This is quite hideous.  I have no objection to optimizing __vmx_vcpu_run(), but
-I would much prefer that a macro like this live in generic code, and that it be
-generic.  It should be easy enough to provide an assembly friendly equivalent to
-__native_wrmsr_constant().
+Is 'scale=2' really needed?  Does something similar to the above like
+
+  if (( $(bc <<< "($invalid_counts / $total_counts) < (1 - $tolerance_rate)") ))
+
+work?
+
+Thanks,
+Namhyung
 
 
-> +
->  .section .noinstr.text, "ax"
+> +  if [ $isok -eq 1 ]
+> +  then
+> +     echo "Leader sampling [Failed inconsistent cycles count]"
+> +     err=1
+> +  else
+> +    echo "Basic leader sampling test [Success]"
+> +  fi
+>  }
 >  
->  /**
-> @@ -123,10 +146,7 @@ SYM_FUNC_START(__vmx_vcpu_run)
->  	movl PER_CPU_VAR(x86_spec_ctrl_current), %esi
->  	cmp %edi, %esi
->  	je .Lspec_ctrl_done
-> -	mov $MSR_IA32_SPEC_CTRL, %ecx
-> -	xor %edx, %edx
-> -	mov %edi, %eax
-> -	wrmsr
-> +	WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
->  
->  .Lspec_ctrl_done:
->  
+>  test_topdown_leader_sampling() {
 > -- 
 > 2.49.0
 > 
