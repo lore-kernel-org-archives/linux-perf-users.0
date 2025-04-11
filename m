@@ -1,171 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B25284B33;
-	Fri, 11 Apr 2025 21:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAAF293B4E
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Apr 2025 21:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744405204; cv=none; b=HhtCN69r0YgThc1+vfcZ4R3IbUc5vgT+JYQIAAXPOI7REtXh5T5kfAXjsEx4KbsbinQfX2RI3VSN/KiDVjx22tXFeZJ7vXSNN9T+54ErEQmyBQzuNhvloiPKEJFpBJ/gUC4WnHmp0ZJd+pi3BSfFyWk+/l3vIkhxQR5nvB7Ngx4=
+	t=1744405965; cv=none; b=fluY/GkClsoWPb/06t6Z4jK6a8W37sRA+r+qBlVNga8Bl+xasNOrEWkrek5nbQMv2/vlZchWnZSm1O6jsSsqx7FVUvqkbqfNSEX92xSPEEmNOxOel/qy0FhkU4agFGfHRQLA7DFpc51BWyBMdhwkVGbLXJnvUs1nlmiKE7FDDNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744405204; c=relaxed/simple;
-	bh=58p2bEquuNdeDBo6V10v9l3W14scmxAZKVaTyX4C2DU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lG3p3vAXZ49oEukR4MCkGma/IncZ7cVqWBb2+herjczIjrGVUp+E6si/ngrZvF2/rBl5Fyo/DX802N87nHWrwi2CopXO/RSAmVR+AogVf5y4Rsu3m2f/WgstqlFvYFBFafuuaZ5ObKAxybBslbusaUdllRuWlfiSZKkGOtsVrmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/pTzjaX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744405965; c=relaxed/simple;
+	bh=6nlXqivw5n2s2vI3iH0kICSGFjaF+JSbbOv3yESDDQ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=amGuiGl+BZyM4LU5lZKmhdTcaE461wqW7B+518UAFsN98vla8mvd1IooFtwnze7LezcsU3uHmz5RuAuTlGZhcpkjEjGlN3A678YIaTg8HG44Nc1ZltPFvCp4bAEEqjf+J4eMVvnWmNAOwJtr4NUi6ZehvsCd6t4p2j9Np0g/xRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o0gy2zMm; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/pTzjaX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327E9C4CEE5;
-	Fri, 11 Apr 2025 21:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744405203;
-	bh=58p2bEquuNdeDBo6V10v9l3W14scmxAZKVaTyX4C2DU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a/pTzjaXAvsi9ClqZx5p4Cr4BE6hFCH8vUC6zbaUcx5WOxNaokll3EvoYWyiM6Add
-	 JTp8sInrMJm3b8y18oMjUrcaIRK0DDdkObJ0ny1O27ZoUA2mRCAGwzxBv6mFT62pFS
-	 LIweVAqIyRESZx50DwvExRcsgfpqu8Z+QlLjm0OFCCT3E3fB40oE1lzQFn9RpjQNLc
-	 uh4HbTaM/9S+nw3mQUGLaB40EGszYS+I4HsDPZhdwBRV9dv6+yEpcxOBLqncvZZoo1
-	 y3/9wQjlGTSruOmWi7ASma0R+G6wJOaLWchWVRVQisqbdLAcMBqUx1ZmcR0cexQH6h
-	 jtcAGBcPtIKmw==
-Date: Fri, 11 Apr 2025 14:00:01 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, acme@kernel.org,
-	ctshao@google.com, rogers@google.com, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
-	Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v3] perf test: Allow tolerance for leader sampling test
-Message-ID: <Z_mC0d2_yRaNEb1F@z2>
-References: <20250410085522.465401-1-tmricht@linux.ibm.com>
- <Z_hkF6R9giaDGQZD@google.com>
- <27901544-619e-4704-a2a6-132e8ab6a6e4@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o0gy2zMm"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f09f2b3959so2902a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Apr 2025 14:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744405960; x=1745010760; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5s9O/8O6xeMVl0tLPF60JEEeubmLlBJjqtBbS0i9ciQ=;
+        b=o0gy2zMmuqK9BfwgMn3I5k9bTf0nRUprt9XeyjAur9+ahPXQie+WOrrNzUzj0sDZ3i
+         EElr14q46QtRYlZxd0a5vfB02F2PiZCisBNImbODE0naF+k+Z++fCeOsqYYUTEUKqB6j
+         WBZrL5iG1PbNkpi0QZJbRN1YB/ONArp+/MdGu1EdZXeT1Ev6dEBn88lKHfhwIM4kOfIg
+         Av89OjKtLZMVJ7kVJxnwkYj2o7DwBElDQ/g+E8uf0AOPvZAywh9xLDBn5U6srs0jI3Hh
+         MutSbVTvWAsLBFQ5Zet5Hjiwce3E5mt68o9Mzcwhzj4uJ4R5+x+8Idg5rA5Jr3rSJ05J
+         jMpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744405960; x=1745010760;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5s9O/8O6xeMVl0tLPF60JEEeubmLlBJjqtBbS0i9ciQ=;
+        b=FZ8klAXp6wtioU1E5fS/5oqGB7Z1LqlvL8JonP1Kig1IE02qpkZ/A3n8r3a8U9mYU9
+         fU3zOVso0w2x/CK8HL6VsRzZdPDFDS8gbyPCu5pPVmXwt1hoOxY+7UmoqVsKEWA5Hjo2
+         cYZjithd2SZOc2knqB3qNfl9H4iv4xAgof06kBeJnbsxyPnGHk0TD15PfL903TSYzf/R
+         oKpV23U7xTGGNTJ7gMIH/Bb77KuGFXl+lggQlNI8H4o2db13OIRIj/GjDqkJ9bojxiwR
+         ipzA4D5DVpRF4r5DVHlPqghfr01CKeo6cLIvwC/C7sy07mKP5gwI4EXXpittWle8SB9z
+         uD3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCULttxeoZqfa4A7rN+1I1L1H04xzsjWZBwdzbMulKqvqrm4ZYFHY/Q2IHr4JKl62xmkb261cnsqgA2bdWb1t2Lw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybgrx1h179Gl9JiVCddYzgTHzb7svKaTuV7KMFMlkprl/T3/WL
+	qYpB60XUnlhJZyq+gSogYyRlGAIqN6nxteSFEytVj06fMeoiOA6GeVdCPX5vpcZjNxvQOhQe9gK
+	UGjWUfn7XqUGQdukTKbIeKBM6wjsUSZSOyUwJ
+X-Gm-Gg: ASbGncsqbWDi23yRoZ8fnpfuXbcQXmIGaCF7fNaQ4HDShyx6YnNnFO0H5rYoEbD2Vrc
+	JM6hCq+iRvsFSGUHtybXtEcj3/zmWyGFH323e5ARRLBHrIxH+nBPQM1VzPAHfxy3SOGeHZDO3Hq
+	uPSoDcWxXnI7SYsZ8CGZORsg==
+X-Google-Smtp-Source: AGHT+IG84lvI3gcXlEPRkJRlkOu8tneyZgmJwr3mqViY4ItysXFcNimZTO7gtwpNKCM01C6d/tdsOPRrFemjcCrBnfs=
+X-Received: by 2002:aa7:cfd6:0:b0:5ec:13d0:4505 with SMTP id
+ 4fb4d7f45d1cf-5f3ea1e2b1dmr6826a12.5.1744405959793; Fri, 11 Apr 2025 14:12:39
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <27901544-619e-4704-a2a6-132e8ab6a6e4@linux.ibm.com>
+References: <20250331082251.3171276-1-xin@zytor.com> <20250331082251.3171276-11-xin@zytor.com>
+ <Z_hTI8ywa3rTxFaz@google.com>
+In-Reply-To: <Z_hTI8ywa3rTxFaz@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Fri, 11 Apr 2025 14:12:27 -0700
+X-Gm-Features: ATxdqUHkE9VKKw2s7zj6-Bzo7sFhtVG2VPQmJwr2UovOBmetGvqQ1ElvaKggsjw
+Message-ID: <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
+ when available
+To: Sean Christopherson <seanjc@google.com>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-edac@vger.kernel.org, 
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-ide@vger.kernel.org, linux-pm@vger.kernel.org, bpf@vger.kernel.org, 
+	llvm@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, jgross@suse.com, 
+	andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+	alexey.amakhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
+	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com, 
+	haiyangz@microsoft.com, decui@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 08:58:45AM +0200, Thomas Richter wrote:
-> On 4/11/25 02:36, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > On Thu, Apr 10, 2025 at 10:55:22AM +0200, Thomas Richter wrote:
-> >> V3: Added check for missing samples as suggested by Chun-Tse.
-> >> V2: Changed bc invocation to return 0 on success and 1 on error.
-> >>
-> >> There is a known issue that the leader sampling is inconsistent, since
-> >> throttle only affect leader, not the slave. The detail is in [1]. To
-> >> maintain test coverage, this patch sets a tolerance rate of 80% to
-> >> accommodate the throttled samples and prevent test failures due to
-> >> throttling.
-> >>
-> >> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
-> >>
-> >> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> >> Suggested-by: Ian Rogers <irogers@google.com>
-> >> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> >> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> >> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> >> ---
-> >>  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
-> >>  1 file changed, 27 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> >> index ba8d873d3ca7..0075ffe783ad 100755
-> >> --- a/tools/perf/tests/shell/record.sh
-> >> +++ b/tools/perf/tests/shell/record.sh
-> >> @@ -238,22 +238,43 @@ test_leader_sampling() {
-> >>      err=1
-> >>      return
-> >>    fi
-> >> +  perf script -i "${perfdata}" | grep brstack > $script_output
-> >> +  # Check if the two instruction counts are equal in each record.
-> >> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
-> >> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-> >> +  # let's set the tolerance rate to 80%.
-> >> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
-> >>    index=0
-> >> -  perf script -i "${perfdata}" > $script_output
-> >> +  valid_counts=0
-> >> +  invalid_counts=0
-> >> +  tolerance_rate=0.8
-> >>    while IFS= read -r line
-> >>    do
-> >> -    # Check if the two instruction counts are equal in each record
-> >>      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-> >>      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-> >>      then
-> >> -      echo "Leader sampling [Failed inconsistent cycles count]"
-> >> -      err=1
-> >> -      return
-> >> +      invalid_counts=$(($invalid_counts+1))
-> >> +    else
-> >> +      valid_counts=$(($valid_counts+1))
-> >>      fi
-> >>      index=$(($index+1))
-> >>      prev_cycles=$cycles
-> >>    done < $script_output
-> >> -  echo "Basic leader sampling test [Success]"
-> >> +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-> >> +  if (( $(bc <<< "$total_counts <= 0") ))
-> >> +  then
-> >> +    echo "Leader sampling [No sample generated]"
-> >> +    err=1
-> >> +    return
-> >> +  fi
-> >> +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
-> > 
-> > Is 'scale=2' really needed?  Does something similar to the above like
-> > 
-> >   if (( $(bc <<< "($invalid_counts / $total_counts) < (1 - $tolerance_rate)") ))
-> > 
-> > work?
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > 
-> 
-> From the man page of bc:
-> 
-> 
-> NUMBERS
->        The most basic element in bc is the number.  Numbers are arbitrary precision numbers.   This
->        precision  is both in the integer part and the fractional part.  All numbers are represented
->        internally in decimal and all computation is done in decimal.  (This version  truncates  re‐
->        sults from divide and multiply operations.)
->        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> This can be proved with:
-> # bc <<< "2/27"
-> 0
-> # bc <<< "scale=2;2/27"
-> .07
-> #
-> 
-> Without scale there is no fractional part and integer arithmetic will lead to wrong results.
-> 
-> I think scale=2 is necessary or we need to use something different like awk.
+On Thu, Apr 10, 2025 at 4:24=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Mon, Mar 31, 2025, Xin Li (Intel) wrote:
+> > Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> > ---
+> >  arch/x86/include/asm/msr-index.h |  6 ++++++
+> >  arch/x86/kvm/vmx/vmenter.S       | 28 ++++++++++++++++++++++++----
+> >  2 files changed, 30 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/ms=
+r-index.h
+> > index e6134ef2263d..04244c3ba374 100644
+> > --- a/arch/x86/include/asm/msr-index.h
+> > +++ b/arch/x86/include/asm/msr-index.h
+> > @@ -1226,4 +1226,10 @@
+> >                                               * a #GP
+> >                                               */
+> >
+> > +/* Instruction opcode for WRMSRNS supported in binutils >=3D 2.40 */
+> > +#define ASM_WRMSRNS          _ASM_BYTES(0x0f,0x01,0xc6)
+> > +
+> > +/* Instruction opcode for the immediate form RDMSR/WRMSRNS */
+> > +#define ASM_WRMSRNS_RAX              _ASM_BYTES(0xc4,0xe7,0x7a,0xf6,0x=
+c0)
+> > +
+> >  #endif /* _ASM_X86_MSR_INDEX_H */
+> > diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+> > index f6986dee6f8c..9fae43723c44 100644
+> > --- a/arch/x86/kvm/vmx/vmenter.S
+> > +++ b/arch/x86/kvm/vmx/vmenter.S
+> > @@ -64,6 +64,29 @@
+> >       RET
+> >  .endm
+> >
+> > +/*
+> > + * Write EAX to MSR_IA32_SPEC_CTRL.
+> > + *
+> > + * Choose the best WRMSR instruction based on availability.
+> > + *
+> > + * Replace with 'wrmsrns' and 'wrmsrns %rax, $MSR_IA32_SPEC_CTRL' once=
+ binutils support them.
+> > + */
+> > +.macro WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
+> > +     ALTERNATIVE_2 __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;         =
+       \
+> > +                               xor %edx, %edx;                        =
+       \
+> > +                               mov %edi, %eax;                        =
+       \
+> > +                               ds wrmsr),                             =
+       \
+> > +                   __stringify(mov $MSR_IA32_SPEC_CTRL, %ecx;         =
+       \
+> > +                               xor %edx, %edx;                        =
+       \
+> > +                               mov %edi, %eax;                        =
+       \
+> > +                               ASM_WRMSRNS),                          =
+       \
+> > +                   X86_FEATURE_WRMSRNS,                               =
+       \
+> > +                   __stringify(xor %_ASM_AX, %_ASM_AX;                =
+       \
+> > +                               mov %edi, %eax;                        =
+       \
+> > +                               ASM_WRMSRNS_RAX; .long MSR_IA32_SPEC_CT=
+RL),   \
+> > +                   X86_FEATURE_MSR_IMM
+> > +.endm
+>
+> This is quite hideous.  I have no objection to optimizing __vmx_vcpu_run(=
+), but
+> I would much prefer that a macro like this live in generic code, and that=
+ it be
+> generic.  It should be easy enough to provide an assembly friendly equiva=
+lent to
+> __native_wrmsr_constant().
 
-Ok, thanks for checking it.  Right, the scale=2 is necessary.
+Surely, any CPU that has WRMSRNS also supports "Virtualize
+IA32_SPEC_CTRL," right? Shouldn't we be using that feature rather than
+swapping host and guest values with some form of WRMSR?
 
-  $ bc <<< '(1 / 10) < (1 - 0.8)'
-  1
-
-  $ bc <<< '(3 / 10) < (1 - 0.8)'
-  1
-
-  $ bc <<< 'scale=2; (1 / 10) < (1 - 0.8)'
-  1
-
-  $ bc <<< 'scale=2; (3 / 10) < (1 - 0.8)'
-  0
-
-Thanks,
-Namhyung
-
+> > +
+> >  .section .noinstr.text, "ax"
+> >
+> >  /**
+> > @@ -123,10 +146,7 @@ SYM_FUNC_START(__vmx_vcpu_run)
+> >       movl PER_CPU_VAR(x86_spec_ctrl_current), %esi
+> >       cmp %edi, %esi
+> >       je .Lspec_ctrl_done
+> > -     mov $MSR_IA32_SPEC_CTRL, %ecx
+> > -     xor %edx, %edx
+> > -     mov %edi, %eax
+> > -     wrmsr
+> > +     WRITE_EAX_TO_MSR_IA32_SPEC_CTRL
+> >
+> >  .Lspec_ctrl_done:
+> >
+> > --
+> > 2.49.0
+> >
+>
