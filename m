@@ -1,127 +1,128 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF413E898;
-	Sat, 12 Apr 2025 09:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0361A3166;
+	Sat, 12 Apr 2025 20:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744448475; cv=none; b=PfQs/s9J9yvKhSwKAD4IsnQQw0tv+RgG644q1gHFix6gHaF1nnDDRey0Dqidb6id07E8wVcJ2Tqc6KD/RrQ/S1eAlrizIhUBhoePD/lPXtgPEwmWzjVLaFV+2DnHHeJ+R8b8h7uVuVxdvzcBSl95oGTK/UOpnYK3Mgo3D1437oc=
+	t=1744490333; cv=none; b=NWVY8+TLkXZjI3FMcsWKcwVksETtHw9I/RV9zlxZP0eTzHLI58XRYl7floxosMrQvqvkBaMCFDljX8dasy7vtVkRTZenxCwTrm+FL+QypX4n2qgg6FWRiuSNZHkOM2NvX1HgvGbzlkoW7BHW7L9qpaxGKTthzG2gU7oc0e9ZCAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744448475; c=relaxed/simple;
-	bh=ei+dZM8tndbz+6mZ+f0R0iePe87jLJXnq/aEdUvIuGw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YwwxEuKfboUpxZeawJFkYle3HUhRtCKXgnJU0EviZVPQrLkmtQSNEhjt8vMqYSr0np3u+2TaoM1h9UIvA1yklHYVeZRj739Mhq8/d9f52Dfq7wuDOmUr1xP7QRApBer6ZQ5IZgCocANlNozVVE/pWW2WVuFN9qcj+boX5hdVtQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZZSFQ44mBz4f3lVs;
-	Sat, 12 Apr 2025 17:00:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A510A1A058E;
-	Sat, 12 Apr 2025 17:01:07 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl+3K_pnr0MAJQ--.64008S4;
-	Sat, 12 Apr 2025 17:01:07 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr group
-Date: Sat, 12 Apr 2025 09:14:23 +0000
-Message-Id: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744490333; c=relaxed/simple;
+	bh=wNYXzw5DmJDatYJ1BMioEnL4R5AmfwnRAAULrwduwbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iu3QQgzgKq+7toeeAsUssYLESf0AXcFxdzgnZbZLPE/1RYtzm5sfi7LnfDYB45Ax3vwX7o/+Yjx3P1y05kMrTRHzswYvaq/oxea28uce95F65pODJuriMNQy9qRy2NMzEzo36m8KOFtpii3/H1Xom4v3eReTnQRxq+q47R9NTBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCuAJj+X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCuAJj+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9FDBC4CEE3;
+	Sat, 12 Apr 2025 20:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744490332;
+	bh=wNYXzw5DmJDatYJ1BMioEnL4R5AmfwnRAAULrwduwbo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VCuAJj+XagMTaoz0MvHU8WvZ9hVBMRmlvhLMSwHCQrpe0b2qHEHKQ1uVzV+JtbomX
+	 o4tz1PUlChUmxhGaydXldfcqgXEWyvldirD4U2/WxQiF2Lm3vrfhJcCFYN9AGw/fKN
+	 B90KfXf76wG9ugWMeNH3i2yq8Rf8Ywrh4a3sPXBbViOkwZzn+E4+DDA8sDXe9ueKIn
+	 eGs8kT4vogbPdMbYa5jMlDRMJzJU0Umz/KtDwkpwzIZzEPGqghHa/mmRCSMXYER6Fc
+	 IsAZyuo8w13voxNWJselPtYJma9E8XOjSsGofFN077xLUDH6twSifmd4jvhRdCuJ4n
+	 gHZ08tBklerjA==
+Date: Sat, 12 Apr 2025 22:38:46 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mark Barnett <mark.barnett@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
+	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
+	james.clark@arm.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 0/5] A mechanism for efficient support for
+ per-function metrics
+Message-ID: <Z_rPVq2Emx697SIA@gmail.com>
+References: <20250408171530.140858-1-mark.barnett@arm.com>
+ <Z_ZcRiHTGljxEEdN@gmail.com>
+ <2fa741d8-13c7-49c0-a6c5-540a7c2cf3a7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl+3K_pnr0MAJQ--.64008S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw4rCw4rZF4DGFykWr1DGFg_yoW8ZrWxp3
-	yfJFsxKF4Ygwn5u34fJFn2qF4Yvryvq3Z5G347K345X3WkZr9FgFWxKa45ur95CryIkFy5
-	Xw1jvr4UCF9rZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0pRiSdgUUUUU=
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fa741d8-13c7-49c0-a6c5-540a7c2cf3a7@arm.com>
 
-The following perf command can trigger a warning on
-intel_pmu_lbr_counters_reorder.
 
- # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+* Mark Barnett <mark.barnett@arm.com> wrote:
 
-The reason is that a lbr event are placed in non lbr group. And the
-previous implememtation cannot force the leader to be a lbr event in this
-case. And is_branch_counters_group will check if the group_leader supports
-BRANCH_COUNTERS. So if a software event becomes a group_leader, which
-hw.flags is -1, this check will alway pass.
+> Tool Integration
+> ==================
+> 
+> We've been using a python script to process the data into a report. We can
+> look at implementing this directly in perf report, if that is required.
+> However, I'm nervous about making the new feature the default behaviour for
+> the tool.
 
-To fix this problem, using has_branch_stack to judge if leader is lbr
-event.
+That's OK - but it should be very simple to activate for perf 
+record/top. A single option or so to get some sane default behavior, 
+without having to micro-manage the period values?
 
-Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- arch/x86/events/intel/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+In particular perf defaults to 4000 Hz auto-freq samples (at least on 
+my x86 devel box), and it would be nice to make this new feature work 
+well with the freq representation too, without complicating it too 
+much.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 09d2d66c9f21..c6b394019e54 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 			event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
- 	}
- 
-+	/*
-+	 * Force the leader to be a LBR event. So LBRs can be reset
-+	 * with the leader event. See intel_pmu_lbr_del() for details.
-+	 */
-+	if (has_branch_stack(event) && !has_branch_stack(event->group_leader))
-+		return -EINVAL;
-+
- 	if (branch_sample_counters(event)) {
- 		struct perf_event *leader, *sibling;
- 		int num = 0;
-@@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
- 			    PERF_SAMPLE_BRANCH_COUNTERS)))
- 			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
--
--		/*
--		 * Force the leader to be a LBR event. So LBRs can be reset
--		 * with the leader event. See intel_pmu_lbr_del() for details.
--		 */
--		if (!intel_pmu_needs_branch_stack(leader))
--			return -EINVAL;
- 	}
- 
- 	if (intel_pmu_needs_branch_stack(event)) {
--- 
-2.34.1
+> This feature has been integrated into our tools [1] for the last 12 
+> months, and has received a lot of testing on Arm Neoverse hardware. 
+> Other platforms have received less rigorous testing. In my opinion, 
+> more work would be needed to validate the PMU hardware & software 
+> characteristics of other architectures before this can be made the 
+> default.
 
+Sure. As long as the switch is simple, I think it will be a popular 
+change once the kernel feature goes upstream.
+
+In other words: please add a simple, idiot-proof switch to perf 
+top/record for maintainers with chronically short attention spans who 
+want to try out your kernel feature. ;)
+
+Please Cc: the perf tooling people to those changes, in general they 
+are very open to such features.
+
+> Burst Sampling
+> ================
+> 
+> I like the burst sampling idea. Increased I-Cache pressure is an inherent
+> weakness of this sampling method, and this would help to alleviate that
+> somewhat. I'll add this in the next spin.
+
+Great, thanks!
+
+> Period Jitter
+> ===============
+> 
+> Yes, we can apply this to both periods. I will make that change.
+> 
+> I'm not sure I've fully understood your suggestion here. In its 
+> current state, the 4-bit jitter field acts as a base-2 exponent. This 
+> gives us a random jitter value of up to 2**15. Is the suggestion to 
+> change this to a fixed, absolute value that can be applied to both 
+> long & short periods?
+
+Oh, I missed the base-2 exponent aspect, I assumed it was a flat period 
+in the small integers range, a kind of micro-jitter to counter 
+resonance with the finest CPU microarchitectural base-frequencies.
+
+What is the typical useful jitter range in your experience? base-2 
+exponents sound a bit too limiting - although the prandom32() indeed 
+smears it between [0..2^param). I'd guess that jitter would rarely want 
+to be larger than the long-period? (Although that might not always be 
+the case.)
+
+I'd generally err on the side of being a bit too generic & generous in 
+the design of ABI parameters, because we never know what people will 
+use it for ... Within reason that is.
+
+Thanks,
+
+	Ingo
