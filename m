@@ -1,111 +1,127 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB4E10F9;
-	Sat, 12 Apr 2025 04:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF413E898;
+	Sat, 12 Apr 2025 09:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744432439; cv=none; b=oivn5F+26FwVaqujP5514cXQN/5pFxX2OmJVAQnvSZTnafh/UWBWPmACVm1vraFVvIaXdKeLZZq9Uasyc+4elXoVyEgVkoPOoyqSjh/aX5pMlBH6JIZxWDV9uYdYHyDrJTk4HD5h4LCLN+n0B3HSvRJMLOfPiIN3a18APxxgpjM=
+	t=1744448475; cv=none; b=PfQs/s9J9yvKhSwKAD4IsnQQw0tv+RgG644q1gHFix6gHaF1nnDDRey0Dqidb6id07E8wVcJ2Tqc6KD/RrQ/S1eAlrizIhUBhoePD/lPXtgPEwmWzjVLaFV+2DnHHeJ+R8b8h7uVuVxdvzcBSl95oGTK/UOpnYK3Mgo3D1437oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744432439; c=relaxed/simple;
-	bh=8HY4pXq4/0sgSGqWKzYB0xMabci34z/M8SocsQbtjIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ekxaLymYCU/zZ+VlpFWKIGNsmIpbV/pbVq5ajS8N84BxahxtBr1lYtTN2JsDxEdNsQfgB/Znp0N0lo73rwWwTok6vv2o4/G0PRt/UCgghhp39ISYS66w6wr5jpOrvyHHgvElv290+3iJ7fVcVVa4MxzvmnASrs0wa6/GxAduHw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=UmkMzcYF; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UmkMzcYF"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53C4WWUM871113
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 11 Apr 2025 21:32:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53C4WWUM871113
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744432355;
-	bh=8HY4pXq4/0sgSGqWKzYB0xMabci34z/M8SocsQbtjIc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UmkMzcYFMOohEYDvst/+wSrvJqxBWNM3y8pTlydtS9u0Vr7uRFr3Z3pCuQCca14kO
-	 ACsIUaW4DWSFZQk6os5w5N7c+E5hX8uOXvMG58Zw1ACWcaqL0evKoHrKsjwK2mCmbu
-	 3fbVO1XRm3rPuvtxsvqFa40+ZJdSrPdyFPMsAPCRm9EzVpscdqiU1jHIOYNpql0/Q+
-	 A4rJGWpOKXJ4rM8Ry7S9QSfW5JMyxnLBqri634s7bqAxLMEVGyTj2wxY2EKLJiAwY7
-	 7S3D+HGa8zlLeI3TPeDpXLNu9OHcHMD6lAYjW/h+oxH9TUSCd3g/AuG8/qoXjh0Ibr
-	 awatBQNumv6Tw==
-Message-ID: <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com>
-Date: Fri, 11 Apr 2025 21:32:32 -0700
+	s=arc-20240116; t=1744448475; c=relaxed/simple;
+	bh=ei+dZM8tndbz+6mZ+f0R0iePe87jLJXnq/aEdUvIuGw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YwwxEuKfboUpxZeawJFkYle3HUhRtCKXgnJU0EviZVPQrLkmtQSNEhjt8vMqYSr0np3u+2TaoM1h9UIvA1yklHYVeZRj739Mhq8/d9f52Dfq7wuDOmUr1xP7QRApBer6ZQ5IZgCocANlNozVVE/pWW2WVuFN9qcj+boX5hdVtQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZZSFQ44mBz4f3lVs;
+	Sat, 12 Apr 2025 17:00:42 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A510A1A058E;
+	Sat, 12 Apr 2025 17:01:07 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl+3K_pnr0MAJQ--.64008S4;
+	Sat, 12 Apr 2025 17:01:07 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr group
+Date: Sat, 12 Apr 2025 09:14:23 +0000
+Message-Id: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
- when available
-To: Jim Mattson <jmattson@google.com>, Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
-        acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
-        decui@microsoft.com
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-11-xin@zytor.com> <Z_hTI8ywa3rTxFaz@google.com>
- <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXOl+3K_pnr0MAJQ--.64008S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw4rCw4rZF4DGFykWr1DGFg_yoW8ZrWxp3
+	yfJFsxKF4Ygwn5u34fJFn2qF4Yvryvq3Z5G347K345X3WkZr9FgFWxKa45ur95CryIkFy5
+	Xw1jvr4UCF9rZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRiSdgUUUUU=
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-On 4/11/2025 2:12 PM, Jim Mattson wrote:
-> Surely, any CPU that has WRMSRNS also supports "Virtualize
-> IA32_SPEC_CTRL," right? Shouldn't we be using that feature rather than
-> swapping host and guest values with some form of WRMSR?
+The following perf command can trigger a warning on
+intel_pmu_lbr_counters_reorder.
 
-Good question, the simple answer is that they are irrelevant.
+ # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+
+The reason is that a lbr event are placed in non lbr group. And the
+previous implememtation cannot force the leader to be a lbr event in this
+case. And is_branch_counters_group will check if the group_leader supports
+BRANCH_COUNTERS. So if a software event becomes a group_leader, which
+hw.flags is -1, this check will alway pass.
+
+To fix this problem, using has_branch_stack to judge if leader is lbr
+event.
+
+Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+---
+ arch/x86/events/intel/core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 09d2d66c9f21..c6b394019e54 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 			event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+ 	}
+ 
++	/*
++	 * Force the leader to be a LBR event. So LBRs can be reset
++	 * with the leader event. See intel_pmu_lbr_del() for details.
++	 */
++	if (has_branch_stack(event) && !has_branch_stack(event->group_leader))
++		return -EINVAL;
++
+ 	if (branch_sample_counters(event)) {
+ 		struct perf_event *leader, *sibling;
+ 		int num = 0;
+@@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+ 			    PERF_SAMPLE_BRANCH_COUNTERS)))
+ 			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+-
+-		/*
+-		 * Force the leader to be a LBR event. So LBRs can be reset
+-		 * with the leader event. See intel_pmu_lbr_del() for details.
+-		 */
+-		if (!intel_pmu_needs_branch_stack(leader))
+-			return -EINVAL;
+ 	}
+ 
+ 	if (intel_pmu_needs_branch_stack(event)) {
+-- 
+2.34.1
+
