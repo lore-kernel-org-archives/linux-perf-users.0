@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD18728BA80;
-	Mon, 14 Apr 2025 13:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31F2296D20;
+	Mon, 14 Apr 2025 13:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744637265; cv=none; b=e9UO7k42U9MH9mKwlhJ4YxonBdAqF1MlUnMxIC7GW3rA8AyfHofDLH2v86pqc1vvS4ubdV6y7NgVIt6QmRFUJMlDDTdF4Ib/lCTWTOLOIAIjEnTmQ5+9IJVsmYxhU8M+VDvSlPd0hrZUlknEAZmZXDfjeYii+JWUc2oxB5T8AJ4=
+	t=1744637341; cv=none; b=DjKjHcD5qNeLG4E2HA65Km/pC56mTZBlXi8fQom5YYmIXf5bZ80ftiPTTQYBVvJm8bBfqvJEEEo5O8EaCEn/MdEIZxPO6OTZ5uYPSD4nmjMO1SFJVGRVRQGvkK/KtcHRY9YSW6wlHoTrV9v+JRDmhPahKOMHffBBQKAO+W6JC/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744637265; c=relaxed/simple;
-	bh=AmuTqnSxO5Ofqui0weWOkE4BjUmC8UvfdruE2jxg1xU=;
+	s=arc-20240116; t=1744637341; c=relaxed/simple;
+	bh=kr0x5q95iVOK8rO660x057UTx55vVWd9whQuL7WCzQU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HssVVdTMYL/2c3jsgB//AkzYhrCXg5gW5xA29yX5hAJyJTpQCeGxkv7oxwMqhZDA0absHAg30iDtwb/su8X3vHBapMrxAaDZrhb7qNN5QbqMmztuN/R6/uZp/h7PSreO3LOcWikAiUsZRWTrHF0/rAuJxacNhAZgp9VaVWOMC5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OaX8Hqh/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=H4jRE0JDzbN2Qa30HIS1VXIYlRwqazRHEAU0p06l0IiaMA6js6WDzksjFYRi6GbGVVQSHLPJv5ENVJ3KBoP+Yo6uJyfW9sTkoNEm7krIiHKbLu1/CMH3dbMeQQV2kdxbvdHMJya/eL1XLtjhMTco8G3DJycamD1mQpTG6nTTYdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVGEFFiU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OaX8Hqh/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ED70C4CEE2;
-	Mon, 14 Apr 2025 13:27:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVGEFFiU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CBBC4CEEB;
+	Mon, 14 Apr 2025 13:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744637264;
-	bh=AmuTqnSxO5Ofqui0weWOkE4BjUmC8UvfdruE2jxg1xU=;
+	s=k20201202; t=1744637340;
+	bh=kr0x5q95iVOK8rO660x057UTx55vVWd9whQuL7WCzQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OaX8Hqh/PBFXyLVTLeB7Up8P9y12JdL3MlAJhPjAePGzU144y0pbTpvvlowyZpreR
-	 gTLicgkwOb5/xCjq2yorwqwHncc+pRL5U32YCwXL+0LAmch9isZsfUTuMRzAta5a8t
-	 Yjy7eo2jhCzv3Zo5p9dhtTCzUJmd//pbpsi7C+hEp4V6Rp1HwCjUp8Yrw3Ts378hHg
-	 Sj9rmm6JyGq0ccxacp/H3+hxL8oKcP9z9J6nZpwklGkk/Mxofa0WPyjzfZSKf6I7ZN
-	 99weNG1MEH7pBxLa0gavz02cPe1yLFqTPH+2zqphOkPliY07e0Az7nKhyKtSJQXllV
-	 O+xUEJLmxH6PQ==
+	b=SVGEFFiUyLegU73jeagMHQw5e3U4OZXVvOYECuzdUmduwRuukL44oSp2352hgcWs7
+	 hH0GOLp7TISTi7w26fZdz4XElAMBoWyivFdX4yBTwmTXy9TdzcV4DblTYXkWTjajkN
+	 8MUwGgah7EZe3GlGGsmoeDAuK3fyLb+F/HBtIooEuxOUOVghCdSLG6KqnjPvRxaIPo
+	 28H8GcKrAIM+rOfaM44eWoYw6tZ1KarDapePyj0XPqv1MeUB++tiwEE146nOhhFCjg
+	 crGMIUhPf96gO39EH9kPbVDJRbYMXTZN2SfYNhtFpVNigL64qV7OOGVvP3bZiArsWG
+	 XEuxKs6gNDINw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -42,12 +42,12 @@ Cc: Gabriel Shahrouzi <gshahrouzi@gmail.com>,
 	acme@kernel.org,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 06/34] perf/core: Fix WARN_ON(!ctx) in __free_event() for partial init
-Date: Mon, 14 Apr 2025 09:27:00 -0400
-Message-Id: <20250414132729.679254-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 05/30] perf/core: Fix WARN_ON(!ctx) in __free_event() for partial init
+Date: Mon, 14 Apr 2025 09:28:22 -0400
+Message-Id: <20250414132848.679855-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250414132729.679254-1-sashal@kernel.org>
-References: <20250414132729.679254-1-sashal@kernel.org>
+In-Reply-To: <20250414132848.679855-1-sashal@kernel.org>
+References: <20250414132848.679855-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.11
+X-stable-base: Linux 6.12.23
 Content-Transfer-Encoding: 8bit
 
 From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
@@ -111,10 +111,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2d2ff7ca95a5b..9b9a89b2c5945 100644
+index b5ccf52bb71ba..8f0dcd8e64888 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -13684,6 +13684,9 @@ inherit_event(struct perf_event *parent_event,
+@@ -13622,6 +13622,9 @@ inherit_event(struct perf_event *parent_event,
  	if (IS_ERR(child_event))
  		return child_event;
  
@@ -124,7 +124,7 @@ index 2d2ff7ca95a5b..9b9a89b2c5945 100644
  	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
  	if (IS_ERR(pmu_ctx)) {
  		free_event(child_event);
-@@ -13706,8 +13709,6 @@ inherit_event(struct perf_event *parent_event,
+@@ -13644,8 +13647,6 @@ inherit_event(struct perf_event *parent_event,
  		return NULL;
  	}
  
@@ -133,7 +133,7 @@ index 2d2ff7ca95a5b..9b9a89b2c5945 100644
  	/*
  	 * Make the child state follow the state of the parent event,
  	 * not its attr.disabled bit.  We hold the parent's mutex,
-@@ -13728,7 +13729,6 @@ inherit_event(struct perf_event *parent_event,
+@@ -13666,7 +13667,6 @@ inherit_event(struct perf_event *parent_event,
  		local64_set(&hwc->period_left, sample_period);
  	}
  
