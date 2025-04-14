@@ -1,56 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA6C247292;
-	Mon, 14 Apr 2025 14:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C242DFA3D
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 16:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640994; cv=none; b=b2FfsCAv5mK5IwK6oKD/Twqdmbu/2qokCQFiSQ24Hz4JrQK526MxfUBPOpAEjtZE1qDuT8Ukm5KhN9EnjUwsKm5j0BDNkx/eFlXlCzusDEuByckAxYR3EXxyKdkiUwr6UxDY/Qty5ocjU/GqUfqKG3Ig4KQadPWV40DuZ4/DdEI=
+	t=1744648122; cv=none; b=aWHf9rYMBc2nVirleYuMNsjRqaXTwSzm63QQtn6q8ZzcOrQSBGv5IGFkTRcrwaAoNlbbYolH8ylBFaOi62fpRkWcv1BIEW/wQpn+il1ydapMo0+h4/19rG/kY+gh8mYZlwpFkXG+VgjS4+IukRDOZM3OM3eRsatqOnIhOoYkGXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640994; c=relaxed/simple;
-	bh=Pv5QTCrjFekbxWmq1MabY838sbrhB9iCwkIZ0j0oU6o=;
+	s=arc-20240116; t=1744648122; c=relaxed/simple;
+	bh=EAvviy7NYDzPXrtTpDrit4MXQHLdNiBY+08kfb3anYo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UgrLE97ELc35+XAJJdgYGI1iTmSqCkPAgAU5kyveN2VdkUbUSzHFp81r6Bk02M7gPrtn4ppwsK1jRVYHYB6ASfhJagNn++oNhJCTK8NrX/ZdsWJkiWvXjvN8L0rh7dAwVm09XFJkorvPxvJrkBTCpUAAPb/X/rv/+yI4PfKP0TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d2AgAj9s; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=AUYauy4PXd4i9R6fDQzj3pCN11KJRdhNDE/1hP3IJpR6EG8wbjgPQ953qGnG25uxFd5ZyU/1hfFTnDth9Oc2vZA4bq+y2QrMk34WkHYeNXKUcPSmPRouiaDqSqbJK/4hdZuNKpZh84sSvhVHLj47/DaoyPdTWXKeSEeKWItEbDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P31sX87L; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d2AgAj9s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744640993; x=1776176993;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Pv5QTCrjFekbxWmq1MabY838sbrhB9iCwkIZ0j0oU6o=;
-  b=d2AgAj9s1GkhWr+1c6ecskit1jUsyCxclsFtp47G+yL7UaMKgYM8fbFc
-   3o5dN12gXWKSHwNYSAMXZ6dpLDo3wTH+YmVNSbxiXSLxOBcmla81B8l3P
-   XNskIgrLjx6fCktg3rbZC7hQpac38YPgh7gWu8JmARn8eCndzQPzwMR3g
-   GuEnw1UO+joSL+rW9aoGg4/vVSfP/wHhKE1uGZDNZ3P/pqgBHBy6fipub
-   7ZReXaOuM9cKRdIqw6PQJRPBTam6cHIqzTKaFFhLilIjRAYDN3KDNXe0+
-   ETvr43vavu1FxorGAIRrGI8GOzRncvGs/8IZb186RY0rG7CRMONTqIQDf
-   Q==;
-X-CSE-ConnectionGUID: 8RS1ul39TMO3WpBmkf1Jzg==
-X-CSE-MsgGUID: 3jp4VokZS2mVXBXbx8CShA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="63518007"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="63518007"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 07:29:52 -0700
-X-CSE-ConnectionGUID: 9pb2hTvjQyO9b3jhGguzjA==
-X-CSE-MsgGUID: U9dsM1VbRWOTr7zGqFZrYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="129683270"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 07:29:52 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 2B81A20B5736;
-	Mon, 14 Apr 2025 07:29:48 -0700 (PDT)
-Message-ID: <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
-Date: Mon, 14 Apr 2025 10:29:47 -0400
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P31sX87L"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf257158fso32675275e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 09:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744648118; x=1745252918; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qTKO9vAqmynoPPCZdzu4Se732LpKeln0OCtsTh96Cx8=;
+        b=P31sX87Lhoi8LdU+H8lkr14Ib1qIIlKAfsOFz6gdv8FmJg1IgsmPAfujxRCgK/hx4I
+         6N4ACyqyARY3Hf7jY0lvxyOuyJ9LPfeUTDAFsa2afFaBDsnqZSXhxhIRu7DHBfMQovM1
+         idLH/LN13q7DY3HjlHnX/pdMzzWdOFXTz8gd8bdKHz3GBwMY/Ng+J7/LdFGGzqcFcpTd
+         BI2rqUxrlGhaZk+tIz3WvGQpAgMYsUrveZg+rojaJLSXnP+G1HeuATIydxPcSXX37OlR
+         XoRUkhBzMJQCn/tMk5i6CsOCKPBmagdSJzNuHV0y+00zXb1KWNya3FFcpBVJb1a08i3g
+         t1tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744648118; x=1745252918;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qTKO9vAqmynoPPCZdzu4Se732LpKeln0OCtsTh96Cx8=;
+        b=BJs4AaQcIMBx0cLCAj6kLYENq27EteJL19j1pbnQGyx3+uXw1/+lIXGLQv0AMTQ/7y
+         nca1MWCRu9ztNiP3tqUby/cJsYLYO/LwYyOARHtdGul5PofQRGVwTNr2ZZKRASPJdZiE
+         Jq3lyXHPe6bWqTc4NeT1AewqISKoz21ewkiDQC5uR5ZEq2KFsPTuFQR3Y2dQjP6hGglR
+         M6OuKDOXOB+9m+ylVJbfiRhyQjULzTr2iO1oC2aLsi1RT9140q3KXmyOGp7XNuJ3WmxP
+         jNHq/kQQ+/rMIrzY3HxpE9a6i4UPxoQonwucmUDC52ZD3/HHFPLloaTs0fbB3IOox9jm
+         bThg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFXAAErFg4vpNLRbtxmgwDlZKd28PskXdPOsJdtypeNTW8fkvkHDWwzssy73B7k8xa5qBA16F1kEwQm4ZQS2NN@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRwWJoGL2ruTCuyZSyt0WuMPuia70bT5+aeZh/tT+9agQePAOp
+	cTr09bMEa/Ea7nl/rTcjBiSWEd3G/5T/is+/8Yf22WoxDBgUE/RhoV/AmcJ1YiA=
+X-Gm-Gg: ASbGncsQCHb4bqj8gRwZwaVT5rQlUnUJshg3SBMyILaYvjUB6GZ5zlrz5Bw+bxSpMSJ
+	DnjMD4qPGO8Qp2t/e44Plw4AghHYqBNQwh1WXFdML4dU0ZVur4De/U1k+//QQW4/CMN0tSCskTF
+	BEQTZOZklL99q7e6ieKukojGXPDTu3l0hbUiwgNiSvTb8Jf/w+/p1CfXYpuhyaghPTKdbiaoGVP
+	gVkpASN9Vp/6wC5ZeOmAkrG5+AN/LZ61AGYOYUv0GFZ5vKloHeK1tMNh1Ot2G+bWduEgfTwiwmj
+	WpQGcU/nxYcLto2XcPyA5lr3wk+1TIxyAKz+oSinoDc=
+X-Google-Smtp-Source: AGHT+IHomYBkrfRArIbBujX/I3y2mxJugC6/rOr7PZ7x4MMpTarYPx/m2CKQvVHOZS3ocFeJW5iO+A==
+X-Received: by 2002:a05:600c:b90:b0:43d:fa58:8377 with SMTP id 5b1f17b1804b1-43f3a9afb11mr111404215e9.32.1744648117820;
+        Mon, 14 Apr 2025 09:28:37 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cdfdsm11702585f8f.61.2025.04.14.09.28.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 09:28:37 -0700 (PDT)
+Message-ID: <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
+Date: Mon, 14 Apr 2025 17:28:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,86 +66,138 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
- group
-To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+Subject: Re: [PATCH 05/10] tools headers: Update the syscall table with the
+ kernel sources
+To: Namhyung Kim <namhyung@kernel.org>, Arnd Bergmann <arnd@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-arch@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>
+References: <20250410001125.391820-1-namhyung@kernel.org>
+ <20250410001125.391820-6-namhyung@kernel.org>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250410001125.391820-6-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
-> The following perf command can trigger a warning on
-> intel_pmu_lbr_counters_reorder.
+On 10/04/2025 1:11 am, Namhyung Kim wrote:
+> To pick up the changes in:
 > 
->  # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+>    c4a16820d9019940 fs: add open_tree_attr()
+>    2df1ad0d25803399 x86/arch_prctl: Simplify sys_arch_prctl()
+>    e632bca07c8eef1d arm64: generate 64-bit syscall.tbl
 > 
-> The reason is that a lbr event are placed in non lbr group. And the
-> previous implememtation cannot force the leader to be a lbr event in this
-> case. 
-
-Perf should only force the LBR leader for the branch counters case, so
-perf only needs to reset the LBRs for the leader.
-I don't think the leader restriction should be applied to other cases.
-
-> And is_branch_counters_group will check if the group_leader supports
-> BRANCH_COUNTERS.
-> So if a software event becomes a group_leader, which
-> hw.flags is -1, this check will alway pass.
-
-I think the default flags for all events is 0. Can you point me to where
-it is changed to -1?
-
-Thanks,
-Kan>
-> To fix this problem, using has_branch_stack to judge if leader is lbr
-> event.
+> This is basically to support the new open_tree_attr syscall.  But it
+> also needs to update asm-generic unistd.h header to get the new syscall
+> number.  And arm64 unistd.h header was converted to use the generic
+> 64-bit header.
 > 
-> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> Addressing this perf tools build warning:
+> 
+>    Warning: Kernel ABI header differences:
+>      diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
+>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/x86/entry/syscalls/syscall_32.tbl
+>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+>      diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
+>      diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+>      diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+>      diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/arm/tools/syscall.tbl
+>      diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/kernel/syscalls/syscall.tbl
+>      diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/sparc/kernel/syscalls/syscall.tbl
+>      diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/xtensa/kernel/syscalls/syscall.tbl
+>      diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
+>      diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+> 
+> Please see tools/include/uapi/README for further details.
+> 
+> Cc: linux-arch@vger.kernel.org
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  arch/x86/events/intel/core.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>   tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +------------------
+>   tools/include/uapi/asm-generic/unistd.h       |  4 +++-
+>   .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
+>   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
+>   .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
+>   .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
+>   tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
+>   .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
+>   .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 ++-
+>   .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
+>   .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
+>   tools/scripts/syscall.tbl                     |  1 +
+>   12 files changed, 15 insertions(+), 25 deletions(-)
 > 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 09d2d66c9f21..c6b394019e54 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct perf_event *event)
->  			event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->  	}
->  
-> +	/*
-> +	 * Force the leader to be a LBR event. So LBRs can be reset
-> +	 * with the leader event. See intel_pmu_lbr_del() for details.
-> +	 */
-> +	if (has_branch_stack(event) && !has_branch_stack(event->group_leader))
-> +		return -EINVAL;
-> +
->  	if (branch_sample_counters(event)) {
->  		struct perf_event *leader, *sibling;
->  		int num = 0;
-> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
->  			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
->  			    PERF_SAMPLE_BRANCH_COUNTERS)))
->  			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+> diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/arm64/include/uapi/asm/unistd.h
+> index 9306726337fe005e..df36f23876e863ff 100644
+> --- a/tools/arch/arm64/include/uapi/asm/unistd.h
+> +++ b/tools/arch/arm64/include/uapi/asm/unistd.h
+> @@ -1,24 +1,2 @@
+>   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> -/*
+> - * Copyright (C) 2012 ARM Ltd.
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * You should have received a copy of the GNU General Public License
+> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> - */
 > -
-> -		/*
-> -		 * Force the leader to be a LBR event. So LBRs can be reset
-> -		 * with the leader event. See intel_pmu_lbr_del() for details.
-> -		 */
-> -		if (!intel_pmu_needs_branch_stack(leader))
-> -			return -EINVAL;
->  	}
->  
->  	if (intel_pmu_needs_branch_stack(event)) {
+> -#define __ARCH_WANT_RENAMEAT
+> -#define __ARCH_WANT_NEW_STAT
+> -#define __ARCH_WANT_SET_GET_RLIMIT
+> -#define __ARCH_WANT_TIME32_SYSCALLS
+> -#define __ARCH_WANT_MEMFD_SECRET
+> -
+> -#include <asm-generic/unistd.h>
+> +#include <asm/unistd_64.h>
+
+Hi Namhyung,
+
+Since we're not including the generic syscalls here anymore we now need 
+to generate the syscall header file for the Perf build to work (build 
+error pasted at the end for reference).
+
+I had a go at adding the rule for it, but I saw that we'd need to pull 
+in quite a bit from the kernel so it was blurring the lines about the 
+separation of the tools/ folder. For example this file has the arm64 defs:
+
+  arch/arm64/kernel/Makefile.syscalls
+
+To make this common part of the makefile work:
+
+  scripts/Makefile.asm-headers
+
+Maybe we can just copy or reimplement Makefile.syscalls, but I'm not 
+even sure if Makefile.asm-headers will work with the tools/ build 
+structure so maybe that has to be re-implemented too. Adding Arnd to see 
+what he thinks.
+
+As far as I can tell this is a separate issue to the work that Charlie 
+and Ian did recently to build all arch's syscall numbers into Perf to 
+use for reporting, as this is requires a single header for the build.
+
+Thanks
+James
+
+---
+
+In file included from /usr/include/aarch64-linux-gnu/sys/syscall.h:24,
+                  from evsel.c:4:
+/home/jamcla02/workspace/linux/linux/tools/arch/arm64/include/uapi/asm/unistd.h:2:10: 
+fatal error: asm/unistd_64.h: No such file or directory
+     2 | #include <asm/unistd_64.h>
+       |          ^~~~~~~~~~~~~~~~~
+
+
 
