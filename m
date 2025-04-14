@@ -1,136 +1,129 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BF4292916
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 17:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0051E28BABF
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 17:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652549; cv=none; b=s4xvXorOGEsQyLyT6KLz/tiF6z404Mm1kZnfZbKnjjQY9/wbhZCO8h4rN/MVJTIK0AUeRaFR9Fr6JuCQRR/PDqiiFJskZAnG3LvuSmImJduYb13lDUmXBnvMjWUNGSnyOFC3TrQAtS+u34qcPgcl8rlV2ljtJtR3NHK7jvHItfw=
+	t=1744652633; cv=none; b=DdtCrgbVbP/5yD4c5bOe5MpFtTf0nrIi+Goh+ESmpyWT/vCs/7zhmxQQPwhOEufCBZdLSKy77sPtkBh+dNrIO1ieT5L02E7IJCwQw26J0bjb/zHncy3UynjU6RFHCd0pbNtGPw0TCAjSdVIz0teboYtyo9c57a5ntlCgpFWH0jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652549; c=relaxed/simple;
-	bh=r/oZLu7g97RF6TF9183rjWt7sdJ2elJ9pfcYGZQAci8=;
+	s=arc-20240116; t=1744652633; c=relaxed/simple;
+	bh=3PQwBhf6eQCtWoWWBJ/OEwKSKiZFxu/iYS4p/icb/kg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J5tB/rJ+chorez/+XOjOJYSpNQosqo2+poY+ayjiVmB9o+4ax7lPizyACY6yhhmVArtiS9GMSIK0pSwpauHK+JM+mO5HeJXLLbku3hrk98IBAOfzTobhpvwptWCy+tOgCOYivd0K66y0N63SDthzecrBEPQa6ZxevhJBacs9QB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BiSHoYa3; arc=none smtp.client-ip=209.85.218.46
+	 To:Cc:Content-Type; b=Mt6PZjzFXK3Dul5FereZNEhsAGc6FtzLJObmmpDZd2Pmnv58CJN1rBUfUwO5PsKrhdxk993oqJyRl4W3fiBu9mZRiBZSWerqhPP4jpp7J1Y6fF/ihCoUsKNcHkwX86HS6ml0eGadgCY2fKTUh3c4EZxmoB+25FlRKErIUujDN4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D9wjv1SI; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BiSHoYa3"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaecf50578eso840021466b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 10:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D9wjv1SI"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2242ac37caeso12285ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 10:43:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744652546; x=1745257346; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744652631; x=1745257431; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S6dXpssTyEnXZw8Werw0Cfea5OuCpmeGi7WA4m5w0Kg=;
-        b=BiSHoYa3fgJSiqVoP3e0H+/FxsvaWZzno78abprQ7Dm0KE5tnvU1RN5Bv7EOMusnhZ
-         qlqJfPG8iitoFObxWWFMGys/INnO8lfSbVdTu3vxGXVO/BBbq7rwhxkeItMJ+RWTfo7X
-         ukGtkO898mKlTACCgY9X6Y0S7E2Z779/KSbzt5EeTW7bDaGADKo5qOAiXZumrWLIOkYj
-         UJgc2LKySaUQwezESr2fSxwXDUX73RBR4ZKBNvG4CkUNn1m1Y+UKOUfia3etcJGPHQ7v
-         JDm8wE60JaNl3Agqp0oWBH1uSM2WuExpguzaSeN8QXCRBOTb2uGSPTh8OYOucw8HXbwj
-         KN9g==
+        bh=x4dVleBDpO6/u22qkJIU8Ny3g2vn/v3l/Py+/JTBXAE=;
+        b=D9wjv1SIvUlfkCl/rJ18ADEUCzjhlPWCCQapoTGUBaT84s+Yj71f/lf4Eneblye2ww
+         uP5askoa6j2QF43R5KP+Gqrx+hP+Mx2liYxJFM9BtyFMiIO3Bir7FOK+DNR2MOl3SqLj
+         vJopbUKGKTPzSZqNkxR1FouULQVtMSVn0A2cc8XZKxWwDiWhYbPt5TfXb1SvI4ktoKWy
+         Agjy2PzEMzJ9m5NyfEgYcMGg1gHb7WePS7kqdn/bUHqkOjSBIj0qHFTI4DytQDrtXLoK
+         wjQgUVmmuSFmkfsYo9OvmjJl0xKDPUo/leQ4UxHLp7QTvR2uTEqPMYqJF9XPIaG8HK80
+         mApA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652546; x=1745257346;
+        d=1e100.net; s=20230601; t=1744652631; x=1745257431;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S6dXpssTyEnXZw8Werw0Cfea5OuCpmeGi7WA4m5w0Kg=;
-        b=iqAuDt5CymmbDb+05HhZqZS9RbiAa7lvNhfwkav6EK27t/jtWsRcvibJYghhWkMKXV
-         XryOaVJwvnKfFd3ay1ANoxm4QUbaiMAj718K9lFysyep/Cokr1dk/ikQV6nscVzdbOJh
-         s1ORdaXfqZWY22TriMvRKDcoLkMebS7FUmCBcsW8h+iC2Z7uBUjRvH4DjYFJ3/2ql6Bw
-         zTYgpO/1B70U8Ijxi6YZspGnCKVzftEgkcmlmcMSeVQPBvD4dgadWi08FDUKeohNKxcq
-         6KUWQiRrOBNQCOnsk8Quk2Pqc0XlsdxdM2omBNAQMnCa/UJQxRCYFwnOWXLTS2tPLtK2
-         vGEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhURL5lzAP+gAFUcFd39zOgvjSNuNzyRBUTXzsDIjy5w68UWbB7UTKvGyxbdo4JU/t+tssVx7MkjL+zdLhb0xG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5S9EF1eKExyjF2/TKFJedFTQ4f5ApaTOw/83Fs+/2orXWsOsk
-	MpczHSPAes+aZLA26pjB+r7XtsxJx3njfrTf3YEgN5XXlbtxwgEeoKR2zacd/l+gFfKzA0G/d/4
-	lbCIJ37yXASDOV5hnriK9ZvL+pCZUtR1o+V0x
-X-Gm-Gg: ASbGnctZg/pU2sj/3GgpcxjnBiSSIRF1ftep5qtnnzbQDrUcl7aCNeEmpRT+cOn2Adw
-	kOfZY2p+JHQ5g9hxPinFju6vb+R4HxNhm1a9sfBTkgr6D2i/vXyYcon5upxEO0Jem95DmrPflaI
-	uOsFBhvJqbE4Hzaske5JPjXcKnTL8r/hE/IsLxIR/3HveaRdW4
-X-Google-Smtp-Source: AGHT+IF0lVacdLNmQXyNIUxEHd+nTqR58C8tfUD29Jy3htQ250p/42LkgbUJpDeJ9P4uGPCW5RLhDiIuWo8Z2TF5ZBs=
-X-Received: by 2002:a17:907:7f23:b0:ac8:14ad:f3cf with SMTP id
- a640c23a62f3a-acad349c379mr1122853466b.23.1744652545646; Mon, 14 Apr 2025
- 10:42:25 -0700 (PDT)
+        bh=x4dVleBDpO6/u22qkJIU8Ny3g2vn/v3l/Py+/JTBXAE=;
+        b=M/2PheZCeA2HGu6+XCTj3HxyRoVatRviOfo1S+oORpLElNmxbGAIDbiV8M9hfu92UM
+         e2eywwwUuHor1LXDRqbwDEidG+sLgKFncd22ZjLG354NYsQI7PI4dL8w/EhAVhS6RQoR
+         5UzJBvQ2c3ECZP3ciZku+hPncO+mArJve4x8/YAc/GvfrG7JIuFCBBAdRdx3X+oHV3/d
+         VhZ+KnaXL7OL/tF+Q2+mfcf1OU2et34cfgi5IVBCSNnlM22hJjcljJ5kVpySBOoUDbk6
+         L2ugx5ICdTA8YfO1ZI17xJ8UIskKXEjkFVzEknTGcv9Bq6WgaI1pHALUZ7poH4mHc12G
+         drKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPu+5qsL7pJqaJcl3a7x7GikghOPIUjih11XmilbE/OCEVd2W7YDkqnI1L7qHeZnb+XD+MIG1e4dL5iQOOorMD@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoM3pAeIvm9PcWpZtvhaSTzaDLhUwUCD7xieJkadFw4syW5bxh
+	XK5gH+SV/ZYViedRUFEcheDEgEWNqJHKQZos6gyQ4XmPNTvhN3+5PCOb4nr9OivrZWEoRIza2G1
+	41Gq93hyFyTzUPxxXo3wPrMzuvX5gSN3oG2jw
+X-Gm-Gg: ASbGnctVE2Qlpwm3+lmq9RCjZGnfyplKPf0ZbwKzlt9QJR/F+h2Y7YOBb5CDjyIKl5X
+	CV1etPW5sTiTlBXEh4NmkH4ovdD8xgAL1x4CzrzzqhU+M4deLQ8eNHhDxaj93iS3Z6PzLIKAQvT
+	XMTrPWV9r/Um00V0S/RfcIWr44qg3uY4H7cU/I7gDKU+WW4tPZbQU=
+X-Google-Smtp-Source: AGHT+IH22Knd2f+MyZKirEYjAUmZsb5BYxkMdbW4areGnzYPG4fkeoyjyV5rMjKASN9vS0KH3caGf6mxt7JSrJnDOhw=
+X-Received: by 2002:a17:903:f87:b0:20c:f40e:6ec3 with SMTP id
+ d9443c01a7336-22c2521699emr36655ad.22.1744652630896; Mon, 14 Apr 2025
+ 10:43:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411174547.2208959-1-ctshao@google.com> <Z_mAxgbgVBqHDRfD@z2>
-In-Reply-To: <Z_mAxgbgVBqHDRfD@z2>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Mon, 14 Apr 2025 10:42:14 -0700
-X-Gm-Features: ATxdqUGmO6XE11TB5jTq_YVjbnQWRZYMA-7dZ_XSG_Wlq2Fx3_o8Rp8eMDvgThU
-Message-ID: <CAJpZYjXduAo1vHzfGzCXk+ZuGwo+Sy5CpZ-cohrooz9k0qwM4w@mail.gmail.com>
-Subject: Re: [PATCH v3] perf report: Skip unsupported new event types
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, dvyukov@google.com, ben.gainey@arm.com, 
-	linux-perf-users@vger.kernel.org
+References: <20250414173921.2905822-1-ctshao@google.com>
+In-Reply-To: <20250414173921.2905822-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 14 Apr 2025 10:43:39 -0700
+X-Gm-Features: ATxdqUEeogjw7qi6Xrd5OpKotHl4BOojFvI9RaQY-9Jp5El-MAuZdx_gvBumaWg
+Message-ID: <CAP-5=fUJip8odShuUVCnwQg9MrMLVdCWjGdSFfUxWubfQYBy1g@mail.gmail.com>
+Subject: Re: [PATCH v4] perf report: Skip unsupported new event types
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, dvyukov@google.com, 
+	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Sorry for my oversight, just sent out v4.
-
-Thanks,
-CT
-
-On Fri, Apr 11, 2025 at 1:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Mon, Apr 14, 2025 at 10:39=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> =
 wrote:
 >
-> On Fri, Apr 11, 2025 at 10:45:21AM -0700, Chun-Tse Shao wrote:
-> > `perf report` currently halts with an error when encountering
-> > unsupported new event types (`event.type >=3D PERF_RECORD_HEADER_MAX`).
-> > This patch modifies the behavior to skip these samples and continue
-> > processing the remaining events. Additionally, stops reporting if the
-> > new event size is not 8-byte aligned.
-> >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/session.c | 13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 60fb9997ea0d..f55b2ac4e103 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struct pe=
-rf_session *session,
-> >       if (session->header.needs_swap)
-> >               event_swap(event, evlist__sample_id_all(evlist));
-> >
-> > -     if (event->header.type >=3D PERF_RECORD_HEADER_MAX)
-> > -             return -EINVAL;
-> > +     if (event->header.type >=3D PERF_RECORD_HEADER_MAX) {
-> > +             /* perf should not support unaligned event, stop here. */
-> > +             if (event->header.size % sizeof(u64))
-> > +                     return -EINVAL;
-> > +
-> > +             /* This perf is outdated and does not support the latest =
+> `perf report` currently halts with an error when encountering
+> unsupported new event types (`event.type >=3D PERF_RECORD_HEADER_MAX`).
+> This patch modifies the behavior to skip these samples and continue
+> processing the remaining events. Additionally, stops reporting if the
+> new event size is not 8-byte aligned.
+>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> ---
+>  tools/perf/util/session.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 60fb9997ea0d..ba32f8461a4b 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struct perf=
+_session *session,
+>         if (session->header.needs_swap)
+>                 event_swap(event, evlist__sample_id_all(evlist));
+>
+> -       if (event->header.type >=3D PERF_RECORD_HEADER_MAX)
+> -               return -EINVAL;
+> +       if (event->header.type >=3D PERF_RECORD_HEADER_MAX) {
+> +               /* perf should not support unaligned event, stop here. */
+> +               if (event->header.size % sizeof(u64))
+> +                       return -EINVAL;
+> +
+> +               /* This perf is outdated and does not support the latest =
 event type. */
-> > +             ui__warning("Unsupported type %u, please considering upda=
+> +               ui__warning("Unsupported type %u, please considering upda=
 te perf.\n",
-> > +                         event->header.type);
-> > +             /* Skip unsupported/unaligned event by returning its size=
-. */
+> +                           event->header.type);
+> +               /* Skip unsupported event by returning its size. */
+> +               return event->header.size;
+> +       }
 >
-> This comment also needs update.  Other than that looks good to me.
+>         events_stats__inc(&evlist->stats, event->header.type);
 >
-> Thanks,
-> Namhyung
+> --
+> 2.49.0.604.gff1f9ca942-goog
 >
-> > +             return event->header.size;
-> > +     }
-> >
-> >       events_stats__inc(&evlist->stats, event->header.type);
-> >
-> > --
-> > 2.49.0.604.gff1f9ca942-goog
-> >
