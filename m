@@ -1,132 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54B718C933;
-	Sun, 13 Apr 2025 23:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577E654670
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 01:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744586742; cv=none; b=nRGEs7n9bj88segX0pF1PbT4UTsQoBW90skcy8m4D+tlUI1ndkLErDvbTNoTHFjO6wjBccPfkHk3DjEnUB46ortXBbL2wtgXGr2DCET5g/h/lmAjt7IMQ8EvLcXbKmk57zoKQL/DCXkx7ze7nIoeJLdEemPZ0C5dl6odH9d0q6w=
+	t=1744594746; cv=none; b=LaAT6UFFO98O0sjAS5SG5FprMVaYtVGsfZwCmyHzfsazDF2HegUACCVsyDGFlAHx+cPPsY8AfyoBgNA/HzV5gwAvyI9j4fhsDChuR1VEpIJnbvIggPiJUN6ZFRM3H8IaypC0B5htwHwlTX+uWfGkGe6DTQ+titlL2tfqbY1nWSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744586742; c=relaxed/simple;
-	bh=cj7tLYWkJnjZzDsM0vjGoO+h1qysMwJqyctJfx39jw8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZbdhG5N0cf/AghWX4FmJelTb649/MI9QUw3UGwfogkPfVpBdsHq5dXImttV7ChPqAEJgnqd3nN32QGzEdDtOKFB/bcRg+wkvt1wr2dOu3I2nS5GUTYG4A5o+j0Rvn4bXdLzJeEN/FonrkxpUC6xcgodjMcprEFM2rWF2TthyEls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Memyz3B+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744594746; c=relaxed/simple;
+	bh=vOASM9yK894Epmo3Asd8AYhSid4PaEsMCnhrIRd3pf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=trzJoEJqkz9G2fsNDRZW1ZEmPxKJxv3FWgpOJDw0h7VFqOkDxfPEOv6FIhdQRDQNAACDe4EbIGPto4ASFwiBTIHODmIuMJZjXphgLa6pteqR+IbSvJ79y/7Of0mCSq+1JYDGcMabqnJ7J6pYsRekglnjjdewaqgPHygN3cMLA5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JcZel8kf; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Memyz3B+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E83C4CEDD;
-	Sun, 13 Apr 2025 23:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744586742;
-	bh=cj7tLYWkJnjZzDsM0vjGoO+h1qysMwJqyctJfx39jw8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Memyz3B+n9+xGqaE4XoOoGH1yC5HeZDc+18Xdr4yBqcFXQzgH4iPzNuKfoN7Aiz9u
-	 Ur/2eht7pG/ZF1N78HV2l2t06NcbS4fhSdaDp8Q6FKsAbn3Xx/To2z5LeDjeFwchrK
-	 OStsiTbLx9bA+vaWTSK+omFEJ+N35sVO3ce7SukilGWcyI0V+ugYr+/00acmnHGw94
-	 +exO6pSeNHzmf/wU+HuXVWT+Rwfxor3/czWtmVAMmGTa4DkuRifkgp9R1JiY6Cf7r5
-	 fzt1tlOKLfS1fF+RXr62p/KHP6VNAQ3CLKo2uu9Puw9Yc63zO+aw6yYAsMu6cxXmQw
-	 4H4Y0LIBB+GnA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf-tools fixes for v6.15-rc2
-Date: Sun, 13 Apr 2025 16:25:38 -0700
-Message-ID: <20250413232538.4094456-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JcZel8kf"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53DNk8Cn016756;
+	Mon, 14 Apr 2025 01:38:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=dRQx/G
+	0oPlXOaXgJjhj9bivzkn8jF+UwvrchoCIDXWI=; b=JcZel8kfefqe+FkeeSKd7c
+	zfS7T4/TqqN2AwIy70mKbOhbdxtuWtg5DilCoxbN0tHtwIUrfa+3SLBtDKtCB1mm
+	gHrHuKArl2fVtMSTCx0MUBicNhf58KXrxSvaR3VTxxmFGYhtSxBXzuSnIX0dkoL6
+	gaUrmlvfDGP/WBdQMynA59rGTc+fIDr+dPlD3O9JxcymeCW/0MlT+qSb3QVtIuUJ
+	ESTMp1iDcmN2huUnjZ7JxhUL9Ij20UGuy+7on/MdwJ8PBiMPiyuta4v6DFSPWM2d
+	z49VEXAFLJfHhGeAUL2fA/VuOexbbE8XDHfQwtCv9bsgIS/+ea9KIrTKMLiUf/hQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460q7x0ade-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 01:38:45 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53E1cjkH005602;
+	Mon, 14 Apr 2025 01:38:45 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 460q7x0adc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 01:38:45 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53DMdNbq017183;
+	Mon, 14 Apr 2025 01:38:44 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040km0tt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 01:38:44 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53E1chwb18285096
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 14 Apr 2025 01:38:43 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 50DD358058;
+	Mon, 14 Apr 2025 01:38:43 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7E1635805C;
+	Mon, 14 Apr 2025 01:38:36 +0000 (GMT)
+Received: from [9.43.3.204] (unknown [9.43.3.204])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 14 Apr 2025 01:38:35 +0000 (GMT)
+Message-ID: <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com>
+Date: Mon, 14 Apr 2025 07:08:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
+ cpumap.c
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+        Likhitha Korrapati <likhitha@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.ibm.com>
+References: <20250406163412.897313-1-likhitha@linux.ibm.com>
+ <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
+ <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
+Content-Language: en-US
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: cku4Dz_w4rMnGh78T_G_k3hYGs9ImlxS
+X-Proofpoint-GUID: 6fflamMzOaeZCqX3p6hdGxoAd_pAlKzE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-13_12,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 adultscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504140009
 
-Hi Linus,
-
-Please consider pulling the following changes in perf tools for v6.15.
-
-Thanks,
-Namhyung
 
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+On 4/7/25 5:38 PM, Venkat Rao Bagalkote wrote:
+> 
+> On 07/04/25 12:10 am, Athira Rajeev wrote:
+>>
+>>> On 6 Apr 2025, at 10:04 PM, Likhitha Korrapati <likhitha@linux.ibm.com> wrote:
+>>>
+>>> perf build break observed when using gcc 13-3 (FC39 ppc64le)
+>>> with the following error.
+>>>
+>>> cpumap.c: In function 'perf_cpu_map__merge':
+>>> cpumap.c:414:20: error: argument 1 range [18446744069414584320, 18446744073709551614] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+>>>   414 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+>>>       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> In file included from cpumap.c:4:
+>>> /usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
+>>>   672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
+>>>       |              ^~~~~~
+>>> cc1: all warnings being treated as errors
+>>>
+>>> Error happens to be only in gcc13-3 and not in latest gcc 14.
+>>> Even though git-bisect pointed bad commit as:
+>>> 'commit f5b07010c13c ("libperf: Don't remove -g when EXTRA_CFLAGS are used")',
+>>> issue is with tmp_len being "int". It holds number of cpus and making
+>>> it "unsigned int" fixes the issues.
+>>>
+>>> After the fix:
+>>>
+>>>   CC      util/pmu-flex.o
+>>>   CC      util/expr-flex.o
+>>>   LD      util/perf-util-in.o
+>>>   LD      perf-util-in.o
+>>>   AR      libperf-util.a
+>>>   LINK    perf
+>>>   GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
+>>>
+>>> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
+>> Looks good to me
+>>
+>> Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> 
+> Tested this patch on perf-tools-next repo, and this patch fixes the issue.
+> 
+> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> 
+>
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Arnaldo, Namhyung,
 
-are available in the Git repository at:
+can you consider pulling this fix? since it is breaking the build in gcc13-3 or
+if you have any comments do let us know.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.15-2025-04-13
+Thanks
+Maddy
 
-for you to fetch changes up to 2b70702917337a8d6d07f03eed961e0119091647:
 
-  perf tools: Remove evsel__handle_error_quirks() (2025-04-11 09:22:49 -0700)
+ 
+> Regards,
+> 
+> Venkat.
+> 
+>>
+>> Thanks
+>> Athira
+>>> ---
+>>> tools/lib/perf/cpumap.c | 2 +-
+>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+>>> index 4454a5987570..c7c784e18225 100644
+>>> --- a/tools/lib/perf/cpumap.c
+>>> +++ b/tools/lib/perf/cpumap.c
+>>> @@ -398,7 +398,7 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
+>>> int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+>>> {
+>>> struct perf_cpu *tmp_cpus;
+>>> - int tmp_len;
+>>> + unsigned int tmp_len;
+>>> int i, j, k;
+>>> struct perf_cpu_map *merged;
+>>>
+>>> -- 
+>>> 2.43.5
+>>>
+>>
 
-----------------------------------------------------------------
-perf tools fixes for v6.15-rc2
-
-A couple of fixes and the usual tooling header updates.
-
-* fix a build error on ARM64 when libunwind is requested
-* fix an infinite loop with branch stack on AMD Zen3
-* sync tooling headers with the kernel source
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (1):
-      perf libunwind arm64: Fix missing close parens in an if statement
-
-Namhyung Kim (11):
-      tools headers: Update the KVM headers with the kernel sources
-      tools headers: Update the socket headers with the kernel sources
-      tools headers: Update the uapi/linux/perf_event.h copy with the kernel sources
-      tools headers: Update the VFS headers with the kernel sources
-      tools headers: Update the syscall table with the kernel sources
-      tools headers: Update the uapi/linux/prctl.h copy with the kernel sources
-      tools headers: Update the uapi/asm-generic/mman-common.h copy with the kernel sources
-      tools headers: Update the linux/unaligned.h copy with the kernel sources
-      tools headers: Update the x86 headers with the kernel sources
-      tools headers: Update the arch/x86/lib/memset_64.S copy with the kernel sources
-      perf tools: Remove evsel__handle_error_quirks()
-
- tools/arch/arm64/include/uapi/asm/kvm.h            |  5 +-
- tools/arch/arm64/include/uapi/asm/unistd.h         | 24 +-----
- tools/arch/x86/include/asm/cpufeatures.h           | 28 ++++--
- tools/arch/x86/include/asm/msr-index.h             | 31 ++++---
- tools/arch/x86/include/uapi/asm/kvm.h              |  4 +
- tools/arch/x86/include/uapi/asm/svm.h              |  2 +
- tools/arch/x86/lib/memset_64.S                     |  3 +-
- tools/include/linux/cfi_types.h                    | 45 ++++++++++
- tools/include/uapi/asm-generic/mman-common.h       |  1 +
- tools/include/uapi/asm-generic/unistd.h            |  4 +-
- tools/include/uapi/linux/in.h                      |  2 +
- tools/include/uapi/linux/kvm.h                     |  9 +-
- tools/include/uapi/linux/perf_event.h              |  2 +
- tools/include/uapi/linux/stat.h                    | 99 ++++++++++++++++------
- tools/perf/arch/arm/entry/syscalls/syscall.tbl     |  1 +
- .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  1 +
- tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  1 +
- tools/perf/arch/sh/entry/syscalls/syscall.tbl      |  1 +
- tools/perf/arch/sparc/entry/syscalls/syscall.tbl   |  1 +
- tools/perf/arch/x86/entry/syscalls/syscall_32.tbl  |  3 +-
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |  1 +
- tools/perf/arch/xtensa/entry/syscalls/syscall.tbl  |  1 +
- tools/perf/check-headers.sh                        |  1 +
- tools/perf/trace/beauty/include/linux/socket.h     |  2 +
- tools/perf/trace/beauty/include/uapi/linux/fcntl.h |  4 +
- tools/perf/trace/beauty/include/uapi/linux/fs.h    | 21 +++--
- tools/perf/trace/beauty/include/uapi/linux/mount.h | 10 ++-
- tools/perf/trace/beauty/include/uapi/linux/prctl.h | 11 +++
- tools/perf/trace/beauty/include/uapi/linux/stat.h  | 99 ++++++++++++++++------
- .../perf/trace/beauty/include/uapi/sound/asound.h  |  8 +-
- tools/perf/util/evsel.c                            | 22 -----
- tools/perf/util/unwind-libunwind-local.c           |  2 +-
- tools/scripts/syscall.tbl                          |  1 +
- 34 files changed, 319 insertions(+), 132 deletions(-)
- create mode 100644 tools/include/linux/cfi_types.h
