@@ -1,292 +1,141 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCEFDDDC
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 17:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295D7289363;
+	Mon, 14 Apr 2025 17:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744650048; cv=none; b=td271ws/DOw8TmzVCf9Q2uJJwzVDJCwGbNCnYArZVFUsT7O/tztlA1cJfwgVcft+kl+5a1C5rZ+OihnGVBLpRGhNUc54THwON+pfwsgaT2gmZMJwEaTkJ4bvfdihymHt/o0DkYqFF2wLEM0GVl0vZmQmfqUOpuGVdRqS6rI5kdE=
+	t=1744650796; cv=none; b=Dkha649vSZx6G1cRc0M0j6NZYC6vzqvCmFS+/qaqPhJdHmZEDpITF4rXYsK2XJbAQPH5A7CXYxGN3k6KgDDtIPBX42R4JhLqoFUljSIEJFJ0L8Z/lN2Sc5vbf0lBZY0cCvOAQpLaUna1pOr/nKQfr11S4x5FtDQZmaYnWmYEiFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744650048; c=relaxed/simple;
-	bh=T3i3Ks6KYkqogNKePbw/HvYGCtTGpF8cMDelJPNuhvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XOg64ZhCydvBnHhLKiuudq7QkerA+Mx4M1b1NwozL/7ZKEGA05n0SJLpo+3lhrLSKHhZkwknOxLXykUQT2B2LPJjOAOrRzKERat2KHP9PmlQYXHp6M4VBAcd3YD4PN4E3aHmueKBo/aYY7jsKnAbIf59bk2akBncwOquhcg2ZxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nRAu8Kqv; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744650796; c=relaxed/simple;
+	bh=sFTaMFijVk2HZVriqjm0aoHOUR8tYLFf51KFMR53Zes=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=I1DUy43a2I3NF7bEY88nFzuxIUQN1MlNlc1HE0xkYw9y3O2fCcEH4MER/FE6SwF0eM6mI5BwHfofD0klVjBkrw3aM0p0rfQ6tzb3gu2lNvEsHHZ5Gk+Yox/tO+8IMCYQ8iqu/4EJn7V5tiVNKgBmqEquOrvh0M/lVdjmVfi0MuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMaOgc3P; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nRAu8Kqv"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2264c9d0295so8185ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 10:00:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMaOgc3P"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso31287295e9.3;
+        Mon, 14 Apr 2025 10:13:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744650046; x=1745254846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qZgX0R3k7vRMomOHwpjZi0jdYMGFvDiknbY7T9HOMsQ=;
-        b=nRAu8KqvQ4kS0ybZFtgBnISSWbLsavgoE6ks5AAv1dZc6o6EpGA4RAYLotdtL4AzUF
-         NEq5ux1L25rfz3rzg2dQIQHEk4puS5olEBwZWLnakB2WBPg5RFdrF0J84IaKQKPfFibh
-         pxztmAynaRj73jkUNfnFVG3ORCo0WIyJA55Ad4/sqJkqjLYLUhAQVS/y/jVTX+bC6rvR
-         xKNFxuR1RqfOH4hZMhhxjV3qNaMGzj4bjBWUEMPja2UxLkkyg6aG1Y4PVqzQ446HJmVi
-         4vvjEFl5CcoZ4TZ4OSZ7el45eDjaUCuJ6PwhhfOXwZ2Yhz5Dqtst//fOmQPcc/O8wGOO
-         NqCA==
+        d=gmail.com; s=20230601; t=1744650793; x=1745255593; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AhLhCv09lRa1OLV+bmnI0sicXwTDVpYEF9Itb4YCx/Y=;
+        b=nMaOgc3PiklhM+d9MWiAlZKVIMZQZT6Zuv3q329TyWGFgsneT+xvnkofiFTJbI5eeg
+         WbFwJ5bqjGqXUBEatndpqvdDF3PeMh0NBb4cNdOtjMSysRmHoVNjZPTGZt4obRcpUdrW
+         +zW74MncDa7dt9c8jpr/sCjbKpbc5bnvVkdnWCJumpy1huga5VlkXWm64HEHAwFRIP04
+         EBuy687pnONPg6iMuPe1VKOEBW9TF9akC3F5pTBvKjF9LXXkAQZTdHmbpIl2eQDf5zeq
+         jTrh9ONS58n9lrOpRAohJyqLWOg2Z7xYnHNQqNNF+RYy/sHPstPa44eIrC85b66E6Hi7
+         8RCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744650046; x=1745254846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qZgX0R3k7vRMomOHwpjZi0jdYMGFvDiknbY7T9HOMsQ=;
-        b=imdFja4jmz1kFfrjthMD8ucYcl0XW/XN3u4lZYSEiCllwme7Q64J7QtYy9nfVWC7mV
-         P/5d3w7vGEsdbRQ7T7SmjNY/Y615WPWqsOr36cPLi9XO/GsiGHlVzGV+4TgZQX8A3nX0
-         8HwsdMe0/mZpS2+8zWhZkD4pQorpvaWytPnvxrl2+Nt3mqhru+W4C5LtT5epSSE0/Er3
-         DJM6uATsHNGLCpp6cRW9y2Hhr5XPNOIErAOMzgJyp4ML37ot5S0wW6vfebDuYAaPOqLM
-         OnLd0VGUbsdLdyx8MX50IlBcsv78/A5CN9actpKCJGYFd5y6YXtIKEWfBP/jLxamFB7G
-         rUzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUycCjTjQfUly9TgBOhvXU/oFF8arKJWJELEAJ/Qnse8aghyVl6r23Nso2nb4zkDbr6IYTt1xB/JhhHoy+dq7RT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0DozZfXjkOHuVV6dM/udTy0y/t+qrElbLRHkO0+yDxHqMfR7T
-	nuIEoVnB2Acmax2RSLfO3NZctdQeuJOa58MZQgyHt7sYLFJb4/U7aNPrLG+pUwWWiABmzvFJopZ
-	wBfaWQzjMVCVMY/aPeaMkyQizoIzIyR9/hIQt
-X-Gm-Gg: ASbGncv805TYZCF6YJYFpmQ/FnusIIDlV8UqoAMdmzXwdRkiyawp7oCxbmBczvr9jeI
-	kqg221E1WG+MenpZBeKAUnPxT6JmsyZGSaTSLqrmn3drzXo75Pq2FrXom/F2omy+teaHiiU8xLj
-	hs6n2rWxbtT61QhOgOqBPFhglln7KTXdMmQ4gkN82IQR5ccgPP9OQ=
-X-Google-Smtp-Source: AGHT+IHbWnNScRnDC9p2CxmWIsPBssiO6wqSRUmKycp5VifarINCOYVDkALgNzE72DCmcrUWFYaAK9lIrLJeqLkXimQ=
-X-Received: by 2002:a17:903:230b:b0:215:42a3:e844 with SMTP id
- d9443c01a7336-22bf52cef09mr4902755ad.17.1744650045179; Mon, 14 Apr 2025
- 10:00:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744650793; x=1745255593;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AhLhCv09lRa1OLV+bmnI0sicXwTDVpYEF9Itb4YCx/Y=;
+        b=LpgzYMbDctPEELPzy+O3tx50+LBNoSZrM625VXx+i7/sWZawRc3tGe4gLnbbIy1QWJ
+         jPNdudJQeB48aaZ6N4FE2Kp8gI0F/bA7cHgA6S8vyoMvqBjPRUsIeSYxKBHhAjFOm8av
+         IshXuEvQ+17q/ZjJ7SQiQNQU9ho5nro/kkqxIrC/rQuyeDdYQVG3DoRJCpMMSqOckXJS
+         MMOTqpVq+E0eDG5i2h+HabMjtG7FZK9UR42iPr1wx4Kg2fjZ1nxTNjStSxCuEfGJJfd2
+         cv4gMLbwN8BVACe69Ly/ggxE5KSb54kc5cmwlqQV48df9rDKgXw3BUhjlPCZbj3wG2Xa
+         hmsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2bXY16glnlasVviZBRNs7rhH3BqilJMPBctOkJOqxaxbOGedhiY6lRVz4TeHjNxIqULKcJj1pn4K3Gw==@vger.kernel.org, AJvYcCUJnxaJO405Mmv2grjO3ZNca6FCL81MjvTjrFSRjF6Y364+21+q/avj1sNmdVkcJoXkchbTKp586lrHmGs+@vger.kernel.org, AJvYcCWNuB5d3gRwsGwmOLGIr2NQtOFbwYypozyB5EiuLTfXtDsQ4V5uoLh2l/AErOpOxLQ4goVXRsx93vG/mQizVjnWVg==@vger.kernel.org, AJvYcCX089GhHkpR8DgZ36gCYB7kTm5nFtfWyZxmTRHUyziTT3HXdPaYG57zN2K8v+vXzcT5qH2+qJ5op/hm@vger.kernel.org, AJvYcCXWOCRSq4ayoXe2if1ippPVwtY73gXqF2NeTrTf9l0qAWWxXWQOp6wzEWWCYd+ISR46QdA9@vger.kernel.org, AJvYcCXX8T9cwWgYaF3RUduEGhzVZYayp86CyVE1JdS4IAqQoIM5LEG9dEtZf03MWuq5CcUe2+92y1Qsvvo=@vger.kernel.org, AJvYcCXaUTHpJF+A86OGgtKPZUAm2HWt6yBoWc/6Rx8AoCQgr9FPp8aAJl9OEYb+D28HpahI2AQbPrawTLA3UZCT@vger.kernel.org, AJvYcCXznFYsrzaoQWy6I6/a+Rpe0q04KZOmXudOrcpsOqNBeFmqiTuTmmnsAppNDYXMuQ9VUlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3agagxpEWagA3o+53FldiLAYBp7FKG848P80I4niseUb5PaP9
+	8UN1UsDs581NeliTqVILmgK8GIcQ8se3wGGrH8qUycjT4ht6FWqK
+X-Gm-Gg: ASbGncvinEuaSivMXvGOZhqNrzCY4jhXYIb2sX26eBBgs9otwWnh5ucjnV10drX4GHs
+	iWOj2kq+1BgL5czuFlPfVam5t9tijcNI258JYyby1z9UnZTQcHxzCTUcZk/QgvwclPhTFUqeZsU
+	pT5YzJIazUIdXNCZlOumNtsqheI28h1n6oIEhQCnmxCbUsga7hp83kKelNE8nUCWtlPDLxXjmcd
+	RZfY1tYR5MHLeVBMJGwFzp03zPbMad+hV/mn80cQgtT0srj0HaAZnSXvR7JtgDa7PkqEO/+wYUs
+	0FBq1pjmq20IWkgNF9FvnejuJqECmL0+lJ8vXJZ2/bJbIusjQWxiJ2c8LTujElfQqXsOWIuZ2AA
+	sEdqKYlzrzE1JXaip9R9MTw==
+X-Google-Smtp-Source: AGHT+IFaPusiZQT0QiFcyLJp0TXK65g3+z16rgMNv9l2dKvCZ0RLPJLCBzoBrYTr6CV/HfnsWx9kLw==
+X-Received: by 2002:a05:600c:8519:b0:43d:300f:fa51 with SMTP id 5b1f17b1804b1-43f3a93ebb3mr115773795e9.9.1744650792986;
+        Mon, 14 Apr 2025 10:13:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:5d29:f42d:74f6:abb7:53c9:817c? ([2001:b07:5d29:f42d:74f6:abb7:53c9:817c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f204c500bsm191180875e9.0.2025.04.14.10.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 10:13:12 -0700 (PDT)
+Message-ID: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
+Subject: Re: [RFC PATCH v1 13/15] x86/msr: Use the alternatives mechanism to
+ read MSR
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+To: xin@zytor.com
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajay.kaher@broadcom.com, 
+ alexander.shishkin@linux.intel.com, alexey.amakhalov@broadcom.com, 
+ andrew.cooper3@citrix.com, bcm-kernel-feedback-list@broadcom.com, 
+ boris.ostrovsky@oracle.com, bp@alien8.de, bpf@vger.kernel.org, 
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
+ hpa@zytor.com, irogers@google.com, jgross@suse.com, jolsa@kernel.org, 
+ kan.liang@linux.intel.com, kvm@vger.kernel.org, kys@microsoft.com, 
+ linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+ linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+ llvm@lists.linux.dev,  luto@kernel.org, mark.rutland@arm.com,
+ mingo@redhat.com, namhyung@kernel.org,  pbonzini@redhat.com,
+ peterz@infradead.org, seanjc@google.com, tglx@linutronix.de, 
+ tony.luck@intel.com, virtualization@lists.linux.dev, vkuznets@redhat.com, 
+ wei.liu@kernel.org, x86@kernel.org, xen-devel@lists.xenproject.org
+Date: Mon, 14 Apr 2025 19:13:09 +0200
+In-Reply-To: <20250331082251.3171276-14-xin@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409061043.700792-1-irogers@google.com> <20250409061043.700792-12-irogers@google.com>
- <Z_mdvahT2i6djhj1@z2>
-In-Reply-To: <Z_mdvahT2i6djhj1@z2>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 14 Apr 2025 10:00:34 -0700
-X-Gm-Features: ATxdqUGBZuUbvz6xLLwag4Dc8Fd8WOuz04UChczVE7TzS6jr-r-Ohiw-pMK6PnI
-Message-ID: <CAP-5=fWWiodHK1e6MsMfNXd=vNsHN5VTg9QOViH+2OF8d7FBZg@mail.gmail.com>
-Subject: Re: [PATCH v4 11/16] perf intel-tpebs: Add mutex for tpebs_results
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 3:54=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Apr 08, 2025 at 11:10:38PM -0700, Ian Rogers wrote:
-> > Ensure sample reader isn't racing with events being added/removed.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/intel-tpebs.c | 51 ++++++++++++++++++++++++++++++-----
-> >  1 file changed, 44 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpeb=
-s.c
-> > index f648fca17556..c5ccdbc42dc6 100644
-> > --- a/tools/perf/util/intel-tpebs.c
-> > +++ b/tools/perf/util/intel-tpebs.c
-> > @@ -16,6 +16,7 @@
-> >  #include "debug.h"
-> >  #include "evlist.h"
-> >  #include "evsel.h"
-> > +#include "mutex.h"
-> >  #include "session.h"
-> >  #include "tool.h"
-> >  #include "cpumap.h"
-> > @@ -32,6 +33,7 @@ bool tpebs_recording;
-> >  static LIST_HEAD(tpebs_results);
-> >  static pthread_t tpebs_reader_thread;
-> >  static struct child_process tpebs_cmd;
-> > +static struct mutex tpebs_mtx;
-> >
-> >  struct tpebs_retire_lat {
-> >       struct list_head nd;
-> > @@ -51,6 +53,19 @@ struct tpebs_retire_lat {
-> >
-> >  static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *e=
-vsel);
-> >
-> > +static void tpebs_mtx_init(void)
-> > +{
-> > +     mutex_init(&tpebs_mtx);
-> > +}
-> > +
-> > +static struct mutex *tpebs_mtx_get(void)
-> > +{
-> > +     static pthread_once_t tpebs_mtx_once =3D PTHREAD_ONCE_INIT;
-> > +
-> > +     pthread_once(&tpebs_mtx_once, tpebs_mtx_init);
-> > +     return &tpebs_mtx;
-> > +}
-> > +
-> >  static int evsel__tpebs_start_perf_record(struct evsel *evsel, int con=
-trol_fd[], int ack_fd[])
-> >  {
-> >       const char **record_argv;
-> > @@ -59,13 +74,15 @@ static int evsel__tpebs_start_perf_record(struct ev=
-sel *evsel, int control_fd[],
-> >       char cpumap_buf[50];
-> >       struct tpebs_retire_lat *t;
-> >
-> > +     mutex_lock(tpebs_mtx_get());
-> >       list_for_each_entry(t, &tpebs_results, nd)
-> >               tpebs_event_size++;
-> >
-> >       record_argv =3D malloc((10 + 2 * tpebs_event_size) * sizeof(*reco=
-rd_argv));
-> > -     if (!record_argv)
-> > +     if (!record_argv) {
-> > +             mutex_unlock(tpebs_mtx_get());
-> >               return -ENOMEM;
-> > -
-> > +     }
-> >       record_argv[i++] =3D "perf";
-> >       record_argv[i++] =3D "record";
-> >       record_argv[i++] =3D "-W";
-> > @@ -101,6 +118,7 @@ static int evsel__tpebs_start_perf_record(struct ev=
-sel *evsel, int control_fd[],
-> >       list_for_each_entry(t, &tpebs_results, nd)
-> >               t->started =3D true;
-> >
-> > +     mutex_unlock(tpebs_mtx_get());
-> >       return ret;
-> >  }
-> >
-> > @@ -112,9 +130,12 @@ static int process_sample_event(const struct perf_=
-tool *tool __maybe_unused,
-> >  {
-> >       struct tpebs_retire_lat *t;
-> >
-> > +     mutex_lock(tpebs_mtx_get());
-> >       t =3D tpebs_retire_lat__find(evsel);
-> > -     if (!t)
-> > +     if (!t) {
-> > +             mutex_unlock(tpebs_mtx_get());
-> >               return -EINVAL;
-> > +     }
-> >       /*
-> >        * Need to handle per core results? We are assuming average retir=
-e
-> >        * latency value will be used. Save the number of samples and the=
- sum of
-> > @@ -123,6 +144,7 @@ static int process_sample_event(const struct perf_t=
-ool *tool __maybe_unused,
-> >       t->count +=3D 1;
-> >       t->sum +=3D sample->retire_lat;
-> >       t->val =3D (double) t->sum / t->count;
-> > +     mutex_unlock(tpebs_mtx_get());
-> >       return 0;
-> >  }
-> >
-> > @@ -229,7 +251,6 @@ static struct tpebs_retire_lat *tpebs_retire_lat__n=
-ew(struct evsel *evsel)
-> >               return NULL;
-> >       }
-> >       result->evsel =3D evsel;
-> > -     list_add_tail(&result->nd, &tpebs_results);
-> >       return result;
-> >  }
-> >
-> > @@ -282,16 +303,22 @@ static struct tpebs_retire_lat *tpebs_retire_lat_=
-_find(struct evsel *evsel)
-> >  static int evsel__tpebs_prepare(struct evsel *evsel)
-> >  {
-> >       struct evsel *pos;
-> > -     struct tpebs_retire_lat *tpebs_event =3D tpebs_retire_lat__find(e=
-vsel);
-> > +     struct tpebs_retire_lat *tpebs_event;
-> >
-> > +     mutex_lock(tpebs_mtx_get());
-> > +     tpebs_event =3D tpebs_retire_lat__find(evsel);
-> >       if (tpebs_event) {
-> >               /* evsel, or an identically named one, was already prepar=
-ed. */
-> > +             mutex_unlock(tpebs_mtx_get());
-> >               return 0;
-> >       }
-> >       tpebs_event =3D tpebs_retire_lat__new(evsel);
-> >       if (!tpebs_event)
-> >               return -ENOMEM;
->
-> The mutex_unlock() is missing here.
+On 2025-03-31 at 8:22, Xin Li (Intel) wrote:
+> diff --git a/arch/x86/xen/xen-asm.S b/arch/x86/xen/xen-asm.S
+> index e672632b1cc0..6e7a9daa03d4 100644
+> --- a/arch/x86/xen/xen-asm.S
+> +++ b/arch/x86/xen/xen-asm.S
+> @@ -399,3 +399,37 @@ SYM_CODE_END(xen_entry_SYSCALL_compat)
+>  	RET
+>  SYM_FUNC_END(asm_xen_write_msr)
+>  EXPORT_SYMBOL_GPL(asm_xen_write_msr)
+> +
+> +/*
+> + * The prototype of the Xen C code:
+> + * 	struct { u64 val, bool done } xen_do_read_msr(u32 msr)
+> + */
+> +SYM_FUNC_START(asm_xen_read_msr)
+> +	ENDBR
+> +	FRAME_BEGIN
+> +	XEN_SAVE_CALLEE_REGS_FOR_MSR
+> +	mov %ecx, %edi		/* MSR number */
+> +	call xen_do_read_msr
+> +	test %dl, %dl		/* %dl=3D1, i.e., ZF=3D0, meaning
+> successfully done */
+> +	XEN_RESTORE_CALLEE_REGS_FOR_MSR
+> +	jnz 2f
+> +
+> +1:	rdmsr
+> +	_ASM_EXTABLE_FUNC_REWIND(1b, -5, FRAME_OFFSET /
+> (BITS_PER_LONG / 8))
+> +	shl $0x20, %rdx
+> +	or %rdx, %rax
+> +	/*
+> +	 * The top of the stack points directly at the return
+> address;
+> +	 * back up by 5 bytes from the return address.
+> +	 */
 
-Good catch, I'll fix in v5. Fwiw cleanups would have avoided this.
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
-> >
-> > +     list_add_tail(&tpebs_event->nd, &tpebs_results);
-> > +     mutex_unlock(tpebs_mtx_get());
-> > +
-> >       /*
-> >        * Eagerly prepare all other evsels on the list to try to ensure =
-that by
-> >        * open they are all known.
-> > @@ -317,6 +344,7 @@ static int evsel__tpebs_prepare(struct evsel *evsel=
-)
-> >  int evsel__tpebs_open(struct evsel *evsel)
-> >  {
-> >       int ret;
-> > +     bool tpebs_empty;
-> >
-> >       /* We should only run tpebs_start when tpebs_recording is enabled=
-. */
-> >       if (!tpebs_recording)
-> > @@ -336,7 +364,10 @@ int evsel__tpebs_open(struct evsel *evsel)
-> >       if (ret)
-> >               return ret;
-> >
-> > -     if (!list_empty(&tpebs_results)) {
-> > +     mutex_lock(tpebs_mtx_get());
-> > +     tpebs_empty =3D list_empty(&tpebs_results);
-> > +     mutex_unlock(tpebs_mtx_get());
-> > +     if (!tpebs_empty) {
-> >               struct pollfd pollfd =3D { .events =3D POLLIN, };
-> >               int control_fd[2], ack_fd[2], len;
-> >               char ack_buf[8];
-> > @@ -436,8 +467,10 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu=
-_map_idx, int thread)
-> >        */
-> >       tpebs_stop();
-> >
-> > +     mutex_lock(tpebs_mtx_get());
-> >       t =3D tpebs_retire_lat__find(evsel);
-> >       val =3D rint(t->val);
-> > +     mutex_unlock(tpebs_mtx_get());
-> >
-> >       if (old_count) {
-> >               count->val =3D old_count->val + val;
-> > @@ -460,9 +493,13 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu=
-_map_idx, int thread)
-> >   */
-> >  void evsel__tpebs_close(struct evsel *evsel)
-> >  {
-> > -     struct tpebs_retire_lat *t =3D tpebs_retire_lat__find(evsel);
-> > +     struct tpebs_retire_lat *t;
-> >
-> > +     mutex_lock(tpebs_mtx_get());
-> > +     t =3D tpebs_retire_lat__find(evsel);
-> > +     list_del_init(&t->nd);
-> >       tpebs_retire_lat__delete(t);
-> > +     mutex_unlock(tpebs_mtx_get());
-> >
-> >       if (list_empty(&tpebs_results))
-> >               tpebs_stop();
-> > --
-> > 2.49.0.504.g3bcea36a83-goog
-> >
+This works only if this function has been called directly (e.g. via
+`call asm_xen_write_msr`), but doesn't work with alternative call types
+(like indirect calls). Not sure why one might want to use an indirect
+call to invoke asm_xen_write_msr, but this creates a hidden coupling
+between caller and callee.
+I don't have a suggestion on how to get rid of this coupling, other
+than setting ipdelta in _ASM_EXTABLE_FUNC_REWIND() to 0 and adjusting
+the _ASM_EXTABLE_TYPE entries at the call sites to consider the
+instruction that follows the function call (instead of the call
+instruction) as the faulting instruction (which seems pretty ugly, at
+least because what follows the function call could be an instruction
+that might itself fault). But you may want to make this caveat explicit
+in the comment.
