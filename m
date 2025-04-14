@@ -1,129 +1,113 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0051E28BABF
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 17:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F34228A1CC;
+	Mon, 14 Apr 2025 17:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652633; cv=none; b=DdtCrgbVbP/5yD4c5bOe5MpFtTf0nrIi+Goh+ESmpyWT/vCs/7zhmxQQPwhOEufCBZdLSKy77sPtkBh+dNrIO1ieT5L02E7IJCwQw26J0bjb/zHncy3UynjU6RFHCd0pbNtGPw0TCAjSdVIz0teboYtyo9c57a5ntlCgpFWH0jM=
+	t=1744652981; cv=none; b=Y61OcmbIIFlS68AJmR490lYlDn6SLm5oCq0VMtlH4/jQdOHcyI7mwS6j0jihBuIGC3nJKIJDzO/Q3WxvIAEEjjU0QIvq47s3f0tN9AMfoXR65SdFcneobc17ksybpDqb83VNfdyh2UiMXidKmWN5QbYXfXCT73ISmFpRN6Fe77k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652633; c=relaxed/simple;
-	bh=3PQwBhf6eQCtWoWWBJ/OEwKSKiZFxu/iYS4p/icb/kg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mt6PZjzFXK3Dul5FereZNEhsAGc6FtzLJObmmpDZd2Pmnv58CJN1rBUfUwO5PsKrhdxk993oqJyRl4W3fiBu9mZRiBZSWerqhPP4jpp7J1Y6fF/ihCoUsKNcHkwX86HS6ml0eGadgCY2fKTUh3c4EZxmoB+25FlRKErIUujDN4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D9wjv1SI; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744652981; c=relaxed/simple;
+	bh=pCf6zl5WWMLk499XrU3ze5XCG4TXFPjHsQDAk9yq3ts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eUG3gUgmmVKRdIaXhY7SVMzsoTrHS8Ul+GWVXUcNR2UIKeVM4xeUKY+XNyrtpXVhnNHztj5TTmP8dmj6BvfI1VQQDvMfmgHf2DMA4WKt+Lk1EpbYZs+Yy/sCilIFLX4RM3b3fDA8emKD0Q5ETF1PVC7VLX2m1PX2mz4GEpZ4HPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OWsAVJsJ; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D9wjv1SI"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2242ac37caeso12285ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Apr 2025 10:43:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744652631; x=1745257431; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x4dVleBDpO6/u22qkJIU8Ny3g2vn/v3l/Py+/JTBXAE=;
-        b=D9wjv1SIvUlfkCl/rJ18ADEUCzjhlPWCCQapoTGUBaT84s+Yj71f/lf4Eneblye2ww
-         uP5askoa6j2QF43R5KP+Gqrx+hP+Mx2liYxJFM9BtyFMiIO3Bir7FOK+DNR2MOl3SqLj
-         vJopbUKGKTPzSZqNkxR1FouULQVtMSVn0A2cc8XZKxWwDiWhYbPt5TfXb1SvI4ktoKWy
-         Agjy2PzEMzJ9m5NyfEgYcMGg1gHb7WePS7kqdn/bUHqkOjSBIj0qHFTI4DytQDrtXLoK
-         wjQgUVmmuSFmkfsYo9OvmjJl0xKDPUo/leQ4UxHLp7QTvR2uTEqPMYqJF9XPIaG8HK80
-         mApA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744652631; x=1745257431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x4dVleBDpO6/u22qkJIU8Ny3g2vn/v3l/Py+/JTBXAE=;
-        b=M/2PheZCeA2HGu6+XCTj3HxyRoVatRviOfo1S+oORpLElNmxbGAIDbiV8M9hfu92UM
-         e2eywwwUuHor1LXDRqbwDEidG+sLgKFncd22ZjLG354NYsQI7PI4dL8w/EhAVhS6RQoR
-         5UzJBvQ2c3ECZP3ciZku+hPncO+mArJve4x8/YAc/GvfrG7JIuFCBBAdRdx3X+oHV3/d
-         VhZ+KnaXL7OL/tF+Q2+mfcf1OU2et34cfgi5IVBCSNnlM22hJjcljJ5kVpySBOoUDbk6
-         L2ugx5ICdTA8YfO1ZI17xJ8UIskKXEjkFVzEknTGcv9Bq6WgaI1pHALUZ7poH4mHc12G
-         drKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPu+5qsL7pJqaJcl3a7x7GikghOPIUjih11XmilbE/OCEVd2W7YDkqnI1L7qHeZnb+XD+MIG1e4dL5iQOOorMD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoM3pAeIvm9PcWpZtvhaSTzaDLhUwUCD7xieJkadFw4syW5bxh
-	XK5gH+SV/ZYViedRUFEcheDEgEWNqJHKQZos6gyQ4XmPNTvhN3+5PCOb4nr9OivrZWEoRIza2G1
-	41Gq93hyFyTzUPxxXo3wPrMzuvX5gSN3oG2jw
-X-Gm-Gg: ASbGnctVE2Qlpwm3+lmq9RCjZGnfyplKPf0ZbwKzlt9QJR/F+h2Y7YOBb5CDjyIKl5X
-	CV1etPW5sTiTlBXEh4NmkH4ovdD8xgAL1x4CzrzzqhU+M4deLQ8eNHhDxaj93iS3Z6PzLIKAQvT
-	XMTrPWV9r/Um00V0S/RfcIWr44qg3uY4H7cU/I7gDKU+WW4tPZbQU=
-X-Google-Smtp-Source: AGHT+IH22Knd2f+MyZKirEYjAUmZsb5BYxkMdbW4areGnzYPG4fkeoyjyV5rMjKASN9vS0KH3caGf6mxt7JSrJnDOhw=
-X-Received: by 2002:a17:903:f87:b0:20c:f40e:6ec3 with SMTP id
- d9443c01a7336-22c2521699emr36655ad.22.1744652630896; Mon, 14 Apr 2025
- 10:43:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OWsAVJsJ"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53EHmldx2305377
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 14 Apr 2025 10:48:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53EHmldx2305377
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744652930;
+	bh=pCf6zl5WWMLk499XrU3ze5XCG4TXFPjHsQDAk9yq3ts=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OWsAVJsJQtReNkvBxn4n90Jw5b4hgpiiMsQMj1kLj82PEd0mx8nuHiF2kM8Mvx3Xw
+	 LqxRXhBr5R0xxDPh57nO2hOouAGBLY3AKdZeqNoPCmA97JPCWtZ0UYmnsK+6p053w2
+	 lqlg5oeia/VCC2I4n1QOzlzq2Q+EByucHb13DRq32ZiCSS+Txt0R8+YpBvAIWB7Gct
+	 FuwsCZqp8vL1531axOppQPBxHdE0eB7iOltYssLVQ7RMeDVsVCMmRKTPxkgHRBImAx
+	 dIJ72y7yKeVu96cbY7s+wNxgXc4DZJO3Heom3U0XoQS1v8gYW+MgQaG/x5uDeQr3y+
+	 wlW0XdVD1zBrA==
+Message-ID: <0cad1e0b-2bfd-4258-90cd-8d319bf0e74a@zytor.com>
+Date: Mon, 14 Apr 2025 10:48:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414173921.2905822-1-ctshao@google.com>
-In-Reply-To: <20250414173921.2905822-1-ctshao@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 14 Apr 2025 10:43:39 -0700
-X-Gm-Features: ATxdqUEeogjw7qi6Xrd5OpKotHl4BOojFvI9RaQY-9Jp5El-MAuZdx_gvBumaWg
-Message-ID: <CAP-5=fUJip8odShuUVCnwQg9MrMLVdCWjGdSFfUxWubfQYBy1g@mail.gmail.com>
-Subject: Re: [PATCH v4] perf report: Skip unsupported new event types
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, dvyukov@google.com, 
-	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 10/15] KVM: VMX: Use WRMSRNS or its immediate form
+ when available
+To: "H. Peter Anvin" <hpa@zytor.com>, Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
+        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
+        decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-11-xin@zytor.com> <Z_hTI8ywa3rTxFaz@google.com>
+ <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com>
+ <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com>
+ <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 10:39=E2=80=AFAM Chun-Tse Shao <ctshao@google.com> =
-wrote:
->
-> `perf report` currently halts with an error when encountering
-> unsupported new event types (`event.type >=3D PERF_RECORD_HEADER_MAX`).
-> This patch modifies the behavior to skip these samples and continue
-> processing the remaining events. Additionally, stops reporting if the
-> new event size is not 8-byte aligned.
->
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+On 4/12/2025 4:10 PM, H. Peter Anvin wrote:
+> Also,*in this specific case* IA32_SPEC_CTRL is architecturally nonserializing, i.e. WRMSR executes as WRMSRNS anyway.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> ---
->  tools/perf/util/session.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 60fb9997ea0d..ba32f8461a4b 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struct perf=
-_session *session,
->         if (session->header.needs_swap)
->                 event_swap(event, evlist__sample_id_all(evlist));
->
-> -       if (event->header.type >=3D PERF_RECORD_HEADER_MAX)
-> -               return -EINVAL;
-> +       if (event->header.type >=3D PERF_RECORD_HEADER_MAX) {
-> +               /* perf should not support unaligned event, stop here. */
-> +               if (event->header.size % sizeof(u64))
-> +                       return -EINVAL;
-> +
-> +               /* This perf is outdated and does not support the latest =
-event type. */
-> +               ui__warning("Unsupported type %u, please considering upda=
-te perf.\n",
-> +                           event->header.type);
-> +               /* Skip unsupported event by returning its size. */
-> +               return event->header.size;
-> +       }
->
->         events_stats__inc(&evlist->stats, event->header.type);
->
-> --
-> 2.49.0.604.gff1f9ca942-goog
->
+While the immediate form WRMSRNS could be faster because the MSR index
+is available *much* earlier in the pipeline, right?
