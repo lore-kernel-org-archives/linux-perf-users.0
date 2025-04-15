@@ -1,80 +1,153 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BF22DFA4F;
-	Tue, 15 Apr 2025 17:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69872DFA5C;
+	Tue, 15 Apr 2025 18:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744736890; cv=none; b=KyHL87JWKokV0W0b5lKliSUtx4R+KInGhsUzj8ghuFJUYerTM1oc5GB4oaoIjZw/sWePE5jfQIbYvUZhnyPzLqfuJ5pgz8K7bgH5KvwzlOfP0uAof/NFpQ24KJ93w2RVQAQuqwVcg2aJ94iiDbHzIeeP8bQebAqD1XQzdRDrOvU=
+	t=1744742877; cv=none; b=sDn/Dz8/qBXh9zhs3T9JaJsYEMPl6ZgTJ1OGaLw+PjLzxXP+gjJERluhmCEBsctLod3v6JAJsURXxVe32i0LrF1bUk3VD+/7sP/uw+1V34C4f1NR4k2opoa5pc71gs1Jph6bHACv43hoJqx8b9rtMNKTZEHwNWqa9kpsWcSxlJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744736890; c=relaxed/simple;
-	bh=ks0jrFHArrBhG+gklxA2J2EYohMH9zdshNRVwNuGI7o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=jh0GNSXhyNutn+5FSldYC/4aYN2ksWMJOyuPIypIgj14Jg3ee4NJ/VzuqY4qz1MLynSKLvVbrTqFwsxOOl1kUNVgM5bwrtveCzXM3JmOoEJ/Yy0uHaSsXOZgV7a81AMMhv3qYKBa5CEJavkkJsjEbQKR85gkdUFsei6+TQv866E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=WhE95lEV; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744742877; c=relaxed/simple;
+	bh=YRPucbupLv7L5SQpYXNvK++dZcGdDzry0G1tMgy83bY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TF9VGRAyNHElrAb7mNeEgKcp8AvRi65Gurnz3eNIRcrwJyjYE4ip2v1+v4OGxBvnxP7YskKSQZM+eHZsDf14HhZvQoU2N7z2PoVkY+y8stUeed5/nfpz8lsUYVHQWGxuoA/JapagxB8jiC1NL5furx+EQR0MibeekOseK1hjQBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zukc0bSq; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WhE95lEV"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53FH73ta2925188
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 15 Apr 2025 10:07:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53FH73ta2925188
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744736825;
-	bh=ks0jrFHArrBhG+gklxA2J2EYohMH9zdshNRVwNuGI7o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=WhE95lEVDeqFGhmykheloCvIa6ec/L8hMkhyTQr4nggCQ2MNaB7hQEnWWqckSYu1M
-	 FE/9lDKGBEsoxf1Fo/4TYjWfKG76tlO1rnm1kp56okVOdII9+UvHjC6xjsPgkldKF/
-	 /Q1USB71Bg7FETpP89gzIM+/TSWjQPfMrln6Vm6Fs3trJnlHEknKcSEVnAn35LwL3B
-	 BtdNdByM7Ug96H+fmgHGlD77jXZNMMvnEE6HU+LJ8nK+7UhdSrlyP9wLK8cDaKhR1R
-	 9aDa46yO3/W/rBR4d9umQD8jDcaEpM7DfRECTnLjrbzw2a/RBUSJ+b/LP4FJciRNSQ
-	 WUVFIq1GFqr6w==
-Date: Tue, 15 Apr 2025 10:07:01 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <seanjc@google.com>
-CC: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
-        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
-        decui@microsoft.com
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_v1_10/15=5D_KVM=3A_VMX=3A_Use_WR?=
- =?US-ASCII?Q?MSRNS_or_its_immediate_form_when_available?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c4fcb208-ee5d-4781-85ce-3b75e651d047@zytor.com>
-References: <20250331082251.3171276-1-xin@zytor.com> <20250331082251.3171276-11-xin@zytor.com> <Z_hTI8ywa3rTxFaz@google.com> <CALMp9eRJkzA2YXf1Dfxt3ONP+P9aTA=WPraOPJPJ6C6j677+6Q@mail.gmail.com> <fa16949e-7842-45f7-9715-1bdda13b762a@zytor.com> <EAB44BB2-99BB-4D4A-8306-0235D2931E72@zytor.com> <0cad1e0b-2bfd-4258-90cd-8d319bf0e74a@zytor.com> <D212FABE-38FE-45D3-A082-CA819CCFFF95@zytor.com> <c4fcb208-ee5d-4781-85ce-3b75e651d047@zytor.com>
-Message-ID: <B2461564-F050-463D-8679-122724559D07@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zukc0bSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744742876; x=1776278876;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YRPucbupLv7L5SQpYXNvK++dZcGdDzry0G1tMgy83bY=;
+  b=Zukc0bSqf5jwjzqiRe837zmYmH0SVZ6HV3LphOcGTlR7v8DpOi2xAnW9
+   ID7Pnl95gtgbJ79kpPjU7Sp/OmvhlgycdMxTC7MUX49BRiJ75CE/huQ5V
+   /t7epEyuvIXWZQnJKkFEMFjovpusUs5GRzkwToJw4tF6hN/b5G40jYzgN
+   cXhJ9oyK9YM6n7Cf5W5tsmZZE2khCyqaWbS/JcCgQlC645RgpdOCKhel7
+   Vyit0oj2Fo7R9tuVCF550FMunB6YzCZytJkVksSx0dp/DVSb4/rr2KINZ
+   uXu9l6uLNWplFvqz0S4HyiITGUuep589NMMtmnk0hGt4gwuLSS3byZaZu
+   A==;
+X-CSE-ConnectionGUID: V/4b/0T8R8mlrKyGzaceTg==
+X-CSE-MsgGUID: E9mLeemkRieIJVIisTsjWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50068837"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="50068837"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:47:55 -0700
+X-CSE-ConnectionGUID: 6fKp7qaMQ16foLRw6GfU6Q==
+X-CSE-MsgGUID: 8kiuUIteQvqhDtaAUM8dHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="161162047"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:47:55 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 380A320B5736;
+	Tue, 15 Apr 2025 11:47:53 -0700 (PDT)
+Message-ID: <7666eeaf-930c-4c4b-bcb8-9767feff10f6@linux.intel.com>
+Date: Tue, 15 Apr 2025 14:47:51 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/intel: Don't clear perf metrics overflow bit
+ unconditionally
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415104135.318169-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250415104135.318169-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On April 15, 2025 10:06:01 AM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 4/14/2025 11:56 PM, H=2E Peter Anvin wrote:
->>> arlier in the pipeline, right?
->> Yes, but then it would be redundant with the virtualization support=2E
->>=20
->
->So better to drop this patch then=2E
 
-Yeah, if it gets pulled in as a consequence of a global change that is OK =
-but the local change makes no sense=2E
+
+On 2025-04-15 6:41 a.m., Dapeng Mi wrote:
+> The below code would always unconditionally clear other status bits like
+> perf metrics overflow bit once PEBS buffer overflows.
+> 
+>         status &= intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+> 
+> This is incorrect. Perf metrics overflow bit should be cleared only when
+> fixed counter 3 in PEBS counter group. Otherwise perf metrics overflow
+> could be missed to handle.
+> 
+> Closes: https://lore.kernel.org/all/20250225110012.GK31462@noisy.programming.kicks-ass.net/
+> Fixes: 7b2c05a15d29 ("perf/x86/intel: Generic support for hardware TopDown metrics")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+For the two patches,
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> ---
+>  arch/x86/events/intel/core.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 0ceaa1b07019..c6f69ce3b2b3 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3140,7 +3140,6 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  	int bit;
+>  	int handled = 0;
+> -	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
+>  
+>  	inc_irq_stat(apic_perf_irqs);
+>  
+> @@ -3184,7 +3183,6 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  		handled++;
+>  		x86_pmu_handle_guest_pebs(regs, &data);
+>  		static_call(x86_pmu_drain_pebs)(regs, &data);
+> -		status &= intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+>  
+>  		/*
+>  		 * PMI throttle may be triggered, which stops the PEBS event.
+> @@ -3195,6 +3193,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  		 */
+>  		if (pebs_enabled != cpuc->pebs_enabled)
+>  			wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
+> +
+> +		/*
+> +		 * Above PEBS handler (PEBS counters snapshotting) has updated fixed
+> +		 * counter 3 and perf metrics counts if they are in counter group,
+> +		 * unnecessary to update again.
+> +		 */
+> +		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
+> +		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
+> +			status &= ~GLOBAL_STATUS_PERF_METRICS_OVF_BIT;
+>  	}
+>  
+>  	/*
+> @@ -3214,6 +3221,8 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  		static_call(intel_pmu_update_topdown_event)(NULL, NULL);
+>  	}
+>  
+> +	status &= hybrid(cpuc->pmu, intel_ctrl);
+> +
+>  	/*
+>  	 * Checkpointed counters can lead to 'spurious' PMIs because the
+>  	 * rollback caused by the PMI will have cleared the overflow status
+> 
+> base-commit: 5c3627b6f0595f1ec27e6f5df903bd072e9b9136
+
