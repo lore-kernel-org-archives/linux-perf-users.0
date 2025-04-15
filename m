@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E464291160;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7DD29116F;
 	Tue, 15 Apr 2025 08:24:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705463; cv=none; b=cXTRY5Y56YoJObXZqYRYk46ej2dLXEe39aNPm8eAXpc0AKIvrbW5dUGl5D8jzCVBCiqTaCJN5K6GadI2qi4tYEj9B3OhkdQaFFGpwpSrIbM5tkNYhRVrxMDpgvpEFxMmGOJ1qAPk+bHy0wYj1JbuNJ4B39Cqk1AMi5PmChIExos=
+	t=1744705464; cv=none; b=XvZEGYHCzrV9s4GU7M4I/9cgKJbqEG/PQUI8tePuA4ldWAHVg5nJ3r4GNV+6hVOloughXyfOTMcMnBlZQtMkA/e9jrx7B3PSu4E4i5Q2Se0nVxFoDiXVOo45OxRvYf+LnfpCG+JCXDkFobUlRHsE+fAijGChZ6KTwzRWsRt+Ju8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705463; c=relaxed/simple;
-	bh=w3cvApiihyqxnckGt3CNiYtqSyQdTpFdKg4IdjtAT9M=;
+	s=arc-20240116; t=1744705464; c=relaxed/simple;
+	bh=7d2zMHeWj50Um4H2evhWEbsinhS6K3aMK32UCV5IJ1w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VPZ63a2jbFl3umAh+o00wLxF79h9vP9xHq0Inwebrj1782WWtwWaiz4SEk7cv4Bucu7c+P+zrulXnHTIrytXiKzw4fGWQBBYPtVnO/lSGxH6+8szLUKUAXWSyqU8OEw5O4Vo0eRhbjHZieTGvjzvffGS2J1qwlH/I9fnUIU0Kuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZYKJgYG; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=Is8pqdNShY6qaC2lqX4YYKCOYsiP88OgmgDEKPxn89Zr2rm7ZSB0X7djCUtUZq8JZNumylybRwRVRVNq1BUZ4egB/eIm0ggxogAxno8a42fujIic6AsLeJx183oN5qagwRsTcKbI3gpXPxSN1nSDE3MIPtnf6l1FILoWJmcOvE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQ7Xa43A; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZYKJgYG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQ7Xa43A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744705462; x=1776241462;
+  t=1744705463; x=1776241463;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=w3cvApiihyqxnckGt3CNiYtqSyQdTpFdKg4IdjtAT9M=;
-  b=VZYKJgYGFA+FjrRxTYc8b2b1I8hZ+2iJX0KTk7LhrgyC3j9vb1bcyiIE
-   CchJVHrhE7gh5/Rbwum61gErvRHSf1/WbnMglMenAr8QBmeyW69aNdNhv
-   XglGyZnyZ1yJu2u2M/o7KxGNnoQRGFnbqA0VRbdAfD0Osbf8ursCFx5iP
-   PCctW2pr/kBaAKZ3dLbGf4sTo97uakgT64WMnWKnaf3bhlYZBf/4EAYqa
-   Zx834uCUif228PvgpH/iYl2WmYfHQlNcsXb49jj5wPQINPeo0n0mSlAMU
-   aoHWiKUZzqS3Uw+CBaE+IxpEKRzW6Q1H1cYYA0NfNoj4G4J6zSd82f1Cs
-   w==;
-X-CSE-ConnectionGUID: 5EjfvxOGRgOk8R35e0pq4g==
-X-CSE-MsgGUID: jknZ1fT+QMC049brVc+/lQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46115861"
+  bh=7d2zMHeWj50Um4H2evhWEbsinhS6K3aMK32UCV5IJ1w=;
+  b=WQ7Xa43AM5/cYyB+mwfsS9ASR1mN9T3K6RmNZ/hRPxdVWIukdkDbLIWj
+   SHYYafUcXKjnPytPCFp34PE4JsP+uwRx4Lg/fDLRWldt7pZeo5Z32JWv0
+   MrwG/otzwTFv8aCGIGSkA36VFpoUxAKrOsUSxRFkESOqev1BybD/I0xcg
+   +aIir7mf0BPvhRgkUDiFEnJ3RP2xbGKSI4XW9mAcVOrjpiS3k3HLFg89v
+   UNHOfyoBrVeqpXfo3uLlcq6BrUKxMkziFdkGTLk0uptFpiu+4o0DTkOwg
+   iSk+8b2FBQB7v9WY1iGGj/mvHLUUYVKqEj0uLUu/1DAhfpkWrheywqKMF
+   Q==;
+X-CSE-ConnectionGUID: Jtpo8TbuRK2NNSTTxMnt/A==
+X-CSE-MsgGUID: 5qImbULOTV+g8c0t7cLmhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46116189"
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46115861"
+   d="scan'208";a="46116189"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:23:20 -0700
-X-CSE-ConnectionGUID: bs1KenWVSpi88Cwd2Nznig==
-X-CSE-MsgGUID: /LpM3HTZQPGsAEiAbxgBmQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:24:22 -0700
+X-CSE-ConnectionGUID: Ryc3lMPdQ1Ou3+GyFFbdrQ==
+X-CSE-MsgGUID: FRkvWQHtSnK2k2VQX0rgUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130055459"
+   d="scan'208";a="130055702"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by fmviesa007.fm.intel.com with ESMTP; 15 Apr 2025 01:23:16 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 15 Apr 2025 01:24:18 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 03/22] perf/x86/intel: Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
-Date: Tue, 15 Apr 2025 11:44:09 +0000
-Message-Id: <20250415114428.341182-4-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 20/22] perf tools: Enhance sample_regs_user/intr to capture more registers
+Date: Tue, 15 Apr 2025 11:44:26 +0000
+Message-Id: <20250415114428.341182-21-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
 References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
@@ -72,106 +72,463 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CPUID archPerfmonExt (0x23) leaves are supported to enumerate CPU
-level's PMU capabilities on non-hybrid processors as well.
+Intel architectural PEBS supports to capture more vector registers like
+OPMASK/YMM/ZMM registers besides already supported XMM registers.
 
-This patch supports to parse archPerfmonExt leaves on non-hybrid
-processors. Architectural PEBS leverages archPerfmonExt sub-leaves 0x4
-and 0x5 to enumerate the PEBS capabilities as well. This patch is a
-precursor of the subsequent arch-PEBS enabling patches.
+arch-PEBS vector registers (VCER) capturing on perf core/pmu driver
+(Intel) has been supported by previous patches. This patch adds perf
+tool's part support. In detail, add support for the new
+sample_regs_intr/user_ext register selector in perf_event_attr. These 32
+bytes bitmap is used to select the new register group OPMASK, YMMH, ZMMH
+and ZMM in VECR. Update perf regs to introduce the new registers.
 
+This single patch only introduces the generic support, x86/intel specific
+support would be added in next patch.
+
+Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ tools/include/uapi/linux/perf_event.h | 14 +++++++++++++
+ tools/perf/builtin-script.c           | 23 +++++++++++++++-----
+ tools/perf/util/evsel.c               | 30 ++++++++++++++++++++-------
+ tools/perf/util/parse-regs-options.c  | 23 ++++++++++++--------
+ tools/perf/util/perf_regs.h           | 16 +++++++++++++-
+ tools/perf/util/record.h              |  4 ++--
+ tools/perf/util/sample.h              |  6 +++++-
+ tools/perf/util/session.c             | 29 +++++++++++++++-----------
+ tools/perf/util/synthetic-events.c    | 12 +++++++----
+ 9 files changed, 116 insertions(+), 41 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index adc0187a81a0..c7937b872348 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5271,7 +5271,7 @@ static inline bool intel_pmu_broken_perf_cap(void)
- 	return false;
- }
- 
--static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
-+static void update_pmu_cap(struct pmu *pmu)
- {
- 	unsigned int cntr, fixed_cntr, ecx, edx;
- 	union cpuid35_eax eax;
-@@ -5280,30 +5280,30 @@ static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
- 	cpuid(ARCH_PERFMON_EXT_LEAF, &eax.full, &ebx.full, &ecx, &edx);
- 
- 	if (ebx.split.umask2)
--		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_UMASK2;
-+		hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_UMASK2;
- 	if (ebx.split.eq)
--		pmu->config_mask |= ARCH_PERFMON_EVENTSEL_EQ;
-+		hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_EQ;
- 
- 	if (eax.split.cntr_subleaf) {
- 		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
- 			    &cntr, &fixed_cntr, &ecx, &edx);
--		pmu->cntr_mask64 = cntr;
--		pmu->fixed_cntr_mask64 = fixed_cntr;
-+		hybrid(pmu, cntr_mask64) = cntr;
-+		hybrid(pmu, fixed_cntr_mask64) = fixed_cntr;
- 	}
- 
- 	if (eax.split.acr_subleaf) {
- 		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_ACR_LEAF,
- 			    &cntr, &fixed_cntr, &ecx, &edx);
- 		/* The mask of the counters which can be reloaded */
--		pmu->acr_cntr_mask64 = cntr | ((u64)fixed_cntr << INTEL_PMC_IDX_FIXED);
-+		hybrid(pmu, acr_cntr_mask64) = cntr | ((u64)fixed_cntr << INTEL_PMC_IDX_FIXED);
- 
- 		/* The mask of the counters which can cause a reload of reloadable counters */
--		pmu->acr_cause_mask64 = ecx | ((u64)edx << INTEL_PMC_IDX_FIXED);
-+		hybrid(pmu, acr_cause_mask64) = ecx | ((u64)edx << INTEL_PMC_IDX_FIXED);
- 	}
- 
- 	if (!intel_pmu_broken_perf_cap()) {
- 		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
--		rdmsrl(MSR_IA32_PERF_CAPABILITIES, pmu->intel_cap.capabilities);
-+		rdmsrl(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
- 	}
- }
- 
-@@ -5390,7 +5390,7 @@ static bool init_hybrid_pmu(int cpu)
- 		goto end;
- 
- 	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
--		update_pmu_cap(pmu);
-+		update_pmu_cap(&pmu->pmu);
- 
- 	intel_pmu_check_hybrid_pmus(pmu);
- 
-@@ -6899,6 +6899,7 @@ __init int intel_pmu_init(void)
- 
- 	x86_pmu.pebs_events_mask	= intel_pmu_pebs_mask(x86_pmu.cntr_mask64);
- 	x86_pmu.pebs_capable		= PEBS_COUNTER_MASK;
-+	x86_pmu.config_mask		= X86_RAW_EVENT_MASK;
- 
- 	/*
- 	 * Quirk: v2 perfmon does not report fixed-purpose events, so
-@@ -7715,6 +7716,18 @@ __init int intel_pmu_init(void)
- 		x86_pmu.attr_update = hybrid_attr_update;
- 	}
- 
-+	/*
-+	 * The archPerfmonExt (0x23) includes an enhanced enumeration of
-+	 * PMU architectural features with a per-core view. For non-hybrid,
-+	 * each core has the same PMU capabilities. It's good enough to
-+	 * update the x86_pmu from the booting CPU. For hybrid, the x86_pmu
-+	 * is used to keep the common capabilities. Still keep the values
-+	 * from the leaf 0xa. The core specific update will be done later
-+	 * when a new type is online.
-+	 */
-+	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
-+		update_pmu_cap(NULL);
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 0524d541d4e3..f19370f9bd78 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -379,6 +379,13 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+ #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+ #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
++#define PERF_ATTR_SIZE_VER9	168	/* add: sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE] */
 +
- 	intel_pmu_check_counters_mask(&x86_pmu.cntr_mask64,
- 				      &x86_pmu.fixed_cntr_mask64,
- 				      &x86_pmu.intel_ctrl);
++#define PERF_EXT_REGS_ARRAY_SIZE	7
++#define PERF_NUM_EXT_REGS		(PERF_EXT_REGS_ARRAY_SIZE * 64)
++
++#define PERF_SAMPLE_ARRAY_SIZE		(PERF_EXT_REGS_ARRAY_SIZE + 1)
++#define PERF_SAMPLE_REGS_NUM		((PERF_SAMPLE_ARRAY_SIZE) * 64)
+ 
+ /*
+  * Hardware event_id to monitor via a performance monitoring event:
+@@ -531,6 +538,13 @@ struct perf_event_attr {
+ 	__u64	sig_data;
+ 
+ 	__u64	config3; /* extension of config2 */
++
++	/*
++	 * Extension sets of regs to dump for each sample.
++	 * See asm/perf_regs.h for details.
++	 */
++	__u64	sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE];
++	__u64   sample_regs_user_ext[PERF_EXT_REGS_ARRAY_SIZE];
+ };
+ 
+ /*
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 9b16df881af8..c41d9ccdaa9d 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -722,21 +722,32 @@ static int perf_session__check_output_opt(struct perf_session *session)
+ }
+ 
+ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask, const char *arch,
+-				     FILE *fp)
++				     unsigned long *mask_ext, FILE *fp)
+ {
++	unsigned int mask_size = sizeof(mask) * 8;
+ 	unsigned i = 0, r;
+ 	int printed = 0;
++	u64 val;
+ 
+ 	if (!regs || !regs->regs)
+ 		return 0;
+ 
+ 	printed += fprintf(fp, " ABI:%" PRIu64 " ", regs->abi);
+ 
+-	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
+-		u64 val = regs->regs[i++];
++	for_each_set_bit(r, (unsigned long *)&mask, mask_size) {
++		val = regs->regs[i++];
+ 		printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r, arch), val);
+ 	}
+ 
++	if (!mask_ext)
++		return printed;
++
++	for_each_set_bit(r, mask_ext, PERF_NUM_EXT_REGS) {
++		val = regs->regs[i++];
++		printed += fprintf(fp, "%5s:0x%"PRIx64" ",
++				   perf_reg_name(r + mask_size, arch), val);
++	}
++
+ 	return printed;
+ }
+ 
+@@ -797,7 +808,8 @@ static int perf_sample__fprintf_iregs(struct perf_sample *sample,
+ 		return 0;
+ 
+ 	return perf_sample__fprintf_regs(perf_sample__intr_regs(sample),
+-					 attr->sample_regs_intr, arch, fp);
++					 attr->sample_regs_intr, arch,
++					 (unsigned long *)attr->sample_regs_intr_ext, fp);
+ }
+ 
+ static int perf_sample__fprintf_uregs(struct perf_sample *sample,
+@@ -807,7 +819,8 @@ static int perf_sample__fprintf_uregs(struct perf_sample *sample,
+ 		return 0;
+ 
+ 	return perf_sample__fprintf_regs(perf_sample__user_regs(sample),
+-					 attr->sample_regs_user, arch, fp);
++					 attr->sample_regs_user, arch,
++					 (unsigned long *)attr->sample_regs_user_ext, fp);
+ }
+ 
+ static int perf_sample__fprintf_start(struct perf_script *script,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 6e71187d6a93..4e4389e16369 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1061,7 +1061,7 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 			arch__user_reg_mask((unsigned long *)&mask);
+ 			evsel__set_sample_bit(evsel, REGS_USER);
+ 			evsel__set_sample_bit(evsel, STACK_USER);
+-			if (opts->sample_user_regs &&
++			if (bitmap_weight(opts->sample_user_regs, PERF_SAMPLE_REGS_NUM) &&
+ 			    DWARF_MINIMAL_REGS(arch) != mask) {
+ 				attr->sample_regs_user |= DWARF_MINIMAL_REGS(arch);
+ 				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
+@@ -1397,15 +1397,19 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	if (callchain && callchain->enabled && !evsel->no_aux_samples)
+ 		evsel__config_callchain(evsel, opts, callchain);
+ 
+-	if (opts->sample_intr_regs && !evsel->no_aux_samples &&
+-	    !evsel__is_dummy_event(evsel)) {
+-		attr->sample_regs_intr = opts->sample_intr_regs;
++	if (bitmap_weight(opts->sample_intr_regs, PERF_SAMPLE_REGS_NUM) &&
++	    !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
++		attr->sample_regs_intr = opts->sample_intr_regs[0];
++		memcpy(attr->sample_regs_intr_ext, &opts->sample_intr_regs[1],
++		       PERF_NUM_EXT_REGS / 8);
+ 		evsel__set_sample_bit(evsel, REGS_INTR);
+ 	}
+ 
+-	if (opts->sample_user_regs && !evsel->no_aux_samples &&
+-	    !evsel__is_dummy_event(evsel)) {
+-		attr->sample_regs_user |= opts->sample_user_regs;
++	if (bitmap_weight(opts->sample_user_regs, PERF_SAMPLE_REGS_NUM) &&
++	    !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
++		attr->sample_regs_user |= opts->sample_user_regs[0];
++		memcpy(attr->sample_regs_user_ext, &opts->sample_user_regs[1],
++		       PERF_NUM_EXT_REGS / 8);
+ 		evsel__set_sample_bit(evsel, REGS_USER);
+ 	}
+ 
+@@ -3198,10 +3202,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 
+ 		if (regs->abi) {
+ 			u64 mask = evsel->core.attr.sample_regs_user;
++			unsigned long *mask_ext =
++				(unsigned long *)evsel->core.attr.sample_regs_user_ext;
++			u64 *user_regs_mask;
+ 
+ 			sz = hweight64(mask) * sizeof(u64);
++			sz += bitmap_weight(mask_ext, PERF_NUM_EXT_REGS) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			regs->mask = mask;
++			user_regs_mask = (u64 *)regs->mask_ext;
++			memcpy(&user_regs_mask[1], mask_ext, PERF_NUM_EXT_REGS);
+ 			regs->regs = (u64 *)array;
+ 			array = (void *)array + sz;
+ 		}
+@@ -3255,10 +3265,16 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 
+ 		if (regs->abi != PERF_SAMPLE_REGS_ABI_NONE) {
+ 			u64 mask = evsel->core.attr.sample_regs_intr;
++			unsigned long *mask_ext =
++				(unsigned long *)evsel->core.attr.sample_regs_intr_ext;
++			u64 *intr_regs_mask;
+ 
+ 			sz = hweight64(mask) * sizeof(u64);
++			sz += bitmap_weight(mask_ext, PERF_NUM_EXT_REGS) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			regs->mask = mask;
++			intr_regs_mask = (u64 *)regs->mask_ext;
++			memcpy(&intr_regs_mask[1], mask_ext, PERF_NUM_EXT_REGS);
+ 			regs->regs = (u64 *)array;
+ 			array = (void *)array + sz;
+ 		}
+diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+index 3dcd8dc4f81b..42b176705ccf 100644
+--- a/tools/perf/util/parse-regs-options.c
++++ b/tools/perf/util/parse-regs-options.c
+@@ -12,11 +12,13 @@
+ static int
+ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ {
++	unsigned int size = PERF_SAMPLE_REGS_NUM;
+ 	uint64_t *mode = (uint64_t *)opt->value;
+ 	const struct sample_reg *r = NULL;
+ 	char *s, *os = NULL, *p;
+ 	int ret = -1;
+-	uint64_t mask = 0;
++	DECLARE_BITMAP(mask, size);
++	DECLARE_BITMAP(mask_tmp, size);
+ 
+ 	if (unset)
+ 		return 0;
+@@ -24,13 +26,14 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 	/*
+ 	 * cannot set it twice
+ 	 */
+-	if (*mode)
++	if (bitmap_weight((unsigned long *)mode, size))
+ 		return -1;
+ 
++	bitmap_zero(mask, size);
+ 	if (intr)
+-		arch__intr_reg_mask((unsigned long *)&mask);
++		arch__intr_reg_mask(mask);
+ 	else
+-		arch__user_reg_mask((unsigned long *)&mask);
++		arch__user_reg_mask(mask);
+ 
+ 	/* str may be NULL in case no arg is passed to -I */
+ 	if (str) {
+@@ -47,7 +50,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 			if (!strcmp(s, "?")) {
+ 				fprintf(stderr, "available registers: ");
+ 				for (r = arch__sample_reg_masks(); r->name; r++) {
+-					if (r->mask & mask)
++					bitmap_and(mask_tmp, mask, r->mask_ext, size);
++					if (bitmap_weight(mask_tmp, size))
+ 						fprintf(stderr, "%s ", r->name);
+ 				}
+ 				fputc('\n', stderr);
+@@ -55,7 +59,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 				goto error;
+ 			}
+ 			for (r = arch__sample_reg_masks(); r->name; r++) {
+-				if ((r->mask & mask) && !strcasecmp(s, r->name))
++				bitmap_and(mask_tmp, mask, r->mask_ext, size);
++				if (bitmap_weight(mask_tmp, size) && !strcasecmp(s, r->name))
+ 					break;
+ 			}
+ 			if (!r || !r->name) {
+@@ -64,7 +69,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 				goto error;
+ 			}
+ 
+-			*mode |= r->mask;
++			bitmap_or((unsigned long *)mode, (unsigned long *)mode, r->mask_ext, size);
+ 
+ 			if (!p)
+ 				break;
+@@ -75,8 +80,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 	ret = 0;
+ 
+ 	/* default to all possible regs */
+-	if (*mode == 0)
+-		*mode = mask;
++	if (!bitmap_weight((unsigned long *)mode, size))
++		bitmap_or((unsigned long *)mode, (unsigned long *)mode, mask, size);
+ error:
+ 	free(os);
+ 	return ret;
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index 316d280e5cd7..d60a74623a0f 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -4,18 +4,32 @@
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
++#include <linux/bitmap.h>
++#include <linux/perf_event.h>
++#include "util/record.h"
+ 
+ struct regs_dump;
+ 
+ struct sample_reg {
+ 	const char *name;
+-	uint64_t mask;
++	union {
++		uint64_t mask;
++		DECLARE_BITMAP(mask_ext, PERF_SAMPLE_REGS_NUM);
++	};
+ };
+ 
+ #define SMPL_REG_MASK(b) (1ULL << (b))
+ #define SMPL_REG(n, b) { .name = #n, .mask = SMPL_REG_MASK(b) }
+ #define SMPL_REG2_MASK(b) (3ULL << (b))
+ #define SMPL_REG2(n, b) { .name = #n, .mask = SMPL_REG2_MASK(b) }
++#define SMPL_REG_EXT(n, b)	\
++	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0x1ULL << (b % __BITS_PER_LONG) }
++#define SMPL_REG2_EXT(n, b)	\
++	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0x3ULL << (b % __BITS_PER_LONG) }
++#define SMPL_REG4_EXT(n, b)	\
++	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0xfULL << (b % __BITS_PER_LONG) }
++#define SMPL_REG8_EXT(n, b)	\
++	{ .name = #n, .mask_ext[b / __BITS_PER_LONG] = 0xffULL << (b % __BITS_PER_LONG) }
+ #define SMPL_REG_END { .name = NULL }
+ 
+ enum {
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index a6566134e09e..2741bbbc2794 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -57,8 +57,8 @@ struct record_opts {
+ 	unsigned int  auxtrace_mmap_pages;
+ 	unsigned int  user_freq;
+ 	u64	      branch_stack;
+-	u64	      sample_intr_regs;
+-	u64	      sample_user_regs;
++	u64	      sample_intr_regs[PERF_SAMPLE_ARRAY_SIZE];
++	u64	      sample_user_regs[PERF_SAMPLE_ARRAY_SIZE];
+ 	u64	      default_interval;
+ 	u64	      user_interval;
+ 	size_t	      auxtrace_snapshot_size;
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index 0e96240052e9..82db52aeae4d 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -4,13 +4,17 @@
+ 
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
++#include <linux/bitmap.h>
+ 
+ /* number of register is bound by the number of bits in regs_dump::mask (64) */
+ #define PERF_SAMPLE_REGS_CACHE_SIZE (8 * sizeof(u64))
+ 
+ struct regs_dump {
+ 	u64 abi;
+-	u64 mask;
++	union {
++		u64 mask;
++		DECLARE_BITMAP(mask_ext, PERF_SAMPLE_REGS_NUM);
++	};
+ 	u64 *regs;
+ 
+ 	/* Cached values/mask filled by first register access. */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 60fb9997ea0d..54db3f36d962 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -910,12 +910,13 @@ static void branch_stack__printf(struct perf_sample *sample,
+ 	}
+ }
+ 
+-static void regs_dump__printf(u64 mask, u64 *regs, const char *arch)
++static void regs_dump__printf(struct regs_dump *regs, const char *arch)
+ {
++	unsigned int size = PERF_SAMPLE_REGS_NUM;
+ 	unsigned rid, i = 0;
+ 
+-	for_each_set_bit(rid, (unsigned long *) &mask, sizeof(mask) * 8) {
+-		u64 val = regs[i++];
++	for_each_set_bit(rid, regs->mask_ext, size) {
++		u64 val = regs->regs[i++];
+ 
+ 		printf(".... %-5s 0x%016" PRIx64 "\n",
+ 		       perf_reg_name(rid, arch), val);
+@@ -936,16 +937,20 @@ static inline const char *regs_dump_abi(struct regs_dump *d)
+ 	return regs_abi[d->abi];
+ }
+ 
+-static void regs__printf(const char *type, struct regs_dump *regs, const char *arch)
++static void regs__printf(bool intr, struct regs_dump *regs, const char *arch)
+ {
+-	u64 mask = regs->mask;
++	u64 *mask = (u64 *)&regs->mask_ext;
+ 
+-	printf("... %s regs: mask 0x%" PRIx64 " ABI %s\n",
+-	       type,
+-	       mask,
+-	       regs_dump_abi(regs));
++	if (intr)
++		printf("... intr regs: mask 0x");
++	else
++		printf("... user regs: mask 0x");
++
++	for (int i = 0; i < PERF_SAMPLE_ARRAY_SIZE; i++)
++		printf("%" PRIx64 "", mask[i]);
++	printf(" ABI %s\n", regs_dump_abi(regs));
+ 
+-	regs_dump__printf(mask, regs->regs, arch);
++	regs_dump__printf(regs, arch);
+ }
+ 
+ static void regs_user__printf(struct perf_sample *sample, const char *arch)
+@@ -958,7 +963,7 @@ static void regs_user__printf(struct perf_sample *sample, const char *arch)
+ 	user_regs = perf_sample__user_regs(sample);
+ 
+ 	if (user_regs->regs)
+-		regs__printf("user", user_regs, arch);
++		regs__printf(false, user_regs, arch);
+ }
+ 
+ static void regs_intr__printf(struct perf_sample *sample, const char *arch)
+@@ -971,7 +976,7 @@ static void regs_intr__printf(struct perf_sample *sample, const char *arch)
+ 	intr_regs = perf_sample__intr_regs(sample);
+ 
+ 	if (intr_regs->regs)
+-		regs__printf("intr", intr_regs, arch);
++		regs__printf(true, intr_regs, arch);
+ }
+ 
+ static void stack_user__printf(struct stack_dump *dump)
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 2fc4d0537840..2706b92c9a80 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1512,7 +1512,8 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs && sample->user_regs->abi) {
+ 			result += sizeof(u64);
+-			sz = hweight64(sample->user_regs->mask) * sizeof(u64);
++			sz = bitmap_weight(sample->user_regs->mask_ext,
++					   PERF_SAMPLE_REGS_NUM) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -1540,7 +1541,8 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs && sample->intr_regs->abi) {
+ 			result += sizeof(u64);
+-			sz = hweight64(sample->intr_regs->mask) * sizeof(u64);
++			sz = bitmap_weight(sample->intr_regs->mask_ext,
++					   PERF_SAMPLE_REGS_NUM) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -1711,7 +1713,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs && sample->user_regs->abi) {
+ 			*array++ = sample->user_regs->abi;
+-			sz = hweight64(sample->user_regs->mask) * sizeof(u64);
++			sz = bitmap_weight(sample->user_regs->mask_ext,
++					   PERF_SAMPLE_REGS_NUM) * sizeof(u64);
+ 			memcpy(array, sample->user_regs->regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
+@@ -1747,7 +1750,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs && sample->intr_regs->abi) {
+ 			*array++ = sample->intr_regs->abi;
+-			sz = hweight64(sample->intr_regs->mask) * sizeof(u64);
++			sz = bitmap_weight(sample->intr_regs->mask_ext,
++					   PERF_SAMPLE_REGS_NUM) * sizeof(u64);
+ 			memcpy(array, sample->intr_regs->regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
 -- 
 2.40.1
 
