@@ -1,38 +1,38 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656E71A3163;
-	Tue, 15 Apr 2025 13:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED9529A3E7;
+	Tue, 15 Apr 2025 13:53:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724917; cv=none; b=bYe804QLD7t6TAj3L09gihnQpRifD1dyU6kuzK/ZMLp4UCqIW6Y0ylcQ+Q9nzmALSn1uW4G1Whn4N5p0GIeVAzslJkWspYE751jIG8V+4ZneW4CZr0lReAkeObycKKlxYVmZrXW+7m00DCfkYUPxcH2q9L7Ouc2QxA70GCjOu/M=
+	t=1744725212; cv=none; b=PRHPdcZt85z0J73sWOkJtk7LSi7aRYt4PxeCxHDnH1JlgyrwLCUOzWeg9ySRx7hlFtgZJFWGqgFi4PvbA7kKJHz2SavLlgqzWQtD5oRJdzhIif/WB8XA/rPX80aXUoi50zwf8lnPFoKsvomFwHMpofXdOkLgNxgwQtYx3aRCX5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724917; c=relaxed/simple;
-	bh=kgM1FwNjGq6qSmmgWtC2WdCn29M56dwgxDebCLwDY2g=;
+	s=arc-20240116; t=1744725212; c=relaxed/simple;
+	bh=op8vw67cOur828GJU/2ZcMGdv1kRcb3KfkJNVv5p/rQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLbcdgOfNRR/3X5kiJQYGJPCH8GOjHrc3CM76acnWunsoR6itf8TqDwjbKIjuCllbYKzaWgZqVkWSknFQjk5nGqJdy5sIj/j8f3Lh4y66r5pJ7PELr4lY0vn9KiZNKLoW2R9piu9cwfH9DEeQqtzW9Whgr68zy8xzSzGt8roqBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YrO1vG1k; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLm4Xss2P7MRvwYT4D6F9tdczVKmFyiuIgGLDYffliOkyrg1i02jAUp9IyPFfr/TYmFbtZq00iT85CqT56v69b8EsGI9oXOROKlP22ZNwzIQir+ngXrX0sLQLPmKHHetbPYaxiZbV7x3QBeafgTOwu11aQPhI41pE24KEQNvvsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Qh02m+rA; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YrO1vG1k"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qh02m+rA"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=V665uomEftWMnY02o1tbsGyNrT4RxPy6B9Au5unyhCw=; b=YrO1vG1kO9sfz1s/fGywwDww2S
-	i6eq7hqDFTv+oEjZ0QCQy9VcqV7PRL15903+yM/J/B1TVc5i9dtZHiNhB9dlqkt/1fql7sdxz2mE+
-	+C4FI4curBsBH81QKfXSxKhYHK/8Ly4DiFOFcwMbSdXaDK0OZTQop4PSrjR0OjGw70xv2p9OfJI0g
-	uyIFnaf+JwiihjVuk5FXBA+kQkpIfPCfpY9clZYmF8ITmYpHLYacaxdeRI68UepSiFOQdFAEgS02m
-	krPTQDJZq3WTcZHV7omdoMcCXABtzY6BlQh/sQBbPSn31/DbKv0L27odDfeKlcMj/tK6k6tkyPnF4
-	KkYbEyVw==;
+	bh=eKkIqQ/T/g0xUsNwRjjkvlqAyXTb8q6GArFbtSlSXZE=; b=Qh02m+rAVahE4tMh/W9yxoCMwY
+	vNns/r2Iqj241nUmBTQLz198myQYuhGkMmBgK2HpFhzysjpjgNgQ6NSg2f3LBtgU2oJA/w9hMocsQ
+	u7IXjFY/vQcuC+GF6Dluafm672kPE2IaDky6ctfF59ZWr9kz5LqJlKk4JPXT/h8LDpRSiwTIMX0ON
+	r1ef68xwxP6+fb0PAHchPx+biWHA/+7Tk9pgOCW2myeZaWyUlbPGic6qAn/cQP/yY4vwfYwcNLjm+
+	M5spTiX4HBYlfglFoYdC/zh70pvDAmKoINxGjGkMIleRDDEGjdoMEjxK3wsykIhH+P7sVyEieDizB
+	ZcCHDaKg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u4geM-00000009tyv-14ML;
-	Tue, 15 Apr 2025 13:48:30 +0000
+	id 1u4gj6-00000009u6S-27rn;
+	Tue, 15 Apr 2025 13:53:24 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CF140300619; Tue, 15 Apr 2025 15:48:29 +0200 (CEST)
-Date: Tue, 15 Apr 2025 15:48:29 +0200
+	id 1378F300619; Tue, 15 Apr 2025 15:53:24 +0200 (CEST)
+Date: Tue, 15 Apr 2025 15:53:23 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -44,11 +44,11 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v3 11/22] perf/x86/intel: Allocate arch-PEBS buffer and
- initialize PEBS_BASE MSR
-Message-ID: <20250415134829.GB4031@noisy.programming.kicks-ass.net>
+Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+Message-ID: <20250415135323.GC4031@noisy.programming.kicks-ass.net>
 References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-12-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,20 +57,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415114428.341182-12-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
 
-On Tue, Apr 15, 2025 at 11:44:17AM +0000, Dapeng Mi wrote:
+On Tue, Apr 15, 2025 at 11:44:18AM +0000, Dapeng Mi wrote:
+> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
+> sampling and precise distribution PEBS sampling. Thus PEBS constraints
+> should be dynamically configured base on these counter and precise
+> distribution bitmap instead of defining them statically.
+> 
+> Update event dyn_constraint base on PEBS event precise level.
 
-> +void fini_arch_pebs_buf_on_cpu(int cpu)
-> +{
-> +	if (!x86_pmu.arch_pebs)
-> +		return;
-> +
-> +	release_pebs_buffer(cpu);
-> +	wrmsr_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0, 0);
-> +}
+What if any constraints are there on this? CPUID is virt host
+controlled, right, so these could be the most horrible masks ever.
 
-So first we free the pages, and then we tell the hardware to not write
-into them again.
-
-What could possibly go wrong :-)
+This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?
