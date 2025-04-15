@@ -1,100 +1,107 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D816E18E1A;
-	Tue, 15 Apr 2025 14:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CD018E1A;
+	Tue, 15 Apr 2025 14:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744726071; cv=none; b=GjhoraHF05I7ygxqBgnXP1Em5NFyg1hpsOXVwKqdevM3/k7RhUPwvdGD5rtF2d0BwQbFoGSX0oGZ8QHfZsnR+rTfs04LL9+WkLl5shpyYB1WPs6xgLKo8Sm4YikAlX49auVm5IxN4dE+Wgu4t3jDe+agBD86NNvhXKkT/vDF8b8=
+	t=1744726967; cv=none; b=DGH/ag+NfGxv3DkvsjT+3t40FG+bHmHiIKTDqFZ1OCx9RD2wSVSMFZ5vtHLWIDck6bfO8PO2aJH3brVC8NOUTcEUwO37uoQLO8wOCjIdYh6FuTbN2rU95y6KUCVIy59+ZVGR95WFvP/L12JVWVm/bQVpoTiXiHy92V2Og++31Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744726071; c=relaxed/simple;
-	bh=D5XakogxV37TAHJXYCgHLmI6mETHhT7YD6oacyBbVgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxFl1Ue1tRWCqX6OHJWBXpAaO6vnnPXm5jgCEhsqMLhdszZ6A4nfAGlG9jYFkoC91bh98jn82Lry/c4MReBnndGSKrYLBmjcyB+K0SEGOWXqzlA9meMLCZzvreU00IDinyDqHeSFaFzkgXkADSPV1gOxxh+gth2bPM+CqEaZ/ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NtWr2gf2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744726967; c=relaxed/simple;
+	bh=CtgxB/ZU4v9c0Nr/WCLB1gJC7TJjSTsmSFedm+T4dNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cRXyOBlsOydTYMjEJvFpRQ68gtSrko5iiXFL7ECWC3QxM9kSkfkzitm4LuzGMiAdSEtCuaRBZ6NTOKDAjvVgw1YYcZ0Ezhauu9Mz9JaVoRuB5cqn5oPGNCwSuaLcfEU30KXkll7i2kuIOtaZt6ZOocKTvOB6Om8X5o9gMRKj1bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jM6IfmKt; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NtWr2gf2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EOzlHo3nOGWAuEjEI2KtHNOFWKa2sq/OO1E6O8ecYn4=; b=NtWr2gf2w3MmBJX5ZeWhAd2jwT
-	OQJarIJihKqXFbfv3cF9p+Llc8Me1yAfdCpQka7Jv4ETGIZtT9SbDeZuDONo1eF8brI9fyzpqq4g9
-	Dkp02eg+IXZkW6lrbDYOgNYp7cRoTRK9nmaVNrswohzqbWS6oV+pse64LxMBimvoEu3m08PaF/L4D
-	102Gp4KPDJdkOVmk98YnV2WGCKMOo3wLmkiFPV2KK5XnitnOW6LT6wDXpbihb9s5K4krMvQX2ydof
-	OryGrL7DaVBrU+yXylWeQqKEIOIw0qQ14Cl3+dxJtTsCbhEnjnJoXrVazhfmJppqigGCl90bV44mZ
-	WmD9dyDQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4gwo-00000008exI-3JwL;
-	Tue, 15 Apr 2025 14:07:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A3ED0300619; Tue, 15 Apr 2025 16:07:34 +0200 (CEST)
-Date: Tue, 15 Apr 2025 16:07:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v3 15/22] perf/x86/intel: Support SSP register capturing
- for arch-PEBS
-Message-ID: <20250415140734.GE4031@noisy.programming.kicks-ass.net>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-16-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jM6IfmKt"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2279915e06eso60170385ad.1;
+        Tue, 15 Apr 2025 07:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744726965; x=1745331765; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GmJxWfWHA7bnPsHWZ3AfA94kON1Er5HrsuLi+dRB8to=;
+        b=jM6IfmKtPCHyC0+ri/8uaL1M7LRYJSXPzu5nK6vCoa32sNsGEN9bzH8Bu7adMfZHXv
+         y0HsV70PiNa5qizCGRGmhGQxE2+iLc6hTHNztk2PlacTybGGi6tdSRjAACXRoALki7uI
+         iy2v0zFZEkqnpZptjCyghzsIYvKfeipwhsb7QABQ1PRcByA2arCNJqpFl+0gb8mv/XZy
+         26fyepYaV88FCRxGc8ELgfKn31Kh/v3NBe1UU+fY9wVmU4gFDQ+6g5ta9pBXXjpudDSV
+         mAtUfKvlSd3NhwRMbH0c7D4aIShN6PJy0yxTWpvtrguRkwMvlMjQvAAc9hyRLM5Q8RKf
+         nWtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744726965; x=1745331765;
+        h=content-transfer-encoding:in-reply-to:from:references:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GmJxWfWHA7bnPsHWZ3AfA94kON1Er5HrsuLi+dRB8to=;
+        b=XIiCJxtjuGYXpjzscLMYDFU222doAVTqoc2uleQpkEbJKxwxkTzxDLCieXwCdWdDdY
+         mE59fCqIvxosqbW5XFVNDmpAgvTiqjcMwfaDtP/X1GamINvuzx5Wt8rLs5fcYchOZ+LN
+         ZtjINTccd5kCDMaT8EYs2ypb8VQ4rIkc69Kf34agxTPwRge+5TsTu9xfh5vYGo/RLdjO
+         lnf8LvRsMTygFqZmuyMVq/URnP/kAtrAqgR01fscNWTOVZJKiHF9PZBacuLxucdFwLx6
+         SCSS72FT2NMpUwB/Dn5zGvQxvKLI8hIQvE4QBKsFtwUmYPI81+ca8tGpPJS7Vcycliyv
+         hUsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfOmu4zPmD0q0pX3Ix8GqbwRj5I7NmRZ7GS0AkoOSPEOlsBu6g5gXIcHb8aFge8JjtsPvh8uaEJJh/FEgSQKt7DA==@vger.kernel.org, AJvYcCXuJqJYJisi9276xOj072JpAcsFYBYzJY0I9d6/hXTW8tnru9xs7q0Jqy10wycfadHIrg9/AOJ8w4Kivh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysa8CzvTj8QygHNGzD3UD/vk3ehL7OXvVBWf2oXH32yigP0wW3
+	vPrmaz1nB8YrxgMZ9JezO+0ppX7bwLeqG5nmZG5m7YU4oBTGEY2/
+X-Gm-Gg: ASbGncu6TshzvfRDabpj33HCEP3PtAXfNSuhRmxz+LDBwcOOWJK9SpUNZ9ZXSPovLhw
+	D4wZuxBdsuE9j52hbJ+oZvSM/wMMJoVvtsFlivmpmUdNiwHLRP6oZADn38HBxabmQoRKIf3kJOL
+	vtpze2eS1n1YGxcg5oZ5dCycthMGRzBAfTpV9J4zBBQuF143HEa42BUkvTOi0mTT1d3HtKR5nAl
+	nZQGlgi3Ekfnf4vCrzYSiFgl2kcoS8xqFJAiH9KEFvhOyfD69Nc2VbYE0i+gYtZ77K2mR1GWcjN
+	DWb+vTokn8xWcVW6/JmbgcGscBpSuqYnTDH8foDvFNg9HYmOdGC4sgbEXAC+
+X-Google-Smtp-Source: AGHT+IFUTNEsWmG+rj7RI8gnYBKjkocJNOCNTmcoqNItsoBYPvpDOGyAMAepGC7aSX/Ic3G5GBsLlQ==
+X-Received: by 2002:a17:903:2f8e:b0:223:6657:5001 with SMTP id d9443c01a7336-22bea4f04a8mr279941955ad.40.1744726964722;
+        Tue, 15 Apr 2025 07:22:44 -0700 (PDT)
+Received: from [192.168.3.3] ([27.38.215.143])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b6508esm117901735ad.52.2025.04.15.07.22.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 07:22:44 -0700 (PDT)
+Message-ID: <c4d3cd8f-7d9e-4827-b9e8-4ca8d7b9946d@gmail.com>
+Date: Tue, 15 Apr 2025 22:22:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415114428.341182-16-dapeng1.mi@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] perf/core: Fix broken throttling bugs
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250405141635.243786-1-wangqing7171@gmail.com>
+From: Qing Wang <wangqing7171@gmail.com>
+In-Reply-To: <20250405141635.243786-1-wangqing7171@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 11:44:21AM +0000, Dapeng Mi wrote:
-> Arch-PEBS supports to capture shadow stack pointer (SSP) register in GPR
-> group. This patch supports to capture and output SSP register at
-> interrupt or user space, but capturing SSP at user space requires
-> 'exclude_kernel' attribute must be set. That avoids kernel space SSP
-> register is captured unintentionally.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/events/core.c                | 15 +++++++++++++++
->  arch/x86/events/intel/core.c          |  3 ++-
->  arch/x86/events/intel/ds.c            |  9 +++++++--
->  arch/x86/events/perf_event.h          |  4 ++++
->  arch/x86/include/asm/perf_event.h     |  1 +
->  arch/x86/include/uapi/asm/perf_regs.h |  4 +++-
->  arch/x86/kernel/perf_regs.c           |  7 +++++++
->  7 files changed, 39 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 9c205a8a4fa6..0ccbe8385c7f 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -650,6 +650,21 @@ int x86_pmu_hw_config(struct perf_event *event)
->  			return -EINVAL;
->  	}
->  
-> +	if (unlikely(event->attr.sample_regs_user & BIT_ULL(PERF_REG_X86_SSP))) {
-> +		/* Only arch-PEBS supports to capture SSP register. */
-> +		if (!x86_pmu.arch_pebs || !event->attr.precise_ip)
-> +			return -EINVAL;
-> +		/* Only user space is allowed to capture. */
-> +		if (!event->attr.exclude_kernel)
-> +			return -EINVAL;
-> +	}
+Hello,
 
-We should be able to support this for !PEBS samples by reading the MSR
-just fine, no?
+PING.
 
-ISTR making a similar comment last time.
+Thanks,
+Qing.
+
+On 4/5/2025 10:16 PM, Qing Wong wrote:
+> From: Qing Wang <wangqing7171@gmail.com>
+>
+> There is a bug that broken throttling, this patchset intends
+> to improve the accuracy of throttling.
+>
+> This patchset does two changes:
+>    - Revert a specific patch to avoid broken throttling when
+>      max_samples_per_tick>1.
+>    - Add throttling judgement when max_samples_per_tick=1.
+>
+> base-commit: acc4d5ff0b61
+>
+> Qing Wang (2):
+>    Revert "perf/core: Fix hardlockup failure caused by perf throttle"
+>    perf/core: Fix broken throttling when max_samples_per_tick=1
+>
+>   kernel/events/core.c | 17 ++++++++---------
+>   1 file changed, 8 insertions(+), 9 deletions(-)
+>
