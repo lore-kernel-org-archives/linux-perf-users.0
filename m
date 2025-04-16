@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C661DB34E;
-	Wed, 16 Apr 2025 06:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEAB1DE3C4;
+	Wed, 16 Apr 2025 07:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785740; cv=none; b=sx6cp06BQbCxCuK/riUBklYQaJSlRxf2YIrnBd9WsN9wwrjFMbEZFFR6t69RtlHkDpYuMOATDUjv9x14q1ZqFzmfUcDC23q/32mS8mMgenbMMTOvwlulNHaE/fj6rEu9JfjGvEZbtPdH745fxiD2MobUeSMilu/cYD9CjnqUXSg=
+	t=1744788135; cv=none; b=uPEug8BF0f4AaCsOVQlPwYWWOuQYsW1c5t+2cpebukT64obAs6GVJkBQ7FAUsNzZR8b8HYBYWuQEqyhgt6WitRqN6Mvx4PRAWax+peT5b0bWvT0Z4zyC/FIKTUlG0/WnmUWMspNxRqtk2FiCQgKpyrxA1Zvv2ChwjEPXfZQatPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785740; c=relaxed/simple;
-	bh=GRVp9P917blqRbz/a0s5zO5oAzopvzG7tEqL7bBBXNw=;
+	s=arc-20240116; t=1744788135; c=relaxed/simple;
+	bh=Yjz8JsYe32EI3Zt2DAC8/MNOPU+2dMfZe8dcMdGp8vM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JP0jJg4lwqLPqotyKqfsMVIPcA3vGddaOnbznUhTzDv/8sNI0mH9lZ4+naSsi1dGIoxJzyI6tZUYT2MZ3KjOk0tOTvsiow5D/gub0yEpa9erz9THwfSCTd7aiLPleDiAHoYtrrlRYB2QneZ2iTiMOKyFlRP1lORv9qD1HUGHaiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n5qnUNED; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=LrkhHQzqXt/bxmkplwTmy3qTgbo5k43yyXz33FA1LXLVzjZJ5lSCypO5K1LUF+s2CoXTCQVjRsWZjhUOftXE3gxzzgW5xRs00FbYBNKIQJU/rO5/XXfnOZelh+pO5oJEIAra62cRHkzlfzYUnLR0VHCGPFsBXR4ZtUcreTPczYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BBqV5T7C; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n5qnUNED"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBqV5T7C"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744785739; x=1776321739;
+  t=1744788133; x=1776324133;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=GRVp9P917blqRbz/a0s5zO5oAzopvzG7tEqL7bBBXNw=;
-  b=n5qnUNEDa4Skfakcwx+6Qtd2Xy4cj5vxBr5RvQKS8R01PnefIp+5Imkc
-   sCGNL6u/0LiW2s+pv33VioIHw7d63hrHwExVeylFhUNtOKswa2moD9hzx
-   FaSM5K9MiH04aaXaIojUMPmmegqBfq0Ka7KknjD+n6dya4ng3yGtusSI3
-   yqf5YUN2F6dN0LTYxRPmED1jHb+eHuby3DW//yYODYPujIw72qT/7e7S/
-   4hSNnfvU/KH6U6prTBbd3tglCZJIQouoWbyz2pON3i/8FWBDN597f0ycg
-   bhARgAlIBulCN92KeWOSjtJJjdry3ESM3vc7EaVyygwupkuPoCS0haq/0
-   g==;
-X-CSE-ConnectionGUID: NNqFPBzrS+uP65tdyhuylA==
-X-CSE-MsgGUID: FjedKStjS+Cl/pSSIWsVAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46334163"
+  bh=Yjz8JsYe32EI3Zt2DAC8/MNOPU+2dMfZe8dcMdGp8vM=;
+  b=BBqV5T7CNXLfgm7fwSZOu4id02RaIjgVm0psgN/L8fWATCjH6zQrndvV
+   mTXK/Yxpc6612aHs8FNtadGkDYJVgrh6Kc/3irs8OfPbGif2c8QKgbTaP
+   9mi4Gx2fJVmN2taNSPWnT7hUtvRI8GsQCY8pboMJ//ZD33JBpR6HNR+kh
+   opkRF2tvFoir/uh87DrgcNdt3gkl7NrQoQ4rDo75EBIyy1z3IIaH4VzM2
+   ryxyfb6yUXHgAIJZ3km06tbZ2WjzBprVDkYW/jY/kpvVOklWo3VLxbOcO
+   qhOOwlNpG+ZQx1TI8xk2Yge1Bq2VrKefAHSI2ENu8DMGcidwci3/RTL+s
+   Q==;
+X-CSE-ConnectionGUID: yo8y/3TGQ4GMvIew8vKtlQ==
+X-CSE-MsgGUID: rgR5ds9uQ3q+v2uXzLeSyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56957176"
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46334163"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:42:18 -0700
-X-CSE-ConnectionGUID: koED1CSRSeS12ubHm/DcqA==
-X-CSE-MsgGUID: Qu+1IbnFQ6yen9OroQkKIg==
+   d="scan'208";a="56957176"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:22:12 -0700
+X-CSE-ConnectionGUID: qvnogiapSim7Oj08XxbWEw==
+X-CSE-MsgGUID: WWYODVADTzS5gFpT58uSoA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="153566334"
+   d="scan'208";a="135199152"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:42:15 -0700
-Message-ID: <26799b7e-c3a6-4de2-afd1-7bda0639fa37@linux.intel.com>
-Date: Wed, 16 Apr 2025 14:42:12 +0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:22:05 -0700
+Message-ID: <16d8265b-750d-4e3c-aeb1-772d28b6c79c@linux.intel.com>
+Date: Wed, 16 Apr 2025 15:22:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,195 +52,202 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 16/22] perf/core: Support to capture higher width
- vector registers
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+To: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-17-dapeng1.mi@linux.intel.com>
- <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Kindly ping... Any comments on this patch series? Thanks.
 
-On 4/15/2025 10:36 PM, Peter Zijlstra wrote:
-> On Tue, Apr 15, 2025 at 11:44:22AM +0000, Dapeng Mi wrote:
->>  extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
->> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
->> index f9c5b16b1882..5e2d9796b2cc 100644
->> --- a/arch/x86/include/uapi/asm/perf_regs.h
->> +++ b/arch/x86/include/uapi/asm/perf_regs.h
->> @@ -33,7 +33,7 @@ enum perf_event_x86_regs {
->>  	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
->>  	PERF_REG_X86_64_MAX = PERF_REG_X86_SSP + 1,
->>  
->> -	/* These all need two bits set because they are 128bit */
->> +	/* These all need two bits set because they are 128 bits */
->>  	PERF_REG_X86_XMM0  = 32,
->>  	PERF_REG_X86_XMM1  = 34,
->>  	PERF_REG_X86_XMM2  = 36,
->> @@ -53,6 +53,83 @@ enum perf_event_x86_regs {
->>  
->>  	/* These include both GPRs and XMMX registers */
->>  	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
->> +
->> +	/* Leave bits[127:64] for other GP registers, like R16 ~ R31.*/
->> +
->> +	/*
->> +	 * Each YMM register need 4 bits to represent because they are 256 bits.
->> +	 * PERF_REG_X86_YMMH0 = 128
->> +	 */
->> +	PERF_REG_X86_YMM0	= 128,
->> +	PERF_REG_X86_YMM1	= PERF_REG_X86_YMM0 + 4,
->> +	PERF_REG_X86_YMM2	= PERF_REG_X86_YMM1 + 4,
->> +	PERF_REG_X86_YMM3	= PERF_REG_X86_YMM2 + 4,
->> +	PERF_REG_X86_YMM4	= PERF_REG_X86_YMM3 + 4,
->> +	PERF_REG_X86_YMM5	= PERF_REG_X86_YMM4 + 4,
->> +	PERF_REG_X86_YMM6	= PERF_REG_X86_YMM5 + 4,
->> +	PERF_REG_X86_YMM7	= PERF_REG_X86_YMM6 + 4,
->> +	PERF_REG_X86_YMM8	= PERF_REG_X86_YMM7 + 4,
->> +	PERF_REG_X86_YMM9	= PERF_REG_X86_YMM8 + 4,
->> +	PERF_REG_X86_YMM10	= PERF_REG_X86_YMM9 + 4,
->> +	PERF_REG_X86_YMM11	= PERF_REG_X86_YMM10 + 4,
->> +	PERF_REG_X86_YMM12	= PERF_REG_X86_YMM11 + 4,
->> +	PERF_REG_X86_YMM13	= PERF_REG_X86_YMM12 + 4,
->> +	PERF_REG_X86_YMM14	= PERF_REG_X86_YMM13 + 4,
->> +	PERF_REG_X86_YMM15	= PERF_REG_X86_YMM14 + 4,
->> +	PERF_REG_X86_YMM_MAX	= PERF_REG_X86_YMM15 + 4,
->> +
->> +	/*
->> +	 * Each ZMM register needs 8 bits to represent because they are 512 bits
->> +	 * PERF_REG_X86_ZMMH0 = 192
->> +	 */
->> +	PERF_REG_X86_ZMM0	= PERF_REG_X86_YMM_MAX,
->> +	PERF_REG_X86_ZMM1	= PERF_REG_X86_ZMM0 + 8,
->> +	PERF_REG_X86_ZMM2	= PERF_REG_X86_ZMM1 + 8,
->> +	PERF_REG_X86_ZMM3	= PERF_REG_X86_ZMM2 + 8,
->> +	PERF_REG_X86_ZMM4	= PERF_REG_X86_ZMM3 + 8,
->> +	PERF_REG_X86_ZMM5	= PERF_REG_X86_ZMM4 + 8,
->> +	PERF_REG_X86_ZMM6	= PERF_REG_X86_ZMM5 + 8,
->> +	PERF_REG_X86_ZMM7	= PERF_REG_X86_ZMM6 + 8,
->> +	PERF_REG_X86_ZMM8	= PERF_REG_X86_ZMM7 + 8,
->> +	PERF_REG_X86_ZMM9	= PERF_REG_X86_ZMM8 + 8,
->> +	PERF_REG_X86_ZMM10	= PERF_REG_X86_ZMM9 + 8,
->> +	PERF_REG_X86_ZMM11	= PERF_REG_X86_ZMM10 + 8,
->> +	PERF_REG_X86_ZMM12	= PERF_REG_X86_ZMM11 + 8,
->> +	PERF_REG_X86_ZMM13	= PERF_REG_X86_ZMM12 + 8,
->> +	PERF_REG_X86_ZMM14	= PERF_REG_X86_ZMM13 + 8,
->> +	PERF_REG_X86_ZMM15	= PERF_REG_X86_ZMM14 + 8,
->> +	PERF_REG_X86_ZMM16	= PERF_REG_X86_ZMM15 + 8,
->> +	PERF_REG_X86_ZMM17	= PERF_REG_X86_ZMM16 + 8,
->> +	PERF_REG_X86_ZMM18	= PERF_REG_X86_ZMM17 + 8,
->> +	PERF_REG_X86_ZMM19	= PERF_REG_X86_ZMM18 + 8,
->> +	PERF_REG_X86_ZMM20	= PERF_REG_X86_ZMM19 + 8,
->> +	PERF_REG_X86_ZMM21	= PERF_REG_X86_ZMM20 + 8,
->> +	PERF_REG_X86_ZMM22	= PERF_REG_X86_ZMM21 + 8,
->> +	PERF_REG_X86_ZMM23	= PERF_REG_X86_ZMM22 + 8,
->> +	PERF_REG_X86_ZMM24	= PERF_REG_X86_ZMM23 + 8,
->> +	PERF_REG_X86_ZMM25	= PERF_REG_X86_ZMM24 + 8,
->> +	PERF_REG_X86_ZMM26	= PERF_REG_X86_ZMM25 + 8,
->> +	PERF_REG_X86_ZMM27	= PERF_REG_X86_ZMM26 + 8,
->> +	PERF_REG_X86_ZMM28	= PERF_REG_X86_ZMM27 + 8,
->> +	PERF_REG_X86_ZMM29	= PERF_REG_X86_ZMM28 + 8,
->> +	PERF_REG_X86_ZMM30	= PERF_REG_X86_ZMM29 + 8,
->> +	PERF_REG_X86_ZMM31	= PERF_REG_X86_ZMM30 + 8,
->> +	PERF_REG_X86_ZMM_MAX	= PERF_REG_X86_ZMM31 + 8,
->> +
->> +	/*
->> +	 * OPMASK Registers
->> +	 * PERF_REG_X86_OPMASK0 = 448
->> +	 */
->> +	PERF_REG_X86_OPMASK0	= PERF_REG_X86_ZMM_MAX,
->> +	PERF_REG_X86_OPMASK1	= PERF_REG_X86_OPMASK0 + 1,
->> +	PERF_REG_X86_OPMASK2	= PERF_REG_X86_OPMASK1 + 1,
->> +	PERF_REG_X86_OPMASK3	= PERF_REG_X86_OPMASK2 + 1,
->> +	PERF_REG_X86_OPMASK4	= PERF_REG_X86_OPMASK3 + 1,
->> +	PERF_REG_X86_OPMASK5	= PERF_REG_X86_OPMASK4 + 1,
->> +	PERF_REG_X86_OPMASK6	= PERF_REG_X86_OPMASK5 + 1,
->> +	PERF_REG_X86_OPMASK7	= PERF_REG_X86_OPMASK6 + 1,
->> +
->> +	PERF_REG_X86_VEC_MAX	= PERF_REG_X86_OPMASK7 + 1,
->>  };
->> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index 5fc753c23734..78aae0464a54 100644
->> --- a/include/uapi/linux/perf_event.h
->> +++ b/include/uapi/linux/perf_event.h
->> @@ -379,6 +379,10 @@ enum perf_event_read_format {
->>  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
->>  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
->>  #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
->> +#define PERF_ATTR_SIZE_VER9	168	/* add: sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE] */
->> +
->> +#define PERF_EXT_REGS_ARRAY_SIZE	7
->> +#define PERF_NUM_EXT_REGS		(PERF_EXT_REGS_ARRAY_SIZE * 64)
->>  
->>  /*
->>   * Hardware event_id to monitor via a performance monitoring event:
->> @@ -533,6 +537,13 @@ struct perf_event_attr {
->>  	__u64	sig_data;
->>  
->>  	__u64	config3; /* extension of config2 */
->> +
->> +	/*
->> +	 * Extension sets of regs to dump for each sample.
->> +	 * See asm/perf_regs.h for details.
->> +	 */
->> +	__u64	sample_regs_intr_ext[PERF_EXT_REGS_ARRAY_SIZE];
->> +	__u64   sample_regs_user_ext[PERF_EXT_REGS_ARRAY_SIZE];
->>  };
->>  
->>  /*
-> I still utterly hate this interface. This is a giant waste of bits.
+On 3/25/2025 1:30 AM, Mingwei Zhang wrote:
+> With joint effort from the upstream KVM community, we come up with the
+> 4th version of mediated vPMU for x86. We have made the following changes
+> on top of the previous RFC v3.
 >
-> What makes it even worse is that XMMn is the lower half of YMMn which in
-> turn is the lower half of ZMMn.
+> v3 -> v4
+>  - Rebase whole patchset on 6.14-rc3 base.
+>  - Address Peter's comments on Perf part.
+>  - Address Sean's comments on KVM part.
+>    * Change key word "passthrough" to "mediated" in all patches
+>    * Change static enabling to user space dynamic enabling via KVM_CAP_PMU_CAPABILITY.
+>    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+>      save/retore list support for GLOBAL_CTRL, thus the support of mediated
+>      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+>    * Merge some small changes into a single patch.
+>  - Address Sandipan's comment on invalid pmu pointer.
+>  - Add back "eventsel_hw" and "fixed_ctr_ctrl_hw" to avoid to directly
+>    manipulate pmc->eventsel and pmu->fixed_ctr_ctrl.
 >
-> So by exposing only ZMMn you already expose all of them. The interface
-> explicitly allows asking for sub-words.
 >
-> But most importantly of all, last time I asked if there are users that
-> actually care about the whole per-register thing and I don't see an
-> answer here.
+> Testing (Intel side):
+>  - Perf-based legacy vPMU (force emulation on/off)
+>    * Kselftests pmu_counters_test, pmu_event_filter_test and
+>      vmx_pmu_caps_test pass.
+>    * KUT PMU tests pmu, pmu_lbr, pmu_pebs pass.
+>    * Basic perf counting/sampling tests in 3 scenarios, guest-only,
+>      host-only and host-guest coexistence all pass.
 >
-> Can we please find a better interface? Ideally one that scales up to
-> 1024 and 2048 bit vector width, because I'd hate to have to rev this
-> again.
+>  - Mediated vPMU (force emulation on/off)
+>    * Kselftests pmu_counters_test, pmu_event_filter_test and
+>      vmx_pmu_caps_test pass.
+>    * KUT PMU tests pmu, pmu_lbr, pmu_pebs pass.
+>    * Basic perf counting/sampling tests in 3 scenarios, guest-only,
+>      host-only and host-guest coexistence all pass.
 >
-> Perhaps add sample_vec_regs_*[] with a saner format, and if that is !0
-> then the XMM regs dissapear from sample_regs_*[] and we get to use that
-> space to extended GPs.
-
-Just think twice, using bitmap to represent these extended registers indeed
-wastes bits and is hard to extend, there could be much much more vector
-registers if considering AMX.
-
-Considering different arch/HW may support different number vector register,
-like platform A supports 8 XMM registers and 8 YMM registers, but platform
-B only supports 16 XMM registers, a better way to represent these vector
-registers may add two fields, one is a bitmap which represents which kinds
-of vector registers needs to be captures. The other field could be a u16
-array which represents the corresponding register length of each kind of
-vector register. It may look like this.
-
-#define    PERF_SAMPLE_EXT_REGS_XMM    BIT(0)
-#define    PERF_SAMPLE_EXT_REGS_YMM    BIT(1)
-#define    PERF_SAMPLE_EXT_REGS_ZMM    BIT(2)
-    __u32    sample_regs_intr_ext;
-    __u16    sample_regs_intr_ext_len[4];
-    __u32    sample_regs_user_ext;
-
-    __u16    sample_regs_user_ext_len[4];
-
-
-Peter, how do you think this? Thanks.
-
-
+>  - Failures. All above tests passed on Intel Granite Rapids as well
+>    except a failure on KUT/pmu_pebs.
+>    * GP counter 0 (0xfffffffffffe): PEBS record (written seq 0)
+>      is verified (including size, counters and cfg).
+>    * The pebs_data_cfg (0xb500000000) doesn't match with the
+>      effective MSR_PEBS_DATA_CFG (0x0).
+>    * This failure has nothing to do with this mediated vPMU patch set. The
+>      failure is caused by Granite Rapids supported timed PEBS which needs
+>      extra support on Qemu and KUT/pmu_pebs. These extra support would be
+>      sent in separate patches later.
+>
+>
+> Testing (AMD side):
+>  - Kselftests pmu_counters_test, pmu_event_filter_test and
+>    vmx_pmu_caps_test all pass
+>
+>  - legacy guest with KUT/pmu:
+>    * qmeu option: -cpu host, -perfctr-core
+>    * when set force_emulation_prefix=1, passes
+>    * when set force_emulation_prefix=0, passes
+>  - perfmon-v1 guest with KUT/pmu:
+>    * qmeu option: -cpu host, -perfmon-v2
+>    * when set force_emulation_prefix=1, passes
+>    * when set force_emulation_prefix=0, passes
+>  - perfmon-v2 guest with KUT/pmu:
+>    * qmeu option: -cpu host
+>    * when set force_emulation_prefix=1, passes
+>    * when set force_emulation_prefix=0, passes
+>
+>  - perf_fuzzer (perfmon-v2):
+>    * fails with soft lockup in guest in current version.
+>    * culprit could be between 6.13 ~ 6.14-rc3 within KVM
+>    * Series tested on 6.12 and 6.13 without issue.
+>
+> Note: a QEMU series is needed to run mediated vPMU v4:
+>  - https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel.com/
+>
+> History:
+>  - RFC v3: https://lore.kernel.org/all/20240801045907.4010984-1-mizhang@google.com/
+>  - RFC v2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com/
+>  - RFC v1: https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com/
+>
+>
+> Dapeng Mi (18):
+>   KVM: x86/pmu: Introduce enable_mediated_pmu global parameter
+>   KVM: x86/pmu: Check PMU cpuid configuration from user space
+>   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+>   KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
+>   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+>   KVM: VMX: Add macros to wrap around
+>     {secondary,tertiary}_exec_controls_changebit()
+>   KVM: x86/pmu: Check if mediated vPMU can intercept rdpmc
+>   KVM: x86/pmu/vmx: Save/load guest IA32_PERF_GLOBAL_CTRL with
+>     vm_exit/entry_ctrl
+>   KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
+>   KVM: x86/pmu: Setup PMU MSRs' interception mode
+>   KVM: x86/pmu: Handle PMU MSRs interception and event filtering
+>   KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
+>   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+>   KVM: nVMX: Add macros to simplify nested MSR interception setting
+>   KVM: selftests: Add mediated vPMU supported for pmu tests
+>   KVM: Selftests: Support mediated vPMU for vmx_pmu_caps_test
+>   KVM: Selftests: Fix pmu_counters_test error for mediated vPMU
+>   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
+>
+> Kan Liang (8):
+>   perf: Support get/put mediated PMU interfaces
+>   perf: Skip pmu_ctx based on event_type
+>   perf: Clean up perf ctx time
+>   perf: Add a EVENT_GUEST flag
+>   perf: Add generic exclude_guest support
+>   perf: Add switch_guest_ctx() interface
+>   perf/x86: Support switch_guest_ctx interface
+>   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
+>
+> Mingwei Zhang (5):
+>   perf/x86: Forbid PMI handler when guest own PMU
+>   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
+>     x86_pmu_cap
+>   KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+>   KVM: x86/pmu: introduce eventsel_hw to prepare for pmu event filtering
+>   KVM: nVMX: Add nested virtualization support for mediated PMU
+>
+> Sandipan Das (4):
+>   perf/x86/core: Do not set bit width for unavailable counters
+>   KVM: x86/pmu: Add AMD PMU registers to direct access list
+>   KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
+>     write to event selectors
+>   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
+>
+> Xiong Zhang (3):
+>   x86/irq: Factor out common code for installing kvm irq handler
+>   perf: core/x86: Register a new vector for KVM GUEST PMI
+>   KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
+>
+>  arch/x86/events/amd/core.c                    |   2 +
+>  arch/x86/events/core.c                        |  40 +-
+>  arch/x86/events/intel/core.c                  |   5 +
+>  arch/x86/include/asm/hardirq.h                |   1 +
+>  arch/x86/include/asm/idtentry.h               |   1 +
+>  arch/x86/include/asm/irq.h                    |   2 +-
+>  arch/x86/include/asm/irq_vectors.h            |   5 +-
+>  arch/x86/include/asm/kvm-x86-pmu-ops.h        |   2 +
+>  arch/x86/include/asm/kvm_host.h               |  10 +
+>  arch/x86/include/asm/msr-index.h              |  18 +-
+>  arch/x86/include/asm/perf_event.h             |   1 +
+>  arch/x86/include/asm/vmx.h                    |   1 +
+>  arch/x86/kernel/idt.c                         |   1 +
+>  arch/x86/kernel/irq.c                         |  39 +-
+>  arch/x86/kvm/cpuid.c                          |  15 +
+>  arch/x86/kvm/pmu.c                            | 254 ++++++++-
+>  arch/x86/kvm/pmu.h                            |  45 ++
+>  arch/x86/kvm/svm/pmu.c                        | 148 ++++-
+>  arch/x86/kvm/svm/svm.c                        |  26 +
+>  arch/x86/kvm/svm/svm.h                        |   2 +-
+>  arch/x86/kvm/vmx/capabilities.h               |  11 +-
+>  arch/x86/kvm/vmx/nested.c                     |  68 ++-
+>  arch/x86/kvm/vmx/pmu_intel.c                  | 224 ++++++--
+>  arch/x86/kvm/vmx/vmx.c                        |  89 +--
+>  arch/x86/kvm/vmx/vmx.h                        |  11 +-
+>  arch/x86/kvm/x86.c                            |  63 ++-
+>  arch/x86/kvm/x86.h                            |   2 +
+>  include/linux/perf_event.h                    |  47 +-
+>  kernel/events/core.c                          | 519 ++++++++++++++----
+>  .../beauty/arch/x86/include/asm/irq_vectors.h |   5 +-
+>  .../selftests/kvm/include/kvm_test_harness.h  |  13 +
+>  .../testing/selftests/kvm/include/kvm_util.h  |   3 +
+>  .../selftests/kvm/include/x86/processor.h     |   8 +
+>  tools/testing/selftests/kvm/lib/kvm_util.c    |  23 +
+>  .../selftests/kvm/x86/pmu_counters_test.c     |  24 +-
+>  .../selftests/kvm/x86/pmu_event_filter_test.c |   8 +-
+>  .../selftests/kvm/x86/vmx_pmu_caps_test.c     |   2 +-
+>  37 files changed, 1480 insertions(+), 258 deletions(-)
+>
+>
+> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
