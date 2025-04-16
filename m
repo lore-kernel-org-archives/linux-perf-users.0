@@ -1,138 +1,123 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B3D22B8A4
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Apr 2025 04:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363111D6AA;
+	Wed, 16 Apr 2025 05:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744779100; cv=none; b=mDT/OqeN7VXH/lGhNMq47ngdD7ntIIf3IuHH9udvef7kXUWYevh4ZT2IQwlK3mmCj8YnBamL246PC3q1Eh0UjBqdmEO0ALFoKwVr4Cp5x7JAJ67/el4Iw4euIXK5puXXPD3g+/9vlgSZbbeayqcrfAYTfSALJemf2tfYOXrhZr0=
+	t=1744782598; cv=none; b=Qe1STMLQm7mxcGcwlva0NKP48qUaFqPoPrPmZoHTU2XH16pV96/7i19OervttT2Gl9T5fkLOFm/X0OsUdzQRhb73glinyY8uN8pqv++W4n12SPio8pX35KqEbCJfwfdANRSHHmqETuNGe/GR8bNxyxs8/AOtDDcfHqT7aBPEyrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744779100; c=relaxed/simple;
-	bh=ZOTsHlfTpSL/Ly5DC6zov/N/ZrnqIeX3TnDUs6l3nhc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ebsiI0343o5VdHIAkeFBzWJlr/OBpwcWFvTZyNos4499a92go1xJ/1wvm0mpb1ah+/Oawy8UjeqxKuk5EVdSWnmJC7CCYqfXYQE/dTJkrZLa012G0tGq1qtSDlLPt8nhDg6O74wKmoNgO9B7c1rtqiODyZgx9ym6B8kmufDA1mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ALyIc9lm; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1744782598; c=relaxed/simple;
+	bh=Rh3s1NfTtZpHTMOs4BVGQooSMtFNYmXpSVOJsb6wJbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LuCtJ6aVfjBeGGlJAfghmcbvBmz7qY52L3DvheV3wdiSQnUODWicNjshxvFkAZxevVOxcMP7mwFFjC1EJBKoVjjrrhKdrEqruiwirYIT+9AiStu9Bz+8KQgCzBuLQjDgkOwCBT4UoVa8nTELoTomKQayvDUKxYrZf+q+8bMIQ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npEBFpet; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ALyIc9lm"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3085f5855c4so403298a91.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Apr 2025 21:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744779096; x=1745383896; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qWGXJXdrT9sF0I7mA7+F4IJQ0dt51AALQlFzat3VGFk=;
-        b=ALyIc9lmsya7hbSYBGhFkjjikTAy914pDgFnU+vAidHMd4d2elxqc8EAMz5nYh3BGI
-         iqwNP0vXImDIjM51BSBBRre96DBO/MpOr/s4yM2HicNqHJZdI2pCehr3heRjT/h7g/4D
-         ugtGFhMY2axdl86/xFeRmsDQS9A1ZmifdHJUaI1igchCciM6PfsdmGY3xP1l+E3RzuoD
-         w1wE+F8CTxS/m+GFsVUc2VkKbkGiRF8KSpoSZ3rEqAmW7Lz0GaUjEOpArdqUhulv5oas
-         ovZu9CYtDxSocOeINqhTCg6uOwFZn+HvvbN4oDHgqhoVem5sWyG3flp4VUnoWcfYqPhC
-         ESrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744779096; x=1745383896;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qWGXJXdrT9sF0I7mA7+F4IJQ0dt51AALQlFzat3VGFk=;
-        b=IxwyhBSBidQuZOn2VO8Q/uiJyc03u+KbRMkrB5JA0UXc6+PDek2eM/YoM2ieGcgRJ+
-         O6bZi8WtHUWlj/gew6iOiObZ0ts3yVqqW8BzRGK5cj2YIpZsKp6d1uerlJHQKKAD3LNQ
-         ET7S4D0w8wAWoxJQA7OpY+ROXjbNxTo+C9yB4g4AUl5sDc6Iqseb755ZNvGRv7yrf/Mf
-         83uIfEjwV2caLbBeuSk8aew9mvtYzjjQf7UxjByN0J4mHCV6cCyRyeGeYkzLLJGZSSoV
-         CIJxeOzo4XNaxVCti0iVWHxTuHyv/X5P2gabGdGS8ZjbqsIWks5EuhtBjB5a5x0BGsHv
-         VfLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdpd+CZUoUZfWhPRnq3nDtQUCbqoZvLyVOaHZ6e+N7UMVEqlxIjCerX1ApyZQsj8+YhsTaY6hUTu3NxXosX1dT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+citODKltPActLzMp9MOYNTgRCBNBof6RwSKF73CW2vkXGJKp
-	16hVQSLQyxA5goL8H8PrjIAFQfsdMFqES/rc8pgLl3w0QkOgdQNBO+k9GYJjpxwvsMR90RuOrU9
-	0ao0ZrQ==
-X-Google-Smtp-Source: AGHT+IFzs+p393a7mxlM3r7qnHxaFIdEo/RP9id0OjOQIRti4PH7xmLH1y5HCxIonfQ1rdoHNlT/H3fbkkEy
-X-Received: from pjzz8.prod.google.com ([2002:a17:90b:58e8:b0:2fa:15aa:4d2b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:6c4:b0:2fe:84d6:cdf9
- with SMTP id 98e67ed59e1d1-3086415d88emr495438a91.26.1744779096558; Tue, 15
- Apr 2025 21:51:36 -0700 (PDT)
-Date: Tue, 15 Apr 2025 21:51:17 -0700
-In-Reply-To: <20250416045117.876775-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npEBFpet"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744782596; x=1776318596;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Rh3s1NfTtZpHTMOs4BVGQooSMtFNYmXpSVOJsb6wJbo=;
+  b=npEBFpetFL5gHhUwedWPsa6TdH2WUbXwjMACGM3SwLT7tnLEQdbG1OfT
+   13wUi+uv8MYO51wZe6cduQGnv8h78cP32njE8/ezFj4r61O3dEoowYSvd
+   KegG4ukqyk5mKqtQ6L7hAexU6wGBWvj9lH1jA3H+W/TYkAgx6sg+Iz5D4
+   h/6Dv+o3ZB9ho38+kSM57pxS3f4iDR1aSTws3FhbPrxBPKzEQY467cEE5
+   B2ItC0GGOG3KIx8NSlOA4tKh79WXlanZQ2cz3ZzAInf8/5Sh8UhZmHAW+
+   5AgGVoF2Atwrn9nq166nLpxypvXwVnEWgrdTkLwjpptEejeipbfa7nqDt
+   w==;
+X-CSE-ConnectionGUID: eUpU3DdLRHyVjeKAOItFtg==
+X-CSE-MsgGUID: 0gbS0Dl1QdW5R2cf5s0C5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46195701"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46195701"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:49:55 -0700
+X-CSE-ConnectionGUID: ooGEVKwBTsCvSgncBiIKSg==
+X-CSE-MsgGUID: C2Tn5zXQQISZ+56tjXk6cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="135323808"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:49:51 -0700
+Message-ID: <c439699c-be19-4dc6-be28-e69e21bbacd4@linux.intel.com>
+Date: Wed, 16 Apr 2025 13:49:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416045117.876775-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250416045117.876775-5-irogers@google.com>
-Subject: [PATCH v8 4/4] perf perf_api_probe: Avoid scanning all PMUs, try
- software PMU first
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 15/22] perf/x86/intel: Support SSP register capturing
+ for arch-PEBS
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-16-dapeng1.mi@linux.intel.com>
+ <20250415140734.GE4031@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250415140734.GE4031@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add PMU names when geting events to probe. The first is only ever used
-but by not specifying a PMU name perf_api_probe will load all the
-PMUs.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/perf_api_probe.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+On 4/15/2025 10:07 PM, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 11:44:21AM +0000, Dapeng Mi wrote:
+>> Arch-PEBS supports to capture shadow stack pointer (SSP) register in GPR
+>> group. This patch supports to capture and output SSP register at
+>> interrupt or user space, but capturing SSP at user space requires
+>> 'exclude_kernel' attribute must be set. That avoids kernel space SSP
+>> register is captured unintentionally.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/core.c                | 15 +++++++++++++++
+>>  arch/x86/events/intel/core.c          |  3 ++-
+>>  arch/x86/events/intel/ds.c            |  9 +++++++--
+>>  arch/x86/events/perf_event.h          |  4 ++++
+>>  arch/x86/include/asm/perf_event.h     |  1 +
+>>  arch/x86/include/uapi/asm/perf_regs.h |  4 +++-
+>>  arch/x86/kernel/perf_regs.c           |  7 +++++++
+>>  7 files changed, 39 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index 9c205a8a4fa6..0ccbe8385c7f 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -650,6 +650,21 @@ int x86_pmu_hw_config(struct perf_event *event)
+>>  			return -EINVAL;
+>>  	}
+>>  
+>> +	if (unlikely(event->attr.sample_regs_user & BIT_ULL(PERF_REG_X86_SSP))) {
+>> +		/* Only arch-PEBS supports to capture SSP register. */
+>> +		if (!x86_pmu.arch_pebs || !event->attr.precise_ip)
+>> +			return -EINVAL;
+>> +		/* Only user space is allowed to capture. */
+>> +		if (!event->attr.exclude_kernel)
+>> +			return -EINVAL;
+>> +	}
+> We should be able to support this for !PEBS samples by reading the MSR
+> just fine, no?
 
-diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_probe.c
-index 1de3b69cdf4a..a910cde4d78b 100644
---- a/tools/perf/util/perf_api_probe.c
-+++ b/tools/perf/util/perf_api_probe.c
-@@ -59,10 +59,10 @@ static int perf_do_probe_api(setup_probe_fn_t fn, struct perf_cpu cpu, const cha
- 
- static bool perf_probe_api(setup_probe_fn_t fn)
- {
--	const char *try[] = {"cycles:u", "instructions:u", "cpu-clock:u", NULL};
-+	struct perf_pmu *pmu;
- 	struct perf_cpu_map *cpus;
- 	struct perf_cpu cpu;
--	int ret, i = 0;
-+	int ret = 0;
- 
- 	cpus = perf_cpu_map__new_online_cpus();
- 	if (!cpus)
-@@ -70,12 +70,23 @@ static bool perf_probe_api(setup_probe_fn_t fn)
- 	cpu = perf_cpu_map__cpu(cpus, 0);
- 	perf_cpu_map__put(cpus);
- 
--	do {
--		ret = perf_do_probe_api(fn, cpu, try[i++]);
--		if (!ret)
--			return true;
--	} while (ret == -EAGAIN && try[i]);
--
-+	ret = perf_do_probe_api(fn, cpu, "software/cpu-clock/u");
-+	if (!ret)
-+		return true;
-+
-+	pmu = perf_pmus__scan_core(/*pmu=*/NULL);
-+	if (pmu) {
-+		const char *try[] = {"cycles", "instructions", NULL};
-+		char buf[256];
-+		int i = 0;
-+
-+		 while (ret == -EAGAIN && try[i]) {
-+			snprintf(buf, sizeof(buf), "%s/%s/u", pmu->name, try[i++]);
-+			ret = perf_do_probe_api(fn, cpu, buf);
-+			if (!ret)
-+				return true;
-+		}
-+	}
- 	return false;
- }
- 
--- 
-2.49.0.777.g153de2bbd5-goog
+Yes, It can be supported for !PEBS samples. I ever hesitated whether to add
+support to capture SSP for !PEBS. Since there is a latency between counter
+overflowing and SW reading SSP, the captured SSP may be inaccurate for
+!PEBS samples. This makes it not so valuable considering we already support
+it for PEBS sampling.
 
+Anyway, we can support it in next version if it's necessary.
+
+
+>
+> ISTR making a similar comment last time.
