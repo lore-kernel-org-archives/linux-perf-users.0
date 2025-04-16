@@ -1,430 +1,294 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F5D21C9FD;
-	Wed, 16 Apr 2025 16:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923E62153C8;
+	Wed, 16 Apr 2025 17:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820981; cv=none; b=iVfJYUcx6i5c0cFzBcWyI452jZ+NE76UyGJrskfXwit8DJ2pBmFQmhsxCfnKmhmphWhzV9tBTrYHtq7a+nTghppqeKwxAk4OxrkvCsDMYsr8ee7wPqlxq5wSOfb4cpUxyhQc5/HOrcSvjbJh5WXvX629MpDAZows7LGU1mK3eMA=
+	t=1744823780; cv=none; b=VfprLxGAZGm7zAEcU8pff9R0ObcTBb/NsmfZZJpK1aGcwUzRxYNjIf7KCubJJGJxWeoNLykpqJzzp+6lMSxcp8b24kzXdyV6qbzQBXRyy04dNWceL3TbhompT8EyzY/wSC17IjFVQAB3gujsva1Rlbpxw6z5VqI1zAnIPsij0sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820981; c=relaxed/simple;
-	bh=4MvYlUcGhYQjwlZwLAwo1RILr6ykcjeL8wbAjqFO940=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QmlArANM2y8ROYCtb6iPdGMSBKPBcQEIe81ljcJNYRDYPcbyY42+Bj7BD+In/CB6m/ZRxfcl/orYKNv7Z7vqaf7KqszNuqic2HYmYOV1KlgvuYzk+0aHQtM9amxiS4Cr6gb6/b9MRe64HBIhxcI9GHH//Fxs30dldbRy7T5TSPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n6yJ2xo4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LArePtHJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744823780; c=relaxed/simple;
+	bh=Ce5s6Z1CFV9qTUVus8GvzRNAMmORomOEL0qJSkFGRiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hHWGFeflvAndKiTiz+7jOdECbfxKhUthZbIpLrL+I03ZXmg0MTnqC7bFP8zAl0icojV34xQiMQ2unqhz9djQ4Qe8Vv5mFNEoTsLPXxRm+F5SMWsnHQlOyCt2gpBEdvN52e/YUthMBFXViNb3b8Zyj0gT8H3aONw1zLZIywbSpA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZUejlzbj; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n6yJ2xo4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LArePtHJ"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744820974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k2Lf8SyuDvhuwsrlXnosYopSjakalKZtdBvos5UVJiQ=;
-	b=n6yJ2xo4SvVASGbwe7E6Fk3gGwT4ufh2vJ3mZj2qnEhAHcgq1wEY6XZFSSNlv/rDY96ook
-	/K5IKca5u8zJOV55ybsBZlnuppAE3qU8mL76q3LrzJtPXTsBPmhsWO3H3HRa+YleHfD9US
-	lrbmLspsZddEELwpDonNU884VYMSuNLdkPN0SH8f5hckmXwMv1FxWuLbdv35zsCf2QCcbj
-	DKIQ6OhOWfi6QfiEQ2XMOkxs3Zhllr6VGKyYZofRHA3DyD+O9/S6dLcZ/kbfKj4JtAuBMl
-	YZ9Xdg6941yKDXGHw7HxI7dJjTRzhI1q8+wGJj9H2vCjbNjBl5R7aP/C9OLbHw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744820974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k2Lf8SyuDvhuwsrlXnosYopSjakalKZtdBvos5UVJiQ=;
-	b=LArePtHJlZ5a3Xnl+k7MfSpBDnDVj4q5ep8/WeT15s5Lbf+gM1pl8CcqftKnjq1VOAnVv9
-	kifftXPhvcvzmmDQ==
-To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v12 19/21] tools/perf: Allow to select the number of hash buckets
-Date: Wed, 16 Apr 2025 18:29:19 +0200
-Message-ID: <20250416162921.513656-20-bigeasy@linutronix.de>
-In-Reply-To: <20250416162921.513656-1-bigeasy@linutronix.de>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZUejlzbj"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GAerFV020699;
+	Wed, 16 Apr 2025 17:16:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=3JEXEK
+	VtqBbKqxPYthqGMyYI10oaZ9cG2KfWeyoFoPs=; b=ZUejlzbjMR5Jp6lI2XDEyI
+	9axyU76abEi0pMHNoNR39q6K9R6eRIrX/OtVwI54ik5ibIXS6diKzTi2H5NVwEpy
+	ryjrV1weoJWmH+qucqYrl/sszY4CtcXvYJXa97eWQqnHNf2fFVyKDotXy2bGLUvE
+	8l+EiSyKKZkRV+P5gjdLiEsREIJ2qWO5z/uONFHyCtrXMCD/AOXQxeV4DtFo51tG
+	fdk7JXer/olvMtem6QxS51DiG0kSzLGurZgZXGIQDzXPVxfff+G4yQKYkzs4IMql
+	FC/CFljnQxmtTGZNOdMbQvxpOxJX0pTbao0RZwECa7/cF9wpNnR1/r/6sbqIVNTg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462b0q22uh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:16:07 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GE5MK4000937;
+	Wed, 16 Apr 2025 17:16:07 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4602w01m0r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:16:07 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GHG6sX30081548
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 17:16:06 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F11D358043;
+	Wed, 16 Apr 2025 17:16:05 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4ABA75805F;
+	Wed, 16 Apr 2025 17:16:03 +0000 (GMT)
+Received: from [9.61.241.145] (unknown [9.61.241.145])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 17:16:03 +0000 (GMT)
+Message-ID: <40981d32-72f4-4935-a62c-444ad78ce336@linux.ibm.com>
+Date: Wed, 16 Apr 2025 22:46:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [mainline]tools/perf build warnings
+Content-Language: en-GB
+To: Athira Rajeev <atrajeev@linux.ibm.com>,
+        Namhyung Kim
+ <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Ingo Molnar
+ <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, jiang.peng9@zte.com.cn,
+        shao.mingyin@zte.com.cn, Thomas Gleixner <tglx@linutronix.de>
+References: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
+ <B34E8075-7F38-4E30-9E51-23E43DDDF06F@linux.ibm.com>
+ <1ec497ed-b98c-46aa-a9c2-5fa906790298@linux.ibm.com>
+ <99a06f56-08cf-42ce-a231-f9a38c6ece9a@linux.ibm.com>
+ <51BBBC12-9A42-4D72-BDBB-84879C940764@linux.ibm.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <51BBBC12-9A42-4D72-BDBB-84879C940764@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JRQ73GbY8oRCS7nWmmcSSVbwr81oZVWv
+X-Proofpoint-GUID: JRQ73GbY8oRCS7nWmmcSSVbwr81oZVWv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504160139
 
-Add the -b/ --buckets argument to specify the number of hash buckets for
-the private futex hash. This is directly passed to
-    prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, buckets, immutable)
 
-and must return without an error if specified. The `immutable' is 0 by
-default and can be set to 1 via the -I/ --immutable argument.
-The size of the private hash is verified with PR_FUTEX_HASH_GET_SLOTS.
-If PR_FUTEX_HASH_GET_SLOTS failed then it is assumed that an older
-kernel was used without the support and that the global hash is used.
+On 16/04/25 8:04 pm, Athira Rajeev wrote:
+>
+>> On 16 Apr 2025, at 7:49 PM, Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>>
+>>
+>> On 16/04/25 7:33 pm, Venkat Rao Bagalkote wrote:
+>>> On 16/04/25 6:41 pm, Athira Rajeev wrote:
+>>>>> On 16 Apr 2025, at 5:12 PM, Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>>
+>>>>> I am observing a new build warning on today mainline kernel, with head commit: g834a4a689699
+>>>>>
+>>>>> Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>>>>
+>>>>>
+>>>>> Warnings:
+>>>>>
+>>>>> diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>>>>>
+>>>>>
+>>>>> If you happen to fix this, please add below tag.
+>>>>>
+>>>>>
+>>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>> Hi Venkat
+>>>>
+>>>> Can you please check with https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/?h=tmp.perf-tools-next
+>>>> with the tmp.perf-tools-next branch..
+>>>
+>>> I verified with perf-tools-next repo on both branches namely tmp.perf-tools-next and perf-tools-next, and I think this warning got recently introduced.
+>> /Typo in the last mail, please refer to below update./
+>>
+>> I verified with perf-tools-next repo on both branches namely tmp.perf-tools-next and perf-tools-next, and issue is not seen there. And I think this warning got recently introduced.
+> Hi Venkat,
+>
+> Can you please check with this change:
+>
+>  From 9a92d361ca2c22ac774b904211eb8c4f7c80fc85 Mon Sep 17 00:00:00 2001
+> From: Athira Rajeev <atrajeev@linux.ibm.com>
+> Date: Fri, 9 May 2025 07:49:40 -0500
+> Subject: [PATCH] tools headers: Update the include/vdso/unaligned.h to sync
+>   headers
+>
+> To pick up the changes in:
+> commit acea9943271b ("vdso: Address variable shadowing in macros")
+>
+> Addressing this perf tools build warning:
+>
+> diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- tools/perf/bench/Build                 |  1 +
- tools/perf/bench/futex-hash.c          |  7 +++
- tools/perf/bench/futex-lock-pi.c       |  5 ++
- tools/perf/bench/futex-requeue.c       |  6 +++
- tools/perf/bench/futex-wake-parallel.c |  9 +++-
- tools/perf/bench/futex-wake.c          |  4 ++
- tools/perf/bench/futex.c               | 65 ++++++++++++++++++++++++++
- tools/perf/bench/futex.h               |  5 ++
- 8 files changed, 101 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/bench/futex.c
 
-diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-index 279ab2ab4abe4..b558ab98719f9 100644
---- a/tools/perf/bench/Build
-+++ b/tools/perf/bench/Build
-@@ -3,6 +3,7 @@ perf-bench-y +=3D sched-pipe.o
- perf-bench-y +=3D sched-seccomp-notify.o
- perf-bench-y +=3D syscall.o
- perf-bench-y +=3D mem-functions.o
-+perf-bench-y +=3D futex.o
- perf-bench-y +=3D futex-hash.o
- perf-bench-y +=3D futex-wake.o
- perf-bench-y +=3D futex-wake-parallel.o
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index b472eded521b1..fdf133c9520f7 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -18,9 +18,11 @@
- #include <stdlib.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
-+#include <linux/prctl.h>
- #include <linux/zalloc.h>
- #include <sys/time.h>
- #include <sys/mman.h>
-+#include <sys/prctl.h>
- #include <perf/cpumap.h>
-=20
- #include "../util/mutex.h"
-@@ -50,9 +52,12 @@ struct worker {
- static struct bench_futex_parameters params =3D {
- 	.nfutexes =3D 1024,
- 	.runtime  =3D 10,
-+	.nbuckets =3D -1,
- };
-=20
- static const struct option options[] =3D {
-+	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
-+	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('r', "runtime", &params.runtime, "Specify runtime (in second=
-s)"),
- 	OPT_UINTEGER('f', "futexes", &params.nfutexes, "Specify amount of futexes=
- per threads"),
-@@ -118,6 +123,7 @@ static void print_summary(void)
- 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs =3D %d\n",
- 	       !params.silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
- 	       (int)bench__runtime.tv_sec);
-+	futex_print_nbuckets(&params);
- }
-=20
- int bench_futex_hash(int argc, const char **argv)
-@@ -161,6 +167,7 @@ int bench_futex_hash(int argc, const char **argv)
-=20
- 	if (!params.fshared)
- 		futex_flag =3D FUTEX_PRIVATE_FLAG;
-+	futex_set_nbuckets_param(&params);
-=20
- 	printf("Run summary [PID %d]: %d threads, each operating on %d [%s] futex=
-es for %d secs.\n\n",
- 	       getpid(), params.nthreads, params.nfutexes, params.fshared ? "shar=
-ed":"private", params.runtime);
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock=
--pi.c
-index 0416120c091b2..5144a158512cc 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -41,10 +41,13 @@ static struct stats throughput_stats;
- static struct cond thread_parent, thread_worker;
-=20
- static struct bench_futex_parameters params =3D {
-+	.nbuckets =3D -1,
- 	.runtime  =3D 10,
- };
-=20
- static const struct option options[] =3D {
-+	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
-+	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('r', "runtime", &params.runtime, "Specify runtime (in second=
-s)"),
- 	OPT_BOOLEAN( 'M', "multi",   &params.multi, "Use multiple futexes"),
-@@ -67,6 +70,7 @@ static void print_summary(void)
- 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs =3D %d\n",
- 	       !params.silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
- 	       (int)bench__runtime.tv_sec);
-+	futex_print_nbuckets(&params);
- }
-=20
- static void toggle_done(int sig __maybe_unused,
-@@ -203,6 +207,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	mutex_init(&thread_lock);
- 	cond_init(&thread_parent);
- 	cond_init(&thread_worker);
-+	futex_set_nbuckets_param(&params);
-=20
- 	threads_starting =3D params.nthreads;
- 	gettimeofday(&bench__start, NULL);
-diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requ=
-eue.c
-index aad5bfc4fe188..a2f91ee1950b3 100644
---- a/tools/perf/bench/futex-requeue.c
-+++ b/tools/perf/bench/futex-requeue.c
-@@ -42,6 +42,7 @@ static unsigned int threads_starting;
- static int futex_flag =3D 0;
-=20
- static struct bench_futex_parameters params =3D {
-+	.nbuckets =3D -1,
- 	/*
- 	 * How many tasks to requeue at a time.
- 	 * Default to 1 in order to make the kernel work more.
-@@ -50,6 +51,8 @@ static struct bench_futex_parameters params =3D {
- };
-=20
- static const struct option options[] =3D {
-+	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
-+	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads",  &params.nthreads, "Specify amount of thread=
-s"),
- 	OPT_UINTEGER('q', "nrequeue", &params.nrequeue, "Specify amount of thread=
-s to requeue at once"),
- 	OPT_BOOLEAN( 's', "silent",   &params.silent, "Silent mode: do not displa=
-y data/details"),
-@@ -77,6 +80,7 @@ static void print_summary(void)
- 	       params.nthreads,
- 	       requeuetime_avg / USEC_PER_MSEC,
- 	       rel_stddev_stats(requeuetime_stddev, requeuetime_avg));
-+	futex_print_nbuckets(&params);
- }
-=20
- static void *workerfn(void *arg __maybe_unused)
-@@ -204,6 +208,8 @@ int bench_futex_requeue(int argc, const char **argv)
- 	if (params.broadcast)
- 		params.nrequeue =3D params.nthreads;
-=20
-+	futex_set_nbuckets_param(&params);
-+
- 	printf("Run summary [PID %d]: Requeuing %d threads (from [%s] %p to %s%p)=
-, "
- 	       "%d at a time.\n\n",  getpid(), params.nthreads,
- 	       params.fshared ? "shared":"private", &futex1,
-diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/fute=
-x-wake-parallel.c
-index 4352e318631e9..ee66482c29fd1 100644
---- a/tools/perf/bench/futex-wake-parallel.c
-+++ b/tools/perf/bench/futex-wake-parallel.c
-@@ -57,9 +57,13 @@ static struct stats waketime_stats, wakeup_stats;
- static unsigned int threads_starting;
- static int futex_flag =3D 0;
-=20
--static struct bench_futex_parameters params;
-+static struct bench_futex_parameters params =3D {
-+	.nbuckets =3D -1,
-+};
-=20
- static const struct option options[] =3D {
-+	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
-+	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('w', "nwakers", &params.nwakes, "Specify amount of waking th=
-reads"),
- 	OPT_BOOLEAN( 's', "silent",  &params.silent, "Silent mode: do not display=
- data/details"),
-@@ -218,6 +222,7 @@ static void print_summary(void)
- 	       params.nthreads,
- 	       waketime_avg / USEC_PER_MSEC,
- 	       rel_stddev_stats(waketime_stddev, waketime_avg));
-+	futex_print_nbuckets(&params);
- }
-=20
-=20
-@@ -291,6 +296,8 @@ int bench_futex_wake_parallel(int argc, const char **ar=
-gv)
- 	if (!params.fshared)
- 		futex_flag =3D FUTEX_PRIVATE_FLAG;
-=20
-+	futex_set_nbuckets_param(&params);
-+
- 	printf("Run summary [PID %d]: blocking on %d threads (at [%s] "
- 	       "futex %p), %d threads waking up %d at a time.\n\n",
- 	       getpid(), params.nthreads, params.fshared ? "shared":"private",
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 49b3c89b0b35d..8d6107f7cd941 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -42,6 +42,7 @@ static unsigned int threads_starting;
- static int futex_flag =3D 0;
-=20
- static struct bench_futex_parameters params =3D {
-+	.nbuckets =3D -1,
- 	/*
- 	 * How many wakeups to do at a time.
- 	 * Default to 1 in order to make the kernel work more.
-@@ -50,6 +51,8 @@ static struct bench_futex_parameters params =3D {
- };
-=20
- static const struct option options[] =3D {
-+	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
-+	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('w', "nwakes",  &params.nwakes, "Specify amount of threads t=
-o wake at once"),
- 	OPT_BOOLEAN( 's', "silent",  &params.silent, "Silent mode: do not display=
- data/details"),
-@@ -93,6 +96,7 @@ static void print_summary(void)
- 	       params.nthreads,
- 	       waketime_avg / USEC_PER_MSEC,
- 	       rel_stddev_stats(waketime_stddev, waketime_avg));
-+	futex_print_nbuckets(&params);
- }
-=20
- static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
-diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-new file mode 100644
-index 0000000000000..02ae6c52ba881
---- /dev/null
-+++ b/tools/perf/bench/futex.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <err.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <linux/prctl.h>
-+#include <sys/prctl.h>
-+
-+#include "futex.h"
-+
-+void futex_set_nbuckets_param(struct bench_futex_parameters *params)
-+{
-+	int ret;
-+
-+	if (params->nbuckets < 0)
-+		return;
-+
-+	ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, p=
-arams->buckets_immutable);
-+	if (ret) {
-+		printf("Requesting %d hash buckets failed: %d/%m\n",
-+		       params->nbuckets, ret);
-+		err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
-+	}
-+}
-+
-+void futex_print_nbuckets(struct bench_futex_parameters *params)
-+{
-+	char *futex_hash_mode;
-+	int ret;
-+
-+	ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-+	if (params->nbuckets >=3D 0) {
-+		if (ret !=3D params->nbuckets) {
-+			if (ret < 0) {
-+				printf("Can't query number of buckets: %m\n");
-+				err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
-+			}
-+			printf("Requested number of hash buckets does not currently used.\n");
-+			printf("Requested: %d in usage: %d\n", params->nbuckets, ret);
-+			err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
-+		}
-+		if (params->nbuckets =3D=3D 0) {
-+			ret =3D asprintf(&futex_hash_mode, "Futex hashing: global hash");
-+		} else {
-+			ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
-+			if (ret < 0) {
-+				printf("Can't check if the hash is immutable: %m\n");
-+				err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
-+			}
-+			ret =3D asprintf(&futex_hash_mode, "Futex hashing: %d hash buckets %s",
-+				       params->nbuckets,
-+				       ret =3D=3D 1 ? "(immutable)" : "");
-+		}
-+	} else {
-+		if (ret <=3D 0) {
-+			ret =3D asprintf(&futex_hash_mode, "Futex hashing: global hash");
-+		} else {
-+			ret =3D asprintf(&futex_hash_mode, "Futex hashing: auto resized to %d b=
-uckets",
-+				       ret);
-+		}
-+	}
-+	if (ret < 0)
-+		err(EXIT_FAILURE, "ENOMEM, futex_hash_mode");
-+	printf("%s\n", futex_hash_mode);
-+	free(futex_hash_mode);
-+}
-diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-index ebdc2b032afc1..9c9a73f9d865e 100644
---- a/tools/perf/bench/futex.h
-+++ b/tools/perf/bench/futex.h
-@@ -25,6 +25,8 @@ struct bench_futex_parameters {
- 	unsigned int nfutexes;
- 	unsigned int nwakes;
- 	unsigned int nrequeue;
-+	int nbuckets;
-+	bool buckets_immutable;
- };
-=20
- /**
-@@ -143,4 +145,7 @@ futex_cmp_requeue_pi(u_int32_t *uaddr, u_int32_t val, u=
-_int32_t *uaddr2,
- 					val, opflags);
- }
-=20
-+void futex_set_nbuckets_param(struct bench_futex_parameters *params);
-+void futex_print_nbuckets(struct bench_futex_parameters *params);
-+
- #endif /* _FUTEX_H */
---=20
-2.49.0
+Tested this patch and it fixes the reported warnings. Hence,
 
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Logs:
+
+
+make -C perf/
+make: Entering directory '/root/linux/tools/perf'
+   BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+   diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+   diff -u tools/include/linux/bits.h include/linux/bits.h
+   diff -u tools/arch/arm64/include/asm/cputype.h 
+arch/arm64/include/asm/cputype.h
+Makefile.config:1093: No libcapstone found, disables disasm engine 
+support for 'perf script', please install libcapstone-dev/capstone-devel
+Makefile.config:1155: libpfm4 not found, disables libpfm4 support. 
+Please install libpfm4-dev
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ OFF ]
+...                             libcapstone: [ OFF ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ OFF ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+   GEN     common-cmds.h
+   GEN /root/linux/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+   PERF_VERSION = 6.15.rc2.g834a4a689699
+   GEN     perf-archive
+   GEN     perf-iostat
+   CC      jvmti/libjvmti.o
+
+
+Regards,
+
+Venkat.
+
+> ---
+>   tools/include/vdso/unaligned.h | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
+> index eee3d2a4dbe4..ff0c06b6513e 100644
+> --- a/tools/include/vdso/unaligned.h
+> +++ b/tools/include/vdso/unaligned.h
+> @@ -2,14 +2,14 @@
+>   #ifndef __VDSO_UNALIGNED_H
+>   #define __VDSO_UNALIGNED_H
+>    -#define __get_unaligned_t(type, ptr) ({ \
+> - const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
+> - __pptr->x; \
+> +#define __get_unaligned_t(type, ptr) ({ \
+> + const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr); \
+> + __get_pptr->x; \
+>   })
+>    -#define __put_unaligned_t(type, val, ptr) do { \
+> - struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
+> - __pptr->x = (val); \
+> +#define __put_unaligned_t(type, val, ptr) do { \
+> + struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr); \
+> + __put_pptr->x = (val); \
+>   } while (0)
+>     #endif /* __VDSO_UNALIGNED_H */
+> --  2.47.1
+>
+> Thanks
+> Athira
+>
+> Hi Namhyung,
+>
+> I see we have few other warnings for which fixes is planned to picked for next cycle: https://lore.kernel.org/linux-perf-users/FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com/T/#me2ee1b70aeaad4901fb4d995b3b3015cd32f1adc
+>
+> Can we also consider picking this one include/vdso/unaligned.h .. Once Venkat tests , I will post this as separate patch
+>
+> Thanks
+> Athira
+>>> Git Bisect is pointing to acea9943271b62905033f2f8ca571cdd52d6ea7b as first bad commit.
+>>>
+>>>
+>>> Below is the bisect log:
+>>>
+>>> git bisect log
+>>> git bisect start
+>>> # status: waiting for both good and bad commits
+>>> # bad: [834a4a689699090a406d1662b03affa8b155d025] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+>>> git bisect bad 834a4a689699090a406d1662b03affa8b155d025
+>>> # status: waiting for good commit(s), bad commit known
+>>> # good: [0af2f6be1b4281385b618cb86ad946eded089ac8] Linux 6.15-rc1
+>>> git bisect good 0af2f6be1b4281385b618cb86ad946eded089ac8
+>>> # bad: [ef7785882672e73847fb80f6c39e76998d4db57b] Merge tag 'bcachefs-2025-04-10' of git://evilpiepirate.org/bcachefs
+>>> git bisect bad ef7785882672e73847fb80f6c39e76998d4db57b
+>>> # good: [e4742a89cfaced383db758bef94037637899487a] Merge tag 'block-6.15-20250410' of git://git.kernel.dk/linux
+>>> git bisect good e4742a89cfaced383db758bef94037637899487a
+>>> # good: [eaa517b77e63442260640d875f824d1111ca6569] ethtool: cmis_cdb: Fix incorrect read / write length extension
+>>> git bisect good eaa517b77e63442260640d875f824d1111ca6569
+>>> # good: [ac253a537da3b210fa4b65d522d5533fc68f9515] Merge tag 'perf-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect good ac253a537da3b210fa4b65d522d5533fc68f9515
+>>> # good: [3c9de67dd37029cca1d0f391ff565b3809b40a1f] Merge tag 'x86-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect good 3c9de67dd37029cca1d0f391ff565b3809b40a1f
+>>> # bad: [0c7cae12f67c4c5fd232cffb27023deb409e1e20] Merge tag 'irq-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect bad 0c7cae12f67c4c5fd232cffb27023deb409e1e20
+>>> # bad: [34833819d2270ef96fa98fe3c1d3d297b5dec986] Merge tag 'timers-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect bad 34833819d2270ef96fa98fe3c1d3d297b5dec986
+>>> # good: [92e250c624ea37fde64bfd624fd2556f0d846f18] timekeeping: Add a lockdep override in tick_freeze()
+>>> git bisect good 92e250c624ea37fde64bfd624fd2556f0d846f18
+>>> # bad: [acea9943271b62905033f2f8ca571cdd52d6ea7b] vdso: Address variable shadowing in macros
+>>> git bisect bad acea9943271b62905033f2f8ca571cdd52d6ea7b
+>>> # first bad commit: [acea9943271b62905033f2f8ca571cdd52d6ea7b] vdso: Address variable shadowing in macros
+>>>
+>>>
+>>> Regards,
+>>>
+>>> Venkat.
+>>>
+>>>> Also there is a patchset here:
+>>>> https://lore.kernel.org/linux-perf-users/FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com/T/#m3e9d6aac4c34ebf42f18f3c213b7dff8f8c70d9d
+>>>>
+>>>> Which I think you have already tested..
+>>>>
+>>>> Thanks
+>>>> Athira
+>>>>> Regards,
+>>>>>
+>>>>> Venkat.
+>
