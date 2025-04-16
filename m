@@ -1,227 +1,229 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9776718DB05;
-	Wed, 16 Apr 2025 19:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744830933; cv=fail; b=WMAKCQzKNwrYXilrILgJXw46EbPkiGOpRr525Z1x3JqbLBqQyuijCgFXGEr1MyJp252E0W9etLjKR3lOrN2k4hrcmm6b1UEyeZj2Vm5j1VMjwzbzsxAk/T05UGN6zk8qgFo34Q2WDNW6bJFmyNd5+3pze91dbw5ALaQCTBohiq0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744830933; c=relaxed/simple;
-	bh=QCQTHgMTiZQ4wbBHXU5Wtxvh+qHsh/n84bc7F/j8A/0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=f81hXuad1P+eBXi0FKbHZtP7pfw7e5P7PturBm/HS0bTbpU+fMm/hcExdukUbUnu128f5WmrbPkg8Mq5bU3KKade6L0CQSE4AHuK18uMENWq/GmC3QQmq9YJfyqmJ1FvZktA3VWavwB5LuIrL18alggFOy2jDFXt4IDB5Cl/EDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=KkqbyR+t; arc=fail smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9181547C0;
+	Wed, 16 Apr 2025 19:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744832729; cv=none; b=f0lf6xaMHfk803v+VXEbS75NsCb2dch/dtez0oVp6i+Ox5ZzG7bbWybi6IgUmlGvsL/2BAZC78eO2qd3KGBs30jaPS5LSIGu9NfVCOyJnA5KYcLoFlo4LNQOqnuPzZu04cBzcSc+FeTxzA867Tgic0e43HIHBBK12rLa0noi+s4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744832729; c=relaxed/simple;
+	bh=SnOLQuJuhzY6tBls03Lca2ZUkw8w57uXybR6W83oisU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jk4yzYfArrGDBxys+FTAMPxGH0QPvhYlniddUhetgbKeMirPdDJaTjGW7yiC8kcXBd2S9wNRYb99KCRhkYfGK3p+/ayCZ6gyVQemQoDoHJEVpXmaigYZg+7f/Gt5LgluUk5uWKfXh9/7vkfbLosUKbXMcR06Dz4QP+UDGBEyl2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUua5sa/; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="KkqbyR+t"
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GIHkWD019681;
-	Wed, 16 Apr 2025 12:15:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	s2048-2021-q4; bh=QCQTHgMTiZQ4wbBHXU5Wtxvh+qHsh/n84bc7F/j8A/0=; b=
-	KkqbyR+tv4XQeO97BbXdB4Ri6u1HaaO1vig36iZ1ZbmXnnNar3gv0mVfB2uwa/hY
-	T16ytXftyvSalHAMQ5owgcb8mIjRhGiqjfR7+XRI4/5KsnkII9fmXNK0MslWbvK6
-	B+3lrxs5vX030Z/oAxIUBTexmMtRw9Mh5MPfHuKXMYTTeQY+73eZfK7LjuZVB2X0
-	zosYDfj/kba9guCSF7KrYeG3M+1HzePclaVDFn4FLz3oZ9Qw0VWv+KRTnxG99kjN
-	FQBd1Ybwe7OT4iIcqX2k9i0lkIC/aUcrQkWXAwCHjOz0+DMdqHC67QjgdyK2P3yK
-	XjRBTRMJ3q6bN8pMQQjIaw==
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2042.outbound.protection.outlook.com [104.47.74.42])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 462aj5v7qn-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 12:15:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O/BPY7elk659Yug8bXVn8tnBVug1woWHpGsoj01sSWU26t+xoBhCyHXZ0OGAdwBaERWyPvPWsrlLSfUxCWPJbPv0MQC3MLLxAU1uBF5pblKmz11pMprgrluHGXmurqAbbpfladgY2J61LR0plfOit575WzQ47FtYebxgH8foO0ZaG3wbjitCMhcOwVbLrL9XqngG/TuTEM6qKCE36/WOJfSYi3oOfHmTjcmcpyf7cooGFAzm7Rt4mP/kb+K6ZVtO5K4UPr3AbrKC+3AYzd5mwdh81wHj+/17nLQ/ifuLXcw2mObRq5pxHc/6kMjF0RdnSTagr0XxVMuvSBkPsliRfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QCQTHgMTiZQ4wbBHXU5Wtxvh+qHsh/n84bc7F/j8A/0=;
- b=rOTBjDQImat5tTjuKaBJgFcDaRcPpaR+WhO77OzE4v1EzVCyBUvl7uV9+RVTvOb9MRCEn8v5U8HjropiLIR/tFnrSu6S8+S2wW3GT5RYGuoSvvWqPTF9uDWXeYGczW+uhRAevvowNSErMZajQDmCLN3rMgOIgunsZmVh2zxQaU3DvwehPA791Hyrh7IxrIUtRihXT8Ycn1Dt8mfNzKXNqV6fC5hk8huObfbR/EotxqeGlnBMrDkFZKoegces2tHUOl0Kjcpm0pICpj7vAXvTQtSrVrhBoQQLFxHTig2t3b+5OcPS25YEx+59WBidAS5abAgKUscXmbAIKtKZdSqI0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from SA1PR15MB5109.namprd15.prod.outlook.com (2603:10b6:806:1dc::10)
- by IA0PPF99570C442.namprd15.prod.outlook.com (2603:10b6:20f:fc04::b3c) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 16 Apr
- 2025 19:15:26 +0000
-Received: from SA1PR15MB5109.namprd15.prod.outlook.com
- ([fe80::662b:d7bd:ab1b:2610]) by SA1PR15MB5109.namprd15.prod.outlook.com
- ([fe80::662b:d7bd:ab1b:2610%4]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
- 19:15:25 +0000
-From: Song Liu <songliubraving@meta.com>
-To: Sandipan Das <sandipan.das@amd.com>
-CC: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com"
-	<mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "mark.rutland@arm.com"
-	<mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com"
-	<alexander.shishkin@linux.intel.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "irogers@google.com" <irogers@google.com>,
-        "adrian.hunter@intel.com"
-	<adrian.hunter@intel.com>,
-        "kan.liang@linux.intel.com"
-	<kan.liang@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "eranian@google.com" <eranian@google.com>,
-        Song Liu <songliubraving@meta.com>,
-        "ravi.bangoria@amd.com"
-	<ravi.bangoria@amd.com>,
-        "ananth.narayan@amd.com" <ananth.narayan@amd.com>
-Subject: Re: [PATCH 4/4] perf/x86/amd/uncore: Prevent UMC counters from
- saturating
-Thread-Topic: [PATCH 4/4] perf/x86/amd/uncore: Prevent UMC counters from
- saturating
-Thread-Index: AQHbqSU5Xjpz+HeHDEaezTzBaTExmbOmtXgA
-Date: Wed, 16 Apr 2025 19:15:25 +0000
-Message-ID: <C24A57FB-5898-411B-90B4-58252BC22CE9@fb.com>
-References: <cover.1744184837.git.sandipan.das@amd.com>
- <c8e5808145985bb558d8daaefe42586b74d4085d.1744184837.git.sandipan.das@amd.com>
-In-Reply-To:
- <c8e5808145985bb558d8daaefe42586b74d4085d.1744184837.git.sandipan.das@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: Apple Mail (2.3826.500.181.1.5)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR15MB5109:EE_|IA0PPF99570C442:EE_
-x-ms-office365-filtering-correlation-id: a729d19f-c4a4-43b0-1277-08dd7d1b0ade
-x-fb-source: Internal
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|7416014|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?dFZBcStOdWVqU2JjNTZkN0hRcW5TMi8vZzdnWm9Wb0xZSk1VUjF2ekFYOVRv?=
- =?utf-8?B?OVNkUlZxZ0dOb0lwbmVZNC9ZRVV1ejg3NnVFT2RCVWZndXIwWSs5R0h1TDRl?=
- =?utf-8?B?UDdJdmxVMnkvV0dOTDlsNERTeGgwRi9YVlVpSUJtd1NySElRUGZLTS9vYkpp?=
- =?utf-8?B?YmJ2NkVkZDFsNTVHdDNpNUFVTjRMRk1PRjZTb3ZhNUtOVnJZT0pBb0taSTJi?=
- =?utf-8?B?OEpYcDB1bHBVeUppYXJrSm9QNzNXdXgvOTl4bnNMQTBJbzJvYXN5Z1pva3RN?=
- =?utf-8?B?WHltSTdMZFdSZVBqUEtTbGZ1Skd2bkhHSnNXU0kwWGRkUHdvM01oV3Jna2Vn?=
- =?utf-8?B?WW5sR3hOZG9YNXRjWHZ2OElkSkVPNk9wTGhBalJZQlcwS3dkdS9Fdm5ldzEw?=
- =?utf-8?B?WnRMU2tpTlNuazUzTkdSS0hXdmtoZjhsK0hzbWJMcGc2STFTeXBQZFpuZ3Z0?=
- =?utf-8?B?bjZTNUZ0Y3JPNmY1cHNCQzByeWx5eFREMWJ2U1oram5JejhJUitvVWdOSWlP?=
- =?utf-8?B?a2hFV3dYVVVqYVVxbTNDczlyRkd6SVgzN0ZhNnVIZWplQUgvQjhsRUU4OHJW?=
- =?utf-8?B?ZDZkT3pPam1vYnQ2U3VMNityYjkvY0Z3cFU0VVpMcUFPWXhrWmdLMW92NC93?=
- =?utf-8?B?ZXFnOENwR05oYzIzZzV0MFpETjFHOE9jbEdkMjRXNWYrRnhLV0hydktvdnNo?=
- =?utf-8?B?dVE4S2U5NFZkT1o4UWM3ZzJUcFBmdXE4ZDZ2L2hzMjZzNzgyUmx2VzN0TnJl?=
- =?utf-8?B?QU9jU3JTam1CS2hUOEtSY0JKeTA3d3NHSWNKRUhWOWpwWUc5Yk0xMDZLbGlV?=
- =?utf-8?B?dUFDNjU3VEtOaEEvQVJCVlhyWnZsU0pCYzdUZ1FzVEhtR0tvWlBUaFdFekQw?=
- =?utf-8?B?bm1ZekRucVFSSTBUZitEYVVOeXo5bmNyR1kyS0FDYTJJaVFzU1Bld1JRRnMw?=
- =?utf-8?B?MUIzWDErZ1BwM3VmQUhHRU50KzBzdm5iSXBHQUpvZDNleUdNREp6SFd0RmFr?=
- =?utf-8?B?eUFPWW1iSURVbWJYd0NqR1VPZk1rdTdCQjFyNkMvN0g2eWRWVFdaVWRJekl6?=
- =?utf-8?B?Q3A5cktrekdzM0Z1clVTUzAzUEdaUlpBWmtHK0RZV000ZkRuTTlZK1N6Z1Bh?=
- =?utf-8?B?V3ZzOGVMUTZhd3N3NnNpUktPWE5GeGtVTTJlVENNQUovcUhWcnJ1OFcvbWhL?=
- =?utf-8?B?MXJITXJQV2hGK1BLaFIrei8reFFaT2ErT0Q1S1lJSlJCSUJ3bDJqS0kzRTJZ?=
- =?utf-8?B?a2xhdmlkNHc3UnNDNDIrZnV1NXJseUNOL2Yzd05KcFluQ3lWb0FSQUZZeldV?=
- =?utf-8?B?NElteXFsYzRGQ0dKYThEWERSaTRwc2xxYkx4WnYxdE1EN0t2YXpUUm5MeUxO?=
- =?utf-8?B?T0ZsaUpsSWloVUc4OW1SOVFMSUVPTElRMjFaWGU2Vm9lU01paTB2ZlZyNWZ5?=
- =?utf-8?B?YkN4S0xaZllLcmpzbWR2L0NHdGxXU0EwQmZBYkt2c3Q5eDRNRmdva0xHU1l3?=
- =?utf-8?B?dytkUVRtOWRydmx0d3hVeTl4dEFBTWFOOGRzZXNUTnQ2c09ZeWhQQjlWUi9q?=
- =?utf-8?B?OHBaRDgvV2I3R3JFbjFYdUVpc3kvNmZBZWFGQjVwd3BBNVBma3EyYnE3NDQ3?=
- =?utf-8?B?RGZQcEk0Q2ZCcjVETE82aWZIbEZDNXQ3emw2NjM2TlJFc1FjcGlrdzdIWTZN?=
- =?utf-8?B?WTJaeHhmeDRmdWoyWmVBRnE5djdXbnNKaVZXVmx0ckJvSCtwT1VSTWtWTFRw?=
- =?utf-8?B?Y01OZ3BFWXUvVUNUR0RKVktjcTUrbzczS3FWdEVWRnVrNmlIU3lyTGxrMFhD?=
- =?utf-8?B?MDlaUWhDdXFTRjIydUd2cVRhOTRZV0liZCtXYisxczdEUjNBMUdoNThhSEtk?=
- =?utf-8?B?bDFvSnZ0Smh0Y0FPLzVmU2w3UXJvZjQwaHpGYkNzQTU2TlJLcHVMeEpjSkdq?=
- =?utf-8?B?UWVENXpuWFNPaFJ3U3BzZXk3bmRweW15MHRPY3VvZ0Y4WFpBc2ErMGpzQUdJ?=
- =?utf-8?B?SmpyeEZ5amtBPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5109.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?ZkI5WTNhSGpRN0xrTzhnQlhQS1BPNWc5K0x0UU5rNURDWW14Y1MvK3pOS3Zx?=
- =?utf-8?B?alFUNWltNXNsOHpKQnVKWm0xUkthOStHKzZyR3FQSXpkQ0tPOFBOQnlVelo3?=
- =?utf-8?B?VVZ3VTJYd3FoTkpGZytjT1RaVWN3UkhnU0lBK3JOWUhSN0pHZkVrS1hxYWQ2?=
- =?utf-8?B?UVF2UTYzY2FZU3lybng0T1dBTGZCeXpXb05kRldUVVp5S1FiREdlMy9PWk15?=
- =?utf-8?B?NFVUNkFRUkhreUppK3JwdGpYQUppZGdXTldITDUvQW5hZG1OMmpvRG5PeWxi?=
- =?utf-8?B?NldLNjY2MkltelVXUk9iOWJWTFBibDlUSy9sMmFsVFhZNkRqVGhZTFhDNFpm?=
- =?utf-8?B?Wll5dHZ6WnY2N1o1N2RnUUNoczBDWmF1VFgyOVBPQlNXWDlkQVMyYjJZWitI?=
- =?utf-8?B?QllyTWl1NVZDeU1HUXN0NmZEYmh1YWhSeTlwaEpMcWxNL3dXMzIvanVTUDFp?=
- =?utf-8?B?eDY0UDVWT1l1a1h4RzU4V2JjME95c0d6eEk0a0J1Z1BSMFR1YVVvV1k2anJE?=
- =?utf-8?B?eWVhU3Y5VXNuSlZmNGdsY3hieG1Eb3B0b0FOUG9xdmduL2dYMkRJSjdXRkdI?=
- =?utf-8?B?aW9EcU1RT0RLM1hFSzI0Y1RaaVphbHlURW1sQ1FzRWgvdklyQUl2ZGk5S3VT?=
- =?utf-8?B?U1BPUzFybXcrTWZic0lUdllrNVBvb0o4S0k3LzVMYWVJTjVnWStLVUZFM01r?=
- =?utf-8?B?WHAxTjIweFNhUW9vYmgzaWg4T01qNGRLdm9GWHNZb0VDTUpidlBxZnNQNzlS?=
- =?utf-8?B?dmUwSmxyYW1hazAwVlFwNHE1VHBVUXRHVjFtL0pNemROWkYyWGl4dGxWZyts?=
- =?utf-8?B?bFZTNnRYVUFUbU9LbDkzbkxlWVJscXlURFdlVlJkUnRzZmd6SlUxc1Z1M3Fn?=
- =?utf-8?B?V1VUTm0rRDlJaC9oWlY3eTBOQXBkd3MvZDFWZ3p0QUFHbSs3encxOHRyN3Ew?=
- =?utf-8?B?U1NBZ2hLVjRSMmZSUFJqQU52K2doWDZOc0tRWlFpQnRmOUx4aUNqSmVRQjds?=
- =?utf-8?B?Q2J2aVlDcVZ2STZRaUJRUUtWSSticU5FWUIySGMrZGVsMThNNFBucTBZV0lp?=
- =?utf-8?B?cWJ1djl4a2puODVQamhQLzROQXhQT1AxWVhIejFrQnlQUXpnUkZReG9ncC84?=
- =?utf-8?B?VGVnalNQL2ZaM1R5b2tJb0ErZExOYXQ3ZzQ4OFRRdW9nck5rZmxrZWxrV3dB?=
- =?utf-8?B?UXlSTkdDN01TbU1QMHNZTXVybjF6djhXemVVRXpUQWVIK1V0eTBDK2srbXc3?=
- =?utf-8?B?TExzY2NlRDFMajk2R21GWmdSNXRkeTlraWV5RGJJM0VoaUlUQkR2VXBQYnBl?=
- =?utf-8?B?SGcrK0xqNjhRQWI2VlNyaEtESm9tNUlRUTJmTjZEeFEreXpXN1g3MWRsV0Fh?=
- =?utf-8?B?ZnNMY092ZlNhVmFsc1hQZlJucENncHVxWVFERm16TFFOYVcxNjhRUGxEMTMw?=
- =?utf-8?B?SUcyNFJRaUJMUk4rNGx0OW51dDM0TkwxUHZ1aTY1bEt3d3RWaW0zVmpHdlZK?=
- =?utf-8?B?V3VMMkprUitaTm1CZDZYUDdGSU9GNXJiUTZKY1RNVFBOakZPY2drRFZiOXBR?=
- =?utf-8?B?dnU4TlJqNTdTV3A3RHJ4MWxjL3dJNTBjSFdhOG1GV0hGb0tPTjdGVkN1RG03?=
- =?utf-8?B?NDdzUTBIc3g5VGhUSG4zakNiQjQxY2NFL3FEZDF3T2F1cVNMWHF1RVl6NCtL?=
- =?utf-8?B?OHJHUUl0Z0VuQ0x5enlYZTlaTnZIR2tYbzlGMnVhYWVkTFVKN3lpRFdWWGI4?=
- =?utf-8?B?UUYxd1VjMk5obUJGZ1ZDaFcvZU9Ka2hIZGRIZFNPeTRYVjJEUzA3b1JCelRw?=
- =?utf-8?B?OFZQVVV3aXRBaEc5dTkxQytHeEYycGJzRVFOTE1oRFBKaTNQdnpPeUFsdk9x?=
- =?utf-8?B?QTBqS3Bnc2RmSk1wV3JvdFBFM3hHVWVJUTRZK1I5UE12OWxteERxUTBUc2lM?=
- =?utf-8?B?TktmTXBiTEoxaytVYVFJbFg0WGMwa2xHRHJFUXB2emZUeDlIYWxYOHJYVHhM?=
- =?utf-8?B?OVdVL1UrTXdOYkdqV1B4TkdWYVlYK043UjZuMGxYT3pkT0U5eUtZMFRqWGJY?=
- =?utf-8?B?ZUk1YmwrNnJNQWtzVnhyUk1uYXZLb3Nhd09pRFNzS0ZZZWl6TE0zVzdHMGU3?=
- =?utf-8?B?d0RDcklDeUZVck02Um1TZ1R5bUJmblBtbzZXK2tyRUUrUmx4TCtUL0psVXhw?=
- =?utf-8?Q?fPn8BJg4t4Tib89t6v/7s/8=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A493AAEABD3CA6419FA143889041E830@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUua5sa/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744832727; x=1776368727;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SnOLQuJuhzY6tBls03Lca2ZUkw8w57uXybR6W83oisU=;
+  b=aUua5sa/ciY5I+//RtS5+KwhaQXdJIGdrKe1tM96dPDd0FdcqKdLLgEP
+   +439nAaUDhz0F+4hIU8edLgFLoLapdZOOHbKE26x0VpFLo5jqseMpR4e5
+   FbkV/VeL5dFVYtltW28KXQ1ntitdo0CyT3IUqUtIeNbk3/UW4JXMiyEVp
+   xGCopDOePL8eT9g20wGugXimgK2kyBziw19qwYsdvUabevwQNPDiaqhZF
+   Np2ZNRAcZafR2tTv3FBvJ+5uTxaIjWtHhFTzVpAAj8yncCFeBZPK4xcUT
+   ozylP8psD8063zURXBbVXep97IdGyEkgtSIh5ayYPC+sJJ/HGtufz7rkR
+   A==;
+X-CSE-ConnectionGUID: H58EIM/dTCugcF2KPdQDdg==
+X-CSE-MsgGUID: ER0K8C2VTu6XOp1uM81P/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46323156"
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="46323156"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 12:45:27 -0700
+X-CSE-ConnectionGUID: 8Fv0wGWhRs6lr3TTHEXLlQ==
+X-CSE-MsgGUID: JhoB8xUjTSqFVOyAPEJuwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="130535123"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 12:45:27 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 5387120B5736;
+	Wed, 16 Apr 2025 12:45:25 -0700 (PDT)
+Message-ID: <e0b25b3e-aec0-4c43-9ab2-907186b56c71@linux.intel.com>
+Date: Wed, 16 Apr 2025 15:45:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5109.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a729d19f-c4a4-43b0-1277-08dd7d1b0ade
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 19:15:25.6220
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PXsYum1Q0IE+aQ6F7XZcI2tE11bezRFy1a9YRTVhyGRLk80IpQjngdrD2TvBxQZNxT4dWAos8Zzz8TiEXS8Kuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF99570C442
-X-Proofpoint-GUID: 5TEVqyR9DAzCVSA6lHPhbC8E0Pt_2YjX
-X-Authority-Analysis: v=2.4 cv=UuxjN/wB c=1 sm=1 tr=0 ts=680001d2 cx=c_pps a=CZyBIZNk7+VlD+/eRBofeA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=VwQbUJbxAAAA:8 a=X5L3JeaEOlXc4u4ZOdwA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
-X-Proofpoint-ORIG-GUID: 5TEVqyR9DAzCVSA6lHPhbC8E0Pt_2YjX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_07,2025-04-15_01,2024-11-22_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
+ <20250415135323.GC4031@noisy.programming.kicks-ass.net>
+ <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
+ <20250416153226.GC17910@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250416153226.GC17910@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-DQoNCj4gT24gQXByIDksIDIwMjUsIGF0IDEyOjU34oCvQU0sIFNhbmRpcGFuIERhcyA8c2FuZGlw
-YW4uZGFzQGFtZC5jb20+IHdyb3RlOg0KPiANCj4gVW5saWtlIEwzIGFuZCBERiBjb3VudGVycywg
-VU1DIGNvdW50ZXJzIChQRVJGX0NUUnMpIHNldCB0aGUgT3ZlcmZsb3cgYml0DQo+IChiaXQgNDgp
-IGFuZCBzYXR1cmF0ZSBvbiBvdmVyZmxvdy4gQSBzdWJzZXF1ZW50IHBtdS0+cmVhZCgpIG9mIHRo
-ZSBldmVudA0KPiByZXBvcnRzIGFuIGluY29ycmVjdCBhY2N1bXVsYXRlZCBjb3VudCBhcyB0aGVy
-ZSBpcyBubyBkaWZmZXJlbmNlIGJldHdlZW4NCj4gdGhlIHByZXZpb3VzIGFuZCB0aGUgY3VycmVu
-dCB2YWx1ZXMgb2YgdGhlIGNvdW50ZXIuDQo+IA0KPiBUbyBhdm9pZCB0aGlzLCBpbnNwZWN0IHRo
-ZSBjdXJyZW50IGNvdW50ZXIgdmFsdWUgYW5kIHByb2FjdGl2ZWx5IHJlc2V0DQo+IHRoZSBjb3Jy
-ZXNwb25kaW5nIFBFUkZfQ1RSIHJlZ2lzdGVyIG9uIGV2ZXJ5IHBtdS0+cmVhZCgpLiBDb21iaW5l
-ZCB3aXRoDQo+IHRoZSBwZXJpb2RpYyByZWFkcyBpbml0aWF0ZWQgYnkgdGhlIGhydGltZXIsIHRo
-ZSBjb3VudGVycyBuZXZlciBnZXQgYQ0KPiBjaGFuY2Ugc2F0dXJhdGUgYnV0IHRoZSByZXNvbHV0
-aW9uIHJlZHVjZXMgdG8gNDcgYml0cy4NCj4gDQo+IEZpeGVzOiAyNWU1Njg0NzgyMWYgKCJwZXJm
-L3g4Ni9hbWQvdW5jb3JlOiBBZGQgbWVtb3J5IGNvbnRyb2xsZXIgc3VwcG9ydCIpDQo+IFNpZ25l
-ZC1vZmYtYnk6IFNhbmRpcGFuIERhcyA8c2FuZGlwYW4uZGFzQGFtZC5jb20+DQoNClJldmlld2Vk
-LWJ5OiBTb25nIExpdSA8c29uZ0BrZXJuZWwub3JnPg0KDQpUaGFua3MgZm9yIHRoZSBmaXghDQoN
-Cg0KDQo=
+
+
+On 2025-04-16 11:32 a.m., Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 12:31:03PM -0400, Liang, Kan wrote:
+> 
+>>> This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?
+> 
+>> The dyn_constraint is a supplement of the static constraints. It doesn't
+>> overwrite the static constraints.
+> 
+> That doesn't matter.
+> 
+>> In the intel_get_event_constraints(), perf always gets the static
+>> constraints first. If the dyn_constraint is defined, it gets the common
+>> mask of the static constraints and the dynamic constraints. All
+>> constraint rules will be complied.
+>>
+>> 	if (event->hw.dyn_constraint != ~0ULL) {
+>> 		c2 = dyn_constraint(cpuc, c2, idx);
+>> 		c2->idxmsk64 &= event->hw.dyn_constraint;
+>> 		c2->weight = hweight64(c2->idxmsk64);
+>> 	}
+> 
+> Read the comment that goes with EVENT_CONSTRAINT_OVERLAP().
+> 
+> Suppose we have (from intel_lnc_event_constraints[]):
+> 
+>   INTEL_UEVENT_CONSTRAINT(0x012a, 0xf)
+>   INTEL_EVENT_CONSTRAINT(0x2e, 0x3ff)
+> 
+> Then since the first is fully contained in the latter, there is no
+> problem.
+> 
+> Now imagine PEBS gets a dynamic constraint of 0x3c (just because), and
+> then you try and create a PEBS event along with the above two events,
+> and all of a sudden you have:
+> 
+> 	0x000f
+> 	0x003c
+> 	0x03ff
+> 
+> And that is exactly the problem case.
+> 
+> Also, looking at that LNC table, please explain:
+> 
+>   INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc)
+> 
+> that looks like the exact thing I've asked to never do, exactly because
+> of the above problem :-(
+
+I see. I think we can check the constraint table and update the overlap
+bit accordingly. Similar to what we did in the
+intel_pmu_check_event_constraints() for the fixed counters.
+
+I'm thinking something as below (Just a POC, not tested.)
+
+For the static table, set the overlap for the events that may trigger
+the issue at init time.
+For the dynamic constraint, add a dyn_overlap_mask to track if overlap
+is required for the feature (The below only supports the branch
+counters. The ACR and ARCH PEBS can be added later.) If it's required,
+set a flag PERF_X86_EVENT_OVERLAP for the event when the dyn_constraint
+is applied. The overlap bit will be set at runtime.
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 16f8aea33243..76a03a0c28e9 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3825,6 +3825,8 @@ intel_get_event_constraints(struct cpu_hw_events
+*cpuc, int idx,
+ 		c2 = dyn_constraint(cpuc, c2, idx);
+ 		c2->idxmsk64 &= event->hw.dyn_constraint;
+ 		c2->weight = hweight64(c2->idxmsk64);+		if (event->hw.flags &
+PERF_X86_EVENT_OVERLAP)
++			c2->overlap = 1;
+ 	}
+
+ 	return c2;
+@@ -4197,6 +4199,12 @@ static inline void
+intel_pmu_set_acr_caused_constr(struct perf_event *event,
+ 		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
+ }
+
++enum dyn_overlap_bits {
++       DYN_OVERLAP_BRANCH_CNTR
++};
++
++static unsigned long dyn_overlap_mask;
++
+ static int intel_pmu_hw_config(struct perf_event *event)
+ {
+ 	int ret = x86_pmu_hw_config(event);
+@@ -4261,6 +4269,8 @@ static int intel_pmu_hw_config(struct perf_event
+*event)
+ 		if (branch_sample_counters(leader)) {
+ 			num++;
+ 			leader->hw.dyn_constraint &= x86_pmu.lbr_counters;
++			if (test_bit(DYN_OVERLAP_BRANCH_CNTR, &dyn_overlap_mask);
++				leader->hw.flags |= PERF_X86_EVENT_OVERLAP;
+ 		}
+ 		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
+
+@@ -4270,6 +4280,8 @@ static int intel_pmu_hw_config(struct perf_event
+*event)
+ 			if (branch_sample_counters(sibling)) {
+ 				num++;
+ 				sibling->hw.dyn_constraint &= x86_pmu.lbr_counters;
++				if (test_bit(DYN_OVERLAP_BRANCH_CNTR, &dyn_overlap_mask);
++					sibling->hw.flags |= PERF_X86_EVENT_OVERLAP;
+ 			}
+ 		}
+
+@@ -6638,6 +6650,29 @@ static void
+intel_pmu_check_event_constraints(struct event_constraint *event_con
+ 	if (!event_constraints)
+ 		return;
+
++	for_each_event_constraint(c, event_constraints) {
++		if (c->weight == 1 || c->overlap)
++			continue;
++
++		/*
++		 * The counter mask of an event is not a subset of
++		 * the counter mask of a constraint with an equal
++		 * or higher weight. The overlap flag must be set.
++		 */
++		for_each_event_constraint(c2, event_constraints) {
++			if ((c2->weight >= c->weight) &&
++			    (c2->idxmsk64 | c->idxmsk64) != c2->idxmsk64) {
++				c->overlap = 1;
++				break;
++			}
++		}
++
++		/* Check for the dynamic constraint */
++		if (c->weight >= HWEIGHT(x86_pmu.lbr_counters) &&
++		    (c->idxmsk64 | x86_pmu.lbr_counters) != c->idxmsk64)
++ 			__set_bit(DYN_OVERLAP_BRANCH_CNTR, &dyn_overlap_mask);
++	}
++
+ 	/*
+ 	 * event on fixed counter2 (REF_CYCLES) only works on this
+ 	 * counter, so do not extend mask to generic counters
+
+
+Thanks,
+Kan
