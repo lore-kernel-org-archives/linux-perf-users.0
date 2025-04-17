@@ -1,144 +1,306 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9904A21ABDB
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 08:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36E622541D;
+	Thu, 17 Apr 2025 09:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744880321; cv=none; b=dJzpprXtJQOfeH9J7ikhulWc1UHB8TWEfefhB3xzM5WpykPo9sWzQ2OVjgxwA8yg0FVdhy+28aU9/kJ1rrkG8syoE/SC+Nr4FPq0Q0EH9WT0ytzlg7H6CufMe8QbvU6HYS4Loz2cwLCKcCwp4vJjfjhWEIUd2xuU1w3Ad667fT4=
+	t=1744880762; cv=none; b=MON6nGSEFWch/p3TWn73kaVAEIn6R45idyfdfM1ykAibeFyhIwrTw8G/peEWsqXvOmni16kJ7S2HwL4Kt/JzddG42Ixj7TcHNrfV/RuO9X1L2S/C7FE9cHvTRgKRxEMvk2G7YI0nhUB85QLM5IIPYjl/Kem9Tf0Ts2Za6/EUR8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744880321; c=relaxed/simple;
-	bh=r1FjPDPkdRR2v2mM9JWjJvN0mbwzm6QYZ2Q9DLtMY7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRbAKuCMpJ03J0SeMVlQkymxTscOVOBMjwt0ZeJXGxvV7+VdldiGmyTx2JQIAqOX7FUu+mqNjPnl1WsPPBJftDU5Nk9OtAEq3WRsxF6ZclpTT8PEBzpT3rsDY/AHlJIPIHo3Sj1pNgtGWHEFhtMVMsx3/pnw6laZMGGn1YU40lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KONCHHu0; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KONCHHu0"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a823036so4571945e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 01:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744880318; x=1745485118; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GP9CJN50tERxm6yE1CuNeHA83a3ivox+fButPu97ez4=;
-        b=KONCHHu0/ixD9FxcFkwSj4Gl/noiidGTT/qniwhrkg1ptG/8f/PDDM8am4vL9O4U1W
-         CBFyPWNyNSjI/j5yJ+AS9zjgzzNzpHR1hnnqmfkjtwK0mEFQawmJKL8odhj/hR06aUw/
-         HemnfBoDrh3xWGVCQQVFoSjT+hO3Uxy5NFlNfXwRTugxgoSGxots6yBqvh5CEWlcwcJa
-         CYRZ1YnAAYlwNv0G3Dg8URTG8NaK8X3+nQNW0zv4u3sQzWlULYOujRzOEf0ZsIz/8cBa
-         GyV7B6Zp88wX/UgIu4A7dFAkt685/ox45cpWi5Y9E9RYgx0E9MNnrYYjdmTmkIZksTba
-         MYOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744880318; x=1745485118;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GP9CJN50tERxm6yE1CuNeHA83a3ivox+fButPu97ez4=;
-        b=tT32BatBplrVFsvGqfekAPX51Wew45y59Yhj7ciBzFmz0QejO4z+w715PDwQSQOJwq
-         yxozA6pzCRNs6folO8JkdkxmyVpHF74TSmLXrNWKv9QhTJSFb3B8bClXiGKEVCcb2gMy
-         lAz1kzDzrJ4+nhY9LFV+7xGlMXH2qRoYv3AMMDUvuYMzYtMUYw7VI0LE5gFoWDDn2JT0
-         Mt37CHVcNKqhdkdDPA8bZ3UnFrOFhIJrQM39wlemkquydeVMsDlw3khrZ8KogIKJLQTu
-         L01XvNq2QSWIBT/G3smKVUacPKkBxkT7E16QpQZVsqS+dbWnFgjF/3fnm5NBmSA6V1on
-         Rvgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ09j05idbOmkQZxsInWDbD31dHH27yh/fX/U4qYuZkZWAVa+GCy7jq7Z93Srhgj1ulc4Y+bA6ljwfmgWCmwUT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC92DhUrOutqvvDlizq4a9HDAcvUHg+evdS01P6uxkQ8SymUlG
-	yit78ocuSfUokVTBpzz/7S9CoZL9PLAWry8ghncUHqJheiPrx2YXYiAtcIZ366U=
-X-Gm-Gg: ASbGnct4I8OKBs1yTpIb/vXud+XPkt8IXcMl28B4QHHLb/yVwqwG5+gSzgxCDP950u5
-	VFlACJb99ZqrKtxO5QBqpcd6s3TStxxk37Hy+H47W5+LFMtaGBMj1/OpOSAJdz14ou9z+mWNlD3
-	fETwrRR21LjyqA+xvtP6CnUU0Hdz6UXgtvna+ahaYTB9P3JpUMajeWYyiB/58v7tv4y0vI7umNC
-	2M4mX6shctc1hABlEoVuktLEmv7M/rDwElvWF6FYaVtvFGH0KtE3C2p/gqC7YTMiInZ14cNLGSm
-	vBTgW70OQjA6bU2Lh8TC/QeKmdWI6gghPrOixpIOn6KhK9VdySo4Aw==
-X-Google-Smtp-Source: AGHT+IH6CNSHBn38pTz3KSqiHQKjYubJUpsb2xFQLAfw5wd+m9vVmQ9WStqNZ9vJMOreqvzejAJH0w==
-X-Received: by 2002:a05:600c:698e:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-4405d624e32mr53383385e9.12.1744880317933;
-        Thu, 17 Apr 2025 01:58:37 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c0d9sm19859259f8f.32.2025.04.17.01.58.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Apr 2025 01:58:37 -0700 (PDT)
-Message-ID: <72b016c4-3959-49d1-8964-0927eee101bf@linaro.org>
-Date: Thu, 17 Apr 2025 09:58:36 +0100
+	s=arc-20240116; t=1744880762; c=relaxed/simple;
+	bh=7/CNDQRHe36v8RmqIV4xRN/kf7wuRIF3PTjvFYwy/MU=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eKlUPUnIKIOzSQCGoLsVqlLSzb+405LOgHek3Ic8lBmFf7paZgUVRi1F5yv3T6kBlqHVKNP5/28JQCm423GhRRe+MUdJCBpwoCKL1kvOvy/q6eUcUUyPSZkRGoGKzDBjqRCLJXFlvbctboIW42QDbBvvy+eHwzLb1mZhN96HHM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZdX1t52wyzvWvY;
+	Thu, 17 Apr 2025 17:01:22 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3278114010D;
+	Thu, 17 Apr 2025 17:05:29 +0800 (CST)
+Received: from kwepemn500004.china.huawei.com (7.202.194.145) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 17 Apr 2025 17:05:28 +0800
+Received: from [10.67.120.218] (10.67.120.218) by
+ kwepemn500004.china.huawei.com (7.202.194.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 17 Apr 2025 17:05:27 +0800
+Subject: Re: [PATCH 1/2] perf vendor events arm64: Fill up Desc field for Hisi
+ hip08 hha pmu
+To: James Clark <james.clark@linaro.org>
+References: <20250416020216.3377959-1-hejunhao3@huawei.com>
+ <20250416020216.3377959-2-hejunhao3@huawei.com>
+ <9f562c23-f790-4d82-b51e-79e63d04890a@linaro.org>
+CC: <linuxarm@huawei.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <leo.yan@arm.com>, <john.g.garry@oracle.com>,
+	<will@kernel.org>, <mike.leach@linaro.org>, <yangyicong@hisilicon.com>,
+	<jonathan.cameron@huawei.com>, hejunhao <hejunhao3@huawei.com>
+From: hejunhao <hejunhao3@huawei.com>
+Message-ID: <4c2ddb5f-0d84-7b9e-7b0e-5fa1159b4be0@huawei.com>
+Date: Thu, 17 Apr 2025 17:05:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip:perf/core] [perf] da916e96e2:
- BUG:KASAN:null-ptr-deref_in_put_event
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>, Frederic Weisbecker <fweisbec@gmail.com>
-References: <202504131701.941039cd-lkp@intel.com>
- <20250414190138.GB13096@noisy.programming.kicks-ass.net>
- <Z/3krxHJLaWJTj4R@xsang-OptiPlex-9020>
- <5bc5f54b-ce6a-4834-86d4-5014d44c7217@linaro.org>
- <20250415100840.GM5600@noisy.programming.kicks-ass.net>
- <20250415131446.GN5600@noisy.programming.kicks-ass.net>
- <77036114-8723-4af9-a068-1d535f4e2e81@linaro.org>
- <20250416084610.GI4031@noisy.programming.kicks-ass.net>
- <20250416190817.GD6580@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250416190817.GD6580@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <9f562c23-f790-4d82-b51e-79e63d04890a@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemn500004.china.huawei.com (7.202.194.145)
 
 
-
-On 16/04/2025 8:08 pm, Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 10:46:10AM +0200, Peter Zijlstra wrote:
->> On Tue, Apr 15, 2025 at 04:52:56PM +0100, James Clark wrote:
->>> Unrelated to the pointer deref issue, I'm also seeing perf stat not working
->>> due to this commit. And that's both with and without this fixup:
->>>
->>>   -> perf stat -- true
->>>
->>>   Performance counter stats for 'true':
->>>
->>>       <not counted> msec task-clock
->>>
->>>       <not counted>      context-switches
->>>
->>>       <not counted>      cpu-migrations
->>>
->>>       <not counted>      page-faults
->>>
->>>       <not counted>      armv8_cortex_a53/instructions/
->>>
->>>       <not counted>      armv8_cortex_a57/instructions/
->>>
->>>       <not counted>      armv8_cortex_a53/cycles/
->>>
->>>       <not counted>      armv8_cortex_a57/cycles/
->>>
->>>       <not counted>      armv8_cortex_a53/branches/
->>>
->>>       <not counted>      armv8_cortex_a53/branch-misses/
->>>
->>>       <not counted>      armv8_cortex_a57/branch-misses/
->>>
->>>
->>>         0.074139992 seconds time elapsed
->>>
->>>         0.000000000 seconds user
->>>         0.054797000 seconds sys
->>>
->>> Didn't look into it more other than bisecting it to this commit, but I can
->>> dig more unless the issue is obvious. This is on Arm big.LITTLE, although I
->>> didn't test it elsewhere so I'm not sure if that's relevant or not.
+On 2025/4/16 21:17, James Clark wrote:
+>
+>
+> On 16/04/2025 3:02 am, Junhao He wrote:
+>> In the same PMU, when some JSON events have the "BriefDescription" field
+>> populated while others do not, the cmp_sevent() function will split 
+>> these
+>> two types of events into separate groups. As a result, when using perf
+>> list to display events, the two types of events cannot be grouped 
+>> together
+>> in the output.
 >>
->> I can reproduce on x86 alderlake (first machine I tried), so let me go
->> have a quick poke.
-> 
-> Could you please try queue.git/perf/core ? I've fixed this and found
-> another problem.
-> 
-> I'll post the patches tomorrow, after the robot has had a go.
+>
+> Hi Junhao,
+>
+> I think just the first patch here [1] might have helped for this 
+> issue. It would result in them being grouped together, although one 
+> would still be missing the description so your change is ok either way.
+>
+> [1]: 
+> https://lore.kernel.org/lkml/20250304-james-perf-hybrid-list-v1-1-a363ffac283c@linaro.org/
+>
 
-Yep that's all working now, thanks.
+Hi James,
+
+Thanks for the comments.
+
+In the cmp_sevent() function [2], the comparison begins with checking 
+sevent->desc.
+Thus, the issue cannot be resolved by the patch [1].
+
+Perhaps the simultaneous occurrence of hisi_sccl1_hha2 and hisi_sccl,hha 
+is making this
+commit hard to understand. This is part of the optimization I'm working 
+on next, so
+please ignore it for now. I will correct the PMU name and Unit in the 
+next version.
+
+[2]: 
+https://elixir.bootlin.com/linux/v6.15-rc1/source/tools/perf/util/pmus.c#L435
+
+>> before patch:
+>>   $ perf list
+>>   ...
+>>   uncore hha:
+>>     hisi_sccl1_hha2/sdir-hit/
+>>     hisi_sccl1_hha2/sdir-lookup/
+>>   ...
+>>   uncore hha:
+>>     edir-hit
+>>        [Count of The number of HHA E-Dir hit operations. Unit: 
+>> hisi_sccl,hha]
+>>
+>> after patch:
+>>   $ perf list
+>>   ...
+>>   uncore hha:
+>>     edir-hit
+>>        [Count of The number of HHA E-Dir hit operations. Unit: 
+>> hisi_sccl,hha]
+>>     sdir-hit
+>>        [Count of The number of HHA S-Dir hit operations. Unit: 
+>> hisi_sccl,hha]
+>>     sdir-lookup
+>>        [Count of the number of HHA S-Dir lookup operations. Unit: 
+>> hisi_sccl,hha]
+>>
+>> Signed-off-by: Junhao He <hejunhao3@huawei.com>
+>> ---
+>>   .../arm64/hisilicon/hip08/uncore-hha.json     | 32 +++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>
+>> diff --git 
+>> a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json 
+>> b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+>> index 9a7ec7af2060..5ac8f919b498 100644
+>> --- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+>> +++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+>> @@ -30,15 +30,21 @@
+>>      {
+>>           "ConfigCode": "0x4",
+>>           "EventName": "rx_wbi",
+>> +        "BriefDescription": "Count of the number of WriteBackI 
+>> operations that HHA has received",
+>> +        "PublicDescription": "Count of the number of WriteBackI 
+>> operations that HHA has received",
+>
+> You only need BriefDescription if both are going to be the same. It 
+> will be used for both short and long form output.
+>
+> With that:
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+>
+
+Ok, i will drop this PublicDescription.
+I will append one new patch to drop other hip08 uncore PMU 
+PublicDescriptions.
+
+Best regards,
+Junhao.
+
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x5",
+>>           "EventName": "rx_wbip",
+>> +        "BriefDescription": "Count of the number of WriteBackIPtl 
+>> operations that HHA has received",
+>> +        "PublicDescription": "Count of the number of WriteBackIPtl 
+>> operations that HHA has received",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x11",
+>> +        "BriefDescription": "Count of the number of WriteThruIStash 
+>> operations that HHA has received",
+>> +        "PublicDescription": "Count of the number of WriteThruIStash 
+>> operations that HHA has received",
+>>           "EventName": "rx_wtistash",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>> @@ -87,66 +93,92 @@
+>>      {
+>>           "ConfigCode": "0x23",
+>>           "EventName": "bi_num",
+>> +        "BriefDescription": "Count of the number of HHA BackInvalid 
+>> operations",
+>> +        "PublicDescription": "Count of the number of HHA BackInvalid 
+>> operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x32",
+>>           "EventName": "mediated_num",
+>> +        "BriefDescription": "Count of the number of Mediated 
+>> operations that the HHA has forwarded",
+>> +        "PublicDescription": "Count of the number of Mediated 
+>> operations that the HHA has forwarded",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x33",
+>>           "EventName": "tx_snp_num",
+>> +        "BriefDescription": "Count of the number of Snoop operations 
+>> that the HHA has sent",
+>> +        "PublicDescription": "Count of the number of Snoop 
+>> operations that the HHA has sent",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x34",
+>>           "EventName": "tx_snp_outer",
+>> +        "BriefDescription": "Count of the number of Snoop operations 
+>> that the HHA has sent to another socket",
+>> +        "PublicDescription": "Count of the number of Snoop 
+>> operations that the HHA has sent to another socket",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x35",
+>>           "EventName": "tx_snp_ccix",
+>> +        "BriefDescription": "Count of the number of Snoop operations 
+>> that the HHA has sent to CCIX",
+>> +        "PublicDescription": "Count of the number of Snoop 
+>> operations that the HHA has sent to CCIX",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x38",
+>>           "EventName": "rx_snprspdata",
+>> +        "BriefDescription": "Count of the number of SnprspData flit 
+>> operations that HHA has received",
+>> +        "PublicDescription": "Count of the number of SnprspData flit 
+>> operations that HHA has received",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x3c",
+>>           "EventName": "rx_snprsp_outer",
+>> +        "BriefDescription": "Count of the number of SnprspData 
+>> operations that HHA has received from another socket",
+>> +        "PublicDescription": "Count of the number of SnprspData 
+>> operations that HHA has received from another socket",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x40",
+>>           "EventName": "sdir-lookup",
+>> +        "BriefDescription": "Count of the number of HHA S-Dir lookup 
+>> operations",
+>> +        "PublicDescription": "Count of the number of HHA S-Dir 
+>> lookup operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x41",
+>>           "EventName": "edir-lookup",
+>> +        "BriefDescription": "Count of the number of HHA E-Dir lookup 
+>> operations",
+>> +        "PublicDescription": "Count of the number of HHA E-Dir 
+>> lookup operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x42",
+>>           "EventName": "sdir-hit",
+>> +        "BriefDescription": "Count of the number of HHA S-Dir hit 
+>> operations",
+>> +        "PublicDescription": "Count of the number of HHA S-Dir hit 
+>> operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x43",
+>>           "EventName": "edir-hit",
+>> +        "BriefDescription": "Count of the number of HHA E-Dir hit 
+>> operations",
+>> +        "PublicDescription": "Count of the number of HHA E-Dir hit 
+>> operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x4c",
+>>           "EventName": "sdir-home-migrate",
+>> +        "BriefDescription": "Count of the number of HHA S-Dir read 
+>> home migrate operations",
+>> +        "PublicDescription": "Count of the number of HHA S-Dir read 
+>> home migrate operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      },
+>>      {
+>>           "ConfigCode": "0x4d",
+>>           "EventName": "edir-home-migrate",
+>> +        "BriefDescription": "Count of the number of HHA E-Dir read 
+>> home migrate operations",
+>> +        "PublicDescription": "Count of the number of HHA E-Dir read 
+>> home migrate operations",
+>>           "Unit": "hisi_sccl,hha"
+>>      }
+>>   ]
+>
+> .
+>
 
