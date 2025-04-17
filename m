@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B61722E3E8
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 23:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC5C2222C1
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 23:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744931307; cv=none; b=iAj/d2q4Sduui48rNZB27CyvM9AzQlPNvcF5Ab6goO2U0xGyIsJvSRn2c2PRVGLc3PF46MrMCD/rNXL0i2pEH6gEcCv3YclCQnJsjbI4yLgmoiu0GHLOkp1b65ukThmiMbKGzaDfEyWQwJt1yJxOBy8881sfhFAWxGl8w41arFQ=
+	t=1744931310; cv=none; b=sclX8z4RHCrI2NvAShHylq3nGNQqm5ae6AJIGtltrACP4mpk3JDWPWu7vvANWZmBSx2F00PeaCdhyqQtOROzke1TeHwMKBimLqo0CcgxHj6evto4n29vhYK4hM4Su/HXV7a8GLxK5vmjQ0PpodxKPfC/mtr+3bk5uW2r8FJUG0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744931307; c=relaxed/simple;
-	bh=foSoET0IF18/f5J0V+ZIUsKXop/FvoFoqTKnlWhCxVc=;
+	s=arc-20240116; t=1744931310; c=relaxed/simple;
+	bh=dVqTwm6Z5kJPYlgxaTtj66E44vbniBTbV8kGzDOLkSk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=XVj7lsq/iQpJvzIBI1tGYAXFdCbCI2QEbnE42jr/t0ckwArmf9hVUxWGEMuv27nfgyQGPdhF+LsSUpYXZ4NURYyvR5eYUjH3FFvBav8lxW5X+StTP3ro+1SlU00zKTNeJiuA4ae0IkHiBlJVdIzXl4Q8IBSpHNuBCs1egSxEJyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lg337xSK; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=kvBftINaZXBUK412YitsaZ5ujmugsRbjzEf5hqDUhZbtl2sW34ezIP19OFVJ5LqbWF7RLeNYnPAUkZjLMExW2wtvgLouQq9N5cI/v+KUD0sKSTGNBpi8/Z0iI9vhHGxNwsFKoifm+zGj4pYt5tJV8cFZ3tW5o54MiSo9Gp8hmQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DsvI37f8; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lg337xSK"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224192ff68bso12623605ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 16:08:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DsvI37f8"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-223fd6e9408so15527585ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 16:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744931306; x=1745536106; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744931308; x=1745536108; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y8ztzt+tF3nTRYCrcDqKNMajzSGAzjCJLiKGSSFxPrQ=;
-        b=lg337xSK5nvTDG2CvM+95trPXVKmEFO8unl/6Yo1b50uYKtDUWywDiQD7MWqYj6+81
-         r7nDO6RFRB6VOVcL7i41RYYxRudizFuoB7ZtpPA+Mt4hAUzMKDlaVCrMoDlrKqf3Q2xd
-         zPdsNrV4c21g+z00IgB2RypGXwjc07XDyniJgZx18TyN5gU22AKHKXY0qrgbrrBge+Ny
-         3Mw0zRv/HFid1oulzNk+5jSJZAyF/kGzCdq1mS9h8zmLsdp8pQZFepofHHhjeYswMPLu
-         aHx0RmSt7WdvpFL8Ik+Y6VIQtEXNumKHjcudAuOTtEJkUW/1VvdZEox/AT2mddX8iUzT
-         +3qQ==
+        bh=RY1r15pwpCxEu/4KBHv5AIK/eUkuBGzABOfCshTThNM=;
+        b=DsvI37f8sUTX7c704DqOwYYW4c6e8G5CTi3vUnaYskkunDwfiOLfLURtIc8WQepQgV
+         DYqQ4ZiNOWUlhZ8H8uShfPBT6DWH4F3Wm1lNeQmZwteh0cSC9nbxdRjo1R7nfoq1XBGP
+         uv5irtYlKc15In1F7V9gDkWADI7bwT+u4E1HbOZr23epyxdyoM6Bi0qDHV+8XU/XH/ZN
+         4u6laLAg/yWvJq1JnDLieuGEEP1JQQNnUAMS22ss5WJyo2AakYP7TfZG5j2CQFJZC8QA
+         MpI3qraKYr9fKqStkRf8ig9y7gynZM/n+vWX4sa2m33flgi5wByJkqvXmkZsfu8K8W5c
+         pbXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744931306; x=1745536106;
+        d=1e100.net; s=20230601; t=1744931308; x=1745536108;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y8ztzt+tF3nTRYCrcDqKNMajzSGAzjCJLiKGSSFxPrQ=;
-        b=IcFGxRQ3L00gW0RbiRZTYwMUvTQU5VFxgMDGtK5s7yVd9WCVsYxOK/GHTJch/HxsuS
-         CKqQj4P2uB+/kqWCXecBWxDZSwketVo0a1uYS3FhJTiI9Ug/y2Xo019dmG8prZCsZqxH
-         +ACvnGU9yEs5NXOC0USdXib0B5EqXRAh2CtCk3v1BCvoPjM4irKvJ94uQX8zFwcDGzrd
-         VWdbyRwhQIFSbEvn4V2MdPhdMvIJxjQsJECJpVQgjxPhZh/FVnW6oQJMbSgo/OP3tDqa
-         cbu9Ff7PeGNV20JT2WTaydbgokG5lO7CwtoQ+V3poFIRMAewq8kO9QHkpFzglA3bwxSN
-         dPBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUo0Wx4i75vUizbr6aSVus0XCLBrTYVnwAwiNSy3tfQrkT2Eq1wVaZrF/HTWQTgzZ1hRzgygR43XTOJIzk+Ajai@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzypae+omLv41CKMqZwuxhwvuBDGQ3ZBnUqOXhlT/VKnFaz3+eo
-	PN10Cqfi/a/ersgnRmRe5vaVuRKtOyzpD9qQO9+iJToEZweh32lZWMqKPaxhFArEQH5ToxJPt6i
-	dsw2zwQ==
-X-Google-Smtp-Source: AGHT+IEWSA4fDbg0ibRFGPSZKCMBCSJeYgY5UAGASEYAWSOWOvfZ2A76/t8FmAXO8wa38rFjn6xU2QPybjdA
-X-Received: from pfod7.prod.google.com ([2002:aa7:8687:0:b0:736:38af:afeb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1744:b0:224:249f:9723
- with SMTP id d9443c01a7336-22c536204c8mr9101135ad.51.1744931305689; Thu, 17
- Apr 2025 16:08:25 -0700 (PDT)
-Date: Thu, 17 Apr 2025 16:07:36 -0700
+        bh=RY1r15pwpCxEu/4KBHv5AIK/eUkuBGzABOfCshTThNM=;
+        b=tjlicXJU4WJpYiil8fdsRgKaeEnPtOmGMzGOOprU8nW98jnl/NUgXDDYjq1QPYVeOf
+         Q36wCTb/46SOngTQlM8k4zwPuR4Wu6Iw6MGo2UcQk5dujiaOBsfgAHL1/IgWF2oRq3fX
+         OsOP22oLdgplOLl/P+yZkl+ZJ0E/JW/WG+Mj4vQU8nfx9oqmFSff/1J6+YZyAditkooJ
+         yVnONzSjxf0lYsQWtHO/VXLCkb7lA9jHEoYq4xafroFMvjVymjFu+kaMz4sEi6qMvhBu
+         BesPDizVzMeigsonQyOq3yKAABYQinzOU/bzbxP9fgoX9X2KzWBWG4dNFsNU0prKl8vj
+         X00g==
+X-Forwarded-Encrypted: i=1; AJvYcCXf/PQiRPDMnYM+MrZVCvRo5+0X/qICeTxBcA+lIMNP/+DhVpRtdzbEz2Ywe3zaw84Ep6YYDcUmh9jxV7uzHx+e@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1nLnQO42p4k+yCgjnGJPgPydF8OtNpbnCymeDj7RB85icGbN2
+	n9yaFGvR1aXfPxt2+41VUThRUa8I/JxlSo23X5pBphNVO4b2RxwhqPO2hLWBq1VXHf8KquWl5/X
+	tovhSdw==
+X-Google-Smtp-Source: AGHT+IF1KynYQjk+qiDtYBRZqtrA+sXYk/Qlh4FVBuUH3NSYZdwIzrbF7KXRZDSOIoNHB1eQbEczvfeazT6E
+X-Received: from plsa23.prod.google.com ([2002:a17:902:b597:b0:227:e456:d436])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f78a:b0:220:cfb7:56eb
+ with SMTP id d9443c01a7336-22c53f36a0fmr7932675ad.26.1744931307861; Thu, 17
+ Apr 2025 16:08:27 -0700 (PDT)
+Date: Thu, 17 Apr 2025 16:07:37 -0700
 In-Reply-To: <20250417230740.86048-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250417230740.86048-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250417230740.86048-16-irogers@google.com>
-Subject: [PATCH v4 15/19] perf build: Remove unused defines
+Message-ID: <20250417230740.86048-17-irogers@google.com>
+Subject: [PATCH v4 16/19] perf disasm: Remove disasm_bpf
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,60 +80,136 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-DISASM_FOUR_ARGS_SIGNATURE and DISASM_INIT_STYLED were used with
-libbfd support. Remove now that libbfd support is removed.
+BPF disassembly was handled in here by libbfd. The LLVM and capstone
+disassemblers now support BPF JIT disassembly. As libbfd support was
+removed the functions here no longer did anything remove them and
+associated error values.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ tools/perf/util/Build        |  1 -
+ tools/perf/util/annotate.h   |  1 -
+ tools/perf/util/disasm.c     | 12 +++---------
+ tools/perf/util/disasm_bpf.c | 29 -----------------------------
+ tools/perf/util/disasm_bpf.h | 12 ------------
+ 5 files changed, 3 insertions(+), 52 deletions(-)
+ delete mode 100644 tools/perf/util/disasm_bpf.c
+ delete mode 100644 tools/perf/util/disasm_bpf.h
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 3ed047ffb4f5..bb4d31b1e1df 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -320,9 +320,6 @@ FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 861e8ed4ac49..cc22cc8a5aac 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -14,7 +14,6 @@ perf-util-y += copyfile.o
+ perf-util-y += ctype.o
+ perf-util-y += db-export.o
+ perf-util-y += disasm.o
+-perf-util-y += disasm_bpf.o
+ perf-util-y += env.o
+ perf-util-y += event.o
+ perf-util-y += evlist.o
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index bbb89b32f398..8b14a90a3a0c 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -446,7 +446,6 @@ enum symbol_disassemble_errno {
+ 	__SYMBOL_ANNOTATE_ERRNO__START		= -10000,
  
- FEATURE_CHECK_LDFLAGS-libaio = -lrt
+ 	SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX	= __SYMBOL_ANNOTATE_ERRNO__START,
+-	SYMBOL_ANNOTATE_ERRNO__NO_LIBOPCODES_FOR_BPF,
+ 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING,
+ 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP,
+ 	SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE,
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 175d9d3b5c97..683eb6aa7b53 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -17,7 +17,6 @@
+ #include "capstone.h"
+ #include "debug.h"
+ #include "disasm.h"
+-#include "disasm_bpf.h"
+ #include "dso.h"
+ #include "dwarf-regs.h"
+ #include "env.h"
+@@ -1231,9 +1230,6 @@ int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, s
+ 			  "  --vmlinux vmlinux\n", build_id_msg ?: "");
+ 	}
+ 		break;
+-	case SYMBOL_ANNOTATE_ERRNO__NO_LIBOPCODES_FOR_BPF:
+-		scnprintf(buf, buflen, "Please link with binutils's libopcode to enable BPF annotation");
+-		break;
+ 	case SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP:
+ 		scnprintf(buf, buflen, "Problems with arch specific instruction name regular expressions.");
+ 		break;
+@@ -1501,11 +1497,9 @@ static int symbol__disassemble_objdump(const char *filename, struct symbol *sym,
+ 	struct child_process objdump_process;
+ 	int err;
  
--FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
--FEATURE_CHECK_LDFLAGS-disassembler-init-styled = -lbfd -lopcodes -ldl
+-	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO)
+-		return symbol__disassemble_bpf(sym, args);
 -
- CORE_CFLAGS += -fno-omit-frame-pointer
- CORE_CFLAGS += -Wall
- CORE_CFLAGS += -Wextra
-@@ -349,7 +346,7 @@ endif
+-	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE)
+-		return symbol__disassemble_bpf_image(sym, args);
++	if (dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO ||
++	    dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE)
++		return -1;
  
- ifeq ($(FEATURES_DUMP),)
- # We will display at the end of this Makefile.config, using $(call feature_display_entries)
--# As we may retry some feature detection here, see the disassembler-four-args case, for instance
-+# As we may retry some feature detection here.
-   FEATURE_DISPLAY_DEFERRED := 1
- include $(srctree)/tools/build/Makefile.feature
- else
-@@ -1006,14 +1003,6 @@ ifdef HAVE_KVM_STAT_SUPPORT
-     CFLAGS += -DHAVE_KVM_STAT_SUPPORT
- endif
- 
--ifeq ($(feature-disassembler-four-args), 1)
--    CFLAGS += -DDISASM_FOUR_ARGS_SIGNATURE
--endif
+ 	err = asprintf(&command,
+ 		 "%s %s%s --start-address=0x%016" PRIx64
+diff --git a/tools/perf/util/disasm_bpf.c b/tools/perf/util/disasm_bpf.c
+deleted file mode 100644
+index a891a0b909a7..000000000000
+--- a/tools/perf/util/disasm_bpf.c
++++ /dev/null
+@@ -1,29 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
 -
--ifeq ($(feature-disassembler-init-styled), 1)
--    CFLAGS += -DDISASM_INIT_STYLED
--endif
+-#include "util/annotate.h"
+-#include "util/disasm_bpf.h"
+-#include "util/symbol.h"
+-#include <linux/zalloc.h>
+-#include <string.h>
 -
- ifeq (${IS_64_BIT}, 1)
-   ifndef NO_PERF_READ_VDSO32
-     $(call feature_check,compile-32)
-@@ -1288,6 +1277,6 @@ endif
- 
- # re-generate FEATURE-DUMP as we may have called feature_check, found out
- # extra libraries to add to LDFLAGS of some other test and then redo those
--# tests, see the block about disassembler-four-args, for instance.
-+# tests.
- $(shell rm -f $(FEATURE_DUMP_FILENAME))
- $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
+-int symbol__disassemble_bpf(struct symbol *sym __maybe_unused, struct annotate_args *args __maybe_unused)
+-{
+-	return SYMBOL_ANNOTATE_ERRNO__NO_LIBOPCODES_FOR_BPF;
+-}
+-
+-int symbol__disassemble_bpf_image(struct symbol *sym, struct annotate_args *args)
+-{
+-	struct annotation *notes = symbol__annotation(sym);
+-	struct disasm_line *dl;
+-
+-	args->offset = -1;
+-	args->line = strdup("to be implemented");
+-	args->line_nr = 0;
+-	args->fileloc = NULL;
+-	dl = disasm_line__new(args);
+-	if (dl)
+-		annotation_line__add(&dl->al, &notes->src->source);
+-
+-	zfree(&args->line);
+-	return 0;
+-}
+diff --git a/tools/perf/util/disasm_bpf.h b/tools/perf/util/disasm_bpf.h
+deleted file mode 100644
+index 2ecb19545388..000000000000
+--- a/tools/perf/util/disasm_bpf.h
++++ /dev/null
+@@ -1,12 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-
+-#ifndef __PERF_DISASM_BPF_H
+-#define __PERF_DISASM_BPF_H
+-
+-struct symbol;
+-struct annotate_args;
+-
+-int symbol__disassemble_bpf(struct symbol *sym, struct annotate_args *args);
+-int symbol__disassemble_bpf_image(struct symbol *sym, struct annotate_args *args);
+-
+-#endif /* __PERF_DISASM_BPF_H */
 -- 
 2.49.0.805.g082f7c87e0-goog
 
