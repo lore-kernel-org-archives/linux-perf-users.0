@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C31184E;
-	Thu, 17 Apr 2025 01:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30204154C0D;
+	Thu, 17 Apr 2025 02:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744852525; cv=none; b=LLcjAa+0ggOmT4PbL8nLzsabpjcILbQ3J2SvtV9P4IJRyavin/YRb5bGdgAKX3kDsktdMFHR3Wz0mCMNjs+tHSb9R9BDCUgFKaf/UN1v6s0w6ENRfF19ya14KhOcvZ+b2DSXwEJuNyi22fY69M7hMXmC7rIB4FG4Ly4NwFmiNpY=
+	t=1744855212; cv=none; b=LxGuC+rYKaAMq6E38sF7Er7nCJB3WJWBURFk1DtsI9tslJw6QoENOn0B9Uw6QlCAp+0mw/tLIN9JeA5QvbVIeKev6KRXbtALWb2G4QBwsbg7El7RVp+tVpy3dBUNFkbUdYK6pSJA3WjXYRE622/aUFSMl1tmsS3gpc69U+EbOOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744852525; c=relaxed/simple;
-	bh=amr6vgsdm/bR4XZmhanRpSp3TvMOJseVw7y8GlsWa0Y=;
+	s=arc-20240116; t=1744855212; c=relaxed/simple;
+	bh=SNHQCgYPPuktylCF1w4UKYr5L1ItGqxSFhQnyoMe0wo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gz9ZIp9pseyytoqMQAPvvu00VcmC4Bz8vnxhzJIZESUvIWkAs+e2djyhhE6ffgv9t0KGkkWf9W1AaXAO521QAKEKiJu3QBzHPI1tkKWuSC6M2iQKoT5/pxdbgNfi4lsqCjVEVPV4RlAZpkdK4nh3wUQJXPCO4NXTMFF64u6nASo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AqnsX7qO; arc=none smtp.client-ip=192.198.163.12
+	 In-Reply-To:Content-Type; b=KCtu1Zoc7Ncgs0UPzPNjm7/SMT6jZtQKGbb1GgulFuWfOpTwVn3uYPv/ZaTUYf07mOzt5RnT6Fn5JwUrXGthB0c7CthPSZBGDYz73P/KsQ8x9qoKHHWC4QvOfDK94q3GFCWrirQ4BTTfuf6/89v6bL+kNMao/RZSWDjaOnamhBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CiKQAkZN; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AqnsX7qO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CiKQAkZN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744852524; x=1776388524;
+  t=1744855212; x=1776391212;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=amr6vgsdm/bR4XZmhanRpSp3TvMOJseVw7y8GlsWa0Y=;
-  b=AqnsX7qOjs4k5a18RFVnjwzT19GsxDtMuxVzbEUm5TieTL0y6ERnNNTB
-   OVUhx1+hztZOpOgdCCg5v8NTa8P4n19vQmQNcyH3CyL+O3rXxZYafuKqV
-   YPTw3l8Vowdq7H11MhZKQB8ue/NcyqL4z40E+vgF7r5hDOxbf1Ribx3gS
-   +Z/CwRsQLLoxqZXDs8mBP30imIn9Fv5jNeU828TbDvilkgUsxQVF/07Yl
-   3UD8HSC7n2y9qCfMOQr2HXVMimARgVzDJOyocJxnPX4d6Lfv2+nWE0cUa
-   Qfpa1zW0lycy6EmqYu9Ui94n2miVroJMKqZ2ogdt6USe9DntSg3bS1cAX
-   g==;
-X-CSE-ConnectionGUID: lMBcJ1PRT0WlAqn9Tkk8yg==
-X-CSE-MsgGUID: 55PC6qRITfqILUTUFFPiAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50247421"
+  bh=SNHQCgYPPuktylCF1w4UKYr5L1ItGqxSFhQnyoMe0wo=;
+  b=CiKQAkZNQ9TU3y4RaXEpDc3Nv+mPP/+yPa9CKJb9ZsaQa09LEoqH/AJZ
+   ndApLXYH9u1SMRR1R9tnK8FvR0uN79+UmCLEh0dXT69D5HWQrHx31WO1y
+   6hbwy5Xumw/7B3MwiS5mtleezxLXE9CgYYxPs1HuHlpbDMYVqY8eHxaVJ
+   7cIId9BK1MPu2E+t2KAR7vGtXXeujbo03raomS+aU0v2UcJD2UbZlOqf8
+   YQVdxesItthSJeDOZF69IaAIH/2IUMqeIAmYRtkbpCL7kI2DAXEUyFj9C
+   BbdbbOaFIW6pcT1qshqvK5RajA9g4r6xwt1G5kWyNwSqfWWTOyGeJ/Z0A
+   w==;
+X-CSE-ConnectionGUID: OKRLOK14Sn2i6mNx/rYN9Q==
+X-CSE-MsgGUID: KB+gfqDySKq1Vppt2IbVpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50236329"
 X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="50247421"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 18:15:23 -0700
-X-CSE-ConnectionGUID: ANCZp8RaQqiMsZfscb+Vlw==
-X-CSE-MsgGUID: XVHW47IARmGHPAmZtw11og==
+   d="scan'208";a="50236329"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 19:00:09 -0700
+X-CSE-ConnectionGUID: F7ZYATMxSgCgCK7sXXbNpg==
+X-CSE-MsgGUID: owziaZAiTN+1EC2LITxSWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="153831948"
+   d="scan'208";a="135476179"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 18:15:19 -0700
-Message-ID: <3989d25c-2961-46b4-8f77-3c1eab63866a@linux.intel.com>
-Date: Thu, 17 Apr 2025 09:15:16 +0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 19:00:02 -0700
+Message-ID: <486ac73c-f409-4b56-8d54-dcd3a73d155e@linux.intel.com>
+Date: Thu, 17 Apr 2025 10:00:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,92 +52,100 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [Patch v3 16/22] perf/core: Support to capture higher width
+ vector registers
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
  Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
- <20250415135323.GC4031@noisy.programming.kicks-ass.net>
- <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
- <a3269f8a-aff3-4f9e-8f43-b00fee03121a@linux.intel.com>
- <a998c0c3-1ec5-4dbe-95fa-fd37648de96a@linux.intel.com>
+ <20250415114428.341182-17-dapeng1.mi@linux.intel.com>
+ <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+ <26799b7e-c3a6-4de2-afd1-7bda0639fa37@linux.intel.com>
+ <20250416155327.GD17910@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <a998c0c3-1ec5-4dbe-95fa-fd37648de96a@linux.intel.com>
+In-Reply-To: <20250416155327.GD17910@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 4/16/2025 9:59 PM, Liang, Kan wrote:
+On 4/16/2025 11:53 PM, Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 02:42:12PM +0800, Mi, Dapeng wrote:
 >
-> On 2025-04-15 9:46 p.m., Mi, Dapeng wrote:
->> On 4/16/2025 12:31 AM, Liang, Kan wrote:
->>> On 2025-04-15 9:53 a.m., Peter Zijlstra wrote:
->>>> On Tue, Apr 15, 2025 at 11:44:18AM +0000, Dapeng Mi wrote:
->>>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>>>> should be dynamically configured base on these counter and precise
->>>>> distribution bitmap instead of defining them statically.
->>>>>
->>>>> Update event dyn_constraint base on PEBS event precise level.
->>>> What if any constraints are there on this? 
->>> Do you mean the static constraints defined in the
->>> event_constraints/pebs_constraints?
->>>
->>>> CPUID is virt host
->>>> controlled, right, so these could be the most horrible masks ever.
->>>>
->>> Yes, it could be changed by VMM. A sanity check should be required if
->>> abad mask is given.
->> Yes, we need a check to restrict the PEBS counter mask into the valid
->> counter mask, and just realized that we can't use hybrid(event->pmu,
->> intel_ctrl) to check counter mask and need a minor tweak since it includes
->> the GLOBAL_CTRL_EN_PERF_METRICS bit.
+>> Just think twice, using bitmap to represent these extended registers indeed
+>> wastes bits and is hard to extend, there could be much much more vector
+>> registers if considering AMX.
+> *Groan* so AMX should never have been register state :-(
+>
+>
+>> Considering different arch/HW may support different number vector register,
+>> like platform A supports 8 XMM registers and 8 YMM registers, but platform
+>> B only supports 16 XMM registers, a better way to represent these vector
+>> registers may add two fields, one is a bitmap which represents which kinds
+>> of vector registers needs to be captures. The other field could be a u16
+>> array which represents the corresponding register length of each kind of
+>> vector register. It may look like this.
 >>
->> How about this?
+>> #define    PERF_SAMPLE_EXT_REGS_XMM    BIT(0)
+>> #define    PERF_SAMPLE_EXT_REGS_YMM    BIT(1)
+>> #define    PERF_SAMPLE_EXT_REGS_ZMM    BIT(2)
+>>     __u32    sample_regs_intr_ext;
+>>     __u16    sample_regs_intr_ext_len[4];
+>>     __u32    sample_regs_user_ext;
+>>     __u16    sample_regs_user_ext_len[4];
 >>
->>         if (x86_pmu.arch_pebs) {
->>             u64 cntr_mask = hybrid(event->pmu, intel_ctrl) &
->>                         ~GLOBAL_CTRL_EN_PERF_METRICS;
->>             u64 pebs_mask = event->attr.precise_ip >= 3 ?
->>                         pebs_cap.pdists : pebs_cap.counters;
->>             if (pebs_mask != cntr_mask)
->>                 event->hw.dyn_constraint = pebs_mask & cntr_mask;
->>         }
 >>
-> The mask isn't changed after boot. The sanity check should only be done
-> once. I think it can be done in the update_pmu_cap() when perf retrieves
-> the value. If a bad mask is detected, the PEBS should be disabled.
+>> Peter, how do you think this? Thanks.
+> I'm not entirely sure I understand.
+>
+> How about something like:
+>
+> 	__u16 sample_simd_reg_words;
+> 	__u64 sample_simd_reg_intr;
+> 	__u64 sample_simd_reg_user;
 
-Yeah, it makes sense. Would do.
+If only considering x86 XMM/YMM/ZMM registers, it should be enough since
+higher width vector registers always contain the lower width vector
+registers on x86 platforms, but I'm not sure if we can have such assumption
+for other archs. If not, then it's not enough since user may hope to sample
+multiple vector registers with different width at the same time.
+Furthermore, considering there could be more other registers like APX
+registers need to be supported in the future, we'd better define a more
+generic and easily extended interface. That's why I suggest to add a bitmap
+like above"sample_regs_intr_ext" which can represent multiple kinds of
+registers simultaneously.
 
 
 >
-> Thanks,
-> Kan>
->>>> This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?The dyn_constraint is a supplement of the static constraints. It doesn't
->>> overwrite the static constraints.
->>>
->>> In the intel_get_event_constraints(), perf always gets the static
->>> constraints first. If the dyn_constraint is defined, it gets the common
->>> mask of the static constraints and the dynamic constraints. All
->>> constraint rules will be complied.
->>>
->>> 	if (event->hw.dyn_constraint != ~0ULL) {
->>> 		c2 = dyn_constraint(cpuc, c2, idx);
->>> 		c2->idxmsk64 &= event->hw.dyn_constraint;
->>> 		c2->weight = hweight64(c2->idxmsk64);
->>> 	}
->>>
->>> Thanks,
->>> Kan
->>>
+> Then the simd_reg_words tell us how many (quad) words per register (8 for
+> 512) and simd_reg_{intr,user} are a simple bitmap, one bit per actual
+> simd reg.
 >
+> So then all of XMM would be:
+>
+>   words = 2;
+>   intr = user = 0xFFFF;
+>
+> (16 regs, 128 wide)
+>
+> Whereas ZMM would be:
+>
+>   words = 8
+>   intr = user = 0xFFFFFFFF;
+>
+> (32 regs, 512 wide)
+>
+>
+> Would this be sufficient? Possibly we can split the words thing into two
+> __u8, but does it make sense to ask for different vector width for
+> intr and user ?
+
+Yes, we need it. Users may need to sample interrupt registers and user
+space registers simultaneously although it sounds a little bit weird.
+
+
