@@ -1,134 +1,299 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7EE253326;
-	Thu, 17 Apr 2025 15:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910B3253F0F
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 15:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744903032; cv=none; b=CFuAUwDDkjyORoYsZLPpjvAVxTwFvKkUnw1Ge2us5jgy+fmivyCzsE06KVOnRa2OQPFK5dOe3ojaGmYe/E5c5mG5GYVcPCgcR+ZuJodYx3RLHQDy4MQKyMswiF5BEvF9w4miPSaSXqSXAKvl8P8sGfjTpw/CrE3sf+DADkH5kXM=
+	t=1744904989; cv=none; b=CVQfA2Fd7aS2c/i06mJ0qBdurBphnZkKiWmRYXOcfFDJRaXEjLW9M46VMFXwZleqko3KpX+dOo00Yfo1nAN2d0oxT4x6WS/+z5db6i7sP/WAT0RicbSXVwIKOHJmJ/nUKNl3xqtPPTeAoI51HBIYu/ucQNrBunRARRvi0fb5TdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744903032; c=relaxed/simple;
-	bh=/DN/ywHfF7hTddel9ytyHlbN3f9UVyhmg5vwqY6t3DI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UOB1B86BIsKEv4VpU+UoJF4I24Gpuic+ZqQ/ZOi2CGZL4wjm4NtPRRMUJqv8bkUuzmZP+5vcmAC1LK/6wBDQv8JL1NvSvZS/wI9GGy5mkWUtC0mcrDmaFdVpjtJdF3aOA8uUBdicECY+tZBVBYreLgBodmaDYq+ABZIB0/3mxfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B5071515;
-	Thu, 17 Apr 2025 08:17:07 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFCC93F59E;
-	Thu, 17 Apr 2025 08:17:07 -0700 (PDT)
-Message-ID: <2cb2d9af-460e-481d-81cc-b189948f4e8c@arm.com>
-Date: Thu, 17 Apr 2025 16:17:05 +0100
+	s=arc-20240116; t=1744904989; c=relaxed/simple;
+	bh=g8NXQzi2AmZwVhtTfHlJcrowEKvgjPLLT105OqqZEIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWtPbp8RfUG2j6Vud0sZJmEGk++YPhl96Yx5pITb+rO0cu5oHAQVOdRHRWYp7hbVosbyhAmzeO/oyiAHwWKflRvkQsd6wiNuTXZZ1hoMnkC1lhZbSvQ7XGrMUSax5WZLDGW767LtSlYghPHqmrOZ4sMICJAYD982KXwDbuIENFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LKmO/jBy; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LKmO/jBy"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240aad70f2so257515ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Apr 2025 08:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744904987; x=1745509787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nyGX6F8mw+QO6Ue+GZurb/6Buesyo98UCvqCcv58NC0=;
+        b=LKmO/jByLPzHtk+V5LAHwGFWRzYvRcwipLNENa+ekvcfUi47LNqQjNgPi3VIFJUJkA
+         FFNbZmj8fbRQA27fhSwcn5SZ/WlSKHhwabNRxPs1xclP96HQ6ge1DfNbQ/FXxcU4e1j/
+         DEDM1N2Y9P5Qrmm3WW9QPEPWz+8yTV1zMncSP5DShSwHwbZIKCvQ5NgRf2YmNWwqe89j
+         aWFfRqCO4y+vXlNNEAdd6nYZqgSSdVEvfp72/XK4oTuSICW0IUNdZi0TfSf4Dnxo8TIc
+         tImJDkse4lj89w6baVt7MsZmo+WEVxjamZ7P4wN/v14cIsEKHtCI2jt87xgHHE2Veu/i
+         cpLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744904987; x=1745509787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nyGX6F8mw+QO6Ue+GZurb/6Buesyo98UCvqCcv58NC0=;
+        b=eSzuxaT4/K6pGJ8OblKfhEbjGwVUk4JDWeffdguAjm/i+JicWhtGLlje8tFSCwCkO0
+         HGXEuMIzEEMeC0ZOskgq/WQMchJGL8CIVE18Cc2ICfSWDIJTAnrWM4KiTIAjJhrCYywa
+         NZ6RK1G+BJ//K7In2AmpNQiXgdd2Jt0wnLPXFC2l5vbxeilY/HM4wvRlEYjf0mma72Z0
+         9jzi3ZlqBMT5KA1Y/cBNkYZIllb6d2P6EguTAQ9qY/JOK8HQv0mk2b1vWQz+8rMsFQMY
+         mOv0zGADeiaCvyvgxbShqQ39ixDWE9/maVkDPTCPnOJaKY4qleItxLxjvCdi7/1amBSB
+         NrrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3jf7JUPvTWWf6/UAjN+idYlUNIFoMntPH9LK2lMX8A/9AOmtMzQzccRBJZzgk0NB/wcmvVIHKwzzR7SzCnpSg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdvFE3epbitQPm5RRBosX5Wz/u9HzfL4Kw0zHynz6Rpzn+lPr+
+	AU/cD2KXm7EBjo+SxW8Hw4hyyb5CclU5H5rY/6oL0TPW5g9/6C1/pb3+UUeq0hTE/pfAXgw3wZQ
+	XJx1cVK9NOUDIRgs0olix302ImqEV6zTiyGEl
+X-Gm-Gg: ASbGncuTkP03hO0ePtYHjSBgDuF5gFr84rfW22PAuZFdqbCfwZmimukmGOUr/46SX0u
+	4+nEZPqhHc/tDTl331jMRnxYGOMS02Qq3qOB4/c3k/gdYJNHGNx08pGLklk3FyHPRdGUErJ8B3a
+	PN+1U//d4x1pTZIGpfjwP3XRpjs43tgYvpBy1s70B9KGFecGPT5u+zqhzh0RTrrg==
+X-Google-Smtp-Source: AGHT+IEKbdgo54sZ9vRJfKwjfKyD3QxiKT9UC5JvB+alX+u9U1kJA3jCrOugP/FsZ+n8XgB5fmlQbfd05KM4Y71BWag=
+X-Received: by 2002:a17:902:ebcd:b0:223:f479:3860 with SMTP id
+ d9443c01a7336-22c41286b2emr3071185ad.18.1744904986501; Thu, 17 Apr 2025
+ 08:49:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf/amlogic: Replace smp_processor_id() with
- raw_smp_processor_id() in meson_ddr_pmu_create()
-To: Will Deacon <will@kernel.org>, Anand Moon <linux.amoon@gmail.com>
-Cc: Jiucheng Xu <jiucheng.xu@amlogic.com>, Mark Rutland
- <mark.rutland@arm.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- "open list:AMLOGIC DDR PMU DRIVER" <linux-amlogic@lists.infradead.org>,
- "moderated list:ARM PMU PROFILING AND DEBUGGING"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:ARM PMU PROFILING AND DEBUGGING"
- <linux-perf-users@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20250407063206.5211-1-linux.amoon@gmail.com>
- <20250417132033.GA12863@willie-the-truck>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250417132033.GA12863@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <aABlDyhAYz95vOM1@x1>
+In-Reply-To: <aABlDyhAYz95vOM1@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 17 Apr 2025 08:49:35 -0700
+X-Gm-Features: ATxdqUEc5PZGs_Zl4NEBlADoVnKMfJWjRjcgj_nbyoQEbH8QUfkGjF2DgBO5y7U
+Message-ID: <CAP-5=fXeykYoqLJ8t6Gq31cO8eYGOnppgc86PHfWnBoz4xgw-g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] tools build: Remove libbfd from the set of expected
+ libraries to build perf
+To: arnaldo.melo@gmail.com
+Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Quentin Monnet <qmo@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/04/2025 2:20 pm, Will Deacon wrote:
-> On Mon, Apr 07, 2025 at 12:02:03PM +0530, Anand Moon wrote:
->> The Amlogic DDR PMU driver meson_ddr_pmu_create() function incorrectly uses
->> smp_processor_id(), which assumes disabled preemption. This leads to kernel
->> warnings during module loading because meson_ddr_pmu_create() can be called
->> in a preemptible context.
->>
->> Following kernel warning and stack trace:
->> [   31.745138] [   T2289] BUG: using smp_processor_id() in preemptible [00000000] code: (udev-worker)/2289
->> [   31.745154] [   T2289] caller is debug_smp_processor_id+0x28/0x38
->> [   31.745172] [   T2289] CPU: 4 UID: 0 PID: 2289 Comm: (udev-worker) Tainted: GW 6.14.0-0-MANJARO-ARM #1 59519addcbca6ba8de735e151fd7b9e97aac7ff0
->> [   31.745181] [   T2289] Tainted: [W]=WARN
->> [   31.745183] [   T2289] Hardware name: Hardkernel ODROID-N2Plus (DT)
->> [   31.745188] [   T2289] Call trace:
->> [   31.745191] [   T2289]  show_stack+0x28/0x40 (C)
->> [   31.745199] [   T2289]  dump_stack_lvl+0x4c/0x198
->> [   31.745205] [   T2289]  dump_stack+0x20/0x50
->> [   31.745209] [   T2289]  check_preemption_disabled+0xec/0xf0
->> [   31.745213] [   T2289]  debug_smp_processor_id+0x28/0x38
->> [   31.745216] [   T2289]  meson_ddr_pmu_create+0x200/0x560 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
->> [   31.745237] [   T2289]  g12_ddr_pmu_probe+0x20/0x38 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
->> [   31.745246] [   T2289]  platform_probe+0x98/0xe0
->> [   31.745254] [   T2289]  really_probe+0x144/0x3f8
->> [   31.745258] [   T2289]  __driver_probe_device+0xb8/0x180
->> [   31.745261] [   T2289]  driver_probe_device+0x54/0x268
->> [   31.745264] [   T2289]  __driver_attach+0x11c/0x288
->> [   31.745267] [   T2289]  bus_for_each_dev+0xfc/0x160
->> [   31.745274] [   T2289]  driver_attach+0x34/0x50
->> [   31.745277] [   T2289]  bus_add_driver+0x160/0x2b0
->> [   31.745281] [   T2289]  driver_register+0x78/0x120
->> [   31.745285] [   T2289]  __platform_driver_register+0x30/0x48
->> [   31.745288] [   T2289]  init_module+0x30/0xfe0 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
->> [   31.745298] [   T2289]  do_one_initcall+0x11c/0x438
->> [   31.745303] [   T2289]  do_init_module+0x68/0x228
->> [   31.745311] [   T2289]  load_module+0x118c/0x13a8
->> [   31.745315] [   T2289]  __arm64_sys_finit_module+0x274/0x390
->> [   31.745320] [   T2289]  invoke_syscall+0x74/0x108
->> [   31.745326] [   T2289]  el0_svc_common+0x90/0xf8
->> [   31.745330] [   T2289]  do_el0_svc+0x2c/0x48
->> [   31.745333] [   T2289]  el0_svc+0x60/0x150
->> [   31.745337] [   T2289]  el0t_64_sync_handler+0x80/0x118
->> [   31.745341] [   T2289]  el0t_64_sync+0x1b8/0x1c0
->>
->> Changes replaces smp_processor_id() with raw_smp_processor_id() to
->> ensure safe CPU ID retrieval in preemptible contexts.
->>
->> Cc: Jiucheng Xu <jiucheng.xu@amlogic.com>
->> Fixes: 2016e2113d35 ("perf/amlogic: Add support for Amlogic meson G12 SoC DDR PMU driver")
->> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->> ---
->>   drivers/perf/amlogic/meson_ddr_pmu_core.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
->> index 07446d784a1a..c1e755c356a3 100644
->> --- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
->> +++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
->> @@ -511,7 +511,7 @@ int meson_ddr_pmu_create(struct platform_device *pdev)
->>   
->>   	fmt_attr_fill(pmu->info.hw_info->fmt_attr);
->>   
->> -	pmu->cpu = smp_processor_id();
->> +	pmu->cpu = raw_smp_processor_id();
->>   
->>   	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, DDR_PERF_DEV_NAME);
->>   	if (!name)
-> 
-> 
-> Bah, this follows what the other drivers are doing but I continue to
-> dislike the races we have between CPU hotplug and perf PMU registration.
-> 
-> Robin -- did you have a crack at fixing that or did I dream it?
+On Wed, Apr 16, 2025 at 7:18=E2=80=AFPM <arnaldo.melo@gmail.com> wrote:
+>
+> The tools/build/feature/test-all.c file tries to build with the most
+> common set of libraries expected to be present to build perf, and these
+> days libbfd (binutils) isn't one since it was made opt-in via
+> BUILD_NONDISTRO=3D1 on the make command line as it has license issues.
+>
+> Fix this by removing the tests from there.
+>
+> Fixes: dd317df072071903 ("perf build: Make binutil libraries opt in")
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Quentin Monnet <qmo@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I've had "Perf core should do cpu hotplug!" written on the whiteboard 
-behind my desk for about 5 years now, does that count? :)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-However my initial plan was to at least factor out some of this common 
-boilerplate within drivers/perf itself - I currently have one WIP patch 
-from last year making a start on that, but I reckon I can find a way to 
-make it crucial for the other PMU driver work I've already got scheduled 
-this quarter (assuming I win the game of whack-a-mole against IOMMU race 
-conditions soon enough...)
+There is a wider set of cleanups that remove BUILD_NONDISTRO and
+libbfd that I posted back in January:
+https://lore.kernel.org/lkml/20250122174308.350350-1-irogers@google.com/
+These changes are carried in:
+https://github.com/googleprodkernel/linux-perf/commits/google_tools_master/
+The remaining use of libbfd for BPF JIT code disassembly is converted
+to using either capstone or LLVM:
+https://lore.kernel.org/lkml/20250122174308.350350-11-irogers@google.com/
+Namhyung had concerns over code like:
+https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
+ls/perf/util/capstone.c#L23-L132
+where structs and enums derived from pahole are declared rather than
+gathered from a #include. Doing things this way was deliberate in the
+patch series so that the code could assume capstone or llvm support
+may be present, falling back when not, and that the build wouldn't
+need to have support for a no header file option that could do nothing
+(this option would always be to try to fallback on dlopen and nobody
+could create a less enabled build by forgetting to have a header
+file). Theoretically the structs and defines, incorporated by way of
+pahole, could change and a header file dependency would be robust to
+this. In practice this would be an ABI incompatible change just as
+changing a function name looked up by dlsym would be. Namhyung took
+onboard my suggestion that we could reduce the set of structs/enums/..
+for capstone by disabling the `print_insn_x86` when using dlopen, but
+I think such a change should warn the user of reduced functionality,
+cleaning up the warning would just bring back the code as I had
+proposed:
+https://lore.kernel.org/lkml/CAP-5=3DfXL0hXFT+t6gHp2RFd4dKnebSkd+rewudpmden=
+tKGPURw@mail.gmail.com/
 
-Cheers,
-Robin.
+I think the patch series should be a priority to land as:
+1) there is substantial cleanup wrt libbfd, libiberty, .. with
+dependencies being factored out into their our C files;
+2) the dependencies on libcapstone and libllvm are broken at build
+time, allowing distributions to ship perf with a more minimal set of
+dependencies and then later get the faster code or better support by
+installing the libraries - I think ideally we'd do the same for the
+libpython dependency as Namhyung has done in his uftrace;
+3) the series adds BPF JIT disassembly.
+
+Maybe this can be an occasion we respect the opinions of the patch
+author and land what may be just a good patch series, but not quite
+perfect to someone else's definition of perfect. We can always put
+patches on top to make things perfect and discuss the merits at that
+moment.
+
+Thanks,
+Ian
+
+> ---
+>  tools/build/Makefile.feature   | 12 ------------
+>  tools/build/feature/Makefile   |  2 +-
+>  tools/build/feature/test-all.c | 19 -------------------
+>  tools/perf/Makefile.config     |  1 +
+>  4 files changed, 2 insertions(+), 32 deletions(-)
+>
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 57bd995ce6afa318..da025a8040a9a154 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -42,17 +42,12 @@ endef
+>  #
+>  #   All the others should have lines in tools/build/feature/test-all.c l=
+ike:
+>  #
+> -#    #define main main_test_disassembler_init_styled
+> -#    # include "test-disassembler-init-styled.c"
+> -#    #undef main
+> -#
+>  #    #define main main_test_libzstd
+>  #    # include "test-libzstd.c"
+>  #    #undef main
+>  #
+>  #    int main(int argc, char *argv[])
+>  #    {
+> -#      main_test_disassembler_four_args();
+>  #      main_test_libzstd();
+>  #      return 0;
+>  #    }
+> @@ -60,7 +55,6 @@ endef
+>  #    If the sample above works, then we end up with these lines in the F=
+EATURE-DUMP
+>  #    file:
+>  #
+> -#    feature-disassembler-four-args=3D1
+>  #    feature-libzstd=3D1
+>  #
+>  FEATURE_TESTS_BASIC :=3D                  \
+> @@ -71,8 +65,6 @@ FEATURE_TESTS_BASIC :=3D                  \
+>          get_current_dir_name            \
+>          gettid                         \
+>          glibc                           \
+> -        libbfd                          \
+> -        libbfd-buildid                 \
+>          libelf                          \
+>          libelf-getphdrnum               \
+>          libelf-gelf_getnote             \
+> @@ -102,8 +94,6 @@ FEATURE_TESTS_BASIC :=3D                  \
+>          setns                          \
+>          libaio                         \
+>          libzstd                                \
+> -        disassembler-four-args         \
+> -        disassembler-init-styled       \
+>          file-handle
+>
+>  # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+> @@ -119,8 +109,6 @@ FEATURE_TESTS_EXTRA :=3D                  \
+>           hello                          \
+>           libbabeltrace                  \
+>           libcapstone                    \
+> -         libbfd-liberty                 \
+> -         libbfd-liberty-z               \
+>           libopencsd                     \
+>           cxx                            \
+>           llvm                           \
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index b8b5fb183dd40693..76724931f68e1b92 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -110,7 +110,7 @@ all: $(FILES)
+>  __BUILD =3D $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c=
+,$(@F)) $(LDFLAGS)
+>    BUILD =3D $(__BUILD) > $(@:.bin=3D.make.output) 2>&1
+>    BUILD_BFD =3D $(BUILD) -DPACKAGE=3D'"perf"' -lbfd -ldl
+> -  BUILD_ALL =3D $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=3D2=
+ -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) =
+-DPACKAGE=3D'"perf"' -lbfd -ldl -lz -llzma -lzstd
+> +  BUILD_ALL =3D $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=3D2=
+ -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) =
+-lz -llzma -lzstd
+>
+>  __BUILDXX =3D $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bi=
+n,%.cpp,$(@F)) $(LDFLAGS)
+>    BUILDXX =3D $(__BUILDXX) > $(@:.bin=3D.make.output) 2>&1
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-al=
+l.c
+> index 03ddaac6f4c4dfa2..1010f233d9c1ad49 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -66,14 +66,6 @@
+>  # include "test-libslang.c"
+>  #undef main
+>
+> -#define main main_test_libbfd
+> -# include "test-libbfd.c"
+> -#undef main
+> -
+> -#define main main_test_libbfd_buildid
+> -# include "test-libbfd-buildid.c"
+> -#undef main
+> -
+>  #define main main_test_backtrace
+>  # include "test-backtrace.c"
+>  #undef main
+> @@ -158,14 +150,6 @@
+>  # include "test-reallocarray.c"
+>  #undef main
+>
+> -#define main main_test_disassembler_four_args
+> -# include "test-disassembler-four-args.c"
+> -#undef main
+> -
+> -#define main main_test_disassembler_init_styled
+> -# include "test-disassembler-init-styled.c"
+> -#undef main
+> -
+>  #define main main_test_libzstd
+>  # include "test-libzstd.c"
+>  #undef main
+> @@ -193,8 +177,6 @@ int main(int argc, char *argv[])
+>         main_test_libelf_gelf_getnote();
+>         main_test_libelf_getshdrstrndx();
+>         main_test_libslang();
+> -       main_test_libbfd();
+> -       main_test_libbfd_buildid();
+>         main_test_backtrace();
+>         main_test_libnuma();
+>         main_test_numa_num_possible_cpus();
+> @@ -213,7 +195,6 @@ int main(int argc, char *argv[])
+>         main_test_setns();
+>         main_test_libaio();
+>         main_test_reallocarray();
+> -       main_test_disassembler_four_args();
+>         main_test_libzstd();
+>         main_test_libtraceevent();
+>         main_test_libtracefs();
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 9f08a6e96b351707..7e9aa3d910c2cdcc 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -917,6 +917,7 @@ ifneq ($(NO_JEVENTS),1)
+>  endif
+>
+>  ifdef BUILD_NONDISTRO
+> +  $(call feature_check,libbfd)
+>    ifeq ($(feature-libbfd), 1)
+>      EXTLIBS +=3D -lbfd -lopcodes
+>    else
+> --
+> 2.49.0
+>
