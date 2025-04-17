@@ -1,119 +1,114 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C20C23645F;
-	Thu, 17 Apr 2025 11:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B413215061;
+	Thu, 17 Apr 2025 11:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744888345; cv=none; b=S9227j0ssDDFMosFj1z5u3/q2oW9pB/sY8vL4Xsl7GinHmaJt00rrWM4WFCifZjoLgC3A6Lr1uGERavvtv/7vnJigoPhTtozjifZiuSJT1ZhtwbRIZ+DI47ZPZ/m4QJh097o9iHc8zNSCewucGItmiE3EC73j8FSXmhCvCLWDz4=
+	t=1744890738; cv=none; b=UambGLveOwKNGoXL5XJJl/Cq+rRd6nbM185pAf8C7zCeO0plbGmi+lxVlT33eijCLkuoN5T1W+UN+jDmFOFiZ+5j8t813OHtbE8YpJmdqbMZua8c44zq7zlWOhnf5dns5ZMvSHaPsII/wZ+bUMeoh/AZC77BjcE6UtTILHQ/mVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744888345; c=relaxed/simple;
-	bh=zKR49UWsXQlKIMA1VnL+BkqgO+3iF8iLPVDDfF2KoTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qJv86Il9HqLtscLyVepF/2S8m/x0VJulXPSa8zvBWZuchr/O4G6UWUyWFznvNE8KjgnwSqRoajoPJpzF2/wy4MpHHYFytP+KKoPa/sfquDczEHSfMFI+RNlieWHMDIr/7cCW3iixL2DS6JcI2oLoGR6XHX/tZxPEdTqhAfK/izs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZIADA/NB; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744890738; c=relaxed/simple;
+	bh=TiDNvMnp0IugLxAqC2JocJtrOHqZw8rkUQ+/eq3NByo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mpKZukr2H43qv1725G4Wk5w0xSeeBBYYa9XBMflHOoBUv48GPREjW46/MR81gYcrE8uOIVh0UnhHrxx9e90lFgLCAM7xz4rL8F4BTh1CNgz7CM2EVuJYsBqLW8VZf+ODLBDPhlP9iPNJhil4L57KZY/zV335p9AdMrLuCC2vi5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Izcs6Pd+; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZIADA/NB"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53HBB0dU3967739
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 17 Apr 2025 04:11:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53HBB0dU3967739
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744888264;
-	bh=zKR49UWsXQlKIMA1VnL+BkqgO+3iF8iLPVDDfF2KoTE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZIADA/NBWFdjMUgJTKpv9M9Wy2YG9IZEPFByL8wYabsxbBoRuZfKRlm/KXHCD1Dct
-	 p+vwf14YsIuc+VHp9bDfack/1J0ZEDi3/LMHCo05xDW9TD4JrJ0GM5fVVA/piqxPhD
-	 UyV8JWSU0hR2PMwkuYuHLcqgii53bDcW9KmA0ITTnJZG4RxQYf1Gr8LMHk+DKpR9xo
-	 v/L3GNQ4ChUSYncpwgOQsPYYlB/v/0qZd/JiW4t/kLzx/6ZLdqruZ97wB6zyl1mziC
-	 tKwEE+12hM3fNBR36tO17t9Oq8pShTsP2t1ihwsRhIESP8RHTn9IcCLiPfhw0jeR7+
-	 9wRv9KyfJmA3A==
-Message-ID: <edbeb41d-3c38-4778-9a7c-255edc7cd5fb@zytor.com>
-Date: Thu, 17 Apr 2025 04:10:59 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Izcs6Pd+"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HA4B0q002812;
+	Thu, 17 Apr 2025 11:52:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=ur8BoTvqIlCkziFmeuS6AZYBF/JO6n
+	z1/deh12WLJkQ=; b=Izcs6Pd+/XtYuSOI6JkebZQtpiR+k9Ax1z8ZMfAgWQdoYf
+	68Kujc65cPNNUVk8HsLdVUvBxeA0VTL8tskF0Qk3T6KZeT9Qqqn+VSWgIE/SAlMh
+	dbhpRDDFv//G3Ftx8kSSpGKJ8AS6Aw6VngkqtPVhsrqVk7R3qI/v5mBEgEnw4PnM
+	Oze9xfOT8YNLjrxN5G1Xqyx5bIPFG1RwJbAwetLLRdnrdFFoSgwNghxGm+SSDDl/
+	KeLMcwdCqDNexUe35y8hwfeMi7pY6qUf1uDTz3z8URb4Nq0OxzKPDljWTAAh8joy
+	W1AW/VFYmSHHHFJAaPT112ht/mDZGC8M1Rkp1fJg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462yjj8f8r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 11:52:11 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53HBUjh4017195;
+	Thu, 17 Apr 2025 11:52:10 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040m5c57-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 11:52:10 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53HBq6YX32768416
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 17 Apr 2025 11:52:06 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A9DEA20043;
+	Thu, 17 Apr 2025 11:52:06 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E3F420040;
+	Thu, 17 Apr 2025 11:52:06 +0000 (GMT)
+Received: from osiris (unknown [9.87.137.75])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 17 Apr 2025 11:52:06 +0000 (GMT)
+Date: Thu, 17 Apr 2025 13:52:04 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com
+Subject: Re: [PATCH] perf/tests: Fix tests 84 and 86 Add --metric-only on s390
+Message-ID: <20250417115204.12521Ef5-hca@linux.ibm.com>
+References: <20250415134553.3089594-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 13/15] x86/msr: Use the alternatives mechanism to
- read MSR
-To: Francesco Lavra <francescolavra.fl@gmail.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ajay.kaher@broadcom.com,
-        alexander.shishkin@linux.intel.com, andrew.cooper3@citrix.com,
-        bcm-kernel-feedback-list@broadcom.com, boris.ostrovsky@oracle.com,
-        bp@alien8.de, bpf@vger.kernel.org, dave.hansen@linux.intel.com,
-        decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
-        irogers@google.com, jgross@suse.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, kvm@vger.kernel.org, kys@microsoft.com,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        llvm@lists.linux.dev, luto@kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, namhyung@kernel.org, pbonzini@redhat.com,
-        peterz@infradead.org, seanjc@google.com, tglx@linutronix.de,
-        tony.luck@intel.com, virtualization@lists.linux.dev,
-        vkuznets@redhat.com, wei.liu@kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-References: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <0f4f2ed70829fffb2eb816e34e26be22681705a5.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415134553.3089594-1-tmricht@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3T4M7v_4x5QBVKGq313W6NGnx1rRdfNb
+X-Authority-Analysis: v=2.4 cv=MsNS63ae c=1 sm=1 tr=0 ts=6800eb6b cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pkdV3G2aDOTQtP1BiC4A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: 3T4M7v_4x5QBVKGq313W6NGnx1rRdfNb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504170086
 
-On 4/14/2025 10:13 AM, Francesco Lavra wrote:
-> This works only if this function has been called directly (e.g. via
-> `call asm_xen_write_msr`), but doesn't work with alternative call types
-> (like indirect calls). Not sure why one might want to use an indirect
-> call to invoke asm_xen_write_msr, but this creates a hidden coupling
-> between caller and callee.
-> I don't have a suggestion on how to get rid of this coupling, other
-> than setting ipdelta in _ASM_EXTABLE_FUNC_REWIND() to 0 and adjusting
-> the _ASM_EXTABLE_TYPE entries at the call sites to consider the
-> instruction that follows the function call (instead of the call
-> instruction) as the faulting instruction (which seems pretty ugly, at
-> least because what follows the function call could be an instruction
-> that might itself fault). But you may want to make this caveat explicit
-> in the comment.
+On Tue, Apr 15, 2025 at 03:45:53PM +0200, Thomas Richter wrote:
+> On s390x z/VM machines the CPU Measurement Facility is not available.
+> Events cycles and instructions do not exist.
+> Running above tests on s390 z/VM always fails with this error:
+> 
+>  # ./perf test 84 86
+>  84: perf stat JSON output linter          : FAILED!
+>  86: perf stat STD output linter           : FAILED!
+>  #
 
-Good idea, will state that in the comment.
+I would guess this fails also for KVM guests?
+
+> diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
+> index 4d4aac547f01..a708dedf7d9d 100644
+> --- a/tools/perf/tests/shell/lib/stat_output.sh
+> +++ b/tools/perf/tests/shell/lib/stat_output.sh
+> @@ -151,6 +151,11 @@ check_per_socket()
+>  check_metric_only()
+>  {
+>  	echo -n "Checking $1 output: metric only "
+> +	if [ "$(uname -m)" = "s390x" ] && grep -q z/VM /proc/sysinfo
+> +	then
+> +		echo "[Skip] not supported on z/VM"
+> +		return
+> +	fi
+
+Wouldn't it be better to test for the availability of the CPU-measurement
+counter facility? That is: test if facility number 67 is present in the
+facilities field of /proc/cpuinfo.
