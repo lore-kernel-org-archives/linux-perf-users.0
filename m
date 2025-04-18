@@ -1,46 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2101FDE12;
-	Fri, 18 Apr 2025 08:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F51E1A2658;
+	Fri, 18 Apr 2025 08:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744965152; cv=none; b=mXLbimFQq5I6t8hL+klAiApBVJg2XKTVCdYx98bb9La4fRrGgR2l9gwZfMw/POOq4mkLp3yVYXCF6TRW68T2FOg6N/5UBc9Gg0Ovqab+YelbAukHXhF4oJpykwvsrLFNHboXYOwJTfMRGhWl6O/LX+Mx9Ns7Xp5GKZYx2o8j8r0=
+	t=1744966747; cv=none; b=iQboN+GNVqcYXVhxc+Z+LnCN0Fe2HIlMCblmKqtgGimEusN3GMoAqmCNBi2LzCnx6WNDPWPCSI8rkOXHGPbOzdmKMopqT4Py+/s8Aokh1a+Iv4jOKfTP5yp7F6UFwpq/s2CCgdUKLO+eI1gFDrWPj7E7aiM03xqRdMKauErPiX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744965152; c=relaxed/simple;
-	bh=DBcmfGPlOYxSIWeCzpc6ORK7sl/z26lxe+TcEDYk5yw=;
+	s=arc-20240116; t=1744966747; c=relaxed/simple;
+	bh=aE+TolPpJytr2bw3ArY9+yrf8+LfS2HJO8eTc40Sjxg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQj8ukfBIS5EeitCpXb9Hfmiat1JBa8yiDQvGBYdVDSeBpbdDpL77A7E1xDVfpRg9PHqLamLNd9BUOn6senrBxW9IVFsoJY9iR6uQB5X/IHY1EK7IaCs0fKkOFiO9cg4ZSx1fJCtX/vZ2xkkU9OBLFZkMIjBdP8mS+3MXZO/Fuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgeUr496; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oh8FcqTyvlVHIgFKOkg8UMLGlsy9HSeFqGqPQHN1OebX4WffylBWJ8t/a63YEO+DCOgHp4Hql/zXkxvmHf+THjwfKUYXWhts3/+gAEa6QXWAtXDv/atxWELk2ybsYY5RvJOQusVxjGXGqPqTD+n0pksZ1Kmp0l8hMei0eMRed38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WYbfwUqq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgeUr496"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52ED6C4CEE2;
-	Fri, 18 Apr 2025 08:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744965152;
-	bh=DBcmfGPlOYxSIWeCzpc6ORK7sl/z26lxe+TcEDYk5yw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sgeUr496kglvJLbnOlYeAz/PqG5sqrASiOT/uZLEncjZMahDKFFMsc4mcDtQJ+60I
-	 AGUiYwK8iE9nF0SWInIlLlewkojFTViQy5nfIvi1XbiFrknTVuX173i2zFEJfOHJqm
-	 1O58hiAjdlkE+6tt2+34AjEWCBEZPGfyiKDh8mpSf8MrGTSOT7RwvxUcZNDHpAMx0j
-	 kTgDCzNFn6YlU7WwrftOS3EJJCuTY8lifkCHa7MJYcDx59Jr2ujAxjUT9Z6LzJFjW0
-	 b8vijCniJEpxEJagDeACDtUExDU/pm+GpgBr1P3dz4ia5J11MdyUNaYvnT3ZJxjsTR
-	 1YUXWyJRRjppg==
-Date: Fri, 18 Apr 2025 10:32:26 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	eranian@google.com, songliubraving@meta.com, ravi.bangoria@amd.com,
-	ananth.narayan@amd.com
-Subject: Re: [PATCH v2 0/5] perf/x86/uncore: Overflow handling enhancements
-Message-ID: <aAIOGkKWGOLbu6y-@gmail.com>
-References: <cover.1744906694.git.sandipan.das@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WYbfwUqq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QGIn3gg2dSpEZDpP3MpEJCGISaE8mMh3VrAkEfJj674=; b=WYbfwUqqSNrv/qSY0jjMdawH2e
+	JIfhUbsbV4Gad4WhGnQqV5z563hDFi0QdB9/PBe+y2BqYnUtfiPC5ovxA+BEDDwXqSdAQtkjyk1YC
+	stwUw8pSaGpiZlud6UiVNsRzxUDCoF3uNFwBMSTdCh1LCdhA4kE8A0kQsWpsryZ8+W+BGJi0AsO2p
+	kLHVQhhfauHugr1HewzcBxsxzY39r5ssPH62L2CGfAww3xsjZz7OPXPYCKsRIVHEC3YW33wkae7gx
+	aLoBns7p9Gh2CGaISqEKdXQvNDIjQDKGz9rZ0G9rXb9wQ0WzIrMwRlrneRI73AWTH97EYVMPZIM0K
+	LjBMijnA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u5hXc-0000000CZza-2Wqf;
+	Fri, 18 Apr 2025 08:58:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0D5E4300619; Fri, 18 Apr 2025 10:57:44 +0200 (CEST)
+Date: Fri, 18 Apr 2025 10:57:43 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Qing Wong <wangqing7171@gmail.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Revert "perf/core: Fix hardlockup failure caused by
+ perf throttle"
+Message-ID: <20250418085743.GN38216@noisy.programming.kicks-ass.net>
+References: <20250405141635.243786-1-wangqing7171@gmail.com>
+ <20250405141635.243786-2-wangqing7171@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,44 +53,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1744906694.git.sandipan.das@amd.com>
+In-Reply-To: <20250405141635.243786-2-wangqing7171@gmail.com>
 
+On Sat, Apr 05, 2025 at 10:16:34PM +0800, Qing Wong wrote:
+> From: Qing Wang <wangqing7171@gmail.com>
+> 
+> This reverts commit 15def34e2635ab7e0e96f1bc32e1b69609f14942.
+> 
+> The hardlockup failure does not exist because:
+> 1. The hardlockup's watchdog event is a pinned event, which exclusively
+> occupies a dedicated PMC (Performance Monitoring Counter) and is unaffected
+> by PMC scheduling.
+> 2. The hardware event throttling mechanism only disables the specific PMC
+> where throttling occurs, without impacting other PMCs. Consequently, The
+> hardlockup event's dedicated PMC remains entirely unaffected.
+> 
+> Signed-off-by: Qing Wang <wangqing7171@gmail.com>
+> ---
+>  kernel/events/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 0bb21659e252..29cdb240e104 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10049,8 +10049,8 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+>  		hwc->interrupts = 1;
+>  	} else {
+>  		hwc->interrupts++;
+> -		if (unlikely(throttle &&
+> -			     hwc->interrupts > max_samples_per_tick)) {
+> +		if (unlikely(throttle
+> +			     && hwc->interrupts >= max_samples_per_tick)) {
 
-* Sandipan Das <sandipan.das@amd.com> wrote:
+Well, it restores bad coding style. The referred commit also states that
+max_samples_per_tick can be 1, at which point we'll always throttle the
+thing, since we've just increased.
 
-> Sandipan Das (5):
->   perf/x86/amd/uncore: Remove unused member from amd_uncore_ctx
->   perf/x86/intel/uncore: Use HRTIMER_MODE_HARD for detecting overflows
->   perf/x86/amd/uncore: Use hrtimer for handling overflows
->   perf/x86/amd/uncore: Add parameter to configure hrtimer
->   perf/x86/amd/uncore: Prevent UMC counters from saturating
-
-Could you please fix your mailer to not mutiliate Cc: lines?
-
-Cc: linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org
-Cc: mingo@redhat.com
-Cc: acme@kernel.org
-Cc: namhyung@kernel.org
-Cc: mark.rutland@arm.com
-Cc: alexander.shishkin@linux.intel.com
-Cc: jolsa@kernel.org
-Cc: irogers@google.com
-Cc: adrian.hunter@intel.com
-Cc: kan.liang@linux.intel.com
-Cc: tglx@linutronix.de
-Cc: bp@alien8.de
-Cc: dave.hansen@linux.intel.com
-Cc: x86@kernel.org
-Cc: hpa@zytor.com
-Cc: eranian@google.com
-Cc: songliubraving@meta.com
-Cc: ravi.bangoria@amd.com
-Cc: ananth.narayan@amd.com
-
-All these email addresses have real names, I suppose they weren't just 
-written in in such a fashion?
-
-Thanks,
-
-	Ingo
+That is, the part of the old commit that argued about e050e3f0a71bf
+flipped the compare and the increment is still true. So even though it
+might not be related to the hardlockup problem, I still don't think the
+patch was wrong.
