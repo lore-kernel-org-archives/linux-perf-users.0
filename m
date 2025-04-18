@@ -1,46 +1,46 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2042.outbound.protection.outlook.com [40.107.101.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBDC1E25E1;
-	Fri, 18 Apr 2025 03:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858561E25E1;
+	Fri, 18 Apr 2025 03:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744947843; cv=fail; b=nm10sZscKdYaFeQoEQ+WMLMh7xdw4X6/tQCUKHi+YvRbhwrBCl0biFHVtJse6EhK3bKx0rA/4Mjary91khB6ZzMMAVpKmMItBCkBjCGXgrsL49BMoMCoEPOtjv0aVZvrtENIf510YalHRMHb13tL+m2LgeloC48cYBrGDGb5bZs=
+	t=1744947860; cv=fail; b=MOF1JEtv5Ktjkgir+aCweYsEqs7ZCrpyniJcJqFAZTuiGjSn1HAEMJxllEIu0igwG3SZGg+RcnGWBQcQbaEfQmj4YVmSjEcWFPQ56reqqrKwgGYm5LqvLyArkllV8Tt8sTFVdPv9sL/d71MZzG5q9fE3Wi6qKA8NkJYNBEvpFyo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744947843; c=relaxed/simple;
-	bh=y5wNSmq8QUO0flqdkg6lLFl/hpBDZrrqL387EL7uCqo=;
+	s=arc-20240116; t=1744947860; c=relaxed/simple;
+	bh=Wmmc5H34GqbjoCfaIsn0emCN0MR2Iy1SIeSXR0K6clc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Drb41M4RXp/cJi7jVvt1XXhl86o/+1E6nw7qO2gu36YxQ9PURUMpcRZSZJXX8XV83Yp1efoq+J5Sgyn0ceXjDamu1oEbYMJt9E8icm46hdgFMFHLy0W6oOI3yY4iL08C0VCrZAtdZpUDUS93wtMPxjxEgvVO8amS6BtgSg0edvU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ik9VHbPj; arc=fail smtp.client-ip=40.107.92.44
+	 MIME-Version:Content-Type; b=XW+yk2kpjIEWkuplWPo85ibuZ8au06eKVpAAHRuS2mmTmQK/1LdPUsgA8Ie2N5IcGYSYvkMLFLh8S+Es52THajg7WhawaDm3FTFhNxuqiDhBVJbz0bLjpy5qAg09go+7XCoGoBSr2kQkTdJ9f+9QksYCatJAbjHi+E5yT91J30k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iCQI9meR; arc=fail smtp.client-ip=40.107.101.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ik9VHbPj"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iCQI9meR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O1aZ/Ib+11oRM5UIa65wWoFvUB5IIP3CAyOzlxGdnja2toCT7bleZigfnM7JGInwv9Gd/dOrkSLRiD/Z/+ZAu7JpH7OPoIBzBTyqFmoApf1PxOwFJjdLHTX3DJHQfQDUk5LqBENEPHSbe6X9J/l9jQRaIpLTylLzXUUYs+1UclkluynQKhI998NwA67L8VPeBI3Xl4eKeWFHdSj3wG9fA0HztSHhrHXqx0iHoqRQE5gmJ5y34UJrk4kIYt4uIOmjW8VkII0DXsOeAQWdIv7amDvCfcnccQWQJ7d02j0oNGfRJdHb+W/WNiwZZvsQ2aPsE7nCOjMPo+f8woh8k1gIXg==
+ b=asA+6DAIuiz1gknf0UpFWMNCg3T5gwU9ORVjkpd3quo8Vq/dbWR3qAdwfGatt3tYHLbAR55FhwNJXRoeDok0/32BLjFibB3iOngNK7P73wTIc3bw4Ji/TfDtxYfuiOPHf/PPzhIVX6a3A8gb5sd4FEEripV+u69t88lBj4a57L7nyRIc2Qe6ihcOtV058GDXnMQ6DFOzuwUYCqVb476zwiwZyuLjUJ1ofaStRZjSgL5cXM0wJZzItCxDsGv9RP43nQ5o6VHjpHWqrZoYKWYSlIRjRw6w36+L8it1UqNGPeCDeoIKTGENlGTMZgXVM3T1+8WDeZx6PDjPTcYkTxWBiQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EspE+wP1mZ1DX10FJTH9EyvIIUqN3yS4qs+W9oSS/BY=;
- b=Gwzkhc2UelT2OpTj1oC3kQIJMhB6lrR+h1k3H9Dm3X3UQoW3tLzYZewnHtQ0RjySc0VkLafKM0MEe233jOstAZuJco7l2J9uKq2M/3gxtT98O2drF3LXEsJ2QJaRAS3rpTlE99hroaHdjlcdpvb4NpsPtcP1NksEoKvEdDSLTmEO4N+Dykmn6v3jH6oXtTbKnNgWd/Ah3nucRyodWnqPCOeeXaxiYRQRyzi4/Q3aswX35QxvYcUzaXIdVSe2QUhmjF/7VdKhhcmj9xMMn0JJr5pr95OCQfDZHcG/RctZJQMkBmN0J9iKTmzhb4r4MFwAZFrPaWtegIwUuhYg7TGL5Q==
+ bh=ZaWNtIsU2ScJ45LnMjxYvTmqmJQhCXYPgCnJp6GO0UM=;
+ b=DUA1r/tIp5agrHRL48X7rmG6n74e7xl5T7mu/d4dtscUhz2hkL9NPlDHBMIV98SY18aoMEaiv7k+tEeTVIZP4uOdKOflr0lp/F9nR0g6UYKl7aS7lGfLz7nUr03njtMgkPKFVvE+NCRO8gk2tuS59t+mfFpuoTPaeZR+2kA1xvGHKIoV2MA5OJ0R3cSGzDihOx80mwg0083lexHzguCerisV6P1yL4ahM28Ia3KDFX77X28KE1+47eXYcY/k6j6Uki3aUeRQjYB6fxH2RTIUyVSaHyxjwq5ytzN8tFwJIonDom+MkZG2vt7Xe1AvQ5rki72lw4vI8PX62IZ+vOZHCg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EspE+wP1mZ1DX10FJTH9EyvIIUqN3yS4qs+W9oSS/BY=;
- b=ik9VHbPjl0cWMyQ283Vw+sw0e7g1wl/LiHaE1E73m1pvNt5+MCR/p6YhtxX3DkypuJ58ltSW9TfYFuoIPv5gAXyh+qSOlgKzWENFQ+TmXXsXT+CCVblTR2JLH9m1XRDHDDQBki8rscU8yPM98xK73j9DcmG5WfHe3+oT11VKIAI=
-Received: from PH8PR07CA0007.namprd07.prod.outlook.com (2603:10b6:510:2cd::23)
- by MN0PR12MB6365.namprd12.prod.outlook.com (2603:10b6:208:3c2::18) with
+ bh=ZaWNtIsU2ScJ45LnMjxYvTmqmJQhCXYPgCnJp6GO0UM=;
+ b=iCQI9meRLi/sd8TaJfl4jo1+MoLV0mSy5LKI3d33JkebPI1q81HhR4fDV+68B6lJDwf3NZTW1bl2QGYNF/wB85KCmKsoQLt7xpXr1EupVvYHJtFtGJ9oBe0CYpeVeDJaTlo8hyuf+g1H62c7wLjcuyWHu6Gb0WxBWYaQgvAHCZU=
+Received: from BYAPR06CA0025.namprd06.prod.outlook.com (2603:10b6:a03:d4::38)
+ by DS7PR12MB6094.namprd12.prod.outlook.com (2603:10b6:8:9d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Fri, 18 Apr
- 2025 03:43:58 +0000
-Received: from CY4PEPF0000E9CF.namprd03.prod.outlook.com
- (2603:10b6:510:2cd:cafe::72) by PH8PR07CA0007.outlook.office365.com
- (2603:10b6:510:2cd::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Fri,
- 18 Apr 2025 03:43:57 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.27; Fri, 18 Apr
+ 2025 03:44:13 +0000
+Received: from CY4PEPF0000E9D3.namprd03.prod.outlook.com
+ (2603:10b6:a03:d4:cafe::ef) by BYAPR06CA0025.outlook.office365.com
+ (2603:10b6:a03:d4::38) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.18 via Frontend Transport; Fri,
+ 18 Apr 2025 03:44:13 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9CF.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ CY4PEPF0000E9D3.mail.protection.outlook.com (10.167.241.138) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Fri, 18 Apr 2025 03:43:57 +0000
+ 15.20.8655.12 via Frontend Transport; Fri, 18 Apr 2025 03:44:13 +0000
 Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 17 Apr
- 2025 22:43:48 -0500
+ 2025 22:44:07 -0500
 From: Sandipan Das <sandipan.das@amd.com>
 To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
@@ -65,9 +65,9 @@ CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 	<x86@kernel.org>, <hpa@zytor.com>, <eranian@google.com>,
 	<songliubraving@meta.com>, <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
 	<sandipan.das@amd.com>
-Subject: [PATCH v2 2/5] perf/x86/intel/uncore: Use HRTIMER_MODE_HARD for detecting overflows
-Date: Fri, 18 Apr 2025 09:13:00 +0530
-Message-ID: <0ad4698465077225769e8edd5b2c7e8f48f636d5.1744906694.git.sandipan.das@amd.com>
+Subject: [PATCH v2 3/5] perf/x86/amd/uncore: Use hrtimer for handling overflows
+Date: Fri, 18 Apr 2025 09:13:01 +0530
+Message-ID: <8ecf5fe20452da1cd19cf3ff4954d3e7c5137468.1744906694.git.sandipan.das@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1744906694.git.sandipan.das@amd.com>
 References: <cover.1744906694.git.sandipan.das@amd.com>
@@ -83,115 +83,203 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CF:EE_|MN0PR12MB6365:EE_
-X-MS-Office365-Filtering-Correlation-Id: aab0a600-a45e-4c31-362a-08dd7e2b3fb1
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D3:EE_|DS7PR12MB6094:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12029045-89fe-4fc2-0dc2-08dd7e2b4941
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013;
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?D2D/J+Y8DjVgll8m014X1a8yylN2dzTfC4cImNlJQF7UqyNWBtCBaHyxbS6s?=
- =?us-ascii?Q?9ti+VwHTRF4iRMyJREdimf3dsqSiIk4/Zz7RipsAjd96MTM601paD0LmeBet?=
- =?us-ascii?Q?i5YeFrxD28pHPSN9ov76RPGpJ+727HC91xVU/kTEdf66tVGksAH9J6n1+/sL?=
- =?us-ascii?Q?nERF44fGL1n2Utw1xJvX0HBytt/kmeWMqKvwq1J7nsWjXbVbdMK8lJfcA8EQ?=
- =?us-ascii?Q?KHN9LnRaVVBbjc/SemRAtYAvP55XspWL7Gni9Upa2Ec3QzkLsDu1Utb8W6qd?=
- =?us-ascii?Q?N3495husyvVnCQeBX0KoiATRL4B4/VYXMwzQXIyz2VFlMyi6SzQh/qG3j/Jt?=
- =?us-ascii?Q?l35gDl/aFoLUMdfW4DpDOsGZeFuXOgwAKEMhi8MCwjq5xhY6dNBgptFV1uUB?=
- =?us-ascii?Q?f11efQxjRovSuUGHGJgC+YNacGqE/6m+tjVDblJpHsQ2q+oXDoQYRHKs7O2o?=
- =?us-ascii?Q?80vAs8rwXKH15QWT3N/jXxgkZuz5kvfhsPgpyffVIJ0+cx2JfkbslLfhxfaS?=
- =?us-ascii?Q?ZC0TckVPaSYqePNsWgtqtw7BetZAxN2aJp2AgH2UxOYZZraMJ9BtaUFj+/NW?=
- =?us-ascii?Q?VC1GWO41/vdBHy86juVdjxLBGDx75FJN9G1rOCSzIb9307qzhGWXcLFqVHLa?=
- =?us-ascii?Q?/S8N5lDj5Mx8jdn8g5aaHeKYqo6OqzSWv5+7zbauDIbxmkPRAbGR9N8TwMki?=
- =?us-ascii?Q?p09Ihi631c0rGqLotz9vAr0U84qRmSq/NMWupJc8qsVNiNt+jomLO5eoStBZ?=
- =?us-ascii?Q?mLyAFdsVRv5aV1PB0iKq3Ymyk7d7EPWUdU3ZzwYnnUcc1ZIPl1DoWNEEce1y?=
- =?us-ascii?Q?HEIiFyekX+S9T5ZlGWG3dDVWIHrXTBaz8NP3/hzCqXbC3Ftx/rTl92U1lyr/?=
- =?us-ascii?Q?DBhmySMx3Qqw5gFbm9CWXvcSmcnLgXy/vHdQe+cgPQjFsaGiP6TFi+Zw08Cr?=
- =?us-ascii?Q?oOEbktoHlSCGKAuDteYZzXxpZHGznxGjlDdZV40TPZpmaBJaB6SQjJWtlIC3?=
- =?us-ascii?Q?PMbmASBH57LRYe3WIAzx2mQJAelYW6kmOL5m2WxVUsWPCRvPJUyYUeECxrbc?=
- =?us-ascii?Q?YFEsjEOhm+SlzqSjjwFWX2qpj1So8rkKONd7ZYO+Jt35JHEC5eEmMVh+nCSV?=
- =?us-ascii?Q?wMUM6f7rhH7PspS4gkEECYFHROLyKPW97dHi+HyZvyXqF7FuBCT6df9y2qdF?=
- =?us-ascii?Q?bg9zhAW5Kl2DchNdOM9n6mp2IGNNSNYXJ/kopYIj5A1+qaLnFz6NKk4RPx21?=
- =?us-ascii?Q?r5njdfB51Bez9j5zefQ4cJEuahx0SL+weQbDUGQqMEi7ZAkzq8sPlaZxy56V?=
- =?us-ascii?Q?+QYqqeHLduyw4rssXaH2tgy9V12bCf5QmD/IW8R2+bTR/C0uc9tRPH+cj3lV?=
- =?us-ascii?Q?A6sxixW3HWKYlIIxXLl7uAmKNXm6GXMuGyHUcHC5Vjs+Bo13e5gBjalN2EMA?=
- =?us-ascii?Q?tv45QXGwSHNrm3liJMCo++7OOn91f8VxWhzLI0aBlsTQzUyVQpwDHeRELcog?=
- =?us-ascii?Q?nvIjLvD+3Sg3ZcUw9lnKvt7M5gHDD22R7CV+?=
+	=?us-ascii?Q?ihc6A7KlLBXddlr9p4ihmLh96gDY5O/3/ebCQtAWbVGQ3YdBYamAxHdUPbsm?=
+ =?us-ascii?Q?pbGdd2y/jQoQfmAalnqNFoDgZ16oyMuBc2ylQJfm7Muga5x8iq1yP0Xg2Vsn?=
+ =?us-ascii?Q?cGJC/s0ojjy8BvtvtkEY2MN5KQAYC2leHxXp/i/IoVKeX9e2Ol/oNGh8Qa9V?=
+ =?us-ascii?Q?j2RH+NF8yguTFwTUP5OTM2/TY80YmP27FwjPeV6fwl/pQfsB/qv0Dx3B1C1D?=
+ =?us-ascii?Q?ZueJo8MlwaaRfJbqi5zo4t4fFumrZ5Nj/db65HM27yDx7omfuN1xeC9XIoSn?=
+ =?us-ascii?Q?G7vHsnrxmptfLYx4RWSnOI6YfvEYHyzUzDIeVOtx9U/3/oibRQUAswZx9nrj?=
+ =?us-ascii?Q?008ETVUUC0wlNX4mp3o9jgKwOfaa3ifS5lmOJUHlR2H0ULxW0U4a5ORToeI3?=
+ =?us-ascii?Q?5cz9Fx0o79tA79rWDo7nBAYyswv9CIB/DuoFM9OnqEwR/a73/Cwd8V7VF1CX?=
+ =?us-ascii?Q?1+D47vsAagKpo05s2o1Tx6J4yJBlHsGPKLGMvR6qnvE99qTdAH2jK4q9VBU/?=
+ =?us-ascii?Q?E3U6cmzgQwUxph1E17p8zuKOXh3/8STAWaqISqsd5k+tQfXOzizcfaKKyoX9?=
+ =?us-ascii?Q?VK3OajrcZji3RMyiI9xH4cAEMkntfns9cEgQjf8qNnwRX7OTthZpZqH3pxwg?=
+ =?us-ascii?Q?smGhgRTYkmKktipo38qQziHmouvONrg6SctS0SC0DFsASkvPCQuj3k43/gWz?=
+ =?us-ascii?Q?gCtECWYuyJ/I7m4NzB/5DDnEu9XPNJFSPzQkOavbiHy5vsW+9Gps+m4R7hQ5?=
+ =?us-ascii?Q?VeHqzx0hxer8pW9q0eXowxGjgfXaeKbGPrM0XJsNOWf2pms94AQzEZ3Qa2cV?=
+ =?us-ascii?Q?wGVWbSCF9MiibYmLavvqFYIQAfyioGKeGI1LeyRAg+4ndYm4+kCaDZ2RvjkD?=
+ =?us-ascii?Q?l/oFQBJ7UNTYpxI+h8Zq0SYlOODaibUtZnEnuglr0WJBBrrDoVseozdcBhJa?=
+ =?us-ascii?Q?OqLSINeewN6Z44B6XhN+OIxE5bs8K1dXJWugl7O6CKrzsBLV3duWeoRkt6/P?=
+ =?us-ascii?Q?pEpTfQ0raKI1ayXImEnZdzuR/KRvaofMPGom2pJ+TaqLQEGvXa/a/j18Llg0?=
+ =?us-ascii?Q?GcDk58i8yWPK27/2nFnfOS6M/2Fv/JJDcfb4+1jOoHlIhrNS8MAepuO/Ip1t?=
+ =?us-ascii?Q?1NimkbqNYRLgdXqYpoW/LDf4QwNYnPOkIWA8k3YqzlNHJKgSyiTVwFuG2uOH?=
+ =?us-ascii?Q?l2OoHI+2cieRv/v+yM0PchwoxxXTRJDQLpCSc5W3jeocCXVGDq0YIoxyHjq1?=
+ =?us-ascii?Q?6/1m+YJatXZQbHkdKTNE0mJz/G0JI1vJSx9/YqTInU/LZh0bvOqoNDhZm5SO?=
+ =?us-ascii?Q?aGZH4ZGZW7a6ZIjI+86J2KXZOu4oUx1A29oN9pFHGgvtSvx2TOoggI1kIFkH?=
+ =?us-ascii?Q?dAQ/8kEhLH9aDg8cW4mEomqqh2Z3maWrgO86xlbSOQxjFjeHU/jzANC/o2Qq?=
+ =?us-ascii?Q?7rJGUMYK5+/BjVbt+ZxlDb2F1zGFynkk8LhJ8qbrb7EGfEMNv4nWJ9XVBS99?=
+ =?us-ascii?Q?KrjXTY6hTn4p/YOuPb+s6jLwPSb+5NkYlPir?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 03:43:57.2656
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 03:44:13.2609
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aab0a600-a45e-4c31-362a-08dd7e2b3fb1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12029045-89fe-4fc2-0dc2-08dd7e2b4941
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9CF.namprd03.prod.outlook.com
+	CY4PEPF0000E9D3.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6365
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6094
 
-Hrtimer handlers can be deferred to softirq context and affect timely
-detection of counter overflows. Hence switch to HRTIMER_MODE_HARD.
+Uncore counters do not provide mechanisms like interrupts to report
+overflows and the accumulated user-visible count is incorrect if there
+is more than one overflow between two successive read requests for the
+same event because the value of prev_count goes out-of-date for
+calculating the correct delta.
 
-Disabling and re-enabling IRQs in the hrtimer handler is not required
-as pmu->start() and pmu->stop() can no longer intervene while updating
-event->hw.prev_count.
+To avoid this, start a hrtimer to periodically initiate a pmu->read() of
+the active counters for keeping prev_count up-to-date. It should be
+noted that the hrtimer duration should be lesser than the shortest time
+it takes for a counter to overflow for this approach to be effective.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 ---
- arch/x86/events/intel/uncore.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ arch/x86/events/amd/uncore.c | 63 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index a34e50fc4a8f..5811e172f721 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -305,17 +305,11 @@ static enum hrtimer_restart uncore_pmu_hrtimer(struct hrtimer *hrtimer)
- {
- 	struct intel_uncore_box *box;
- 	struct perf_event *event;
--	unsigned long flags;
- 	int bit;
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 010024f09f2c..e09bfbb4a4cd 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -21,6 +21,7 @@
+ #define NUM_COUNTERS_NB		4
+ #define NUM_COUNTERS_L2		4
+ #define NUM_COUNTERS_L3		6
++#define NUM_COUNTERS_MAX	64
  
- 	box = container_of(hrtimer, struct intel_uncore_box, hrtimer);
- 	if (!box->n_active || box->cpu != smp_processor_id())
- 		return HRTIMER_NORESTART;
--	/*
--	 * disable local interrupt to prevent uncore_pmu_event_start/stop
--	 * to interrupt the update process
--	 */
--	local_irq_save(flags);
+ #define RDPMC_BASE_NB		6
+ #define RDPMC_BASE_LLC		10
+@@ -38,6 +39,10 @@ struct amd_uncore_ctx {
+ 	int refcnt;
+ 	int cpu;
+ 	struct perf_event **events;
++	unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
++	int nr_active;
++	struct hrtimer hrtimer;
++	u64 hrtimer_duration;
+ };
  
- 	/*
- 	 * handle boxes with an active event list as opposed to active
-@@ -328,8 +322,6 @@ static enum hrtimer_restart uncore_pmu_hrtimer(struct hrtimer *hrtimer)
- 	for_each_set_bit(bit, box->active_mask, UNCORE_PMC_IDX_MAX)
- 		uncore_perf_event_update(box, box->events[bit]);
- 
--	local_irq_restore(flags);
--
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(box->hrtimer_duration));
- 	return HRTIMER_RESTART;
+ struct amd_uncore_pmu {
+@@ -87,6 +92,42 @@ static struct amd_uncore_pmu *event_to_amd_uncore_pmu(struct perf_event *event)
+ 	return container_of(event->pmu, struct amd_uncore_pmu, pmu);
  }
-@@ -337,7 +329,7 @@ static enum hrtimer_restart uncore_pmu_hrtimer(struct hrtimer *hrtimer)
- void uncore_pmu_start_hrtimer(struct intel_uncore_box *box)
- {
- 	hrtimer_start(&box->hrtimer, ns_to_ktime(box->hrtimer_duration),
--		      HRTIMER_MODE_REL_PINNED);
+ 
++static enum hrtimer_restart amd_uncore_hrtimer(struct hrtimer *hrtimer)
++{
++	struct amd_uncore_ctx *ctx;
++	struct perf_event *event;
++	int bit;
++
++	ctx = container_of(hrtimer, struct amd_uncore_ctx, hrtimer);
++
++	if (!ctx->nr_active || ctx->cpu != smp_processor_id())
++		return HRTIMER_NORESTART;
++
++	for_each_set_bit(bit, ctx->active_mask, NUM_COUNTERS_MAX) {
++		event = ctx->events[bit];
++		event->pmu->read(event);
++	}
++
++	hrtimer_forward_now(hrtimer, ns_to_ktime(ctx->hrtimer_duration));
++	return HRTIMER_RESTART;
++}
++
++static void amd_uncore_start_hrtimer(struct amd_uncore_ctx *ctx)
++{
++	hrtimer_start(&ctx->hrtimer, ns_to_ktime(ctx->hrtimer_duration),
 +		      HRTIMER_MODE_REL_PINNED_HARD);
- }
- 
- void uncore_pmu_cancel_hrtimer(struct intel_uncore_box *box)
-@@ -347,7 +339,7 @@ void uncore_pmu_cancel_hrtimer(struct intel_uncore_box *box)
- 
- static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
++}
++
++static void amd_uncore_cancel_hrtimer(struct amd_uncore_ctx *ctx)
++{
++	hrtimer_cancel(&ctx->hrtimer);
++}
++
++static void amd_uncore_init_hrtimer(struct amd_uncore_ctx *ctx)
++{
++	hrtimer_setup(&ctx->hrtimer, amd_uncore_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
++}
++
+ static void amd_uncore_read(struct perf_event *event)
  {
--	hrtimer_setup(&box->hrtimer, uncore_pmu_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_setup(&box->hrtimer, uncore_pmu_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	struct hw_perf_event *hwc = &event->hw;
+@@ -117,18 +158,26 @@ static void amd_uncore_read(struct perf_event *event)
+ 
+ static void amd_uncore_start(struct perf_event *event, int flags)
+ {
++	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
++	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
++	if (!ctx->nr_active++)
++		amd_uncore_start_hrtimer(ctx);
++
+ 	if (flags & PERF_EF_RELOAD)
+ 		wrmsrl(hwc->event_base, (u64)local64_read(&hwc->prev_count));
+ 
+ 	hwc->state = 0;
++	__set_bit(hwc->idx, ctx->active_mask);
+ 	wrmsrl(hwc->config_base, (hwc->config | ARCH_PERFMON_EVENTSEL_ENABLE));
+ 	perf_event_update_userpage(event);
  }
  
- static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
+ static void amd_uncore_stop(struct perf_event *event, int flags)
+ {
++	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
++	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+ 	wrmsrl(hwc->config_base, hwc->config);
+@@ -138,6 +187,11 @@ static void amd_uncore_stop(struct perf_event *event, int flags)
+ 		event->pmu->read(event);
+ 		hwc->state |= PERF_HES_UPTODATE;
+ 	}
++
++	if (!--ctx->nr_active)
++		amd_uncore_cancel_hrtimer(ctx);
++
++	__clear_bit(hwc->idx, ctx->active_mask);
+ }
+ 
+ static int amd_uncore_add(struct perf_event *event, int flags)
+@@ -490,6 +544,9 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 				goto fail;
+ 			}
+ 
++			amd_uncore_init_hrtimer(curr);
++			curr->hrtimer_duration = 60LL * NSEC_PER_SEC;
++
+ 			cpumask_set_cpu(cpu, &pmu->active_mask);
+ 		}
+ 
+@@ -879,12 +936,18 @@ static int amd_uncore_umc_event_init(struct perf_event *event)
+ 
+ static void amd_uncore_umc_start(struct perf_event *event, int flags)
+ {
++	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
++	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
++	if (!ctx->nr_active++)
++		amd_uncore_start_hrtimer(ctx);
++
+ 	if (flags & PERF_EF_RELOAD)
+ 		wrmsrl(hwc->event_base, (u64)local64_read(&hwc->prev_count));
+ 
+ 	hwc->state = 0;
++	__set_bit(hwc->idx, ctx->active_mask);
+ 	wrmsrl(hwc->config_base, (hwc->config | AMD64_PERFMON_V2_ENABLE_UMC));
+ 	perf_event_update_userpage(event);
+ }
 -- 
 2.43.0
 
