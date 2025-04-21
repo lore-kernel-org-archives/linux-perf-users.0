@@ -1,158 +1,345 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD38E33EC;
-	Mon, 21 Apr 2025 16:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D392AC17
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 18:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745252000; cv=none; b=Ftag3eupT/LGdgiPURlsa/riiYP5o02CkwL5PGFyJYy+rmZZNF69wDYapNgeghgDWgLbBSjDp97N14mym3YcJ8lb/F4E2qN1Q4ELqHlAU1IYNebQkkVm6l37LaxPC5cH3il+0LBZ48eTZC3dftPCTRl6Da+vHWSX3ZWIASLdL20=
+	t=1745259160; cv=none; b=JIg7Fh7B/HhtwM0bLtkcR2mmt8BVh5hYg8n6oD52dzrJsdIzy8VPUvQepDm9oRdD3ybOC4pPJoVxfsowyz9od9It9osIw1zB/Qo27LGtafhYO2sCrBasp2CeeFuoDqVaXceP3v0j0OyPSg0R5T6uH0S25xXohAvY/3mwVP2UMkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745252000; c=relaxed/simple;
-	bh=fjHyYEUz8mq+kd32kuPuYxYj0H98bcmAhUeHAtoZ0Kg=;
+	s=arc-20240116; t=1745259160; c=relaxed/simple;
+	bh=LlLLEOuW0U4rC1WNREWEL0LzvBz4miLqqOTsacsqNZg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rNruy1hwv/xDa9iZ78mmdMr/V1YQqXXfHX8627FJIgum6zLrRFpLw/3a7cuiUt+o8s8XujmqjRy3ZsqwIByWKgfTsdZQNxFuqYEMhYYU1AGVXYSyr92bs8XZ6FOUGTVy59x9Cbs47my0+RsBpkSru+oWsoOWeKRvAwq6/TV7tHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvFwV9Hl; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=gm0JCNvWVfpt8LrPgliUvYRckn7K/+S6NSMV7RcuuFzBqhoPpkLau3DW9n7QwBW7WK6FmIfIWBov2ffwvuC1ZQXFA1PcZ3KAnYRSnQmSTH9EtQKqXQnxLV1dbIHXWy4qip7x7yzkYqyuifhN8mmbHXMqbKdmqgwrJ9AZnpWItLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dQDQtF/6; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvFwV9Hl"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so2480557f8f.0;
-        Mon, 21 Apr 2025 09:13:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dQDQtF/6"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240aad70f2so720655ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 11:12:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745251996; x=1745856796; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745259158; x=1745863958; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2zLX7K/cYY3IleSeSkksUZh8idp3aJvGLpMSPQRzdiw=;
-        b=YvFwV9Hl0bw4MjxtQPjEQl8W7GfA8Hvn5lfHfw2inVxZ/TlMWBuLxziiAzGP7OU+Vm
-         KpzGaoGIhPS5jUlEI4LMKrUtIBQGCUd0P/oF/t4g5Yif4fyJVeLKtMhviusWSd+C4Eez
-         rvKRsBVza2yHaOmqDD1U4oLMQwuZmR1Ej2d+fA9mf9QH4XyOeUpTVcm2s2+sR/nVGN6Q
-         Ttr6BDnT/E5ArOhcnOypWPRRkc2Cy7CEnfeDah3JoW4uYqgkQSUwNhu+jkHTo7Q+6iHX
-         GZ7kTzZZT/5FsTh7+YqzmpBNXJ7Rv1kR/45CqMmZX2KmSbPM9O4ZtvUmD67qJm/ia9QC
-         m58g==
+        bh=OX1b+irsz3GA0jrQb8R5L6gAGyJvu0NWPGMIJQPRA48=;
+        b=dQDQtF/6qF6Khgz92nIyRzKFnwypbSwOHioUD+N8DObPjSL3WpqdoMv57YOzDwou/W
+         BKFmYVRN6p/I2cFSKCE/x3OGZNOU2s4nJ/YY3J4Ge6hwMNBi+UF5uSOwQ9zws7aHELaR
+         2SdpdcHptt8+K0THEW8CwByR7Gzj0GZT6FrNVO7w3kRf9rQpKzPBy4D5snSR1bWy1oDB
+         WDBKT/VHXsb1GmOW9fZ639x1N13Y/M61shjNFlDr/I83CZA4vxKghlauYh25xXQFAWQj
+         CXGWFKDpmr1c0etcbgukILFE9HrfVu7Aoxp1nkirocqgthPNWcFpCox9fHCF4/al/Byd
+         ZF7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745251996; x=1745856796;
+        d=1e100.net; s=20230601; t=1745259158; x=1745863958;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2zLX7K/cYY3IleSeSkksUZh8idp3aJvGLpMSPQRzdiw=;
-        b=oikGSrQyCU1U5R5ghXtteIGEBvJbzHTFzCITbCcGBmiahkzxTC6//IXc9EoPfO8w/f
-         ZAo0uoMnJ8QIN4mlEpqT3bs6DLASkpvDejACZ26WFhYOh+hnVTT7AV3J+FrIC1Zp0aFc
-         EfiKlYd0v5OBbpbsqEIJUYDoKvP3L5ILJi82eIhs8H3ohyk4DJDluplqR6KStgHroZEu
-         5bJA3XuZk+qZv4b9fmrPhK1rX9N1/RE+PI0nPf+7EE8Sx6vsr54AjXISDbOkU0j4RF0y
-         Tlc5NcRogj94zHYCX8G/O7XEftUKWl3hoPjN/AQzFS3QVZbiy7gR1bG/fSw4FMnBR5mz
-         83CA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUTbQ4aQ2n75Qeh+xdoNZhhHxnpryXTnA2kNhInbG+73Mtj6idfCZzON0C3CulwyioL4c=@vger.kernel.org, AJvYcCUbR/9hfBiMtTYBCl8j6hPBS1vnjCj35JE9ZbZ3Yb4IUen/hCXZCA8mXzbn38Iu2xtxXzHQNzmXgTciKSPrdfT8yw==@vger.kernel.org, AJvYcCUoJhnMYSH6I4MdtF3s4Uez3qAkDqWFNhD4mES/gJwcDVzIsoFaiuVHGyrO2bUFEKM3rJfIItsmuOrqV3w=@vger.kernel.org, AJvYcCVBglNtso3nTc8twJBFzZWRUDuhT7L/72MlLpCvXwVYLA2af+QaMvvAib4bZATEOWv+cnucDShazxpAAtsUfrKP@vger.kernel.org, AJvYcCVDBuWk5c+wscaV4sQa98Ma9Z1a1vj/qUOuvVMS5V1SWagxwiPZ3nwoiwIrAONuafZtGQ8t5SD1+zZfqx3I@vger.kernel.org, AJvYcCW/VXntTVvtnAIrPhQcMW7JebXnYMh3L1TMjY9PHkYJZhXeEGuta6yp6CF+ANd/1Wr+cMkgP75y@vger.kernel.org, AJvYcCWce9Dy1PT9NLBTyzS5fpLDAKUZi+9UJRt4cRzgUF4JBq1MLrxLkGqXZ/yzMCKXCAHFvIYPRr9b44pfbPHV2uwOXJvA@vger.kernel.org, AJvYcCWta6dCYDpgn02Rqnk87qhRToqCUEDF0/Fz9Qpw2YxMsCW01eVT7QzVwxurxbhoZP1lSbbKkXur2Vc+4YWvuQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9PUFfHR2o/xBQoq8j4rjjEveMu94gRG8EwwCTj7WSUiIy/j77
-	Nf6F4HOk5PpQalefbFTKROlZxw7moxaRpnA4NlQiQmzV75jEIO0zhGE5Aw+F/pzFgNaSYT+ayZr
-	doMt2R/QcsZQSCXGO1J3iIpFG1SM=
-X-Gm-Gg: ASbGncvqMLhxcrRnvUeGjcWzx5XvV2zWKlRntGLFRxf55bfyLqGY7ZLKXgd/CaPs14d
-	eipqtmQYnE2qPJDOS660LFkB0HE2D+5C4WliL4FlHMX7BcR2UH/NGIcW1U+rCPVIx8wy/fEaMsz
-	1N/cOEwFkcq/qrMMGrRfeZfAR2tc9yUsa+mJFwjw==
-X-Google-Smtp-Source: AGHT+IERc9SbXqHoD9IEJg7efyEpkbehIMV7qdPZVeaGZ/dKsZqt8X+kv+83Lua/+4bYS6g8aPAmuT20YbQK/7LgbuE=
-X-Received: by 2002:a05:6000:188b:b0:38f:503a:d93f with SMTP id
- ffacd0b85a97d-39efbacdc16mr9730639f8f.40.1745251995604; Mon, 21 Apr 2025
- 09:13:15 -0700 (PDT)
+        bh=OX1b+irsz3GA0jrQb8R5L6gAGyJvu0NWPGMIJQPRA48=;
+        b=OcWhQ/cHH9YMHuEkdhrhD1XaO9GBATNxAy+GNPZ/N9ZurL68W9nV+DEmixwH28fjUg
+         9Llv3HBWPvNhav/edVfZGjY/vOElzqHd6tGGAQHdPkw9kmo2zNGEhT+UobylHFfM8VHq
+         NLVKKJbrC3yhY4VjyryZCBpNi7vaFYIPQW8ITRtXcouKkZ7x+v0BuW9/MPAlIhCsMzzI
+         xkg/FE/pSXG4tXuztwji8LMgMWRHZHoHLgCFru7vQH/2CdPd+sjxhkJvZutBeleW/ViV
+         PUwKdhJ32cflGkfPNBfrjpwTVLiY8cEaAyCH7VSKPcztGG0KR9FsLS1mN95d8jF3MVrv
+         lgCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX73o4J8e4agn1QAR1b8Z6vFv9wTh+0V+M6DAiB74TmzAtto1u+Mt/buPyUCeQD2YGxxi3DdWMv7cXjVpU1vQz8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA6rmBRYU7YFSSZzzdO2D9rO9ZhVgv8o2wfPYkxQDkzOl1xKX2
+	VRh40CbDuF3jzVnQ0xV5jkw2mS4qlJ9DxIfPReaOMKPXDgx6H3cbUazC3Z8IWU0UvDW6SIKr1k/
+	M7sb8bsojP93TzupRok78/4snW/oPDEAdKogw
+X-Gm-Gg: ASbGncvyI/yhFFNgDl1eO43HX/yLSfZ+f2zb2En+OYKgAzKkKCcoMWPeZHcl2EJ8Fyd
+	pl0m3lVLKqi611S1BGX6k2zqCeiT8yCKsdnQ1i6aZkTrvpsL5ZqaR0S7gwAuWUy83P+EiwfYsKL
+	SMNGrlhsMO2EaVrawf+OJ58+DjqTyQXooiiOqaIi625gLIULalF0Q=
+X-Google-Smtp-Source: AGHT+IGk2cBFcvD6bIA+IM+UxZOjB/9DHHkKlh+XuIlwWpbUzF0BycMYfeYZR5aoPQsLrGPUkfn88nX1hRa7dxeQ2qo=
+X-Received: by 2002:a17:903:3ba4:b0:224:a93:704d with SMTP id
+ d9443c01a7336-22c529e5f3amr7116565ad.2.1745259157504; Mon, 21 Apr 2025
+ 11:12:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744169424.git.dxu@dxuuu.xyz> <5b3433d942eaecdbcc92876c9ed8b7d17f7e1086.1744169424.git.dxu@dxuuu.xyz>
-In-Reply-To: <5b3433d942eaecdbcc92876c9ed8b7d17f7e1086.1744169424.git.dxu@dxuuu.xyz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 21 Apr 2025 09:13:03 -0700
-X-Gm-Features: ATxdqUH2LI9xx7Ht6ga__5IFi0RUqBTSDZrwpNL136ky8WsOy4vl2AEULf1HMhQ
-Message-ID: <CAADnVQK111J3b-4gauYkptFf51fhYQn2J78dH8QiwdSigiRuJw@mail.gmail.com>
-Subject: Re: [RFC bpf-next 11/13] treewide: bpf: Export symbols used by verifier
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	David Ahern <dsahern@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Quentin Monnet <qmo@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Jozsef Kadlecsik <kadlec@netfilter.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Namhyung Kim <namhyung@kernel.org>, Eric Dumazet <edumazet@google.com>, Sean Young <sean@mess.org>, 
-	X86 ML <x86@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, KP Singh <kpsingh@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Song Liu <song@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Pablo Neira Ayuso <pablo@netfilter.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Jan Kara <jack@suse.cz>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Simon Horman <horms@kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	netfilter-devel <netfilter-devel@vger.kernel.org>, coreteam@netfilter.org
+References: <20250328175006.43110-1-irogers@google.com> <24f97eb6f76bfd2fcc968f93a8aeda390d54cc98.camel@intel.com>
+ <CAP-5=fWjjvXVRD5L9Gi0_kbwGh+MzVFD0a2NRT2P8bTNu+jicQ@mail.gmail.com> <CAP-5=fW-X_B2sH-PfHYnZaTUupHwYya9M9xJt9dncJNnn+sKkw@mail.gmail.com>
+In-Reply-To: <CAP-5=fW-X_B2sH-PfHYnZaTUupHwYya9M9xJt9dncJNnn+sKkw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 21 Apr 2025 11:12:26 -0700
+X-Gm-Features: ATxdqUESP6f7Sau15-x9XQjlR2rql7Ui3T7UQcegDGq4Y13C9MKG-7w6QLkXDec
+Message-ID: <CAP-5=fWxuKHLZJjd2NVWjA7ktCX6X3yQBsH2kh+eTTaNcSqbTg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/35] GNR retirement latencies, topic and metric updates
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"Biggers, Caleb" <caleb.biggers@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"Taylor, Perry" <perry.taylor@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, 
+	"alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, 
+	"namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 8:35=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote:
+On Mon, Apr 7, 2025 at 9:50=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> This commit EXPORT_SYMBOL_GPL()'s all the unresolved symbols from verifie=
-r.o.
-> This is necessary to support loads and reloads of the verifier at
-> runtime.
+> On Wed, Apr 2, 2025 at 11:41=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Fri, Mar 28, 2025 at 12:16=E2=80=AFPM Falcon, Thomas <thomas.falcon@=
+intel.com> wrote:
+> > >
+> > > On Fri, 2025-03-28 at 10:49 -0700, Ian Rogers wrote:
+> > > > Add default mean, min and max retirement latency values to GNR
+> > > > events. Update the topics on a number of events previously
+> > > > "other". Switch TMA metrics to the generated version. Add TMA 5.02
+> > > > metrics for sandybridge, ivytown, ivybridge and jaketown.
+> > > >
+> > > > Events and metrics generated from the data and scripts in:
+> > > > https://github.com/intel/perfmon
+> > > >
+> > > > v5: Additional metrics constraints from:
+> > > >     https://github.com/intel/perfmon/pull/299
+> > > >     PDIST descriptions added from:
+> > > >     https://github.com/intel/perfmon/pull/292
+> > > >     Original retirement latency, .. updates in:
+> > > >     https://github.com/intel/perfmon/pull/298
+> > > >
+> > >
+> > > Metrics tests are passing on Granite Rapids, Arrow Lake and Alder Lak=
+e
+> > >
+> > > Tested-by: Thomas Falcon <thomas.falcon@intel.com>
+> >
+> > Thanks Thomas, for Alderlake I ran into an issue fixed by:
+> > https://lore.kernel.org/lkml/20250402183806.3947021-1-irogers@google.co=
+m/
 >
-> The list of symbols was generated using:
->
->     nm -u kernel/bpf/verifier.o | grep -ve "__asan\|__ubsan\|__kasan" | a=
-wk '{print $2}'
->
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> ---
->  arch/x86/net/bpf_jit_comp.c |  2 ++
->  drivers/media/rc/bpf-lirc.c |  1 +
->  fs/bpf_fs_kfuncs.c          |  4 ++++
->  kernel/bpf/bpf_iter.c       |  1 +
->  kernel/bpf/bpf_lsm.c        |  5 +++++
->  kernel/bpf/bpf_struct_ops.c |  2 ++
->  kernel/bpf/btf.c            | 40 +++++++++++++++++++++++++++++++++++++
->  kernel/bpf/cgroup.c         |  4 ++++
->  kernel/bpf/core.c           | 29 +++++++++++++++++++++++++++
->  kernel/bpf/disasm.c         |  4 ++++
->  kernel/bpf/helpers.c        |  2 ++
->  kernel/bpf/local_storage.c  |  2 ++
->  kernel/bpf/log.c            | 12 +++++++++++
->  kernel/bpf/map_iter.c       |  1 +
->  kernel/bpf/memalloc.c       |  3 +++
->  kernel/bpf/offload.c        | 10 ++++++++++
->  kernel/bpf/syscall.c        |  7 +++++++
->  kernel/bpf/tnum.c           | 20 +++++++++++++++++++
->  kernel/bpf/token.c          |  1 +
->  kernel/bpf/trampoline.c     |  5 +++++
->  kernel/events/callchain.c   |  3 +++
->  kernel/trace/bpf_trace.c    |  9 +++++++++
->  lib/error-inject.c          |  2 ++
->  net/core/filter.c           | 26 ++++++++++++++++++++++++
->  net/core/xdp.c              |  2 ++
->  net/netfilter/nf_bpf_link.c |  1 +
->  26 files changed, 198 insertions(+)
+> Sorry, I was wrong that patch isn't necessary. There's a lot missing
+> from the perf-next tree that is in the google tree. Some of the
+> changes here are needed by:
+> https://lore.kernel.org/lkml/20250407050101.1389825-1-irogers@google.com/
+> So it would be good to see these purely json file updates land with
+> Thomas' tested-by tag.
 
-Patches 1-10 look ok. Moving the code around and few targeted
-exports are fine,
-but this patch goes too far.
-At least btf.c, log.c, tnum.c and may be others should be a part
-of the module.
-Then check_sock_access() can be refactored into callbacks
-to avoid exports in filter.c
-We can approach it from the pov of minimizing exports,
-but such steps won't give us clarity on how portable such
-modular verifier will be.
-Other questions to answer is whether maps should be in the module too.
-Modules can provide their kfuncs already, so existing kfuncs
-can stay where they are.
+Ping.
 
-Namespacing into "bpf_internal" as Stanislav suggested is
-a good thing too with a warning somewhere in Documentation/bpf/
-that these must only be used by the verifier.
+Thanks,
+Ian
+
+> Thanks,
+> Ian
+>
+> >
+> > > > v4: Generate grandridge metrics from the spreadsheet using conversi=
+on
+> > > >     with the core type of crestmont.
+> > > >
+> > > > v3: Generate sierraforest metrics from the spreadsheet using
+> > > >     conversion with the core type of crestmont.
+> > > >
+> > > > v2: Fix arrowlake PMU/cpu prefixes.
+> > > >
+> > > > Ian Rogers (35):
+> > > >   perf vendor events: Update alderlake events/metrics
+> > > >   perf vendor events: Update AlderlakeN events/metrics
+> > > >   perf vendor events: Update arrowlake events/metrics
+> > > >   perf vendor events: Update bonnell events
+> > > >   perf vendor events: Update broadwell metrics
+> > > >   perf vendor events: Update broadwellde metrics
+> > > >   perf vendor events: Update broadwellx metrics
+> > > >   perf vendor events: Update cascadelakex events/metrics
+> > > >   perf vendor events: Update clearwaterforest events
+> > > >   perf vendor events: Update elkhartlake events
+> > > >   perf vendor events: Update emeraldrapids events/metrics
+> > > >   perf vendor events: Update grandridge events/metrics
+> > > >   perf vendor events: Add graniterapids retirement latencies
+> > > >   perf vendor events: Update haswell metrics
+> > > >   perf vendor events: Update haswellx metrics
+> > > >   perf vendor events: Update icelake events/metrics
+> > > >   perf vendor events: Update icelakex events/metrics
+> > > >   perf vendor events: Update ivybridge metrics
+> > > >   perf vendor events: Update ivytown metrics
+> > > >   perf vendor events: Update jaketown metrics
+> > > >   perf vendor events: Update lunarlake events/metrics
+> > > >   perf vendor events: Update meteorlake events/metrics
+> > > >   perf vendor events: Update nehalemep events
+> > > >   perf vendor events: Update nehalemex events
+> > > >   perf vendor events: Update rocketlake events/metrics
+> > > >   perf vendor events: Update sandybridge metrics
+> > > >   perf vendor events: Update sapphirerapids events/metrics
+> > > >   perf vendor events: Update sierraforest events/metrics
+> > > >   perf vendor events: Update skylake metrics
+> > > >   perf vendor events: Update skylakex events/metrics
+> > > >   perf vendor events: Update snowridgex events
+> > > >   perf vendor events: Update tigerlake metrics
+> > > >   perf vendor events: Update westmereep-dp events
+> > > >   perf vendor events: Update westmereep-dp events
+> > > >   perf vendor events: Update westmereep-dp events
+> > > >
+> > > >  .../arch/x86/alderlake/adl-metrics.json       | 489 +++++++-------=
+-
+> > > >  .../pmu-events/arch/x86/alderlake/cache.json  | 284 ++++++---
+> > > >  .../arch/x86/alderlake/floating-point.json    |  29 +-
+> > > >  .../arch/x86/alderlake/frontend.json          |  78 +--
+> > > >  .../pmu-events/arch/x86/alderlake/memory.json |  82 ++-
+> > > >  .../pmu-events/arch/x86/alderlake/other.json  | 209 +------
+> > > >  .../arch/x86/alderlake/pipeline.json          | 308 +++++++---
+> > > >  .../arch/x86/alderlake/virtual-memory.json    |  43 +-
+> > > >  .../arch/x86/alderlaken/adln-metrics.json     |  54 +-
+> > > >  .../pmu-events/arch/x86/alderlaken/cache.json | 107 +++-
+> > > >  .../arch/x86/alderlaken/floating-point.json   |   1 +
+> > > >  .../arch/x86/alderlaken/memory.json           |  50 ++
+> > > >  .../pmu-events/arch/x86/alderlaken/other.json | 102 +---
+> > > >  .../arch/x86/alderlaken/pipeline.json         |  55 +-
+> > > >  .../arch/x86/alderlaken/virtual-memory.json   |   3 +
+> > > >  .../arch/x86/arrowlake/arl-metrics.json       | 566 +++++++++-----=
+----
+> > > >  .../pmu-events/arch/x86/arrowlake/cache.json  | 200 ++++++-
+> > > >  .../arch/x86/arrowlake/frontend.json          |  39 +-
+> > > >  .../pmu-events/arch/x86/arrowlake/memory.json |  36 +-
+> > > >  .../pmu-events/arch/x86/arrowlake/other.json  | 197 +-----
+> > > >  .../arch/x86/arrowlake/pipeline.json          | 230 ++++++-
+> > > >  .../pmu-events/arch/x86/bonnell/other.json    |   8 -
+> > > >  .../pmu-events/arch/x86/bonnell/pipeline.json |   8 +
+> > > >  .../arch/x86/broadwell/bdw-metrics.json       | 256 ++++----
+> > > >  .../arch/x86/broadwellde/bdwde-metrics.json   | 180 +++---
+> > > >  .../arch/x86/broadwellx/bdx-metrics.json      | 268 ++++-----
+> > > >  .../arch/x86/cascadelakex/cache.json          | 404 +++++++++++++
+> > > >  .../arch/x86/cascadelakex/clx-metrics.json    | 389 ++++++------
+> > > >  .../arch/x86/cascadelakex/other.json          | 404 -------------
+> > > >  .../arch/x86/clearwaterforest/cache.json      |  35 ++
+> > > >  .../arch/x86/clearwaterforest/memory.json     |   2 +
+> > > >  .../arch/x86/clearwaterforest/other.json      |  22 -
+> > > >  .../arch/x86/clearwaterforest/pipeline.json   |   6 +-
+> > > >  .../arch/x86/elkhartlake/cache.json           | 296 ++++++++-
+> > > >  .../arch/x86/elkhartlake/floating-point.json  |   1 +
+> > > >  .../arch/x86/elkhartlake/memory.json          | 261 ++++++++
+> > > >  .../arch/x86/elkhartlake/other.json           | 404 +------------
+> > > >  .../arch/x86/elkhartlake/pipeline.json        |  31 +-
+> > > >  .../arch/x86/elkhartlake/virtual-memory.json  |   4 +
+> > > >  .../arch/x86/emeraldrapids/cache.json         | 284 +++++++--
+> > > >  .../arch/x86/emeraldrapids/emr-metrics.json   | 475 +++++++-------=
+-
+> > > >  .../x86/emeraldrapids/floating-point.json     |  43 +-
+> > > >  .../arch/x86/emeraldrapids/frontend.json      |  78 +--
+> > > >  .../arch/x86/emeraldrapids/memory.json        | 231 ++++++-
+> > > >  .../arch/x86/emeraldrapids/other.json         | 332 +---------
+> > > >  .../arch/x86/emeraldrapids/pipeline.json      | 259 +++++---
+> > > >  .../x86/emeraldrapids/virtual-memory.json     |  40 +-
+> > > >  .../pmu-events/arch/x86/grandridge/cache.json | 155 ++++-
+> > > >  .../arch/x86/grandridge/counter.json          |   2 +-
+> > > >  .../arch/x86/grandridge/frontend.json         |   8 +
+> > > >  .../arch/x86/grandridge/grr-metrics.json      | 204 ++++---
+> > > >  .../arch/x86/grandridge/memory.json           |   2 +
+> > > >  .../pmu-events/arch/x86/grandridge/other.json |  29 +-
+> > > >  .../arch/x86/grandridge/pipeline.json         |  52 +-
+> > > >  .../arch/x86/grandridge/uncore-cache.json     |  45 +-
+> > > >  .../arch/x86/grandridge/uncore-memory.json    | 338 +++++++++++
+> > > >  .../arch/x86/graniterapids/cache.json         | 305 +++++++---
+> > > >  .../arch/x86/graniterapids/counter.json       |   5 +
+> > > >  .../x86/graniterapids/floating-point.json     |  43 +-
+> > > >  .../arch/x86/graniterapids/frontend.json      | 105 ++--
+> > > >  .../arch/x86/graniterapids/gnr-metrics.json   | 487 +++++++-------=
+-
+> > > >  .../arch/x86/graniterapids/memory.json        | 206 ++++++-
+> > > >  .../arch/x86/graniterapids/other.json         | 243 +-------
+> > > >  .../arch/x86/graniterapids/pipeline.json      | 261 +++++---
+> > > >  .../arch/x86/graniterapids/uncore-cache.json  |  42 ++
+> > > >  .../graniterapids/uncore-interconnect.json    |  90 ++-
+> > > >  .../arch/x86/graniterapids/uncore-memory.json | 240 ++++++++
+> > > >  .../x86/graniterapids/virtual-memory.json     |  40 +-
+> > > >  .../arch/x86/haswell/hsw-metrics.json         | 206 ++++---
+> > > >  .../arch/x86/haswellx/hsx-metrics.json        | 222 ++++---
+> > > >  .../pmu-events/arch/x86/icelake/cache.json    |  60 ++
+> > > >  .../arch/x86/icelake/icl-metrics.json         | 385 ++++++------
+> > > >  .../pmu-events/arch/x86/icelake/memory.json   | 160 +++++
+> > > >  .../pmu-events/arch/x86/icelake/other.json    | 220 -------
+> > > >  .../pmu-events/arch/x86/icelakex/cache.json   | 273 +++++++++
+> > > >  .../arch/x86/icelakex/icx-metrics.json        | 399 ++++++------
+> > > >  .../pmu-events/arch/x86/icelakex/memory.json  | 190 ++++++
+> > > >  .../pmu-events/arch/x86/icelakex/other.json   | 463 --------------
+> > > >  .../arch/x86/ivybridge/ivb-metrics.json       |  76 ++-
+> > > >  .../arch/x86/ivybridge/metricgroups.json      |   5 +
+> > > >  .../arch/x86/ivytown/ivt-metrics.json         |  80 ++-
+> > > >  .../arch/x86/ivytown/metricgroups.json        |   5 +
+> > > >  .../arch/x86/jaketown/frontend.json           |   8 +
+> > > >  .../arch/x86/jaketown/jkt-metrics.json        |  40 +-
+> > > >  .../arch/x86/jaketown/metricgroups.json       |   5 +
+> > > >  .../pmu-events/arch/x86/jaketown/other.json   |   8 -
+> > > >  .../pmu-events/arch/x86/lunarlake/cache.json  | 182 +++++-
+> > > >  .../arch/x86/lunarlake/frontend.json          |  39 +-
+> > > >  .../arch/x86/lunarlake/lnl-metrics.json       | 560 ++++++++------=
+---
+> > > >  .../pmu-events/arch/x86/lunarlake/memory.json |  75 ++-
+> > > >  .../pmu-events/arch/x86/lunarlake/other.json  | 358 +----------
+> > > >  .../arch/x86/lunarlake/pipeline.json          | 253 +++++++-
+> > > >  tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
+> > > >  .../pmu-events/arch/x86/meteorlake/cache.json | 352 ++++++++---
+> > > >  .../arch/x86/meteorlake/floating-point.json   |  28 +-
+> > > >  .../arch/x86/meteorlake/frontend.json         |  82 +--
+> > > >  .../arch/x86/meteorlake/memory.json           |  90 ++-
+> > > >  .../arch/x86/meteorlake/mtl-metrics.json      | 553 ++++++++------=
+---
+> > > >  .../pmu-events/arch/x86/meteorlake/other.json | 149 +----
+> > > >  .../arch/x86/meteorlake/pipeline.json         | 252 +++++---
+> > > >  .../arch/x86/meteorlake/uncore-memory.json    |  18 +
+> > > >  .../arch/x86/meteorlake/virtual-memory.json   |  40 +-
+> > > >  .../pmu-events/arch/x86/nehalemep/cache.json  |  32 +
+> > > >  .../pmu-events/arch/x86/nehalemep/other.json  |  40 --
+> > > >  .../arch/x86/nehalemep/virtual-memory.json    |   8 +
+> > > >  .../pmu-events/arch/x86/nehalemex/cache.json  |  32 +
+> > > >  .../pmu-events/arch/x86/nehalemex/other.json  |  40 --
+> > > >  .../arch/x86/nehalemex/virtual-memory.json    |   8 +
+> > > >  .../pmu-events/arch/x86/rocketlake/cache.json |  60 ++
+> > > >  .../arch/x86/rocketlake/memory.json           | 160 +++++
+> > > >  .../pmu-events/arch/x86/rocketlake/other.json | 220 -------
+> > > >  .../arch/x86/rocketlake/rkl-metrics.json      | 385 ++++++------
+> > > >  .../arch/x86/sandybridge/frontend.json        |   8 +
+> > > >  .../arch/x86/sandybridge/metricgroups.json    |   5 +
+> > > >  .../arch/x86/sandybridge/other.json           |   8 -
+> > > >  .../arch/x86/sandybridge/snb-metrics.json     |  36 +-
+> > > >  .../arch/x86/sapphirerapids/cache.json        | 343 ++++++++---
+> > > >  .../x86/sapphirerapids/floating-point.json    |  43 +-
+> > > >  .../arch/x86/sapphirerapids/frontend.json     |  78 +--
+> > > >  .../arch/x86/sapphirerapids/memory.json       | 231 ++++++-
+> > > >  .../arch/x86/sapphirerapids/other.json        | 382 +-----------
+> > > >  .../arch/x86/sapphirerapids/pipeline.json     | 259 +++++---
+> > > >  .../arch/x86/sapphirerapids/spr-metrics.json  | 469 ++++++++------=
+-
+> > > >  .../x86/sapphirerapids/virtual-memory.json    |  40 +-
+> > > >  .../arch/x86/sierraforest/cache.json          |  25 +
+> > > >  .../arch/x86/sierraforest/memory.json         |  24 +
+> > > >  .../arch/x86/sierraforest/other.json          |  49 +-
+> > > >  .../arch/x86/sierraforest/pipeline.json       |   9 +
+> > > >  .../arch/x86/sierraforest/srf-metrics.json    | 204 ++++---
+> > > >  .../arch/x86/sierraforest/uncore-cache.json   |  32 +
+> > > >  .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++
+> > > >  .../arch/x86/skylake/skl-metrics.json         | 367 ++++++------
+> > > >  .../pmu-events/arch/x86/skylakex/cache.json   |  74 +++
+> > > >  .../pmu-events/arch/x86/skylakex/other.json   |  74 ---
+> > > >  .../arch/x86/skylakex/skx-metrics.json        | 385 ++++++------
+> > > >  .../pmu-events/arch/x86/snowridgex/cache.json | 296 ++++++++-
+> > > >  .../arch/x86/snowridgex/floating-point.json   |   1 +
+> > > >  .../arch/x86/snowridgex/memory.json           | 261 ++++++++
+> > > >  .../pmu-events/arch/x86/snowridgex/other.json | 404 +------------
+> > > >  .../arch/x86/snowridgex/pipeline.json         |  31 +-
+> > > >  .../arch/x86/snowridgex/virtual-memory.json   |   4 +
+> > > >  .../arch/x86/tigerlake/tgl-metrics.json       | 383 ++++++------
+> > > >  .../arch/x86/westmereep-dp/cache.json         |  32 +
+> > > >  .../arch/x86/westmereep-dp/other.json         |  40 --
+> > > >  .../x86/westmereep-dp/virtual-memory.json     |   8 +
+> > > >  .../arch/x86/westmereep-sp/cache.json         |  32 +
+> > > >  .../arch/x86/westmereep-sp/other.json         |  40 --
+> > > >  .../x86/westmereep-sp/virtual-memory.json     |   8 +
+> > > >  .../pmu-events/arch/x86/westmereex/cache.json |  32 +
+> > > >  .../pmu-events/arch/x86/westmereex/other.json |  40 --
+> > > >  .../arch/x86/westmereex/virtual-memory.json   |   8 +
+> > > >  151 files changed, 12770 insertions(+), 9855 deletions(-)
+> > > >  delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest=
+/other.json
+> > > >
+> > >
