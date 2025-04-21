@@ -1,221 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AA227463;
-	Mon, 21 Apr 2025 14:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD38E33EC;
+	Mon, 21 Apr 2025 16:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745247412; cv=none; b=dbNPyQ/EiEms0L7oGOR5B8RsuNEoWpRFal3gLlHMBqr48G3Qq2uCx1AavOYkx4fUua0Nr1Dx8q8tlkZJcPNWxzMNPyIS7WHwJFd8q5wO0kRz+/AO28O0OIMNO9zI3rCy+2NOiO3SLjmm5LUawPG0VsyLaKCRWcffLfKoCVtxP7M=
+	t=1745252000; cv=none; b=Ftag3eupT/LGdgiPURlsa/riiYP5o02CkwL5PGFyJYy+rmZZNF69wDYapNgeghgDWgLbBSjDp97N14mym3YcJ8lb/F4E2qN1Q4ELqHlAU1IYNebQkkVm6l37LaxPC5cH3il+0LBZ48eTZC3dftPCTRl6Da+vHWSX3ZWIASLdL20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745247412; c=relaxed/simple;
-	bh=AfpQFdxWYCGW2yOTHE8xiNehlAmZLJGt8hAkUsyBys4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WX5i7scWDx8tP0veMKk3RftZDTp/A1nfwgMPkmt7O8xGFo4cYAGS8L+5Gvs5jNMgvJ3GysSO4L9sgRs1V3wEgtvf8FPITfINrTwMcxJeXiRMtruM7BYwyr+K4h2FiEf6fBkBMX/e64QaXMcwoVIPA/da0p/xQDMBMXqecGQHpI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxZbrc0x; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745252000; c=relaxed/simple;
+	bh=fjHyYEUz8mq+kd32kuPuYxYj0H98bcmAhUeHAtoZ0Kg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rNruy1hwv/xDa9iZ78mmdMr/V1YQqXXfHX8627FJIgum6zLrRFpLw/3a7cuiUt+o8s8XujmqjRy3ZsqwIByWKgfTsdZQNxFuqYEMhYYU1AGVXYSyr92bs8XZ6FOUGTVy59x9Cbs47my0+RsBpkSru+oWsoOWeKRvAwq6/TV7tHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvFwV9Hl; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxZbrc0x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745247411; x=1776783411;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AfpQFdxWYCGW2yOTHE8xiNehlAmZLJGt8hAkUsyBys4=;
-  b=bxZbrc0xMog25WV91gFFkSxs4D1mV6AiAfkDsXaoH32edg9YJxYwldiN
-   dR5hPOniRU2b+yPBACuzuHu3jy8q9uoQSli7EFEflfxA/mXPjIiNdLORP
-   4Vr4wE2lVDK5SnCEHdgprog5LbQ2u/SqpG5hPXaBJuazgNHE9QKVXlqNB
-   WwMgpjGio+6uVPJc1BC3zm+/EehZf6T7WG41ljfwCMM16N/b3JdI+ouTt
-   yYV6cMtIkxi7TvvYOmHzw0k9R/6GOoMiBuxtIF5ChUYv0m90ZPKvdnWjt
-   E5y00CPlp6Mv6Xif6jsyAsgxLCOhsnnItzhVYho4psu8p8KN+H1J+zDSe
-   g==;
-X-CSE-ConnectionGUID: aD03p8bOQfac88NVQua54g==
-X-CSE-MsgGUID: iqYRr0FdSU6uHGcAy8Fl0g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46672335"
-X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
-   d="scan'208";a="46672335"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 07:56:50 -0700
-X-CSE-ConnectionGUID: 6JZXDHGERSiknRZmBk4bKQ==
-X-CSE-MsgGUID: 89xj+DvxTomTnKHLHNyFsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
-   d="scan'208";a="131491346"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 07:56:50 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id ED29A20B5736;
-	Mon, 21 Apr 2025 07:56:45 -0700 (PDT)
-Message-ID: <f142d45d-4164-4883-ac4c-ea5b1c20c1c0@linux.intel.com>
-Date: Mon, 21 Apr 2025 10:56:43 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvFwV9Hl"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so2480557f8f.0;
+        Mon, 21 Apr 2025 09:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745251996; x=1745856796; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2zLX7K/cYY3IleSeSkksUZh8idp3aJvGLpMSPQRzdiw=;
+        b=YvFwV9Hl0bw4MjxtQPjEQl8W7GfA8Hvn5lfHfw2inVxZ/TlMWBuLxziiAzGP7OU+Vm
+         KpzGaoGIhPS5jUlEI4LMKrUtIBQGCUd0P/oF/t4g5Yif4fyJVeLKtMhviusWSd+C4Eez
+         rvKRsBVza2yHaOmqDD1U4oLMQwuZmR1Ej2d+fA9mf9QH4XyOeUpTVcm2s2+sR/nVGN6Q
+         Ttr6BDnT/E5ArOhcnOypWPRRkc2Cy7CEnfeDah3JoW4uYqgkQSUwNhu+jkHTo7Q+6iHX
+         GZ7kTzZZT/5FsTh7+YqzmpBNXJ7Rv1kR/45CqMmZX2KmSbPM9O4ZtvUmD67qJm/ia9QC
+         m58g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745251996; x=1745856796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2zLX7K/cYY3IleSeSkksUZh8idp3aJvGLpMSPQRzdiw=;
+        b=oikGSrQyCU1U5R5ghXtteIGEBvJbzHTFzCITbCcGBmiahkzxTC6//IXc9EoPfO8w/f
+         ZAo0uoMnJ8QIN4mlEpqT3bs6DLASkpvDejACZ26WFhYOh+hnVTT7AV3J+FrIC1Zp0aFc
+         EfiKlYd0v5OBbpbsqEIJUYDoKvP3L5ILJi82eIhs8H3ohyk4DJDluplqR6KStgHroZEu
+         5bJA3XuZk+qZv4b9fmrPhK1rX9N1/RE+PI0nPf+7EE8Sx6vsr54AjXISDbOkU0j4RF0y
+         Tlc5NcRogj94zHYCX8G/O7XEftUKWl3hoPjN/AQzFS3QVZbiy7gR1bG/fSw4FMnBR5mz
+         83CA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUTbQ4aQ2n75Qeh+xdoNZhhHxnpryXTnA2kNhInbG+73Mtj6idfCZzON0C3CulwyioL4c=@vger.kernel.org, AJvYcCUbR/9hfBiMtTYBCl8j6hPBS1vnjCj35JE9ZbZ3Yb4IUen/hCXZCA8mXzbn38Iu2xtxXzHQNzmXgTciKSPrdfT8yw==@vger.kernel.org, AJvYcCUoJhnMYSH6I4MdtF3s4Uez3qAkDqWFNhD4mES/gJwcDVzIsoFaiuVHGyrO2bUFEKM3rJfIItsmuOrqV3w=@vger.kernel.org, AJvYcCVBglNtso3nTc8twJBFzZWRUDuhT7L/72MlLpCvXwVYLA2af+QaMvvAib4bZATEOWv+cnucDShazxpAAtsUfrKP@vger.kernel.org, AJvYcCVDBuWk5c+wscaV4sQa98Ma9Z1a1vj/qUOuvVMS5V1SWagxwiPZ3nwoiwIrAONuafZtGQ8t5SD1+zZfqx3I@vger.kernel.org, AJvYcCW/VXntTVvtnAIrPhQcMW7JebXnYMh3L1TMjY9PHkYJZhXeEGuta6yp6CF+ANd/1Wr+cMkgP75y@vger.kernel.org, AJvYcCWce9Dy1PT9NLBTyzS5fpLDAKUZi+9UJRt4cRzgUF4JBq1MLrxLkGqXZ/yzMCKXCAHFvIYPRr9b44pfbPHV2uwOXJvA@vger.kernel.org, AJvYcCWta6dCYDpgn02Rqnk87qhRToqCUEDF0/Fz9Qpw2YxMsCW01eVT7QzVwxurxbhoZP1lSbbKkXur2Vc+4YWvuQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9PUFfHR2o/xBQoq8j4rjjEveMu94gRG8EwwCTj7WSUiIy/j77
+	Nf6F4HOk5PpQalefbFTKROlZxw7moxaRpnA4NlQiQmzV75jEIO0zhGE5Aw+F/pzFgNaSYT+ayZr
+	doMt2R/QcsZQSCXGO1J3iIpFG1SM=
+X-Gm-Gg: ASbGncvqMLhxcrRnvUeGjcWzx5XvV2zWKlRntGLFRxf55bfyLqGY7ZLKXgd/CaPs14d
+	eipqtmQYnE2qPJDOS660LFkB0HE2D+5C4WliL4FlHMX7BcR2UH/NGIcW1U+rCPVIx8wy/fEaMsz
+	1N/cOEwFkcq/qrMMGrRfeZfAR2tc9yUsa+mJFwjw==
+X-Google-Smtp-Source: AGHT+IERc9SbXqHoD9IEJg7efyEpkbehIMV7qdPZVeaGZ/dKsZqt8X+kv+83Lua/+4bYS6g8aPAmuT20YbQK/7LgbuE=
+X-Received: by 2002:a05:6000:188b:b0:38f:503a:d93f with SMTP id
+ ffacd0b85a97d-39efbacdc16mr9730639f8f.40.1745251995604; Mon, 21 Apr 2025
+ 09:13:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
- group
-To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
- <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
- <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
- <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1744169424.git.dxu@dxuuu.xyz> <5b3433d942eaecdbcc92876c9ed8b7d17f7e1086.1744169424.git.dxu@dxuuu.xyz>
+In-Reply-To: <5b3433d942eaecdbcc92876c9ed8b7d17f7e1086.1744169424.git.dxu@dxuuu.xyz>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 21 Apr 2025 09:13:03 -0700
+X-Gm-Features: ATxdqUH2LI9xx7Ht6ga__5IFi0RUqBTSDZrwpNL136ky8WsOy4vl2AEULf1HMhQ
+Message-ID: <CAADnVQK111J3b-4gauYkptFf51fhYQn2J78dH8QiwdSigiRuJw@mail.gmail.com>
+Subject: Re: [RFC bpf-next 11/13] treewide: bpf: Export symbols used by verifier
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	David Ahern <dsahern@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Quentin Monnet <qmo@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Jozsef Kadlecsik <kadlec@netfilter.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Namhyung Kim <namhyung@kernel.org>, Eric Dumazet <edumazet@google.com>, Sean Young <sean@mess.org>, 
+	X86 ML <x86@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, KP Singh <kpsingh@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Song Liu <song@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Pablo Neira Ayuso <pablo@netfilter.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jan Kara <jack@suse.cz>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Simon Horman <horms@kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	netfilter-devel <netfilter-devel@vger.kernel.org>, coreteam@netfilter.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2025-04-19 12:50 a.m., Luo Gengkun wrote:
-> 
-> On 2025/4/19 10:25, Luo Gengkun wrote:
->>
->> On 2025/4/14 22:29, Liang, Kan wrote:
->>>
->>> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
->>>> The following perf command can trigger a warning on
->>>> intel_pmu_lbr_counters_reorder.
->>>>
->>>>   # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
->>>>
->>>> The reason is that a lbr event are placed in non lbr group. And the
->>>> previous implememtation cannot force the leader to be a lbr event in
->>>> this
->>>> case.
->>> Perf should only force the LBR leader for the branch counters case, so
->>> perf only needs to reset the LBRs for the leader.
->>> I don't think the leader restriction should be applied to other cases.
->>
->> Yes, the commit message should be updated.  The code implementation only
->>
->> restricts the leader to be an LBRs.
->>
->>>> And is_branch_counters_group will check if the group_leader supports
->>>> BRANCH_COUNTERS.
->>>> So if a software event becomes a group_leader, which
->>>> hw.flags is -1, this check will alway pass.
->>> I think the default flags for all events is 0. Can you point me to where
->>> it is changed to -1?
->>>
->>> Thanks,
->>> Kan>
->>
->> The hw_perf_event contains a union, hw.flags is used only for hardware
->> events.
->>
->> For the software events, it uses hrtimer. Therefor, when
->> perf_swevent_init_hrtimer
->>
->> is called, it changes the value of hw.flags too.
->>
->>
->> Thanks,
->>
->> Gengkun
-> 
-> 
-> It seems that using union is dangerous because different types of
-> perf_events can be
-> placed in the same group.
-
-Only the PMU with perf_sw_context can be placed in the same group with
-other types.
-
-> Currently, a large number of codes directly
-> access the hw
-> of the leader, which is insecure. 
-
-For X86, the topdown, ACR and branch counters will touch the
-leader.hw->flags. The topdown and ACR have already checked the leader
-before updating the flags. The branch counters missed it. I think a
-check is required for the branch counters as well, which should be good
-enough to address the issue.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 16f8aea33243..406f58b3b5d4 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4256,6 +4256,12 @@ static int intel_pmu_hw_config(struct perf_event
-*event)
- 		 * group, which requires the extra space to store the counters.
- 		 */
- 		leader = event->group_leader;
-+		/*
-+		 * The leader's hw.flags will be used to determine a
-+		 * branch counter logging group. Force it a X86 event.
-+		 */
-+		if (!is_x86_event(leader))
-+			return -EINVAL;
- 		if (branch_sample_call_stack(leader))
- 			return -EINVAL;
- 		if (branch_sample_counters(leader)) {
-
-> This part of the logic needs to be
-> redesigned to void
-> similar problems. And I am happy to work for this.
+On Tue, Apr 8, 2025 at 8:35=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote:
 >
+> This commit EXPORT_SYMBOL_GPL()'s all the unresolved symbols from verifie=
+r.o.
+> This is necessary to support loads and reloads of the verifier at
+> runtime.
+>
+> The list of symbols was generated using:
+>
+>     nm -u kernel/bpf/verifier.o | grep -ve "__asan\|__ubsan\|__kasan" | a=
+wk '{print $2}'
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  arch/x86/net/bpf_jit_comp.c |  2 ++
+>  drivers/media/rc/bpf-lirc.c |  1 +
+>  fs/bpf_fs_kfuncs.c          |  4 ++++
+>  kernel/bpf/bpf_iter.c       |  1 +
+>  kernel/bpf/bpf_lsm.c        |  5 +++++
+>  kernel/bpf/bpf_struct_ops.c |  2 ++
+>  kernel/bpf/btf.c            | 40 +++++++++++++++++++++++++++++++++++++
+>  kernel/bpf/cgroup.c         |  4 ++++
+>  kernel/bpf/core.c           | 29 +++++++++++++++++++++++++++
+>  kernel/bpf/disasm.c         |  4 ++++
+>  kernel/bpf/helpers.c        |  2 ++
+>  kernel/bpf/local_storage.c  |  2 ++
+>  kernel/bpf/log.c            | 12 +++++++++++
+>  kernel/bpf/map_iter.c       |  1 +
+>  kernel/bpf/memalloc.c       |  3 +++
+>  kernel/bpf/offload.c        | 10 ++++++++++
+>  kernel/bpf/syscall.c        |  7 +++++++
+>  kernel/bpf/tnum.c           | 20 +++++++++++++++++++
+>  kernel/bpf/token.c          |  1 +
+>  kernel/bpf/trampoline.c     |  5 +++++
+>  kernel/events/callchain.c   |  3 +++
+>  kernel/trace/bpf_trace.c    |  9 +++++++++
+>  lib/error-inject.c          |  2 ++
+>  net/core/filter.c           | 26 ++++++++++++++++++++++++
+>  net/core/xdp.c              |  2 ++
+>  net/netfilter/nf_bpf_link.c |  1 +
+>  26 files changed, 198 insertions(+)
 
-OK. Please share your idea.
+Patches 1-10 look ok. Moving the code around and few targeted
+exports are fine,
+but this patch goes too far.
+At least btf.c, log.c, tnum.c and may be others should be a part
+of the module.
+Then check_sock_access() can be refactored into callbacks
+to avoid exports in filter.c
+We can approach it from the pov of minimizing exports,
+but such steps won't give us clarity on how portable such
+modular verifier will be.
+Other questions to answer is whether maps should be in the module too.
+Modules can provide their kfuncs already, so existing kfuncs
+can stay where they are.
 
-Thanks,
-Kan
-> 
-> Thanks,
-> Gengkun
->>>> To fix this problem, using has_branch_stack to judge if leader is lbr
->>>> event.
->>>>
->>>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
->>>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
->>>> ---
->>>>   arch/x86/events/intel/core.c | 14 +++++++-------
->>>>   1 file changed, 7 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/
->>>> core.c
->>>> index 09d2d66c9f21..c6b394019e54 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct
->>>> perf_event *event)
->>>>               event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->>>>       }
->>>>   +    /*
->>>> +     * Force the leader to be a LBR event. So LBRs can be reset
->>>> +     * with the leader event. See intel_pmu_lbr_del() for details.
->>>> +     */
->>>> +    if (has_branch_stack(event) && !has_branch_stack(event-
->>>> >group_leader))
->>>> +        return -EINVAL;
->>>> +
->>>>       if (branch_sample_counters(event)) {
->>>>           struct perf_event *leader, *sibling;
->>>>           int num = 0;
->>>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct
->>>> perf_event *event)
->>>>                 ~(PERF_SAMPLE_BRANCH_PLM_ALL |
->>>>                   PERF_SAMPLE_BRANCH_COUNTERS)))
->>>>               event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->>>> -
->>>> -        /*
->>>> -         * Force the leader to be a LBR event. So LBRs can be reset
->>>> -         * with the leader event. See intel_pmu_lbr_del() for details.
->>>> -         */
->>>> -        if (!intel_pmu_needs_branch_stack(leader))
->>>> -            return -EINVAL;
->>>>       }
->>>>         if (intel_pmu_needs_branch_stack(event)) {
-> 
-
+Namespacing into "bpf_internal" as Stanislav suggested is
+a good thing too with a warning somewhere in Documentation/bpf/
+that these must only be used by the verifier.
