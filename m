@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A9221ADA4
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 21:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B263D21B9E7
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 21:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745272709; cv=none; b=ISLrzVFOrGPXoKtmEv0ny4UM9LymhRbzHG1SXMzbowQEaeDLc7lihZ0kMDYR+OdEbkHHYq7it4rKMqkt/Y2ww1xPn9eDx3osOBPVPYRp5tT45HmGLDCdJaJ1ACF5CVmNgDDgr1N884wvLvmZHwFGtHCxDMj1PZvH0KgzLuFGGaU=
+	t=1745272713; cv=none; b=sZS6rAL6lbf2MQtDOrsAJKmuCkaQ9OqAlQDDKoKXzOdoLeb6IL2lCrKrcTqtUM32PVg3a4HgDdalrAFjYFXrmBvq+9C9vJ9b4n2ISlC+7tLnTfjI6YB+yzvQfDpEf+xlHwS/aWZpfAvZoaXvzFIb3/CSjm/eWWJBRPj7QAw+Iw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745272709; c=relaxed/simple;
-	bh=hS1o3wNFKx2vnmveTMX3eCOlsgwQBYcrENQJm+49WtU=;
+	s=arc-20240116; t=1745272713; c=relaxed/simple;
+	bh=nMgu5glmK3F7QNbIg1QfyS3VbDIbwgjVcwChkm+gctQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TKprhkaGlkqPrXPW3qSFYdoF0MrA7+AX8OiUpLjcDv7KsV5axysJPxIhYkb1wOffZl5dL9S2l+8GyUCI6gC+3yoZiAWR5uzmdoQhS0Z8qynvaRYEAPwXtqDAzD6xkq5of2EcQuZ1KkErIPpBp4gGSuWXwHMf5K06crAq0Zt8hVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IJJRQavT; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=En4V6mjL3puhYifGLJtWI9YFCyt7Uo6gVrkkQB2tZYS9iv/2ht5FOB7vjMIs2zoFh1nO7JkcL+lmSd3QNyPE/VrlUSNUNhU898btVxF8xRW0yM5ehBGwA0CQlNOmJjyL5cK3+5RvEV2u1P+Eft4Wl4KXMiGyOIRLBvenk/3Q+gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M6uXK9wq; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IJJRQavT"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff62f96b10so4238296a91.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 14:58:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M6uXK9wq"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2254bdd4982so67585585ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 14:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745272707; x=1745877507; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745272711; x=1745877511; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppEhzGTJ1895vVIrd/yxk1GkqcslORwV/iBHx5nBBw0=;
-        b=IJJRQavTTaWcA4u71k/5b+Sv5G+y/pC/QpGYF59x38bP9aSfNSd6Sbxey6g6O7Drsk
-         jHpwvJt9mVPB1ClRtUKfA7OTzX3a/cbsx1y4XJdSVRNVV6hh2wkXxCp4dV0Ve60tGGqu
-         we2rFn7bOpKSCVDzd4CmPv3RHihMt+l0ZS/42xuL9kvd/+hc83BMpzreqtZA+UafCUaj
-         Pru82iBeDE+0BGL6jMigR6B6MvQTs4FgZIMapo6j99n/864PEDcwGp5tt5M4yQPs0MRP
-         wdx6SAACdbbb0WLoyGyoLkukfdGmv3V7cVOa4XvLlT65p7zunJwZI3kuYDn/5AKWCkCU
-         ikVg==
+        bh=EcpcuD7anqMhhZmchi1Jj15ct5OGdKXSmJ/UTKESh3w=;
+        b=M6uXK9wqqNfx8zKsUY4mjCLKP5aUKmT/hawDTTKj3/diZcsikN1kXlUFxHLKNsrNr6
+         kk6rF5zWUZzDZIl7vCbSASDNtOu5xqmQWgRCQamKnLLyDEhaEbmLrc+lS785ZyFIHQ14
+         42mYE7AFg2VLJ+RuJiqzSnf0fgkujYp9Fve7WTs5OMmMyO41jjoi4IIJjbwGehaGMKpR
+         tuFPfNoYZzeR+TTvO2ikWACA6yHYBhlxWvxeWhSA3Ft2nXIgBgg1rIG4SjJ4Z7tOjyz0
+         L5JJ3SiyYHQ5RxqRTJEWjjgBMdpb/7Pigh/x6XkMJ+3J5TI7x5Qvkvms3q9fErVF1S3H
+         wYow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745272707; x=1745877507;
+        d=1e100.net; s=20230601; t=1745272711; x=1745877511;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppEhzGTJ1895vVIrd/yxk1GkqcslORwV/iBHx5nBBw0=;
-        b=BYsbUITxA6Yk6KBuK/hswJeRqmA6Ew50SojWcPES1XNmE/j+jTMX6OfU0QpvJqeZK7
-         NJJ67z2MJ+qWY/B7uIIMJvpds+Gsna+gY8gaY1gjwhlVAhizI62SUwGbDLfsHRUcg7y/
-         NyTo5DnVO/ByT6V+1H/UKZBBsqvq8ep9usLeCPt0X3+FseeU7EWq0H6uKmmjcAEFLACp
-         77ob3EiDcJPuZ1b5cnmfG+DgFmxCuhpyrMuERM0XratOpychlAMsEMX2iH34OjsNEUwo
-         MdHgN3mZrvbcaw2yfz++NlfZgUugVAicCzFL0DC/Nl2FBCAYyzhw5Nx3pz9W4UBxBrej
-         NhIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVC9gKWltn3HI5dVuN0uF1CAJqNGeAfFZCqEeWjA3H4bsQ9neEVb/raUhlOwP6haTj+sjE3xsp3uXeN+naBvom@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUP3SXZYcX/pl3fxCqBgcJgeZJukvpYVuXZBXArd9WcBQIy8ST
-	2257l42CPlsSGW4nzqg+onteOwfpWULCHW2oRPaoBj5DY7myE3dFj5D/sooHr67eRuTqN7tQ5Zf
-	H
-X-Google-Smtp-Source: AGHT+IEUjbbR7dOsTbPRk4tKnHc0lJD5Lp9uelQGasXEqv+mLjMNCHnAVBHz9WrQmMThkR2ExG51pC8JdTg=
-X-Received: from pjbnb11.prod.google.com ([2002:a17:90b:35cb:b0:2fc:201d:6026])
- (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5826:b0:2fe:93be:7c9d
- with SMTP id 98e67ed59e1d1-3087c2ca5a2mr18673508a91.7.1745272707042; Mon, 21
- Apr 2025 14:58:27 -0700 (PDT)
-Date: Mon, 21 Apr 2025 14:58:17 -0700
+        bh=EcpcuD7anqMhhZmchi1Jj15ct5OGdKXSmJ/UTKESh3w=;
+        b=wTeXgXRwwhW85GNSW+34xlJuL6YNB/PTIdtYH7Qo2T1qyc1QA+3bVPxpm0mlCE4AW6
+         dFa6+miaMQ4Ggk+js8WENhNWDF8t79YLi+/D2GAvuxPbeGtLiE5KZjtamy4IwSFy+hb1
+         ACvyreENIgCQ8BBEBGzrREHiTFXxacLMRwPBkJ6ovHVNdhNEIkUTrf1U5ox6l1uj0EkI
+         IZ3k5/RPQYZS1dFJERkQyfVxOGAcuS+wEc35h7W17SB2Dljf1CwEAzNwWEBuroxJme5i
+         Tu5ilBflWJFXiq9M3OKds2L0rZ5kSPV4wz91Qe5oChNvIpQFEK4QGhUAJcNbywKEp/Nl
+         qqOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpZajajSSfPrTzXpF40N94zls2tfVAqt+Vbf7Id0rQIW6djuYPBeY7PgUhuLso1OYWrhCE/RxwUbuhRpA2PYsi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4N47/EYGdPr6VM5QPkPxAP+5TZXDAcq7DurkhZ/zHrEqDR3aG
+	Spu4s7x9fOMeM5kFEmK2w7ju6/22yBdAC/bmwMBFnMA1i7O35GFrsxhno3qY2dP+H6whbOYBlNP
+	B
+X-Google-Smtp-Source: AGHT+IHXIs/Ogd7Xy1uFo5InHHYWM0p69glnRQCeqAR959OOyLerqEP0Pnb8KTz0VXSe5vCiUYWbcDZdU/s=
+X-Received: from plsr14.prod.google.com ([2002:a17:902:be0e:b0:223:8233:a96c])
+ (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce84:b0:224:24d3:6103
+ with SMTP id d9443c01a7336-22c5361988bmr204811505ad.35.1745272711001; Mon, 21
+ Apr 2025 14:58:31 -0700 (PDT)
+Date: Mon, 21 Apr 2025 14:58:18 -0700
 In-Reply-To: <20250421215818.3800081-1-yabinc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250421215818.3800081-1-yabinc@google.com>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250421215818.3800081-2-yabinc@google.com>
-Subject: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU capability
+Message-ID: <20250421215818.3800081-3-yabinc@google.com>
+Subject: [PATCH 2/2] coresight: etm-perf: Add AUX_NON_CONTIGUOUS_PAGES to
+ cs_etm PMU
 From: Yabin Cui <yabinc@google.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
 	James Clark <james.clark@linaro.org>, 
@@ -73,47 +74,33 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
 	Yabin Cui <yabinc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-For PMUs like ARM ETM/ETE, contiguous AUX buffers are unnecessary
-and increase memory fragmentation.
+The cs_etm PMU, regardless of the underlying trace sink (ETF, ETR or
+TRBE), doesn't require contiguous pages for its AUX buffer.
 
-This patch introduces PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES, allowing
-PMUs to request non-contiguous pages for their AUX buffers.
+This patch adds the PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES capability
+to the cs_etm PMU. This allows the kernel to allocate non-contiguous
+pages for the AUX buffer, reducing memory fragmentation when using
+cs_etm.
 
 Signed-off-by: Yabin Cui <yabinc@google.com>
 ---
- include/linux/perf_event.h  | 1 +
- kernel/events/ring_buffer.c | 6 ++++++
- 2 files changed, 7 insertions(+)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0069ba6866a4..26ca35d6a9f2 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -301,6 +301,7 @@ struct perf_event_pmu_context;
- #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
- #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-+#define PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES	0x0400
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index f4cccd68e625..c98646eca7f8 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -899,7 +899,8 @@ int __init etm_perf_init(void)
+ 	int ret;
  
- /**
-  * pmu::scope
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 5130b119d0ae..87f42f4e8edc 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -710,6 +710,12 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 		max_order = ilog2(nr_pages);
- 		watermark = 0;
- 	}
-+	/*
-+	 * When the PMU doesn't prefer contiguous AUX buffer pages, favor
-+	 * low-order allocations to reduce memory fragmentation.
-+	 */
-+	if (event->pmu->capabilities & PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES)
-+		max_order = 0;
+ 	etm_pmu.capabilities		= (PERF_PMU_CAP_EXCLUSIVE |
+-					   PERF_PMU_CAP_ITRACE);
++					   PERF_PMU_CAP_ITRACE |
++					   PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES);
  
- 	/*
- 	 * kcalloc_node() is unable to allocate buffer if the size is larger
+ 	etm_pmu.attr_groups		= etm_pmu_attr_groups;
+ 	etm_pmu.task_ctx_nr		= perf_sw_context;
 -- 
 2.49.0.805.g082f7c87e0-goog
 
