@@ -1,192 +1,221 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8361DED52
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Apr 2025 09:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AA227463;
+	Mon, 21 Apr 2025 14:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745227586; cv=none; b=Oh1nD/Rc0J9SsEfo9AE4CLaaYE9uItI0ujcvyqMSykAr3NglWdXZ18Qp0nGKE29B0IvuBN0W3WosDxZwhKXOu/HNNm5FNVb7iKM6TKdNCu9EuoJ2/L44CJWahigrEZedQsPh2s3iZghCHTbEvqWQFv80nTZLA67Uz9PorCIZIF4=
+	t=1745247412; cv=none; b=dbNPyQ/EiEms0L7oGOR5B8RsuNEoWpRFal3gLlHMBqr48G3Qq2uCx1AavOYkx4fUua0Nr1Dx8q8tlkZJcPNWxzMNPyIS7WHwJFd8q5wO0kRz+/AO28O0OIMNO9zI3rCy+2NOiO3SLjmm5LUawPG0VsyLaKCRWcffLfKoCVtxP7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745227586; c=relaxed/simple;
-	bh=gJXlzt8xzxk9K+T6g0Nw822S4FjofEtMGLcJgi6DovY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uOdp/UMRfJhUy4Jx7UNEYB+HW12YbHgxEaQJRo9gG96iAnWEKnO5LSDJ1JCAIya7JafqUGiwWK3r6NzSnktJaX+GCxo84qVrif3PH1NoBDjVDBOKie+z+hZpKJZmRwdmWFyJSyw9OAJd5olxM9E3j8bUNqTj/CPIfEMj73l4sbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Au+IXDUl; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745247412; c=relaxed/simple;
+	bh=AfpQFdxWYCGW2yOTHE8xiNehlAmZLJGt8hAkUsyBys4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WX5i7scWDx8tP0veMKk3RftZDTp/A1nfwgMPkmt7O8xGFo4cYAGS8L+5Gvs5jNMgvJ3GysSO4L9sgRs1V3wEgtvf8FPITfINrTwMcxJeXiRMtruM7BYwyr+K4h2FiEf6fBkBMX/e64QaXMcwoVIPA/da0p/xQDMBMXqecGQHpI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxZbrc0x; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Au+IXDUl"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNgFS4019157;
-	Mon, 21 Apr 2025 09:26:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=NMzEpFLJGpRGGSwUCsBzHt/BYxkWg5WdpNshT18rS
-	0Q=; b=Au+IXDUltZUCBElfyb6uZ+Tkny+3CpTZ52zZGEI2i/B4gWL0yjEOTS3FY
-	p+VRioOv38SKL9jN5OT/qQa2VRg4e5eEFDkIwCszHJFoKgK/ZaR/jWFc3FIFMsw6
-	0m40s7CP30HMCBvHa6FCWejxjoPKxtxgkDkEMDq1eI6+ySxdrPpYGUEI9YqHNS6y
-	nsQ3+nPRQ3yVDUBpju9CU2R1eKpLZ/TyRcVDHyEz9BxZB9AGEZWHX2fFOcc0t5lk
-	7RfHjARdcB8j5HLk10R0JzJohIjS5pReg2oM6BtgLRL3uhTy+ZRQto8TN5xMMDlD
-	Ej7R/Pe2onGavqYBNSVo+4FOnprxw==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4658gk29pq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 09:26:22 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53L96H3m028130;
-	Mon, 21 Apr 2025 09:26:22 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv1wc4a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 09:26:21 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53L9QG0V56492410
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 09:26:16 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BBA08200CE;
-	Mon, 21 Apr 2025 09:26:16 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BCD03200D7;
-	Mon, 21 Apr 2025 09:26:15 +0000 (GMT)
-Received: from Adityas-MBP.lan (unknown [9.43.41.109])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Apr 2025 09:26:15 +0000 (GMT)
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Disha Goel <disgoel@linux.ibm.com>,
-        Aditya Bodkhe <aditya.b1@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH v2] perf script: perf script tests fails with segfault
-Date: Mon, 21 Apr 2025 14:55:59 +0530
-Message-Id: <20250421092559.75109-1-adityab1@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxZbrc0x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745247411; x=1776783411;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AfpQFdxWYCGW2yOTHE8xiNehlAmZLJGt8hAkUsyBys4=;
+  b=bxZbrc0xMog25WV91gFFkSxs4D1mV6AiAfkDsXaoH32edg9YJxYwldiN
+   dR5hPOniRU2b+yPBACuzuHu3jy8q9uoQSli7EFEflfxA/mXPjIiNdLORP
+   4Vr4wE2lVDK5SnCEHdgprog5LbQ2u/SqpG5hPXaBJuazgNHE9QKVXlqNB
+   WwMgpjGio+6uVPJc1BC3zm+/EehZf6T7WG41ljfwCMM16N/b3JdI+ouTt
+   yYV6cMtIkxi7TvvYOmHzw0k9R/6GOoMiBuxtIF5ChUYv0m90ZPKvdnWjt
+   E5y00CPlp6Mv6Xif6jsyAsgxLCOhsnnItzhVYho4psu8p8KN+H1J+zDSe
+   g==;
+X-CSE-ConnectionGUID: aD03p8bOQfac88NVQua54g==
+X-CSE-MsgGUID: iqYRr0FdSU6uHGcAy8Fl0g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46672335"
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="46672335"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 07:56:50 -0700
+X-CSE-ConnectionGUID: 6JZXDHGERSiknRZmBk4bKQ==
+X-CSE-MsgGUID: 89xj+DvxTomTnKHLHNyFsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="131491346"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 07:56:50 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id ED29A20B5736;
+	Mon, 21 Apr 2025 07:56:45 -0700 (PDT)
+Message-ID: <f142d45d-4164-4883-ac4c-ea5b1c20c1c0@linux.intel.com>
+Date: Mon, 21 Apr 2025 10:56:43 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
+ group
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+ <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
+ <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
+ <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3QG-OGA7kGxkTZlncEGaFbJa9KZmArQZ
-X-Authority-Analysis: v=2.4 cv=Xv/6OUF9 c=1 sm=1 tr=0 ts=68060f3f cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=bfOIhj56j9TKDZiLBowA:9
-X-Proofpoint-ORIG-GUID: 3QG-OGA7kGxkTZlncEGaFbJa9KZmArQZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- impostorscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015
- phishscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210070
 
-perf script: pert script tests fails with segmentation fault as below:
 
- 92: perf script tests:
---- start ---
-test child forked, pid 103769
-DB test
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
-/usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
---- Cleaning up ---
----- end(-1) ----
-	92: perf script tests                                               : FAILED!
 
-Backtrace pointed to :
-	#0  0x0000000010247dd0 in maps.machine ()
-	#1  0x00000000101d178c in db_export.sample ()
-	#2  0x00000000103412c8 in python_process_event ()
-	#3  0x000000001004eb28 in process_sample_event ()
-	#4  0x000000001024fcd0 in machines.deliver_event ()
-	#5  0x000000001025005c in perf_session.deliver_event ()
-	#6  0x00000000102568b0 in __ordered_events__flush.part.0 ()
-	#7  0x0000000010251618 in perf_session.process_events ()
-	#8  0x0000000010053620 in cmd_script ()
-	#9  0x00000000100b5a28 in run_builtin ()
-	#10 0x00000000100b5f94 in handle_internal_command ()
-	#11 0x0000000010011114 in main ()
+On 2025-04-19 12:50 a.m., Luo Gengkun wrote:
+> 
+> On 2025/4/19 10:25, Luo Gengkun wrote:
+>>
+>> On 2025/4/14 22:29, Liang, Kan wrote:
+>>>
+>>> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
+>>>> The following perf command can trigger a warning on
+>>>> intel_pmu_lbr_counters_reorder.
+>>>>
+>>>>   # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+>>>>
+>>>> The reason is that a lbr event are placed in non lbr group. And the
+>>>> previous implememtation cannot force the leader to be a lbr event in
+>>>> this
+>>>> case.
+>>> Perf should only force the LBR leader for the branch counters case, so
+>>> perf only needs to reset the LBRs for the leader.
+>>> I don't think the leader restriction should be applied to other cases.
+>>
+>> Yes, the commit message should be updated.  The code implementation only
+>>
+>> restricts the leader to be an LBRs.
+>>
+>>>> And is_branch_counters_group will check if the group_leader supports
+>>>> BRANCH_COUNTERS.
+>>>> So if a software event becomes a group_leader, which
+>>>> hw.flags is -1, this check will alway pass.
+>>> I think the default flags for all events is 0. Can you point me to where
+>>> it is changed to -1?
+>>>
+>>> Thanks,
+>>> Kan>
+>>
+>> The hw_perf_event contains a union, hw.flags is used only for hardware
+>> events.
+>>
+>> For the software events, it uses hrtimer. Therefor, when
+>> perf_swevent_init_hrtimer
+>>
+>> is called, it changes the value of hw.flags too.
+>>
+>>
+>> Thanks,
+>>
+>> Gengkun
+> 
+> 
+> It seems that using union is dangerous because different types of
+> perf_events can be
+> placed in the same group.
 
-Further investigation reveals that this occurs in the `perf script tests`,
-because it uses `db_test.py` script. This script sets `perf_db_export_mode = True`.
+Only the PMU with perf_sw_context can be placed in the same group with
+other types.
 
-With `perf_db_export_mode` enabled, if a sample originates from a hypervisor,
-perf doesn't set maps for "[H]" sample in the code. Consequently, `al->maps` remains NULL
-when `maps__machine(al->maps)` is called from `db_export__sample`.
+> Currently, a large number of codes directly
+> access the hw
+> of the leader, which is insecure. 
 
-As al->maps can be NULL in case of Hypervisor samples , use thread->maps
-because even for Hypervisor sample, machine should exist.
-If we don't have machine for some reason, return -1 to avoid segmentation fault.
+For X86, the topdown, ACR and branch counters will touch the
+leader.hw->flags. The topdown and ACR have already checked the leader
+before updating the flags. The branch counters missed it. I think a
+check is required for the branch counters as well, which should be good
+enough to address the issue.
 
-Reported-by: Disha Goel <disgoel@linux.ibm.com>
-Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
----
-Changelog:
-v1 -> v2:
-The below patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to handle the segmentation fault ,
-as well as initialisation of al.thread
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 16f8aea33243..406f58b3b5d4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4256,6 +4256,12 @@ static int intel_pmu_hw_config(struct perf_event
+*event)
+ 		 * group, which requires the extra space to store the counters.
+ 		 */
+ 		leader = event->group_leader;
++		/*
++		 * The leader's hw.flags will be used to determine a
++		 * branch counter logging group. Force it a X86 event.
++		 */
++		if (!is_x86_event(leader))
++			return -EINVAL;
+ 		if (branch_sample_call_stack(leader))
+ 			return -EINVAL;
+ 		if (branch_sample_counters(leader)) {
 
- tools/perf/util/db-export.c                           | 11 ++++++++---
- .../perf/util/scripting-engines/trace-event-python.c  |  2 +-
- 2 files changed, 9 insertions(+), 4 deletions(-)
+> This part of the logic needs to be
+> redesigned to void
+> similar problems. And I am happy to work for this.
+>
 
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 50f916374d87..8f52e8cefcf3 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
- 	if (al->map) {
- 		struct dso *dso = map__dso(al->map);
+OK. Please share your idea.
 
--		err = db_export__dso(dbe, dso, maps__machine(al->maps));
-+		err = db_export__dso(dbe, dso, maps__machine(thread__maps(al->thread)));
- 		if (err)
- 			return err;
- 		*dso_db_id = dso__db_id(dso);
-@@ -256,6 +256,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 		al.map = map__get(node->ms.map);
- 		al.maps = maps__get(thread__maps(thread));
- 		al.addr = node->ip;
-+		al.thread = thread__get(thread);
-
- 		if (al.map && !al.sym)
- 			al.sym = dso__find_symbol(map__dso(al.map), al.addr);
-@@ -358,14 +359,18 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 	};
- 	struct thread *main_thread;
- 	struct comm *comm = NULL;
--	struct machine *machine;
-+	struct machine *machine = NULL;
- 	int err;
-
-+	if (thread__maps(thread))
-+		machine = maps__machine(thread__maps(thread));
-+	if (!machine)
-+		return -1;
-+
- 	err = db_export__evsel(dbe, evsel);
- 	if (err)
- 		return err;
-
--	machine = maps__machine(al->maps);
- 	err = db_export__machine(dbe, machine);
- 	if (err)
- 		return err;
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 520729e78965..00f2c6c5114d 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1306,7 +1306,7 @@ static void python_export_sample_table(struct db_export *dbe,
-
- 	tuple_set_d64(t, 0, es->db_id);
- 	tuple_set_d64(t, 1, es->evsel->db_id);
--	tuple_set_d64(t, 2, maps__machine(es->al->maps)->db_id);
-+	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
- 	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
- 	tuple_set_d64(t, 4, es->comm_db_id);
- 	tuple_set_d64(t, 5, es->dso_db_id);
---
-2.43.0
+Thanks,
+Kan
+> 
+> Thanks,
+> Gengkun
+>>>> To fix this problem, using has_branch_stack to judge if leader is lbr
+>>>> event.
+>>>>
+>>>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+>>>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>>>> ---
+>>>>   arch/x86/events/intel/core.c | 14 +++++++-------
+>>>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/
+>>>> core.c
+>>>> index 09d2d66c9f21..c6b394019e54 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct
+>>>> perf_event *event)
+>>>>               event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>>       }
+>>>>   +    /*
+>>>> +     * Force the leader to be a LBR event. So LBRs can be reset
+>>>> +     * with the leader event. See intel_pmu_lbr_del() for details.
+>>>> +     */
+>>>> +    if (has_branch_stack(event) && !has_branch_stack(event-
+>>>> >group_leader))
+>>>> +        return -EINVAL;
+>>>> +
+>>>>       if (branch_sample_counters(event)) {
+>>>>           struct perf_event *leader, *sibling;
+>>>>           int num = 0;
+>>>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct
+>>>> perf_event *event)
+>>>>                 ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+>>>>                   PERF_SAMPLE_BRANCH_COUNTERS)))
+>>>>               event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>> -
+>>>> -        /*
+>>>> -         * Force the leader to be a LBR event. So LBRs can be reset
+>>>> -         * with the leader event. See intel_pmu_lbr_del() for details.
+>>>> -         */
+>>>> -        if (!intel_pmu_needs_branch_stack(leader))
+>>>> -            return -EINVAL;
+>>>>       }
+>>>>         if (intel_pmu_needs_branch_stack(event)) {
+> 
 
