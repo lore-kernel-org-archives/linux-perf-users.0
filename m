@@ -1,208 +1,144 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3885227D77B
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 12:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC132BB13;
+	Tue, 22 Apr 2025 12:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325111; cv=none; b=N+gUgvgkyNdlPE5BOsTiTEuaIYN84ofLrvbIOP0KnoZ1CkxzHMjVBK/AhHXLVswrkAEmlUnJazphAcKU1C+BMTkxhyq4cBWHIFmdX1l2kBxm5jts0Cs4gKXWYY8Ezcu5gFko1cWY6Co5+f7kxItTmPFAQa7Tj6ntMv/YeT2om3Y=
+	t=1745326200; cv=none; b=HYbhtJw6eA5zb2r3PRk1UWXGGHHR59i14GkKgULgDLhp2LDWsnC5fk6XT4/Q/v1GUOmWn4UGwRyHB3G/YpLvoUde2xQirAFYW9x+QD0j9xH9wzxV2haKUyVWPP0xzSZPs+s/7FJGFKGRMDe5rC7sJeLhc6gnA4vfw+pMwdLXuPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325111; c=relaxed/simple;
-	bh=q6Td+l+W/9+Bn7dgxpWUU2aZ0vlD19qRoos3jiiX9EY=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lpACMlzkcz9wgh73UTESi/mPGkgWTKvUC8uUMQkUW4GNPkB1Sl0RSZF/qOnynjKxtCjqrl6ZO9aEF46QVyadId3cv18r8mvwVVKddiEQPSjqFtsCfQgykcQwxCRGJzxatfeadYlAgt7x6wgRcQwgkGLmPaiF0sUph7alWTxgMmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZhhMX1t5MzvWrn;
-	Tue, 22 Apr 2025 20:27:36 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 072551400D4;
-	Tue, 22 Apr 2025 20:31:45 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 22 Apr 2025 20:31:43 +0800
-CC: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<hejunhao3@huawei.com>, <linuxarm@huawei.com>, <wangyushan12@huawei.com>,
-	<caijingtao@huawei.com>, <xueshan2@huawei.com>, <prime.zeng@hisilicon.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<mark.rutland@arm.com>, <jolsa@kernel.org>, <john.g.garry@oracle.com>,
-	<leo.yan@linux.dev>, <irogers@google.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf arm-spe: Add support for SPE Data Source packet on
- HiSilicon HIP12
-To: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>
-References: <20250408122809.37884-1-yangyicong@huawei.com>
- <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
- <20250422102952.GD28953@e132581.arm.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <ccb8ce65-8241-0670-25c8-f8245fbc5e22@huawei.com>
-Date: Tue, 22 Apr 2025 20:31:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1745326200; c=relaxed/simple;
+	bh=zGK1SYvl1R3qX4Muyg2URTmK/fEOJmlqm6dSjkPeR90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkYahQYGMIiOib11c4ZbQu8WlUNzQ6oFZnQGyinJwzIQBFbgmjZt9RLTVtl/aOgIqSJ0NuxSOLCA112qxmvBkvB+1wKVLozv89aVe/i04JYFHSRRAl9+/BJcJo/wYSRbM+1u36At+54qMGLlbQOaIJNzUdaC94S1qbdkBU9nNgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwA3/5J9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwA3/5J9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FAC9C4CEE9;
+	Tue, 22 Apr 2025 12:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745326199;
+	bh=zGK1SYvl1R3qX4Muyg2URTmK/fEOJmlqm6dSjkPeR90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NwA3/5J9Ha5NdSIjddtSk2H5ta118ishcIEEwQOH3/kIAelihtsb9UcFAYQxemhHS
+	 bi+jk1ryXPj4T1zPSC4Ck44ocqOrd+tm9IRodQAjwzwpt8y48u/W/fqFIPJvgibOF0
+	 acROZXRvsitp3oBYOazJIhGaVwTui2wAFREzWwaIRbWRtDA1y2XXm5SPOb8eBI/Ari
+	 6Wh1x5rIqZTQNeP9Sjw31E/8oXvN4/zvrEEIhYhy1P84pmIsTqcYRNO9Z6n7QVDnsg
+	 YSO+CdirFjG/zdr60H9LjYMbNkroUBoBpKB6VsUzUQcsH8NiyADbDJ+v33L4BFwRwt
+	 F1RPuaLlSCh3A==
+Date: Tue, 22 Apr 2025 14:49:54 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Yabin Cui <yabinc@google.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>
+Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU
+ capability
+Message-ID: <aAeQcgmL-iqGbG_g@gmail.com>
+References: <20250421215818.3800081-1-yabinc@google.com>
+ <20250421215818.3800081-2-yabinc@google.com>
+ <48640298-effa-42d4-9137-a18a51637f03@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250422102952.GD28953@e132581.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48640298-effa-42d4-9137-a18a51637f03@linaro.org>
 
-On 2025/4/22 18:29, Leo Yan wrote:
-> On Tue, Apr 22, 2025 at 10:16:40AM +0100, James Clark wrote:
->>>
->>> Add data source encoding for HiSilicon HIP12 and coresponding mapping
->>> to the perf's memory data source. This will help to synthesize the data
->>> and support upper layer tools like perf-mem and perf-c2c.
->>>
->>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->>> ---
->>>   arch/arm64/include/asm/cputype.h              |   2 +
->>>   tools/arch/arm64/include/asm/cputype.h        |   2 +
-> 
-> Please split into two patches.  One is a kernel patch and another is a
-> tool patch.
 
-will do in next version.
+* James Clark <james.clark@linaro.org> wrote:
 
 > 
-> [...]
 > 
->>> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->>> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->>> @@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
->>>   	ARM_SPE_AMPEREONE_L2D                           = 0x9,
->>>   };
->>> +enum arm_spe_hisi_hip_data_source {
->>> +	ARM_SPE_HISI_HIP_PEER_CPU		= 0,
->>> +	ARM_SPE_HISI_HIP_PEER_CPU_HITM		= 1,
->>> +	ARM_SPE_HISI_HIP_L3			= 2,
->>> +	ARM_SPE_HISI_HIP_L3_HITM		= 3,
->>> +	ARM_SPE_HISI_HIP_PEER_CLUSTER		= 4,
->>> +	ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM	= 5,
->>> +	ARM_SPE_HISI_HIP_REMOTE_SOCKET		= 6,
->>> +	ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM	= 7,
->>> +	ARM_SPE_HISI_HIP_LOCAL			= 8,
->>> +	ARM_SPE_HISI_HIP_REMOTE			= 9,
->>> +	ARM_SPE_HISI_HIP_NC_DEV			= 13,
->>> +	ARM_SPE_HISI_HIP_L2			= 16,
->>> +	ARM_SPE_HISI_HIP_L2_HITM		= 17,
->>> +	ARM_SPE_HISI_HIP_L1			= 18,
->>> +};
->>> +
->>>   struct arm_spe_record {
->>>   	enum arm_spe_sample_type type;
->>>   	int err;
->>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->>> index 2a9775649cc2..eceae4219601 100644
->>> --- a/tools/perf/util/arm-spe.c
->>> +++ b/tools/perf/util/arm-spe.c
->>> @@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
->>>   	{},
->>>   };
->>> +static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
->>> +	MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
->>> +	{},
->>> +};
->>> +
->>>   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
->>>   {
->>>   	const struct arm_spe_record *record = &speq->decoder->record;
->>> @@ -718,9 +723,105 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
->>>   	arm_spe__synth_data_source_common(&common_record, data_src);
->>>   }
->>> +static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
->>> +						union perf_mem_data_src *data_src)
->>> +{
->>> +	/* Use common synthesis method to handle store operations */
->>> +	if (record->op & ARM_SPE_OP_ST) {
->>> +		arm_spe__synth_data_source_common(record, data_src);
->>> +		return;
->>> +	}
->>> +
->>> +	switch (record->source) {
->>> +	case ARM_SPE_HISI_HIP_PEER_CPU:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->>> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
->>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+> On 21/04/2025 10:58 pm, Yabin Cui wrote:
+> > For PMUs like ARM ETM/ETE, contiguous AUX buffers are unnecessary
+> > and increase memory fragmentation.
+> > 
+> > This patch introduces PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES, allowing
+> > PMUs to request non-contiguous pages for their AUX buffers.
+> > 
+> > Signed-off-by: Yabin Cui <yabinc@google.com>
+> > ---
+> >   include/linux/perf_event.h  | 1 +
+> >   kernel/events/ring_buffer.c | 6 ++++++
+> >   2 files changed, 7 insertions(+)
+> > 
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index 0069ba6866a4..26ca35d6a9f2 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -301,6 +301,7 @@ struct perf_event_pmu_context;
+> >   #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+> >   #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
+> >   #define PERF_PMU_CAP_AUX_PAUSE			0x0200
+> > +#define PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES	0x0400
+> >   /**
+> >    * pmu::scope
+> > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> > index 5130b119d0ae..87f42f4e8edc 100644
+> > --- a/kernel/events/ring_buffer.c
+> > +++ b/kernel/events/ring_buffer.c
+> > @@ -710,6 +710,12 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+> >   		max_order = ilog2(nr_pages);
+> >   		watermark = 0;
+> >   	}
+> > +	/*
+> > +	 * When the PMU doesn't prefer contiguous AUX buffer pages, favor
+> > +	 * low-order allocations to reduce memory fragmentation.
+> > +	 */
+> > +	if (event->pmu->capabilities & PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES)
+> > +		max_order = 0;
+> >   	/*
+> >   	 * kcalloc_node() is unable to allocate buffer if the size is larger
 > 
-> Seems it is conflict to set both 'PERF_MEM_SNOOP_NONE' and
-> 'PERF_MEM_SNOOPX_PEER'.
+> Hi Yabin,
 > 
-> Remove setting 'PERF_MEM_SNOOP_NONE' in this case?
+> I was wondering if this is just the opposite of 
+> PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default 
+> for all devices to solve the issue you describe. Because we already 
+> have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages. 
+> Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high order 
+> allocations for AUX buffers optimistically") that explains that the 
+> current allocation strategy is an optimization.
 > 
->>> +		break;
->>> +	case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->>> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
->>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->>> +		break;
->>> +	case ARM_SPE_HISI_HIP_L3:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->>> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
->>> +		break;
->>> +	case ARM_SPE_HISI_HIP_L3_HITM:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->>> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
->>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->>> +		break;
->>> +	case ARM_SPE_HISI_HIP_PEER_CLUSTER:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> 
-> Seems to me, a CPU has L3 cache, would the cluster has a higher level's
-> cache?
+> Your change seems to decide that for certain devices we want to 
+> optimize for fragmentation rather than performance. If these are 
+> rarely used features specifically when looking at performance should 
+> we not continue to optimize for performance? Or at least make it user 
+> configurable?
 
-In my case, the cluster CPUs share the L3 cache and there's several clusters.
-L3's the highest level cache in the system.
+So there seems to be 3 categories:
 
-> 
->>> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
->>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> 
-> Ditto for the confliction for the two flags 'SNOOP_NONE' and
-> 'SNOOPX_PEER'.
-> 
->>> +		break;
->>> +	case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->>> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
->>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->>> +		break;
->>> +	case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
->>> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
->>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
->>> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
->>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->>
->> Hi Yicong,
->>
->> Is the mem_snoop setting missing from this one?
-> 
-> The field 'mem_snoopx' is an extension to the field 'mem_snoop'.
-> 
-> If the field 'mem_snoopx' is set, it is no need to set 'mem_snoop'.
-> 
+ - 1) Must have physically contiguous AUX buffers, it's a hardware ABI. 
+      (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
 
-they should not be mutal exclusive. mem_snoopx provides the information where
-the cacheline comes from while mem_snoop provides the status of the cacheline.
-if hardware supports we can gather both information from the data source, like
-above for ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM.
+ - 2) Would be nice to have continguous AUX buffers, for a bit more 
+      performance.
 
-for other cases if there's mem_snoopx information I think mem_snoop can be dropped,
-this won't make differeces. Checked c2c_decode_stats(), only PERF_MEM_SNOOP_HIT and
-PERF_MEM_SNOOP_HITM is useful when summarizing c2c statistics.
+ - 3) Doesn't really care.
 
-Thanks.
+So we do have #1, and it appears Yabin's usecase is #3?
+
+I strongly suspect that #2 and #3 are mostly the same in practice, and 
+that we don't really need a lot of differentiation and complexity here, 
+just the AUX_NO_SG flag that must have a max-order allocation - all 
+other cases should allocate the AUX buffer in a default-nice, 
+MM-friendly way.
+
+Thanks,
+
+	Ingo
