@@ -1,93 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D56228469B;
-	Tue, 22 Apr 2025 14:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C045D28F51F
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 15:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331670; cv=none; b=utzapWSOgnJC+MJYCcyGaujx4Ltmt5g1pTmCBz+vrjATDDNRgO6JSs/k1t02PreQQY6cMwxIQtDxIOe/k80FhKzMc1lbEbhhQNgXVMbFlS5jxv6HYvkcLhkzyEykbNdS+gxB0NeG82PpTCzAgUrlpC+9hkfor1VtlZ5KuLPtyI4=
+	t=1745334185; cv=none; b=ZpXBGKLU09ATBwTHtGRGcxRLUivi4NTd+4AfQAILHQAhoDhWiM8GqxXnw31pJFNOMQi4brwPCvF3xqHWEyjuM49bT7J3qpVqAzpzmMKeo7jsLKDnSM1K9BvJB42ZSaoQ4jjmRJzSlNpzf7VrD0EHasezX4uXgpOzYdMD6GMukOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331670; c=relaxed/simple;
-	bh=bqIeIQeh4fLBXqUF5XbW0OIF6SuCLBF7zBYy0ok2Z80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLELRAz6PQ/98VyV0qUPNa4SQrRiY8zC9H1vqD6yRTl5M1So3nPpFYfJ+/3Hsk4mizwPfos4iuRR/pD9PPuYrE9h2vKVFIeDciEXYm5P6hzOMJWuFrwkFdLoF1JoZVCvM6pqNg3NQBTTTRJb34LEZKnRMOcIqakcscRj6FtXFUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56BF1152B;
-	Tue, 22 Apr 2025 07:21:03 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 485253F66E;
-	Tue, 22 Apr 2025 07:21:07 -0700 (PDT)
-Date: Tue, 22 Apr 2025 15:21:02 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yabin Cui <yabinc@google.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] coresight: etm-perf: Add AUX_NON_CONTIGUOUS_PAGES to
- cs_etm PMU
-Message-ID: <20250422142102.GI28953@e132581.arm.com>
-References: <20250421215818.3800081-1-yabinc@google.com>
- <20250421215818.3800081-3-yabinc@google.com>
+	s=arc-20240116; t=1745334185; c=relaxed/simple;
+	bh=a9oHiuIRd+Lat23wgyOLQVKu0davNOYNyV1lqgu94Hc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=aPqEeTV4eLCudbxLMvU8No/l9810Z+FXTF9QYvvfHuyA7KEoOXi9wcBGzzmzR71S/1ncBcxe9A3hq1cNrFvCF631wvRaCYxVBLSDOO7lqpvAkn8PxRnt2ucoioaiN5IWsXxcjLSqSH8aiG3wwM/yjE2imnJvaDPHz4bYf460UoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I6IV+lrb; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I6IV+lrb"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so4598372a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 08:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745334183; x=1745938983; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZR743ev6ExzRYE8cINx+AM9cywgAmFfoIc+SqezuNJU=;
+        b=I6IV+lrbYv0t+bvIaiG0TbVyWJT40Lj0vRqcLzc3/x+0dcZml1AnFM8HQY5Ii0wkCK
+         EFI9GLLncA7Nf81PeY4qYgGpbEdk6GQtvjHUrP43uS7sYSItfs/Hp/W+equBtADhN9iR
+         H8kGG/d5XAZylKSAL++q+ioYsECrBM0IYZU7VUdqcrJGhPa3joqiDrIgBusCnfsOOjmZ
+         /a1Dr6t8bvSNSFRCHQvERf4r1hilrZRf/fX4p3Lkj5VzPiie0d1c69yQE2wP4ATTE3E/
+         J6p2quspRGpvtugOYU1sLARWmrmhAeltWiFl33W2BwncgY4q3qCNTdFwpdJXyCO/Kkkj
+         To3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745334183; x=1745938983;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZR743ev6ExzRYE8cINx+AM9cywgAmFfoIc+SqezuNJU=;
+        b=JkenaFlI2Yg7KtbmTiijNmnrsAUJ6HtwtfOYCgvE1hCCVrO74AA72Li7c+4gUHdaF5
+         t9Q0881f0XZI9pWKCQjv80jVh+2qTBTr64YIY2clsczU59Ud3+zwOiEKojlJ5hDzPtKT
+         RFADclce4oFe8XJkIR1FUxFJdZJDmkrgxK/r7PqPcFii7NTU8VDuBWIrRB3HZe4x7ms1
+         XlUNA6Jkq8mfifFgcMIP3MDFCPxbz92cRGh6lCY0B8THdCfNd8WpJkUf8h7nmtq0VW9e
+         jKb+MPQLYvesqORZ6FUnagpsuMQSZTOe30gp0xhCbgp3VIDn8sd57fWc96IjvzRDDp/Y
+         pr5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVvQKTOPPPL29G+Pi0NiF7KCiclgUZPXiip7Z94h41hx/03+c0QXROpycQ3aAE0qquNnZH3Vh8v8qBSqBY+skZw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp4RwAVKf3XMNQiQdHUS/1rGo8XzkmcQEHloxgiXAHxCx2yVK1
+	gNsg6iwETLdLaCKhjjp5ctu8Fy5yM8Uhmb2y7VQs5/CvtgU+tLDb8xvBpuhAZ7xZQzRaYSV1yeD
+	7lg==
+X-Google-Smtp-Source: AGHT+IEIapJZJRM9UWSGs3HX5eEFDXXhucM1QTXJfnPOK/9YTrDfsNmQubNfg9xjcSY4LHTjaYmG0pXn5/g=
+X-Received: from pjbsn11.prod.google.com ([2002:a17:90b:2e8b:b0:308:861f:fddb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a0c:b0:2ef:31a9:95c6
+ with SMTP id 98e67ed59e1d1-3087bb56439mr25794718a91.14.1745334182926; Tue, 22
+ Apr 2025 08:03:02 -0700 (PDT)
+Date: Tue, 22 Apr 2025 08:03:01 -0700
+In-Reply-To: <20250422082216.1954310-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421215818.3800081-3-yabinc@google.com>
+Mime-Version: 1.0
+References: <20250422082216.1954310-1-xin@zytor.com>
+Message-ID: <aAevpauKYWwObsB7@google.com>
+Subject: Re: [RFC PATCH v2 00/34] MSR refactor with new MSR instructions support
+From: Sean Christopherson <seanjc@google.com>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
+	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
+	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
+	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 21, 2025 at 02:58:18PM -0700, Yabin Cui wrote:
-> The cs_etm PMU, regardless of the underlying trace sink (ETF, ETR or
-> TRBE), doesn't require contiguous pages for its AUX buffer.
+On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
+> base-commit: f30a0c0d2b08b355c01392538de8fc872387cb2b
 
-Though contiguous pages are not mandatory for TRBE, I would set the
-PERF_PMU_CAP_AUX_NO_SG flag for it.  This can potentially benefit
-performance.
-
-For non per CPU sinks, it is fine to allocate non-contiguous pages.
-
-Thanks,
-Leo
-
-> This patch adds the PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES capability
-> to the cs_etm PMU. This allows the kernel to allocate non-contiguous
-> pages for the AUX buffer, reducing memory fragmentation when using
-> cs_etm.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> ---
->  drivers/hwtracing/coresight/coresight-etm-perf.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index f4cccd68e625..c98646eca7f8 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -899,7 +899,8 @@ int __init etm_perf_init(void)
->  	int ret;
->  
->  	etm_pmu.capabilities		= (PERF_PMU_CAP_EXCLUSIVE |
-> -					   PERF_PMU_CAP_ITRACE);
-> +					   PERF_PMU_CAP_ITRACE |
-> +					   PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES);
->  
->  	etm_pmu.attr_groups		= etm_pmu_attr_groups;
->  	etm_pmu.task_ctx_nr		= perf_sw_context;
-> -- 
-> 2.49.0.805.g082f7c87e0-goog
-> 
-> 
+This commit doesn't exist in Linus' tree or the tip tree, and the series doesn't
+apply cleanly on any of the "obvious" choices.  Reviewing a 34 patches series
+without being able to apply it is a wee bit difficult...
