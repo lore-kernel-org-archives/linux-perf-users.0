@@ -1,64 +1,39 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A62A1F0E26
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 09:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37302E56A;
+	Tue, 22 Apr 2025 09:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313406; cv=none; b=Wyo2uQ3WvcT10q1wTLXNqNx0nqy2lctR6F3Ewv1t2z807SV7KlbLGUah3/GVZ6IMq1udhXXplba4UNCuNvh4zjHXM36Uvc1bHctu0yRr7RE0FfJJUfqVclazp5qOMWOxXlJ3vjbKEzP+Fs+9f9q+yTcBwu7A8nSfRITPSGKvdqI=
+	t=1745313683; cv=none; b=Fjg7xMPJ4MijZC6lseFjvAvYB0RkvzKOyFUkz08vwT7aeod55fwEvhxXU7QxPAOpv/5OeIeCS4WIq5EP6wbuPMeQgOTxNHDMTXyJ1HP+XqK916AdbbGGLoPP7l5bu5tcdbAZkow1j0PcovUGQEbWPb0bMWqgce+rQQA1DN14F1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313406; c=relaxed/simple;
-	bh=XLb2GPkP+wj3NGaw9/03Vrv8EQD5FEEK6kKMUdoXDnI=;
+	s=arc-20240116; t=1745313683; c=relaxed/simple;
+	bh=IJFxtry7hhT8Yr4zEl4gtA++56+FAG+dLifspSiZ+1Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZULwlGBuwwcyv25q/RrO5Y2yUuDxFjc3ShmiP2AifFAG7DQvv5RBtF6fk2NetoqE+GGOtACN8hR3xdHxXuz7f4m92o6+8ap2DRsjAIHPwDmPWDDzTJx/+fS3HzHtyUJVdGiLmziF4759Whm8yz4g/4dnwXTJrWwYylWsLS1pPvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D0EFPcFn; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=ODk8QhY1E3sZBB639IWcBuCUvtaFQsssJtFBJDHnD/PZrVXYAAiI7uOB8evOXcau4Ly2w5pEckwr7f4Am5NAFKmLJtTUn5bCK2p6LCT4YQcLee/xLXS8grhKZ1uXiV3A8TPc2wcpVOJYYwScd2+q+MhrCPM3KR4heoEMhYFc8n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aTCKesca; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D0EFPcFn"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so44154675e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 02:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745313402; x=1745918202; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LAIUiMIMcANp49836dqsOtoIvLH2tYBBYWYFrEFvBSE=;
-        b=D0EFPcFn9k0sz6Y2sqDFHAn2yIbPPDleuXs9dQ6pZy9zinA1ZdeWyuHzi5TLq8r7V4
-         7iAUrjJNokq+lLvY4UvlPvABGIuvwg76C0KKlfokbFduSzptzbeL6d8Ih+6LaDwRG+/U
-         ZGVWe4gS6uzfnYEIIeKrXlxuTYaGlxBpuYMfng3rCLa2JiVUGU6eUSxsWIMCnrmXe/f1
-         Rx5p9XUi1OFJUf96l0YDKZEzrismxA8Xz6HfmeaA7mNHJFD2wMnNNET85na0AM40khMS
-         xRPEulyNzQxWwxsICz9vuqhJdUZPO8kFQtPVMc13phkbSWh0THk0FT4dkWq8z+91dR4N
-         2PEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745313402; x=1745918202;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LAIUiMIMcANp49836dqsOtoIvLH2tYBBYWYFrEFvBSE=;
-        b=I8gmn9quYucNwrxQy4ugqORWYrwwc3Foh8x87nPdSfzqhcTnr7ePf6nUogX28A3xmo
-         i1Hoi7B+5Mu45ffjXIioWan9UiBYnL/mA1zsbBlmcX8xFPqDmf8dcG/Ca4Wi+jwCXNgd
-         toC/gwJjJrvTTwBcysgLVYS4odEzletWIfhT8bgmr0/liGE6UwGsXoTjbGkH3sOHIiUI
-         h+LNYWZkXpT4pSaSEBPhBCechDaQ/Zrs1rMsuImQ9p+gL3zdl2hLSuC8ZoAU3GImP53F
-         qAlk0zPqutuILuxnmeWjCYSgr1j8wP16Nn71bmaxfvV7VnyEIrToTi7VcUEYS9oMwgLR
-         3Rnw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4ZO6f6SfCv81JkuT67VN/I0OTz9CNVZxxFQtBK9eMXwNBsMx5Kk7UqQDxMqcvTvUtY5TUWLaKV7K7Ae4bWyzy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ4SLlsTBTH7CCV6TNBh/QrhnecpFL30DeKTk7MiLNj7hzETM0
-	bhvWX/PRf31P21JDgn46Ix/VkokeAf5tvwv9eFkg0MmAWBzpSqipKINSJOQzrNk=
-X-Gm-Gg: ASbGncu5OFk6Ulb8RVg6yvsbU4CNVOHiBvuQI4qEcI9E39oKcYGoKItrtWVNrxCHotO
-	LU4Kzd4WfDDVpudoTFk7XJKrMAc8D3/o+pRALok+ivDATPSYGgYdiC5w5/5Dh0y/EyaWfLejJ6/
-	2HyDWtgBrO56XvYIWZBQEu9izFE/pMaW0qPCFu3cr6rEp1DLdD3njrrv/m7PrmrQD+LgWiI8GPy
-	3+nJxtD6y17WGiUQ7scaw62HgWaBYZ8Ps3SRdL6npbHnaAYo8WAsJP9fPp7LyFzuEhuR2DLQpcV
-	YV9QsWKNqg1ulr+dFCmsGwsjl39tS649unrbyxC2HJA/re9040CRgw==
-X-Google-Smtp-Source: AGHT+IHSmn7InVI4HJQAnYc4ixv6KlQi3IVS6vPqSQLW1cy6FbhQcHoFR4nhvDq+BMRCiagfyFUWeg==
-X-Received: by 2002:a05:600c:3592:b0:439:9e13:2dd7 with SMTP id 5b1f17b1804b1-4408188366cmr66858785e9.2.1745313402478;
-        Tue, 22 Apr 2025 02:16:42 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4407c5c7916sm107783135e9.27.2025.04.22.02.16.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 02:16:42 -0700 (PDT)
-Message-ID: <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
-Date: Tue, 22 Apr 2025 10:16:40 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aTCKesca"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53M9KXTP1995439
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 22 Apr 2025 02:20:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53M9KXTP1995439
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745313638;
+	bh=cLR0wjbhwRTduGhrcmgQgQdpIXcDkWnqVuLKh1m13oQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aTCKescadr0sHc1OBNab3mt0WNOdORNOUu7rpBETQ6vGwSMvW5FXLhE2vfj1fe1w6
+	 kxqgtHLh80BykH4vNphE7UVD2umMuSaHZ0X7BB8pQmc61E8lzA//9+HuTE4ROZLaHQ
+	 dQx1WOTNwbk243SjOLe1tpFcPH9y12xx7ogDIZhREF4ji6RETc9TF7kIMeKjF5mIsX
+	 eMDXrP0TRl7JUiIRx2OTEz9i2vbZmrKeMtWUxjkY/XflI7iXlGFVwA24g71d0hbH9Y
+	 ZcmCp02WLH6iMipEkRPpY3a67hmjRhqj5K+CZV5FH7x7JFpmsNnSuIPtKmy58Xt4bk
+	 MKbcDfnoCUCnA==
+Message-ID: <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
+Date: Tue, 22 Apr 2025 02:20:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,186 +41,106 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf arm-spe: Add support for SPE Data Source packet on
- HiSilicon HIP12
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: jonathan.cameron@huawei.com, hejunhao3@huawei.com, linuxarm@huawei.com,
- wangyushan12@huawei.com, caijingtao@huawei.com, xueshan2@huawei.com,
- prime.zeng@hisilicon.com, yangyicong@hisilicon.com, acme@kernel.org,
- namhyung@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
- jolsa@kernel.org, john.g.garry@oracle.com, leo.yan@linux.dev,
- irogers@google.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org
-References: <20250408122809.37884-1-yangyicong@huawei.com>
+Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
+ to read MSR
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-23-xin@zytor.com>
+ <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250408122809.37884-1-yangyicong@huawei.com>
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 08/04/2025 1:28 pm, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
+On 4/22/2025 1:59 AM, Jürgen Groß wrote:
+> On 22.04.25 10:22, Xin Li (Intel) wrote:
+>> To eliminate the indirect call overhead introduced by the pv_ops API,
+>> utilize the alternatives mechanism to read MSR:
+>>
+>>      1) When built with !CONFIG_XEN_PV, X86_FEATURE_XENPV becomes a
+>>         disabled feature, preventing the Xen code from being built
+>>         and ensuring the native code is executed unconditionally.
+>>
+>>      2) When built with CONFIG_XEN_PV:
+>>
+>>         2.1) If not running on the Xen hypervisor (!X86_FEATURE_XENPV),
+>>              the kernel runtime binary is patched to unconditionally
+>>              jump to the native MSR read code.
+>>
+>>         2.2) If running on the Xen hypervisor (X86_FEATURE_XENPV), the
+>>              kernel runtime binary is patched to unconditionally jump
+>>              to the Xen MSR read code.
+>>
+>> The alternatives mechanism is also used to choose the new immediate
+>> form MSR read instruction when it's available.
+>>
+>> Consequently, remove the pv_ops MSR read APIs and the Xen callbacks.
 > 
-> Add data source encoding for HiSilicon HIP12 and coresponding mapping
-> to the perf's memory data source. This will help to synthesize the data
-> and support upper layer tools like perf-mem and perf-c2c.
+> Same as the comment to patch 5: there is no indirect call overhead after
+> the system has come up.
 > 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->   arch/arm64/include/asm/cputype.h              |   2 +
->   tools/arch/arm64/include/asm/cputype.h        |   2 +
->   .../util/arm-spe-decoder/arm-spe-decoder.h    |  17 +++
->   tools/perf/util/arm-spe.c                     | 101 ++++++++++++++++++
->   4 files changed, 122 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-> index d1cc0571798b..36c5bbfbb6e9 100644
-> --- a/arch/arm64/include/asm/cputype.h
-> +++ b/arch/arm64/include/asm/cputype.h
-> @@ -133,6 +133,7 @@
->   
->   #define HISI_CPU_PART_TSV110		0xD01
->   #define HISI_CPU_PART_HIP09			0xD02
-> +#define HISI_CPU_PART_HIP12		0xD06
->   
->   #define APPLE_CPU_PART_M1_ICESTORM	0x022
->   #define APPLE_CPU_PART_M1_FIRESTORM	0x023
-> @@ -220,6 +221,7 @@
->   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
->   #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
->   #define MIDR_HISI_HIP09 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP09)
-> +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
->   #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
->   #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
->   #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
-> diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
-> index 488f8e751349..9a5d85cfd1fb 100644
-> --- a/tools/arch/arm64/include/asm/cputype.h
-> +++ b/tools/arch/arm64/include/asm/cputype.h
-> @@ -129,6 +129,7 @@
->   #define FUJITSU_CPU_PART_A64FX		0x001
->   
->   #define HISI_CPU_PART_TSV110		0xD01
-> +#define HISI_CPU_PART_HIP12		0xD06
->   
->   #define APPLE_CPU_PART_M1_ICESTORM	0x022
->   #define APPLE_CPU_PART_M1_FIRESTORM	0x023
-> @@ -202,6 +203,7 @@
->   #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
->   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
->   #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
-> +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
->   #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
->   #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
->   #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
-> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> index 5d232188643b..0410abed5009 100644
-> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> @@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
->   	ARM_SPE_AMPEREONE_L2D                           = 0x9,
->   };
->   
-> +enum arm_spe_hisi_hip_data_source {
-> +	ARM_SPE_HISI_HIP_PEER_CPU		= 0,
-> +	ARM_SPE_HISI_HIP_PEER_CPU_HITM		= 1,
-> +	ARM_SPE_HISI_HIP_L3			= 2,
-> +	ARM_SPE_HISI_HIP_L3_HITM		= 3,
-> +	ARM_SPE_HISI_HIP_PEER_CLUSTER		= 4,
-> +	ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM	= 5,
-> +	ARM_SPE_HISI_HIP_REMOTE_SOCKET		= 6,
-> +	ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM	= 7,
-> +	ARM_SPE_HISI_HIP_LOCAL			= 8,
-> +	ARM_SPE_HISI_HIP_REMOTE			= 9,
-> +	ARM_SPE_HISI_HIP_NC_DEV			= 13,
-> +	ARM_SPE_HISI_HIP_L2			= 16,
-> +	ARM_SPE_HISI_HIP_L2_HITM		= 17,
-> +	ARM_SPE_HISI_HIP_L1			= 18,
-> +};
-> +
->   struct arm_spe_record {
->   	enum arm_spe_sample_type type;
->   	int err;
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 2a9775649cc2..eceae4219601 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
->   	{},
->   };
->   
-> +static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
-> +	MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
-> +	{},
-> +};
-> +
->   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
->   {
->   	const struct arm_spe_record *record = &speq->decoder->record;
-> @@ -718,9 +723,105 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
->   	arm_spe__synth_data_source_common(&common_record, data_src);
->   }
->   
-> +static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
-> +						union perf_mem_data_src *data_src)
-> +{
-> +	/* Use common synthesis method to handle store operations */
-> +	if (record->op & ARM_SPE_OP_ST) {
-> +		arm_spe__synth_data_source_common(record, data_src);
-> +		return;
-> +	}
-> +
-> +	switch (record->source) {
-> +	case ARM_SPE_HISI_HIP_PEER_CPU:
-> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> +		break;
-> +	case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
-> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> +		break;
-> +	case ARM_SPE_HISI_HIP_L3:
-> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> +		break;
-> +	case ARM_SPE_HISI_HIP_L3_HITM:
-> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> +		break;
-> +	case ARM_SPE_HISI_HIP_PEER_CLUSTER:
-> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> +		break;
-> +	case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
-> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> +		break;
-> +	case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
-> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
 
-Hi Yicong,
+Please check https://lore.kernel.org/lkml/87y1h81ht4.ffs@tglx/.
 
-Is the mem_snoop setting missing from this one?
+And it's was also mentioned in the previous patch:
 
-Other than that, LGTM.
+https://lore.kernel.org/lkml/20250422082216.1954310-22-xin@zytor.com/
 
-Thanks
-James
+Please let me know what I have missed.
+
+Thanks!
+     Xin
+
 
