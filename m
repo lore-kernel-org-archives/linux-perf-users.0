@@ -1,218 +1,153 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED15C20C48C
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 10:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C19220C49E
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 10:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316706; cv=none; b=XYCv+V538kFbq73A2nn+G3Gy2Q5AtoZovUHy59KUNP9jYLV1MMFeP8MPsHkxqlewx+2KCkHLpMrx5nUT/M4o7U4Jh+gmklLRA/AMTuilvgePH3wJ/Zjw+VVJ49G8tFf0WSoS9hJgn7IPWkoHIkO/4UyRdMLVNN7fbMhlhO8J66A=
+	t=1745317294; cv=none; b=MwmrmR3JFs6IdpJQp9ZqAVkzpEnS2BNqFRy4FQWfWGFhVLVMJqtizeUm5LIM5PQqF4h/i3V4VQ8q5YkI2ZsFGVk+qSEh2S8fFpu+LSX9heuP95q4pQDKnzhKq5rtLwccVrsZ+iinmOiYw5mdCdTGqSFa3Qp8cCS2U1fGlq61w0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316706; c=relaxed/simple;
-	bh=Z2Zb0buQrmv30KS66jFdsktxt4Ba+0nou1pvPEAFBUI=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uJKYIIYXONq9n7xRoKHq2yjaP8ZKDfFSQ80JUL1AGpjVsvdaYnbNWvjHFndwqNE0NsmiEvgbudgcTNYo0GX1sjKmwg4iVmytInriXM8v8dIKLCpoJlffSnLWX72hDdt9l3Xr9mB2pfuW4/ZQlW+x99ssSjqnTj7bBP6r9s4Ye5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZhdKV1V5Xz1d09W;
-	Tue, 22 Apr 2025 18:10:38 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id C027A1400D4;
-	Tue, 22 Apr 2025 18:11:35 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 22 Apr 2025 18:11:34 +0800
-CC: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<hejunhao3@huawei.com>, <linuxarm@huawei.com>, <wangyushan12@huawei.com>,
-	<caijingtao@huawei.com>, <xueshan2@huawei.com>, <prime.zeng@hisilicon.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<mark.rutland@arm.com>, <jolsa@kernel.org>, <john.g.garry@oracle.com>,
-	<leo.yan@linux.dev>, <irogers@google.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf arm-spe: Add support for SPE Data Source packet on
- HiSilicon HIP12
-To: James Clark <james.clark@linaro.org>
-References: <20250408122809.37884-1-yangyicong@huawei.com>
- <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <36d03a7e-ffd6-29b8-c34f-fd6780adffe9@huawei.com>
-Date: Tue, 22 Apr 2025 18:11:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1745317294; c=relaxed/simple;
+	bh=vPaSK1YJPMimS0f/8osQJzDVTRZjiow/jJ+CiwFH3dY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e/qixx9JzjwSX2JzU3ZQELthYdKMj9j5uBT83f1YkjSc5FaViZlsLbHK6WZBYffjdFTtE+kOhMR1LW05VnBp5IMCj+yDYiaiMICShwFzHZXz/BnsrGjmxFTCyLXBXDb9g4tDJJCNpBCVs0Q7Ti+eLqhJ3qlifJnjKCMwxQULVNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SoDqO9dq; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SoDqO9dq"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3469967f8f.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 03:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745317290; x=1745922090; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JvWmQrsXg9zHl1MPjQw5tN8WwrpI48NyLqFNhUg6Edg=;
+        b=SoDqO9dq0Aa2aew459oPiT2uYtaMADhxTOXvHOJMHiTApHI7ULln7G+pqna6lVlU+C
+         NAzXtEpAGlGZmcTRSBCl9kCqoc9cnOscNy/QZvs6fklL4qDTDETydZ+QfiAg93zcNH1U
+         wF9VZdiI4dqwx1ncEHTdPW+wE7SnN2LL5lX8Egm5NNmiSN1rdA66ETpMlgKDfdUpLAQw
+         +KORWQArmNMTjlwst9DTeQd2o3hXaMmbm15PHboGdd7nvuro6BVUTtknD1VRM7jW2Rpw
+         iMNTKWAwS4OIvZAcGXnTSCpUO7S/m5O/M36AKFB2iXrn0oVoaaDXtr0ILX/x2GyImcMF
+         C6iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317290; x=1745922090;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JvWmQrsXg9zHl1MPjQw5tN8WwrpI48NyLqFNhUg6Edg=;
+        b=arcnq6B2mP3pxZ3GREephkYgAHZBzpAC6Qs9GgJDZuBAwy5IFPjIHuTa4CHIRorr7H
+         5e7qrDdFIE3Zz3uL1HVa5uASySRZkb7ZintSn07znvwu0Ar+1bYZaQ7JfJs8O673EUiC
+         wEe3/7AP1JXTFU7PGbSl3747gTnx08zYp5ZIlRpMkR9jWM0ewdwngu9QvXVLHUTA78bL
+         O/hcnTUG/VStACY/BioATi67upZjEMJKdBVXOwstBZDsg7XP/7O6OeUk2V00UVkmHpnQ
+         EzXZydANmL7r/GYTdsxPTlRcD0DPlG61mhuqmEGDreHpjintxhtaUAOM1QClgQzO9bZ3
+         S+OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXf9qCyccOgCjKA4ISm0AiiTIA4ADPiVAmzC7qGArhlDQHmYqJLWHgAWNaSPfg3NG1ApCosS8wOVZ0xF5JJhxko@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0hrbeVydH02iZB3P91GWW16kejQeLmKHt/M0e6SNV+L9oq9WP
+	HwO0iLipiDaw9/jM8p0zbf/uf59GxnX+Hizig2NZyBlsTTDSHpTLFT4wc+bd6ho=
+X-Gm-Gg: ASbGncuPrKJWxn76MEtlG3sQnyUWLtgYewKqcsfMl3OaBlkMqkRhxaAjqbnh1Y3Ua2M
+	k3PY+jz90hAM1JTuRQ7d7nxlGYlxqu9ZtUoQwoQAkELZJ+UkozYWnw+JG6N+qDXPZxNVLLu3gJB
+	0nqejq/qJW/gSsWl1/1GTMWTxZ3uWAzR0l95L2a/xaZPGnBwrbfFA4rC45PYjswkqzWChHFlbMF
+	/MGwuoYDwgutk/3CVqqXtKvEonzorfnOOvMzF9vCbbaqi8MYI3wvoJYAQqGCDFn5j7t46EYDDyz
+	i7h8ppA8FPnMjN4S6i1j/77/etpR//MBUCpZ30jKZg4=
+X-Google-Smtp-Source: AGHT+IFaqQKcJYU0wnjYmq4qKpdD7Qb4L05M0qqkdyijsfGrapNInK3N9dhMXV0eheuNB4H3XoJVdQ==
+X-Received: by 2002:a5d:6daf:0:b0:39a:c9cb:819f with SMTP id ffacd0b85a97d-39efbae0e1fmr10293740f8f.37.1745317289921;
+        Tue, 22 Apr 2025 03:21:29 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bf20sm14488732f8f.48.2025.04.22.03.21.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 03:21:29 -0700 (PDT)
+Message-ID: <48640298-effa-42d4-9137-a18a51637f03@linaro.org>
+Date: Tue, 22 Apr 2025 11:21:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU
+ capability
+To: Yabin Cui <yabinc@google.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>
+References: <20250421215818.3800081-1-yabinc@google.com>
+ <20250421215818.3800081-2-yabinc@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250421215818.3800081-2-yabinc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025/4/22 17:16, James Clark wrote:
-> 
-> 
-> On 08/04/2025 1:28 pm, Yicong Yang wrote:
->> From: Yicong Yang <yangyicong@hisilicon.com>
->>
->> Add data source encoding for HiSilicon HIP12 and coresponding mapping
->> to the perf's memory data source. This will help to synthesize the data
->> and support upper layer tools like perf-mem and perf-c2c.
->>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
->>   arch/arm64/include/asm/cputype.h              |   2 +
->>   tools/arch/arm64/include/asm/cputype.h        |   2 +
->>   .../util/arm-spe-decoder/arm-spe-decoder.h    |  17 +++
->>   tools/perf/util/arm-spe.c                     | 101 ++++++++++++++++++
->>   4 files changed, 122 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
->> index d1cc0571798b..36c5bbfbb6e9 100644
->> --- a/arch/arm64/include/asm/cputype.h
->> +++ b/arch/arm64/include/asm/cputype.h
->> @@ -133,6 +133,7 @@
->>     #define HISI_CPU_PART_TSV110        0xD01
->>   #define HISI_CPU_PART_HIP09            0xD02
->> +#define HISI_CPU_PART_HIP12        0xD06
->>     #define APPLE_CPU_PART_M1_ICESTORM    0x022
->>   #define APPLE_CPU_PART_M1_FIRESTORM    0x023
->> @@ -220,6 +221,7 @@
->>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
->>   #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
->>   #define MIDR_HISI_HIP09 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP09)
->> +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
->>   #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
->>   #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
->>   #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
->> diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
->> index 488f8e751349..9a5d85cfd1fb 100644
->> --- a/tools/arch/arm64/include/asm/cputype.h
->> +++ b/tools/arch/arm64/include/asm/cputype.h
->> @@ -129,6 +129,7 @@
->>   #define FUJITSU_CPU_PART_A64FX        0x001
->>     #define HISI_CPU_PART_TSV110        0xD01
->> +#define HISI_CPU_PART_HIP12        0xD06
->>     #define APPLE_CPU_PART_M1_ICESTORM    0x022
->>   #define APPLE_CPU_PART_M1_FIRESTORM    0x023
->> @@ -202,6 +203,7 @@
->>   #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
->>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
->>   #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
->> +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
->>   #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
->>   #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
->>   #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
->> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->> index 5d232188643b..0410abed5009 100644
->> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
->> @@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
->>       ARM_SPE_AMPEREONE_L2D                           = 0x9,
->>   };
->>   +enum arm_spe_hisi_hip_data_source {
->> +    ARM_SPE_HISI_HIP_PEER_CPU        = 0,
->> +    ARM_SPE_HISI_HIP_PEER_CPU_HITM        = 1,
->> +    ARM_SPE_HISI_HIP_L3            = 2,
->> +    ARM_SPE_HISI_HIP_L3_HITM        = 3,
->> +    ARM_SPE_HISI_HIP_PEER_CLUSTER        = 4,
->> +    ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM    = 5,
->> +    ARM_SPE_HISI_HIP_REMOTE_SOCKET        = 6,
->> +    ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM    = 7,
->> +    ARM_SPE_HISI_HIP_LOCAL            = 8,
->> +    ARM_SPE_HISI_HIP_REMOTE            = 9,
->> +    ARM_SPE_HISI_HIP_NC_DEV            = 13,
->> +    ARM_SPE_HISI_HIP_L2            = 16,
->> +    ARM_SPE_HISI_HIP_L2_HITM        = 17,
->> +    ARM_SPE_HISI_HIP_L1            = 18,
->> +};
->> +
->>   struct arm_spe_record {
->>       enum arm_spe_sample_type type;
->>       int err;
->> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->> index 2a9775649cc2..eceae4219601 100644
->> --- a/tools/perf/util/arm-spe.c
->> +++ b/tools/perf/util/arm-spe.c
->> @@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
->>       {},
->>   };
->>   +static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
->> +    MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
->> +    {},
->> +};
->> +
->>   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
->>   {
->>       const struct arm_spe_record *record = &speq->decoder->record;
->> @@ -718,9 +723,105 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
->>       arm_spe__synth_data_source_common(&common_record, data_src);
->>   }
->>   +static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
->> +                        union perf_mem_data_src *data_src)
->> +{
->> +    /* Use common synthesis method to handle store operations */
->> +    if (record->op & ARM_SPE_OP_ST) {
->> +        arm_spe__synth_data_source_common(record, data_src);
->> +        return;
->> +    }
->> +
->> +    switch (record->source) {
->> +    case ARM_SPE_HISI_HIP_PEER_CPU:
->> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->> +        data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
->> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->> +        break;
->> +    case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
->> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->> +        data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
->> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->> +        break;
->> +    case ARM_SPE_HISI_HIP_L3:
->> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->> +        data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
->> +        break;
->> +    case ARM_SPE_HISI_HIP_L3_HITM:
->> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->> +        data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
->> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->> +        break;
->> +    case ARM_SPE_HISI_HIP_PEER_CLUSTER:
->> +        data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->> +        data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
->> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->> +        break;
->> +    case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
->> +        data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
->> +        data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
->> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
->> +        break;
->> +    case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
->> +        data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
->> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
->> +        data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
->> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> 
-> Hi Yicong,
-> 
-> Is the mem_snoop setting missing from this one?
-> 
 
-it should be PERF_MEM_SNOOP_NONE, will fix. Thanks for catching this.
 
-> Other than that, LGTM.
+On 21/04/2025 10:58 pm, Yabin Cui wrote:
+> For PMUs like ARM ETM/ETE, contiguous AUX buffers are unnecessary
+> and increase memory fragmentation.
 > 
+> This patch introduces PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES, allowing
+> PMUs to request non-contiguous pages for their AUX buffers.
+> 
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> ---
+>   include/linux/perf_event.h  | 1 +
+>   kernel/events/ring_buffer.c | 6 ++++++
+>   2 files changed, 7 insertions(+)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0069ba6866a4..26ca35d6a9f2 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -301,6 +301,7 @@ struct perf_event_pmu_context;
+>   #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
+>   #define PERF_PMU_CAP_AUX_PAUSE			0x0200
+> +#define PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES	0x0400
+>   
+>   /**
+>    * pmu::scope
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 5130b119d0ae..87f42f4e8edc 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -710,6 +710,12 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+>   		max_order = ilog2(nr_pages);
+>   		watermark = 0;
+>   	}
+> +	/*
+> +	 * When the PMU doesn't prefer contiguous AUX buffer pages, favor
+> +	 * low-order allocations to reduce memory fragmentation.
+> +	 */
+> +	if (event->pmu->capabilities & PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES)
+> +		max_order = 0;
+>   
+>   	/*
+>   	 * kcalloc_node() is unable to allocate buffer if the size is larger
 
-Thanks.
+Hi Yabin,
+
+I was wondering if this is just the opposite of PERF_PMU_CAP_AUX_NO_SG, 
+and that order 0 should be used by default for all devices to solve the 
+issue you describe. Because we already have PERF_PMU_CAP_AUX_NO_SG for 
+devices that need contiguous pages. Then I found commit 5768402fd9c6 
+("perf/ring_buffer: Use high order allocations for AUX buffers 
+optimistically") that explains that the current allocation strategy is 
+an optimization.
+
+Your change seems to decide that for certain devices we want to optimize 
+for fragmentation rather than performance. If these are rarely used 
+features specifically when looking at performance should we not continue 
+to optimize for performance? Or at least make it user configurable?
+
+Thanks
+James
 
