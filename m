@@ -1,136 +1,134 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A5027817A
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 19:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E50B8634F;
+	Tue, 22 Apr 2025 22:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351486; cv=none; b=mDm9mQ5gxdC6PNbU5TbGybPGcQY6h66wB9rilqMORiQvn0Mqj3hb1EthMFTwHP62XwGV2ybkEsRQsUkuiFCoiO1xxP7eLOGjA2rbZXkR34l0MJOe7Bx21+DJQAISopmt6JVF4QV72sQlbfeDgRxOydGhtK5Fspr9a8aWHQoTa9M=
+	t=1745362256; cv=none; b=S/ZpiEDKI9ETWNw7OrR+D+viR7+OEGv9hnyF6BvdwYryfQQ8SKa8jqyGjkjAtbr20vkIsiUcMKsnWq/aRvJ6qXo2Jt2gZ/NT2nBHPVV9mg9WQR6gxOQ+2WvTSQ6NH2unP5oCD76Ni+edVsYcTcYUlWowdE4G9j/pWgcMySvhxQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351486; c=relaxed/simple;
-	bh=G+t2v6BhLb+5vWztzdpssgwdNSlTOk90KThSVmnEfpo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OUXCGqlBgfIzx8K98WmK+fCELJ2uaCI8fA5ul8xJr96Gnnoqr4O751dzyD/uHtUDbjMsxdf4/uYL9uyMGesVqkVl+dmW7dvhgHz5yUXbE2D+Bg4fxwHax6uEHZhqAkodLCZVRqyy81MN+7LJxy9xJrccPRC1fruXwmwwVKwYfXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sEsuM4T/; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745362256; c=relaxed/simple;
+	bh=qic8WDJnyOQBWYfyXO7/q90sRjGRhIGgxtQ3jdqmKoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HsN5Rvhn9DiYfojHq7xEYtQmX8ONxr9dVoBASQNL/jMN74iiSnMQp/IhyfZHhxEyKBnCtehPEhUbtsJRulDSdncXQRIF5u/IH12sHaOxHzdvrzgmAFdSYMaV6ICl3M8P/EM/O7s/XeoqUlbAfZHkw9HqTZSrNMDPEEAWa+X0XOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gst9f3o0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sEsuM4T/"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7f9a0b9bso4915696a91.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 12:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745351483; x=1745956283; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mH6UGx1+cJUt0+vdtDYj5GNgwh2+pJEonMo7kApLLOI=;
-        b=sEsuM4T/6AiEfbcv6LEBX9nIBDT+43JI3MKdo3iKnkO2YqI70DcND2IDwLROe9Q4D5
-         GArSdE4crjfrbQKmyHy1Els5AUgocKZZBhQ4ePOShvuMia5QfeqWQImCd0ooUy3J7eaq
-         uQ6iKaiB9W6Oab+GGxn3MZLM2zo9IQaI7BW1VoDi98zqEoGP3JMAMBj5PRaUmpBLWtRo
-         mjh4DGwfQSGSsttkwj1ptnNcpnPTSEHYTK8QeWv5i016xI7jxtl9m17cB/A22/f5mrtk
-         Q0lgI2Pwnlfgiq4aj2EbhSZVbFNZn+LTprUdDBVTDrYPrI9CfkqS4laNY2dRY2mAg8i+
-         vevA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745351483; x=1745956283;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mH6UGx1+cJUt0+vdtDYj5GNgwh2+pJEonMo7kApLLOI=;
-        b=X/EdApyaT/j7x84Uk2dg2reEYVTo5NkzTJwqGuTsOv8oMLaEkzqVGuHXVHykZRVI07
-         MKZbQmOh3OOLHfn70b01+nwP/FLzokutMmNwGt7fYAZjpAKPhokMZfYEUuPO9wGRKngy
-         rGfMdCrmeyLdRGp2viZdUIV4fqwEWyZYM6zfB9LABsz5ULpGcccuWhHtxmO/0FtWt0Q3
-         b3MCQpiLMgpCTEzylmtQZb1XFzFbrOKeYIG+MI3dK7jy+eHYCGDJl2w5kwiEerRwFpyw
-         qf44Hh+5nNJWosg9+YqvTxUO/NluT49T9Hd0rn1yp1W/O/j2u9biX1gFVVRT0siF6rEg
-         V1BA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9pSIpTu5RsNRyK8WWoylDquqERN8biTnRUFOCF6UWuC8/Nf2cpNyV99x9t7f6la7udVmQDGznsyYLDSOzEWPS@vger.kernel.org
-X-Gm-Message-State: AOJu0YweY+NpuPDf7iFkE2qP91wnuni00ta9fcfRubJD9zN5bsuC/UPy
-	hSujK5/KrDtLpXmnTWS1dhm1fWyUbleYVt+Z1reMDdLKV7KLLuZHjzL6XJHh71N6WucVfk4Re9r
-	7zw==
-X-Google-Smtp-Source: AGHT+IGkV0RcloCvNwgssDSlkXsqRo5n8/rzSZ0U6QUVt02K3Nbge8IReH8D+uHUWVsCRD28uFY//07FCPo=
-X-Received: from pjbsr7.prod.google.com ([2002:a17:90b:4e87:b0:301:2679:9d9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b90:b0:2ee:bc7b:9237
- with SMTP id 98e67ed59e1d1-3087bb9ede2mr21004314a91.27.1745351482796; Tue, 22
- Apr 2025 12:51:22 -0700 (PDT)
-Date: Tue, 22 Apr 2025 12:51:21 -0700
-In-Reply-To: <aAfxuby_0eZZTrj-@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gst9f3o0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745362255; x=1776898255;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qic8WDJnyOQBWYfyXO7/q90sRjGRhIGgxtQ3jdqmKoI=;
+  b=gst9f3o0e7JLwVHy+suQ6sVMjrWWR9qLbDanT7Yaa33kxnyfjV/OQx7p
+   TdvfrQ4Uvthl6z2Vy+FUKM79gTYjF/XIfQe9jm1CygFyQMJQYwcUIXBAQ
+   CAP7qJuTbU011dDLb6C6twFLaL189PMozPMDIO7E/6xB6bJyfjIN0q5Ed
+   FEEbllr+Eijlhhb+K8Y2+Sb48VwGzQ5gQXshfzXKoshpmp33CpOcjxMKH
+   lrOqwshZ6/k0LYTAln7mhapfzdVByiuKg7r1zdF0JWAUS93gkOCAdjbbU
+   IZ2JrV0dYFRcWzOLtAa/FKAm4sIdSKQRGwwt2u9UvfSRuB8eQr/xr0lSs
+   w==;
+X-CSE-ConnectionGUID: ltSHvNIJQ26d2PxBQAWWtw==
+X-CSE-MsgGUID: eRcrbDC8TcuVdE3KwSPiRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46816880"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="46816880"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:50:54 -0700
+X-CSE-ConnectionGUID: n7TL10sURoCXgOxgB+IyBA==
+X-CSE-MsgGUID: WhMNARUHSzqW4R8DxoGfLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="137006997"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:50:54 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0C69220B5736;
+	Tue, 22 Apr 2025 15:50:51 -0700 (PDT)
+Message-ID: <34bcfac9-86df-42d8-adef-9ccedc3a322a@linux.intel.com>
+Date: Tue, 22 Apr 2025 18:50:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com> <aAevpauKYWwObsB7@google.com>
- <cb4e24a0-fdb7-46d2-9b0e-200f5e3e4c96@zytor.com> <DS7PR11MB6077B4D80EB7020C4D3FCD52FCBB2@DS7PR11MB6077.namprd11.prod.outlook.com>
- <aAfxuby_0eZZTrj-@gmail.com>
-Message-ID: <aAfzOWnYzcPjZDEI@google.com>
-Subject: Re: [RFC PATCH v2 00/34] MSR refactor with new MSR instructions support
-From: Sean Christopherson <seanjc@google.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>, Xin Li <xin@zytor.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, 
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "acme@kernel.org" <acme@kernel.org>, "jgross@suse.com" <jgross@suse.com>, 
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"irogers@google.com" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, 
-	"ajay.kaher@broadcom.com" <ajay.kaher@broadcom.com>, 
-	"bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "vkuznets@redhat.com" <vkuznets@redhat.com>, 
-	"luto@kernel.org" <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-	Dexuan Cui <decui@microsoft.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
+ <20250415135323.GC4031@noisy.programming.kicks-ass.net>
+ <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
+ <20250416153226.GC17910@noisy.programming.kicks-ass.net>
+ <e0b25b3e-aec0-4c43-9ab2-907186b56c71@linux.intel.com>
+ <20250416195610.GC38216@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250416195610.GC38216@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025, Ingo Molnar wrote:
-> 
-> * Luck, Tony <tony.luck@intel.com> wrote:
-> 
-> > > >> base-commit: f30a0c0d2b08b355c01392538de8fc872387cb2b
-> > > >
-> > > > This commit doesn't exist in Linus' tree or the tip tree, and the series doesn't
-> > > > apply cleanly on any of the "obvious" choices.  Reviewing a 34 patches series
-> > > > without being able to apply it is a wee bit difficult...
-> > > >
-> > >
-> > > $ git show f30a0c0d2b08b355c01392538de8fc872387cb2b
-> > > commit f30a0c0d2b08b355c01392538de8fc872387cb2b
-> > > Merge: 49b517e68cf7 e396dd85172c
-> > > Author: Ingo Molnar <mingo@kernel.org>
-> > > Date:   Tue Apr 22 08:37:32 2025 +0200
-> > >
-> > >      Merge branch into tip/master: 'x86/sev'
-> > >
-> > >       # New commits in x86/sev:
-> > >          e396dd85172c ("x86/sev: Register tpm-svsm platform device")
-> > >          93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
-> > >          b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
-> > >          770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command
-> > > functions")
-> > >
-> > >      Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > >
-> > >
-> > > You probably need to git pull from the tip tree :-)
-> > 
-> > If possible, you should avoid basing a series on tip/master as it 
-> > gets recreated frequently by merging all the topic branches. The SHA1 
-> > is here today, gone tomorrow.
-> 
-> Correct, although for x86 patch submissions via email it's not wrong: 
-> what applies today will likely apply tomorrow as well, regardless of 
-> the SHA1 change. :-)
 
-Yeah, but as Tony pointed out, when using base commit that may be ephemeral, then
-the cover letter needs to call out the tree+branch.  This series applies on the
-current tip/master, but there was nothing to clue me into that fact.
+
+On 2025-04-16 3:56 p.m., Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 03:45:24PM -0400, Liang, Kan wrote:
+> 
+>> I see. I think we can check the constraint table and update the overlap
+>> bit accordingly. Similar to what we did in the
+>> intel_pmu_check_event_constraints() for the fixed counters.
+>>
+>> I'm thinking something as below (Just a POC, not tested.)
+> 
+> I'll try and digest in more detail tomorrow, but having overlap it *not*
+> a good thing. Which is why I've always asked to make sure this
+> doesn't happen :/
+>
+
+I've checked all the existing event_constraints[] tables and features,
+e.g., auto counter reload.
+On the Lion Cove core, the MEM_TRANS_RETIRED.LOAD_LATENCY_GT event has a
+constraint mask of 0x3fc. The counter mask for the auto counter reload
+feature is 0xfc. On the Golden Cove, the
+MEM_TRANS_RETIRED.LOAD_LATENCY_GT event has a constraint mask of 0xfe.
+
+Other constraints (except the one with weight 1) are 0x3, 0xf, 0xff, and
+0x3ff.
+
+But I don't think it can trigger the issue which mentioned in the commit
+bc1738f6ee83 ("perf, x86: Fix event scheduler for constraints with
+overlapping counters"). Because the scheduler always start from 0. The
+non-overlapping bits are always scheduled first.
+For example, 0xf and 0x3fc. The events with 0xf (has low weights) must
+be scheduled first, which occupy the non-overlapping counter 0 and
+counter 1. There is no scheduling problem for the events with 0x3fc then.
+
+I think we are good for the static constraints of the existing platforms.
+
+> At the very least we should WARN if we find the dynamic constraint gets
+> us there.
+> 
+So the problem is only with the dynamic constraint.
+
+It looks like only checking the weight and subset is not enough. (It may
+trigger false positive for the 0xf and 0x3fc case.)
+I think the last bit of the mask should be taken into account as well.
+
+WEIGHT(A) <= WEIGHT(B) &&
+A | B != B &&
+LAST_BIT(A) > LAST_BIT(B)
+
+Thanks,Kan
