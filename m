@@ -1,63 +1,39 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC4F1F03D9
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 09:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C23B1EFFBF;
+	Tue, 22 Apr 2025 09:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313121; cv=none; b=pVNlMTmP93HJ0PjrrJB/T5beYXKcp6IEllofo2D0esK7SkwMZwJRqUouuDxHoOBZ6WCV2wxXVMK1lh9ePQnvdTrPM+J+yetP0I9Jk1/hzVcVnP8/QRJyG77UM/chBjTr3PrAW4K19XBc91v3FJmCuKL1f5sfua7O0rACYOuF1Ig=
+	t=1745313237; cv=none; b=sJGXbxdeKArJJgrV/yT88cXl9SmZRQ3mwOgdXiCRYgSRa0Uh5uWA4kwIaQDP6e05tIoIRdkE3VjdXkBdf2rU2u89uW4a1MSVouBk2QegyRPXZpriAQ46PZHbzTyYf6VEcCfQwM+wEzfqszGWsYplsA7umwHTRd6QvFHJzfl2AHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313121; c=relaxed/simple;
-	bh=HxMXQ3xc4mDvaapysGnC877OYn6XVsmfSDsrTgWCYsI=;
+	s=arc-20240116; t=1745313237; c=relaxed/simple;
+	bh=8t87NXRHmH+x11mIfycM4fyvuVR/eKMQUHrwiHhPu78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XAk6ORmtB7JQVqCPrXR9bQUEMRYU10rSpF33+lhhQyvRoCutmiYIJFSWGroiDM6/JUTAlGWW31rKV3Vc5jRNcoxMDIxTaBTxqCOeniG/SY2YBP91EjncbD9U9YPuyjNRIIxlSJTm3nUyICbwF0r4QQ7Tnn/yr8zj9n0AM/g0YmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AlIzmfrQ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=ZqRSsyIK2jm7yc24LVHKX8b7QMSP93cmnmSZmjGw0Jb2uyi9tIhq3VynnSgryOhP6EpNYEBScfisyxM1Hn+/7VIrIYk0R/mlV4Hr9QAGzKFxAnIurqXH1nBb3yK+TopRfuhdN9KnD7dx4xjKPg7HpLVEfaE2Fhaf3mQXjxcSQqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZPeuqs2Q; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AlIzmfrQ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-440685d6afcso45752935e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 02:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745313117; x=1745917917; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vNQhtMzboJsKqrUjFlhlWpbiOnbOUnEHjsqB+mLSfIY=;
-        b=AlIzmfrQHujeUK/EEdpGhI/gxMsOtaQ3f8FfmPvPp1CVYrZ9A0NxqIJ8ITSsezUrQB
-         pJaQ8wI2bkV3sokRhGdU1rD/sxHVIFJZHDizQwWSiewspM2ejjAMAyAx8c6rlK+fhQRB
-         Nem1U05Xm8HtqM0gEmevD3XcvGva5xijfg8pJJzL7O+3dqVUblf3mcia3f2bok12KrvP
-         rSEtBE/4A8N04omNGParl9IsTr+fRlnLlSMoJkKEXTkCQ/GmPFmgVwsPYFd33baRzuQm
-         g3oxtPsWrDIgaSlhUQoO+cSZ6K57/yp3xjkuH255UwerdhpRDG5Vc6bGE0PEKEIw4m4e
-         /ugg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745313117; x=1745917917;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vNQhtMzboJsKqrUjFlhlWpbiOnbOUnEHjsqB+mLSfIY=;
-        b=w4nWtCeKoS1S1v86e3gpLwEcRrO3+2ieSSPtKoCT0RIFhdEnmtiSFKIWFvgnBs/0Oo
-         RJX2SoKD2CbbKUU45O+SGnX0w+RZiJ+t5T3yh3B0Mnqk46A0WIsjjpc+Jd3G3afUbsgE
-         cMLlQdargf9ks7TQsSPncTDuVr+WX7r7WahQAh7BADlZ/ixvW/c+65QoPinfDB/fqI2g
-         5FxrTJ0negrtqJJaOALBHzRRq8an3oMLIgAY+iBeeCmBd0/A0BftN5QbOX+s/iBg+hHA
-         st8SWef/50hyoPHODYTaAF6ieUn6oZxsL+ymw8gzRNXIH6EZbcBR6PTrnONRGaDmGdpA
-         Uibg==
-X-Gm-Message-State: AOJu0Yyndsy1XTq84M17QcD7+e4RKkvufXJdyMLUBmu5OrB2Tg4q9NdX
-	/Wz7Pdv37eRhVCBIYnwwLWATfmJYqiDVtZGBTdpTTZ7iirmKbYFT2oyhIaVoYgI=
-X-Gm-Gg: ASbGnctbzoq6dpyzJw8S1NISyIHC5tlgW3yVxP8F5QlhhQMd4HVp1eelHVUMNB8MFTU
-	Os4WuIMrbcVRXi5zTWCJZkeBPtwAi29Hx6WZUhPcJwuEAA/CY1sb9IxcqTM2rbEWdYLWDbrm0Ce
-	j+u9INwxE31/PfxU6aphtWHSv7AU2xoSzJTvMqR2NuSx3IM9cZRdfMjWBLZoBIJ1NLhFqaB66Fk
-	TpYYd1fuYBcB9eqXTYi7faR9I3n2EXuR/EE3DiytTOkctoIVD/JikcpzX0BWy/R7BWz/5QuIONI
-	eOYE4c5kNGMeDPZ9eZUMNsTP9JDukrI3cbLW6/2xNpw=
-X-Google-Smtp-Source: AGHT+IGPpbum0KsQcE9z8vl2RfdveoyjLjKiZigrimsFoHNByQt297/k0WCP9oipkvXobXbABwmLAA==
-X-Received: by 2002:a5d:5f93:0:b0:39c:140b:feec with SMTP id ffacd0b85a97d-39efba384cemr9947675f8f.7.1745313117068;
-        Tue, 22 Apr 2025 02:11:57 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4933e7sm14681335f8f.65.2025.04.22.02.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 02:11:56 -0700 (PDT)
-Message-ID: <0f2b7c10-a30a-4d2e-ac3f-baec1b45d945@linaro.org>
-Date: Tue, 22 Apr 2025 10:11:55 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZPeuqs2Q"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53M9Clo71988629
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 22 Apr 2025 02:12:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53M9Clo71988629
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745313171;
+	bh=5MyMi1dWDpqM4+680ZRWUMemTrM7gOfrACTzG+hcvhU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZPeuqs2QxCZr+2CQbzBLOCpW3Aawds6/1cwg0KOGkN4s7Xzb3PZq6E2KiAUhdSklS
+	 6bmAZ9hG+CfiogKMARVhoVzL3oriBG5dyHPHGBto0/mSKUTbfZ4aFLYUysVlh6JFC/
+	 ZfI2lvkhOZHiUCZh+IkdkYywF31eKyF7de+lHzDs4b9fjhHs57HIRf++LaLMNtLPKY
+	 QczCdjB0+4sEGoXJlmUjHhZjwRqeUafNM/3rfcGnb2CJu8EO98o0Ia9j/fEpQcfhQG
+	 lCV0OoOhQjfirIbZQCPq86OrgvY0dVY0/wQxoL36KQ5giQ3vDEnESbBhySaQesbEM7
+	 0Bz5uP6uYbAzw==
+Message-ID: <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
+Date: Tue, 22 Apr 2025 02:12:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,64 +41,120 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools headers: Update the include/vdso/unaligned.h to
- sync headers
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
- disgoel@linux.vnet.ibm.com, hbathini@linux.vnet.ibm.com,
- Aditya.Bodkhe1@ibm.com, jiang.peng9@zte.com.cn, venkat88@linux.ibm.com,
- Tejas.Manhas1@ibm.com, acme@kernel.org, jolsa@kernel.org,
- adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org
-References: <20250421034143.67607-1-atrajeev@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
+ read PMC
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-7-xin@zytor.com>
+ <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250421034143.67607-1-atrajeev@linux.ibm.com>
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 21/04/2025 4:41 am, Athira Rajeev wrote:
-> To pick up the changes in:
-> 	commit acea9943271b ("vdso: Address variable shadowing in macros")
+On 4/22/2025 1:38 AM, Jürgen Groß wrote:
+> On 22.04.25 10:21, Xin Li (Intel) wrote:
+>> To eliminate the indirect call overhead introduced by the pv_ops API,
+>> use the alternatives mechanism to read PMC:
 > 
-> Addressing this perf tools build warning:
+> Which indirect call overhead? The indirect call is patched via the
+> alternative mechanism to a direct one.
 > 
-> 	diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
-> 
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> ---
->   tools/include/vdso/unaligned.h | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
-> index eee3d2a4dbe4..ff0c06b6513e 100644
-> --- a/tools/include/vdso/unaligned.h
-> +++ b/tools/include/vdso/unaligned.h
-> @@ -2,14 +2,14 @@
->   #ifndef __VDSO_UNALIGNED_H
->   #define __VDSO_UNALIGNED_H
->   
-> -#define __get_unaligned_t(type, ptr) ({						\
-> -	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
-> -	__pptr->x;								\
-> +#define __get_unaligned_t(type, ptr) ({							\
-> +	const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr);	\
-> +	__get_pptr->x;									\
->   })
->   
-> -#define __put_unaligned_t(type, val, ptr) do {					\
-> -	struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);		\
-> -	__pptr->x = (val);							\
-> +#define __put_unaligned_t(type, val, ptr) do {						\
-> +	struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr);		\
-> +	__put_pptr->x = (val);								\
->   } while (0)
->   
->   #endif /* __VDSO_UNALIGNED_H */
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+See below.
 
+
+>>
+>>      1) When built with !CONFIG_XEN_PV, X86_FEATURE_XENPV becomes a
+>>         disabled feature, preventing the Xen PMC read code from being
+>>         built and ensuring the native code is executed unconditionally.
+> 
+> Without CONFIG_XEN_PV CONFIG_PARAVIRT_XXL is not selected, resulting in
+> native code anyway.
+
+Yes, this is kept in this patch, but in a little different way.
+
+> 
+>>
+>>      2) When built with CONFIG_XEN_PV:
+>>
+>>         2.1) If not running on the Xen hypervisor (!X86_FEATURE_XENPV),
+>>              the kernel runtime binary is patched to unconditionally
+>>              jump to the native PMC read code.
+>>
+>>         2.2) If running on the Xen hypervisor (X86_FEATURE_XENPV), the
+>>              kernel runtime binary is patched to unconditionally jump
+>>              to the Xen PMC read code.
+>>
+>> Consequently, remove the pv_ops PMC read API.
+> 
+> I don't see the value of this patch.
+> 
+> It adds more #ifdef and code lines without any real gain.
+> 
+> In case the x86 maintainers think it is still worth it, I won't object.
+
+I think we want to totally bypass pv_ops in the case 2.1).
+
+Do you mean the indirect call is patched to call native code *directly*
+for 2.1?  I don't know it, can you please elaborate?
+
+AFAIK, Xen PV has been the sole user of pv_ops for nearly 20 years. This
+raises significant doubts about whether pv_ops provides Linux with the
+value of being a well-abstracted "CPU" or "Platform".  And the x86
+maintainers have said that it's a maintenance nightmare.
+
+Thanks!
+     Xin
