@@ -1,79 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F01DA63D;
-	Tue, 22 Apr 2025 17:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C63E14C5B0;
+	Tue, 22 Apr 2025 17:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343734; cv=none; b=O1ujKiJnm/u8Xy+XNVvlGtwyvNQGPyQoLMVXVIrhs5vUIz0CdEj5boN8LaooytkH/yW5PUKsJhVg5wwccF2rhG0K27ehv3hYXODuFk4yrBwRR3tsFwx+nUO8wAHQ+oPn+nSOOdbrbxhGuwL2K1zd0Q8vMp+NhoAHV0AOK2x3nIQ=
+	t=1745344347; cv=none; b=D5espHuydmKC7fQBZE5H9ozk0uj7XOZwBNxBPakq8CzTN3bXp3PuNlCDC2LUwqVjVptonbhpI/SPjAR5bom7Nai0TPWD5ZlQQrXQ91THTRnDumsgBKtlwgtOgpxwIHvkhhAvWniMsXWVninacUlfS4xGZ0Y1BpHkonKnJyeTjtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343734; c=relaxed/simple;
-	bh=QaEXmCGSZOW0nPSYRQqYZLcN6XSKT+AUR8R/rRFsWb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TjOaooRCjnHo//LPBwnu/EeUsuQZPmDu1l4/o6C8p5C9yyupWUksLQ+Ouz07d845aoEpdN/SDt+zLyTN9mPBTSPWgtpuARSNjPW9GTdMu3I8I0XI8vZpHXF2SOAM+yVh8jEXFibdlqdhPQztZgXK9cwpofvXQx/WUQ6GyuCHkbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87AC0C4CEE9;
-	Tue, 22 Apr 2025 17:42:11 +0000 (UTC)
-Date: Tue, 22 Apr 2025 13:44:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
- <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, Andy
- Lutomirski <luto@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v4 09/39] x86/vdso: Enable sframe generation in VDSO
-Message-ID: <20250422134401.55178c36@gandalf.local.home>
-In-Reply-To: <20250124164332.gqgzimfix3vk4bsw@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
-	<c93fbd53f01c2c86f747af27040ac11f16dee032.1737511963.git.jpoimboe@kernel.org>
-	<cde90a82-6bdd-4a12-872a-7b39edf3eac8@linux.ibm.com>
-	<20250124164332.gqgzimfix3vk4bsw@jpoimboe>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745344347; c=relaxed/simple;
+	bh=lEwSbyb06nJTnLm31QF4tJhYRxmwtJ9K8AwGP9871XI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kvYluPfxUJcJDVzm7bSQzM8Jms4Jnni5sxn9ZvTHfGcYe+ueSazEVKqW3JiyOrOH2Ll/gSRetr6UchpuRZj96Y9MzPFq6zkC8bf2kZzkFiM25Y7BF2Z9OLiB02bGoZw/WzedeB5OIg568FZbzKyMdXwFYAohodHx/cm3NhIZqP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YjZW6aKh; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YjZW6aKh"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53MHpKcw2355011
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 22 Apr 2025 10:51:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53MHpKcw2355011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745344284;
+	bh=rFPFOxh07YQOPNQeOEZTdVhMGdZpRwExW7XWemhAAAc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YjZW6aKhRpgJytE5GhVir2qestF3DCS/CzYBraBrI1+eqedS8JuNCmk8lGP5yrGHU
+	 dKpFaNveGqqwaCiXgcxo+9E0aZZzenoVFKtrRsWfD3luxBjXmuGIkZwXQeOpiWbEd4
+	 dJnwZOCd0FF6QfjMgL7uT8gBwsvsLHXgdNXX/GJxaYqcDijsFlFCzEXz++8qUiHnA7
+	 atYwZogQ/qsUvEE3igWyPAnJs0nTs8Oxx060cbVOf1UhHUQyYdtlToEaACsVFrVteY
+	 H2tS1TUyjsJ6IH57pbBTkqnN9K8YArFEHolw9bITu9w/FVlIam8ZCPXGAxqspQwzYX
+	 P73L3Fc5KiJKA==
+Message-ID: <cb4e24a0-fdb7-46d2-9b0e-200f5e3e4c96@zytor.com>
+Date: Tue, 22 Apr 2025 10:51:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 00/34] MSR refactor with new MSR instructions
+ support
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
+        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
+        decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <aAevpauKYWwObsB7@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <aAevpauKYWwObsB7@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Fri, 24 Jan 2025 08:43:32 -0800
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-
-> On Fri, Jan 24, 2025 at 05:00:27PM +0100, Jens Remus wrote:
-> > On 22.01.2025 03:31, Josh Poimboeuf wrote:  
-> > > diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-> > > index b195b3c8677e..1c354f648505 100644
-> > > --- a/arch/x86/include/asm/dwarf2.h
-> > > +++ b/arch/x86/include/asm/dwarf2.h
-> > > @@ -12,8 +12,11 @@
-> > >   	 * For the vDSO, emit both runtime unwind information and debug
-> > >   	 * symbols for the .dbg file.
-> > >   	 */
-> > > -  
-> > 
-> > Nit: Deleted blank line you introduced in "[PATCH v4 05/39] x86/asm:
-> > Avoid emitting DWARF CFI for non-VDSO".  
+On 4/22/2025 8:03 AM, Sean Christopherson wrote:
+> On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
+>> base-commit: f30a0c0d2b08b355c01392538de8fc872387cb2b
 > 
-> Indeed.
+> This commit doesn't exist in Linus' tree or the tip tree, and the series doesn't
+> apply cleanly on any of the "obvious" choices.  Reviewing a 34 patches series
+> without being able to apply it is a wee bit difficult...
+> 
 
-Note, I'm getting ready to send out an update of Josh's patches.
+$ git show f30a0c0d2b08b355c01392538de8fc872387cb2b
+commit f30a0c0d2b08b355c01392538de8fc872387cb2b
+Merge: 49b517e68cf7 e396dd85172c
+Author: Ingo Molnar <mingo@kernel.org>
+Date:   Tue Apr 22 08:37:32 2025 +0200
 
-This particular nit isn't really an issue, as #ifdef's do sometimes replace
-blank lines.
+     Merge branch into tip/master: 'x86/sev'
 
-Just mentioning this so you don't think I'm ignoring it, when I post patches.
+      # New commits in x86/sev:
+         e396dd85172c ("x86/sev: Register tpm-svsm platform device")
+         93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
+         b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
+         770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command 
+functions")
 
--- Steve
+     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+
+You probably need to git pull from the tip tree :-)
