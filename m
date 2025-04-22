@@ -1,181 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A207C1D799D
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 10:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B25C25D206;
+	Tue, 22 Apr 2025 11:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317800; cv=none; b=d0VnLFUrfYCQUcw5RktZlRoRgHqY1w+6SLLLIV3OlNAFYuZKRx5ZAGLtyjGriN2jU8CjxMfLxu2JblI0E6Sa252FugfirBIz2xqGyWtkC/FaPMavSuCpcXfS/kxW+UoiBOP/fqpSrMrv8mWZnyY6vZWpVN274ZwZfN6WPsFP28E=
+	t=1745320033; cv=none; b=NnQ5urrgwAiSQSGHlMBrDENTh8K6vws2JQKGjlgTYWy5dBc9F2cZm333TOdMln2jC/9GExqKf/GiVB2PhhHa4u4jnI4HCi4jKWVReI1sgu+AH8bRI0HQKR8Ghzj2ddnzkxqFRdQjPJP7xW+BL9JbalYbSweAhMcZRGd+jph+KiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317800; c=relaxed/simple;
-	bh=JMSgKVULcC02OVaBReNIfOLNeuj8R4Zj4JGhc/RBKoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KqbgsCV+Tz8GVPBXolqxk1pQ35OnMiDLxWkpINnzlys0BMzR2R0Y/SY+p4Awnq1/uNO4wXxZIiAMYDIOXc1gybDj/N6/BgSW4eWNebM85Ytk+mpIHx7fOwa2izeqN9+tsXC5Gs1Ss5cjZLoNdZ+WFF3jEnT4jJlS0UOAuSFYe5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4045B152B;
-	Tue, 22 Apr 2025 03:29:53 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C6AA3F66E;
-	Tue, 22 Apr 2025 03:29:57 -0700 (PDT)
-Date: Tue, 22 Apr 2025 11:29:52 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Yicong Yang <yangyicong@huawei.com>, jonathan.cameron@huawei.com,
-	hejunhao3@huawei.com, linuxarm@huawei.com, wangyushan12@huawei.com,
-	caijingtao@huawei.com, xueshan2@huawei.com,
-	prime.zeng@hisilicon.com, yangyicong@hisilicon.com, acme@kernel.org,
-	namhyung@kernel.org, catalin.marinas@arm.com, will@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	jolsa@kernel.org, john.g.garry@oracle.com, leo.yan@linux.dev,
-	irogers@google.com, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf arm-spe: Add support for SPE Data Source packet on
- HiSilicon HIP12
-Message-ID: <20250422102952.GD28953@e132581.arm.com>
-References: <20250408122809.37884-1-yangyicong@huawei.com>
- <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
+	s=arc-20240116; t=1745320033; c=relaxed/simple;
+	bh=Z1lx0c1DKy5mQNqT6KE2lwDMPc9LmjPkKs+Fx0auDmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dzIJBgSANIrbiOzNBi9zor5QrmRNG2dbvFhHclwF8kDZpzvvbo9ozRwKVskU6+LjcUWzeueei+1BuCk3Zi9pxS8MiSOs4923RfM1aIrd7f/fZUZqS/HdJsvbv1zJAm9djN5+pOHCw0FnPh3QT3MTs/jZ++3GskYsfQbaZ3UZgEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OS/anh0v; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OS/anh0v"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M9v2w5029634;
+	Tue, 22 Apr 2025 11:07:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=ftmgQ0hy9b7VESd2ry5NzRU/B9QR7Vu65vxMfgkf2
+	OY=; b=OS/anh0v28e0iapPC/tKfGDzurfmFWzR1mMbMAakR3flo2gL84nx7+aXP
+	P1LjxG4tWyLn9UgQghMza5mi+TlN5gof2f7AZqNcg08aKHLQkvRZZf/i69Z+DRkq
+	vzDqCXDBf+WjN7peW2vYftBPdyV8dV5cNGubS4Mg8M5TVgPd+D2Nzl/SroV1JH/3
+	jD5wxjbezeQDeaR2/cPXqztnnC22huwvFuE6Lg8OZDzcBapIWhF9/z0Rs5KWnR6L
+	IPXQ9KFFNmnK8P9gHWZn56bfagwm6uUmulZpg0DpR4EMYwDG3VeWRIwJkkuJUNLg
+	xdrLV5jO/ScFUP/Z3XPo644N9yxHA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465x5vtt0a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 11:07:07 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53MB3frp025550;
+	Tue, 22 Apr 2025 11:07:06 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465x5vtt09-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 11:07:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53M8K6jW001570;
+	Tue, 22 Apr 2025 11:07:05 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rck2afm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 11:07:05 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53MB72FC48955752
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 11:07:02 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EFCD620124;
+	Tue, 22 Apr 2025 11:07:01 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 97B6F20123;
+	Tue, 22 Apr 2025 11:07:01 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 22 Apr 2025 11:07:01 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        ctshao@google.com, irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PING PATCH v3] perf test: Allow tolerance for leader sampling test
+Date: Tue, 22 Apr 2025 13:06:43 +0200
+Message-ID: <20250422110643.2900090-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HnSEsrNbpl65pvRThV3W7zNSA0vwaceM
+X-Proofpoint-ORIG-GUID: gfZKAm9cgJbFRHPMC8ixQsR2CaIDLRBL
+X-Authority-Analysis: v=2.4 cv=CuO/cm4D c=1 sm=1 tr=0 ts=6807785b cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=C54mTPxxYbvSgDT82gwA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_05,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 phishscore=0 mlxlogscore=927
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504220083
 
-On Tue, Apr 22, 2025 at 10:16:40AM +0100, James Clark wrote:
-> > 
-> > Add data source encoding for HiSilicon HIP12 and coresponding mapping
-> > to the perf's memory data source. This will help to synthesize the data
-> > and support upper layer tools like perf-mem and perf-c2c.
-> > 
-> > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> > ---
-> >   arch/arm64/include/asm/cputype.h              |   2 +
-> >   tools/arch/arm64/include/asm/cputype.h        |   2 +
+V3: Added check for missing samples as suggested by Chun-Tse.
+V2: Changed bc invocation to return 0 on success and 1 on error.
 
-Please split into two patches.  One is a kernel patch and another is a
-tool patch.
+There is a known issue that the leader sampling is inconsistent, since
+throttle only affect leader, not the slave. The detail is in [1]. To
+maintain test coverage, this patch sets a tolerance rate of 80% to
+accommodate the throttled samples and prevent test failures due to
+throttling.
 
-[...]
+[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
 
-> > --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> > +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-> > @@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
-> >   	ARM_SPE_AMPEREONE_L2D                           = 0x9,
-> >   };
-> > +enum arm_spe_hisi_hip_data_source {
-> > +	ARM_SPE_HISI_HIP_PEER_CPU		= 0,
-> > +	ARM_SPE_HISI_HIP_PEER_CPU_HITM		= 1,
-> > +	ARM_SPE_HISI_HIP_L3			= 2,
-> > +	ARM_SPE_HISI_HIP_L3_HITM		= 3,
-> > +	ARM_SPE_HISI_HIP_PEER_CLUSTER		= 4,
-> > +	ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM	= 5,
-> > +	ARM_SPE_HISI_HIP_REMOTE_SOCKET		= 6,
-> > +	ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM	= 7,
-> > +	ARM_SPE_HISI_HIP_LOCAL			= 8,
-> > +	ARM_SPE_HISI_HIP_REMOTE			= 9,
-> > +	ARM_SPE_HISI_HIP_NC_DEV			= 13,
-> > +	ARM_SPE_HISI_HIP_L2			= 16,
-> > +	ARM_SPE_HISI_HIP_L2_HITM		= 17,
-> > +	ARM_SPE_HISI_HIP_L1			= 18,
-> > +};
-> > +
-> >   struct arm_spe_record {
-> >   	enum arm_spe_sample_type type;
-> >   	int err;
-> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> > index 2a9775649cc2..eceae4219601 100644
-> > --- a/tools/perf/util/arm-spe.c
-> > +++ b/tools/perf/util/arm-spe.c
-> > @@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
-> >   	{},
-> >   };
-> > +static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
-> > +	MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
-> > +	{},
-> > +};
-> > +
-> >   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
-> >   {
-> >   	const struct arm_spe_record *record = &speq->decoder->record;
-> > @@ -718,9 +723,105 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
-> >   	arm_spe__synth_data_source_common(&common_record, data_src);
-> >   }
-> > +static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
-> > +						union perf_mem_data_src *data_src)
-> > +{
-> > +	/* Use common synthesis method to handle store operations */
-> > +	if (record->op & ARM_SPE_OP_ST) {
-> > +		arm_spe__synth_data_source_common(record, data_src);
-> > +		return;
-> > +	}
-> > +
-> > +	switch (record->source) {
-> > +	case ARM_SPE_HISI_HIP_PEER_CPU:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> > +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> > +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Suggested-by: Ian Rogers <irogers@google.com>
+Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-Seems it is conflict to set both 'PERF_MEM_SNOOP_NONE' and
-'PERF_MEM_SNOOPX_PEER'.
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index ba8d873d3ca7..0075ffe783ad 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -238,22 +238,43 @@ test_leader_sampling() {
+     err=1
+     return
+   fi
++  perf script -i "${perfdata}" | grep brstack > $script_output
++  # Check if the two instruction counts are equal in each record.
++  # However, the throttling code doesn't consider event grouping. During throttling, only the
++  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
++  # let's set the tolerance rate to 80%.
++  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+   index=0
+-  perf script -i "${perfdata}" > $script_output
++  valid_counts=0
++  invalid_counts=0
++  tolerance_rate=0.8
+   while IFS= read -r line
+   do
+-    # Check if the two instruction counts are equal in each record
+     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+     then
+-      echo "Leader sampling [Failed inconsistent cycles count]"
+-      err=1
+-      return
++      invalid_counts=$(($invalid_counts+1))
++    else
++      valid_counts=$(($valid_counts+1))
+     fi
+     index=$(($index+1))
+     prev_cycles=$cycles
+   done < $script_output
+-  echo "Basic leader sampling test [Success]"
++  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
++  if (( $(bc <<< "$total_counts <= 0") ))
++  then
++    echo "Leader sampling [No sample generated]"
++    err=1
++    return
++  fi
++  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
++  if [ $isok -eq 1 ]
++  then
++     echo "Leader sampling [Failed inconsistent cycles count]"
++     err=1
++  else
++    echo "Basic leader sampling test [Success]"
++  fi
+ }
+ 
+ test_topdown_leader_sampling() {
+-- 
+2.49.0
 
-Remove setting 'PERF_MEM_SNOOP_NONE' in this case?
-
-> > +		break;
-> > +	case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> > +		break;
-> > +	case ARM_SPE_HISI_HIP_L3:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> > +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> > +		break;
-> > +	case ARM_SPE_HISI_HIP_L3_HITM:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> > +		break;
-> > +	case ARM_SPE_HISI_HIP_PEER_CLUSTER:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-
-Seems to me, a CPU has L3 cache, would the cluster has a higher level's
-cache?
-
-> > +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-> > +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-
-Ditto for the confliction for the two flags 'SNOOP_NONE' and
-'SNOOPX_PEER'.
-
-> > +		break;
-> > +	case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> > +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-> > +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> > +		break;
-> > +	case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
-> > +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
-> > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
-> > +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> > +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
-> 
-> Hi Yicong,
-> 
-> Is the mem_snoop setting missing from this one?
-
-The field 'mem_snoopx' is an extension to the field 'mem_snoop'.
-
-If the field 'mem_snoopx' is set, it is no need to set 'mem_snoop'.
-
-Thanks,
-Leo
