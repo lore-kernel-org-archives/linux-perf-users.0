@@ -1,280 +1,218 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C667C204840
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 09:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED15C20C48C
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 10:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315884; cv=none; b=Ocb1sWRd1Qi36lhP09swoOQGtbgSBdoHzTK+b8Nn7T+uzGcs6vYLJhmtibVXLBkrj0Iy9VpqOPEjIXSzfdYb0icCpMGotu632DSs2439UEN29qw7bQ7K5eowOE+Fs73AC2Nd9v6L+tUAaAEO68bdqda2DK0sXB9zzctcFDWrVjE=
+	t=1745316706; cv=none; b=XYCv+V538kFbq73A2nn+G3Gy2Q5AtoZovUHy59KUNP9jYLV1MMFeP8MPsHkxqlewx+2KCkHLpMrx5nUT/M4o7U4Jh+gmklLRA/AMTuilvgePH3wJ/Zjw+VVJ49G8tFf0WSoS9hJgn7IPWkoHIkO/4UyRdMLVNN7fbMhlhO8J66A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315884; c=relaxed/simple;
-	bh=tO6B4uusGXWb6S1d5vB39Y8e5rVhKy79xlXkhC2hD/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CFCTz1Qx4TXlBrEG9bN8jo3FUvkpoj2aDslCwIjSLFnzpq8MzHCxH18fgwFiIEwZ+k74qLkUQ2wOgzyG3AzLPAn0I0Q45P8rdUZe9xkAcw58jDzOXCUWotHb/+hqSmbntRWHFjkC6PbdFiyYs6uxbu25eCyrBk1j4cpgj3n3jjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cHLsoNRU; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cHLsoNRU"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso2997128f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 02:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745315880; x=1745920680; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tO6B4uusGXWb6S1d5vB39Y8e5rVhKy79xlXkhC2hD/8=;
-        b=cHLsoNRUSrRFPsnxYTqdRoHuPRcHFk4bLYqf0exWuh8lozisJ35yit1T+TKlczWFHh
-         IUNN9jxzf11zubnS2xVRGAx0DSO77MjU9MnzfBc7UR41YiW6HHg5hX0M3yX5JeStHM9P
-         L4BaimxAt66DNfxkV62hl3NPBY7RVwOXu0QQ+BTHfCKFcDX4WpkzS1xc2DfaS1ldHoGb
-         QhHvThj9s1tgeehIosM4J8oWdrbBN8RmMgVYWMWAYzvN/QZUxt0qA1T5Oayq57yLKuQ/
-         1Df4QSJ7b7P57lCoheSjkW/dOQHbE8S/XSdYIoYqoXkEV0Z11hPNEibbNgZq1V4nUkjL
-         tmRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315880; x=1745920680;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tO6B4uusGXWb6S1d5vB39Y8e5rVhKy79xlXkhC2hD/8=;
-        b=dqGGKzYJP0ShuIKOfv+p1x5zZp+Z+AVsmt9dQBNEVjw2HzA8ekF3lZUl/tC/cz+fxG
-         HXJQ+MeG7RestoXkGm9PHlArRQmLbEiPZgO2IfoTwUo7sEmug6iyxcCn5t5ErSORD5O1
-         1fJLu/zqKu7b0+9KNaM96LE5DhC8j942qwuoSrwt0X6bc6ireXtE08PfsQ9FGlEctRqK
-         XfjlZWWp9rkCLiCTlnasAgX3AdKbDPWsL4G50o7c51uAdmwQfzTXddrkndGHL4cl2yQo
-         gLqWbGZmq4nRwLQdqvcoHHvM5pPmbx1Kby/3K1cWsxlqcJk3rD/eVkgP4nOcFePUrjEv
-         7ceQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9fI3V8L69TM02qAl6gpKT8wIPfkyIf7SpFWU5T6qxXrJi9hxMUOLUwb8e4H+puCmb+zR7nceihOeE1ZvtfF7y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwjbE3UKBpR5sT0MGOHrTE2yisG31SZGO7qIBuJI+/FxuZwVrr
-	u+vHdxLjEurHoJqblynE4rEMh/Qi+STzl6fULzIZKy/6RWxzFYk/rlcUbsxeYnYAyGFBM2I1IFx
-	UvpHudQ==
-X-Gm-Gg: ASbGncv5xtGO18jrZbo5ai38JFsimRLeDPw5McfWaHEbou2j+uOV7nQRQ4wAetz814J
-	OXtU30Pu9yDYoKLGF9w4L1txTj8ClcDPH744NEtp6XQMkN33Edqi2K5fES017MZseLKF/QtQAz4
-	YsymnMz2/WvHXsG3hgEXDHfHCArnaJ7bTom5L3lDldaI9lNG5pRUjvjdZWVoDpHkrxfkCNeV0T7
-	cxdSknmga8Ezh896S4KuTw/aqKTg0QIJ7sx6KeCs+hhuoUOIQ2mj7eYDAB/MolFHlOqeqi3C6Yi
-	RvZYrH6oH1k19fcduYaYcysGCzJEw23GMS0jqG64ZAwdkot1RRDPwCituEongw1vwaklr4ujKxg
-	xJapzMIBwzxEcZT157Yk16qb012tjk6+/2bmN96+I/mlFtb2KvnCy33eAo9r/MGNqrw==
-X-Google-Smtp-Source: AGHT+IGwOEvoLsyGlKbLK2I7EO3CV112zbLo9AuOo2VfG3qa8/zautum4TxS9/Et7Lbmpeas2d4LEQ==
-X-Received: by 2002:a5d:584e:0:b0:39c:2264:43ea with SMTP id ffacd0b85a97d-39efba2a69bmr12519153f8f.3.1745315879983;
-        Tue, 22 Apr 2025 02:57:59 -0700 (PDT)
-Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207afsm14838749f8f.12.2025.04.22.02.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 02:57:59 -0700 (PDT)
-Message-ID: <6046a6d0-bae3-41bb-9960-82c403f62476@suse.com>
-Date: Tue, 22 Apr 2025 11:57:57 +0200
+	s=arc-20240116; t=1745316706; c=relaxed/simple;
+	bh=Z2Zb0buQrmv30KS66jFdsktxt4Ba+0nou1pvPEAFBUI=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uJKYIIYXONq9n7xRoKHq2yjaP8ZKDfFSQ80JUL1AGpjVsvdaYnbNWvjHFndwqNE0NsmiEvgbudgcTNYo0GX1sjKmwg4iVmytInriXM8v8dIKLCpoJlffSnLWX72hDdt9l3Xr9mB2pfuW4/ZQlW+x99ssSjqnTj7bBP6r9s4Ye5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZhdKV1V5Xz1d09W;
+	Tue, 22 Apr 2025 18:10:38 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id C027A1400D4;
+	Tue, 22 Apr 2025 18:11:35 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 22 Apr 2025 18:11:34 +0800
+CC: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
+	<hejunhao3@huawei.com>, <linuxarm@huawei.com>, <wangyushan12@huawei.com>,
+	<caijingtao@huawei.com>, <xueshan2@huawei.com>, <prime.zeng@hisilicon.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<mark.rutland@arm.com>, <jolsa@kernel.org>, <john.g.garry@oracle.com>,
+	<leo.yan@linux.dev>, <irogers@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf arm-spe: Add support for SPE Data Source packet on
+ HiSilicon HIP12
+To: James Clark <james.clark@linaro.org>
+References: <20250408122809.37884-1-yangyicong@huawei.com>
+ <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <36d03a7e-ffd6-29b8-c34f-fd6780adffe9@huawei.com>
+Date: Tue, 22 Apr 2025 18:11:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
- <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------LRC1NKAgjBDvH3dBaZRyJS4G"
+In-Reply-To: <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------LRC1NKAgjBDvH3dBaZRyJS4G
-Content-Type: multipart/mixed; boundary="------------2vrbMGF8pPaZHLnA82JDRyos";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <6046a6d0-bae3-41bb-9960-82c403f62476@suse.com>
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
- <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-In-Reply-To: <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
+On 2025/4/22 17:16, James Clark wrote:
+> 
+> 
+> On 08/04/2025 1:28 pm, Yicong Yang wrote:
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> Add data source encoding for HiSilicon HIP12 and coresponding mapping
+>> to the perf's memory data source. This will help to synthesize the data
+>> and support upper layer tools like perf-mem and perf-c2c.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>   arch/arm64/include/asm/cputype.h              |   2 +
+>>   tools/arch/arm64/include/asm/cputype.h        |   2 +
+>>   .../util/arm-spe-decoder/arm-spe-decoder.h    |  17 +++
+>>   tools/perf/util/arm-spe.c                     | 101 ++++++++++++++++++
+>>   4 files changed, 122 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+>> index d1cc0571798b..36c5bbfbb6e9 100644
+>> --- a/arch/arm64/include/asm/cputype.h
+>> +++ b/arch/arm64/include/asm/cputype.h
+>> @@ -133,6 +133,7 @@
+>>     #define HISI_CPU_PART_TSV110        0xD01
+>>   #define HISI_CPU_PART_HIP09            0xD02
+>> +#define HISI_CPU_PART_HIP12        0xD06
+>>     #define APPLE_CPU_PART_M1_ICESTORM    0x022
+>>   #define APPLE_CPU_PART_M1_FIRESTORM    0x023
+>> @@ -220,6 +221,7 @@
+>>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
+>>   #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
+>>   #define MIDR_HISI_HIP09 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP09)
+>> +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
+>>   #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
+>>   #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
+>>   #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
+>> diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
+>> index 488f8e751349..9a5d85cfd1fb 100644
+>> --- a/tools/arch/arm64/include/asm/cputype.h
+>> +++ b/tools/arch/arm64/include/asm/cputype.h
+>> @@ -129,6 +129,7 @@
+>>   #define FUJITSU_CPU_PART_A64FX        0x001
+>>     #define HISI_CPU_PART_TSV110        0xD01
+>> +#define HISI_CPU_PART_HIP12        0xD06
+>>     #define APPLE_CPU_PART_M1_ICESTORM    0x022
+>>   #define APPLE_CPU_PART_M1_FIRESTORM    0x023
+>> @@ -202,6 +203,7 @@
+>>   #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
+>>   #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
+>>   #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
+>> +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
+>>   #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
+>>   #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
+>>   #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
+>> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> index 5d232188643b..0410abed5009 100644
+>> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>> @@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
+>>       ARM_SPE_AMPEREONE_L2D                           = 0x9,
+>>   };
+>>   +enum arm_spe_hisi_hip_data_source {
+>> +    ARM_SPE_HISI_HIP_PEER_CPU        = 0,
+>> +    ARM_SPE_HISI_HIP_PEER_CPU_HITM        = 1,
+>> +    ARM_SPE_HISI_HIP_L3            = 2,
+>> +    ARM_SPE_HISI_HIP_L3_HITM        = 3,
+>> +    ARM_SPE_HISI_HIP_PEER_CLUSTER        = 4,
+>> +    ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM    = 5,
+>> +    ARM_SPE_HISI_HIP_REMOTE_SOCKET        = 6,
+>> +    ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM    = 7,
+>> +    ARM_SPE_HISI_HIP_LOCAL            = 8,
+>> +    ARM_SPE_HISI_HIP_REMOTE            = 9,
+>> +    ARM_SPE_HISI_HIP_NC_DEV            = 13,
+>> +    ARM_SPE_HISI_HIP_L2            = 16,
+>> +    ARM_SPE_HISI_HIP_L2_HITM        = 17,
+>> +    ARM_SPE_HISI_HIP_L1            = 18,
+>> +};
+>> +
+>>   struct arm_spe_record {
+>>       enum arm_spe_sample_type type;
+>>       int err;
+>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>> index 2a9775649cc2..eceae4219601 100644
+>> --- a/tools/perf/util/arm-spe.c
+>> +++ b/tools/perf/util/arm-spe.c
+>> @@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
+>>       {},
+>>   };
+>>   +static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
+>> +    MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
+>> +    {},
+>> +};
+>> +
+>>   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+>>   {
+>>       const struct arm_spe_record *record = &speq->decoder->record;
+>> @@ -718,9 +723,105 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
+>>       arm_spe__synth_data_source_common(&common_record, data_src);
+>>   }
+>>   +static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
+>> +                        union perf_mem_data_src *data_src)
+>> +{
+>> +    /* Use common synthesis method to handle store operations */
+>> +    if (record->op & ARM_SPE_OP_ST) {
+>> +        arm_spe__synth_data_source_common(record, data_src);
+>> +        return;
+>> +    }
+>> +
+>> +    switch (record->source) {
+>> +    case ARM_SPE_HISI_HIP_PEER_CPU:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>> +        data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+>> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>> +        break;
+>> +    case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>> +        data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+>> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>> +        break;
+>> +    case ARM_SPE_HISI_HIP_L3:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>> +        data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+>> +        break;
+>> +    case ARM_SPE_HISI_HIP_L3_HITM:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>> +        data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+>> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>> +        break;
+>> +    case ARM_SPE_HISI_HIP_PEER_CLUSTER:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>> +        data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+>> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>> +        break;
+>> +    case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>> +        data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+>> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>> +        break;
+>> +    case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
+>> +        data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
+>> +        data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+>> +        data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+>> +        data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+> 
+> Hi Yicong,
+> 
+> Is the mem_snoop setting missing from this one?
+> 
 
---------------2vrbMGF8pPaZHLnA82JDRyos
-Content-Type: multipart/mixed; boundary="------------0gah4xKFvsHE00D3flXrnkz1"
+it should be PERF_MEM_SNOOP_NONE, will fix. Thanks for catching this.
 
---------------0gah4xKFvsHE00D3flXrnkz1
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> Other than that, LGTM.
+> 
 
-T24gMjIuMDQuMjUgMTE6MjAsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDE6NTkg
-QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+PiBPbiAyMi4wNC4yNSAxMDoyMiwgWGluIExp
-IChJbnRlbCkgd3JvdGU6DQo+Pj4gVG8gZWxpbWluYXRlIHRoZSBpbmRpcmVjdCBjYWxsIG92
-ZXJoZWFkIGludHJvZHVjZWQgYnkgdGhlIHB2X29wcyBBUEksDQo+Pj4gdXRpbGl6ZSB0aGUg
-YWx0ZXJuYXRpdmVzIG1lY2hhbmlzbSB0byByZWFkIE1TUjoNCj4+Pg0KPj4+IMKgwqDCoMKg
-IDEpIFdoZW4gYnVpbHQgd2l0aCAhQ09ORklHX1hFTl9QViwgWDg2X0ZFQVRVUkVfWEVOUFYg
-YmVjb21lcyBhDQo+Pj4gwqDCoMKgwqDCoMKgwqAgZGlzYWJsZWQgZmVhdHVyZSwgcHJldmVu
-dGluZyB0aGUgWGVuIGNvZGUgZnJvbSBiZWluZyBidWlsdA0KPj4+IMKgwqDCoMKgwqDCoMKg
-IGFuZCBlbnN1cmluZyB0aGUgbmF0aXZlIGNvZGUgaXMgZXhlY3V0ZWQgdW5jb25kaXRpb25h
-bGx5Lg0KPj4+DQo+Pj4gwqDCoMKgwqAgMikgV2hlbiBidWlsdCB3aXRoIENPTkZJR19YRU5f
-UFY6DQo+Pj4NCj4+PiDCoMKgwqDCoMKgwqDCoCAyLjEpIElmIG5vdCBydW5uaW5nIG9uIHRo
-ZSBYZW4gaHlwZXJ2aXNvciAoIVg4Nl9GRUFUVVJFX1hFTlBWKSwNCj4+PiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgdGhlIGtlcm5lbCBydW50aW1lIGJpbmFyeSBpcyBwYXRjaGVkIHRv
-IHVuY29uZGl0aW9uYWxseQ0KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBqdW1wIHRv
-IHRoZSBuYXRpdmUgTVNSIHJlYWQgY29kZS4NCj4+Pg0KPj4+IMKgwqDCoMKgwqDCoMKgIDIu
-MikgSWYgcnVubmluZyBvbiB0aGUgWGVuIGh5cGVydmlzb3IgKFg4Nl9GRUFUVVJFX1hFTlBW
-KSwgdGhlDQo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtlcm5lbCBydW50aW1lIGJp
-bmFyeSBpcyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxseSBqdW1wDQo+Pj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHRvIHRoZSBYZW4gTVNSIHJlYWQgY29kZS4NCj4+Pg0KPj4+IFRo
-ZSBhbHRlcm5hdGl2ZXMgbWVjaGFuaXNtIGlzIGFsc28gdXNlZCB0byBjaG9vc2UgdGhlIG5l
-dyBpbW1lZGlhdGUNCj4+PiBmb3JtIE1TUiByZWFkIGluc3RydWN0aW9uIHdoZW4gaXQncyBh
-dmFpbGFibGUuDQo+Pj4NCj4+PiBDb25zZXF1ZW50bHksIHJlbW92ZSB0aGUgcHZfb3BzIE1T
-UiByZWFkIEFQSXMgYW5kIHRoZSBYZW4gY2FsbGJhY2tzLg0KPj4NCj4+IFNhbWUgYXMgdGhl
-IGNvbW1lbnQgdG8gcGF0Y2ggNTogdGhlcmUgaXMgbm8gaW5kaXJlY3QgY2FsbCBvdmVyaGVh
-ZCBhZnRlcg0KPj4gdGhlIHN5c3RlbSBoYXMgY29tZSB1cC4NCj4+DQo+IA0KPiBQbGVhc2Ug
-Y2hlY2sgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC84N3kxaDgxaHQ0LmZmc0B0Z2x4
-Ly4NCj4gDQo+IEFuZCBpdCdzIHdhcyBhbHNvIG1lbnRpb25lZCBpbiB0aGUgcHJldmlvdXMg
-cGF0Y2g6DQo+IA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNDIyMDgy
-MjE2LjE5NTQzMTAtMjIteGluQHp5dG9yLmNvbS8NCj4gDQo+IFBsZWFzZSBsZXQgbWUga25v
-dyB3aGF0IEkgaGF2ZSBtaXNzZWQuDQoNClBsZWFzZSBzZWUgbXkgcmVzcG9uc2UgdG8gdGhl
-IHByZXZpb3VzIHBhdGNoLg0KDQoNCkp1ZXJnZW4NCg==
---------------0gah4xKFvsHE00D3flXrnkz1
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Thanks.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------0gah4xKFvsHE00D3flXrnkz1--
-
---------------2vrbMGF8pPaZHLnA82JDRyos--
-
---------------LRC1NKAgjBDvH3dBaZRyJS4G
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgHaCYFAwAAAAAACgkQsN6d1ii/Ey88
-2gf9G2X7seedpgkuVi3Kr8ramS2kAPeIhTmk5YzYNI/baO7kJni9Bz3A8CJrjqPBQos1/m+ZHUnL
-HHqgoLhq+2kdhHVUY+nPYIPdebmYLTHvd3gC+R7swUzJf55bQGENKLO6WtuH5sksovruObmjap7C
-sbHKsWYiAx51NvcRCMZPJAmT8N/+KqAAPfqutdEhiGIfuSkyH9cA34H3Dg/y2hLs4SMppXznwBe7
-TXOOblqw8TxiQKwP05dQo56KdIc6ap06wnELQWlmjSZUSIkSyD4RvmANZE0jAxiFKQr00dtaGUxz
-eaA239uDGL6mfOq/W/cBOw0vspmUeBL6fc4RZErgyw==
-=mYH8
------END PGP SIGNATURE-----
-
---------------LRC1NKAgjBDvH3dBaZRyJS4G--
