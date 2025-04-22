@@ -1,206 +1,208 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324551F0E4E
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 12:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3885227D77B
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 12:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324380; cv=none; b=AXC1ygALrYRK0wA4yke1SoIfI8rxZMi3D9EfE7IPIDgjzuXAmKwUxarjR9KCusUuSi2gB3WamUNgg7to23eb9r1CwSgnAgVkHaZxM7Yf5hPy4GZgJss1IdCBiHkTboyaCQ4CliF0lNQ8TNPVuhVBVMXcXG4jdKWaZA9bFNwgJfg=
+	t=1745325111; cv=none; b=N+gUgvgkyNdlPE5BOsTiTEuaIYN84ofLrvbIOP0KnoZ1CkxzHMjVBK/AhHXLVswrkAEmlUnJazphAcKU1C+BMTkxhyq4cBWHIFmdX1l2kBxm5jts0Cs4gKXWYY8Ezcu5gFko1cWY6Co5+f7kxItTmPFAQa7Tj6ntMv/YeT2om3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324380; c=relaxed/simple;
-	bh=8iXICBVi8dMKg299zTAgwkh+uD1AMbo+GvxOM3qnpCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sl0E1XuJfDqgQVTiu3jm5U0fkKrGyzamw4XiCYgB6H3TSfN91UwlYt+ni33zDFQCARY8kjg4eqw/FLjBgsgmL0HAOVEN7XgfJLag79fwbYlSTNTlHi8qu8BgiAII9vHYIpddJLbV86hIFZlTg3rrul1gUsIml8+pJk1teDE9Gfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OkWBtELP; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OkWBtELP"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MAbWCi020829;
-	Tue, 22 Apr 2025 12:19:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ZHG0CM
-	3sFz84C9w6Q4lGzBsUeyUc0WHy7OwpnmoMrwg=; b=OkWBtELP1yY9h3A50U5JUi
-	RkdIYARySetArx2aKCqyJtztAf4s1Jbng4z0VkhDTKT9fEMpfxOdEGPRvuubK1N1
-	gyhftpxEabntQApNN1qVYdz5++QsJEp8t/ne/Wh1G833jFWx/vaON5xMyHudl9XM
-	sIXbc+D9gqTz0/cTKYyJrfd7PjL5fDtShFIZRWfR+l3nUEPjw7KIQd9STk/PMt0V
-	aV4X2fJOXUUfkG1CHwFywQpyJpQ+97K10uwxtMKyeWi/EUP2TLKG9ODnObZZxUV6
-	AJlWvnOMvj0dJTJ9gHwzGEgVuW59lI89QGqgDOrIeJ8tKTTf5P8CLS0j0TYwCNFQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4669h1geky-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 12:19:37 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53MBIfX7003021;
-	Tue, 22 Apr 2025 12:19:36 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 464q5njry0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 12:19:36 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53MCJVSR46465496
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 12:19:31 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E7B1020043;
-	Tue, 22 Apr 2025 12:19:30 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 20D6F20040;
-	Tue, 22 Apr 2025 12:19:30 +0000 (GMT)
-Received: from [9.109.217.253] (unknown [9.109.217.253])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 22 Apr 2025 12:19:29 +0000 (GMT)
-Message-ID: <a687c72a-7874-4fb4-8fa2-4f428d3a0d65@linux.ibm.com>
-Date: Tue, 22 Apr 2025 17:49:29 +0530
+	s=arc-20240116; t=1745325111; c=relaxed/simple;
+	bh=q6Td+l+W/9+Bn7dgxpWUU2aZ0vlD19qRoos3jiiX9EY=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lpACMlzkcz9wgh73UTESi/mPGkgWTKvUC8uUMQkUW4GNPkB1Sl0RSZF/qOnynjKxtCjqrl6ZO9aEF46QVyadId3cv18r8mvwVVKddiEQPSjqFtsCfQgykcQwxCRGJzxatfeadYlAgt7x6wgRcQwgkGLmPaiF0sUph7alWTxgMmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZhhMX1t5MzvWrn;
+	Tue, 22 Apr 2025 20:27:36 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 072551400D4;
+	Tue, 22 Apr 2025 20:31:45 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 22 Apr 2025 20:31:43 +0800
+CC: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
+	<hejunhao3@huawei.com>, <linuxarm@huawei.com>, <wangyushan12@huawei.com>,
+	<caijingtao@huawei.com>, <xueshan2@huawei.com>, <prime.zeng@hisilicon.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<mark.rutland@arm.com>, <jolsa@kernel.org>, <john.g.garry@oracle.com>,
+	<leo.yan@linux.dev>, <irogers@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf arm-spe: Add support for SPE Data Source packet on
+ HiSilicon HIP12
+To: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>
+References: <20250408122809.37884-1-yangyicong@huawei.com>
+ <89741897-6c8f-4b75-8ec3-675111ea60a1@linaro.org>
+ <20250422102952.GD28953@e132581.arm.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <ccb8ce65-8241-0670-25c8-f8245fbc5e22@huawei.com>
+Date: Tue, 22 Apr 2025 20:31:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf script: perf script tests fails with segfault
-Content-Language: en-GB
-To: Aditya Bodkhe <adityab1@linux.ibm.com>, linux-perf-users@vger.kernel.org
-Cc: Aditya Bodkhe <aditya.b1@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20250421092559.75109-1-adityab1@linux.ibm.com>
-From: Disha Goel <disgoel@linux.ibm.com>
-In-Reply-To: <20250421092559.75109-1-adityab1@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20250422102952.GD28953@e132581.arm.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=XvP6OUF9 c=1 sm=1 tr=0 ts=68078959 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=Y1vEN1OhJcvSrPPfg14A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 8EucEVeP1yLngShGmyoWVkh1oUahyEFB
-X-Proofpoint-ORIG-GUID: 8EucEVeP1yLngShGmyoWVkh1oUahyEFB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_06,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1011 suspectscore=0 spamscore=0
- malwarescore=0 impostorscore=0 adultscore=0 mlxlogscore=999 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220091
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-On 21/04/25 2:55 pm, Aditya Bodkhe wrote:
-> perf script: pert script tests fails with segmentation fault as below:
+On 2025/4/22 18:29, Leo Yan wrote:
+> On Tue, Apr 22, 2025 at 10:16:40AM +0100, James Clark wrote:
+>>>
+>>> Add data source encoding for HiSilicon HIP12 and coresponding mapping
+>>> to the perf's memory data source. This will help to synthesize the data
+>>> and support upper layer tools like perf-mem and perf-c2c.
+>>>
+>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>>> ---
+>>>   arch/arm64/include/asm/cputype.h              |   2 +
+>>>   tools/arch/arm64/include/asm/cputype.h        |   2 +
 > 
->   92: perf script tests:
-> --- start ---
-> test child forked, pid 103769
-> DB test
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
-> /usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
-> --- Cleaning up ---
-> ---- end(-1) ----
-> 	92: perf script tests                                               : FAILED!
-> 
-> Backtrace pointed to :
-> 	#0  0x0000000010247dd0 in maps.machine ()
-> 	#1  0x00000000101d178c in db_export.sample ()
-> 	#2  0x00000000103412c8 in python_process_event ()
-> 	#3  0x000000001004eb28 in process_sample_event ()
-> 	#4  0x000000001024fcd0 in machines.deliver_event ()
-> 	#5  0x000000001025005c in perf_session.deliver_event ()
-> 	#6  0x00000000102568b0 in __ordered_events__flush.part.0 ()
-> 	#7  0x0000000010251618 in perf_session.process_events ()
-> 	#8  0x0000000010053620 in cmd_script ()
-> 	#9  0x00000000100b5a28 in run_builtin ()
-> 	#10 0x00000000100b5f94 in handle_internal_command ()
-> 	#11 0x0000000010011114 in main ()
-> 
-> Further investigation reveals that this occurs in the `perf script tests`,
-> because it uses `db_test.py` script. This script sets `perf_db_export_mode = True`.
-> 
-> With `perf_db_export_mode` enabled, if a sample originates from a hypervisor,
-> perf doesn't set maps for "[H]" sample in the code. Consequently, `al->maps` remains NULL
-> when `maps__machine(al->maps)` is called from `db_export__sample`.
-> 
-> As al->maps can be NULL in case of Hypervisor samples , use thread->maps
-> because even for Hypervisor sample, machine should exist.
-> If we don't have machine for some reason, return -1 to avoid segmentation fault.
-> 
-> Reported-by: Disha Goel <disgoel@linux.ibm.com>
-> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Please split into two patches.  One is a kernel patch and another is a
+> tool patch.
 
-I have tested the patch on PowerPC, it fixes the reported issue and test 
-passes.
+will do in next version.
 
-Tested-by: Disha Goel <disgoel@linux.ibm.com>
+> 
+> [...]
+> 
+>>> --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>>> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>>> @@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
+>>>   	ARM_SPE_AMPEREONE_L2D                           = 0x9,
+>>>   };
+>>> +enum arm_spe_hisi_hip_data_source {
+>>> +	ARM_SPE_HISI_HIP_PEER_CPU		= 0,
+>>> +	ARM_SPE_HISI_HIP_PEER_CPU_HITM		= 1,
+>>> +	ARM_SPE_HISI_HIP_L3			= 2,
+>>> +	ARM_SPE_HISI_HIP_L3_HITM		= 3,
+>>> +	ARM_SPE_HISI_HIP_PEER_CLUSTER		= 4,
+>>> +	ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM	= 5,
+>>> +	ARM_SPE_HISI_HIP_REMOTE_SOCKET		= 6,
+>>> +	ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM	= 7,
+>>> +	ARM_SPE_HISI_HIP_LOCAL			= 8,
+>>> +	ARM_SPE_HISI_HIP_REMOTE			= 9,
+>>> +	ARM_SPE_HISI_HIP_NC_DEV			= 13,
+>>> +	ARM_SPE_HISI_HIP_L2			= 16,
+>>> +	ARM_SPE_HISI_HIP_L2_HITM		= 17,
+>>> +	ARM_SPE_HISI_HIP_L1			= 18,
+>>> +};
+>>> +
+>>>   struct arm_spe_record {
+>>>   	enum arm_spe_sample_type type;
+>>>   	int err;
+>>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>>> index 2a9775649cc2..eceae4219601 100644
+>>> --- a/tools/perf/util/arm-spe.c
+>>> +++ b/tools/perf/util/arm-spe.c
+>>> @@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
+>>>   	{},
+>>>   };
+>>> +static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
+>>> +	MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
+>>> +	{},
+>>> +};
+>>> +
+>>>   static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+>>>   {
+>>>   	const struct arm_spe_record *record = &speq->decoder->record;
+>>> @@ -718,9 +723,105 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
+>>>   	arm_spe__synth_data_source_common(&common_record, data_src);
+>>>   }
+>>> +static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
+>>> +						union perf_mem_data_src *data_src)
+>>> +{
+>>> +	/* Use common synthesis method to handle store operations */
+>>> +	if (record->op & ARM_SPE_OP_ST) {
+>>> +		arm_spe__synth_data_source_common(record, data_src);
+>>> +		return;
+>>> +	}
+>>> +
+>>> +	switch (record->source) {
+>>> +	case ARM_SPE_HISI_HIP_PEER_CPU:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>>> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+>>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+> 
+> Seems it is conflict to set both 'PERF_MEM_SNOOP_NONE' and
+> 'PERF_MEM_SNOOPX_PEER'.
+> 
+> Remove setting 'PERF_MEM_SNOOP_NONE' in this case?
+> 
+>>> +		break;
+>>> +	case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>>> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+>>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>>> +		break;
+>>> +	case ARM_SPE_HISI_HIP_L3:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>>> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+>>> +		break;
+>>> +	case ARM_SPE_HISI_HIP_L3_HITM:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>>> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+>>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>>> +		break;
+>>> +	case ARM_SPE_HISI_HIP_PEER_CLUSTER:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+> 
+> Seems to me, a CPU has L3 cache, would the cluster has a higher level's
+> cache?
 
-> ---
-> Changelog:
-> v1 -> v2:
-> The below patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to handle the segmentation fault ,
-> as well as initialisation of al.thread
+In my case, the cluster CPUs share the L3 cache and there's several clusters.
+L3's the highest level cache in the system.
+
 > 
->   tools/perf/util/db-export.c                           | 11 ++++++++---
->   .../perf/util/scripting-engines/trace-event-python.c  |  2 +-
->   2 files changed, 9 insertions(+), 4 deletions(-)
+>>> +		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
+>>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
 > 
-> diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-> index 50f916374d87..8f52e8cefcf3 100644
-> --- a/tools/perf/util/db-export.c
-> +++ b/tools/perf/util/db-export.c
-> @@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
->   	if (al->map) {
->   		struct dso *dso = map__dso(al->map);
+> Ditto for the confliction for the two flags 'SNOOP_NONE' and
+> 'SNOOPX_PEER'.
 > 
-> -		err = db_export__dso(dbe, dso, maps__machine(al->maps));
-> +		err = db_export__dso(dbe, dso, maps__machine(thread__maps(al->thread)));
->   		if (err)
->   			return err;
->   		*dso_db_id = dso__db_id(dso);
-> @@ -256,6 +256,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
->   		al.map = map__get(node->ms.map);
->   		al.maps = maps__get(thread__maps(thread));
->   		al.addr = node->ip;
-> +		al.thread = thread__get(thread);
+>>> +		break;
+>>> +	case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+>>> +		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
+>>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>>> +		break;
+>>> +	case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
+>>> +		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
+>>> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
+>>> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+>>> +		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
+>>
+>> Hi Yicong,
+>>
+>> Is the mem_snoop setting missing from this one?
 > 
->   		if (al.map && !al.sym)
->   			al.sym = dso__find_symbol(map__dso(al.map), al.addr);
-> @@ -358,14 +359,18 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
->   	};
->   	struct thread *main_thread;
->   	struct comm *comm = NULL;
-> -	struct machine *machine;
-> +	struct machine *machine = NULL;
->   	int err;
+> The field 'mem_snoopx' is an extension to the field 'mem_snoop'.
 > 
-> +	if (thread__maps(thread))
-> +		machine = maps__machine(thread__maps(thread));
-> +	if (!machine)
-> +		return -1;
-> +
->   	err = db_export__evsel(dbe, evsel);
->   	if (err)
->   		return err;
-> 
-> -	machine = maps__machine(al->maps);
->   	err = db_export__machine(dbe, machine);
->   	if (err)
->   		return err;
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 520729e78965..00f2c6c5114d 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -1306,7 +1306,7 @@ static void python_export_sample_table(struct db_export *dbe,
-> 
->   	tuple_set_d64(t, 0, es->db_id);
->   	tuple_set_d64(t, 1, es->evsel->db_id);
-> -	tuple_set_d64(t, 2, maps__machine(es->al->maps)->db_id);
-> +	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
->   	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
->   	tuple_set_d64(t, 4, es->comm_db_id);
->   	tuple_set_d64(t, 5, es->dso_db_id);
-> --
-> 2.43.0
-> 
+> If the field 'mem_snoopx' is set, it is no need to set 'mem_snoop'.
 > 
 
+they should not be mutal exclusive. mem_snoopx provides the information where
+the cacheline comes from while mem_snoop provides the status of the cacheline.
+if hardware supports we can gather both information from the data source, like
+above for ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM.
+
+for other cases if there's mem_snoopx information I think mem_snoop can be dropped,
+this won't make differeces. Checked c2c_decode_stats(), only PERF_MEM_SNOOP_HIT and
+PERF_MEM_SNOOP_HITM is useful when summarizing c2c statistics.
+
+Thanks.
