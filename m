@@ -1,100 +1,121 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19491A08A6
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 13:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D102A1E4A4;
+	Wed, 23 Apr 2025 13:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415435; cv=none; b=EVzTteY5exM4pkUBElWx28fUrqgqMr2Wz26Mb5SqCbYD+t/HbsAtq4LFcx1aO/PucGtXGNASx3fgbp3LRrh8wgYLkGUEpGd2qF/2qHcavMSEM1zQdm3RAlP2DTVKnCmsTmZ/g5daIA3wuKPWbG6UjCQ1xGwlVJ9wtb7tZTWzURo=
+	t=1745416293; cv=none; b=fGkMqiCYkwPAsAY9VhBCYd5Uk0NxJioSiUHjNYKsCNtpginZFe5hr3dOJgwG7r3oqMP6Ozi4zH7wNQQUo5QUtZDPcWYf7jqKf9tMtXqwOvU1OUmcdcLB8QvMDjyHY9go3nNqSkm7NUjPF7mYeTMt9IDtYdKcc3e4BLnX/tlhRo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415435; c=relaxed/simple;
-	bh=dXr0vdvJSE4CQmBa2fTuILJV/L6G5HpSxSHQ49PKVqY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PXpLq4EDHWqhEvcevBKFVRuTvClHoAcav68EWGHLWbcMb4f0t/qc6qXBl748FD4Lhuu08ZyHwmNPengRBJQPyq9I6yMjSOnZxl5JOBSZI7SHCRszKVIwY/ofAfLphETfZgxcg2FwdxkAzSESYE+KZhQjCOaKQJeauy4cwALIIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nT0JZxbk; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745416293; c=relaxed/simple;
+	bh=V7UiGGeU3UPmto3LMdpllZkC0y8zXQCR/LJyE9FYYwA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N+P03Va2C56AqNDe+hJap60Gg8URawAwBYAgORt6AQydrjSOgIMMqQbWQrMU2jn3Onp1UMzAr2AYwiqjm2oBBT0NzQqRlswRmsjHL5b3yVwbG/lh7dWGtJFsW7kfl/2YCRISTjnzrTiUMtkYEOCEnB9ZJEMtwet5jF7R4390xnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZ1Miqpt; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nT0JZxbk"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30828f9af10so13580988a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 06:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745415433; x=1746020233; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
-        b=nT0JZxbkLOWuAaq4nDpqtJy0UU3fVSwyW/pnNNBGYtoYR/+veEUbsw1SW7uJkXUY9+
-         O8RFZ5mI3iZ/bhFeyS6mpQMMAXezkdZIzt5lXK/oKDFsuDimPPcn2I6rOaU8XnWilwy4
-         Qflh7jQ/97QLXGCjRrnvUz0MJpppmkyoylDcvcx1GHi73/C77pzsSBWavAJzDCuOl8Vu
-         Bx69HB/Nd+cusCL5TPzdZ2tLrS0aQKRNqjrAQAhL7fNktV8FmsgyGiJ37d7CE0puVmjy
-         sSKyhx/48E0CSccNslHjG8NDhKl65lvTaigTuvvrWJaiU24iVs3SZBs7noSsvJEIf+mE
-         70Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745415433; x=1746020233;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
-        b=thRjCPir75EqRILcgHJVNt8OeQMUZHUGDqd+D4W+mVnN3fJpWAGfoWP/9O385YA7bb
-         K1WmqBktFU0dZG0MFbvLaJK2tikzYxgdyibcUkDuyVOaN0NC/O/3+x7HsUg5l3nBe6b0
-         xLpmJUG0hIWa48QG08RWYP1WrUTOJtbDnWEVNL1lkpJCUAZCV7biicvEXvwlFIX03XxX
-         9UmioW+/t+UNLJlUmkT8IpYUuNt8qyyBHflNFgAf4QMzPXt46gUvmJgxdlppJcPNAm5V
-         olxmoRmOsoLKZB612lPTG9Q2yEQ1e0mFE0U0dE60YAXSkDkXXMePwYxQ6uJdMErCUb8C
-         vaNw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+I04oXSAmlGJ6ljRxExK5VkumKk8kVu1r15staVsqxIQS6hE2CSEa+lNOBdqeGweCDFvMu5wVnJD2tAI5ixLa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1pCD3/R/Pbtpf3kF0XXEos7wJ562eSKKl7ToyRfgFeR3CKuw8
-	Xu6mxNAEgJ0aajyx8GEUPoYME6fbUsIKhfeCvv1oohjLDGg3gAh3/3oLKamB9YrQy5iktejvuOT
-	j4g==
-X-Google-Smtp-Source: AGHT+IEWS42km52dkYFlmcKZWmN1wttg5SPG3JN+o4kIB9LzXEDLrbHh1gdrPp7a64YZSw75FwPTF5N3xvo=
-X-Received: from pjur12.prod.google.com ([2002:a17:90a:d40c:b0:308:867e:1ced])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2650:b0:2ee:9b2c:3253
- with SMTP id 98e67ed59e1d1-3087bbc9333mr25668631a91.30.1745415432973; Wed, 23
- Apr 2025 06:37:12 -0700 (PDT)
-Date: Wed, 23 Apr 2025 06:37:11 -0700
-In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZ1Miqpt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745416292; x=1776952292;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=V7UiGGeU3UPmto3LMdpllZkC0y8zXQCR/LJyE9FYYwA=;
+  b=nZ1Miqpt78j7eoPvQrkDf+exIyVmOfFPl86zshYq7112jonZlsTQQo5A
+   nhOhuuLkpokJg3qYIsmCdrEXv02L/E5C4NAHpAMqxMZMCMk4vTs5tDN6c
+   UovE61OmTZ1vxoBs3TIaRONZUtfgH+taJQ7UjwFIb4JPvaFYr3EkoznQZ
+   cAKeJBI7iQYk0fbQXlt30n8rFZU48X9bR8B6wPWCM4mKn3u5VDb0vzTnW
+   9UExSK5OStjpTyX9naBAhngy4d0e+VXytJ2yQYXHb2Mp1hPRpJfJDqEhE
+   ZMvXdJ8z7BP3iFhAe34BlDQSvdF8rMoOZ9F5dyCIH/Lb7NmIGHFy6/0vi
+   g==;
+X-CSE-ConnectionGUID: ++3BgU9qRPKLzSQ9476N9g==
+X-CSE-MsgGUID: /EUXqn/5QEuhaTMdTtl7OQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57999483"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="57999483"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:51:31 -0700
+X-CSE-ConnectionGUID: VCaw58mPS+iNbJaE7gQT8w==
+X-CSE-MsgGUID: 6lYfMo74RqC3Cbso7kb5Xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132852538"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:51:31 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id F30FD20B5736;
+	Wed, 23 Apr 2025 06:51:16 -0700 (PDT)
+Message-ID: <7bafc0c9-0f72-44ba-a242-51918e32808a@linux.intel.com>
+Date: Wed, 23 Apr 2025 09:51:11 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-11-xin@zytor.com>
- <aAexLqjhKncFyw2V@google.com> <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
-Message-ID: <aAjtBxzvRgNt4Uzr@google.com>
-Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
- native_rdmsrq() uses
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
-	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
-	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
-	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86: Fix open counting event error
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025, Xin Li wrote:
-> On 4/22/2025 8:09 AM, Sean Christopherson wrote:
-> > I strongly prefer that we find a way to not require such verbose APIs, especially
-> > if KVM ends up using native variants throughout.  Xen PV is supposed to be the
-> > odd one out, yet native code is what suffers.  Blech.
+
+
+On 2025-04-23 2:47 a.m., Luo Gengkun wrote:
+> Perf doesn't work at perf stat for hardware events:
 > 
-> Will try to figure out how to name the APIs.
+>  $perf stat -- sleep 1
+>  Performance counter stats for 'sleep 1':
+>              16.44 msec task-clock                       #    0.016 CPUs utilized
+>                  2      context-switches                 #  121.691 /sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 54      page-faults                      #    3.286 K/sec
+>    <not supported>	cycles
+>    <not supported>	instructions
+>    <not supported>	branches
+>    <not supported>	branch-misses
 > 
-> One reason I chose verbose names is that short names are in use and
-> renaming needs to touch a lot of files (and not fun at all).
+> The reason is that the check in x86_pmu_hw_config for sampling event is
+> unexpectedly applied to the counting event.
+> 
+> Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 
-Yeah, I've looked at modifying rdmsrl() to "return" a value more than once, and
-ran away screaming every time.
+Yes, it should only be applied for the sampling event. The
+event->attr.freq is always 0 in the counting mode.
 
-But since you're already doing a pile of renames, IMO this is the perfect time to
-do an aggressive cleanup.
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan> ---
+>  arch/x86/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 6866cc5acb0b..3a4f031d2f44 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
+>  	if (event->attr.type == event->pmu->type)
+>  		event->hw.config |= x86_pmu_get_event_config(event);
+>  
+> -	if (!event->attr.freq && x86_pmu.limit_period) {
+> +	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
+>  		s64 left = event->attr.sample_period;
+>  		x86_pmu.limit_period(event, &left);
+>  		if (left > event->attr.sample_period)
+
