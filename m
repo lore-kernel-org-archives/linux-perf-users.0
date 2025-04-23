@@ -1,264 +1,277 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C21427CB12
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 14:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B778F28935B
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 15:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420236; cv=none; b=K0B+CEmCqDCFYswuf0dd533ilAtEb62uNRQ4E0MY2br7bFYMoUG2RIH4bpio/xy44iAkF4IeNLZvyE+3n9ee8B9IBH9dvxkz23Wp+npylbyHSCc+4Ucq5LVrsJzc/q0VdnYbDERdcXYAqW/oOqL2MOBqSjZyzC4wGL+YHxQ4LkI=
+	t=1745420615; cv=none; b=N3+uBjyUN00QnYVjxEm1KAo06X2hsnUXIsB+gm3P2C2pm6rCr+Ol4us4SIVxsr730fa9qAk0Y0hZVbmIf9YL3ZLb1TNsMOrrhCPSfc+Qy3Be1TSgmmGD5AUtil8XdpRRmj8vWCp7+229xT/CTeL10iZt17f7dy8568KuPKj5Tjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420236; c=relaxed/simple;
-	bh=L2+fFsOOIiiVFpcGVxzqurqwQu7AtginQsSOZ6MVl7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m3q+EJTcm8/Fc/RMmeBhp3MSYYkErySmV+ONlMMocX02kbbMdySh9ijcfprTKiTJIBlLGZXAZWQuhsPgb304ES+ZUIzila1Hh8or1G9GHCdx/F5GO2dKPwuliE5781CeZK4vUMqaqeXozuRpNTZGx/NHBqjnz6TC1bKURbT5ff4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KlqLblJD; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745420615; c=relaxed/simple;
+	bh=12qzKXY0BzwvID0wgiAUqMdZl3WivHrcHHDo50Rut44=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I8DD6dooNPJAwNAE4qVRerUSKFAufPZ5Rfu8yvDl3IJ+0+9xUsmnF69iEQ6EOTFVXpSEXuRSUqTWEVqPwLhHiGbPj4gCvcYJ0/SBECpe4nXmio52dp10zQyZHM1l9SgGrsBxJFjUn4Jqm2+FZ/VuGuKaS9IsJPYPaz4YUxRteko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aRvoDM/R; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KlqLblJD"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so4337663f8f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 07:57:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRvoDM/R"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d5bc35ed3aso248535ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 08:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745420232; x=1746025032; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zUDCtlDdD9FnwLrhTU1YzOhKTBBommPMrgobNX2rsFQ=;
-        b=KlqLblJD/GB/8kX8O4kM4PJ5mTKFCZtbfhAnvz2OImjG+PfplT1w6/rko7CrJYuDB4
-         Sg0zfPKbGgzOC3L/kyU8hr8eF9wwfboFMgS/4MVjfUejSVCOp4b1C0TUrngcMrvOFNdl
-         H7piY/AfpGe+RPX7cgefEgXJFH9iepGblfIOAWuqFOAlTcuyL7bkCDpIM16Ugo1kYpan
-         FTgH27+RWPjjGVOXi5ZTrjL+GMHi+mWCkZ+etq/UiRFp/T5B6eoL77zwRgWg6uMOeryc
-         yDClHefgivfpXM1LkOPMhiok6iFHPDUs9foKKGUvby67tN76D5yBW16gLjgxb2pvD4MB
-         HPPQ==
+        d=google.com; s=20230601; t=1745420613; x=1746025413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MeALuF8jKVLJRlKRLq/6pLCkpUuGmGPwZiC4ZXVfYlg=;
+        b=aRvoDM/RNINBn3VK96HXnNtXxDRtiDDRdya/2pDvkjSoowT96C5NgLh3GC60RuMBJa
+         eWkKA2gHmVXDv7LhhkBmcM3w3jE49BTDLtSOtoBYHK/SXfTNX5OMG2PBspKYKrpifNyp
+         i67UuMd6ull83RONO+eUqueGWs6dJlWdZ2DiVw9Gi0n/BpS1jjBlF/T5KwPUhYHc4pwe
+         EEzbNNvs5pniASJ71Qd6S851prvPbPllqcRbUhjC6Y8RwvLthrpjFFWHQ5AVHi44l6UU
+         uqaXH8Tpq7TqNa1ko1A1NF4c6DtkPOL+OMyqk8mkePrODaZtU/MKJiJM1N+MSWSgt1rp
+         YvjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745420232; x=1746025032;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zUDCtlDdD9FnwLrhTU1YzOhKTBBommPMrgobNX2rsFQ=;
-        b=smsSDr+OMNwZ0DeCaUrb6YfLSibQcKjdjLJowFF4z8/PBL2Z9qFPtnzlceZ10PnuiT
-         s1PZfDTZb+6O9Va7KyznZDWINEys3EQDLaFCsWwvexEFvH4MLCojJHyIqnQSDXOni2xW
-         G/I5AxVbNvXvbgfk7y5WLBpGQsgtcUO1Pfhv+Erl5LdD1LUXo1Iy7YKTuB5geSSTdsr4
-         pSCQTYMfoh/KlYZN+Uo68n+Vz6lVWWqSFPX/eWS3T/qeZz9QWoe0OM8p+x0YfGX8P40o
-         0lhQw84/QViDadu8hiHhFkanzk0hz3LzywKWiVFoOm+xUKQjYOUwVcGQEMqpbwjwuHlk
-         l6+g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6qgnxe1EXTNIgtS9/A0kKa3CAD0qqrw3kHlNJkQrkKDDiksWciFwdG2UCcUHfqeu/QtqOjEZ/wfR26Gw4SDkB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyWXP6yEQ1MjwuGyTzQDPDS+wpwj3K4GEfqWdweX8YCg9rEtEf
-	4qvYCspPwXUWldq5bTWP3DyRa6qinv4r6po6TgYdN4a925KmE7ls3nYhpzzsXBE=
-X-Gm-Gg: ASbGncuk+mzg5d4n6dElGbj2x0+KrvVUFdF8/e+ZapKm8+XuHNz8E5B7zML6YZDzcjY
-	kEfcReaanWCiOalWD8Ldr2S44rfXqzji5SfQAQUS44yJ6WktZ8r4XGTuZPfrV8fKMgkIatW1E7C
-	D0czfjKIiO4etmjXoNOGeQ70PLmi1TgSy9/GVlV6GowpANcc2WsNCQVdl459WS63cWEVER7QP0F
-	jmHUBMwxClduDZUrDO08X2Vh1lLPmrgDyPNesvt4pHrS931pRkqUq+5B8b5NEdNCBHy7ujRyye+
-	Y7HvAArxxuqhFw41vcIg+0vVIK8g3nE/T/LYU/8KfAk=
-X-Google-Smtp-Source: AGHT+IEPainaGmGjpIiItMGlmlLgvOsPNvqLrthDPksqJiSBGTCfDQ36eqcMYcBmtNhgVr1tdiOcrA==
-X-Received: by 2002:a05:6000:2409:b0:39c:1efb:ec9a with SMTP id ffacd0b85a97d-39efba2ab3cmr14435427f8f.6.1745420232327;
-        Wed, 23 Apr 2025 07:57:12 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bf2csm19239229f8f.51.2025.04.23.07.57.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:57:11 -0700 (PDT)
-Message-ID: <b2a5cfc4-190f-4983-8d5e-3483a02be980@linaro.org>
-Date: Wed, 23 Apr 2025 15:57:10 +0100
+        d=1e100.net; s=20230601; t=1745420613; x=1746025413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MeALuF8jKVLJRlKRLq/6pLCkpUuGmGPwZiC4ZXVfYlg=;
+        b=r0Oj1GHLCBcxsXQ4OTUoCxPSeQLVhXcI0dd7GsmTuU+OKj7Xv1OoCkJi/kCuZQQAcn
+         JBrMYq13jp5J2L/NBcGe2KCYCaOmNuG3gwotwoPgDZ99PfNOAilKaq1IdiEQRHrPgiO9
+         Ql49crLB6/JoEYjtVa3luRSMY4J10mi3rE3+/S/WVbZzpWXDIsqdarfhrMChflrK7NeA
+         aqnOrwiYwWc04DRq9Ahv1nV9Amh5teadqeDutzd2OhOK2WvZsQ09pzU2pZh1FFj2sn1D
+         UtJeW67BZX1CiFD7b74aKJuXtzk2Ldg+Hw2M+Tx3IUDUnKRzPXoqu49h+V7FernONaDb
+         MqDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUe56it/CUQfRXOBf4szESRF5xNG+fOy0Dnh7p+/7NxsVDHH4g1jL+5P2RKnk240hRzY5PvEb9f8N0IsJOwuSh4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvTVNbp82y2hiIpOrtc9QbXVGvgqQq3xrSVvW7Ew+Q73ibQh74
+	pwLG/fVtRUoiu42r50C6JOHQgDJfHvTX8cD1k7NSe6erAicuxdGEOCV4dZNWmQMKDZOJ3vi4QAa
+	5V6UDwXuTbah89ugzIJfUygNwh6aDet0DxEo5
+X-Gm-Gg: ASbGncuq/ws398B8FMTrzf6lye4LurrOh/6ad0wAR0idH2zxQpUMGRu72aZSr5PYUbC
+	6AGkKhCUmRPpNKcy155cbarupI+YM6PuDOjUAp1VMRSkr1e5l5GtY4JAUdT9ECKsNyw7mXkK22T
+	w0C8V0GIXzWwupTDM4u8C8klOWjr3MwHRXKCi46kUDikw+3xDwR5U=
+X-Google-Smtp-Source: AGHT+IEiVg+r9k0GPVsb58FfTecIW8FL7oqxuNIJ+9fbKQlVi8lDoMz0e9WPUX7FFI56Oddi4JpWt8CNAuFxVH5aph4=
+X-Received: by 2002:a05:6e02:128f:b0:3d9:28d8:966d with SMTP id
+ e9e14a558f8ab-3d928d89906mr2257965ab.5.1745420612385; Wed, 23 Apr 2025
+ 08:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/10] tools headers: Update the syscall table with the
- kernel sources
-To: Jon Hunter <jonathanh@nvidia.com>, Namhyung Kim <namhyung@kernel.org>,
- Arnd Bergmann <arnd@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- linux-arch@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20250410001125.391820-1-namhyung@kernel.org>
- <20250410001125.391820-6-namhyung@kernel.org>
- <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
- <95c9bd53-ccef-4a34-b6d2-7203df84db01@linaro.org>
- <4c042dd9-50d6-401a-bce7-d22213b07bca@nvidia.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <4c042dd9-50d6-401a-bce7-d22213b07bca@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250414174134.3095492-1-irogers@google.com> <20250414174134.3095492-15-irogers@google.com>
+ <aAjxkfz4rSHe5Eoi@x1>
+In-Reply-To: <aAjxkfz4rSHe5Eoi@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Apr 2025 08:03:21 -0700
+X-Gm-Features: ATxdqUFsWQJKyZcPwpKNBRwYmnKwjJeUY9t4bXm9rd-t6ERhHUw3S8DYw9QTfTY
+Message-ID: <CAP-5=fU0N9dkJhVm4+nsBQqXNA5v4pNmTO8JGAEzRsoE0im6Fg@mail.gmail.com>
+Subject: Re: [PATCH v5 14/16] perf stat: Add mean, min, max and last
+ --tpebs-mode options
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 23, 2025 at 6:56=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, Apr 14, 2025 at 10:41:32AM -0700, Ian Rogers wrote:
+> > Add command line configuration option for how retirement latency
+> > events are combined. The default "mean" gives the average of
+> > retirement latency. "min" or "max" give the smallest or largest
+> > retirment latency times respectively. "last" uses the last retirment
+> > latency sample's time.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Tested-by: Weilin Wang <weilin.wang@intel.com>
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/Documentation/perf-stat.txt |  7 +++++++
+> >  tools/perf/builtin-stat.c              | 27 ++++++++++++++++++++++++++
+> >  tools/perf/util/intel-tpebs.c          | 20 ++++++++++++++++++-
+> >  tools/perf/util/intel-tpebs.h          |  8 ++++++++
+> >  4 files changed, 61 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Docume=
+ntation/perf-stat.txt
+> > index 2bc063672486..61d091670dee 100644
+> > --- a/tools/perf/Documentation/perf-stat.txt
+> > +++ b/tools/perf/Documentation/perf-stat.txt
+> > @@ -506,6 +506,13 @@ this option is not set. The TPEBS hardware feature=
+ starts from Intel Granite
+> >  Rapids microarchitecture. This option only exists in X86_64 and is mea=
+ningful on
+> >  Intel platforms with TPEBS feature.
+> >
+> > +--tpebs-mode=3D[mean|min|max|last]::
+> > +Set how retirement latency events have their sample times
+> > +combined. The default "mean" gives the average of retirement
+> > +latency. "min" or "max" give the smallest or largest retirment latency
+> > +times respectively. "last" uses the last retirment latency sample's
+> > +time.
+> > +
+> >  --td-level::
+> >  Print the top-down statistics that equal the input level. It allows
+> >  users to print the interested top-down metrics level instead of the
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 80e491bd775b..4adf2ae53b11 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -2327,6 +2327,30 @@ static void setup_system_wide(int forks)
+> >       }
+> >  }
+> >
+> > +static int parse_tpebs_mode(const struct option *opt, const char *str,
+> > +                         int unset __maybe_unused)
+> > +{
+> > +     enum tpebs_mode *mode =3D opt->value;
+> > +
+> > +     if (!strcasecmp("mean", str)) {
+> > +             *mode =3D TPEBS_MODE__MEAN;
+> > +             return 0;
+> > +     }
+> > +     if (!strcasecmp("min", str)) {
+> > +             *mode =3D TPEBS_MODE__MIN;
+> > +             return 0;
+> > +     }
+> > +     if (!strcasecmp("max", str)) {
+> > +             *mode =3D TPEBS_MODE__MAX;
+> > +             return 0;
+> > +     }
+> > +     if (!strcasecmp("last", str)) {
+> > +             *mode =3D TPEBS_MODE__LAST;
+> > +             return 0;
+> > +     }
+> > +     return -1;
+> > +}
+> > +
+> >  int cmd_stat(int argc, const char **argv)
+> >  {
+> >       struct opt_aggr_mode opt_mode =3D {};
+> > @@ -2431,6 +2455,9 @@ int cmd_stat(int argc, const char **argv)
+> >  #ifdef HAVE_ARCH_X86_64_SUPPORT
+> >               OPT_BOOLEAN(0, "record-tpebs", &tpebs_recording,
+> >                       "enable recording for tpebs when retire_latency r=
+equired"),
+> > +             OPT_CALLBACK(0, "tpebs-mode", &tpebs_mode, "tpebs-mode",
+> > +                     "Mode of TPEBS recording: mean, min or max",
+> > +                     parse_tpebs_mode),
+> >  #endif
+>
+>   20     5.60 debian:experimental-x-mips    : FAIL gcc version 14.2.0 (De=
+bian 14.2.0-1)
+>     builtin-stat.c:2330:12: error: 'parse_tpebs_mode' defined but not use=
+d [-Werror=3Dunused-function]
+>      2330 | static int parse_tpebs_mode(const struct option *opt, const c=
+har *str,
+>           |            ^~~~~~~~~~~~~~~~
+>     --
+>
+>
+> I'm enclosing parse_tpebs_mode() under #ifdef HAVE_ARCH_X86_64_SUPPORT
+> to fix this.
 
+Thanks, I agree with the fix. Longer term I think we can remove the
+HAVE_ARCH_X86_64_SUPPORT. Now that events carry the retirement latency
+information and hardware isn't required, there's no reason why
+retirement latency couldn't be added to architectures that aren't
+Intel (HAVE_ARCH_X86_64_SUPPORT is already covering AMD which lacks
+support).
 
-On 23/04/2025 10:24 am, Jon Hunter wrote:
-> 
-> On 16/04/2025 14:26, James Clark wrote:
->>
->>
->> On 14/04/2025 5:28 pm, James Clark wrote:
->>>
->>>
->>> On 10/04/2025 1:11 am, Namhyung Kim wrote:
->>>> To pick up the changes in:
->>>>
->>>>    c4a16820d9019940 fs: add open_tree_attr()
->>>>    2df1ad0d25803399 x86/arch_prctl: Simplify sys_arch_prctl()
->>>>    e632bca07c8eef1d arm64: generate 64-bit syscall.tbl
->>>>
->>>> This is basically to support the new open_tree_attr syscall.  But it
->>>> also needs to update asm-generic unistd.h header to get the new syscall
->>>> number.  And arm64 unistd.h header was converted to use the generic
->>>> 64-bit header.
->>>>
->>>> Addressing this perf tools build warning:
->>>>
->>>>    Warning: Kernel ABI header differences:
->>>>      diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
->>>>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/ 
->>>> x86/entry/syscalls/syscall_32.tbl
->>>>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/ 
->>>> x86/entry/syscalls/syscall_64.tbl
->>>>      diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl 
->>>> arch/ powerpc/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/ 
->>>> s390/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl 
->>>> arch/ mips/kernel/syscalls/syscall_n64.tbl
->>>>      diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/ 
->>>> arm/ tools/syscall.tbl
->>>>      diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/ 
->>>> kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/ 
->>>> sparc/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/ 
->>>> xtensa/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/ 
->>>> include/uapi/asm/unistd.h
->>>>      diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/ 
->>>> asm- generic/unistd.h
->>>>
->>>> Please see tools/include/uapi/README for further details.
->>>>
->>>> Cc: linux-arch@vger.kernel.org
->>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>>> ---
->>>>   tools/arch/arm64/include/uapi/asm/unistd.h    | 24 
->>>> +------------------
->>>>   tools/include/uapi/asm-generic/unistd.h       |  4 +++-
->>>>   .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
->>>>   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
->>>>   .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
->>>>   .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
->>>>   tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
->>>>   .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
->>>>   .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 ++-
->>>>   .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
->>>>   .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
->>>>   tools/scripts/syscall.tbl                     |  1 +
->>>>   12 files changed, 15 insertions(+), 25 deletions(-)
->>>>
->>>> diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/ 
->>>> arch/ arm64/include/uapi/asm/unistd.h
->>>> index 9306726337fe005e..df36f23876e863ff 100644
->>>> --- a/tools/arch/arm64/include/uapi/asm/unistd.h
->>>> +++ b/tools/arch/arm64/include/uapi/asm/unistd.h
->>>> @@ -1,24 +1,2 @@
->>>>   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->>>> -/*
->>>> - * Copyright (C) 2012 ARM Ltd.
->>>> - *
->>>> - * This program is free software; you can redistribute it and/or 
->>>> modify
->>>> - * it under the terms of the GNU General Public License version 2 as
->>>> - * published by the Free Software Foundation.
->>>> - *
->>>> - * This program is distributed in the hope that it will be useful,
->>>> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> - * GNU General Public License for more details.
->>>> - *
->>>> - * You should have received a copy of the GNU General Public License
->>>> - * along with this program.  If not, see <http://www.gnu.org/ 
->>>> licenses/>.
->>>> - */
->>>> -
->>>> -#define __ARCH_WANT_RENAMEAT
->>>> -#define __ARCH_WANT_NEW_STAT
->>>> -#define __ARCH_WANT_SET_GET_RLIMIT
->>>> -#define __ARCH_WANT_TIME32_SYSCALLS
->>>> -#define __ARCH_WANT_MEMFD_SECRET
->>>> -
->>>> -#include <asm-generic/unistd.h>
->>>> +#include <asm/unistd_64.h>
->>>
->>> Hi Namhyung,
->>>
->>> Since we're not including the generic syscalls here anymore we now 
->>> need to generate the syscall header file for the Perf build to work 
->>> (build error pasted at the end for reference).
->>>
->>> I had a go at adding the rule for it, but I saw that we'd need to 
->>> pull in quite a bit from the kernel so it was blurring the lines 
->>> about the separation of the tools/ folder. For example this file has 
->>> the arm64 defs:
->>>
->>>   arch/arm64/kernel/Makefile.syscalls
->>>
->>> To make this common part of the makefile work:
->>>
->>>   scripts/Makefile.asm-headers
->>>
->>> Maybe we can just copy or reimplement Makefile.syscalls, but I'm not 
->>> even sure if Makefile.asm-headers will work with the tools/ build 
->>> structure so maybe that has to be re-implemented too. Adding Arnd to 
->>> see what he thinks.
->>>
->>> As far as I can tell this is a separate issue to the work that 
->>> Charlie and Ian did recently to build all arch's syscall numbers into 
->>> Perf to use for reporting, as this is requires a single header for 
->>> the build.
->>>
->>> Thanks
->>> James
->>>
->>> ---
->>>
->>> In file included from /usr/include/aarch64-linux-gnu/sys/syscall.h:24,
->>>                   from evsel.c:4:
->>> /home/jamcla02/workspace/linux/linux/tools/arch/arm64/include/uapi/ 
->>> asm/ unistd.h:2:10: fatal error: asm/unistd_64.h: No such file or 
->>> directory
->>>      2 | #include <asm/unistd_64.h>
->>>        |          ^~~~~~~~~~~~~~~~~
->>>
->>>
->>>
->>
->> Hmmm I see this was also mentioned a while ago here [1]. Maybe I can 
->> have another go at adding the makerule to generate the file. I'll 
->> probably start by including as much as possible from the existing make 
->> rules from the kernel side. I think something similar was already done 
->> for generating the sysreg defs in commit 02e85f74668e ("tools: arm64: 
->> Add a Makefile for generating sysreg-defs.h")
->>
->>
->> [1]: https://lore.kernel.org/lkml/ZrO5HR9x2xyPKttx@google.com/T/ 
->> #m269c1d3c64e3e0c96f45102d358d9583c69b722f
-> 
-> 
-> FWIW I am seeing this build issue too on ARM64 and these changes have 
-> now landed in the mainline :-(
-> 
-> So would be great to get this fixed or reverted.
-> 
-> Jon
-> 
+Thanks,
+Ian
 
-Hi Jon,
-
-I probably should have updated this thread, but the fix is here:
-
-https://lore.kernel.org/linux-perf-users/20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org/
-
-Thanks
-James
-
+> - Arnaldo
+>
+> >               OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
+> >                       "Set the metrics level for the top-down statistic=
+s (0: max level)"),
+> > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpeb=
+s.c
+> > index de9fea601964..6b00bd5b0af1 100644
+> > --- a/tools/perf/util/intel-tpebs.c
+> > +++ b/tools/perf/util/intel-tpebs.c
+> > @@ -31,6 +31,7 @@
+> >  #define PERF_DATA            "-"
+> >
+> >  bool tpebs_recording;
+> > +enum tpebs_mode tpebs_mode;
+> >  static LIST_HEAD(tpebs_results);
+> >  static pthread_t tpebs_reader_thread;
+> >  static struct child_process tpebs_cmd;
+> > @@ -45,6 +46,8 @@ struct tpebs_retire_lat {
+> >       char *event;
+> >       /** @stats: Recorded retirement latency stats. */
+> >       struct stats stats;
+> > +     /** @last: Last retirement latency read. */
+> > +     uint64_t last;
+> >       /* Has the event been sent to perf record? */
+> >       bool started;
+> >  };
+> > @@ -142,6 +145,7 @@ static int process_sample_event(const struct perf_t=
+ool *tool __maybe_unused,
+> >        * latency value will be used. Save the number of samples and the=
+ sum of
+> >        * retire latency value for each event.
+> >        */
+> > +     t->last =3D sample->retire_lat;
+> >       update_stats(&t->stats, sample->retire_lat);
+> >       mutex_unlock(tpebs_mtx_get());
+> >       return 0;
+> > @@ -517,7 +521,21 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu=
+_map_idx, int thread)
+> >                       return ret;
+> >               mutex_lock(tpebs_mtx_get());
+> >       }
+> > -     val =3D rint(t->stats.mean);
+> > +     switch (tpebs_mode) {
+> > +     case TPEBS_MODE__MIN:
+> > +             val =3D rint(t->stats.min);
+> > +             break;
+> > +     case TPEBS_MODE__MAX:
+> > +             val =3D rint(t->stats.max);
+> > +             break;
+> > +     case TPEBS_MODE__LAST:
+> > +             val =3D t->last;
+> > +             break;
+> > +     default:
+> > +     case TPEBS_MODE__MEAN:
+> > +             val =3D rint(t->stats.mean);
+> > +             break;
+> > +     }
+> >       mutex_unlock(tpebs_mtx_get());
+> >
+> >       if (old_count) {
+> > diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpeb=
+s.h
+> > index 218a82866cee..9475e2e6ea74 100644
+> > --- a/tools/perf/util/intel-tpebs.h
+> > +++ b/tools/perf/util/intel-tpebs.h
+> > @@ -8,7 +8,15 @@
+> >  struct evlist;
+> >  struct evsel;
+> >
+> > +enum tpebs_mode {
+> > +     TPEBS_MODE__MEAN,
+> > +     TPEBS_MODE__MIN,
+> > +     TPEBS_MODE__MAX,
+> > +     TPEBS_MODE__LAST,
+> > +};
+> > +
+> >  extern bool tpebs_recording;
+> > +extern enum tpebs_mode tpebs_mode;
+> >
+> >  int evsel__tpebs_open(struct evsel *evsel);
+> >  void evsel__tpebs_close(struct evsel *evsel);
+> > --
+> > 2.49.0.604.gff1f9ca942-goog
