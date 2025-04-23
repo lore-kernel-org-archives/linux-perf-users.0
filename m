@@ -1,134 +1,111 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBB819D07B
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 05:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073C413C3F6;
+	Wed, 23 Apr 2025 06:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745384644; cv=none; b=Ef/7mGUfPxPzRiqFKOYXmNbH4VN3mNEhqXkZtQ64mCu+cQPO2+Y+4BPGzESK1PmQl//sYFCUCXPukVU0kKIoTCp+XPobm6eZB18BeMMSFOX/01VEdg8utIIe3UZouH17cJkvt/gyx7TjRAOS+k2kPi9khLCShNPCV3Bqx6ZJLV4=
+	t=1745390072; cv=none; b=gBbeBhIjYfMRGTl/9ZGbSTb2QteWCQ9fB4y1EFZf3XnukSNsaNaS1zWTkCtmmgezwa71OCxP0lOkD+pprZ6wgvF4vto4F7vPb6fWYXpDf7tldG9UQAAhqH6VtxeYtr/fUaomoPplqnkkaASgL6PJsnp0I7aB1eyGeIAivyFY8TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745384644; c=relaxed/simple;
-	bh=oB2HzbtYpc9Q5I3Vg5QkTUqM7V3SyGu8YJi7lZs4R10=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XkBS2DT5k2o0ubZ3+ZxvPUvOJaWII6Tj0GBOL0GUPLGaTMj8rqnZXXMXFXSCRLDNBI+2rCXxPUOp0axGgSu4XOAp5R5rNtVp2HgY6SKnsw1/FFbW/mskNIC72CNkcLk4wS7GA6dOk92hWjCypofToxZek980Cw9iAm72Dt5gFO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=urA9eEN0; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="urA9eEN0"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so5332467a91.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 22:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745384642; x=1745989442; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=c8FjqkwUOy/feAuFkYLTMBE7cfoy6lLV0uD1r/cCh0I=;
-        b=urA9eEN0xh/Ca70FjmQBJ9h8vxHH4EwzhE44wwEDiTeMR86L+K4xZia+qpAw+qjgFk
-         pOlOEocjeLssDpeuW615c7tKEsOgA3G2ysJISlVVYDUgcCrADrbkDCLd7MJjv0Dqlwv6
-         JR0S6QB9IqV79YvVehf5qEnav+VFIse3JwUeFLvRz4cDqCMdCoCUsnDySkv9StDj9HCZ
-         ozXK1dtbgce/HcfF8lGKkBsdvvKuPV9Ju4SbKki94fTel3ExzAqNYAvR2TvgyvSSDPYt
-         mmDXZCKJfiuGz50fLALmTB1UflrKwMNsHCpmeRXf9oKY+sHESIWRezcRXz/kTRIitchE
-         VzAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745384642; x=1745989442;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c8FjqkwUOy/feAuFkYLTMBE7cfoy6lLV0uD1r/cCh0I=;
-        b=d3PL6DiDmSWrFLJPATYCwLM1sKT71E3EDjQjSd137lCWyztCSkgU5wdMGc77KxImxI
-         bPjitOs4NkNk1qHBIPN86mzdGwRb7nTvujL/8coLS6T6S9J3IxaCfYrbrJ0lk00q4vXF
-         OaV9hJkMrIfoH9C2NxIvgGt5rhuo2Vy+J/I8uOyLiWBHH95l1SjEtBB0vxTYbKDjdlI9
-         qww1f+lCSEJg76/L8VIxVCka6m1HoC1htgjlJXuwT9/UuhS7DOKgaFeullX9+IOm38O9
-         g16ixcFgJWYwpmlPNA7xc9QknLf5pej1nSIhOYAWmTz9Z1bFcsszjPxiJIrH1nLmyHRb
-         37Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCXr9h4pIR+v6PtqRi97ZZKzVFpv+A8p3I7vTFQ5IC3eLRsb2lc/PJfnPOeieqKMOUWqMNIfVZeikVHAnleQvUrb@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpkii8CNU20PJKvHXbYoqg7u3lPi9LnEy1wFteUpZ/jWgsP1GT
-	Qi6r+0+l6VPB502LDDnEMOtsJTlzfDleaIAND5CF3B8If9QOLeNBnkN10MftSu3xRaqIqMhY/km
-	gOCfKWQ==
-X-Google-Smtp-Source: AGHT+IEbKVuQ+IUoxTP2GjaxL/FeIucG9KFtnMOdHmvOXU/9QIWe+RKO8d61OXFu3KMCelLXzw2U8CktptGb
-X-Received: from pji15.prod.google.com ([2002:a17:90b:3fcf:b0:301:1bf5:2f07])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d448:b0:2ff:4f04:4266
- with SMTP id 98e67ed59e1d1-3087bbc22b1mr22444810a91.23.1745384641976; Tue, 22
- Apr 2025 22:04:01 -0700 (PDT)
-Date: Tue, 22 Apr 2025 22:03:58 -0700
+	s=arc-20240116; t=1745390072; c=relaxed/simple;
+	bh=Qlt8fOU7S3qN3z2CYEB2iLHJtb0RRgm0RQ9Hv1XYFIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OOzGgsSpvuloulz2VwGDlld4LReFktBZWv6PPjmyPYqfUUkm9VHx2kec0YqY7RjRCtWVEurs6ns+MHAZDp0LS3KYVhASWKEeFbpuaMPyjxaaetLiNjGovJ+gIqoI/LOBEm/gOlEwkJR3hMutokkYPxjK4TuST5ikATXWCtpwbJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zj8T45MPnz4f3lCm;
+	Wed, 23 Apr 2025 14:34:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3BD031A06DC;
+	Wed, 23 Apr 2025 14:34:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl_wiQhoEV49KQ--.26381S4;
+	Wed, 23 Apr 2025 14:34:25 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86: Fix open counting event error
+Date: Wed, 23 Apr 2025 06:47:24 +0000
+Message-Id: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250423050358.94310-1-irogers@google.com>
-Subject: [PATCH v1] perf tool_pmu: Fix aggregation on duration_time
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCl_wiQhoEV49KQ--.26381S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1xGF1rZr45JryrCFyfWFg_yoW8Gr15p3
+	47Crn3KFyIgrn8Wwn8JF4Iya1UZF4ktr9rJ3WfWr45A345WwnxXFWxKFs8Wa15Ar1fJ34f
+	tanagF9rurWkA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
+	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUIa0PDUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-evsel__count_has_error fails counters when the enabled or running time
-are 0. The duration_time event reads 0 when the cpu_map_idx != 0 to
-avoid aggregating time over CPUs. Change the enable and running time
-to always have a ratio of 100% so that evsel__count_has_error won't
-fail.
+Perf doesn't work at perf stat for hardware events:
 
-Before:
-```
-$ sudo /tmp/perf/perf stat --per-core -a -M UNCORE_FREQ sleep 1
+ $perf stat -- sleep 1
+ Performance counter stats for 'sleep 1':
+             16.44 msec task-clock                       #    0.016 CPUs utilized
+                 2      context-switches                 #  121.691 /sec
+                 0      cpu-migrations                   #    0.000 /sec
+                54      page-faults                      #    3.286 K/sec
+   <not supported>	cycles
+   <not supported>	instructions
+   <not supported>	branches
+   <not supported>	branch-misses
 
- Performance counter stats for 'system wide':
+The reason is that the check in x86_pmu_hw_config for sampling event is
+unexpectedly applied to the counting event.
 
-S0-D0-C0              1      2,615,819,485      UNC_CLOCK.SOCKET                 #     2.61 UNCORE_FREQ
-S0-D0-C0              2      <not counted>      duration_time
-
-       1.002111784 seconds time elapsed
-```
-
-After:
-```
-$ perf stat --per-core -a -M UNCORE_FREQ sleep 1
-
- Performance counter stats for 'system wide':
-
-S0-D0-C0              1        758,160,296      UNC_CLOCK.SOCKET                 #     0.76 UNCORE_FREQ
-S0-D0-C0              2      1,003,438,246      duration_time
-
-       1.002486017 seconds time elapsed
-```
-
-Note: the metric reads the value a different way and isn't impacted.
-
-Reported-by: Stephane Eranian <eranian@google.com>
-Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 ---
- tools/perf/util/tool_pmu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index 97b327d1ce4a..727a10e3f990 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -486,8 +486,14 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 		delta_start *= 1000000000 / ticks_per_sec;
- 	}
- 	count->val    = delta_start;
--	count->ena    = count->run = delta_start;
- 	count->lost   = 0;
-+	/*
-+	 * The values of enabled and running must make a ratio of 100%. The
-+	 * exact values don't matter as long as they are non-zero to avoid
-+	 * issues with evsel__count_has_error.
-+	 */
-+	count->ena++;
-+	count->run++;
- 	return 0;
- }
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 6866cc5acb0b..3a4f031d2f44 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 	if (event->attr.type == event->pmu->type)
+ 		event->hw.config |= x86_pmu_get_event_config(event);
  
+-	if (!event->attr.freq && x86_pmu.limit_period) {
++	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
+ 		s64 left = event->attr.sample_period;
+ 		x86_pmu.limit_period(event, &left);
+ 		if (left > event->attr.sample_period)
 -- 
-2.49.0.805.g082f7c87e0-goog
+2.34.1
 
