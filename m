@@ -1,151 +1,133 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0336C265609
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 19:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836F422CBD8
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 20:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745437945; cv=none; b=nO+nygciZOTW/WPV++vrCRfNG1s1WBgHDEQhvmqZiNdaFR2XFuLcvXMuNRBx3Pr/PZSt60gHihYVD/U6TRGQ8/nomQ9YyQHYgZ/yhlQVJrlXaKen6hFE0RpAx4Rqjy6WNKQiAq+/SH42NID1PCkEmv7vmSxpHP7pzYbNqn2VkDI=
+	t=1745438478; cv=none; b=O1zNMxRWqRajWjiSOos0ySeU62cUUxEhtR/uuZg3H5wKBlwFOmPn/4sb95XREuDQS7Z0TR/Xg6//2e75VG4gJa+nmmtAZ1px0+6b4qTf8L2EtW6K/Gu0yU34XVWr9HRQwwKphsf2tCS+cVKBL7mIQ7jm7PwRpQcTq2qdZOgYS58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745437945; c=relaxed/simple;
-	bh=6CFbqi4rYx8ZGB/rgVhh/cJewRwwE8YJCMFAGQ8OFpM=;
+	s=arc-20240116; t=1745438478; c=relaxed/simple;
+	bh=Pf8PH2t3WoU0meJ6dE8N7zGHohafdCGWsPMCYza/pDc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hXppEwYcIxGrMvh8LVn7VfBB8i0VAZF0GtiDnvdtTkaXVv5GMXe+/AtH1ln9MffP3EB1mNyr9Iw/Mu2KPbuJ01Z07L0SYr/xseNGitP+bMC18QCtUwText//Jj4a8KsKl/2ycWwqrttq6n9whWV6/utPYJGNHGQ9lcWnMQ+6q7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ywyS3iY9; arc=none smtp.client-ip=209.85.219.48
+	 To:Cc:Content-Type; b=UIh1/fJnlOTHMdg+CIdtANTxxYcxlqmh+mfYyOcDaQqaCinvbgnxDzTqaXo5Femjy83C5cwalA0HXh44/yrFJfr/o85VCz4pJVd9ZVGyxLmavWwxgXzE01QnABJ2uKdw3IKMUSyMY8E4K59ZohwRzRIuMpeZ1dObYLVSa4Y+RFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PWUS0q1G; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ywyS3iY9"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so3466076d6.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 12:52:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PWUS0q1G"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5c815f8efso22534985a.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 13:01:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745437943; x=1746042743; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745438475; x=1746043275; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0xVavQGeHiKp7rEiymJ5kdyLh0t3H4T8Z/fRsD3R+Vc=;
-        b=ywyS3iY9aaQBGYSlCyP3Nhl7+XtapcTMxc3Znr0nYP7b6i5DpcX448vNu0zz9JjYX8
-         IFaDwg5mTLIYD4UpslcMOVADTaTn4c/CU//HvniXx/GTo2hYGgKx4aAiV84H3kL/aNfg
-         O0ji3AX8JiRSjdcTBsuETrG2FbOiBnvvUSWuCBTpaz7X3iHq70+UIZNb9yPSEdoJmq+f
-         Z62cwgcYqyBDk7/+I4Jv6NjW2vbUDn42HrJbo8TrQFk9CcrPIpIPqTTUYa8EymI7PkCR
-         GIqful2iWfVaoyZekvmu86lsWblzio5Vy46JIUIQ1LGPURomgY58YvVwU7E3r3G9JPJ4
-         sjLw==
+        bh=Lp4CdKMNjxvtvuUzztK6+9w/pLy8jiHgEZIHEVYZ3qc=;
+        b=PWUS0q1GrbGN3TpHdQHr3M0uKwd/qp+IW/kI/iEePcd7MGZVWDERQ3G+8Wv8EMSNqC
+         9sVRq4tqL0keg46Ydty1bs+RnO5VBWuV5pkzWvwwZa/Cy5NN0cwdEc7uGWy4lmtjRIhN
+         Y2j8Nxaa+62GXHpleWRaM/RO1FNl1Ljlnj/GFWx+kmtlLKBPWJ/dWgWDxz/t9mEoqG00
+         sww+jfvv/qFNViCWW+7gm8q/R2JtXuliHyqeHu//29GSwkyvto0oYl6P85uOa4CmDp2t
+         2kNCREfQS/mq/I5mR8J6VNUXlDGT5jdwhrHAELBiMIFbiUC/TzvbqhGw/kKIAvTrjgGX
+         Y2LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745437943; x=1746042743;
+        d=1e100.net; s=20230601; t=1745438475; x=1746043275;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0xVavQGeHiKp7rEiymJ5kdyLh0t3H4T8Z/fRsD3R+Vc=;
-        b=Gbj1TszWxPzbykNSi1AJuZxdeBExm7pUYMc3Q15XUWa9eyn+3gU9/njVPm3T+rJROe
-         pvdRNT0dthrPPSkEPY2NireX1HREN0VsNA3saHm71QcRRWBNUJlWLfZ8jgwJmvm7/4qQ
-         X4sUeezgliTJHhiwgJk2kjTcKmWSdONwVD7YvwmkMNu2xG4CHJd6PehjoY/RbMNn/lSf
-         HKEqEjfTMNyh4CMPm3t1EHfkqJ9dsL64nzki3bJIcztfpv45vZStnBOz3HCJyRCp9hE2
-         ocXRDqbw+dcf+Ooquncq/4kdCcG3zvSS3th2vWn6GKYFhO+UpYzqHFEuCDiujmFClqdW
-         IfFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrPus6BwUiWvQVjUBMy/o3KmLtJsShVulrgi9Dy6AlX7VGiDY/dhJQY60pghI9BR1rt2Txf2PAs/Ho8vzQk4W5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUI2KtqyXfW+1reSJJxKcCHXqVS+Jn8l0JBYxMPxG4ABV4r8yR
-	HUEm4e/VFThPS5+S93CknZX2lcV4z8BIazRL++j6yMj6qPX0J8QgTJeMTQRuSI2hPjxR1bUdd2v
-	iV7PVsFsPFaQCfQqJRpP7ghBtO1i55+HoAgc=
-X-Gm-Gg: ASbGnctQds5CiGd2LDZoOXrcSUA6OqzBNMrvMPjms/6HXWAF6y+buUwogQtcrahIPBc
-	BpkIyoNgxv+/OgjyiswEUjCd6ZopSn42T34W025DI7qVFjYCbGLP/8wsojTXkIHPtCE4i6UX6fq
-	PRiplyBABbMtAXSga3aujx+5heE7H/9pVgNnahEBpGPwSrdxTQevE=
-X-Google-Smtp-Source: AGHT+IGvkeMBlU3PpGjnWugnhbT53UHQ7DwITUrvLyvzt1HBLSHaQaZ8fpdIp3kWeT20F4N4HGIU5JKsHeWBdDZUuKM=
-X-Received: by 2002:a05:6214:27ce:b0:6cb:ee08:c1e8 with SMTP id
- 6a1803df08f44-6f4bfc1a1f9mr498676d6.23.1745437942447; Wed, 23 Apr 2025
- 12:52:22 -0700 (PDT)
+        bh=Lp4CdKMNjxvtvuUzztK6+9w/pLy8jiHgEZIHEVYZ3qc=;
+        b=NHlEMwhcGvLtqfL8BTd0ENIgLNKWA+m+yLyxtskWtORBLIoNyqGuziCpwzCtwl7Ey5
+         SFBNY87NetKGKOyNBodH+I2zj6wppDr6lldCXzABEs2Fk449A6zZ4OXJlatgt7BNCQpB
+         17+hsBhiX/xsReuLinyaybJsy86cRpAoP/nAJx8tckvXr8/Icq3VH0lSnO+GmON6rCM+
+         Aa40Qv942nDcgbmnY7rm30uYsm5F4P3goFrnFznad/3X1E4wWfXd5c4ImtHjtpEVQVSt
+         ZCaVE302LexBIsjn1sdnLqWpXUSqoetWh3ThI2MSKkPap/Ovf+38TZ4a8Xs6bxV98DRo
+         yz3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvvxKyz2x5p7ATSK3rtpgA2clMDCRyQQP25QrD2fV3PPebdio29Pb470CuEGvYzM9zkXgFp9Ahml+9+/NLGrq/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRlx/z2S87H4KS2YTU2vY4AR5VJOLYOJBFsvdxZPVQBaB1XZXD
+	SlmtRuU8833EFqn1t7MzeLaSwoDSDuEHp67WeDqqy6mwCszWps4PE2jDf6ZfFM8hWAcemxynSlK
+	NW2hYcpYo2TL/zysdb+VbDAZbmNPY5wn2SFE=
+X-Gm-Gg: ASbGnctRDiCXFUWvQTaq+tn1ogEsWIqryHOXNJ2EdGuGnltGLObeMCchYZ9LAPhMeF1
+	rNA7jXrP2z1ygmStRi6/K+HIH5dO8BRKcg9kGfPopHmVA0Puk04zDKXA1QWnVA7DYoqPt13tACJ
+	jAtSRi7vI8UDihieQAXCbr2W8S6o1a7llwOa946pB6f+ko9eBIe43zl4oYbhk51g==
+X-Google-Smtp-Source: AGHT+IGLQ5HSuz+Vu0fNrtBJpS4OlBT/hHsgAWnUcy9YtEjieTri+yDmgzJuQXVWkptGriSGBQGbhS8z3mhXYKbvHzo=
+X-Received: by 2002:ad4:574a:0:b0:6d8:9c92:6555 with SMTP id
+ 6a1803df08f44-6f4bfc7afc4mr561126d6.29.1745438474901; Wed, 23 Apr 2025
+ 13:01:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-2-yabinc@google.com>
- <48640298-effa-42d4-9137-a18a51637f03@linaro.org> <aAeQcgmL-iqGbG_g@gmail.com>
- <20250422141026.GH28953@e132581.arm.com>
-In-Reply-To: <20250422141026.GH28953@e132581.arm.com>
+References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-3-yabinc@google.com>
+ <20250422142102.GI28953@e132581.arm.com>
+In-Reply-To: <20250422142102.GI28953@e132581.arm.com>
 From: Yabin Cui <yabinc@google.com>
-Date: Wed, 23 Apr 2025 12:52:11 -0700
-X-Gm-Features: ATxdqUF-LMwUWmW3taSe4IV8gwEgoHiIaDfjDbYRrV--toG-Jr8hdz8bhgWNT-Q
-Message-ID: <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU capability
+Date: Wed, 23 Apr 2025 13:01:03 -0700
+X-Gm-Features: ATxdqUHxCe0dNQK1zzumyasbHqzp8bMN4VyHh8fq17oPYK91Kakr2wvuHppdyfg
+Message-ID: <CALJ9ZPNKZU7nVLyodN5i7GeRxWL6KzkXnqEJMv2sJkk2SwYi9Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] coresight: etm-perf: Add AUX_NON_CONTIGUOUS_PAGES to
+ cs_etm PMU
 To: Leo Yan <leo.yan@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>, James Clark <james.clark@linaro.org>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, 
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@linaro.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 7:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+On Tue, Apr 22, 2025 at 7:21=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
+> On Mon, Apr 21, 2025 at 02:58:18PM -0700, Yabin Cui wrote:
+> > The cs_etm PMU, regardless of the underlying trace sink (ETF, ETR or
+> > TRBE), doesn't require contiguous pages for its AUX buffer.
 >
-> [...]
->
-> > > Hi Yabin,
-> > >
-> > > I was wondering if this is just the opposite of
-> > > PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default
-> > > for all devices to solve the issue you describe. Because we already
-> > > have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages.
-> > > Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high order
-> > > allocations for AUX buffers optimistically") that explains that the
-> > > current allocation strategy is an optimization.
-> > >
-> > > Your change seems to decide that for certain devices we want to
-> > > optimize for fragmentation rather than performance. If these are
-> > > rarely used features specifically when looking at performance should
-> > > we not continue to optimize for performance? Or at least make it user
-> > > configurable?
-> >
-> > So there seems to be 3 categories:
-> >
-> >  - 1) Must have physically contiguous AUX buffers, it's a hardware ABI.
-> >       (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
-> >
-> >  - 2) Would be nice to have continguous AUX buffers, for a bit more
-> >       performance.
-> >
-> >  - 3) Doesn't really care.
-> >
-> > So we do have #1, and it appears Yabin's usecase is #3?
+> Though contiguous pages are not mandatory for TRBE, I would set the
+> PERF_PMU_CAP_AUX_NO_SG flag for it.  This can potentially benefit
+> performance.
 
-Yes, in my usecase, I care much more about MM-friendly than a little potent=
-ial
-performance when using PMU. It's not a rarely used feature. On Android, we
-collect ETM data periodically on internal user devices for AutoFDO optimiza=
-tion
-(for both userspace libraries and the kernel). Allocating a large
-chunk of contiguous
-AUX pages (4M for each CPU) periodically is almost unbearable. The kernel m=
-ay
-need to kill many processes to fulfill the request. It affects user
-experience even
-after using PMU.
-
-I am totally fine to reuse PERF_PMU_CAP_AUX_NO_SG. If PMUs don't want to
-sacrifice performance for MM-friendly, why support scatter gather mode? If =
-there
-are strong performance reasons to allocate contiguous AUX pages in
-scatter gather
-mode, I hope max_order is configurable in userspace.
-
-Currently, max_order is affected by aux_watermark. But aux_watermark
-also affects
-how frequently the PMU overflows AUX buffer and notifies userspace.
-It's not ideal
-to set aux_watermark to 1 page size. So if we want to make max_order user
-configurable, maybe we can add a one bit field in perf_event_attr?
+As explained in the patch 1/2, my use case periodically collects ETM data
+from the field (using both TRBE and ETR), and needs to reduce memory
+fragmentation. If the performance impact is big, we can make it user
+configurable. Otherwise, shall we default it to non-contiguous pages?
 
 >
-> In Yabin's case, the AUX buffer work as a bounce buffer.  The hardware
-> trace data is copied by a driver from low level's contiguous buffer to
-> the AUX buffer.
->
-> In this case we cannot benefit much from continguous AUX buffers.
+> For non per CPU sinks, it is fine to allocate non-contiguous pages.
 >
 > Thanks,
 > Leo
+>
+> > This patch adds the PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES capability
+> > to the cs_etm PMU. This allows the kernel to allocate non-contiguous
+> > pages for the AUX buffer, reducing memory fragmentation when using
+> > cs_etm.
+> >
+> > Signed-off-by: Yabin Cui <yabinc@google.com>
+> > ---
+> >  drivers/hwtracing/coresight/coresight-etm-perf.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers=
+/hwtracing/coresight/coresight-etm-perf.c
+> > index f4cccd68e625..c98646eca7f8 100644
+> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > @@ -899,7 +899,8 @@ int __init etm_perf_init(void)
+> >       int ret;
+> >
+> >       etm_pmu.capabilities            =3D (PERF_PMU_CAP_EXCLUSIVE |
+> > -                                        PERF_PMU_CAP_ITRACE);
+> > +                                        PERF_PMU_CAP_ITRACE |
+> > +                                        PERF_PMU_CAP_AUX_NON_CONTIGUOU=
+S_PAGES);
+> >
+> >       etm_pmu.attr_groups             =3D etm_pmu_attr_groups;
+> >       etm_pmu.task_ctx_nr             =3D perf_sw_context;
+> > --
+> > 2.49.0.805.g082f7c87e0-goog
+> >
+> >
