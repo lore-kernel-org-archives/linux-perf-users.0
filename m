@@ -1,273 +1,301 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731F21A23B0
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 16:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ED927FD42;
+	Wed, 23 Apr 2025 16:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424676; cv=none; b=ttVXBlh2uFX3orKR3+AbzKHtXJxE7gviUAsUoVHvRgko6bjcu49VaeYOluxU4B+jXJ0R286O5yfutAfNgFP8wRfn5KCP0raVHmInCB7Jwqy/tfJPbNL4ZDvzszi96mQjA7s/eOrVxVRixZ9xS1pgfSbagit+gC1v0xuxe4/MmS0=
+	t=1745425178; cv=none; b=hMoxFZCZ0mPZ6hyadJyHqRvrxHnKYy3qsjQqRcOC5ODaaXEb4wsQ0lCgEkNo4pEzaClequ5rRiluB4jBH2c+Ez2tOSvX7u1eIqdjT6sr2ogPwzDgPJDnvGBXhsfYHl34VudBmS8Vy4RN1x4tz4G+6LDnXx1rpACdGSCXXq2JM2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424676; c=relaxed/simple;
-	bh=r6M9Ja1D8Zs6b5j1y3MnNQBue4KN5PdtElPgqLbvxSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ijaIamod3D+CnXropohA4ClQQF6OK9cGIfZSMOAoF68J2ava9D1+WJ6o3vQXxcmKOMrtt4B1AdPbv3cNgagGL85Wg776ge1wob9UazwlsvQdTS3WumypTy+Yzxeo6Fa/MBd6faeDIcNssQIefNdDlUJsG6jNBOHbKZ6lTIIj0bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=foHx8vG8; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745425178; c=relaxed/simple;
+	bh=q6ScX9mWRWztFOA5aq1RyBHqHRm/hPzxoPr1yx5+Sbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GOblEs0Ttw9sCyEwFe571PhEaeFhF3uobp8pfUezehAjxCDi9JeIob295smsrYiaF2zYFg28SOBWGGwi+jb2086PbClyAInOtDa15P89qMrMb6Y1AN5Q/KHX34v6Nr++4Q7ZC83l7lDJS1tSQjlmWp4NhOzirB9vDUM9yPqiBdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IriTGtjo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="foHx8vG8"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso2153904a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 09:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745424672; x=1746029472; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=r6M9Ja1D8Zs6b5j1y3MnNQBue4KN5PdtElPgqLbvxSg=;
-        b=foHx8vG8PQfH0jKC0Ufn87MRkGXSXtLPt9ndfFmB/CBj5NXqlBrmsHPuoq0ZbYDYEi
-         qDtgDo2r4St6mitw5+zUq18bHaCf5P9nV2AjWm6alFhzbXtfHqDNm1pSSb6QBbD7k42l
-         khrRlcGn8tce6EP2TLEJRoRNkByxfm5GEo047t07clh+vb9phjPcvki9oUkIj4QaaZfp
-         MCkB8iSRHc8UyJc59a5zuSGQE9gYQF4TO6Q961KwvFzyEuKv5VjViagfN2YGCv7N+6Nb
-         XqTzFTpoR4UGDAU8by/odEGmUmuU6nwaXKXLfGMnQ8GeIDChcNre9TXc/bvzv/VnFeMd
-         iYIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745424672; x=1746029472;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r6M9Ja1D8Zs6b5j1y3MnNQBue4KN5PdtElPgqLbvxSg=;
-        b=FSit2u6htSH5thiwZDq6k7hcL+ddMlruHX60lgNy+1dHrDt6hT9NDTxzeBXKJZwrxA
-         30rDtPR/Qp9VgyCwSsFiLNjeVC6Xj2WgpOI/4KfhPgjhWeCdw1r2wV4uJuSz6H1KWHdg
-         16zeHzXGFHPEo3305B+Qlz/qQSCgz+4sIP+JjpeidOLFjcvlVklz7COhSFwqNZx1M3Lc
-         A02TgwcLLepsJDJ7P0GSpIMVYLZaNfsL7iNNPUD1o4B4pNUFMSmyDl1eyBRcn3I8G8Jw
-         JGs2DwuGGHb6HaD7rv7XU9GDwyx1Q+Ua+9/Id4Vm9n9lKf4H2QgEk4+3RMghly7YvJ6m
-         vj8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWCb8YgwYrDh/kZu6QifJTkgGH9chU8VA9aNxn+F4Pgu/NZUsYpz8sh3sMvhwxLKvVxP2pWDqK5iKiigS/jr7l2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTY8K7/OONgXumhhteIpdFCnyESdE19DX/r3rg1nMTAKln4jYM
-	p9XX226EzcewfTnI86NJ15EGy/9k6KJJBv3gUIt6ivyMFRt6BswjquiC1LODKNc=
-X-Gm-Gg: ASbGncsjTlF6eXWzi+4+WbWDmD+gZhTFiXCkaL09m3vgMPmTG3fX4pHK84uM+uVe6A5
-	YVjPaYlXVm1NuVN/ba2JBPV/jTftzFhnOtBXnlL0T1dfjmcws7mTqSFSuz6OW8cHRhKHw20h7Uu
-	AmVsgPku9rn0JwryKwesf+C2KjOD3nkLzyBMGkC4xtTYj+XU3fVTPU7rGDzW7XWrU9rd7ZJQiRw
-	TyU4fbSPSOoflGcRNywGt45ynzY7IUUKPx5kKZSJHeH++DPj+QkVV7wAhBNXmn76afsFe3Vn+XX
-	RrUwbeWaeJOzE6kstDVfP229u9/5oBZ9wPNQ4v2G6RsEAMBOd8AUF2DScIYxi+aP4NVVjab53jt
-	Vsu/p31TwHFdTq9J6wwKGdE9TCsbt10xo8v/T0EVS0qRJi9Mf/CkjeQnMbQRbbZWXyg==
-X-Google-Smtp-Source: AGHT+IGCpPmCGC7IHEh0MIOg0AX5sgy1qpm3zmVV6d+GogUn6nD6VtfuVEh/CSiuiB3OjgZ0F+tEng==
-X-Received: by 2002:a17:907:728e:b0:ac7:3441:79aa with SMTP id a640c23a62f3a-ace3f4c1d0dmr289156466b.13.1745424672252;
-        Wed, 23 Apr 2025 09:11:12 -0700 (PDT)
-Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec04668sm821934866b.24.2025.04.23.09.11.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 09:11:11 -0700 (PDT)
-Message-ID: <281505d5-7459-4903-887e-dc78a4c1fce4@suse.com>
-Date: Wed, 23 Apr 2025 18:11:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IriTGtjo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFD6C4CEE8;
+	Wed, 23 Apr 2025 16:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745425178;
+	bh=q6ScX9mWRWztFOA5aq1RyBHqHRm/hPzxoPr1yx5+Sbo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IriTGtjo2LqN3oML1AWXEYX7t6sgbaii8sJNCRpB2GEGZykrnN5rAM/2Tez9f1k30
+	 A8SXm0G3RuyJomLqNYomZpZzrd2Xsv4KQoDfnnaRA4WsZ5BZc9xIEV89Untwy9itYn
+	 dTAx9Gq89eDsITq96jX60WqBLMgXaO9UZqyX7p3ZUtZ6cdpa5wQzJfhd7AhqDouw9Q
+	 VU+pSyImBjg1Qe1BC/HwJso6uAsuQpyuIe0iojlbzJYLNhCRh9B0xlPc/Cws187ioL
+	 qK7ai2DW1Jeocqg/oEVEIyttRnQs0OshGM+oFGzqorr5TrAZ9OHDINzO2j+V8EcbAr
+	 B+09mRb4A1MCA==
+Date: Wed, 23 Apr 2025 13:19:35 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
+Message-ID: <aAkTFyihA9bwBx6V@x1>
+References: <20250326044001.3503432-1-namhyung@kernel.org>
+ <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <080351cb-6c3d-4540-953d-6205f1ff0745@suse.com>
- <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------FE970QYjLz2b50Iy5t5x4Ioe"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------FE970QYjLz2b50Iy5t5x4Ioe
-Content-Type: multipart/mixed; boundary="------------mQHAHZCn0fpZPeY8nLddn93h";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <281505d5-7459-4903-887e-dc78a4c1fce4@suse.com>
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <080351cb-6c3d-4540-953d-6205f1ff0745@suse.com>
- <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-In-Reply-To: <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
+On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
+> Hello Namhyung,
+> 
+> On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > When -s/--summary option is used, it doesn't need (augmented) arguments
+> > of syscalls.  Let's skip the augmentation and load another small BPF
+> > program to collect the statistics in the kernel instead of copying the
+> > data to the ring-buffer to calculate the stats in userspace.  This will
+> > be much more light-weight than the existing approach and remove any lost
+> > events.
+> >
+> > Let's add a new option --bpf-summary to control this behavior.  I cannot
+> > make it default because there's no way to get e_machine in the BPF which
+> > is needed for detecting different ABIs like 32-bit compat mode.
+> >
+> > No functional changes intended except for no more LOST events. :)
+> >
+> >   $ sudo ./perf trace -as --summary-mode=total --bpf-summary sleep 1
+> >
+> >    Summary of events:
+> >
+> >    total, 6194 events
+> >
+> >      syscall            calls  errors  total       min       avg       max       stddev
+> >                                        (msec)    (msec)    (msec)    (msec)        (%)
+> >      --------------- --------  ------ -------- --------- --------- ---------     ------
+> >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
+> >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
+> >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
+> >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
+> >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
+> >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
+> >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
+> >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
+> >      ...
+> >
+> > Cc: Howard Chu <howardchu95@gmail.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> > v4)
+> >  * fix segfault on -S  (Howard)
+> >  * correct some comments  (Howard)
+> 
+> + if (!hashmap__find(hash, map_key->nr, &data)) {
+> 
+> I think you should mention the hashmap's map_key->nr update, as this
+> change is actually important for the feature.
+> 
+> >
+> > v3)
+> >  * support -S/--with-summary option too  (Howard)
+> >  * make it work only with -a/--all-cpus  (Howard)
+> >  * fix stddev calculation  (Howard)
+> >  * add some comments about syscall_data  (Howard)
+> >
+> > v2)
+> >  * Rebased on top of Ian's e_machine changes
+> >  * add --bpf-summary option
+> >  * support per-thread summary
+> >  * add stddev calculation  (Howard)
+> >
+> >  tools/perf/Documentation/perf-trace.txt       |   6 +
+> >  tools/perf/Makefile.perf                      |   2 +-
+> >  tools/perf/builtin-trace.c                    |  54 ++-
+> >  tools/perf/util/Build                         |   1 +
+> >  tools/perf/util/bpf-trace-summary.c           | 347 ++++++++++++++++++
+> >  .../perf/util/bpf_skel/syscall_summary.bpf.c  | 118 ++++++
+> >  tools/perf/util/bpf_skel/syscall_summary.h    |  25 ++
+> >  tools/perf/util/trace.h                       |  37 ++
+> >  8 files changed, 577 insertions(+), 13 deletions(-)
+> >  create mode 100644 tools/perf/util/bpf-trace-summary.c
+> >  create mode 100644 tools/perf/util/bpf_skel/syscall_summary.bpf.c
+> >  create mode 100644 tools/perf/util/bpf_skel/syscall_summary.h
+> >  create mode 100644 tools/perf/util/trace.h
+> >
+> > diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+> > index 887dc37773d0f4d6..a8a0d8c33438fef7 100644
+> > --- a/tools/perf/Documentation/perf-trace.txt
+> > +++ b/tools/perf/Documentation/perf-trace.txt
+> > @@ -251,6 +251,12 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+> >         pretty-printing serves as a fallback to hand-crafted pretty printers, as the latter can
+> >         better pretty-print integer flags and struct pointers.
+> >
+> > +--bpf-summary::
+> > +       Collect system call statistics in BPF.  This is only for live mode and
+> > +       works well with -s/--summary option where no argument information is
+> > +       required.
 
---------------mQHAHZCn0fpZPeY8nLddn93h
-Content-Type: multipart/mixed; boundary="------------hwRd1olu00ORJ06CZhGAHDwc"
+root@number:~#> 
+> It works with -S as well, doesn't it?
 
---------------hwRd1olu00ORJ06CZhGAHDwc
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Yes, I tested it:
 
-T24gMjMuMDQuMjUgMTE6MDMsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDQ6MTIg
-QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+Pj4gKw0KPj4+ICtzdGF0aWMgX19hbHdheXNf
-aW5saW5lIGJvb2wgX19yZG1zcnEodTMyIG1zciwgdTY0ICp2YWwsIGludCB0eXBlKQ0KPj4+
-ICt7DQo+Pj4gK8KgwqDCoCBib29sIHJldDsNCj4+PiArDQo+Pj4gKyNpZmRlZiBDT05GSUdf
-WEVOX1BWDQo+Pj4gK8KgwqDCoCBpZiAoY3B1X2ZlYXR1cmVfZW5hYmxlZChYODZfRkVBVFVS
-RV9YRU5QVikpDQo+Pj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiBfX3hlbnB2X3JkbXNycSht
-c3IsIHZhbCwgdHlwZSk7DQo+Pg0KPj4gSSBkb24ndCB0aGluayB0aGlzIHdpbGwgd29yayBm
-b3IgdGhlIFhlbiBQViBjYXNlLg0KPiANCj4gV2VsbCwgSSBoYXZlIGJlZW4gdGVzdGluZyB0
-aGUgY29kZSBvbiB4ZW4tNC4xNyBjb21pbmcgd2l0aCBVYnVudHUNCj4gMjQuMDQuMiBMVFMg
-OikNCg0KSG1tLCBzZWVtcyB0aGF0IHRoZSBhY2Nlc3NlZCBNU1IocykgYXJlIHRoZSBvbmVz
-IGZhbGxpbmcgYmFjayB0byB0aGUNCm5hdGl2ZV9yZG1zcigpIGNhbGxzLiBBdCBsZWFzdCBv
-biB0aGUgaGFyZHdhcmUgeW91IHRlc3RlZCBvbi4NCg0KPj4gWDg2X0ZFQVRVUkVfWEVOUFYg
-aXMgc2V0IG9ubHkgYWZ0ZXIgdGhlIGZpcnN0IE1TUiBpcyBiZWluZyByZWFkLg0KPiANCj4g
-Tm8gbWF0dGVyIHdoZXRoZXIgdGhlIGNvZGUgd29ya3Mgb3Igbm90LCBnb29kIGNhdGNoIQ0K
-PiANCj4+DQo+PiBUaGlzIGNhbiBiZSBmaXhlZCBieSBzZXR0aW5nIHRoZSBmZWF0dXJlIGVh
-cmxpZXIsIGJ1dCBpdCBzaG93cyB0aGF0IHRoZQ0KPj4gcGFyYXZpcnQgZmVhdHVyZSBoYXMg
-aXRzIGJlbmVmaXRzIGluIHN1Y2ggY2FzZXMuDQo+IA0KPiBTZWUgbXkgb3RoZXIgcmVwbHkg
-dG8gbGV0IFhlbiBoYW5kbGUgYWxsIHRoZSBkZXRhaWxzLg0KPiANCj4gUGx1cyB0aGUgY29k
-ZSBhY3R1YWxseSB3b3JrcywgSSB3b3VsZCBhY3R1YWxseSBhcmd1ZSB0aGUgb3Bwb3NpdGUg
-Oi1QDQoNCkJUVywgaXQgd2FzIGluIGtlcm5lbCA2LjEyIEkgaGFkIHRvIGNoYW5nZSB0aGUg
-TVNSIHJlYWQgZW11bGF0aW9uIGZvcg0KWGVuLVBWIHRoZSBsYXN0IHRpbWUgKGZpeCBzb21l
-IHByb2JsZW1zIHdpdGggY2hhbmdlZCB4ODYgdG9wb2xvZ3kNCmRldGVjdGlvbikuIFRoaW5n
-cyBsaWtlIHRoYXQgd29uJ3QgYmUgZWFzaWx5IHB1dCBpbnRvIHRoZSBoeXBlcnZpc29yLA0K
-d2hpY2ggbmVlZHMgdG8gc2VydmUgb3RoZXIgT1MtZXMsIHRvby4NCg0KDQpKdWVyZ2VuDQo=
+root@number:~# perf trace -aS --summary-mode=total --bpf-summary sleep 0.000000001
+     0.011 ( 0.008 ms): :146484/146484 execve(filename: "/home/acme/libexec/perf-core/sleep", argv: 0x7ffcdf2108f0, envp: 0x37fabf70) = -1 ENOENT (No such file or directory)
+     0.021 ( 0.002 ms): :146484/146484 execve(filename: "/root/.local/bin/sleep", argv: 0x7ffcdf2108f0, envp: 0x37fabf70) = -1 ENOENT (No such file or directory)
+     0.024 ( 0.002 ms): :146484/146484 execve(filename: "/root/bin/sleep", argv: 0x7ffcdf2108f0, envp: 0x37fabf70) = -1 ENOENT (No such file or directory)
+     0.026 ( 0.002 ms): :146484/146484 execve(filename: "/usr/local/sbin/sleep", argv: 0x7ffcdf2108f0, envp: 0x37fabf70) = -1 ENOENT (No such file or directory)
+     0.029 ( 0.001 ms): :146484/146484 execve(filename: "/usr/local/bin/sleep", argv: 0x7ffcdf2108f0, envp: 0x37fabf70) = -1 ENOENT (No such file or directory)
+         ? (         ): sudo/115804  ... [continued]: ppoll())                                            = 1
+     0.032 (         ): :146484/146484 execve(filename: "/usr/sbin/sleep", argv: 0x7ffcdf2108f0, envp: 0x37fabf70) ...
+     0.146 ( 0.002 ms): sudo/115804 rt_sigaction(sig: TTIN, act: (struct sigaction){.sa_handler = (__sighandler_t)0x557bdbdec4c0,.sa_flags = (long unsigned int)67108864,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, oact: 0x7ffff79f7d80, sigsetsize: 8) = 0
+     0.150 ( 0.003 ms): sudo/115804 read(fd: 9</dev/ptmx>, buf: 0x557be6008260, count: 65536)             = 297
+     0.155 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTIN, act: (struct sigaction){.sa_handler = (__sighandler_t)0x1,.sa_flags = (long unsigned int)335544320,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, sigsetsize: 8) = 0
+     0.158 ( 0.001 ms): sudo/115804 rt_sigprocmask(nset: 0x557bdbe1a6a0, oset: 0x7ffff79f7d70, sigsetsize: 8) = 0
+     0.162 ( 0.001 ms): sudo/115804 rt_sigprocmask(how: SETMASK, nset: 0x7ffff79f7d70, sigsetsize: 8)     = 0
+     0.165 ( 0.002 ms): sudo/115804 ppoll(ufds: 0x557be5f955b0, nfds: 5, sigsetsize: 8)                   = 2
+     0.169 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTIN, act: (struct sigaction){.sa_handler = (__sighandler_t)0x557bdbdec4c0,.sa_flags = (long unsigned int)67108864,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, oact: 0x7ffff79f7d80, sigsetsize: 8) = 0
+     0.171 ( 0.002 ms): sudo/115804 read(fd: 9</dev/ptmx>, buf: 0x557be6008389, count: 65239)             = 502
+     0.175 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTIN, act: (struct sigaction){.sa_handler = (__sighandler_t)0x1,.sa_flags = (long unsigned int)335544320,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, sigsetsize: 8) = 0
+     0.177 ( 0.001 ms): sudo/115804 rt_sigprocmask(nset: 0x557bdbe1a6a0, oset: 0x7ffff79f7d70, sigsetsize: 8) = 0
+     0.179 ( 0.001 ms): sudo/115804 rt_sigprocmask(how: SETMASK, nset: 0x7ffff79f7d70, sigsetsize: 8)     = 0
+     0.181 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTOU, act: (struct sigaction){.sa_handler = (__sighandler_t)0x557bdbdec4d0,.sa_flags = (long unsigned int)67108864,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, oact: 0x7ffff79f7d80, sigsetsize: 8) = 0
+     0.183 ( 0.004 ms): sudo/115804 write(fd: 8</dev/tty>, buf:          ? (         ): :146484/, count: 799) = 799
+     0.189 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTOU, act: (struct sigaction){.sa_handler = (__sighandler_t)0x1,.sa_flags = (long unsigned int)335544320,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, sigsetsize: 8) = 0
+     0.193 ( 0.002 ms): sudo/115804 ppoll(ufds: 0x557be5f955b0, nfds: 4, sigsetsize: 8)                   = 1
+     0.196 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTIN, act: (struct sigaction){.sa_handler = (__sighandler_t)0x557bdbdec4c0,.sa_flags = (long unsigned int)67108864,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, oact: 0x7ffff79f7d80, sigsetsize: 8) = 0
+     0.199 ( 0.002 ms): sudo/115804 read(fd: 9</dev/ptmx>, buf: 0x557be6008260, count: 65536)             = 379
+     0.201 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTIN, act: (struct sigaction){.sa_handler = (__sighandler_t)0x1,.sa_flags = (long unsigned int)335544320,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, sigsetsize: 8) = 0
+     0.203 ( 0.001 ms): sudo/115804 rt_sigprocmask(nset: 0x557bdbe1a6a0, oset: 0x7ffff79f7d70, sigsetsize: 8) = 0
+     0.205 ( 0.001 ms): sudo/115804 rt_sigprocmask(how: SETMASK, nset: 0x7ffff79f7d70, sigsetsize: 8)     = 0
+     0.206 ( 0.002 ms): sudo/115804 ppoll(ufds: 0x557be5f955b0, nfds: 5, sigsetsize: 8)                   = 1
+     0.209 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTOU, act: (struct sigaction){.sa_handler = (__sighandler_t)0x557bdbdec4d0,.sa_flags = (long unsigned int)67108864,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, oact: 0x7ffff79f7d80, sigsetsize: 8) = 0
+     0.211 ( 0.002 ms): sudo/115804 write(fd: 8</dev/tty>, buf: ): :146484/146484 execve(filenam, count: 379) = 379
+     0.213 ( 0.001 ms): sudo/115804 rt_sigaction(sig: TTOU, act: (struct sigaction){.sa_handler = (__sighandler_t)0x1,.sa_flags = (long unsigned int)335544320,.sa_restorer = (__sigrestore_t)0x7f50c6627bf0,}, sigsetsize: 8) = 0
+         ? (         ): ptyxis/3622  ... [continued]: ppoll())                                            = 1
+     0.215 (         ): sudo/115804 ppoll(ufds: 0x557be5f955b0, nfds: 4, sigsetsize: 8)                ...
+     0.196 ( 0.002 ms): ptyxis/3622 write(fd: 4<anon_inode:[eventfd]>, buf: \1\0\0\0\0\0\0\0, count: 8)   = 8
+     0.206 ( 0.003 ms): ptyxis/3622 read(fd: 41</dev/ptmx>, buf: 0x5586a84ee428, count: 8136)             = 800
+     0.209 ( 0.001 ms): ptyxis/3622 read(fd: 41</dev/ptmx>, buf: 0x5586a84ee747, count: 7337)             = -1 EAGAIN (Resource temporarily unavailable)
+     0.221 ( 0.001 ms): ptyxis/3622 write(fd: 4<anon_inode:[eventfd]>, buf: \1\0\0\0\0\0\0\0, count: 8)   = 8
+     0.224 ( 0.002 ms): ptyxis/3622 ppoll(ufds: 0x5586a7e8f120, nfds: 10, tsp: 0x7ffdd1fbb470, sigsetsize: 8) = 2
+     0.227 ( 0.001 ms): ptyxis/3622 read(fd: 4<anon_inode:[eventfd]>, buf: 0x7ffdd1fbb3a0, count: 8)      = 8
+     0.229 ( 0.001 ms): ptyxis/3622 write(fd: 4<anon_inode:[eventfd]>, buf: \1\0\0\0\0\0\0\0, count: 8)   = 8
+     0.231 ( 0.001 ms): ptyxis/3622 read(fd: 41</dev/ptmx>, buf: 0x5586a84ee747, count: 7337)             = 380
+     0.233 ( 0.001 ms): ptyxis/3622 read(fd: 41</dev/ptmx>, buf: 0x5586a84ee8c2, count: 6958)             = -1 EAGAIN (Resource temporarily unavailable)
+     0.234 ( 0.001 ms): ptyxis/3622 write(fd: 4<anon_inode:[eventfd]>, buf: \1\0\0\0\0\0\0\0, count: 8)   = 8
+     0.236 ( 0.001 ms): ptyxis/3622 ppoll(ufds: 0x5586a7e8f120, nfds: 10, tsp: 0x7ffdd1fbb470, sigsetsize: 8) = 1
+     0.238 ( 0.001 ms): ptyxis/3622 read(fd: 4<anon_inode:[eventfd]>, buf: 0x7ffdd1fbb3a0, count: 8)      = 8
+         ? (         ): mdns_service/5565  ... [continued]: recvfrom())                                         = -1 EAGAIN (Resource temporarily unavailable)
+     0.241 (         ): ptyxis/3622 ppoll(ufds: 0x5586a7e8f120, nfds: 10, tsp: 0x7ffdd1fbb470, sigsetsize: 8) ...
+     0.032 ( 0.627 ms): sleep/146484  ... [continued]: execve())                                           = 0
+     1.059 (         ): mdns_service/5565 recvfrom(fd: 292<socket:[81029]>, ubuf: 0x7f6cfdc454c0, size: 9000, addr: 0x7f6cfdc47b00, addr_len: 0x7f6cfdc47a00) ...
+     0.676 ( 0.001 ms): sleep/146484 brk()                                                                 = 0x56443e2d4000
+     0.689 ( 0.002 ms): sleep/146484 mmap(len: 8192, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS)           = 0x7fe66d41d000
+     0.693 ( 0.002 ms): sleep/146484 access(filename: "/etc/ld.so.preload", mode: R)                       = -1 ENOENT (No such file or directory)
+     0.698 ( 0.002 ms): sleep/146484 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
+     0.701 ( 0.001 ms): sleep/146484 fstat(fd: 3, statbuf: 0x7ffefb498350)                                 = 0
+     0.704 ( 0.003 ms): sleep/146484 mmap(len: 76091, prot: READ, flags: PRIVATE, fd: 3)                   = 0x7fe66d40a000
+     0.708 ( 0.001 ms): sleep/146484 close(fd: 3)                                                          = 0
+     0.712 ( 0.002 ms): sleep/146484 openat(dfd: CWD, filename: "/lib64/libc.so.6", flags: RDONLY|CLOEXEC) = 3
+     0.715 ( 0.001 ms): sleep/146484 read(fd: 3, buf: 0x7ffefb4984b8, count: 832)                          = 832
+     0.717 ( 0.001 ms): sleep/146484 pread64(fd: 3, buf: 0x7ffefb4980a0, count: 784, pos: 64)              = 784
+     0.719 ( 0.001 ms): sleep/146484 fstat(fd: 3, statbuf: 0x7ffefb498340)                                 = 0
+     0.722 ( 0.001 ms): sleep/146484 pread64(fd: 3, buf: 0x7ffefb497f80, count: 784, pos: 64)              = 784
+     0.723 ( 0.003 ms): sleep/146484 mmap(len: 2038872, prot: READ|EXEC, flags: PRIVATE|DENYWRITE, fd: 3)  = 0x7fe66d218000
+     0.727 ( 0.004 ms): sleep/146484 mmap(addr: 0x7fe66d387000, len: 479232, prot: READ, flags: PRIVATE|FIXED|DENYWRITE, fd: 3, off: 0x16f000) = 0x7fe66d387000
+     0.733 ( 0.003 ms): sleep/146484 mmap(addr: 0x7fe66d3fc000, len: 24576, prot: READ|WRITE, flags: PRIVATE|FIXED|DENYWRITE, fd: 3, off: 0x1e3000) = 0x7fe66d3fc000
+     0.737 ( 0.002 ms): sleep/146484 mmap(addr: 0x7fe66d402000, len: 31832, prot: READ|WRITE, flags: PRIVATE|FIXED|ANONYMOUS) = 0x7fe66d402000
+     0.743 ( 0.001 ms): sleep/146484 close(fd: 3)                                                          = 0
+     0.748 ( 0.002 ms): sleep/146484 mmap(len: 12288, prot: READ|WRITE, flags: PRIVATE|ANONYMOUS)          = 0x7fe66d215000
+     0.753 ( 0.001 ms): sleep/146484 arch_prctl(option: SET_FS, arg2: 0x7fe66d215740)                      = 0
+     0.754 ( 0.001 ms): sleep/146484 set_tid_address(tidptr: 0x7fe66d215a10)                               = 146484 (sleep)
+     0.757 ( 0.001 ms): sleep/146484 set_robust_list(head: (struct robust_list_head){.list = (struct robust_list){.next = (struct robust_list *)0x7fe66d215a20,},.futex_offset = (long int)-32,}, len: 24) = 0
+     0.759 ( 0.001 ms): sleep/146484 rseq(rseq: (struct rseq){.cpu_id = (__u32)4294967295,}, rseq_len: 32, sig: 1392848979) = 0
+     0.780 ( 0.003 ms): sleep/146484 mprotect(start: 0x7fe66d3fc000, len: 16384, prot: READ)               = 0
+     0.788 ( 0.002 ms): sleep/146484 mprotect(start: 0x564438854000, len: 4096, prot: READ)                = 0
+     0.792 ( 0.002 ms): sleep/146484 mprotect(start: 0x7fe66d459000, len: 8192, prot: READ)                = 0
+     0.798 ( 0.001 ms): sleep/146484 prlimit64(resource: STACK, old_rlim: 0x7ffefb498e90)                  = 0
+     0.807 ( 0.003 ms): sleep/146484 munmap(addr: 0x7fe66d40a000, len: 76091)                              = 0
+     0.817 ( 0.001 ms): sleep/146484 getrandom(ubuf: 0x7fe66d407218, len: 8, flags: NONBLOCK)              = 8
+     0.819 ( 0.001 ms): sleep/146484 brk()                                                                 = 0x56443e2d4000
+     0.821 ( 0.003 ms): sleep/146484 brk(brk: 0x56443e2f5000)                                              = 0x56443e2f5000
+     0.827 ( 0.032 ms): sleep/146484 openat(dfd: CWD, filename: "", flags: RDONLY|CLOEXEC)                 = 3
+     0.860 ( 0.001 ms): sleep/146484 fstat(fd: 3, statbuf: 0x7fe66d401800)                                 = 0
+     0.862 ( 0.002 ms): sleep/146484 mmap(len: 233242544, prot: READ, flags: PRIVATE, fd: 3)               = 0x7fe65f200000
+     0.867 ( 0.001 ms): sleep/146484 close(fd: 3)                                                          = 0
+     0.888 ( 0.003 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/locale.alias", flags: RDONLY|CLOEXEC) = 3
+     0.892 ( 0.001 ms): sleep/146484 fstat(fd: 3, statbuf: 0x7ffefb498a70)                                 = 0
+     0.895 ( 0.002 ms): sleep/146484 read(fd: 3, buf: 0x56443e2d5680, count: 4096)                         = 2998
+     0.901 ( 0.001 ms): sleep/146484 read(fd: 3, buf: 0x56443e2d5680, count: 4096)                         = 0
+     0.903 ( 0.001 ms): sleep/146484 close(fd: 3)                                                          = 0
+     0.909 ( 0.002 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/en_US.UTF-8/LC_MESSAGES/coreutils.mo") = -1 ENOENT (No such file or directory)
+     0.912 ( 0.001 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/en_US.utf8/LC_MESSAGES/coreutils.mo") = -1 ENOENT (No such file or directory)
+     0.914 ( 0.002 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/en_US/LC_MESSAGES/coreutils.mo") = -1 ENOENT (No such file or directory)
+     0.916 ( 0.001 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/en.UTF-8/LC_MESSAGES/coreutils.mo") = -1 ENOENT (No such file or directory)
+     0.918 ( 0.001 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/en.utf8/LC_MESSAGES/coreutils.mo") = -1 ENOENT (No such file or directory)
+     0.920 ( 0.002 ms): sleep/146484 openat(dfd: CWD, filename: "/usr/share/locale/en/LC_MESSAGES/coreutils.mo") = -1 ENOENT (No such file or directory)
+     0.930 ( 0.055 ms): sleep/146484 clock_nanosleep(rqtp: { .tv_sec: 0, .tv_nsec: 1 }, rmtp: 0x7ffefb4990f0) = 0
+     0.987 ( 0.001 ms): sleep/146484 close(fd: 1)                                                          = 0
+     0.989 ( 0.001 ms): sleep/146484 close(fd: 2)                                                          = 0
+     0.992 (         ): sleep/146484 exit_group()                                                          = ?
 
---------------hwRd1olu00ORJ06CZhGAHDwc
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+ Summary of events:
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+ total, 3096 events
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+   syscall            calls  errors  total       min       avg       max       stddev
+                                     (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- --------  ------ -------- --------- --------- ---------     ------
+   ppoll                317      0    47.372     0.000     0.149     3.804     17.80%
+   recvfrom               8      8    18.000     1.986     2.250     2.996      7.19%
+   sched_setaffinity       66      0     0.743     0.001     0.011     0.021      6.16%
+   execve                 6      5     0.644     0.001     0.107     0.630     97.28%
+   write               1268      0     0.548     0.000     0.000     0.005      2.30%
+   read                 390     75     0.158     0.000     0.000     0.012      9.19%
+   ioctl                138      1     0.119     0.000     0.001     0.011     14.79%
+   newfstatat            28     17     0.079     0.001     0.003     0.025     33.91%
+   rt_sigaction         446      0     0.077     0.000     0.000     0.002      4.78%
+   futex                 20      1     0.077     0.000     0.004     0.037     51.43%
+   openat                13      6     0.057     0.001     0.004     0.032     51.97%
+   clock_nanosleep        1      0     0.055     0.055     0.055     0.055      0.00%
+   rt_sigprocmask       290      0     0.047     0.000     0.000     0.002      5.61%
+   mmap                   8      0     0.021     0.002     0.003     0.004     12.60%
+   poll                   4      0     0.015     0.000     0.004     0.014     92.77%
+   readlink               5      0     0.014     0.001     0.003     0.005     28.80%
+   close                 15      0     0.009     0.000     0.001     0.001     12.52%
+   pread64               10      0     0.009     0.000     0.001     0.003     26.77%
+   recvmsg               17     13     0.008     0.000     0.000     0.002     23.80%
+   mprotect               3      0     0.006     0.002     0.002     0.003     15.31%
+   sendmsg                5      0     0.006     0.001     0.001     0.002     21.98%
+   fstat                  6      0     0.005     0.000     0.001     0.001     23.30%
+   brk                    3      0     0.004     0.001     0.001     0.003     39.48%
+   munmap                 1      0     0.003     0.003     0.003     0.003      0.00%
+   access                 1      1     0.002     0.002     0.002     0.002      0.00%
+   timerfd_settime        5      0     0.002     0.000     0.000     0.000     11.96%
+   eventfd2               1      0     0.002     0.002     0.002     0.002      0.00%
+   sched_getaffinity        2      0     0.001     0.001     0.001     0.001      0.96%
+   getrandom              1      0     0.001     0.001     0.001     0.001      0.00%
+   rt_sigreturn           1      0     0.001     0.001     0.001     0.001      0.00%
+   prlimit64              1      0     0.001     0.001     0.001     0.001      0.00%
+   set_tid_address        1      0     0.001     0.001     0.001     0.001      0.00%
+   getpid                 6      0     0.001     0.000     0.000     0.000     14.19%
+   arch_prctl             1      0     0.001     0.001     0.001     0.001      0.00%
+   set_robust_list        1      0     0.001     0.001     0.001     0.001      0.00%
+   rseq                   1      0     0.001     0.001     0.001     0.001      0.00%
+   fcntl                  3      0     0.001     0.000     0.000     0.000     20.48%
+   epoll_wait             2      0     0.001     0.000     0.000     0.000     38.12%
+   uname                  1      0     0.000     0.000     0.000     0.000      0.00%
+ 
+> Anyway, I don't mind adding these details later on, so
+> 
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
---------------hwRd1olu00ORJ06CZhGAHDwc--
+Thanks, applied to perf-tools-next,
 
---------------mQHAHZCn0fpZPeY8nLddn93h--
-
---------------FE970QYjLz2b50Iy5t5x4Ioe
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgJER4FAwAAAAAACgkQsN6d1ii/Ey9B
-OAgAgUnmx2ytj5fx0ZWLVVSeVgbrAkAAJwflobLTfsKbhnmAKSXlnLeLRLVkxNnEl2JtohZ6+oZD
-YIxawfxiIGTbwbemJOWdlKj6zJJE2cKl39wCE83gJZM/VGYiBo+Q0dTWWOWGfUJD04EkOMAAiJ96
-iI2xfjOnxm1YBb5TqBqC/CvC2mbHOg543h8N5NoVx39tEeSepbZH6UirBZ3B50y3/Zgp50DK2R3O
-6YLl6jBayBEHkZkqK59qYmjBrj6OriVMZpo5QCK+NLuv2mdv3O7hI1nKbmUmS94/7UcuHFtan862
-npbfPTBwkAXV5WDYJ7uyIdkMVl3F9PhN2zVI4a4VUQ==
-=Dl6w
------END PGP SIGNATURE-----
-
---------------FE970QYjLz2b50Iy5t5x4Ioe--
+- Arnaldo
