@@ -1,127 +1,121 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523928A1E8;
-	Wed, 23 Apr 2025 17:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EF726561E;
+	Wed, 23 Apr 2025 17:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745429297; cv=none; b=Bpur7RCzya8T7vlBNPFl4lULzlb3K3q4LaehlImk3DyxCxP9mBG8JJRG+xQtwHhm3e3KVn2MOM+G6hgUMVP853ytdNLKcl/LOvpq2//s9UluYm2upR+kZymui9EqnjUckP9ky43cM69dNp7JaHrhaO0AxDqgMlsAREKVerWyik4=
+	t=1745430118; cv=none; b=VgV040Bm1JFstbpu029S7H3zePDXE7rvpl41zNJ6Zh+D2JlzUYoeBkCAHfRDTkKDnlIeoAGRWBvfruQ0D00vHIJkn4At5/lvcxC8YeBEspOTqyrFgw2xFcn7o9weyIY2QNRakmUVsT4Y5K/sw6f6Km7h3KoqQ+Hyh1ZKlqoxX/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745429297; c=relaxed/simple;
-	bh=Wa2nKVy62V+d/qbDEyNIn13+ePN0sTeeuwvCl+4mMK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q1n8LgToSEjBW1RUf4KePU/OXUB5veqoo2RT+2Av52CU7IdgSvl7peRGfZ/FCvcSo7DSIZ8YUJ3xaEt7W7R8q3jhd1kJSonCUrG2OkIVZtLIZPkqBycoxYl49bBZ0CAFBgh97yX8AyhVT2croyGXh8iMK+7ero09RIKR4KMk4xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FYHpQRl8; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745430118; c=relaxed/simple;
+	bh=xxDEXBF4JOStXbO8ET7ZNLV54di3BzCWH33hKVBt2ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I60lr/bvNK8p5iXxiAAZBbO7jQZjdHXaktCDnFNkzz/UlsjpJtiz5fK1HsGsiAmJTlVVq+RlN9BIvs9GuzE6AE/lacONNCp2XE1d+RrCBDZArgBlUG5zDSL88cwmO/1pSAyOdOkIWgQdQZUMKWIUnFXI+G7ZtqVEYUArs4zjUYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTRxz3ej; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FYHpQRl8"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53NHRSwP3822273
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 10:27:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53NHRSwP3822273
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745429251;
-	bh=3DNEiH9ClADNNdC4s2AFGq03za4/i0hRtsw7HdWhX8Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FYHpQRl8w+nTjaGGRqdQx9A21dGh6eRp5/7vZcoeVQfJ9FBrAtuE4a8nbQdhPJpY7
-	 C5nTvzzz33F1edToPwWHSeJXgoh6SwIuUPr91pgD6ORF2jN+/5fZh9Ofi3nO2wDCgX
-	 NyB6TneZbcSNhKwI3FWPkvGtSRtfl8YKXephFBr2m8UWFGjBObYHKKsepz0L/aTUGo
-	 jFGXQZIyrJ70pWBdnFXn75qaBkvkid3XPvRU6MU8TH8CRJxSKjrb4b2UYHO+wGQ51t
-	 Z5W8BeQoRoZzPHd5lWutYI7E+jcqOoxDsMyaxvuPKWJE7ftMpslNO0VeQ/i0ZeFCUN
-	 zwJslGTaEkwWw==
-Message-ID: <0e5cf01a-2cc1-46a2-89c1-3bcc502229c8@zytor.com>
-Date: Wed, 23 Apr 2025 10:27:27 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTRxz3ej"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41F3C4CEEE;
+	Wed, 23 Apr 2025 17:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745430117;
+	bh=xxDEXBF4JOStXbO8ET7ZNLV54di3BzCWH33hKVBt2ME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fTRxz3ejXHjFcP3WcXvwUtu9b2s4sD4wHmnBIWzmOlNhMQfv4QTr9K35qcsboFZh8
+	 8LDtsDVIuqpzW0RQhR0b3wK0Gu6VoSNeP6aoHWH+CzVo8T5vG1frkdilVs9hQHS5VC
+	 Yc/1nJTIKM11meo5QpXvyicsiQkxwF0S6nnlStQaI1gMoNlD073xQP+QJ40w/T3JWQ
+	 GJEE21eN9iGSHVMNPzfTFybdr1hCgm1ZWOl8/UdFZ0yEXV62YhNIul6+XCNXlX4Y87
+	 3AuRAoyo9NDQlYEKksB2iNe5pL33MwSaQtfn1okUmwewtXxenyQOspigVe1iz6eDWd
+	 qQez9mwkyntSw==
+Date: Wed, 23 Apr 2025 10:41:55 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
+Message-ID: <aAkmY0hLXarmCSIA@google.com>
+References: <20250326044001.3503432-1-namhyung@kernel.org>
+ <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
+ <aAkUyFjRFLkS170u@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
- native_wrmsrq()
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-9-xin@zytor.com>
- <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAkUyFjRFLkS170u@x1>
 
-On 4/23/2025 8:51 AM, Dave Hansen wrote:
-> On 4/22/25 01:21, Xin Li (Intel) wrote:
->>   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
->>   {
->> -	u32 low, high;
->> -
->> -	low  = (u32)(val);
->> -	high = (u32)(val >> 32);
->> -
->> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
->> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
->>   }
-> 
-> A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
-> conversion, it could be sucked into the tree easily before the big
-> __wrmsr()=>native_wrmsrq() conversion.
-> 
-> Yeah, you'd have to base the big rename on top of this. But with a
-> series this big, I'd prioritize whatever gets it trimmed down.
+Hi Arnaldo,
 
-Okay, I will focus on cleanup first.
+On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
+> > Hello Namhyung,
+> > 
+> > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > When -s/--summary option is used, it doesn't need (augmented) arguments
+> > > of syscalls.  Let's skip the augmentation and load another small BPF
+> > > program to collect the statistics in the kernel instead of copying the
+> > > data to the ring-buffer to calculate the stats in userspace.  This will
+> > > be much more light-weight than the existing approach and remove any lost
+> > > events.
+> > >
+> > > Let's add a new option --bpf-summary to control this behavior.  I cannot
+> > > make it default because there's no way to get e_machine in the BPF which
+> > > is needed for detecting different ABIs like 32-bit compat mode.
+> > >
+> > > No functional changes intended except for no more LOST events. :)
+> > >
+> > >   $ sudo ./perf trace -as --summary-mode=total --bpf-summary sleep 1
+> > >
+> > >    Summary of events:
+> > >
+> > >    total, 6194 events
+> > >
+> > >      syscall            calls  errors  total       min       avg       max       stddev
+> > >                                        (msec)    (msec)    (msec)    (msec)        (%)
+> > >      --------------- --------  ------ -------- --------- --------- ---------     ------
+> > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
+> > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
+> > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
+> > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
+> > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
+> > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
+> > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
+> > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
+> > >      ...
+> 
+> I added the following to align sched_[gs]etaffinity,
+
+Thanks for processing the patch and updating this.  But I'm afraid there
+are more syscalls with longer names and this is not the only place to
+print the syscall names.  Also I think we need to update length of the
+time fields.  So I prefer handling them in a separate patch later.
+
+Thanks,
+Namhyung
+ 
+> 
+> diff --git a/tools/perf/util/bpf-trace-summary.c b/tools/perf/util/bpf-trace-summary.c
+> index 114d8d9ed9b2d3f3..af37d3bb5f9c42e7 100644
+> --- a/tools/perf/util/bpf-trace-summary.c
+> +++ b/tools/perf/util/bpf-trace-summary.c
+> @@ -139,9 +139,9 @@ static int print_common_stats(struct syscall_data *data, FILE *fp)
+>  		/* TODO: support other ABIs */
+>  		name = syscalltbl__name(EM_HOST, node->syscall_nr);
+>  		if (name)
+> -			printed += fprintf(fp, "   %-15s", name);
+> +			printed += fprintf(fp, "   %-17s", name);
+>  		else
+> -			printed += fprintf(fp, "   syscall:%-7d", node->syscall_nr);
+> +			printed += fprintf(fp, "   syscall:%-9d", node->syscall_nr);
+>  
+>  		printed += fprintf(fp, " %8u %6u %9.3f %9.3f %9.3f %9.3f %9.2f%%\n",
+>  				   stat->count, stat->error, total, min, avg, max,
