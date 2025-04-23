@@ -1,98 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AFA4315F;
-	Wed, 23 Apr 2025 13:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19491A08A6
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 13:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415204; cv=none; b=bf2BLBR0mqm4DqSSgOtvxUBBB5UiZhOq7MHFPKXVJxS1v2py2D9D3Guef5Pr2B3cxMjDndixb04k8RPh1PEM4g44diN0WVwRn/BLzgdcgy7H+crDZmLeuEpU0MtEVFpbH8/3n4+9+j/1EGAniEwRewJqwwWs5UaolzCAvEyDehM=
+	t=1745415435; cv=none; b=EVzTteY5exM4pkUBElWx28fUrqgqMr2Wz26Mb5SqCbYD+t/HbsAtq4LFcx1aO/PucGtXGNASx3fgbp3LRrh8wgYLkGUEpGd2qF/2qHcavMSEM1zQdm3RAlP2DTVKnCmsTmZ/g5daIA3wuKPWbG6UjCQ1xGwlVJ9wtb7tZTWzURo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415204; c=relaxed/simple;
-	bh=VhWoNd6QDgqzPaFDzKXzz8wt8AdcVP4ZGz7YZmxeeKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jsi10suw9j2pVs/L36a0E1g1NOWc9C/sX/a60xK07lvODn6SbFOTW7EBPmogjowkMAxY1lQfKcBwGQYfaC5FIgDffqnZac36FY879arlt45/qX72z6LuPGH5ezijMXPYBRniFhijFy+8udk3EFWkd6+iUrtZmLg20L4tptQFtmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lhv9eXCA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745415435; c=relaxed/simple;
+	bh=dXr0vdvJSE4CQmBa2fTuILJV/L6G5HpSxSHQ49PKVqY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PXpLq4EDHWqhEvcevBKFVRuTvClHoAcav68EWGHLWbcMb4f0t/qc6qXBl748FD4Lhuu08ZyHwmNPengRBJQPyq9I6yMjSOnZxl5JOBSZI7SHCRszKVIwY/ofAfLphETfZgxcg2FwdxkAzSESYE+KZhQjCOaKQJeauy4cwALIIcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nT0JZxbk; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lhv9eXCA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1DDC4CEE2;
-	Wed, 23 Apr 2025 13:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745415203;
-	bh=VhWoNd6QDgqzPaFDzKXzz8wt8AdcVP4ZGz7YZmxeeKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lhv9eXCAUwFGvkecgZ/eXjJ8bnIqiwFBvuGfgk2GFw95jkXdOvlGDcGExkfZMNYsz
-	 MWvWRyDJ5sWBaqUw0eBxIUgEt/9jMR2rL+AeQlkRyCzRuQPnVGxWYtG0PERSHWEpXC
-	 KpDfGrpzfjnp6HQ2ovpMeUQwRLs1gL9hRnjqlycOf2g0/vobi4OezLLds31Ai8uk2b
-	 WPhE+7tUHrcir6ybEQzRfYnmxq3DmYxw3zrxf3nkSkO2MkM1W8SnPmWQEhK9GqBbzp
-	 R1nLlXMtPC5TSNrYKI6U9Nw1A1Px1mrAbkU3uMgVcYIAHTA/E658gjztNdVOkMy2s9
-	 9fZsDIFNEnNPw==
-Date: Wed, 23 Apr 2025 10:33:20 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Caleb Biggers <caleb.biggers@intel.com>,
-	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: Re: [PATCH v5 00/16] Intel TPEBS min/max/mean/last support
-Message-ID: <aAjsIGKS6e3MfI60@x1>
-References: <20250414174134.3095492-1-irogers@google.com>
- <cfa0aa31-3fe7-4174-8cce-89e8aadbcd07@linux.intel.com>
- <CAP-5=fVo_yGgEwndavWaNAQRg=1MR121PQ-KwOW0HsUWGBLLnA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nT0JZxbk"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30828f9af10so13580988a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 06:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745415433; x=1746020233; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
+        b=nT0JZxbkLOWuAaq4nDpqtJy0UU3fVSwyW/pnNNBGYtoYR/+veEUbsw1SW7uJkXUY9+
+         O8RFZ5mI3iZ/bhFeyS6mpQMMAXezkdZIzt5lXK/oKDFsuDimPPcn2I6rOaU8XnWilwy4
+         Qflh7jQ/97QLXGCjRrnvUz0MJpppmkyoylDcvcx1GHi73/C77pzsSBWavAJzDCuOl8Vu
+         Bx69HB/Nd+cusCL5TPzdZ2tLrS0aQKRNqjrAQAhL7fNktV8FmsgyGiJ37d7CE0puVmjy
+         sSKyhx/48E0CSccNslHjG8NDhKl65lvTaigTuvvrWJaiU24iVs3SZBs7noSsvJEIf+mE
+         70Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745415433; x=1746020233;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
+        b=thRjCPir75EqRILcgHJVNt8OeQMUZHUGDqd+D4W+mVnN3fJpWAGfoWP/9O385YA7bb
+         K1WmqBktFU0dZG0MFbvLaJK2tikzYxgdyibcUkDuyVOaN0NC/O/3+x7HsUg5l3nBe6b0
+         xLpmJUG0hIWa48QG08RWYP1WrUTOJtbDnWEVNL1lkpJCUAZCV7biicvEXvwlFIX03XxX
+         9UmioW+/t+UNLJlUmkT8IpYUuNt8qyyBHflNFgAf4QMzPXt46gUvmJgxdlppJcPNAm5V
+         olxmoRmOsoLKZB612lPTG9Q2yEQ1e0mFE0U0dE60YAXSkDkXXMePwYxQ6uJdMErCUb8C
+         vaNw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+I04oXSAmlGJ6ljRxExK5VkumKk8kVu1r15staVsqxIQS6hE2CSEa+lNOBdqeGweCDFvMu5wVnJD2tAI5ixLa@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1pCD3/R/Pbtpf3kF0XXEos7wJ562eSKKl7ToyRfgFeR3CKuw8
+	Xu6mxNAEgJ0aajyx8GEUPoYME6fbUsIKhfeCvv1oohjLDGg3gAh3/3oLKamB9YrQy5iktejvuOT
+	j4g==
+X-Google-Smtp-Source: AGHT+IEWS42km52dkYFlmcKZWmN1wttg5SPG3JN+o4kIB9LzXEDLrbHh1gdrPp7a64YZSw75FwPTF5N3xvo=
+X-Received: from pjur12.prod.google.com ([2002:a17:90a:d40c:b0:308:867e:1ced])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2650:b0:2ee:9b2c:3253
+ with SMTP id 98e67ed59e1d1-3087bbc9333mr25668631a91.30.1745415432973; Wed, 23
+ Apr 2025 06:37:12 -0700 (PDT)
+Date: Wed, 23 Apr 2025 06:37:11 -0700
+In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVo_yGgEwndavWaNAQRg=1MR121PQ-KwOW0HsUWGBLLnA@mail.gmail.com>
+Mime-Version: 1.0
+References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-11-xin@zytor.com>
+ <aAexLqjhKncFyw2V@google.com> <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+Message-ID: <aAjtBxzvRgNt4Uzr@google.com>
+Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
+ native_rdmsrq() uses
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
+	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
+	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
+	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 21, 2025 at 11:13:49AM -0700, Ian Rogers wrote:
-> On Mon, Apr 14, 2025 at 12:08 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
-> > On 2025-04-14 1:41 p.m., Ian Rogers wrote:
-> > > Ian Rogers (16):
-> > >   perf intel-tpebs: Cleanup header
-> > >   perf intel-tpebs: Simplify tpebs_cmd
-> > >   perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
-> > >   perf intel-tpebs: Separate evsel__tpebs_prepare out of
-> > >     evsel__tpebs_open
-> > >   perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
-> > >   perf intel-tpebs: Reduce scope of tpebs_events_size
-> > >   perf intel-tpebs: Inline get_perf_record_args
-> > >   perf intel-tpebs: Ensure events are opened, factor out finding
-> > >   perf intel-tpebs: Refactor tpebs_results list
-> > >   perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
-> > >   perf intel-tpebs: Add mutex for tpebs_results
-> > >   perf intel-tpebs: Don't close record on read
-> > >   perf intel-tpebs: Use stats for retirement latency statistics
-> > >   perf stat: Add mean, min, max and last --tpebs-mode options
-> > >   perf pmu-events: Add retirement latency to JSON events inside of perf
-> > >   perf record: Retirement latency cleanup in evsel__config
+On Wed, Apr 23, 2025, Xin Li wrote:
+> On 4/22/2025 8:09 AM, Sean Christopherson wrote:
+> > I strongly prefer that we find a way to not require such verbose APIs, especially
+> > if KVM ends up using native variants throughout.  Xen PV is supposed to be the
+> > odd one out, yet native code is what suffers.  Blech.
+> 
+> Will try to figure out how to name the APIs.
+> 
+> One reason I chose verbose names is that short names are in use and
+> renaming needs to touch a lot of files (and not fun at all).
 
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
- 
-> Ping.
- 
-> It would be great if we could land:
-> https://lore.kernel.org/lkml/CAP-5=fWxuKHLZJjd2NVWjA7ktCX6X3yQBsH2kh+eTTaNcSqbTg@mail.gmail.com/T/#m1bba00c3a699397b54e1a77da9b9ff392b435e4d
-> and then land this series.
+Yeah, I've looked at modifying rdmsrl() to "return" a value more than once, and
+ran away screaming every time.
 
-Applied that and then this one,
-
-Thanks,
-
-- Arnaldo
+But since you're already doing a pile of renames, IMO this is the perfect time to
+do an aggressive cleanup.
