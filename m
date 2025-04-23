@@ -1,118 +1,134 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C611EA7DD;
-	Wed, 23 Apr 2025 00:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBB819D07B
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 05:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745367489; cv=none; b=JCGBqTvtg2gks6N7iPAamLo3uXaLCnpaVSJ4S8lUpVMbtSEJfgD0qUJ9DzqsO/lkGxJ4vsvU5ESzyFK5d9iXcqRE0LKMNQKbiwsvL04OVuNvjHDb0xycREI6Ah4FUvYQEVeN5IokfwolIk2KZj1ShX5JyyNJPVUqvjHHoGc3pm0=
+	t=1745384644; cv=none; b=Ef/7mGUfPxPzRiqFKOYXmNbH4VN3mNEhqXkZtQ64mCu+cQPO2+Y+4BPGzESK1PmQl//sYFCUCXPukVU0kKIoTCp+XPobm6eZB18BeMMSFOX/01VEdg8utIIe3UZouH17cJkvt/gyx7TjRAOS+k2kPi9khLCShNPCV3Bqx6ZJLV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745367489; c=relaxed/simple;
-	bh=oCq3FEMp4oYWYDtLba7KpYl9dlOTixalU2uzeiDdgFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r5rXM3BSqtJCu1Rajt0MC9ba5Sith6bhMlAXPt46P/G/lWVrgWciKDZ3LSkVx3y087oxe7shmZT/3SJv8+HOPa1+JjmHY/CGAudoXqVDjv7mz36cHwAjXPTWxE+l5QJQ79di+4g+6o7IKUxiv+H7F/PJ1bGqGjNxnjDwfWYZVYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZXnPxwMI; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745384644; c=relaxed/simple;
+	bh=oB2HzbtYpc9Q5I3Vg5QkTUqM7V3SyGu8YJi7lZs4R10=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XkBS2DT5k2o0ubZ3+ZxvPUvOJaWII6Tj0GBOL0GUPLGaTMj8rqnZXXMXFXSCRLDNBI+2rCXxPUOp0axGgSu4XOAp5R5rNtVp2HgY6SKnsw1/FFbW/mskNIC72CNkcLk4wS7GA6dOk92hWjCypofToxZek980Cw9iAm72Dt5gFO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=urA9eEN0; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZXnPxwMI"
-Message-ID: <9d827020-ee6c-40c2-a83d-7eb9a00f8aa8@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745367484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QxWWJwIhRG++LmaYSHq+CfihXUQKS791vet7ACFep64=;
-	b=ZXnPxwMIzj+wa71041mXF8qVCG8DMEdoDp5cKh6/OMUSbnHJsUOr8pPMBvEd3bQ/lHmxd/
-	261GdghcLYCbTAGewnTK4Ot6fNFDvrhR49od4TTjQzTj23cS2qBBQ4F8ovitKxuEcZ+fxm
-	Zux3jbOBlbr4jgIwtMYVJCM6Qj1SoZM=
-Date: Tue, 22 Apr 2025 17:17:56 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="urA9eEN0"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so5332467a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Apr 2025 22:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745384642; x=1745989442; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c8FjqkwUOy/feAuFkYLTMBE7cfoy6lLV0uD1r/cCh0I=;
+        b=urA9eEN0xh/Ca70FjmQBJ9h8vxHH4EwzhE44wwEDiTeMR86L+K4xZia+qpAw+qjgFk
+         pOlOEocjeLssDpeuW615c7tKEsOgA3G2ysJISlVVYDUgcCrADrbkDCLd7MJjv0Dqlwv6
+         JR0S6QB9IqV79YvVehf5qEnav+VFIse3JwUeFLvRz4cDqCMdCoCUsnDySkv9StDj9HCZ
+         ozXK1dtbgce/HcfF8lGKkBsdvvKuPV9Ju4SbKki94fTel3ExzAqNYAvR2TvgyvSSDPYt
+         mmDXZCKJfiuGz50fLALmTB1UflrKwMNsHCpmeRXf9oKY+sHESIWRezcRXz/kTRIitchE
+         VzAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745384642; x=1745989442;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c8FjqkwUOy/feAuFkYLTMBE7cfoy6lLV0uD1r/cCh0I=;
+        b=d3PL6DiDmSWrFLJPATYCwLM1sKT71E3EDjQjSd137lCWyztCSkgU5wdMGc77KxImxI
+         bPjitOs4NkNk1qHBIPN86mzdGwRb7nTvujL/8coLS6T6S9J3IxaCfYrbrJ0lk00q4vXF
+         OaV9hJkMrIfoH9C2NxIvgGt5rhuo2Vy+J/I8uOyLiWBHH95l1SjEtBB0vxTYbKDjdlI9
+         qww1f+lCSEJg76/L8VIxVCka6m1HoC1htgjlJXuwT9/UuhS7DOKgaFeullX9+IOm38O9
+         g16ixcFgJWYwpmlPNA7xc9QknLf5pej1nSIhOYAWmTz9Z1bFcsszjPxiJIrH1nLmyHRb
+         37Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXr9h4pIR+v6PtqRi97ZZKzVFpv+A8p3I7vTFQ5IC3eLRsb2lc/PJfnPOeieqKMOUWqMNIfVZeikVHAnleQvUrb@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpkii8CNU20PJKvHXbYoqg7u3lPi9LnEy1wFteUpZ/jWgsP1GT
+	Qi6r+0+l6VPB502LDDnEMOtsJTlzfDleaIAND5CF3B8If9QOLeNBnkN10MftSu3xRaqIqMhY/km
+	gOCfKWQ==
+X-Google-Smtp-Source: AGHT+IEbKVuQ+IUoxTP2GjaxL/FeIucG9KFtnMOdHmvOXU/9QIWe+RKO8d61OXFu3KMCelLXzw2U8CktptGb
+X-Received: from pji15.prod.google.com ([2002:a17:90b:3fcf:b0:301:1bf5:2f07])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d448:b0:2ff:4f04:4266
+ with SMTP id 98e67ed59e1d1-3087bbc22b1mr22444810a91.23.1745384641976; Tue, 22
+ Apr 2025 22:04:01 -0700 (PDT)
+Date: Tue, 22 Apr 2025 22:03:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH v5 20/21] tools/perf: Pass the Counter constraint values
- in the pmu events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
- <20250327-counter_delegation-v5-20-1ee538468d1b@rivosinc.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250327-counter_delegation-v5-20-1ee538468d1b@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250423050358.94310-1-irogers@google.com>
+Subject: [PATCH v1] perf tool_pmu: Fix aggregation on duration_time
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/27/25 12:36 PM, Atish Patra wrote:
-> RISC-V doesn't have any standard event to counter mapping discovery
-> mechanism in the ISA. The ISA defines 29 programmable counters and
-> platforms can choose to implement any number of them and map any
-> events to any counters. Thus, the perf tool need to inform the driver
-> about the counter mapping of each events.
-> 
-> The current perf infrastructure only parses the 'Counter' constraints
-> in metrics. This patch extends that to pass in the pmu events so that
-> any driver can retrieve those values via perf attributes if defined
-> accordingly.
-> 
+evsel__count_has_error fails counters when the enabled or running time
+are 0. The duration_time event reads 0 when the cpu_map_idx != 0 to
+avoid aggregating time over CPUs. Change the enable and running time
+to always have a ratio of 100% so that evsel__count_has_error won't
+fail.
 
-Hi Ian/Arnaldo/Namhyung,
-Any thoughts on this patch ? Please let me know if there are any other 
-better approaches to pass the counter constraints to the driver ?
+Before:
+```
+$ sudo /tmp/perf/perf stat --per-core -a -M UNCORE_FREQ sleep 1
 
-The RISC-V pmu driver maps the attr.config2 with counterid_mask value
-so that driver can parse the counter restrictions.
+ Performance counter stats for 'system wide':
 
+S0-D0-C0              1      2,615,819,485      UNC_CLOCK.SOCKET                 #     2.61 UNCORE_FREQ
+S0-D0-C0              2      <not counted>      duration_time
 
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->   tools/perf/pmu-events/jevents.py | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index fdb7ddf093d2..f9f274678a32 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -274,6 +274,11 @@ class JsonEvent:
->           return fixed[name.lower()]
->         return event
->   
-> +    def counter_list_to_bitmask(counterlist):
-> +      counter_ids = list(map(int, counterlist.split(',')))
-> +      bitmask = sum(1 << pos for pos in counter_ids)
-> +      return bitmask
-> +
->       def unit_to_pmu(unit: str) -> Optional[str]:
->         """Convert a JSON Unit to Linux PMU name."""
->         if not unit or unit == "core":
-> @@ -427,6 +432,10 @@ class JsonEvent:
->         else:
->           raise argparse.ArgumentTypeError('Cannot find arch std event:', arch_std)
->   
-> +    if self.counters['list']:
-> +      bitmask = counter_list_to_bitmask(self.counters['list'])
-> +      event += f',counterid_mask={bitmask:#x}'
-> +
->       self.event = real_event(self.name, event)
->   
->     def __repr__(self) -> str:
-> 
+       1.002111784 seconds time elapsed
+```
+
+After:
+```
+$ perf stat --per-core -a -M UNCORE_FREQ sleep 1
+
+ Performance counter stats for 'system wide':
+
+S0-D0-C0              1        758,160,296      UNC_CLOCK.SOCKET                 #     0.76 UNCORE_FREQ
+S0-D0-C0              2      1,003,438,246      duration_time
+
+       1.002486017 seconds time elapsed
+```
+
+Note: the metric reads the value a different way and isn't impacted.
+
+Reported-by: Stephane Eranian <eranian@google.com>
+Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/tool_pmu.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 97b327d1ce4a..727a10e3f990 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -486,8 +486,14 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
+ 		delta_start *= 1000000000 / ticks_per_sec;
+ 	}
+ 	count->val    = delta_start;
+-	count->ena    = count->run = delta_start;
+ 	count->lost   = 0;
++	/*
++	 * The values of enabled and running must make a ratio of 100%. The
++	 * exact values don't matter as long as they are non-zero to avoid
++	 * issues with evsel__count_has_error.
++	 */
++	count->ena++;
++	count->run++;
+ 	return 0;
+ }
+ 
+-- 
+2.49.0.805.g082f7c87e0-goog
 
