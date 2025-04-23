@@ -1,121 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EF726561E;
-	Wed, 23 Apr 2025 17:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0336C265609
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 19:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430118; cv=none; b=VgV040Bm1JFstbpu029S7H3zePDXE7rvpl41zNJ6Zh+D2JlzUYoeBkCAHfRDTkKDnlIeoAGRWBvfruQ0D00vHIJkn4At5/lvcxC8YeBEspOTqyrFgw2xFcn7o9weyIY2QNRakmUVsT4Y5K/sw6f6Km7h3KoqQ+Hyh1ZKlqoxX/o=
+	t=1745437945; cv=none; b=nO+nygciZOTW/WPV++vrCRfNG1s1WBgHDEQhvmqZiNdaFR2XFuLcvXMuNRBx3Pr/PZSt60gHihYVD/U6TRGQ8/nomQ9YyQHYgZ/yhlQVJrlXaKen6hFE0RpAx4Rqjy6WNKQiAq+/SH42NID1PCkEmv7vmSxpHP7pzYbNqn2VkDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430118; c=relaxed/simple;
-	bh=xxDEXBF4JOStXbO8ET7ZNLV54di3BzCWH33hKVBt2ME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I60lr/bvNK8p5iXxiAAZBbO7jQZjdHXaktCDnFNkzz/UlsjpJtiz5fK1HsGsiAmJTlVVq+RlN9BIvs9GuzE6AE/lacONNCp2XE1d+RrCBDZArgBlUG5zDSL88cwmO/1pSAyOdOkIWgQdQZUMKWIUnFXI+G7ZtqVEYUArs4zjUYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTRxz3ej; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745437945; c=relaxed/simple;
+	bh=6CFbqi4rYx8ZGB/rgVhh/cJewRwwE8YJCMFAGQ8OFpM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hXppEwYcIxGrMvh8LVn7VfBB8i0VAZF0GtiDnvdtTkaXVv5GMXe+/AtH1ln9MffP3EB1mNyr9Iw/Mu2KPbuJ01Z07L0SYr/xseNGitP+bMC18QCtUwText//Jj4a8KsKl/2ycWwqrttq6n9whWV6/utPYJGNHGQ9lcWnMQ+6q7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ywyS3iY9; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTRxz3ej"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41F3C4CEEE;
-	Wed, 23 Apr 2025 17:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745430117;
-	bh=xxDEXBF4JOStXbO8ET7ZNLV54di3BzCWH33hKVBt2ME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fTRxz3ejXHjFcP3WcXvwUtu9b2s4sD4wHmnBIWzmOlNhMQfv4QTr9K35qcsboFZh8
-	 8LDtsDVIuqpzW0RQhR0b3wK0Gu6VoSNeP6aoHWH+CzVo8T5vG1frkdilVs9hQHS5VC
-	 Yc/1nJTIKM11meo5QpXvyicsiQkxwF0S6nnlStQaI1gMoNlD073xQP+QJ40w/T3JWQ
-	 GJEE21eN9iGSHVMNPzfTFybdr1hCgm1ZWOl8/UdFZ0yEXV62YhNIul6+XCNXlX4Y87
-	 3AuRAoyo9NDQlYEKksB2iNe5pL33MwSaQtfn1okUmwewtXxenyQOspigVe1iz6eDWd
-	 qQez9mwkyntSw==
-Date: Wed, 23 Apr 2025 10:41:55 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
-Message-ID: <aAkmY0hLXarmCSIA@google.com>
-References: <20250326044001.3503432-1-namhyung@kernel.org>
- <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
- <aAkUyFjRFLkS170u@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ywyS3iY9"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so3466076d6.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 12:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745437943; x=1746042743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0xVavQGeHiKp7rEiymJ5kdyLh0t3H4T8Z/fRsD3R+Vc=;
+        b=ywyS3iY9aaQBGYSlCyP3Nhl7+XtapcTMxc3Znr0nYP7b6i5DpcX448vNu0zz9JjYX8
+         IFaDwg5mTLIYD4UpslcMOVADTaTn4c/CU//HvniXx/GTo2hYGgKx4aAiV84H3kL/aNfg
+         O0ji3AX8JiRSjdcTBsuETrG2FbOiBnvvUSWuCBTpaz7X3iHq70+UIZNb9yPSEdoJmq+f
+         Z62cwgcYqyBDk7/+I4Jv6NjW2vbUDn42HrJbo8TrQFk9CcrPIpIPqTTUYa8EymI7PkCR
+         GIqful2iWfVaoyZekvmu86lsWblzio5Vy46JIUIQ1LGPURomgY58YvVwU7E3r3G9JPJ4
+         sjLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745437943; x=1746042743;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0xVavQGeHiKp7rEiymJ5kdyLh0t3H4T8Z/fRsD3R+Vc=;
+        b=Gbj1TszWxPzbykNSi1AJuZxdeBExm7pUYMc3Q15XUWa9eyn+3gU9/njVPm3T+rJROe
+         pvdRNT0dthrPPSkEPY2NireX1HREN0VsNA3saHm71QcRRWBNUJlWLfZ8jgwJmvm7/4qQ
+         X4sUeezgliTJHhiwgJk2kjTcKmWSdONwVD7YvwmkMNu2xG4CHJd6PehjoY/RbMNn/lSf
+         HKEqEjfTMNyh4CMPm3t1EHfkqJ9dsL64nzki3bJIcztfpv45vZStnBOz3HCJyRCp9hE2
+         ocXRDqbw+dcf+Ooquncq/4kdCcG3zvSS3th2vWn6GKYFhO+UpYzqHFEuCDiujmFClqdW
+         IfFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrPus6BwUiWvQVjUBMy/o3KmLtJsShVulrgi9Dy6AlX7VGiDY/dhJQY60pghI9BR1rt2Txf2PAs/Ho8vzQk4W5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUI2KtqyXfW+1reSJJxKcCHXqVS+Jn8l0JBYxMPxG4ABV4r8yR
+	HUEm4e/VFThPS5+S93CknZX2lcV4z8BIazRL++j6yMj6qPX0J8QgTJeMTQRuSI2hPjxR1bUdd2v
+	iV7PVsFsPFaQCfQqJRpP7ghBtO1i55+HoAgc=
+X-Gm-Gg: ASbGnctQds5CiGd2LDZoOXrcSUA6OqzBNMrvMPjms/6HXWAF6y+buUwogQtcrahIPBc
+	BpkIyoNgxv+/OgjyiswEUjCd6ZopSn42T34W025DI7qVFjYCbGLP/8wsojTXkIHPtCE4i6UX6fq
+	PRiplyBABbMtAXSga3aujx+5heE7H/9pVgNnahEBpGPwSrdxTQevE=
+X-Google-Smtp-Source: AGHT+IGvkeMBlU3PpGjnWugnhbT53UHQ7DwITUrvLyvzt1HBLSHaQaZ8fpdIp3kWeT20F4N4HGIU5JKsHeWBdDZUuKM=
+X-Received: by 2002:a05:6214:27ce:b0:6cb:ee08:c1e8 with SMTP id
+ 6a1803df08f44-6f4bfc1a1f9mr498676d6.23.1745437942447; Wed, 23 Apr 2025
+ 12:52:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAkUyFjRFLkS170u@x1>
+References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-2-yabinc@google.com>
+ <48640298-effa-42d4-9137-a18a51637f03@linaro.org> <aAeQcgmL-iqGbG_g@gmail.com>
+ <20250422141026.GH28953@e132581.arm.com>
+In-Reply-To: <20250422141026.GH28953@e132581.arm.com>
+From: Yabin Cui <yabinc@google.com>
+Date: Wed, 23 Apr 2025 12:52:11 -0700
+X-Gm-Features: ATxdqUF-LMwUWmW3taSe4IV8gwEgoHiIaDfjDbYRrV--toG-Jr8hdz8bhgWNT-Q
+Message-ID: <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU capability
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>, James Clark <james.clark@linaro.org>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo,
+On Tue, Apr 22, 2025 at 7:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
+>
+> [...]
+>
+> > > Hi Yabin,
+> > >
+> > > I was wondering if this is just the opposite of
+> > > PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default
+> > > for all devices to solve the issue you describe. Because we already
+> > > have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages.
+> > > Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high order
+> > > allocations for AUX buffers optimistically") that explains that the
+> > > current allocation strategy is an optimization.
+> > >
+> > > Your change seems to decide that for certain devices we want to
+> > > optimize for fragmentation rather than performance. If these are
+> > > rarely used features specifically when looking at performance should
+> > > we not continue to optimize for performance? Or at least make it user
+> > > configurable?
+> >
+> > So there seems to be 3 categories:
+> >
+> >  - 1) Must have physically contiguous AUX buffers, it's a hardware ABI.
+> >       (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
+> >
+> >  - 2) Would be nice to have continguous AUX buffers, for a bit more
+> >       performance.
+> >
+> >  - 3) Doesn't really care.
+> >
+> > So we do have #1, and it appears Yabin's usecase is #3?
 
-On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
-> > Hello Namhyung,
-> > 
-> > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > When -s/--summary option is used, it doesn't need (augmented) arguments
-> > > of syscalls.  Let's skip the augmentation and load another small BPF
-> > > program to collect the statistics in the kernel instead of copying the
-> > > data to the ring-buffer to calculate the stats in userspace.  This will
-> > > be much more light-weight than the existing approach and remove any lost
-> > > events.
-> > >
-> > > Let's add a new option --bpf-summary to control this behavior.  I cannot
-> > > make it default because there's no way to get e_machine in the BPF which
-> > > is needed for detecting different ABIs like 32-bit compat mode.
-> > >
-> > > No functional changes intended except for no more LOST events. :)
-> > >
-> > >   $ sudo ./perf trace -as --summary-mode=total --bpf-summary sleep 1
-> > >
-> > >    Summary of events:
-> > >
-> > >    total, 6194 events
-> > >
-> > >      syscall            calls  errors  total       min       avg       max       stddev
-> > >                                        (msec)    (msec)    (msec)    (msec)        (%)
-> > >      --------------- --------  ------ -------- --------- --------- ---------     ------
-> > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
-> > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
-> > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
-> > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
-> > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
-> > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
-> > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
-> > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
-> > >      ...
-> 
-> I added the following to align sched_[gs]etaffinity,
+Yes, in my usecase, I care much more about MM-friendly than a little potent=
+ial
+performance when using PMU. It's not a rarely used feature. On Android, we
+collect ETM data periodically on internal user devices for AutoFDO optimiza=
+tion
+(for both userspace libraries and the kernel). Allocating a large
+chunk of contiguous
+AUX pages (4M for each CPU) periodically is almost unbearable. The kernel m=
+ay
+need to kill many processes to fulfill the request. It affects user
+experience even
+after using PMU.
 
-Thanks for processing the patch and updating this.  But I'm afraid there
-are more syscalls with longer names and this is not the only place to
-print the syscall names.  Also I think we need to update length of the
-time fields.  So I prefer handling them in a separate patch later.
+I am totally fine to reuse PERF_PMU_CAP_AUX_NO_SG. If PMUs don't want to
+sacrifice performance for MM-friendly, why support scatter gather mode? If =
+there
+are strong performance reasons to allocate contiguous AUX pages in
+scatter gather
+mode, I hope max_order is configurable in userspace.
 
-Thanks,
-Namhyung
- 
-> 
-> diff --git a/tools/perf/util/bpf-trace-summary.c b/tools/perf/util/bpf-trace-summary.c
-> index 114d8d9ed9b2d3f3..af37d3bb5f9c42e7 100644
-> --- a/tools/perf/util/bpf-trace-summary.c
-> +++ b/tools/perf/util/bpf-trace-summary.c
-> @@ -139,9 +139,9 @@ static int print_common_stats(struct syscall_data *data, FILE *fp)
->  		/* TODO: support other ABIs */
->  		name = syscalltbl__name(EM_HOST, node->syscall_nr);
->  		if (name)
-> -			printed += fprintf(fp, "   %-15s", name);
-> +			printed += fprintf(fp, "   %-17s", name);
->  		else
-> -			printed += fprintf(fp, "   syscall:%-7d", node->syscall_nr);
-> +			printed += fprintf(fp, "   syscall:%-9d", node->syscall_nr);
->  
->  		printed += fprintf(fp, " %8u %6u %9.3f %9.3f %9.3f %9.3f %9.2f%%\n",
->  				   stat->count, stat->error, total, min, avg, max,
+Currently, max_order is affected by aux_watermark. But aux_watermark
+also affects
+how frequently the PMU overflows AUX buffer and notifies userspace.
+It's not ideal
+to set aux_watermark to 1 page size. So if we want to make max_order user
+configurable, maybe we can add a one bit field in perf_event_attr?
+
+>
+> In Yabin's case, the AUX buffer work as a bounce buffer.  The hardware
+> trace data is copied by a driver from low level's contiguous buffer to
+> the AUX buffer.
+>
+> In this case we cannot benefit much from continguous AUX buffers.
+>
+> Thanks,
+> Leo
