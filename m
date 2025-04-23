@@ -1,111 +1,116 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073C413C3F6;
-	Wed, 23 Apr 2025 06:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F7B268C41
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 07:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390072; cv=none; b=gBbeBhIjYfMRGTl/9ZGbSTb2QteWCQ9fB4y1EFZf3XnukSNsaNaS1zWTkCtmmgezwa71OCxP0lOkD+pprZ6wgvF4vto4F7vPb6fWYXpDf7tldG9UQAAhqH6VtxeYtr/fUaomoPplqnkkaASgL6PJsnp0I7aB1eyGeIAivyFY8TQ=
+	t=1745392528; cv=none; b=s7NPaUBAOr4vyEHAjghPQDyOmfG4qbnJi+LNB9o0ng9krEoWySox88HwS7e+y4oY/DYLa9uTtpTuNBWQu9PZE2R2NGZG215hZFRKvU0XOfXR3HxoBsaSwjEm/GuHa10Bbqwdeiv3wL1QMS46/Jt53Gqnl2nBUWVghMtF/Y96sZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745390072; c=relaxed/simple;
-	bh=Qlt8fOU7S3qN3z2CYEB2iLHJtb0RRgm0RQ9Hv1XYFIs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OOzGgsSpvuloulz2VwGDlld4LReFktBZWv6PPjmyPYqfUUkm9VHx2kec0YqY7RjRCtWVEurs6ns+MHAZDp0LS3KYVhASWKEeFbpuaMPyjxaaetLiNjGovJ+gIqoI/LOBEm/gOlEwkJR3hMutokkYPxjK4TuST5ikATXWCtpwbJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zj8T45MPnz4f3lCm;
-	Wed, 23 Apr 2025 14:34:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3BD031A06DC;
-	Wed, 23 Apr 2025 14:34:26 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl_wiQhoEV49KQ--.26381S4;
-	Wed, 23 Apr 2025 14:34:25 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	ravi.bangoria@amd.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86: Fix open counting event error
-Date: Wed, 23 Apr 2025 06:47:24 +0000
-Message-Id: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1745392528; c=relaxed/simple;
+	bh=4xkPXOEiCWxWBhxVi73v8vLlxNzuHtWpdec3we/OgAc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JsCBkTuaOjURwq/l6Tm4xEKhiYGIdVFQXYpsHuLISVsPrw5YuDYwRdQbu9+8uJakXi2eEio5PiaLxCOgu4gerAp9EeraqxZymIzxYjBz2Wb3BQ4OC2/4nZtgq4TwyQd9bbdYY8Q1+jS6w38//+72hOQJ+DA/yq9JuZKxSWmOS/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1745391829-086e234cd195e40001-i5rUwQ
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id YabMpNHYLRfa8bYB (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 23 Apr 2025 15:03:49 +0800 (CST)
+X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXSHMBX3.zhaoxin.com (10.28.252.165) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Wed, 23 Apr
+ 2025 15:03:48 +0800
+Received: from ZXSHMBX3.zhaoxin.com ([fe80::8cc5:5bc6:24ec:65f2]) by
+ ZXSHMBX3.zhaoxin.com ([fe80::8cc5:5bc6:24ec:65f2%6]) with mapi id
+ 15.01.2507.044; Wed, 23 Apr 2025 15:03:48 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from silvia-OptiPlex-3010.Zhaoxin.com (10.29.8.50) by
+ ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 23 Apr 2025 14:35:10 +0800
+From: SilviaZhao-oc <silviazhao-oc@zhaoxin.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+	<adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kan.liang@linux.intel.com>
+CC: <ewanhai@zhaoxin.com>, <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
+	<silviazhao@zhaoxin.com>, <cooperyan@zhaoxin.com>, SilviaZhao
+	<silviazhao-oc@zhaoxin.com>
+Subject: [PATCH RESEND 1/3] x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
+Date: Wed, 23 Apr 2025 14:35:07 +0800
+X-ASG-Orig-Subj: [PATCH RESEND 1/3] x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
+Message-ID: <20250423063509.20996-2-silviazhao-oc@zhaoxin.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423063509.20996-1-silviazhao-oc@zhaoxin.com>
+References: <20250423063509.20996-1-silviazhao-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl_wiQhoEV49KQ--.26381S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr1xGF1rZr45JryrCFyfWFg_yoW8Gr15p3
-	47Crn3KFyIgrn8Wwn8JF4Iya1UZF4ktr9rJ3WfWr45A345WwnxXFWxKFs8Wa15Ar1fJ34f
-	tanagF9rurWkA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
-	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUIa0PDUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Moderation-Data: 4/23/2025 3:03:47 PM
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1745391829
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1216
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.140368
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-Perf doesn't work at perf stat for hardware events:
+From: SilviaZhao <silviazhao-oc@zhaoxin.com>
 
- $perf stat -- sleep 1
- Performance counter stats for 'sleep 1':
-             16.44 msec task-clock                       #    0.016 CPUs utilized
-                 2      context-switches                 #  121.691 /sec
-                 0      cpu-migrations                   #    0.000 /sec
-                54      page-faults                      #    3.286 K/sec
-   <not supported>	cycles
-   <not supported>	instructions
-   <not supported>	branches
-   <not supported>	branch-misses
+Create zhaoxin-family.h to define Zhaoxin family numbers in one header
+file. So we can use the macros instead of open-coded model numbers in
+other files.
 
-The reason is that the check in x86_pmu_hw_config for sampling event is
-unexpectedly applied to the counting event.
-
-Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+Signed-off-by: SilviaZhao <silviazhao-oc@zhaoxin.com>
 ---
- arch/x86/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/zhaoxin-family.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6866cc5acb0b..3a4f031d2f44 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
- 	if (event->attr.type == event->pmu->type)
- 		event->hw.config |= x86_pmu_get_event_config(event);
- 
--	if (!event->attr.freq && x86_pmu.limit_period) {
-+	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
- 		s64 left = event->attr.sample_period;
- 		x86_pmu.limit_period(event, &left);
- 		if (left > event->attr.sample_period)
--- 
+diff --git a/arch/x86/include/asm/zhaoxin-family.h b/arch/x86/include/asm/z=
+haoxin-family.h
+new file mode 100644
+index 000000000000..d54e0112207a
+--- /dev/null
++++ b/arch/x86/include/asm/zhaoxin-family.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_ZHAOXIN_FAMILY_H
++#define _ASM_X86_ZHAOXIN_FAMILY_H
++
++/*
++ * The defined symbol names have the following form:
++ *             ZHAOXIN_FAM7{OPTFAMILY}_{MICROARCH}
++ * where:
++ * OPTFAMILY   Describes the family of CPUs that this belongs to. Default
++ *             is assumed to be omitted.
++ * MICROARCH   Is the code name for the micro-architecture for this core.
++ */
++
++
++#define ZHAOXIN_FAM7_WUDAOKOU		0x1B
++#define ZHAOXIN_FAM7_LUJIAZUI		0x3B
++#define ZHAOXIN_FAM7_YONGFENG		0x5B
++
++#endif /* _ASM_X86_ZHAOXIN_FAMILY_H */
+--=20
 2.34.1
 
