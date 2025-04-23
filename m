@@ -1,214 +1,130 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3481F9413
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 22:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8838A223DC9;
+	Wed, 23 Apr 2025 23:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745448552; cv=none; b=d+Nu3Zd0Tia63wK/7Hm6HaRnNfKGunwThhqlamSc8JcReomZTZOF1gcN2LMNvEdhO40eAezZsxvg8HavDvOLQF3sb9p/QBwUR0WJm5CcyVENPbxR3HtvNnxjR7vGC9s/5neyy37H/3xHLNR1WzMEJRBjUbzPBYlpxn8vpq+MotY=
+	t=1745450701; cv=none; b=hyTgH2V/vJuX9QYVG+arQSvJUxwStbr4L1uUukR+Cp+KqaDYyhYG0b2SjEAmv1VsxFzHOSot4fgNC1DkNF3YeVFOH/Cg4xlIRLkpBtfG9Zlf+1/dIfVS6hc+fpIl0YQX1Zq9N+j5JW+KsQ3ibDJcHyJS5jiqZ7Hrfx2/KLEm5Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745448552; c=relaxed/simple;
-	bh=1Gi0O3bymMAhwOE7EO9gUhKQ5ASLF7SPZ8b+OzOFjI8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uKt2PdBbnwVBXEJTYq1KrqT6EslfxDAdozmw+tOvRziwKf2z4Xx0fzZe5FGkVdKNdu+Ec8sNvE2PsfiU2HaZeZFCnGGmcOtoVTcXoWAEJRL7LSQG4kYOC/kuck8YZ77CbBkwTCu3F+XwODtAAfjlZODqg1rv4AYug9XrDp02Fe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cnWMNJ/a; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745450701; c=relaxed/simple;
+	bh=yskBEWSEF6FlJkJi4DwqXGby0psHuBX/9ua/oCniJP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BGfXTY3iZ9Dv287qopTGeAFuZgVIrDc8m82KQ/oiLlfn0gsv9XMT7ucLGil1u6izN/iUiE/2SQ6vB/g9lqm4G5KY2yOtKRKaCx+KvtMQP0O7tE+UqWfofsxkZJycIddgpRuvoWzC9jEjRx3jcprOutLYPcJSPvaBZYthxio3O4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=g52K7MMR; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cnWMNJ/a"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acacb8743a7so66946666b.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Apr 2025 15:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745448549; x=1746053349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFqMsc9Cgrc/jOwHdKO+Q6o7jkhid+GmOd9W2mEHoHY=;
-        b=cnWMNJ/a9UDVqY1QAMgi68edJFwQ0x4rKWKnWZszqmk6Vq2bdWGIRI30zlP3eYheUH
-         wpHFf1TMsI6/8t5kk+gi//Ayv0S9OIH0Zn5kLEyqJMd0jG88bELti3yyWyaWR7z8BC/U
-         tZv7Z8TPLxF8/JMd85DseQQUu6siXYS6F17igEw6uookl+kqPReG5pvwy6sZUqPuqEcz
-         w2QenS40Zsdp/eltm55zG59cYfKXFiGOb+2kloyZ/2pAw/BinF/NNf+IUJx62m9lgnCG
-         rd3NK1oqWFukaN/JoqY7Hpp59+vRFTMm3Xm4FUwqzPRGPQw3+intc82l4gEedIfvuoxs
-         UBfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745448549; x=1746053349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFqMsc9Cgrc/jOwHdKO+Q6o7jkhid+GmOd9W2mEHoHY=;
-        b=lQHKbMaKm3YlyaQr41laXwOsieS3DZFE1q4RQ3yNHOFbkPqRtGIn9VXCQIYZWez7Xp
-         NhANScLg/izeBWJzS0r4DiDC3aq/g1QTRGBRqpxfjQb8syLRsRhSRx0Gu04Rh5RR7trC
-         pPlrW62yyghwGx6JOxfxf7UtZDnUyg0y3v0i76PvBKWLptiq1cS/W29DgS6dynk2hNxE
-         p4MuI/9pbYpmXZivElVAlTjpO3LoINMmxcxsOpPv3cDJvaE7ZU9W77x915czV8de4Gf4
-         efJUxUToVW2b8jwD6+UbRiOhOFQepHtvo9pRIPqZl08SybU+is8I4H3xUhVv2CudN1/Q
-         3zKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVs+DtWJYKDrCsnZiC9gVTicq7WG7ZWSXF1keTVTSSXXFQ6lGqTar1Pi3vTqkl0uikg0wd7YOd6LvWs4l9zQXYy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVeVTWOOU4nOCgrcWX4yjCS5UONZs6JKJWkXqlzA4ZYTmuEhjz
-	bURnbbJfGx0y1S/Nc5Fups2OjWmEFHKHZsDqEUEYFrgF9UFo9jv+ZBYOBoUaNxgBoMLTFJi9ouQ
-	XJcM4QfknP0W7xMlooZ3p9Oul2+58kKMDmMHU
-X-Gm-Gg: ASbGncvZI87JiQjGUg3pAIJTW04uezmNPiMY98QjRKK72xqewFdo5wg9sTK3jVQGui0
-	WCI57WK41FGZxWzyILvcc7KSnQ0vCsEiDWRe4ODvB61WtvNJOZC2zoeLqQ5ifQlO2pmuJRRvRmx
-	jXNeurYn46eAZUkaUyRZpLhfHqvzsQMiNmTexFDzb/s0BMkZM=
-X-Google-Smtp-Source: AGHT+IF8vhtPElp2/qNIeSObRCOdb1stNKogQ7L4t9EfEQ/ciGeZ8TDp+qkyekR47NwH27EEaH1CJUxWIZvWrUjAuU0=
-X-Received: by 2002:a17:907:2d13:b0:ace:395c:124d with SMTP id
- a640c23a62f3a-ace5a40501bmr9619966b.25.1745448549160; Wed, 23 Apr 2025
- 15:49:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="g52K7MMR"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53NNNmdO016856
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 23 Apr 2025 16:23:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53NNNmdO016856
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745450634;
+	bh=3ZRudBcQfUXdEeUGknvRzjxdjhla7ofQa9vhRPg63Iw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g52K7MMRbWF6yLwDhmY0YU3Om9fpRH0Ut+qyo76sxSZ4NHnyBc98XW5u2s2hVCFUK
+	 PhNe+N15jsjlumb03xkDxJWNBMQ76zGMekkVPvwrCgqXTuVJomLV1T/3YW5TFZ7jZ8
+	 1UmN3Fwk6b31yjBct2QL3ajxMU+0ZhSXqsLtn5qHYLVhfR4vWwV537HB9cU8VSqJHv
+	 6bXyJrePtilh9n0zOlm3jS0UhKtUD+8gXNtFrWLBIVXKpgaPuv0YalLYf+ij4Y2WWd
+	 yrxqlPYGWH/00BTyjqGIOa+LNPKvKGQxRb/Vrh8pulNMK2D75Bck1Sw8zFpVOmUKyD
+	 ftlR5gTTNtHcw==
+Message-ID: <88bcd897-8436-4ebb-ac03-833c8c8045f2@zytor.com>
+Date: Wed, 23 Apr 2025 16:23:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327225651.642965-1-ctshao@google.com> <20250327225651.642965-4-ctshao@google.com>
- <CAP-5=fU37XBFa-kft5JYPO+BCWP5zGnfZCkCqvzYW-yozF8o0g@mail.gmail.com>
-In-Reply-To: <CAP-5=fU37XBFa-kft5JYPO+BCWP5zGnfZCkCqvzYW-yozF8o0g@mail.gmail.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Wed, 23 Apr 2025 15:48:57 -0700
-X-Gm-Features: ATxdqUGAMv_9OU25H2O9bUU4wBlTXm4ZUK_M0yXfJBA5sp3etcIw-e-NvW66MDk
-Message-ID: <CAJpZYjXZGXFC8CwKahCya9sB6J6OOOdsX7=X9mdPfyxQ7DAGGg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf test: Add stat uniquifying test
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, ak@linux.intel.com, howardchu95@gmail.com, 
-	linux@treblig.org, yeoreum.yun@arm.com, james.clark@linaro.org, 
-	weilin.wang@intel.com, asmadeus@codewreck.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
+ native_wrmsrq()
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-9-xin@zytor.com>
+ <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 3, 2025 at 12:25=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, Mar 27, 2025 at 4:01=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > The `stat+uniquify.sh` test retrieves all uniquified `clockticks` event=
-s
-> > from `perf list -v clockticks` and check if `perf stat -e clockticks -A=
-`
-> > contains all of them.
-> >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > ---
-> >  .../tests/shell/stat+event_uniquifying.sh     | 69 +++++++++++++++++++
-> >  1 file changed, 69 insertions(+)
-> >  create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
-> >
-> > diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/p=
-erf/tests/shell/stat+event_uniquifying.sh
-> > new file mode 100755
-> > index 000000000000..5ec35c52b7d9
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-> > @@ -0,0 +1,69 @@
-> > +#!/bin/bash
-> > +# perf stat events uniquifying
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +set -e
-> > +
-> > +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-> > +perf_tool=3Dperf
-> > +err=3D0
-> > +
-> > +test_event_uniquifying() {
-> > +  # We use `clockticks` to verify the uniquify behavior.
-> > +  event=3D"clockticks"
->
-> This event is generally only available on Intel, not AMD or ARM, so we
-> will need to skip if it isn't present.
->
-> > +  # If the `-A` option is added, the event should be uniquified.
-> > +  #
-> > +  # $perf list -v clockticks
-> > +  #
-> > +  # List of pre-defined events (to be used in -e or -M):
-> > +  #
-> > +  #   uncore_imc_0/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_1/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_2/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_3/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_4/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_5/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #
-> > +  #   ...
-> > +  #
-> > +  # $perf stat -e clockticks -A -- true
-> > +  #
-> > +  #  Performance counter stats for 'system wide':
-> > +  #
-> > +  # CPU0            3,773,018      uncore_imc_0/clockticks/
-> > +  # CPU0            3,609,025      uncore_imc_1/clockticks/
-> > +  # CPU0                    0      uncore_imc_2/clockticks/
-> > +  # CPU0            3,230,009      uncore_imc_3/clockticks/
-> > +  # CPU0            3,049,897      uncore_imc_4/clockticks/
-> > +  # CPU0                    0      uncore_imc_5/clockticks/
-> > +  #
-> > +  #        0.002029828 seconds time elapsed
-> > +
-> > +  echo "stat event uniquifying test"
-> > +  uniquified_event_array=3D()
-> > +
-> > +  # Check how many uniquified events.
-> > +  while IFS=3D read -r line; do
-> > +    uniquified_event=3D$(echo "$line" | awk '{print $1}')
-> > +    uniquified_event_array+=3D("${uniquified_event}")
-> > +  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]"=
-)
->
-> Shouldn't the array contain every sysfs event that doesn't have a json
-> component? They may or may not be uniquified so I think the array name
-> is misleading.
->
-> > +  perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- =
-true"
-> > +  $perf_command
-> > +
-> > +  # Check the output contains all uniquified events.
-> > +  for uniquified_event in "${uniquified_event_array[@]}"; do
-> > +    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
->
-> Why not pass the file directly to grep?
-> Should some of the events not show in the stat output as you only
-> asked for the clockticks event? I'm not sure how this test can pass
-> currently.
->
-> Thanks,
-> Ian
->
-Thanks for your comment, Ian.
+On 4/23/2025 8:51 AM, Dave Hansen wrote:
+> On 4/22/25 01:21, Xin Li (Intel) wrote:
+>>   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
+>>   {
+>> -	u32 low, high;
+>> -
+>> -	low  = (u32)(val);
+>> -	high = (u32)(val >> 32);
+>> -
+>> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
+>> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
+>>   }
+> 
+> A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
+> conversion, it could be sucked into the tree easily before the big
+> __wrmsr()=>native_wrmsrq() conversion.
 
-I tried to run `perf list -v clockticks` and grep for all events which
-have `[Kernel PMU event]` tag.
-Ideally, that should retrieve all uniquified clockticks events.
-Then I ran `perf stat -e clockticks` to check if all events from `perf
-list` are showing.
+Can't reorder the 2 patches, because __wrmsr() takes two u32 arguments
+and the split has to be done explicitly in sev_es_wr_ghcb_msr().
 
-I randomly picked some machines from different arches and it seems
-work. Let me know if you have a better idea.
+Thanks!
+     Xin
 
--CT
 
-> > +      echo "Event is not uniquified [Failed]"
-> > +      echo "${perf_command}"
-> > +      cat "${stat_output}"
-> > +      err=3D1
-> > +      break
-> > +    fi
-> > +  done
-> > +}
-> > +
-> > +test_event_uniquifying
-> > +rm -f "${stat_output}"
-> > +exit $err
-> > --
-> > 2.49.0.472.ge94155a9ec-goog
-> >
