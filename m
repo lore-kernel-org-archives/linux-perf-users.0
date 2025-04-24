@@ -1,260 +1,150 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E162957BC
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 19:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9A1C6FFA;
+	Thu, 24 Apr 2025 20:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745524733; cv=none; b=iP27GjOkLYXBwDS0TTk5jOUUUD3fVB5XTWOz0tsTHvf5Nl5cQl9t+T8IXKZe5b35wQYMDRACAJH9cV9ldqma6+efubRl91WMPDdyTwf3NpW3iGBkljw6BVjHXba6f9ngJm4nekcGcXMlXAokSOzZ7e1/MS8TwgpBNY8yYj61QRQ=
+	t=1745525788; cv=none; b=RnowhRD95rrVuF1jtbt6UCqH+RpHDIgsOmjMJcSkNcdIZsaT0YrT5Wu3aJ69PffKOAQFgLtGc4mjdNjxoyBzpLhPTs+hrx5mstB809Ji+AD3MF/KV68TJskqaS9b21dPhqL4KlUwqKc+cjAwEaWgQjmA+HaHHcC7uwK8XmRNKzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745524733; c=relaxed/simple;
-	bh=3mET9+njEz0Qqs0rjagQZqg2H0OJF9kLeZvRZQFAVGo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=sKzoucQqnr3EBkCa/nucy+SHtNE5cujjInPRObkm9ofe1QUeDdln9v1cBL2NIQ9RN4SGPWbKXqY9nhRwHDP0OwXpLTVr0/vUgDnDIy7MFI+OKd9Wl7S69ctlwGja8ZmZ+QQWfaUbul3kk2MlQMdCTuPA1+y65vZeh7JQtyzq43Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3XTlBtxF; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3XTlBtxF"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so1156286a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 12:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745524731; x=1746129531; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FsW7ntgrEiteL6+NRyYkKnb+c0cF8to6DMFvVFkK9wk=;
-        b=3XTlBtxFMYyhKKjP2GYgKESbwCgAI3i1JyuuVtXoqI9AIRtXex9dVMCVG4eRku+6OX
-         J31Fyjz6XcYCHF5Fi4glC5ghyP/jZTrKAsNXFKapokHBCxBQ9hRNrNNeAaYJJlHgwqii
-         RiAkvtL4ZgajJlvSJYn5cm/rN8lc0QAX2M+VEHbzrLCvEA859Ra1RjBJ911sVnT2J4Rl
-         gaPpmd/27AgMgJlDm2FCw6VKly+kyKuNH25px8fpOtCmVYdBsdpOvZWhUidXCB+GQmEE
-         PT7ciKT3FmJOdhEoo1jQ5rbTuPwQMETUgexU7fHRK5o2V3wzVzg3uN+0SwzW48Jps4UU
-         d57w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745524731; x=1746129531;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsW7ntgrEiteL6+NRyYkKnb+c0cF8to6DMFvVFkK9wk=;
-        b=dj0oAOm9lNK14GtNEv67iElbA+EKGMWsLF0pudwotKBrOmq7VMxQWFgwPf0m3wBPk3
-         YrIOmcYqkQgmcupCAEQ53rzWK50oQQ8ymiAtpcXenl0jgxE/BjsewAX3ZlOuZCvYCQQx
-         g4ycKOpraeADHdN9Nou6N0YhtlZt2uRjV8/+SjKUhRex+v7wpxQ74eQuOdAhfa7nvusG
-         pdrWGGxqH8FNTBC/UEmOgu5J2ogyw66QBg3J2bP31cewJGsbwl5dQaOrLf4875DdpAzN
-         VgX8WMrwXiXj3OzvY9CM/WTGVHT5d3JDiFS30qlEH0nvdGqXKQ4AIQvgvYQd3qy456Vl
-         0QaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZIXkcsBc4VE5J/ARZ+DKen8LDqOo8RLtPOfmhWJLIb/IuiTLxL0XorFWQ8P2wP3xdAGFziUYO85eoDtByif7n@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNoYBXbuVDftOc5X6N3k1YQZTPdR9CJLfT/VpAeZWIFvcGkab2
-	Vljino0m+KuMTc5W/+UJv19q6/zpMNyW22njlER8S+SzBPWBVepgWIPuf3Zc/ChNEF7ONx3DjJ4
-	H2EjkhA==
-X-Google-Smtp-Source: AGHT+IF61i443moqQRGbCyMTbCxXjQRC0vDLWqpkI7uiwvfyhgS5AvqN7qVyEWF4SUVt4tzWu/5uC98s2k/Q
-X-Received: from pjkk11.prod.google.com ([2002:a17:90b:57eb:b0:2fa:2661:76ac])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da90:b0:2fa:f8d:65de
- with SMTP id 98e67ed59e1d1-309f56c67c7mr997471a91.22.1745524730623; Thu, 24
- Apr 2025 12:58:50 -0700 (PDT)
-Date: Thu, 24 Apr 2025 12:58:31 -0700
-In-Reply-To: <20250424195831.1767457-1-irogers@google.com>
+	s=arc-20240116; t=1745525788; c=relaxed/simple;
+	bh=KeeVbnNomauR1fqRtkCW4Hw5hNY/GMwON7hWq9lvYvk=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=B9Kv45iTyDlZhci/toUDkn6jPceAaRYk2gcFWx9apfvBMyUjUMMQ/2rlswKjBA85DjXDJka9mqyGGWTmucwMXwRYBjmiCL4jZ3G+lWdG2N3UaTQ0l/nS9/01wU12QUdvIuk5Q1tyWlGyyzsCEwTl/Z0/LUshh2iPirpg2r6iiDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC8BC4CEE3;
+	Thu, 24 Apr 2025 20:16:27 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1u831b-0000000H3sF-2N4W;
+	Thu, 24 Apr 2025 16:18:23 -0400
+Message-ID: <20250424201511.921245242@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 24 Apr 2025 16:15:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org,
+ Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Alexander Aring <aahringo@redhat.com>
+Subject: [PATCH v5 00/12] unwind_deferred: Implement sframe handling
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250424195831.1767457-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250424195831.1767457-9-irogers@google.com>
-Subject: [PATCH v2 8/8] perf record: Make --buildid-mmap the default
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, James Clark <james.clark@linaro.org>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
-	"=?UTF-8?q?Martin=20Li=C5=A1ka?=" <m.liska@foxlink.cz>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Support for build IDs in mmap2 perf events has been present since
-Linux v5.12:
-https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
-Build ID mmap events don't avoid the need to inject build IDs for DSO
-touched by samples as the build ID cache is populated by perf
-record. They can avoid some cases of symbol mis-resolution caused by
-the file system changing from when a sample occurred and when the DSO
-is sought. To disable build ID scanning
 
-Unlike the --buildid-mmap option, this doesn't disable the build ID
-cache but it does disable the processing of samples looking for DSOs
-to inject build IDs for. To disable the build ID cache the -B
-(--no-buildid) option should be used.
+I'm currently working on getting sframe support from the kernel.
+Josh Poimboeuf did a lot of the hard work already, but he told me he doesn't
+have time to continue it so I'm picking it up where he left off.
 
-Making this option the default was raised on the list in:
-https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
+His last series of v4 is here:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-record.c        | 33 +++++++++++++++++++-----------
- tools/perf/util/symbol_conf.h      |  2 +-
- tools/perf/util/synthetic-events.c | 16 +++++++--------
- 3 files changed, 30 insertions(+), 21 deletions(-)
+  https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index ba20bf7c011d..7b64013ba8c0 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -169,6 +169,7 @@ struct record {
- 	bool			no_buildid_cache_set;
- 	bool			buildid_all;
- 	bool			buildid_mmap;
-+	bool			buildid_mmap_set;
- 	bool			timestamp_filename;
- 	bool			timestamp_boundary;
- 	bool			off_cpu;
-@@ -1795,6 +1796,7 @@ record__finish_output(struct record *rec)
- 			data->dir.files[i].size = lseek(data->dir.files[i].fd, 0, SEEK_CUR);
- 	}
- 
-+	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
- 	if (!rec->no_buildid) {
- 		process_buildids(rec);
- 
-@@ -2966,6 +2968,8 @@ static int perf_record_config(const char *var, const char *value, void *cb)
- 			rec->no_buildid = true;
- 		else if (!strcmp(value, "mmap"))
- 			rec->buildid_mmap = true;
-+		else if (!strcmp(value, "no-mmap"))
-+			rec->buildid_mmap = false;
- 		else
- 			return -1;
- 		return 0;
-@@ -3349,6 +3353,7 @@ static struct record record = {
- 		.ctl_fd_ack          = -1,
- 		.synth               = PERF_SYNTH_ALL,
- 	},
-+	.buildid_mmap = true,
- };
- 
- const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
-@@ -3514,8 +3519,8 @@ static struct option __record_options[] = {
- 		   "file", "vmlinux pathname"),
- 	OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
- 		    "Record build-id of all DSOs regardless of hits"),
--	OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
--		    "Record build-id in map events"),
-+	OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
-+			"Legacy record build-id in map events option which is now the default. Behaves indentically to --no-buildid. Disable with --no-buildid-mmap"),
- 	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
- 		    "append timestamp to output filename"),
- 	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
-@@ -4042,19 +4047,23 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.record_switch_events = true;
- 	}
- 
-+	if (!rec->buildid_mmap) {
-+		pr_debug("Disabling build id in synthesized mmap2 events.\n");
-+		symbol_conf.no_buildid_mmap2 = true;
-+	} else if (rec->buildid_mmap_set) {
-+		/*
-+		 * Explicitly passing --buildid-mmap disables buildid processing
-+		 * and cache generation.
-+		 */
-+		rec->no_buildid = true;
-+	}
-+	if (rec->buildid_mmap && !perf_can_record_build_id()) {
-+		pr_warning("Missing support for build id in kernel mmap events. Disable this warning with --no-buildid-mmap\n");
-+		rec->buildid_mmap = false;
-+	}
- 	if (rec->buildid_mmap) {
--		if (!perf_can_record_build_id()) {
--			pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
--			err = -EINVAL;
--			goto out_opts;
--		}
--		pr_debug("Enabling build id in mmap2 events.\n");
--		/* Enable mmap build id synthesizing. */
--		symbol_conf.buildid_mmap2 = true;
- 		/* Enable perf_event_attr::build_id bit. */
- 		rec->opts.build_id = true;
--		/* Disable build id cache. */
--		rec->no_buildid = true;
- 	}
- 
- 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index cd9aa82c7d5a..7a80d2c14d9b 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -43,7 +43,7 @@ struct symbol_conf {
- 			report_individual_block,
- 			inline_name,
- 			disable_add2line_warn,
--			buildid_mmap2,
-+			no_buildid_mmap2,
- 			guest_code,
- 			lazy_load_kernel_maps,
- 			keep_exited_threads,
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 8fb2ea544d3a..f48109c14235 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
- 		event->mmap2.pid = tgid;
- 		event->mmap2.tid = pid;
- 
--		if (symbol_conf.buildid_mmap2)
-+		if (!symbol_conf.no_buildid_mmap2)
- 			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
- 
- 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
-@@ -690,7 +690,7 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
- 		return 0;
- 
- 	dso = map__dso(map);
--	if (symbol_conf.buildid_mmap2) {
-+	if (!symbol_conf.no_buildid_mmap2) {
- 		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
- 		event->mmap2.header.type = PERF_RECORD_MMAP2;
- 		event->mmap2.header.size = (sizeof(event->mmap2) -
-@@ -734,9 +734,9 @@ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__han
- 		.process = process,
- 		.machine = machine,
- 	};
--	size_t size = symbol_conf.buildid_mmap2
--		? sizeof(args.event->mmap2)
--		: sizeof(args.event->mmap);
-+	size_t size = symbol_conf.no_buildid_mmap2
-+		? sizeof(args.event->mmap)
-+		: sizeof(args.event->mmap2);
- 
- 	args.event = zalloc(size + machine->id_hdr_size);
- 	if (args.event == NULL) {
-@@ -1124,8 +1124,8 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
- 						struct machine *machine)
- {
- 	union perf_event *event;
--	size_t size = symbol_conf.buildid_mmap2 ?
--			sizeof(event->mmap2) : sizeof(event->mmap);
-+	size_t size = symbol_conf.no_buildid_mmap2 ?
-+			sizeof(event->mmap) : sizeof(event->mmap2);
- 	struct map *map = machine__kernel_map(machine);
- 	struct kmap *kmap;
- 	int err;
-@@ -1159,7 +1159,7 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
- 		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
- 	}
- 
--	if (symbol_conf.buildid_mmap2) {
-+	if (!symbol_conf.no_buildid_mmap2) {
- 		size = snprintf(event->mmap2.filename, sizeof(event->mmap2.filename),
- 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
- 		size = PERF_ALIGN(size, sizeof(u64));
--- 
-2.49.0.850.g28803427d3-goog
+It covers a lot of topics as he found issues with other aspects of
+the kernel that needed to be fixed for sframes to work properly.
 
+This adds the support for sframes to the deferred unwinder. It is based
+on top of this series:
+
+  https://lore.kernel.org/all/20250424192456.851953422@goodmis.org/
+
+This series is the last of the work that Josh had done in v4.
+Note, I did not address the comments that were made in the previous series.
+I'm posting this so that others may have something to work from that is
+based on the deferred unwinder code of the other series. This series is
+specific for sframe decoding itself and can be worked on separately from the
+other series.
+
+Hopefully someone that understands the sframe specification better than
+I do can continue this work. I'm only posting this so that there's
+something others can start with.
+
+Where there were discussions done on patches in v4, I left a Link:
+tag in the change log so that it is easy to go back and see what was
+discussed, as this series did not make an attempt to resolve those
+discussions.
+
+I'll be working on the other three series in trying to get them ready
+for submission. Those series are:
+
+ vdso: https://lore.kernel.org/all/20250422183439.895236512@goodmis.org/
+ [ Which is a separate work that is not directly needed by the other serise ]
+
+ perf: https://lore.kernel.org/all/20250424162529.686762589@goodmis.org/
+
+ tracing: https://lore.kernel.org/all/20250424192456.851953422@goodmis.org/
+ [ This is based on top of the perf series ]
+
+Again, this series is based on the tracing series.
+
+Hopefully someone can help me and work on this series ;-)
+
+Cheers!
+
+Josh Poimboeuf (12):
+      unwind_user/sframe: Add support for reading .sframe headers
+      unwind_user/sframe: Store sframe section data in per-mm maple tree
+      x86/uaccess: Add unsafe_copy_from_user() implementation
+      unwind_user/sframe: Add support for reading .sframe contents
+      unwind_user/sframe: Detect .sframe sections in executables
+      unwind_user/sframe: Add prctl() interface for registering .sframe sections
+      unwind_user/sframe: Wire up unwind_user to sframe
+      unwind_user/sframe/x86: Enable sframe unwinding on x86
+      unwind_user/sframe: Remove .sframe section on detected corruption
+      unwind_user/sframe: Show file name in debug output
+      unwind_user/sframe: Enable debugging in uaccess regions
+      unwind_user/sframe: Add .sframe validation option
+
+----
+ MAINTAINERS                       |   1 +
+ arch/Kconfig                      |  23 ++
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/include/asm/mmu.h        |   2 +-
+ arch/x86/include/asm/uaccess.h    |  39 ++-
+ fs/binfmt_elf.c                   |  49 +++-
+ include/linux/mm_types.h          |   3 +
+ include/linux/sframe.h            |  60 ++++
+ include/linux/unwind_user_types.h |   1 +
+ include/uapi/linux/elf.h          |   1 +
+ include/uapi/linux/prctl.h        |   5 +-
+ kernel/fork.c                     |  10 +
+ kernel/sys.c                      |   9 +
+ kernel/unwind/Makefile            |   1 +
+ kernel/unwind/sframe.c            | 596 ++++++++++++++++++++++++++++++++++++++
+ kernel/unwind/sframe.h            |  71 +++++
+ kernel/unwind/sframe_debug.h      |  99 +++++++
+ kernel/unwind/user.c              |  22 +-
+ mm/init-mm.c                      |   2 +
+ 19 files changed, 977 insertions(+), 18 deletions(-)
+ create mode 100644 include/linux/sframe.h
+ create mode 100644 kernel/unwind/sframe.c
+ create mode 100644 kernel/unwind/sframe.h
+ create mode 100644 kernel/unwind/sframe_debug.h
