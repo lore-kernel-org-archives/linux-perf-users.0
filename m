@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE96218838;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20925218AAB;
 	Thu, 24 Apr 2025 20:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745525789; cv=none; b=PQ0QXMX9W1lnV/jGR/7mRwMiqdob+t/zOZQ9Oev4CLiMtBjoZIEg3P2OeAP0E5Nwm/SPExwEOHSv7KLmVtKNYdIp0w6XzviGj0OcKkcFH8s8RKI26XZgkTYducI6IX3jhb5BH9S2kwmGb/REaQVmRCuGxXcfQzq57cen2fbWAis=
+	t=1745525789; cv=none; b=o85jSpAynqh8Z1Wquy2/Yij1oQPPOccySG8YTOhKd0/2pg63fhTWQ/CVM6ZgWd3ZQPaLbBY3YgKlwfeIU2FRsd0MJFBrmnvKWcvX4FfAuW/FSnN0WE7O9fer2kmkWIv6u1QtDq4BPUH3rlZsNJj7mZYp6636Svlrk6wDLh6/KcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745525789; c=relaxed/simple;
-	bh=fp29FQG7tCj2MT79QM0yn2AjFI3efyx4XK+jS6q+wv4=;
+	bh=ZP5UvVQS2n9JR0ja/o9odhgYAaUJy06ADu8QyOUtw4Y=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=g6FYrzGsRJSgvhHSEbTg9aSrzt7vUii99rqD2JH6Kq5OmPZmtzReBDHAK34KmWC0EV7wYpFEkepnFVTPTffyTXHNlEsMLLQITCte2TLve6LOe0N7WyUA1jXPO7wpPrgbRWUWB1XKI4cJ+wjMBx8batpWYkiepzy+twtrxhxc54o=
+	 Content-Type; b=g1kuYVgap6IsjqIwPu0aYHCq1wCa8H9HrVR8OVmchrnFLjwArhx4tYcfY+UJm4rYv59y7RxVDdwiQH8QFdg58+esm36OGffhcDw9EBvpDEnnA9WZtyYDP7A4dxbCL9SzrRzWD1Vlzv16VeFkJ4re7VS9U2OPhYxZKu/IJYjn56M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A6AC4AF60;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2250C116C6;
 	Thu, 24 Apr 2025 20:16:28 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u831d-0000000H3wi-0Wkx;
-	Thu, 24 Apr 2025 16:18:25 -0400
-Message-ID: <20250424201824.978358670@goodmis.org>
+	id 1u831c-0000000H3wD-4139;
+	Thu, 24 Apr 2025 16:18:24 -0400
+Message-ID: <20250424201824.810584229@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 16:15:20 -0400
+Date: Thu, 24 Apr 2025 16:15:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v5 09/12] unwind_user/sframe: Remove .sframe section on detected corruption
+Subject: [PATCH v5 08/12] unwind_user/sframe/x86: Enable sframe unwinding on x86
 References: <20250424201511.921245242@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -65,30 +65,28 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-To avoid continued attempted use of a bad .sframe section, remove it
-on demand when the first sign of corruption is detected.
+The x86 sframe 2.0 implementation works fairly well, starting with
+binutils 2.41 (though some bugs are getting fixed in later versions).
+Enable it.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/unwind/sframe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index 1a35615a361e..66b920441692 100644
---- a/kernel/unwind/sframe.c
-+++ b/kernel/unwind/sframe.c
-@@ -294,6 +294,10 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
- 	ret = __find_fre(sec, &fde, ip, frame);
- end:
- 	user_read_access_end();
-+
-+	if (ret == -EFAULT)
-+		WARN_ON_ONCE(sframe_remove_section(sec->sframe_start));
-+
- 	return ret;
- }
- 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 35d3b01b65c6..c890430cb807 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -303,6 +303,7 @@ config X86
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+ 	select HAVE_UNWIND_USER_COMPAT_FP	if IA32_EMULATION
+ 	select HAVE_UNWIND_USER_FP		if X86_64
++	select HAVE_UNWIND_USER_SFRAME		if X86_64
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
+ 	select VDSO_GETRANDOM			if X86_64
 -- 
 2.47.2
 
