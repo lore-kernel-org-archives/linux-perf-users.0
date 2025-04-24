@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099DA21882B;
-	Thu, 24 Apr 2025 20:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE96218838;
+	Thu, 24 Apr 2025 20:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745525789; cv=none; b=FGhmH0keCVT9WS6eqRC9QujuS65li5Oz0rLjshbsLJwIjZKSlwlJWgQ5+eVMo7eF/0BsxUhSw/aXF/4ziq1LU8qhB9sOmvPSiwrz5MOrHqwDraeYX6QJqWrIo3fizddJv9FhbMMqkvTQKDMqCqrlCEI8bvEXjTy/tEu6gx3QGnk=
+	t=1745525789; cv=none; b=PQ0QXMX9W1lnV/jGR/7mRwMiqdob+t/zOZQ9Oev4CLiMtBjoZIEg3P2OeAP0E5Nwm/SPExwEOHSv7KLmVtKNYdIp0w6XzviGj0OcKkcFH8s8RKI26XZgkTYducI6IX3jhb5BH9S2kwmGb/REaQVmRCuGxXcfQzq57cen2fbWAis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745525789; c=relaxed/simple;
-	bh=HYqUX8NOw07w7m9e2ts05QoIOIvbKztU+oGEXImRejg=;
+	bh=fp29FQG7tCj2MT79QM0yn2AjFI3efyx4XK+jS6q+wv4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Ezexj3hxQaZElvhl7kApRQ2dyHJQsYC4Eoz6WPUVQqlyu/E1cwQi9yxqYJxW3kmU+MdU0gokieRe9zgTY3Aw+pggUvvDfqbBRBq+CafOnTOEP2u5w/+keJ36xG5iO9+brfz75hsLWvon5zTgt6O5yPFu/zlicp2847xFlzl5Cgk=
+	 Content-Type; b=g6FYrzGsRJSgvhHSEbTg9aSrzt7vUii99rqD2JH6Kq5OmPZmtzReBDHAK34KmWC0EV7wYpFEkepnFVTPTffyTXHNlEsMLLQITCte2TLve6LOe0N7WyUA1jXPO7wpPrgbRWUWB1XKI4cJ+wjMBx8batpWYkiepzy+twtrxhxc54o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD58C16AAE;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A6AC4AF60;
 	Thu, 24 Apr 2025 20:16:28 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u831c-0000000H3vB-2axK;
-	Thu, 24 Apr 2025 16:18:24 -0400
-Message-ID: <20250424201824.466438405@goodmis.org>
+	id 1u831d-0000000H3wi-0Wkx;
+	Thu, 24 Apr 2025 16:18:25 -0400
+Message-ID: <20250424201824.978358670@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 16:15:17 -0400
+Date: Thu, 24 Apr 2025 16:15:20 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,8 +53,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v5 06/12] unwind_user/sframe: Add prctl() interface for registering .sframe
- sections
+Subject: [PATCH v5 09/12] unwind_user/sframe: Remove .sframe section on detected corruption
 References: <20250424201511.921245242@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -66,65 +65,30 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-The kernel doesn't have direct visibility to the ELF contents of shared
-libraries.  Add some prctl() interfaces which allow glibc to tell the
-kernel where to find .sframe sections.
+To avoid continued attempted use of a bad .sframe section, remove it
+on demand when the first sign of corruption is detected.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/uapi/linux/prctl.h | 5 ++++-
- kernel/sys.c               | 9 +++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ kernel/unwind/sframe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 15c18ef4eb11..4973c932341b 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -351,7 +351,7 @@ struct prctl_mm_map {
-  * configuration.  All bits may be locked via this call, including
-  * undefined bits.
-  */
--#define PR_LOCK_SHADOW_STACK_STATUS      76
-+#define PR_LOCK_SHADOW_STACK_STATUS	76
- 
- /*
-  * Controls the mode of timer_create() for CRIU restore operations.
-@@ -364,4 +364,7 @@ struct prctl_mm_map {
- # define PR_TIMER_CREATE_RESTORE_IDS_ON		1
- # define PR_TIMER_CREATE_RESTORE_IDS_GET	2
- 
-+#define PR_ADD_SFRAME			78
-+#define PR_REMOVE_SFRAME		79
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+index 1a35615a361e..66b920441692 100644
+--- a/kernel/unwind/sframe.c
++++ b/kernel/unwind/sframe.c
+@@ -294,6 +294,10 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
+ 	ret = __find_fre(sec, &fde, ip, frame);
+ end:
+ 	user_read_access_end();
 +
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index c434968e9f5d..d76665e4df7e 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -64,6 +64,7 @@
- #include <linux/rcupdate.h>
- #include <linux/uidgid.h>
- #include <linux/cred.h>
-+#include <linux/sframe.h>
++	if (ret == -EFAULT)
++		WARN_ON_ONCE(sframe_remove_section(sec->sframe_start));
++
+ 	return ret;
+ }
  
- #include <linux/nospec.h>
- 
-@@ -2820,6 +2821,14 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 			return -EINVAL;
- 		error = posixtimer_create_prctl(arg2);
- 		break;
-+	case PR_ADD_SFRAME:
-+		error = sframe_add_section(arg2, arg3, arg4, arg5);
-+		break;
-+	case PR_REMOVE_SFRAME:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = sframe_remove_section(arg2);
-+		break;
- 	default:
- 		trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
- 		error = -EINVAL;
 -- 
 2.47.2
 
