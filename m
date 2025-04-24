@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19679293B50;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5C3293B5A;
 	Thu, 24 Apr 2025 19:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522658; cv=none; b=KbTrl/0UK3JAXjIyovO3sDACwNK77D+E7mtfY1pzDDiezmbROw4UB56h3Wol4uz0AgZ8Pk2N7jWe5AoxYzfjy9n2M04sGHIycIf3mm4ZjHXmvVvCEMISOqAjMFRhKQr2FEPAb3tkVgccZ1gziI/jD1nlzgUx73fpWFCK3SVTLI4=
+	t=1745522658; cv=none; b=SBOeinVxqnjUCyQodjtwx6rE8oOfVaPGZbMq7p2zoBR+T+5MHZlY9u/HlQwAr8tS/cvJ8zSs256trV3Qih5gLgCXOSAjf82IhfSsoDqRdTjiw4x5HeR6FIQExLpWKru5slHlXg5b+E5m9lBuvj4d47VtkjiNBBaSZ966+msPSAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745522658; c=relaxed/simple;
-	bh=BG0zUEBPIwP0oa+bn506OOY7CMuENYzp2nHa7OnXsQA=;
+	bh=kJdHyyr5g9cwZZEEx8rTPCm7ZWJNtMxA7FZ5ZyNruPY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=S8LOnWO58LUtkGi8yV6EM4efNQbGA5ohVFPy5i6Ph59i50XbiKCGuYXOe8Ve9a/DYZdD0lT8mnl3iJ4nYSwpD1MgwGiT97pd5zsV1+faixInrvqKhE/toVmWp22DF5yizCdTw9MCUdZSQBNYCLw+EoSbvSxCwhIw3OL7jh7JMf0=
+	 Content-Type; b=K+5RmGcVv4awthZqKsS4ExcwdH4wZYvOVyHWJUkvf6sT7cRTOZSUJZjwwUoSMrFxgDd/27djBMNOLZq5O2uHMEKvNRzx11TBnwkYsVsDwoN50rTHgKL3537bc7oeS8KLPeulcIkI0vOHYxocU4QLZskW+GgP+aqA25hSQ2wm44Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BD7C4AF13;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C660DC4AF14;
 	Thu, 24 Apr 2025 19:24:17 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u82D7-0000000H2SA-3Yej;
-	Thu, 24 Apr 2025 15:26:13 -0400
-Message-ID: <20250424192613.695828192@goodmis.org>
+	id 1u82D8-0000000H2Sf-04ZF;
+	Thu, 24 Apr 2025 15:26:14 -0400
+Message-ID: <20250424192613.869730948@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 15:25:04 -0400
+Date: Thu, 24 Apr 2025 15:25:05 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v5 8/9] tracing: Have deferred user space stacktrace show file offsets
+Subject: [PATCH v5 9/9] tracing: Show inode and device major:minor in deferred user space
+ stacktrace
 References: <20250424192456.851953422@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -65,102 +66,173 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Instead of showing the IP address of the user space stack trace, which is
-where ever it was mapped by the kernel, show the offsets of where it would
-be in the file.
+The deferred user space stacktrace event already does a lookup of the vma
+for each address in the trace to get the file offset for those addresses,
+it can also report the file itself.
 
-Instead of:
+Add two more arrays to the user space stacktrace event. One for the inode
+number, and the other to store the device major:minor number. Now the
+output looks like this:
 
-       trace-cmd-1066    [007] .....    67.770256: <user stack unwind>
+       trace-cmd-1108    [007] .....   240.253487: <user stack unwind>
 cookie=7000000000009
- =>  <00007fdbd0d421ca>
- =>  <00007fdbd0f3be27>
- =>  <00005635ece557e7>
- =>  <00005635ece559d3>
- =>  <00005635ece56523>
- =>  <00005635ece6479d>
- =>  <00005635ece64b01>
- =>  <00005635ece64bc0>
- =>  <00005635ece53b7e>
- =>  <00007fdbd0c6bca8>
+ =>  <00000000001001ca> : 1340007 : 254:3
+ =>  <000000000000ae27> : 1308548 : 254:3
+ =>  <00000000000107e7> : 1440347 : 254:3
+ =>  <00000000000109d3> : 1440347 : 254:3
+ =>  <0000000000011523> : 1440347 : 254:3
+ =>  <000000000001f79d> : 1440347 : 254:3
+ =>  <000000000001fb01> : 1440347 : 254:3
+ =>  <000000000001fbc0> : 1440347 : 254:3
+ =>  <000000000000eb7e> : 1440347 : 254:3
+ =>  <0000000000029ca8> : 1340007 : 254:3
 
-Which is the addresses of the functions in the virtual address space of
-the process. Have it record:
-
-       trace-cmd-1090    [003] .....   180.779876: <user stack unwind>
-cookie=3000000000009
- =>  <00000000001001ca>
- =>  <000000000000ae27>
- =>  <00000000000107e7>
- =>  <00000000000109d3>
- =>  <0000000000011523>
- =>  <000000000001f79d>
- =>  <000000000001fb01>
- =>  <000000000001fbc0>
- =>  <000000000000eb7e>
- =>  <0000000000029ca8>
-
-Which is the offset from code where it was mapped at. To find this
-address, the mmap_read_lock is taken and the vma is searched for the
-addresses. Then what is recorded is simply:
-
-  (addr - vma->vm_start) + (vma->vm_pgoff << PAGE_SHIFT);
+Use space tooling can use this information to get the actual functions
+from the files.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c         | 25 ++++++++++++++++++++++++-
+ kernel/trace/trace_entries.h |  8 ++++++--
+ kernel/trace/trace_output.c  | 27 +++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 71340207321e..f9eb0f7d649c 100644
+index f9eb0f7d649c..cb0255106b7f 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -3085,18 +3085,27 @@ static void trace_user_unwind_callback(struct unwind_work *unwind,
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct userunwind_stack_entry *entry;
- 	struct ring_buffer_event *event;
-+	struct mm_struct *mm = current->mm;
+@@ -3089,6 +3089,8 @@ static void trace_user_unwind_callback(struct unwind_work *unwind,
  	unsigned int trace_ctx;
-+	struct vm_area_struct *vma = NULL;
+ 	struct vm_area_struct *vma = NULL;
  	unsigned long *caller;
++	unsigned long *inodes;
++	unsigned int *devs;
  	unsigned int offset;
  	int len;
  	int i;
- 
-+	/* This should never happen */
-+	if (!mm)
-+		return;
-+
+@@ -3100,7 +3102,8 @@ static void trace_user_unwind_callback(struct unwind_work *unwind,
  	if (!(tr->trace_flags & TRACE_ITER_USERSTACKTRACE_DELAY))
  		return;
  
- 	len = trace->nr * sizeof(unsigned long) + sizeof(*entry);
+-	len = trace->nr * sizeof(unsigned long) + sizeof(*entry);
++	len = trace->nr * (sizeof(unsigned long) * 2 + sizeof(unsigned int))
++			   + sizeof(*entry);
  
  	trace_ctx = tracing_gen_ctx();
-+
-+	guard(mmap_read_lock)(mm);
-+
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_USER_UNWIND_STACK,
- 					    len, trace_ctx);
- 	if (!event)
-@@ -3113,7 +3122,16 @@ static void trace_user_unwind_callback(struct unwind_work *unwind,
+ 
+@@ -3121,6 +3124,15 @@ static void trace_user_unwind_callback(struct unwind_work *unwind,
+ 	entry->__data_loc_stack = offset | (len << 16);
  	caller = (void *)entry + offset;
  
++	offset += len;
++	entry->__data_loc_inodes = offset | (len << 16);
++	inodes = (void *)entry + offset;
++
++	offset += len;
++	len = sizeof(unsigned int) * trace->nr;
++	entry->__data_loc_dev = offset | (len << 16);
++	devs = (void *)entry + offset;
++
  	for (i = 0; i < trace->nr; i++) {
--		caller[i] = trace->entries[i];
-+		unsigned long addr = trace->entries[i];
+ 		unsigned long addr = trace->entries[i];
+ 
+@@ -3129,9 +3141,20 @@ static void trace_user_unwind_callback(struct unwind_work *unwind,
+ 
+ 		if (!vma) {
+ 			caller[i] = addr;
++			inodes[i] = 0;
++			devs[i] = 0;
+ 			continue;
+ 		}
 +
-+		if (!vma || addr < vma->vm_start || addr >= vma->vm_end)
-+			vma = vma_lookup(mm, addr);
+ 		caller[i] = (addr - vma->vm_start) + (vma->vm_pgoff << PAGE_SHIFT);
 +
-+		if (!vma) {
-+			caller[i] = addr;
-+			continue;
++		if (vma->vm_file && vma->vm_file->f_inode) {
++			inodes[i] = vma->vm_file->f_inode->i_ino;
++			devs[i] = vma->vm_file->f_inode->i_sb->s_dev;
++		} else {
++			inodes[i] = 0;
++			devs[i] = 0;
 +		}
-+		caller[i] = (addr - vma->vm_start) + (vma->vm_pgoff << PAGE_SHIFT);
  	}
  
  	__buffer_unlock_commit(buffer, event);
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 752a99296c95..f2dc09405128 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -256,10 +256,14 @@ FTRACE_ENTRY(user_unwind_stack, userunwind_stack_entry,
+ 	F_STRUCT(
+ 		__field(		u64,		cookie	)
+ 		__dynamic_array(	unsigned long,	stack	)
++		__dynamic_array(	unsigned long,	inodes	)
++		__dynamic_array(	unsigned int,	dev	)
+ 	),
+ 
+-	F_printk("cookie=%lld\n%s", __entry->cookie,
+-		 __print_dynamic_array(stack, sizeof(unsigned long)))
++	F_printk("cookie=%lld\n%s%s%s", __entry->cookie,
++		 __print_dynamic_array(stack, sizeof(unsigned long)),
++		 __print_dynamic_array(inodes, sizeof(unsigned long)),
++		 __print_dynamic_array(dev, sizeof(unsigned long)))
+ );
+ 
+ FTRACE_ENTRY(user_unwind_cookie, userunwind_cookie_entry,
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index e11911e5f7d0..4bdbc6c48cdb 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1380,9 +1380,13 @@ static enum print_line_t trace_user_unwind_stack_print(struct trace_iterator *it
+ 	struct userunwind_stack_entry *field;
+ 	struct trace_seq *s = &iter->seq;
+ 	unsigned long *caller;
++	unsigned long *inodes;
++	unsigned int *devs;
+ 	unsigned int offset;
+ 	unsigned int len;
+ 	unsigned int caller_cnt;
++	unsigned int inode_cnt;
++	unsigned int dev_cnt;
+ 	unsigned int i;
+ 
+ 	trace_assign_type(field, iter->ent);
+@@ -1399,6 +1403,21 @@ static enum print_line_t trace_user_unwind_stack_print(struct trace_iterator *it
+ 
+ 	caller = (void *)iter->ent + offset;
+ 
++	/* The inodes and devices are also dynamic pointers */
++	offset = field->__data_loc_inodes;
++	len = offset >> 16;
++	offset = offset & 0xffff;
++	inode_cnt = len / sizeof(*inodes);
++
++	inodes = (void *)iter->ent + offset;
++
++	offset = field->__data_loc_dev;
++	len = offset >> 16;
++	offset = offset & 0xffff;
++	dev_cnt = len / sizeof(*devs);
++
++	devs = (void *)iter->ent + offset;
++
+ 	for (i = 0; i < caller_cnt; i++) {
+ 		unsigned long ip = caller[i];
+ 
+@@ -1407,6 +1426,14 @@ static enum print_line_t trace_user_unwind_stack_print(struct trace_iterator *it
+ 
+ 		trace_seq_puts(s, " => ");
+ 		seq_print_user_ip(s, NULL, ip, flags);
++
++		if (i < inode_cnt) {
++			trace_seq_printf(s, " : %ld", inodes[i]);
++			if (i < dev_cnt) {
++				trace_seq_printf(s, " : %d:%d",
++						 MAJOR(devs[i]), MINOR(devs[i]));
++			}
++		}
+ 		trace_seq_putc(s, '\n');
+ 	}
+ 
 -- 
 2.47.2
 
