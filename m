@@ -1,110 +1,316 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E64C28A1F9;
-	Thu, 24 Apr 2025 17:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EF4A93D;
+	Thu, 24 Apr 2025 18:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745517098; cv=none; b=rE5kcYSuRgDaoD8DKO+VCUQe9UG3iZL0GEuQFg7/lTwnScFVtgH5jJfjJtnVzXdiIldhHirVZN1VmE8+pCfS2jDuXhv/QJEngX2bTY+JZwxHbqI2SE9ZQ/pCsImsBKubZr4OPCtFn+Y+nsd0MfZ11McjFHhF5BWvdntNga9QuxY=
+	t=1745518388; cv=none; b=bJUm/21sajx3zAWyaphaL/l0N0FK1X/9t4l8dsFccjiozkEllvTS3JnCQw6uYHJAMIXar546LdAlsWyt77HV4c+2qSX//Ep5TULbOJJuxsFIUvPkr+rQxY2TWLp7JvnygT2eBHRXW5vJXAAvoYxu1N1JEdYx8r+CkNIILZ8sQZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745517098; c=relaxed/simple;
-	bh=vRUzZpZGFJolMKWVih6pSIskaMZx/C9W0RbkMI/WUL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKlpA4b/4oDwkQ8qJSMnIiazcrirqlLRcfTpbrAt9Ekx3oePVrKE53pHbCdcp9WAP2qC5w+e7k2Yad4ygOUjQc3hU2WharHFDxjNp2SI7O9516ni97Q0iJbdw67JV72FuQsc6hWFV3VIESrpK00nP5xQnyfVKW73bx8DYl+mr6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=BVFv6Rd/; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745518388; c=relaxed/simple;
+	bh=yYs97Jd1RkJGVCrGGdVNydUIykMVC7x1/mkHbVGzG14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBXzfbxFWnpy7sl+PwRS+phj3RFnnVLrQUZBZ6xBiMqv53E8TqyQDTsn22GXWoNW09UABhWz0oEBupHAErR4NsbMrCaKpq/nAmYZUBaMLUiYCM6hoi4fvj5GmDh/C1ayFY9e/NQz9q8FAERkqCuFyoK3SahifC2Z4izFjKMUTK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NTRnKJ7o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BVFv6Rd/"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OHooUY1383060
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 24 Apr 2025 10:50:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OHooUY1383060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745517053;
-	bh=vRUzZpZGFJolMKWVih6pSIskaMZx/C9W0RbkMI/WUL4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BVFv6Rd/IQ4J/PYHV3nN9oqAwGme4iFBImZRL6GTcMhgw7NYKI28t7uuoVpBh6PKp
-	 Qy2xaOL92iZPXBKZt18DClDdHu3Cu26OIl4X3wCxR6sP5IvdC0f2A7gL/3A2OrpX9K
-	 vBDJPG7XgmIA8lWPglrxwu2BGk3JKhEvcr6RSlKe2FpGUDSIGQIrDKIZmZn49EaoYL
-	 ADBESCC4Zsb4bWa7wGLDCdPOl+K3TeEVWdgeOHMFTdiA2wKrluDoC86oJ/ps6iqrBb
-	 f6WH3cQT18xQO9Bmnlmpr31eZorHV057tP0mCCdH9T/XCtwTZdzP0kYWRlcnS5Uvqb
-	 Rvudk3Z8FPKfA==
-Message-ID: <b90ead3b-75fd-464f-aa93-5afdc7ee0f02@zytor.com>
-Date: Thu, 24 Apr 2025 10:50:50 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NTRnKJ7o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527BFC4CEE3;
+	Thu, 24 Apr 2025 18:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745518387;
+	bh=yYs97Jd1RkJGVCrGGdVNydUIykMVC7x1/mkHbVGzG14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NTRnKJ7oRP07ihCoPNkZfR+5CEXTwJdhGnjrjvtctPdYPt/IxVZ59IN5H46vAYZW/
+	 40+4G2Cl1s4ioX0ZsEn0tzqvFBgaE4XAPDZCkXuLjUBvarNtiH3R4FXp3cT5R7CR/y
+	 ll+/b4gmtUAEDx2may7hdsHThIWmZz7FxW71kTTM2gcauhD5wIXpg7T8h4YoEt2yEk
+	 B4rRlyUpaTDiz+wvF2Qz7DQRk1XU8/O+Gf/vllpAqI5xeeYy5l3M/SDhWm+CKZUeh8
+	 8HsMywD5lg2I60VE8DXR6RCR2mM4edJTVXBz2z82B2T22ozgQwQLR/2hHyKgGO7s+d
+	 8srE4vYo9GSGQ==
+Date: Thu, 24 Apr 2025 15:13:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+	namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com, hbathini@linux.vnet.ibm.com,
+	Aditya.Bodkhe1@ibm.com, jiang.peng9@zte.com.cn,
+	venkat88@linux.ibm.com, Tejas.Manhas1@ibm.com,
+	sshegde@linux.ibm.com, sfr@canb.auug.org.au,
+	linux-kernel@vger.kernel.org, mingo@redhat.com,
+	ravi.bangoria@amd.com, bp@alien8.de
+Subject: Re: [PATCH] perf build: Add tools/arch/x86/include/asm/amd/ibs.h to
+ sync the headers
+Message-ID: <aAp_MGf8HcKJ1QjY@x1>
+References: <20250424163033.6601-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 13/34] x86/xen/msr: Remove the error pointer
- argument from set_reg()
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-14-xin@zytor.com>
- <7c7de4be-e8d0-45b9-9212-186d79e95512@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <7c7de4be-e8d0-45b9-9212-186d79e95512@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424163033.6601-1-atrajeev@linux.ibm.com>
 
-On 4/24/2025 3:11 AM, Jürgen Groß wrote:
-> set_seg(), please (further up, too).
+On Thu, Apr 24, 2025 at 10:00:33PM +0530, Athira Rajeev wrote:
+> Headers sync up update for the patch that adds the original
+> copy of the IBS header file in arch/x86/include/asm/amd/ibs.h
+ 
+> Without this, perf shows build warning:
 
-Good catch, thanks a lot!
+Warning != error, so shouldn't result in something stopping to work.
+ 
+>  # make
+
+What is the cwd?
+
+Probably tools/perf/
+
+>   BUILD:   Doing 'make -j24' parallel build
+> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
+> Warning: Kernel ABI header differences:
+>   diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+>   diff -u tools/include/linux/bits.h include/linux/bits.h
+>   diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>   diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+>   diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
+>   diff -u tools/arch/x86/include/asm/amd/ibs.h arch/x86/include/asm/amd/ibs.h
+>   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+ 
+> Add tools/arch/x86/include/asm/amd directory and also file
+> tools/arch/x86/include/asm/amd/ibs.h to sync up the kernel headers
+> with perf tools and fix the warning:
+ 
+> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
+ 
+> Apart from the warning, the perf build also fails as below on powerpc:
+ 
+>   In file included from util/amd-sample-raw.c:12:0:
+>   /root/bug/tip/tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal error: asm/msr-index.h: No such file or directory
+>    #include <asm/msr-index.h>
+>             ^~~~~~~~~~~~~~~~~
+>   compilation terminated.
+ 
+> To fix this, added this change:
+ 
+>   -#include <asm/msr-index.h>
+>   +#include "../msr-index.h"
+ 
+> And change the check-headers.sh entry to ignore this line when
+> comparing with the original kernel header.
+
+So, was this caused by some file being updated under tools/ that didn't
+go thru the maintainers for that area?
+
+It is important to read this file:
+
+tools/include/uapi/README
+
+Specially this part:
+
+The tools/perf/check-headers.sh script, part of the tools/ build
+process, points out changes in the original files.
+
+So its important not to touch the copies in tools/ when doing changes in
+the original kernel headers, that will be done later, when
+check-headers.sh inform about the change to the perf tools hackers.
+
+--
+
+So, files under tools/ should only be updated once it is determined that
+it doesn't break building tools/.
+
+And for that to happen, just submit it as a separate patch that should
+be processed by tools people, if it makes sense.
+
+- Arnaldo
+ 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reported-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> ---
+>  tools/arch/x86/include/asm/amd/ibs.h | 158 +++++++++++++++++++++++++++
+>  tools/perf/check-headers.sh          |   2 +-
+>  2 files changed, 159 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/arch/x86/include/asm/amd/ibs.h
+> 
+> diff --git a/tools/arch/x86/include/asm/amd/ibs.h b/tools/arch/x86/include/asm/amd/ibs.h
+> new file mode 100644
+> index 000000000000..cbce54fec7b9
+> --- /dev/null
+> +++ b/tools/arch/x86/include/asm/amd/ibs.h
+> @@ -0,0 +1,158 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_AMD_IBS_H
+> +#define _ASM_X86_AMD_IBS_H
+> +
+> +/*
+> + * From PPR Vol 1 for AMD Family 19h Model 01h B1
+> + * 55898 Rev 0.35 - Feb 5, 2021
+> + */
+> +
+> +#include "../msr-index.h"
+> +
+> +/* IBS_OP_DATA2 DataSrc */
+> +#define IBS_DATA_SRC_LOC_CACHE			 2
+> +#define IBS_DATA_SRC_DRAM			 3
+> +#define IBS_DATA_SRC_REM_CACHE			 4
+> +#define IBS_DATA_SRC_IO				 7
+> +
+> +/* IBS_OP_DATA2 DataSrc Extension */
+> +#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
+> +#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
+> +#define IBS_DATA_SRC_EXT_DRAM			 3
+> +#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
+> +#define IBS_DATA_SRC_EXT_PMEM			 6
+> +#define IBS_DATA_SRC_EXT_IO			 7
+> +#define IBS_DATA_SRC_EXT_EXT_MEM		 8
+> +#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
+> +
+> +/*
+> + * IBS Hardware MSRs
+> + */
+> +
+> +/* MSR 0xc0011030: IBS Fetch Control */
+> +union ibs_fetch_ctl {
+> +	__u64 val;
+> +	struct {
+> +		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
+> +			fetch_cnt:16,	/* 16-31: instruction fetch count */
+> +			fetch_lat:16,	/* 32-47: instruction fetch latency */
+> +			fetch_en:1,	/* 48: instruction fetch enable */
+> +			fetch_val:1,	/* 49: instruction fetch valid */
+> +			fetch_comp:1,	/* 50: instruction fetch complete */
+> +			ic_miss:1,	/* 51: i-cache miss */
+> +			phy_addr_valid:1,/* 52: physical address valid */
+> +			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
+> +					 *	  (needs IbsPhyAddrValid) */
+> +			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
+> +			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
+> +			rand_en:1,	/* 57: random tagging enable */
+> +			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
+> +					 *      (needs IbsFetchComp) */
+> +			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
+> +			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
+> +			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
+> +			reserved:2;	/* 62-63: reserved */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011033: IBS Execution Control */
+> +union ibs_op_ctl {
+> +	__u64 val;
+> +	struct {
+> +		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
+> +			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
+> +			op_en:1,	/* 17: op sampling enable */
+> +			op_val:1,	/* 18: op sample valid */
+> +			cnt_ctl:1,	/* 19: periodic op counter control */
+> +			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
+> +			reserved0:5,	/* 27-31: reserved */
+> +			opcurcnt:27,	/* 32-58: periodic op counter current count */
+> +			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
+> +			ldlat_en:1;	/* 63: Load Latency enabled */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011035: IBS Op Data 1 */
+> +union ibs_op_data {
+> +	__u64 val;
+> +	struct {
+> +		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
+> +			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
+> +			reserved1:2,		/* 32-33: reserved */
+> +			op_return:1,		/* 34: return op */
+> +			op_brn_taken:1,		/* 35: taken branch op */
+> +			op_brn_misp:1,		/* 36: mispredicted branch op */
+> +			op_brn_ret:1,		/* 37: branch op retired */
+> +			op_rip_invalid:1,	/* 38: RIP is invalid */
+> +			op_brn_fuse:1,		/* 39: fused branch op */
+> +			op_microcode:1,		/* 40: microcode op */
+> +			reserved2:23;		/* 41-63: reserved */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011036: IBS Op Data 2 */
+> +union ibs_op_data2 {
+> +	__u64 val;
+> +	struct {
+> +		__u64	data_src_lo:3,	/* 0-2: data source low */
+> +			reserved0:1,	/* 3: reserved */
+> +			rmt_node:1,	/* 4: destination node */
+> +			cache_hit_st:1,	/* 5: cache hit state */
+> +			data_src_hi:2,	/* 6-7: data source high */
+> +			reserved1:56;	/* 8-63: reserved */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011037: IBS Op Data 3 */
+> +union ibs_op_data3 {
+> +	__u64 val;
+> +	struct {
+> +		__u64	ld_op:1,			/* 0: load op */
+> +			st_op:1,			/* 1: store op */
+> +			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
+> +			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
+> +			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
+> +			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
+> +			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
+> +			dc_miss:1,			/* 7: data cache miss */
+> +			dc_mis_acc:1,			/* 8: misaligned access */
+> +			reserved:4,			/* 9-12: reserved */
+> +			dc_wc_mem_acc:1,		/* 13: write combining memory access */
+> +			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
+> +			dc_locked_op:1,			/* 15: locked operation */
+> +			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
+> +			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
+> +			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
+> +			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
+> +			l2_miss:1,			/* 20: L2 cache miss */
+> +			sw_pf:1,			/* 21: software prefetch */
+> +			op_mem_width:4,			/* 22-25: load/store size in bytes */
+> +			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
+> +			dc_miss_lat:16,			/* 32-47: data cache miss latency */
+> +			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
+> +	};
+> +};
+> +
+> +/* MSR 0xc001103c: IBS Fetch Control Extended */
+> +union ic_ibs_extd_ctl {
+> +	__u64 val;
+> +	struct {
+> +		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
+> +			reserved:48;		/* 16-63: reserved */
+> +	};
+> +};
+> +
+> +/*
+> + * IBS driver related
+> + */
+> +
+> +struct perf_ibs_data {
+> +	u32		size;
+> +	union {
+> +		u32	data[0];	/* data buffer starts here */
+> +		u32	caps;
+> +	};
+> +	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
+> +};
+> +
+> +#endif /* _ASM_X86_AMD_IBS_H */
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index e9fab20e9330..e1a1fdfa7115 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -186,7 +186,7 @@ done
+>  # diff with extra ignore lines
+>  check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memcpy_\(erms\|orig\))" -I"^#include <linux/cfi_types.h>"'
+>  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+> -check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
+> +check arch/x86/include/asm/amd/ibs.h  '-I "^#include <asm/msr-index.h>" -I "^#include \"\.\./msr-index.h\""'
+>  check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
+>  check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+>  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
+> -- 
+> 2.43.0
