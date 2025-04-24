@@ -1,91 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1584E285412;
-	Thu, 24 Apr 2025 16:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA9A13213E;
+	Thu, 24 Apr 2025 16:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511108; cv=none; b=IYO2P9xtshSAfX+5/+TNHRnzg/+1IYBlgH+bGEPSRe4Jzp4XmCxonP4CmCvXihH1uHd9g1oWXK6ShCrx6N5dK9w4VsS9IakVl6bNXAPhYVO9mePTwk8UrJA+B+0xfB+qOrK3B4uihkAEQh1Yd6fKZk9htGoozQkQN0z2V6/757c=
+	t=1745511392; cv=none; b=Yr5W4ao5CEWaf1ll/vIAHk1Og4VKk/3ICqybpH3XCbZNUDvkjqH8q61diM5Fubm1Q95BItdLxaEAHM7J3BENeQEWLtt/vXXkZyAv0pf8mQY8DjHmluC8oOzw3lY/1eYx1DJzvP9ZoQQOzRSVFMWW7/XcGiZdx7Lo7/1Pymg3UaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511108; c=relaxed/simple;
-	bh=DyNbIMm3t1OQosHaL0SdDU7894u7I6YldwA1DhSvZII=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XAesvNRtSmUM2R22+8pJ+BkVK1XB/cD3p6MTuiDaj9bQrj+23jHYmAnCh3FEAJKa8x6n0pXPle2SEnOoaSwcq+6BVfVN8hYfGUASKs4PCLb0ajtpmvQgItYKQ++1WKvibpxLQLdJXGoSoJpGg8ykNq5lbksK6bmASpFxRhZDQVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFnuii9a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745511392; c=relaxed/simple;
+	bh=ufPD5Qc37EQkwAX6bXVZ6anbgOdjefX2LxyQmQbslzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OADQ8Cyepo/ukx3p81QkoazaYsPbDYY02HB5B7TGOfS1/CFTmzAUuw3jG8VCMqtZF3tsRREhFNNBoNNbaHfgrjZAQwz2eKm02JZaUHUByQliYnyE+qt/z3GEyX3A6CTZ5hR5GatPJjBgNB85a+ZW9HVDT975WdvqEiLgAF8xan4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EYIanhV0; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFnuii9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0899EC4CEE3;
-	Thu, 24 Apr 2025 16:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745511107;
-	bh=DyNbIMm3t1OQosHaL0SdDU7894u7I6YldwA1DhSvZII=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bFnuii9aq5fTzsXM0BwraDE0WeCM4/xjUCeQdF1E3wj9U1jEIrmxwQHUL4hpDN+Qa
-	 8c5LQ+iTuX499/BsntY8R+1DBQZQvPRI/f9ONW3dPzNrLJ1HvXMWlJOnpnqOx+hjFA
-	 uskP7OeNvdFhlgEkIKOn87MklG+NpTZqrSn5sTPNSyIi38LMEEuuyK/7gNwFUwGZB7
-	 t1vpjaikuLu0zGMAIuEBclEuBhvRZS1ETJ2ZgL1y0L5efFq1KOyyGLke8axGOkPyIX
-	 TF1IoPlusbU0JIwA7YNTBJ9OMwuUkn0GotBqKXLzrOHnFc+q6yggpbxn/AlRRoMpSs
-	 ftsquHYDh77Tw==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EYIanhV0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3PNY4afMuvAcfFQt5nQIxzLkrrR5jlxWzwnh2y2DRzY=; b=EYIanhV08SnaH/rHYdMDItwphV
+	jd1ERqfdwFiEH3xw9gJPARmotnHiBbJhgmkb/CaAn4WhL5GjOxVjhsbvpWuevhvcTTlAwmskYrjsM
+	GcJBKu/QPoH8oapRH9t06RZIupMDJvP+umFz9VaYXghwojqvrHaFmvgLUGzmUewT+gqv9N1wfSNGo
+	pPG5w6WXLZlrD3zURiQ/RZJNUDrgt+ZmQ4tLE7gL2Dd/QbRGJslSAurUONZfTqaRI3DIFYSZBSHFV
+	y5dC1M++AgDC5SG2YwFNnHH4L1bmWNfk2t3nAP/Sb5gdSei0hWE5u4ypUYiF8GjOdeSfTnY+rMYWK
+	rtUkrYkA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7zFO-0000000Cp9u-3Urm;
+	Thu, 24 Apr 2025 16:16:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4AC7E300642; Thu, 24 Apr 2025 18:16:22 +0200 (CEST)
+Date: Thu, 24 Apr 2025 18:16:22 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Ravi Bangoria <ravi.bangoria@amd.com>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/4] perf: Fix confusing aux iteration
-Date: Thu, 24 Apr 2025 18:11:28 +0200
-Message-ID: <20250424161128.29176-5-frederic@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250424161128.29176-1-frederic@kernel.org>
+Subject: Re: [PATCH 1/4] perf: Fix failing inherit_event() doing extra
+ refcount decrement on parent
+Message-ID: <20250424161622.GB18306@noisy.programming.kicks-ass.net>
 References: <20250424161128.29176-1-frederic@kernel.org>
+ <20250424161128.29176-2-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424161128.29176-2-frederic@kernel.org>
 
-While an event tears down all links to it as an aux, the iteration
-happens on the event's group leader instead of the group itself.
+On Thu, Apr 24, 2025 at 06:11:25PM +0200, Frederic Weisbecker wrote:
+> When inherit_event() fails after the child allocation but before the
+> parent refcount has been incremented, calling put_event() wrongly
+> decrements the reference to the parent, risking to free it too early.
+> 
+> Also pmu_get_event() can't be holding a reference to the child
+> concurrently at this point since it is under pmus_srcu critical section.
+> 
+> Fix it with restoring the deleted free_event() function and call it on
+> the failing child in order to free it directly under the verified
+> assumption that its refcount is only 1. The refcount to the parent is
+> then voluntarily omitted.
+> 
+> Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-If the event is a group leader, it has no effect because the event is
-also its own group leader. But otherwise there would be a risk to detach
-all the siblings events from the wrong group leader.
-
-It just happens to work because each sibling's aux link is tested
-against the right event before proceeding. Also the ctx lock is the same
-for the events and their group leader so the iteration is safe.
-
-Yet the iteration is confusing. Clarify the actual intent.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 968a1d14bc8b..0d25bde536c9 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2171,7 +2171,7 @@ static void perf_put_aux_event(struct perf_event *event)
- 	 * If the event is an aux_event, tear down all links to
- 	 * it from other events.
- 	 */
--	for_each_sibling_event(iter, event->group_leader) {
-+	for_each_sibling_event(iter, event) {
- 		if (iter->aux_event != event)
- 			continue;
- 
--- 
-2.48.1
-
+Bah, yes, another bad interaction between your fix and my patch :/
