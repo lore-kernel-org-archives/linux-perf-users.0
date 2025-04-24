@@ -1,55 +1,45 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA9A13213E;
-	Thu, 24 Apr 2025 16:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4377B5BAF0;
+	Thu, 24 Apr 2025 16:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511392; cv=none; b=Yr5W4ao5CEWaf1ll/vIAHk1Og4VKk/3ICqybpH3XCbZNUDvkjqH8q61diM5Fubm1Q95BItdLxaEAHM7J3BENeQEWLtt/vXXkZyAv0pf8mQY8DjHmluC8oOzw3lY/1eYx1DJzvP9ZoQQOzRSVFMWW7/XcGiZdx7Lo7/1Pymg3UaA=
+	t=1745511623; cv=none; b=ldx72u8cw/iHUcSzkeqq1vNml2qAVX9CWfIxtSO7xygfcrrxyuJbqSeuBmDUvji6Pyg740DoRG7KZW2EEKIB/PGn9t37NIJY6C5RNWJaOTJ08E99TAw51wZcyxdsB6+lbqjHa504tFPqzbeK6tw2ZoIbhDngrjT76VmJF1ubl8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511392; c=relaxed/simple;
-	bh=ufPD5Qc37EQkwAX6bXVZ6anbgOdjefX2LxyQmQbslzk=;
+	s=arc-20240116; t=1745511623; c=relaxed/simple;
+	bh=6ljqckhANoBqw3YchiUNPsDCe7CdD/3KO0hDL4Rve1U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OADQ8Cyepo/ukx3p81QkoazaYsPbDYY02HB5B7TGOfS1/CFTmzAUuw3jG8VCMqtZF3tsRREhFNNBoNNbaHfgrjZAQwz2eKm02JZaUHUByQliYnyE+qt/z3GEyX3A6CTZ5hR5GatPJjBgNB85a+ZW9HVDT975WdvqEiLgAF8xan4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EYIanhV0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=in8wsDj0uq0euq/m6+vJNMLlSqdElxtlcnCuFAxuHk+nI4AQ/DZykxQuhi1E1IAflHnZnk7Dpg4y2JNn7OaglHIsOMfNYSHlydkEAZ7DAZcvpvqKrSf+k4eBxuuClawl/cKCevNvWUFicmFOLE2nQ03PyfM0yDmUoRUEmv6HRKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSobpsIx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EYIanhV0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3PNY4afMuvAcfFQt5nQIxzLkrrR5jlxWzwnh2y2DRzY=; b=EYIanhV08SnaH/rHYdMDItwphV
-	jd1ERqfdwFiEH3xw9gJPARmotnHiBbJhgmkb/CaAn4WhL5GjOxVjhsbvpWuevhvcTTlAwmskYrjsM
-	GcJBKu/QPoH8oapRH9t06RZIupMDJvP+umFz9VaYXghwojqvrHaFmvgLUGzmUewT+gqv9N1wfSNGo
-	pPG5w6WXLZlrD3zURiQ/RZJNUDrgt+ZmQ4tLE7gL2Dd/QbRGJslSAurUONZfTqaRI3DIFYSZBSHFV
-	y5dC1M++AgDC5SG2YwFNnHH4L1bmWNfk2t3nAP/Sb5gdSei0hWE5u4ypUYiF8GjOdeSfTnY+rMYWK
-	rtUkrYkA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7zFO-0000000Cp9u-3Urm;
-	Thu, 24 Apr 2025 16:16:22 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4AC7E300642; Thu, 24 Apr 2025 18:16:22 +0200 (CEST)
-Date: Thu, 24 Apr 2025 18:16:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf: Fix failing inherit_event() doing extra
- refcount decrement on parent
-Message-ID: <20250424161622.GB18306@noisy.programming.kicks-ass.net>
-References: <20250424161128.29176-1-frederic@kernel.org>
- <20250424161128.29176-2-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSobpsIx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECCCC4CEE3;
+	Thu, 24 Apr 2025 16:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745511623;
+	bh=6ljqckhANoBqw3YchiUNPsDCe7CdD/3KO0hDL4Rve1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kSobpsIxRHPCbYVAvP9UEgh8ge5jddMoUCQ0yOa137tXWJaKce0wErqAAzMGICdy6
+	 vAWlYVdw5+jUZAbI3fFFSy+ZGqv3YE4y9KqMGL4yZKO9kmnUC7rRt7HpmcJiabdW6U
+	 AVkKuuNNtX1IiIAwhb+5tqtuV0R8yCfzzkZ0m0CVTap39G3B7V8KnVp1etohxI1qKs
+	 YOoLBo+KMEsL4imPfJGXwTALJGBUGjcEWK6XGg28jfX3urBpYO3+EoGkG0cRcLcp0O
+	 M1e3ihpfQ9nVEL7ztFtGCw/BcuIGUrd/aMHY+xQJf2jCbHD/dAMVZFzoxpIQ8aDx3X
+	 6dAocR38TFrNw==
+Date: Thu, 24 Apr 2025 18:20:17 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Luo Gengkun <luogengkun@huaweicloud.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86: Fix open counting event error
+Message-ID: <aApkwfEUCJcc9PXn@gmail.com>
+References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,22 +48,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424161128.29176-2-frederic@kernel.org>
+In-Reply-To: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
 
-On Thu, Apr 24, 2025 at 06:11:25PM +0200, Frederic Weisbecker wrote:
-> When inherit_event() fails after the child allocation but before the
-> parent refcount has been incremented, calling put_event() wrongly
-> decrements the reference to the parent, risking to free it too early.
-> 
-> Also pmu_get_event() can't be holding a reference to the child
-> concurrently at this point since it is under pmus_srcu critical section.
-> 
-> Fix it with restoring the deleted free_event() function and call it on
-> the failing child in order to free it directly under the verified
-> assumption that its refcount is only 1. The refcount to the parent is
-> then voluntarily omitted.
-> 
-> Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-Bah, yes, another bad interaction between your fix and my patch :/
+* Luo Gengkun <luogengkun@huaweicloud.com> wrote:
+
+> Perf doesn't work at perf stat for hardware events:
+> 
+>  $perf stat -- sleep 1
+>  Performance counter stats for 'sleep 1':
+>              16.44 msec task-clock                       #    0.016 CPUs utilized
+>                  2      context-switches                 #  121.691 /sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 54      page-faults                      #    3.286 K/sec
+>    <not supported>	cycles
+>    <not supported>	instructions
+>    <not supported>	branches
+>    <not supported>	branch-misses
+> 
+> The reason is that the check in x86_pmu_hw_config for sampling event is
+> unexpectedly applied to the counting event.
+> 
+> Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> ---
+>  arch/x86/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 6866cc5acb0b..3a4f031d2f44 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
+>  	if (event->attr.type == event->pmu->type)
+>  		event->hw.config |= x86_pmu_get_event_config(event);
+>  
+> -	if (!event->attr.freq && x86_pmu.limit_period) {
+> +	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
+
+Hm, so how come it works here, on an affected x86 system:
+
+$ perf stat -- sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+              0.64 msec task-clock:u                     #    0.001 CPUs utilized             
+                 0      context-switches:u               #    0.000 /sec                      
+                 0      cpu-migrations:u                 #    0.000 /sec                      
+                73      page-faults:u                    #  114.063 K/sec                     
+           325,849      instructions:u                   #    0.56  insn per cycle            
+                                                  #    0.88  stalled cycles per insn   
+           580,323      cycles:u                         #    0.907 GHz                       
+           286,348      stalled-cycles-frontend:u        #   49.34% frontend cycles idle      
+            72,623      branches:u                       #  113.474 M/sec                     
+             4,713      branch-misses:u                  #    6.49% of all branches           
+
+
+?
+
+Thanks,
+
+	Ingo
