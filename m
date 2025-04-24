@@ -1,168 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8603019F471;
-	Thu, 24 Apr 2025 22:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFE51EA84;
+	Thu, 24 Apr 2025 22:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745532395; cv=none; b=R3H7sKmqhWLUPx6idzzz5b9VKzNkEXF4Mz9Myx8/ZhkuIr7yyd0Pg0ArkSR0xuBkTLxnVWcG5xaDU9rh5sp0rbsE5gjtAoO1RR7MGd7yEiKoqH0ovmy6r0WHqsWQURE02ZTPDsOq9D28SgDe2YXE4sFesV+Jftcggf971W/kKNA=
+	t=1745533527; cv=none; b=I4aEcUBWtINBEXrHx4KbFbMyNh8bRI3EY4eOFnbcCJIOSN+EZbXa5yVydooscTjzt4FRxBF/EJxFH2fRMagqWUI60jgwabIA6OMTP9fhI+AY2drHIJrnnDmV/9mJLGAwvJLd3Ri5Jra2M9AWo8YuvfqzGrZslmDRfiKIaUQN1G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745532395; c=relaxed/simple;
-	bh=nHHKm+v7CyTG5oWYNzsXxiimdV4zZ6PRwiC+1/v1Pv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qg4lDa3pnMAxNFB9hrC9NABujwuYvMvJ7DBh9UB0VOqJ5hUh6VdKD+ssLAP0vL+pc7GLj6bWP2fEQfLKYnVF7+POqyay4tb5GjTZke05pSDx7vB65K3D4Np5cGwZlm7nftaBpwfSsIEn4EsK+Yv0vNzsfbJvDoKVKt2aKC/nc5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3Z0SvQj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745533527; c=relaxed/simple;
+	bh=geVdAODQa5LNlip0NptpinhwFwtWBxWKaCUmeLAWNLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SV5P2FlPNmBJWUkgLr8+UQJh1wU/30sy+pcoGkocGBYTKH18PH1pj95m7smEjHXh6RjuBDcw7IwpQecQ4dGJejYfwl/eXbGGBw3sq4yTApgytwq21e4TGLNYLGA0/jUkXHz16IGwcDSAdCoVRHLEKNvdGcUfKyGubnW1QRBFgeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aIcpLSsA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3Z0SvQj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9383EC4CEE3;
-	Thu, 24 Apr 2025 22:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745532394;
-	bh=nHHKm+v7CyTG5oWYNzsXxiimdV4zZ6PRwiC+1/v1Pv4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y3Z0SvQjA5m8EnDWin9jfDUq55M6s0VCknvHorR0avtchr+OZ6Zp2wIiDA7+jXUH+
-	 H16y2U4dd47eDCk/LZSUOguDlUeWMPEkwpJTXyjQoOVaxMaYMBZDhnAQsI2O7yqZJN
-	 fgeZN5LJf8rEph/Ste9uQ80H+Z3oFRepJSwoG2K6wUVzLDBqATslxr2B5bFWWH/Oo+
-	 CRCz9jkuPjAqKduHozP44WUZaik8Xo7KdrVIi7YRPlsTsjbVE6g5NCCBKLm3OSJ7ZF
-	 mrCQ/KUXFA8R3u6Eu8xoaM2VxWkVf70HCXxrrOyfa1qpKG3CQ/7mUd9d/eAuJINsre
-	 7rwv8SUJekPMg==
-Date: Thu, 24 Apr 2025 19:06:32 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
-Message-ID: <aAq16LWBIVr08iSe@x1>
-References: <20250326044001.3503432-1-namhyung@kernel.org>
- <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
- <aAkUyFjRFLkS170u@x1>
- <aAkmY0hLXarmCSIA@google.com>
- <aAlSqGN9Sx4x6_sI@x1>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aIcpLSsA"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OMORWG1692289
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 15:24:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OMORWG1692289
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745533472;
+	bh=G5UVXicyTBIPs6yn0Aol/9aUmVhDamNK2RBM6HiC8ec=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aIcpLSsAz7DGTiM9hjhLHyD03dBWLKbzaB0V7WrZg3rVc8ktBSYGZKS94ZpxkPHnw
+	 CsFJQCtr1TeOAu7k8gJdRylK+VYPpFazuWZNgwVB32EqC/nJxAiobWbnAqdHF65XG2
+	 +FO7dAWYnt93+w+yiJ8iigZ28z1jIOGv0wAmPXqKWpxUUG4KtkHHdonr86KgEl9+fD
+	 7Y9QDxWWLyY4HpxDsapGfWsbm1L0xMFDZR8rHZtRI58j1lRq1WnC1HJADQJGBgpjyn
+	 A0jWqTb6KjE+o3MzIzTtJ2zwLsjRHOlx4VenrIMKzRUYWNwBX4y23nDAjPzb2IQV56
+	 EdGEcpRBEmJvg==
+Message-ID: <7649416e-1955-4c9c-a851-8b0c4da34c6f@zytor.com>
+Date: Thu, 24 Apr 2025 15:24:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAlSqGN9Sx4x6_sI@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
+ <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
+        andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
+ <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
+ <ca088501-2fbe-4a32-b191-04f7be6a2713@zytor.com>
+ <018705C7-35CF-406A-85DA-360FF7BCB072@zytor.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <018705C7-35CF-406A-85DA-360FF7BCB072@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 05:50:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
-> > On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
-> > > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > >      syscall            calls  errors  total       min       avg       max       stddev
+> By the way, this patch should have "xen" in its subject tag.
+> 
 
-> > > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
-> > > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
-> > > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
-> > > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
-> > > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
-> > > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
-> > > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
-> > > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
-> > > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
-> > > > >      ...
-
-> > > I added the following to align sched_[gs]etaffinity,
-
-> > Thanks for processing the patch and updating this.  But I'm afraid there
-> > are more syscalls with longer names and this is not the only place to
-> > print the syscall names.  Also I think we need to update length of the
-> > time fields.  So I prefer handling them in a separate patch later.
- 
-> Fair enough, I'm leaving the patch as-is.
-
-But, still have to look at this:
-
-toolsbuilder@five:~$ time dm
-   1   114.52 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-26) , clang version 18.1.8 (Red Hat 18.1.8-1.module_el8.10.0+3903+ca21d481) flex 2.6.1
-   2   111.09 almalinux:9                   : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 18.1.8 (AlmaLinux OS Foundation 18.1.8-3.el9) flex 2.6.4
-   3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
-WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
-   132.71 almalinux:9-i386              : Ok   gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3) , clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9) flex 2.6.4
-   4    21.54 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
-    bpf-trace-summary.c:(.text+0xf0760): undefined reference to `syscalltbl__name'
-    collect2: error: ld returned 1 exit status
-   5    16.50 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
-    bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
-    collect2: error: ld returned 1 exit status
-
-More info:
-
-perf-6.15.0-rc2/HEAD
-perf-6.15.0-rc2/PERF-VERSION-FILE
-BUILD_TARBALL_HEAD=24c0c35d4640052c61ed539a777bd3bd60d62bbf
-Using built-in specs.
-COLLECT_GCC=gcc
-COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-alpine-linux-musl/12.2.1/lto-wrapper
-Target: x86_64-alpine-linux-musl
-Configured with: /home/buildozer/aports/main/gcc/src/gcc-12-20220924/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --target=x86_64-alpine-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-default-ssp --enable-languages=c,c++,d,objc,go,fortran,ada --disable-libssp --disable-libsanitizer --enable-shared --enable-threads --enable-tls --with-bugurl=https://gitlab.alpinelinux.org/alpine/aports/-/issues --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpine 12.2.1_git20220924-r4'
-Thread model: posix
-Supported LTO compression algorithms: zlib
-gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
-+ make 'NO_LIBTRACEEVENT=1' 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf'
-make: Entering directory '/git/perf-6.15.0-rc2/tools/perf'
-  BUILD:   Doing 'make -j28' parallel build
-Warning: Skipped check-headers due to missing ../../include
-Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install libdebuginfod-dev/elfutils-debuginfod-client-devel or equivalent
-Makefile.config:605: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
-Makefile.config:1085: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-Makefile.config:1128: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-Makefile.config:1159: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
-
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ OFF ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-
-  PERF_VERSION = 6.15.rc2.g24c0c35d4640
-  GEN     /tmp/build/perf/common-cmds.h
-  GEN     /tmp/build/perf/arch/arm64/include/generated/asm/sysreg-defs.h
-  GEN     perf-archive
-  GEN     perf-iostat
-<SNIP>
-  CC      /tmp/build/perf/util/bpf-filter-flex.o
-  LD      /tmp/build/perf/util/perf-util-in.o
-  LD      /tmp/build/perf/perf-util-in.o
-  AR      /tmp/build/perf/libperf-util.a
-  CC      /tmp/build/perf/pmu-events/pmu-events.o
-  LD      /tmp/build/perf/pmu-events/pmu-events-in.o
-  AR      /tmp/build/perf/libpmu-events.a
-  LINK    /tmp/build/perf/perf
-  GEN     /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so
-/usr/lib/gcc/x86_64-alpine-linux-musl/12.2.1/../../../../x86_64-alpine-linux-musl/bin/ld: /tmp/build/perf/libperf-util.a(perf-util-in.o): in function `print_common_stats':
-bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
-collect2: error: ld returned 1 exit status
-make[2]: *** [Makefile.perf:804: /tmp/build/perf/perf] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [Makefile.perf:290: sub-make] Error 2
-make: *** [Makefile:76: all] Error 2
-make: Leaving directory '/git/perf-6.15.0-rc2/tools/perf'
-+ exit 1
-toolsbuilder@five:~$ 
-
-I'll take a look tomorrow.
-
-- Arnaldo
+Right, I should add it.
