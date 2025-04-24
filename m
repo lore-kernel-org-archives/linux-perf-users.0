@@ -1,305 +1,116 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B583E214A66
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 07:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1831F153C;
+	Thu, 24 Apr 2025 07:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479258; cv=none; b=pSY2rPEbIPOY5jagQkPjVRfSf/ifnYKb2/SOUZJ138j0664KWx0Bs1MOYNp4iAlqsBFwikpq6/EoW13rSbQbdYOdf6KD0WNYSMN+EBnL773rFlLGccwWAVOS9M1Gyo7JhnMq/B20tbMtH22dFV0wyCvAyx3Q0v0eAGfjPfb1qwA=
+	t=1745479345; cv=none; b=icMPohdLPIwAt2pSctN8Fx+Gg0PVaoRPWsaa1l4fV60zNwQJT19cLD9Zy1uVGrHnEDZzdIA7e4R4N+Z2PVrequ2Qp/Zb4qsX9MhTUM5ArRPK65BFK28IX6gd0ETxOhe78o28L4k03iVmwjrV5dOCvvFHMEi9luoBe45ECn/TN7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479258; c=relaxed/simple;
-	bh=PFaPJW6WbKpaphdDjGJTGVYm4CBQjgl3CqLs6bFrP7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=mkKIrT8Tylw0conJMJVH0Af4cKQoPRkSbDoU20MjsVX/jqnBX8iyEkXglKefmcbM2qY9/Cg+J3R7Y91Jwh+xB2ilIObWxWoV033JZaM2nbiA6IvAyoI6+VPPzM782GzmKHKFTP/XQImlMg/6lM3Ty5DL0iuzPIgYQCqD4SO6DjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tUeeFOjd; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745479345; c=relaxed/simple;
+	bh=O9DVYPK4RZY6YYB7/ewtc8a7TzxiyHmBlNZob9ULLMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CBVWjKKVZsiZB4JXbNeP67ry5IgaYl/MkrRiVmJLnRnycpl5+NDSJP+DnRut5i7ZVugmnDdu6PiVFlVgzrxn3mPUMgplUVlq55xyjzhdiGfcEjipqH6saDirb3WsXOz6h9USPvTNTWt+vCbBFm5xmkJhd87dc/hFM+9cw96r8o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=EzvxVtK1; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tUeeFOjd"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so174345ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 00:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745479256; x=1746084056; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KdXVRWu1cWa5yFS/BktSM31ONwJYqjrvHb1KL6pTjnw=;
-        b=tUeeFOjdl9/ApKD4yEV7oZXKTzNUlAGtv/8Xm9AW86rBeNrdQaUlGLAM7WPQz17VDg
-         5HVHtPaOXskdSvPD0/wrgMetaDfz+D9CBTwxU6du4uJk/h2mCp38geZrQVIVA4WK+TSP
-         bHWe2w3qri1J0vPnjEdmmurC2KZJk64SEtgF/xODyzdiaF6bYeW2Sdkyz8GWDL/ZcZMj
-         IakLXGjCa9jpphgVJSZG3khkBKBtVVqNAJ5kXyoLy5YcLm9Cqg1WgpdHw45+ERcEM8+i
-         yjc2wbzyp6uJfBpXk8n+jGbzXQdC0XbvcuaI48zO/YSvFgvi4lekqbzhhR7kf+z2ah5q
-         jcHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745479256; x=1746084056;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KdXVRWu1cWa5yFS/BktSM31ONwJYqjrvHb1KL6pTjnw=;
-        b=YruB8qltPJIYCmpIp+33984J1iLRBr2BWWPMKria5Ru9N9DnZofsOXFI06bThiVbuo
-         J7uF58bPREpSRbkVarYlgRdPMBZKKXrrF4LygXZJiZq1+gjMiEypbmKE5SNev1c2fVK2
-         6f+xNYzuAiqeYj9unWZRleF1n8I2ojcR8tpV+OYL4Xi7LikdTOj/HK28BV4ZbFRin8PZ
-         gHeuOXYKFaUHB/4bS23Mn6BWgfSCpaMNiHv9NTR2hfRnR5OVmQpWw7hZ/9v7U9RhLJZa
-         wjbpt6f5jdo22YKxoIcHbTtEQ7tOnFCd9FPGKYALMvAgMaMXntXNnJsv/rdIsKAm2oTx
-         8W4g==
-X-Forwarded-Encrypted: i=1; AJvYcCW4HMz0O3Qz75wzwGVOJGHqAApHBS+JHWs+ZhskFldcecoueM1L4bBS+wq6SU4oNJPqWl6kwv/RMMdKaqrcKnrU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/We9iiVwvkzlS3YVsRfAEY+6LWKtH4680URHDb555Hg6G6dp1
-	7yYIITc/qAxfm8JsFCO1OJKx5hlSgpFeNdQArthCxJZNIgzs8pvvKgcf/aNiLPL/zTW8yrX6Fcp
-	cGRQZjqymRHtHxkk5sE2RcGErinhuY53SJ30B
-X-Gm-Gg: ASbGncsmVB4f/GLFqaVMEmjRI/IZOfCg8kPQr8eMelFE/Az8Go6S7y8hCEem4903MNT
-	0S6KOtekmnMvBR8cJPWYX0TOpuLjXdMdTX7iQ4KVnTXi0zfUBK2wNkVCcKt1Mhlh6k0avRprQnK
-	QEP2YABnmRhZjYGnhTqNRZdk8=
-X-Google-Smtp-Source: AGHT+IEpBptf66jSOD/k1VjkSt/DcKFRh42zBUPLdQXqMg7qrD6+Zv8DAqrIIwqhqqSAJAw8zZkOZeHHV+YhgfOdErU=
-X-Received: by 2002:a05:6e02:3c86:b0:3d4:2362:9fbc with SMTP id
- e9e14a558f8ab-3d9303bbbbdmr1910165ab.27.1745479255440; Thu, 24 Apr 2025
- 00:20:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EzvxVtK1"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53O7LZ5g680960
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 00:21:35 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53O7LZ5g680960
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745479299;
+	bh=O9DVYPK4RZY6YYB7/ewtc8a7TzxiyHmBlNZob9ULLMA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EzvxVtK1RQzG5pBpbz5wweMmUbLdbX/ewshxBSEyzwL/iSqjs/faWzfoVSom8e2bU
+	 rmtjJO6WWsw5MRs+zFMZdhntary9psA+7pGR0qJdm5RToXkkDchyg/7J6wq+MXnydS
+	 UyLEA/gHD031cZVbQISWf2vqYtuDBOavy4tsFM7jHVW35I0N3LU2ji43dZuWviNu+n
+	 FFLmIt3g5crz4RF3ksAJwKElGMES6WqszkBNO0xqtkqsXJyqbnXEZbMYTHwHd3awyK
+	 c6+7Hh3YMNGJO193usGiO/3RsTuBx8nz3JVH/XdAf95WQAP9Kvgb0r/sHpAcHBWEwG
+	 PsB6OXwrQJnjg==
+Message-ID: <45f95d01-4b98-457c-8272-c396a52b3844@zytor.com>
+Date: Thu, 24 Apr 2025 00:21:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424061943.1321025-1-irogers@google.com> <20250424061943.1321025-6-irogers@google.com>
-In-Reply-To: <20250424061943.1321025-6-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 24 Apr 2025 00:20:44 -0700
-X-Gm-Features: ATxdqUHbvDTReF8oer7yYmxaK6piTc5lulDTad5CJ_WnpQIjCkfaH5FP3w14a-c
-Message-ID: <CAP-5=fXHay1Qn7c3JUe4nH-cTw8zPhPv6-XWMZdPKpwwT=9n2w@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] perf record: Make --buildid-mmap the default
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	James Clark <james.clark@linaro.org>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Leo Yan <leo.yan@arm.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
-	=?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
+ <7c44da88-72bb-4d1f-9f38-bf0e7e79b7a0@linux.intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <7c44da88-72bb-4d1f-9f38-bf0e7e79b7a0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 11:19=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Support for build IDs in mmap2 perf events has been present since
-> Linux v5.12:
-> https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
-> Build ID mmap events avoid the need to inject build IDs for DSO
-> touched by samples when perf record completes and can avoid some cases
-> of symbol mis-resolution.
->
-> Unlike the --buildid-mmap option, this doesn't disable the build ID
-> cache but it does disable the processing of samples looking for DSOs
-> to inject build IDs for. To disable the build ID cache the -N
-> (--no-buildid-cache) option is necessary.
->
-> Making this option the default was raised on the list in:
-> https://lore.kernel.org/linux-perf-users/CAP-5=3DfXP7jN_QrGUcd55_QH5J-Y-F=
-CaJ6=3DNaHVtyx0oyNh8_-Q@mail.gmail.com/
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c        | 35 +++++++++++++++++++-----------
->  tools/perf/util/symbol_conf.h      |  2 +-
->  tools/perf/util/synthetic-events.c | 16 +++++++-------
->  3 files changed, 31 insertions(+), 22 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index ba20bf7c011d..0fcb0f469488 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -169,6 +169,7 @@ struct record {
->         bool                    no_buildid_cache_set;
->         bool                    buildid_all;
->         bool                    buildid_mmap;
-> +       bool                    buildid_mmap_set;
->         bool                    timestamp_filename;
->         bool                    timestamp_boundary;
->         bool                    off_cpu;
-> @@ -1795,7 +1796,8 @@ record__finish_output(struct record *rec)
->                         data->dir.files[i].size =3D lseek(data->dir.files=
-[i].fd, 0, SEEK_CUR);
->         }
->
-> -       if (!rec->no_buildid) {
-> +       /* Buildid scanning disabled or build ID in kernel and synthesize=
-d map events. */
-> +       if (!rec->no_buildid && !rec->buildid_mmap) {
+On 4/23/2025 11:33 PM, Mi, Dapeng wrote:
+> Could we merge this patch and previous patch into a single patch? It's
+> unnecessary to just modify the pmu_msr_read()/pmu_msr_write() in previous
+> patch and delete them immediately. It just wastes the effort.
 
-So I think this is wrong. It matches current behaviors, but it is
-wrong. If we don't process the kernel's mmap events the DSOs won't be
-loaded and the build ID cache won't contain the DSOs. There is also
-the bug that the sample processing to find maps to find DSOs, doesn't
-handle call chains. Given the broken nature of the build ID cache I'm
-not sure it makes any sense for perf record to be by default
-populating it. I think it probably makes sense to consider the default
-population a legacy feature and make -N the default along with
---buildid-mmap.
+No, it's not wasting effort, it's for easier review.
 
-Thanks,
-Ian
+Look at this patch, you can easily tell that pmu_msr_read() and
+pmu_msr_write() are nothing more than pmu_msr_chk_emulated(), and
+then removing them makes a lot of sense.
 
->                 process_buildids(rec);
->
->                 if (rec->buildid_all)
-> @@ -2966,6 +2968,8 @@ static int perf_record_config(const char *var, cons=
-t char *value, void *cb)
->                         rec->no_buildid =3D true;
->                 else if (!strcmp(value, "mmap"))
->                         rec->buildid_mmap =3D true;
-> +               else if (!strcmp(value, "no-mmap"))
-> +                       rec->buildid_mmap =3D false;
->                 else
->                         return -1;
->                 return 0;
-> @@ -3349,6 +3353,7 @@ static struct record record =3D {
->                 .ctl_fd_ack          =3D -1,
->                 .synth               =3D PERF_SYNTH_ALL,
->         },
-> +       .buildid_mmap =3D true,
->  };
->
->  const char record_callchain_help[] =3D CALLCHAIN_RECORD_HELP
-> @@ -3514,8 +3519,8 @@ static struct option __record_options[] =3D {
->                    "file", "vmlinux pathname"),
->         OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
->                     "Record build-id of all DSOs regardless of hits"),
-> -       OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
-> -                   "Record build-id in map events"),
-> +       OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.=
-buildid_mmap_set,
-> +                       "Legacy record build-id in map events option whic=
-h is now the default. Behaves indentically to --no-buildid. Disable with --=
-no-buildid-mmap"),
->         OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
->                     "append timestamp to output filename"),
->         OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
-> @@ -4042,19 +4047,23 @@ int cmd_record(int argc, const char **argv)
->                 record.opts.record_switch_events =3D true;
->         }
->
-> +       if (!rec->buildid_mmap) {
-> +               pr_debug("Disabling build id in synthesized mmap2 events.=
-\n");
-> +               symbol_conf.no_buildid_mmap2 =3D true;
-> +       } else if (rec->buildid_mmap_set) {
-> +               /*
-> +                * Explicitly passing --buildid-mmap disables buildid pro=
-cessing
-> +                * and cache generation.
-> +                */
-> +               rec->no_buildid =3D true;
-> +       }
-> +       if (rec->buildid_mmap && !perf_can_record_build_id()) {
-> +               pr_warning("Missing support for build id in kernel mmap e=
-vents. Disable this warning with --no-buildid-mmap\n");
-> +               rec->buildid_mmap =3D false;
-> +       }
->         if (rec->buildid_mmap) {
-> -               if (!perf_can_record_build_id()) {
-> -                       pr_err("Failed: no support to record build id in =
-mmap events, update your kernel.\n");
-> -                       err =3D -EINVAL;
-> -                       goto out_opts;
-> -               }
-> -               pr_debug("Enabling build id in mmap2 events.\n");
-> -               /* Enable mmap build id synthesizing. */
-> -               symbol_conf.buildid_mmap2 =3D true;
->                 /* Enable perf_event_attr::build_id bit. */
->                 rec->opts.build_id =3D true;
-> -               /* Disable build id cache. */
-> -               rec->no_buildid =3D true;
->         }
->
->         if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.=
-h
-> index cd9aa82c7d5a..7a80d2c14d9b 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -43,7 +43,7 @@ struct symbol_conf {
->                         report_individual_block,
->                         inline_name,
->                         disable_add2line_warn,
-> -                       buildid_mmap2,
-> +                       no_buildid_mmap2,
->                         guest_code,
->                         lazy_load_kernel_maps,
->                         keep_exited_threads,
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 8fb2ea544d3a..f48109c14235 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct p=
-erf_tool *tool,
->                 event->mmap2.pid =3D tgid;
->                 event->mmap2.tid =3D pid;
->
-> -               if (symbol_conf.buildid_mmap2)
-> +               if (!symbol_conf.no_buildid_mmap2)
->                         perf_record_mmap2__read_build_id(&event->mmap2, m=
-achine, false);
->
->                 if (perf_tool__process_synth_event(tool, event, machine, =
-process) !=3D 0) {
-> @@ -690,7 +690,7 @@ static int perf_event__synthesize_modules_maps_cb(str=
-uct map *map, void *data)
->                 return 0;
->
->         dso =3D map__dso(map);
-> -       if (symbol_conf.buildid_mmap2) {
-> +       if (!symbol_conf.no_buildid_mmap2) {
->                 size =3D PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u=
-64));
->                 event->mmap2.header.type =3D PERF_RECORD_MMAP2;
->                 event->mmap2.header.size =3D (sizeof(event->mmap2) -
-> @@ -734,9 +734,9 @@ int perf_event__synthesize_modules(const struct perf_=
-tool *tool, perf_event__han
->                 .process =3D process,
->                 .machine =3D machine,
->         };
-> -       size_t size =3D symbol_conf.buildid_mmap2
-> -               ? sizeof(args.event->mmap2)
-> -               : sizeof(args.event->mmap);
-> +       size_t size =3D symbol_conf.no_buildid_mmap2
-> +               ? sizeof(args.event->mmap)
-> +               : sizeof(args.event->mmap2);
->
->         args.event =3D zalloc(size + machine->id_hdr_size);
->         if (args.event =3D=3D NULL) {
-> @@ -1124,8 +1124,8 @@ static int __perf_event__synthesize_kernel_mmap(con=
-st struct perf_tool *tool,
->                                                 struct machine *machine)
->  {
->         union perf_event *event;
-> -       size_t size =3D symbol_conf.buildid_mmap2 ?
-> -                       sizeof(event->mmap2) : sizeof(event->mmap);
-> +       size_t size =3D symbol_conf.no_buildid_mmap2 ?
-> +                       sizeof(event->mmap) : sizeof(event->mmap2);
->         struct map *map =3D machine__kernel_map(machine);
->         struct kmap *kmap;
->         int err;
-> @@ -1159,7 +1159,7 @@ static int __perf_event__synthesize_kernel_mmap(con=
-st struct perf_tool *tool,
->                 event->header.misc =3D PERF_RECORD_MISC_GUEST_KERNEL;
->         }
->
-> -       if (symbol_conf.buildid_mmap2) {
-> +       if (!symbol_conf.no_buildid_mmap2) {
->                 size =3D snprintf(event->mmap2.filename, sizeof(event->mm=
-ap2.filename),
->                                 "%s%s", machine->mmap_name, kmap->ref_rel=
-oc_sym->name) + 1;
->                 size =3D PERF_ALIGN(size, sizeof(u64));
-> --
-> 2.49.0.805.g082f7c87e0-goog
->
