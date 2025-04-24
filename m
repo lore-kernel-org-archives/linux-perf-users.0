@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC2E2918C5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832652918F6;
 	Thu, 24 Apr 2025 19:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522657; cv=none; b=J/BfzmGeTwxUMK98pAlROF7MBpt39u5JWUUAsdyR0Z6QjU5QAcHjzrUIiFuReMuq/C3Hhoc2pNUvoA8K54UjZ5Ds0yInPwjwMj6/anRLlMdOkWZMMfoXdvW+Z/AbqUB4bnR2ePD04/AxaSJ2hCyqFtVft0xj96TYnXvjhSHkQ4c=
+	t=1745522657; cv=none; b=czeV8mIpHueatw0yQUgO0bYnvQ5YEcLbLdDcmRaQOzTinhLu5vAoUhvjD+/dM/O03iqpMpTEZ2489DuDzBcgnFlVjgDO7qBCkfHzmW1eDaHDQvx9m7UhzLTP4Si6Wt6Hd8hjlp9bDFoqCi4S5g8Nm9xNCSM9DyvzIpjXvTjL71o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745522657; c=relaxed/simple;
-	bh=y7auUpMLFJPKjEnzj7HiaQ3abA+PL0AyQVUPG2xZYmQ=;
+	bh=ajvnsllmRpQFIX6Qgf3TWPxF1BZqvJ/hp9YJ40O7mK8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=qyrAU83irXcoOh5uP4joskAd2NpvhyV1A1vJS9v/O8M3Th738ryQKuwXOh5CbL2W2vBfxydPYDdghqXBu5Cfxk1PWLxJRm6yFIRFkRvKHLb3pPLmLLJvUqGv8NaWBsLAzVJTvxh90zOg4yrbtCLbJJcPDIcX0iWSGPXtK2K6VDI=
+	 Content-Type; b=Q2spTwjADK6K7Pn0kYyrHY+RIA57wbMuMcgJutEvpr+f/aGW+XzxkIDtMlMm8cvzNoQFL6sMZ8JzprTw+pfFQZe0TElQa9sLnvjTRxYbXEe95Q5mGCNApbpJ5qU0Ub0udmL5Vr1fcOwYdXJwpEYddErcYQWi0CgacZx+UYI77qc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E7BC4CEFA;
-	Thu, 24 Apr 2025 19:24:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 145B5C2BCB1;
+	Thu, 24 Apr 2025 19:24:17 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u82D6-0000000H2Ph-4AmK;
-	Thu, 24 Apr 2025 15:26:12 -0400
-Message-ID: <20250424192612.844558089@goodmis.org>
+	id 1u82D7-0000000H2Qg-1P4M;
+	Thu, 24 Apr 2025 15:26:13 -0400
+Message-ID: <20250424192613.183589150@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 15:24:59 -0400
+Date: Thu, 24 Apr 2025 15:25:01 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v5 3/9] unwind deferred: Use bitmask to determine which callbacks to call
+Subject: [PATCH v5 5/9] tracing: Rename __dynamic_array() to __dynamic_field() for ftrace
+ events
 References: <20250424192456.851953422@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -65,183 +66,138 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-In order to know which registered callback requested a stacktrace for when
-the task goes back to user space, add a bitmask for all registered
-tracers. The bitmask is the size of log, which means that on a 32 bit
-machine, it can have at most 32 registered tracers, and on 64 bit, it can
-have at most 64 registered tracers. This should not be an issue as there
-should not be more than 10 (unless BPF can abuse this?).
+The ftrace events (like function, trace_print, etc) are created somewhat
+manually and not via the TRACE_EVENT() or tracepoint magic macros. It has
+its own macros.
 
-When a tracer registers with unwind_deferred_init() it will get a bit
-number assigned to it. When a tracer requests a stacktrace, it will have
-its bit set within the task_struct. When the task returns back to user
-space, it will call the callbacks for all the registered tracers where
-their bits are set in the task's mask.
+The dynamic fields used __dynamic_array() to be created, but the output is
+different than the __dynamic_array() used by TRACE_EVENT().
 
-When a tracer is removed by the unwind_deferred_cancel() all current tasks
-will clear the associated bit, just in case another tracer gets registered
-immediately afterward and then gets their callback called unexpectedly.
+The TRACE_EVENT() __dynamic_array() creates the field like:
+
+	field:__data_loc u8[] v_data;   offset:120;     size:4; signed:0;
+
+Whereas the ftrace event is created as:
+
+	field:char buf[];       offset:12;      size:0; signed:0;
+
+The difference is that the ftrace field is defined as the rest of the size
+of the event saved in the ring buffer. TRACE_EVENT() doesn't have such a
+dynamic field, and its version saves a word that holds the offset into the
+event that the field is stored, as well as the size.
+
+For consistency rename the ftrace event macro to __dynamic_field(). This
+way the ftrace event can also include a __dynamic_array() later that works
+the same as the TRACE_EVENT() dynamic array.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/sched.h           |  1 +
- include/linux/unwind_deferred.h |  1 +
- kernel/unwind/deferred.c        | 44 ++++++++++++++++++++++++++++++---
- 3 files changed, 42 insertions(+), 4 deletions(-)
+ kernel/trace/trace.h         |  4 ++--
+ kernel/trace/trace_entries.h | 10 +++++-----
+ kernel/trace/trace_export.c  | 12 ++++++------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index a1e1c07cadfb..d3ee0c5405d6 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1649,6 +1649,7 @@ struct task_struct {
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 79be1995db44..3c733b9e7b32 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -92,8 +92,8 @@ enum trace_type {
+ #undef __array_desc
+ #define __array_desc(type, container, item, size)
  
- #ifdef CONFIG_UNWIND_USER
- 	struct unwind_task_info		unwind_info;
-+	unsigned long			unwind_mask;
- #endif
+-#undef __dynamic_array
+-#define __dynamic_array(type, item)	type	item[];
++#undef __dynamic_field
++#define __dynamic_field(type, item)	type	item[];
  
- 	/* CPU-specific state of this task: */
-diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
-index d36784cae658..719a7cfb3164 100644
---- a/include/linux/unwind_deferred.h
-+++ b/include/linux/unwind_deferred.h
-@@ -13,6 +13,7 @@ typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stackt
- struct unwind_work {
- 	struct list_head		list;
- 	unwind_callback_t		func;
-+	int				bit;
- };
+ #undef __rel_dynamic_array
+ #define __rel_dynamic_array(type, item)	type	item[];
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 4ef4df6623a8..7100d8f86011 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -63,7 +63,7 @@ FTRACE_ENTRY_REG(function, ftrace_entry,
+ 	F_STRUCT(
+ 		__field_fn(	unsigned long,		ip		)
+ 		__field_fn(	unsigned long,		parent_ip	)
+-		__dynamic_array( unsigned long,		args		)
++		__dynamic_field( unsigned long,		args		)
+ 	),
  
- #ifdef CONFIG_UNWIND_USER
-diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index 2afd197da2ef..f505cb1766de 100644
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -26,6 +26,7 @@ static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
- /* Guards adding to and reading the list of callbacks */
- static DEFINE_MUTEX(callback_mutex);
- static LIST_HEAD(callbacks);
-+static unsigned long unwind_mask;
+ 	F_printk(" %ps <-- %ps",
+@@ -81,7 +81,7 @@ FTRACE_ENTRY(funcgraph_entry, ftrace_graph_ent_entry,
+ 		__field_struct(	struct ftrace_graph_ent,	graph_ent	)
+ 		__field_packed(	unsigned long,	graph_ent,	func		)
+ 		__field_packed(	unsigned int,	graph_ent,	depth		)
+-		__dynamic_array(unsigned long,	args				)
++		__dynamic_field(unsigned long,	args				)
+ 	),
  
- /*
-  * The context cookie is a unique identifier that is assigned to a user
-@@ -135,6 +136,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
- 	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
- 	struct unwind_stacktrace trace;
- 	struct unwind_work *work;
-+	struct task_struct *task = current;
- 	u64 cookie;
+ 	F_printk("--> %ps (%u)", (void *)__entry->func, __entry->depth)
+@@ -259,7 +259,7 @@ FTRACE_ENTRY(bprint, bprint_entry,
+ 	F_STRUCT(
+ 		__field(	unsigned long,	ip	)
+ 		__field(	const char *,	fmt	)
+-		__dynamic_array(	u32,	buf	)
++		__dynamic_field(	u32,	buf	)
+ 	),
  
- 	if (WARN_ON_ONCE(!info->pending))
-@@ -156,7 +158,10 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 	F_printk("%ps: %s",
+@@ -272,7 +272,7 @@ FTRACE_ENTRY_REG(print, print_entry,
  
- 	guard(mutex)(&callback_mutex);
- 	list_for_each_entry(work, &callbacks, list) {
--		work->func(work, &trace, cookie);
-+		if (task->unwind_mask & (1UL << work->bit)) {
-+			work->func(work, &trace, cookie);
-+			clear_bit(work->bit, &current->unwind_mask);
-+		}
- 	}
- 	barrier();
- 	/* If another task work is pending, reuse the cookie and stack trace */
-@@ -194,9 +199,12 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *cookie)
- 		*cookie = info->nmi_cookie;
- 	}
+ 	F_STRUCT(
+ 		__field(	unsigned long,	ip	)
+-		__dynamic_array(	char,	buf	)
++		__dynamic_field(	char,	buf	)
+ 	),
  
--	if (info->pending)
-+	if (current->unwind_mask & (1UL << work->bit))
- 		return 0;
+ 	F_printk("%ps: %s",
+@@ -287,7 +287,7 @@ FTRACE_ENTRY(raw_data, raw_data_entry,
  
-+	if (info->pending)
-+		goto out;
-+
- 	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
- 	if (ret) {
- 		if (inited_cookie)
-@@ -205,6 +213,8 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *cookie)
- 	}
+ 	F_STRUCT(
+ 		__field(	unsigned int,	id	)
+-		__dynamic_array(	char,	buf	)
++		__dynamic_field(	char,	buf	)
+ 	),
  
- 	info->pending = 1;
-+ out:
-+	set_bit(work->bit, &current->unwind_mask);
+ 	F_printk("id:%04x %08x",
+diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
+index 1698fc22afa0..d9d41e3ba379 100644
+--- a/kernel/trace/trace_export.c
++++ b/kernel/trace/trace_export.c
+@@ -57,8 +57,8 @@ static int ftrace_event_register(struct trace_event_call *call,
+ #undef __array_desc
+ #define __array_desc(type, container, item, size)	type item[size];
  
- 	return 0;
- }
-@@ -244,14 +254,18 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+-#undef __dynamic_array
+-#define __dynamic_array(type, item)			type item[];
++#undef __dynamic_field
++#define __dynamic_field(type, item)			type item[];
  
- 	*cookie = get_cookie(info);
+ #undef F_STRUCT
+ #define F_STRUCT(args...)				args
+@@ -123,8 +123,8 @@ static void __always_unused ____ftrace_check_##name(void)		\
+ #undef __array_desc
+ #define __array_desc(_type, _container, _item, _len) __array(_type, _item, _len)
  
-+	/* This is already queued */
-+	if (current->unwind_mask & (1UL << work->bit))
-+		return 0;
-+
- 	/* callback already pending? */
- 	pending = READ_ONCE(info->pending);
- 	if (pending)
--		return 0;
-+		goto out;
+-#undef __dynamic_array
+-#define __dynamic_array(_type, _item) {					\
++#undef __dynamic_field
++#define __dynamic_field(_type, _item) {					\
+ 	.type = #_type "[]", .name = #_item,				\
+ 	.size = 0, .align = __alignof__(_type),				\
+ 	is_signed_type(_type), .filter_type = FILTER_OTHER },
+@@ -161,8 +161,8 @@ static struct trace_event_fields ftrace_event_fields_##name[] = {	\
+ #undef __array_desc
+ #define __array_desc(type, container, item, len)
  
- 	/* Claim the work unless an NMI just now swooped in to do so. */
- 	if (!try_cmpxchg(&info->pending, &pending, 1))
--		return 0;
-+		goto out;
+-#undef __dynamic_array
+-#define __dynamic_array(type, item)
++#undef __dynamic_field
++#define __dynamic_field(type, item)
  
- 	/* The work has been claimed, now schedule it. */
- 	ret = task_work_add(current, &info->work, TWA_RESUME);
-@@ -260,16 +274,29 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
- 		return ret;
- 	}
- 
-+ out:
-+	set_bit(work->bit, &current->unwind_mask);
-+
- 	return 0;
- }
- 
- void unwind_deferred_cancel(struct unwind_work *work)
- {
-+	struct task_struct *g, *t;
-+
- 	if (!work)
- 		return;
- 
- 	guard(mutex)(&callback_mutex);
- 	list_del(&work->list);
-+
-+	clear_bit(work->bit, &unwind_mask);
-+
-+	guard(rcu)();
-+	/* Clear this bit from all threads */
-+	for_each_process_thread(g, t) {
-+		clear_bit(work->bit, &t->unwind_mask);
-+	}
- }
- 
- int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
-@@ -277,6 +304,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
- 	memset(work, 0, sizeof(*work));
- 
- 	guard(mutex)(&callback_mutex);
-+
-+	/* See if there's a bit in the mask available */
-+	if (unwind_mask == ~0UL)
-+		return -EBUSY;
-+
-+	work->bit = ffz(unwind_mask);
-+	unwind_mask |= 1UL << work->bit;
-+
- 	list_add(&work->list, &callbacks);
- 	work->func = func;
- 	return 0;
-@@ -288,6 +323,7 @@ void unwind_task_init(struct task_struct *task)
- 
- 	memset(info, 0, sizeof(*info));
- 	init_task_work(&info->work, unwind_deferred_task_work);
-+	task->unwind_mask = 0;
- }
- 
- void unwind_task_free(struct task_struct *task)
+ #undef F_printk
+ #define F_printk(fmt, args...) __stringify(fmt) ", "  __stringify(args)
 -- 
 2.47.2
 
