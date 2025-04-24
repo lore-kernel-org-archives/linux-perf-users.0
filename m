@@ -1,69 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7679118E34A;
-	Thu, 24 Apr 2025 13:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82048280A5C;
+	Thu, 24 Apr 2025 16:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501951; cv=none; b=i685Cr8jotv6snFVWE7RRq1UM95kjG/C6YCLdof4CXlbp7rAJ9+0RPfxxSIvXcBcA0rY6CX1gOP9EgfG1qsbUu7rznAU1vgl6cXoP5OpyK70R5KO51bq53K8+LC8Loh9XxqnQBg8pexAiko+gxPW7Rh883Yi5mkdZBTwVhZQqXA=
+	t=1745511096; cv=none; b=qt4jqnhYv05XvtGQl30jRPRd09YdQyl5eXkAZpWWM1YAG4eatGxL3NPyDrQamkLosGr3ELxUBohaegTYTqIeuY/ZuBNus+nXV+nQ3VUJthvUYNYc7dVOJZ3dy2LOPrvNc+d8ELPbnHqJFkLosreu/7bjzkDVPkibGMQlC8Q157E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501951; c=relaxed/simple;
-	bh=qgnyhI7G1sbn3+oID5OpHpCLMNHcLsKjgs4//IEb2I8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pP+rqfyoyc6kwIFHs1kGQwGVq9upHMrW9Hekj0fnr+drup9OXVdGU/tdmb0ODkE5SsE5E+ZgubOF9bY02q47DHFiQvhzoTC3RvkGcRlpE126x1GY+3OnaUuQB7JEc6Ct/iFjdzbfld0yTyvG7AUYsPoo/jCLgDgusK4YNfb4bew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D063CC4CEE3;
-	Thu, 24 Apr 2025 13:39:07 +0000 (UTC)
-Date: Thu, 24 Apr 2025 09:41:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu
- Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Jens Remus
- <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 12/39] unwind_user: Add frame pointer support
-Message-ID: <20250424094102.0004f8f8@gandalf.local.home>
-In-Reply-To: <20250124181610.zdqvdaeqrp7kyzis@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
-	<10b92f2fd065b67e6e3fd473ca145c34ea74b73a.1737511963.git.jpoimboe@kernel.org>
-	<CAEf4BzaQr1ruCh1beyhJ_i+aGuw4rGSftF_Zr5ZB=8Jim1jyyQ@mail.gmail.com>
-	<20250124181610.zdqvdaeqrp7kyzis@jpoimboe>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745511096; c=relaxed/simple;
+	bh=lGbigt4yXPuc/0KEjUr68E4pZ/LwXWjCGLHBhgq6++c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KMLOREcFWyX8M1YXeni+fEcbxeX7wjMCtoKBFO+tEMZSx1u/wZw4cSMa6dJc6E3tS9xkOv89SWFNlP5LFswKju4RbhrS9jiqmk3zxjl67XPi0xZKIHsKzncwd027z3meb+hrwVZhXZ0eUxbsv0+rmuoWq/N8A1RmInadNF9G+PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOuE8Iua; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOuE8Iua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F27C4CEE3;
+	Thu, 24 Apr 2025 16:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745511095;
+	bh=lGbigt4yXPuc/0KEjUr68E4pZ/LwXWjCGLHBhgq6++c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JOuE8IuavC22Y62ZpZ5IL5mrJMavaJeWracRtZhCRITQ+VEuspPRWAYOiXIp051ZE
+	 HkmW8PlVwZpqpPaOhJqJU/hVNBjjOisClg1AyGBMd2orMnFZbtOvsFdG0ztSF6PL32
+	 1APA+UJ3ElPBOlCDr/C31aF2vxucPTjaOUctVCflhqZuEisqMPF0OvlFFGua4iX4Qh
+	 FjsmhO50qi+duYFy4fodJbSe1zAAJVeaJIv0Z8zdKAaWCW1Kix+xwRLkLjm+y+xU3A
+	 6EBxzauk/4mHYA17iEiq3hld8yyauSZER8g5dFtGWZW6o27/GwtM/JWO0KQri8Y9Ci
+	 DLmof7WWg0V5w==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 0/4] perf fixes
+Date: Thu, 24 Apr 2025 18:11:24 +0200
+Message-ID: <20250424161128.29176-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 24 Jan 2025 10:16:10 -0800
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+Hi,
 
-> > Do you plan to reuse this logic for stack unwinding done by perf
-> > subsystem in perf_callchain_user()? See is_uprobe_at_func_entry()
-> > parts and also fixup_uretprobe_trampoline_entries() for some of the
-> > quirks that have to be taken into account when doing frame
-> > pointer-based unwinding. It would be great not to lose those in this
-> > new reimplementation.
-> > 
-> > Not sure what's the best way to avoid duplicating the logic, but I
-> > thought I'd bring that up.  
-> 
-> Indeed!  That was on the todo list and somehow evaporated.
+A few bunch of fixes against perf/core while staring at perf latest changes.
 
-I'm getting ready to post an update of these patches, but I want to mention
-that this has not been addressed, and I'm replying here to make sure it
-stays on the radar.
+git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
+	perf/core
 
--- Steve
+HEAD: 623d84ef5ee7d4cefa546de630fec805e4634335
+
+Thanks,
+	Frederic
+---
+
+Frederic Weisbecker (4):
+      perf: Fix failing inherit_event() doing extra refcount decrement on parent
+      perf: Fix irq work dereferencing garbage
+      perf: Remove too early and redundant CPU hotplug handling
+      perf: Fix confusing aux iteration
+
+
+ include/linux/cpuhotplug.h |   1 -
+ kernel/cpu.c               |   5 ---
+ kernel/events/core.c       | 109 ++++++++++++++++++++++++++++-----------------
+ 3 files changed, 67 insertions(+), 48 deletions(-)
