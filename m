@@ -1,225 +1,126 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2041.outbound.protection.outlook.com [40.107.244.41])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B101E5219;
-	Thu, 24 Apr 2025 06:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745477539; cv=fail; b=JfHzYyySa5Oc6wN6SwXWn7RU7Fj4gNbilMFi/RrQgED3VqtdNljKlEOJn5VNHuFriFRqtUES3Dk23a6BpEEvzJYnpdpuhws6MCZ0BOaDkgSxWh3o+Fj+kVx3A8ptsTHOoPX0w14HMyKlrxCDDOWBuLsFYHodHR3+A4bPcjkv9uE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745477539; c=relaxed/simple;
-	bh=Q8IoOdFxVLdPlcb58vnchwZmTL9eqtdNTJXLbx3udj4=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LZyLsufqfKaMb1lW99CCPzRjq6OoCEMoKyJb9eL5mfX5hyBIMlhpyp73QVKcS67mz8JbSt/J/FKj2D0Q4YHh/aVm1OT83svc5yDSEJNK57W9cf6ahFRg6183FfgFRHNHPJdZYUGT2jTSQyupIyMXt1kkWF9+paC9f/3QhGe3wG0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cWg/vdpx; arc=fail smtp.client-ip=40.107.244.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A7ACA52;
+	Thu, 24 Apr 2025 07:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745479029; cv=none; b=GiUQNiClpf+CXIefEbJ/PEMFELusBV7E7Y65a5dDAPNSTP9gZ8ucBw0UEF5tjzlMlMZbGELQOaN/NsPQomXUSXySaWk9FVktuYPt+/H0bzMeZs2vOBzmEYNWqOdYBEEt1AQ4AG7QzMGFUPwxBEgWFGM/4K/JyObjNGFeoqT4l4M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745479029; c=relaxed/simple;
+	bh=yZRYHLcKw89EP37KcoFX6g4T9W70k7GQ0wfSXH5Btoc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iirmojiO+tiLqDyvN6wajs7Twr0mTtUyGUhLAtekGQ12eIh43X12b6knr7rDluDLnehbR27rxfoe/NO7CCb3QADiWkctqdVTMqzf/qNKAkYP/8yuqptDjrurzD7WG7wOyFx/i3+AhQnnY/losUJOGirCFuO3PkRzFg8YKZdiWvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=d86S+IGY; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cWg/vdpx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=omB4AKdr4SzznZIxwOO+z2FnGP+u+ybfOYeDZpZpJYHR8ec+Tff8OShoIpASyUBG6bvbS+ZUMqAjbZGQmjPVptnWymAFS+696Gnl0/t+G3Am9CxpEPju/viTcqDnnA1I4wg4L7htkN2uHO+u95GAjc6servsQbU/8GxOBg5tOGCpC6xDo4tGNjtqw2tTWnFjUXyOr9qUnYfZyHiz3ec4gUAgMkj4Abpo1bKnDZUlhfUSQ1ALXV6fv2MI3ZVzVHwzepDyRWozyjXtyN1rCM07QF/HTqduyluni1dj3JvyUVS3371neqh13hphgSCgZXFX8nZGmm0FMSFJNJB68c/Rrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4hyV+wZTU+G1XkPZUFo7qqtEzlpG95uORIbAOwFg5K8=;
- b=A3jCfgy2TCfP849lA0inYLEtq9wVcO0ALwtziMwTWzHJ0Cf5gFy/nM3Hmdt0xLeK3cRN7XX0nEMNAWR0XBOE4IAfjxCEX8rSaeGiD1gy+1Axw5xjXeb4JK06n3KpztkLRaEzLYXS9JhueH8PTVAsn3D+JyNcrX6jf9q+VxuH9OuZ4Z/xPJcEPrxgAlvy/nZ0RfIHm1YH001WyegcQtPgrlj5G4gQQvF3lqZSlaGKtE/yQjNl2c/MqM7+ccTttmMRFQYO8MQ5Wbgxf0yz8L9hC95NCkRkxggyJ9OZ6xcTvDXQR/tL95vzygGnNGw6t+SMRCJ6pMkBFa/geLVcyZLwaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4hyV+wZTU+G1XkPZUFo7qqtEzlpG95uORIbAOwFg5K8=;
- b=cWg/vdpxTBVRKnBERyEwyopYUs75xeP9b5WyjyQZLMqLXnd5WExAVWicggHj9t9SWrc3Tl/544Sv5UQMFU6kS+uNFSp58ENhSI+Aog6mS3HmLBl1jeIKILpcTV73bCmUIwfQqwu738URookLk0hzfcVHiXamL4MxjtL3YaF2qPg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SA1PR12MB9248.namprd12.prod.outlook.com (2603:10b6:806:3a3::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Thu, 24 Apr
- 2025 06:52:13 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
- 06:52:13 +0000
-Message-ID: <f8c349c8-b074-4b27-b799-e484631b9b3e@amd.com>
-Date: Thu, 24 Apr 2025 12:22:03 +0530
-User-Agent: Mozilla Thunderbird
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH] perf/x86: Fix open counting event error
-To: Luo Gengkun <luogengkun@huaweicloud.com>,
- "peterz@infradead.org" <peterz@infradead.org>
-Cc: "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org"
- <acme@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "irogers@google.com" <irogers@google.com>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Bangoria, Ravikumar" <ravi.bangoria@amd.com>
-References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN4P287CA0121.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:2b2::8) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d86S+IGY"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53O7G7xQ675155
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 00:16:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53O7G7xQ675155
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745478973;
+	bh=Odag7AUDgfyRP0+2u/H+HenPnfgl0J1B2VMW9HL/hPY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d86S+IGYG3p4vXYzf5tU1fqwwhzwlqPeOdX0LxBP3GXABuT8mjfDO+CBUKCW848SQ
+	 DZKTS3GVQ63kEDbEoH3UczKm0cOKJPG2Qwh++9GOGJTM5UuSqDcynKa2xFyNgkdz4Z
+	 R9VFC+6vru/Wbfh93IBkm1anEKXEw+f4obbh3WSLvTlHMYA93DY/dXGOsfOOtd92xQ
+	 oizB71iApse9+ri55DZ2jAGUU+LSC2awjvDaoHQvrkRDvdKdRaoFx+ISpI70XSxFPc
+	 jqSmnMNMNsT/GqweC5nu+VfxFOHe7P5xgOsr9wU+7mhYoBfhtU+mMKTul67uGxqWuB
+	 yTuvbW0WLwpCw==
+Message-ID: <2ce9ab5c-89a5-4504-91d2-fbc12c68117a@zytor.com>
+Date: Thu, 24 Apr 2025 00:16:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SA1PR12MB9248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a730baa-4a12-4f63-42d7-08dd82fc8ac6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZDh4bXZUU20xNmhoNElQVU9wZlJPRDhzeGg1cHJZZWRMdFUyVE94NEdva0dJ?=
- =?utf-8?B?VWd5VHJwNlQ5QTlXWjQ1dU5HdTRYeVhrM0pTb3llclZqakxTUGJQa0g4Nld1?=
- =?utf-8?B?VGhEakl5aEs1QnJVbHE1K0NUS0NxeDkwVzA2R3EzRmpzWnkwSXdTa29CRUJ4?=
- =?utf-8?B?QWgyTFpNazkwTUxNcllsWllUVEFVMmFqSnI2UUNaODl3ZkRyQjRJSXhMOEZI?=
- =?utf-8?B?M3ExSXRmcW5FNGk4OVBnRThSUThsS1pITFdqc2RINzRaS0dZbnJlVmNjVWx1?=
- =?utf-8?B?MnhwSmVTYjdMSlhXY1RBYkFqVUFYbGxIVFA2NVlPaFl4TkhXL3RBcDRydGZR?=
- =?utf-8?B?d0poT3JZeEpOQjZ4TWF5L3dCTEpMdGR5UUxDT3JqVGlPL2NKYlhQQndxdmhl?=
- =?utf-8?B?RHJkNklXMUNCRjlPVmg4NGVDclh4OWdsZUxSLy9aT2E2SzlUZ0QrRmQ0ejFq?=
- =?utf-8?B?ZzhlSG5NYkQxdmcveHNzVFhnRkJUOURNTldIRUNDdEJKQllMZHNzb0NNSC9V?=
- =?utf-8?B?djkvN2dnMkJ5QWp4THhyeTRYL2NEQlFNL3dHTWdUYkYxczFmbUdVdXpkeS9x?=
- =?utf-8?B?OU5CV1BZaXprZGpZUFpRWFlHWk94VTA1Ny9JZlVWSERQZ1hOQXlHYjlOWkVT?=
- =?utf-8?B?WjR0eHJVeWMxc0hDS1l3cVNqUlNBSm15dUZ1d00wbTkxUjhsWS8rYmRWQm9F?=
- =?utf-8?B?bkNrN0VJdTFzeGJZRlMxUExYaG9reXBBNVZjUHc4T21DZ2VSckV3bFZBVGMw?=
- =?utf-8?B?Mm4ycmNXRHg2byt6RXZWaVp1OGFCSlZYUTRmbWJsR2EyZnlCSlJiUUk2UThH?=
- =?utf-8?B?WDZHTyt6OVJxRDFndExaRUg1VXZrVC9XMDhtckRDNHZ1Y2huZTI0M2VYUlhB?=
- =?utf-8?B?TnlkMWlzT093TFUvNmxkbjhOUXZOUUdaYnlIbWJrMkp5MGNYRVJsYlVIc1FT?=
- =?utf-8?B?elZ1UWQrQUtWc2lTQ3h3bnkzb3FKRnVDYkp4TzNNSm5QbmNLSmRPQ0V0YjRj?=
- =?utf-8?B?THJMbVNqQmxId3duemVLYlJrbEQxYmZVZy9ZOVFNV292WWkzd0lDaG5RbGg1?=
- =?utf-8?B?Y200RDNSL3FJZlp6RE5mTFQ4UkZ2NHlpVm1ZL2Jpa1BJV1dJMEw1MWFBdGoz?=
- =?utf-8?B?KzI4K2ZHdEV4SHJxaU5qM0NqL3ZvdG0rWTEvYjExNUxRdmg4TWllclBGOGZN?=
- =?utf-8?B?ZVlBUWZwSytNc2NLaVdkZ21nM1VqVFc3UHVMNURZbHlTRlRGbTRPdnV6RFVh?=
- =?utf-8?B?aW8rWUJBcmgzZmJ1NTdyREptcWt2YXM1WmpGV3NUTGR1bEUySVVwbHk0Wm5z?=
- =?utf-8?B?eHpyUmdLaUZWMVFPdHNvWXp4UDIvbDhQU1BZdkVhZW5kOUVITFlYMjJuS2I1?=
- =?utf-8?B?MFRNUVZscjZuWjlQcWVUanBWODRZanJvamllMlBpWEtmTFY3T2VEaTJidE0v?=
- =?utf-8?B?U1VkQU16c0RxSUtpM084cDZTRzU2NHViWEttR1FNRTlDYW9mMmdqTTRQOUI4?=
- =?utf-8?B?NHJLOUJ3a24zQjc4dTAvMk0reVpMU1N4WWhoWndySnBLbWNHeUx2RUhMN0RS?=
- =?utf-8?B?VThYYmxrc3dnYzRzem9XWFY1WkN6UjNkTUJjNWExRFhYUGlYSlM2RW9pTWdw?=
- =?utf-8?B?alRTcSszMjhKR2s3eWFqMmFFMGltRDRFb2pHT1dsUHFZSTc3RHdRR1RaRzIz?=
- =?utf-8?B?RU9jdW03UVpqS21zOXBUTlBrM3BHVGsybkRMUVU4WUJpVUhRbjRGd0N4K1h5?=
- =?utf-8?B?c1NKNHNJcXlTLzVNL3lYUmFqNkdrRFdwL0pERVZVeWlSU0dnOTRyUlY5OXJm?=
- =?utf-8?B?cGlHTnhwMDZRQ0VmbGUveGZIRXFydmtnczczemoyTXBpM1JxZjBCUWgzZitm?=
- =?utf-8?B?cWRvRGQxMVRZT1RmU21odldVSk1USVFHZkwyMXFyWW9Fd2c9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dllqYmlaaVhrTEl3elBXVSttZW11VmM5R043SmZQbU0xeWs4R0RoMFZVVDRr?=
- =?utf-8?B?cnZxTW9MaGlhaUM2dEpLd2V2Z1gybFd2OHExS2NwQ3kyVmVvdm4vWTRkTng0?=
- =?utf-8?B?MVpFM0hkL1p0MFZOaTAxY0ZabkwxU3U0dGN2b3J5SlA0UXlhOFdhWjNFOVFx?=
- =?utf-8?B?R3lGUFpFUWhKYkV3a2RFd3h5QWVmb3ZlTmhyengzMFBHUzZiLzBVUlpDRCtD?=
- =?utf-8?B?MmZNbEtzWU52SjMxUTZJaGdxTjFjSXNKUkxodCtRendTSUVyZjFJTmF2bEFx?=
- =?utf-8?B?TGZiMHRNMGREZTJFcnprN0pWcWk3U3dKTk9WSmdOY0RLRmJrUVAvRGRwOEhP?=
- =?utf-8?B?RHcxVGtMcC9jYjVxalN2QzZsOTdDQ1hyV1c4eTFqR0tjR0dxR29WUXNrUjFa?=
- =?utf-8?B?YWVGdVJwN01mRzdmWjVsSTU1K2t2Mno3bU1TUXpCeU81ZThNait4cmxRSkpG?=
- =?utf-8?B?WTAyOXNzZERubCtucnhFNmloclpZSUp6Um1SNnkrREU2RzZMbmpibEZ0UzhY?=
- =?utf-8?B?VkF1UnZQZGYwd0tnSHZJeEx0S2NhNVBUbjBMRjN6dTMwQmJ2WkpsOU4vbzlK?=
- =?utf-8?B?SDQySVRmTmNHNXIrUllBc2Y3cEExVzBOSEVCZ1UrZ1ovV1o1bk91VnY2cE96?=
- =?utf-8?B?a2VrWXduTWYrRUJuRDg2Z01iWkdld2ROMDFnMFFxQ01seHA3UVZESVVYaUdT?=
- =?utf-8?B?bTRnVEdET3Uvc3kvdTRscXdvcTljS2xoVjJUZ3k1RnJweUFLa0xRQndyaFB4?=
- =?utf-8?B?ZFdGSVRNMXB6eGZxMlBVeitJNmFkeCtROGZOQnBDNElDbUh5TjRLV1hwbm44?=
- =?utf-8?B?dTFhbTZacHhzSWZIRHJXTk0veGJBd0hFbGF4b1JpWDh0MjI5ZW5MNGp6Njg1?=
- =?utf-8?B?WGUyazREelRZdkVZbEd5M2lVWmlGR1V1WHVBN3oySkxsdURFdlJDMERHOXVG?=
- =?utf-8?B?UzNWR0R2N3NtM1dSTWRoNldGZldGbWZ1WUx6V0EyeUZVR0M1ZVowbzFwSVlz?=
- =?utf-8?B?aWpxM2V4UnZndDYvYk1heEFRc2h2dGw1cHNzR09ZT2k5cmdQaFpDRUw2YUM5?=
- =?utf-8?B?Y1lXdERJVHlWZU1BNHp2YTFtYzNNcVN4T2JyYjA2M3VGVk1iaERaeVlFcWw1?=
- =?utf-8?B?dzE1UXNKUlg1WmgxUmxDKzNxeVlSVDY3ampMWmUzUjc0NEZEK0tZQlRFSlFB?=
- =?utf-8?B?TlRQb0lSNDJNOTlkYnUyRzVhaS9RVVYyUWtXbWp4Ti9mTWxnVTR4c3ZwTWRW?=
- =?utf-8?B?bmVScGNEaHM1bWZ3UDluT1Uvd2JiOGlDYkxTQ2pTNlhQTlArY3dWY0dJZUhN?=
- =?utf-8?B?cjYyUTl0ci9ESzg4djR5MWZDRTUwNjVacE9vS3ZLdDVhNGk3cG1MLzJZbkZQ?=
- =?utf-8?B?c2hSN3FBWUo5TkhidE9MZGhoMjY4Y3RpUVlCZlNxRHFyTU52bW54Qjlpbkly?=
- =?utf-8?B?Z3ZNbEIySmFaT2ludjFGVXIzdzd2WEVaS0pxaEVZK2IydHd4bWpENzNKUnZB?=
- =?utf-8?B?cERtNTltaGpMaGVjeXlrZllkejF6TlMvZ2dWbm82Mi9XRmJGWjNDTlEwdVkv?=
- =?utf-8?B?cC9IYnpOTFg1N2Z2U014T2x2K3ZQaUVsc2orcDI2SUN5eURNSDNWZkdNRXhh?=
- =?utf-8?B?Y0tMOWJGdUNZNVU5ai9PbFhXK2oxeFd4QzVoYnlkMmxYL0lVdU9UVkY5WDlo?=
- =?utf-8?B?R0Vnbm1mdUpleUZ0R0dkRS9RVTQxMHRPUnFwY2p3NWhscjZSQ2RpZ1ZhZFVC?=
- =?utf-8?B?VS9pd2RBTzVvZ211RndoeUtsckVKc2VpZXlhMEZFOWxGWHpjSlNPZlpNOVNL?=
- =?utf-8?B?bi9Gc3F4RE9GMDlicGJwdU9KeGVQNXZzYVJxdFE0ZjNjQlE4amk1U2l6aE95?=
- =?utf-8?B?ZDkxd1ZCSnFreGFtdHhzRnVvc1oxWGhzdG0yaVFVdDdIcHQ4UFExNitlcTEv?=
- =?utf-8?B?dUUyaGE0ditNZEx2MlJkV1d6cS9iMlZrdm50dTZyTGlHM09Ldi9uRjU3dmFC?=
- =?utf-8?B?Q3RnZnE5cnhrQjVyZzFvdi9kbXRMaWdVYnpnaGJMdkZQeXJCLzhMNWpvRGM1?=
- =?utf-8?B?S3JHMnhzT3VsekJWZjZZUzBXMEhobkx6OGNJN04xY0dnUWZVWGxQODVoN2NE?=
- =?utf-8?Q?GHfxve7plM3v2Qv5TXX76bhNL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a730baa-4a12-4f63-42d7-08dd82fc8ac6
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 06:52:13.2854
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aVkUxxIN2OWwAIixzoSlOQO8zIAaVDlA2V3fzzHbFLWHUJxdVwyh076A5DtvvARWtLYDb8fjxk5OEDG0EYAMNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9248
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 11/34] x86/msr: Remove calling
+ native_{read,write}_msr{,_safe}() in pmu_msr_{read,write}()
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-12-xin@zytor.com>
+ <20471e53-c228-4cf6-83e6-3ab49f32f19f@linux.intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <20471e53-c228-4cf6-83e6-3ab49f32f19f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 23-Apr-25 12:17 PM, Luo Gengkun wrote:
-> Perf doesn't work at perf stat for hardware events:
+On 4/23/2025 11:25 PM, Mi, Dapeng wrote:
+
+>> -bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err)
+>> +bool pmu_msr_read(u32 msr, u64 *val)
 > 
->  $perf stat -- sleep 1
->  Performance counter stats for 'sleep 1':
->              16.44 msec task-clock                       #    0.016 CPUs utilized
->                  2      context-switches                 #  121.691 /sec
->                  0      cpu-migrations                   #    0.000 /sec
->                 54      page-faults                      #    3.286 K/sec
->    <not supported>	cycles
->    <not supported>	instructions
->    <not supported>	branches
->    <not supported>	branch-misses
+> The function name is some kind of misleading right now. With the change,
+> this function only read PMU MSR's value if it's emulated, otherwise it
+> won't really read PMU MSR. How about changing the name to
+> "pmu_emulated_msr_read" or something similar?
 
-Wondering if it is worth to add this in perf test. Something like
-below?
+This makes sense!
 
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -16,6 +16,24 @@ test_default_stat() {
-   echo "Basic stat command test [Success]"
- }
- 
-+test_stat_count() {
-+  echo "stat count test"
-+
-+  if ! perf list | grep -q "cpu-cycles OR cycles"
-+  then
-+    echo "stat count test [Skipped cpu-cycles event missing]"
-+    return
-+  fi
-+
-+  if perf stat -e cycles true 2>&1 | grep -E -q "<not supported>"
-+  then
-+    echo "stat count test [Failed]"
-+    err=1
-+    return
-+  fi
-+  echo "stat count test [Success]"
-+}
-+
- test_stat_record_report() {
-   echo "stat record and report test"
-   if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
-@@ -201,6 +219,7 @@ test_hybrid() {
- }
- 
- test_default_stat
-+test_stat_count
- test_stat_record_report
- test_stat_record_script
- test_stat_repeat_weak_groups
----
+>> -bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err);
+>> -bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err);
+>> +bool pmu_msr_read(u32 msr, u64 *val);
+> 
+> The prototype of pmu_msr_read() has been changed, but why there is no
+> corresponding change in its caller (xen_do_read_msr())?
 
-Thanks,
-Ravi
+Good catch.  I didn't compile one by one thus missed it.
