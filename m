@@ -1,139 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4053E1EDA35;
-	Thu, 24 Apr 2025 21:35:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DBB13213E;
+	Thu, 24 Apr 2025 21:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745530515; cv=none; b=n7e2bBjsnFf+qEd6AcLnqdLpDLNMwMCdlrpUmPD5S/R6AGJsUjLcqqv4Om9i4BiSQylRxSt+gEfO2iacKpAQWb6mjcWiDIq5hlkDpMAzSWrDK0kbrvTPkZ0Z0XV+bHj+HQ5emzQrMu0XEy2kl5tfaXWrha5PM824oR4ay/rRvBE=
+	t=1745531261; cv=none; b=lrZB3PhVzVQCBWaUTxFAOV/V/5nhBnbPFME5DXidjCd4e791nVyFY6mFl5rUFjm7Jxr7Nk6LJ1AAEhUyOTKUDBrqfcy5ioRG0ERE7Fiju53pC7FbZTIV0ocbBatA+qUTv9gSFPDleQDfWuKgEJXqhTtZVc8XfjbNIL4VHcbGjIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745530515; c=relaxed/simple;
-	bh=PrKkYRIlJvWKFYZLmBouuUGmii3H5YdNfIXLlJe7XtE=;
+	s=arc-20240116; t=1745531261; c=relaxed/simple;
+	bh=/OtnegXrAUInM02RmbInPRK5cQX2lIlEaqMGbFsc8QM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6YoT17StGuRq38Zfio+wQXGqtnjMXIV79gJw6Mc+sOYvehGGdzKqRreTc//74XdyU8P/vIaqKpIyPrKD12ZtRIY22lLgox1hy447jtBcenn0GzaRtcS9vYMAwgXQDSfac3PvojYmV/vFvZjlIEVtGO9FZHMdxJ1nHeHtE3c7fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlH2uCVt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VKufhDUCTI7cSscXIyq2w1wtYNyF0d3557hmSpNRfTW8FRqB6+Zjsws2D6oDhDLN/8xrk/fPLsH+iqOcTBAklT4/NuXNZps23RN3w2duoGgqcexO4eVPXaTq/QfIdNjH46lONjAxnWfKH11sxwE5exL40kvVChUw8SShwiJfTd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPjpiAWL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlH2uCVt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33505C4CEE3;
-	Thu, 24 Apr 2025 21:35:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPjpiAWL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3F3C4CEE3;
+	Thu, 24 Apr 2025 21:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745530514;
-	bh=PrKkYRIlJvWKFYZLmBouuUGmii3H5YdNfIXLlJe7XtE=;
+	s=k20201202; t=1745531261;
+	bh=/OtnegXrAUInM02RmbInPRK5cQX2lIlEaqMGbFsc8QM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HlH2uCVtbAaYIeTfClE3ZdZYv2SBl4wO/cVxZBShZrgUrvToaxWkzEaUqEgvj/ORV
-	 gprqxHogthQhrIPwDzRUR6602qSvGwEs4cL9rnxPE+LuCC2RNbtqBnprpnrDGD6aRd
-	 mhYK8UC1gWppjllQEmyjcsG/JpqSxa+HDTkTQb14Qk206r9wgq6r0uXPOQJZkHyB4K
-	 49S9+7xJWfCqc2S1TOZUG1XbbUKNQDPttR8mLAjHhIe+oIdIMXhEjDI+3Okk9tSq8m
-	 4Z5jiJdMAn1xVIugT3N3ibi4/tljj5tU4JxpPyUOKUKekJhg8fevI/6DE2HDECLK6G
-	 yed/q1anDYnww==
-Date: Thu, 24 Apr 2025 18:35:11 -0300
+	b=fPjpiAWLJmklUim0524Dr+JbFiUZKVwGNoM5kezTioyx52Vghb/vbv+KGIHIPzEkG
+	 u/it2sj5HQROCzqtKddufFAgZSvSFG9wSZsduDTUZ4flK/bU0a7St+TqmkUcie+hha
+	 a6lgHMMewgovod6o1l4SJlzPJBZ26MIkug21EtvrO0v9r4tW88HRD0VfsYIREPppsd
+	 WwYReglf3megpF/2IH7eSGSE0jFDUdL8yQxNgZWHuakH53/dMcYMo9hTXH2q5i6PGm
+	 sZy5DTDGYDwJMh4+jAv67EV5uaQ53eC28p2DyfXyrPsdGxpaki7xAhnddctiPzN+wJ
+	 LxjujzSFVvjew==
+Date: Thu, 24 Apr 2025 18:47:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Xu Yang <xu.yang_2@nxp.com>, Tengda Wu <wutengda@huaweicloud.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 06/12] perf record: Switch user option to use BPF
- filter
-Message-ID: <aAquj31djneyTwLG@x1>
-References: <20250410173631.1713627-1-irogers@google.com>
- <20250410173631.1713627-7-irogers@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>, jolsa@kernel.org,
+	adrian.hunter@intel.com, irogers@google.com,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+	hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com,
+	jiang.peng9@zte.com.cn, Tejas.Manhas1@ibm.com,
+	sshegde@linux.ibm.com, sfr@canb.auug.org.au,
+	linux-kernel@vger.kernel.org, mingo@redhat.com,
+	ravi.bangoria@amd.com, bp@alien8.de
+Subject: Re: [PATCH] perf build: Add tools/arch/x86/include/asm/amd/ibs.h to
+ sync the headers
+Message-ID: <aAqxei2pAfDbmiTy@x1>
+References: <20250424163033.6601-1-atrajeev@linux.ibm.com>
+ <16bee348-2b41-4337-85c8-8a6d2719e99b@linux.ibm.com>
+ <aAqB6kI5mDp4bxY9@x1>
+ <aAqlFA4qIVh9SQke@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250410173631.1713627-7-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAqlFA4qIVh9SQke@google.com>
 
-On Thu, Apr 10, 2025 at 10:36:25AM -0700, Ian Rogers wrote:
-> Finding user processes by scanning /proc is inherently racy and
-> results in perf_event_open failures. Use a BPF filter to drop samples
-> where the uid doesn't match. Ensure adding the BPF filter forces
-> system-wide.
+On Thu, Apr 24, 2025 at 01:54:44PM -0700, Namhyung Kim wrote:
+> > On Thu, Apr 24, 2025 at 10:39:56PM +0530, Venkat Rao Bagalkote wrote:
+> > > On 24/04/25 10:00 pm, Athira Rajeev wrote:
+> > > Tested this patch by applying on tip HEAD:
+> > > 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d and it fixes the reported issue.
 
-Since the BPF filter is not introduced in this patch, can you please
-provide, in the commit log message or in the patch itself, some
-commentary as to how this is accomplished thru a BPF filter?
+> > This is just a long list of characters, can you please next time provide
+> > something like, humm, tip/head, not really:
+> 
+> > ⬢ [acme@toolbx perf-tools-next]$ git remote -v | grep tip
+> > tip	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (fetch)
+> > tip	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (push)
+> > ⬢ [acme@toolbx perf-tools-next]$ git remote update tip 
+> > Fetching tip
+> > ⬢ [acme@toolbx perf-tools-next]$ git show 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
+> > fatal: bad object 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
+> > ⬢ [acme@toolbx perf-tools-next]$
+
+> > So please add the summary, that way we can try to figure out if this is
+> > a rebase and they look for the description instead of this sha1 that I'm
+> > not finding even after doing a 'git remore update tip'.
+
+> Does this mean the kernel change broke the tool build but we don't have
+> it in the perf-tools-next yet?  Then probably we need to wait for the
+> next merge window to fix it in the tool side, no?
+
+I'm not noticing this with perf-tools-next on a 9950x3d fedora:42 and
+the referenced commit is not present in it nor in upstream nor in tip
+master, so I need the reporter to check his environment and report back.
 
 - Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c | 27 ++++++++++++++++-----------
->  1 file changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index ba20bf7c011d..202c917fd122 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -173,6 +173,7 @@ struct record {
->  	bool			timestamp_boundary;
->  	bool			off_cpu;
->  	const char		*filter_action;
-> +	const char		*uid_str;
->  	struct switch_output	switch_output;
->  	unsigned long long	samples;
->  	unsigned long		output_max_size;	/* = 0: unlimited */
-> @@ -3460,8 +3461,7 @@ static struct option __record_options[] = {
->  		     "or ranges of time to enable events e.g. '-D 10-20,30-40'",
->  		     record__parse_event_enable_time),
->  	OPT_BOOLEAN(0, "kcore", &record.opts.kcore, "copy /proc/kcore"),
-> -	OPT_STRING('u', "uid", &record.opts.target.uid_str, "user",
-> -		   "user to profile"),
-> +	OPT_STRING('u', "uid", &record.uid_str, "user", "user to profile"),
->  
->  	OPT_CALLBACK_NOOPT('b', "branch-any", &record.opts.branch_stack,
->  		     "branch any", "sample any taken branches",
-> @@ -4196,19 +4196,24 @@ int cmd_record(int argc, const char **argv)
->  		ui__warning("%s\n", errbuf);
->  	}
->  
-> -	err = target__parse_uid(&rec->opts.target);
-> -	if (err) {
-> -		int saved_errno = errno;
-> +	if (rec->uid_str) {
-> +		uid_t uid = parse_uid(rec->uid_str);
->  
-> -		target__strerror(&rec->opts.target, err, errbuf, BUFSIZ);
-> -		ui__error("%s", errbuf);
-> +		if (uid == UINT_MAX) {
-> +			ui__error("Invalid User: %s", rec->uid_str);
-> +			err = -EINVAL;
-> +			goto out;
-> +		}
-> +		err = parse_uid_filter(rec->evlist, uid);
-> +		if (err)
-> +			goto out;
->  
-> -		err = -saved_errno;
-> -		goto out;
-> +		/* User ID filtering implies system wide. */
-> +		rec->opts.target.system_wide = true;
->  	}
->  
-> -	/* Enable ignoring missing threads when -u/-p option is defined. */
-> -	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
-> +	/* Enable ignoring missing threads when -p option is defined. */
-> +	rec->opts.ignore_missing_thread = rec->opts.target.pid;
->  
->  	evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
->  
-> -- 
-> 2.49.0.604.gff1f9ca942-goog
