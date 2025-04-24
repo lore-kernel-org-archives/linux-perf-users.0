@@ -1,56 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7709B28468B;
-	Thu, 24 Apr 2025 17:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBE827A126;
+	Thu, 24 Apr 2025 17:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745514501; cv=none; b=YBFx8pOr629e01o2XSIWxzw2qSo9/bVFnjPZP/XjbbTQ/RZn9+oWwHvUSO4w906wGvDAJBmXjYS/+xJ0LRM4IEuIv7pVT70Wi7DPh+jWJBDv2yJY3qqj8aNdVCp0HDMvqT7mulkh2lIuGI+i8h2T+0Q0R7ztnAx5Im4xOplnJsw=
+	t=1745514642; cv=none; b=i8G7AuGXdNgLSfngYNlVD87Qvk5ScE9iDDin8vIEAPX72hXU0eT1d5Oe4RNF8kbkJhsAjvYKbJ4NLsvNlBPga0FQ6znVYdgZcKj+R8fdfqRyX4Kx6CXNpvmFSkm33QDGlvooxACDf+ajtZxzx7E9eeT8pd4IAiEE81oAMI5Mdbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745514501; c=relaxed/simple;
-	bh=Aua7mFb35cAODT1KQWumEW/D3FGry1i9W+uCgHVB7mQ=;
+	s=arc-20240116; t=1745514642; c=relaxed/simple;
+	bh=5I4WpYyvL7Dsl/EQM2inIZSA3FEf1s6jecfhyyQu31I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I8gwm/cP4mhYC22AhkrOwPmWqDvnE9c/48j7mLHnrRxQecP3GNi/terS8AV7NRUVRtMCfYXxKS6dS6plHM2F74qF8DiFcoINY8VvKu6BOJ+ypbnqC5K5c7nrvngyMaFsI866KTt78tdlAPeYjUbTObaqZZY84Qzhbb0c+myxLIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eWChJjfz; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=o23aqQQf1Bh30HO3e5xG2iCRgrdbOzwe86OyLNCt7fLLnWH1hZXyNwXcbZbneJUIkJM0WAdWP44+jPBi9FUJWLB6sUg+FV+TyE+j03wttvM+hPqGLUzCeeGGHyu5xCNfkgs5zj02B2ccS2TDkBAuVc6Qlkvb2+n28of9GuOgSFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qKMF8m0q; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eWChJjfz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745514500; x=1777050500;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Aua7mFb35cAODT1KQWumEW/D3FGry1i9W+uCgHVB7mQ=;
-  b=eWChJjfzkntx5aNhGIHRHQ5SpxmQlCH3pL98eccpbhLvXUsLw88nnnxd
-   To8nVzj7+9jK1ulUAtcRqFtB62m3feKtgPgulAMF5P6t/TkNHc2e7/mYF
-   qFxcY/vE7mTGuseKr1Wb1dTVlZmK7/qb1h9mfaVgfnbqZip0T5lO9u40l
-   pLFgcZ0hnaqEjQ5nNp6BuiiY2bcE6LuN2CrhY+YAW75r/m8TWNaK33eXA
-   LIS27EwI6POWJmcfIE/U9K7z0Chw2YzKePtFUVxZbMFnsgfORpc3jUNe4
-   vqgQzvzRpqkARsp3XjOaJYZlrv0qh8I8sp8XaQJI00ooIHYlYZz4y5L5K
-   w==;
-X-CSE-ConnectionGUID: z1vrj4EXRm2S6I/yQ0hHLA==
-X-CSE-MsgGUID: BB+lDNSlTTefjqicGbnEdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57809582"
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="57809582"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 10:08:17 -0700
-X-CSE-ConnectionGUID: 0hUj5O7+TaCht2uSvGMjKA==
-X-CSE-MsgGUID: 64deZ4BxSfGtUVeufLULTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="133199286"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 10:08:18 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E0DC420B5736;
-	Thu, 24 Apr 2025 10:08:13 -0700 (PDT)
-Message-ID: <e85c1a65-fa55-457f-82d9-c25f6a4deb49@linux.intel.com>
-Date: Thu, 24 Apr 2025 13:08:12 -0400
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qKMF8m0q"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O9v66e010688;
+	Thu, 24 Apr 2025 17:10:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=+ccnUv
+	06O5qK+wZzwIVU2JLwrxodc3+PuvFG1IojwTw=; b=qKMF8m0qvAH/mzyQ524Sxq
+	X3zvqXaHi1/uN+uJQNEwcpM1wvVWJjIgYTtW6Ngu0Q0GY/07o3QZyJi/PyKrFZ6t
+	r2dDWfORvPtLfUCkXrgRXJzeVsPyUWlKo7DfZaly8dFS+0aQrSbTxTnerwY/cBrT
+	2P5CbI7bR+BN8/zDJBSyY5q8OjpxkC+Pexkg/0gHNsbQDi/kuIuBaau9INLr0fad
+	RsvwyUmw5o61BxRKyX1ETVnvWvkCemEbTekXCh64MY0iksFo5JT49yTuLlgl+Lfu
+	3SA0qai/gWp5t36prYebCxaSCGQ44G4P1u/jQhX4yumg50snUH1MOzHEzJm5nv5A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4677sm54dv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 17:10:09 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53OGp0VY025563;
+	Thu, 24 Apr 2025 17:10:09 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4677sm54dj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 17:10:09 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OFkTdj028407;
+	Thu, 24 Apr 2025 17:10:07 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvs6j5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 17:10:07 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53OHA4VO65732900
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 17:10:04 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7DF1F58069;
+	Thu, 24 Apr 2025 17:10:04 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 76D895805A;
+	Thu, 24 Apr 2025 17:09:58 +0000 (GMT)
+Received: from [9.61.255.202] (unknown [9.61.255.202])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 24 Apr 2025 17:09:58 +0000 (GMT)
+Message-ID: <16bee348-2b41-4337-85c8-8a6d2719e99b@linux.ibm.com>
+Date: Thu, 24 Apr 2025 22:39:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,97 +69,320 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86: Fix open counting event error
-To: Ingo Molnar <mingo@kernel.org>, Luo Gengkun <luogengkun@huaweicloud.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
- <aApkwfEUCJcc9PXn@gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aApkwfEUCJcc9PXn@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] perf build: Add tools/arch/x86/include/asm/amd/ibs.h to
+ sync the headers
+To: Athira Rajeev <atrajeev@linux.ibm.com>, acme@kernel.org, jolsa@kernel.org,
+        adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com,
+        jiang.peng9@zte.com.cn, Tejas.Manhas1@ibm.com, sshegde@linux.ibm.com,
+        sfr@canb.auug.org.au, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        ravi.bangoria@amd.com, bp@alien8.de
+References: <20250424163033.6601-1-atrajeev@linux.ibm.com>
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250424163033.6601-1-atrajeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDExOCBTYWx0ZWRfX1W3ezGWNI+5X tRD7VZfUJdKEy955W2SDP1pFuRkMagc2h1WS4+EOKbLCxQm16tlcxe03k+7ewMLl8zk+ttwxB8d hjjUEP3GkpR5xJ/ksG0JsUUbIP3RH7KSDk61Fq56h98niVMnk3fd2WtSSeM5pLKJ7fWCEQ9bEW2
+ QedKOqMwEtO6lUYMpMXmHo3HSE/IPGLcAY6kduBq5/LsaESR6ISDMNvnQuX/qs+pmb6WZ1K/I/j 09T/Egyx0U6qfnweehWs3PCempvQIMffzASIec1A4YzrJaOdOEjyryTZaKjqRAHAB27b+dBEXuJ I6SaULLBQ3H7CItw2bekUBOj2wA0+QVHCyMR+VaWp1oSDMInQ6d9Q+86oACxI82Q3oXCl9F9v1b
+ c75DH8HJnrSLM25GyUYAA7tbbF0VF6BZeDX7sLKZJV/jCovck6VakGopIAnQPclPYe6+jNdH
+X-Proofpoint-GUID: ab4ubInCN8YQE6ESl2-ELeaUBy95GIbW
+X-Proofpoint-ORIG-GUID: W2O773Nlm7aOPqK_BCZh1Ae7fttbgPCz
+X-Authority-Analysis: v=2.4 cv=CcMI5Krl c=1 sm=1 tr=0 ts=680a7071 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=rOUgymgbAAAA:8 a=VnNF1IyMAAAA:8 a=a7G4Gb3wKFATOBt86dsA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=MP9ZtiD8KjrkvI0BhSjB:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_07,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ clxscore=1011 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240118
 
 
+On 24/04/25 10:00 pm, Athira Rajeev wrote:
+> Headers sync up update for the patch that adds the original
+> copy of the IBS header file in arch/x86/include/asm/amd/ibs.h
+>
+> Without this, perf shows build warning:
+>
+>   # make
+>    BUILD:   Doing 'make -j24' parallel build
+> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
+> Warning: Kernel ABI header differences:
+>    diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+>    diff -u tools/include/linux/bits.h include/linux/bits.h
+>    diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>    diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+>    diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
+>    diff -u tools/arch/x86/include/asm/amd/ibs.h arch/x86/include/asm/amd/ibs.h
+>    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+>
+> Add tools/arch/x86/include/asm/amd directory and also file
+> tools/arch/x86/include/asm/amd/ibs.h to sync up the kernel headers
+> with perf tools and fix the warning:
+>
+> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
+>
+> Apart from the warning, the perf build also fails as below on powerpc:
+>
+>    In file included from util/amd-sample-raw.c:12:0:
+>    /root/bug/tip/tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal error: asm/msr-index.h: No such file or directory
+>     #include <asm/msr-index.h>
+>              ^~~~~~~~~~~~~~~~~
+>    compilation terminated.
+>
+> To fix this, added this change:
+>
+>    -#include <asm/msr-index.h>
+>    +#include "../msr-index.h"
+>
+> And change the check-headers.sh entry to ignore this line when
+> comparing with the original kernel header.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reported-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> ---
+>   tools/arch/x86/include/asm/amd/ibs.h | 158 +++++++++++++++++++++++++++
+>   tools/perf/check-headers.sh          |   2 +-
+>   2 files changed, 159 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/arch/x86/include/asm/amd/ibs.h
+>
+> diff --git a/tools/arch/x86/include/asm/amd/ibs.h b/tools/arch/x86/include/asm/amd/ibs.h
+> new file mode 100644
+> index 000000000000..cbce54fec7b9
+> --- /dev/null
+> +++ b/tools/arch/x86/include/asm/amd/ibs.h
+> @@ -0,0 +1,158 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_AMD_IBS_H
+> +#define _ASM_X86_AMD_IBS_H
+> +
+> +/*
+> + * From PPR Vol 1 for AMD Family 19h Model 01h B1
+> + * 55898 Rev 0.35 - Feb 5, 2021
+> + */
+> +
+> +#include "../msr-index.h"
+> +
+> +/* IBS_OP_DATA2 DataSrc */
+> +#define IBS_DATA_SRC_LOC_CACHE			 2
+> +#define IBS_DATA_SRC_DRAM			 3
+> +#define IBS_DATA_SRC_REM_CACHE			 4
+> +#define IBS_DATA_SRC_IO				 7
+> +
+> +/* IBS_OP_DATA2 DataSrc Extension */
+> +#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
+> +#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
+> +#define IBS_DATA_SRC_EXT_DRAM			 3
+> +#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
+> +#define IBS_DATA_SRC_EXT_PMEM			 6
+> +#define IBS_DATA_SRC_EXT_IO			 7
+> +#define IBS_DATA_SRC_EXT_EXT_MEM		 8
+> +#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
+> +
+> +/*
+> + * IBS Hardware MSRs
+> + */
+> +
+> +/* MSR 0xc0011030: IBS Fetch Control */
+> +union ibs_fetch_ctl {
+> +	__u64 val;
+> +	struct {
+> +		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
+> +			fetch_cnt:16,	/* 16-31: instruction fetch count */
+> +			fetch_lat:16,	/* 32-47: instruction fetch latency */
+> +			fetch_en:1,	/* 48: instruction fetch enable */
+> +			fetch_val:1,	/* 49: instruction fetch valid */
+> +			fetch_comp:1,	/* 50: instruction fetch complete */
+> +			ic_miss:1,	/* 51: i-cache miss */
+> +			phy_addr_valid:1,/* 52: physical address valid */
+> +			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
+> +					 *	  (needs IbsPhyAddrValid) */
+> +			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
+> +			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
+> +			rand_en:1,	/* 57: random tagging enable */
+> +			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
+> +					 *      (needs IbsFetchComp) */
+> +			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
+> +			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
+> +			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
+> +			reserved:2;	/* 62-63: reserved */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011033: IBS Execution Control */
+> +union ibs_op_ctl {
+> +	__u64 val;
+> +	struct {
+> +		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
+> +			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
+> +			op_en:1,	/* 17: op sampling enable */
+> +			op_val:1,	/* 18: op sample valid */
+> +			cnt_ctl:1,	/* 19: periodic op counter control */
+> +			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
+> +			reserved0:5,	/* 27-31: reserved */
+> +			opcurcnt:27,	/* 32-58: periodic op counter current count */
+> +			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
+> +			ldlat_en:1;	/* 63: Load Latency enabled */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011035: IBS Op Data 1 */
+> +union ibs_op_data {
+> +	__u64 val;
+> +	struct {
+> +		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
+> +			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
+> +			reserved1:2,		/* 32-33: reserved */
+> +			op_return:1,		/* 34: return op */
+> +			op_brn_taken:1,		/* 35: taken branch op */
+> +			op_brn_misp:1,		/* 36: mispredicted branch op */
+> +			op_brn_ret:1,		/* 37: branch op retired */
+> +			op_rip_invalid:1,	/* 38: RIP is invalid */
+> +			op_brn_fuse:1,		/* 39: fused branch op */
+> +			op_microcode:1,		/* 40: microcode op */
+> +			reserved2:23;		/* 41-63: reserved */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011036: IBS Op Data 2 */
+> +union ibs_op_data2 {
+> +	__u64 val;
+> +	struct {
+> +		__u64	data_src_lo:3,	/* 0-2: data source low */
+> +			reserved0:1,	/* 3: reserved */
+> +			rmt_node:1,	/* 4: destination node */
+> +			cache_hit_st:1,	/* 5: cache hit state */
+> +			data_src_hi:2,	/* 6-7: data source high */
+> +			reserved1:56;	/* 8-63: reserved */
+> +	};
+> +};
+> +
+> +/* MSR 0xc0011037: IBS Op Data 3 */
+> +union ibs_op_data3 {
+> +	__u64 val;
+> +	struct {
+> +		__u64	ld_op:1,			/* 0: load op */
+> +			st_op:1,			/* 1: store op */
+> +			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
+> +			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
+> +			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
+> +			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
+> +			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
+> +			dc_miss:1,			/* 7: data cache miss */
+> +			dc_mis_acc:1,			/* 8: misaligned access */
+> +			reserved:4,			/* 9-12: reserved */
+> +			dc_wc_mem_acc:1,		/* 13: write combining memory access */
+> +			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
+> +			dc_locked_op:1,			/* 15: locked operation */
+> +			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
+> +			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
+> +			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
+> +			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
+> +			l2_miss:1,			/* 20: L2 cache miss */
+> +			sw_pf:1,			/* 21: software prefetch */
+> +			op_mem_width:4,			/* 22-25: load/store size in bytes */
+> +			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
+> +			dc_miss_lat:16,			/* 32-47: data cache miss latency */
+> +			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
+> +	};
+> +};
+> +
+> +/* MSR 0xc001103c: IBS Fetch Control Extended */
+> +union ic_ibs_extd_ctl {
+> +	__u64 val;
+> +	struct {
+> +		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
+> +			reserved:48;		/* 16-63: reserved */
+> +	};
+> +};
+> +
+> +/*
+> + * IBS driver related
+> + */
+> +
+> +struct perf_ibs_data {
+> +	u32		size;
+> +	union {
+> +		u32	data[0];	/* data buffer starts here */
+> +		u32	caps;
+> +	};
+> +	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
+> +};
+> +
+> +#endif /* _ASM_X86_AMD_IBS_H */
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index e9fab20e9330..e1a1fdfa7115 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -186,7 +186,7 @@ done
+>   # diff with extra ignore lines
+>   check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memcpy_\(erms\|orig\))" -I"^#include <linux/cfi_types.h>"'
+>   check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+> -check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
+> +check arch/x86/include/asm/amd/ibs.h  '-I "^#include <asm/msr-index.h>" -I "^#include \"\.\./msr-index.h\""'
+>   check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
+>   check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+>   check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
 
-On 2025-04-24 12:20 p.m., Ingo Molnar wrote:
-> 
-> * Luo Gengkun <luogengkun@huaweicloud.com> wrote:
-> 
->> Perf doesn't work at perf stat for hardware events:
->>
->>  $perf stat -- sleep 1
->>  Performance counter stats for 'sleep 1':
->>              16.44 msec task-clock                       #    0.016 CPUs utilized
->>                  2      context-switches                 #  121.691 /sec
->>                  0      cpu-migrations                   #    0.000 /sec
->>                 54      page-faults                      #    3.286 K/sec
->>    <not supported>	cycles
->>    <not supported>	instructions
->>    <not supported>	branches
->>    <not supported>	branch-misses
->>
->> The reason is that the check in x86_pmu_hw_config for sampling event is
->> unexpectedly applied to the counting event.
->>
->> Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
->> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
->> ---
->>  arch/x86/events/core.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 6866cc5acb0b..3a4f031d2f44 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
->>  	if (event->attr.type == event->pmu->type)
->>  		event->hw.config |= x86_pmu_get_event_config(event);
->>  
->> -	if (!event->attr.freq && x86_pmu.limit_period) {
->> +	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
-> 
-> Hm, so how come it works here, on an affected x86 system:
-> 
-> $ perf stat -- sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->               0.64 msec task-clock:u                     #    0.001 CPUs utilized             
->                  0      context-switches:u               #    0.000 /sec                      
->                  0      cpu-migrations:u                 #    0.000 /sec                      
->                 73      page-faults:u                    #  114.063 K/sec                     
->            325,849      instructions:u                   #    0.56  insn per cycle            
->                                                   #    0.88  stalled cycles per insn   
->            580,323      cycles:u                         #    0.907 GHz                       
->            286,348      stalled-cycles-frontend:u        #   49.34% frontend cycles idle      
->             72,623      branches:u                       #  113.474 M/sec                     
->              4,713      branch-misses:u                  #    6.49% of all branches           
-> 
-> 
-> ?
 
-It doesn't affect all X86 platforms. It should only impact the platforms
-with limit_period used for the non-pebs events. For Intel platforms, it
-should only impact some older platforms, e.g., HSW, BDW and NHM.
+Tested this patch by applying on tip HEAD: 
+7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d and it fixes the reported 
+issue. Hence,
 
-For other platforms, the x86_pmu.limit_period is invoked. But the left
-is not updated. So it still equals to event->attr.sample_period.
-It doesn't error out.
 
-	if (!event->attr.freq && x86_pmu.limit_period) {
-		s64 left = event->attr.sample_period;
-		x86_pmu.limit_period(event, &left);
-		if (left > event->attr.sample_period)
-			return -EINVAL;
-	}
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-Thanks,
-Kan
+
+Before Patch:
+
+
+Below warning is observed at the start of compilation.
+
+
+diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
+
+
+  CC      util/ordered-events.o
+   CC      util/namespaces.o
+In file included from util/amd-sample-raw.c:12:
+/root/tip/tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: 
+fatal error: asm/msr-index.h: No such file or directory
+    10 | #include <asm/msr-index.h>
+       |          ^~~~~~~~~~~~~~~~~
+compilation terminated.
+   CC      util/comm.o
+make[4]: *** [/root/tip/tools/build/Makefile.build:86: 
+util/amd-sample-raw.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+
+
+After Patch:
+
+
+Reproted warning is fixed.
+
+
+   CC      util/bpf-filter-flex.o
+   LD      util/perf-util-in.o
+   LD      perf-in.o
+   LD      perf-util-in.o
+   AR      libperf-util.a
+   LINK    perf
+   GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
+
+# ./perf version
+perf version 6.15.rc3.g477fb4e08521
+
+
+Regards,
+
+Venkat.
 
