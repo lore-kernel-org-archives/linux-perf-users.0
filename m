@@ -1,96 +1,155 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BEC17A2EA;
-	Thu, 24 Apr 2025 18:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7D728F52B
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 18:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745519547; cv=none; b=XHrrVKPwMXPQh84kH8T7KwdTfuFQU04F5iA9eVKUbG6rt/m2TqWws8sCaH/aKfo176sNb7M35WtjW2Q/fsX26y2VFhxmbRas5CR0E7AQ1gWCiWihceavuwnUI88LPXz8BdEKUgYS+G6o67VUnA2fnRC1RJrYpSZTs9wL7Eg8kJw=
+	t=1745519586; cv=none; b=Bnk5Y1OMqN70Tg3LC5NxhGUBmFoyxOQHSy/RwIqZS3CQH3iVZoUqtRbmUCIcgjpeDWtkM8LkYOiy1twkeS816ZXxbBZhQqICLCKLZ3YvWtmdoSx8EK+5GREhCyB6uiXNXThvT5A0eEJl6IDR0RAiMu3w5xXFJsRT0LQcnhXJSmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745519547; c=relaxed/simple;
-	bh=PWqxGBqm0mCFstmnd0YfHIQW/zhHYQTqpo3ZPTNavlg=;
+	s=arc-20240116; t=1745519586; c=relaxed/simple;
+	bh=yTqO1U4NNGcPPghDlKDlpq2q5FXSu6lS8+cwxigBGUQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BfvjknpMxrx97pF1nx9QpExAJR+K0D+ayNlWg8lpRI3rRzTGk8R41K7eqMAmDV/sP+BEk4t+EybsKLk3nIYtUGiBkRhVY10KS+eXWGaUjo/kAe5ByLK8QLjh5L77MEmOJUyRlinpVTmLox3vpP5MX62nGvMalgUdVobio5Qj+48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FqcdLgoW; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=WgV3fZFz/I0Av0pDsZe/ha1pA1tPUjvMCsS12wOhEa5JDyKr4CzVSm7zizTrSfX/c2vPzuwAkiRj+CGKEt6CCDkIm8eIpCsApDcGZnlDbuGU/8exko/VgzJXBWv2tgWCgjtnBQu+j+gorjFG2NWGTyB8iVzIjv6evdogK/ixjWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xIP7Qpvg; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqcdLgoW"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22792ef6215so2693085ad.2;
-        Thu, 24 Apr 2025 11:32:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xIP7Qpvg"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6ecfc7ed0c1so13774406d6.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 11:33:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745519544; x=1746124344; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745519583; x=1746124383; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PWqxGBqm0mCFstmnd0YfHIQW/zhHYQTqpo3ZPTNavlg=;
-        b=FqcdLgoWEYnc56GsqNrTs7eH/uc/Qa8BBB6DpnFEh1oETstUTsXjG/DODsJdQYcIPc
-         HJ/83N5fczaOpE8uZwrv5/8mB5RjGTPcLgFfqMTTS9zc61AFqaVL7eZd2QYixJhyUpUd
-         zoRFkcd8a6jKygGsgx2P2XZaqHAxMZXvkJj6UCaJQVKuiCfWjAjKsczMLSllOrUsXy7D
-         j9sUxAisBKr69QsBjaAPbWtJQQaepZv3NuHdYysN3TcDN9wg745sgS341NDGw/iBEDzG
-         P4+EB9JVvtt49lawyH/vGsDlLl6tAaDv+BR84huc3GNAIJNRxOXjeA/dtu4N9svZXuVG
-         AVXA==
+        bh=nZLDFPYYERChhwGiLV1V4ti0sf1HZ45rpQN9Kgve63o=;
+        b=xIP7Qpvgb8Dd0lshlQX4/LwxbIylyv66vVHa3WKR5R1ph3wzS4ZeAGJjPkyfFYUzwn
+         pVRFHPZzOFvx+KgaDb2ZJrUkXVbeEvJUxQwL1WCCdc7pVDZExnIWz2PD+O7HPKVTbAaM
+         5Nr+TANF0eueBNC2IBIR2dZqfXrybfIhAONltCJF81B4ypkGlOFD3FVWI/J94SpnjTNI
+         Bl9H2ABcv0IDCg+9F2isBnbo4akYlScEEuAr+KV2wKRPlX2p4Il9sWjdgn9hhSTi4Z51
+         xTB7kg2StYG6CMlM4dfAoT1uvhEvEbXnmW7C7+su5XWqPFBMT1CL1sC4zLHoMvQs9yGD
+         i55w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745519544; x=1746124344;
+        d=1e100.net; s=20230601; t=1745519583; x=1746124383;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PWqxGBqm0mCFstmnd0YfHIQW/zhHYQTqpo3ZPTNavlg=;
-        b=QIAlP58KiBeW+XP0ImsuxSUJTJhyefAPbtitu7W3dmTpeJi6lgADPr0jgidypWQihi
-         XtLa0lNd0bBuJQl8hPRuzbGlyMapztdvyRXM5wJWRS6hgPocgLP1oHytR1YdKKkmKZHY
-         y8F3IurgOalJRSXkPyhW/238aoBjSMOnZNKor38wRoQ9QIDv1NpMTgfmr1nvkoEKdWkL
-         kC2fgmU6QzLwgTQjwOyG96xZ5wFQIeRGC4ncp4dxjcCwbsQwQMGGAecdZwzRQUkIYCHE
-         0f2uPa/OXi37rrBT+2XSDtdApB98oxp6ttT+Q6O0q0Gc91b4QBZCoHeEjooJ/Z6sSRL0
-         Tc+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3HVowxeaqmZ99gLIP/oYa+U3NrDXn9DD07ZaPWjtBK4WyXjAnPLUJxbet4foqk4w3830GOHxYtX0ybEHh9v6LnQ==@vger.kernel.org, AJvYcCXFnbDdQI1VLA6m0TlTxYT4Ry4K8wSE7NN7+DfyvON0OsFJ8O+0otSpXMuuv7QnhwsiLnZZks50x5Zp//4NN6uTE4eW@vger.kernel.org, AJvYcCXLv2Q+o0NTZ2E2EKjmFATU8/dn3VJarcGcHz6y6tFBaG1ELI4vc80CnTA3MhK+QHedtH4Yf1UZ7Hng2ebIIjor@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywi3gj1UseIaehn7UJStsvSYrg1pAG0cBOT1E9Zx/c+izWDGuT
-	PYqkiSXsKLqpehb7Nn7FO5al0dp43+N0Y50PTDsXfBJf03QEsHB8wQykuo//8L90fvmFs/lLAMC
-	bVrjmww+O2OaOs01EgOVIaDhjBtg=
-X-Gm-Gg: ASbGnctn4qrirknnoMBUbWklaWqkgBLBYptpaP8oDXFfD+CUKg+ArW1S5Ly5dAG9YaW
-	NP/+JQf0iIwPeeQcn8ewXbA9K9sRcKOPEAxNl8u254X5TBg5CNLh4qIVoHP8L2/TadIMQb74Jfx
-	kstjDImjn8jMyUP0FPKvAU4w==
-X-Google-Smtp-Source: AGHT+IHkC9ZwDM9ltxXoIZCTN6bwJ1VBYzoPMAvs9wAeWzPstnX0Yne0+vn7j6P5wRtymjuIHqUokJmcuZSEbMjh4L8=
-X-Received: by 2002:a17:902:d589:b0:224:1579:b347 with SMTP id
- d9443c01a7336-22db3c31011mr20288065ad.7.1745519544529; Thu, 24 Apr 2025
- 11:32:24 -0700 (PDT)
+        bh=nZLDFPYYERChhwGiLV1V4ti0sf1HZ45rpQN9Kgve63o=;
+        b=dVfH5ekfSDpbuiCnE59T0xYWbPri6tRNcoHs+IjrIo5tIQ56dxpy/WAbJnqVKAIcc2
+         CK7VDmBYb7xAleXFfeZIszpC3C0STK3szQeT5f2ZHN5gsScb8tgNGjmS2vl2hIRm5xVk
+         Crz38WHYS48lU6d4ZKZWejRp4sqJHlnLeACaQ3Knv5a5qQ91dG2mqRKEQ7yytvk4OEpv
+         TwN4LQgcWf3olPlSlLJZUQY5bYENmKmmuEfKjwm9xU1J3j06xCprjtvmx1vbySqelCIi
+         sAEKODdX+LiDSA3gJF4Dvv4T/gh+8ppZ41fXhYggETdl7S08YYpLB9WmKENjQhWTl+AA
+         CfKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvTOsSJOKEB65GAUfEnuuxXne3MHN1Mp3SML94FHfejDP3DztAto5gy2Kf27loYVfDJNzp7/HON+1Z7H+lJOp+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKl7+50JFMajfMJf3Zcb563A3wUzpTfRjC8SE8bi6z691+u2hk
+	1NRrVWs+wY0fR32X7O0kd/04zjmkwyUXo0aeCqk2LfcntfW/WBNkuKjgdBqcPFkHFn+hIH65tJa
+	os/42N4Dnk7z7gzh5F233QVwljjipeugENcw=
+X-Gm-Gg: ASbGnct1F/sPNxqUCC2ooY5C1cQfESN7VBEh7SlNXHdCbTqYB2WSPPkVfmoGSXypKp0
+	wNsDUQUm3SIzNMx6vgNtWOY9srcPm/f7n/PUIlgUo0TJ2mFDiukH12WZg8Z+kABojQ7St6HukJv
+	8bN84zGfEzPbZUQLC7nURgEvpTGrFN6MF7aI7Mqygz1+eGGyKkH7ALzGw=
+X-Google-Smtp-Source: AGHT+IEQy8HLY9L1xq1buozzz2mjfrB7q7OHv76jqVScfSv3yY42ZW1q86tGFEOQmX5exFFK+eIU1yfKiVx6TSLc6Rw=
+X-Received: by 2002:ad4:5ba2:0:b0:6f2:a886:7c6d with SMTP id
+ 6a1803df08f44-6f4bfbc963bmr60071466d6.3.1745519583247; Thu, 24 Apr 2025
+ 11:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424162529.686762589@goodmis.org> <20250424130421.53877e58@gandalf.local.home>
-In-Reply-To: <20250424130421.53877e58@gandalf.local.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 24 Apr 2025 20:32:10 +0200
-X-Gm-Features: ATxdqUHOhToA3p4S9cpP8XMX_ZAHvboSK1v3e9z9JkTdMKBJR5K7p4zsCrv7jgg
-Message-ID: <CANiq72kG5-qZ2TopNx_AxYoB65XP7vHaNiUv4jh+w6MCrAnfbA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/17] perf: Deferred unwinding of user space stack traces
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
-	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, 
-	Blake Jones <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>
+References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-3-yabinc@google.com>
+ <20250422142102.GI28953@e132581.arm.com> <CALJ9ZPNKZU7nVLyodN5i7GeRxWL6KzkXnqEJMv2sJkk2SwYi9Q@mail.gmail.com>
+ <b002574d-e993-4b06-87f7-54bd01dfa500@arm.com>
+In-Reply-To: <b002574d-e993-4b06-87f7-54bd01dfa500@arm.com>
+From: Yabin Cui <yabinc@google.com>
+Date: Thu, 24 Apr 2025 11:32:51 -0700
+X-Gm-Features: ATxdqUFZ5Rgkz0Uy3iPfdZn7rATtAi2L_ZiNJkBFnMe_eiVY_i8WBoCCOZy6iHc
+Message-ID: <CALJ9ZPOBUc1wkQXVgjU-4w6r8c27uv4YxzKkfgEQdqtNJbVt9Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] coresight: etm-perf: Add AUX_NON_CONTIGUOUS_PAGES to
+ cs_etm PMU
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 7:02=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
+On Thu, Apr 24, 2025 at 4:29=E2=80=AFAM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
 >
-> Lovely, gmail doesn't like my email :-p
+>
+>
+> On 4/24/25 01:31, Yabin Cui wrote:
+> > On Tue, Apr 22, 2025 at 7:21=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote=
+:
+> >>
+> >> On Mon, Apr 21, 2025 at 02:58:18PM -0700, Yabin Cui wrote:
+> >>> The cs_etm PMU, regardless of the underlying trace sink (ETF, ETR or
+> >>> TRBE), doesn't require contiguous pages for its AUX buffer.
+> >>
+> >> Though contiguous pages are not mandatory for TRBE, I would set the
+> >> PERF_PMU_CAP_AUX_NO_SG flag for it.  This can potentially benefit
+> >> performance.
+> >
+> > As explained in the patch 1/2, my use case periodically collects ETM da=
+ta
+> > from the field (using both TRBE and ETR), and needs to reduce memory
+> > fragmentation. If the performance impact is big, we can make it user
+> > configurable. Otherwise, shall we default it to non-contiguous pages?
+>
+> But is not that already happening ? cs_etm does not set the PMU cap
+> PERF_PMU_CAP_AUX_NO_SG that means it can allocate non-contig memory
+> chunk. Where am I missing ?
 
-Yeah, I had a moment ago 3 of your emails in my spam, so it seems it
-flagged them also for those getting it from a list.
+Although cs_etm doesn't set AUX_NO_SG flag, the perf component still prefer=
+s
+to allocate contiguous AUX pages for it. The new flag is to ask perf
+component to
+not allocate contiguous AUX pages.
 
-Cheers,
-Miguel
+>
+> >
+> >>
+> >> For non per CPU sinks, it is fine to allocate non-contiguous pages.
+> >>
+> >> Thanks,
+> >> Leo
+> >>
+> >>> This patch adds the PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES capability
+> >>> to the cs_etm PMU. This allows the kernel to allocate non-contiguous
+> >>> pages for the AUX buffer, reducing memory fragmentation when using
+> >>> cs_etm.
+> >>>
+> >>> Signed-off-by: Yabin Cui <yabinc@google.com>
+> >>> ---
+> >>>  drivers/hwtracing/coresight/coresight-etm-perf.c | 3 ++-
+> >>>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drive=
+rs/hwtracing/coresight/coresight-etm-perf.c
+> >>> index f4cccd68e625..c98646eca7f8 100644
+> >>> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> >>> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> >>> @@ -899,7 +899,8 @@ int __init etm_perf_init(void)
+> >>>       int ret;
+> >>>
+> >>>       etm_pmu.capabilities            =3D (PERF_PMU_CAP_EXCLUSIVE |
+> >>> -                                        PERF_PMU_CAP_ITRACE);
+> >>> +                                        PERF_PMU_CAP_ITRACE |
+> >>> +                                        PERF_PMU_CAP_AUX_NON_CONTIGU=
+OUS_PAGES);
+> >>>
+> >>>       etm_pmu.attr_groups             =3D etm_pmu_attr_groups;
+> >>>       etm_pmu.task_ctx_nr             =3D perf_sw_context;
+> >>> --
+> >>> 2.49.0.805.g082f7c87e0-goog
+> >>>
+> >>>
+> >
