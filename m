@@ -1,344 +1,203 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109FA25DCED
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 21:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327BF1FC0FE;
+	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617245; cv=none; b=JhBVE0AYVL3hIKwce/93CahZtPRenH6ci4gqKL1jhGfOAwl4EeB1OfKsedWicFAf4HaevclU12YutM7eCeNNfLTh6j3/gi3M9swfngHVhZa3M3v/cYDaB1KlmuEz+sWfU8LReT1kQFGN834rt+fMKY+Gs9BGiEoGEuslhy5qY4k=
+	t=1745617895; cv=none; b=WTudG5MfXPWxlU7BMearAWCuzvCnDCorq1UH4u3+zpzEqF1Y/p/BfyWofCtlZxmQRwAaqERe9rKrev6sfXwrDh1CtILiN3nF15ybAYTSrXEh3+kUtcpWpzPNsja5gtmOACczYpzsFLLWkipqC2yzW2wEaIuZhUaypvDy/w2DaY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617245; c=relaxed/simple;
-	bh=civL0ptmakP58BNTG6qRL/WfDNW9+VMZdvD44UQo1N4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=AeAPb3PkOIsmkWwZahN1AjnA2w8uu+eUnqquNeFSif6L1mXmcTz4Px/LRd6KgekkKuNAO9CZJwkUXOe0DQPd8iBHASQrQpQor2SLbIlkR0rgF7ubrMLuz2imyy5x9lLNO+uVRsy5hX5WhWf8zspwb9ARK3KKlRPkXz5/fOJ0590=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FZyxdf6v; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1745617895; c=relaxed/simple;
+	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bclAru4UwCn7m7fboBCpUxIIkwxD22+86eMlhTU7rGw59ucZ5vYWyupIl/fJq827hM7CwW5UAg0sW/GXAKMI83qsI591Aw14hd3sPLZWOWpEoe4N5Zt/4MGqkKfUW+2yxq0wvlDpR//T6WxDBsJfP6kdXK5NqrAhEkYgX2SHmZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXVu+k+l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FZyxdf6v"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-73720b253fcso2321424b3a.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 14:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745617242; x=1746222042; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PD/2gZzkdXqRjrGcRCMV5rPK+HPN6vuWAJ5aTNU/fMM=;
-        b=FZyxdf6vIfEcVTxzWPLDxtB/ss62ZbMaPY2EO74jLnfNzg1DDlsj0TzYY0eWgcS0O0
-         34U2bPtfXzFadLZSTDto9UqDc57O4a4S8yZ8iN2HXr/aVH8AGnzCp99bb3cZT927kP0y
-         bHaBmjFyTSi7BFhOoeivehYOrraMaoaQoEQBLltjaEAQVkIQR1tXB9s0rwBlPCdMcS+e
-         05Udm+ZGOOcGboOzABIdoN4g+wNFBe0nesHLEZ+mrw7NBEm/yT6QYQ5copaeHgH12dt5
-         lj7HcF1RAhuNaFJPwqxsu4bK6SWGsTaUsa+4HEfPCkuXStgUOw7Nr2Py9V1V0pvdFYNp
-         TC4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745617242; x=1746222042;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PD/2gZzkdXqRjrGcRCMV5rPK+HPN6vuWAJ5aTNU/fMM=;
-        b=RpDum86CZVCV2J8RmX81xNc7I2N9wJLzoXMnlyJoZMsgQIWBYS4UCGdbjKWXni/7AD
-         ku4l/SZejqpxIYKS0qJJtLHmF0/yps4EsNa2woX1Amjvuh0Dma01rcGjzINPJxsOGsNm
-         /L8dgDTxaYKFErdv0sTEk4XkJ8FStGqAeafc4XUNzmwITVFMn36HZM7n6zvbfxMuxSTJ
-         pqmhizV7cm8cFVZuAZU6bU04Lu9Fz5ZRrC9WDSvfDsRyK0RHOd9/LOXAKGvyy9ZQkFE/
-         VwbCwgD2pVfKuYSoOrsycnmAKM0MmWmuJULqXanjIIOIGwDSHA2JYjMmJaBbTw2DG5OD
-         EYgA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDwkiu/IpnaW6zH/g07Br3W6FXldWMrtujnFie5496qgVbYavtXnp4airGI1RpN6Ov80vYcPP2B2avxY/pSq7M@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX24zdXNW7moHF6wuFmSk2ogZIGqWjsAgwq1P62BZ0RiO6Vfd7
-	S07ZnhfvHTDA0XtLk8HmS29U4MSKU1njez6fD8fD5fZGHnExcveVOcyELelOM2nvuYBu+ULPceI
-	Aoq0lsw==
-X-Google-Smtp-Source: AGHT+IFCtEhRCBjDW2a8s4jRDfOQsUoZ7gsKizv5ygUaW1sjDqLjtvAoq2pOpHphbv7xIzozUy8B6xlFSZN6
-X-Received: from pgbee7.prod.google.com ([2002:a05:6a02:4587:b0:b16:7375:98d2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d8c:b0:1f5:8e04:f186
- with SMTP id adf61e73a8af0-2045b9c0068mr5774268637.35.1745617242379; Fri, 25
- Apr 2025 14:40:42 -0700 (PDT)
-Date: Fri, 25 Apr 2025 14:40:08 -0700
-In-Reply-To: <20250425214008.176100-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXVu+k+l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D4C4CEE4;
+	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745617893;
+	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cXVu+k+la7gq52onV+AVCt/AUgAofpFfu4riRWLuEAqy7dlYRVsMixSF3nuFrFLO1
+	 cgkHhux3Jt3RRShIOySpWH9teWmMV/x2BO5PwfL4MVTWe6hZlhzX5XwtDTpHHuFtYd
+	 0MyTnsJo5qNagQmi6guwSidwRKH27NPBgEEheaYPqCuc7g46F5I/M+fgahVOjw+LEF
+	 l2/clbpIjNwvW6o3nevfgYuRLarcYLETJtyvGr34F9rI8I3PXry3wEdLT4rLYBCLzv
+	 uM4AlfusDhMZTSE/svCo66iN1s1ej/tlEY6xy5F6zq6E/smYM506DtiuTBt4DDi2RT
+	 gRcF1NHQu8GbA==
+Date: Fri, 25 Apr 2025 14:51:30 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
+Message-ID: <aAwD4idaGnTiQ-ld@google.com>
+References: <20250326044001.3503432-1-namhyung@kernel.org>
+ <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
+ <aAkUyFjRFLkS170u@x1>
+ <aAkmY0hLXarmCSIA@google.com>
+ <aAlSqGN9Sx4x6_sI@x1>
+ <aAq16LWBIVr08iSe@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250425214008.176100-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250425214008.176100-11-irogers@google.com>
-Subject: [PATCH v3 10/10] perf thread_map: Remove uid options
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAq16LWBIVr08iSe@x1>
 
-Now the target doesn't have a uid, it is handled through BPF filters,
-remove the uid options to thread_map creation. Tidy up the functions
-used in tests to avoid passing unused arguments.
+Hi Arnaldo,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/event-times.c             |  4 +--
- tools/perf/tests/keep-tracking.c           |  2 +-
- tools/perf/tests/mmap-basic.c              |  2 +-
- tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
- tools/perf/tests/openat-syscall.c          |  2 +-
- tools/perf/tests/perf-time-to-tsc.c        |  2 +-
- tools/perf/tests/switch-tracking.c         |  2 +-
- tools/perf/tests/thread-map.c              |  2 +-
- tools/perf/util/evlist.c                   |  2 +-
- tools/perf/util/python.c                   | 10 +++----
- tools/perf/util/thread_map.c               | 32 ++--------------------
- tools/perf/util/thread_map.h               |  6 ++--
- 12 files changed, 20 insertions(+), 48 deletions(-)
+On Thu, Apr 24, 2025 at 07:06:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Apr 23, 2025 at 05:50:51PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
+> > > On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
+> > > > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >      syscall            calls  errors  total       min       avg       max       stddev
+> 
+> > > > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
+> > > > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
+> > > > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
+> > > > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
+> > > > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
+> > > > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
+> > > > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
+> > > > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
+> > > > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
+> > > > > >      ...
+> 
+> > > > I added the following to align sched_[gs]etaffinity,
+> 
+> > > Thanks for processing the patch and updating this.  But I'm afraid there
+> > > are more syscalls with longer names and this is not the only place to
+> > > print the syscall names.  Also I think we need to update length of the
+> > > time fields.  So I prefer handling them in a separate patch later.
+>  
+> > Fair enough, I'm leaving the patch as-is.
+> 
+> But, still have to look at this:
+> 
+> toolsbuilder@five:~$ time dm
+>    1   114.52 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-26) , clang version 18.1.8 (Red Hat 18.1.8-1.module_el8.10.0+3903+ca21d481) flex 2.6.1
+>    2   111.09 almalinux:9                   : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 18.1.8 (AlmaLinux OS Foundation 18.1.8-3.el9) flex 2.6.4
+>    3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
+> WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
+>    132.71 almalinux:9-i386              : Ok   gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3) , clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9) flex 2.6.4
+>    4    21.54 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
+>     bpf-trace-summary.c:(.text+0xf0760): undefined reference to `syscalltbl__name'
+>     collect2: error: ld returned 1 exit status
+>    5    16.50 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
+>     bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
+>     collect2: error: ld returned 1 exit status
+> 
+> More info:
+> 
+> perf-6.15.0-rc2/HEAD
+> perf-6.15.0-rc2/PERF-VERSION-FILE
+> BUILD_TARBALL_HEAD=24c0c35d4640052c61ed539a777bd3bd60d62bbf
+> Using built-in specs.
+> COLLECT_GCC=gcc
+> COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-alpine-linux-musl/12.2.1/lto-wrapper
+> Target: x86_64-alpine-linux-musl
+> Configured with: /home/buildozer/aports/main/gcc/src/gcc-12-20220924/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --target=x86_64-alpine-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-default-ssp --enable-languages=c,c++,d,objc,go,fortran,ada --disable-libssp --disable-libsanitizer --enable-shared --enable-threads --enable-tls --with-bugurl=https://gitlab.alpinelinux.org/alpine/aports/-/issues --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpine 12.2.1_git20220924-r4'
+> Thread model: posix
+> Supported LTO compression algorithms: zlib
+> gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
+> + make 'NO_LIBTRACEEVENT=1' 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf'
+> make: Entering directory '/git/perf-6.15.0-rc2/tools/perf'
+>   BUILD:   Doing 'make -j28' parallel build
+> Warning: Skipped check-headers due to missing ../../include
+> Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install libdebuginfod-dev/elfutils-debuginfod-client-devel or equivalent
+> Makefile.config:605: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
+> Makefile.config:1085: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+> Makefile.config:1128: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
+> Makefile.config:1159: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ OFF ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>   PERF_VERSION = 6.15.rc2.g24c0c35d4640
+>   GEN     /tmp/build/perf/common-cmds.h
+>   GEN     /tmp/build/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+>   GEN     perf-archive
+>   GEN     perf-iostat
+> <SNIP>
+>   CC      /tmp/build/perf/util/bpf-filter-flex.o
+>   LD      /tmp/build/perf/util/perf-util-in.o
+>   LD      /tmp/build/perf/perf-util-in.o
+>   AR      /tmp/build/perf/libperf-util.a
+>   CC      /tmp/build/perf/pmu-events/pmu-events.o
+>   LD      /tmp/build/perf/pmu-events/pmu-events-in.o
+>   AR      /tmp/build/perf/libpmu-events.a
+>   LINK    /tmp/build/perf/perf
+>   GEN     /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so
+> /usr/lib/gcc/x86_64-alpine-linux-musl/12.2.1/../../../../x86_64-alpine-linux-musl/bin/ld: /tmp/build/perf/libperf-util.a(perf-util-in.o): in function `print_common_stats':
+> bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
+> collect2: error: ld returned 1 exit status
+> make[2]: *** [Makefile.perf:804: /tmp/build/perf/perf] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> make: *** [Makefile:76: all] Error 2
+> make: Leaving directory '/git/perf-6.15.0-rc2/tools/perf'
+> + exit 1
+> toolsbuilder@five:~$ 
+> 
+> I'll take a look tomorrow.
 
-diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
-index 2148024b4f4a..ae3b98bb42cf 100644
---- a/tools/perf/tests/event-times.c
-+++ b/tools/perf/tests/event-times.c
-@@ -62,7 +62,7 @@ static int attach__current_disabled(struct evlist *evlist)
+Thanks for the report.  I think it's because syscalltbl.c depends on
+CONFIG_TRACE but bpf-trace-summary depends on CONFIG_PERF_BPF_SKEL.
+
+In the future, I'd like to get rid of dependency to libtraceevent in
+perf trace and make it possible to use BPF/BTF only.
+
+How about this?
+
+Thanks,
+Namhyung
+
+
+---8<---
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 4f00cde8c3ea63eb..7ae5b4b9330af0ce 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -173,9 +173,12 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
+-perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
  
- 	pr_debug("attaching to current thread as disabled\n");
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("thread_map__new\n");
- 		return -1;
-@@ -88,7 +88,7 @@ static int attach__current_enabled(struct evlist *evlist)
- 
- 	pr_debug("attaching to current thread as enabled\n");
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("failed to call thread_map__new\n");
- 		return -1;
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index 5a3b2bed07f3..eafb49eb0b56 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -78,7 +78,7 @@ static int test__keep_tracking(struct test_suite *test __maybe_unused, int subte
- 	int found, err = -1;
- 	const char *comm;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	CHECK_NOT_NULL__(threads);
- 
- 	cpus = perf_cpu_map__new_online_cpus();
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index bd2106628b34..04b547c6bdbe 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -46,7 +46,7 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
- 	char sbuf[STRERR_BUFSIZE];
- 	struct mmap *md;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("thread_map__new\n");
- 		return -1;
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index fb114118c876..3644d6f52c07 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -28,7 +28,7 @@ static int test__openat_syscall_event_on_all_cpus(struct test_suite *test __mayb
- 	struct evsel *evsel;
- 	unsigned int nr_openat_calls = 111, i;
- 	cpu_set_t cpu_set;
--	struct perf_thread_map *threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	struct perf_thread_map *threads = thread_map__new_by_tid(getpid());
- 	char sbuf[STRERR_BUFSIZE];
- 	char errbuf[BUFSIZ];
- 
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index 131b62271bfa..b54cbe5f1808 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -20,7 +20,7 @@ static int test__openat_syscall_event(struct test_suite *test __maybe_unused,
- 	int err = TEST_FAIL, fd;
- 	struct evsel *evsel;
- 	unsigned int nr_openat_calls = 111, i;
--	struct perf_thread_map *threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	struct perf_thread_map *threads = thread_map__new_by_tid(getpid());
- 	char sbuf[STRERR_BUFSIZE];
- 	char errbuf[BUFSIZ];
- 
-diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-index d3e40fa5482c..d4437410c99f 100644
---- a/tools/perf/tests/perf-time-to-tsc.c
-+++ b/tools/perf/tests/perf-time-to-tsc.c
-@@ -90,7 +90,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	struct mmap *md;
- 
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	CHECK_NOT_NULL__(threads);
- 
- 	cpus = perf_cpu_map__new_online_cpus();
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 8df3f9d9ffd2..96f880c922d1 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -351,7 +351,7 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
- 	const char *comm;
- 	int err = -1;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (!threads) {
- 		pr_debug("thread_map__new failed!\n");
- 		goto out_err;
-diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-index 1fe521466bf4..54209592168d 100644
---- a/tools/perf/tests/thread-map.c
-+++ b/tools/perf/tests/thread-map.c
-@@ -115,7 +115,7 @@ static int test__thread_map_remove(struct test_suite *test __maybe_unused, int s
- 	TEST_ASSERT_VAL("failed to allocate map string",
- 			asprintf(&str, "%d,%d", getpid(), getppid()) >= 0);
- 
--	threads = thread_map__new_str(str, NULL, 0, false);
-+	threads = thread_map__new_str(str, /*tid=*/NULL, /*all_threads=*/false);
- 	free(str);
- 
- 	TEST_ASSERT_VAL("failed to allocate thread_map",
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 86b11ffc09b7..ba9e69b5acba 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1005,7 +1005,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
- 	 * per-thread data. thread_map__new_str will call
- 	 * thread_map__new_all_cpus to enumerate all threads.
- 	 */
--	threads = thread_map__new_str(target->pid, target->tid, UINT_MAX, all_threads);
-+	threads = thread_map__new_str(target->pid, target->tid, all_threads);
- 
- 	if (!threads)
- 		return -1;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index f3c05da25b4a..56f8ae4cebf7 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -566,14 +566,14 @@ struct pyrf_thread_map {
- static int pyrf_thread_map__init(struct pyrf_thread_map *pthreads,
- 				 PyObject *args, PyObject *kwargs)
- {
--	static char *kwlist[] = { "pid", "tid", "uid", NULL };
--	int pid = -1, tid = -1, uid = UINT_MAX;
-+	static char *kwlist[] = { "pid", "tid", NULL };
-+	int pid = -1, tid = -1;
- 
--	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|iii",
--					 kwlist, &pid, &tid, &uid))
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ii",
-+					 kwlist, &pid, &tid))
- 		return -1;
- 
--	pthreads->threads = thread_map__new(pid, tid, uid);
-+	pthreads->threads = thread_map__new(pid, tid);
- 	if (pthreads->threads == NULL)
- 		return -1;
- 	return 0;
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index b5f12390c355..ca193c1374ed 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -72,7 +72,7 @@ struct perf_thread_map *thread_map__new_by_tid(pid_t tid)
- 	return threads;
- }
- 
--static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
-+static struct perf_thread_map *thread_map__new_all_cpus(void)
- {
- 	DIR *proc;
- 	int max_threads = 32, items, i;
-@@ -98,15 +98,6 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 		if (*end) /* only interested in proper numerical dirents */
- 			continue;
- 
--		snprintf(path, sizeof(path), "/proc/%s", dirent->d_name);
--
--		if (uid != UINT_MAX) {
--			struct stat st;
--
--			if (stat(path, &st) != 0 || st.st_uid != uid)
--				continue;
--		}
--
- 		snprintf(path, sizeof(path), "/proc/%d/task", pid);
- 		items = scandir(path, &namelist, filter, NULL);
- 		if (items <= 0) {
-@@ -157,24 +148,11 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 	goto out_closedir;
- }
- 
--struct perf_thread_map *thread_map__new_all_cpus(void)
--{
--	return __thread_map__new_all_cpus(UINT_MAX);
--}
--
--struct perf_thread_map *thread_map__new_by_uid(uid_t uid)
--{
--	return __thread_map__new_all_cpus(uid);
--}
--
--struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid)
-+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid)
- {
- 	if (pid != -1)
- 		return thread_map__new_by_pid(pid);
- 
--	if (tid == -1 && uid != UINT_MAX)
--		return thread_map__new_by_uid(uid);
--
- 	return thread_map__new_by_tid(tid);
- }
- 
-@@ -289,15 +267,11 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
- 	goto out;
- }
- 
--struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid,
--				       uid_t uid, bool all_threads)
-+struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid, bool all_threads)
- {
- 	if (pid)
- 		return thread_map__new_by_pid_str(pid);
- 
--	if (!tid && uid != UINT_MAX)
--		return thread_map__new_by_uid(uid);
--
- 	if (all_threads)
- 		return thread_map__new_all_cpus();
- 
-diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
-index 00ec05fc1656..fc16d87f32fb 100644
---- a/tools/perf/util/thread_map.h
-+++ b/tools/perf/util/thread_map.h
-@@ -11,13 +11,11 @@ struct perf_record_thread_map;
- struct perf_thread_map *thread_map__new_dummy(void);
- struct perf_thread_map *thread_map__new_by_pid(pid_t pid);
- struct perf_thread_map *thread_map__new_by_tid(pid_t tid);
--struct perf_thread_map *thread_map__new_by_uid(uid_t uid);
--struct perf_thread_map *thread_map__new_all_cpus(void);
--struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid);
-+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid);
- struct perf_thread_map *thread_map__new_event(struct perf_record_thread_map *event);
- 
- struct perf_thread_map *thread_map__new_str(const char *pid,
--		const char *tid, uid_t uid, bool all_threads);
-+		const char *tid, bool all_threads);
- 
- struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str);
- 
--- 
-2.49.0.850.g28803427d3-goog
++ifeq ($(CONFIG_TRACE),y)
++  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
++endif
++
+ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
+ endif
 
