@@ -1,65 +1,67 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E314E22D4DC
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 06:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA404414;
+	Fri, 25 Apr 2025 06:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745563925; cv=none; b=QNGkYkRQXe5hTOIeD5yN4vxdH5bUHb2ZN0tA6YF3sua03pkX6ut1yd89jUnJotT3aLy9S/ZyvbzahndRmhIdiCXv4gvG8/ObF2HdZNaxZp86G7X16m21MG/uo6Zt38KZDXrH4+hkQhIlqSQUuE5kL6ylOdxNUYogNjbByf8Vh9k=
+	t=1745564365; cv=none; b=EllsvdodCTEBOSn84EGqMpwtdEjFIST6B5qRzsbGeoHVs3uNj1XVlIdxZuUb6dz2pN1MI/s+37pFz5QRzpOnbJr/lys/30xwFtBLpaadBRp3+t48Z8B9BHZoUYkNLLCJ+X+KRNxf5RNc0q5WoV6XbL8Wo4gy+gQWYldGlIcMaNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745563925; c=relaxed/simple;
-	bh=0MiSnhd6LKI51whYJ6+YCfOKtkOaJi9qq1W8mhQmh9U=;
+	s=arc-20240116; t=1745564365; c=relaxed/simple;
+	bh=A7zkNKvQB6u5H1frJaZ3QunxIoyKnq8PvZ/di23pP8E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D+wlA+Jfee+1UyfGqVEwO2xoIjOmo2DtGJzDgL2Yrq3J9NepaP8geZnvaGY1JkkTk1lCnTq984svZ43EbL0//LULedO9WEHyWafmQcD82bU40MfvMi/FG43Hmw0CFLT59MtgiIHPBFd6vxiz27suruPlYYiGR2MfAzoY/LByxE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fnqWZbK2; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=qc1xcZFxLlYnPhHDenUbgZBgE4KQRNYdti5igd6NTORqR+I2JmT5OaLdMgPx3ZeTev0i4mjT62zRFZ4XWztCQpRK1/zofrtGlC2DVSxDmBsKZs4vTH0LmzTp0XlCjt9iQ6lpoy9A4PA0wn1WxHjm0uIKV2XmLjaHoJdgpuzolm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=m8q9qI7R; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fnqWZbK2"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso1960579a12.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 23:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745563921; x=1746168721; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0MiSnhd6LKI51whYJ6+YCfOKtkOaJi9qq1W8mhQmh9U=;
-        b=fnqWZbK2i0YmxcoOG0zwYb2a+Njrm2KAMK3IjjE1hPI9ahskxAWKUBtirzYV6c+1Mt
-         jxWOh6pW767U7EP6Po6NN5DiXU1Z1Nowi7LrxATJMxITfv1slAYE2ND/SpU4nZ54BNtX
-         Lx8mHhZiVSap73rMiTrKIBz15BtR/zpl0Okzwhpgrys1yPYT86foBDxeyla6u+WiWv3o
-         qPPL74heDQIiUk2hIQqSy+2LushrU49hnuQUHqtArTw56zf5n3jC3yFha72iYsnYR5rE
-         UqKeN2QipdaeFdsC+Z/cXLpzmNk9VpjiHhVCeRYiAYM82uWkWRec2fKNCwyAGDtJR1Td
-         IEKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745563921; x=1746168721;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0MiSnhd6LKI51whYJ6+YCfOKtkOaJi9qq1W8mhQmh9U=;
-        b=LAF2EAc602MR2V6xCkzyLqCb2sWtGVS3d2kk5CLBuVnlVhIjBmXE19oaNMLRFeyoET
-         dxo5s0ua+7NQdSCmvBqVTIQdZ+WL7hgm0I1e0UCgG92OWL+xM1T7iyZzecVPSi9OXasm
-         klj5R1Y3tpWuxUuL602bPz7ZTVQJ13hxVjwTKjt2vJ4z8T1kv2jPEPz0M2Q6P/Uw/kjn
-         yYshmN7jVWH91RlecgLKk+4cqIq0/DZN+oQ/2uGRahUZMRw/ZzitCcx4dtMq9+cjnSz3
-         ydXfi4BWpoKiWn7hDxiX2is+NhInwJEXY9NbENahaMyNITgqN1JcvwQCOIG8gj4Ylmma
-         BTRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXr2Zw1xrsDWiWuX9J6Abr9szdeCHXpt/iSG9Jwjhds9mXwflwm3IKAj3WjTVRzCKb32VmSrepMZAA8UDHrcSL4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxtIImWpjyoeojMhte3Ub7QIHfC9Tx4eysNMo1lVW75NvIigAu
-	ChOJPm0LoGB1NmUhRKvDdKhWBJXIXq69fInuY4tuUM7RZUiEpKM0CsxzPrTqDDQ=
-X-Gm-Gg: ASbGncun7H1I0NIuahiycXZFtnusxb85LxIqMDekHLW0T6Gnmy6atlN7vcqkxMDqhzB
-	VaSTe55jk8UWFNv1X2k56YWB2CJKWk8D/WGZTp0OJW6aeSwpQYBjPn+PBcfnmpVswk33Wr1O3BX
-	r66/ZhxUI+a311l3R5fMtZmgEjmFaidPxiioS09rfSApZvvlmB36LA+hFP6gijJfNeZOYV1hd2v
-	S9i6Ab7iLDzn/wEmogu+CjliDDa8DWaQaS4k80fHoYrwe0av0lEpZ/cKCoLrviR715Yeb2+6fW6
-	kmzOWpyIaKc8kEt3w6YKO/Gs1qmlpvPHs2u1Go/+7PG0Sfyh+bHhVrrcgNnEWr7Y+UuLXQC/kLv
-	8yCn0Qa/QKqHEJAbnCnXaBPhAKtc1Iw6RHDkY32B1dnBNLR+le4gawYfsehHKwKnlRQ==
-X-Google-Smtp-Source: AGHT+IH6tRnHb03g3T3b9xd39ZFziT14G1AusaxT67r9u6w2KcJuEH4Jv4x/SdvY9ic/HmRGz4GAmQ==
-X-Received: by 2002:a17:907:1c18:b0:aca:a162:8707 with SMTP id a640c23a62f3a-ace71025d83mr100133966b.7.1745563921096;
-        Thu, 24 Apr 2025 23:52:01 -0700 (PDT)
-Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f703831b5csm794913a12.65.2025.04.24.23.51.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 23:52:00 -0700 (PDT)
-Message-ID: <0825ae04-6545-424d-ad01-3a5fda36ad86@suse.com>
-Date: Fri, 25 Apr 2025 08:51:58 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="m8q9qI7R"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OL4NtM002532;
+	Fri, 25 Apr 2025 06:58:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=TRhqbD
+	67z9XvmRFQN2yKg1Ib2zMzYiTPqDsaG9k6XLg=; b=m8q9qI7RmWtdn6jhYibpFj
+	rUqVlJ0akLjbuVqVQQCFJaSCBYWgei6uEWPm8AN9tCpiaW+swqD0Ef3HEHFsJd62
+	76rNHc4QQF2oQeUNPA2JWeRRNB3Mhrc39YeqDxa3zO967gD3kSQLlh8V07Qku7i7
+	l2zD+W/AhZe0xjeFogaIlpfdO83MD8/pzFcKSD0HGJbg5U66xDnIcKNKGix1cce3
+	kwRRrmMytYLnCeByaP3W7MGf4WTKFmWn/vFBupV5prXop6YK+B9BPMYvfSJKTV57
+	J1SiOyNlRhvN6eGSB7+ghfIwAj+7mD7bxW8Q+Q1g4PQylxCRirilfJyvMJaBN87Q
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467vvkswkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 06:58:56 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53P6wtse022579;
+	Fri, 25 Apr 2025 06:58:55 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467vvkswka-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 06:58:55 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53P3xI5a028447;
+	Fri, 25 Apr 2025 06:58:54 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvv01d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 06:58:54 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53P6wpje30868164
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 06:58:52 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D9C7758055;
+	Fri, 25 Apr 2025 06:58:51 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6696F5804B;
+	Fri, 25 Apr 2025 06:58:45 +0000 (GMT)
+Received: from [9.61.252.26] (unknown [9.61.252.26])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 25 Apr 2025 06:58:45 +0000 (GMT)
+Message-ID: <d11b2740-d484-4fcf-8296-80e93ef534f2@linux.ibm.com>
+Date: Fri, 25 Apr 2025 12:28:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,228 +69,245 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-To: "H. Peter Anvin" <hpa@zytor.com>, Xin Li <xin@zytor.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
- linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
- <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
- <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
- <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
- <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
- <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------T4ZWz9eXqhqS8XTZKkH4szjE"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------T4ZWz9eXqhqS8XTZKkH4szjE
-Content-Type: multipart/mixed; boundary="------------aDhkvWpyJ2mqrcVlzpHJ5Lh0";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: "H. Peter Anvin" <hpa@zytor.com>, Xin Li <xin@zytor.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
- linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <0825ae04-6545-424d-ad01-3a5fda36ad86@suse.com>
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
- <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
- <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
- <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
- <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
- <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
-In-Reply-To: <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
-
---------------aDhkvWpyJ2mqrcVlzpHJ5Lh0
-Content-Type: multipart/mixed; boundary="------------zlSHc0vaMFKhZ0dLG0JUBad0"
-
---------------zlSHc0vaMFKhZ0dLG0JUBad0
+Subject: Re: [PATCH] perf build: Add tools/arch/x86/include/asm/amd/ibs.h to
+ sync the headers
+Content-Language: en-GB
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Athira Rajeev <atrajeev@linux.ibm.com>, jolsa@kernel.org,
+        adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com,
+        jiang.peng9@zte.com.cn, Tejas.Manhas1@ibm.com, sshegde@linux.ibm.com,
+        sfr@canb.auug.org.au, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        ravi.bangoria@amd.com, bp@alien8.de
+References: <20250424163033.6601-1-atrajeev@linux.ibm.com>
+ <16bee348-2b41-4337-85c8-8a6d2719e99b@linux.ibm.com> <aAqB6kI5mDp4bxY9@x1>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <aAqB6kI5mDp4bxY9@x1>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA0NyBTYWx0ZWRfXxKioVV0C0UhC TAqyHKuAWOuw71w+ovLckblGdA69anb68RWrig9PQWCdkma9B/+As6dR82LavF3T8lphzn8+LR8 7CHb+6syPkyaix10Ka/CsErmPd8h6JaIOAND9kO0WNch9/fplReqeKd39t8w3ZCwsC8P0FhmV0v
+ btu8qjiFTMzDkMAJrnJ90LqhuVzra/XeX2Lf2MsD2RBrK78Rj4tzSbOtak55iUWcgyxUkuarEzl OENk5jkjffZi44kjSejFE1EgUA8fsYZSKtDXlVwj9DSEJvl/l/bHF9CTOh6sBMbmHDRYA0TmO0+ /ruVaNxaSLJL2+ggFWVrW/lz5VWPsYMnsNdOFXRFxZ4NZl3IdE+3M/RpOer4JE5in6RncVY8hZ2
+ vVzYw/HJkOAK9pmBaDrTqRv+IiYCK3ErhEjSbHrYdRNE7uxMsQ1ivhUDJAlziwFhc8NbQ7f4
+X-Proofpoint-ORIG-GUID: bA5O8ybd1YYa84ySleW6v5WOi1z1V4vV
+X-Proofpoint-GUID: pmgqd089mNEFfh4hnCCxUkWvw90Bwq1-
+X-Authority-Analysis: v=2.4 cv=HoF2G1TS c=1 sm=1 tr=0 ts=680b32b0 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=Oh2cFVv5AAAA:8 a=VnNF1IyMAAAA:8 a=LpQ4EuG3LMeFR_QAhVYA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=7KeoIwV6GZqOttXkcoxL:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250047
 
-T24gMjUuMDQuMjUgMDM6MTUsIEguIFBldGVyIEFudmluIHdyb3RlOg0KPiBPbiA0LzI0LzI1
-IDAxOjE0LCBKw7xyZ2VuIEdyb8OfIHdyb3RlOg0KPj4+DQo+Pj4gQWN0dWFsbHksIHRoYXQg
-aXMgaG93IHdlIGdldCB0aGlzIHBhdGNoIHdpdGggdGhlIGV4aXN0aW5nIGFsdGVybmF0aXZl
-cw0KPj4+IGluZnJhc3RydWN0dXJlLsKgIEFuZCB3ZSB0b29rIGEgc3RlcCBmdXJ0aGVyIHRv
-IGFsc28gcmVtb3ZlIHRoZSBwdl9vcHMNCj4+PiBNU1IgQVBJcy4uLg0KPj4NCj4+IEFuZCB0
-aGlzIGlzIHdoYXQgSSdtIHF1ZXN0aW9uaW5nLiBJTUhPIHRoaXMgYXBwcm9hY2ggaXMgYWRk
-aW5nIG1vcmUNCj4+IGNvZGUgYnkgcmVtb3ZpbmcgdGhlIHB2X29wcyBNU1JfQVBJcyBqdXN0
-IGJlY2F1c2UgInB2X29wcyBpcyBiYWQiLiBBbmQNCj4+IEkgYmVsaWV2ZSBtb3N0IHJlZnVz
-YWwgb2YgcHZfb3BzIGlzIGJhc2VkIG9uIG5vIGxvbmdlciB2YWxpZCByZWFzb25pbmcuDQo+
-Pg0KPiANCj4gcHZvcHMgYXJlIGEgaGVhZGFjaGUgYmVjYXVzZSBpdCBpcyBlZmZlY3RpdmVs
-eSBhIHNlY29uZGFyeSBhbHRlcm5hdGl2ZXMgDQo+IGluZnJhc3RydWN0dXJlIHRoYXQgaXMg
-aW5jb21wYXRpYmxlIHdpdGggdGhlIGFsdGVybmF0aXZlcyBvbmUuLi4NCg0KSHU/IEhvdyBj
-YW4gdGhhdCBiZSwgYXMgcHZfb3BzIGlzIHVzaW5nIG9ubHkgYWx0ZXJuYXRpdmVzIGluZnJh
-c3RydWN0dXJlDQpmb3IgZG9pbmcgdGhlIHBhdGNoaW5nPw0KDQpJJ2Qgc2F5IHRvZGF5IHB2
-X29wcyBpcyBhIGNvbnZlbmllbmNlIHdyYXBwZXIgYXJvdW5kIGFsdGVybmF0aXZlcy4NCg0K
-PiANCj4+PiBJdCBsb29rcyB0byBtZSB0aGF0IHlvdSB3YW50IHRvIGFkZCBhIG5ldyBmYWNp
-bGl0eSB0byB0aGUgYWx0ZXJuYXRpdmVzDQo+Pj4gaW5mcmFzdHJ1Y3R1cmUgZmlyc3Q/DQo+
-Pg0KPj4gV2h5IHdvdWxkIHdlIG5lZWQgYSBuZXcgZmFjaWxpdHkgaW4gdGhlIGFsdGVybmF0
-aXZlcyBpbmZyYXN0cnVjdHVyZT8NCj4gDQo+IEknbSBub3Qgc3VyZSB3aGF0IFhpbiBtZWFu
-cyB3aXRoICJmYWNpbGl0eSIsIGJ1dCBhIGtleSBtb3RpdmF0aW9uIGZvciB0aGlzIGlzIHRv
-Og0KPiANCj4gYS4gQXZvaWQgdXNpbmcgdGhlIHB2b3BzIGZvciBNU1JzIHdoZW4gb24gdGhl
-IG9ubHkgcmVtYWluaW5nIHVzZXIgdGhlcmVvZiAoWGVuKSANCj4gaXMgb25seSB1c2luZyBp
-dCBmb3IgYSB2ZXJ5IHNtYWxsIHN1YnNldCBvZiBNU1JzIGFuZCBmb3IgdGhlIHJlc3QgaXQg
-aXMganVzdCANCj4gb3ZlcmhlYWQsIGV2ZW4gZm9yIFhlbjsNCj4gDQo+IGIuIEJlaW5nIGFi
-bGUgdG8gZG8gd3Jtc3JucyBpbW1lZGlhdGUvd3Jtc3Jucy93cm1zciBhbmQgcmRtc3IgaW1t
-ZWRpYXRlL3JkbXNyIA0KPiBhbHRlcm5hdGl2ZXMuDQo+IA0KPiBPZiB0aGVzZSwgKGIpIGlz
-IGJ5IGZhciB0aGUgYmlnZ2VzdCBtb3RpdmF0aW9uLiBUaGUgYXJjaGl0ZWN0dXJhbCBkaXJl
-Y3Rpb24gZm9yIA0KPiBzdXBlcnZpc29yIHN0YXRlcyBpcyB0byBhdm9pZCBhZCBob2MgYW5k
-IFhTQVZFUyBJU0EgYW5kIGluc3RlYWQgdXNlIE1TUnMuIFRoZSANCj4gaW1tZWRpYXRlIGZv
-cm1zIGFyZSBleHBlY3RlZCB0byBiZSBzaWduaWZpY2FudGx5IGZhc3RlciwgYmVjYXVzZSB0
-aGV5IG1ha2UgdGhlIA0KPiBNU1IgaW5kZXggYXZhaWxhYmxlIGF0IHRoZSB2ZXJ5IGJlZ2lu
-bmluZyBvZiB0aGUgcGlwZWxpbmUgaW5zdGVhZCBvZiBhdCBhIA0KPiByZWxhdGl2ZWx5IGxh
-dGUgc3RhZ2UuDQoNCkkgdW5kZXJzdGFuZCB0aGUgbW90aXZhdGlvbiBmb3IgYiksIGJ1dCBJ
-IHRoaW5rIHRoaXMgY291bGQgYmUgYWNoaWV2ZWQgd2l0aG91dA0KYSkgcmF0aGVyIGVhc2ls
-eS4gQW5kIEkgY29udGludWUgdG8gYmVsaWV2ZSB0aGF0IHlvdXIgcmVhc29uaW5nIGZvciBh
-KSBpcyBiYXNlZA0Kb24gb2xkIGZhY3RzLiBCdXQgbWF5IGJlIEknbSBqdXN0IG5vdCB1bmRl
-cnN0YW5kaW5nIHlvdXIgY29uY2VybnMgd2l0aCB0b2RheSdzDQpwdl9vcHMgaW1wbGVtZW50
-YXRpb24uDQoNCg0KSnVlcmdlbg0K
---------------zlSHc0vaMFKhZ0dLG0JUBad0
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On 24/04/25 11:54 pm, Arnaldo Carvalho de Melo wrote:
+> On Thu, Apr 24, 2025 at 10:39:56PM +0530, Venkat Rao Bagalkote wrote:
+>> On 24/04/25 10:00 pm, Athira Rajeev wrote:
+>> Tested this patch by applying on tip HEAD:
+>> 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d and it fixes the reported issue.
+> This is just a long list of characters, can you please next time provide
+> something like, humm, tip/head, not really:
+>
+> ⬢ [acme@toolbx perf-tools-next]$ git remote -v | grep tip
+> tip	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (fetch)
+> tip	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (push)
+> ⬢ [acme@toolbx perf-tools-next]$ git remote update tip
+> Fetching tip
+> ⬢ [acme@toolbx perf-tools-next]$ git show 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
+> fatal: bad object 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
+> ⬢ [acme@toolbx perf-tools-next]$
+>
+> So please add the summary, that way we can try to figure out if this is
+> a rebase and they look for the description instead of this sha1 that I'm
+> not finding even after doing a 'git remore update tip'.
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+Apolozies for the confusion.
 
---------------zlSHc0vaMFKhZ0dLG0JUBad0--
+The commit ID I shared was from the repo: 
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.
 
---------------aDhkvWpyJ2mqrcVlzpHJ5Lh0--
+# git log
+commit 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d (HEAD -> master)
+Merge: 1e4babe52c11 e396dd85172c
+Author: Ingo Molnar <mingo@kernel.org>
+Date:   Tue Apr 22 14:42:13 2025 +0200
 
---------------T4ZWz9eXqhqS8XTZKkH4szjE
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+     Merge branch into tip/master: 'x86/sev'
 
------BEGIN PGP SIGNATURE-----
+      # New commits in x86/sev:
+         e396dd85172c ("x86/sev: Register tpm-svsm platform device")
+         93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
+         b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
+         770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command 
+functions")
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgLMQ4FAwAAAAAACgkQsN6d1ii/Ey8v
-GAf8CiwnPQUGDuLTROoGEGEZYhZNiIuP6NpPgDIjznR04WHQqCKmSKzSJU9bRnXelOjMGbYovqK5
-H/4ovrb5WrWiSib6UbfpZkkgEJi/2YSoXppYhG4sNDnhRSUrFBREETgpfTokr0tYEvX/ZZYrx+nV
-RVCKKt9kWmHh3+v0+SzR5AfexZ5c13gqdsYhMKlYu49q82NdjjrwXF6F/WHahWchlhxv2LElrYO+
-K7zm4YOjDOn3F04XKVSHqBfQsO5J6ZKHLbow+YnWjYIo5B4GlUGkd6xRmxrTXd7cvqwGxJ9urozi
-pw9xdCBracc183w0319kUg4l8bsZ35Ynel8AymEH+w==
-=pOyC
------END PGP SIGNATURE-----
+     Signed-off-by: Ingo Molnar <mingo@kernel.org>
 
---------------T4ZWz9eXqhqS8XTZKkH4szjE--
+
+I have freshly cloned the repo from 
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/ and issue 
+is seen here also. I have applied the patch on top of this, and issue is 
+resolved.
+
+
+Additional info regarding the environment:
+
+
+git log
+
+commit 0c6ae66ef164c408daeab6a61aace4b86010369a (HEAD -> master, 
+origin/master, origin/HEAD)
+Merge: b6e62c063f84 e396dd85172c
+Author: Ingo Molnar <mingo@kernel.org>
+Date:   Thu Apr 24 20:20:18 2025 +0200
+
+     Merge branch into tip/master: 'x86/sev'
+
+      # New commits in x86/sev:
+         e396dd85172c ("x86/sev: Register tpm-svsm platform device")
+         93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
+         b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
+         770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command 
+functions")
+
+     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+
+git branch
+* master
+
+
+git remote show origin
+* remote origin
+   Fetch URL: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
+   Push  URL: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
+   HEAD branch: master
+   Remote branches:
+     auto-latest           tracked
+     core/build            tracked
+     core/core             tracked
+     core/debugobjects     tracked
+     core/documentation    tracked
+     core/entry            tracked
+     core/headers          tracked
+     core/kprobes          tracked
+     core/merge            tracked
+     core/mm               tracked
+     core/rcu              tracked
+     core/static_call      tracked
+     core/urgent           tracked
+     efi/core              tracked
+     efi/urgent            tracked
+     irq/core              tracked
+     irq/drivers           tracked
+     irq/msi               tracked
+     irq/urgent            tracked
+     locking/core          tracked
+     locking/debug         tracked
+     locking/futex         tracked
+     locking/header        tracked
+     locking/kcsan         tracked
+     locking/nmi           tracked
+     locking/rcuref        tracked
+     locking/rwsem         tracked
+     locking/urgent        tracked
+     locking/wwmutex       tracked
+     master                tracked
+     objtool/core          tracked
+     objtool/urgent        tracked
+     perf/core             tracked
+     perf/kprobes          tracked
+     perf/merge            tracked
+     perf/urgent           tracked
+     perf/vlbr             tracked
+     ras/core              tracked
+     ras/merge             tracked
+     ras/urgent            tracked
+     rcu/urgent            tracked
+     sched/arm64           tracked
+     sched/core            tracked
+     sched/eevdf           tracked
+     sched/fifo            tracked
+     sched/migrate-disable tracked
+     sched/psi             tracked
+     sched/rt              tracked
+     sched/smp             tracked
+     sched/urgent          tracked
+     smp/core              tracked
+     smp/urgent            tracked
+     timers/cleanups       tracked
+     timers/clocksource    tracked
+     timers/core           tracked
+     timers/merge          tracked
+     timers/nohz           tracked
+     timers/ptp            tracked
+     timers/urgent         tracked
+     timers/vdso           tracked
+     tip/tip               tracked
+     tip/urgent            tracked
+     x86/acpi              tracked
+     x86/alternatives      tracked
+     x86/apic              tracked
+     x86/asm               tracked
+     x86/boot              tracked
+     x86/bugs              tracked
+     x86/build             tracked
+     x86/cache             tracked
+     x86/cc                tracked
+     x86/cleanups          tracked
+     x86/core              tracked
+     x86/cpu               tracked
+     x86/entry             tracked
+     x86/fpu               tracked
+     x86/fred              tracked
+     x86/fsgsbase          tracked
+     x86/headers           tracked
+     x86/hyperv            tracked
+     x86/irq               tracked
+     x86/kaslr             tracked
+     x86/kconfig           tracked
+     x86/kdump             tracked
+     x86/merge             tracked
+     x86/microcode         tracked
+     x86/misc              tracked
+     x86/mm                tracked
+     x86/msr               tracked
+     x86/mtrr              tracked
+     x86/nmi               tracked
+     x86/paravirt          tracked
+     x86/pasid             tracked
+     x86/percpu            tracked
+     x86/platform          tracked
+     x86/sev               tracked
+     x86/seves             tracked
+     x86/sgx               tracked
+     x86/shstk             tracked
+     x86/splitlock         tracked
+     x86/tdx               tracked
+     x86/timers            tracked
+     x86/urgent            tracked
+     x86/vdso              tracked
+     x86/vmware            tracked
+   Local branch configured for 'git pull':
+     master merges with remote master
+   Local ref configured for 'git push':
+
+     master pushes to master (fast-forwardable)
+
+
+Regards,
+
+Venkat.
+
+>   
+>> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>
+> Thanks,
+>
+> - Arnaldo
