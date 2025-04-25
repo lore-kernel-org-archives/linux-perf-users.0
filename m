@@ -1,135 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2CE13633F;
-	Fri, 25 Apr 2025 15:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDCC12C544
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 16:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595937; cv=none; b=G7x8Ax74kaDgySNTz5Jlsoih9DAeesVDV66WKndj0XUSO+RllSNntMUVYDSLa5i68Tbb4T8uuyDJoHabqy8efQq5m4AeMzLe+mc3Dl+hLeb15HsD4Um3tI0O5/FlygD8jPpITqN8RsR+EUCtw3dVl0Oh16WLh9W21VH+Elda+Eg=
+	t=1745596890; cv=none; b=BdsJjTFp4CY+dVXKEDuOvEui3jRduKQA8+iIAu89oNsjsSEyZHU/klBD4FpJ5iy/1GLNwjqqw+isMht0eUpLPcrCvE8X8VNf1C2FvXUrZnl4BQrPJZhLeK5/Cq1lRGr44qoyh5yQVPcdF/3EJGKZSXMWp7OsH/Ke+fGxp5tbpUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595937; c=relaxed/simple;
-	bh=NDEMzXyKMQaX/1P4v8LWPCUwLdyUYFm0Z5j9i1NuUNc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oURIrzB+ARE3FVQLxz8dnOYU14uCYJjSvVX3nqn4tRxl4sqIg0d9GcdrQHWP+8ijFC1LA/zQonMzi39gEDovU/vlRJprrAMSpCqMIjZbdqwKMDMh4/q7CcalYhhgFQ/04fC+JnOFHmm7ZJ6T/QR933JkOJ7LdY0XGkJrf978+fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dRNB0hzB; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745596890; c=relaxed/simple;
+	bh=NM8corU8iG3XSLf0jLK81K8WAxwZt1U/2PMRRRV5dg4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJavKeWEe4vm2b0BtCcwRAFO5cguGBhxjxb1uHc8L0dl0kKXJPQyQHRPbz1Nl6CkMEhcdl+VkjsBgXMA+Bl4YA4W7YKQrvJXbs94vTeEPAzD31alJIUs2g/qS9ggkfeGE4i7utoag4ERTJuG0CnA9pxHBUIZqnYwqh3A0jkok/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aSKEvCe8; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dRNB0hzB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745595936; x=1777131936;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NDEMzXyKMQaX/1P4v8LWPCUwLdyUYFm0Z5j9i1NuUNc=;
-  b=dRNB0hzB9VSEVZTN6uSQdKcHqikDg35+hrmD9RswM0sJg7VLq7vXflvN
-   L1reVIaspl2ar5jsCDPfpN7akAbFhLGghWw+pCn19pxVTEbDg12AsoN6N
-   O6iyX/zUQKQvZtktFX2jk7eJYafaN86bT+ROFbbafcHQha1t0OhXLKs5p
-   W4k/Hcovc41OunM9OT7Hr9Q1XDHwhBS6NIRM9c6ZZzzY4mdcLEvIudGeo
-   UYRwmAL+8O3spijxoiIPhcZNqx2AO5dl0pJegz89Q+YcbAn4diomQZ1Jc
-   hAlzIA8q1wKOcSE2RV7O6gnp0NSBmt5HQG7wN/HZr61mIeUmmbAlXpmwn
-   w==;
-X-CSE-ConnectionGUID: 7bCgJpPqRiefXyfn2jXtMQ==
-X-CSE-MsgGUID: bMKMOgZ8RAGO3vxuOpGwsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="50928849"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="50928849"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:45:35 -0700
-X-CSE-ConnectionGUID: zVyTiGS+Tp27oRIuRu3o/Q==
-X-CSE-MsgGUID: FTR+bshYRAKz5gvHmp9NIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133870388"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:45:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Apr 2025 18:45:18 +0300 (EEST)
-To: "Xin Li (Intel)" <xin@zytor.com>
-cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
-    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
-    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
-    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
-    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
-    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-    dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to
- <asm/tsc.h>
-In-Reply-To: <20250425083442.2390017-2-xin@zytor.com>
-Message-ID: <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
-References: <20250425083442.2390017-1-xin@zytor.com> <20250425083442.2390017-2-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aSKEvCe8"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d5bc35ed3aso220805ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 09:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745596888; x=1746201688; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s4Q5enwWy2Bh63PX2HWpj7DvEc9JEml5VEzzEfbUzYM=;
+        b=aSKEvCe8RVmWpaC6iTJpgnCvgKAmWffDCUb8i893jo326z1TGqVb8STmeAXpQN9bUJ
+         jx6v5Nf4QA7YCa79cJWKuUqj3/cgKZ6xYDLV0ktoGboewwBkEJunSE1opAfPZPLS7Vct
+         bBQozQFIhNrLp0In568c7AVSy2IFMFdWWSolPTQvT1AATSXJXOKkWNsgYAlEOGR5NYmz
+         +AAnY+wZi3EFXdGbdw0qPLJ0gU6n39ZjUUJr8wIlJFEXBIzFCRb/pJTJBNNr9KpB8Tbi
+         TRz2GrsYjtK5lK01aUXbYKuZ0z8tGSPnocR/eFdvweEd/HiY2fu/tYcWDSfKPurO1Kg0
+         RnLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745596888; x=1746201688;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s4Q5enwWy2Bh63PX2HWpj7DvEc9JEml5VEzzEfbUzYM=;
+        b=kpwT7hFDG6LEFG17ZA0wOIUEf5vdBVWPecgfTvrAOebBZ8aFhpPU7azrkV8e3r204+
+         GOLgP2Kn8/VU/rii8+XJ0pXTQk427riQT5OOSvuxpf8vYbCScPTlImnWQYH3BrFtX387
+         MdKaI0yrT1Hen1SeGw8XofZ7c2/toYUGUH7tE04U9oswlwfunxYMNfve5P5T6kkqdYka
+         +NMnhLfl7w3BCIYwMATEFsng28ZkLC+LB2LOnQNCdVIlxbAJtmVgvZbOsSDiwLVC9+o+
+         SBAWk5aGQrJ+WWLIaDxAUPpu0T4smlmZJKYpM2lazSAh73WBQlsu7TrcPaS2Sd/DQNU7
+         rldA==
+X-Forwarded-Encrypted: i=1; AJvYcCUt59bVtBpVN8EwzZgfItKsvOHpBTcZ1GzTm37Hp8m1uBiA6+sM0htKQM9vJ/ETO9537dmT7r+Jp34F4RcZTrjJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+gILnmOpnDw4ADfzzu1O8gJKfy35b02fU9CneGKJ2T8l+byj+
+	qF98JY0FRabsARgdEURi4gGXjw7zwS9KIHqrapItDjXZeGlZPihquIUoqRnAp3VeQN7d3XPBM1V
+	SgIqgGHl3tchSuof9Nun7LwiP1gnyZig5HnYu
+X-Gm-Gg: ASbGncvDBvA7mYSL7/utAQ3oek+0juFvjrt3EWP9WAttiLxpuJSHPRMGSU1n+tghdZ8
+	Jw3MW8au+i9pdxfYUpxWlyM+9VVmkZREM62SYBoYP5l9tm9L7Kfs285XSxwMEoHutWtgv1ZQG9p
+	vN1azhwMriA2wXN7Akcn6Vihw=
+X-Google-Smtp-Source: AGHT+IH3aEe2XhyQ8kQeASDAcTJLkKqPyqPR9OvyFpipcyath5p0woO8oV98VdbziVnpYPoTM8/N3ge+6eljADCuHI4=
+X-Received: by 2002:a05:6e02:1a2f:b0:3d2:b23f:a1e0 with SMTP id
+ e9e14a558f8ab-3d93982329emr3740865ab.16.1745596887809; Fri, 25 Apr 2025
+ 09:01:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250424195831.1767457-1-irogers@google.com> <20250424195831.1767457-3-irogers@google.com>
+ <aAumWUWXB05qLez6@x1>
+In-Reply-To: <aAumWUWXB05qLez6@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 25 Apr 2025 09:01:15 -0700
+X-Gm-Features: ATxdqUFawm7sW-e1SCW6vhRWPwY3DGm8LO4BtVMxeRdcSpC5bUntlT1ZcNSG0lk
+Message-ID: <CAP-5=fU-+r8VcGPXGYmzei=S6-Uqqy2Y77eVK89q6fEBHSyEEw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] perf jitdump: Directly mark the jitdump DSO
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	James Clark <james.clark@linaro.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
+	=?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 25 Apr 2025, Xin Li (Intel) wrote:
-
-> For some reason, there are some TSC-related functions in the MSR
-> header even though there is a tsc.h header.
-> 
-> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
-> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
-> Consequently, <asm/msr.h> must be included in several source files
-> that previously did not require it.
+On Fri, Apr 25, 2025 at 8:12=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
-> 
-> Change in v3:
-> * Add a problem statement to the changelog (Dave Hansen).
-> ---
+> On Thu, Apr 24, 2025 at 12:58:25PM -0700, Ian Rogers wrote:
+> > The DSO being generated was being accessed through a thread's maps,
+> > this is unnecessary as the dso can just be directly found. This avoids
+> > problems with passing a NULL evsel which may be inspected to determine
+> > properties of a callchain when using the buildid DSO marking code.
+>
+> And this patch had to be moved after:
+>
+> "perf dso: Move build_id to dso_id"
+>
+> As it uses fields that were introduced there.
 
->  drivers/platform/x86/intel/pmc/cnp.c          |  1 +
->  .../intel/speed_select_if/isst_if_common.c    |  1 +
->  drivers/platform/x86/intel/turbo_max_3.c      |  1 +
+Sorry for that, my mistake.
 
-Hi,
+Thanks,
+Ian
 
-To me this looks really a random set of source files, maybe it helped some 
-build success but it's hard for me to review this because there are still 
-cases that depend on indirect include chains.
-
-Could you just look into solving all missing msr.h includes instead 
-as clearly some are still missing after 3 pre-existing ones and you adding 
-it into 3 files:
-
-$ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
-drivers/platform/x86/intel/ifs/core.c
-drivers/platform/x86/intel/ifs/load.c
-drivers/platform/x86/intel/ifs/runtest.c
-drivers/platform/x86/intel/pmc/cnp.c
-drivers/platform/x86/intel/pmc/core.c
-drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
-drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-drivers/platform/x86/intel/tpmi_power_domains.c
-drivers/platform/x86/intel/turbo_max_3.c
-drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-drivers/platform/x86/intel_ips.c
-
-$ git grep -e 'msr.h' -l drivers/platform/x86/
-drivers/platform/x86/intel/pmc/core.c
-drivers/platform/x86/intel/tpmi_power_domains.c
-drivers/platform/x86/intel_ips.c
-
-I'd also prefer the patch(es) adding missing includes be in a different 
-patch.
-
--- 
- i.
-
+> Thanks,
+>
+> - Arnaldo
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/jitdump.c | 21 +++++++++++++++++----
+> >  1 file changed, 17 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> > index 624964f01b5f..b062b1f234b6 100644
+> > --- a/tools/perf/util/jitdump.c
+> > +++ b/tools/perf/util/jitdump.c
+> > @@ -14,9 +14,9 @@
+> >  #include <sys/mman.h>
+> >  #include <linux/stringify.h>
+> >
+> > -#include "build-id.h"
+> >  #include "event.h"
+> >  #include "debug.h"
+> > +#include "dso.h"
+> >  #include "evlist.h"
+> >  #include "namespaces.h"
+> >  #include "symbol.h"
+> > @@ -531,9 +531,22 @@ static int jit_repipe_code_load(struct jit_buf_des=
+c *jd, union jr_entry *jr)
+> >       /*
+> >        * mark dso as use to generate buildid in the header
+> >        */
+> > -     if (!ret)
+> > -             build_id__mark_dso_hit(tool, event, &sample, NULL, jd->ma=
+chine);
+> > -
+> > +     if (!ret) {
+> > +             struct dso_id dso_id =3D {
+> > +                     {
+> > +                             .maj =3D event->mmap2.maj,
+> > +                             .min =3D event->mmap2.min,
+> > +                             .ino =3D event->mmap2.ino,
+> > +                             .ino_generation =3D event->mmap2.ino_gene=
+ration,
+> > +                     },
+> > +                     .mmap2_valid =3D true,
+> > +                     .mmap2_ino_generation_valid =3D true,
+> > +             };
+> > +             struct dso *dso =3D machine__findnew_dso_id(jd->machine, =
+filename, &dso_id);
+> > +
+> > +             if (dso)
+> > +                     dso__set_hit(dso);
+> > +     }
+> >  out:
+> >       perf_sample__exit(&sample);
+> >       free(event);
+> > --
+> > 2.49.0.850.g28803427d3-goog
