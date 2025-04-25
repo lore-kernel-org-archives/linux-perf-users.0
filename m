@@ -1,71 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1F926981E;
-	Fri, 25 Apr 2025 15:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C582741C2;
+	Fri, 25 Apr 2025 15:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593798; cv=none; b=fWkLRnOtU4byc9aDyPSx254yJ6b8JHrjYPfMx2xipqcSU7q6zONGYDVbmG1Lw1LT7S926xysWOu9vsbxEBEZQ3luDADkpC0Y02ad4ZM3f1rTWydZ/Wyj/lKj8rwOPvBxboPFX/CKeVTBchS/lFUERACSH+nXQR/lA2HpTxP42t4=
+	t=1745593948; cv=none; b=PvmaX/xkC7akXJvKYZPZ7VXM+Q5z14dAYE7tNVleNGOba0gzP2B5m3BcGyyuYgISq3ptDOH8CklJ3WRP8+n6pwKSnWkDsjBdcwvuJAQikOvFGmK6T14j5uw4cvpUA7q8lwf43CZ1tcIls3bNcSYAlGxsgqn985eCkoYiAn/3/OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593798; c=relaxed/simple;
-	bh=EIBrRW6pSpT48bOHI0PJpzhoy9SNKaPDbB33zZhg9zM=;
+	s=arc-20240116; t=1745593948; c=relaxed/simple;
+	bh=k2dlEjW6bN02EsPsXZP+WGuAK1XkqzdWBG/Yeze9+j8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J188aStFCa5ux6PeYaiD+ld//sgjXpT8d3qw3PfSYSMo+d1tPWETpJj6i10I6Wt9TjqM+R8abSKBo6co/wiyhlXC7CL97gKAyULeUrukNXEJjJKoZuH2FOE2QgN+Sk2i6VVr1KmkJpey+8fzzquAFN2OnAuzLi3H+b1NXmfT6c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppB35Oe/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajBVi08jST8f9Z3ScJFtGgAj7kW0Raxj8GjUdQkYigYPRISoGm9OB9mLsgwgvToJ1GzXAPK+1u2UxllUGE/+F+JgTVSjOTBvQfMdp86pAspn/MvAYxZFw60O+L4WEN1prlrRkHe28AC0bzcovLlSvTnTGXlcHwXfFeR47u6gdeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPu5hOPv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppB35Oe/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20ABCC4CEE4;
-	Fri, 25 Apr 2025 15:09:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPu5hOPv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D668AC4CEE8;
+	Fri, 25 Apr 2025 15:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745593798;
-	bh=EIBrRW6pSpT48bOHI0PJpzhoy9SNKaPDbB33zZhg9zM=;
+	s=k20201202; t=1745593948;
+	bh=k2dlEjW6bN02EsPsXZP+WGuAK1XkqzdWBG/Yeze9+j8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ppB35Oe/DmhNr2hEVw/NY+7HiZtvS/xyR2bqhIizqs4G9DxLEmqa9a99XaTPKNKi1
-	 zGQFCrU4DXoGOnanl9SzoJt5U3yaKrcS2lygDpaIIOAahn4EX/amkLBsF3BKeGQpey
-	 R4QZrf68zhVdYsWL+K2gIsVRj9Bjp5NTJe/RS56QEzeUNDU/LAy2b+N9i7ROC8+7v3
-	 egcuaW7eYCutf67+ask/AHtTjUYHKYPR3m0K2gnN29T0TL6/x+z0ewJ10EHEMmAvvz
-	 2hGMytBcCZM7ApZB1cGV9QDNi2uO2SpKuu3iALuK+501kxyzikkeSs+NfNkliqC4WQ
-	 9JhlSBvoXAZxA==
-Date: Fri, 25 Apr 2025 08:09:55 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, 
-	Blake Jones <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
-Subject: Re: [PATCH v6 11/18] perf: Use current->flags & PF_KTHREAD instead
- of current->mm == NULL
-Message-ID: <2fjdalrdgadbt6kmv7wgbc2vs42ojkwh2vj6yfwlttmoo2rijs@5gtrvow66g7m>
-References: <20250425145422.132820147@goodmis.org>
- <20250425145813.518795213@goodmis.org>
+	b=WPu5hOPvekUKrQ8NrtZfaTIhpMWEA58RcxLRWr/rEG8Am2Ienbfqm0UECzivtl3M7
+	 j9DZu54zUgRiRRcqJdTD39IsJYXFDJskuxktOj3VisE6ykt3bqQ/+LeLr+NDrr6AFD
+	 Gus0XSgED4bjV3vYLHtuUDoK7a6qNYmuZHNBd32RGgtzouzZz06f+D/LtVBePdb9WN
+	 5VOruMAKK+3OxnSW50ZgIHn9rZfej92CwhivqHeewasZH6CpvL0uU4J6F0qTvYi6S+
+	 pNbAIIPnvQT2/6jYL7/kYlbrJTUJbYrznd/sSdFhUPUx9ssnF0J1hUc9zQ9ja4u1HZ
+	 Kn+JibzISQe3Q==
+Date: Fri, 25 Apr 2025 12:12:25 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Martin Liska <martin.liska@hey.com>,
+	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] perf jitdump: Directly mark the jitdump DSO
+Message-ID: <aAumWUWXB05qLez6@x1>
+References: <20250424195831.1767457-1-irogers@google.com>
+ <20250424195831.1767457-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425145813.518795213@goodmis.org>
+In-Reply-To: <20250424195831.1767457-3-irogers@google.com>
 
-On Fri, Apr 25, 2025 at 10:54:33AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Apr 24, 2025 at 12:58:25PM -0700, Ian Rogers wrote:
+> The DSO being generated was being accessed through a thread's maps,
+> this is unnecessary as the dso can just be directly found. This avoids
+> problems with passing a NULL evsel which may be inspected to determine
+> properties of a callchain when using the buildid DSO marking code.
+
+And this patch had to be moved after:
+
+"perf dso: Move build_id to dso_id"
+
+As it uses fields that were introduced there.
+
+Thanks,
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/jitdump.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 > 
-> To determine if a task is a kernel thread or not, it is more reliable to
-> use (current->flags & PF_KTHREAD) than to rely on current->mm being NULL.
-> That is because some kernel tasks (io_uring helpers) may have a mm field.
-
-There's a current->mm check in the user space unwinder (patch 1) which
-should probably also be converted.
-
--- 
-Josh
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index 624964f01b5f..b062b1f234b6 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -14,9 +14,9 @@
+>  #include <sys/mman.h>
+>  #include <linux/stringify.h>
+>  
+> -#include "build-id.h"
+>  #include "event.h"
+>  #include "debug.h"
+> +#include "dso.h"
+>  #include "evlist.h"
+>  #include "namespaces.h"
+>  #include "symbol.h"
+> @@ -531,9 +531,22 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+>  	/*
+>  	 * mark dso as use to generate buildid in the header
+>  	 */
+> -	if (!ret)
+> -		build_id__mark_dso_hit(tool, event, &sample, NULL, jd->machine);
+> -
+> +	if (!ret) {
+> +		struct dso_id dso_id = {
+> +			{
+> +				.maj = event->mmap2.maj,
+> +				.min = event->mmap2.min,
+> +				.ino = event->mmap2.ino,
+> +				.ino_generation = event->mmap2.ino_generation,
+> +			},
+> +			.mmap2_valid = true,
+> +			.mmap2_ino_generation_valid = true,
+> +		};
+> +		struct dso *dso = machine__findnew_dso_id(jd->machine, filename, &dso_id);
+> +
+> +		if (dso)
+> +			dso__set_hit(dso);
+> +	}
+>  out:
+>  	perf_sample__exit(&sample);
+>  	free(event);
+> -- 
+> 2.49.0.850.g28803427d3-goog
