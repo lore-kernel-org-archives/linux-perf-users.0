@@ -1,29 +1,29 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F4025771
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 03:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E120025771
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 03:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745552337; cv=none; b=Vfyxsb+0yGh39p/OocBlZ8SWSlfPdUKKBx3fux8nAsfZRrL5RUjK2ByHDLjDbov6xklc9oFIKBbdPe5CjHE2Npn29t0cWetuJkqJHsFdJMw7cVIlWPotJyMJtnz4gQ4as6wgSH7dK0YWdEmnIwxjWxCG5c5/IWRLqCvnGiaShdA=
+	t=1745552342; cv=none; b=AcPQ761VU6VS5pXzlFJMDHUz+Wgyq0UHcWxLdFSWiJmJp5o7pbQgYV6Kzd0wWAHDvFv7SgCIt2m1HzVgOSCvMdlLetlxuKmkAzbQiH0NjS7T54XC3FfkLtPyHYLG64+7kmntncJ6bzeKePzSbNfXn/h3/7fJDwIHODPDECZ2FyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745552337; c=relaxed/simple;
-	bh=BA+o1hcUfrzxXTGlLhXLfMbHHmpGEJu5eBeRv16P4ys=;
+	s=arc-20240116; t=1745552342; c=relaxed/simple;
+	bh=TdZHNpWN2e6+Ex1ELjsshhfDM2wAAMmvAeEkq6//Bq8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YuiBo1h1p0zs7/af9xoAenUT69PMnfw2nZy8lpPQLIOaCEVMK0Gt6/kkmS0UEk5BDBkQtCCzUiwoLvK4E+svWA9/FSmuT9KUxW/x7HSYZt3FJ92XVFfigVBolF5GS6DRvnogU9QZGutQT34ri5NfasR8RJvOk4bO+HAlyG6NN4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 MIME-Version:Content-Type; b=O4RbYUs4IMfTgwhQAqWcwkmlM/pbijO7Evd8txEHrwTbKAafuv1XHvg3mJw8kSwOUap9zMuTqGFXESeJVrmeMCiwrZlodKeLwGmMb3eWEQo4tBPUNfW+y9icFY3zeLwA7dWb9LCHVeaBabxNPCRsV1lODrYxKgAkvT2zVRYli60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZkJTj3DZ6z1j5tv;
-	Fri, 25 Apr 2025 11:38:33 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZkJSv1KLGz13Kcp;
+	Fri, 25 Apr 2025 11:37:51 +0800 (CST)
 Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id BC9081400D4;
-	Fri, 25 Apr 2025 11:38:51 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6BA6E1400D9;
+	Fri, 25 Apr 2025 11:38:52 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Fri, 25 Apr 2025 11:38:50 +0800
+ 15.2.1748.10; Fri, 25 Apr 2025 11:38:51 +0800
 From: Yicong Yang <yangyicong@huawei.com>
 To: <acme@kernel.org>, <namhyung@kernel.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
@@ -33,9 +33,9 @@ To: <acme@kernel.org>, <namhyung@kernel.org>, <catalin.marinas@arm.com>,
 CC: <jonathan.cameron@huawei.com>, <hejunhao3@huawei.com>,
 	<linuxarm@huawei.com>, <wangyushan12@huawei.com>, <caijingtao@huawei.com>,
 	<xueshan2@huawei.com>, <prime.zeng@hisilicon.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH v2 1/3] arm64: cputype: Add cputype definition for HIP12
-Date: Fri, 25 Apr 2025 11:38:43 +0800
-Message-ID: <20250425033845.57671-2-yangyicong@huawei.com>
+Subject: [PATCH v2 2/3] perf arm-spe: Add support for SPE Data Source packet on HiSilicon HIP12
+Date: Fri, 25 Apr 2025 11:38:44 +0800
+Message-ID: <20250425033845.57671-3-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20250425033845.57671-1-yangyicong@huawei.com>
 References: <20250425033845.57671-1-yangyicong@huawei.com>
@@ -52,34 +52,182 @@ X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
 
 From: Yicong Yang <yangyicong@hisilicon.com>
 
-Add MIDR encoding for HiSilicon HIP12 which is used on HiSilicon
-HIP12 SoCs.
+Add data source encoding for HiSilicon HIP12 and coresponding mapping
+to the perf's memory data source. This will help to synthesize the data
+and support upper layer tools like perf-mem and perf-c2c.
 
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- arch/arm64/include/asm/cputype.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/arch/arm64/include/asm/cputype.h        |  2 +
+ .../util/arm-spe-decoder/arm-spe-decoder.h    | 17 ++++
+ tools/perf/util/arm-spe.c                     | 96 +++++++++++++++++++
+ 3 files changed, 115 insertions(+)
 
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index d1cc0571798b..36c5bbfbb6e9 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -133,6 +133,7 @@
+diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
+index 488f8e751349..9a5d85cfd1fb 100644
+--- a/tools/arch/arm64/include/asm/cputype.h
++++ b/tools/arch/arm64/include/asm/cputype.h
+@@ -129,6 +129,7 @@
+ #define FUJITSU_CPU_PART_A64FX		0x001
  
  #define HISI_CPU_PART_TSV110		0xD01
- #define HISI_CPU_PART_HIP09			0xD02
 +#define HISI_CPU_PART_HIP12		0xD06
  
  #define APPLE_CPU_PART_M1_ICESTORM	0x022
  #define APPLE_CPU_PART_M1_FIRESTORM	0x023
-@@ -220,6 +221,7 @@
+@@ -202,6 +203,7 @@
+ #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
  #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
  #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
- #define MIDR_HISI_HIP09 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP09)
 +#define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
  #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
  #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
  #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index 5d232188643b..881d9f29c138 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -82,6 +82,23 @@ enum arm_spe_ampereone_data_source {
+ 	ARM_SPE_AMPEREONE_L2D                           = 0x9,
+ };
+ 
++enum arm_spe_hisi_hip_data_source {
++	ARM_SPE_HISI_HIP_PEER_CPU		= 0,
++	ARM_SPE_HISI_HIP_PEER_CPU_HITM		= 1,
++	ARM_SPE_HISI_HIP_L3			= 2,
++	ARM_SPE_HISI_HIP_L3_HITM		= 3,
++	ARM_SPE_HISI_HIP_PEER_CLUSTER		= 4,
++	ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM	= 5,
++	ARM_SPE_HISI_HIP_REMOTE_SOCKET		= 6,
++	ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM	= 7,
++	ARM_SPE_HISI_HIP_LOCAL_MEM		= 8,
++	ARM_SPE_HISI_HIP_REMOTE_MEM		= 9,
++	ARM_SPE_HISI_HIP_NC_DEV			= 13,
++	ARM_SPE_HISI_HIP_L2			= 16,
++	ARM_SPE_HISI_HIP_L2_HITM		= 17,
++	ARM_SPE_HISI_HIP_L1			= 18,
++};
++
+ struct arm_spe_record {
+ 	enum arm_spe_sample_type type;
+ 	int err;
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 2a9775649cc2..d46e0cccac99 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -571,6 +571,11 @@ static const struct midr_range ampereone_ds_encoding_cpus[] = {
+ 	{},
+ };
+ 
++static const struct midr_range hisi_hip_ds_encoding_cpus[] = {
++	MIDR_ALL_VERSIONS(MIDR_HISI_HIP12),
++	{},
++};
++
+ static void arm_spe__sample_flags(struct arm_spe_queue *speq)
+ {
+ 	const struct arm_spe_record *record = &speq->decoder->record;
+@@ -718,9 +723,100 @@ static void arm_spe__synth_data_source_ampereone(const struct arm_spe_record *re
+ 	arm_spe__synth_data_source_common(&common_record, data_src);
+ }
+ 
++static void arm_spe__synth_data_source_hisi_hip(const struct arm_spe_record *record,
++						union perf_mem_data_src *data_src)
++{
++	/* Use common synthesis method to handle store operations */
++	if (record->op & ARM_SPE_OP_ST) {
++		arm_spe__synth_data_source_common(record, data_src);
++		return;
++	}
++
++	switch (record->source) {
++	case ARM_SPE_HISI_HIP_PEER_CPU:
++		data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
++		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
++		break;
++	case ARM_SPE_HISI_HIP_PEER_CPU_HITM:
++		data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
++		break;
++	case ARM_SPE_HISI_HIP_L3:
++		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
++		break;
++	case ARM_SPE_HISI_HIP_L3_HITM:
++		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		break;
++	case ARM_SPE_HISI_HIP_PEER_CLUSTER:
++		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
++		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
++		break;
++	case ARM_SPE_HISI_HIP_PEER_CLUSTER_HITM:
++		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
++		break;
++	case ARM_SPE_HISI_HIP_REMOTE_SOCKET:
++		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
++		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
++		break;
++	case ARM_SPE_HISI_HIP_REMOTE_SOCKET_HITM:
++		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_ANY_CACHE;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++		data_src->mem_snoopx = PERF_MEM_SNOOPX_PEER;
++		break;
++	case ARM_SPE_HISI_HIP_LOCAL_MEM:
++		data_src->mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
++		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
++		break;
++	case ARM_SPE_HISI_HIP_REMOTE_MEM:
++		data_src->mem_lvl = PERF_MEM_LVL_REM_RAM1 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_RAM;
++		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
++		break;
++	case ARM_SPE_HISI_HIP_NC_DEV:
++		data_src->mem_lvl = PERF_MEM_LVL_IO | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_IO;
++		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
++		break;
++	case ARM_SPE_HISI_HIP_L2:
++		data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
++		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
++		break;
++	case ARM_SPE_HISI_HIP_L2_HITM:
++		data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L2;
++		data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
++		break;
++	case ARM_SPE_HISI_HIP_L1:
++		data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
++		data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
++		break;
++	default:
++		break;
++	}
++}
++
+ static const struct data_source_handle data_source_handles[] = {
+ 	DS(common_ds_encoding_cpus, data_source_common),
+ 	DS(ampereone_ds_encoding_cpus, data_source_ampereone),
++	DS(hisi_hip_ds_encoding_cpus, data_source_hisi_hip),
+ };
+ 
+ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
 -- 
 2.24.0
 
