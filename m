@@ -1,64 +1,145 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4D023D2AA;
-	Fri, 25 Apr 2025 11:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4205183CC3;
+	Fri, 25 Apr 2025 11:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579387; cv=none; b=T0LIleuCv/kn+YZt8JTH35g8xjKDg5uGQgg2L6NkSIR01EwPQrNbiJ0TAsHxvb569IcdnPWi4xCwoHrAcbyX2S6mLJnqfcWAJxhHq2xxwXLUL0YDkx4VNh3Of2/nscULin/Rm0w2/tH/FJKp0It8uynnAcSCkY0yxCg8N49Yxeo=
+	t=1745579589; cv=none; b=bApfgaiNxwiBHv5XL6sUEY49Z5Se89Ar3zqX8QffIIsrM2dn0Smv8fmiBA8puirxJudwTTStkT2nOIqMbbMLoMDX/fj0mkKx7AtUNaQJX94eLj1zus48OLLQ4Evof3dtTZr2f7RGacOBSFe+LUdu6ucIxPERWqfLIaA9i2a9VfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579387; c=relaxed/simple;
-	bh=6+9MkaQu+mPud85wB7s0sGxBcW7FKtrCtMEYMFsYG+w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D9M0mzvY9J8s4RH9FT/dVd3NHnbGnXRZ2oBeZBz0g39Re3dLFfX3VLsMN8ISWa9jhljsoVBUmKuHQwcHpSS4Avu4PfFDAVsg96R2+HkLc4EgQpblBQZKtucNcNgLrpszhBNxNne1Oll62bnI12F1ul1Ot2FmI6k1l93YuBO9Uhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZkVPR0BJlz6M4tN;
-	Fri, 25 Apr 2025 19:05:31 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 50F141400D7;
-	Fri, 25 Apr 2025 19:09:43 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 25 Apr
- 2025 13:09:42 +0200
-Date: Fri, 25 Apr 2025 12:09:41 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Junhao He <hejunhao3@huawei.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <james.clark@linaro.org>, <leo.yan@arm.com>,
-	<john.g.garry@oracle.com>, <will@kernel.org>, <mike.leach@linaro.org>,
-	<yangyicong@hisilicon.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add hisilicon pmu json events under
- its entry
-Message-ID: <20250425120941.00004f12@huawei.com>
-In-Reply-To: <20250418070812.3771441-4-hejunhao3@huawei.com>
-References: <20250418070812.3771441-1-hejunhao3@huawei.com>
-	<20250418070812.3771441-4-hejunhao3@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1745579589; c=relaxed/simple;
+	bh=BQZ1WZa9i63LV1fgRsPMTvGEzDqSt6xk/3q7eL5JIvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUCPrkjYOtlKMpckeEjjKESJK4w+3FtyxyzB6adV1p5/L7+2DfyIn8m0ClyTSrVRXfih4uOgB6578PumtfCeTPJFddE0bIUDa5UtdH7wmcs+bXXfrRH5734w8ujnefqDQrq7mGory4LKw1oATPsskJ/PADk6x0TLGedAktJukS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uUI+Jwgx; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uUI+Jwgx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7pkDfdxdw7o8CU4rwyMhmAqybwgwSXlsx2/t9ooZeJQ=; b=uUI+Jwgx74okaceFngtxWhItZA
+	J+hhe+lJ2oYZtIQZh5aHpbmkWr4kP5pj7yXN570zp1wrvVjwVXDgPhE8miXXhMxzCt2toN6O0nkvG
+	rAmc5z5q0XUm7L63Io52NWCc4pyj0fmVrGCQXBqtsHuwTMlIaFB8egLS55ueWPplFzc4oLLCpmmPv
+	UnRNJTz1BkFoeFiVaDKf61BJJmihuoEXiUHXWDAhNai+GZqDpjxG8cPePY7ycHquFR8xo6RNvY+AF
+	CaR9oxmzOYfFBLoGDy3rOutayP0Iv+t57nssL8jWMtdt35iHySvdmhWLFwWjuj9Pojf+CAPtAftxG
+	1yhDghSA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8GzJ-0000000ENXM-1nQU;
+	Fri, 25 Apr 2025 11:12:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C4AEA3003C4; Fri, 25 Apr 2025 13:12:56 +0200 (CEST)
+Date: Fri, 25 Apr 2025 13:12:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Shukla Manali <Manali.Shukla@amd.com>,
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
+Message-ID: <20250425111256.GE1166@noisy.programming.kicks-ass.net>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-10-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324173121.1275209-10-mizhang@google.com>
 
-On Fri, 18 Apr 2025 15:08:12 +0800
-Junhao He <hejunhao3@huawei.com> wrote:
+On Mon, Mar 24, 2025 at 05:30:49PM +0000, Mingwei Zhang wrote:
 
-> The all hisilicon pmu json events were missing to be listed there.
-> 
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> Reviewed-by: James Clark <james.clark@linaro.org>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> @@ -1822,7 +1835,7 @@ extern int perf_event_period(struct perf_event *event, u64 value);
+>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
+>  int perf_get_mediated_pmu(void);
+>  void perf_put_mediated_pmu(void);
+> -void perf_guest_enter(void);
+> +void perf_guest_enter(u32 guest_lvtpc);
+>  void perf_guest_exit(void);
+>  #else /* !CONFIG_PERF_EVENTS: */
+>  static inline void *
+> @@ -1921,7 +1934,7 @@ static inline int perf_get_mediated_pmu(void)
+>  }
+>  
+>  static inline void perf_put_mediated_pmu(void)			{ }
+> -static inline void perf_guest_enter(void)			{ }
+> +static inline void perf_guest_enter(u32 guest_lvtpc)		{ }
+>  static inline void perf_guest_exit(void)			{ }
+>  #endif
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index d05487d465c9..406b86641f02 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -451,6 +451,7 @@ static inline bool is_include_guest_event(struct perf_event *event)
+>  static LIST_HEAD(pmus);
+>  static DEFINE_MUTEX(pmus_lock);
+>  static struct srcu_struct pmus_srcu;
+> +static DEFINE_PER_CPU(struct mediated_pmus_list, mediated_pmus);
+>  static cpumask_var_t perf_online_mask;
+>  static cpumask_var_t perf_online_core_mask;
+>  static cpumask_var_t perf_online_die_mask;
+> @@ -6053,8 +6054,26 @@ static inline void perf_host_exit(struct perf_cpu_context *cpuctx)
+>  	}
+>  }
+>  
+> +static void perf_switch_guest_ctx(bool enter, u32 guest_lvtpc)
+> +{
+> +	struct mediated_pmus_list *pmus = this_cpu_ptr(&mediated_pmus);
+> +	struct perf_cpu_pmu_context *cpc;
+> +	struct pmu *pmu;
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(cpc, &pmus->list, mediated_entry) {
+> +		pmu = cpc->epc.pmu;
+> +
+> +		if (pmu->switch_guest_ctx)
+> +			pmu->switch_guest_ctx(enter, (void *)&guest_lvtpc);
+> +	}
+> +	rcu_read_unlock();
+> +}
+> +
+>  /* When entering a guest, schedule out all exclude_guest events. */
+> -void perf_guest_enter(void)
+> +void perf_guest_enter(u32 guest_lvtpc)
+>  {
+>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+>  
+> @@ -6067,6 +6086,8 @@ void perf_guest_enter(void)
+>  
+>  	perf_host_exit(cpuctx);
+>  
+> +	perf_switch_guest_ctx(true, guest_lvtpc);
+> +
+>  	__this_cpu_write(perf_in_guest, true);
+>  
+>  unlock:
+
+This, I'm still utterly hating on that lvtpc argument. That doesn't
+belong here. Make it go away.
 
