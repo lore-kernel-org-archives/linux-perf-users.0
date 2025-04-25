@@ -1,30 +1,39 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E228195808;
-	Fri, 25 Apr 2025 03:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36E5144304;
+	Fri, 25 Apr 2025 03:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745552653; cv=none; b=cyyy4PqZqKO4LpgjoOycZzIqSe8Z956MvCienKv+z9kd7ludEPN0nFLnhnxAzqXQOxEOwADy0Spaetn9c6gUPpxH+hdfnBJaNEJY/2L8aFGhcHIwo3bRy7PdBshJzsHnXWAzRe91MWRMHLD9wWt70MxljBpJ51M83JD1UD8Uqq4=
+	t=1745552725; cv=none; b=cC+8pVzYVlqcpY/3qUgJucQPZlyZQGBRyQP059KQx2ToW79uqM8dlWCWn1PDeawgna+jUbhmvOhG/got1PnG2JZQK1dEt8ZzLkLF5VikoEkeACmGxR2S/X83XPq5ObOcxvex7/nyIqf7CX4HCWuziebQOFZUfqWzrM8+CstF+0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745552653; c=relaxed/simple;
-	bh=C+PlvwyiVxvSAR/Lb3vYBgjgbXtxr++0MUnqWe5M/I4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CRo7nTXhhOrY1Mklku28epFAO7Zu+JFPsPFpZjRtDQUFN7Aq1xhsHtMTq7GXZnBGhfOORS0MjShoORcjSnGobUNzTivOO88T7vw9bgdoEqdLiZA4NW2HQNyHsy7VHF1q9lPw5iMNIY6J70/rioW6b2V+M4XaTdUKGNWXKgWbT+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZkJbk4vSNz4f3jLm;
-	Fri, 25 Apr 2025 11:43:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 678A61A06D7;
-	Fri, 25 Apr 2025 11:44:05 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP1 (Coremail) with SMTP id cCh0CgBHq3sBBQtosqhRKQ--.26866S3;
-	Fri, 25 Apr 2025 11:44:02 +0800 (CST)
-Message-ID: <f0f1d9d1-ffae-4075-ab39-b96516e247db@huaweicloud.com>
-Date: Fri, 25 Apr 2025 11:44:01 +0800
+	s=arc-20240116; t=1745552725; c=relaxed/simple;
+	bh=GCsuJBHrLb8OOsw0Nrc363phMun5O+wCt6+3FMpkJQo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lJx8m28YeK2c0ANh1LGU6keZyNdiIQ+pOZdvLVRgMX9wMY5xmv0GocMlPNBml9t8GJbqQA9jwODQ1eFx91Db5Vko+RlZUjqVjZZEy2k0vmErs0NlQ6jmSAF0dkHuQyB75fc5hOotHivgORAcw3HUGtShWvxyeJyhv50CnaPDW2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=h6tkGPZf; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h6tkGPZf"
+Received: from [IPV6:2601:646:8081:1f93:ace:6989:11eb:d5d3] ([IPv6:2601:646:8081:1f93:ace:6989:11eb:d5d3])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P3iRFQ2047105
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 20:44:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P3iRFQ2047105
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745552672;
+	bh=b2EU0c9r4+7Z91N6+uKj1oR80E0vF0IHEbyiUhJnLQA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=h6tkGPZf95yQ3bAcYVi/++g5apF9dA+xDaGqiCLYRc9VcHVlrJdGQsg4l29MEZ7CJ
+	 aLVdgM7ERZdGZm+YeYHxkaRoWYmC139k7kZqYZoAzT/znx6Kx6O2GtZpDA/JUfvlJ1
+	 CcsBsfRHddjbpCzdM4zIuzpA7epwqsOqTiZB4ua/CkyilKNABnOQlavSOZxha0+wfj
+	 cX6ckW2WvvNyLFS1B2A5lWVYkYGzgGJhfmVN53iSVa6vyOu/NY5xsXrNsSQKXTH85b
+	 +dwG+fJzWTGalgBqhI1nG1clXUnlMv9jRJvaiZN9wKeE5vSAPLzqIsZZs/a531ezoe
+	 HihwH9Nv3ITtg==
+Message-ID: <72516271-5b28-434a-838b-d8532e1b4fc1@zytor.com>
+Date: Thu, 24 Apr 2025 20:44:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,191 +41,87 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
- group
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Xin Li
+ <xin@zytor.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
+        andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
+ <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+ <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
+ <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+ <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
+ <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
+ <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
 Content-Language: en-US
-To: "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
- <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
- <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
- <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
- <f142d45d-4164-4883-ac4c-ea5b1c20c1c0@linux.intel.com>
- <a9d12369-9aca-473a-a660-478bfe969396@linux.intel.com>
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-In-Reply-To: <a9d12369-9aca-473a-a660-478bfe969396@linux.intel.com>
+In-Reply-To: <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHq3sBBQtosqhRKQ--.26866S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFyUKF4xAFyfWr1rKr1ftFb_yoW7ur1Dpr
-	n5JF4UKFWUWwn5u348tr1UtFyUtrykt3Z5Wr1UJFyUJr1qvr1aqF4UX34Y9r95Gr48JFyr
-	Xw1UXr17ZFy5JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	aFAJUUUUU==
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-
-On 2025/4/24 6:11, Liang, Kan wrote:
->
-> On 2025-04-21 10:56 a.m., Liang, Kan wrote:
->>
->> On 2025-04-19 12:50 a.m., Luo Gengkun wrote:
->>> On 2025/4/19 10:25, Luo Gengkun wrote:
->>>> On 2025/4/14 22:29, Liang, Kan wrote:
->>>>> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
->>>>>> The following perf command can trigger a warning on
->>>>>> intel_pmu_lbr_counters_reorder.
->>>>>>
->>>>>>    # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
->>>>>>
->>>>>> The reason is that a lbr event are placed in non lbr group. And the
->>>>>> previous implememtation cannot force the leader to be a lbr event in
->>>>>> this
->>>>>> case.
->>>>> Perf should only force the LBR leader for the branch counters case, so
->>>>> perf only needs to reset the LBRs for the leader.
->>>>> I don't think the leader restriction should be applied to other cases.
->>>> Yes, the commit message should be updated.  The code implementation only
->>>>
->>>> restricts the leader to be an LBRs.
->>>>
->>>>>> And is_branch_counters_group will check if the group_leader supports
->>>>>> BRANCH_COUNTERS.
->>>>>> So if a software event becomes a group_leader, which
->>>>>> hw.flags is -1, this check will alway pass.
->>>>> I think the default flags for all events is 0. Can you point me to where
->>>>> it is changed to -1?
->>>>>
->>>>> Thanks,
->>>>> Kan>
->>>> The hw_perf_event contains a union, hw.flags is used only for hardware
->>>> events.
->>>>
->>>> For the software events, it uses hrtimer. Therefor, when
->>>> perf_swevent_init_hrtimer
->>>>
->>>> is called, it changes the value of hw.flags too.
->>>>
->>>>
->>>> Thanks,
->>>>
->>>> Gengkun
+On 4/24/25 18:15, H. Peter Anvin wrote:
+> On 4/24/25 01:14, Jürgen Groß wrote:
 >>>
->>> It seems that using union is dangerous because different types of
->>> perf_events can be
->>> placed in the same group.
->> Only the PMU with perf_sw_context can be placed in the same group with
->> other types.
+>>> Actually, that is how we get this patch with the existing alternatives
+>>> infrastructure.  And we took a step further to also remove the pv_ops
+>>> MSR APIs...
 >>
->>> Currently, a large number of codes directly
->>> access the hw
->>> of the leader, which is insecure.
->> For X86, the topdown, ACR and branch counters will touch the
->> leader.hw->flags. The topdown and ACR have already checked the leader
->> before updating the flags. The branch counters missed it. I think a
->> check is required for the branch counters as well, which should be good
->> enough to address the issue.
+>> And this is what I'm questioning. IMHO this approach is adding more
+>> code by removing the pv_ops MSR_APIs just because "pv_ops is bad". And
+>> I believe most refusal of pv_ops is based on no longer valid reasoning.
 >>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 16f8aea33243..406f58b3b5d4 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -4256,6 +4256,12 @@ static int intel_pmu_hw_config(struct perf_event
->> *event)
->>   		 * group, which requires the extra space to store the counters.
->>   		 */
->>   		leader = event->group_leader;
->> +		/*
->> +		 * The leader's hw.flags will be used to determine a
->> +		 * branch counter logging group. Force it a X86 event.
->> +		 */
->> +		if (!is_x86_event(leader))
->> +			return -EINVAL;
->>   		if (branch_sample_call_stack(leader))
->>   			return -EINVAL;
->>   		if (branch_sample_counters(leader)) {
+> 
+> pvops are a headache because it is effectively a secondary alternatives 
+> infrastructure that is incompatible with the alternatives one...
+> 
+>>> It looks to me that you want to add a new facility to the alternatives
+>>> infrastructure first?
 >>
-> The above check may not enough, since the
-> intel_pmu_lbr_counters_reorder() can be invoked without branch counters
-> event.
->
-> I've posted a fix to address the issue. Please take a look.
-> https://lore.kernel.org/lkml/20250423221015.268949-1-kan.liang@linux.intel.com/
->
-> Thanks,
-> Kan
+>> Why would we need a new facility in the alternatives infrastructure?
+> 
+> I'm not sure what Xin means with "facility", but a key motivation for 
+> this is to:
+> 
+> a. Avoid using the pvops for MSRs when on the only remaining user 
+> thereof (Xen) is only using it for a very small subset of MSRs and for 
+> the rest it is just overhead, even for Xen;
+> 
+> b. Being able to do wrmsrns immediate/wrmsrns/wrmsr and rdmsr immediate/ 
+> rdmsr alternatives.
+> 
+> Of these, (b) is by far the biggest motivation. The architectural 
+> direction for supervisor states is to avoid ad hoc and XSAVES ISA and 
+> instead use MSRs. The immediate forms are expected to be significantly 
+> faster, because they make the MSR index available at the very beginning 
+> of the pipeline instead of at a relatively late stage.
+> 
 
+Note that to support the immediate forms, we *must* do these inline, or 
+the const-ness of the MSR index -- which applies to by far the vast 
+majority of MSR references -- gets lost. pvops does exactly that.
 
-LGTM.
-Thanks,
-Gengkun
->>> This part of the logic needs to be
->>> redesigned to void
->>> similar problems. And I am happy to work for this.
->>>
->> OK. Please share your idea.
->>
->> Thanks,
->> Kan
->>> Thanks,
->>> Gengkun
->>>>>> To fix this problem, using has_branch_stack to judge if leader is lbr
->>>>>> event.
->>>>>>
->>>>>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
->>>>>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
->>>>>> ---
->>>>>>    arch/x86/events/intel/core.c | 14 +++++++-------
->>>>>>    1 file changed, 7 insertions(+), 7 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/
->>>>>> core.c
->>>>>> index 09d2d66c9f21..c6b394019e54 100644
->>>>>> --- a/arch/x86/events/intel/core.c
->>>>>> +++ b/arch/x86/events/intel/core.c
->>>>>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct
->>>>>> perf_event *event)
->>>>>>                event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->>>>>>        }
->>>>>>    +    /*
->>>>>> +     * Force the leader to be a LBR event. So LBRs can be reset
->>>>>> +     * with the leader event. See intel_pmu_lbr_del() for details.
->>>>>> +     */
->>>>>> +    if (has_branch_stack(event) && !has_branch_stack(event-
->>>>>>> group_leader))
->>>>>> +        return -EINVAL;
->>>>>> +
->>>>>>        if (branch_sample_counters(event)) {
->>>>>>            struct perf_event *leader, *sibling;
->>>>>>            int num = 0;
->>>>>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct
->>>>>> perf_event *event)
->>>>>>                  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
->>>>>>                    PERF_SAMPLE_BRANCH_COUNTERS)))
->>>>>>                event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->>>>>> -
->>>>>> -        /*
->>>>>> -         * Force the leader to be a LBR event. So LBRs can be reset
->>>>>> -         * with the leader event. See intel_pmu_lbr_del() for details.
->>>>>> -         */
->>>>>> -        if (!intel_pmu_needs_branch_stack(leader))
->>>>>> -            return -EINVAL;
->>>>>>        }
->>>>>>          if (intel_pmu_needs_branch_stack(event)) {
->>
+Furthermore, the MSR immediate instructions take a 64-bit number in a 
+single register; as these instructions are by necessity relatively long, 
+it makes sense for the alternative sequence to accept a 64-bit input 
+register and do the %eax/%edx shuffle in the legacy fallback code... we 
+did a bunch of experiments to see what made most sense.
+
+	-hpa
 
