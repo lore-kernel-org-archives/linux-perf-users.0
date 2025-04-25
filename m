@@ -1,176 +1,86 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B968290BCB
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 22:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5902382;
+	Fri, 25 Apr 2025 00:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745534313; cv=none; b=ROVLpSshD207hLqFoh3n2p+UEulTcNisx9qk1u4C+ArFFX3bOhYqjz/aF9EDJbC6gB2+lpD83lvyzxHkzqmFj3gAeHlkXUixGRIUTPmW5JEnhNMZr9+1PC2O2EGi6x6VDJrVCN0uG0HJxvR9+1qrE7PdV7kcRdzJ5FBzn0CyPGQ=
+	t=1745540264; cv=none; b=Ue3zQ+AUAStcHEN2Jz9KxC6nO+8tuXc/t/3OP5Zwgxe1ES7tr8bM3oun+5GphKY1G5btFeASClihl/ezEp7vHJhKs7PRJIEysSw1QoBqfi/f92LL4RTbK0uQZQgIhMIro8JvIhS8phlJHkzoO7f9iSAqAy67gyi9ctt2tuP8RlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745534313; c=relaxed/simple;
-	bh=SuVGuLPWXRTw2XBo3wLqRg4mWBMzlan/Fdd/ceeK+m0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uVBfituQkcbNx+c9y3IDmw2VyR+0wt67ypG/1yQZnwBeaVPh57+vvX6Aa5UlGaZEVAsl0ih+Mt1aPysYRqhltRFYBDjzYGQxaPMN3JaUsYRAGCM7dxJK7lIqEmlk8ZZJMEbdbySEZjCPdrGly7Y84K5OFdflOcTW7b+nPCaAqDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DjF4h2bx; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745540264; c=relaxed/simple;
+	bh=hBejx/ayd+GyQ+0SkZMatW7XvWQxt2+ga5tDFrKq55Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nWxeJIN6FQgG2b2wrnTMBfp/IU/xGiKo/lADDGOm324jEkIOMnIWWna8lw+LkdfOlEEfO9F0cmKjOq+0yqdMaGSf5e2ePjKUqCwHJK1jG8znImCnmpv8BSRG1Kl/Qlble+OoVWnLG4NuFmmmKG0RWNNzk2qA0IBCgEiHl4IyGDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAwHIjtn; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DjF4h2bx"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac25520a289so258919266b.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Apr 2025 15:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745534309; x=1746139109; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZs76uIchCrwsJqCT+S4BB1Qj4mv/z4p+yQgfmNcgZA=;
-        b=DjF4h2bxiQf7IzaFxoAzQ/OxMmKrJyXftVIgMGXX5e3e7SQd69cF/4CL7dfmS6Cfpa
-         bnE2aitQ8hOlcB6Lsy4QuFkAevTRF/T3jk4cIeF5nk4ZPRLlakvfRcxbeZQsQms9ZwM9
-         FA4zkcykZO3qjt3sJCcuTUp9b9UCEX8QXapTihakX3fHtfQuEBT92AXlHDAez9BfErUO
-         fJzvTIuVCagTeJPfT6PDO2MFJpX3gXWsUy0HljG3nHeoqcRpa533b7IqL9oZflyarAu2
-         OCT5illL6FIjPj11B6mgq5iHFEw0/sljgXxM3fLbNFw6Sm1t1gZvJNbMqcVNSP2G5rHY
-         quJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745534309; x=1746139109;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZs76uIchCrwsJqCT+S4BB1Qj4mv/z4p+yQgfmNcgZA=;
-        b=tQczTaKjfRbumji4DTO/UN9+kYSzdZPv2kyxiPeX+/mquFNDOFDv55AeKWpqYDlzQd
-         Gb8hmGPg4BX9bVXHo9h/t1f+lXQC9aGsoso4uHptJMA0pGpy+pmizG8bAcSyZsrr5af4
-         vfBzD0bEEkVx1uXZM1UVmjRPRFv1QNAVqDmxjULdQBCvB/X6H6aNbsKzP8hZxIDQ7hmH
-         nVXJwsIUThSAaBaVbJkfFYvT9jEzaxfgjTt1vZVO/D/JIVa7ajTpCNOvo0vJL/vAM2yK
-         ZzaQ0rpGeWgTB1kxAGQ0M5tVga35PeFBPdQUfjS10yDpx5a9Zg89bIDME7m79Vb5scjy
-         V4KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLc0TCibAXwQlFU8gVS/GyoukUcAzgAJtYQItRBM38NLtsudVZWv4tL4k14SEgf4EaMTyQVKRhblyGzEn1fiv3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVERwrklsRu43S7UKHc7P7ZQkV/ZeRlnesoGn1U5l9i//CpKWh
-	h0gbw2aURrsKs46bWcCPDYi7F5siXgQw7o/VZnZiPlSQ81DHXKGPXAvTeV+dKxD2scDA8KIIHGV
-	EzPqXy3DyCKfiTFgIIXOObKlDQCO6FktN79gg
-X-Gm-Gg: ASbGncuxDMW+qyGBhTTVgnxQXg3d7Eoczpi8HEusZlRcejTUSjxVvkeIFPO+lSj3JKq
-	VlwVojmyQUlZjsfKJKUiXgEV9C9CPxPUVOhFiDr8mRN3lr2inPvysSxer6+p+WpkN+5xaBDclSB
-	QX75THGhaQJmvkUryQL5S1W+yUxwk6/kzmKPAn13Yf6FJIV34=
-X-Google-Smtp-Source: AGHT+IG3MnYI0bmjFs1Ub5SgzwgKFOkJr0O/+0+ozMNFTj0WeOHAT3DtP/7YoC7pgKXf1I2Z6zt0Gnvi3S4GULDzMcw=
-X-Received: by 2002:a17:907:1c29:b0:aca:95e7:9977 with SMTP id
- a640c23a62f3a-ace7113336fmr17668566b.28.1745534309428; Thu, 24 Apr 2025
- 15:38:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAwHIjtn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745540263; x=1777076263;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hBejx/ayd+GyQ+0SkZMatW7XvWQxt2+ga5tDFrKq55Q=;
+  b=HAwHIjtnoEEeyygPoH0U0vRrxpIYdr0PVVLMu3BiSUl5pTYfwi9Fm3gY
+   5Ri2hC8lPkb9ta8jCrZuSbrQRfMWO4geG89NDqAHSEDVznn+tmRapAopm
+   UggXO1XFbD6MbWhycsEIskZyXV37fAn5s4pWwZ1dpokcof8CjSZWTlUe+
+   JA5Z8HfB4BWdhe33kjsekJ6EbmWWw0YkZEq5HlNvasgSHZxm0SqlD0MFO
+   76VXX+az7iQvSBH7CMAY4A+29J8K/OQhyR8qHT5FysRBOWTOffHeoEwph
+   7o5WyzK/sTrcxtfKyP/wHMblclhYwfHetjd/2x7AXhmrkfX21DYmFng6i
+   g==;
+X-CSE-ConnectionGUID: +iYAUrizRo+tboUd3xdLNA==
+X-CSE-MsgGUID: 6McV+jX2QRGI8mPVZTyzFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="64612561"
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="64612561"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 17:17:41 -0700
+X-CSE-ConnectionGUID: PJfJ+tfnQl+P6lFjPBpldQ==
+X-CSE-MsgGUID: 26kbLsDHTNGSalFA9BBFUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="163815423"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 17:17:38 -0700
+Message-ID: <1fd8dd31-faf4-4657-ab06-ccba3e790d01@linux.intel.com>
+Date: Fri, 25 Apr 2025 08:17:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414173921.2905822-1-ctshao@google.com> <CAP-5=fUJip8odShuUVCnwQg9MrMLVdCWjGdSFfUxWubfQYBy1g@mail.gmail.com>
- <CAJpZYjV1Z_A08A1GSTLZwo7BCaJNGGD+Q06w2A1Uc9p1ihT=Tg@mail.gmail.com> <aAo0IoT0xV4HysKk@x1>
-In-Reply-To: <aAo0IoT0xV4HysKk@x1>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Thu, 24 Apr 2025 15:38:15 -0700
-X-Gm-Features: ATxdqUGxnFHYMdiH6QdyUK2sRPf3xTXG6-Dub1uKAhq18MriPRC1xMgHBDQMQVA
-Message-ID: <CAJpZYjUrScM=zh8yTu5GV8AK3zG6wVCa_9OYXmsfk10HYpgaTA@mail.gmail.com>
-Subject: Re: [PATCH v4] perf report: Skip unsupported new event types
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
-	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, dvyukov@google.com, 
-	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: kvm guests crash when running "perf kvm top"
+To: Sean Christopherson <seanjc@google.com>
+Cc: Seth Forshee <sforshee@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <Z_VUswFkWiTYI0eD@do-x1carbon>
+ <27175b8e-144d-42cb-b149-04031e9aa698@linux.intel.com>
+ <aAo445Nzi5DuAQAR@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aAo445Nzi5DuAQAR@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you Arnaldo!
 
--CT
+On 4/24/2025 9:13 PM, Sean Christopherson wrote:
+> On Thu, Apr 24, 2025, Dapeng Mi wrote:
+>> Is the command "perf kvm top" executed in host or guest when you see guest
+>> crash? Is it easy to be reproduced? Could you please provide the detailed
+>> steps to reproduce the issue with 6.15-rc1 kernel?
+> Host.  I already have a fix, I'll get it posted today.
+>
+> https://lore.kernel.org/all/Z_aovIbwdKIIBMuq@google.com
 
-On Thu, Apr 24, 2025 at 5:52=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Wed, Apr 23, 2025 at 03:46:21PM -0700, Chun-Tse Shao wrote:
-> > Ping.
->
-> Thanks for the ping, I just applied it with these changes, please check,
->
-> Thanks,
->
-> - Arnaldo
->
-> =E2=AC=A2 [acme@toolbox perf-tools-next]$ git diff
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index ba32f8461a4b6438..81cc56503a2d0f51 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1645,7 +1645,7 @@ static s64 perf_session__process_event(struct perf_=
-session *session,
->                         return -EINVAL;
->
->                 /* This perf is outdated and does not support the latest =
-event type. */
-> -               ui__warning("Unsupported type %u, please considering upda=
-te perf.\n",
-> +               ui__warning("Unsupported header type %u, please consider =
-updating perf.\n",
->                             event->header.type);
->                 /* Skip unsupported event by returning its size. */
->                 return event->header.size;
-> =E2=AC=A2 [acme@toolbox perf-tools-next]$
->
-> > Thanks,
-> > CT
-> >
-> >
-> > On Mon, Apr 14, 2025 at 10:43=E2=80=AFAM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > On Mon, Apr 14, 2025 at 10:39=E2=80=AFAM Chun-Tse Shao <ctshao@google=
-.com> wrote:
-> > > >
-> > > > `perf report` currently halts with an error when encountering
-> > > > unsupported new event types (`event.type >=3D PERF_RECORD_HEADER_MA=
-X`).
-> > > > This patch modifies the behavior to skip these samples and continue
-> > > > processing the remaining events. Additionally, stops reporting if t=
-he
-> > > > new event size is not 8-byte aligned.
-> > > >
-> > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > >
-> > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > ---
-> > > >  tools/perf/util/session.c | 13 +++++++++++--
-> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > > > index 60fb9997ea0d..ba32f8461a4b 100644
-> > > > --- a/tools/perf/util/session.c
-> > > > +++ b/tools/perf/util/session.c
-> > > > @@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struc=
-t perf_session *session,
-> > > >         if (session->header.needs_swap)
-> > > >                 event_swap(event, evlist__sample_id_all(evlist));
-> > > >
-> > > > -       if (event->header.type >=3D PERF_RECORD_HEADER_MAX)
-> > > > -               return -EINVAL;
-> > > > +       if (event->header.type >=3D PERF_RECORD_HEADER_MAX) {
-> > > > +               /* perf should not support unaligned event, stop he=
-re. */
-> > > > +               if (event->header.size % sizeof(u64))
-> > > > +                       return -EINVAL;
-> > > > +
-> > > > +               /* This perf is outdated and does not support the l=
-atest event type. */
-> > > > +               ui__warning("Unsupported type %u, please considerin=
-g update perf.\n",
-> > > > +                           event->header.type);
-> > > > +               /* Skip unsupported event by returning its size. */
-> > > > +               return event->header.size;
-> > > > +       }
-> > > >
-> > > >         events_stats__inc(&evlist->stats, event->header.type);
-> > > >
-> > > > --
-> > > > 2.49.0.604.gff1f9ca942-goog
-> > > >
+Thumbs up! Glad to see it has been root caused. Thanks.
+
+
