@@ -1,129 +1,183 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB5D13A244
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Apr 2025 00:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCCD192D97;
+	Sat, 26 Apr 2025 07:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745626444; cv=none; b=XPTcljAqHZHExmGEgDhriHBlXaOtcJDGqY7OMrvIENA9oRYgeoY5KPrCvJidUqp/igjTXbtOXYxbtbxC7ZVvZpPEVEBg98A3hhK8YSkhWuMcmp3KI+uRENawtyFCI/GgILTfQuiGaMZvpSo+wnOEgx/UZW89wHU8Ij7d9bY4dH4=
+	t=1745652496; cv=none; b=FsM5Jp3qVceYJEXqiwhGuR+18GDtWCZQFpMdAvM8RABNLDbpm/GAXkkHDqty+OyBkuWxX8SS11qjkUsswjSOCKz1Z3T9TR23p2gwGBbUhAz9+P/a/aQxYAtyngrjKd3gVmm4zxml6UZRsmksTcE2Z0oNb4WVUU3WZiofF6MriOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745626444; c=relaxed/simple;
-	bh=5ZI1miHdJz7wfQVJ3AKTnq8ZxdU0aecNlHa6tzNWZxE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uLSh0nJhHSyK9efgIVV3z6TMTolzeS4PXTFlVF1u8R42PGybs/WdnLvAobTk8szDC1c2lPY7Gqf/ZyLpunstXPBgSox6hAMlggtPNviKB7RYP4i/wMhmfpgPdBy8RduoG2QGAu8d+Ki8EDsTqo/hpCguH/Tj4TD4oXiwmopw0ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lybnRj71; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745652496; c=relaxed/simple;
+	bh=XjMjO7HflcfiRrSXpoSWT54pSI6eenhpN6xe1KG2F+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lcGye+Fzy4pavwNqtPvdn59Msv2TM2y7fFhc1wTRX75ClwZ+unhkArnSlEUMcLHqvgLuZSrENgFvmrYg3bq5DFTXLi251uy4LrvK0LWyEMZG21EFCSR1k6PmMeGhxbZxMtX4olELmw4AQI3PxTDjYjMpRwgWz5hfr3Y73Z0Cr20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RjCSEzfE; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lybnRj71"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2265a09dbfcso42153425ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 17:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745626442; x=1746231242; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bxpVCBLHTfcLtbj0gBx4eYSK7GUN1WhxDLmW+4nAY1I=;
-        b=lybnRj71bcsgCzrsxS62lOXwTsxB+aoTRgUedTWvZQ9SQHi9YkxQyifFe8QytC+RcE
-         sZd4BWyrzwf86MXgPEV95GYGbwxwF39To/u0H+/WPtO/YA19J2x74vjnbZineKCb1UrH
-         FMAOoqKx5v94b3MA6C8QideorQoXqRksdlebX1KnS2LVqkKc+vgnV/Zurjmi7NOGywNr
-         D0wvtSMkf48+HLkg+9ZE1rK4b3ds6mHOvL7R56SST9YUon9eEdP660N7W/jLruMzJ3dT
-         Hwiam5MacLwrfznZPk7/d9uAd7mpPKTpqSuVogjS3JjOovkbQ79kWqg8MY0JBcMLC0cE
-         d4Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745626442; x=1746231242;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bxpVCBLHTfcLtbj0gBx4eYSK7GUN1WhxDLmW+4nAY1I=;
-        b=fwhB7hzEs1/XmT0+PKlZGxmbX+BPWOBM547Jee0gzRWfTyqot3a9IpMBG8YmSYnbDC
-         SOYxzHRSLEjoThd55inZLW80jGcYWCwxcYLUq7nVE0Ey7+qLGqFPA9ryQY4wax4HQfzq
-         Kzy6a0fiPEw4iOoVfVFysgWLa5dNqGYzklbBIym90hkcvqmpBgGMGzEygIbJXKxKMHvC
-         hzCQAjc+wrUVaKt5xZfTfaUvopA46eoSqGlCbUvCKxCIU6fUYYeycnsnwoMVV66i1Dsm
-         XA00eHLZTim2QKM98nPZ1zFwxRxXMAX+X1i7pe3TxAJnMzghSsiOZR4LCDDHCeuNs43/
-         eTjQ==
-X-Gm-Message-State: AOJu0Yxv+7/5HSLBVgoYstx8qs5FPw7aCtrNN0MA4BFBqNQp33JyVi0p
-	q23Q8irQXMwRGG0KulL0d5AU6f+amEmfufg+0eut2ITd6yUbcllxZRA8h00LVYxehw6nVUjgmKd
-	dYQ==
-X-Google-Smtp-Source: AGHT+IE2zeHpQPZegtnClFnzj4+h59uTeKaFQ58TNuLPt2n5wY8qYg8PRH47N7frx+oBKxsilN/R1JEII2E=
-X-Received: from pgns27.prod.google.com ([2002:a63:925b:0:b0:af0:e359:c50a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef4f:b0:224:24d5:f20a
- with SMTP id d9443c01a7336-22dbf740c03mr67564265ad.48.1745626442696; Fri, 25
- Apr 2025 17:14:02 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 25 Apr 2025 17:13:55 -0700
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RjCSEzfE"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53Q7RDlh4064371
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 26 Apr 2025 00:27:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53Q7RDlh4064371
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745652440;
+	bh=9M1Htgas0CGK26R6ri7TrX3Gr2qZnASXeVTeX3rMiIs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RjCSEzfElpajKkgYYkV/+MBKINyow1AsiXOQ9t25nN80YY48sfqpaQzNKvS9wovLg
+	 89fcrOmFuSALWEVhtziqyKoX4p5+bDKC5sOXnITQu0I9pzln1i6o6Kx+Zinny/P5J/
+	 NtEGeb3UHVlgAvvXUqporCfcK2cJ/ScxE0e/jUuyshXzNKua/GrB89ci8uE7KvUwGr
+	 Y+kiGMd8OPAUFViUOU2URxLWLLEYaoVuPqTFFCaZP8kPE0qL1U3xNnaxmiw3VuRSm3
+	 mSAabdcMTMuBrPZX+0RkvM1HHS/HvGIAZaennDGAFdhkrlTWeAl7NP0whBGetXW0Sb
+	 G0dkIqzJjgfFg==
+Message-ID: <e62b81f3-1952-43e6-85fd-18c6f37d531d@zytor.com>
+Date: Sat, 26 Apr 2025 00:27:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250426001355.1026530-1-seanjc@google.com>
-Subject: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest with
- vCPU's value.
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Seth Forshee <sforshee@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        dapeng1.mi@linux.intel.com
+References: <20250425083442.2390017-1-xin@zytor.com>
+ <20250425083442.2390017-2-xin@zytor.com>
+ <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-When generating the MSR_IA32_PEBS_ENABLE value that will be loaded on
-VM-Entry to a KVM guest, mask the value with the vCPU's desired PEBS_ENABLE
-value.  Consulting only the host kernel's host vs. guest masks results in
-running the guest with PEBS enabled even when the guest doesn't want to use
-PEBS.  Because KVM uses perf events to proxy the guest virtual PMU, simply
-looking at exclude_host can't differentiate between events created by host
-userspace, and events created by KVM on behalf of the guest.
+On 4/25/2025 8:45 AM, Ilpo Järvinen wrote:
+> To me this looks really a random set of source files, maybe it helped some
+> build success but it's hard for me to review this because there are still
+> cases that depend on indirect include chains.
+> 
+> Could you just look into solving all missing msr.h includes instead
+> as clearly some are still missing after 3 pre-existing ones and you adding
+> it into 3 files:
+> 
+> $ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
+> drivers/platform/x86/intel/ifs/core.c
+> drivers/platform/x86/intel/ifs/load.c
+> drivers/platform/x86/intel/ifs/runtest.c
+> drivers/platform/x86/intel/pmc/cnp.c
+> drivers/platform/x86/intel/pmc/core.c
+> drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
+> drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> drivers/platform/x86/intel/tpmi_power_domains.c
+> drivers/platform/x86/intel/turbo_max_3.c
+> drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> drivers/platform/x86/intel_ips.c
+> 
+> $ git grep -e 'msr.h' -l drivers/platform/x86/
+> drivers/platform/x86/intel/pmc/core.c
+> drivers/platform/x86/intel/tpmi_power_domains.c
+> drivers/platform/x86/intel_ips.c
 
-Running the guest with PEBS unexpectedly enabled typically manifests as
-crashes due to a near-infinite stream of #PFs.  E.g. if the guest hasn't
-written MSR_IA32_DS_AREA, the CPU will hit page faults on address '0' when
-trying to record PEBS events.
+I think you want me to add all necessary direct inclusions, right?
 
-The issue is most easily reproduced by running `perf kvm top` from before
-commit 7b100989b4f6 ("perf evlist: Remove __evlist__add_default") (after
-which, `perf kvm top` effectively stopped using PEBS).	The userspace side
-of perf creates a guest-only PEBS event, which intel_guest_get_msrs()
-misconstrues a guest-*owned* PEBS event.
+This is the right thing to do, and I did try it but gave up later.
 
-Arguably, this is a userspace bug, as enabling PEBS on guest-only events
-simply cannot work, and userspace can kill VMs in many other ways (there
-is no danger to the host).  However, even if this is considered to be bad
-userspace behavior, there's zero downside to perf/KVM restricting PEBS to
-guest-owned events.
+I will do it in the next iteration as you asked.  But I want to make my
+points:
 
-Note, commit 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily
-in two rare situations") fixed the case where host userspace is profiling
-KVM *and* userspace, but missed the case where userspace is profiling only
-KVM.
+1) It's not just two patterns {rd,wr}msr, there are a lot of definitions
+    in <asm/msr.h> and we need to cover all of them:
 
-Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-Reported-by: Seth Forshee <sforshee@kernel.org>
-Closes: https://lore.kernel.org/all/Z_VUswFkWiTYI0eD@do-x1carbon
-Cc: stable@vger.kernel.org
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+       struct msr_info
+       struct msr_regs_info
+       struct saved_msr
+       struct saved_msrs
+       {read,write}_msr
+       rdpmc
+       .*msr.*_on_cpu
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index cd6329207311..75a376478b21 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4625,7 +4625,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 	arr[pebs_enable] = (struct perf_guest_switch_msr){
- 		.msr = MSR_IA32_PEBS_ENABLE,
- 		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
--		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
-+		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
- 	};
- 
- 	if (arr[pebs_enable].host) {
+2) Once all necessary direct inclusions are in place, it's easy to
+    overlook adding a header inclusion in practice, especially if the
+    build passes.  Besides we often forget to remove a header when a
+    definition is removed.  In other words, direct inclusion is hard to
+    maintain.
 
-base-commit: 2492e5aba2be064d0604ae23ae0770ecc0168192
--- 
-2.49.0.850.g28803427d3-goog
+3) Some random kernel configuration combinations can cause the current
+    kernel build to fail.  I hit one in x86 UML.
 
+
+We all know Ingo is the best person to discuss this with :).  While my
+understanding of the header inclusion issue may be inaccurate or
+outdated.
+
+So for me, using "make allyesconfig" is a practical method for a quick
+local build check, plus I always send my patches to Intel LKP.
+
+
+There probably wants a script that identifies all files that reference a
+definition in a header thus need to include it explicitly.  And indirect
+includes should be zapped.
+
+
+> 
+> I'd also prefer the patch(es) adding missing includes be in a different
+> patch.
+
+Great suggestion!  It clearly highlights the most significant changes.
+
+Thanks!
+     Xin
