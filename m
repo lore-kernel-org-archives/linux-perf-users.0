@@ -1,203 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327BF1FC0FE;
-	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB5D13A244
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Apr 2025 00:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617895; cv=none; b=WTudG5MfXPWxlU7BMearAWCuzvCnDCorq1UH4u3+zpzEqF1Y/p/BfyWofCtlZxmQRwAaqERe9rKrev6sfXwrDh1CtILiN3nF15ybAYTSrXEh3+kUtcpWpzPNsja5gtmOACczYpzsFLLWkipqC2yzW2wEaIuZhUaypvDy/w2DaY0=
+	t=1745626444; cv=none; b=XPTcljAqHZHExmGEgDhriHBlXaOtcJDGqY7OMrvIENA9oRYgeoY5KPrCvJidUqp/igjTXbtOXYxbtbxC7ZVvZpPEVEBg98A3hhK8YSkhWuMcmp3KI+uRENawtyFCI/GgILTfQuiGaMZvpSo+wnOEgx/UZW89wHU8Ij7d9bY4dH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617895; c=relaxed/simple;
-	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bclAru4UwCn7m7fboBCpUxIIkwxD22+86eMlhTU7rGw59ucZ5vYWyupIl/fJq827hM7CwW5UAg0sW/GXAKMI83qsI591Aw14hd3sPLZWOWpEoe4N5Zt/4MGqkKfUW+2yxq0wvlDpR//T6WxDBsJfP6kdXK5NqrAhEkYgX2SHmZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXVu+k+l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745626444; c=relaxed/simple;
+	bh=5ZI1miHdJz7wfQVJ3AKTnq8ZxdU0aecNlHa6tzNWZxE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uLSh0nJhHSyK9efgIVV3z6TMTolzeS4PXTFlVF1u8R42PGybs/WdnLvAobTk8szDC1c2lPY7Gqf/ZyLpunstXPBgSox6hAMlggtPNviKB7RYP4i/wMhmfpgPdBy8RduoG2QGAu8d+Ki8EDsTqo/hpCguH/Tj4TD4oXiwmopw0ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lybnRj71; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXVu+k+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D4C4CEE4;
-	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745617893;
-	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cXVu+k+la7gq52onV+AVCt/AUgAofpFfu4riRWLuEAqy7dlYRVsMixSF3nuFrFLO1
-	 cgkHhux3Jt3RRShIOySpWH9teWmMV/x2BO5PwfL4MVTWe6hZlhzX5XwtDTpHHuFtYd
-	 0MyTnsJo5qNagQmi6guwSidwRKH27NPBgEEheaYPqCuc7g46F5I/M+fgahVOjw+LEF
-	 l2/clbpIjNwvW6o3nevfgYuRLarcYLETJtyvGr34F9rI8I3PXry3wEdLT4rLYBCLzv
-	 uM4AlfusDhMZTSE/svCo66iN1s1ej/tlEY6xy5F6zq6E/smYM506DtiuTBt4DDi2RT
-	 gRcF1NHQu8GbA==
-Date: Fri, 25 Apr 2025 14:51:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
-Message-ID: <aAwD4idaGnTiQ-ld@google.com>
-References: <20250326044001.3503432-1-namhyung@kernel.org>
- <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
- <aAkUyFjRFLkS170u@x1>
- <aAkmY0hLXarmCSIA@google.com>
- <aAlSqGN9Sx4x6_sI@x1>
- <aAq16LWBIVr08iSe@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lybnRj71"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2265a09dbfcso42153425ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Apr 2025 17:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745626442; x=1746231242; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bxpVCBLHTfcLtbj0gBx4eYSK7GUN1WhxDLmW+4nAY1I=;
+        b=lybnRj71bcsgCzrsxS62lOXwTsxB+aoTRgUedTWvZQ9SQHi9YkxQyifFe8QytC+RcE
+         sZd4BWyrzwf86MXgPEV95GYGbwxwF39To/u0H+/WPtO/YA19J2x74vjnbZineKCb1UrH
+         FMAOoqKx5v94b3MA6C8QideorQoXqRksdlebX1KnS2LVqkKc+vgnV/Zurjmi7NOGywNr
+         D0wvtSMkf48+HLkg+9ZE1rK4b3ds6mHOvL7R56SST9YUon9eEdP660N7W/jLruMzJ3dT
+         Hwiam5MacLwrfznZPk7/d9uAd7mpPKTpqSuVogjS3JjOovkbQ79kWqg8MY0JBcMLC0cE
+         d4Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745626442; x=1746231242;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bxpVCBLHTfcLtbj0gBx4eYSK7GUN1WhxDLmW+4nAY1I=;
+        b=fwhB7hzEs1/XmT0+PKlZGxmbX+BPWOBM547Jee0gzRWfTyqot3a9IpMBG8YmSYnbDC
+         SOYxzHRSLEjoThd55inZLW80jGcYWCwxcYLUq7nVE0Ey7+qLGqFPA9ryQY4wax4HQfzq
+         Kzy6a0fiPEw4iOoVfVFysgWLa5dNqGYzklbBIym90hkcvqmpBgGMGzEygIbJXKxKMHvC
+         hzCQAjc+wrUVaKt5xZfTfaUvopA46eoSqGlCbUvCKxCIU6fUYYeycnsnwoMVV66i1Dsm
+         XA00eHLZTim2QKM98nPZ1zFwxRxXMAX+X1i7pe3TxAJnMzghSsiOZR4LCDDHCeuNs43/
+         eTjQ==
+X-Gm-Message-State: AOJu0Yxv+7/5HSLBVgoYstx8qs5FPw7aCtrNN0MA4BFBqNQp33JyVi0p
+	q23Q8irQXMwRGG0KulL0d5AU6f+amEmfufg+0eut2ITd6yUbcllxZRA8h00LVYxehw6nVUjgmKd
+	dYQ==
+X-Google-Smtp-Source: AGHT+IE2zeHpQPZegtnClFnzj4+h59uTeKaFQ58TNuLPt2n5wY8qYg8PRH47N7frx+oBKxsilN/R1JEII2E=
+X-Received: from pgns27.prod.google.com ([2002:a63:925b:0:b0:af0:e359:c50a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef4f:b0:224:24d5:f20a
+ with SMTP id d9443c01a7336-22dbf740c03mr67564265ad.48.1745626442696; Fri, 25
+ Apr 2025 17:14:02 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 25 Apr 2025 17:13:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAq16LWBIVr08iSe@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <20250426001355.1026530-1-seanjc@google.com>
+Subject: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest with
+ vCPU's value.
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Seth Forshee <sforshee@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Arnaldo,
+When generating the MSR_IA32_PEBS_ENABLE value that will be loaded on
+VM-Entry to a KVM guest, mask the value with the vCPU's desired PEBS_ENABLE
+value.  Consulting only the host kernel's host vs. guest masks results in
+running the guest with PEBS enabled even when the guest doesn't want to use
+PEBS.  Because KVM uses perf events to proxy the guest virtual PMU, simply
+looking at exclude_host can't differentiate between events created by host
+userspace, and events created by KVM on behalf of the guest.
 
-On Thu, Apr 24, 2025 at 07:06:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 23, 2025 at 05:50:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
-> > > On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
-> > > > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > >      syscall            calls  errors  total       min       avg       max       stddev
-> 
-> > > > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
-> > > > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
-> > > > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
-> > > > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
-> > > > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
-> > > > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
-> > > > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
-> > > > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
-> > > > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
-> > > > > >      ...
-> 
-> > > > I added the following to align sched_[gs]etaffinity,
-> 
-> > > Thanks for processing the patch and updating this.  But I'm afraid there
-> > > are more syscalls with longer names and this is not the only place to
-> > > print the syscall names.  Also I think we need to update length of the
-> > > time fields.  So I prefer handling them in a separate patch later.
->  
-> > Fair enough, I'm leaving the patch as-is.
-> 
-> But, still have to look at this:
-> 
-> toolsbuilder@five:~$ time dm
->    1   114.52 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-26) , clang version 18.1.8 (Red Hat 18.1.8-1.module_el8.10.0+3903+ca21d481) flex 2.6.1
->    2   111.09 almalinux:9                   : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 18.1.8 (AlmaLinux OS Foundation 18.1.8-3.el9) flex 2.6.4
->    3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
-> WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
->    132.71 almalinux:9-i386              : Ok   gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3) , clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9) flex 2.6.4
->    4    21.54 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
->     bpf-trace-summary.c:(.text+0xf0760): undefined reference to `syscalltbl__name'
->     collect2: error: ld returned 1 exit status
->    5    16.50 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
->     bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
->     collect2: error: ld returned 1 exit status
-> 
-> More info:
-> 
-> perf-6.15.0-rc2/HEAD
-> perf-6.15.0-rc2/PERF-VERSION-FILE
-> BUILD_TARBALL_HEAD=24c0c35d4640052c61ed539a777bd3bd60d62bbf
-> Using built-in specs.
-> COLLECT_GCC=gcc
-> COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-alpine-linux-musl/12.2.1/lto-wrapper
-> Target: x86_64-alpine-linux-musl
-> Configured with: /home/buildozer/aports/main/gcc/src/gcc-12-20220924/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --target=x86_64-alpine-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-default-ssp --enable-languages=c,c++,d,objc,go,fortran,ada --disable-libssp --disable-libsanitizer --enable-shared --enable-threads --enable-tls --with-bugurl=https://gitlab.alpinelinux.org/alpine/aports/-/issues --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpine 12.2.1_git20220924-r4'
-> Thread model: posix
-> Supported LTO compression algorithms: zlib
-> gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
-> + make 'NO_LIBTRACEEVENT=1' 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf'
-> make: Entering directory '/git/perf-6.15.0-rc2/tools/perf'
->   BUILD:   Doing 'make -j28' parallel build
-> Warning: Skipped check-headers due to missing ../../include
-> Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install libdebuginfod-dev/elfutils-debuginfod-client-devel or equivalent
-> Makefile.config:605: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
-> Makefile.config:1085: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-> Makefile.config:1128: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-> Makefile.config:1159: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
-> 
-> Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ OFF ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                                 libperl: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                               libcrypto: [ on  ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                               get_cpuid: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
-> 
->   PERF_VERSION = 6.15.rc2.g24c0c35d4640
->   GEN     /tmp/build/perf/common-cmds.h
->   GEN     /tmp/build/perf/arch/arm64/include/generated/asm/sysreg-defs.h
->   GEN     perf-archive
->   GEN     perf-iostat
-> <SNIP>
->   CC      /tmp/build/perf/util/bpf-filter-flex.o
->   LD      /tmp/build/perf/util/perf-util-in.o
->   LD      /tmp/build/perf/perf-util-in.o
->   AR      /tmp/build/perf/libperf-util.a
->   CC      /tmp/build/perf/pmu-events/pmu-events.o
->   LD      /tmp/build/perf/pmu-events/pmu-events-in.o
->   AR      /tmp/build/perf/libpmu-events.a
->   LINK    /tmp/build/perf/perf
->   GEN     /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so
-> /usr/lib/gcc/x86_64-alpine-linux-musl/12.2.1/../../../../x86_64-alpine-linux-musl/bin/ld: /tmp/build/perf/libperf-util.a(perf-util-in.o): in function `print_common_stats':
-> bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
-> collect2: error: ld returned 1 exit status
-> make[2]: *** [Makefile.perf:804: /tmp/build/perf/perf] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [Makefile.perf:290: sub-make] Error 2
-> make: *** [Makefile:76: all] Error 2
-> make: Leaving directory '/git/perf-6.15.0-rc2/tools/perf'
-> + exit 1
-> toolsbuilder@five:~$ 
-> 
-> I'll take a look tomorrow.
+Running the guest with PEBS unexpectedly enabled typically manifests as
+crashes due to a near-infinite stream of #PFs.  E.g. if the guest hasn't
+written MSR_IA32_DS_AREA, the CPU will hit page faults on address '0' when
+trying to record PEBS events.
 
-Thanks for the report.  I think it's because syscalltbl.c depends on
-CONFIG_TRACE but bpf-trace-summary depends on CONFIG_PERF_BPF_SKEL.
+The issue is most easily reproduced by running `perf kvm top` from before
+commit 7b100989b4f6 ("perf evlist: Remove __evlist__add_default") (after
+which, `perf kvm top` effectively stopped using PEBS).	The userspace side
+of perf creates a guest-only PEBS event, which intel_guest_get_msrs()
+misconstrues a guest-*owned* PEBS event.
 
-In the future, I'd like to get rid of dependency to libtraceevent in
-perf trace and make it possible to use BPF/BTF only.
+Arguably, this is a userspace bug, as enabling PEBS on guest-only events
+simply cannot work, and userspace can kill VMs in many other ways (there
+is no danger to the host).  However, even if this is considered to be bad
+userspace behavior, there's zero downside to perf/KVM restricting PEBS to
+guest-owned events.
 
-How about this?
+Note, commit 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily
+in two rare situations") fixed the case where host userspace is profiling
+KVM *and* userspace, but missed the case where userspace is profiling only
+KVM.
 
-Thanks,
-Namhyung
+Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+Reported-by: Seth Forshee <sforshee@kernel.org>
+Closes: https://lore.kernel.org/all/Z_VUswFkWiTYI0eD@do-x1carbon
+Cc: stable@vger.kernel.org
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
----8<---
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 4f00cde8c3ea63eb..7ae5b4b9330af0ce 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -173,9 +173,12 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
--perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cd6329207311..75a376478b21 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4625,7 +4625,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	arr[pebs_enable] = (struct perf_guest_switch_msr){
+ 		.msr = MSR_IA32_PEBS_ENABLE,
+ 		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+-		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
++		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+ 	};
  
-+ifeq ($(CONFIG_TRACE),y)
-+  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
-+endif
-+
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
-   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
- endif
+ 	if (arr[pebs_enable].host) {
+
+base-commit: 2492e5aba2be064d0604ae23ae0770ecc0168192
+-- 
+2.49.0.850.g28803427d3-goog
 
