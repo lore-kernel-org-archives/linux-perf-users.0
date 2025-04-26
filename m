@@ -1,120 +1,200 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927761A83F5;
-	Sat, 26 Apr 2025 07:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3714223C9;
+	Sat, 26 Apr 2025 13:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745653289; cv=none; b=YmAGAR4IXnEOStJrUtXWupjFnJR6RHPiRx15XV5yeUkOXtv6nJVtoLIW1kyxf+NA4uhQ7MMUh52R1TuP3l7bV9+00+1BMwN2aCaUrT90vUyVd5Izmcg31lEDOqNVcUO1sdF3N0i4StaAWVPELYD9A/EjQZBtGpvGJdXuC7nSd8U=
+	t=1745675146; cv=none; b=SCKtN3FU1DTzlZSmN0aTJKqG3/Usn6prS6t4s5oy5Xq76UmhKx52aTNzDzHm1Pd5hzmAFNInSCARSSS69dge7tYx7Mc/Vqy6daDXv7MULv91H5rUBol82nSd0Jw8/HLyVYtjbICvyWtPqh5TxJQazeGOFK6iWWbkfCwXxO2O10U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745653289; c=relaxed/simple;
-	bh=hS1jPAiEqHUvDMPkv5Lj+oeUpVA95gPZF2GujwJl4JY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ExcYtYeac3hhvXdhD3qtxPE2fV9AVcLmJFl5yZgio0+4c6z8LPGz0I9dT1mZTYt3KHusO4diWjjB3S7EFlKKue9JLTtJvrHLdsGCScNtqB51fIeoL9sRskLKfkhz1QRjGvmuX9Of0XGIW7n6iGZlTFcjGodKb+qUkUntaXbCM3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bvhYUcCC; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745675146; c=relaxed/simple;
+	bh=I4nsA4r/Iu57UddEcOKuVuHTuSSaO7yRpZoDOY/Qp2U=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=f6jE//5dGP+yujZDygBhxI12zfBvjAiiIrmsxv8F+/qVvJWSwkEDnJXcMj8isOy+aqgiKuXi7bsGIRTqJzOSGW+jKWbYdrDP8oBUy6IWpAoMJFHcvXaaL+IrJKMNeZxoixKhKLAFnoyhqFAUNNjURaGIpUGUw/+2LWdOinTXh80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FL73MtPT; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bvhYUcCC"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53Q7eZXY4077669
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 26 Apr 2025 00:40:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53Q7eZXY4077669
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745653241;
-	bh=EnzZeIbi73Uf9UHrFp1u6oVId+aFUuWUYzex7VH6YZ8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bvhYUcCCrcNPHPHMfra8pagGFHBS1eIdachPY1j/LcLKf75gVtMgjo4Z3lxW/Nwx8
-	 K3abxiwtE5S6sAYo2Z6xAFmeJAbufNq9L8ADk5XuAUJ+H1tQ3G+X0J9m0VZjBLaA+s
-	 5n4Z890DiCiOntXIwifwugz7hNqwSnsVHa6YIIwsPaR3Ir9ZolFZmCw+gTKQ62dE4J
-	 YecUoTzxNgG+BOaBljb6+z0Do/A8o3VQ615cdunTjaM57EXYYspTWEBwIZzokrA2Wq
-	 9fiFpIsxxWxYHBZiB5dJyiIoZFVhM3/ZEzW/zA5+lZDd3b8R/C+bYjqUDXonYDLCCo
-	 u8/14ZBKTETHw==
-Message-ID: <3a25ce15-f95c-41c9-8f8a-3b01cffc95e5@zytor.com>
-Date: Sat, 26 Apr 2025 00:40:34 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FL73MtPT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745675144; x=1777211144;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I4nsA4r/Iu57UddEcOKuVuHTuSSaO7yRpZoDOY/Qp2U=;
+  b=FL73MtPTIblP+GDB0e3HutmxvspsnScb1Q8MgkOg+0FgCJk83LlQX37D
+   D6O2VEiAd3ZnGAPuMeiC1p+lOxC0BUoWn/yv9KlVf4JTDVYVqfnzXA+OR
+   DutgC9PHVari3dsAVurAxj8alSC47O3w3xRUAYEaHX8vKl6xSDeiXOV5u
+   8+fXOtcF1Mufp5d7nAAGzqNA6s/EWO5tUHxoKF/tApwjc8U0b5Odl1lhr
+   5XkdHiDtLbON22C2c1d62RcP6zLnpMSStEIY8p39MDCuaMuh/sz5NYt7M
+   stq1CpRZD+QdAxMzxnx04nXmArVvLbd97t0xzFj351KRhqDSXG/JM5O9T
+   A==;
+X-CSE-ConnectionGUID: rluqqy2OT+ujeyTWTOU9Mg==
+X-CSE-MsgGUID: +oYvne6NRzqCTuyzNKfqzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="47229772"
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="47229772"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:45:43 -0700
+X-CSE-ConnectionGUID: WMbNce1ORpCDbJZHWjGjpw==
+X-CSE-MsgGUID: UaIR2HdjTjK095toUEDbGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="138223278"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:45:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 26 Apr 2025 16:45:26 +0300 (EEST)
+To: Xin Li <xin@zytor.com>
+cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
+    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
+    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
+    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
+    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
+    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+    dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to
+ <asm/tsc.h>
+In-Reply-To: <e62b81f3-1952-43e6-85fd-18c6f37d531d@zytor.com>
+Message-ID: <f8a5b080-b2a8-06f0-3d2d-d232ef0887a4@linux.intel.com>
+References: <20250425083442.2390017-1-xin@zytor.com> <20250425083442.2390017-2-xin@zytor.com> <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com> <e62b81f3-1952-43e6-85fd-18c6f37d531d@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/14] x86/xen/msr: Remove pmu_msr_{read,write}()
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <20250425083442.2390017-1-xin@zytor.com>
- <20250425083442.2390017-11-xin@zytor.com>
- <04d47f21-6183-42d5-bc18-f23a8c3c2009@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-In-Reply-To: <04d47f21-6183-42d5-bc18-f23a8c3c2009@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-589040720-1745675126=:944"
 
-On 4/25/2025 3:08 AM, Jürgen Groß wrote:
-> 
-> Can you please remove the two "else" instances above? With directly 
-> returning
-> form the "if" clause they are no longer needed.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I thought about it but forgot to do it later.
+--8323328-589040720-1745675126=:944
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> 
-> With that you can add my:
-> 
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+On Sat, 26 Apr 2025, Xin Li wrote:
 
-Thanks a lot!
+> On 4/25/2025 8:45 AM, Ilpo J=C3=A4rvinen wrote:
+> > To me this looks really a random set of source files, maybe it helped s=
+ome
+> > build success but it's hard for me to review this because there are sti=
+ll
+> > cases that depend on indirect include chains.
+> >=20
+> > Could you just look into solving all missing msr.h includes instead
+> > as clearly some are still missing after 3 pre-existing ones and you add=
+ing
+> > it into 3 files:
+> >=20
+> > $ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
+> > drivers/platform/x86/intel/ifs/core.c
+> > drivers/platform/x86/intel/ifs/load.c
+> > drivers/platform/x86/intel/ifs/runtest.c
+> > drivers/platform/x86/intel/pmc/cnp.c
+> > drivers/platform/x86/intel/pmc/core.c
+> > drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> > drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
+> > drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> > drivers/platform/x86/intel/tpmi_power_domains.c
+> > drivers/platform/x86/intel/turbo_max_3.c
+> > drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> > drivers/platform/x86/intel_ips.c
+> >=20
+> > $ git grep -e 'msr.h' -l drivers/platform/x86/
+> > drivers/platform/x86/intel/pmc/core.c
+> > drivers/platform/x86/intel/tpmi_power_domains.c
+> > drivers/platform/x86/intel_ips.c
+>=20
+> I think you want me to add all necessary direct inclusions, right?
+
+For asm/msr.h yes, as it seems you're altering the inclusion paths and all=
+=20
+non-direct includes have a chance of breaking so it seems prudent to just=
+=20
+convert them into direct includes.
+
+> This is the right thing to do, and I did try it but gave up later.
+>=20
+> I will do it in the next iteration as you asked.  But I want to make my
+> points:
+>=20
+> 1) It's not just two patterns {rd,wr}msr, there are a lot of definitions
+>    in <asm/msr.h> and we need to cover all of them:
+
+I know and I don't expect you to get it 100% perfect, but taking a major=20
+step into the right direction would be way better than build testing one=20
+configuration and see what blows up and fix only those.
+
+In this particular case, the amount of includes seemed really subpar with=
+=20
+many users lacking the include.
+
+>       struct msr_info
+>       struct msr_regs_info
+>       struct saved_msr
+>       struct saved_msrs
+
+Could be shortened to -e 'struct msr' -e 'struct saved_msr'.
+
+>       {read,write}_msr
+>       rdpmc
+>       .*msr.*_on_cpu
+
+Well, my pattern already caught rdmsr.*on_cpu and wrmsr.*on_cpu.
+
+For the other patterns, I don't see those at all under=20
+drivers/platform/x86/ but I think when one typically implies the=20
+others tend appear as well so this might not be as hard as it seems.
+
+> 2) Once all necessary direct inclusions are in place, it's easy to
+>    overlook adding a header inclusion in practice, especially if the
+>    build passes.  Besides we often forget to remove a header when a
+>    definition is removed.  In other words, direct inclusion is hard to
+>    maintain.
+
+This is true as well but we should still try to move towards the right=20
+state affairs even if we will not get it near 100% until there's a real=20
+tool that relentlessly keeps exposing such human oversight.
+
+And do I try to check also includes whenever I remember while reviewing=20
+patches (which requires some effort as they are not visible in the code=20
+context and might not appear in a patch at all).
+
+> 3) Some random kernel configuration combinations can cause the current
+>    kernel build to fail.  I hit one in x86 UML.
+
+Yes, which why direct including is much better than relying on fragile=20
+indirects.
+
+> We all know Ingo is the best person to discuss this with :).  While my
+> understanding of the header inclusion issue may be inaccurate or
+> outdated.
+>=20
+> So for me, using "make allyesconfig" is a practical method for a quick
+> local build check, plus I always send my patches to Intel LKP.
+
+Even with LKP, randconfig builds may still require many tests to find=20
+issues.
+
+> There probably wants a script that identifies all files that reference a
+> definition in a header thus need to include it explicitly.  And indirect
+> includes should be zapped.
+
+Sadly, the clang based include-what-you-use tool is not yet there for=20
+the kernel AFAIK.
+
+--=20
+ i.
+
+--8323328-589040720-1745675126=:944--
