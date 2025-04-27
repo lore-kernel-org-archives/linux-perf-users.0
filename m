@@ -1,200 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3714223C9;
-	Sat, 26 Apr 2025 13:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8DA24E4A9;
+	Sun, 27 Apr 2025 09:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745675146; cv=none; b=SCKtN3FU1DTzlZSmN0aTJKqG3/Usn6prS6t4s5oy5Xq76UmhKx52aTNzDzHm1Pd5hzmAFNInSCARSSS69dge7tYx7Mc/Vqy6daDXv7MULv91H5rUBol82nSd0Jw8/HLyVYtjbICvyWtPqh5TxJQazeGOFK6iWWbkfCwXxO2O10U=
+	t=1745745053; cv=none; b=cG5d8C8fzuV/aNIa9EeyNk9y5mAVBsTuBblIFgN6GKPSZB26uDYT0pDSHVifHM+NaoZZZkxn4h3qtPgziZSieH7MvNAiV8FpOzsJ7B2VRR9W2gjMSJFrAcAi4jMSj/U89NAlYBBbeWuBHr4jyybEI4QTNCDWS5Py+WTZhdnSLVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745675146; c=relaxed/simple;
-	bh=I4nsA4r/Iu57UddEcOKuVuHTuSSaO7yRpZoDOY/Qp2U=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f6jE//5dGP+yujZDygBhxI12zfBvjAiiIrmsxv8F+/qVvJWSwkEDnJXcMj8isOy+aqgiKuXi7bsGIRTqJzOSGW+jKWbYdrDP8oBUy6IWpAoMJFHcvXaaL+IrJKMNeZxoixKhKLAFnoyhqFAUNNjURaGIpUGUw/+2LWdOinTXh80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FL73MtPT; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1745745053; c=relaxed/simple;
+	bh=l27j9bbFzg5WdPYW60QEheUSRLlp0arn/ghs/Nzwozo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iEZPkaHJd9a0A6RIK/K3CGycPiyDHwaS9iwdTcXXmfOU4N/Y4pwnzfig6mR3aL7tfBzzJnMtziNWbHuDgHq3HtMm6Y2X2xDZCZSRvwKQIS0XKA7Fpkot6qIbf7ddvdxWfEwtj87Sp2Ogo0Uyr4Yc4h+IKwia0Nv777NGjAV34L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wmw2akk6; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FL73MtPT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wmw2akk6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745675144; x=1777211144;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=I4nsA4r/Iu57UddEcOKuVuHTuSSaO7yRpZoDOY/Qp2U=;
-  b=FL73MtPTIblP+GDB0e3HutmxvspsnScb1Q8MgkOg+0FgCJk83LlQX37D
-   D6O2VEiAd3ZnGAPuMeiC1p+lOxC0BUoWn/yv9KlVf4JTDVYVqfnzXA+OR
-   DutgC9PHVari3dsAVurAxj8alSC47O3w3xRUAYEaHX8vKl6xSDeiXOV5u
-   8+fXOtcF1Mufp5d7nAAGzqNA6s/EWO5tUHxoKF/tApwjc8U0b5Odl1lhr
-   5XkdHiDtLbON22C2c1d62RcP6zLnpMSStEIY8p39MDCuaMuh/sz5NYt7M
-   stq1CpRZD+QdAxMzxnx04nXmArVvLbd97t0xzFj351KRhqDSXG/JM5O9T
-   A==;
-X-CSE-ConnectionGUID: rluqqy2OT+ujeyTWTOU9Mg==
-X-CSE-MsgGUID: +oYvne6NRzqCTuyzNKfqzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="47229772"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="47229772"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:45:43 -0700
-X-CSE-ConnectionGUID: WMbNce1ORpCDbJZHWjGjpw==
-X-CSE-MsgGUID: UaIR2HdjTjK095toUEDbGQ==
+  t=1745745051; x=1777281051;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l27j9bbFzg5WdPYW60QEheUSRLlp0arn/ghs/Nzwozo=;
+  b=Wmw2akk65oG1R4ymJEGFNtunTiXzQVaUlUK0EQf8iW7cMHanuM1S+5P7
+   JmmfkLypMevtVswcgjIG6D3//q4LHg0+G2VfOURKczBVXVAL6FdtuXDY6
+   +4VJFAn6z9QTdQiqgO1KfoHe6OffvsyxbNbxJQXMwiR53ee1yXnvGZ8Rd
+   QJS1JCV6JOiSsljYbssf2QOAWBspaTNkhSXqiwzC1V1K+sl0xNQT/y+X+
+   QcqFt2shl15xyPcAzK7CaQVkH3DR8+sxrhGkoxDu6mCuTx7Tsc344MkoA
+   KtmuhjT3xVAwWeAM76LR5yLttqfJuOx3cF6BA5QE68nMfOWxcXiZ5FPvD
+   w==;
+X-CSE-ConnectionGUID: uYDaokDHQ3KBt1oePv+0JQ==
+X-CSE-MsgGUID: N7VQM6NORoSXWl6jxFRWDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="57994264"
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="57994264"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 02:10:50 -0700
+X-CSE-ConnectionGUID: vpIpS3DeTp2CXfSkUqwIig==
+X-CSE-MsgGUID: 3vCkie5AToGeIrdu6tlCCA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="138223278"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:45:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 26 Apr 2025 16:45:26 +0300 (EEST)
-To: Xin Li <xin@zytor.com>
-cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
-    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
-    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
-    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
-    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
-    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-    dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to
- <asm/tsc.h>
-In-Reply-To: <e62b81f3-1952-43e6-85fd-18c6f37d531d@zytor.com>
-Message-ID: <f8a5b080-b2a8-06f0-3d2d-d232ef0887a4@linux.intel.com>
-References: <20250425083442.2390017-1-xin@zytor.com> <20250425083442.2390017-2-xin@zytor.com> <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com> <e62b81f3-1952-43e6-85fd-18c6f37d531d@zytor.com>
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="134202862"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 02:10:47 -0700
+Message-ID: <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
+Date: Sun, 27 Apr 2025 17:10:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-589040720-1745675126=:944"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-589040720-1745675126=:944
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
+ with vCPU's value.
+To: Sean Christopherson <seanjc@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Seth Forshee <sforshee@kernel.org>
+References: <20250426001355.1026530-1-seanjc@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250426001355.1026530-1-seanjc@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
 
-On Sat, 26 Apr 2025, Xin Li wrote:
 
-> On 4/25/2025 8:45 AM, Ilpo J=C3=A4rvinen wrote:
-> > To me this looks really a random set of source files, maybe it helped s=
-ome
-> > build success but it's hard for me to review this because there are sti=
-ll
-> > cases that depend on indirect include chains.
-> >=20
-> > Could you just look into solving all missing msr.h includes instead
-> > as clearly some are still missing after 3 pre-existing ones and you add=
-ing
-> > it into 3 files:
-> >=20
-> > $ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
-> > drivers/platform/x86/intel/ifs/core.c
-> > drivers/platform/x86/intel/ifs/load.c
-> > drivers/platform/x86/intel/ifs/runtest.c
-> > drivers/platform/x86/intel/pmc/cnp.c
-> > drivers/platform/x86/intel/pmc/core.c
-> > drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> > drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
-> > drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > drivers/platform/x86/intel/tpmi_power_domains.c
-> > drivers/platform/x86/intel/turbo_max_3.c
-> > drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-> > drivers/platform/x86/intel_ips.c
-> >=20
-> > $ git grep -e 'msr.h' -l drivers/platform/x86/
-> > drivers/platform/x86/intel/pmc/core.c
-> > drivers/platform/x86/intel/tpmi_power_domains.c
-> > drivers/platform/x86/intel_ips.c
->=20
-> I think you want me to add all necessary direct inclusions, right?
+On 4/26/2025 8:13 AM, Sean Christopherson wrote:
+> When generating the MSR_IA32_PEBS_ENABLE value that will be loaded on
+> VM-Entry to a KVM guest, mask the value with the vCPU's desired PEBS_ENABLE
+> value.  Consulting only the host kernel's host vs. guest masks results in
+> running the guest with PEBS enabled even when the guest doesn't want to use
+> PEBS.  Because KVM uses perf events to proxy the guest virtual PMU, simply
+> looking at exclude_host can't differentiate between events created by host
+> userspace, and events created by KVM on behalf of the guest.
+>
+> Running the guest with PEBS unexpectedly enabled typically manifests as
+> crashes due to a near-infinite stream of #PFs.  E.g. if the guest hasn't
+> written MSR_IA32_DS_AREA, the CPU will hit page faults on address '0' when
+> trying to record PEBS events.
+>
+> The issue is most easily reproduced by running `perf kvm top` from before
+> commit 7b100989b4f6 ("perf evlist: Remove __evlist__add_default") (after
+> which, `perf kvm top` effectively stopped using PEBS).	The userspace side
+> of perf creates a guest-only PEBS event, which intel_guest_get_msrs()
+> misconstrues a guest-*owned* PEBS event.
+>
+> Arguably, this is a userspace bug, as enabling PEBS on guest-only events
+> simply cannot work, and userspace can kill VMs in many other ways (there
+> is no danger to the host).  However, even if this is considered to be bad
+> userspace behavior, there's zero downside to perf/KVM restricting PEBS to
+> guest-owned events.
+>
+> Note, commit 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily
+> in two rare situations") fixed the case where host userspace is profiling
+> KVM *and* userspace, but missed the case where userspace is profiling only
+> KVM.
+>
+> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+> Reported-by: Seth Forshee <sforshee@kernel.org>
+> Closes: https://lore.kernel.org/all/Z_VUswFkWiTYI0eD@do-x1carbon
+> Cc: stable@vger.kernel.org
+> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/events/intel/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index cd6329207311..75a376478b21 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4625,7 +4625,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  	arr[pebs_enable] = (struct perf_guest_switch_msr){
+>  		.msr = MSR_IA32_PEBS_ENABLE,
+>  		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+> -		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
+> +		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
 
-For asm/msr.h yes, as it seems you're altering the inclusion paths and all=
-=20
-non-direct includes have a chance of breaking so it seems prudent to just=
-=20
-convert them into direct includes.
+Although I can't reproduce the guest crash issue on local SPR server, the
+logic is correct.
 
-> This is the right thing to do, and I did try it but gave up later.
->=20
-> I will do it in the next iteration as you asked.  But I want to make my
-> points:
->=20
-> 1) It's not just two patterns {rd,wr}msr, there are a lot of definitions
->    in <asm/msr.h> and we need to cover all of them:
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-I know and I don't expect you to get it 100% perfect, but taking a major=20
-step into the right direction would be way better than build testing one=20
-configuration and see what blows up and fix only those.
+Furthermore,  the below global_ctrl guest value calculation  seems
+incorrect as well.
 
-In this particular case, the amount of includes seemed really subpar with=
-=20
-many users lacking the include.
+    u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
 
->       struct msr_info
->       struct msr_regs_info
->       struct saved_msr
->       struct saved_msrs
+    arr[global_ctrl] = (struct perf_guest_switch_msr){
+        .msr = MSR_CORE_PERF_GLOBAL_CTRL,
+        .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+        .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+    };
 
-Could be shortened to -e 'struct msr' -e 'struct saved_msr'.
+For guest PEBS events, its HW counter idx would be set into
+cpuc->pebs_enabled as well, so the calculated guest value would clear the
+corresponding bit of the guest PEBS events. Thus the guest PEBS events
+should not be enabled in non-root mode, but coincidentally since the
+calculated host and guest value of global_ctrl MSR is same,
+atomic_switch_perf_msrs() doesn't really write the guest value into
+GLOBAL_CTRL MSR before vm-entry and GLOBAL_CTRL MSR still keeps the default
+value (all HW counters are enabled). That's why we see guest PEBS still works.
 
->       {read,write}_msr
->       rdpmc
->       .*msr.*_on_cpu
+for (i = 0; i < nr_msrs; i++)
+        if (msrs[i].host == msrs[i].guest)
+            clear_atomic_switch_msr(vmx, msrs[i].msr);
+        else
+            add_atomic_switch_msr(vmx, msrs[i].msr, msrs[i].guest,
+                    msrs[i].host, false);
 
-Well, my pattern already caught rdmsr.*on_cpu and wrmsr.*on_cpu.
+Currently we have this Sean's fix, only the guest PEBS event bits of
+IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
+change global_ctrl guest value calculation to this.
 
-For the other patterns, I don't see those at all under=20
-drivers/platform/x86/ but I think when one typically implies the=20
-others tend appear as well so this might not be as hard as it seems.
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 09d2d66c9f21..5bc56bb616ec 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
+*intel_guest_get_msrs(int *nr, void *data)
+        arr[global_ctrl] = (struct perf_guest_switch_msr){
+                .msr = MSR_CORE_PERF_GLOBAL_CTRL,
+                .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+-               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
++               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask,
+        };
 
-> 2) Once all necessary direct inclusions are in place, it's easy to
->    overlook adding a header inclusion in practice, especially if the
->    build passes.  Besides we often forget to remove a header when a
->    definition is removed.  In other words, direct inclusion is hard to
->    maintain.
-
-This is true as well but we should still try to move towards the right=20
-state affairs even if we will not get it near 100% until there's a real=20
-tool that relentlessly keeps exposing such human oversight.
-
-And do I try to check also includes whenever I remember while reviewing=20
-patches (which requires some effort as they are not visible in the code=20
-context and might not appear in a patch at all).
-
-> 3) Some random kernel configuration combinations can cause the current
->    kernel build to fail.  I hit one in x86 UML.
-
-Yes, which why direct including is much better than relying on fragile=20
-indirects.
-
-> We all know Ingo is the best person to discuss this with :).  While my
-> understanding of the header inclusion issue may be inaccurate or
-> outdated.
->=20
-> So for me, using "make allyesconfig" is a practical method for a quick
-> local build check, plus I always send my patches to Intel LKP.
-
-Even with LKP, randconfig builds may still require many tests to find=20
-issues.
-
-> There probably wants a script that identifies all files that reference a
-> definition in a header thus need to include it explicitly.  And indirect
-> includes should be zapped.
-
-Sadly, the clang based include-what-you-use tool is not yet there for=20
-the kernel AFAIK.
-
---=20
- i.
-
---8323328-589040720-1745675126=:944--
+>  	};
+>  
+>  	if (arr[pebs_enable].host) {
+>
+> base-commit: 2492e5aba2be064d0604ae23ae0770ecc0168192
