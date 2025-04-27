@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8DA24E4A9;
-	Sun, 27 Apr 2025 09:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A252505BA;
+	Sun, 27 Apr 2025 09:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745745053; cv=none; b=cG5d8C8fzuV/aNIa9EeyNk9y5mAVBsTuBblIFgN6GKPSZB26uDYT0pDSHVifHM+NaoZZZkxn4h3qtPgziZSieH7MvNAiV8FpOzsJ7B2VRR9W2gjMSJFrAcAi4jMSj/U89NAlYBBbeWuBHr4jyybEI4QTNCDWS5Py+WTZhdnSLVI=
+	t=1745745683; cv=none; b=DJvu8EfduhVZHWvRz7T9UOPHoK68XXcRXo7yKyKNa139eudmRsd2u7tAWhqVDs11E8JQi5Xky/fijw2EgsOUghbtcj5/oZtaly0hpODMk6mwMXhadmqWzlKx9OoKLIoaohoEVOF7oN4nfNSF8cBpXEvIGMcnrQl8eLPS8R2d5qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745745053; c=relaxed/simple;
-	bh=l27j9bbFzg5WdPYW60QEheUSRLlp0arn/ghs/Nzwozo=;
+	s=arc-20240116; t=1745745683; c=relaxed/simple;
+	bh=StjvexCO/8zLImAhby8WhuBY7Msfnw3+TtbfmBdURq4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iEZPkaHJd9a0A6RIK/K3CGycPiyDHwaS9iwdTcXXmfOU4N/Y4pwnzfig6mR3aL7tfBzzJnMtziNWbHuDgHq3HtMm6Y2X2xDZCZSRvwKQIS0XKA7Fpkot6qIbf7ddvdxWfEwtj87Sp2Ogo0Uyr4Yc4h+IKwia0Nv777NGjAV34L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wmw2akk6; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=GCfCsnirTvra3AJhjJuLNKu+u6VwHkWoTRfduHpae+TOMmo0bccKA1ClvbOWZEAVuWQV+GWfXrSYGDgR6P1QXBDqSsYprinPrbf9uwyTAyGcsoR7lrkjE5EDVpY3DQJs9LaCoJOjJc4iaFKhMCq/GWwFHG5G0ZC/L9LQmlq99PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i4m4S/wy; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wmw2akk6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4m4S/wy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745745051; x=1777281051;
+  t=1745745682; x=1777281682;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=l27j9bbFzg5WdPYW60QEheUSRLlp0arn/ghs/Nzwozo=;
-  b=Wmw2akk65oG1R4ymJEGFNtunTiXzQVaUlUK0EQf8iW7cMHanuM1S+5P7
-   JmmfkLypMevtVswcgjIG6D3//q4LHg0+G2VfOURKczBVXVAL6FdtuXDY6
-   +4VJFAn6z9QTdQiqgO1KfoHe6OffvsyxbNbxJQXMwiR53ee1yXnvGZ8Rd
-   QJS1JCV6JOiSsljYbssf2QOAWBspaTNkhSXqiwzC1V1K+sl0xNQT/y+X+
-   QcqFt2shl15xyPcAzK7CaQVkH3DR8+sxrhGkoxDu6mCuTx7Tsc344MkoA
-   KtmuhjT3xVAwWeAM76LR5yLttqfJuOx3cF6BA5QE68nMfOWxcXiZ5FPvD
-   w==;
-X-CSE-ConnectionGUID: uYDaokDHQ3KBt1oePv+0JQ==
-X-CSE-MsgGUID: N7VQM6NORoSXWl6jxFRWDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="57994264"
+  bh=StjvexCO/8zLImAhby8WhuBY7Msfnw3+TtbfmBdURq4=;
+  b=i4m4S/wyRbt9VxBy3mtZQMMrWxzwfy0jIlDKtnwmyJej1Qe2+w14/R9u
+   9kO2M+OyoBG0GRYOhiVjmNfrR1Mqz3Q90aFFnBPJD1XM6MsN/5F73X+F7
+   0HAx0e7SRpTS9oM6n/Knb+XYEv3AWgiIe4BIwYXxsDWiiWTItI1jHAlur
+   1k8htBneUKeDzpxBh2uDrDL5ToLu+9hMPSAMyB3UpLXlrYeivICXefvmN
+   XLCSdQopL0DBxq9AzfoZORwf6fMJQ18c8MIQ2DlB22Am72MfMlaa8jTzT
+   rqSeECXzG6Rd4aPeAHvhkj6G4XwgoNsEGc1Wymf3GOpgmlq7EA6CCInPF
+   A==;
+X-CSE-ConnectionGUID: nMuMAj5nR72ceNwSJV0KwA==
+X-CSE-MsgGUID: DHY+4D5/TJeL6mLrzwdr7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="47236481"
 X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="57994264"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 02:10:50 -0700
-X-CSE-ConnectionGUID: vpIpS3DeTp2CXfSkUqwIig==
-X-CSE-MsgGUID: 3vCkie5AToGeIrdu6tlCCA==
+   d="scan'208";a="47236481"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 02:21:19 -0700
+X-CSE-ConnectionGUID: JeWrP7m0Q8KAGkBMWvxeDQ==
+X-CSE-MsgGUID: lIrEAOnkShqHlZAf/7h3KA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="134202862"
+   d="scan'208";a="133151304"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 02:10:47 -0700
-Message-ID: <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
-Date: Sun, 27 Apr 2025 17:10:44 +0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 02:21:12 -0700
+Message-ID: <d2bdd61d-cab6-401f-9b6a-17b28f3cd19c@linux.intel.com>
+Date: Sun, 27 Apr 2025 17:21:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,127 +52,164 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
- with vCPU's value.
-To: Sean Christopherson <seanjc@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Seth Forshee <sforshee@kernel.org>
-References: <20250426001355.1026530-1-seanjc@google.com>
+Subject: Re: [PATCH v3 09/14] x86/xen/msr: Remove calling
+ native_{read,write}_msr{,_safe}() in pmu_msr_{read,write}()
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+ seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+ kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+References: <20250425083442.2390017-1-xin@zytor.com>
+ <20250425083442.2390017-10-xin@zytor.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250426001355.1026530-1-seanjc@google.com>
+In-Reply-To: <20250425083442.2390017-10-xin@zytor.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 4/26/2025 8:13 AM, Sean Christopherson wrote:
-> When generating the MSR_IA32_PEBS_ENABLE value that will be loaded on
-> VM-Entry to a KVM guest, mask the value with the vCPU's desired PEBS_ENABLE
-> value.  Consulting only the host kernel's host vs. guest masks results in
-> running the guest with PEBS enabled even when the guest doesn't want to use
-> PEBS.  Because KVM uses perf events to proxy the guest virtual PMU, simply
-> looking at exclude_host can't differentiate between events created by host
-> userspace, and events created by KVM on behalf of the guest.
+On 4/25/2025 4:34 PM, Xin Li (Intel) wrote:
+> hpa found that pmu_msr_write() is actually a completely pointless
+> function [1]: all it does is shuffle some arguments, then calls
+> pmu_msr_chk_emulated() and if it returns true AND the emulated flag
+> is clear then does *exactly the same thing* that the calling code
+> would have done if pmu_msr_write() itself had returned true.  And
+> pmu_msr_read() does the equivalent stupidity.
 >
-> Running the guest with PEBS unexpectedly enabled typically manifests as
-> crashes due to a near-infinite stream of #PFs.  E.g. if the guest hasn't
-> written MSR_IA32_DS_AREA, the CPU will hit page faults on address '0' when
-> trying to record PEBS events.
+> Remove the calls to native_{read,write}_msr{,_safe}() within
+> pmu_msr_{read,write}().  Instead reuse the existing calling code
+> that decides whether to call native_{read,write}_msr{,_safe}() based
+> on the return value from pmu_msr_{read,write}().  Consequently,
+> eliminate the need to pass an error pointer to pmu_msr_{read,write}().
 >
-> The issue is most easily reproduced by running `perf kvm top` from before
-> commit 7b100989b4f6 ("perf evlist: Remove __evlist__add_default") (after
-> which, `perf kvm top` effectively stopped using PEBS).	The userspace side
-> of perf creates a guest-only PEBS event, which intel_guest_get_msrs()
-> misconstrues a guest-*owned* PEBS event.
+> While at it, refactor pmu_msr_write() to take the MSR value as a u64
+> argument, replacing the current dual u32 arguments, because the dual
+> u32 arguments were only used to call native_write_msr{,_safe}(), which
+> has now been removed.
 >
-> Arguably, this is a userspace bug, as enabling PEBS on guest-only events
-> simply cannot work, and userspace can kill VMs in many other ways (there
-> is no danger to the host).  However, even if this is considered to be bad
-> userspace behavior, there's zero downside to perf/KVM restricting PEBS to
-> guest-owned events.
+> [1]: https://lore.kernel.org/lkml/0ec48b84-d158-47c6-b14c-3563fd14bcc4@zytor.com/
 >
-> Note, commit 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily
-> in two rare situations") fixed the case where host userspace is profiling
-> KVM *and* userspace, but missed the case where userspace is profiling only
-> KVM.
->
-> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-> Reported-by: Seth Forshee <sforshee@kernel.org>
-> Closes: https://lore.kernel.org/all/Z_VUswFkWiTYI0eD@do-x1carbon
-> Cc: stable@vger.kernel.org
-> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Sign-off-by: Xin Li (Intel) <xin@zytor.com>
 > ---
->  arch/x86/events/intel/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index cd6329207311..75a376478b21 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4625,7 +4625,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  	arr[pebs_enable] = (struct perf_guest_switch_msr){
->  		.msr = MSR_IA32_PEBS_ENABLE,
->  		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
-> -		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
-> +		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
-
-Although I can't reproduce the guest crash issue on local SPR server, the
-logic is correct.
+> Change in v3:
+> *) Rename pmu_msr_{read,write}() to pmu_msr_{read,write}_emulated()
+>    (Dapeng Mi).
+> *) Fix a pmu_msr_read() callsite with wrong arguments (Dapeng Mi).
+> ---
+>  arch/x86/xen/enlighten_pv.c |  8 ++++++--
+>  arch/x86/xen/pmu.c          | 27 ++++-----------------------
+>  arch/x86/xen/xen-ops.h      |  4 ++--
+>  3 files changed, 12 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+> index 846b5737d320..61e51a970f3c 100644
+> --- a/arch/x86/xen/enlighten_pv.c
+> +++ b/arch/x86/xen/enlighten_pv.c
+> @@ -1090,7 +1090,7 @@ static u64 xen_do_read_msr(unsigned int msr, int *err)
+>  {
+>  	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
+>  
+> -	if (pmu_msr_read(msr, &val, err))
+> +	if (pmu_msr_read_emulated(msr, &val))
+>  		return val;
+>  
+>  	if (err)
+> @@ -1132,6 +1132,8 @@ static void set_seg(unsigned int which, unsigned int low, unsigned int high,
+>  static void xen_do_write_msr(unsigned int msr, unsigned int low,
+>  			     unsigned int high, int *err)
+>  {
+> +	u64 val;
+> +
+>  	switch (msr) {
+>  	case MSR_FS_BASE:
+>  		set_seg(SEGBASE_FS, low, high, err);
+> @@ -1158,7 +1160,9 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+>  		break;
+>  
+>  	default:
+> -		if (!pmu_msr_write(msr, low, high, err)) {
+> +		val = (u64)high << 32 | low;
+> +
+> +		if (!pmu_msr_write_emulated(msr, val)) {
+>  			if (err)
+>  				*err = native_write_msr_safe(msr, low, high);
+>  			else
+> diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+> index 9c1682af620a..b6557f2d1a2e 100644
+> --- a/arch/x86/xen/pmu.c
+> +++ b/arch/x86/xen/pmu.c
+> @@ -313,37 +313,18 @@ static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+>  	return true;
+>  }
+>  
+> -bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err)
+> +bool pmu_msr_read_emulated(u32 msr, u64 *val)
+>  {
+>  	bool emulated;
+>  
+> -	if (!pmu_msr_chk_emulated(msr, val, true, &emulated))
+> -		return false;
+> -
+> -	if (!emulated) {
+> -		*val = err ? native_read_msr_safe(msr, err)
+> -			   : native_read_msr(msr);
+> -	}
+> -
+> -	return true;
+> +	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
+>  }
+>  
+> -bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err)
+> +bool pmu_msr_write_emulated(u32 msr, u64 val)
+>  {
+> -	uint64_t val = ((uint64_t)high << 32) | low;
+>  	bool emulated;
+>  
+> -	if (!pmu_msr_chk_emulated(msr, &val, false, &emulated))
+> -		return false;
+> -
+> -	if (!emulated) {
+> -		if (err)
+> -			*err = native_write_msr_safe(msr, low, high);
+> -		else
+> -			native_write_msr(msr, low, high);
+> -	}
+> -
+> -	return true;
+> +	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
+>  }
+>  
+>  static u64 xen_amd_read_pmc(int counter)
+> diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+> index 735f58780704..163e03e33089 100644
+> --- a/arch/x86/xen/xen-ops.h
+> +++ b/arch/x86/xen/xen-ops.h
+> @@ -274,8 +274,8 @@ void xen_pmu_finish(int cpu);
+>  static inline void xen_pmu_init(int cpu) {}
+>  static inline void xen_pmu_finish(int cpu) {}
+>  #endif
+> -bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err);
+> -bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err);
+> +bool pmu_msr_read_emulated(u32 msr, u64 *val);
+> +bool pmu_msr_write_emulated(u32 msr, u64 val);
+>  int pmu_apic_update(uint32_t reg);
+>  u64 xen_read_pmc(int counter);
+>  
 
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Furthermore,  the below global_ctrl guest value calculation  seems
-incorrect as well.
 
-    u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
-
-    arr[global_ctrl] = (struct perf_guest_switch_msr){
-        .msr = MSR_CORE_PERF_GLOBAL_CTRL,
-        .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
-        .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
-    };
-
-For guest PEBS events, its HW counter idx would be set into
-cpuc->pebs_enabled as well, so the calculated guest value would clear the
-corresponding bit of the guest PEBS events. Thus the guest PEBS events
-should not be enabled in non-root mode, but coincidentally since the
-calculated host and guest value of global_ctrl MSR is same,
-atomic_switch_perf_msrs() doesn't really write the guest value into
-GLOBAL_CTRL MSR before vm-entry and GLOBAL_CTRL MSR still keeps the default
-value (all HW counters are enabled). That's why we see guest PEBS still works.
-
-for (i = 0; i < nr_msrs; i++)
-        if (msrs[i].host == msrs[i].guest)
-            clear_atomic_switch_msr(vmx, msrs[i].msr);
-        else
-            add_atomic_switch_msr(vmx, msrs[i].msr, msrs[i].guest,
-                    msrs[i].host, false);
-
-Currently we have this Sean's fix, only the guest PEBS event bits of
-IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
-change global_ctrl guest value calculation to this.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 09d2d66c9f21..5bc56bb616ec 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
-*intel_guest_get_msrs(int *nr, void *data)
-        arr[global_ctrl] = (struct perf_guest_switch_msr){
-                .msr = MSR_CORE_PERF_GLOBAL_CTRL,
-                .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
--               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
-+               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask,
-        };
-
->  	};
->  
->  	if (arr[pebs_enable].host) {
->
-> base-commit: 2492e5aba2be064d0604ae23ae0770ecc0168192
