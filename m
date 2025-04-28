@@ -1,153 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CBD186284;
-	Mon, 28 Apr 2025 20:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AA218DB29
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 21:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745872940; cv=none; b=YanC3nQGNuz3ZFVQOs5NJWXVk5Di9MVHuvfH9SpweHNJz8bI4DA7/jPwhXOyRsG/0Fh6V2cK8UpiumGo9/H0g8aLmLYn++hWXpFXf0zN5yLy3UIwrU1g3Qlyb9V8kgR6eaSrNrpLs9p2J6xqWSDJMuL0jzx3V8PuzBtiSyhFJWc=
+	t=1745876054; cv=none; b=GqWOn8ipq4aM6yeREUt+zDDnxq2rm+6dHEwSkLYl+pP9GFXAVv1qpmt3fEfXM51u1r/8LUDG2xwtUmP8UXCPTZeV0zQhhK+q2q+FFeZjYs571SEyYqVIOIqvpKNsbgvWiymagi0L0XCNl332ohqp77AnHF+BdNKDWYB2Wgujl7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745872940; c=relaxed/simple;
-	bh=V0uWzclMr2r/WAwDMRAdUM4T2DZ/rdMtbW/axAzMidY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n6f5iC+7mfTKFplDwIkYZk34r4sSjOsrBcmgo4ciewGjW0l52pti3eOEjhOMbCqn4Vo0yP4KGZuy38uYkofV4ZBh2Oza4kQxa0flnOtHRcvOMo/UgvEcRgJVsiDOpyIM5gK7+kRtGbnIGTnjQm7/Athcw/wHRTIughsby+PUIWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sm9EWizy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745876054; c=relaxed/simple;
+	bh=wmLjL3uu1SBaQMt05DbJktre9AX9CZEIaHrF9c+vxcc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=GRMTnxMSUA72IFuxZn7Ip20HDbg1RL4YHXhJYtWuEFkpPgxXc1DgAfm14ulpLutbhkZm7E+MYWP/zuTie5FjlTveXv7vtCgyGJ6hf1xck5YQ4AwRzSjl11sY3IhrEymJXdME+8XPBZRGP1o9OUNJ0mrfHYU+cMz9rO+RW6EdahI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eib6ECsB; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sm9EWizy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CB0C4CEE4;
-	Mon, 28 Apr 2025 20:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745872938;
-	bh=V0uWzclMr2r/WAwDMRAdUM4T2DZ/rdMtbW/axAzMidY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sm9EWizyaC+EPmMkIokOwSgMmHtKXllVhpWHjjfuF8ul9YSnOc3D8iKL7jte0m9g0
-	 F/3LjKi5p0yf6ov+fi4hHI2Y46xmoZ0FpGgyTazaP9g/14gDaI9c/x9fipZS6YbyaN
-	 HJ2qeIGnT8nPB7oNwPS1Yb7Sd8lOqBZX8a4oJePJkL038MsHbV6Q96W9yvt/TPur0a
-	 M0mx+VxVBTnL9eL2jIFF/EI4oiXkl3gmYMSG635T5orCP+8917RbmOQNFzMVeOfa+u
-	 WBWjrOol3x5/4dJ+ukk/Fq5bzww/JHqtm0P2fl9CmuqBtf06GieGbVWJaxJivjVocn
-	 wGqJJjRbgiWVA==
-Date: Mon, 28 Apr 2025 13:42:15 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
-	Blake Jones <blakejones@google.com>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>
-Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
-Message-ID: <aA_oJ7tgGv-H4ocX@google.com>
-References: <20250424162529.686762589@goodmis.org>
- <20250424162633.390748816@goodmis.org>
- <aAupP56jOM_wul_8@google.com>
- <20250425125815.5c5b33be@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eib6ECsB"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so5054414a91.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 14:34:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745876052; x=1746480852; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cj/c5oogZqYX3xzKlkyw0X3MbeqYB945x9Mgm79S4zo=;
+        b=eib6ECsByVbKA7bdEtrfjv7pK0WMWLzxNWJweEV6OHPX0eR4dDKszqdaNKp/QyAb3J
+         amCZQKTooBn8UjaS0nM2dA62O4JNhnMo2KS44iCEtgMHF4TcFYw1vwJMc94ZQIQEFuBY
+         V2pUjCi7F5SwP4n/GSICdj/+8JPU4YTzTE53l7Sjb2ZUAFgJK9TB0Y+ir/bdiger/UB2
+         svwAdmZp44/nXeL3xpWJSBTEibxFszrRGNBp9sN1UoAHBDNxUnO2ehVos0cWr+pr92U6
+         ravYuO4iEQeIMBL8LIKwnAEfazFYWOx9Ykoy2QW2EE6ZTMXshgMsOugmF0bgPB5Oabnl
+         /37Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745876052; x=1746480852;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cj/c5oogZqYX3xzKlkyw0X3MbeqYB945x9Mgm79S4zo=;
+        b=mbBU++Me5ZE1JxzsyqOncYNBlntt/R7H4vGd2FaBsX/dfmQ5Vgx76K/Jo2IVhMBVVd
+         S4b1wKKEAOlVfrwm1H33EA3MJTjtDEf70JWnGj9rm0UmV1lH1gEpQGMF/tEe4/06BtLV
+         kE+uRER6Hc+tSjLLVT+RPSw1OoRNpalb+RaHKx3qEp43/SW9JarBE5Zs0BSkvq8MRzGi
+         NaW9axDTbGwVRpEeTYtUtL/ipgN5SLybKDzKADygF4MAwhytlrXHuHghr+CYHonC92Ll
+         zQ+YAysWB/iEHvYvCIXdeBoqrDrTgHYm6a7uRdp0MDbr27jsCuaTGaO0BVr25q58TEh9
+         SEaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwhnIHWj0zYSwakCa5nzjKqmVnNDgv3qLLiVnwYhpwE7zuTUD0InrNw+T8tKm9lkiEu0bU4IMqzz4CpqC/MBvM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8+01+V0bO/Eos3bqOV/iX+gOWHLCzNXOpCsBW/PIxKYKhIqC7
+	M2ieG73mt9P3DJf6ja1IfQtdkqD4en0jHur0Rd+B5S9j/PPRUnm4kC06WqcAXDs9Fr0Bsf0XEU4
+	FWvPtFg==
+X-Google-Smtp-Source: AGHT+IHv7PlHZ00FuHiUOgTY4BIXnXtwISPxnN0k3IBWgGiIrvxGquayY7tBuGrkZMoqODT26AYFUGzt7gYS
+X-Received: from pjyp8.prod.google.com ([2002:a17:90a:e708:b0:305:2d68:2be6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4cc4:b0:305:5f25:59a5
+ with SMTP id 98e67ed59e1d1-30a215a9e6cmr1892969a91.35.1745876052550; Mon, 28
+ Apr 2025 14:34:12 -0700 (PDT)
+Date: Mon, 28 Apr 2025 14:33:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250425125815.5c5b33be@gandalf.local.home>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+Message-ID: <20250428213409.1417584-1-irogers@google.com>
+Subject: [PATCH v3 0/9] perf: Default use of build IDs and improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, James Clark <james.clark@linaro.org>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
+	"=?UTF-8?q?Martin=20Li=C5=A1ka?=" <m.liska@foxlink.cz>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 25, 2025 at 12:58:15PM -0400, Steven Rostedt wrote:
-> On Fri, 25 Apr 2025 08:24:47 -0700
-> Namhyung Kim <namhyung@kernel.org> wrote:
-> > > +/*
-> > > + * Returns:
-> > > +*     > 0 : if already queued.
-> > > + *      0 : if it performed the queuing
-> > > + *    < 0 : if it did not get queued.
-> > > + */
-> > > +static int deferred_request(struct perf_event *event)
-> > > +{
-> > > +	struct callback_head *work = &event->pending_unwind_work;
-> > > +	int pending;
-> > > +	int ret;  
-> > 
-> > I'm not sure if it works for per-CPU events.  The event is shared so any
-> > task can request the deferred callchains.  Does it handle if task A
-> > requests one and scheduled out before going to the user mode, and task B
-> > on the CPU also requests another after that?  I'm afraid not..
-> 
-> I was afraid of that.
-> 
-> This is no different that what Josh did in his last set in v4. I'm guessing
-> the issue is running with "-a", correct?
+Build ID mmap2 events have been available since Linux v5.12 and avoid
+certain races. Enable these by default as discussed in:
+https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
 
-Yes.
+The dso_id is used to indentify a DSO that may change by being
+overwritten. The inode generation isn't present in /proc/pid/maps and
+so was already only optionally filled in. With build ID mmap events
+the other major, minor and inode varialbes aren't filled in. Change
+the dso_id implementation to make optional values explicit, rather
+than injecting a dso_id we want to improve it during find operations,
+add the buildid to the dso_id for sorting and so that matching fails
+when build IDs vary between DSOs.
 
-> 
-> Could we just not use deferred when running with "-a" for now? Or could we
-> possibly just make the deferred stacktrace its own event? Have it be
-> possible that perf just registers a signal instance with the deferred
-> unwinding logic, and then perf can handle where to write the information. I
-> don't know perf well enough to implement that.
+Mark the callchain for buildids and not just the sample IP, fixing
+missing DSOs.
 
-Even if it excludes per-CPU events, per-task events also can attach to a
-CPU and that's the default behavior of the perf record IIRC.  In that
-case, it needs to be careful when it accesses the event since the task
-can migrate to another CPU.  So I'm not sure if it's a good idea to
-track event that requested the deferred callchains.
+Fix sample__for_each_callchain_node to populate the map even when
+symbols aren't computed.
 
-Also it doesn't need to emit duplicate deferred callchains if a task
-has multiple events and they are requesting callchains.  Unfortunately,
-the kernel cannot know which events are related or profiled together.
+Other minor bits of build_id clean up.
 
-Hmm.. maybe we can add a cookie to the event itself (by ioctl or
-something) in order to group events in a profiling session and then use
-that for deferred callchains?  Task should maintain a list of active
-cookies (or sessions) somehow but then perf can check if the current CPU
-has events with matching cookies and emit a deferred callchain.
+v3: Ensure the struct build_id is initialized empty prior to use as
+    read paths may fail (Namhyung).
 
-> 
-> Josh's code had it call the unwind_deferred_init() and just used its own
-> event to callback to and that was called on hundreds of events when I ran:
-> 
->   perf record -g <whatever>
-> 
-> Same if I added the "-a" option.
-> 
-> The above function return values came from Josh's code:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/tree/kernel/unwind/deferred.c?h=sframe#n173
-> 
-> I just moved it out of deferred.c and into perf itself, and removed the
-> cookie logic.
-> 
-> > 
-> > > +
-> > > +	if (!current->mm || !user_mode(task_pt_regs(current)))
-> > > +		return -EINVAL;  
-> > 
-> > Does it mean it cannot use deferred callstack when it's in the kernel
-> > mode like during a syscall?
-> 
-> task_pt_regs(current) will return the regs from when the task entered the
-> kernel. So the answer is no, it will still trace if an interrupt happened
-> while a task is in a system call.
+v2: Make marking DSOs still the default even with the defaulted build
+    ID mmap. The command line option still disables this to avoid
+    regressions. Add callchain patches and jitdump fix.
 
-Ok, thanks for the explanation.  The the user_mode check was for kernel
-threads, right?
+Ian Rogers (9):
+  perf callchain: Always populate the addr_location map when adding IP
+  perf build-id: Reduce size of "size" variable
+  perf build-id: Truncate to avoid overflowing the build_id data
+  perf build-id: Change sprintf functions to snprintf
+  perf build-id: Mark DSO in sample callchains
+  perf build-id: Ensure struct build_id is empty before use
+  perf dso: Move build_id to dso_id
+  perf jitdump: Directly mark the jitdump DSO
+  perf record: Make --buildid-mmap the default
 
-Thanks,
-Namhyung
+ tools/perf/bench/inject-buildid.c             |   2 +-
+ tools/perf/builtin-buildid-cache.c            |  20 ++--
+ tools/perf/builtin-buildid-list.c             |   6 +-
+ tools/perf/builtin-inject.c                   |  36 +++---
+ tools/perf/builtin-record.c                   |  33 ++++--
+ tools/perf/builtin-report.c                   |  11 +-
+ tools/perf/include/perf/perf_dlfilter.h       |   2 +-
+ tools/perf/tests/pe-file-parsing.c            |   2 +-
+ tools/perf/tests/sdt.c                        |   2 +-
+ tools/perf/tests/symbols.c                    |   4 +-
+ tools/perf/util/build-id.c                    |  63 ++++++----
+ tools/perf/util/build-id.h                    |   8 +-
+ tools/perf/util/debuginfo.c                   |   2 +-
+ tools/perf/util/disasm.c                      |   2 +-
+ tools/perf/util/dso.c                         | 111 ++++++++++--------
+ tools/perf/util/dso.h                         |  75 ++++++------
+ tools/perf/util/dsos.c                        |  20 ++--
+ tools/perf/util/event.c                       |   2 +-
+ tools/perf/util/header.c                      |   2 +-
+ tools/perf/util/jitdump.c                     |  21 +++-
+ tools/perf/util/machine.c                     |  34 +++---
+ tools/perf/util/map.c                         |  15 ++-
+ tools/perf/util/map.h                         |   5 +-
+ tools/perf/util/probe-event.c                 |   3 +-
+ tools/perf/util/probe-file.c                  |   4 +-
+ tools/perf/util/probe-finder.c                |   3 +-
+ .../scripting-engines/trace-event-python.c    |   7 +-
+ tools/perf/util/sort.c                        |  27 +++--
+ tools/perf/util/symbol-minimal.c              |   2 +-
+ tools/perf/util/symbol.c                      |   7 +-
+ tools/perf/util/symbol_conf.h                 |   2 +-
+ tools/perf/util/synthetic-events.c            |  44 ++++---
+ tools/perf/util/thread.c                      |   8 +-
+ tools/perf/util/thread.h                      |   2 +-
+ 34 files changed, 337 insertions(+), 250 deletions(-)
+
+-- 
+2.49.0.901.g37484f566f-goog
 
