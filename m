@@ -1,113 +1,382 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B99622D4FF;
-	Sun, 27 Apr 2025 09:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7704206B;
+	Mon, 28 Apr 2025 04:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745746027; cv=none; b=us3Dlcy84H2RbkuKvJ5n2DT/yVm0nTnkzhtNHs8NbbHuHeZm2SG4Rga7MXyG5m/Tj7IJkhMPtSGR8ofSFdp1Z04X/lXtbXgMeEJ+OIjH+YEOzfTR9S6kB7ZfQCEglyawTyvlULqb53F8fs4FMQG4uOuiwusC4WhHAYnxJnr7wrc=
+	t=1745815339; cv=none; b=SGkEW3D3xU2Reg/UOsy3+uHaa1WXijTC40HkaR6h5CS9Lhg/4HooD6te5SyzZG/1eXh0h2sFh7kiOsJcb/wQ2TyU3theQhslhJG7M3w3JTpxZxVdmDrBIr0KdeOqWkpToTmTvuL4x3UurpTAVFgI6ZIzyuIgZ9XNAobf6U5lTt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745746027; c=relaxed/simple;
-	bh=MIEw6Uk+Yy3hODU6rwhHvIU2GjFINvMLe/ajDksnc7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TIuVWn0tMG8l0AhF0zED3/GcYcaapiBhYth42B7oI8vwV1j3sNGQhGbiLCctcb6kCfwqbg+7a8RmZzuaOC1a2o4HfKYkuDx9mU0eRH4z+YUgsp4QYJCNxoPO2Pm0CTkEeAROWz5SPkrm/jHaPUdNIHRln5QgIAx9D3OwWgj9qiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=M//ALZ9S; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745815339; c=relaxed/simple;
+	bh=QmzgfQ06maqti9OHW1JK8Xk6tJKbHqxNWnVy975oDjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSrutYNbJFkQoH3TDb08bkKj6BZ4ywarjNa1jXDyMWfYIorocIXylDJanEBbZ3ynVzufD8nCFJFGzI5MiTA6P8xbhldusZdRGPwmRXFW3iW8oO3Rdp/loMNXT8Od8dWgoSYbGZ9G4oOZ82Uz8SULJlxly1bQUCjhx35Dhsfosrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jM7S0HBK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="M//ALZ9S"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R9QJ7P1607230
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sun, 27 Apr 2025 02:26:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R9QJ7P1607230
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745745982;
-	bh=MIEw6Uk+Yy3hODU6rwhHvIU2GjFINvMLe/ajDksnc7g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M//ALZ9Sj+luXQrDMRpV2wKmumbHvDVNiTfeqhmsOqEn27FbweEdRBGxeQudcHytg
-	 mjZ0mzPUGKx3F/LVuWSdCk4ViQohkiMVOe6rMp1EIjc/BK+o1SZ+H9XVTS5+G+kSeO
-	 zQ3NHolfCn7sahiOBdM1OBsESpcIUtcW9qo6sKNY60Vfxfvch+08cpnvAyLmXFnYsQ
-	 93Y7Wskrdj3G6wb4UcX3Mz6aoc2egCpy0NZxMDGruB37nyn5jhzeGyVdMqPgshwSiv
-	 6FXv61KqgGYM/rKMdEXcU26QtoBhaWUY+LA1ZxkaC+aC++GFPJfxtH4TbeC8zG4BPw
-	 6m/0oO6Lz9THg==
-Message-ID: <5a953dcc-96c1-4312-a8b5-25ca7ee4d0f7@zytor.com>
-Date: Sun, 27 Apr 2025 02:26:18 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jM7S0HBK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D20C4CEE4;
+	Mon, 28 Apr 2025 04:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745815337;
+	bh=QmzgfQ06maqti9OHW1JK8Xk6tJKbHqxNWnVy975oDjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jM7S0HBKSlCf3cCWhBzzFT3jcZxFtOggm2CxVmEU1A7dcRWRvWzYiz5DVZoK0c7bh
+	 MC7jm+WHJcxrk2A/jWpzUUwQVCyumJnlZC1jmUg6O1nmLeSd8uUlxACtI08106QBLS
+	 NRcZ8FuafWW2kxuQgWL6457ifOGHMA6FxZW+jwkhrlqMWcr9QcNv8g9VmV+ewQNA8T
+	 9MERD8rqNE5Nr6t6FRu9JTv80HLh1PTY2zEvWbUadGWNRD08TOJWqHEJppjuk8WpZo
+	 V7tOtIS5L3FNPckOUKkKCIHnh+1CFj02wSAKZUGy1b3sHTuxD4zMKMKJWLlIkefsNH
+	 RYBBBuvMlgTeg==
+Date: Sun, 27 Apr 2025 21:42:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] perf lock contention: Symbolize zone->lock using BTF
+Message-ID: <aA8HImKeUutpFoeD@google.com>
+References: <20250401063055.7431-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/14] x86/xen/msr: Remove calling
- native_{read,write}_msr{,_safe}() in pmu_msr_{read,write}()
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250425083442.2390017-1-xin@zytor.com>
- <20250425083442.2390017-10-xin@zytor.com>
- <d2bdd61d-cab6-401f-9b6a-17b28f3cd19c@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <d2bdd61d-cab6-401f-9b6a-17b28f3cd19c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250401063055.7431-1-namhyung@kernel.org>
 
-On 4/27/2025 2:21 AM, Mi, Dapeng wrote:
-> Reviewed-by: Dapeng Mi<dapeng1.mi@linux.intel.com>
+Ping!
 
-Thanks!
-
-I just sent out v4, so unless a v5 is needed, leave it to our x86
-maintainers.
+On Mon, Mar 31, 2025 at 11:30:55PM -0700, Namhyung Kim wrote:
+> The struct zone is embedded in struct pglist_data which can be allocated
+> for each NUMA node early in the boot process.  As it's not a slab object
+> nor a global lock, this was not symbolized.
+> 
+> Since the zone->lock is often contended, it'd be nice if we can
+> symbolize it.  On NUMA systems, node_data array will have pointers for
+> struct pglist_data.  By following the pointer, it can calculate the
+> address of each zone and its lock using BTF.  On UMA, it can just use
+> contig_page_data and its zones.
+> 
+> The following example shows the zone lock contention at the end.
+> 
+>   $ sudo ./perf lock con -abl -E 5 -- ./perf bench sched messaging
+>   # Running 'sched/messaging' benchmark:
+>   # 20 sender and receiver processes per group
+>   # 10 groups == 400 processes run
+> 
+>        Total time: 0.038 [sec]
+>    contended   total wait     max wait     avg wait            address   symbol
+> 
+>         5167     18.17 ms     10.27 us      3.52 us   ffff953340052d00   &kmem_cache_node (spinlock)
+>           38     11.75 ms    465.49 us    309.13 us   ffff95334060c480   &sock_inode_cache (spinlock)
+>         3916     10.13 ms     10.43 us      2.59 us   ffff953342aecb40   &kmem_cache_node (spinlock)
+>         2963     10.02 ms     13.75 us      3.38 us   ffff9533d2344098   &kmalloc-rnd-08-2k (spinlock)
+>          216      5.05 ms     99.49 us     23.39 us   ffff9542bf7d65d0   zone_lock (spinlock)
+> 
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_lock_contention.c         | 88 +++++++++++++++++--
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 64 ++++++++++++++
+>  tools/perf/util/bpf_skel/lock_data.h          |  1 +
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |  9 ++
+>  tools/perf/util/lock-contention.h             |  1 +
+>  5 files changed, 157 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 5af8f6d1bc952613..98395667220e58ee 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -12,6 +12,7 @@
+>  #include "util/lock-contention.h"
+>  #include <linux/zalloc.h>
+>  #include <linux/string.h>
+> +#include <api/fs/fs.h>
+>  #include <bpf/bpf.h>
+>  #include <bpf/btf.h>
+>  #include <inttypes.h>
+> @@ -35,28 +36,26 @@ static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unused)
+>  
+>  static void check_slab_cache_iter(struct lock_contention *con)
+>  {
+> -	struct btf *btf = btf__load_vmlinux_btf();
+>  	s32 ret;
+>  
+>  	hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ctx=*/NULL);
+>  
+> -	if (btf == NULL) {
+> +	con->btf = btf__load_vmlinux_btf();
+> +	if (con->btf == NULL) {
+>  		pr_debug("BTF loading failed: %s\n", strerror(errno));
+>  		return;
+>  	}
+>  
+> -	ret = btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
+> +	ret = btf__find_by_name_kind(con->btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
+>  	if (ret < 0) {
+>  		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
+>  		pr_debug("slab cache iterator is not available: %d\n", ret);
+> -		goto out;
+> +		return;
+>  	}
+>  
+>  	has_slab_iter = true;
+>  
+>  	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
+> -out:
+> -	btf__free(btf);
+>  }
+>  
+>  static void run_slab_cache_iter(void)
+> @@ -109,6 +108,75 @@ static void exit_slab_cache_iter(void)
+>  	hashmap__clear(&slab_hash);
+>  }
+>  
+> +static void init_numa_data(struct lock_contention *con)
+> +{
+> +	struct symbol *sym;
+> +	struct map *kmap;
+> +	char *buf = NULL, *p;
+> +	size_t len;
+> +	long last = -1;
+> +	int ret;
+> +
+> +	/*
+> +	 * 'struct zone' is embedded in 'struct pglist_data' as an array.
+> +	 * As we may not have full information of the struct zone in the
+> +	 * (fake) vmlinux.h, let's get the actual size from BTF.
+> +	 */
+> +	ret = btf__find_by_name_kind(con->btf, "zone", BTF_KIND_STRUCT);
+> +	if (ret < 0) {
+> +		pr_debug("cannot get type of struct zone: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	ret = btf__resolve_size(con->btf, ret);
+> +	if (ret < 0) {
+> +		pr_debug("cannot get size of struct zone: %d\n", ret);
+> +		return;
+> +	}
+> +	skel->rodata->sizeof_zone = ret;
+> +
+> +	/* UMA system doesn't have 'node_data[]' - just use contig_page_data. */
+> +	sym = machine__find_kernel_symbol_by_name(con->machine,
+> +						  "contig_page_data",
+> +						  &kmap);
+> +	if (sym) {
+> +		skel->rodata->contig_page_data_addr = map__unmap_ip(kmap, sym->start);
+> +		map__put(kmap);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * The 'node_data' is an array of pointers to struct pglist_data.
+> +	 * It needs to follow the pointer for each node in BPF to get the
+> +	 * address of struct pglist_data and its zones.
+> +	 */
+> +	sym = machine__find_kernel_symbol_by_name(con->machine,
+> +						  "node_data",
+> +						  &kmap);
+> +	if (sym == NULL)
+> +		return;
+> +
+> +	skel->rodata->node_data_addr = map__unmap_ip(kmap, sym->start);
+> +	map__put(kmap);
+> +
+> +	/* get the number of online nodes using the last node number + 1 */
+> +	ret = sysfs__read_str("devices/system/node/online", &buf, &len);
+> +	if (ret < 0) {
+> +		pr_debug("failed to read online node: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	p = buf;
+> +	while (p && *p) {
+> +		last = strtol(p, &p, 0);
+> +
+> +		if (p && (*p == ',' || *p == '-' || *p == '\n'))
+> +			p++;
+> +	}
+> +	skel->rodata->nr_nodes = last + 1;
+> +	free(buf);
+> +}
+> +
+>  int lock_contention_prepare(struct lock_contention *con)
+>  {
+>  	int i, fd;
+> @@ -218,6 +286,8 @@ int lock_contention_prepare(struct lock_contention *con)
+>  
+>  	bpf_map__set_max_entries(skel->maps.slab_filter, nslabs);
+>  
+> +	init_numa_data(con);
+> +
+>  	if (lock_contention_bpf__load(skel) < 0) {
+>  		pr_err("Failed to load lock-contention BPF skeleton\n");
+>  		return -1;
+> @@ -505,6 +575,11 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+>  				return "rq_lock";
+>  		}
+>  
+> +		if (!bpf_map_lookup_elem(lock_fd, &key->lock_addr_or_cgroup, &flags)) {
+> +			if (flags == LOCK_CLASS_ZONE_LOCK)
+> +				return "zone_lock";
+> +		}
+> +
+>  		/* look slab_hash for dynamic locks in a slab object */
+>  		if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK, &slab_data)) {
+>  			snprintf(name_buf, sizeof(name_buf), "&%s", slab_data->name);
+> @@ -743,6 +818,7 @@ int lock_contention_finish(struct lock_contention *con)
+>  	}
+>  
+>  	exit_slab_cache_iter();
+> +	btf__free(con->btf);
+>  
+>  	return 0;
+>  }
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 69be7a4234e076e8..6f12c7d978a2e015 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -11,6 +11,9 @@
+>  /* for collect_lock_syms().  4096 was rejected by the verifier */
+>  #define MAX_CPUS  1024
+>  
+> +/* for collect_zone_lock().  It should be more than the actual zones. */
+> +#define MAX_ZONES  10
+> +
+>  /* lock contention flags from include/trace/events/lock.h */
+>  #define LCB_F_SPIN	(1U << 0)
+>  #define LCB_F_READ	(1U << 1)
+> @@ -801,6 +804,11 @@ int contention_end(u64 *ctx)
+>  
+>  extern struct rq runqueues __ksym;
+>  
+> +const volatile __u64 contig_page_data_addr;
+> +const volatile __u64 node_data_addr;
+> +const volatile int nr_nodes;
+> +const volatile int sizeof_zone;
+> +
+>  struct rq___old {
+>  	raw_spinlock_t lock;
+>  } __attribute__((preserve_access_index));
+> @@ -809,6 +817,59 @@ struct rq___new {
+>  	raw_spinlock_t __lock;
+>  } __attribute__((preserve_access_index));
+>  
+> +static void collect_zone_lock(void)
+> +{
+> +	__u64 nr_zones, zone_off;
+> +	__u64 lock_addr, lock_off;
+> +	__u32 lock_flag = LOCK_CLASS_ZONE_LOCK;
+> +
+> +	zone_off = offsetof(struct pglist_data, node_zones);
+> +	lock_off = offsetof(struct zone, lock);
+> +
+> +	if (contig_page_data_addr) {
+> +		struct pglist_data *contig_page_data;
+> +
+> +		contig_page_data = (void *)(long)contig_page_data_addr;
+> +		nr_zones = BPF_CORE_READ(contig_page_data, nr_zones);
+> +
+> +		for (int i = 0; i < MAX_ZONES; i++) {
+> +			__u64 zone_addr;
+> +
+> +			if (i >= nr_zones)
+> +				break;
+> +
+> +			zone_addr = contig_page_data_addr + (sizeof_zone * i) + zone_off;
+> +			lock_addr = zone_addr + lock_off;
+> +
+> +			bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+> +		}
+> +	} else if (nr_nodes > 0) {
+> +		struct pglist_data **node_data = (void *)(long)node_data_addr;
+> +
+> +		for (int i = 0; i < nr_nodes; i++) {
+> +			struct pglist_data *pgdat = NULL;
+> +			int err;
+> +
+> +			err = bpf_core_read(&pgdat, sizeof(pgdat), &node_data[i]);
+> +			if (err < 0 || pgdat == NULL)
+> +				break;
+> +
+> +			nr_zones = BPF_CORE_READ(pgdat, nr_zones);
+> +			for (int k = 0; k < MAX_ZONES; k++) {
+> +				__u64 zone_addr;
+> +
+> +				if (k >= nr_zones)
+> +					break;
+> +
+> +				zone_addr = (__u64)(void *)pgdat + (sizeof_zone * k) + zone_off;
+> +				lock_addr = zone_addr + lock_off;
+> +
+> +				bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>  SEC("raw_tp/bpf_test_finish")
+>  int BPF_PROG(collect_lock_syms)
+>  {
+> @@ -830,6 +891,9 @@ int BPF_PROG(collect_lock_syms)
+>  		lock_flag = LOCK_CLASS_RQLOCK;
+>  		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+>  	}
+> +
+> +	collect_zone_lock();
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+> index 15f5743bd409f2f9..28c5e5aced7fcc91 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -67,6 +67,7 @@ enum lock_aggr_mode {
+>  enum lock_class_sym {
+>  	LOCK_CLASS_NONE,
+>  	LOCK_CLASS_RQLOCK,
+> +	LOCK_CLASS_ZONE_LOCK,
+>  };
+>  
+>  struct slab_cache_data {
+> diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> index 7b81d3173917fdb5..a59ce912be18cd0f 100644
+> --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> @@ -203,4 +203,13 @@ struct bpf_iter__kmem_cache {
+>  	struct kmem_cache *s;
+>  } __attribute__((preserve_access_index));
+>  
+> +struct zone {
+> +	spinlock_t lock;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct pglist_data {
+> +	struct zone node_zones[6]; /* value for all possible config */
+> +	int nr_zones;
+> +} __attribute__((preserve_access_index));
+> +
+>  #endif // __VMLINUX_H
+> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+> index b5d916aa49df6424..d331ce8e3caad4cb 100644
+> --- a/tools/perf/util/lock-contention.h
+> +++ b/tools/perf/util/lock-contention.h
+> @@ -142,6 +142,7 @@ struct lock_contention {
+>  	struct lock_filter *filters;
+>  	struct lock_contention_fails fails;
+>  	struct rb_root cgroups;
+> +	void *btf;
+>  	unsigned long map_nr_entries;
+>  	int max_stack;
+>  	int stack_skip;
+> -- 
+> 2.49.0
+> 
