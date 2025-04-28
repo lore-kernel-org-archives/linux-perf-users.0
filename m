@@ -1,158 +1,153 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8BF19259F
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 20:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CBD186284;
+	Mon, 28 Apr 2025 20:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745871735; cv=none; b=eCBnTZpWnpCza25edGWpjnoYcaexI/InK5telTUN+ggpghX8eCz+eFHMszc+MPhD15oL9bAb7Em8yVcW1Z7MUw2GE5Jl8moZh5uugwErKgf5rgx9alxlEmimSv9GBGxu9dr/tt7KG9WGNvqv5qL1BwsVHdvQuxS9vssDaf5puTA=
+	t=1745872940; cv=none; b=YanC3nQGNuz3ZFVQOs5NJWXVk5Di9MVHuvfH9SpweHNJz8bI4DA7/jPwhXOyRsG/0Fh6V2cK8UpiumGo9/H0g8aLmLYn++hWXpFXf0zN5yLy3UIwrU1g3Qlyb9V8kgR6eaSrNrpLs9p2J6xqWSDJMuL0jzx3V8PuzBtiSyhFJWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745871735; c=relaxed/simple;
-	bh=WByhWmAW5j9cQa9BYhcDr/NkumXfBFSpeQWdsFz/ULw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WgyjE3gIZO7JLiPqeUyQRMIV+OnfMJKMDE62471N1azHTCrbH1FWypzPGAOdUzQB15qy02GAvUPsICns1hDvCw6iYFAn9KTdE0spxrjgsL+FN5LCVty0jxqxukrra02uE74SS8jVte5/8jX1zKLrmn+SqvauGmiWvRlX0OzLo8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gs1POZ8a; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745872940; c=relaxed/simple;
+	bh=V0uWzclMr2r/WAwDMRAdUM4T2DZ/rdMtbW/axAzMidY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6f5iC+7mfTKFplDwIkYZk34r4sSjOsrBcmgo4ciewGjW0l52pti3eOEjhOMbCqn4Vo0yP4KGZuy38uYkofV4ZBh2Oza4kQxa0flnOtHRcvOMo/UgvEcRgJVsiDOpyIM5gK7+kRtGbnIGTnjQm7/Athcw/wHRTIughsby+PUIWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sm9EWizy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gs1POZ8a"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so5865ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 13:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745871733; x=1746476533; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1t34wb3LufXxsreMxoYBGqZz29OOuwJmg0rd4hhRLfU=;
-        b=gs1POZ8a9Zl0HmZPLxdfoGi63xXRH4DsBMh6HMXA0oZl1y71L2fNZkRNUHzCsTh1Dl
-         PENkMZ2I0v2U1L6C6lhuEKoBA/f7FXpE7npFzBEQE/fOzgXzn5Oh34mXrk+Rl7D8Z2Ro
-         gnw5FsG63/G6SRsY0yCnmo9aucn1VdrHNfGeZZsvwq1OYpdx42m/o1o33qgEItG6WWUE
-         B1UlHztnWuF5LtvKTFU8zaUIrBcdWcbP2Q80P3BldeQG94MHAHClI0n0+gTHW9gF4BFh
-         Sd4y+JTnqMnPFG98czJuxXjiVdTqNhh9iTx/Q+WtafIiXNN5cmvVESBcLS+fe6oosi3J
-         tELQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745871733; x=1746476533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1t34wb3LufXxsreMxoYBGqZz29OOuwJmg0rd4hhRLfU=;
-        b=bpMuu1GaesZ8QEIXlCsHhLJYEotJD6uEu1Nma5zpdaLb1oynuikN4Fz1K0oUwEBE1m
-         wJ0z4tRDGrAI2RlQvMedqnRxi3HO2seZBe3noZRBsVoD3U7pNLACG5IfW7tiR9c/GPes
-         eNgPcIWjHD+TFgbfUKFLadHIUGAlAz8t60c0uWJ2hz2kukU1XsnHhr5j2nPREWP4Y26u
-         WLawzgzOSZVo6uz/lqzDZBXOrph0Gu09tVgtRs60wrw/IBWVUtB80sikLh9K2WRtCWer
-         a4xri9ZKIb/92skqwn0DbPYdlIyeZjf9c4TYEcxb0gt63dlx/fba2u+Obk4lOeUm+7wN
-         cCUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHJeB4XSgh2S5hrK7m5Wz4vQIUCFpX+JLo/jl8nM4w5guvxKU08zkO4405Lj7kIYgctiQSZd/PfpAfeFusSLey@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqpYQDVoSNmW2FlNnsS2KtoI7N3psIIXWKYaEx/g3y5Ozm/NFe
-	TklIax0Riwb70qnpfT6c5gK0Amk9+sQeJr97wbouyDZpCO1X2GeDHEh5AoUHgoPUb16PsR5ffRD
-	wGUfJ6ssqqL+qfXSztep0S0nANWfsdikTPdQx
-X-Gm-Gg: ASbGncuHQIi2qffA0VMLQAlDgDfJGR56p9N+lO9Qbusou5kqfyZBh9Mdt9urZ+uXnRs
-	PukrD0NLR9VBF3LqgbfF4S3kylDc/6GGWqRihaaGrBwGBL0OVOjd/zAgszUpBbaxMS/P/tCQDH0
-	I55Ah/W28SbwBr56qNmYiu0ZtCukipnfalHDbEOM1eNDsVOMWaXuQ=
-X-Google-Smtp-Source: AGHT+IFw+uaHG3qywqDO8quGFytFYPdFOjGAURjv6bxAuwL1EMjzAmXI5FAd5cCyo7imjUiuIm5ecl0TTBohqCJa5m0=
-X-Received: by 2002:a05:6e02:188f:b0:3d9:2b9f:49bd with SMTP id
- e9e14a558f8ab-3d95d89933bmr825525ab.6.1745871733005; Mon, 28 Apr 2025
- 13:22:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sm9EWizy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CB0C4CEE4;
+	Mon, 28 Apr 2025 20:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745872938;
+	bh=V0uWzclMr2r/WAwDMRAdUM4T2DZ/rdMtbW/axAzMidY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sm9EWizyaC+EPmMkIokOwSgMmHtKXllVhpWHjjfuF8ul9YSnOc3D8iKL7jte0m9g0
+	 F/3LjKi5p0yf6ov+fi4hHI2Y46xmoZ0FpGgyTazaP9g/14gDaI9c/x9fipZS6YbyaN
+	 HJ2qeIGnT8nPB7oNwPS1Yb7Sd8lOqBZX8a4oJePJkL038MsHbV6Q96W9yvt/TPur0a
+	 M0mx+VxVBTnL9eL2jIFF/EI4oiXkl3gmYMSG635T5orCP+8917RbmOQNFzMVeOfa+u
+	 WBWjrOol3x5/4dJ+ukk/Fq5bzww/JHqtm0P2fl9CmuqBtf06GieGbVWJaxJivjVocn
+	 wGqJJjRbgiWVA==
+Date: Mon, 28 Apr 2025 13:42:15 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+	Blake Jones <blakejones@google.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
+Message-ID: <aA_oJ7tgGv-H4ocX@google.com>
+References: <20250424162529.686762589@goodmis.org>
+ <20250424162633.390748816@goodmis.org>
+ <aAupP56jOM_wul_8@google.com>
+ <20250425125815.5c5b33be@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424195831.1767457-1-irogers@google.com> <20250424195831.1767457-8-irogers@google.com>
- <aAvDStpWjwC7grya@google.com> <CAP-5=fXcTssH=bGQLDmPeT=fGf270B1-ocsP2Y7EP_RV=M838A@mail.gmail.com>
- <aA_fYvTI7YRIy2k9@google.com>
-In-Reply-To: <aA_fYvTI7YRIy2k9@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 28 Apr 2025 13:22:01 -0700
-X-Gm-Features: ATxdqUHOTk_IXTG3Cep-9E8EP1IyjezhKdOd6pFkrN__beKdTuskgRT3EVPv1Us
-Message-ID: <CAP-5=fX92dj4+UJrWGQpO15U62zJZDZ39SMgen8171RJ3Jcygw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] perf dso: Move build_id to dso_id
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	James Clark <james.clark@linaro.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
-	=?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
-	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250425125815.5c5b33be@gandalf.local.home>
 
-On Mon, Apr 28, 2025 at 1:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Apr 25, 2025 at 11:46:40AM -0700, Ian Rogers wrote:
-> > On Fri, Apr 25, 2025 at 10:15=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > > On Thu, Apr 24, 2025 at 12:58:30PM -0700, Ian Rogers wrote:
-> [SNIP]
-> > > > @@ -1665,18 +1675,20 @@ bool dso__build_id_equal(const struct dso *=
-dso, struct build_id *bid)
-> > > >  void dso__read_running_kernel_build_id(struct dso *dso, struct mac=
-hine *machine)
-> > > >  {
-> > > >       char path[PATH_MAX];
-> > > > +     struct build_id bid;
-> > > >
-> > > >       if (machine__is_default_guest(machine))
-> > > >               return;
-> > > >       sprintf(path, "%s/sys/kernel/notes", machine->root_dir);
-> > > > -     if (sysfs__read_build_id(path, dso__bid(dso)) =3D=3D 0)
-> > > > -             dso__set_has_build_id(dso);
-> > > > +     sysfs__read_build_id(path, &bid);
-> > > > +     dso__set_build_id(dso, &bid);
-> > >
-> > > Why not check the return value anymore?
-> >
-> > Checking the return value was a mistake. For example if we have
-> > libc.so with a build ID and then it is replaced with a libc.so without
-> > a build ID then build ID wouldn't be updated previously as reading the
-> > build ID had failed - no value found.
->
-> I'm not sure if it updates the dso as a whole.  This functions is to get
-> build-ID of the kernel and it seems we can skip this if it already has a
-> build-ID.  But if sysfs__read_build_id() failed, it may have a garbage.
->
-> Do I miss something?
+On Fri, Apr 25, 2025 at 12:58:15PM -0400, Steven Rostedt wrote:
+> On Fri, 25 Apr 2025 08:24:47 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
+> > > +/*
+> > > + * Returns:
+> > > +*     > 0 : if already queued.
+> > > + *      0 : if it performed the queuing
+> > > + *    < 0 : if it did not get queued.
+> > > + */
+> > > +static int deferred_request(struct perf_event *event)
+> > > +{
+> > > +	struct callback_head *work = &event->pending_unwind_work;
+> > > +	int pending;
+> > > +	int ret;  
+> > 
+> > I'm not sure if it works for per-CPU events.  The event is shared so any
+> > task can request the deferred callchains.  Does it handle if task A
+> > requests one and scheduled out before going to the user mode, and task B
+> > on the CPU also requests another after that?  I'm afraid not..
+> 
+> I was afraid of that.
+> 
+> This is no different that what Josh did in his last set in v4. I'm guessing
+> the issue is running with "-a", correct?
 
-I think there is a missing initialization, I'll add it in v2.
+Yes.
+
+> 
+> Could we just not use deferred when running with "-a" for now? Or could we
+> possibly just make the deferred stacktrace its own event? Have it be
+> possible that perf just registers a signal instance with the deferred
+> unwinding logic, and then perf can handle where to write the information. I
+> don't know perf well enough to implement that.
+
+Even if it excludes per-CPU events, per-task events also can attach to a
+CPU and that's the default behavior of the perf record IIRC.  In that
+case, it needs to be careful when it accesses the event since the task
+can migrate to another CPU.  So I'm not sure if it's a good idea to
+track event that requested the deferred callchains.
+
+Also it doesn't need to emit duplicate deferred callchains if a task
+has multiple events and they are requesting callchains.  Unfortunately,
+the kernel cannot know which events are related or profiled together.
+
+Hmm.. maybe we can add a cookie to the event itself (by ioctl or
+something) in order to group events in a profiling session and then use
+that for deferred callchains?  Task should maintain a list of active
+cookies (or sessions) somehow but then perf can check if the current CPU
+has events with matching cookies and emit a deferred callchain.
+
+> 
+> Josh's code had it call the unwind_deferred_init() and just used its own
+> event to callback to and that was called on hundreds of events when I ran:
+> 
+>   perf record -g <whatever>
+> 
+> Same if I added the "-a" option.
+> 
+> The above function return values came from Josh's code:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/tree/kernel/unwind/deferred.c?h=sframe#n173
+> 
+> I just moved it out of deferred.c and into perf itself, and removed the
+> cookie logic.
+> 
+> > 
+> > > +
+> > > +	if (!current->mm || !user_mode(task_pt_regs(current)))
+> > > +		return -EINVAL;  
+> > 
+> > Does it mean it cannot use deferred callstack when it's in the kernel
+> > mode like during a syscall?
+> 
+> task_pt_regs(current) will return the regs from when the task entered the
+> kernel. So the answer is no, it will still trace if an interrupt happened
+> while a task is in a system call.
+
+Ok, thanks for the explanation.  The the user_mode check was for kernel
+threads, right?
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Namhyung
->
-> > >
-> > > >  }
-> > > >
-> > > >  int dso__kernel_module_get_build_id(struct dso *dso,
-> > > >                                   const char *root_dir)
-> > > >  {
-> > > >       char filename[PATH_MAX];
-> > > > +     struct build_id bid;
-> > > >       /*
-> > > >        * kernel module short names are of the form "[module]" and
-> > > >        * we need just "module" here.
-> > > > @@ -1687,9 +1699,8 @@ int dso__kernel_module_get_build_id(struct ds=
-o *dso,
-> > > >                "%s/sys/module/%.*s/notes/.note.gnu.build-id",
-> > > >                root_dir, (int)strlen(name) - 1, name);
-> > > >
-> > > > -     if (sysfs__read_build_id(filename, dso__bid(dso)) =3D=3D 0)
-> > > > -             dso__set_has_build_id(dso);
-> > > > -
-> > > > +     sysfs__read_build_id(filename, &bid);
-> > > > +     dso__set_build_id(dso, &bid);
-> > > >       return 0;
-> > > >  }
