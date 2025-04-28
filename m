@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CF320FAB3
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 21:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1569210F49
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 21:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745876059; cv=none; b=afjvBXqfTAIaQf/bfqq3yWe8LBEC1X32LxzummIQlQdqr9TLFzhg7xgt2iXCmUc796DUOPmEnOETDtDUejQ54eokhw8nNdukE5qfLfuhMDpRTjIsQNSDo7GLwTQT2YbAVsLXbgYquk2FRm0OdZyfIl9vqB59a/LCFx19/KqgFfQ=
+	t=1745876060; cv=none; b=UWjQTZwdtBiYTulqqj6UIWkzd+FtwbYjMHxGHprSa34CqC9EJnzGsw26gyFVs+/9tDrrtx6qziqIQNJANtGLYYQiK2HGNrOP4oH8yYb3rQFiSBBzkP/n0psViovTOs5ricj6fF/AUtrddGSzZFpptjn7G9YX46GMp6kZ+qCUmbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745876059; c=relaxed/simple;
-	bh=sNSKisiG1hdsMeqAXMQnBsbK1CE7qqQDhEcMwAn9yhQ=;
+	s=arc-20240116; t=1745876060; c=relaxed/simple;
+	bh=DT+OD4lOib7IOS4ovH6DPK7Kmbb/+1k3dk49ghgZL+c=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=B/BpM7Eg80AhychqsptLtKIysrzK0djl/hd4rs1+c+QrZlJFKlzDWTG9UCaT8Np+ledGm4FDCuGMC87sfPJRQ1+W6aIqLBbdrgPMEr9yhTGWhyBudnx4GJ7JtzuZW8/8mvp9+DeeoMbigl7uGbeiv6QkJELE/NAZLH9RxFoFU8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UVyiYdyO; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=BHLdk9oXETZBRo96ql926s+ghe+uK4wnxFySefpMjad0v8TYHwDm3Y7jkml0qyQkhcziA7rf4MrWj4XG922cnS3sNJrmopQLcj+PhsS/SX3Vcqqy8saCsc3w8PwzqYtTNAvLt0YVQJwxMX7JEccFuFGDwJzB1Mp9ABmqfKsJzko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iyDeuoei; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UVyiYdyO"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736b431ee0dso3902337b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 14:34:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iyDeuoei"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e30ffso4267942a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 14:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745876056; x=1746480856; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745876058; x=1746480858; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=X02HQomgxWR3mWoM82/yA1eUjs3APdARyr9edl1ymiY=;
-        b=UVyiYdyOSxnDxDu2soqu/hFv1RqnaE3Me/dC+DrXORs6CC9cKsHcWPRyLwdMnHdfHU
-         ZyUptv+RZpomP8FJRMSFAeWqa989t3W9qdF20gnD6/VnLb/3zGLFZNqwscFR7Qhx5BJN
-         oQ0/d+YNUVL9hH2W0SPQ06vrZc3BYkec9uTRo+OnoKU1rp5N4YmPIYiNrwLqaV5yHv9y
-         Q07iVPXf5cdke5QEwv/sohQuObpZRpIQbE9n0h3MV6fYAyAmxvkb3g1I0fellZgJdG1l
-         YNVCJ6kKNutLBQwM8eLlYYC/xjytSYz3jZDgrf5KEvVJgMxJGPuHLX+2kS7dgyS3u+44
-         1hYw==
+        bh=fZS1n0db6qQg+ZjsoOF7DP7dvRsPHCjcVpwodHb7LO0=;
+        b=iyDeuoeiBIE3A11AODrCjeEk0v5HkkMkYErgZKuSjmqIJeL/ol9cazt7UYj4zyHFYL
+         SZp2atfdv+2hrkoeuY1iKEWJ7xchEBqVgn5JVhNDD1FAI+71+WGl0IyRqfDXwPTKUCXK
+         wlpRp0gp+B2GetfLSDSoLjEgObDKrp1f0k1agFubhXgX/aS9kVNSqkno1OjcmSWUcF1n
+         W+QMOwkl3+UMmGtA1WSMO4PtpIHxoI5vn/vuL7POnk+e8r/qtkBZ8X7PgFdSPGvx2icu
+         7Oe4UXVRzPEj4Y81HpzrRzI3qSXEVn/qN/YHXtaxtp3UzuZcFUIEk90BmNybLTRlWmkA
+         7Iew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745876056; x=1746480856;
+        d=1e100.net; s=20230601; t=1745876058; x=1746480858;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X02HQomgxWR3mWoM82/yA1eUjs3APdARyr9edl1ymiY=;
-        b=W4STsWIk7MHMJDxX3zzwzbbqtcBwzkzo7v6yt91LwVJpAYHdvdXqp4eZOTlfwauI9p
-         SZrH0E08iVAMAmFDB/FmtgxhxmQtaGNCjyRdWSzT+ALhdTxO62aRI8c3MSOU4oP/7w9G
-         6vh9IyCKhOTqlyF5TvpBp81RcJXWGCLBHyByw2/cvsGaxSomccckDzVrDVHwHkSkXtoG
-         e6la4afNg21ZsLZcYkfzhVmCQnIXKHwB1/rfO0Wm16c4ce9GtuoBffCepFD/hgHrjfDD
-         hlFkSVKfdDDkWmWmLdM3icmID+GO8yb5ulo6F4bWt553jYhtGIIFxV1AitCloQdS1MOo
-         eFJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUr/rTR67/9gTIE1gDnPDRS73SA1DiIUbcoKcP1ccHkVGeI30Vugjz3k7b54WZdJqYv4yB9ASkVSwEW87rqpe6b@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd0ZE+A71n8ydvdqBzyEzrZ6NPYeNAPOUscilQ0fF4QdIW5vpE
-	jIR191l5jkf4Ua0G38Ev0wQhVBd0af1rpRgEqOvt8AI3Fg3pMKlFFm2NYEQp76vA605fylMeGyx
-	ZQY037A==
-X-Google-Smtp-Source: AGHT+IG9piqj3ObQ1uyzi2wTg72pEue4UFNXrJZLmUK2OICKb7nWvOBDj/R3L8x9+9AWxEJhOVRnDHHFPirA
-X-Received: from pgld6.prod.google.com ([2002:a63:e06:0:b0:b13:7874:b1b3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a03:b0:1f5:80a3:b006
- with SMTP id adf61e73a8af0-2095682bb2dmr953425637.21.1745876056067; Mon, 28
- Apr 2025 14:34:16 -0700 (PDT)
-Date: Mon, 28 Apr 2025 14:34:01 -0700
+        bh=fZS1n0db6qQg+ZjsoOF7DP7dvRsPHCjcVpwodHb7LO0=;
+        b=EmNVIGsEELLx0JbOa81vxuZIdCFSrjh98SoL7NtzC29qDKAwFAEUoi1PBkXk+/fwhN
+         vCODx6tXaVINoLlnLV2i4qnyWznG/eyJfnkIeGOpsWWVDlocilTyUjdXVQwLx8vtZFGC
+         vvME5MgTVPPp1SFCvRAg6LgJ/IeyOy6KBONM9n8vwGVWhh3ZnFVDd6E6wpgRejs/tQrG
+         pcFGxshjf/Oom7oF0J8/bou5j/HTMSV5wiWCbR/YHOZ98uAYGdJEhZGAFymmwfcAr/9s
+         MGGOgWnHCzguEHj8tGiIMLIdTXBKT8HJ8j3EfmpamZVz0AIawdYD+iszwAVm9LqqK7W3
+         Lp6g==
+X-Forwarded-Encrypted: i=1; AJvYcCW9VbMcI1GaKQM3+WhaguyCwBxoQHMVBSjO7Q5WFGohVnzhsg/arI08Xa0snfus+4rNrva641Nkjz9h1tdPbuK3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2MtcqPPAR8mCHRjghij7fF3syIQwqhW4ezedqIdjlNqJcQ7fK
+	epRdxlCrrczKBUS2pCIp5t4/qDiOvtLYx8xtyzUMvhDcyUJPeuD+Nin0VZ86YbUOKJ1eDiBwVYz
+	5fzE9rw==
+X-Google-Smtp-Source: AGHT+IHkMEjq/0HiG7c1pF4ho/tCZ2BXVghAmtjMD8gPiMcgBdq5bmFUEr0M1yJwJEodxrYaR2+ePoOYa5W6
+X-Received: from pjxx14.prod.google.com ([2002:a17:90b:58ce:b0:2f7:d453:e587])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e8f:b0:2ff:71ad:e84e
+ with SMTP id 98e67ed59e1d1-30a21550360mr1947861a91.10.1745876057888; Mon, 28
+ Apr 2025 14:34:17 -0700 (PDT)
+Date: Mon, 28 Apr 2025 14:34:02 -0700
 In-Reply-To: <20250428213409.1417584-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250428213409.1417584-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250428213409.1417584-3-irogers@google.com>
-Subject: [PATCH v3 2/9] perf build-id: Reduce size of "size" variable
+Message-ID: <20250428213409.1417584-4-irogers@google.com>
+Subject: [PATCH v3 3/9] perf build-id: Truncate to avoid overflowing the
+ build_id data
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,55 +82,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Later clean up of the dso_id to include a build_id will suffer from
-alignment and size issues. The size can only hold up to a value of
-BUILD_ID_SIZE (20) and the mmap2 event uses a byte for the value.
+Warning when the build_id data would be overflowed would lead to
+memory corruption, switch to truncation.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/build-id.h         | 2 +-
- tools/perf/util/synthetic-events.c | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/util/build-id.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/build-id.h b/tools/perf/util/build-id.h
-index a212497bfdb0..e3e0a446ff0c 100644
---- a/tools/perf/util/build-id.h
-+++ b/tools/perf/util/build-id.h
-@@ -13,7 +13,7 @@
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index e763e8d99a43..5bc2040bdd0d 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -951,7 +951,10 @@ bool perf_session__read_build_ids(struct perf_session *session, bool with_hits)
  
- struct build_id {
- 	u8	data[BUILD_ID_SIZE];
--	size_t	size;
-+	u8	size;
- };
- 
- struct dso;
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 2fc4d0537840..68bb7c5fe1b1 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2248,7 +2248,9 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
- 
- 	memset(&ev, 0, len);
- 
--	ev.build_id.size = min(bid->size, sizeof(ev.build_id.build_id));
-+	ev.build_id.size = bid->size;
-+	if (ev.build_id.size > sizeof(ev.build_id.build_id))
-+		ev.build_id.size = sizeof(ev.build_id.build_id);
- 	memcpy(ev.build_id.build_id, bid->data, ev.build_id.size);
- 	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
- 	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
-@@ -2308,7 +2310,9 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 	ev.mmap2.len = len;
- 	ev.mmap2.pgoff = pgoff;
- 
--	ev.mmap2.build_id_size = min(bid->size, sizeof(ev.mmap2.build_id));
-+	ev.mmap2.build_id_size = bid->size;
-+	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
-+		ev.build_id.size = sizeof(ev.mmap2.build_id);
- 	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
- 
- 	ev.mmap2.prot = prot;
+ void build_id__init(struct build_id *bid, const u8 *data, size_t size)
+ {
+-	WARN_ON(size > BUILD_ID_SIZE);
++	if (size > BUILD_ID_SIZE) {
++		pr_debug("Truncating build_id size from %zd\n", size);
++		size = BUILD_ID_SIZE;
++	}
+ 	memcpy(bid->data, data, size);
+ 	bid->size = size;
+ }
 -- 
 2.49.0.901.g37484f566f-goog
 
