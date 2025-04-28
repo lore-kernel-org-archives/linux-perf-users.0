@@ -1,382 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7704206B;
-	Mon, 28 Apr 2025 04:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEBD1DF269
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 07:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745815339; cv=none; b=SGkEW3D3xU2Reg/UOsy3+uHaa1WXijTC40HkaR6h5CS9Lhg/4HooD6te5SyzZG/1eXh0h2sFh7kiOsJcb/wQ2TyU3theQhslhJG7M3w3JTpxZxVdmDrBIr0KdeOqWkpToTmTvuL4x3UurpTAVFgI6ZIzyuIgZ9XNAobf6U5lTt4=
+	t=1745826141; cv=none; b=iM6sOHlP3McfaDgwtobyq9BwgArfziO7mydxPtyAWcGrFNCJ7mpF6mpAPVINFhbp/tXfNTJtdr4NPPVgUoIII+mKhG3xgDnQdg+o9UxlqHdiS8nIdcQkRWHHyKPW6tAiMKtAYZUl0Lj7uM5e1+J3gtkEVsucwyKOGi1ay3042G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745815339; c=relaxed/simple;
-	bh=QmzgfQ06maqti9OHW1JK8Xk6tJKbHqxNWnVy975oDjs=;
+	s=arc-20240116; t=1745826141; c=relaxed/simple;
+	bh=RO4fe7hF3YRJO+Sakz3qlIuEQu+QpUlcCFkVjyWJZoQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uSrutYNbJFkQoH3TDb08bkKj6BZ4ywarjNa1jXDyMWfYIorocIXylDJanEBbZ3ynVzufD8nCFJFGzI5MiTA6P8xbhldusZdRGPwmRXFW3iW8oO3Rdp/loMNXT8Od8dWgoSYbGZ9G4oOZ82Uz8SULJlxly1bQUCjhx35Dhsfosrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jM7S0HBK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CllnTFuSgN6BFMDygtYLeTSdgIoNrDxKUklN5PkboqeBtgW0wTwJ/Ly/x3SdwTDwlaUyyvs8xRUfFmtWsomGiUkUR6ecRIAA0vN3xGfBiqMWxb7PzUvBa/diYfF/M/lnd7dNpQjIrfkJNpcgwVEDf3I3aYkcCStIeK+xauWQkoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OAnfLBX3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jM7S0HBK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D20C4CEE4;
-	Mon, 28 Apr 2025 04:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745815337;
-	bh=QmzgfQ06maqti9OHW1JK8Xk6tJKbHqxNWnVy975oDjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jM7S0HBKSlCf3cCWhBzzFT3jcZxFtOggm2CxVmEU1A7dcRWRvWzYiz5DVZoK0c7bh
-	 MC7jm+WHJcxrk2A/jWpzUUwQVCyumJnlZC1jmUg6O1nmLeSd8uUlxACtI08106QBLS
-	 NRcZ8FuafWW2kxuQgWL6457ifOGHMA6FxZW+jwkhrlqMWcr9QcNv8g9VmV+ewQNA8T
-	 9MERD8rqNE5Nr6t6FRu9JTv80HLh1PTY2zEvWbUadGWNRD08TOJWqHEJppjuk8WpZo
-	 V7tOtIS5L3FNPckOUKkKCIHnh+1CFj02wSAKZUGy1b3sHTuxD4zMKMKJWLlIkefsNH
-	 RYBBBuvMlgTeg==
-Date: Sun, 27 Apr 2025 21:42:10 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] perf lock contention: Symbolize zone->lock using BTF
-Message-ID: <aA8HImKeUutpFoeD@google.com>
-References: <20250401063055.7431-1-namhyung@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OAnfLBX3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745826138;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dpj7I8mgxfJqgam51CzzudZUWclMLZg1KKSrTJW4zYg=;
+	b=OAnfLBX3iCilB4XyghfhkTXuXkUjdExCxba2AaQNLKD5zIq7wOvPOV6ZSaxmMawgeW/2jj
+	lmTbNE6JpVLlPDGrkpYQgQZ9gnF8Kd7hSUrjifMrA6dDzGsPgTp0MskjNf6mERKV0kYs/A
+	SC+YdPiXZxSUlR396GO99hagZASqb54=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-452-ogAkanY0Pomca6GPyAXV9A-1; Mon, 28 Apr 2025 03:42:16 -0400
+X-MC-Unique: ogAkanY0Pomca6GPyAXV9A-1
+X-Mimecast-MFC-AGG-ID: ogAkanY0Pomca6GPyAXV9A_1745826135
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb66d17be4so327099466b.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 00:42:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745826135; x=1746430935;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dpj7I8mgxfJqgam51CzzudZUWclMLZg1KKSrTJW4zYg=;
+        b=pFPTDUNCQD/Wjen7NkviHQG5JOziPVYuCcMTWvPLFL1d7NasP4MSMWyzANSIF3EZys
+         FeJFf3y9T/5uhMnzNktdJQkOa8nMMal9NM3DAsARHxWNQZfAh3sTXr6eGyr5EkVYAnBW
+         b2x28XFkjgONtTkyPKbCja0dvykmpFNciUV9l5aztYH++rqWROJWflIzRWRSjPhUJzVE
+         LUKjHn68+XEiUVVSQy8t+OjdJNizLZJNmn260AToavrzAmAXUTSe0Ey6PwlL+Gajy+kH
+         rIz/Yhc1B1a4AXuEWdizXS2NiFVe57/ldvEkA+u+J0FNuNmhF3uyjUyf+brA2r5oe3Xo
+         xGrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHGl93IG2qfPwFste9eF6F1u4mNM/vCJ9MQqEgHlGgSaobm2xAObbTMzz+OytKigTuICJojSmzDQcRV4Mh44D9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj7aohTns4sB53hqxAyXRaoDTD0YnrkXnxQ4Kd5jcpK3M+kjTd
+	eQjCqVx93H9p9K+TxNvZKHykw9XtVcw+k8ff2rkgOJGI27c2K36mnKMse2qjA8UvrxvwbAbHgqY
+	kdKvqCagGT09sS2VHiUPh4LwlBBtcXA5x76l1mypOp2muE7VMXvqrSwrM0AHJGWF67eQ=
+X-Gm-Gg: ASbGncsfYgYpPEoi48j7mSjokffPq+Zc7itIWR1qmkgcw5yddIfAYUckWBpfxJUiunP
+	/mQANK5WIfznYlWM2XpjfOt8hlKXjXU6v+IxnpIFeRCLmnqF9NDuXAZiI/IrdaxSyi0nMqIADTz
+	pvI28PxICxek6sNI3XXUOhlflYSB2p4/L2OxZ657oEBqyR9iQuKVyV3Xr7peA+JanvevZusQkWc
+	1QPvuhZy/q9BsVjZbRQ0srKi42aH59bUBxyU9Vfbmd7XPm/gcldQndTMWKeJxO2J9QTIL792wbo
+	B07GLaLSAy+EhatSsQ==
+X-Received: by 2002:a17:907:1c27:b0:ac4:3cd:2cb2 with SMTP id a640c23a62f3a-ace7104e5d8mr1000675166b.1.1745826135426;
+        Mon, 28 Apr 2025 00:42:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXzAr0+bjExObNijhwwYl1i6kI6R1HoChQXPYHAU+nUMCp81+2mz+T7WI44sNlBU3yht/5vw==
+X-Received: by 2002:a17:907:1c27:b0:ac4:3cd:2cb2 with SMTP id a640c23a62f3a-ace7104e5d8mr1000672266b.1.1745826134717;
+        Mon, 28 Apr 2025 00:42:14 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.219.109])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e70bbsm587228966b.63.2025.04.28.00.42.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 00:42:14 -0700 (PDT)
+Date: Mon, 28 Apr 2025 09:42:10 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Ingo Molnar <mingo@kernel.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, mst@redhat.com
+Subject: Re: [mainline]Warning while building tools/perf
+Message-ID: <CAGxU2F4X2TYM+fD-TnLjTPd+AcwSccREBnO1+geSFs-KVM4kRg@mail.gmail.com>
+References: <9c40ab1a-3d08-4af8-a430-0ba245842959@linux.ibm.com>
+ <43507075-ec04-44c8-a95f-49e074d933d8@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401063055.7431-1-namhyung@kernel.org>
+In-Reply-To: <43507075-ec04-44c8-a95f-49e074d933d8@linux.ibm.com>
 
-Ping!
+On Fri, 25 Apr 2025 at 18:07, Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>
+>
+> My bad, missed to mention the warning in the previous mail.
+>
+> On 25/04/25 9:32 pm, Venkat Rao Bagalkote wrote:
+> > Hello,
+> >
+> >
+> > I am seeing a new build warning while building tools/perf on the
+> > mainline kernel, with base:
+> >
+> > commit 02ddfb981de88a2c15621115dd7be2431252c568 (HEAD -> master,
+> > origin/master, origin/HEAD)
+> > Merge: 30e268185e59 b0b7ee3b574a
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Thu Apr 24 13:01:31 2025 -0700
+> >
+> >     Merge tag 'scsi-fixes' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> >
+> >     Pull SCSI fixes from James Bottomley:
+> >      "The single core change is an obvious bug fix (and falls within
+> > the LF
+> >       guidelines for patches from sanctioned entities). The other driver
+> >       changes are a bit larger but likewise pretty obvious"
+> >
+> >     * tag 'scsi-fixes' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi:
+> >       scsi: mpi3mr: Add level check to control event logging
+> >       scsi: ufs: core: Add NULL check in
+> > ufshcd_mcq_compl_pending_transfer()
+> >       scsi: core: Clear flags for scsi_cmnd that did not complete
+> >       scsi: ufs: Introduce quirk to extend PA_HIBERN8TIME for UFS devices
+> >       scsi: ufs: qcom: Add quirks for Samsung UFS devices
+> >       scsi: target: iscsi: Fix timeout on deleted connection
+> >       scsi: mpi3mr: Reset the pending interrupt flag
+> >       scsi: mpi3mr: Fix pending I/O counter
+> >       scsi: ufs: mcq: Add NULL check in ufshcd_mcq_abort()
+> >
+>
+> Warning:
+>
+> diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> include/uapi/linux/vhost.h
+>
+> >
+> > Git Bisect is pointing to below commit as first bad commit.
+> >
+> >
+> > a940e0a685575424d33324ec7f0089045249de0a is the first bad commit
+> > commit a940e0a685575424d33324ec7f0089045249de0a
 
-On Mon, Mar 31, 2025 at 11:30:55PM -0700, Namhyung Kim wrote:
-> The struct zone is embedded in struct pglist_data which can be allocated
-> for each NUMA node early in the boot process.  As it's not a slab object
-> nor a global lock, this was not symbolized.
-> 
-> Since the zone->lock is often contended, it'd be nice if we can
-> symbolize it.  On NUMA systems, node_data array will have pointers for
-> struct pglist_data.  By following the pointer, it can calculate the
-> address of each zone and its lock using BTF.  On UMA, it can just use
-> contig_page_data and its zones.
-> 
-> The following example shows the zone lock contention at the end.
-> 
->   $ sudo ./perf lock con -abl -E 5 -- ./perf bench sched messaging
->   # Running 'sched/messaging' benchmark:
->   # 20 sender and receiver processes per group
->   # 10 groups == 400 processes run
-> 
->        Total time: 0.038 [sec]
->    contended   total wait     max wait     avg wait            address   symbol
-> 
->         5167     18.17 ms     10.27 us      3.52 us   ffff953340052d00   &kmem_cache_node (spinlock)
->           38     11.75 ms    465.49 us    309.13 us   ffff95334060c480   &sock_inode_cache (spinlock)
->         3916     10.13 ms     10.43 us      2.59 us   ffff953342aecb40   &kmem_cache_node (spinlock)
->         2963     10.02 ms     13.75 us      3.38 us   ffff9533d2344098   &kmalloc-rnd-08-2k (spinlock)
->          216      5.05 ms     99.49 us     23.39 us   ffff9542bf7d65d0   zone_lock (spinlock)
-> 
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/bpf_lock_contention.c         | 88 +++++++++++++++++--
->  .../perf/util/bpf_skel/lock_contention.bpf.c  | 64 ++++++++++++++
->  tools/perf/util/bpf_skel/lock_data.h          |  1 +
->  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |  9 ++
->  tools/perf/util/lock-contention.h             |  1 +
->  5 files changed, 157 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index 5af8f6d1bc952613..98395667220e58ee 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -12,6 +12,7 @@
->  #include "util/lock-contention.h"
->  #include <linux/zalloc.h>
->  #include <linux/string.h>
-> +#include <api/fs/fs.h>
->  #include <bpf/bpf.h>
->  #include <bpf/btf.h>
->  #include <inttypes.h>
-> @@ -35,28 +36,26 @@ static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unused)
->  
->  static void check_slab_cache_iter(struct lock_contention *con)
->  {
-> -	struct btf *btf = btf__load_vmlinux_btf();
->  	s32 ret;
->  
->  	hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ctx=*/NULL);
->  
-> -	if (btf == NULL) {
-> +	con->btf = btf__load_vmlinux_btf();
-> +	if (con->btf == NULL) {
->  		pr_debug("BTF loading failed: %s\n", strerror(errno));
->  		return;
->  	}
->  
-> -	ret = btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
-> +	ret = btf__find_by_name_kind(con->btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
->  	if (ret < 0) {
->  		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
->  		pr_debug("slab cache iterator is not available: %d\n", ret);
-> -		goto out;
-> +		return;
->  	}
->  
->  	has_slab_iter = true;
->  
->  	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
-> -out:
-> -	btf__free(btf);
->  }
->  
->  static void run_slab_cache_iter(void)
-> @@ -109,6 +108,75 @@ static void exit_slab_cache_iter(void)
->  	hashmap__clear(&slab_hash);
->  }
->  
-> +static void init_numa_data(struct lock_contention *con)
-> +{
-> +	struct symbol *sym;
-> +	struct map *kmap;
-> +	char *buf = NULL, *p;
-> +	size_t len;
-> +	long last = -1;
-> +	int ret;
-> +
-> +	/*
-> +	 * 'struct zone' is embedded in 'struct pglist_data' as an array.
-> +	 * As we may not have full information of the struct zone in the
-> +	 * (fake) vmlinux.h, let's get the actual size from BTF.
-> +	 */
-> +	ret = btf__find_by_name_kind(con->btf, "zone", BTF_KIND_STRUCT);
-> +	if (ret < 0) {
-> +		pr_debug("cannot get type of struct zone: %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	ret = btf__resolve_size(con->btf, ret);
-> +	if (ret < 0) {
-> +		pr_debug("cannot get size of struct zone: %d\n", ret);
-> +		return;
-> +	}
-> +	skel->rodata->sizeof_zone = ret;
-> +
-> +	/* UMA system doesn't have 'node_data[]' - just use contig_page_data. */
-> +	sym = machine__find_kernel_symbol_by_name(con->machine,
-> +						  "contig_page_data",
-> +						  &kmap);
-> +	if (sym) {
-> +		skel->rodata->contig_page_data_addr = map__unmap_ip(kmap, sym->start);
-> +		map__put(kmap);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * The 'node_data' is an array of pointers to struct pglist_data.
-> +	 * It needs to follow the pointer for each node in BPF to get the
-> +	 * address of struct pglist_data and its zones.
-> +	 */
-> +	sym = machine__find_kernel_symbol_by_name(con->machine,
-> +						  "node_data",
-> +						  &kmap);
-> +	if (sym == NULL)
-> +		return;
-> +
-> +	skel->rodata->node_data_addr = map__unmap_ip(kmap, sym->start);
-> +	map__put(kmap);
-> +
-> +	/* get the number of online nodes using the last node number + 1 */
-> +	ret = sysfs__read_str("devices/system/node/online", &buf, &len);
-> +	if (ret < 0) {
-> +		pr_debug("failed to read online node: %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	p = buf;
-> +	while (p && *p) {
-> +		last = strtol(p, &p, 0);
-> +
-> +		if (p && (*p == ',' || *p == '-' || *p == '\n'))
-> +			p++;
-> +	}
-> +	skel->rodata->nr_nodes = last + 1;
-> +	free(buf);
-> +}
-> +
->  int lock_contention_prepare(struct lock_contention *con)
->  {
->  	int i, fd;
-> @@ -218,6 +286,8 @@ int lock_contention_prepare(struct lock_contention *con)
->  
->  	bpf_map__set_max_entries(skel->maps.slab_filter, nslabs);
->  
-> +	init_numa_data(con);
-> +
->  	if (lock_contention_bpf__load(skel) < 0) {
->  		pr_err("Failed to load lock-contention BPF skeleton\n");
->  		return -1;
-> @@ -505,6 +575,11 @@ static const char *lock_contention_get_name(struct lock_contention *con,
->  				return "rq_lock";
->  		}
->  
-> +		if (!bpf_map_lookup_elem(lock_fd, &key->lock_addr_or_cgroup, &flags)) {
-> +			if (flags == LOCK_CLASS_ZONE_LOCK)
-> +				return "zone_lock";
-> +		}
-> +
->  		/* look slab_hash for dynamic locks in a slab object */
->  		if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK, &slab_data)) {
->  			snprintf(name_buf, sizeof(name_buf), "&%s", slab_data->name);
-> @@ -743,6 +818,7 @@ int lock_contention_finish(struct lock_contention *con)
->  	}
->  
->  	exit_slab_cache_iter();
-> +	btf__free(con->btf);
->  
->  	return 0;
->  }
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 69be7a4234e076e8..6f12c7d978a2e015 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -11,6 +11,9 @@
->  /* for collect_lock_syms().  4096 was rejected by the verifier */
->  #define MAX_CPUS  1024
->  
-> +/* for collect_zone_lock().  It should be more than the actual zones. */
-> +#define MAX_ZONES  10
-> +
->  /* lock contention flags from include/trace/events/lock.h */
->  #define LCB_F_SPIN	(1U << 0)
->  #define LCB_F_READ	(1U << 1)
-> @@ -801,6 +804,11 @@ int contention_end(u64 *ctx)
->  
->  extern struct rq runqueues __ksym;
->  
-> +const volatile __u64 contig_page_data_addr;
-> +const volatile __u64 node_data_addr;
-> +const volatile int nr_nodes;
-> +const volatile int sizeof_zone;
-> +
->  struct rq___old {
->  	raw_spinlock_t lock;
->  } __attribute__((preserve_access_index));
-> @@ -809,6 +817,59 @@ struct rq___new {
->  	raw_spinlock_t __lock;
->  } __attribute__((preserve_access_index));
->  
-> +static void collect_zone_lock(void)
-> +{
-> +	__u64 nr_zones, zone_off;
-> +	__u64 lock_addr, lock_off;
-> +	__u32 lock_flag = LOCK_CLASS_ZONE_LOCK;
-> +
-> +	zone_off = offsetof(struct pglist_data, node_zones);
-> +	lock_off = offsetof(struct zone, lock);
-> +
-> +	if (contig_page_data_addr) {
-> +		struct pglist_data *contig_page_data;
-> +
-> +		contig_page_data = (void *)(long)contig_page_data_addr;
-> +		nr_zones = BPF_CORE_READ(contig_page_data, nr_zones);
-> +
-> +		for (int i = 0; i < MAX_ZONES; i++) {
-> +			__u64 zone_addr;
-> +
-> +			if (i >= nr_zones)
-> +				break;
-> +
-> +			zone_addr = contig_page_data_addr + (sizeof_zone * i) + zone_off;
-> +			lock_addr = zone_addr + lock_off;
-> +
-> +			bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
-> +		}
-> +	} else if (nr_nodes > 0) {
-> +		struct pglist_data **node_data = (void *)(long)node_data_addr;
-> +
-> +		for (int i = 0; i < nr_nodes; i++) {
-> +			struct pglist_data *pgdat = NULL;
-> +			int err;
-> +
-> +			err = bpf_core_read(&pgdat, sizeof(pgdat), &node_data[i]);
-> +			if (err < 0 || pgdat == NULL)
-> +				break;
-> +
-> +			nr_zones = BPF_CORE_READ(pgdat, nr_zones);
-> +			for (int k = 0; k < MAX_ZONES; k++) {
-> +				__u64 zone_addr;
-> +
-> +				if (k >= nr_zones)
-> +					break;
-> +
-> +				zone_addr = (__u64)(void *)pgdat + (sizeof_zone * k) + zone_off;
-> +				lock_addr = zone_addr + lock_off;
-> +
-> +				bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  SEC("raw_tp/bpf_test_finish")
->  int BPF_PROG(collect_lock_syms)
->  {
-> @@ -830,6 +891,9 @@ int BPF_PROG(collect_lock_syms)
->  		lock_flag = LOCK_CLASS_RQLOCK;
->  		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
->  	}
-> +
-> +	collect_zone_lock();
-> +
->  	return 0;
->  }
->  
-> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-> index 15f5743bd409f2f9..28c5e5aced7fcc91 100644
-> --- a/tools/perf/util/bpf_skel/lock_data.h
-> +++ b/tools/perf/util/bpf_skel/lock_data.h
-> @@ -67,6 +67,7 @@ enum lock_aggr_mode {
->  enum lock_class_sym {
->  	LOCK_CLASS_NONE,
->  	LOCK_CLASS_RQLOCK,
-> +	LOCK_CLASS_ZONE_LOCK,
->  };
->  
->  struct slab_cache_data {
-> diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-> index 7b81d3173917fdb5..a59ce912be18cd0f 100644
-> --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-> +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-> @@ -203,4 +203,13 @@ struct bpf_iter__kmem_cache {
->  	struct kmem_cache *s;
->  } __attribute__((preserve_access_index));
->  
-> +struct zone {
-> +	spinlock_t lock;
-> +} __attribute__((preserve_access_index));
-> +
-> +struct pglist_data {
-> +	struct zone node_zones[6]; /* value for all possible config */
-> +	int nr_zones;
-> +} __attribute__((preserve_access_index));
-> +
->  #endif // __VMLINUX_H
-> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index b5d916aa49df6424..d331ce8e3caad4cb 100644
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -142,6 +142,7 @@ struct lock_contention {
->  	struct lock_filter *filters;
->  	struct lock_contention_fails fails;
->  	struct rb_root cgroups;
-> +	void *btf;
->  	unsigned long map_nr_entries;
->  	int max_stack;
->  	int stack_skip;
-> -- 
-> 2.49.0
-> 
+That commit just updated the documentation, no code change.
+
+I guess in tools/perf they copied vhost.h and there is some check to 
+control if they are in sync.
+
+CCing Arnaldo who has updated the copy several times.
+
+Thanks,
+Stefano
+
+> > Author: Stefano Garzarella <sgarzare@redhat.com>
+> > Date:   Mon Mar 3 09:52:37 2025 +0100
+> >
+> >     vhost: fix VHOST_*_OWNER documentation
+> >
+> >     VHOST_OWNER_SET and VHOST_OWNER_RESET are used in the documentation
+> >     instead of VHOST_SET_OWNER and VHOST_RESET_OWNER respectively.
+> >
+> >     To avoid confusion, let's use the right names in the documentation.
+> >     No change to the API, only the documentation is involved.
+> >
+> >     Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> >     Message-Id: <20250303085237.19990-1-sgarzare@redhat.com>
+> >     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> >
+> >  include/uapi/linux/vhost.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> >
+> > Upon reverting the above commit, warning is not seen.
+> >
+> >
+> > Bisect log:
+> >
+> >
+> > git bisect start
+> > # status: waiting for both good and bad commits
+> > # good: [9c32cda43eb78f78c73aee4aa344b777714e259b] Linux 6.15-rc3
+> > git bisect good 9c32cda43eb78f78c73aee4aa344b777714e259b
+> > # status: waiting for bad commit, 1 good commit known
+> > # bad: [02ddfb981de88a2c15621115dd7be2431252c568] Merge tag
+> > 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> > git bisect bad 02ddfb981de88a2c15621115dd7be2431252c568
+> > # good: [cc0dec3f659d19805fcaf8822204137c9f27a912] Merge branch
+> > 'net-stmmac-fix-timestamp-snapshots-on-dwmac1000'
+> > git bisect good cc0dec3f659d19805fcaf8822204137c9f27a912
+> > # bad: [0251ddbffbeb213f0f74ef94b2cacce580eb8d76] Merge tag
+> > 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
+> > git bisect bad 0251ddbffbeb213f0f74ef94b2cacce580eb8d76
+> > # good: [bc3372351d0c8b2726b7d4229b878342e3e6b0e8] Merge tag
+> > 'for-6.15-rc3-tag' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> > git bisect good bc3372351d0c8b2726b7d4229b878342e3e6b0e8
+> > # bad: [fbd3039a64b01b769040677c4fc68badeca8e3b2] virtio_console: fix
+> > missing byte order handling for cols and rows
+> > git bisect bad fbd3039a64b01b769040677c4fc68badeca8e3b2
+> > # bad: [a940e0a685575424d33324ec7f0089045249de0a] vhost: fix
+> > VHOST_*_OWNER documentation
+> > git bisect bad a940e0a685575424d33324ec7f0089045249de0a
+> > # good: [16c22c56d4282584742022a37d4f79a46ca6094a] virtio_pci: Use
+> > self group type for cap commands
+> > git bisect good 16c22c56d4282584742022a37d4f79a46ca6094a
+> > # first bad commit: [a940e0a685575424d33324ec7f0089045249de0a] vhost:
+> > fix VHOST_*_OWNER documentation
+> >
+> >
+> > If you happen to fix this, please add below tag.
+> >
+> >
+> > Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> >
+> >
+> > Regards,
+> >
+> > Venkat.
+> >
+>
+
