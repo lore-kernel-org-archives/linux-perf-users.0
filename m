@@ -1,146 +1,205 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 369FE262FEE;
-	Mon, 28 Apr 2025 11:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD2A265604;
+	Mon, 28 Apr 2025 11:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745838611; cv=none; b=gKTZWRlYXWvC+FF9NcgmbBfeVVp8Ts9LsIFGOKlP2kZGU3xZVYoOkeieVX6fg2yNihQ0pCuGSapyu4RycBXgyN9+cF1P/ZLi1Evzzo5QzPKKDKNgeBGRHq1ZFMkwgBYxClWu0qIEmL1AEtEQ5vznzkwCD2ZIncK+botCqzzVx0Q=
+	t=1745838711; cv=none; b=MrhtzfjLqaD3V/6cLOH5UHZ2hC78x17tHKYL2mJfAhPLxNNg5yDcEdlryUmQNK/eOTc314QzdrOig9pXeFDme872rPb49Xsx2kfzZ1G3Bfks9kXyFmx7ASWqIFKZZVbHbm71FpG4DW6JySl+4IE/rUT8w1WAyu3kkcMInnLjd0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745838611; c=relaxed/simple;
-	bh=A9Okykt1CO9Gdzyw8Gz9j8J09jGfp2GgOobllD66Xws=;
+	s=arc-20240116; t=1745838711; c=relaxed/simple;
+	bh=M8bfo9nwHR9FBIyNBaiiApaWzDjww92GWLsgn0B2p44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ftCqRPX3AQ8PiATPyJ3kgyQZHTE+Gurl76yiryPJE7EWRliAWRD/mPfg0TV2B1k3oLqap8sGbz46yMeXlPWlEAfS5i1VhlwglOF7LywlXxJO9/eeoAVc/HAY9IDpyfAB/NrA77r/pw5n2Tl3CzDFWZxJBBbDp3cYU4R2ZZmC0go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A2F11595;
-	Mon, 28 Apr 2025 04:10:02 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB783F673;
-	Mon, 28 Apr 2025 04:10:08 -0700 (PDT)
-Date: Mon, 28 Apr 2025 12:10:03 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=usgVtM/PApy7OEKtb3N5AOthCa9kz9z4ydcSO1GBIX0C2FAa9JMDaM61pQEBJQetEyWpZf6jREGx1U8eh/WqS4iibCe6T/lLLZmm1jMfTp/+KkPzt5jhgtvPbe4IJSHi7U024S9t1OCRmw6ShJ0luarQKgdWSYui0sLXDoOhX1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2ptE2LU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2ptE2LU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29ABFC4CEF2;
+	Mon, 28 Apr 2025 11:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745838710;
+	bh=M8bfo9nwHR9FBIyNBaiiApaWzDjww92GWLsgn0B2p44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g2ptE2LULN/9xqE5iRO+qlMYyfOkLCI0Oje/CzfSo5mOpJ7WWJ00odf1s5RIAqRPi
+	 rAztIyzza5w0MlJlYEyd++Ak/qx+z0WOzhY494W2IvPSToFuaPQQd9pHb4TTLJGlH7
+	 Ewes1QIp9/wp9CdO1VukijKAv23gloO08Vcf+UzTaOKXBMlqO0b5M19+T8mMq9mR5j
+	 B8WBca0kBiJtch3jIoN+pEA41bUej1KNbTWp05acw+HwMwUl5yXF3VEyjjQzuPBUdk
+	 /06B4ZXKqx4V9UvRVsjrdBMrpjYtwxKp7IOat6DSx35BXIzj/i26pqV1Ip5nzygZLo
+	 5aNNwNdYfp3bQ==
+Date: Mon, 28 Apr 2025 13:11:47 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
-Message-ID: <20250428111003.GC551819@e132581.arm.com>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-10-irogers@google.com>
- <20250402143541.GM115840@e132581.arm.com>
- <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
- <20250402163807.GP115840@e132581.arm.com>
- <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
- <Z-4URXOzsVHTY7zz@google.com>
- <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
+Message-ID: <aA9ic6m6WAcmVBAw@pavilion.home>
+References: <20250424161128.29176-1-frederic@kernel.org>
+ <20250424161128.29176-3-frederic@kernel.org>
+ <20250424163024.GC18306@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250424163024.GC18306@noisy.programming.kicks-ass.net>
 
-Hi Namhyung, Ian,
+Le Thu, Apr 24, 2025 at 06:30:24PM +0200, Peter Zijlstra a écrit :
+> On Thu, Apr 24, 2025 at 06:11:26PM +0200, Frederic Weisbecker wrote:
+> > @@ -13940,29 +13941,36 @@ perf_event_exit_event(struct perf_event *event,
+> >  		 * Do destroy all inherited groups, we don't care about those
+> >  		 * and being thorough is better.
+> >  		 */
+> > -		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> > +		prd.detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> >  		mutex_lock(&parent_event->child_mutex);
+> >  	}
+> >  
+> >  	if (revoke)
+> > -		detach_flags |= DETACH_GROUP | DETACH_REVOKE;
+> > +		prd.detach_flags |= DETACH_GROUP | DETACH_REVOKE;
+> >  
+> > -	perf_remove_from_context(event, detach_flags);
+> > +	perf_remove_from_context(event, &prd);
+> 
+> Isn't all this waay to complicated?
+> 
+> That is, to modify state we need both ctx->mutex and ctx->lock, and this
+> is what __perf_remove_from_context() has, but because of this, holding
+> either one of those locks is sufficient to read the state -- it cannot
+> change.
+> 
+> And here we already hold ctx->mutex.
+> 
+> So can't we simply do:
+> 
+> 	old_state = event->attach_state;
+> 	perf_remove_from_context(event, detach_flags);
+> 
+> 	// do whatever with old_state
 
-On Thu, Apr 03, 2025 at 08:20:02AM -0700, Ian Rogers wrote:
+Right, the locking scenario is just a bit more complicated.
+Most flags are set on init or with both ctx mutex and lock.
+But:
 
-[...]
+_ PERF_ATTACH_CHILD is set instead with parent child_mutex and ctx lock.
+_ PERF_ATTACH_ITRACE is set from pmu::start(). Thus from the event context
+  with just interrupt disabled. It's probably enough to synchronize against
+  initialization and remove_from_context IPIs but perf_event_exit_event() needs
+  some care.
 
-> > > Anyway, I don't have time to do such a larger refactor so
-> > > somebody else is going to need to pick that up. I did refactor the
-> > > cases where I thought it mattered more, but as you say that does lead
-> > > to a feeling of inconsistency in the series.
-> >
-> > I'm curious there are any actual errorenous cases other than the return
-> > type of comparisons from Leo.
+So we must hold both ctx mutex and child_mutex (although the pmus_srcu thing
+should make that PERF_ATTACH_CHILD thing visible but let's keep things obvious).
+And also have WRITE_ONCE() / READ_ONCE() to take care about PERF_ATTACH_ITRACE,
+which we don't care about anyway.
 
-I am just wandering if we could give priority for errorenous cases.
+Now this looks like this:
 
-Could you send fixes for these cases firstly and leave out refactoring
-for later merging?
-
-[...]
-
-> There are lots of cases like:
-> ```
->                 case ARM_SPE_COUNTER:
->                        if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
-> -                               decoder->record.latency = payload;
-> +                               decoder->record.latency = (u32)payload;
-
-This would be fine.  Since Arm SPE implements a counter with a maximum
-of 16 bits, there will never be an overflow when storing the data in a
-32-bit unsigned integer.
-
-Thanks,
-Leo
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7bcb02ffb93a..7278ca731a55 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -208,7 +208,6 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
+ }
+ 
+ #define TASK_TOMBSTONE ((void *)-1L)
+-#define EVENT_TOMBSTONE ((void *)-1L)
+ 
+ static bool is_kernel_event(struct perf_event *event)
+ {
+@@ -2338,12 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+ 
+ 	sync_child_event(event);
+ 	list_del_init(&event->child_list);
+-	/*
+-	 * Cannot set to NULL, as that would confuse the situation vs
+-	 * not being a child event. See for example unaccount_event().
+-	 */
+-	event->parent = EVENT_TOMBSTONE;
+-	put_event(parent_event);
+ }
+ 
+ static bool is_orphaned_event(struct perf_event *event)
+@@ -5705,7 +5698,7 @@ static void put_event(struct perf_event *event)
+ 	_free_event(event);
+ 
+ 	/* Matches the refcount bump in inherit_event() */
+-	if (parent && parent != EVENT_TOMBSTONE)
++	if (parent)
+ 		put_event(parent);
+ }
+ 
+@@ -9998,7 +9991,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
+ 
+ void perf_event_itrace_started(struct perf_event *event)
+ {
+-	event->attach_state |= PERF_ATTACH_ITRACE;
++	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
+ }
+ 
+ static void perf_log_itrace_start(struct perf_event *event)
+@@ -13922,10 +13915,7 @@ perf_event_exit_event(struct perf_event *event,
+ {
+ 	struct perf_event *parent_event = event->parent;
+ 	unsigned long detach_flags = DETACH_EXIT;
+-	bool is_child = !!parent_event;
+-
+-	if (parent_event == EVENT_TOMBSTONE)
+-		parent_event = NULL;
++	unsigned int attach_state;
+ 
+ 	if (parent_event) {
+ 		/*
+@@ -13942,6 +13932,8 @@ perf_event_exit_event(struct perf_event *event,
+ 		 */
+ 		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+ 		mutex_lock(&parent_event->child_mutex);
++		/* PERF_ATTACH_ITRACE might be set concurrently */
++		attach_state = READ_ONCE(event->attach_state);
+ 	}
+ 
+ 	if (revoke)
+@@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
+ 	/*
+ 	 * Child events can be freed.
+ 	 */
+-	if (is_child) {
+-		if (parent_event) {
+-			mutex_unlock(&parent_event->child_mutex);
+-			/*
+-			 * Kick perf_poll() for is_event_hup();
+-			 */
+-			perf_event_wakeup(parent_event);
++	if (parent_event) {
++		mutex_unlock(&parent_event->child_mutex);
++		/*
++		 * Kick perf_poll() for is_event_hup();
++		 */
++		perf_event_wakeup(parent_event);
++
++		/*
++		 * Match the refcount initialization. Make sure it doesn't happen
++		 * twice if pmu_detach_event() calls it on an already exited task.
++		 */
++		if (attach_state & PERF_ATTACH_CHILD) {
+ 			/*
+ 			 * pmu_detach_event() will have an extra refcount.
++			 * perf_pending_task() might have one too.
+ 			 */
+ 			put_event(event);
+ 		}
++
+ 		return;
+ 	}
+ 
