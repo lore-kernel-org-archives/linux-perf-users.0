@@ -1,157 +1,163 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E6025F794;
-	Mon, 28 Apr 2025 09:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29B1255233
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 09:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745830973; cv=none; b=RVBKbe9j9TkDiVV9YfLCp+EWCRgxWIwG48gmh/6K+3SdU5DtAvvllxBzefraCHl9sKdoct/E7ZQ/qNQWXBIHdrmCHoRXMLUfSGCavEEGVjJcDYiidpJQ/q6YWCTh/LOOXX//ffOzdwDpbu9YsjxBtjkqSZbP+pNHXE7crCZrWWI=
+	t=1745831259; cv=none; b=roAhkU93IPoWT9/BA/ZXXKK7pjBVolsrE2PLU1x7pWY27B7laf9YHez3cm9pliKTrnIglqY6mUHwaaQ0wrx0K7/6d/UbyN7aaSfdM/uyNejdAXConkGcCzyD/RHFkW04bbhUWfmQUivbtb3bnciRIMqDkRppNZYTlVCS/pe7Z+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745830973; c=relaxed/simple;
-	bh=jk2xPovHc5F6l7T8mmd6XwqbNZPK/rB+qGPsEbuP4iI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bn6YaAexS+A98BRtgXPj/WIo9b0492LYK0N+LScVmuNGHcgmuG4RGcgllmh/AOedQA3JMgDHwAGkvkGRnj9QYHq3wrNqbKOC+/ZkBSCBrNYe89KJYGtwiGXqs57s87fcywMH7X8iBeRHBtqtltohsNxvYBux8YLx0nCSc7DCezQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nJvkzJn5; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745831259; c=relaxed/simple;
+	bh=UybRkzn8WVqdE1THG5SNswNLOWS8DckJhCs42e2ygxw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=dZu99sDevwIMlaZdE8Psn/QtbyNMA4b0aDj6Lx++n1ZbwGtBges/zsqxZugWkgSo4KJmBe/1wh62rO+PEMUoeyaVucRIT/UFvmmm65s3L175111GsmQ8qin82sNcf/Apa6/AHohm6E1er6uZOthu1tBJaBlQJi9TQldObbaCRSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ASzDjqxw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nJvkzJn5"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53RMu5b7023190;
-	Mon, 28 Apr 2025 09:01:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2FVh8p
-	KWRuaqN3fBqmPyc2Nc7uaC9djDNtBndOlCsIg=; b=nJvkzJn5ZARn6vwwP5m5q9
-	FubFQ3/ZU8MiFGZEQu4r5jjAl72RcEC1YVz94xHhI4tOBI1wsbJI92w+nbJkXnbO
-	X7/WCbfWcJMjp0roQuJktbH1BGYGllW1b17i0BKvi26TdEdUPPR7W4E+JFrOXux8
-	LCced+QhTs6XUn3Ah8RaXUL2W1ZImLE1H/Zho9rwNcvE1YJaIol9Nb/dA0kr5t0X
-	rGUZ4fvwRScozf5kLGL9q5/6tx2n+9n5DoEOfrcmkQUN2OIZlYbMDfFCoZuuyRRH
-	gLYxdS+zrBvlkFmXkVjK9lB2uYdpsc/un7VJshESFQusfi/rH/jN48nne5l/gAGQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5kj87x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:01:13 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53S8nZ83032396;
-	Mon, 28 Apr 2025 09:01:12 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5kj87t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:01:12 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53S8k1ob008518;
-	Mon, 28 Apr 2025 09:01:11 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 469ch2wawx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:01:11 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53S919Un46924108
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 09:01:09 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7720720148;
-	Mon, 28 Apr 2025 09:01:09 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41CFC2013C;
-	Mon, 28 Apr 2025 09:01:01 +0000 (GMT)
-Received: from [9.111.133.157] (unknown [9.111.133.157])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 28 Apr 2025 09:01:01 +0000 (GMT)
-Message-ID: <5aaab4c0-accd-4b37-8093-d2664483f985@linux.ibm.com>
-Date: Mon, 28 Apr 2025 11:00:52 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ASzDjqxw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745831256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=U83a+nTlEFAKC2Rdyrq3VHyIzU428c5fHiV27cVYo1k=;
+	b=ASzDjqxwtqn5JqsL6g/yyqDfHbt5eQaUNrh6X7YoTBWPtvhaJ+m3krrDHNor+5yLMa1XO5
+	/V5VCumCsxC1ISU8bcqWvqt4ie1RxJKBMfa42SgH6OytGx8aPtlHX43hUIRY2P5sG8PbE9
+	q9RXOHaqdKqG5q4DG572l7yl3uJ72rE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-UykiFHDCO66cSTmTiyHiXQ-1; Mon, 28 Apr 2025 05:07:34 -0400
+X-MC-Unique: UykiFHDCO66cSTmTiyHiXQ-1
+X-Mimecast-MFC-AGG-ID: UykiFHDCO66cSTmTiyHiXQ_1745831254
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac28f255a36so309438366b.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Apr 2025 02:07:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745831254; x=1746436054;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U83a+nTlEFAKC2Rdyrq3VHyIzU428c5fHiV27cVYo1k=;
+        b=vbe04n9ZtV/txOI9Pq3l908rSO6ZCj2HTa/RPyebCI6rPzCNOI+AMbBKaz0i0oEpmg
+         Gl+t3oWGSAFjF2eKcbNCD0D4e33uVt6Fw8Hy0sUGwe+k61Lv7e0XQdf+8UJeth2UIm+W
+         tntR+jzpoWXs5l94l85MVjicLv6D86SJ4RoAWYZHgWaTpBnz/aGc2SwYSyJU5byi9+UQ
+         +r3ZQscPZRHZ9Frlw630LNRNW0i+y/btpHf4cwPov+aHhvhtJhqDNc+wO7Uyc9Zu+2Ur
+         EuvSIcYnWwwZpHJdBRqjEyNzC31M0ZbcNzgUpLM8y+bn4XbnVFIrcyuh9+11qkxRJvvu
+         wNrg==
+X-Gm-Message-State: AOJu0YzczqPVaSuWWhF5Ug0TjWDjGxkegTfydaudpgiTuWjRzlwRUAmg
+	vmnFVpBD1U7zZ+J5CUaF8duXnEYS8ltZh0kqiovuIj9UXovqYFB4wo2vxwDvVyQePo1tSV9CU4p
+	0fMaMbhYYLADy8b7BMvE5go0GMskemYWEfZRWgaBnj67NmzC7QwwN9U1Uvo7frmQTRKsL6c5YXH
+	YMpzwDx7G5wn45FaxPpzaUCg2RO37aC6usNYQPsZ0shA==
+X-Gm-Gg: ASbGnculdtXmzfftNDvdO2KImmySDyH+dSQBXOyNlOyYdzlQziSe5i+viQ09WAtMvPY
+	+XK3tqHLQtAmyZJIWkXBDE5Fi7yJw/EzNPx0KfVjOE0dSIKWQzz1w5jhkZZgLbZHJZ5Cd/MgI0H
+	LxoX1em1EWeSvvMUyZezELFvE=
+X-Received: by 2002:a17:907:1b22:b0:aca:a687:a409 with SMTP id a640c23a62f3a-ace71098d4bmr1075264066b.17.1745831253629;
+        Mon, 28 Apr 2025 02:07:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFgYwmPlIC7YgpE+PSFxKMe//ba9PVWCueXky1f4Hyp24q1RjJNcmUjYtJUZ28R0eTkQQ9mALmDyYJsqSo+HHM=
+X-Received: by 2002:a17:907:1b22:b0:aca:a687:a409 with SMTP id
+ a640c23a62f3a-ace71098d4bmr1075261666b.17.1745831253261; Mon, 28 Apr 2025
+ 02:07:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 06/12] unwind_user/sframe: Add prctl() interface for
- registering .sframe sections
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Weinan Liu <wnliu@google.com>, Blake Jones <blakejones@google.com>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        "Jose E. Marchesi"
- <jemarch@gnu.org>,
-        Alexander Aring <aahringo@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20250424201511.921245242@goodmis.org>
- <20250424201824.466438405@goodmis.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250424201824.466438405@goodmis.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: kJDEausPcbwEQ5UVXsuWsVgepzjfRBDY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA3MCBTYWx0ZWRfX6HmmDtG6yVbm 5sAPffm3RWr8Ok53wbtDbbgnczO/VpoLTLYRq4daoO8iqz/d3q2DPi3eHMj+BCGax2bpXNgEyjo S+ziWTBLpq701Gr0BXej3kcZnj6JkbIlZ1zJKerDSrG1qOFM4yWTyA3T6noFe07bMAFQAucieMF
- J+81Y6T4ufIayQh429v2nGqLIpEhaUq7C5dPJOVApl7GtBsxy65cuOFyL6B+P0h69e17SqktpJS bSI2/2vC+Fcsaeu6s74MZW57hjf0LDsoSzRBpLkdfdfS8HyQceKTjjsaeJ0vOnUQAXGiMAKuBbd ky8JV+T9iJwIj/q3G6HQDttlCp/2o2noxQ1cNR+lgoaBYi/47uSshxlV6yNHnkHia+Z3HP8OCOL
- dSgXhCRcqnT2uyia/ZX8kCw8lRkB7CSVrBdRd7ZW0HKdTBVkD0NBNTRcTNcxeHCywuQni/VG
-X-Proofpoint-GUID: 3C0i5nYl02Er9XYf-2XXf9tbdHY-GiOS
-X-Authority-Analysis: v=2.4 cv=DvxW+H/+ c=1 sm=1 tr=0 ts=680f43d9 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=0MvmVg10__VCTnNSAJcA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1011
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280070
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 28 Apr 2025 11:07:21 +0200
+X-Gm-Features: ATxdqUGbtYEpyFOd5glkWz-aR-UH1QxYr3tYPCWdrrc_cIW_rAu4Jj2afo2Hfp8
+Message-ID: <CAP4=nvTab7BnT4uu0iCuFJpZ-_MdY-MYU+Q25QnpygEZKmsQ8A@mail.gmail.com>
+Subject: [BUG] perf segfaults when combining --overwrite and intel_pt event
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Wander Costa <wcosta@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 24.04.2025 22:15, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> The kernel doesn't have direct visibility to the ELF contents of shared
-> libraries.  Add some prctl() interfaces which allow glibc to tell the
-> kernel where to find .sframe sections.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Dear maintainers,
 
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+I would like to report a bug in perf I ran into when trying to combine
+--overwrite and intel_pt on latest perf from 6.15-rc4:
 
-> +#define PR_ADD_SFRAME			78
-> +#define PR_REMOVE_SFRAME		79
+$ perf --version
+perf version 6.15.rc4.gb4432656b36e
+$ perf record --overwrite -a -e intel_pt/cyc,noretcomp/k
+perf: Segmentation fault
+Obtained 16 stack frames.
+perf() [0x59aab7]
+perf() [0x59ab97]
+perf() [0x41a9db]
+/lib64/libc.so.6(+0x1a050) [0x7f7fc2e27050]
+perf() [0x61bb16]
+perf() [0x55fee9]
+perf() [0x54a790]
+perf() [0x469c92]
+perf() [0x46a09f]
+perf() [0x46a317]
+perf() [0x54ac83]
+perf() [0x41c61c]
+perf() [0x41c92c]
+perf() [0x41cc65]
+perf() [0x41ff41]
+perf() [0x424015]
+Segmentation fault (core dumped)
 
-Note that those values have been bumped since Josh's v4.  Therefore
-Josh's related Glibc patch needs to be updated and Glibc needs to be
-rebuild as well.  Otherwise the Kernel won't be able to find any
-.sframe sections for DSOs.
+GDB gives the following backtrace:
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+(gdb) bt
+#0  0x000000000061bb16 in auxtrace_mmap__mmap (mm=0x7c9fa0,
+mp=0x7fffffff9008, userpg=0x7ffff7cff000, fd=7) at util/auxtrace.c:136
+#1  0x000000000055fee9 in mmap__mmap (map=0x7c9f40, mp=0x7fffffff8ff0,
+fd=7, cpu=...) at util/mmap.c:312
+#2  0x000000000054a790 in perf_evlist__mmap_cb_mmap (_map=0x7c9f40,
+_mp=0x7fffffff8ff0, output=7, cpu=...) at util/evlist.c:825
+#3  0x0000000000469c92 in mmap_per_evsel (evlist=0x78f190,
+ops=0x7fffffff8fd0, idx=0, mp=0x7fffffff8ff0, cpu_idx=0, thread=0,
+   _output=0x7fffffff8f10, _output_overwrite=0x7fffffff8f14,
+nr_mmaps=0x7fffffff8f0c) at evlist.c:527
+#4  0x000000000046a09f in mmap_per_cpu (evlist=0x78f190,
+ops=0x7fffffff8fd0, mp=0x7fffffff8ff0) at evlist.c:620
+#5  0x000000000046a317 in perf_evlist__mmap_ops (evlist=0x78f190,
+ops=0x7fffffff8fd0, mp=0x7fffffff8ff0) at evlist.c:679
+#6  0x000000000054ac83 in evlist__mmap_ex (evlist=0x78f190,
+pages=4294967295, auxtrace_pages=1024, auxtrace_overwrite=false,
+   nr_cblocks=0, affinity=0, flush=1, comp_level=0) at util/evlist.c:977
+#7  0x000000000041c61c in record__mmap_evlist (rec=0x764de0 <record>,
+evlist=0x78f190) at builtin-record.c:1310
+#8  0x000000000041c92c in record__mmap (rec=0x764de0 <record>) at
+builtin-record.c:1359
+#9  0x000000000041cc65 in record__open (rec=0x764de0 <record>) at
+builtin-record.c:1413
+#10 0x000000000041ff41 in __cmd_record (rec=0x764de0 <record>, argc=0,
+argv=0x7fffffffe0f0) at builtin-record.c:2492
+#11 0x0000000000424015 in cmd_record (argc=0, argv=0x7fffffffe0f0) at
+builtin-record.c:4285
+#12 0x0000000000461133 in run_builtin (p=0x769260 <commands+288>,
+argc=5, argv=0x7fffffffe0f0) at perf.c:351
+#13 0x00000000004613a2 in handle_internal_command (argc=5,
+argv=0x7fffffffe0f0) at perf.c:404
+#14 0x00000000004614f1 in run_argv (argcp=0x7fffffffdedc,
+argv=0x7fffffffded0) at perf.c:448
+#15 0x00000000004617d7 in main (argc=5, argv=0x7fffffffe0f0) at perf.c:556
 
-IBM
+Further investigation shows the range associated with userpg, to which
+the statement at util/auxtrace.c:136 attempts to write to, is mapped
+read-only:
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+(gdb) info proc mappings
+...
+0x00007ffff7cff000 0x00007ffff7d80000 0x81000            0x0
+     r--s  anon_inode:[perf_event]
+...
+
+Compare to a run without --overwrite, where the memory is writable and
+everything is good:
+
+(gdb) info proc mappings
+...
+0x00007ffff7cff000 0x00007ffff7d80000 0x81000            0x0
+     rw-s  anon_inode:[perf_event]
+...
+
+Let me know if you need any more information.
+
+Tomas
 
