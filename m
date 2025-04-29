@@ -1,264 +1,203 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CC513D8A3
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 05:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B84A23CEE5
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 06:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745903542; cv=none; b=gDVhDnQHNqNM3O9JVe+KOkkn3KGlV4wPc72k9wUa92wH4i4HhBTiURxgGcm4/YrK37zAaXVTtNtCJcfJYQT/t1Bm8jtQtaeF3oROKwJ7nUrgyQ8KHomwJHDKz4ubyetU1tHWRHJL37knxGT2X00lM1fIAhuWhvzA+4vSxugG+bs=
+	t=1745909524; cv=none; b=kITqmMW+7agbD2OVNQ7Z1p2pbkSsqCXTYezXxZW9g13LJIR6bDYOuTyb0Mw/VLtDPX7b6HRReDGwE4gGvqr8K1opwFiFRFGHhdj3TFeBUdWA+BXuFpI8QBV3asyIQl3Gvwi6DzXQFol3U175F61N1harILpWgg2aU407aT1S7K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745903542; c=relaxed/simple;
-	bh=COjCAfNNB14OVUZM8FvFD/Hesv2vqslnX07ctsQOG1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qc475P6AHcz2t7d+pZnTuGB0jKmIOSjsw2lycGm72FVi7ejwkdKRHCH3fqXzjimMxg1cCh4QemmD3vdCTWXO+9tZqZ5BAGRMbw18DjErQ7rkm5C/VkONlQ++95HZ5c81+ICDy5nnIVO4o3Ulz3bzt+hlKLvhD/zrcXz5pRi+yPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NUEQ7JuN; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1745909524; c=relaxed/simple;
+	bh=OsbRCUKtS1g6kdeWUlqCgkrSl6P+6YFFCidGZt74u/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XWytje3VEZDuE+NZgTSYJ8TomuyZKxajLll24S3djGgcQscdsT6L2BFF50varNIP73E3xddgpWP0XitlKV+w8P3ico8JldHmjijTp/v4M+hpMh1FrjwctRkLjpouM3aEf35zRamXyLXoWp2IoAnxpbZEZsgh2Q+pdhyeJjXqGfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sKCjb2sL; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NUEQ7JuN"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T4EOKW028151;
-	Tue, 29 Apr 2025 05:12:04 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sKCjb2sL"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T4EYD1026454;
+	Tue, 29 Apr 2025 06:52:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hOwTz0
-	BxlJ4QAgmS44LEL0RWzQlwr32IjUrntFNmUvE=; b=NUEQ7JuNgIe1WNtYmhq8Jx
-	/URxZg5hfBdjpKOrllPpH9z5LuTNE8xJCEW1axaOFPe9sM8lChf46oYxgPV7ahMn
-	JG19nQ2ku9dFGn6kUYWyO/WSWCWKykC/X5914AsySTH9PK1BMzvolhv6Wt4x2DPn
-	NdGAuqg5NrKq4u6h0WQp8eYx1Q9nhGguSvRyzgchlQEhQ4LXqWVoSCmt01/3iut/
-	PYzolTOFBJlQyLNrKQsPTHt8nl951BI5ye/USajTNyrXJei7RmiRVC6+PgX9QLcS
-	7H/Swr8cAhps11UEYmLb2nI5xWoXFapeDzOM3zaq11/Q7bRc3LY4m5yesbpd3jMw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ah8m9djk-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=BYTDnf2YueOeH3kEBJ4kRqkQ7iJYqEC8S1noYwpjg
+	n0=; b=sKCjb2sLtGK15xH9tFYfVuzx+rx/l8VS1TYcH6d6qw0Y3QldISq5W5O+x
+	drEwv5EBC8IDtQwshX5GT+vHbt9A5aOzVzKteTX4+Tg2jxhnplEd0FGY5xOFBvUc
+	NKRHUzURCZ4/dZujff2Wq9SrA+tB3VZrTxjv14oYsOvtnhG4IVSoaHlrce/0rMC2
+	tr8iR//2taOhyB+2YNzwUcIIszpvzqG/v5SIG5Qy2x6RLFbZDqtxPt52AQnL4tfX
+	hQE8rgqS1Inw7Q1NU1z2HfRYtnhWCZHTTEf+0HauUd3EEhfRJYIaiZURId2aGg5g
+	O4Dwv3qHFIAhmttnk2LFqFKsABjXw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ahtwhjfm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 05:12:04 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53T56DLw001662;
-	Tue, 29 Apr 2025 05:12:04 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ah8m9djf-1
+	Tue, 29 Apr 2025 06:51:59 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T6Q5hD008490;
+	Tue, 29 Apr 2025 06:51:58 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 469ch31qhx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 05:12:04 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T1BQ4s024679;
-	Tue, 29 Apr 2025 05:12:03 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1m1gtf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 05:12:03 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53T5BxAJ34013798
+	Tue, 29 Apr 2025 06:51:58 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53T6prPR29884758
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 05:11:59 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 298BC20040;
-	Tue, 29 Apr 2025 05:11:59 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 71E8720043;
-	Tue, 29 Apr 2025 05:11:57 +0000 (GMT)
-Received: from [9.199.192.254] (unknown [9.199.192.254])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 29 Apr 2025 05:11:57 +0000 (GMT)
-Message-ID: <780bee9f-081d-4d40-b82d-8fd6727f9433@linux.ibm.com>
-Date: Tue, 29 Apr 2025 10:41:56 +0530
+	Tue, 29 Apr 2025 06:51:53 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E62B02004E;
+	Tue, 29 Apr 2025 06:51:52 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E0E5720040;
+	Tue, 29 Apr 2025 06:51:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.109.199.221])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Apr 2025 06:51:51 +0000 (GMT)
+From: Aditya Bodkhe <adityab1@linux.ibm.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Aditya Bodkhe <aditya.b1@linux.ibm.com>,
+        Disha Goel <disgoel@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH v3] perf script: perf script tests fails with segfault
+Date: Tue, 29 Apr 2025 12:21:32 +0530
+Message-Id: <20250429065132.36839-1-adityab1@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
- cpumap.c
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-References: <20250406163412.897313-1-likhitha@linux.ibm.com>
- <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
- <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
- <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com>
- <D1C1E5D6-085A-41D1-85AB-52809C956BFB@linux.ibm.com> <aAvKg8K2fyrZ6zy4@x1>
-Content-Language: en-US
-From: Likhitha Korrapati <likhitha@linux.ibm.com>
-In-Reply-To: <aAvKg8K2fyrZ6zy4@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: AZWN7fMJg5JATrtyL13CAj3liSirK_K-
-X-Proofpoint-GUID: gvTb79_l8ijvR9FbLk3gxylnZM4snZEQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDAzNyBTYWx0ZWRfX/ivTIJqqZHM/ JcVJBRCTp+DO362b2sZEWxEx4Bi86FLIzElUy/d2yOOvWQwJoTvyragcuVjoBqa+iLdBTwdJepa 1IMju1S7Xcn8Ycu63vAWQ8akwunYoGNBzkKIpKeNT6/6WN+SMmDpG0aBnvZv/qjjWCi6W/KetHT
- oYm6GW84xj9F5IAd8ZvSTxV/vcXvLcF0O8ZZnEo+gqtQ09rHmJMHtsuhXttpXSsLitxoDXcD/cI XrdqEG0+cTYQVRCr+exyGgwWbrZdx2g2EN+euCWENZBhqzzU9zPjQBuD7utEZlrdObxFwLfI0Nm DfyM/sA27dYyw7rQRw08/1c1TmaCbfzbNeeWlVjV8Sqld60WjHxZON+hnSXLlnCrLTV+obQRwMH
- XE3cJn+FhQnWPCec8WFRa7tdnUIycu1JB95LkZR1VTay18MUzQf5cEqYyeaScsUMQRHcQtlZ
-X-Authority-Analysis: v=2.4 cv=QNRoRhLL c=1 sm=1 tr=0 ts=68105fa4 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=8XcPMh4SkUfmyqR2tSwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0OSBTYWx0ZWRfX0D/kShOsjzA8 vd8Vbx0Ms38Lq/uuQTc3Gd21nFwPBwHmJbrqXXGMv9EJYuf+YTYdNEM4fvt0wWUMI76NrEcyBXu BtR1wmuZoUvqat0q/L/S/LYuV0sv3FTnAHTNtmB7WhEgwf6s7EZwTso6IAHjw2DjG4UQuhLPrKW
+ IfuOc3l+bgI9JnWWFI82vAzd8TBK17FgNEpCxFglm7g1kenmJLnawTQwsBvQD9+bKYLuK9OjrB8 r4BZkV9iytQIgQ/JnHXyG1TsDGmb+WD+Y598kQ7k2srAUygAS+1zwb20YOaGw5DrfRuGsI5yn4o wDrOhIrwdXUZyw2I8DE25PImClVWsi+glFylou1i/FUmkrFgHvpz/4M3eS8EhBE1xy/EMgJekgB
+ 8U4+1VzWVxyXuvrPWUj5qd8UhjukBakD0qxkJGtF4HpYDw+1tZWuwayY2W+lFdUrZ4mEoXma
+X-Proofpoint-GUID: Qps3RGWya02JCDIqc0ejB_Dlah3_GcpJ
+X-Authority-Analysis: v=2.4 cv=KtxN2XWN c=1 sm=1 tr=0 ts=6810770f cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=bfOIhj56j9TKDZiLBowA:9
+X-Proofpoint-ORIG-GUID: Qps3RGWya02JCDIqc0ejB_Dlah3_GcpJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 phishscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290037
+ definitions=2025-04-29_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ priorityscore=1501 mlxlogscore=999 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290049
 
-Hi Arnaldo,
+From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
 
-On 4/25/25 23:16, Arnaldo Carvalho de Melo wrote:
-> On Fri, Apr 25, 2025 at 08:19:02PM +0530, Athira Rajeev wrote:
->>> On 14 Apr 2025, at 7:08 AM, Madhavan Srinivasan <maddy@linux.ibm.com> wrote:
->>> On 4/7/25 5:38 PM, Venkat Rao Bagalkote wrote:
->>>> On 07/04/25 12:10 am, Athira Rajeev wrote:
->>>>>> On 6 Apr 2025, at 10:04 PM, Likhitha Korrapati <likhitha@linux.ibm.com> wrote:
-> 
->>>>>> perf build break observed when using gcc 13-3 (FC39 ppc64le)
->>>>>> with the following error.
-> 
->>>>>> cpumap.c: In function 'perf_cpu_map__merge':
->>>>>> cpumap.c:414:20: error: argument 1 range [18446744069414584320, 18446744073709551614] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
->>>>>>    414 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
->>>>>>        |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>>> In file included from cpumap.c:4:
->>>>>> /usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
->>>>>>    672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
->>>>>>        |              ^~~~~~
->>>>>> cc1: all warnings being treated as errors
-> 
->>>>>> Error happens to be only in gcc13-3 and not in latest gcc 14.
->>>>>> Even though git-bisect pointed bad commit as:
->>>>>> 'commit f5b07010c13c ("libperf: Don't remove -g when EXTRA_CFLAGS are used")',
->>>>>> issue is with tmp_len being "int". It holds number of cpus and making
->>>>>> it "unsigned int" fixes the issues.
-> 
->>>>>> After the fix:
-> 
->>>>>>    CC      util/pmu-flex.o
->>>>>>    CC      util/expr-flex.o
->>>>>>    LD      util/perf-util-in.o
->>>>>>    LD      perf-util-in.o
->>>>>>    AR      libperf-util.a
->>>>>>    LINK    perf
->>>>>>    GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
-> 
->>>>>> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
->>>>> Looks good to me
-> 
->>>>> Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> 
->>>> Tested this patch on perf-tools-next repo, and this patch fixes the issue.
-> 
->>>> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> 
->>> Arnaldo, Namhyung,
-> 
->>> can you consider pulling this fix? since it is breaking the build in gcc13-3 or
->>> if you have any comments do let us know.
-> 
-> This isn't the only place in that file where this pattern exists:
-> 
-> ⬢ [acme@toolbx perf-tools-next]$ grep malloc tools/lib/perf/cpumap.c
-> 	cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-> 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> 
-> struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-> {
->          RC_STRUCT(perf_cpu_map) *cpus;
->          struct perf_cpu_map *result;
-> 
->          if (nr_cpus == 0)
->                  return NULL;
-> 
->          cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-> 
-> 
-> int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
-> {
->          struct perf_cpu *tmp_cpus;
->          int tmp_len;
->          int i, j, k;
->          struct perf_cpu_map *merged;
-> 
->          if (perf_cpu_map__is_subset(*orig, other))
->                  return 0;
->          if (perf_cpu_map__is_subset(other, *orig)) {
->                  perf_cpu_map__put(*orig);
->                  *orig = perf_cpu_map__get(other);
->                  return 0;
->          }
-> 
->          tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
->          tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 
-> 
-> struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
->                                               struct perf_cpu_map *other)
-> {
->          struct perf_cpu *tmp_cpus;
->          int tmp_len;
->          int i, j, k;
->          struct perf_cpu_map *merged = NULL;
-> 
->          if (perf_cpu_map__is_subset(other, orig))
->                  return perf_cpu_map__get(orig);
->          if (perf_cpu_map__is_subset(orig, other))
->                  return perf_cpu_map__get(other);
-> 
->          tmp_len = max(__perf_cpu_map__nr(orig), __perf_cpu_map__nr(other));
->          tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 
-> I'm trying to figure out why its only in perf_cpu_map__merge() that this
-> triggers :-\
-> 
-> Maybe that max() call in perf_cpu_map__intersect() somehow makes the
-> compiler happy.
-> 
-> And in perf_cpu_map__alloc() all calls seems to validate it.
-> 
-> But wouldn't turning this into a calloc() be better?
+perf script: pert script tests fails with segmentation fault as below:
 
-I have tried using calloc() instead of malloc() and the issue still 
-exists even using calloc().
+ 92: perf script tests:
+ --- start ---
+test child forked, pid 103769
+DB test
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
+/usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
+ --- Cleaning up ---
+ ---- end(-1) ----
+	92: perf script tests                                               : FAILED!
 
-cpumap.c: In function ‘perf_cpu_map__merge’:
-cpumap.c:414:20: error: argument 1 range [18446744071562067968, 
-18446744073709551615] exceeds maximum object size 9223372036854775807 
-[-Werror=alloc-size-larger-than=]
+Backtrace pointed to :
+	#0  0x0000000010247dd0 in maps.machine ()
+	#1  0x00000000101d178c in db_export.sample ()
+	#2  0x00000000103412c8 in python_process_event ()
+	#3  0x000000001004eb28 in process_sample_event ()
+	#4  0x000000001024fcd0 in machines.deliver_event ()
+	#5  0x000000001025005c in perf_session.deliver_event ()
+	#6  0x00000000102568b0 in __ordered_events__flush.part.0 ()
+	#7  0x0000000010251618 in perf_session.process_events ()
+	#8  0x0000000010053620 in cmd_script ()
+	#9  0x00000000100b5a28 in run_builtin ()
+	#10 0x00000000100b5f94 in handle_internal_command ()
+	#11 0x0000000010011114 in main ()
 
-   414 |         tmp_cpus = calloc(tmp_len , sizeof(struct perf_cpu));
+Further investigation reveals that this occurs in the `perf script tests`,
+because it uses `db_test.py` script. This script sets `perf_db_export_mode = True`.
 
-> 
-> Like:
-> 
-> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> index 4454a5987570cfbc..99d21618a252ac0e 100644
-> --- a/tools/lib/perf/cpumap.c
-> +++ b/tools/lib/perf/cpumap.c
-> @@ -411,7 +411,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
->          }
->   
->          tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
-> -       tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> +       tmp_cpus = calloc(tmp_len, sizeof(struct perf_cpu));
->          if (!tmp_cpus)
->                  return -ENOMEM;
->   
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> 
-> And better, do the max size that the compiler is trying to help us
-> catch?
-> 
-> - Arnaldo
-I have tried using max and it worked. I am doing testing with this 
-change and will be posting a V2.
+With `perf_db_export_mode` enabled, if a sample originates from a hypervisor,
+perf doesn't set maps for "[H]" sample in the code. Consequently, `al->maps` remains NULL
+when `maps__machine(al->maps)` is called from `db_export__sample`.
 
-Thanks
-Likhitha
+As al->maps can be NULL in case of Hypervisor samples , use thread->maps
+because even for Hypervisor sample, machine should exist.
+If we don't have machine for some reason, return -1 to avoid segmentation fault.
+
+Reported-by: Disha Goel <disgoel@linux.ibm.com>
+Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+Changelog:
+v2 -> v3:
+This patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to add extra spaces
+before ---start--- and ---end---
+to be able to apply patch without any issues
+
+v1 -> v2:
+The below patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to handle the segmentation fault ,
+as well as initialisation of al.thread
+
+ tools/perf/util/db-export.c                           | 11 ++++++++---
+ .../perf/util/scripting-engines/trace-event-python.c  |  2 +-
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index 50f916374d87..8f52e8cefcf3 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
+ 	if (al->map) {
+ 		struct dso *dso = map__dso(al->map);
+
+-		err = db_export__dso(dbe, dso, maps__machine(al->maps));
++		err = db_export__dso(dbe, dso, maps__machine(thread__maps(al->thread)));
+ 		if (err)
+ 			return err;
+ 		*dso_db_id = dso__db_id(dso);
+@@ -256,6 +256,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
+ 		al.map = map__get(node->ms.map);
+ 		al.maps = maps__get(thread__maps(thread));
+ 		al.addr = node->ip;
++		al.thread = thread__get(thread);
+
+ 		if (al.map && !al.sym)
+ 			al.sym = dso__find_symbol(map__dso(al.map), al.addr);
+@@ -358,14 +359,18 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 	};
+ 	struct thread *main_thread;
+ 	struct comm *comm = NULL;
+-	struct machine *machine;
++	struct machine *machine = NULL;
+ 	int err;
+
++	if (thread__maps(thread))
++		machine = maps__machine(thread__maps(thread));
++	if (!machine)
++		return -1;
++
+ 	err = db_export__evsel(dbe, evsel);
+ 	if (err)
+ 		return err;
+
+-	machine = maps__machine(al->maps);
+ 	err = db_export__machine(dbe, machine);
+ 	if (err)
+ 		return err;
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 520729e78965..00f2c6c5114d 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1306,7 +1306,7 @@ static void python_export_sample_table(struct db_export *dbe,
+
+ 	tuple_set_d64(t, 0, es->db_id);
+ 	tuple_set_d64(t, 1, es->evsel->db_id);
+-	tuple_set_d64(t, 2, maps__machine(es->al->maps)->db_id);
++	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
+ 	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
+ 	tuple_set_d64(t, 4, es->comm_db_id);
+ 	tuple_set_d64(t, 5, es->dso_db_id);
+--
+2.43.0
+
+
