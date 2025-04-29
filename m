@@ -1,64 +1,64 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C561A2777E4
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 07:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F17279356
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 07:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912525; cv=none; b=dX0oXJ/mpaKZzkwquTtYMPP00tTAg30rJMcXSygJOeGVtJnxWBxlKMjVyGiVVHvuPvHDqS3MlrDdHMvEVl8DoUjRk+mceU37rC8OlxzgF0VOhO6PbMChNcIZhzNtohwOImMzNAIduC54Obk5lVPqe2VNFDJTRSjdm6H+D6WiMio=
+	t=1745913148; cv=none; b=o91xZnLlx6lWrgqp4fC8N3xiEJFnO2DuLLzHQ1UjRdJIJHhtg/zdV1Vw/xwW8cVF2oIXLKGcUfiB2/1q2Mx903N9MbRAe1w60Za+EactltmqMvLzqE/pFF0Dm3pYP+GTIsRXxahG+OOddvo5bxn1/vXCXYFxkXlcNfJ7+QGjfQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745912525; c=relaxed/simple;
-	bh=vYKNzFRfeSD8uhdK3ZiLtOXLvaQBwII13UmNV0ReRrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o9khakJR4AhL8w3WjW46UcQhcMAZxGnsr5V8WYGF0RUoRwJD8xLgjerKAdaBnRVX/KRHYuMmloQQUHXEQa0l+HI+baIugQWrTirDX1uDGCCD5BuC53IEypDUHwtXn5H/MHefYPvDVyMrnl1LaCKh6B/SH/GJXjylZFdtlcag4ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nGt7mxBk; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1745913148; c=relaxed/simple;
+	bh=f3kOrGVppFlTurzyKRffUEWgIU+mOrq3ADeX0U8XaFI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dRymtQ+/5Nt6/EScFpc/lG1B91G4oe9p9wVliyef9G/MvYNc9wWQGBQ2QwTFxsBIW6YQUGYxDFEmGZNRcli3u//rz0JX4a+b6gYxH2U/84MraC89WucWhI3c7++r9PG3CtXtG527YKI2kVynSTy3CDJGpRiw0g2TzcvaQiSiHjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=plXnjQue; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nGt7mxBk"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so3592388f8f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 00:42:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plXnjQue"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c266c1389so4125610f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 00:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745912522; x=1746517322; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XImyMVSLZL6nTiWgBIjQP2A74qR2PA0/ckZKHqWgLH0=;
-        b=nGt7mxBkb/dRqEnTwopi8fasGsnZrPNMtlBqx6I+yANf+b1Bni67L1uqm7iiwdw7mu
-         qAPZtMR+vGp+0PWJgndBWAPB1/StZZA5eq8iXZT8KurLNACUiKnwNlmpCPdGM4DWfnRl
-         SHs39vqBtuQJWJqLeX4g6mG/rMhU8d4YcgVegeX4BS6MP+yTZYjPH5zlKwru9R8rJhkk
-         l3gZZgGDTrPb/LiTglceVDVwp1nhh9/4mAh3uhwxpMRdA9IzwC+ryBUgm2yVTytQhcWl
-         wnxVsPPW9KvJZ7oXtEFeR7q4bNvyWT2m3zi5T5UUSw9x2wDFI9kU9r6SzupvMkd1DEpi
-         f6Vw==
+        d=linaro.org; s=google; t=1745913145; x=1746517945; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IP0g6Az1qg6/PdzbTEpbc2W905Osm3FKSg9EV8HEtrU=;
+        b=plXnjQueqEy1y78R8r0bGDOEMp6NXsmbeZxEW8uWP4gI8OQNc+HtfXJJnaN9J0wcqi
+         SLzi4M+jNvhHsLQzIUCKVpANZZtQhZoBUPfC1WP83cbGvNxShI3FU5a+ajQqi28pMUWA
+         W0UK8PIa7qcm12xdvOdilcgxNtG8JsxesV7NNxVpmWpdrk/Sxt6R+tVLGBVgQMf+Ll/A
+         hNa7DPDXuUJmJfRMWbM90swQK2YcPB0wlNaREHep5lZvVoKN4tHiggVuUtdR5SR/QRrL
+         GcjZIZbpZdD1s6ggkzEo9F6U237tS3CqinZrJZKCNBEim2KBsyXkidHTd0wUreLMTdJ4
+         zHVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745912522; x=1746517322;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1745913145; x=1746517945;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XImyMVSLZL6nTiWgBIjQP2A74qR2PA0/ckZKHqWgLH0=;
-        b=CngouajasCaQEbvdW5sDapoKfd5e5XsAT8D8PohZeip5/HVok9twnMEc3jLfY8wyql
-         OAhybRO+YuNiHRusnwHEhcKEQrBPM/OEaHZyCFKnuv5GNkQMw0+ql4cdvsJpT2eaffyp
-         1zdmt1weZvucwUO332RRHaE+IsiBm4HLKQKD+3hSgJOV14bA9Cp0K/P1LxiHFuAHqFvU
-         sVmhSNOAU59DlaEHOvkTCYeGSq6ADkZr7t/f/5W/+iVzoWr/8XO8mDGBv2bfeNmf+FvC
-         0OyET0lLcDWRcwRNxLeY5xgulVt1jTKmIbueaOuqDZWzo/yrIm/We9FKlieQn2oKbWGt
-         Ryfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAtbl5XnGjk5FYzQ33csf/+nuqy2HbmIZpJen9HLKupfvGt6DDCf0LoeMlsDRMRUSI+1Qyfc6tYMPKkITyIxhn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhNJIn7/D9TP1BlC2bBOa/7XzL8CbaWyYIAL1eFYWZrXnUpYTl
-	gQg50OxgC8aPMe7rdS9//4M2/nm/IxwScCVgAcG8OLQLX1L7LI4+nFtKslOxS+Y=
-X-Gm-Gg: ASbGncsE6MUYs7umCYH8JKCPqAtz6B6A83/UqsCwzyxvhBqptFkz/3M5/y2/i12u3wZ
-	RtuCylbIaO6jRny2xtmECRW4/tavZ24d8c7Crd7E/KOjO6F+ZBAxHoj7Ox8x0KfIKQED1FQUcOm
-	ZWpt7Edt9Zs0wTaubIz3Av4iq57uXafPL35a2Rn+9diSTrXFNKGWC0UQwHJDiGBHg6rj9dba5Bl
-	QSz5cI6YYA24KWoLheRUl/rKdw4PSnbWGRtFxxvuyv8Np1rlRoQWyjkMWib4X77BQZAxnVUXbd1
-	MzLdsVnN+GJSHrfrjoGwzHmNQzJtkngGr38RqU6IJGs=
-X-Google-Smtp-Source: AGHT+IGGv7E79J2GQd/UW8LiJcDmHFN0qa1OtSoQpyK2if340bHg4S63X8Ujs5w3GbfTFYVvGSkaIw==
-X-Received: by 2002:a05:6000:22c5:b0:399:7f2b:8531 with SMTP id ffacd0b85a97d-3a08ad77608mr1109534f8f.38.1745912522007;
-        Tue, 29 Apr 2025 00:42:02 -0700 (PDT)
+        bh=IP0g6Az1qg6/PdzbTEpbc2W905Osm3FKSg9EV8HEtrU=;
+        b=Tw62WqT4ba1NpqihqOc+ZvmnQOppfsOCOZLGbnWWBNf7TKpuDS3yCs09GB10WmFF5M
+         Pqp0ErR4ZTpKsIDbe4M6AdCrOYWUi+E9/WnGvV09tNyKzASsAFv45RBZqrOJ+jXVM6JM
+         aP9GsE0kgF8/k7CuxkilPuMwM4/wAXcqFjJWiHVZwlxz8NU02EZD54bb5l9S6UMHBTOK
+         5tYn4mPj6Wh6ptTxoSAgHwuXLQhHhF70Gh3awt9ltrhhwy8tMovJkbagy2ZGp+Juu7D/
+         7vZzg3acOkfckW1/jHtRXt60VTDXLP0Krv4b50d0eOwiof8IGLah6zXXVtQzF4DaBsV4
+         WyTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXR+YJ6RufTztcCnbYqndY74mHRRl0oeT3TjvFc/vv/fdyLRgtojZ9x9AZAXY3VcVStA0Y4JJsUDBLe6KCzsAnD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4KmhGCDTgfwTrYx9kng1XhfHCKCUsuvvBDwYCS9BVr2njPjZM
+	z/cUW96ximeWlZDSs8JFX1ioJGiZYWMIQaZT+Kp5EewasHziRKEeK6nTGaWut6Y=
+X-Gm-Gg: ASbGnctS6aunVGxq4+Z9E0O2DVwb4NFAhPLcTb/e9FlYM5W7Evyuhiie5sSFBE+BRGT
+	egvBzjrOckzzoRoQiF+WXImX3eHGeLpwJLzY7fOPFk0fT3iKuo4Ku2uwsAtWEiUsmNtLMHjYv0v
+	6gGoPvt8H3sxQTdonSl8KW9lPPzZKtKcn3xmjAkIja3Jb686TeH6ksPVzUVIb5u3p4M0tNpvJ8M
+	ZaeG5hAj5KDGC04PXTW6kFaA5hCbAapRABntGC/XPvAnaNU3lQS8eXcS4lU1Zvryz9aETZEXjfJ
+	W1KGln2/y5QPiAA7iuLDfhfds2GP5kh9nrprlZ38i5Y=
+X-Google-Smtp-Source: AGHT+IGuBGfFJec7/To+e+YvCZS6DGgY+MBgTwoivHQuGe6+RlkaR/yseql0t1IC3PzvnNkFfvupOA==
+X-Received: by 2002:a05:6000:430c:b0:3a0:8492:e493 with SMTP id ffacd0b85a97d-3a0890a5862mr2211069f8f.6.1745913144897;
+        Tue, 29 Apr 2025 00:52:24 -0700 (PDT)
 Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca4e50sm13483251f8f.30.2025.04.29.00.42.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cc199fsm13354105f8f.55.2025.04.29.00.52.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 00:42:01 -0700 (PDT)
-Message-ID: <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
-Date: Tue, 29 Apr 2025 08:42:00 +0100
+        Tue, 29 Apr 2025 00:52:24 -0700 (PDT)
+Message-ID: <4c5eb1e1-f8ef-46a5-92da-50d77aba1405@linaro.org>
+Date: Tue, 29 Apr 2025 08:52:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,6 +67,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] perf tools: Fix arm64 build by generating unistd_64.h
+From: James Clark <james.clark@linaro.org>
 To: Thorsten Leemhuis <linux@leemhuis.info>
 Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -77,115 +78,88 @@ Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  Adrian Hunter <adrian.hunter@intel.com>, arnd@linaro.org
 References: <20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org>
  <7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info>
+ <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info>
+In-Reply-To: <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 28/04/2025 2:23 pm, Thorsten Leemhuis wrote:
-> On 17.04.25 15:55, James Clark wrote:
->> Since pulling in the kernel changes in commit 22f72088ffe6 ("tools
->> headers: Update the syscall table with the kernel sources"), arm64 is
->> no longer using a generic syscall header and generates one from the
->> syscall table. Therefore we must also generate the syscall header for
->> arm64 before building Perf.
->>
->> Add it as a dependency to libperf which uses one syscall number. Perf
->> uses more, but as libperf is a dependency of Perf it will be generated
->> for both.
->>
->> Future platforms that need this will have to add their own syscall-y
->> targets in libperf manually. Unfortunately the arch specific files that
->> do this (e.g. arch/arm64/include/asm/Kbuild) can't easily be imported
->> into the Perf build. But Perf only needs a subset of the generated files
->> anyway, so redefining them is probably the correct thing to do.
+On 29/04/2025 8:42 am, James Clark wrote:
 > 
-> FYI, my daily -next build for Fedora based on its RPM spec file broke
-> on arm64 (x86_64 worked fine) while building libperf. I haven't checked
-> yet, but due to the error messages and a quick look in the history I
-> wonder if this is due to the quoted change, which showed up in -next
-> today:
 > 
-> """
-> kernel.spec:3115: build libperf
-> + /usr/bin/make -s 'EXTRA_CFLAGS=-O2  -fexceptions -g -grecord-gcc-switches -pipe -Wall -Wno-complain-wrong-lang -Werror=format-security -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -mbranch-protection=standard -fasynchronous-unwind-tables -fstack-clash-protection  ' 'LDFLAGS=-Wl,-z,relro -Wl,--as-needed  -Wl,-z,pack-relative-relocs -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld -specs=/usr/lib/rpm/redhat/redhat-hardened-ld-errors -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -Wl,--build-id=sha1 -specs=/usr/lib/rpm/redhat/redhat-package-notes ' -C tools/lib/perf V=1 DESTDIR=/builddir/build/BUILD/kernel-6.15.0-build/BUILDROOT
-> mkdir: cannot create directory â€˜/../archâ€™: Permission denied
-> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/syscallhdr.sh: line 98: /../arch/arm64/include/generated/uapi/asm/unistd_64.h: No such file or directory
-> make[2]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/Makefile.asm-headers:81: /../arch/arm64/include/generated/uapi/asm/unistd_64.h] Error 1
-> make[1]: *** [Makefile:108: uapi-asm-generic] Error 2
-> make: *** [Makefile:128: all] Error 2
-> error: Bad exit status from /var/tmp/rpm-tmp.vAfil2 (%build)
-> """
-> 
-> Full log: https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-aarch64/08975350-next-next-all/builder-live.log.gz
-> 
-> Ciao, Thorsten
->   
-
-Hi Thorsten,
-
-Yes, this is the error that the fix is for.
-
-
-James
-
->> Fixes: 22f72088ffe6 ("tools headers: Update the syscall table with the kernel sources")
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   tools/lib/perf/Makefile    | 12 +++++++++++-
->>   tools/perf/Makefile.config |  1 +
->>   2 files changed, 12 insertions(+), 1 deletion(-)
+> On 28/04/2025 2:23 pm, Thorsten Leemhuis wrote:
+>> On 17.04.25 15:55, James Clark wrote:
+>>> Since pulling in the kernel changes in commit 22f72088ffe6 ("tools
+>>> headers: Update the syscall table with the kernel sources"), arm64 is
+>>> no longer using a generic syscall header and generates one from the
+>>> syscall table. Therefore we must also generate the syscall header for
+>>> arm64 before building Perf.
+>>>
+>>> Add it as a dependency to libperf which uses one syscall number. Perf
+>>> uses more, but as libperf is a dependency of Perf it will be generated
+>>> for both.
+>>>
+>>> Future platforms that need this will have to add their own syscall-y
+>>> targets in libperf manually. Unfortunately the arch specific files that
+>>> do this (e.g. arch/arm64/include/asm/Kbuild) can't easily be imported
+>>> into the Perf build. But Perf only needs a subset of the generated files
+>>> anyway, so redefining them is probably the correct thing to do.
 >>
->> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
->> index ffcfd777c451..1a19b5013f45 100644
->> --- a/tools/lib/perf/Makefile
->> +++ b/tools/lib/perf/Makefile
->> @@ -42,6 +42,7 @@ libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
->>   TEST_ARGS := $(if $(V),-v)
->>   
->>   INCLUDES = \
->> +-I$(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi \
->>   -I$(srctree)/tools/lib/perf/include \
->>   -I$(srctree)/tools/lib/ \
->>   -I$(srctree)/tools/include \
->> @@ -99,7 +100,16 @@ $(LIBAPI)-clean:
->>   	$(call QUIET_CLEAN, libapi)
->>   	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
->>   
->> -$(LIBPERF_IN): FORCE
->> +uapi-asm := $(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi/asm
->> +ifeq ($(SRCARCH),arm64)
->> +	syscall-y := $(uapi-asm)/unistd_64.h
->> +endif
->> +uapi-asm-generic:
->> +	$(if $(syscall-y),\
->> +		$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.asm-headers obj=$(uapi-asm) \
->> +		generic=include/uapi/asm-generic $(syscall-y),)
->> +
->> +$(LIBPERF_IN): uapi-asm-generic FORCE
->>   	$(Q)$(MAKE) $(build)=libperf
->>   
->>   $(LIBPERF_A): $(LIBPERF_IN)
->> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->> index eea95c6c0c71..a52482654d4b 100644
->> --- a/tools/perf/Makefile.config
->> +++ b/tools/perf/Makefile.config
->> @@ -29,6 +29,7 @@ include $(srctree)/tools/scripts/Makefile.arch
->>   $(call detected_var,SRCARCH)
->>   
->>   CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated
->> +CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi
->>   
->>   # Additional ARCH settings for ppc
->>   ifeq ($(SRCARCH),powerpc)
+>> FYI, my daily -next build for Fedora based on its RPM spec file broke
+>> on arm64 (x86_64 worked fine) while building libperf. I haven't checked
+>> yet, but due to the error messages and a quick look in the history I
+>> wonder if this is due to the quoted change, which showed up in -next
+>> today:
 >>
->> ---
->> base-commit: 2b70702917337a8d6d07f03eed961e0119091647
->> change-id: 20250414-james-perf-fix-gen-syscall-a8d9b4367d07
+>> """
+>> kernel.spec:3115: build libperf
+>> + /usr/bin/make -s 'EXTRA_CFLAGS=-O2  -fexceptions -g -grecord-gcc- 
+>> switches -pipe -Wall -Wno-complain-wrong-lang -Werror=format-security 
+>> -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS - 
+>> specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong 
+>> -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -mbranch- 
+>> protection=standard -fasynchronous-unwind-tables -fstack-clash- 
+>> protection  ' 'LDFLAGS=-Wl,-z,relro -Wl,--as-needed  -Wl,-z,pack- 
+>> relative-relocs -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened- 
+>> ld -specs=/usr/lib/rpm/redhat/redhat-hardened-ld-errors -specs=/usr/ 
+>> lib/rpm/redhat/redhat-annobin-cc1  -Wl,--build-id=sha1 -specs=/usr/ 
+>> lib/rpm/redhat/redhat-package-notes ' -C tools/lib/perf V=1 DESTDIR=/ 
+>> builddir/build/BUILD/kernel-6.15.0-build/BUILDROOT
+>> mkdir: cannot create directory â€˜/../archâ€™: Permission denied
+>> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/ 
+>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/ 
+>> syscallhdr.sh: line 98: /../arch/arm64/include/generated/uapi/asm/ 
+>> unistd_64.h: No such file or directory
+>> make[2]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel- 
+>> next-20250428/linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/ 
+>> scripts/Makefile.asm-headers:81: /../arch/arm64/include/generated/ 
+>> uapi/asm/unistd_64.h] Error 1
+>> make[1]: *** [Makefile:108: uapi-asm-generic] Error 2
+>> make: *** [Makefile:128: all] Error 2
+>> error: Bad exit status from /var/tmp/rpm-tmp.vAfil2 (%build)
+>> """
 >>
->> Best regards,
+>> Full log: https://download.copr.fedorainfracloud.org/results/@kernel- 
+>> vanilla/next/fedora-rawhide-aarch64/08975350-next-next-all/builder- 
+>> live.log.gz
+>>
+>> Ciao, Thorsten
 > 
+> Hi Thorsten,
+> 
+> Yes, this is the error that the fix is for.
+> 
+> 
+> James
+> 
+
+Sorry I had it the wrong way around, I see you were asking about a new 
+build failure caused by the fix. Looking into it now.
+
+I noticed some strange characters in here, but I might have enough to go 
+on from the logs:
+
+   mkdir: cannot create directory â€˜/../archâ€™: Permission denied
 
