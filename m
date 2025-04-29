@@ -1,211 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78132750ED;
-	Tue, 29 Apr 2025 09:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1C91F416A;
+	Tue, 29 Apr 2025 09:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919968; cv=none; b=a1/Y7er53mi0bVLoxAyX8YQdD9DnKoavjyp8hUvCSVVMkG8mUUuugUszd6HZQF/bfJLqeMl7eThf7FVkL9cc29fImiSyJVZsWZ5hfIv2umcrepRnROHJJ1J/ZbKsLd+ioxUd48QAViGSs4x5ZQ8oFcVnhA4kuAC2D3JFevcodM0=
+	t=1745920422; cv=none; b=isuIE1WMVnMXm7GdwWuiOMUBTc/PvKdiBMyEYAwupjtxXpR3CJQv9HPLX9hJ27wOV7IS6b00tNYJ9VGS7x+aaJrbyaUt28LQSnYl7qGiK0b+OC0cGwTumOxK73wzsALDfQcZyMCsR6jksnRwy+BiYpNDotwpIRa5xJtRVJXpSNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919968; c=relaxed/simple;
-	bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Emgtv/gMe8St7UkcENtZv3YP4C3bsW6bZP0FKsGeS9U1BnqUjnJNZbnZpBbPYaqf5kryfkN+/tEaJYtwi4K+j+U/qRm+KlwPYB0QDqUiQEgBYfYiwi91+Wkmi/tUOtgTIFRj6nyQpWbf5tTKZhqvDps63zrbTXyaR88wDjjZJ/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhEkgs3Z; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhEkgs3Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745919967; x=1777455967;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
-  b=KhEkgs3ZllIg5zGgsQX8fqOMXknpgK69caY27Orl6Lxtw7NSWSLkG1w4
-   g2DW8+YFG9+XROlrqXraqLm0YeKWEEPWfiozJNYG7NTjY9Ybfsx3fLYkC
-   y8vtWOJIfBcuRSbazfZUYhXJKkjZZzmLz+muojM6CKnLobXStCbTRw9bt
-   bVEcs9nbLpqe00aqkAN6nG2rckC7k2KlnNzn8lwvKgBJHm7fasoExIpQ2
-   Jpakh/f/zv4EkmnPEU3vWprM8wNHG6yIZRy3Hb/xzhlHzWUISTWFmsr4c
-   /lOfdyDSIpXKM0elxe1+HRCwKDWNyXDlQ7xWGHaMQuoIH+jRXpCTKCWob
-   Q==;
-X-CSE-ConnectionGUID: Z6lDBEttR7i/lsUKBkcN2Q==
-X-CSE-MsgGUID: JtsTc6SLS9m+bLDZyPwX+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="35143891"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="35143891"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:46:06 -0700
-X-CSE-ConnectionGUID: chXqGONbRG+KNhUajc2ULw==
-X-CSE-MsgGUID: 8lVzqi8rRgSKGWTaNKThpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="133495412"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:45:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 29 Apr 2025 12:45:49 +0300 (EEST)
-To: "Xin Li (Intel)" <xin@zytor.com>
-cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
-    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
-    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
-    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
-    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
-    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-    dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-In-Reply-To: <20250427092027.1598740-2-xin@zytor.com>
-Message-ID: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-References: <20250427092027.1598740-1-xin@zytor.com> <20250427092027.1598740-2-xin@zytor.com>
+	s=arc-20240116; t=1745920422; c=relaxed/simple;
+	bh=OhGV0jZlvwbTl/ALDvHmL48asVDhok2hLypoi47b+h0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYtlqqYeS+CSyVGtRx+RYTYz5pN1SmuduAsh/s0n93ssxKUJzwd9qfGI0BBnQnjskj94KqRLyd8kIjSvbGPDVkSLAdH4MjPYHELjIjGd0YgUYYkzBc4Ji2ABtUOAUS1bLV6Hfd14I7VJYgK5cT0WHFmgwZ0GInrTDQs0V0d9IT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3860E1516;
+	Tue, 29 Apr 2025 02:53:33 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EBBE3F66E;
+	Tue, 29 Apr 2025 02:53:39 -0700 (PDT)
+Date: Tue, 29 Apr 2025 10:53:35 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Namhyung Kim <namhyung@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250429095335.GH551819@e132581.arm.com>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-10-irogers@google.com>
+ <20250402143541.GM115840@e132581.arm.com>
+ <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
+ <20250402163807.GP115840@e132581.arm.com>
+ <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
+ <Z-4URXOzsVHTY7zz@google.com>
+ <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
+ <20250428111003.GC551819@e132581.arm.com>
+ <CAP-5=fX3jn=ff9itMemKB22ACnHtU_cO6YUcx=uYYWX4=QaLJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-666243473-1745919726=:938"
-Content-ID: <1b5519eb-241d-dec5-af5a-fc9378cf96ec@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fX3jn=ff9itMemKB22ACnHtU_cO6YUcx=uYYWX4=QaLJw@mail.gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Ian,
 
---8323328-666243473-1745919726=:938
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <6ad7f337-7709-3cca-3ccd-80f11d3e8d38@linux.intel.com>
+On Mon, Apr 28, 2025 at 09:29:37AM -0700, Ian Rogers wrote:
 
-On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
+[...]
 
-> For some reason, there are some TSC-related functions in the MSR
-> header even though there is a tsc.h header.
->=20
-> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
-> to <asm/tsc.h> and to eventually eliminate the inclusion of
-> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
-> reference definitions from <asm/msr.h>.
->=20
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->=20
-> Change in v4:
-> *) Add missing includes in a different patch (Ilpo J=E4rvinen).
-> *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
->=20
-> Change in v3:
-> * Add a problem statement to the changelog (Dave Hansen).
-> ---
->  arch/x86/events/msr.c                                         | 3 +++
->  arch/x86/events/perf_event.h                                  | 1 +
->  arch/x86/events/probe.c                                       | 2 ++
+> Hi Leo,
+> 
+> So I sent out cleaning up the kernel headers separately:
+> https://lore.kernel.org/lkml/20250403165702.396388-1-irogers@google.com/
+> Arnd commented that it would be nicer to do larger changes, but my
+> concern was breaking printf modifiers, etc. It looks like those
+> patches have lost momentum, not sure what's going to happen about them
+> being merged.
+> 
+> On the fixes vs refactoring. I'm not sure refactoring is the right
+> term for the other things in the series. It is basically trying to
+> make implicit casts explicit, without doing some boil the ocean
+> exercise.
 
-Under arch/x86/events/ a few files seem to be missing the include?
+Yeah, I agreed that some "refactoring" is actually fixing bugs.
 
->  arch/x86/hyperv/ivm.c                                         | 1 +
+> I went through the issues in the email this is a reply to:
+> https://lore.kernel.org/lkml/CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com/
+> Do you want to send the bits you think need prioritizing to the list?
 
-Also under hyperv/ not all files are covered but I'm a bit hesitant to=20
-suggest a change there since I'm not sure if they (hypervisors) do=20
-something special w.r.t. msr.
+For me, at least two things can be fixed first:
 
->  arch/x86/include/asm/fred.h                                   | 1 +
->  arch/x86/include/asm/microcode.h                              | 2 ++
->  arch/x86/include/asm/mshyperv.h                               | 1 +
->  arch/x86/include/asm/msr.h                                    | 1 +
->  arch/x86/include/asm/suspend_32.h                             | 1 +
->  arch/x86/include/asm/suspend_64.h                             | 1 +
->  arch/x86/include/asm/switch_to.h                              | 2 ++
+- One is the test case switch-tracking.c is broken on Arm64, your
+  change for the compar() function would be fine for me.
 
-arch/x86/kernel/acpi/ ?
-acrh/x86/kernel/cet.c ?
-=2E..
+- You mentioned the issue in ui/hist.c:
+  ret = b->callchain->max_depth - a->callchain->max_depth;
 
-There seem to be quite many under arch/x86/ that still don't have it, I=20
-didn't list them all as there were so many after this point.
+These two issues are similiar and can fixed in the same format.
 
-But that's up to x86 maintainers how throughout they want you to be.
+> > > There are lots of cases like:
+> > > ```
+> > >                 case ARM_SPE_COUNTER:
+> > >                        if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
+> > > -                               decoder->record.latency = payload;
+> > > +                               decoder->record.latency = (u32)payload;
+> >
+> > This would be fine.  Since Arm SPE implements a counter with a maximum
+> > of 16 bits, there will never be an overflow when storing the data in a
+> > 32-bit unsigned integer.
+> 
+> The payload was > sizeof(u32), should record.latency be a u16?
 
-This command may be helpful to exclude the files which already have the=20
-include so you can focus on the ones that may still be missing it:
+Yes, we can change to u16 type for latency.
 
-git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
+> My point wasn't so much to complain about adding a u32 cast in the SPE
+> code, but that having the cast makes it clear that truncation is
+> expected. Adding the casts isn't fixing a bug, but it is making it
+> clearer that the code will truncate the payload value (imo).
 
->  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
->  arch/x86/kernel/fpu/xstate.h                                  | 1 +
->  arch/x86/kernel/hpet.c                                        | 1 +
->  arch/x86/kernel/process_64.c                                  | 1 +
->  arch/x86/kernel/trace_clock.c                                 | 2 +-
->  arch/x86/kernel/tsc_sync.c                                    | 1 +
->  arch/x86/lib/kaslr.c                                          | 2 +-
->  arch/x86/mm/mem_encrypt_identity.c                            | 1 +
->  arch/x86/realmode/init.c                                      | 1 +
->  drivers/acpi/acpi_extlog.c                                    | 1 +
->  drivers/acpi/processor_perflib.c                              | 1 +
->  drivers/acpi/processor_throttling.c                           | 3 ++-
->  drivers/char/agp/nvidia-agp.c                                 | 1 +
->  drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
->  drivers/crypto/ccp/sev-dev.c                                  | 1 +
->  drivers/edac/amd64_edac.c                                     | 1 +
->  drivers/edac/ie31200_edac.c                                   | 1 +
->  drivers/edac/mce_amd.c                                        | 1 +
->  drivers/hwmon/hwmon-vid.c                                     | 4 ++++
->  drivers/idle/intel_idle.c                                     | 1 +
->  drivers/misc/cs5535-mfgpt.c                                   | 1 +
->  drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
->  drivers/platform/x86/intel/ifs/core.c                         | 1 +
->  drivers/platform/x86/intel/ifs/load.c                         | 1 +
->  drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
->  drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
->  drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
->  .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
->  drivers/powercap/intel_rapl_common.c                          | 1 +
->  drivers/powercap/intel_rapl_msr.c                             | 1 +
->  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
->  drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
->  drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
->  drivers/video/fbdev/geode/display_gx.c                        | 1 +
->  drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
->  drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
+As Arm SPE has defined the format, I would prefer to refine the code
+based on the format:
 
-Under drivers/ this looked pretty complete. Nice work.
+  #define SPE_CNT_PKT_COUNT(v)    ((v) & GENMASK_ULL(15, 0))
 
-Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
+  decoder->record.latency = SPE_CNT_PKT_COUNT(payload);
 
-I also noticed these files might not need to include msr.h:
+I can send a minor patch series for this, if not conflict with your
+side.
 
-drivers/cpufreq/elanfreq.c
-drivers/cpufreq/sc520_freq.c
-drivers/accel/habanalabs/common/habanalabs_ioctl.c
-
-=2E..so if you want, you may consider optionally adding a cleanup patch to=
-=20
-remove the include from them.
-
-> --- a/drivers/video/fbdev/geode/gxfb_core.c
-> +++ b/drivers/video/fbdev/geode/gxfb_core.c
-> @@ -30,6 +30,7 @@
->  #include <linux/cs5535.h>
-> =20
->  #include <asm/olpc.h>
-> +#include <asm/msr.h>
-
-In wrong order.
-> =20
->  #include "gxfb.h"
-
---
- i.
---8323328-666243473-1745919726=:938--
+Thanks,
+Leo
