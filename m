@@ -1,180 +1,211 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBB92BCF50
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 09:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78132750ED;
+	Tue, 29 Apr 2025 09:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918506; cv=none; b=L1awPxqKtS0H6bDZcQr+XaRN1MktjDylVvwEq/UWxfBCxcbhaSLf1lIvHP8JpSeztxJNbKxW4q6Zb1QZmNHN4Y8LANqSOm7YsgDb7T0ywI5S1J+/C4R6FysyRqpqr7MPxLW4JwCedJRDTy9GVo72K2DrROS1f44o3ZKCRdqQ2rg=
+	t=1745919968; cv=none; b=a1/Y7er53mi0bVLoxAyX8YQdD9DnKoavjyp8hUvCSVVMkG8mUUuugUszd6HZQF/bfJLqeMl7eThf7FVkL9cc29fImiSyJVZsWZ5hfIv2umcrepRnROHJJ1J/ZbKsLd+ioxUd48QAViGSs4x5ZQ8oFcVnhA4kuAC2D3JFevcodM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918506; c=relaxed/simple;
-	bh=yylSKJDv8HkOf0iH+SYlqcQffyWxREZ928vnNlKrMhI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MpYJChMjYQQ1zUmaN/BqmHrsrWRdkAMngj2eXos087HSAqiWs/06d2rizkzmU8mG4oqfBaF9oGp/4sy2Y0zJye+JEUNfEa8XJA7kxRT7Np0+zvSyRkel6QxT7fGhELt9feUllX6Z+iZWKPZEnx8psoFnreWgsr2aJz+FCnIpg8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z90x38ny; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745919968; c=relaxed/simple;
+	bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Emgtv/gMe8St7UkcENtZv3YP4C3bsW6bZP0FKsGeS9U1BnqUjnJNZbnZpBbPYaqf5kryfkN+/tEaJYtwi4K+j+U/qRm+KlwPYB0QDqUiQEgBYfYiwi91+Wkmi/tUOtgTIFRj6nyQpWbf5tTKZhqvDps63zrbTXyaR88wDjjZJ/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhEkgs3Z; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z90x38ny"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43690d4605dso43199555e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 02:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745918503; x=1746523303; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3jdvpeyG/XLxQ3dsLKaff+2PtCT4KthrhFkzjVZAM=;
-        b=Z90x38nygZHLQlMLbTcx4J7BKNQ3skhVLdP8aZYZ5rH/RdqkSCQ/IiMYkhxdfm0o+w
-         fPM4KpFd0+8rLvVmXtgbXHIzyTIgiHj3Q0shjAf/CZN9cRhdCoiZEjvNyM6R32fvJveb
-         ul9ZfypIvW6qqZ2JPdJLXKe91fQZTQRK6c+EYOg1BeOE333s6mtYxEhjN0nNjzrEEsM7
-         zr8XMkwzkdc25MXIECUAKkLF/lt0caGQDQIgQ3M0wwIxfwlUMlU5+592pi5mTN38SuT3
-         U93Eo7qqPqRCeRPdRPhahpRgAqCVwGT5fLO552j2B6I9sV1r+C30cp0X9c3fHe8XnPL7
-         LSSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918503; x=1746523303;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3jdvpeyG/XLxQ3dsLKaff+2PtCT4KthrhFkzjVZAM=;
-        b=n2EUmNganc/KAF8UJO5DsAT8p52G885GLDn146c/SnXlLoYhcVMat8Mapm0SSXLv+m
-         +asIRSEsnQ4ooj/6DfVcBclJmR8QsCUMq9BEUCFe2vvGO2x33t9fsD7b7a3d0TfN9QJJ
-         fH8HlusfIxoE3QAm/g8BdO4uoSA7TEFdBcOrEhWv7aB6xngkW9ZLrgNqFjxu+f3hmU+J
-         p4vudpIrPDWrLPExj2eI0wbd+yO1R+9LPWgBDac6mbpspgqAdsZsjwPzC0ayyh/MWmuR
-         rgE/TM+F0ymio7aLsOFsTylwqeNpYWW4In0H81QLOQ81FSol3GrRY95c90uGGI8GyVYD
-         iUzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSQG+1ksBziu8VRIYuSkqsSoLcGAaU9ZZrFUF0X44f7iQLQdNzhm5wTV+JrcyWVP5h90ZRSswUWOIcd59LNmcn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEcWKg0K244+e3ITKT7MuYbDGVQN5YgNwyY9A7LLd4Wqj7j1Dd
-	jvonFIrX5ohC0f2wlBNnGAFAWV6XUHqXVXB7gfABGHytkTyWU/4XFuzUII7rs6Q=
-X-Gm-Gg: ASbGncv2zz9Ze9j/dc4In4XcqS8n4+42jKCP4svgB3tHv4EhSS7ecD4pryIlUlKzoeO
-	NQsryFaPknRAyHpGS0fuF7iETxSQbmgWHVMfR5l7AxEK+BS4fJTyehuZWgSXHVi3dQkZ//iIF/f
-	r3JzuPe1VGudvClBPjWyrw+2X6LmhiAdby4OKw/uDubFN4bI+SBFyaOvgCZSDs36Y/1VddmpoqC
-	Cr/Z1bzymE3jcs94SNfYJ8GuZOpoNgbz88LgOroRzXTDVybDuc/akVrQXc7RiUiP+2XfHrSPfT5
-	jl9WU3hkHyi1AAorqbVVgpzm3qLa47Oom0dXiUJnw9NByaSFG0tyQw==
-X-Google-Smtp-Source: AGHT+IEUGW55N4u/mThqrlEDhA9YSxZ89qDIJshXeMtSzbHkz+MFGGxdrPryOqnbUPm5rxvbTdTFqA==
-X-Received: by 2002:a05:6000:18ac:b0:39e:f89b:85dc with SMTP id ffacd0b85a97d-3a07aa65134mr7471133f8f.17.1745918502621;
-        Tue, 29 Apr 2025 02:21:42 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c6a0sm13337100f8f.86.2025.04.29.02.21.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:21:42 -0700 (PDT)
-Message-ID: <b2f05ef5-4ba7-4041-8d11-021aa2c3f6e3@linaro.org>
-Date: Tue, 29 Apr 2025 10:21:41 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhEkgs3Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745919967; x=1777455967;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
+  b=KhEkgs3ZllIg5zGgsQX8fqOMXknpgK69caY27Orl6Lxtw7NSWSLkG1w4
+   g2DW8+YFG9+XROlrqXraqLm0YeKWEEPWfiozJNYG7NTjY9Ybfsx3fLYkC
+   y8vtWOJIfBcuRSbazfZUYhXJKkjZZzmLz+muojM6CKnLobXStCbTRw9bt
+   bVEcs9nbLpqe00aqkAN6nG2rckC7k2KlnNzn8lwvKgBJHm7fasoExIpQ2
+   Jpakh/f/zv4EkmnPEU3vWprM8wNHG6yIZRy3Hb/xzhlHzWUISTWFmsr4c
+   /lOfdyDSIpXKM0elxe1+HRCwKDWNyXDlQ7xWGHaMQuoIH+jRXpCTKCWob
+   Q==;
+X-CSE-ConnectionGUID: Z6lDBEttR7i/lsUKBkcN2Q==
+X-CSE-MsgGUID: JtsTc6SLS9m+bLDZyPwX+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="35143891"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="35143891"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:46:06 -0700
+X-CSE-ConnectionGUID: chXqGONbRG+KNhUajc2ULw==
+X-CSE-MsgGUID: 8lVzqi8rRgSKGWTaNKThpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="133495412"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:45:52 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 29 Apr 2025 12:45:49 +0300 (EEST)
+To: "Xin Li (Intel)" <xin@zytor.com>
+cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
+    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
+    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
+    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
+    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
+    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+    dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
+In-Reply-To: <20250427092027.1598740-2-xin@zytor.com>
+Message-ID: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
+References: <20250427092027.1598740-1-xin@zytor.com> <20250427092027.1598740-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tools: Fix arm64 build by generating unistd_64.h
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, arnd@linaro.org
-References: <20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org>
- <7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info>
- <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
- <4c5eb1e1-f8ef-46a5-92da-50d77aba1405@linaro.org>
- <f0bab5f8-ff61-4eee-a736-8c2dbd33bc72@leemhuis.info>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <f0bab5f8-ff61-4eee-a736-8c2dbd33bc72@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-666243473-1745919726=:938"
+Content-ID: <1b5519eb-241d-dec5-af5a-fc9378cf96ec@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-666243473-1745919726=:938
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <6ad7f337-7709-3cca-3ccd-80f11d3e8d38@linux.intel.com>
 
-On 29/04/2025 9:02 am, Thorsten Leemhuis wrote:
-> On 29.04.25 09:52, James Clark wrote:
->> On 29/04/2025 8:42 am, James Clark wrote:
->>> On 28/04/2025 2:23 pm, Thorsten Leemhuis wrote:
->>>> On 17.04.25 15:55, James Clark wrote:
->>>>> Since pulling in the kernel changes in commit 22f72088ffe6 ("tools
->>>>> headers: Update the syscall table with the kernel sources"), arm64 is
->>>>> no longer using a generic syscall header and generates one from the
->>>>> syscall table. Therefore we must also generate the syscall header for
->>>>> arm64 before building Perf.
->>>>>
->>>>> Add it as a dependency to libperf which uses one syscall number. Perf
->>>>> uses more, but as libperf is a dependency of Perf it will be generated
->>>>> for both.
->>>>>
->>>>> Future platforms that need this will have to add their own syscall-y
->>>>> targets in libperf manually. Unfortunately the arch specific files that
->>>>> do this (e.g. arch/arm64/include/asm/Kbuild) can't easily be imported
->>>>> into the Perf build. But Perf only needs a subset of the generated
->>>>> files
->>>>> anyway, so redefining them is probably the correct thing to do.
->>>>
->>>> FYI, my daily -next build for Fedora based on its RPM spec file broke
->>>> on arm64 (x86_64 worked fine) while building libperf. I haven't checked
->>>> yet, but due to the error messages and a quick look in the history I
->>>> wonder if this is due to the quoted change, which showed up in -next
->>>> today:
->>>>
->>>> """
->>>> kernel.spec:3115: build libperf
->>>> + /usr/bin/make -s 'EXTRA_CFLAGS=-O2  -fexceptions -g -grecord-gcc-
->>>> switches -pipe -Wall -Wno-complain-wrong-lang -Werror=format-security
->>>> -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS -
->>>> specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-
->>>> strong -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -mbranch-
->>>> protection=standard -fasynchronous-unwind-tables -fstack-clash-
->>>> protection  ' 'LDFLAGS=-Wl,-z,relro -Wl,--as-needed  -Wl,-z,pack-
->>>> relative-relocs -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-
->>>> hardened- ld -specs=/usr/lib/rpm/redhat/redhat-hardened-ld-errors -
->>>> specs=/usr/ lib/rpm/redhat/redhat-annobin-cc1  -Wl,--build-id=sha1 -
->>>> specs=/usr/ lib/rpm/redhat/redhat-package-notes ' -C tools/lib/perf
->>>> V=1 DESTDIR=/ builddir/build/BUILD/kernel-6.15.0-build/BUILDROOT
->>>> mkdir: cannot create directory â€˜/../archâ€™: Permission denied
->>>> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/
->>>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/
->>>> syscallhdr.sh: line 98: /../arch/arm64/include/generated/uapi/asm/
->>>> unistd_64.h: No such file or directory
->>>> make[2]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-
->>>> next-20250428/
->>>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/ scripts/
->>>> Makefile.asm-headers:81: /../arch/arm64/include/generated/ uapi/asm/
->>>> unistd_64.h] Error 1
->>>> make[1]: *** [Makefile:108: uapi-asm-generic] Error 2
->>>> make: *** [Makefile:128: all] Error 2
->>>> error: Bad exit status from /var/tmp/rpm-tmp.vAfil2 (%build)
->>>> """
->>>>
->>>> Full log: https://download.copr.fedorainfracloud.org/results/@kernel-
->>>> vanilla/next/fedora-rawhide-aarch64/08975350-next-next-all/builder-
->>>> live.log.gz
->>>
->>> Yes, this is the error that the fix is for.
->>
->> Sorry I had it the wrong way around,
-> 
-> Okay, for a moment I was confused and wondered if I was holding things
-> wrong. :-D
-> 
->> I see you were asking about a new
->> build failure caused by the fix. Looking into it now.
-> 
-> Many thx!
-> 
->> I noticed some strange characters in here
-> 
-> Sorry, that was my (or my browsers) fault (some encoding mixup somewhere
-> I've seen earlier) and highly unlikely to be related.
-> 
+On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
 
-Yep, not related it's just the quotes around the error printout. I just 
-need to use $(OUTPUT) properly without the "/../" on the end of it. If 
-OUTPUT isn't set it tries to go up one from root rather than being 
-relative to cwd.
+> For some reason, there are some TSC-related functions in the MSR
+> header even though there is a tsc.h header.
+>=20
+> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
+> to <asm/tsc.h> and to eventually eliminate the inclusion of
+> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
+> reference definitions from <asm/msr.h>.
+>=20
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>=20
+> Change in v4:
+> *) Add missing includes in a different patch (Ilpo J=E4rvinen).
+> *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
+>=20
+> Change in v3:
+> * Add a problem statement to the changelog (Dave Hansen).
+> ---
+>  arch/x86/events/msr.c                                         | 3 +++
+>  arch/x86/events/perf_event.h                                  | 1 +
+>  arch/x86/events/probe.c                                       | 2 ++
 
-I'll send a patch.
+Under arch/x86/events/ a few files seem to be missing the include?
 
->>    mkdir: cannot create directory â€˜/../archâ€™: Permission denied
-> 
-> Ciao, Thorsten
+>  arch/x86/hyperv/ivm.c                                         | 1 +
 
+Also under hyperv/ not all files are covered but I'm a bit hesitant to=20
+suggest a change there since I'm not sure if they (hypervisors) do=20
+something special w.r.t. msr.
+
+>  arch/x86/include/asm/fred.h                                   | 1 +
+>  arch/x86/include/asm/microcode.h                              | 2 ++
+>  arch/x86/include/asm/mshyperv.h                               | 1 +
+>  arch/x86/include/asm/msr.h                                    | 1 +
+>  arch/x86/include/asm/suspend_32.h                             | 1 +
+>  arch/x86/include/asm/suspend_64.h                             | 1 +
+>  arch/x86/include/asm/switch_to.h                              | 2 ++
+
+arch/x86/kernel/acpi/ ?
+acrh/x86/kernel/cet.c ?
+=2E..
+
+There seem to be quite many under arch/x86/ that still don't have it, I=20
+didn't list them all as there were so many after this point.
+
+But that's up to x86 maintainers how throughout they want you to be.
+
+This command may be helpful to exclude the files which already have the=20
+include so you can focus on the ones that may still be missing it:
+
+git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
+
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
+>  arch/x86/kernel/fpu/xstate.h                                  | 1 +
+>  arch/x86/kernel/hpet.c                                        | 1 +
+>  arch/x86/kernel/process_64.c                                  | 1 +
+>  arch/x86/kernel/trace_clock.c                                 | 2 +-
+>  arch/x86/kernel/tsc_sync.c                                    | 1 +
+>  arch/x86/lib/kaslr.c                                          | 2 +-
+>  arch/x86/mm/mem_encrypt_identity.c                            | 1 +
+>  arch/x86/realmode/init.c                                      | 1 +
+>  drivers/acpi/acpi_extlog.c                                    | 1 +
+>  drivers/acpi/processor_perflib.c                              | 1 +
+>  drivers/acpi/processor_throttling.c                           | 3 ++-
+>  drivers/char/agp/nvidia-agp.c                                 | 1 +
+>  drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
+>  drivers/crypto/ccp/sev-dev.c                                  | 1 +
+>  drivers/edac/amd64_edac.c                                     | 1 +
+>  drivers/edac/ie31200_edac.c                                   | 1 +
+>  drivers/edac/mce_amd.c                                        | 1 +
+>  drivers/hwmon/hwmon-vid.c                                     | 4 ++++
+>  drivers/idle/intel_idle.c                                     | 1 +
+>  drivers/misc/cs5535-mfgpt.c                                   | 1 +
+>  drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
+>  drivers/platform/x86/intel/ifs/core.c                         | 1 +
+>  drivers/platform/x86/intel/ifs/load.c                         | 1 +
+>  drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
+>  drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
+>  drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
+>  .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
+>  drivers/powercap/intel_rapl_common.c                          | 1 +
+>  drivers/powercap/intel_rapl_msr.c                             | 1 +
+>  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
+>  drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
+>  drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
+>  drivers/video/fbdev/geode/display_gx.c                        | 1 +
+>  drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
+>  drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
+
+Under drivers/ this looked pretty complete. Nice work.
+
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
+
+I also noticed these files might not need to include msr.h:
+
+drivers/cpufreq/elanfreq.c
+drivers/cpufreq/sc520_freq.c
+drivers/accel/habanalabs/common/habanalabs_ioctl.c
+
+=2E..so if you want, you may consider optionally adding a cleanup patch to=
+=20
+remove the include from them.
+
+> --- a/drivers/video/fbdev/geode/gxfb_core.c
+> +++ b/drivers/video/fbdev/geode/gxfb_core.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/cs5535.h>
+> =20
+>  #include <asm/olpc.h>
+> +#include <asm/msr.h>
+
+In wrong order.
+> =20
+>  #include "gxfb.h"
+
+--
+ i.
+--8323328-666243473-1745919726=:938--
