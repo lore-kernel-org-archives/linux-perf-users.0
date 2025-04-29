@@ -1,63 +1,66 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED00621ABDB
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 18:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D57254AF2
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 18:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745953150; cv=none; b=k55gqmMwKWZlrZBZlnroNKLg8jvWlJTedaTcrur8e42KOb5katWICW24iRc8A3PYB0NFIFaiTYBu2iFu9oO+1dniMbr3C75Mp0k4WIdWW+t990j0JjOzJK4VmVA0ExslncqwFttYUX/L9k4qlJU40dM/4EcHdAC8Yk7w2rAKqIc=
+	t=1745953155; cv=none; b=GdrhEP7I7+kHIUq1KW8iUks8vrZ27CS+E8SfVTXmKzvp/clkDjIhampYm3KNNFFUMJpkP38RHwr85+QkXLoBPxjLM6lsX2HX0n94RBQEIL2w3biLf89WVX5dI9gYfMERj0WUMtjHZMS2a20Y+mHq4NEmNk70sYMVD8xBGWHPxOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745953150; c=relaxed/simple;
-	bh=JKuR2HnO4uDM9v+Z7llC/3uiDFowURfwK74QDWYhdv8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=TQ7XBwScdkNAUu3gdvEZOZYmS5dxcv3EpZTssW8/aCKYOu59X4jCPo2ofGUjOEM0sikBFmo2v7wlOYN8EtqUSoKGbGIi+DGo9vcKc37UBNjhj8Qes7TpgL4DFrMhWoVTqVC/NZUfDPtAoLm7DXa2wBp5Z5D8Q2gbKJbBKNgvSFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fKvPCf+g; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1745953155; c=relaxed/simple;
+	bh=kgvUqUs9tDT7/Goccc5s/AHR9V2GVcDy1e7HZmcr48o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=FiRoF3OtpH/IGgUx4l3DSKA3sFWiSZ2dxWvNn8wvhTrWGpN1xUQ5CoBIPvhUTDci3opMVnyHBrCxV5L/YJ7XvHYaZozbXxdXLkuXvsMkTLr7FWSCrJSLf8ZZ6GungdhGOxkwt9bV56/GiHSfUL6tagPZyzlUZsdX4UbXritv3dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wss/8Dca; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKvPCf+g"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so9213917a91.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 11:59:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wss/8Dca"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2242ade807fso99687355ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 11:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745953148; x=1746557948; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eXJ8J07H9GMYt3devST83hdUmEga5s87LMXmrPwfkrE=;
-        b=fKvPCf+gaZVDQfkmynEvFIEYEHR1BSCpdweSDhXd4Cc1QeEPCdRymYsL3XDIH2oVlB
-         uY/ioN9kcoweilekVxVGCBng8e5r3SrJaQqmyaiDwXQxI9/OS/E+IM0HXBavsegwx5ZI
-         c4MyEHMZHlgt5b9qJeeaL08/4cB0uGS7QjprLWSpIDdpOfNcxcNy6L14HQB6g8Fqt9AY
-         +i45UJYFiECbxmQYKMurxKuhDPq41CWhZnforu/KDoUr2Gy1v6OO5APHsFXQyP4WCZ57
-         xKnRUrLPDnfGjBRhxJzPaYs5xXPzQhXkRAWbYLUoJ8LRPjwOMazBEBCAfHGIGSPLDn4K
-         p4UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745953148; x=1746557948;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1745953152; x=1746557952; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eXJ8J07H9GMYt3devST83hdUmEga5s87LMXmrPwfkrE=;
-        b=euu9KiIYzUZ4i1b14KdYBxZuJXo++96a3EeyFriMHCkfboVW8tHCuMunCmNl4q/CMZ
-         QIKXjmzezlwTiEU71E1eD0sP6TNBan+SGTfiwUQr7jMINlhmkUvFOKzMxLl9l7Wwh9DJ
-         +/f2aF//HZ1EWWw0GFC8wNTxIXBOc1DUocEkFy+Q4bgqmFlfK1kB0RwaJIMuaA5dqQDr
-         DJNMuG4SnfF18eguyTbHkA5obzTI9mDSpj2RF9jEGbaVVVktsxmMMJ8SVXH3zQBLX9eE
-         XS/iOt8dmqU0N/0HxaqI7gAnuIbTAj3SgcUfkX31R3DZqr3l0qbvyenHfu6msU3Tkjov
-         KjEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqevZL5+ESPG/pzrbyKoi+LoOOflwyuUKIE3EIYOFI5lIXKRVRoivNPvuSiHQp1tE8b7vbeU2OR09J2mR6YaAE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+aUAI5ls04Ggn92dfFjLmtrzgppm4nA2IRzgig9b/lUYTW5yE
-	nyOtD9qWY1cKOS8hxRMzq6olcYz3dzfbA8HKvd3y+OCe5Nnqsz/xhgUsqSyLHNp6VRGZWEmWLJ7
-	hrskkpw==
-X-Google-Smtp-Source: AGHT+IEwoN0N6+nJ6vqr/dgRzJLp6ISNYWD1HN7A2s+gg7YV9C0xR0d2OaoIaTgW058JKbZw1oATFTbdIpRF
-X-Received: from pjbsm11.prod.google.com ([2002:a17:90b:2e4b:b0:301:2a0f:b03d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1346:b0:301:1c11:aa74
- with SMTP id 98e67ed59e1d1-30a333530c8mr307400a91.28.1745953148279; Tue, 29
- Apr 2025 11:59:08 -0700 (PDT)
-Date: Tue, 29 Apr 2025 11:58:32 -0700
+        bh=H5STVKEj33U6deIy1RNvJ4OCh/5ONE1eRUPfMHrQT+s=;
+        b=Wss/8DcaNsO9w4Fj2trlTiHnjb8B/WmSYJDpLvJ5Pb9coyYDt9zJkgxpOs48ajMgCk
+         9/ynP48Nln9UrJHlOUU8U2uONsx9+xglkvf+p0I7hWw2RExPhj6QNiFf84oY3Bi5HN8K
+         s3lqUL9XRBIgSMDfH3fiMakOBwP3EzDHXQKYedFdNr3GLu7toBzTX5hTg/DZH4dpbcJx
+         w+rhALIlFdJHFmVdeCRjMjqnIIrz2T5VeUK843flpUufP8rWXN+ee4fI6rumHxSYo2LP
+         hKP1gG0R0bzbH12i258y9bK/4b1ZKEUJ7TLCa0ODI277YOAhAvutoAW7b60mCrUy438k
+         LSCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745953152; x=1746557952;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H5STVKEj33U6deIy1RNvJ4OCh/5ONE1eRUPfMHrQT+s=;
+        b=VFnmq+eqkHn9qrA0XZiQL0X1hkCgGMSomAi5EgnMg0B2wsiAcuv4SerBDwe2c3ZTbR
+         yiB2r+bmhX4fYURxgALrfnpma49fquUr70tEXCQfzUrJsBpTEwuEh9541yOUFHdDliuJ
+         exhjF2s9N+OECzEDEQeqx7D7B3dJPoFJla8Yc9UidYOF5ti5eH8jLq3BIsEepR+0eadF
+         UOf35lE8maDaoajOvUmTbOCAbZkMzKMsp1Dibxebvv2yFS0a7WPj5UrieDuZ/00h6fXn
+         UDnUfegEdvNhveC5ihfKnJ4jVu2k7NPzwh8IhLH3frnvSlZoYvhFXWSzWj4F+QkCzGBw
+         u8MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUp6V0za/kKwRUZRC05M8alWWZq1qDVRk/aYP+vlczkTXTUe+9MaRGognOEqgMgThlmn9MJyzclY7AELvCfd7hE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBrw3WWpeTObbca4JqBXYaBuv7KSGGwLjW/7cIqvepWckcpx/L
+	Y3xv8K1qbFZsIhhGOVglFzSxehqFoRCSPgtbkj2ziiHKabcBj3M0LoNLNUTlx743D5KDUMSArQp
+	2RJrrGw==
+X-Google-Smtp-Source: AGHT+IFpHl+y/PWwofCL1rMjzchgL79tywxXMez3bw84m9Mggck93/1v/VhSL3Q9Sj/smnNUiXwQMW8zWVGI
+X-Received: from pgbcq11.prod.google.com ([2002:a05:6a02:408b:b0:b1b:caa8:2ec9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d486:b0:223:5c33:56b4
+ with SMTP id d9443c01a7336-22df34d85d3mr5723445ad.20.1745953152321; Tue, 29
+ Apr 2025 11:59:12 -0700 (PDT)
+Date: Tue, 29 Apr 2025 11:58:34 -0700
+In-Reply-To: <20250429185839.1807005-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250429185839.1807005-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250429185839.1807005-1-irogers@google.com>
-Subject: [PATCH v1 0/6] Use rustc-demangle for Rust demangling
+Message-ID: <20250429185839.1807005-3-irogers@google.com>
+Subject: [PATCH v1 2/6] perf symbol-elf: Integrate rust-v0 demangling
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,43 +83,115 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Daniel Xu <dxu@dxuuu.xyz>
 Content-Type: text/plain; charset="UTF-8"
 
-Discussion of improved Rust demangling started with:
-https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb/
-that led to implementing a Rust v0 demangler:
-https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
-Discussion on that patch series led to the rust-lang issue:
-https://github.com/rust-lang/rust/issues/60705
-where the pre-existing Rust C demangler, authored by
-github.com/arielb1, was mentioned. There wasn't progress on that issue
-and so I've pulled that work into perf as discussed on the issue.
+Use the demangle-rust-v0 APIs to see if symbol is Rust mangled and
+demangle if so. The API requires a pre-allocated output buffer, some
+estimation and retrying are added for this.
 
-Ian Rogers (6):
-  perf demangle-rust: Add rustc-demangle C demangler
-  perf symbol-elf: Integrate rust-v0 demangling
-  perf demangle-rust: Remove previous legacy rust decoder
-  perf test demangle-rust: Add Rust demangling test
-  perf test demangle-java: Switch to using dso__demangle_sym
-  perf test demangle-ocaml: Switch to using dso__demangle_sym
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/Build        |  5 +++-
+ tools/perf/util/symbol-elf.c | 47 ++++++++++++++++++++++++++----------
+ 2 files changed, 38 insertions(+), 14 deletions(-)
 
- tools/perf/tests/Build                   |    1 +
- tools/perf/tests/builtin-test.c          |    1 +
- tools/perf/tests/demangle-java-test.c    |   17 +-
- tools/perf/tests/demangle-ocaml-test.c   |    7 +-
- tools/perf/tests/demangle-rust-v0-test.c |   74 +
- tools/perf/tests/tests.h                 |    1 +
- tools/perf/util/Build                    |    5 +-
- tools/perf/util/demangle-rust-v0.c       | 2035 ++++++++++++++++++++++
- tools/perf/util/demangle-rust-v0.h       |   81 +
- tools/perf/util/demangle-rust.c          |  269 ---
- tools/perf/util/demangle-rust.h          |    8 -
- tools/perf/util/symbol-elf.c             |   49 +-
- 12 files changed, 2243 insertions(+), 305 deletions(-)
- create mode 100644 tools/perf/tests/demangle-rust-v0-test.c
- create mode 100644 tools/perf/util/demangle-rust-v0.c
- create mode 100644 tools/perf/util/demangle-rust-v0.h
- delete mode 100644 tools/perf/util/demangle-rust.c
- delete mode 100644 tools/perf/util/demangle-rust.h
-
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 4f7f072fa222..7910d908c814 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -241,9 +241,12 @@ perf-util-y += cap.o
+ perf-util-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
+ perf-util-y += demangle-ocaml.o
+ perf-util-y += demangle-java.o
+-perf-util-y += demangle-rust.o
++perf-util-y += demangle-rust-v0.o
+ perf-util-$(CONFIG_LIBLLVM) += llvm-c-helpers.o
+ 
++CFLAGS_demangle-rust-v0.o += -Wno-shadow -Wno-declaration-after-statement \
++    -Wno-switch-default -Wno-switch-enum -Wno-missing-field-initializers
++
+ ifdef CONFIG_JITDUMP
+ perf-util-$(CONFIG_LIBELF) += jitdump.o
+ perf-util-$(CONFIG_LIBELF) += genelf.o
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index fbf6d0f73af9..f953868521f2 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -16,13 +16,14 @@
+ #include "demangle-cxx.h"
+ #include "demangle-ocaml.h"
+ #include "demangle-java.h"
+-#include "demangle-rust.h"
++#include "demangle-rust-v0.h"
+ #include "machine.h"
+ #include "vdso.h"
+ #include "debug.h"
+ #include "util/copyfile.h"
+ #include <linux/ctype.h>
+ #include <linux/kernel.h>
++#include <linux/log2.h>
+ #include <linux/zalloc.h>
+ #include <linux/string.h>
+ #include <symbol/kallsyms.h>
+@@ -308,6 +309,9 @@ char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unuse
+ 
+ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ {
++	struct demangle rust_demangle = {
++		.style = DemangleStyleUnknown,
++	};
+ 	char *demangled = NULL;
+ 
+ 	/*
+@@ -318,21 +322,38 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ 	if (!want_demangle(dso__kernel(dso) || kmodule))
+ 		return demangled;
+ 
+-	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+-	if (demangled == NULL) {
+-		demangled = ocaml_demangle_sym(elf_name);
+-		if (demangled == NULL) {
+-			demangled = java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
++	rust_demangle_demangle(elf_name, &rust_demangle);
++	if (rust_demangle_is_known(&rust_demangle)) {
++		/* A rust mangled name. */
++		if (rust_demangle.mangled_len == 0)
++			return demangled;
++
++		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
++		     buf_len < 1024 * 1024; buf_len += 32) {
++			char *tmp = realloc(demangled, buf_len);
++
++			if (!tmp) {
++				/* Failure to grow output buffer, return what is there. */
++				return demangled;
++			}
++			demangled = tmp;
++			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
++							   /*alternate=*/false) == OverflowOk)
++				return demangled;
+ 		}
++		/* Buffer exceeded sensible bounds, return what is there. */
++		return demangled;
+ 	}
+-	else if (rust_is_mangled(demangled))
+-		/*
+-		    * Input to Rust demangling is the BFD-demangled
+-		    * name which it Rust-demangles in place.
+-		    */
+-		rust_demangle_sym(demangled);
+ 
+-	return demangled;
++	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
++	if (demangled)
++		return demangled;
++
++	demangled = ocaml_demangle_sym(elf_name);
++	if (demangled)
++		return demangled;
++
++	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+ }
+ 
+ struct rel_info {
 -- 
 2.49.0.901.g37484f566f-goog
 
