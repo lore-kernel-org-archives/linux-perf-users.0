@@ -1,55 +1,55 @@
-Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44400254B1A
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 18:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDCC2550BB
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 18:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745953157; cv=none; b=jQjXUHJIvw7MVlpYz0keOIFPY8KazQRfb0O1slIuiKR6E2BNP49svB3i9xdJ9wPnSSSvBPUFefRQ8Pl/ZMB4uTue7a/RoNeX+yWxNnBv3uAzcWsWqbJ0lkJzqMchp3m8Vkm/7lMiTTIwPUG91tFGKDXOx9CGSzMd4RTsrKVuh6c=
+	t=1745953158; cv=none; b=ZP2gApMVpQzYWUTXuUhbZ79Nz+yuHI6m2lUzqnCRFy9TJYEmF/LiOnyWedYWmWT2GbSWBOmwm+Vs/Z1dy55K5/uwmQT1t0PdJt4XYWuvxn2UJ+6ZAExj7djklfM0BtSozvq9ZDi09gZQd23ttPy/z37KNEb0C1WXGwIl1c8yA5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745953157; c=relaxed/simple;
-	bh=Ue9nBlH5+cpkAWpy3xS5x2aDum/rfACDGDSXckDBQ6U=;
+	s=arc-20240116; t=1745953158; c=relaxed/simple;
+	bh=J3jpNhn0L0RmqQRHro2IecNg02DmmYFRiA3vyYti8QU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=b3xYK6pWxN4c+UX9XEgSgVbe9+ECyjegOwiXMFT9ZjfXOGhBRlUTZx1WPRlSw3/eR3Eqf8HZzpMl746DylP3CwFa4FhThmHQ1TLhV+blpAT4mgF6ec5nbYQC/PYPHP1PV2Dr5GnaNUbbX2/4noCE/vLP+PIEJflJ9CZKt5gJJQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GZcoDj+G; arc=none smtp.client-ip=209.85.161.74
+	 To:Content-Type; b=Doou+8HwDKRppuSbEsjFJoRYwC1VE4T+/D6XnqT3F9+CQRppEEm8sBt+h61Q8eDUtxuXhnxsCCsgYvg9z45EliKQBp59oz6wOLuko0lLohA86vnvCzfaAuXelHegWYIykOdVRdM/EXiiXqQQAKCyKvZXoia/RfxKhQQDZ1IWj1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jrhBgCCk; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZcoDj+G"
-Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-6025007d8feso4322200eaf.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 11:59:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jrhBgCCk"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032ea03448so6122491a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 11:59:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745953154; x=1746557954; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745953156; x=1746557956; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=V3LacVyFweeSGcTkDzNuZ/uQ5X4VwRZmHM3h5Mf2qTI=;
-        b=GZcoDj+GLPK3jd+Ou+k8KzVzH+uWqA+igyMfIRmDUFs+b79nkSY9zOkSpY5hgCsKss
-         3hVlHfOLpNaENDqfV5wXW68mzsdtG6dYPiUS3irXDDzABNE3uIJFw9KyM+Rn3E/ATyRL
-         Mu7Qa/UHpOWAk4d0cxb5zE5jtaJrskwkD7har4Z3oT+9kkUmMrt43SiziRhXy7o5r8bT
-         uTfFZxKUQ+ilm82ljIaZCJy/y2xWYctWjMMpLfmMrNCVEnYKKjux2v8TID3wUwyLe/hn
-         4QIff0JKK3iy7EOxqweuOzmkFNBZxDW2Fdigu8F0wLtN/tP6H8MM+kVCRzzMEmINIP5Y
-         cAGQ==
+        bh=kwZxu6T2B4sSkVVEcDdLfRn7wg748q/A7mexDtxkipg=;
+        b=jrhBgCCkOpZgBHlg+DB2sgkVwZFUZI+maNMhC2jKFNVndr0/1TNtXQ7339vd4NFYDO
+         bklORvd82gDFTgB0rXl75aHCQavuf+L78RGLwTdEVmuxL5XgaL5Qve8K34WsxPTAaTGD
+         A/sUufBV5S5dDIfgWEdPxp/2kEXPKfX3BXYBw2pjGa0mls8se3ohaBxE0JUqyGsbTDyz
+         aHUt8oZ88GhAapyLC3BrzRizPun61Lxo26VB3lPkyMpCdQ9xgXUEeG1BPd8/69bzT5ha
+         7QvYntitSB7mJPDPkpkJgip6yYQGLg8p8fcTSBrOyI5wVdx6RoXwqzZkzWtiNlW8oby3
+         EPbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745953154; x=1746557954;
+        d=1e100.net; s=20230601; t=1745953156; x=1746557956;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V3LacVyFweeSGcTkDzNuZ/uQ5X4VwRZmHM3h5Mf2qTI=;
-        b=fMJja+XKA1j4vSxSrWHfLWEzX47JNhApnfK1O6nQI9b9Z6YYDgb3d0zt9r6Sf6a/L9
-         BdT1xogdmx2Xaiq73C+D+fRlRGBRHLmUhPZ/XrNzu7HiypxcmJs4pm/Qjeaqy8+p7lH3
-         Fsj7E3MkdHZgLDM6dNDNGJtUUT3k8MAcfCIFrqyQrcqIs/ASyPPj2YI2usi0FX7pyGCY
-         km/o1nlYPV5Wgt/glXC2hM25Kj7mr0E5wY9nKIzC2B/jAEJaveJP1XE6vUg6hymiYVCV
-         O2grkB0j/Uv7KS2IvwKVZvlqSktKrrW71tU0u/7t1f0Pkl8GI21aiev5XM38qhdvDzbs
-         R2Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCXT4/i06Uc9p57ZABaBNUCWB8XAZft1NLB12Y1rp2K574MzbheoV/IVyBQfPUUMYRQKn2MBShliv1/7M+tsIGh+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykcd6DXrhO2RUjc4NsMwjXNC3cP8XIb9enG1v8OaaZc7me7wyQ
-	jypge6w0lImpR4zsz7t2mM/HdOBLXESTD7xt/S6i2YAcOtHyK+e6XmEuXnIJD4LBhB8sGQ+KTvr
-	5UtEO9Q==
-X-Google-Smtp-Source: AGHT+IHo8G7rLNbyqpArjSn7VMDCd6TuEa5QJkNy4GHvHjVDGnlwNyMISwWDpJlDVXCjOyGw8WYcgr1naxp2
-X-Received: from oabhp13.prod.google.com ([2002:a05:6870:9a8d:b0:2c8:7d3c:12cc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:e2d6:b0:2c1:51f7:e648
- with SMTP id 586e51a60fabf-2da6a38e449mr115049fac.35.1745953154406; Tue, 29
- Apr 2025 11:59:14 -0700 (PDT)
-Date: Tue, 29 Apr 2025 11:58:35 -0700
+        bh=kwZxu6T2B4sSkVVEcDdLfRn7wg748q/A7mexDtxkipg=;
+        b=CfuYGh2D3MFHWe6KdmFw0GcQ4dlPOTpyDm/cwE2svuXBpl9i17+NyZczcyMmmuxGpA
+         EHmeT4kZmFNaAh3n5wwbJAcceaO34PozAjLtwlnqD4d9wwndZQGsFcs4e+Xq/nC2DYgt
+         qRYFFaAfJ4Qmz4AL9GFphAiRKyudZqZPqJgzowIzsmrq+4Rag/9BdYd78P4Ub5NC7Jde
+         Ib5GJLv9tZaebssKPhdInNVsLN6D5MBedOVZma5sj9QaL2yG7CSd78QFts2IYyf1oZWP
+         DZlNOMew15dd9YK4u5dR+QEOxUOoC2k+O/V2iMIdAhLHSx8Lpgm/nwQQrOGJHhjvgFfy
+         n4ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXVesl25xGIlpuOrYesQ2crR5+xiKTt9yw7H2tBfd+/bF98RysCLQd7gLZKbKOGKtMpvEhDim9esZcLJlbXyh4D@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrO6ZU1uYU7YdCcKciSdlFYsbAxycUiyuOefw0oOhzgoDHt1pK
+	DcZEVFPXfyi8aQ1gKBTGwoR9Qz17JDI75qdP0hhYYaPomq8xPBP/kCUmCFmrYz0Ni8iKNmwUIPa
+	X9JrC7Q==
+X-Google-Smtp-Source: AGHT+IEgShAFHftTTVxbrvVcDqE2v6HQyys2Tjgrus0Ml4unFOZkCNqcLxKiT5FKmZLOfryZx2Mt7AWcMLto
+X-Received: from pjbdj11.prod.google.com ([2002:a17:90a:d2cb:b0:2ff:6e58:8a0a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:55c7:b0:2ee:e113:815d
+ with SMTP id 98e67ed59e1d1-30a332ee938mr337025a91.8.1745953156249; Tue, 29
+ Apr 2025 11:59:16 -0700 (PDT)
+Date: Tue, 29 Apr 2025 11:58:36 -0700
 In-Reply-To: <20250429185839.1807005-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250429185839.1807005-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250429185839.1807005-4-irogers@google.com>
-Subject: [PATCH v1 3/6] perf demangle-rust: Remove previous legacy rust decoder
+Message-ID: <20250429185839.1807005-5-irogers@google.com>
+Subject: [PATCH v1 4/6] perf test demangle-rust: Add Rust demangling test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -83,305 +83,160 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Daniel Xu <dxu@dxuuu.xyz>
 Content-Type: text/plain; charset="UTF-8"
 
-Code is unused since the introduction of rustc-demangle demangler.
+The test cases are listed examples in:
+https://doc.rust-lang.org/rustc/symbol-mangling/v0.html
+
+This test was previously part of a different Rust v0 demangler:
+https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/demangle-rust.c | 269 --------------------------------
- tools/perf/util/demangle-rust.h |   8 -
- 2 files changed, 277 deletions(-)
- delete mode 100644 tools/perf/util/demangle-rust.c
- delete mode 100644 tools/perf/util/demangle-rust.h
+ tools/perf/tests/Build                   |  1 +
+ tools/perf/tests/builtin-test.c          |  1 +
+ tools/perf/tests/demangle-rust-v0-test.c | 74 ++++++++++++++++++++++++
+ tools/perf/tests/tests.h                 |  1 +
+ tools/perf/util/symbol-elf.c             |  4 +-
+ 5 files changed, 79 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/tests/demangle-rust-v0-test.c
 
-diff --git a/tools/perf/util/demangle-rust.c b/tools/perf/util/demangle-rust.c
-deleted file mode 100644
-index a659fc69f73a..000000000000
---- a/tools/perf/util/demangle-rust.c
-+++ /dev/null
-@@ -1,269 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <string.h>
--#include "debug.h"
--
--#include "demangle-rust.h"
--
--/*
-- * Mangled Rust symbols look like this:
-- *
-- *     _$LT$std..sys..fd..FileDesc$u20$as$u20$core..ops..Drop$GT$::drop::hc68340e1baa4987a
-- *
-- * The original symbol is:
-- *
-- *     <std::sys::fd::FileDesc as core::ops::Drop>::drop
-- *
-- * The last component of the path is a 64-bit hash in lowercase hex, prefixed
-- * with "h". Rust does not have a global namespace between crates, an illusion
-- * which Rust maintains by using the hash to distinguish things that would
-- * otherwise have the same symbol.
-- *
-- * Any path component not starting with a XID_Start character is prefixed with
-- * "_".
-- *
-- * The following escape sequences are used:
-- *
-- *     ","  =>  $C$
-- *     "@"  =>  $SP$
-- *     "*"  =>  $BP$
-- *     "&"  =>  $RF$
-- *     "<"  =>  $LT$
-- *     ">"  =>  $GT$
-- *     "("  =>  $LP$
-- *     ")"  =>  $RP$
-- *     " "  =>  $u20$
-- *     "'"  =>  $u27$
-- *     "["  =>  $u5b$
-- *     "]"  =>  $u5d$
-- *     "~"  =>  $u7e$
-- *
-- * A double ".." means "::" and a single "." means "-".
-- *
-- * The only characters allowed in the mangled symbol are a-zA-Z0-9 and _.:$
-- */
--
--static const char *hash_prefix = "::h";
--static const size_t hash_prefix_len = 3;
--static const size_t hash_len = 16;
--
--static bool is_prefixed_hash(const char *start);
--static bool looks_like_rust(const char *sym, size_t len);
--static bool unescape(const char **in, char **out, const char *seq, char value);
--
--/*
-- * INPUT:
-- *     sym: symbol that has been through BFD-demangling
-- *
-- * This function looks for the following indicators:
-- *
-- *  1. The hash must consist of "h" followed by 16 lowercase hex digits.
-- *
-- *  2. As a sanity check, the hash must use between 5 and 15 of the 16 possible
-- *     hex digits. This is true of 99.9998% of hashes so once in your life you
-- *     may see a false negative. The point is to notice path components that
-- *     could be Rust hashes but are probably not, like "haaaaaaaaaaaaaaaa". In
-- *     this case a false positive (non-Rust symbol has an important path
-- *     component removed because it looks like a Rust hash) is worse than a
-- *     false negative (the rare Rust symbol is not demangled) so this sets the
-- *     balance in favor of false negatives.
-- *
-- *  3. There must be no characters other than a-zA-Z0-9 and _.:$
-- *
-- *  4. There must be no unrecognized $-sign sequences.
-- *
-- *  5. There must be no sequence of three or more dots in a row ("...").
-- */
--bool
--rust_is_mangled(const char *sym)
--{
--	size_t len, len_without_hash;
--
--	if (!sym)
--		return false;
--
--	len = strlen(sym);
--	if (len <= hash_prefix_len + hash_len)
--		/* Not long enough to contain "::h" + hash + something else */
--		return false;
--
--	len_without_hash = len - (hash_prefix_len + hash_len);
--	if (!is_prefixed_hash(sym + len_without_hash))
--		return false;
--
--	return looks_like_rust(sym, len_without_hash);
--}
--
--/*
-- * A hash is the prefix "::h" followed by 16 lowercase hex digits. The hex
-- * digits must comprise between 5 and 15 (inclusive) distinct digits.
-- */
--static bool is_prefixed_hash(const char *str)
--{
--	const char *end;
--	bool seen[16];
--	size_t i;
--	int count;
--
--	if (strncmp(str, hash_prefix, hash_prefix_len))
--		return false;
--	str += hash_prefix_len;
--
--	memset(seen, false, sizeof(seen));
--	for (end = str + hash_len; str < end; str++)
--		if (*str >= '0' && *str <= '9')
--			seen[*str - '0'] = true;
--		else if (*str >= 'a' && *str <= 'f')
--			seen[*str - 'a' + 10] = true;
--		else
--			return false;
--
--	/* Count how many distinct digits seen */
--	count = 0;
--	for (i = 0; i < 16; i++)
--		if (seen[i])
--			count++;
--
--	return count >= 5 && count <= 15;
--}
--
--static bool looks_like_rust(const char *str, size_t len)
--{
--	const char *end = str + len;
--
--	while (str < end)
--		switch (*str) {
--		case '$':
--			if (!strncmp(str, "$C$", 3))
--				str += 3;
--			else if (!strncmp(str, "$SP$", 4)
--					|| !strncmp(str, "$BP$", 4)
--					|| !strncmp(str, "$RF$", 4)
--					|| !strncmp(str, "$LT$", 4)
--					|| !strncmp(str, "$GT$", 4)
--					|| !strncmp(str, "$LP$", 4)
--					|| !strncmp(str, "$RP$", 4))
--				str += 4;
--			else if (!strncmp(str, "$u20$", 5)
--					|| !strncmp(str, "$u27$", 5)
--					|| !strncmp(str, "$u5b$", 5)
--					|| !strncmp(str, "$u5d$", 5)
--					|| !strncmp(str, "$u7e$", 5))
--				str += 5;
--			else
--				return false;
--			break;
--		case '.':
--			/* Do not allow three or more consecutive dots */
--			if (!strncmp(str, "...", 3))
--				return false;
--			/* Fall through */
--		case 'a' ... 'z':
--		case 'A' ... 'Z':
--		case '0' ... '9':
--		case '_':
--		case ':':
--			str++;
--			break;
--		default:
--			return false;
--		}
--
--	return true;
--}
--
--/*
-- * INPUT:
-- *     sym: symbol for which rust_is_mangled(sym) returns true
-- *
-- * The input is demangled in-place because the mangled name is always longer
-- * than the demangled one.
-- */
--void
--rust_demangle_sym(char *sym)
--{
--	const char *in;
--	char *out;
--	const char *end;
--
--	if (!sym)
--		return;
--
--	in = sym;
--	out = sym;
--	end = sym + strlen(sym) - (hash_prefix_len + hash_len);
--
--	while (in < end)
--		switch (*in) {
--		case '$':
--			if (!(unescape(&in, &out, "$C$", ',')
--					|| unescape(&in, &out, "$SP$", '@')
--					|| unescape(&in, &out, "$BP$", '*')
--					|| unescape(&in, &out, "$RF$", '&')
--					|| unescape(&in, &out, "$LT$", '<')
--					|| unescape(&in, &out, "$GT$", '>')
--					|| unescape(&in, &out, "$LP$", '(')
--					|| unescape(&in, &out, "$RP$", ')')
--					|| unescape(&in, &out, "$u20$", ' ')
--					|| unescape(&in, &out, "$u27$", '\'')
--					|| unescape(&in, &out, "$u5b$", '[')
--					|| unescape(&in, &out, "$u5d$", ']')
--					|| unescape(&in, &out, "$u7e$", '~'))) {
--				pr_err("demangle-rust: unexpected escape sequence");
--				goto done;
--			}
--			break;
--		case '_':
--			/*
--			 * If this is the start of a path component and the next
--			 * character is an escape sequence, ignore the
--			 * underscore. The mangler inserts an underscore to make
--			 * sure the path component begins with a XID_Start
--			 * character.
--			 */
--			if ((in == sym || in[-1] == ':') && in[1] == '$')
--				in++;
--			else
--				*out++ = *in++;
--			break;
--		case '.':
--			if (in[1] == '.') {
--				/* ".." becomes "::" */
--				*out++ = ':';
--				*out++ = ':';
--				in += 2;
--			} else {
--				/* "." becomes "-" */
--				*out++ = '-';
--				in++;
--			}
--			break;
--		case 'a' ... 'z':
--		case 'A' ... 'Z':
--		case '0' ... '9':
--		case ':':
--			*out++ = *in++;
--			break;
--		default:
--			pr_err("demangle-rust: unexpected character '%c' in symbol\n",
--				*in);
--			goto done;
--		}
--
--done:
--	*out = '\0';
--}
--
--static bool unescape(const char **in, char **out, const char *seq, char value)
--{
--	size_t len = strlen(seq);
--
--	if (strncmp(*in, seq, len))
--		return false;
--
--	**out = value;
--
--	*in += len;
--	*out += 1;
--
--	return true;
--}
-diff --git a/tools/perf/util/demangle-rust.h b/tools/perf/util/demangle-rust.h
-deleted file mode 100644
-index 2fca618b1aa5..000000000000
---- a/tools/perf/util/demangle-rust.h
-+++ /dev/null
-@@ -1,8 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __PERF_DEMANGLE_RUST
--#define __PERF_DEMANGLE_RUST 1
--
--bool rust_is_mangled(const char *str);
--void rust_demangle_sym(char *str);
--
--#endif /* __PERF_DEMANGLE_RUST */
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 934f32090553..2181f5a92148 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -56,6 +56,7 @@ perf-test-y += genelf.o
+ perf-test-y += api-io.o
+ perf-test-y += demangle-java-test.o
+ perf-test-y += demangle-ocaml-test.o
++perf-test-y += demangle-rust-v0-test.o
+ perf-test-y += pfm.o
+ perf-test-y += parse-metric.o
+ perf-test-y += pe-file-parsing.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 14d30a5053be..45d3d8b3317a 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -126,6 +126,7 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__maps__merge_in,
+ 	&suite__demangle_java,
+ 	&suite__demangle_ocaml,
++	&suite__demangle_rust,
+ 	&suite__parse_metric,
+ 	&suite__pe_file_parsing,
+ 	&suite__expand_cgroup_events,
+diff --git a/tools/perf/tests/demangle-rust-v0-test.c b/tools/perf/tests/demangle-rust-v0-test.c
+new file mode 100644
+index 000000000000..efbc0fc25ffc
+--- /dev/null
++++ b/tools/perf/tests/demangle-rust-v0-test.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#include "tests.h"
++#include "debug.h"
++#include "symbol.h"
++#include <linux/kernel.h>
++#include <stdlib.h>
++#include <string.h>
++
++static int test__demangle_rust(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++{
++	int ret = TEST_OK;
++	char *buf = NULL;
++	size_t i;
++
++	struct {
++		const char *mangled, *demangled;
++	} test_cases[] = {
++		{ "_RNvMsr_NtCs3ssYzQotkvD_3std4pathNtB5_7PathBuf3newCs15kBYyAo9fc_7mycrate",
++		  "<std::path::PathBuf>::new" },
++		{ "_RNvCs15kBYyAo9fc_7mycrate7example",
++		  "mycrate::example" },
++		{ "_RNvMs_Cs4Cv8Wi1oAIB_7mycrateNtB4_7Example3foo",
++		  "<mycrate::Example>::foo" },
++		{ "_RNvXCs15kBYyAo9fc_7mycrateNtB2_7ExampleNtB2_5Trait3foo",
++		  "<mycrate::Example as mycrate::Trait>::foo" },
++		{ "_RNvMCs7qp2U7fqm6G_7mycrateNtB2_7Example3foo",
++		  "<mycrate::Example>::foo" },
++		{ "_RNvMs_Cs7qp2U7fqm6G_7mycrateNtB4_7Example3bar",
++		  "<mycrate::Example>::bar" },
++		{ "_RNvYNtCs15kBYyAo9fc_7mycrate7ExampleNtB4_5Trait7exampleB4_",
++		  "<mycrate::Example as mycrate::Trait>::example" },
++		{ "_RNCNvCsgStHSCytQ6I_7mycrate4main0B3_",
++		  "mycrate::main::{closure#0}" },
++		{ "_RNCNvCsgStHSCytQ6I_7mycrate4mains_0B3_",
++		  "mycrate::main::{closure#1}" },
++		{ "_RINvCsgStHSCytQ6I_7mycrate7examplelKj1_EB2_",
++		  "mycrate::example::<i32, 1>" },
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleFG0_RL1_hRL0_tEuEB2_",
++		  "mycrate::example::<for<'a, 'b> fn(&'a u8, &'b u16)>",
++		},
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleKy12345678_EB2_",
++		  "mycrate::example::<305419896>" },
++		{ "_RNvNvMCsd9PVOYlP1UU_7mycrateINtB4_7ExamplepKpE3foo14EXAMPLE_STATIC",
++		  "<mycrate::Example<_, _>>::foo::EXAMPLE_STATIC",
++		},
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleAtj8_EB2_",
++		  "mycrate::example::<[u16; 8]>" },
++		{ "_RINvCs7qp2U7fqm6G_7mycrate7exampleNtB2_7ExampleBw_EB2_",
++		  "mycrate::example::<mycrate::Example, mycrate::Example>" },
++		{ "_RINvMsY_NtCseXNvpPnDBDp_3std4pathNtB6_4Path3neweECs7qp2U7fqm6G_7mycrate",
++		  "<std::path::Path>::new::<str>" },
++		{ "_RNvNvNvCs7qp2U7fqm6G_7mycrate7EXAMPLE7___getit5___KEY",
++		  "mycrate::EXAMPLE::__getit::__KEY" },
++	};
++
++	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
++		buf = dso__demangle_sym(/*dso=*/NULL, /*kmodule=*/0, test_cases[i].mangled);
++		if (!buf) {
++			pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n", test_cases[i].mangled,
++				 test_cases[i].demangled);
++			continue;
++		}
++		if (strcmp(buf, test_cases[i].demangled)) {
++			pr_debug("FAILED: %s: %s != %s\n", test_cases[i].mangled,
++				 buf, test_cases[i].demangled);
++			ret = TEST_FAIL;
++		}
++		free(buf);
++	}
++
++	return ret;
++}
++
++DEFINE_SUITE("Demangle Rust", demangle_rust);
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 8aea344536b8..bb7951c61971 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -157,6 +157,7 @@ DECLARE_SUITE(jit_write_elf);
+ DECLARE_SUITE(api_io);
+ DECLARE_SUITE(demangle_java);
+ DECLARE_SUITE(demangle_ocaml);
++DECLARE_SUITE(demangle_rust);
+ DECLARE_SUITE(pfm);
+ DECLARE_SUITE(parse_metric);
+ DECLARE_SUITE(pe_file_parsing);
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index f953868521f2..8734e8b6cf84 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -319,7 +319,7 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ 	 * DWARF DW_compile_unit has this, but we don't always have access
+ 	 * to it...
+ 	 */
+-	if (!want_demangle(dso__kernel(dso) || kmodule))
++	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
+ 		return demangled;
+ 
+ 	rust_demangle_demangle(elf_name, &rust_demangle);
+@@ -338,7 +338,7 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ 			}
+ 			demangled = tmp;
+ 			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
+-							   /*alternate=*/false) == OverflowOk)
++							   /*alternate=*/true) == OverflowOk)
+ 				return demangled;
+ 		}
+ 		/* Buffer exceeded sensible bounds, return what is there. */
 -- 
 2.49.0.901.g37484f566f-goog
 
