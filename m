@@ -1,152 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F041325394B;
-	Tue, 29 Apr 2025 18:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED00621ABDB
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 18:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745949720; cv=none; b=C1kM0kntviZu9PKb8gg6yTD5MQWOwP6JbpNTORLAdj6y7+37XKg/yLMltmDnPwBj/aXV5ihr7Be2U4XWqmF1qCWnnLY5ZkDlrQyRFaA17RzCw5RVDy5Oq9rbMllb4u5Co3dODEvi/YWHNfo2zT3b4wxn6nLyWFqk1v6sf7Y+oNU=
+	t=1745953150; cv=none; b=k55gqmMwKWZlrZBZlnroNKLg8jvWlJTedaTcrur8e42KOb5katWICW24iRc8A3PYB0NFIFaiTYBu2iFu9oO+1dniMbr3C75Mp0k4WIdWW+t990j0JjOzJK4VmVA0ExslncqwFttYUX/L9k4qlJU40dM/4EcHdAC8Yk7w2rAKqIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745949720; c=relaxed/simple;
-	bh=592Ml20d/7CsLvSvbhwM3alxfNaRGpjjJKzbJ1oRFUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=njHvLfDI/mMxCOsj9z9+a4PaGcR9rLRRmQ5yVc4URhf0ttR2VrrYq1Ndwy0XPQix6ndtcvqPNwo6p+ajsnZ5vMsJu3ddGu4T72mNjFvYkQg+HOVgUH51WUjTJ3a4qXw7SHFpgJ2zWPYnQzE7xXNxIwDnwf/TAT21BClv6Ck7XQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ImGvbmLj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745953150; c=relaxed/simple;
+	bh=JKuR2HnO4uDM9v+Z7llC/3uiDFowURfwK74QDWYhdv8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=TQ7XBwScdkNAUu3gdvEZOZYmS5dxcv3EpZTssW8/aCKYOu59X4jCPo2ofGUjOEM0sikBFmo2v7wlOYN8EtqUSoKGbGIi+DGo9vcKc37UBNjhj8Qes7TpgL4DFrMhWoVTqVC/NZUfDPtAoLm7DXa2wBp5Z5D8Q2gbKJbBKNgvSFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fKvPCf+g; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ImGvbmLj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B81C4CEE3;
-	Tue, 29 Apr 2025 18:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745949719;
-	bh=592Ml20d/7CsLvSvbhwM3alxfNaRGpjjJKzbJ1oRFUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ImGvbmLj7vAizxTOJHyYd9JOx8FSRs9TsWm0qO7ao89jbgnThxRHV1dxIeUi01RwT
-	 TEbLv918l61ZCWv2mDJSXT68VUHZuUWtxPTTiVGjUVWZx/iVr9FU07u8BnzCxINJ+c
-	 +FsM1EFGjItysmxJ6rpj7MB5IkdOpneByK+6C1guefLvW4fXnUQTVpDjjWD+GKE0Sg
-	 EsXebkyWaRJNlMdOJVd9fzdUyWGxRCA5zKuMg+va5GwmGbj1ECn2WyDZ8KC9v25fRl
-	 OGb9QC7OuY1x2YAST72aRcom7u+uUcGrpeQPnRvCK8BUTrUlnhlOnsP+s6JhQ/XzvV
-	 KvoKVJksHt7GA==
-Date: Tue, 29 Apr 2025 15:01:56 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, linux@leemhuis.info,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix in-source libperf build
-Message-ID: <aBEUFK6o41mlkd9j@x1>
-References: <20250429-james-perf-fix-libperf-in-source-build-v1-1-a1a827ac15e5@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKvPCf+g"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so9213917a91.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 11:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745953148; x=1746557948; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eXJ8J07H9GMYt3devST83hdUmEga5s87LMXmrPwfkrE=;
+        b=fKvPCf+gaZVDQfkmynEvFIEYEHR1BSCpdweSDhXd4Cc1QeEPCdRymYsL3XDIH2oVlB
+         uY/ioN9kcoweilekVxVGCBng8e5r3SrJaQqmyaiDwXQxI9/OS/E+IM0HXBavsegwx5ZI
+         c4MyEHMZHlgt5b9qJeeaL08/4cB0uGS7QjprLWSpIDdpOfNcxcNy6L14HQB6g8Fqt9AY
+         +i45UJYFiECbxmQYKMurxKuhDPq41CWhZnforu/KDoUr2Gy1v6OO5APHsFXQyP4WCZ57
+         xKnRUrLPDnfGjBRhxJzPaYs5xXPzQhXkRAWbYLUoJ8LRPjwOMazBEBCAfHGIGSPLDn4K
+         p4UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745953148; x=1746557948;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eXJ8J07H9GMYt3devST83hdUmEga5s87LMXmrPwfkrE=;
+        b=euu9KiIYzUZ4i1b14KdYBxZuJXo++96a3EeyFriMHCkfboVW8tHCuMunCmNl4q/CMZ
+         QIKXjmzezlwTiEU71E1eD0sP6TNBan+SGTfiwUQr7jMINlhmkUvFOKzMxLl9l7Wwh9DJ
+         +/f2aF//HZ1EWWw0GFC8wNTxIXBOc1DUocEkFy+Q4bgqmFlfK1kB0RwaJIMuaA5dqQDr
+         DJNMuG4SnfF18eguyTbHkA5obzTI9mDSpj2RF9jEGbaVVVktsxmMMJ8SVXH3zQBLX9eE
+         XS/iOt8dmqU0N/0HxaqI7gAnuIbTAj3SgcUfkX31R3DZqr3l0qbvyenHfu6msU3Tkjov
+         KjEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqevZL5+ESPG/pzrbyKoi+LoOOflwyuUKIE3EIYOFI5lIXKRVRoivNPvuSiHQp1tE8b7vbeU2OR09J2mR6YaAE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+aUAI5ls04Ggn92dfFjLmtrzgppm4nA2IRzgig9b/lUYTW5yE
+	nyOtD9qWY1cKOS8hxRMzq6olcYz3dzfbA8HKvd3y+OCe5Nnqsz/xhgUsqSyLHNp6VRGZWEmWLJ7
+	hrskkpw==
+X-Google-Smtp-Source: AGHT+IEwoN0N6+nJ6vqr/dgRzJLp6ISNYWD1HN7A2s+gg7YV9C0xR0d2OaoIaTgW058JKbZw1oATFTbdIpRF
+X-Received: from pjbsm11.prod.google.com ([2002:a17:90b:2e4b:b0:301:2a0f:b03d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1346:b0:301:1c11:aa74
+ with SMTP id 98e67ed59e1d1-30a333530c8mr307400a91.28.1745953148279; Tue, 29
+ Apr 2025 11:59:08 -0700 (PDT)
+Date: Tue, 29 Apr 2025 11:58:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429-james-perf-fix-libperf-in-source-build-v1-1-a1a827ac15e5@linaro.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+Message-ID: <20250429185839.1807005-1-irogers@google.com>
+Subject: [PATCH v1 0/6] Use rustc-demangle for Rust demangling
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 29, 2025 at 03:22:18PM +0100, James Clark wrote:
-> When libperf is built alone in-source, $(OUTPUT) isn't set. This causes
-> the generated uapi path to resolve to '/../arch' which results in a
-> permissions error:
- 
->   mkdir: cannot create directory '/../arch': Permission denied
+Discussion of improved Rust demangling started with:
+https://lore.kernel.org/lkml/jgxfnphfo3nzlfipnuuzdlfc4ehbr2tnh2evz3mdhynd6wvrsu@fcz6vrvepybb/
+that led to implementing a Rust v0 demangler:
+https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
+Discussion on that patch series led to the rust-lang issue:
+https://github.com/rust-lang/rust/issues/60705
+where the pre-existing Rust C demangler, authored by
+github.com/arielb1, was mentioned. There wasn't progress on that issue
+and so I've pulled that work into perf as discussed on the issue.
 
-So this requires the only outstanding patch in perf-tools/perf-tools:
+Ian Rogers (6):
+  perf demangle-rust: Add rustc-demangle C demangler
+  perf symbol-elf: Integrate rust-v0 demangling
+  perf demangle-rust: Remove previous legacy rust decoder
+  perf test demangle-rust: Add Rust demangling test
+  perf test demangle-java: Switch to using dso__demangle_sym
+  perf test demangle-ocaml: Switch to using dso__demangle_sym
 
-⬢ [acme@toolbx perf-tools-next]$ git log -5 --oneline perf-tools/perf-tools
-bfb713ea53c746b0 (perf-tools/tmp.perf-tools, perf-tools/perf-tools, perf-tools) perf tools: Fix arm64 build by generating unistd_64.h
-9c32cda43eb78f78 (tag: v6.15-rc3) Linux 6.15-rc3
-ac71fabf15679fc7 gcc-15: work around sequence-point warning
-05e8d261a34e5c63 gcc-15: add '__nonstring' markers to byte arrays
-be913e7c4034bd7a gcc-15: get rid of misc extra NUL character padding
-⬢ [acme@toolbx perf-tools-next]$
+ tools/perf/tests/Build                   |    1 +
+ tools/perf/tests/builtin-test.c          |    1 +
+ tools/perf/tests/demangle-java-test.c    |   17 +-
+ tools/perf/tests/demangle-ocaml-test.c   |    7 +-
+ tools/perf/tests/demangle-rust-v0-test.c |   74 +
+ tools/perf/tests/tests.h                 |    1 +
+ tools/perf/util/Build                    |    5 +-
+ tools/perf/util/demangle-rust-v0.c       | 2035 ++++++++++++++++++++++
+ tools/perf/util/demangle-rust-v0.h       |   81 +
+ tools/perf/util/demangle-rust.c          |  269 ---
+ tools/perf/util/demangle-rust.h          |    8 -
+ tools/perf/util/symbol-elf.c             |   49 +-
+ 12 files changed, 2243 insertions(+), 305 deletions(-)
+ create mode 100644 tools/perf/tests/demangle-rust-v0-test.c
+ create mode 100644 tools/perf/util/demangle-rust-v0.c
+ create mode 100644 tools/perf/util/demangle-rust-v0.h
+ delete mode 100644 tools/perf/util/demangle-rust.c
+ delete mode 100644 tools/perf/util/demangle-rust.h
 
-So probably should go to there, to be submitted to Linus in the current
-merge window, right?
+-- 
+2.49.0.901.g37484f566f-goog
 
-Namhyung?
-
-- Arnaldo
- 
-> Fix it by removing the preceding '/..' which means that it gets
-> generated either in the tools/lib/perf part of the tree or the OUTPUT
-> folder. Some other rules that rely on OUTPUT further refine this
-> conditionally depending on whether it's an in-source or out-of-source
-> build, but I don't think we need the extra complexity here. And this
-> rule is slightly different to others because the header is needed by
-> both libperf and Perf. This is further complicated by the fact that Perf
-> always passes O=... to libperf even for in source builds, meaning that
-> OUTPUT isn't set consistently between projects.
-> 
-> Because we're no longer going one level up to try to generate the file
-> in the tools/ folder, Perf's include rule needs to descend into libperf.
-> Also fix the clean rule while we're here.
-> 
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Closes: https://lore.kernel.org/linux-perf-users/7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info/
-> Fixes: bfb713ea53c7 ("perf tools: Fix arm64 build by generating unistd_64.h")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/lib/perf/Makefile    | 6 +++---
->  tools/perf/Makefile.config | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-> index 1a19b5013f45..7fbb50b74c00 100644
-> --- a/tools/lib/perf/Makefile
-> +++ b/tools/lib/perf/Makefile
-> @@ -42,7 +42,7 @@ libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
->  TEST_ARGS := $(if $(V),-v)
->  
->  INCLUDES = \
-> --I$(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi \
-> +-I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi \
->  -I$(srctree)/tools/lib/perf/include \
->  -I$(srctree)/tools/lib/ \
->  -I$(srctree)/tools/include \
-> @@ -100,7 +100,7 @@ $(LIBAPI)-clean:
->  	$(call QUIET_CLEAN, libapi)
->  	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
->  
-> -uapi-asm := $(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi/asm
-> +uapi-asm := $(OUTPUT)arch/$(SRCARCH)/include/generated/uapi/asm
->  ifeq ($(SRCARCH),arm64)
->  	syscall-y := $(uapi-asm)/unistd_64.h
->  endif
-> @@ -130,7 +130,7 @@ all: fixdep
->  clean: $(LIBAPI)-clean
->  	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
->                  *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
-> -                $(TESTS_STATIC) $(TESTS_SHARED)
-> +                $(TESTS_STATIC) $(TESTS_SHARED) $(syscall-y)
->  
->  TESTS_IN = tests-in.o
->  
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index a52482654d4b..b7769a22fe1a 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -29,7 +29,7 @@ include $(srctree)/tools/scripts/Makefile.arch
->  $(call detected_var,SRCARCH)
->  
->  CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated
-> -CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi
-> +CFLAGS += -I$(OUTPUT)libperf/arch/$(SRCARCH)/include/generated/uapi
->  
->  # Additional ARCH settings for ppc
->  ifeq ($(SRCARCH),powerpc)
-> 
-> ---
-> base-commit: bfb713ea53c746b07ae69fe97fa9b5388e4f34f9
-> change-id: 20250429-james-perf-fix-libperf-in-source-build-15609cc212aa
-> 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
-> 
