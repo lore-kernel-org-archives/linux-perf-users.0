@@ -1,208 +1,135 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B24B25486E
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 21:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2082D11187
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 00:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745962516; cv=none; b=hixw2IQk6YUX5nUetIQJBYLoVn4KkbdVgKoxYrWvnlN0XhKo72Audxjs2LLCHxaf+1Whl/knlYQKc0b+uvzZ4dIBtv/b1V3Rx8Fs/Sj/Zeyk+ODBmcDL/QARXLK41C5zwj8r6bIE7BvBYHiEhCehvqDz56jSiJQOWr90/vufxpg=
+	t=1745972673; cv=none; b=TwX2KZJnIsZsb59KfANHz2eJAFw+QNoX4gHIw2OCEFSMmK+thrYoEysk95IOOmzIUvrUPiXMHiv995rt385Bq8rloaazQYOpIbOVyYLlPZeFF1mM9joNaLUri+EHImVRCpLJdKEnQTg+lG6cBTMUvdWNNOOMABoQPPUxFU0UO/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745962516; c=relaxed/simple;
-	bh=Th8FT/kGvlr9TA9yY+YuPhwVkQ7i6L0YkGhRHWZuh6k=;
+	s=arc-20240116; t=1745972673; c=relaxed/simple;
+	bh=SVBKQRaD+pc2oozHM9FJP56TA7JsjUqWU4fId+vRf54=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VQSawvbr1JO84szhXsDLsTJzPUc73x+1mfrW3pdbutGB7rIUZdq4rzycDfhNaFO3N01CamN2RPYYsV1cuFfi9gK0vs5wkOXaSUEjpcOnCMHBhmo50x3aDmTDAmbBbVcFZvEOQRNHcED8EIhP2oHnqj5xrdNFQQ+V5d9ivbWEbNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sOj3kzS9; arc=none smtp.client-ip=209.85.219.47
+	 To:Cc:Content-Type; b=YYZgdeJ/rwRfdkLJO16LDTnY1t7Mq5eDcdINFZHbMl2woOY+uQSbRfKsogXic1hQkqYsZzTXxLrraYKzNjVabsQY0sY6R1z2VqJTWN28U4t1MFxyLxW8QlZYz7XVeiAaI9hPlFwe6X2thMv6rHMHBEmiMpYwGd0xC1kD9+1D2Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TscSiY19; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sOj3kzS9"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so89924796d6.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 14:35:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TscSiY19"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so80925ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 17:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745962513; x=1746567313; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745972671; x=1746577471; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y1nuu73zjClx2psq7xdas0e4BatM4ucgjTEBi/N9T8k=;
-        b=sOj3kzS9RL73f1zsPCO7syubfneUDCEc5y5Obo6vA00Ty8Qf4F8obSfgRqJkSP+WPf
-         fd+hEiyKZrc10gYMwhY1MhlrndLuct4nPamWkMC7utMt1DpbzytM1FJj9+1webwAm0D/
-         IsUbf7X5QLS3cKjjlqUXuZuU3nDvl2piRehgSDAkm1u6unLWDzvl3xACJIKC8Whcqhwv
-         dXlBlLgWQeQqc+YbRerKxnVA8G75tp/k2i1y5wPD9Cylo7benWJKINZDZWybqNmmrOYj
-         MKMtBoM6WhY5dyMLlJKCaolSuPkhk1WCksSWyGxcZ52ntj14xK9yRNBkm8uQyHy7MakE
-         vr4A==
+        bh=HfnEQM+OI/9Zb5rBitTrywPeYSIe0JsG+EMavn2ZaPs=;
+        b=TscSiY19XVQKMjJo6pzDRzIFQ6fZrHhqg1Xgpa0KEAohkhZQTr2L7ACSbImp9sn5JN
+         pCzuD+k0qG3sXnBxZmUYBt2FVlMwQN66Nzy+iHJrnmk//rf5aZ0fgAX9YywWG37l4KRJ
+         326RXuA1g1CrWU/7Zqfy0iDvDQ6+eeoV8nX8DYWmWLA8TldUZ9rnQM86rRiNpjtMJjeO
+         EyM5zRBpMoz+zn6E7QjM5Nj0OIbLFM6FJhkbVJFd0B5JvT2VFrF/PVdKqmOMQl6Fgj1R
+         sqfk6nNIYO6zgGZ6OXBt+jCElqHCH6rmbgYv46Ezqwzz+JCtxBHsuxyDZUL1nYGpMWJl
+         fj0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745962513; x=1746567313;
+        d=1e100.net; s=20230601; t=1745972671; x=1746577471;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y1nuu73zjClx2psq7xdas0e4BatM4ucgjTEBi/N9T8k=;
-        b=scyveVjRRfEmHbU46cLRvAjtmbgO9+1CZFFgaFPrYKt1QIvJCnc/J4huVmb8C5tVGC
-         asWwNafRJ7czGme8GqmNqYTcFtaDBL9SKVrgsI61FBVoYpm6FSVYVyXd80Idc9IZgjn2
-         sCK2/d/O/U4jnnSATINlhxE6UeU88hEvuLmqyn0EG3icb40eKWMh406d6I0HhAC2i+kF
-         Pja54QOP0e9bYZ30xKpzAxDOFM49nnETl6cYrrRu+4lIdLtOILjKOAmoR4sM9mD7rsH2
-         XaiylPEj5SQ+CyWT4szUTAPpu/jMN8U8WcjkLh9Wl4WGplG6BWx+M5jvuwcvV6GGiOmL
-         Fv5A==
-X-Forwarded-Encrypted: i=1; AJvYcCX9L09ikplz2O1jEfIHABgoEzSfZLjVbC91lZwCRKga11uNmfy6Pi1ajlWjSSX9iPfcfCPKCEiHcT+7fDYk4+pJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyplQy2vdn3SZdxwh5xHWO4BGRKU+c/90s+rkq9ALC80GKNgvnl
-	UynA0VAhjwaG4wbXHLxu2Nis4b9zxph3MG3Vm47tqwTe1KWafUMoxs2EtlpDIxA33KbABBq98ag
-	m+U5Ltn/sk2Mf56l/IVL0H0/AhL24S/dX70IQ4efund3UCtFpLjxZ0Q==
-X-Gm-Gg: ASbGncsq0b9T9qarwUlZrRKytu9Fzj1SMHE6dBi5/pINCPwkTcu1B2TGDh2rDPUFdmu
-	HDNucwKs1BJaTQNI1gb0JP2EfmwhNkj8utmAnz4id1nYm3r9i/nNfWsuPi6BOkay3Sdjax7eXDJ
-	bBtSM8RL6ey+3AKuKGApJVrFPQhk0pp8SuyGY62sZ4Gz1/k1Yaf34=
-X-Google-Smtp-Source: AGHT+IHdGBlsyLmHS0F3JdjDWgppCwC6kObHYfd9Irsj3QIg9RtclmbdpOnv6QueauuKbKvJEGgnE7theqdRIDiBF68=
-X-Received: by 2002:a05:6214:2525:b0:6f2:d25e:8cfc with SMTP id
- 6a1803df08f44-6f4fe03cfccmr6404496d6.9.1745962512631; Tue, 29 Apr 2025
- 14:35:12 -0700 (PDT)
+        bh=HfnEQM+OI/9Zb5rBitTrywPeYSIe0JsG+EMavn2ZaPs=;
+        b=XcdTPbW4upGBjZVEPB/Xs4N3hNdThiXa9H3DjxxoU/Dwdl2Snv4qJiiO7F3i2nLpd4
+         uZpcd1cG07BNq+HnynAiE8vcITjV9SHYzZwhgSc1Fb7wPjOl6qZrngQmvPU1J/LlTxfm
+         TSvx0kBfuXUsoXxkPvXo4GCnoFZkU9UbaTtVyU+cYoZx3lyYDIXMl1P9FgvMFZVG2VIG
+         97PIwwLRGSy0Z7XGqhmSCoXwEso/P1DaKQ4DfU7vXQ4woGkT3odJ4lcvEKQ3rN+WlQQI
+         A2Nxc3WC8gy0oUp4fZgfscurAxTHHrVTA2aYmG9yZ42UiRY/KvzKeCkfXWMQRxMga4gn
+         FcVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfy+IZB0AT+aserQzfQrDS8drVnQARdc5ZgXLyoq8EAg6jb+dKOSUIYpf05l5KfAvVQXh6Nqr6TLGIt5RIGJal@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb91j7xXul4iu72zOqKAPNX8icFeR+KHL8dw7QfvdA5lIm/GZv
+	xHJwFE/727GbhMYXePtrn4BB7C8yS6XyuKnX9c/8rkfGcvqRIPnc6lnRiLJ3lTOFPQHkr9zv5AY
+	kCuyJGt4qF8alh0DNX1HMcN0ckLPYB4MG3TOA
+X-Gm-Gg: ASbGncu1HZH+VyAaAtgK8/M+T+qnfWg6WpS0F13Fr2iGYSrexGytP25fa22zmBxtx68
+	4dOyGYR4SbqD9DKiO8wAgkPa78oIeGkLw9Ne3rb3P9aid0KxEw0x7I6dw5D6Oxf9LNMECjupfLs
+	NsSepP+iESyMUbmlrlDdQEb0a8NemNYpXk8Q==
+X-Google-Smtp-Source: AGHT+IFvMyC0i9SD2AIanZuarEXq/nVMiHDXfN1zanfzkQ1wYHtHOZeag/IQagtoWu0Y074s/SHzs/s1TZ4iy5ijQ1A=
+X-Received: by 2002:a05:6e02:18c6:b0:3d4:6f05:dfde with SMTP id
+ e9e14a558f8ab-3d96761218cmr1585405ab.22.1745972670925; Tue, 29 Apr 2025
+ 17:24:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-2-yabinc@google.com>
- <48640298-effa-42d4-9137-a18a51637f03@linaro.org> <aAeQcgmL-iqGbG_g@gmail.com>
- <20250422141026.GH28953@e132581.arm.com> <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
- <f03715ac-a4ac-415d-8daa-1914384319fb@linaro.org> <CALJ9ZPMiJ4oZerKWb4TL8swh8K3tfj70LTL+WibTRN-vB8rqvw@mail.gmail.com>
-In-Reply-To: <CALJ9ZPMiJ4oZerKWb4TL8swh8K3tfj70LTL+WibTRN-vB8rqvw@mail.gmail.com>
-From: Yabin Cui <yabinc@google.com>
-Date: Tue, 29 Apr 2025 14:35:00 -0700
-X-Gm-Features: ATxdqUH8QFOp7_4_6WS0YFJZ66Ou2QkaCWdN15e__QKEKbCxBuIPL53duQQlwB8
-Message-ID: <CALJ9ZPNPDtSy2rSeZ04bzXp+OFDTDJ5_he5e9raBbd022Hr5ig@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU capability
-To: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@arm.com>, Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Mike Leach <mike.leach@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+References: <20250402201549.4090305-1-irogers@google.com> <18c2fb33-2b3a-4ebe-ab26-8cebe0b6b94c@linux.intel.com>
+In-Reply-To: <18c2fb33-2b3a-4ebe-ab26-8cebe0b6b94c@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 29 Apr 2025 17:24:19 -0700
+X-Gm-Features: ATxdqUH3eXojgNt7cQNxNZcVbYdXqWfNpU3cNDaLVnlRGBaG315cXDbD7DXJitE
+Message-ID: <CAP-5=fXDriX5ipdvierw5VMTBUp-Q+97Xi5peaTmabe=Gp1BMw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] NMI warning and debug improvements
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Howard Chu <howardchu95@gmail.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Levi Yun <yeoreum.yun@arm.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 10:02=E2=80=AFAM Yabin Cui <yabinc@google.com> wrot=
-e:
+On Wed, Apr 2, 2025 at 1:33=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
 >
-> On Mon, Apr 28, 2025 at 1:56=E2=80=AFAM James Clark <james.clark@linaro.o=
-rg> wrote:
+> On 2025-04-02 4:15 p.m., Ian Rogers wrote:
+> > The NMI warning wouldn't fire even if all the events were for one PMU
+> > type. Remove a nearby, and no longer useful, mixed hardware event
+> > group function. Improve the evlist to string function and dump it in
+> > verbose mode after the reordered events warning.
 > >
+> > As commonly happens legacy events like instructions will be uniquified
+> > to hybrid events like cpu_core/instructions/, even though the
+> > encodings differ. To make this correct either:
+> > https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.co=
+m/
+> > or:
+> > https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-iroger=
+s@google.com/
+> > needs merging.
 > >
+> > v3: Increase the verbose dump length from 1024 to 2048 as requested by
+> >     Kan Liang.
 > >
-> > On 23/04/2025 8:52 pm, Yabin Cui wrote:
-> > > On Tue, Apr 22, 2025 at 7:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wro=
-te:
-> > >>
-> > >> On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
-> > >>
-> > >> [...]
-> > >>
-> > >>>> Hi Yabin,
-> > >>>>
-> > >>>> I was wondering if this is just the opposite of
-> > >>>> PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default
-> > >>>> for all devices to solve the issue you describe. Because we alread=
-y
-> > >>>> have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages=
-.
-> > >>>> Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high orde=
-r
-> > >>>> allocations for AUX buffers optimistically") that explains that th=
-e
-> > >>>> current allocation strategy is an optimization.
-> > >>>>
-> > >>>> Your change seems to decide that for certain devices we want to
-> > >>>> optimize for fragmentation rather than performance. If these are
-> > >>>> rarely used features specifically when looking at performance shou=
-ld
-> > >>>> we not continue to optimize for performance? Or at least make it u=
-ser
-> > >>>> configurable?
-> > >>>
-> > >>> So there seems to be 3 categories:
-> > >>>
-> > >>>   - 1) Must have physically contiguous AUX buffers, it's a hardware=
- ABI.
-> > >>>        (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
-> > >>>
-> > >>>   - 2) Would be nice to have continguous AUX buffers, for a bit mor=
-e
-> > >>>        performance.
-> > >>>
-> > >>>   - 3) Doesn't really care.
-> > >>>
-> > >>> So we do have #1, and it appears Yabin's usecase is #3?
-> > >
-> > > Yes, in my usecase, I care much more about MM-friendly than a little =
-potential
-> > > performance when using PMU. It's not a rarely used feature. On Androi=
-d, we
-> > > collect ETM data periodically on internal user devices for AutoFDO op=
-timization
-> > > (for both userspace libraries and the kernel). Allocating a large
-> > > chunk of contiguous
-> > > AUX pages (4M for each CPU) periodically is almost unbearable. The ke=
-rnel may
-> > > need to kill many processes to fulfill the request. It affects user
-> > > experience even
-> > > after using PMU.
-> > >
-> > > I am totally fine to reuse PERF_PMU_CAP_AUX_NO_SG. If PMUs don't want=
- to
-> > > sacrifice performance for MM-friendly, why support scatter gather mod=
-e? If there
-> > > are strong performance reasons to allocate contiguous AUX pages in
-> > > scatter gather
-> > > mode, I hope max_order is configurable in userspace.
-> > >
-> > > Currently, max_order is affected by aux_watermark. But aux_watermark
-> > > also affects
-> > > how frequently the PMU overflows AUX buffer and notifies userspace.
-> > > It's not ideal
-> > > to set aux_watermark to 1 page size. So if we want to make max_order =
-user
-> > > configurable, maybe we can add a one bit field in perf_event_attr?
-> > >
-> > >>
-> > >> In Yabin's case, the AUX buffer work as a bounce buffer.  The hardwa=
-re
-> > >> trace data is copied by a driver from low level's contiguous buffer =
-to
-> > >> the AUX buffer.
-> > >>
-> > >> In this case we cannot benefit much from continguous AUX buffers.
-> > >>
-> > >> Thanks,
-> > >> Leo
+> > v2: Rename evlist__has_hybrid to evlist__has_hybrid_pmus and add a
+> >     max_length parameter to evlist__format_evsels as suggested by Kan
+> >     Liang.
 > >
-> > Hi Yabin,
-> >
-> > So after doing some testing it looks like there is 0 difference in
-> > overhead for max_order=3D0 vs ensuring the buffer is one contiguous
-> > allocation for Arm SPE, and TRBE would be exactly the same. This makes
-> > sense because we're vmapping pages individually anyway regardless of th=
-e
-> > base allocation.
-> >
-> > Seems like the performance optimization of the optimistically large
-> > mappings is only for devices that require extra buffer management stuff
-> > other than normal virtual memory. Can we add a new capability
-> > PERF_PMU_CAP_AUX_PREFER_LARGE and apply it to Intel PT and BTS? Then th=
-e
-> > old (before the optimistic large allocs change) max_order=3D0 behavior
-> > becomes the default again, and PREFER_LARGE is just for those two
-> > devices. Other and new devices would get the more memory friendly
-> > allocations by default, as it's unlikely they'll benefit from anything
-> > different.
-> >
-> Good suggestion! I will upload a v2 patch for that.
+> > Ian Rogers (5):
+> >   perf stat: Better hybrid support for the NMI watchdog warning
+> >   perf stat: Remove print_mixed_hw_group_error
+> >   perf evlist: Refactor evlist__scnprintf_evsels
+> >   perf evlist: Add groups to evlist__format_evsels
+> >   perf parse-events: Add debug dump of evlist if reordered
+>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Hi everyone,
-I have sent the v2 patch for review, with the title
-"[PATCH v2] perf: Allocate non-contiguous AUX pages by default".
-Please help review it. Thanks!
+Ping. The v3 patch series (this series) is here:
+https://lore.kernel.org/lkml/20250402201549.4090305-1-irogers@google.com/
 
+Thanks,
+Ian
+
+> Thanks,
+> Kan
+>
 > >
-> > Thanks
-> > James
+> >  tools/perf/builtin-record.c    |  9 ++++---
+> >  tools/perf/util/evlist.c       | 34 ++++++++++++++++-------
+> >  tools/perf/util/evlist.h       |  3 ++-
+> >  tools/perf/util/parse-events.c | 16 ++++++++---
+> >  tools/perf/util/stat-display.c | 49 +++++++++++-----------------------
+> >  tools/perf/util/stat.h         |  1 -
+> >  6 files changed, 60 insertions(+), 52 deletions(-)
 > >
+>
