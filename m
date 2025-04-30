@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F49027E7C6
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4F4280324
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035492; cv=none; b=Ed97EDXYtbR+18N8hdW2vb7MDU8u0xrsl1OPQaZDzBXFVQli1BWnaiBJW6ij0TvxVqCk07/cr1Q3DMqWoRz6Kz0cdz+MCBTrz+qJQaisAnIOXzl29bZr7eh9meWRkYo7GXfRNWC18lq/uFDH26YsT85SNkGOSCXMExIXGBjk2Nw=
+	t=1746035494; cv=none; b=PZ7n67oMlkKBc5aWdh38a3EysWXWshBhPg8kqCpDz66NosMmoyF3GzFOcOfEp4K0LlHu7yehO4dIJE85ao8rshTHYrEFInYS8LL4vqWFVQXZ4m6zjYeSTig7P+LZp7KX50FCQr7umvJHoDNs6i7U5lyXiUM78qK812Mgnb9DJJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035492; c=relaxed/simple;
-	bh=PSiOgG7bWFRhRJGZr4xrC9dwLgvQlvIMtzHTDPuKezI=;
+	s=arc-20240116; t=1746035494; c=relaxed/simple;
+	bh=FzFTOk8Ufj5qP+krSfCyPLmIdLEkdVxKDQVag/5VkCY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lJZ1vDdRvOG87j6gA8iovgnpayJ1uZ0eYe7BG91D6TyqQeQ3kOmPUUXk2wiWHgbRciO3AISzfzHjsKqkFEaF3KkubXeFJ6cHSkrPG/YcQV2LNvhrTTvrih4ZaU1a5oeYSxNvZsbL72FXejzUIlMleRgq8qbjJlWhJ/XKb6mgH/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=akEgTEzq; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=njnwx8ZdnoYf+iy1SsAQitpmWSOkF6RxrkRG2xaWaxNv1wUMrgvOO3wuGxSZZ/TlxbO6RZzIXAs8kUryDU3oCNsqe6wNTUT2fAlWG104NprQUdXzLXfvXshSgTF997qeSsolTaio1sfuAuWlH5pDPG3uJM9wMJnWXnANLCs9Qvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2e9DAVE9; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="akEgTEzq"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a2b6c8ff2so146200a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2e9DAVE9"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7401179b06fso134669b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035486; x=1746640286; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035492; x=1746640292; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffqnGj+pBhQ6TrUOmeMPrDQngLLfEb3NGF58IKymfSU=;
-        b=akEgTEzq9okNBFygSKv2UXkT6bA8FCS13nHc1c17l9So7P6atcoFNIodatPcndzfzx
-         vopUw+ZBPSSqffVuahaLiriLd0xL+wURIhNylHgdveUdnLNKquX7C1ALNSyuABo9AqA8
-         Cq13rylt6cb7neGiEEy8OHQg4vf3GNoN8UKHl/Ik+OGBHa1DDn9+8WGxj0X6/ng+xuJ2
-         hNOZBpU/alqB6Ee/33V2eBsKKEDpyCbJ8UiW9+41seDzbAqgfkHxyvxu8hmKSkQx0l7L
-         I073bcYp2ognHHV+PpkQplsc/eZkCSVMPwGYNF7gAiDfdpve0EbIWTP2h3VvulQBtIJf
-         7WQw==
+        bh=hYPH1xGtocHJ35QYcCtSMMJMMhxe7zjT7fDJ29knBFI=;
+        b=2e9DAVE9DEhurmiExb0p6uy+vZUYta3H6birMxPci5choYYeVTlGLQXYXHVJBhBA9z
+         btmIdr4T5VyQ48CR2acBdFfn1rbrqC6wSuFOkZtX7UpGhOSAaawkkSzzJRrCBuZqKvCL
+         ShEgOyTt39F5sb9u7rtLEJvKCtMr7uL1OBu52O0er/NdtBMHH0g/bW2N+8c+e/SBgKtw
+         RPJfidFvBY11X0fVH79igEkH6PmSw9YUzAouztXQMF8/pELkYPQc9eBhgIr/C6QKumQQ
+         94Q7WuWFSMXt0nPaTihcYloY1qgTdlc4GgLdj+BZWaCWOSyqL0JQ9cTxQPpb6CH8M4U5
+         oVLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035486; x=1746640286;
+        d=1e100.net; s=20230601; t=1746035492; x=1746640292;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffqnGj+pBhQ6TrUOmeMPrDQngLLfEb3NGF58IKymfSU=;
-        b=rNQIZ0RC2f1KV+2F/qVOt8tuBkcnGhkypeFWU8MquLeZQU6HMqf5GjJcKuj271PP5N
-         yQh9niX9tUqQ+flXYnyR/vkJPT3QmWJ6WKi2yAvhGZoGQX+LrUNTcC03/+A+AfrU485R
-         9FWYZM5KCvfFq+XEEa7RGNKilinll4J2lweRhQpBkCFE0eQJsi2Wy3vglPaz5wE9GY1M
-         w2CGWw4jFjqOfrn3PIdCV/4+K//Jdk6t0v2bonSUKkHpRzOVa4ab/Te7u9FXkuEzpLo3
-         CYZZC/9yfS3JTKT2O8nDhzcOQSqzWYTcS/IhGTLsIpgRhAxpR8DcCkvKpFO9nTh65QYR
-         jqvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnJWPOn8Blut1+2srSgr9DjVR4RcYMFBH3EjG5IrTHOdNgGXU3aQ/+oLOj/WmkMFedG1LYZCNdrgsJN2p9gn9J@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2gTKqXKNLkjrOvtpQn70JD+sOnXxhogRWHs5fVnKQz3MFDNLL
-	LlfZA/baw97ZKskm+TttqRKsqLH8kASCAlS4AxN9QZsKaEyrHl6t3DwokietlngnYAu6TR8RFyO
-	pMdnjNQ==
-X-Google-Smtp-Source: AGHT+IFoFY/yppOPHW+0sW6SMr0S9TXM/T2GiOtYKIfeG6NYAA5w/aaMGtekGErA65y8/28Sygemm2DdYeVj
-X-Received: from pjbrr12.prod.google.com ([2002:a17:90b:2b4c:b0:2ff:4be0:c675])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da8f:b0:2ff:6bd0:ff26
- with SMTP id 98e67ed59e1d1-30a3336fea3mr4760497a91.34.1746035485584; Wed, 30
- Apr 2025 10:51:25 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:02 -0700
+        bh=hYPH1xGtocHJ35QYcCtSMMJMMhxe7zjT7fDJ29knBFI=;
+        b=oehfBlNsmH3ZMrc+q40H+lVCxGWFqn3Y01q9EwdxAjI+4ymhzH8L2im91cLh2WZtl1
+         mwevGXPFz0yexfO2ORgmb/UY7wQCC6YfGp69EbKyX2mSDlewRYgvnpPh6sFF7Qwf8c7U
+         1hB9FROEUq9lv44/z42LPTZTESXNl5eQEz+q2zlw4pt3lcJNeWrgcS4TGXsuNWJRt4MU
+         fEDtt6Bb2yRs+ILyZm7LBF4Avp2z/Hj8roSfllPpz54DoirxI6oYrR4NmIgmQYJ4cIFx
+         PmGhuSD9oqrRA5L9mEfAMmTHzQRiox98+TBZFT7lbDYm0ZdUmJXrYY1STdk76wuf8MRr
+         dDjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUB9Xj+3mMPuT2lz6JvAyv4YuDjry5hE8TutDxKIONlutGW8zNTxw+kCvZ25Ln86HqSftZEjlEZQ0WfRd0cF9mc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz//2KARQIDfgAeHGQ0FVCJwrw3KqJ1kN9yBu/NyL2qZ169MQVQ
+	ZiWqk7tMejlec//tv9FPi/2cTVyG1bO8ksmpnS31rEjH6STIip5UU8PnJbwLTv4AqDjEHqZ58pK
+	aKn8JoA==
+X-Google-Smtp-Source: AGHT+IHbw+GdtjVSf/hiJFmVY7X2M/TmZ2qfVrFS6sONlhMKvT3czNPfmyWWbkeJgJWJ2/mlC7aqCgd+XwFA
+X-Received: from pgbee3.prod.google.com ([2002:a05:6a02:4583:b0:b16:4869:6621])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:158c:b0:1f5:6abb:7cbb
+ with SMTP id adf61e73a8af0-20a8832fa6amr5508460637.23.1746035491433; Wed, 30
+ Apr 2025 10:51:31 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:05 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-15-irogers@google.com>
-Subject: [PATCH v2 14/47] perf jvmti: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-18-irogers@google.com>
+Subject: [PATCH v2 17/47] perf s390: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,139 +116,31 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/jvmti/jvmti_agent.c |  6 +++---
- tools/perf/util/genelf.c       |  2 +-
- tools/perf/util/jitdump.c      | 24 +++++++++++++-----------
- 3 files changed, 17 insertions(+), 15 deletions(-)
+ tools/perf/util/s390-sample-raw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
-index 526dcaf9f079..2e2be9d8a118 100644
---- a/tools/perf/jvmti/jvmti_agent.c
-+++ b/tools/perf/jvmti/jvmti_agent.c
-@@ -377,7 +377,7 @@ jvmti_write_code(void *agent, char const *sym,
- 	sym_len = strlen(sym) + 1;
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 335217bb532b..7e5c1448ea6b 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -202,7 +202,7 @@ static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
+ 		color_fprintf(stdout, color, "    [%#08zx] Counterset:%d"
+ 			      " Counters:%d\n", offset, ce.set, ce.ctr);
+ 		for (i = 0, p = (u64 *)(cep + 1); i < ce.ctr; ++i, ++p) {
+-			char *ev_name = get_counter_name(ce.set, i, pmu);
++			char *ev_name = get_counter_name(ce.set, (int)i, pmu);
  
- 	rec.p.id           = JIT_CODE_LOAD;
--	rec.p.total_size   = sizeof(rec) + sym_len;
-+	rec.p.total_size   = (uint32_t)(sizeof(rec) + sym_len);
- 	rec.p.timestamp    = perf_get_timestamp();
+ 			color_fprintf(stdout, color,
+ 				      "\tCounter:%03zd %s Value:%#018"PRIx64"\n", i,
+@@ -258,7 +258,7 @@ static void s390_pai_all_dump(struct evsel *evsel, struct perf_sample *sample)
+ 		p += sizeof(pai_data.event_val);
+ 		offset += sizeof(pai_data.event_val);
  
- 	rec.code_size  = size;
-@@ -400,7 +400,7 @@ jvmti_write_code(void *agent, char const *sym,
- 	 */
- 	rec.code_index = code_generation++;
- 
--	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
-+	ret = (int)fwrite_unlocked(&rec, sizeof(rec), 1, fp);
- 	fwrite_unlocked(sym, sym_len, 1, fp);
- 
- 	if (code)
-@@ -454,7 +454,7 @@ jvmti_write_debug_info(void *agent, uint64_t code,
- 	 */
- 	size += nr_lines * sizeof(struct debug_entry);
- 	size += flen;
--	rec.p.total_size = size;
-+	rec.p.total_size = (uint32_t)size;
- 
- 	/*
- 	 * If JVM is multi-threaded, multiple concurrent calls to agent
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index cdce7f173d00..6da8f3c53f7d 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -252,7 +252,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	Elf_Shdr *shdr;
- 	uint64_t eh_frame_base_offset;
- 	char *strsym = NULL;
--	int symlen;
-+	size_t symlen;
- 	int retval = -1;
- 
- 	if (elf_version(EV_CURRENT) == EV_NONE) {
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 624964f01b5f..874ced77d0a4 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -160,7 +160,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
- 	 */
- 	flockfile(jd->in);
- 
--	ret = fread(buf, sizeof(header), 1, jd->in);
-+	ret = (int)fread(buf, sizeof(header), 1, jd->in);
- 	if (ret != 1)
- 		goto error;
- 
-@@ -226,7 +226,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
- 		bsz = bs;
- 		buf = n;
- 		/* read extra we do not know about */
--		ret = fread(buf, bs - bsz, 1, jd->in);
-+		ret = (int)fread(buf, bs - bsz, 1, jd->in);
- 		if (ret != 1)
- 			goto error;
- 	}
-@@ -274,7 +274,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
- 	/*
- 	 * file is still locked at this point
- 	 */
--	ret = fread(prefix, sizeof(*prefix), 1, jd->in);
-+	ret = (int)fread(prefix, sizeof(*prefix), 1, jd->in);
- 	if (ret  != 1)
- 		return NULL;
- 
-@@ -304,7 +304,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
- 
- 	addr = ((void *)jd->buf) + sizeof(*prefix);
- 
--	ret = fread(addr, bs - sizeof(*prefix), 1, jd->in);
-+	ret = (int)fread(addr, bs - sizeof(*prefix), 1, jd->in);
- 	if (ret != 1)
- 		return NULL;
- 
-@@ -398,7 +398,7 @@ static uint64_t convert_timestamp(struct jit_buf_desc *jd, uint64_t timestamp)
- 		return timestamp;
- 
- 	tc.time_shift = time_conv->time_shift;
--	tc.time_mult  = time_conv->time_mult;
-+	tc.time_mult  = (unsigned int)time_conv->time_mult;
- 	tc.time_zero  = time_conv->time_zero;
- 
- 	/*
-@@ -443,8 +443,8 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 	nspid = jr->load.pid;
- 	pid   = jr_entry_pid(jd, jr);
- 	tid   = jr_entry_tid(jd, jr);
--	csize = jr->load.code_size;
--	usize = jd->unwinding_mapped_size;
-+	csize = (int)jr->load.code_size;
-+	usize = (int)jd->unwinding_mapped_size;
- 	addr  = jr->load.code_addr;
- 	sym   = (void *)((unsigned long)jr + sizeof(jr->load));
- 	code  = (unsigned long)jr + jr->load.p.total_size - csize;
-@@ -465,8 +465,10 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 
- 	size = PERF_ALIGN(size, sizeof(u64));
- 	uaddr = (uintptr_t)code;
--	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, jd->debug_data, jd->nr_debug_entries,
--			   jd->unwinding_data, jd->eh_frame_hdr_size, jd->unwinding_size);
-+	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, jd->debug_data,
-+			   (int)jd->nr_debug_entries, jd->unwinding_data,
-+			   (uint32_t)jd->eh_frame_hdr_size,
-+			   (uint32_t)jd->unwinding_size);
- 
- 	if (jd->debug_data && jd->nr_debug_entries) {
- 		zfree(&jd->debug_data);
-@@ -559,8 +561,8 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
- 
- 	nspid = jr->load.pid;
- 	pid   = jr_entry_pid(jd, jr);
--	tid   = jr_entry_tid(jd, jr);
--	usize = jd->unwinding_mapped_size;
-+	tid   = (int)jr_entry_tid(jd, jr);
-+	usize = (int)jd->unwinding_mapped_size;
- 	idr_size = jd->machine->id_hdr_size;
- 
- 	/*
+-		ev_name = get_counter_name(evsel->core.attr.config,
++		ev_name = get_counter_name((int)evsel->core.attr.config,
+ 					   pai_data.event_nr, evsel->pmu);
+ 		color_fprintf(stdout, color, "\tCounter:%03d %s Value:%#018"PRIx64"\n",
+ 			      pai_data.event_nr, ev_name ?: "<unknown>",
 -- 
 2.49.0.906.g1f30a19c02-goog
 
