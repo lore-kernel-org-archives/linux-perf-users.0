@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1DC29374A
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45DC295502
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035518; cv=none; b=Of68AFEzoFGm2kShXtumRFpV+pRQEg0rglL/cA35sOGZgOM5AgyH7BXaRtjWY7idouw5vHiFWt6qX5verJQIbtyHN0QyFsyN5ywtDRy4zDt9u9CoRLpzfopNp2uI7DH8K9uEK/6vblhlmRIHRhillQIgAmEzXkHZBPe7xfRj7Ss=
+	t=1746035520; cv=none; b=R0Sxjd7FgKAu+3qGR28al68/4Ic8eVT5k1Nd6x8gVXWm9GKEF5Ps524p2AZQ0l9HkvCwtS8ARVygnkdm6SNcKJIiS1qcnMMXfSRqp0SaOe4PNaFKDbFuROAanV9WtT2bOf6Z3CxvpuHV7tDme2NpfLjCNZ/lAqJ15qkDWnG7J0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035518; c=relaxed/simple;
-	bh=9l2dMOM7UimoBEXqUwjoRi9BOwrL79JE0K1FOZ1eTn0=;
+	s=arc-20240116; t=1746035520; c=relaxed/simple;
+	bh=N9Bs69Q0gHmhI4eo8xMCY3Rp0tQZHLDjeB46JguulvE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=C5MyoubHfpRACQftCMehhIa8iz8iwegsbX0YD+eFTK7jqz+3PteLN93TaSUkzBqr0i5fJHQTIQeQ9FjmXSFNHZVVm0etLhXsBiqoa62bPe0CqeJ3AoiQN9bE1hZFcq3eo8uNMj1ZI8kyGUh1i2pfHhXXuBQhJi7uUwaX4eV9EZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G0h3BZMY; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=bfyYo1VkAmHs/rT8rn6AL+MQ7+KPPXjTYuERLj/e9Kez5vCCcpuaSF9GT/XhSj7vQESHr2l+IH1PY/xG40u2+ovu5VGV3h/SINMWAWFQB783xjY2D7Xe8CvQ+0sKb2ThSVHRAFZt9wRBs2+jn07hdK7XolXoLwzePR6/3yf2mBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HfDckrfa; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G0h3BZMY"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-afd1e7f52f7so51099a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HfDckrfa"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3086107d023so133512a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035516; x=1746640316; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035518; x=1746640318; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IyLcztOS6ND7VNkEzmFW3p+zRnL5x5BHhQ/NtraX+jQ=;
-        b=G0h3BZMYvR+3hm3gUmIM0t/jZzuDyB3TVvfkuYWFueUNVqlkAYycoUSP2iyPzlXQOQ
-         9QuuaPoqQwF3qVIe5fTvuE/lEf3w8PcCylNmYP6FtOzJ57YXen6ikWppVb3R7RqR0lv8
-         v0NEcQLF8UTjATdqjXh/qeCriYBaKm2bT1UWkwqSgjVRkRRdvbxAl2Doq7vCyNuGt3yh
-         a+8oDI0lFRhNmUBOtDaSqMXz8040ujHL2e7S9C74YJE5uxbPCYR7SrJ51IwvtgfsIDGx
-         MAgHIAp66725tS7wcRDfQs94faL0Mu0yZKALwGCpHBJTshLfS27GmAOENujFRaZXOVQ4
-         3zVw==
+        bh=7DcJ1qi6x2GgioZqECz9ghmDuadJ5RenRHwjo+uvBnM=;
+        b=HfDckrfazPrUzCPJh4dZ897C02A1scHNWj2beT6nTQZ52hVyNFXZksOhS1KybWX11p
+         yXjLi9fhVYWQqQ3005lvS8IqqGmg3NIJLgFWFc2r4aK+mZlgRBJJd8FEDIPh9ULstFq7
+         S7pUbzRZTkgVlzWpI0G9c/pWb48hZV/rZ027+emsbMDlrekEeO7cDXkkMrJNF/amUnVb
+         fX8x2lNh0YyOoQ4etUbBB5xnqZSpDveWduXGObQYEdqUUmxobELLID5eYh08JPVbAqnP
+         P81+H8WzzMRC1O0clK2ZHWRapBHkOyw2Ti1OjvPFwU8eTPURWO/gpiEPwSGCaemiU+C9
+         0gnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035516; x=1746640316;
+        d=1e100.net; s=20230601; t=1746035518; x=1746640318;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IyLcztOS6ND7VNkEzmFW3p+zRnL5x5BHhQ/NtraX+jQ=;
-        b=QnoK4PrnSzyEv6xbMPHm0SykjcJSPkOnR4illcwznuxVBn2SuKCv1WZqJGruw4XIb2
-         Q0L/lVe5RFEogxZP7kLRN70BKvzNYsQ+9pxSBh+fNfuxZTrXqeGnCkL4CCgPMre6HpGG
-         oH5zxSyRKiFHE2ggWalelrA3vqs3OYe+GQldo5HolPcLLP+13EdDZLZqT3B3IqI4EH5e
-         Hu+2TS0D9ZX9oeSv5o3kX10ktlpHQl9jqOYw4tdSsrrxPXsk5gpoRysdaVkJE9vW53jP
-         mYo5ZveBoliQIFHPYp4Zv3hd0BBwbhQCSrQ1ABXRmMdoTdt7sO37enWQrzNiZDQcPrTt
-         Xi+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXPPhA/Thh26POEWfpp38Sk0fxsr8HttJ9RSeWGyLQoivAlfXe8qON57XSBq8/A8hpofssxDsXndx8QgkwuCHcQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn4D6YgBJrE6fGudrDBENQIKMrDYqwGO2JQsApG6jUIXmnb7Pe
-	XLCzU+MEW4n+WuNhQXLI0KzOyAqYCIJyqJHqShUto2R9sdhx8CQum3J0C9c5gM3eSKMqAcATHad
-	MiuCmhw==
-X-Google-Smtp-Source: AGHT+IG/bAJeuyUUIqze0k4zWjdHDhymwu1QrCFfccFUxqYIawKUgDvs/Fgjiy4LZ5RieT7vyM2xLY3z/Lt1
-X-Received: from pgam9.prod.google.com ([2002:a05:6a02:2b49:b0:af2:54b0:c8d5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:33a3:b0:1f5:852a:dd81
- with SMTP id adf61e73a8af0-20aa41848a9mr5512244637.34.1746035515853; Wed, 30
- Apr 2025 10:51:55 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:17 -0700
+        bh=7DcJ1qi6x2GgioZqECz9ghmDuadJ5RenRHwjo+uvBnM=;
+        b=NjajmNjuMV3DnLhn1Shxg4fd11vo0baiobgO+N0JgxkLSKeZiEO8RBfLMWWjUAiARH
+         7ulFFk8W73vg0rDlG1NSn1FHHJ734s/IMgbu6A7n3tUuCj4TXDr7hEgoACE1i5dWtYI0
+         Fpon6wS4vgAGTK9+6xrOpBtYFnma/OuhaWwW41ShmgOuEwMuUbtmCJ7asi674j0/8V2J
+         +2hz5QtR+rjZcMBKmkdfr5ygm7pzbsoefi1etn9NaApHY9xXMCS9n5i4fxgiWTMQH+Cg
+         u5LEAfqNNeiK5ABIzWKNgQJ64vhsT1Q2Q9bYpLrYi5WvbKA5mRVH/AvFWV/NtsvLWqiL
+         eNPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGNmP3dwsAqi2QD8dlOeedB/DZKGtK36IjB1BkWVJ3NwqK8QTVMFfNRuptTfkKbYEgXkUNeUBfm0nFiKARZSfq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE23FL/4WE1wsMZxgDPNZxiHWgnqPjx5Pg+ci7nUoCePMWjqlj
+	Mbcihh0HSrQBMjaLC3vjtDEejz9p+DWbTBZE3iVhs105tNKVid9SRPZ1GP6lk7dwaSQGc3HxdF/
+	WoPFZAA==
+X-Google-Smtp-Source: AGHT+IHk8/+NAcFZh2Wb9xOYFIlypRhZRhl9IF5IJNwhrNiC5zF54w1KI/Rd0Fsj1chyjvEwC8kJjpt3MV8G
+X-Received: from pjbee6.prod.google.com ([2002:a17:90a:fc46:b0:2ff:852c:ceb8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5745:b0:2ea:a9ac:eee1
+ with SMTP id 98e67ed59e1d1-30a332f6c1bmr6642182a91.10.1746035517863; Wed, 30
+ Apr 2025 10:51:57 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:18 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-30-irogers@google.com>
-Subject: [PATCH v2 29/47] perf lock: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-31-irogers@google.com>
+Subject: [PATCH v2 30/47] perf mem: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,131 +116,318 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-lock.c             | 16 ++++++++--------
- tools/perf/util/bpf_lock_contention.c | 17 +++++++++--------
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ tools/perf/builtin-c2c.c     | 21 ++++++++++---------
+ tools/perf/builtin-kmem.c    | 39 ++++++++++++++++++------------------
+ tools/perf/builtin-mem.c     |  2 +-
+ tools/perf/util/mem-events.c | 12 +++++------
+ tools/perf/util/mem2node.c   |  2 +-
+ 5 files changed, 38 insertions(+), 38 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 05e7bc30488a..0f7e627394aa 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -569,7 +569,7 @@ static int report_lock_acquire_event(struct evsel *evsel,
- 	struct lock_seq_stat *seq;
- 	const char *name = evsel__strval(evsel, sample, "name");
- 	u64 addr = evsel__intval(evsel, sample, "lockdep_addr");
--	int flag = evsel__intval(evsel, sample, "flags");
-+	int flag = (int)evsel__intval(evsel, sample, "flags");
- 	u64 key;
- 	int ret;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e2e257bcc461..c99266b4f365 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -1206,7 +1206,7 @@ node_entry(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *hpp,
+ 			break;
+ 		case 1:
+ 		{
+-			int num = bitmap_weight(set, c2c.cpus_cnt);
++			int num = (int)bitmap_weight(set, c2c.cpus_cnt);
+ 			struct c2c_stats *stats = &c2c_he->node_stats[node];
  
-@@ -837,7 +837,7 @@ static int get_symbol_name_offset(struct map *map, struct symbol *sym, u64 ip,
- 	if (offset)
- 		return scnprintf(buf, size, "%s+%#lx", sym->name, offset);
- 	else
--		return strlcpy(buf, sym->name, size);
-+		return (int)strlcpy(buf, sym->name, size);
- }
- static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sample,
- 				  char *buf, int size)
-@@ -968,7 +968,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 	struct thread_stat *ts;
- 	struct lock_seq_stat *seq;
- 	u64 addr = evsel__intval(evsel, sample, "lock_addr");
--	unsigned int flags = evsel__intval(evsel, sample, "flags");
-+	unsigned int flags = (unsigned int)evsel__intval(evsel, sample, "flags");
- 	u64 key;
- 	int i, ret;
- 	static bool kmap_loaded;
-@@ -1303,7 +1303,7 @@ static void print_result(void)
- 				struct thread *t;
+ 			ret = scnprintf(hpp->buf, hpp->size, "%2d{%2d ", node, num);
+@@ -1249,7 +1249,7 @@ node_entry(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *hpp,
+ 			ret = scnprintf(hpp->buf, hpp->size, "%2d{", node);
+ 			advance_hpp(hpp, ret);
  
- 				/* st->addr contains tid of thread */
--				t = perf_session__findnew(session, st->addr);
-+				t = perf_session__findnew(session, (int)st->addr);
- 				name = thread__comm_str(t);
- 			}
+-			ret = bitmap_scnprintf(set, c2c.cpus_cnt, hpp->buf, hpp->size);
++			ret = (int)bitmap_scnprintf(set, c2c.cpus_cnt, hpp->buf, hpp->size);
+ 			advance_hpp(hpp, ret);
  
-@@ -1638,7 +1638,7 @@ static void print_lock_stat_stdio(struct lock_contention *con, struct lock_stat
- 		fprintf(lock_output, "  %10s   %s\n", get_type_flags_name(st->flags), st->name);
- 		break;
- 	case LOCK_AGGR_TASK:
--		pid = st->addr;
-+		pid = (int)st->addr;
- 		t = perf_session__findnew(session, pid);
- 		fprintf(lock_output, "  %10d   %s\n",
- 			pid, pid == -1 ? "Unknown" : thread__comm_str(t));
-@@ -1691,7 +1691,7 @@ static void print_lock_stat_csv(struct lock_contention *con, struct lock_stat *s
- 			fprintf(lock_output, "\n");
- 		break;
- 	case LOCK_AGGR_TASK:
--		pid = st->addr;
-+		pid = (int)st->addr;
- 		t = perf_session__findnew(session, pid);
- 		fprintf(lock_output, "%d%s %s\n", pid, sep,
- 			pid == -1 ? "Unknown" : thread__comm_str(t));
-@@ -1870,7 +1870,7 @@ static int __cmd_report(bool display_info)
- 	session = perf_session__new(&data, &eops);
- 	if (IS_ERR(session)) {
- 		pr_err("Initializing perf session failed\n");
--		return PTR_ERR(session);
-+		return (int)PTR_ERR(session);
+ 			ret = scnprintf(hpp->buf, hpp->size, "}");
+@@ -1911,7 +1911,7 @@ static int c2c_se_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 			len = symbol_width(he->hists, dim->se);
  	}
  
- 	symbol_conf.allow_aliases = true;
-@@ -2023,7 +2023,7 @@ static int __cmd_contention(int argc, const char **argv)
- 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
+-	return dim->se->se_snprintf(he, hpp->buf, hpp->size, len);
++	return dim->se->se_snprintf(he, hpp->buf, hpp->size, (unsigned int)len);
+ }
+ 
+ static int64_t c2c_se_cmp(struct perf_hpp_fmt *fmt,
+@@ -2164,7 +2164,7 @@ static void set_node_width(struct c2c_hist_entry *c2c_he, int len)
+ static int set_nodestr(struct c2c_hist_entry *c2c_he)
+ {
+ 	char buf[30];
+-	int len;
++	size_t len;
+ 
+ 	if (c2c_he->nodestr)
+ 		return 0;
+@@ -2176,7 +2176,7 @@ static int set_nodestr(struct c2c_hist_entry *c2c_he)
+ 		len = scnprintf(buf, sizeof(buf), "N/A");
+ 	}
+ 
+-	set_node_width(c2c_he, len);
++	set_node_width(c2c_he, (int)len);
+ 	c2c_he->nodestr = strdup(buf);
+ 	return c2c_he->nodestr ? 0 : -ENOMEM;
+ }
+@@ -2353,7 +2353,7 @@ static int hists__iterate_cb(struct hists *hists, hists__resort_cb_t cb)
+ 
+ static void print_c2c__display_stats(FILE *out)
+ {
+-	int llc_misses;
++	uint64_t llc_misses;
+ 	struct c2c_stats *stats = &c2c.hists.stats;
+ 
+ 	llc_misses = get_load_llc_misses(stats);
+@@ -2379,7 +2379,7 @@ static void print_c2c__display_stats(FILE *out)
+ 	fprintf(out, "  Load Remote DRAM                  : %10d\n", stats->rmt_dram);
+ 	fprintf(out, "  Load MESI State Exclusive         : %10d\n", stats->ld_excl);
+ 	fprintf(out, "  Load MESI State Shared            : %10d\n", stats->ld_shared);
+-	fprintf(out, "  Load LLC Misses                   : %10d\n", llc_misses);
++	fprintf(out, "  Load LLC Misses                   : %10"PRIu64"\n", llc_misses);
+ 	fprintf(out, "  Load access blocked by data       : %10d\n", stats->blk_data);
+ 	fprintf(out, "  Load access blocked by address    : %10d\n", stats->blk_addr);
+ 	fprintf(out, "  Load HIT Local Peer               : %10d\n", stats->lcl_peer);
+@@ -2738,9 +2738,10 @@ static void perf_c2c_display(struct perf_session *session)
+ }
+ #endif /* HAVE_SLANG_SUPPORT */
+ 
+-static char *fill_line(const char *orig, int len)
++static char *fill_line(const char *orig, size_t len)
+ {
+-	int i, j, olen = strlen(orig);
++	size_t i, j;
++	size_t olen = strlen(orig);
+ 	char *buf;
+ 
+ 	buf = zalloc(len + 1);
+@@ -3068,7 +3069,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	c2c.tool.ordering_requires_timestamps = true;
+ 	session = perf_session__new(&data, &c2c.tool);
  	if (IS_ERR(session)) {
- 		pr_err("Initializing perf session failed\n");
 -		err = PTR_ERR(session);
 +		err = (int)PTR_ERR(session);
- 		session = NULL;
- 		goto out_delete;
+ 		pr_debug("Error creating perf session\n");
+ 		goto out;
  	}
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 5af8f6d1bc95..5a7a820000d4 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -54,7 +54,7 @@ static void check_slab_cache_iter(struct lock_contention *con)
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 67fb1946ef13..6a905161f21b 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -173,10 +173,10 @@ static int insert_caller_stat(unsigned long call_site,
  
- 	has_slab_iter = true;
+ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+-	unsigned long ptr = evsel__intval(evsel, sample, "ptr"),
+-		      call_site = evsel__intval(evsel, sample, "call_site");
+-	int bytes_req = evsel__intval(evsel, sample, "bytes_req"),
+-	    bytes_alloc = evsel__intval(evsel, sample, "bytes_alloc");
++	unsigned long ptr = evsel__intval(evsel, sample, "ptr");
++	unsigned long call_site = evsel__intval(evsel, sample, "call_site");
++	int bytes_req = (int)evsel__intval(evsel, sample, "bytes_req");
++	int bytes_alloc = (int)evsel__intval(evsel, sample, "bytes_alloc");
  
--	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
-+	bpf_map__set_max_entries(skel->maps.slab_caches, (__u32)con->map_nr_entries);
- out:
- 	btf__free(btf);
+ 	if (insert_alloc_stat(call_site, ptr, bytes_req, bytes_alloc, sample->cpu) ||
+ 	    insert_caller_stat(call_site, bytes_req, bytes_alloc))
+@@ -202,7 +202,7 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
+ 		int node1, node2;
+ 
+ 		node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu});
+-		node2 = evsel__intval(evsel, sample, "node");
++		node2 = (int)evsel__intval(evsel, sample, "node");
+ 
+ 		/*
+ 		 * If the field "node" is NUMA_NO_NODE (-1), we don't take it
+@@ -737,7 +737,7 @@ static char *compact_gfp_flags(char *gfp_flags)
+ 	return new_flags;
  }
-@@ -123,23 +123,24 @@ int lock_contention_prepare(struct lock_contention *con)
+ 
+-static char *compact_gfp_string(unsigned long gfp_flags)
++static char *compact_gfp_string(unsigned int gfp_flags)
+ {
+ 	struct gfp_flag key = {
+ 		.flags = gfp_flags,
+@@ -808,10 +808,9 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	u64 page;
+-	unsigned int order = evsel__intval(evsel, sample, "order");
+-	unsigned int gfp_flags = evsel__intval(evsel, sample, "gfp_flags");
+-	unsigned int migrate_type = evsel__intval(evsel, sample,
+-						       "migratetype");
++	unsigned int order = (unsigned int)evsel__intval(evsel, sample, "order");
++	unsigned int gfp_flags = (unsigned int)evsel__intval(evsel, sample, "gfp_flags");
++	unsigned int migrate_type = (unsigned int)evsel__intval(evsel, sample, "migratetype");
+ 	u64 bytes = kmem_page_size << order;
+ 	u64 callsite;
+ 	struct page_stat *pstat;
+@@ -880,7 +879,7 @@ static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_samp
+ static int evsel__process_page_free_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	u64 page;
+-	unsigned int order = evsel__intval(evsel, sample, "order");
++	unsigned int order = (unsigned int)evsel__intval(evsel, sample, "order");
+ 	u64 bytes = kmem_page_size << order;
+ 	struct page_stat *pstat;
+ 	struct page_stat this = {
+@@ -1064,12 +1063,12 @@ static void __print_page_alloc_result(struct perf_session *session, int n_lines)
+ 	struct rb_node *next = rb_first(&page_alloc_sorted);
+ 	struct machine *machine = &session->machines.host;
+ 	const char *format;
+-	int gfp_len = max(strlen("GFP flags"), max_gfp_len);
++	size_t gfp_len = max(strlen("GFP flags"), max_gfp_len);
+ 
+ 	printf("\n%.105s\n", graph_dotted_line);
+ 	printf(" %-16s | %5s alloc (KB) | Hits      | Order | Mig.type | %-*s | Callsite\n",
+ 	       use_pfn ? "PFN" : "Page", live_page ? "Live" : "Total",
+-	       gfp_len, "GFP flags");
++		(int)gfp_len, "GFP flags");
+ 	printf("%.105s\n", graph_dotted_line);
+ 
+ 	if (use_pfn)
+@@ -1102,7 +1101,7 @@ static void __print_page_alloc_result(struct perf_session *session, int n_lines)
+ 
+ 	if (n_lines == -1) {
+ 		printf(" ...              | ...              | ...       | ...   | ...      | %-*s | ...\n",
+-		       gfp_len, "...");
++		       (int)gfp_len, "...");
  	}
  
- 	bpf_map__set_value_size(skel->maps.stacks, con->max_stack * sizeof(u64));
--	bpf_map__set_max_entries(skel->maps.lock_stat, con->map_nr_entries);
--	bpf_map__set_max_entries(skel->maps.tstamp, con->map_nr_entries);
-+	bpf_map__set_max_entries(skel->maps.lock_stat, (__u32)con->map_nr_entries);
-+	bpf_map__set_max_entries(skel->maps.tstamp, (__u32)con->map_nr_entries);
+ 	printf("%.105s\n", graph_dotted_line);
+@@ -1112,11 +1111,11 @@ static void __print_page_caller_result(struct perf_session *session, int n_lines
+ {
+ 	struct rb_node *next = rb_first(&page_caller_sorted);
+ 	struct machine *machine = &session->machines.host;
+-	int gfp_len = max(strlen("GFP flags"), max_gfp_len);
++	size_t gfp_len = max(strlen("GFP flags"), max_gfp_len);
  
- 	if (con->aggr_mode == LOCK_AGGR_TASK)
--		bpf_map__set_max_entries(skel->maps.task_data, con->map_nr_entries);
-+		bpf_map__set_max_entries(skel->maps.task_data, (__u32)con->map_nr_entries);
- 	else
- 		bpf_map__set_max_entries(skel->maps.task_data, 1);
+ 	printf("\n%.105s\n", graph_dotted_line);
+ 	printf(" %5s alloc (KB) | Hits      | Order | Mig.type | %-*s | Callsite\n",
+-	       live_page ? "Live" : "Total", gfp_len, "GFP flags");
++	       live_page ? "Live" : "Total", (int)gfp_len, "GFP flags");
+ 	printf("%.105s\n", graph_dotted_line);
  
- 	if (con->save_callstack) {
--		bpf_map__set_max_entries(skel->maps.stacks, con->map_nr_entries);
-+		bpf_map__set_max_entries(skel->maps.stacks, (__u32)con->map_nr_entries);
- 		if (con->owner) {
- 			bpf_map__set_value_size(skel->maps.stack_buf, con->max_stack * sizeof(u64));
- 			bpf_map__set_key_size(skel->maps.owner_stacks,
- 						con->max_stack * sizeof(u64));
--			bpf_map__set_max_entries(skel->maps.owner_stacks, con->map_nr_entries);
--			bpf_map__set_max_entries(skel->maps.owner_data, con->map_nr_entries);
--			bpf_map__set_max_entries(skel->maps.owner_stat, con->map_nr_entries);
-+			bpf_map__set_max_entries(skel->maps.owner_stacks,
-+						 (__u32)con->map_nr_entries);
-+			bpf_map__set_max_entries(skel->maps.owner_data, (__u32)con->map_nr_entries);
-+			bpf_map__set_max_entries(skel->maps.owner_stat, (__u32)con->map_nr_entries);
- 			skel->rodata->max_stack = con->max_stack;
- 		}
- 	} else {
+ 	while (next && n_lines--) {
+@@ -1137,14 +1136,14 @@ static void __print_page_caller_result(struct perf_session *session, int n_lines
+ 		       (unsigned long long)data->alloc_bytes / 1024,
+ 		       data->nr_alloc, data->order,
+ 		       migrate_type_str[data->migrate_type],
+-		       gfp_len, compact_gfp_string(data->gfp_flags), caller);
++		       (int)gfp_len, compact_gfp_string(data->gfp_flags), caller);
+ 
+ 		next = rb_next(next);
+ 	}
+ 
+ 	if (n_lines == -1) {
+ 		printf(" ...              | ...       | ...   | ...      | %-*s | ...\n",
+-		       gfp_len, "...");
++		       (int)gfp_len, "...");
+ 	}
+ 
+ 	printf("%.105s\n", graph_dotted_line);
+@@ -1828,7 +1827,7 @@ static int parse_line_opt(const struct option *opt __maybe_unused,
+ 	if (!arg)
+ 		return -1;
+ 
+-	lines = strtoul(arg, NULL, 10);
++	lines = (int)strtoul(arg, NULL, 10);
+ 
+ 	if (caller_flag > alloc_flag)
+ 		caller_lines = lines;
+@@ -2001,7 +2000,7 @@ int cmd_kmem(int argc, const char **argv)
+ 
+ 	kmem_session = session = perf_session__new(&data, &perf_kmem);
+ 	if (IS_ERR(session))
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
+ 
+ 	ret = -1;
+ 
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 5ec83cd85650..988b3877cde8 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -293,7 +293,7 @@ static int report_raw_events(struct perf_mem *mem)
+ 	session = perf_session__new(&data, &mem->tool);
+ 
+ 	if (IS_ERR(session))
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
+ 
+ 	session->itrace_synth_opts = &itrace_synth_opts;
+ 
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 884d9aebce91..6ad99ace56e3 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -364,7 +364,7 @@ int perf_mem__tlb_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	if (miss)
+ 		l += scnprintf(out + l, sz - l, " miss");
+ 
+-	return l;
++	return (int)l;
+ }
+ 
+ static const char * const mem_lvl[] = {
+@@ -476,7 +476,7 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 			l += scnprintf(out + l, sz - l, "Unknown level %d", lvl);
+ 
+ 		l += scnprintf(out + l, sz - l, " %s", hit_miss);
+-		return l;
++		return (int)l;
+ 	}
+ 
+ 	lvl = data_src.mem_lvl;
+@@ -499,7 +499,7 @@ int perf_mem__lvl_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 
+ 	if (printed) {
+ 		l += scnprintf(out + l, sz - l, " %s", hit_miss);
+-		return l;
++		return (int)l;
+ 	}
+ 
+ na:
+@@ -559,7 +559,7 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	if (*out == '\0')
+ 		l += scnprintf(out, sz - l, "N/A");
+ 
+-	return l;
++	return (int)l;
+ }
+ 
+ int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
+@@ -593,14 +593,14 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 
+ 	if (!mask || (mask & PERF_MEM_BLK_NA)) {
+ 		l += scnprintf(out + l, sz - l, " N/A");
+-		return l;
++		return (int)l;
+ 	}
+ 	if (mask & PERF_MEM_BLK_DATA)
+ 		l += scnprintf(out + l, sz - l, " Data");
+ 	if (mask & PERF_MEM_BLK_ADDR)
+ 		l += scnprintf(out + l, sz - l, " Addr");
+ 
+-	return l;
++	return (int)l;
+ }
+ 
+ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
+diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+index 03a7d7b27737..2d76626dec01 100644
+--- a/tools/perf/util/mem2node.c
++++ b/tools/perf/util/mem2node.c
+@@ -56,7 +56,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
+ 
+ 	for (i = 0; i < env->nr_memory_nodes; i++) {
+ 		n = &nodes[i];
+-		max += bitmap_weight(n->set, n->size);
++		max += bitmap_weight(n->set, (unsigned int)n->size);
+ 	}
+ 
+ 	entries = zalloc(sizeof(*entries) * max);
 -- 
 2.49.0.906.g1f30a19c02-goog
 
