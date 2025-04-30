@@ -1,169 +1,137 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D984313E02D
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 15:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDA51E501C
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 15:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746025335; cv=none; b=pH864T7muFvvZ4WVTu90+jSFiYkcda7yfA3uI/Fzdcf8zSgkq3/Ira5vgH1ZWltflgaNhdgIVKroMMlwW49vjmRh1L9gVA6DhfP77fPWq6gpEddaQ0vlPD+wgbdnS8nM2JiOMmI9w8br7TRrNdybXrVIrnZb4lnMVC0m2YtdvwM=
+	t=1746026533; cv=none; b=SxR6Hp7BSsHKuuIxdKo/GwmdSoX0gR1u1p5qxQQekqakRu3HxzAFveHec0fFu+Mzsj4MvZ9NZFfeEV9E6nnPMXHfSss+SfomrrDz1Z16G5b1HnJCh1S+g5ceIZkOa6I+w/wI2kHmzS7p3qt5u9ZyzKsZFHLpmNYa8ZR3b0L5Kmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746025335; c=relaxed/simple;
-	bh=yTzOvPVZicdtXxYAN3i0WpG3riaGBG0fc2rbiaYZ7Gg=;
+	s=arc-20240116; t=1746026533; c=relaxed/simple;
+	bh=WZRYexjcI+FcMwQnFYdjjkqA9YMUqrFrRBtF8JzIvqg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ka8nuJn2lmT1EhHMaiuc7oSEcjuYcnN6baj4tI5IWfvGPqQUhWxwCqmL4hvfys/6X4kI4yWgLoiU901niakYyXnUPGBkb1zGscJlG9LZUr527clxvBKZO6nPlMmcsiSTRoQ4yxCZm8jmwa+Rs3IG2F7NuBzYP8j+sIsVMlKOV8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mCwyBwln; arc=none smtp.client-ip=209.85.166.172
+	 To:Cc:Content-Type; b=L4xSPXo0B8pZj7AQMcPT9dJKo2/31S+UlBFlMbH/dgEuUSA980cnplMWViL6CfVlT6A/O07NHhl1Ja2ksmVEqTdcO3rYDRZff2ev9l4bzpG26uhTDE3/CCYXCio+2iRyreN/scWwCOMmDfm0nBXy42Pbtklh+GgqnEs755KuW00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p3tx83uy; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mCwyBwln"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so185395ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 08:02:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p3tx83uy"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so350965ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 08:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746025333; x=1746630133; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746026531; x=1746631331; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TxLP2jvQJU6ArGA2+B3kENikuO4EAauVA/47UH8n29s=;
-        b=mCwyBwln/HBYY8iU0m6W+w5qb3vbbiXi5xOa7wbHpvlBJ6G2Tf9V7a38G6WnXQDpWJ
-         pWiIOOcmkjNtNArn94Q/JuEW83q3Bcn6xzQaqAV1gHJzBA3TETQvxjF/bW9FEvuodOKS
-         K9HSSB9CPHhfuLnflJeHCy6V+ifD6yYJAjQfS4l9amXmOCYpjQz6ckmpSAuj4ylVHwQv
-         mLUOqrjNFFa9iDkg70wmNYyPRgCFAm8lvhkHRmp6UzSr0ChRGBPHfJMeL6xmpKHzzcrB
-         2vAOk1C6NuACUPBKN+Ofoqv/5f9cKIAmrA5RZBPvYD4jcJ9KvSI96v5kUNvfTjWtl+cr
-         b9ow==
+        bh=93eCSnL7YqqbeGNknrrinPW0I2Te+1gugq/NSOoUJBI=;
+        b=p3tx83uyneiPanGtLTgkP+OyIoenVC8fUZg5kRbnZztHeQfT9098eqd6Ffy44wkLu9
+         bXDjIt9ix2VY36VFtRnRhvoQXLMZl//5iptsLwt99sGtGJK9TrSQkdqWppy1gnaSrfgM
+         dm02C41li8CRJwIPSIffowHVxiWVrclhFjNiW66p1xE47CJ5kZLjVgf5eG94biWxJqxp
+         LLyYIXZ1yo9Az6puafSyb8+kO6qe7Xgxx9sfkqHnnH6IQIKp78oW4WSgpGra+G/lSBv0
+         MrRH75l8azvrAvqIoc9PfyH7AiDw7R142Y2zJeFwQc2+hkS2vvWJ+N1YSxxqqDcMVPqq
+         P+dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746025333; x=1746630133;
+        d=1e100.net; s=20230601; t=1746026531; x=1746631331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TxLP2jvQJU6ArGA2+B3kENikuO4EAauVA/47UH8n29s=;
-        b=niAc0mqw91ptq9gtkXVQvZ4bWBHm82FujszGRSkwWYZCtPDDrQVpSfYKH1YVVrEEpg
-         RIz4TtWyWsB8wUCQA4851pVdiUKwCbjxBJ4QiY4xTIkE/V7usLm24VckeHf+ZnPXDTSW
-         3z2mRVWdulHooyl4g+j3wrvOaFmq7Yt5J24NSziYHG3tJXYHXiI+EfRauCiEQB9DTAIW
-         WOpWL1fd35OLNJi72odk6+iZWCGWkZajRDx04ah09GPWaJ+JpZc/8CKYOMVgSsWfvi/j
-         /wlF88A6VvEkledc0G/m4TC8OimQ+zr6bP0HeyVj+oVVQe0S00HUBxt848xoOHzHRHZF
-         hBKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWKkS/SOZOCaJU4RxR8k5DtrCo+wUcCLwcSTW4VOna/UZ8L6WlD9UqSQWS/J7snFoBNrkoLnHJJav3tHDruSzU@vger.kernel.org
-X-Gm-Message-State: AOJu0YycuT/DI3vWTBhQ0lZEr2Nqc4NH706JR47Sc76YD+kBVDF/EZ+D
-	cj5TW1LIFPcuZxvGQAhtAViLarUqecuxXEHKQQ4X8wSNLCmsb6vsRs73Xi51VgUF6PH59TNy4UF
-	FRkDwJmXH70EGyXoUuNlrpbwwOXqmFlHav2qM
-X-Gm-Gg: ASbGncuncviEuzUwrKyfSaCn0LL77E5+YKHsDpMi/PnwNMLnsoXLRlzyuF3z8833zCp
-	nyEFku8gKN509Rx+HnC1DIdH4E4VZ+m4nUeHdZZ3a3DJAqulvUMquUuJy8JfX+Z6zEdrpM9qN+c
-	0XH1uJ1H7yJKhB4zewtj5vC+2scMtZWZAE0n/LjSj362mlP/EFRZQ=
-X-Google-Smtp-Source: AGHT+IFkE/B5i/O5ffd0Y9+cfOmEolUnMeNWp7gfguWLFWzrthiz5YGUN8hzcMmp9FogiKa7pA1epCiBXvFTujwV/cM=
-X-Received: by 2002:a05:6e02:2164:b0:3d5:e202:6f05 with SMTP id
- e9e14a558f8ab-3d967612248mr4125325ab.18.1746025332744; Wed, 30 Apr 2025
- 08:02:12 -0700 (PDT)
+        bh=93eCSnL7YqqbeGNknrrinPW0I2Te+1gugq/NSOoUJBI=;
+        b=YfUFbtpu8FulfBUJXJGtdg3kfTIOiwwSnFxT4lBQ7tNP/9Il+9iHa28T4iPeRYUeDb
+         srxvmWiNAqdjpEXNK8Pis8+cKxpZwm6YOFk1CU9qFz3JcLYyUBwHODeziLRSodmmmkda
+         siWj37+UETosjScsV+ToTpeg4Y5mfUfPKMNb2PnF9U36xsQzw5RTVMo9hqEksDcHg2mk
+         7fRPcZ1ykeUCivUJogQ1U1Qk/Ix4tCwJ3N9WuiHrSKMf9sswcmxNMz7B3VSPZ7N/iQRg
+         NUgmm+7UG6COm1JP+3vlrdav//pqMVGSN0/ajzy4M0VMvM4impsBVN2dvDfoacSBIbp3
+         igLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfNUWGowK3/UBSyk4KKkj+NkQXCDQ1sCZfPzCb0SHrCLpCMoYqT+PNTaUgrqP7NVlsh0NJYc8b3m4kTqfm3vdk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5t+lNfrsLmGDcHlAnA6iY3qLVnDA8WqW1sIcBELblWipALr5y
+	wwr5PsSMtAdYhnQuy8xeviTmcufL7Z2xa84oFrT53j9IjnXCFajoNx3QejyTWl4zRa+rADXlkRo
+	UgmlUvMXc+2nmqLS1/iSu5Hc2/UNEM4dCdejm
+X-Gm-Gg: ASbGncvjpwlOAyeAVLrzYVGqrQFl50fWwGAWEbHn1MF7faybvY4MHpkHCL+98DQi8Ri
+	m6Mq1iKNSDmJzWJpm7QWS8X3EcxKY4NONXJIFlieka5U8OQBrTTrBXFV9p1syHZs38ZnVLEiPVJ
+	R4uyXvsP6qITmnoTKSO3la6kFjRxD9X8mG7gJNB78EcPSRFlYGrcw=
+X-Google-Smtp-Source: AGHT+IELFRtJscY2zbXLAgGomavWrz5X4sjvrTHzwB6yFqNo7j46RHB/wvbsUhzom5/2eGNsOqexGsnaS9kImIm15og=
+X-Received: by 2002:a05:6e02:330b:b0:3d6:d147:3126 with SMTP id
+ e9e14a558f8ab-3d967f2dc37mr3787365ab.5.1746026530498; Wed, 30 Apr 2025
+ 08:22:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430140611.599078-1-tmricht@linux.ibm.com>
-In-Reply-To: <20250430140611.599078-1-tmricht@linux.ibm.com>
+References: <20250403202439.57791-1-irogers@google.com>
+In-Reply-To: <20250403202439.57791-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 30 Apr 2025 08:02:00 -0700
-X-Gm-Features: ATxdqUEjvqkuTaPqQIOIutbCYOx106q2eTjEroJsyqDujQ6PC-OfenpiCGQkBb8
-Message-ID: <CAP-5=fXKp6sX2jndJjS7a9ycHW8F2iFxHLEQhJp4PiOAuanyGQ@mail.gmail.com>
-Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
-	hca@linux.ibm.com, ctshao@google.com
+Date: Wed, 30 Apr 2025 08:21:59 -0700
+X-Gm-Features: ATxdqUEX8IsJnW5m4DN3_VCxfO0u0ElVgGonJIShmJi7InKGbKOKF9LlxD3eVyM
+Message-ID: <CAP-5=fXkayZ7pj+EctOtSBiTcGuyi6SHm9c5RZ3HyyPYcot9zA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Add support for a DRM tool like PMU
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Junhao He <hejunhao3@huawei.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Brendan Gregg <brendan@intel.com>, 
+	gabriel.munoz@intel.com, matthew.olson@intel.com, 
+	brandon.kammerdiener@intel.com
+Cc: dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 7:06=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Thu, Apr 3, 2025 at 1:24=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> V4: Update to be applied onto linux-next
-> V3: Added check for missing samples as suggested by Chun-Tse.
-> V2: Changed bc invocation to return 0 on success and 1 on error.
->
-> There is a known issue that the leader sampling is inconsistent, since
-> throttle only affect leader, not the slave. The detail is in [1]. To
-> maintain test coverage, this patch sets a tolerance rate of 80% to
-> accommodate the throttled samples and prevent test failures due to
-> throttling.
->
-> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
->
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> DRM clients expose information through usage stats as documented in
+> Documentation/gpu/drm-usage-stats.rst (available online at
+> https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
+> PMU, similar to the hwmon PMU, that exposes DRM information.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I'm reminded by Brendan Gregg's new blog:
+https://www.brendangregg.com/blog/2025-05-01/doom-gpu-flame-graphs.html
+that this is still outstanding. The patches also reduce some directory
+scanning for the hwmon "PMU", they are in Google's tree:
+https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
+ls/perf/util/drm_pmu.c
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
->  1 file changed, 27 insertions(+), 6 deletions(-)
+> v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
+>     trap cleanup.
 >
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/re=
-cord.sh
-> index 05d91a663fda..587f62e34414 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -240,22 +240,43 @@ test_leader_sampling() {
->      err=3D1
->      return
->    fi
-> +  perf script -i "${perfdata}" | grep brstack > $script_output
-> +  # Check if the two instruction counts are equal in each record.
-> +  # However, the throttling code doesn't consider event grouping. During=
- throttling, only the
-> +  # leader is stopped, causing the slave's counts significantly higher. =
-To temporarily solve this,
-> +  # let's set the tolerance rate to 80%.
-> +  # TODO: Revert the code for tolerance once the throttling mechanism is=
- fixed.
->    index=3D0
-> -  perf script -i "${perfdata}" > "${script_output}"
-> +  valid_counts=3D0
-> +  invalid_counts=3D0
-> +  tolerance_rate=3D0.8
->    while IFS=3D read -r line
->    do
-> -    # Check if the two instruction counts are equal in each record
->      cycles=3D$(echo $line | awk '{for(i=3D1;i<=3DNF;i++) if($i=3D=3D"cyc=
-les:") print $(i-1)}')
->      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x !=3D ${prev_cycles}x ]
->      then
-> -      echo "Leader sampling [Failed inconsistent cycles count]"
-> -      err=3D1
-> -      return
-> +      invalid_counts=3D$(($invalid_counts+1))
-> +    else
-> +      valid_counts=3D$(($valid_counts+1))
->      fi
->      index=3D$(($index+1))
->      prev_cycles=3D$cycles
->    done < "${script_output}"
-> -  echo "Basic leader sampling test [Success]"
-> +  total_counts=3D$(bc <<< "$invalid_counts+$valid_counts")
-> +  if (( $(bc <<< "$total_counts <=3D 0") ))
-> +  then
-> +    echo "Leader sampling [No sample generated]"
-> +    err=3D1
-> +    return
-> +  fi
-> +  isok=3D$(bc <<< "scale=3D2; if (($invalid_counts/$total_counts) < (1-$=
-tolerance_rate)) { 0 } else { 1 };")
-> +  if [ $isok -eq 1 ]
-> +  then
-> +     echo "Leader sampling [Failed inconsistent cycles count]"
-> +     err=3D1
-> +  else
-> +    echo "Basic leader sampling test [Success]"
-> +  fi
->  }
+> v2: Add support to only scan hwmon and drm PMUs if the event or PMU
+> wildcard can match. Add a test as requested by Namhyung. Add file
+> comments.
 >
->  test_topdown_leader_sampling() {
+> v1:
+> https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.com/
+>
+> Ian Rogers (4):
+>   perf parse-events: Avoid scanning PMUs that can't contain events
+>   perf parse-events: Avoid scanning PMUs that can't match a wildcard
+>   perf drm_pmu: Add a tool like PMU to expose DRM information
+>   perf tests: Add a DRM PMU test
+>
+>  tools/perf/tests/shell/drm_pmu.sh |  78 ++++
+>  tools/perf/util/Build             |   1 +
+>  tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++++
+>  tools/perf/util/drm_pmu.h         |  39 ++
+>  tools/perf/util/evsel.c           |   9 +
+>  tools/perf/util/parse-events.c    |  30 +-
+>  tools/perf/util/pmu.c             |  15 +
+>  tools/perf/util/pmu.h             |   4 +-
+>  tools/perf/util/pmus.c            | 101 ++++-
+>  tools/perf/util/pmus.h            |   2 +
+>  10 files changed, 952 insertions(+), 16 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/drm_pmu.sh
+>  create mode 100644 tools/perf/util/drm_pmu.c
+>  create mode 100644 tools/perf/util/drm_pmu.h
+>
 > --
-> 2.45.2
+> 2.49.0.504.g3bcea36a83-goog
 >
