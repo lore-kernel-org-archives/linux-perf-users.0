@@ -1,691 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2078.outbound.protection.outlook.com [40.107.236.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5783A1DE2A7;
-	Wed, 30 Apr 2025 06:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745993217; cv=none; b=E7oKQytEOl5eBQ/iPiMECBMpmI7qUxn/3xB0+q+p/PR/RrTrWbS22MqnP85tMv7/IshmeYIBmFXEenyD9YzikGvz4xj1/9KgocKGrssFjyVqhqbrJ+ZcwV4JU0xCgGOyMXGmv+3zhwhOO+AepHd+aWdaWzfwphf/POO39wUpV0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745993217; c=relaxed/simple;
-	bh=Qa2orF1FmtuhmsUpgkpDzS8EP0w35oFtgPbKJyYW480=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s962vHgwxrULEJASURN870ra62sbDBzVobUcDTQi18kOuWN+JRe6ypAiWXiucu0Mhh/lt9gh4r4tLeAlE+EzI51WnnxxKVyFNJCDrq1QBt9bv5FZsB7mT+P/xQJnege19bBkC7Uw9RX/mSqcwFJ1tVZ/XLi7ooeFkruSieBuyvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTOnDWY+; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F87C1EEF9;
+	Wed, 30 Apr 2025 06:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745994834; cv=fail; b=W5Y5zuEFLK1B72O1ZO3S46EQzcAfCW7xJ4nwbE5yvBnfpqqhVJkxtYHA8Lllt2YkStQnqVp5A9xyrph2Mq+9HhSPOCdyvnLGyzPr8XoZomuay2534+X6llrv7NPgMenuLVQQknd3qzzE0zhscsphSN/7bIwGfT8i4qRqT89MnLY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745994834; c=relaxed/simple;
+	bh=8x0a9cO972VLGGIFJXihBDxihAdVgnN4EBM5yeKmHJ0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=MUm7VrvpfeBUgSifIoAEdtQ9ShUvnZZbB0C5rpxPqUH/T8CJeO4YhftgxCyVNjIWSddkW1PL6k2tp8UrOWbz+pQj+hOhfdZMW0CHIT4SUJCuaQK+gKlQi7UhaSWxOt8HPSs/RgN7iRrG7GOUsXuIHZ0Mq08+4vDHA5kJVMznu0w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VPil0d3h; arc=fail smtp.client-ip=40.107.236.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTOnDWY+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB60C4CEE9;
-	Wed, 30 Apr 2025 06:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745993216;
-	bh=Qa2orF1FmtuhmsUpgkpDzS8EP0w35oFtgPbKJyYW480=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lTOnDWY+TRZahlVRdKhWnGddm0YoGYioDcsvll5e9pvAtV2qJyB2maGswgY0AZVpr
-	 6/UijoJPOON2znAop86MNUDxzosf3ymWTpwfnRYoF121qqmmPjY+498NGJHSQxWqrK
-	 xKCDqKNabwqpNx8JRaz7RMqdw02cnG/1C7J8CanJEMJEHrOeKK3ZUWJzguhrL6Kx9Q
-	 HhV5WA6HZhPMrdyxzKzJG/PiFiMDTrJaog9r5f5XX491Zqir2nqxkiB8+sKuwWEk0Z
-	 om+vomclzdn+D+sedwGuWPYQNdBIJG7fjW9K6Lqakzg02sgGW6utJFhalihAgyg0yh
-	 dgcMl4xHVXgoA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH] perf trace: Split BPF skel code to util/trace_augment.c
-Date: Tue, 29 Apr 2025 23:06:16 -0700
-Message-ID: <20250430060616.18576-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VPil0d3h"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lNSrSdkyUrQMVrFWkbB52awpU7o2k9Szw2P8mANUCVB4yuf5K68g25fW7brpmYtUy8kgccV2ihQr1FHUDWV+zMcZjB9zP+p9o6nMJ/Drchn3VMjqADkBxOp29WjPzA9YhZ0sm9geg0tRwaCdhhd6a+QOjz/HTSVSrHJqcZSub8dtF/ne7qFihjSILvI+FVl5DOxz5BZ68L4QKTS5YA5XiUKZqu8KWPIMsCU1P85HXmH/kmZmqS+7EA7bG3TawyFjxaGTTEYCW1ROCU8vKfa0e/vut2FWBDQfMPZOR/otTZvybKYxlUMxy+F0ucmLGi6uoCrxiPONNfsdVaq3Mt9aPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UriQzMwN/gOp8aEeIslM49eNX70wkiES18tsMKu5n2Q=;
+ b=t8UAlJfRk0Q8uG7HJoSSa4u5xGn227kKKh/W/1Vvyg9ZRc+g3hnluf13h39MaKZjHIxlzeyN5BF0FKoUva1VGfZ/mSoYESemgnoQx5gqz39a5BAeH1qN+4awmKjhMApkfGBDdL+EFbfXnwEL73ScUs1sziQ2eTucmqY68W9cEhuM21tj7DhvzMnV4mwcOZfMcsqrpbe/fdqdBtoAAaIZHGbepVwMjrELnUBSmPbA/2CaMsxOAdfePDNSPg3kE+6a6mypdom5z4LQc3+ruEUbE0M42SzJtmnCshd6w2DxqgC6b2qCtjhaB/fthBLRb5qBRSxdGDP7jwgp586/mihlxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UriQzMwN/gOp8aEeIslM49eNX70wkiES18tsMKu5n2Q=;
+ b=VPil0d3h7ThSOHgzHaKHiQ2vwmUB+fNgQ94yfhbk9crn1UcXmeZm4AcSp38FNwWHIZh7QPUt1aBL/RRJhGg649yEn77SPRMupI+1T4ZpGGDxJiMuO2p2/wrU5Zm0cnu4apBPXIm14w7b43TVS9/lS7MH8JQ2F5r6sLtiGsP9iCs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by IA1PR12MB6139.namprd12.prod.outlook.com (2603:10b6:208:3e9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
+ 2025 06:33:50 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 06:33:50 +0000
+Message-ID: <eeae0c3b-7f9d-4dfe-bf98-2c4f79f96187@amd.com>
+Date: Wed, 30 Apr 2025 12:03:40 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] perf test amd ibs: Add sample period unit test
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Joe Mario <jmario@redhat.com>,
+ Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Santosh Shukla <santosh.shukla@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das
+ <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250429035938.1301-1-ravi.bangoria@amd.com>
+ <20250429035938.1301-5-ravi.bangoria@amd.com> <aBE8raTOCVZLfw7J@x1>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <aBE8raTOCVZLfw7J@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN4P287CA0116.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:2b0::8) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA1PR12MB6139:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8554e63c-aa05-4b84-1c88-08dd87b0f7e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RzVDRG5JT0ZPMGZIRVcrTTdvMHB2WWtSYjQya0lCTzBDYW51U3BvaUxKWGNm?=
+ =?utf-8?B?ZDFrRElrdUtmQnF0cklqQWtDYVp2M0I3dzZCTENGSktHb0IxVEE4Sldwd1hM?=
+ =?utf-8?B?YkhqMGp1T1VnWXVOcVNDNWRKOGdhcmJhMGNBZW9jcEwvTHJmMU84dmR0Vmti?=
+ =?utf-8?B?VUxxK2JZcEtJRHJMbHNWNGZyb3hmZ0FuV0c2WitOdzlnUC9KWnhJQzl5bUxM?=
+ =?utf-8?B?Qi9Wall2dnF1OHB6b01uNDNQMGRjUTFGT0pqZFp3RnFlRE9FOVgyOUVOSzV0?=
+ =?utf-8?B?c1puaGdxVk9GMXQvbmhZNHFSYk53Rzk4cE1URUdPT1lqMzdGWm1YSy8vT0dT?=
+ =?utf-8?B?S1UxL0ZuazhvaU1kTGQyTmxCNlhHeFRSdUhXblhhd003WEUyTzI5eHgrRnNQ?=
+ =?utf-8?B?N3pHVDBlUDBVc3crbGIreXRCMzlQNldrOFpBMkNnSFdxUisxOUc5c0oxc1lG?=
+ =?utf-8?B?SVNTSy95L1Z6YmdrYm0vSFQyNFJHcXdaajBqdzAzajZycm8xRjNSN1NRaEQ3?=
+ =?utf-8?B?YzF0cDQ4RTFLYnN3Q0ZSdFdlM05qOERJZVFIZmlzV2ZKS051N3hWa0tLMWFi?=
+ =?utf-8?B?R0VRSkdTUDNwVEx2MkQ1WFIrTjRuTThKYWx0VXRWU1BhcWN6L3FRQ2lNb0pV?=
+ =?utf-8?B?TUN4Y0FXTUVyUUlDYnoxNmtrMHllM3p3WnEvb1JvQVphQmVTNlpUcGRFWk5h?=
+ =?utf-8?B?N3h2cU1MVUdsQW5pSzFRcFI1RjgrK3BjUlZEL2NHZXlQM0ZBaUg4MEZ1UTJ5?=
+ =?utf-8?B?c3FKYnhXOHcyblp6a0RpTkJDR0ErQ3R3Y2NqN3FIVmpmWmwxeU8weTVhclpE?=
+ =?utf-8?B?cU0zeTZLK1hYQzJ2RFlGTVNTMGlEQnpoS0tkQWlmUGJPTklMMWs1WnpacFFI?=
+ =?utf-8?B?WkpGOGxHNXhBMkl2a205eklFWnM5UGZrcUE4c2ozazZDN1AwcXpuMDZJYzVh?=
+ =?utf-8?B?a2ROTUt6dXFWTXBJNUdmZVJOUm5GU014WWNJek1WWlZ5WndZQzkvMTlsNlEy?=
+ =?utf-8?B?Nm10NmpWQVNiY3UrRmRHL2tONmdoYkt3T2tIM2pyN0RyUnk3M1pRbkU0WlFL?=
+ =?utf-8?B?aFhYbmtmdmszR2c4bXRra0lVTjJWckV0OWxNem00dHlJNkkyL3ZUNVlGUWZ4?=
+ =?utf-8?B?bmg5VU1yUnRhbXB0QmE1L2laZ1hQMEFFZ1FmYXNRc1NKQzFKK0JtTGxodXp3?=
+ =?utf-8?B?NlRMZXNqS2ZNWGJQbjhWY2tpRmNsN25JRytBNTBzZEdqQitCNmxXZ0lXUjM5?=
+ =?utf-8?B?UEEvUW1SaFhZV1gxOFJoQUVkZ2RoQjF1VWVkd1g2SW8wWjU5LzJ4UVp2Ym5n?=
+ =?utf-8?B?SW5TTWJpY3Nvbm1BM3FNV256eTRIdVcwQkpidkdKazE5SXRQUGJBT2FHQmVr?=
+ =?utf-8?B?L2MrU3J2aExtaUVYN1RiZ0RQM3dPQUU4d2djaHptZ2prOUVtUGxObDFMYjlY?=
+ =?utf-8?B?Q1ZNcEZwc0phd1ltVnduMHBENWk3bWNTVzZPMklLVjg5RFZLMVQzZlcyNUZF?=
+ =?utf-8?B?bEQzVCtleFprWG90Vnh6dlRnS0FGL2V3bTVjVk1va2UycktFM3Y4K2dmbUlu?=
+ =?utf-8?B?aVlPeksveXdxSlFIK2sxUFZtNjIvUUFML2JaYnNySVVaa3lpdHFiYzRzQ0FR?=
+ =?utf-8?B?MEJTZ2ljQXZQbUd1d0dWY3lWVHB1cmo2bERiT2twWUhNU1NxR3JXRnlvUEZX?=
+ =?utf-8?B?VVYzcTlOdzhORlFHWktTbnhTa3Z1dXlRRzNmYzZWZEFGS1ZRYndmUDBIVndw?=
+ =?utf-8?B?RlFWV096SmlZcFNNZm9Kbkp1Z0lWOGU2R2c4d0gvejVnQ2VtY2dMUVdBak0r?=
+ =?utf-8?B?SmlHbXZLT1hUMjduVlRzMi9nUStuWUVtQ0NBbWlJY09xSDZ4ejM0S3JiUERG?=
+ =?utf-8?B?UENZdE5GVk56OUdRQXU0S25BcFlhai9wSFZOQldVVUxJVnlZWmNpeEsrdzhD?=
+ =?utf-8?Q?61DdOWnUcyo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cU9YdWluemVHc2VucFFOL29VQjY5K0lOT20rU3NrNGIrajl1UUh2QWJIZWRo?=
+ =?utf-8?B?aVpoVGU0Mm9udkhDMjU5d0lkdnNXU1F0dTZDY3QwMU5nMU5NbTdIY1liMXk2?=
+ =?utf-8?B?bXRnOWRQcnExYmd4K2VyZHJuQUZld3dWYjNoL2N4ZTY5dEpHZ3RuMUhsS3VD?=
+ =?utf-8?B?WURYNGZlNW01bmlaYkhkUTFmR1k4RTZLVWEva0cwSjhjbEVyNWNBdmZ6ZjYx?=
+ =?utf-8?B?Z3FPUFQwcmMvVExzNTZMN2U0aGJ0L3Y3VlZSUC9PdmgvTHFPNUhQYi9HR1gw?=
+ =?utf-8?B?L1VEd0pKbWZLc2d4Y3ZMdHlMNUVkcW4xdWZIQk1nbm1MTHpwT0l2Q2lIcU56?=
+ =?utf-8?B?Wkd5T0dGOFhnbEE1OXpyWk5sY3Nka01keEVaVWJ4MDEzbWhwWFBRMWczeWk3?=
+ =?utf-8?B?VnhLSDVIZExhdmwrNVJyd1N6aXJUYjRNR2hjZjVEVkNOYkczcVZDUlRweVpB?=
+ =?utf-8?B?QzVWNnhiVDkycXBLSnFmOStPOFBxMHpoU3JBN01SeW16OTBjRkJtV3NYQk9o?=
+ =?utf-8?B?bWRCcm8rZEptZWQ1TkRGQi9SaHFpSnhsTzJ3c29JR1duUmY2bkpTYVlOVFFP?=
+ =?utf-8?B?QXBtRjErSmV5Wmt6U25GWXNEakJBVmF2RUR5V0tpUk1USG9mVDEwaTF3bDhy?=
+ =?utf-8?B?VEJtbmxMM2YremFEL1V5elBxNExVSm03d0tMem55VDF0YXFKbzVJU3RYN1py?=
+ =?utf-8?B?VWlPZFoxS3BGSzdrSnJOSHdMdVIrZzJvMFhkUUg4Wm9mMUtQanRsbmdYOWla?=
+ =?utf-8?B?SjhhalBRUURxRi9MUHl0eTZ4K2txWWM0TnBuQVRGUmhleUpqSVVHRWFTdWd1?=
+ =?utf-8?B?UjMybmYzZmI5RTVoQUc2b0hxMllOV21ydFUyQU5KWlNxcFZwemNJYXo2L28w?=
+ =?utf-8?B?dzQ0N2t0YVErVHN5NUIzdkJDT3ZQWElualR5d21wUm54M0oxQjgvS2xFaGlL?=
+ =?utf-8?B?cHlCakJqZzVsOTlBclN3Q2gzYm81dEdsNjNOTjZObkJvOFVXWkwrREdwS1NL?=
+ =?utf-8?B?QU1BYnk3azFPdGRLWFFKNjJRSHl1dUxtMGYwY2dMS0l2MGxzTFRVeW5BMm53?=
+ =?utf-8?B?YnRrY0txM2JvSU14bkRmN0RGa3VsU0ZTb3gzRUU4Sm9FMjI2MStIc2UxbDB6?=
+ =?utf-8?B?VzZTbmpGRmZRZEpnVXRPMXJMV3kvcFNPMWFCWnc4Nm9QR2J2THV6bUhMK1lh?=
+ =?utf-8?B?UFBVSXI3TEh1Y2tsZ1hVK3c5MUJjcCtTcjNwZnVYaElnbUNLdHRVVEh4aXNZ?=
+ =?utf-8?B?ZE1naW9HRmh5dWVLSmFMNDdKV2I4OFh5aFpISjV0Q3l4SVNGczBsSnplZElH?=
+ =?utf-8?B?bW9EWUZNZmpPZlA3bExxSHI4T0xzdmtoZ0ZXOWtmK0RvWTJuVXMvYzNZd3Bv?=
+ =?utf-8?B?VGU1OTZhQXRUa1NVUVI2T2UxUllSbWtYa01xQ1F3ZExGR2VIbGkwWDRUNXRV?=
+ =?utf-8?B?U3d2Z25EOEMyS1Fxd1pRK2k2NDNVOW8rb1JjVmxOWXQvY0dPYlppSVNHZHZ2?=
+ =?utf-8?B?aTNiMWcyb0N1a0FtdGc1QW41MlVINEEvZGx3MVpGR2YxUzlSWXBZQlk5N1U1?=
+ =?utf-8?B?YTV0cUozMHVTTnNOWkhnN0Y0aHc3czVJR1F1czYvY05UM3kzMnZGSU11RjUr?=
+ =?utf-8?B?QWNVOEdDMXY1WmdtUDk5cVU2TjJndHVlTFQyVDNVUW1MY0RWWGZXMlBvUDBt?=
+ =?utf-8?B?cWRBb0c0cWQzclJsOVZNcEtNeTJkY3JCVTJLK0lwYXBWVURXTTgrK1Z6bEV0?=
+ =?utf-8?B?SjBESnAwcXUwbHpXVmNiQjNLTktUZmVpZHlzK0k0eEJkSWhEbldFUFMxSGc2?=
+ =?utf-8?B?N1VYbDJjaW1JaEk2NEhjalZ1T2c4UTZ2Snp2NDExZExIVVdJOFlJSkhNUjR5?=
+ =?utf-8?B?bWY2dk85RDhqMDBQWkMzL0duU3NFUUwyTUNncHJDd2pRLzRjaVZyZ0thbUZ3?=
+ =?utf-8?B?M2FWNk5LazhUenUwc2VQZUhqUk5hOE8vNy9UUEY1NmNjc0o5NEpWL2YxRjBP?=
+ =?utf-8?B?Y2VyRWZOTi85R1Y4TWhoRThHcDRIcFFoT2l6N0pTVzBTdTc0QUNPendrNHVp?=
+ =?utf-8?B?cWtWRTZHSE1Gd1o5ZVl5Zld1SWVacGVRTXlWckhocXZFWFBwWHNycHNRR21B?=
+ =?utf-8?Q?YN+i3nH3QwGxY7TAZ5ydW8+J9?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8554e63c-aa05-4b84-1c88-08dd87b0f7e7
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 06:33:50.3257
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ve2DS7LUOnG8Zv38hSsIkhpzDCwzF1cSX+FxEObweX09ofu5TmI+9MNegrj0wqUWQOF3neeD0qeiK3Ny6qkViw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6139
 
-And make builtin-trace.c less conditional.  Dummy functions will be
-called when BUILD_BPF_SKEL=0 is used.  This makes the builtin-trace.c
-slightly smaller and simpler by removing the skeleton and its helpers.
+On 30-Apr-25 2:25 AM, Arnaldo Carvalho de Melo wrote:
+> On Tue, Apr 29, 2025 at 03:59:38AM +0000, Ravi Bangoria wrote:
+>> IBS Fetch and IBS Op PMUs has various constraints on supported sample
+>> periods. Add perf unit tests to test those.
+>>
+>> Running it in parallel with other tests causes intermittent failures.
+>> Mark it exclusive to force it to run sequentially. Sample output on a
+>> Zen5 machine:
+> 
+> I've applied the series and will test it now, but found some problems
+> when building in some non-glibc systems, namely the use of PAGE_SIZE,
+> that is used in libc headers, even in glibc, its just that in glibc we
+> happen not to include that header where PAGE_SIZE gets redefined:
+> 
+> ⬢ [acme@toolbx perf-tools-next]$ grep PAGE_SIZE /usr/include/sys/*.h
+> /usr/include/sys/user.h:#define PAGE_SIZE		(1UL << PAGE_SHIFT)
+> /usr/include/sys/user.h:#define PAGE_MASK		(~(PAGE_SIZE-1))
+> /usr/include/sys/user.h:#define NBPG			PAGE_SIZE
+> ⬢ [acme@toolbx perf-tools-next]$
+> 
+> So I folded the following patch, see if it is acceptable and please ack.
 
-The conditional guard of trace__init_syscalls_bpf_prog_array_maps() is
-changed from the HAVE_BPF_SKEL to HAVE_LIBBPF_SUPPORT as it doesn't
-have a skeleton in the code directly.  And a dummy function is added so
-that it can be called unconditionally.  The function will succeed only
-if the both conditions are true.
+Thanks for the fix Arnaldo. It LGTM.
 
-Do not include trace_augment.h from the BPF code and move the definition
-of TRACE_AUG_MAX_BUF to the BPF directly.
-
-Cc: Howard Chu <howardchu95@gmail.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-trace.c                    | 187 +++++-------------
- tools/perf/util/Build                         |   1 +
- .../bpf_skel/augmented_raw_syscalls.bpf.c     |   3 +-
- tools/perf/util/trace_augment.c               | 143 ++++++++++++++
- tools/perf/util/trace_augment.h               |  62 +++++-
- 5 files changed, 255 insertions(+), 141 deletions(-)
- create mode 100644 tools/perf/util/trace_augment.c
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 809b4d5b0a8a4ddc..3f3f6fadef0a128f 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -20,9 +20,6 @@
- #include <bpf/bpf.h>
- #include <bpf/libbpf.h>
- #include <bpf/btf.h>
--#ifdef HAVE_BPF_SKEL
--#include "bpf_skel/augmented_raw_syscalls.skel.h"
--#endif
- #endif
- #include "util/bpf_map.h"
- #include "util/rlimit.h"
-@@ -155,9 +152,6 @@ struct trace {
- 				*bpf_output;
- 		}		events;
- 	} syscalls;
--#ifdef HAVE_BPF_SKEL
--	struct augmented_raw_syscalls_bpf *skel;
--#endif
- #ifdef HAVE_LIBBPF_SUPPORT
- 	struct btf		*btf;
- #endif
-@@ -3699,7 +3693,10 @@ static int trace__set_ev_qualifier_tp_filter(struct trace *trace)
- 	goto out;
- }
- 
--#ifdef HAVE_BPF_SKEL
-+#ifdef HAVE_LIBBPF_SUPPORT
-+
-+static struct bpf_program *unaugmented_prog;
-+
- static int syscall_arg_fmt__cache_btf_struct(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
- {
-        int id;
-@@ -3717,26 +3714,8 @@ static int syscall_arg_fmt__cache_btf_struct(struct syscall_arg_fmt *arg_fmt, st
-        return 0;
- }
- 
--static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace, const char *name)
--{
--	struct bpf_program *pos, *prog = NULL;
--	const char *sec_name;
--
--	if (trace->skel->obj == NULL)
--		return NULL;
--
--	bpf_object__for_each_program(pos, trace->skel->obj) {
--		sec_name = bpf_program__section_name(pos);
--		if (sec_name && !strcmp(sec_name, name)) {
--			prog = pos;
--			break;
--		}
--	}
--
--	return prog;
--}
--
--static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, struct syscall *sc,
-+static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace __maybe_unused,
-+							struct syscall *sc,
- 							const char *prog_name, const char *type)
- {
- 	struct bpf_program *prog;
-@@ -3744,19 +3723,19 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
- 	if (prog_name == NULL) {
- 		char default_prog_name[256];
- 		scnprintf(default_prog_name, sizeof(default_prog_name), "tp/syscalls/sys_%s_%s", type, sc->name);
--		prog = trace__find_bpf_program_by_title(trace, default_prog_name);
-+		prog = augmented_syscalls__find_by_title(default_prog_name);
- 		if (prog != NULL)
- 			goto out_found;
- 		if (sc->fmt && sc->fmt->alias) {
- 			scnprintf(default_prog_name, sizeof(default_prog_name), "tp/syscalls/sys_%s_%s", type, sc->fmt->alias);
--			prog = trace__find_bpf_program_by_title(trace, default_prog_name);
-+			prog = augmented_syscalls__find_by_title(default_prog_name);
- 			if (prog != NULL)
- 				goto out_found;
- 		}
- 		goto out_unaugmented;
- 	}
- 
--	prog = trace__find_bpf_program_by_title(trace, prog_name);
-+	prog = augmented_syscalls__find_by_title(prog_name);
- 
- 	if (prog != NULL) {
- out_found:
-@@ -3766,7 +3745,7 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
- 	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
- 		 prog_name, type, sc->name);
- out_unaugmented:
--	return trace->skel->progs.syscall_unaugmented;
-+	return unaugmented_prog;
- }
- 
- static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, int id)
-@@ -3783,13 +3762,13 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, in
- static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int e_machine, int id)
- {
- 	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
--	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
-+	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(unaugmented_prog);
- }
- 
- static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int e_machine, int id)
- {
- 	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
--	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
-+	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(unaugmented_prog);
- }
- 
- static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, int key, unsigned int *beauty_array)
-@@ -3899,7 +3878,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
- 		bool is_candidate = false;
- 
- 		if (pair == NULL || pair->id == sc->id ||
--		    pair->bpf_prog.sys_enter == trace->skel->progs.syscall_unaugmented)
-+		    pair->bpf_prog.sys_enter == unaugmented_prog)
- 			continue;
- 
- 		for (field = sc->args, candidate_field = pair->args;
-@@ -3965,7 +3944,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
- 		 */
- 		if (pair_prog == NULL) {
- 			pair_prog = trace__find_syscall_bpf_prog(trace, pair, pair->fmt ? pair->fmt->bpf_prog_name.sys_enter : NULL, "enter");
--			if (pair_prog == trace->skel->progs.syscall_unaugmented)
-+			if (pair_prog == unaugmented_prog)
- 				goto next_candidate;
- 		}
- 
-@@ -3981,12 +3960,17 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
- 
- static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_machine)
- {
--	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
--	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
--	int beauty_map_fd = bpf_map__fd(trace->skel->maps.beauty_map_enter);
-+	int map_enter_fd;
-+	int map_exit_fd;
-+	int beauty_map_fd;
- 	int err = 0;
- 	unsigned int beauty_array[6];
- 
-+	if (augmented_syscalls__get_map_fds(&map_enter_fd, &map_exit_fd, &beauty_map_fd) < 0)
-+		return -1;
-+
-+	unaugmented_prog = augmented_syscalls__unaugmented();
-+
- 	for (int i = 0, num_idx = syscalltbl__num_idx(e_machine); i < num_idx; ++i) {
- 		int prog_fd, key = syscalltbl__id_at_idx(e_machine, i);
- 
-@@ -4056,7 +4040,7 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
- 		 * For now we're just reusing the sys_enter prog, and if it
- 		 * already has an augmenter, we don't need to find one.
- 		 */
--		if (sc->bpf_prog.sys_enter != trace->skel->progs.syscall_unaugmented)
-+		if (sc->bpf_prog.sys_enter != unaugmented_prog)
- 			continue;
- 
- 		/*
-@@ -4081,7 +4065,13 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
- 
- 	return err;
- }
--#endif // HAVE_BPF_SKEL
-+#else // !HAVE_LIBBPF_SUPPORT
-+static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace __maybe_unused,
-+						    int e_machine __maybe_unused)
-+{
-+	return -1;
-+}
-+#endif // HAVE_LIBBPF_SUPPORT
- 
- static int trace__set_ev_qualifier_filter(struct trace *trace)
- {
-@@ -4090,24 +4080,6 @@ static int trace__set_ev_qualifier_filter(struct trace *trace)
- 	return 0;
- }
- 
--static int bpf_map__set_filter_pids(struct bpf_map *map __maybe_unused,
--				    size_t npids __maybe_unused, pid_t *pids __maybe_unused)
--{
--	int err = 0;
--#ifdef HAVE_LIBBPF_SUPPORT
--	bool value = true;
--	int map_fd = bpf_map__fd(map);
--	size_t i;
--
--	for (i = 0; i < npids; ++i) {
--		err = bpf_map_update_elem(map_fd, &pids[i], &value, BPF_ANY);
--		if (err)
--			break;
--	}
--#endif
--	return err;
--}
--
- static int trace__set_filter_loop_pids(struct trace *trace)
- {
- 	unsigned int nr = 1, err;
-@@ -4133,8 +4105,8 @@ static int trace__set_filter_loop_pids(struct trace *trace)
- 	}
- 
- 	err = evlist__append_tp_filter_pids(trace->evlist, nr, pids);
--	if (!err && trace->filter_pids.map)
--		err = bpf_map__set_filter_pids(trace->filter_pids.map, nr, pids);
-+	if (!err)
-+		err = augmented_syscalls__set_filter_pids(nr, pids);
- 
- 	return err;
- }
-@@ -4151,8 +4123,8 @@ static int trace__set_filter_pids(struct trace *trace)
- 	if (trace->filter_pids.nr > 0) {
- 		err = evlist__append_tp_filter_pids(trace->evlist, trace->filter_pids.nr,
- 						    trace->filter_pids.entries);
--		if (!err && trace->filter_pids.map) {
--			err = bpf_map__set_filter_pids(trace->filter_pids.map, trace->filter_pids.nr,
-+		if (!err) {
-+			err = augmented_syscalls__set_filter_pids(trace->filter_pids.nr,
- 						       trace->filter_pids.entries);
- 		}
- 	} else if (perf_thread_map__pid(trace->evlist->core.threads, 0) == -1) {
-@@ -4475,41 +4447,18 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	err = evlist__open(evlist);
- 	if (err < 0)
- 		goto out_error_open;
--#ifdef HAVE_BPF_SKEL
--	if (trace->syscalls.events.bpf_output) {
--		struct perf_cpu cpu;
- 
--		/*
--		 * Set up the __augmented_syscalls__ BPF map to hold for each
--		 * CPU the bpf-output event's file descriptor.
--		 */
--		perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
--			int mycpu = cpu.cpu;
--
--			bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
--					&mycpu, sizeof(mycpu),
--					xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
--						       mycpu, 0),
--					sizeof(__u32), BPF_ANY);
--		}
--	}
-+	augmented_syscalls__setup_bpf_output();
- 
--	if (trace->skel)
--		trace->filter_pids.map = trace->skel->maps.pids_filtered;
--#endif
- 	err = trace__set_filter_pids(trace);
- 	if (err < 0)
- 		goto out_error_mem;
- 
--#ifdef HAVE_BPF_SKEL
--	if (trace->skel && trace->skel->progs.sys_enter) {
--		/*
--		 * TODO: Initialize for all host binary machine types, not just
--		 * those matching the perf binary.
--		 */
--		trace__init_syscalls_bpf_prog_array_maps(trace, EM_HOST);
--	}
--#endif
-+	/*
-+	 * TODO: Initialize for all host binary machine types, not just
-+	 * those matching the perf binary.
-+	 */
-+	trace__init_syscalls_bpf_prog_array_maps(trace, EM_HOST);
- 
- 	if (trace->ev_qualifier_ids.nr > 0) {
- 		err = trace__set_ev_qualifier_filter(trace);
-@@ -5368,18 +5317,6 @@ static void trace__exit(struct trace *trace)
- #endif
- }
- 
--#ifdef HAVE_BPF_SKEL
--static int bpf__setup_bpf_output(struct evlist *evlist)
--{
--	int err = parse_event(evlist, "bpf-output/no-inherit=1,name=__augmented_syscalls__/");
--
--	if (err)
--		pr_debug("ERROR: failed to create the \"__augmented_syscalls__\" bpf-output event\n");
--
--	return err;
--}
--#endif
--
- int cmd_trace(int argc, const char **argv)
- {
- 	const char *trace_usage[] = {
-@@ -5575,7 +5512,6 @@ int cmd_trace(int argc, const char **argv)
- 				       "cgroup monitoring only available in system-wide mode");
- 	}
- 
--#ifdef HAVE_BPF_SKEL
- 	if (!trace.trace_syscalls)
- 		goto skip_augmentation;
- 
-@@ -5594,42 +5530,17 @@ int cmd_trace(int argc, const char **argv)
- 			goto skip_augmentation;
- 	}
- 
--	trace.skel = augmented_raw_syscalls_bpf__open();
--	if (!trace.skel) {
--		pr_debug("Failed to open augmented syscalls BPF skeleton");
--	} else {
--		/*
--		 * Disable attaching the BPF programs except for sys_enter and
--		 * sys_exit that tail call into this as necessary.
--		 */
--		struct bpf_program *prog;
-+	err = augmented_syscalls__prepare();
-+	if (err < 0)
-+		goto skip_augmentation;
- 
--		bpf_object__for_each_program(prog, trace.skel->obj) {
--			if (prog != trace.skel->progs.sys_enter && prog != trace.skel->progs.sys_exit)
--				bpf_program__set_autoattach(prog, /*autoattach=*/false);
--		}
-+	trace__add_syscall_newtp(&trace);
- 
--		err = augmented_raw_syscalls_bpf__load(trace.skel);
-+	err = augmented_syscalls__create_bpf_output(trace.evlist);
-+	if (err == 0)
-+		trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
- 
--		if (err < 0) {
--			libbpf_strerror(err, bf, sizeof(bf));
--			pr_debug("Failed to load augmented syscalls BPF skeleton: %s\n", bf);
--		} else {
--			augmented_raw_syscalls_bpf__attach(trace.skel);
--			trace__add_syscall_newtp(&trace);
--		}
--	}
--
--	err = bpf__setup_bpf_output(trace.evlist);
--	if (err) {
--		libbpf_strerror(err, bf, sizeof(bf));
--		pr_err("ERROR: Setup BPF output event failed: %s\n", bf);
--		goto out;
--	}
--	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
--	assert(evsel__name_is(trace.syscalls.events.bpf_output, "__augmented_syscalls__"));
- skip_augmentation:
--#endif
- 	err = -1;
- 
- 	if (trace.trace_pgfaults) {
-@@ -5812,8 +5723,6 @@ int cmd_trace(int argc, const char **argv)
- 		fclose(trace.output);
- out:
- 	trace__exit(&trace);
--#ifdef HAVE_BPF_SKEL
--	augmented_raw_syscalls_bpf__destroy(trace.skel);
--#endif
-+	augmented_syscalls__cleanup();
- 	return err;
- }
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 4f7f072fa222ba80..7113dd237e3387db 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -175,6 +175,7 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
- 
- ifeq ($(CONFIG_TRACE),y)
-   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
-+  perf-util-$(CONFIG_PERF_BPF_SKEL) += trace_augment.o
- endif
- 
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index e4352881e3faa602..cb86e261b4de0685 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -7,7 +7,6 @@
-  */
- 
- #include "vmlinux.h"
--#include "../trace_augment.h"
- 
- #include <bpf/bpf_helpers.h>
- #include <linux/limits.h>
-@@ -27,6 +26,8 @@
- 
- #define MAX_CPUS  4096
- 
-+#define TRACE_AUG_MAX_BUF 32 /* for buffer augmentation in perf trace */
-+
- /* bpf-output associated map */
- struct __augmented_syscalls__ {
- 	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-diff --git a/tools/perf/util/trace_augment.c b/tools/perf/util/trace_augment.c
-new file mode 100644
-index 0000000000000000..56ed17534caa4f3f
---- /dev/null
-+++ b/tools/perf/util/trace_augment.c
-@@ -0,0 +1,143 @@
-+#include <bpf/libbpf.h>
-+#include <internal/xyarray.h>
-+
-+#include "util/debug.h"
-+#include "util/evlist.h"
-+#include "util/trace_augment.h"
-+
-+#include "bpf_skel/augmented_raw_syscalls.skel.h"
-+
-+static struct augmented_raw_syscalls_bpf *skel;
-+static struct evsel *bpf_output;
-+
-+int augmented_syscalls__prepare(void)
-+{
-+	struct bpf_program *prog;
-+	char buf[128];
-+	int err;
-+
-+	skel = augmented_raw_syscalls_bpf__open();
-+	if (!skel) {
-+		pr_debug("Failed to open augmented syscalls BPF skeleton\n");
-+		return -errno;
-+	}
-+
-+	/*
-+	 * Disable attaching the BPF programs except for sys_enter and
-+	 * sys_exit that tail call into this as necessary.
-+	 */
-+	bpf_object__for_each_program(prog, skel->obj) {
-+		if (prog != skel->progs.sys_enter && prog != skel->progs.sys_exit)
-+			bpf_program__set_autoattach(prog, /*autoattach=*/false);
-+	}
-+
-+	err = augmented_raw_syscalls_bpf__load(skel);
-+	if (err < 0) {
-+		libbpf_strerror(err, buf, sizeof(buf));
-+		pr_debug("Failed to load augmented syscalls BPF skeleton: %s\n", buf);
-+		return err;
-+	}
-+
-+	augmented_raw_syscalls_bpf__attach(skel);
-+	return 0;
-+}
-+
-+int augmented_syscalls__create_bpf_output(struct evlist *evlist)
-+{
-+	int err = parse_event(evlist, "bpf-output/no-inherit=1,name=__augmented_syscalls__/");
-+
-+	if (err) {
-+		pr_err("ERROR: Setup BPF output event failed: %d\n", err);
-+		return err;
-+	}
-+
-+	bpf_output = evlist__last(evlist);
-+	assert(evsel__name_is(bpf_output, "__augmented_syscalls__"));
-+
-+	return 0;
-+}
-+
-+void augmented_syscalls__setup_bpf_output(void)
-+{
-+	struct perf_cpu cpu;
-+	int i;
-+
-+	if (bpf_output == NULL)
-+		return;
-+
-+	/*
-+	 * Set up the __augmented_syscalls__ BPF map to hold for each
-+	 * CPU the bpf-output event's file descriptor.
-+	 */
-+	perf_cpu_map__for_each_cpu(cpu, i, bpf_output->core.cpus) {
-+		int mycpu = cpu.cpu;
-+
-+		bpf_map__update_elem(skel->maps.__augmented_syscalls__,
-+				     &mycpu, sizeof(mycpu),
-+				     xyarray__entry(bpf_output->core.fd,
-+						    mycpu, 0),
-+				     sizeof(__u32), BPF_ANY);
-+	}
-+}
-+
-+int augmented_syscalls__set_filter_pids(unsigned int nr, pid_t *pids)
-+{
-+	bool value = true;
-+	int err = 0;
-+
-+	if (skel == NULL)
-+		return 0;
-+
-+	for (size_t i = 0; i < nr; ++i) {
-+		err = bpf_map__update_elem(skel->maps.pids_filtered, &pids[i],
-+					   sizeof(*pids), &value, sizeof(value),
-+					   BPF_ANY);
-+		if (err)
-+			break;
-+	}
-+	return err;
-+}
-+
-+int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd)
-+{
-+	if (skel == NULL)
-+		return -1;
-+
-+	*enter_fd = bpf_map__fd(skel->maps.syscalls_sys_enter);
-+	*exit_fd  = bpf_map__fd(skel->maps.syscalls_sys_exit);
-+	*beauty_fd = bpf_map__fd(skel->maps.beauty_map_enter);
-+
-+	if (*enter_fd < 0 || *exit_fd < 0 || *beauty_fd < 0) {
-+		pr_err("Error: failed to get syscall or beauty map fd\n");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+struct bpf_program *augmented_syscalls__unaugmented(void)
-+{
-+	return skel->progs.syscall_unaugmented;
-+}
-+
-+struct bpf_program *augmented_syscalls__find_by_title(const char *name)
-+{
-+	struct bpf_program *pos;
-+	const char *sec_name;
-+
-+	if (skel->obj == NULL)
-+		return NULL;
-+
-+	bpf_object__for_each_program(pos, skel->obj) {
-+		sec_name = bpf_program__section_name(pos);
-+		if (sec_name && !strcmp(sec_name, name))
-+			return pos;
-+	}
-+
-+	return NULL;
-+}
-+
-+void augmented_syscalls__cleanup(void)
-+{
-+	augmented_raw_syscalls_bpf__destroy(skel);
-+}
-diff --git a/tools/perf/util/trace_augment.h b/tools/perf/util/trace_augment.h
-index 57a3e50459377983..4f729bc6775304b4 100644
---- a/tools/perf/util/trace_augment.h
-+++ b/tools/perf/util/trace_augment.h
-@@ -1,6 +1,66 @@
- #ifndef TRACE_AUGMENT_H
- #define TRACE_AUGMENT_H
- 
--#define TRACE_AUG_MAX_BUF 32 /* for buffer augmentation in perf trace */
-+#include <linux/compiler.h>
-+
-+struct bpf_program;
-+struct evlist;
-+
-+#ifdef HAVE_BPF_SKEL
-+
-+int augmented_syscalls__prepare(void);
-+int augmented_syscalls__create_bpf_output(struct evlist *evlist);
-+void augmented_syscalls__setup_bpf_output(void);
-+int augmented_syscalls__set_filter_pids(unsigned int nr, pid_t *pids);
-+int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd);
-+struct bpf_program *augmented_syscalls__find_by_title(const char *name);
-+struct bpf_program *augmented_syscalls__unaugmented(void);
-+void augmented_syscalls__cleanup(void);
-+
-+#else /* !HAVE_BPF_SKEL */
-+
-+static inline int augmented_syscalls__prepare(void)
-+{
-+	return -1;
-+}
-+
-+static inline int augmented_syscalls__create_bpf_output(struct evlist *evlist __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+static inline void augmented_syscalls__setup_bpf_output(void)
-+{
-+}
-+
-+static inline int augmented_syscalls__set_filter_pids(unsigned int nr __maybe_unused,
-+						      pid_t *pids __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline int augmented_syscalls__get_map_fds(int *enter_fd __maybe_unused,
-+						  int *exit_fd __maybe_unused,
-+						  int *beauty_fd __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+static inline struct bpf_program *
-+augmented_syscalls__find_by_title(const char *name __maybe_unused)
-+{
-+	return NULL;
-+}
-+
-+static inline struct bpf_program *augmented_syscalls__unaugmented(void)
-+{
-+	return NULL;
-+}
-+
-+static inline void augmented_syscalls__cleanup(void)
-+{
-+}
-+
-+#endif /* HAVE_BPF_SKEL */
- 
- #endif
--- 
-2.49.0
-
+Ravi
