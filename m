@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455FD1E1E10;
-	Wed, 30 Apr 2025 20:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F07C283FF0;
+	Wed, 30 Apr 2025 20:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746043264; cv=none; b=YnnJFjLD72mVQEYgYsGLZ2jBA8mFiJVVe6k/hRIpYHWuU+dgJp0/q0h84lUxQjlGH7U6m3+IecdFTLcDRr02GDoBKQsgGlgTXAYI9AI7M+4h/T2mo+dGhsh4QvKLbL8O8BwbZhd0EG4VZ+tWHA4+j4cnc+ycnKfBAv/sbThKzro=
+	t=1746043264; cv=none; b=ZSIbn5xQ+hRg1Hq/aOHOLFuDQHT1kQvXDqtVRU/Y8pFLrIGGwdH7M3u71XIM+YSqxbdYbB3md0puVs34/UfsZyLDwwFz2Ez9ADv1XkUDRpHdExJ4UNpgG9NsNal+PZSlO6LBMzambTqwyXsC2zKKT/5CP8sqvqoDErvjytY/EWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746043264; c=relaxed/simple;
-	bh=Ivqqrdd6BFIWSz+UZ5uzPlJbABlGLJtKzmx89lxeAbI=;
+	bh=7I11mP3w18vX4htds3yiDDbcRgMIVKdNKXayRuKw4cg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uThhrR+gF7rTekN2vbPwY7Qw+9V1nYySdHTPT6k0aIGkUzSq4jYBNVQCFfUCl0qsEwqAy7f24prW1+NHPhG1QOkUkpIecpjSYL66IkAYfiDt38UGB4JH3VZ2UoIDXkNF5JS+uGPAiNiNdmfPn5gB/+7KF9o6Vo2hHsaRtaGnbgE=
+	 Content-Type; b=XL+UMgZrt0Cr8AOvLx/gg6yJOSXWd5qzzZsAtgwSU2MnazWI1hiyTeXdES+BPDhbbt+944BOevAsi6kKejO27X3D1t4CgZ2mZsETdkoR361ShZk5K4eArdpJRc08jpItqQm3mZVK4TwzUk0cNsmADv/4Qs3zof/iEbUYMGEDn2U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C604CC4CEF6;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF1BC4CEEA;
 	Wed, 30 Apr 2025 20:01:03 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uADcC-00000001dOW-0alf;
+	id 1uADcC-00000001dP3-1IEj;
 	Wed, 30 Apr 2025 16:01:08 -0400
-Message-ID: <20250430200107.992453476@goodmis.org>
+Message-ID: <20250430200108.162415077@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 30 Apr 2025 15:57:49 -0400
+Date: Wed, 30 Apr 2025 15:57:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v7 03/18] unwind_user/x86: Enable frame pointer unwinding on x86
+Subject: [PATCH v7 04/18] perf/x86: Rename and move get_segment_base() and make it global
 References: <20250430195746.827125963@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -65,47 +65,169 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
-on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
-unwind_user interfaces can be used.
+get_segment_base() will be used by the unwind_user code, so make it
+global and rename it so it doesn't conflict with a KVM function of the
+same name.
+
+As the function is no longer specific to perf, move it to ptrace.c as that
+seems to be a better location for a generic function like this.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/Kconfig                   |  1 +
- arch/x86/include/asm/unwind_user.h | 11 +++++++++++
- 2 files changed, 12 insertions(+)
- create mode 100644 arch/x86/include/asm/unwind_user.h
+ arch/x86/events/core.c        | 44 ++++-------------------------------
+ arch/x86/include/asm/ptrace.h |  2 ++
+ arch/x86/kernel/ptrace.c      | 38 ++++++++++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 39 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index aeac63b11fc2..b5a85d2be5ee 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -301,6 +301,7 @@ config X86
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
- 	select HAVE_UNSTABLE_SCHED_CLOCK
-+	select HAVE_UNWIND_USER_FP		if X86_64
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
- 	select VDSO_GETRANDOM			if X86_64
-diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
-new file mode 100644
-index 000000000000..8597857bf896
---- /dev/null
-+++ b/arch/x86/include/asm/unwind_user.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_UNWIND_USER_H
-+#define _ASM_X86_UNWIND_USER_H
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 85eb0eb1b284..524a59d9c2c4 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -42,6 +42,7 @@
+ #include <asm/ldt.h>
+ #include <asm/unwind.h>
+ #include <asm/uprobes.h>
++#include <asm/ptrace.h>
+ #include <asm/ibt.h>
+ 
+ #include "perf_event.h"
+@@ -2807,41 +2808,6 @@ valid_user_frame(const void __user *fp, unsigned long size)
+ 	return __access_ok(fp, size);
+ }
+ 
+-static unsigned long get_segment_base(unsigned int segment)
+-{
+-	struct desc_struct *desc;
+-	unsigned int idx = segment >> 3;
+-
+-	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
+-#ifdef CONFIG_MODIFY_LDT_SYSCALL
+-		struct ldt_struct *ldt;
+-
+-		/*
+-		 * If we're not in a valid context with a real (not just lazy)
+-		 * user mm, then don't even try.
+-		 */
+-		if (!nmi_uaccess_okay())
+-			return 0;
+-
+-		/* IRQs are off, so this synchronizes with smp_store_release */
+-		ldt = smp_load_acquire(&current->mm->context.ldt);
+-		if (!ldt || idx >= ldt->nr_entries)
+-			return 0;
+-
+-		desc = &ldt->entries[idx];
+-#else
+-		return 0;
+-#endif
+-	} else {
+-		if (idx >= GDT_ENTRIES)
+-			return 0;
+-
+-		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
+-	}
+-
+-	return get_desc_base(desc);
+-}
+-
+ #ifdef CONFIG_UPROBES
+ /*
+  * Heuristic-based check if uprobe is installed at the function entry.
+@@ -2898,8 +2864,8 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 	if (user_64bit_mode(regs))
+ 		return 0;
+ 
+-	cs_base = get_segment_base(regs->cs);
+-	ss_base = get_segment_base(regs->ss);
++	cs_base = segment_base_address(regs->cs);
++	ss_base = segment_base_address(regs->ss);
+ 
+ 	fp = compat_ptr(ss_base + regs->bp);
+ 	pagefault_disable();
+@@ -3018,11 +2984,11 @@ static unsigned long code_segment_base(struct pt_regs *regs)
+ 		return 0x10 * regs->cs;
+ 
+ 	if (user_mode(regs) && regs->cs != __USER_CS)
+-		return get_segment_base(regs->cs);
++		return segment_base_address(regs->cs);
+ #else
+ 	if (user_mode(regs) && !user_64bit_mode(regs) &&
+ 	    regs->cs != __USER32_CS)
+-		return get_segment_base(regs->cs);
++		return segment_base_address(regs->cs);
+ #endif
+ 	return 0;
+ }
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 50f75467f73d..59357ec98e52 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -314,6 +314,8 @@ static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
+ 	return !(regs->flags & X86_EFLAGS_IF);
+ }
+ 
++unsigned long segment_base_address(unsigned int segment);
 +
-+#define ARCH_INIT_USER_FP_FRAME							\
-+	.cfa_off	= (s32)sizeof(long) *  2,				\
-+	.ra_off		= (s32)sizeof(long) * -1,				\
-+	.fp_off		= (s32)sizeof(long) * -2,				\
-+	.use_fp		= true,
+ /* Query offset/name of register from its name/offset */
+ extern int regs_query_register_offset(const char *name);
+ extern const char *regs_query_register_name(unsigned int offset);
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 095f04bdabdc..81353a09701b 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -41,6 +41,7 @@
+ #include <asm/syscall.h>
+ #include <asm/fsgsbase.h>
+ #include <asm/io_bitmap.h>
++#include <asm/mmu_context.h>
+ 
+ #include "tls.h"
+ 
+@@ -339,6 +340,43 @@ static int set_segment_reg(struct task_struct *task,
+ 
+ #endif	/* CONFIG_X86_32 */
+ 
++unsigned long segment_base_address(unsigned int segment)
++{
++	struct desc_struct *desc;
++	unsigned int idx = segment >> 3;
 +
-+#endif /* _ASM_X86_UNWIND_USER_H */
++	lockdep_assert_irqs_disabled();
++
++	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
++#ifdef CONFIG_MODIFY_LDT_SYSCALL
++		struct ldt_struct *ldt;
++
++		/*
++		 * If we're not in a valid context with a real (not just lazy)
++		 * user mm, then don't even try.
++		 */
++		if (!nmi_uaccess_okay())
++			return 0;
++
++		/* IRQs are off, so this synchronizes with smp_store_release */
++		ldt = smp_load_acquire(&current->mm->context.ldt);
++		if (!ldt || idx >= ldt->nr_entries)
++			return 0;
++
++		desc = &ldt->entries[idx];
++#else
++		return 0;
++#endif
++	} else {
++		if (idx >= GDT_ENTRIES)
++			return 0;
++
++		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
++	}
++
++	return get_desc_base(desc);
++}
++
+ static unsigned long get_flags(struct task_struct *task)
+ {
+ 	unsigned long retval = task_pt_regs(task)->flags;
 -- 
 2.47.2
 
