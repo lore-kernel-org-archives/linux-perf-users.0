@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45D0280316
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F49027E7C6
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035492; cv=none; b=nMhUeJZxn/N603/jalgtGG1MB/E4wS863sRrv905jj8PBogTxW65DoCzX99GYBMi1byQYOjl3TtMxTLGaeSn6D4Mpp2vZHlTPllQ890vX4NycQWLXMWEaS1mywmMFbIX0jOr4ASwhxTQ2cXobz3ivxrN7/jQOE1vAM96PzdniHM=
+	t=1746035492; cv=none; b=Ed97EDXYtbR+18N8hdW2vb7MDU8u0xrsl1OPQaZDzBXFVQli1BWnaiBJW6ij0TvxVqCk07/cr1Q3DMqWoRz6Kz0cdz+MCBTrz+qJQaisAnIOXzl29bZr7eh9meWRkYo7GXfRNWC18lq/uFDH26YsT85SNkGOSCXMExIXGBjk2Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746035492; c=relaxed/simple;
-	bh=ylzDCz7ABNgz73jC33kqWkLxtIyjwa4WXPEBCQ9IPSs=;
+	bh=PSiOgG7bWFRhRJGZr4xrC9dwLgvQlvIMtzHTDPuKezI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mIyfRzEVfa2iE71wS5mR+jjqPaKfsHsAGwxeftyEfkItMmk57hXugSyfo2GGA85KNsrn47VwXzST7LoQAwtxW8/rS55mRfEALwEHTfFuKr1Y5gBFgJHJm3JNKn8Y8IMm1njLrE2+QlHTUThRjR0+pOBL70lCrD0KUOk5Cj3VjDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dujynV5A; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=lJZ1vDdRvOG87j6gA8iovgnpayJ1uZ0eYe7BG91D6TyqQeQ3kOmPUUXk2wiWHgbRciO3AISzfzHjsKqkFEaF3KkubXeFJ6cHSkrPG/YcQV2LNvhrTTvrih4ZaU1a5oeYSxNvZsbL72FXejzUIlMleRgq8qbjJlWhJ/XKb6mgH/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=akEgTEzq; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dujynV5A"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2242ce15cc3so1073405ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="akEgTEzq"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a2b6c8ff2so146200a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035490; x=1746640290; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035486; x=1746640286; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PKvodGdphwgw3/59PaEVxt3ZIF+tbA/HSL0dM2VGnxA=;
-        b=dujynV5AQHb5AxFUg1gfHtD710bpQML4Q1ZaHio7eLNTx8hYpaiby0q9qdSxOdxml/
-         6PTX24ySObR2nqyOv5YOoPuP3p2wQFfcrEAnNFqiCoBmT87VioBodzLKfeS6lme7/9Hi
-         TUoxh4Urr+HxBmi10Ede+naepU5Drks14Bucl/OOvt0LbYuFLp4vd3T0SRsrE8fP/Fxk
-         xyuRHPeLDLzs91ykDaum6GOINdraqGbcRiiFCNNhsJWTp1Lkm7BSkFp5TfbLPX5+blAa
-         k2ifWeOUFyaJLStsG5HnnAzy/9RZ+AqRT3ya1GunVkwyP+JkWZwlLCfjLjbTNF7HursY
-         Jjgw==
+        bh=ffqnGj+pBhQ6TrUOmeMPrDQngLLfEb3NGF58IKymfSU=;
+        b=akEgTEzq9okNBFygSKv2UXkT6bA8FCS13nHc1c17l9So7P6atcoFNIodatPcndzfzx
+         vopUw+ZBPSSqffVuahaLiriLd0xL+wURIhNylHgdveUdnLNKquX7C1ALNSyuABo9AqA8
+         Cq13rylt6cb7neGiEEy8OHQg4vf3GNoN8UKHl/Ik+OGBHa1DDn9+8WGxj0X6/ng+xuJ2
+         hNOZBpU/alqB6Ee/33V2eBsKKEDpyCbJ8UiW9+41seDzbAqgfkHxyvxu8hmKSkQx0l7L
+         I073bcYp2ognHHV+PpkQplsc/eZkCSVMPwGYNF7gAiDfdpve0EbIWTP2h3VvulQBtIJf
+         7WQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035490; x=1746640290;
+        d=1e100.net; s=20230601; t=1746035486; x=1746640286;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PKvodGdphwgw3/59PaEVxt3ZIF+tbA/HSL0dM2VGnxA=;
-        b=TM0Wo/wOCnAJbRaY+O7T5i9//3kqgb5mAIICfHoDbEMMgclcM0Il9BLXcTS+XG+NJ2
-         zAaH8YInVvXOf9dONh2NunYmjoAO1bc+8UYSitxHd7ONIcy2/zJarkQ1Dw4xhVzFmDOH
-         1set0wPnYc/0XCFL+i5euxcG5AE6ckFTs4989Abrpqn5LHSZlXmXNs5nL0x/i5RXOym+
-         55W3CM3KhumD0TJr00Tb5BVDOGK2B/F81C0NHlZAgVpbnxQI8DyvgNYzmmK9m9MgDpQC
-         dbuUvkZkbzV8G5wJfFfrlp+Jhu3Xn7P+bXklhNCQMx2GtWuGl7MCMsszx/tnSU16n47r
-         Ex+g==
-X-Forwarded-Encrypted: i=1; AJvYcCW/bCzOLbkbsXydmmQayvExq9NksDBwWUqXYrCS5qPA7ljW19treotz9WtBOqZlPVTGqoz5fMmAbrflfbv6eIvc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM+RVUde76wtoKLGfco7VmYFeomRd0gNz7CzH7dCn2XAsd8NM/
-	pJynYvxXETIga/Z6tZtjpfND6LIFWNDecYVENBMGxBbP563FvVeqCqiWM8NOqh/znaaE7ivh6K6
-	ir1qtAA==
-X-Google-Smtp-Source: AGHT+IG3HFqCqUHV2O/fvwRA05Ia4nOSW+cf2ULUFRm7S3WdX6PSZJ9m9PEqLWVOShsiSpMoyTeVc4TfDMSC
-X-Received: from pgbee3.prod.google.com ([2002:a05:6a02:4583:b0:b16:4869:6621])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f685:b0:223:f9a4:3f9c
- with SMTP id d9443c01a7336-22df34a60dbmr58244925ad.9.1746035489482; Wed, 30
- Apr 2025 10:51:29 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:04 -0700
+        bh=ffqnGj+pBhQ6TrUOmeMPrDQngLLfEb3NGF58IKymfSU=;
+        b=rNQIZ0RC2f1KV+2F/qVOt8tuBkcnGhkypeFWU8MquLeZQU6HMqf5GjJcKuj271PP5N
+         yQh9niX9tUqQ+flXYnyR/vkJPT3QmWJ6WKi2yAvhGZoGQX+LrUNTcC03/+A+AfrU485R
+         9FWYZM5KCvfFq+XEEa7RGNKilinll4J2lweRhQpBkCFE0eQJsi2Wy3vglPaz5wE9GY1M
+         w2CGWw4jFjqOfrn3PIdCV/4+K//Jdk6t0v2bonSUKkHpRzOVa4ab/Te7u9FXkuEzpLo3
+         CYZZC/9yfS3JTKT2O8nDhzcOQSqzWYTcS/IhGTLsIpgRhAxpR8DcCkvKpFO9nTh65QYR
+         jqvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnJWPOn8Blut1+2srSgr9DjVR4RcYMFBH3EjG5IrTHOdNgGXU3aQ/+oLOj/WmkMFedG1LYZCNdrgsJN2p9gn9J@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2gTKqXKNLkjrOvtpQn70JD+sOnXxhogRWHs5fVnKQz3MFDNLL
+	LlfZA/baw97ZKskm+TttqRKsqLH8kASCAlS4AxN9QZsKaEyrHl6t3DwokietlngnYAu6TR8RFyO
+	pMdnjNQ==
+X-Google-Smtp-Source: AGHT+IFoFY/yppOPHW+0sW6SMr0S9TXM/T2GiOtYKIfeG6NYAA5w/aaMGtekGErA65y8/28Sygemm2DdYeVj
+X-Received: from pjbrr12.prod.google.com ([2002:a17:90b:2b4c:b0:2ff:4be0:c675])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da8f:b0:2ff:6bd0:ff26
+ with SMTP id 98e67ed59e1d1-30a3336fea3mr4760497a91.34.1746035485584; Wed, 30
+ Apr 2025 10:51:25 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:02 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-17-irogers@google.com>
-Subject: [PATCH v2 16/47] perf annotate powerpc: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-15-irogers@google.com>
+Subject: [PATCH v2 14/47] perf jvmti: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,22 +116,139 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/powerpc/annotate/instructions.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/jvmti/jvmti_agent.c |  6 +++---
+ tools/perf/util/genelf.c       |  2 +-
+ tools/perf/util/jitdump.c      | 24 +++++++++++++-----------
+ 3 files changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index ca567cfdcbdb..598dc10a1751 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -18,7 +18,7 @@ static struct ins_ops *powerpc__associate_instruction_ops(struct arch *arch, con
+diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+index 526dcaf9f079..2e2be9d8a118 100644
+--- a/tools/perf/jvmti/jvmti_agent.c
++++ b/tools/perf/jvmti/jvmti_agent.c
+@@ -377,7 +377,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	sym_len = strlen(sym) + 1;
  
- 	ops = &jump_ops;
+ 	rec.p.id           = JIT_CODE_LOAD;
+-	rec.p.total_size   = sizeof(rec) + sym_len;
++	rec.p.total_size   = (uint32_t)(sizeof(rec) + sym_len);
+ 	rec.p.timestamp    = perf_get_timestamp();
  
--	i = strlen(name) - 1;
-+	i = (int)strlen(name) - 1;
- 	if (i < 0)
+ 	rec.code_size  = size;
+@@ -400,7 +400,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	 */
+ 	rec.code_index = code_generation++;
+ 
+-	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
++	ret = (int)fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+ 	fwrite_unlocked(sym, sym_len, 1, fp);
+ 
+ 	if (code)
+@@ -454,7 +454,7 @@ jvmti_write_debug_info(void *agent, uint64_t code,
+ 	 */
+ 	size += nr_lines * sizeof(struct debug_entry);
+ 	size += flen;
+-	rec.p.total_size = size;
++	rec.p.total_size = (uint32_t)size;
+ 
+ 	/*
+ 	 * If JVM is multi-threaded, multiple concurrent calls to agent
+diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+index cdce7f173d00..6da8f3c53f7d 100644
+--- a/tools/perf/util/genelf.c
++++ b/tools/perf/util/genelf.c
+@@ -252,7 +252,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+ 	Elf_Shdr *shdr;
+ 	uint64_t eh_frame_base_offset;
+ 	char *strsym = NULL;
+-	int symlen;
++	size_t symlen;
+ 	int retval = -1;
+ 
+ 	if (elf_version(EV_CURRENT) == EV_NONE) {
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 624964f01b5f..874ced77d0a4 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -160,7 +160,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ 	 */
+ 	flockfile(jd->in);
+ 
+-	ret = fread(buf, sizeof(header), 1, jd->in);
++	ret = (int)fread(buf, sizeof(header), 1, jd->in);
+ 	if (ret != 1)
+ 		goto error;
+ 
+@@ -226,7 +226,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ 		bsz = bs;
+ 		buf = n;
+ 		/* read extra we do not know about */
+-		ret = fread(buf, bs - bsz, 1, jd->in);
++		ret = (int)fread(buf, bs - bsz, 1, jd->in);
+ 		if (ret != 1)
+ 			goto error;
+ 	}
+@@ -274,7 +274,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
+ 	/*
+ 	 * file is still locked at this point
+ 	 */
+-	ret = fread(prefix, sizeof(*prefix), 1, jd->in);
++	ret = (int)fread(prefix, sizeof(*prefix), 1, jd->in);
+ 	if (ret  != 1)
  		return NULL;
  
+@@ -304,7 +304,7 @@ jit_get_next_entry(struct jit_buf_desc *jd)
+ 
+ 	addr = ((void *)jd->buf) + sizeof(*prefix);
+ 
+-	ret = fread(addr, bs - sizeof(*prefix), 1, jd->in);
++	ret = (int)fread(addr, bs - sizeof(*prefix), 1, jd->in);
+ 	if (ret != 1)
+ 		return NULL;
+ 
+@@ -398,7 +398,7 @@ static uint64_t convert_timestamp(struct jit_buf_desc *jd, uint64_t timestamp)
+ 		return timestamp;
+ 
+ 	tc.time_shift = time_conv->time_shift;
+-	tc.time_mult  = time_conv->time_mult;
++	tc.time_mult  = (unsigned int)time_conv->time_mult;
+ 	tc.time_zero  = time_conv->time_zero;
+ 
+ 	/*
+@@ -443,8 +443,8 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	nspid = jr->load.pid;
+ 	pid   = jr_entry_pid(jd, jr);
+ 	tid   = jr_entry_tid(jd, jr);
+-	csize = jr->load.code_size;
+-	usize = jd->unwinding_mapped_size;
++	csize = (int)jr->load.code_size;
++	usize = (int)jd->unwinding_mapped_size;
+ 	addr  = jr->load.code_addr;
+ 	sym   = (void *)((unsigned long)jr + sizeof(jr->load));
+ 	code  = (unsigned long)jr + jr->load.p.total_size - csize;
+@@ -465,8 +465,10 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+ 
+ 	size = PERF_ALIGN(size, sizeof(u64));
+ 	uaddr = (uintptr_t)code;
+-	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, jd->debug_data, jd->nr_debug_entries,
+-			   jd->unwinding_data, jd->eh_frame_hdr_size, jd->unwinding_size);
++	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, jd->debug_data,
++			   (int)jd->nr_debug_entries, jd->unwinding_data,
++			   (uint32_t)jd->eh_frame_hdr_size,
++			   (uint32_t)jd->unwinding_size);
+ 
+ 	if (jd->debug_data && jd->nr_debug_entries) {
+ 		zfree(&jd->debug_data);
+@@ -559,8 +561,8 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
+ 
+ 	nspid = jr->load.pid;
+ 	pid   = jr_entry_pid(jd, jr);
+-	tid   = jr_entry_tid(jd, jr);
+-	usize = jd->unwinding_mapped_size;
++	tid   = (int)jr_entry_tid(jd, jr);
++	usize = (int)jd->unwinding_mapped_size;
+ 	idr_size = jd->machine->id_hdr_size;
+ 
+ 	/*
 -- 
 2.49.0.906.g1f30a19c02-goog
 
