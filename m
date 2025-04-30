@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B94A27817E
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F82A2798F0
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035470; cv=none; b=eyYS1Jk5HbPL3wJJEYgvGB4OdmoBWa6omCS1jDv9dU9YxdfUMXVckuq91hkGIVtG/V0L3Ben777KBRxqX/TKheB/L6vM0W8WxvA1m1lPERoXoYkI4KkuhzIIiNDL9KIPGYlLyyucRqP/GmoGyqpppgwYmoZo5AUCrT7tQj0Lm6s=
+	t=1746035473; cv=none; b=cfY8Jhfp3Ve22OUqCd06hIPiByudL501Pl2gHvyEaultKTAey9LBgi1p9OmrBDaV4nsqj97d+DjZhaE9Yc7j5/S3lQfdNcyehBhQi0t1d6eZZ/MDDddzHlBzo2JQd+9+wmxdfg0qSpxs5Rs48PU4HFtgHtsTB4M8g3Xk5KMgTnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035470; c=relaxed/simple;
-	bh=7tLf8ZlpDGA58/SmNmZNJE4X51OXHkvdbXoRMSCnQ20=;
+	s=arc-20240116; t=1746035473; c=relaxed/simple;
+	bh=3zq+IDnOKZT0hU1YInek2TZNl0fl0bkC+6BhqcfPYRE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ATis4UnBm2Q3LtJWKhLUgG8heZGnY+onD6f6YcwMbbOPG1Hwqpvep23rLCwlJ1FdGWmYctaMj3C/QPH5AknKnaSvgykk4YstbIYXaSn5LN09iNViXn2BlcrI5rX7vPt1cpaov7j0JXjQnfJVxwOOrsKNFyzkab+QrpzTLC7OKxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpWZ1ADK; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=mA8mF/LriSShA3faxcyt2nFQk1CzqYFcY9fHnJfQ0mV6oy5OECzZyuX2eCPie+nCzZjbSF+lVTAsES/bk7Ljy3D6Oa3B7o4/bNUY2KheBHuc3EaFgbwpd4dlanLWjzsMnxn4rswiKp3/c5yn9oz3GFRM5WhLccNYvoVIzF7+yJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XHsQ3Acp; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpWZ1ADK"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3011bee1751so129494a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XHsQ3Acp"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22c31b55ac6so1445475ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035468; x=1746640268; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035470; x=1746640270; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=f3P3h5pAB5HUVcxM6Pr4S0kZF2+GkLiV5d80YFIKGnY=;
-        b=KpWZ1ADKSCxgNkbaK8HkZcn7YsWQnt4SqwmJfignWWSWcX/TPRIYGUmEuDabpkcws4
-         F3EyGk2u/iV9dyDnE3SceiBUU74zs2jt4WnGKFvb7JQ5ZwbshOfTnbXz8dkMHctnB8t9
-         iWNWNnhsXa3X/QiDhz4C4u3spdEXxNH3IraRC3XU42P782LPLp2q0QP7jVPirUqNy1vf
-         sYmYp+oMU8cfeWXxdX4LeYAojNjXyf5qVbnSOYAiyES+H8+dVfZoxiEJsIF1EaHskDsG
-         767QirhmjWOmbV87k6iQ8EAVzWDCFJsRiBilXTj8qvsZ6vf80Ul8runlK+Z7qM9drZ+S
-         xccg==
+        bh=MH5R01x49/QwgHTF4kBLHXHZXH1w/fu12hpgiU8X9b4=;
+        b=XHsQ3AcpiTb0s3MxaR2bKD2LVx9W2lViT3eRN/1tN58uPi8f0UGmFGgGj+vBwmiCwe
+         L0O7JeNIc5IHSK6Bmhf1BpD9pJn42zuDQ2MXm3cDhUjY6bTK/x6Fxk1ISkwsa1kyl9/A
+         QYdwSsdUqdj2T+AIvufGFqt/uoYqkmn3EhdMrFFcvdN+oNHiZ77NId+qROncbSajXhUs
+         73gpPjkHHSrn7Jf4IsrPIjhcekkKU5643Cj9rOh/lCqs6J+9sOkNZtBbZPywQk4eRwDg
+         jUi+Dn09fIK8qxzvHKQhMa0xhHhCcoR1+WQmLwtrIWc2CW1BXCdiFykZ3odq4ThiBhmc
+         OMqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035468; x=1746640268;
+        d=1e100.net; s=20230601; t=1746035470; x=1746640270;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f3P3h5pAB5HUVcxM6Pr4S0kZF2+GkLiV5d80YFIKGnY=;
-        b=ihx+mZBO/zT99iGfrMYKii7jIWBAxd9VYjAWsOQljRVcLj/1zJEzdwB4Q0YdNepOnh
-         FUnlPSAg58lcaERL2RQJmbNwBPwO5TJ6PehuEj32r2b7rZ8s97W2IZ+JMmG4pv3AIHK2
-         pnt4mffClxhW8QLpnxw6T6TS24jXWqYrqw+RoL1n5VG2ERg5L8crJ0RfLhnlO2cRuCtP
-         cfPIw08nyxisqcQ3u2VTdXdsLwdk6eQf7ShcFagoMIDYLMWxsBd20uToewG3/ZGeIPm3
-         D/LV3vpijKOVLhI/kvPpOHm8vgncCifF4c49kCW+Is5vAHc5maJHwAppERbzEduwkrsP
-         HEJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlzdsUjLAuL1WwOCydSLguc47FWXB65jwNfz1dppnrpNk4aUgwbw6hwo6iW946+d1HqFggwYlFk/jFIN8lnKoX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHyoPP+0ux90zkfbBfIYuW0Qt3lWIinTSGumAcZa4WU2vvWdmu
-	nmDh0Jvw56Q2v+qMCNOOMZqcNn6Rdc/Fs1Q/Gz2K8m1xc5OF1IvtCEpwxSxdrjt8ZTpK+CC13VB
-	RCCv/4A==
-X-Google-Smtp-Source: AGHT+IEo4BpVSTP736KrWVvKElXNGdJEvRja+RffiZep9xfmBDE9bpWvo/gjF9Sok1i5GqMVUn1zEL5vbAu7
-X-Received: from pjbee6.prod.google.com ([2002:a17:90a:fc46:b0:2ff:852c:ceb8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c888:b0:301:1d9f:4ba2
- with SMTP id 98e67ed59e1d1-30a34450bdcmr5395853a91.28.1746035468058; Wed, 30
- Apr 2025 10:51:08 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:49:53 -0700
+        bh=MH5R01x49/QwgHTF4kBLHXHZXH1w/fu12hpgiU8X9b4=;
+        b=DQVV8ItRSTBmJhBGDcVCqDnNYgVTwmBfT3HgGr90Ut+Yqc6Td5zD2Q3GN9nwr/LwN2
+         nqjanMOP6zRLMAoXCJKu+4yav5F5wzjfICS4j4v6N/Z51t4W1ZI3oTx+meywwNJx9llA
+         WUz34KYwvzND6FVPxx3p+HZw197BBXkhM5j5tokHeDL75kIg5/AJQVjMMFWfuh8zgen6
+         Jkx/ObaRWkn1c9W+jIEkENEshwhc55WafWTRvkrZ2HOeAq412rHSIf2nooNi1QhPu4yX
+         TrTxaQ2Jn/bOnLAeSdLC2HPOSMHMTcvAX2710/I/XNuEcC9PsVRwXglIOVwzyKyW/52P
+         2d/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/SAQQAZiSATf4qgQ7+xtMaSu5tcwnaSZUaZI55o+eEssXFabDbdFzLnJj5VwNg4Fsk9i83aKcfUHAxH217xn6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1lzNcDVPfkPTSuWwiKqG1LM1U6qiZ6xdxn6XlhYrWJOnh2lUZ
+	2NYvbvPwdbcTv3x0XZfv69wB7nEXV1vhfCJwatS8uPb4tICNVZuropWoUlk62yfIhLS5wI0bmqH
+	VfYzV3g==
+X-Google-Smtp-Source: AGHT+IEn60x0bx43W5CWnBKmy0OZf6RSYbimZ3i3xC3fCl6DnVc73ipLr6BDAlwtbtQmzWBsuGzN/W9i5K4j
+X-Received: from plsl18.prod.google.com ([2002:a17:903:2452:b0:225:e051:fe46])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2290:b0:223:517a:d2a3
+ with SMTP id d9443c01a7336-22df34ec0b0mr65059825ad.17.1746035469944; Wed, 30
+ Apr 2025 10:51:09 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:49:54 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-6-irogers@google.com>
-Subject: [PATCH v2 05/47] arm64: cputype: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-7-irogers@google.com>
+Subject: [PATCH v2 06/47] x86/insn: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,22 +116,22 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/arch/arm64/include/asm/cputype.h | 2 +-
+ tools/arch/x86/lib/insn.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
-index 488f8e751349..d7289b9d2758 100644
---- a/tools/arch/arm64/include/asm/cputype.h
-+++ b/tools/arch/arm64/include/asm/cputype.h
-@@ -227,7 +227,7 @@
+diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
+index e91d4c4e1c16..5fa8697498fe 100644
+--- a/tools/arch/x86/lib/insn.c
++++ b/tools/arch/x86/lib/insn.c
+@@ -92,7 +92,7 @@ static int __insn_get_emulate_prefix(struct insn *insn,
+ 			goto err_out;
+ 	}
  
- #include <asm/sysreg.h>
+-	insn->emulate_prefix_size = len;
++	insn->emulate_prefix_size = (int)len;
+ 	insn->next_byte += len;
  
--#define read_cpuid(reg)			read_sysreg_s(SYS_ ## reg)
-+#define read_cpuid(reg)			((u32)read_sysreg_s(SYS_ ## reg))
- 
- /*
-  * Represent a range of MIDR values for a given CPU model and a
+ 	return 1;
 -- 
 2.49.0.906.g1f30a19c02-goog
 
