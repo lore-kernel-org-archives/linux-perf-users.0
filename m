@@ -1,244 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12AAB640;
-	Wed, 30 Apr 2025 02:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F3B210FB;
+	Wed, 30 Apr 2025 03:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745978434; cv=none; b=e7WbYLE7OXW890LDfe7ekpbufQDXMgpYhX6DCcZdLZPAGarD3D75xjH6PdWFny2Kw+RpwA7Z0r3vT0xYL8aqVFCAhiCGfXqOBGeIFa+zTbFN2BeSgP9UyXcDQEoCjbCHQVMu9XJfMKNJ9Ir71JmY1IQIe5oQwetYJRMIE7CLXu0=
+	t=1745984277; cv=none; b=SvbvFLrdzYYtKsyDTLxZ1lr5ZWIDvdkW7xy/99Zdf+bOf4XLRI8houzHzW2qAn8u387ldjoOnuUU8Aw7AEhZ7q96NrhIlSb6ldrGi2AM5BjBPgQJwR7WDOrGA34EwznKbwmL+8TW5VVCFr/sCu9KTXk6nK1on6Z/XUpZT2+D0mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745978434; c=relaxed/simple;
-	bh=w0w5lvrWyI2uESxm0saMYz1L0A7srJ9/pf0tn1Fa33s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kGlsmGjiZ54wKLgflQDj/QAWPuEyc5UaRDpRICP9sIQCCB5R7RTZJxjUPKrvKSD8aItsdrrOHaBLGYEzbZbhlLJrNI1dr0eMCjlePbYxvNhx+eHWWhGCEVU1XffkZ3LVy1yDuLyqcO+aWf13I2X2UzWxOdjX7CH8BG3PtRbcRF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iI2aDARX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745984277; c=relaxed/simple;
+	bh=nFGGmJ5/n03v9z1/QgjnpQmz8tz7KZGnHiZq3aSa61o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GrfNWglOVMDIomundDeNtLFwr7eo5a6sLvsQ6LEbw+RNaiDOiJyHuy72aUJhJUf2fSDkeaBHjDhVy+ErzGM9+Y5dz3uIiOZFTHylJGDeaJ5OT6SxJmwaY2+j/Y3eIPS1U4dylfQQJxf5vzb1dgDyUKv/Rzi28SGAXFyn3V3emdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1dl7PyS; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iI2aDARX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC40DC4CEE3;
-	Wed, 30 Apr 2025 02:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745978433;
-	bh=w0w5lvrWyI2uESxm0saMYz1L0A7srJ9/pf0tn1Fa33s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iI2aDARX5ZQkEr37KubOYVvroK3MzhXJZhArCsHHtnh/wmg4PLsD6dOS7SYW6/tFs
-	 lDe0mm+BxkAOp73TFmiAYLutg28MhiOTwq4/5bBGSklJkJyVLeHGrYhvGWGZzK7ncn
-	 cuRopzYUtplz0M6/GjoeQ5AVRi6UiD2tQ1B7eAasDNS8WVGSnJTBEeBovi7m0MuysN
-	 3V/NQLermErVGhMNZEkgO/1XaB4tsu9ozHTCK1qtPhWf88zMuL248jCeeHawWLgYwd
-	 iBajmazst/Bl8tWaXi905l2WKuWyxuEOL25bgY0EsbGKXjpON9TEbr7wzNd81z00By
-	 u9JTxSJPgXyZA==
-Date: Tue, 29 Apr 2025 23:00:30 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Joe Mario <jmario@redhat.com>,
-	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v4 0/4] perf/amd/ibs: Add Zen5 support (tools changes)
-Message-ID: <aBGEPnB5B4NTaOg9@x1>
-References: <20250429035938.1301-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1dl7PyS"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b0b229639e3so718323a12.0;
+        Tue, 29 Apr 2025 20:37:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745984275; x=1746589075; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nFGGmJ5/n03v9z1/QgjnpQmz8tz7KZGnHiZq3aSa61o=;
+        b=H1dl7PySuzs452Mt6XRIuZCVk7yk5FqOS2K0MJsZH6ZxR74l8kZMOxwrinVSE+zIaM
+         /QZPkNnuHQI240O0tcUHrVzoMKXUD+ZwWBFCZI7gnonBbc7qW3ieBn5H6jMtBmLQVn2/
+         WIBzWglNOF854MMT9JwJWA7n8VAhNx+/tTxsoiY8/uNJifMbNvaQbtOVUHTLPQeX6k+M
+         Puc9dOxFT9ceDkYvlNL0WIwyTiI7dqw48W7ObAOORpUy0kzD3mNAO3aXk8qOeINfsPGD
+         hKUd07+aqxroh/hyoFcxg59PoyhR61hKpeY9Az6km+iifxPc+r3/yG6aVyHKOat0X6fx
+         VFYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745984275; x=1746589075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nFGGmJ5/n03v9z1/QgjnpQmz8tz7KZGnHiZq3aSa61o=;
+        b=UKKqWe04kGJz4LlwJr9iPEyJdmsEis3outPKvvcMWoRNyU23RfqymuB8ztOJhuHXwD
+         Mh1KzobV+/oZxlBr3edVuESnnjtTVHAvT08ellLMsxrvT0u+nSYIiq6sIJ7FA+3s3Mti
+         J/qLwAAf5eq+xTKjA1GJnaNI3wWBl13Gv4d59rxCPOKnphgt1+u/vjPmwyyGKgH0B252
+         Na1N5EXw69dgLR8GToxHbtXdPD2KNyg/4vrI4c/1CtDRim916AnqcLVs6QN0j6IGm8yx
+         CRvi9Fz13bUxY2MpeofuiQ+SBg4tVytx4uAz3MbQNM0chEVBF1hDRUmxAOiQ9unzMhzL
+         RzKg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3A2dljdzG52XjhfbL2lttTgC+cViDKva78ZB1lQEfeyXNGzjxqHKnBGJeRSCwQNbIhhqwylcGC8tz8hM=@vger.kernel.org, AJvYcCVbA6i12I1/xUG+KfBWhrg004b368VTSLpOEfAHAZxF0S0/uJ7SaKG8za+vdfR1pH5pijL6bb0l5ChqFm82fiU=@vger.kernel.org, AJvYcCX0BFWq5I83FlXWTt128nIwIywv78BkgEb8Avb4bnSlieMXMLGz0FEPAhMlUbw7KQKYgszP/2IA8aj68NgZIltcdQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZvNQPAlSuzC4tCMMF43qojw4B46/YkpBVNMROD8YYL2HMjHVv
+	DPEQNbrnFwZmGNC3UlbsOg6dr1LEXHOtG1ZkmIaAqn7yz6yODSXH6PBKcZwSqTUBoLiNxwEalvK
+	bkb+GHldhfaVMNTmTq/g3+DinkOE=
+X-Gm-Gg: ASbGncvIsRKdCzGjia32DgVM7yW3lFaHSu7ChkyVyMC+WQ26W1Sz1lDm+mMaO73XZP4
+	rQQ0/vKX9WqSgKkEMpNevmQsMcBX7NmrBrguJEHHcXwtIQKfXaDfQlt8loF/E7nqj42fy/ym1Ft
+	V6qWl8UdRAvqmbpyEm5fBnwg==
+X-Google-Smtp-Source: AGHT+IGeL4q3Sdp0CYP9/FmEFq3Sy3JI7KbV2ri0jrVCotH/QaRkIFoag3MCddg/nXXdBUd3LyaNFbeyeJgjrqZdu9s=
+X-Received: by 2002:a17:90b:1e05:b0:306:b593:4551 with SMTP id
+ 98e67ed59e1d1-30a34a96d45mr481543a91.6.1745984274894; Tue, 29 Apr 2025
+ 20:37:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429035938.1301-1-ravi.bangoria@amd.com>
+References: <20250430004128.474388-1-irogers@google.com> <20250430004128.474388-2-irogers@google.com>
+In-Reply-To: <20250430004128.474388-2-irogers@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 30 Apr 2025 05:37:42 +0200
+X-Gm-Features: ATxdqUGa7WM7kfr9cHYmn3SM4PPOkRBfwRxxJYsjswOMOQKEEXrxM_mPUUtmvvg
+Message-ID: <CANiq72ksEJdnT86V42hoNVfB7OpmaouD+eBQwpRJR899nPsttA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] perf demangle-rust: Add rustc-demangle C demangler
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev, Daniel Xu <dxu@dxuuu.xyz>, 
+	Ariel Ben-Yehuda <ariel.byd@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 03:59:34AM +0000, Ravi Bangoria wrote:
-> IBS on Zen5:
-> - Introduced Load Latency filtering capability.
-> - Shows DTLB and page size information differently from prior generations.
-> 
-> Kernel changes for these enhancements are already upstream. So, resending
-> tools changes separately.
-> 
-> Patches are prepared on perf-tools-next/perf-tools-next (85447f68a1e3).
-> 
-> v3: https://lore.kernel.org/r/20250205060547.1337-1-ravi.bangoria@amd.com
-> v3->v4:
-> - Remove kernel changes.
-> - Improve IBS sample period unit test
+On Wed, Apr 30, 2025 at 2:41=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Imported at commit 80e40f57d99f ("add comment about finding latest
+> version of code") from:
+> https://github.com/rust-lang/rustc-demangle/blob/main/crates/native-c/src=
+/demangle.c
+> https://github.com/rust-lang/rustc-demangle/blob/main/crates/native-c/inc=
+lude/demangle.h
+>
+> There is discussion of this issue motivating the import in:
+> https://github.com/rust-lang/rust/issues/60705
+> https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
+>
+> The SPDX lines reflect the dual license Apache-2 or MIT in:
+> https://github.com/rust-lang/rustc-demangle/blob/main/README.md
+> Following Migual Ojeda's suggestion comments were added on copyright
+> and keeping the code in sync with upstream.
 
-Preliminary tests with what is in tmp.perf-tools-next:
+Thanks! I doubled-checked that the files added here are essentially
+equal to upstream, modulo trailing whitespace cleanups, the header
+addition and the change to the include name, so:
 
-root@number:~# perf mem record find / > /dev/null
-[ perf record: Woken up 5 times to write data ]
-[ perf record: Captured and wrote 1.992 MB perf.data (31824 samples) ]
-root@number:~# perf mem report -s mem --stdio
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 31K of event 'ibs_op//'
-# Total weight : 66561
-# Sort order   : mem
-#
-# Overhead       Samples  Memory access                          
-# ........  ............  .......................................
-#
-    36.51%           456  L2 hit                                 
-    30.26%         20141  N/A                                    
-    16.75%         11149  L1 hit                                 
-    10.08%            18  RAM hit                                
-     6.39%            52  L3 hit                                 
-     0.01%             8  LFB/MAB hit                            
-#
-# (Tip: To collect Processor Trace with samples use perf record -e '{intel_pt//,cycles}' ; perf script --call-trace or --insn-trace --xed -F +ipc (remove --xed if no xed))
-#
-root@number:~#
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
 
-root@number:~# perf evlist -v
-ibs_op//: type: 11 (ibs_op), size: 136, config: 0, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, enable_on_exec: 1, task: 1, mmap_data: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-root@number:~# 
+(Typo on "Migual", but I don't mind it -- it sounds like "M-equal" :)
 
-root@number:~# perf report --header-only | head -25
-# ========
-# captured on    : Tue Apr 29 22:54:04 2025
-# header version : 1
-# data offset    : 512
-# data size      : 668520
-# feat offset    : 669032
-# hostname : number
-# os release : 6.15.0-rc4+
-# perf version : 6.15.rc2.g3e8278077117
-# arch : x86_64
-# nrcpus online : 32
-# nrcpus avail : 32
-# cpudesc : AMD Ryzen 9 9950X3D 16-Core Processor
-# cpuid : AuthenticAMD,26,68,0
-# total memory : 31928240 kB
-# cmdline : /home/acme/bin/perf mem record find / 
-# event : name = ibs_op//, , id = { 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335 }, type = 11 (ibs_op), size = 136, config = 0, { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|ADDR|PERIOD|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, mmap_data = 1, sample_id_all = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1
-# CPU_TOPOLOGY info available, use -I to display
-# NUMA_TOPOLOGY info available, use -I to display
-# pmu mappings: cpu = 4, amd_df = 12, amd_iommu_0 = 15, amd_l3 = 13, amd_umc_0 = 14, breakpoint = 5, hwmon_amdgpu = 4294901761, hwmon_k10temp = 4294901762, hwmon_nvme = 4294901760, hwmon_r8169_0_e00_00 = 4294901763, ibs_fetch = 10, ibs_op = 11, kprobe = 8, msr = 16, power = 17, power_core = 18, software = 1, tool = 4294967294, tracepoint = 2, uprobe = 9
-# CACHE info available, use -I to display
-# time of first sample : 244.312475
-# time of last sample : 246.801803
-# sample duration :   2489.328 ms
-# MEM_TOPOLOGY info available, use -I to display
-root@number:~#
-
-root@number:~# perf report | head
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 9K of event 'ibs_op//'
-# Event count (approx.): 12948758501
-#
-# Overhead  Command  Shared Object              Symbol                                  
-# ........  .......  .........................  ........................................
-root@number:~# perf report | head -20
-# To display the perf.data header info, please use --header/--header-only options.
-#
-#
-# Total Lost Samples: 0
-#
-# Samples: 9K of event 'ibs_op//'
-# Event count (approx.): 12948758501
-#
-# Overhead  Command  Shared Object              Symbol                                  
-# ........  .......  .........................  ........................................
-#
-     6.11%  find     [kernel.kallsyms]          [k] btrfs_bin_search
-     4.91%  find     [kernel.kallsyms]          [k] filldir64
-     4.77%  find     find                       [.] consider_visiting
-     3.95%  find     [kernel.kallsyms]          [k] memcpy
-     2.76%  find     [kernel.kallsyms]          [k] entry_SYSCALL_64
-     2.59%  find     libc.so.6                  [.] __printf_buffer
-     2.52%  find     [kernel.kallsyms]          [k] btrfs_getattr
-     2.09%  find     [kernel.kallsyms]          [k] pid_delete_dentry
-     1.88%  find     libc.so.6                  [.] msort_with_tmp.part.0
-root@number:~#
-
-root@number:~# perf annotate -v --stdio2 btrfs_bin_search
-build id event received for [vdso]: 6dc5707510cc7434be3d6cb4dc6bae12881efda3 [20]
-build id event received for /usr/bin/find: 3804e1e1214a39a975e093a79ec04961743ef5c5 [20]
-build id event received for /usr/lib64/libc.so.6: 2b3c02fe7e4d3811767175b6f323692a10a4e116 [20]
-build id event received for [kernel.kallsyms]: d391f0e79126801bc8a8f907e763de7979941712 [20]
-Looking at the vmlinux_path (8 entries long)
-Using /lib/modules/6.15.0-rc4+/build/vmlinux for symbols
-read_gnu_debugdata: using .gnu_debugdata of /usr/bin/find
-symbol__disassemble: filename=/lib/modules/6.15.0-rc4+/build/vmlinux, sym=btrfs_bin_search, start=0xffffffffac97e890, end=0xffffffffac97ead9
-annotating [0x2e87fbf0] /lib/modules/6.15.0-rc4+/build/vmlinux : [0x2fa7f070]               btrfs_bin_search
-Disassembled with llvm
-Samples: 585  of event 'ibs_op//', 4000 Hz, Event count (approx.): 790819874, [percent: local period]
-btrfs_bin_search() /lib/modules/6.15.0-rc4+/build/vmlinux
-Percent       0xffffffff8197e890 <btrfs_bin_search>:
-   0.17         endbr64         
-              → callq   __fentry__
-   0.16         pushq   %r15    
-   0.18         movq    %rdx,%r15
-                pushq   %r14    
-                pushq   %r13    
-   0.18         pushq   %r12    
-   0.34         pushq   %rbp    
-                movl    %esi,%ebp
-                pushq   %rbx    
-   0.35         movq    %rdi,%rbx
-                subq    $0x48,%rsp
-                movq    (%rdi),%r9
-                movq    %rcx,(%rsp)
-   0.34         movq    %r9,%rdx
-                andl    $0xfff,%edx
-                movq    __stack_chk_guard,%r14
-   0.18         movq    %r14,0x40(%rsp)
-   0.33         movl    %esi,%r14d
-   0.17         movq    0x70(%rdi),%rsi
-                movq    %rsi,%rax
-                subq    vmemmap_base,%rax
-                sarq    $0x6, %rax
-   0.17         shlq    $0xc, %rax
-   0.15         addq    page_offset_base,%rax
-   0.17         addq    %rdx,%rax
-                movl    0x60(%rax),%r13d
-   0.17         cmpl    %ebp,%r13d
-              → jb      btrfs_bin_search.cold
-                cmpb    $0x1,0x64(%rax)
-                sbbl    %r12d,%r12d
-                andl    $-0x8,%r12d
-   0.18         addl    $0x21,%r12d
-                cmpl    %r13d,%r14d
-              ↓ jae     20f     
-   1.04   84:   leal    (%r14,%r13),%ebp
-   0.81         movb    $0x0,0x3f(%rsp)
-   1.20         movslq  0xc(%rbx),%r10
-   0.66         movl    $0xfff,%r11d
-   1.06         movq    $0x0,0x2f(%rsp)
-   0.85         shrl    %ebp    
-   1.35         movq    $0x0,0x37(%rsp)
-   1.93         movl    %ebp,%eax
-   1.04         movq    (%rsi),%rdx
-   2.20         imull   %r12d,%eax
-  10.77         cltq            
-  10.26         addq    $0x65,%rax
-   3.11         addq    %rax,%r9
-   0.68         andl    $0x40,%edx
-              ↓ je      e3      
-                movq    0x40(%rsi),%rsi
-                movl    $0x1000,%r11d
-                movzbl  %sil,%ecx
-                shlq    %cl, %r11
-                subq    $0x1,%r11
-root@number:~# 
-
-
-I'll do more tests tomorrow and try some of the workloads that Joe uses.
-
-
-
-Thanks a lot!
-
-- Arnaldo
+Cheers,
+Miguel
