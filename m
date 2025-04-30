@@ -1,145 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144E0227BA5;
-	Wed, 30 Apr 2025 14:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9151B5EB5;
+	Wed, 30 Apr 2025 14:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746021802; cv=none; b=nqZfNcMxbqJOiwbiam226+n5Kp/WMEVz8xD1SpJED20IOfp7zHrVtelPYASwrWyB9aWXbnS+WU4fPjy5Tj7bQuLSn8ITqr4fLGcYtHA9PF82NBBA57KqyZ3jeukh1h5gF1rfYzY6Y+4cee16vHBTeZASn+LFDOSIKuqi9h5wFi0=
+	t=1746021990; cv=none; b=g45baCGV4+hqRtxSAxen44lOyPSqldMzn0tCjwjgb9Y9kiLsVEV8NmbK6y6KmHGCanym+0rSecTVYYjUbvDlbXPFS/r9XDEFI3djXQYlQQ/piTVPpLGbtJXkyTIog/K1MMM5V4Sv4KpE8weoBPbQqQ0GyYitcfZynpEvM4TON0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746021802; c=relaxed/simple;
-	bh=oV9B2r0VrTgigR4sUinXlFwe6m8WkIqU+og3Gf2XdH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyQ0ZpXobSSniOd+6MpUuejYZr6rqO7gU0QDglJqSYSr4CKHtmA2qxuUZXHh4i9A1hHiABH3a/lnHxIkbzAOQO2hPFkBjVsXm+poEzxD3d5ECEgjQnFF6+PibKrP7jhXTLATX48xfAS/3eENf1VAmu3mVE5nKHALSzwyOBwvqiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UlsIjj1y; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746021990; c=relaxed/simple;
+	bh=Is5RVfMU5+fLCq4dwszPfEvzEgmFjYMe1veGCVF7e2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uTb37PetzqQbNGdTBfwohphqcEm7n9YLE+jJXWpz0v9i0OghjB7b4jvnUE/M0XvbbIrlfxo7CLRZmmUpRCDk2TmTCh1Pxmx8TBN4M87xBX0HejwBgd2zoX1eIE4nE2KS+SH6HCtuLjMKKotOkoIb49kVEZmP4UesS+0wXDFvhio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k1dzkGKN; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UlsIjj1y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746021801; x=1777557801;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oV9B2r0VrTgigR4sUinXlFwe6m8WkIqU+og3Gf2XdH4=;
-  b=UlsIjj1yUxskdbVmmI6Cy1ORn8KjJULOEPPiArr8mIkzo/i9emEBl4ND
-   9SBwW6PBLtr72lGg54dklC9AVEWE2DOguwFQpmovh4ukLM+rwjzwV+Pa+
-   ZMjtTcg32yeAx+prxQabSwcjMNDCbvhpE4ZUxhtK5jLlgOHYlVcacQKiT
-   33GMwLqHK7Tv+uCQJ/ZHOM2pghAX6svrQOvs1xIBl/D6gMkGXGRV+5o2O
-   ZyDySua2TGo66urmGheKH73kqI8Y4lh/iXbwq0wwIK5Kwf+aL6CfssmjK
-   OUv6UyM51TFpxXGi1B8Z55sf8GQHkFRJpbvQJAd4EQjCcH71rGHzEgeac
-   w==;
-X-CSE-ConnectionGUID: 2aiv6yXRS6yo5hMEBioxmA==
-X-CSE-MsgGUID: jJjYZVOrRga5TkLDIQJEWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="65096254"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="65096254"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:03:20 -0700
-X-CSE-ConnectionGUID: Z2iOPct0SmG484vb6sAtnQ==
-X-CSE-MsgGUID: bhME4bkBS+u+IQ6JP/GOyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="134656948"
-Received: from bkammerd-mobl.amr.corp.intel.com (HELO [10.124.223.145]) ([10.124.223.145])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:03:15 -0700
-Message-ID: <b22117bf-6b2c-4a98-8a40-48163c1e25d9@intel.com>
-Date: Wed, 30 Apr 2025 07:03:12 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k1dzkGKN"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UBKUfA016448;
+	Wed, 30 Apr 2025 14:06:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=z7PrF91iL711BYQhJ1aumTe2wZ1AFn9CFKfWuPJz+
+	MI=; b=k1dzkGKNjOnN5P6/T4J3KSqAf5icJbtrGpq+zRTxC6zaXYVvosklFz1FX
+	NdKRe2lCGevQHaOnKKFvyYzp8EeIyRQrtyuniZeYX4Et0UiyiZT9ojmzlQQ9n7ol
+	auMdM8zJZLn57Dwu/nLSF2JtofeGSFfyl2rzCs6g958MCabJAmNcB7F5RMe6qJ40
+	Rcskz6JY7EtBS5DIWniKKCQxtk1315MquUlxTfBqJMlwHGbNksCaCgh6Pi++ADYz
+	2qvp/z9/M8JrqLLtMrNFjwJeVrd1/t/9z6H6thnVlktzLkLpDPsAC2EOcc/WSKIj
+	FDES1/TBXD1heecrnDKquJEw9Pigw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46b6upkg3q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 14:06:26 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53UDw1Mb009759;
+	Wed, 30 Apr 2025 14:06:26 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46b6upkg3g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 14:06:26 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53UBVkcM016584;
+	Wed, 30 Apr 2025 14:06:24 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a70g8g0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 14:06:24 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53UE6L6Q52494628
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 14:06:21 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 09C622004E;
+	Wed, 30 Apr 2025 14:06:21 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9AB2420040;
+	Wed, 30 Apr 2025 14:06:20 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 30 Apr 2025 14:06:20 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, irogers@google.com, ctshao@google.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH V4] perf test: Allow tolerance for leader sampling test
+Date: Wed, 30 Apr 2025 16:06:11 +0200
+Message-ID: <20250430140611.599078-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] optimize cost of inter-process communication
-To: Jiadong Sun <sunjiadong.lff@bytedance.com>, luto@kernel.org,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, akpm@linux-foundation.org
-Cc: x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, viro@zeniv.linux.org.uk,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
- dengliang.1214@bytedance.com, xieyongji@bytedance.com,
- chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com
-References: <CAP2HCOmAkRVTci0ObtyW=3v6GFOrt9zCn2NwLUbZ+Di49xkBiw@mail.gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <CAP2HCOmAkRVTci0ObtyW=3v6GFOrt9zCn2NwLUbZ+Di49xkBiw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=IqQecK/g c=1 sm=1 tr=0 ts=68122e62 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=C54mTPxxYbvSgDT82gwA:9
+X-Proofpoint-ORIG-GUID: JRqHqBzu54QBWPIdjiWFm7t7xVGLDcXR
+X-Proofpoint-GUID: rhhV1dOfsxmW37JvZn1PCaTLWXxLk-BL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDEwMCBTYWx0ZWRfX/3aL1dWwgMEM jBmawLCX7vzvqLbhrrrLra76t3D3wT9xjoef8LwwY/2ISIhiMO/gJ0NBqQ/bSDLAVYr5qDJhphz w99dNbuqrxYvlvnqFAdA5NxC8R/LDxKgH6h0OX+8c7/GpGO0YdjsntmtHkV/J8L2t5OTuzEElXb
+ bivU88h5/XXrxJmsfiACGarqeUV/3B8SKkuT5j5uPeLaHMMVjXJWs8f+GLPoftx6/gef3XNfL4v IdSj3Cx0NGkBSOvtg172XBFTGHRDsIGLTc2sutRnUD3YC7VJ9T3WZ8t3VXEFO/zrRDU8mf4FQZU YJSd4Cav+CRu4XcqW+5Uuu6qupeb7XUn8+zNB/dlWtSCYmFihB85q63lgf8YvEo4HsGdrzQm3+4
+ vd/I64GWlXwjjN8TciHP5lrHGl89GP+0VJzEwKjEpD3kp9Iw+svITkrO/S1vxHhaXBXABtzu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ phishscore=0 spamscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=876 suspectscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300100
 
-On 4/30/25 02:16, Jiadong Sun wrote:
-> To attain the first objective, processes that use RPAL share the same
-> virtual address space. So one process can access another's data directly
-> via a data pointer. This means data can be transferred from one process
-> to another with just one copy operation.
+V4: Update to be applied onto linux-next
+V3: Added check for missing samples as suggested by Chun-Tse.
+V2: Changed bc invocation to return 0 on success and 1 on error.
 
-It's a neat idea and it is impressive that you got it running at all.
+There is a known issue that the leader sampling is inconsistent, since
+throttle only affect leader, not the slave. The detail is in [1]. To
+maintain test coverage, this patch sets a tolerance rate of 80% to
+accommodate the throttled samples and prevent test failures due to
+throttling.
 
-But it's a *HUGE* change in the process model and it's obviously not
-generally applicable. You literally don't have small processes any more.
-You only have big ones that are *VERY* expensive to tear down.
+[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
 
-> RPAL is currently implemented on the Linux v5.15 kernel
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Suggested-by: Ian Rogers <irogers@google.com>
+Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-Hmmm: "This branch is 196946 commits ahead of, 17734 commits behind
-5.4.143-velinux."
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 05d91a663fda..587f62e34414 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -240,22 +240,43 @@ test_leader_sampling() {
+     err=1
+     return
+   fi
++  perf script -i "${perfdata}" | grep brstack > $script_output
++  # Check if the two instruction counts are equal in each record.
++  # However, the throttling code doesn't consider event grouping. During throttling, only the
++  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
++  # let's set the tolerance rate to 80%.
++  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+   index=0
+-  perf script -i "${perfdata}" > "${script_output}"
++  valid_counts=0
++  invalid_counts=0
++  tolerance_rate=0.8
+   while IFS= read -r line
+   do
+-    # Check if the two instruction counts are equal in each record
+     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+     then
+-      echo "Leader sampling [Failed inconsistent cycles count]"
+-      err=1
+-      return
++      invalid_counts=$(($invalid_counts+1))
++    else
++      valid_counts=$(($valid_counts+1))
+     fi
+     index=$(($index+1))
+     prev_cycles=$cycles
+   done < "${script_output}"
+-  echo "Basic leader sampling test [Success]"
++  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
++  if (( $(bc <<< "$total_counts <= 0") ))
++  then
++    echo "Leader sampling [No sample generated]"
++    err=1
++    return
++  fi
++  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
++  if [ $isok -eq 1 ]
++  then
++     echo "Leader sampling [Failed inconsistent cycles count]"
++     err=1
++  else
++    echo "Basic leader sampling test [Success]"
++  fi
+ }
+ 
+ test_topdown_leader_sampling() {
+-- 
+2.45.2
 
-So this isn't even on top of a stable kernel? It's 10,000 lines on top
-of a ~200k commit fork? Yeah, I can see how it would take some
-substantial effort to rebase it to mainline. It's also a _bit_ of a
-stretch to call this a v5.15 kernel.
-
-Basically, I don't doubt that this is good for _you_ and your
-applications. But would anybody else ever use it? I seriously doubt it.
-It's too big of a change in model and it has too many compromises in its
-design. It's fundamentally not aligned with how the kernel evolves both
-in ts design and its development process.
-
-Unless something big changes (like a lot of users suddenly dying for
-this functionality), this isn't even something I'd remotely consider
-spending any time on looking at again. Sorry.
