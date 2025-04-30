@@ -1,172 +1,175 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9151B5EB5;
-	Wed, 30 Apr 2025 14:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13218101E6;
+	Wed, 30 Apr 2025 14:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746021990; cv=none; b=g45baCGV4+hqRtxSAxen44lOyPSqldMzn0tCjwjgb9Y9kiLsVEV8NmbK6y6KmHGCanym+0rSecTVYYjUbvDlbXPFS/r9XDEFI3djXQYlQQ/piTVPpLGbtJXkyTIog/K1MMM5V4Sv4KpE8weoBPbQqQ0GyYitcfZynpEvM4TON0w=
+	t=1746022373; cv=none; b=VIHaSe/53YQc8IeQ3g8OcPGUw2mMAVCSMw8K652RBwEqg3SZXv6RQBqOt5vM5SKFeV4Rixt+rW8LOdKOpKl7oEdEgBX6P1E1Y/xsfl7UoFZPsH28umgmJf86avD37j/HY1zMinlIr4YxlE1gkofAbr758RtWuDNSg/XARAlrF50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746021990; c=relaxed/simple;
-	bh=Is5RVfMU5+fLCq4dwszPfEvzEgmFjYMe1veGCVF7e2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uTb37PetzqQbNGdTBfwohphqcEm7n9YLE+jJXWpz0v9i0OghjB7b4jvnUE/M0XvbbIrlfxo7CLRZmmUpRCDk2TmTCh1Pxmx8TBN4M87xBX0HejwBgd2zoX1eIE4nE2KS+SH6HCtuLjMKKotOkoIb49kVEZmP4UesS+0wXDFvhio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k1dzkGKN; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746022373; c=relaxed/simple;
+	bh=HcvCTaVzzx3q7RPBC6uFYMN9Hd7p5KMc6tnbL+F69YU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y+Z4opyBsS3N8em5QKYj2k+Ekno9vKFxrjW6OEh3VlBL90JOlEeM40bmRS2kkficYlFat2vRB5thPHIz61IC9Mm0BcKfqZoiPVQzuFsfsLwJ82JjcjFS1+l5EYB8gqcp3fOdD0U5kvxiOSzU17iJn80sO0+f6/sz7KrK87XjtrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fT24SPJZ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k1dzkGKN"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UBKUfA016448;
-	Wed, 30 Apr 2025 14:06:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=z7PrF91iL711BYQhJ1aumTe2wZ1AFn9CFKfWuPJz+
-	MI=; b=k1dzkGKNjOnN5P6/T4J3KSqAf5icJbtrGpq+zRTxC6zaXYVvosklFz1FX
-	NdKRe2lCGevQHaOnKKFvyYzp8EeIyRQrtyuniZeYX4Et0UiyiZT9ojmzlQQ9n7ol
-	auMdM8zJZLn57Dwu/nLSF2JtofeGSFfyl2rzCs6g958MCabJAmNcB7F5RMe6qJ40
-	Rcskz6JY7EtBS5DIWniKKCQxtk1315MquUlxTfBqJMlwHGbNksCaCgh6Pi++ADYz
-	2qvp/z9/M8JrqLLtMrNFjwJeVrd1/t/9z6H6thnVlktzLkLpDPsAC2EOcc/WSKIj
-	FDES1/TBXD1heecrnDKquJEw9Pigw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46b6upkg3q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 14:06:26 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53UDw1Mb009759;
-	Wed, 30 Apr 2025 14:06:26 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46b6upkg3g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 14:06:26 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53UBVkcM016584;
-	Wed, 30 Apr 2025 14:06:24 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a70g8g0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 14:06:24 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53UE6L6Q52494628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 14:06:21 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 09C622004E;
-	Wed, 30 Apr 2025 14:06:21 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9AB2420040;
-	Wed, 30 Apr 2025 14:06:20 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 30 Apr 2025 14:06:20 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, irogers@google.com, ctshao@google.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH V4] perf test: Allow tolerance for leader sampling test
-Date: Wed, 30 Apr 2025 16:06:11 +0200
-Message-ID: <20250430140611.599078-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fT24SPJZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746022372; x=1777558372;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HcvCTaVzzx3q7RPBC6uFYMN9Hd7p5KMc6tnbL+F69YU=;
+  b=fT24SPJZ1R7B8fS3Xrp1K0DXDSsoteiVoF753o89i9ib20K5TIqPTXhs
+   uKK95k2CmRxjgqjpHbnsZ0Qn2vyRN2M7uxIeTr8+W8iJyWHcPiX6SRI49
+   7i7vaOzP3fthDggxJtXvpTchrtZ0eaI9Fx5578JP/RHhYlFT3KPOtRj/h
+   SudUJMlr2l2nf5cvElquVGCkSBp/8DLRIsbIk2q/xgj+wZGqI4GDA6/8A
+   c43PC3kfvvZuEanEHiZuiFapCgxdRA1VhCcVn88AsataZ6gcLtYZ/T3fI
+   IQMg8lI6pDoh8cCTy8WbbXfkjeMq8m5fE7tYq9nEjYtB3xyMzGbjUcpYS
+   A==;
+X-CSE-ConnectionGUID: VQ5Ek9f5SsSeLxafDbcVfg==
+X-CSE-MsgGUID: yqnVlpdKRPmEcdJOONtVFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="70187901"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="70187901"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:12:51 -0700
+X-CSE-ConnectionGUID: PlSVIgpdST2WQ3C+krywdg==
+X-CSE-MsgGUID: GsQDU0juQwGzNeL0+Vaqug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="135111904"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:12:51 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id DA07B20B5736;
+	Wed, 30 Apr 2025 07:12:48 -0700 (PDT)
+Message-ID: <5206f699-ae03-47ad-98e9-3805bc8f2548@linux.intel.com>
+Date: Wed, 30 Apr 2025 10:12:47 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=IqQecK/g c=1 sm=1 tr=0 ts=68122e62 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=C54mTPxxYbvSgDT82gwA:9
-X-Proofpoint-ORIG-GUID: JRqHqBzu54QBWPIdjiWFm7t7xVGLDcXR
-X-Proofpoint-GUID: rhhV1dOfsxmW37JvZn1PCaTLWXxLk-BL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDEwMCBTYWx0ZWRfX/3aL1dWwgMEM jBmawLCX7vzvqLbhrrrLra76t3D3wT9xjoef8LwwY/2ISIhiMO/gJ0NBqQ/bSDLAVYr5qDJhphz w99dNbuqrxYvlvnqFAdA5NxC8R/LDxKgH6h0OX+8c7/GpGO0YdjsntmtHkV/J8L2t5OTuzEElXb
- bivU88h5/XXrxJmsfiACGarqeUV/3B8SKkuT5j5uPeLaHMMVjXJWs8f+GLPoftx6/gef3XNfL4v IdSj3Cx0NGkBSOvtg172XBFTGHRDsIGLTc2sutRnUD3YC7VJ9T3WZ8t3VXEFO/zrRDU8mf4FQZU YJSd4Cav+CRu4XcqW+5Uuu6qupeb7XUn8+zNB/dlWtSCYmFihB85q63lgf8YvEo4HsGdrzQm3+4
- vd/I64GWlXwjjN8TciHP5lrHGl89GP+0VJzEwKjEpD3kp9Iw+svITkrO/S1vxHhaXBXABtzu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- phishscore=0 spamscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- lowpriorityscore=0 mlxscore=0 mlxlogscore=876 suspectscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86: Fix open counting event error
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Luo Gengkun <luogengkun@huaweicloud.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
+ "namhyung@kernel.org" <namhyung@kernel.org>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>,
+ "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+ "jolsa@kernel.org" <jolsa@kernel.org>,
+ "irogers@google.com" <irogers@google.com>,
+ "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+ <f8c349c8-b074-4b27-b799-e484631b9b3e@amd.com>
+ <1d1cb14f-5729-4200-af20-d66b4feebe94@linux.intel.com>
+ <a04c37c6-8f83-45e9-a39f-1e1ba613f7f4@amd.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <a04c37c6-8f83-45e9-a39f-1e1ba613f7f4@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-V4: Update to be applied onto linux-next
-V3: Added check for missing samples as suggested by Chun-Tse.
-V2: Changed bc invocation to return 0 on success and 1 on error.
+Hi Ravi,
 
-There is a known issue that the leader sampling is inconsistent, since
-throttle only affect leader, not the slave. The detail is in [1]. To
-maintain test coverage, this patch sets a tolerance rate of 80% to
-accommodate the throttled samples and prevent test failures due to
-throttling.
+Sorry for the late response. I was on vacation.
 
-[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+On 2025-04-25 6:12 a.m., Ravi Bangoria wrote:
+> Hi Kan,
+> 
+>>>> Perf doesn't work at perf stat for hardware events:
+>>>>
+>>>>  $perf stat -- sleep 1
+>>>>  Performance counter stats for 'sleep 1':
+>>>>              16.44 msec task-clock                       #    0.016 CPUs utilized
+>>>>                  2      context-switches                 #  121.691 /sec
+>>>>                  0      cpu-migrations                   #    0.000 /sec
+>>>>                 54      page-faults                      #    3.286 K/sec
+>>>>    <not supported>	cycles
+>>>>    <not supported>	instructions
+>>>>    <not supported>	branches
+>>>>    <not supported>	branch-misses
+>>>
+>>> Wondering if it is worth to add this in perf test. Something like
+>>> below?
+>>>
+>>> --- a/tools/perf/tests/shell/stat.sh
+>>> +++ b/tools/perf/tests/shell/stat.sh
+>>> @@ -16,6 +16,24 @@ test_default_stat() {
+>>>    echo "Basic stat command test [Success]"
+>>>  }
+>>>  
+>>> +test_stat_count() {
+>>> +  echo "stat count test"
+>>> +
+>>> +  if ! perf list | grep -q "cpu-cycles OR cycles"
+>>> +  then
+>>> +    echo "stat count test [Skipped cpu-cycles event missing]"
+>>> +    return
+>>> +  fi
+>>> +
+>>> +  if perf stat -e cycles true 2>&1 | grep -E -q "<not supported>"
+>>> +  then
+>>> +    echo "stat count test [Failed]"
+>>> +    err=1
+>>> +    return
+>>> +  fi
+>>> +  echo "stat count test [Success]"
+>>> +}
+>>> +
+>>>  test_stat_record_report() {
+>>>    echo "stat record and report test"
+>>>    if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
+>>> @@ -201,6 +219,7 @@ test_hybrid() {
+>>>  }
+>>>  
+>>>  test_default_stat
+>>> +test_stat_count
+>>
+>> I think the perf stat default should always be supported, not just cycles.
+>> Maybe we should add the check in test_default_stat?
+> 
+> Do you mean:
+> 
+>   if perf stat true 2>&1 | grep -E -q "<not supported>"
+>     err=1
+>
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+Yes, I assumed that all the events in the perf stat are always
+available. But it seems the assumption is only true for bare metal.
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 05d91a663fda..587f62e34414 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -240,22 +240,43 @@ test_leader_sampling() {
-     err=1
-     return
-   fi
-+  perf script -i "${perfdata}" | grep brstack > $script_output
-+  # Check if the two instruction counts are equal in each record.
-+  # However, the throttling code doesn't consider event grouping. During throttling, only the
-+  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-+  # let's set the tolerance rate to 80%.
-+  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
-   index=0
--  perf script -i "${perfdata}" > "${script_output}"
-+  valid_counts=0
-+  invalid_counts=0
-+  tolerance_rate=0.8
-   while IFS= read -r line
-   do
--    # Check if the two instruction counts are equal in each record
-     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-     then
--      echo "Leader sampling [Failed inconsistent cycles count]"
--      err=1
--      return
-+      invalid_counts=$(($invalid_counts+1))
-+    else
-+      valid_counts=$(($valid_counts+1))
-     fi
-     index=$(($index+1))
-     prev_cycles=$cycles
-   done < "${script_output}"
--  echo "Basic leader sampling test [Success]"
-+  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-+  if (( $(bc <<< "$total_counts <= 0") ))
-+  then
-+    echo "Leader sampling [No sample generated]"
-+    err=1
-+    return
-+  fi
-+  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
-+  if [ $isok -eq 1 ]
-+  then
-+     echo "Leader sampling [Failed inconsistent cycles count]"
-+     err=1
-+  else
-+    echo "Basic leader sampling test [Success]"
-+  fi
- }
- 
- test_topdown_leader_sampling() {
--- 
-2.45.2
+
+> Isn't this ambiguous? Also, this fails on machines where HW pmu
+> is not supported. For ex, on my qemu guest with `-cpu pmu=off`:
+> 
+>   $ ./perf list | grep "cpu-cycles OR cycles"
+>   <empty output>
+> 
+>   $ ./perf stat true
+>    Performance counter stats for 'true':
+>                 0.42 msec task-clock:u                     #    0.470 CPUs utilized
+>                    0      context-switches:u               #    0.000 /sec
+>                    0      cpu-migrations:u                 #    0.000 /sec
+>                   48      page-faults:u                    #  113.874 K/sec
+>      <not supported>      cycles:u
+> 
+If taking the virtualization into account, the test_stat_count looks
+good to me.
+
+Thanks,
+Kan
 
