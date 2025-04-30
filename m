@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD0B2D0AD6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD682D1102;
 	Wed, 30 Apr 2025 20:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746046552; cv=none; b=cIQ/SLD8kqtBH5CPFQ1YHZJ5xWdxFZ9lPgiFxa8mU6oSiWwyNjacml9HWd1t2A1Fu8t+Eg8cNPoacoc6V8vm/JX0EnCVYFCuD7p1RUS/TfNOGQjFbwFjJvqSUyR2KP5hYbUKvAXZSViObHTKWfjoPzyXz/hxIIvz+ufSbdThoXM=
+	t=1746046553; cv=none; b=orwyO7/4cCwLRm//o1vIrLSgzU1uskm9/uzP3Rva+hkSvzelpRWeWeFcqP9wHuPoD9Zn+NjOPuETW9x8x+tlJbC4m8U53vRK4NiUBn2WJj1s0HbLinfOILWNn9YC+2ZBfgQpxjXiElruTLA8DkT5Z0kBKKAecxEA1GUbqL0dTuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746046552; c=relaxed/simple;
-	bh=L4TzTyAJccQj99m5SJjBS6xHZW5xZZiPDpLmCh83ayg=;
+	s=arc-20240116; t=1746046553; c=relaxed/simple;
+	bh=Od313OK1KaRM9Dc3kB1+B0iEWriL30mnhLfzK6N9vII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PTNHNcqLNGKTV1eLFexAAt0fI4RccLb/i/V5vC7ZPmlYxw0zj3bXZvwNSgdKnG1T/R3yCm0qS8Dl07GQ9AxLDk2NLBSxxo55SOflPRTnaA/Ffkee8Ljsy8HIg3dNvVzV/y/BueeT5wpjxp2NgYYBZo7Iol44pL6t9nPdcQW0fA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKhr351z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oxpC1RTacIvGHAZOS7S/sb0ZMhkubbsulmcNKSAXk2TRkUW3dRXj6Otx2ArEGgLrKDcQ3PNE1T1CLifMa4L5Yzb3Or+NB3K2etRtBvXKGJuu2YieYhQXelH2XwEYokSO1Vk1BmaKPYq55njrcTQzcYs1BE5SffnJ+Y/aX6rCglg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fP5u5fPu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKhr351z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD51C4CEF3;
-	Wed, 30 Apr 2025 20:55:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fP5u5fPu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F70C4CEEC;
+	Wed, 30 Apr 2025 20:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746046552;
-	bh=L4TzTyAJccQj99m5SJjBS6xHZW5xZZiPDpLmCh83ayg=;
+	bh=Od313OK1KaRM9Dc3kB1+B0iEWriL30mnhLfzK6N9vII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lKhr351z4IH8+s7+u9gilJe7pTmsA5NwuVovzJhVKcKGMKyQuDIuL/glN8uUtk7PN
-	 c1uwKmeSJQUXQpP3GFeL1xYpRe2uZH+NevktJgM7/qf8GDjqunyTjfdAjGs3v+yhUx
-	 ReHWYJJJQ5V9rwrDN7IKbNEsFHCiBTb+Z1YQrPAUvgXtBw8S0n3VZWP0dAHtk/Hwkl
-	 C3OfZSlZ8kVq6fsTYxZlZrkfLfyVcp/zRrXUsfXhUP7HI3TARvcBepWqw5vmzsQyse
-	 kuy4trWuVApDH7LM+ocLyhDw969hUHHe4DZUPpFWrP6TXhcYIeQdCk85MEQ3jqBCRQ
-	 4ekO3NcdS3GIQ==
+	b=fP5u5fPuoRUawWmxv8/rx3GO0pbZNX0bbxtGLVnBUuQ8itZ3s/yb0xyUHx7EgEkam
+	 QfJw1AaeaZR+uSiSVvvnu26u6cp1ExObdUq1D8HyfxFLATDUVYmnHzd+SQ7r1nA/E7
+	 TVviNngR9xlN2B/1oe6BAPhr8QzssBjPTr9TJilrgqFDXWP2jry27Z8KW1uYAX+nFh
+	 PQ/Z7p5XgXfCGaV2tObPD2p+rtBvGx8src9z8nsSMUdMafxO+LmdUgNlWU5bHaw3E+
+	 v8BmE/esYoZoCGX/FMkRKq0IR/IKVqdny8eHsN/18/DU/8Y9O6Fm3YyANFtP2koh53
+	 Z9rPMYZJ0tLHw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Ravi Bangoria <ravi.bangoria@amd.com>,
 	Leo Yan <leo.yan@arm.com>
-Subject: [PATCH 03/11] perf hist: Support multi-line header
-Date: Wed, 30 Apr 2025 13:55:40 -0700
-Message-ID: <20250430205548.789750-4-namhyung@kernel.org>
+Subject: [PATCH 04/11] perf hist: Add struct he_mem_stat
+Date: Wed, 30 Apr 2025 13:55:41 -0700
+Message-ID: <20250430205548.789750-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
 In-Reply-To: <20250430205548.789750-1-namhyung@kernel.org>
 References: <20250430205548.789750-1-namhyung@kernel.org>
@@ -52,224 +52,182 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a preparation to support multi-line headers in perf mem report.
-Normal sort keys and output fields that don't have contents for multi-
-line will print the header string at the last line only.
+The struct he_mem_stat is to save detailed information about memory
+instruction.  It'll be used to show breakdown of various data from
+PERF_SAMPLE_DATA_SRC.  Note that this structure is generic and the
+contents will be different depending on actual data it'll use later.
 
-As we don't use multi-line headers normally, it should not have any
-changes in the output.
+The information about the actual data will be saved in struct hists and
+its length is in nr_mem_stats.  This commit just adds ground works and
+does nothing since hists->nr_mem_stats is 0 for now.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/ui/browsers/hists.c | 24 +++++++++-----
- tools/perf/ui/hist.c           |  9 ++++--
- tools/perf/ui/stdio/hist.c     | 57 +++++++++++++++++++++-------------
- tools/perf/util/sort.c         |  8 +++--
- 4 files changed, 64 insertions(+), 34 deletions(-)
+ tools/perf/util/hist.c | 74 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/hist.h |  9 +++++
+ 2 files changed, 83 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index cf022e92d06b9b28..67cbdec90d0bf0ea 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -1686,7 +1686,8 @@ hists_browser__scnprintf_headers(struct hist_browser *browser, char *buf,
- 	return ret;
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index d65228c1141251fb..fcb9f0db0c92a229 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -336,6 +336,67 @@ static void he_stat__decay(struct he_stat *he_stat)
+ 	he_stat->latency = (he_stat->latency * 7) / 8;
  }
  
--static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *browser, char *buf, size_t size)
-+static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *browser,
-+						      char *buf, size_t size, int line)
- {
- 	struct hists *hists = browser->hists;
- 	struct perf_hpp dummy_hpp = {
-@@ -1712,7 +1713,7 @@ static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *brows
- 		if (column++ < browser->b.horiz_scroll)
- 			continue;
- 
--		ret = fmt->header(fmt, &dummy_hpp, hists, 0, NULL);
-+		ret = fmt->header(fmt, &dummy_hpp, hists, line, NULL);
- 		if (advance_hpp_check(&dummy_hpp, ret))
- 			break;
- 
-@@ -1723,6 +1724,9 @@ static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *brows
- 		first_node = false;
- 	}
- 
-+	if (line < hists->hpp_list->nr_header_lines - 1)
-+		return ret;
++static int hists__update_mem_stat(struct hists *hists, struct hist_entry *he,
++				  struct mem_info *mi, u64 period)
++{
++	if (hists->nr_mem_stats == 0)
++		return 0;
 +
- 	if (!first_node) {
- 		ret = scnprintf(dummy_hpp.buf, dummy_hpp.size, "%*s",
- 				indent * HIERARCHY_INDENT, "");
-@@ -1753,7 +1757,7 @@ static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *brows
- 			}
- 			first_col = false;
- 
--			ret = fmt->header(fmt, &dummy_hpp, hists, 0, NULL);
-+			ret = fmt->header(fmt, &dummy_hpp, hists, line, NULL);
- 			dummy_hpp.buf[ret] = '\0';
- 
- 			start = strim(dummy_hpp.buf);
-@@ -1772,14 +1776,18 @@ static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *brows
- 
- static void hists_browser__hierarchy_headers(struct hist_browser *browser)
- {
-+	struct perf_hpp_list *hpp_list = browser->hists->hpp_list;
- 	char headers[1024];
-+	int line;
- 
--	hists_browser__scnprintf_hierarchy_headers(browser, headers,
--						   sizeof(headers));
-+	for (line = 0; line < hpp_list->nr_header_lines; line++) {
-+		hists_browser__scnprintf_hierarchy_headers(browser, headers,
-+							   sizeof(headers), line);
- 
--	ui_browser__gotorc_title(&browser->b, 0, 0);
--	ui_browser__set_color(&browser->b, HE_COLORSET_ROOT);
--	ui_browser__write_nstring(&browser->b, headers, browser->b.width + 1);
-+		ui_browser__gotorc_title(&browser->b, line, 0);
-+		ui_browser__set_color(&browser->b, HE_COLORSET_ROOT);
-+		ui_browser__write_nstring(&browser->b, headers, browser->b.width + 1);
++	if (he->mem_stat == NULL) {
++		he->mem_stat = calloc(hists->nr_mem_stats, sizeof(*he->mem_stat));
++		if (he->mem_stat == NULL)
++			return -1;
 +	}
++
++	for (int i = 0; i < hists->nr_mem_stats; i++) {
++		int idx = 0; /* TODO: get correct index from mem info */
++
++		(void)mi;
++		he->mem_stat[i].entries[idx] += period;
++	}
++	return 0;
++}
++
++static void hists__add_mem_stat(struct hists *hists, struct hist_entry *dst,
++				struct hist_entry *src)
++{
++	if (hists->nr_mem_stats == 0)
++		return;
++
++	for (int i = 0; i < hists->nr_mem_stats; i++) {
++		for (int k = 0; k < MEM_STAT_LEN; k++)
++			dst->mem_stat[i].entries[k] += src->mem_stat[i].entries[k];
++	}
++}
++
++static int hists__clone_mem_stat(struct hists *hists, struct hist_entry *dst,
++				  struct hist_entry *src)
++{
++	if (hists->nr_mem_stats == 0)
++		return 0;
++
++	dst->mem_stat = calloc(hists->nr_mem_stats, sizeof(*dst->mem_stat));
++	if (dst->mem_stat == NULL)
++		return -1;
++
++	for (int i = 0; i < hists->nr_mem_stats; i++) {
++		for (int k = 0; k < MEM_STAT_LEN; k++)
++			dst->mem_stat[i].entries[k] = src->mem_stat[i].entries[k];
++	}
++	return 0;
++}
++
++static void hists__decay_mem_stat(struct hists *hists, struct hist_entry *he)
++{
++	if (hists->nr_mem_stats == 0)
++		return;
++
++	for (int i = 0; i < hists->nr_mem_stats; i++) {
++		for (int k = 0; k < MEM_STAT_LEN; k++)
++			he->mem_stat[i].entries[k] = (he->mem_stat[i].entries[k] * 7) / 8;
++	}
++}
++
+ static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
+ 
+ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
+@@ -350,6 +411,7 @@ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
+ 	if (symbol_conf.cumulate_callchain)
+ 		he_stat__decay(he->stat_acc);
+ 	decay_callchain(he->callchain);
++	hists__decay_mem_stat(hists, he);
+ 
+ 	if (!he->depth) {
+ 		u64 period_diff = prev_period - he->stat.period;
+@@ -693,6 +755,10 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 		he_stat__add_cpumode_period(&he->stat, al->cpumode, period);
+ 	if (symbol_conf.cumulate_callchain)
+ 		he_stat__add_cpumode_period(he->stat_acc, al->cpumode, period);
++	if (hists__update_mem_stat(hists, he, entry->mem_info, period) < 0) {
++		hist_entry__delete(he);
++		return NULL;
++	}
+ 	return he;
  }
  
- static void hists_browser__headers(struct hist_browser *browser)
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index bc0689fceeb18bde..ec44633207aa3aba 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -321,11 +321,16 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
+@@ -1423,6 +1489,7 @@ void hist_entry__delete(struct hist_entry *he)
+ 	free_callchain(he->callchain);
+ 	zfree(&he->trace_output);
+ 	zfree(&he->raw_data);
++	zfree(&he->mem_stat);
+ 	ops->free(he);
  }
  
- static int hpp__header_fn(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--			  struct hists *hists, int line __maybe_unused,
-+			  struct hists *hists, int line,
- 			  int *span __maybe_unused)
- {
- 	int len = hpp__width_fn(fmt, hpp, hists);
--	return scnprintf(hpp->buf, hpp->size, "%*s", len, fmt->name);
-+	const char *hdr = "";
-+
-+	if (line == hists->hpp_list->nr_header_lines - 1)
-+		hdr = fmt->name;
-+
-+	return scnprintf(hpp->buf, hpp->size, "%*s", len, hdr);
- }
- 
- int hpp_color_scnprintf(struct perf_hpp *hpp, const char *fmt, ...)
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 7ac4b98e28bca82e..8c4c8925df2c22fc 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -643,45 +643,58 @@ static int hists__fprintf_hierarchy_headers(struct hists *hists,
- 	unsigned header_width = 0;
- 	struct perf_hpp_fmt *fmt;
- 	struct perf_hpp_list_node *fmt_node;
-+	struct perf_hpp_list *hpp_list = hists->hpp_list;
- 	const char *sep = symbol_conf.field_sep;
- 
- 	indent = hists->nr_hpp_node;
- 
--	/* preserve max indent depth for column headers */
--	print_hierarchy_indent(sep, indent, " ", fp);
--
- 	/* the first hpp_list_node is for overhead columns */
- 	fmt_node = list_first_entry(&hists->hpp_formats,
- 				    struct perf_hpp_list_node, list);
- 
--	perf_hpp_list__for_each_format(&fmt_node->hpp, fmt) {
--		fmt->header(fmt, hpp, hists, 0, NULL);
--		fprintf(fp, "%s%s", hpp->buf, sep ?: "  ");
--	}
-+	for (int line = 0; line < hpp_list->nr_header_lines; line++) {
-+		/* first # is displayed one level up */
-+		if (line)
-+			fprintf(fp, "# ");
- 
--	/* combine sort headers with ' / ' */
--	first_node = true;
--	list_for_each_entry_continue(fmt_node, &hists->hpp_formats, list) {
--		if (!first_node)
--			header_width += fprintf(fp, " / ");
--		first_node = false;
-+		/* preserve max indent depth for column headers */
-+		print_hierarchy_indent(sep, indent, " ", fp);
- 
--		first_col = true;
- 		perf_hpp_list__for_each_format(&fmt_node->hpp, fmt) {
--			if (perf_hpp__should_skip(fmt, hists))
--				continue;
-+			fmt->header(fmt, hpp, hists, line, NULL);
-+			fprintf(fp, "%s%s", hpp->buf, sep ?: "  ");
-+		}
- 
--			if (!first_col)
--				header_width += fprintf(fp, "+");
--			first_col = false;
-+		if (line < hpp_list->nr_header_lines - 1)
-+			goto next_line;
-+
-+		/* combine sort headers with ' / ' */
-+		first_node = true;
-+		list_for_each_entry_continue(fmt_node, &hists->hpp_formats, list) {
-+			if (!first_node)
-+				header_width += fprintf(fp, " / ");
-+			first_node = false;
- 
--			fmt->header(fmt, hpp, hists, 0, NULL);
-+			first_col = true;
-+			perf_hpp_list__for_each_format(&fmt_node->hpp, fmt) {
-+				if (perf_hpp__should_skip(fmt, hists))
-+					continue;
- 
--			header_width += fprintf(fp, "%s", strim(hpp->buf));
-+				if (!first_col)
-+					header_width += fprintf(fp, "+");
-+				first_col = false;
-+
-+				fmt->header(fmt, hpp, hists, line, NULL);
-+
-+				header_width += fprintf(fp, "%s", strim(hpp->buf));
-+			}
+@@ -1572,6 +1639,7 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
+ 		cmp = hist_entry__collapse_hierarchy(hpp_list, iter, he);
+ 		if (!cmp) {
+ 			he_stat__add_stat(&iter->stat, &he->stat);
++			hists__add_mem_stat(hists, iter, he);
+ 			return iter;
  		}
-+
-+next_line:
-+		fprintf(fp, "\n");
+ 
+@@ -1613,6 +1681,11 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
+ 			new->srcfile = NULL;
  	}
  
--	fprintf(fp, "\n# ");
-+	fprintf(fp, "# ");
- 
- 	/* preserve max indent depth for initial dots */
- 	print_hierarchy_indent(sep, indent, dots, fp);
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 594b75ca95bf72b2..ae8b8ceb82f3d00b 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2641,18 +2641,22 @@ void perf_hpp__reset_sort_width(struct perf_hpp_fmt *fmt, struct hists *hists)
- }
- 
- static int __sort__hpp_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--			      struct hists *hists, int line __maybe_unused,
-+			      struct hists *hists, int line,
- 			      int *span __maybe_unused)
- {
- 	struct hpp_sort_entry *hse;
- 	size_t len = fmt->user_len;
-+	const char *hdr = "";
++	if (hists__clone_mem_stat(hists, new, he) < 0) {
++		hist_entry__delete(new);
++		return NULL;
++	}
 +
-+	if (line == hists->hpp_list->nr_header_lines - 1)
-+		hdr = fmt->name;
+ 	rb_link_node(&new->rb_node_in, parent, p);
+ 	rb_insert_color_cached(&new->rb_node_in, root, leftmost);
+ 	return new;
+@@ -1695,6 +1768,7 @@ static int hists__collapse_insert_entry(struct hists *hists,
+ 			he_stat__add_stat(&iter->stat, &he->stat);
+ 			if (symbol_conf.cumulate_callchain)
+ 				he_stat__add_stat(iter->stat_acc, he->stat_acc);
++			hists__add_mem_stat(hists, iter, he);
  
- 	hse = container_of(fmt, struct hpp_sort_entry, hpp);
+ 			if (hist_entry__has_callchains(he) && symbol_conf.use_callchain) {
+ 				struct callchain_cursor *cursor = get_tls_callchain_cursor();
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 76efd8952507a561..aba1d84ca074f27b 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -100,6 +100,13 @@ enum hist_column {
+ struct thread;
+ struct dso;
  
- 	if (!len)
- 		len = hists__col_len(hists, hse->se->se_width_idx);
++#define MEM_STAT_LEN  8
++
++struct he_mem_stat {
++	/* meaning of entries depends on enum mem_stat_type */
++	u64			entries[MEM_STAT_LEN];
++};
++
+ struct hists {
+ 	struct rb_root_cached	entries_in_array[2];
+ 	struct rb_root_cached	*entries_in;
+@@ -125,6 +132,7 @@ struct hists {
+ 	struct perf_hpp_list	*hpp_list;
+ 	struct list_head	hpp_formats;
+ 	int			nr_hpp_node;
++	int			nr_mem_stats;
+ };
  
--	return scnprintf(hpp->buf, hpp->size, "%-*.*s", len, len, fmt->name);
-+	return scnprintf(hpp->buf, hpp->size, "%-*.*s", len, len, hdr);
- }
- 
- static int __sort__hpp_width(struct perf_hpp_fmt *fmt,
+ #define hists__has(__h, __f) (__h)->hpp_list->__f
+@@ -232,6 +240,7 @@ struct hist_entry {
+ 	} pairs;
+ 	struct he_stat		stat;
+ 	struct he_stat		*stat_acc;
++	struct he_mem_stat	*mem_stat;
+ 	struct map_symbol	ms;
+ 	struct thread		*thread;
+ 	struct comm		*comm;
 -- 
 2.49.0.906.g1f30a19c02-goog
 
