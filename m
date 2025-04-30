@@ -1,308 +1,691 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010003.outbound.protection.outlook.com [52.103.12.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01DA32C85;
-	Wed, 30 Apr 2025 04:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745986860; cv=fail; b=ACkfV35XPtc959Gip0vMi/PtyFno4BeNix7V921rG49hi4dV8MFcKN5+nldLBdBi3J6Cbh/hje8KuxfrwtwOQNo5zbx516mHCqbUb9cBpGujzzvF5kqXpm2rM6ZT7736Vwr6Qw6wjQJv14FILf0/1UYIeXOoG7zqwzRKNZExjT0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745986860; c=relaxed/simple;
-	bh=KWYz4HiFOZ3yX4G0KklaWry7u3sF9v0oz96ipPJ0Zqc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J6ft6fIdRmo6TBDyolVI52SYB35Vx2j2uuTn1stfU/bT/xny/v1j7YSZuYbIDNwOJhvZMTkOcgnZq38l1E9eFBRQXhJLHn5Nf5TrIoz1Ipkw7Q632PmNqYPjCbGFdZqhyNLNoYjyxZwuvR0PscnPYkOL8Ld1TT8csO5hieM32Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=s1LPyTtz; arc=fail smtp.client-ip=52.103.12.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5783A1DE2A7;
+	Wed, 30 Apr 2025 06:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745993217; cv=none; b=E7oKQytEOl5eBQ/iPiMECBMpmI7qUxn/3xB0+q+p/PR/RrTrWbS22MqnP85tMv7/IshmeYIBmFXEenyD9YzikGvz4xj1/9KgocKGrssFjyVqhqbrJ+ZcwV4JU0xCgGOyMXGmv+3zhwhOO+AepHd+aWdaWzfwphf/POO39wUpV0M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745993217; c=relaxed/simple;
+	bh=Qa2orF1FmtuhmsUpgkpDzS8EP0w35oFtgPbKJyYW480=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s962vHgwxrULEJASURN870ra62sbDBzVobUcDTQi18kOuWN+JRe6ypAiWXiucu0Mhh/lt9gh4r4tLeAlE+EzI51WnnxxKVyFNJCDrq1QBt9bv5FZsB7mT+P/xQJnege19bBkC7Uw9RX/mSqcwFJ1tVZ/XLi7ooeFkruSieBuyvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTOnDWY+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="s1LPyTtz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ga/E4WGXqv5N4wpBc8DzychM63nQINi3PIZyQhvHEa/DI9rN/3dze5jz+be4ovRww5u7oV93YGi2/72Sz/v4GhJuYuG1Yxdk4vg9qGfOiAJqSGv/tamywScYyFaAyAJWWWe8+xE6gh3JhEuyB/RAWWoNz4GcxeGJbcqFOoWCtiHoWR5FJNXKbUafO9rUf/3A8r4Vdm4QujcxJOkUgMP2OSAmV2PB24uvvXFAhFeQBTojWVg0lfJ2MpNVv0YCPU/e+ngshY7cjd6AfzrRQ2enHaZ2y787IrXA8/gCVQzkOe/DPXoT3zyW0/8YYGnLZQn84Ltm8sJeYXJ7ZNYjJSHMmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dvK2r+/hEf2JsEW/4ID2HtZg7/lC0WNw/mRBGzmJ9UI=;
- b=HHSaZX2FdcEfRpDkg+44rRHuksrqoKqCQVU4akcJXqYupuuu8NeIAFCo2x5WDP3sMG7XuM+RBx2rk2fLzoVMmsiIBqrp/spZE0PkZbXctGsadAUn2YF/9xJVKY1YoOKmKqcBVVXfdAvtwpE0q1cqA19VUz7YK3ag+gUktPqn9wty8CXZc18Sr5rrwmKY2Mw3miOv7gv2w6rdwQaRP4v0ENP6V8K14QrSUHw1c1fhfla4r5seHFMMzHpV9BO7MrF7kKCU0eTexEdv5wQBlQY7HJNaznSaVG6bSTr/KtcfM6ijohzADpOx7p0t2Rebew4kXdk1Wj1yyKuS676JLToDYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dvK2r+/hEf2JsEW/4ID2HtZg7/lC0WNw/mRBGzmJ9UI=;
- b=s1LPyTtzZMFRmWOY43AU9AHEdyANDTA2OH+M60JwjcHqAulz897g+WPHljm3SWLHlWD0DeZ5K/wncSS2kUtNYtjYI2ugYq/CuppAJUqbqXrzy7m/33EwkwATwHm2p+Lz3HYtKIiq1yS36yn4b88GL3g7aM049VGivZpb0IF7vU++ten7/7aB4rSvR5cL8pQCx/Dxr7HN51+xw2+ZXyxdXG+AP5pnM5c7hbL65j9yvB1nzOe9k3GFGXCUhfb+eNaJgoHWL7Rf6SiZ7QeLfJqoiGEuB/xAPexGd4Etmzysf292N3/HpjnSVN1EZW/J0jj5R54qnZ9vY85UJW0PkZh2Xw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CY8PR02MB9428.namprd02.prod.outlook.com (2603:10b6:930:75::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.18; Wed, 30 Apr
- 2025 04:20:54 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Wed, 30 Apr 2025
- 04:20:54 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Xin Li
- (Intel)" <xin@zytor.com>
-CC: LKML <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "virtualization@lists.linux.dev"
-	<virtualization@lists.linux.dev>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "xen-devel@lists.xenproject.org"
-	<xen-devel@lists.xenproject.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "acme@kernel.org"
-	<acme@kernel.org>, "jgross@suse.com" <jgross@suse.com>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "irogers@google.com"
-	<irogers@google.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "ajay.kaher@broadcom.com" <ajay.kaher@broadcom.com>,
-	"bcm-kernel-feedback-list@broadcom.com"
-	<bcm-kernel-feedback-list@broadcom.com>, "tony.luck@intel.com"
-	<tony.luck@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "luto@kernel.org" <luto@kernel.org>,
-	"boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>,
-	"dapeng1.mi@linux.intel.com" <dapeng1.mi@linux.intel.com>
-Subject: RE: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-Thread-Topic: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-Thread-Index: AQHbt1dCxRX1SSJBLkyUN2kSfV4ndLO6aEuAgAE1BbA=
-Date: Wed, 30 Apr 2025 04:20:53 +0000
-Message-ID:
- <SN6PR02MB4157EA2E3B827141588DA310D4832@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-2-xin@zytor.com>
- <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB9428:EE_
-x-ms-office365-filtering-correlation-id: 3d0d210a-0c2d-4037-26cd-08dd879e65cb
-x-ms-exchange-slblob-mailprops:
- 70qbaZjg4mvbis83qL2U5WvEmRMBS6Og9W/3014Us/uuwmhN2UMLRJLUTlmuqN5h9ehr8uc6w6voiES8QxIGpN0rfCSOM9sOOHGLjemzx5vQcTGO902AiVqPz2A3JQjnNpxe+TmFCiX45epvb1/3E/S3dfmB2IMc6Sb5ndzUEmhxssKtmEvp14NWRaHnFrw0WfyKXLFWZHE9acl4TNTQEsEu2HU3f0UKjU/UX+YJwX4k3uWTUqE0DZHWP69nVlSBLjWeBqPlZ6K1qpn77jaYLfB3Bz0dHAjXzcVxdtqb6xdBDnbSc0yNWRaBrkzWWu+H254LnHV+pHFD/oi59WsjdoBkyG6V20uf+TedjnyD3uFNl6uy6HCeWUb3GCb+Lb9FedlS9/k31aK78fViFEM9TLpwgQO5hAzNa+K5Web9rzREs0PzO5c6XoOeyaNpFknp3pT136KOQpfNix+EqD3O/JhBn7qKAgHbmirv3yzuoEtWGcn68EyMRjFfsGfLhZfEkseUv0Az7QRsqcwv3Q9HNGBWa3Xw5TjT7IVQn6byPyF/rDDHJXJb+Mwu4mQKJbokv5eZrLVW2qFYwPw7+8vJGo55OGPMzuDsYDZBugm826HQBw+0h8GCwcvrySV2YrD8kcpgITqSZ7kSsqNgyf9Jnbw4iT7xLfzQeVeRqwCe6RH/9SRKDXNJ4nD+ryVAdkLeYUb7GEDe/R3Z7K5AeleYFv+p4EhZtZdU3bI6e82Z4MHFIA+tdk5pzQ==
-x-microsoft-antispam:
- BCL:0;ARA:14566002|12121999004|19110799003|461199028|15080799006|8062599003|7072599006|8060799006|102099032|3412199025|440099028|19111999003|21061999003|12071999003;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?sAHcTpNlk86YDWmdOjpjnVGfqswYWqUmVVV01MSP5d+6CLugqu9DDRrRpW?=
- =?iso-8859-1?Q?uZZA1rl6GPfrNusZXaarGueIpwi8Q5ayKtp626EpHtCKvNCh/z9omy7Ip1?=
- =?iso-8859-1?Q?dNi9Vl1FcWAtvxkWHSdNEE7Hfxv/zNDKmPnqFIaBWnb/8w/M+Fo8/DhAkD?=
- =?iso-8859-1?Q?x1kOGshNgwS6F7jQSuf9Pa6AIACpt8WCaHG0f8XKmVWymesSmiBRtrbPmX?=
- =?iso-8859-1?Q?pjRhOfEe7fvI4MbaaeYiDrXKKltX9xDawlEiP2muaG4tDot/vad4XOzDV5?=
- =?iso-8859-1?Q?oDxyzf5WbsSzQeTrF9DR//PpQaO0MC6cX1Y0WDZ07zGJoAe1cCs8tiixaI?=
- =?iso-8859-1?Q?WgmHuWq+o2li88q4iq+9jlPtL3AEJCJMERnHfaHoPV6NY0awa6rwtI8DYp?=
- =?iso-8859-1?Q?wVmiG0VKOYaiVszrc1JHCnb2wUZAORWUwRsJBANUc7z945TjgjkIx6fNRx?=
- =?iso-8859-1?Q?PyRkALMTUxKeqcnJM7Jy/VymuYrnNoPHNm6h59YFI28VA69J36aUTug/Y1?=
- =?iso-8859-1?Q?hbDJKl9jFRUm6WrQbFvZN6omiAVR8PpCUWRljjjhgLCVIo5ta0QcDlPXjs?=
- =?iso-8859-1?Q?rsfmnL1o6skGx0vaa06y33p25QviLyrlqdev616BmETRtJ1YiGTwuD4GSo?=
- =?iso-8859-1?Q?LaueymHkPhouAVIGnKzPyS9hqFmkql7N53RaaAM5lJkf9xtQpExfrmq5zd?=
- =?iso-8859-1?Q?1jeqo+wfO83sVMoF7ha+nOa34GqzbtcJa2sEckN/90lbL5fRzgK/CsADRi?=
- =?iso-8859-1?Q?vHaMVScui45ypd0/T+g+xcnRqNdiJNhsC4E5Qz2EDI7+66pyxiTXigV2ds?=
- =?iso-8859-1?Q?w6FNILVJljSPTqKp/8NoUgVtHYPs7DzFYWyoH8PultihFHpn9giSm+ddPP?=
- =?iso-8859-1?Q?s4sst1NTjetFCCwqpp+GtZ8XOQ31E3s9GKHbN1lcGDhleXtsAMvPpw9fp+?=
- =?iso-8859-1?Q?84PamiJ43E7lAfpHbeSbwtZ78XHQh2a1aBRb1DfP9WtmymvkZ+5hiQ+Jtt?=
- =?iso-8859-1?Q?exCggCOz3vT5JSUMvjl9vC9i5WgIh+VrOo4/bWg/4zeaXIJBUa7u+Txtk8?=
- =?iso-8859-1?Q?3Ct8MUCtP3mg0j0gqB6TTFxY3IZHSrJ+uDIuepJd+8BqnErUTzv2cdODhU?=
- =?iso-8859-1?Q?AxL+0XrpyWwdc3zBYWl1cu/OmIkj8gdyAh2cKKG1ljZFKy0eefh/nD9N2Y?=
- =?iso-8859-1?Q?WBq1xgdNiTFaecZQGenBafpOQalkmcrrn8IkFuPwY3Ct0rvfhqzrSxVw3v?=
- =?iso-8859-1?Q?hscSj88xP6N7FqaOLiwt1fWf9jRQTG9RH0QKSkH4Q=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?46i1sKkGUf2Kl0zhlolABqRmtZzPSJWRjAt3BFRy8ECcgF+mQjobIr8cFQ?=
- =?iso-8859-1?Q?+xL9oK/IIbRvPY+mKZFTmaj2v7xwVnxmp5FLnoEHtjFro3dm6V664MBU+3?=
- =?iso-8859-1?Q?+wPEZkUsza3xlJCNL9TMoEJDpLke0A+mmjcDkB4kRERzec3xK39migWixJ?=
- =?iso-8859-1?Q?pg5WLKFxzHTPGcw1w3nXH9OHxmF3MHrXV2GSMo5xDw+ZR674xPhR3HKi+3?=
- =?iso-8859-1?Q?byXeWGntA73Y90gvA/KzHl27/g3QhxIbumHYJx02+nRDrPELJs5pOgfKhg?=
- =?iso-8859-1?Q?8as9Bh0H2ZTBKlto5EOzn9Sj+k9RlFIvp2h+TdByzwptC7+7jFk2Mmx9hf?=
- =?iso-8859-1?Q?ahypKdmrVptvlkMPgCJyizYP5ZAqlk3abvjfVjqDqlb6jZneUcJcyEByX9?=
- =?iso-8859-1?Q?1Pb+zpJtWKqj2u7rSUjduaK4jqrfZ/a2iY5G28cGyaUlHkIwZmU2kj/gYq?=
- =?iso-8859-1?Q?CEbNY10bJ8JbiO1eRntgpbuCj/c2VX5g+p6o6S5kvJ2iZ1TKI+8rTXyYEw?=
- =?iso-8859-1?Q?sfgLmQWoIhX/O/4kPtMMUS0GqX8pdwPHqalj3PlCd2XwMLG2Un7beBj5u6?=
- =?iso-8859-1?Q?fVNgjaQy/9+r1Nrkaqoh8nTd4pi3Y71sGpRLDhBN9tfZ9DHynMkc9gLNXV?=
- =?iso-8859-1?Q?ZLoTxKuHu2PCJuvV73F7LJNO1AN9ctVA66T9Y5CZv37eA0wxjOnJAXy9L9?=
- =?iso-8859-1?Q?+X2JXWnztCyw8Oau0IG/Db/UMzkXXXQ0ChVqnz40TvV/MlvlzKHhgegih3?=
- =?iso-8859-1?Q?qjTKwx2HkgXvMOHanw5rUpwOiTDWV0uyc+kAoOeUmZu68Uri9XOPO7XVd4?=
- =?iso-8859-1?Q?MF1FFTnKeanbFYR7K0SEvJr7gOTHl6rF0n4hb4A7olHugY6esyZjj//LmC?=
- =?iso-8859-1?Q?WuRnkqxBF7voOdjtfGN/YqMqHJ8m50DqyqoTnWtFNE05mxqFNmW/oxghUb?=
- =?iso-8859-1?Q?/IbP705YFTxIZyHYnEw+ClfPc9B+HvOSxdAVPVGbiZwWqp16xrAN9fxEe4?=
- =?iso-8859-1?Q?Z1cSzpkkI4v4KfI53O1bcxI7Nx/8xDZZVf7wE6+D2s4FGibs3bQMknxKaf?=
- =?iso-8859-1?Q?N4jVzDAQb32d4v0nmFp+Pj7NVGYtGk391AOzFilb844Vu9pgakBFAiHVjK?=
- =?iso-8859-1?Q?vxivww+0PJrUeh/POy7j7pEyrr/rYsJvl/6omeOiM9K79pBUxEHyBXaW4m?=
- =?iso-8859-1?Q?PEGHpafia27LjTH2/m1MbQ3fyjNt7F+AkithQGsohmUxpLpSmgPdAmdaw5?=
- =?iso-8859-1?Q?D7NbEddypJrHYEzE0DKSxbU0+RQIMRlu4i+2edvB0=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTOnDWY+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB60C4CEE9;
+	Wed, 30 Apr 2025 06:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745993216;
+	bh=Qa2orF1FmtuhmsUpgkpDzS8EP0w35oFtgPbKJyYW480=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lTOnDWY+TRZahlVRdKhWnGddm0YoGYioDcsvll5e9pvAtV2qJyB2maGswgY0AZVpr
+	 6/UijoJPOON2znAop86MNUDxzosf3ymWTpwfnRYoF121qqmmPjY+498NGJHSQxWqrK
+	 xKCDqKNabwqpNx8JRaz7RMqdw02cnG/1C7J8CanJEMJEHrOeKK3ZUWJzguhrL6Kx9Q
+	 HhV5WA6HZhPMrdyxzKzJG/PiFiMDTrJaog9r5f5XX491Zqir2nqxkiB8+sKuwWEk0Z
+	 om+vomclzdn+D+sedwGuWPYQNdBIJG7fjW9K6Lqakzg02sgGW6utJFhalihAgyg0yh
+	 dgcMl4xHVXgoA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf trace: Split BPF skel code to util/trace_augment.c
+Date: Tue, 29 Apr 2025 23:06:16 -0700
+Message-ID: <20250430060616.18576-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d0d210a-0c2d-4037-26cd-08dd879e65cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2025 04:20:53.8258
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB9428
+Content-Transfer-Encoding: 8bit
 
-From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> Sent: Tuesday, April =
-29, 2025 2:46 AM
->=20
-> On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
->=20
-> > For some reason, there are some TSC-related functions in the MSR
-> > header even though there is a tsc.h header.
-> >
-> > To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
-> > to <asm/tsc.h> and to eventually eliminate the inclusion of
-> > <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
-> > reference definitions from <asm/msr.h>.
-> >
-> > Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> > Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >
-> > Change in v4:
-> > *) Add missing includes in a different patch (Ilpo J=E4rvinen).
-> > *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
-> >
-> > Change in v3:
-> > * Add a problem statement to the changelog (Dave Hansen).
-> > ---
-> >  arch/x86/events/msr.c                                         | 3 +++
-> >  arch/x86/events/perf_event.h                                  | 1 +
-> >  arch/x86/events/probe.c                                       | 2 ++
->=20
-> Under arch/x86/events/ a few files seem to be missing the include?
->=20
-> >  arch/x86/hyperv/ivm.c                                         | 1 +
->=20
-> Also under hyperv/ not all files are covered but I'm a bit hesitant to
-> suggest a change there since I'm not sure if they (hypervisors) do
-> something special w.r.t. msr.
+And make builtin-trace.c less conditional.  Dummy functions will be
+called when BUILD_BPF_SKEL=0 is used.  This makes the builtin-trace.c
+slightly smaller and simpler by removing the skeleton and its helpers.
 
-I've worked on the Hyper-V code in Linux for 8 years or so, first as
-a Microsoft employee, and more recently as a retiree. :-) I'm not
-aware of anything special w.r.t. MSR access for Hyper-V guests.
-All the normal Linux code for accessing MSRs just works. Hyper-V
-*does* provide a set of synthetic MSRs that are unique to
-Hyper-V, but they are also accessed using normal Linux code. Of
-course, at runtime the access to these synthetic MSRs always
-traps to the hypervisor.
+The conditional guard of trace__init_syscalls_bpf_prog_array_maps() is
+changed from the HAVE_BPF_SKEL to HAVE_LIBBPF_SUPPORT as it doesn't
+have a skeleton in the code directly.  And a dummy function is added so
+that it can be called unconditionally.  The function will succeed only
+if the both conditions are true.
 
-I'm planning to apply Xin Li's patch set and make sure nothing
-breaks for Hyper-V guests, and particularly when running as an
-SEV-SNP or TDX guest. Hopefully I can do that by early next week
-at the latest.
+Do not include trace_augment.h from the BPF code and move the definition
+of TRACE_AUG_MAX_BUF to the BPF directly.
 
-Michael
+Cc: Howard Chu <howardchu95@gmail.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-trace.c                    | 187 +++++-------------
+ tools/perf/util/Build                         |   1 +
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     |   3 +-
+ tools/perf/util/trace_augment.c               | 143 ++++++++++++++
+ tools/perf/util/trace_augment.h               |  62 +++++-
+ 5 files changed, 255 insertions(+), 141 deletions(-)
+ create mode 100644 tools/perf/util/trace_augment.c
 
->=20
-> >  arch/x86/include/asm/fred.h                                   | 1 +
-> >  arch/x86/include/asm/microcode.h                              | 2 ++
-> >  arch/x86/include/asm/mshyperv.h                               | 1 +
-> >  arch/x86/include/asm/msr.h                                    | 1 +
-> >  arch/x86/include/asm/suspend_32.h                             | 1 +
-> >  arch/x86/include/asm/suspend_64.h                             | 1 +
-> >  arch/x86/include/asm/switch_to.h                              | 2 ++
->=20
-> arch/x86/kernel/acpi/ ?
-> acrh/x86/kernel/cet.c ?
-> ...
->=20
-> There seem to be quite many under arch/x86/ that still don't have it, I
-> didn't list them all as there were so many after this point.
->=20
-> But that's up to x86 maintainers how throughout they want you to be.
->=20
-> This command may be helpful to exclude the files which already have the
-> include so you can focus on the ones that may still be missing it:
->=20
-> git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
->=20
-> >  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
-> >  arch/x86/kernel/fpu/xstate.h                                  | 1 +
-> >  arch/x86/kernel/hpet.c                                        | 1 +
-> >  arch/x86/kernel/process_64.c                                  | 1 +
-> >  arch/x86/kernel/trace_clock.c                                 | 2 +-
-> >  arch/x86/kernel/tsc_sync.c                                    | 1 +
-> >  arch/x86/lib/kaslr.c                                          | 2 +-
-> >  arch/x86/mm/mem_encrypt_identity.c                            | 1 +
-> >  arch/x86/realmode/init.c                                      | 1 +
-> >  drivers/acpi/acpi_extlog.c                                    | 1 +
-> >  drivers/acpi/processor_perflib.c                              | 1 +
-> >  drivers/acpi/processor_throttling.c                           | 3 ++-
-> >  drivers/char/agp/nvidia-agp.c                                 | 1 +
-> >  drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
-> >  drivers/crypto/ccp/sev-dev.c                                  | 1 +
-> >  drivers/edac/amd64_edac.c                                     | 1 +
-> >  drivers/edac/ie31200_edac.c                                   | 1 +
-> >  drivers/edac/mce_amd.c                                        | 1 +
-> >  drivers/hwmon/hwmon-vid.c                                     | 4 ++++
-> >  drivers/idle/intel_idle.c                                     | 1 +
-> >  drivers/misc/cs5535-mfgpt.c                                   | 1 +
-> >  drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
-> >  drivers/platform/x86/intel/ifs/core.c                         | 1 +
-> >  drivers/platform/x86/intel/ifs/load.c                         | 1 +
-> >  drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
-> >  drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
-> >  drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
-> >  drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
-> >  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
-> >  drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
-> >  .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
-> >  drivers/powercap/intel_rapl_common.c                          | 1 +
-> >  drivers/powercap/intel_rapl_msr.c                             | 1 +
-> >  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
-> >  drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
-> >  drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
-> >  drivers/video/fbdev/geode/display_gx.c                        | 1 +
-> >  drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
-> >  drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
->=20
-> Under drivers/ this looked pretty complete. Nice work.
->=20
-> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
->=20
-> I also noticed these files might not need to include msr.h:
->=20
-> drivers/cpufreq/elanfreq.c
-> drivers/cpufreq/sc520_freq.c
-> drivers/accel/habanalabs/common/habanalabs_ioctl.c
->=20
-> ...so if you want, you may consider optionally adding a cleanup patch to
-> remove the include from them.
->=20
-> > --- a/drivers/video/fbdev/geode/gxfb_core.c
-> > +++ b/drivers/video/fbdev/geode/gxfb_core.c
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/cs5535.h>
-> >
-> >  #include <asm/olpc.h>
-> > +#include <asm/msr.h>
->=20
-> In wrong order.
-> >
-> >  #include "gxfb.h"
->=20
-> --
->  i.
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 809b4d5b0a8a4ddc..3f3f6fadef0a128f 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -20,9 +20,6 @@
+ #include <bpf/bpf.h>
+ #include <bpf/libbpf.h>
+ #include <bpf/btf.h>
+-#ifdef HAVE_BPF_SKEL
+-#include "bpf_skel/augmented_raw_syscalls.skel.h"
+-#endif
+ #endif
+ #include "util/bpf_map.h"
+ #include "util/rlimit.h"
+@@ -155,9 +152,6 @@ struct trace {
+ 				*bpf_output;
+ 		}		events;
+ 	} syscalls;
+-#ifdef HAVE_BPF_SKEL
+-	struct augmented_raw_syscalls_bpf *skel;
+-#endif
+ #ifdef HAVE_LIBBPF_SUPPORT
+ 	struct btf		*btf;
+ #endif
+@@ -3699,7 +3693,10 @@ static int trace__set_ev_qualifier_tp_filter(struct trace *trace)
+ 	goto out;
+ }
+ 
+-#ifdef HAVE_BPF_SKEL
++#ifdef HAVE_LIBBPF_SUPPORT
++
++static struct bpf_program *unaugmented_prog;
++
+ static int syscall_arg_fmt__cache_btf_struct(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
+ {
+        int id;
+@@ -3717,26 +3714,8 @@ static int syscall_arg_fmt__cache_btf_struct(struct syscall_arg_fmt *arg_fmt, st
+        return 0;
+ }
+ 
+-static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace, const char *name)
+-{
+-	struct bpf_program *pos, *prog = NULL;
+-	const char *sec_name;
+-
+-	if (trace->skel->obj == NULL)
+-		return NULL;
+-
+-	bpf_object__for_each_program(pos, trace->skel->obj) {
+-		sec_name = bpf_program__section_name(pos);
+-		if (sec_name && !strcmp(sec_name, name)) {
+-			prog = pos;
+-			break;
+-		}
+-	}
+-
+-	return prog;
+-}
+-
+-static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, struct syscall *sc,
++static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace __maybe_unused,
++							struct syscall *sc,
+ 							const char *prog_name, const char *type)
+ {
+ 	struct bpf_program *prog;
+@@ -3744,19 +3723,19 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
+ 	if (prog_name == NULL) {
+ 		char default_prog_name[256];
+ 		scnprintf(default_prog_name, sizeof(default_prog_name), "tp/syscalls/sys_%s_%s", type, sc->name);
+-		prog = trace__find_bpf_program_by_title(trace, default_prog_name);
++		prog = augmented_syscalls__find_by_title(default_prog_name);
+ 		if (prog != NULL)
+ 			goto out_found;
+ 		if (sc->fmt && sc->fmt->alias) {
+ 			scnprintf(default_prog_name, sizeof(default_prog_name), "tp/syscalls/sys_%s_%s", type, sc->fmt->alias);
+-			prog = trace__find_bpf_program_by_title(trace, default_prog_name);
++			prog = augmented_syscalls__find_by_title(default_prog_name);
+ 			if (prog != NULL)
+ 				goto out_found;
+ 		}
+ 		goto out_unaugmented;
+ 	}
+ 
+-	prog = trace__find_bpf_program_by_title(trace, prog_name);
++	prog = augmented_syscalls__find_by_title(prog_name);
+ 
+ 	if (prog != NULL) {
+ out_found:
+@@ -3766,7 +3745,7 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
+ 	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
+ 		 prog_name, type, sc->name);
+ out_unaugmented:
+-	return trace->skel->progs.syscall_unaugmented;
++	return unaugmented_prog;
+ }
+ 
+ static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, int id)
+@@ -3783,13 +3762,13 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, in
+ static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int e_machine, int id)
+ {
+ 	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
+-	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
++	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(unaugmented_prog);
+ }
+ 
+ static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int e_machine, int id)
+ {
+ 	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
+-	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
++	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(unaugmented_prog);
+ }
+ 
+ static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, int key, unsigned int *beauty_array)
+@@ -3899,7 +3878,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+ 		bool is_candidate = false;
+ 
+ 		if (pair == NULL || pair->id == sc->id ||
+-		    pair->bpf_prog.sys_enter == trace->skel->progs.syscall_unaugmented)
++		    pair->bpf_prog.sys_enter == unaugmented_prog)
+ 			continue;
+ 
+ 		for (field = sc->args, candidate_field = pair->args;
+@@ -3965,7 +3944,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+ 		 */
+ 		if (pair_prog == NULL) {
+ 			pair_prog = trace__find_syscall_bpf_prog(trace, pair, pair->fmt ? pair->fmt->bpf_prog_name.sys_enter : NULL, "enter");
+-			if (pair_prog == trace->skel->progs.syscall_unaugmented)
++			if (pair_prog == unaugmented_prog)
+ 				goto next_candidate;
+ 		}
+ 
+@@ -3981,12 +3960,17 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+ 
+ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_machine)
+ {
+-	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
+-	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
+-	int beauty_map_fd = bpf_map__fd(trace->skel->maps.beauty_map_enter);
++	int map_enter_fd;
++	int map_exit_fd;
++	int beauty_map_fd;
+ 	int err = 0;
+ 	unsigned int beauty_array[6];
+ 
++	if (augmented_syscalls__get_map_fds(&map_enter_fd, &map_exit_fd, &beauty_map_fd) < 0)
++		return -1;
++
++	unaugmented_prog = augmented_syscalls__unaugmented();
++
+ 	for (int i = 0, num_idx = syscalltbl__num_idx(e_machine); i < num_idx; ++i) {
+ 		int prog_fd, key = syscalltbl__id_at_idx(e_machine, i);
+ 
+@@ -4056,7 +4040,7 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
+ 		 * For now we're just reusing the sys_enter prog, and if it
+ 		 * already has an augmenter, we don't need to find one.
+ 		 */
+-		if (sc->bpf_prog.sys_enter != trace->skel->progs.syscall_unaugmented)
++		if (sc->bpf_prog.sys_enter != unaugmented_prog)
+ 			continue;
+ 
+ 		/*
+@@ -4081,7 +4065,13 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
+ 
+ 	return err;
+ }
+-#endif // HAVE_BPF_SKEL
++#else // !HAVE_LIBBPF_SUPPORT
++static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace __maybe_unused,
++						    int e_machine __maybe_unused)
++{
++	return -1;
++}
++#endif // HAVE_LIBBPF_SUPPORT
+ 
+ static int trace__set_ev_qualifier_filter(struct trace *trace)
+ {
+@@ -4090,24 +4080,6 @@ static int trace__set_ev_qualifier_filter(struct trace *trace)
+ 	return 0;
+ }
+ 
+-static int bpf_map__set_filter_pids(struct bpf_map *map __maybe_unused,
+-				    size_t npids __maybe_unused, pid_t *pids __maybe_unused)
+-{
+-	int err = 0;
+-#ifdef HAVE_LIBBPF_SUPPORT
+-	bool value = true;
+-	int map_fd = bpf_map__fd(map);
+-	size_t i;
+-
+-	for (i = 0; i < npids; ++i) {
+-		err = bpf_map_update_elem(map_fd, &pids[i], &value, BPF_ANY);
+-		if (err)
+-			break;
+-	}
+-#endif
+-	return err;
+-}
+-
+ static int trace__set_filter_loop_pids(struct trace *trace)
+ {
+ 	unsigned int nr = 1, err;
+@@ -4133,8 +4105,8 @@ static int trace__set_filter_loop_pids(struct trace *trace)
+ 	}
+ 
+ 	err = evlist__append_tp_filter_pids(trace->evlist, nr, pids);
+-	if (!err && trace->filter_pids.map)
+-		err = bpf_map__set_filter_pids(trace->filter_pids.map, nr, pids);
++	if (!err)
++		err = augmented_syscalls__set_filter_pids(nr, pids);
+ 
+ 	return err;
+ }
+@@ -4151,8 +4123,8 @@ static int trace__set_filter_pids(struct trace *trace)
+ 	if (trace->filter_pids.nr > 0) {
+ 		err = evlist__append_tp_filter_pids(trace->evlist, trace->filter_pids.nr,
+ 						    trace->filter_pids.entries);
+-		if (!err && trace->filter_pids.map) {
+-			err = bpf_map__set_filter_pids(trace->filter_pids.map, trace->filter_pids.nr,
++		if (!err) {
++			err = augmented_syscalls__set_filter_pids(trace->filter_pids.nr,
+ 						       trace->filter_pids.entries);
+ 		}
+ 	} else if (perf_thread_map__pid(trace->evlist->core.threads, 0) == -1) {
+@@ -4475,41 +4447,18 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	err = evlist__open(evlist);
+ 	if (err < 0)
+ 		goto out_error_open;
+-#ifdef HAVE_BPF_SKEL
+-	if (trace->syscalls.events.bpf_output) {
+-		struct perf_cpu cpu;
+ 
+-		/*
+-		 * Set up the __augmented_syscalls__ BPF map to hold for each
+-		 * CPU the bpf-output event's file descriptor.
+-		 */
+-		perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
+-			int mycpu = cpu.cpu;
+-
+-			bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
+-					&mycpu, sizeof(mycpu),
+-					xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
+-						       mycpu, 0),
+-					sizeof(__u32), BPF_ANY);
+-		}
+-	}
++	augmented_syscalls__setup_bpf_output();
+ 
+-	if (trace->skel)
+-		trace->filter_pids.map = trace->skel->maps.pids_filtered;
+-#endif
+ 	err = trace__set_filter_pids(trace);
+ 	if (err < 0)
+ 		goto out_error_mem;
+ 
+-#ifdef HAVE_BPF_SKEL
+-	if (trace->skel && trace->skel->progs.sys_enter) {
+-		/*
+-		 * TODO: Initialize for all host binary machine types, not just
+-		 * those matching the perf binary.
+-		 */
+-		trace__init_syscalls_bpf_prog_array_maps(trace, EM_HOST);
+-	}
+-#endif
++	/*
++	 * TODO: Initialize for all host binary machine types, not just
++	 * those matching the perf binary.
++	 */
++	trace__init_syscalls_bpf_prog_array_maps(trace, EM_HOST);
+ 
+ 	if (trace->ev_qualifier_ids.nr > 0) {
+ 		err = trace__set_ev_qualifier_filter(trace);
+@@ -5368,18 +5317,6 @@ static void trace__exit(struct trace *trace)
+ #endif
+ }
+ 
+-#ifdef HAVE_BPF_SKEL
+-static int bpf__setup_bpf_output(struct evlist *evlist)
+-{
+-	int err = parse_event(evlist, "bpf-output/no-inherit=1,name=__augmented_syscalls__/");
+-
+-	if (err)
+-		pr_debug("ERROR: failed to create the \"__augmented_syscalls__\" bpf-output event\n");
+-
+-	return err;
+-}
+-#endif
+-
+ int cmd_trace(int argc, const char **argv)
+ {
+ 	const char *trace_usage[] = {
+@@ -5575,7 +5512,6 @@ int cmd_trace(int argc, const char **argv)
+ 				       "cgroup monitoring only available in system-wide mode");
+ 	}
+ 
+-#ifdef HAVE_BPF_SKEL
+ 	if (!trace.trace_syscalls)
+ 		goto skip_augmentation;
+ 
+@@ -5594,42 +5530,17 @@ int cmd_trace(int argc, const char **argv)
+ 			goto skip_augmentation;
+ 	}
+ 
+-	trace.skel = augmented_raw_syscalls_bpf__open();
+-	if (!trace.skel) {
+-		pr_debug("Failed to open augmented syscalls BPF skeleton");
+-	} else {
+-		/*
+-		 * Disable attaching the BPF programs except for sys_enter and
+-		 * sys_exit that tail call into this as necessary.
+-		 */
+-		struct bpf_program *prog;
++	err = augmented_syscalls__prepare();
++	if (err < 0)
++		goto skip_augmentation;
+ 
+-		bpf_object__for_each_program(prog, trace.skel->obj) {
+-			if (prog != trace.skel->progs.sys_enter && prog != trace.skel->progs.sys_exit)
+-				bpf_program__set_autoattach(prog, /*autoattach=*/false);
+-		}
++	trace__add_syscall_newtp(&trace);
+ 
+-		err = augmented_raw_syscalls_bpf__load(trace.skel);
++	err = augmented_syscalls__create_bpf_output(trace.evlist);
++	if (err == 0)
++		trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
+ 
+-		if (err < 0) {
+-			libbpf_strerror(err, bf, sizeof(bf));
+-			pr_debug("Failed to load augmented syscalls BPF skeleton: %s\n", bf);
+-		} else {
+-			augmented_raw_syscalls_bpf__attach(trace.skel);
+-			trace__add_syscall_newtp(&trace);
+-		}
+-	}
+-
+-	err = bpf__setup_bpf_output(trace.evlist);
+-	if (err) {
+-		libbpf_strerror(err, bf, sizeof(bf));
+-		pr_err("ERROR: Setup BPF output event failed: %s\n", bf);
+-		goto out;
+-	}
+-	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
+-	assert(evsel__name_is(trace.syscalls.events.bpf_output, "__augmented_syscalls__"));
+ skip_augmentation:
+-#endif
+ 	err = -1;
+ 
+ 	if (trace.trace_pgfaults) {
+@@ -5812,8 +5723,6 @@ int cmd_trace(int argc, const char **argv)
+ 		fclose(trace.output);
+ out:
+ 	trace__exit(&trace);
+-#ifdef HAVE_BPF_SKEL
+-	augmented_raw_syscalls_bpf__destroy(trace.skel);
+-#endif
++	augmented_syscalls__cleanup();
+ 	return err;
+ }
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 4f7f072fa222ba80..7113dd237e3387db 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -175,6 +175,7 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
+ 
+ ifeq ($(CONFIG_TRACE),y)
+   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
++  perf-util-$(CONFIG_PERF_BPF_SKEL) += trace_augment.o
+ endif
+ 
+ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index e4352881e3faa602..cb86e261b4de0685 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -7,7 +7,6 @@
+  */
+ 
+ #include "vmlinux.h"
+-#include "../trace_augment.h"
+ 
+ #include <bpf/bpf_helpers.h>
+ #include <linux/limits.h>
+@@ -27,6 +26,8 @@
+ 
+ #define MAX_CPUS  4096
+ 
++#define TRACE_AUG_MAX_BUF 32 /* for buffer augmentation in perf trace */
++
+ /* bpf-output associated map */
+ struct __augmented_syscalls__ {
+ 	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+diff --git a/tools/perf/util/trace_augment.c b/tools/perf/util/trace_augment.c
+new file mode 100644
+index 0000000000000000..56ed17534caa4f3f
+--- /dev/null
++++ b/tools/perf/util/trace_augment.c
+@@ -0,0 +1,143 @@
++#include <bpf/libbpf.h>
++#include <internal/xyarray.h>
++
++#include "util/debug.h"
++#include "util/evlist.h"
++#include "util/trace_augment.h"
++
++#include "bpf_skel/augmented_raw_syscalls.skel.h"
++
++static struct augmented_raw_syscalls_bpf *skel;
++static struct evsel *bpf_output;
++
++int augmented_syscalls__prepare(void)
++{
++	struct bpf_program *prog;
++	char buf[128];
++	int err;
++
++	skel = augmented_raw_syscalls_bpf__open();
++	if (!skel) {
++		pr_debug("Failed to open augmented syscalls BPF skeleton\n");
++		return -errno;
++	}
++
++	/*
++	 * Disable attaching the BPF programs except for sys_enter and
++	 * sys_exit that tail call into this as necessary.
++	 */
++	bpf_object__for_each_program(prog, skel->obj) {
++		if (prog != skel->progs.sys_enter && prog != skel->progs.sys_exit)
++			bpf_program__set_autoattach(prog, /*autoattach=*/false);
++	}
++
++	err = augmented_raw_syscalls_bpf__load(skel);
++	if (err < 0) {
++		libbpf_strerror(err, buf, sizeof(buf));
++		pr_debug("Failed to load augmented syscalls BPF skeleton: %s\n", buf);
++		return err;
++	}
++
++	augmented_raw_syscalls_bpf__attach(skel);
++	return 0;
++}
++
++int augmented_syscalls__create_bpf_output(struct evlist *evlist)
++{
++	int err = parse_event(evlist, "bpf-output/no-inherit=1,name=__augmented_syscalls__/");
++
++	if (err) {
++		pr_err("ERROR: Setup BPF output event failed: %d\n", err);
++		return err;
++	}
++
++	bpf_output = evlist__last(evlist);
++	assert(evsel__name_is(bpf_output, "__augmented_syscalls__"));
++
++	return 0;
++}
++
++void augmented_syscalls__setup_bpf_output(void)
++{
++	struct perf_cpu cpu;
++	int i;
++
++	if (bpf_output == NULL)
++		return;
++
++	/*
++	 * Set up the __augmented_syscalls__ BPF map to hold for each
++	 * CPU the bpf-output event's file descriptor.
++	 */
++	perf_cpu_map__for_each_cpu(cpu, i, bpf_output->core.cpus) {
++		int mycpu = cpu.cpu;
++
++		bpf_map__update_elem(skel->maps.__augmented_syscalls__,
++				     &mycpu, sizeof(mycpu),
++				     xyarray__entry(bpf_output->core.fd,
++						    mycpu, 0),
++				     sizeof(__u32), BPF_ANY);
++	}
++}
++
++int augmented_syscalls__set_filter_pids(unsigned int nr, pid_t *pids)
++{
++	bool value = true;
++	int err = 0;
++
++	if (skel == NULL)
++		return 0;
++
++	for (size_t i = 0; i < nr; ++i) {
++		err = bpf_map__update_elem(skel->maps.pids_filtered, &pids[i],
++					   sizeof(*pids), &value, sizeof(value),
++					   BPF_ANY);
++		if (err)
++			break;
++	}
++	return err;
++}
++
++int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd)
++{
++	if (skel == NULL)
++		return -1;
++
++	*enter_fd = bpf_map__fd(skel->maps.syscalls_sys_enter);
++	*exit_fd  = bpf_map__fd(skel->maps.syscalls_sys_exit);
++	*beauty_fd = bpf_map__fd(skel->maps.beauty_map_enter);
++
++	if (*enter_fd < 0 || *exit_fd < 0 || *beauty_fd < 0) {
++		pr_err("Error: failed to get syscall or beauty map fd\n");
++		return -1;
++	}
++
++	return 0;
++}
++
++struct bpf_program *augmented_syscalls__unaugmented(void)
++{
++	return skel->progs.syscall_unaugmented;
++}
++
++struct bpf_program *augmented_syscalls__find_by_title(const char *name)
++{
++	struct bpf_program *pos;
++	const char *sec_name;
++
++	if (skel->obj == NULL)
++		return NULL;
++
++	bpf_object__for_each_program(pos, skel->obj) {
++		sec_name = bpf_program__section_name(pos);
++		if (sec_name && !strcmp(sec_name, name))
++			return pos;
++	}
++
++	return NULL;
++}
++
++void augmented_syscalls__cleanup(void)
++{
++	augmented_raw_syscalls_bpf__destroy(skel);
++}
+diff --git a/tools/perf/util/trace_augment.h b/tools/perf/util/trace_augment.h
+index 57a3e50459377983..4f729bc6775304b4 100644
+--- a/tools/perf/util/trace_augment.h
++++ b/tools/perf/util/trace_augment.h
+@@ -1,6 +1,66 @@
+ #ifndef TRACE_AUGMENT_H
+ #define TRACE_AUGMENT_H
+ 
+-#define TRACE_AUG_MAX_BUF 32 /* for buffer augmentation in perf trace */
++#include <linux/compiler.h>
++
++struct bpf_program;
++struct evlist;
++
++#ifdef HAVE_BPF_SKEL
++
++int augmented_syscalls__prepare(void);
++int augmented_syscalls__create_bpf_output(struct evlist *evlist);
++void augmented_syscalls__setup_bpf_output(void);
++int augmented_syscalls__set_filter_pids(unsigned int nr, pid_t *pids);
++int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd);
++struct bpf_program *augmented_syscalls__find_by_title(const char *name);
++struct bpf_program *augmented_syscalls__unaugmented(void);
++void augmented_syscalls__cleanup(void);
++
++#else /* !HAVE_BPF_SKEL */
++
++static inline int augmented_syscalls__prepare(void)
++{
++	return -1;
++}
++
++static inline int augmented_syscalls__create_bpf_output(struct evlist *evlist __maybe_unused)
++{
++	return -1;
++}
++
++static inline void augmented_syscalls__setup_bpf_output(void)
++{
++}
++
++static inline int augmented_syscalls__set_filter_pids(unsigned int nr __maybe_unused,
++						      pid_t *pids __maybe_unused)
++{
++	return 0;
++}
++
++static inline int augmented_syscalls__get_map_fds(int *enter_fd __maybe_unused,
++						  int *exit_fd __maybe_unused,
++						  int *beauty_fd __maybe_unused)
++{
++	return -1;
++}
++
++static inline struct bpf_program *
++augmented_syscalls__find_by_title(const char *name __maybe_unused)
++{
++	return NULL;
++}
++
++static inline struct bpf_program *augmented_syscalls__unaugmented(void)
++{
++	return NULL;
++}
++
++static inline void augmented_syscalls__cleanup(void)
++{
++}
++
++#endif /* HAVE_BPF_SKEL */
+ 
+ #endif
+-- 
+2.49.0
+
