@@ -1,55 +1,55 @@
 Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B8028D83A
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AE3293730
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035511; cv=none; b=geXb1k+sPsdbc551ZNs9J/zbTfA/lO6ceI5etvM0USYL13h7pj7pxpLYJz1DMh2eSz7a/y01h98S7pUdetCBsAZvXr3E42/WAM0chgQn0hWfixJHBptPXZxuwkvV4CdWjd/gNqcr/o05+t3QsQU+MY3j0lJppQq2R/0XILYpNdY=
+	t=1746035513; cv=none; b=eeDGQ7d5geOt/Xam5429DznD7f9Mq1odp7UL2Qjy5zWooXoAZzU9oW/hvQFxKzFoQjZEeTGA8VAp34655wfFtkkjQFFMBb5RbwNzDI4q7VGMJbtpDn0sj/MGPHUy8+YwC/DFkBa4m0LmrldQuYyRdZRA24CBn4/gh0R+KKnbCTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035511; c=relaxed/simple;
-	bh=fQPKb2tvExN0lDvsWfwtFVM9KmnDm0fiUGU2uLUv3bU=;
+	s=arc-20240116; t=1746035513; c=relaxed/simple;
+	bh=cRmg9Uhy/kSRny4v9VxENzuNJ6XDnUaDzdD6WOoauU4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=M6kj0ol5YbUjDbG2m+Y3gvoKJZxJJVLLtmHoozRhJHukY8K4BLcQahCcTFnibZhKFukIqQFdolKPfumb6PMwj6b8d0ygrIxV+Nm81qR35xHLX1LzR3r4bjqOgns23gUDKfKLnGPeVAuxwVmEwQvZvG6E/fMbQ6dwLrZbEitYtAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bTOTHOgF; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=HWMelS77ap8KkD/CDNpheZN4++fv2WjpakMaWyCGo9DYS74ZWlp7LCihp8n0EWLtlvS8ZtrG8NYC2+WmOR1FQkuPqLzFVfxdlZMN1y1HmHkMeQ64f1FT/iR2sLCj7kGbDiHMT64+sF7qg/dSM9JW341WmQ1B90QMzvPv66gEYjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pl7vcDP8; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTOTHOgF"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b115fb801bcso99676a12.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pl7vcDP8"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1c654f620dso117041a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035509; x=1746640309; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035512; x=1746640312; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JCXEeH2++brLGuPtaI9HX8GOKQIfJPPTyPL2HMhADPg=;
-        b=bTOTHOgFpDl+XhHXCJQVPvI0mYY+SNajMuo8PUFJL3PMdtX43AZJvKMbUZgmamYoNA
-         UYbUVrhVrceCRPAzjTvn4llJv+6/k15aga18vqsjeMgorEyZQpSt/9zGYqP79mUupNZS
-         PrHh8d5yIrcnjf1rpaPalm/mD7316EiiUZCbLRSuXNwHdEoLs26d/zazeBbkMfrhqmu9
-         ARWpmjN0baFMRnJfJl6ROCztcmfZbMHDOu7jEWByl2dgQ9w+tuYoOXT2ItTHWvGgyEmN
-         Ql4nWP9oAgjcMULk06v7MlFfeMho0yC7ye+ERmpdLz6wUSQR6Ll9rRwFa3ratrpm6PcC
-         HmAA==
+        bh=eLABi1cAYEw9fAUdNsHNLvlLHNMrUQ32W3A6QzBe7uI=;
+        b=pl7vcDP8iDP1YhOiVhyQULrqZork/ulbJNyYHiF5avBDiaKGhRo13plo/b98rTi2+/
+         g6DVCZHGf6/0rzuDG72amp1gM/l4k3Thad8sdrw4pfkNvJo94XqtV1m1GKr3giUzRyNl
+         jxyLazF5LAQoD87gOeE9V68TR282M3BUN+eurO64K3O2zUJOiOl4b+XdM6sV1ZBRyMCB
+         9m0B2vWTvzZCyx5qaEYXjMmpANk14We3wg0b1CNefN0wBuTgvoponbOhTnr4DTuvMWDY
+         1NBA+ntw9NrSN7C3P3n4C8lJ78DOeYrzCf1HYsB2CAFmnvCtEACux43pFObG/MMrXfCT
+         ryXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035509; x=1746640309;
+        d=1e100.net; s=20230601; t=1746035512; x=1746640312;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JCXEeH2++brLGuPtaI9HX8GOKQIfJPPTyPL2HMhADPg=;
-        b=NX0r974kPQvrWMOg3H5fOaWG4kioJ/Y58LOs0e43Nwd8JCWBPICXia1ycqEgTo2AMH
-         6hQ2AfeJkB9431h43ddxh7N2f46G/NYubb+dXi9FEGUMGFqe1vN89q3KuxwED8+07npb
-         qkHl4LdHfRcqJ1yyG02ZHfx8RPnVPQ4Lf1Cyyu1jEXsNzBHebn7XDERlyqM5zpKJPGju
-         L+vpnawcisA0N1Dzc8bouJ24XdMNLR3LvQcFEgC6AT2/2sLZnZ9oEQsfyLztQt8XoLVt
-         5as5XD/i6LWXmEhdavy3JPju/JPURifkop1B2UF40USLQSHMXnsPhfiHftn0kcoyOvIM
-         5kyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXrrrdXycwZVU8BQhuDLz/7k6f8yMKm//EEffzaLCahvAit3hIrF7XQXinpCfpyR2+QnnXinRa1/ZFc9UaPUex@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFtpzCTCtXe27rMjbqOow3ed3VP+EBd/cJ6NHU+Aj+viRDbQ9Z
-	wJLqrmT1PBEaxjNtt34bcjDFnCniln85p7QbsO/T8B62RL48KjPTeVWBBan/fYAeZ6JEvDxDH55
-	gjzhNtQ==
-X-Google-Smtp-Source: AGHT+IEfUWrcjNsU0ffRE3xfCfQBJUVEGiO9SdsAEQnnMSUi7Qwz6JGDA0vDAX4/+G9g5F2zB5NK4DSVmE8v
-X-Received: from pgcv17.prod.google.com ([2002:a05:6a02:5311:b0:af0:e359:c50a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3292:b0:1f5:8eec:e517
- with SMTP id adf61e73a8af0-20ba6a18158mr146417637.9.1746035509372; Wed, 30
- Apr 2025 10:51:49 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:14 -0700
+        bh=eLABi1cAYEw9fAUdNsHNLvlLHNMrUQ32W3A6QzBe7uI=;
+        b=Fo6l967dLafDXsknzJOxz6a58e9O/EOIR8upGZ4Ozbroyfk8iZmgRrfAHSkCCEBWgB
+         UhLXua+xHIPHatZZVGmueLYz3nOQSSIrsDchDDFHUtm4IrXG/qvcoZPVyqDNStaM/EzQ
+         72anqX86n3cMIN9vInKYECcvhtCj3iNAS4AuzHQ04/Tfq370Gci6GiBwG/6GUpJ2P1M5
+         nIwBCHL/daKLHOII/YvW6JL4rR++Zk95kJ0muRpZwJZSBIlZGXNEi2oufOxi0hv9wrLD
+         NpphdjYwptau+Wmr8DH+sKuzWif1avGCUe25ex4qnzSwC9Z//aP07rV35Pp3lfKQGVon
+         EEMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXnKOznP+ek/wmDOqDzAT6nAE7Mo70+QtDf+blCGq20nOkP1IjwF2KW67ZcarRd/qK/jsAfhFnwhWk7JRG+DNXe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQpDMWjEOSpxaM5rLSOrGyIdyj85Un6SNHDG07Wj7JsxZArPzo
+	xb+7zY8ozsqG2hAP+jfC3++NwMGaVGk4PGpRaulIxaXdfjobUWjPnLlwgqO/j3eYVNnjkV02w7R
+	ucnR7uQ==
+X-Google-Smtp-Source: AGHT+IGIUuzSwqqdo5HW7am+AeE4/a6b6jacfSJCk8vxA7uRt24KCIqbt8SNuwNGgHLKwxFchcrFLUe52XI7
+X-Received: from pgam20.prod.google.com ([2002:a05:6a02:2b54:b0:b0b:2c1f:b8b3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6f05:b0:1ee:e33d:f477
+ with SMTP id adf61e73a8af0-20ba6ff8e7emr145936637.15.1746035511348; Wed, 30
+ Apr 2025 10:51:51 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:15 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-27-irogers@google.com>
-Subject: [PATCH v2 26/47] perf probe: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-28-irogers@google.com>
+Subject: [PATCH v2 27/47] perf kwork: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,112 +116,65 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/probe-event.c | 13 +++++++------
- tools/perf/util/probe-file.c  | 12 +++++++-----
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ tools/perf/builtin-kwork.c      | 11 +++++------
+ tools/perf/util/bpf_kwork_top.c |  2 +-
+ 2 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 307ad6242a4e..55bc68e5bd97 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1336,7 +1336,7 @@ static int parse_line_num(char **ptr, int *val, const char *what)
- 	const char *start = *ptr;
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index c41a68d073de..cc5488cb98e4 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -1574,8 +1574,7 @@ static void top_print_per_cpu_load(struct perf_kwork *kwork)
+ 		load = stat->cpus_runtime[i].load;
+ 		if (test_bit(i, stat->all_cpus_bitmap) && total) {
+ 			load_ratio = load * 10000 / total;
+-			load_width = PRINT_CPU_USAGE_HIST_WIDTH *
+-				load_ratio / 10000;
++			load_width = (int)(PRINT_CPU_USAGE_HIST_WIDTH * load_ratio / 10000);
  
- 	errno = 0;
--	*val = strtol(*ptr, ptr, 0);
-+	*val = (int)strtol(*ptr, ptr, 0);
- 	if (errno || *ptr == start) {
- 		semantic_error("'%s' is not a valid number.\n", what);
- 		return -EINVAL;
-@@ -1620,7 +1620,7 @@ static int parse_perf_probe_point(char *arg, struct perf_probe_event *pev)
- 		}
- 		switch (c) {
- 		case ':':	/* Line number */
--			pp->line = strtoul(arg, &tmp, 0);
-+			pp->line = (int)strtoul(arg, &tmp, 0);
- 			if (*tmp != '\0') {
- 				semantic_error("There is non-digit char"
- 					       " in line number.\n");
-@@ -2065,8 +2065,8 @@ char *synthesize_perf_probe_arg(struct perf_probe_arg *pa)
- static char *synthesize_perf_probe_point(struct perf_probe_point *pp)
- {
- 	struct strbuf buf;
--	char *tmp, *ret = NULL;
--	int len, err = 0;
-+	char *ret = NULL;
-+	int err = 0;
+ 			printf("%%Cpu%-*d[%.*s%.*s %*.*f%%]\n",
+ 			       PRINT_CPU_WIDTH, i,
+@@ -1595,7 +1594,7 @@ static void top_print_cpu_usage(struct perf_kwork *kwork)
+ 	u64 idle_time = stat->cpus_runtime[MAX_NR_CPUS].idle;
+ 	u64 hardirq_time = stat->cpus_runtime[MAX_NR_CPUS].irq;
+ 	u64 softirq_time = stat->cpus_runtime[MAX_NR_CPUS].softirq;
+-	int cpus_nr = bitmap_weight(stat->all_cpus_bitmap, MAX_NR_CPUS);
++	int cpus_nr = (int)bitmap_weight(stat->all_cpus_bitmap, MAX_NR_CPUS);
+ 	u64 cpus_total_time = stat->cpus_runtime[MAX_NR_CPUS].total;
  
- 	if (strbuf_init(&buf, 64) < 0)
- 		return NULL;
-@@ -2084,8 +2084,9 @@ static char *synthesize_perf_probe_point(struct perf_probe_point *pp)
- 			goto out;
+ 	printf("Total  : %*.*f ms, %d cpus\n",
+@@ -1801,7 +1800,7 @@ static int perf_kwork__read_events(struct perf_kwork *kwork)
+ 	session = perf_session__new(&data, &kwork->tool);
+ 	if (IS_ERR(session)) {
+ 		pr_debug("Error creating perf session\n");
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
  	}
- 	if (pp->file) {
--		tmp = pp->file;
--		len = strlen(tmp);
-+		char *tmp = pp->file;
-+		size_t len = strlen(tmp);
-+
- 		if (len > 30) {
- 			tmp = strchr(pp->file + len - 30, '/');
- 			tmp = tmp ? tmp + 1 : pp->file + len - 30;
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index ec8ac242fedb..2d84002710f3 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -167,7 +167,7 @@ int probe_file__open_both(int *kfd, int *ufd, int flag)
- /* Get raw string list of current kprobe_events  or uprobe_events */
- struct strlist *probe_file__get_rawlist(int fd)
- {
--	int ret, idx, fddup;
-+	int ret, fddup;
- 	FILE *fp;
- 	char buf[MAX_CMDLEN];
- 	char *p;
-@@ -189,6 +189,8 @@ struct strlist *probe_file__get_rawlist(int fd)
- 		goto out_close_fddup;
  
- 	while (!feof(fp)) {
-+		size_t idx;
-+
- 		p = fgets(buf, MAX_CMDLEN, fp);
- 		if (!p)
- 			break;
-@@ -307,7 +309,7 @@ static int __del_trace_probe_event(int fd, struct str_node *ent)
- 	*p = '/';
+ 	symbol__init(&session->header.env);
+@@ -2088,8 +2087,8 @@ static void top_calc_cpu_usage(struct perf_kwork *kwork)
  
- 	pr_debug("Writing event: %s\n", buf);
--	ret = write(fd, buf, strlen(buf));
-+	ret = (int)write(fd, buf, strlen(buf));
- 	if (ret < 0) {
- 		ret = -errno;
- 		goto error;
-@@ -962,7 +964,7 @@ static int probe_cache_entry__write(struct probe_cache_entry *entry, int fd)
- 	iov[0].iov_base = (void *)prefix; iov[0].iov_len = 1;
- 	iov[1].iov_base = entry->spev; iov[1].iov_len = strlen(entry->spev);
- 	iov[2].iov_base = (void *)"\n"; iov[2].iov_len = 1;
--	ret = writev(fd, iov, 3);
-+	ret = (int)writev(fd, iov, 3);
- 	if (ret < (int)iov[1].iov_len + 2)
- 		goto rollback;
+ 		top_subtract_irq_runtime(kwork, work);
  
-@@ -970,7 +972,7 @@ static int probe_cache_entry__write(struct probe_cache_entry *entry, int fd)
- 		iov[0].iov_base = (void *)snode->s;
- 		iov[0].iov_len = strlen(snode->s);
- 		iov[1].iov_base = (void *)"\n"; iov[1].iov_len = 1;
--		ret = writev(fd, iov, 2);
-+		ret = (int)writev(fd, iov, 2);
- 		if (ret < (int)iov[0].iov_len + 1)
- 			goto rollback;
- 	}
-@@ -992,7 +994,7 @@ int probe_cache__commit(struct probe_cache *pcache)
- 	int ret = 0;
+-		work->cpu_usage = work->total_runtime * 10000 /
+-			stat->cpus_runtime[work->cpu].total;
++		work->cpu_usage = (u32)(work->total_runtime *
++					10000 / stat->cpus_runtime[work->cpu].total);
  
- 	/* TBD: if we do not update existing entries, skip it */
--	ret = lseek(pcache->fd, 0, SEEK_SET);
-+	ret = (int)lseek(pcache->fd, 0, SEEK_SET);
- 	if (ret < 0)
- 		goto out;
+ 		top_calc_idle_time(kwork, work);
+ next:
+diff --git a/tools/perf/util/bpf_kwork_top.c b/tools/perf/util/bpf_kwork_top.c
+index b6f187dd9136..808d0c84d26d 100644
+--- a/tools/perf/util/bpf_kwork_top.c
++++ b/tools/perf/util/bpf_kwork_top.c
+@@ -219,7 +219,7 @@ static void read_task_info(struct kwork_work *work)
+ 	int fd;
+ 	struct task_data data;
+ 	struct task_key key = {
+-		.pid = work->id,
++		.pid = (__u32)work->id,
+ 		.cpu = work->cpu,
+ 	};
  
 -- 
 2.49.0.906.g1f30a19c02-goog
