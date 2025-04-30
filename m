@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B70289E38
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4495728C5B9
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035508; cv=none; b=mMTn/g4i4b5Keq4zl54g6fmn4s+ZqHjYCwtzRmQsBbYKSzwGT4CE/xMAugo7YcQa6XQvVbpF21u2xP3+f8QvFdc0hGWgUAgHSXhnVKqSRUOMLJ7u1byYxzzQWpDwiZtHvq9fBIjgKsdXHmYRSOBcxMubrvlAIP6cFFfMwRr8Tks=
+	t=1746035509; cv=none; b=u8bhwfUxfbTht4L5JQHBy86paqAh/CkytNQPNN8/TQvcBRV5QZZ/uBLnS73Auqx0rz2cM/Id4AgatDV5oqd3pvB93N1UGjCS/gzjg5UzxIuDdOXtWjwL9ZoRrGN0Wp6UkFX9BYvM6eth7ZG2f0LUdrG7pxdgxQHDOmOcMoiybNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035508; c=relaxed/simple;
-	bh=9pgIBm6NSisapiSqj5zQA3vSFMAeMe8aGHH3thkw0jc=;
+	s=arc-20240116; t=1746035509; c=relaxed/simple;
+	bh=x1iTOuCNnuksau6+iZvHjhoPDhp0WCruIHotwcEx174=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KtOfvDPrDIjqpddQsibHhLn8Xt9iOVB8DS+UarcBjvSRuAqPTMShJsWHjSkmWRCPK3F5A2a0Gm+QKj3BMCbWmz/YXZ3pPESyUYaAAqipA+RkI33zd7d4BbzjrzVyyv8kfVCT1Hq80R9VR+BvigEQAXsK0IrHz6eDO0T2gh6hzwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K95jcYJA; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=pIjNl0G69SitkZ+d2TccfSn1zI8WK+sOb12rejVyS0uIX4RQxOcqzz9kDRXuTce0a/vr1S3X3BpnsOJsZwPjzwMkFoBkGf0ZQDsIAP6sq8tggeSz1u5VQLWMbnozeyr2bi0TQFFwCWr1cW4hEFpS4DXmKaL4r+mssr8lB4QqtR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=triM1FNq; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K95jcYJA"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3032ea03448so164633a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="triM1FNq"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032ea03448so164667a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035506; x=1746640306; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035507; x=1746640307; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mSGmrz0VgpdryeMuc4wJHeXUaiQJDc7wpL8BqB7GbRs=;
-        b=K95jcYJAYIFzp8lxGp5BEximBuTlGH93voZdAienR2SFJ5rLYhoVZvHRd75F93yy/a
-         XLgRY1/WpJ1mxo06gG5X6g2W+NlOClZqFkX/NckyGeK6ZjPzMzHKSr7OYL1DkCnrpWIF
-         HzzfoRNfjiwvQZT47+9SgZKn37GVhZa59eekhs8A3161tJAs6N9duEag1LBGNG9NpNyA
-         T0MBy1KQ30ymsM9GuL5zNTy6Ig55mu55YZp8NihznJAEtZAhGlSnBbutz/BgsEpGFENf
-         4UehY7SrnH5Q7Jm5/nyrob7pJiIJd4QPycdaB3KamogtYIWPHmUWaizWV0W5/AM1B6lw
-         Fa/Q==
+        bh=tTvuhDKPIYjHf7Egjh82CR3gFLkm+6BF54DwU8iucco=;
+        b=triM1FNqCVjgLmCdqINckmrltY9Czo/nB/x4J9Cdr7A3ytOCFyaRxe3wheTc/WjvJQ
+         xtb2ENsdUnUp2sKEE5crdVK8HncfbmQ7gROp286VBQznbu0z1jtFcNzgt9cobR5oT6mI
+         PPrxO5dM0Y9mSmHGcVdG6jsbVko/gOmi7nQtHE+USWiqntVYZbCDMLVWrqu6l8IAmFu8
+         3cJ06/Cou0da57/HnW7D2AyfBRsUlKoyTcTMrXGeX2FmVfLX7yRP0d0oWEatEn8iM4bn
+         Mzf/IiwdN8KwJWWnDM5e85Xr9+MPXGnTWbukjOlskFeDjDo9szcXoNCCGyOEYH4N3kyk
+         90SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035506; x=1746640306;
+        d=1e100.net; s=20230601; t=1746035507; x=1746640307;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mSGmrz0VgpdryeMuc4wJHeXUaiQJDc7wpL8BqB7GbRs=;
-        b=b4swsGSEl9K6sLbQXvWpBvjNvT/bod2IIpjCuXPXF9dLIjA4Mao7sbPq1oQp9bhmN+
-         HeglUtdtLec1WSeVyBqkKOJaZ7bQTvm6mHZOexXViH9ilo0p/VHPO45UfXsLu0CNQ0KU
-         Zh+nKeaW8Eupq5vN36qE210K+yB8oprT8SH0X7lFb56gT2BytBq9iL5jDUU14GB2chU9
-         nNLvXyutZw7HGFrW6P6OLo9RQEb/3BhI7JY2c0P8MQQAc4HjR+2QtrWWUsqXH38NyjKi
-         PPeDfp9hCN9WY5ar7Hv/M5VZnksz3p7iUeexPX9b4lyXYRcv2rzMMN8tccKAxVJcF8pM
-         zVGg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0PyRD4yxR3UkRdJEhrLx6QK3f2e3+gQ+rEHwX3BYNS6f2QEcJmunEbZb9KsMY5LOLwHLcaKCsPLeH3hgDxWog@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWFVQgFUQ81p0QLKvCdcMI2avMX/x3Y2BMDi0JPvYAyslskEkJ
-	FDXB5r/drAq/3QTm+awj9y+2C4a4Y93XjyEjEKU2c9yDeqNaDseaTt+SmTsBm/d3M3vJf2+Q1Hs
-	k2kRWTA==
-X-Google-Smtp-Source: AGHT+IHkONYHJZfK+RtGOYuqOR3Tmv1Fc5hyNA9X/JV4Uor3w7tc3iAjbnOBIe0SDP0OTR36qQM2EwN7Mdm0
-X-Received: from pjbpt8.prod.google.com ([2002:a17:90b:3d08:b0:308:670e:aa2c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1804:b0:301:1d03:93cf
- with SMTP id 98e67ed59e1d1-30a3447ef20mr4890430a91.30.1746035505522; Wed, 30
- Apr 2025 10:51:45 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:12 -0700
+        bh=tTvuhDKPIYjHf7Egjh82CR3gFLkm+6BF54DwU8iucco=;
+        b=IB3MNRio9nkbmKhNgY90pWkPnxyafsxS30bCORvGr9krMFtDEPCKbl5ChTcRqyQ48F
+         TccCGqwKL8ubH614qYb5e7I7HFW85ELpi1zVA+08H/VJoowPeGdl/xbEYhC3TaA1/Bbs
+         LJZZD8uR9jOyY1wzNjkSLCzpFMtNRQGGs4eF1YQQBX453UrH/T7VpGy1IPXHpCCDhF9x
+         gbu2oJBX5zizRrtK7DLNGg+lCij443kgGiGBdDx/V+V8Wv4snxOcFBk8dM1vGRNU1yYM
+         FjX64vBe8Oyaj7I9YY0kXlEkTZi+NiTgl4xmdNqwLHv6aM3pFFwORQNXLMcH9Pjt22z5
+         jxJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXjdhXc0g30MCgpyb0b0tjQ5rChH44m+jtUMnMkRaNQOQsPnPB6pzoFDwhp8kY7riS0B9+jrL9QV7QQOlIgQ5k@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrSiGgd7z5ALW/IBBkeZifCYIah5j0gbTCfkRVq8hkuuYENmcY
+	4J541qh14KCL913/iQEoOVh3m4E1X4rQbPLqD5AR0unMZheObIebSk6GtWUKzmSXjGUjXO0z6LE
+	66H6+4Q==
+X-Google-Smtp-Source: AGHT+IHPseCWZCSIfP9sB93dm0W0MhWEPRlyV1K8nbl8fnIp2K9Y+W+znyK0oA7t66P0/ARXK1K41jlyGz5Z
+X-Received: from pjtd4.prod.google.com ([2002:a17:90b:44:b0:2ef:d283:5089])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:6c8:b0:301:a0e9:66f
+ with SMTP id 98e67ed59e1d1-30a3440127emr6430034a91.14.1746035507300; Wed, 30
+ Apr 2025 10:51:47 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:13 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-25-irogers@google.com>
-Subject: [PATCH v2 24/47] perf help: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-26-irogers@google.com>
+Subject: [PATCH v2 25/47] perf hisi-ptt: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,120 +116,44 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-help.c          |  4 ++--
- tools/perf/util/help-unknown-cmd.c | 14 ++++++++------
- tools/perf/util/levenshtein.c      | 18 +++++++++---------
- 3 files changed, 19 insertions(+), 17 deletions(-)
+ tools/perf/util/hisi-ptt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index 7be6fb6df595..05151c68191f 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -301,7 +301,7 @@ static struct cmdnames main_cmds, other_cmds;
+diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
+index e4cc4785f744..978f5781c990 100644
+--- a/tools/perf/util/hisi-ptt.c
++++ b/tools/perf/util/hisi-ptt.c
+@@ -59,7 +59,7 @@ static void hisi_ptt_dump(struct hisi_ptt *ptt __maybe_unused,
+ 		      len);
  
- void list_common_cmds_help(void)
- {
--	unsigned int i, longest = 0;
-+	size_t i, longest = 0;
+ 	while (len > 0) {
+-		pkt_len = hisi_ptt_pkt_desc(buf, pos, type);
++		pkt_len = hisi_ptt_pkt_desc(buf, (int)pos, type);
+ 		if (!pkt_len)
+ 			color_fprintf(stdout, color, " Bad packet!\n");
  
- 	for (i = 0; i < ARRAY_SIZE(common_cmds); i++) {
- 		if (longest < strlen(common_cmds[i].name))
-@@ -310,7 +310,7 @@ void list_common_cmds_help(void)
+@@ -91,10 +91,10 @@ static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
+ 	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+ 					    auxtrace);
+ 	int fd = perf_data__fd(session->data);
+-	int size = event->auxtrace.size;
++	u64 size = event->auxtrace.size;
+ 	void *data = malloc(size);
+ 	off_t data_offset;
+-	int err;
++	ssize_t err;
  
- 	puts(" The most commonly used perf commands are:");
- 	for (i = 0; i < ARRAY_SIZE(common_cmds); i++) {
--		printf("   %-*s   ", longest, common_cmds[i].name);
-+		printf("   %-*s   ", (int)longest, common_cmds[i].name);
- 		puts(common_cmds[i].help);
- 	}
- }
-diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
-index a0a46e34f8d1..f0a0b8c13a92 100644
---- a/tools/perf/util/help-unknown-cmd.c
-+++ b/tools/perf/util/help-unknown-cmd.c
-@@ -24,14 +24,15 @@ static int levenshtein_compare(const void *p1, const void *p2)
- {
- 	const struct cmdname *const *c1 = p1, *const *c2 = p2;
- 	const char *s1 = (*c1)->name, *s2 = (*c2)->name;
--	int l1 = (*c1)->len;
--	int l2 = (*c2)->len;
--	return l1 != l2 ? l1 - l2 : strcmp(s1, s2);
-+	ssize_t l1 = (*c1)->len;
-+	ssize_t l2 = (*c2)->len;
-+
-+	return l1 != l2 ? (int)(l1 - l2) : (int)strcmp(s1, s2);
- }
+ 	if (!data)
+ 		return -errno;
+@@ -174,7 +174,7 @@ int hisi_ptt_process_auxtrace_info(union perf_event *event,
+ 	ptt->session = session;
+ 	ptt->machine = &session->machines.host; /* No kvm support */
+ 	ptt->auxtrace_type = auxtrace_info->type;
+-	ptt->pmu_type = auxtrace_info->priv[0];
++	ptt->pmu_type = (unsigned int)auxtrace_info->priv[0];
  
- static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
- {
--	unsigned int i, nr = cmds->cnt + old->cnt;
-+	size_t nr = cmds->cnt + old->cnt;
- 	void *tmp;
- 
- 	if (nr > cmds->alloc) {
-@@ -45,7 +46,7 @@ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
- 			return -1;
- 		cmds->names = tmp;
- 	}
--	for (i = 0; i < old->cnt; i++)
-+	for (size_t i = 0; i < old->cnt; i++)
- 		cmds->names[cmds->cnt++] = old->names[i];
- 	zfree(&old->names);
- 	old->cnt = 0;
-@@ -54,7 +55,8 @@ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
- 
- const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
- {
--	unsigned int i, n = 0, best_similarity = 0;
-+	unsigned int i, n = 0;
-+	size_t best_similarity = 0;
- 	struct cmdnames other_cmds;
- 
- 	memset(&other_cmds, 0, sizeof(other_cmds));
-diff --git a/tools/perf/util/levenshtein.c b/tools/perf/util/levenshtein.c
-index 6a6712635aa4..f6912b848c4a 100644
---- a/tools/perf/util/levenshtein.c
-+++ b/tools/perf/util/levenshtein.c
-@@ -44,19 +44,19 @@
- int levenshtein(const char *string1, const char *string2,
- 		int w, int s, int a, int d)
- {
--	int len1 = strlen(string1), len2 = strlen(string2);
-+	size_t len1 = strlen(string1), len2 = strlen(string2);
- 	int *row0 = malloc(sizeof(int) * (len2 + 1));
- 	int *row1 = malloc(sizeof(int) * (len2 + 1));
- 	int *row2 = malloc(sizeof(int) * (len2 + 1));
--	int i, j;
-+	int ret;
- 
--	for (j = 0; j <= len2; j++)
--		row1[j] = j * a;
--	for (i = 0; i < len1; i++) {
-+	for (size_t j = 0; j <= len2; j++)
-+		row1[j] = (int)j * a;
-+	for (size_t i = 0; i < len1; i++) {
- 		int *dummy;
- 
--		row2[0] = (i + 1) * d;
--		for (j = 0; j < len2; j++) {
-+		row2[0] = ((int)i + 1) * d;
-+		for (size_t j = 0; j < len2; j++) {
- 			/* substitution */
- 			row2[j + 1] = row1[j] + s * (string1[i] != string2[j]);
- 			/* swap */
-@@ -78,10 +78,10 @@ int levenshtein(const char *string1, const char *string2,
- 		row2 = dummy;
- 	}
- 
--	i = row1[len2];
-+	ret = row1[len2];
- 	free(row0);
- 	free(row1);
- 	free(row2);
- 
--	return i;
-+	return ret;
- }
+ 	ptt->auxtrace.process_event = hisi_ptt_process_event;
+ 	ptt->auxtrace.process_auxtrace_event = hisi_ptt_process_auxtrace_event;
 -- 
 2.49.0.906.g1f30a19c02-goog
 
