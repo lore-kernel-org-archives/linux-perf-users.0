@@ -1,123 +1,131 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567FEB640
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 00:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1C62DC782;
+	Wed, 30 Apr 2025 01:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745973717; cv=none; b=n272YvESfO+sj5+ctimrUfhO6Kl7W+CONA4ysVtWgV8RfoISU52KSLhs/UHp0QzEQpTRqN0wervjEXQrY66R3M2QXgpSQK8bEaw7zdofzoagyKx7wwtwutle9bP0he8erwmYsIcwKgh9F33YM5X2POhq+xx90PgCQR3PSG8J4d8=
+	t=1745975636; cv=none; b=pu7SFnEQYd14XJFAdUSxarLtT56RSFwcIQl9LpZqBqNhR66mfkUDqCVjKqEsecs4JsZIS82YkSDjHoWd1lr6X4jWH1awMwfRI4/CPZPZ1rXuJ9g3Ur10xou9NwS/myZ0TgA5B4GEWI6X8R2IxwtJ2+s0mysJhWL2IzV7rVGfaqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745973717; c=relaxed/simple;
-	bh=pLvxUdxndsr2wYkJQYg49ecez/cviTwRj3eN4nJwgxo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ts9Ts26dCuC641vPkebi5KUWYN4cswrZL/EzQ5PSRF2GijrNDQb3L4MneT0PjeoAHgMPKu3chRNW5ioEyD4a+71HzTIBDKSG7urJheNNQya5Gfue37cljS/PalbGq1RRy/j58Mgya7DVLXlmg/hnOeiauKQ4IQdePjXMkfU4xPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=apNF28FV; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1745975636; c=relaxed/simple;
+	bh=uDFgTBxxrjAiTdB762RD/JEcEdFUMtvx0lbzh//GqVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUK7eycrcExHgScamhkMH9kVRy21+wK13VRuUJd2Ha8KxkE2Jy0M6ZUcH5xZiRjlaEjS6A8XixoOYxssdXRIAF+Zey/3jO1ExCNJTYmnrgBbxfmbIJhypOGGcpSKVAVv0Nb7Y9Pt9u+YvU6Rablyy8oE6Sb6m3lLKYykqM/A4kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+h6PquG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="apNF28FV"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736cd36189bso9294164b3a.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Apr 2025 17:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745973715; x=1746578515; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWjkucJuMaosxMcy1Z3rSUNsLtdDY3ZZywavpz7InSY=;
-        b=apNF28FVbWdzH+0p7oT9pqhgVfytqVk4HeXo+6Pnia3EmomAcSMSbJQxSrx5jaqdv+
-         +9rgBfJ7WR8ZIb1AQIrdBZpSvJdoOtkLqFDnVB5bV6hzfAwZgIKVv8/2pSJiSiZ7O8ro
-         aOOxHiF6fqhWoRE/7cGosma/CCpMzJuGDnNx7kYgLDxHMdteOMvJZP/U6mhPM6e9g58P
-         75/BKgxt+1kcfuxqKq+z9uOzONGN5f/ZMidHbVOGMhTnVnGPHEjJSLlRN9DiKcsZx84M
-         WVra43nR9I9c4ShK8cQRuSXo708Z0UXlJWRWmYloVSAdwTMPf/tSHOLldBKRQrWtDlit
-         lltQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745973715; x=1746578515;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWjkucJuMaosxMcy1Z3rSUNsLtdDY3ZZywavpz7InSY=;
-        b=hRTP8BDgf1Ze0tcITyBE2AzbVqN4cedBA13wlfMvYe1VDsdICPMUUcKfqE8hxVTzAC
-         P16ZdlyeTORc5smwnDX0oIYU56HAipqUxQYKVGyPbtT1vRNsUrxcW4dAMGnfvYtFMO+w
-         49MlDyzUiBllq7j/jCLvb+ldl+R/2D2A9z/ALm/NpMW1YcYNE1V+KcJmCBMeruNbdcQZ
-         jBcc2YMe6Z0nKuab1USIKyfuewfeXuYqqI/5PQbSDrHop0GIx+M6wi4g+YH8p8jdBIIK
-         3AYANXECty+3A4BY8EVeggynkO37nDQll4iD8ybUKYHlfeUz/Uq0C2fQylJScHqCiWbx
-         JmNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmW1ZPl3yPWtv9wJLpiudSHw/UAumixWAnKhGOVWQSkytkEqxOQjv2ezTilsQyTBdSfN/+7Co5D4RXzQFMbtOA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIb/Yb5Fdos7EVvHuA9/I0TqQTWVuEG/1NIiR9PlKVnWw9+lGs
-	SQzlPkR4MaYiVhrAfAJXpkw/AE59eDGVTz3Ph2TnFbuirwdF4kMDm1aA846KEKa7/GP/qiNdUV+
-	hHLEXRw==
-X-Google-Smtp-Source: AGHT+IGBKZmj0xcnx3IB64TcbS0pb/r17lmOgH8lxAqqhmr49CDFUH1EBNpi6iyWZc1C2ZsKErjB7VbqxAQl
-X-Received: from pfbfn23.prod.google.com ([2002:a05:6a00:2fd7:b0:740:555:f7af])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3924:b0:736:34a2:8a18
- with SMTP id d2e1a72fcca58-7403a836556mr988402b3a.24.1745973715575; Tue, 29
- Apr 2025 17:41:55 -0700 (PDT)
-Date: Tue, 29 Apr 2025 17:41:28 -0700
-In-Reply-To: <20250430004128.474388-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+h6PquG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF2EC4CEE3;
+	Wed, 30 Apr 2025 01:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745975636;
+	bh=uDFgTBxxrjAiTdB762RD/JEcEdFUMtvx0lbzh//GqVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N+h6PquG3eFY5ZhOGfQfRS7KEJsRPgZTthi8Ju3c5HYUUF+GdNba+rAln1Zk/+JdE
+	 OrPIDNyr8SHocWhFIC302cl1u5aYmQdAiZarEU18fDUn/bOpqNZwgp9FoSpJs1K3rA
+	 Ec23UUCPAjgjlxMlXi3sM+6xoy0oALdKNtm/SugxuwYEHWCCUeacPEi2qBI8/xt4gE
+	 TVsESWUy23yCX+KM0BABNYBh3mYvxr9D0tb1yXyWIBRLg+xOQEEGEztVkIgxiwH6vZ
+	 EJ6a1EaiFrhSB97GeWzJvLq268KYDd6S/TxT0UpWX12MgABkTMVN4s5aDd+nD6yGbq
+	 VXhYTA6kz9YOQ==
+Date: Tue, 29 Apr 2025 22:13:53 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Joe Mario <jmario@redhat.com>,
+	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: Re: [PATCH v4 4/4] perf test amd ibs: Add sample period unit test
+Message-ID: <aBF5UWrxvYgbnxde@x1>
+References: <20250429035938.1301-1-ravi.bangoria@amd.com>
+ <20250429035938.1301-5-ravi.bangoria@amd.com>
+ <aBE8raTOCVZLfw7J@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250430004128.474388-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250430004128.474388-7-irogers@google.com>
-Subject: [PATCH v2 6/6] perf test demangle-ocaml: Switch to using dso__demangle_sym
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	Daniel Xu <dxu@dxuuu.xyz>, Ariel Ben-Yehuda <ariel.byd@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBE8raTOCVZLfw7J@x1>
 
-The use of the demangle-ocaml APIs means we don't detect if a different
-demangler is used before the OCaml one for the case that matters to
-perf.
+On Tue, Apr 29, 2025 at 05:55:13PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Apr 29, 2025 at 03:59:38AM +0000, Ravi Bangoria wrote:
+> > IBS Fetch and IBS Op PMUs has various constraints on supported sample
+> > periods. Add perf unit tests to test those.
+> > 
+> > Running it in parallel with other tests causes intermittent failures.
+> > Mark it exclusive to force it to run sequentially. Sample output on a
+> > Zen5 machine:
+> 
+> I've applied the series and will test it now, but found some problems
+> when building in some non-glibc systems, namely the use of PAGE_SIZE,
+> that is used in libc headers, even in glibc, its just that in glibc we
+> happen not to include that header where PAGE_SIZE gets redefined:
+> 
+> ⬢ [acme@toolbx perf-tools-next]$ grep PAGE_SIZE /usr/include/sys/*.h
+> /usr/include/sys/user.h:#define PAGE_SIZE		(1UL << PAGE_SHIFT)
+> /usr/include/sys/user.h:#define PAGE_MASK		(~(PAGE_SIZE-1))
+> /usr/include/sys/user.h:#define NBPG			PAGE_SIZE
+> ⬢ [acme@toolbx perf-tools-next]$
+> 
+> So I folded the following patch, see if it is acceptable and please ack.
+> 
+> Thanks for respining it!
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/demangle-ocaml-test.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Another issue when building with clang on musl:
 
-diff --git a/tools/perf/tests/demangle-ocaml-test.c b/tools/perf/tests/demangle-ocaml-test.c
-index 90a4285e2ad5..612c788b7e0d 100644
---- a/tools/perf/tests/demangle-ocaml-test.c
-+++ b/tools/perf/tests/demangle-ocaml-test.c
-@@ -2,10 +2,9 @@
- #include <string.h>
- #include <stdlib.h>
- #include <stdio.h>
--#include "tests.h"
--#include "session.h"
- #include "debug.h"
--#include "demangle-ocaml.h"
-+#include "symbol.h"
-+#include "tests.h"
- 
- static int test__demangle_ocaml(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
-@@ -27,7 +26,7 @@ static int test__demangle_ocaml(struct test_suite *test __maybe_unused, int subt
- 	};
- 
- 	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
--		buf = ocaml_demangle_sym(test_cases[i].mangled);
-+		buf = dso__demangle_sym(/*dso=*/NULL, /*kmodule=*/0, test_cases[i].mangled);
- 		if ((buf == NULL && test_cases[i].demangled != NULL)
- 				|| (buf != NULL && test_cases[i].demangled == NULL)
- 				|| (buf != NULL && strcmp(buf, test_cases[i].demangled))) {
--- 
-2.49.0.901.g37484f566f-goog
+arch/x86/tests/amd-ibs-period.c:81:3: error: no matching function for call to 'memcpy'
+                memcpy(func, insn1, sizeof(insn1));
+                ^~~~~~
+/usr/include/string.h:27:7: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *' for 1st argument
+void *memcpy (void *__restrict, const void *__restrict, size_t);
+      ^
+/usr/include/fortify/string.h:40:27: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *const' for 1st argument
+_FORTIFY_FN(memcpy) void *memcpy(void * _FORTIFY_POS0 __od,
+                          ^
+arch/x86/tests/amd-ibs-period.c:87:3: error: no matching function for call to 'memcpy'
+                memcpy(func, insn2, sizeof(insn2));
+                ^~~~~~
+/usr/include/string.h:27:7: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *' for 1st argument
+void *memcpy (void *__restrict, const void *__restrict, size_t);
+      ^
+/usr/include/fortify/string.h:40:27: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *const' for 1st argument
+_FORTIFY_FN(memcpy) void *memcpy(void * _FORTIFY_POS0 __od,
+                          ^
+2 errors generated.
+  CC      /tmp/build/perf/ui/browsers/header.o
+  CC      /tmp/build/perf/arch/x86/util/mem-events.o
 
+Adding the patch below cures it, still need to test on a Zen 5 system.
+
+These issues were just in the regression test.
+
+- Arnaldo
+
+diff --git a/tools/perf/arch/x86/tests/amd-ibs-period.c b/tools/perf/arch/x86/tests/amd-ibs-period.c
+index 946b0a377554fb81..a198434da9b5c4a1 100644
+--- a/tools/perf/arch/x86/tests/amd-ibs-period.c
++++ b/tools/perf/arch/x86/tests/amd-ibs-period.c
+@@ -78,13 +78,13 @@ static int dummy_workload_1(unsigned long count)
+ 	else if (count > 10000000)
+ 		count = 10000000;
+ 	while (count--) {
+-		memcpy(func, insn1, sizeof(insn1));
++		memcpy((void *)func, insn1, sizeof(insn1));
+ 		if (func() != 1) {
+ 			pr_debug("ERROR insn1\n");
+ 			ret = -1;
+ 			goto out;
+ 		}
+-		memcpy(func, insn2, sizeof(insn2));
++		memcpy((void *)func, insn2, sizeof(insn2));
+ 		if (func() != 2) {
+ 			pr_debug("ERROR insn2\n");
+ 			ret = -1;
