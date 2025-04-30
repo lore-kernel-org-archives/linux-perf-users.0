@@ -1,49 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0662580D5;
-	Wed, 30 Apr 2025 16:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654581754B;
+	Wed, 30 Apr 2025 17:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746032319; cv=none; b=ZGkRNzD0CMzqdKNj6305bwpAHVO8Rkcs1DT7/bkmskp0MlJCvDWUEuZDGYoM1nGUIVexb/kr3X2xHw1Si18MeQsN536w+V+OrJHNHxTEzekMGSxbSHN79bww8jSf8MRM2bLnesMMa2/AOYLTBTTveas+ca/dLHTBRbOzbFA9N98=
+	t=1746033393; cv=none; b=XpSO964+uF6Eg/8QZBmQmGFfXCXHOcmBCRabRFq+/CsEMTV7t7xtcR9IiQPyk28bfc31BKpfJ9t/hhFxE0nsle6yls395D8255TskuSM6XYUrA4rthQuwRBGjAHd8gviETIG4CvRN+xub+PMVLSan3tjhNlNWAAZsMttaSKmLAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746032319; c=relaxed/simple;
-	bh=IHQZr7lGpJ8t+/rizich5GtpDGJI9PPkZu7s7u3vswc=;
+	s=arc-20240116; t=1746033393; c=relaxed/simple;
+	bh=3kFc6bITolNQ6TSbrVeg0UUkF0uc4ccuVasUl9gV4ZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiaOskkIS/Gt99CVJJcLjuRW+OqHmNxSN4YnRArfIqLltRom3BWsp4uEhdkFFZ6NnIY2I27a55vDK9Zdc1bTGws0zofaKlUvxoMbr/6lfc8OaEnCqMNQSIReDlr7y0sN9lgXmfwx1Imc8iu/FJGl5gEuHkRFc+fPj9qDWVa2v6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYMuPA/R; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YPt7FdItJBq33Ur5vnwkbIQiMs+J0SVPlZi215uLR3sqk98uk0sw5h2D4BallIejfAXRIafapAOkTcKBwCXxB64MYhdgpMKhUm0YKkAQeggA8HDBRrOSya+/k0d3xY/bA6CIf+b62z02lxu5uv2r9KKEScnQlgravB3akLWVIlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btCa1JS7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYMuPA/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3997C4CEE7;
-	Wed, 30 Apr 2025 16:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btCa1JS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB81C4CEE7;
+	Wed, 30 Apr 2025 17:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746032318;
-	bh=IHQZr7lGpJ8t+/rizich5GtpDGJI9PPkZu7s7u3vswc=;
+	s=k20201202; t=1746033392;
+	bh=3kFc6bITolNQ6TSbrVeg0UUkF0uc4ccuVasUl9gV4ZI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZYMuPA/RVFgMtF2HaxEoiV2z99ULz9jUdl4H9+s4mkl6V5HX8ga42F5F+J+05e0aA
-	 VehGldG9vaZJ9Fk8QiwevxnHh5ZJqadZUlS/XA3Y6UJlXSW5uIjfU+tbm5Sl81UOow
-	 lDQrJWnMURmvg1WZrjLvtMPeVKIXD63WygPrxzgGgq/7y3JYIClEf6v+qKr7EK9YCw
-	 UjxEHsu+Axs+3MMyh1CJ8g46RrEoNq+WcF5vA+flMTKWh5TiBx7cJ0wEgu24cHtq0b
-	 jkLucjOfsNfyMrO6k1xyscLYtz6JfYM0fX9kyqHhzPnFFcFPMOLn8pSfxZ/CxfBAPL
-	 +asX4HqaTiysg==
-Date: Wed, 30 Apr 2025 09:58:36 -0700
+	b=btCa1JS7AQHDhlnrJPPp66XcaQy+9ZdIyLgkmE8cp+NMWjggVdullhDz5saEv3nGK
+	 p9VY3HHbKSpKg4uRMWUTLj7U4GmJP+9kKiSEKmUJ4l2fDRuD/YOQzKtK6jYjywVc3W
+	 x18FK46b8x6zKLoB+pRNw1Bh2sPdf6CM4axK/DBs8+MzqlcY8v4SBXNBFvprv1/n6F
+	 0RtNKSrqaPsZhCTtQtk5q6s4Z91yeSKBJaIdWYPAlY/fqlxFzd0OJTkRVipJcpX0ht
+	 wmtNV8KPXss3+k9DCRnZWTI2/IGuGPAZ/AjonKSjVJlnqDtwAET5Hfz0ASIBCsltS2
+	 7JXZrE7FBYJtA==
+Date: Wed, 30 Apr 2025 10:16:30 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Joe Mario <jmario@redhat.com>,
-	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v4 1/4] perf amd ibs: Add Load Latency bits in raw dump
-Message-ID: <aBJWvAQc0wF6EV9g@google.com>
-References: <20250429035938.1301-1-ravi.bangoria@amd.com>
- <20250429035938.1301-2-ravi.bangoria@amd.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, acme@kernel.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+	hca@linux.ibm.com, irogers@google.com, ctshao@google.com
+Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
+Message-ID: <aBJa7qrdMcIEt7y8@google.com>
+References: <20250430140611.599078-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,102 +44,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250429035938.1301-2-ravi.bangoria@amd.com>
+In-Reply-To: <20250430140611.599078-1-tmricht@linux.ibm.com>
 
 Hello,
 
-On Tue, Apr 29, 2025 at 03:59:35AM +0000, Ravi Bangoria wrote:
-> IBS OP PMU on Zen5 supports Load Latency filtering. Decode and dump Load
-> Latency filtering related bits into perf script raw dump.
+On Wed, Apr 30, 2025 at 04:06:11PM +0200, Thomas Richter wrote:
+> V4: Update to be applied onto linux-next
+> V3: Added check for missing samples as suggested by Chun-Tse.
+> V2: Changed bc invocation to return 0 on success and 1 on error.
 > 
-> Also add oneliner example in the perf-amd-ibs man page.
+> There is a known issue that the leader sampling is inconsistent, since
+> throttle only affect leader, not the slave. The detail is in [1]. To
+> maintain test coverage, this patch sets a tolerance rate of 80% to
+> accommodate the throttled samples and prevent test failures due to
+> throttling.
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+> 
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 > ---
->  tools/perf/Documentation/perf-amd-ibs.txt |  9 +++++++++
->  tools/perf/util/amd-sample-raw.c          | 14 ++++++++++++--
->  2 files changed, 21 insertions(+), 2 deletions(-)
+>  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+>  1 file changed, 27 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-> index 2fd31d9d7b71..55f80beae037 100644
-> --- a/tools/perf/Documentation/perf-amd-ibs.txt
-> +++ b/tools/perf/Documentation/perf-amd-ibs.txt
-> @@ -85,6 +85,15 @@ System-wide profile, uOps event, sampling period: 100000, L3MissOnly (Zen4 onwar
->  
->  	# perf record -e ibs_op/cnt_ctl=1,l3missonly=1/ -c 100000 -a
->  
-> +System-wide profile, cycles event, sampling period: 100000, LdLat filtering (Zen5
-> +onward)
-> +
-> +	# perf record -e ibs_op/ldlat=128/ -c 100000 -a
-> +
-> +	Supported load latency threshold values are 128 to 2048 (both inclusive).
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index 05d91a663fda..587f62e34414 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -240,22 +240,43 @@ test_leader_sampling() {
+>      err=1
+>      return
+>    fi
+> +  perf script -i "${perfdata}" | grep brstack > $script_output
+> +  # Check if the two instruction counts are equal in each record.
+> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
+> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
+> +  # let's set the tolerance rate to 80%.
+> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+>    index=0
+> -  perf script -i "${perfdata}" > "${script_output}"
+> +  valid_counts=0
+> +  invalid_counts=0
+> +  tolerance_rate=0.8
+>    while IFS= read -r line
+>    do
+> -    # Check if the two instruction counts are equal in each record
+>      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>      then
+> -      echo "Leader sampling [Failed inconsistent cycles count]"
+> -      err=1
+> -      return
+> +      invalid_counts=$(($invalid_counts+1))
+> +    else
+> +      valid_counts=$(($valid_counts+1))
+>      fi
+>      index=$(($index+1))
+>      prev_cycles=$cycles
+>    done < "${script_output}"
+> -  echo "Basic leader sampling test [Success]"
+> +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
+> +  if (( $(bc <<< "$total_counts <= 0") ))
+> +  then
+> +    echo "Leader sampling [No sample generated]"
+> +    err=1
+> +    return
+> +  fi
+> +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
 
-What happens if user gives an out of range value?
-
-
-> +	Latency value which is a multiple of 128 incurs a little less profiling
-> +	overhead compared to other values.
-> +
->  Per process(upstream v6.2 onward), uOps event, sampling period: 100000
->  
->  	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -p 1234
-> diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-> index 9d0ce88e90e4..ac34b18ccc0c 100644
-> --- a/tools/perf/util/amd-sample-raw.c
-> +++ b/tools/perf/util/amd-sample-raw.c
-> @@ -19,6 +19,7 @@
->  
->  static u32 cpu_family, cpu_model, ibs_fetch_type, ibs_op_type;
->  static bool zen4_ibs_extensions;
-> +static bool ldlat_cap;
->  
->  static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
->  {
-> @@ -78,14 +79,20 @@ static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
->  static void pr_ibs_op_ctl(union ibs_op_ctl reg)
->  {
->  	char l3_miss_only[sizeof(" L3MissOnly _")] = "";
-> +	char ldlat[sizeof(" LdLatThrsh __ LdLatEn _")] = "";
-
-Shouldn't it reserve 4 characters for the threshold since it can be up
-to 2048?
-
->  
->  	if (zen4_ibs_extensions)
->  		snprintf(l3_miss_only, sizeof(l3_miss_only), " L3MissOnly %d", reg.l3_miss_only);
->  
-> -	printf("ibs_op_ctl:\t%016llx MaxCnt %9d%s En %d Val %d CntCtl %d=%s CurCnt %9d\n",
-> +	if (ldlat_cap) {
-> +		snprintf(ldlat, sizeof(ldlat), " LdLatThrsh %2d LdLatEn %d",
-
-Here, it would be %4d.
+I think the 'if-else' part can be omitted but I can live with that. :)
 
 Thanks,
 Namhyung
 
 
-> +			 reg.ldlat_thrsh, reg.ldlat_en);
-> +	}
-> +
-> +	printf("ibs_op_ctl:\t%016llx MaxCnt %9d%s En %d Val %d CntCtl %d=%s CurCnt %9d%s\n",
->  		reg.val, ((reg.opmaxcnt_ext << 16) | reg.opmaxcnt) << 4, l3_miss_only,
->  		reg.op_en, reg.op_val, reg.cnt_ctl,
-> -		reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt);
-> +		reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt, ldlat);
+> +  if [ $isok -eq 1 ]
+> +  then
+> +     echo "Leader sampling [Failed inconsistent cycles count]"
+> +     err=1
+> +  else
+> +    echo "Basic leader sampling test [Success]"
+> +  fi
 >  }
 >  
->  static void pr_ibs_op_data(union ibs_op_data reg)
-> @@ -331,6 +338,9 @@ bool evlist__has_amd_ibs(struct evlist *evlist)
->  	if (perf_env__find_pmu_cap(env, "ibs_op", "zen4_ibs_extensions"))
->  		zen4_ibs_extensions = 1;
->  
-> +	if (perf_env__find_pmu_cap(env, "ibs_op", "ldlat"))
-> +		ldlat_cap = 1;
-> +
->  	if (ibs_fetch_type || ibs_op_type) {
->  		if (!cpu_family)
->  			parse_cpuid(env);
+>  test_topdown_leader_sampling() {
 > -- 
-> 2.43.0
+> 2.45.2
 > 
