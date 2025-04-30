@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8981A289E28
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B70289E38
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035506; cv=none; b=eudoJMH8ARYk2dTTQ/sd/cV0xpAlrD+tdC9lgzlki4nCS9rFP6DKLbbVjleqpEv8Dv232UqNEeyNJ5mWrQJJPl4JDkmTkybzah9LKQB7qKma2XvcewlddqFeJz5GhMEoKe/U/wJuFBVzaqDdL+sYoEHrKTFh6rSHGq7Sy4iaaXo=
+	t=1746035508; cv=none; b=mMTn/g4i4b5Keq4zl54g6fmn4s+ZqHjYCwtzRmQsBbYKSzwGT4CE/xMAugo7YcQa6XQvVbpF21u2xP3+f8QvFdc0hGWgUAgHSXhnVKqSRUOMLJ7u1byYxzzQWpDwiZtHvq9fBIjgKsdXHmYRSOBcxMubrvlAIP6cFFfMwRr8Tks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035506; c=relaxed/simple;
-	bh=qYxyPi6RkviI4bX+6bORVAMTvoU1dSPnFuXQJ++clR8=;
+	s=arc-20240116; t=1746035508; c=relaxed/simple;
+	bh=9pgIBm6NSisapiSqj5zQA3vSFMAeMe8aGHH3thkw0jc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bjmtVHYFbjaTxBx20S5NUecAjwsc0UujUVOa9F0udiI+kr3TBIB8MGtlz0Dr1E+BWQOG0nKQ5e4dE6YlE3ijtIcfYmZnA0nHMTvMexlHA6l/cx/bR6RCwHMmsFK5a8IS7Yh9lOene9JJ5J/EiQxiy4u6a+S64lWwTUvbairW0Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f/Nbq0/7; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=KtOfvDPrDIjqpddQsibHhLn8Xt9iOVB8DS+UarcBjvSRuAqPTMShJsWHjSkmWRCPK3F5A2a0Gm+QKj3BMCbWmz/YXZ3pPESyUYaAAqipA+RkI33zd7d4BbzjrzVyyv8kfVCT1Hq80R9VR+BvigEQAXsK0IrHz6eDO0T2gh6hzwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K95jcYJA; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/Nbq0/7"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b19226b5f7dso100224a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K95jcYJA"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3032ea03448so164633a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035504; x=1746640304; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035506; x=1746640306; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J2GFrTv5xjFh/L7If88NMoXB+NztpoP+PMoIikktuv4=;
-        b=f/Nbq0/7gOnIfKqcjTsE1N+BJwGuvJVtyllZbw1WcURxUD58HqfrhHriJI/VUv3L5X
-         +CtJ+10zomUadxYR9D4IIi0cCvx5N8KYsfVI5pAtRv8/QrhWKZZbchuG6RKvuzgCwLgd
-         b4vqXh2rlHfiW6dVo3BViKXdybLXimzs15+cYdcBotPTWXogLymNGzReEX4qg6eCPP/o
-         4+GdFT15wSm9J9mrr+zAB2QvgeThCxOOnG36p1i2IMZ2b0cyxxU/5XJT5s/ed7h4UgWy
-         49guyNQtaoXkgJ/gQN5vFSormzbQ3eL77V13KjDYMwxOGAOZ7GbfLYIXSlms0/M8nQTH
-         Z+ew==
+        bh=mSGmrz0VgpdryeMuc4wJHeXUaiQJDc7wpL8BqB7GbRs=;
+        b=K95jcYJAYIFzp8lxGp5BEximBuTlGH93voZdAienR2SFJ5rLYhoVZvHRd75F93yy/a
+         XLgRY1/WpJ1mxo06gG5X6g2W+NlOClZqFkX/NckyGeK6ZjPzMzHKSr7OYL1DkCnrpWIF
+         HzzfoRNfjiwvQZT47+9SgZKn37GVhZa59eekhs8A3161tJAs6N9duEag1LBGNG9NpNyA
+         T0MBy1KQ30ymsM9GuL5zNTy6Ig55mu55YZp8NihznJAEtZAhGlSnBbutz/BgsEpGFENf
+         4UehY7SrnH5Q7Jm5/nyrob7pJiIJd4QPycdaB3KamogtYIWPHmUWaizWV0W5/AM1B6lw
+         Fa/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035504; x=1746640304;
+        d=1e100.net; s=20230601; t=1746035506; x=1746640306;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J2GFrTv5xjFh/L7If88NMoXB+NztpoP+PMoIikktuv4=;
-        b=kHp06dxjcAyTO+ZAGbdIgPctoYfY94x1GCyKFL7mRxBjaIdMwY8K/HTKgKJ7Sgg5Ep
-         MqREInycmEXeJA9OrdineutLH8dg/Nvs+GgWtPWIKsGuDUExOfYy5lKCYMKG9fekqUHX
-         gh6XNiwJu931u9j5lgNjZnhxu+7EvePblAmEzZa4m+CV63Es5/rGUfGK3ykMHmNna7jp
-         TypURrjBXzsLfQ8+SMH4o1ZmRRvvMsjZO8rO1m4s+ra6gbG4P/w1y/lEliP4t5dwSjco
-         WpatjFDoghdjBDk9Gr6pxnYpGMerHrqbIUMaTGUNLRywOC4sarLYi6Nof32qoDmLcJZm
-         WndA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUXSu5i+0f+c+v0jvoWDmEEU6ddCbgO2wjZlhO0SHO7+Lp5C5tAQWMikymaoqO2d6egf0qIHp/oX68KiLr0nT3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtbJN/gLatOJqxmOYIazPg3WndTGg366WlVNRZD1va4VTYmOK5
-	EA+fbY70a9+s1Y4CGVoc1PohXTicgQU4aYRewORzKYocdHNZWad6JE4OlNXzrgC+J4UpwVSvLHf
-	X0z+lJw==
-X-Google-Smtp-Source: AGHT+IGv2W/7VpCyNYDC1NVo2pEj4o3KLFYg0roQUo8v41bXyZlRs19Lsz8lL/tQOofmbcRVbLIJwW0fQB8/
-X-Received: from pjuw16.prod.google.com ([2002:a17:90a:d610:b0:2e9:38ea:ca0f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dc4:b0:2fa:1e56:5d82
- with SMTP id 98e67ed59e1d1-30a3f0ae2demr585709a91.17.1746035503469; Wed, 30
- Apr 2025 10:51:43 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:11 -0700
+        bh=mSGmrz0VgpdryeMuc4wJHeXUaiQJDc7wpL8BqB7GbRs=;
+        b=b4swsGSEl9K6sLbQXvWpBvjNvT/bod2IIpjCuXPXF9dLIjA4Mao7sbPq1oQp9bhmN+
+         HeglUtdtLec1WSeVyBqkKOJaZ7bQTvm6mHZOexXViH9ilo0p/VHPO45UfXsLu0CNQ0KU
+         Zh+nKeaW8Eupq5vN36qE210K+yB8oprT8SH0X7lFb56gT2BytBq9iL5jDUU14GB2chU9
+         nNLvXyutZw7HGFrW6P6OLo9RQEb/3BhI7JY2c0P8MQQAc4HjR+2QtrWWUsqXH38NyjKi
+         PPeDfp9hCN9WY5ar7Hv/M5VZnksz3p7iUeexPX9b4lyXYRcv2rzMMN8tccKAxVJcF8pM
+         zVGg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0PyRD4yxR3UkRdJEhrLx6QK3f2e3+gQ+rEHwX3BYNS6f2QEcJmunEbZb9KsMY5LOLwHLcaKCsPLeH3hgDxWog@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWFVQgFUQ81p0QLKvCdcMI2avMX/x3Y2BMDi0JPvYAyslskEkJ
+	FDXB5r/drAq/3QTm+awj9y+2C4a4Y93XjyEjEKU2c9yDeqNaDseaTt+SmTsBm/d3M3vJf2+Q1Hs
+	k2kRWTA==
+X-Google-Smtp-Source: AGHT+IHkONYHJZfK+RtGOYuqOR3Tmv1Fc5hyNA9X/JV4Uor3w7tc3iAjbnOBIe0SDP0OTR36qQM2EwN7Mdm0
+X-Received: from pjbpt8.prod.google.com ([2002:a17:90b:3d08:b0:308:670e:aa2c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1804:b0:301:1d03:93cf
+ with SMTP id 98e67ed59e1d1-30a3447ef20mr4890430a91.30.1746035505522; Wed, 30
+ Apr 2025 10:51:45 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:12 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-24-irogers@google.com>
-Subject: [PATCH v2 23/47] perf report: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-25-irogers@google.com>
+Subject: [PATCH v2 24/47] perf help: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,149 +116,120 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-report.c |  4 ++--
- tools/perf/util/callchain.c | 12 ++++++------
- tools/perf/util/callchain.h |  2 +-
- tools/perf/util/srccode.c   |  6 +++---
- tools/perf/util/srcline.c   |  2 +-
- 5 files changed, 13 insertions(+), 13 deletions(-)
+ tools/perf/builtin-help.c          |  4 ++--
+ tools/perf/util/help-unknown-cmd.c | 14 ++++++++------
+ tools/perf/util/levenshtein.c      | 18 +++++++++---------
+ 3 files changed, 19 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index f0299c7ee025..9c10209d7b57 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -800,7 +800,7 @@ static int count_lost_samples_event(const struct perf_tool *tool,
- 	evsel = evlist__id2evsel(rep->session->evlist, sample->id);
- 	if (evsel) {
- 		struct hists *hists = evsel__hists(evsel);
--		u32 count = event->lost_samples.lost;
-+		u32 count = (u32)event->lost_samples.lost;
+diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
+index 7be6fb6df595..05151c68191f 100644
+--- a/tools/perf/builtin-help.c
++++ b/tools/perf/builtin-help.c
+@@ -301,7 +301,7 @@ static struct cmdnames main_cmds, other_cmds;
  
- 		if (event->header.misc & PERF_RECORD_MISC_LOST_SAMPLES_BPF)
- 			hists__inc_nr_dropped_samples(hists, count);
-@@ -1602,7 +1602,7 @@ int cmd_report(int argc, const char **argv)
- 
- 	session = perf_session__new(&data, &report.tool);
- 	if (IS_ERR(session)) {
--		ret = PTR_ERR(session);
-+		ret = (int)PTR_ERR(session);
- 		goto exit;
- 	}
- 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index d7b7eef740b9..c3206b9d7b52 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -214,7 +214,7 @@ __parse_callchain_report_opt(const char *arg, bool allow_record_opt)
- 
- 			if (get_stack_size(tok, &size) < 0)
- 				return -1;
--			callchain_param.dump_size = size;
-+			callchain_param.dump_size = (u32)size;
- 			try_stack_size = false;
- 		} else if (!minpcnt_set) {
- 			/* try to get the min percent */
-@@ -224,7 +224,7 @@ __parse_callchain_report_opt(const char *arg, bool allow_record_opt)
- 			minpcnt_set = true;
- 		} else {
- 			/* try print limit at last */
--			callchain_param.print_limit = strtoul(tok, &endptr, 0);
-+			callchain_param.print_limit = (u32)strtoul(tok, &endptr, 0);
- 			if (tok == endptr)
- 				return -1;
- 		}
-@@ -295,7 +295,7 @@ int parse_callchain_record(const char *arg, struct callchain_param *param)
- 				unsigned long size = 0;
- 
- 				ret = get_stack_size(tok, &size);
--				param->dump_size = size;
-+				param->dump_size = (u32)size;
- 			}
- 		} else if (!strncmp(name, "lbr", sizeof("lbr"))) {
- 			if (!strtok_r(NULL, ",", &saveptr)) {
-@@ -332,7 +332,7 @@ int perf_callchain_config(const char *var, const char *value)
- 		int ret;
- 
- 		ret = get_stack_size(value, &size);
--		callchain_param.dump_size = size;
-+		callchain_param.dump_size = (u32)size;
- 
- 		return ret;
- 	}
-@@ -817,7 +817,7 @@ split_add_child(struct callchain_node *parent,
+ void list_common_cmds_help(void)
  {
- 	struct callchain_node *new;
- 	struct list_head *old_tail;
--	unsigned int idx_total = idx_parents + idx_local;
-+	u64 idx_total = idx_parents + idx_local;
+-	unsigned int i, longest = 0;
++	size_t i, longest = 0;
  
- 	/* split */
- 	new = create_child(parent, true);
-@@ -1027,7 +1027,7 @@ merge_chain_branch(struct callchain_cursor *cursor,
- 	struct callchain_node *child;
- 	struct callchain_list *list, *next_list;
- 	struct rb_node *n;
--	int old_pos = cursor->nr;
-+	u64 old_pos = cursor->nr;
- 	int err = 0;
+ 	for (i = 0; i < ARRAY_SIZE(common_cmds); i++) {
+ 		if (longest < strlen(common_cmds[i].name))
+@@ -310,7 +310,7 @@ void list_common_cmds_help(void)
  
- 	list_for_each_entry_safe(list, next_list, &src->val, list) {
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 86ed9e4d04f9..7a2abff6d0a5 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -65,7 +65,7 @@ struct callchain_node {
- 	struct rb_node		rb_node;    /* to sort nodes in an output tree */
- 	struct rb_root		rb_root_in; /* input tree of children */
- 	struct rb_root		rb_root;    /* sorted output tree of children */
--	unsigned int		val_nr;
-+	u64			val_nr;
- 	unsigned int		count;
- 	unsigned int		children_count;
- 	u64			hit;
-diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
-index 476e99896d5e..f5f8cdfd00c1 100644
---- a/tools/perf/util/srccode.c
-+++ b/tools/perf/util/srccode.c
-@@ -37,7 +37,7 @@ static LIST_HEAD(srcfile_list);
- static long map_total_sz;
- static int num_srcfiles;
- 
--static int countlines(char *map, int maplen)
-+static int countlines(char *map, size_t maplen)
- {
- 	int numl;
- 	char *end = map + maplen;
-@@ -136,7 +136,7 @@ static struct srcfile *find_srcfile(char *fn)
- 	h->lines = calloc(h->numlines, sizeof(char *));
- 	if (!h->lines)
- 		goto out_map;
--	fill_lines(h->lines, h->numlines, h->map, h->maplen);
-+	fill_lines(h->lines, h->numlines, h->map, (int)h->maplen);
- 	list_add(&h->nd, &srcfile_list);
- 	hlist_add_head(&h->hash_nd, &srcfile_htab[hval]);
- 	map_total_sz += h->maplen;
-@@ -166,6 +166,6 @@ char *find_sourceline(char *fn, unsigned line, int *lenp)
- 	if (!l)
- 		return NULL;
- 	p = memchr(l, '\n', sf->map + sf->maplen - l);
--	*lenp = p - l;
-+	*lenp = (int)(p - l);
- 	return l;
+ 	puts(" The most commonly used perf commands are:");
+ 	for (i = 0; i < ARRAY_SIZE(common_cmds); i++) {
+-		printf("   %-*s   ", longest, common_cmds[i].name);
++		printf("   %-*s   ", (int)longest, common_cmds[i].name);
+ 		puts(common_cmds[i].help);
+ 	}
  }
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index f32d0d4f4bc9..b2003c5490a2 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -443,7 +443,7 @@ static int filename_split(char *filename, unsigned int *line_nr)
- 	sep = strchr(filename, ':');
- 	if (sep) {
- 		*sep++ = '\0';
--		*line_nr = strtoul(sep, NULL, 0);
-+		*line_nr = (unsigned int)strtoul(sep, NULL, 0);
- 		return 1;
+diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
+index a0a46e34f8d1..f0a0b8c13a92 100644
+--- a/tools/perf/util/help-unknown-cmd.c
++++ b/tools/perf/util/help-unknown-cmd.c
+@@ -24,14 +24,15 @@ static int levenshtein_compare(const void *p1, const void *p2)
+ {
+ 	const struct cmdname *const *c1 = p1, *const *c2 = p2;
+ 	const char *s1 = (*c1)->name, *s2 = (*c2)->name;
+-	int l1 = (*c1)->len;
+-	int l2 = (*c2)->len;
+-	return l1 != l2 ? l1 - l2 : strcmp(s1, s2);
++	ssize_t l1 = (*c1)->len;
++	ssize_t l2 = (*c2)->len;
++
++	return l1 != l2 ? (int)(l1 - l2) : (int)strcmp(s1, s2);
+ }
+ 
+ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
+ {
+-	unsigned int i, nr = cmds->cnt + old->cnt;
++	size_t nr = cmds->cnt + old->cnt;
+ 	void *tmp;
+ 
+ 	if (nr > cmds->alloc) {
+@@ -45,7 +46,7 @@ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
+ 			return -1;
+ 		cmds->names = tmp;
  	}
- 	pr_debug("addr2line missing ':' in filename split\n");
+-	for (i = 0; i < old->cnt; i++)
++	for (size_t i = 0; i < old->cnt; i++)
+ 		cmds->names[cmds->cnt++] = old->names[i];
+ 	zfree(&old->names);
+ 	old->cnt = 0;
+@@ -54,7 +55,8 @@ static int add_cmd_list(struct cmdnames *cmds, struct cmdnames *old)
+ 
+ const char *help_unknown_cmd(const char *cmd, struct cmdnames *main_cmds)
+ {
+-	unsigned int i, n = 0, best_similarity = 0;
++	unsigned int i, n = 0;
++	size_t best_similarity = 0;
+ 	struct cmdnames other_cmds;
+ 
+ 	memset(&other_cmds, 0, sizeof(other_cmds));
+diff --git a/tools/perf/util/levenshtein.c b/tools/perf/util/levenshtein.c
+index 6a6712635aa4..f6912b848c4a 100644
+--- a/tools/perf/util/levenshtein.c
++++ b/tools/perf/util/levenshtein.c
+@@ -44,19 +44,19 @@
+ int levenshtein(const char *string1, const char *string2,
+ 		int w, int s, int a, int d)
+ {
+-	int len1 = strlen(string1), len2 = strlen(string2);
++	size_t len1 = strlen(string1), len2 = strlen(string2);
+ 	int *row0 = malloc(sizeof(int) * (len2 + 1));
+ 	int *row1 = malloc(sizeof(int) * (len2 + 1));
+ 	int *row2 = malloc(sizeof(int) * (len2 + 1));
+-	int i, j;
++	int ret;
+ 
+-	for (j = 0; j <= len2; j++)
+-		row1[j] = j * a;
+-	for (i = 0; i < len1; i++) {
++	for (size_t j = 0; j <= len2; j++)
++		row1[j] = (int)j * a;
++	for (size_t i = 0; i < len1; i++) {
+ 		int *dummy;
+ 
+-		row2[0] = (i + 1) * d;
+-		for (j = 0; j < len2; j++) {
++		row2[0] = ((int)i + 1) * d;
++		for (size_t j = 0; j < len2; j++) {
+ 			/* substitution */
+ 			row2[j + 1] = row1[j] + s * (string1[i] != string2[j]);
+ 			/* swap */
+@@ -78,10 +78,10 @@ int levenshtein(const char *string1, const char *string2,
+ 		row2 = dummy;
+ 	}
+ 
+-	i = row1[len2];
++	ret = row1[len2];
+ 	free(row0);
+ 	free(row1);
+ 	free(row2);
+ 
+-	return i;
++	return ret;
+ }
 -- 
 2.49.0.906.g1f30a19c02-goog
 
