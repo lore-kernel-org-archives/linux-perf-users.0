@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62A629372E;
-	Wed, 30 Apr 2025 20:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BE92949FB;
+	Wed, 30 Apr 2025 20:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746043265; cv=none; b=ZNCVcM71HSIAnRyqgSAl97/mYuE16wgGLsdj+1xDGXsjvqV37Ynm/Eo6vXSrFiNC9Gfk9TImiHOpuzjAqkF9Kih/6I5mUgErWLDmT7nZRV0J25YRoICyOaWO/Gl0d0r/psN02ypdR3ZlxMiV2TTe9KhM8aOBAzYkc/hbuae2lIg=
+	t=1746043265; cv=none; b=n5HeAgwAw+wfrWJMeUxAxdn0TAskH0y2q9MSEZrGmzoEdrV2gn3UpYl5u7N8VKafZVaYE7ADx628+AEGIvV8nADF8833McQejiUsGU9soKKx3MqP1Q4n6TVBMRJOw3Z1AfkNafprqlE2OP1DCslhBqNBDgDerWVsGDYG3wMNTic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746043265; c=relaxed/simple;
-	bh=bYoE3lWyc/7+xI2i1oiE1igTNM0T6KYUsdoBK92sjnU=;
+	bh=mggx5smXanCvg7n8gnR/FploZ9NPITBU1NWvDKMpMos=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=sAWLAxOzsBYALELKOUSKWcydk1sOTyUXNmVClMdKnlQPEkcDrVKtShxpOXjkkneWS0/Bh2k7NQlIMwXkET7VqHyJvuEBjTIE7fRBd3zn0k7WGAZ4swHEG9u6+TEZTc2HlDOVRj73I1lkw/kyH0yynN+exWxW54ZW23OGZrTWbZo=
+	 Content-Type; b=NJ8MAf9cp7y7yEPGF7hHAAr9N3oyH50rtf2f5kjV2OQbWsV2ujA557+XyGun1ZfbMbz4KyEeykEXMw1Gpc/zI6xOA+gHGNEF4E1OaADlb6+d2INi76GZCqktm9N37hkjT0mrT8uUm2MUi7KFBkWPyIbZRLvs5zR0PhOlkrnmKrY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC709C4CEEC;
-	Wed, 30 Apr 2025 20:01:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 570FFC4CEE7;
+	Wed, 30 Apr 2025 20:01:05 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uADcD-00000001dRa-0e4d;
+	id 1uADcD-00000001dT5-2lNA;
 	Wed, 30 Apr 2025 16:01:09 -0400
-Message-ID: <20250430200109.007677803@goodmis.org>
+Message-ID: <20250430200109.512005059@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 30 Apr 2025 15:57:55 -0400
+Date: Wed, 30 Apr 2025 15:57:58 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -52,9 +52,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Blake Jones <blakejones@google.com>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
- Alexander Aring <aahringo@redhat.com>,
- Namhyung Kim <Namhyung@kernel.org>
-Subject: [PATCH v7 09/18] perf: Remove get_perf_callchain() init_nr argument
+ Alexander Aring <aahringo@redhat.com>
+Subject: [PATCH v7 12/18] perf: Simplify get_perf_callchain() user logic
 References: <20250430195746.827125963@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -66,98 +65,50 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-The 'init_nr' argument has double duty: it's used to initialize both the
-number of contexts and the number of stack entries.  That's confusing
-and the callers always pass zero anyway.  Hard code the zero.
+Simplify the get_perf_callchain() user logic a bit.  task_pt_regs()
+should never be NULL.
 
-Acked-by: Namhyung Kim <Namhyung@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/perf_event.h |  2 +-
- kernel/bpf/stackmap.c      |  4 ++--
- kernel/events/callchain.c  | 12 ++++++------
- kernel/events/core.c       |  2 +-
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ kernel/events/callchain.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 947ad12dfdbe..3cc0b0ea0afa 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1651,7 +1651,7 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
- extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
- extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
- extern struct perf_callchain_entry *
--get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
-+get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 		   u32 max_stack, bool crosstask, bool add_mark);
- extern int get_callchain_buffers(int max_stack);
- extern void put_callchain_buffers(void);
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 3615c06b7dfa..ec3a57a5fba1 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -314,7 +314,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 	if (max_depth > sysctl_perf_event_max_stack)
- 		max_depth = sysctl_perf_event_max_stack;
- 
--	trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
-+	trace = get_perf_callchain(regs, kernel, user, max_depth,
- 				   false, false);
- 
- 	if (unlikely(!trace))
-@@ -451,7 +451,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 	else if (kernel && task)
- 		trace = get_callchain_entry_for_task(task, max_depth);
- 	else
--		trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
-+		trace = get_perf_callchain(regs, kernel, user, max_depth,
- 					   crosstask, false);
- 
- 	if (unlikely(!trace) || trace->nr < skip) {
 diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 6c83ad674d01..b0f5bd228cd8 100644
+index cda145dc11bd..2798c0c9f782 100644
 --- a/kernel/events/callchain.c
 +++ b/kernel/events/callchain.c
-@@ -217,7 +217,7 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
- }
+@@ -247,21 +247,19 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 	if (user) {
+ 		if (!user_mode(regs)) {
+ 			if (current->flags & PF_KTHREAD)
+-				regs = NULL;
+-			else
+-				regs = task_pt_regs(current);
++				goto exit_put;
++			regs = task_pt_regs(current);
+ 		}
  
- struct perf_callchain_entry *
--get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
-+get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 		   u32 max_stack, bool crosstask, bool add_mark)
- {
- 	struct perf_callchain_entry *entry;
-@@ -228,11 +228,11 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 	if (!entry)
- 		return NULL;
+-		if (regs) {
+-			if (add_mark)
+-				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
++		if (add_mark)
++			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
  
--	ctx.entry     = entry;
--	ctx.max_stack = max_stack;
--	ctx.nr	      = entry->nr = init_nr;
--	ctx.contexts       = 0;
--	ctx.contexts_maxed = false;
-+	ctx.entry		= entry;
-+	ctx.max_stack		= max_stack;
-+	ctx.nr			= entry->nr = 0;
-+	ctx.contexts		= 0;
-+	ctx.contexts_maxed	= false;
+-			start_entry_idx = entry->nr;
+-			perf_callchain_user(&ctx, regs);
+-			fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
+-		}
++		start_entry_idx = entry->nr;
++		perf_callchain_user(&ctx, regs);
++		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
+ 	}
  
- 	if (kernel && !user_mode(regs)) {
- 		if (add_mark)
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3c69a1a3f41c..67581babe9ba 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8110,7 +8110,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
- 	if (!kernel && !user)
- 		return &__empty_callchain;
++exit_put:
+ 	put_callchain_entry(rctx);
  
--	callchain = get_perf_callchain(regs, 0, kernel, user,
-+	callchain = get_perf_callchain(regs, kernel, user,
- 				       max_stack, crosstask, true);
- 	return callchain ?: &__empty_callchain;
- }
+ 	return entry;
 -- 
 2.47.2
 
