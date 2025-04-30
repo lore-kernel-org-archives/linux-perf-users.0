@@ -1,106 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D5625D541;
-	Wed, 30 Apr 2025 12:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87B62620F1;
+	Wed, 30 Apr 2025 13:06:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017818; cv=none; b=uhSIXx9aDtwl4ey61yfhxd9HD4qCSTPjXSckgOM03ziiA+g3+6sI/mDDtY+pKV0IFyUX4azjlwnk2FBy9JguonfPkjErDq464kA9Odrk9DjtO25xfenPrie5wzi/lLuIJjDC28S+EbeGYdldZmDMink1GCG2pYwMcJOutMzTYr0=
+	t=1746018394; cv=none; b=gbXGWkFVn0YZCeEepGARvsMuqLSfBG+VHtQP/++UjNE6csX/kUC1G4+ZYoNR0E7vAKMUiYvUD7gb2JjpzqUiHcJlCwkGfFxdmQv9uZo7bful+lEVbNe5r9+uWeJ92jW3QY/23Rbru2Wdlh2BRsK43q5leBbMwKj+y1Put1L6TjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017818; c=relaxed/simple;
-	bh=uLcVteZSPDqe2u74CAvMKYQO5qHTff2Fkb3KFWwvD4Y=;
+	s=arc-20240116; t=1746018394; c=relaxed/simple;
+	bh=B56c2X14qHZ4Yj3ML01q9Bz07Deisw0vJi8ciltC+fk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gBz1Jp8mGt0E11bzFEVPrAKgVOFxKk052nAAWNmF7ncMi8EJhijQkMFiAp+jCWdknENZLtpob4XrMznAS6eiotgyfuK9lv/SMZmtYdjlxqNAy9fIjV9a5BqyY/Qd+9B71mIVb6pCIeUGW99zeWvqZinXcD3M4V4hyynt33Tu1Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxzW83SP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UKAvi3ASrWNFCnzVYTsy+xGuGCuR5W+YkEcAGXgGPFqcUehXeGC0sBXl7WISmeMSEyvBJAZyP4imaXn+Inxpj0C/Paxop090nr6sO/iYs+1fq5SgmVwgBhMwY9l5X05kPWRMah6xl10Bd62Gj84oiyP6gjXKtGCkF4iYK1fiZzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFFWjWM2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxzW83SP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DDA1C4CEE9;
-	Wed, 30 Apr 2025 12:56:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFFWjWM2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE74C4CEE9;
+	Wed, 30 Apr 2025 13:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746017817;
-	bh=uLcVteZSPDqe2u74CAvMKYQO5qHTff2Fkb3KFWwvD4Y=;
+	s=k20201202; t=1746018393;
+	bh=B56c2X14qHZ4Yj3ML01q9Bz07Deisw0vJi8ciltC+fk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PxzW83SPf9ZZ4HFymch8b/+BMURaYyGgCYmOxJVXagSIhyQoSBlovI8WWsTUDRrir
-	 E1UVkInW31z9/Davm3uR30FvsKSVTNsA4CnXtdPuFlPkfWYExc2HjBG+QexyPJtRXZ
-	 jqJ9QZFz4emaAubh4vCZF4/5fAR5CDpY9ZorbPgtK10rP8MXJuDW41JKaVOR5xBs9+
-	 LGU2tOGEmUE67eBZ6WgGrCzim01goK/ZPPadEunbAnhJyGLoBNsooezwExFafNJwCg
-	 72klqPkgk3nqcNihBLuSk04VqJPxIPpJ+LmzQmy1rPtCSElK+fcbgYXRF87Qvs6G1H
-	 qJJ3haj51R9fw==
-Date: Wed, 30 Apr 2025 09:56:54 -0300
+	b=mFFWjWM2K43mt1MkDa65QXGy8Q1/Szb7pMpXhfz3xIdsDcPZWRqKHpP9mcETAPdDe
+	 AzeRYqXLbV8jpgMpk1EABYv0+eypHt9QjY9labRSvopXYaz9HHVVqXF9dAufcIqHWM
+	 g0vbOpYZvDfvBz6JfzTuDQ2k+uxUNA2epN85jJ9VYW0Ss9Cfpj8VljFA6Rtl6QgsZ9
+	 jb5lAIyV7cATurVAieNjL4MClcfcujBqSJFiL0AeK7MQxqyQLngLGtX0KpTT/Ata6h
+	 CfnCdyQro9CZbsjvXz2mXuHRUbST0Tu7Bcf8bHNRwXcNuzdierzkI3Ht8sAvs7kSCw
+	 VTNyTexUfmBPg==
+Date: Wed, 30 Apr 2025 10:06:30 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-	ctshao@google.com, irogers@google.com, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PING PATCH v3] perf test: Allow tolerance for leader sampling
- test
-Message-ID: <aBIeFio2nkbzFj0b@x1>
-References: <20250422110643.2900090-1-tmricht@linux.ibm.com>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Joe Mario <jmario@redhat.com>,
+	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: Re: [PATCH v4 4/4] perf test amd ibs: Add sample period unit test
+Message-ID: <aBIgVi90Zinz6Rl4@x1>
+References: <20250429035938.1301-1-ravi.bangoria@amd.com>
+ <20250429035938.1301-5-ravi.bangoria@amd.com>
+ <aBE8raTOCVZLfw7J@x1>
+ <aBF5UWrxvYgbnxde@x1>
+ <aBF7ZarWJvzeDKqF@x1>
+ <4bea7b8a-9ff5-4ae9-8154-57ec7377ee4e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422110643.2900090-1-tmricht@linux.ibm.com>
+In-Reply-To: <4bea7b8a-9ff5-4ae9-8154-57ec7377ee4e@amd.com>
 
-On Tue, Apr 22, 2025 at 01:06:43PM +0200, Thomas Richter wrote:
-> V3: Added check for missing samples as suggested by Chun-Tse.
-> V2: Changed bc invocation to return 0 on success and 1 on error.
+On Wed, Apr 30, 2025 at 02:32:12PM +0530, Ravi Bangoria wrote:
+> On 30-Apr-25 6:52 AM, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Apr 29, 2025 at 10:13:53PM -0300, Arnaldo Carvalho de Melo wrote:
+> >> Adding the patch below cures it, still need to test on a Zen 5 system.
+
+> >> These issues were just in the regression test.
  
-> There is a known issue that the leader sampling is inconsistent, since
-> throttle only affect leader, not the slave. The detail is in [1]. To
-> maintain test coverage, this patch sets a tolerance rate of 80% to
-> accommodate the throttled samples and prevent test failures due to
-> throttling.
+> > BTW, all is at the tmp.perf-tools-next branch at:
  
-> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
- 
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
 
-This doesn't apply to perf-tools-next:
+> I tested with few simple perf mem/c2c commands and it seems to be working
+> fine.
 
-⬢ [acme@toolbx perf-tools-next]$        git am ./v3_20250422_tmricht_perf_test_allow_tolerance_for_leader_sampling_test.mbx
-Applying: perf test: Allow tolerance for leader sampling test
-error: patch failed: tools/perf/tests/shell/record.sh:238
-error: tools/perf/tests/shell/record.sh: patch does not apply
-Patch failed at 0001 perf test: Allow tolerance for leader sampling test
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-⬢ [acme@toolbx perf-tools-next]$
+Thanks for checking!
 
-Are you proposing this for perf-tools, i.e. for this release cycles?
+While testing it I noticed that locally built kernels using O= to
+separate the build files from source are ending up with:
 
-Namhyung, what do you think?
+root@number:/home/acme/git/linux# readelf -wi ../build/v6.15.0-rc4+/vmlinux | grep -m1 DW_AT_comp_dir
+    <17>   DW_AT_comp_dir    : (indirect line string, offset: 0): /home/acme/git/build/v6.15.0-rc4+
+root@number:/home/acme/git/linux# readelf -wi ../build/v6.15.0-rc4+/vmlinux | grep DW_AT_comp_dir | cut -d: -f4 | sort | uniq -c
+     49  /home/acme/git/build/v6.15.0-rc2+
+   3104  /home/acme/git/build/v6.15.0-rc4+
+root@number:/home/acme/git/linux#
 
-I think it is not applying in perf-tools-next due to this patch that
-isn't in perf-tools:
+I reused a previous build dir, something got reused, but then tools like
+annotate, objdump -dS can't find the sources.
 
-⬢ [acme@toolbx perf-tools-next]$ git log --oneline -5 perf-tools-next/perf-tools-next tools/perf/tests/shell/record.sh
-be8aefad33760dd8 perf tests record: Cleanup improvements <<<<<<<<<<<<<<<<<<<<<<<<<<<<
-90d97674d4ad0166 perf test: Use cycles event in perf record test for leader_sampling
-859199431d768091 perf test: Fix perf record test for precise_max
-180fd0c1eac7cd8c perf tests: Make leader sampling test work without branch event
-2532be3d219d8819 perf test: Tag parallel failing shell tests with "(exclusive)"
-⬢ [acme@toolbx perf-tools-next]$
-
-⬢ [acme@toolbx perf-tools-next]$ git log --oneline -5 perf-tools/perf-tools tools/perf/tests/shell/record.sh
-90d97674d4ad0166 perf test: Use cycles event in perf record test for leader_sampling
-859199431d768091 perf test: Fix perf record test for precise_max
-180fd0c1eac7cd8c perf tests: Make leader sampling test work without branch event
-2532be3d219d8819 perf test: Tag parallel failing shell tests with "(exclusive)"
-36fae9f93e5f00eb perf test: Add precise_max subtest to the perf record shell test
-⬢ [acme@toolbx perf-tools-next]$
+A distraction while testing your patches :-\
 
 - Arnaldo
