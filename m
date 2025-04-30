@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA20A29551F
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCDD295537
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 17:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035522; cv=none; b=NKViQUlqi9YAPKQlGJCyqp0K9G39yCurCUSEL9sN8/j34I4OJ6UY6cGHufs2B2FACmXT6/qq3SdS/CEafuHB1otaLPi0WSqofMQ3D5uwg2xF6DSoL4kE0Xagt5uYddFcu8wzBUtr2hTajtn4xoAwLklxzQ+T95QIBbDxSWBEj2o=
+	t=1746035524; cv=none; b=VyRMeAiR8BGGVPoZu7MbXp9aXYNe6S9xX4yJY0+x1gSymTSpdH2OgTg8OxR3HZYTvfA5oBzluBK7IPkoMJX2Os3Vz0HUsrH1qcdTeWgZXx9z0crvKXsgjfmsw7bj8nODqK6yVoVKmOt7Q4abVIwq0i5/nb9SbK9cYvP0SUi5zuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035522; c=relaxed/simple;
-	bh=r5dyt7WULPT6TwZ8GkpsBnLtWgUyrYqxUVqGjZbdg6Q=;
+	s=arc-20240116; t=1746035524; c=relaxed/simple;
+	bh=Nu64fgsUggtVqciky6DS55ECHqWe+JpaG3wU41WVZ8M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=d3TdnGFSsSxcxAWG7w1IKO/ipre+lkqG0wqL11nfLlYXZ7d7yZgzNhfcwF2eQRzQOGx9aODym/ROQ83gvd6/WUnd43fPqBnADNEDOQC4MS+rUxt7BxzaQ7RkQuA07t0vR5rbrRMQlD7jvEYU/AKQoDurVJvz/4qCtN0FQSsACVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W1x4GAmn; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=MpscAf6JUN0GFsK4fiBTNDAPUK4FXgFGxpuTe1Zmapz/xn7vk4mA3vWeltvq/dS6XH9OX77QhoiytoLOandF+CglDCPJuflIySQQSiNsUFK7rhOFHanB1BdxcVrEU6r3bPvcBGj10zz1XZ9T1gbutQX24cBBswagnrdlzxqgPiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BMMT5rDE; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W1x4GAmn"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e30ffso128940a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:52:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BMMT5rDE"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b00ce246e38so85821a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Apr 2025 10:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035520; x=1746640320; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035522; x=1746640322; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FJDGTrAXLYH4hGYuUKjDOU1yDsQb9jT4XvyOCJsmDmM=;
-        b=W1x4GAmngPuGTP7IiWCW++sEJyV8+Oe/ypwtj874SmF7gSWWFjy1wmsxElHezznrbu
-         W7qsuNuKdkZX4Pc9vkgABJhea2joFiJxu3M1G8zGW8B7VknoHETTONrWac3D5dWepPIo
-         /NA/Q4IhF765DWja1olx14LhqWpKNdhDkAJf5mKaNU4nB2Ymm9DHnaQyYh9WE7nF669t
-         BdF9a/1lmPjJOw+3XYb4tPwe0Rk+5SKmEXf6FmnrbkKHQQcrTR9dg2lLyOpjfUETIej7
-         Qx4t6MhWEXEmET6FZaq8YDtprKSJ/jtTINNe4Rq12LfvYGrRvvA6Cjyw9mq+mBWru23n
-         voCA==
+        bh=b94roP851Er7qs/qoq/Fr5lHIvpxhU3lVSn/ifYnsLI=;
+        b=BMMT5rDEsht1Z3Yvc78Q3B11V4JrMyV3MyTGSaUIxSqNuLY0pDSau+feT+4h6uc0Ym
+         qwJroUwxJggtzR+vDNSdCb0JgsTZdt/fyqmS/cY4+gOskvJSUMIyF7gN35gM1lTZ2vX8
+         Kx+DuUcM3yarcjLCJuCqM9iNJkgoGJ0RDqWBGK+Lr98Jnaj2okBrqhXqJ5CJbfkJSUgn
+         e+hHALL9K9TOLpoFSuHxzIVh7BDjO47J4cXg8G2Z8UVQ+Rzjl2zRRnjzt/cGATCJcyzG
+         WrD1Eg1+bXZUvDT23n490n1zjwRiUXKBpLuFZdRD2ctDTRkQGpNtUgAs39jQmwr58Fpz
+         84zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035520; x=1746640320;
+        d=1e100.net; s=20230601; t=1746035522; x=1746640322;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FJDGTrAXLYH4hGYuUKjDOU1yDsQb9jT4XvyOCJsmDmM=;
-        b=vybnVabWh/gIuH5RnbWYIxBlLytv6tlKnGlrj5a5erauJvqFocX8yLr/aiyZI3zGU1
-         zUgjg93tdCwjDhHK9okweNSNy5NQVQ+1yVbuKY95Dbw9mtliKNwHtvKWeLpCH2mOrrrB
-         QKAMa8mtiwt/XxizhESJeDyGdxhwkKnAFd7nNbAuRtmrbwUKMJLGAK4xjIO7p5n7hB3n
-         t6jTl7c03YZsbVS/Ttq9oDMYBJRA/oa+yRikZZVq0k6tQTeljQFt+lMz+7kxljq1fEd9
-         JCSt35EKSSGIwWycyT3LNgScDc547x5ZKPbfH2cvudm0LVq1ZYCMfXLIkE4DYMn4eI8s
-         nDBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQqCu8HchTlUomvpdyyGnqP4t8mXifVwNwY01TweJG4hRKDtvHmNcBfI8jPYY9gDgblbxwAxwnQpl/95UDKlRS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPL28YAuyDR5hs6GtXLcN9oJ6+XL+2PWTmpjRDqfFPeP7SuYYy
-	yw7t00Y9NiLCbgD3sGpOtA0rA6LuMIo8eocwecvAzcHFaRDrJbvqAMYr0w0amDfR+KyZeLTPALT
-	99Vh8Dw==
-X-Google-Smtp-Source: AGHT+IGpMdCcZwC8lu20bnUel1JwqffOM2cVPf2gSFSm5sX+qsnG32WRPx6BVsGF8ae+jTxBwJ7hUdoImMJ7
-X-Received: from pjbee6.prod.google.com ([2002:a17:90a:fc46:b0:2ff:852c:ceb8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:548f:b0:2fe:8282:cb9d
- with SMTP id 98e67ed59e1d1-30a33359527mr5858439a91.28.1746035519920; Wed, 30
- Apr 2025 10:51:59 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:19 -0700
+        bh=b94roP851Er7qs/qoq/Fr5lHIvpxhU3lVSn/ifYnsLI=;
+        b=odM4SbOuKGfpulRyXxqmZU/WstQGxHM1ybwyrSIAaiZ5ukNbZhQAlXUe/6QYZ3uGau
+         653X4acFz2qNh1whJF0jQmsajP76UBjHpMfzZE8cP0vhMPe0h7T1Mt+0sUge15LXq95L
+         lvc/1L8lJeV8eVogmOe1emc2vnRVi757mk/cU0FpL70ECamSFTF0we5ynCPuoYbDW3dX
+         dG1OaAsHFUOnBCEyueR9L7usjc4ox6fbco1j6zEqhKxGYQk6Sq/urFituyjAVpb30WDD
+         ugqqyz970SgpMqJv45QWWZhcUMCTLgbw5FhqPsMJc0obaX9m1mtiSG3UYdwy3UyRLD/P
+         RnfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9mDB4QPLw4T3ZDS0PFdyN4rPazoFM/MCLJCR+LDYD/pXcleomicnmPrvLFPYhjb06zTrVdGawEjSKD0YbyNFk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1OsLJQflihJp8VMeg+G4z1bgERIilz3uLkiQrkG7sK4MC/9EH
+	Fgq6U52rTxadxKXkyhccccqZRd61dYChrcQDs8+SioNbbDow30/YThXa7ZfxV/u6PCIo98g4SYP
+	oVQo+Og==
+X-Google-Smtp-Source: AGHT+IFkyemDuf41ZeRelK0Jyrut7TlDmTPmMz4GlW9IeIakNxi5M3tcF17YTaGyuJnBR0tIvKx0crdkE8o+
+X-Received: from pjboi8.prod.google.com ([2002:a17:90b:3a08:b0:308:64ce:7274])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ad2:b0:30a:2173:9f0b
+ with SMTP id 98e67ed59e1d1-30a34467f57mr5271082a91.28.1746035521921; Wed, 30
+ Apr 2025 10:52:01 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:20 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-32-irogers@google.com>
-Subject: [PATCH v2 31/47] perf script: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-33-irogers@google.com>
+Subject: [PATCH v2 32/47] perf evlist: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,204 +116,274 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c    | 39 ++++++++++++++++++----------------
- tools/perf/util/print_binary.c | 13 ++++++------
- 2 files changed, 27 insertions(+), 25 deletions(-)
+ tools/perf/builtin-evlist.c |  2 +-
+ tools/perf/util/evlist.c    | 29 +++++++++++++++--------------
+ tools/perf/util/evsel.c     | 35 ++++++++++++++---------------------
+ 3 files changed, 30 insertions(+), 36 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 9b16df881af8..bb997f2ceb62 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -724,7 +724,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
- static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask, const char *arch,
- 				     FILE *fp)
- {
--	unsigned i = 0, r;
-+	size_t i = 0, r;
- 	int printed = 0;
- 
- 	if (!regs || !regs->regs)
-@@ -734,7 +734,7 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask, cons
- 
- 	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
- 		u64 val = regs->regs[i++];
--		printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r, arch), val);
-+		printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name((int)r, arch), val);
- 	}
- 
- 	return printed;
-@@ -1150,7 +1150,7 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
- 	if (len <= 0)
- 		pr_debug("\tcannot fetch code for block at %" PRIx64 "-%" PRIx64 "\n",
- 			start, end);
--	ret = len;
-+	ret = (int)len;
- out:
- 	addr_location__exit(&al);
- 	return ret;
-@@ -1270,7 +1270,8 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 
- 	if (PRINT_FIELD(BRCNTR)) {
- 		struct evsel *pos = evsel__leader(evsel);
--		unsigned int i = 0, j, num, mask, width;
-+		unsigned int i = 0, width;
-+		size_t mask, num;
- 
- 		perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &width);
- 		mask = (1L << width) - 1;
-@@ -1283,10 +1284,11 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 
- 			num = (br_cntr >> (i++ * width)) & mask;
- 			if (!verbose) {
--				for (j = 0; j < num; j++)
-+				for (size_t j = 0; j < num; j++)
- 					printed += fprintf(fp, "%s", pos->abbr_name);
--			} else
--				printed += fprintf(fp, "%s %d ", pos->name, num);
-+			} else {
-+				printed += fprintf(fp, "%s %zu ", pos->name, num);
-+			}
- 		}
- 		printed += fprintf(fp, "\t");
- 	}
-@@ -1328,9 +1330,9 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
- 		goto out;
- 
- 	if (al.addr < al.sym->end)
--		off = al.addr - al.sym->start;
-+		off = (int)(al.addr - al.sym->start);
- 	else
--		off = al.addr - map__start(al.map) - al.sym->start;
-+		off = (int)(al.addr - map__start(al.map) - al.sym->start);
- 	printed += fprintf(fp, "\t%s", al.sym->name);
- 	if (off)
- 		printed += fprintf(fp, "%+d", off);
-@@ -1365,7 +1367,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 
- 	if (!(br && br->nr))
- 		return 0;
--	nr = br->nr;
-+	nr = (int)br->nr;
- 	if (max_blocks && nr > max_blocks + 1)
- 		nr = max_blocks + 1;
- 
-@@ -1645,14 +1647,14 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- static int perf_sample__fprintf_ipc(struct perf_sample *sample,
- 				    struct evsel *evsel, FILE *fp)
- {
--	unsigned int ipc;
-+	u64 ipc;
- 
- 	if (!PRINT_FIELD(IPC) || !sample->cyc_cnt || !sample->insn_cnt)
- 		return 0;
- 
- 	ipc = (sample->insn_cnt * 100) / sample->cyc_cnt;
- 
--	return fprintf(fp, " \t IPC: %u.%02u (%" PRIu64 "/%" PRIu64 ") ",
-+	return fprintf(fp, " \t IPC: %" PRIu64 ".%02" PRIu64 " (%" PRIu64 "/%" PRIu64 ") ",
- 		       ipc / 100, ipc % 100, sample->insn_cnt, sample->cyc_cnt);
- }
- 
-@@ -2036,7 +2038,7 @@ static int evlist__max_name_len(struct evlist *evlist)
- 	int max = 0;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		int len = strlen(evsel__name(evsel));
-+		int len = (int)strlen(evsel__name(evsel));
- 
- 		max = MAX(len, max);
- 	}
-@@ -2147,7 +2149,7 @@ static bool show_event(struct perf_sample *sample,
- 		       struct addr_location *al,
- 		       struct addr_location *addr_al)
- {
--	int depth = thread_stack__depth(thread, sample->cpu);
-+	int depth = (int)thread_stack__depth(thread, sample->cpu);
- 
- 	if (!symbol_conf.graph_function)
- 		return true;
-@@ -2163,13 +2165,14 @@ static bool show_event(struct perf_sample *sample,
- 		u64 ip;
- 		const char *name = resolve_branch_sym(sample, evsel, thread, al, addr_al,
- 				&ip);
--		unsigned nlen;
-+		size_t nlen;
- 
- 		if (!name)
- 			return false;
- 		nlen = strlen(name);
- 		while (*s) {
--			unsigned len = strcspn(s, ",");
-+			size_t len = strcspn(s, ",");
-+
- 			if (nlen == len && !strncmp(name, s, len)) {
- 				thread__set_filter(thread, true);
- 				thread__set_filter_entry_depth(thread, depth);
-@@ -2952,7 +2955,7 @@ static int parse_scriptname(const struct option *opt __maybe_unused,
- {
- 	char spec[PATH_MAX];
- 	const char *script, *ext;
--	int len;
-+	size_t len;
- 
- 	if (strcmp(str, "lang") == 0) {
- 		list_available_languages();
-@@ -4097,7 +4100,7 @@ int cmd_script(int argc, const char **argv)
- 	script.tool.ordering_requires_timestamps = true;
- 	session = perf_session__new(&data, &script.tool);
+diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
+index a9bd7bbef5a9..d8888c46238a 100644
+--- a/tools/perf/builtin-evlist.c
++++ b/tools/perf/builtin-evlist.c
+@@ -44,7 +44,7 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
+ 	tool.feature = process_header_feature;
+ 	session = perf_session__new(&data, &tool);
  	if (IS_ERR(session))
 -		return PTR_ERR(session);
 +		return (int)PTR_ERR(session);
  
- 	if (header || header_only) {
- 		script.tool.show_feat_hdr = SHOW_FEAT_HEADER;
-diff --git a/tools/perf/util/print_binary.c b/tools/perf/util/print_binary.c
-index 13fdc51c61d9..6894fb5e7865 100644
---- a/tools/perf/util/print_binary.c
-+++ b/tools/perf/util/print_binary.c
-@@ -7,8 +7,7 @@ int binary__fprintf(unsigned char *data, size_t len,
- 		    size_t bytes_per_line, binary__fprintf_t printer,
- 		    void *extra, FILE *fp)
- {
--	size_t i, j, mask;
--	int printed = 0;
-+	size_t mask, printed = 0;
- 
- 	if (!printer)
- 		return 0;
-@@ -17,7 +16,7 @@ int binary__fprintf(unsigned char *data, size_t len,
- 	mask = bytes_per_line - 1;
- 
- 	printed += printer(BINARY_PRINT_DATA_BEGIN, 0, extra, fp);
--	for (i = 0; i < len; i++) {
-+	for (unsigned int i = 0; i < len; i++) {
- 		if ((i & mask) == 0) {
- 			printed += printer(BINARY_PRINT_LINE_BEGIN, -1, extra, fp);
- 			printed += printer(BINARY_PRINT_ADDR, i, extra, fp);
-@@ -26,19 +25,19 @@ int binary__fprintf(unsigned char *data, size_t len,
- 		printed += printer(BINARY_PRINT_NUM_DATA, data[i], extra, fp);
- 
- 		if (((i & mask) == mask) || i == len - 1) {
--			for (j = 0; j < mask-(i & mask); j++)
-+			for (unsigned int j = 0; j < mask-(i & mask); j++)
- 				printed += printer(BINARY_PRINT_NUM_PAD, -1, extra, fp);
- 
- 			printer(BINARY_PRINT_SEP, i, extra, fp);
--			for (j = i & ~mask; j <= i; j++)
-+			for (unsigned int j = i & ~mask; j <= i; j++)
- 				printed += printer(BINARY_PRINT_CHAR_DATA, data[j], extra, fp);
--			for (j = 0; j < mask-(i & mask); j++)
-+			for (unsigned int j = 0; j < mask-(i & mask); j++)
- 				printed += printer(BINARY_PRINT_CHAR_PAD, i, extra, fp);
- 			printed += printer(BINARY_PRINT_LINE_END, -1, extra, fp);
- 		}
+ 	if (data.is_pipe)
+ 		perf_session__process_events(session);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 0a21da4f990f..72af905bbc11 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -919,7 +919,7 @@ int __evlist__parse_mmap_pages(unsigned int *mmap_pages, const char *str)
+ 		return -1;
  	}
- 	printed += printer(BINARY_PRINT_DATA_END, -1, extra, fp);
--	return printed;
-+	return (int)printed;
+ 
+-	*mmap_pages = pages;
++	*mmap_pages = (unsigned int)pages;
+ 	return 0;
  }
  
- int is_printable_array(char *p, unsigned int len)
+@@ -1441,7 +1441,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+ 	}
+ 
+ 	if (!evlist->workload.pid) {
+-		int ret;
++		ssize_t ret;
+ 
+ 		if (pipe_output)
+ 			dup2(2, 1);
+@@ -1481,7 +1481,7 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+ 		if (ret != 1) {
+ 			if (ret == -1)
+ 				perror("unable to read pipe");
+-			exit(ret);
++			exit((int)ret);
+ 		}
+ 
+ 		execvp(argv[0], (char **)argv);
+@@ -1542,7 +1542,7 @@ int evlist__start_workload(struct evlist *evlist)
+ {
+ 	if (evlist->workload.cork_fd >= 0) {
+ 		char bf = 0;
+-		int ret;
++		ssize_t ret;
+ 		/*
+ 		 * Remove the cork, let it rip!
+ 		 */
+@@ -1552,7 +1552,7 @@ int evlist__start_workload(struct evlist *evlist)
+ 
+ 		close(evlist->workload.cork_fd);
+ 		evlist->workload.cork_fd = -1;
+-		return ret;
++		return (int)ret;
+ 	}
+ 
+ 	return 0;
+@@ -1655,7 +1655,8 @@ int evlist__strerror_open(struct evlist *evlist, int err, char *buf, size_t size
+ int evlist__strerror_mmap(struct evlist *evlist, int err, char *buf, size_t size)
+ {
+ 	char sbuf[STRERR_BUFSIZE], *emsg = str_error_r(err, sbuf, sizeof(sbuf));
+-	int pages_attempted = evlist->core.mmap_len / 1024, pages_max_per_user, printed = 0;
++	int pages_attempted = (int)evlist->core.mmap_len / 1024;
++	int pages_max_per_user, printed = 0;
+ 
+ 	switch (err) {
+ 	case EPERM:
+@@ -1940,7 +1941,7 @@ int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *c
+ 	if (strncmp(str, "fd:", 3))
+ 		return evlist__parse_control_fifo(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
+ 
+-	*ctl_fd = strtoul(&str[3], &endptr, 0);
++	*ctl_fd = (int)strtoul(&str[3], &endptr, 0);
+ 	if (endptr == &str[3])
+ 		return -EINVAL;
+ 
+@@ -1949,7 +1950,7 @@ int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *c
+ 		if (endptr != comma)
+ 			return -EINVAL;
+ 
+-		*ctl_fd_ack = strtoul(comma + 1, &endptr, 0);
++		*ctl_fd_ack = (int)strtoul(comma + 1, &endptr, 0);
+ 		if (endptr == comma + 1 || *endptr != '\0')
+ 			return -EINVAL;
+ 	}
+@@ -2015,7 +2016,7 @@ int evlist__finalize_ctlfd(struct evlist *evlist)
+ static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
+ 			      char *cmd_data, size_t data_size)
+ {
+-	int err;
++	ssize_t err;
+ 	char c;
+ 	size_t bytes_read = 0;
+ 
+@@ -2069,12 +2070,12 @@ static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
+ 		}
+ 	}
+ 
+-	return bytes_read ? (int)bytes_read : err;
++	return bytes_read ? (int)bytes_read : (int)err;
+ }
+ 
+ int evlist__ctlfd_ack(struct evlist *evlist)
+ {
+-	int err;
++	ssize_t err;
+ 
+ 	if (evlist->ctl_fd.ack == -1)
+ 		return 0;
+@@ -2084,7 +2085,7 @@ int evlist__ctlfd_ack(struct evlist *evlist)
+ 	if (err == -1)
+ 		pr_err("failed to write to ctl_ack_fd %d: %m\n", evlist->ctl_fd.ack);
+ 
+-	return err;
++	return (int)err;
+ }
+ 
+ static int get_cmd_arg(char *cmd_data, size_t cmd_size, char **arg)
+@@ -2304,7 +2305,7 @@ static int str_to_delay(const char *str)
+ 	d = strtol(str, &endptr, 10);
+ 	if (*endptr || d > INT_MAX || d < -1)
+ 		return 0;
+-	return d;
++	return (int)d;
+ }
+ 
+ int evlist__parse_event_enable_time(struct evlist *evlist, struct record_opts *opts,
+@@ -2325,7 +2326,7 @@ int evlist__parse_event_enable_time(struct evlist *evlist, struct record_opts *o
+ 
+ 	ret = parse_event_enable_times(str, NULL);
+ 	if (ret < 0)
+-		return ret;
++		return (int)ret;
+ 
+ 	times_cnt = ret;
+ 	if (times_cnt == 0)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 1d79ffecd41f..6cdb9313778a 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -655,12 +655,12 @@ struct tep_event *evsel__tp_format(struct evsel *evsel)
+ 		return NULL;
+ 
+ 	if (!evsel->tp_sys)
+-		tp_format = trace_event__tp_format_id(evsel->core.attr.config);
++		tp_format = trace_event__tp_format_id((int)evsel->core.attr.config);
+ 	else
+ 		tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
+ 
+ 	if (IS_ERR(tp_format)) {
+-		int err = -PTR_ERR(evsel->tp_format);
++		int err = (int)-PTR_ERR(evsel->tp_format);
+ 
+ 		pr_err("Error getting tracepoint format '%s' '%s'(%d)\n",
+ 			evsel__name(evsel), strerror(err), err);
+@@ -688,7 +688,7 @@ char *evsel__bpf_counter_events;
+ 
+ bool evsel__match_bpf_counter_events(const char *name)
+ {
+-	int name_len;
++	size_t name_len;
+ 	bool match;
+ 	char *ptr;
+ 
+@@ -1154,7 +1154,7 @@ static void evsel__apply_config_terms(struct evsel *evsel,
+ 				evsel__reset_sample_bit(evsel, BRANCH_STACK);
+ 			break;
+ 		case EVSEL__CONFIG_TERM_STACK_USER:
+-			dump_size = term->val.stack_user;
++			dump_size = (u32)term->val.stack_user;
+ 			break;
+ 		case EVSEL__CONFIG_TERM_MAX_STACK:
+ 			max_stack = term->val.max_stack;
+@@ -1770,7 +1770,7 @@ static u64 evsel__group_read_size(struct evsel *leader)
+ 	u64 read_format = leader->core.attr.read_format;
+ 	int entry = sizeof(u64); /* value */
+ 	int size = 0;
+-	int nr = 1;
++	u64 nr = 1;
+ 
+ 	if (!evsel__group_has_tpebs(leader))
+ 		return perf_evsel__read_size(&leader->core);
+@@ -1834,7 +1834,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
+ {
+ 	struct perf_stat_evsel *ps = leader->stats;
+ 	u64 read_format = leader->core.attr.read_format;
+-	int size = evsel__group_read_size(leader);
++	size_t size = evsel__group_read_size(leader);
+ 	u64 *data = ps->group_data;
+ 
+ 	if (!(read_format & PERF_FORMAT_ID))
+@@ -2176,31 +2176,27 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ static bool __has_attr_feature(struct perf_event_attr *attr,
+ 			       struct perf_cpu cpu, unsigned long flags)
+ {
+-	int fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+-			 /*group_fd=*/-1, flags);
++	int fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
+ 	close(fd);
+ 
+ 	if (fd < 0) {
+ 		attr->exclude_kernel = 1;
+ 
+-		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+-			     /*group_fd=*/-1, flags);
++		fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
+ 		close(fd);
+ 	}
+ 
+ 	if (fd < 0) {
+ 		attr->exclude_hv = 1;
+ 
+-		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+-			     /*group_fd=*/-1, flags);
++		fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
+ 		close(fd);
+ 	}
+ 
+ 	if (fd < 0) {
+ 		attr->exclude_guest = 1;
+ 
+-		fd = syscall(SYS_perf_event_open, attr, /*pid=*/0, cpu.cpu,
+-			     /*group_fd=*/-1, flags);
++		fd = sys_perf_event_open(attr, /*pid=*/0, cpu.cpu, /*group_fd=*/-1, flags);
+ 		close(fd);
+ 	}
+ 
+@@ -3464,7 +3460,7 @@ char evsel__taskstate(struct evsel *evsel, struct perf_sample *sample, const cha
+ 	 * We can change this if we have a good reason in the future.
+ 	 */
+ 	val = evsel__intval(evsel, sample, name);
+-	bit = val ? ffs(val) : 0;
++	bit = val ? ffs((int)val) : 0;
+ 	state = (!bit || bit > strlen(states)) ? 'R' : states[bit-1];
+ 	return state;
+ }
+@@ -3809,18 +3805,15 @@ struct perf_env *evsel__env(struct evsel *evsel)
+ 
+ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+ {
+-	int cpu_map_idx, thread;
+-
+ 	if (evsel__is_retire_lat(evsel))
+ 		return 0;
+ 
+-	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
+-		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
+-		     thread++) {
++	for (size_t cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
++		for (size_t thread = 0; thread < xyarray__max_y(evsel->core.fd); thread++) {
+ 			int fd = FD(evsel, cpu_map_idx, thread);
+ 
+ 			if (perf_evlist__id_add_fd(&evlist->core, &evsel->core,
+-						   cpu_map_idx, thread, fd) < 0)
++						   (int)cpu_map_idx, (int)thread, fd) < 0)
+ 				return -1;
+ 		}
+ 	}
 -- 
 2.49.0.906.g1f30a19c02-goog
 
