@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD682D1102;
-	Wed, 30 Apr 2025 20:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55382D1111;
+	Wed, 30 Apr 2025 20:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746046553; cv=none; b=orwyO7/4cCwLRm//o1vIrLSgzU1uskm9/uzP3Rva+hkSvzelpRWeWeFcqP9wHuPoD9Zn+NjOPuETW9x8x+tlJbC4m8U53vRK4NiUBn2WJj1s0HbLinfOILWNn9YC+2ZBfgQpxjXiElruTLA8DkT5Z0kBKKAecxEA1GUbqL0dTuY=
+	t=1746046553; cv=none; b=asnHo31EcKIC/kNvLBoXvUYWsKJLHvqnJN73bvZPn+1ZSwHlO28H+VuXPEIGIl7+EbqJpBUweo3J7As7lGSdWqTKyK/Ue93KtFb7yjDUlASR/98V0GgTrD8BkPuYm0o/MwepXuv2RYrBttu/klgqtNojoAthO0gktKRq/R4BQ7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746046553; c=relaxed/simple;
-	bh=Od313OK1KaRM9Dc3kB1+B0iEWriL30mnhLfzK6N9vII=;
+	bh=7sXQXwPPQhlYweuVtPWicgFAno3L7sNHip2o4AI7mXc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oxpC1RTacIvGHAZOS7S/sb0ZMhkubbsulmcNKSAXk2TRkUW3dRXj6Otx2ArEGgLrKDcQ3PNE1T1CLifMa4L5Yzb3Or+NB3K2etRtBvXKGJuu2YieYhQXelH2XwEYokSO1Vk1BmaKPYq55njrcTQzcYs1BE5SffnJ+Y/aX6rCglg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fP5u5fPu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=vAR/gfh5E1GAeKdgeP/04lxKi/RwwHOFQvmFO7NvU1gvp/a9T89zhhc6+uElg8Ch8fCgRjYE2aCDCZbm0ugC5LccyfFv2BTmrAm0CpcLBd1b90EXw32ilqD1PzyZpfuqq9B6LPr//Pk4lwIuqA22zdVreyxS3OXscFCXkYQ3NG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMcOS4AD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fP5u5fPu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F70C4CEEC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMcOS4AD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02291C4CEEA;
 	Wed, 30 Apr 2025 20:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746046552;
-	bh=Od313OK1KaRM9Dc3kB1+B0iEWriL30mnhLfzK6N9vII=;
+	s=k20201202; t=1746046553;
+	bh=7sXQXwPPQhlYweuVtPWicgFAno3L7sNHip2o4AI7mXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fP5u5fPuoRUawWmxv8/rx3GO0pbZNX0bbxtGLVnBUuQ8itZ3s/yb0xyUHx7EgEkam
-	 QfJw1AaeaZR+uSiSVvvnu26u6cp1ExObdUq1D8HyfxFLATDUVYmnHzd+SQ7r1nA/E7
-	 TVviNngR9xlN2B/1oe6BAPhr8QzssBjPTr9TJilrgqFDXWP2jry27Z8KW1uYAX+nFh
-	 PQ/Z7p5XgXfCGaV2tObPD2p+rtBvGx8src9z8nsSMUdMafxO+LmdUgNlWU5bHaw3E+
-	 v8BmE/esYoZoCGX/FMkRKq0IR/IKVqdny8eHsN/18/DU/8Y9O6Fm3YyANFtP2koh53
-	 Z9rPMYZJ0tLHw==
+	b=RMcOS4AD+GQlbBi2e2q67OHhvg/felLZ/Et4kTFhrsq1lkA2vS1vLhTEUmt3mFKwg
+	 LKhF+TFPtY4gGLq2Z+ZDrP8NFxMATdrgqfoUNNDKSHBFpuXQEpORUU2FbinQCjX4rT
+	 qZvLIwgg2uSqpo1IuJwj0rlhDadPKv+mcL0BM0/EWc4fwkG44IlwY/R0vSmq3f0Aiq
+	 ipzzWu/pLmD0VeZfIGJtUxUjfonzg9WAVTgAGFXjLu/mEPHEmt7RJyeSTQ3JE+SuhH
+	 M2D4lQGq+75B1TZhfx9bWLAF3meDrRyVIbKzXixYeCbHhwfo/ojB2ph1RTS4/I844V
+	 G1VXJGqgQfEOw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Ravi Bangoria <ravi.bangoria@amd.com>,
 	Leo Yan <leo.yan@arm.com>
-Subject: [PATCH 04/11] perf hist: Add struct he_mem_stat
-Date: Wed, 30 Apr 2025 13:55:41 -0700
-Message-ID: <20250430205548.789750-5-namhyung@kernel.org>
+Subject: [PATCH 05/11] perf hist: Basic support for mem_stat accounting
+Date: Wed, 30 Apr 2025 13:55:42 -0700
+Message-ID: <20250430205548.789750-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
 In-Reply-To: <20250430205548.789750-1-namhyung@kernel.org>
 References: <20250430205548.789750-1-namhyung@kernel.org>
@@ -52,182 +52,196 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The struct he_mem_stat is to save detailed information about memory
-instruction.  It'll be used to show breakdown of various data from
-PERF_SAMPLE_DATA_SRC.  Note that this structure is generic and the
-contents will be different depending on actual data it'll use later.
+Add a logic to account he->mem_stat based on mem_stat_type in hists.
+Each mem_stat entry will have different meaning based on the type so the
+index in the array is calculated at runtime using the corresponding
+value in the sample.data_src.
 
-The information about the actual data will be saved in struct hists and
-its length is in nr_mem_stats.  This commit just adds ground works and
-does nothing since hists->nr_mem_stats is 0 for now.
+Still hists has no mem_stat_types yet so this code won't work for now.
+Later hists->mem_stat_types will be allocated based on what users want
+in the output actually.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/hist.c | 74 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/hist.h |  9 +++++
- 2 files changed, 83 insertions(+)
+ tools/perf/ui/hist.c         | 39 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/hist.c       |  6 ++++--
+ tools/perf/util/hist.h       |  4 ++++
+ tools/perf/util/mem-events.c | 18 +++++++++++++++++
+ tools/perf/util/mem-events.h |  6 ++++++
+ tools/perf/util/sort.c       |  4 ++++
+ 6 files changed, 75 insertions(+), 2 deletions(-)
 
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index ec44633207aa3aba..2aad46bbd2ed4d93 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -11,6 +11,7 @@
+ #include "../util/sort.h"
+ #include "../util/evsel.h"
+ #include "../util/evlist.h"
++#include "../util/mem-events.h"
+ #include "../util/thread.h"
+ #include "../util/util.h"
+ 
+@@ -500,6 +501,12 @@ static int64_t hpp__nop_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 	return 0;
+ }
+ 
++static bool perf_hpp__is_mem_stat_entry(struct perf_hpp_fmt *fmt)
++{
++	(void)fmt;
++	return false;
++}
++
+ static bool perf_hpp__is_hpp_entry(struct perf_hpp_fmt *a)
+ {
+ 	return a->header == hpp__header_fn;
+@@ -1022,3 +1029,35 @@ int perf_hpp__setup_hists_formats(struct perf_hpp_list *list,
+ 
+ 	return 0;
+ }
++
++int perf_hpp__alloc_mem_stats(struct perf_hpp_list *list, struct evlist *evlist)
++{
++	struct perf_hpp_fmt *fmt;
++	struct evsel *evsel;
++	enum mem_stat_type mst[16];
++	unsigned nr_mem_stats = 0;
++
++	perf_hpp_list__for_each_format(list, fmt) {
++		if (!perf_hpp__is_mem_stat_entry(fmt))
++			continue;
++
++		assert(nr_mem_stats < ARRAY_SIZE(mst));
++		mst[nr_mem_stats++] = PERF_MEM_STAT_UNKNOWN;
++	}
++
++	if (nr_mem_stats == 0)
++		return 0;
++
++	evlist__for_each_entry(evlist, evsel) {
++		struct hists *hists = evsel__hists(evsel);
++
++		hists->mem_stat_types = calloc(nr_mem_stats,
++					       sizeof(*hists->mem_stat_types));
++		if (hists->mem_stat_types == NULL)
++			return -ENOMEM;
++
++		memcpy(hists->mem_stat_types, mst, nr_mem_stats * sizeof(*mst));
++		hists->nr_mem_stats = nr_mem_stats;
++	}
++	return 0;
++}
 diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index d65228c1141251fb..fcb9f0db0c92a229 100644
+index fcb9f0db0c92a229..7759c1818c1ad168 100644
 --- a/tools/perf/util/hist.c
 +++ b/tools/perf/util/hist.c
-@@ -336,6 +336,67 @@ static void he_stat__decay(struct he_stat *he_stat)
- 	he_stat->latency = (he_stat->latency * 7) / 8;
- }
- 
-+static int hists__update_mem_stat(struct hists *hists, struct hist_entry *he,
-+				  struct mem_info *mi, u64 period)
-+{
-+	if (hists->nr_mem_stats == 0)
-+		return 0;
-+
-+	if (he->mem_stat == NULL) {
-+		he->mem_stat = calloc(hists->nr_mem_stats, sizeof(*he->mem_stat));
-+		if (he->mem_stat == NULL)
-+			return -1;
-+	}
-+
-+	for (int i = 0; i < hists->nr_mem_stats; i++) {
-+		int idx = 0; /* TODO: get correct index from mem info */
-+
-+		(void)mi;
-+		he->mem_stat[i].entries[idx] += period;
-+	}
-+	return 0;
-+}
-+
-+static void hists__add_mem_stat(struct hists *hists, struct hist_entry *dst,
-+				struct hist_entry *src)
-+{
-+	if (hists->nr_mem_stats == 0)
-+		return;
-+
-+	for (int i = 0; i < hists->nr_mem_stats; i++) {
-+		for (int k = 0; k < MEM_STAT_LEN; k++)
-+			dst->mem_stat[i].entries[k] += src->mem_stat[i].entries[k];
-+	}
-+}
-+
-+static int hists__clone_mem_stat(struct hists *hists, struct hist_entry *dst,
-+				  struct hist_entry *src)
-+{
-+	if (hists->nr_mem_stats == 0)
-+		return 0;
-+
-+	dst->mem_stat = calloc(hists->nr_mem_stats, sizeof(*dst->mem_stat));
-+	if (dst->mem_stat == NULL)
-+		return -1;
-+
-+	for (int i = 0; i < hists->nr_mem_stats; i++) {
-+		for (int k = 0; k < MEM_STAT_LEN; k++)
-+			dst->mem_stat[i].entries[k] = src->mem_stat[i].entries[k];
-+	}
-+	return 0;
-+}
-+
-+static void hists__decay_mem_stat(struct hists *hists, struct hist_entry *he)
-+{
-+	if (hists->nr_mem_stats == 0)
-+		return;
-+
-+	for (int i = 0; i < hists->nr_mem_stats; i++) {
-+		for (int k = 0; k < MEM_STAT_LEN; k++)
-+			he->mem_stat[i].entries[k] = (he->mem_stat[i].entries[k] * 7) / 8;
-+	}
-+}
-+
- static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
- 
- static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
-@@ -350,6 +411,7 @@ static bool hists__decay_entry(struct hists *hists, struct hist_entry *he)
- 	if (symbol_conf.cumulate_callchain)
- 		he_stat__decay(he->stat_acc);
- 	decay_callchain(he->callchain);
-+	hists__decay_mem_stat(hists, he);
- 
- 	if (!he->depth) {
- 		u64 period_diff = prev_period - he->stat.period;
-@@ -693,6 +755,10 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 		he_stat__add_cpumode_period(&he->stat, al->cpumode, period);
- 	if (symbol_conf.cumulate_callchain)
- 		he_stat__add_cpumode_period(he->stat_acc, al->cpumode, period);
-+	if (hists__update_mem_stat(hists, he, entry->mem_info, period) < 0) {
-+		hist_entry__delete(he);
-+		return NULL;
-+	}
- 	return he;
- }
- 
-@@ -1423,6 +1489,7 @@ void hist_entry__delete(struct hist_entry *he)
- 	free_callchain(he->callchain);
- 	zfree(&he->trace_output);
- 	zfree(&he->raw_data);
-+	zfree(&he->mem_stat);
- 	ops->free(he);
- }
- 
-@@ -1572,6 +1639,7 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
- 		cmp = hist_entry__collapse_hierarchy(hpp_list, iter, he);
- 		if (!cmp) {
- 			he_stat__add_stat(&iter->stat, &he->stat);
-+			hists__add_mem_stat(hists, iter, he);
- 			return iter;
- 		}
- 
-@@ -1613,6 +1681,11 @@ static struct hist_entry *hierarchy_insert_entry(struct hists *hists,
- 			new->srcfile = NULL;
+@@ -349,9 +349,10 @@ static int hists__update_mem_stat(struct hists *hists, struct hist_entry *he,
  	}
  
-+	if (hists__clone_mem_stat(hists, new, he) < 0) {
-+		hist_entry__delete(new);
-+		return NULL;
-+	}
-+
- 	rb_link_node(&new->rb_node_in, parent, p);
- 	rb_insert_color_cached(&new->rb_node_in, root, leftmost);
- 	return new;
-@@ -1695,6 +1768,7 @@ static int hists__collapse_insert_entry(struct hists *hists,
- 			he_stat__add_stat(&iter->stat, &he->stat);
- 			if (symbol_conf.cumulate_callchain)
- 				he_stat__add_stat(iter->stat_acc, he->stat_acc);
-+			hists__add_mem_stat(hists, iter, he);
+ 	for (int i = 0; i < hists->nr_mem_stats; i++) {
+-		int idx = 0; /* TODO: get correct index from mem info */
++		int idx = mem_stat_index(hists->mem_stat_types[i],
++					 mem_info__const_data_src(mi)->val);
  
- 			if (hist_entry__has_callchains(he) && symbol_conf.use_callchain) {
- 				struct callchain_cursor *cursor = get_tls_callchain_cursor();
+-		(void)mi;
++		assert(0 <= idx && idx < MEM_STAT_LEN);
+ 		he->mem_stat[i].entries[idx] += period;
+ 	}
+ 	return 0;
+@@ -3052,6 +3053,7 @@ static void hists_evsel__exit(struct evsel *evsel)
+ 	struct perf_hpp_list_node *node, *tmp;
+ 
+ 	hists__delete_all_entries(hists);
++	zfree(&hists->mem_stat_types);
+ 
+ 	list_for_each_entry_safe(node, tmp, &hists->hpp_formats, list) {
+ 		perf_hpp_list__for_each_format_safe(&node->hpp, fmt, pos) {
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 76efd8952507a561..aba1d84ca074f27b 100644
+index aba1d84ca074f27b..509af09691b84e10 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -100,6 +100,13 @@ enum hist_column {
- struct thread;
- struct dso;
- 
-+#define MEM_STAT_LEN  8
-+
-+struct he_mem_stat {
-+	/* meaning of entries depends on enum mem_stat_type */
-+	u64			entries[MEM_STAT_LEN];
-+};
-+
- struct hists {
- 	struct rb_root_cached	entries_in_array[2];
- 	struct rb_root_cached	*entries_in;
-@@ -125,6 +132,7 @@ struct hists {
- 	struct perf_hpp_list	*hpp_list;
+@@ -9,6 +9,7 @@
+ #include "events_stats.h"
+ #include "evsel.h"
+ #include "map_symbol.h"
++#include "mem-events.h"
+ #include "mutex.h"
+ #include "sample.h"
+ #include "spark.h"
+@@ -133,6 +134,7 @@ struct hists {
  	struct list_head	hpp_formats;
  	int			nr_hpp_node;
-+	int			nr_mem_stats;
+ 	int			nr_mem_stats;
++	enum mem_stat_type	*mem_stat_types;
  };
  
  #define hists__has(__h, __f) (__h)->hpp_list->__f
-@@ -232,6 +240,7 @@ struct hist_entry {
- 	} pairs;
- 	struct he_stat		stat;
- 	struct he_stat		*stat_acc;
-+	struct he_mem_stat	*mem_stat;
- 	struct map_symbol	ms;
- 	struct thread		*thread;
- 	struct comm		*comm;
+@@ -597,6 +599,8 @@ void perf_hpp__reset_output_field(struct perf_hpp_list *list);
+ void perf_hpp__append_sort_keys(struct perf_hpp_list *list);
+ int perf_hpp__setup_hists_formats(struct perf_hpp_list *list,
+ 				  struct evlist *evlist);
++int perf_hpp__alloc_mem_stats(struct perf_hpp_list *list,
++			      struct evlist *evlist);
+ 
+ 
+ bool perf_hpp__is_sort_entry(struct perf_hpp_fmt *format);
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 884d9aebce9199c0..1bc60ad3dc312542 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -799,3 +799,21 @@ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add)
+ 	stats->nomap		+= add->nomap;
+ 	stats->noparse		+= add->noparse;
+ }
++
++/*
++ * It returns an index in hist_entry->mem_stat array for the given val which
++ * represents a data-src based on the mem_stat_type.
++ *
++ * For example, when mst is about cache level, the index can be 1 for L1, 2 for
++ * L2 and so on.
++ */
++int mem_stat_index(const enum mem_stat_type mst, const u64 val)
++{
++	switch (mst) {
++	case PERF_MEM_STAT_UNKNOWN:  /* placeholder */
++	default:
++		break;
++	}
++	(void)val;
++	return -1;
++}
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index a5c19d39ee37147b..2604464f985815f6 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -89,4 +89,10 @@ struct hist_entry;
+ int c2c_decode_stats(struct c2c_stats *stats, struct mem_info *mi);
+ void c2c_add_stats(struct c2c_stats *stats, struct c2c_stats *add);
+ 
++enum mem_stat_type {
++	PERF_MEM_STAT_UNKNOWN,  /* placeholder */
++};
++
++int mem_stat_index(const enum mem_stat_type mst, const u64 data_src);
++
+ #endif /* __PERF_MEM_EVENTS_H */
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index ae8b8ceb82f3d00b..6024f588f66f3156 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -4163,6 +4163,10 @@ int setup_sorting(struct evlist *evlist)
+ 	if (err < 0)
+ 		return err;
+ 
++	err = perf_hpp__alloc_mem_stats(&perf_hpp_list, evlist);
++	if (err < 0)
++		return err;
++
+ 	/* copy sort keys to output fields */
+ 	perf_hpp__setup_output_field(&perf_hpp_list);
+ 	/* and then copy output fields to sort keys */
 -- 
 2.49.0.906.g1f30a19c02-goog
 
