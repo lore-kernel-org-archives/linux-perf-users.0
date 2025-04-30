@@ -1,136 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654581754B;
-	Wed, 30 Apr 2025 17:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AB52609C5;
+	Wed, 30 Apr 2025 17:20:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746033393; cv=none; b=XpSO964+uF6Eg/8QZBmQmGFfXCXHOcmBCRabRFq+/CsEMTV7t7xtcR9IiQPyk28bfc31BKpfJ9t/hhFxE0nsle6yls395D8255TskuSM6XYUrA4rthQuwRBGjAHd8gviETIG4CvRN+xub+PMVLSan3tjhNlNWAAZsMttaSKmLAQ=
+	t=1746033655; cv=none; b=po5KW45EueBSa+Ip5hdMDNBwI+m/dcFETDy4mNNzAL5zQPGniKI5t5dSnTYnGtIMxVWyLEPRC68OsV2yY1CBMO5bxP9o0/bdaE7x9ObePsQe8RVA/UtFMO5ZyNcCk5REATmZ+3Pqc89Z2HiEn5cldt0jppzqKzJDEXObsKX10ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746033393; c=relaxed/simple;
-	bh=3kFc6bITolNQ6TSbrVeg0UUkF0uc4ccuVasUl9gV4ZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YPt7FdItJBq33Ur5vnwkbIQiMs+J0SVPlZi215uLR3sqk98uk0sw5h2D4BallIejfAXRIafapAOkTcKBwCXxB64MYhdgpMKhUm0YKkAQeggA8HDBRrOSya+/k0d3xY/bA6CIf+b62z02lxu5uv2r9KKEScnQlgravB3akLWVIlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btCa1JS7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btCa1JS7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB81C4CEE7;
-	Wed, 30 Apr 2025 17:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746033392;
-	bh=3kFc6bITolNQ6TSbrVeg0UUkF0uc4ccuVasUl9gV4ZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=btCa1JS7AQHDhlnrJPPp66XcaQy+9ZdIyLgkmE8cp+NMWjggVdullhDz5saEv3nGK
-	 p9VY3HHbKSpKg4uRMWUTLj7U4GmJP+9kKiSEKmUJ4l2fDRuD/YOQzKtK6jYjywVc3W
-	 x18FK46b8x6zKLoB+pRNw1Bh2sPdf6CM4axK/DBs8+MzqlcY8v4SBXNBFvprv1/n6F
-	 0RtNKSrqaPsZhCTtQtk5q6s4Z91yeSKBJaIdWYPAlY/fqlxFzd0OJTkRVipJcpX0ht
-	 wmtNV8KPXss3+k9DCRnZWTI2/IGuGPAZ/AjonKSjVJlnqDtwAET5Hfz0ASIBCsltS2
-	 7JXZrE7FBYJtA==
-Date: Wed, 30 Apr 2025 10:16:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, acme@kernel.org,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-	hca@linux.ibm.com, irogers@google.com, ctshao@google.com
-Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
-Message-ID: <aBJa7qrdMcIEt7y8@google.com>
-References: <20250430140611.599078-1-tmricht@linux.ibm.com>
+	s=arc-20240116; t=1746033655; c=relaxed/simple;
+	bh=39KWSZA/+5ZTjQd4vRuOPIK2i+N4nybWhXUJllaBu/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b5KntVeZGijtm27y0qoRBsKEEiFDMkIKwEvZM0FeCpVtTB54aV5+y+O5v2hyhZBSCsjWQVAw7nEzVvV5/Qmb0KAoEiU+o+OeCC8SjkJEB3be28rMTHxDNpWwUpG2iLO9pMjr2o4vb/8ZzBaKa5X2sLL0bWAcXuBH8s0RJTK3efY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD676C4CEEB;
+	Wed, 30 Apr 2025 17:20:43 +0000 (UTC)
+Date: Wed, 30 Apr 2025 13:20:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>, Petr Tesarik
+ <ptesarik@suse.com>, Nicolas Saenz Julienne <nsaenz@amazon.com>, Frederic
+ Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, Josh
+ Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <20250430132047.01d48647@gandalf.local.home>
+In-Reply-To: <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+	<fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250430140611.599078-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, 29 Apr 2025 09:11:57 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-On Wed, Apr 30, 2025 at 04:06:11PM +0200, Thomas Richter wrote:
-> V4: Update to be applied onto linux-next
-> V3: Added check for missing samples as suggested by Chun-Tse.
-> V2: Changed bc invocation to return 0 on success and 1 on error.
-> 
-> There is a known issue that the leader sampling is inconsistent, since
-> throttle only affect leader, not the slave. The detail is in [1]. To
-> maintain test coverage, this patch sets a tolerance rate of 80% to
-> accommodate the throttled samples and prevent test failures due to
-> throttling.
-> 
-> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
-> 
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
->  1 file changed, 27 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 05d91a663fda..587f62e34414 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -240,22 +240,43 @@ test_leader_sampling() {
->      err=1
->      return
->    fi
-> +  perf script -i "${perfdata}" | grep brstack > $script_output
-> +  # Check if the two instruction counts are equal in each record.
-> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
-> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-> +  # let's set the tolerance rate to 80%.
-> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
->    index=0
-> -  perf script -i "${perfdata}" > "${script_output}"
-> +  valid_counts=0
-> +  invalid_counts=0
-> +  tolerance_rate=0.8
->    while IFS= read -r line
->    do
-> -    # Check if the two instruction counts are equal in each record
->      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
->      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
->      then
-> -      echo "Leader sampling [Failed inconsistent cycles count]"
-> -      err=1
-> -      return
-> +      invalid_counts=$(($invalid_counts+1))
-> +    else
-> +      valid_counts=$(($valid_counts+1))
->      fi
->      index=$(($index+1))
->      prev_cycles=$cycles
->    done < "${script_output}"
-> -  echo "Basic leader sampling test [Success]"
-> +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-> +  if (( $(bc <<< "$total_counts <= 0") ))
-> +  then
-> +    echo "Leader sampling [No sample generated]"
-> +    err=1
-> +    return
-> +  fi
-> +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
+> I don't think we should do this series.
 
-I think the 'if-else' part can be omitted but I can live with that. :)
+Could you provide more rationale for your decision.
 
-Thanks,
-Namhyung
+>=20
+> If folks want this functionality, they should get a new CPU that can
+> flush the TLB without IPIs.
 
+That's a pretty heavy handed response. I'm not sure that's always a
+feasible solution.
 
-> +  if [ $isok -eq 1 ]
-> +  then
-> +     echo "Leader sampling [Failed inconsistent cycles count]"
-> +     err=1
-> +  else
-> +    echo "Basic leader sampling test [Success]"
-> +  fi
->  }
->  
->  test_topdown_leader_sampling() {
-> -- 
-> 2.45.2
-> 
+=46rom my experience in the world, software has always been around to fix the
+hardware, not the other way around ;-)
+
+-- Steve
+
