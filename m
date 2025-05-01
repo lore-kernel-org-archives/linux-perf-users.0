@@ -1,127 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81093224FA;
-	Wed, 30 Apr 2025 23:39:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B6B1F1527;
+	Thu,  1 May 2025 01:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746056390; cv=none; b=czVqSbXrVj8i1EKVIjQ4LZXzylDbaiVH5HOxLpnsIczulhTWsLz/ayTZN6F71KBCp/t7ycyIxUpoYACeg3WWVVmkQMWnCvHB29bSYcbfFEhQSuznI0w60TUnfpkcTSULXMWiQipL29fs6njQeQ6ArsAgv0Sr6n6mYeFfuJ3tmYY=
+	t=1746063301; cv=none; b=g77NBzv+kzBado0rNtYuE8lX38nhGyfhfv2xc0DjHCLpffodDdhaHGzON5Zl5GYK0kfiWqzqt0xdaurIqr8VhqQNPEz8nmJUzKq4/RiPC4vrJ8CPPko69pX997ycZBhL77eaQnxxim43OuPZmFVE0c7hggr+k3OvRB5eDocV/JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746056390; c=relaxed/simple;
-	bh=q0/1FCqesPJ0uv8M8Mu9vFgEJRoRAee9ysk85//yWiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Woz6e59ITCNUkLAZEYj4CAlsskcHnqjU83UDVAAxGlzu8ys8yHgK5Z2cAmn2dzRD+wGI3b7MUHXyY6c0LqqjHRb8FTcZVoKYcXLM2dVKGY3m/BGXYYTuCPom7e9HpevBEpg5HeDrdLxC4TSL9qGBlv3VxNVOWJBW8nuTtuhC/x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZoWLz8L; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZoWLz8L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96692C4CEE9;
-	Wed, 30 Apr 2025 23:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746056390;
-	bh=q0/1FCqesPJ0uv8M8Mu9vFgEJRoRAee9ysk85//yWiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jZoWLz8LrFd1jOhL+1AaM7UTAzy1f9wIi9x7SfcAU+ZuMPT7nMur55BHf2mh5N6fV
-	 +38CM69pZPeGZWBiH4uJqPcIeNiLhqz/E5bzpGik5WCMXlEqh+U7cmMSadBTQP5Dx5
-	 tuKMLATcTefvwgx8zO7vpX6CI//W142y/f4koP5CmhMDpcSkn768QOE9fvImcoq3hh
-	 j3IrJcW+Ji83QzhPDO5nQvZ4Med1ZpnqA0IhW+nxHz2K3prB2t1oeo3e/L4R0++GsA
-	 4FNsQ0T+vr9czxEvRC90a6bq9wudG3rnigYt7XqfH6kOmG+hmYf+ZJBv8zT9WHONA0
-	 Nw6Zddiwt0cLw==
-Date: Wed, 30 Apr 2025 20:39:47 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Joe Mario <jmario@redhat.com>,
-	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"Shukla, Santosh" <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v4 4/4] perf test amd ibs: Add sample period unit test
-Message-ID: <aBK0wz2QENx9qQEz@x1>
-References: <20250429035938.1301-1-ravi.bangoria@amd.com>
- <20250429035938.1301-5-ravi.bangoria@amd.com>
- <aBE8raTOCVZLfw7J@x1>
- <aBF5UWrxvYgbnxde@x1>
- <aBF7ZarWJvzeDKqF@x1>
- <4bea7b8a-9ff5-4ae9-8154-57ec7377ee4e@amd.com>
- <aBIgVi90Zinz6Rl4@x1>
- <aBImI03VHeJSGVfn@x1>
- <09f5d37b-0ef8-4cc5-bf60-172c448ff9c7@amd.com>
+	s=arc-20240116; t=1746063301; c=relaxed/simple;
+	bh=Agkv3OGBG77qIC3WcKk7FTT3q4BDqxYanUlFlICbwOg=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=ZfuzK1ok7uW5PFfgp6k73BARPe4+qZkSNn7ETH+8Sq1l44o1pgcu6wNGdYukES9TtVd2N8oT74IRRPl+htpmPTlvKi2Y5NWgr3hn4HtYgqB1EH1nF4aBp2s9pXh1tzbXY3naVnw/qyXI57deiwvmwqjCAE4ApxaN2OVTMfyl5KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5731DC4CEEB;
+	Thu,  1 May 2025 01:35:01 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uAIpO-00000001okg-0Cca;
+	Wed, 30 Apr 2025 21:35:06 -0400
+Message-ID: <20250501013202.997535180@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 30 Apr 2025 21:32:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org,
+ Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Alexander Aring <aahringo@redhat.com>
+Subject: [PATCH v6 0/5] perf: Deferred unwinding of user space stack traces for per CPU events
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09f5d37b-0ef8-4cc5-bf60-172c448ff9c7@amd.com>
 
-On Wed, Apr 30, 2025 at 09:37:22PM +0530, Ravi Bangoria wrote:
-> Hi Arnaldo,
-> 
-> > root@number:/home/acme/git/linux# perf test -vvv ibs
-> >  73: AMD IBS via core pmu:
-> > --- start ---
-> > test child forked, pid 10047
-> > Using CPUID AuthenticAMD-26-44-0
-> > type: 0x0, config: 0x0, fd: 3  -  Pass
-> > type: 0x0, config: 0x1, fd: -1  -  Pass
-> > type: 0x4, config: 0x76, fd: 3  -  Pass
-> > type: 0x4, config: 0xc1, fd: 3  -  Pass
-> > type: 0x4, config: 0x12, fd: -1  -  Pass
-> > ---- end(0) ----
-> >  73: AMD IBS via core pmu                                            : Ok
-> > root@number:/home/acme/git/linux#
-> 
-> It picks up both the IBS tests for me. (Is that what you mean?)
-> 
->   $ sudo ./perf test ibs
->    73: AMD IBS via core pmu                                            : Ok
->   112: AMD IBS sample period                                           : Ok
-> 
->   $ ./perf --version
->   perf version 6.15.rc2.g35db59fa8ea2
+This is v6 of:
 
-Are there two? I probably tested it with just the first patch on your
-series applied, lemme see...
+  https://lore.kernel.org/linux-trace-kernel/20250424192456.851953422@goodmis.org/
 
-The second takes quite a while to finish :)
+But this only adds the unwind deferred interface and not the ftrace code
+so that perf can use it.
 
-root@number:/# perf test ibs
- 73: AMD IBS via core pmu                                            : Ok
-112: AMD IBS sample period                                           : Ok
-root@number:/#
+This series is based on top of:
+
+ https://lore.kernel.org/linux-trace-kernel/20250430195746.827125963@goodmis.org/
+
+The above patch series adds deferred unwinding for task events, but not
+for per CPU events. This is because the event is only tracing a single task
+and can use a task_work to trigger its own callbacks. But per CPU events do
+not have that luxury. A single per CPU event can request a deferred user
+space stacktrace for several tasks before receiving any of the deferred
+stacktraces.
+
+To solve this, per CPU events will use the extended interface of the
+deferred unwinder that ftrace will use. This includes the new API of:
+
+  unwind_deferred_init()
+  unwind_deferred_request()
+  unwind_deferred_cancel()
 
 
-root@number:/# perf stat --null perf test 73
- 73: AMD IBS via core pmu                                            : Ok
+What perf now does is:
 
- Performance counter stats for 'perf test 73':
+When a new per CPU event is created, it searches a global list of
+descriptors that map to the group_leader of tasks that create these events.
+The PID of group_leader of current is used to find this descriptor.
+If one is found, the event is simply added to it. If one is not found, then
+it will create the descriptor.
 
-       0.018951061 seconds time elapsed
+This descriptor has an array the size of possible CPUs and holds per CPU
+descriptors. Each of these CPU descriptors has a linked list that would
+holds the CPU events that were created and want deferred unwinding.
 
-       0.004640000 seconds user
-       0.005627000 seconds sys
+The group_leader descriptor has a unwind_work descriptor that it registers
+with the unwind deferred infrastructure with unwind_deferred_init().
+Each event within this descriptor has a pointer to this descriptor.
+When a request is made from interrupt context to have a deferred unwind
+happen, it calls unwind_deferred_request() passing it the group_leader
+descriptor.
+
+When the task returns back to user space, it will call the callback
+associated with the group_leader descriptor, and that callback will pass the
+user space stacktrace to the event attached to the CPU from its CPU array.
+
+When these events are freed, they are removed from this descriptor, and
+when the last event is removed, the descriptor is freed.
+
+I've tested this, and this appears to work fine. All the associated events
+that the perf tool creates are associated via this descriptor. At least it
+doesn't overflow the max number of unwind works that can be attached to the
+unwind deferred infrastructure.
+
+This is based on v5 of the unwind code mentioned above. Changes since
+then include:
+
+- Have unwind_deferred_request() return positive if already queued
+
+- Check (current->flags & PF_KTHREAD | PF_EXITING) in
+  unwind_deferred_request(), as the task_work will fail to be added in the
+  exit code.
+
+- Have unwind_deferred_request() return positive if already queued.
+
+- Use SRCU to protect the list of callbacks when a task returns instead of
+  using a global mutex. (Mathieu Desnoyers)
+
+- Does not include ftrace update
+
+- Includes perf per CPU events using this infrastructure
 
 
-root@number:/# perf stat --null perf test 112
-112: AMD IBS sample period                                           : Ok
+Josh Poimboeuf (2):
+      unwind_user/deferred: Add deferred unwinding interface
+      unwind_user/deferred: Make unwind deferral requests NMI-safe
 
- Performance counter stats for 'perf test 112':
+Steven Rostedt (3):
+      unwind deferred: Use bitmask to determine which callbacks to call
+      unwind deferred: Use SRCU unwind_deferred_task_work()
+      perf: Support deferred user callchains for per CPU events
 
-      17.888279280 seconds time elapsed
-
-       1.539229000 seconds user
-      16.325610000 seconds sys
-
-
-root@number:/#
-
-But yeah, both are passing on this 9950x3d.
-
-- Arnaldo
+----
+ include/linux/perf_event.h            |   5 +
+ include/linux/sched.h                 |   1 +
+ include/linux/unwind_deferred.h       |  19 +++
+ include/linux/unwind_deferred_types.h |   4 +
+ kernel/events/core.c                  | 226 +++++++++++++++++++++++---
+ kernel/unwind/deferred.c              | 290 +++++++++++++++++++++++++++++++++-
+ 6 files changed, 519 insertions(+), 26 deletions(-)
