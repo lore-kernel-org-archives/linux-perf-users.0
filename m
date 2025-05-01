@@ -1,283 +1,201 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB10118D63E
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 May 2025 15:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A565A200BBC
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 May 2025 15:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746112419; cv=none; b=J0VPEtONMyYiGDJdOba9SyeQ4lfqadq0hpaBxlR19cf+2ji5Djpc4WSGJwqwEajm6rD8ja9tJAaj8G/Cy1ZQCYZw/cFWXp6XXA1QJ5Mnu7iruVhIm1o1IIKcMoP08zl+wKVv86ruiwXxMpLqi66WGhQSqo/RrmtzX+E0f2ake74=
+	t=1746114562; cv=none; b=I4Dit4Jvm/fpLM+O7s0jGho4IDKNTFtIJrX+o3pgDUFiB+cX/Hf73a9vsgH+cHwJTCbYbksshU21zBKzVDv7DLVwFe8shwn51SV/K6uAeLAcDX5fbKx2F56PqLpf4MQKFfMGt+tqLJg5za8ddbbX6p0smYGdo8FS01+GM/Osw3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746112419; c=relaxed/simple;
-	bh=OzBrloBm/V4YW3Mg4aldVmjhnsv5beIgJRxQgna75gk=;
+	s=arc-20240116; t=1746114562; c=relaxed/simple;
+	bh=3HKIVnPDQ9OEKCweD1mvGi7LavbypPCv6RQLPe4WJn4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QxTNgBXHcs8m+6aHbmiKDMDBNMOlp8ZIpERDXD3uUemGdrSRtjqn9QiddEJrDL8OrBsYI0cDqoF1IQViYHodGMvycV7zXMuxqH/R9Tnh9/VvyRT2RIEKwOwRMBppnb2kbUQ9hgy6zINiaEr140mN5+PwXMgRLaQmqw2Y6l6Bnc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cutb4Rp1; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=osnBgCc1kshwNCZ8b1763xFw/lXjiCbMX/CnYED+sklzAbFVilCGAu1hNkuqQaczj719JQ9pfslxNARBomo/5i1V77WJoI1dAAHZxQOFxWg9QDTtzMNrHLwQlg5uLZyIrkrzEIjagvj8YDw3l25B7TpqlKh3OsufSh0RoIcuqS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L0bnZDrP; arc=none smtp.client-ip=209.85.166.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cutb4Rp1"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so198385ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 May 2025 08:13:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L0bnZDrP"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so209215ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 May 2025 08:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746112417; x=1746717217; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746114560; x=1746719360; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=85n8jESwrmid0ZkoomIHFt8MZy/m9sXudOknYqK+2nQ=;
-        b=cutb4Rp1hOWIKsyuzdh8lkWLmPeXs7P1t3e6oj/kqOjq5thSkZ6Ua88RE+ijqlNw0q
-         C/tfYHu8r59YBMeg/Q+q8ca/whRxjKsdKqcFwS355vh9s/Vf17ivDVlup8FUTUJ/Sl6C
-         92ilnjmPCkwrk4XBvYlxAV/iDtvu/V3LLB7RNamgLqdmHma4HoWvlBuWPk3iONeljGZc
-         QZON39XlMBejmvjHe6TQmCQo9IakhYFWJ1sjmFKgXqpqfehtvnl0gcHLIxLxLpZl0xmc
-         3ZsWJ/w1C6GPfn0Ek3JW6plNWP0EA488BLQDnrN7ApF21DTebUciGrfnTnQO0DUE/CeP
-         jlPQ==
+        bh=B61it6scwYY34x7zwdbk+FyL53fYrJ6lieiu0DvGpsE=;
+        b=L0bnZDrPYTrKA2oaHa9R8ZGDxMM6O8GQ5cXIRoTd9ZpbqzFaUk4Y54YCG90ezPbfCG
+         TO1PNoBi2Ym5SGhfppSbYkmNmXGvk4nkuhwouyXjC8AWaCASCZA57F5UNz/MC1yvYrOv
+         51ZtqNmBl4fh8VliNe79+FdYbnC85Xjy/xTrTU0n6jS8Jp9C2B+DscKQ7wHx1SV9wKQJ
+         8ZuIJtmzI3CGiQocqR7FTeLjEeF/WVzMoQrRfkyi8YQXwRyYc7xOu8gmhkJd6ge1bY37
+         nE4j4Wy00m4TOLDam0VLdSameFHs9xW/chqoAxtEeKG+D0gQOV76lf561Y6EQ2+L1k4x
+         NYCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746112417; x=1746717217;
+        d=1e100.net; s=20230601; t=1746114560; x=1746719360;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=85n8jESwrmid0ZkoomIHFt8MZy/m9sXudOknYqK+2nQ=;
-        b=Oq7jMG/6wFNgmncxkj+xIgp/hsTLN/U4VSY4Ji7e1I+Q4Ga+Jo4f59aBAIp70vdJMI
-         LQdhxi7dqhwo7lfzAeWLJljsP0jNONZWp29J0SaLywYJyIe+d1rpC9NGCGEvWC1xQ4UX
-         DK9A6Xr8ev9kER7b7wApb6nB2vsJ7rdbJmokf1Xc4S9LAPnbKiB4iRo7hwCJa5hahUd5
-         Y+rP0+LUxIK0fy6c5tKEbT/tajG466P6RBsbCNFvaZPEEo45jAcilZX7IF/DTHdWUPdr
-         0WmUd78mOQG3toe6Y6JvjFvIRq5Dy37IYcH0s2KCYiZTB2xplSeZimqeBGDVfOgOXpZE
-         2Kkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPJ4k/ztX6w/pWImgu2fjdLJNBJE4+E0WhYYZ0RGPBn/snNPK5tpfWMveWexYObOQdYJ+aHdZjeE0pmvRoOhBK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR2tE1vDmT/eCKO6H2xTy32zOeqisgAAa/1AnGImO6pkeOhv3x
-	f9/zZFXthXYJxerUGNvi4OdhBH/k6hRneDJ3Q/vyVgaIBrbxAhphoDukm6YZBhi7PWabo98+e3v
-	COmMjcr2WNbFLlqziMjeNpijI/Es8jbNppblo
-X-Gm-Gg: ASbGncuQBqL/A036yKe4nUn17HrdfU07ye8+rb+ZZuGDxcph9w8f7kh+xxDEydGQRUO
-	gRkFGVOhL6tE5Ec538yFjdWMBtfISYuLEtaeT5E1T5GNuL2roJUSn7iTiKSAFzPDdaf3deM2fhr
-	or/mH6H7Yba2uVEjXNARU5TY43fixZiyPbv+GD14GjUa6VxHZlew==
-X-Google-Smtp-Source: AGHT+IH/g13hY6mqTd3V9Dy+QXZ9IB5wT6d8KsQH0XFcUwB04paWY/i6fjQ4kjZss6cp+maGmlgLVAnvbwLlEzuqRaM=
-X-Received: by 2002:a05:6e02:2291:b0:3d3:d1f9:4ccd with SMTP id
- e9e14a558f8ab-3d970170975mr2263245ab.9.1746112416703; Thu, 01 May 2025
- 08:13:36 -0700 (PDT)
+        bh=B61it6scwYY34x7zwdbk+FyL53fYrJ6lieiu0DvGpsE=;
+        b=ORp7v8DIrFJ577xf6PJufsUVdnXjUtQpNZdCaOQwc4m1QAApMe49/AybpnylpR44k0
+         VQIKl6QKfy9fsPFc0Aqqdk0heQd1mA5cp4yUF09RjlwjXbgJc+uh+I6bQL0pyX7DtlWC
+         DHttAqLtkeCL7L7AL8upLSdqmn16lUgZR42fOXLgB8HKW96wAxm7GMlfDwmzkF5E7PYZ
+         XVQ2Zjv41xQS1DSL7mlzI/OjAAd21Li2wnKab/bm3ScrSU40LiC9aec5TCig4QJ+qBr6
+         MZ/9TQpWpmriqmnj6vGaX8p9YEtQbMMg6X5pKC3UdSaP8vTU88WUjxEy4+is/xG/cSbb
+         xfQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLMPWhUNjKwT2G30iXdRZR9IPESGyHKY8Pz+eF1DfezJDq6mzA4Q0YrZCFYtNDAHzBdNqW34EHyLryUmPHhmoG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfv+QHMh3+y8kxK570fRTZXR2xj5AWYfFjYWGiIlTAOpW4P80z
+	SYMJ0+XLxPhq41Crq7I5mEMkgGGZJxHfE5LY+GFKu7PR16PSzmapqvEj741t+tlLlrEUlOyS/+F
+	6l3dB4fNyAwp86uLt4ZbAVmxB9YR/kikmjeli
+X-Gm-Gg: ASbGncvStdaYOzWsZsaqygUGUyyLlFZRuIbiYJ9PqF0JsUirfUGRMukwRFK4cd1TVT3
+	iIXTRNekicIWCtz00q8F6uuB3F4MDTMbRLmDbWyoWoay9CRkWONqNivnAtEYhT8PFa6iZP6MKqW
+	JKVTIclLW7Ywg4QUhJNgt9EGHMy7Wk2AT6SkaTjJGOh8mwiMCUeuE=
+X-Google-Smtp-Source: AGHT+IE7pBElH8T1s8JI1VwtyernK2V6bzN/KH8RUTWDX7XmmiYtthCh5W/qK19YYDCmOQTsLLavP7Kt7KPUitaxRdk=
+X-Received: by 2002:a92:ca47:0:b0:3d9:66ba:1ab7 with SMTP id
+ e9e14a558f8ab-3d96f21344amr3585695ab.10.1746114559459; Thu, 01 May 2025
+ 08:49:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501022809.449767-1-howardchu95@gmail.com>
-In-Reply-To: <20250501022809.449767-1-howardchu95@gmail.com>
+References: <20250501093633.578010-1-gautam@linux.ibm.com> <20250501093633.578010-4-gautam@linux.ibm.com>
+In-Reply-To: <20250501093633.578010-4-gautam@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 May 2025 08:13:25 -0700
-X-Gm-Features: ATxdqUE--wiAak5qnAOvXKfkOPQBHA5JKIS-hip6kd_XcccmZxR4MlNxNOM__EY
-Message-ID: <CAP-5=fVHo5sYSHoxzRgC7poszLS5x4H3Cy5NsUTB8tH+n3L6Ww@mail.gmail.com>
-Subject: Re: [PATCH v16 00/10] perf record --off-cpu: Dump off-cpu samples directly
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+Date: Thu, 1 May 2025 08:49:08 -0700
+X-Gm-Features: ATxdqUHBwK_l4-FbEaeqBNUJ7dPx7nAhGNUc9NCG8l8rw9-A97bRM4npOofxd7s
+Message-ID: <CAP-5=fX1qodprWrwK7yq2WYZNnLtiEe_rjvw0aJ7gXY2ma+Hzw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf python: Add evlist close and next methods
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	gautam@linux.ibm.com
+	maddy@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 7:28=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
+On Thu, May 1, 2025 at 2:37=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.co=
+m> wrote:
 >
-> As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D207323
+> Add support for the evlist close and next methods. The next method
+> enables iterating over the evsels in an evlist.
 >
-> Currently, off-cpu samples are dumped when perf record is exiting. This
-> results in off-cpu samples being after the regular samples. This patch
-> series makes possible dumping off-cpu samples on-the-fly, directly into
-> perf ring buffer. And it dispatches those samples to the correct format
-> for perf.data consumers.
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+>  tools/perf/util/python.c | 47 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
 >
-> Before:
-> ```
->      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  fff=
-fffff90d2e8aa record_times+0xa ([kernel.kallsyms])
->             perf  770116 [001] 27981.041375:          1    cycles:P:  fff=
-fffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041377:          1    cycles:P:  fff=
-fffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041379:      51611    cycles:P:  fff=
-fffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
->      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  fff=
-fffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
->      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  fff=
-fffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 5a4d2c9aaabd..599cb37600f1 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -1163,6 +1163,16 @@ static PyObject *pyrf_evlist__open(struct pyrf_evl=
+ist *pevlist,
+>         return Py_None;
+>  }
 >
-> sshd  708098 [000] 18446744069.414584:     286392 offcpu-time:
->             79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
->             585690935cca [unknown] (/usr/bin/sshd)
-> ```
+> +static PyObject *pyrf_evlist__close(struct pyrf_evlist *pevlist)
+> +{
+> +       struct evlist *evlist =3D &pevlist->evlist;
+> +
+> +       evlist__close(evlist);
+> +
+> +       Py_INCREF(Py_None);
+> +       return Py_None;
+> +}
+> +
+>  static PyObject *pyrf_evlist__config(struct pyrf_evlist *pevlist)
+>  {
+>         struct record_opts opts =3D {
+> @@ -1202,6 +1212,31 @@ static PyObject *pyrf_evlist__enable(struct pyrf_e=
+vlist *pevlist)
+>         return Py_None;
+>  }
 >
-> After:
-> ```
->             perf  774767 [003] 28178.033444:        497           cycles:=
-P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
->             perf  774767 [003] 28178.033445:     399440           cycles:=
-P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
->          swapper       0 [001] 28178.036639:  376650973           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->          swapper       0 [003] 28178.182921:  348779378           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->          swapper       0 [000] 28178.463253:  195945410           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->      dbus-broker     412 [002] 28178.464855:  376737008           cycles:=
-P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
-> ```
+> +static PyObject *pyrf_evlist__next(struct pyrf_evlist *pevlist,
+> +                                  PyObject *args, PyObject *kwargs)
+> +{
+> +       struct evlist *evlist =3D &pevlist->evlist;
+> +       PyObject *py_evsel;
+> +       struct perf_evsel *pevsel;
+> +       struct evsel *evsel;
+> +       struct pyrf_evsel *next_evsel =3D PyObject_New(struct pyrf_evsel,=
+ &pyrf_evsel__type);
+> +       static char *kwlist[] =3D { "evsel", NULL };
+> +
+> +       if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist,
+> +                                        &py_evsel))
+> +               return NULL;
+> +
+> +       pevsel =3D (py_evsel =3D=3D Py_None) ? NULL : &(((struct pyrf_evs=
+el *)py_evsel)->evsel.core);
+> +       pevsel =3D perf_evlist__next(&(evlist->core), pevsel);
+> +       if (pevsel !=3D NULL) {
+> +               evsel =3D container_of(pevsel, struct evsel, core);
+> +               next_evsel =3D container_of(evsel, struct pyrf_evsel, evs=
+el);
+> +               return (PyObject *) next_evsel;
+> +       }
+> +
+> +       return Py_None;
+> +}
+> +
 
-Tested-by: Ian Rogers <irogers@google.com>
+Thanks for this! Have you looked at the existing iteration support?
+There's an example here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/python/tracepoint.py?h=3Dperf-tools-next#n26
+```
+    for ev in evlist:
+        ev.sample_type =3D ev.sample_type & ~perf.SAMPLE_IP
+        ev.read_format =3D 0
+```
+In the next patch you have:
+```
+        evsel =3D evlist.next(None)
+        while evsel !=3D None:
+            counts =3D evsel.read(0, 0)
+            print(counts.val, counts.ena, counts.run)
+            evsel =3D evlist.next(evsel)
+```
+I believe the former looks better. It also isn't clear to me if next
+belongs on evlist or evsel.
 
-and in the process coming across:
-https://lore.kernel.org/lkml/20250501070003.22251-1-irogers@google.com/
-
-Thanks for persisting with this, we're past the 1 year milestone:
-https://lore.kernel.org/linux-perf-users/20240424024805.144759-1-howardchu9=
-5@gmail.com/
-
-Thanks!
+Thanks,
 Ian
 
-> Changes in v16:
->  - Add Tested-by from Gautam and Acked-by from Namhyung.
->  - Rebase on the perf-tools-next branch.
->  - Edit the commit message of patch 10.
->  - Fix a bug caused by the type change of struct perf_cpu.
->  - Rename test_offcpu_over_thresh() to test_offcpu_above_thresh().
->
-> Changes in v15:
->  - Fix workload recording bug pointed out by Arnaldo.
->  - Rename struct stack to struct __stack as suggested by Arnaldo.
->  - Delete the extra offcpu workload now that recording workload is fixed,
->    use 'sleep 1' for testing instead.
->  - Add more tests for the off-cpu-thresh option.
->
-> Changes in v14:
->  - Change the internal off_cpu_thresh_us to off_cpu_thresh_ns, i.e. use
->    nsec instead of usec
->
-> Changes in v13:
->  - Move the definition of 'off_cpu_thresh_ns' to the same commit as
->    dumping off-cpu samples in BPF, and give off_cpu_thresh_ns a default
->    value before the --off-cpu-thresh option is parsed.
->
-> Changes in v12:
->  - Restore patches' bisectability, because the ordering of patches has
->    changed.
->  - Change 'us =3D ms * 1000' to 'us =3D ms * USEC_PER_MSEC'
->
-> Changes in v11:
->  - Modify the options used in the off-cpu tests, as I changed the unit
->    of the off-cpu threshold to milliseconds.
->
-> Changes in v10:
->  - Move the commit "perf record --off-cpu: Add --off-cpu-thresh option"
->    to where the direct sample feature is completed.
->  - Make --off-cpu-thresh use milliseconds as the unit.
->
-> Changes in v9:
->  - Add documentation for the new option '--off-cpu-thresh', and include
->    an example of its usage in the commit message
->  - Set inherit in evsel__config() to prevent future modifications
->  - Support off-cpu sample data collected by perf before this patch series
->
-> Changes in v8:
->  - Make this series bisectable
->  - Rename off_cpu_thresh to off_cpu_thresh_us and offcpu_thresh (in BPF)
->    to offcpu_thresh_ns for clarity
->  - Add commit messages to 'perf evsel: Expose evsel__is_offcpu_event()
->    for future use' commit
->  - Correct spelling mistakes in the commit message (s/is should be/should=
- be/)
->  - Add kernel-doc comments to off_cpu_dump(), and comments to the empty
->    if block
->  - Add some comments to off-cpu test
->  - Delete an unused variable 'timestamp' in off_cpu_dump()
->
-> Changes in v7:
->  - Make off-cpu event system-wide
->  - Use strtoull instead of strtoul
->  - Delete unused variable such as sample_id, and sample_type
->  - Use i as index to update BPF perf_event map
->  - MAX_OFFCPU_LEN 128 is too big, make it smaller.
->  - Delete some bound check as it's always guaranteed
->  - Do not set ip_pos in BPF
->  - Add a new field for storing stack traces in the tstamp map
->  - Dump the off-cpu sample directly or save it in the off_cpu map, not bo=
-th
->  - Delete the sample_type_off_cpu check
->  - Use __set_off_cpu_sample() to parse samples instead of a two-pass pars=
-ing
->
-> Changes in v6:
->  - Make patches bisectable
->
-> Changes in v5:
->  - Delete unnecessary copy in BPF program
->  - Remove sample_embed from perf header, hard code off-cpu stuff instead
->  - Move evsel__is_offcpu_event() to evsel.h
->  - Minor changes to the test
->  - Edit some comments
->
-> Changes in v4:
->  - Minimize the size of data output by perf_event_output()
->  - Keep only one off-cpu event
->  - Change off-cpu threshold's unit to microseconds
->  - Set a default off-cpu threshold
->  - Print the correct error message for the field 'embed' in perf data hea=
-der
->
-> Changes in v3:
->  - Add off-cpu-thresh argument
->  - Process direct off-cpu samples in post
->
-> Changes in v2:
->  - Remove unnecessary comments.
->  - Rename function off_cpu_change_type to off_cpu_prepare_parse
->
-> Howard Chu (10):
->   perf evsel: Expose evsel__is_offcpu_event() for future use
->   perf record --off-cpu: Parse off-cpu event
->   perf record --off-cpu: Preparation of off-cpu BPF program
->   perf record --off-cpu: Dump off-cpu samples in BPF
->   perf evsel: Assemble offcpu samples
->   perf record --off-cpu: Disable perf_event's callchain collection
->   perf script: Display off-cpu samples correctly
->   perf record --off-cpu: Dump the remaining samples in BPF's stack trace
->     map
->   perf record --off-cpu: Add --off-cpu-thresh option
->   perf test: Add direct off-cpu tests
->
->  tools/perf/Documentation/perf-record.txt |   9 ++
->  tools/perf/builtin-record.c              |  33 +++++++
->  tools/perf/builtin-script.c              |   4 +-
->  tools/perf/tests/shell/record_offcpu.sh  |  71 ++++++++++++++
->  tools/perf/util/bpf_off_cpu.c            | 119 ++++++++++++++---------
->  tools/perf/util/bpf_skel/off_cpu.bpf.c   |  98 ++++++++++++++++++-
->  tools/perf/util/evsel.c                  |  41 +++++++-
->  tools/perf/util/evsel.h                  |   2 +
->  tools/perf/util/off_cpu.h                |   3 +-
->  tools/perf/util/record.h                 |   1 +
->  10 files changed, 324 insertions(+), 57 deletions(-)
+
+>  static PyMethodDef pyrf_evlist__methods[] =3D {
+>         {
+>                 .ml_name  =3D "all_cpus",
+> @@ -1221,6 +1256,12 @@ static PyMethodDef pyrf_evlist__methods[] =3D {
+>                 .ml_flags =3D METH_VARARGS | METH_KEYWORDS,
+>                 .ml_doc   =3D PyDoc_STR("open the file descriptors.")
+>         },
+> +       {
+> +               .ml_name  =3D "close",
+> +               .ml_meth  =3D (PyCFunction)pyrf_evlist__close,
+> +               .ml_flags =3D METH_NOARGS,
+> +               .ml_doc   =3D PyDoc_STR("close the file descriptors.")
+> +       },
+>         {
+>                 .ml_name  =3D "poll",
+>                 .ml_meth  =3D (PyCFunction)pyrf_evlist__poll,
+> @@ -1263,6 +1304,12 @@ static PyMethodDef pyrf_evlist__methods[] =3D {
+>                 .ml_flags =3D METH_NOARGS,
+>                 .ml_doc   =3D PyDoc_STR("Enable the evsels in the evlist.=
+")
+>         },
+> +       {
+> +               .ml_name  =3D "next",
+> +               .ml_meth  =3D (PyCFunction)pyrf_evlist__next,
+> +               .ml_flags =3D METH_VARARGS | METH_KEYWORDS,
+> +               .ml_doc   =3D PyDoc_STR("Return next evsel")
+> +       },
+>         { .ml_name =3D NULL, }
+>  };
 >
 > --
-> 2.45.2
+> 2.49.0
 >
