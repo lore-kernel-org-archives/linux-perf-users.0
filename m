@@ -1,186 +1,265 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BAD18DB16
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 May 2025 16:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A796B26ADD;
+	Thu,  1 May 2025 18:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746115916; cv=none; b=QKx+b4Qbi5S/ceNP+KO45k2v23BrG5uWeYwsFsJPiq4AxU6u3hRa6kqdjYAddg8Zyw3JLsr4cgm3IMctllM3hnU6tfo+GwjFY3Fe77DztbZKaoIsqgVYunxU2Nc9lgtl9/zI55MxjbLwNkME1bE3aEPBeiSix2dZukwaolG0/qE=
+	t=1746124922; cv=none; b=kNXNdY1BiyNYOPpXdYwwv2TlTcREQURoE/X3RZ7eiUbLLV2B3qMKkP+zXlQs2z6Voc3TRW6nFSGr0qWHm4b4aRXsCdjR4Zhs6GNX34Z/gcY3FjJql6J1SiHYA5MqWakHvpd+Y/EBNW+RfZ1/jdbnvuCiQBIFB1WmDVAS4xZO1Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746115916; c=relaxed/simple;
-	bh=dd5x+Zla52OMiqgDfX4eQs/qllxAI/m4TSHlwyUxVqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iWikUCWhFCYi02eB85Pk57SfkiTuM9pfyXkzZaGuMcOycb87RESsl+JuZO5MDsxAVz72e1HtnsU3lYIRrVakfMN7/x0bxc6YG9p/a0RyIqAsOhJzjTdAPNklIzekro7FnNdhEr9Iq8F2opBxgdvRkpXmkOyG6NwHI/+ew9hLEsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lRtVoKcs; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746124922; c=relaxed/simple;
+	bh=8qtcsAanPDMiYbgqm1wJQ+JhBnwTnN0EQq/sTw0wVH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vv67MfQBFZuZVxQAyU9cWhbynfHTo6ty1WmNLvsjrgsqRYjkXfDRvCTVHg9StPbN4oh2LdbIHbAAdthSDxAkSu/T+r/W/XTr1gb7hkNEg1MfM94q3abGcOhdmbF8PnJ5jTvMyMGAl2+dTNnpp6k92pxZ0JVBS23F/b+Y4CLORYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GuQgwo6D; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lRtVoKcs"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so178765ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 May 2025 09:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746115914; x=1746720714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w2Ud6eTNp6ERtti4oEB8plIlcS/1i9l0/NlQRj/X6dU=;
-        b=lRtVoKcsXq/NpUcKjANi1RSNUTyXPDcCgURhzerIuJpnQa+2JWOoTtSFdrRaoVj12H
-         D/6aOYBZcDHIJI2fpoq9+TwYZVN3xo2CFvbD6KmerMgyXUezAKYlpf8Nrw3to8xmCtAL
-         DLYua6UGrN640jS/Ge0uEcb1AQuaT/gBPXE9PIagJbXi7oOfcO6POfltDBRl/3FE7pIl
-         xzRhYPxTPkOYPTK09ssBvlIm+O7zfXyrrlewH3xxtM7wnH73+KehEVZ8oHJa0dLIQmZJ
-         zObefnCjnvR6u+qv08ttKaoTojCswD4Mkdl8lH3am1xmNcAWF2BvpabVtd4ENQU1Wtmv
-         eD4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746115914; x=1746720714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w2Ud6eTNp6ERtti4oEB8plIlcS/1i9l0/NlQRj/X6dU=;
-        b=Ix5YzI0XRmbgaZ+3fyOndXHundRCU6sEpzTKSAjLhOyupVKFaQCKK1olwOk7FP8xyS
-         X0bT0wi9CcvbL6bKFD9FttWSDJJ26b/GBJsCNDmB5tthqiiwsBjRjJLpq3cmn1lI6onK
-         sGAzZNnMNqEMsSt9YAkaTuz4+8NAXujRC5ESgHFG3UhRQk8LIhLY5e/C6BEjYzBsrdai
-         Jk86GWvHVVl6MGszs7lKqb3u3POdq25pdymkMj0vXcI2oQj5vXwXh+yo+RyUM7VWciyg
-         9Jr5wpvWP+YLmBGbfY0Gno5l3GnJihOcqRPRUFz6VaBk6bzUCVnjvtQZdVYMSxuLBNwt
-         Zg4g==
-X-Forwarded-Encrypted: i=1; AJvYcCU9CwX6gPr4jYxqVd0/Twg1h/nL+pGjd8FgPaUMUb7Fp/nFceQgvdrGq17GMN2Duo1W03+JZ9G89tYT3PztHqRP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsGjmqFKkHG+HNBZ2QK5BPGXz7KavHj29wixKiPRpcWYFbtp1+
-	dqWTWXHHv9nsJebJF7+hjm8HbCD8nkwf9IEbQ5VMWtweWF9TabeYRELIoqVSg6M0CpRpevGij3w
-	DImttsI6tJiFROf62XjmbUODA5zn0VfCCceyw
-X-Gm-Gg: ASbGncuxS1Ho9RJB3Ehj/saP0DcdN+eG2cZp9vFGrA50GwtuYotBPPzgs77Tld5INlY
-	za+fCP1lP1Nnz6qa9sv+ZNlAWx1ToQ05M1w8fVptcBnkjd0oNBCXu2InuCrUHUGmp5XGXqTS3n7
-	KwfT+7uSMEcu0gsSK3hNhJiDfDLtbJz0RDtoZx649b6xY+qXXivBo=
-X-Google-Smtp-Source: AGHT+IFPyeDI8MA2OYOfgRXYCzBuihXkzFlHRvbpZ0KKhlS+gdqpJHcPr95ZuVNrd0zQpSv4pYwycLyUzAG9j8684Zc=
-X-Received: by 2002:a05:6e02:1a0e:b0:3d3:d4ed:bb37 with SMTP id
- e9e14a558f8ab-3d970180e4cmr2567215ab.29.1746115914117; Thu, 01 May 2025
- 09:11:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GuQgwo6D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746124921; x=1777660921;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8qtcsAanPDMiYbgqm1wJQ+JhBnwTnN0EQq/sTw0wVH0=;
+  b=GuQgwo6DvBEMjRIcKavhGb51QLeK/R86spFF/xhkUOWBS1TdPdZokUcR
+   aCoqdal8xLFAqicqgCZ4FRoFk51PXnDNVAfkQfObcz94VVfTdN9Wf6Mp7
+   eTecUIEMA6Qzr4AZSB9ujt7+G1b/KARURo4lLoQfweMaqYPbEIVP7z/hE
+   OtPyNlHQ9WSpXXcqYD1quWQ3WNWMQYDV7K2hl7x9Bjco0k4xfSr/qmY8J
+   Z7xHcfbAoA9K5UT7yLWD062V0ZOsCPIJF3GRcVUQY36H2ThbhcEMeKQyA
+   UJifHMAju6c/3KN/K0h/GfOT0yd7AtjUDuPe+TToqju5S264EQlqMvDSl
+   Q==;
+X-CSE-ConnectionGUID: /SWgMc+dQxybYlS2W+e8Dw==
+X-CSE-MsgGUID: 47fI7DqASLy9JqLToiJAFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58793613"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="58793613"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 11:42:00 -0700
+X-CSE-ConnectionGUID: 3Wa1chpERi2qba44yA+3jQ==
+X-CSE-MsgGUID: nKElqJEMQ/Svg1Y4V2P/wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="139431744"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.220.41])
+  by orviesa004.jf.intel.com with ESMTP; 01 May 2025 11:41:59 -0700
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: [PATCH] perf top: populate PMU capabilities data in perf_env
+Date: Thu,  1 May 2025 13:41:43 -0500
+Message-ID: <20250501184143.873536-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501093633.578010-1-gautam@linux.ibm.com> <20250501093633.578010-5-gautam@linux.ibm.com>
- <CAP-5=fW2--aUG9=14R8fqSEJQN-D3PATTwU15czWVsQidA51bA@mail.gmail.com>
-In-Reply-To: <CAP-5=fW2--aUG9=14R8fqSEJQN-D3PATTwU15czWVsQidA51bA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 May 2025 09:11:42 -0700
-X-Gm-Features: ATxdqUHgDAH_d2amllbxS047LtIyRHk3xiWW8PXOWZtXwl_bgU0sYuKQ5jhvI3E
-Message-ID: <CAP-5=fVqRrO2pQx6he9N2R1A11RzVTFb-0KBvg4ydK4Eh7qSFw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf python: Add counting.py as example for counting
- perf events
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maddy@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 1, 2025 at 9:04=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Thu, May 1, 2025 at 2:37=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.=
-com> wrote:
-> >
-> > Add counting.py - a python version of counting.c to demonstrate
-> > measuring and reading of counts for given perf events.
-> >
-> > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> > ---
-> >  tools/perf/python/counting.py | 41 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> >  create mode 100755 tools/perf/python/counting.py
-> >
-> > diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting=
-.py
-> > new file mode 100755
-> > index 000000000000..0c58907bd8bf
-> > --- /dev/null
-> > +++ b/tools/perf/python/counting.py
-> > @@ -0,0 +1,41 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# -*- python -*-
-> > +# -*- coding: utf-8 -*-
-> > +
-> > +import perf
-> > +
-> > +def main():
-> > +        cpus =3D perf.cpu_map()
-> > +        thread_map =3D perf.thread_map(-1)
-> > +        evlist =3D perf.evlist(cpus, thread_map)
-> > +
-> > +        evsel1 =3D perf.evsel(type =3D perf.TYPE_SOFTWARE,
-> > +                 config =3D perf.COUNT_SW_CPU_CLOCK,
-> > +                 read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf=
-.FORMAT_TOTAL_TIME_RUNNING,
-> > +                 disabled=3D1)
-> > +        evlist.add(evsel1)
-> > +
-> > +        evsel2 =3D perf.evsel(type =3D perf.TYPE_SOFTWARE,
-> > +                 config =3D perf.COUNT_SW_TASK_CLOCK,
-> > +                 read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf=
-.FORMAT_TOTAL_TIME_RUNNING,
-> > +                 disabled=3D1)
-> > +        evlist.add(evsel2)
->
-> Nice example! Would this be better as:
-> ```
->     cpus    =3D perf.cpu_map()
->     threads =3D perf.thread_map(-1)
->     evlist =3D perf.parse_events("cpu-clock,task-clock", cpus, threads)
-> ```
-> If you run `perf stat -vv -e 'cpu-clock,task-clock' .. ` you can
-> double check the perf event attribute bits. For example in
-> tracepoint.py we remove the SAMPLE_IP:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/python/tracepoint.py?h=3Dperf-tools-next#n27
->
-> > +
-> > +        evlist.open()
-> > +        evlist.enable()
-> > +
-> > +        count =3D 100000
-> > +        while count > 0:
-> > +            count -=3D 1
-> > +
-> > +        evlist.disable()
-> > +        evsel =3D evlist.next(None)
-> > +        while evsel !=3D None:
-> > +            counts =3D evsel.read(0, 0)
->
-> Rather than just reading on the first CPU and thread, perhaps change
-> to iterate over the cpus and threads? Something like:
-> ```
->     for evsel in evlist:
->         for cpu in cpus:
->             for thread in threads:
->                 counts =3D evsel.read(cpu, thread)
->                 print(f"For {evsel} read val=3D{counts.val}
-> enable=3D{counts.ena} run =3D{counts.run}")
-> ```
+Calling perf top with brach filters enabled on Intel hybrid CPU's
+with branch counter event logging support results in a segfault.
 
-Oh note, it is easy to confuse a thread or a CPU with the index into
-the thread_map or cpu_map. For CPUs the two values of CPU and index
-are often the same making it very easy to write code that works only
-on CPU events (not events on things like memory controllers that
-typically list a CPU per-socket). We added a struct perf_cpu to try to
-avoid this kind of issue in the C code but in the python code
-everything is back to being ints :-(
+$ ./perf top -e '{cpu_core/cpu-cycles/,cpu_core/event=0xc6,umask=0x3,\
+	frontend=0x11,name=frontend_retired_dsb_miss/}' -j any,counter
+perf: Segmentation fault
+-------- backtrace --------
+./perf() [0x55f460]
+/lib64/libc.so.6(+0x1a050) [0x7fd8be227050]
+./perf() [0x57b4a7]
+./perf() [0x561e5a]
+./perf() [0x604a81]
+./perf() [0x4395b5]
+./perf() [0x601732]
+./perf() [0x439bc1]
+./perf() [0x5d35b3]
+./perf() [0x43936c]
+/lib64/libc.so.6(+0x70ba8) [0x7fd8be27dba8]
+/lib64/libc.so.6(+0xf4b8c) [0x7fd8be301b8c]
 
-Thanks,
-Ian
+The cause is that perf_env__find_br_cntr_info tries to access a
+null pointer pmu_caps in the perf_env struct. Presumably this would
+also be an issue when using the cpu_pmu_caps structure available for
+homogeneous core CPU's.
 
-> Thanks,
-> Ian
->
-> > +            print(counts.val, counts.ena, counts.run)
-> > +            evsel =3D evlist.next(evsel)
-> > +        evlist.close()
-> > +
-> > +if __name__ =3D=3D '__main__':
-> > +    main()
-> > --
-> > 2.49.0
-> >
+Fix this by populating cpu_pmu_caps and pmu_caps structures with
+values from sysfs when calling perf top with branch stack sampling
+enabled.
+
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+ tools/perf/builtin-top.c |   8 +++
+ tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/env.h    |   1 +
+ 3 files changed, 123 insertions(+)
+
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 1061f4eebc3f..c2688e4ef3c4 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
+ 	if (opts->branch_stack && callchain_param.enabled)
+ 		symbol_conf.show_branchflag_count = true;
+ 
++	if (opts->branch_stack) {
++		status = perf_env__read_core_pmu_caps(&perf_env);
++		if (status) {
++			pr_err("PMU capability data is not available\n");
++			goto out_delete_evlist;
++		}
++	}
++
+ 	sort__mode = SORT_MODE__TOP;
+ 	/* display thread wants entries to be collapsed in a different tree */
+ 	perf_hpp_list.need_collapse = 1;
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 36411749e007..37ed6dc52cf3 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struct perf_env *env)
+ 	return env->nr_cpus_avail ? 0 : -ENOENT;
+ }
+ 
++static int __perf_env__read_core_pmu_caps(struct perf_pmu *pmu,
++					  int *nr_caps, char ***caps,
++					  unsigned int *max_branches,
++					  unsigned int *br_cntr_nr,
++					  unsigned int *br_cntr_width)
++{
++	struct perf_pmu_caps *pcaps = NULL;
++	char *ptr, **tmp;
++	int ret = 0;
++
++	*nr_caps = 0;
++	*caps = NULL;
++
++	if (!pmu->nr_caps)
++		return 0;
++
++	*caps = zalloc(sizeof(char *) * pmu->nr_caps);
++	if (!*caps)
++		return -ENOMEM;
++
++	tmp = *caps;
++	list_for_each_entry(pcaps, &pmu->caps, list) {
++
++		if (asprintf(&ptr, "%s=%s", pcaps->name, pcaps->value) < 0) {
++			ret = -ENOMEM;
++			goto error;
++		}
++
++		*tmp++ = ptr;
++
++		if (!strcmp(pcaps->name, "branches"))
++			*max_branches = atoi(pcaps->value);
++
++		if (!strcmp(pcaps->name, "branch_counter_nr"))
++			*br_cntr_nr = atoi(pcaps->value);
++
++		if (!strcmp(pcaps->name, "branch_counter_width"))
++			*br_cntr_width = atoi(pcaps->value);
++	}
++	*nr_caps = pmu->nr_caps;
++	return 0;
++error:
++	while (tmp-- != *caps)
++		free(*tmp);
++	free(*caps);
++	*caps = NULL;
++	*nr_caps = 0;
++	return ret;
++}
++
++int perf_env__read_core_pmu_caps(struct perf_env *env)
++{
++	struct perf_pmu *pmu = NULL;
++	struct pmu_caps *pmu_caps;
++	int nr_pmu = 0, i = 0, j;
++	int ret;
++
++	nr_pmu = perf_pmus__num_core_pmus();
++
++	if (!nr_pmu)
++		return -ENODEV;
++
++	if (nr_pmu == 1) {
++		pmu = perf_pmus__scan_core(NULL);
++		if (!pmu)
++			return -ENODEV;
++		ret = perf_pmu__caps_parse(pmu);
++		if (ret < 0)
++			return ret;
++		return __perf_env__read_core_pmu_caps(pmu, &env->nr_cpu_pmu_caps,
++						      &env->cpu_pmu_caps,
++						      &env->max_branches,
++						      &env->br_cntr_nr,
++						      &env->br_cntr_width);
++	}
++
++	pmu_caps = zalloc(sizeof(*pmu_caps) * nr_pmu);
++	if (!pmu_caps)
++		return -ENOMEM;
++
++	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
++		if (perf_pmu__caps_parse(pmu) <= 0)
++			continue;
++		ret = __perf_env__read_core_pmu_caps(pmu, &pmu_caps[i].nr_caps,
++						     &pmu_caps[i].caps,
++						     &pmu_caps[i].max_branches,
++						     &pmu_caps[i].br_cntr_nr,
++						     &pmu_caps[i].br_cntr_width);
++		if (ret)
++			goto error;
++
++		pmu_caps[i].pmu_name = strdup(pmu->name);
++		if (!pmu_caps[i].pmu_name) {
++			ret = -ENOMEM;
++			goto error;
++		}
++		i++;
++	}
++
++	env->nr_pmus_with_caps = nr_pmu;
++	env->pmu_caps = pmu_caps;
++
++	return 0;
++error:
++	for (i = 0; i < nr_pmu; i++) {
++		for (j = 0; j < pmu_caps[i].nr_caps; j++)
++			free(pmu_caps[i].caps[j]);
++		free(pmu_caps[i].caps);
++		free(pmu_caps[i].pmu_name);
++	}
++	free(pmu_caps);
++	return ret;
++}
++
+ const char *perf_env__raw_arch(struct perf_env *env)
+ {
+ 	return env && !perf_env__read_arch(env) ? env->arch : "unknown";
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d90e343cf1fa..135a1f714905 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -152,6 +152,7 @@ struct btf_node;
+ 
+ extern struct perf_env perf_env;
+ 
++int perf_env__read_core_pmu_caps(struct perf_env *env);
+ void perf_env__exit(struct perf_env *env);
+ 
+ int perf_env__kernel_is_64_bit(struct perf_env *env);
+-- 
+2.49.0
+
