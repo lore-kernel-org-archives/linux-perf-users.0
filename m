@@ -1,64 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E996A22CBD5;
-	Thu,  1 May 2025 09:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A65822D4F0;
+	Thu,  1 May 2025 09:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746092248; cv=none; b=V+2o3LmBoKthQhG0zSEkyZK3rmRtu8KXceV0v9Qvn7IfOWadNRG/basxvSoxNxZKKaMi3W5gdvI0jNDYR2X3+1giXGWPrPGgqkxbWwUUhqkm5Er8B/9wGrAmXSTqTuqk2rjQsoUxC/j+rC6E+RZV2l/he4ybt/eUp5yPd7n6M0I=
+	t=1746092255; cv=none; b=dYjzWyomLcZu9uYnjrNjUAXwx6J8jMlH30tH4zlZc1KxtXGEx6Zpj6RPziQP/XfbbWZ6wHAFLGfORF/rpHnRX056YXsAOLGmbAYd4cFH5+tU8qn/YGgmP/NrA8cuTDTdixOLMdVpwt7FJQHzyTSyUFgwJXNIKUt9wuxZGftsV84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746092248; c=relaxed/simple;
-	bh=oFt16kgUKdcj33X/bx1wFeNI8gWedSulniZ0udiW7pA=;
+	s=arc-20240116; t=1746092255; c=relaxed/simple;
+	bh=hc7NgoslmUG4t3a9ZjQNuHyS58KdErQYl4ZgInZTw4A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CEN9Z7zsztgU1L/pV7/PuEe1ocENItNE7I+tmkLEffniz0qd22ho+8sB/IvrOJ8lKESw1D/V4/leUZhRog++oBMA7qiePZ8NRFUKig9m6onZcPAc9Ln4wsJ5TshZkvx/iFGhmqtAl686tCyupW34FmTOmt2rPuKB5mVKlVrC9Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eZn7dODM; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=DD1ohpy1aGvk9jxwXgqpULJhrbNLJeg5TS4iIEEeOjXxLoBU31/24TN9rmvDw7xdeGabP61LrmsFgXzc7Wu5Gyq85Atxb9cH++CoinBPGRozZwHR7wM+qoUMkezQeiVCc1v8anAxp+T9MJUXQKjEH6UrMJFtCBhASSewoWfYyyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RK2iU0jp; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eZn7dODM"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5414PmKH012575;
-	Thu, 1 May 2025 09:37:16 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RK2iU0jp"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UL3EHd021977;
+	Thu, 1 May 2025 09:37:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=IQ5UwL7a/qlNX/AYu
-	nSCEk7/ZRMUEI71r/DO7zPY7Fw=; b=eZn7dODM4+j0qf7f9tL01uHPuveugiAj5
-	oVm6QX+D/37r55QcmwKmhgJhu2Kgdo39JsaUZ4Mbw8c3Rirs4gMx/z2cJOy3xHxq
-	APmD1ogrbUXBxpyDUexot1suVcXnPklXmfZN1JzVFR2RGcTzuibpUZ21vz4RBdsC
-	p5+7tKjuxm31YS68Q5UhDoYGSqha+mbisbxXnFthZaUPXbxgsWZmsGwzCqzmlZ2J
-	EdhWctxljWtXMDuyOb2c3C69nNf7HnvSOo7w79K9QBye+AHnasj91pUZS4nDnnQ3
-	Qtnj35aIgUQ+1Lwjy6vggBTSs4micdH7z1mlYnA13n8GCPitjFe1A==
+	:mime-version:references:subject:to; s=pp1; bh=AquKFxP8l67OoaM9Z
+	z0xrfQap9EJ2IiwDoc+9rWGBDo=; b=RK2iU0jp/lWTs9uSJrZgOyHwhAmVvPwNS
+	hHzICziJ43LfzZ9u9APfbhBwMFJ+z8nRZOp4WOHGkVVleQb28L0S71uJNzB4n/Zo
+	9gv3Kss7p+Y/ai1mugpJ8ROeR6cZchy59lrS5fw2b/HlEoODr+L0kWoiFwXdRPp9
+	Q6vTcB15Bgr62ANYgEpVyEEJQaeLmJfMnaxbFGGz9a6fPlkQbJA/pBjXZgD1hmx6
+	RHK2QPVp0J/ankLG22q35kGuQXWKHSPAmHP3WSsUnJiri7oFxbytIDarGWuE8K3a
+	61ULi1cdJ/0TInphvP//YRzu3AOdTz0uBdzgM2OrSZg9/JVPOuDcQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bjas592m-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46buekjbk9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 09:37:16 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5419bFLq001185;
-	Thu, 1 May 2025 09:37:15 GMT
+	Thu, 01 May 2025 09:37:25 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5419bOhb005184;
+	Thu, 1 May 2025 09:37:24 GMT
 Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bjas592h-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46buekjbk5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 09:37:15 +0000 (GMT)
+	Thu, 01 May 2025 09:37:24 +0000 (GMT)
 Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5418aUGg016584;
-	Thu, 1 May 2025 09:37:15 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a70mbre-1
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5419EBFk016145;
+	Thu, 1 May 2025 09:37:23 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a70mbrn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 09:37:14 +0000
+	Thu, 01 May 2025 09:37:23 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5419bBN041091572
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5419bJaw21954850
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 1 May 2025 09:37:11 GMT
+	Thu, 1 May 2025 09:37:19 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1AF2820043;
-	Thu,  1 May 2025 09:37:11 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7B51220043;
+	Thu,  1 May 2025 09:37:19 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA08A20040;
-	Thu,  1 May 2025 09:37:07 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1DAF320040;
+	Thu,  1 May 2025 09:37:16 +0000 (GMT)
 Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com.com (unknown [9.124.221.47])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  1 May 2025 09:37:07 +0000 (GMT)
+	Thu,  1 May 2025 09:37:15 +0000 (GMT)
 From: Gautam Menghani <gautam@linux.ibm.com>
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         namhyung@kernel.org, mark.rutland@arm.com,
@@ -66,9 +66,9 @@ To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
 Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, maddy@linux.ibm.com
-Subject: [PATCH 3/4] perf python: Add evlist close and next methods
-Date: Thu,  1 May 2025 15:06:29 +0530
-Message-ID: <20250501093633.578010-4-gautam@linux.ibm.com>
+Subject: [PATCH 4/4] perf python: Add counting.py as example for counting perf events
+Date: Thu,  1 May 2025 15:06:30 +0530
+Message-ID: <20250501093633.578010-5-gautam@linux.ibm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250501093633.578010-1-gautam@linux.ibm.com>
 References: <20250501093633.578010-1-gautam@linux.ibm.com>
@@ -80,109 +80,78 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yyBUwlojeB4xEITTnv8pARp8CkFrYMXf
-X-Proofpoint-ORIG-GUID: mTS9J_dvBiI8nrm5vqITQ2Qlb91nc3ds
-X-Authority-Analysis: v=2.4 cv=LKNmQIW9 c=1 sm=1 tr=0 ts=681340cc cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=Mu-R3_ysuym7pKtYsCYA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA3MiBTYWx0ZWRfXwt7Ohp+kVF3k BQL4hf4trUWiAl4VTyzblWJiLP5p6DcbKhr+2orDlhu3XdFrCfxI7+QIavyS/yCb0+4X/+KNPZ+ JibQF14OG5WLLJrRKwTf1nKhYYAmYCGLva52A2ndYRxHKg4aVapHXYsbrPCC33NuTNGzm8UP+g0
- 93CrNU60CLBgmzbK2sWD8CMBC+y5n7Z2CtzTF87wypWC3N70W9/u0Sysz/iksNevVuizjbMQRfE dP1mNsOOArRofAeZVpA7sRWLX1UWFh9pxopvG4/+rE+Tv32Ttig4V1lgjo+R06NL0f/WrDb2sWq 8ipiX4nsSQBpR1ezE71oJaFggfo43HtnOcb9Z3ScEFkTjBEGzgQXhpXM0OrsFX997gZtXEGiGrd
- uXFCHKR+ENs2NTwjaarQ/rHlyOAH4Q4Pfbp8qn/qoCJ92CaLrpcv/YLvZ8wy4xE1CiQKMWaZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA3MiBTYWx0ZWRfX4ep+RS1nkGDH iQwwqG7jrir52dpfBhi2LBia4vZ2jGBSiF+B0fyNFECfwjm3JYrceivvkLS6OXVts0m0LZODuH6 r5MCMCGRA6sj1NOj9outZjj1tMKChCf28lm/jIPbfNL0TecblMR6Qy7wSP+uQFNKkRPssbLWbr/
+ 6gBXzoGdSD7fGwwYxpSseb2vDBObCTxIbjXQyoPvZNCYCAyJph8CO5m9nu/gtC75ER6Jx2zgv7u N/XKfXOBzQymSNjk/1VxV4in+zePqoID11SOB77uHcDpp1ETG+rHCJvltfAHnpLaeJUjbe9kKt5 bgrDBnIDqYHYElGP8RA8kmYL9as5KVwrH+37bJQowT7JplzA+USzdJ4aMhpSUqGegJT4M2GHlUy
+ 5VJl2IiHvYr7OKZBd5fCCOlxV1tHdMn1omm0JJsmiGU1RqLy7lOdxex+CaPYQyrBL4ybQ8Qh
+X-Authority-Analysis: v=2.4 cv=Io0ecK/g c=1 sm=1 tr=0 ts=681340d5 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=YI06EguIVAnxD8KhfcAA:9
+X-Proofpoint-ORIG-GUID: HZXWosbrsR__hhjxEQHClb4BplyKzekZ
+X-Proofpoint-GUID: Awrz7UgddSuikCZ4ScTR0SFfKhng096F
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-01_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0
- impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=950 clxscore=1015
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505010072
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 suspectscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505010072
 
-Add support for the evlist close and next methods. The next method
-enables iterating over the evsels in an evlist.
+Add counting.py - a python version of counting.c to demonstrate
+measuring and reading of counts for given perf events.
 
 Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 ---
- tools/perf/util/python.c | 47 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ tools/perf/python/counting.py | 41 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100755 tools/perf/python/counting.py
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 5a4d2c9aaabd..599cb37600f1 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1163,6 +1163,16 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
- 	return Py_None;
- }
- 
-+static PyObject *pyrf_evlist__close(struct pyrf_evlist *pevlist)
-+{
-+	struct evlist *evlist = &pevlist->evlist;
+diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.py
+new file mode 100755
+index 000000000000..0c58907bd8bf
+--- /dev/null
++++ b/tools/perf/python/counting.py
+@@ -0,0 +1,41 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++# -*- python -*-
++# -*- coding: utf-8 -*-
 +
-+	evlist__close(evlist);
++import perf
 +
-+	Py_INCREF(Py_None);
-+	return Py_None;
-+}
++def main():
++        cpus = perf.cpu_map()
++        thread_map = perf.thread_map(-1)
++        evlist = perf.evlist(cpus, thread_map)
 +
- static PyObject *pyrf_evlist__config(struct pyrf_evlist *pevlist)
- {
- 	struct record_opts opts = {
-@@ -1202,6 +1212,31 @@ static PyObject *pyrf_evlist__enable(struct pyrf_evlist *pevlist)
- 	return Py_None;
- }
- 
-+static PyObject *pyrf_evlist__next(struct pyrf_evlist *pevlist,
-+				   PyObject *args, PyObject *kwargs)
-+{
-+	struct evlist *evlist = &pevlist->evlist;
-+	PyObject *py_evsel;
-+	struct perf_evsel *pevsel;
-+	struct evsel *evsel;
-+	struct pyrf_evsel *next_evsel = PyObject_New(struct pyrf_evsel, &pyrf_evsel__type);
-+	static char *kwlist[] = { "evsel", NULL };
++        evsel1 = perf.evsel(type = perf.TYPE_SOFTWARE,
++                 config = perf.COUNT_SW_CPU_CLOCK,
++                 read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING,
++                 disabled=1)
++        evlist.add(evsel1)
 +
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist,
-+					 &py_evsel))
-+		return NULL;
++        evsel2 = perf.evsel(type = perf.TYPE_SOFTWARE,
++                 config = perf.COUNT_SW_TASK_CLOCK,
++                 read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING,
++                 disabled=1)
++        evlist.add(evsel2)
 +
-+	pevsel = (py_evsel == Py_None) ? NULL : &(((struct pyrf_evsel *)py_evsel)->evsel.core);
-+	pevsel = perf_evlist__next(&(evlist->core), pevsel);
-+	if (pevsel != NULL) {
-+		evsel = container_of(pevsel, struct evsel, core);
-+		next_evsel = container_of(evsel, struct pyrf_evsel, evsel);
-+		return (PyObject *) next_evsel;
-+	}
++        evlist.open()
++        evlist.enable()
 +
-+	return Py_None;
-+}
++        count = 100000
++        while count > 0:
++            count -= 1
 +
- static PyMethodDef pyrf_evlist__methods[] = {
- 	{
- 		.ml_name  = "all_cpus",
-@@ -1221,6 +1256,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
- 		.ml_flags = METH_VARARGS | METH_KEYWORDS,
- 		.ml_doc	  = PyDoc_STR("open the file descriptors.")
- 	},
-+	{
-+		.ml_name  = "close",
-+		.ml_meth  = (PyCFunction)pyrf_evlist__close,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("close the file descriptors.")
-+	},
- 	{
- 		.ml_name  = "poll",
- 		.ml_meth  = (PyCFunction)pyrf_evlist__poll,
-@@ -1263,6 +1304,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
- 		.ml_flags = METH_NOARGS,
- 		.ml_doc	  = PyDoc_STR("Enable the evsels in the evlist.")
- 	},
-+	{
-+		.ml_name  = "next",
-+		.ml_meth  = (PyCFunction)pyrf_evlist__next,
-+		.ml_flags = METH_VARARGS | METH_KEYWORDS,
-+		.ml_doc	  = PyDoc_STR("Return next evsel")
-+	},
- 	{ .ml_name = NULL, }
- };
- 
++        evlist.disable()
++        evsel = evlist.next(None)
++        while evsel != None:
++            counts = evsel.read(0, 0)
++            print(counts.val, counts.ena, counts.run)
++            evsel = evlist.next(evsel)
++        evlist.close()
++
++if __name__ == '__main__':
++    main()
 -- 
 2.49.0
 
