@@ -1,172 +1,113 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8471E5B68
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 May 2025 07:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E9E1DF98B;
+	Thu,  1 May 2025 09:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746082826; cv=none; b=ozbIW0b7IIOI+qQLFexY1x44i0OWzWSKW4yAljpjvaM1Z69m7POK9+Qc6xElMa0GcwRour5ZVpSyjYS2lXkPno4wFPeShdxsfyASWx21zcwS2qtpQfvtWahZAMWndMCAwp0CUXlTlAVqpNXy1QkodbKUOUJWnfqTrezDsYoYQvI=
+	t=1746092234; cv=none; b=NxvYWoUOWl0ujQlNKt0x4Xux6XieXlkcdrSmSPgRHm6hTblQwupPYl4d+Zv62JLIrbN78NuHRv3oOwi4DdTPfnFVY1CeJGHn1vsA24WH1ghI19Tcl/ElMaPn1ZiG3pMWrIshgDpuPYDwk8SGtialhuYI63AruF3ELOMiuw3waJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746082826; c=relaxed/simple;
-	bh=c8IIHBKOqP/8zRONOTaQ8sX55xLc+LG986tLPWZhOiQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=jfzJ/nYTMWKACtOlkrI5YkMQAr0qG7gYWOjbOQGtfDzapDvxLiWBcZraCdouEVNrN4aW6AVdoy1Auv/JvnExDZV80Uu7up3eCtET2EXx5IQQMUI3AzhDEBSTvNNOvCxAUM1irPJucQ54nw/ESu8lbR7o6DXLMJa5EwPMPneDEPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nBXWG/Rf; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1746092234; c=relaxed/simple;
+	bh=5TVxRuUsvxeKsl81HyL6zYDQvld+upRtFi070TXtXvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XHfFJTG6Xh4DSGILk4w48ob1JV+PUj/pDi/KJbqtw2YfZtFOPNnvZcuXJr8iFR7vh4qsFpatHINnXQ9CsAAT2kmvTgsTapOqlXbU8B68JwDHyq5M6BjcoNyB41KKHDM8smsEqPKhyBt2hYhdbHnAS7ZRFunkHGRb2KFBMyvvYvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pxQXTZxI; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nBXWG/Rf"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3087a704c6bso738790a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 May 2025 00:00:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746082819; x=1746687619; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O4YRrIcRlvenOuksykoyHqCdG2wzhEYXKqU9yvMfzTc=;
-        b=nBXWG/Rfgz1ItKBJ8V8iVRtat2gp+1NU3kklQuOgXhxE+Cg6hRi7+/KpotVGL/Buv6
-         lUEqyOi74XFtLVRMs47REoSEDFJG2PA9+8+M9kabm8tg5EZ8jpA1HReNncBLb1usSjAr
-         b+8yto7+Btg2YLDkpAWLnxO1dr3WV5PAE4DHAcL1NPRkeqX8+xQa69MfjGGqBYglTvrR
-         O7q1lRLmUTeNIydJUpsAPtgihezul8oc7XHCK+0tCXQ8o6i9qlcUDYeBMUyK50vMRL+y
-         +Vuq5CE41TH+ofGVBsVcs8RYe1KbMqdJQ7iiaJhusvOFYxeAZiT9ifEOeWOHKsh9Mokt
-         VeFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746082819; x=1746687619;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O4YRrIcRlvenOuksykoyHqCdG2wzhEYXKqU9yvMfzTc=;
-        b=Zr0RpZqG+FkTe3/2MgZ0zwhyCyRyjpRm+1yQejYx8oet09WMSCcXATNeMOrx/HsKWH
-         qYBtKcIeg1ImU27UhMWKImK+1IUX6H+5vQps1ZMQeAa6H2ZkIP/CFz5ntRRPVkxiVlT1
-         KvvMrg8gKeVOV5F78rwR1edYplTQTcrCB0rVpk4/qZf9p+tC0uLggI3O/snQYtkGAXVW
-         RAWuaz1LLv/w5aW/9yoNy/IVW6czETryyN0hQf3/HyudkJiaA82QTwZzD+J5Oc0butvW
-         r4BxdCAV59/KjxeZZmyeDD+wzejIZW3WDOnkrnBcXgJIPU+zNeNztCE+JpM0eUXAQllJ
-         0oCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPdP93NJFRGsTv+3vM1GAz1B1PUPZdugI24JVUZdFXlN+aIg1ZUz2sQypupaE9+4I9+IstiypHc2eX9NNck+Qh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ5kNHNa4y65UqGLTOFOBWyeSmmtNdx2NvS2qSqsnfuSXh4x3t
-	W5XL4BCGJJ9c6FSOOIsYgJRUbnuRePM0x1VLLol3kEzHWDaEX84vOhJaDcOzSIqetG8951I3bcd
-	KT9viqw==
-X-Google-Smtp-Source: AGHT+IFpl0+qcuf8ZtvMi3OotBvFMEe8ZOS4gDGfUKf8XAHd4j6NjjQqvkCBYrVSm/FN192i8J9X711d5Aw1
-X-Received: from pjbsv3.prod.google.com ([2002:a17:90b:5383:b0:308:6626:81c4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:274b:b0:2fe:a545:4c84
- with SMTP id 98e67ed59e1d1-30a41eb5a8cmr2109230a91.34.1746082819308; Thu, 01
- May 2025 00:00:19 -0700 (PDT)
-Date: Thu,  1 May 2025 00:00:03 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pxQXTZxI"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UL3FN8022002;
+	Thu, 1 May 2025 09:36:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=Vrq5euhucGh4sFveToiJoGlg63GGSwrwLyHPglf6w
+	vA=; b=pxQXTZxIp8M7UIz++wquPZQJ/+vTR/MTHCTUpYM1HT9Pw+5W6ND5O0u61
+	dAsqSqI7nwwmF6dpRQkFdrGxACuGAjqu0843m3Ckp/avA/oh/0vq7Qf5lLxx3MOK
+	HXWIqyxqtDf4OfSZsEj6v/QT8woGZIJQHxgZ/T3j8Gf+5tlJJO03zv4P8mJmdlK4
+	Kj/tjDkV0Ka2Yt8H0dtmVfUXyC6StzSHkcqud+RaJ9ekQIOxiYUQKHj5mnCVgHoG
+	Pac+wbhTaQOusSuA1QypxUUNrMfv7luve37ZEu/ZR02xG0P/qmi7apjDo5OrqLa2
+	Inh8u/mAscLf8urwMm8B1hlDSq2Yw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46buekjbhj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 09:36:49 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5419anO2004139;
+	Thu, 1 May 2025 09:36:49 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46buekjbhf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 09:36:49 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5415BH9F000675;
+	Thu, 1 May 2025 09:36:48 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469atpm7dj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 09:36:47 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5419ah2u56361412
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 09:36:43 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D477120043;
+	Thu,  1 May 2025 09:36:43 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5E69B20040;
+	Thu,  1 May 2025 09:36:40 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com.com (unknown [9.124.221.47])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 May 2025 09:36:40 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maddy@linux.ibm.com
+Subject: [PATCH 0/4] perf python: Add missing infra pieces for counting perf events
+Date: Thu,  1 May 2025 15:06:26 +0530
+Message-ID: <20250501093633.578010-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250501070003.22251-1-irogers@google.com>
-Subject: [PATCH v1] perf symbol-minimal: Fix double free in filename__read_build_id
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA3MiBTYWx0ZWRfXyRAvlHq8pW6F byIwUEfIm9mHBGoj4COIIYfYOSMy8QAeldpQPltv3j40aYu7jol0mDL6xy/YDe3obCqt0BM8krb zVjsErlcG9ToQxzgV/HbAPPeOxtniWGUS7CPBV0srIly4M2a2nJMYlb+pLBLS6+++6aDp4YL0b6
+ QrEE2Gtn7S8y4PKKDfbfWCm140HBqEJ7LSxhNGFBGI3haZTtrJYFv6zxJ+oRnMN13aH4SR/yvpQ iiENYMZfX8xKjV9aVcXGTJLpDYsCv2Mv4xzA3n2PJ/zbu5u4dT1TYXyL8EbzXIfzWq/3BbUSBFg OmsKiC21sEG8Woxvmns+tbrqKUVmilOzxVkA5dyK0YGN+8jWHbAysPe37QR1jv8g1PYMQFKsM9B
+ UxMA0aSqxJAnN02WdVm4M6IboJcE8FmSkH3a9bV59yraKNu7MgNDyvroqW9Aeppl2kUabNYt
+X-Authority-Analysis: v=2.4 cv=Io0ecK/g c=1 sm=1 tr=0 ts=681340b1 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=dt9VzEwgFbYA:10 a=Wi2F9hvkSztuHusd8C0A:9
+X-Proofpoint-ORIG-GUID: gGeeGpRApqZf9zMzzDR2y7A9TeYelspe
+X-Proofpoint-GUID: TdQzQYuP8WE8fEThWyb5_ghYPbQwRoAs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 suspectscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505010072
 
-Running the "perf script task-analyzer tests" with address sanitizer
-showed a double free:
-```
-FAIL: "test_csv_extended_times" Error message: "Failed to find required string:'Out-Out;'."
-=================================================================
-==19190==ERROR: AddressSanitizer: attempting double-free on 0x50b000017b10 in thread T0:
-    #0 0x55da9601c78a in free (perf+0x26078a) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
-    #1 0x55da96640c63 in filename__read_build_id tools/perf/util/symbol-minimal.c:221:2
+Add the missing infra code in the perf python bindings for measuring and
+reading the counter values for the given perf event. Demonstrate the
+usage of this with counting.py - a python version of counting.c
 
-0x50b000017b10 is located 0 bytes inside of 112-byte region [0x50b000017b10,0x50b000017b80)
-freed by thread T0 here:
-    #0 0x55da9601ce40 in realloc (perf+0x260e40) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
-    #1 0x55da96640ad6 in filename__read_build_id tools/perf/util/symbol-minimal.c:204:10
+Gautam Menghani (4):
+  perf python: Add support for perf_counts_values to return counter data
+  perf python: Add evsel read method
+  perf python: Add evlist close and next methods
+  perf python: Add counting.py as example for counting perf events
 
-previously allocated by thread T0 here:
-    #0 0x55da9601ca23 in malloc (perf+0x260a23) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
-    #1 0x55da966407e7 in filename__read_build_id tools/perf/util/symbol-minimal.c:181:9
+ tools/perf/python/counting.py |  42 +++++++++
+ tools/perf/util/python.c      | 162 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 203 insertions(+), 1 deletion(-)
+ create mode 100755 tools/perf/python/counting.py
 
-SUMMARY: AddressSanitizer: double-free (perf+0x26078a) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a) in free
-==19190==ABORTING
-FAIL: "invocation of perf script report task-analyzer --csv-summary csvsummary --summary-extended command failed" Error message: ""
-FAIL: "test_csvsummary_extended" Error message: "Failed to find required string:'Out-Out;'."
----- end(-1) ----
-132: perf script task-analyzer tests                                 : FAILED!
-```
-
-The buf_size if always set to phdr->p_filesz, but that may be 0
-causing a free and realloc to return NULL. This is treated in
-filename__read_build_id like a failure and the buffer is freed again.
-
-To avoid this problem only grow buf, meaning the buf_size will never
-be 0. This also reduces the number of memory (re)allocations.
-
-Fixes: b691f64360ec ("perf symbols: Implement poor man's ELF parser")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/symbol-minimal.c | 34 +++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
-
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index c6f369b5d893..d8da3da01fe6 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -147,18 +147,19 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- 			if (phdr->p_type != PT_NOTE)
- 				continue;
- 
--			buf_size = phdr->p_filesz;
- 			offset = phdr->p_offset;
--			tmp = realloc(buf, buf_size);
--			if (tmp == NULL)
--				goto out_free;
--
--			buf = tmp;
-+			if (phdr->p_filesz > buf_size) {
-+				buf_size = phdr->p_filesz;
-+				tmp = realloc(buf, buf_size);
-+				if (tmp == NULL)
-+					goto out_free;
-+				buf = tmp;
-+			}
- 			fseek(fp, offset, SEEK_SET);
--			if (fread(buf, buf_size, 1, fp) != 1)
-+			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
- 				goto out_free;
- 
--			ret = read_build_id(buf, buf_size, bid, need_swap);
-+			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
- 			if (ret == 0) {
- 				ret = bid->size;
- 				break;
-@@ -199,18 +200,19 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- 			if (phdr->p_type != PT_NOTE)
- 				continue;
- 
--			buf_size = phdr->p_filesz;
- 			offset = phdr->p_offset;
--			tmp = realloc(buf, buf_size);
--			if (tmp == NULL)
--				goto out_free;
--
--			buf = tmp;
-+			if (phdr->p_filesz > buf_size) {
-+				buf_size = phdr->p_filesz;
-+				tmp = realloc(buf, buf_size);
-+				if (tmp == NULL)
-+					goto out_free;
-+				buf = tmp;
-+			}
- 			fseek(fp, offset, SEEK_SET);
--			if (fread(buf, buf_size, 1, fp) != 1)
-+			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
- 				goto out_free;
- 
--			ret = read_build_id(buf, buf_size, bid, need_swap);
-+			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
- 			if (ret == 0) {
- 				ret = bid->size;
- 				break;
 -- 
-2.49.0.967.g6a0df3ecc3-goog
+2.49.0
 
