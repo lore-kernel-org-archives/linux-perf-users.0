@@ -1,253 +1,114 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ADF2AF14
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 May 2025 07:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D3426772A;
+	Fri,  2 May 2025 08:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171893; cv=none; b=WksH16BH+OswSWZdP+uMkuuQosSnM9rl8IC0RorSpwS01WLOFDIW735wRnG5uLKtJVQgbfzx9YkHL+HssMkcTD6QzfEZfHXCjX2ICh/AaURjS+dmHfx+pbNkwSfRBZfGKAkygTYEXGKVkg8bQc9ZwOHecSs+eh32H/48Bv0aSYk=
+	t=1746172957; cv=none; b=SsNGsBRXJZfNjBj2nlca3vZEuGbvN3I7SRrrLrzOeaE3tp8BZn43mf1SWIYNiu04HBLXibI4LRyX2YHVuLX70JMLW1Idv8qEOVu4OzWnPJQgHvdR6Kolvxin3w+DWKsBLBjGGMEe99ljp3HGaBSmm5f8l3HwQGKv1nkdRYM889U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171893; c=relaxed/simple;
-	bh=4rVSUduYYD8SNGpavEo1McfEh70G3wDGsbxxwOBYv8A=;
+	s=arc-20240116; t=1746172957; c=relaxed/simple;
+	bh=VrP6FYMiM8APrbbiFFr3vwipUq0BMzeGXIdgg8yPKw0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TOaxvwvq3uXHkRr8ej5dVS71DBtoYJ9tq40KJEYfeWT0e7lhgXhGlaBI5hutEisuSIJM1feV1CsHCO0uLl2/SAgErkFhqUWpRz3oUcVs4iLA8ydgm4NRPrrJ2k1LD54T2Awr6Yki320oNdXAyVu4ExdS8bi4SE+Cdofc1VZGBF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h/oLGHJ/; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LCHlu1zSYY41ig/48LvnpO9otB1H8qnK5lJAz2V6++HLw/UNq3c6aR9r71UgJfjDGbsy+AtpDOc80YBA+a7cdxtk3Xv3w2GG7KlqKU8a5xw35u3t9UPtw39myLGqHMyXhxviHVio+U1AdfuDH/o+ZZtfR1jfVUXrKkoKQxEE3Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o40ruDpd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h/oLGHJ/"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541LDof1022745;
-	Fri, 2 May 2025 07:44:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=PFTDWb
-	mpjqyNvorZ00qOZ1uq1aBoJ70rMvhghqTVrlw=; b=h/oLGHJ/3pmWiwDyKFvkd6
-	wWA3ChBFGvb+pUpo9v6oOiAobsvGUxAMabmk1g3c+6qp3TdNwcTyxtGEXQaza1zV
-	Ej3FOUS7zn26UKhYC56xIBgOHye0fTl5Pmd8kQ6kWJ5ipa3T2eLed7YRIqoHSy7S
-	lt0BWjTmLa8caL7Lpikfcu+sSVYjyvue8rh5SWp26EOlYkPSSpNarbJUvWuEDvL6
-	VeqnuqjUmnX5BWyXtI2FzUPuPlCXOezgpW+LEKsmxVi5jZ9XLcLlhQfe667MTh0e
-	u2c7h89eprW3Dal+kxvFPiMpzhq5qwUnMcn1f0jshEf4lgwbgORvMkgrnLHGorlA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c6vjmvsr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 07:44:43 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5427igvp021333;
-	Fri, 2 May 2025 07:44:42 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c6vjmvsg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 07:44:42 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5426fh0s000666;
-	Fri, 2 May 2025 07:44:41 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469atprvwh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 07:44:41 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5427ibbI51511576
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 07:44:37 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1CA6820040;
-	Fri,  2 May 2025 07:44:37 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D406F20043;
-	Fri,  2 May 2025 07:44:34 +0000 (GMT)
-Received: from li-e1dea04c-3555-11b2-a85c-f57333552245.ibm.com (unknown [9.124.221.245])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  2 May 2025 07:44:34 +0000 (GMT)
-Date: Fri, 2 May 2025 13:14:32 +0530
-From: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Athira Rajeev <atrajeev@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        Likhitha Korrapati <likhitha@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
- cpumap.c
-Message-ID: <wqewmdha3bx7pmxqwbna26qnl55fcejqsjs4b2zhuciddpb3b5@7ztolpf6erwo>
-References: <20250406163412.897313-1-likhitha@linux.ibm.com>
- <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
- <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
- <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com>
- <D1C1E5D6-085A-41D1-85AB-52809C956BFB@linux.ibm.com>
- <aAvKg8K2fyrZ6zy4@x1>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o40ruDpd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE92BC4CEE4;
+	Fri,  2 May 2025 08:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746172956;
+	bh=VrP6FYMiM8APrbbiFFr3vwipUq0BMzeGXIdgg8yPKw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o40ruDpdxuzYi5SlPXBVO3KE83CyehxDNrNO/541PgVjFTDFgkp9ttfsSywwoC2Xi
+	 deyF+fk2wjQxxc5XQRBVm8Bmt2O6KE/EWUyWPBtkP4DjmRVUsgvwR4qUU7TcNGYno2
+	 LrsDSCZuBZAWl/LYiTehIFOfFP/Ile60POceUApHmDdzreBk3ZrpTs99IMSeErgzEI
+	 qcVRENdvjn60dt64quynSDl7VztBTPTl/yjYLXHI6ByaM4mPy/wh1yniu8zkGauz6l
+	 KWZFS4mxzAp7qh9gzlauN/px1lSmL30l6NU2jcy73WKeezA7wFlGHek2h34pt4xuBA
+	 QpbqWIpAjreaA==
+Date: Fri, 2 May 2025 10:02:26 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+	peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, wei.liu@kernel.org,
+	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+	dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+Message-ID: <aBR8EoYkxaFHwZN2@gmail.com>
+References: <20250427092027.1598740-1-xin@zytor.com>
+ <20250427092027.1598740-3-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAvKg8K2fyrZ6zy4@x1>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA1OCBTYWx0ZWRfX4m1mmQcwxxjX 7PJbATbVI6JHd6OZrJmg/+HyH00Nir2mgxw2v2v28H65YXhjSWDzdFE/LfGNrs82w7WbmTqGB+n jZI4YStnh8EOVrYHofDvpNsQH4c1JWSeimGgtx42PyyhIOZZ3q45NUJagM9zCEAPZ1Y5XVWOAyM
- l3p695d+GcytBMrM6XStcXj2Xo9fJy4MnQuCKzhXDDWkry9gsMb4FiaaNGIfZeC/nJJYLxGIB5e 0atVaNrWoiRM6S2bFJ7y0+ZavZP9nUR+bgvUVLcsyEJC0sMzIVeX79PR7L3GNgriBnfNEcGLIkx rMEMdNj8HExvfzZDwOBkVsiimUaUGT+de9FI9O4eVuC736EUMvtdvt45t7SEFIO15pElZru39+d
- ThC+FY/02RzPcPTYo59+rXpskxsX33IGAmdat0U8Hp070DjIPcbNovdhmzudTP9qb1KUQxlW
-X-Authority-Analysis: v=2.4 cv=GI8IEvNK c=1 sm=1 tr=0 ts=681477eb cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=8Zd0U_MfKav0zEdrKIYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: nIkLRvl2A13TXS6hPaJD8YwMqIqOd-lF
-X-Proofpoint-ORIG-GUID: 7HHaU-Dxzzd2D6qhEdqCW3vSmqz6S2Sf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 suspectscore=0 adultscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020058
+In-Reply-To: <20250427092027.1598740-3-xin@zytor.com>
 
-On Fri, Apr 25, 2025 at 02:46:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Apr 25, 2025 at 08:19:02PM +0530, Athira Rajeev wrote:
-> > > On 14 Apr 2025, at 7:08 AM, Madhavan Srinivasan <maddy@linux.ibm.com> wrote:
-> > > On 4/7/25 5:38 PM, Venkat Rao Bagalkote wrote:
-> > >> On 07/04/25 12:10 am, Athira Rajeev wrote:
-> > >>>> On 6 Apr 2025, at 10:04 PM, Likhitha Korrapati <likhitha@linux.ibm.com> wrote:
-> 
-> > >>>> perf build break observed when using gcc 13-3 (FC39 ppc64le)
-> > >>>> with the following error.
-> 
-> > >>>> cpumap.c: In function 'perf_cpu_map__merge':
-> > >>>> cpumap.c:414:20: error: argument 1 range [18446744069414584320, 18446744073709551614] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
-> > >>>>   414 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> > >>>>       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >>>> In file included from cpumap.c:4:
-> > >>>> /usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
-> > >>>>   672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
-> > >>>>       |              ^~~~~~
-> > >>>> cc1: all warnings being treated as errors
-> 
-> > >>>> Error happens to be only in gcc13-3 and not in latest gcc 14.
-> > >>>> Even though git-bisect pointed bad commit as:
-> > >>>> 'commit f5b07010c13c ("libperf: Don't remove -g when EXTRA_CFLAGS are used")',
-> > >>>> issue is with tmp_len being "int". It holds number of cpus and making
-> > >>>> it "unsigned int" fixes the issues.
-> 
-> > >>>> After the fix:
-> 
-> > >>>>   CC      util/pmu-flex.o
-> > >>>>   CC      util/expr-flex.o
-> > >>>>   LD      util/perf-util-in.o
-> > >>>>   LD      perf-util-in.o
-> > >>>>   AR      libperf-util.a
-> > >>>>   LINK    perf
-> > >>>>   GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
-> 
-> > >>>> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
-> > >>> Looks good to me
-> 
-> > >>> Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> 
-> > >> Tested this patch on perf-tools-next repo, and this patch fixes the issue.
-> 
-> > >> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> 
-> > > Arnaldo, Namhyung,
-> 
-> > > can you consider pulling this fix? since it is breaking the build in gcc13-3 or
-> > > if you have any comments do let us know.
-> 
-> This isn't the only place in that file where this pattern exists:
-> 
-> ⬢ [acme@toolbx perf-tools-next]$ grep malloc tools/lib/perf/cpumap.c 
-> 	cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-> 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> 
-> struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-> {
->         RC_STRUCT(perf_cpu_map) *cpus;
->         struct perf_cpu_map *result;
-> 
->         if (nr_cpus == 0)
->                 return NULL;
-> 
->         cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-> 
-> 
-> int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
-> {
->         struct perf_cpu *tmp_cpus;
->         int tmp_len;
->         int i, j, k;
->         struct perf_cpu_map *merged;
-> 
->         if (perf_cpu_map__is_subset(*orig, other))
->                 return 0;
->         if (perf_cpu_map__is_subset(other, *orig)) {
->                 perf_cpu_map__put(*orig);
->                 *orig = perf_cpu_map__get(other);
->                 return 0;
->         }
-> 
->         tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
->         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 
-> 
-> struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
->                                              struct perf_cpu_map *other)
-> {
->         struct perf_cpu *tmp_cpus;
->         int tmp_len;
->         int i, j, k;
->         struct perf_cpu_map *merged = NULL;
-> 
->         if (perf_cpu_map__is_subset(other, orig))
->                 return perf_cpu_map__get(orig);
->         if (perf_cpu_map__is_subset(orig, other))
->                 return perf_cpu_map__get(other);
-> 
->         tmp_len = max(__perf_cpu_map__nr(orig), __perf_cpu_map__nr(other));
->         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 
-> I'm trying to figure out why its only in perf_cpu_map__merge() that this
-> triggers :-\
-> 
-> Maybe that max() call in perf_cpu_map__intersect() somehow makes the
-> compiler happy.
-> 
-> And in perf_cpu_map__alloc() all calls seems to validate it.
-> 
-> But wouldn't turning this into a calloc() be better?
-> 
-> Like:
-> 
-> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> index 4454a5987570cfbc..99d21618a252ac0e 100644
-> --- a/tools/lib/perf/cpumap.c
-> +++ b/tools/lib/perf/cpumap.c
-> @@ -411,7 +411,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
->         }
+
+* Xin Li (Intel) <xin@zytor.com> wrote:
+
+> index 94408a784c8e..13335a130edf 100644
+> --- a/arch/x86/include/asm/tsc.h
+> +++ b/arch/x86/include/asm/tsc.h
+> @@ -7,7 +7,81 @@
 >  
->         tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
-> -       tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> +       tmp_cpus = calloc(tmp_len, sizeof(struct perf_cpu));
->         if (!tmp_cpus)
->                 return -ENOMEM;
->  
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> 
-> And better, do the max size that the compiler is trying to help us
-> catch?
-> 
-> - Arnaldo
-Isn't it better to use perf_cpu_map__nr. That should fix this problem.
+>  #include <asm/cpufeature.h>
+>  #include <asm/processor.h>
+> -#include <asm/msr.h>
+> +
+> +/*
+> + * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
+> + * constraint has different meanings. For i386, "A" means exactly
+> + * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
+> + * it means rax *or* rdx.
+> + */
+> +#ifdef CONFIG_X86_64
+> +/* Using 64-bit values saves one instruction clearing the high half of low */
+> +#define DECLARE_ARGS(val, low, high)	unsigned long low, high
+> +#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
+> +#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
+> +#else
+> +#define DECLARE_ARGS(val, low, high)	u64 val
+> +#define EAX_EDX_VAL(val, low, high)	(val)
+> +#define EAX_EDX_RET(val, low, high)	"=A" (val)
+> +#endif
 
-One question I have, in perf_cpu_map__nr, the function is returning
-1 in case *cpus is NULL. Is it ok to do that? wouldn't it cause problems?
+Meh, this patch creates a duplicate copy of DECLARE_ARGS() et al in 
+<asm/tsc.h> now:
 
-Regards,
-Mukesh
+ arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
+ arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) u64 val
+ arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
+ arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) u64 val
+ arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
+ arch/x86/include/asm/tsc.h:#undef DECLARE_ARGS
+
+Which was both an undeclared change, bloats the code, causes various 
+problems, and is totally unnecessary to boot.
+
+Please don't do that ...
+
+Thanks,
+
+	Ingo
