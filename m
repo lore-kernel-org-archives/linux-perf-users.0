@@ -1,225 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49789253B71;
-	Fri,  2 May 2025 14:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCB014A09C
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 May 2025 15:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196447; cv=none; b=SWIYQp+L0q9OlplVbYArRL88502sLud8PoMRhfJyUL4lozrsUnoGOw5JU6PvkcMyy+wF2gH38TH0jQTprStbIvpRqIcegXu51kG8qbmGQuxxXlWIlex75cICXTr0PO9Fdm09KiR9cSMGn2w7F20Efz79epud0c73+sXKUAOQZSs=
+	t=1746198252; cv=none; b=kFnC1i6znQvbuIxuLI7RL4a9HwvOwGQcKRq500XDuJubQaXGDr05sp0EDpWAH7wjRziWuLr/EdrBTJIsF566EwPchB0rSIhUnCgnKLoqF9rAZDKDeAH4h7dHg0/WwXhZN/6h12gb9pargpy19p3XAjX0YI5OH23YxIRJoR3TK7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746196447; c=relaxed/simple;
-	bh=6xpTcm5i9h8w6CwoFRxZPxtoKJJ3BBCKGnmNa7Z2kh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h68RrAsZVc8fLKevKfnBDOkr/YP3vX3lI7TxqFD9EP+aZgdiYSaoE+EYW+V/isuR6+rjba2XKefMmnD1nGi1HGvlwY8EUrF5HG9MHMmzKAPhqKm9HgeS8qzhhxV51Ox+1vOABvANRYYdTKkldFBZlaou2LI5c0030CbWRbHbT5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Npe5tFXN; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746198252; c=relaxed/simple;
+	bh=ZfdAuZ4luE7ecRrrKYgU2xqiiinSC6V246gx5SGCqOU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NVEhfUynzDQZpQ5sx8Pv15Pep8+r4LogHGs9DriPzCaYUJwX8pZdZvUs3BgCi8RWPxM065x6hpteN/RYp95XSvrk0r7RteDjwUzNn5bpNDsO4feuFzhLdMPlKZ12uMefXm5pFEriaV5BRrNF02qWkH45HLXBUs595zyFCdKghKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dv9A1z3j; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Npe5tFXN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746196446; x=1777732446;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6xpTcm5i9h8w6CwoFRxZPxtoKJJ3BBCKGnmNa7Z2kh4=;
-  b=Npe5tFXNWCE2ydv1+lpRhtikkivi/XAwMXnMIKPnPQ5wuM+WFF8b4lqU
-   PXfISgifALZahW+OrIsEOUfaVmUCVxLtVp0+KxI1O3P2oiQSw6k882tyq
-   g4PfyRHulvqm9LF0l+I1uKpfeRX2D0+kjDDyy1u6m+7LK7zR/gU3/f7zA
-   2q9aWVRUMxxxu2OtWQR4o+uXLuGHP1nICenJJW7H+ZtArzbjGcUjsq4Cg
-   VyaT5fn+pxkTqrGHSggUb08MdL8nwgkjgS8dZ9HZsFKNkxz4mYpoKoLFf
-   b3KuGJ/wZkkcKVuXroOyTpLCDFoqcjecZjcKJotUuF848QheFn2yFf9le
-   Q==;
-X-CSE-ConnectionGUID: 1OP9sx5mQ2yjeVnYUhmvqA==
-X-CSE-MsgGUID: 2/LkVHk+TRWMuHCel1Lcig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47762474"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47762474"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:34:04 -0700
-X-CSE-ConnectionGUID: VxHvVA4GR1yhOEAvPb47UQ==
-X-CSE-MsgGUID: rx5pPAMZTRORyTUWVz/hDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="135634956"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:33:59 -0700
-Message-ID: <6c44fa0e-28ed-400e-aaf2-e0e0720d3811@intel.com>
-Date: Fri, 2 May 2025 07:33:55 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dv9A1z3j"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so2102007a91.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 May 2025 08:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746198251; x=1746803051; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FvHi4YFKCbuqsMQKI+TX+enTdCmUmo+3VNuon3agJYk=;
+        b=dv9A1z3jizHik41nuxffAzkDLEA/b64VBy1nyJHEQFPWZd1BZRwAMvaPDIG+UiKeCK
+         HksGDYnD8e0fkV3K3mqfa46ijcFQg5JgxlgiEM7vc5uxL4i9Rv2wAcUs3wS5QivNdBoT
+         +mAufLAiHS+HTbvODNl72H/5BZM3hHF/6PeYKKcHdZGtv1mR13dAl4hMS9wlcV0pL07k
+         ocMwfYc3BWRxC51L8ozdvkztMsojw14ZI28HCjSAD9zT1CJ6uYNLGeg9fDRPitmKdcxY
+         ptC1cLyYvHZmJPwqwYrsho7YkX0ikU1BDSef9pSZKhWpcWBA20MmS2jQAAo872PiM+Q5
+         UZBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746198251; x=1746803051;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FvHi4YFKCbuqsMQKI+TX+enTdCmUmo+3VNuon3agJYk=;
+        b=Ej4vkEyUHWMg3tAwYju8Q2FLqPtkUvpnY5LLAtL4ax41oVI4PN7zYcfCobOAOmE0Mz
+         woFwtX8ouCXL+w0kTY+m9R10qbh138Kb1FRPsILLKmomwEsYCWuEWTwfOGn9RK+ye4E9
+         l9u/4RSGz/Br0EBHbWpognDjym5dwNvCg6atYFVJKnngztoFcw/4IHsXfofiKHZSvcEZ
+         RzwxdgcTN3FCyODkVy82XerxkI1HBrxX7gnqS76PJSLfDtK3Vwk9aTXITzNp+e5Qocg2
+         dSaWAQCDKC6jKCndTNUOVEmETmuWkOoQXVhq+9FJ3qnSDpaG/IPIKoOkATf97jv00ijR
+         DwPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgrh40v4SFOZ/eRLJfUMtyjTDaj18XwPMk6OPmTbXTzMdp++seUuN5K2QUnF3cFAzJgQA5+99IvpFtHYdx+OVg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEfYP5F2TC9gGQ++q3oyzkoaFYOPiGhX9dvbLuhn5fIPtA5RnW
+	dZJ0gT9kPI3tzgj9SNdNH6Tg6xPF+Mu+zQVucRlb4EFBXIMbPygxLS3c/OadUEPsWo8kykafpZy
+	9Qg==
+X-Google-Smtp-Source: AGHT+IEq9Ml4E8TtIdCStMt4qKKAbF1zNt+6heIhpZJLGDBHf9KVgBdqXSANU9yLOCS831wxgusg2lp6zCk=
+X-Received: from pjbpt18.prod.google.com ([2002:a17:90b:3d12:b0:2fc:11a0:c549])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:56c8:b0:308:1ee5:4247
+ with SMTP id 98e67ed59e1d1-30a4e6b457dmr4586669a91.32.1746198250755; Fri, 02
+ May 2025 08:04:10 -0700 (PDT)
+Date: Fri, 2 May 2025 08:04:09 -0700
+In-Reply-To: <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
- Marcelo Tosatti <mtosatti@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>,
- Petr Tesarik <ptesarik@suse.com>, Nicolas Saenz Julienne
- <nsaenz@amazon.com>, Frederic Weisbecker <frederic@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.amakhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
- Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Naveen N Rao <naveen@kernel.org>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Miguel Ojeda <ojeda@kernel.org>, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>, Rong Xu <xur@google.com>,
- Rafael Aquini <aquini@redhat.com>, Song Liu <song@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Benjamin Berg <benjamin.berg@intel.com>,
- Vishal Annapurve <vannapurve@google.com>,
- Randy Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20250429113242.998312-1-vschneid@redhat.com>
- <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
- <20250430132047.01d48647@gandalf.local.home>
- <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
- <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250426001355.1026530-1-seanjc@google.com> <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
+Message-ID: <aBTe6dpaQs6bmFwh@google.com>
+Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
+ with vCPU's value.
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Seth Forshee <sforshee@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/2/25 04:22, Peter Zijlstra wrote:
-> On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
-> 
->> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
->> You can go buy the Intel hardware off the shelf today.
-> To be fair, the Intel RAR thing is pretty horrific 🙁 Definitely
-> sub-par compared to the AMD and ARM things.
-> 
-> Furthermore, the paper states it is a uarch feature for SPR with no
-> guarantee future uarchs will get it (and to be fair, I'd prefer it if
-> they didn't).
+On Sun, Apr 27, 2025, Dapeng Mi wrote:
+> On 4/26/2025 8:13 AM, Sean Christopherson wrote:
+> Currently we have this Sean's fix, only the guest PEBS event bits of
+> IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
+> change global_ctrl guest value calculation to this.
+>=20
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 09d2d66c9f21..5bc56bb616ec 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
+> *intel_guest_get_msrs(int *nr, void *data)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arr[global_ctrl] =3D (struct p=
+erf_guest_switch_msr){
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 .msr =3D MSR_CORE_PERF_GLOBAL_CTRL,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 .host =3D intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_ma=
+sk,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
 
-I don't think any of that is set in stone, fwiw. It should be entirely
-possible to obtain a longer promise about its availability.
+Hmm, that's not as clear cut.  PEBS needs to be disabled because leaving it=
+ enabled
+will crash the guest.  For the counter itself, unless leaving it enabled br=
+eaks
+perf and/or degrades the sampling, I don't think there's an obvious right/w=
+rong
+approach.
 
-Or ask that AMD and Intel put their heads together in their fancy new
-x86 advisory group and figure out a single way forward. If you're right
-that RAR stinks and INVLPGB rocks, then it'll be an easy thing to advise.
-
-> Furthermore, I suspect it will actually be slower than IPIs for anything
-> with more than 64 logical CPUs due to reduced parallelism.
-
-Maybe my brain is crusty and I need to go back and read the spec, but I
-remember RAR using the normal old APIC programming that normal old TLB
-flush IPIs use. So they have similar restrictions. If it's inefficient
-to program a wide IPI, it's also inefficient to program a RAR operation.
-So the (theoretical) pro is that you program it like an IPI and it slots
-into the IPI code fairly easily. But the con is that it has the same
-limitations as IPIs.
-
-I was actually concerned that INVLPGB won't be scalable. Since it
-doesn't have the ability to target specific CPUs in the ISA, it
-fundamentally need to either have a mechanism to reach all CPUs, or some
-way to know which TLB entries each CPU might have.
-
-Maybe AMD has something super duper clever to limit the broadcast scope.
-But if they don't, then a small range flush on a small number of CPUs
-might end up being pretty expensive, relatively.
-
-I don't think this is a big problem in Rik's series because he had a
-floor on the size of processes that get INVLPGB applied. Also, if it
-turns out to be a problem, it's dirt simple to revert back to IPIs for
-problematic TLB flushes.
-
-But I am deeply curious how the system will behave if there are a
-boatload of processes doing modestly-sized INVLPGBs that only apply to a
-handful of CPUs on a very large system.
-
-AMD and Intel came at this from very different angles (go figure). The
-designs are prioritizing different things for sure. I can't wait to see
-both of them fighting it out under real workloads.
+E.g. if the host wants to profile host and guest, then keeping the count ru=
+nning
+while the guest is active might be a good thing.  It's still far, far from
+perfect, as a counter that overflows when the guest is active won't generat=
+e a
+PEBS record, but without digging further, it's not obvious that even that f=
+law
+is overall worse than always disabling the counter.
