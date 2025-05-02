@@ -1,97 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB511EEE6;
-	Fri,  2 May 2025 16:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD42B1EEE6;
+	Fri,  2 May 2025 16:33:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746203540; cv=none; b=cQoLUWc18Nuyrtq9xix0ydUsN2yzgiUJrOocJTBm1JeY7+0nUn2JYPLe8zdnN4Uuf9crRYSPT3gd9n2bE40KEvYodCuT6H9QeQbWEqClIBIDMlC1sDAv03awi3bKP1l3R6MiTMB/eIW7a66vzA6AoYUezZfK+A5O81eT55zR5rg=
+	t=1746203592; cv=none; b=k1qSjRGFLO/E994j067aTQzGOtXS0siK1ZBlQt71SDAlNwY+67GS98I0LVE45kGtp8/RCNPluCxvkEJEd8m+4LXGWZemWsvlEho4ef1gKTjqrutDQragyDhzItSK1/lSNVXL4oM/WC7aQ63l73kds8+cZ+XKyqx+19gyn0+wnfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746203540; c=relaxed/simple;
-	bh=Ex0V+mdFa3wWpJAaWC1vaJo/G3UpVI7H7KM2zjkElgY=;
+	s=arc-20240116; t=1746203592; c=relaxed/simple;
+	bh=gGhrIz8xXo4FBtKTWnukSWjz2WxOsCyy6kCNnvJY+Hs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RT2VsUFE1LgT3Cvi9LsxgQmxM6K6QDgvsEaMjGr17CCfQF0A6rMrgg0uzhp99W/1RvZlK1jSJAAGt2UfXBuD5Joq6EPBGiK0SPEUhrAMhPlg8F2XAgZyMV8LvaWSr5fxxs2mG9V5UILIhgOeKZk/wtQ4Pexk/s/uujgolz32WjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jhg68QUQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4ewGe11c8YiChraAT8p2HccI7VRvVjZipXc5XtCRz/NUoOhlLA1/xcy/X5/VG0BJ4qO6FtT4vE8+TE7cTxEy/k8zQRS0VKsZT+lHDh5DGS1Y+FMk5diIgkMVo4/gvXb1ofytbZ6VgVcJXL9T+gR8jvsz6ts4UWiSrx42fw5jMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAo+Oz9P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jhg68QUQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67333C4CEE4;
-	Fri,  2 May 2025 16:32:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAo+Oz9P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE99BC4CEE4;
+	Fri,  2 May 2025 16:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746203539;
-	bh=Ex0V+mdFa3wWpJAaWC1vaJo/G3UpVI7H7KM2zjkElgY=;
+	s=k20201202; t=1746203590;
+	bh=gGhrIz8xXo4FBtKTWnukSWjz2WxOsCyy6kCNnvJY+Hs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jhg68QUQtxblsPCPDZy0W3PY4N6N4VryqoBPW/laCo3PdZSBBGSnrDl9ebVwWj1gi
-	 FTZalzRRM9FeRkaBq0daBglrvmN2tckWOmuDVIsy4IQAWkZx9YTHaJEYnLicq1PGqc
-	 OnHbIY6S4xP6b9GFSUoPaSYWiXUrpkwOpNaZOZG9T0NTW17dKLp9pooppNAkRAYlQb
-	 GhbWLATUy5na2LmF3kcGdNMx04eW5EHfzY9KIuRUt3pscKJ2dRlEaXGcCmaWwTvyA7
-	 U74DBQ4TjSAZNNYFk5mT4v/mDyWzvrCsBN8XyEmCchrIVtduj74X1bjUW9WAG5TFa5
-	 Qb9cJer05t2Qg==
-Date: Fri, 2 May 2025 13:32:17 -0300
+	b=HAo+Oz9Pq0jIsklcz19DgnsHi3Xz2doGqzmqbED0UXb3ZJFccvU1w3YiY3eesIXdl
+	 SPikIGJckbVCRZhIT0LdaDgGbJC4h1ch7B3kPv+KPS3zXhamj07grm0mVAJTvb9sFT
+	 VFjG0LtD/m+PIJ3nj83FoiU3bZHzqw9DHCycX2JrelZ99uVtT7ZUUSQhM123boZsLP
+	 GYYacEOwVmHwCPwUc0pKzjh1RZJCFUTHQxu6/r5nkgHBi8LamfB+qADWsmyl+SH0cn
+	 plCETHnmpGCVoCBmQN2/PGqmoQRmWAcCDpKVepn7HsnKrgLNjANwtRAehWTB7YgDMA
+	 ep7Xju5+0kugw==
+Date: Fri, 2 May 2025 13:33:07 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf symbol-minimal: Fix double free in
- filename__read_build_id
-Message-ID: <aBTzkQctM8p2HsVw@x1>
-References: <20250501070003.22251-1-irogers@google.com>
- <aBPYt1G3VpLI5qBa@google.com>
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Joe Mario <jmario@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: DW_AT_comp_dir and O= usage not working with objdump -dS, perf
+ probe, etc
+Message-ID: <aBTzw5t5u9CLIqhI@x1>
+References: <aBKziq9dr_EsWLuZ@x1>
+ <8046e5bb-06d4-47dd-ad08-deef63a7e734@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aBPYt1G3VpLI5qBa@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8046e5bb-06d4-47dd-ad08-deef63a7e734@t-8ch.de>
 
-On Thu, May 01, 2025 at 01:25:27PM -0700, Namhyung Kim wrote:
-> Hi Ian,
+On Thu, May 01, 2025 at 08:59:39AM +0200, Thomas Weiﬂschuh wrote:
+> Hi Arnaldo,
 > 
-> On Thu, May 01, 2025 at 12:00:03AM -0700, Ian Rogers wrote:
-> > Running the "perf script task-analyzer tests" with address sanitizer
-> > showed a double free:
-> > ```
-> > FAIL: "test_csv_extended_times" Error message: "Failed to find required string:'Out-Out;'."
-> > =================================================================
-> > ==19190==ERROR: AddressSanitizer: attempting double-free on 0x50b000017b10 in thread T0:
-> >     #0 0x55da9601c78a in free (perf+0x26078a) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
-> >     #1 0x55da96640c63 in filename__read_build_id tools/perf/util/symbol-minimal.c:221:2
-> > 
-> > 0x50b000017b10 is located 0 bytes inside of 112-byte region [0x50b000017b10,0x50b000017b80)
-> > freed by thread T0 here:
-> >     #0 0x55da9601ce40 in realloc (perf+0x260e40) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
-> >     #1 0x55da96640ad6 in filename__read_build_id tools/perf/util/symbol-minimal.c:204:10
-> > 
-> > previously allocated by thread T0 here:
-> >     #0 0x55da9601ca23 in malloc (perf+0x260a23) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
-> >     #1 0x55da966407e7 in filename__read_build_id tools/perf/util/symbol-minimal.c:181:9
-> > 
-> > SUMMARY: AddressSanitizer: double-free (perf+0x26078a) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a) in free
-> > ==19190==ABORTING
-> > FAIL: "invocation of perf script report task-analyzer --csv-summary csvsummary --summary-extended command failed" Error message: ""
-> > FAIL: "test_csvsummary_extended" Error message: "Failed to find required string:'Out-Out;'."
-> > ---- end(-1) ----
-> > 132: perf script task-analyzer tests                                 : FAILED!
-> > ```
-> > 
-> > The buf_size if always set to phdr->p_filesz, but that may be 0
-> > causing a free and realloc to return NULL. This is treated in
-> > filename__read_build_id like a failure and the buffer is freed again.
-> > 
-> > To avoid this problem only grow buf, meaning the buf_size will never
-> > be 0. This also reduces the number of memory (re)allocations.
+> On 2025-04-30 20:34:34-0300, Arnaldo Carvalho de Melo wrote:
+> > 	I noticed recently while testing some other patches that
+> > disassembling with objdump -dS didn't work when building the kernel with
+> > O= as it sets it to the build dir, not to where the sources are, for
+> > instance:
 > 
-> Thanks for fixing this!
+> <snip>
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > I haven't checked, ran out of time today, but I think this may be
+> > involved:
+> > 
+> > commit 97282e6d380db8a07120fe1b794ac969ee4a3b5c
+> > Author: Thomas Weiﬂschuh <linux@weissschuh.net>
+> > Date:   Sat Mar 22 10:03:16 2025 +0100
+> > 
+> >     x86: drop unnecessary prefix map configuration
+> 
+> It should be caused by this one:
+> 
+> commit cacd22ce69585a91c386243cd662ada962431e63
+> Author: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Date:   Sat Mar 15 14:20:14 2025 +0100
+> 
+>     kbuild: make all file references relative to source root
+> 
+> 
+> There is already another report about objdump here:
+> https://lore.kernel.org/lkml/aBEttQH4kimHFScx@intel.com/
+> 
+> Let's continue the discussion there.
 
-Thanks, applied to perf-tools-next,
+Thanks, I'll follow that discussion then.
 
 - Arnaldo
