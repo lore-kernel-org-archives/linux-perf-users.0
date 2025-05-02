@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B13A25D203;
-	Fri,  2 May 2025 16:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887019D081;
+	Fri,  2 May 2025 16:27:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202692; cv=none; b=R8wq9mdfyrA7uYn2s2NlqK4zlak3/A2AjnCTjXCjH5mEt9qrV+6AruaFzZ4vO8Cwe0ymDsGTVCOIbTe4DDkuGzXj4rN0JM30nCcJFvsJCYGulih4/AWXpf3r/pdAYvfqtdKMqNAgeo5BIU+0QeduFDCxoTxgfhQD6tz73JXiag4=
+	t=1746203240; cv=none; b=ZNWA+tJC2uS3iASekpFGG3sv/QQxjkiQa4whtFGBv+9padIOBapfkJVlymT6K9ltJj7Xjyc012u0jE4SSSiY4DU6Obe1P5hgMb+Ai6y85yu3Lfx7NtimpTbWCBV6KbORD7yfIpBKUE2KAlYbMo3QD2tSrn8yANL0AFtVUMCmAHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202692; c=relaxed/simple;
-	bh=NUuvAkF9Yp4UdF79uBK6uSEGxsRQE3x35b21NmErHh8=;
+	s=arc-20240116; t=1746203240; c=relaxed/simple;
+	bh=XMB5Gz0uzjZYtHTuXzVR/zhdVlhFwhyEhphtCUKQsfI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZwRNCK80mz/Dg2G6nsnIvPq7qUxKvMELBIwBIvrBHn3QX4GACKER+DkdDUzWJI3x028xfj9w3/HvjEZsnqZASIUJ1Yt4R1Z1v1IKRXEg/RZqD2KiT20Om1DkV9DE2hm05lTGk9J23B18cs/P/1LdvqHJO84SX4Xu0t5xKSZLrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2wwG93D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nIxS+nKBqt2CozqDLw7fi6orM8Uo5sGGJCNlPZAKB4WAa05wXn7npR53QVCses+NF5Wc3q2Ieg3fNhHmM1boitj1Dn4tTqrKH/8FN3qcY79p1NwY3brLKc7EKXPQDi9F7UDXmVpAYVSSlYvYPLWCZV6nqm/S6RjhYfdiIa5G0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUQDmuBM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2wwG93D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB21FC4CEE4;
-	Fri,  2 May 2025 16:18:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUQDmuBM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2509C4CEE4;
+	Fri,  2 May 2025 16:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746202692;
-	bh=NUuvAkF9Yp4UdF79uBK6uSEGxsRQE3x35b21NmErHh8=;
+	s=k20201202; t=1746203237;
+	bh=XMB5Gz0uzjZYtHTuXzVR/zhdVlhFwhyEhphtCUKQsfI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y2wwG93DNB5pyTNJMkIfTTGx+OwnKLxbz5opmCaM5I9NyPPh8mTzFWuStoALRPdM8
-	 fJeqsx4W+CckDRdOBm2+YKrEQVvjosN4mZBsPv+vPZ/gX5Y6TdTvziOA2RTDzgwQE1
-	 JGX0yAW9hjct4bYssQWr1L4499Fu382V4xm0XYlTcn9TZtUexIIuAhUvhCYvRJ92aL
-	 nYCY9MAf8PixMw/sEj6sRnfTQBydpGdXNwlO+teGkRKf6TuN498rSljcPWApEopoEs
-	 WHCZUBK+kIykvNnSeygjG5oYxvN8WRuD/QKgHf+QlqY+hAqtniEqa5l8a/i7jcoLgv
-	 XCgVEjb4uHpmw==
-Date: Fri, 2 May 2025 13:18:09 -0300
+	b=TUQDmuBMz853IiK9HNFGj6U7ttRzxHIxniPvIVI4D/SP67dIy4HzhHRd8C5XtvnUH
+	 8aFJqjoKzDNb1ap9uISuvyjUSz22el7lxP8x24fGsU0mgwgygRxAazfZcLta8SKIOc
+	 16QRTaaAeUUprV0IJS8cAD8b4EjTstqto5372aDBle0uIFliNqUhIfNFnaN5HiJ87n
+	 M8nMtNttWfqGKU1P7Eberj3D+JfFk613YVpjjjtpWRAkRZIVuXvbbUYLD/oxTn9UY+
+	 mzKgH6khmQUzdesVZ3/tx89PbQqjPKshu9LbysnNJCWug/4YgmHCh/fw6goH6lO8Nq
+	 R98TSstmRFwmA==
+Date: Fri, 2 May 2025 13:27:14 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -37,7 +37,7 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	linux-perf-users@vger.kernel.org,
 	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
 Subject: Re: [PATCH 08/11] perf hist: Hide unused mem stat columns
-Message-ID: <aBTwQeO1RwS7_jLk@x1>
+Message-ID: <aBTyYv_yXCPkn2d0@x1>
 References: <20250430205548.789750-1-namhyung@kernel.org>
  <20250430205548.789750-9-namhyung@kernel.org>
 Precedence: bulk
@@ -65,6 +65,48 @@ On Wed, Apr 30, 2025 at 01:55:45PM -0700, Namhyung Kim wrote:
 >   #
 >       44.85%    21.1%  30.7%  48.3%  swapper
 >       26.82%    98.8%   0.3%   0.9%  netsli-prober
+
+/me curious about this "Other" column.
+
+Maps to MEM_STAT_OP_OTHER, that comes from mem_stat_index, that comes
+from:
+
+int mem_stat_index(const enum mem_stat_type mst, const u64 val)
+{
+        union perf_mem_data_src src = {
+                .val = val,
+        };
+
+                int idx = mem_stat_index(hists->mem_stat_types[i],
+                                         mem_info__const_data_src(mi)->val);
+
+struct mem_info *mi
+
+
+union perf_mem_data_src {
+        __u64 val;
+        struct {
+                __u64   mem_op:5,       /* type of opcode */
+                        mem_lvl:14,     /* memory hierarchy level */
+                        mem_snoop:5,    /* snoop mode */
+                        mem_lock:2,     /* lock instr */
+                        mem_dtlb:7,     /* tlb access */
+                        mem_lvl_num:4,  /* memory hierarchy level number */
+                        mem_remote:1,   /* remote */
+                        mem_snoopx:2,   /* snoop mode, ext */
+                        mem_blk:3,      /* access blocked */
+                        mem_hops:3,     /* hop level */
+                        mem_rsvd:18;
+        };
+};
+
+As the percentage for "Other" is so high I think some other patch in
+this series will elucidate that :-)
+
+Lemme continue testing...
+
+- Arnaldo
+
 >        7.19%    51.7%  13.7%  34.6%  perf
 >        5.81%    89.7%   2.2%   8.1%  qemu-system-ppc
 >        4.77%   100.0%   0.0%   0.0%  notifications_c
@@ -90,32 +132,120 @@ On Wed, Apr 30, 2025 at 01:55:45PM -0700, Namhyung Kim wrote:
 >        5.30%   100.0%  Chrome_ChildIOT
 >        3.17%   100.0%  Isolated Web Co
 >        ...
-
-  # grep "model name" -m1 /proc/cpuinfo
-  model name    : AMD Ryzen 9 9950X3D 16-Core Processo
-  # perf mem report -F overhead,op,comm --stdio
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'cycles:P'
-  # Total weight : 2637
-  # Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc
-  #
-  #           ------ Mem Op -------
-  # Overhead     Load  Store  Other  Command
-  # ........  .....................  ...............
-  #
-      61.02%    14.4%  25.5%  60.1%  swapper
-       5.61%    26.4%  13.5%  60.1%  Isolated Web Co
-       5.50%    21.4%  29.7%  49.0%  perf
-       4.74%    27.2%  15.2%  57.6%  gnome-shell
-       4.63%    33.6%  11.5%  54.9%  mdns_service
-       4.29%    28.3%  12.4%  59.3%  ptyxis
-       2.16%    24.6%  19.3%  56.1%  DOM Worker
-       0.99%    23.1%  34.6%  42.3%  firefox
-       0.72%    26.3%  15.8%  57.9%  IPC I/O Parent
-       0.61%    12.5%  12.5%  75.0%  kworker/u130:20
-       0.61%    37.5%  18.8%  43.8%  podman
-       0.57%    33.3%   6.7%  60.0%  Timer
-       0.53%    14.3%   7.1%  78.6%  KMS thread
-       0.49%    30.8%   7.7%  61.5%  kworker/u130:3-
-       0.46%    41.7%  33.3%  25.0%  IPDL Background
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/ui/hist.c   | 35 +++++++++++++++++++++++++++++++++--
+>  tools/perf/util/hist.c |  2 ++
+>  tools/perf/util/hist.h |  1 +
+>  3 files changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> index 427ce687ad815a62..661922c4d7863224 100644
+> --- a/tools/perf/ui/hist.c
+> +++ b/tools/perf/ui/hist.c
+> @@ -178,6 +178,9 @@ int hpp__fmt_mem_stat(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *
+>  	for (int i = 0; i < MEM_STAT_LEN; i++) {
+>  		u64 val = he->mem_stat[mem_stat_idx].entries[i];
+>  
+> +		if (hists->mem_stat_total[mem_stat_idx].entries[i] == 0)
+> +			continue;
+> +
+>  		ret += hpp__call_print_fn(hpp, print_fn, fmtstr, 100.0 * val / total);
+>  	}
+>  
+> @@ -405,12 +408,31 @@ static int hpp__header_mem_stat_fn(struct perf_hpp_fmt *fmt, struct perf_hpp *hp
+>  	int ret = 0;
+>  	int len;
+>  	enum mem_stat_type mst = hpp__mem_stat_type(fmt);
+> +	int mem_stat_idx = -1;
+> +
+> +	for (int i = 0; i < hists->nr_mem_stats; i++) {
+> +		if (hists->mem_stat_types[i] == mst) {
+> +			mem_stat_idx = i;
+> +			break;
+> +		}
+> +	}
+> +	assert(mem_stat_idx != -1);
+>  
+> -	(void)hists;
+>  	if (line == 0) {
+>  		int left, right;
+>  
+> -		len = fmt->len;
+> +		len = 0;
+> +		/* update fmt->len for acutally used columns only */
+> +		for (int i = 0; i < MEM_STAT_LEN; i++) {
+> +			if (hists->mem_stat_total[mem_stat_idx].entries[i])
+> +				len += MEM_STAT_PRINT_LEN;
+> +		}
+> +		fmt->len = len;
+> +
+> +		/* print header directly if single column only */
+> +		if (len == MEM_STAT_PRINT_LEN)
+> +			return scnprintf(hpp->buf, hpp->size, "%*s", len, fmt->name);
+> +
+>  		left = (len - strlen(fmt->name)) / 2 - 1;
+>  		right = len - left - strlen(fmt->name) - 2;
+>  
+> @@ -423,10 +445,14 @@ static int hpp__header_mem_stat_fn(struct perf_hpp_fmt *fmt, struct perf_hpp *hp
+>  				 left, graph_dotted_line, fmt->name, right, graph_dotted_line);
+>  	}
+>  
+> +
+>  	len = hpp->size;
+>  	for (int i = 0; i < MEM_STAT_LEN; i++) {
+>  		int printed;
+>  
+> +		if (hists->mem_stat_total[mem_stat_idx].entries[i] == 0)
+> +			continue;
+> +
+>  		printed = scnprintf(buf, len, "%*s", MEM_STAT_PRINT_LEN,
+>  				    mem_stat_name(mst, i));
+>  		ret += printed;
+> @@ -1214,6 +1240,11 @@ int perf_hpp__alloc_mem_stats(struct perf_hpp_list *list, struct evlist *evlist)
+>  		if (hists->mem_stat_types == NULL)
+>  			return -ENOMEM;
+>  
+> +		hists->mem_stat_total = calloc(nr_mem_stats,
+> +					       sizeof(*hists->mem_stat_total));
+> +		if (hists->mem_stat_total == NULL)
+> +			return -ENOMEM;
+> +
+>  		memcpy(hists->mem_stat_types, mst, nr_mem_stats * sizeof(*mst));
+>  		hists->nr_mem_stats = nr_mem_stats;
+>  	}
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 7759c1818c1ad168..afc6855327ab0de6 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -354,6 +354,7 @@ static int hists__update_mem_stat(struct hists *hists, struct hist_entry *he,
+>  
+>  		assert(0 <= idx && idx < MEM_STAT_LEN);
+>  		he->mem_stat[i].entries[idx] += period;
+> +		hists->mem_stat_total[i].entries[idx] += period;
+>  	}
+>  	return 0;
+>  }
+> @@ -3054,6 +3055,7 @@ static void hists_evsel__exit(struct evsel *evsel)
+>  
+>  	hists__delete_all_entries(hists);
+>  	zfree(&hists->mem_stat_types);
+> +	zfree(&hists->mem_stat_total);
+>  
+>  	list_for_each_entry_safe(node, tmp, &hists->hpp_formats, list) {
+>  		perf_hpp_list__for_each_format_safe(&node->hpp, fmt, pos) {
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 3990cfc21b1615ae..fa5e886e5b04ec9b 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -135,6 +135,7 @@ struct hists {
+>  	int			nr_hpp_node;
+>  	int			nr_mem_stats;
+>  	enum mem_stat_type	*mem_stat_types;
+> +	struct he_mem_stat	*mem_stat_total;
+>  };
+>  
+>  #define hists__has(__h, __f) (__h)->hpp_list->__f
+> -- 
+> 2.49.0.906.g1f30a19c02-goog
