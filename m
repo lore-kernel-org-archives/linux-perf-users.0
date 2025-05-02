@@ -1,238 +1,176 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A7E205AB9;
-	Fri,  2 May 2025 10:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094E924167C;
+	Fri,  2 May 2025 10:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181825; cv=none; b=MnnfxOBdN+UNldrwyssrAw5tvEevjmf+VY5F+y1nKX0oLEF1CCIb73T8DBQdTbOPnoPZ/GQv/JmyaPC9bHnlmJprSyiCxMsIcjVNRnAdHbER+GCKuBHWwT2KNkiFT2UaI0WlElYDKnRI+WYR8q+5FckZooP+qAuxn5jhcjPtc5E=
+	t=1746183119; cv=none; b=tLJNzbAHnprntuw2MC0quZmDxXZ2Ixj+fVapolIKOdcfR7l4RIUDaLjFVEWf5EY1EtgNq6vrw/5raPudI7MOp9GX6VFrJwzcNfcyyTyZYIQplHiaJY/9AOnGM7lw88nhnuQlZwTZjNYqOyh0vXLEaHEOIuYIxZDNG27hgiNx69Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181825; c=relaxed/simple;
-	bh=bKgIZqE60Yc5Ng7cINg5bqiXiAx88WDNx0NxbbmuxJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPhB8C01LH/w3bXAIOKwNo3RvD7rNVa6LtnujXWvzAVeQd773srtWQUhCm6oK5PVaG3GSo/LroT3ExIbbRztn6VwUPsA3icByuuYXc0kKiP3AXsPFRh7gV7FjOr6gm4ElBpVqgCKpqgle0VoSDLxm2is6EPihsaJOdKJed+as58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TaBqGMnl; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TaBqGMnl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=SN1hpXTp8D/aFRS6lABiopQRF6lYY9KR9gHRTnY5UwY=; b=TaBqGMnlMHaMberg1eWR0Bpk7C
-	cAqtlSQ8oAF/kfWClzM5St1RGCJTeFCogu2EdzZBXPdPKuku9XC4V5dJoCRbUiqVVNoCfJfxP3xK7
-	Q/ORspdHtNoj5CBDjizcPpsKAB+zkicOzPonG1E3x7H8xjsjcjAtWKRlzCyiNaRAhmTjPJtQvXGsi
-	E6uaTPtuk7qIFEM4AJPYocuhkmHWa4+YFdUeXAnyQ6vrhpNqGoDtt2z3bJLrTi2LYdCO2ASsUySeg
-	4qbnDUi63PA1Toi2nqOK5QTKhBxtcA0xwJfEr9u2Upd4mw6MOyd7V0964mK0WV1yJ9z0jzyI/l5pe
-	L/oKUGgA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAne6-0000000Ds04-2eqf;
-	Fri, 02 May 2025 10:29:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A5DC73001D4; Fri,  2 May 2025 12:29:18 +0200 (CEST)
-Date: Fri, 2 May 2025 12:29:18 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
-Message-ID: <20250502102918.GW4198@noisy.programming.kicks-ass.net>
-References: <20250424161128.29176-1-frederic@kernel.org>
- <20250424161128.29176-3-frederic@kernel.org>
- <20250424163024.GC18306@noisy.programming.kicks-ass.net>
- <aA9ic6m6WAcmVBAw@pavilion.home>
+	s=arc-20240116; t=1746183119; c=relaxed/simple;
+	bh=FR1svUWuKMgzXQh3HaE0yPgWzy0dReuXGI/447taf58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ih0J8XNdtb0mamKnbc/Gb3JWrdk2iIlPxmz5yBz/PvlIRGAHXHSZKGOxaJAiT6dxivExSnYezJ5PYHohtjdCkVUNi45vrF7gMnFR7Wz0BWnmloJisFGkNLGQftRgsxOMgIBWivkIwTyQKL04v2Y+6xJ5YoiXLvYHaYnswJSYnLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E8A1688;
+	Fri,  2 May 2025 03:51:47 -0700 (PDT)
+Received: from [10.163.80.227] (unknown [10.163.80.227])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F8993F66E;
+	Fri,  2 May 2025 03:51:45 -0700 (PDT)
+Message-ID: <02c125c9-7a1f-4dfd-b058-02a38ed5b598@arm.com>
+Date: Fri, 2 May 2025 16:21:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aA9ic6m6WAcmVBAw@pavilion.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf: Allocate non-contiguous AUX pages by default
+To: Yabin Cui <yabinc@google.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250501193556.23473-1-yabinc@google.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250501193556.23473-1-yabinc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 01:11:47PM +0200, Frederic Weisbecker wrote:
-> Le Thu, Apr 24, 2025 at 06:30:24PM +0200, Peter Zijlstra a écrit :
-> > On Thu, Apr 24, 2025 at 06:11:26PM +0200, Frederic Weisbecker wrote:
-> > > @@ -13940,29 +13941,36 @@ perf_event_exit_event(struct perf_event *event,
-> > >  		 * Do destroy all inherited groups, we don't care about those
-> > >  		 * and being thorough is better.
-> > >  		 */
-> > > -		detach_flags |= DETACH_GROUP | DETACH_CHILD;
-> > > +		prd.detach_flags |= DETACH_GROUP | DETACH_CHILD;
-> > >  		mutex_lock(&parent_event->child_mutex);
-> > >  	}
-> > >  
-> > >  	if (revoke)
-> > > -		detach_flags |= DETACH_GROUP | DETACH_REVOKE;
-> > > +		prd.detach_flags |= DETACH_GROUP | DETACH_REVOKE;
-> > >  
-> > > -	perf_remove_from_context(event, detach_flags);
-> > > +	perf_remove_from_context(event, &prd);
-> > 
-> > Isn't all this waay to complicated?
-> > 
-> > That is, to modify state we need both ctx->mutex and ctx->lock, and this
-> > is what __perf_remove_from_context() has, but because of this, holding
-> > either one of those locks is sufficient to read the state -- it cannot
-> > change.
-> > 
-> > And here we already hold ctx->mutex.
-> > 
-> > So can't we simply do:
-> > 
-> > 	old_state = event->attach_state;
-> > 	perf_remove_from_context(event, detach_flags);
-> > 
-> > 	// do whatever with old_state
+On 5/2/25 01:05, Yabin Cui wrote:
+> perf always allocates contiguous AUX pages based on aux_watermark.
+> However, this contiguous allocation doesn't benefit all PMUs. For
+> instance, ARM SPE and TRBE operate with virtual pages, and Coresight
+> ETR allocates a separate buffer. For these PMUs, allocating contiguous
+> AUX pages unnecessarily exacerbates memory fragmentation. This
+> fragmentation can prevent their use on long-running devices.
 > 
-> Right, the locking scenario is just a bit more complicated.
-> Most flags are set on init or with both ctx mutex and lock.
-> But:
+> This patch modifies the perf driver to be memory-friendly by default,
+> by allocating non-contiguous AUX pages. For PMUs requiring contiguous
+> pages (Intel BTS and some Intel PT), the existing
+> PERF_PMU_CAP_AUX_NO_SG capability can be used. For PMUs that don't
+> require but can benefit from contiguous pages (some Intel PT), a new
+> capability, PERF_PMU_CAP_AUX_PREFER_LARGE, is added to maintain their
+> existing behavior.
 > 
-> _ PERF_ATTACH_CHILD is set instead with parent child_mutex and ctx lock.
-
-Looks trivial to add ctx->mutex to the mix here. Its not like that's a
-fast path. But let me go read your patch before deciding if that's
-actually needed :-)
-
-> _ PERF_ATTACH_ITRACE is set from pmu::start(). Thus from the event context
->   with just interrupt disabled. It's probably enough to synchronize against
->   initialization and remove_from_context IPIs but perf_event_exit_event() needs
->   some care.
-
-Right, that's a little tricky indeed. As stated, we don't care about the
-bit, but the write shouldn't mess things up.
-
-> So we must hold both ctx mutex and child_mutex (although the pmus_srcu thing
-> should make that PERF_ATTACH_CHILD thing visible but let's keep things obvious).
-> And also have WRITE_ONCE() / READ_ONCE() to take care about PERF_ATTACH_ITRACE,
-> which we don't care about anyway.
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> ---
+> Changes since v2:
+> Let NO_SG imply PREFER_LARGE. So PMUs don't need to set both flags.
+> Then the only place needing PREFER_LARGE is intel/pt.c.
 > 
-> Now this looks like this:
+> Changes since v1:
+> In v1, default is preferring contiguous pages, and add a flag to
+> allocate non-contiguous pages. In v2, default is allocating
+> non-contiguous pages, and add a flag to prefer contiguous pages.
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7bcb02ffb93a..7278ca731a55 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -208,7 +208,6 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
->  }
+> v1 patchset:
+> perf,coresight: Reduce fragmentation with non-contiguous AUX pages for
+> cs_etm
+> 
+>  arch/x86/events/intel/pt.c  |  2 ++
+>  include/linux/perf_event.h  |  1 +
+>  kernel/events/ring_buffer.c | 20 +++++++++++++-------
+>  3 files changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index fa37565f6418..25ead919fc48 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -1863,6 +1863,8 @@ static __init int pt_init(void)
 >  
->  #define TASK_TOMBSTONE ((void *)-1L)
-> -#define EVENT_TOMBSTONE ((void *)-1L)
+>  	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries))
+>  		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_NO_SG;
+> +	else
+> +		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_PREFER_LARGE;
 >  
->  static bool is_kernel_event(struct perf_event *event)
+>  	pt_pmu.pmu.capabilities		|= PERF_PMU_CAP_EXCLUSIVE |
+>  					   PERF_PMU_CAP_ITRACE |
+
+Why this PMU has PERF_PMU_CAP_AUX_PREFER_LARGE fallback option but
+not the other PMU in arch/x86/events/intel/bts.c even though both
+had PERF_PMU_CAP_AUX_NO_SG ?
+
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0069ba6866a4..56d77348c511 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -301,6 +301,7 @@ struct perf_event_pmu_context;
+>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
+>  #define PERF_PMU_CAP_AUX_PAUSE			0x0200
+> +#define PERF_PMU_CAP_AUX_PREFER_LARGE		0x0400
+>  
+>  /**
+>   * pmu::scope
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 5130b119d0ae..4d2f1c95673e 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -679,7 +679,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
 >  {
-> @@ -2338,12 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+>  	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
+>  	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
+> -	int ret = -ENOMEM, max_order;
+> +	int ret = -ENOMEM, max_order = 0;
+
+0 order is now the default allocation granularity. This might benefit
+from a comment above explaining that max_order could change only with
+PERF_PMU_CAP_AUX_NO_SG or PERF_PMU_CAP_AUX_PREFER_LARGE PMU flags etc.
+
 >  
->  	sync_child_event(event);
->  	list_del_init(&event->child_list);
-> -	/*
-> -	 * Cannot set to NULL, as that would confuse the situation vs
-> -	 * not being a child event. See for example unaccount_event().
-> -	 */
-> -	event->parent = EVENT_TOMBSTONE;
-> -	put_event(parent_event);
->  }
+>  	if (!has_aux(event))
+>  		return -EOPNOTSUPP;
+> @@ -689,8 +689,8 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
 >  
->  static bool is_orphaned_event(struct perf_event *event)
-> @@ -5705,7 +5698,7 @@ static void put_event(struct perf_event *event)
->  	_free_event(event);
->  
->  	/* Matches the refcount bump in inherit_event() */
-> -	if (parent && parent != EVENT_TOMBSTONE)
-> +	if (parent)
->  		put_event(parent);
->  }
->  
-> @@ -9998,7 +9991,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
->  
->  void perf_event_itrace_started(struct perf_event *event)
->  {
-> -	event->attach_state |= PERF_ATTACH_ITRACE;
-> +	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
->  }
->  
->  static void perf_log_itrace_start(struct perf_event *event)
-> @@ -13922,10 +13915,7 @@ perf_event_exit_event(struct perf_event *event,
->  {
->  	struct perf_event *parent_event = event->parent;
->  	unsigned long detach_flags = DETACH_EXIT;
-> -	bool is_child = !!parent_event;
-> -
-> -	if (parent_event == EVENT_TOMBSTONE)
-> -		parent_event = NULL;
-> +	unsigned int attach_state;
->  
->  	if (parent_event) {
+>  	if (!overwrite) {
 >  		/*
-> @@ -13942,6 +13932,8 @@ perf_event_exit_event(struct perf_event *event,
+> -		 * Watermark defaults to half the buffer, and so does the
+> -		 * max_order, to aid PMU drivers in double buffering.
+> +		 * Watermark defaults to half the buffer, to aid PMU drivers
+> +		 * in double buffering.
 >  		 */
->  		detach_flags |= DETACH_GROUP | DETACH_CHILD;
->  		mutex_lock(&parent_event->child_mutex);
-> +		/* PERF_ATTACH_ITRACE might be set concurrently */
-> +		attach_state = READ_ONCE(event->attach_state);
+>  		if (!watermark)
+>  			watermark = min_t(unsigned long,
+> @@ -698,16 +698,22 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
+>  					  (unsigned long)nr_pages << (PAGE_SHIFT - 1));
+>  
+>  		/*
+> -		 * Use aux_watermark as the basis for chunking to
+> +		 * For PMUs that need or prefer large contiguous buffers,
+> +		 * use aux_watermark as the basis for chunking to
+>  		 * help PMU drivers honor the watermark.
+>  		 */
+> -		max_order = get_order(watermark);
+> +		if (event->pmu->capabilities & (PERF_PMU_CAP_AUX_NO_SG |
+> +						PERF_PMU_CAP_AUX_PREFER_LARGE))
+> +			max_order = get_order(watermark);
+>  	} else {
+>  		/*
+> -		 * We need to start with the max_order that fits in nr_pages,
+> +		 * For PMUs that need or prefer large contiguous buffers,
+> +		 * we need to start with the max_order that fits in nr_pages,
+>  		 * not the other way around, hence ilog2() and not get_order.
+>  		 */
+> -		max_order = ilog2(nr_pages);
+> +		if (event->pmu->capabilities & (PERF_PMU_CAP_AUX_NO_SG |
+> +						PERF_PMU_CAP_AUX_PREFER_LARGE))
+> +			max_order = ilog2(nr_pages);
+>  		watermark = 0;
 >  	}
 >  
->  	if (revoke)
-> @@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
->  	/*
->  	 * Child events can be freed.
->  	 */
-> -	if (is_child) {
-> -		if (parent_event) {
-> -			mutex_unlock(&parent_event->child_mutex);
-> -			/*
-> -			 * Kick perf_poll() for is_event_hup();
-> -			 */
-> -			perf_event_wakeup(parent_event);
-> +	if (parent_event) {
-> +		mutex_unlock(&parent_event->child_mutex);
-> +		/*
-> +		 * Kick perf_poll() for is_event_hup();
-> +		 */
-> +		perf_event_wakeup(parent_event);
 
-Should not this perf_event_wakeup() be inside the next if() as well?
-doing anything on parent_event when !ATTACH_CHILD seems dodgy.
-
-> +
-> +		/*
-> +		 * Match the refcount initialization. Make sure it doesn't happen
-> +		 * twice if pmu_detach_event() calls it on an already exited task.
-> +		 */
-> +		if (attach_state & PERF_ATTACH_CHILD) {
->  			/*
->  			 * pmu_detach_event() will have an extra refcount.
-> +			 * perf_pending_task() might have one too.
->  			 */
->  			put_event(event);
->  		}
-> +
->  		return;
->  	}
-
-This is a *much* saner patch, thank you!
-
-So the thing I worried about... which is why I chose for the TOMBSTONE
-thing, is that this second invocation will now dereference parent_event,
-even though we've already released our reference count on it. 
-
-This is essentially a use-after-free.
-
-The thing that makes it work is RCU. And I think we're good, since the
-fail case is two perf_event_exit_event() invocations on the same event,
-separated by an RCU grace period, and I don't think this can happen.
-
-But its a shame we can't reliably detect that.. Oh well.
+Although not really sure, could event->pmu->capabilities check against the ORed
+PMU flags PERF_PMU_CAP_AUX_NO_SG and PERF_PMU_CAP_AUX_PREFER_LARGE be contained
+in a helper pmu_prefers_cont_alloc(struct *pmu ...) or something similar ?
