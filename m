@@ -1,205 +1,238 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458FB23184A
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 May 2025 09:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A7E205AB9;
+	Fri,  2 May 2025 10:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746179731; cv=none; b=KbFnfe8JvKxVpccyWo1vKrnpMCTwRR05eaEHEDmYz5MnnWYOFxF69UWq65w5Im+MfiQxHf8qC8vOUiK6soiKr5BnVYgjC/RKMmpuYemwvVPsaMgMTbKpId6jxwqopMtvea4DPN3ibV+OmAQR5Gu1oWpKjDocND9/8ZdKy+RAnYc=
+	t=1746181825; cv=none; b=MnnfxOBdN+UNldrwyssrAw5tvEevjmf+VY5F+y1nKX0oLEF1CCIb73T8DBQdTbOPnoPZ/GQv/JmyaPC9bHnlmJprSyiCxMsIcjVNRnAdHbER+GCKuBHWwT2KNkiFT2UaI0WlElYDKnRI+WYR8q+5FckZooP+qAuxn5jhcjPtc5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746179731; c=relaxed/simple;
-	bh=DbOmruiDXqyCFuxtwBSQJBYz2MVx6spaIxjAgcz+Oj8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PSHzSn8CetyhlNluU20ca1N28O36vS8cfd0hbmC+pX4Uf4JQxdY8h5bE+L7Z+ksWB0cdAt/6G+d+xEbfTLZroF1JDt8NvDtJFHbFGnSKtydWpr0yP8yJi4cvzBhSF1AvQH+lJ3Fctq4wNdWvywlLSVsJv4laMLfL0cAKfAdwQ+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/2SNfyP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746181825; c=relaxed/simple;
+	bh=bKgIZqE60Yc5Ng7cINg5bqiXiAx88WDNx0NxbbmuxJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPhB8C01LH/w3bXAIOKwNo3RvD7rNVa6LtnujXWvzAVeQd773srtWQUhCm6oK5PVaG3GSo/LroT3ExIbbRztn6VwUPsA3icByuuYXc0kKiP3AXsPFRh7gV7FjOr6gm4ElBpVqgCKpqgle0VoSDLxm2is6EPihsaJOdKJed+as58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TaBqGMnl; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/2SNfyP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746179728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
-	b=c/2SNfyPnj7Q9740GNXSjSEGfyVQvNzu1kfdfMKK8wnyBIbvhRbHp3RRvGxNKhur9XdPjf
-	NDwyDWSpxQFULU3QRWu9NWeR+N9O9AzjSw5ovLXlF7ih/C0yxFkdnAFJo+C44m7WQjSUzY
-	0rKen5oRNhg+LimqnoXiLxENKrWjTpg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-5_HGXMKjMhup5ShXPeyUtg-1; Fri, 02 May 2025 05:55:27 -0400
-X-MC-Unique: 5_HGXMKjMhup5ShXPeyUtg-1
-X-Mimecast-MFC-AGG-ID: 5_HGXMKjMhup5ShXPeyUtg_1746179726
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39143311936so531321f8f.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 May 2025 02:55:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746179726; x=1746784526;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
-        b=RxP+w4w8Latzh94siQ1DWbzFtOn1m5bnd4QKyzSWa2wWolbjqAtzFWxvc8cMK3/VXM
-         7lUqVJR/uL3ukER/tfpZYKAY/BuHNtj1joVDx7vz1gNmI9gx4FeYKBj8Id5/pgnlFdjk
-         cNxhyfopuXM32Htz0CgwsuJmN7uUWjVsdCtWIHZsrloO7h0n+cj23HP35fGQsmoZxBgB
-         M+BgpYbI6PWvw/Iz7VfOLr4ye97t6Rv4TAgDOxdwIX5yfpZiyznWmBtSPwH+V4r1W5jH
-         cpvqUqxTQG90iJwOc6GPdC6Oe4VrhBpCQmoo8dT0KE3fx4kJtjauZS0hGR4qSKixSAgF
-         VAkA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8zmN8JRcRKA7E8NGsRJgRrkHeuLfzy4NCPHfuVPWUA4ToeUgU7m8ksOXfkuqu/Zrprx3LlOso7Hhl1tnEgqif@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDPSvtSejo9fMfTwkk4NZWXjaY7yqUSMgRimVjhd7LEZyLfEH+
-	kFY08cEvUE4bHZ8sNjcy5MNCgdsQxx1TEGzLTb3NE48997tAn8IyctHVWryZK7KIL8bA8eEZSZS
-	qygUBpRhG6h4hbIvhznZItrXjcrI9Xh4Oa3DNkD7lh9QbyRrDFbrejVi3Yq3Mhv+CN4U=
-X-Gm-Gg: ASbGncsC8uw3HuEeL/SuzNCqr7jqb7p8OQSvsLWVf4tq8JFpyD+Jxu4hO2nyDnHkYje
-	1AdblCiteuEGLFwEqqa1ckGhj0JfhhN6P6GL/BmuUc/Wjbw1fAm2MMJ0bdiBOGhDWPUwpfCUQ+J
-	L8N9KfygyYRqRwAaVuxLNRgHY69nhKiouwYMMafLlLp1YggUJY4vEU2lv1NGsEF9xYq0y2H5eAv
-	zsVaFRjyFKcgdGfRRNE1lXBSY56FCRn47zxuyVwBi90HuuBQlCpUP6LM2hLUanJdTljiWa5+xio
-	wHWB4YIxM2m2fjwSTnrvrIlv4C5QTSXMpvi2ERzPLPUI0/gI
-X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613276f8f.54.1746179725797;
-        Fri, 02 May 2025 02:55:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpWssSttWyCeyGY3CsU2VpUSZWAU4rNhFXcV+QIILeKOWgOhhc72G0KBYplClE77XLY5f7yg==
-X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613170f8f.54.1746179725069;
-        Fri, 02 May 2025 02:55:25 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm1693329f8f.38.2025.05.02.02.55.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 02:55:24 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
- <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
- Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
- Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
- Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
- <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
- Rao <naveen@kernel.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
- <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
- <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
- <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
- <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
- <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
- Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
- Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-In-Reply-To: <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
-References: <20250429113242.998312-1-vschneid@redhat.com>
- <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
- <20250430132047.01d48647@gandalf.local.home>
- <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
- <20250430154228.1d6306b4@gandalf.local.home>
- <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
-Date: Fri, 02 May 2025 11:55:21 +0200
-Message-ID: <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TaBqGMnl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=SN1hpXTp8D/aFRS6lABiopQRF6lYY9KR9gHRTnY5UwY=; b=TaBqGMnlMHaMberg1eWR0Bpk7C
+	cAqtlSQ8oAF/kfWClzM5St1RGCJTeFCogu2EdzZBXPdPKuku9XC4V5dJoCRbUiqVVNoCfJfxP3xK7
+	Q/ORspdHtNoj5CBDjizcPpsKAB+zkicOzPonG1E3x7H8xjsjcjAtWKRlzCyiNaRAhmTjPJtQvXGsi
+	E6uaTPtuk7qIFEM4AJPYocuhkmHWa4+YFdUeXAnyQ6vrhpNqGoDtt2z3bJLrTi2LYdCO2ASsUySeg
+	4qbnDUi63PA1Toi2nqOK5QTKhBxtcA0xwJfEr9u2Upd4mw6MOyd7V0964mK0WV1yJ9z0jzyI/l5pe
+	L/oKUGgA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAne6-0000000Ds04-2eqf;
+	Fri, 02 May 2025 10:29:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A5DC73001D4; Fri,  2 May 2025 12:29:18 +0200 (CEST)
+Date: Fri, 2 May 2025 12:29:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
+Message-ID: <20250502102918.GW4198@noisy.programming.kicks-ass.net>
+References: <20250424161128.29176-1-frederic@kernel.org>
+ <20250424161128.29176-3-frederic@kernel.org>
+ <20250424163024.GC18306@noisy.programming.kicks-ass.net>
+ <aA9ic6m6WAcmVBAw@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aA9ic6m6WAcmVBAw@pavilion.home>
 
-On 30/04/25 13:00, Dave Hansen wrote:
-> On 4/30/25 12:42, Steven Rostedt wrote:
->>> Look at the syscall code for instance:
->>>
->>>> SYM_CODE_START(entry_SYSCALL_64)
->>>>         swapgs
->>>>         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
->>>>         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
->>> You can _trivially_ audit this and know that swapgs doesn't touch memory
->>> and that as long as PER_CPU_VAR()s and the process stack don't have
->>> their mappings munged and flushes deferred that this would be correct.
->> Hmm, so there is still a path for this?
->>
->> At least if it added more ways to debug it, and some other changes to make
->> the locations where vmalloc is dangerous smaller?
->
-> Being able to debug it would be a good start. But, more generally, what
-> we need is for more people to be able to run the code in the first
-> place. Would a _normal_ system (without setups that are trying to do
-> NOHZ_FULL) ever be able to defer TLB flush IPIs?
->
-> If the answer is no, then, yeah, I'll settle for some debugging options.
->
-> But if you shrink the window as small as I'm talking about, it would
-> look very different from this series.
->
-> For instance, imagine when a CPU goes into the NOHZ mode. Could it just
-> unconditionally flush the TLB on the way back into the kernel (in the
-> same SWITCH_TO_KERNEL_CR3 spot)? Yeah, it'll make entry into the kernel
-> expensive for NOHZ tasks, but it's not *THAT* bad. And if the entire
-> point of a NOHZ_FULL task is to minimize the number of kernel entries
-> then a little extra overhead there doesn't sound too bad.
->
+On Mon, Apr 28, 2025 at 01:11:47PM +0200, Frederic Weisbecker wrote:
+> Le Thu, Apr 24, 2025 at 06:30:24PM +0200, Peter Zijlstra a écrit :
+> > On Thu, Apr 24, 2025 at 06:11:26PM +0200, Frederic Weisbecker wrote:
+> > > @@ -13940,29 +13941,36 @@ perf_event_exit_event(struct perf_event *event,
+> > >  		 * Do destroy all inherited groups, we don't care about those
+> > >  		 * and being thorough is better.
+> > >  		 */
+> > > -		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> > > +		prd.detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> > >  		mutex_lock(&parent_event->child_mutex);
+> > >  	}
+> > >  
+> > >  	if (revoke)
+> > > -		detach_flags |= DETACH_GROUP | DETACH_REVOKE;
+> > > +		prd.detach_flags |= DETACH_GROUP | DETACH_REVOKE;
+> > >  
+> > > -	perf_remove_from_context(event, detach_flags);
+> > > +	perf_remove_from_context(event, &prd);
+> > 
+> > Isn't all this waay to complicated?
+> > 
+> > That is, to modify state we need both ctx->mutex and ctx->lock, and this
+> > is what __perf_remove_from_context() has, but because of this, holding
+> > either one of those locks is sufficient to read the state -- it cannot
+> > change.
+> > 
+> > And here we already hold ctx->mutex.
+> > 
+> > So can't we simply do:
+> > 
+> > 	old_state = event->attach_state;
+> > 	perf_remove_from_context(event, detach_flags);
+> > 
+> > 	// do whatever with old_state
+> 
+> Right, the locking scenario is just a bit more complicated.
+> Most flags are set on init or with both ctx mutex and lock.
+> But:
+> 
+> _ PERF_ATTACH_CHILD is set instead with parent child_mutex and ctx lock.
 
-Right, so my thought per your previous comments was to special case the
-TLB flush, depend on kPTI and do it uncondtionally in SWITCH_TO_KERNEL_CR3
-just like you've described - but keep the context tracking mechanism for
-other deferrable operations.
+Looks trivial to add ctx->mutex to the mix here. Its not like that's a
+fast path. But let me go read your patch before deciding if that's
+actually needed :-)
 
-My gripe with that was having two separate mechanisms
-- super early entry around SWITCH_TO_KERNEL_CR3)
-- later entry at context tracking
+> _ PERF_ATTACH_ITRACE is set from pmu::start(). Thus from the event context
+>   with just interrupt disabled. It's probably enough to synchronize against
+>   initialization and remove_from_context IPIs but perf_event_exit_event() needs
+>   some care.
 
-Shifting everything to SWITCH_TO_KERNEL_CR3 means we lose the
-context_tracking infra to dynamically defer operations (atomically reading
-and writing to context_tracking.state), which means we unconditionally run
-all possible deferrable operations. This doesn't scream scalable, even
-though as you say NOHZ_FULL kernel entry is already a "you lose" situation.
+Right, that's a little tricky indeed. As stated, we don't care about the
+bit, but the write shouldn't mess things up.
 
-Yet another option is to duplicate the context tracking state specifically
-for IPI deferral and have it driven in/by SWITCH_TO_KERNEL_CR3, which is
-also not super savoury.
+> So we must hold both ctx mutex and child_mutex (although the pmus_srcu thing
+> should make that PERF_ATTACH_CHILD thing visible but let's keep things obvious).
+> And also have WRITE_ONCE() / READ_ONCE() to take care about PERF_ATTACH_ITRACE,
+> which we don't care about anyway.
+> 
+> Now this looks like this:
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7bcb02ffb93a..7278ca731a55 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -208,7 +208,6 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
+>  }
+>  
+>  #define TASK_TOMBSTONE ((void *)-1L)
+> -#define EVENT_TOMBSTONE ((void *)-1L)
+>  
+>  static bool is_kernel_event(struct perf_event *event)
+>  {
+> @@ -2338,12 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+>  
+>  	sync_child_event(event);
+>  	list_del_init(&event->child_list);
+> -	/*
+> -	 * Cannot set to NULL, as that would confuse the situation vs
+> -	 * not being a child event. See for example unaccount_event().
+> -	 */
+> -	event->parent = EVENT_TOMBSTONE;
+> -	put_event(parent_event);
+>  }
+>  
+>  static bool is_orphaned_event(struct perf_event *event)
+> @@ -5705,7 +5698,7 @@ static void put_event(struct perf_event *event)
+>  	_free_event(event);
+>  
+>  	/* Matches the refcount bump in inherit_event() */
+> -	if (parent && parent != EVENT_TOMBSTONE)
+> +	if (parent)
+>  		put_event(parent);
+>  }
+>  
+> @@ -9998,7 +9991,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
+>  
+>  void perf_event_itrace_started(struct perf_event *event)
+>  {
+> -	event->attach_state |= PERF_ATTACH_ITRACE;
+> +	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
+>  }
+>  
+>  static void perf_log_itrace_start(struct perf_event *event)
+> @@ -13922,10 +13915,7 @@ perf_event_exit_event(struct perf_event *event,
+>  {
+>  	struct perf_event *parent_event = event->parent;
+>  	unsigned long detach_flags = DETACH_EXIT;
+> -	bool is_child = !!parent_event;
+> -
+> -	if (parent_event == EVENT_TOMBSTONE)
+> -		parent_event = NULL;
+> +	unsigned int attach_state;
+>  
+>  	if (parent_event) {
+>  		/*
+> @@ -13942,6 +13932,8 @@ perf_event_exit_event(struct perf_event *event,
+>  		 */
+>  		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+>  		mutex_lock(&parent_event->child_mutex);
+> +		/* PERF_ATTACH_ITRACE might be set concurrently */
+> +		attach_state = READ_ONCE(event->attach_state);
+>  	}
+>  
+>  	if (revoke)
+> @@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
+>  	/*
+>  	 * Child events can be freed.
+>  	 */
+> -	if (is_child) {
+> -		if (parent_event) {
+> -			mutex_unlock(&parent_event->child_mutex);
+> -			/*
+> -			 * Kick perf_poll() for is_event_hup();
+> -			 */
+> -			perf_event_wakeup(parent_event);
+> +	if (parent_event) {
+> +		mutex_unlock(&parent_event->child_mutex);
+> +		/*
+> +		 * Kick perf_poll() for is_event_hup();
+> +		 */
+> +		perf_event_wakeup(parent_event);
 
-I suppose I can start poking around running deferred ops in that
-SWITCH_TO_KERNEL_CR3 region, and add state/infra on top. Let's see where
-this gets me :-)
+Should not this perf_event_wakeup() be inside the next if() as well?
+doing anything on parent_event when !ATTACH_CHILD seems dodgy.
 
-Again, thanks for the insight and the suggestions Dave!
+> +
+> +		/*
+> +		 * Match the refcount initialization. Make sure it doesn't happen
+> +		 * twice if pmu_detach_event() calls it on an already exited task.
+> +		 */
+> +		if (attach_state & PERF_ATTACH_CHILD) {
+>  			/*
+>  			 * pmu_detach_event() will have an extra refcount.
+> +			 * perf_pending_task() might have one too.
+>  			 */
+>  			put_event(event);
+>  		}
+> +
+>  		return;
+>  	}
 
-> Also, about the new hardware, I suspect there's some mystery customer
-> lurking in the shadows asking folks for this functionality. Could you at
-> least go _talk_ to the mystery customer(s) and see which hardware they
-> care about? They might already even have the magic CPUs they need for
-> this, or have them on the roadmap. If they've got Intel CPUs, I'd be
-> happy to help figure it out.
+This is a *much* saner patch, thank you!
 
+So the thing I worried about... which is why I chose for the TOMBSTONE
+thing, is that this second invocation will now dereference parent_event,
+even though we've already released our reference count on it. 
+
+This is essentially a use-after-free.
+
+The thing that makes it work is RCU. And I think we're good, since the
+fail case is two perf_event_exit_event() invocations on the same event,
+separated by an RCU grace period, and I don't think this can happen.
+
+But its a shame we can't reliably detect that.. Oh well.
