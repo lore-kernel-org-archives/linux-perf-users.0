@@ -1,40 +1,34 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08E9213E6D;
-	Fri,  2 May 2025 11:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C43224B04;
+	Fri,  2 May 2025 11:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185413; cv=none; b=YVIhvrt7kIhhiTOWuABFdV3rgoYxNKv5X41sWAOmoR67tGv2LpFxdIAxCZ9cbwLgk4nraZdjIxd1bLRyGw/IAcMv7UoPmf3QsswxWmB4YUhzrtgFbKkeYlMEB2pV51eWs/HTSmut3GMb2Tlg3B478leDsecNkvuv+cW5HutwylU=
+	t=1746187142; cv=none; b=ECZLyGd7oREry9lB8ieMxdYbkFJU5mIocI+f0HtB+pnwgAWut/UbdTIhTzX9Xei0SCA+1tovtXDpCKV8nSS8DUkbirC7wU3e8qTkphpN1vHI1Lviq3hhxGApysuTKwrHx7k9/AU/pUquqE5UrsnkNo/bQQv263bdHew6pfLQEd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185413; c=relaxed/simple;
-	bh=2QKHX5I0hrfjKUeJW5kqDHcnDew73hGAW86pFp03DEs=;
+	s=arc-20240116; t=1746187142; c=relaxed/simple;
+	bh=RwgCDnQ37EObTe/l83jABDwxgXSvAaJZEbvdls3xVr8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dhf1N4aApfMfvkjmus+YEyqM5gfaDebZ6qVTNpeCZegfJiEicfQlbTmIBDWqtfprpSugEkasVY5D/Zj3ZLTDhdwqp1CGIjaliZfevfOb5GPgOAJxQAjCqguS20U5qBfWQFaj87yJkz3ek7YALRfoXmxD7IMvqlzua5NwQSiAMFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W9KPIPgQ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWLk3vxUMVeLI8IFKPDS/y1XTOFhvqA+K/f8xFvKJLta1bOsKkuWvi0VzPC9H1kVuNpDZUozmR07285HntIyq6wjEsmVi3LZpYo4I5/t50tg/laU2fdj6MWy2M+j0SQD36fJDfrRCFbLuqMK8G+lwUB3OZNyMzcLEVxACTon+08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGa1Ng9Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W9KPIPgQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Q9WiYxsL0hM2ucNez6Xdvadf+AnlurqcqXxqHVY4ku0=; b=W9KPIPgQbJzttJSnUnHXmYV0o4
-	a8m3wtPol/rEWe3szznpiHry9s0IR3srTVQdvTD9PSNSVxfH0vKU3hrtI9VYkAyr4Ydq3hzTKC567
-	xek4RHndpZu8vMLQnkmJ/WBtwfmIji9TqHyERU8dYsnNXexR0O0l6SiRN4B3NGnB0nYRnrSKb3bry
-	JA9E7ebsXTr0p+H7AgwOSbNHZcpuCVod+F05fxs8B43n58lyeW3uiyW1IC5G82ShTuoWrOKYmBPMY
-	BP/qVBV0J6oZVY4/NhLfFe89uCePs/uOEpL43us2A/Kqoq/EBjLVuYIALiieUOAjik6cSjE6vhNPT
-	KKpTmwog==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uAoag-0000000EpK0-3IGE;
-	Fri, 02 May 2025 11:30:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 260F030057C; Fri,  2 May 2025 13:30:02 +0200 (CEST)
-Date: Fri, 2 May 2025 13:30:02 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Frederic Weisbecker <frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGa1Ng9Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B625C4CEE4;
+	Fri,  2 May 2025 11:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746187141;
+	bh=RwgCDnQ37EObTe/l83jABDwxgXSvAaJZEbvdls3xVr8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gGa1Ng9QOwviHBkEzyjbOGYNSiaM+mQvYc/nKz5Qq0XA5Ed2TF+IDD3zAle2bWPdU
+	 FCUJ+eO6qbLOQPVmSkan8UqqI/iL2k480/lmex0DBsLSvkSRxWjVSBZtGpWBAr5qHD
+	 xxVDPLnci9qhq1FMTuzQSdcwb2MdxiLNTJb1XLjqiwfPXVMkQ4A5rSfxvLcOfld3td
+	 mWCIPO8LhRD9al7AiChjH4W7mEdhaBf3pWzJ7zMWmVs9uq+p9xDiyHsr4/bRXvpeQK
+	 nNrBe5h6EgaivhdZqPTBRRrZBEGe44BQDC2NQhVoAbhV9xdnxFAsnfzPj5aYGpx+NT
+	 npmxlfiAvqsEA==
+Date: Fri, 2 May 2025 13:58:58 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -46,7 +40,7 @@ Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
 	Ravi Bangoria <ravi.bangoria@amd.com>,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
-Message-ID: <20250502113002.GF4356@noisy.programming.kicks-ass.net>
+Message-ID: <aBSzgrz9zTaFW5dj@pavilion.home>
 References: <20250424161128.29176-1-frederic@kernel.org>
  <20250424161128.29176-3-frederic@kernel.org>
  <20250424163024.GC18306@noisy.programming.kicks-ass.net>
@@ -58,12 +52,12 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20250502102918.GW4198@noisy.programming.kicks-ass.net>
 
-On Fri, May 02, 2025 at 12:29:18PM +0200, Peter Zijlstra wrote:
-
+Le Fri, May 02, 2025 at 12:29:18PM +0200, Peter Zijlstra a écrit :
 > > @@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
 > >  	/*
 > >  	 * Child events can be freed.
@@ -85,10 +79,9 @@ On Fri, May 02, 2025 at 12:29:18PM +0200, Peter Zijlstra wrote:
 > Should not this perf_event_wakeup() be inside the next if() as well?
 > doing anything on parent_event when !ATTACH_CHILD seems dodgy.
 
-I made this change, and munged the original changelog on top and stuffed
-the patches into queue/perf/core.
+Good point!
 
-
+> 
 > > +
 > > +		/*
 > > +		 * Match the refcount initialization. Make sure it doesn't happen
@@ -104,3 +97,28 @@ the patches into queue/perf/core.
 > > +
 > >  		return;
 > >  	}
+> 
+> This is a *much* saner patch, thank you!
+> 
+> So the thing I worried about... which is why I chose for the TOMBSTONE
+> thing, is that this second invocation will now dereference parent_event,
+> even though we've already released our reference count on it. 
+> 
+> This is essentially a use-after-free.
+> 
+> The thing that makes it work is RCU. And I think we're good, since the
+> fail case is two perf_event_exit_event() invocations on the same event,
+> separated by an RCU grace period, and I don't think this can happen.
+> 
+> But its a shame we can't reliably detect that.. Oh well.
+
+It's not RCU but the reference count of the child that protects it.
+In a second invocation, pmu_unregister() still holds a reference to
+the child and that protects the parent as well because the reference
+to the parent is only dropped once the child has dropped its own.
+
+Hopefully that is one less opportunity for a headache :-)
+
+-- 
+Frederic Weisbecker
+SUSE Labs
