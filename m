@@ -1,263 +1,325 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9948023C500;
-	Fri,  2 May 2025 12:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F1252905;
+	Fri,  2 May 2025 13:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746187607; cv=none; b=Xn/n9uW5wQgLlCBPvcA+sG8E8Q9vuhU5gQn1m7iGmxZWiSBmMpj0q5TdemuCXR37+RR02UpfTvNxzEMvbwvHKZYBTGzgDwnuEm3AeSgCrw5sbAo+p4ZQCehrxIEQ4xCJNf+LRVGtjcq79XDQN4g2sfAgnAxYI0AWPSSM1CL4WnQ=
+	t=1746191606; cv=none; b=Pj8IBZ2ACDsCyH256PsyfsEm22wb/6kKnEDLyZK1iroRNu9B00FPwTS0ZqtvR+IHfiDwyXSX/7T340iNMJ7kpZ+wL1caLe3ATZefoNzoD/wYPrzed64j7yBSkZcunFxMbIiaintv7uKmcF+zPyutqmONhaiSmAciy+t1btcsgxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746187607; c=relaxed/simple;
-	bh=VIiENbdDB2JwUhcI2xcDSEB/mg732gTkvnNfrNikiAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=feaxZsuFSMcfrdE0tXFQ3T5V16PRyfYiJkgu6Pm6a8P8wbZG8jVdaFUtgjxWaBo0iNBYnWrdjwSGbPsdyZgUIj5T07iFdr7VpDc/uCULxGj0RM5BnnNfC9k7CS0QBje+D716nGTPZ3jRDOtTLKua1NINGoAdqxpqvWMkFH9M2Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvN/dIDp; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746191606; c=relaxed/simple;
+	bh=8rjzfX3W2W2Ua3bnqMyXei5mk/ntSXdZx8V9rkAjM0A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YXP6+qcX6mFz3b1EMJv4q2HdX0WzcXZTovEFDhoCxDelcAPGqaf/GFwSOi2VIePBcVTnTn2myUTTl8MF5DYmb+s1kE8suMI9mQtN7pGGtl5ZgorZVcYi9WEUF/cHIIGORagOjqm9Fd1eHTj2BlVItPzIcDY7CMs94hg+Kek57Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PUfTHgWM; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvN/dIDp"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-440685d6afcso15430775e9.0;
-        Fri, 02 May 2025 05:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746187604; x=1746792404; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3V73705bvr6jBRGxONET/Lnah1PbBZsX8gJ3s70qtfs=;
-        b=GvN/dIDp+HAOv5C+L1ptLYYlUWwW9l+wdWh6ObC3Ceks8hpg/E+R4tD71/FKqhJuO9
-         jhCRxBz4VItA5WwfppNdgh0uWOqb5LTJtHzdM1WBZ1t2WCWgQPZSsDVOvkP1dzBLe1Yq
-         EtnSEr3jy/esjZLmz67q9cIGjSWqko5S31gbNl84NNAI/X6E92O8mck6sqV+R5HCHHJ4
-         Jt0PXaYOG/7vq8ZTrT7AS+r9Ux5Zsuxj799Rd/Q/BLHJVqHxIzyxjQtZ3iust0lKc5uv
-         E6VFaBzKmB2ykaZN8FNMcJRFxUVWq6nONPZ6z49veBvulxy9weuE8VKPgXdQbcYQmVIw
-         YvaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746187604; x=1746792404;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3V73705bvr6jBRGxONET/Lnah1PbBZsX8gJ3s70qtfs=;
-        b=LEh7qsHflNOWGwfJrZdL+DQ19WT8QuO2fYUMKtHBtKx0Z0YtQwjgiEbxFeGpz0yTYb
-         5zxv8hYCFR+/PnQzrmm6DoGIVwZhjxtTdJATaLSH2yRCi2+rRZVgZd1RbHzJl/mA+pQH
-         S9ePhyr3gM+tHLYUUMBfvWtSvpFNs9ak5aG42CUb5nWV7/6mbBAIhBPX0Q3d8Z3fkUgS
-         Px3BZ2+E2iR85qSXkATygsHKRWAFa5iK0CDFWaaCwJClz+SMcGsVMLs4JkKl830YM8dw
-         a3KawJDnlv4Wc6pYm8gUp4OhlE+xoT/j9/ozM+Tph2pSxYb5eaoRAZ2AwHTJx3IiMzVc
-         Es6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVDJcf5U6/SxFi58uO9eAw1kcYMlnNw6+Z558AIKLWiAsNmNO+jYPFMHFp0nTtvsMq9c63CgW1qvjjHikA=@vger.kernel.org, AJvYcCX+ZK6N5ehVqMsvA7StrJKLpPwtkuSHaeyiPCm5g2F+m45CdobKAy81W/EuSj40DoERP54HM/hMVmFRg9gHPxkFgw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvo/Yk2CYHvAUJcBmg9uY9dGVl2twLzhNbgJ//ca0uQPYkerTQ
-	/vBWUW9QyKdbZ6vqwu/5QR7DcdYUTeg4iuEs4g+MSdYrDHXMYkDN
-X-Gm-Gg: ASbGncu/YQqRK6uxlbC5+bZFH624P2RidhPpwOdBhffM0a/pCk6Cv+6bJY9eJmE9efC
-	h4UNOvssWCq4wujz2Qxqzy/dv5AFPg5mkZhHW6ac/RjY5dOthwzL3fSRMKrblR2ayCcX8FJy9Sy
-	nyKNPcUzl1KlnEGPcbqJ/6qUDkNl+pxbq1SpRJJHMfF54pawT7J+J0ea6qHzV7TVJNeCTLVAmXN
-	QHKuQWmEeVJ8weY0n8pt/rPPKOzPRdLh+GuFumuMaYFOgtiarqEozqhFke9jycUrNlLNmX2NRbL
-	KrIhb7qqP9IHs5Y36STqqS6m72uWoaNm/u0BQITsqiAmYM9lStJiaSbRcEGnnFt8F/8XUAR/Yaf
-	XEFE=
-X-Google-Smtp-Source: AGHT+IFh2JoJgMUXNCEsxIU7sFr9ZKrk9uzl/gj68SDvvgkmdXJHvwZfMJbNBkXkaIN5STEA3H1Rgg==
-X-Received: by 2002:a05:600c:1c26:b0:440:68db:a013 with SMTP id 5b1f17b1804b1-441bbf2cb29mr17733935e9.25.1746187603660;
-        Fri, 02 May 2025 05:06:43 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc469sm43027435e9.6.2025.05.02.05.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 05:06:43 -0700 (PDT)
-Date: Fri, 2 May 2025 13:06:35 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Dirk Gouders <dirk@gouders.net>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
- <kan.liang@linux.intel.com>, Yury Norov <yury.norov@gmail.com>, Rasmus
- Villemoes <linux@rasmusvillemoes.dk>, Thomas Gleixner <tglx@linutronix.de>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James Clark
- <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan
- <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, Jonathan
- Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor
- <nathan@kernel.org>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro
- <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey
- <ben.gainey@arm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol
- Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, Eder
- Zulian <ezulian@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>, Brian
- Geffon <bgeffon@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Howard
- Chu <howardchu95@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, Colin
- Ian King <colin.i.king@gmail.com>, Dominique Martinet
- <asmadeus@codewreck.org>, Jann Horn <jannh@google.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Yang Jihong
- <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, Andi Kleen
- <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, Ilkka
- Koskinen <ilkka@os.amperecomputing.com>, Anshuman Khandual
- <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao
- Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, Gabriele
- Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, Casey Chen
- <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, Li
- Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>,
- Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>, Thomas
- Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Andrew Kreimer <algonell@gmail.com>, Krzysztof =?UTF-8?B?xYFvcGF0b3dza2k=?=
- <krzysztof.m.lopatowski@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Jean-Philippe Romain
- <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang
- <xu.yang_2@nxp.com>, Steve Clevenger <scclevenger@os.amperecomputing.com>,
- Zixian Cai <fzczx123@gmail.com>, Stephen Brennan
- <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 04/47] perf bench: Silence -Wshorten-64-to-32
- warnings
-Message-ID: <20250502130635.0eabb190@pumpkin>
-In-Reply-To: <gha57xgs8b.fsf@gouders.net>
-References: <20250430175036.184610-1-irogers@google.com>
-	<20250430175036.184610-5-irogers@google.com>
-	<gho6wdh00l.fsf@gouders.net>
-	<CAP-5=fUdpa40MDNu0aDBO7o8H3YMe-cYsg-YfqUUZUY4M4XLeA@mail.gmail.com>
-	<ghecx9guoj.fsf@gouders.net>
-	<CAP-5=fXJpD_f6dUqroVpqe-OX5kyOPc1zpbyOZoQtqvQWBGr=Q@mail.gmail.com>
-	<gha57xgs8b.fsf@gouders.net>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PUfTHgWM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746191604; x=1777727604;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=8rjzfX3W2W2Ua3bnqMyXei5mk/ntSXdZx8V9rkAjM0A=;
+  b=PUfTHgWMvFJxTxND5TgwBvNsgJId94eVBVfY440xMak13A4AWz2tAXMD
+   Tao5LLz6glxthe48jZDAji454nEQ7pCS0yaWIRtt58SJAPgIb8CALdIzn
+   XjXoRZMkps0dcuyhpJu5ErZ/E3FMm724c1VeqkvyhLDVla9PiJNPNQ+hb
+   UI2miYeVyfl8xb9sD5fQDWVHBUH7OlS2t6VwkIU4+iQP76IHZjN0OWL7D
+   k2GhxH/HW2A29ksO0xD7OsaxXM/E0fegq45MRQzdcYeFZs+un+N0qk1rp
+   Yr6I/ELrKocmRKRB/psq9q++qBO2KKjoqZHjZWXykBb5aSUxgu2PFj0aa
+   w==;
+X-CSE-ConnectionGUID: 3nKXHhdgS9Wu9QsbB212VA==
+X-CSE-MsgGUID: 8DsjZxQjR+S24+L33e3JJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="59233288"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="59233288"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:13:23 -0700
+X-CSE-ConnectionGUID: uqJeJQZ9QjyJ9pDg+lbEpA==
+X-CSE-MsgGUID: eaKgRDz1TzO6Du8usPzXEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="135599266"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.135])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:13:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 2 May 2025 16:13:03 +0300 (EEST)
+To: "Xin Li (Intel)" <xin@zytor.com>, mingo@redhat.com
+cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, 
+    x86@kernel.org, hpa@zytor.com, acme@kernel.org, jgross@suse.com, 
+    andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org, 
+    mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+    irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+    wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+    bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
+    pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com, 
+    luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com, 
+    haiyangz@microsoft.com, decui@microsoft.com, dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH v4A 01/15] x86/msr: Add missing includes of <asm/msr.h>
+In-Reply-To: <20250501054241.1245648-1-xin@zytor.com>
+Message-ID: <a34d7955-aa31-7bef-52cf-65dc4bb7a5c1@linux.intel.com>
+References: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com> <20250501054241.1245648-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; BOUNDARY="8323328-2124274657-1746191047=:958"
+Content-ID: <69d4ead6-fa09-8594-add2-0d027d3e7e6c@linux.intel.com>
 
-On Thu, 01 May 2025 01:11:16 +0200
-Dirk Gouders <dirk@gouders.net> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Ian Rogers <irogers@google.com> writes:
+--8323328-2124274657-1746191047=:958
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <914dd26d-9889-125a-917d-3b9acfbc7938@linux.intel.com>
+
+On Wed, 30 Apr 2025, Xin Li (Intel) wrote:
+
+> For some reason, there are some TSC-related functions in the MSR
+> header even though there is a tsc.h header.
 >=20
-> > On Wed, Apr 30, 2025 at 3:19=E2=80=AFPM Dirk Gouders <dirk@gouders.net>=
- wrote: =20
-> >>
-> >> Ian Rogers <irogers@google.com> writes:
-> >> =20
-> >> > On Wed, Apr 30, 2025 at 1:23=E2=80=AFPM Dirk Gouders <dirk@gouders.n=
-et> wrote: =20
-> >> >>
-> >> >> Hi Ian,
-> >> >>
-> >> >> considering so many eyes looking at this, I am probably wrong.
-> >> >>
-> >> >> So, this is only a "gauge reply" to see if it's worth I really read
-> >> >> through all the commits ;-)
-> >> >>
-> >> >> Ian Rogers <irogers@google.com> writes:
-> >> >>
-> >> >> [SNIP]
-> >> >> =20
-> >> >> > diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sch=
-ed-pipe.c
-> >> >> > index 70139036d68f..b847213fd616 100644
-> >> >> > --- a/tools/perf/bench/sched-pipe.c
-> >> >> > +++ b/tools/perf/bench/sched-pipe.c
-> >> >> > @@ -102,7 +102,8 @@ static const char * const bench_sched_pipe_us=
-age[] =3D {
-> >> >> >  static int enter_cgroup(int nr)
-> >> >> >  {
-> >> >> >       char buf[32];
-> >> >> > -     int fd, len, ret;
-> >> >> > +     int fd;
-> >> >> > +     ssize_t ret, len;
-> >> >> >       int saved_errno;
-> >> >> >       struct cgroup *cgrp;
-> >> >> >       pid_t pid;
-> >> >> > @@ -118,7 +119,7 @@ static int enter_cgroup(int nr)
-> >> >> >       cgrp =3D cgrps[nr];
-> >> >> >
-> >> >> >       if (threaded)
-> >> >> > -             pid =3D syscall(__NR_gettid);
-> >> >> > +             pid =3D (pid_t)syscall(__NR_gettid);
-> >> >> >       else
-> >> >> >               pid =3D getpid();
-> >> >> >
-> >> >> > @@ -172,23 +173,25 @@ static void exit_cgroup(int nr)
-> >> >> >
-> >> >> >  static inline int read_pipe(struct thread_data *td)
-> >> >> >  {
-> >> >> > -     int ret, m;
-> >> >> > +     ssize_t ret;
-> >> >> > +     int m;
-> >> >> >  retry:
-> >> >> >       if (nonblocking) {
-> >> >> >               ret =3D epoll_wait(td->epoll_fd, &td->epoll_ev, 1, =
--1); =20
-> >> >>
-> >> >> The epoll_wait(), I know of, returns an int and not ssize_t.
-> >> >>
-> >> >> That shouldn't show up, because it doesn't cause real problems... =
+> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
+> to <asm/tsc.h> and to eventually eliminate the inclusion of
+> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
+> reference definitions from <asm/msr.h>.
+>=20
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>=20
+> Change in v4A:
+> *) Use "git grep -l -e $PATTERN | grep -v -f <(git grep -l -e 'asm/msr\.h=
+')"
+>    to ensure ALL required *direct* inclusion of <asm/msr.h> (Ilpo J=E4rvi=
+nen).
+>=20
+> Change in v4:
+> *) Add missing includes in a different patch (Ilpo J=E4rvinen).
+> *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
+>=20
+> Change in v3:
+> * Add a problem statement to the changelog (Dave Hansen).
+> ---
+>  arch/x86/coco/sev/core.c                                    | 1 +
+>  arch/x86/events/amd/core.c                                  | 1 +
+>  arch/x86/events/amd/ibs.c                                   | 1 +
+>  arch/x86/events/amd/iommu.c                                 | 2 ++
+>  arch/x86/events/amd/lbr.c                                   | 1 +
+>  arch/x86/events/amd/power.c                                 | 1 +
+>  arch/x86/events/core.c                                      | 1 +
+>  arch/x86/events/intel/bts.c                                 | 1 +
+>  arch/x86/events/intel/core.c                                | 1 +
+>  arch/x86/events/intel/cstate.c                              | 1 +
+>  arch/x86/events/intel/ds.c                                  | 1 +
+>  arch/x86/events/intel/knc.c                                 | 1 +
+>  arch/x86/events/intel/p4.c                                  | 1 +
+>  arch/x86/events/intel/p6.c                                  | 1 +
+>  arch/x86/events/intel/pt.c                                  | 1 +
+>  arch/x86/events/intel/uncore.c                              | 1 +
+>  arch/x86/events/intel/uncore_discovery.c                    | 1 +
+>  arch/x86/events/intel/uncore_nhmex.c                        | 1 +
+>  arch/x86/events/intel/uncore_snb.c                          | 1 +
+>  arch/x86/events/intel/uncore_snbep.c                        | 1 +
+>  arch/x86/events/msr.c                                       | 2 ++
+>  arch/x86/events/perf_event.h                                | 1 +
+>  arch/x86/events/probe.c                                     | 2 ++
+>  arch/x86/events/rapl.c                                      | 1 +
+>  arch/x86/events/utils.c                                     | 1 +
+>  arch/x86/events/zhaoxin/core.c                              | 1 +
+>  arch/x86/hyperv/hv_apic.c                                   | 1 +
+>  arch/x86/hyperv/hv_init.c                                   | 1 +
+>  arch/x86/hyperv/hv_spinlock.c                               | 1 +
+>  arch/x86/hyperv/hv_vtl.c                                    | 1 +
+>  arch/x86/hyperv/ivm.c                                       | 1 +
+>  arch/x86/include/asm/fred.h                                 | 1 +
+>  arch/x86/include/asm/kvm_host.h                             | 1 +
+>  arch/x86/include/asm/microcode.h                            | 2 ++
+>  arch/x86/include/asm/mshyperv.h                             | 1 +
+>  arch/x86/include/asm/msr.h                                  | 1 +
+>  arch/x86/include/asm/resctrl.h                              | 2 ++
+>  arch/x86/include/asm/suspend_32.h                           | 1 +
+>  arch/x86/include/asm/suspend_64.h                           | 1 +
+>  arch/x86/include/asm/switch_to.h                            | 2 ++
+>  arch/x86/kernel/acpi/sleep.c                                | 1 +
+>  arch/x86/kernel/amd_nb.c                                    | 1 +
+>  arch/x86/kernel/apic/apic.c                                 | 1 +
+>  arch/x86/kernel/apic/apic_numachip.c                        | 1 +
+>  arch/x86/kernel/cet.c                                       | 1 +
+>  arch/x86/kernel/cpu/amd.c                                   | 1 +
+>  arch/x86/kernel/cpu/aperfmperf.c                            | 1 +
+>  arch/x86/kernel/cpu/bus_lock.c                              | 1 +
+>  arch/x86/kernel/cpu/feat_ctl.c                              | 1 +
+>  arch/x86/kernel/cpu/hygon.c                                 | 1 +
+>  arch/x86/kernel/cpu/mce/inject.c                            | 1 +
+>  arch/x86/kernel/cpu/microcode/core.c                        | 1 +
+>  arch/x86/kernel/cpu/mshyperv.c                              | 1 +
+>  arch/x86/kernel/cpu/resctrl/core.c                          | 1 +
+>  arch/x86/kernel/cpu/resctrl/monitor.c                       | 1 +
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                   | 1 +
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c                      | 1 +
+>  arch/x86/kernel/cpu/sgx/main.c                              | 1 +
+>  arch/x86/kernel/cpu/topology.c                              | 1 +
+>  arch/x86/kernel/cpu/topology_amd.c                          | 1 +
+>  arch/x86/kernel/cpu/tsx.c                                   | 1 +
+>  arch/x86/kernel/cpu/zhaoxin.c                               | 1 +
+>  arch/x86/kernel/fpu/core.c                                  | 1 +
+>  arch/x86/kernel/fpu/xstate.c                                | 1 +
+>  arch/x86/kernel/fpu/xstate.h                                | 1 +
+>  arch/x86/kernel/fred.c                                      | 1 +
+>  arch/x86/kernel/hpet.c                                      | 1 +
+>  arch/x86/kernel/kvm.c                                       | 1 +
+>  arch/x86/kernel/paravirt.c                                  | 1 +
+>  arch/x86/kernel/process.c                                   | 1 +
+>  arch/x86/kernel/process_64.c                                | 1 +
+>  arch/x86/kernel/trace_clock.c                               | 2 +-
+>  arch/x86/kernel/traps.c                                     | 1 +
+>  arch/x86/kernel/tsc.c                                       | 1 +
+>  arch/x86/kernel/tsc_sync.c                                  | 1 +
+>  arch/x86/kvm/svm/avic.c                                     | 1 +
+>  arch/x86/kvm/svm/sev.c                                      | 1 +
+>  arch/x86/kvm/svm/svm.c                                      | 1 +
+>  arch/x86/kvm/vmx/nested.c                                   | 1 +
+>  arch/x86/kvm/vmx/pmu_intel.c                                | 1 +
+>  arch/x86/kvm/vmx/sgx.c                                      | 1 +
+>  arch/x86/kvm/vmx/vmx.c                                      | 1 +
+>  arch/x86/lib/insn-eval.c                                    | 1 +
+>  arch/x86/lib/kaslr.c                                        | 2 +-
+>  arch/x86/mm/mem_encrypt_identity.c                          | 1 +
+>  arch/x86/mm/tlb.c                                           | 1 +
+>  arch/x86/pci/amd_bus.c                                      | 1 +
+>  arch/x86/pci/mmconfig-shared.c                              | 3 ++-
+>  arch/x86/power/cpu.c                                        | 1 +
+>  arch/x86/realmode/init.c                                    | 1 +
+>  arch/x86/virt/svm/sev.c                                     | 1 +
+>  arch/x86/xen/enlighten_pv.c                                 | 1 +
+>  arch/x86/xen/pmu.c                                          | 1 +
+>  arch/x86/xen/suspend.c                                      | 1 +
+>  drivers/accel/habanalabs/common/habanalabs_ioctl.c          | 2 --
+>  drivers/acpi/acpi_extlog.c                                  | 1 +
+>  drivers/acpi/processor_perflib.c                            | 1 +
+>  drivers/acpi/processor_throttling.c                         | 6 +++++-
+>  drivers/char/agp/nvidia-agp.c                               | 1 +
+>  drivers/cpufreq/amd-pstate-ut.c                             | 2 ++
+>  drivers/cpufreq/elanfreq.c                                  | 1 -
+>  drivers/cpufreq/sc520_freq.c                                | 1 -
+>  drivers/crypto/ccp/sev-dev.c                                | 1 +
+>  drivers/edac/amd64_edac.c                                   | 1 +
+>  drivers/edac/ie31200_edac.c                                 | 1 +
+>  drivers/edac/mce_amd.c                                      | 1 +
+>  drivers/hwmon/hwmon-vid.c                                   | 4 ++++
+>  drivers/idle/intel_idle.c                                   | 1 +
+>  drivers/misc/cs5535-mfgpt.c                                 | 1 +
+>  drivers/net/vmxnet3/vmxnet3_drv.c                           | 4 ++++
+>  drivers/platform/x86/intel/ifs/core.c                       | 1 +
+>  drivers/platform/x86/intel/ifs/load.c                       | 1 +
+>  drivers/platform/x86/intel/ifs/runtest.c                    | 1 +
+>  drivers/platform/x86/intel/pmc/cnp.c                        | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
+>  .../platform/x86/intel/speed_select_if/isst_if_mbox_msr.c   | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 1 +
+>  drivers/platform/x86/intel/turbo_max_3.c                    | 1 +
+>  .../platform/x86/intel/uncore-frequency/uncore-frequency.c  | 1 +
+>  drivers/powercap/intel_rapl_common.c                        | 1 +
+>  drivers/powercap/intel_rapl_msr.c                           | 1 +
+>  .../intel/int340x_thermal/processor_thermal_device.c        | 1 +
+>  drivers/thermal/intel/intel_tcc_cooling.c                   | 1 +
+>  drivers/thermal/intel/x86_pkg_temp_thermal.c                | 1 +
+>  drivers/video/fbdev/geode/display_gx.c                      | 1 +
+>  drivers/video/fbdev/geode/gxfb_core.c                       | 1 +
+>  drivers/video/fbdev/geode/lxfb_ops.c                        | 1 +
+>  127 files changed, 142 insertions(+), 8 deletions(-)
+>=20
+
+> diff --git a/arch/x86/kernel/trace_clock.c b/arch/x86/kernel/trace_clock.=
+c
+> index b8e7abe00b06..708d61743d15 100644
+> --- a/arch/x86/kernel/trace_clock.c
+> +++ b/arch/x86/kernel/trace_clock.c
+> @@ -4,7 +4,7 @@
+>   */
+>  #include <asm/trace_clock.h>
+>  #include <asm/barrier.h>
+> -#include <asm/msr.h>
+> +#include <asm/tsc.h>
+
+Does this change belong to this patch?
+
+It might even cause a build failure until the second patch which moves=20
+the tsc related things to the other file (unless there's indirect include=
 =20
-> >> >
-> >> > So the function is read_pipe so it should probably return a ssize_t.=
- I
-> >> > stopped short of that but made ret a ssize_t to silence the truncati=
-on
-> >> > warning on the read call. Assigning smaller to bigger is of course n=
-ot
-> >> > an issue for epoll_wait. =20
-> >>
-> >> Oh yes, I missed that ret is also used for the result of read().
-> >>
-> >> Some lines down there is also a combination of
-> >>
-> >> ret =3D enter_cgroup() (which is int)
-> >>
-> >> and
-> >>
-> >> ret =3D write()
-> >>
-> >>
-> >> Just confusing but yes, because ret is also used for read() and write()
-> >> in those cases it should be ssize_t.
-> >>
-> >> I'm sorry for the noise. =20
-> >
-> > No worries, I'm appreciative of the eyes. I suspect we'll only pick up
-> > the first patches in this series to fix what is a bug on ARM. I think
-> > I'm responsible for too much noise here ;-) =20
->=20
-> A final thought (in case this patch will also be picked):
->=20
-> Why not, in case of read_pipe() and worker_thread() just cast
-> read() and write() to int?  Both get counts of sizeof(int) and
-> it would clearly show: we know the result fits into an int.
+path to asm/msr.h).
 
-This is an obvious case of the entire insanity of these changes.
+> diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
+> index a58f451a7dd3..b5893928d55c 100644
+> --- a/arch/x86/lib/kaslr.c
+> +++ b/arch/x86/lib/kaslr.c
+> @@ -8,7 +8,7 @@
+>   */
+>  #include <asm/asm.h>
+>  #include <asm/kaslr.h>
+> -#include <asm/msr.h>
+> +#include <asm/tsc.h>
 
-	David
+Same thing here.
 
->=20
-> In case of read_pipe() that would mean to just change one line in
-> contrast to:
->=20
-> @@ -172,23 +173,25 @@ static void exit_cgroup(int nr)
+>  #include <asm/archrandom.h>
+>  #include <asm/e820/api.h>
+>  #include <asm/shared/io.h>
+
+> diff --git a/drivers/accel/habanalabs/common/habanalabs_ioctl.c b/drivers=
+/accel/habanalabs/common/habanalabs_ioctl.c
+> index 8729a0c57d78..dc80ca921d90 100644
+> --- a/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+> +++ b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+> @@ -17,8 +17,6 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/vmalloc.h>
 > =20
->  static inline int read_pipe(struct thread_data *td)
->  {
-> -	int ret, m;
-> +	ssize_t ret;
-> +	int m;
->  retry:
->  	if (nonblocking) {
->  		ret =3D epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1);
->  		if (ret < 0)
-> -			return ret;
-> +			return (int)ret;
->  	}
->  	ret =3D read(td->pipe_read, &m, sizeof(int));
->  	if (nonblocking && ret < 0 && errno =3D=3D EWOULDBLOCK)
->  		goto retry;
-> -	return ret;
-> +	return (int)ret;
->=20
->=20
-> Best regards,
->=20
-> Dirk
->=20
+> -#include <asm/msr.h>
+> -
 
+I suggested making a separate patch out of these removals. Currently you=20
+do them without any clear warning in the changelog which only talks about=
+=20
+adding asm/msr.h.
+
+> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor=
+_throttling.c
+> index 00d045e5f524..ecd7fe256153 100644
+> --- a/drivers/acpi/processor_throttling.c
+> +++ b/drivers/acpi/processor_throttling.c
+> @@ -18,9 +18,13 @@
+>  #include <linux/sched.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/acpi.h>
+> +#include <linux/uaccess.h>
+>  #include <acpi/processor.h>
+>  #include <asm/io.h>
+> -#include <linux/uaccess.h>
+> +#include <asm/asm.h>
+
+???
+
+> +#ifdef CONFIG_X86
+> +#include <asm/msr.h>
+> +#endif
+
+
+I really appreciate you took the effort to do this change the correct
+way! :-)
+
+--
+ i.
+--8323328-2124274657-1746191047=:958--
