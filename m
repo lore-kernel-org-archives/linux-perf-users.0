@@ -1,176 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094E924167C;
-	Fri,  2 May 2025 10:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C881E5B62;
+	Fri,  2 May 2025 11:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746183119; cv=none; b=tLJNzbAHnprntuw2MC0quZmDxXZ2Ixj+fVapolIKOdcfR7l4RIUDaLjFVEWf5EY1EtgNq6vrw/5raPudI7MOp9GX6VFrJwzcNfcyyTyZYIQplHiaJY/9AOnGM7lw88nhnuQlZwTZjNYqOyh0vXLEaHEOIuYIxZDNG27hgiNx69Y=
+	t=1746185014; cv=none; b=osDXjMz7z3TvR5RrTV/Pr9VN+i+4UsqNkekmmHrcX8UD7kONHuXPO59sxibhAp05FwEE9AkRCpGa3Oz1MqB7oMnm9SIYUUKehsyyOi6aFqsZLNuzxKIfnatunEPPGzT8pxsbi4w9Opvd/JQGZEPx0lIN3hmjD7f9NK9FWnFEKno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746183119; c=relaxed/simple;
-	bh=FR1svUWuKMgzXQh3HaE0yPgWzy0dReuXGI/447taf58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ih0J8XNdtb0mamKnbc/Gb3JWrdk2iIlPxmz5yBz/PvlIRGAHXHSZKGOxaJAiT6dxivExSnYezJ5PYHohtjdCkVUNi45vrF7gMnFR7Wz0BWnmloJisFGkNLGQftRgsxOMgIBWivkIwTyQKL04v2Y+6xJ5YoiXLvYHaYnswJSYnLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E8A1688;
-	Fri,  2 May 2025 03:51:47 -0700 (PDT)
-Received: from [10.163.80.227] (unknown [10.163.80.227])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F8993F66E;
-	Fri,  2 May 2025 03:51:45 -0700 (PDT)
-Message-ID: <02c125c9-7a1f-4dfd-b058-02a38ed5b598@arm.com>
-Date: Fri, 2 May 2025 16:21:40 +0530
+	s=arc-20240116; t=1746185014; c=relaxed/simple;
+	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUCWQpoSrcP0KEtS9ljATKEOt7WiXA5RQ2z+e0iHBPRJeKQCPi3tt0EeYalYNgp2ATSgIPh+L2QvHQlqOv9R+GpI/hsa+uZofrQvEZLA+bgRvMLfVVWYFA+fIWQ5+1a1mWqy87yKc5dwVNsHTfdkX6Kp7houkXPsPp4kxzVElJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lmV94JNE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmV94JNE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=; b=lmV94JNEzV4MsUJuxpPUrg3Bax
+	VPmVO1/zySgMAd5F2IJnFvPiwZNPECAQ1noECVKMioFjFmA+n5SOAzV+kGbk/f9S1iWtVP9rLg6cZ
+	hHF7SAR0m7IaJh5tCHy2qA/R/vkevPz7ZR3+xa+Zh5GSLdg0ezbI6iHsuifF9HE00+OjyODMdnQyb
+	JkPl44vhH6EmamOKaWacZeeUgT5U6RxA5F79Ex/83F13pJOquOWPbK7ely8gHy1uVeRQNWbA0aBQP
+	f+nYHty39Jk6K+NlHv/lPYoCn7B5BgUPqoEMb82IHPQShd8FJim54uJ17ucrfOJGKm432KMXzRw1R
+	RwhYSB9w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAoTJ-0000000FKnO-0XWf;
+	Fri, 02 May 2025 11:22:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6C1A530057C; Fri,  2 May 2025 13:22:16 +0200 (CEST)
+Date: Fri, 2 May 2025 13:22:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>, Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf: Allocate non-contiguous AUX pages by default
-To: Yabin Cui <yabinc@google.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Liang Kan <kan.liang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250501193556.23473-1-yabinc@google.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250501193556.23473-1-yabinc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
 
-On 5/2/25 01:05, Yabin Cui wrote:
-> perf always allocates contiguous AUX pages based on aux_watermark.
-> However, this contiguous allocation doesn't benefit all PMUs. For
-> instance, ARM SPE and TRBE operate with virtual pages, and Coresight
-> ETR allocates a separate buffer. For these PMUs, allocating contiguous
-> AUX pages unnecessarily exacerbates memory fragmentation. This
-> fragmentation can prevent their use on long-running devices.
-> 
-> This patch modifies the perf driver to be memory-friendly by default,
-> by allocating non-contiguous AUX pages. For PMUs requiring contiguous
-> pages (Intel BTS and some Intel PT), the existing
-> PERF_PMU_CAP_AUX_NO_SG capability can be used. For PMUs that don't
-> require but can benefit from contiguous pages (some Intel PT), a new
-> capability, PERF_PMU_CAP_AUX_PREFER_LARGE, is added to maintain their
-> existing behavior.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> ---
-> Changes since v2:
-> Let NO_SG imply PREFER_LARGE. So PMUs don't need to set both flags.
-> Then the only place needing PREFER_LARGE is intel/pt.c.
-> 
-> Changes since v1:
-> In v1, default is preferring contiguous pages, and add a flag to
-> allocate non-contiguous pages. In v2, default is allocating
-> non-contiguous pages, and add a flag to prefer contiguous pages.
-> 
-> v1 patchset:
-> perf,coresight: Reduce fragmentation with non-contiguous AUX pages for
-> cs_etm
-> 
->  arch/x86/events/intel/pt.c  |  2 ++
->  include/linux/perf_event.h  |  1 +
->  kernel/events/ring_buffer.c | 20 +++++++++++++-------
->  3 files changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-> index fa37565f6418..25ead919fc48 100644
-> --- a/arch/x86/events/intel/pt.c
-> +++ b/arch/x86/events/intel/pt.c
-> @@ -1863,6 +1863,8 @@ static __init int pt_init(void)
->  
->  	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries))
->  		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_NO_SG;
-> +	else
-> +		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_PREFER_LARGE;
->  
->  	pt_pmu.pmu.capabilities		|= PERF_PMU_CAP_EXCLUSIVE |
->  					   PERF_PMU_CAP_ITRACE |
+On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
 
-Why this PMU has PERF_PMU_CAP_AUX_PREFER_LARGE fallback option but
-not the other PMU in arch/x86/events/intel/bts.c even though both
-had PERF_PMU_CAP_AUX_NO_SG ?
+> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
+> You can go buy the Intel hardware off the shelf today.
 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 0069ba6866a4..56d77348c511 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -301,6 +301,7 @@ struct perf_event_pmu_context;
->  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
->  #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-> +#define PERF_PMU_CAP_AUX_PREFER_LARGE		0x0400
->  
->  /**
->   * pmu::scope
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 5130b119d0ae..4d2f1c95673e 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -679,7 +679,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  {
->  	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
->  	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
-> -	int ret = -ENOMEM, max_order;
-> +	int ret = -ENOMEM, max_order = 0;
+To be fair, the Intel RAR thing is pretty horrific :-( Definitely
+sub-par compared to the AMD and ARM things.
 
-0 order is now the default allocation granularity. This might benefit
-from a comment above explaining that max_order could change only with
-PERF_PMU_CAP_AUX_NO_SG or PERF_PMU_CAP_AUX_PREFER_LARGE PMU flags etc.
+Furthermore, the paper states it is a uarch feature for SPR with no
+guarantee future uarchs will get it (and to be fair, I'd prefer it if
+they didn't).
 
->  
->  	if (!has_aux(event))
->  		return -EOPNOTSUPP;
-> @@ -689,8 +689,8 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  
->  	if (!overwrite) {
->  		/*
-> -		 * Watermark defaults to half the buffer, and so does the
-> -		 * max_order, to aid PMU drivers in double buffering.
-> +		 * Watermark defaults to half the buffer, to aid PMU drivers
-> +		 * in double buffering.
->  		 */
->  		if (!watermark)
->  			watermark = min_t(unsigned long,
-> @@ -698,16 +698,22 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
->  					  (unsigned long)nr_pages << (PAGE_SHIFT - 1));
->  
->  		/*
-> -		 * Use aux_watermark as the basis for chunking to
-> +		 * For PMUs that need or prefer large contiguous buffers,
-> +		 * use aux_watermark as the basis for chunking to
->  		 * help PMU drivers honor the watermark.
->  		 */
-> -		max_order = get_order(watermark);
-> +		if (event->pmu->capabilities & (PERF_PMU_CAP_AUX_NO_SG |
-> +						PERF_PMU_CAP_AUX_PREFER_LARGE))
-> +			max_order = get_order(watermark);
->  	} else {
->  		/*
-> -		 * We need to start with the max_order that fits in nr_pages,
-> +		 * For PMUs that need or prefer large contiguous buffers,
-> +		 * we need to start with the max_order that fits in nr_pages,
->  		 * not the other way around, hence ilog2() and not get_order.
->  		 */
-> -		max_order = ilog2(nr_pages);
-> +		if (event->pmu->capabilities & (PERF_PMU_CAP_AUX_NO_SG |
-> +						PERF_PMU_CAP_AUX_PREFER_LARGE))
-> +			max_order = ilog2(nr_pages);
->  		watermark = 0;
->  	}
->  
-
-Although not really sure, could event->pmu->capabilities check against the ORed
-PMU flags PERF_PMU_CAP_AUX_NO_SG and PERF_PMU_CAP_AUX_PREFER_LARGE be contained
-in a helper pmu_prefers_cont_alloc(struct *pmu ...) or something similar ?
+Furthermore, I suspect it will actually be slower than IPIs for anything
+with more than 64 logical CPUs due to reduced parallelism.
