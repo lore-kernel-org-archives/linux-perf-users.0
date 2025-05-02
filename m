@@ -1,298 +1,205 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F84822DFA7
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 May 2025 09:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458FB23184A
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 May 2025 09:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176783; cv=none; b=El7huk5R2aWQaDQnA1MjPY49SKYnRgVEpRRsZ105N5Lz6tT5VbgTOlvRDquWUMwmaqpE+aQp70FphwuJLO0NlU29PeoDL8Ef0Zwokc01rFRthEfEFHPKqMf5YvhkKlkOyIM1EUXSEV+6X9tBWi8zKiChaFMCP8ONcBS0nUiUtcU=
+	t=1746179731; cv=none; b=KbFnfe8JvKxVpccyWo1vKrnpMCTwRR05eaEHEDmYz5MnnWYOFxF69UWq65w5Im+MfiQxHf8qC8vOUiK6soiKr5BnVYgjC/RKMmpuYemwvVPsaMgMTbKpId6jxwqopMtvea4DPN3ibV+OmAQR5Gu1oWpKjDocND9/8ZdKy+RAnYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176783; c=relaxed/simple;
-	bh=kzBefYFh2I/qWMCbO9Dd/AMd7iBsPql5B406PyvyiUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LYf9381XjHfNjkH176BZzxbGtbAoFtQPNG/KvSFsu1UEqjgYSImXyIJHoZ5xAWw4zCMUNFgDbJu6U21QKcxMuVrnPb+dvHyXNMiZyN52y7O9YcDq2ZkNB3YBh19cO4jCh60sMfaPPag+dh1xA/sajIoDhAWcla6NwN9P1natcfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=px+bBO79; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746179731; c=relaxed/simple;
+	bh=DbOmruiDXqyCFuxtwBSQJBYz2MVx6spaIxjAgcz+Oj8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PSHzSn8CetyhlNluU20ca1N28O36vS8cfd0hbmC+pX4Uf4JQxdY8h5bE+L7Z+ksWB0cdAt/6G+d+xEbfTLZroF1JDt8NvDtJFHbFGnSKtydWpr0yP8yJi4cvzBhSF1AvQH+lJ3Fctq4wNdWvywlLSVsJv4laMLfL0cAKfAdwQ+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/2SNfyP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="px+bBO79"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541M0geq011560;
-	Fri, 2 May 2025 09:06:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=IAAOoe
-	3Cy/FuVRNXtgYsa7nitP231NLJy4EXeBm89rk=; b=px+bBO79zejt4i7w0/62VH
-	j9uBtl+eo2o6rfZr2vk0hWvR6gq6XCeROloRkTLuoDZaoALDFbjaAoxeT84mH17V
-	2gpNhHF4sTQ6EFaYKamqNCbhtPY/cy4DWWB7LfdmHy0KFu2lrByN76VWykvK6nrT
-	q9vaVushxVIUmDqRdmZSr+HdMeRJaNDlw2YmDD0Min4zeN89hlqaNkZp6YxHE+YE
-	3058iEqQ7gOZjmQ7KiAy6SHqJkEqbXscQci1mBQqU4TEFtC5bypKNlE7KRj8Z/mh
-	Q4DWQh8tskftBolarvQ1GZI9lPuoYVxwlBgO+WFQlKEn36Z9dNjbgaLwUKXfXjCw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7dsd0x7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 09:06:10 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5428swL5029758;
-	Fri, 2 May 2025 09:06:10 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7dsd0wt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 09:06:10 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5425kcoA031617;
-	Fri, 2 May 2025 09:06:01 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4699tuhaut-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 09:06:01 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54295vAr59638186
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 09:05:57 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE2A92004B;
-	Fri,  2 May 2025 09:05:57 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAC0720049;
-	Fri,  2 May 2025 09:05:55 +0000 (GMT)
-Received: from [9.39.16.240] (unknown [9.39.16.240])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  2 May 2025 09:05:55 +0000 (GMT)
-Message-ID: <876f14c7-2a9c-403a-809b-2c0f9bb41ba2@linux.ibm.com>
-Date: Fri, 2 May 2025 14:35:54 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/2SNfyP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746179728;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+	b=c/2SNfyPnj7Q9740GNXSjSEGfyVQvNzu1kfdfMKK8wnyBIbvhRbHp3RRvGxNKhur9XdPjf
+	NDwyDWSpxQFULU3QRWu9NWeR+N9O9AzjSw5ovLXlF7ih/C0yxFkdnAFJo+C44m7WQjSUzY
+	0rKen5oRNhg+LimqnoXiLxENKrWjTpg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-194-5_HGXMKjMhup5ShXPeyUtg-1; Fri, 02 May 2025 05:55:27 -0400
+X-MC-Unique: 5_HGXMKjMhup5ShXPeyUtg-1
+X-Mimecast-MFC-AGG-ID: 5_HGXMKjMhup5ShXPeyUtg_1746179726
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39143311936so531321f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 May 2025 02:55:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746179726; x=1746784526;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+        b=RxP+w4w8Latzh94siQ1DWbzFtOn1m5bnd4QKyzSWa2wWolbjqAtzFWxvc8cMK3/VXM
+         7lUqVJR/uL3ukER/tfpZYKAY/BuHNtj1joVDx7vz1gNmI9gx4FeYKBj8Id5/pgnlFdjk
+         cNxhyfopuXM32Htz0CgwsuJmN7uUWjVsdCtWIHZsrloO7h0n+cj23HP35fGQsmoZxBgB
+         M+BgpYbI6PWvw/Iz7VfOLr4ye97t6Rv4TAgDOxdwIX5yfpZiyznWmBtSPwH+V4r1W5jH
+         cpvqUqxTQG90iJwOc6GPdC6Oe4VrhBpCQmoo8dT0KE3fx4kJtjauZS0hGR4qSKixSAgF
+         VAkA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8zmN8JRcRKA7E8NGsRJgRrkHeuLfzy4NCPHfuVPWUA4ToeUgU7m8ksOXfkuqu/Zrprx3LlOso7Hhl1tnEgqif@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDPSvtSejo9fMfTwkk4NZWXjaY7yqUSMgRimVjhd7LEZyLfEH+
+	kFY08cEvUE4bHZ8sNjcy5MNCgdsQxx1TEGzLTb3NE48997tAn8IyctHVWryZK7KIL8bA8eEZSZS
+	qygUBpRhG6h4hbIvhznZItrXjcrI9Xh4Oa3DNkD7lh9QbyRrDFbrejVi3Yq3Mhv+CN4U=
+X-Gm-Gg: ASbGncsC8uw3HuEeL/SuzNCqr7jqb7p8OQSvsLWVf4tq8JFpyD+Jxu4hO2nyDnHkYje
+	1AdblCiteuEGLFwEqqa1ckGhj0JfhhN6P6GL/BmuUc/Wjbw1fAm2MMJ0bdiBOGhDWPUwpfCUQ+J
+	L8N9KfygyYRqRwAaVuxLNRgHY69nhKiouwYMMafLlLp1YggUJY4vEU2lv1NGsEF9xYq0y2H5eAv
+	zsVaFRjyFKcgdGfRRNE1lXBSY56FCRn47zxuyVwBi90HuuBQlCpUP6LM2hLUanJdTljiWa5+xio
+	wHWB4YIxM2m2fjwSTnrvrIlv4C5QTSXMpvi2ERzPLPUI0/gI
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613276f8f.54.1746179725797;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpWssSttWyCeyGY3CsU2VpUSZWAU4rNhFXcV+QIILeKOWgOhhc72G0KBYplClE77XLY5f7yg==
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613170f8f.54.1746179725069;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm1693329f8f.38.2025.05.02.02.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 02:55:24 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+Date: Fri, 02 May 2025 11:55:21 +0200
+Message-ID: <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
- cpumap.c
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-References: <20250406163412.897313-1-likhitha@linux.ibm.com>
- <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
- <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
- <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com>
- <D1C1E5D6-085A-41D1-85AB-52809C956BFB@linux.ibm.com> <aAvKg8K2fyrZ6zy4@x1>
-Content-Language: en-US
-From: Likhitha Korrapati <likhitha@linux.ibm.com>
-In-Reply-To: <aAvKg8K2fyrZ6zy4@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=afZhnQot c=1 sm=1 tr=0 ts=68148b02 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=zDGJ4L4n3l-mZm_ena4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 2JaCjYvcfWzKcZKt7IB5WJ4HBFpC3Db1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA3MSBTYWx0ZWRfXyrZKywzvAogg 8o70CJbFwsEIC/bpxjxw+D9FZiljhbZcqyBTjFWLCd48F3NSx5tjj3AbiMD5OoGRtg2QCzWZQKR PX6QD2149fwTi48qxVIr/Zz7uDGpeXI/FGGQZvkNIpB3R0NreQsTjpTtLE3SND1J80NyNzJCMTD
- xELJCnI7o946wozsqhgnRc0rXEXYJtMQFkWPSvGRQx5Y8cpuNkGSUnTu7rFcezgEd+MtBYB7/TD ircpUPss6gTdmp3QsxzowVdvgwshqPoVDgWRktRT9qIGwIZpsgalJpra4HSpkOXOKi5aQYIo3jR E3K52GropfV77Pf2Ei6bX5m5IOw/MKiZLXbi0wHTWRZdK3mQyPVxLU8cAhmqxuGrWA8BNHRRQaX
- dTcBrfxWCz+JqUzeQW3pfbibmYtS5qmlbEmC2xAUJBdBiNcOhMXdDg1fjwdQQkvr1W3CQGS0
-X-Proofpoint-GUID: 8x02msb4LjZGj6xc9YwE3Z6h0S0mjYQI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505020071
+Content-Type: text/plain
 
-Hi Arnaldo,
+On 30/04/25 13:00, Dave Hansen wrote:
+> On 4/30/25 12:42, Steven Rostedt wrote:
+>>> Look at the syscall code for instance:
+>>>
+>>>> SYM_CODE_START(entry_SYSCALL_64)
+>>>>         swapgs
+>>>>         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+>>>>         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
+>>> You can _trivially_ audit this and know that swapgs doesn't touch memory
+>>> and that as long as PER_CPU_VAR()s and the process stack don't have
+>>> their mappings munged and flushes deferred that this would be correct.
+>> Hmm, so there is still a path for this?
+>>
+>> At least if it added more ways to debug it, and some other changes to make
+>> the locations where vmalloc is dangerous smaller?
+>
+> Being able to debug it would be a good start. But, more generally, what
+> we need is for more people to be able to run the code in the first
+> place. Would a _normal_ system (without setups that are trying to do
+> NOHZ_FULL) ever be able to defer TLB flush IPIs?
+>
+> If the answer is no, then, yeah, I'll settle for some debugging options.
+>
+> But if you shrink the window as small as I'm talking about, it would
+> look very different from this series.
+>
+> For instance, imagine when a CPU goes into the NOHZ mode. Could it just
+> unconditionally flush the TLB on the way back into the kernel (in the
+> same SWITCH_TO_KERNEL_CR3 spot)? Yeah, it'll make entry into the kernel
+> expensive for NOHZ tasks, but it's not *THAT* bad. And if the entire
+> point of a NOHZ_FULL task is to minimize the number of kernel entries
+> then a little extra overhead there doesn't sound too bad.
+>
 
-On 4/25/25 23:16, Arnaldo Carvalho de Melo wrote:
-> On Fri, Apr 25, 2025 at 08:19:02PM +0530, Athira Rajeev wrote:
->>> On 14 Apr 2025, at 7:08 AM, Madhavan Srinivasan <maddy@linux.ibm.com> wrote:
->>> On 4/7/25 5:38 PM, Venkat Rao Bagalkote wrote:
->>>> On 07/04/25 12:10 am, Athira Rajeev wrote:
->>>>>> On 6 Apr 2025, at 10:04 PM, Likhitha Korrapati <likhitha@linux.ibm.com> wrote:
-> 
->>>>>> perf build break observed when using gcc 13-3 (FC39 ppc64le)
->>>>>> with the following error.
-> 
->>>>>> cpumap.c: In function 'perf_cpu_map__merge':
->>>>>> cpumap.c:414:20: error: argument 1 range [18446744069414584320, 18446744073709551614] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
->>>>>>    414 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
->>>>>>        |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>>>> In file included from cpumap.c:4:
->>>>>> /usr/include/stdlib.h:672:14: note: in a call to allocation function 'malloc' declared here
->>>>>>    672 | extern void *malloc (size_t __size) __THROW __attribute_malloc__
->>>>>>        |              ^~~~~~
->>>>>> cc1: all warnings being treated as errors
-> 
->>>>>> Error happens to be only in gcc13-3 and not in latest gcc 14.
->>>>>> Even though git-bisect pointed bad commit as:
->>>>>> 'commit f5b07010c13c ("libperf: Don't remove -g when EXTRA_CFLAGS are used")',
->>>>>> issue is with tmp_len being "int". It holds number of cpus and making
->>>>>> it "unsigned int" fixes the issues.
-> 
->>>>>> After the fix:
-> 
->>>>>>    CC      util/pmu-flex.o
->>>>>>    CC      util/expr-flex.o
->>>>>>    LD      util/perf-util-in.o
->>>>>>    LD      perf-util-in.o
->>>>>>    AR      libperf-util.a
->>>>>>    LINK    perf
->>>>>>    GEN     python/perf.cpython-312-powerpc64le-linux-gnu.so
-> 
->>>>>> Signed-off-by: Likhitha Korrapati <likhitha@linux.ibm.com>
->>>>> Looks good to me
-> 
->>>>> Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> 
->>>> Tested this patch on perf-tools-next repo, and this patch fixes the issue.
-> 
->>>> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> 
->>> Arnaldo, Namhyung,
-> 
->>> can you consider pulling this fix? since it is breaking the build in gcc13-3 or
->>> if you have any comments do let us know.
-> 
-> This isn't the only place in that file where this pattern exists:
-> 
-> ⬢ [acme@toolbx perf-tools-next]$ grep malloc tools/lib/perf/cpumap.c
-> 	cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-> 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> 
-> struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-> {
->          RC_STRUCT(perf_cpu_map) *cpus;
->          struct perf_cpu_map *result;
-> 
->          if (nr_cpus == 0)
->                  return NULL;
-> 
->          cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-> 
-> 
-> int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
-> {
->          struct perf_cpu *tmp_cpus;
->          int tmp_len;
->          int i, j, k;
->          struct perf_cpu_map *merged;
-> 
->          if (perf_cpu_map__is_subset(*orig, other))
->                  return 0;
->          if (perf_cpu_map__is_subset(other, *orig)) {
->                  perf_cpu_map__put(*orig);
->                  *orig = perf_cpu_map__get(other);
->                  return 0;
->          }
-> 
->          tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
->          tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 
-> 
-> struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
->                                               struct perf_cpu_map *other)
-> {
->          struct perf_cpu *tmp_cpus;
->          int tmp_len;
->          int i, j, k;
->          struct perf_cpu_map *merged = NULL;
-> 
->          if (perf_cpu_map__is_subset(other, orig))
->                  return perf_cpu_map__get(orig);
->          if (perf_cpu_map__is_subset(orig, other))
->                  return perf_cpu_map__get(other);
-> 
->          tmp_len = max(__perf_cpu_map__nr(orig), __perf_cpu_map__nr(other));
->          tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> 
-> I'm trying to figure out why its only in perf_cpu_map__merge() that this
-> triggers :-\
-> 
-> Maybe that max() call in perf_cpu_map__intersect() somehow makes the
-> compiler happy.
-> 
-> And in perf_cpu_map__alloc() all calls seems to validate it.
-> 
-> But wouldn't turning this into a calloc() be better?
-> 
-> Like:
-> 
-> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> index 4454a5987570cfbc..99d21618a252ac0e 100644
-> --- a/tools/lib/perf/cpumap.c
-> +++ b/tools/lib/perf/cpumap.c
-> @@ -411,7 +411,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
->          }
->   
->          tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
-> -       tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> +       tmp_cpus = calloc(tmp_len, sizeof(struct perf_cpu));
->          if (!tmp_cpus)
->                  return -ENOMEM;
->   
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> 
-> And better, do the max size that the compiler is trying to help us
-> catch?
-> 
-> - Arnaldo
+Right, so my thought per your previous comments was to special case the
+TLB flush, depend on kPTI and do it uncondtionally in SWITCH_TO_KERNEL_CR3
+just like you've described - but keep the context tracking mechanism for
+other deferrable operations.
 
-I am not sure if using max() is right incase of perf_cpu_map_merge as 
-this is a merge functionality. As this is summation we get a value 
-greater than the max of orig and other cpus. And this might be correct 
-in perf_cpu_map__intersect() but will cause issues in perf_cpu_map__marge().
-Can you please eloborate if you meant this or there is something else I 
-missed.
+My gripe with that was having two separate mechanisms
+- super early entry around SWITCH_TO_KERNEL_CR3)
+- later entry at context tracking
 
-I tried the following:
+Shifting everything to SWITCH_TO_KERNEL_CR3 means we lose the
+context_tracking infra to dynamically defer operations (atomically reading
+and writing to context_tracking.state), which means we unconditionally run
+all possible deferrable operations. This doesn't scream scalable, even
+though as you say NOHZ_FULL kernel entry is already a "you lose" situation.
 
-int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-{
-         return cpus ? __perf_cpu_map__nr(cpus) : 1;
-}
+Yet another option is to duplicate the context tracking state specifically
+for IPI deferral and have it driven in/by SWITCH_TO_KERNEL_CR3, which is
+also not super savoury.
 
-static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-{
-         return RC_CHK_ACCESS(cpus)->nr;
-}
+I suppose I can start poking around running deferred ops in that
+SWITCH_TO_KERNEL_CR3 region, and add state/infra on top. Let's see where
+this gets me :-)
 
-This got introduced via commit 7d1b529f164d33ad4514b272bcec65036873d717 
-where it assumes cpu map as non-null.
+Again, thanks for the insight and the suggestions Dave!
 
-And we are checking this non-null in perf_cpu_map__merge()
+> Also, about the new hardware, I suspect there's some mystery customer
+> lurking in the shadows asking folks for this functionality. Could you at
+> least go _talk_ to the mystery customer(s) and see which hardware they
+> care about? They might already even have the magic CPUs they need for
+> this, or have them on the roadmap. If they've got Intel CPUs, I'd be
+> happy to help figure it out.
 
-         if (perf_cpu_map__is_subset(*orig, other))
-                 return 0;
-         if (perf_cpu_map__is_subset(other, *orig)) {
-                 perf_cpu_map__put(*orig);
-                 *orig = perf_cpu_map__get(other);
-                 return 0;
-         }
-
-Using perf_cpu_map__nr instead of __perf_cpu_map__nr  and this works as 
-it has a check.
-
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -410,7 +410,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, 
-struct perf_cpu_map *other)
-                 return 0;
-         }
-
--       tmp_len = max(__perf_cpu_map__nr(*orig), __perf_cpu_map__nr(other));
-+       tmp_len = perf_cpu_map__nr(*orig) +  perf_cpu_map__nr(other);
-         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-         if (!tmp_cpus)
-                 return -ENOMEM;
-Regards,
-Likhitha.
