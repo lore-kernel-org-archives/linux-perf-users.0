@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABE32BD585;
-	Mon,  5 May 2025 22:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD23C2D37EF;
+	Mon,  5 May 2025 22:47:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485191; cv=none; b=gczajIXzeRCRyY8/hYeP2JMdkDalKoYyUSFBuk4UDQeWIuKkkaoLmAeKga4uP0s32uxnluJnmU3XsWUf2+XnUC7kU8irlt+ly8OupyXUDdwR9jqlhBVzPQ1R3NmUbZ/kXNt0OW0JJH5ceDiaFStImwvJldTtt4vIM1cjVDdXvJ8=
+	t=1746485239; cv=none; b=junG3c7sNtGngr537OnS1kRE3vW3vPRCZAsG7WzdAoNre4L4kabX2xTji+H6a77E88/pVt3sg3ZLR7qwyEmp1WafbWv29ry1oracugpycRGnRvBPDr0o1r5SUc1oK+eHXyetW6k4mhHsz6AewXBOQZ6j4qXVMUW8pl+Uiel7BKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485191; c=relaxed/simple;
-	bh=Nb9WwKqb2w5KCbCEHMmkoXMoM7qE9XNWo3xQoG4YWSc=;
+	s=arc-20240116; t=1746485239; c=relaxed/simple;
+	bh=Q6mzvyxCFKn0LYzphUXFPUR4b1GinHCbmTPxZGgDFAI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZsA3I62bOPJ8+J1kiC69gxXqhe7MSpbBhaHVC6UrVngj6bQDw2fgPwiff2mSt72TW+qKJcoNQ1Csw+o1iTbi5j94vYq1OY9QNMb9zq3M3SzP8SPdkPpwogwDxQV4pTzHmFwUJJsJVJZ19RwytKW7fUi/oXmsYgfIvmw03Ow6qXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iblX7p40; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eGTZYkGCPO9n2Ba7CEwXemiwZFx4OYX8jGJGhSlnhZ9k9OfgSVhBfTeX70FLFqseo4BuNpKQLF3paJxZfX1HPLmoU64xXHY01yra8scQ3ck0kpKq+j9lT6yvtT3xO0D0CSKDHjX/w68ndahcHYGxEIN0e8YNKM/HOjiiCXHmD3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFl7pGS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iblX7p40"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA247C4CEEF;
-	Mon,  5 May 2025 22:46:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFl7pGS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706D3C4CEED;
+	Mon,  5 May 2025 22:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485189;
-	bh=Nb9WwKqb2w5KCbCEHMmkoXMoM7qE9XNWo3xQoG4YWSc=;
+	s=k20201202; t=1746485238;
+	bh=Q6mzvyxCFKn0LYzphUXFPUR4b1GinHCbmTPxZGgDFAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iblX7p408hqdLmDLKjYJEfKId/zMU/4uE4ufAYa3RB3XHh+Yq4SCakS0CKZ/k9pnX
-	 Szy/Lvjfh101ZQkWOhnduewTfsllCQIw/87Aaao8lXsNPnRNznuWUDk6snOXg+hwfd
-	 Zj1X0tImVZYGgFNNoiClvirKdugGZ6xh9bpZM0B+DEwuBnEueYXcsH6f0vulC53iy5
-	 yrnehDh2mHU5XiA1xXAF4bpgKj+cAAnKrUOq17tdQDxNhaUcCMBP1MRKygCN6yxZEi
-	 r9WAzIi3RiLomGVhnGNfQ9Y/slKIqPHSytAWuXESDj02qGqHPgiydy9vNxXnT0jjoE
-	 iTYlGw737Q1Nw==
+	b=sFl7pGS3Mp5yRD+wJVWyy5C9CQkpAiJMR1VWSc0LlOQ3TbIDRcGrETxSru5A2JRvf
+	 DB7ribZ42Nzyx4evfGdH9LGZzNm3USUiwQWz4LdDmOhLXE5B7DtXyW0yi0m6gRpHgv
+	 EulKpVDBs43q95u/uOR9Gr1Ioa0xwga1X0iWuKnKGOK1eh8fTYJusb+0AD3h076zoU
+	 LvU12QS7pKzvPPb2oGOmohpTrSM618oXGuxuKx4pI+ANdpCbWslheqyBHUO1RboLOr
+	 t/4MQ929kGsVxqbLjtdNRXtbji2aKTAPGJ2e7Junf+Gt1s94FW4/6dqYLudZv5orfV
+	 xGy5cl0/GdQew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
+Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 202/486] perf/core: Clean up perf_try_init_event()
-Date: Mon,  5 May 2025 18:34:38 -0400
-Message-Id: <20250505223922.2682012-202-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 228/486] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
+Date: Mon,  5 May 2025 18:35:04 -0400
+Message-Id: <20250505223922.2682012-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,105 +54,41 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
 
-[ Upstream commit da02f54e81db2f7bf6af9d1d0cfc5b41ec6d0dcb ]
+[ Upstream commit 04bd15c4cbc3f7bd2399d1baab958c5e738dbfc9 ]
 
-Make sure that perf_try_init_event() doesn't leave event->pmu nor
-event->destroy set on failure.
+Counting events related to setup of the PMU is not desired, but
+kvm_vcpu_pmu_resync_el0() is called just after the PMU counters have
+been enabled. Move the call to before enabling the counters.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Link: https://lore.kernel.org/r/20250205102449.110145835@infradead.org
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Tested-by: James Clark <james.clark@linaro.org>
+Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-1-4e9922fc2e8e@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 65 ++++++++++++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 27 deletions(-)
+ drivers/perf/arm_pmuv3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index edafe9fc4bdd0..19dde12f23b83 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11978,40 +11978,51 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
- 	if (ctx)
- 		perf_event_ctx_unlock(event->group_leader, ctx);
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 0afe02f879b45..d9b56f0f90942 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -816,10 +816,10 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
+ 	else
+ 		armv8pmu_disable_user_access();
  
--	if (!ret) {
--		if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
--		    has_extended_regs(event))
--			ret = -EOPNOTSUPP;
-+	if (ret)
-+		goto err_pmu;
- 
--		if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
--		    event_has_any_exclude_flag(event))
--			ret = -EINVAL;
-+	if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
-+	    has_extended_regs(event)) {
-+		ret = -EOPNOTSUPP;
-+		goto err_destroy;
-+	}
- 
--		if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
--			const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
--			struct cpumask *pmu_cpumask = perf_scope_cpumask(pmu->scope);
--			int cpu;
++	kvm_vcpu_pmu_resync_el0();
++
+ 	/* Enable all counters */
+ 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
 -
--			if (pmu_cpumask && cpumask) {
--				cpu = cpumask_any_and(pmu_cpumask, cpumask);
--				if (cpu >= nr_cpu_ids)
--					ret = -ENODEV;
--				else
--					event->event_caps |= PERF_EV_CAP_READ_SCOPE;
--			} else {
--				ret = -ENODEV;
--			}
--		}
-+	if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
-+	    event_has_any_exclude_flag(event)) {
-+		ret = -EINVAL;
-+		goto err_destroy;
-+	}
- 
--		if (ret && event->destroy)
--			event->destroy(event);
-+	if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
-+		const struct cpumask *cpumask;
-+		struct cpumask *pmu_cpumask;
-+		int cpu;
-+
-+		cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
-+		pmu_cpumask = perf_scope_cpumask(pmu->scope);
-+
-+		ret = -ENODEV;
-+		if (!pmu_cpumask || !cpumask)
-+			goto err_destroy;
-+
-+		cpu = cpumask_any_and(pmu_cpumask, cpumask);
-+		if (cpu >= nr_cpu_ids)
-+			goto err_destroy;
-+
-+		event->event_caps |= PERF_EV_CAP_READ_SCOPE;
- 	}
- 
--	if (ret) {
--		event->pmu = NULL;
--		module_put(pmu->module);
-+	return 0;
-+
-+err_destroy:
-+	if (event->destroy) {
-+		event->destroy(event);
-+		event->destroy = NULL;
- 	}
- 
-+err_pmu:
-+	event->pmu = NULL;
-+	module_put(pmu->module);
- 	return ret;
+-	kvm_vcpu_pmu_resync_el0();
  }
  
+ static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
 -- 
 2.39.5
 
