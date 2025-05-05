@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8FE2FC2D0;
-	Mon,  5 May 2025 22:25:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E233379F4;
+	Mon,  5 May 2025 22:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483956; cv=none; b=mD+YJUg1Eg+Ps+6A64Hnyx/00DKvStLtyORzEy5ae0UeE2by5LXoKgAjnYaZhtXpubCv4uq/95JUXF2fp1On/JaFet6/pTq+vqdRuUtX7LEga90IXdYrDvAg2AasRFEL4I9vZZjPa0PsVTUYP/QRzKcAdVlX+qL3fVA+g/m/0lE=
+	t=1746484610; cv=none; b=dMl8qimw+LBTTOSReBz47slq/5tfBYOSrzAFYlZTDKwu2V830v2xM/5FiQkpVB0wCtBRESx+loR0TQSRetSYgtakKQNdHWnaDWzkP4ew0My2Ubfr2wPjF94dkCXkvEPKqe41uUwLYFMhuAsa3qRadwCUFm8Ysg5xi2NbCGUgiZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483956; c=relaxed/simple;
-	bh=lA11mi3pVZ3Zgt4Qb1dPLIWEf000WMWrP3zmD8x6dCk=;
+	s=arc-20240116; t=1746484610; c=relaxed/simple;
+	bh=WGBuxXAEay4v9f9o9yAA/hL14UszKSsb4vIP7vaUp6s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dfRSCm6OIoR60jedTg9Gyqlul1jSHdX5EWkT9uZC0sqk6IvL2tJQAZ2E9gqk7GBcJMI6aY1WL7xYS95UpZA+sO9l2d0bw0kOw6JbIR++j0IouTOYbbSHWDT5owK3JORSSoH2ryWbQ56gYmO0OHZokpMvVW4WEJ6wg1VglLcsfL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSMkfTKe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RX3ZtcLIVEU46MyZKnNCp4RHcLg6iJ7BsG55Ijyg3GsdhEfODJ74voUFiglygqwLXMgEg+N7uo8zpGm4FYP3iRqa3plJAKMnXrlNQl3ZmRfbb0UR7QapH1FcLIpC02QpIGTW6wRoh/ttWFFVtcgYos3VQwSlAOC/7j4HvWKh7xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msqJW+E5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSMkfTKe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAD45C4CEE4;
-	Mon,  5 May 2025 22:25:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msqJW+E5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0197C4CEE4;
+	Mon,  5 May 2025 22:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483956;
-	bh=lA11mi3pVZ3Zgt4Qb1dPLIWEf000WMWrP3zmD8x6dCk=;
+	s=k20201202; t=1746484609;
+	bh=WGBuxXAEay4v9f9o9yAA/hL14UszKSsb4vIP7vaUp6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CSMkfTKeCL/Ym0f0lRDWsCDqgm+BVhWCqQqWabxDbrIW3FQpvXrqNfABh5BiN8Oaa
-	 C4pfI8uQGyyAxCQcqO4MzCrAJjIYARmmoNyZPRzQMEqBXt6fg0M1zw+kQ8g8GUAC8r
-	 wnm4HHsFTf1R8yKX/xQM3+H5h8uB1r+74wKABORXJvcO+4EwlqQzxD+cY/Kmht4nYm
-	 4ap05AtnbhCkWow4S1WjH5Glmeak6m9c9rr3wjlo2799plR8mg5A+e+y8T3VBq/Rjh
-	 CeuntQsGbywOXPkAwF6Ls28GRzrXVny9EbytwEJUug4X2W3PFGFUjimAynwIhKlkHi
-	 azzd1dS2kLQFg==
+	b=msqJW+E5d7Q15NlpYZ87DgXyoPjkfA2Zkj9Kj6VhpQtSM8GHPBi1J9d1nyM/Z0Oul
+	 OWsta0XdLxduATAAI/FqNopw3TWkQ+ith+ZOZIejFpGt+jjsIGFjg19QNO/3cCAl/L
+	 IfCZ4WUykNKEN5GxNFDciI0RTnDNrlcDXRSAl/yIJwJOrkKKD52YPXHQl8YNYY4ERC
+	 EviesUN2Fg5z9g6ASR5UuNBZCNK2TMWEuPdG4eaZi3BYtxKTfeosY2qX7W3yWZQwxE
+	 lK+DEIyyv48w2v6HfHPt9fNGILyneuUCUk6T6eIlC69p7qmpsZ6oKNXleOkSI000kS
+	 QBc+U4LAh224w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Will Deacon <will@kernel.org>,
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 289/642] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
-Date: Mon,  5 May 2025 18:08:25 -0400
-Message-Id: <20250505221419.2672473-289-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 560/642] perf: Avoid the read if the count is already updated
+Date: Mon,  5 May 2025 18:12:56 -0400
+Message-Id: <20250505221419.2672473-560-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -54,41 +53,142 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: "Rob Herring (Arm)" <robh@kernel.org>
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-[ Upstream commit 04bd15c4cbc3f7bd2399d1baab958c5e738dbfc9 ]
+[ Upstream commit 8ce939a0fa194939cc1f92dbd8bc1a7806e7d40a ]
 
-Counting events related to setup of the PMU is not desired, but
-kvm_vcpu_pmu_resync_el0() is called just after the PMU counters have
-been enabled. Move the call to before enabling the counters.
+The event may have been updated in the PMU-specific implementation,
+e.g., Intel PEBS counters snapshotting. The common code should not
+read and overwrite the value.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Tested-by: James Clark <james.clark@linaro.org>
-Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-1-4e9922fc2e8e@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+The PERF_SAMPLE_READ in the data->sample_type can be used to detect
+whether the PMU-specific value is available. If yes, avoid the
+pmu->read() in the common code. Add a new flag, skip_read, to track the
+case.
+
+Factor out a perf_pmu_read() to clean up the code.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20250121152303.3128733-3-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmuv3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/perf_event.h  |  8 +++++++-
+ kernel/events/core.c        | 33 ++++++++++++++++-----------------
+ kernel/events/ring_buffer.c |  1 +
+ 3 files changed, 24 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 0e360feb3432e..9ebc950559c0a 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -825,10 +825,10 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- 	else
- 		armv8pmu_disable_user_access();
- 
-+	kvm_vcpu_pmu_resync_el0();
-+
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
--
--	kvm_vcpu_pmu_resync_el0();
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 93ea9c6672f0e..3d5814c6d251c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1098,7 +1098,13 @@ struct perf_output_handle {
+ 	struct perf_buffer		*rb;
+ 	unsigned long			wakeup;
+ 	unsigned long			size;
+-	u64				aux_flags;
++	union {
++		u64			flags;		/* perf_output*() */
++		u64			aux_flags;	/* perf_aux_output*() */
++		struct {
++			u64		skip_read : 1;
++		};
++	};
+ 	union {
+ 		void			*addr;
+ 		unsigned long		head;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index dda1670b3539a..6fa70b3826d0e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1191,6 +1191,12 @@ static void perf_assert_pmu_disabled(struct pmu *pmu)
+ 	WARN_ON_ONCE(*this_cpu_ptr(pmu->pmu_disable_count) == 0);
  }
  
- static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
++static inline void perf_pmu_read(struct perf_event *event)
++{
++	if (event->state == PERF_EVENT_STATE_ACTIVE)
++		event->pmu->read(event);
++}
++
+ static void get_ctx(struct perf_event_context *ctx)
+ {
+ 	refcount_inc(&ctx->refcount);
+@@ -3478,8 +3484,7 @@ static void __perf_event_sync_stat(struct perf_event *event,
+ 	 * we know the event must be on the current CPU, therefore we
+ 	 * don't need to use it.
+ 	 */
+-	if (event->state == PERF_EVENT_STATE_ACTIVE)
+-		event->pmu->read(event);
++	perf_pmu_read(event);
+ 
+ 	perf_event_update_time(event);
+ 
+@@ -4625,15 +4630,8 @@ static void __perf_event_read(void *info)
+ 
+ 	pmu->read(event);
+ 
+-	for_each_sibling_event(sub, event) {
+-		if (sub->state == PERF_EVENT_STATE_ACTIVE) {
+-			/*
+-			 * Use sibling's PMU rather than @event's since
+-			 * sibling could be on different (eg: software) PMU.
+-			 */
+-			sub->pmu->read(sub);
+-		}
+-	}
++	for_each_sibling_event(sub, event)
++		perf_pmu_read(sub);
+ 
+ 	data->ret = pmu->commit_txn(pmu);
+ 
+@@ -7451,9 +7449,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+ 		values[n++] = running;
+ 
+-	if ((leader != event) &&
+-	    (leader->state == PERF_EVENT_STATE_ACTIVE))
+-		leader->pmu->read(leader);
++	if ((leader != event) && !handle->skip_read)
++		perf_pmu_read(leader);
+ 
+ 	values[n++] = perf_event_count(leader, self);
+ 	if (read_format & PERF_FORMAT_ID)
+@@ -7466,9 +7463,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	for_each_sibling_event(sub, leader) {
+ 		n = 0;
+ 
+-		if ((sub != event) &&
+-		    (sub->state == PERF_EVENT_STATE_ACTIVE))
+-			sub->pmu->read(sub);
++		if ((sub != event) && !handle->skip_read)
++			perf_pmu_read(sub);
+ 
+ 		values[n++] = perf_event_count(sub, self);
+ 		if (read_format & PERF_FORMAT_ID)
+@@ -7527,6 +7523,9 @@ void perf_output_sample(struct perf_output_handle *handle,
+ {
+ 	u64 sample_type = data->type;
+ 
++	if (data->sample_flags & PERF_SAMPLE_READ)
++		handle->skip_read = 1;
++
+ 	perf_output_put(handle, *header);
+ 
+ 	if (sample_type & PERF_SAMPLE_IDENTIFIER)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 09459647cb822..5130b119d0ae0 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -185,6 +185,7 @@ __perf_output_begin(struct perf_output_handle *handle,
+ 
+ 	handle->rb    = rb;
+ 	handle->event = event;
++	handle->flags = 0;
+ 
+ 	have_lost = local_read(&rb->lost);
+ 	if (unlikely(have_lost)) {
 -- 
 2.39.5
 
