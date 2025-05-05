@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BAD2F22E5;
-	Mon,  5 May 2025 23:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340DF2F665B;
+	Mon,  5 May 2025 23:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486787; cv=none; b=D6bwFSU7OgT2Kip6X62+9c+uVze4Y1dfdjFTy+gh+GIN0BrqFcpyuiRQEzWcbTDtXzTtfaFbRvwCtKiZz1e4MYhFbuYNUVJZPNzz1t49JOZz661mHZD496yvmdesR86NNydtCLg3fQHYWCzeETrH0dM+KDUuvPqFv3nMnR1L6EQ=
+	t=1746487088; cv=none; b=j2eNEHPWX75q7raZxpp+5prfQDHQ7XhBJtrUzaloXV9ZPTi6cU9BKzZdnR4waeNwlEoudt0wC927EEC5oN2hP7TbkrtCYdbY69/beh8eLpY9ofXPEvNnRlMnDanG+4M3w5g4ubTuRybKs188FmKbjocFhQwP9Wz362tkovRh/7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486787; c=relaxed/simple;
-	bh=Ky2YJCmBq4yjzjzdNAXmiq5hU2l7Onct2vzG80Vm9Xk=;
+	s=arc-20240116; t=1746487088; c=relaxed/simple;
+	bh=aODPuwxiWJff9RzDxF69b5g2E2/R55ip7KWod8t+Nz8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hZWHt1Y+U7xx0eCZji0NbL4wgUhQelIpNlR7Bh1338gGSsjfkA8RvnZ1P9KJkmxF6VLwcrhWFMwj4KmL8tKYveMlish98rRZgA+pbX8YoapJTylKzpKRYHG6yX8LueuVDwqMOMoSR33Py/h+/7P0+ocjl/mgkLtpgy0HKjjCg9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8Kx0bom; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TlKBTzyVyl1mHrUIqm/cvFWPKeeTWceX0etTwQ+eObGSANXET2lDEFPV1gotyYR1gnKJCvFNyH+zcMyCRq8ecuJufY9kNQU0fX3djKvf2T4zKYf3VL7/nVk283hvCo1bUFaDcOSUswIKfPZfXDW85wouPWoa7wl1ZqEnzrXMMFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euremZ5M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8Kx0bom"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7451AC4CEED;
-	Mon,  5 May 2025 23:13:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euremZ5M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74E0C4CEE4;
+	Mon,  5 May 2025 23:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486785;
-	bh=Ky2YJCmBq4yjzjzdNAXmiq5hU2l7Onct2vzG80Vm9Xk=;
+	s=k20201202; t=1746487087;
+	bh=aODPuwxiWJff9RzDxF69b5g2E2/R55ip7KWod8t+Nz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y8Kx0bom/lb2bIX51cOtRkGuMeBRqzeGnGM5e0C9ET/IHcKV0MJrEbfmGLiC3cCW9
-	 CBpu+WgdgYHL+DO96NouMOrsJDTFKqZUfAbJO981ZnAoAje/iZM6i+PGrdpcChfVmL
-	 rUJQHG5uXjXce9QjaG8muWNCUkQGQxy128pf645Ru3hSiBAVPOiOrwLJx4sHmzVzxP
-	 4RfYmPrDPjYCheR1n0PVSZPZeq0zwlJdaq2AY+VxwswlrStf1rp5FHLODX6M/DM9jz
-	 BpgYmnUDUYE0M7zQnvTav1PxHrMKo0qS5aNf8Cyh4NPyp7H679K7R5nTHOD/5dRFSQ
-	 aufu1ZYrd+swQ==
+	b=euremZ5MWIXKRPnkn/JyHbvXrrQnu8jDzw0mAmIqwI12BRw0UQQqOPVXwQCIVNffp
+	 PV+Xj+pHlQdiRDaZ/5qhVDIXUjzq+2qk3Ma9QyvJRUOTmIx+z28tnRUZCaapQ8nou3
+	 KEJpao+kRdjWgrZbY+7hjD82MouOrhCZRyz3rysNDVpbDDvNdoiSVLbxOSdcyU6miB
+	 cmWpyoK5pSCuah31TXb+D5PgSHsa1aywZbgOEus475LABEkNAOvGHWxEMFahGl9+IM
+	 +2cFjCb2a3+VRdOCK4RSrkk3wtOWF+aJTXnmMogl/TsNSTzdvVHoPemxlqUQqztu7L
+	 dxnVmiZ4i9RmQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -40,12 +40,12 @@ Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
 	dave.hansen@linux.intel.com,
 	x86@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 203/212] perf/amd/ibs: Fix perf_ibs_op.cnt_mask for CurCnt
-Date: Mon,  5 May 2025 19:06:15 -0400
-Message-Id: <20250505230624.2692522-203-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 147/153] perf/amd/ibs: Fix perf_ibs_op.cnt_mask for CurCnt
+Date: Mon,  5 May 2025 19:13:14 -0400
+Message-Id: <20250505231320.2695319-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
-References: <20250505230624.2692522-1-sashal@kernel.org>
+In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
+References: <20250505231320.2695319-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.136
+X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
 From: Ravi Bangoria <ravi.bangoria@amd.com>
@@ -87,10 +87,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 37cbbc5c659a5..8c385e231e070 100644
+index b605e08f9a8ef..2b83056029942 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -1216,7 +1216,8 @@ static __init int perf_ibs_op_init(void)
+@@ -803,7 +803,8 @@ static __init int perf_event_ibs_init(void)
  	if (ibs_caps & IBS_CAPS_OPCNTEXT) {
  		perf_ibs_op.max_period  |= IBS_OP_MAX_CNT_EXT_MASK;
  		perf_ibs_op.config_mask	|= IBS_OP_MAX_CNT_EXT_MASK;
@@ -99,12 +99,12 @@ index 37cbbc5c659a5..8c385e231e070 100644
 +					    IBS_OP_CUR_CNT_EXT_MASK);
  	}
  
- 	if (ibs_caps & IBS_CAPS_ZEN4)
+ 	ret = perf_ibs_pmu_init(&perf_ibs_op, "ibs_op");
 diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 4d810b9478a43..fa3576ef19daa 100644
+index 0e4efcde07831..cbfca9d2c419b 100644
 --- a/arch/x86/include/asm/perf_event.h
 +++ b/arch/x86/include/asm/perf_event.h
-@@ -456,6 +456,7 @@ struct pebs_xmm {
+@@ -417,6 +417,7 @@ struct pebs_xmm {
   */
  #define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
  #define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
