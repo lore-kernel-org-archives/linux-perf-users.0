@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E233379F4;
-	Mon,  5 May 2025 22:36:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF32C33CC6C;
+	Mon,  5 May 2025 22:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484610; cv=none; b=dMl8qimw+LBTTOSReBz47slq/5tfBYOSrzAFYlZTDKwu2V830v2xM/5FiQkpVB0wCtBRESx+loR0TQSRetSYgtakKQNdHWnaDWzkP4ew0My2Ubfr2wPjF94dkCXkvEPKqe41uUwLYFMhuAsa3qRadwCUFm8Ysg5xi2NbCGUgiZ8=
+	t=1746484649; cv=none; b=RG/XNWT1wq96EPVqptq8JOSSP4r4LI2DRcGWe6AhwGOT5BYAKO8zDhif0lLf02OzwKSSwZXrPuygBNQPSCon6JKrIunWONhG2lV79r+H2bRs8kd3V5mtlqBEgrT3r97PUg6T6XJY2gGyHuj+bzdF+2bkLCUJKFhwLZ8wF573+Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484610; c=relaxed/simple;
-	bh=WGBuxXAEay4v9f9o9yAA/hL14UszKSsb4vIP7vaUp6s=;
+	s=arc-20240116; t=1746484649; c=relaxed/simple;
+	bh=v5IvEfryJ1AT+Qpk4h/gIHPnhL2txwlgWoaZAXpcqdk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RX3ZtcLIVEU46MyZKnNCp4RHcLg6iJ7BsG55Ijyg3GsdhEfODJ74voUFiglygqwLXMgEg+N7uo8zpGm4FYP3iRqa3plJAKMnXrlNQl3ZmRfbb0UR7QapH1FcLIpC02QpIGTW6wRoh/ttWFFVtcgYos3VQwSlAOC/7j4HvWKh7xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msqJW+E5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=E5IarWaPbS0ZznG94pKCP6EVPta4ylY7rEScO7oH32ZEkYoOwp6ZB0dzvz/zydvQipilUuX3hPEZyuF9DMcRAx0MTnbn74DLX6j5xHEeZKJ6QNMWwoyAwTt6fiHPaTLUBxWjhZp4BpMJ6+2u5TfFsMFcXITbdoTe5kJKNQcs/ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsxVU75m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msqJW+E5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0197C4CEE4;
-	Mon,  5 May 2025 22:36:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsxVU75m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF5D5C4CEED;
+	Mon,  5 May 2025 22:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484609;
-	bh=WGBuxXAEay4v9f9o9yAA/hL14UszKSsb4vIP7vaUp6s=;
+	s=k20201202; t=1746484649;
+	bh=v5IvEfryJ1AT+Qpk4h/gIHPnhL2txwlgWoaZAXpcqdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=msqJW+E5d7Q15NlpYZ87DgXyoPjkfA2Zkj9Kj6VhpQtSM8GHPBi1J9d1nyM/Z0Oul
-	 OWsta0XdLxduATAAI/FqNopw3TWkQ+ith+ZOZIejFpGt+jjsIGFjg19QNO/3cCAl/L
-	 IfCZ4WUykNKEN5GxNFDciI0RTnDNrlcDXRSAl/yIJwJOrkKKD52YPXHQl8YNYY4ERC
-	 EviesUN2Fg5z9g6ASR5UuNBZCNK2TMWEuPdG4eaZi3BYtxKTfeosY2qX7W3yWZQwxE
-	 lK+DEIyyv48w2v6HfHPt9fNGILyneuUCUk6T6eIlC69p7qmpsZ6oKNXleOkSI000kS
-	 QBc+U4LAh224w==
+	b=DsxVU75m25hy9ljG5l7V3nt3Gl7HYqWbBDH+VSuXCcTG8KNd/q9RY7teECw1yQ2LR
+	 f1X+QOIHc+YrptGM5LNAs+PZxwgSoGyC/cw41QXoZef+hxbynlYH3K66henWQXP15C
+	 BzRUdbIBl7Adieym02+qpzkQUsD/YgIFckPTfzGZt30eNZCmFRCde5phVR58Norvb4
+	 0x3otBvyFDGRBDAIzUkDzTP1KyMCvAMzs6eX3QcCef4jpGm2C9gYY74YPIwgArRkAK
+	 23JryzU54dZ/8ygfsvm8nGM+pVXE6xpdqOC3P7qGAJUXwto6/fVSleJH5Zeito7s/z
+	 oOwoKNgnbvsPw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	mingo@redhat.com,
 	acme@kernel.org,
-	namhyung@kernel.org,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 560/642] perf: Avoid the read if the count is already updated
-Date: Mon,  5 May 2025 18:12:56 -0400
-Message-Id: <20250505221419.2672473-560-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 583/642] perf/amd/ibs: Fix perf_ibs_op.cnt_mask for CurCnt
+Date: Mon,  5 May 2025 18:13:19 -0400
+Message-Id: <20250505221419.2672473-583-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -53,142 +57,61 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+From: Ravi Bangoria <ravi.bangoria@amd.com>
 
-[ Upstream commit 8ce939a0fa194939cc1f92dbd8bc1a7806e7d40a ]
+[ Upstream commit 46dcf85566170d4528b842bf83ffc350d71771fa ]
 
-The event may have been updated in the PMU-specific implementation,
-e.g., Intel PEBS counters snapshotting. The common code should not
-read and overwrite the value.
+IBS Op uses two counters: MaxCnt and CurCnt. MaxCnt is programmed with
+the desired sample period. IBS hw generates sample when CurCnt reaches
+to MaxCnt. The size of these counter used to be 20 bits but later they
+were extended to 27 bits. The 7 bit extension is indicated by CPUID
+Fn8000_001B_EAX[6 / OpCntExt].
 
-The PERF_SAMPLE_READ in the data->sample_type can be used to detect
-whether the PMU-specific value is available. If yes, avoid the
-pmu->read() in the common code. Add a new flag, skip_read, to track the
-case.
+perf_ibs->cnt_mask variable contains bit masks for MaxCnt and CurCnt.
+But IBS driver does not set upper 7 bits of CurCnt in cnt_mask even
+when OpCntExt CPUID bit is set. Fix this.
 
-Factor out a perf_pmu_read() to clean up the code.
+IBS driver uses cnt_mask[CurCnt] bits only while disabling an event.
+Fortunately, CurCnt bits are not read from MSR while re-enabling the
+event, instead MaxCnt is programmed with desired period and CurCnt is
+set to 0. Hence, we did not see any issues so far.
 
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250121152303.3128733-3-kan.liang@linux.intel.com
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/r/20250115054438.1021-5-ravi.bangoria@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/perf_event.h  |  8 +++++++-
- kernel/events/core.c        | 33 ++++++++++++++++-----------------
- kernel/events/ring_buffer.c |  1 +
- 3 files changed, 24 insertions(+), 18 deletions(-)
+ arch/x86/events/amd/ibs.c         | 3 ++-
+ arch/x86/include/asm/perf_event.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 93ea9c6672f0e..3d5814c6d251c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1098,7 +1098,13 @@ struct perf_output_handle {
- 	struct perf_buffer		*rb;
- 	unsigned long			wakeup;
- 	unsigned long			size;
--	u64				aux_flags;
-+	union {
-+		u64			flags;		/* perf_output*() */
-+		u64			aux_flags;	/* perf_aux_output*() */
-+		struct {
-+			u64		skip_read : 1;
-+		};
-+	};
- 	union {
- 		void			*addr;
- 		unsigned long		head;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index dda1670b3539a..6fa70b3826d0e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1191,6 +1191,12 @@ static void perf_assert_pmu_disabled(struct pmu *pmu)
- 	WARN_ON_ONCE(*this_cpu_ptr(pmu->pmu_disable_count) == 0);
- }
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index e36c9c63c97cc..5d975c39701cb 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -1318,7 +1318,8 @@ static __init int perf_ibs_op_init(void)
+ 	if (ibs_caps & IBS_CAPS_OPCNTEXT) {
+ 		perf_ibs_op.max_period  |= IBS_OP_MAX_CNT_EXT_MASK;
+ 		perf_ibs_op.config_mask	|= IBS_OP_MAX_CNT_EXT_MASK;
+-		perf_ibs_op.cnt_mask    |= IBS_OP_MAX_CNT_EXT_MASK;
++		perf_ibs_op.cnt_mask    |= (IBS_OP_MAX_CNT_EXT_MASK |
++					    IBS_OP_CUR_CNT_EXT_MASK);
+ 	}
  
-+static inline void perf_pmu_read(struct perf_event *event)
-+{
-+	if (event->state == PERF_EVENT_STATE_ACTIVE)
-+		event->pmu->read(event);
-+}
-+
- static void get_ctx(struct perf_event_context *ctx)
- {
- 	refcount_inc(&ctx->refcount);
-@@ -3478,8 +3484,7 @@ static void __perf_event_sync_stat(struct perf_event *event,
- 	 * we know the event must be on the current CPU, therefore we
- 	 * don't need to use it.
- 	 */
--	if (event->state == PERF_EVENT_STATE_ACTIVE)
--		event->pmu->read(event);
-+	perf_pmu_read(event);
- 
- 	perf_event_update_time(event);
- 
-@@ -4625,15 +4630,8 @@ static void __perf_event_read(void *info)
- 
- 	pmu->read(event);
- 
--	for_each_sibling_event(sub, event) {
--		if (sub->state == PERF_EVENT_STATE_ACTIVE) {
--			/*
--			 * Use sibling's PMU rather than @event's since
--			 * sibling could be on different (eg: software) PMU.
--			 */
--			sub->pmu->read(sub);
--		}
--	}
-+	for_each_sibling_event(sub, event)
-+		perf_pmu_read(sub);
- 
- 	data->ret = pmu->commit_txn(pmu);
- 
-@@ -7451,9 +7449,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
- 		values[n++] = running;
- 
--	if ((leader != event) &&
--	    (leader->state == PERF_EVENT_STATE_ACTIVE))
--		leader->pmu->read(leader);
-+	if ((leader != event) && !handle->skip_read)
-+		perf_pmu_read(leader);
- 
- 	values[n++] = perf_event_count(leader, self);
- 	if (read_format & PERF_FORMAT_ID)
-@@ -7466,9 +7463,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 	for_each_sibling_event(sub, leader) {
- 		n = 0;
- 
--		if ((sub != event) &&
--		    (sub->state == PERF_EVENT_STATE_ACTIVE))
--			sub->pmu->read(sub);
-+		if ((sub != event) && !handle->skip_read)
-+			perf_pmu_read(sub);
- 
- 		values[n++] = perf_event_count(sub, self);
- 		if (read_format & PERF_FORMAT_ID)
-@@ -7527,6 +7523,9 @@ void perf_output_sample(struct perf_output_handle *handle,
- {
- 	u64 sample_type = data->type;
- 
-+	if (data->sample_flags & PERF_SAMPLE_READ)
-+		handle->skip_read = 1;
-+
- 	perf_output_put(handle, *header);
- 
- 	if (sample_type & PERF_SAMPLE_IDENTIFIER)
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 09459647cb822..5130b119d0ae0 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -185,6 +185,7 @@ __perf_output_begin(struct perf_output_handle *handle,
- 
- 	handle->rb    = rb;
- 	handle->event = event;
-+	handle->flags = 0;
- 
- 	have_lost = local_read(&rb->lost);
- 	if (unlikely(have_lost)) {
+ 	if (ibs_caps & IBS_CAPS_ZEN4)
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 0ba8d20f2d1d5..d37c1c32e74b9 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -536,6 +536,7 @@ struct pebs_xmm {
+  */
+ #define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
+ #define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
++#define IBS_OP_CUR_CNT_EXT_MASK	(0x7FULL<<52)
+ #define IBS_OP_CNT_CTL		(1ULL<<19)
+ #define IBS_OP_VAL		(1ULL<<18)
+ #define IBS_OP_ENABLE		(1ULL<<17)
 -- 
 2.39.5
 
