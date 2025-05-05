@@ -1,48 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD23C2D37EF;
-	Mon,  5 May 2025 22:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ABE3867ED;
+	Mon,  5 May 2025 23:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485239; cv=none; b=junG3c7sNtGngr537OnS1kRE3vW3vPRCZAsG7WzdAoNre4L4kabX2xTji+H6a77E88/pVt3sg3ZLR7qwyEmp1WafbWv29ry1oracugpycRGnRvBPDr0o1r5SUc1oK+eHXyetW6k4mhHsz6AewXBOQZ6j4qXVMUW8pl+Uiel7BKM=
+	t=1746486043; cv=none; b=P6dQ3KjrK4PgQAGSF/LZPBzW/lyMCzyTu8NGUXHjYEJn/mrURoA65qLsoyrnQkochwx01qVRiMCv14l2V+LwlDHl6sfI1hvRWVPctpzZin9EwvQF946erNL1ad86INRfzWSD7AjRMJHuBZG/vVJ/GHB464ApEv6FH0uM1tC9+aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485239; c=relaxed/simple;
-	bh=Q6mzvyxCFKn0LYzphUXFPUR4b1GinHCbmTPxZGgDFAI=;
+	s=arc-20240116; t=1746486043; c=relaxed/simple;
+	bh=8S/5I22qd4S0oH7P51ixZiHczSeXqwMQkKM+m4qTrFo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eGTZYkGCPO9n2Ba7CEwXemiwZFx4OYX8jGJGhSlnhZ9k9OfgSVhBfTeX70FLFqseo4BuNpKQLF3paJxZfX1HPLmoU64xXHY01yra8scQ3ck0kpKq+j9lT6yvtT3xO0D0CSKDHjX/w68ndahcHYGxEIN0e8YNKM/HOjiiCXHmD3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFl7pGS3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sQhGJJfg0AI7guTYzl8b2gwPomoJJhjeAkH5suwllGMpF1CKpPX+gPbwR/GJuo0/XJzObas9I6OlBuDpuBGC/uZvn92G1OP8i+x87WW/oUqX9PJAH7klrkee7f7BBB+t3ti0YTN6UJ7urO4sxOD06XL+zHlyA6zeNQrAg4SE+Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyi3Vn79; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFl7pGS3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706D3C4CEED;
-	Mon,  5 May 2025 22:47:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyi3Vn79"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE05C4CEEF;
+	Mon,  5 May 2025 23:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485238;
-	bh=Q6mzvyxCFKn0LYzphUXFPUR4b1GinHCbmTPxZGgDFAI=;
+	s=k20201202; t=1746486043;
+	bh=8S/5I22qd4S0oH7P51ixZiHczSeXqwMQkKM+m4qTrFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sFl7pGS3Mp5yRD+wJVWyy5C9CQkpAiJMR1VWSc0LlOQ3TbIDRcGrETxSru5A2JRvf
-	 DB7ribZ42Nzyx4evfGdH9LGZzNm3USUiwQWz4LdDmOhLXE5B7DtXyW0yi0m6gRpHgv
-	 EulKpVDBs43q95u/uOR9Gr1Ioa0xwga1X0iWuKnKGOK1eh8fTYJusb+0AD3h076zoU
-	 LvU12QS7pKzvPPb2oGOmohpTrSM618oXGuxuKx4pI+ANdpCbWslheqyBHUO1RboLOr
-	 t/4MQ929kGsVxqbLjtdNRXtbji2aKTAPGJ2e7Junf+Gt1s94FW4/6dqYLudZv5orfV
-	 xGy5cl0/GdQew==
+	b=gyi3Vn79cHk4L0hjx8oPMEqBxGcyv/d0etl95QPj9UYhCogK65HAOwh9txxL5d7Yd
+	 GsTDJWzGahDp91FiB/QQcE5V8YeY7jrfwCjr7yl1OPmgLPE8JNpd3tWKWU98pLLIFT
+	 gO6VKR8xFInas/KkiB78zvS5aidRsE8gLJpyOlOnwubHJXIpHMDJgj6K7eQ7e7lM5/
+	 10vLpPkbLRJIUcxd78POI/6ukc1iltfjxMZ2YMqMS6/64EH1Bbct5tOneUomtZIYoE
+	 GhiO+ub0Gka0SPUSJCIx2Iqu5BtPBioAPZdJrg+KLNObsaa2RnrNJ71tvV1PA5qQf6
+	 uLe0+28fbLB3g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Will Deacon <will@kernel.org>,
+Cc: Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Ian Rogers <irogers@google.com>,
+	Frederic Weisbecker <fweisbec@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 228/486] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
-Date: Mon,  5 May 2025 18:35:04 -0400
-Message-Id: <20250505223922.2682012-228-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 124/294] perf/hw_breakpoint: Return EOPNOTSUPP for unsupported breakpoint type
+Date: Mon,  5 May 2025 18:53:44 -0400
+Message-Id: <20250505225634.2688578-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,44 +55,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: "Rob Herring (Arm)" <robh@kernel.org>
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
 
-[ Upstream commit 04bd15c4cbc3f7bd2399d1baab958c5e738dbfc9 ]
+[ Upstream commit 061c991697062f3bf87b72ed553d1d33a0e370dd ]
 
-Counting events related to setup of the PMU is not desired, but
-kvm_vcpu_pmu_resync_el0() is called just after the PMU counters have
-been enabled. Move the call to before enabling the counters.
+Currently, __reserve_bp_slot() returns -ENOSPC for unsupported
+breakpoint types on the architecture. For example, powerpc
+does not support hardware instruction breakpoints. This causes
+the perf_skip BPF selftest to fail, as neither ENOENT nor
+EOPNOTSUPP is returned by perf_event_open for unsupported
+breakpoint types. As a result, the test that should be skipped
+for this arch is not correctly identified.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Tested-by: James Clark <james.clark@linaro.org>
-Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-1-4e9922fc2e8e@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+To resolve this, hw_breakpoint_event_init() should exit early by
+checking for unsupported breakpoint types using
+hw_breakpoint_slots_cached() and return the appropriate error
+(-EOPNOTSUPP).
+
+Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Link: https://lore.kernel.org/r/20250303092451.1862862-1-skb99@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmuv3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/events/hw_breakpoint.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 0afe02f879b45..d9b56f0f90942 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -816,10 +816,10 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- 	else
- 		armv8pmu_disable_user_access();
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 6c2cb4e4f48da..8f3f624419aa9 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -950,9 +950,10 @@ static int hw_breakpoint_event_init(struct perf_event *bp)
+ 		return -ENOENT;
  
-+	kvm_vcpu_pmu_resync_el0();
-+
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
--
--	kvm_vcpu_pmu_resync_el0();
- }
+ 	/*
+-	 * no branch sampling for breakpoint events
++	 * Check if breakpoint type is supported before proceeding.
++	 * Also, no branch sampling for breakpoint events.
+ 	 */
+-	if (has_branch_stack(bp))
++	if (!hw_breakpoint_slots_cached(find_slot_idx(bp->attr.bp_type)) || has_branch_stack(bp))
+ 		return -EOPNOTSUPP;
  
- static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
+ 	err = register_perf_hw_breakpoint(bp);
 -- 
 2.39.5
 
