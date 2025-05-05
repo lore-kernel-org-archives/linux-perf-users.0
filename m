@@ -1,201 +1,215 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815F019DF60;
-	Mon,  5 May 2025 17:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77727450F2
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 May 2025 21:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746467066; cv=none; b=JvY0nJ+Zw9bgQX2aB52WH2nUVYpPT4Mf0/uJYSzg+NcH7MAmAxKwNNdRt/zFQ5Pxckz9ELQeKx/nQXF9x8fehru/aQ7EVBBNSnra1ZYhfM1XNsRA4/IWZPbe3C0TzhnQacP+vVEYBvgH1AIpa0MFUUmIbYr9A6AAmfi8nzislyI=
+	t=1746478952; cv=none; b=YpugTTNG+OlultnzV+YX1412wP4/mlPOmpr45nhptGOX9Za6q/YXxc1svj0PKIH4XTk1WkOQD+221+ubSPgxsXYXmWFovFP8/fU6E2jNDikEJA8e+NEqqYXN2XLI2xcR0F/3b0AvXEwkgET/oJFWSaEYy9Dp9TTl6USic8yZvEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746467066; c=relaxed/simple;
-	bh=5VAbR2RVbk7no9ughwahTI4Y9xo+HqbMuhu5oedRwxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CT+gL++Hw14jgx+kCuySVA7STeJWrO2VvGGOZRW2uNbngYImXShnxwfr+M5GM5DVNQRlpP1a2k6VeKB5TeKURUlgu9UhgAzBceDT9v+CQFgM6Dd2tsZvOt36eNkB2fNLF36gSIs4d51LMFBehuDyyURZ52K0fRYxHO/8vZgK4EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AVk9l+W2; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746478952; c=relaxed/simple;
+	bh=HRglVARIR6s7RVWqhuWUuqfWy72BHg5jQVngdbDKS08=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WirgG7YqxHFLPFAekEVJ8zmh8X+edYx/XetJ0+jlQVpkGtid7DjHVDs/ddMpB6G/nuazWc23a6xEfk5zJ+VxovDfbfsc0DahcyI3TsMoViZfB29aWcDreHHVUevhKbQNVRORbWqlg2gdzK+3dB6vI5XLVzcymYJtiM/9wcYExvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SWNvKeru; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVk9l+W2"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441c99459e9so11091165e9.3;
-        Mon, 05 May 2025 10:44:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SWNvKeru"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so10565ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 May 2025 14:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746467063; x=1747071863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7t6DVXH4iOBNsSuSyqAlHh43XQ/4M0Ozd8UutrRZoY=;
-        b=AVk9l+W2m95XS9/gK5hYKiNwuPRhjQ63otJDs2lsYyACBvfyuN96x7ykWDbe+l5GHW
-         AVCoFxk3DAuqU3w39i0uzoTG1CowCfcEFMUbEX0CChozK67KoLBQq6RqAZZW1m2w8Bst
-         qvxOoMhVp4QuBTe7exOJyIPEyp4LnHn1arv6YGX4F9VuqItTZ5DWDLXj/ijjWD/gjDUm
-         jc14naiLGrDJDiw0Oc5ZMnuhpF1/Qa58mF48WmtN1F3MObwD/4jTPVgE/jz0cGmiekXQ
-         JRP+4LtGYRcRr91V4SiEQov95Y5Tmi/heCrRKyN3yLs0c2A8wlxTitD6UajZXHykCHxC
-         j10w==
+        d=google.com; s=20230601; t=1746478949; x=1747083749; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hfTq/NM7F4E9QDRvn+svqfb4fl714MQcUHP6WgqkNOo=;
+        b=SWNvKeruKTzqpZkdYuwsHJMVaEMBkU50iM0W6wLXVAZhbvXRFyQSa4/Ezs1sVfMLLW
+         VYBAmUEYOygLz+7O1ltdZut6nEEUZ/B8TYcfkGCp7Frt52cg3B/0okZC/YoDp1tHz5O5
+         kehajBUxnCeVBGdz3Ub5iLeRwq6SAnymMuq+wndjc8klassJp3I/v2z3Dw+Ux3ceSYka
+         o8R7+N1cSJTjrd+m3KWoDZR6aw2VQUQJJ1UGXJ7WHp0mFO3Q7DwdPNRz4r3w+rnlJ4kX
+         0qi8ByD7lsFnmDcawAhzFqv/iZiQhPYzXY5/AoOfqxt26pBaqTU5/+JgsZlyhlSH02HQ
+         uGzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746467063; x=1747071863;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q7t6DVXH4iOBNsSuSyqAlHh43XQ/4M0Ozd8UutrRZoY=;
-        b=mkC478vdvF2Sjp/tdesRuaCERHmE/8QXN7qp61oRkcmD4m+fpMcUGCNzsxXqzL/UCi
-         mS3+7tjxAIa5p2xGT8t4yCa6jbWkURCriqC1mlQgRWIK5hvsdpMVaWPwGC07lmguB6md
-         QtP8f2QsXvIgYI+E1jl3gK1nyHWrDj2An7xiCvdSmNO+u6PlBkrMC6GPHqXXZCPzdm1C
-         pEp7WAmk+XZjQPC+IAzUXt1gjt+afp4ka5jm3oWzoK7imA/FZMNjc0JhYDmyJXoI6okF
-         J+UZ2d7jqB2dZx5u7rYJNDIiNlX1HPWUKa+EZMYsw/d+lADDmhMtACTD+ANa91IAE+KH
-         0Xfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcT3Ixr43OvEsYVMjAXF8gnUUQ/4xW52F/jzO7dKQaGX4ozJh7rb479p9D3Gv+aVJiMVvJKnpYQaDVWP9QJIZJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwpVuoo9+YfWrN8Z1RewK7OaDCa13It8CWMz/08nEYSrpvyUmE
-	e1DrrMyhSE/J7E65dIkzmkGIAwMlnBBOqjSMW9f9Oz6wLx/0776A
-X-Gm-Gg: ASbGncsMPgLkqoV/UqrB8cUYeFlkekPawCx3DkJJHkGpNwqYihq6BBYETWK8/UuAPHr
-	nGo+Jo+p7VhKzxUA+CES+59//a5xLs00IlsV7ajTmyzFqXcafDQIeh8HbapxuV7D6srWlGBr9Ug
-	FMCZtXHoy56rIDF0NoE6qZ9TyI8xXwNYgQYfoB53b6SZML4I3z3RtrDItIDdN9ovDXwEmo4onaL
-	U1AlDxP4/Yprhif9oSt4T94mPfqdxVbTAGlg1EYKFU5XocniJPeNkgIIuQf9nfasw6Har7ktaV9
-	Iwc+hawWWRAiakb0avkpROZ1DAjB
-X-Google-Smtp-Source: AGHT+IHR4MNcJ/O6ihfp9Yt9yMxsWNp6Yl38+okRvXxS7TCHqrXudNkNMVXWpg1iM1QJsN2s34IO/Q==
-X-Received: by 2002:a05:600c:1d27:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-441bbea0ce6mr124668115e9.2.1746467062305;
-        Mon, 05 May 2025 10:44:22 -0700 (PDT)
-Received: from nz.home ([31.127.92.20])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a286dasm139576495e9.31.2025.05.05.10.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 10:44:21 -0700 (PDT)
-Received: by nz.home (Postfix, from userid 1000)
-	id DDFFA2E3E9B35E; Mon, 05 May 2025 18:44:20 +0100 (BST)
-From: Sergei Trofimovich <slyich@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Sergei Trofimovich <slyich@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf unwind-libdw: skip non-regular files
-Date: Mon,  5 May 2025 18:44:19 +0100
-Message-ID: <20250505174419.2814857-1-slyich@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1746478949; x=1747083749;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hfTq/NM7F4E9QDRvn+svqfb4fl714MQcUHP6WgqkNOo=;
+        b=g0mIebBkVhNFiNnq7BRvw6DudssNr3paAmIEwJMS4vN4ScdKTS65Hld9oh6vHU4GHH
+         OpAL0FNKHOBHusVsq8MggsmziwIEPQY5D/n+yGlyEc4IFALYzte/07iMMBYyDN3IGhVO
+         bqAJxcOEqR3oztM0gidlWnBCADmx/4i2GIiQmRqED7UgRu4B+5GKlDjfd4RPv3cGFZ56
+         SfaEFoMx/AKtx+Ukc5aXFYVEe4HcRo5y98iKzvdHzYfJAukC8OSPIOVxltBk9G6uIUbM
+         Q1bYEXbnbkw9zhPBiOp2LAg1NRivYmSGNKK0voJPcIBNcWSk0JgQtG0NcTFo8S1w/3WA
+         NzSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSLzrbFKKXC/Lc93cbbrnBaCAWDsLjujBi5fnMjm3O5HV2U7ZsKrgrF24x5GFRI1gNgfWZcSvIINS77ZM8MW9d@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiZSJMq6xgQK9cA9iUxFOfLy7rl7CVHbsw5Pj0yHHYcfjg52sp
+	TXIXgYpv7HVWd80wdY8qq2i8C3tQFe5VR1Ks2eNkFN/LLd+saX6T3Cea/fxfwU58FOBaSumrm5B
+	Zfv8/skLFdY0GmcfENtYVIk4LAtDUQyyTeVxN
+X-Gm-Gg: ASbGncuhWf/UtEJdPm225/cEuWjs4dWKQx01lErNTcbiCB4bp7B9o+7XifGpIL/K+CA
+	Mf26553/cAtBBYvlgoU+kpPZ81jlQ+O/ZiGBYfK33cQLgMme6yJCUyJL63M5QrdVwsr0ge7V08f
+	TnOK14tM1X1UbE4y2VT/arAdShw+zW4EGi+TpDWCVwtmcd792/j3Q=
+X-Google-Smtp-Source: AGHT+IFrGFD2S6wJ3YfWfBvDNL5C/Rp9fbcbeJBi0Vx5UH45RAa965d61PNqdu/D7r+Q0YcRvreRYVuJiS2f2sNBytE=
+X-Received: by 2002:a05:6e02:198d:b0:3d9:66a3:66fa with SMTP id
+ e9e14a558f8ab-3da6d5a8464mr169035ab.21.1746478949286; Mon, 05 May 2025
+ 14:02:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250501093633.578010-1-gautam@linux.ibm.com> <20250501093633.578010-4-gautam@linux.ibm.com>
+ <CAP-5=fX1qodprWrwK7yq2WYZNnLtiEe_rjvw0aJ7gXY2ma+Hzw@mail.gmail.com> <wu4cq5jilwtwdle2xuj5vuzz2cc6hx4whrbshkiw2pregk4xdi@lj7i53kssgur>
+In-Reply-To: <wu4cq5jilwtwdle2xuj5vuzz2cc6hx4whrbshkiw2pregk4xdi@lj7i53kssgur>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 5 May 2025 14:02:18 -0700
+X-Gm-Features: ATxdqUHurjOGKk1Z3bfM5EM_EPzgB5jiYiMmVzWCs1OTe4lsYo7mc6rHh-HKn8c
+Message-ID: <CAP-5=fV-XKf78FajY5FDzXRQNZ5f_VWx9wwLU1g2JJEFvyjVCw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf python: Add evlist close and next methods
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maddy@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Without the change `perf `hangs up on charaster devices. On my system
-it's enough to run system-wide sampler for a few seconds to get the
-hangup:
+On Mon, May 5, 2025 at 4:49=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.co=
+m> wrote:
+>
+> On Thu, May 01, 2025 at 08:49:08AM -0700, Ian Rogers wrote:
+> > On Thu, May 1, 2025 at 2:37=E2=80=AFAM Gautam Menghani <gautam@linux.ib=
+m.com> wrote:
+> > >
+> > > Add support for the evlist close and next methods. The next method
+> > > enables iterating over the evsels in an evlist.
+> > >
+> > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > > ---
+> > >  tools/perf/util/python.c | 47 ++++++++++++++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 47 insertions(+)
+> > >
+> > > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > > index 5a4d2c9aaabd..599cb37600f1 100644
+> > > --- a/tools/perf/util/python.c
+> > > +++ b/tools/perf/util/python.c
+> > > @@ -1163,6 +1163,16 @@ static PyObject *pyrf_evlist__open(struct pyrf=
+_evlist *pevlist,
+> > >         return Py_None;
+> > >  }
+> > >
+> > > +static PyObject *pyrf_evlist__close(struct pyrf_evlist *pevlist)
+> > > +{
+> > > +       struct evlist *evlist =3D &pevlist->evlist;
+> > > +
+> > > +       evlist__close(evlist);
+> > > +
+> > > +       Py_INCREF(Py_None);
+> > > +       return Py_None;
+> > > +}
+> > > +
+> > >  static PyObject *pyrf_evlist__config(struct pyrf_evlist *pevlist)
+> > >  {
+> > >         struct record_opts opts =3D {
+> > > @@ -1202,6 +1212,31 @@ static PyObject *pyrf_evlist__enable(struct py=
+rf_evlist *pevlist)
+> > >         return Py_None;
+> > >  }
+> > >
+> > > +static PyObject *pyrf_evlist__next(struct pyrf_evlist *pevlist,
+> > > +                                  PyObject *args, PyObject *kwargs)
+> > > +{
+> > > +       struct evlist *evlist =3D &pevlist->evlist;
+> > > +       PyObject *py_evsel;
+> > > +       struct perf_evsel *pevsel;
+> > > +       struct evsel *evsel;
+> > > +       struct pyrf_evsel *next_evsel =3D PyObject_New(struct pyrf_ev=
+sel, &pyrf_evsel__type);
+> > > +       static char *kwlist[] =3D { "evsel", NULL };
+> > > +
+> > > +       if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist,
+> > > +                                        &py_evsel))
+> > > +               return NULL;
+> > > +
+> > > +       pevsel =3D (py_evsel =3D=3D Py_None) ? NULL : &(((struct pyrf=
+_evsel *)py_evsel)->evsel.core);
+> > > +       pevsel =3D perf_evlist__next(&(evlist->core), pevsel);
+> > > +       if (pevsel !=3D NULL) {
+> > > +               evsel =3D container_of(pevsel, struct evsel, core);
+> > > +               next_evsel =3D container_of(evsel, struct pyrf_evsel,=
+ evsel);
+> > > +               return (PyObject *) next_evsel;
+> > > +       }
+> > > +
+> > > +       return Py_None;
+> > > +}
+> > > +
+> >
+> > Thanks for this! Have you looked at the existing iteration support?
+> > There's an example here:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/python/tracepoint.py?h=3Dperf-tools-next#n26
+> > ```
+> >     for ev in evlist:
+> >         ev.sample_type =3D ev.sample_type & ~perf.SAMPLE_IP
+> >         ev.read_format =3D 0
+> > ```
+> > In the next patch you have:
+> > ```
+> >         evsel =3D evlist.next(None)
+> >         while evsel !=3D None:
+> >             counts =3D evsel.read(0, 0)
+> >             print(counts.val, counts.ena, counts.run)
+> >             evsel =3D evlist.next(evsel)
+> > ```
+> > I believe the former looks better. It also isn't clear to me if next
+> > belongs on evlist or evsel.
+>
+> Yes, the existing support would be the right way, I missed that. Will fix=
+ in
+> v2.
+>
+> and regarding the next() function, I think we should keep it for evlist
+> because for the C code it's defined in the context of evlist, so would
+> avoid confusion. But since it is not needed for the iteration, should
+> I keep it in v2?
 
-    $ perf record -a -g --call-graph=dwarf
-    $ perf report
-    # hung
+So the perf code is following the kernel style and using invasive data
+structures a lot. The kernel does this as memory allocation is a pain
+and can fail causing complicated error paths. It gets kind of crazy,
+if you look at perf_event in the kernel it has like 11 invasive data
+structures:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/include/linux/perf_event.h?h=3Dperf-tools-next#n706
+```
+struct perf_event {
+struct list_head event_entry;
+struct list_head sibling_list;
+struct list_head active_list;
+struct rb_node group_node;
+struct list_head migrate_entry;
+struct hlist_node hlist_entry;
+struct list_head active_entry;
+struct list_head child_list;
+struct list_head owner_entry;
+struct list_head rb_entry;
+struct list_head sb_list;
+};
+```
+Managed languages like Python don't tend to use invasive data
+structures and I'm not sure exposing next in this way makes sense. We
+may want to use an array for evlist in the future, which we've done in
+the past to make reference count accounting easier, for example:
+https://lore.kernel.org/r/20240210031746.4057262-2-irogers@google.com
+But if next is exposed then we'd need to support that for scripts that
+may be using it. I think it is easier to avoid the problem by just not
+adding the function.
 
-`strace` shows that hangup happens on reading on a character device
-`/dev/dri/renderD128`
+Thanks,
+Ian
 
-    $ strace -y -f -p 2780484
-    strace: Process 2780484 attached
-    pread64(101</dev/dri/renderD128>, strace: Process 2780484 detached
-
-It's call trace descends into `elfutils`:
-
-    $ gdb -p 2780484
-    (gdb) bt
-    #0  0x00007f5e508f04b7 in __libc_pread64 (fd=101, buf=0x7fff9df7edb0, count=0, offset=0)
-        at ../sysdeps/unix/sysv/linux/pread64.c:25
-    #1  0x00007f5e52b79515 in read_file () from /<<NIX>>/elfutils-0.192/lib/libelf.so.1
-    #2  0x00007f5e52b25666 in libdw_open_elf () from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #3  0x00007f5e52b25907 in __libdw_open_file () from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #4  0x00007f5e52b120a9 in dwfl_report_elf@@ELFUTILS_0.156 ()
-       from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #5  0x000000000068bf20 in __report_module (al=al@entry=0x7fff9df80010, ip=ip@entry=139803237033216, ui=ui@entry=0x5369b5e0)
-        at util/dso.h:537
-    #6  0x000000000068c3d1 in report_module (ip=139803237033216, ui=0x5369b5e0) at util/unwind-libdw.c:114
-    #7  frame_callback (state=0x535aef10, arg=0x5369b5e0) at util/unwind-libdw.c:242
-    #8  0x00007f5e52b261d3 in dwfl_thread_getframes () from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #9  0x00007f5e52b25bdb in get_one_thread_cb () from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #10 0x00007f5e52b25faa in dwfl_getthreads () from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #11 0x00007f5e52b26514 in dwfl_getthread_frames () from /<<NIX>>/elfutils-0.192/lib/libdw.so.1
-    #12 0x000000000068c6ce in unwind__get_entries (cb=cb@entry=0x5d4620 <unwind_entry>, arg=arg@entry=0x10cd5fa0,
-        thread=thread@entry=0x1076a290, data=data@entry=0x7fff9df80540, max_stack=max_stack@entry=127,
-        best_effort=best_effort@entry=false) at util/thread.h:152
-    #13 0x00000000005dae95 in thread__resolve_callchain_unwind (evsel=0x106006d0, thread=0x1076a290, cursor=0x10cd5fa0,
-        sample=0x7fff9df80540, max_stack=127, symbols=true) at util/machine.c:2939
-    #14 thread__resolve_callchain_unwind (thread=0x1076a290, cursor=0x10cd5fa0, evsel=0x106006d0, sample=0x7fff9df80540,
-        max_stack=127, symbols=true) at util/machine.c:2920
-    #15 __thread__resolve_callchain (thread=0x1076a290, cursor=0x10cd5fa0, evsel=0x106006d0, evsel@entry=0x7fff9df80440,
-        sample=0x7fff9df80540, parent=parent@entry=0x7fff9df804a0, root_al=root_al@entry=0x7fff9df80440, max_stack=127, symbols=true)
-        at util/machine.c:2970
-    #16 0x00000000005d0cb2 in thread__resolve_callchain (thread=<optimized out>, cursor=<optimized out>, evsel=0x7fff9df80440,
-        sample=<optimized out>, parent=0x7fff9df804a0, root_al=0x7fff9df80440, max_stack=127) at util/machine.h:198
-    #17 sample__resolve_callchain (sample=<optimized out>, cursor=<optimized out>, parent=parent@entry=0x7fff9df804a0,
-        evsel=evsel@entry=0x106006d0, al=al@entry=0x7fff9df80440, max_stack=max_stack@entry=127) at util/callchain.c:1127
-    #18 0x0000000000617e08 in hist_entry_iter__add (iter=iter@entry=0x7fff9df80480, al=al@entry=0x7fff9df80440, max_stack_depth=127,
-        arg=arg@entry=0x7fff9df81ae0) at util/hist.c:1255
-    #19 0x000000000045d2d0 in process_sample_event (tool=0x7fff9df81ae0, event=<optimized out>, sample=0x7fff9df80540,
-        evsel=0x106006d0, machine=<optimized out>) at builtin-report.c:334
-    #20 0x00000000005e3bb1 in perf_session__deliver_event (session=0x105ff2c0, event=0x7f5c7d735ca0, tool=0x7fff9df81ae0,
-        file_offset=2914716832, file_path=0x105ffbf0 "perf.data") at util/session.c:1367
-    #21 0x00000000005e8d93 in do_flush (oe=0x105ffa50, show_progress=false) at util/ordered-events.c:245
-    #22 __ordered_events__flush (oe=0x105ffa50, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:324
-    #23 0x00000000005e1f64 in perf_session__process_user_event (session=0x105ff2c0, event=0x7f5c7d752b18, file_offset=2914835224,
-        file_path=0x105ffbf0 "perf.data") at util/session.c:1419
-    #24 0x00000000005e47c7 in reader__read_event (rd=rd@entry=0x7fff9df81260, session=session@entry=0x105ff2c0,
-    --Type <RET> for more, q to quit, c to continue without paging--
-    quit
-        prog=prog@entry=0x7fff9df81220) at util/session.c:2132
-    #25 0x00000000005e4b37 in reader__process_events (rd=0x7fff9df81260, session=0x105ff2c0, prog=0x7fff9df81220)
-        at util/session.c:2181
-    #26 __perf_session__process_events (session=0x105ff2c0) at util/session.c:2226
-    #27 perf_session__process_events (session=session@entry=0x105ff2c0) at util/session.c:2390
-    #28 0x0000000000460add in __cmd_report (rep=0x7fff9df81ae0) at builtin-report.c:1076
-    #29 cmd_report (argc=<optimized out>, argv=<optimized out>) at builtin-report.c:1827
-    #30 0x00000000004c5a40 in run_builtin (p=p@entry=0xd8f7f8 <commands+312>, argc=argc@entry=1, argv=argv@entry=0x7fff9df844b0)
-        at perf.c:351
-    #31 0x00000000004c5d63 in handle_internal_command (argc=argc@entry=1, argv=argv@entry=0x7fff9df844b0) at perf.c:404
-    #32 0x0000000000442de3 in run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:448
-    #33 main (argc=<optimized out>, argv=0x7fff9df844b0) at perf.c:556
-
-The hangup happens because nothing in` perf` or `elfutils` checks if a
-mapped file is easily readable.
-
-The change conservatively skips all non-regular files.
-
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Namhyung Kim <namhyung@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: Jiri Olsa <jolsa@kernel.org>
-CC: Ian Rogers <irogers@google.com>
-CC: Adrian Hunter <adrian.hunter@intel.com>
-CC: "Liang, Kan" <kan.liang@linux.intel.com>
-CC: linux-perf-users@vger.kernel.org
-Signed-off-by: Sergei Trofimovich <slyich@gmail.com>
----
- tools/perf/util/unwind-libdw.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 793d11832694..ae70fb56a057 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -84,8 +84,11 @@ static int __report_module(struct addr_location *al, u64 ip,
- 		char filename[PATH_MAX];
- 
- 		__symbol__join_symfs(filename, sizeof(filename), dso__long_name(dso));
--		mod = dwfl_report_elf(ui->dwfl, dso__short_name(dso), filename, -1,
--				      base, false);
-+		/* Don't hang up on device files like /dev/dri/renderD128. */
-+		if (is_regular_file(filename)) {
-+			mod = dwfl_report_elf(ui->dwfl, dso__short_name(dso), filename, -1,
-+					      base, false);
-+		}
- 	}
- 	if (!mod) {
- 		char filename[PATH_MAX];
--- 
-2.49.0
-
+> Thanks,
+> Gautam
