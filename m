@@ -1,172 +1,220 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACED4220F47
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 May 2025 06:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6732C1C5D5A
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 May 2025 06:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746513995; cv=none; b=hXDyGof12ZLX4TYgAkUM2O7NOQMPINmA4zEyRnveA3mknoZpbDBZcGZgIzRFhhGUe2DoJzlY+oLh7uu0gEl6/LDqz574rPpIZVujcCvONkaQGMbwg+6VmlM4HWxvZfLmduh8uZR6sF6OUFtnq9D/L89MU74RiZYRHUzQaMOl0Mc=
+	t=1746514143; cv=none; b=tH9IcspT0be4dIXafjDg8hYNPfg93ICrIN1wnlkTaeavjbGBY95NJE2sIjoGIzSAzaGauSUiyx+bwrZOrN57GGdXLNU5daIoo4wx6vY/84IVQfeTg17/asOinIp3HG/aMUJyDWEANEHwEee0b6ytz2OCwBbGo74FAQucunfEu0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746513995; c=relaxed/simple;
-	bh=5Xi6j//R02dpub/R7xxHcBfZMhj1LSXeBKp5n05nTvQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mnEB5E5/9bF9s17AxOV78aGMvoOPgNS3c/3ScDVDv6SwXkuHprwY/sadk4DsuhDwx/8lvUMyxPABQYEFwRwc/1EtmObgKZLOJbF5nnUEgLjeSTjCycxA9Qfna2Os4Ti3k0CcfDtkJwzcCOJnh+wVzUgpGFPWEIc6p2pD0s62EKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wv4ZsJPy; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746514143; c=relaxed/simple;
+	bh=DQX+HSyK/A4pKdJ6Wcy13raRHbAw0cR4RxvqIvGHBxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FRdOghJwkp8J05bTpAAYiU1e7KntPf2pgSeBNiSlqDnC3wT+27kYbvkVsGI2d9qZamrI3uYuTdjnhzo1tmlrLNarHQl5QDy+ASJVAs/uoZshjqlRpBSDJlHzGKN+B+N1Tn8QGaNf7pWrYLQQNRGkc6wo6ldEYyvThApNEWdUVWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rfMbSkPg; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wv4ZsJPy"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54e816aeca6so6748395e87.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 May 2025 23:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746513992; x=1747118792; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+TkT8CQai/ZWtD1K5cF0ad1w9jdiTtki3uhfACJlgto=;
-        b=wv4ZsJPy78qW2Ry7u6LbEeFyNfoBXAks1HWIXRhWF4dcMRKvydWJw6OBlbbK//QSr9
-         3Nnz1fwBqKmM9rqdD6uAqlvs6v5pLDy6bytsx4HrWiNQjb0N7F3A6capq2AT/vJ4Tl4l
-         ExFnEL7Q/JpN5G3dHxtEEYUgZeDrBR+4izajKEN0UCG2lQxBC85wmhG0g6IB0JgsXiTW
-         7CfqgLFOAcIwVmHLmulUkDPcmGdU4GwR7MoOADCIUcXdwny0r4pVeR2tM9zc297Rxc0u
-         NiEcq6Gt9r34ZmzAaxu4GHROTQw3JjYuSGtE84hKO9y+jglOfEawcj2JLNEP2TJTUJtR
-         KXMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746513992; x=1747118792;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+TkT8CQai/ZWtD1K5cF0ad1w9jdiTtki3uhfACJlgto=;
-        b=LS6uS8ja7pN4BeGvaeCXf6IuK9G3I8eUAxIk2SZre9n4PkV38NDF7nSvL3yQWobK2M
-         Of4xHLWp0mQsmXuFjDVuDla9WOutK4N4QbIk4vk8F6hD4DDmMVFsoDbnS1o1a0tAUAvR
-         V5M9wuwAaYLT6qM792P2wn8U7RO/gKME4xNJfJFX+NP8eWQWGyTapN4hy92gNVHtGKJH
-         MTqPAeBAaYpxSBe8KVdoTHgdp5z2pyd1lpBQMS1Uye29SQGcSxGIX3j5Mlld1I/2XcsO
-         una+TQjasqTLXDyhFfaW6eLnHpU2gMcASD3I2e+KB45piHkIHulnwXE+QBFx+gUd6OUz
-         iEOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLxb0TFb0+a6QVSilt+ibb/9S1U/rtbmBDOZ//TCYrHXwZ1GoYOfcQ48oxeewLM2+S9IQ0oDtxGlnn47KzRfLq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDOX8BOra0gQs3u0PTKt7pxJ/uODKV2A5h5Dx8t/WbeXUjmP1s
-	cobpmISzw+Bv35/GWj/x9jwEVjiC2fOK8c/kFtsWT9dHXRPRzKmNCpcVRt+aNbfUJPNFhiZm7yt
-	cbMZfDSi8pD802PA7JpxEra5RNLStcup9J9+7
-X-Gm-Gg: ASbGncutbHmtd7wNYEaENtPdosQI5X4DnkDeIrLQ4BOMgUDBL+PMLJQbJuW0t9r3mft
-	h8piSjIQmnN80V+eag7HZLL0wFcFwr6JXYqEqKsDdjzjyOt6K7OR83oY7eXp8mnYQfReCO6E6BH
-	eN0Oz9LFJpiSap8DKfw+wba4TjfFMq3XhknCvs3SJuuHfPtGRZyVK0eXo=
-X-Google-Smtp-Source: AGHT+IF/1cJ0gn0VbpuxAups41aSoda4aMlkyRVuVVCTnyySXdE5xjS3ApovhcJGPqcHbWgerPHgZOwlWlSuLsCbw5o=
-X-Received: by 2002:a05:651c:b2a:b0:319:d856:c2f3 with SMTP id
- 38308e7fff4ca-3266b59789emr4354901fa.10.1746513991522; Mon, 05 May 2025
- 23:46:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rfMbSkPg"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5465giwX006736;
+	Tue, 6 May 2025 06:48:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=PUhovj
+	zHf0+NE8mdu7J28hkOcUvHyTW6u/okdUGynxU=; b=rfMbSkPgBpLGTIQyv3wUok
+	bIMH50NaRyc0NFJZ6P2ROZhqgbDxn78DO0f5xZJtU0rLJ/DgZ9LTLqqcLrDPBx/n
+	ezoXnmcZrp5pbF0jdgng2C6ztoo51fKksgDfWEhJalsX/j9HKsh0a30IDXZy1MJP
+	bFWgXcaQhAac8ZJwp7IKSPEsyyjE3CY9EbzUOGtZRemChq3AZ8J8HG2d573OhaDs
+	OhnMlX/uGaJ20PyiqWnYfPytq8d3MAQ+LRGzi6BQLorfJUtTKS6r0Bp5NW46D8G7
+	7b8Tb4lPbahFaaU6kC5ib+0axzKkapUs91tBM2/ylUcFJJUqBNYLAaQKXuxhL72g
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fcgy06xw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 06:48:57 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 546409RP002765;
+	Tue, 6 May 2025 06:48:57 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxfnt6aj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 06:48:57 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5466mpwa30212726
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 May 2025 06:48:51 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1B7562004B;
+	Tue,  6 May 2025 06:48:51 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49FFA2004E;
+	Tue,  6 May 2025 06:48:50 +0000 (GMT)
+Received: from [9.109.217.253] (unknown [9.109.217.253])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  6 May 2025 06:48:50 +0000 (GMT)
+Message-ID: <44ee5f28-41ea-4523-8fe8-9d0d52129f5c@linux.ibm.com>
+Date: Tue, 6 May 2025 12:18:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503003620.45072-1-namhyung@kernel.org> <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
- <aBmei7cMf-MzzX5W@google.com> <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
- <aBmvmmRKpeVd6aT3@google.com>
-In-Reply-To: <aBmvmmRKpeVd6aT3@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 6 May 2025 08:46:20 +0200
-X-Gm-Features: ATxdqUEgdDVnyyriKiX9pDQDs3z8t8w0Gd3KuZT0JW1dkH5BkkyNq1pTZnz9pko
-Message-ID: <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf script: perf script tests fails with segfault
+Content-Language: en-GB
+To: Aditya Bodkhe <adityab1@linux.ibm.com>, linux-perf-users@vger.kernel.org
+Cc: Aditya Bodkhe <aditya.b1@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+References: <20250429065132.36839-1-adityab1@linux.ibm.com>
+From: Disha Goel <disgoel@linux.ibm.com>
+In-Reply-To: <20250429065132.36839-1-adityab1@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 58UzGs27icGbL434zeGnkyTSkjeTjw-2
+X-Authority-Analysis: v=2.4 cv=Pa7/hjhd c=1 sm=1 tr=0 ts=6819b0d9 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=nRiDTj3yiyNuxznsutwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 58UzGs27icGbL434zeGnkyTSkjeTjw-2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA2MSBTYWx0ZWRfX0W64SnLuadTB LBcSp0vihUiuSLm5BRU7KA1S7avvuqzBF6OlcKA7lY20Vn+gzaQ7AssqLoFjIpFgCAvFeB91qqW wrmNNPuRTOvZJnn1HwyBCGoOdVeAk4Cn3UNLcbtHMIg83pCtjiD3/Dvo2mqw03W0Ac8awLWTvRH
+ Fj95ySKD8FHzVFufFbYaL16Z91WIY1RzcigO/doER0XAnRgg8U1Cmqywhj90sVoLNzWUKo/fC6V BVqOVa9JjlSDUddo+mUM2jZJCNYLpK36WvMc8LaUbN+OtJ3FcSbSz8ofvoHx36TUSm01+MQs6RT Cmni0Dl2w0CVYVThD8ffj4xzlVlNwJlyM36LFlOX0Ie68FK9jrXtWTNTD10dhavWd0aXk2IC2Oy
+ QZVBwMrqn1dDclKDqsWpMzWd8Hwaau/94gFcX5LZAZHZG3T43lUt/BqcpsL7s1eJw2/zUBcH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_03,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060061
 
-On Tue, 6 May 2025 at 08:43, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Tue, May 06, 2025 at 07:55:25AM +0200, Dmitry Vyukov wrote:
-> > On Tue, 6 May 2025 at 07:30, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Mon, May 05, 2025 at 10:08:17AM +0200, Dmitry Vyukov wrote:
-> > > > On Sat, 3 May 2025 at 02:36, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > >
-> > > > > When it profile a target process (and its children), it's
-> > > > > straight-forward to track parallelism using sched-switch info.  The
-> > > > > parallelism is kept in machine-level in this case.
-> > > > >
-> > > > > But when it profile multiple processes like in the system-wide mode,
-> > > > > it might not be clear how to apply the (machine-level) parallelism to
-> > > > > different tasks.  That's why it disabled the latency profiling for
-> > > > > system-wide mode.
-> > > > >
-> > > > > But it should be able to track parallelism in each process and it'd
-> > > > > useful to profile latency issues in multi-threaded programs.  So this
-> > > > > patch tries to enable it.
-> > > > >
-> > > > > However using sched-switch info can be a problem since it may emit a lot
-> > > > > more data and more chances for losing data when perf cannot keep up with
-> > > > > it.
-> > > > >
-> > > > > Instead, it can maintain the current process for each CPU when it sees
-> > > > > samples.
-> > > >
-> > > > Interesting.
-> > > >
-> > > > Few questions:
-> > > > 1. Do we always see a CPU sample when a CPU becomes idle? Otherwise we
-> > > > will think that the last thread runs on that CPU for arbitrary long,
-> > > > when it's actually not.
-> > >
-> > > No, it's not guaranteed to have a sample for idle tasks.  So right, it
-> > > can mis-calculate the parallelism for the last task.  If we can emit
-> > > sched-switches only when it goes to the idle task, it'd be accurate.
-> >
-> > Then I think the profile can be significantly off if the system wasn't
-> > ~100% loaded, right?
->
-> Yep, it can be.
->
-> >
-> > > > 2. If yes, can we also lose that "terminating" even when a CPU becomes
-> > > > idle? If yes, then it looks equivalent to missing a context switch
-> > > > event.
-> > >
-> > > I'm not sure what you are asking.  When it lose some records because the
-> > > buffer is full, it'll see the task of the last sample on each CPU.
-> > > Maybe we want to reset the current task after PERF_RECORD_LOST.
-> >
-> > This probably does not matter much if the answer to question 1 is No.
-> >
-> > But what I was is the following:
-> >
-> > let's say we have samples:
-> > Sample 1 for Pid 42 on Cpu 10
-> > Sample 2 for idle task on Cpu 10
-> > ... no samples for some time on Cpu 10 ...
-> >
-> > When we process sample 2, we decrement the counter for running tasks
-> > for Pid 42, right.
-> > Now if sample 2 is lost, then we don't do decrement and the accounting
-> > becomes off.
-> > In a sense this is equivalent to the problem of losing context switch event.
->
-> Right.  But I think it's hard to be correct once it loses something.
->
-> >
-> >
-> > > > 3. Does this mode kick in even for non system-wide profiles (collected
-> > > > w/o context switch events)? If yes, do we properly understand when a
-> > > > thread stops running for such profiles? How do we do that? There won't
-> > > > be samples for idle/other tasks.
-> > >
-> > > For non system-wide profiles, the problem is that it cannot know when
-> > > the current task is scheduled out so that it can decrease the count of
-> > > parallelism.  So this approach cannot work and sched-switch info is
-> > > required.
-> >
-> > Where does the patch check that this mode is used only for system-wide profiles?
-> > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
->
-> Basically yes, but you can use --sample-cpu to add it.
+On 29/04/25 12:21 pm, Aditya Bodkhe wrote:
+> From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+> 
+> perf script: pert script tests fails with segmentation fault as below:
+> 
+>   92: perf script tests:
+>   --- start ---
+> test child forked, pid 103769
+> DB test
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
+> /usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
+>   --- Cleaning up ---
+>   ---- end(-1) ----
+> 	92: perf script tests                                               : FAILED!
+> 
+> Backtrace pointed to :
+> 	#0  0x0000000010247dd0 in maps.machine ()
+> 	#1  0x00000000101d178c in db_export.sample ()
+> 	#2  0x00000000103412c8 in python_process_event ()
+> 	#3  0x000000001004eb28 in process_sample_event ()
+> 	#4  0x000000001024fcd0 in machines.deliver_event ()
+> 	#5  0x000000001025005c in perf_session.deliver_event ()
+> 	#6  0x00000000102568b0 in __ordered_events__flush.part.0 ()
+> 	#7  0x0000000010251618 in perf_session.process_events ()
+> 	#8  0x0000000010053620 in cmd_script ()
+> 	#9  0x00000000100b5a28 in run_builtin ()
+> 	#10 0x00000000100b5f94 in handle_internal_command ()
+> 	#11 0x0000000010011114 in main ()
+> 
+> Further investigation reveals that this occurs in the `perf script tests`,
+> because it uses `db_test.py` script. This script sets `perf_db_export_mode = True`.
+> 
+> With `perf_db_export_mode` enabled, if a sample originates from a hypervisor,
+> perf doesn't set maps for "[H]" sample in the code. Consequently, `al->maps` remains NULL
+> when `maps__machine(al->maps)` is called from `db_export__sample`.
+> 
+> As al->maps can be NULL in case of Hypervisor samples , use thread->maps
+> because even for Hypervisor sample, machine should exist.
+> If we don't have machine for some reason, return -1 to avoid segmentation fault.
+> 
+> Reported-by: Disha Goel <disgoel@linux.ibm.com>
+> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
+I have tested the patch on PowerPC, it fixes the reported issue and test 
+passes.
 
-> In util/evsel.c::evsel__config():
->
->         if (target__has_cpu(&opts->target) || opts->sample_cpu)
->                 evsel__set_sample_bit(evsel, CPU);
+# ./perf test -v 'perf script tests'
+  95: perf script tests : Ok
+
+Tested-by: Disha Goel <disgoel@linux.ibm.com>
+
+> ---
+> Changelog:
+> v2 -> v3:
+> This patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to add extra spaces
+> before ---start--- and ---end---
+> to be able to apply patch without any issues
+> 
+> v1 -> v2:
+> The below patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to handle the segmentation fault ,
+> as well as initialisation of al.thread
+> 
+>   tools/perf/util/db-export.c                           | 11 ++++++++---
+>   .../perf/util/scripting-engines/trace-event-python.c  |  2 +-
+>   2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+> index 50f916374d87..8f52e8cefcf3 100644
+> --- a/tools/perf/util/db-export.c
+> +++ b/tools/perf/util/db-export.c
+> @@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
+>   	if (al->map) {
+>   		struct dso *dso = map__dso(al->map);
+> 
+> -		err = db_export__dso(dbe, dso, maps__machine(al->maps));
+> +		err = db_export__dso(dbe, dso, maps__machine(thread__maps(al->thread)));
+>   		if (err)
+>   			return err;
+>   		*dso_db_id = dso__db_id(dso);
+> @@ -256,6 +256,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
+>   		al.map = map__get(node->ms.map);
+>   		al.maps = maps__get(thread__maps(thread));
+>   		al.addr = node->ip;
+> +		al.thread = thread__get(thread);
+> 
+>   		if (al.map && !al.sym)
+>   			al.sym = dso__find_symbol(map__dso(al.map), al.addr);
+> @@ -358,14 +359,18 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+>   	};
+>   	struct thread *main_thread;
+>   	struct comm *comm = NULL;
+> -	struct machine *machine;
+> +	struct machine *machine = NULL;
+>   	int err;
+> 
+> +	if (thread__maps(thread))
+> +		machine = maps__machine(thread__maps(thread));
+> +	if (!machine)
+> +		return -1;
+> +
+>   	err = db_export__evsel(dbe, evsel);
+>   	if (err)
+>   		return err;
+> 
+> -	machine = maps__machine(al->maps);
+>   	err = db_export__machine(dbe, machine);
+>   	if (err)
+>   		return err;
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 520729e78965..00f2c6c5114d 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -1306,7 +1306,7 @@ static void python_export_sample_table(struct db_export *dbe,
+> 
+>   	tuple_set_d64(t, 0, es->db_id);
+>   	tuple_set_d64(t, 1, es->evsel->db_id);
+> -	tuple_set_d64(t, 2, maps__machine(es->al->maps)->db_id);
+> +	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
+>   	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
+>   	tuple_set_d64(t, 4, es->comm_db_id);
+>   	tuple_set_d64(t, 5, es->dso_db_id);
+> --
+> 2.43.0
+> 
+> 
+> 
+
