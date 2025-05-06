@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21F928751A;
-	Tue,  6 May 2025 16:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216E72882C7;
+	Tue,  6 May 2025 16:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550104; cv=none; b=FkDRmmAURWtZbhhUwJLKwf0YXe2NK0GK/U4duMfkFLHromQeyUtRXM0Nfi+7eMqiwWk/cDFKMalBQoIu6isyRyoP51iQbjwh9Xb3kFWDkZ7LcQE/h6APjKluYGLKa/4RuQcOotD7nPUAuOeRnzdNdSzfEQbSuFiozBEhm39p000=
+	t=1746550105; cv=none; b=erMQR43RHnEMpodyXOsSmB9vnhn8fXODSZzZxC3bni8S7DinQ/0f5q0Bsz8rY8L50zou02RZZtn/0L3Npe2YBwCQqHxyP/7zTFF60KU+g9NJsK2JiRAXUnX5gDLt16tEHICWB2l7CXFunDpLJzMXVpFeO6U3h9+ej8L9E9/ZZek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550104; c=relaxed/simple;
-	bh=4mpX1YmJsKhiwoN8Qz2qbRy/2tQafGlzgwM0Wm9azSo=;
+	s=arc-20240116; t=1746550105; c=relaxed/simple;
+	bh=JiwvHEAYw1T9QTlO99VilV21kD4dORO/tZIjOkKmDDQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dVWhynAWt0ogKqX0KZ/BVCmIZe4xWmURWKIHsIrMsRMBj04KmknWW5XyymzVy41H7EUMEDOGFhvMVfML2JlyiVRxrB7RvNcZvy+EpFuV2v9rWkoeXbyFDstvQ0fZYlW2EXisKNR+lcfthj7Bjav+f2wzj2qL0chLJwdyK+qhmjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isnW4O+e; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=J3Ml1kZOX8fbJl7BVktEMaopNf8cBVRDGgyZyVHvyfQknhyyHYGISVFttcgIVJ1HjwF4q49X8e7dI5Dug5UNRRyBLCRNCv2Uf99Iqo/arN8E2W6c1yptfcM9vJm9mbdpWUdV5rrQ/RuSZNeWY1+GWDPbzl5I3WJ1+kO4XbzluU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RS/RhSox; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isnW4O+e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RS/RhSox"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746550103; x=1778086103;
+  t=1746550104; x=1778086104;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4mpX1YmJsKhiwoN8Qz2qbRy/2tQafGlzgwM0Wm9azSo=;
-  b=isnW4O+eQweU3B7x9FnMHUrrwxNWPDhE9XVBK7aTPp732rmOSqD1XPcD
-   yH6q7eDWVPuJL4C5mHm9XyGzFGLdatnIN0hnRA2UpRWQCBkf+Dhlhsom+
-   BbfJSU5VzHodc+ivKJrZsRY6rp0jjiUyrSdtg1I+yvc7Mc76ZkaRuUZ67
-   dOs6/CaVNFLTWyplm35tsExfq51k9Z4Clr9ORxvJgUJOotdmo+JhDw+VF
-   HY/haMDysLqcmQ8ry/tXfZacdG9apBRCkaRJw9qtkuVSO6g31fIJ6NIdG
-   1YPKnySYjIXMPO4KfmJjUAQgLOINqZI6KnODXpjUgaQoSg0VdsBONuYfu
-   A==;
-X-CSE-ConnectionGUID: vNhQZMsWQGS4aWmnMXgn+A==
-X-CSE-MsgGUID: wsObRy7CQNS6q+bZpqzxgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59595341"
+  bh=JiwvHEAYw1T9QTlO99VilV21kD4dORO/tZIjOkKmDDQ=;
+  b=RS/RhSoxZREfEVH7cUixDkgKqLbEBAgivTDTvSwSQ2ARnHxnD5HBt+Y9
+   Tr6p/vVXwD5MaxoMiRfIorWBGCD2LZQtDBG/1GKUDGkfhcojniFd4sRMb
+   dcPdMyFg/6S16YLfk/H7gEPyP8d75cM5Ho58mdOsabS0zncYCps2/ulWF
+   1UjvMOx4QmWoQBufO+O02TTgFHRgGNcnQOHfp/IiiLhmdq/pclQfjj23Q
+   nWlgM+UuESR/oGmn2uYAKLnwS+pLVW3hvbgKfFu0/+bpJ64WlT6HjIdw/
+   9KFkCQb6Lxpa+X8Mat/hIRFPFAkiYrEAI+50rh5LMS6ZYWFeneGSYfgZ7
+   w==;
+X-CSE-ConnectionGUID: SO49iDrxTEyakXWkNbem6A==
+X-CSE-MsgGUID: g21pdYN0S9eYc2z5u3+xzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59595349"
 X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="59595341"
+   d="scan'208";a="59595349"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 09:48:22 -0700
-X-CSE-ConnectionGUID: MnshmrgQQDq73z9YdAaT8Q==
-X-CSE-MsgGUID: wLLBYeL+TkS20ZXm+AXRqg==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 09:48:23 -0700
+X-CSE-ConnectionGUID: PTJ6Lt5rQda926yXGjd9SQ==
+X-CSE-MsgGUID: WFzlB+Z+ROWlvkmzdTUuRw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="135674904"
+   d="scan'208";a="135674908"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 09:48:22 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 09:48:23 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -55,10 +55,10 @@ Cc: eranian@google.com,
 	ctshao@google.com,
 	tmricht@linux.ibm.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Max Filippov <jcmvbkbc@gmail.com>
-Subject: [RFC PATCH 14/15] xtensa/perf: Remove driver-specific throttle support
-Date: Tue,  6 May 2025 09:47:39 -0700
-Message-Id: <20250506164740.1317237-15-kan.liang@linux.intel.com>
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [RFC PATCH 15/15] mips/perf: Remove driver-specific throttle support
+Date: Tue,  6 May 2025 09:47:40 -0700
+Message-Id: <20250506164740.1317237-16-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250506164740.1317237-1-kan.liang@linux.intel.com>
 References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
@@ -80,25 +80,25 @@ event_limit. It already does an inatomic event disable. The pmu->stop
 is not required either.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- arch/xtensa/kernel/perf_event.c | 3 +--
+ arch/mips/kernel/perf_event_mipsxx.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/kernel/perf_event.c b/arch/xtensa/kernel/perf_event.c
-index 183618090d05..223f1d452310 100644
---- a/arch/xtensa/kernel/perf_event.c
-+++ b/arch/xtensa/kernel/perf_event.c
-@@ -388,8 +388,7 @@ irqreturn_t xtensa_pmu_irq_handler(int irq, void *dev_id)
- 			struct pt_regs *regs = get_irq_regs();
+diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
+index c4d6b09136b1..196a070349b0 100644
+--- a/arch/mips/kernel/perf_event_mipsxx.c
++++ b/arch/mips/kernel/perf_event_mipsxx.c
+@@ -791,8 +791,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc,
+ 	if (!mipspmu_event_set_period(event, hwc, idx))
+ 		return;
  
- 			perf_sample_data_init(&data, 0, last_period);
--			if (perf_event_overflow(event, &data, regs))
--				xtensa_pmu_stop(event, 0);
-+			perf_event_overflow(event, &data, regs);
- 		}
+-	if (perf_event_overflow(event, data, regs))
+-		mipsxx_pmu_disable_event(idx);
++	perf_event_overflow(event, data, regs);
+ }
  
- 		rc = IRQ_HANDLED;
+ 
 -- 
 2.38.1
 
