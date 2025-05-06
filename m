@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326472874FB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21F928751A;
 	Tue,  6 May 2025 16:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550104; cv=none; b=tOCcpb1VGpmwMnQvKAmmMZv7lIFtUabZrYEnAAu6DAg0SxHiDbFYs4RkPAn2gJlka2ms4BeLikRSXfO+u7LHclPtXDkS99fTkQYE/6m7SSmf3HF/a1VVCDs2x9Ek83ZN/vZoTbDehzvA8S5T3Gt493Q3qHefqByOwuiMQ7b+kWU=
+	t=1746550104; cv=none; b=FkDRmmAURWtZbhhUwJLKwf0YXe2NK0GK/U4duMfkFLHromQeyUtRXM0Nfi+7eMqiwWk/cDFKMalBQoIu6isyRyoP51iQbjwh9Xb3kFWDkZ7LcQE/h6APjKluYGLKa/4RuQcOotD7nPUAuOeRnzdNdSzfEQbSuFiozBEhm39p000=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746550104; c=relaxed/simple;
-	bh=B8QsEFV1XiWjwO1syGoIhQQIyeZx4cI+2rXT69sma5A=;
+	bh=4mpX1YmJsKhiwoN8Qz2qbRy/2tQafGlzgwM0Wm9azSo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FonG6X2h21iSNy9WRZur78HBH+a1p0UGfkH7q1xhlomtJ4E93+IIa+JqkB33kfrS4jvsPzVuzLiKImnc+CFBjdCTeTIr+hehNAKWhw9/klT2Cwt2paafgcPN85QvBr8KBGfvOG6mywEQJJH8E1qwrUUKHO5LXOfslXcOMRXP0uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bd0sSzbL; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=dVWhynAWt0ogKqX0KZ/BVCmIZe4xWmURWKIHsIrMsRMBj04KmknWW5XyymzVy41H7EUMEDOGFhvMVfML2JlyiVRxrB7RvNcZvy+EpFuV2v9rWkoeXbyFDstvQ0fZYlW2EXisKNR+lcfthj7Bjav+f2wzj2qL0chLJwdyK+qhmjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isnW4O+e; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bd0sSzbL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isnW4O+e"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746550102; x=1778086102;
+  t=1746550103; x=1778086103;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=B8QsEFV1XiWjwO1syGoIhQQIyeZx4cI+2rXT69sma5A=;
-  b=Bd0sSzbLP6rnjuC8HkxCyoSTnh20gj/uiD3hwk8POVWm36Gc5oDsL/c5
-   0EcZyWr5PQQgIBCGFN1dAQPa/3iwCgVMCFvNKP3HsGNSSCXqo25i8SMDa
-   bmdRgDfmPXH7ZOEz4vytSEXIJOqgeePJRAseDHNyGJmBFeGjGj0xfuy/7
-   FHd1YFkVnCvoio6GrSYx0KRDVVG4YVQF3E9nFnrM45G10AJinWVGUMi61
-   gVdGiR+p9ZJUOk4LwxvW8zRNoV6lWockUhzYpBmAEJa2mC8WGheo2oJ5D
-   VVHuELnyC23toEdgJgoL6CJ6bU0/YqIa/JNGvNFduocSsTJRSObpMzamY
-   g==;
-X-CSE-ConnectionGUID: MAqiBhLvT6uzHNhdP207Rw==
-X-CSE-MsgGUID: EbkXbxFhRe+5nGPE1f0yYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59595332"
+  bh=4mpX1YmJsKhiwoN8Qz2qbRy/2tQafGlzgwM0Wm9azSo=;
+  b=isnW4O+eQweU3B7x9FnMHUrrwxNWPDhE9XVBK7aTPp732rmOSqD1XPcD
+   yH6q7eDWVPuJL4C5mHm9XyGzFGLdatnIN0hnRA2UpRWQCBkf+Dhlhsom+
+   BbfJSU5VzHodc+ivKJrZsRY6rp0jjiUyrSdtg1I+yvc7Mc76ZkaRuUZ67
+   dOs6/CaVNFLTWyplm35tsExfq51k9Z4Clr9ORxvJgUJOotdmo+JhDw+VF
+   HY/haMDysLqcmQ8ry/tXfZacdG9apBRCkaRJw9qtkuVSO6g31fIJ6NIdG
+   1YPKnySYjIXMPO4KfmJjUAQgLOINqZI6KnODXpjUgaQoSg0VdsBONuYfu
+   A==;
+X-CSE-ConnectionGUID: vNhQZMsWQGS4aWmnMXgn+A==
+X-CSE-MsgGUID: wsObRy7CQNS6q+bZpqzxgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59595341"
 X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="59595332"
+   d="scan'208";a="59595341"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 09:48:22 -0700
-X-CSE-ConnectionGUID: ON9dzfoMQ3q3ixbCJ6PDkg==
-X-CSE-MsgGUID: WiO49QYWQWayAOM/A83GCQ==
+X-CSE-ConnectionGUID: MnshmrgQQDq73z9YdAaT8Q==
+X-CSE-MsgGUID: wLLBYeL+TkS20ZXm+AXRqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="135674896"
+   d="scan'208";a="135674904"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 09:48:21 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 09:48:22 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -55,10 +55,10 @@ Cc: eranian@google.com,
 	ctshao@google.com,
 	tmricht@linux.ibm.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: [RFC PATCH 13/15] sparc/perf: Remove driver-specific throttle support
-Date: Tue,  6 May 2025 09:47:38 -0700
-Message-Id: <20250506164740.1317237-14-kan.liang@linux.intel.com>
+	Max Filippov <jcmvbkbc@gmail.com>
+Subject: [RFC PATCH 14/15] xtensa/perf: Remove driver-specific throttle support
+Date: Tue,  6 May 2025 09:47:39 -0700
+Message-Id: <20250506164740.1317237-15-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250506164740.1317237-1-kan.liang@linux.intel.com>
 References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
@@ -80,25 +80,25 @@ event_limit. It already does an inatomic event disable. The pmu->stop
 is not required either.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: David S. Miller <davem@davemloft.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
 ---
- arch/sparc/kernel/perf_event.c | 3 +--
+ arch/xtensa/kernel/perf_event.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
-index f02a283a8e8f..cae4d33002a5 100644
---- a/arch/sparc/kernel/perf_event.c
-+++ b/arch/sparc/kernel/perf_event.c
-@@ -1668,8 +1668,7 @@ static int __kprobes perf_event_nmi_handler(struct notifier_block *self,
- 		if (!sparc_perf_event_set_period(event, hwc, idx))
- 			continue;
+diff --git a/arch/xtensa/kernel/perf_event.c b/arch/xtensa/kernel/perf_event.c
+index 183618090d05..223f1d452310 100644
+--- a/arch/xtensa/kernel/perf_event.c
++++ b/arch/xtensa/kernel/perf_event.c
+@@ -388,8 +388,7 @@ irqreturn_t xtensa_pmu_irq_handler(int irq, void *dev_id)
+ 			struct pt_regs *regs = get_irq_regs();
  
--		if (perf_event_overflow(event, &data, regs))
--			sparc_pmu_stop(event, 0);
-+		perf_event_overflow(event, &data, regs);
- 	}
+ 			perf_sample_data_init(&data, 0, last_period);
+-			if (perf_event_overflow(event, &data, regs))
+-				xtensa_pmu_stop(event, 0);
++			perf_event_overflow(event, &data, regs);
+ 		}
  
- 	finish_clock = sched_clock();
+ 		rc = IRQ_HANDLED;
 -- 
 2.38.1
 
