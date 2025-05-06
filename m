@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D902853F7;
-	Tue,  6 May 2025 16:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E89284B50;
+	Tue,  6 May 2025 16:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550095; cv=none; b=oO6GeCl2XLMIOSG5dZ0zaFsziWcRW0otYsOAxznmjQhEQR/LdSRy39rMmYfZORen8PisNUHh+oTJDjBsGhqQCjoDk4CPu5TVUJ51CMHyngQoA5DdNGp2+RqQugLJkx7v+06NbROEvLEE03RlaO/2ui1IDrxkRIqCNG0WVNdTmMA=
+	t=1746550095; cv=none; b=a04NKQgeCB5/eHJW3DpxoknV8cAdAPOIhtJeRHYNMt+s7kaNOWWcgC7mIwfovz1gLMNsTp/PJQW+XDvzdIEKEQ5CbBfYr6PddGvH1kV8InrH8nj5HJ22t4MnSzLInrf3/no17dDOIfWSFAKUtBDyf1enHcPhGdPEFqSbVBlUHKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746550095; c=relaxed/simple;
-	bh=RMEehrWYnmEORlN8I5Spw4Yog1jSoilWyq1ppX1bKEc=;
+	bh=8RE0xbWDyWwo1by9qxsaBAuAFWZOZ+iKPD900Oa+h/I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ke8SVwQ9c8y9lPuPhXvmLyHoH8gx2W0Xzqecm4Pg6DmGtc3zqP9Pd2mTWh2jSe2BJ3wknjSYk263YENsh0mi8pdwvhI5wtKI5xIrl+BNGVSMXcCnleS5jcRYzNILLm1SRltUO74nUiBCtSA8/b4LsydBdf4sTEIlbvr+ddMVHUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lv+DAO+O; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=VtPK8GuMSCEjxTDJVVlZPKe0yxigFqQ2f9PPI7mR2WxFk7GhGieXtJCJiywLjLyNnDhRjlqHVqfs3O6q9/iEGF5tGCsk46r/6Hv27V48JvCfml5SLydPf2isi8wsTLu3pd1G8GYBD2HeqKqJpMPgt3BNcY2GMSJoSLH1delayqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXehuzW/; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lv+DAO+O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXehuzW/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746550094; x=1778086094;
+  t=1746550093; x=1778086093;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RMEehrWYnmEORlN8I5Spw4Yog1jSoilWyq1ppX1bKEc=;
-  b=Lv+DAO+OCoFn45r4VUnPpYy8Xy6T3RZkPXRncj0l7pu0IT5nprNuBAN4
-   lK2PY/SdVxCJs7uZnkWTid5hU8XplOmHRFsWsH5lSCPz5kM8zCJRUtKUY
-   pJsM0x/zAiJn4KzdUnG2nSoHDzetMngal8cnWpDBXCPE4W8MjA6iQpK9V
-   3SSwHrOeg8q3SCVl51qexuU+5DqgJIA7zIxIsiypQ5ou8bqiTo0f/cL+d
-   gdapDYaz0vPbaxRsTkyp28eAMyLEy3eF3U7QqkR6jLXHpg2yD4+sT1k+6
-   adNdBe7GG3gYmeS6e3SqfPKmQYRLV3i6SR2dI+ci9hy114RPapi55KTF4
-   A==;
-X-CSE-ConnectionGUID: k4qxrZsXSwOQaPd85FVpeQ==
-X-CSE-MsgGUID: y2Fy/EhsQ3qshUBqyEqRFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59595238"
+  bh=8RE0xbWDyWwo1by9qxsaBAuAFWZOZ+iKPD900Oa+h/I=;
+  b=mXehuzW/UQqesdmST8T9yEMOlbr+I3cbE/hkyqXbvXLVzMPF6AGd56bf
+   GgQQTzm/tjzB2R9Co++UxH4LLQWB9zaoNwnCK6PxJOHdmrUOWafXUHhUV
+   7lCRE+65yc0ao4QLnfKTWZ3Z31ywGg7w5pohEkoqCSgV6jmrgEq5SFNUW
+   GFGbbChCsfLj9Fm6vqMqSfTGT4YC3BdAhXv38z5qEFl3yJk8XWmACzirZ
+   IH0GypyfIgLQUZhvWg+5jklJf5FUbMNcqn+ZdHwP6oZrsyj+qn+euNW7S
+   uoXTE66m0N8pjrEvp5aD1nyoMSOOk0PHUKuG9R4z0n8d4CEmrFrIVenVw
+   g==;
+X-CSE-ConnectionGUID: YO45yPZ8Rlyo987zAepaEQ==
+X-CSE-MsgGUID: avAsFJ6LRCuuVg6G9pwfdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59595226"
 X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="59595238"
+   d="scan'208";a="59595226"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 09:48:13 -0700
-X-CSE-ConnectionGUID: BT+lBUeSQzumpL83ImWCeQ==
-X-CSE-MsgGUID: ul4nINe+TZ6rCAqW1RSGxg==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 09:48:12 -0700
+X-CSE-ConnectionGUID: NVDxh0tIS0Sfq0k8upO/aQ==
+X-CSE-MsgGUID: nRI49dU5QaqKDYGNK/eOaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="135674849"
+   d="scan'208";a="135674843"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 09:48:12 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 09:48:11 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,12 +54,10 @@ To: peterz@infradead.org,
 Cc: eranian@google.com,
 	ctshao@google.com,
 	tmricht@linux.ibm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [RFC PATCH 03/15] perf/x86/amd: Remove driver-specific throttle support
-Date: Tue,  6 May 2025 09:47:28 -0700
-Message-Id: <20250506164740.1317237-4-kan.liang@linux.intel.com>
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [RFC PATCH 02/15] perf/x86/intel: Remove driver-specific throttle support
+Date: Tue,  6 May 2025 09:47:27 -0700
+Message-Id: <20250506164740.1317237-3-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250506164740.1317237-1-kan.liang@linux.intel.com>
 References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
@@ -81,18 +79,19 @@ event_limit. It already does an inatomic event disable. The pmu->stop
 is not required either.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Sandipan Das <sandipan.das@amd.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- arch/x86/events/amd/core.c | 3 +--
- arch/x86/events/amd/ibs.c  | 4 +---
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/events/core.c       | 3 +--
+ arch/x86/events/intel/core.c | 6 ++----
+ arch/x86/events/intel/ds.c   | 7 +++----
+ arch/x86/events/intel/knc.c  | 3 +--
+ arch/x86/events/intel/p4.c   | 3 +--
+ 5 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 30d6ceb4c8ad..5e64283b9bf2 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -1003,8 +1003,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 186e31cd0c14..8a2f73333a50 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1730,8 +1730,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
  
  		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
  
@@ -101,22 +100,84 @@ index 30d6ceb4c8ad..5e64283b9bf2 100644
 +		perf_event_overflow(event, &data, regs);
  	}
  
- 	/*
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 0252b7ea8bca..4bbbca02aeb1 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -1373,9 +1373,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		hwc->sample_period = perf_ibs->min_period;
+ 	if (handled)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cd6329207311..3a319cf6d364 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3138,8 +3138,7 @@ static void x86_pmu_handle_guest_pebs(struct pt_regs *regs,
+ 			continue;
  
- out:
--	if (throttle) {
--		perf_ibs_stop(event, 0);
--	} else {
-+	if (!throttle) {
- 		if (perf_ibs == &perf_ibs_op) {
- 			if (ibs_caps & IBS_CAPS_OPCNTEXT) {
- 				new_config = period & IBS_OP_MAX_CNT_EXT_MASK;
+ 		perf_sample_data_init(data, 0, event->hw.last_period);
+-		if (perf_event_overflow(event, data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, data, regs);
+ 
+ 		/* Inject one fake event is enough. */
+ 		break;
+@@ -3282,8 +3281,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 		if (has_branch_stack(event))
+ 			intel_pmu_lbr_save_brstack(&data, cpuc, event);
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	return handled;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 61ee698deaab..f33451dc7bc7 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2362,8 +2362,7 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
+ 		 * All but the last records are processed.
+ 		 * The last one is left to be able to call the overflow handler.
+ 		 */
+-		if (perf_event_overflow(event, data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, data, regs);
+ 	}
+ 
+ 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
+@@ -2591,8 +2590,8 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+ 		if (error[bit]) {
+ 			perf_log_lost_samples(event, error[bit]);
+ 
+-			if (iregs && perf_event_account_interrupt(event))
+-				x86_pmu_stop(event, 0);
++			if (iregs)
++				perf_event_account_interrupt(event);
+ 		}
+ 
+ 		if (counts[bit]) {
+diff --git a/arch/x86/events/intel/knc.c b/arch/x86/events/intel/knc.c
+index 3e8ec049b46d..384589168c1a 100644
+--- a/arch/x86/events/intel/knc.c
++++ b/arch/x86/events/intel/knc.c
+@@ -254,8 +254,7 @@ static int knc_pmu_handle_irq(struct pt_regs *regs)
+ 
+ 		perf_sample_data_init(&data, 0, last_period);
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	/*
+diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
+index c85a9fc44355..126d5ae264cb 100644
+--- a/arch/x86/events/intel/p4.c
++++ b/arch/x86/events/intel/p4.c
+@@ -1072,8 +1072,7 @@ static int p4_pmu_handle_irq(struct pt_regs *regs)
+ 			continue;
+ 
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	if (handled)
 -- 
 2.38.1
 
