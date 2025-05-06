@@ -1,92 +1,85 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CC1179A7;
-	Tue,  6 May 2025 19:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F412A20B804
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 May 2025 19:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558159; cv=none; b=SzaahI+dhU5Ty+9LOgNmW7/TfftTlfA3qY1ZjEx3Z5PSSBWSGzRvD132xUBHSOiguM7xBJCqe5BctnqJPbbkKUHq4rCePh2ZzS4NPIIxy0khI7wA9B8gsYvkVmcqNtT7/9NobcFgXAvDMdoDznD3D4T45nZqippaZIKIyJWSkEg=
+	t=1746560717; cv=none; b=moNd13jEqJhN2b5YIrA9dlH3HbutqcZS4jzH2xpXqMgXCEprnkYVsXQp9ahnyR8BVXy/osIB5e6yLd3PH2Z3yQX6UmwGbHa5hdVVLlrMPURtveaPsFzTC5tSR474SblWrkZN4BnxTk4nVfMC+ywEuGveVbrTkJy6qiwj7VrTC6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558159; c=relaxed/simple;
-	bh=PswShjgN6Rszgz9uyGjrC76Ws2kV3BczGDl7Z32YkD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrqhJ66/b7AfX/OgrALsSA0JOP457i9EaSBH1+cBgHtBYBeyLXh/cgpdtMUuEiGxlQJmIgIEjnWES8IQdWAqtkmkFL5dpaLuEwNDBZk2djX2WjDcRw90L1+hAdwhoLrfwjjjj/0ACB7kEIu5s621pN5hlI5VKQYe2ggXJUf52NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=Xei9OplX; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1746560717; c=relaxed/simple;
+	bh=fA6baFrBMTZPoGqIiJ7GW9c6V8LDlSpjpVUs3FFWZkA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ilnqDgydUUx4fGzYYcpD2Wev7/yU815fO+dQ9or28Acu35sySdd42PMbgvD72CW07h7KMR2VoliZRQI1rnZUb8HOd54pSqwXVcN0oCM4QEvQIDWOcX8uEFrWvezrTggvCthxJCGfQT8NZXAfpNTsUpIlAG/orAkG5bnv2ZGmCoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gHgw+6Tb; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="Xei9OplX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bDTAGv7oRiMJeLUnclRB63EHqXZhIX5RyFl4xNg4aaA=; b=Xei9OplXgWfccuSLrRkj3fR8qH
-	wMLAUlTYWHm/JllhBzwLEGWWOkE86zc0G0dB0aZDahq2PD3lH5zlrwVOCfqTkpJJqPVOLjfAaHC6P
-	qOYqZjVYXD7np/5D0sqDqkgMra1gJ16Ppqa177iusR2zf2t4AKcXqE4QT/p0EbYuTxBevM/A+Za4r
-	KffhzqVVl13US1ZPfgdL5ptQe6MAVoiARLA9uewTn1INOnNy7mQ04tbdozEJhoHa+o4lEUoyPR89Q
-	Jas6z/BcAASjCYctn0GcaGnZCt7F25UJs1QDDlknyqFLsPJM30WzmJNpq4jsbJQp7gHJPT5edm7hv
-	Uu3TEQAg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1uCNYa-0052Yu-Ri; Tue, 06 May 2025 19:02:21 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 3BE19BE2DE0; Tue, 06 May 2025 21:02:20 +0200 (CEST)
-Date: Tue, 6 May 2025 21:02:20 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Pasi Kallinen <paxed@alt.org>, 1104796@bugs.debian.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	Debian Bug Tracking System <submit@bugs.debian.org>
-Subject: perf r5101c4 counter regression
-Message-ID: <aBpcvG2yBtrrTie-@eldamar.lan>
-References: <174654831962.2704.6099474499200154093.reportbug@deveel>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHgw+6Tb"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b1f8d149911so5435720a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 May 2025 12:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746560715; x=1747165515; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nbit0ITm/pQP3NVf792bDV8mZNspv5mb/mti4+w+eCo=;
+        b=gHgw+6Tbi4onJw6RFC+exOn31VEOpTMUcGk7gYftiFiapBfNIF3snUKXgbhxJ0dE3P
+         WgF/kGpzdZVwXvnQutlYxv4OTLA7tmINS8p9mbbExpMN3jSfCmuoYJ6OUoGv6iDSFiNw
+         NFDOvuQIApm6EDOgjAMPhC8t7nXF2RRil8ynkHPrb4EUxCN1d7wC/xTjmObwI74gOJGe
+         ukitBNxY4eIZHD2vMS84Xc7/6EnQO3HvLHLY5z1XIlYDpStwor3sqFOxoe2DbtRa0676
+         oeh3TWeSY8XrjnvR1/aM9B2R0MX8C7kPL3E2q6HVr29eKYdppJSGEpLODkNn8tdm9R5/
+         7M8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746560715; x=1747165515;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nbit0ITm/pQP3NVf792bDV8mZNspv5mb/mti4+w+eCo=;
+        b=Ddqg4IxvmS920qYZD9c8NUNb6gc+cwzikeecEZSaQ0BQZSd3uwjG0HddtBDlXvgjPi
+         crMGbMjGAjS5RhKmWHUPo2opsv3bpv3pWd9pFfuCuU0OI5UiCYQCWaPsrW+MdHBc/xMd
+         kcqYfbWvpF+8kf67R3Hv4Caw+6JzA66INGBAJswHJlQvEGAs43131+AnJD+8WtOlzMf1
+         sVtGOKr56tcZoPH0YdKvl3NfW8z0FpZ2hyoYSwxi4ac/MHfL7TE+ZVGsK4lahE+evuy2
+         NwKMhaoAehNJturdhetDtzyL0VxNDj8wvMlriUETRGhqskLaFIauksqMIiz6HwqXQpd5
+         t9xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEsVS/fkgu9r8srCMLIEigWVbwaAz0vgWHdhBGw4Uz89t7tC5AuUBl6uTZSZuiH0sEDzZA2fPbzEOvulk1iead@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhUvdGrLNQC/e6suVZODeLOTjJWDxbvkeL3/KHczWKVl76oMbG
+	2jC4j+IKPUwy/flVSDIyT4YNlG34k08Vahuu9IDJwsbQJI3fn+4vrSE6uXyKIq1iSHYJpqr2zzC
+	cWg==
+X-Google-Smtp-Source: AGHT+IFqRJC+/nE+KITlgWvBy1Ybx1q2CpPmR4WfkU+G+40vwLU3dW8GZ+n+QI5InJgQduz6JwxzACkmxAw=
+X-Received: from plbmq4.prod.google.com ([2002:a17:902:fd44:b0:22c:3374:e338])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d54f:b0:223:635d:3e38
+ with SMTP id d9443c01a7336-22e5ea6ba5amr6666535ad.15.1746560715262; Tue, 06
+ May 2025 12:45:15 -0700 (PDT)
+Date: Tue, 6 May 2025 12:45:13 -0700
+In-Reply-To: <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174654831962.2704.6099474499200154093.reportbug@deveel>
-X-Debian-User: carnil
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
+Message-ID: <aBpmycjTn4Xo4Hc4@google.com>
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
-
-Pasi Kallinen reported in Debian a regression with perf r5101c4
-counter, initially it was found in
-https://github.com/rr-debugger/rr/issues/3949 but said to be a kernel
-problem.
-
-On Tue, May 06, 2025 at 07:18:39PM +0300, Pasi Kallinen wrote:
-> Package: src:linux
-> Version: 6.12.25-1
-> Severity: normal
-> X-Debbugs-Cc: debian-amd64@lists.debian.org, paxed@alt.org
-> User: debian-amd64@lists.debian.org
-> Usertags: amd64
+On Tue, May 06, 2025, Dapeng Mi wrote:
+> Hi Sean,
 > 
-> Dear Maintainer,
-> 
-> perf stat -e r5101c4 true
-> 
-> reports "not supported".
-> 
-> The counters worked in kernel 6.11.10.
-> 
-> I first noticed this not working when updating to 6.12.22.
-> Booting back to 6.11.10, the counters work correctly.
+> Not sure if you have bandwidth to review this mediated vPMU v4 patchset?
 
-Does this ring a bell?
-
-Would you be able to bisect the changes to identify where the
-behaviour changed?
-
-Regards,
-Salvatore
+I'm getting there.  I wanted to get through all the stuff I thought would likely
+be ready for 6.16 as-is before moving onto the larger series.
