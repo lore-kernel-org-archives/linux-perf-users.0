@@ -1,65 +1,65 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D3827C14A
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 May 2025 11:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB3227C860
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 May 2025 11:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746531762; cv=none; b=aM/8eehizB8oW6WnPHJKiGD2phQUs95zVIDDx72kda9Y5K3iWMkoXLM6rYIzBUUdD4zJ2/yqcI+0jOXbO9lh9aAvsgnDH74yPlHoH0wmESP+LwDvMXJqc45LEyIH2ZyFFECy9kxv1mBOhTIVORXSsJjTDZzP3SuVaaPA93HkEuU=
+	t=1746531764; cv=none; b=UXGmzrOUcX3oUcUPeUfGxUqQ+7GpPI1G1rIR96MJWopO7A3E7ECHT18exNDA9JYpLRradYsYrYD2gW0gi2qLWiG5hbUFxz2OW7/BGdyVWw9wZosgh+THN3EvsqK059RDuEoiIBuescsITfkXbtlGfiFpAzRpU1LtRRbynz0CO+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746531762; c=relaxed/simple;
-	bh=TD6ToqP0Mw9/zwmt/jMIGuCKaH1dYDGMG9cypkdxqkw=;
+	s=arc-20240116; t=1746531764; c=relaxed/simple;
+	bh=1Orlrzff9rVR0JZWyMg++jiq5IsyuYfqKzNJU/EyCi0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VtGULoOPTM6bz64GaGbKRDKKFuj8WHBDAJ5qTyvt+DMvMtMDsl4LOFH9gIpZUAosDyf9oSHcf5La3/M8sKqlBl+EB+2/s9nF/y6nA66Rc4r23WJ7/vQl5EWD45g0r6QXna+HyBRTwoA/BIB+FJK/aomMhHR4RmA7mZqypGpSdas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OqVUSZUE; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:To:Cc; b=R5izSzMfAiXyYM4Dns59Sj2XggCKy3UjnPgsiirq7U8VUXJhyE919puamFchDbbTLBrR0qquYCvnu1p6O6hvX0YYQMBGEvVKphj+3L9ng87LNNb7YteY78C8ebKr2zVzoRJxapODOmicHTd2o+egk8kkzFB1FvjcTb+srWeVPUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=naVGkR5w; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OqVUSZUE"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441c99459e9so17309575e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 May 2025 04:42:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="naVGkR5w"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3526782f8f.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 May 2025 04:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746531758; x=1747136558; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746531760; x=1747136560; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2LJ8ZLIjDVC5fijUJQfad9+mmQw33lNnVTO/5Fbzfl0=;
-        b=OqVUSZUEIn9+M4eH2yndN8kQVMh/r9mh7UrA5j5nrKxNl23G6AdHIdY432VQA8GiPV
-         2aRchZV5WQRxE4RrpZ9NsljVj6KUYtWxyKeSmoUZVPdV7KgT/+Clseq6omsdj2+d7hec
-         7I2g0NVWKO3m7zZ4uCDWrBvgASAcrzPoeTWWrdofquwAInhuLl8PBfRbr+Iwey+NEKCq
-         eqECHJpe9LvmUnzFjpMRnjS/DCKPjoxoZHP5RwWD86v8/r57Uh+CWGp/c/f0fR2peFD3
-         fBYZU8MrgKZiKBgSTIuMW8WdnHGTx5rV0DVuShLuwMzJXMeEBUAlYFGU5s2YQLYTbLGu
-         ZDwQ==
+        bh=NIZcQ6bjIvx3LOuJqJtvWPXqPFlWznoYfJ+QWY9umw8=;
+        b=naVGkR5wXITAX+DRXH0/HMatroPp4sFAvgLKQDW+YyMzQgomcYaXm134m/E45LwtUK
+         4g1+g7CyG8dGp5hKm5spYNAhLDlagNf8X3ghRt2IxWKaHt4NvX/7k2ihTdu9L9crfoiF
+         lcYCWwFGfZ8oMmHMRR0XneEMGWORapIk/nhvYylxBM0E/gmKmC3zUtq+rfsnO49nja5X
+         rvrpbZq9iVRzcVgZtts+hAyvR6UOODQPZqiMwY4/15qmjvvtD88kvPNTY2EQo352vL0V
+         2KATzbUInukqyBz1OXwMZapXIenpZ8fiiczwJ6kxgG0jSy5uyarvJEHJyhZInR26R9y4
+         D85A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746531758; x=1747136558;
+        d=1e100.net; s=20230601; t=1746531760; x=1747136560;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2LJ8ZLIjDVC5fijUJQfad9+mmQw33lNnVTO/5Fbzfl0=;
-        b=NZlMehnwUBwEYtHKiu7Jceh4af3oLh1kOAens51/ys/vHS/2TzJC/PHqNlObOoK+ct
-         GBCko5Q7CeGjRoKcWXHgPHtB2CxShMuMqOi+374PWCePoWyeFNywLp0tvy3yEIlY94ZV
-         HX7X7E3dzPtP8P09gk7p+B9Vrrto7iFFWSCzKYoen5ek7pHQfCdX1S+APbxN50wr1Sz6
-         8ijjNjzWfKpr6QE08p5TyYS/VVqBbjkBQ10Tldoe3u6rmLIvu/3EIt1fgAsEu+B76DZX
-         8N1dcEJNw+O3spP2dXQRornjjXCpiLNM0mot+vXb0pdCT/1Mld3whoVclpeAzFixvqOJ
-         AOCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUt2lVsIyCBaHoEzCPXxFiF9QMZZoQLJaMgJM1HAhmWyfp9/FZ4laU0E+zyRPaT7TIt+v5ymR1xdqmJoHyXEDFE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXko322D4IUkzTi9olH4DbvpGNDUZSeJ0g0hbfl41Uv+yGWfJm
-	Rr19c2haqYg8j6Ls0/TqpEWrqmaEWYHXy5gKtRbJUXWxPXJlhwYtgS4em9nN7d0=
-X-Gm-Gg: ASbGnct6cCYCkv4RN6W8gcW7CEYH95SAvAPr+f3op9M9ZoZqaGyWcte9bK6tKprb7Hr
-	zFbrnIPvbdXEKSOcY5/Ng4afuSd5wquXF2GSrZTwWkjNfITpAVir4+B+0XhE9UiOMM9nHPoTOCT
-	s2jJRLi2ADvdUdfKW1WzSRYjUCF00QTql/QgKS2YAYEZnU9fKga3zB+OA+joxAVv/y34fo/rEXI
-	QE8Ixx2I5E780eJvYvHjM+ZaczcMnciPs88h6M8qyS/4F84WLJ//pwS1PiabKZZ5a/AuFBdEN9E
-	qMPjwxqZoJmUwb7rgzJuwOquypMeUT3jfSIlHyNhnBkZeCg=
-X-Google-Smtp-Source: AGHT+IFY2PTkM5OGqyGQ1rieutDdi16VfttDeC1GlcJYbSC4zGE/aIwEggIDkiNucqgP5hbvdPyHIA==
-X-Received: by 2002:a5d:5f8b:0:b0:3a0:b133:8d4a with SMTP id ffacd0b85a97d-3a0b1338f93mr1496745f8f.5.1746531757737;
-        Tue, 06 May 2025 04:42:37 -0700 (PDT)
+        bh=NIZcQ6bjIvx3LOuJqJtvWPXqPFlWznoYfJ+QWY9umw8=;
+        b=ZPVvfgIG09GEMWCWpIdnxoIpiuA1viEae/XBTBjbyo2DJ69Q2FXVwsD5NSwQ1faoZe
+         a7/x+JHdUmap6Z+hD7Lp9gDmwOGKSvEYMzw72O9admZkBaVHAUzA8n0bKyHeyHZuomZn
+         xA5A/MWDTCJ359jcjiFy5JYVNIYA+icfw5BOxCWMgbCXfJ5ed52RrElYSv0owxPxVdbz
+         QvpKaezaQxQchYCd2DVrPemlhIviiDbVNMlNZ6yzuqy9gNn0DJiVHrWNOYGgKcqu3l7e
+         qIXMVAu0ifRv4BKN+s+VczSYbyQiJVJJYL/wxfEXYpbGkXW4un1IoGD2MgzeiF7A5SsO
+         ZvWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX4gQ5DrXam/rgAOSGWgp/I13gA2/fQdScm/WeNdlqRtqBh7TkfzLOICgJ76MqLh+46UggKjN5xDA6B8tMprTns@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpXC1Uu34wI1ykDdqrSlA8sudwVB8b5BryCN+lhIdzginvwrzX
+	0QOZgw/31HPQt6szemghYe9LRpvlZKF2G8rr0W+vhWzvGOdN3tGLYLZOy4KM7hQ=
+X-Gm-Gg: ASbGnct2BoSLw6Y36XoWx8rdK+CmqXn1Gpg5KU/zuNhvv3JAZzeUpbGNZbNa9GCL7BM
+	PNyaOoofHR66jEDYNrg7/ZQJ18+2B5igrM4sD5Uy/K2uA2k2I5u8OI3lY3Qepn/bkXg+EUg2Qi0
+	cghVNqfv5lyebQsxr/jDUlhK3HgHsRuonXgk+ZjAOgqTvF+AJpjL3YDt7l4+hfE6hQx5AReHTZU
+	ACZM36OSUJY85NjOHxG8+9rEjO31SysssLoxx6sAVZCXRIAb+d3SCMp4JC4UT671wr8iz7JfgpQ
+	E0j7S521Kup40WlRrRfJqAMJhxyxFEsE5/svvM6OGf7IDg4=
+X-Google-Smtp-Source: AGHT+IFOd1IsGOuUERaKBF17xqjJD9v+resYFgda6lTrrEteCoMMOKMSD17uDHezFeocGMqRKvBkWQ==
+X-Received: by 2002:adf:e6c8:0:b0:3a0:b1de:1be0 with SMTP id ffacd0b85a97d-3a0b1de1dacmr1217177f8f.31.1746531760579;
+        Tue, 06 May 2025 04:42:40 -0700 (PDT)
 Received: from ho-tower-lan.lan ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae344esm13198473f8f.25.2025.05.06.04.42.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae344esm13198473f8f.25.2025.05.06.04.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 04:42:37 -0700 (PDT)
+        Tue, 06 May 2025 04:42:40 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 06 May 2025 12:41:36 +0100
-Subject: [PATCH 04/10] arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+Date: Tue, 06 May 2025 12:41:38 +0100
+Subject: [PATCH 06/10] perf: Add perf_event_attr::config4
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-james-perf-feat_spe_eft-v1-4-dd480e8e4851@linaro.org>
+Message-Id: <20250506-james-perf-feat_spe_eft-v1-6-dd480e8e4851@linaro.org>
 References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
 In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -87,63 +87,36 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
 X-Mailer: b4 0.14.0
 
-SPE data source filtering (optional from Armv8.8) requires that traps to
-the filter register PMSDSFR be disabled. Document the requirements and
-disable the traps if the feature is present.
+Arm FEAT_SPE_FDS adds the ability to filter on the data source of a
+packet using another 64-bits of event filtering control. As the existing
+perf_event_attr::configN fields are all used up for SPE PMU, an
+additional field is needed. Add a new 'config4' field.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- Documentation/arch/arm64/booting.rst | 11 +++++++++++
- arch/arm64/include/asm/el2_setup.h   | 14 ++++++++++++++
- 2 files changed, 25 insertions(+)
+ include/uapi/linux/perf_event.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-index dee7b6de864f..8da6801da9a0 100644
---- a/Documentation/arch/arm64/booting.rst
-+++ b/Documentation/arch/arm64/booting.rst
-@@ -404,6 +404,17 @@ Before jumping into the kernel, the following conditions must be met:
-     - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
-     - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 5fc753c23734..c7c2b1d4ad28 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -379,6 +379,7 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+ #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+ #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
++#define PERF_ATTR_SIZE_VER9	144	/* add: config4 */
  
-+  For CPUs with SPE data source filtering (SPE_FEAT_FDS):
-+
-+  - If EL3 is present:
-+
-+    - MDCR_EL3.EnPMS3 (bit 42) must be initialised to 0b1.
-+
-+  - If the kernel is entered at EL1 and EL2 is present:
-+
-+    - HDFGRTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
-+    - HDFGWTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
-+
-   For CPUs with Memory Copy and Memory Set instructions (FEAT_MOPS):
+ /*
+  * Hardware event_id to monitor via a performance monitoring event:
+@@ -533,6 +534,7 @@ struct perf_event_attr {
+ 	__u64	sig_data;
  
-   - If the kernel is entered at EL1 and EL2 is present:
-diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-index ebceaae3c749..155b45092f5e 100644
---- a/arch/arm64/include/asm/el2_setup.h
-+++ b/arch/arm64/include/asm/el2_setup.h
-@@ -275,6 +275,20 @@
- 	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
- 	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
- .Lskip_pmuv3p9_\@:
-+	mrs	x1, id_aa64dfr0_el1
-+	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-+	/* If SPE is implemented, we can read PMSIDR and */
-+	cmp	x1, #ID_AA64DFR0_EL1_PMSVer_IMP
-+	b.lt	.Lskip_spefds_\@
-+
-+	mrs_s	x1, SYS_PMSIDR_EL1
-+	and	x1, x1, PMSIDR_EL1_FDS_SHIFT
-+	/* if FEAT_SPE_FDS is implemented, */
-+	cbz	x1, .Lskip_spefds_\@
-+	/* disable traps to PMSDSFR. */
-+	orr	x0, x0, #HDFGRTR2_EL2_nPMSDSFR_EL1
-+
-+.Lskip_spefds_\@:
- 	msr_s   SYS_HDFGRTR2_EL2, x0
- 	msr_s   SYS_HDFGWTR2_EL2, x0
- 	msr_s   SYS_HFGRTR2_EL2, xzr
+ 	__u64	config3; /* extension of config2 */
++	__u64	config4; /* extension of config3 */
+ };
+ 
+ /*
 
 -- 
 2.34.1
