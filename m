@@ -1,103 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B29327AC40;
-	Tue,  6 May 2025 13:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B86128137F;
+	Tue,  6 May 2025 14:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539883; cv=none; b=XGME9SmTk9RISHpZmNAAsZ9gK853bXPhea2Xi5EusgGzDEbvHVGIdFapj+J2votoFNpIWUvqc2l4FQzfU7SoikGbOxIaDKkIMT1WG4QE/UrSpzCOrMe01OJStbrSvlcP+PztZnXAxXW0JHrowNtkfmPkBXzh8BT1nh4o+8zy3nA=
+	t=1746541741; cv=none; b=ZyhDbUIZX5Uvh/tyNCvQfhSAtf7IIX+4LEF/vEosDYl/TKyo4G8PPhpxCoLyAyfnADhpimWL949eiPbveOQc32uA87yPbZ/Yh4dwoeQZ3dhhHnD7+carYCK7eA3e34CBavRCWiqjjJ936YcAw8+tqnSjssI2hn8LSdF1uJPvQTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539883; c=relaxed/simple;
-	bh=UNTo3iZVOa4t/XvFANiR11s1+SpIejyKh5B9uerKwmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Et71iUSPmiVL089JhWaIFH7CVEil1Fec7hlr9a5oU3LeqUWjmXKq2GSdVmGBWdpXLy28IWvzBBkhEtm4SWy5qW8pshZhMwGz8P6f95IJxPWuxOvS26CX8AvYNGKTkLjyTAKhYxS5CBtzg2D7wsM/QGZKxnQplRBIOA1PF0CSE8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cx94n/Jv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746541741; c=relaxed/simple;
+	bh=IJHHseOgHNs3AOiq3STstPXs9Ok8aHt5Zb+1wzbHFik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I5scl4fxOjn6LlkZNXZOzvv1cqzmR8PVXe4kPxMZeNiaX+6ucfJA64/mSp66wkfSWdrosDQSyMnjl/ywRFmpNvqRld/McN6wUQzwdnGEMr4IlVpLYoXfjHsf8xjQA3SmVRMhlnJTkv82CNG6/ujg5HJQ6UbMaK3+CTKSJqRBkLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxszpRYB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cx94n/Jv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06922C4CEE4;
-	Tue,  6 May 2025 13:57:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxszpRYB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A49C4CEF0;
+	Tue,  6 May 2025 14:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746539883;
-	bh=UNTo3iZVOa4t/XvFANiR11s1+SpIejyKh5B9uerKwmY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cx94n/Jv5UVPHDOs9BS1kOT2U/NYbO1Re3f0AAOMcKEs2bsq10SU7DOYrZfdJT7Dl
-	 TeR9dQmf3/oQ6FBC7NIGoZvQ5DPwS3A0VZqNhDiz0D8Yf9FRNyRLZAOqCP1B3xd2cr
-	 fcjRoKk8nXHK6bkvW2cKCtDWKCI+OOVrktsOMclaHt8UTKdiyZ748huOK24L7zD/Bg
-	 IQGhlUoGIuk8TvqJ9zkcyYtmyR+J1g25xrhgpIUzNXOj7iTEJp6alQwxAHpSAu9VjM
-	 N33dFCqiSipY6gc8Lj1bbEeEW7IgzBmKNxZvsY1oPS6llaTNAczFhILPWNWCEnQ2+4
-	 7RBQ+G/jhzGSg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Quentin Monnet <qmo@kernel.org>
-Subject: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe link info
-Date: Tue,  6 May 2025 15:57:27 +0200
-Message-ID: <20250506135727.3977467-4-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506135727.3977467-1-jolsa@kernel.org>
-References: <20250506135727.3977467-1-jolsa@kernel.org>
+	s=k20201202; t=1746541740;
+	bh=IJHHseOgHNs3AOiq3STstPXs9Ok8aHt5Zb+1wzbHFik=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pxszpRYB3PG72pkjYudQA2/la5qxMmluzQi3WA5RGhkYheBR/q1im29V8XgiUsBH9
+	 Q/G5Lfk8o5xAR6L58BYrTo/hTSe0PDNCVQxBHKqPUItziDzmFoxJKdmLihqT3vSceh
+	 kYme+onDDk9GBFE4geDIweV0JGjilfsV5s6zfbuUqQS1YV7+oO+VxnejiMk9DikVxM
+	 G1MFuI7Zpprk04wuq1B/riE+8xHL4KXaRwuod+3jXtzHhCX9qX21Fz6WWmsVmtL0sk
+	 V6AJ8DqtisDAh87RjtZsKklcTjBmuxWuCixJLCpFLdEFhCr7gRMlcJEfnhtn0qMBQE
+	 fKi9lYe+T/kiw==
+Message-ID: <ee3f47dd-dd22-4947-afa5-a99a3de96710@kernel.org>
+Date: Tue, 6 May 2025 15:28:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe
+ link info
+To: Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ Hao Luo <haoluo@google.com>, Yafang Shao <laoar.shao@gmail.com>
+References: <20250506135727.3977467-1-jolsa@kernel.org>
+ <20250506135727.3977467-4-jolsa@kernel.org>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <20250506135727.3977467-4-jolsa@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Adding support to display ref_ctr_offset in link output, like:
+On 06/05/2025 14:57, Jiri Olsa wrote:
+> Adding support to display ref_ctr_offset in link output, like:
+> 
+>   # bpftool link
+>   ...
+>   42: perf_event  prog 174
+>           uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_offset 50500538
+>           bpf_cookie 3735928559
+>           pids test_progs(1820)
+> 
+>   # bpftool link -j | jq
+>   [
+>     ...
+>     {
+>       "id": 42,
+>        ...
+>       "ref_ctr_offset": 50500538,
+>     }
+>   ]
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-  # bpftool link
-  ...
-  42: perf_event  prog 174
-          uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_offset 50500538
-          bpf_cookie 3735928559
-          pids test_progs(1820)
+Acked-by: Quentin Monnet <qmo@kernel.org>
 
-  # bpftool link -j | jq
-  [
-    ...
-    {
-      "id": 42,
-       ...
-      "ref_ctr_offset": 50500538,
-    }
-  ]
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/bpf/bpftool/link.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-index 52fd2c9fac56..b09aae3a191e 100644
---- a/tools/bpf/bpftool/link.c
-+++ b/tools/bpf/bpftool/link.c
-@@ -380,6 +380,7 @@ show_perf_event_uprobe_json(struct bpf_link_info *info, json_writer_t *wtr)
- 			   u64_to_ptr(info->perf_event.uprobe.file_name));
- 	jsonw_uint_field(wtr, "offset", info->perf_event.uprobe.offset);
- 	jsonw_uint_field(wtr, "cookie", info->perf_event.uprobe.cookie);
-+	jsonw_uint_field(wtr, "ref_ctr_offset", info->perf_event.uprobe.ref_ctr_offset);
- }
- 
- static void
-@@ -823,6 +824,8 @@ static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
- 	printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
- 	if (info->perf_event.uprobe.cookie)
- 		printf("cookie %llu  ", info->perf_event.uprobe.cookie);
-+	if (info->perf_event.uprobe.ref_ctr_offset)
-+		printf("ref_ctr_offset %llu  ", info->perf_event.uprobe.ref_ctr_offset);
- }
- 
- static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
--- 
-2.49.0
-
+Thanks Jiri!
