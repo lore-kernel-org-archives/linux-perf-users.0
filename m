@@ -1,157 +1,257 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41BD283C9E
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 May 2025 15:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E6A28A1F6
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 May 2025 16:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633424; cv=none; b=kU/nG63Qoq/7h2+NsP9Mj4xwYVkix1oWCMBP+nCmNvV0dTkWkgSJv4nTz4o45NQAtVJp2AtPALOTc0gCW98rLt1zVvoNvtD77S1W2J1ZrwfiYLlut8A2ehDYnQJHHby7ogc4+kk0OkINfWd4Dyxt0AVYfX1Y+27dEKDOcCLTfdQ=
+	t=1746636758; cv=none; b=bw6t8mazwJH27GDVZ4IKCMsmL4vsaeYyjD4RI67gMk1bFflkyEO8Yo+ygHCVgvGHp9hI3YPypAIBmytwTCXRWlY1QxhlOe2xrgb0cRs5QK2i5XDKKufuw9+wDhu2oBWQFaDAKiRG5AvWbJs17zF/1SmRmT5bjtHHTAuF+fUIMRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633424; c=relaxed/simple;
-	bh=NTNl3P+fq5lCsDHlnsdh3mf77EycibLg7WMw+O8HKkQ=;
+	s=arc-20240116; t=1746636758; c=relaxed/simple;
+	bh=SvriLAY4tqocWjR67Z1UvWSi8Z2M0izp+2Ews5nyV2w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i9ulTs/xrpDhYaDuLDBmLWKa1T9lnFFJf785oipgajkpzC8W4uySp0289JY2dxyJYY2jOTbAyhD0nmHN0cFvElcvjagaAKgCru7VVt+njNBU+VEZEzqEdB1h+ENSJ8Jz4/pYMrzH8XsqrNqQHYv64lBsARNnpusXjJ7cApXNOOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GaUBvnfI; arc=none smtp.client-ip=209.85.166.178
+	 To:Cc:Content-Type; b=GmFBerVO0t5nOJR6wvEg+MSjNheN7mqbGf4l25OP0zpvb20Vq0BbGw/FbFTxx9IKbAl34aFvBRA0bKyFuxWUui9tHVNv8/X9mWaiB067HjG7TYcXsjVsPzMPKE1uSojUNAX+cAHHsUgiwNsDDO55csEEHyHPDs9Go3hMpo/kBBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KM4jNbh4; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GaUBvnfI"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3da73d35c11so183155ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 May 2025 08:57:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KM4jNbh4"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so7295ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 May 2025 09:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746633422; x=1747238222; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746636756; x=1747241556; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ykDpkAM2sXvXYZSjDalTbIgb2nTcNniwyG0Gjx+kJAo=;
-        b=GaUBvnfIWXc13XOM3ZnuDBmSDNdyr7/49Ba6I+hCWhIB1lo4oKfMGG1lCHt6BbZS09
-         B7OAbFg60wBSArA56+1hdNzFkGmi2vzSw67NUe2AQKGeoiZfzomady+p4ySLJbzWiBcW
-         lgJixYpMfowHYztin0EtZyxfLo/gJXXMt7AAphNnW194fjC02c4QjhVAVy4FuCRgYQ6t
-         ruqfEAFbYw1Ii2itcaa2W5DdEWcx9d0UoRnEZAz+YSg9PJ2Dk1pfmvaRtgXJ9BntEOl3
-         l0SyUPF+1NgHjLRvaVvbRnfKsvsqe2D6Nsf/Vzz5e7Xuf+wr+hxVkrO7EDPi29BmdBPf
-         mmKg==
+        bh=Hv8GwvXmYC8+EkUfOb+Rq82WOJczckO52LbqfSz6J9Q=;
+        b=KM4jNbh4F04nSkhn1YSAwNM0YfVgpnH+wIL5cb+Z4BUftWDP58ngGGBnrzGbCGmJeY
+         ueD0sCqIJ+7XW7j6PwIn+jCUcVDFEaJzUfKqmcIf+v+v+JtjYW/78l+8AQsUTlBd97ql
+         BOW2RjEhvnTDtqSKY+Aa9CYcoqXHvBW29oSexpYVYuHAvnbIukiBl6PL58cDHfszy8Lh
+         h9z1ex1N+lquIEDlcbbItBR7qhLn/XzcQA5pdEW/GZeuDTGn1CkGZZUgjzHIZHAUa520
+         G1qoenrLmzHq/haRgafrBVn0VCErinNOXdBllB+KOc72Anatwwun4eIJqdZZ5hzLVZFS
+         8Rrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746633422; x=1747238222;
+        d=1e100.net; s=20230601; t=1746636756; x=1747241556;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ykDpkAM2sXvXYZSjDalTbIgb2nTcNniwyG0Gjx+kJAo=;
-        b=EOdW5uozwxGyqSUfF4IX74StmzYXM2b1eEXSQk8cwyUqSnbG86IAo3w1vUkQ95ZiNg
-         f5Os5BQ6TaS63tAwgZYBH7TB1Krccwht0MkO9GQQofpu55imkmHfMZ+65fc+Q+o1nwts
-         IFcqRTjrSAEoMy0BMFdZCYMi0Zt9ZaRNU1c+EjZyegEgPUPRTsFfTJJgTtAy7m4EmeQl
-         wh1rGmr3xy8oGN3se+Swryk/F/L7loQGSqNqC99fMaxuqozSKKWb8Xx+o5ZV+u63foAE
-         c8FC3Svpinqdyf+zJd7RaTsefB3C4HihGJ2vnfEANmEWeBPjIAJdvjWXGZhx5TIMsVgq
-         gcoQ==
-X-Gm-Message-State: AOJu0YzM5M3Q1MA5cQC/Xd8AdBens1KUJW9+AzxA2V4h3Y7o7ai0AIVi
-	/+e1ZwBXdS2u717udloPZMhnko6Tzf5Q776IZDW2JXsdjPeqZ5fTGD9l+xOtXMTn7nR/8T4c0Yl
-	3UTe09oiH/0rV5Y1Bzyj+ETpvB/VqmAujPh9n
-X-Gm-Gg: ASbGncswcqEBXdVmOVix2kx7Md1CP2wfypcfX5G1+kQNlUBGrQlnQF4UoaVjvkQOrgl
-	2yaddm4NdGp4ggdzFHC+l1gBXXcxo35CVPEylBrKtQox1B7qIES2WSXDfsYFi4foeO+VfmC2BEe
-	4gA0v2/L2YPCtNF2uG7QQiVg+ShSjOLAyTgFPBr6fkioKioaMJhoo=
-X-Google-Smtp-Source: AGHT+IFW2jlrBx5rvnWqUJCGGZ/vNfDAJ4GchVrKzbBv2MfE/Sb33H5VFCY+zf6KNPxytQqDQyGffoG3Q1QQvt+bH+M=
-X-Received: by 2002:a05:6e02:1aae:b0:3d9:6e55:2aae with SMTP id
- e9e14a558f8ab-3da7384a1cdmr4493615ab.0.1746633421645; Wed, 07 May 2025
- 08:57:01 -0700 (PDT)
+        bh=Hv8GwvXmYC8+EkUfOb+Rq82WOJczckO52LbqfSz6J9Q=;
+        b=vbmbLz/A9ksfFZgJi74rEdd3PK8QPbIw6gkY9apJEwzZxF5gARNtglyHJgrDTfySqq
+         1yHK0CU6LA1i2Pr8OJT40WUUKzaAGw/Lqvv43ODY2rD2fxOGX3C00/G7vLObOUU13VWn
+         ZR+ya3IrwqlNaWtHo11Ig+biyS83EOJfqAihl1FiRR1qI7iOkNDsSL3QAISpB9qV9phz
+         HvoxHO5gMHX5lgC76pcnByq5Ed/agOc4dDuGOfHCqFzc7IjJJydeKf68lFXt28YKQlSt
+         6bzW5iyl6d9wQ3q6n4Fbs8xsFxKUwzYGosr2FnKhMDIK3ds4otjGXdXnQcacS0hNa8F7
+         A25A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3D9Au6Jh6dVbsFcQq9C11NZI/zyLo9wuWet80gVU2K69pcfw05tm+8dz+HRdbEbm687EFmJ+4OI5BS0evbnBg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO8KJRvOcdRcfvh3UvyqQ+bbJhlxne5yOSaRmnxEO4OuslevqV
+	6wDEgJXJm74kBBAyqup1lxT3hr4wb9i9Gu5sMHgdNQ/obAGbydFgWfdk+HKQ0X+/YDrnUDknWSu
+	Aeg/E4d4etxYUXnSPJ+Pe3g+oniFI+lsHXRa/
+X-Gm-Gg: ASbGncuU1niZFodfi6Twf+7okfCQ3P2s+YVqD5rl4dABO8O/wbquRyM9wBsRejZO9Ng
+	jWqkjjF0YPKcNSdhf89L5fJTbkqCSf4JPMIMD/AHdvn1k9CI+hOu+D55wJlOm+PkV0CYi8hElk9
+	qScHFKw5ewLtrzSWMYKIEXjfRVVLQKo7WqGlwjj07nRjM+KVPrWQY=
+X-Google-Smtp-Source: AGHT+IHk6P3Dbhek/nvVqKBGspo+Pf7s7x7KRyrupTiVsqy2UzwjoFgpSYE3fLh21rGgPLk6dWKYwmGZvVXZ1WAtABc=
+X-Received: by 2002:a05:6e02:1c0c:b0:3d8:18f8:fb02 with SMTP id
+ e9e14a558f8ab-3da740f0edcmr3325945ab.17.1746636755902; Wed, 07 May 2025
+ 09:52:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1746627307.git.sandipan.das@amd.com>
-In-Reply-To: <cover.1746627307.git.sandipan.das@amd.com>
+References: <20250506164740.1317237-1-kan.liang@linux.intel.com> <20250506164740.1317237-2-kan.liang@linux.intel.com>
+In-Reply-To: <20250506164740.1317237-2-kan.liang@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 7 May 2025 08:56:48 -0700
-X-Gm-Features: ATxdqUEVk5ap3Ro9zQ37LWqA-dyg-_rUJj1mv9TtCWTKq9jDzIJAnq3O20-GKiU
-Message-ID: <CAP-5=fUEeFb3jh-MtxEEH0Z+HFAD0oxSc4uE66Rfg+BRzYRB5Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf vendor events amd: Address event errata
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Stephane Eranian <eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>
+Date: Wed, 7 May 2025 09:52:24 -0700
+X-Gm-Features: ATxdqUGZfF3SPhuNJRBiWU0JCKQyrtzl5Ioq80WzxyQa4_lxXSuGDS4VJRPjkBo
+Message-ID: <CAP-5=fXgLJR2EQoK3SVrGWOKVWuZ4+ZVWFHLU8B_w2ibWtFzwg@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/15] perf: Fix the throttle logic for a group
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com, 
+	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 7, 2025 at 7:28=E2=80=AFAM Sandipan Das <sandipan.das@amd.com> =
-wrote:
+On Tue, May 6, 2025 at 9:48=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
-> Remove unreliable Zen 5 events and metrics. The following errata from
-> the Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors have
-> been addressed.
-> #1569 PMCx078 Counts Incorrectly in Unpredictable Ways
-> #1583 PMCx18E May Overcount Instruction Cache Accesses
-> #1587 PMCx188 May Undercount IBS (Instruction Based Sampling) Fetch Event=
-s
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> The document can be downloaded from
-> https://bugzilla.kernel.org/attachment.cgi?id=3D308095
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
+>
+> $ perf record -e "{cycles,cycles}:S" ...
+>
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
+>
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+>
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+>
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. However, for all ARCHs, the implementation is similar. It only
+> disable the event, rather than the group.
+>
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+>
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle. Set the
+> MAX_INTERRUPTS to the leader event to indicate the group is throttled.
+>
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+>
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
 
-Hi Sandipan,
+Thanks Kan! The patches look good to me. As I understand it patches 2
+to 15 are just removing the logic where an event is unnecessarily
+stopped twice, so is it possible to test just this patch in isolation?
+Given the logic is generic it is applied to software events, so you
+should be able to repeat the problem with `perf record -e
+"{cpu-clock,cpu-clock}:S" ...` possibly by reducing the period or
+increasing the frequency. This would be nice to show that it fixes the
+problem more generically than just the Intel PMU.
 
-the document is somewhat brief, for example:
-```
-1583 PMCx18E May Overcount Instruction Cache Accesses
-
-Description
-If PMCx18E[IcAccessTypes] is programmed to 18x (Instruction Cache
-Miss) or 1Fx (All Instruction Cache Accesses) then the performance
-counter may overcount.
-
-Potential Effect on System
-Inaccuracies in performance monitoring software may be experienced.
-
-Suggested Workaround
-None
-
-Fix Planned
-No fix planned
-```
-Given being able to count instruction cache accesses (for example) is
-a useful feature, would it be possible to change:
-```
--  {
--    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
--    "EventCode": "0x18e",
--    "BriefDescription": "Instruction cache hits.",
--    "UMask": "0x07"
--  },
-...
-```
-to be say:
-```
-  {
-    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
-    "EventCode": "0x18e",
-    "BriefDescription": "Instruction cache hits. Note, this counter is
-affected by errata 1583.",
-    "UMask": "0x07",
-    "Experimental": "1"
-  },
-```
-That is rather than remove the event, the event is tagged as
-experimental (taken to mean accuracy isn't guaranteed) and the errata
-is explicitly noted in the description. Currently the Experimental tag
-has no impact on what happens in the perf tool, for example, the
-"Deprecated" tag hides events in the `perf list` command and is
-commonly used when an event is renamed.
-
-Thanks,
 Ian
-> Sandipan Das (3):
->   perf vendor events amd: Remove Zen 5 instruction cache events
->   perf vendor events amd: Remove Zen 5 TLB flush event
->   perf vendor events amd: Remove Zen 5 IBS fetch event
+
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  kernel/events/core.c | 55 +++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 41 insertions(+), 14 deletions(-)
 >
->  .../arch/x86/amdzen5/inst-cache.json          | 24 -------------------
->  .../arch/x86/amdzen5/load-store.json          |  6 -----
->  .../arch/x86/amdzen5/recommended.json         | 13 ----------
->  3 files changed, 43 deletions(-)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a84abc2b7f20..eb0dc871f4f1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2734,6 +2734,38 @@ void perf_event_disable_inatomic(struct perf_event=
+ *event)
+>  static void perf_log_throttle(struct perf_event *event, int enable);
+>  static void perf_log_itrace_start(struct perf_event *event);
+>
+> +static void perf_event_group_unthrottle(struct perf_event *event, bool s=
+tart_event)
+> +{
+> +       struct perf_event *leader =3D event->group_leader;
+> +       struct perf_event *sibling;
+> +
+> +       if (leader !=3D event || start_event)
+> +               leader->pmu->start(leader, 0);
+> +       leader->hw.interrupts =3D 0;
+> +
+> +       for_each_sibling_event(sibling, leader) {
+> +               if (sibling !=3D event || start_event)
+> +                       sibling->pmu->start(sibling, 0);
+> +               sibling->hw.interrupts =3D 0;
+> +       }
+> +
+> +       perf_log_throttle(leader, 1);
+> +}
+> +
+> +static void perf_event_group_throttle(struct perf_event *event)
+> +{
+> +       struct perf_event *leader =3D event->group_leader;
+> +       struct perf_event *sibling;
+> +
+> +       leader->hw.interrupts =3D MAX_INTERRUPTS;
+> +       leader->pmu->stop(leader, 0);
+> +
+> +       for_each_sibling_event(sibling, leader)
+> +               sibling->pmu->stop(sibling, 0);
+> +
+> +       perf_log_throttle(leader, 0);
+> +}
+> +
+>  static int
+>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
+>  {
+> @@ -4389,10 +4421,8 @@ static void perf_adjust_freq_unthr_events(struct l=
+ist_head *event_list)
+>                 hwc =3D &event->hw;
+>
+>                 if (hwc->interrupts =3D=3D MAX_INTERRUPTS) {
+> -                       hwc->interrupts =3D 0;
+> -                       perf_log_throttle(event, 1);
+> -                       if (!event->attr.freq || !event->attr.sample_freq=
+)
+> -                               event->pmu->start(event, 0);
+> +                       perf_event_group_unthrottle(event,
+> +                               !event->attr.freq || !event->attr.sample_=
+freq);
+>                 }
+>
+>                 if (!event->attr.freq || !event->attr.sample_freq)
+> @@ -6421,14 +6451,6 @@ static void __perf_event_period(struct perf_event =
+*event,
+>         active =3D (event->state =3D=3D PERF_EVENT_STATE_ACTIVE);
+>         if (active) {
+>                 perf_pmu_disable(event->pmu);
+> -               /*
+> -                * We could be throttled; unthrottle now to avoid the tic=
+k
+> -                * trying to unthrottle while we already re-started the e=
+vent.
+> -                */
+> -               if (event->hw.interrupts =3D=3D MAX_INTERRUPTS) {
+> -                       event->hw.interrupts =3D 0;
+> -                       perf_log_throttle(event, 1);
+> -               }
+>                 event->pmu->stop(event, PERF_EF_UPDATE);
+>         }
+>
+> @@ -6436,6 +6458,12 @@ static void __perf_event_period(struct perf_event =
+*event,
+>
+>         if (active) {
+>                 event->pmu->start(event, PERF_EF_RELOAD);
+> +               /*
+> +                * We could be throttled; unthrottle now to avoid the tic=
+k
+> +                * trying to unthrottle while we already re-started the e=
+vent.
+> +                */
+> +               if (event->group_leader->hw.interrupts =3D=3D MAX_INTERRU=
+PTS)
+> +                       perf_event_group_unthrottle(event, false);
+>                 perf_pmu_enable(event->pmu);
+>         }
+>  }
+> @@ -10326,8 +10354,7 @@ __perf_event_account_interrupt(struct perf_event =
+*event, int throttle)
+>         if (unlikely(throttle && hwc->interrupts >=3D max_samples_per_tic=
+k)) {
+>                 __this_cpu_inc(perf_throttled_count);
+>                 tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EV=
+ENTS);
+> -               hwc->interrupts =3D MAX_INTERRUPTS;
+> -               perf_log_throttle(event, 0);
+> +               perf_event_group_throttle(event);
+>                 ret =3D 1;
+>         }
 >
 > --
-> 2.43.0
+> 2.38.1
 >
