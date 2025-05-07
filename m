@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342DA2951AD;
-	Wed,  7 May 2025 23:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7125F1B422A;
+	Wed,  7 May 2025 23:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746661400; cv=none; b=deiisyegaLef350J6VdjkmYhGxIRDUAzbTW8cndAVVYidxTvmeRvjgeSZDprOGC8Dxde55HzTh7uqyw7rF9L8AoDnOPIUjVsP0xNJYCcbAd4xKmXc9+48G1YhnUck39j7vAkguaWsNvVmH44Opjb++hVEhVwKSoLjrEKsSVR8yM=
+	t=1746661882; cv=none; b=lH+XFkNi/EtO9YFBMvRDFLjR8FU2O7Bw/QRT9BcPrz41TI79n87C2VJ0eS7SKij8T05TRJwjWTWxbRMHMLaSyTWn9K2uHVrB53fVoM8J02d19qDShxNd8YskdWZwbmU/D4M/pFEqyURvCh8Q0L5QG22wgVOAr5buU2Dhc1kN/U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746661400; c=relaxed/simple;
-	bh=/BsSG3FylJbUfjpoVJ9Pn20AQV560RtWljBbtWQ5oVQ=;
+	s=arc-20240116; t=1746661882; c=relaxed/simple;
+	bh=sF8Abmh/+6fn/FzOe0l/7dwwjCJ6ZpSgaatciwZCwM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nhklmKEVoOh/ck3pRXOBSH4pE7fswdDmnLG2+Pm9SYB99HmIjJTfbyu5J4tRWavNpA4jyXBvdYIfywmqmhM5Kcror+4gWZcalR/WjfLfSyYxS9SufNjDEXfeQUYy38Reyk6/5Vm1CngfKTbNyPpGm+Tq8PNChV+3Pd0wEPc/aac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJmgu/6Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFaUIYUE9g/cjT2ryAG0gS8UXojcvR3Zq+mzq40TRTsp3LELQ1XxnJdcE32w4kifE5tk7bkWYYdqIclkWcwb/MmiCVDJHb1xRvt67U2BZ7mreKTbUdaEd9DXUl05XPmdFIZa746CbQ4MElcqlrcJN0ogK0WsjoCnqmTbmPpIpbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8XWq6E6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJmgu/6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBCFC4CEE2;
-	Wed,  7 May 2025 23:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8XWq6E6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E64C4CEE2;
+	Wed,  7 May 2025 23:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746661398;
-	bh=/BsSG3FylJbUfjpoVJ9Pn20AQV560RtWljBbtWQ5oVQ=;
+	s=k20201202; t=1746661881;
+	bh=sF8Abmh/+6fn/FzOe0l/7dwwjCJ6ZpSgaatciwZCwM8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJmgu/6Qe22gk5ptBs+Q2Hrl3IaHGAakG+libRwjz5JVAaPrK2LQGUU9N5E3Oxcqx
-	 0l2vLZqD2709yYc3iLACJkyyffPp1QdiZu2yX+fGWQLOz8mUG6asVd88eAPqJj2a52
-	 kwNoI88Chpq5KvF71AzjGWMKf0k7Z0x1QWVR9Yfs1s5rvBQIAsLGy8MDKvqQEIfr3f
-	 g9egfDqupNTW4E105+HSnI0Dbd5WxHpFUGNIl67FB/ZINSqa114MRuJ1VZxa0ImPpV
-	 sBq4vtMA9E244B0BKVWtPzhDL17ekiwJpugS4/lNYD/NJ82zmmd/Ptv/zGJNC9TE7Y
-	 PEQamyre2nAuA==
-Date: Wed, 7 May 2025 16:43:16 -0700
+	b=b8XWq6E6Fhd0ULmPTVFTj4GAo4U7W1WSw+Tgr2FixGFlU2im2Tr8PQ5lr2LXCajn+
+	 dfbC+dx91Xnu9Mv57Vsi1aCm898OAJodB4WDbP3uQG1QbRibxQ0JOhYH9HivAHZf72
+	 gR6NfI1vfPVyTKDWnDprCQ+ceSWgAsrxZYP7bUmyzcUfcN/fasrh8YUy9jZagwMRnp
+	 j5/qUc8LtMOayJgzsCnOVlpdHw4HNqCs1BdZkWfgAHgl69Kx6uVOCrGTC36iCoXAYc
+	 VidQzDdLOpqPvhq/JXGjrUOqi/s2pPHUuvFf4j9cnaO+BcBr00+Vh/0c7wFjnvwRxi
+	 emvTDFOIFdcTA==
+Date: Wed, 7 May 2025 16:51:20 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
  system-wide mode
-Message-ID: <aBvwFPRwA2LVQJkO@google.com>
+Message-ID: <aBvx-J-ISifmw0NS@google.com>
 References: <20250503003620.45072-1-namhyung@kernel.org>
- <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
- <aBmei7cMf-MzzX5W@google.com>
- <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
- <aBmvmmRKpeVd6aT3@google.com>
- <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
- <aBm1x2as1fraHXHz@google.com>
- <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
+ <aBcjwoINtWRWKMIJ@gmail.com>
+ <aBfFlT0l05yBbZBj@google.com>
+ <CACT4Y+YvWYFBkZ9jQ2kuTOHb6pZQwWXc9sOJ5Km0Wr1fLi-94A@mail.gmail.com>
+ <aBojTzsa5mSAGziP@x1>
+ <aBo_z8Q87gflYyuX@x1>
+ <CACT4Y+YG61CUPG1WRSGWgv00eP9aPYLELvDVmjK9ULJwNiiMgw@mail.gmail.com>
+ <aBuAjt5PyBsN65R9@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,93 +55,127 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBuAjt5PyBsN65R9@x1>
 
-On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
-> On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > Where does the patch check that this mode is used only for system-wide profiles?
-> > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
-> > > >
-> > > > Basically yes, but you can use --sample-cpu to add it.
-> > >
-> > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
-> >
-> > Yep, that's why I said "Basically".  So it's not 100% guarantee.
-> >
-> > We may disable latency column by default in this case and show warning
-> > if it's requested.  Or we may add a new attribute to emit sched-switch
-> > records only for idle tasks and enable the latency report only if the
-> > data has sched-switch records.
-> >
-> > What do you think?
+On Wed, May 07, 2025 at 12:47:26PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, May 07, 2025 at 11:58:10AM +0200, Dmitry Vyukov wrote:
+> > On Tue, 6 May 2025 at 18:58, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > So maybe when we notice that cycles was used 'perf report/top' should
+> > > > use the term 'wall-clock' for the column name?
 > 
-> Depends on what problem we are trying to solve:
+> > > > So instead of having a --latency we could have a hint that would tell
+> > > > the user that if this knob was set:
 > 
-> 1. Enabling latency profiling for system-wide mode.
+> > > >   $ perf config report.wall-clock=true
+>  
+> > I am not sure it can be as simple as a single global knob.
 > 
-> 2. Switch events bloating trace too much.
+> > First, record needs to collect additional info and that may be
+> > somewhat expensive.
+>  
+> > Second, report now has several modes:
+> >  - it can show latency, but order by the current overhead
+> >  - it can also show latency, and order by latency
+> > A user wants one or another depending on what they are optimizing
+> > (possibly looking at both).
+>  
+> > I also feel that global config switches are even less discoverable by
+> > median users (read -- ~nobody will know about that). If these things
+> > are normal flags with a help description, then some users may
+> > eventually discover them.
 > 
-> 3. Lost switch events lead to imprecise accounting.
+> So, the addition of:
 > 
-> The patch mentions all 3 :)
-> But I think 2 and 3 are not really specific to system-wide mode.
-> An active single process profile can emit more samples than a
-> system-wide profile on a lightly loaded system.
-
-True.  But we don't need to care about lightly loaded systems as they
-won't cause problems.
-
-
-> Similarly, if we rely on switch events for system-wide mode, then it's
-> equally subject to the lost events problem.
-
-Right, but I'm afraid practically it'll increase the chance of lost
-in system-wide mode.  The default size of the sample for system-wide
-is 56 byte and the size of the switch is 48 byte.  And the default
-sample frequency is 4000 Hz but it cannot control the rate of the
-switch.  I saw around 10000 Hz of switches per CPU on my work env.
-
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e9cbc854d8b148e3491291fb615e94261970fb54
 > 
-> For problem 1: we can just permit --latency for system wide mode and
-> fully rely on switch events.
-> It's not any worse than we do now (wrt both profile size and lost events).
-
-This can be an option and it'd work well on lightly loaded systems.
-Maybe we can just try it first.  But I think it's better to have an
-option to make it work on heavily loaded systems.
-
+>   perf config: Add a function to set one variable in .perfconfig
 > 
-> For problem 2: yes, we could emit only switches to idle tasks. Or
-> maybe just a fake CPU sample for an idle task? That's effectively what
-> we want, then your current accounting code will work w/o any changes.
-> This should help wrt trace size only for system-wide mode (provided
-> that user already enables CPU accounting for other reasons, otherwise
-> it's unclear what's better -- attaching CPU to each sample, or writing
-> switch events).
+>   To allow for setting a variable from some other tool, like with the
+>   "wallclock" patchset needs to allow the user to opt-in to having
+>   that key in the sort order for 'perf report'.
+> 
+>   Cc: Dmitriy Vyukov <dvyukov@google.com>
+> 
+> 
+> Was to tell the user about the new possibilities of profiling, once,
+> with something like:
+> 
+> root@number:~# perf report
+>              ┌─────────────────────────────────────────────────────┐
+>              │Do you want to use latency mode?                     │
+>              │That will add a 'Latency' column that would mean     │
+>              │'wall-clock' time when used with cycles, for instance│
+>              │                                                     │
+>              │                                                     │
+>              │Enter: Yes, ESC: No                                  │
+>              └─────────────────────────────────────────────────────┘
+>  
+> The working should inform if the current perf.data has what is needed
+> and thus this would take immediate effect, and if not, inform that as
+> well and what is needed to be able to use that, things like you
+> described above:
 
-I'm not sure how we can add the fake samples.  The switch events will be
-from the kernel and we may add the condition in the attribute.
-
-And PERF_SAMPLE_CPU is on by default in system-wide mode.
+Looks useful!  Maybe we want to add it to interactive TUI only..
 
 > 
-> For problem 3: switches to idle task won't really help. There can be
-> lots of them, and missing any will lead to wrong accounting.
+> > First, record needs to collect additional info and that may be
+> > somewhat expensive.
+> 
+> If the user says that the feature is desired by pressing Enter, follow
+> up questions can be asked as well, like you described:
 
-I don't know how severe the situation will be.  On heavily loaded
-systems, the idle task won't run much and data size won't increase.
-On lightly loaded systems, increased data will likely be handled well.
+I'm afraid it can have a long chain of questions when a new user starts
+to use the perf tool with any config.  Maybe we need to limit it somehow.
 
+> 
+> > Second, report now has several modes:
+> 
+> >  - it can show latency, but order by the current overhead
+> >  - it can also show latency, and order by latency
+> 
+> > A user wants one or another depending on what they are optimizing
+> > (possibly looking at both).
+> 
+> Once these are answered, the questions goes away, as they are now
+> recorded in the user's ~/.perfconfig file and will be used when what is
+> needed is present in perf.data file.
 
-> A principled approach would be to attach a per-thread scheduler
-> quantum sequence number to each CPU sample. The sequence number would
-> be incremented on every context switch. Then any subset of CPU should
-> be enough to understand when a task was scheduled in and out
-> (scheduled in on the first CPU sample with sequence number N, and
-> switched out on the last sample with sequence number N).
+Sounds good.
 
-I'm not sure how it can help.  We don't need the switch info itself.
-What's needed is when the CPU was idle, right?
+> 
+> The user should also be informed that to change that knob, 'perf config'
+> is your friend.
+> 
+> Additionally some hotkey could be made available to change that
+> behaviour, on the fly, with the option of turning the new mode the new
+> default, again writing to ~/.perfconfig.
+> 
+> Sometimes this "on the fly" needs reprocessing of the whole perf.data
+> file, sometimes it may be a matter of just showing extra available
+> fields, like the 'V' key now, that goes on bumping the verbosity in the
+> 'perf report' and 'perf top' browsers (they share the hists browser), or
+> 'j' that toogles showing the lines from jump sources to jump targets in
+> the annotate browser, 'J' to show how many jumps target a particular
+> jump target, also in the annotate browser, etc.
+> 
+> This could help experimenting with the various modes of doing profiling,
+> interactively, to see the problem from different angles, without having
+> to restart the whole process by exiting the 'perf report' to add new
+> command line options, then restart, etc, reusing computation sometimes
+> when switching views, etc.
+> 
+> To get default behaviour its just a matter of renaming ~/.perfconfig to
+> ~/.perfconfig.some_suitabe_name_for_later_use.
+> 
+> This way interesting new features like this don't get buried behind
+> either command line options nor man pages, giving the user at least an
+> opportunity to be informed about it.
+> 
+> That is what the patch below barely starts sketching, not doing all I
+> just described.
+
+Sounds like a good idea.
 
 Thanks,
 Namhyung
