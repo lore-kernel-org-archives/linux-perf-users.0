@@ -1,229 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B434528C2DE;
-	Wed,  7 May 2025 15:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41BD283C9E
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 May 2025 15:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632849; cv=none; b=puXLaPgSwenB3TfbjeqgVkz8YrfYwkg5X1Fb6VMRnDT57kX5k4U5oIjuCH5jm6KYCuCTfz9eD84HDw9fgaU0IwxSWgOy+iA9SdYZeX+6AFo70/UUirq4cDQrm5U2aVg/gtc6s6s2ieDtWFtJbY94q8u5nwYzngYDvAZDDpzJ6ow=
+	t=1746633424; cv=none; b=kU/nG63Qoq/7h2+NsP9Mj4xwYVkix1oWCMBP+nCmNvV0dTkWkgSJv4nTz4o45NQAtVJp2AtPALOTc0gCW98rLt1zVvoNvtD77S1W2J1ZrwfiYLlut8A2ehDYnQJHHby7ogc4+kk0OkINfWd4Dyxt0AVYfX1Y+27dEKDOcCLTfdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632849; c=relaxed/simple;
-	bh=WXI0SNppGx3CN4e/YPICg3MD2GaSica0+CejvhbhP2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FaIwj4k/mpNpn/9SHsRYGxXky695bslCfhRuwUbWS0VR+hiA9hI4O6df7iksFqroF9vw1/NUMXXaJd84nrHZaHU8Z+xh/D/zunXXd1W/SRqjTRML8cr1JqP3r6pxX3BeScT87F86jWWJLOYtNZPQYWoc2QUc4KJ6czTu69bI0CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPufcLux; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746633424; c=relaxed/simple;
+	bh=NTNl3P+fq5lCsDHlnsdh3mf77EycibLg7WMw+O8HKkQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i9ulTs/xrpDhYaDuLDBmLWKa1T9lnFFJf785oipgajkpzC8W4uySp0289JY2dxyJYY2jOTbAyhD0nmHN0cFvElcvjagaAKgCru7VVt+njNBU+VEZEzqEdB1h+ENSJ8Jz4/pYMrzH8XsqrNqQHYv64lBsARNnpusXjJ7cApXNOOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GaUBvnfI; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPufcLux"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACFCC4CEEE;
-	Wed,  7 May 2025 15:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746632849;
-	bh=WXI0SNppGx3CN4e/YPICg3MD2GaSica0+CejvhbhP2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nPufcLuxU3+y1KrclByxH5uRimPfKnvmCtCerOUp//wSrfgIbRRX9jyST0BaPFjfa
-	 7+5JXzvJkxZ4NpPGN5gZ4n2mEv7l9GE4edcei366kxKtgx7541zcWPc0fJv2SJQAxm
-	 p09QOqEx/nC8ypCsaRHpD7JOeTD5mV21YnK21A9Cb1I2nYSEuJoPh6ieR9PAt0U85t
-	 J1tw/uvDzgOO1TQqMHmEb6N7v8Unip5nLetXcpOgOnWF7tmQKdWGJlbGPzsp9A8JlM
-	 NFX89P89ibVD61ZWzJT4mhbavu+k2RufZbQyPkHO4L1hB5p0qa9nYlNbwaRDYvNwrJ
-	 gsif6mc5mUgsw==
-Date: Wed, 7 May 2025 12:47:26 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
- system-wide mode
-Message-ID: <aBuAjt5PyBsN65R9@x1>
-References: <20250503003620.45072-1-namhyung@kernel.org>
- <aBcjwoINtWRWKMIJ@gmail.com>
- <aBfFlT0l05yBbZBj@google.com>
- <CACT4Y+YvWYFBkZ9jQ2kuTOHb6pZQwWXc9sOJ5Km0Wr1fLi-94A@mail.gmail.com>
- <aBojTzsa5mSAGziP@x1>
- <aBo_z8Q87gflYyuX@x1>
- <CACT4Y+YG61CUPG1WRSGWgv00eP9aPYLELvDVmjK9ULJwNiiMgw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GaUBvnfI"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3da73d35c11so183155ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 May 2025 08:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746633422; x=1747238222; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ykDpkAM2sXvXYZSjDalTbIgb2nTcNniwyG0Gjx+kJAo=;
+        b=GaUBvnfIWXc13XOM3ZnuDBmSDNdyr7/49Ba6I+hCWhIB1lo4oKfMGG1lCHt6BbZS09
+         B7OAbFg60wBSArA56+1hdNzFkGmi2vzSw67NUe2AQKGeoiZfzomady+p4ySLJbzWiBcW
+         lgJixYpMfowHYztin0EtZyxfLo/gJXXMt7AAphNnW194fjC02c4QjhVAVy4FuCRgYQ6t
+         ruqfEAFbYw1Ii2itcaa2W5DdEWcx9d0UoRnEZAz+YSg9PJ2Dk1pfmvaRtgXJ9BntEOl3
+         l0SyUPF+1NgHjLRvaVvbRnfKsvsqe2D6Nsf/Vzz5e7Xuf+wr+hxVkrO7EDPi29BmdBPf
+         mmKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746633422; x=1747238222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ykDpkAM2sXvXYZSjDalTbIgb2nTcNniwyG0Gjx+kJAo=;
+        b=EOdW5uozwxGyqSUfF4IX74StmzYXM2b1eEXSQk8cwyUqSnbG86IAo3w1vUkQ95ZiNg
+         f5Os5BQ6TaS63tAwgZYBH7TB1Krccwht0MkO9GQQofpu55imkmHfMZ+65fc+Q+o1nwts
+         IFcqRTjrSAEoMy0BMFdZCYMi0Zt9ZaRNU1c+EjZyegEgPUPRTsFfTJJgTtAy7m4EmeQl
+         wh1rGmr3xy8oGN3se+Swryk/F/L7loQGSqNqC99fMaxuqozSKKWb8Xx+o5ZV+u63foAE
+         c8FC3Svpinqdyf+zJd7RaTsefB3C4HihGJ2vnfEANmEWeBPjIAJdvjWXGZhx5TIMsVgq
+         gcoQ==
+X-Gm-Message-State: AOJu0YzM5M3Q1MA5cQC/Xd8AdBens1KUJW9+AzxA2V4h3Y7o7ai0AIVi
+	/+e1ZwBXdS2u717udloPZMhnko6Tzf5Q776IZDW2JXsdjPeqZ5fTGD9l+xOtXMTn7nR/8T4c0Yl
+	3UTe09oiH/0rV5Y1Bzyj+ETpvB/VqmAujPh9n
+X-Gm-Gg: ASbGncswcqEBXdVmOVix2kx7Md1CP2wfypcfX5G1+kQNlUBGrQlnQF4UoaVjvkQOrgl
+	2yaddm4NdGp4ggdzFHC+l1gBXXcxo35CVPEylBrKtQox1B7qIES2WSXDfsYFi4foeO+VfmC2BEe
+	4gA0v2/L2YPCtNF2uG7QQiVg+ShSjOLAyTgFPBr6fkioKioaMJhoo=
+X-Google-Smtp-Source: AGHT+IFW2jlrBx5rvnWqUJCGGZ/vNfDAJ4GchVrKzbBv2MfE/Sb33H5VFCY+zf6KNPxytQqDQyGffoG3Q1QQvt+bH+M=
+X-Received: by 2002:a05:6e02:1aae:b0:3d9:6e55:2aae with SMTP id
+ e9e14a558f8ab-3da7384a1cdmr4493615ab.0.1746633421645; Wed, 07 May 2025
+ 08:57:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACT4Y+YG61CUPG1WRSGWgv00eP9aPYLELvDVmjK9ULJwNiiMgw@mail.gmail.com>
+References: <cover.1746627307.git.sandipan.das@amd.com>
+In-Reply-To: <cover.1746627307.git.sandipan.das@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 7 May 2025 08:56:48 -0700
+X-Gm-Features: ATxdqUEVk5ap3Ro9zQ37LWqA-dyg-_rUJj1mv9TtCWTKq9jDzIJAnq3O20-GKiU
+Message-ID: <CAP-5=fUEeFb3jh-MtxEEH0Z+HFAD0oxSc4uE66Rfg+BRzYRB5Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf vendor events amd: Address event errata
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Stephane Eranian <eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Ananth Narayan <ananth.narayan@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 11:58:10AM +0200, Dmitry Vyukov wrote:
-> On Tue, 6 May 2025 at 18:58, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > So maybe when we notice that cycles was used 'perf report/top' should
-> > > use the term 'wall-clock' for the column name?
+On Wed, May 7, 2025 at 7:28=E2=80=AFAM Sandipan Das <sandipan.das@amd.com> =
+wrote:
+>
+> Remove unreliable Zen 5 events and metrics. The following errata from
+> the Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors have
+> been addressed.
+> #1569 PMCx078 Counts Incorrectly in Unpredictable Ways
+> #1583 PMCx18E May Overcount Instruction Cache Accesses
+> #1587 PMCx188 May Undercount IBS (Instruction Based Sampling) Fetch Event=
+s
+>
+> The document can be downloaded from
+> https://bugzilla.kernel.org/attachment.cgi?id=3D308095
 
-> > > So instead of having a --latency we could have a hint that would tell
-> > > the user that if this knob was set:
+Hi Sandipan,
 
-> > >   $ perf config report.wall-clock=true
- 
-> I am not sure it can be as simple as a single global knob.
+the document is somewhat brief, for example:
+```
+1583 PMCx18E May Overcount Instruction Cache Accesses
 
-> First, record needs to collect additional info and that may be
-> somewhat expensive.
- 
-> Second, report now has several modes:
->  - it can show latency, but order by the current overhead
->  - it can also show latency, and order by latency
-> A user wants one or another depending on what they are optimizing
-> (possibly looking at both).
- 
-> I also feel that global config switches are even less discoverable by
-> median users (read -- ~nobody will know about that). If these things
-> are normal flags with a help description, then some users may
-> eventually discover them.
+Description
+If PMCx18E[IcAccessTypes] is programmed to 18x (Instruction Cache
+Miss) or 1Fx (All Instruction Cache Accesses) then the performance
+counter may overcount.
 
-So, the addition of:
+Potential Effect on System
+Inaccuracies in performance monitoring software may be experienced.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e9cbc854d8b148e3491291fb615e94261970fb54
+Suggested Workaround
+None
 
-  perf config: Add a function to set one variable in .perfconfig
+Fix Planned
+No fix planned
+```
+Given being able to count instruction cache accesses (for example) is
+a useful feature, would it be possible to change:
+```
+-  {
+-    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
+-    "EventCode": "0x18e",
+-    "BriefDescription": "Instruction cache hits.",
+-    "UMask": "0x07"
+-  },
+...
+```
+to be say:
+```
+  {
+    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
+    "EventCode": "0x18e",
+    "BriefDescription": "Instruction cache hits. Note, this counter is
+affected by errata 1583.",
+    "UMask": "0x07",
+    "Experimental": "1"
+  },
+```
+That is rather than remove the event, the event is tagged as
+experimental (taken to mean accuracy isn't guaranteed) and the errata
+is explicitly noted in the description. Currently the Experimental tag
+has no impact on what happens in the perf tool, for example, the
+"Deprecated" tag hides events in the `perf list` command and is
+commonly used when an event is renamed.
 
-  To allow for setting a variable from some other tool, like with the
-  "wallclock" patchset needs to allow the user to opt-in to having
-  that key in the sort order for 'perf report'.
-
-  Cc: Dmitriy Vyukov <dvyukov@google.com>
-
-
-Was to tell the user about the new possibilities of profiling, once,
-with something like:
-
-root@number:~# perf report
-             ┌─────────────────────────────────────────────────────┐
-             │Do you want to use latency mode?                     │
-             │That will add a 'Latency' column that would mean     │
-             │'wall-clock' time when used with cycles, for instance│
-             │                                                     │
-             │                                                     │
-             │Enter: Yes, ESC: No                                  │
-             └─────────────────────────────────────────────────────┘
- 
-The working should inform if the current perf.data has what is needed
-and thus this would take immediate effect, and if not, inform that as
-well and what is needed to be able to use that, things like you
-described above:
-
-> First, record needs to collect additional info and that may be
-> somewhat expensive.
-
-If the user says that the feature is desired by pressing Enter, follow
-up questions can be asked as well, like you described:
-
-> Second, report now has several modes:
-
->  - it can show latency, but order by the current overhead
->  - it can also show latency, and order by latency
-
-> A user wants one or another depending on what they are optimizing
-> (possibly looking at both).
-
-Once these are answered, the questions goes away, as they are now
-recorded in the user's ~/.perfconfig file and will be used when what is
-needed is present in perf.data file.
-
-The user should also be informed that to change that knob, 'perf config'
-is your friend.
-
-Additionally some hotkey could be made available to change that
-behaviour, on the fly, with the option of turning the new mode the new
-default, again writing to ~/.perfconfig.
-
-Sometimes this "on the fly" needs reprocessing of the whole perf.data
-file, sometimes it may be a matter of just showing extra available
-fields, like the 'V' key now, that goes on bumping the verbosity in the
-'perf report' and 'perf top' browsers (they share the hists browser), or
-'j' that toogles showing the lines from jump sources to jump targets in
-the annotate browser, 'J' to show how many jumps target a particular
-jump target, also in the annotate browser, etc.
-
-This could help experimenting with the various modes of doing profiling,
-interactively, to see the problem from different angles, without having
-to restart the whole process by exiting the 'perf report' to add new
-command line options, then restart, etc, reusing computation sometimes
-when switching views, etc.
-
-To get default behaviour its just a matter of renaming ~/.perfconfig to
-~/.perfconfig.some_suitabe_name_for_later_use.
-
-This way interesting new features like this don't get buried behind
-either command line options nor man pages, giving the user at least an
-opportunity to be informed about it.
-
-That is what the patch below barely starts sketching, not doing all I
-just described.
-
-- Arnaldo
-
-> > > Then if 'cycles' is present we would have:
-
-> > Something along the lines of the patch below, but there are several
-> > details to take into account with what is in the current codebase, only
-> > if what is needed for doing the latency/wall-clock time is present in
-> > the perf.data being used is present that knob would be used or suggested
-> > to the user, so some refactorings are needed, I'll try to folow on it.
-
-> > But just for reference:
-
-> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > index f0299c7ee0254a37..20874800d967ffb5 100644
-> > --- a/tools/perf/builtin-report.c
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -51,6 +51,7 @@
-> >  #include "util/util.h" // perf_tip()
-> >  #include "ui/ui.h"
-> >  #include "ui/progress.h"
-> > +#include "ui/util.h"
-> >  #include "util/block-info.h"
-> >
-> >  #include <dlfcn.h>
-> > @@ -127,6 +128,11 @@ static int report__config(const char *var, const char *value, void *cb)
-> >  {
-> >         struct report *rep = cb;
-> >
-> > +       if (!strcmp(var, "report.prefer_latency")) {
-> > +               symbol_conf.prefer_latency = perf_config_bool(var, value);
-> > +               symbol_conf.prefer_latency_set = true;
-> > +               return 0;
-> > +       }
-> >         if (!strcmp(var, "report.group")) {
-> >                 symbol_conf.event_group = perf_config_bool(var, value);
-> >                 return 0;
-> > @@ -1734,6 +1740,15 @@ int cmd_report(int argc, const char **argv)
-> >                 symbol_conf.annotate_data_sample = true;
-> >         }
-> >
-> > +       if (!symbol_conf.prefer_latency) {
-> > +               if (ui__dialog_yesno("Do you want to use latency mode?\n"
-> > +                                    "That will add a 'Latency' column that would mean\n"
-> > +                                    "'wall-clock' time when used with cycles, for instance\n")) {
-> > +                       symbol_conf.prefer_latency = symbol_conf.prefer_latency_set = true;
-> > +                       perf_config__set_variable("report.prefer_latency", "yes");
-> > +               }
-> > +       }
-> > +
-> >         symbol_conf.enable_latency = true;
-> >         if (report.disable_order || !perf_session__has_switch_events(session)) {
-> >                 if (symbol_conf.parallelism_list_str ||
-> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> > index cd9aa82c7d5ad941..f87071f5dedd94ca 100644
-> > --- a/tools/perf/util/symbol_conf.h
-> > +++ b/tools/perf/util/symbol_conf.h
-> > @@ -51,6 +51,7 @@ struct symbol_conf {
-> >                         annotate_data_sample,
-> >                         skip_empty,
-> >                         enable_latency,
-> > +                       prefer_latency_set,
-> >                         prefer_latency;
-> >         const char      *vmlinux_name,
-> >                         *kallsyms_name,
+Thanks,
+Ian
+> Sandipan Das (3):
+>   perf vendor events amd: Remove Zen 5 instruction cache events
+>   perf vendor events amd: Remove Zen 5 TLB flush event
+>   perf vendor events amd: Remove Zen 5 IBS fetch event
+>
+>  .../arch/x86/amdzen5/inst-cache.json          | 24 -------------------
+>  .../arch/x86/amdzen5/load-store.json          |  6 -----
+>  .../arch/x86/amdzen5/recommended.json         | 13 ----------
+>  3 files changed, 43 deletions(-)
+>
+> --
+> 2.43.0
+>
