@@ -1,106 +1,158 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E074B1E63;
-	Wed,  7 May 2025 08:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B642B193062;
+	Wed,  7 May 2025 08:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746606276; cv=none; b=g+EZJl3a/cl47TAp2kPaK9DMWVLFthhkxvbhQnsEjAqz0SA7QwYZOW2OeYLKdiskTgfeMijvvwf0hghSah6QCD29/ExOwRtOjLLAoTBRJBjY5yX+BsQevxv9VYhiQSdwbxMFbEPn2UD+ElKo24G1OT9CqVz0RC55w7s+g/zYU1A=
+	t=1746608201; cv=none; b=h9150QpqXgG0xaJ00wkC+fRDaULqg+ScmN+4SjzPP08LJjQYzIAerE1tlWn8SbQi/XB31bdsFsD4oNPCOs7QETC0Xq45n+0dPk2MMDN0+uMxbIiHHUIxiaR2FmHLw52XBuo6AfQq6+ic1t0Zn+0VD881UadiyThjsR0qF135Mrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746606276; c=relaxed/simple;
-	bh=K1bXuCNq92ymrxxKhU8GBp2FS/Yerp+VX6bV8D9y6ak=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MyZKhpxAAr26EKf/PhlOJd45JxGf18AS0RFdmlgKAhKWOtOqrf3tFM1bEk1vIOgxmrqLoCW3etkWZAH7NEBJwPLXzrcWqXJlz00K4onedEHkftBKp1vcu021BIZCyrvEFT4GrRpfX2T4L0stBbrU2TjhcNImrLV1hhk0zvOGqHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H0Mji8B/; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1746608201; c=relaxed/simple;
+	bh=YF0XBybdGev5P5laamOGvx0yuMkyeOtbHYbsvXl924w=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mkW1WUOzKaUmnVOJH1Gksxh5Q/m1hP4XnwwNdcw5jrNWUURPlHQKZmby33TRaPDcI66xL2i1n6ej4cfip16cSHbUyfuZnMV+HjgOOldqPCWagA9s1brqWSvfmwBEHibxusc4i9fhBG84F/suyJOz19klF0py2sac3HAbrSBrUbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJMZeHPK; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0Mji8B/"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so13325655a12.1;
-        Wed, 07 May 2025 01:24:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJMZeHPK"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fbee929e83so678244a12.3;
+        Wed, 07 May 2025 01:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746606273; x=1747211073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WeSPKvH+WVEgstVbSqgAOmvbvcpZiw2WDpxt7LDDVAM=;
-        b=H0Mji8B/1xY9NSlqVbv79bCbXFl55pEk26AY55EaxiYOp7kRM4cEWFHDv9ulN5VrqY
-         ngovbFMLBoFcCNRIw0zQEVauLsy6Nxx0mnqbNUxbCiqKUmlpPH/Ck5BZIZwR+9dIu4NA
-         r6yrfmx6n+t+CKpLQmRQDkkmq1wIJvyr3d9U9jHhlrUuu+cowhbOoO6XeKYoJilsyrJT
-         GczvMgdxcYErqKgnMv9zUscLwgtt+rxy8m+54dmoGBsmoz43Q0ehs6raq+o0LtDvDfh7
-         RiCWlfla/0sFF8ILGIBWV7wGAqcmkw6GZ9ght5gpdhU8817dPbVp/Sp6b0wZdQ1ueoq3
-         nkOA==
+        d=gmail.com; s=20230601; t=1746608198; x=1747212998; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RtJrNEhTxPpRyYlS5ximO0nluwO8bWEvvP6btnNB21E=;
+        b=JJMZeHPKcibRmqMPIVAh+As1HV8FA7KXR1UslVcLladEtlFxZNjyiYScb8EwdaarzC
+         S5GJo7KwXiRUUnaY0HbsI+yfOsxGbQqTYWa0f+dkp85GucaSj+pd7E+s75SJ27zo7zff
+         Q/PJgHcseohQ0v8pVf29+aHlnXp6nYAKPTaKSuNqn+v9MK946KwKW/qPEorz620+ALLJ
+         8SEHqP05B8KSSpAMl0/Jf/FqA/VyriMUfOO2Wu3e0EgtqneSr+ch6QG7/x2eq2oujAtz
+         ZEmORYQ4UyH4/KlNscIoVD9M6BSYKEh709sX9HZV3fwKt5mfzhF6hKV0Q+YwwDDQaxxu
+         r/uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746606273; x=1747211073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WeSPKvH+WVEgstVbSqgAOmvbvcpZiw2WDpxt7LDDVAM=;
-        b=oVrj7jSqacW9vY7m9r13+mSAuVYuVwq7p+pWoS/k+tIBjqIQJXPiuuhm5XRWN7EA5m
-         Jhm9AA4h7VIp7z6hArbjLBGODF03+Y41jJP4OPEqDfJHT4DMIoGoSwDNjaQDOOFo+P78
-         lpu8ammJdDNQms1vWhMDGDuInbg3WsS+7LVLbA86C1NP06DjpvJnO1DkBQI1owL+ddze
-         FwZRS0qh/j8seXFp5rGU2VraU7oiZsScjcNV8knMaRRyWiqPtp5lgOt29SFLKUvtgV8K
-         sPe4OuB/s6FNc4Yc2NjndnfBPsbTPrNBVcdtvms2Y4xZ6wYk/7iZaAIpYJMKsVjb6uKy
-         AXng==
-X-Forwarded-Encrypted: i=1; AJvYcCVYRGtDB8YCurBcTqGWkHra07bAwQ/ias9dW3UoAM/JMWWuiA/LTmGu+/IkykiS1xFRtrpMIO5dKq6woInOYKsZlA==@vger.kernel.org, AJvYcCWw3e1yWyl0jTQd+yP4UH3piMlaI5ZbJHbQYQE4+cZWg7rEOfnWsL/tKwJ3UQqM3lKDB8+lm0ybW33UXDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5iKZ40jJtKU0UmqyvP4RAqIAMZPapLdvJ5w/XIbODkOU0nOue
-	GB2a1qpjCPQ0ch8GG9kaoIqW4NV6+2DJVd8HMg2zHumDkIZ8gcMr6rw2uJoXIAWQZA==
-X-Gm-Gg: ASbGncssLMjcpu9sEeLW4LIaGTnp/iPc+JvM5mxH+nSOLJGWfgEDn0nQ89yQJnK4iVV
-	yFr7iaQbtWNKQP/MXtt2ho93Bd0Y2XA9VZ2Z6AQff7B5ISdeW4WF6snZ0DdvcySp4+8eUuqw6Vv
-	cQdbPKiuwWQZPw0A3E9c3UatXgSDDPcWiy+o1/w9CJq3FOmLArbkoEGa2abl5wesJBcDh7xY+Ie
-	aQau+7FauL5flqyaADj3fA828KxptsGL50u4ZV94jRfRvefEahYz085pqxYx7y0iC23rZQMnwiV
-	v92sttkqWr5qTmpmjM0tY2ywHO2z/ZIe5ucP2R0=
-X-Google-Smtp-Source: AGHT+IEz0ehkkfHliEKbCARiajPMz8+n5lQFFMi3ISzajdliDRj4KQwVjekIiFMF25Y5rCc0yRQolg==
-X-Received: by 2002:a05:6402:13cf:b0:5e0:9959:83cd with SMTP id 4fb4d7f45d1cf-5fbe9f4888fmr1748076a12.21.1746606273036;
-        Wed, 07 May 2025 01:24:33 -0700 (PDT)
-Received: from localhost ([87.254.1.131])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5fbf11d9ad2sm805024a12.41.2025.05.07.01.24.32
+        d=1e100.net; s=20230601; t=1746608198; x=1747212998;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RtJrNEhTxPpRyYlS5ximO0nluwO8bWEvvP6btnNB21E=;
+        b=UYzEU3yE7eQJfcM4eDNaD/8csl+fHqVUDwt9+738pu0TYj24/pyc6mfuogzjDfF/Sa
+         n+ib6ZknD3P/yzYje78edhO7p0qL+cnHL3t9LHip9FB52OZB7P6wlcYWr8NuUeje+pNK
+         Ko27CtCJM+Slvv626cNctci1x3roWVccFhdgd0u4FKv9WZfrBbQyenl6ckVN+6wCYQxI
+         cX60dUO1iWhoOXB0vRTIavMaRSeZS02hQ7UjxCA303tl98RRIjs0LXbbRZ50ms1ghvPM
+         l0laf8ZWoIWlJ4sWeor4+O3exCp27RZztkJlLrcw5B64WEHqvSSNohLkzV2aqb6XwAr1
+         rgBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWH5MJXSkopgdgv8a9OzeCLfApdVoaBqyCmbdwk//UOOsDX2rl/GIDXU6Fyw4JzeH6L1z/dv5dDHGm3wdzy+Mz/Jg==@vger.kernel.org, AJvYcCXGyswD4+eDlZmsKrYPymhTB3epaX3dXFebgSatwbiFNFx9A3HdMtzierWaKUz19VUpO60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ9CkWLACawDtYkzYoTmPYb89Qaer2QroBmnKbzSPwes2y8tTO
+	ybvnQH0HDJGmhSRi8QjljRH3wq8DvHZgK294RtaslfBavd2DN48S
+X-Gm-Gg: ASbGnctb2xLTtS8PH0qUfDv6JpwUJusNfDtvv1om7d+lNYzIrc93ZWd4Vg8ugyp8vsj
+	pCzafzROpUWJUVLXh01bozT5cuD7p6EX6RTKN8Srefe31t549NNeCN7UnYBk9vTddtz35ukS23g
+	eaQioXeUJu9zGxwmGJN+CIshJa1aA8UVLG2a/EAnJYQdwkca/OgJ0L4+tmw9vaQallsxOIBFfZE
+	XB1aiHm2JFQbko7zaf+N7l7m38nHxDPiReZ4IYi2gqrAmu9p+8lUlXtMLJMzmEXeOFZWn90IjZ/
+	JhLJfKHNs0jxwBdCs/ZRCLiKZNE=
+X-Google-Smtp-Source: AGHT+IGkqNN7KP/S/TA1argQXXGqtucTueWdiZvttJsrEcaRwxPxXI3wgtYKoiS0qQb8Z5uO5jIjYA==
+X-Received: by 2002:a17:907:2ce6:b0:ac7:b8d0:86c0 with SMTP id a640c23a62f3a-ad1e8b936c7mr252997266b.9.1746608197607;
+        Wed, 07 May 2025 01:56:37 -0700 (PDT)
+Received: from krava ([173.38.220.40])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189146f61sm866955566b.9.2025.05.07.01.56.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 01:24:32 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] perf test amd ibs: Fix spelling mistake "Asssuming" -> "Assuming"
-Date: Wed,  7 May 2025 09:24:21 +0100
-Message-ID: <20250507082421.188848-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Wed, 07 May 2025 01:56:37 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 7 May 2025 10:56:35 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Yafang Shao <laoar.shao@gmail.com>,
+	Quentin Monnet <qmo@kernel.org>
+Subject: Re: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe
+ link info
+Message-ID: <aBsgQw1kzJsRzM5p@krava>
+References: <20250506135727.3977467-1-jolsa@kernel.org>
+ <20250506135727.3977467-4-jolsa@kernel.org>
+ <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
 
-There is a spelling mistake ina pr_debug message. Fix it.
+On Tue, May 06, 2025 at 03:33:33PM -0700, Andrii Nakryiko wrote:
+> On Tue, May 6, 2025 at 6:58 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Adding support to display ref_ctr_offset in link output, like:
+> >
+> >   # bpftool link
+> >   ...
+> >   42: perf_event  prog 174
+> >           uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_offset 50500538
+> 
+> let's use hex for ref_ctr_offset?
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/perf/arch/x86/tests/amd-ibs-period.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I had that, then I saw cookie was dec ;-) either way is fine for me
 
-diff --git a/tools/perf/arch/x86/tests/amd-ibs-period.c b/tools/perf/arch/x86/tests/amd-ibs-period.c
-index a198434da9b5..7c77d86f369d 100644
---- a/tools/perf/arch/x86/tests/amd-ibs-period.c
-+++ b/tools/perf/arch/x86/tests/amd-ibs-period.c
-@@ -896,7 +896,7 @@ static unsigned int get_perf_event_max_sample_rate(void)
- 
- 	fp = fopen("/proc/sys/kernel/perf_event_max_sample_rate", "r");
- 	if (!fp) {
--		pr_debug("Can't open perf_event_max_sample_rate. Asssuming %d\n",
-+		pr_debug("Can't open perf_event_max_sample_rate. Assuming %d\n",
- 			 max_sample_rate);
- 		goto out;
- 	}
--- 
-2.49.0
+> 
+> and also, why do we have bpf_cookie and cookie emitted? Are they different?
 
+hum, right.. so there's bpf_cookie retrieval from perf_link through the
+task_file iterator:
+
+  cbdaf71f7e65 bpftool: Add bpf_cookie to link output
+
+I guess it was added before we decided to have bpf_link_info.perf_event
+interface, which seems easier to me
+
+jirka
+
+> 
+> >           bpf_cookie 3735928559
+> >           pids test_progs(1820)
+> >
+> >   # bpftool link -j | jq
+> >   [
+> >     ...
+> >     {
+> >       "id": 42,
+> >        ...
+> >       "ref_ctr_offset": 50500538,
+> >     }
+> >   ]
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/bpf/bpftool/link.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
+> > index 52fd2c9fac56..b09aae3a191e 100644
+> > --- a/tools/bpf/bpftool/link.c
+> > +++ b/tools/bpf/bpftool/link.c
+> > @@ -380,6 +380,7 @@ show_perf_event_uprobe_json(struct bpf_link_info *info, json_writer_t *wtr)
+> >                            u64_to_ptr(info->perf_event.uprobe.file_name));
+> >         jsonw_uint_field(wtr, "offset", info->perf_event.uprobe.offset);
+> >         jsonw_uint_field(wtr, "cookie", info->perf_event.uprobe.cookie);
+> > +       jsonw_uint_field(wtr, "ref_ctr_offset", info->perf_event.uprobe.ref_ctr_offset);
+> >  }
+> >
+> >  static void
+> > @@ -823,6 +824,8 @@ static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
+> >         printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
+> >         if (info->perf_event.uprobe.cookie)
+> >                 printf("cookie %llu  ", info->perf_event.uprobe.cookie);
+> > +       if (info->perf_event.uprobe.ref_ctr_offset)
+> > +               printf("ref_ctr_offset %llu  ", info->perf_event.uprobe.ref_ctr_offset);
+> >  }
+> >
+> >  static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
+> > --
+> > 2.49.0
+> >
