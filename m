@@ -1,204 +1,116 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F4F241673
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 May 2025 18:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F47928B4F9;
+	Wed,  7 May 2025 18:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746641631; cv=none; b=ci7z7GcXsc956Z6DWz38VcXcuhWiIVdepm/DPTcUOjMq7JNk9I0TPexSuy+QBKEG0IyWGgWnelyVodT4xES4LUXG+aozhq6hmzP+iYuQS8zFzvH3O268cGoNPyKPstY4nmP7Wn6UO/ncsQICfCAyuUSIfs/w/ABe+D5jfD7/avc=
+	t=1746641910; cv=none; b=dMbnH7wb56Ev5uIwYBK9Gh+k5ht8AkyZ4Vy3hf0R4bDiM0AQPHrQHpY5c4Y0v6Hv1EQxJWvvSbSewlsSvFN3DJWV9FYXFIL0IIoKM1mFykA4Bi5tDBLUBlWEMCtYcrKyn9LK5laQngbHUAaY/oINwkuez3A03Z5dJvPM5b14Ee8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746641631; c=relaxed/simple;
-	bh=3VvSBSZHAcqGL90WW9CUZLTPJaD3rXPiR7KPvcxHITI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rxW+D6GTAF+c18JANUb7xafSTyP+2tdTpm+q6Zz7o1ov/pR7hJm6XE4XsmLqRYwS/n750pY1xVgw/BC0A9PeaoT59V0LfeMZTfRiKUokK0O5bbV12mm8eYBi2MDxzUULjahRsF/2hvaRZHpYA0l3iX5ucpUgs1wA1Yvgte6k7m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lAZrRe9e; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
+	s=arc-20240116; t=1746641910; c=relaxed/simple;
+	bh=F+Xnu6PQbi3T4Wkg/GHyn4Jj0vjwAEy6UneJsbqIPv8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O73L03vYX/cLO9JUDsYTxeIolz0h/SI/CQ34ve6p4hGFRjG+hh3soUzqGuENuakz/Ep41zej65br5XugtTcILiNDu+5te60zhVa4wZmeNc45WRCpoq2wq/8+Rs5nnPHk5lu3RYDu5/pPUm4fNueJ7p7KSaLFylhByurywQWDoCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BvKTBGUB; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lAZrRe9e"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ab450d918so209323a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 May 2025 11:13:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvKTBGUB"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736aaeed234so245646b3a.0;
+        Wed, 07 May 2025 11:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746641629; x=1747246429; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ab0z/F9w7QZP+evG5akeK0TKh6nX5z62iRNswb/WdEg=;
-        b=lAZrRe9eDHagQ0vkCDItayi1y0CTf9yWVzkE/OFhyc3welcyXXe/bsqDe331Wd1x1x
-         3KLRzt0VOSf6580G+17DQInUgVZQ6MjycCLVm9L70UNCVJxSoZ2bk2ylk1g8bg/9XzM+
-         Tx0aFDNC9X65z0GUpMvkruF9T4ul+wi0NvLG/XAWJgRVlbTLFXdHu5529CeuLEuKTkyT
-         jYjEYKOkigvu548qNe9y3UHXJAM84kmxgDXGie9tFYCY/M0o7PIVXS4h/KGhYC5e/vK6
-         nPpVdf/ZVSL4+hjm4RUtrwXTZQqVg9Gs+7dDybi2nUcSIqAfZgjV45IqrUZlV6fSG5oC
-         haVQ==
+        d=gmail.com; s=20230601; t=1746641908; x=1747246708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+ykkdjkXW3JCGwoicQaugKr7maJVyx5Tj8MypKlbh5U=;
+        b=BvKTBGUB/0OVdnk9LHX2NxYkzqjFlnlURZ/wEqLOpGMk6FiO7OpYgyShq8GCAxJ9ly
+         RP1OZ+9lUHDvqadyJwWWhN2D99LEUMOh9Uaw3ms+ruwOygaFrrmZTBmrPUJ2zOs5P1u+
+         hUODuj8bcTirqiYNnWB/CcR7jbV0agXjbpD8jtIMej8K60Fnfli6UWsSVOz/LrnQqcgo
+         uyU4kR0MeJwTkatvkkRsSIYRvJA9lFbBpfLEQpuUIi0hK5SaZrsd1/KRQib8kgmbtWEI
+         oksxeUzLSfEJw+kvIypXzWM0+bIO53XrErHVjVuqjSlIoyTOSxYf7LKIsIL0m4t9X2r/
+         ioNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746641629; x=1747246429;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ab0z/F9w7QZP+evG5akeK0TKh6nX5z62iRNswb/WdEg=;
-        b=TzZ88uiiii+2x9oTTXYR7TLLSu5aUKLuKBB0ik/RdbGIABdWuQ2zeHGpff1KSE0ok1
-         dc7N76JlmahtrQJK7UD3l48S811KOpIxEX02aPrr1qzHz3047uH9g2e147uGxVlsVBM7
-         3ukYzLd0CVjEK1Sk9yomIoVWbiGaO45mqIn26ZzjKavrAME5cJG5/ITcKtzbl59Pe8+y
-         /+4Pbqhpq5n49Szksujo1TFG4dnMhTEINEy97mFZlpkIYqcIYn1FjzJ6LqNV4XPdW0Wt
-         k6wPjYoM//Ci9gR9JHKYsFhIwQuo0Bz0EwpWGW2bCaPcKoDMUn5DMhbob7aSeKeTiLWs
-         ExqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlVmNdwmYvpn1EZ6uNIlrDkcynaXO/SMuoQgPtw88GpWxxnKr8tE2Bk303x7AHKUk/3qUW0usnOCmHg9llXf6h@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv22IF9uoo2DsjUo0+nWVM2ZyyGhpxg1frPwqfGne1e65WdVkU
-	EA0Js1hRqg5HXeA+Ti+mfMTxe0DblaizRysZuYiVlqFBtMZjg0BRCj6lX1ueQ4uQkU8pbrsEYR+
-	d
-X-Google-Smtp-Source: AGHT+IGpLtQq0H5iCUdoOPsdCAt5VRS4YQpvIHWiOc6SQmamTL+NGw8aOW9RqwiZ2NDkrnrpMD7IjSLJbok=
-X-Received: from pjbpv17.prod.google.com ([2002:a17:90b:3c91:b0:301:2679:9aa])
- (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e7c8:b0:2f4:432d:250d
- with SMTP id 98e67ed59e1d1-30b3a6715b7mr207404a91.21.1746641629056; Wed, 07
- May 2025 11:13:49 -0700 (PDT)
-Date: Wed,  7 May 2025 11:13:46 -0700
+        d=1e100.net; s=20230601; t=1746641908; x=1747246708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+ykkdjkXW3JCGwoicQaugKr7maJVyx5Tj8MypKlbh5U=;
+        b=pmmasT7Z9rm9gHPoo8CobJ/qnO1ICHdBBLQ4t7jdO+kgCZGPIDk1jIw9HvW7tX4zHD
+         TljsqWJsGSz0pHsjmIJdqsVEa1mFXfBGobHiEeRN2SIA+AI70qqppsRxZSQ3AY8SVhNT
+         /C70VyqvaqT5GydNFOfs0J8/za92RNLyNosYA2CMeJvdSmhVfkOFmyDA6dEKOeZ0dVvE
+         dm5FJnknvmnzdL4GlmMD9fciJ2RjgOqcskAxtwHlcaHWwT0vCDlN8esY+4Mg10t0+CRw
+         FQ8m5yrbMDhUh3pEpYpoivZ4t5vCBL4/kEVAZhzE/s4APeEiNGynZOJpV0rvFx8pu2AL
+         sewA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2yN2oOAUMIanOlUvAvfiT/U/hJ59v1ZM7OBPxmKaTMO16stV8J1BKDKMzUjZzWLGXPNy4gTEO7i0VgE3OHV6pdQ==@vger.kernel.org, AJvYcCWrnu1wnARoM/RgVrU3M0ZI6FbRpfWRxdFhBjTScE5z0cXqGV6MhVWVsL1OcdvGwHqYTE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDU8LQsBQm/7jSUEwgP13lDlXZQ7jqscfrrdUXogjQoFLOb20B
+	Fz0oBetuXQ5eKv7KkFwWsWZgeAGe7yqnYTtEzaDE9HAMkfqF7JNuXDZ+5j/2y7M513/kb7olOcL
+	aReRSj04B9rI6jGEjyzHeIJWa9k4=
+X-Gm-Gg: ASbGncv44jEsHF6D4cof92udIsSLeC7r52YPrTZssn7IxjQVUqApkR5gcJiBkgPnkvF
+	YpSVRI6Wuik/gGruXPC3Jd1S/mDPKSzjj2TqrgxU0se+etRnbPAPNjsTbM24TcRwSiPDkxbKpf+
+	7KwWrI9rmPdnFAUCw0k2psQcxnQoJgCQJUJFo2JFVnwu4TlYl6
+X-Google-Smtp-Source: AGHT+IEwrG04KfvN0Sm5IMEbJ31M92rsLJW5TODK5sQZ2RUKu4hFOhM/oejl+e88Nd9DQsT8cYykc74cVHm/k8rNnEQ=
+X-Received: by 2002:a05:6a20:3952:b0:1f5:5b77:3818 with SMTP id
+ adf61e73a8af0-2159b01b23bmr280952637.27.1746641908429; Wed, 07 May 2025
+ 11:18:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250507181346.1892103-1-yabinc@google.com>
-Subject: [PATCH v4] perf: Allocate non-contiguous AUX pages by default
-From: Yabin Cui <yabinc@google.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Yabin Cui <yabinc@google.com>
+MIME-Version: 1.0
+References: <20250506135727.3977467-1-jolsa@kernel.org> <20250506135727.3977467-4-jolsa@kernel.org>
+ <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
+ <aBsgQw1kzJsRzM5p@krava> <1392a5c9-f67b-49fe-9f05-f2bc63fe01bb@kernel.org>
+In-Reply-To: <1392a5c9-f67b-49fe-9f05-f2bc63fe01bb@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 7 May 2025 11:18:15 -0700
+X-Gm-Features: ATxdqUG9qEGa0gANWEJhzjvfK9b_Pt_XTKW096PXo3aMsFz6Rq3SZcpdKwec2Wg
+Message-ID: <CAEf4Bzar5Ai5WdaFvSPR_z8izoTE_Wejo-pewaH2FtQbm=nd7w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe
+ link info
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Yafang Shao <laoar.shao@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-perf always allocates contiguous AUX pages based on aux_watermark.
-However, this contiguous allocation doesn't benefit all PMUs. For
-instance, ARM SPE and TRBE operate with virtual pages, and Coresight
-ETR allocates a separate buffer. For these PMUs, allocating contiguous
-AUX pages unnecessarily exacerbates memory fragmentation. This
-fragmentation can prevent their use on long-running devices.
+On Wed, May 7, 2025 at 2:40=E2=80=AFAM Quentin Monnet <qmo@kernel.org> wrot=
+e:
+>
+> 2025-05-07 10:56 UTC+0200 ~ Jiri Olsa <olsajiri@gmail.com>
+> > On Tue, May 06, 2025 at 03:33:33PM -0700, Andrii Nakryiko wrote:
+> >> On Tue, May 6, 2025 at 6:58=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wr=
+ote:
+> >>>
+> >>> Adding support to display ref_ctr_offset in link output, like:
+> >>>
+> >>>   # bpftool link
+> >>>   ...
+> >>>   42: perf_event  prog 174
+> >>>           uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_=
+offset 50500538
+> >>
+> >> let's use hex for ref_ctr_offset?
+> >
+> > I had that, then I saw cookie was dec ;-) either way is fine for me
+>
+> I'm fine either way, but let's use the same base for the two values
+> please. If you want to change the cookie to hexa (in the plain output)
+> for better readability, that's OK as well (JSON output needs to remain a
+> decimal in both cases, of course).
 
-This patch modifies the perf driver to be memory-friendly by default,
-by allocating non-contiguous AUX pages. For PMUs requiring contiguous
-pages (Intel BTS and some Intel PT), the existing
-PERF_PMU_CAP_AUX_NO_SG capability can be used. For PMUs that don't
-require but can benefit from contiguous pages (some Intel PT), a new
-capability, PERF_PMU_CAP_AUX_PREFER_LARGE, is added to maintain their
-existing behavior.
+Why should cookie and offset use the same base? Offset is always
+address-like, so hex makes most sense there, 100%. But a cookie is
+most probably going to be some small value (index into array, or small
+number representing attachment point number, etc), so decimal is most
+natural. Importantly, BPF cookie can't really be a pointer (what will
+you do with it on BPF side?), so it's something a bit more
+human-driven, and thus decimal seems like a better default.
 
-Signed-off-by: Yabin Cui <yabinc@google.com>
----
-Changes since v3:
-Add comments and a local variable to explain max_order value
-changes in rb_alloc_aux().
-
-Changes since v2:
-Let NO_SG imply PREFER_LARGE. So PMUs don't need to set both flags.
-Then the only place needing PREFER_LARGE is intel/pt.c.
-
-Changes since v1:
-In v1, default is preferring contiguous pages, and add a flag to
-allocate non-contiguous pages. In v2, default is allocating
-non-contiguous pages, and add a flag to prefer contiguous pages.
-
-v1 patchset:
-perf,coresight: Reduce fragmentation with non-contiguous AUX pages for
-cs_etm
-
- arch/x86/events/intel/pt.c  |  2 ++
- include/linux/perf_event.h  |  1 +
- kernel/events/ring_buffer.c | 33 ++++++++++++++++++++++++---------
- 3 files changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index fa37565f6418..25ead919fc48 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1863,6 +1863,8 @@ static __init int pt_init(void)
- 
- 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries))
- 		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_NO_SG;
-+	else
-+		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_PREFER_LARGE;
- 
- 	pt_pmu.pmu.capabilities		|= PERF_PMU_CAP_EXCLUSIVE |
- 					   PERF_PMU_CAP_ITRACE |
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0069ba6866a4..56d77348c511 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -301,6 +301,7 @@ struct perf_event_pmu_context;
- #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
- #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-+#define PERF_PMU_CAP_AUX_PREFER_LARGE		0x0400
- 
- /**
-  * pmu::scope
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 5130b119d0ae..69c90ea1b79a 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -679,7 +679,19 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- {
- 	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
- 	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
--	int ret = -ENOMEM, max_order;
-+	/*
-+	 * True if the PMU needs a contiguous AUX buffer (CAP_AUX_NO_SG) or
-+	 * prefers large contiguous pages (CAP_AUX_PREFER_LARGE).
-+	 */
-+	bool use_contiguous_pages = event->pmu->capabilities & (
-+		PERF_PMU_CAP_AUX_NO_SG | PERF_PMU_CAP_AUX_PREFER_LARGE);
-+	/*
-+	 * Initialize max_order to 0 for page allocation. This allocates single
-+	 * pages to minimize memory fragmentation. This is overriden if
-+	 * use_contiguous_pages is true.
-+	 */
-+	int max_order = 0;
-+	int ret = -ENOMEM;
- 
- 	if (!has_aux(event))
- 		return -EOPNOTSUPP;
-@@ -689,8 +701,8 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 
- 	if (!overwrite) {
- 		/*
--		 * Watermark defaults to half the buffer, and so does the
--		 * max_order, to aid PMU drivers in double buffering.
-+		 * Watermark defaults to half the buffer, to aid PMU drivers
-+		 * in double buffering.
- 		 */
- 		if (!watermark)
- 			watermark = min_t(unsigned long,
-@@ -698,16 +710,19 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 					  (unsigned long)nr_pages << (PAGE_SHIFT - 1));
- 
- 		/*
--		 * Use aux_watermark as the basis for chunking to
--		 * help PMU drivers honor the watermark.
-+		 * If using contiguous pages, use aux_watermark as the basis
-+		 * for chunking to help PMU drivers honor the watermark.
- 		 */
--		max_order = get_order(watermark);
-+		if (use_contiguous_pages)
-+			max_order = get_order(watermark);
- 	} else {
- 		/*
--		 * We need to start with the max_order that fits in nr_pages,
--		 * not the other way around, hence ilog2() and not get_order.
-+		 * If using contiguous pages, we need to start with the
-+		 * max_order that fits in nr_pages, not the other way around,
-+		 * hence ilog2() and not get_order.
- 		 */
--		max_order = ilog2(nr_pages);
-+		if (use_contiguous_pages)
-+			max_order = ilog2(nr_pages);
- 		watermark = 0;
- 	}
- 
--- 
-2.49.0.1045.g170613ef41-goog
-
+>
+> Quentin
