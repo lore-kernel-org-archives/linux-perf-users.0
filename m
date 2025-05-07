@@ -1,158 +1,183 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B642B193062;
-	Wed,  7 May 2025 08:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36BB23C4E1;
+	Wed,  7 May 2025 09:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746608201; cv=none; b=h9150QpqXgG0xaJ00wkC+fRDaULqg+ScmN+4SjzPP08LJjQYzIAerE1tlWn8SbQi/XB31bdsFsD4oNPCOs7QETC0Xq45n+0dPk2MMDN0+uMxbIiHHUIxiaR2FmHLw52XBuo6AfQq6+ic1t0Zn+0VD881UadiyThjsR0qF135Mrg=
+	t=1746609303; cv=none; b=sRk69KjBgJB6Q9Hy9TlUo1q3ZiH1++bRTqig8FS96g932xjZSDjlx81uTPyAF4Y+OhOpy+HgFtvyIVCvc7sZU5Er0Fysyfp6DR0QijtL1dq98m3Cs2fK8LNvZlAnEULUnEMSD8oVcD1gjqaJmIYDN2mn7c01TFZyIrGyFMGd45w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746608201; c=relaxed/simple;
-	bh=YF0XBybdGev5P5laamOGvx0yuMkyeOtbHYbsvXl924w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mkW1WUOzKaUmnVOJH1Gksxh5Q/m1hP4XnwwNdcw5jrNWUURPlHQKZmby33TRaPDcI66xL2i1n6ej4cfip16cSHbUyfuZnMV+HjgOOldqPCWagA9s1brqWSvfmwBEHibxusc4i9fhBG84F/suyJOz19klF0py2sac3HAbrSBrUbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJMZeHPK; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746609303; c=relaxed/simple;
+	bh=8bzrdEFI6hGktiNjZu3XxSN3Ansccky9WP6hM1uEFvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VSwKHAj/FgKjMq7eKydUBWXbD90gsvy9/cametHrZDGOaGE8C7SNmS+nWUUxDFT3RAqqMZippYLmM7clPGwz/9KC+U7jFczQSJdTaUsZdxPo4eADea/QrbR/22Rxj3b6Lbgt50APondy/ctQ74xzD+POLe7C4Wuwqu616BRBGpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F4nSP2Fz; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJMZeHPK"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fbee929e83so678244a12.3;
-        Wed, 07 May 2025 01:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746608198; x=1747212998; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RtJrNEhTxPpRyYlS5ximO0nluwO8bWEvvP6btnNB21E=;
-        b=JJMZeHPKcibRmqMPIVAh+As1HV8FA7KXR1UslVcLladEtlFxZNjyiYScb8EwdaarzC
-         S5GJo7KwXiRUUnaY0HbsI+yfOsxGbQqTYWa0f+dkp85GucaSj+pd7E+s75SJ27zo7zff
-         Q/PJgHcseohQ0v8pVf29+aHlnXp6nYAKPTaKSuNqn+v9MK946KwKW/qPEorz620+ALLJ
-         8SEHqP05B8KSSpAMl0/Jf/FqA/VyriMUfOO2Wu3e0EgtqneSr+ch6QG7/x2eq2oujAtz
-         ZEmORYQ4UyH4/KlNscIoVD9M6BSYKEh709sX9HZV3fwKt5mfzhF6hKV0Q+YwwDDQaxxu
-         r/uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746608198; x=1747212998;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RtJrNEhTxPpRyYlS5ximO0nluwO8bWEvvP6btnNB21E=;
-        b=UYzEU3yE7eQJfcM4eDNaD/8csl+fHqVUDwt9+738pu0TYj24/pyc6mfuogzjDfF/Sa
-         n+ib6ZknD3P/yzYje78edhO7p0qL+cnHL3t9LHip9FB52OZB7P6wlcYWr8NuUeje+pNK
-         Ko27CtCJM+Slvv626cNctci1x3roWVccFhdgd0u4FKv9WZfrBbQyenl6ckVN+6wCYQxI
-         cX60dUO1iWhoOXB0vRTIavMaRSeZS02hQ7UjxCA303tl98RRIjs0LXbbRZ50ms1ghvPM
-         l0laf8ZWoIWlJ4sWeor4+O3exCp27RZztkJlLrcw5B64WEHqvSSNohLkzV2aqb6XwAr1
-         rgBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWH5MJXSkopgdgv8a9OzeCLfApdVoaBqyCmbdwk//UOOsDX2rl/GIDXU6Fyw4JzeH6L1z/dv5dDHGm3wdzy+Mz/Jg==@vger.kernel.org, AJvYcCXGyswD4+eDlZmsKrYPymhTB3epaX3dXFebgSatwbiFNFx9A3HdMtzierWaKUz19VUpO60=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ9CkWLACawDtYkzYoTmPYb89Qaer2QroBmnKbzSPwes2y8tTO
-	ybvnQH0HDJGmhSRi8QjljRH3wq8DvHZgK294RtaslfBavd2DN48S
-X-Gm-Gg: ASbGnctb2xLTtS8PH0qUfDv6JpwUJusNfDtvv1om7d+lNYzIrc93ZWd4Vg8ugyp8vsj
-	pCzafzROpUWJUVLXh01bozT5cuD7p6EX6RTKN8Srefe31t549NNeCN7UnYBk9vTddtz35ukS23g
-	eaQioXeUJu9zGxwmGJN+CIshJa1aA8UVLG2a/EAnJYQdwkca/OgJ0L4+tmw9vaQallsxOIBFfZE
-	XB1aiHm2JFQbko7zaf+N7l7m38nHxDPiReZ4IYi2gqrAmu9p+8lUlXtMLJMzmEXeOFZWn90IjZ/
-	JhLJfKHNs0jxwBdCs/ZRCLiKZNE=
-X-Google-Smtp-Source: AGHT+IGkqNN7KP/S/TA1argQXXGqtucTueWdiZvttJsrEcaRwxPxXI3wgtYKoiS0qQb8Z5uO5jIjYA==
-X-Received: by 2002:a17:907:2ce6:b0:ac7:b8d0:86c0 with SMTP id a640c23a62f3a-ad1e8b936c7mr252997266b.9.1746608197607;
-        Wed, 07 May 2025 01:56:37 -0700 (PDT)
-Received: from krava ([173.38.220.40])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189146f61sm866955566b.9.2025.05.07.01.56.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 01:56:37 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 7 May 2025 10:56:35 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Yafang Shao <laoar.shao@gmail.com>,
-	Quentin Monnet <qmo@kernel.org>
-Subject: Re: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe
- link info
-Message-ID: <aBsgQw1kzJsRzM5p@krava>
-References: <20250506135727.3977467-1-jolsa@kernel.org>
- <20250506135727.3977467-4-jolsa@kernel.org>
- <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F4nSP2Fz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=N6hxa7ktAI16FThLApG5BUFDutIZOY100z1nEuVdsWU=; b=F4nSP2FzZ8rKSWMhBjzEjDSXfc
+	z0A3zK1IOTGReBK/EpHD0aBhmsW2oNP7kbHRgPHTTUtnt2kktsrF0yOEe9ra4dEXCAT6KXzpP2uYR
+	Jg7RfQ5RUR9fBMXgRHAHWTHyhL612ZYnAnxFuYwPGXKLjWNlE7hym93yt0n6z+e953H8AFlgNea9a
+	myU1RrJLqJdpzCqyrZ//9TIuXE/t4qfzOgfQQordbCIfzKm/FPAHg7E3lDASVhcvEKnCVLFLag3Zf
+	N3Jfo8TXjFZ2GG1cmRMpkskB3h0cpZq3nLpZS97h6EU4nb3/arJfY4jA5mP0vK2K4rW9oPj1WAjq8
+	f6/K3HEA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uCarT-0000000FogU-247e;
+	Wed, 07 May 2025 09:14:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C9D82300780; Wed,  7 May 2025 11:14:42 +0200 (CEST)
+Date: Wed, 7 May 2025 11:14:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/9] x86/nmi: Add support to handle NMIs with source
+ information
+Message-ID: <20250507091442.GB4439@noisy.programming.kicks-ass.net>
+References: <20250507012145.2998143-1-sohil.mehta@intel.com>
+ <20250507012145.2998143-6-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
+In-Reply-To: <20250507012145.2998143-6-sohil.mehta@intel.com>
 
-On Tue, May 06, 2025 at 03:33:33PM -0700, Andrii Nakryiko wrote:
-> On Tue, May 6, 2025 at 6:58 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Adding support to display ref_ctr_offset in link output, like:
-> >
-> >   # bpftool link
-> >   ...
-> >   42: perf_event  prog 174
-> >           uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_offset 50500538
+On Tue, May 06, 2025 at 06:21:41PM -0700, Sohil Mehta wrote:
+> The NMI-source bitmap is delivered as FRED event data to the kernel.
+> When available, use NMI-source based filtering to determine the exact
+> handlers to run.
 > 
-> let's use hex for ref_ctr_offset?
-
-I had that, then I saw cookie was dec ;-) either way is fine for me
-
+> Activate NMI-source based filtering only for Local NMIs. While handling
+> platform NMI types (such as SERR and IOCHK), do not use the source
+> bitmap. They have only one handler registered per type, so there is no
+> need to disambiguate between multiple handlers.
 > 
-> and also, why do we have bpf_cookie and cookie emitted? Are they different?
-
-hum, right.. so there's bpf_cookie retrieval from perf_link through the
-task_file iterator:
-
-  cbdaf71f7e65 bpftool: Add bpf_cookie to link output
-
-I guess it was added before we decided to have bpf_link_info.perf_event
-interface, which seems easier to me
-
-jirka
-
+> Some third-party chipsets may send NMI messages with a hardcoded vector
+> of 2, which would result in bit 2 being set in the NMI-source bitmap.
+> Skip the local NMI handlers in this situation.
 > 
-> >           bpf_cookie 3735928559
-> >           pids test_progs(1820)
-> >
-> >   # bpftool link -j | jq
-> >   [
-> >     ...
-> >     {
-> >       "id": 42,
-> >        ...
-> >       "ref_ctr_offset": 50500538,
-> >     }
-> >   ]
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/bpf/bpftool/link.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-> > index 52fd2c9fac56..b09aae3a191e 100644
-> > --- a/tools/bpf/bpftool/link.c
-> > +++ b/tools/bpf/bpftool/link.c
-> > @@ -380,6 +380,7 @@ show_perf_event_uprobe_json(struct bpf_link_info *info, json_writer_t *wtr)
-> >                            u64_to_ptr(info->perf_event.uprobe.file_name));
-> >         jsonw_uint_field(wtr, "offset", info->perf_event.uprobe.offset);
-> >         jsonw_uint_field(wtr, "cookie", info->perf_event.uprobe.cookie);
-> > +       jsonw_uint_field(wtr, "ref_ctr_offset", info->perf_event.uprobe.ref_ctr_offset);
-> >  }
-> >
-> >  static void
-> > @@ -823,6 +824,8 @@ static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
-> >         printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
-> >         if (info->perf_event.uprobe.cookie)
-> >                 printf("cookie %llu  ", info->perf_event.uprobe.cookie);
-> > +       if (info->perf_event.uprobe.ref_ctr_offset)
-> > +               printf("ref_ctr_offset %llu  ", info->perf_event.uprobe.ref_ctr_offset);
-> >  }
-> >
-> >  static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
-> > --
-> > 2.49.0
-> >
+> Bit 0 of the source bitmap is set by the hardware whenever a source
+> vector was not used while generating an NMI, or the originator could not
+> be reliably identified. Poll all the registered handlers in that case.
+> 
+> When multiple handlers need to be executed, adhere to the existing
+> priority scheme and execute the handlers registered with NMI_FLAG_FIRST
+> before others.
+> 
+> The logic for handling legacy NMIs is unaffected since the source bitmap
+> would always be zero.
+> 
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> ---
+> v5: Significantly simplify NMI-source handling logic.
+>     Get rid of a separate lookup table for NMI-source vectors.
+>     Adhere to existing priority scheme for handling NMIs.
+> ---
+>  arch/x86/kernel/nmi.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index a1d672dcb6f0..183e3e717326 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+
+>  static int nmi_handle(unsigned int type, struct pt_regs *regs)
+>  {
+>  	struct nmi_desc *desc = nmi_to_desc(type);
+> +	unsigned long source_bitmap = 0;
+
+	unsigned long source = ~0UL;
+
+>  	nmi_handler_t ehandler;
+>  	struct nmiaction *a;
+>  	int handled=0;
+> @@ -148,16 +164,40 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+>  
+>  	rcu_read_lock();
+>  
+> +	/*
+> +	 * Activate NMI source-based filtering only for Local NMIs.
+> +	 *
+> +	 * Platform NMI types (such as SERR and IOCHK) have only one
+> +	 * handler registered per type, so there is no need to
+> +	 * disambiguate between multiple handlers.
+> +	 *
+> +	 * Also, if a platform source ends up setting bit 2 in the
+> +	 * source bitmap, the local NMI handlers would be skipped since
+> +	 * none of them use this reserved vector.
+> +	 *
+> +	 * For Unknown NMIs, avoid using the source bitmap to ensure all
+> +	 * potential handlers have a chance to claim responsibility.
+> +	 */
+> +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL)
+> +		source_bitmap = fred_event_data(regs);
+
+	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL) {
+		source = fred_event_data(regs);
+		if (source & BIT(0))
+			source = ~0UL;
+	}
+
+>  	/*
+>  	 * NMIs are edge-triggered, which means if you have enough
+>  	 * of them concurrently, you can lose some because only one
+>  	 * can be latched at any given time.  Walk the whole list
+>  	 * to handle those situations.
+> +	 *
+> +	 * However, NMI-source reporting does not have this limitation.
+> +	 * When NMI-source information is available, only run the
+> +	 * handlers that match the reported vectors.
+>  	 */
+>  	list_for_each_entry_rcu(a, &desc->head, list) {
+>  		int thishandled;
+>  		u64 delta;
+>  
+> +		if (source_bitmap && !match_nmi_source(source_bitmap, a))
+> +			continue;
+
+		if (!(souce & BIT(a->source_vector)))
+			continue;
+
+>  		delta = sched_clock();
+>  		thishandled = a->handler(type, regs);
+>  		handled += thishandled;
