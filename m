@@ -1,168 +1,149 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F158CBA38;
-	Wed,  7 May 2025 02:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED053273F9;
+	Wed,  7 May 2025 08:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746584812; cv=none; b=FBHV+Yfb9VIWzvZnVHkj0h9RUVWCHjrbDna4wLdt742zbPxMfGZxnaR/8O3B0e6rs56Qsedkb87yB2gGcI8s3+WhtsK5rLCGzjp9ckiMPx7LpXcUZidQkvSph03Fz3JximSqX60ziRxszFC9oXcT7+HK9aFuOD5KKMNBqQ3aCBY=
+	t=1746606163; cv=none; b=QluZ4P1QKVQ5FYGDkABnEYTI2qe+NBgWSLmyKS6VlgsVPSnCjUYjM3dKD7YVAWbRvrXIkMw1/L70pZACk5TfzySvIJSD6XhyNJTpXK2oSZXV7XultoahwFpVmBvrQZKpL4dKnlk4kN8vNhJuv+iTOJcOjDN1y6TymF+krYuN0m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746584812; c=relaxed/simple;
-	bh=T9tRu5SD300+EflneLEIAzFh5F8Y1bienABnSapwQeE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KyrNFcy/JdLOHbp5o3GIjqfjkutHdQsEiB25ILSVubTjrlLm7Wdu5XgCNmZC6Q707gQN4bryOMemHg2L+vXFGX6m14/K1qBI7W2aaKqS1yyx8U2h7r5gFE2+5RO7+WkpViE6Um9oxF0Yfsshxp2jvw893GfneWqZWFVegX4kK8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fWDR+lM8; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746606163; c=relaxed/simple;
+	bh=pm/x4yL4ynHqji5f94ZWEII9oNZb9GpYQx4Qg6pHT/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M42wWx6SmkQyl35tJ2nAaJjq7nhB7IF1ra6yjPxDMOMABetY7DZd/GJ5g+QELh4FQT7SXhKFtjB20QtwzAhxKqzEnOK5U3jkVo2mX+8nbh98229f+dgTdvYuaw+LjBEoZb80RAaQ7+mJ+gLdS3V2mGW8EZsstqRWGoTvmtQFxig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WvRWxpmd; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWDR+lM8"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8fb83e137so61329116d6.0;
-        Tue, 06 May 2025 19:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746584810; x=1747189610; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpWGvheQhS+DNg7fxr9VaJH2DOJjS8jMhgJEonuQaUs=;
-        b=fWDR+lM8PncwLl1kEWKgIMMUjFQoA1LLJOj+MnlDW3WUvLnkKc5QIEcV9EN7oxa1mS
-         hzbpa3wwiH8H2eLPaRRUrMjS/yJtSMde3J1QQ/jQdNAeLWVzePPRY9v0POAM7uRG89EX
-         EFbLavNYfKGvXdV0QCL3YEJmuiGCjCCB/CKSRzXmnyNMYYA1OL4/m3oeKOIRLH5d3MpF
-         FURLIE5osbGeBt5ndubEOnNe/pz+8sg9XVfFeeh+cOooQfw2ldG2rquJF2M874ryMLsJ
-         qYjsAXN4iLGgpsACK0u1ImRH4ZPFb0Ah2nwS85XUeWjXYZbhw30tIvTgZEmkWkbz8BOJ
-         flwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746584810; x=1747189610;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpWGvheQhS+DNg7fxr9VaJH2DOJjS8jMhgJEonuQaUs=;
-        b=k9y4I3wnPQd4RbBxt1tpXPo96XolpcT2e1ZyH3MUATfd5wao8F/OfvlUPHBl9htNej
-         VEK7F5LqxLqplm0fD5s5RhB2am9f3NApH8+srDp+yniLaQmzWNIdaJmHMOE7Q6x/8KcQ
-         zog/AMCUqWMU/wdC3AVlH1RyYugTLpty41JTH/s1u8/scHaRXWSE3++i7mnLpSONk0G1
-         lCcmXtDhCI2bVtpDfvZnPjkDQ5e4H0bopvoEbILYtQcJlgNV+l/WjaSEoH+5FdZDWjqI
-         WL3YfdjNfv4feDySSr9byq85GcgLhoP8fxO1dY3W6JZaNobsCb89DvMYENYdcRrf+2S8
-         yRrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLm+JT4xoz6jwAYuexDETHpdyMd9nMZdTCThH2PV8dMgjIocnSJR9CXIlk0gQcS5mJF1fZh7BTkqZhoHnojdTxSQ==@vger.kernel.org, AJvYcCW+OvnQu0uSiyy0IGBQMEcKeYi7A3tXqWXWWy2aINhY214slb+HPtZ6ZECs/vKo6PvfQ/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrqdBu8/dZzaVvuVr0Ovflfq45XydBElko/imGUla/FgVruDmg
-	iRdTnu3qzxa8o1ElCH5DQMLU8u3T6LQFvvsL+TxlTK8DzlGWVPZVqWCAjf9VxMOoERlOEnVV040
-	+8zec5DAVyr1azXPoDduPf8R8j8w=
-X-Gm-Gg: ASbGnct8wKMSrs8K7twDRKtSN7LAlJukSX7DPh4b1WmvKAf7ENQeBZl7DCm5wMqmloq
-	iliKAyfBZOZQG9pSGfuYzQTfFF2KzEN3P32gUwebgt/zVufFHEPyNiLTRQ2/pUI/lb6uX/ZKiFP
-	1uafs/MftnO0Z05lNpaLC1ix8=
-X-Google-Smtp-Source: AGHT+IHck3whkXJkexNBhCky/liPLCcdzr0pwds9wgG7c8v/oMOnB4eS5sc35Hf3le2ntF8Tk3v3wdgBdYwpEm3QHKY=
-X-Received: by 2002:a05:6214:f05:b0:6f5:436:9e46 with SMTP id
- 6a1803df08f44-6f5429fc37amr26406666d6.15.1746584809795; Tue, 06 May 2025
- 19:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WvRWxpmd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dZYqAlHezITuF/Jo/pYWYXAIRG3sFn0xWBaAQsF1gug=; b=WvRWxpmdFQwb7Y8W2h0NSxfsEL
+	UWuCjylwSxWE4S3uF5d6bftzRw9LMfYxyHMpa193wXJzmLv11yd5cu3T9W3gWFU36XJCXsL0kJnmM
+	NKBCnHY2NZcfgRStd2Zk7dw/1FTdNnJIficcCFz7ESA7R5+XkXBd62b8sxRW2LLOMBpeZDpa2s5aQ
+	2TRD+MGG+Kpu2RE5jFIUVqIHWkYlSbq3jID2qJLRrLB2ELd53QFo0T9wnAHMM94n+4vFSR4UTQBo3
+	D5viJw6wGtHnBXYwer75H2S+OiOSrmVT74MogNJ309Kt60Cq3FtWwxTVPo3ELXFaZ4b9D4ilPw+kU
+	LZupus0Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uCa2i-0000000FoF4-3Rza;
+	Wed, 07 May 2025 08:22:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 66035300780; Wed,  7 May 2025 10:22:16 +0200 (CEST)
+Date: Wed, 7 May 2025 10:22:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/9] x86/nmi: Assign and register NMI-source vectors
+Message-ID: <20250507082216.GA4439@noisy.programming.kicks-ass.net>
+References: <20250507012145.2998143-1-sohil.mehta@intel.com>
+ <20250507012145.2998143-5-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506135727.3977467-1-jolsa@kernel.org> <20250506135727.3977467-3-jolsa@kernel.org>
-In-Reply-To: <20250506135727.3977467-3-jolsa@kernel.org>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Wed, 7 May 2025 10:26:13 +0800
-X-Gm-Features: ATxdqUGqu4CSpwD4XlH84XS6zttaYkOi3zAYlyMUh_MeHJm9kLB5LYfq_ultkUw
-Message-ID: <CALOAHbAWHz_64QHXEaiRk1xaCQDU77b7EwY3dpkPrSyNYxcayw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/3] selftests/bpf: Add link info test for
- ref_ctr_offset retrieval
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Quentin Monnet <qmo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507012145.2998143-5-sohil.mehta@intel.com>
 
-On Tue, May 6, 2025 at 9:57=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding link info test for ref_ctr_offset retrieval for both
-> uprobe and uretprobe probes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On Tue, May 06, 2025 at 06:21:40PM -0700, Sohil Mehta wrote:
 
-LGTM
-Acked-by: Yafang Shao <laoar.shao@gmail.com>
-
-> ---
->  .../selftests/bpf/prog_tests/fill_link_info.c  | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c b/to=
-ols/testing/selftests/bpf/prog_tests/fill_link_info.c
-> index e59af2aa6601..e40114620751 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-> @@ -37,6 +37,7 @@ static noinline void uprobe_func(void)
->  static int verify_perf_link_info(int fd, enum bpf_perf_event_type type, =
-long addr,
->                                  ssize_t offset, ssize_t entry_offset)
->  {
-> +       ssize_t ref_ctr_offset =3D entry_offset /* ref_ctr_offset for upr=
-obes */;
->         struct bpf_link_info info;
->         __u32 len =3D sizeof(info);
->         char buf[PATH_MAX];
-> @@ -97,6 +98,7 @@ static int verify_perf_link_info(int fd, enum bpf_perf_=
-event_type type, long add
->         case BPF_PERF_EVENT_UPROBE:
->         case BPF_PERF_EVENT_URETPROBE:
->                 ASSERT_EQ(info.perf_event.uprobe.offset, offset, "uprobe_=
-offset");
-> +               ASSERT_EQ(info.perf_event.uprobe.ref_ctr_offset, ref_ctr_=
-offset, "uprobe_ref_ctr_offset");
->
->                 ASSERT_EQ(info.perf_event.uprobe.name_len, strlen(UPROBE_=
-FILE) + 1,
->                                   "name_len");
-> @@ -241,20 +243,32 @@ static void test_uprobe_fill_link_info(struct test_=
-fill_link_info *skel,
->                 .retprobe =3D type =3D=3D BPF_PERF_EVENT_URETPROBE,
->                 .bpf_cookie =3D PERF_EVENT_COOKIE,
->         );
-> +       const char *sema[1] =3D {
-> +               "uprobe_link_info_sema_1",
-> +       };
-> +       __u64 *ref_ctr_offset;
->         struct bpf_link *link;
->         int link_fd, err;
->
-> +       err =3D elf_resolve_syms_offsets("/proc/self/exe", 1, sema,
-> +                                      (unsigned long **) &ref_ctr_offset=
-, STT_OBJECT);
-> +       if (!ASSERT_OK(err, "elf_resolve_syms_offsets_object"))
-> +               return;
+> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+> index f0a577bf7bba..b9beb216f2d0 100644
+> --- a/arch/x86/include/asm/nmi.h
+> +++ b/arch/x86/include/asm/nmi.h
+> @@ -57,6 +57,38 @@ struct nmiaction {
+>  	u8			source_vector;
+>  };
+>  
+> +/**
+> + * NMI-source vectors are used to identify the origin of an NMI and to
+> + * route the NMI directly to the appropriate handler.
+> + *
+> + * On CPUs that support NMI-source reporting with FRED, receiving an NMI
+> + * with a valid vector sets the corresponding bit in the NMI-source
+> + * bitmap. The bitmap is delivered as FRED event data on the stack.
+> + * Multiple NMIs are coalesced in the NMI-source bitmap until the next
+> + * NMI delivery.
+> + *
+> + * If an NMI is received without a vector or beyond the defined range,
+> + * the CPU sets bit 0 of the NMI-source bitmap.
+> + *
+> + * Vector 2 is reserved for external NMIs related to the Local APIC -
+> + * LINT1. Some third-party chipsets may send NMI messages with a
+> + * hardcoded vector of 2, which would result in bit 2 being set in the
+> + * NMI-source bitmap.
+> + *
+> + * The vectors are in no particular priority order. Add new vector
+> + * assignments sequentially in the list below.
+> + */
+> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sources */
+> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector 2 */
+> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
 > +
-> +       opts.ref_ctr_offset =3D *ref_ctr_offset;
->         link =3D bpf_program__attach_uprobe_opts(skel->progs.uprobe_run,
->                                                0, /* self pid */
->                                                UPROBE_FILE, uprobe_offset=
-,
->                                                &opts);
->         if (!ASSERT_OK_PTR(link, "attach_uprobe"))
-> -               return;
-> +               goto out;
->
->         link_fd =3D bpf_link__fd(link);
-> -       err =3D verify_perf_link_info(link_fd, type, 0, uprobe_offset, 0)=
-;
-> +       err =3D verify_perf_link_info(link_fd, type, 0, uprobe_offset, *r=
-ef_ctr_offset);
->         ASSERT_OK(err, "verify_perf_link_info");
->         bpf_link__destroy(link);
-> +out:
-> +       free(ref_ctr_offset);
->  }
->
->  static int verify_kmulti_link_info(int fd, bool retprobe, bool has_cooki=
-es)
-> --
-> 2.49.0
->
+> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
 
+Are these really independent NMI vectors, or simply NMI source reporting bits?
 
---=20
-Regards
-Yafang
+Because if they are not NMI vectors, naming them such is confusing.
+
+Specifically, is there a latch per source?
+
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index be93ec7255bf..a1d672dcb6f0 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -184,6 +184,11 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+>  
+>  	raw_spin_lock_irqsave(&desc->lock, flags);
+>  
+> +	WARN_ON_ONCE(action->source_vector >= NMIS_VECTORS_MAX);
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) || type != NMI_LOCAL)
+> +		action->source_vector = 0;
+
+How about:
+
+	WARN_ON_ONCE(type != NMI_LOCAL && action->source_vector);
+
+instead?
