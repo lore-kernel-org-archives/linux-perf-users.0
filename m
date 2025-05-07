@@ -1,187 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731101BCA07;
-	Wed,  7 May 2025 01:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63AABA38;
+	Wed,  7 May 2025 02:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746580895; cv=none; b=SRiG9J/5v0YIpdqsootpIIUaMKfIZN/XFdj6p/JC+Fufs53WQwzYJTX45I6RSFpg9osfMjQYWrq7WNlSHIzC30qqrV189b+YZ3Rxh9v6qlS8vLK5xniw8mVahm/lVMMDAKlY8ecp+a8kmqwaHKpHWzl6IYjrkAhOdxXVeP3lpHA=
+	t=1746584323; cv=none; b=Cx89EQRPDWCrCOTLsJNMT3891MaHO/pNimseymws31sRvvYs51QcNPWOTJnpy6MrHj5ki9nokgRNnI8osj7J3NxmYWAf7FLJFl2oVHIAMOL5oXg9JRxPWP0v7pqJcPSMMVccEAxv86q/cpOgiIdedZ/VUDJAK3k9cVS7RwXoJ7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746580895; c=relaxed/simple;
-	bh=edU4z1uYW4G0oPnEqlkumseThNzJ3IpnbOl27q6GHKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hN3Yo59AbcOD5yhjRupt+XvIPx+sTJ12Lui7LKYPmn7CFf9k6g9tZa5j0AI22x2FOE7FmQwc5Y91Kb6yKLGj9yjHVZ1mPqogixzI49jB8E1TEPpfTvzW8xd4rpC7QGWGsUbzOqJVV7Kk822QlS5XU9y5WncNMuE3r2KLR1IE3j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T35X9xUB; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746584323; c=relaxed/simple;
+	bh=+4wEaXY1Q2OpDK61tuib2GPcqsE/z8bw55i5VbDquoU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b3gxgkySzx++DVEmYSb+XuF1BlRJNY2d+jLfTB/tCNTY0FqG8KgPSV6nARpCJH3llN23sGiquOQrB9qT8sIjuiF9Iet+8A1V7MHqpHGqCcirT9rXy1wP4HlU0UQjeOHjPxqc5FscQTzAu0YeLZmkAqbWY60y8u+cDlJzcuUQp28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gYa9SUBC; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T35X9xUB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746580890; x=1778116890;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=edU4z1uYW4G0oPnEqlkumseThNzJ3IpnbOl27q6GHKs=;
-  b=T35X9xUBuDImWiN2OtOjbiLiPvWJ6LYeFyBBB0TuN7wZn1rmpowUpqxb
-   s4ODwAXi+3I95zxJjugum5Yz0xQm1g5kgT/tU3Q7LAEjGm+gbHJ9iYyPV
-   9J975fD7jjo9ClbFnwWYEbnBJqAH8ybsAJE4eX3nmZmqVgDHQXHRE5da7
-   nyG+iPYxu0arLcag4svA0mDgXCpsiQCirnkGMLzzdAlkqX2PJ7wJIcjtF
-   A7hj2Bh9Rd3GsTuE3ZftWTvua3n/yRuCd3b0q1ZIoT7rMeCG6VxVBIfgQ
-   3WegPcVeaqByM9TbEWaqNlDR83Q5e576flPZQunLrG5kmW6duHVvOuknp
-   w==;
-X-CSE-ConnectionGUID: M6mWRWmpTReVCIqegAVVmw==
-X-CSE-MsgGUID: gfNRS2GWRwGRCIZ8msuDkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="47384041"
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="47384041"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 18:21:28 -0700
-X-CSE-ConnectionGUID: WFLsTaPVS/SK+jJfVEQ7jQ==
-X-CSE-MsgGUID: k2h7TXjyR7SIN+Jy8mIiKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="136808763"
-Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by fmviesa009.fm.intel.com with ESMTP; 06 May 2025 18:21:28 -0700
-From: Sohil Mehta <sohil.mehta@intel.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 9/9] x86/nmi: Include NMI-source information in tracepoint and debug prints
-Date: Tue,  6 May 2025 18:21:45 -0700
-Message-ID: <20250507012145.2998143-10-sohil.mehta@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250507012145.2998143-1-sohil.mehta@intel.com>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYa9SUBC"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f544014883so937486d6.0;
+        Tue, 06 May 2025 19:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746584320; x=1747189120; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4yctemJmdsE3vWYVvWZtCXsrMclPy1lOHqA26FMsE2Q=;
+        b=gYa9SUBChMrm/6sWdTk9MAb+3K6xn2EyWfP/5RKxd/GJo3r9rDBpnGJzfgsZ2i4qxZ
+         zYan/ui7CkxVaEZmNBJTpvuHsBlGAvLIZ4sL0n8eACS3WuRn95FnGy9OwsD5yLhRUq74
+         hGK+D6qFEvhQVa2xpQaY4LfhigxQXnr7YxHCfKOWuzmR6lfBPAxTKD4ykVTchnXl++ko
+         sxx+NotkLyiZuW55ZJ/42g8OtL6po88PgOehVGewHfsDLOyNGG0cNkv7PYBD36H0NeXc
+         rkiX6QWQJLcnUQ4YBRFXlxaQvGyexxrCB7hxtdCVNNbG6BkgYwT13w1kF1S6ABlmk+c0
+         XVLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746584320; x=1747189120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4yctemJmdsE3vWYVvWZtCXsrMclPy1lOHqA26FMsE2Q=;
+        b=MI6n0tQzctECa+FXqdwh791BjjLKr49OCMdYruhzUH+GkGrybNvHfRWsrqdQYicDj7
+         JoCGWMu/W2dFQZbWZyYRTcxmyUFSH+W3BGS7vxlbRQk/hQ90XmGbFZlMRZKSP26qDMOl
+         EFgTtH9QubXWJ3x7Z51YzMw/03LIbg7lr5aLlzmckjua6gazM9hrOsc0oBJO60Pt1Sva
+         dX1jUEvYGRQFSS50XEsh5m9TACZ3Dmvw/EYlBjddTw+wFvwnQdW0pQfTmcK9hA/gzX7l
+         a/zIG4EY7jnCP7bwTwXS7WZo79Fg9Z3auco4B0ZTiZdkeijlyBmV5OByDZtQCfCPAOHi
+         oveQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSDTD0IyFJApaHmakgZLp6XgihZ2iLnBu/alwb6+BaixGakIK84sVdCSrutU08Ij6CQ3Y=@vger.kernel.org, AJvYcCW6PB/I+m3RT1VmfVUM/lIgy4BrWDcsgYI+UkKtO9hbN0xEf0+WCBzeJMr02svX0WnacWs0n+83Q8aBNC7En/NNLA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqvYjmqgES5tLLs+0rhEgp7/gQhfLJMGoAwOD1sVITflAAMsHR
+	f2qSwnjeq8WGiCE5pX/hF/+z7N5lWESXbWyXzUqTdyxYqws06ESHL7DZmRWqRoj9MCPqZQQ+NxX
+	7TjVfA0DioGIMMYWMvrpBi3btTzQobS2Z
+X-Gm-Gg: ASbGncvd7oyk68GS7smx8Wv5/Q06XyUw/Lk8znoX6iymw+gAKMqJGXz/k/1cXfujjYQ
+	BiowxNMPjV+KY4F97fPd2/PAnE+PJoy6qk9Dqd/TGworV9OkXdGtcK7WugHupBUy70vX8svaloW
+	Dbs7ntBhYYl3utVqgHdkmrPfQ=
+X-Google-Smtp-Source: AGHT+IHqu3ORyAnXZo4ZZNXaCNvEiVJD2fgs1PqPMfJONl0rxeJaMlFqxp/Cve3ShusQT37MECY3ypBgItWXcL/UgoQ=
+X-Received: by 2002:a05:6214:d47:b0:6e6:684f:7f78 with SMTP id
+ 6a1803df08f44-6f5429b4190mr30689716d6.3.1746584320477; Tue, 06 May 2025
+ 19:18:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250506135727.3977467-1-jolsa@kernel.org> <20250506135727.3977467-2-jolsa@kernel.org>
+In-Reply-To: <20250506135727.3977467-2-jolsa@kernel.org>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Wed, 7 May 2025 10:18:04 +0800
+X-Gm-Features: ATxdqUEIoqC70hSX0uHnGRk1LHHd81MZyM1n2t3Xby6Ul3NefJjtzWMd3mMo3Vg
+Message-ID: <CALOAHbBL9oyxJah1+=VbhAXWtQe0Cmm2nLo=vhpJv1LNkGyLOA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/3] bpf: Add support to retrieve ref_ctr_offset
+ for uprobe perf link
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Quentin Monnet <qmo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The NMI-source bitmap is the most critical information provided by the
-NMI-source reporting feature. It can help identify issues when multiple
-NMIs occur simultaneously or if certain NMI handlers consistently
-misbehave. It is also very useful in debugging unknown NMIs since it can
-pinpoint the exact source that caused the NMI.
+On Tue, May 6, 2025 at 9:57=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding support to retrieve ref_ctr_offset for uprobe perf link,
+> which got somehow omitted from the initial uprobe link info changes.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Add the source bitmap to the nmi_handler() tracepoint. Also, print the
-bitmap along with the "Unknown NMI" kernel log message.
+LGTM
+Acked-by: Yafang Shao <laoar.shao@gmail.com>
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
----
-v5: New patch
----
- arch/x86/kernel/nmi.c      |  5 ++++-
- include/trace/events/nmi.h | 13 ++++++++-----
- 2 files changed, 12 insertions(+), 6 deletions(-)
+> ---
+>  include/uapi/linux/bpf.h       | 1 +
+>  kernel/bpf/syscall.c           | 5 +++--
+>  kernel/trace/trace_uprobe.c    | 2 +-
+>  tools/include/uapi/linux/bpf.h | 1 +
+>  4 files changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 71d5ac83cf5d..16e95398c91c 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -6724,6 +6724,7 @@ struct bpf_link_info {
+>                                         __u32 name_len;
+>                                         __u32 offset; /* offset from file=
+_name */
+>                                         __u64 cookie;
+> +                                       __u64 ref_ctr_offset;
+>                                 } uprobe; /* BPF_PERF_EVENT_UPROBE, BPF_P=
+ERF_EVENT_URETPROBE */
+>                                 struct {
+>                                         __aligned_u64 func_name; /* in/ou=
+t */
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index df33d19c5c3b..4b5f29168618 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -3800,14 +3800,14 @@ static int bpf_perf_link_fill_kprobe(const struct=
+ perf_event *event,
+>  static int bpf_perf_link_fill_uprobe(const struct perf_event *event,
+>                                      struct bpf_link_info *info)
+>  {
+> +       u64 ref_ctr_offset, offset;
+>         char __user *uname;
+> -       u64 addr, offset;
+>         u32 ulen, type;
+>         int err;
+>
+>         uname =3D u64_to_user_ptr(info->perf_event.uprobe.file_name);
+>         ulen =3D info->perf_event.uprobe.name_len;
+> -       err =3D bpf_perf_link_fill_common(event, uname, &ulen, &offset, &=
+addr,
+> +       err =3D bpf_perf_link_fill_common(event, uname, &ulen, &offset, &=
+ref_ctr_offset,
+>                                         &type, NULL);
+>         if (err)
+>                 return err;
+> @@ -3819,6 +3819,7 @@ static int bpf_perf_link_fill_uprobe(const struct p=
+erf_event *event,
+>         info->perf_event.uprobe.name_len =3D ulen;
+>         info->perf_event.uprobe.offset =3D offset;
+>         info->perf_event.uprobe.cookie =3D event->bpf_cookie;
+> +       info->perf_event.uprobe.ref_ctr_offset =3D ref_ctr_offset;
+>         return 0;
+>  }
+>  #endif
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index 3386439ec9f6..d9cf6ed2c106 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -1489,7 +1489,7 @@ int bpf_get_uprobe_info(const struct perf_event *ev=
+ent, u32 *fd_type,
+>                                     : BPF_FD_TYPE_UPROBE;
+>         *filename =3D tu->filename;
+>         *probe_offset =3D tu->offset;
+> -       *probe_addr =3D 0;
+> +       *probe_addr =3D tu->ref_ctr_offset;
+>         return 0;
+>  }
+>  #endif /* CONFIG_PERF_EVENTS */
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bp=
+f.h
+> index 71d5ac83cf5d..16e95398c91c 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -6724,6 +6724,7 @@ struct bpf_link_info {
+>                                         __u32 name_len;
+>                                         __u32 offset; /* offset from file=
+_name */
+>                                         __u64 cookie;
+> +                                       __u64 ref_ctr_offset;
+>                                 } uprobe; /* BPF_PERF_EVENT_UPROBE, BPF_P=
+ERF_EVENT_URETPROBE */
+>                                 struct {
+>                                         __aligned_u64 func_name; /* in/ou=
+t */
+> --
+> 2.49.0
+>
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 183e3e717326..b9ece0b63ca7 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -202,7 +202,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 		thishandled = a->handler(type, regs);
- 		handled += thishandled;
- 		delta = sched_clock() - delta;
--		trace_nmi_handler(a->handler, (int)delta, thishandled);
-+		trace_nmi_handler(a->handler, (int)delta, thishandled, source_bitmap);
- 
- 		nmi_check_duration(a, delta);
- 	}
-@@ -387,6 +387,9 @@ unknown_nmi_error(unsigned char reason, struct pt_regs *regs)
- 	pr_emerg_ratelimited("Uhhuh. NMI received for unknown reason %02x on CPU %d.\n",
- 			     reason, smp_processor_id());
- 
-+	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-+		pr_emerg_ratelimited("NMI-source bitmap is 0x%lx\n", fred_event_data(regs));
-+
- 	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
- 		nmi_panic(regs, "NMI: Not continuing");
- 
-diff --git a/include/trace/events/nmi.h b/include/trace/events/nmi.h
-index 18e0411398ba..6e4a1ff70a44 100644
---- a/include/trace/events/nmi.h
-+++ b/include/trace/events/nmi.h
-@@ -10,29 +10,32 @@
- 
- TRACE_EVENT(nmi_handler,
- 
--	TP_PROTO(void *handler, s64 delta_ns, int handled),
-+	TP_PROTO(void *handler, s64 delta_ns, int handled, unsigned long source_bitmap),
- 
--	TP_ARGS(handler, delta_ns, handled),
-+	TP_ARGS(handler, delta_ns, handled, source_bitmap),
- 
- 	TP_STRUCT__entry(
- 		__field(	void *,		handler	)
- 		__field(	s64,		delta_ns)
- 		__field(	int,		handled	)
-+		__field(	unsigned long,	source_bitmap)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->handler = handler;
- 		__entry->delta_ns = delta_ns;
- 		__entry->handled = handled;
-+		__entry->source_bitmap = source_bitmap;
- 	),
- 
--	TP_printk("%ps() delta_ns: %lld handled: %d",
-+	TP_printk("%ps() delta_ns: %lld handled: %d source_bitmap: 0x%lx",
- 		__entry->handler,
- 		__entry->delta_ns,
--		__entry->handled)
-+		__entry->handled,
-+		__entry->source_bitmap)
- );
- 
- #endif /* _TRACE_NMI_H */
- 
--/* This part ust be outside protection */
-+/* This part must be outside protection */
- #include <trace/define_trace.h>
--- 
-2.43.0
 
+--=20
+Regards
+Yafang
