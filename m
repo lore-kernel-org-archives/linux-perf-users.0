@@ -1,139 +1,95 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082F2376;
-	Tue,  6 May 2025 22:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1310ABA34;
+	Wed,  7 May 2025 00:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746570829; cv=none; b=a9EF0zsMNV0TmZIlqUs26RnvPdip2ehUzQUgvtlOKB15WzY1eVSjzF5PDJjW3xa9SgsksrT0iC8VZsB3e0Wo4Sf5WcGm1NHXReVetA337ZkRuCTnJUQelZqddvvR+wfHqa6bLEFBJ6zj4SwKcmdfCjnEeK03mzJEABYYjuBaYUU=
+	t=1746578794; cv=none; b=UJrWIdWiMwc53Fzv9KbhA2lVKoeXEgU96jQyM/uclhus8K/5yfOUfb6ys50iZaJuEes8/cpuY1o9Ov4Zh+niIwyDr2rVGe8Nm3DyncXpaqWSIyYtSOzi886bmXxp7IhuKYCKJ33uk/z7rh6l/bKnVJgPwcTy7t6U+Nw4HPoEAzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746570829; c=relaxed/simple;
-	bh=Z6Cu6uLDLqCjsTrHz4tZK/0V/DvOEPcQ9/3zXvM+WLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eN5iwTTIG4p4Onz7LobWN0+k4/9GhR5wCg3PARncGhUBeyYy4sTdUMB7yO0zmzp17N4SxKQuPjE7CzJmmqp+u/t9DID1c93ti6sfB2f1FKpmSMMoy6bDLiI9IrBJqREOCkiL9WYbN179lwaUQ1zPAAlsINOHIvdU4qt3HjvAi0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXapaie2; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746578794; c=relaxed/simple;
+	bh=+A5NJ5+jxCm9l0AgQ7gorxymnsY8EJzbQp8wownW+dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sceNDLIMM5LK+Wn5iWDReXUrO3T8//qbJKNqM2tQAi+erPTXjAjY2TjmfYEDg6I+VTyIgFlJ4kOkK1LIeLpmoD+HiVaEXSt38pb4Ww/gGoBaLkTBhgC/qmxZbXDMXEI/KXAJdcUsIQ7d2oFybKZqRzRCZzT7zfw3JBohs09epbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcQnjx4K; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXapaie2"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so5279981a12.3;
-        Tue, 06 May 2025 15:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746570827; x=1747175627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ztsAI3tt7LcUXIIXknbAsi0ywBlmlwHCJZfAYlrtiA=;
-        b=FXapaie2Vc+2r8Kd5mmLAzLZMFGul+qDjUK24h4rRqzHELApvu5DwkkoVRYJ+wKIa6
-         p65kNwuH/jmisgIpMIxmbMsN2POF4/By5PlerFNIwOUqLfQIMc++/tEGhIUI0ZhnnOdI
-         FmeJMD01RsgDs4Lse438HwfHim49wj0F3JbKaNuckFA/jmzfbsAii9hAcR/yK+Jkp3kc
-         hGrmV8aO9kjbhGrj0pJ2ZdmVnnAtw8d1Qeg0NnQPUc4J+7CFx6g1Xg12mmxsSq1QycAO
-         plESCvVHfkD8Je8DF4QXd1qO5w2+8lGDvdMxhXqYbeud+kg4xfXVi4DGjnioIxhq2NYc
-         0tXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746570827; x=1747175627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0ztsAI3tt7LcUXIIXknbAsi0ywBlmlwHCJZfAYlrtiA=;
-        b=vNdRXD598ve4/JKNMYVf6vW7QBQPlUmRTkdwr4yQGaXQMapAey7aF2rIqQHuYMOhRZ
-         MfDHnXcczClRr9+luWsUy3N/3eI++XPHHHZiThklRPS/1XooW0v8L2SA0QxNVRFxIWD/
-         krlo9kSAKHta7CtnHTPjpTwTp3NhApzkv1quHLylBDz1uPZkMGRlE0tMt3UWdhnhPH+O
-         QEZ0eu6ryuvAoJxoKq25FNlIfmt5pXVMSQ7NLq4lVKQs6M7OkkxdAQjPZt+eEwGpNYgT
-         fPKOcNaLrWT4VP4fXlqwehAsf6v8xtjzlE/qAJWvGtqNCJXgiJ0+EIAPzFjtlinVn64K
-         Wy3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUsED64PUU8Z/IskAn7+VWkJEYfvYsSaUEKRTMjpzeGTU0iEeDqP4GTrpn3mnJgZxsTfNw=@vger.kernel.org, AJvYcCWes7R+1gAnrPIdFcTFeLmoInlPoOBa9V0uukDHB21E4VvQT2PGAtUkZ+gVqBihCFmYDghhr8p8uZ2uu+JO+vuS3A==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0qf7sqxN5C+DhyW4x+38i3pGZVrzjZ4e7HuH54UesrrnWtR9K
-	6a7ZFKYtQXV+vLVz+vGbXfuRu0amQR2ECd4osdoNLC56GSsxptnlA3jMX4eIRDSqGBzlbTCvD0i
-	Va0ECf/+yDXVvkRVZtVWgyf3YkJk=
-X-Gm-Gg: ASbGnctLSGMcsi8mpa0BHDBI04kdUEZlF1Pz0id8TLzBzoovxpOWLDI42rpCm+yWKDc
-	qDJs4VRvqSmZP6nP3/rqMbJ9CPRwU/MQioH2ptLrvPnm+4TeOkB8Qza8o5FUPiBY5W7xZfArwCw
-	MUrqwL/v1f26Ebg4ctpV5Td9BTdBiAuVGqyDm+CQ==
-X-Google-Smtp-Source: AGHT+IH46l0FIeRyH+MYoGlRN88I3II5+z0dX/Rr+XfLGINfG5d0VJB+T10DQzUXa2KL886Fv1+jNhJ2jPh+00VDvRM=
-X-Received: by 2002:a17:90b:2d06:b0:2ea:5dea:eb0a with SMTP id
- 98e67ed59e1d1-30aac160befmr1731900a91.4.1746570827116; Tue, 06 May 2025
- 15:33:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcQnjx4K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746578793; x=1778114793;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+A5NJ5+jxCm9l0AgQ7gorxymnsY8EJzbQp8wownW+dc=;
+  b=fcQnjx4KEQNvH4+v5rvCkCODezS14upNzyGV4QEqx5tVCusqkJj6Z3ke
+   pI2P8tQuegBBp/j9T6VyzeaXQAeqPY+puY6pD3QQHfuvf16ZV2fQlA1Ye
+   w+Yy6yFJYw37eC+AEIhJCC1IZE6yM14FP2aJnlRi2Ik5kBaKq2hwALVaS
+   df8qFEewHlXKv0aJPqt5kEQ7ASvvEOgB7Qg/mGzvrI3BE9OPCOea0hrwo
+   W/XaRTdCWzwabRf0qmRMx1T6hKm9S0n45bUnv2yo6JmUEPEmfhSJO+WCV
+   O64uz1PbTbOgGSB16bWXPa7nQSBXWSSRLOj2t2sr3+XSY+K8ZlORGc03q
+   A==;
+X-CSE-ConnectionGUID: xwwEusAMRFOa8zInuDacdw==
+X-CSE-MsgGUID: 0nnmH39fQSy03iGF2yNfyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="51932183"
+X-IronPort-AV: E=Sophos;i="6.15,267,1739865600"; 
+   d="scan'208";a="51932183"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 17:46:33 -0700
+X-CSE-ConnectionGUID: E4wGvNi4Tl+mgOx7GOxyag==
+X-CSE-MsgGUID: mTwCQj6CSNiurqeHblQLPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,267,1739865600"; 
+   d="scan'208";a="136305613"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 17:46:26 -0700
+Message-ID: <faacb266-4b2a-4b96-b324-9b6aa3379830@linux.intel.com>
+Date: Wed, 7 May 2025 08:46:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506135727.3977467-1-jolsa@kernel.org> <20250506135727.3977467-4-jolsa@kernel.org>
-In-Reply-To: <20250506135727.3977467-4-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 6 May 2025 15:33:33 -0700
-X-Gm-Features: ATxdqUFQxJiSboYf4ST_YuQwx0r_j09hJFyA_TWeI3gHv8AFDz7xUUpR7RHhtn0
-Message-ID: <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe
- link info
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Yafang Shao <laoar.shao@gmail.com>, Quentin Monnet <qmo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
+ <aBpmycjTn4Xo4Hc4@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aBpmycjTn4Xo4Hc4@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 6, 2025 at 6:58=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding support to display ref_ctr_offset in link output, like:
->
->   # bpftool link
->   ...
->   42: perf_event  prog 174
->           uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_offs=
-et 50500538
 
-let's use hex for ref_ctr_offset?
+On 5/7/2025 3:45 AM, Sean Christopherson wrote:
+> On Tue, May 06, 2025, Dapeng Mi wrote:
+>> Hi Sean,
+>>
+>> Not sure if you have bandwidth to review this mediated vPMU v4 patchset?
+> I'm getting there.  I wanted to get through all the stuff I thought would likely
+> be ready for 6.16 as-is before moving onto the larger series.
 
-and also, why do we have bpf_cookie and cookie emitted? Are they different?
+Got it. Thanks.
 
->           bpf_cookie 3735928559
->           pids test_progs(1820)
->
->   # bpftool link -j | jq
->   [
->     ...
->     {
->       "id": 42,
->        ...
->       "ref_ctr_offset": 50500538,
->     }
->   ]
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/bpf/bpftool/link.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-> index 52fd2c9fac56..b09aae3a191e 100644
-> --- a/tools/bpf/bpftool/link.c
-> +++ b/tools/bpf/bpftool/link.c
-> @@ -380,6 +380,7 @@ show_perf_event_uprobe_json(struct bpf_link_info *inf=
-o, json_writer_t *wtr)
->                            u64_to_ptr(info->perf_event.uprobe.file_name))=
-;
->         jsonw_uint_field(wtr, "offset", info->perf_event.uprobe.offset);
->         jsonw_uint_field(wtr, "cookie", info->perf_event.uprobe.cookie);
-> +       jsonw_uint_field(wtr, "ref_ctr_offset", info->perf_event.uprobe.r=
-ef_ctr_offset);
->  }
->
->  static void
-> @@ -823,6 +824,8 @@ static void show_perf_event_uprobe_plain(struct bpf_l=
-ink_info *info)
->         printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
->         if (info->perf_event.uprobe.cookie)
->                 printf("cookie %llu  ", info->perf_event.uprobe.cookie);
-> +       if (info->perf_event.uprobe.ref_ctr_offset)
-> +               printf("ref_ctr_offset %llu  ", info->perf_event.uprobe.r=
-ef_ctr_offset);
->  }
->
->  static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
-> --
-> 2.49.0
+
 >
