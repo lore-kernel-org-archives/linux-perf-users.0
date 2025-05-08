@@ -1,115 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9E726F478;
-	Thu,  8 May 2025 14:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8649B7E792
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 May 2025 15:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715932; cv=none; b=rT5evFXbKDlwMc9FuPTFarNWxejP0VeuN9JNDrK9aa3otcQlOCEdZ+0F/mT9oOgdnCWaMjgjd/31rVo6hIneXRwdE/utdkf+npSCWVa66PwIcB6ig1AuyjbCqkqTas2yusZ9aTaS7itk6Ea2mUZA3unBcXpxlS/pbEciP6ancfc=
+	t=1746717078; cv=none; b=Vi28devrjoYBkeFtzk/wnbIT9uRZYgvbv9GA9G1NjbqxrGl+xed4mZw7cytp9cF2qfLCWWlxJ/Zs1fintpkceMYfo8dKMfSiusTjqklUsP9D+G2VEiJxwpmUgBWv4NLeHqYoB2Auy5807UnrGsyy8Un8tJ/bcKiKW1e/KO1l+rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715932; c=relaxed/simple;
-	bh=m9+dvvH99WOk1Q+YGo6PeA3k97JBnWhonrMgm9Unthw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sgohs6XQjd9Bs5++dPxZZ/EgXIkuvQQ8vSiXW445rdlwHjIsnXkPFaU53h2Rr9UTzMNrqZJ4V24m8TdO8ftZh8CKGOmGNZdo17cxAMfjsspeADLdSIjctjeU0LVKg0bjdeTBb+8aQkKHk8RqzONZumhp9USrcH28e4Omg4Hg/+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egLbwTX5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746717078; c=relaxed/simple;
+	bh=Bvl5ba3YwvsEiX7qFzTQrsZHe1T6nf+edYW5UyyKea4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I4iEPZ/YElXnDtrjyQdsqHIHRBZ5YvRL2cFaYTLyVuVq5EXbWz2yeQfJyLASj2aYmNuFsvMbrBvvcnI1tYxibFmbupwOi0/Ws3A8bY7f7jW33mQrNADcn+zwUNtXOc8OaJpQKFcguvWpj0+WcYNGSlAUb4b1pkU0TAOdua1NBeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e2T1lxaN; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egLbwTX5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842CDC4CEE7;
-	Thu,  8 May 2025 14:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746715932;
-	bh=m9+dvvH99WOk1Q+YGo6PeA3k97JBnWhonrMgm9Unthw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=egLbwTX5kYtcWDxF3pn+h6VTXTWbSAcexEh4T80EqMnZT8K3dD1DxveyRZl8dNWHF
-	 Bz8R0Tg7S0i3FFwyhV/YeWbXb5cmQbTumgVquKzqw8nALHHvpOJUQuyYOoaCOMT/k4
-	 DX13/JrDQOJpswCP4htG77iiUDstsLiVySJCsLY6ODNro4Co8VT8Y2A/6aehoLmfCN
-	 kGYElrH+djZQtFrObp8ha3Mj5tZ2nNkmEkULAq2XaFq1NUgFqe7Y3Ay343zkv0bC+v
-	 h3y6Pd38S5ty9c60ENFNakD/iCe0bPvjOV3xtB4pgesMSFWLWthUhpRdI/nMu8LI+c
-	 J+n+vAShgBMWA==
-Date: Thu, 8 May 2025 11:52:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix some more memory leaks
-Message-ID: <aBzFGKKubskQDLrs@x1>
-References: <20250401202715.3493567-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2T1lxaN"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so229135ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 May 2025 08:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746717075; x=1747321875; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cHfS18XLHw1fuH23fouICv2ZdP/LcvdC0OJaySiiGfE=;
+        b=e2T1lxaNeCi59Le6g1OQQtPEn6zezlnfCTETfES65jvKNwekNYw7M4sr2911S4AVLd
+         MHlyLfwHQhGKiSUjktszG5d95RhYqGM3QQJfje7PEiqk7M4W8RmYu5/2dzwj4u2NYff9
+         UbdDNN6A6hllzF4zU7HK7XtrwUngSvX0qcJm85fQOmxPERE0YbKE+g8Kea2bFnG2U9WV
+         gIUCufQPfg/aMTsi6SUnhFOPq5usMjNwFG4HONKBCot0WlSK/ikxfjdyfQQ3tyD5fFCe
+         a8+geMNfgqmIiNV5Hh+tO/6kSPE7TmmVSDLnvfcFe8Bjg0heRsWGPY0WXioFxyDf/Xc2
+         21Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746717075; x=1747321875;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cHfS18XLHw1fuH23fouICv2ZdP/LcvdC0OJaySiiGfE=;
+        b=gmjRp5UZqd+1i4kK15LAD5OfP18ySwB9xq4yhwbbePA1COTVKxuVYZQI5WBciLVfaS
+         OAacXC65dZyIwXHgnJOJOman8X0FGOS9sPnuHUES9BHcaV308VSbDeH2KWRLfmcAEk8O
+         5PdltMsVwfj2+je+Nixy3kUIz+IcfdaZD4CDt6ukTYB/DO/qzbG7wZqSxsoaT6SYsMmw
+         cV7+pJJ84PGs+5gTE/uAzw27ISwz0fFiw2lQEXCBt3Av63STn0GId82IOKeNYG/n/WbC
+         PpPnI4Aqglggj53E09sBaYt+Rxzy7CHoq2DgR4U7o7BsLBo6qt8T6T24ei+pN/XVydye
+         0ygQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdDgZx3ZZXBJWsnQtYoN2oGP4k6t7Xp7MnjhLY9+jDCIIYCMWtZU6iSquRVhEcB+u6IboSNETK2dLCboQD4xg/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXmcPsqgxKuhBQkmmkJn6rYVGBXuHZom6EgjhjrMKb5xoSkjxg
+	Yj7vMsut0OgZ9pvU7l3KxswF7VmR/4L87JKEPmXvAeQp4BnVcl1wh9PeEeTyyIVYYZNUwx/BJHe
+	sM2udr4E1uW6QwgvyzdOou3YRU8fZ0h23gYxq
+X-Gm-Gg: ASbGncsAM2esxgzhoDUR4llLRfphf5oV71LV4pNCI9jdeR5vEoh2bjSUPPItNSySx01
+	VMoqQltxCi7dPMMZub1HfEUty6euuRFigpjdQsjk8e+YOWR6Mvrs1E7hcdcCubHjG3wYYUPLO5p
+	o1IUYpwcQPflP8jtTTioxzA9BpMeU84Jik7r85RXVdzyc3vd/eHgg=
+X-Google-Smtp-Source: AGHT+IFFJVUbQXfgmM72qK+a/tgW1VnOX0I3j7G1qITzcwyR32vYuWtr/9hkpF6ADEctErBKN9iWetyfgg4nZJcpIAo=
+X-Received: by 2002:a92:cd8f:0:b0:3d9:6498:ea24 with SMTP id
+ e9e14a558f8ab-3da78cdd14amr3932905ab.6.1746717075312; Thu, 08 May 2025
+ 08:11:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250401202715.3493567-1-irogers@google.com>
+References: <20250507215939.54399-1-namhyung@kernel.org>
+In-Reply-To: <20250507215939.54399-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 8 May 2025 08:11:03 -0700
+X-Gm-Features: ATxdqUGIwKyO1AluhVQQEoLGtf3xZKIZYsFgUCWs6YV1c4qBENQQbw397sVgnp8
+Message-ID: <CAP-5=fWE=jquq9WqReAu+Mow4r6LPgOOvxEXb-L5vK+UwThjGw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf pmu: Use available core PMU for raw events
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025 at 01:27:15PM -0700, Ian Rogers wrote:
-> The files.max is the maximum valid fd in the files array and so
-> freeing the values needs to be inclusive of the max value.
-> 
-> Add missing thread__put of the found parent thread in
-> thread__e_machine.
+On Wed, May 7, 2025 at 2:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> When it finds a matching pmu for a legacy event, it should look for
+> core pmus.  The raw events also refers to core events so it should be
+> handled similarly.
+>
+> On x86, PERF_TYPE_RAW should match with the existing cpu PMU.  But on
+> ARM, there's no PMU with the matching type so it'll pick the first core
+> PMU for it.
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Split it into:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-⬢ [acme@toolbx perf-tools-next]$ git log --oneline -2
-7900938850645ed4 (HEAD -> perf-tools-next) perf trace: Add missing thread__put() in thread__e_machine()
-8830091383b03498 perf trace: Free the files.max entry in files->table
-⬢ [acme@toolbx perf-tools-next]$ 
+Thanks,
+Ian
 
-So that git --oneline is more descriptive, etc.
-
-Thanks, applied to perf-tools-next,
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-trace.c | 3 ++-
->  tools/perf/util/thread.c   | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 58a2ce3ff2db..c02ea4e8b270 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1657,7 +1657,7 @@ static const size_t trace__entry_str_size = 2048;
->  
->  static void thread_trace__free_files(struct thread_trace *ttrace)
->  {
-> -	for (int i = 0; i < ttrace->files.max; ++i) {
-> +	for (int i = 0; i <= ttrace->files.max; ++i) {
->  		struct file *file = ttrace->files.table + i;
->  		zfree(&file->pathname);
->  	}
-> @@ -1703,6 +1703,7 @@ static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pat
->  
->  	if (file != NULL) {
->  		struct stat st;
-> +
->  		if (stat(pathname, &st) == 0)
->  			file->dev_maj = major(st.st_rdev);
->  		file->pathname = strdup(pathname);
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index 89585f53c1d5..415c0e5d1e75 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -471,6 +471,7 @@ uint16_t thread__e_machine(struct thread *thread, struct machine *machine)
->  
->  		if (parent) {
->  			e_machine = thread__e_machine(parent, machine);
-> +			thread__put(parent);
->  			thread__set_e_machine(thread, e_machine);
->  			return e_machine;
->  		}
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
-> 
+>  tools/perf/util/pmus.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> index b99292de76693dbb..3bbd26fec78a10e2 100644
+> --- a/tools/perf/util/pmus.c
+> +++ b/tools/perf/util/pmus.c
+> @@ -727,14 +727,21 @@ struct perf_pmu *evsel__find_pmu(const struct evsel=
+ *evsel)
+>         legacy_core_type =3D
+>                 evsel->core.attr.type =3D=3D PERF_TYPE_HARDWARE ||
+>                 evsel->core.attr.type =3D=3D PERF_TYPE_HW_CACHE;
+> -       if (!pmu && legacy_core_type) {
+> -               if (perf_pmus__supports_extended_type()) {
+> -                       u32 type =3D evsel->core.attr.config >> PERF_PMU_=
+TYPE_SHIFT;
+> +       if (!pmu && legacy_core_type && perf_pmus__supports_extended_type=
+()) {
+> +               u32 type =3D evsel->core.attr.config >> PERF_PMU_TYPE_SHI=
+FT;
+>
+> -                       pmu =3D perf_pmus__find_by_type(type);
+> -               } else {
+> -                       pmu =3D perf_pmus__find_core_pmu();
+> -               }
+> +               pmu =3D perf_pmus__find_by_type(type);
+> +       }
+> +       if (!pmu && (legacy_core_type || evsel->core.attr.type =3D=3D PER=
+F_TYPE_RAW)) {
+> +               /*
+> +                * For legacy events, if there was no extended type info =
+then
+> +                * assume the PMU is the first core PMU.
+> +                *
+> +                * On architectures like ARM there is no sysfs PMU with t=
+ype
+> +                * PERF_TYPE_RAW, assume the RAW events are going to be h=
+andled
+> +                * by the first core PMU.
+> +                */
+> +               pmu =3D perf_pmus__find_core_pmu();
+>         }
+>         ((struct evsel *)evsel)->pmu =3D pmu;
+>         return pmu;
+> --
+> 2.49.0.987.g0cc8ee98dc-goog
+>
