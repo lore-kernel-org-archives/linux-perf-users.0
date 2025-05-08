@@ -1,192 +1,176 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C464278762
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 May 2025 15:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AF52CCC0;
+	Thu,  8 May 2025 16:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746718483; cv=none; b=LAOVgvl9DWV9+IShj0vwJhJIwco/pmOfRiZhCYCzKln/+cD5ON6FVhI0Yf/0WWIP5kTWfV9OCVw3jo5P9H33Ts4ZR+SV/KeUG66m513U+I4PWGjXCXYYijG7ml35BvMWavuFjtLFEVn/9gE5K2jIdrB5ldhpJ/2yO381Qn5tcls=
+	t=1746720192; cv=none; b=jI44SEU34bW7QZ3nrKgKd3Wi/uB09ZVMRwl0loHWGLKBs0TxOxyuyIsu9CEpoU4sZp/2bQ0O0CgVlbtgb5IBZu+NSaxIQvK+9JWnuQ+oLj/uLxVkicES5qaFQFP1fKmQyoWXP3xvQCqCDYtyEeYkg438NI3wRx5+YnRweX0QohE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746718483; c=relaxed/simple;
-	bh=gcIxBck903wC6+fYbT1hPtb7Kf1widiij7ZBobmZTSM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ovyXr+qM+cYeRYFs4aSFt1PTbeIHdtpFBD8w9m96p9byicKbh3mSXo0Qh8gsLSBvCSgrPTr0AoQVLT4q5vViCbPKMMqBatbrmWWXkQR0jCyjOcWAl63V7gOQN9yao8ld8P+TBps9nB2Pl4w3EsQi30ci7+WuyeFkVqSTYDFOyik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=on7dl3Xr; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="on7dl3Xr"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da73d35c11so188825ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 May 2025 08:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746718477; x=1747323277; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VXm0ZBrwABOf6g7AdY2Q3tjscZRI3pFxv+5nt0U5acw=;
-        b=on7dl3XrGaFTWqXZ33VLhr3+KiUlRjOnMG9JMXJwzKnUxuVqBTWrRHW/81Z9GxgaqH
-         qbGFtmz4mBBIUCu2VCLu7fAEzU8zMsGaY+0P+NaKGtqq6T5nW3O/GQ2KYnfmTs+qpis9
-         EgAEm8bG21KKvgQsdp8ZYKyT6R8vkgXwD32AKOQ1bC2OgCTZXMsqzYStt99nwn+BG/3y
-         A38wI5oDH4p/6JJriACzbJV8aXljjksMrNENGbIbBYcMiZYOc11/xdFAjT/WCrC+pUEr
-         lJx4MiW9riEkUJkgq0etBFK7fJXMtUIi4h+0uVmdorH7VYFIxMGWX5lL1kc8m5eBCaWl
-         2U1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746718477; x=1747323277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VXm0ZBrwABOf6g7AdY2Q3tjscZRI3pFxv+5nt0U5acw=;
-        b=HCEPrplzzySo45ra7NVQMmu+Q5kTud1aRGObK+sHtAWKRIIXdnM5bdC+SvWbgKGyLR
-         Sw00iJ13ijMNKUQAHnP5ww/wcV8ezbtjOvp2g6fkAtPb3VQiT0hy5aEDx8BJKCOjVfzM
-         Rf0t86GdpKx5NRkEId+7yoTVKHKb/Qma2eU/v1x/s7XIZ11/U/fu1x0oZOI66Vdw4BmU
-         SXSE4fv77UV1VZZOwNnvEclkZs5Zxub8bEVp8mA8q/ICcsUai5FqcKFD42+FILJjYHPy
-         bAmBepzjE0FJ0/63iy6f8g4J4VcPHeCHABdrs+6PMO+imHttYCYtTiWT1SLziCVEWM1Z
-         a1bA==
-X-Gm-Message-State: AOJu0YzAJl8kgQ2R6HKPWNfD+SAaD2+r1/2iKc7wdE9j2GOUvLIAMd5e
-	fmIV7erCtTyAvlqIwN4oQ2myb2JXuRreH7S6ljBh7bULXrxzOYPbRGOaNt1btupd2YbWRflWUDy
-	Btzgop52tAFI78E9bdz72RTWQyieIVnNzxalI
-X-Gm-Gg: ASbGncuVTbO9xW1ueY9sJYRYteiX8xMVA+ajsC25jYHmO8Im03LLmY3yBdkHZPO+CPb
-	PivtK9BH6BraPGhmfkOIyu8EHlThuJgg5GAPbZOz818+59/odlQ0VFXYSpU54ijkG37UxMhCoiL
-	2wdXIVm4z2D71fe8QxHzKexJRS7DwvUAGRxiO1f8byKUDjobkI8bg=
-X-Google-Smtp-Source: AGHT+IEmY29VLIxcHiOy88IrSXPvl4jrcnZ6oWdUWj9VlZWcwMFb59eThp1T3HbGq0HsKPusqumJ/JFwaYe/0SvE2tE=
-X-Received: by 2002:a05:6e02:338f:b0:3d5:bb1f:843e with SMTP id
- e9e14a558f8ab-3da796a4745mr3873215ab.29.1746718477199; Thu, 08 May 2025
- 08:34:37 -0700 (PDT)
+	s=arc-20240116; t=1746720192; c=relaxed/simple;
+	bh=CDfe11rcN0+pev+XPdEEOzZuVEPrSuLFZ/WBZH4YLkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RlhA8m/br3FVIHbgSfdTXXAvZ0r4ITte/zhRDhL/baHrcHdS5aAx6eOvjSF0/0m1zO22GzMoBejusReXv1bpDTuJWt5dS4cFG+UysQoB1ZCiHM9EVHIf3ocIPvpRPWaXkYpwhACfl7F9T/e2rrAh1yJwo02CmjWTMy/C884Fg4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18695C4CEEB;
+	Thu,  8 May 2025 16:03:09 +0000 (UTC)
+Date: Thu, 8 May 2025 12:03:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark Brown
+ <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
+ <jordalgo@meta.com>, Sam James <sam@gentoo.org>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
+ Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu
+ <wnliu@google.com>, Blake Jones <blakejones@google.com>, Beau Belgrave
+ <beaub@linux.microsoft.com>, "Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
+Message-ID: <20250508120321.20677bc6@gandalf.local.home>
+In-Reply-To: <20250424162633.390748816@goodmis.org>
+References: <20250424162529.686762589@goodmis.org>
+	<20250424162633.390748816@goodmis.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1746627307.git.sandipan.das@amd.com> <CAP-5=fUEeFb3jh-MtxEEH0Z+HFAD0oxSc4uE66Rfg+BRzYRB5Q@mail.gmail.com>
- <9a76fcc7-a8e0-4b88-b93c-7dbf65bc695e@amd.com>
-In-Reply-To: <9a76fcc7-a8e0-4b88-b93c-7dbf65bc695e@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 8 May 2025 08:34:26 -0700
-X-Gm-Features: ATxdqUFgDyfNDRfGkNXB5R6CnIvZeH9JhkEGpxdXOLCOBuOArjupnMk_-ndllEQ
-Message-ID: <CAP-5=fU3fk79xtNAGwk35PCkiii=QoBdhbzit1Ax9OsEtrPExg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf vendor events amd: Address event errata
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Stephane Eranian <eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 3:56=E2=80=AFAM Sandipan Das <sandipan.das@amd.com> =
-wrote:
->
-> On 5/7/2025 9:26 PM, Ian Rogers wrote:
-> > On Wed, May 7, 2025 at 7:28=E2=80=AFAM Sandipan Das <sandipan.das@amd.c=
-om> wrote:
-> >>
-> >> Remove unreliable Zen 5 events and metrics. The following errata from
-> >> the Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors have
-> >> been addressed.
-> >> #1569 PMCx078 Counts Incorrectly in Unpredictable Ways
-> >> #1583 PMCx18E May Overcount Instruction Cache Accesses
-> >> #1587 PMCx188 May Undercount IBS (Instruction Based Sampling) Fetch Ev=
-ents
-> >>
-> >> The document can be downloaded from
-> >> https://bugzilla.kernel.org/attachment.cgi?id=3D308095
-> >
-> > Hi Sandipan,
-> >
-> > the document is somewhat brief, for example:
-> > ```
-> > 1583 PMCx18E May Overcount Instruction Cache Accesses
-> >
-> > Description
-> > If PMCx18E[IcAccessTypes] is programmed to 18x (Instruction Cache
-> > Miss) or 1Fx (All Instruction Cache Accesses) then the performance
-> > counter may overcount.
-> >
-> > Potential Effect on System
-> > Inaccuracies in performance monitoring software may be experienced.
-> >
-> > Suggested Workaround
-> > None
-> >
-> > Fix Planned
-> > No fix planned
-> > ```
-> > Given being able to count instruction cache accesses (for example) is
-> > a useful feature, would it be possible to change:
-> > ```
-> > -  {
-> > -    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
-> > -    "EventCode": "0x18e",
-> > -    "BriefDescription": "Instruction cache hits.",
-> > -    "UMask": "0x07"
-> > -  },
-> > ...
-> > ```
-> > to be say:
-> > ```
-> >   {
-> >     "EventName": "ic_tag_hit_miss.instruction_cache_hit",
-> >     "EventCode": "0x18e",
-> >     "BriefDescription": "Instruction cache hits. Note, this counter is
-> > affected by errata 1583.",
-> >     "UMask": "0x07",
-> >     "Experimental": "1"
-> >   },
-> > ```
-> > That is rather than remove the event, the event is tagged as
-> > experimental (taken to mean accuracy isn't guaranteed) and the errata
-> > is explicitly noted in the description. Currently the Experimental tag
-> > has no impact on what happens in the perf tool, for example, the
-> > "Deprecated" tag hides events in the `perf list` command and is
-> > commonly used when an event is renamed.
-> >
->
-> I agree that events like IC hits and misses are generally useful and am
-> fine with the idea of keeping them but my concern is that unless users
-> read the event description, there is no way for them to know if the
-> perf output that they are seeing may be unreliable. There is also no
-> guarantee that such events will be fixed in a future uarch. From a
-> quick glance, I couldn't find a mechanism that makes perf stat/report
-> show a warning for named events with known issues.
+On Thu, 24 Apr 2025 12:25:42 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-So I'm forgetting the flow, but rediscovering it. We do have an Errata
-json value as shown in:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json?h=3Dpe=
-rf-tools-next#n2
-```
-    {
-       "ArchStdEvent": "LD_RETIRED",
-       "Errata": "Errata AC03_CPU_52",
-       "BriefDescription": "Instruction architecturally executed,
-condition code check pass, load.
-Impacted by errata -"
-   },
-```
-It doesn't impact perf stat/record but it does get added to the event
-description for perf list:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/jevents.py?h=3Dperf-tools-next#n340
-```
-    if 'Errata' in jd:
-      extra_desc +=3D '  Spec update: ' + jd['Errata']
-```
-which means the perf list description ends up as "Instruction
-architecturally executed, condition code check pass, load. Impacted by
-errata -  Spec update: Errata AC03_CPU_52". We could change this so
-that the Errata is distinct in the encoded in perf json and then we
-could display the errata when perf stat/record parses the event. I'd
-be a little worried about this breaking things that parse perf's text
-output, but the impact would be limited to Zen5, Ampere and older
-Intel CPUs. We could also make the errata output conditional on
-passing a verbose flag to perf. Would just `perf list` support work
-for you or would the perf stat/record changes be a requirement for
-keeping these events?
+> +static void perf_event_callchain_deferred(struct callback_head *work)
+> +{
+> +	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
+> +	struct perf_callchain_deferred_event deferred_event;
+> +	u64 callchain_context = PERF_CONTEXT_USER;
+> +	struct unwind_stacktrace trace;
+> +	struct perf_output_handle handle;
+> +	struct perf_sample_data data;
+> +	u64 nr;
+> +
+> +	if (!event->pending_unwind_callback)
+> +		return;
+> +
+> +	if (unwind_deferred_trace(&trace) < 0)
+> +		goto out;
+> +
+> +	/*
+> +	 * All accesses to the event must belong to the same implicit RCU
+> +	 * read-side critical section as the ->pending_unwind_callback reset.
+> +	 * See comment in perf_pending_unwind_sync().
+> +	 */
+> +	guard(rcu)();
+> +
+> +	if (!current->mm)
+> +		goto out;
+> +
+> +	nr = trace.nr + 1 ; /* '+1' == callchain_context */
 
-Thanks,
-Ian
+Hi Namhyung,
+
+Talking with Beau about how Microsoft does their own deferred tracing, I
+wonder if the timestamp approach would be useful.
+
+This is where a timestamp is taken at the first request for a deferred
+trace, and this is recorded in the trace when it happens. It basically
+states that "this trace is good up until the given timestamp".
+
+The rationale for this is for lost events. Let's say you have:
+
+  <task enters kernel>
+    Request deferred trace
+
+    <buffer fills up and events start to get lost>
+
+    Deferred trace happens (but is dropped due to buffer being full)
+
+  <task exits kernel>
+
+  <task enters kernel again>
+    Request deferred trace  (Still dropped due to buffer being full)
+
+    <Reader catches up and buffer is free again>
+
+    Deferred trace happens (this time it is recorded>
+  <task exits kernel>
+
+How would user space know that the deferred trace that was recorded doesn't
+go with the request (and kernel stack trace) that was done initially)?
+
+If we add a timestamp, then it would look like:
+
+  <task enters kernel>
+    Request deferred trace
+    [Record timestamp]
+
+    <buffer fills up and events start to get lost>
+
+    Deferred trace happens with timestamp (but is dropped due to buffer being full)
+
+  <task exits kernel>
+
+  <task enters kernel again>
+    Request deferred trace  (Still dropped due to buffer being full)
+    [Record timestamp]
+
+    <Reader catches up and buffer is free again>
+
+    Deferred trace happens with timestamp (this time it is recorded>
+  <task exits kernel>
+
+Then user space will look at the timestamp that was recorded and know that
+it's not for the initial request because the timestamp of the kernel stack
+trace done was before the timestamp of the user space stacktrace and
+therefore is not valid for the kernel stacktrace.
+
+The timestamp would become zero when exiting to user space. The first
+request will add it but would need a cmpxchg to do so, and if the cmpxchg
+fails, it then needs to check if the one recorded is before the current
+one, and if it isn't it still needs to update the timestamp (this is to
+handle races with NMIs).
+
+Basically, the timestamp would replace the cookie method.
+
+Thoughts?
+
+-- Steve
+
+
+> +
+> +	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
+> +	deferred_event.header.misc = PERF_RECORD_MISC_USER;
+> +	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
+> +
+> +	deferred_event.nr = nr;
+> +
+> +	perf_event_header__init_id(&deferred_event.header, &data, event);
+> +
+> +	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
+> +		goto out;
+> +
+> +	perf_output_put(&handle, deferred_event);
+> +	perf_output_put(&handle, callchain_context);
+> +	perf_output_copy(&handle, trace.entries, trace.nr * sizeof(u64));
+> +	perf_event__output_id_sample(event, &handle, &data);
+> +
+> +	perf_output_end(&handle);
+> +
+> +out:
+> +	event->pending_unwind_callback = 0;
+> +	local_dec(&event->ctx->nr_no_switch_fast);
+> +	rcuwait_wake_up(&event->pending_unwind_wait);
+> +}
+> +
