@@ -1,111 +1,110 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EDD1D63F5;
-	Thu,  8 May 2025 20:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C8921D5B6;
+	Thu,  8 May 2025 20:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746737368; cv=none; b=J+uxW9slsbnJ+mWbLj/xyf0MgSUkc/koj+GCLJIgH2chNzaDd8RWCp/YNhFgnAzX+swxxV8Wjq5P1/oDZeippRpV5Z6c36ZQWaFB58Ad6iqzvhFlqtPh/xMDv/3XYlMe8T2r93Uz6Nik+m0y3NekZu44CSMHA6APqOMPTIo0z58=
+	t=1746737814; cv=none; b=S/LqkgJgJvd79d2zwYvXPLHwz9BU22eSllXpM+VC4FEeZbfxJ+Yu7vaTs8JqkgpBkTlWuITS1EH0iQ5lA9U5UfxUywlK1+f3IairCbaaDLvpua/53FF8RKGUr+yGtf6u2S8mf+R+0JMmiusowVOTiRIWpxFikI36A1uwozA7NsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746737368; c=relaxed/simple;
-	bh=QkqgnDA/kdh8NiKMnLO2InJpAElzsZBA/UFEt5uNoHU=;
+	s=arc-20240116; t=1746737814; c=relaxed/simple;
+	bh=NFIYZyU4ZlPO9IXNvf8D4jJ65kxgXjTKLnvESLhF03c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXLGmoVLpjkrb/3k6+4VTyG835exGDRcfDIJwMfa717KvpYTLAG7iYRHRO6WVDhA0f+23Gu6gc0mRvBzAY+kwjzirg/UX3CVpJ99yVe/CGDBLuvBV7tcEzTqLe+pgqzO5Jg0t9cheB+91Cfl7ZJqFnFthSheCNaqJQI1U8kiMyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JMlKqetr; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ifxtal4/m5MbMcvkYLOyZC08Myb7iCZan8yaoiD4XBzw2bjc3f/bXjUTxUPZst6auOIYL4ub3gKpqGwngDa1JT/cunz8ClDSQWrgKqTNz92X2cHHfSFb2J6Y6LIYrrp1qKnCThIF5FBKvgJURepLw+FnQAsntiVTcTKVzltHXMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JE89aymo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMlKqetr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hWA3Okv8QojCnFmChBVRHVH95q4ija3JUXWql+dARaA=; b=JMlKqetrrMtUUObbeNQXONoIA7
-	RnErBFgdchc1XcYIkkweQHs8M85/xeMPkYrP+Lin6DGHro+LgTJe9UsJPvYs1l3vvlFppiWEf8BtU
-	kJ71zS+0yd44w9BqgNw+HsgX259VwwAMdbbSY5U0cRoNh/E5BAXogPBxkwH4KV79UxGbors38PxB2
-	XOwhcrhaN50pNLdptVsvmZkr/AXoovtXirRdNbN9iB7rJ7zPuG3JOLZw6Ir7fPHsrnLl2YCCTCn/z
-	KNyjVfDwwCjamwCOgc7yAQUpxjLPGvf6jXrYhp84A1iuXhUFAo4iq76C5pmlIHHwSKBpxtzZxrxmm
-	EswnLwQg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uD8B1-0000000GAKv-02ZU;
-	Thu, 08 May 2025 20:49:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 61CB0300348; Thu,  8 May 2025 22:49:06 +0200 (CEST)
-Date: Thu, 8 May 2025 22:49:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JE89aymo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E47C4CEE7;
+	Thu,  8 May 2025 20:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746737813;
+	bh=NFIYZyU4ZlPO9IXNvf8D4jJ65kxgXjTKLnvESLhF03c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JE89aymo9TKHtwMSvprqGcsCA5HrnXMXJfsYd7TdOFEvd4U6zUiaF5jH/JYJ1JHAc
+	 ELFfBC4mndhFz7aQG9Ods6A/twTUWNgDqODb4L2/6PWvDv/CxZ9JXSrJqhWhFDDm73
+	 D0Zgi9VglaSEtkP2UfOtIcV6A5u4NaUvLVBO8F+RKOt79zEX0QNVjx7Up5F8xi/84D
+	 MumGob+/xu7Of9cRxx+MH2v5cUBTtYlDJlMTcYKot8ame3Q+iZLTLTDIqsHdNSpyhf
+	 h+o4zUSY3J3BWSnRYFonDD6M0dm3BsJgLgqlXqZnb4U8B2Vh35a/frXEHsjKrE5i+X
+	 HBF8z7ASebJaQ==
+Date: Thu, 8 May 2025 13:56:50 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Pasi Kallinen <paxed@alt.org>, 1104796@bugs.debian.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/9] x86/nmi: Add support to handle NMIs with source
- information
-Message-ID: <20250508204906.GJ4439@noisy.programming.kicks-ass.net>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com>
- <20250507012145.2998143-6-sohil.mehta@intel.com>
- <20250507091442.GB4439@noisy.programming.kicks-ass.net>
- <55527575-e3b8-4cf6-b09c-b81437e0c892@intel.com>
- <20250508121544.GH4439@noisy.programming.kicks-ass.net>
- <D368D488-6D4E-4590-8E98-A7D7CD5E7F20@zytor.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	Debian Bug Tracking System <submit@bugs.debian.org>
+Subject: Re: perf r5101c4 counter regression
+Message-ID: <aB0akj1BdBeY6YiI@google.com>
+References: <174654831962.2704.6099474499200154093.reportbug@deveel>
+ <aBpcvG2yBtrrTie-@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <D368D488-6D4E-4590-8E98-A7D7CD5E7F20@zytor.com>
+In-Reply-To: <aBpcvG2yBtrrTie-@eldamar.lan>
 
-On Thu, May 08, 2025 at 01:23:04PM -0700, H. Peter Anvin wrote:
-> On May 8, 2025 5:15:44 AM PDT, Peter Zijlstra <peterz@infradead.org> wrote:
+Hello,
 
-> >> Looks good, except when fred_event_data() returns 0. I don't expect it
-> >> to happen in practice. But, maybe with new hardware and eventually
-> >> different hypervisors being involved, it is a possibility.
-> >> 
-> >> We can either call it a bug that an NMI happened without source
-> >> information. Or be extra nice and do this:
-> >> 
-> >> if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL) {
-> >> 	source = fred_event_data(regs);
-> >> 	if (!source || (source & BIT(0)))
-> >> 		source = ~0UL;
-> >> }
-> >
-> >Perhaps also WARN about the !source case?
+On Tue, May 06, 2025 at 09:02:20PM +0200, Salvatore Bonaccorso wrote:
+> Hi,
 > 
-> A 0 should be interpreted such that NMI source is not available, e.g.
-> due to a broken hypervisor or similar.
+> Pasi Kallinen reported in Debian a regression with perf r5101c4
+> counter, initially it was found in
+> https://github.com/rr-debugger/rr/issues/3949 but said to be a kernel
+> problem.
 
-I'm reading that as an agreement for WARN-ing on 0. We should definitely
-WARN on broken hypervisors and similar.
+What's the '51' part?  I don't think it's defined.
+
+  $ grep . -r /sys/bus/event_source/devices/cpu/format/
+  /sys/bus/event_source/devices/cpu/format/event:config:0-7
+  /sys/bus/event_source/devices/cpu/format/pc:config:19
+  /sys/bus/event_source/devices/cpu/format/edge:config:18
+  /sys/bus/event_source/devices/cpu/format/offcore_rsp:config1:0-63
+  /sys/bus/event_source/devices/cpu/format/ldlat:config1:0-15
+  /sys/bus/event_source/devices/cpu/format/inv:config:23
+  /sys/bus/event_source/devices/cpu/format/umask:config:8-15
+  /sys/bus/event_source/devices/cpu/format/frontend:config1:0-23
+  /sys/bus/event_source/devices/cpu/format/cmask:config:24-31
+
+
+Nothing for bit 16, 20 and 22 on the 'config' field.
+
+Is it possible to fix rr to use a correct event encoding instead?
+
+Thanks,
+Namhyung
+
+> 
+> On Tue, May 06, 2025 at 07:18:39PM +0300, Pasi Kallinen wrote:
+> > Package: src:linux
+> > Version: 6.12.25-1
+> > Severity: normal
+> > X-Debbugs-Cc: debian-amd64@lists.debian.org, paxed@alt.org
+> > User: debian-amd64@lists.debian.org
+> > Usertags: amd64
+> > 
+> > Dear Maintainer,
+> > 
+> > perf stat -e r5101c4 true
+> > 
+> > reports "not supported".
+> > 
+> > The counters worked in kernel 6.11.10.
+> > 
+> > I first noticed this not working when updating to 6.12.22.
+> > Booting back to 6.11.10, the counters work correctly.
+> 
+> Does this ring a bell?
+> 
+> Would you be able to bisect the changes to identify where the
+> behaviour changed?
+> 
+> Regards,
+> Salvatore
