@@ -1,176 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AF52CCC0;
-	Thu,  8 May 2025 16:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369542741CF;
+	Thu,  8 May 2025 16:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746720192; cv=none; b=jI44SEU34bW7QZ3nrKgKd3Wi/uB09ZVMRwl0loHWGLKBs0TxOxyuyIsu9CEpoU4sZp/2bQ0O0CgVlbtgb5IBZu+NSaxIQvK+9JWnuQ+oLj/uLxVkicES5qaFQFP1fKmQyoWXP3xvQCqCDYtyEeYkg438NI3wRx5+YnRweX0QohE=
+	t=1746720333; cv=none; b=Nz7mD5+UHpoUaimzrnvjn+i/igWY8p3AL1jI+VWChilGS65Irif1tvnSKRZ+UNgBblsHXy08PM9KU2bs/Hg3SLIJvL6HAx6+T6z0ZFXUu96Bzsuj9+SqtC7dwl7x049OIwPhpB5QleCw2fpCvXbNlax9yPdLYHmf9L72pc8cgyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746720192; c=relaxed/simple;
-	bh=CDfe11rcN0+pev+XPdEEOzZuVEPrSuLFZ/WBZH4YLkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RlhA8m/br3FVIHbgSfdTXXAvZ0r4ITte/zhRDhL/baHrcHdS5aAx6eOvjSF0/0m1zO22GzMoBejusReXv1bpDTuJWt5dS4cFG+UysQoB1ZCiHM9EVHIf3ocIPvpRPWaXkYpwhACfl7F9T/e2rrAh1yJwo02CmjWTMy/C884Fg4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18695C4CEEB;
-	Thu,  8 May 2025 16:03:09 +0000 (UTC)
-Date: Thu, 8 May 2025 12:03:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark Brown
- <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
- <jordalgo@meta.com>, Sam James <sam@gentoo.org>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
- Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu
- <wnliu@google.com>, Blake Jones <blakejones@google.com>, Beau Belgrave
- <beaub@linux.microsoft.com>, "Jose E. Marchesi" <jemarch@gnu.org>
-Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
-Message-ID: <20250508120321.20677bc6@gandalf.local.home>
-In-Reply-To: <20250424162633.390748816@goodmis.org>
-References: <20250424162529.686762589@goodmis.org>
-	<20250424162633.390748816@goodmis.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746720333; c=relaxed/simple;
+	bh=7qKKMZlG0QuZoiFYx7gS6XYcKRcAoqo6IoP4i1tWvJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RV4KAVjWDcvRyXFd/aHv9jw0g65s7ghv/GF8S70hoV6JBk9IBV27oMd8D+Dfno2m7b0Z8E78ZViuGcKjtTriiyCHY6XQ3qVuTz3PEagBNgk0cwusUSWVpK68WSdkiP/RkXFsu9bWwMPqu0SI9bo+AhMAqtwCR3I2RkiAssC0a04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqeHmpOB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqeHmpOB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B3EC4CEEE;
+	Thu,  8 May 2025 16:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746720332;
+	bh=7qKKMZlG0QuZoiFYx7gS6XYcKRcAoqo6IoP4i1tWvJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FqeHmpOBQqETvRlV5GVxhUmf/qQBptjCQLA9hn/rjJ8WgEOhuyCBSPu8PidtNbaOA
+	 7qpua65wZ9eHfBgm1JZO0XW/cTZ5PsU7l4i0VnqrODcSEGcuDy1lHaNvKzaVCQEWSG
+	 fzXNRK/lqmOVle7lLymH+6enSvpZYz+650ilKNDNTVYu5LvkCQoFY9Adc8zPNgW5OW
+	 DHrsi3psbMF+hbvEITF503hPk9whLjHTAdAiwAvE1DSrVv1+sstypkh14A6z2DkMYk
+	 Yvr/CnDaP9xYEQnXE6U91mMZJbQuCgRK2Z3UC5+u+svvEN76p5r2UftObYM5EiVa4/
+	 4VAypCjNmRP5A==
+Date: Thu, 8 May 2025 13:05:29 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Levi Yun <yeoreum.yun@arm.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Andi Kleen <ak@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Weilin Wang <weilin.wang@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] NMI warning and debug improvements
+Message-ID: <aBzWSTzjSW97FlBN@x1>
+References: <20250402201549.4090305-1-irogers@google.com>
+ <18c2fb33-2b3a-4ebe-ab26-8cebe0b6b94c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <18c2fb33-2b3a-4ebe-ab26-8cebe0b6b94c@linux.intel.com>
 
-On Thu, 24 Apr 2025 12:25:42 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Apr 02, 2025 at 04:33:25PM -0400, Liang, Kan wrote:
+> 
+> 
+> On 2025-04-02 4:15 p.m., Ian Rogers wrote:
+> > The NMI warning wouldn't fire even if all the events were for one PMU
+> > type. Remove a nearby, and no longer useful, mixed hardware event
+> > group function. Improve the evlist to string function and dump it in
+> > verbose mode after the reordered events warning.
+> > 
+> > As commonly happens legacy events like instructions will be uniquified
+> > to hybrid events like cpu_core/instructions/, even though the
+> > encodings differ. To make this correct either:
+> > https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
+> > or:
+> > https://lore.kernel.org/linux-perf-users/20250109222109.567031-1-irogers@google.com/
+> > needs merging.
+> > 
+> > v3: Increase the verbose dump length from 1024 to 2048 as requested by
+> >     Kan Liang.
+> > 
+> > v2: Rename evlist__has_hybrid to evlist__has_hybrid_pmus and add a
+> >     max_length parameter to evlist__format_evsels as suggested by Kan
+> >     Liang.
+> > 
+> > Ian Rogers (5):
+> >   perf stat: Better hybrid support for the NMI watchdog warning
+> >   perf stat: Remove print_mixed_hw_group_error
+> >   perf evlist: Refactor evlist__scnprintf_evsels
+> >   perf evlist: Add groups to evlist__format_evsels
+> >   perf parse-events: Add debug dump of evlist if reordered
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-> +static void perf_event_callchain_deferred(struct callback_head *work)
-> +{
-> +	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
-> +	struct perf_callchain_deferred_event deferred_event;
-> +	u64 callchain_context = PERF_CONTEXT_USER;
-> +	struct unwind_stacktrace trace;
-> +	struct perf_output_handle handle;
-> +	struct perf_sample_data data;
-> +	u64 nr;
-> +
-> +	if (!event->pending_unwind_callback)
-> +		return;
-> +
-> +	if (unwind_deferred_trace(&trace) < 0)
-> +		goto out;
-> +
-> +	/*
-> +	 * All accesses to the event must belong to the same implicit RCU
-> +	 * read-side critical section as the ->pending_unwind_callback reset.
-> +	 * See comment in perf_pending_unwind_sync().
-> +	 */
-> +	guard(rcu)();
-> +
-> +	if (!current->mm)
-> +		goto out;
-> +
-> +	nr = trace.nr + 1 ; /* '+1' == callchain_context */
+Thanks, applied to perf-tools-next,
 
-Hi Namhyung,
-
-Talking with Beau about how Microsoft does their own deferred tracing, I
-wonder if the timestamp approach would be useful.
-
-This is where a timestamp is taken at the first request for a deferred
-trace, and this is recorded in the trace when it happens. It basically
-states that "this trace is good up until the given timestamp".
-
-The rationale for this is for lost events. Let's say you have:
-
-  <task enters kernel>
-    Request deferred trace
-
-    <buffer fills up and events start to get lost>
-
-    Deferred trace happens (but is dropped due to buffer being full)
-
-  <task exits kernel>
-
-  <task enters kernel again>
-    Request deferred trace  (Still dropped due to buffer being full)
-
-    <Reader catches up and buffer is free again>
-
-    Deferred trace happens (this time it is recorded>
-  <task exits kernel>
-
-How would user space know that the deferred trace that was recorded doesn't
-go with the request (and kernel stack trace) that was done initially)?
-
-If we add a timestamp, then it would look like:
-
-  <task enters kernel>
-    Request deferred trace
-    [Record timestamp]
-
-    <buffer fills up and events start to get lost>
-
-    Deferred trace happens with timestamp (but is dropped due to buffer being full)
-
-  <task exits kernel>
-
-  <task enters kernel again>
-    Request deferred trace  (Still dropped due to buffer being full)
-    [Record timestamp]
-
-    <Reader catches up and buffer is free again>
-
-    Deferred trace happens with timestamp (this time it is recorded>
-  <task exits kernel>
-
-Then user space will look at the timestamp that was recorded and know that
-it's not for the initial request because the timestamp of the kernel stack
-trace done was before the timestamp of the user space stacktrace and
-therefore is not valid for the kernel stacktrace.
-
-The timestamp would become zero when exiting to user space. The first
-request will add it but would need a cmpxchg to do so, and if the cmpxchg
-fails, it then needs to check if the one recorded is before the current
-one, and if it isn't it still needs to update the timestamp (this is to
-handle races with NMIs).
-
-Basically, the timestamp would replace the cookie method.
-
-Thoughts?
-
--- Steve
-
-
-> +
-> +	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
-> +	deferred_event.header.misc = PERF_RECORD_MISC_USER;
-> +	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
-> +
-> +	deferred_event.nr = nr;
-> +
-> +	perf_event_header__init_id(&deferred_event.header, &data, event);
-> +
-> +	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
-> +		goto out;
-> +
-> +	perf_output_put(&handle, deferred_event);
-> +	perf_output_put(&handle, callchain_context);
-> +	perf_output_copy(&handle, trace.entries, trace.nr * sizeof(u64));
-> +	perf_event__output_id_sample(event, &handle, &data);
-> +
-> +	perf_output_end(&handle);
-> +
-> +out:
-> +	event->pending_unwind_callback = 0;
-> +	local_dec(&event->ctx->nr_no_switch_fast);
-> +	rcuwait_wake_up(&event->pending_unwind_wait);
-> +}
-> +
+- Arnaldo
