@@ -1,277 +1,404 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1BD4B1E79;
-	Thu,  8 May 2025 16:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0F028688A;
+	Thu,  8 May 2025 17:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746721900; cv=none; b=XDAKn1b70UcE2L/Zn4b0JDQKxzBPo0ILd9aCS1V+7AZZ/J0Jgro4Gsa3Omrsj6f2ObOmtn0r929UiTEzCYFh6uAkYikO+N3/XD6+KC/wSX+FhV6BvC6UVk7Cdf4AW8lYLwS7rF39Z2Cvn+gLMB27mNh8KA7R37/KkjCmAt5UcFA=
+	t=1746725405; cv=none; b=ikTnLNaIDy7Wsf+C72tCnoip/lEXfAuL8zi5gD2FLfdU/w4c0s6Gu4kNIH0DdyJEaRZxqoY1Tfhyv4Zm/Or/ajwd59q8SDeCnFXYfZ1S0Pt7vjMDpKrEolf1DLVXVvDptHQdCVPZtva2no4i7ju3evgMzZo2boWKGN82Y0dM/p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746721900; c=relaxed/simple;
-	bh=05jLKU06PawFALveu+0xiZr5Wnvi7if7M8SRQRcdPIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sln8y39XWKkmZN7J0dssTqUCJykjtCphcoZdjcjVxgVd3zZPPmUqv2u/EKFK9yhTpaXkqhi4VHE92QZCz1w5TdDlRrUcQeYgGklJdk++rEBZSgKsamPEztF73CtYiMsNr93fvg8t357cXOcK+oatVYZCQyrBFyXlEWxUN7t93c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BUtZ+E79; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746725405; c=relaxed/simple;
+	bh=4HYvtGrWvOU7csH8Z5QMOkWRHrctMainddkfO2f5Rgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pssfVTBXoBTS/Ws+q3Q+5DYg2+HF1UjiW9HxgE/8Wl1IvhgLZRRhjU91s5GMNiY8TYpQAw2iEzmEUYtozHS0+c1CYO3D70TTy0vr7f8xRCYzBu4ge3qDXY9DjD1dRJ2Nsrfx1QagPl6sUDK2felVycCI1wujgevLvv1BQTmCMFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlJTNQPs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BUtZ+E79"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746721899; x=1778257899;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=05jLKU06PawFALveu+0xiZr5Wnvi7if7M8SRQRcdPIo=;
-  b=BUtZ+E79Ek4uVea/oujB4lPR5Y0tN7aBpOzZp89d/gkjJ6WnuS5bGvHF
-   U3778bF72VN2encGCBXd0AQQS23P4/OOzeu9mExDUO7inBJ8AOJu/pCUs
-   ajuLjc2A59pSz+VqJWvLFGHgaMYEUD03hf2g2T9Tpuc0dC4RL9PcjsBLC
-   1dePQ2JLq3MlP1q8gNcrbE3LrzVdzPntL5GFs0TJE1gjYsaiX631bqMMc
-   ldL9Z+jO2roZ9aCW2Dt3V5n5Uru1pIa9QShUKJTvqcnukUR4MwuIrwIBW
-   uO9kM9jgNBs9Y+Q/Ze7Rcd7AINlecU5vizxw7i7fngi7xLwo1v2afVHPO
-   A==;
-X-CSE-ConnectionGUID: dGGJkXEVRk+OPtXowRol8w==
-X-CSE-MsgGUID: TR9f4kacTTeHJe7TiLLMaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="58730459"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="58730459"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 09:31:33 -0700
-X-CSE-ConnectionGUID: MTv2y1qRSGu1tcmmE8DSXQ==
-X-CSE-MsgGUID: dAZvhpblRsqmr0IltyP6RQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="173532347"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.223.23])
-  by orviesa001.jf.intel.com with ESMTP; 08 May 2025 09:31:30 -0700
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlJTNQPs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395CEC4CEE7;
+	Thu,  8 May 2025 17:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746725405;
+	bh=4HYvtGrWvOU7csH8Z5QMOkWRHrctMainddkfO2f5Rgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BlJTNQPsyBv3KVwuB4C3gbY6G9xwmv54LLhUBwHxkmEiAGsyzPPr/uW64HcySPY1D
+	 J7KIih2VpacJta9Puuo08efUv3yIKuanizOshYKNuDdTXOmbnI2MTDW0D/qZHF7AIB
+	 BPpHez2vsGsRRWN79ypVOEK97QGaocIiW0JOOT5mSjmp2oMvoBNI75GDuerjyGXCb9
+	 hHUINZmug3PK3+hJNCqP6CoYKnrrWWXJDNNPyR9df4pSp7QhLMktuJ9AbZJEDY86fu
+	 k/10ZEmHGUS4iI1t9N3DYxvLMa14aPPIoebMQ/oqZkvru8rtF2WydWzUtGtR8FHxb/
+	 BFIdFy/8O7IAQ==
+Date: Thu, 8 May 2025 10:30:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: [PATCH v2] perf top: populate PMU capabilities data in perf_env
-Date: Thu,  8 May 2025 11:31:27 -0500
-Message-ID: <20250508163127.726660-1-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.49.0
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC/PATCH] perf lock contention: Add -J/--inject-delay option
+Message-ID: <aBzqGn0Ktbl38sOF@google.com>
+References: <20250225075929.900995-1-namhyung@kernel.org>
+ <aBzDpi25-LBgAjEj@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aBzDpi25-LBgAjEj@x1>
 
-Calling perf top with branch filters enabled on Intel CPU's
-with branch counters logging (A.K.A LBR event logging [1]) support
-results in a segfault.
-        
-Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
-[Switching to Thread 0x7fffafff76c0 (LWP 949003)]
-perf_env__find_br_cntr_info (env=0xf66dc0 <perf_env>, nr=0x0, width=0x7fffafff62c0) at util/env.c:653
-653			*width = env->cpu_pmu_caps ? env->br_cntr_width :
-(gdb) bt
- #0  perf_env__find_br_cntr_info (env=0xf66dc0 <perf_env>, nr=0x0, width=0x7fffafff62c0) at util/env.c:653
- #1  0x00000000005b1599 in symbol__account_br_cntr (branch=0x7fffcc3db580, evsel=0xfea2d0, offset=12, br_cntr=8) at util/annotate.c:345
- #2  0x00000000005b17fb in symbol__account_cycles (addr=5658172, start=5658160, sym=0x7fffcc0ee420, cycles=539, evsel=0xfea2d0, br_cntr=8) at util/annotate.c:389
- #3  0x00000000005b1976 in addr_map_symbol__account_cycles (ams=0x7fffcd7b01d0, start=0x7fffcd7b02b0, cycles=539, evsel=0xfea2d0, br_cntr=8) at util/annotate.c:422
- #4  0x000000000068d57f in hist__account_cycles (bs=0x110d288, al=0x7fffafff6540, sample=0x7fffafff6760, nonany_branch_mode=false, total_cycles=0x0, evsel=0xfea2d0) at util/hist.c:2850
- #5  0x0000000000446216 in hist_iter__top_callback (iter=0x7fffafff6590, al=0x7fffafff6540, single=true, arg=0x7fffffff9e00) at builtin-top.c:737
- #6  0x0000000000689787 in hist_entry_iter__add (iter=0x7fffafff6590, al=0x7fffafff6540, max_stack_depth=127, arg=0x7fffffff9e00) at util/hist.c:1359
- #7  0x0000000000446710 in perf_event__process_sample (tool=0x7fffffff9e00, event=0x110d250, evsel=0xfea2d0, sample=0x7fffafff6760, machine=0x108c968) at builtin-top.c:845
- #8  0x0000000000447735 in deliver_event (qe=0x7fffffffa120, qevent=0x10fc200) at builtin-top.c:1211
- #9  0x000000000064ccae in do_flush (oe=0x7fffffffa120, show_progress=false) at util/ordered-events.c:245
- #10 0x000000000064d005 in __ordered_events__flush (oe=0x7fffffffa120, how=OE_FLUSH__TOP, timestamp=0) at util/ordered-events.c:324
- #11 0x000000000064d0ef in ordered_events__flush (oe=0x7fffffffa120, how=OE_FLUSH__TOP) at util/ordered-events.c:342
- #12 0x00000000004472a9 in process_thread (arg=0x7fffffff9e00) at builtin-top.c:1120
- #13 0x00007ffff6e7dba8 in start_thread (arg=<optimized out>) at pthread_create.c:448
- #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Hi Arnaldo,
 
-The cause is that perf_env__find_br_cntr_info tries to access a
-null pointer pmu_caps in the perf_env struct. A similar issue exists
-for homogeneous core systems which use the cpu_pmu_caps structure.
+On Thu, May 08, 2025 at 11:45:58AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Feb 24, 2025 at 11:59:29PM -0800, Namhyung Kim wrote:
+> > This is to slow down lock acquistion (on contention locks) deliberately.
+> > A possible use case is to estimate impact on application performance by
+> > optimization of kernel locking behavior.  By delaying the lock it can
+> > simulate the worse condition as a control group, and then compare with
+> > the current behavior as a optimized condition.
+> 
+> So this looks useful, I guess we can proceed and merge it?
 
-Fix this by populating cpu_pmu_caps and pmu_caps structures with
-values from sysfs when calling perf top with branch stack sampling
-enabled.
+That'd be great. :)
 
-[1], LBR event logging introduced here:
-https://lore.kernel.org/all/20231025201626.3000228-5-kan.liang@linux.intel.com/
+Thanks,
+Namhyung
 
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
-v2: update commit message with more meaningful stack trace from
-    gdb and indicate that affected systems are limited to CPU's
-    with LBR event logging support and that both hybrid and
-    non-hybrid core systems are affected.
----
- tools/perf/builtin-top.c |   8 +++
- tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/env.h    |   1 +
- 3 files changed, 123 insertions(+)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1061f4eebc3f..c2688e4ef3c4 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
- 	if (opts->branch_stack && callchain_param.enabled)
- 		symbol_conf.show_branchflag_count = true;
- 
-+	if (opts->branch_stack) {
-+		status = perf_env__read_core_pmu_caps(&perf_env);
-+		if (status) {
-+			pr_err("PMU capability data is not available\n");
-+			goto out_delete_evlist;
-+		}
-+	}
-+
- 	sort__mode = SORT_MODE__TOP;
- 	/* display thread wants entries to be collapsed in a different tree */
- 	perf_hpp_list.need_collapse = 1;
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 36411749e007..37ed6dc52cf3 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struct perf_env *env)
- 	return env->nr_cpus_avail ? 0 : -ENOENT;
- }
- 
-+static int __perf_env__read_core_pmu_caps(struct perf_pmu *pmu,
-+					  int *nr_caps, char ***caps,
-+					  unsigned int *max_branches,
-+					  unsigned int *br_cntr_nr,
-+					  unsigned int *br_cntr_width)
-+{
-+	struct perf_pmu_caps *pcaps = NULL;
-+	char *ptr, **tmp;
-+	int ret = 0;
-+
-+	*nr_caps = 0;
-+	*caps = NULL;
-+
-+	if (!pmu->nr_caps)
-+		return 0;
-+
-+	*caps = zalloc(sizeof(char *) * pmu->nr_caps);
-+	if (!*caps)
-+		return -ENOMEM;
-+
-+	tmp = *caps;
-+	list_for_each_entry(pcaps, &pmu->caps, list) {
-+
-+		if (asprintf(&ptr, "%s=%s", pcaps->name, pcaps->value) < 0) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		*tmp++ = ptr;
-+
-+		if (!strcmp(pcaps->name, "branches"))
-+			*max_branches = atoi(pcaps->value);
-+
-+		if (!strcmp(pcaps->name, "branch_counter_nr"))
-+			*br_cntr_nr = atoi(pcaps->value);
-+
-+		if (!strcmp(pcaps->name, "branch_counter_width"))
-+			*br_cntr_width = atoi(pcaps->value);
-+	}
-+	*nr_caps = pmu->nr_caps;
-+	return 0;
-+error:
-+	while (tmp-- != *caps)
-+		free(*tmp);
-+	free(*caps);
-+	*caps = NULL;
-+	*nr_caps = 0;
-+	return ret;
-+}
-+
-+int perf_env__read_core_pmu_caps(struct perf_env *env)
-+{
-+	struct perf_pmu *pmu = NULL;
-+	struct pmu_caps *pmu_caps;
-+	int nr_pmu = 0, i = 0, j;
-+	int ret;
-+
-+	nr_pmu = perf_pmus__num_core_pmus();
-+
-+	if (!nr_pmu)
-+		return -ENODEV;
-+
-+	if (nr_pmu == 1) {
-+		pmu = perf_pmus__scan_core(NULL);
-+		if (!pmu)
-+			return -ENODEV;
-+		ret = perf_pmu__caps_parse(pmu);
-+		if (ret < 0)
-+			return ret;
-+		return __perf_env__read_core_pmu_caps(pmu, &env->nr_cpu_pmu_caps,
-+						      &env->cpu_pmu_caps,
-+						      &env->max_branches,
-+						      &env->br_cntr_nr,
-+						      &env->br_cntr_width);
-+	}
-+
-+	pmu_caps = zalloc(sizeof(*pmu_caps) * nr_pmu);
-+	if (!pmu_caps)
-+		return -ENOMEM;
-+
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+		if (perf_pmu__caps_parse(pmu) <= 0)
-+			continue;
-+		ret = __perf_env__read_core_pmu_caps(pmu, &pmu_caps[i].nr_caps,
-+						     &pmu_caps[i].caps,
-+						     &pmu_caps[i].max_branches,
-+						     &pmu_caps[i].br_cntr_nr,
-+						     &pmu_caps[i].br_cntr_width);
-+		if (ret)
-+			goto error;
-+
-+		pmu_caps[i].pmu_name = strdup(pmu->name);
-+		if (!pmu_caps[i].pmu_name) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+		i++;
-+	}
-+
-+	env->nr_pmus_with_caps = nr_pmu;
-+	env->pmu_caps = pmu_caps;
-+
-+	return 0;
-+error:
-+	for (i = 0; i < nr_pmu; i++) {
-+		for (j = 0; j < pmu_caps[i].nr_caps; j++)
-+			free(pmu_caps[i].caps[j]);
-+		free(pmu_caps[i].caps);
-+		free(pmu_caps[i].pmu_name);
-+	}
-+	free(pmu_caps);
-+	return ret;
-+}
-+
- const char *perf_env__raw_arch(struct perf_env *env)
- {
- 	return env && !perf_env__read_arch(env) ? env->arch : "unknown";
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index d90e343cf1fa..135a1f714905 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -152,6 +152,7 @@ struct btf_node;
- 
- extern struct perf_env perf_env;
- 
-+int perf_env__read_core_pmu_caps(struct perf_env *env);
- void perf_env__exit(struct perf_env *env);
- 
- int perf_env__kernel_is_64_bit(struct perf_env *env);
--- 
-2.49.0
-
+>  
+> > The syntax is 'time@function' and the time can have unit suffix like
+> > "us" and "ms".  For example, I ran a simple test like below.
+> > 
+> >   $ sudo perf lock con -abl -L tasklist_lock -- \
+> >     sh -c 'for i in $(seq 1000); do sleep 1 & done; wait'
+> >    contended   total wait     max wait     avg wait            address   symbol
+> > 
+> >           92      1.18 ms    199.54 us     12.79 us   ffffffff8a806080   tasklist_lock (rwlock)
+> > 
+> > The contention count was 92 and the average wait time was around 10 us.
+> > But if I add 100 usec of delay to the tasklist_lock,
+> > 
+> >   $ sudo perf lock con -abl -L tasklist_lock -J 100us@tasklist_lock -- \
+> >     sh -c 'for i in $(seq 1000); do sleep 1 & done; wait'
+> >    contended   total wait     max wait     avg wait            address   symbol
+> > 
+> >          190     15.67 ms    230.10 us     82.46 us   ffffffff8a806080   tasklist_lock (rwlock)
+> > 
+> > The contention count increased and the average wait time was up closed
+> > to 100 usec.  If I increase the delay even more,
+> > 
+> >   $ sudo perf lock con -abl -L tasklist_lock -J 1ms@tasklist_lock -- \
+> >     sh -c 'for i in $(seq 1000); do sleep 1 & done; wait'
+> >    contended   total wait     max wait     avg wait            address   symbol
+> > 
+> >         1002      2.80 s       3.01 ms      2.80 ms   ffffffff8a806080   tasklist_lock (rwlock)
+> > 
+> > Now every sleep process had contention and the wait time was more than 1
+> > msec.  This is on my 4 CPU laptop so I guess one CPU has the lock while
+> > other 3 are waiting for it mostly.
+> > 
+> > For simplicity, it only supports global locks for now.
+> > 
+> > Suggested-by: Stephane Eranian <eranian@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/Documentation/perf-lock.txt        | 11 +++
+> >  tools/perf/builtin-lock.c                     | 74 +++++++++++++++++++
+> >  tools/perf/util/bpf_lock_contention.c         | 28 +++++++
+> >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 43 +++++++++++
+> >  tools/perf/util/lock-contention.h             |  8 ++
+> >  5 files changed, 164 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+> > index d3793054f7d35626..151fc837587b216e 100644
+> > --- a/tools/perf/Documentation/perf-lock.txt
+> > +++ b/tools/perf/Documentation/perf-lock.txt
+> > @@ -215,6 +215,17 @@ CONTENTION OPTIONS
+> >  --cgroup-filter=<value>::
+> >  	Show lock contention only in the given cgroups (comma separated list).
+> >  
+> > +-J::
+> > +--inject-delay=<time@function>::
+> > +	Add delays to the given lock.  It's added to the contention-end part so
+> > +	that the (new) owner of the lock will be delayed.  But by slowing down
+> > +	the owner, the waiters will also be delayed as well.  This is working
+> > +	only with -b/--use-bpf.
+> > +
+> > +	The 'time' is specified in nsec but it can have a unit suffix.  Available
+> > +	units are "ms" and "us".  Note that it will busy-wait after it gets the
+> > +	lock.  Please use it at your own risk.
+> > +
+> >  
+> >  SEE ALSO
+> >  --------
+> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> > index 5d405cd8e696d21b..3ef452d5d9f5679d 100644
+> > --- a/tools/perf/builtin-lock.c
+> > +++ b/tools/perf/builtin-lock.c
+> > @@ -62,6 +62,8 @@ static const char *output_name = NULL;
+> >  static FILE *lock_output;
+> >  
+> >  static struct lock_filter filters;
+> > +static struct lock_delay *delays;
+> > +static int nr_delays;
+> >  
+> >  static enum lock_aggr_mode aggr_mode = LOCK_AGGR_ADDR;
+> >  
+> > @@ -1971,6 +1973,8 @@ static int __cmd_contention(int argc, const char **argv)
+> >  		.max_stack = max_stack_depth,
+> >  		.stack_skip = stack_skip,
+> >  		.filters = &filters,
+> > +		.delays = delays,
+> > +		.nr_delays = nr_delays,
+> >  		.save_callstack = needs_callstack(),
+> >  		.owner = show_lock_owner,
+> >  		.cgroups = RB_ROOT,
+> > @@ -2474,6 +2478,74 @@ static int parse_cgroup_filter(const struct option *opt __maybe_unused, const ch
+> >  	return ret;
+> >  }
+> >  
+> > +static bool add_lock_delay(char *spec)
+> > +{
+> > +	char *at, *pos;
+> > +	struct lock_delay *tmp;
+> > +	unsigned long duration;
+> > +
+> > +	at = strchr(spec, '@');
+> > +	if (at == NULL) {
+> > +		pr_err("lock delay should have '@' sign: %s\n", spec);
+> > +		return false;
+> > +	}
+> > +	if (at == spec) {
+> > +		pr_err("lock delay should have time before '@': %s\n", spec);
+> > +		return false;
+> > +	}
+> > +
+> > +	*at = '\0';
+> > +	duration = strtoul(spec, &pos, 0);
+> > +	if (!strcmp(pos, "ns"))
+> > +		duration *= 1;
+> > +	else if (!strcmp(pos, "us"))
+> > +		duration *= 1000;
+> > +	else if (!strcmp(pos, "ms"))
+> > +		duration *= 1000 * 1000;
+> > +	else if (*pos) {
+> > +		pr_err("invalid delay time: %s@%s\n", spec, at + 1);
+> > +		return false;
+> > +	}
+> > +
+> > +	tmp = realloc(delays, (nr_delays + 1) * sizeof(*delays));
+> > +	if (tmp == NULL) {
+> > +		pr_err("Memory allocation failure\n");
+> > +		return false;
+> > +	}
+> > +	delays = tmp;
+> > +
+> > +	delays[nr_delays].sym = strdup(at + 1);
+> > +	if (delays[nr_delays].sym == NULL) {
+> > +		pr_err("Memory allocation failure\n");
+> > +		return false;
+> > +	}
+> > +	delays[nr_delays].time = duration;
+> > +
+> > +	nr_delays++;
+> > +	return true;
+> > +}
+> > +
+> > +static int parse_lock_delay(const struct option *opt __maybe_unused, const char *str,
+> > +			    int unset __maybe_unused)
+> > +{
+> > +	char *s, *tmp, *tok;
+> > +	int ret = 0;
+> > +
+> > +	s = strdup(str);
+> > +	if (s == NULL)
+> > +		return -1;
+> > +
+> > +	for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
+> > +		if (!add_lock_delay(tok)) {
+> > +			ret = -1;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	free(s);
+> > +	return ret;
+> > +}
+> > +
+> >  int cmd_lock(int argc, const char **argv)
+> >  {
+> >  	const struct option lock_options[] = {
+> > @@ -2550,6 +2622,8 @@ int cmd_lock(int argc, const char **argv)
+> >  	OPT_BOOLEAN(0, "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
+> >  	OPT_CALLBACK('G', "cgroup-filter", NULL, "CGROUPS",
+> >  		     "Filter specific cgroups", parse_cgroup_filter),
+> > +	OPT_CALLBACK('J', "inject-delay", NULL, "TIME@FUNC",
+> > +		     "Inject delays to specific locks", parse_lock_delay),
+> >  	OPT_PARENT(lock_options)
+> >  	};
+> >  
+> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> > index fc8666222399c995..99b64f303e761cbc 100644
+> > --- a/tools/perf/util/bpf_lock_contention.c
+> > +++ b/tools/perf/util/bpf_lock_contention.c
+> > @@ -183,6 +183,27 @@ int lock_contention_prepare(struct lock_contention *con)
+> >  		skel->rodata->has_addr = 1;
+> >  	}
+> >  
+> > +	/* resolve lock name in delays */
+> > +	if (con->nr_delays) {
+> > +		struct symbol *sym;
+> > +		struct map *kmap;
+> > +
+> > +		for (i = 0; i < con->nr_delays; i++) {
+> > +			sym = machine__find_kernel_symbol_by_name(con->machine,
+> > +								  con->delays[i].sym,
+> > +								  &kmap);
+> > +			if (sym == NULL) {
+> > +				pr_warning("ignore unknown symbol: %s\n",
+> > +					   con->delays[i].sym);
+> > +				continue;
+> > +			}
+> > +
+> > +			con->delays[i].addr = map__unmap_ip(kmap, sym->start);
+> > +		}
+> > +		skel->rodata->lock_delay = 1;
+> > +		bpf_map__set_max_entries(skel->maps.lock_delays, con->nr_delays);
+> > +	}
+> > +
+> >  	bpf_map__set_max_entries(skel->maps.cpu_filter, ncpus);
+> >  	bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
+> >  	bpf_map__set_max_entries(skel->maps.type_filter, ntypes);
+> > @@ -272,6 +293,13 @@ int lock_contention_prepare(struct lock_contention *con)
+> >  			bpf_map_update_elem(fd, &con->filters->cgrps[i], &val, BPF_ANY);
+> >  	}
+> >  
+> > +	if (con->nr_delays) {
+> > +		fd = bpf_map__fd(skel->maps.lock_delays);
+> > +
+> > +		for (i = 0; i < con->nr_delays; i++)
+> > +			bpf_map_update_elem(fd, &con->delays[i].addr, &con->delays[i].time, BPF_ANY);
+> > +	}
+> > +
+> >  	if (con->aggr_mode == LOCK_AGGR_CGROUP)
+> >  		read_all_cgroups(&con->cgroups);
+> >  
+> > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > index 6533ea9b044c71d1..0ac9ae2f1711a129 100644
+> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > @@ -11,6 +11,9 @@
+> >  /* for collect_lock_syms().  4096 was rejected by the verifier */
+> >  #define MAX_CPUS  1024
+> >  
+> > +/* for do_lock_delay().  Arbitrarily set to 1 million. */
+> > +#define MAX_LOOP  (1U << 20)
+> > +
+> >  /* lock contention flags from include/trace/events/lock.h */
+> >  #define LCB_F_SPIN	(1U << 0)
+> >  #define LCB_F_READ	(1U << 1)
+> > @@ -114,6 +117,13 @@ struct {
+> >  	__uint(max_entries, 1);
+> >  } slab_caches SEC(".maps");
+> >  
+> > +struct {
+> > +	__uint(type, BPF_MAP_TYPE_HASH);
+> > +	__uint(key_size, sizeof(__u64));
+> > +	__uint(value_size, sizeof(__u64));
+> > +	__uint(max_entries, 1);
+> > +} lock_delays SEC(".maps");
+> > +
+> >  struct rw_semaphore___old {
+> >  	struct task_struct *owner;
+> >  } __attribute__((preserve_access_index));
+> > @@ -143,6 +153,7 @@ const volatile int needs_callstack;
+> >  const volatile int stack_skip;
+> >  const volatile int lock_owner;
+> >  const volatile int use_cgroup_v2;
+> > +const volatile int lock_delay;
+> >  
+> >  /* determine the key of lock stat */
+> >  const volatile int aggr_mode;
+> > @@ -348,6 +359,35 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
+> >  	return 0;
+> >  }
+> >  
+> > +static inline long delay_callback(__u64 idx, void *arg)
+> > +{
+> > +	__u64 target = *(__u64 *)arg;
+> > +
+> > +	if (target <= bpf_ktime_get_ns())
+> > +		return 1;
+> > +
+> > +	/* just to kill time */
+> > +	(void)bpf_get_prandom_u32();
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static inline void do_lock_delay(__u64 duration)
+> > +{
+> > +	__u64 target = bpf_ktime_get_ns() + duration;
+> > +
+> > +	bpf_loop(MAX_LOOP, delay_callback, &target, /*flags=*/0);
+> > +}
+> > +
+> > +static inline void check_lock_delay(__u64 lock)
+> > +{
+> > +	__u64 *delay;
+> > +
+> > +	delay = bpf_map_lookup_elem(&lock_delays, &lock);
+> > +	if (delay)
+> > +		do_lock_delay(*delay);
+> > +}
+> > +
+> >  static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
+> >  {
+> >  	__u32 pid;
+> > @@ -566,6 +606,9 @@ int contention_end(u64 *ctx)
+> >  		data->min_time = duration;
+> >  
+> >  out:
+> > +	if (lock_delay)
+> > +		check_lock_delay(pelem->lock);
+> > +
+> >  	pelem->lock = 0;
+> >  	if (need_delete)
+> >  		bpf_map_delete_elem(&tstamp, &pid);
+> > diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+> > index a09f7fe877df8184..12f6cb789ada1bc7 100644
+> > --- a/tools/perf/util/lock-contention.h
+> > +++ b/tools/perf/util/lock-contention.h
+> > @@ -18,6 +18,12 @@ struct lock_filter {
+> >  	char			**slabs;
+> >  };
+> >  
+> > +struct lock_delay {
+> > +	char			*sym;
+> > +	unsigned long		addr;
+> > +	unsigned long		time;
+> > +};
+> > +
+> >  struct lock_stat {
+> >  	struct hlist_node	hash_entry;
+> >  	struct rb_node		rb;		/* used for sorting */
+> > @@ -140,6 +146,7 @@ struct lock_contention {
+> >  	struct machine *machine;
+> >  	struct hlist_head *result;
+> >  	struct lock_filter *filters;
+> > +	struct lock_delay *delays;
+> >  	struct lock_contention_fails fails;
+> >  	struct rb_root cgroups;
+> >  	unsigned long map_nr_entries;
+> > @@ -148,6 +155,7 @@ struct lock_contention {
+> >  	int aggr_mode;
+> >  	int owner;
+> >  	int nr_filtered;
+> > +	int nr_delays;
+> >  	bool save_callstack;
+> >  };
+> >  
+> > -- 
+> > 2.48.1.658.g4767266eb4-goog
