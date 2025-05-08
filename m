@@ -1,212 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BF7222568;
-	Thu,  8 May 2025 12:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE1D22425B
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 May 2025 12:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746706925; cv=none; b=ENq4ZPN9nAGj6QxjC8DoAx2BgDGC4uND3w/NZuYlj+Atg38LuUa4YA7tCzShep0zB/y5DUnGF9tDeA3PMgrVKhrqSxvSEydW6YeMTxkAcelflyKRLCLn9WPMIDwxkiAI8Q3MJf0BPtELQZNlxwGHQcBIaKlIeVuT5T9sT4E5daI=
+	t=1746707064; cv=none; b=cXJQf6Q+JGU5omZ0auiTUJOTkA3rKDjvtRBwLZcnddG2RS+S80OcmWUjN8TeFOKBc0c5Lq897WeTj7gx5gT/dvFiJAGdvtjQLmST/Jw1ZKiaWGl3hCjnWzmr9zNMwMUItaRKsa6hqcdU/UbD0yOp5sEsuqT5cB3LNBDoE24gqWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746706925; c=relaxed/simple;
-	bh=2B1VAFopbYwqp+cWfaNd09XKHhaCO5pZWfe0iB09SgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ol/vA+3ZYfV7ZlluZ5pnzRGu5SLJZlWh8gnZTLlOVXILX2Qomb1nyoDXfROiQK4etJ2DfURMOXey1K0EgrMqYVQSv//lUQD+uWCN4soffuuSImVZg912VpiLsxMY6oFaaWUvSiOqS3AP5dKdeSoX2nIf2zDT1k8IQDreBuyboYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fvg8W6fF; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746707064; c=relaxed/simple;
+	bh=euuXHiLbWHlXdD01r1NgpXkzti+uOFQDaY5u0OFhkLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g7O9hOZCkGVszzE+p0oXSET5sookNxbSPvaWspLMOjFFkvDtrFD+7FJ1lohVrTjMFGD8GXHs3YAT4xeF6t4KQiY3k7kVx2Bdl36F/rL6pw/fM/P6d5fhzIoaUIFmAC9etMKwvgESY3Y0ir6BkCDxGYDPyVdQTZuDTMeIDI0PSlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bo+NAqAs; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fvg8W6fF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746706923; x=1778242923;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2B1VAFopbYwqp+cWfaNd09XKHhaCO5pZWfe0iB09SgM=;
-  b=fvg8W6fFX0jCwofd3cAD9yDFMcGxUA6kK1Fov4/d9PhhksbjxEFLDKs1
-   hqBJ0yxvVtcdqXQIeb+UolfnA+rB3BDAhLmebjnFv7F7Zl9hTTsvxFaBg
-   t1i5x48yVFIIbmDHG/tl3bKwXDDVYVolyrHgIEUQRCzSI+fCKrnyUvHtM
-   60LpBs/76HvWVR/1m9g8cfqrjNWOIXN7NjCvFTik2lINHzIUo854lsWQl
-   qzBJk2bQy4sZvDvfXaJ+O4QtzuQQbwXPCEKLyxl/VMqOjRy+ikGUH70ZX
-   3aMHqlXA2hcf0kFEQdDLHfRA9PhyGijE4/1sMQlp8KISL29wH7H/rLZAs
-   Q==;
-X-CSE-ConnectionGUID: taG/2HaDQx2mYpNdL15sIw==
-X-CSE-MsgGUID: iCP6sg5HRq2qV1yxpLJC/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59883099"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="59883099"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 05:22:02 -0700
-X-CSE-ConnectionGUID: M/O0ahs2QSSbInJwpZqolg==
-X-CSE-MsgGUID: 18OfEl75RnKfUN8GeVzMFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="141492373"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 08 May 2025 05:21:56 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uD0G9-000Ax1-2X;
-	Thu, 08 May 2025 12:21:53 +0000
-Date: Thu, 8 May 2025 20:21:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, bhupesh@igalia.com,
-	kernel-dev@igalia.com, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	oliver.sang@intel.com, lkp@intel.com, laoar.shao@gmail.com,
-	pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
-	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
-	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
-	mgorman@suse.de
-Subject: Re: [PATCH v3 2/3] treewide: Switch memcpy() users of 'task->comm'
- to a more safer implementation
-Message-ID: <202505082038.A5ejhbR4-lkp@intel.com>
-References: <20250507110444.963779-3-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bo+NAqAs"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30c461a45f8so6677021fa.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 May 2025 05:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746707061; x=1747311861; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bYq9UdbXkspTJzU3jmebisflnUZ0+YdudwLiQZEMhwo=;
+        b=bo+NAqAscalhccSn5X2VMDJQU1TebCb06glaJ29SYdh0pZWajib7W0W1YR2VadQ5To
+         4M+RKzEmAxsY4OnyR+Q0In75uxXx9Wj/kG8veOU8aTDaTpAzKPZTY/+IWCRhmNr6lW1O
+         B4UmqWKgjfaxSVUN7PumAAkz8bCMeCZbAK0uCfTVWUPJpuwyopkzyDriS2xcrHl0J+Ow
+         qV41ECuC4VGKl0RJBmY1A+grJpKykHl/2AlLTg+kArMfw2CWzKnGkDfLeUWhJxcKGGaW
+         xlOQK4KydOLyvCobV8uiW5XQXvubvPbRBi+uqRjJrsUMtzlYzDyK0b4cg/jldBJ7fKwN
+         4U9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746707061; x=1747311861;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bYq9UdbXkspTJzU3jmebisflnUZ0+YdudwLiQZEMhwo=;
+        b=ivNmkVErWTR6U7IS/LLd15GD0wwQYdGnK1AveTYjR0D5LbUNAdg+nB6GgA7RCkE7No
+         8hzeAnyk01VMKlKgWgHrtr/wF0tdPZGBnIh/mwL7K4Q4aq1ETHfB61Yjd7ihiQODeTre
+         qJuXBh02V5kr03o9ToykKrDI/PGKwKq5eMLuG66DDpEVEFX8LJVUsJUtcjtISj6qO+ku
+         miyIfB6qXfmh5SskzsLUZcSUaOwqOUUQCup4NtJcffkoHS5WFz06oUbvFuA0/uRK6tDI
+         9BTRgOSWEUWUMFscbhiG314RzG+DezqbOxKB4Eb6zEVYC2Gf7SOlaanf9p6AfEbchx+N
+         q6pg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkhEiWdv3eUOlKJ0JvwJCFpK1LnK3ryL5rQmnIqTZRpywolR7XPRVS1xzNpXMcs13DJAZXI6bj6xGGOJxpQzj8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJDQ6Yaa+lBvjRbz9kuklSHATjxR5esIqiBhAGdaAlG/5ud5aC
+	zHSI02TiYjZZ+S//YFje75lWUJARuC7rL/sb+x8Bn+hGYrFCIdTQGa0/ZiXI4MGDopSXMDMmLy2
+	Z7ntYiy1s25lmGfJGkN1nXooM8UtE3z7Oynqy
+X-Gm-Gg: ASbGnculBvBom5ZkOmMiyKOVrhdkyLAnI7yJ/RySHXU6Hc9NsOzKgvBsFaHiHf72y7D
+	jXqLGzmCrpg+NbDH9VOSGpIAUe1PAvDq32+KLTWKAeju6bAakdBW7uI2uRo0+pdHIkgIKGjiB0Z
+	7zMB6tC5vRSFEC3hEP8OuVn/TO5gHFDh/0N4N+aZiIEcidmi89VS/B
+X-Google-Smtp-Source: AGHT+IHPoJzLIhtFpzN/1sdhJyeU+LjrmCDNcg6Q3CdDJNa61d9LsaQZ5H7HHpgfMKAjEBI/JJxSi01QEQ+VLyZX92Q=
+X-Received: by 2002:a2e:a10f:0:b0:30d:e104:b67c with SMTP id
+ 38308e7fff4ca-326b890cc7fmr11091271fa.39.1746707060441; Thu, 08 May 2025
+ 05:24:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507110444.963779-3-bhupesh@igalia.com>
+References: <20250503003620.45072-1-namhyung@kernel.org> <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
+ <aBmei7cMf-MzzX5W@google.com> <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
+ <aBmvmmRKpeVd6aT3@google.com> <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
+ <aBm1x2as1fraHXHz@google.com> <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
+ <aBvwFPRwA2LVQJkO@google.com>
+In-Reply-To: <aBvwFPRwA2LVQJkO@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Thu, 8 May 2025 14:24:08 +0200
+X-Gm-Features: ATxdqUGsP-cGz5xol7t0MUfWkbJwMTGTSs06jyX6wDkhPuAbKmxfVW9d0Ia1KLE
+Message-ID: <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Bhupesh,
+On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
+> > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > Where does the patch check that this mode is used only for system-wide profiles?
+> > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
+> > > > >
+> > > > > Basically yes, but you can use --sample-cpu to add it.
+> > > >
+> > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
+> > >
+> > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
+> > >
+> > > We may disable latency column by default in this case and show warning
+> > > if it's requested.  Or we may add a new attribute to emit sched-switch
+> > > records only for idle tasks and enable the latency report only if the
+> > > data has sched-switch records.
+> > >
+> > > What do you think?
+> >
+> > Depends on what problem we are trying to solve:
+> >
+> > 1. Enabling latency profiling for system-wide mode.
+> >
+> > 2. Switch events bloating trace too much.
+> >
+> > 3. Lost switch events lead to imprecise accounting.
+> >
+> > The patch mentions all 3 :)
+> > But I think 2 and 3 are not really specific to system-wide mode.
+> > An active single process profile can emit more samples than a
+> > system-wide profile on a lightly loaded system.
+>
+> True.  But we don't need to care about lightly loaded systems as they
+> won't cause problems.
+>
+>
+> > Similarly, if we rely on switch events for system-wide mode, then it's
+> > equally subject to the lost events problem.
+>
+> Right, but I'm afraid practically it'll increase the chance of lost
+> in system-wide mode.  The default size of the sample for system-wide
+> is 56 byte and the size of the switch is 48 byte.  And the default
+> sample frequency is 4000 Hz but it cannot control the rate of the
+> switch.  I saw around 10000 Hz of switches per CPU on my work env.
+>
+> >
+> > For problem 1: we can just permit --latency for system wide mode and
+> > fully rely on switch events.
+> > It's not any worse than we do now (wrt both profile size and lost events).
+>
+> This can be an option and it'd work well on lightly loaded systems.
+> Maybe we can just try it first.  But I think it's better to have an
+> option to make it work on heavily loaded systems.
+>
+> >
+> > For problem 2: yes, we could emit only switches to idle tasks. Or
+> > maybe just a fake CPU sample for an idle task? That's effectively what
+> > we want, then your current accounting code will work w/o any changes.
+> > This should help wrt trace size only for system-wide mode (provided
+> > that user already enables CPU accounting for other reasons, otherwise
+> > it's unclear what's better -- attaching CPU to each sample, or writing
+> > switch events).
+>
+> I'm not sure how we can add the fake samples.  The switch events will be
+> from the kernel and we may add the condition in the attribute.
+>
+> And PERF_SAMPLE_CPU is on by default in system-wide mode.
+>
+> >
+> > For problem 3: switches to idle task won't really help. There can be
+> > lots of them, and missing any will lead to wrong accounting.
+>
+> I don't know how severe the situation will be.  On heavily loaded
+> systems, the idle task won't run much and data size won't increase.
+> On lightly loaded systems, increased data will likely be handled well.
+>
+>
+> > A principled approach would be to attach a per-thread scheduler
+> > quantum sequence number to each CPU sample. The sequence number would
+> > be incremented on every context switch. Then any subset of CPU should
+> > be enough to understand when a task was scheduled in and out
+> > (scheduled in on the first CPU sample with sequence number N, and
+> > switched out on the last sample with sequence number N).
+>
+> I'm not sure how it can help.  We don't need the switch info itself.
+> What's needed is when the CPU was idle, right?
 
-kernel test robot noticed the following build errors:
+I mean the following.
+Each sample has a TID.
+We add a SEQ field, which is per-thread and is incremented after every
+rescheduling of the thread.
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on tip/sched/core akpm-mm/mm-everything linus/master v6.15-rc5 next-20250508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+When we see the last sample for (TID,SEQ), we pretend there is SCHED
+OUT event for this thread at this timestamp. When we see the first
+sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
+thread at this timestamp.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250507-190740
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250507110444.963779-3-bhupesh%40igalia.com
-patch subject: [PATCH v3 2/3] treewide: Switch memcpy() users of 'task->comm' to a more safer implementation
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20250508/202505082038.A5ejhbR4-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505082038.A5ejhbR4-lkp@intel.com/reproduce)
+These SCHED IN/OUT events are not injected by the kernel. We just
+pretend they happen for accounting purposes. We may actually
+materialize them in the perf tool, or me may just update parallelism
+as if they happen.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505082038.A5ejhbR4-lkp@intel.com/
+With this scheme we can lose absolutely any subset of samples, and
+still get very precise accounting. When we lose samples, the profile
+of course becomes a bit less precise, but the effect is local and
+recoverable.
 
-All errors (new ones prefixed by >>):
+If we lose the last/first event for (TID,SEQ), then we slightly
+shorten/postpone the thread accounting in the process parallelism
+level. If we lose a middle (TID,SEQ), then parallelism is not
+affected.
 
-   In file included from include/trace/define_trace.h:119,
-                    from include/trace/events/sched.h:856,
-                    from kernel/sched/core.c:84:
-   include/trace/events/sched.h: In function 'do_trace_event_raw_event_sched_switch':
->> include/trace/events/sched.h:245:24: error: 'struct trace_event_raw_sched_switch' has no member named 'comm'
-     245 |                 __entry->comm[TASK_COMM_LEN - 1] = '\0';
-         |                        ^~
-   include/trace/trace_events.h:427:11: note: in definition of macro '__DECLARE_EVENT_CLASS'
-     427 |         { assign; }                                                     \
-         |           ^~~~~~
-   include/trace/trace_events.h:435:23: note: in expansion of macro 'PARAMS'
-     435 |                       PARAMS(assign), PARAMS(print))                    \
-         |                       ^~~~~~
-   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
-      40 |         DECLARE_EVENT_CLASS(name,                              \
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/trace/trace_events.h:44:30: note: in expansion of macro 'PARAMS'
-      44 |                              PARAMS(assign),                   \
-         |                              ^~~~~~
-   include/trace/events/sched.h:224:1: note: in expansion of macro 'TRACE_EVENT'
-     224 | TRACE_EVENT(sched_switch,
-         | ^~~~~~~~~~~
-   include/trace/events/sched.h:243:9: note: in expansion of macro 'TP_fast_assign'
-     243 |         TP_fast_assign(
-         |         ^~~~~~~~~~~~~~
-   In file included from include/trace/define_trace.h:120,
-                    from include/trace/events/sched.h:856,
-                    from kernel/sched/core.c:84:
-   include/trace/events/sched.h: In function 'do_perf_trace_sched_switch':
->> include/trace/events/sched.h:245:24: error: 'struct trace_event_raw_sched_switch' has no member named 'comm'
-     245 |                 __entry->comm[TASK_COMM_LEN - 1] = '\0';
-         |                        ^~
-   include/trace/perf.h:51:11: note: in definition of macro '__DECLARE_EVENT_CLASS'
-      51 |         { assign; }                                                     \
-         |           ^~~~~~
-   include/trace/perf.h:67:23: note: in expansion of macro 'PARAMS'
-      67 |                       PARAMS(assign), PARAMS(print))                    \
-         |                       ^~~~~~
-   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
-      40 |         DECLARE_EVENT_CLASS(name,                              \
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/trace/trace_events.h:44:30: note: in expansion of macro 'PARAMS'
-      44 |                              PARAMS(assign),                   \
-         |                              ^~~~~~
-   include/trace/events/sched.h:224:1: note: in expansion of macro 'TRACE_EVENT'
-     224 | TRACE_EVENT(sched_switch,
-         | ^~~~~~~~~~~
-   include/trace/events/sched.h:243:9: note: in expansion of macro 'TP_fast_assign'
-     243 |         TP_fast_assign(
-         |         ^~~~~~~~~~~~~~
+The switches from a thread to itself is not a problem. We will just
+inject a SCHED OUT followed by SCHED IN. But exactly the same happens
+now when the kernel injects these events.
 
-
-vim +245 include/trace/events/sched.h
-
-   225	
-   226		TP_PROTO(bool preempt,
-   227			 struct task_struct *prev,
-   228			 struct task_struct *next,
-   229			 unsigned int prev_state),
-   230	
-   231		TP_ARGS(preempt, prev, next, prev_state),
-   232	
-   233		TP_STRUCT__entry(
-   234			__array(	char,	prev_comm,	TASK_COMM_LEN	)
-   235			__field(	pid_t,	prev_pid			)
-   236			__field(	int,	prev_prio			)
-   237			__field(	long,	prev_state			)
-   238			__array(	char,	next_comm,	TASK_COMM_LEN	)
-   239			__field(	pid_t,	next_pid			)
-   240			__field(	int,	next_prio			)
-   241		),
-   242	
-   243		TP_fast_assign(
-   244			memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
- > 245			__entry->comm[TASK_COMM_LEN - 1] = '\0';
-   246			__entry->prev_pid	= prev->pid;
-   247			__entry->prev_prio	= prev->prio;
-   248			__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
-   249			memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-   250			__entry->next_comm[TASK_COMM_LEN - 1] = '\0';
-   251			__entry->next_pid	= next->pid;
-   252			__entry->next_prio	= next->prio;
-   253			/* XXX SCHED_DEADLINE */
-   254		),
-   255	
-   256		TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
-   257			__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
-   258	
-   259			(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
-   260			  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
-   261					{ TASK_INTERRUPTIBLE, "S" },
-   262					{ TASK_UNINTERRUPTIBLE, "D" },
-   263					{ __TASK_STOPPED, "T" },
-   264					{ __TASK_TRACED, "t" },
-   265					{ EXIT_DEAD, "X" },
-   266					{ EXIT_ZOMBIE, "Z" },
-   267					{ TASK_PARKED, "P" },
-   268					{ TASK_DEAD, "I" }) :
-   269			  "R",
-   270	
-   271			__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-   272			__entry->next_comm, __entry->next_pid, __entry->next_prio)
-   273	);
-   274	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+But if we switch to idle task and got no samples for some period of
+time on the CPU, then we properly inject SCHED OUT/IN that will
+account for the thread not actually running.
