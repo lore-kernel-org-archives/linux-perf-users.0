@@ -1,112 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFA5228C9D;
-	Fri,  9 May 2025 15:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F7E2367D1;
+	Fri,  9 May 2025 15:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746805706; cv=none; b=XCO0WLXwEkEoy/FzFlXgwgQh9pX7hvxs/FWTSVAh3g3jTJmpezK6oVCCE8qKQn6FBYxmEm4occDguE8Cs5IBNXca8kf1BXQPhIV3IYtCShOa9OZ9C3nOLNSz86zAgcDhXXdyQ2fVILsFqiR3h5GcTmeY/mrYd0oIIy5MBqA/Mxk=
+	t=1746806068; cv=none; b=Oe9pOGcstVV9whMnuezVGWgbFAp4JtmaaGucK2IjTOBuGQIy7u1xFQZOaC2R+cVmSvdoXfy2nQQi/CdrIOg+1rTlWKZFh0XiicSzH06FleKnfhzEQIPKcdxCVLteLUoXOCAj25xzZeqybrcqajrjSg+Qpg9eJ8pgW/TIOKgbkWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746805706; c=relaxed/simple;
-	bh=wBjQfXrnYFf046xq7csQXka+67IngmWM78qorBmxYEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ovfm8XDyRcgsmyK9CqnoYOf9BjxrXgNuJOAHW0+wdbkMQqu/9HCWQOnddvheo3JMt4HPgw5OfTUjd3fQXefC/d1yLlpu5xBxyy4Q1uufN/0XwmIdej6p2puQxJUlMrZNXEtTovHPv60lPkS4j+07InbccxTzVc5mQTDa0LX2YZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLgbQAus; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746806068; c=relaxed/simple;
+	bh=Sui2EcUfyEFEiiBj9npahfEdi8XviSyQkLNYyZHPRJk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b6tdMTlnbvssumS7ODGnAsLGTXi9YASrebq/EjJbiMz3BwiFFLY3p8Kymdtk3ZBc7skRISwG+1FL5tC3nuJlt/NsqE2bUAsS+oXGBHg2lw24XjdiyR2GvKujuuMxl5vQCz/lViDTFiSCUGEpvkkeLkbV0SQsZU0pQi9F3ED46hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esan7kPu; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLgbQAus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B286C4CEE4;
-	Fri,  9 May 2025 15:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746805706;
-	bh=wBjQfXrnYFf046xq7csQXka+67IngmWM78qorBmxYEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pLgbQAusXReXrnsC7hdi5/wDxA81/FEyh8N31IqWbBLHhNQizEtb9lRIAdBjLvW9y
-	 hj5bCornBQnMLMCMvmY9sExw2m2FDskioDEeR5epbDVYbulybEGH2PXA3zWfhw5Yaz
-	 HpCKsoS7LZ75vUXQpVBz3OIh6NtLYVQ/oEFO7GhypP/Phvs8SL7gFVbbfbuy4X5YRG
-	 6WaMmfoIJ+a4QocvPLxYj1lfyhrAySW8pqpt+P7+Nvgq/TgJ1r2x1cu9CFdejBy/fZ
-	 L8f6Z+quBByE+vA3YwuZGXihO+KsVht7uO/VGH5Bs0gJkN1gW9hhbFU6Y65PWJ5xQD
-	 RiNX3cTdARgOg==
-Date: Fri, 9 May 2025 08:48:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC/PATCH] perf lock contention: Add -J/--inject-delay option
-Message-ID: <aB4jxs90zVid4Bx8@google.com>
-References: <20250225075929.900995-1-namhyung@kernel.org>
- <aBzDpi25-LBgAjEj@x1>
- <aBzqGn0Ktbl38sOF@google.com>
- <aB0MSvrGA5fgH5Hj@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esan7kPu"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30ab344a1d8so2312091a91.3;
+        Fri, 09 May 2025 08:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746806066; x=1747410866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yz6pDe71ckfZADdpZgYyIVOXkOuqeIhTAPzRX03e+oA=;
+        b=esan7kPuuA1ndJOX2hDMSMa3SNfaDuiLCMRoUApKqf+aaVphFaSrjj8x6iKOlcc4tw
+         LgkYupQ1cV9MgMO9Ja4cqZQhczqOfZAqo3we0sKIpz6TlznuRd7uVApSJZaLaHCSpmD4
+         HYzH0aAMqT0jtRqZqg15B35EC9RePhfjEhLfF4ddIkHlapd1q9t2/ztlYcd5shiAL4ff
+         BWpESXxP4FzqivnvUrWtyuyr8I4zAhjgHaieKpJeDqNlJJTGDW2EPu2GaVFpeC6ftR4p
+         Rp+Am3j/NkXu2ec70HFrOGJuJ860qt5bFfZNx/z0xzpFOUBQZHHs7jVhStFwB1ZYzvjK
+         j08Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746806066; x=1747410866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yz6pDe71ckfZADdpZgYyIVOXkOuqeIhTAPzRX03e+oA=;
+        b=wwp/z8LzRtjPFn4HBDo8s6xSjmgpfCWsWygbiBO99HdXds7qD2e6ubWA2ApurEANJW
+         Qq8BgzkILO2EH4EDMH6UfqzGB+Se+/+mG/ZemZ9WMHMaKlnFrP9vCPcq63NvbhTQ9+We
+         7WKjbn2vIMEWhkUwj3PlxFompze9yRKNMZo4iEy3QzmbFfDpO9+/0Ua4uQfVMRfclWxn
+         tgIstPolgC0t3sUih4l5oYJpARxnGcHpiTY6zEamqLkHXVF63Syhv3vl1r73GT9ruKtF
+         owAx7zYa4/jTlBlZmxDUYgTaXb/fh38n/PTg8pBKko4SjeMQTrwXSnaBJtBlNwmtQP1z
+         5yrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkB84FIE6u4X7WhitDW/Zcxi+qfUtzaLIrN07X8NWaQvLTvjlPTIpQzmeIU/nMG+gOWjOZ9hrfIcYqi5kbgopyQQ==@vger.kernel.org, AJvYcCW5uEYrDhIQj0qhnYIl5HnjHKcPWrF2ns2oeAS9R8/1WIeDC3WDXQ58vfuWl0AMGrnPB8I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJdGBZ6fGtREC6Yc/ZSjEr1zJliMsoDs5jBgYQpARzqqM9+lBY
+	rdCqKcMt8QOwg6rKeORTHa3+og9r0KNyEm5Q1MYy/s8/4c1otyvqkXToJahoW9CLnHm4hTLFqGD
+	Ea+btjShvwSUf25lQoYhXD4ZXFSJQiuux
+X-Gm-Gg: ASbGncvlpcS4nduemIayzOn9Qtt0g3G1si3vWvN0F+Kwc5aBd9IePtImVv7H2P9D4cX
+	PV2ZFOgflu0TXP0FkhTgt9cML8C6EKxj+yafTMU7r8K4FrjzLMxEJC5MR+XLLuqnzgT0GF9vMgg
+	vBhXJAC+9yhnsnGbIvSRpZ8Mh/5q3jya6r57ic3A==
+X-Google-Smtp-Source: AGHT+IFs9bvuO1HL/nFDkN10tn2aX8i2fj1KaEl/BofeuLq37eMzGJjUKwIzA727WP8jVdou6+mByNXD80MtOgeP268=
+X-Received: by 2002:a17:90b:1fcc:b0:2ee:dd9b:e402 with SMTP id
+ 98e67ed59e1d1-30c3cff2babmr8312426a91.12.1746806066125; Fri, 09 May 2025
+ 08:54:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aB0MSvrGA5fgH5Hj@x1>
+References: <20250506135727.3977467-1-jolsa@kernel.org> <20250506135727.3977467-4-jolsa@kernel.org>
+ <CAEf4Bzbpn8kQV8ORoBv7iDR1VxT0uUf=qqjanFQFtFx1fSjrQQ@mail.gmail.com>
+ <aBsgQw1kzJsRzM5p@krava> <aB4fpAlfNhshy5DA@krava>
+In-Reply-To: <aB4fpAlfNhshy5DA@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 9 May 2025 08:54:13 -0700
+X-Gm-Features: ATxdqUGEacgOCN2wIh9C0kOvfo_aS5tl4Yi2jLhAkQLxswtKX1ggx2808mOWWFI
+Message-ID: <CAEf4Bzbsj2xAxhpH1zkT+EWVntOq9+tevN+SS=tRm-uwLMjxCw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe
+ link info
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Yafang Shao <laoar.shao@gmail.com>, Quentin Monnet <qmo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 08, 2025 at 04:55:54PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 08, 2025 at 10:30:02AM -0700, Namhyung Kim wrote:
-> > On Thu, May 08, 2025 at 11:45:58AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Feb 24, 2025 at 11:59:29PM -0800, Namhyung Kim wrote:
-> > > > This is to slow down lock acquistion (on contention locks) deliberately.
-> > > > A possible use case is to estimate impact on application performance by
-> > > > optimization of kernel locking behavior.  By delaying the lock it can
-> > > > simulate the worse condition as a control group, and then compare with
-> > > > the current behavior as a optimized condition.
-> 
-> > > So this looks useful, I guess we can proceed and merge it?
-> 
-> > That'd be great. :)
-> 
-> Can you please refresh it?
+On Fri, May 9, 2025 at 8:30=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
+>
+> On Wed, May 07, 2025 at 10:56:35AM +0200, Jiri Olsa wrote:
+> > On Tue, May 06, 2025 at 03:33:33PM -0700, Andrii Nakryiko wrote:
+> > > On Tue, May 6, 2025 at 6:58=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> w=
+rote:
+> > > >
+> > > > Adding support to display ref_ctr_offset in link output, like:
+> > > >
+> > > >   # bpftool link
+> > > >   ...
+> > > >   42: perf_event  prog 174
+> > > >           uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ct=
+r_offset 50500538
+> > >
+> > > let's use hex for ref_ctr_offset?
+> >
+> > I had that, then I saw cookie was dec ;-) either way is fine for me
+> >
+> > >
+> > > and also, why do we have bpf_cookie and cookie emitted? Are they diff=
+erent?
+> >
+> > hum, right.. so there's bpf_cookie retrieval from perf_link through the
+> > task_file iterator:
+> >
+> >   cbdaf71f7e65 bpftool: Add bpf_cookie to link output
+> >
+> > I guess it was added before we decided to have bpf_link_info.perf_event
+> > interface, which seems easier to me
+>
+> we could drop the bpf_cookie with attached patch, but should we worry
+> about loosing 'bpf_cookie' tag from json output (there will be just
+> 'cookie' tag now with the same value)
+>
 
-Sure, will send v2.
+I don't have strong feelings about this, but note that bpf_cookie is
+available on more kernel versions than the more recently added
+uprobe-specific cookie. If it's not too cumbersome, maybe we can just
+not display bpf_cookie *if* kernel provides uprobe-specific cookie
+information? Not sure, don't really care all that much, just noticed
+duplication earlier and thought to point this out.
 
-Thanks,
-Namhyung
-
-> 
-> ⬢ [acme@toolbox perf-tools-next]$        git am ./20250224_namhyung_perf_lock_contention_add_j_inject_delay_option.mbx
-> Applying: perf lock contention: Add -J/--inject-delay option
-> error: patch failed: tools/perf/util/bpf_skel/lock_contention.bpf.c:11
-> error: tools/perf/util/bpf_skel/lock_contention.bpf.c: patch does not apply
-> error: patch failed: tools/perf/util/lock-contention.h:140
-> error: tools/perf/util/lock-contention.h: patch does not apply
-> Patch failed at 0001 perf lock contention: Add -J/--inject-delay option
-> hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> hint: When you have resolved this problem, run "git am --continue".
-> hint: If you prefer to skip this patch, run "git am --skip" instead.
-> hint: To restore the original branch and stop patching, run "git am --abort".
-> hint: Disable this message with "git config set advice.mergeConflict false"
-> ⬢ [acme@toolbox perf-tools-next]$ git am --abort
-> ⬢ [acme@toolbox perf-tools-next]$ 
-> ⬢ [acme@toolbox perf-tools-next]$ patch -p1 < ./20250224_namhyung_perf_lock_contention_add_j_inject_delay_option.mbx
-> patching file tools/perf/Documentation/perf-lock.txt
-> Hunk #1 succeeded at 216 (offset 1 line).
-> patching file tools/perf/builtin-lock.c
-> Hunk #2 succeeded at 2003 (offset 30 lines).
-> Hunk #3 succeeded at 2508 (offset 30 lines).
-> Hunk #4 succeeded at 2652 (offset 30 lines).
-> patching file tools/perf/util/bpf_lock_contention.c
-> Hunk #1 succeeded at 261 (offset 78 lines).
-> Hunk #2 succeeded at 373 (offset 80 lines).
-> patching file tools/perf/util/bpf_skel/lock_contention.bpf.c
-> Hunk #1 succeeded at 14 with fuzz 2 (offset 3 lines).
-> Hunk #2 succeeded at 152 (offset 35 lines).
-> Hunk #3 FAILED at 153.
-> Hunk #4 succeeded at 397 (offset 39 lines).
-> Hunk #5 succeeded at 835 with fuzz 1 (offset 230 lines).
-> 1 out of 5 hunks FAILED -- saving rejects to file tools/perf/util/bpf_skel/lock_contention.bpf.c.rej
-> patching file tools/perf/util/lock-contention.h
-> Hunk #2 succeeded at 146 with fuzz 1.
-> Hunk #3 succeeded at 156 (offset 1 line).
-> ⬢ [acme@toolbox perf-tools-next]$
+> jirka
+>
+>
+> ---
+> diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
+> index 9eb764fe4cc8..ca8923425637 100644
+> --- a/tools/bpf/bpftool/main.h
+> +++ b/tools/bpf/bpftool/main.h
+> @@ -104,9 +104,7 @@ struct obj_ref {
+>
+>  struct obj_refs {
+>         int ref_cnt;
+> -       bool has_bpf_cookie;
+>         struct obj_ref *refs;
+> -       __u64 bpf_cookie;
+>  };
+>
+>  struct btf;
+> diff --git a/tools/bpf/bpftool/pids.c b/tools/bpf/bpftool/pids.c
+> index 23f488cf1740..e81518dfc835 100644
+> --- a/tools/bpf/bpftool/pids.c
+> +++ b/tools/bpf/bpftool/pids.c
+> @@ -80,8 +80,6 @@ static void add_ref(struct hashmap *map, struct pid_ite=
+r_entry *e)
+>         memcpy(ref->comm, e->comm, sizeof(ref->comm));
+>         ref->comm[sizeof(ref->comm) - 1] =3D '\0';
+>         refs->ref_cnt =3D 1;
+> -       refs->has_bpf_cookie =3D e->has_bpf_cookie;
+> -       refs->bpf_cookie =3D e->bpf_cookie;
+>
+>         err =3D hashmap__append(map, e->id, refs);
+>         if (err)
+> @@ -214,9 +212,6 @@ void emit_obj_refs_json(struct hashmap *map, __u32 id=
+,
+>                 if (refs->ref_cnt =3D=3D 0)
+>                         break;
+>
+> -               if (refs->has_bpf_cookie)
+> -                       jsonw_lluint_field(json_writer, "bpf_cookie", ref=
+s->bpf_cookie);
+> -
+>                 jsonw_name(json_writer, "pids");
+>                 jsonw_start_array(json_writer);
+>                 for (i =3D 0; i < refs->ref_cnt; i++) {
+> @@ -246,9 +241,6 @@ void emit_obj_refs_plain(struct hashmap *map, __u32 i=
+d, const char *prefix)
+>                 if (refs->ref_cnt =3D=3D 0)
+>                         break;
+>
+> -               if (refs->has_bpf_cookie)
+> -                       printf("\n\tbpf_cookie %llu", (unsigned long long=
+) refs->bpf_cookie);
+> -
+>                 printf("%s", prefix);
+>                 for (i =3D 0; i < refs->ref_cnt; i++) {
+>                         struct obj_ref *ref =3D &refs->refs[i];
+> diff --git a/tools/bpf/bpftool/skeleton/pid_iter.bpf.c b/tools/bpf/bpftoo=
+l/skeleton/pid_iter.bpf.c
+> index 948dde25034e..ea6d54f43425 100644
+> --- a/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
+> +++ b/tools/bpf/bpftool/skeleton/pid_iter.bpf.c
+> @@ -15,19 +15,6 @@ enum bpf_obj_type {
+>         BPF_OBJ_BTF,
+>  };
+>
+> -struct bpf_perf_link___local {
+> -       struct bpf_link link;
+> -       struct file *perf_file;
+> -} __attribute__((preserve_access_index));
+> -
+> -struct perf_event___local {
+> -       u64 bpf_cookie;
+> -} __attribute__((preserve_access_index));
+> -
+> -enum bpf_link_type___local {
+> -       BPF_LINK_TYPE_PERF_EVENT___local =3D 7,
+> -};
+> -
+>  extern const void bpf_link_fops __ksym;
+>  extern const void bpf_link_fops_poll __ksym __weak;
+>  extern const void bpf_map_fops __ksym;
+> @@ -52,17 +39,6 @@ static __always_inline __u32 get_obj_id(void *ent, enu=
+m bpf_obj_type type)
+>         }
+>  }
+>
+> -/* could be used only with BPF_LINK_TYPE_PERF_EVENT links */
+> -static __u64 get_bpf_cookie(struct bpf_link *link)
+> -{
+> -       struct bpf_perf_link___local *perf_link;
+> -       struct perf_event___local *event;
+> -
+> -       perf_link =3D container_of(link, struct bpf_perf_link___local, li=
+nk);
+> -       event =3D BPF_CORE_READ(perf_link, perf_file, private_data);
+> -       return BPF_CORE_READ(event, bpf_cookie);
+> -}
+> -
+>  SEC("iter/task_file")
+>  int iter(struct bpf_iter__task_file *ctx)
+>  {
+> @@ -102,18 +78,6 @@ int iter(struct bpf_iter__task_file *ctx)
+>         e.pid =3D task->tgid;
+>         e.id =3D get_obj_id(file->private_data, obj_type);
+>
+> -       if (obj_type =3D=3D BPF_OBJ_LINK &&
+> -           bpf_core_enum_value_exists(enum bpf_link_type___local,
+> -                                      BPF_LINK_TYPE_PERF_EVENT___local))=
+ {
+> -               struct bpf_link *link =3D (struct bpf_link *) file->priva=
+te_data;
+> -
+> -               if (BPF_CORE_READ(link, type) =3D=3D bpf_core_enum_value(=
+enum bpf_link_type___local,
+> -                                                                    BPF_=
+LINK_TYPE_PERF_EVENT___local)) {
+> -                       e.has_bpf_cookie =3D true;
+> -                       e.bpf_cookie =3D get_bpf_cookie(link);
+> -               }
+> -       }
+> -
+>         bpf_probe_read_kernel_str(&e.comm, sizeof(e.comm),
+>                                   task->group_leader->comm);
+>         bpf_seq_write(ctx->meta->seq, &e, sizeof(e));
+> diff --git a/tools/bpf/bpftool/skeleton/pid_iter.h b/tools/bpf/bpftool/sk=
+eleton/pid_iter.h
+> index bbb570d4cca6..5692cf257adb 100644
+> --- a/tools/bpf/bpftool/skeleton/pid_iter.h
+> +++ b/tools/bpf/bpftool/skeleton/pid_iter.h
+> @@ -6,8 +6,6 @@
+>  struct pid_iter_entry {
+>         __u32 id;
+>         int pid;
+> -       __u64 bpf_cookie;
+> -       bool has_bpf_cookie;
+>         char comm[16];
+>  };
+>
