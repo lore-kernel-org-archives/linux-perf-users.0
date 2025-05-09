@@ -1,103 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9FD22CBE9;
-	Fri,  9 May 2025 15:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2B022F147;
+	Fri,  9 May 2025 15:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746804988; cv=none; b=XAEh60MiIvzMxs030ZuDC1kV7mzFZ1Aw6yVvWYH49x9x2k/Cbxk9W+P3+2d8K++BzeTjN91ijNLfljPAbKet1ips0ts+2wzGP89rXzTrteErwYu2PPNMWZK+ZcL0CX9KsrDsfT4HHP4ibtzWzIwhhS5m1FlpEu+cxf+gb3ppnts=
+	t=1746805550; cv=none; b=cl2jqhXpdV2uGiorX61cyXm3USGUTY86dXWxKGvN9IzaEG/LgJaWcX32/mKlnVhrlv0IvluxROJWWrUfxe08Zuu7TxwJScZDAX++wu89tc9u37HFHuXpKdSCrk3nFUoKN9q7rdJ+soKujVcXejH99G8SGXjnWZrhEYq6qAGsfRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746804988; c=relaxed/simple;
-	bh=JhUNKQ6QMQHMlhTbc+jHODr6xLarzt5atYANdmmOfng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WAHl/MRC/kWKim2hsw4+zHddk1HKZc4Siv06K4n83gDQHTxYpKy9M5oHIdlr1VfXormsS91bCch957Hw/+TpAtENNOrc4VZvpfZ5O9/e/2bvyelmhNhWQvWzEdpPlIMlrBybkKYZJDWW3iBdxi2VO9Bi+eWRiJIjqhP96erDOjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ehumb4Ge; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746805550; c=relaxed/simple;
+	bh=EiFOaPSKs0D9kCFjTr6DbCFxYlqjxLAR3rBU0u7Ioeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtTX1L/0VAUWC25wvzR4nDnE3CdH5Slt/qz1n015dp2ez3LoVGlq0YTIkReBWpylOAsIR+TavV7Ut5dHOWVXBeSkI0i7XYgvm7lYC5UGJNxj5QHyaEXXC0zaUuVkZDOJ1WnvsWRL5292hIo6KAWIFR0OMP9WTRLJFgpEDzqgjW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXA0uTnj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ehumb4Ge"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78ECEC4CEE4;
-	Fri,  9 May 2025 15:36:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXA0uTnj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9EBC4CEE4;
+	Fri,  9 May 2025 15:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746804988;
-	bh=JhUNKQ6QMQHMlhTbc+jHODr6xLarzt5atYANdmmOfng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ehumb4GeiqmzVzmKyhXR14vRImwXqaWYFPbFLNzSq0I2jPfC4mjdeby8gjIzFw/rD
-	 ClApZ+lCSAz3+s8+8Kl4WQABwdU8mcAN9mK92NAP6bcLC3QFGoxYEaJMsgEgDZYIlu
-	 eIO5im3k5gdqMWCCH5Lv6rO+3R/NUj4gc5FDOU3Qx+PPpXlJLGoWb3QwPg9LZ/6OiY
-	 sKxbsG7a/NLJmb+j9aRRXu749JHlsfqYx0xndbKn6GPg60qfLpq4uVQ9aXkDuVj0Sa
-	 gqOMtriDwDFaPQIukf3RGYx1RAF+sTXT75ZD7X08Obx1LanS2sopsPhGnf2FdnRCSV
-	 wNXTrzpwEGspw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Quentin Monnet <qmo@kernel.org>
-Subject: [PATCHv2 bpf-next 3/3] bpftool: Display ref_ctr_offset for uprobe link info
-Date: Fri,  9 May 2025 17:35:39 +0200
-Message-ID: <20250509153539.779599-4-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250509153539.779599-1-jolsa@kernel.org>
-References: <20250509153539.779599-1-jolsa@kernel.org>
+	s=k20201202; t=1746805549;
+	bh=EiFOaPSKs0D9kCFjTr6DbCFxYlqjxLAR3rBU0u7Ioeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mXA0uTnjf2juDtNOz/sIFlBK6q06Pg2zqdh/KvXdeuiYV3o8yGoP8hC/4mRnj2RP6
+	 twbQsDPqkqRexQKI9kAEUb4EriwWJcXrm3yJiCmC3NcKC4UL71LXrp95b3KT1OSUm2
+	 9WNY5XJLF0QhANNzoRbtrbeGnF4KelEXHO8NlNrJDTyKAfrJ/TwKZTKjH+BqvzMr01
+	 DBD5JrRgU4DvA2KLjeUd28fI/NhvOGokNpyGOq+jM46IeQDFkmWxdJrdE4eUpqy7mb
+	 Tp3vOZPU7iUIQF5XQvq/Df4dweQlbWtBLwbP0DfSWhtNF1bXMUPQ1U3hkh1b0z8Z7j
+	 C0fdX/oVBjUPQ==
+Date: Fri, 9 May 2025 08:45:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+	Blake Jones <blakejones@google.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
+Message-ID: <aB4jKjLsXCzcH4yd@google.com>
+References: <20250424162529.686762589@goodmis.org>
+ <20250424162633.390748816@goodmis.org>
+ <20250508120321.20677bc6@gandalf.local.home>
+ <89c62296-fbe4-4d9d-a2ec-19c4ca0c14b2@efficios.com>
+ <20250508145439.4c6482b7@gandalf.local.home>
+ <8889c16b-9c3d-4ab3-b353-e00146532174@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8889c16b-9c3d-4ab3-b353-e00146532174@efficios.com>
 
-Adding support to display ref_ctr_offset in link output, like:
+Hi Mathieu,
 
-  # bpftool link
-  ...
-  42: perf_event  prog 174
-          uprobe /proc/self/exe+0x102f13  cookie 3735928559  ref_ctr_offset 0x303a3fa
-          bpf_cookie 3735928559
-          pids test_progs(1820)
+On Fri, May 09, 2025 at 08:23:49AM -0400, Mathieu Desnoyers wrote:
+> On 2025-05-08 14:54, Steven Rostedt wrote:
+> > On Thu, 8 May 2025 14:49:59 -0400
+> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> > 
+> > > AFAIR, the cookie method generates the cookie by combining the cpu
+> > > number with a per-cpu count.
+> > > 
+> > > This ensures that there are not two cookies emitted at the same time
+> > > from two CPUs that have the same value by accident.
+> > > 
+> > > How would the timestamp method prevent this ?
+> > 
+> > Do we care? It only needs to be unique per pid doesn't it?
+> 
+> Is it possible to have many threads writing into the same
+> ring buffer in that scenario ? Are all event records stamped
+> with their associated PID ? As long as we have enough information
+> to know which thread was associated with the timestamp cookie
+> on both ends (request for callchain and saving the user callchain
+> on return to userspace), we should be OK.
 
-  # bpftool link -j | jq
-  [
-    ...
-    {
-      "id": 42,
-       ...
-      "ref_ctr_offset": 50500538,
-    }
-  ]
+Yep, basically perf sets PERF_SAMPLE_TID (and sample_id_all) which makes
+every records come with PID/TID.. 
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/bpf/bpftool/link.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-index 52fd2c9fac56..3535afc80a49 100644
---- a/tools/bpf/bpftool/link.c
-+++ b/tools/bpf/bpftool/link.c
-@@ -380,6 +380,7 @@ show_perf_event_uprobe_json(struct bpf_link_info *info, json_writer_t *wtr)
- 			   u64_to_ptr(info->perf_event.uprobe.file_name));
- 	jsonw_uint_field(wtr, "offset", info->perf_event.uprobe.offset);
- 	jsonw_uint_field(wtr, "cookie", info->perf_event.uprobe.cookie);
-+	jsonw_uint_field(wtr, "ref_ctr_offset", info->perf_event.uprobe.ref_ctr_offset);
- }
- 
- static void
-@@ -823,6 +824,8 @@ static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
- 	printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
- 	if (info->perf_event.uprobe.cookie)
- 		printf("cookie %llu  ", info->perf_event.uprobe.cookie);
-+	if (info->perf_event.uprobe.ref_ctr_offset)
-+		printf("ref_ctr_offset 0x%llx  ", info->perf_event.uprobe.ref_ctr_offset);
- }
- 
- static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
--- 
-2.49.0
-
+Thanks,
+Namhyung
