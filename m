@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F70228C9D;
-	Fri,  9 May 2025 15:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFA5228C9D;
+	Fri,  9 May 2025 15:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746805659; cv=none; b=ZEo+e5y7HJCWkRJms0F1rGuC/FGfGx9OSRtM2oN6QPQ8nrPue0TWGQ9dMylONWUX+KgZCTOn5SkMU0rw2NQsCsLuyV2XQiXGxfGIHPJlatZzar8MBtHvgR+gle2AjkmyIu8/vlK500k6MmN8WxZ2p7YpKzpPSYpRriYwDqX37B0=
+	t=1746805706; cv=none; b=XCO0WLXwEkEoy/FzFlXgwgQh9pX7hvxs/FWTSVAh3g3jTJmpezK6oVCCE8qKQn6FBYxmEm4occDguE8Cs5IBNXca8kf1BXQPhIV3IYtCShOa9OZ9C3nOLNSz86zAgcDhXXdyQ2fVILsFqiR3h5GcTmeY/mrYd0oIIy5MBqA/Mxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746805659; c=relaxed/simple;
-	bh=TjJRtu1IKdCYsfE1QjMqNHO1xvXGAyq+p+mPWyCIR54=;
+	s=arc-20240116; t=1746805706; c=relaxed/simple;
+	bh=wBjQfXrnYFf046xq7csQXka+67IngmWM78qorBmxYEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdkHhXuyTTBxmVespaT0KTPPRcNhqZ9Ljnyobeeo+0bZNEILOpAUvNLnWE86VMKZonNUIpuqgj9fIK4MH/3sfjtqk91HbQ5h2kGZDxDIyjQTjr86uEMHQBXZSiodKL8kLX5yNBNGa/TPh0jaVneNBWebcFOSSGhmjvRANCP/2gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmjnWLmb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ovfm8XDyRcgsmyK9CqnoYOf9BjxrXgNuJOAHW0+wdbkMQqu/9HCWQOnddvheo3JMt4HPgw5OfTUjd3fQXefC/d1yLlpu5xBxyy4Q1uufN/0XwmIdej6p2puQxJUlMrZNXEtTovHPv60lPkS4j+07InbccxTzVc5mQTDa0LX2YZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLgbQAus; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmjnWLmb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AEBC4CEE4;
-	Fri,  9 May 2025 15:47:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLgbQAus"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B286C4CEE4;
+	Fri,  9 May 2025 15:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746805659;
-	bh=TjJRtu1IKdCYsfE1QjMqNHO1xvXGAyq+p+mPWyCIR54=;
+	s=k20201202; t=1746805706;
+	bh=wBjQfXrnYFf046xq7csQXka+67IngmWM78qorBmxYEY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PmjnWLmbRYHj+HLr0b8pdBekNsD15yqatuqPwgkiIJEzlfWq+aDvgqh/bvRDjnEc2
-	 yhdHJL9OaSbRjXUqyFeg2je3GDQUmxjmqJCAJYv8+iW3x4+4JiQNK2MicfbIrWSAGL
-	 61m0KhYJ3DXylQaZ2YzMebcxudYxUA/k8FiloJLEc6gvZ7rAZsfNlYdn0moxt+E3Tr
-	 JM11rbPK2c4y4dgbwvfGWtxSNghFIhQYP1pZYbBeSaKY9gUG45DsSJnj06wgfEshTu
-	 MPd27X/2a6BL/9Qa7UPVpnrvBg+XjQJrS/xYDn+4ySSuatKSz2ZyVWjKRMlux7OQKw
-	 MJB1sLZlSoboA==
-Date: Fri, 9 May 2025 08:47:36 -0700
+	b=pLgbQAusXReXrnsC7hdi5/wDxA81/FEyh8N31IqWbBLHhNQizEtb9lRIAdBjLvW9y
+	 hj5bCornBQnMLMCMvmY9sExw2m2FDskioDEeR5epbDVYbulybEGH2PXA3zWfhw5Yaz
+	 HpCKsoS7LZ75vUXQpVBz3OIh6NtLYVQ/oEFO7GhypP/Phvs8SL7gFVbbfbuy4X5YRG
+	 6WaMmfoIJ+a4QocvPLxYj1lfyhrAySW8pqpt+P7+Nvgq/TgJ1r2x1cu9CFdejBy/fZ
+	 L8f6Z+quBByE+vA3YwuZGXihO+KsVht7uO/VGH5Bs0gJkN1gW9hhbFU6Y65PWJ5xQD
+	 RiNX3cTdARgOg==
+Date: Fri, 9 May 2025 08:48:22 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix some more memory leaks
-Message-ID: <aB4jmGT8M8bJEY9c@google.com>
-References: <20250401202715.3493567-1-irogers@google.com>
- <aBzFGKKubskQDLrs@x1>
- <aBzrkz0__S_eupgB@google.com>
- <aB0QAUw7N9RaeVVO@x1>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC/PATCH] perf lock contention: Add -J/--inject-delay option
+Message-ID: <aB4jxs90zVid4Bx8@google.com>
+References: <20250225075929.900995-1-namhyung@kernel.org>
+ <aBzDpi25-LBgAjEj@x1>
+ <aBzqGn0Ktbl38sOF@google.com>
+ <aB0MSvrGA5fgH5Hj@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,56 +51,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aB0QAUw7N9RaeVVO@x1>
+In-Reply-To: <aB0MSvrGA5fgH5Hj@x1>
 
-On Thu, May 08, 2025 at 05:11:45PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 08, 2025 at 10:36:19AM -0700, Namhyung Kim wrote:
-> > On Thu, May 08, 2025 at 11:52:08AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Tue, Apr 01, 2025 at 01:27:15PM -0700, Ian Rogers wrote:
-> > > > The files.max is the maximum valid fd in the files array and so
-> > > > freeing the values needs to be inclusive of the max value.
-> > > > 
-> > > > Add missing thread__put of the found parent thread in
-> > > > thread__e_machine.
-> > > 
-> > > Split it into:
-> > > 
-> > > ⬢ [acme@toolbx perf-tools-next]$ git log --oneline -2
-> > > 7900938850645ed4 (HEAD -> perf-tools-next) perf trace: Add missing thread__put() in thread__e_machine()
-> > > 8830091383b03498 perf trace: Free the files.max entry in files->table
-> > > ⬢ [acme@toolbx perf-tools-next]$ 
-> > > 
-> > > So that git --oneline is more descriptive, etc.
-> > > 
-> > > Thanks, applied to perf-tools-next,
-> > 
-> > PTAL this one as well.
-> > 
-> > https://lore.kernel.org/r/20250403054213.7021-1-namhyung@kernel.org
+On Thu, May 08, 2025 at 04:55:54PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, May 08, 2025 at 10:30:02AM -0700, Namhyung Kim wrote:
+> > On Thu, May 08, 2025 at 11:45:58AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Feb 24, 2025 at 11:59:29PM -0800, Namhyung Kim wrote:
+> > > > This is to slow down lock acquistion (on contention locks) deliberately.
+> > > > A possible use case is to estimate impact on application performance by
+> > > > optimization of kernel locking behavior.  By delaying the lock it can
+> > > > simulate the worse condition as a control group, and then compare with
+> > > > the current behavior as a optimized condition.
 > 
-> Split into two patches, as one fixes one long standing problem (from
-> 2017:
+> > > So this looks useful, I guess we can proceed and merge it?
 > 
->     perf trace: Fix leaks of 'struct thread' in set_filter_loop_pids()
->     
->     I've found some leaks from 'perf trace -a'.
->     
->     It seems there are more leaks but this is what I can find for now.
->     
->     Fixes: 082ab9a18e532864 ("perf trace: Filter out 'sshd' in the tracer ancestry in syswide tracing")
+> > That'd be great. :)
 > 
-> But the other fixes a more recent bug:
-> 
->     perf trace: Fix leaks of 'struct thread' in fprintf_sys_enter()
->     
->     I've found some leaks from 'perf trace -a'.
->     
->     It seems there are more leaks but this is what I can find for now.
->     
->     Fixes: 70351029b55677eb ("perf thread: Add support for reading the e_machine type for a thread")
-> 
-> - Arnaldo
+> Can you please refresh it?
 
-Thanks for doing this!
+Sure, will send v2.
+
+Thanks,
 Namhyung
 
+> 
+> ⬢ [acme@toolbox perf-tools-next]$        git am ./20250224_namhyung_perf_lock_contention_add_j_inject_delay_option.mbx
+> Applying: perf lock contention: Add -J/--inject-delay option
+> error: patch failed: tools/perf/util/bpf_skel/lock_contention.bpf.c:11
+> error: tools/perf/util/bpf_skel/lock_contention.bpf.c: patch does not apply
+> error: patch failed: tools/perf/util/lock-contention.h:140
+> error: tools/perf/util/lock-contention.h: patch does not apply
+> Patch failed at 0001 perf lock contention: Add -J/--inject-delay option
+> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+> hint: When you have resolved this problem, run "git am --continue".
+> hint: If you prefer to skip this patch, run "git am --skip" instead.
+> hint: To restore the original branch and stop patching, run "git am --abort".
+> hint: Disable this message with "git config set advice.mergeConflict false"
+> ⬢ [acme@toolbox perf-tools-next]$ git am --abort
+> ⬢ [acme@toolbox perf-tools-next]$ 
+> ⬢ [acme@toolbox perf-tools-next]$ patch -p1 < ./20250224_namhyung_perf_lock_contention_add_j_inject_delay_option.mbx
+> patching file tools/perf/Documentation/perf-lock.txt
+> Hunk #1 succeeded at 216 (offset 1 line).
+> patching file tools/perf/builtin-lock.c
+> Hunk #2 succeeded at 2003 (offset 30 lines).
+> Hunk #3 succeeded at 2508 (offset 30 lines).
+> Hunk #4 succeeded at 2652 (offset 30 lines).
+> patching file tools/perf/util/bpf_lock_contention.c
+> Hunk #1 succeeded at 261 (offset 78 lines).
+> Hunk #2 succeeded at 373 (offset 80 lines).
+> patching file tools/perf/util/bpf_skel/lock_contention.bpf.c
+> Hunk #1 succeeded at 14 with fuzz 2 (offset 3 lines).
+> Hunk #2 succeeded at 152 (offset 35 lines).
+> Hunk #3 FAILED at 153.
+> Hunk #4 succeeded at 397 (offset 39 lines).
+> Hunk #5 succeeded at 835 with fuzz 1 (offset 230 lines).
+> 1 out of 5 hunks FAILED -- saving rejects to file tools/perf/util/bpf_skel/lock_contention.bpf.c.rej
+> patching file tools/perf/util/lock-contention.h
+> Hunk #2 succeeded at 146 with fuzz 1.
+> Hunk #3 succeeded at 156 (offset 1 line).
+> ⬢ [acme@toolbox perf-tools-next]$
