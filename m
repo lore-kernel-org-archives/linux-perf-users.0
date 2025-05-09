@@ -1,162 +1,148 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18DA8F77;
-	Fri,  9 May 2025 02:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5997846F;
+	Fri,  9 May 2025 02:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746756661; cv=none; b=S1b1n/ZOZORPogXtIPSFPBheWu9UDdxtKC1u6niOZqC1LzLl21j+9Gyg//CTPqDFssHXDwTYpFVHmQrlu5D4N9OPg0ikUZHr+/r8KhVY3H2lxZN57Mvcmy47+w4pLfzwg/HzCeqdMBP98t4Z3dmCwmtBKpk8FUvKfzWMogngPq4=
+	t=1746757174; cv=none; b=th9OhFoGDmCbAPIp2LlnLy+XoiKgsQKrqBBHhNrwZcdIl9zk4je3XQGKngVDaimJD/UBB2JNVKwsPP/amELttiihL3+wXfR1QZIWP/BTWuH9gLWOETrGuGL8AVjDhrw9HP+TfzQyOS2qyqtxua7Ue1bvi7+eGTG/ngacSejkoj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746756661; c=relaxed/simple;
-	bh=eouLDxNWFtWINNeneQevRkOh1Ike8Q0fYwwO6srNaVc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=nm17EKxeRqKlswvacxvZutHb/kl1FKwenxAWzvATPEkM9qPff7iVW6NqvPHyZsPZ3vX1nH+oYk0t9VSTF3+/3eU+PB5j2IIv293Ir9CTLTjh7tC7TnHYPOJyw/txmDZOgHWQCVFjgFNM/IyngDUQKnc9ThuhTpl4/SqFDYs4wb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZtsQr68Dbz1Z1Yl;
-	Fri,  9 May 2025 09:50:44 +0800 (CST)
-Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
-	by mail.maildlp.com (Postfix) with ESMTPS id 745B0180B52;
-	Fri,  9 May 2025 09:54:21 +0800 (CST)
-Received: from [10.174.178.219] (10.174.178.219) by
- kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 9 May 2025 09:54:19 +0800
-Subject: Re: [PATCH] perf kvm: Fix arm64 VM-EXIT event detection
-To: Haixin Yu <yuhaixin.yhx@linux.alibaba.com>
-CC: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James
- Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan
-	<leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Shannon Zhao
-	<shannon.zhao@linux.alibaba.com>, Sergey Senozhatsky
-	<sergey.senozhatsky@gmail.com>
-References: <ZNG9PNB-fEBNyK9E@B-Q60VQ05P-2326.local>
-From: Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <33dd0a17-cf35-4b6b-9ee5-9983669cc98b@huawei.com>
-Date: Fri, 9 May 2025 09:54:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+	s=arc-20240116; t=1746757174; c=relaxed/simple;
+	bh=WnBpkQV0yq9AWdCpThVf6GUnM7PgMoyjUXtRXm1i0ms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X9k/oySPLN6fFsv9UDO6IyJbvoV0ccufjLDi2ZO6aklJgMOW1JHUU5xh+iQHxmaq8U2BNeKdMxNaza0HeanZ4l7LZ2Ds1Gpa1aPIxx1q7iGW2b/cT/WU2mqCRjZkV1X8/v0ZouAWzqw/ss2G3Fz2Wc8/kIUatOQVjJ7wt+C3kI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3kKUNXo; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3kKUNXo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746757173; x=1778293173;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WnBpkQV0yq9AWdCpThVf6GUnM7PgMoyjUXtRXm1i0ms=;
+  b=N3kKUNXob5pkND0wfrS03DWdQqSPD+RLFiDeJmy+p5AxX5M9+CJ+OrwK
+   rWSRhUDo2V0cTfndvlyK9aIhFaPEd5560u2S8JlkQoB+Qyw4kdU9eH0P1
+   JDuAR2Z0fMqOPUB101ceV6cHbX8b3AI51fWf9gD2MGPL/+05qEJHpoOA9
+   MCjTyFMXHKOrNCjI3gOOSW+rHG5Symwf2AZSmLzFBxs5XVgYaMSvcGl8I
+   rtTawMe86+CCE90D30dp5GsioOmkBBtrmpYF1Ac+orHPNMD1Hdu568wDO
+   k1wJmVqan8okVlEZ4Uw2X1ATfIrtvokNdNDmyl99fsNqds8jm6GygLFLx
+   w==;
+X-CSE-ConnectionGUID: h9vo4ckqSQeev56iy+z+yw==
+X-CSE-MsgGUID: beakdVgpRdmSseV4tHfDKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48479313"
+X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
+   d="scan'208";a="48479313"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 19:19:32 -0700
+X-CSE-ConnectionGUID: hTWXd3trQomq2TdVOhkBlA==
+X-CSE-MsgGUID: 38jSYgSFQSeRnsD7WpelPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
+   d="scan'208";a="136360142"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.231.84]) ([10.124.231.84])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 19:19:29 -0700
+Message-ID: <a08c7053-26b8-43ae-a036-05ae2c132e4f@linux.intel.com>
+Date: Fri, 9 May 2025 10:19:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZNG9PNB-fEBNyK9E@B-Q60VQ05P-2326.local>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
+ with vCPU's value.
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Seth Forshee <sforshee@kernel.org>
+References: <20250426001355.1026530-1-seanjc@google.com>
+ <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
+ <aBTe6dpaQs6bmFwh@google.com>
+ <d78cd913-69eb-415f-ac30-1677642a5f1a@linux.intel.com>
+ <aBy2AGIFi34q031x@google.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemk200017.china.huawei.com (7.202.194.83)
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aBy2AGIFi34q031x@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-[ +Cc the original author of perf kvm stat ]
 
-On 2023/8/8 11:57, Haixin Yu wrote:
-> A VM-EXIT event shall start at kvm:kvm_exit, and end with the next
-> kvm:kvm_entry. But it's reversed on arm64, which means the time running
-> guest code in fact.
+On 5/8/2025 9:47 PM, Sean Christopherson wrote:
+> On Tue, May 06, 2025, Dapeng Mi wrote:
+>> On 5/2/2025 11:04 PM, Sean Christopherson wrote:
+>>> On Sun, Apr 27, 2025, Dapeng Mi wrote:
+>>>> On 4/26/2025 8:13 AM, Sean Christopherson wrote:
+>>>> Currently we have this Sean's fix, only the guest PEBS event bits of
+>>>> IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
+>>>> change global_ctrl guest value calculation to this.
+>>>>
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>>> index 09d2d66c9f21..5bc56bb616ec 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
+>>>> *intel_guest_get_msrs(int *nr, void *data)
+>>>>         arr[global_ctrl] = (struct perf_guest_switch_msr){
+>>>>                 .msr = MSR_CORE_PERF_GLOBAL_CTRL,
+>>>>                 .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+>>>> -               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+>>>> +               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask,
+>>>>         };
+>>> Hmm, that's not as clear cut.  PEBS needs to be disabled because leaving it enabled
+>>> will crash the guest.  For the counter itself, unless leaving it enabled breaks
+>>> perf and/or degrades the sampling, I don't think there's an obvious right/wrong
+>>> approach.
+>>>
+>>> E.g. if the host wants to profile host and guest, then keeping the count running
+>>> while the guest is active might be a good thing.  It's still far, far from
+>>> perfect, as a counter that overflows when the guest is active won't generate a
+>>> PEBS record, but without digging further, it's not obvious that even that flaw
+>>> is overall worse than always disabling the counter.
+>> Hmm, if the host PEBS event only samples host side, whether the HW counter
+>> or the PEBS engine would be disabled once VM enters non-root mode, the KVM
+>> PEBS implementation is correct. But for the host PEBS events which sampling
+>> both host and guest, the implementation seems incorrect.
+> Well, yeah, because there is no correct implementation.
+>
+>> As the below code shows, as long as there are host PEBS events regardless
+>> of the host PEBS events only sample guest or both host and guest, the host
+>> PEBS events would be disabled on both HW counters and PEBS engine once VM
+>> enters non-root mode.
+>>
+>>     arr[global_ctrl] = (struct perf_guest_switch_msr){
+>>         .msr = MSR_CORE_PERF_GLOBAL_CTRL,
+>>         .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+>>         .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+>>     };
+>>
+>>     if (arr[pebs_enable].host) {
+>>         /* Disable guest PEBS if host PEBS is enabled. */
+>>         arr[pebs_enable].guest = 0;
+>>
+>>     }
+>>
+>> So the host PEBS events which hopes to sample both host and guest only
+>> samples host side in fact. This is unexpected.
+> It's only unexpected in the sense that it's probably not well documented.  Because
+> the DS buffer is virtually address, there simply isn't a sane way to enable PEBS
+> (or any feature that utizies the DS buffer) while running a KVM guest that isn't
+> enlightened to explicitly allow profiling via host PEBS (and AFAIK, no such guest
+> exists).
+>
+> Even when KVM is using shadowing paging, i.e. fully controls the page tables used
+> while the guest is running, enabling PEBS isn't feasible as KVM has no way to
+> prevent the guest from using the virtual address.  E.g. KVM could shove in mappings
+> for the DS buffer, but that DoS the guest if the guest wants to use the same
+> virtual address range for its own purposes, and would be a massive data leak to
+> the guest since the guest could read host data from the buffer.
 
-Good catch! It'd be great if Sergey could take a look.
+Yeah, that's true. Thanks for the explanation.
 
-> 
-> Example:
-> 
->  # perf kvm stat record -p 2772 -- sleep 1
-> 
-> Before this change:
-> 
->  # perf kvm stat report
-> 
-> Analyze events for all VMs, all VCPUs:
-> 
->     VM-EXIT Samples Samples%   Time%   Min Time   Max Time    Avg time
-> 
->     IRQ      756     100.00%  100.00%   2.28us    3674.38us   1375.66us ( +-   4.34% )
-> 
-> Total Samples:756, Total events handled time:1039996.94us.
-> 
-> After:
-> 
->  # perf kvm stat report
-> 
-> Analyze events for all VMs, all VCPUs:
-> 
->     VM-EXIT Samples Samples%   Time%   Min Time   Max Time    Avg time
-> 
->     IRQ     772      100.00%  100.00%   0.24us     62.86us    6.34us ( +-   3.55% )
-> 
-> Total Samples:772, Total events handled time:4890.80us.
-> 
-> IRQ average handled time decreases to 6us, which is a more rational result
-> as KVM handles IRQ by returning to guest directly.
-> 
-> Signed-off-by: Haixin Yu <yuhaixin.yhx@linux.alibaba.com>
-> ---
->  tools/perf/arch/arm64/util/kvm-stat.c | 24 +++---------------------
->  tools/perf/builtin-kvm.c              |  2 +-
->  2 files changed, 4 insertions(+), 22 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm64/util/kvm-stat.c b/tools/perf/arch/arm64/util/kvm-stat.c
-> index 6611aa21cba9..eeb659ceedc2 100644
-> --- a/tools/perf/arch/arm64/util/kvm-stat.c
-> +++ b/tools/perf/arch/arm64/util/kvm-stat.c
-> @@ -21,7 +21,7 @@ const char *kvm_events_tp[] = {
->  	NULL,
->  };
->  
-> -static void event_get_key(struct evsel *evsel,
-> +void exit_event_get_key(struct evsel *evsel,
->  			  struct perf_sample *sample,
->  			  struct event_key *key)
->  {
-> @@ -40,27 +40,9 @@ static void event_get_key(struct evsel *evsel,
->  	}
->  }
->  
-> -static bool event_begin(struct evsel *evsel,
-> -			struct perf_sample *sample __maybe_unused,
-> -			struct event_key *key __maybe_unused)
-> -{
-> -	return evsel__name_is(evsel, kvm_entry_trace);
-> -}
-> -
-> -static bool event_end(struct evsel *evsel,
-> -		      struct perf_sample *sample,
-> -		      struct event_key *key)
-> -{
-> -	if (evsel__name_is(evsel, kvm_exit_trace)) {
-> -		event_get_key(evsel, sample, key);
-> -		return true;
-> -	}
-> -	return false;
-> -}
-> -
->  static struct kvm_events_ops exit_events = {
-> -	.is_begin_event = event_begin,
-> -	.is_end_event	= event_end,
-> +	.is_begin_event = exit_event_begin,
-> +	.is_end_event	= exit_event_end,
->  	.decode_key	= exit_event_decode_key,
->  	.name		= "VM-EXIT"
->  };
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 71165036e4ca..498cd8e21134 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -615,7 +615,7 @@ static const char *get_filename_for_perf_kvm(void)
->  
->  #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  
-> -void exit_event_get_key(struct evsel *evsel,
-> +void __weak exit_event_get_key(struct evsel *evsel,
->  			struct perf_sample *sample,
->  			struct event_key *key)
->  {
+
+>
