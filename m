@@ -1,148 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2041.outbound.protection.outlook.com [40.107.92.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5997846F;
-	Fri,  9 May 2025 02:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746757174; cv=none; b=th9OhFoGDmCbAPIp2LlnLy+XoiKgsQKrqBBHhNrwZcdIl9zk4je3XQGKngVDaimJD/UBB2JNVKwsPP/amELttiihL3+wXfR1QZIWP/BTWuH9gLWOETrGuGL8AVjDhrw9HP+TfzQyOS2qyqtxua7Ue1bvi7+eGTG/ngacSejkoj4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746757174; c=relaxed/simple;
-	bh=WnBpkQV0yq9AWdCpThVf6GUnM7PgMoyjUXtRXm1i0ms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X9k/oySPLN6fFsv9UDO6IyJbvoV0ccufjLDi2ZO6aklJgMOW1JHUU5xh+iQHxmaq8U2BNeKdMxNaza0HeanZ4l7LZ2Ds1Gpa1aPIxx1q7iGW2b/cT/WU2mqCRjZkV1X8/v0ZouAWzqw/ss2G3Fz2Wc8/kIUatOQVjJ7wt+C3kI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3kKUNXo; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F73283FD9;
+	Fri,  9 May 2025 08:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746780030; cv=fail; b=ecIZWZKHigZVkzg0hQC4nfR4urxXoUj+p+rUbw0illTp0LhqDPPiooJI7lT82V5hhYTxyLGGeZgIXDCcTiqdke3xxr704/wTwmB/i6qsepOyQYIiSsmTn5aq7iCInuxRgperoELPPGZn9C0bKtT0PD/2EEe4vtJWnLqfI6vMaug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746780030; c=relaxed/simple;
+	bh=0k3GiLoFcJvmgHYW2FYR6KcHxtUFG6KtQexlhg6snv4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=c7nNwWwF7zYlBQNEwuplF9g+8o1wmsrel4cs8HevpBCUMzQoR1gZwZ8vFw8sdwWHf5EwhEhNRECWYy117K+ygNkYIYbYX+KXqDy1sCKtaarmxE/NRAWICdURFlH0LNDMWKtnKkie9Qn34zxA/8ABsJp8vJjqDd6Lx0jSpEZkhc4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=A9QlAJUC; arc=fail smtp.client-ip=40.107.92.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3kKUNXo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746757173; x=1778293173;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WnBpkQV0yq9AWdCpThVf6GUnM7PgMoyjUXtRXm1i0ms=;
-  b=N3kKUNXob5pkND0wfrS03DWdQqSPD+RLFiDeJmy+p5AxX5M9+CJ+OrwK
-   rWSRhUDo2V0cTfndvlyK9aIhFaPEd5560u2S8JlkQoB+Qyw4kdU9eH0P1
-   JDuAR2Z0fMqOPUB101ceV6cHbX8b3AI51fWf9gD2MGPL/+05qEJHpoOA9
-   MCjTyFMXHKOrNCjI3gOOSW+rHG5Symwf2AZSmLzFBxs5XVgYaMSvcGl8I
-   rtTawMe86+CCE90D30dp5GsioOmkBBtrmpYF1Ac+orHPNMD1Hdu568wDO
-   k1wJmVqan8okVlEZ4Uw2X1ATfIrtvokNdNDmyl99fsNqds8jm6GygLFLx
-   w==;
-X-CSE-ConnectionGUID: h9vo4ckqSQeev56iy+z+yw==
-X-CSE-MsgGUID: beakdVgpRdmSseV4tHfDKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48479313"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="48479313"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 19:19:32 -0700
-X-CSE-ConnectionGUID: hTWXd3trQomq2TdVOhkBlA==
-X-CSE-MsgGUID: 38jSYgSFQSeRnsD7WpelPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="136360142"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.231.84]) ([10.124.231.84])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 19:19:29 -0700
-Message-ID: <a08c7053-26b8-43ae-a036-05ae2c132e4f@linux.intel.com>
-Date: Fri, 9 May 2025 10:19:25 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="A9QlAJUC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vPuUxdYN5CqOELUuH/489k/WsRyv0gc20O3MG4Bd3NVwC/lhmh+3oejgeKXcxvky3olYXmR0J2XmScWeUyxq/0i6iIHR3vutsRfoScLvLBdMtsdiuhGAOVP/Io0mxBnlqMc17U86oGgIV4ULeO4qepCFBQgaIufbK1CAPeLtuLGi14OMQY3+jhdVyXWWNt8DI2m1kjG0a5CtyYr7wTvcgTrjyXLp6jaKuJvL3A6KkJPZveR9PdA1CNwHrrMWDJkuKTAffeUWjHJW2wENqPN03UOc2E24Gv2iNnWYS0//yyETNggFujPCVznOAbW8B5ujhSZ+kHmuB6NDWurwmhQyug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=irOY7YXFjdfy0eS7yzePIAl3JCUDl2+bsiwzLJFDrpY=;
+ b=ghYEkq2NF5OmZzfguNGDR8ak1CEl9JP9DC21PeG+zcwYn4erEhopLKKj0YI3ivLfyF/wHH0WLSVXut3OoidugWJmmfXy3fH9CMgyZi/HOOFAE+yZRbU/uOF6Gx82hZdAvgVBWHURmDj6I66YLgLh1s+HrZjFefxapQvI++blKHtqsiw04QpECFqM+ULfArxhQPXEXw/E3d1i7rCO7vKXAJQPfSRXdOsSFGjJGDWKt08tPKpTXVuTEWHu433go6q9WBAvjb7Xt2p61BPWiEPnQUQO3VBR50lkOGUurKWMJs1lFwkCibF//JedIX4ml6Kc6DADywGRRFwF+K+WLFy9pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=irOY7YXFjdfy0eS7yzePIAl3JCUDl2+bsiwzLJFDrpY=;
+ b=A9QlAJUCRpP7WEoGQ4cNFtVdrOmI47w/WW0vl2rX0cCfPLSQlvoKt2+EF4EAUPfmps9ljBwmoBgJFptq1GoBVnN0u74OMo893gCigmf8jpCGnWKbND1pmMZ2+FSDYAZorgW/9U6AcIyEyn7yGbUwH5EBqNzESFZ4ky1akekKAg8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by IA1PR12MB8286.namprd12.prod.outlook.com (2603:10b6:208:3f8::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Fri, 9 May
+ 2025 08:40:22 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291%6]) with mapi id 15.20.8722.020; Fri, 9 May 2025
+ 08:40:21 +0000
+Message-ID: <8fbf8627-e7d3-4271-95ce-2c17c5933cc0@amd.com>
+Date: Fri, 9 May 2025 14:10:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] perf vendor events amd: Address event errata
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Stephane Eranian
+ <eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>
+References: <cover.1746627307.git.sandipan.das@amd.com>
+ <CAP-5=fUEeFb3jh-MtxEEH0Z+HFAD0oxSc4uE66Rfg+BRzYRB5Q@mail.gmail.com>
+ <9a76fcc7-a8e0-4b88-b93c-7dbf65bc695e@amd.com>
+ <CAP-5=fU3fk79xtNAGwk35PCkiii=QoBdhbzit1Ax9OsEtrPExg@mail.gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAP-5=fU3fk79xtNAGwk35PCkiii=QoBdhbzit1Ax9OsEtrPExg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN4PR01CA0051.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:274::15) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
- with vCPU's value.
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Seth Forshee <sforshee@kernel.org>
-References: <20250426001355.1026530-1-seanjc@google.com>
- <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
- <aBTe6dpaQs6bmFwh@google.com>
- <d78cd913-69eb-415f-ac30-1677642a5f1a@linux.intel.com>
- <aBy2AGIFi34q031x@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aBy2AGIFi34q031x@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|IA1PR12MB8286:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4cd07b8d-8353-4f39-00a5-08dd8ed52129
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OEs5eUppNG9oQk1ybi90RUtxSmg0UmNtbmcyRUhTWUVWWjVwSkZxNTZwQ0NV?=
+ =?utf-8?B?bEwrYzBqbTRvYi90UnpRTzJMdThBZjgrVlFRNzQ5ZW9EY05leUpRNVpjQ3Ru?=
+ =?utf-8?B?VldUb1dIa0hZQkhCdmFIaEd5c29obzNXdlFScEMyTEVrQm5FdnNYQ1F4MURj?=
+ =?utf-8?B?WE1rdU9MTExHeUJkWloyU041djZUSWRyQzVEbDZsMXdzVEhvVWNOY3B0RWdE?=
+ =?utf-8?B?bi8yelI4NFhjMDdyeXRVNCs1YUpkVWlPOEVoaXl6VHJwWlQ2R2NmNUcydi9i?=
+ =?utf-8?B?V0ZZRG9VU0VscFNBZTIwMU5RWDJDUGVBMmp5Z0VYWmYyaGNZY3dRd21yTHVR?=
+ =?utf-8?B?UFF4aXBaOUxwaVh1Mzc4QXk5elZoZThvU2FWNVl3K0sxVE4wWFhyZHY1WnR0?=
+ =?utf-8?B?eUJZU1pZQ2RQblRKOTBwT3RzanowUDNQMGFieW1pVmZrbXdPV3BmS3lPaTBH?=
+ =?utf-8?B?Tkx3S2JmVjBJUjdFTmMxNE95VWtvdDFwb1k3cU9kQW5OU1lZeEdkQmFCcVIr?=
+ =?utf-8?B?dUpnQ1k1VUd0aUZ4TFpId05HUVN6eEprTGhSbTdGWURxaWN0dTFWV2J1d1Zw?=
+ =?utf-8?B?UkVyQmt5M25ldEFjZng1V0xqNkk0bVJmSUlHcDdDd1J2cUVGdHdUWHA5d3U2?=
+ =?utf-8?B?MVZqbVdFYlcrVFAwZGRObkpMMFg1b05uNHhvTGsrNlJUMU41SzBoMnBvYnJk?=
+ =?utf-8?B?eFF6MHVwMmRlQnVVSnh3elN5L3ArWkVFVERWenJWeGdzYUwzTS95VktlRFJI?=
+ =?utf-8?B?OE5TdHFrOUx3NkltaDc5ZnRpRHI3d1BFV2p4Y1ZzOVVFR1Axc0ZJUG1hTytD?=
+ =?utf-8?B?YU14WTBaZnc1ZWUvcFZDZ3BPNGd5NVM2VFEwd2VPb0g5d1FSK0Y5WVVtNFZ1?=
+ =?utf-8?B?SmJFOWlOTlN3QldsK1lTWnlPeHVoeGdMMU9UM2NLRG0ybnA0MlRFWXRNL1Fj?=
+ =?utf-8?B?WlQ1a3pNdk52bW1ZNGpKRzRjWFo1TkhIWVZaeG5uMzQxSFZOVDB2dHpvT3NE?=
+ =?utf-8?B?NUwzdWQzSUhsNm9xaitjaXFJN2NqNVhsWnVXb0ExTkNqdnJtTFUrdDZrRDBE?=
+ =?utf-8?B?bUdmU09nUENqTmdyOUUzNFg2bmd2S1lyZGdoNnMvdXFuYWRZV01RRnpRMklw?=
+ =?utf-8?B?aFdwWlNxcm53eFpYazVUYWV3azl2ZWpMRWNUeWVaQW9HelIxYXBVZWlVUVJX?=
+ =?utf-8?B?dE51NFBUUFNxaVVteWFHM0RTOGdRR3NTRzFidXhNa1dodm90MTB4RHlxSzhK?=
+ =?utf-8?B?S2gweS95cGlaQU9pV2NxSE5pOEJFcFJ5ZDA3clozRy92TjJFMlN1eTVqK1hh?=
+ =?utf-8?B?TEpnYU43T2tDV2IxNXMrQmVDV05TWG1XckkveUF6bDdERkg1cHhWVVpvZ3lF?=
+ =?utf-8?B?bnNNamZhZkdXQTI0bVhEQ1ViWFZ0RGNWenE2dzZ1Vm15bkxxT0srSUN3RUc3?=
+ =?utf-8?B?UzRLLzhOLzR0c2cvbmdFaEUwYWkrRGx0V05SbHd3TERCY29CZWRXa3ZObnlP?=
+ =?utf-8?B?ZWxKTWJpT0J3UWt2UUUzT0RId1RwMSt1UWFSREI0KzNuaXhJUkgyeVRZNVhC?=
+ =?utf-8?B?dENXczh5TTVoUVBnVXdYQUp6US9SZWdiV1krTXRjVGljdDJZMkhWSGlyV1Zz?=
+ =?utf-8?B?eFZ5LzQ5eWdXV3daWGRvVVFsZjBUN3VEOXZIV2xBQXVkMkVMUVZqSlE5OS9N?=
+ =?utf-8?B?V0p0NzZnWG9IeEFXUVI4aEJpODF0MVZXTlRuaVhrUGdHbkZobk9xcFlwQVJj?=
+ =?utf-8?B?TkE2SFpoNnAxQUxRc2JaRDRFeVdFR2d1UHNNZHFKYTk3eW9YWDNFeklkdXBE?=
+ =?utf-8?B?Y1BMN3BLTEhMeU13QmZhY0JERG1EOGlsMTBxcHRxa24xRTc5aVdWK2NZbHRE?=
+ =?utf-8?Q?WGeQm/IQDoEkI?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UXNtbG1majRoVEllQXBTQWZKTGg0VWZuaWUzSm1JTFlmN1FDbzNHOEVoRjlw?=
+ =?utf-8?B?NHhWdmFBNjBPdHhVZFlHSk5MVmh0a0Nya2pPYmZMWXE3d2FDazJ5K3BPNkpU?=
+ =?utf-8?B?dFJycWd5RU9sZ0xxbms2N0ZubmlTekcxMDJhNTlCR3ZUb2FoT1I0Rzhoa3JE?=
+ =?utf-8?B?Njk5a2gwalQ0QWdsUU1kaGhjL2hXcGtHZFlJMWVUY2VEajdFekNhT0tjNHo1?=
+ =?utf-8?B?QUpEaHk4WENuaXYyeU00S2ZSSmg5Y3FBUXhER0dObElKeUxtRDRoNmdTSWp6?=
+ =?utf-8?B?T2dKMHFiM1l1Q2dHQzRtdzdITkdubmtLYlRmWGk5bXNYUEpIRVRURVNXYUJX?=
+ =?utf-8?B?MVl2VFhHUWhwUmNvRXJYY3dTUlJjUzFLdUw5WE52aTQ0SUM3c1hMekxzQ25Z?=
+ =?utf-8?B?eFVGQldodlZ0S25Sb3VzMmdZK1haUWFnMmMyZUxMZHRCNkgyeHVGUy93T2VJ?=
+ =?utf-8?B?b1VZWHZKY09jK25XL0tNNVp5dDdENmtjWDdzV2w3QUJGd08zUkUxc3VGUUh4?=
+ =?utf-8?B?Ty9NVmdMSEVHWHBTak9qaE1Ec3k1SDRUM0FBSjNqeWU2UjJ0MjFEVHJ0VERr?=
+ =?utf-8?B?b2UvQkEzMUl2NlFSTVBLMS9Qa0RrZE10cVoxc2ZFdFB4akNmYmxyUGM5aG1t?=
+ =?utf-8?B?M3Z6S01qTjJ1LzF0QXJXd25hYTY2Q1l2TEtub0JoUnJMdVI2UUFONlNSajNP?=
+ =?utf-8?B?WWtvQ1J1dUJ3TmZYamtXb0taaU81QVBDOG1NaFVmZGVlZmt1VllwMXFMZTYx?=
+ =?utf-8?B?Q01ISVpqR1h0SG1VcFRSRFVxc21ac1h4dEZya0JQNytkcHhQMUNNUng5aTI4?=
+ =?utf-8?B?aUhkUy94Sjd4eCtqbkt3eG9tNzBKZEhFY2d3dVdMRmZld3drOEorVzBNZjF0?=
+ =?utf-8?B?VGh4MWhIalRwU0FlWjZ4V05pT0JjVHlNYm80RTFDZkdEeVVkaUc2aWpoNmxE?=
+ =?utf-8?B?NUtnckVkYXVEUjBWdU1CbTRrdzhoRlpsUjNGa3libWFXWVFCckRUL3NSbGRr?=
+ =?utf-8?B?Z0I3QWpnYUFoaDFjT3VVWDBXSk1YWFpEVkhHMTZPTFY2V0oxV2hTWXMvWnRq?=
+ =?utf-8?B?UVVPdmYzL2h5Q0ZDVkFiMUthVnZ5UDE2Z2Y1TU5neTFHMU5hRkxoNUY0NUxX?=
+ =?utf-8?B?Q0p2bitwU2RXOWNxWGFqZm5qL0ZhVHNPd0YwY2VKMGFWYjM1V1AwVjM0MGx4?=
+ =?utf-8?B?RVQ5OTE0RWFqeU05RzY1VGQ0anBnOFA2SDJXMktDOGlyS2xXczZTYzVtL05F?=
+ =?utf-8?B?VUVEdWRBYXAwdXR3bHNPcmZGN1hlWHBsQnk3K0FjMHpUUkVZRFJkSHhIamlN?=
+ =?utf-8?B?Qkt4ZjZvVVY2MDJoUDUzRHFURXNiN2w1bWVRQllHWXJXNk05RDJiVnF5Mktz?=
+ =?utf-8?B?bVJKcjlZQ2tWeGE3cXJJTGJaQWhPY0kxeXJxeGxNYjg4ek9uRnd6UkVBSEhH?=
+ =?utf-8?B?TWV5bWNvdE5oU2ZNSlBnZ3A3SjNCZnl0YnRCMmFQT00zM0loclpTdnR2bjl1?=
+ =?utf-8?B?VUdGU2o3VFpmL3BkL1ZGMUx2Mm04dHZKc2c5U0JjaXhDSnF5czdLWXZWNlIw?=
+ =?utf-8?B?WGhYMlpWczJrc3Vsc3Q4WVkzRzNqMDZXUmQvRWZvLy9IdzBVeTFiYlVwNkRv?=
+ =?utf-8?B?QU9sQ3MxZXJTWml1ZEtMZVFuZlFvcmhRU1BZLzAxM2hTckhqQUhjN1JaTis0?=
+ =?utf-8?B?cjRDS3Rpa2syMXowZVVzbnA3YU9PWUxCVEYvaVBudHQrYjZkcUFuUWV3M2xU?=
+ =?utf-8?B?UlhRbFl4eDd6aGlyR3A3ODRiZjdySmFBY2JONHQzOEhIZ3VUYVV2WFN3UW1Z?=
+ =?utf-8?B?NU1FWWlXaTlwdFVIOW9HbHJ0NUh2SjcxdDRSeTN5WUZUMVBTYk5vUytGUjlq?=
+ =?utf-8?B?T3IwNXNPNm00bGwwQWVtSm4wK05PN2ZZM3NuRk1XNWxZRkhzQnFJK2FNbFAr?=
+ =?utf-8?B?T2dZQ0RhWmlsWG5YNGNoRDd1Zi96Z29UZWNVOXJvdXhWN29XNTY3Y0liMnVi?=
+ =?utf-8?B?eUNiUmg3V3NqTDhyM1IvU1RHdTdRLzd3S1dtWDRCYitFY3Y3aEloQkpPcUhY?=
+ =?utf-8?B?eEFCVnJNVUV3TDdBZFhldzlGbTlEQ3R1WTZFV2t4eUhqQzQ0QzZMS0RaZUN5?=
+ =?utf-8?Q?tcQpBkysYoU+EekxW3kK26wJH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cd07b8d-8353-4f39-00a5-08dd8ed52129
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 08:40:21.0765
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KiTmAqJbHmjLsbIXeeXdA6N1VESiB72ItrC4+PkToWEyXtW7y7PrivvS4K+DMgojlXYsXH8VfbPRn9VVJRshSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8286
 
-
-On 5/8/2025 9:47 PM, Sean Christopherson wrote:
-> On Tue, May 06, 2025, Dapeng Mi wrote:
->> On 5/2/2025 11:04 PM, Sean Christopherson wrote:
->>> On Sun, Apr 27, 2025, Dapeng Mi wrote:
->>>> On 4/26/2025 8:13 AM, Sean Christopherson wrote:
->>>> Currently we have this Sean's fix, only the guest PEBS event bits of
->>>> IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
->>>> change global_ctrl guest value calculation to this.
+On 5/8/2025 9:04 PM, Ian Rogers wrote:
+> On Thu, May 8, 2025 at 3:56 AM Sandipan Das <sandipan.das@amd.com> wrote:
+>>
+>> On 5/7/2025 9:26 PM, Ian Rogers wrote:
+>>> On Wed, May 7, 2025 at 7:28 AM Sandipan Das <sandipan.das@amd.com> wrote:
 >>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 09d2d66c9f21..5bc56bb616ec 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
->>>> *intel_guest_get_msrs(int *nr, void *data)
->>>>         arr[global_ctrl] = (struct perf_guest_switch_msr){
->>>>                 .msr = MSR_CORE_PERF_GLOBAL_CTRL,
->>>>                 .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
->>>> -               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
->>>> +               .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask,
->>>>         };
->>> Hmm, that's not as clear cut.  PEBS needs to be disabled because leaving it enabled
->>> will crash the guest.  For the counter itself, unless leaving it enabled breaks
->>> perf and/or degrades the sampling, I don't think there's an obvious right/wrong
->>> approach.
+>>>> Remove unreliable Zen 5 events and metrics. The following errata from
+>>>> the Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors have
+>>>> been addressed.
+>>>> #1569 PMCx078 Counts Incorrectly in Unpredictable Ways
+>>>> #1583 PMCx18E May Overcount Instruction Cache Accesses
+>>>> #1587 PMCx188 May Undercount IBS (Instruction Based Sampling) Fetch Events
+>>>>
+>>>> The document can be downloaded from
+>>>> https://bugzilla.kernel.org/attachment.cgi?id=308095
 >>>
->>> E.g. if the host wants to profile host and guest, then keeping the count running
->>> while the guest is active might be a good thing.  It's still far, far from
->>> perfect, as a counter that overflows when the guest is active won't generate a
->>> PEBS record, but without digging further, it's not obvious that even that flaw
->>> is overall worse than always disabling the counter.
->> Hmm, if the host PEBS event only samples host side, whether the HW counter
->> or the PEBS engine would be disabled once VM enters non-root mode, the KVM
->> PEBS implementation is correct. But for the host PEBS events which sampling
->> both host and guest, the implementation seems incorrect.
-> Well, yeah, because there is no correct implementation.
->
->> As the below code shows, as long as there are host PEBS events regardless
->> of the host PEBS events only sample guest or both host and guest, the host
->> PEBS events would be disabled on both HW counters and PEBS engine once VM
->> enters non-root mode.
+>>> Hi Sandipan,
+>>>
+>>> the document is somewhat brief, for example:
+>>> ```
+>>> 1583 PMCx18E May Overcount Instruction Cache Accesses
+>>>
+>>> Description
+>>> If PMCx18E[IcAccessTypes] is programmed to 18x (Instruction Cache
+>>> Miss) or 1Fx (All Instruction Cache Accesses) then the performance
+>>> counter may overcount.
+>>>
+>>> Potential Effect on System
+>>> Inaccuracies in performance monitoring software may be experienced.
+>>>
+>>> Suggested Workaround
+>>> None
+>>>
+>>> Fix Planned
+>>> No fix planned
+>>> ```
+>>> Given being able to count instruction cache accesses (for example) is
+>>> a useful feature, would it be possible to change:
+>>> ```
+>>> -  {
+>>> -    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
+>>> -    "EventCode": "0x18e",
+>>> -    "BriefDescription": "Instruction cache hits.",
+>>> -    "UMask": "0x07"
+>>> -  },
+>>> ...
+>>> ```
+>>> to be say:
+>>> ```
+>>>   {
+>>>     "EventName": "ic_tag_hit_miss.instruction_cache_hit",
+>>>     "EventCode": "0x18e",
+>>>     "BriefDescription": "Instruction cache hits. Note, this counter is
+>>> affected by errata 1583.",
+>>>     "UMask": "0x07",
+>>>     "Experimental": "1"
+>>>   },
+>>> ```
+>>> That is rather than remove the event, the event is tagged as
+>>> experimental (taken to mean accuracy isn't guaranteed) and the errata
+>>> is explicitly noted in the description. Currently the Experimental tag
+>>> has no impact on what happens in the perf tool, for example, the
+>>> "Deprecated" tag hides events in the `perf list` command and is
+>>> commonly used when an event is renamed.
+>>>
 >>
->>     arr[global_ctrl] = (struct perf_guest_switch_msr){
->>         .msr = MSR_CORE_PERF_GLOBAL_CTRL,
->>         .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
->>         .guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
->>     };
->>
->>     if (arr[pebs_enable].host) {
->>         /* Disable guest PEBS if host PEBS is enabled. */
->>         arr[pebs_enable].guest = 0;
->>
->>     }
->>
->> So the host PEBS events which hopes to sample both host and guest only
->> samples host side in fact. This is unexpected.
-> It's only unexpected in the sense that it's probably not well documented.  Because
-> the DS buffer is virtually address, there simply isn't a sane way to enable PEBS
-> (or any feature that utizies the DS buffer) while running a KVM guest that isn't
-> enlightened to explicitly allow profiling via host PEBS (and AFAIK, no such guest
-> exists).
->
-> Even when KVM is using shadowing paging, i.e. fully controls the page tables used
-> while the guest is running, enabling PEBS isn't feasible as KVM has no way to
-> prevent the guest from using the virtual address.  E.g. KVM could shove in mappings
-> for the DS buffer, but that DoS the guest if the guest wants to use the same
-> virtual address range for its own purposes, and would be a massive data leak to
-> the guest since the guest could read host data from the buffer.
+>> I agree that events like IC hits and misses are generally useful and am
+>> fine with the idea of keeping them but my concern is that unless users
+>> read the event description, there is no way for them to know if the
+>> perf output that they are seeing may be unreliable. There is also no
+>> guarantee that such events will be fixed in a future uarch. From a
+>> quick glance, I couldn't find a mechanism that makes perf stat/report
+>> show a warning for named events with known issues.
+> 
+> So I'm forgetting the flow, but rediscovering it. We do have an Errata
+> json value as shown in:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json?h=perf-tools-next#n2
+> ```
+>     {
+>        "ArchStdEvent": "LD_RETIRED",
+>        "Errata": "Errata AC03_CPU_52",
+>        "BriefDescription": "Instruction architecturally executed,
+> condition code check pass, load.
+> Impacted by errata -"
+>    },
+> ```
+> It doesn't impact perf stat/record but it does get added to the event
+> description for perf list:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/jevents.py?h=perf-tools-next#n340
+> ```
+>     if 'Errata' in jd:
+>       extra_desc += '  Spec update: ' + jd['Errata']
+> ```
+> which means the perf list description ends up as "Instruction
+> architecturally executed, condition code check pass, load. Impacted by
+> errata -  Spec update: Errata AC03_CPU_52". We could change this so
+> that the Errata is distinct in the encoded in perf json and then we
+> could display the errata when perf stat/record parses the event. I'd
+> be a little worried about this breaking things that parse perf's text
+> output, but the impact would be limited to Zen5, Ampere and older
+> Intel CPUs. We could also make the errata output conditional on
+> passing a verbose flag to perf. Would just `perf list` support work
+> for you or would the perf stat/record changes be a requirement for
+> keeping these events?
+> 
 
-Yeah, that's true. Thanks for the explanation.
-
-
->
+Adding "Errata" tags to the affected events is a good start.
+We can sort out the perf stat/record changes eventually.
