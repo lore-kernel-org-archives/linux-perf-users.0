@@ -1,172 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D043235059;
-	Fri,  9 May 2025 16:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C5A45038;
+	Fri,  9 May 2025 17:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807463; cv=none; b=KiAhinTbH3luKigCHIPjEm2cwDtqZqxnp+ZmO4JbPxDh3uBLpOVhV0AGaWLolUGOVuQGLg8FpSOZYmD2b4ruUbyZwqX1nnWrnicxP0Usjx2l2hEoPhRihj6FfMCKml1X0L9HjLpUv9Jt3QgMyoYqYCAfVAWYjfLIcbshOzSsJEs=
+	t=1746810092; cv=none; b=KqLZ4V27tuk0k37+IJhKNqZNH3Ot3UsrxwZoFjMjrRm/i+vb6cBIy83W24LpnI9G30XHcN0NaTuFE/UXqNp2ilU8O99mHuZsgv6vbD0jH9MEpD4RUw0bd63Pzh24l1qhxlKhXTjZ1F4J7WWbpKrt3BzICXb8ArS6WtfTuI69B7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807463; c=relaxed/simple;
-	bh=/FSy4Y5u8yi3L51i2Mvhg2Nfe0hzragk32vSsyBE6/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nLGazH3AFgWRl/kg12WOXbLk+Mmk6lu9D6EoAa0BjWu1q9aBs+NAVZizzXPPszFCqHDr1ezOEUrCZjXfeVhUCzMtJtD1kPE5/JOS86738ARDKpwnDoa3tAHY00OH3fedXgAgiBKRyLAE0A4xoy3U7sMv3s8AzsbxI84V/C+6YGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1xovz5D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746810092; c=relaxed/simple;
+	bh=/w4P765IV7uAAFXrKC5J83/GWV8vEEtvplPc++mjWm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e0Q3mHmmh+k/cBIRT0SGcoRtSpu2IHxdolQa8MdsBpOxzGG43/y0MPvVVYg6w06s0lLAe1Xn5sDeplkzKeBw1RDkmMRoL3Om6G2GViqycadLEJq5XxdvRCNkSlmoyD5pEyXPKfQwVub09WX8tb5iI5DaWAr27IfWuqy1fE5Gmvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fMR5aum8; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1xovz5D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E52C4CEEE;
-	Fri,  9 May 2025 16:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746807462;
-	bh=/FSy4Y5u8yi3L51i2Mvhg2Nfe0hzragk32vSsyBE6/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p1xovz5DW5Nhz241NhCdaXIQHQq8dLSs/NOrOUjUuFRCh3+socScZYGxmY+5+2hVp
-	 +iWmK6UjcQbbY/IDfaix96KBqyuFfSVec4ex1pGc3xDBlknjy/csfhxlmpEKYdmD/Y
-	 Y94hucb7yOecxhLgV4+glBISwW4jUOeRt1P4e/MXuQK6E5Sz4HghH5DAzxDKx06yIS
-	 u5ibSWiXjcmC68Cmy3/wc0hddNEYMy6EsFWm43/oFy2qyg5Bb047AkJcr+KMMpQNyV
-	 N0NadlwvBv1u6AdAGNwJ6TKpSpvnKRhB6rW86e8PJR4uG7BhCe3sHTweQxi/hgoAuR
-	 dO7Fl1RqouaxQ==
-Date: Fri, 9 May 2025 09:17:40 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC/PATCHSET 00/11] perf mem: Add new output fields for data
- source (v1)
-Message-ID: <aB4qpAc2GThyGaqg@google.com>
-References: <20250430205548.789750-1-namhyung@kernel.org>
- <33984b44-ae3d-4fbd-b918-07289a3f1d8a@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fMR5aum8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746810090; x=1778346090;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/w4P765IV7uAAFXrKC5J83/GWV8vEEtvplPc++mjWm8=;
+  b=fMR5aum8O3h2Yl2UCn8Ko0NWtjlfQJYwLyYORxluNXWVm29r2vAae1S5
+   mkHXeJCS9dAhyf/A6I/O8FTjmtvxPLVrnCKlUioUTIkHPXkUinzeoTSBY
+   p1a6ywlJ+5lmu/rVOOrZwh2+F1vKbsyIQ7GnC53ww3dz+vztVDrEWXm1T
+   aI9EDEzAUsST7o9QLc9dP5VBUidDAcd4rtF9vXbVJkeW1r8AHI6dBL+u/
+   m0eYuHJVUeRop5rXx/GD1m79kjMTJtNEaBq4QFlChLhrf+FkBj10zbRor
+   2cuLMraDxNM839jmP9qbN+raAmrCGdbidXdDylugXzFNhAaetF7gwBuaq
+   Q==;
+X-CSE-ConnectionGUID: vHxQt2zEQbmzT07y0hr18A==
+X-CSE-MsgGUID: /UFo65DeQlaTqGTPMojf5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48562114"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="48562114"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 10:01:12 -0700
+X-CSE-ConnectionGUID: Vud84jh6Qqq6txVXDtu69w==
+X-CSE-MsgGUID: iPpdFma3SDC0m1e4Z47sTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="141781628"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 10:01:11 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id AC97120B5736;
+	Fri,  9 May 2025 10:01:10 -0700 (PDT)
+Message-ID: <467513ae-3d02-4639-97e9-a5f0d3451a7b@linux.intel.com>
+Date: Fri, 9 May 2025 13:01:09 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <33984b44-ae3d-4fbd-b918-07289a3f1d8a@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix segfault with PEBS-via-PT with
+ sample_freq
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250508134452.73960-1-adrian.hunter@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250508134452.73960-1-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Ravi,
 
-On Thu, May 08, 2025 at 09:42:41AM +0530, Ravi Bangoria wrote:
-> Hi Namhyung,
-> 
-> I feel the overall idea is good. Running few simple perf-mem commands
-> on AMD works fine too. Few general feedback below.
 
-Thanks for your review!
+On 2025-05-08 9:44 a.m., Adrian Hunter wrote:
+> Currently, using PEBS-via-PT with a sample frequency instead of a sample
+> period, causes a segfault.  For example:
+> 
+>  [  103.607823] BUG: kernel NULL pointer dereference, address: 0000000000000195
+>  [  103.607876]  <NMI>
+>  [  103.607879]  ? __die_body.cold+0x19/0x27
+>  [  103.607885]  ? page_fault_oops+0xca/0x290
+>  [  103.607891]  ? exc_page_fault+0x7e/0x1b0
+>  [  103.607897]  ? asm_exc_page_fault+0x26/0x30
+>  [  103.607901]  ? intel_pmu_pebs_event_update_no_drain+0x40/0x60
+>  [  103.607903]  ? intel_pmu_pebs_event_update_no_drain+0x32/0x60
+>  [  103.607905]  intel_pmu_drain_pebs_icl+0x333/0x350
+>  [  103.607910]  handle_pmi_common+0x272/0x3c0
+>  [  103.607919]  intel_pmu_handle_irq+0x10a/0x2e0
+>  [  103.607922]  perf_event_nmi_handler+0x2a/0x50
+> 
+> That happens because intel_pmu_pebs_event_update_no_drain() assumes all the
+> pebs_enabled bits represent counter indexes, which is not always the case.
+> In this particular case, bits 60 and 61 are set for PEBS-via-PT purposes.
+> 
+> The behaviour of PEBS-via-PT with sample frequency is questionable because
+> although a PMI is generated (PEBS_PMI_AFTER_EACH_RECORD), the period is not
+> adjusted anyway.
+> 
+> Putting that aside, fix intel_pmu_pebs_event_update_no_drain() by passing
+> the mask of counter bits instead of 'size'.  Note, prior to the Fixes
+> commit, 'size' would be limited to the maximum counter index, so the issue
+> was not hit.
+> 
+> Fixes: 722e42e45c2f1 ("perf/x86: Support counter mask")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> 
-> > The name of some new fields are the same as the corresponding sort
-> > keys (mem, op, snoop) so I had to change the order whether it's
-> > applied as an output field or a sort key.  Maybe it's better to name
-> > them differently but I couldn't come up with better ideas.
-> 
-> 1) These semantic changes of the field name seems counter intuitive
->    (to me). Example:
-> 
->    -F mem:
-> 
->      Without patch:
-> 
->      $ perf mem report -F overhead,sample,mem --stdio
->      # Overhead       Samples  Memory access
->          39.29%             1  L3 hit
->          37.50%            21  N/A
->          23.21%            13  L1 hit
-> 
->      With patch:
-> 
->      $ perf mem report -F overhead,sample,mem --stdio
->      #                          Memory
->      # Overhead       Samples    Other
->         100.00%            35   100.0%
+Thanks for the fix.
 
-Yep, that's because I split the 'mem' part to 'cache' and 'mem' because
-he_mem_stat can handle up to 8 entries.  As your samples hit mostly in
-the caches, you'd get the similar result when you run:
-
-  $ perf mem report -F overhead,sample,cache --stdio
-
-> 
->    -F 'snoop':
-> 
->      Without patch:
-> 
->      $ perf mem report -F overhead,sample,snoop --stdio
->      # Overhead       Samples  Snoop
->          60.71%            34  N/A
->          39.29%             1  HitM
->    
->      With patchset:
-> 
->      $ perf mem report -F overhead,sample,snoop --stdio
->      #                         --- Snoop ----
->      # Overhead       Samples     HitM  Other
->         100.00%            35    39.3%  60.7%
-
-This matches to 'Overhead' distribution without patch, right?
-
-> 
-> 2) It was not intuitive (to me:)) that perf-mem overhead is calculated
->    using sample->weight by overwriting sample->period. I also don't see
->    it documented anywhere (or did I miss it?)
-
-I don't see the documentation and I also find it confusing.  Sometimes I
-think the weight is better but sometimes not. :(  At least we could add
-and option to control that (like --use-weight ?).
-
-Also we now have 'weight' output field so users can see it, althought it
-shows averages.
-
-> 
->    perf report:
-> 
->      $ perf report -F overhead,sample,period,dso --stdio
->      # Overhead  Samples   Period  Shared Object
->          80.00%       28  2800000  [kernel.kallsyms]
->           5.71%        2   200000  ld-linux-x86-64.so.2
->           5.71%        2   200000  libc.so.6
->           5.71%        2   200000  ls
->           2.86%        1   100000  libpcre2-8.so.0.11.2
-> 
->    perf mem report:
-> 
->      $ perf mem report -F overhead,sample,period,dso --stdio
->      # Overhead  Samples   Period  Shared Object
->          87.50%       28       49  [kernel.kallsyms]
->           3.57%        2        2  ld-linux-x86-64.so.2
->           3.57%        2        2  libc.so.6
->           3.57%        2        2  ls
->           1.79%        1        1  libpcre2-8.so.0.11.2
-> 
-> 3) Similarly, it was not intuitive (again, to me:)) that -F op/snoop/dtlb
->    percentages are calculated based on sample->weight.
-
-Hmm.. ok.  Maybe better to use the original period for percentage
-breakdown in the new output fields.  For examples, in the above result
-you have 13 samples for L1 and 1 sample for L3 but the weight of L3
-access is bigger.  But I guess users probably want to see L1 access was
-dominant.
-
-> 
-> 4) I've similar recommended perf-mem command in perf-amd-ibs man page.
->    Can you please update alternate command there.
->    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-amd-ibs.txt?h=v6.15-rc5#n167
-
-Sure will do.
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
-Namhyung
+Kan
 
+> ---
+>  arch/x86/events/intel/ds.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> Please correct me if I'm missing anything.
-> 
-> Thanks,
-> Ravi
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index adb2e44761b2..8da1105a419f 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -2469,8 +2469,9 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_
+>  				setup_pebs_fixed_sample_data);
+>  }
+>  
+> -static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int size)
+> +static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, u64 mask)
+>  {
+> +	u64 pebs_enabled = cpuc->pebs_enabled & mask;
+>  	struct perf_event *event;
+>  	int bit;
+>  
+> @@ -2481,7 +2482,7 @@ static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int
+>  	 * It needs to call intel_pmu_save_and_restart_reload() to
+>  	 * update the event->count for this case.
+>  	 */
+> -	for_each_set_bit(bit, (unsigned long *)&cpuc->pebs_enabled, size) {
+> +	for_each_set_bit(bit, (unsigned long *)&pebs_enabled, X86_PMC_IDX_MAX) {
+>  		event = cpuc->events[bit];
+>  		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
+>  			intel_pmu_save_and_restart_reload(event, 0);
+> @@ -2516,7 +2517,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+>  	}
+>  
+>  	if (unlikely(base >= top)) {
+> -		intel_pmu_pebs_event_update_no_drain(cpuc, size);
+> +		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
+>  		return;
+>  	}
+>  
+> @@ -2630,7 +2631,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+>  	       (hybrid(cpuc->pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED);
+>  
+>  	if (unlikely(base >= top)) {
+> -		intel_pmu_pebs_event_update_no_drain(cpuc, X86_PMC_IDX_MAX);
+> +		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
+>  		return;
+>  	}
+>  
+
