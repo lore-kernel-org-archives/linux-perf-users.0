@@ -1,184 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722697FBA2;
-	Sat, 10 May 2025 01:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F741D86F7;
+	Sat, 10 May 2025 05:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746841368; cv=none; b=qELDXG22+Mz8kdkV+Osnwg/o9n557WPONoGtY7/rs4RXWap6YSe6REL6Bgv3VgV8mGiJOIoyl39685hLSQVmIl2l1KhjaXdhpZjLbyipOJ6k3rOAVNh1lThjgeYSu3uwFEiYtm4KSH4npGmXo7TNiQpLwtN5PrcqmEmK5UFrsXo=
+	t=1746856729; cv=none; b=FxAyZamzmsRVwJy9EadGdwRgFq7Y+mvLBlzPrSE8PUMDGjqdr2031NvWMFtc9ze4vpQnqEH4NhBaNly1Rpw0wvOlbm5y3/kAINqjiRHymDHC/7KeFMJ4+TQRS4Ww0FwsBDCKFKUBU5VlvyaIUUxDOAXO/U7cbz+NKjym7wDrRWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746841368; c=relaxed/simple;
-	bh=dUUQMmWR7Jy1/aAsU/wZxQjB+U//saDUPDcTRXqcbmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qU3uRQ4a5q5GcCVqt6prSQNL16gtmOxjZcNY4lzkDTZIwVY1d/xwX9MO3BBcm5qeunT/ZqjaCCCt7TypUMd47vNUArroEOYmfpN9GgllNU2d7IowJlC5NzZ5hVgQMDTyPOsmBdJm3evPDiJ7GH9JWZRNp4xeKVdd61N9ZZnKRLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APX+pI7n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746856729; c=relaxed/simple;
+	bh=Ak/3kDW2H5mJRaqud3LnLTy7IPbuS4V++tfpvlmoDKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lcuf29Vp0Lcn9Sp8Qb9y0WTIn1TyGQvbrtUiS+pN97pWKVCn7v7UOdfwlTxZWceBYjBttrHXIA8jLXe16kTDt1G+dfC6eT/Pf/j7k46U0kThEpoeWUpZv0gxV3RmvV2flv+Z+nIPtic0o+B1Q1OK2SV558nfn7krRkzqk8kJeDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GIJGPDiy; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APX+pI7n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4D0C4CEE4;
-	Sat, 10 May 2025 01:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746841367;
-	bh=dUUQMmWR7Jy1/aAsU/wZxQjB+U//saDUPDcTRXqcbmw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=APX+pI7ndkDqi3osqafP2nlyI+lXBAV9pWoDEvdcnWFa5xvaFPMjaEOfXDD+nPS/5
-	 R2Vaz3Nc6agcjQgMUbdil52eWTRZfzWRgctPLur9worcFUk/QoSLqqb789NzxA9Zsw
-	 p3ueZSnXTOCoIes+tOCz8x+AqtnXRbNaV+cLQotmQioeHKMcaS3UGDOo6QrAnRxnGB
-	 z2XW8m54reAg0QzPPtJf6uDJx5MpdeFfJFhC1BHi/RQcjgLHbJouRfovmt8Dlp5Ejo
-	 AiOwpjqfFU8AgXCNxtueb/fEj4xj8aJ7wjZX8gklXXqteiw+xPzISNgBAutIIjuf7/
-	 Df1eiQrWgRjSA==
-Date: Fri, 9 May 2025 22:42:44 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: make -C tools/perf build-test failing on aarch64
-Message-ID: <aB6vFFcRErPVt7p9@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIJGPDiy"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b061a06f127so1822514a12.2;
+        Fri, 09 May 2025 22:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746856727; x=1747461527; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZvSrH0m4IUpU+lJMf9GPrH6cvsJ1xHIQMLaVbqpMvdE=;
+        b=GIJGPDiypqnFcgZj4zCk2i/SO5cShyAkZDUp/4lP/YcklO7OgEZIPSHHnmoSPdUz7n
+         kB3CXq65N/3JLhZJShuKs3mnz17d4aGl53oVMViPjlrzFmdnsPdIK4ICawazxVRx0WV6
+         To+2ZlKyOunPZY/S8FrV9MU70P07rIlaJtAmSc+H1WCQ9y1caO2iKNNqYzVPZ7YT+Gz+
+         URqQehmmIwSSae2b5v3gVKgNiV+rB/OzaXMi4BjOaskfJynS0pdwMJ7FzwRp70o1+7+b
+         fGZ0rtW/+iEJ3iXBaLkurb7nVOduFtE0r7GNHTxirkjOf+8lVbgvArXG4x0B6iK6c1+e
+         lexA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746856727; x=1747461527;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZvSrH0m4IUpU+lJMf9GPrH6cvsJ1xHIQMLaVbqpMvdE=;
+        b=xLNzFzu5gz4Z1OyHNVSt+6KfMUDtFhHGfQ0HTteyibq1Oi9ggXIOUob26ooaYO1b7P
+         48iCw0SayZ+PWYi2m4OysttVf7G6QT9k0u3kNlVigyO2bs+55HxnDyynnq2+VR8mEn7Y
+         7Q3cWlY6S36bt+VvyW6/20//CVq4g0H/nbQ+zLRFImW0wAzAMqmGhxeUJYHvetz6vKNl
+         xzLZkpu/ESe2zIY4TnMS22TcwJNZGBroQnCqZI172n9h4gt66RyZDiviAlkZOBwpdGsg
+         gj/qch/zVPS7c8niqnKtfz+eVewedym5tXCwy3J3N1XR91NcibYE+HG9duaGMi6x6eH9
+         WQxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4HvHTQpxbTYvpilL1reto8GcdenKh7jFJXzwGX0owTDbRdzi/DDPuUhLk5T3kn8u+k0tcD7nuJa2FJz+BPN23jA==@vger.kernel.org, AJvYcCW8RA1m8Gnxs6sxr6qt3qPoq0PAiHfVN1NXnEGDOFWzxPUwx4AEeE1oI2cU/b0sc67bo8ezXcL7XFIL@vger.kernel.org, AJvYcCX01a1hyi/GkYnm1Uh3Pr18DM20UvVa2AcF0/9SdTkIgJR6V28hRsNN0Hk3Nc/lMrcRMaKbQlWK/dp8tlAw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDqq6Uwp4xB44RL6Z1rotPi/cGkvpZU1017i63f+vwNuJLInX0
+	ifjeT42MpmGuvM9IFhWdqKBkguopJasIsM9wtGKYePwZNimBCEwp
+X-Gm-Gg: ASbGncvZx3tfFu2Yp1fIsS8EwtAcYbnoZlWwNp7yQou/eLz+yIGdLFV1CzlSnOosRX4
+	fQgQlYS3bsencCNxeTK7SnqV2BadrrtdCxKEJPIFCMMh4sa2T433VtMnzB04mrQxC0UxnC/5tIz
+	9snW6T5J72HHeTuOKqQ04kx1YZpbrI9dfzsA0kj0sscO+BWVXf1P2FmPZgjtnVPDk78XgI/8I3h
+	s1BQDivmvQOw0uUPk5RcTqMNI/kurQ9x3a2S3ENYUbBioTE0BGVhPBhU3FjXHkpIjUWhhA3zXdk
+	5kiNzvuoZDIs51UFCHg4WPXbZDhSFLSXhERO7U43v9E8sv8fT7XiFl8s8UG+HNc5N8k4uw==
+X-Google-Smtp-Source: AGHT+IHszysuOKe+BXliXC54u04RRE82xYLl5n3Hlqtc4Nnx4bwzHJoObH1iIIdfyb0NhtdrtlIVMg==
+X-Received: by 2002:a17:902:f612:b0:223:54aa:6d15 with SMTP id d9443c01a7336-22fc8b3b39fmr105809735ad.12.1746856726879;
+        Fri, 09 May 2025 22:58:46 -0700 (PDT)
+Received: from [192.168.0.121] ([59.188.211.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc77413besm26910865ad.84.2025.05.09.22.58.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 22:58:46 -0700 (PDT)
+Message-ID: <fa4f46ef-0f86-41f8-afc2-afc8dd2704a1@gmail.com>
+Date: Sat, 10 May 2025 13:58:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v6 03/21] drivers/perf: apple_m1: Support
+ per-implementation event tables
+To: kernel test robot <lkp@intel.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Sven Peter <sven@svenpeter.dev>,
+ Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Neal Gompa <neal@gompa.dev>
+Cc: oe-kbuild-all@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ devicetree@vger.kernel.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250429-apple-cpmu-v6-3-ed21815f0c3f@gmail.com>
+ <202505071747.2b2WEajY-lkp@intel.com>
+Content-Language: en-MW
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <202505071747.2b2WEajY-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-	I noticed that upstream is failing on aarch64:
+#syz test
 
-acme@raspberrypi:~/git/perf-tools-next $ uname -a
-Linux raspberrypi 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux
-acme@raspberrypi:~/git/perf-tools-next $ grep -m1 Model /proc/cpuinfo 
-Model		: Raspberry Pi 5 Model B Rev 1.1
-acme@raspberrypi:~/git/perf-tools-next $ 
-acme@raspberrypi:~/git/perf-tools-next $ git log --oneline -1 ; time make -C tools/perf build-test
-cd17a9b1a779 (HEAD -> perf-tools-next, number/perf-tools-next, number/HEAD) perf test demangle-ocaml: Switch to using dso__demangle_sym()
-make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-- tarpkg: ./tests/perf-targz-src-pkg .
-make[1]: *** [tests/make:351: tarpkg] Error 2
-make: *** [Makefile:109: build-test] Error 2
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+index 365b4ecaedb1..81443e5158b2 100644
+--- a/drivers/perf/apple_m1_cpu_pmu.c
++++ b/drivers/perf/apple_m1_cpu_pmu.c
+@@ -1082,7 +1082,7 @@ static void m1_pmu_write_counter(struct perf_event *event, u64 value)
+ 
+ static int apple_pmu_get_event_idx(struct pmu_hw_events *cpuc,
+                                struct perf_event *event,
+-                               const u16 event_affinities[M1_PMU_CFG_EVENT])
++                               const u16 event_affinities[])
+ {
+        unsigned long evtype = event->hw.config_base & M1_PMU_CFG_EVENT;
+        unsigned long affinity = event_affinities[evtype];
 
-real	0m12.130s
-user	0m12.653s
-sys	0m2.091s
-acme@raspberrypi:~/git/perf-tools-next $ 
-
-I noticed that it is using some files from outside tools/, i.e. kernel
-files, so I tried adding those (and its dependencies) to the
-tools/perf/MANIFEST, but stumbled at this point:
-
-acme@raspberrypi:~/git/perf-tools-next $ git diff
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 364b55b00b48..3fe627c4b599 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -28,3 +28,6 @@ scripts/bpf_doc.py
- tools/bpf/bpftool
- kernel/bpf/disasm.c
- kernel/bpf/disasm.h
-+scripts/Kbuild.include
-+scripts/Makefile.asm-headers
-+include/uapi/asm-generic/Kbuild
-acme@raspberrypi:~/git/perf-tools-next $
-
-To test it directly:
-
-acme@raspberrypi:~/git/perf-tools-next $ sh -x tools/perf/tests/perf-targz-src-pkg tools/perf 
-+ set -e
-+ PERF=tools/perf
-+ cd tools/perf/../..
-+ make perf-targz-src-pkg
-  ARCHIVE perf-6.15.0-rc5.tar.gz
-+ ls -rt perf-6.15.0-rc5.tar.gz
-+ TARBALL=perf-6.15.0-rc5.tar.gz
-+ mktemp -d
-+ TMP_DEST=/tmp/tmp.wzVpK2Gmvw
-+ tar xf perf-6.15.0-rc5.tar.gz -C /tmp/tmp.wzVpK2Gmvw
-+ rm -f perf-6.15.0-rc5.tar.gz
-+ cd -
-+ make -C /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf
-make: Entering directory '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf'
-  BUILD:   Doing 'make -j4' parallel build
-
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ OFF ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-
-  PERF_VERSION = 6.15.rc5.gcd17a9b1a779
-  GEN     common-cmds.h
-  GEN     /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
-  CC      jvmti/libjvmti.o
-  GEN     perf-archive
-  GEN     perf-iostat
-  CC      dlfilters/dlfilter-test-api-v0.o
-  CC      dlfilters/dlfilter-test-api-v2.o
-  CC      dlfilters/dlfilter-show-cycles.o
-  CC      jvmti/jvmti_agent.o
-  CC      jvmti/libstring.o
-  CC      jvmti/libctype.o
-  MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/array.o
-make[4]: *** No rule to make target '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libperf/arch/arm64/include/generated/uapi/asm/unistd_64.h'.  Stop.
-make[3]: *** [Makefile:108: uapi-asm-generic] Error 2
-make[2]: *** [Makefile.perf:973: /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libperf/libperf.a] Error 2
-make[2]: *** Waiting for unfinished jobs....
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/cpu.h
-  MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
-  MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/fs.o
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/tracing_path.o
-  LD      jvmti/jvmti-in.o
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/cpu.o
-  LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/libapi-in.o
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/debug.o
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/debug.h
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/io.h
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/io_dir.h
-  MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/cgroup.o
-  CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/str_error_r.o
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fd/array.h
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fs/fs.h
-  INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fs/tracing_path.h
-  INSTALL libapi_headers
-  LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/libapi-in.o
-  LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/libapi-in.o
-  AR      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/libapi.a
-make[1]: *** [Makefile.perf:290: sub-make] Error 2
-make: *** [Makefile:76: all] Error 2
-make: Leaving directory '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf'
-acme@raspberrypi:~/git/perf-tools-next $
-
-I think this is related to:
-
-commit bfb713ea53c746b07ae69fe97fa9b5388e4f34f9 (perf-tools)
-Author: James Clark <james.clark@linaro.org>
-Date:   Thu Apr 17 14:55:50 2025 +0100
-
-    perf tools: Fix arm64 build by generating unistd_64.h
-
-Can you please take a look?
-
-Thanks a lot,
-
-- Arnaldo
