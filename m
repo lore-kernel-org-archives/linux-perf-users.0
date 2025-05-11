@@ -1,60 +1,64 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7143D81
-	for <linux-perf-users@vger.kernel.org>; Sun, 11 May 2025 05:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1090B43172
+	for <linux-perf-users@vger.kernel.org>; Sun, 11 May 2025 17:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746942948; cv=none; b=cqzxSV8roueM6OkLMRDH6w1aI7JmrVVlcSp3zW52kYo9fepRPA18XjSDbELEfJrVUa7HudQaoKX1XBbela9/ymEgYBlxuZaRGMOr4ctvBabnmrHj3vn3IeQWyDAzGVdOINFSCyutkNo9KqeUZ43KlYY8DCCR3VOAMohXK/rzk5Q=
+	t=1746985599; cv=none; b=ZKQqENtwGOhgNL9rj0NmyKCQf0d6mvbbUBFZ1GaeJNAnjzqBKi7S+LUdEZcjx2/ZhyPCshf95PNTd2Su+H4EU4rEO9GwNcrRNkzZJnCw4cUt8XZdbI4iQ0WmD7W5kdIDEGiQH2Qp5tm4OH7tluZRAh3+1fShx6QD55PeR5xDUYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746942948; c=relaxed/simple;
-	bh=a26yTv+hz9hhrWmz3vE5Hc9fnLKbuninPB4VdxAqDCI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=G/2S4QGm13b4ClPr6V5C9OBBNHeMlBKHe9RmDAc0S9bvJaybP8Txajb0ZrVxtLxqRHf+WIAbEhuZgyV4/4PrIoc9MP9Ik5jcai04kTKOrl8p2pIiACy2lJvOoTXkJ4wkjWiK1yyvQqAMczNarl2MOcQvJwIvb5Utj8WE0tusvDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wg8mjCGh; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746985599; c=relaxed/simple;
+	bh=8OwMFLhhIArPMkXspYwNl3MrKVbZe0hfpWIx92ZBjpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JJt4jNKz3Me3w4pUhuXIHfJvCZMsHDnTeQlMGcaN8cS2eaT30kHwsY+mbuGpQdYZhtRFs7eVXnsoniWgYCD2rIp4RYNrKr5tXipPG6GrWnSoDIKYpAHaDMmDD0tWlCeo5Iy4koPdJsz2z0/zWRuN8GvdMuOvT172QTQQ7s2Lf8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EExrEJDC; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wg8mjCGh"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54B2fBK7021541;
-	Sun, 11 May 2025 05:55:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=iIK0dO
-	zyU0tOceKcboEB/er26o/bbDtTUUxQYzwR1bk=; b=Wg8mjCGhqXlhGGVMRVzBTK
-	SlGeoWdesWXHfD3OypOrsee3vrLLUeODoPYu12+2usWCl2M7Zc9liPOiepMjEjtG
-	doMkUIWi6mYIlRZoWEDd9ZE56J7HwxV5nP+XWof5IcSxHvoRn7mA7ccy9pgAPjjK
-	mnS65c3h86gpUTlff8HxFKzS3JNbmKfLvreh6Wlmg1nqwTjDHrT/nXg2peQDn10E
-	GbfADmePIAGRI1nlUoEPjX4tHHwYBkwRliVU5+4cRN6wM2R2mDpYhJkmhbM+Dsr0
-	uNetXQJrJSrqIUVg0fgwCHtugyYq7+kK1cec45jeCeIFN95Qjy49erS5u7Sltz7g
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jce8h41k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 11 May 2025 05:55:45 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54B0bPMk016928;
-	Sun, 11 May 2025 05:55:44 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jhgyrt1v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 11 May 2025 05:55:44 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54B5tcuh44630410
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 11 May 2025 05:55:38 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E45F2005A;
-	Sun, 11 May 2025 05:34:04 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB84520067;
-	Sun, 11 May 2025 05:33:59 +0000 (GMT)
-Received: from [9.43.60.96] (unknown [9.43.60.96])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 11 May 2025 05:33:59 +0000 (GMT)
-Message-ID: <68cb4551-7992-4d91-bf00-a3b46e41fea2@linux.ibm.com>
-Date: Sun, 11 May 2025 11:03:59 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EExrEJDC"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a1f8c85562so1403186f8f.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 May 2025 10:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746985595; x=1747590395; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=71Yr4Tj5FXklh2M1YhEvgAExOFERp4o4g1avjYW/63k=;
+        b=EExrEJDCMaBSdxxnT4M3QzrsZf/8ReX4+X7DVHS+KTdP/pGc7z92CBbbAwhJMGaNGk
+         8Y0IDMfxYgHM/fc9bHiq0sboq3qzDTqbF7a9008ioHBwMNrXR2pcd3su0MSNTcjjfYbc
+         76bm7F0RAJJhYOJCYNEbTy+yKFfglbWpEfiJCrXYFWO6iXwITmvDy9sMsSI5wnPRIVN8
+         ObOL5svSqK4gHlyF3PmrolbN2SgGG/UEivcCbpR0kSiFMC/bV7WfFKo1YpVXbUdnelzf
+         P+HZXFFWLAeqPJIr9pyL984LbIbHhMbJeivGOfGaNQr9q2oRk2ccc4BDw5P2gfq2TkKj
+         xDEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746985595; x=1747590395;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=71Yr4Tj5FXklh2M1YhEvgAExOFERp4o4g1avjYW/63k=;
+        b=j3DPj0LxQ3nZuLU3/KRU3CuCR/ChbR2Ro24R/SzoSEZ1Pjsmbr89VC/4BQkzl71+Yd
+         SMawB2sVQrrwl3Pp74FsomjtsQPhW9dP/g+8Q0n5C8ojaLWL1Og9iyPMQtKKw9ymW7gv
+         XnNkTAlefC2jMNY4Gg7uM4XYKle8z++O27IJmUq67yp/sy4r85ucZxkYzQ/SKI1iYnVk
+         C1/QoqiHOL0hXW4alXDwzvwYLFMVcRf5e+ecRmB+v9g52SGnBMpxH8WAblRWjXN0y9R2
+         MLsYr9qu7HEIpWA+iKPjfO6cbgtUF8qcnX4qbVeg36vkJTWYrFC52HEkG31HHIjVyHim
+         swGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTM8zTCkXIx1ihh/jKWfVHNezpad5cu+OIErMckZLRXql3gASPmRqbXtN0k5XJ/+kVSttOo3MLujf2bEzu+cR4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxWGD2BuYGSA/9qiImdNkALPV1gjWOMA2+TbyJHnyVHqV17bl5
+	uKU9up+R/mp6VDffBDDNtJ5bAmLhakVt5DSzCBs5ol09qrWzBbSdUXIxnOU2zac=
+X-Gm-Gg: ASbGnctob0wwoIzcOntwUSCyqrAXaiAc6xbMAPEmceYlz603VB2UT49ELE2zlKm6j1a
+	gn3ySksOtR38dmrecTqPLGRDt0GwWj5fwixk/N0DkZ8KaIP2t7H1kMpz4DDZdIPcZxoHHgIzrH2
+	F35aBtT8/sPccNJ0JTAp4NOAf8uhCY9ecksyxzr7b2YV1BKkf6vN86LVUG7d9rDRWjIItC4VYQi
+	N4Jqhvwy6mrKZaMTVOiEBqPw2waSUoOjoN0nexxLwjD+g4+ekL0z6wCxAI5Yopn4IN2/jbYAzoM
+	hUUbbWn0WYQ0ew8hRD/8uwuYXmqe9xR3UmTnUSoQb9jsfP9NGSJArQ==
+X-Google-Smtp-Source: AGHT+IE8IsDzl9+c2njAtHrivPeEXcUCgMYEQX14/fVv7Y4VnuVvC558uuC8GvC4j0Fr4IRA4QuPdg==
+X-Received: by 2002:a5d:64ab:0:b0:3a1:f635:1133 with SMTP id ffacd0b85a97d-3a1f64220b7mr8846248f8f.7.1746985595204;
+        Sun, 11 May 2025 10:46:35 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecb46sm9977125f8f.30.2025.05.11.10.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 May 2025 10:46:34 -0700 (PDT)
+Message-ID: <95bd54bf-09b7-4444-94a7-87ab9a3035e6@linaro.org>
+Date: Sun, 11 May 2025 18:46:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,157 +66,163 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf script: perf script tests fails with segfault
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Aditya Bodkhe <aditya.b1@linux.ibm.com>,
-        Disha Goel <disgoel@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20250429065132.36839-1-adityab1@linux.ibm.com>
+Subject: Re: make -C tools/perf build-test failing on aarch64
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-perf-users@vger.kernel.org
+References: <aB6vFFcRErPVt7p9@x1>
 Content-Language: en-US
-In-Reply-To: <20250429065132.36839-1-adityab1@linux.ibm.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aB6vFFcRErPVt7p9@x1>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: LQs_gqPBxYEF23V3zIU_yaotvj2GVc2Z
-X-Proofpoint-GUID: LQs_gqPBxYEF23V3zIU_yaotvj2GVc2Z
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTExMDA1MyBTYWx0ZWRfXzeU4i2c5KGW2 SzOhoZJtxNaI/SCf2Zwnw0nz2xAnr5fYgR/2WVxMIO4E2aJ+C6bpt3FHv0GTYXW4+RLDMiJKihv 1quzI7Y3yyyXCgpGxYUJZXttnKAUaHdLRtmdcClLDIMNFh3wVkgeUwql6BAJGd2kbp/ts65Camx
- pa+8H0ZFfQAMypQRlCw9UeAnkdvbjC8e7VPEgHXi2CK4fDugWPzy/MSk00h5UjX57FtDxQwVIH+ rHvO9YzSdVVl9uhU+A8cj5TBbKwHouvAPQ4HR5Ylfr056dmWZdH1C/mTn54vxBIRxZgHswWsh4T WgB9XAz3ClIPl0fAS5qY13D1MU8GTZHllPIulLbh8HSDHaR0OvFZ0uZmV/KTj/bV/D465sh5KRq
- mv1tNbA20VpatrngYm7Hk+StE85HTDdFSM/h/asJm7P6+o0HtVmpFtBbrtly7S7qqOMdmJdN
-X-Authority-Analysis: v=2.4 cv=fvrcZE4f c=1 sm=1 tr=0 ts=68203be1 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=nRiDTj3yiyNuxznsutwA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-11_02,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- spamscore=0 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505110053
 
-I will handle helper as a separate patch . Can this patch be pulled in.
 
+
+On 10/05/2025 2:42 am, Arnaldo Carvalho de Melo wrote:
+> Hi,
+> 
+> 	I noticed that upstream is failing on aarch64:
+> 
+> acme@raspberrypi:~/git/perf-tools-next $ uname -a
+> Linux raspberrypi 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux
+> acme@raspberrypi:~/git/perf-tools-next $ grep -m1 Model /proc/cpuinfo
+> Model		: Raspberry Pi 5 Model B Rev 1.1
+> acme@raspberrypi:~/git/perf-tools-next $
+> acme@raspberrypi:~/git/perf-tools-next $ git log --oneline -1 ; time make -C tools/perf build-test
+> cd17a9b1a779 (HEAD -> perf-tools-next, number/perf-tools-next, number/HEAD) perf test demangle-ocaml: Switch to using dso__demangle_sym()
+> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+> - tarpkg: ./tests/perf-targz-src-pkg .
+> make[1]: *** [tests/make:351: tarpkg] Error 2
+> make: *** [Makefile:109: build-test] Error 2
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> 
+> real	0m12.130s
+> user	0m12.653s
+> sys	0m2.091s
+> acme@raspberrypi:~/git/perf-tools-next $
+> 
+> I noticed that it is using some files from outside tools/, i.e. kernel
+> files, so I tried adding those (and its dependencies) to the
+> tools/perf/MANIFEST, but stumbled at this point:
+> 
+> acme@raspberrypi:~/git/perf-tools-next $ git diff
+> diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+> index 364b55b00b48..3fe627c4b599 100644
+> --- a/tools/perf/MANIFEST
+> +++ b/tools/perf/MANIFEST
+> @@ -28,3 +28,6 @@ scripts/bpf_doc.py
+>   tools/bpf/bpftool
+>   kernel/bpf/disasm.c
+>   kernel/bpf/disasm.h
+> +scripts/Kbuild.include
+> +scripts/Makefile.asm-headers
+> +include/uapi/asm-generic/Kbuild
+> acme@raspberrypi:~/git/perf-tools-next $
+> 
+> To test it directly:
+> 
+> acme@raspberrypi:~/git/perf-tools-next $ sh -x tools/perf/tests/perf-targz-src-pkg tools/perf
+> + set -e
+> + PERF=tools/perf
+> + cd tools/perf/../..
+> + make perf-targz-src-pkg
+>    ARCHIVE perf-6.15.0-rc5.tar.gz
+> + ls -rt perf-6.15.0-rc5.tar.gz
+> + TARBALL=perf-6.15.0-rc5.tar.gz
+> + mktemp -d
+> + TMP_DEST=/tmp/tmp.wzVpK2Gmvw
+> + tar xf perf-6.15.0-rc5.tar.gz -C /tmp/tmp.wzVpK2Gmvw
+> + rm -f perf-6.15.0-rc5.tar.gz
+> + cd -
+> + make -C /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf
+> make: Entering directory '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf'
+>    BUILD:   Doing 'make -j4' parallel build
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ OFF ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>    PERF_VERSION = 6.15.rc5.gcd17a9b1a779
+>    GEN     common-cmds.h
+>    GEN     /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+>    CC      jvmti/libjvmti.o
+>    GEN     perf-archive
+>    GEN     perf-iostat
+>    CC      dlfilters/dlfilter-test-api-v0.o
+>    CC      dlfilters/dlfilter-test-api-v2.o
+>    CC      dlfilters/dlfilter-show-cycles.o
+>    CC      jvmti/jvmti_agent.o
+>    CC      jvmti/libstring.o
+>    CC      jvmti/libctype.o
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/array.o
+> make[4]: *** No rule to make target '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libperf/arch/arm64/include/generated/uapi/asm/unistd_64.h'.  Stop.
+> make[3]: *** [Makefile:108: uapi-asm-generic] Error 2
+> make[2]: *** [Makefile.perf:973: /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libperf/libperf.a] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/cpu.h
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/fs.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/tracing_path.o
+>    LD      jvmti/jvmti-in.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/cpu.o
+>    LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fd/libapi-in.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/debug.o
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/debug.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/io.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/io_dir.h
+>    MKDIR   /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/cgroup.o
+>    CC      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/str_error_r.o
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fd/array.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fs/fs.h
+>    INSTALL /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/include/api/fs/tracing_path.h
+>    INSTALL libapi_headers
+>    LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/fs/libapi-in.o
+>    LD      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/libapi-in.o
+>    AR      /tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf/libapi/libapi.a
+> make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> make: *** [Makefile:76: all] Error 2
+> make: Leaving directory '/tmp/tmp.wzVpK2Gmvw/perf-6.15.0-rc5/tools/perf'
+> acme@raspberrypi:~/git/perf-tools-next $
+> 
+> I think this is related to:
+> 
+> commit bfb713ea53c746b07ae69fe97fa9b5388e4f34f9 (perf-tools)
+> Author: James Clark <james.clark@linaro.org>
+> Date:   Thu Apr 17 14:55:50 2025 +0100
+> 
+>      perf tools: Fix arm64 build by generating unistd_64.h
+> 
+> Can you please take a look?
+> 
+> Thanks a lot,
+> 
+> - Arnaldo
+
+Hmm yeah looks like it's caused by that. I'm travelling tomorrow but 
+I'll try to take a look.
 
 Thanks
+James
 
-Aditya Bodkhe
-
-On 29/04/25 12:21 pm, Aditya Bodkhe wrote:
-> From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
->
-> perf script: pert script tests fails with segmentation fault as below:
->
->   92: perf script tests:
->   --- start ---
-> test child forked, pid 103769
-> DB test
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
-> /usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
->   --- Cleaning up ---
->   ---- end(-1) ----
-> 	92: perf script tests                                               : FAILED!
->
-> Backtrace pointed to :
-> 	#0  0x0000000010247dd0 in maps.machine ()
-> 	#1  0x00000000101d178c in db_export.sample ()
-> 	#2  0x00000000103412c8 in python_process_event ()
-> 	#3  0x000000001004eb28 in process_sample_event ()
-> 	#4  0x000000001024fcd0 in machines.deliver_event ()
-> 	#5  0x000000001025005c in perf_session.deliver_event ()
-> 	#6  0x00000000102568b0 in __ordered_events__flush.part.0 ()
-> 	#7  0x0000000010251618 in perf_session.process_events ()
-> 	#8  0x0000000010053620 in cmd_script ()
-> 	#9  0x00000000100b5a28 in run_builtin ()
-> 	#10 0x00000000100b5f94 in handle_internal_command ()
-> 	#11 0x0000000010011114 in main ()
->
-> Further investigation reveals that this occurs in the `perf script tests`,
-> because it uses `db_test.py` script. This script sets `perf_db_export_mode = True`.
->
-> With `perf_db_export_mode` enabled, if a sample originates from a hypervisor,
-> perf doesn't set maps for "[H]" sample in the code. Consequently, `al->maps` remains NULL
-> when `maps__machine(al->maps)` is called from `db_export__sample`.
->
-> As al->maps can be NULL in case of Hypervisor samples , use thread->maps
-> because even for Hypervisor sample, machine should exist.
-> If we don't have machine for some reason, return -1 to avoid segmentation fault.
->
-> Reported-by: Disha Goel <disgoel@linux.ibm.com>
-> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
-> Changelog:
-> v2 -> v3:
-> This patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to add extra spaces
-> before ---start--- and ---end---
-> to be able to apply patch without any issues
->
-> v1 -> v2:
-> The below patch contains changes suggested by Adrian Hunter<adrian.hunter@intel.com> to handle the segmentation fault ,
-> as well as initialisation of al.thread
->
->   tools/perf/util/db-export.c                           | 11 ++++++++---
->   .../perf/util/scripting-engines/trace-event-python.c  |  2 +-
->   2 files changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-> index 50f916374d87..8f52e8cefcf3 100644
-> --- a/tools/perf/util/db-export.c
-> +++ b/tools/perf/util/db-export.c
-> @@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
->   	if (al->map) {
->   		struct dso *dso = map__dso(al->map);
->
-> -		err = db_export__dso(dbe, dso, maps__machine(al->maps));
-> +		err = db_export__dso(dbe, dso, maps__machine(thread__maps(al->thread)));
->   		if (err)
->   			return err;
->   		*dso_db_id = dso__db_id(dso);
-> @@ -256,6 +256,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
->   		al.map = map__get(node->ms.map);
->   		al.maps = maps__get(thread__maps(thread));
->   		al.addr = node->ip;
-> +		al.thread = thread__get(thread);
->
->   		if (al.map && !al.sym)
->   			al.sym = dso__find_symbol(map__dso(al.map), al.addr);
-> @@ -358,14 +359,18 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
->   	};
->   	struct thread *main_thread;
->   	struct comm *comm = NULL;
-> -	struct machine *machine;
-> +	struct machine *machine = NULL;
->   	int err;
->
-> +	if (thread__maps(thread))
-> +		machine = maps__machine(thread__maps(thread));
-> +	if (!machine)
-> +		return -1;
-> +
->   	err = db_export__evsel(dbe, evsel);
->   	if (err)
->   		return err;
->
-> -	machine = maps__machine(al->maps);
->   	err = db_export__machine(dbe, machine);
->   	if (err)
->   		return err;
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 520729e78965..00f2c6c5114d 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -1306,7 +1306,7 @@ static void python_export_sample_table(struct db_export *dbe,
->
->   	tuple_set_d64(t, 0, es->db_id);
->   	tuple_set_d64(t, 1, es->evsel->db_id);
-> -	tuple_set_d64(t, 2, maps__machine(es->al->maps)->db_id);
-> +	tuple_set_d64(t, 2, maps__machine(thread__maps(es->al->thread))->db_id);
->   	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
->   	tuple_set_d64(t, 4, es->comm_db_id);
->   	tuple_set_d64(t, 5, es->dso_db_id);
-> --
-> 2.43.0
->
->
->
