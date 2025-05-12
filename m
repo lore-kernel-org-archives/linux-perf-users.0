@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3721025743F;
-	Mon, 12 May 2025 08:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A692561B8;
+	Mon, 12 May 2025 08:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747037433; cv=none; b=UHEKINbCLCPXJEYZWY+6DttwyP4O19H3oKA6xp8NYJ4OJ/yXydSSX90YLH9QkJhWKOm+qqluetw4evrF6t759jpaYsNAfrdMiBbgHGFh3Q8e2Bkg/EaZgm/fmFn7I4689Z/UrN3AemjTjH2dkZVolWwnAByGnd/xkx4Z3KuiTrk=
+	t=1747037465; cv=none; b=evZZnJUz92LLVfgP8+6EnUcW6HJOUxXF+0ZF0QuHqeyVdbNxU/ZiKaz7VPILuNIapbDUCkSi6jdM2KmsS4YJ542U5ytnELhgT3hw6ap4/mMp8+6LsCqSeGkiIInCiKiVkgNNl2B3dc5MOmCto9IGZ0c814Og8DEPfxXmqkxz/LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747037433; c=relaxed/simple;
-	bh=PLhj8XRRcFobgNY8IKrQl05mOUEVDT1ZaUSUY1pOwWo=;
+	s=arc-20240116; t=1747037465; c=relaxed/simple;
+	bh=9Wo1EwJxutD9p3npSM18IZGR8PNKr7fkce/EAjiUTQo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dbrteebwW5YTyC8bsQ6tkJGs7tieNJfAoJUWw5bFMX2E3YmZ0LzosYfuNMzWGRRORVT/r9b/pzLeRhMGvDc4VvXsXWTg5u1HEO8AkcQEaiEdSSTn3gTJ0R46v/2QBDVFcIbWziTO4Nvxv7aVNjYGurcRA5oSJgPKL3Urw4Cq+3w=
+	 MIME-Version:Content-Type; b=W8PAleS703vSs2IGt26wm1k/U18OOPq6HUxGckRmkvuYcfgFzVK38362+1G0X91esXzSxNE0bfVpUM1+R+2qFZsMBCNu69Xd4DBRP4r/TWXyJaaesQTk7CLLwatzZYVnwGPfbLGnTuS7xOBhHwh8YfnWZCUPsKNu0F2Svaw/10E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZwsfW0mLTz6L57s;
-	Mon, 12 May 2025 16:07:47 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zwscv1Lntz6M4gh;
+	Mon, 12 May 2025 16:06:23 +0800 (CST)
 Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7DF321402FC;
-	Mon, 12 May 2025 16:10:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BE8E41402F4;
+	Mon, 12 May 2025 16:11:01 +0800 (CST)
 Received: from a2303103017.china.huawei.com (10.47.30.10) by
  frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 12 May 2025 10:10:28 +0200
+ 15.1.2507.39; Mon, 12 May 2025 10:11:00 +0200
 From: Alireza Sanaee <alireza.sanaee@huawei.com>
 To: <devicetree@vger.kernel.org>
 CC: <robh@kernel.org>, <alireza.sanaee@huawei.com>,
@@ -34,9 +34,9 @@ CC: <robh@kernel.org>, <alireza.sanaee@huawei.com>,
 	<suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@linaro.org>,
 	<linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
 	<gshan@redhat.com>, <ruanjinjie@huawei.com>, <saravanak@google.com>
-Subject: [PATCH v3 6/7] arm64: of: handle multiple threads in ARM cpu node
-Date: Mon, 12 May 2025 09:07:14 +0100
-Message-ID: <20250512080715.82-7-alireza.sanaee@huawei.com>
+Subject: [PATCH v3 7/7] of: of_cpu_phandle_to_id to support SMT threads
+Date: Mon, 12 May 2025 09:07:15 +0100
+Message-ID: <20250512080715.82-8-alireza.sanaee@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250512080715.82-1-alireza.sanaee@huawei.com>
 References: <20250512080715.82-1-alireza.sanaee@huawei.com>
@@ -51,162 +51,116 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  frapeml500003.china.huawei.com (7.182.85.28)
 
-Update `of_parse_and_init_cpus` to parse reg property of CPU node as
-an array based as per spec for SMT threads.
+Enhance the API to support SMT threads, this will allow sharing
+resources among multiple SMT threads.
 
-Spec v0.4 Section 3.8.1:
-The value of reg is a <prop-encoded-**array**> that defines a unique
-CPU/thread id for the CPU/threads represented by the CPU node.  **If a CPU
-supports more than one thread (i.e.  multiple streams of execution) the
-reg property is an array with 1 element per thread**.  The address-cells
-on the /cpus node specifies how many cells each element of the array
-takes. Software can determine the number of threads by dividing the size
-of reg by the parent node's address-cells.
+Enabled the sharing of resources, such as L1 Cache and clocks, between
+SMT threads. It introduces a fix that uses thread IDs to match each CPU
+thread in the register array within the cpu-node. This ensures that the
+cpu-map or any driver relying on this API is fine even when SMT threads
+share resources.
 
-An accurate example of 1 core with 2 SMTs:
+Additionally, I have tested this for CPU based on the discussions in
+[1], I adopted the new cpu-map layout, where the first parameter is a
+phandle and the second is the local thread index, as shown below:
 
-	cpus {
-		#size-cells = <0x00>;
-		#address-cells = <0x01>;
+    core0 {
+      thread0 {
+        cpu = <&cpu0 0>;
+      };
+      thread1 {
+        cpu = <&cpu0 1>;
+      };
+    };
 
-		cpu@0 {
-			phandle = <0x8000>;
-			**reg = <0x00 0x01>;**
-			enable-method = "psci";
-			compatible = "arm,cortex-a57";
-			device_type = "cpu";
-		};
-	};
+Also, there are devices such as below that are a bit different.
 
-Instead of:
+    arm_dsu@0 {
+      compatible = "arm,dsu";
+      cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
+    }
 
-	cpus {
-		#size-cells = <0x00>;
-		#address-cells = <0x01>;
+In these cases, we can also point to a CPU thread as well like the
+following:
 
-		cpu@0 {
-			phandle = <0x8000>;
-			reg = <0x00>;
-			enable-method = "psci";
-			compatible = "arm,cortex-a57";
-			device_type = "cpu";
-		};
+    arm_dsu@0 {
+      compatible = "arm,dsu";
+        cpus = <&cpu0 5 &cpu1 9 &cpu2 1 &cpu3 0>;
+    }
 
-		cpu@1 {
-			phandle = <0x8001>;
-			reg = <0x01>;
-			enable-method = "psci";
-			compatible = "arm,cortex-a57";
-			device_type = "cpu";
-		};
-	};
-
-which is **NOT** accurate.
+It should be possible to know how many arguments a phandle might
+require, and this information is encoded in another variable in the dt
+called #cpu-cells in cpu node.
 
 Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
----
- arch/arm64/kernel/smp.c | 74 +++++++++++++++++++++++------------------
- 1 file changed, 41 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 3b3f6b56e733..8dd3b3c82967 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -689,53 +689,61 @@ static void __init acpi_parse_and_init_cpus(void)
- static void __init of_parse_and_init_cpus(void)
+[1] https://lore.kernel.org/devicetree-spec/CAL_JsqK1yqRLD9B+G7UUp=D8K++mXHq0Rmv=1i6DL_jXyZwXAw@mail.gmail.com/
+---
+ drivers/of/cpu.c | 41 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
+index fba17994fc20..cf54ef47f029 100644
+--- a/drivers/of/cpu.c
++++ b/drivers/of/cpu.c
+@@ -189,16 +189,41 @@ int of_cpu_phandle_to_id(const struct device_node *node,
+ 			 struct device_node **cpu_np,
+ 			 uint8_t cpu_idx)
  {
- 	struct device_node *dn;
-+	u64 hwid;
-+	u32 tid;
- 
- 	for_each_of_cpu_node(dn) {
--		u64 hwid = of_get_cpu_hwid(dn, 0);
-+		tid = 0;
- 
--		if (hwid & ~MPIDR_HWID_BITMASK)
--			goto next;
-+		while (1) {
-+			hwid = of_get_cpu_hwid(dn, tid++);
-+			if (hwid == ~0ULL)
-+				break;
- 
--		if (is_mpidr_duplicate(cpu_count, hwid)) {
--			pr_err("%pOF: duplicate cpu reg properties in the DT\n",
--				dn);
--			goto next;
--		}
-+			if (hwid & ~MPIDR_HWID_BITMASK)
-+				goto next;
- 
--		/*
--		 * The numbering scheme requires that the boot CPU
--		 * must be assigned logical id 0. Record it so that
--		 * the logical map built from DT is validated and can
--		 * be used.
--		 */
--		if (hwid == cpu_logical_map(0)) {
--			if (bootcpu_valid) {
--				pr_err("%pOF: duplicate boot cpu reg property in DT\n",
--					dn);
-+			if (is_mpidr_duplicate(cpu_count, hwid)) {
-+				pr_err("%pOF: duplicate cpu reg properties in the DT\n",
-+				       dn);
- 				goto next;
- 			}
- 
--			bootcpu_valid = true;
--			early_map_cpu_to_node(0, of_node_to_nid(dn));
--
- 			/*
--			 * cpu_logical_map has already been
--			 * initialized and the boot cpu doesn't need
--			 * the enable-method so continue without
--			 * incrementing cpu.
-+			 * The numbering scheme requires that the boot CPU
-+			 * must be assigned logical id 0. Record it so that
-+			 * the logical map built from DT is validated and can
-+			 * be used.
- 			 */
--			continue;
--		}
-+			if (hwid == cpu_logical_map(0)) {
-+				if (bootcpu_valid) {
-+					pr_err("%pOF: duplicate boot cpu reg property in DT\n",
-+					       dn);
-+					goto next;
-+				}
++	bool found = false;
++	int cpu, ret = -1, i, j;
++	uint32_t local_thread, thread_index;
++	struct device_node *np;
++	struct of_phandle_args args;
++	static const char * const phandle_names[] = { "cpus", "cpu" };
++	static const char * const cpu_cells[] = { "#cpu-cells", NULL };
 +
-+				bootcpu_valid = true;
-+				early_map_cpu_to_node(0, of_node_to_nid(dn));
-+
-+				/*
-+				 * cpu_logical_map has already been
-+				 * initialized and the boot cpu doesn't need
-+				 * the enable-method so continue without
-+				 * incrementing cpu.
-+				 */
-+				continue;
-+			}
+ 	if (!node)
+-		return -1;
++		return ret;
  
--		if (cpu_count >= NR_CPUS)
--			goto next;
-+			if (cpu_count >= NR_CPUS)
-+				goto next;
- 
--		pr_debug("cpu logical map 0x%llx\n", hwid);
--		set_cpu_logical_map(cpu_count, hwid);
-+			pr_debug("cpu logical map 0x%llx\n", hwid);
-+			set_cpu_logical_map(cpu_count, hwid);
- 
--		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
-+			early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
- next:
--		cpu_count++;
-+			cpu_count++;
+-	*cpu_np = of_parse_phandle(node, "cpu", 0);
+-	if (!*cpu_np)
+-		*cpu_np = of_parse_phandle(node, "cpus", cpu_idx);
+-			if (!*cpu_np)
+-				return -ENODEV;
++	for (i = 0; i < ARRAY_SIZE(phandle_names); i++) {
++		for (j = 0; j < ARRAY_SIZE(cpu_cells); j++) {
++			ret = of_parse_phandle_with_args(node, phandle_names[i],
++							 cpu_cells[j], cpu_idx,
++							 &args);
++				if (ret >= 0)
++					goto success;
 +		}
- 	}
- }
++	}
  
+-	return of_cpu_node_to_id(*cpu_np);
++	if (ret < 0)
++		return ret;
++success:
++	*cpu_np = args.np;
++	thread_index = args.args_count == 1 ? args.args[0] : 0;
++	for_each_possible_cpu(cpu) {
++		np = of_get_cpu_node(cpu, &local_thread);
++		found = (*cpu_np == np) && (local_thread == thread_index);
++		of_node_put(np);
++		if (found)
++			return cpu;
++	}
++
++	return -ENODEV;
+ }
+ EXPORT_SYMBOL(of_cpu_phandle_to_id);
+ 
+@@ -206,7 +231,7 @@ EXPORT_SYMBOL(of_cpu_phandle_to_id);
+  * of_get_cpu_state_node - Get CPU's idle state node at the given index
+  *
+  * @cpu_node: The device node for the CPU
+- * @index: The index in the list of the idle states
++g* @index: The index in the list of the idle states
+  *
+  * Two generic methods can be used to describe a CPU's idle states, either via
+  * a flattened description through the "cpu-idle-states" binding or via the
 -- 
 2.34.1
 
