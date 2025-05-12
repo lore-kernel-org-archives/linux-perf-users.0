@@ -1,77 +1,42 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2531E255E27;
-	Mon, 12 May 2025 06:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C1B17A2F6;
+	Mon, 12 May 2025 08:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747031164; cv=none; b=PE7IBM5oQer/0axJVBFboQsExXqvqoYVzmjsCJGV+dIjLIZHXxK4Qp0ZFDQegA/DmqiS0VVLKKcW+K0Vmpv75E+8/ok4ldTQ4re93+Qn0rwhEg8gA8dFS9MeIf702AtTkhWJpQBBoujYRYlzbh2g4Ei8hjhVVpX2fBHIux89I1I=
+	t=1747037248; cv=none; b=rf/uuP04WCaPMJOOdC92aSqK7Q4zceFVA9XbUJvrW+QVS6vjFOZJYeNh6gx24GB/v0OqnA64JL7gJ4f9+f27QS4Uk8smBggbrM1kq78ZQ0Fs3R4O/rjXDFh5SQ7U8RoGK2uFN/kMVzecR9QYkrgoSZVS2/KFSpSLJoJ03vcabY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747031164; c=relaxed/simple;
-	bh=nlRYXIexSil3us+olEQ3l6qGg05Uil0ykxfctWceppM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XdYmCd5VGEQQP3uUntq0rYkqBKeMkPwYGmh+p4gnUbyfmXBku3KFi5/Cq4l55Y5ku6yoN9tpThQQt2hx1eJSX6WFOS75RGH11DNfrpcAQ9UZg8Uq9C/EOsm5upRnwYmO8mjfYE6enjX3dNRfTZjHaNf6ongDkKxSFWp1PCfoTiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H3nbeFz9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H3nbeFz9"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54C5Yck2020732;
-	Mon, 12 May 2025 06:25:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=QaB/di9rrLscjRxGn
-	wPR1rtyS/LNU0MvgHfPxjHAv8k=; b=H3nbeFz9zSNATPqezN4w4F1VdenMGJITf
-	SmfVuY54QqArT1ADKouKdl/kzBkYgVeiVrN9MQ2Oy1+ojaEadTnSqVDbNiJRsNHb
-	zI+KgAs4C6MejODxo0ho5M200vHBQH23sV2W+bC60sLPVhrhTNQvTGeK9pzbPB0c
-	sNEDe7RzHuHgAGyTAH3xFR43m1hWAmTvMZN2y3HtMZF7jVOt5n/awo+vKfSlVWZA
-	2ywhH7Wuy5VfqsIw25uvdV+jC+VgmS2rhg4yK8iqMj03A+9RpqEE87H3hrN9wvuZ
-	Vh/sNyNhgsjFQmP7iupnfnbzi9FwM0+vINr6cCiNArF4kB1ru2unQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jrrg2x70-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 06:25:50 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54C6E3HK020500;
-	Mon, 12 May 2025 06:25:50 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46jrrg2x6u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 06:25:50 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54C5Qa8d024452;
-	Mon, 12 May 2025 06:25:48 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jjmkvhmj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 06:25:48 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54C6PiMA18481426
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 06:25:45 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A01A9200E0;
-	Mon, 12 May 2025 05:58:03 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C6868200DB;
-	Mon, 12 May 2025 05:58:00 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com.com (unknown [9.39.26.83])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 12 May 2025 05:58:00 +0000 (GMT)
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
-Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, maddy@linux.ibm.com
-Subject: [PATCH v2 1/4] perf python: Add support for perf_counts_values to return counter data
-Date: Mon, 12 May 2025 11:27:42 +0530
-Message-ID: <20250512055748.479786-2-gautam@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250512055748.479786-1-gautam@linux.ibm.com>
-References: <20250512055748.479786-1-gautam@linux.ibm.com>
+	s=arc-20240116; t=1747037248; c=relaxed/simple;
+	bh=cKm2n4AH6F3DTn3dvdbDG6iaw7pJk0gCrqJKwsVEGJ4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pd1nLB7E1WmfVHDlOIDw1xvg591LDb8T6cIEObnwau7Dw3PMZ1EGpyxfmroBGXk6xGpQq9jHDkzCjhZICkA9ycBAevqLb+YnwWnkaFnHtSSuMO48wF6qiLVj1LqjmHshW62Od/GwVbWhQ5vddR+ntN9nUlAcC1iHT6KSzAWsOfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZwsZq4BwBz67Y2h;
+	Mon, 12 May 2025 16:04:35 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id F25291402F4;
+	Mon, 12 May 2025 16:07:17 +0800 (CST)
+Received: from a2303103017.china.huawei.com (10.47.30.10) by
+ frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 12 May 2025 10:07:16 +0200
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: <devicetree@vger.kernel.org>
+CC: <robh@kernel.org>, <alireza.sanaee@huawei.com>,
+	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<krzk@kernel.org>, <dianders@chromium.org>, <catalin.marinas@arm.com>,
+	<suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@linaro.org>,
+	<linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
+	<gshan@redhat.com>, <ruanjinjie@huawei.com>, <saravanak@google.com>
+Subject: [PATCH v3 0/7] DT: Enable sharing resources for SMT threads
+Date: Mon, 12 May 2025 09:07:08 +0100
+Message-ID: <20250512080715.82-1-alireza.sanaee@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,148 +44,83 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: OdvryHYZxMvEJvvOqMQRrmMZSZixWgrZ
-X-Proofpoint-GUID: qyzWuJFvalwHTBIqls_s8k5CP8rhA0jP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDA2MyBTYWx0ZWRfX31N19L8sXwEy EDEbddAgM5/TbC3xdSLZGr0T9xiY2uamD2Z0G3nybGnxjVeuAPi0OT28TUuKHLtxpeK8cymkmZn 6fOki1JdkUfKF3i10TkgUSIhjJqECepdBhkGiEK47loTW6vMEjPmGw7nkl7xDAjKYam7YLCgTUW
- sgWqmQVcfK/7eHHb2Xl8hu8luN8PtSux5XViZce+Evb+d8XmA9C4zdiRQSCpkcuCZMllkTrOabc I8vCUfrT86EDibzOtyZ2mShlYzqHAAQXBfJn7/DPWCgTP+vPslrrGdx3f2UkKap0q9HDZRfpwnV Mru72YoKrcjIpSqpbLunzjE3P+Wd8XgXW/CaPZFdWIisSw2HY9F/4zaDDWNH5Fa6+5YHrm/l/2v
- ZeMf0/eKLxY73iIr3nG7v4iv/poDBimN4YUklwwbixuZxqz+6aeXmFQHlV9fzkam+PYbDNdZ
-X-Authority-Analysis: v=2.4 cv=KPFaDEFo c=1 sm=1 tr=0 ts=6821946e cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=8VWMH8aeIS0OOwB8Z8wA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_02,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505120063
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-Add support for perf_counts_values struct to enable the python
-bindings to read and return the counter data.
+This patchset allows for sharing resources between SMT threads in the
+device tree (DT).
 
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
----
- tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 91 insertions(+), 1 deletion(-)
+WHY? Given the current use of the DT, it is not possible to share L1
+caches, as well as other resources such as clock among SMT threads.
+However, DT spec in section Section 3.8.1 [1], describes how SMT threads
+can be described in the reg array, this is how PowerPC describes SMT
+threads in DT.
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index f3c05da25b4a..011ee2e27797 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
- 	return PyType_Ready(&pyrf_thread_map__type);
- }
- 
-+struct pyrf_counts_values {
-+	PyObject_HEAD
-+
-+	struct perf_counts_values values;
-+};
-+
-+static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
-+
-+static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
-+{
-+	Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
-+}
-+
-+#define counts_values_member_def(member, ptype, help) \
-+	{ #member, ptype, \
-+	  offsetof(struct pyrf_counts_values, values.member), \
-+	  0, help }
-+
-+static PyMemberDef pyrf_counts_values_members[] = {
-+	counts_values_member_def(val, Py_T_ULONG, "Value of event"),
-+	counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
-+	counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
-+	counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
-+	counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
-+	{NULL}
-+};
-+
-+static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
-+{
-+	PyObject *vals = PyList_New(5);
-+
-+	if (!vals)
-+		return NULL;
-+	for (int i = 0; i < 5; i++)
-+		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
-+
-+	return vals;
-+}
-+
-+static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
-+					 void *closure)
-+{
-+	Py_ssize_t size;
-+	PyObject *item = NULL;
-+
-+	if (!PyList_Check(list)) {
-+		PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
-+		return -1;
-+	}
-+
-+	size = PyList_Size(list);
-+	for (Py_ssize_t i = 0; i < size; i++) {
-+		item = PyList_GetItem(list, i);
-+		if (!PyLong_Check(item)) {
-+			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
-+			return -1;
-+		}
-+		self->values.values[i] = PyLong_AsLong(item);
-+	}
-+
-+	return 0;
-+}
-+
-+static PyGetSetDef pyrf_counts_values_getset[] = {
-+	{"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
-+		"Name field", NULL},
-+	{NULL}
-+};
-+
-+static PyTypeObject pyrf_counts_values__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.counts_values",
-+	.tp_basicsize	= sizeof(struct pyrf_counts_values),
-+	.tp_dealloc	= (destructor)pyrf_counts_values__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= pyrf_counts_values__doc,
-+	.tp_members	= pyrf_counts_values_members,
-+	.tp_getset	= pyrf_counts_values_getset,
-+};
-+
-+static int pyrf_counts_values__setup_types(void)
-+{
-+	pyrf_counts_values__type.tp_new = PyType_GenericNew;
-+	return PyType_Ready(&pyrf_counts_values__type);
-+}
-+
- struct pyrf_evsel {
- 	PyObject_HEAD
- 
-@@ -1442,7 +1528,8 @@ PyMODINIT_FUNC PyInit_perf(void)
- 	    pyrf_evlist__setup_types() < 0 ||
- 	    pyrf_evsel__setup_types() < 0 ||
- 	    pyrf_thread_map__setup_types() < 0 ||
--	    pyrf_cpu_map__setup_types() < 0)
-+	    pyrf_cpu_map__setup_types() < 0 ||
-+	    pyrf_counts_values__setup_types() < 0)
- 		return module;
- 
- 	/* The page_size is placed in util object. */
-@@ -1487,6 +1574,9 @@ PyMODINIT_FUNC PyInit_perf(void)
- 	Py_INCREF(&pyrf_cpu_map__type);
- 	PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
- 
-+	Py_INCREF(&pyrf_counts_values__type);
-+	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
-+
- 	dict = PyModule_GetDict(module);
- 	if (dict == NULL)
- 		goto error;
+CHALLENGE: Given discussions with the community [2], it was apparent
+that it is not straightforward to implement this, since cpu-maps must
+point to a particular CPU node in DT [3], Section 2.1. However, it is
+not only the cpu-map but also there other nodes that point to cpu nodes
+which indeed need care and changes.
+
+SOLUTION: This led to more discussions on what the solution should look
+like and based on recent conversations we ended up with the following
+approach [4].
+
+core0 {
+  thread0 {
+    cpu = <&cpu0 0>;
+  };
+  thread1 {
+    cpu = <&cpu0 1>;
+  };
+};
+
+In this layout, first parameter is the phandle to cpu-node and second
+index would be the local-thread index in the reg array available in the
+cpu-node reg property.
+
+SIDE-NOTE: This patchset does not change any bindings, so I am not
+including anything in this patchset.
+
+[1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.4/devicetree-specification-v0.4.pdf
+[2] https://lore.kernel.org/linux-arm-kernel/Z4FJZPRg75YIUR2l@J2N7QTR9R3/
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+[4] https://lore.kernel.org/devicetree-spec/CAL_JsqK1yqRLD9B+G7UUp=D8K++mXHq0Rmv=1i6DL_jXyZwXAw@mail.gmail.com/
+
+PRIOR VERSIONs:
+   [V1] https://lore.kernel.org/all/20250422084340.457-1-alireza.sanaee@huawei.com/
+   [V2] https://lore.kernel.org/all/20250502161300.1411-1-alireza.sanaee@huawei.com/
+
+CHANGE LOG:
+    V2 -> V3:
+        * I got the V2 completely wrong, so I updated it.
+        * Re-introduce #cpu-cells property.
+    V1 -> V2:
+        * Address Rob's comments.
+            ** Re-order patches.
+            ** Fix bugs.
+        * Remove #cpu-cells property
+
+Alireza Sanaee (7):
+  of: add infra for finding CPU id from phandle
+  arch_topology: update CPU map to use the new API
+  coresight: cti: Use of_cpu_phandle_to_id for grabbing CPU id
+  coresight: Use of_cpu_phandle_to_id for grabbing CPU id
+  perf/arm-dsu: refactor cpu id retrieval via new API
+    of_cpu_phandle_to_id
+  arm64: of: handle multiple threads in ARM cpu node
+  of: of_cpu_phandle_to_id to support SMT threads
+
+ arch/arm64/kernel/smp.c                       | 74 ++++++++++---------
+ drivers/base/arch_topology.c                  | 12 +--
+ .../coresight/coresight-cti-platform.c        | 15 +---
+ .../hwtracing/coresight/coresight-platform.c  | 14 +---
+ drivers/of/cpu.c                              | 56 +++++++++++++-
+ drivers/perf/arm_dsu_pmu.c                    |  6 +-
+ include/linux/of.h                            |  9 +++
+ 7 files changed, 118 insertions(+), 68 deletions(-)
+
 -- 
-2.49.0
+2.34.1
 
