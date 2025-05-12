@@ -1,611 +1,321 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97356299933
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 19:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747079197; cv=none; b=hfTwIO4VblOIFcs7eKQ0ks3CoQRd2P+Y7XRjqEfx/NEvVv8ghoy6yNvdcqkVLfNrA3ksToIZ5piYrxwMNLJSqUpd06SCG3HDF7zYPcCp/SXR/T/A+XpxIZLprGQMh/RZTXUT1pmzggeqSS2p9gAMbSX495Hz9cMf6ZojTtqgkBI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747079197; c=relaxed/simple;
-	bh=EJq4d6V/TegRo06UFWSmMrSXZ+vsTgE2iby9MZsZ8hk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Taoj09epbv2TTzw5LykICTvqKWslOG7vZcIFIzsJTdowsWzC7LkrCkOdDBW5/0W/8kDfZ1U5pBcrW7N1+tAbN/GeuuOkiTw+Xe9qGAMGvCIMcypTAxbf3y4WHq4nciQJGYZn71TTl2vi0Z6Rg35o+/mDTmpMSVDXocOgyOsKGfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4i2XI67w; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84ED3FE7;
+	Mon, 12 May 2025 20:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747081849; cv=fail; b=eyTfDK4JViPW1s2B3WrWhcqlNLutf2260bHSX0ztTx8z5UyRO1Q4GheQfwyX+iynV+xOOVcFqWPG6xmKTiWQvBBFV0lW2de3d176dawDeIeTB3hjUVJwcDuqRJFjNUHQ7QplVtT3ulLeQbwL2vHN2bxXMAk4SmCLcFgcRbKIBC0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747081849; c=relaxed/simple;
+	bh=MEE6r4dVVgO0sZxOJcneHzzOICWa5lWIsRuxVH/yu5Y=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AkJO6r5FfUNEP1+KsdpSexQP7eO4Em63NKDlErCoJKZiSeDkX/hpexURiVtkXT861RlRIaalfLhp3/9gXemR7FBEzQTwCwTIVBbrT9NolxDpWZOHY7WEiR7heybtLtsFhbAFTK+XcNxpSgd6JmySDE4jAmTOvOr9IkGWzUewZV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NW0ayhRs; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4i2XI67w"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e5cd14e48so41685525ad.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 12:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747079195; x=1747683995; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gw0lJdAlfTHt8Lthll3NS6E8Hn93bhsZ2X/iJcYDreI=;
-        b=4i2XI67wcGZIlxykhSIHwqDX4QZeUDJ2WoWKdQoPqUSLi7/VXlsaqQY7qoUtACmXma
-         /ygu8aeTLEfe3q54C+6y0y1TQTRUd2VEXI+K0KFXM0jxPJ066FQaC7hZoe3znZPnZPC+
-         i6YffN+DvT5KmtXBAMdnrGKDSFrRri4jp3l3eFda6A0B8PhD5gPJFRBfOnkUvdkc8fu8
-         suRZAh9tb1uXTSDdERqCjPtOxZCaB6XoVFiXGH0gA+6WPFR22YeRgv/FNY58urILkv/i
-         giGqzRfGQq7x5dqv8nACVraEJsT4bhyVcsSGW+BMbTmxJWrPSCVl5lCgyXrsuFRG/j52
-         Xruw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747079195; x=1747683995;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gw0lJdAlfTHt8Lthll3NS6E8Hn93bhsZ2X/iJcYDreI=;
-        b=LF+pW5qSXMJs+sHgUeTbUF6Us+pDZ5rDDi9JRRHwAEVaq4VGjnVtzRGuZewUQypdjW
-         mTDOq7LhXG9vlxH1ebGl988yYVQ2JtAYCCzk3wtnI5qHIj6zKx3/R9x+5AdlOZ71ZtyD
-         si+g67cwqY/wp0Y4xp9XUJNwFO7YmLmDlXu0LYSyz56vDvE5FgvdPBwIAfjK8YGYj0us
-         iQgJUm7UWa87d5ur94i5wZpx4Sflgs/yEtGVFXZ8TcG4j5Gnf9oGEOwoVUUJcDlMFSC8
-         Qd6W9Ql2soUsdcZQwznrjHNLkzf4Js34qwU2zahRn7z3T8JMEXxsHaLxVic8GJQeCzqK
-         IwvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDGfZ42y5oKtDREUaHJG6JOjx2OIwaaZOpZ1oMibkrioH6xJUCoU9Kf7s/6IHcKAJou+bztFCtLa4w/wthD256@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywoh7tA09/Xj/Tid8p+e3ALbfC62/f1ebRXbhx/VUlElIfseS4H
-	rDM48N8Hzk4xiFAI6gq+exzojSZ7s6zRN5X9PrPmLSTJfR0kMpzgsEXe/eNtzDhYLjg9d8FY8Y1
-	6kWALMA==
-X-Google-Smtp-Source: AGHT+IFeclwNkDo16EN497pqyxKZSWdPuUX6eSGCdQy3YwKZjYh4ntKKgx+X8NACMVCsKFLx83JvP47yypmd
-X-Received: from plar20.prod.google.com ([2002:a17:902:c7d4:b0:230:136b:a034])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:22d2:b0:215:b75f:a1cb
- with SMTP id d9443c01a7336-22fc8b0fa32mr198814715ad.9.1747079194915; Mon, 12
- May 2025 12:46:34 -0700 (PDT)
-Date: Mon, 12 May 2025 12:46:22 -0700
-In-Reply-To: <20250512194622.33258-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NW0ayhRs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747081847; x=1778617847;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version;
+  bh=MEE6r4dVVgO0sZxOJcneHzzOICWa5lWIsRuxVH/yu5Y=;
+  b=NW0ayhRsMvS2SBKTYuAL+0fiSwop3zDmelR/PuSM0R0vwsWaZZnfUeEq
+   SmmbbOakCjy4mZKzdmzk6Eq10xFmVif/7QcZGgfdddBm3P+mdLu0DZIyx
+   roCUIm4ah/39KV1EIg39ExI895bO42aLTSZ9b5O7StLvL4RJH1VcVDkY3
+   vmpTLvBxAhUBbzGyr7qlN4n2MX0BXnpSrcRzw3LHuWR/IJ89PBMhj+YXZ
+   3gleIxYA5q6+mlkptz7LpOc93E4lAQ17h67jSw+q47RqAQ2oAOUVrLiJu
+   OQ4ZJ3/fhGS15wbZuXUYqEeiU3CMkO5sayt1MFgNxC9NyJIbtdrXiyAe1
+   w==;
+X-CSE-ConnectionGUID: 3kBvELvqTQeAsiMorGknyg==
+X-CSE-MsgGUID: RV/m4FL2SJWwRssVVWl0wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59904948"
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="59904948"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 13:30:43 -0700
+X-CSE-ConnectionGUID: zt8/fUMVQtOpdCaMbfaH1Q==
+X-CSE-MsgGUID: xsMpZsdwR52JnSfNz7rA8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="137365779"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 13:30:17 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 12 May 2025 13:30:16 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 12 May 2025 13:30:16 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 12 May 2025 13:30:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CaDRVDFHqTGRZ6jJtNxHM6wiDu+5dB2prZmqH1eQGl6LufKSzzw1ViS+hZYXpAznQrDsfhJ83gfotZkjT3l95ueZ4UiuE57Qguk1nu+AXYkzLoBEpVwRQkAlzeQD8kmxSK2OJ/4SoFAcDVHEru+Fl5IBgHsARoZBbt871W5G9MtjcGOfapUwNp74l2izq1p2z9rhJNQqz52USQnqLs1Jlq3Ih+hI/jyqIpTynqnudzabsEthu3aHT0JDjKO4M/ras86GgZeN84GYHcmzGL/t1DCB54w+FYzmUcilEI/ogSk3moTfZs//d+6k3IJlcRcGbE0peHv1TRyAEj+0bj6tJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MEE6r4dVVgO0sZxOJcneHzzOICWa5lWIsRuxVH/yu5Y=;
+ b=sAaA9ZQAPuINPYYgoS9op0iMGB1z8AkD2mM66qoLRfqLIpVv9/oe3eWNYvwbYBYi2TK03JnhT5bGi67gtEaWhAtEsxplT3mtIVqckmXUXx1csnvCAW7f7wBUFPpJHsIAwVVi4ZzSoaKiBPHmnqmTa8tu47mfArKsa3aSg9p8bJQ+5p5K46I6QntvQWcs8ApIvx6wosKIGiLh4PqtQKrXqUi2KsZRry+HCai+aWumkTUosMgwpMHoZJKGPTxe8gcr8ysX9rxbtZ4yfs2dYGehVXqL6hhZCJEiGfYclUJJbtlhb2uu6JbKE6UAFxZEOGgZq7NS61/cRAzhOb+CasqmBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
+ by PH7PR11MB8549.namprd11.prod.outlook.com (2603:10b6:510:308::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 20:30:08 +0000
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b]) by CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 20:30:08 +0000
+From: "Falcon, Thomas" <thomas.falcon@intel.com>
+To: "james.clark@linaro.org" <james.clark@linaro.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>, "mingo@redhat.com" <mingo@redhat.com>, "Hunter,
+ Adrian" <adrian.hunter@intel.com>, "acme@kernel.org" <acme@kernel.org>,
+	"namhyung@kernel.org" <namhyung@kernel.org>, "irogers@google.com"
+	<irogers@google.com>, "Wang, Weilin" <weilin.wang@intel.com>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "jolsa@kernel.org"
+	<jolsa@kernel.org>
+Subject: Re: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
+ validation test
+Thread-Topic: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
+ validation test
+Thread-Index: AQHbw25TvIPDhNU9aES6j4Anv1fMDLPPcm+A
+Date: Mon, 12 May 2025 20:30:08 +0000
+Message-ID: <108f87fc28453adb52d6b8c2afd8d184e288a83e.camel@intel.com>
+References: <20250512184700.11691-1-irogers@google.com>
+	 <20250512184700.11691-2-irogers@google.com>
+In-Reply-To: <20250512184700.11691-2-irogers@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|PH7PR11MB8549:EE_
+x-ms-office365-filtering-correlation-id: 58b5d043-e24e-493d-ce5d-08dd9193c9c6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018|921020;
+x-microsoft-antispam-message-info: =?utf-8?B?OU9DYzkvMGFIUmRydDRLSlRQcHJlWGxTME5yOTJKeWVzNEpDTmFSdFBtdTh1?=
+ =?utf-8?B?L3h6dWhKYUJub2orZUcvM0FXWCtBYWtPaVFqbks3M0JBc0ZxZU9FZDJHWU9D?=
+ =?utf-8?B?YW1hVitmazBNdDdpTUFuNjFZdGlValNXSzFqaWN6UjNZckpLUWpjYUc4SUll?=
+ =?utf-8?B?d3pVaTZLamxkbXFoSEZlS0hpaDd4SklJUXRoQjVqVGJnd3RnL0R2YktkeGJY?=
+ =?utf-8?B?V1lOaExkRWdueWRoSEJhcndqeTRISkYyU3FaV2NaL2tabG5seWVJOFRIbUQv?=
+ =?utf-8?B?UVVHZHE4M1dsR2pRaS9PRUt0Q3c0R1QxN2hlVWRObXhseHkxOWFuZG90TUZ4?=
+ =?utf-8?B?bjViRTFMcmJzWmhyUzJFYmptQjlwcnk3UzFkV1E4U2hmNlU1UTFNeHAxNzVU?=
+ =?utf-8?B?UWl3WEx5b0Q2QWJvNlMxRndpaDVSNkJ3ZXhtcHRySmd6NGM1RTNleUh5R0lD?=
+ =?utf-8?B?ekRhT2RBTXgwdFNzWXZBeUp4K2NDTm5XV0VqNlRyU2RqdVRGTVdkYWkwTGZG?=
+ =?utf-8?B?WVQra0t1NVMvQXNtQzdTZ25WZldWME5yeEhYcGg4TmJpR0o3M2RHcWxaMGcx?=
+ =?utf-8?B?VllJeWVuYTdmc3p5WVVjc2luTE8zQzcrSzhVa3VGRk1hRmxsNmRYaDVlTTA4?=
+ =?utf-8?B?QUd3T21vM2dibGlkRDdKM2hhMXRuWlZmSmVHbXdBbVY1MmErL3drbWN2cGp3?=
+ =?utf-8?B?VUpncVRSY3FabSt6dllDYXBOV3JjVXhQT2xnRzJmRjdNMGxadFJLaFZJMmVt?=
+ =?utf-8?B?c2Q4b0JibnlhNVlDMEpzWnYrbXByMXNETFhobFhoRGZQL3hoSGprcG5aL3dz?=
+ =?utf-8?B?ZTE2aXNiSTNaTTN4OXp3Vm4wTGljb3dxWFA5L2JmTjM4cmUrc1hFNCtUcjc0?=
+ =?utf-8?B?MVlueHpzYXMreHZyNjgwZDVDeHo2WHlucmRza0s5UlRLZ1BKZVR1dlVSOXdz?=
+ =?utf-8?B?WUlXU2RoUS9EaVVJRDVXcE40RDFRMmJVZkhlK0RBQjYvN0FuVkJJNkhCRWdr?=
+ =?utf-8?B?V3NxdTR3R0xlV2xGTGRYNllieVNlSkdNL21Vc2d5Y0FLbURtOXh5VFlEazd2?=
+ =?utf-8?B?cUNrcVNQVUpReThCSlI3a1htcGg5b1VDZXVSaG14R2tZS0F6ZDIxdzZZSkdt?=
+ =?utf-8?B?NnVzYnVrQW9Ta2NsTkVwbS93clE3NlMwSlZlUTBydmhpMXRSajBCMDJEVmN3?=
+ =?utf-8?B?dmFodko5VmhreEFZUEdhWlNEdXNXcnRvejJVaXovM2dOUlZPRzYxK2hSb3NZ?=
+ =?utf-8?B?QndyeTFxdTJkSHZOOGc3bWxYTkQ4VkF4QmUrVnNPSTg4WUYyclZYR1pzNTZQ?=
+ =?utf-8?B?R05taVJZSG5KZ2xFRWVyZkMrMnA0SzEraktqUVVueEQ3NXg2MURhOUlKSHhw?=
+ =?utf-8?B?YjZwNXNIWXZwN1pheE5RL3I0bkYzSm41MXNmR3dZc21yQkoxM2lYTmg5Rjhi?=
+ =?utf-8?B?YTFrd0Q2YlVVQnE1MVJIQXJsdndDWEFrUTRROEFva1pYYVJWa2VHVmFQYlEv?=
+ =?utf-8?B?M1ExMTZudUY2UVVINFJoM2lDYy9Sbk1XTW5zaE91YzEzdXVJTy9LOTh5Zm1S?=
+ =?utf-8?B?eXhDZXJ2NlQ0bnZmbjk0Nm4yL3BZbG0rN2N3VWJMRVltbWRweWxwUVZ3bzhW?=
+ =?utf-8?B?NlVxZ093WTl6TnM0K0RmMFprTE0wTG9HZzBSQTlWL0ljSEpLZi9ZZVEzUVBJ?=
+ =?utf-8?B?WVdBdkJpRS94REp5TnM0UkVDOWpsanZvNlk4QWoxaHh4R3RmM1RLUHV4dEJw?=
+ =?utf-8?B?Y2Fmdld1RUJKWVdaMmVzVVk5bUpDeVZvUVdScFRZU1NkRXJiWVdPME5hbU4z?=
+ =?utf-8?B?a21VOExSUEtETHhBU2dKRjRPWW8xV2tRYzErT1F6aDdiT1JERi9zaHk0ZXhp?=
+ =?utf-8?B?UkpMOGwwbEdGajVNOFU1dUVMRXpweXZ6US94aVpiRFBONlBhNjR1QjFkb3Vr?=
+ =?utf-8?B?V0pyTnJNaDd6U293RXJwNWFzT1ArN1FKdytKMU0rd1ZuL2NSaDJkZUxrb3o5?=
+ =?utf-8?Q?WIqbCdbqPxDW+Dxk8pOaCStYLvxliI=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Mk9iRDByZDVhUHlTMzQ2cXI2U05saUVpeUNzUTBsMVdSV2VmcFpvT2F2L1Y5?=
+ =?utf-8?B?WlFwcVA2aGJYSkZJUWxpTWVhWS9tRkR0NzNvR1RsdGpIeURaTTdmYUJpaWpv?=
+ =?utf-8?B?UnFYN3o3d21kUjlkZHdXNmowZGVVKzRFN1FqZXpKZEViVWJ2YlJhOU5Td2xw?=
+ =?utf-8?B?a0J1WjBwTCtuWnhVZXZ0eEx4QmVuMDAxQmUyd1U4bFhGRW5UMU1tTDFnblBL?=
+ =?utf-8?B?SmpPM0JwK1BNdDQwZEVCeS9UTnVaR0xkVzNLT3M2UzVZVGxKY0kwdVo2UFhQ?=
+ =?utf-8?B?aisxOEJsSldXcHRpR0Zyd2RndmhXeWRCNHRuUTVOSm84Tkh5UTNBQTEvU2E0?=
+ =?utf-8?B?Nm1pdzdBMmlvenpjNitlOEhqb3gxVmd2RS83QWRwaW5ZYkNOdVZLYitIb0Z1?=
+ =?utf-8?B?Z3MvQWpQV3Q1REh0ZDEvK2tOYlA2eENTRVBuMGxtWEVxVEZZYzF4U0o5ZEl0?=
+ =?utf-8?B?elpjeU9CcmxNSU1pV3h3SWZERWYvbmVmWmJqYjlVYnViK3NHNGMycDluSlpN?=
+ =?utf-8?B?YlNyMzMvaGRwV1hRbUt0bENCMUJPSTBwcGJBUVVDdG9DdTFpVWdLdGNaY3hk?=
+ =?utf-8?B?N3RLMDNqeWFzQlZ3eTY2d3R3cFJFb0lnL1lhWGdzOFB1ak95Z3hrVzh5R0JP?=
+ =?utf-8?B?b3RFSHZzV3NMQXRjbnR5VEFST1duYzNlbHhOdTlobWJUQllMTHBucUVFaUJh?=
+ =?utf-8?B?ZHF3a3pKYXF1VnU4M3RXdGVLeW9yWDd0Z1lDTWFjZWVHTUdkUHNBVzI4VzF2?=
+ =?utf-8?B?dkR2a3Q5TmF4cFBJS2hsMEhMa3BRam83WkgrVXVyRFkvbXc1UWRlNlpMcUxD?=
+ =?utf-8?B?K093Szc0bDJVdWRoWDJSSHB1aVcrbkIvSGJ6Mnl6VlE3K1R3WjRBL0RsNlgz?=
+ =?utf-8?B?b2xCMVBTYTlIYlpkWVBEUXJiMXJYZFFpSWRXajAyV2V6QWtVNW4zU1JYZGRi?=
+ =?utf-8?B?bUNSbCtqT2k3Qkp1d2Z5VEs1dCtpMXlMdlpudXhjNzBsZUNwY0NvYm9zeHVJ?=
+ =?utf-8?B?T0JsT2ZjekRTWERCSEpha04xUjR3Wnh1M2xuSUI0VjJmczBQZjRsQm5iZGlm?=
+ =?utf-8?B?MXdLVXBoTmlKaE1vODFwdU9JZFRFUXA3R0M1VWtSYjdwWFovcnRHeUpGUXpF?=
+ =?utf-8?B?Mjl5OTVpK0RuZnEwc3E2SW85TlJ0LzNFakx4ZlRlRFU3akx0VjFISHNUaXhQ?=
+ =?utf-8?B?YkdXSHIzUlhNSzhtd3o3SGFjWjAzdEUwaC96bVZiMXNJeTBLbTZ4QitTcWRQ?=
+ =?utf-8?B?OXlabW5weU5NK3ZjaDgvNW5jdWtNcndLOVd2NmNZMm5YSHF6andnRHNDczlE?=
+ =?utf-8?B?Tmh4em9HaklOSi9PTEVtTzN3dldPMVpORGdheHplbU93SjhiM1pwcVViSW53?=
+ =?utf-8?B?QzViZHpLaUFnMmNpQTJreTJVU2U1N2tmakpSb0dCZDFUa09rc0tjUWlRa00r?=
+ =?utf-8?B?M3AxZmQ4UEZGaUI1UGhoU2k3K1NXTTZGbm12OGx2SmxiZ09QL2lOb3VJYXJF?=
+ =?utf-8?B?RTZxVEdCNERnb2J3U0Z0ZWYxSnI4N1NsTmxwR3lsZTVwRTlQRkwyY2RDb0dn?=
+ =?utf-8?B?VTVONE5Od0FoYitSa2NXbTVEenJjNDF2WG1IK1RJa0VIM01yaFRrTDVGSTEx?=
+ =?utf-8?B?eElCTklPR1BMUTQ4UTlSMUovcExPam9sZTNCbUlIRlZ1aFh2OUdyS0luUGpp?=
+ =?utf-8?B?VnpYakErR3htOE1QY042a00zRVRYb3ZINGlHWnJNNURNUGhhd1V1aWVaVjJU?=
+ =?utf-8?B?anRkdC9yZGlzdmpKRVBxUFh1Q2tCbE1CZENZK1VnWDVpckNzMHNqZ2lEZ1lH?=
+ =?utf-8?B?YjEwMWUxTlZ4TC96V0V1Y0c5bjBSU3M2UWtTcHdKVTA1TVNpUGxWYXV1N0xL?=
+ =?utf-8?B?MjY5Qmk1NlByVldGbGZRdEx2Mk51bzRKeHorbEpxK3ZJSHBkUG5INnZmRmFs?=
+ =?utf-8?B?YUcvU3prM3Q2M2tXVHcvbGxrNUpZOFV6ZnZ1RDdQUXRza3VjR2dpSk41YzBC?=
+ =?utf-8?B?SWgxUG02eVNtUTN0SmVneTY1eVB1SUxLc1hpVHViVWRpTk9UN2FjbDF5VUpX?=
+ =?utf-8?B?aTc1R1Bpd00weE5TaVpobjJVVFl0NzhBTXlCM09peDVFV2NseTl6WkJrQTc1?=
+ =?utf-8?B?bDBLRzlob2tkZEU4WFI3SFg1NmZEeHJsWXA0UFBZWUxrU2RJQWd6b3pMSDh1?=
+ =?utf-8?B?Tnc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F3E3D24E237E77448CCF928F1DD5AEE1@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250512194622.33258-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512194622.33258-4-irogers@google.com>
-Subject: [PATCH v2 3/3] perf metricgroup: Binary search when resolving
- referred to metrics
-From: Ian Rogers <irogers@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58b5d043-e24e-493d-ce5d-08dd9193c9c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2025 20:30:08.7719
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cyL75bKmCMOqXIPM3eygBnbqwdxGocqVLr8zci8RhULrVxtD3u9XSPQLHo5bmo+LSatzxcMRO5EcEi8SbxjjuA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8549
+X-OriginatorOrg: intel.com
 
-Unlike with events, metrics can be matched by name or a list of metric
-groups. However, when a metric refers to another metric it isn't
-referring to a group but the singular metric in question. Prior to
-this change every "id" in a metric expression is checked to see if it
-is a metric by scanning all the metrics in the metrics table. As the
-table is sorted my metric name we can speed the search in the
-resolution case by binary searching for the metric.
-
-Rename some of the metricgroup functions to make it clearer whether
-they match a metric by name or by both name and group.
-
-Before:
-```
-$ time perf test -v 10
- 10: PMU JSON event tests                                            :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
- 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-
-real    0m15.972s
-user    0m13.176s
-sys     0m3.001s
-```
-
-After:
-```
-$ time perf test -v 10
- 10: PMU JSON event tests                                            :
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
- 10.3: Parsing of PMU event table metrics                            : Ok
- 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
- 10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-
-real    0m5.343s
-user    0m1.871s
-sys     0m2.128s
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c                |   6 +-
- tools/perf/pmu-events/empty-pmu-events.c |  66 ++++++++++++++-
- tools/perf/pmu-events/jevents.py         |  66 ++++++++++++++-
- tools/perf/pmu-events/pmu-events.h       |  23 +++--
- tools/perf/util/metricgroup.c            | 102 +++++++++--------------
- tools/perf/util/metricgroup.h            |   2 +-
- 6 files changed, 192 insertions(+), 73 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 300b6393bb41..bf0e5e12d992 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1854,7 +1854,7 @@ static int add_default_events(void)
- 		 * will use this approach. To determine transaction support
- 		 * on an architecture test for such a metric name.
- 		 */
--		if (!metricgroup__has_metric(pmu, "transaction")) {
-+		if (!metricgroup__has_metric_or_groups(pmu, "transaction")) {
- 			pr_err("Missing transaction metrics\n");
- 			ret = -1;
- 			goto out;
-@@ -1888,7 +1888,7 @@ static int add_default_events(void)
- 			smi_reset = true;
- 		}
- 
--		if (!metricgroup__has_metric(pmu, "smi")) {
-+		if (!metricgroup__has_metric_or_groups(pmu, "smi")) {
- 			pr_err("Missing smi metrics\n");
- 			ret = -1;
- 			goto out;
-@@ -1978,7 +1978,7 @@ static int add_default_events(void)
- 		 * Add TopdownL1 metrics if they exist. To minimize
- 		 * multiplexing, don't request threshold computation.
- 		 */
--		if (metricgroup__has_metric(pmu, "Default")) {
-+		if (metricgroup__has_metric_or_groups(pmu, "Default")) {
- 			struct evlist *metric_evlist = evlist__new();
- 
- 			if (!metric_evlist) {
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index 0361bcc1eb58..d4017007a991 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -449,7 +449,7 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
-                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-                 int ret;
- 
--                if (!perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-                         continue;
- 
-                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
-@@ -495,6 +495,49 @@ static int pmu_metrics_table__for_each_metric_pmu(const struct pmu_metrics_table
-         return 0;
- }
- 
-+static int pmu_metrics_table__find_metric_pmu(const struct pmu_metrics_table *table,
-+                                            const struct pmu_table_entry *pmu,
-+                                            const char *metric,
-+                                            pmu_metric_iter_fn fn,
-+                                            void *data)
-+{
-+        struct pmu_metric pm = {
-+                .pmu = &big_c_string[pmu->pmu_name.offset],
-+        };
-+        int low = 0, high = pmu->num_entries - 1;
-+
-+        while (low <= high) {
-+                int cmp, mid = (low + high) / 2;
-+
-+                decompress_metric(pmu->entries[mid].offset, &pm);
-+
-+                if (!pm.metric_name && !metric)
-+                        goto do_call;
-+
-+                if (!pm.metric_name && metric) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (pm.metric_name && !metric) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+
-+                cmp = strcmp(pm.metric_name, metric);
-+                if (cmp < 0) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (cmp > 0) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+  do_call:
-+                return fn ? fn(&pm, table, data) : 0;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-                                      pmu_metric_iter_fn fn,
-                                      void *data)
-@@ -509,6 +552,27 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-         return 0;
- }
- 
-+int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
-+                                 struct perf_pmu *pmu,
-+                                 const char *metric,
-+                                 pmu_metric_iter_fn fn,
-+                                 void *data)
-+{
-+        for (size_t i = 0; i < table->num_pmus; i++) {
-+                const struct pmu_table_entry *table_pmu = &table->pmus[i];
-+                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-+                int ret;
-+
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                        continue;
-+
-+                ret = pmu_metrics_table__find_metric_pmu(table, table_pmu, metric, fn, data);
-+                if (ret != PMU_METRICS__NOT_FOUND)
-+                        return ret;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
- {
-         static struct {
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index e3a55486c08e..a1899f35ec74 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -972,7 +972,7 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
-                 const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-                 int ret;
- 
--                if (!perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-                         continue;
- 
-                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
-@@ -1018,6 +1018,49 @@ static int pmu_metrics_table__for_each_metric_pmu(const struct pmu_metrics_table
-         return 0;
- }
- 
-+static int pmu_metrics_table__find_metric_pmu(const struct pmu_metrics_table *table,
-+                                            const struct pmu_table_entry *pmu,
-+                                            const char *metric,
-+                                            pmu_metric_iter_fn fn,
-+                                            void *data)
-+{
-+        struct pmu_metric pm = {
-+                .pmu = &big_c_string[pmu->pmu_name.offset],
-+        };
-+        int low = 0, high = pmu->num_entries - 1;
-+
-+        while (low <= high) {
-+                int cmp, mid = (low + high) / 2;
-+
-+                decompress_metric(pmu->entries[mid].offset, &pm);
-+
-+                if (!pm.metric_name && !metric)
-+                        goto do_call;
-+
-+                if (!pm.metric_name && metric) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (pm.metric_name && !metric) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+
-+                cmp = strcmp(pm.metric_name, metric);
-+                if (cmp < 0) {
-+                        low = mid + 1;
-+                        continue;
-+                }
-+                if (cmp > 0) {
-+                        high = mid - 1;
-+                        continue;
-+                }
-+  do_call:
-+                return fn ? fn(&pm, table, data) : 0;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-                                      pmu_metric_iter_fn fn,
-                                      void *data)
-@@ -1032,6 +1075,27 @@ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
-         return 0;
- }
- 
-+int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
-+                                 struct perf_pmu *pmu,
-+                                 const char *metric,
-+                                 pmu_metric_iter_fn fn,
-+                                 void *data)
-+{
-+        for (size_t i = 0; i < table->num_pmus; i++) {
-+                const struct pmu_table_entry *table_pmu = &table->pmus[i];
-+                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
-+                int ret;
-+
-+                if (pmu && !perf_pmu__name_wildcard_match(pmu, pmu_name))
-+                        continue;
-+
-+                ret = pmu_metrics_table__find_metric_pmu(table, table_pmu, metric, fn, data);
-+                if (ret != PMU_METRICS__NOT_FOUND)
-+                        return ret;
-+        }
-+        return PMU_METRICS__NOT_FOUND;
-+}
-+
- static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
- {
-         static struct {
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index a95fee561622..a523936846e0 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -74,6 +74,7 @@ struct pmu_events_table;
- struct pmu_metrics_table;
- 
- #define PMU_EVENTS__NOT_FOUND -1000
-+#define PMU_METRICS__NOT_FOUND -1000
- 
- typedef int (*pmu_event_iter_fn)(const struct pmu_event *pe,
- 				 const struct pmu_events_table *table,
-@@ -88,11 +89,11 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
- 				    pmu_event_iter_fn fn,
- 				    void *data);
- /*
-- * Search for table and entry matching with pmu__name_match. Each matching event
-- * has fn called on it. 0 implies to success/continue the search while non-zero
-- * means to terminate. The special value PMU_EVENTS__NOT_FOUND is used to
-- * indicate no event was found in one of the tables which doesn't terminate the
-- * search of all tables.
-+ * Search for a table and entry matching with pmu__name_wildcard_match or any
-+ * tables if pmu is NULL. Each matching event has fn called on it. 0 implies to
-+ * success/continue the search while non-zero means to terminate. The special
-+ * value PMU_EVENTS__NOT_FOUND is used to indicate no event was found in one of
-+ * the tables which doesn't terminate the search of all tables.
-  */
- int pmu_events_table__find_event(const struct pmu_events_table *table,
-                                  struct perf_pmu *pmu,
-@@ -104,6 +105,18 @@ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
- 
- int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
- 				     void *data);
-+/*
-+ * Search for a table and entry matching with pmu__name_wildcard_match or any
-+ * tables if pmu is NULL. Each matching metric has fn called on it. 0 implies to
-+ * success/continue the search while non-zero means to terminate. The special
-+ * value PMU_METRICS__NOT_FOUND is used to indicate no metric was found in one
-+ * of the tables which doesn't terminate the search of all tables.
-+ */
-+int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
-+				   struct perf_pmu *pmu,
-+				   const char *metric,
-+				   pmu_metric_iter_fn fn,
-+				   void *data);
- 
- const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu);
- const struct pmu_metrics_table *pmu_metrics_table__find(void);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 46920ebadfd1..126a631686b0 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -353,7 +353,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	return 0;
- }
- 
--static bool match_metric(const char *metric_or_groups, const char *sought)
-+static bool match_metric_or_groups(const char *metric_or_groups, const char *sought)
- {
- 	int len;
- 	char *m;
-@@ -369,18 +369,19 @@ static bool match_metric(const char *metric_or_groups, const char *sought)
- 	    (metric_or_groups[len] == 0 || metric_or_groups[len] == ';'))
- 		return true;
- 	m = strchr(metric_or_groups, ';');
--	return m && match_metric(m + 1, sought);
-+	return m && match_metric_or_groups(m + 1, sought);
- }
- 
--static bool match_pm_metric(const struct pmu_metric *pm, const char *pmu, const char *metric)
-+static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *pmu,
-+				      const char *metric_or_groups)
- {
- 	const char *pm_pmu = pm->pmu ?: "cpu";
- 
- 	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
- 		return false;
- 
--	return match_metric(pm->metric_group, metric) ||
--	       match_metric(pm->metric_name, metric);
-+	return match_metric_or_groups(pm->metric_group, metric_or_groups) ||
-+	       match_metric_or_groups(pm->metric_name, metric_or_groups);
- }
- 
- /** struct mep - RB-tree node for building printing information. */
-@@ -802,11 +803,6 @@ struct metricgroup_add_iter_data {
- 	const struct pmu_metrics_table *table;
- };
- 
--static bool metricgroup__find_metric(const char *pmu,
--				     const char *metric,
--				     const struct pmu_metrics_table *table,
--				     struct pmu_metric *pm);
--
- static int add_metric(struct list_head *metric_list,
- 		      const struct pmu_metric *pm,
- 		      const char *modifier,
-@@ -818,6 +814,16 @@ static int add_metric(struct list_head *metric_list,
- 		      const struct visited_metric *visited,
- 		      const struct pmu_metrics_table *table);
- 
-+static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
-+					     const struct pmu_metrics_table *table  __maybe_unused,
-+					     void *vdata)
-+{
-+	struct pmu_metric *copied_pm = vdata;
-+
-+	memcpy(copied_pm, pm, sizeof(*pm));
-+	return 0;
-+}
-+
- /**
-  * resolve_metric - Locate metrics within the root metric and recursively add
-  *                    references to them.
-@@ -838,7 +844,7 @@ static int add_metric(struct list_head *metric_list,
-  *       architecture perf is running upon.
-  */
- static int resolve_metric(struct list_head *metric_list,
--			  const char *pmu,
-+			  struct perf_pmu *pmu,
- 			  const char *modifier,
- 			  bool metric_no_group,
- 			  bool metric_no_threshold,
-@@ -868,7 +874,9 @@ static int resolve_metric(struct list_head *metric_list,
- 	hashmap__for_each_entry(root_metric->pctx->ids, cur, bkt) {
- 		struct pmu_metric pm;
- 
--		if (metricgroup__find_metric(pmu, cur->pkey, table, &pm)) {
-+		if (pmu_metrics_table__find_metric(table, pmu, cur->pkey,
-+						   metricgroup__find_metric_callback,
-+						   &pm) != PMU_METRICS__NOT_FOUND) {
- 			pending = realloc(pending,
- 					(pending_cnt + 1) * sizeof(struct to_resolve));
- 			if (!pending)
-@@ -1019,7 +1027,12 @@ static int __add_metric(struct list_head *metric_list,
- 	}
- 	if (!ret) {
- 		/* Resolve referenced metrics. */
--		const char *pmu = pm->pmu ?: "cpu";
-+		struct perf_pmu *pmu;
-+
-+		if (pm->pmu && pm->pmu[0] != '\0')
-+			pmu = perf_pmus__find(pm->pmu);
-+		else
-+			pmu = perf_pmus__scan_core(/*pmu=*/ NULL);
- 
- 		ret = resolve_metric(metric_list, pmu, modifier, metric_no_group,
- 				     metric_no_threshold, user_requested_cpu_list,
-@@ -1036,44 +1049,6 @@ static int __add_metric(struct list_head *metric_list,
- 	return ret;
- }
- 
--struct metricgroup__find_metric_data {
--	const char *pmu;
--	const char *metric;
--	struct pmu_metric *pm;
--};
--
--static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
--					     const struct pmu_metrics_table *table  __maybe_unused,
--					     void *vdata)
--{
--	struct metricgroup__find_metric_data *data = vdata;
--	const char *pm_pmu = pm->pmu ?: "cpu";
--
--	if (strcmp(data->pmu, "all") && strcmp(pm_pmu, data->pmu))
--		return 0;
--
--	if (!match_metric(pm->metric_name, data->metric))
--		return 0;
--
--	memcpy(data->pm, pm, sizeof(*pm));
--	return 1;
--}
--
--static bool metricgroup__find_metric(const char *pmu,
--				     const char *metric,
--				     const struct pmu_metrics_table *table,
--				     struct pmu_metric *pm)
--{
--	struct metricgroup__find_metric_data data = {
--		.pmu = pmu,
--		.metric = metric,
--		.pm = pm,
--	};
--
--	return pmu_metrics_table__for_each_metric(table, metricgroup__find_metric_callback, &data)
--		? true : false;
--}
--
- static int add_metric(struct list_head *metric_list,
- 		      const struct pmu_metric *pm,
- 		      const char *modifier,
-@@ -1119,7 +1094,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
- 	struct metricgroup_add_iter_data *d = data;
- 	int ret;
- 
--	if (!match_pm_metric(pm, d->pmu, d->metric_name))
-+	if (!match_pm_metric_or_groups(pm, d->pmu, d->metric_name))
- 		return 0;
- 
- 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
-@@ -1200,9 +1175,9 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
- 	struct metricgroup__add_metric_data *data = vdata;
- 	int ret = 0;
- 
--	if (pm->metric_expr && match_pm_metric(pm, data->pmu, data->metric_name)) {
-+	if (pm->metric_expr && match_pm_metric_or_groups(pm, data->pmu, data->metric_name)) {
- 		bool metric_no_group = data->metric_no_group ||
--			match_metric(pm->metricgroup_no_group, data->metric_name);
-+			match_metric_or_groups(pm->metricgroup_no_group, data->metric_name);
- 
- 		data->has_match = true;
- 		ret = add_metric(data->list, pm, data->modifier, metric_no_group,
-@@ -1723,29 +1698,32 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 
- struct metricgroup__has_metric_data {
- 	const char *pmu;
--	const char *metric;
-+	const char *metric_or_groups;
- };
--static int metricgroup__has_metric_callback(const struct pmu_metric *pm,
--					    const struct pmu_metrics_table *table __maybe_unused,
--					    void *vdata)
-+static int metricgroup__has_metric_or_groups_callback(const struct pmu_metric *pm,
-+						      const struct pmu_metrics_table *table
-+							__maybe_unused,
-+						      void *vdata)
- {
- 	struct metricgroup__has_metric_data *data = vdata;
- 
--	return match_pm_metric(pm, data->pmu, data->metric) ? 1 : 0;
-+	return match_pm_metric_or_groups(pm, data->pmu, data->metric_or_groups) ? 1 : 0;
- }
- 
--bool metricgroup__has_metric(const char *pmu, const char *metric)
-+bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups)
- {
- 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
- 	struct metricgroup__has_metric_data data = {
- 		.pmu = pmu,
--		.metric = metric,
-+		.metric_or_groups = metric_or_groups,
- 	};
- 
- 	if (!table)
- 		return false;
- 
--	return pmu_metrics_table__for_each_metric(table, metricgroup__has_metric_callback, &data)
-+	return pmu_metrics_table__for_each_metric(table,
-+						  metricgroup__has_metric_or_groups_callback,
-+						  &data)
- 		? true : false;
- }
- 
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 779f6ede1b51..a04ac1afa6cc 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -85,7 +85,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   struct rblist *metric_events);
- 
- void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
--bool metricgroup__has_metric(const char *pmu, const char *metric);
-+bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups);
- unsigned int metricgroups__topdown_max_level(void);
- int arch_get_runtimeparam(const struct pmu_metric *pm);
- void metricgroup__rblist_exit(struct rblist *metric_events);
--- 
-2.49.0.1045.g170613ef41-goog
-
+T24gTW9uLCAyMDI1LTA1LTEyIGF0IDExOjQ3IC0wNzAwLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiBP
+biBteSBhbGRlcmxha2UgSSBjdXJyZW50bHkgc2VlIGZvciB0aGUgInBlcmYgbWV0cmljcyB2YWx1
+ZSB2YWxpZGF0aW9uIiB0ZXN0Og0KPiBgYGANCj4gVG90YWwgVGVzdCBDb3VudDogIDE0Mg0KPiBQ
+YXNzZWQgVGVzdCBDb3VudDogIDEzOQ0KPiBbDQo+IE1ldHJpYyBSZWxhdGlvbnNoaXAgRXJyb3I6
+ICAgICAgVGhlIGNvbGxlY3RlZCB2YWx1ZSBvZiBtZXRyaWMgWyd0bWFfZmV0Y2hfbGF0ZW5jeScs
+ICd0bWFfZmV0Y2hfYmFuZHdpZHRoJywgJ3RtYV9mcm9udGVuZF9ib3VuZCddDQo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIGlzIFszMS4xMzcwMjhdIGluIHdvcmtsb2FkKHMpOiBbJ3BlcmYgYmVu
+Y2ggZnV0ZXggaGFzaCAtciAyIC1zJ10NCj4gICAgICAgICAgICAgICAgICAgICAgICAgYnV0IGV4
+cGVjdGVkIHZhbHVlIHJhbmdlIGlzIFt0bWFfZnJvbnRlbmRfYm91bmQsIHRtYV9mcm9udGVuZF9i
+b3VuZF0NCj4gICAgICAgICAgICAgICAgICAgICAgICAgUmVsYXRpb25zaGlwIHJ1bGUgZGVzY3Jp
+cHRpb246ICdTdW0gb2YgdGhlIGxldmVsIDIgY2hpbGRyZW4gc2hvdWxkIGVxdWFsIGxldmVsIDEg
+cGFyZW50JywNCj4gTWV0cmljIFJlbGF0aW9uc2hpcCBFcnJvcjogICAgICBUaGUgY29sbGVjdGVk
+IHZhbHVlIG9mIG1ldHJpYyBbJ3RtYV9tZW1vcnlfYm91bmQnLCAndG1hX2NvcmVfYm91bmQnLCAn
+dG1hX2JhY2tlbmRfYm91bmQnXQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICBpcyBbNi41NjQ0
+NDJdIGluIHdvcmtsb2FkKHMpOiBbJ3BlcmYgYmVuY2ggZnV0ZXggaGFzaCAtciAyIC1zJ10NCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgYnV0IGV4cGVjdGVkIHZhbHVlIHJhbmdlIGlzIFt0bWFf
+YmFja2VuZF9ib3VuZCwgdG1hX2JhY2tlbmRfYm91bmRdDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgIFJlbGF0aW9uc2hpcCBydWxlIGRlc2NyaXB0aW9uOiAnU3VtIG9mIHRoZSBsZXZlbCAyIGNo
+aWxkcmVuIHNob3VsZCBlcXVhbCBsZXZlbCAxIHBhcmVudCcsDQo+IE1ldHJpYyBSZWxhdGlvbnNo
+aXAgRXJyb3I6ICAgICAgVGhlIGNvbGxlY3RlZCB2YWx1ZSBvZiBtZXRyaWMgWyd0bWFfbGlnaHRf
+b3BlcmF0aW9ucycsICd0bWFfaGVhdnlfb3BlcmF0aW9ucycsICd0bWFfcmV0aXJpbmcnXQ0KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBpcyBbNTcuODA2MTc5XSBpbiB3b3JrbG9hZChzKTogWydw
+ZXJmIGJlbmNoIGZ1dGV4IGhhc2ggLXIgMiAtcyddDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+IGJ1dCBleHBlY3RlZCB2YWx1ZSByYW5nZSBpcyBbdG1hX3JldGlyaW5nLCB0bWFfcmV0aXJpbmdd
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIFJlbGF0aW9uc2hpcCBydWxlIGRlc2NyaXB0aW9u
+OiAnU3VtIG9mIHRoZSBsZXZlbCAyIGNoaWxkcmVuIHNob3VsZCBlcXVhbCBsZXZlbCAxIHBhcmVu
+dCddDQo+IE1ldHJpYyB2YWxpZGF0aW9uIHJldHVybiB3aXRoIGVycm9zLiBQbGVhc2UgY2hlY2sg
+bWV0cmljcyByZXBvcnRlZCB3aXRoIGVycm9ycy4NCj4gYGBgDQo+IEkgc3VzcGVjdCBpdCBpcyBk
+dWUgdG8gdHdvIG1ldHJpY3MgZm9yIGRpZmZlcmVudCBDUFUgdHlwZXMgYmVpbmcNCj4gZW5hYmxl
+ZC4gQWRkIGEgLWNwdXR5cGUgb3B0aW9uIHRvIGF2b2lkIHRoaXMuIFRoZSB0ZXN0IHN0aWxsIGZh
+aWxzIHdpdGg6DQo+IGBgYA0KPiBUb3RhbCBUZXN0IENvdW50OiAgMTE1DQo+IFBhc3NlZCBUZXN0
+IENvdW50OiAgMTE0DQo+IFsNCj4gV3JvbmcgTWV0cmljIFZhbHVlIEVycm9yOiAgICAgICBUaGUg
+Y29sbGVjdGVkIHZhbHVlIG9mIG1ldHJpYyBbJ3RtYV9sMl9oaXRfbGF0ZW5jeSddDQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgIGlzIFsxMTcuOTQ3MDg4XSBpbiB3b3JrbG9hZChzKTogWydwZXJm
+IGJlbmNoIGZ1dGV4IGhhc2ggLXIgMiAtcyddDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGJ1
+dCBleHBlY3RlZCB2YWx1ZSByYW5nZSBpcyBbMCwgMTAwXV0NCj4gTWV0cmljIHZhbGlkYXRpb24g
+cmV0dXJuIHdpdGggZXJyb3JzLiBQbGVhc2UgY2hlY2sgbWV0cmljcyByZXBvcnRlZCB3aXRoIGVy
+cm9ycy4NCj4gYGBgDQo+IHdoaWNoIGlzIGEgcmVwcm9kdWNpYmxlIGdlbnVpbmUgZXJyb3IgYW5k
+IGxpa2VseSByZXF1aXJlcyBhIG1ldHJpYyBmaXguDQoNCkhpIElhbiwgSSB0ZXN0ZWQgdGhpcyBv
+biBteSBhbGRlciBsYWtlIGFuZCBhbiBhcnJvdyBsYWtlLiBBbGwgdGVzdHMsIGluY2x1ZGluZyB0
+bWFfbDJfaGl0X2xhdGVuY3ksDQpwYXNzIG9uIG15IGVuZC4NCg0KVGVzdGVkLWJ5OiBUaG9tYXMg
+RmFsY29uIDx0aG9tYXMuZmFsY29uQGludGVsLmNvbT4NCg0KVGhhbmtzLA0KVG9tDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+DQo+IC0tLQ0KPiAg
+Li4uL3Rlc3RzL3NoZWxsL2xpYi9wZXJmX21ldHJpY192YWxpZGF0aW9uLnB5ICAgfCAxMiArKysr
+KysrKystLS0NCj4gIHRvb2xzL3BlcmYvdGVzdHMvc2hlbGwvc3RhdF9tZXRyaWNzX3ZhbHVlcy5z
+aCAgIHwgMTcgKysrKysrKysrKystLS0tLS0NCj4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0
+aW9ucygrKSwgOSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3Rl
+c3RzL3NoZWxsL2xpYi9wZXJmX21ldHJpY192YWxpZGF0aW9uLnB5IGIvdG9vbHMvcGVyZi90ZXN0
+cy9zaGVsbC9saWIvcGVyZl9tZXRyaWNfdmFsaWRhdGlvbi5weQ0KPiBpbmRleCAwYjk0MjE2Yzlj
+NDYuLmRlYThlZjE5NzdiZiAxMDA2NDQNCj4gLS0tIGEvdG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9s
+aWIvcGVyZl9tZXRyaWNfdmFsaWRhdGlvbi5weQ0KPiArKysgYi90b29scy9wZXJmL3Rlc3RzL3No
+ZWxsL2xpYi9wZXJmX21ldHJpY192YWxpZGF0aW9uLnB5DQo+IEBAIC0zNSw3ICszNSw4IEBAIGNs
+YXNzIFRlc3RFcnJvcjoNCj4gIA0KPiAgDQo+ICBjbGFzcyBWYWxpZGF0b3I6DQo+IC0gICAgZGVm
+IF9faW5pdF9fKHNlbGYsIHJ1bGVmbmFtZSwgcmVwb3J0Zm5hbWU9JycsIHQ9NSwgZGVidWc9RmFs
+c2UsIGRhdGFmbmFtZT0nJywgZnVsbHJ1bGVmbmFtZT0nJywgd29ya2xvYWQ9J3RydWUnLCBtZXRy
+aWNzPScnKToNCj4gKyAgICBkZWYgX19pbml0X18oc2VsZiwgcnVsZWZuYW1lLCByZXBvcnRmbmFt
+ZT0nJywgdD01LCBkZWJ1Zz1GYWxzZSwgZGF0YWZuYW1lPScnLCBmdWxscnVsZWZuYW1lPScnLA0K
+PiArICAgICAgICAgICAgICAgICB3b3JrbG9hZD0ndHJ1ZScsIG1ldHJpY3M9JycsIGNwdXR5cGU9
+J2NwdScpOg0KPiAgICAgICAgICBzZWxmLnJ1bGVmbmFtZSA9IHJ1bGVmbmFtZQ0KPiAgICAgICAg
+ICBzZWxmLnJlcG9ydGZuYW1lID0gcmVwb3J0Zm5hbWUNCj4gICAgICAgICAgc2VsZi5ydWxlcyA9
+IE5vbmUNCj4gQEAgLTQzLDYgKzQ0LDcgQEAgY2xhc3MgVmFsaWRhdG9yOg0KPiAgICAgICAgICBz
+ZWxmLm1ldHJpY3MgPSBzZWxmLl9fc2V0X21ldHJpY3MobWV0cmljcykNCj4gICAgICAgICAgc2Vs
+Zi5za2lwbGlzdCA9IHNldCgpDQo+ICAgICAgICAgIHNlbGYudG9sZXJhbmNlID0gdA0KPiArICAg
+ICAgICBzZWxmLmNwdXR5cGUgPSBjcHV0eXBlDQo+ICANCj4gICAgICAgICAgc2VsZi53b3JrbG9h
+ZHMgPSBbeCBmb3IgeCBpbiB3b3JrbG9hZC5zcGxpdCgiLCIpIGlmIHhdDQo+ICAgICAgICAgIHNl
+bGYud2xpZHggPSAwICAjIGlkeCBvZiBjdXJyZW50IHdvcmtsb2Fkcw0KPiBAQCAtMzc3LDcgKzM3
+OSw3IEBAIGNsYXNzIFZhbGlkYXRvcjoNCj4gIA0KPiAgICAgIGRlZiBfcnVuX3BlcmYoc2VsZiwg
+bWV0cmljLCB3b3JrbG9hZDogc3RyKToNCj4gICAgICAgICAgdG9vbCA9ICdwZXJmJw0KPiAtICAg
+ICAgICBjb21tYW5kID0gW3Rvb2wsICdzdGF0JywgJy1qJywgJy1NJywgZiJ7bWV0cmljfSIsICIt
+YSJdDQo+ICsgICAgICAgIGNvbW1hbmQgPSBbdG9vbCwgJ3N0YXQnLCAnLS1jcHV0eXBlJywgc2Vs
+Zi5jcHV0eXBlLCAnLWonLCAnLU0nLCBmInttZXRyaWN9IiwgIi1hIl0NCj4gICAgICAgICAgd2wg
+PSB3b3JrbG9hZC5zcGxpdCgpDQo+ICAgICAgICAgIGNvbW1hbmQuZXh0ZW5kKHdsKQ0KPiAgICAg
+ICAgICBwcmludCgiICIuam9pbihjb21tYW5kKSkNCj4gQEAgLTQ0Myw2ICs0NDUsOCBAQCBjbGFz
+cyBWYWxpZGF0b3I6DQo+ICAgICAgICAgICAgICAgICAgaWYgJ01ldHJpY05hbWUnIG5vdCBpbiBt
+Og0KPiAgICAgICAgICAgICAgICAgICAgICBwcmludCgiV2FybmluZzogbm8gbWV0cmljIG5hbWUi
+KQ0KPiAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZQ0KPiArICAgICAgICAgICAgICAgIGlm
+ICdVbml0JyBpbiBtIGFuZCBtWydVbml0J10gIT0gc2VsZi5jcHV0eXBlOg0KPiArICAgICAgICAg
+ICAgICAgICAgICBjb250aW51ZQ0KPiAgICAgICAgICAgICAgICAgIG5hbWUgPSBtWydNZXRyaWNO
+YW1lJ10ubG93ZXIoKQ0KPiAgICAgICAgICAgICAgICAgIHNlbGYubWV0cmljcy5hZGQobmFtZSkN
+Cj4gICAgICAgICAgICAgICAgICBpZiAnU2NhbGVVbml0JyBpbiBtIGFuZCAobVsnU2NhbGVVbml0
+J10gPT0gJzElJyBvciBtWydTY2FsZVVuaXQnXSA9PSAnMTAwJScpOg0KPiBAQCAtNTc4LDYgKzU4
+Miw4IEBAIGRlZiBtYWluKCkgLT4gTm9uZToNCj4gICAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KA0K
+PiAgICAgICAgICAiLXdsIiwgaGVscD0iV29ya2xvYWQgdG8gcnVuIHdoaWxlIGRhdGEgY29sbGVj
+dGlvbiIsIGRlZmF1bHQ9InRydWUiKQ0KPiAgICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIi1tIiwg
+aGVscD0iTWV0cmljIGxpc3QgdG8gdmFsaWRhdGUiLCBkZWZhdWx0PSIiKQ0KPiArICAgIHBhcnNl
+ci5hZGRfYXJndW1lbnQoIi1jcHV0eXBlIiwgaGVscD0iT25seSB0ZXN0IG1ldHJpY3MgZm9yIHRo
+ZSBnaXZlbiBDUFUvUE1VIHR5cGUiLA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgZGVmYXVs
+dD0iY3B1IikNCj4gICAgICBhcmdzID0gcGFyc2VyLnBhcnNlX2FyZ3MoKQ0KPiAgICAgIG91dHBh
+dGggPSBQYXRoKGFyZ3Mub3V0cHV0X2RpcikNCj4gICAgICByZXBvcnRmID0gUGF0aC5qb2lucGF0
+aChvdXRwYXRoLCAncGVyZl9yZXBvcnQuanNvbicpDQo+IEBAIC01ODYsNyArNTkyLDcgQEAgZGVm
+IG1haW4oKSAtPiBOb25lOg0KPiAgDQo+ICAgICAgdmFsaWRhdG9yID0gVmFsaWRhdG9yKGFyZ3Mu
+cnVsZSwgcmVwb3J0ZiwgZGVidWc9YXJncy5kZWJ1ZywNCj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgZGF0YWZuYW1lPWRhdGFmaWxlLCBmdWxscnVsZWZuYW1lPWZ1bGxydWxlLCB3b3JrbG9h
+ZD1hcmdzLndsLA0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICBtZXRyaWNzPWFyZ3MubSkN
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgbWV0cmljcz1hcmdzLm0sIGNwdXR5cGU9YXJn
+cy5jcHV0eXBlKQ0KPiAgICAgIHJldCA9IHZhbGlkYXRvci50ZXN0KCkNCj4gIA0KPiAgICAgIHJl
+dHVybiByZXQNCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdGVzdHMvc2hlbGwvc3RhdF9tZXRy
+aWNzX3ZhbHVlcy5zaCBiL3Rvb2xzL3BlcmYvdGVzdHMvc2hlbGwvc3RhdF9tZXRyaWNzX3ZhbHVl
+cy5zaA0KPiBpbmRleCAyNzlmMTljNTkxOWEuLjMwNTY2ZjBiNTQyNyAxMDA3NTUNCj4gLS0tIGEv
+dG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9zdGF0X21ldHJpY3NfdmFsdWVzLnNoDQo+ICsrKyBiL3Rv
+b2xzL3BlcmYvdGVzdHMvc2hlbGwvc3RhdF9tZXRyaWNzX3ZhbHVlcy5zaA0KPiBAQCAtMTYsMTEg
+KzE2LDE2IEBAIHdvcmtsb2FkPSJwZXJmIGJlbmNoIGZ1dGV4IGhhc2ggLXIgMiAtcyINCj4gICMg
+QWRkIC1kZWJ1Zywgc2F2ZSBkYXRhIGZpbGUgYW5kIGZ1bGwgcnVsZSBmaWxlDQo+ICBlY2hvICJM
+YXVuY2ggcHl0aG9uIHZhbGlkYXRpb24gc2NyaXB0ICRweXRob252YWxpZGF0b3IiDQo+ICBlY2hv
+ICJPdXRwdXQgd2lsbCBiZSBzdG9yZWQgaW46ICR0bXBkaXIiDQo+IC0kUFlUSE9OICRweXRob252
+YWxpZGF0b3IgLXJ1bGUgJHJ1bGVmaWxlIC1vdXRwdXRfZGlyICR0bXBkaXIgLXdsICIke3dvcmts
+b2FkfSINCj4gLXJldD0kPw0KPiAtcm0gLXJmICR0bXBkaXINCj4gLWlmIFsgJHJldCAtbmUgMCBd
+OyB0aGVuDQo+IC0JZWNobyAiTWV0cmljIHZhbGlkYXRpb24gcmV0dXJuIHdpdGggZXJyb3MuIFBs
+ZWFzZSBjaGVjayBtZXRyaWNzIHJlcG9ydGVkIHdpdGggZXJyb3JzLiINCj4gLWZpDQo+ICtmb3Ig
+Y3B1dHlwZSBpbiAvc3lzL2J1cy9ldmVudF9zb3VyY2UvZGV2aWNlcy9jcHVfKjsgZG8NCj4gKwlj
+cHV0eXBlPSQoYmFzZW5hbWUgIiRjcHV0eXBlIikNCj4gKwllY2hvICJUZXN0aW5nIG1ldHJpY3Mg
+Zm9yOiAkY3B1dHlwZSINCj4gKwkkUFlUSE9OICRweXRob252YWxpZGF0b3IgLXJ1bGUgJHJ1bGVm
+aWxlIC1vdXRwdXRfZGlyICR0bXBkaXIgLXdsICIke3dvcmtsb2FkfSIgXA0KPiArCQktY3B1dHlw
+ZSAiJHtjcHV0eXBlfSINCj4gKwlyZXQ9JD8NCj4gKwlybSAtcmYgJHRtcGRpcg0KPiArCWlmIFsg
+JHJldCAtbmUgMCBdOyB0aGVuDQo+ICsJCWVjaG8gIk1ldHJpYyB2YWxpZGF0aW9uIHJldHVybiB3
+aXRoIGVycm9ycy4gUGxlYXNlIGNoZWNrIG1ldHJpY3MgcmVwb3J0ZWQgd2l0aCBlcnJvcnMuIg0K
+PiArCWZpDQo+ICtkb25lDQo+ICBleGl0ICRyZXQNCj4gIA0KDQo=
