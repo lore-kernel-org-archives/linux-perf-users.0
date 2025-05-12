@@ -1,102 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334AF18BBBB;
-	Mon, 12 May 2025 16:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E66224FBFF;
+	Mon, 12 May 2025 16:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067889; cv=none; b=NJqQd7TKDCc1a0lDTrgGDsExIOq5YJ5mFPnmQ2hoDLn04whyeaPJ2crBrvZ4RrjHT50+FSybst9vQwOXbKK+7caCMx6WeUgp5wiA74ge8REAurwZf7WevXx0jOJrFaqVbuBqjnmqRgX+6Lmb6i88RlRoeCwtIk2mbhqfwJmik58=
+	t=1747068058; cv=none; b=GOUvFf+fzqQIFIblAG8PhfkF7qPqkFxfEOUeojhUSVN570vtKkXiDpd+Cw3pprt8qOua+LCEfZQcbkkCbmegiaL+MHBJ6B1M1vWzTRGcg/NO+zD+ynWNTPQa9RN101PHKrCy08WI0Asy1hSHE9bGh+InJ66iyVggk/YPV42QAUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067889; c=relaxed/simple;
-	bh=RnMPIEuptinKtXBm6r83Xwd6jpAeUbGRgUV7y4MJ4tc=;
+	s=arc-20240116; t=1747068058; c=relaxed/simple;
+	bh=Lk3Qyi2Jh3RaX5DGTgnwgbgZSVy/HqI9XT5UMipzj5Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CyBklMqSiBUl7Du4nh0aP/96olS0tDoxVK7gaEM/7hj1d9VOmN6+x3FJkA9UQxnJEp8VFYq1dKBqgjbYcmuINwTGlXBtHfkeOd29zBxKsLU/5wS9yFTrjE/eGjtlMlMKbRJSUOyyMp2RipBPhabnECdQ28IFDvxcXzwXN73eON4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbOL8Np1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m4Br3H/PGoe0lu07lcAAQAbwcv5czYviMd+u1dPSGbHoN3OEOwhOvBUm8pLb/HjGj10UcdcNwiQB1vKWHCQ28NAkcyS/b/ePLoGDinhi5mVbsCG6yeZHWYhpYSRx9zR6rpyGKf3G/NmwctzZo/Evlju+q2xs9o85EZAN5ktzK28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIccRPeW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbOL8Np1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48644C4CEE7;
-	Mon, 12 May 2025 16:38:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIccRPeW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA6FC4CEE7;
+	Mon, 12 May 2025 16:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747067888;
-	bh=RnMPIEuptinKtXBm6r83Xwd6jpAeUbGRgUV7y4MJ4tc=;
+	s=k20201202; t=1747068058;
+	bh=Lk3Qyi2Jh3RaX5DGTgnwgbgZSVy/HqI9XT5UMipzj5Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NbOL8Np1eKv6TORiATvfcYBeJd6J1sv6olX1TfpN/ja3eza+q3NOHNKkIbEWrSdRw
-	 jTnDIPRhGW4ABaNW1+Nsj9h+HqWEPuUVNPySieYz38yBn5PRIKE3ZETJObEM0X6BS3
-	 sgtvokoHisfM67yrZGo7PrvwgiSiHsEBZYvDXLXaGsQrOvCW3KlPC48+We0aKhXtQc
-	 qdR6g/rCg9WGyOVPZSrNbkYfKg/AgC0GYCizArkF6LNVuW0rTqIwzsKHtBoUxWvPPZ
-	 2504BkZ9SCgGC7Oqr9RK2bibkSNkeRC0CAb7JZNvJTm9ipN2nAsbHWOVRsaWdPGCOt
-	 Gp8bE6OHBYvoQ==
-Date: Mon, 12 May 2025 13:38:05 -0300
+	b=GIccRPeWg0aFmGv36OjxR1Je8Xz8005GkV1MiRXcGRuacClhZ8za4rZNegZ1aGjdT
+	 hckPEeZ/ho7aaj7+BGNKvJuOYOTtARvQxHHDzxvixrVcu1ur/6Fcqi7pmHu4nmvK3x
+	 rC0tzGnpgkHE760j/6wbmwN3xLjh+c/YiWRXg6mY23Q0zpzjTytzfAxquohonCkS5s
+	 RR26/9PnlyEO3gXW/0shIRGJZbeHTiwjSccyXsgwp+hfke6xq2k3W+h7W3bGC664g1
+	 LJ/7Z2ul3dnMS+EGx9ZCPLkGEIvSHOIuwfdSBEx7pLk6orvVQgHU/7+Gb4Lt8BCIJl
+	 oU1EFzL6o4rlA==
+Date: Mon, 12 May 2025 13:40:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf intel-pt: Do not default to recording all
- switch events
-Message-ID: <aCIj7fggPPbu2xgV@x1>
-References: <20250512093932.79854-1-adrian.hunter@intel.com>
- <20250512093932.79854-3-adrian.hunter@intel.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] Metric related performance improvements
+Message-ID: <aCIkl8Skof--Of99@x1>
+References: <20250410044532.52017-1-irogers@google.com>
+ <Z_dp7E2wtSek-KHo@z2>
+ <CAP-5=fU6NM4LZWt9SdTFX9JKTgfghwAVvtXc-qBuUb0vpUeTQA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512093932.79854-3-adrian.hunter@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU6NM4LZWt9SdTFX9JKTgfghwAVvtXc-qBuUb0vpUeTQA@mail.gmail.com>
 
-On Mon, May 12, 2025 at 12:39:31PM +0300, Adrian Hunter wrote:
-> On systems with many CPUs, recording extra context switch events can be
-> excessive and unnecessary. Add perf config intel-pt.all-switch-events=false
-> to control the behaviour.
+On Wed, Apr 23, 2025 at 01:48:22PM -0700, Ian Rogers wrote:
+> On Wed, Apr 9, 2025 at 11:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Wed, Apr 09, 2025 at 09:45:29PM -0700, Ian Rogers wrote:
+> > > The "PMU JSON event tests" have been running slowly, these changes
+> > > target improving them with an improvement of the test running 8 to 10
+> > > times faster.
+> > >
+> > > The first patch changes from searching through all aliases by name in
+> > > a list to using a hashmap. Doing a fast hashmap__find means testing
+> > > for having an event needn't load from disk if an event is already
+> > > present.
+> > >
+> > > The second patch switch the fncache to use a hashmap rather than its
+> > > own hashmap with a limited number of buckets. When there are many
+> > > filename queries, such as with a test, there are many collisions with
+> > > the previous fncache approach leading to linear searching of the
+> > > entries.
+> > >
+> > > The final patch adds a find function for metrics. Normally metrics can
+> > > match by name and group, however, only name matching happens when one
+> > > metric refers to another. As we test every "id" in a metric to see if
+> > > it is a metric, the find function can dominate performance as it
+> > > linearly searches all metrics. Add a find function for the metrics
+> > > table so that a metric can be found by name with a binary search.
+> > >
+> > > Before these changes:
+> > > ```
+> > > $ time perf test -v 10
+> > >  10: PMU JSON event tests                                            :
+> > >  10.1: PMU event table sanity                                        : Ok
+> > >  10.2: PMU event map aliases                                         : Ok
+> > >  10.3: Parsing of PMU event table metrics                            : Ok
+> > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+> > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+> > >
+> > > real    0m18.499s
+> > > user    0m18.150s
+> > > sys     0m3.273s
+> > > ```
+> > >
+> > > After these changes:
+> > > ```
+> > > $ time perf test -v 10
+> > >  10: PMU JSON event tests                                            :
+> > >  10.1: PMU event table sanity                                        : Ok
+> > >  10.2: PMU event map aliases                                         : Ok
+> > >  10.3: Parsing of PMU event table metrics                            : Ok
+> > >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+> > >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+> > >
+> > > real    0m2.338s
+> > > user    0m1.797s
+> > > sys     0m2.186s
+> > > ```
+> >
+> > Great, I also see the speedup on my machine from 32s to 3s.
+> >
+> > Tested-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> Example:
-> 
->  # perf config intel-pt.all-switch-events=false
->  # perf record -eintel_pt//u uname
->  Linux
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.082 MB perf.data ]
->  # perf script -D | grep PERF_RECORD_SWITCH | awk '{print $5}' | uniq -c
->        5 PERF_RECORD_SWITCH
->  # perf config intel-pt.all-switch-events=true
->  # perf record -eintel_pt//u uname
->  Linux
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.102 MB perf.data ]
->  # perf script -D | grep PERF_RECORD_SWITCH | awk '{print $5}' | uniq -c
->      180 PERF_RECORD_SWITCH_CPU_WIDE
+> Ping.
 
-Thanks, tested and applied the series.
+I'll try to fix up it later, if you don't beat me to it, will continue
+with the other patches you listed to get the ones that applies merged:
 
-BTW, I used 'perf report --stats' that shows the number of PERF_RECORD_
-events:
-
-Committer testing:
-
-While doing a make -j28 allmodconfig:
-
-  root@five:~# grep "model name" -m1 /proc/cpuinfo
-  model name    : Intel(R) Core(TM) i7-14700K
-  root@five:~#
-  root@five:~# perf config intel-pt.all-switch-events=false
-  root@five:~# perf record -e intel_pt//u uname
-  Linux
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.019 MB perf.data ]
-  root@five:~# perf report --stats | grep SWITCH_CPU_WIDE
-  root@five:~# 
-  root@five:~# perf config intel-pt.all-switch-events=true
-  root@five:~# perf record -e intel_pt//u uname
-  Linux
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.047 MB perf.data ]
-  root@five:~# perf report --stats | grep SWITCH_CPU_WIDE
-       SWITCH_CPU_WIDE events:        542  (96.4%)
-  root@five:~#
-
-- Arnaldo
+Total patches: 3
+---
+Cover: ./20250409_irogers_metric_related_performance_improvements.cover
+ Link: https://lore.kernel.org/r/20250410044532.52017-1-irogers@google.com
+ Base: not specified
+       git am ./20250409_irogers_metric_related_performance_improvements.mbx
+⬢ [acme@toolbx perf-tools-next]$        git am ./20250409_irogers_metric_related_performance_improvements.mbx
+Applying: perf pmu: Change aliases from list to hashmap
+error: patch failed: tools/perf/util/pmu.c:532
+error: tools/perf/util/pmu.c: patch does not apply
+Patch failed at 0001 perf pmu: Change aliases from list to hashmap
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbx perf-tools-next]$ 
+⬢ [acme@toolbx perf-tools-next]$ git am --abort
+⬢ [acme@toolbx perf-tools-next]$ patch -p1 < ./20250409_irogers_metric_related_performance_improvements.mbx
+patching file tools/perf/tests/pmu-events.c
+patching file tools/perf/util/hwmon_pmu.c
+patching file tools/perf/util/pmu.c
+Hunk #3 succeeded at 417 (offset 11 lines).
+Hunk #4 succeeded at 451 (offset 11 lines).
+Hunk #5 FAILED at 541.
+Hunk #6 succeeded at 657 (offset 41 lines).
+Hunk #7 succeeded at 1146 (offset 41 lines).
+Hunk #8 succeeded at 1238 (offset 41 lines).
+Hunk #9 succeeded at 1259 (offset 41 lines).
+Hunk #10 succeeded at 2018 (offset 48 lines).
+Hunk #11 succeeded at 2033 (offset 48 lines).
+Hunk #12 succeeded at 2502 (offset 59 lines).
+Hunk #13 succeeded at 2522 (offset 59 lines).
+1 out of 13 hunks FAILED -- saving rejects to file tools/perf/util/pmu.c.rej
+patching file tools/perf/util/pmu.h
+Hunk #3 succeeded at 295 (offset 5 lines).
+patching file tools/perf/util/tool_pmu.c
+Hunk #1 succeeded at 502 (offset 6 lines).
+patching file tools/perf/util/fncache.c
+patching file tools/perf/util/fncache.h
+patching file tools/perf/util/srccode.c
+patching file tools/perf/builtin-stat.c
+Hunk #1 succeeded at 1854 (offset -2 lines).
+Hunk #2 succeeded at 1888 (offset -2 lines).
+Hunk #3 succeeded at 1978 (offset -2 lines).
+patching file tools/perf/pmu-events/empty-pmu-events.c
+Hunk #1 succeeded at 449 (offset 6 lines).
+Hunk #2 succeeded at 495 (offset 6 lines).
+Hunk #3 succeeded at 552 (offset 6 lines).
+patching file tools/perf/pmu-events/jevents.py
+Hunk #1 succeeded at 972 (offset 6 lines).
+Hunk #2 succeeded at 1018 (offset 6 lines).
+Hunk #3 succeeded at 1075 (offset 6 lines).
+patching file tools/perf/pmu-events/pmu-events.h
+Hunk #1 succeeded at 74 (offset 3 lines).
+Hunk #2 succeeded at 89 (offset 3 lines).
+Hunk #3 succeeded at 105 (offset 3 lines).
+patching file tools/perf/util/metricgroup.c
+patching file tools/perf/util/metricgroup.h
+⬢ [acme@toolbx perf-tools-next]$
