@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8E925E459;
-	Mon, 12 May 2025 09:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54798261381;
+	Mon, 12 May 2025 09:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747042790; cv=none; b=Ey1xfb6R3XextgsaUYRXexwxxaNaFg49H4QRXhY2KERzZh+bA6kESX1yCJfecdqJTXbTv9HWPFqvH+j+6blXyuv7jTSuG/wV5QvGUZ49RWpswKnXpF0flF6jvFl2ewh7k3gIYvrDhmk4OeDbSLfLbfTlrag5YzbleJTbbaYfrfc=
+	t=1747042794; cv=none; b=APi2VU6Ihhn0mJlZsL5csXwrN/AlvWkMYH+vVJevXOnqvrK9G17sTgKtrQxn4UmhI19HrJ5HZhQg/cNNHkTUsJ/MC6yI64X4O07FcHaxWpfjvYxT4GdlgFiIKry7ExvfC0yjcGVqjbreuxWMdEiZ6sytRQdw7vansKMYg59/BgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747042790; c=relaxed/simple;
-	bh=+JPZFrLeHan5qO0lHyWxoXHqqYbfROkWGRmWraQxI0Q=;
+	s=arc-20240116; t=1747042794; c=relaxed/simple;
+	bh=GJ9BKJd2PRiCU2kpbBVN9+TUnj1dNbBrQ3BJhhqTcmo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HPGIYBD7iFOXJaWR48ihHtZudNDnhW1rGQXXYv7sJ8OpQqp+ap5ESdhM9vS/41J3Je9Cz/hEkdwCax4MRPCRiruInJ2RBcXn+vZ1ZN65PdR26oZH43lu4o4swyJRdl7J4x/bGf+lDUV/DmQRB5cHrU5DJ1RyaWEL5rx7nholsII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HKSfHYnF; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=hySSoV9Ljl6smbiYsojLXibbJyfZ47HIN5sTATmxYHTov6f9jvdLbQbz8szGsQhxF5T7krkuseG+oBgEFF30HlXqJN0SZyAaBrYp4gIW37vK6Z6d5dYkN0X2HsOIlQ7F6cWlCsaKkVqZguzlJNByYclVWQ7uX4KR3soQW/1Z9SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XeFACxJy; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HKSfHYnF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XeFACxJy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747042789; x=1778578789;
+  t=1747042793; x=1778578793;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+JPZFrLeHan5qO0lHyWxoXHqqYbfROkWGRmWraQxI0Q=;
-  b=HKSfHYnFqDgsmu71xkI1iYwlzXJJoLiaaRWLHe3kVo0nhN4XTwkGkxqr
-   fxK8kxr4LY3c9AaHno0MqUW7Q9NA/TYg86HNr4F51yiSNHtg56OpaLgR7
-   +6XHJCaAC7Oip/1EMRvSyegFY2QIWu6GUaoKdfcRN40TVsORf0vHDZyCd
-   4Bi89Q9CCVY8e7HRsVutZPhAy19GSW3S2bVffu2TeLdfR7fS7L3yMMklS
-   wdlzz5aI7p58XUT/NrA77GBp1E6oiOlIhb5lGGHgRTJiUe1D+w2VhEafJ
-   ibuIU8sjcGazC+HWwDgqW5krG0FmDmB9xNiNPegLkCWKEZB7ITypDM+vF
-   Q==;
-X-CSE-ConnectionGUID: 86Y+fkgQRkK7QDxYBl1C5w==
-X-CSE-MsgGUID: 88JXl+zYS46iQUXCJQyIeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="36457530"
+  bh=GJ9BKJd2PRiCU2kpbBVN9+TUnj1dNbBrQ3BJhhqTcmo=;
+  b=XeFACxJy0EQqitCNpi4d3S3y4kgK8F+Q/H8BxPpOb5oNXUt5xCm6fMm7
+   sT7rcBM8mt8hSIoeHA5trq1p71erwSkPb8zVXA2cJhV5NcK/lpbsyRB+F
+   4ggYdnMMZeuXiw/m8rjxflp2yrU8OqtPyJiA2hPE+61RPPMyKzXWq090C
+   eBLWYqqvxGzdwqyV+3Z/GirtvVPYjZWC4vdtXgotmr+vZH92/6x4dQLyM
+   j07Sv4oupvcJAH+Ua3uq1AdmH/Ro+j+4n7eFh2il3SMc63220CpzRvzmm
+   5YgvUKsT7ASLL57gEzMZncZK9iiXaIzTnAWWotcJ5BXsDd49b7c3Sz5Cm
+   A==;
+X-CSE-ConnectionGUID: hh9bdC7UTcmsSVvWNkiY4w==
+X-CSE-MsgGUID: NKDoc040Tk2rGsHNemRYug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="36457535"
 X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="36457530"
+   d="scan'208";a="36457535"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:39:49 -0700
-X-CSE-ConnectionGUID: VXHpmoIzSQqzjl2rhyMMww==
-X-CSE-MsgGUID: xgyaBwUDTE2oZdfVzNJKeA==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:39:51 -0700
+X-CSE-ConnectionGUID: GOJ8cRRZS6SK52RSkifd1Q==
+X-CSE-MsgGUID: geiVIFlZTdymWDQZhjZX1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="142214304"
+   d="scan'208";a="142214310"
 Received: from bvivekan-mobl1.gar.corp.intel.com (HELO localhost.localdomain) ([10.245.245.139])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:39:46 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:39:49 -0700
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
@@ -52,9 +52,9 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/3] perf intel-pt: Do not default to recording all switch events
-Date: Mon, 12 May 2025 12:39:31 +0300
-Message-ID: <20250512093932.79854-3-adrian.hunter@intel.com>
+Subject: [PATCH 3/3] perf scripts python: exported-sql-viewer.py: Fix pattern matching with Python 3
+Date: Mon, 12 May 2025 12:39:32 +0300
+Message-ID: <20250512093932.79854-4-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250512093932.79854-1-adrian.hunter@intel.com>
 References: <20250512093932.79854-1-adrian.hunter@intel.com>
@@ -67,103 +67,33 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-On systems with many CPUs, recording extra context switch events can be
-excessive and unnecessary. Add perf config intel-pt.all-switch-events=false
-to control the behaviour.
+The script allows the user to enter patterns to find symbols.  The pattern
+matching characters are converted for use in SQL.  For PostgreSQL the
+conversion involves using the Python maketrans() method which is slightly
+different in Python 3 compared with Python 2.  Fix to work in Python 3.
 
-Example:
-
- # perf config intel-pt.all-switch-events=false
- # perf record -eintel_pt//u uname
- Linux
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.082 MB perf.data ]
- # perf script -D | grep PERF_RECORD_SWITCH | awk '{print $5}' | uniq -c
-       5 PERF_RECORD_SWITCH
- # perf config intel-pt.all-switch-events=true
- # perf record -eintel_pt//u uname
- Linux
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.102 MB perf.data ]
- # perf script -D | grep PERF_RECORD_SWITCH | awk '{print $5}' | uniq -c
-     180 PERF_RECORD_SWITCH_CPU_WIDE
-
+Fixes: beda0e725e5f ("perf script python: Add Python3 support to exported-sql-viewer.py")
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/Documentation/perf-config.txt |  4 ++++
- tools/perf/arch/x86/util/intel-pt.c      | 16 +++++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 36ebebc875ea..c6f335659667 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -708,6 +708,10 @@ intel-pt.*::
- 		the maximum is exceeded there will be a "Never-ending loop"
- 		error. The default is 100000.
- 
-+	intel-pt.all-switch-events::
-+		If the user has permission to do so, always record all context
-+		switch events on all CPUs.
-+
- auxtrace.*::
- 
- 	auxtrace.dumpdir::
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 8f235d8b67b6..add33cb5d1da 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -19,6 +19,7 @@
- #include "../../../util/evlist.h"
- #include "../../../util/evsel.h"
- #include "../../../util/evsel_config.h"
-+#include "../../../util/config.h"
- #include "../../../util/cpumap.h"
- #include "../../../util/mmap.h"
- #include <subcmd/parse-options.h>
-@@ -52,6 +53,7 @@ struct intel_pt_recording {
- 	struct perf_pmu			*intel_pt_pmu;
- 	int				have_sched_switch;
- 	struct evlist		*evlist;
-+	bool				all_switch_events;
- 	bool				snapshot_mode;
- 	bool				snapshot_init_done;
- 	size_t				snapshot_size;
-@@ -794,7 +796,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 			bool cpu_wide = !target__none(&opts->target) &&
- 					!target__has_task(&opts->target);
- 
--			if (!cpu_wide && perf_can_record_cpu_wide()) {
-+			if (ptr->all_switch_events && !cpu_wide && perf_can_record_cpu_wide()) {
- 				struct evsel *switch_evsel;
- 
- 				switch_evsel = evlist__add_dummy_on_all_cpus(evlist);
-@@ -1178,6 +1180,16 @@ static u64 intel_pt_reference(struct auxtrace_record *itr __maybe_unused)
- 	return rdtsc();
- }
- 
-+static int intel_pt_perf_config(const char *var, const char *value, void *data)
-+{
-+	struct intel_pt_recording *ptr = data;
-+
-+	if (!strcmp(var, "intel-pt.all-switch-events"))
-+		ptr->all_switch_events = perf_config_bool(var, value);
-+
-+	return 0;
-+}
-+
- struct auxtrace_record *intel_pt_recording_init(int *err)
- {
- 	struct perf_pmu *intel_pt_pmu = perf_pmus__find(INTEL_PT_PMU_NAME);
-@@ -1197,6 +1209,8 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 		return NULL;
- 	}
- 
-+	perf_config(intel_pt_perf_config, ptr);
-+
- 	ptr->intel_pt_pmu = intel_pt_pmu;
- 	ptr->itr.recording_options = intel_pt_recording_options;
- 	ptr->itr.info_priv_size = intel_pt_info_priv_size;
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index 121cf61ba1b3..e0b2e7268ef6 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -680,7 +680,10 @@ class CallGraphModelBase(TreeModel):
+ 				s = value.replace("%", "\\%")
+ 				s = s.replace("_", "\\_")
+ 				# Translate * and ? into SQL LIKE pattern characters % and _
+-				trans = string.maketrans("*?", "%_")
++				if sys.version_info[0] == 3:
++					trans = str.maketrans("*?", "%_")
++				else:
++					trans = string.maketrans("*?", "%_")
+ 				match = " LIKE '" + str(s).translate(trans) + "'"
+ 			else:
+ 				match = " GLOB '" + str(value) + "'"
 -- 
 2.45.2
 
