@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB3D1C173C;
-	Mon, 12 May 2025 17:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB91245022;
+	Mon, 12 May 2025 17:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747072163; cv=none; b=BxqW0EiZqFcB/CuTN7sUfoGFqAeyf+TuWa7evy+19UxrmOyIU4xmH87wyXAG8qMLrbfZ0MJNXU1H0O6mb/0rDW3ePm8iXlP9xRNiZrLcAfutZ6j0I37a0Nr0JkknyrWjC429Wm3ZxLyXHplWL4BNlO/n2H6ZNxl2SA/LD9g//C4=
+	t=1747072297; cv=none; b=MwcarUy2Ze8yhvyiHuxTTEDrUYk2b6p2D8Xo3QbSPKh+qsDrqKTAraG9+rI3ydKXXraqXDzhHMMoLSNSD8v6MoVmLsdIB0ShPYN4SNj3MzouCnD2SiHzDBjMbTqSBTJ9pROHqyiW+JlLIQtct2Ee5lJRPOIg4ozWVIpN0iOSjnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747072163; c=relaxed/simple;
-	bh=gDNi1AwVmSropyIfvPJSBu00uCfJB3w5KotarpDlRLI=;
+	s=arc-20240116; t=1747072297; c=relaxed/simple;
+	bh=nsQDG1JcQ5amYajbq7Hsmujpg7BCALH6xd/P+umfcgk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tlOdn/i0Ti1wxWmDjvchfhm10rp5I6wcJcT50Y0SKxlQjzhBmAaASfQyXbsMKZpaL4EjB7a1ewh2H247hKAjEO33gm7V2CqoMVy6BYixmVeUpFmXXtEwxrKUE0qBwZq6XhAn5qFisuDGKt9NJikPgysw48W9YkN+IR854XUA5zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FxVJNpGl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VC7lyJWgdJCnRb3cVM/lNfNZnJ2oWsFB3SsktGlOGYOwm504xCdCCRb3q8Gb1DpOST/loXKsEtD9b4ft8GX9K+OZH1My+ezWgimNDHrG45BPyghi5dvhmWtUlT0sg7PrGznX10wP8c4QktA+iSCBdekgMVSHNmoFWXwiZ1dgcQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btgB4YDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FxVJNpGl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE786C4CEE7;
-	Mon, 12 May 2025 17:49:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btgB4YDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D4BC4CEE7;
+	Mon, 12 May 2025 17:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747072163;
-	bh=gDNi1AwVmSropyIfvPJSBu00uCfJB3w5KotarpDlRLI=;
+	s=k20201202; t=1747072296;
+	bh=nsQDG1JcQ5amYajbq7Hsmujpg7BCALH6xd/P+umfcgk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FxVJNpGlhpqS5jnseF5ovxmqTrlBoR95bMjs2lR0/3McT0MDaDRvPKVC/tSQr0i52
-	 TktRS077h/cDfA8isM9Yqn4AOmSSTOn67CjIEdgBI/6GSdKeOee5nIJjgMKMY4OIbL
-	 crQGG1ZEfQmjtso2EGSRkPGW5B2vRUvnXfkDbYntGcXhV67TS8JaJ/zaU0dtm+ix3r
-	 8+6lq6h2goFpgc6n1dcJVKs+zLflc6WQhRR/fZzPOAZZT4RO7tqPxN0lvf12tZrgEM
-	 m0jF55dEM0cKcD3ESfYnha4KTNxKTK9Lpo7KjCjGKmC9zvnyD5I7lwEXcyT0Jjzzb1
-	 DEkRI+o88ThCg==
-Date: Mon, 12 May 2025 14:49:20 -0300
+	b=btgB4YDPs8Z6d7ZDPwdIkYoruJhFcv6L/893Y0UDZf0xDGmvYLnY1SlKwE8Zx+CLg
+	 /Mgg/ynnM6Y4ctYtoiBOTgMcvklaS3iDk4g+K8ADFg88MAtGRk4V6yx1XTDJva67cv
+	 Ao9nmy6HJV2EmMp5VaWnAEha+7zE4zWtYYb7wdAZuHdOXtSB7f6o2pdE6fiLomJI+3
+	 ZsRasjVhum5RxAsYifN0Md8R4yHCkVi81XBztwqlPrE59xcAeEZk4UA7rwN1/8V0hC
+	 c4esgacDz/9HXiZj+P90PKmib7Q8VjFB9021U7UMiUnOJtoQVBJOyGwFxh5xQ/4o3t
+	 JwPAXCAEeJmXw==
+Date: Mon, 12 May 2025 14:51:33 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	maddy@linux.ibm.com
-Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
- counting perf events
-Message-ID: <aCI0oDBSz86S9fz-@x1>
-References: <20250512055748.479786-1-gautam@linux.ibm.com>
- <20250512055748.479786-5-gautam@linux.ibm.com>
- <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, howardchu95@gmail.com,
+	yeoreum.yun@arm.com, linux@treblig.org, james.clark@linaro.org,
+	ak@linux.intel.com, weilin.wang@intel.com, asmadeus@codewreck.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] perf evlist: Make uniquifying counter names
+ consistent
+Message-ID: <aCI1JRjBBINe0set@x1>
+References: <20250327225651.642965-1-ctshao@google.com>
+ <20250327225651.642965-2-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,182 +51,96 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
+In-Reply-To: <20250327225651.642965-2-ctshao@google.com>
 
-On Mon, May 12, 2025 at 10:23:39AM -0700, Ian Rogers wrote:
-> On Sun, May 11, 2025 at 10:58 PM Gautam Menghani <gautam@linux.ibm.com> wrote:
-> > Add counting.py - a python version of counting.c to demonstrate
-> > measuring and reading of counts for given perf events.
+On Thu, Mar 27, 2025 at 03:48:16PM -0700, Chun-Tse Shao wrote:
+> From: Ian Rogers <irogers@google.com>
+> 
+> perf stat has different uniquification logic to perf record and perf
+> top. In the case of perf record and perf top all hybrid event
+> names are uniquified. Perf stat is more disciplined respecting
+> name config terms, libpfm4 events, etc. Perf stat will uniquify
+> hybrid events and the non-core PMU cases shouldn't apply to perf
+> record or perf top. For consistency, remove the uniquification for
+> perf record and perf top and reuse the perf stat uniquification,
+> making the code more globally visible for this.
+> 
+> Fix the detection of cross-PMU for disabling uniquify by correctly
+> setting last_pmu. When setting uniquify on an evsel, make sure the
+> PMUs between the 2 considered events differ otherwise the uniquify
+> isn't adding value.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Tested-by: Chun-Tse Shao <ctshao@google.com>
 
-> > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> > ---
-> > v1 -> v2:
-> > 1. Use existing iteration support instead of next
-> > 2. Read the counters on all cpus
-> > 3. Use existing helper functions
-> >
-> >  tools/perf/python/counting.py | 34 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100755 tools/perf/python/counting.py
+Can you please refresh this series?
 
-> > diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.py
-> > new file mode 100755
-> > index 000000000000..e535e3ae8bdf
-> > --- /dev/null
-> > +++ b/tools/perf/python/counting.py
-> > @@ -0,0 +1,34 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# -*- python -*-
-> > +# -*- coding: utf-8 -*-
-> > +
-> > +import perf
-> > +
-> > +def main():
-> > +        cpus = perf.cpu_map()
-> > +        thread_map = perf.thread_map(-1)
-> > +        evlist = perf.parse_events("cpu-clock,task-clock", cpus, thread_map)
- 
-> Thanks Gautam! I think this is really good. Perhaps the events could
-> be a command line option, but I can see why you want to keep this
-> similar to counting.c.
- 
-> > +
-> > +        for ev in evlist:
-> > +            ev.read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
-> > +
-> > +        evlist.open()
-> > +        evlist.enable()
-> > +
-> > +        count = 100000
-> > +        while count > 0:
-> > +            count -= 1
-> > +
-> > +        evlist.disable()
-> > +
-> > +        for evsel in evlist:
-> > +            for cpu in cpus:
-> > +                for thread in range(len(thread_map)):
-
-> I kind of wish, for the reason of being intention revealing, this could just be:
- 
-> for thread in thread_map:
-
-> I can see the problem though, the counts lack the thread_map and the
-> thread_map is needed to turn a thread back into an index. Perhaps when
-> the python counts is created we hold onto the evsel so that this is
-> possible. I also suspect that in the code:
- 
-> for cpu in cpus:
- 
-> The CPU number is being used rather than its index, which is a similar
-> story/problem.
-
-Lemme see the rest of this code...
-
-+static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
-+                                 PyObject *args, PyObject *kwargs)
-+{
-+       struct evsel *evsel = &pevsel->evsel;
-+       int cpu_map_idx = 0, thread = 0;
-+       struct perf_counts_values counts;
-+       struct pyrf_counts_values *count_values = PyObject_New(struct pyrf_counts_values,
-+                                                              &pyrf_counts_values__type);
-+
-+       if (!PyArg_ParseTuple(args, "ii", &cpu_map_idx, &thread))
-+               return NULL;
-+
-+       perf_evsel__read(&(evsel->core), cpu_map_idx, thread, &counts);
-+       count_values->values = counts;
-+       return (PyObject *)count_values;
-+}
-
-Yeah, it is expecting the cpu_map_idx but the cpu number is being used,
-that is a bug.
-
-The way perf_evsel__read() is implemented:
-
-int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
-                     struct perf_counts_values *count)
-
-It expects a cpu_map index, not a cpu and then a thread that in its
-prototype seems to imply its not an index? But it is an index as it ends
-up being the 'y' for:
-
-  xyarray__entry(_evsel->mmap, _cpu_map_idx, _thread))
-
-:-/
-
-So probably its best to do it using indexes and when needing to know the
-pid or cpu number then use some helper to get the entry at the given
-entry? At least for the perf_evsel__read() API that seems to be the
-case, right?
- 
-> Arnaldo, could you give some input on what to do wrt indices, threads
-> and CPUs at the API level? Perhaps we need a refactor and objects for
-> perf CPU and perf thread, similar to the use of struct perf_cpu in the
-> C code. The original API all pre-dates that change. The issue is that
-> changing the API could break existing scripts and we can only fix
-> those that ship with perf.
-
-So the original user of the perf python binding was:
-
-https://git.kernel.org/pub/scm/utils/tuna/tuna.git/tree/tuna/gui/procview.py
-
-That does basically what the above example does:
-
-    def perf_init(self):
-        self.cpu_map = perf.cpu_map()
-        self.thread_map = perf.thread_map()
-        self.evsel_cycles = perf.evsel(task=1, comm=1, wakeup_events=1, \
-            watermark=1, sample_type=perf.SAMPLE_CPU | perf.SAMPLE_TID)
-        self.evsel_cycles.open(cpus=self.cpu_map, threads=self.thread_map)
-        self.evlist = perf.evlist(self.cpu_map, self.thread_map)
-        self.evlist.add(self.evsel_cycles)
-        self.evlist.mmap()
-        self.pollfd = self.evlist.get_pollfd()
-        for f in self.pollfd:
-            GObject.io_add_watch(f, GObject.IO_IN, self.perf_process_events)
-        self.perf_counter = {}
-
-Then:
-
-    def perf_process_events(self, source, condition):
-        had_events = True
-        while had_events: 
-            had_events = False
-            for cpu in self.cpu_map:
-                event = self.evlist.read_on_cpu(cpu)
-                if event:
-                    had_events = True
-                    if event.type == perf.RECORD_FORK:
-                        if event.pid == event.tid:
-                            try:
-                                self.ps.processes[event.pid] = procfs.process(event.pid)
-                            except: # short lived thread
-                                pass
-                        else: 
-                            if event.pid in self.ps.processes:
-                                try:
-                                    self.ps.processes[event.pid].threads.processes[event.tid] = procfs.process(event.tid)
-                                except (AttributeError, KeyError):
-                                    try:
-                                        self.ps.processes[event.pid].threads = procfs.pidstats("/proc/%d/task/" % event.pid)
-                                    except:
-                                        pass
-                    elif event.type == perf.RECORD_EXIT:
-                        del self.ps[int(event.tid)]
-                    elif event.type == perf.RECORD_SAMPLE:
-                        tid = event.sample_tid
-                        if tid in self.perf_counter:
-                            self.perf_counter[tid] += event.sample_period
-                        else:
-                            self.perf_counter[tid] = event.sample_period
-
-        self.evlist_added = True  # Mark that event arrived, so next periodic show() will refresh GUI
-        return True
+Total patches: 3
+---
+Cover: ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.cover
+ Link: https://lore.kernel.org/r/20250327225651.642965-1-ctshao@google.com
+ Base: not specified
+       git am ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.mbx
+⬢ [acme@toolbx perf-tools-next]$        git am ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.mbx
+Applying: perf evlist: Make uniquifying counter names consistent
+error: patch failed: tools/perf/util/evlist.h:19
+error: tools/perf/util/evlist.h: patch does not apply
+Patch failed at 0001 perf evlist: Make uniquifying counter names consistent
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbx perf-tools-next]$ git am --abort
+⬢ [acme@toolbx perf-tools-next]$ patch -p1 < ./v2_20250327_ctshao_fix_incorrect_counts_when_count_the_same_uncore_event_multiple_times.mbx
+patching file tools/perf/builtin-record.c
+Hunk #2 succeeded at 2485 (offset 1 line).
+patching file tools/perf/builtin-top.c
+patching file tools/perf/util/evlist.c
+Hunk #1 succeeded at 2565 (offset 13 lines).
+patching file tools/perf/util/evlist.h
+Hunk #1 succeeded at 19 with fuzz 2.
+Hunk #2 succeeded at 435 with fuzz 1 (offset 1 line).
+patching file tools/perf/util/evsel.c
+Hunk #1 succeeded at 3954 (offset 15 lines).
+patching file tools/perf/util/evsel.h
+Hunk #2 succeeded at 549 (offset 6 lines).
+patching file tools/perf/util/stat-display.c
+Hunk #1 succeeded at 915 (offset -14 lines).
+Hunk #2 succeeded at 1005 (offset -9 lines).
+Hunk #3 succeeded at 1579 (offset -14 lines).
+Hunk #4 succeeded at 1590 (offset -14 lines).
+patching file tools/perf/util/evsel.c
+Hunk #2 succeeded at 3964 (offset 15 lines).
+Hunk #3 succeeded at 3992 (offset 15 lines).
+patching file tools/perf/util/evsel.h
+patching file tools/perf/util/parse-events.c
+Hunk #1 FAILED at 228.
+Hunk #2 FAILED at 262.
+Hunk #3 succeeded at 318 (offset 31 lines).
+Hunk #4 succeeded at 329 (offset 31 lines).
+Hunk #5 succeeded at 454 (offset 31 lines).
+Hunk #6 FAILED at 433.
+Hunk #7 FAILED at 449.
+Hunk #8 FAILED at 480.
+Hunk #9 succeeded at 1387 (offset 52 lines).
+Hunk #10 FAILED at 1363.
+Hunk #11 succeeded at 1435 (offset 54 lines).
+Hunk #12 succeeded at 1446 (offset 54 lines).
+Hunk #13 succeeded at 1478 (offset 54 lines).
+Hunk #14 succeeded at 1515 (offset 55 lines).
+Hunk #15 FAILED at 1530.
+Hunk #16 succeeded at 1623 (offset 60 lines).
+Hunk #17 succeeded at 1656 (offset 60 lines).
+Hunk #18 succeeded at 1672 (offset 60 lines).
+Hunk #19 succeeded at 1709 (offset 60 lines).
+Hunk #20 succeeded at 1720 (offset 60 lines).
+Hunk #21 succeeded at 1737 (offset 60 lines).
+7 out of 21 hunks FAILED -- saving rejects to file tools/perf/util/parse-events.c.rej
+patching file tools/perf/util/stat-display.c
+Hunk #1 succeeded at 1002 (offset -9 lines).
+patching file tools/perf/util/stat.c
+patching file tools/perf/tests/shell/stat+event_uniquifying.sh
+⬢ [acme@toolbx perf-tools-next]$ 
 
 
-So it was more for catching new/dead threads without having to process /proc.
-
-- Arnaldo
