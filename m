@@ -1,200 +1,295 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084032550A0
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 18:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA79298240
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 19:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747075632; cv=none; b=mlwTsYqi/V5sO7dAOz/C3Iyw65WjSRiskq0b5WEHcN1D5T6EkalzhUjCciceBvylAlNwYToB4tMtkKHEOYz4FRk5tpVPnEv/As8fwn07reFgBrsDOEZ/8+aTj0dMrouEIszOgR3dbiFfyAittGQN0byuT3/U790/e4ScHTSv10E=
+	t=1747078718; cv=none; b=iDTG7J8qHFHVi8O89Bo7T5oOiQh5r+sQ4S0gQpThuCQ7yAfre7BdjBkEOcqvFMrTTDkY1QWumGK2HCd8sXbhn50vrvGUBHlFZkveSUlGy93TJlOe8FvzUEPuMQbPxkZ3pZFdSK+W4Xvb8twgOln6P3tRr1LghtiR3c3+LDj9+i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747075632; c=relaxed/simple;
-	bh=zJvyNdX2YgdEqoNXg3n4TWo71oZ36ldMsiFZEsSn1ts=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=dMy2S7ZlavCR131lNKa4XUXELLEsYX7q+YbAb6K9g9vHgy/qiTWPYggBR9t8GdH7B4uAARzB7ZsQ83T/Y0UykXhKVJY0x9HspSs+6hDuZy1ltpC69Hs51I11z5C7971fwxSJRHR0evdBkYYHQFRAICFYDIF70UbDZ2rrfcvEbXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1HwZ2dDw; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1747078718; c=relaxed/simple;
+	bh=XqEGdfsUGkO19mTxKg2E3payd8kgE0M8puWXFDBpZR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c7vaYbbBx2Up7jFy2h7IlKjBD61Sf5ELAnEZldr20/43kas/0G7WVYKxy+AfagqJdS8X7hUNNB2vGlgXf3iKAzcCXa9aTAZKl8wf2E6WvTh5S4dtux2Y5AqqK2gSUdCZ0aLUW+n+jmBAULKlQmCU+B7lvzlA0PmpsUntUg3ur/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c+1r64b+; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1HwZ2dDw"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e544a4c83so46710845ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 11:47:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c+1r64b+"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3da73d35c11so3335ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 12:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747075630; x=1747680430; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AvMb/mvqXOc4kGMuj8jXPuGYMUK8d+5O6okErUodjJo=;
-        b=1HwZ2dDwsLmob/1REMEo/enhHeIcvjXyxGaVdJ0dbmahvR3QSj2WQ65KQpZwAnPS58
-         Z5I3U6OprYf/G30n9Fk4U+7MjrLW9wedmarFzfmSgx5BHEiOlEvkJyq13LZpEoGdi2YN
-         ztnUlQaRe4/WBo3YNBJSe9NIeYo5SnJoUp6tMde6uivGPMNxtTCbXfybf6AHtzVinWV0
-         dxP+mxUenJEPEFy3qRrodZJw7BDJ/lQasgIAyt8ylv2tg8v71JqM6teyYv6nIhuee5hW
-         8vVWClBoq07MU9as3JbiuRhbR3MEkKm3OgEwQdXgv8mLSx1zAkJCfspTy+7PqnOmw9Sn
-         bbMA==
+        d=google.com; s=20230601; t=1747078715; x=1747683515; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZgqvnAFQAowltKv4MUMv8LmXy9URPFUmzmA7urdx5o=;
+        b=c+1r64b+IiTvKDNiDa5WP6E0NiJV7k3kNa5QVj7sa9/RWhpJKbVJ3qgZ4fe+jItoyy
+         ylbWBnlT9bCbp3iZCq0ZNCNjVU9vfxhVOEooAT7SWQ2b6HDEQ2/tjCMnLS+Pi/oeEHaG
+         oKSNV9+3WBlxA2O8k8QPUPSP6QluuuD05gFmhwDQi+q3k4RnQwBoG/UJYlKYp5fM3/3l
+         RidyFCf9JATBfA4VzRMq4ZGTekYtYhd7KW84Gh91E1FvJMrDAnNn76W3MoA5w2CE260h
+         Y2fvyVOFJJlpbuOQs/u68OHHFNubVe4KaS2kjXg2/ZPg/fGChMEWtnJvVrWqu8tqqhCY
+         gleA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747075630; x=1747680430;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AvMb/mvqXOc4kGMuj8jXPuGYMUK8d+5O6okErUodjJo=;
-        b=ndCTuZR0LgS76IyNMfA+2SmSP/eWzSX3e5g5IB/fBgZq3iG5xyFOT76mvxRQUTgl/g
-         BxzSNanlnScss8n79nBvq70p/3hth+2MNpvZeMMT5jNykCaFyp/KpuWaNNoKdhNud9OQ
-         NOErXy764qIHqOvO4dmUXhcSUUnzVZl269vQGFSTb1fyHyT+TlQYVbGOzNm0tiEpbhJp
-         btK0Tbg0HZ4Uk2KKlVWNvmKLbhNTnXNRpdukK+83Q1ZB5g3ReaD47QMD/x6aqre+4dkP
-         xygg2ilF3Tcz9EuiaZHlOWF1IWAs+i/CgMULgmFTwBD7b0PGvEjmBIqMDY+m1Kv3/Wdw
-         IQAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoXR7K7kbQJW1zw6oItrg7yPn2F5+RSrp3DT3+5OMXjUxK6EcVIkGNdxcaPx1+6Y5MdjksG3w8RK5egRc0JjSN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx7k/KxdqVgwutEIet15Y30HQb1NojyDVCTnrMSuwsPbU3pSeq
-	VqfqlWRLoA0vh9QmJm1aKbP7d5QTKSwdO6A/tePaxDbmOjooVGB1iPOD1dm2F8hsqFDxzOJnUl/
-	k4pRNow==
-X-Google-Smtp-Source: AGHT+IF6DRng9Ys70rVqDkR2VNd1jFwXPfLJ9xYMfUoFSksY3J1duClwQNcQWc7iMUssoYXSZswWKh1T10hm
-X-Received: from plle7.prod.google.com ([2002:a17:903:1667:b0:223:225b:3d83])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c6c:b0:215:9eac:1857
- with SMTP id d9443c01a7336-2317cade1b7mr7587905ad.5.1747075630302; Mon, 12
- May 2025 11:47:10 -0700 (PDT)
-Date: Mon, 12 May 2025 11:47:00 -0700
-In-Reply-To: <20250512184700.11691-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1747078715; x=1747683515;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nZgqvnAFQAowltKv4MUMv8LmXy9URPFUmzmA7urdx5o=;
+        b=HWMRGHmbqH+VCPMtlrEsgwcEpxXKyII+6pdvXxxwHKhVJ1LgkxM3OxUco1XWC3oQZ7
+         vFqZUom4UGJbbDURliO/fNADoTV/3eYH0Wf9uE66fKvh7m1hD4hdeky43PYZEc1n3wP0
+         gwwVGKhN1pDhUeK6+Lj28K4yCeia2vs50Fd0Ceoui29B/iK6hV3P211+0CEMCOpyhd7w
+         xL8BJepemR0513jGUqBJdcuJzyRhac6MWJscOK7AmyI7T57Z3YcW8sGcuVZPKEEmnBuU
+         A1Nj2Tyfid7qV+1HozuxMw1+9DrRj42uEC8Op1NFGTZ195ZGfZmRunjObLWAatUSjL6A
+         Nakw==
+X-Forwarded-Encrypted: i=1; AJvYcCU04AVQqHtBvJzrh2VdDOkxxBg44Z8yUIw0xg/ZFbCsiw++WF/UrySvPRf1VrPuMErSzvg9WN7katDAMb0zSpv2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCy2jkAuq5z1DwJHd+jXKEwWQ0x44qsEwUigavnAsQU4FGSQ5s
+	589GUNeb4j8aP4wOsFWXPbF2IzWSWz3uK5GQ1cq+oqS3JVsrvVuAiSSsMXL3Q1DaWXGt/avR+oi
+	j+6BVMj126+V850JU7sHnUFAw+tKoKNHtyMm8LpGa
+X-Gm-Gg: ASbGncuEQTGsqebDAK6UTLloxoZhAhdQP+LMgVXk1iNqgm/7y+Ed+G7gM+GbOSdBCSU
+	y/usmtJhWAEM2cvO0RQVygKZ/IxPJeiwHfm/V+NmRT4fqKrNFkgJtedwOvmgI/LtA5hRRzkSSix
+	mQAA35KeZ2jLmnRrisFtBqCimUdh2tmwujI+v7HNZETSSBygjYiay1az2SZPqn5zhv7sdPptjQ
+X-Google-Smtp-Source: AGHT+IFrKDVWmTu4QBNU3Dr+1Blr0vP06f5LkC9U0WmWSt+1gL6Ehj6McIF3PQQCfNjxXcfiDjTSfhOcA7cYcwDOoAw=
+X-Received: by 2002:a05:6e02:1707:b0:3d9:64e3:60d with SMTP id
+ e9e14a558f8ab-3db66928053mr507155ab.20.1747078714735; Mon, 12 May 2025
+ 12:38:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250512184700.11691-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512184700.11691-2-irogers@google.com>
-Subject: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
- validation test
+MIME-Version: 1.0
+References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
+ <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com> <aCI0oDBSz86S9fz-@x1>
+In-Reply-To: <aCI0oDBSz86S9fz-@x1>
 From: Ian Rogers <irogers@google.com>
-To: Weilin Wang <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 12 May 2025 12:38:23 -0700
+X-Gm-Features: AX0GCFtzM5CEYYKnrd7gMGrMVs73MKrzoUVJrZgnpDoBSkWMk-0hEDLTIn3Kn2I
+Message-ID: <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
+ counting perf events
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maddy@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On my alderlake I currently see for the "perf metrics value validation" test:
-```
-Total Test Count:  142
-Passed Test Count:  139
-[
-Metric Relationship Error:      The collected value of metric ['tma_fetch_latency', 'tma_fetch_bandwidth', 'tma_frontend_bound']
-                        is [31.137028] in workload(s): ['perf bench futex hash -r 2 -s']
-                        but expected value range is [tma_frontend_bound, tma_frontend_bound]
-                        Relationship rule description: 'Sum of the level 2 children should equal level 1 parent',
-Metric Relationship Error:      The collected value of metric ['tma_memory_bound', 'tma_core_bound', 'tma_backend_bound']
-                        is [6.564442] in workload(s): ['perf bench futex hash -r 2 -s']
-                        but expected value range is [tma_backend_bound, tma_backend_bound]
-                        Relationship rule description: 'Sum of the level 2 children should equal level 1 parent',
-Metric Relationship Error:      The collected value of metric ['tma_light_operations', 'tma_heavy_operations', 'tma_retiring']
-                        is [57.806179] in workload(s): ['perf bench futex hash -r 2 -s']
-                        but expected value range is [tma_retiring, tma_retiring]
-                        Relationship rule description: 'Sum of the level 2 children should equal level 1 parent']
-Metric validation return with erros. Please check metrics reported with errors.
-```
-I suspect it is due to two metrics for different CPU types being
-enabled. Add a -cputype option to avoid this. The test still fails with:
-```
-Total Test Count:  115
-Passed Test Count:  114
-[
-Wrong Metric Value Error:       The collected value of metric ['tma_l2_hit_latency']
-                        is [117.947088] in workload(s): ['perf bench futex hash -r 2 -s']
-                        but expected value range is [0, 100]]
-Metric validation return with errors. Please check metrics reported with errors.
-```
-which is a reproducible genuine error and likely requires a metric fix.
+On Mon, May 12, 2025 at 10:49=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, May 12, 2025 at 10:23:39AM -0700, Ian Rogers wrote:
+> > On Sun, May 11, 2025 at 10:58=E2=80=AFPM Gautam Menghani <gautam@linux.=
+ibm.com> wrote:
+> > > Add counting.py - a python version of counting.c to demonstrate
+> > > measuring and reading of counts for given perf events.
+>
+> > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > > ---
+> > > v1 -> v2:
+> > > 1. Use existing iteration support instead of next
+> > > 2. Read the counters on all cpus
+> > > 3. Use existing helper functions
+> > >
+> > >  tools/perf/python/counting.py | 34 +++++++++++++++++++++++++++++++++=
++
+> > >  1 file changed, 34 insertions(+)
+> > >  create mode 100755 tools/perf/python/counting.py
+>
+> > > diff --git a/tools/perf/python/counting.py b/tools/perf/python/counti=
+ng.py
+> > > new file mode 100755
+> > > index 000000000000..e535e3ae8bdf
+> > > --- /dev/null
+> > > +++ b/tools/perf/python/counting.py
+> > > @@ -0,0 +1,34 @@
+> > > +#!/usr/bin/env python3
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +# -*- python -*-
+> > > +# -*- coding: utf-8 -*-
+> > > +
+> > > +import perf
+> > > +
+> > > +def main():
+> > > +        cpus =3D perf.cpu_map()
+> > > +        thread_map =3D perf.thread_map(-1)
+> > > +        evlist =3D perf.parse_events("cpu-clock,task-clock", cpus, t=
+hread_map)
+>
+> > Thanks Gautam! I think this is really good. Perhaps the events could
+> > be a command line option, but I can see why you want to keep this
+> > similar to counting.c.
+>
+> > > +
+> > > +        for ev in evlist:
+> > > +            ev.read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf=
+.FORMAT_TOTAL_TIME_RUNNING
+> > > +
+> > > +        evlist.open()
+> > > +        evlist.enable()
+> > > +
+> > > +        count =3D 100000
+> > > +        while count > 0:
+> > > +            count -=3D 1
+> > > +
+> > > +        evlist.disable()
+> > > +
+> > > +        for evsel in evlist:
+> > > +            for cpu in cpus:
+> > > +                for thread in range(len(thread_map)):
+>
+> > I kind of wish, for the reason of being intention revealing, this could=
+ just be:
+>
+> > for thread in thread_map:
+>
+> > I can see the problem though, the counts lack the thread_map and the
+> > thread_map is needed to turn a thread back into an index. Perhaps when
+> > the python counts is created we hold onto the evsel so that this is
+> > possible. I also suspect that in the code:
+>
+> > for cpu in cpus:
+>
+> > The CPU number is being used rather than its index, which is a similar
+> > story/problem.
+>
+> Lemme see the rest of this code...
+>
+> +static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
+> +                                 PyObject *args, PyObject *kwargs)
+> +{
+> +       struct evsel *evsel =3D &pevsel->evsel;
+> +       int cpu_map_idx =3D 0, thread =3D 0;
+> +       struct perf_counts_values counts;
+> +       struct pyrf_counts_values *count_values =3D PyObject_New(struct p=
+yrf_counts_values,
+> +                                                              &pyrf_coun=
+ts_values__type);
+> +
+> +       if (!PyArg_ParseTuple(args, "ii", &cpu_map_idx, &thread))
+> +               return NULL;
+> +
+> +       perf_evsel__read(&(evsel->core), cpu_map_idx, thread, &counts);
+> +       count_values->values =3D counts;
+> +       return (PyObject *)count_values;
+> +}
+>
+> Yeah, it is expecting the cpu_map_idx but the cpu number is being used,
+> that is a bug.
+>
+> The way perf_evsel__read() is implemented:
+>
+> int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int threa=
+d,
+>                      struct perf_counts_values *count)
+>
+> It expects a cpu_map index, not a cpu and then a thread that in its
+> prototype seems to imply its not an index? But it is an index as it ends
+> up being the 'y' for:
+>
+>   xyarray__entry(_evsel->mmap, _cpu_map_idx, _thread))
+>
+> :-/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../tests/shell/lib/perf_metric_validation.py   | 12 +++++++++---
- tools/perf/tests/shell/stat_metrics_values.sh   | 17 +++++++++++------
- 2 files changed, 20 insertions(+), 9 deletions(-)
+Yeah. In the C code we've pretty much committed to notions of cpu map
+index and CPU. We're more ambiguous with threads, but generally thread
+is actually thread index into the thread map. As you say it is for the
+xyarray so that we can densely pack things by index rather than having
+huge gaps, say between PIDs. For the python we don't have to have a
+1:1 mapping with the C code, so I was wondering if we could just
+remove the notions of index and have them be implementation details?
+This would lead to an unfortunate O(log n) translation between
+thread/CPU and index (perf_cpu_map__idx) at the API boundary in
+python.c.
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index 0b94216c9c46..dea8ef1977bf 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -35,7 +35,8 @@ class TestError:
- 
- 
- class Validator:
--    def __init__(self, rulefname, reportfname='', t=5, debug=False, datafname='', fullrulefname='', workload='true', metrics=''):
-+    def __init__(self, rulefname, reportfname='', t=5, debug=False, datafname='', fullrulefname='',
-+                 workload='true', metrics='', cputype='cpu'):
-         self.rulefname = rulefname
-         self.reportfname = reportfname
-         self.rules = None
-@@ -43,6 +44,7 @@ class Validator:
-         self.metrics = self.__set_metrics(metrics)
-         self.skiplist = set()
-         self.tolerance = t
-+        self.cputype = cputype
- 
-         self.workloads = [x for x in workload.split(",") if x]
-         self.wlidx = 0  # idx of current workloads
-@@ -377,7 +379,7 @@ class Validator:
- 
-     def _run_perf(self, metric, workload: str):
-         tool = 'perf'
--        command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
-+        command = [tool, 'stat', '--cputype', self.cputype, '-j', '-M', f"{metric}", "-a"]
-         wl = workload.split()
-         command.extend(wl)
-         print(" ".join(command))
-@@ -443,6 +445,8 @@ class Validator:
-                 if 'MetricName' not in m:
-                     print("Warning: no metric name")
-                     continue
-+                if 'Unit' in m and m['Unit'] != self.cputype:
-+                    continue
-                 name = m['MetricName'].lower()
-                 self.metrics.add(name)
-                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
-@@ -578,6 +582,8 @@ def main() -> None:
-     parser.add_argument(
-         "-wl", help="Workload to run while data collection", default="true")
-     parser.add_argument("-m", help="Metric list to validate", default="")
-+    parser.add_argument("-cputype", help="Only test metrics for the given CPU/PMU type",
-+                        default="cpu")
-     args = parser.parse_args()
-     outpath = Path(args.output_dir)
-     reportf = Path.joinpath(outpath, 'perf_report.json')
-@@ -586,7 +592,7 @@ def main() -> None:
- 
-     validator = Validator(args.rule, reportf, debug=args.debug,
-                           datafname=datafile, fullrulefname=fullrule, workload=args.wl,
--                          metrics=args.m)
-+                          metrics=args.m, cputype=args.cputype)
-     ret = validator.test()
- 
-     return ret
-diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
-index 279f19c5919a..30566f0b5427 100755
---- a/tools/perf/tests/shell/stat_metrics_values.sh
-+++ b/tools/perf/tests/shell/stat_metrics_values.sh
-@@ -16,11 +16,16 @@ workload="perf bench futex hash -r 2 -s"
- # Add -debug, save data file and full rule file
- echo "Launch python validation script $pythonvalidator"
- echo "Output will be stored in: $tmpdir"
--$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${workload}"
--ret=$?
--rm -rf $tmpdir
--if [ $ret -ne 0 ]; then
--	echo "Metric validation return with erros. Please check metrics reported with errors."
--fi
-+for cputype in /sys/bus/event_source/devices/cpu_*; do
-+	cputype=$(basename "$cputype")
-+	echo "Testing metrics for: $cputype"
-+	$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${workload}" \
-+		-cputype "${cputype}"
-+	ret=$?
-+	rm -rf $tmpdir
-+	if [ $ret -ne 0 ]; then
-+		echo "Metric validation return with errors. Please check metrics reported with errors."
-+	fi
-+done
- exit $ret
- 
--- 
-2.49.0.1045.g170613ef41-goog
+> So probably its best to do it using indexes and when needing to know the
+> pid or cpu number then use some helper to get the entry at the given
+> entry? At least for the perf_evsel__read() API that seems to be the
+> case, right?
+>
+> > Arnaldo, could you give some input on what to do wrt indices, threads
+> > and CPUs at the API level? Perhaps we need a refactor and objects for
+> > perf CPU and perf thread, similar to the use of struct perf_cpu in the
+> > C code. The original API all pre-dates that change. The issue is that
+> > changing the API could break existing scripts and we can only fix
+> > those that ship with perf.
+>
+> So the original user of the perf python binding was:
+>
+> https://git.kernel.org/pub/scm/utils/tuna/tuna.git/tree/tuna/gui/procview=
+.py
+>
+> That does basically what the above example does:
+>
+>     def perf_init(self):
+>         self.cpu_map =3D perf.cpu_map()
+>         self.thread_map =3D perf.thread_map()
+>         self.evsel_cycles =3D perf.evsel(task=3D1, comm=3D1, wakeup_event=
+s=3D1, \
+>             watermark=3D1, sample_type=3Dperf.SAMPLE_CPU | perf.SAMPLE_TI=
+D)
+>         self.evsel_cycles.open(cpus=3Dself.cpu_map, threads=3Dself.thread=
+_map)
+>         self.evlist =3D perf.evlist(self.cpu_map, self.thread_map)
+>         self.evlist.add(self.evsel_cycles)
+>         self.evlist.mmap()
+>         self.pollfd =3D self.evlist.get_pollfd()
+>         for f in self.pollfd:
+>             GObject.io_add_watch(f, GObject.IO_IN, self.perf_process_even=
+ts)
+>         self.perf_counter =3D {}
+>
+> Then:
+>
+>     def perf_process_events(self, source, condition):
+>         had_events =3D True
+>         while had_events:
+>             had_events =3D False
+>             for cpu in self.cpu_map:
+>                 event =3D self.evlist.read_on_cpu(cpu)
+>                 if event:
+>                     had_events =3D True
+>                     if event.type =3D=3D perf.RECORD_FORK:
+>                         if event.pid =3D=3D event.tid:
+>                             try:
+>                                 self.ps.processes[event.pid] =3D procfs.p=
+rocess(event.pid)
+>                             except: # short lived thread
+>                                 pass
+>                         else:
+>                             if event.pid in self.ps.processes:
+>                                 try:
+>                                     self.ps.processes[event.pid].threads.=
+processes[event.tid] =3D procfs.process(event.tid)
+>                                 except (AttributeError, KeyError):
+>                                     try:
+>                                         self.ps.processes[event.pid].thre=
+ads =3D procfs.pidstats("/proc/%d/task/" % event.pid)
+>                                     except:
+>                                         pass
+>                     elif event.type =3D=3D perf.RECORD_EXIT:
+>                         del self.ps[int(event.tid)]
+>                     elif event.type =3D=3D perf.RECORD_SAMPLE:
+>                         tid =3D event.sample_tid
+>                         if tid in self.perf_counter:
+>                             self.perf_counter[tid] +=3D event.sample_peri=
+od
+>                         else:
+>                             self.perf_counter[tid] =3D event.sample_perio=
+d
+>
+>         self.evlist_added =3D True  # Mark that event arrived, so next pe=
+riodic show() will refresh GUI
+>         return True
+>
+>
+> So it was more for catching new/dead threads without having to process /p=
+roc.
 
+Yeah. I think the sampling API is okay. The nice thing with Gautum's
+patches is adding support for counters for use-cases like perf stat.
+
+Thanks,
+Ian
