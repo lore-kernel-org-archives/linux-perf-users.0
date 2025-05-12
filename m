@@ -1,64 +1,67 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EF5245022
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 18:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084032550A0
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 18:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747075631; cv=none; b=oqHhIr0xxLNdp3AzjwqwGSC2U7KA0+wT5KgSpoVHS62d6MkjQrUqiGeOghY/K6XnKvdBBe//d9EDExE1e0Boj10Jtm724/6pNw7WlV25RvdTTckV7+uSKbGqde55M/sh0vjC9yo0MRJNtDkyluf5I2ziavT8pqXVZEtCohAfDC8=
+	t=1747075632; cv=none; b=mlwTsYqi/V5sO7dAOz/C3Iyw65WjSRiskq0b5WEHcN1D5T6EkalzhUjCciceBvylAlNwYToB4tMtkKHEOYz4FRk5tpVPnEv/As8fwn07reFgBrsDOEZ/8+aTj0dMrouEIszOgR3dbiFfyAittGQN0byuT3/U790/e4ScHTSv10E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747075631; c=relaxed/simple;
-	bh=SEhKerd/haNl7wlB6BoA97ehO97jOk7VpGMWJZEARTs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=ZFfRUZb9BIJjVjkMBcWa6l17cfc3i7XCR/FXE2YeR7bfWL5fmcn0PbQZKf6QhkEAwhJYg0VdTI+xS8dX3kwRnowj6RfBI6oA34SuzDzIXfqbjsWh8DO+rQRU1+alIwdy/N285P9h1yN6I0pGHSbL/ld5wJSgwBbHuky27+q43J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1Tgzn0+; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1747075632; c=relaxed/simple;
+	bh=zJvyNdX2YgdEqoNXg3n4TWo71oZ36ldMsiFZEsSn1ts=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=dMy2S7ZlavCR131lNKa4XUXELLEsYX7q+YbAb6K9g9vHgy/qiTWPYggBR9t8GdH7B4uAARzB7ZsQ83T/Y0UykXhKVJY0x9HspSs+6hDuZy1ltpC69Hs51I11z5C7971fwxSJRHR0evdBkYYHQFRAICFYDIF70UbDZ2rrfcvEbXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1HwZ2dDw; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1Tgzn0+"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e7903f35980so3634432276.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 11:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1HwZ2dDw"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e544a4c83so46710845ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 May 2025 11:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747075628; x=1747680428; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N7h6b26N/R/NGxMDZ3ohDUFhbT1oVCZDTo7x++LTbwc=;
-        b=S1Tgzn0+2+6tmZ3vsEOC81GJiaTGUuDqTnyEZXhk6ruUiknWCDMk+6StZqW00KFs7g
-         n7LFhtun4cNn4L3HLfEw7sK4uNmA2wapyT8vna7htbjn8CRflJiAZDKMzehvysAY5tzx
-         QGjX30RvGRTiPEf9Jb/sczA8XOaEWMc2RGA/pra2fC2oKuyXV45178VJK4aYEWi0PQX4
-         ZhdFkpe63H2wgEbSccSl5nA4AnG4B5F2e/G2mg+Qpt2svAROHJVAeQZ/XiHheLkSp6G5
-         u8QxhmV6125PpVqjgGu3Kmf+gq5KaXzH0xEOWpCf0gS1aWI4fmzs/Qls6rwHTNTszgJP
-         P+Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747075628; x=1747680428;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1747075630; x=1747680430; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=N7h6b26N/R/NGxMDZ3ohDUFhbT1oVCZDTo7x++LTbwc=;
-        b=ZJlbradw3Th/LbGYLYM/w0JS1dJuG74Qv/sHSLuHRTdtP5r8Y/uF1PyS7s9sGyChr0
-         yyrD4tjKsJYghYHcKMw47DlVoSWh4TXtqgqbjBfBVrB9C6r4uOu3WSA7sarL+C+CD77A
-         fep+IgaT2OqO//DohLsOoz+u19QIjNpd6cmPqLKnJT1sg1ZSvmt1WCnX7OcCDsuMC2di
-         k54JAR1AfpoE7hmA9uzBgipTQ6I/2p3y/KDTfxs15QZ8/n7ZYH1ktlonn60XGU7qHAw1
-         QRvtxQcZ+PCuS8S5L9cKIDUKj4IkbRDtHlJb+Nl29IH5l1qN9lAYHMV28DtpqIFfTcwa
-         nzxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1kyT993VK9gZVna7JN/cU352j10fwXHNQosphl4+evPHH0M+r5Q01U3MLhWkVzGiTicKTYcO/JGWE2jQqwAeb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEYJkH65vcdO+sz6+OXMyRzc0gGiU/9xqkodyFVioWjBDb+SJd
-	Ig+Fw0jub0T9HI5msHmSl+mKGxu6GxWRVVUo6tz6JgFDv2K38FuCcO1uGKa4iLWLPvzmqQ4mf5+
-	nxZXupQ==
-X-Google-Smtp-Source: AGHT+IGy8/5DMSVrm1V5Nn0D6X/7V833WTU9rhXyBdG3tq8u/sFgcEV4161bk8fXo788cImQuMct0zF75g0R
-X-Received: from ybbgv9.prod.google.com ([2002:a05:6902:4389:b0:e79:cbca:44e5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:2585:b0:e75:6432:4b26
- with SMTP id 3f1490d57ef6-e78fdbe9926mr17317084276.13.1747075628248; Mon, 12
- May 2025 11:47:08 -0700 (PDT)
-Date: Mon, 12 May 2025 11:46:59 -0700
+        bh=AvMb/mvqXOc4kGMuj8jXPuGYMUK8d+5O6okErUodjJo=;
+        b=1HwZ2dDwsLmob/1REMEo/enhHeIcvjXyxGaVdJ0dbmahvR3QSj2WQ65KQpZwAnPS58
+         Z5I3U6OprYf/G30n9Fk4U+7MjrLW9wedmarFzfmSgx5BHEiOlEvkJyq13LZpEoGdi2YN
+         ztnUlQaRe4/WBo3YNBJSe9NIeYo5SnJoUp6tMde6uivGPMNxtTCbXfybf6AHtzVinWV0
+         dxP+mxUenJEPEFy3qRrodZJw7BDJ/lQasgIAyt8ylv2tg8v71JqM6teyYv6nIhuee5hW
+         8vVWClBoq07MU9as3JbiuRhbR3MEkKm3OgEwQdXgv8mLSx1zAkJCfspTy+7PqnOmw9Sn
+         bbMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747075630; x=1747680430;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AvMb/mvqXOc4kGMuj8jXPuGYMUK8d+5O6okErUodjJo=;
+        b=ndCTuZR0LgS76IyNMfA+2SmSP/eWzSX3e5g5IB/fBgZq3iG5xyFOT76mvxRQUTgl/g
+         BxzSNanlnScss8n79nBvq70p/3hth+2MNpvZeMMT5jNykCaFyp/KpuWaNNoKdhNud9OQ
+         NOErXy764qIHqOvO4dmUXhcSUUnzVZl269vQGFSTb1fyHyT+TlQYVbGOzNm0tiEpbhJp
+         btK0Tbg0HZ4Uk2KKlVWNvmKLbhNTnXNRpdukK+83Q1ZB5g3ReaD47QMD/x6aqre+4dkP
+         xygg2ilF3Tcz9EuiaZHlOWF1IWAs+i/CgMULgmFTwBD7b0PGvEjmBIqMDY+m1Kv3/Wdw
+         IQAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWoXR7K7kbQJW1zw6oItrg7yPn2F5+RSrp3DT3+5OMXjUxK6EcVIkGNdxcaPx1+6Y5MdjksG3w8RK5egRc0JjSN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx7k/KxdqVgwutEIet15Y30HQb1NojyDVCTnrMSuwsPbU3pSeq
+	VqfqlWRLoA0vh9QmJm1aKbP7d5QTKSwdO6A/tePaxDbmOjooVGB1iPOD1dm2F8hsqFDxzOJnUl/
+	k4pRNow==
+X-Google-Smtp-Source: AGHT+IF6DRng9Ys70rVqDkR2VNd1jFwXPfLJ9xYMfUoFSksY3J1duClwQNcQWc7iMUssoYXSZswWKh1T10hm
+X-Received: from plle7.prod.google.com ([2002:a17:903:1667:b0:223:225b:3d83])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c6c:b0:215:9eac:1857
+ with SMTP id d9443c01a7336-2317cade1b7mr7587905ad.5.1747075630302; Mon, 12
+ May 2025 11:47:10 -0700 (PDT)
+Date: Mon, 12 May 2025 11:47:00 -0700
+In-Reply-To: <20250512184700.11691-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250512184700.11691-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250512184700.11691-1-irogers@google.com>
-Subject: [PATCH v1 1/2] perf list: Display the PMU name associated with a perf
- metric in json
+Message-ID: <20250512184700.11691-2-irogers@google.com>
+Subject: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
+ validation test
 From: Ian Rogers <irogers@google.com>
 To: Weilin Wang <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,112 +72,128 @@ To: Weilin Wang <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The perf stat --cputype option can be used to filter which metrics
-will be applied, for this reason the json metrics have an associated
-PMU. List this PMU name in the perf list output in json mode so that
-tooling may access it.
-
-An example of the new field is:
+On my alderlake I currently see for the "perf metrics value validation" test:
 ```
-{
-        "MetricGroup": "Backend",
-        "MetricName": "tma_core_bound",
-        "MetricExpr": "max(0, tma_backend_bound - tma_memory_bound)",
-        "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.2",
-        "ScaleUnit": "100%",
-        "BriefDescription": "This metric represents fraction of slots where ...
-        "PublicDescription": "This metric represents fraction of slots where ...
-        "Unit": "cpu_core"
-},
+Total Test Count:  142
+Passed Test Count:  139
+[
+Metric Relationship Error:      The collected value of metric ['tma_fetch_latency', 'tma_fetch_bandwidth', 'tma_frontend_bound']
+                        is [31.137028] in workload(s): ['perf bench futex hash -r 2 -s']
+                        but expected value range is [tma_frontend_bound, tma_frontend_bound]
+                        Relationship rule description: 'Sum of the level 2 children should equal level 1 parent',
+Metric Relationship Error:      The collected value of metric ['tma_memory_bound', 'tma_core_bound', 'tma_backend_bound']
+                        is [6.564442] in workload(s): ['perf bench futex hash -r 2 -s']
+                        but expected value range is [tma_backend_bound, tma_backend_bound]
+                        Relationship rule description: 'Sum of the level 2 children should equal level 1 parent',
+Metric Relationship Error:      The collected value of metric ['tma_light_operations', 'tma_heavy_operations', 'tma_retiring']
+                        is [57.806179] in workload(s): ['perf bench futex hash -r 2 -s']
+                        but expected value range is [tma_retiring, tma_retiring]
+                        Relationship rule description: 'Sum of the level 2 children should equal level 1 parent']
+Metric validation return with erros. Please check metrics reported with errors.
 ```
+I suspect it is due to two metrics for different CPU types being
+enabled. Add a -cputype option to avoid this. The test still fails with:
+```
+Total Test Count:  115
+Passed Test Count:  114
+[
+Wrong Metric Value Error:       The collected value of metric ['tma_l2_hit_latency']
+                        is [117.947088] in workload(s): ['perf bench futex hash -r 2 -s']
+                        but expected value range is [0, 100]]
+Metric validation return with errors. Please check metrics reported with errors.
+```
+which is a reproducible genuine error and likely requires a metric fix.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-list.c      | 12 ++++++++++--
- tools/perf/util/metricgroup.c  |  5 ++++-
- tools/perf/util/print-events.h |  3 ++-
- 3 files changed, 16 insertions(+), 4 deletions(-)
+ .../tests/shell/lib/perf_metric_validation.py   | 12 +++++++++---
+ tools/perf/tests/shell/stat_metrics_values.sh   | 17 +++++++++++------
+ 2 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index fed482adb039..e9b595d75df2 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -197,7 +197,8 @@ static void default_print_metric(void *ps,
- 				const char *long_desc,
- 				const char *expr,
- 				const char *threshold,
--				const char *unit __maybe_unused)
-+				const char *unit __maybe_unused,
-+				const char *pmu_name __maybe_unused)
- {
- 	struct print_state *print_state = ps;
- 	FILE *fp = print_state->fp;
-@@ -433,7 +434,8 @@ static void json_print_event(void *ps, const char *topic, const char *pmu_name,
- static void json_print_metric(void *ps __maybe_unused, const char *group,
- 			      const char *name, const char *desc,
- 			      const char *long_desc, const char *expr,
--			      const char *threshold, const char *unit)
-+			      const char *threshold, const char *unit,
-+			      const char *pmu_name)
- {
- 	struct json_print_state *print_state = ps;
- 	bool need_sep = false;
-@@ -483,6 +485,12 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
- 				   long_desc);
- 		need_sep = true;
- 	}
-+	if (pmu_name) {
-+		fix_escape_fprintf(fp, &buf, "%s\t\"Unit\": \"%S\"",
-+				   need_sep ? ",\n" : "",
-+				   pmu_name);
-+		need_sep = true;
-+	}
- 	fprintf(fp, "%s}", need_sep ? "\n" : "");
- 	strbuf_release(&buf);
- }
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 126a631686b0..43d35f956a33 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -396,6 +396,7 @@ struct mep {
- 	const char *metric_expr;
- 	const char *metric_threshold;
- 	const char *metric_unit;
-+	const char *pmu_name;
- };
+diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
+index 0b94216c9c46..dea8ef1977bf 100644
+--- a/tools/perf/tests/shell/lib/perf_metric_validation.py
++++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+@@ -35,7 +35,8 @@ class TestError:
  
- static int mep_cmp(struct rb_node *rb_node, const void *entry)
-@@ -476,6 +477,7 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
- 			me->metric_expr = pm->metric_expr;
- 			me->metric_threshold = pm->metric_threshold;
- 			me->metric_unit = pm->unit;
-+			me->pmu_name = pm->pmu;
- 		}
- 	}
- 	free(omg);
-@@ -551,7 +553,8 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
- 				me->metric_long_desc,
- 				me->metric_expr,
- 				me->metric_threshold,
--				me->metric_unit);
-+				me->metric_unit,
-+				me->pmu_name);
- 		next = rb_next(node);
- 		rblist__remove_node(&groups, node);
- 	}
-diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index 445efa1636c1..8f19c2bea64a 100644
---- a/tools/perf/util/print-events.h
-+++ b/tools/perf/util/print-events.h
-@@ -25,7 +25,8 @@ struct print_callbacks {
- 			const char *long_desc,
- 			const char *expr,
- 			const char *threshold,
--			const char *unit);
-+			const char *unit,
-+			const char *pmu_name);
- 	bool (*skip_duplicate_pmus)(void *print_state);
- };
+ 
+ class Validator:
+-    def __init__(self, rulefname, reportfname='', t=5, debug=False, datafname='', fullrulefname='', workload='true', metrics=''):
++    def __init__(self, rulefname, reportfname='', t=5, debug=False, datafname='', fullrulefname='',
++                 workload='true', metrics='', cputype='cpu'):
+         self.rulefname = rulefname
+         self.reportfname = reportfname
+         self.rules = None
+@@ -43,6 +44,7 @@ class Validator:
+         self.metrics = self.__set_metrics(metrics)
+         self.skiplist = set()
+         self.tolerance = t
++        self.cputype = cputype
+ 
+         self.workloads = [x for x in workload.split(",") if x]
+         self.wlidx = 0  # idx of current workloads
+@@ -377,7 +379,7 @@ class Validator:
+ 
+     def _run_perf(self, metric, workload: str):
+         tool = 'perf'
+-        command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
++        command = [tool, 'stat', '--cputype', self.cputype, '-j', '-M', f"{metric}", "-a"]
+         wl = workload.split()
+         command.extend(wl)
+         print(" ".join(command))
+@@ -443,6 +445,8 @@ class Validator:
+                 if 'MetricName' not in m:
+                     print("Warning: no metric name")
+                     continue
++                if 'Unit' in m and m['Unit'] != self.cputype:
++                    continue
+                 name = m['MetricName'].lower()
+                 self.metrics.add(name)
+                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
+@@ -578,6 +582,8 @@ def main() -> None:
+     parser.add_argument(
+         "-wl", help="Workload to run while data collection", default="true")
+     parser.add_argument("-m", help="Metric list to validate", default="")
++    parser.add_argument("-cputype", help="Only test metrics for the given CPU/PMU type",
++                        default="cpu")
+     args = parser.parse_args()
+     outpath = Path(args.output_dir)
+     reportf = Path.joinpath(outpath, 'perf_report.json')
+@@ -586,7 +592,7 @@ def main() -> None:
+ 
+     validator = Validator(args.rule, reportf, debug=args.debug,
+                           datafname=datafile, fullrulefname=fullrule, workload=args.wl,
+-                          metrics=args.m)
++                          metrics=args.m, cputype=args.cputype)
+     ret = validator.test()
+ 
+     return ret
+diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
+index 279f19c5919a..30566f0b5427 100755
+--- a/tools/perf/tests/shell/stat_metrics_values.sh
++++ b/tools/perf/tests/shell/stat_metrics_values.sh
+@@ -16,11 +16,16 @@ workload="perf bench futex hash -r 2 -s"
+ # Add -debug, save data file and full rule file
+ echo "Launch python validation script $pythonvalidator"
+ echo "Output will be stored in: $tmpdir"
+-$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${workload}"
+-ret=$?
+-rm -rf $tmpdir
+-if [ $ret -ne 0 ]; then
+-	echo "Metric validation return with erros. Please check metrics reported with errors."
+-fi
++for cputype in /sys/bus/event_source/devices/cpu_*; do
++	cputype=$(basename "$cputype")
++	echo "Testing metrics for: $cputype"
++	$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${workload}" \
++		-cputype "${cputype}"
++	ret=$?
++	rm -rf $tmpdir
++	if [ $ret -ne 0 ]; then
++		echo "Metric validation return with errors. Please check metrics reported with errors."
++	fi
++done
+ exit $ret
  
 -- 
 2.49.0.1045.g170613ef41-goog
