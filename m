@@ -1,162 +1,176 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DE02770B
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 21:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2920F1F0E26
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 22:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747173578; cv=none; b=eZ142CuLroLnWybJJFN9CT7zsQ+bdfbC0r+IKyWFY2LM6mXv8vhIB5+OgJLU6B/c2FvCsZPwuhspAgS7VzSG4hDZFwdsjHhDymRNdqw3cYNHILp3X20Am510TLkq33wfeUIZBU1tlFuBZe/As5866PbRBdnGi37QdVM4Jh6dkms=
+	t=1747174393; cv=none; b=eyYTGMWd/Y4DtvmJq9Q2VeTa72UsfA46Y6RmcvgarVlMU60olGO7ar+JFYDnU8DBdZ5b4wqSj3AK6Ts74fUqb0HkO4Gt4RnV/RV5iXyU4FLjIXAZxbEdSubGBsm/zmQbrplEbelP5Kl5Z1KIsq5ydJWjVZo2JLMaF1dQN2J1cA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747173578; c=relaxed/simple;
-	bh=59VlnNQcrQbF9VoPWx9rTK6gSiYi9D6flZRl8TqbiJY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fk8DO8e2aNp7U+/iLzbI1WQGND8+un5Da/R3ufXxy5IfjGUi/vjmqmrrYe1NUTA6VEnnM2tYCqtGGvb9+onAGgyrT6Lh1rg626qQptYeP1RDQhNDlPIhJ9pDvVrW9tF+XBPz7LuXn1mQQAd2iZ6VUf73QfGgpdpai8OYhs2UU2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4qV0C8/t; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1747174393; c=relaxed/simple;
+	bh=m3X02wzS76njaqHsgqO80nusK2eJUCQH4uItF1eSpdw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J4YTKTMIAGpWlNWT1Rkpb3HjiCHB7knQB1fW/LtmFezvpcNVdXd4DX/bIgoYm8sBpxqM7CdgL52CYB6aN45dt+IcoTnedDaQobA6SMKnzyWkk+kalzAsCXC6v1YtQNMHbQdGI80HwCQ8svuP1YLcS3L47TmETKw66lTY5TUNhPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WDjgLvsW; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4qV0C8/t"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30df7c1287fso1700006a91.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 14:59:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WDjgLvsW"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22fa47f295dso21305ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 15:13:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747173576; x=1747778376; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wxh9BxVjJTo5yVA2IRbpjDRptGFFtiq3WHv5MWVzf+Y=;
-        b=4qV0C8/tT6O+knwEpeIO6kRsCio/5PHP4L/R5DgB9wHl/ooJit4qxP323el0Yt4d5s
-         S1qcGuz/Wmu6bZNQmd5AOXA58CO4waXL2GK2b0uEnpuhhwL4vSSvfBGsDWQDDd9VnfGI
-         Ez8Qitq7tHQJKXEzsvMdWLusOxA8reRxMqCZ8NDK6qJv5S+24PTiVDONjY0NPDgDxd4+
-         USUprfFbVXKuwQPoXULHFBUkfkimiHZo2JBjBKbyJzbajlZQhJ6kxYmPaJpx2UQaatlB
-         UsjY2PmZO1A1iUewHZQb+kuTXKRjPjYJJXrn0O9bDwQSJ0fuQO0MZu6YFO2qijxe4qjn
-         UWcQ==
+        d=google.com; s=20230601; t=1747174391; x=1747779191; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UvfAJHIRWnQ+p9ir6YwP0vx6pRTMTNkEvEBeEPzn4xw=;
+        b=WDjgLvsWsqLecw5rebxCXlqlRtyBxbO4nQpBHh5i660RtBm1kBm3qqY3k7TEMIcRLW
+         PSP7hhpDHYUtAiuTowYwRyCPhSR3KzYUEfU6h84BE4jTLEv222v/AcYXVYkJ0NbJgzRi
+         GfWB81NtQV5g6+MbRflmCSOgZ8Av73J5oAOaEyiRKMIIWB+E6rI4Tvyb8McmlEApTVWH
+         alna1C6kgMctCK3lrh4VWT+i65kpnmEz45WPBg0i5TkM/1y6sgxx7RMN4NgNmdbVc9EY
+         LHccMAno8aASIH1MpH8YwY5Koxif6zUWux9zQAm3m3FbwSAOUMYARndTJezvzLRN5gh4
+         6/Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747173576; x=1747778376;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wxh9BxVjJTo5yVA2IRbpjDRptGFFtiq3WHv5MWVzf+Y=;
-        b=JtSi0X1AbDnPnnjQr0VEwGbRSKINPzss7WcyfKALmB0raa1Kfk70NJ1+6qulR/LW1U
-         UXrZrjuVDrPlvys+Oxu+PkKYPS402rJ4tYuLgZetJ0whhW0uzxbC56bPU3cIHAKD8+UG
-         rzbKUQ/CwhGnk4wRrDKQeODT59+Pr4JcisU+L35manZKWrBUnIlZ+aSilDlD8LHmPoWb
-         LVYKqRiTA440nXT+xOb4hYe91uJuCjtxxkccOYUNOtbBYc6a44vuP6hJGfWN1aVoyCGP
-         IORlEHL7w35h75NpUZ1lxCERGS6UzcWpIUEjMLtFdKdC/BoapzZJmRm7tN9UtpgwMoWj
-         PbUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqZlaEBIpgW4tGqZO10vE0QKbArHBsq9MXbQoA9tHEo70OsLGbJNpyRL7x7uQItJN1wJOU/HOZlgCNYK4XhvJC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXouRsgi1Ei6WS4JJtTFU3x40GWq7/QggL+jhLOT4NnCNlEk08
-	z/RbL3y67j4J9la72MAjkKbDcBYQa07nebeTekslhPufC4g/ALS4HFS3IEOruyyQ+FRl89gtxGc
-	2Fg==
-X-Google-Smtp-Source: AGHT+IGjzCvvWC24UQLYpGjqozDFlayOjAbZNXIhc9Bx7yZY6KP50LdqPlIhi5YtpGxNXqNDP6O+tXNP1C4=
-X-Received: from pjk3.prod.google.com ([2002:a17:90b:5583:b0:308:65f7:9f24])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3bce:b0:305:2d68:8d39
- with SMTP id 98e67ed59e1d1-30e2e5e6ca8mr1988712a91.12.1747173576315; Tue, 13
- May 2025 14:59:36 -0700 (PDT)
-Date: Tue, 13 May 2025 14:45:03 -0700
-In-Reply-To: <20250513215401.2315949-1-ctshao@google.com>
+        d=1e100.net; s=20230601; t=1747174391; x=1747779191;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UvfAJHIRWnQ+p9ir6YwP0vx6pRTMTNkEvEBeEPzn4xw=;
+        b=uRrab1ujNRANFup0ODSzh2hHfh7I/rinuka278NVVM3nm4Atv8YkuUWSwUKBw3Yyku
+         H24B+WcAnkTZhyfuZtlvHcbredZPh2Ca+ymzmkORJ0M978jQufJ0CYUKiqEnqBOX15Ay
+         +7ShCIFYUf1P9OtttiMlyI1+seEEdjcXe1T14RI3PoUOKIqbjRzqSsHUgIulytTZfKfM
+         u7KikzotZ7djHo+2EBLgU4Dupq91wbOuJ3fnrR4/GZmyVP20pBNVQUREWW3ZY/GZcQSm
+         qoQcWO2tcCF+DldxD1xQv3SZqnk0YkUB3u368v17ayWTVG3Bz2VmwaLoA60twWAdpHPn
+         Q8DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmFQ/c+wP1NTfaY5Gy/GONe4xaEMvQAOtsDC+ojecqhAml50EgiszFdJDAbKk5+mDtwQmMPt9q1FX3vyrhzWzL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD5eFxX8/cN0D3RsUPShnNxHZPdbP3tisvEMRNLLBu73PXAEce
+	lhFy5x/TvoFFEpo84DfEKB3Yh1+bpP1tIYV6mMbMO6A9L2Db2GVspWqnUe2hVvONFJkFeK7jFWT
+	MPp46NcnaEBTqOK3osCOQ1d+O4tto/Knq13NIq6Cv
+X-Gm-Gg: ASbGncs5vroqNlSKFdIZholRcWJYtWfOKJFbRCt7QSpti7dg25tuBzxlIiALOMhlLfs
+	2cCT0h9V70rDoyh4vgdqSarrSFfAeMBy8S8KGmTpngkFHD/jbAuvN8bMjbIzXdVMAMU2MIgGiBP
+	70TB67P1pQ3+Wx7xfJ/7Sle6Cj4Uqze72obEUwNwlO/T+Q6pN3lBAPRkT7nyR0
+X-Google-Smtp-Source: AGHT+IGK13UC7ns0GMUYJcxFVWFi0VHg+7Om/jbLCrHNV0DH6pq+FfUGmtxXNX7onPvv9ImPoAH2vSu7Mu8WiaNMxZ0=
+X-Received: by 2002:a17:903:18d:b0:21b:b3c4:7e0a with SMTP id
+ d9443c01a7336-2319ab28443mr387825ad.13.1747174391151; Tue, 13 May 2025
+ 15:13:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250513215401.2315949-1-ctshao@google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250513215401.2315949-4-ctshao@google.com>
-Subject: [PATCH v4 3/3] perf test: Add stat uniquifying test
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, howardchu95@gmail.com, 
-	linux@treblig.org, yeoreum.yun@arm.com, ak@linux.intel.com, 
-	james.clark@linaro.org, weilin.wang@intel.com, 
-	linux-perf-users@vger.kernel.org
+MIME-Version: 1.0
+References: <20250406163412.897313-1-likhitha@linux.ibm.com>
+ <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com> <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
+ <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com> <D1C1E5D6-085A-41D1-85AB-52809C956BFB@linux.ibm.com>
+ <aAvKg8K2fyrZ6zy4@x1> <wqewmdha3bx7pmxqwbna26qnl55fcejqsjs4b2zhuciddpb3b5@7ztolpf6erwo>
+ <aCO156Qh5mbeR4Sk@x1>
+In-Reply-To: <aCO156Qh5mbeR4Sk@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 May 2025 15:12:58 -0700
+X-Gm-Features: AX0GCFt2ZXiEO9TuXFPm0bKw1-QAm8lVQ3r6wPOHiSdsHNW8kwJjOrdLgaqNTTY
+Message-ID: <CAP-5=fXtppSZZc=DxDRkdXgVmqFycaSsji-MVOvFK6go9GY=3A@mail.gmail.com>
+Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in cpumap.c
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
+	Likhitha Korrapati <likhitha@linux.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The `stat+uniquify.sh` test retrieves all uniquified `clockticks` events
-from `perf list -v clockticks` and check if `perf stat -e clockticks -A`
-contains all of them.
+On Tue, May 13, 2025 at 2:13=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Fri, May 02, 2025 at 01:14:32PM +0530, Mukesh Kumar Chaurasiya wrote:
+> > On Fri, Apr 25, 2025 at 02:46:43PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > Maybe that max() call in perf_cpu_map__intersect() somehow makes the
+> > > compiler happy.
+>
+> > > And in perf_cpu_map__alloc() all calls seems to validate it.
+>
+> > > Like:
+>
+> > > +++ b/tools/lib/perf/cpumap.c
+> > > @@ -411,7 +411,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **ori=
+g, struct perf_cpu_map *other)
+> > >         }
+> > >
+> > >         tmp_len =3D __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(ot=
+her);
+> > > -       tmp_cpus =3D malloc(tmp_len * sizeof(struct perf_cpu));
+> > > +       tmp_cpus =3D calloc(tmp_len, sizeof(struct perf_cpu));
+> > >         if (!tmp_cpus)
+> > >                 return -ENOMEM;
+>
+> > > =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> > > And better, do the max size that the compiler is trying to help us
+> > > catch?
+>
+> > Isn't it better to use perf_cpu_map__nr. That should fix this problem.
+>
+> Maybe, have you tried it?
+>
+> > One question I have, in perf_cpu_map__nr, the function is returning
+> > 1 in case *cpus is NULL. Is it ok to do that? wouldn't it cause problem=
+s?
+>
+> Indeed this better be documented, as by just looking at:
+>
+> int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
+> {
+>         return cpus ? __perf_cpu_map__nr(cpus) : 1;
+> }
+>
+> It really doesn't make much sense to say that a NULL map has one entry.
+>
+> But the next functions are:
+>
+> bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map=
+)
+> {
+>         return map ? __perf_cpu_map__cpu(map, 0).cpu =3D=3D -1 : true;
+> }
+>
+> bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map)
+> {
+>         if (!map)
+>                 return true;
+>
+>         return __perf_cpu_map__nr(map) =3D=3D 1 && __perf_cpu_map__cpu(ma=
+p, 0).cpu =3D=3D -1;
+> }
+>
+> bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
+> {
+>         return map =3D=3D NULL;
+> }
+>
+> So it seems that a NULL cpu map means "any/all CPU) and a map with just
+> one entry would have as its content "-1" that would mean "any/all CPU".
+>
+> Ian did work on trying to simplify/clarify this, so maybe he can chime
+> in :-)
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- .../tests/shell/stat+event_uniquifying.sh     | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+So I've tried to improve the naming but not vary the implementation
+greatly - initially I was in the code fixing reference count checking
+issues. There is an important distinction between "all" meaning a
+range of CPUs like 0-15 on a 16 core/hyperthread system, and "any"
+meaning the special "-1" value. It is possible to have a perf_cpu_map
+to both be "all" and "any", iterating an empty perf_cpu_map has
+strangely also meant the "any" and so the code isn't specific but
+relies on these odd properties.
 
-diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
-new file mode 100755
-index 000000000000..5ec35c52b7d9
---- /dev/null
-+++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-@@ -0,0 +1,69 @@
-+#!/bin/bash
-+# perf stat events uniquifying
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-+perf_tool=perf
-+err=0
-+
-+test_event_uniquifying() {
-+  # We use `clockticks` to verify the uniquify behavior.
-+  event="clockticks"
-+
-+  # If the `-A` option is added, the event should be uniquified.
-+  #
-+  # $perf list -v clockticks
-+  #
-+  # List of pre-defined events (to be used in -e or -M):
-+  #
-+  #   uncore_imc_0/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_1/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_2/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_3/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_4/clockticks/                           [Kernel PMU event]
-+  #   uncore_imc_5/clockticks/                           [Kernel PMU event]
-+  #
-+  #   ...
-+  #
-+  # $perf stat -e clockticks -A -- true
-+  #
-+  #  Performance counter stats for 'system wide':
-+  #
-+  # CPU0            3,773,018      uncore_imc_0/clockticks/
-+  # CPU0            3,609,025      uncore_imc_1/clockticks/
-+  # CPU0                    0      uncore_imc_2/clockticks/
-+  # CPU0            3,230,009      uncore_imc_3/clockticks/
-+  # CPU0            3,049,897      uncore_imc_4/clockticks/
-+  # CPU0                    0      uncore_imc_5/clockticks/
-+  #
-+  #        0.002029828 seconds time elapsed
-+
-+  echo "stat event uniquifying test"
-+  uniquified_event_array=()
-+
-+  # Check how many uniquified events.
-+  while IFS= read -r line; do
-+    uniquified_event=$(echo "$line" | awk '{print $1}')
-+    uniquified_event_array+=("${uniquified_event}")
-+  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]")
-+
-+  perf_command="${perf_tool} stat -e $event -A -o ${stat_output} -- true"
-+  $perf_command
-+
-+  # Check the output contains all uniquified events.
-+  for uniquified_event in "${uniquified_event_array[@]}"; do
-+    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
-+      echo "Event is not uniquified [Failed]"
-+      echo "${perf_command}"
-+      cat "${stat_output}"
-+      err=1
-+      break
-+    fi
-+  done
-+}
-+
-+test_event_uniquifying
-+rm -f "${stat_output}"
-+exit $err
--- 
-2.49.0.1045.g170613ef41-goog
+Anyway, I'm not sure on the implication of this with
+malloc/calloc/unsigned... It would seem reasonable to me for
+__perf_cpu_map__nr to return an unsigned number and to propagate that
+to fix the new GCC issue.
 
+Thanks,
+Ian
+
+
+> - Arnaldo
