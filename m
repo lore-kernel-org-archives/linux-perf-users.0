@@ -1,386 +1,364 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91FA2BFC6D;
-	Tue, 13 May 2025 17:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747156673; cv=fail; b=HADNuhJMGDsH238i/5CZRdLtAdP1NvDbgdzs59M0J9eT4EgSaj7yHCB/O2qmV6FS+AiCYle/k5v9GMWmz8Hz2dnImgyHfXPRAWtR9PeBF7Qnf0/X3Sz+S9DsMwovqAMAJIuyMW+bhIOPCDUUzqNMrEMXSRw93G+3uFfLMKdy6Jo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747156673; c=relaxed/simple;
-	bh=+HQS1WwN2xJRSmEARMo/WrGpCNZPlbypu2k5SfB+Oac=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=O7T+BA4XBnID9rd7RSHsg5vikM9XDxxs/k7hos5vVEmUgg+4IHNk30hT4vTIQOMEJd3MKuwtJE47WGT3l5VlW9GUNN0ygTfM/AvfaSORjSV2BsQkg/pJCeKlxNJXqX/7VwbzWcDoTpS3LJWnkDDNdBbRcz0zDFC27rIZbViFCyY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZNhy0GsD; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320021D5CDE
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 17:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747157202; cv=none; b=HSaruSPSKkkCzgPA/bzjRvFwgztYK76ipcMBoDdqsz5ApHmpYvX6n0OInJF5SuJBCIfzgwB91AfLYdsh4pf+prFeQpImzZv5/7DIceJMCCI3XCsKYQn+UQLY835Tp2XLLGmEexXSjw9ZD1rBqlYLLacZvPc022pX2tKxDVHOJrc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747157202; c=relaxed/simple;
+	bh=j7MG8fRFjn64P571yBnwfXSB6U8Ki0vuuY9QiefIPV8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ghrrLNn4YpARg2c0rbwnH/AxO0GCnaR851C/YArMalU3Gg+SKDMPLM0HBG86aKuen1q3GOPkU6KOawcc6KtLCnlOTuQK8arM50eAaR+6nKJNcwifLB1KhW9VhIcC/zkux06mHt+JuymY86AM9mcgUO0J5eQL1QxGgfS//lttZIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ypEIuLZB; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZNhy0GsD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747156671; x=1778692671;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=+HQS1WwN2xJRSmEARMo/WrGpCNZPlbypu2k5SfB+Oac=;
-  b=ZNhy0GsDLRmmfYmAgvhQ+GW4AGCXmfDxcPzIie1v1ubFXbmCK/uPFbwa
-   eOqDYYCe+OnYlqrT0e95sN87HhIuiZW1UpB4W5u58+W0/8+JsGZ67UEje
-   fiRGUcC5f+W3j7QTPj50j9KGuhmDn0XNRZG6jP3KIBuZJf0cWdkbFgdK9
-   OJ2d/yK3XEkO/xQ+DbVoXCFn4IoqgIIHu9rVKn8c6m4PNeIWR15GEtB1Q
-   N9Qare5zNUf52CaDO10CqeT2SdqEFakzFtaBXHF5ffuYUANks06A5kz0z
-   oRQdTpiaiM3tXFGyNqebWOEnc+lEkAUgRLlgAGKElmA76Il8ZmSisM6Wk
-   Q==;
-X-CSE-ConnectionGUID: Whjxn3+PQCCj541M9l3vYA==
-X-CSE-MsgGUID: JD7m82d+SXmUtDFaCnW07w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48915430"
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="48915430"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 10:17:50 -0700
-X-CSE-ConnectionGUID: HETHo40zThGynQtRcWv+zw==
-X-CSE-MsgGUID: jYNhlHA1RqKpVTQ53c0EVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="142536613"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 10:17:49 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 13 May 2025 10:17:49 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 13 May 2025 10:17:49 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.42) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 13 May 2025 10:17:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tv1XrSbEFfJkWmJsHy9ZhLuEZQGpV3lbmwSYnJeDEbc/z7/dJzPQTTs+LZwkRP/gawD79+TuanW6ZCtgART1voRcSNN+Rcd1U7a6nE+ck6RC04S9xZ72lPqY78ZNQ29ShOUEtzhmZSHPeDnkGJLcAKYHeRxprvNHXTCIAGmEmNNCLFu9UHrg+6idZYzu3sWmaCoeyKEpiyhdWmtevnwGXMLXS+EFGCYYbykTuirQzu/ycTCafqf3IOTsGdk79XUTAMRC9RU+pUM7R3lnTda0in8KICFJIIhBSlG0YeHhu0nSJwLMmiKQACkfB9ZYWu8vSK/FrkZ1k3wRjjths+M7nA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+HQS1WwN2xJRSmEARMo/WrGpCNZPlbypu2k5SfB+Oac=;
- b=rRYFuna4nmrTTiIc0VqJss96Sag4oeRuzVuiBJ/c+cIYGGUcUwDyJBCrzRR7qQuilcjT14bpSByGOlqJe8x4a6fbb5CGTzFxjCjKFOanEgD17NJGRNNW1euy2PSws9fz6xOBW0snAQ7x8+QwY2p8EAOlbRmIOV6ZRvKWscwpSZD+H38XEVg3Df/tpVmZylDXhp19OlY+81XpdvekYcVF2ADSXGo0cPpcQl8C5zPl8aMVfDGwPapBLRVraQNfz94gZ/ukGZ2+CNxrnB53ZPEzQumqUytO9n/HIdi9cLRpCCORBmGZHvDCuTB3fKko38Sx8LRWalZ0oWFKR6slAHgDUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
- by SA3PR11MB8003.namprd11.prod.outlook.com (2603:10b6:806:2f7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
- 2025 17:17:07 +0000
-Received: from CH3PR11MB8383.namprd11.prod.outlook.com
- ([fe80::56d4:6f50:dd04:d11b]) by CH3PR11MB8383.namprd11.prod.outlook.com
- ([fe80::56d4:6f50:dd04:d11b%4]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 17:17:07 +0000
-From: "Falcon, Thomas" <thomas.falcon@intel.com>
-To: "irogers@google.com" <irogers@google.com>
-CC: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org"
-	<acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian"
-	<adrian.hunter@intel.com>, "namhyung@kernel.org" <namhyung@kernel.org>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kan.liang@linux.intel.com"
-	<kan.liang@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] perf top: populate PMU capabilities data in perf_env
-Thread-Topic: [PATCH v2] perf top: populate PMU capabilities data in perf_env
-Thread-Index: AQHbwDatfr+vouCuXkemFl3YBUhWB7PQulAAgAAa9gA=
-Date: Tue, 13 May 2025 17:17:07 +0000
-Message-ID: <6ffd38b54e57709ca980087abe2582f1ae89250c.camel@intel.com>
-References: <20250508163127.726660-1-thomas.falcon@intel.com>
-	 <CAP-5=fVJWSyymbbk30Cx6Dhk-nTQJUUM-oOTrBCJuS6Q5az9Ag@mail.gmail.com>
-In-Reply-To: <CAP-5=fVJWSyymbbk30Cx6Dhk-nTQJUUM-oOTrBCJuS6Q5az9Ag@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|SA3PR11MB8003:EE_
-x-ms-office365-filtering-correlation-id: 740c9e12-55a9-4ba8-870d-08dd9241fd04
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?VHhSdTM0N0huYTVBcU1jenVPc1Y0MlVxVzZFM3JzRkxzZXNNOC9OMTJvSHJa?=
- =?utf-8?B?eGNjZmRJcTFQR0hQNlQ1aU5jT2krekxaMjYxTG1Qd2RGREZEajB4dzZ4SHNt?=
- =?utf-8?B?a2IzbmxycURaYVVIN2prYzZTTUdIQUExclFGQUlrcjFmMkh3NnVGdzB1Rno0?=
- =?utf-8?B?YURPbUNIaXVhd0NRR1VPcENZMU50a2VnbXNERFcvYXJ1ek5uTlVSTHcwMXZT?=
- =?utf-8?B?ZWJtRGJvaFVtN1kwNXoyS0Jla0VrSXl6TDVTcEYwV3ErcTJrMDhUNy95S0VO?=
- =?utf-8?B?K1pVd3JVdkJnWnJvdTFORm9nYVJYTnNWalgzbFE5SDJCVlhCdzNzS3AxUzIw?=
- =?utf-8?B?eVZXa1l1ZmtKMzh6NSt0TDJ4dUZMQmxrL04zY2tON29yc0FydE10eDMvSjZO?=
- =?utf-8?B?cllnMkZoLzl3L0F4SDVtUUpkVWlYelp4WEliUGJWandXTXN6ajVsYS9wTTdZ?=
- =?utf-8?B?V1VaTTZhTEtwMzhBL0Y5K0VsV3VQZmMxQnpOQnk4QVZLd2dpWm1FK1FnRUlz?=
- =?utf-8?B?d2VTZFdpbjZTd1VUUmhNeUVpZ1JLaExwZnB2NmlQZ21acEVWMStIQ2x3eDhH?=
- =?utf-8?B?Mm8rakpRNUtjUFpWMW02TFgwQ0x5djV3Z2dXT3ZjTjRWbUdDdFNCUWVzTU5O?=
- =?utf-8?B?cWJKUHB6ZXBtQ0JRaUpMNGdmeDJpRW1wU2RNc0xad0ZldCtkOGJlZ3ZJQnhN?=
- =?utf-8?B?NkNwcGliK01yN3c3REZNWnhxeUF1KzFpdjg3ZnhTQ3VxZmVCT0kwWTdVTHNq?=
- =?utf-8?B?dm1SaytzaHpxU01BZVhBaFhlRk9KRnFmOTkzeE9hNTVmMXM4eng3MGd3Tzhl?=
- =?utf-8?B?V1dMT21pU1U0amdVRHFXOWxIa1k2THZmQzJXbk9Mb3BUWVBWdDB5Vnk1bHdC?=
- =?utf-8?B?VmpkYlBNd055ejBkZktXKzN1MzV2NFFSRE1keTEvcDhEclltTUpSaVVyUlBm?=
- =?utf-8?B?dkFPS0NDTEg3cWxLRTJhL25EZkd2NFduZkNlS2xZbngyUVhuNEVaNzJwQjd6?=
- =?utf-8?B?dW1SVHRPYWlBK0orb3E0T0dvVHNtM1h3V3pvVENUanZ2emt0bjJxS293QTJF?=
- =?utf-8?B?VzdpUHd5WlZ4THBtRFRpTURqNENKZkpEMk9DUVlhNjdLUkJMMkVabDhqTjlP?=
- =?utf-8?B?RllYUUxWc3hOU1lwN1dpcEZENDNqYU9XbHFOSkMzVm1XSkxrbFhxU0VRcXUy?=
- =?utf-8?B?TVZycEtoWWVaZ0hOUU05TWxBRkJUTTNPemI5SHJxcWU3OHprWHhqNGhZM2JG?=
- =?utf-8?B?YnBCS1NwQWtqQmRuQm1iWU5Tc1dUVHlrR0VKUGlQVkJVQ0FYRzF4QXZOSC9H?=
- =?utf-8?B?UWd5QXpScHRtUHdGTlNtYTRBK0tvNEloWjZkbVRrQmc4eHJ4Z243U0ltdmxy?=
- =?utf-8?B?L3hYTXRGVEpvV1JwRFBrOGZBZ3BqanRaR2tnbHZldnlScm1wejBXUXE3Wlhn?=
- =?utf-8?B?d2Y0WDM4M0Z5M1FuNkV6b25ZQ2RIaTl5a2FKVGdyVHkvOEU0b0lQbjFpSkty?=
- =?utf-8?B?cjRvVCsxazJLaUZPbVV0NHArZ284Sk1Od2M5WHBFQi9qNWFWRTBOMWk3N3A3?=
- =?utf-8?B?aEtxNkZ5bWFKVGtJRndQUDViVHUxZUMwVyt0OGkyb1ZOaG9Ccnpwc2llVy9I?=
- =?utf-8?B?VEU0aWZwbXMvb2xOei9GakRkNmNQYjBXRDRSZ0NITmYrekJwRXlHcEltOGdh?=
- =?utf-8?B?SVdOUlBmcmUwaVNEdDJrTk1PVFRQakluaEl6MVh4Zmg1SE5DcVNVemlmWERr?=
- =?utf-8?B?WE9aLzBNNWIyc01rcUtsdjVONG5ZQ3I3YmVyMURpTDV0WStNd2lMZ0dWN1hp?=
- =?utf-8?B?RWR4WW44UGRGTEJUVFdYRFZGSzZuR0RXWEc4NFlLN1RKd1JKb240d3FnU2xL?=
- =?utf-8?B?Zm44SlVadC9GM2xFUzNPellVQWZ2V3FveDBJQUp6V3Erb01GSGhhTi94LzVF?=
- =?utf-8?B?S0NhbWpYblVDLzBCVmpUNWw0MkRENnZUY25pU0RNUDVZU1pJMTluZWFiTU11?=
- =?utf-8?Q?L8IT8YSXNR/cogqiz/8waxSZY9uWRA=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SU5uWTR3V1h4WnY0OUFOTG1LTlpaVXRBOU9JNXFybW9uTnVLbjcvZDBKRCtJ?=
- =?utf-8?B?OFo5cE1FVGlGM3UzdEZsYi9LbEtRQXZDZ1hpUm9DenBZQ1BzeTBwVThSS0x4?=
- =?utf-8?B?STlFQWFPbnVmd3dkK0Y3ZnkzOGdqYUhhVytKVTJyS29tV1FML1dQN0JxY3Yw?=
- =?utf-8?B?NUt4Qjl0YW9kYzVqT0I2MlNaeDJTSzVyVW1lQzRrSUprQ1k5VFNUaTdWNlps?=
- =?utf-8?B?ZnFrWUIyL3pCdm5FQW82UmJ1Rnp0Ny9SNGpvVmIwK01sd2FOUCswa0xzNHBr?=
- =?utf-8?B?djlsaU5DbXZBSTJvWjdTMDFvRUFXaW1Vb1BIOG5JaVQ3Sm50ZXpDRk9BNUJU?=
- =?utf-8?B?YzFhaG9IMm5RY2wrTmQvdE5KcHBWVkNzNGpvYVN0WUZVK1ZKSnBFSjJYVFUv?=
- =?utf-8?B?TjJjY2NOR3BUdEV5RE1KWUJhYm9JbjBGL3J6WkFKSHg0dGRZWkpQWWNDdDFW?=
- =?utf-8?B?dmpkQTVRRmtaVGllaVp5azkrRFJ1VDd2d2RvYyt5M0lFNm1oQmN1Ump4OER6?=
- =?utf-8?B?Vi9rWDd6WWpUc2ZzMEp4aVlKVVM1WC9kbjcwOHY0SDZTd1FGbndVSFRLR2ZK?=
- =?utf-8?B?eXcxa0dzR0VGSkhrdHBaWjN3OTlOZnREM2h6K2U5QTV2S3V6dFc5VldrWHVj?=
- =?utf-8?B?K2x3VlVkZ0ZYOEFPNkRuK1lOR2N0N3RtdTFSUzdDRVBQNXcyMTJmalA5RWxv?=
- =?utf-8?B?VGJkYWxvYWF4U09KMGR3S0NIbENRYmZrY0RCZVBKc1oxWjRpRW9JN3NvUDN4?=
- =?utf-8?B?c01obDFHaFVmV1VjWHZyY0l0d1NyOU80WjZYMERFM25DTzVIdC9GcHp6c1RI?=
- =?utf-8?B?cTNXRzJQdzNoWlQyaTRsYzgvMzVpQXdhVFF0OWVXbG5tYStackNVUE1YK2c4?=
- =?utf-8?B?NTVneDJYMzYxR3ZCSjRKdXJra0MwMk5pNnRHVGhQZzNaZ2FNWW9XU2ZkTEtB?=
- =?utf-8?B?RmprTTRZRXVhRU9qcjZBcjRWNUpuVUhJNmFLL0d4TWdjK1Nmcyt2dnlCYmRn?=
- =?utf-8?B?RjBEcEZaS0YrU2UxYlR1b3hLZjVQUkRqVG16K2g1ZTZveDZBSUVtZVFPN3pN?=
- =?utf-8?B?NnN2N2ZFSnBVQy80KzM5ZXM3NzBTcGhTblE5M1NUcEUzL1hSTFNlSE5lQmx3?=
- =?utf-8?B?aDBvRkcvUHJvUlM4V3Y3Qk9jSTBjRWNYdmsyQ1J2cnFibXpBNFUzMWNBUUMz?=
- =?utf-8?B?bVdCY3kzTUxNOWhrczB0WHJWS282NXRLUkVBSnkrU2E1aWVnZ0gzQVROYnlB?=
- =?utf-8?B?ekxFaFp2aEtBV2Jsd1A5VktIc0ViejByNEFMTU0rUG5EdS9PYkphMEU2NURB?=
- =?utf-8?B?WTlGbVdSQmc4M2lXYkp6RStPS0tGZWFvMGE0N2tmUzlkdW96bFJpVExjQ0NF?=
- =?utf-8?B?SGRiSUYzOWFNTHJjODMxZDN0b1ZUdWRITEI2VGoyWEd3QXdyS24xcU5TdG5L?=
- =?utf-8?B?VWQ5M1BhRHNyb25MSnp5ZDNYekYyT0dTUlVjWEtRWHZNdThvZDgwbUNWWVVB?=
- =?utf-8?B?aGZPQk1zYXZ3Ujd2VXAyS1RVNWRCT1lldWVvZjhoRDBHeGJWV00xeCsvMkFq?=
- =?utf-8?B?WWZ3TGJ0TmErM3lqQXV5QjViQXBiY2ZjbDY1QTh2Sm1tV091NzBTamRxUGNW?=
- =?utf-8?B?MFVvTTJpcmY0ZFdkNElFT05BUXJhbVVmQ3ZkRG1lVmlqOXBjQVdSbzNvZlF5?=
- =?utf-8?B?NDZ4bW5tcG0vV3d2VFF4MmlVWFE1MVI2MllJVitpeml5cXphVTZkUy9tNEFK?=
- =?utf-8?B?V2taTDFyNkQ0bDREQmFJNlVxWjFBUEI3N3pHY2FSRzNLemJqaWo5UmcyNDJo?=
- =?utf-8?B?U2JLKzhObzg1ZGduc0ZPZitINUtRT1l3WjJJNWZNaHNkckpXdU9WcUhXU01N?=
- =?utf-8?B?SHVPdXdxVkY5bHREeHZDNE1taXhMRWttNjhCdDNrN3VXb1R1czJHdWM3clJU?=
- =?utf-8?B?N200QmRLNXJUOTBYQTd1ZkJmc00xTWx4b2k2eW9IVjRpRWZQWnFsbUwvR1dn?=
- =?utf-8?B?clFNcFVFUk1pTXRHMUoweVhTME5nK2djMnpOdWVBbWthSENQKzVvZURYUGpT?=
- =?utf-8?B?UEMrZ1pjWTRLbU5hWGN1K24yTHN2SldEUnZxSE5RblY4V2VaaTY5TE9TWlJ2?=
- =?utf-8?B?dzNubm5VYnFmbDNmbVVJTXB1MW9KRUorWGxRSU9GRmsrNHdxQm92NGlwRUli?=
- =?utf-8?B?YUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <394C2E652682224F93658D8BE66A09E6@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ypEIuLZB"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22e42641d7cso17325ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 10:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747157199; x=1747761999; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pt97d48gjNxSANYhlUYSzocgwjeBM/CBv6nzairLsS4=;
+        b=ypEIuLZBfTWXmWpqvsQGdbfz1PwLCFuA03Afo9CgJGYAhv9MwzrRsnrwg4bM1Hsrak
+         JDLs9XoeO1u8vkrIaTXsxKO8JG1bS3rL7uyiSUgjPPwHV8qt3W1cghzuHrCmTG3d2O+G
+         psBwcTOap9o6htTXFfU1gPehP5P70n3/+RpF69MP5+LhcLnfYuF88ugH5StboRGTHgim
+         2Kso82W3rtu5TCQuv4DcPixbJYq4jScW2A1ofYgiKhxgHpcZcRz9NwfB1vDWA3O+Y6JZ
+         iv0DOOc/S+Tn6uco92SUVwpdPyD5LXd7yjz1N7Tn0BNV3sEaemyvNoRhJsFW5QqRe7R9
+         v45w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747157199; x=1747761999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pt97d48gjNxSANYhlUYSzocgwjeBM/CBv6nzairLsS4=;
+        b=nbhJg8du0LsAB9RSdodtND+bA1bQbdUmqK8dp1n+vCaL+65bjEgAvx9QjsUujKUanT
+         3M7AExN885Ot4AlGgZyIp+Plqm5QdsDeZ+fV+BuBZ4lzBJA8f/xgBj/ZK15V++wqQm2t
+         u4PGb5UY/JK8S+gZ7idh3ZflwYGuLEc8wF3M7lJZS5y3nYYTa6ctZhFa8cWlQJLLCezB
+         /Hea1dDNb5YVTrlp+4ce6v4AF/aUEbLDC/e6LeN+a1owTYDWfU5s8qCK6ErSMDZgVNBS
+         g0Q/miBf8zYPWgUxHNK96RP0ddEVvSMgjcp2pZRNFTy9+a5KMFGc/RQR9mij91BI1xyW
+         RKPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxs7g50QZoaHH+5dKg8AHsysE3B2QjKmWzsfC+dObNRwHLciKaTtw7HFolJ1S22F0/hrAnxiisC6X4woXvQf6a@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxaSEHAHQQCro1qSOeJzAfvcR2FyG01JRzcMl4xRHXQ7vomrVD
+	+gsl0vJpJ9kQ8GQEc8N7CXVYOVRz+tuo6cyTW1jfdDkdekEo1TYWznnAaGzRiEZm9hmgUcYB6jo
+	et12iPbtDhnAeWxI6L9gN1JC1/0mFjb5gJlNDyjA/
+X-Gm-Gg: ASbGnctK24N0c+IJZRt8SDQzYBPEZnasauFfDaYH/Ct9G3anrSNWxdoUXMUjcHyjL3v
+	xz5xI0MAW5G8odPGElBlYIsZVRwoNF+CCugML5+38jHxLbcoj7xlxZU/Ydjzzo55nSBAKKC2uVb
+	q9KCggsGCnKW0QGRBUEx/ijbqMdNYVZPT8cwLLKlQ1Xt8DircGiB8ZLe8Z8VB98A==
+X-Google-Smtp-Source: AGHT+IFlIkzISAflQDFsf9GZe2dx0t09B6mo1dIn5rYsLY+FhyqTbGnWgAXgCe6we8o1uLkfk0pj6mv0d4VZl0VUorY=
+X-Received: by 2002:a17:903:2b10:b0:21f:2ded:bfa0 with SMTP id
+ d9443c01a7336-231803fbff3mr3273635ad.25.1747157199111; Tue, 13 May 2025
+ 10:26:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 740c9e12-55a9-4ba8-870d-08dd9241fd04
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2025 17:17:07.1422
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: InyNOdeaZXOFpaxeTC9YdAWdMLxCyfP0bv3FSlreSfMzw76g5d6Pkr7ZUi+PI40vQLSdOebMB9E2dTLB+2qy8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8003
-X-OriginatorOrg: intel.com
+References: <20250512184700.11691-1-irogers@google.com> <20250512184700.11691-2-irogers@google.com>
+ <108f87fc28453adb52d6b8c2afd8d184e288a83e.camel@intel.com> <CAP-5=fVaC662z2nJnTwBHMu-RE+9HkRmvSyNT5qB448+zw6e9Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fVaC662z2nJnTwBHMu-RE+9HkRmvSyNT5qB448+zw6e9Q@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 May 2025 10:26:26 -0700
+X-Gm-Features: AX0GCFvK2V6CRXEAzQUuHKbGYnq4DKTfCv9i3TVjKKobxEOPyde8mDvOMXOdHlo
+Message-ID: <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
+ validation test
+To: "Falcon, Thomas" <thomas.falcon@intel.com>, "Wang, Weilin" <weilin.wang@intel.com>
+Cc: "james.clark@linaro.org" <james.clark@linaro.org>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gVHVlLCAyMDI1LTA1LTEzIGF0IDA4OjQwIC0wNzAwLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiBP
-biBUaHUsIE1heSA4LCAyMDI1IGF0IDk6MzHigK9BTSBUaG9tYXMgRmFsY29uIDx0aG9tYXMuZmFs
-Y29uQGludGVsLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gQ2FsbGluZyBwZXJmIHRvcCB3aXRoIGJy
-YW5jaCBmaWx0ZXJzIGVuYWJsZWQgb24gSW50ZWwgQ1BVJ3MNCj4gPiB3aXRoIGJyYW5jaCBjb3Vu
-dGVycyBsb2dnaW5nIChBLksuQSBMQlIgZXZlbnQgbG9nZ2luZyBbMV0pIHN1cHBvcnQNCj4gPiBy
-ZXN1bHRzIGluIGEgc2VnZmF1bHQuDQo+IA0KDQpIaSBJYW4sIHRoYW5rcyBmb3IgcmV2aWV3aW5n
-IQ0KDQo+IEF0IHNvbWUgcG9pbnQgd2Ugc2hvdWxkIGFkZCBhIGBwZXJmIHRvcGAgc2hlbGwgdGVz
-dCBhbmQgaW5jbHVkZQ0KPiByZWdyZXNzaW9uIHRlc3RzIGZvciBjYXNlcyBsaWtlIHRoaXMuDQoN
-Ckdvb2QgcG9pbnQsIEkgd2lsbCBsb29rIGludG8gY3JlYXRpbmcgYSB0ZXN0IGZvciB0aGlzLg0K
-DQo+IA0KPiA+IFRocmVhZCAyNyAicGVyZiIgcmVjZWl2ZWQgc2lnbmFsIFNJR1NFR1YsIFNlZ21l
-bnRhdGlvbiBmYXVsdC4NCj4gPiBbU3dpdGNoaW5nIHRvIFRocmVhZCAweDdmZmZhZmZmNzZjMCAo
-TFdQIDk0OTAwMyldDQo+ID4gcGVyZl9lbnZfX2ZpbmRfYnJfY250cl9pbmZvIChlbnY9MHhmNjZk
-YzAgPHBlcmZfZW52PiwgbnI9MHgwLCB3aWR0aD0weDdmZmZhZmZmNjJjMCkgYXQgdXRpbC9lbnYu
-Yzo2NTMNCj4gPiA2NTMgICAgICAgICAgICAgICAgICAgICAqd2lkdGggPSBlbnYtPmNwdV9wbXVf
-Y2FwcyA/IGVudi0+YnJfY250cl93aWR0aCA6DQo+ID4gKGdkYikgYnQNCj4gPiAgIzAgIHBlcmZf
-ZW52X19maW5kX2JyX2NudHJfaW5mbyAoZW52PTB4ZjY2ZGMwIDxwZXJmX2Vudj4sIG5yPTB4MCwg
-d2lkdGg9MHg3ZmZmYWZmZjYyYzApIGF0IHV0aWwvZW52LmM6NjUzDQo+ID4gICMxICAweDAwMDAw
-MDAwMDA1YjE1OTkgaW4gc3ltYm9sX19hY2NvdW50X2JyX2NudHIgKGJyYW5jaD0weDdmZmZjYzNk
-YjU4MCwgZXZzZWw9MHhmZWEyZDAsIG9mZnNldD0xMiwgYnJfY250cj04KSBhdCB1dGlsL2Fubm90
-YXRlLmM6MzQ1DQo+ID4gICMyICAweDAwMDAwMDAwMDA1YjE3ZmIgaW4gc3ltYm9sX19hY2NvdW50
-X2N5Y2xlcyAoYWRkcj01NjU4MTcyLCBzdGFydD01NjU4MTYwLCBzeW09MHg3ZmZmY2MwZWU0MjAs
-IGN5Y2xlcz01MzksIGV2c2VsPTB4ZmVhMmQwLCBicl9jbnRyPTgpIGF0IHV0aWwvYW5ub3RhdGUu
-YzozODkNCj4gPiAgIzMgIDB4MDAwMDAwMDAwMDViMTk3NiBpbiBhZGRyX21hcF9zeW1ib2xfX2Fj
-Y291bnRfY3ljbGVzIChhbXM9MHg3ZmZmY2Q3YjAxZDAsIHN0YXJ0PTB4N2ZmZmNkN2IwMmIwLCBj
-eWNsZXM9NTM5LCBldnNlbD0weGZlYTJkMCwgYnJfY250cj04KSBhdCB1dGlsL2Fubm90YXRlLmM6
-NDIyDQo+ID4gICM0ICAweDAwMDAwMDAwMDA2OGQ1N2YgaW4gaGlzdF9fYWNjb3VudF9jeWNsZXMg
-KGJzPTB4MTEwZDI4OCwgYWw9MHg3ZmZmYWZmZjY1NDAsIHNhbXBsZT0weDdmZmZhZmZmNjc2MCwg
-bm9uYW55X2JyYW5jaF9tb2RlPWZhbHNlLCB0b3RhbF9jeWNsZXM9MHgwLCBldnNlbD0weGZlYTJk
-MCkgYXQgdXRpbC9oaXN0LmM6Mjg1MA0KPiA+ICAjNSAgMHgwMDAwMDAwMDAwNDQ2MjE2IGluIGhp
-c3RfaXRlcl9fdG9wX2NhbGxiYWNrIChpdGVyPTB4N2ZmZmFmZmY2NTkwLCBhbD0weDdmZmZhZmZm
-NjU0MCwgc2luZ2xlPXRydWUsIGFyZz0weDdmZmZmZmZmOWUwMCkgYXQgYnVpbHRpbi10b3AuYzo3
-MzcNCj4gPiAgIzYgIDB4MDAwMDAwMDAwMDY4OTc4NyBpbiBoaXN0X2VudHJ5X2l0ZXJfX2FkZCAo
-aXRlcj0weDdmZmZhZmZmNjU5MCwgYWw9MHg3ZmZmYWZmZjY1NDAsIG1heF9zdGFja19kZXB0aD0x
-MjcsIGFyZz0weDdmZmZmZmZmOWUwMCkgYXQgdXRpbC9oaXN0LmM6MTM1OQ0KPiA+ICAjNyAgMHgw
-MDAwMDAwMDAwNDQ2NzEwIGluIHBlcmZfZXZlbnRfX3Byb2Nlc3Nfc2FtcGxlICh0b29sPTB4N2Zm
-ZmZmZmY5ZTAwLCBldmVudD0weDExMGQyNTAsIGV2c2VsPTB4ZmVhMmQwLCBzYW1wbGU9MHg3ZmZm
-YWZmZjY3NjAsIG1hY2hpbmU9MHgxMDhjOTY4KSBhdCBidWlsdGluLXRvcC5jOjg0NQ0KPiA+ICAj
-OCAgMHgwMDAwMDAwMDAwNDQ3NzM1IGluIGRlbGl2ZXJfZXZlbnQgKHFlPTB4N2ZmZmZmZmZhMTIw
-LCBxZXZlbnQ9MHgxMGZjMjAwKSBhdCBidWlsdGluLXRvcC5jOjEyMTENCj4gPiAgIzkgIDB4MDAw
-MDAwMDAwMDY0Y2NhZSBpbiBkb19mbHVzaCAob2U9MHg3ZmZmZmZmZmExMjAsIHNob3dfcHJvZ3Jl
-c3M9ZmFsc2UpIGF0IHV0aWwvb3JkZXJlZC1ldmVudHMuYzoyNDUNCj4gPiAgIzEwIDB4MDAwMDAw
-MDAwMDY0ZDAwNSBpbiBfX29yZGVyZWRfZXZlbnRzX19mbHVzaCAob2U9MHg3ZmZmZmZmZmExMjAs
-IGhvdz1PRV9GTFVTSF9fVE9QLCB0aW1lc3RhbXA9MCkgYXQgdXRpbC9vcmRlcmVkLWV2ZW50cy5j
-OjMyNA0KPiA+ICAjMTEgMHgwMDAwMDAwMDAwNjRkMGVmIGluIG9yZGVyZWRfZXZlbnRzX19mbHVz
-aCAob2U9MHg3ZmZmZmZmZmExMjAsIGhvdz1PRV9GTFVTSF9fVE9QKSBhdCB1dGlsL29yZGVyZWQt
-ZXZlbnRzLmM6MzQyDQo+ID4gICMxMiAweDAwMDAwMDAwMDA0NDcyYTkgaW4gcHJvY2Vzc190aHJl
-YWQgKGFyZz0weDdmZmZmZmZmOWUwMCkgYXQgYnVpbHRpbi10b3AuYzoxMTIwDQo+ID4gICMxMyAw
-eDAwMDA3ZmZmZjZlN2RiYTggaW4gc3RhcnRfdGhyZWFkIChhcmc9PG9wdGltaXplZCBvdXQ+KSBh
-dCBwdGhyZWFkX2NyZWF0ZS5jOjQ0OA0KPiA+ICAjMTQgMHgwMDAwN2ZmZmY2ZjAxYjhjIGluIF9f
-R0lfX19jbG9uZTMgKCkgYXQgLi4vc3lzZGVwcy91bml4L3N5c3YvbGludXgveDg2XzY0L2Nsb25l
-My5TOjc4DQo+ID4gDQo+ID4gVGhlIGNhdXNlIGlzIHRoYXQgcGVyZl9lbnZfX2ZpbmRfYnJfY250
-cl9pbmZvIHRyaWVzIHRvIGFjY2VzcyBhDQo+ID4gbnVsbCBwb2ludGVyIHBtdV9jYXBzIGluIHRo
-ZSBwZXJmX2VudiBzdHJ1Y3QuIEEgc2ltaWxhciBpc3N1ZSBleGlzdHMNCj4gPiBmb3IgaG9tb2dl
-bmVvdXMgY29yZSBzeXN0ZW1zIHdoaWNoIHVzZSB0aGUgY3B1X3BtdV9jYXBzIHN0cnVjdHVyZS4N
-Cj4gPiANCj4gPiBGaXggdGhpcyBieSBwb3B1bGF0aW5nIGNwdV9wbXVfY2FwcyBhbmQgcG11X2Nh
-cHMgc3RydWN0dXJlcyB3aXRoDQo+ID4gdmFsdWVzIGZyb20gc3lzZnMgd2hlbiBjYWxsaW5nIHBl
-cmYgdG9wIHdpdGggYnJhbmNoIHN0YWNrIHNhbXBsaW5nDQo+ID4gZW5hYmxlZC4NCj4gPiANCj4g
-PiBbMV0sIExCUiBldmVudCBsb2dnaW5nIGludHJvZHVjZWQgaGVyZToNCj4gPiBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9hbGwvMjAyMzEwMjUyMDE2MjYuMzAwMDIyOC01LWthbi5saWFuZ0BsaW51
-eC5pbnRlbC5jb20vDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIEZhbGNvbiA8dGhv
-bWFzLmZhbGNvbkBpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gdjI6IHVwZGF0ZSBjb21taXQgbWVz
-c2FnZSB3aXRoIG1vcmUgbWVhbmluZ2Z1bCBzdGFjayB0cmFjZSBmcm9tDQo+ID4gICAgIGdkYiBh
-bmQgaW5kaWNhdGUgdGhhdCBhZmZlY3RlZCBzeXN0ZW1zIGFyZSBsaW1pdGVkIHRvIENQVSdzDQo+
-ID4gICAgIHdpdGggTEJSIGV2ZW50IGxvZ2dpbmcgc3VwcG9ydCBhbmQgdGhhdCBib3RoIGh5YnJp
-ZCBhbmQNCj4gPiAgICAgbm9uLWh5YnJpZCBjb3JlIHN5c3RlbXMgYXJlIGFmZmVjdGVkLg0KPiA+
-IC0tLQ0KPiA+ICB0b29scy9wZXJmL2J1aWx0aW4tdG9wLmMgfCAgIDggKysrDQo+ID4gIHRvb2xz
-L3BlcmYvdXRpbC9lbnYuYyAgICB8IDExNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysNCj4gPiAgdG9vbHMvcGVyZi91dGlsL2Vudi5oICAgIHwgICAxICsNCj4gPiAgMyBm
-aWxlcyBjaGFuZ2VkLCAxMjMgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS90
-b29scy9wZXJmL2J1aWx0aW4tdG9wLmMgYi90b29scy9wZXJmL2J1aWx0aW4tdG9wLmMNCj4gPiBp
-bmRleCAxMDYxZjRlZWJjM2YuLmMyNjg4ZTRlZjNjNCAxMDA2NDQNCj4gPiAtLS0gYS90b29scy9w
-ZXJmL2J1aWx0aW4tdG9wLmMNCj4gPiArKysgYi90b29scy9wZXJmL2J1aWx0aW4tdG9wLmMNCj4g
-PiBAQCAtMTcyOSw2ICsxNzI5LDE0IEBAIGludCBjbWRfdG9wKGludCBhcmdjLCBjb25zdCBjaGFy
-ICoqYXJndikNCj4gPiAgICAgICAgIGlmIChvcHRzLT5icmFuY2hfc3RhY2sgJiYgY2FsbGNoYWlu
-X3BhcmFtLmVuYWJsZWQpDQo+ID4gICAgICAgICAgICAgICAgIHN5bWJvbF9jb25mLnNob3dfYnJh
-bmNoZmxhZ19jb3VudCA9IHRydWU7DQo+ID4gDQo+ID4gKyAgICAgICBpZiAob3B0cy0+YnJhbmNo
-X3N0YWNrKSB7DQo+ID4gKyAgICAgICAgICAgICAgIHN0YXR1cyA9IHBlcmZfZW52X19yZWFkX2Nv
-cmVfcG11X2NhcHMoJnBlcmZfZW52KTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHN0YXR1cykg
-ew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX2VycigiUE1VIGNhcGFiaWxpdHkgZGF0
-YSBpcyBub3QgYXZhaWxhYmxlXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBnb3Rv
-IG91dF9kZWxldGVfZXZsaXN0Ow0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAgICB9
-DQo+ID4gKw0KPiA+ICAgICAgICAgc29ydF9fbW9kZSA9IFNPUlRfTU9ERV9fVE9QOw0KPiA+ICAg
-ICAgICAgLyogZGlzcGxheSB0aHJlYWQgd2FudHMgZW50cmllcyB0byBiZSBjb2xsYXBzZWQgaW4g
-YSBkaWZmZXJlbnQgdHJlZSAqLw0KPiA+ICAgICAgICAgcGVyZl9ocHBfbGlzdC5uZWVkX2NvbGxh
-cHNlID0gMTsNCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL2Vudi5jIGIvdG9vbHMv
-cGVyZi91dGlsL2Vudi5jDQo+ID4gaW5kZXggMzY0MTE3NDllMDA3Li4zN2VkNmRjNTJjZjMgMTAw
-NjQ0DQo+ID4gLS0tIGEvdG9vbHMvcGVyZi91dGlsL2Vudi5jDQo+ID4gKysrIGIvdG9vbHMvcGVy
-Zi91dGlsL2Vudi5jDQo+ID4gQEAgLTQxNiw2ICs0MTYsMTIwIEBAIHN0YXRpYyBpbnQgcGVyZl9l
-bnZfX3JlYWRfbnJfY3B1c19hdmFpbChzdHJ1Y3QgcGVyZl9lbnYgKmVudikNCj4gPiAgICAgICAg
-IHJldHVybiBlbnYtPm5yX2NwdXNfYXZhaWwgPyAwIDogLUVOT0VOVDsNCj4gPiAgfQ0KPiA+IA0K
-PiA+ICtzdGF0aWMgaW50IF9fcGVyZl9lbnZfX3JlYWRfY29yZV9wbXVfY2FwcyhzdHJ1Y3QgcGVy
-Zl9wbXUgKnBtdSwNCj4gDQo+IFByZWZlciAiY29uc3Qgc3RydWN0IHBlcmZfcG11ICpwbXUiIHRv
-IHNob3cgdGhhdCBpdCBkb2Vzbid0IGNoYW5nZSB3aXRoaW4uDQoNCk9rLCBJIHdpbGwgY2hhbmdl
-IHRoYXQgaW4gYSBuZXcgdmVyc2lvbi4NCg0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBpbnQgKm5yX2NhcHMsIGNoYXIgKioqY2FwcywNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgKm1heF9i
-cmFuY2hlcywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1
-bnNpZ25lZCBpbnQgKmJyX2NudHJfbnIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgdW5zaWduZWQgaW50ICpicl9jbnRyX3dpZHRoKQ0KPiA+ICt7DQo+ID4g
-KyAgICAgICBzdHJ1Y3QgcGVyZl9wbXVfY2FwcyAqcGNhcHMgPSBOVUxMOw0KPiA+ICsgICAgICAg
-Y2hhciAqcHRyLCAqKnRtcDsNCj4gPiArICAgICAgIGludCByZXQgPSAwOw0KPiA+ICsNCj4gPiAr
-ICAgICAgICpucl9jYXBzID0gMDsNCj4gPiArICAgICAgICpjYXBzID0gTlVMTDsNCj4gPiArDQo+
-ID4gKyAgICAgICBpZiAoIXBtdS0+bnJfY2FwcykNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJu
-IDA7DQo+ID4gKw0KPiA+ICsgICAgICAgKmNhcHMgPSB6YWxsb2Moc2l6ZW9mKGNoYXIgKikgKiBw
-bXUtPm5yX2NhcHMpOw0KPiA+ICsgICAgICAgaWYgKCEqY2FwcykNCj4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsgICAgICAgdG1wID0gKmNhcHM7DQo+ID4g
-KyAgICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KHBjYXBzLCAmcG11LT5jYXBzLCBsaXN0KSB7DQo+
-ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoYXNwcmludGYoJnB0ciwgIiVzPSVzIiwgcGNh
-cHMtPm5hbWUsIHBjYXBzLT52YWx1ZSkgPCAwKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmV0ID0gLUVOT01FTTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGVycm9y
-Ow0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAqdG1w
-KysgPSBwdHI7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoIXN0cmNtcChwY2Fwcy0+
-bmFtZSwgImJyYW5jaGVzIikpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgKm1heF9icmFu
-Y2hlcyA9IGF0b2kocGNhcHMtPnZhbHVlKTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGlm
-ICghc3RyY21wKHBjYXBzLT5uYW1lLCAiYnJhbmNoX2NvdW50ZXJfbnIiKSkNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAqYnJfY250cl9uciA9IGF0b2kocGNhcHMtPnZhbHVlKTsNCj4gPiAr
-DQo+ID4gKyAgICAgICAgICAgICAgIGlmICghc3RyY21wKHBjYXBzLT5uYW1lLCAiYnJhbmNoX2Nv
-dW50ZXJfd2lkdGgiKSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAqYnJfY250cl93aWR0
-aCA9IGF0b2kocGNhcHMtPnZhbHVlKTsNCj4gPiArICAgICAgIH0NCj4gPiArICAgICAgICpucl9j
-YXBzID0gcG11LT5ucl9jYXBzOw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK2Vycm9yOg0K
-PiA+ICsgICAgICAgd2hpbGUgKHRtcC0tICE9ICpjYXBzKQ0KPiA+ICsgICAgICAgICAgICAgICBm
-cmVlKCp0bXApOw0KPiA+ICsgICAgICAgZnJlZSgqY2Fwcyk7DQo+ID4gKyAgICAgICAqY2FwcyA9
-IE5VTEw7DQo+ID4gKyAgICAgICAqbnJfY2FwcyA9IDA7DQo+ID4gKyAgICAgICByZXR1cm4gcmV0
-Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICtpbnQgcGVyZl9lbnZfX3JlYWRfY29yZV9wbXVfY2Fwcyhz
-dHJ1Y3QgcGVyZl9lbnYgKmVudikNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IHBlcmZfcG11
-ICpwbXUgPSBOVUxMOw0KPiA+ICsgICAgICAgc3RydWN0IHBtdV9jYXBzICpwbXVfY2FwczsNCj4g
-PiArICAgICAgIGludCBucl9wbXUgPSAwLCBpID0gMCwgajsNCj4gPiArICAgICAgIGludCByZXQ7
-DQo+ID4gKw0KPiA+ICsgICAgICAgbnJfcG11ID0gcGVyZl9wbXVzX19udW1fY29yZV9wbXVzKCk7
-DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKCFucl9wbXUpDQo+ID4gKyAgICAgICAgICAgICAgIHJl
-dHVybiAtRU5PREVWOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChucl9wbXUgPT0gMSkgew0KPiA+
-ICsgICAgICAgICAgICAgICBwbXUgPSBwZXJmX3BtdXNfX3NjYW5fY29yZShOVUxMKTsNCj4gDQo+
-IFRoZXJlIGlzIHBlcmZfcG11c19fZmluZF9jb3JlX3BtdSBmb3IgdGhpcywgbm90IHN1cmUgd2h5
-IHRoaXMgaXMgaW4NCj4gcG11LmggcmF0aGVyIHRoYW4gcG11cy5oIHRob3VnaC4NCg0KVGhhbmtz
-LCBJIHdpbGwgdXNlIHBlcmZfcG11c19fZmluZF9jb3JlX3BtdSgpIGZvciB0aGlzIHRoZW4uIFNo
-b3VsZCBJIGluY2x1ZGUgYW5vdGhlciBwYXRjaCBtb3ZpbmcNCnRoZSBwcm90b3R5cGUgdG8gcG11
-cy5oPw0KDQpUb20NCj4gDQo+IFRoYW5rcywNCj4gSWFuDQo+IA0KPiA+ICsgICAgICAgICAgICAg
-ICBpZiAoIXBtdSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsN
-Cj4gPiArICAgICAgICAgICAgICAgcmV0ID0gcGVyZl9wbXVfX2NhcHNfcGFyc2UocG11KTsNCj4g
-PiArICAgICAgICAgICAgICAgaWYgKHJldCA8IDApDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcmV0dXJuIHJldDsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIF9fcGVyZl9lbnZfX3Jl
-YWRfY29yZV9wbXVfY2FwcyhwbXUsICZlbnYtPm5yX2NwdV9wbXVfY2FwcywNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmZW52LT5jcHVf
-cG11X2NhcHMsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgJmVudi0+bWF4X2JyYW5jaGVzLA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZlbnYtPmJyX2NudHJfbnIsDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmVu
-di0+YnJfY250cl93aWR0aCk7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcG11
-X2NhcHMgPSB6YWxsb2Moc2l6ZW9mKCpwbXVfY2FwcykgKiBucl9wbXUpOw0KPiA+ICsgICAgICAg
-aWYgKCFwbXVfY2FwcykNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4g
-Kw0KPiA+ICsgICAgICAgd2hpbGUgKChwbXUgPSBwZXJmX3BtdXNfX3NjYW5fY29yZShwbXUpKSAh
-PSBOVUxMKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChwZXJmX3BtdV9fY2Fwc19wYXJzZShw
-bXUpIDw9IDApDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQo+ID4gKyAg
-ICAgICAgICAgICAgIHJldCA9IF9fcGVyZl9lbnZfX3JlYWRfY29yZV9wbXVfY2FwcyhwbXUsICZw
-bXVfY2Fwc1tpXS5ucl9jYXBzLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJnBtdV9jYXBzW2ldLmNhcHMsDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcG11X2NhcHNbaV0ubWF4
-X2JyYW5jaGVzLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgJnBtdV9jYXBzW2ldLmJyX2NudHJfbnIsDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcG11X2NhcHNbaV0uYnJfY250
-cl93aWR0aCk7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQpDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgZ290byBlcnJvcjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHBtdV9j
-YXBzW2ldLnBtdV9uYW1lID0gc3RyZHVwKHBtdS0+bmFtZSk7DQo+ID4gKyAgICAgICAgICAgICAg
-IGlmICghcG11X2NhcHNbaV0ucG11X25hbWUpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICByZXQgPSAtRU5PTUVNOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyb3I7
-DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiArICAgICAgICAgICAgICAgaSsrOw0KPiA+ICsg
-ICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGVudi0+bnJfcG11c193aXRoX2NhcHMgPSBucl9w
-bXU7DQo+ID4gKyAgICAgICBlbnYtPnBtdV9jYXBzID0gcG11X2NhcHM7DQo+ID4gKw0KPiA+ICsg
-ICAgICAgcmV0dXJuIDA7DQo+ID4gK2Vycm9yOg0KPiA+ICsgICAgICAgZm9yIChpID0gMDsgaSA8
-IG5yX3BtdTsgaSsrKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGZvciAoaiA9IDA7IGogPCBwbXVf
-Y2Fwc1tpXS5ucl9jYXBzOyBqKyspDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZnJlZShw
-bXVfY2Fwc1tpXS5jYXBzW2pdKTsNCj4gPiArICAgICAgICAgICAgICAgZnJlZShwbXVfY2Fwc1tp
-XS5jYXBzKTsNCj4gPiArICAgICAgICAgICAgICAgZnJlZShwbXVfY2Fwc1tpXS5wbXVfbmFtZSk7
-DQo+ID4gKyAgICAgICB9DQo+ID4gKyAgICAgICBmcmVlKHBtdV9jYXBzKTsNCj4gPiArICAgICAg
-IHJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArDQo+ID4gIGNvbnN0IGNoYXIgKnBlcmZfZW52X19y
-YXdfYXJjaChzdHJ1Y3QgcGVyZl9lbnYgKmVudikNCj4gPiAgew0KPiA+ICAgICAgICAgcmV0dXJu
-IGVudiAmJiAhcGVyZl9lbnZfX3JlYWRfYXJjaChlbnYpID8gZW52LT5hcmNoIDogInVua25vd24i
-Ow0KPiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0aWwvZW52LmggYi90b29scy9wZXJmL3V0
-aWwvZW52LmgNCj4gPiBpbmRleCBkOTBlMzQzY2YxZmEuLjEzNWExZjcxNDkwNSAxMDA2NDQNCj4g
-PiAtLS0gYS90b29scy9wZXJmL3V0aWwvZW52LmgNCj4gPiArKysgYi90b29scy9wZXJmL3V0aWwv
-ZW52LmgNCj4gPiBAQCAtMTUyLDYgKzE1Miw3IEBAIHN0cnVjdCBidGZfbm9kZTsNCj4gPiANCj4g
-PiAgZXh0ZXJuIHN0cnVjdCBwZXJmX2VudiBwZXJmX2VudjsNCj4gPiANCj4gPiAraW50IHBlcmZf
-ZW52X19yZWFkX2NvcmVfcG11X2NhcHMoc3RydWN0IHBlcmZfZW52ICplbnYpOw0KPiA+ICB2b2lk
-IHBlcmZfZW52X19leGl0KHN0cnVjdCBwZXJmX2VudiAqZW52KTsNCj4gPiANCj4gPiAgaW50IHBl
-cmZfZW52X19rZXJuZWxfaXNfNjRfYml0KHN0cnVjdCBwZXJmX2VudiAqZW52KTsNCj4gPiAtLQ0K
-PiA+IDIuNDkuMA0KPiA+IA0KPiANCg0K
+On Mon, May 12, 2025 at 2:52=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Mon, May 12, 2025 at 1:30=E2=80=AFPM Falcon, Thomas <thomas.falcon@int=
+el.com> wrote:
+> >
+> > On Mon, 2025-05-12 at 11:47 -0700, Ian Rogers wrote:
+> > > On my alderlake I currently see for the "perf metrics value validatio=
+n" test:
+> > > ```
+> > > Total Test Count:  142
+> > > Passed Test Count:  139
+> > > [
+> > > Metric Relationship Error:      The collected value of metric ['tma_f=
+etch_latency', 'tma_fetch_bandwidth', 'tma_frontend_bound']
+> > >                         is [31.137028] in workload(s): ['perf bench f=
+utex hash -r 2 -s']
+> > >                         but expected value range is [tma_frontend_bou=
+nd, tma_frontend_bound]
+> > >                         Relationship rule description: 'Sum of the le=
+vel 2 children should equal level 1 parent',
+> > > Metric Relationship Error:      The collected value of metric ['tma_m=
+emory_bound', 'tma_core_bound', 'tma_backend_bound']
+> > >                         is [6.564442] in workload(s): ['perf bench fu=
+tex hash -r 2 -s']
+> > >                         but expected value range is [tma_backend_boun=
+d, tma_backend_bound]
+> > >                         Relationship rule description: 'Sum of the le=
+vel 2 children should equal level 1 parent',
+> > > Metric Relationship Error:      The collected value of metric ['tma_l=
+ight_operations', 'tma_heavy_operations', 'tma_retiring']
+> > >                         is [57.806179] in workload(s): ['perf bench f=
+utex hash -r 2 -s']
+> > >                         but expected value range is [tma_retiring, tm=
+a_retiring]
+> > >                         Relationship rule description: 'Sum of the le=
+vel 2 children should equal level 1 parent']
+> > > Metric validation return with erros. Please check metrics reported wi=
+th errors.
+> > > ```
+> > > I suspect it is due to two metrics for different CPU types being
+> > > enabled. Add a -cputype option to avoid this. The test still fails wi=
+th:
+> > > ```
+> > > Total Test Count:  115
+> > > Passed Test Count:  114
+> > > [
+> > > Wrong Metric Value Error:       The collected value of metric ['tma_l=
+2_hit_latency']
+> > >                         is [117.947088] in workload(s): ['perf bench =
+futex hash -r 2 -s']
+> > >                         but expected value range is [0, 100]]
+> > > Metric validation return with errors. Please check metrics reported w=
+ith errors.
+> > > ```
+> > > which is a reproducible genuine error and likely requires a metric fi=
+x.
+> >
+> > Hi Ian, I tested this on my alder lake and an arrow lake. All tests, in=
+cluding tma_l2_hit_latency,
+> > pass on my end.
+> >
+> > Tested-by: Thomas Falcon <thomas.falcon@intel.com>
+>
+> Thanks Thomas! It should also work for core_lowpower on ArrowLake. I
+> find some times that tma_l2_hit_latency passes for me. Trying a few
+> more times I see other failures, but they all seem to be "No Metric
+> Value Error" - perhaps these shouldn't fail the test. In the testing
+> code we're passing '-a' for system wide profiling:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/tests/shell/lib/perf_metric_validation.py?h=3Dperf-tool=
+s-next#n380
+> I believe this is done so that counters for things like AVX will
+> gather values. I wonder if the tma_l2_hit_latency something is
+> happening due to scaling counts:
+> ```
+> $ sudo /tmp/perf/perf stat -M tma_l2_hit_latency -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>      7,987,903,325      cpu_core/TOPDOWN.SLOTS/          #    210.2 %
+> tma_l2_hit_latency       (87.27%)
+>      3,131,119,398      cpu_core/topdown-retiring/
+>                          (87.27%)
+>      1,910,718,811      cpu_core/topdown-mem-bound/
+>                          (87.27%)
+>        481,456,610      cpu_core/topdown-bad-spec/
+>                          (87.27%)
+>      1,681,347,944      cpu_core/topdown-fe-bound/
+>                          (87.27%)
+>      2,798,109,902      cpu_core/topdown-be-bound/
+>                          (87.27%)
+>        365,736,554      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
+>                                   (87.27%)
+>        327,668,588      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
+>                                  (87.30%)
+>         12,744,464      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
+>                            (75.32%)
+>      1,403,250,041      cpu_core/CPU_CLK_UNHALTED.THREAD/
+>                           (87.65%)
+>          6,657,480      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
+>                           (87.66%)
+>     59,424,499,192      TSC
+>         40,830,608      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
+>                           (62.46%)
+>      1,461,544,380      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
+>                            (74.79%)
+>      1,008,604,319      duration_time
+>
+>        1.004974560 seconds time elapsed
+> ```
+> The values in the parentheses is a scaling amount which should mean
+> for event multiplexing but for hybrid the events aren't running when
+> on the other core type, so we're seeing these odd multiplexing values
+> and these are used to scale counts:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/lib/perf/evsel.c?h=3Dperf-tools-next#n599
+> I find when I run a benchmark rather than "sleep" the issue seems
+> harder to reproduce.
+
+Ok chatting with Weilin and actually paying attention to warning
+messages I think I see a problem. TSC (msr/tsc/) is aggregating data
+across all CPUs (it is a software event and is a different performance
+monitoring unit to cpu_core) while the counters are only on cpu_core.
+So I think this means the TSC value is too large. However, even with
+restricting the CPUs I see the >100% problem:
+```
+$ perf stat -M tma_l2_hit_latency -C 0-15 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+    27,985,670,146      cpu_core/TOPDOWN.SLOTS/          #    125.6 %
+tma_l2_hit_latency       (87.22%)
+     9,619,906,383      cpu_core/topdown-retiring/
+                         (87.22%)
+     2,333,124,385      cpu_core/topdown-mem-bound/
+                         (87.22%)
+     3,607,656,674      cpu_core/topdown-bad-spec/
+                         (87.22%)
+     9,839,779,867      cpu_core/topdown-fe-bound/
+                         (87.22%)
+     5,244,189,749      cpu_core/topdown-be-bound/
+                         (87.22%)
+       442,932,231      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
+                                  (87.24%)
+       360,126,840      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
+                                 (87.63%)
+        31,264,814      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
+                           (75.26%)
+     4,761,244,040      cpu_core/CPU_CLK_UNHALTED.THREAD/
+                          (87.63%)
+        28,429,277      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
+                          (87.62%)
+    33,863,490,835      TSC
+        23,533,366      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
+                          (62.25%)
+     3,158,155,632      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
+                           (74.63%)
+     1,003,102,327      duration_time
+
+       1.001912038 seconds time elapsed
+```
+So we still need to figure this one out. The multiplexing numbers
+still worry me.
+
+Thanks,
+Ian
+
+
+> Thanks,
+> Ian
+>
+> > Thanks,
+> > Tom
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  .../tests/shell/lib/perf_metric_validation.py   | 12 +++++++++---
+> > >  tools/perf/tests/shell/stat_metrics_values.sh   | 17 +++++++++++----=
+--
+> > >  2 files changed, 20 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/t=
+ools/perf/tests/shell/lib/perf_metric_validation.py
+> > > index 0b94216c9c46..dea8ef1977bf 100644
+> > > --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > @@ -35,7 +35,8 @@ class TestError:
+> > >
+> > >
+> > >  class Validator:
+> > > -    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=3DF=
+alse, datafname=3D'', fullrulefname=3D'', workload=3D'true', metrics=3D''):
+> > > +    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=3DF=
+alse, datafname=3D'', fullrulefname=3D'',
+> > > +                 workload=3D'true', metrics=3D'', cputype=3D'cpu'):
+> > >          self.rulefname =3D rulefname
+> > >          self.reportfname =3D reportfname
+> > >          self.rules =3D None
+> > > @@ -43,6 +44,7 @@ class Validator:
+> > >          self.metrics =3D self.__set_metrics(metrics)
+> > >          self.skiplist =3D set()
+> > >          self.tolerance =3D t
+> > > +        self.cputype =3D cputype
+> > >
+> > >          self.workloads =3D [x for x in workload.split(",") if x]
+> > >          self.wlidx =3D 0  # idx of current workloads
+> > > @@ -377,7 +379,7 @@ class Validator:
+> > >
+> > >      def _run_perf(self, metric, workload: str):
+> > >          tool =3D 'perf'
+> > > -        command =3D [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
+> > > +        command =3D [tool, 'stat', '--cputype', self.cputype, '-j', =
+'-M', f"{metric}", "-a"]
+> > >          wl =3D workload.split()
+> > >          command.extend(wl)
+> > >          print(" ".join(command))
+> > > @@ -443,6 +445,8 @@ class Validator:
+> > >                  if 'MetricName' not in m:
+> > >                      print("Warning: no metric name")
+> > >                      continue
+> > > +                if 'Unit' in m and m['Unit'] !=3D self.cputype:
+> > > +                    continue
+> > >                  name =3D m['MetricName'].lower()
+> > >                  self.metrics.add(name)
+> > >                  if 'ScaleUnit' in m and (m['ScaleUnit'] =3D=3D '1%' =
+or m['ScaleUnit'] =3D=3D '100%'):
+> > > @@ -578,6 +582,8 @@ def main() -> None:
+> > >      parser.add_argument(
+> > >          "-wl", help=3D"Workload to run while data collection", defau=
+lt=3D"true")
+> > >      parser.add_argument("-m", help=3D"Metric list to validate", defa=
+ult=3D"")
+> > > +    parser.add_argument("-cputype", help=3D"Only test metrics for th=
+e given CPU/PMU type",
+> > > +                        default=3D"cpu")
+> > >      args =3D parser.parse_args()
+> > >      outpath =3D Path(args.output_dir)
+> > >      reportf =3D Path.joinpath(outpath, 'perf_report.json')
+> > > @@ -586,7 +592,7 @@ def main() -> None:
+> > >
+> > >      validator =3D Validator(args.rule, reportf, debug=3Dargs.debug,
+> > >                            datafname=3Ddatafile, fullrulefname=3Dfull=
+rule, workload=3Dargs.wl,
+> > > -                          metrics=3Dargs.m)
+> > > +                          metrics=3Dargs.m, cputype=3Dargs.cputype)
+> > >      ret =3D validator.test()
+> > >
+> > >      return ret
+> > > diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/pe=
+rf/tests/shell/stat_metrics_values.sh
+> > > index 279f19c5919a..30566f0b5427 100755
+> > > --- a/tools/perf/tests/shell/stat_metrics_values.sh
+> > > +++ b/tools/perf/tests/shell/stat_metrics_values.sh
+> > > @@ -16,11 +16,16 @@ workload=3D"perf bench futex hash -r 2 -s"
+> > >  # Add -debug, save data file and full rule file
+> > >  echo "Launch python validation script $pythonvalidator"
+> > >  echo "Output will be stored in: $tmpdir"
+> > > -$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${=
+workload}"
+> > > -ret=3D$?
+> > > -rm -rf $tmpdir
+> > > -if [ $ret -ne 0 ]; then
+> > > -     echo "Metric validation return with erros. Please check metrics=
+ reported with errors."
+> > > -fi
+> > > +for cputype in /sys/bus/event_source/devices/cpu_*; do
+> > > +     cputype=3D$(basename "$cputype")
+> > > +     echo "Testing metrics for: $cputype"
+> > > +     $PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -w=
+l "${workload}" \
+> > > +             -cputype "${cputype}"
+> > > +     ret=3D$?
+> > > +     rm -rf $tmpdir
+> > > +     if [ $ret -ne 0 ]; then
+> > > +             echo "Metric validation return with errors. Please chec=
+k metrics reported with errors."
+> > > +     fi
+> > > +done
+> > >  exit $ret
+> > >
+> >
