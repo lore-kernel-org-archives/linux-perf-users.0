@@ -1,154 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BEEB672;
-	Tue, 13 May 2025 20:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFC61EB5CB;
+	Tue, 13 May 2025 20:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747166696; cv=none; b=HfHR4CcBR1VGrB0mVRjYaVE33XPG8Dx9mGVZD/P7hMxRiIQgAVv/3F15spM8sV2ABWpigYqbdNAN06gnWxOc8KCmth2V9gzfNkm/otH1XKJXav4J63BBiaEvGOcKGd7NygNqDIwVDdxGU8h0CQqOvkPYydXFegipTnkfcUwCfvw=
+	t=1747167945; cv=none; b=gvTn/RBOCnAziiD8EcwbIi22H3y5ACAB3YUDuEkhDGM1Z281XC56J6UhcTyHWnnM4BHC36fO1CUhQ38qQBUpdwH5ggLKxX1/RcGTcCx00PXSEYim+1XX4Gv9QR7ObC7JjoDyKJBVshe5+XyGrkMX0sSzc3sbCbbzeT24UPIe0Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747166696; c=relaxed/simple;
-	bh=PbvXWPEHj3CJ720Vc2P5668xM5C4UMcH106vpWhJdIU=;
+	s=arc-20240116; t=1747167945; c=relaxed/simple;
+	bh=0MKuDY/6Amoi1YM1St5qTbrAf/RVeMjzPu/o1T55q68=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KPxY4fUmE0WLhv+9cCO+hbmITZiQ5O5Wsx3EmTcujMKkZCX6xWiXWeOQ1YleOgv5AAcRpB0a7FMOF2lhnZOIBCAlNvCjWbtkTtQdpL519l5RTgmOriel4gLg8XKOvz4aj47anATfUgQk67UJxbKdRlnXNT04hBQFZKcOlcVku3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fST1datj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tZPemUm2E2NZTSDJTPmtyYG6oDKtOFTZEhvmdi8IzioNBX5zOr4IpcDiQThlnzL9klMnhlUN3FF4VBxyeKsWGRO5L5jlabdOds6G6xabgI7aUemLPcPXA/y/mTj7I1egjypQD1itJrTYl21T+nNwNHn8LfynEYYFR1cR9BGnxQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyXdIM8l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fST1datj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3DDC4CEE4;
-	Tue, 13 May 2025 20:04:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyXdIM8l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44E2C4CEE4;
+	Tue, 13 May 2025 20:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747166696;
-	bh=PbvXWPEHj3CJ720Vc2P5668xM5C4UMcH106vpWhJdIU=;
+	s=k20201202; t=1747167945;
+	bh=0MKuDY/6Amoi1YM1St5qTbrAf/RVeMjzPu/o1T55q68=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fST1datjKg6boceRGwpnD5lzzNrwsRTMyG3F6SNepRehdFyWd+nTdPBAg56AlEgPE
-	 Q7YnDOO/kK5OluHdL78Sum3aZZT/jScC5iMG/pcFEJVC31VC3D+lP0YhwyPblkTqRZ
-	 Xmp5idAQ3Jd0dYCXoSKTXKZOp12BeoPYScia1OQLJBeruXC0W0/ZIu54WanegiB5yh
-	 7sdb8LyIwSTIhniZQ0yyxlhvLBQaD/Wb0b5fdHt0Pn7l0W+jpqtD1mgY41GzqkmhHy
-	 7VDRzeLcjXr9mnjC4YXlWbIgOFz+5loxPmweq5ls2Lgl/dvGC15OrF/DwC4ab0mNeu
-	 2A9pIANCvrMfw==
-Date: Tue, 13 May 2025 17:04:53 -0300
+	b=KyXdIM8lW/Fz/OS1iSgShRZC6HD8y1wZPX6NKUd6ZxV+M3BOdHNeJz7RiXuI9GZZ7
+	 afWWRjC/RUyYGvqqMMzP2mrG1PBZcjo89oENhXt92rp+Iaf5P821SNH44s6kVbQtJR
+	 dsEJTJRWyR8DXwVBA4PbVgfhwuc8En8n7yWXDxbuS264OS6/8pwHeOTxmjfOFSKuII
+	 eW23utU8oNa0/yHlOGkaUBjKk4SKoc1JqOJl8TsSLGVNrKqyD8kIgxaoCy+7uFzv/e
+	 jayLWkSkLPaOyUeIEwphQoLa1WU4VY8OLJG58fD7bsIS6yel/4VrlcTzqgx8iM2y6b
+	 Iac+/B2Li44Pg==
+Date: Tue, 13 May 2025 17:25:42 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, james.clark@linaro.org,
-	howardchu95@gmail.com, weilin.wang@intel.com, yeoreum.yun@arm.com,
-	linux@treblig.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Fix incorrect counts when count the same uncore
- event multiple times
-Message-ID: <aCOl5ep67uTeGVmm@x1>
-References: <20250512215929.2098240-1-ctshao@google.com>
- <aCOlViKRwS0kE0tg@x1>
+To: Ian Rogers <irogers@google.com>
+Cc: Weilin Wang <weilin.wang@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf list: Display the PMU name associated with a
+ perf metric in json
+Message-ID: <aCOqxtOqVHF1XRN_@x1>
+References: <20250512184700.11691-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCOlViKRwS0kE0tg@x1>
+In-Reply-To: <20250512184700.11691-1-irogers@google.com>
 
-On Tue, May 13, 2025 at 05:02:33PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, May 12, 2025 at 02:50:29PM -0700, Chun-Tse Shao wrote:
-> > Let's take a look an example, the machine is SKX with 6 IMC devices.
-> > 
-> >   perf stat -e clockticks,clockticks -I 1000
-> >   #           time             counts unit events
-> >        1.001127430      6,901,503,174      uncore_imc_0/clockticks/
-> >        1.001127430      3,940,896,301      uncore_imc_0/clockticks/
-> >        2.002649722        988,376,876      uncore_imc_0/clockticks/
-> >        2.002649722        988,376,141      uncore_imc_0/clockticks/
-> >        3.004071319      1,000,292,675      uncore_imc_0/clockticks/
-> >        3.004071319      1,000,294,160      uncore_imc_0/clockticks/
-> > 
-> > 1) The events name should not be uniquified.
-> > 2) The initial count for the first `clockticks` is doubled.
-> > 3) Subsequent count only report for the first IMC device.
-> > 
-> > The first patch fixes 1) and 3), and the second patch fixes 2).
+On Mon, May 12, 2025 at 11:46:59AM -0700, Ian Rogers wrote:
+> The perf stat --cputype option can be used to filter which metrics
+> will be applied, for this reason the json metrics have an associated
+> PMU. List this PMU name in the perf list output in json mode so that
+> tooling may access it.
 > 
-> So, after having just the first patch applied I'm getting:
-> 
->   CC      /tmp/build/perf-tools-next/util/bpf-filter-flex.o
-> util/parse-events.c: In function ‘__parse_events’:
-> util/parse-events.c:2270:25: error: implicit declaration of function ‘evlist__uniquify_name’; did you mean ‘evlist__uniquify_evsel_names’? [-Wimplicit-function-declaration]
->  2270 |                         evlist__uniquify_name(evlist);
->       |                         ^~~~~~~~~~~~~~~~~~~~~
->       |                         evlist__uniquify_evsel_names
-> make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:85: /tmp/build/perf-tools-next/util/parse-events.o] Error 1
-> make[4]: *** Waiting for unfinished jobs....
-> make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:142: util] Error 2
-> make[2]: *** [Makefile.perf:798: /tmp/build/perf-tools-next/perf-util-in.o] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> 
-> 
->   CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
->   LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
-> make[1]: *** [Makefile.perf:290: sub-make] Error 2
-> make: *** [Makefile:119: install-bin] Error 2
-> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ 
-> ⬢ [acme@toolbx perf-tools-next]$ git log --oneline -3
-> 6ffcaec3ac0d055a (HEAD) perf evlist: Make uniquifying counter names consistent
-> 4102ff8b1fdaa588 perf metricgroup: Binary search when resolving referred to metrics
-> 754baf426e099fbf perf pmu: Change aliases from list to hashmap
-> ⬢ [acme@toolbx perf-tools-next]$
-> 
-> When test building the second patch, it builds, so I'm now looking if
-> you used things from the future or if the second patch removes the
-> problem.
+> An example of the new field is:
+> ```
+> {
+>         "MetricGroup": "Backend",
+>         "MetricName": "tma_core_bound",
+>         "MetricExpr": "max(0, tma_backend_bound - tma_memory_bound)",
+>         "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.2",
+>         "ScaleUnit": "100%",
+>         "BriefDescription": "This metric represents fraction of slots where ...
+>         "PublicDescription": "This metric represents fraction of slots where ...
+>         "Unit": "cpu_core"
+> },
+> ```
 
-At that point:
+Tried testing this but the Intel system I have (14700k) while hybrid
+doesn't have this "unit"  field in its JSON files :-)
 
-util/parse-events.c: In function ‘__parse_events’:
-util/parse-events.c:2270:25: error: implicit declaration of function ‘evlist__uniquify_name’; did you mean ‘evlist__uniquify_evsel_names’? [-Wimplicit-function-declaration]
- 2270 |                         evlist__uniquify_name(evlist);
-      |                         ^~~~~~~~~~~~~~~~~~~~~
-      |                         evlist__uniquify_evsel_names
-make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:85: /tmp/build/perf-tools-next/util/parse-events.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  LD      /tmp/build/perf-tools-next/util/scripting-engines/perf-util-in.o
-make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:142: util] Error 2
-make[2]: *** [Makefile.perf:798: /tmp/build/perf-tools-next/perf-util-in.o] Error 2
-make[1]: *** [Makefile.perf:290: sub-make] Error 2
-make: *** [Makefile:119: install-bin] Error 2
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-⬢ [acme@toolbx perf-tools-next]$ 
-⬢ [acme@toolbx perf-tools-next]$ git grep evlist__uniquify_name
-tools/perf/util/parse-events.c:                 evlist__uniquify_name(evlist);
-⬢ [acme@toolbx perf-tools-next]$
-
-So its the later, the second patch builds because:
-
-⬢ [acme@toolbx perf-tools-next]$ git rebase --continue
-Stopped at ed3b26e31f42d1e4...  perf parse-events: Use wildcard processing to set an event to merge into
-You can amend the commit now, with
-
-  git commit --amend 
-
-Once you are satisfied with your changes, run
-
-  git rebase --continue
-⬢ [acme@toolbx perf-tools-next]$ git grep evlist__uniquify_name
-⬢ [acme@toolbx perf-tools-next]$ git show | grep evlist__uniquify_name
--			evlist__uniquify_name(evlist);
-⬢ [acme@toolbx perf-tools-next]$
-
-That function isn't there anymore.
-
-Please try to fix this and build it patch by patch so that we don't
-introduce bisection breakage patches.
-
-Thanks,
+Anyway, applying the patches.
 
 - Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-list.c      | 12 ++++++++++--
+>  tools/perf/util/metricgroup.c  |  5 ++++-
+>  tools/perf/util/print-events.h |  3 ++-
+>  3 files changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index fed482adb039..e9b595d75df2 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -197,7 +197,8 @@ static void default_print_metric(void *ps,
+>  				const char *long_desc,
+>  				const char *expr,
+>  				const char *threshold,
+> -				const char *unit __maybe_unused)
+> +				const char *unit __maybe_unused,
+> +				const char *pmu_name __maybe_unused)
+>  {
+>  	struct print_state *print_state = ps;
+>  	FILE *fp = print_state->fp;
+> @@ -433,7 +434,8 @@ static void json_print_event(void *ps, const char *topic, const char *pmu_name,
+>  static void json_print_metric(void *ps __maybe_unused, const char *group,
+>  			      const char *name, const char *desc,
+>  			      const char *long_desc, const char *expr,
+> -			      const char *threshold, const char *unit)
+> +			      const char *threshold, const char *unit,
+> +			      const char *pmu_name)
+>  {
+>  	struct json_print_state *print_state = ps;
+>  	bool need_sep = false;
+> @@ -483,6 +485,12 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
+>  				   long_desc);
+>  		need_sep = true;
+>  	}
+> +	if (pmu_name) {
+> +		fix_escape_fprintf(fp, &buf, "%s\t\"Unit\": \"%S\"",
+> +				   need_sep ? ",\n" : "",
+> +				   pmu_name);
+> +		need_sep = true;
+> +	}
+>  	fprintf(fp, "%s}", need_sep ? "\n" : "");
+>  	strbuf_release(&buf);
+>  }
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 126a631686b0..43d35f956a33 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -396,6 +396,7 @@ struct mep {
+>  	const char *metric_expr;
+>  	const char *metric_threshold;
+>  	const char *metric_unit;
+> +	const char *pmu_name;
+>  };
+>  
+>  static int mep_cmp(struct rb_node *rb_node, const void *entry)
+> @@ -476,6 +477,7 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
+>  			me->metric_expr = pm->metric_expr;
+>  			me->metric_threshold = pm->metric_threshold;
+>  			me->metric_unit = pm->unit;
+> +			me->pmu_name = pm->pmu;
+>  		}
+>  	}
+>  	free(omg);
+> @@ -551,7 +553,8 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
+>  				me->metric_long_desc,
+>  				me->metric_expr,
+>  				me->metric_threshold,
+> -				me->metric_unit);
+> +				me->metric_unit,
+> +				me->pmu_name);
+>  		next = rb_next(node);
+>  		rblist__remove_node(&groups, node);
+>  	}
+> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+> index 445efa1636c1..8f19c2bea64a 100644
+> --- a/tools/perf/util/print-events.h
+> +++ b/tools/perf/util/print-events.h
+> @@ -25,7 +25,8 @@ struct print_callbacks {
+>  			const char *long_desc,
+>  			const char *expr,
+>  			const char *threshold,
+> -			const char *unit);
+> +			const char *unit,
+> +			const char *pmu_name);
+>  	bool (*skip_duplicate_pmus)(void *print_state);
+>  };
+>  
+> -- 
+> 2.49.0.1045.g170613ef41-goog
