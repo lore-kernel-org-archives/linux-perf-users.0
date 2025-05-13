@@ -1,98 +1,128 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9F342A80
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 20:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B14A1CD0C
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 21:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747169983; cv=none; b=sggeuFY2iTlUqtgBp56gPGyFx4jTBilawNUIWWaUUTKgFhjiJP4UIwEx+Pcep7HMtq5bjaUTGjiXGRxedA/2i16d6JA18AcUvJV1CKCPjOzpgxbFsMdLJ4RhYYHiIkRPxBO9mahtYC0/PTfBOnivz1ImSTKfKT1Fg190WT067S0=
+	t=1747170795; cv=none; b=g7JtYpL2Qbpcuu6PJvaVUNGDRDC7WcEywIHKxipK7BLcKomm6l46VCrPt7b0qOlQAu5vTvT73sFMz+86rdur4oGp49rMz/yPeTRvfL1H7LpZJQ10FBr+yUSTQgb04brui9SDv/7CVaeAqIv7x2tOcZQPqnE6gw9i0hwItpHcf2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747169983; c=relaxed/simple;
-	bh=kmoujT613lINq5POisBnj8k0q5mR078aRV2JQyCa9YQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X1PlElgnl1FGJKKqiGo1d9zT0/mFwXyE5eGnEHNrb3IiDDwV0la8zEou+WLPxlV8tjYCC0fEVd/3PUgEJEkll/lU+INU7ECvNDyosBK9UKM4CJt/JQyQw0D+GhT2+UMtIwXDPpgrkT7u2Jyf4EosxMOjBeGddpm+8XgQ3WjibMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1xt8DBBL; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747170795; c=relaxed/simple;
+	bh=lSO4G0MjFvkGxsdN+DqSJNonGJ8MvH7A4Iu1Mc6BmP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OIaue2ssiffjWuoRqycr0Qov4GR3fjIWzZLHAvJRmW5bk3uImofUN1RR+ut7C1Akz0ocPv9iCVdmJ4SUwo6yqfZfHDrxk9S8+YEWWc1c4QdwUcu4L4FDQ5ZQEYV7ihenOSGlyBDNy03iekH9orDREg4D46x6ZReR+l71acI54vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0A/21tC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1xt8DBBL"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e39fbad5fso13195ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 13:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747169982; x=1747774782; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kmoujT613lINq5POisBnj8k0q5mR078aRV2JQyCa9YQ=;
-        b=1xt8DBBLFGEBCEhH71EydtNAsD83WdywTFTFoY6FohMH5yq1hxQyU0d6uD/WnhQDVR
-         usdJuNiuuCSIhFFacoODenw/7xjoZGc8KwyNPPYJaYKwccDNYiRXWu0YM9PKB2Bon3Lw
-         nbK1wUiYmyE7uTppEf5j9wO3tntLiHj9x3r9HFhMkkFRwDb9xaLvZ1LlknrJQAaC+aju
-         M4FNAezG5OYfYT2imMZE6VeEe6BogL6f5UXl23XB6XuYLYe+YVwqiRgt28F9hTwuNng1
-         Wv4TZZlgEWJljq6pkr+FzK2v1UEunHKibO8XkX7kehrirLnR58JPTUyJ2U23WwcenzIH
-         V2WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747169982; x=1747774782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kmoujT613lINq5POisBnj8k0q5mR078aRV2JQyCa9YQ=;
-        b=FFT21iWWIlMuUT7vAuoZfaf1TpGMiHav+vsEADwsDMqpBHalaoHoq/qVUceXbSWyIy
-         jUiF3PSX0PtPgwseMTPBztcEk3kw9r6Y4it2yWf8hv6EEUxZTmFi7O8RKUyqu1xjkV+M
-         xtKddgyRygbPT5xJ96q2Aefd9ukvuaxGGYcDGYHuuo0kLpZzr/8qo0Q+kryu+RoOkA0D
-         ssauTLxMqVBQ3UcNMg8IRMq6yBR1o9sZQji3inTO5g8rrgInmm00HDC+fbfNeL042gJD
-         j9kxUh3cQt8HlrIVoTLLeyQDjAhNQvJzqJqkMTzy9buDtKFOl00bIQTvgZPQLgGVlK/+
-         RBZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIUc1CmnEN2zXvBsA3fAwJn0dCpVq01ck0krkzAmJ0eyrEpdXkQVL5ffq5bK0zbqlKL6AjIfMjMljR+G7DIqJ+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkI+out2EI98CnQOrIAWZ7Ta7WpAuaXuBV89gTdMRPfc8zyaqb
-	az3lSTRyYFGwW3TzETDuJuELs96TtTlxetWsIaVnZwxwVlrEMnpvMMgQmrEDpJkP47B+qjg1N59
-	xlb7k3fxnhbnQxuVfkxjpi24kv/fK0+dxz738zaAT
-X-Gm-Gg: ASbGncu4GeXi6qeS0lPVM57UDOvBBjO/99X4Z85oYkZp10BRuOqJ57iQN99YVypo8EB
-	RNYdfzAgb71adLFTMhQ0I7ENpdXkMlUJSaDfhMKjopetn+kuuIwiAdqI4vr8xTnb17IaYsMSAm+
-	7EwfU0LRVwLgMvXqmjKFTtegT1sMyTl/Y2He2pFkJMWEGWL+3lB80mIsf6B4rwSg==
-X-Google-Smtp-Source: AGHT+IEHJcjpKAtOS86nQV+xU9mV44SrVY+/XlpOPb9EojLJPjbR4OqS16VP12w9iA5csSFCoG51WilhKP4l+phrj0U=
-X-Received: by 2002:a17:903:f83:b0:21d:dba1:dd72 with SMTP id
- d9443c01a7336-2319ab2117amr121865ad.15.1747169981479; Tue, 13 May 2025
- 13:59:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0A/21tC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FBFEC4CEE4;
+	Tue, 13 May 2025 21:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747170794;
+	bh=lSO4G0MjFvkGxsdN+DqSJNonGJ8MvH7A4Iu1Mc6BmP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m0A/21tCQi6vmsNbJWgrgIkhRnXXsZZZFp29g0KlyDxWe8VKPnCzSGMky3IYKe0Rl
+	 fmYCvX3Xq0jG6/vyPYhEi4ETHBbyTs0ULaTOYOEP/6BnBTkx7TOJMx1GBRdpHfTS/9
+	 +tcApLMg1oKpQLNZsNeZUHb+mmj7h1ngiy2vHRuTILBExPY/mxIieRt2x8mNJuSag1
+	 CaPF1umLUhOuazh2viAt8m14uuL2wg5BVLV65zOhR/fkrWBZC8wUuNbkIckjjoU1k3
+	 fvbpzRexfWzyBgqHdgXAgMJGQQ8DlnIwVCsmdjDY4VpPBRPF8vVEL50anM0rKcFdpn
+	 dkCtoehopzuiQ==
+Date: Tue, 13 May 2025 18:13:11 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+Cc: Athira Rajeev <atrajeev@linux.ibm.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	Likhitha Korrapati <likhitha@linux.ibm.com>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in
+ cpumap.c
+Message-ID: <aCO156Qh5mbeR4Sk@x1>
+References: <20250406163412.897313-1-likhitha@linux.ibm.com>
+ <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com>
+ <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
+ <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com>
+ <D1C1E5D6-085A-41D1-85AB-52809C956BFB@linux.ibm.com>
+ <aAvKg8K2fyrZ6zy4@x1>
+ <wqewmdha3bx7pmxqwbna26qnl55fcejqsjs4b2zhuciddpb3b5@7ztolpf6erwo>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
- <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
- <aCI0oDBSz86S9fz-@x1> <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
- <aCOwnUUVKx798Uza@x1>
-In-Reply-To: <aCOwnUUVKx798Uza@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 May 2025 13:59:28 -0700
-X-Gm-Features: AX0GCFsVt-eZ2CzDOIaHjUDdhu6L7-cbOlm1bATvBY8CUXJTAsFZBElBTukfvfI
-Message-ID: <CAP-5=fXK9Jru+ZqeTSuaTmOTmpF3JDHDswUOcmdOyLSP1Go_Gg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
- counting perf events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maddy@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <wqewmdha3bx7pmxqwbna26qnl55fcejqsjs4b2zhuciddpb3b5@7ztolpf6erwo>
 
-On Tue, May 13, 2025 at 1:50=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
-[snip]
-> Right, I like the effort he is making into having perf more usable in
-> python, and I encourage him to think about the issues you raised so that
-> we can come to some good abstractions.
+On Fri, May 02, 2025 at 01:14:32PM +0530, Mukesh Kumar Chaurasiya wrote:
+> On Fri, Apr 25, 2025 at 02:46:43PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Maybe that max() call in perf_cpu_map__intersect() somehow makes the
+> > compiler happy.
 
-Thanks Arnaldo, can we be tolerant to API changes in the python from a
-"regression" point-of-view? Like avoiding the notion of indices?
-Presumably such a fix would also need fixing in all the perf python
-scripts, but the external users I worry about. My sense is the number
-of external users is minimal, for example, toplev I don't believe is a
-user [1].
+> > And in perf_cpu_map__alloc() all calls seems to validate it.
+ 
+> > Like:
 
-Ian
+> > +++ b/tools/lib/perf/cpumap.c
+> > @@ -411,7 +411,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+> >         }
+> >  
+> >         tmp_len = __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other);
+> > -       tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+> > +       tmp_cpus = calloc(tmp_len, sizeof(struct perf_cpu));
+> >         if (!tmp_cpus)
+> >                 return -ENOMEM;
 
-[1] https://github.com/andikleen/pmu-tools
+> > ⬢ [acme@toolbx perf-tools-next]$
+
+> > And better, do the max size that the compiler is trying to help us
+> > catch?
+
+> Isn't it better to use perf_cpu_map__nr. That should fix this problem.
+
+Maybe, have you tried it?
+ 
+> One question I have, in perf_cpu_map__nr, the function is returning
+> 1 in case *cpus is NULL. Is it ok to do that? wouldn't it cause problems?
+
+Indeed this better be documented, as by just looking at:
+
+int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
+{
+        return cpus ? __perf_cpu_map__nr(cpus) : 1;
+}
+
+It really doesn't make much sense to say that a NULL map has one entry.
+
+But the next functions are:
+
+bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map *map)
+{
+        return map ? __perf_cpu_map__cpu(map, 0).cpu == -1 : true;
+}
+
+bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *map)
+{
+        if (!map)
+                return true;
+
+        return __perf_cpu_map__nr(map) == 1 && __perf_cpu_map__cpu(map, 0).cpu == -1;
+}
+
+bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
+{
+        return map == NULL;
+}
+
+So it seems that a NULL cpu map means "any/all CPU) and a map with just
+one entry would have as its content "-1" that would mean "any/all CPU".
+
+Ian did work on trying to simplify/clarify this, so maybe he can chime
+in :-)
+
+- Arnaldo
