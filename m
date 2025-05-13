@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76B22AF10;
-	Tue, 13 May 2025 19:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A902AF10;
+	Tue, 13 May 2025 19:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747164869; cv=none; b=HnFdAb4JoV11oIXekeifUsb3mugb15YSEvuv9UY96mVrP+VPEZpauVQJ8T+/1h7jXdoCa0RZDCLS02+sEmrw+6CNoEdWVe9Myj7SZFQjPKMiZgP6nt2ZIy/AGuFEJO67kQM2W7cmMMvSN14uODGry1mgUrWpSghRxGYzM6RGxpE=
+	t=1747164919; cv=none; b=e9VJyM+jAY/Mhn9DQrfumaABWEsVZ/DYnXyxlTtvw2fA2GgScyd5MtiHT/mIKsAbn1Hjty2vlfQ3EzW+V4PGvK4Go6dR4B89Jb7wNlnHGxioPc3wnNFKfs/yfHiTd5Laz+kIjZ2Ph53ZeskhCkm/1FL4diudj/T8UZx0nOPzfjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747164869; c=relaxed/simple;
-	bh=KYnC36TQkZP1AvnrNNz9vqgyvOyQ7HJ7m1kyyu3CnkY=;
+	s=arc-20240116; t=1747164919; c=relaxed/simple;
+	bh=NKW7fWAMGx7vuDsNqjWG++yNI1YSSBcCdp2F3u9Eoac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i37QmfMAo6ojZzICUCMFRs9cRqiicmruNNFqklrIZQr6WDVIJDkSx0aD5ws223tqW94V+MQWMq7bqD2tal/AW/ZJyeu36CMJDKluMuqnx8XYATz7hlsuFvJyq7Urog5/0pjFZUwHKc/e/f+SyE6PjmZj2VznNkJP3NrChOLy3+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bT/97jqS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=owrfMXhO2lI6lfjhPWbgu1uJRQOO/hi8uqxWkwbQByn753/EzpQI6PmCvlz3dwERK+N0Ne0kJaqIkElvaXeETK03cPorj4BoDB19mDQ1t1UZn+MDos/yNr4FeEfVmw8bSw69aBxSywig607QRA5iFehR2gK+oh5dRdPRq66JpzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHamqIXR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bT/97jqS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D63AFC4CEE4;
-	Tue, 13 May 2025 19:34:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHamqIXR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B0F9C4CEEB;
+	Tue, 13 May 2025 19:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747164868;
-	bh=KYnC36TQkZP1AvnrNNz9vqgyvOyQ7HJ7m1kyyu3CnkY=;
+	s=k20201202; t=1747164918;
+	bh=NKW7fWAMGx7vuDsNqjWG++yNI1YSSBcCdp2F3u9Eoac=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bT/97jqShn9UhEPB9VANVMzCtvvJQsJx8KFMU32D1jsDIzHdOsHg4Elii0JzkMxdX
-	 oGkON8OLJ1exewVYni6c+XC14MjNmCo9uMSVEk2cIVnlKsc8qSOs99Di8ThH7iIxvp
-	 t3IdVIyCQZfhqT/lwgfkCwfDKNxHW3Q5p/6e7bg0hDtvAwlDW0+VQYBte8As15Oofh
-	 +oEUx+YvulmFpsyKobuaF1UtLDrgWuPQfjEAEoM/chL3QZVu1JXath5lRdDsp4+bN1
-	 dQH+BI4tqZ72MDyGwvVhQMpSCaiNX++Kd+A769ruRC45ZQnCUM2AqYJyLVi54xGUKf
-	 Ukv/CGDzPg6/w==
-Date: Tue, 13 May 2025 16:34:25 -0300
+	b=ZHamqIXRvn5zOEHqKLiHjErflvpdj1JYDOAJaGK492eYJZHRqRLtCf9qOGdINcmHn
+	 HickgvddKLqBo6Y1oYFVI0FevwPcq0CPmlQuPY4Yw7ZLG+npgTOkMy5Q00qOG0hGym
+	 KPNgdZcvoTF40UX+d85nAf0Wgcx9w9e/7VAHIbZCdS0Ik8IzZtBzyzMFx8WDLwKbwH
+	 Kob6qDqGMhn9tJlg/eYGOaVs4PEKZ29NioKEHzq5LQLY/LraZepBwNU2NUFoxMT1vt
+	 y/UzCNPGbc49/AU33iuNA+BSG3cKIY46Vd9507gRXXZX2vPClLGe8egTjz+0u1rhtq
+	 B3BW2/RxzqDwQ==
+Date: Tue, 13 May 2025 16:35:15 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
@@ -42,9 +42,10 @@ Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Weilin Wang <weilin.wang@intel.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1 0/3] Metric related performance improvements
-Message-ID: <aCOewZobRD1dPrl4@x1>
+Message-ID: <aCOe85iNjzgIW1B-@x1>
 References: <20250410044532.52017-1-irogers@google.com>
  <Z_dp7E2wtSek-KHo@z2>
+ <aCOewZobRD1dPrl4@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,68 +54,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_dp7E2wtSek-KHo@z2>
+In-Reply-To: <aCOewZobRD1dPrl4@x1>
 
-On Wed, Apr 09, 2025 at 11:49:16PM -0700, Namhyung Kim wrote:
-> Hi Ian,
-> 
-> On Wed, Apr 09, 2025 at 09:45:29PM -0700, Ian Rogers wrote:
-> > The "PMU JSON event tests" have been running slowly, these changes
-> > target improving them with an improvement of the test running 8 to 10
-> > times faster.
-> > 
-> > The first patch changes from searching through all aliases by name in
-> > a list to using a hashmap. Doing a fast hashmap__find means testing
-> > for having an event needn't load from disk if an event is already
-> > present.
-> > 
-> > The second patch switch the fncache to use a hashmap rather than its
-> > own hashmap with a limited number of buckets. When there are many
-> > filename queries, such as with a test, there are many collisions with
-> > the previous fncache approach leading to linear searching of the
-> > entries.
-> > 
-> > The final patch adds a find function for metrics. Normally metrics can
-> > match by name and group, however, only name matching happens when one
-> > metric refers to another. As we test every "id" in a metric to see if
-> > it is a metric, the find function can dominate performance as it
-> > linearly searches all metrics. Add a find function for the metrics
-> > table so that a metric can be found by name with a binary search.
-> > 
-> > Before these changes:
-> > ```
-> > $ time perf test -v 10
-> >  10: PMU JSON event tests                                            :
-> >  10.1: PMU event table sanity                                        : Ok
-> >  10.2: PMU event map aliases                                         : Ok
-> >  10.3: Parsing of PMU event table metrics                            : Ok
-> >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > 
-> > real    0m18.499s
-> > user    0m18.150s
-> > sys     0m3.273s
-> > ```
-> > 
-> > After these changes:
-> > ```
-> > $ time perf test -v 10
-> >  10: PMU JSON event tests                                            :
-> >  10.1: PMU event table sanity                                        : Ok
-> >  10.2: PMU event map aliases                                         : Ok
-> >  10.3: Parsing of PMU event table metrics                            : Ok
-> >  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> >  10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-> > 
-> > real    0m2.338s
-> > user    0m1.797s
-> > sys     0m2.186s
-> > ```
-> 
-> Great, I also see the speedup on my machine from 32s to 3s.
-> 
-> Tested-by: Namhyung Kim <namhyung@kernel.org>
+On Tue, May 13, 2025 at 04:34:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Apr 09, 2025 at 11:49:16PM -0700, Namhyung Kim wrote:
+> > Great, I also see the speedup on my machine from 32s to 3s.
 
-I'm collecting this for v2 as well, ok? Holler if you disagree.
+> > Tested-by: Namhyung Kim <namhyung@kernel.org>
+ 
+> I'm collecting this for v2 as well, ok? Holler if you disagree.
 
-- Arnaldo
+BTW, in my workstation:
+
+Before:
+
+  root@number:~# time perf test "Parsing of PMU event table metrics"
+   10.3: Parsing of PMU event table metrics                            : Ok
+   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+
+  real  0m9.286s
+  user  0m9.354s
+  sys   0m0.062s
+  root@number:~#
+
+After:
+
+  root@number:~# time perf test "Parsing of PMU event table metrics"
+   10.3: Parsing of PMU event table metrics                            : Ok
+   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+
+  real  0m0.689s
+  user  0m0.766s
+  sys   0m0.042s
+  root@number:~# time perf test 10
+   10: PMU JSON event tests                                            :
+   10.1: PMU event table sanity                                        : Ok
+   10.2: PMU event map aliases                                         : Ok
+   10.3: Parsing of PMU event table metrics                            : Ok
+   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+   10.5: Parsing of metric thresholds with fake PMUs                   : Ok
+
+  real  0m0.696s
+  user  0m0.807s
+  sys   0m0.064s
+  root@number:~#
