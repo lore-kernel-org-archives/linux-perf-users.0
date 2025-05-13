@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421071CA81
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 15:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A04F269D1B
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 15:39:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150752; cv=none; b=FIFkWVgnKuay8ew6YsK/H+jDs9ZQfEL6q7QwKiOhVFHg4GOoaxHMk9Nc5+44jJ5ri1OzwWuHxiOiVyafwGbMmM15JdwFvrKfSPOFnMOhxuEwgc5VpuUggUdWGXSmH22FgJUwuCRUKXn7uHhqspdHVCw2qp9atrkQJvYIfAVKo+k=
+	t=1747150758; cv=none; b=Nc1kk6a092WKC5sHqS1AmQB8pXBIl+8uSqkQdFY25sa+0+GNgrsAKWWamSziO548NgCxL2d8Sss5wLvkH8Y/hWs/2piXUkscew1SLV8cbmoL15Vj6xApe3vEsRpgHbIwMLfpTXVTa5iWy6fLzsg6UmpUB3dut31xkp+bT3hWvhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150752; c=relaxed/simple;
-	bh=btpzknTs7aXySjZ4MGsJVR27qW/aTG1UBDjjRqYczqs=;
+	s=arc-20240116; t=1747150758; c=relaxed/simple;
+	bh=LXs1OV07aqUnAiYITCmPrbcB0Bly4cjR7JLh0FzsiLw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oU94X+Ng/97d8ZU3cVbv53OHZb0Cpz3LjlXXvNa39QEBaTtDzbUAl5IbewMrirVEvp3VfY6Gi9vfzXaRyjhSdJTNo+Xw3CuP0b9LHOY86MgaillbCkQy5lmtX3A9L+IqDWm3LlCDdl0vTaxKbYGq93x6s97kDyl1KVycUb1SSLQ=
+	 MIME-Version; b=OtOBK9vt0snsAVaJEQBiyoZa7yBFo+PGBRklItuk2VGsoe7lQTo0B0WWyz3WUkcnWhfbHI8wKojHUXGqhWgY/usw+zJBdeX1MIa8fxk/KwWCld9tfYUy+0pvmLUgVTTqJQkQLVgbMOaJglZELp5S3augyf7l9ZxMBpZNLm7K9sk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72887150C;
-	Tue, 13 May 2025 08:38:59 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 887881E4D;
+	Tue, 13 May 2025 08:39:02 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 546A13F63F;
-	Tue, 13 May 2025 08:39:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6A61D3F63F;
+	Tue, 13 May 2025 08:39:12 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: will@kernel.org
 Cc: mark.rutland@arm.com,
@@ -26,9 +26,9 @@ Cc: mark.rutland@arm.com,
 	allen.wang@hj-micro.com,
 	peter.du@hj-micro.com,
 	andy.xu@hj-micro.com
-Subject: [PATCH 2/3] perf/arm-ni: Consolidate CPU affinity handling
-Date: Tue, 13 May 2025 16:38:59 +0100
-Message-Id: <5b4ff1b8e41ddbc7fd2548f5da33d9788cf181fd.1747149165.git.robin.murphy@arm.com>
+Subject: [PATCH 3/3] perf/arm-ni: Support sharing IRQs within an NI instance
+Date: Tue, 13 May 2025 16:39:00 +0100
+Message-Id: <c7ac53d0f608d92d96e4e2827e253a9cb2a337bb.1747149165.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 In-Reply-To: <cover.1747149165.git.robin.murphy@arm.com>
 References: <cover.1747149165.git.robin.murphy@arm.com>
@@ -40,207 +40,158 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since overflow interrupts from the individual PMUs are infrequent and
-unlikely to coincide, and we make no attempt to balance them across
-CPUs anyway, there's really not much point tracking a separate CPU
-affinity per PMU. Move the CPU affinity and hotplug migration up to
-the NI instance level.
+From: Shouping Wang <allen.wang@hj-micro.com>
 
+NI-700 has a distinct PMU interrupt output for each Clock Domain,
+however some integrations may still combine these together externally.
+The initial driver didn't attempt to support this, in anticipation of a
+more general solution for IRQ sharing between system PMU instances, but
+that's still a way off, so let's make this intermediate step for now to
+at least allow sharing IRQs within an individual NI instance.
+
+Now that CPU affinity and migration are cleaned up, it's fairly
+straightforward to adopt similar logic to arm-cmn, to identify CDs with
+a common interrupt and loop over them directly in the handler.
+
+Signed-off-by: Shouping Wang <allen.wang@hj-micro.com>
+[ rm: Rework for affinity handling, cosmetics, new commit message ]
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/arm-ni.c | 74 ++++++++++++++++++++-----------------------
- 1 file changed, 34 insertions(+), 40 deletions(-)
+ drivers/perf/arm-ni.c | 78 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 51 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index 9396d243415f..168750e78fc4 100644
+index 168750e78fc4..ca033c8785ff 100644
 --- a/drivers/perf/arm-ni.c
 +++ b/drivers/perf/arm-ni.c
-@@ -104,8 +104,6 @@ struct arm_ni_cd {
+@@ -102,6 +102,7 @@ struct arm_ni_unit {
+ struct arm_ni_cd {
+ 	void __iomem *pmu_base;
  	u16 id;
++	s8 irq_friend;
  	int num_units;
  	int irq;
--	int cpu;
--	struct hlist_node cpuhp_node;
  	struct pmu pmu;
- 	struct arm_ni_unit *units;
- 	struct perf_event *evcnt[NI_NUM_COUNTERS];
-@@ -117,13 +115,18 @@ struct arm_ni {
- 	void __iomem *base;
- 	enum ni_part part;
- 	int id;
-+	int cpu;
- 	int num_cds;
-+	struct hlist_node cpuhp_node;
- 	struct arm_ni_cd cds[] __counted_by(num_cds);
- };
- 
- #define cd_to_ni(cd) container_of((cd), struct arm_ni, cds[(cd)->id])
- #define pmu_to_cd(p) container_of((p), struct arm_ni_cd, pmu)
- 
-+#define ni_for_each_cd(n, c) \
-+	for (struct arm_ni_cd *c = n->cds; c < n->cds + n->num_cds; c++) if (c->pmu_base)
-+
- #define cd_for_each_unit(cd, u) \
- 	for (struct arm_ni_unit *u = cd->units; u < cd->units + cd->num_units; u++)
- 
-@@ -218,9 +221,9 @@ static const struct attribute_group arm_ni_format_attrs_group = {
- static ssize_t arm_ni_cpumask_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
+@@ -448,33 +449,37 @@ static irqreturn_t arm_ni_handle_irq(int irq, void *dev_id)
  {
--	struct arm_ni_cd *cd = pmu_to_cd(dev_get_drvdata(dev));
-+	struct arm_ni *ni = cd_to_ni(pmu_to_cd(dev_get_drvdata(dev)));
+ 	struct arm_ni_cd *cd = dev_id;
+ 	irqreturn_t ret = IRQ_NONE;
+-	u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
  
--	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cd->cpu));
-+	return cpumap_print_to_pagebuf(true, buf, cpumask_of(ni->cpu));
+-	if (reg & (1U << NI_CCNT_IDX)) {
+-		ret = IRQ_HANDLED;
+-		if (!(WARN_ON(!cd->ccnt))) {
+-			arm_ni_event_read(cd->ccnt);
+-			arm_ni_init_ccnt(cd);
++	for (;;) {
++		u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
++
++		if (reg & (1U << NI_CCNT_IDX)) {
++			ret = IRQ_HANDLED;
++			if (!(WARN_ON(!cd->ccnt))) {
++				arm_ni_event_read(cd->ccnt);
++				arm_ni_init_ccnt(cd);
++			}
+ 		}
+-	}
+-	for (int i = 0; i < NI_NUM_COUNTERS; i++) {
+-		if (!(reg & (1U << i)))
+-			continue;
+-		ret = IRQ_HANDLED;
+-		if (!(WARN_ON(!cd->evcnt[i]))) {
+-			arm_ni_event_read(cd->evcnt[i]);
+-			arm_ni_init_evcnt(cd, i);
++		for (int i = 0; i < NI_NUM_COUNTERS; i++) {
++			if (!(reg & (1U << i)))
++				continue;
++			ret = IRQ_HANDLED;
++			if (!(WARN_ON(!cd->evcnt[i]))) {
++				arm_ni_event_read(cd->evcnt[i]);
++				arm_ni_init_evcnt(cd, i);
++			}
+ 		}
++		writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
++		if (!cd->irq_friend)
++			return ret;
++		cd += cd->irq_friend;
+ 	}
+-	writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
+-	return ret;
  }
  
- static struct device_attribute arm_ni_cpumask_attr =
-@@ -314,7 +317,7 @@ static int arm_ni_event_init(struct perf_event *event)
- 	if (is_sampling_event(event))
- 		return -EINVAL;
+ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_start)
+ {
+ 	struct arm_ni_cd *cd = ni->cds + node->id;
+ 	const char *name;
+-	int err;
  
--	event->cpu = cd->cpu;
-+	event->cpu = cd_to_ni(cd)->cpu;
- 	if (NI_EVENT_TYPE(event) == NI_PMU)
- 		return arm_ni_validate_group(event);
+ 	cd->id = node->id;
+ 	cd->num_units = node->num_components;
+@@ -534,20 +539,11 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
+ 		       cd->pmu_base + NI_PMCR);
+ 	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMCNTENCLR);
+ 	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMOVSCLR);
+-	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENSET);
  
-@@ -543,8 +546,7 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
- 	if (err)
- 		return err;
+ 	cd->irq = platform_get_irq(to_platform_device(ni->dev), cd->id);
+ 	if (cd->irq < 0)
+ 		return cd->irq;
  
--	cd->cpu = cpumask_local_spread(0, dev_to_node(ni->dev));
--	irq_set_affinity(cd->irq, cpumask_of(cd->cpu));
-+	irq_set_affinity(cd->irq, cpumask_of(ni->cpu));
- 
- 	cd->pmu = (struct pmu) {
- 		.module = THIS_MODULE,
-@@ -566,32 +568,19 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
- 	if (!name)
- 		return -ENOMEM;
- 
--	err = cpuhp_state_add_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
+-	err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
+-			       IRQF_NOBALANCING | IRQF_NO_THREAD,
+-			       dev_name(ni->dev), cd);
 -	if (err)
 -		return err;
 -
--	err = perf_pmu_register(&cd->pmu, name, -1);
--	if (err)
--		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
+-	irq_set_affinity(cd->irq, cpumask_of(ni->cpu));
 -
--	return err;
-+	return perf_pmu_register(&cd->pmu, name, -1);
+ 	cd->pmu = (struct pmu) {
+ 		.module = THIS_MODULE,
+ 		.parent = ni->dev,
+@@ -593,6 +589,30 @@ static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
+ 	node->num_components = readl_relaxed(base + NI_CHILD_NODE_INFO);
  }
  
- static void arm_ni_remove(struct platform_device *pdev)
- {
- 	struct arm_ni *ni = platform_get_drvdata(pdev);
- 
--	for (int i = 0; i < ni->num_cds; i++) {
--		struct arm_ni_cd *cd = ni->cds + i;
--
--		if (!cd->pmu_base)
--			continue;
--
-+	ni_for_each_cd(ni, cd) {
- 		writel_relaxed(0, cd->pmu_base + NI_PMCR);
- 		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENCLR);
- 		perf_pmu_unregister(&cd->pmu);
--		cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &cd->cpuhp_node);
- 	}
-+	cpuhp_state_remove_instance_nocalls(arm_ni_hp_state, &ni->cpuhp_node);
- }
- 
- static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
-@@ -611,7 +600,7 @@ static int arm_ni_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *base;
- 	static atomic_t id;
--	int num_cds;
-+	int ret, num_cds;
- 	u32 reg, part;
- 
- 	/*
-@@ -662,8 +651,13 @@ static int arm_ni_probe(struct platform_device *pdev)
- 	ni->num_cds = num_cds;
- 	ni->part = part;
- 	ni->id = atomic_fetch_inc(&id);
-+	ni->cpu = cpumask_local_spread(0, dev_to_node(ni->dev));
- 	platform_set_drvdata(pdev, ni);
- 
-+	ret = cpuhp_state_add_instance_nocalls(arm_ni_hp_state, &ni->cpuhp_node);
-+	if (ret)
-+		return ret;
++static int arm_ni_init_irqs(struct arm_ni *ni)
++{
++	int err;
 +
- 	for (int v = 0; v < cfg.num_components; v++) {
- 		reg = readl_relaxed(cfg.base + NI_CHILD_PTR(v));
- 		arm_ni_probe_domain(base + reg, &vd);
-@@ -671,8 +665,6 @@ static int arm_ni_probe(struct platform_device *pdev)
- 			reg = readl_relaxed(vd.base + NI_CHILD_PTR(p));
- 			arm_ni_probe_domain(base + reg, &pd);
- 			for (int c = 0; c < pd.num_components; c++) {
--				int ret;
--
- 				reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
- 				arm_ni_probe_domain(base + reg, &cd);
- 				ret = arm_ni_init_cd(ni, &cd, res->start);
-@@ -714,42 +706,44 @@ static struct platform_driver arm_ni_driver = {
- 	.remove = arm_ni_remove,
- };
- 
--static void arm_ni_pmu_migrate(struct arm_ni_cd *cd, unsigned int cpu)
-+static void arm_ni_pmu_migrate(struct arm_ni *ni, unsigned int cpu)
- {
--	perf_pmu_migrate_context(&cd->pmu, cd->cpu, cpu);
--	irq_set_affinity(cd->irq, cpumask_of(cpu));
--	cd->cpu = cpu;
 +	ni_for_each_cd(ni, cd) {
-+		perf_pmu_migrate_context(&cd->pmu, ni->cpu, cpu);
-+		irq_set_affinity(cd->irq, cpumask_of(cpu));
++		for (struct arm_ni_cd *prev = cd; prev-- > ni->cds; ) {
++			if (prev->irq == cd->irq) {
++				prev->irq_friend = cd - prev;
++				goto enable_irq;
++			}
++		}
++		err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
++				       IRQF_NOBALANCING | IRQF_NO_THREAD,
++				       dev_name(ni->dev), cd);
++		if (err)
++			return err;
++
++		irq_set_affinity(cd->irq, cpumask_of(ni->cpu));
++enable_irq:
++		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENSET);
 +	}
-+	ni->cpu = cpu;
- }
- 
- static int arm_ni_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
++	return 0;
++}
++
+ static int arm_ni_probe(struct platform_device *pdev)
  {
--	struct arm_ni_cd *cd;
-+	struct arm_ni *ni;
- 	int node;
+ 	struct arm_ni_node cfg, vd, pd, cd;
+@@ -677,7 +697,11 @@ static int arm_ni_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
--	cd = hlist_entry_safe(cpuhp_node, struct arm_ni_cd, cpuhp_node);
--	node = dev_to_node(cd_to_ni(cd)->dev);
--	if (cpu_to_node(cd->cpu) != node && cpu_to_node(cpu) == node)
--		arm_ni_pmu_migrate(cd, cpu);
-+	ni = hlist_entry_safe(cpuhp_node, struct arm_ni, cpuhp_node);
-+	node = dev_to_node(ni->dev);
-+	if (cpu_to_node(ni->cpu) != node && cpu_to_node(cpu) == node)
-+		arm_ni_pmu_migrate(ni, cpu);
- 	return 0;
+-	return 0;
++	ret = arm_ni_init_irqs(ni);
++	if (ret)
++		arm_ni_remove(pdev);
++
++	return ret;
  }
  
- static int arm_ni_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
- {
--	struct arm_ni_cd *cd;
-+	struct arm_ni *ni;
- 	unsigned int target;
- 	int node;
- 
--	cd = hlist_entry_safe(cpuhp_node, struct arm_ni_cd, cpuhp_node);
--	if (cpu != cd->cpu)
-+	ni = hlist_entry_safe(cpuhp_node, struct arm_ni, cpuhp_node);
-+	if (cpu != ni->cpu)
- 		return 0;
- 
--	node = dev_to_node(cd_to_ni(cd)->dev);
-+	node = dev_to_node(ni->dev);
- 	target = cpumask_any_and_but(cpumask_of_node(node), cpu_online_mask, cpu);
- 	if (target >= nr_cpu_ids)
- 		target = cpumask_any_but(cpu_online_mask, cpu);
- 
- 	if (target < nr_cpu_ids)
--		arm_ni_pmu_migrate(cd, target);
-+		arm_ni_pmu_migrate(ni, target);
- 	return 0;
- }
- 
+ #ifdef CONFIG_OF
 -- 
 2.39.2.101.g768bb238c484.dirty
 
