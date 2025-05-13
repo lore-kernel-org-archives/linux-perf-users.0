@@ -1,392 +1,186 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11021108.outbound.protection.outlook.com [40.93.194.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7422B28C873
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 19:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747163259; cv=none; b=iuPr1An/79mkjfcIZoRtPNpgLxwXtz/PpfAQA5fRjLOFnlreGb7OXwhu30yNHoom8hF8md8pRrGzU2T+iHx7A0YiETk3MaKDdHaTWhSRrxPDrrsM99Lw5xgqxdw5Vi8Ea286p1pxrkJKxqxzwvB/HSLPoge3moWIDv88FpOdqQY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747163259; c=relaxed/simple;
-	bh=BfIIdAmYgagg8bgmfKPMbA/yNS8HDi+q7tLjHe0l8yk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TZRygLcDDDMrp9bDbNlBjJKkr61eCnauGVtS+Ge7ijiNld9hcBYA8RX6OQqU6CKcykFTqJAl0cUwTjo3O/li285OhZUkP4WAeXLeT4HNgexrAL+EoS1GxJaQSCVP+GdKJLPyBd9sMEkOHt8Bqr2TB17S6EXjuIkrqdp1DabSbLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D8KHP6Rm; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE891E8328;
+	Tue, 13 May 2025 19:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.108
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747163438; cv=fail; b=kAogbz8/dJ/MIvrs7MhmkECRIL+HkrpNfDRWVqCyN1d3sTs0m83GVB2zYPs5KG+gZt1bdJ4iOQ2rd5LdMGdCpNJlDYytJA/BdntrM3vGtrIUTE8YvXrQCG3xcktXB2Xc2oQDF+PKGGfBdkUYk+lirdRkcIokyBNrtARFR6W5EFE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747163438; c=relaxed/simple;
+	bh=r5gOljndzKMowGL1jyyhEgLAJoK8IfApwLJ/F7VHIDE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=XIh35N9I6L8/925ToO6AFARxqDDcqFXRHmlVqcc6+y6EyUmUyntiqchsOqwnKqS6f181cyO20q5srqCBpWJXRKzUm/6rUfxUO/nTYoBQssPL+jq2ZmgqwIk6ai3R3GcyJGsOQJhY+ntY+2sL5gSeI8HdRmebcvHjBf4d0//7hyQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=IzXFL8By; arc=fail smtp.client-ip=40.93.194.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8KHP6Rm"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22fa47f295dso31965ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 12:07:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="IzXFL8By"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Jsh4v5l1gUDUzYrFTNWSJ7ex9ZptlOqL6jL4gJFBPADNP5pF/c9leRjCYsV6kKdYzUi/mEP/1g1wPow1EhabUzH4CaUqDp5wkcJn8RH3Eu6On+1P1RsPoyTSE966XR90NQ+8N7FqKjE2xhBw2qTDzsM/FjQqPk6RfJ7288CI6GKuKwt9+UK/bemyIjAmNlIX2qyQA7jdEscUkBFCYqDqTWJVmhi8gUi41ghUMmgtOdRkYhTHL0GoIrzNAA2sU5mhT/4pkuR2nze4Oz1VvJAydJQOcmT15kT39H6hGDDfDG4Tu/Ht4R+JFqY3i/lSkUJlzvAC8gYxmUbdpnxc6jteww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f8VCkCR/IApHyk9BqCXUUXLqrQa1jsH2d7AbUh9eYbY=;
+ b=bbW8Yoks0rPofMs1L0DFhlHIQVjtOh66S8vXLeGO4KbIpuz8tjg5tTzMXZAuA0TtcKEQOtne4l+ko+xe4jXxJ2h3Q4wqvjQaTHqB3EHPJlHeyFh+fEAQCOQ/fzrnjTaFCFWtlZ14dytuXRK2erN9l70xyjl5LOsSKG/n3Rn88X7wscT0GbekibYxtOZvvteJL2kOvzfZsWvt1c8kd7EeZmQpRZH85p+3RyNC57B5GWFqDmFufg6qt3REw8qZK4NENx6W87stS40m4Mdwtl1N0omdu5Xpu2xWe747uh4PYWC4ylc2moJrrq7ICo8u1+jJ/2rqcIZurWbO9OKhlx8EyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747163256; x=1747768056; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WEL74c2SOBaH5lHHG44gJaQWn8jnoJ1Naxq4P6yhI70=;
-        b=D8KHP6RmzaIqO48wRKqFYB9BwWFrkilj62soDrrPMH2hCH1nJK8BchOncTkHEu8/jd
-         Z1AF6eNhYwlrMfyatLy/A7MTmTHqFFtad9vMQbqUf6/JXxcrAafrNhGww6UJwepjABf2
-         3ynraTBWsrTHUdAknrBFBOYs5wUsUW9i8Mr5T6hyKzSfDZPL+zvRzV/guGb+0OwFEM9e
-         WU0Hc3zPHvtw973WThutQAHdMAbyZk+dCnD+jzQqSaVR2DxmYL95nsBpFD3lSybBU+qh
-         TQFO+EbaYnfx/zBMhOwSyIFF9AdrCTUN62ZD9XQzO0ENMzYwqZLqyBtLXVunrTbXMt2D
-         tdRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747163256; x=1747768056;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WEL74c2SOBaH5lHHG44gJaQWn8jnoJ1Naxq4P6yhI70=;
-        b=TmaKssroMvr2B//xXGKT0scFh2y2hEtMvZALxn9z+4EXwvktU4SMFmdtzopYoji1JV
-         m+RDVHzvt/l5ty+frmqJtVZB76oiTcSLA2UT7tXtapJf5cDwsVQ2ayt+Pi9uyBX/X9Gv
-         K0jnmww2JNLiOEsxdoo9H6KifZFJ0pJbN5kz3lZ9kz7a2x+q4A6WXsJ9mUhqbC3LSJfl
-         f8cbsfpCirOAvgCzx4LY3k3iB2DOhLjwROHXNu80EJGCEHZjtbYq1UsGMUvttmn/lSjW
-         OXU0gp4tq239IBTtVioKEDtQf+MWoSbw18GtjR1JHUS+YY1aq2vsVd7BC+uwrWuu3Zc1
-         HPrw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1EO6vit/dYM2nhqZRkj7SsvmQ8Pkx+pXfPcLiCLXI4sAy9kvFFQueB0vDpv9NcKe7yO7VoL93dd+jb3L15gOq@vger.kernel.org
-X-Gm-Message-State: AOJu0YziAZyPJBFZVxiQWzRa3nx6YSp9tCPJQA3AEvQ2XDwFxSZxbtvX
-	UUaDfvms5UAkcAJkiRC7PalX2+FO9gBY5amxHwp+OM/XespBHw7f1bwpSdvYzM70JyzfnKzL+jy
-	w9e9lVAPvOQRf5/X+HRJX14OEawUIOon+q3cFvCwf
-X-Gm-Gg: ASbGncvw8NUlXvK6Kgq5KHKoiv7IvLLxy/QIRrQ5yEHv/VZeNjVlZJWrfDnzcNBPqLF
-	CGnQ3vi8iIsHTRwzAXMwccsvhuMxyxjSIDiwrzumwwBUGFfaTpRQnNsQsMlh61nykGk3CazK3D1
-	MVsn362ItfZUx5vvgi581f5/FWPqFemcjfbgN9pmFLlCWR4yBF6NUTOt0wWqJK
-X-Google-Smtp-Source: AGHT+IFwdsPT6+6RkvJxXLy3zo+LPCFyRXTUHWRP+m7DkI1VtSOnHZRCHu1WV9UtnVz/sCV1SdFwGbfGlIKW4ECRDNg=
-X-Received: by 2002:a17:903:244a:b0:224:6c8:8d84 with SMTP id
- d9443c01a7336-2319906cfb6mr449655ad.4.1747163256295; Tue, 13 May 2025
- 12:07:36 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f8VCkCR/IApHyk9BqCXUUXLqrQa1jsH2d7AbUh9eYbY=;
+ b=IzXFL8BykO4b/xZrYhh2QAmLjcx0qi5UmkBKCUZcQG4IkQhtz7SMyfKKSCBERkWkK/AwcxS4o6KUDXhPos8SksFqIfzKSJpmshUCFp0XNG7KFdW/03XM6xJXQelLlVIKwk9h2k75xsyrykF/5vpeo7BKeg9Qd3CBotUKQ+OAHFc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
+ MW4PR01MB6130.prod.exchangelabs.com (2603:10b6:303:75::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.30; Tue, 13 May 2025 19:10:33 +0000
+Received: from MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba]) by MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::13ba:df5b:8558:8bba%4]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 19:10:33 +0000
+Date: Tue, 13 May 2025 12:10:29 -0700 (PDT)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Robin Murphy <robin.murphy@arm.com>
+cc: will@kernel.org, mark.rutland@arm.com, 
+    linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH] perf/arm-cmn: Initialise cmn->cpu earlier
+In-Reply-To: <b12fccba6b5b4d2674944f59e4daad91cd63420b.1747069914.git.robin.murphy@arm.com>
+Message-ID: <6e3c1f7a-ec87-d135-bee-1470da25a8fd@os.amperecomputing.com>
+References: <b12fccba6b5b4d2674944f59e4daad91cd63420b.1747069914.git.robin.murphy@arm.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: MW4PR03CA0135.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::20) To MW4PR01MB6228.prod.exchangelabs.com
+ (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184700.11691-1-irogers@google.com> <20250512184700.11691-2-irogers@google.com>
- <108f87fc28453adb52d6b8c2afd8d184e288a83e.camel@intel.com>
- <CAP-5=fVaC662z2nJnTwBHMu-RE+9HkRmvSyNT5qB448+zw6e9Q@mail.gmail.com> <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
-In-Reply-To: <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 May 2025 12:07:24 -0700
-X-Gm-Features: AX0GCFscnAabIE4jY1VGOomuoUWx0fFM4LdVeYZd19rTeRAhgOJVom0cEP2gKDs
-Message-ID: <CAP-5=fXr4bydqx5vXdFkJW99Asa3+Bzhk8AWnQc9_g8pywDaTg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
- validation test
-To: "Falcon, Thomas" <thomas.falcon@intel.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, Stephane Eranian <eranian@google.com>
-Cc: "james.clark@linaro.org" <james.clark@linaro.org>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|MW4PR01MB6130:EE_
+X-MS-Office365-Filtering-Correlation-Id: dfe76e0f-215a-45d4-1e96-08dd9251d57c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?VMBDimJKkLa7zokLz9az9QnS5nLIVXfOKlMQvnq/UZpc1ReZBqoI6jgrgHO7?=
+ =?us-ascii?Q?/YLRRUBOzaEOdmAoodIdREQ2p8ijRsYHGm0ED5KuPd6hHQbWWACA/ixpDBez?=
+ =?us-ascii?Q?mO3LRRwL0DQG1w/tLZFNzaPWxCokV76HSLISmvEP4FCez3hmgUl2NKNWXXaK?=
+ =?us-ascii?Q?5PhF1VEfuu+1KJfSpgBB7yUIcpLCymYz426x+5DHqcSqybm5wuMyV7Ww0CSb?=
+ =?us-ascii?Q?ipBgOa0D7gVI+esMFVI+y7pjVKTxqeeyaDSW2ufq1uOlt8CLWmRdgg46KayE?=
+ =?us-ascii?Q?ay2XJMQ+qJpp0hupRJ/nw7YB/y6879qTSDwVou/pv8V9crXfZ9URvglV8J9n?=
+ =?us-ascii?Q?XlIXXRkjATGI4xTVLxHG0Ndnq8r9bUrmNqlIxHJzQ5DsQQxyQDMtXq5bt69t?=
+ =?us-ascii?Q?WJeGnjrYJ81Z7LvFetLNa8B2OpRcDmBLlDOFk2Sy6CJxbwZrC5hysUuWsq8y?=
+ =?us-ascii?Q?jWNPWKB6wT2p7Crxv801y4j7Gjxjc1A/xYJK1b738dR4DjeIHi6/RRA1Ab2L?=
+ =?us-ascii?Q?3i+IbkWalDr5+fm65+sv4rYBpMfWh5UTfMdNq94xS/CpYugpgvLbREMRHpfP?=
+ =?us-ascii?Q?3Oxs4mdc6zRmlBGmziOcR4XMpwR2TEN7qVX0tltXqAM9jl9lmJa9W/JBrAPw?=
+ =?us-ascii?Q?/LiLoH5fuv30MyrAouOrBOBcN6Xek9YCtMZF1ocvli6Qxvl9dvE5PXQUdmSA?=
+ =?us-ascii?Q?vVp0nCaEdRUP/KWVzFroVABXCGV5Zk2KXY4IA1kuMbwP91n9JMZC0FjpqoYK?=
+ =?us-ascii?Q?bf77UQTbgw5NUscY77RK2XqYjjrEq4qRQncoyC5JKK2yIPvB5ygVZwWiZngv?=
+ =?us-ascii?Q?010isN8OJHR4m6XJtcwMvVJVbBq9PvWv+lzq0KBRBjSxGO4S7FPN8bwL/hKr?=
+ =?us-ascii?Q?KIhzkfKAoVHBhCGK8I8zvydw8e6SGdIbHpGWYP4RG/fqO/ESVxiprBssgcXb?=
+ =?us-ascii?Q?oTBSL6njdv5cDc+6T3Re1ZeJEVTPlO0zUomATpNcjUokPSeZeVYcG9fh9dz3?=
+ =?us-ascii?Q?EDCjU96Ty6tNrS0suXnreovI+2l4dOxlzlWv7vXEogaohDacsEals7HenDSx?=
+ =?us-ascii?Q?hGRgmWs5YPNig1VXqwgEWNzn1QZ6AqWUkKHeI+c1DujWOUUSjRBpZlTj2Z7u?=
+ =?us-ascii?Q?C/EDyMb7oY3CrcyqYPT6ln1qPeL4r04uafLuEvxo5jJfRlDbBu6oYcew3k8l?=
+ =?us-ascii?Q?0sXhm/8zYzlbOlMIlc8aAuB4ck+NqhvZMdhcmJJPyacqWUnqlfZYNwRseqtI?=
+ =?us-ascii?Q?Fmvmhgs4tcRIDgXdTmDdpPGg5cs8GG6ZuoqWN0ja/F9giX13VOZT8D32tSou?=
+ =?us-ascii?Q?EX+lzl9Z2kHMMoX3vD5L+bjA4sv/9maQuYmE2TvrSDFyjjWBU7d0HKp2KVwV?=
+ =?us-ascii?Q?9D1K+zts1CuEK/1L5L4k/FycaT85ibhCt0sb/BKvC2FZ4oliEFm3vvQkwJlv?=
+ =?us-ascii?Q?4ceVslZAvucq0wmRoVGchN6ly3apfA6EmWXukciXeJyuthjFwo/hVQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?fwvwS9ubZJ512NE//EVkXSeK7Qs7WdlkF5nbr54vUYVsC3Zpy4RxWOCGNdpV?=
+ =?us-ascii?Q?0IIcuf3b1Kn5+gA6GT9RCtSMM/FS9lmOU6986H5QYH8Fj80udKt6Aa0zEEGH?=
+ =?us-ascii?Q?YVvH2Cn4Un2fKCcUnKkp3379bSrG/KIWC8JlrPYmGqBqDhsfxezN7GzQmJw5?=
+ =?us-ascii?Q?OyJ6bA0GPonJskDh5hG9A+EJWQ+VkZpGCWuknC8AJKAu8K3hkK5VMRvCKDUK?=
+ =?us-ascii?Q?AlWzt+npFwjGzuJIYDV/rgXPFvehcBffM4bNMSC3aqPVMS/SnM0ag4FF6STv?=
+ =?us-ascii?Q?RiYwhYuH+jhilQoC8qmvZrkwW4USHQ6GDR/JHo3oKCI4fVHJN/sAhukrF2KS?=
+ =?us-ascii?Q?CVGtZlBQk1aMqUPya2ttnmfIVgi55/a5vkSVZUdKLvypZ1RPbw1pF8av5H2c?=
+ =?us-ascii?Q?F57gP+MNOxGkA3Uintj2A/lAzVytBVaMC/2Ny6MF29iTWd47lYFHcTtXe/2W?=
+ =?us-ascii?Q?S75R9N999Jba/bjXNHV7qSbcNmjrt1kX7z7ElAJrSxRY9WFtqwthNbm2b35A?=
+ =?us-ascii?Q?2j1VoDRkuB77pMOsXO35CrV3eWiqzxsfuxWzHGrZ1U8rLUSprV3lz2Iswgdn?=
+ =?us-ascii?Q?qvFqtFkdyjuT3qOMjfguMYUserwC2PBlAvhXHjdbQdHnAZ+AKs9kocvXUPoJ?=
+ =?us-ascii?Q?33BT46uKsulGeLpuHcUj5C2RXtexpJjqWst7H4aielUhCEDmg47TTozc6iDR?=
+ =?us-ascii?Q?qYkkSqtAwJwR3hZJg9uD+ELALrH3TrOWki6jsWecumuRBEb8y2h/SezTlDqA?=
+ =?us-ascii?Q?Axz5I9By1FYKeAYaUblHu8JwDsXS4YiIolvG5eYPnUD/HG6Sp/wdNFtiftnW?=
+ =?us-ascii?Q?pHV6vAIpY1M0/N2W9my/Uoc4g8BdtCEYsK30DBj8JIglYuuhz/4hfxkmuUqT?=
+ =?us-ascii?Q?N8ZgcM6mXj9QfOXmzQ/wGbbRA1LIuV0cR4Qf75ENHIjVGDPGkqvLX2ZTHGNy?=
+ =?us-ascii?Q?FZLwprkNfXYpzeRfZ8oDkAyxZkJjZwFRxe9vFHLAkYY7OfHlwC4DuJP7v6PQ?=
+ =?us-ascii?Q?mbxWrI/9OTuIUmmcz/7UwH85lxxtpzVfSxU3JNyOAN1KrDtEmCFHqvlWS1R3?=
+ =?us-ascii?Q?ch7bIQozNCVGjX76eL16JDl2Ti9xlRZ6WVMwjWUNUSAdyaVw2GrekNaDXPGJ?=
+ =?us-ascii?Q?hGer1yv8bSkd3D5Xg6ipse5A99OFg01atc4Md9lZVjmLqtxmXf/63IAOvVSV?=
+ =?us-ascii?Q?BtTPvs/W6w6yLlRXwQcnBIu83nMOkQ5DLQlaC+dHuLXoAHQgGfU+niYn8o68?=
+ =?us-ascii?Q?05OFq9xkTGjdZLysq/LrjXA9y0/k1Hih3LRqEk4rF7zkc7rmZxDkU0OGsBNK?=
+ =?us-ascii?Q?tPBYfUs9xBLmHRtTXfVWHP51S3ogSxCACDxGwKd6GlQNc3pcEnxFeNb8ZSyJ?=
+ =?us-ascii?Q?3vknn6wNSwaCD/4v7weEZYzbiB6c5ori9DsrOJApzYedUXN7sNbX61IAkR78?=
+ =?us-ascii?Q?wd5YnazwQxqDvqy8WRIyNfCo9pcW/AceAKUG7ER37mJWjCv1vr45kd1oZqjp?=
+ =?us-ascii?Q?7LwLAdNG56S/tLNvl8FWNp9nbrkF4ojcxy4O2+AreWFtRAHljrB6GYTZOa67?=
+ =?us-ascii?Q?0L33eVp/71ssbqtjMVGaJAJ6QoXRW6a4FgjohNNIumFWA1NtAl0wOaHOotQO?=
+ =?us-ascii?Q?5oM413J5YxPEI+9NwRyO+3Y=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfe76e0f-215a-45d4-1e96-08dd9251d57c
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 19:10:33.0130
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JGNIhi2wuGcqteGKytOOiMZBl+xf+UKs1iR1jX9DofsawcmsaYuf6oCKMsJJwE5dGGiav5X+NIJqK9py/78RtTSWGmGRIVcNYfUKWmKG4EaFvObdWonAEe6d/XKQNmgG
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR01MB6130
 
-On Tue, May 13, 2025 at 10:26=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+
+
+On Mon, 12 May 2025, Robin Murphy wrote:
+> For all the complexity of handling affinity for CPU hotplug, what we've
+> apparently managed to overlook is that arm_cmn_init_irqs() has in fact
+> always been setting the *initial* affinity of all IRQs to CPU 0, not the
+> CPU we subsequently choose for event scheduling. Oh dear.
 >
-> On Mon, May 12, 2025 at 2:52=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Mon, May 12, 2025 at 1:30=E2=80=AFPM Falcon, Thomas <thomas.falcon@i=
-ntel.com> wrote:
-> > >
-> > > On Mon, 2025-05-12 at 11:47 -0700, Ian Rogers wrote:
-> > > > On my alderlake I currently see for the "perf metrics value validat=
-ion" test:
-> > > > ```
-> > > > Total Test Count:  142
-> > > > Passed Test Count:  139
-> > > > [
-> > > > Metric Relationship Error:      The collected value of metric ['tma=
-_fetch_latency', 'tma_fetch_bandwidth', 'tma_frontend_bound']
-> > > >                         is [31.137028] in workload(s): ['perf bench=
- futex hash -r 2 -s']
-> > > >                         but expected value range is [tma_frontend_b=
-ound, tma_frontend_bound]
-> > > >                         Relationship rule description: 'Sum of the =
-level 2 children should equal level 1 parent',
-> > > > Metric Relationship Error:      The collected value of metric ['tma=
-_memory_bound', 'tma_core_bound', 'tma_backend_bound']
-> > > >                         is [6.564442] in workload(s): ['perf bench =
-futex hash -r 2 -s']
-> > > >                         but expected value range is [tma_backend_bo=
-und, tma_backend_bound]
-> > > >                         Relationship rule description: 'Sum of the =
-level 2 children should equal level 1 parent',
-> > > > Metric Relationship Error:      The collected value of metric ['tma=
-_light_operations', 'tma_heavy_operations', 'tma_retiring']
-> > > >                         is [57.806179] in workload(s): ['perf bench=
- futex hash -r 2 -s']
-> > > >                         but expected value range is [tma_retiring, =
-tma_retiring]
-> > > >                         Relationship rule description: 'Sum of the =
-level 2 children should equal level 1 parent']
-> > > > Metric validation return with erros. Please check metrics reported =
-with errors.
-> > > > ```
-> > > > I suspect it is due to two metrics for different CPU types being
-> > > > enabled. Add a -cputype option to avoid this. The test still fails =
-with:
-> > > > ```
-> > > > Total Test Count:  115
-> > > > Passed Test Count:  114
-> > > > [
-> > > > Wrong Metric Value Error:       The collected value of metric ['tma=
-_l2_hit_latency']
-> > > >                         is [117.947088] in workload(s): ['perf benc=
-h futex hash -r 2 -s']
-> > > >                         but expected value range is [0, 100]]
-> > > > Metric validation return with errors. Please check metrics reported=
- with errors.
-> > > > ```
-> > > > which is a reproducible genuine error and likely requires a metric =
-fix.
-> > >
-> > > Hi Ian, I tested this on my alder lake and an arrow lake. All tests, =
-including tma_l2_hit_latency,
-> > > pass on my end.
-> > >
-> > > Tested-by: Thomas Falcon <thomas.falcon@intel.com>
-> >
-> > Thanks Thomas! It should also work for core_lowpower on ArrowLake. I
-> > find some times that tma_l2_hit_latency passes for me. Trying a few
-> > more times I see other failures, but they all seem to be "No Metric
-> > Value Error" - perhaps these shouldn't fail the test. In the testing
-> > code we're passing '-a' for system wide profiling:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/tests/shell/lib/perf_metric_validation.py?h=3Dperf-to=
-ols-next#n380
-> > I believe this is done so that counters for things like AVX will
-> > gather values. I wonder if the tma_l2_hit_latency something is
-> > happening due to scaling counts:
-> > ```
-> > $ sudo /tmp/perf/perf stat -M tma_l2_hit_latency -a sleep 1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> >      7,987,903,325      cpu_core/TOPDOWN.SLOTS/          #    210.2 %
-> > tma_l2_hit_latency       (87.27%)
-> >      3,131,119,398      cpu_core/topdown-retiring/
-> >                          (87.27%)
-> >      1,910,718,811      cpu_core/topdown-mem-bound/
-> >                          (87.27%)
-> >        481,456,610      cpu_core/topdown-bad-spec/
-> >                          (87.27%)
-> >      1,681,347,944      cpu_core/topdown-fe-bound/
-> >                          (87.27%)
-> >      2,798,109,902      cpu_core/topdown-be-bound/
-> >                          (87.27%)
-> >        365,736,554      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
-> >                                   (87.27%)
-> >        327,668,588      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
-> >                                  (87.30%)
-> >         12,744,464      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
-> >                            (75.32%)
-> >      1,403,250,041      cpu_core/CPU_CLK_UNHALTED.THREAD/
-> >                           (87.65%)
-> >          6,657,480      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
-> >                           (87.66%)
-> >     59,424,499,192      TSC
-> >         40,830,608      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
-> >                           (62.46%)
-> >      1,461,544,380      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
-> >                            (74.79%)
-> >      1,008,604,319      duration_time
-> >
-> >        1.004974560 seconds time elapsed
-> > ```
-> > The values in the parentheses is a scaling amount which should mean
-> > for event multiplexing but for hybrid the events aren't running when
-> > on the other core type, so we're seeing these odd multiplexing values
-> > and these are used to scale counts:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/lib/perf/evsel.c?h=3Dperf-tools-next#n599
-> > I find when I run a benchmark rather than "sleep" the issue seems
-> > harder to reproduce.
+> Cc: stable@vger.kernel.org
+> Fixes: 0ba64770a2f2 ("perf: Add Arm CMN-600 PMU driver")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+
+Good catch.
+
+Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+
+> ---
+> drivers/perf/arm-cmn.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Ok chatting with Weilin and actually paying attention to warning
-> messages I think I see a problem. TSC (msr/tsc/) is aggregating data
-> across all CPUs (it is a software event and is a different performance
-> monitoring unit to cpu_core) while the counters are only on cpu_core.
-> So I think this means the TSC value is too large. However, even with
-> restricting the CPUs I see the >100% problem:
-> ```
-> $ perf stat -M tma_l2_hit_latency -C 0-15 -a sleep 1
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index aa2908313558..e385f187a084 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -2558,6 +2558,7 @@ static int arm_cmn_probe(struct platform_device *pdev)
 >
->  Performance counter stats for 'system wide':
+> 	cmn->dev = &pdev->dev;
+> 	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
+> +	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
+> 	platform_set_drvdata(pdev, cmn);
 >
->     27,985,670,146      cpu_core/TOPDOWN.SLOTS/          #    125.6 %
-> tma_l2_hit_latency       (87.22%)
->      9,619,906,383      cpu_core/topdown-retiring/
->                          (87.22%)
->      2,333,124,385      cpu_core/topdown-mem-bound/
->                          (87.22%)
->      3,607,656,674      cpu_core/topdown-bad-spec/
->                          (87.22%)
->      9,839,779,867      cpu_core/topdown-fe-bound/
->                          (87.22%)
->      5,244,189,749      cpu_core/topdown-be-bound/
->                          (87.22%)
->        442,932,231      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
->                                   (87.24%)
->        360,126,840      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
->                                  (87.63%)
->         31,264,814      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
->                            (75.26%)
->      4,761,244,040      cpu_core/CPU_CLK_UNHALTED.THREAD/
->                           (87.63%)
->         28,429,277      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
->                           (87.62%)
->     33,863,490,835      TSC
->         23,533,366      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
->                           (62.25%)
->      3,158,155,632      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
->                            (74.63%)
->      1,003,102,327      duration_time
+> 	if (cmn->part == PART_CMN600 && has_acpi_companion(cmn->dev)) {
+> @@ -2585,7 +2586,6 @@ static int arm_cmn_probe(struct platform_device *pdev)
+> 	if (err)
+> 		return err;
 >
->        1.001912038 seconds time elapsed
-> ```
-> So we still need to figure this one out. The multiplexing numbers
-> still worry me.
-
-So I think the TSC bug is genuine, perhaps Kan has thoughts on how to
-restrict the cpu mask to just the core cpus. The tma_l2_hit_latency
->100% bug appears to be global. I see the problem on a tigerlake:
-```
-$ perf stat --metric-no-threshold -M tma_l2_hit_latency -a sleep 1
-
-Performance counter stats for 'system wide':
-
-       46,745,378      MEM_LOAD_RETIRED.FB_HIT          #    105.8 %
-tma_l2_hit_latency
-    1,445,788,955      CPU_CLK_UNHALTED.REF_TSC
-    2,532,066,403      CPU_CLK_UNHALTED.THREAD
-   40,008,507,350      TSC
-       11,922,390      MEM_LOAD_RETIRED.L1_MISS
-        2,587,517      MEM_LOAD_RETIRED.L2_HIT
-    1,002,819,485      duration_time
-
-      1.002198593 seconds time elapsed
-```
-Anyway, I think this patch series should land and we can worry about
-this metric and the hybrid problems separately.
-
-Thanks,
-Ian
-
-> >
-> > > Thanks,
-> > > Tom
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  .../tests/shell/lib/perf_metric_validation.py   | 12 +++++++++---
-> > > >  tools/perf/tests/shell/stat_metrics_values.sh   | 17 +++++++++++--=
-----
-> > > >  2 files changed, 20 insertions(+), 9 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b=
-/tools/perf/tests/shell/lib/perf_metric_validation.py
-> > > > index 0b94216c9c46..dea8ef1977bf 100644
-> > > > --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-> > > > +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-> > > > @@ -35,7 +35,8 @@ class TestError:
-> > > >
-> > > >
-> > > >  class Validator:
-> > > > -    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=
-=3DFalse, datafname=3D'', fullrulefname=3D'', workload=3D'true', metrics=3D=
-''):
-> > > > +    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=
-=3DFalse, datafname=3D'', fullrulefname=3D'',
-> > > > +                 workload=3D'true', metrics=3D'', cputype=3D'cpu')=
-:
-> > > >          self.rulefname =3D rulefname
-> > > >          self.reportfname =3D reportfname
-> > > >          self.rules =3D None
-> > > > @@ -43,6 +44,7 @@ class Validator:
-> > > >          self.metrics =3D self.__set_metrics(metrics)
-> > > >          self.skiplist =3D set()
-> > > >          self.tolerance =3D t
-> > > > +        self.cputype =3D cputype
-> > > >
-> > > >          self.workloads =3D [x for x in workload.split(",") if x]
-> > > >          self.wlidx =3D 0  # idx of current workloads
-> > > > @@ -377,7 +379,7 @@ class Validator:
-> > > >
-> > > >      def _run_perf(self, metric, workload: str):
-> > > >          tool =3D 'perf'
-> > > > -        command =3D [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
-> > > > +        command =3D [tool, 'stat', '--cputype', self.cputype, '-j'=
-, '-M', f"{metric}", "-a"]
-> > > >          wl =3D workload.split()
-> > > >          command.extend(wl)
-> > > >          print(" ".join(command))
-> > > > @@ -443,6 +445,8 @@ class Validator:
-> > > >                  if 'MetricName' not in m:
-> > > >                      print("Warning: no metric name")
-> > > >                      continue
-> > > > +                if 'Unit' in m and m['Unit'] !=3D self.cputype:
-> > > > +                    continue
-> > > >                  name =3D m['MetricName'].lower()
-> > > >                  self.metrics.add(name)
-> > > >                  if 'ScaleUnit' in m and (m['ScaleUnit'] =3D=3D '1%=
-' or m['ScaleUnit'] =3D=3D '100%'):
-> > > > @@ -578,6 +582,8 @@ def main() -> None:
-> > > >      parser.add_argument(
-> > > >          "-wl", help=3D"Workload to run while data collection", def=
-ault=3D"true")
-> > > >      parser.add_argument("-m", help=3D"Metric list to validate", de=
-fault=3D"")
-> > > > +    parser.add_argument("-cputype", help=3D"Only test metrics for =
-the given CPU/PMU type",
-> > > > +                        default=3D"cpu")
-> > > >      args =3D parser.parse_args()
-> > > >      outpath =3D Path(args.output_dir)
-> > > >      reportf =3D Path.joinpath(outpath, 'perf_report.json')
-> > > > @@ -586,7 +592,7 @@ def main() -> None:
-> > > >
-> > > >      validator =3D Validator(args.rule, reportf, debug=3Dargs.debug=
-,
-> > > >                            datafname=3Ddatafile, fullrulefname=3Dfu=
-llrule, workload=3Dargs.wl,
-> > > > -                          metrics=3Dargs.m)
-> > > > +                          metrics=3Dargs.m, cputype=3Dargs.cputype=
-)
-> > > >      ret =3D validator.test()
-> > > >
-> > > >      return ret
-> > > > diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/=
-perf/tests/shell/stat_metrics_values.sh
-> > > > index 279f19c5919a..30566f0b5427 100755
-> > > > --- a/tools/perf/tests/shell/stat_metrics_values.sh
-> > > > +++ b/tools/perf/tests/shell/stat_metrics_values.sh
-> > > > @@ -16,11 +16,16 @@ workload=3D"perf bench futex hash -r 2 -s"
-> > > >  # Add -debug, save data file and full rule file
-> > > >  echo "Launch python validation script $pythonvalidator"
-> > > >  echo "Output will be stored in: $tmpdir"
-> > > > -$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "=
-${workload}"
-> > > > -ret=3D$?
-> > > > -rm -rf $tmpdir
-> > > > -if [ $ret -ne 0 ]; then
-> > > > -     echo "Metric validation return with erros. Please check metri=
-cs reported with errors."
-> > > > -fi
-> > > > +for cputype in /sys/bus/event_source/devices/cpu_*; do
-> > > > +     cputype=3D$(basename "$cputype")
-> > > > +     echo "Testing metrics for: $cputype"
-> > > > +     $PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir =
--wl "${workload}" \
-> > > > +             -cputype "${cputype}"
-> > > > +     ret=3D$?
-> > > > +     rm -rf $tmpdir
-> > > > +     if [ $ret -ne 0 ]; then
-> > > > +             echo "Metric validation return with errors. Please ch=
-eck metrics reported with errors."
-> > > > +     fi
-> > > > +done
-> > > >  exit $ret
-> > > >
-> > >
+> -	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
+> 	cmn->pmu = (struct pmu) {
+> 		.module = THIS_MODULE,
+> 		.parent = cmn->dev,
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
+>
+>
+>
