@@ -1,124 +1,178 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5650165EFC
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 21:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7082080C8
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 21:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747172887; cv=none; b=X9kAFZxx3yznF3DS5wZA6CHvZ8M0gM/UQ6FXT0YVZLE4IYo6kxtb44S4tVslCN3iN9vhP5HfQvGUo/PwyrjzS9szPdhdoYe4gWxoy4zD3rubRRzm5jW90HnP8Kof95o33FqK87HlSzTvFF4r72HYc/dfDjw9zjv2pOKM0V750Us=
+	t=1747173248; cv=none; b=Mej5zgfMz7MDId4Sb37yJ6SfuLfS7UXlBlOWqU+0fefpYssRxtyYap7tfvYZSJdkN2w/nPIK1B55j5rAV2hCRWLnMgBvwMyxD/tN6iRfwrWjJbRVaAPHJIPsqqNrcQ9GZWRBOpESZ/mOa2W4b7WC9O5DK0CB0h6+wtvyL3Yt5zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747172887; c=relaxed/simple;
-	bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rrf2Sf0K1WWqaBEK/XKTsvHalwrX8ncpJayDzptXBrIpNSMtW1VpAWk83nu2HduHXaXUYS6fIXSRWCAQCl5sXV+koU7f8UyTB6X8nBG1mGV7ESzA92aFB2FCHQNfTUB1g4eI88KMe7NnfFMu6Oqfbll4e2RiQgPiPFmszeAFBhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X8V7pgnB; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1747173248; c=relaxed/simple;
+	bh=40QKALZCDAdxC2I4RCUouF79EW48OYte1LNp7ZKNIsQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=VKUpdfzg+v3rKmdJUXlB1SdGM9jd9F2ws6w4h3D2GIoJhZ/zC5EmuIibP4dKE6wB/Arl7h9dRQtugOh3eqA0BKcNAbAJ5v5q9UHn3HYxnnZpiASb9aucxgiwAuzdvP1XxtLcdY6RfW1+X4moUR0J4Rl3GPzN95GL48gtjDjp2vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1m2zxbJ/; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X8V7pgnB"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e39fbad5fso22615ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 14:48:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1m2zxbJ/"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30c4b072631so4572724a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 14:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747172885; x=1747777685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
-        b=X8V7pgnBH7ps++IOxXnTrN9yjBAUYocMo9Z5qTyjFIw+rlmqZX8EQb38EeRm+03MGB
-         B8OCOr6yi+DGnUF30pdJNNkcFYM/vfS2jyRauIgy7UqXh3AFQ9cbrERao7WV6aE5mgSB
-         KOj91koSc9Px/Ouuh8YETGValXz9LoDoY9IT2rA0NF751kGemDviM5aKMdUKOkvCOVUQ
-         EOlgc2JxrePPB7LL+T895UkxJICyVuJtKyHGT4jd2ijuudZ51r6jOStpdnNUO+S8I0WQ
-         fOID76fVBdnVhQ8As1e5aKjsQe0M+g/4y9c8B28u1jVQjMzlKLgP64o49g7DPU7tJ2IO
-         mwAw==
+        d=google.com; s=20230601; t=1747173246; x=1747778046; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7fXd3bwKMsVTV58ODLndnal7i9Na64IyoboiGNyHuF8=;
+        b=1m2zxbJ/p2cIB7HFnZ149CPnUnuA+7gCUQapIlqENC997yJSw+UecETyVUGDfIiSZS
+         Z2FqOi0N3N6NbJ8M8VuemCmKqZOi732pVS/0lSFbod9vXMgQ41CSgujEdDKdZ/Qj0UCM
+         jW+R/06rcQoM7qAnonZ3fnz56Dn2Fhojno8gShqMbbIrcaQYMB7mIGUg74jXfpG6sb3Z
+         AQzQVFFNWd0AISM3xSz9YSVwhQIBBlW3fEcQ/LziuEWjNi4f9dZ/tJEWYN8Pckcm2oG3
+         0wu9Rt1ceoI6OBtodYZ6v6I9XUwFAYr6+Ujfej1qcUYDyUhYW7JFNd/Kwh4l9++xGNK3
+         A5yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747172885; x=1747777685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
-        b=s+4JvKC/bU9naNC4YB9HSjMnlpXAovO8Lx1Ce9aT1VOrcxp16GG9R9mPCZtvasmjdW
-         jfLKVqfOzTIH2mJHRHBqR2QXdtyF3HG095re76U3i50JGNBe8wKmbPrnLZ+I5AVjsPA7
-         DlYF/9qt4dcsBycgzi/QmPZt9dKqsAAU3Wg4+qAajR5J4qqmF5v+5p6cyqAXbF14EJu2
-         UUqcTNQnABO3A72IaW6DaTFwL+FV+WE1e0Au7yfoaqHEvWxi5azpv7aAtBXMBakpuCrU
-         ZbFKYbxV5Q08EvOfvM65QXFqPNP/Htu6agLGbeDUbqZUeiXTphQXDVDb+R5PvwyzMACb
-         LTDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw4mzL2FeVjDjpoqRl65hh6vFKWri5auyfwOh0WKb9a3TGjWGsSbXtGICH0zmfaEZBmccYrq2FPnnLICEOiO9y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbbarEWRehj17QEw7LP6emD+o7Z8fIpm1i9dDZY/vRIxrX4nxt
-	YleRf8zx3Qd5vtXlFUy2fBoM+f4pGVN2DXUm4MiCCxoQOYE3nj/N55b+sbj6rOtxDOjBEi+ErPF
-	MaVhVAROiqWOGHvX7jPm9oJkgmEwz59Bia5F4a59s
-X-Gm-Gg: ASbGncvh7M4Xgjxq4mdkMLQr3B6fCBE2OvEchN6Q12lXNMI2OBs9yw46S+uMBbXiywO
-	ZB5gMm/4XDPNN3gHUciEDW3NWlUeHPofZZv9Ewt9gJ5sPpAArUjr/75P9Tj4lnu+Splbh4MuFhz
-	ml80wzwBzhRG+ePDj6VqtdytFf1jHRyhNXlRg/43K4kFEsjTCv6cswx7WRnAUeRA==
-X-Google-Smtp-Source: AGHT+IGWnW2WGxzwBbXWKiTn3MvoWiCD0XtTUgC4Dyy6a5CfSo+75wPjhsjn9A6aqbNxMFJ5cC9rThSPTVN3I4JESDE=
-X-Received: by 2002:a17:902:f708:b0:21f:3f5c:d24c with SMTP id
- d9443c01a7336-23198fb5195mr1065335ad.0.1747172884970; Tue, 13 May 2025
- 14:48:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747173246; x=1747778046;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7fXd3bwKMsVTV58ODLndnal7i9Na64IyoboiGNyHuF8=;
+        b=aAMyRQS6Efy0S3/mxfqLHYHK8bN9P4Ca3m7Ii9uNGZSTqxYeakVnt0aJ/nM1yloMaj
+         bcYZ7KpCRCmiPHTzgAqJdV3gdSxnkUchxUysXbLPXVlnDuQ9FaDq7aASAWnCcG2zjOKC
+         z9ZR/EW4fHgSp+dGF3W5zzFquTi0pNuOF7AtW/l9sQ/y4fEq2FtC57DT1MOztzleMYI0
+         +lk1G3XBYr+BhwRjRsP9P2dUA9aaWUXMSDCRj39YxxuRdPfTQd3qXjaXcyPy8dRDS7I+
+         7ctipNMO7dvvnh7YHFBXM4YifMjRh2BREz/mmy51ty7x3ivkSbB0nxQmSZeJmWcERw4e
+         uANw==
+X-Forwarded-Encrypted: i=1; AJvYcCWE8UXPf2injoVe9nVW8fXxJADhnmf0WIsdkwQZFMHXsE+1BPGN0TtlkjBB9+xbkycrOMhrGgLcRaEdZbuJDGNs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG8xcc6IjixEMUCHY5kgZM4YrIr+ZGEVebTWU+6vRg0wsRhZkD
+	ISxABYF1g+IBFhv3IZ1K1356Ehg7wUS+aAtC65rLjloBRJjJDXeluUKMtn9qC21fxFjdsu+ogR1
+	PTQ==
+X-Google-Smtp-Source: AGHT+IF1Pdt3TrLC1JMdQHnUNLYTkgKgYFba33/us5gzSx8qvo238++158+LVN95N/pxvj7wbVmZyRh9Puo=
+X-Received: from pjbcz6.prod.google.com ([2002:a17:90a:d446:b0:2fa:2661:76ac])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a86:b0:2ee:8e75:4aeb
+ with SMTP id 98e67ed59e1d1-30e2e5dc9f5mr1720334a91.17.1747173246009; Tue, 13
+ May 2025 14:54:06 -0700 (PDT)
+Date: Tue, 13 May 2025 14:45:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
- <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
- <aCI0oDBSz86S9fz-@x1> <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
- <aCOwnUUVKx798Uza@x1> <CAP-5=fXK9Jru+ZqeTSuaTmOTmpF3JDHDswUOcmdOyLSP1Go_Gg@mail.gmail.com>
- <aCO2nJG8i3S6vUid@x1>
-In-Reply-To: <aCO2nJG8i3S6vUid@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 May 2025 14:47:52 -0700
-X-Gm-Features: AX0GCFvwPjF_wCWYPn7MYZ-YTSuih7Z6FiFjJVGe-Qu4_P_r0R8eZp_JhA1M6xk
-Message-ID: <CAP-5=fX8xkO8jXqvgksTF_5m+gknhZ2p1NuPZ_Lb0fzbDMDJ=A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
- counting perf events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maddy@linux.ibm.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250513215401.2315949-1-ctshao@google.com>
+Subject: [PATCH v4 0/3] Fix incorrect counts when count the same uncore event
+ multiple time
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, ak@linux.intel.com, 
+	howardchu95@gmail.com, yeoreum.yun@arm.com, linux@treblig.org, 
+	james.clark@linaro.org, weilin.wang@intel.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 2:16=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, May 13, 2025 at 01:59:28PM -0700, Ian Rogers wrote:
-> > On Tue, May 13, 2025 at 1:50=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > [snip]
-> > > Right, I like the effort he is making into having perf more usable in
-> > > python, and I encourage him to think about the issues you raised so t=
-hat
-> > > we can come to some good abstractions.
-> >
-> > Thanks Arnaldo, can we be tolerant to API changes in the python from a
-> > "regression" point-of-view? Like avoiding the notion of indices?
->
-> But correct me if I am missing something, aren't indices only introduced
-> with this new patchset?
+Let's take a look an example, the machine is SKX with 6 IMC devices.
 
-Checking the code I think you're right. Unless you do something like
-the range loop:
-```
- for thread in range(len(thread_map)):
-```
-so I think we'd all prefer indices not to be a part of the python API.
-On the C side we can get indices via helpers like perf_cpu_map__idx,
-which will introduce O(log N) overhead - thread map is missing this
-currently I believe. For compatibility a CPU and thread should remain
-an int.
+  perf stat -e clockticks,clockticks -I 1000
+  #           time             counts unit events
+       1.001127430      6,901,503,174      uncore_imc_0/clockticks/
+       1.001127430      3,940,896,301      uncore_imc_0/clockticks/
+       2.002649722        988,376,876      uncore_imc_0/clockticks/
+       2.002649722        988,376,141      uncore_imc_0/clockticks/
+       3.004071319      1,000,292,675      uncore_imc_0/clockticks/
+       3.004071319      1,000,294,160      uncore_imc_0/clockticks/
 
-Thanks,
-Ian
+1) The events name should not be uniquified.
+2) The initial count for the first `clockticks` is doubled.
+3) Subsequent count only report for the first IMC device.
 
-> - Arnaldo
->
-> > Presumably such a fix would also need fixing in all the perf python
-> > scripts, but the external users I worry about. My sense is the number
-> > of external users is minimal, for example, toplev I don't believe is a
-> > user [1].
-> >
-> > Ian
-> >
-> > [1] https://github.com/andikleen/pmu-tools
+The first patch fixes 1) and 3), and the second patch fixes 2).
+
+After these fix:
+
+  perf stat -e clockticks,clockticks -I 1000
+  #           time             counts unit events
+       1.001127586      4,126,938,857      clockticks
+       1.001127586      4,121,564,277      clockticks
+       2.001686014      3,953,806,350      clockticks
+       2.001686014      3,953,809,541      clockticks
+       3.003121403      4,137,750,252      clockticks
+       3.003121403      4,137,749,048      clockticks
+
+I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
+looks good.
+
+Ian tested `hybrid-merge` and `hwmon`, all looks good as well.
+
+Chun-Tse Shao (1):
+  perf test: Add stat uniquifying test
+
+Ian Rogers (2):
+  perf evlist: Make uniquifying counter names consistent
+  perf parse-events: Use wildcard processing to set an event to merge
+    into
+
+ tools/perf/builtin-record.c                   |   7 +-
+ tools/perf/builtin-top.c                      |   7 +-
+ .../tests/shell/stat+event_uniquifying.sh     |  69 ++++++++
+ tools/perf/util/evlist.c                      |  66 +++++---
+ tools/perf/util/evlist.h                      |   3 +-
+ tools/perf/util/evsel.c                       | 119 ++++++++++++-
+ tools/perf/util/evsel.h                       |  11 +-
+ tools/perf/util/parse-events.c                |  90 +++++++---
+ tools/perf/util/stat-display.c                | 160 ++----------------
+ tools/perf/util/stat.c                        |  40 +----
+ 10 files changed, 332 insertions(+), 240 deletions(-)
+ create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+
+Chun-Tse Shao (1):
+  perf test: Add stat uniquifying test
+
+Ian Rogers (2):
+  perf evlist: Make uniquifying counter names consistent
+  perf parse-events: Use wildcard processing to set an event to merge
+    into
+
+ tools/perf/builtin-record.c                   |   7 +-
+ tools/perf/builtin-top.c                      |   7 +-
+ .../tests/shell/stat+event_uniquifying.sh     |  69 ++++++++
+ tools/perf/util/evlist.c                      |  66 +++++---
+ tools/perf/util/evlist.h                      |   3 +-
+ tools/perf/util/evsel.c                       | 119 ++++++++++++-
+ tools/perf/util/evsel.h                       |  11 +-
+ tools/perf/util/parse-events.c                |  86 +++++++---
+ tools/perf/util/stat-display.c                | 160 ++----------------
+ tools/perf/util/stat.c                        |  40 +----
+ 10 files changed, 328 insertions(+), 240 deletions(-)
+ create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+
+--
+v4: Fix a compiling error on patch v3 1/3.
+
+v3: lore.kernel.org/20250512215929.2098240-1-ctshao@google.com
+  Rebase with tmp.perf-tools-next. Since most of the conflicts are from
+  lore.kernel.org/20250403194337.40202-5-irogers@google.com, tested v3
+  patches with:
+
+  perf stat -A -C 0,4-5,8 -e "instructions/cpu=0/,l1d-misses/cpu=4,cpu=5/,inst_retired.any/cpu=8/,cycles" -a sleep 0.1
+
+   Performance counter stats for 'system wide':
+
+  CPU0              682,860      instructions/cpu=0/              #    0.27  insn per cycle
+  CPU4               53,774      l1d-misses
+  CPU5               18,725      l1d-misses
+  CPU8              608,698      inst_retired.any/cpu=8/
+  CPU0            2,574,325      cycles
+  CPU4            4,267,115      cycles
+  CPU5            1,741,536      cycles
+  CPU8            1,969,547      cycles
+
+         0.102746958 seconds time elapsed
+
+v2: lore.kernel.org/20250327225651.642965-1-ctshao@google.com
+  - Fixes for `hwmon` and `--hybrid-merge`.
+  - Add a test for event uniquifying.
+
+v1: lore.kernel.org/20250326234758.480431-1-ctshao@google.com
+
+2.49.0.1045.g170613ef41-goog
+
