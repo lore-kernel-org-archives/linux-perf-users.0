@@ -1,369 +1,392 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5631D5CDE
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 17:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7422B28C873
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 19:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157269; cv=none; b=EgH7jrabin3nZ4aTRkw9tJB+PWp652pP2Ml+ZlZVz2j1Suz3FcomeVE1wumurO3OxOm+5HqDY+unvzBZJKm/0Yaysi6LdXWCR5yd+NvdRTsRz+tK/TjSVvl+VgIw1PsOxehJ9iaYKVxz9KWNnNXPfu/yYMU/I1pXb0FdqQeCnE0=
+	t=1747163259; cv=none; b=iuPr1An/79mkjfcIZoRtPNpgLxwXtz/PpfAQA5fRjLOFnlreGb7OXwhu30yNHoom8hF8md8pRrGzU2T+iHx7A0YiETk3MaKDdHaTWhSRrxPDrrsM99Lw5xgqxdw5Vi8Ea286p1pxrkJKxqxzwvB/HSLPoge3moWIDv88FpOdqQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157269; c=relaxed/simple;
-	bh=Exu5LPRDrF9GPsvFUHg86uGON/SziE1Wv94sTJI6drE=;
+	s=arc-20240116; t=1747163259; c=relaxed/simple;
+	bh=BfIIdAmYgagg8bgmfKPMbA/yNS8HDi+q7tLjHe0l8yk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oVJSZjflOI21HFeMnDkNea1eYJWoXvSo7ZtJLVkAwuZAV03o5uXs5wAZ57Xv2esY8dn0g84JzpB4tWOE0gIEgKzgrTtuzxqLYHS18jjXIhBLAkgSSqOJlNZPwSjsFIJIsk06mNolI86o1cDc4Em+8UAkw9jKSw8Rv+RJTQzwXTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wedbrfON; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=TZRygLcDDDMrp9bDbNlBjJKkr61eCnauGVtS+Ge7ijiNld9hcBYA8RX6OQqU6CKcykFTqJAl0cUwTjo3O/li285OhZUkP4WAeXLeT4HNgexrAL+EoS1GxJaQSCVP+GdKJLPyBd9sMEkOHt8Bqr2TB17S6EXjuIkrqdp1DabSbLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D8KHP6Rm; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wedbrfON"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e39fbad5fso11515ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 10:27:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8KHP6Rm"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22fa47f295dso31965ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 12:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747157266; x=1747762066; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747163256; x=1747768056; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xIBSjAwDF5t1nNXPsQyXyqyW/fbAdYhx5iacZFg6vR0=;
-        b=wedbrfONJh5ujexa0Mlo7SGzlX25k4KXDRYQYglZhDrnpdg4MBX2krkb3z4cZAKcXE
-         TQSmTxy+wIEzfIjfykPTVrff7i/qrIRFwJ1Rdg/yEyussZSZxA49XaZFNBK5UYq3JcT0
-         uC88iHVpHtJOt/9Y2p7ZLFFqGnlUqNwLJrVNuCtVwjHQw1+wZ/k6nbyykDFmaYd0m4XP
-         ls7ebyIYyjv5/q51Q3RvyR225uE6MNEQ5PgBym+j7/7khFbqny9TnbSAIbdLTKhMTmkd
-         A+AYokQuS1jKr5RtQSBrEjjjgS/jKSuhhKsRAixuUWkPhNa/z5KNw1nZwqazQY4bGJrw
-         FY9Q==
+        bh=WEL74c2SOBaH5lHHG44gJaQWn8jnoJ1Naxq4P6yhI70=;
+        b=D8KHP6RmzaIqO48wRKqFYB9BwWFrkilj62soDrrPMH2hCH1nJK8BchOncTkHEu8/jd
+         Z1AF6eNhYwlrMfyatLy/A7MTmTHqFFtad9vMQbqUf6/JXxcrAafrNhGww6UJwepjABf2
+         3ynraTBWsrTHUdAknrBFBOYs5wUsUW9i8Mr5T6hyKzSfDZPL+zvRzV/guGb+0OwFEM9e
+         WU0Hc3zPHvtw973WThutQAHdMAbyZk+dCnD+jzQqSaVR2DxmYL95nsBpFD3lSybBU+qh
+         TQFO+EbaYnfx/zBMhOwSyIFF9AdrCTUN62ZD9XQzO0ENMzYwqZLqyBtLXVunrTbXMt2D
+         tdRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747157266; x=1747762066;
+        d=1e100.net; s=20230601; t=1747163256; x=1747768056;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xIBSjAwDF5t1nNXPsQyXyqyW/fbAdYhx5iacZFg6vR0=;
-        b=xLKObknSJZNtIkv9NoQWTika0KUmD7ASnqz/tZjDbz1W1jW/ZUaDAaK9LQdYAvPBBS
-         WId5tnWeeeEWpUU95OMESqg+D6/X1ZTF02q9GpL7NzA+I4hDN6m+f4IuDf9KTERp1G1m
-         z1DXs1DdkVa7DH/gx/xggY/QVW90+/NO4VxPh28oOB1f1gJ61wGPRr4pGPdWNZp16N3B
-         yRx9C/cELKHYHICXH07Oo3v4Ij5EJBn6pKebcQXakwrbKtl+Z0Xy32gOJrXGMLAEkg5y
-         FDQZ4dPNS4kugVmupbjXjisWQaZOho7Q3PF2QcfYrrMQzx9a4OFOGaaqyPji7diAw5b/
-         BySg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8AZc8oV634OzWA2U4h5D71v+LX8eL6VA8ZOAxXiNNhLHDKb9qWToQlocVPCAMasQ4D961eY4rp31MI7yqIng7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2QD9iqcf7c/jWdM/zL2JO1w91QDwDae++FrsBWeGJ3mVlonk8
-	Psbs+F3UDmKvAPZL6uRFa4+2HxixEViKHLy0he0NpnRGBry594qfWydrA9yIkMuBYBpXJXfa4+B
-	UujJ04uw8jJYnARBdrSXDZZBeAQbK7m6xFmi5uKd3
-X-Gm-Gg: ASbGncuA3BBlgS+eZ/dIgUsMD6tr3sx8I5dcAzyls2annRg7ncriGevJMEKGgPxZKNa
-	h6JGMKuLJr6C+coyfDDOb3Ou0H8B7M6Br3j7lCIJyNFO5xjoKWOPZxwRD3AvGiyEGcrOE4RjPY9
-	n5xbgLRPYMv+r5S6Y+aKflT+vRCqa+Re42CwB9Qi66xgXDK7y45gMnOa9IJVgVmQ==
-X-Google-Smtp-Source: AGHT+IGVUzw2P0BwYqRkKzacyTgyWkVtZx3xr2gBNrhQGTALIijCMhmH1LGQ+5rJ7M6GeM4wwGj/qVRIjqVKD5G7oTQ=
-X-Received: by 2002:a17:903:2445:b0:223:7f8f:439b with SMTP id
- d9443c01a7336-231804055e9mr2789555ad.29.1747157266226; Tue, 13 May 2025
- 10:27:46 -0700 (PDT)
+        bh=WEL74c2SOBaH5lHHG44gJaQWn8jnoJ1Naxq4P6yhI70=;
+        b=TmaKssroMvr2B//xXGKT0scFh2y2hEtMvZALxn9z+4EXwvktU4SMFmdtzopYoji1JV
+         m+RDVHzvt/l5ty+frmqJtVZB76oiTcSLA2UT7tXtapJf5cDwsVQ2ayt+Pi9uyBX/X9Gv
+         K0jnmww2JNLiOEsxdoo9H6KifZFJ0pJbN5kz3lZ9kz7a2x+q4A6WXsJ9mUhqbC3LSJfl
+         f8cbsfpCirOAvgCzx4LY3k3iB2DOhLjwROHXNu80EJGCEHZjtbYq1UsGMUvttmn/lSjW
+         OXU0gp4tq239IBTtVioKEDtQf+MWoSbw18GtjR1JHUS+YY1aq2vsVd7BC+uwrWuu3Zc1
+         HPrw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1EO6vit/dYM2nhqZRkj7SsvmQ8Pkx+pXfPcLiCLXI4sAy9kvFFQueB0vDpv9NcKe7yO7VoL93dd+jb3L15gOq@vger.kernel.org
+X-Gm-Message-State: AOJu0YziAZyPJBFZVxiQWzRa3nx6YSp9tCPJQA3AEvQ2XDwFxSZxbtvX
+	UUaDfvms5UAkcAJkiRC7PalX2+FO9gBY5amxHwp+OM/XespBHw7f1bwpSdvYzM70JyzfnKzL+jy
+	w9e9lVAPvOQRf5/X+HRJX14OEawUIOon+q3cFvCwf
+X-Gm-Gg: ASbGncvw8NUlXvK6Kgq5KHKoiv7IvLLxy/QIRrQ5yEHv/VZeNjVlZJWrfDnzcNBPqLF
+	CGnQ3vi8iIsHTRwzAXMwccsvhuMxyxjSIDiwrzumwwBUGFfaTpRQnNsQsMlh61nykGk3CazK3D1
+	MVsn362ItfZUx5vvgi581f5/FWPqFemcjfbgN9pmFLlCWR4yBF6NUTOt0wWqJK
+X-Google-Smtp-Source: AGHT+IFwdsPT6+6RkvJxXLy3zo+LPCFyRXTUHWRP+m7DkI1VtSOnHZRCHu1WV9UtnVz/sCV1SdFwGbfGlIKW4ECRDNg=
+X-Received: by 2002:a17:903:244a:b0:224:6c8:8d84 with SMTP id
+ d9443c01a7336-2319906cfb6mr449655ad.4.1747163256295; Tue, 13 May 2025
+ 12:07:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508163127.726660-1-thomas.falcon@intel.com>
- <CAP-5=fVJWSyymbbk30Cx6Dhk-nTQJUUM-oOTrBCJuS6Q5az9Ag@mail.gmail.com> <6ffd38b54e57709ca980087abe2582f1ae89250c.camel@intel.com>
-In-Reply-To: <6ffd38b54e57709ca980087abe2582f1ae89250c.camel@intel.com>
+References: <20250512184700.11691-1-irogers@google.com> <20250512184700.11691-2-irogers@google.com>
+ <108f87fc28453adb52d6b8c2afd8d184e288a83e.camel@intel.com>
+ <CAP-5=fVaC662z2nJnTwBHMu-RE+9HkRmvSyNT5qB448+zw6e9Q@mail.gmail.com> <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
+In-Reply-To: <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 May 2025 10:27:33 -0700
-X-Gm-Features: AX0GCFuXGojRR0m70VSVeriQ0Pz4e5YufP-2wgrTpOE3IlAmB-NP_aujBkOqsvM
-Message-ID: <CAP-5=fVYLHY8Stz557sWHmFv7nMs+uHGHGPLiCOE7H5===XWSA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf top: populate PMU capabilities data in perf_env
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+Date: Tue, 13 May 2025 12:07:24 -0700
+X-Gm-Features: AX0GCFscnAabIE4jY1VGOomuoUWx0fFM4LdVeYZd19rTeRAhgOJVom0cEP2gKDs
+Message-ID: <CAP-5=fXr4bydqx5vXdFkJW99Asa3+Bzhk8AWnQc9_g8pywDaTg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
+ validation test
+To: "Falcon, Thomas" <thomas.falcon@intel.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, Stephane Eranian <eranian@google.com>
+Cc: "james.clark@linaro.org" <james.clark@linaro.org>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
 	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"namhyung@kernel.org" <namhyung@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, 
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+	"peterz@infradead.org" <peterz@infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 10:17=E2=80=AFAM Falcon, Thomas <thomas.falcon@inte=
-l.com> wrote:
+On Tue, May 13, 2025 at 10:26=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> On Tue, 2025-05-13 at 08:40 -0700, Ian Rogers wrote:
-> > On Thu, May 8, 2025 at 9:31=E2=80=AFAM Thomas Falcon <thomas.falcon@int=
-el.com> wrote:
-> > >
-> > > Calling perf top with branch filters enabled on Intel CPU's
-> > > with branch counters logging (A.K.A LBR event logging [1]) support
-> > > results in a segfault.
+> On Mon, May 12, 2025 at 2:52=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
 > >
->
-> Hi Ian, thanks for reviewing!
->
-> > At some point we should add a `perf top` shell test and include
-> > regression tests for cases like this.
->
-> Good point, I will look into creating a test for this.
->
+> > On Mon, May 12, 2025 at 1:30=E2=80=AFPM Falcon, Thomas <thomas.falcon@i=
+ntel.com> wrote:
+> > >
+> > > On Mon, 2025-05-12 at 11:47 -0700, Ian Rogers wrote:
+> > > > On my alderlake I currently see for the "perf metrics value validat=
+ion" test:
+> > > > ```
+> > > > Total Test Count:  142
+> > > > Passed Test Count:  139
+> > > > [
+> > > > Metric Relationship Error:      The collected value of metric ['tma=
+_fetch_latency', 'tma_fetch_bandwidth', 'tma_frontend_bound']
+> > > >                         is [31.137028] in workload(s): ['perf bench=
+ futex hash -r 2 -s']
+> > > >                         but expected value range is [tma_frontend_b=
+ound, tma_frontend_bound]
+> > > >                         Relationship rule description: 'Sum of the =
+level 2 children should equal level 1 parent',
+> > > > Metric Relationship Error:      The collected value of metric ['tma=
+_memory_bound', 'tma_core_bound', 'tma_backend_bound']
+> > > >                         is [6.564442] in workload(s): ['perf bench =
+futex hash -r 2 -s']
+> > > >                         but expected value range is [tma_backend_bo=
+und, tma_backend_bound]
+> > > >                         Relationship rule description: 'Sum of the =
+level 2 children should equal level 1 parent',
+> > > > Metric Relationship Error:      The collected value of metric ['tma=
+_light_operations', 'tma_heavy_operations', 'tma_retiring']
+> > > >                         is [57.806179] in workload(s): ['perf bench=
+ futex hash -r 2 -s']
+> > > >                         but expected value range is [tma_retiring, =
+tma_retiring]
+> > > >                         Relationship rule description: 'Sum of the =
+level 2 children should equal level 1 parent']
+> > > > Metric validation return with erros. Please check metrics reported =
+with errors.
+> > > > ```
+> > > > I suspect it is due to two metrics for different CPU types being
+> > > > enabled. Add a -cputype option to avoid this. The test still fails =
+with:
+> > > > ```
+> > > > Total Test Count:  115
+> > > > Passed Test Count:  114
+> > > > [
+> > > > Wrong Metric Value Error:       The collected value of metric ['tma=
+_l2_hit_latency']
+> > > >                         is [117.947088] in workload(s): ['perf benc=
+h futex hash -r 2 -s']
+> > > >                         but expected value range is [0, 100]]
+> > > > Metric validation return with errors. Please check metrics reported=
+ with errors.
+> > > > ```
+> > > > which is a reproducible genuine error and likely requires a metric =
+fix.
+> > >
+> > > Hi Ian, I tested this on my alder lake and an arrow lake. All tests, =
+including tma_l2_hit_latency,
+> > > pass on my end.
+> > >
+> > > Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 > >
-> > > Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
-> > > [Switching to Thread 0x7fffafff76c0 (LWP 949003)]
-> > > perf_env__find_br_cntr_info (env=3D0xf66dc0 <perf_env>, nr=3D0x0, wid=
-th=3D0x7fffafff62c0) at util/env.c:653
-> > > 653                     *width =3D env->cpu_pmu_caps ? env->br_cntr_w=
-idth :
-> > > (gdb) bt
-> > >  #0  perf_env__find_br_cntr_info (env=3D0xf66dc0 <perf_env>, nr=3D0x0=
-, width=3D0x7fffafff62c0) at util/env.c:653
-> > >  #1  0x00000000005b1599 in symbol__account_br_cntr (branch=3D0x7fffcc=
-3db580, evsel=3D0xfea2d0, offset=3D12, br_cntr=3D8) at util/annotate.c:345
-> > >  #2  0x00000000005b17fb in symbol__account_cycles (addr=3D5658172, st=
-art=3D5658160, sym=3D0x7fffcc0ee420, cycles=3D539, evsel=3D0xfea2d0, br_cnt=
-r=3D8) at util/annotate.c:389
-> > >  #3  0x00000000005b1976 in addr_map_symbol__account_cycles (ams=3D0x7=
-fffcd7b01d0, start=3D0x7fffcd7b02b0, cycles=3D539, evsel=3D0xfea2d0, br_cnt=
-r=3D8) at util/annotate.c:422
-> > >  #4  0x000000000068d57f in hist__account_cycles (bs=3D0x110d288, al=
-=3D0x7fffafff6540, sample=3D0x7fffafff6760, nonany_branch_mode=3Dfalse, tot=
-al_cycles=3D0x0, evsel=3D0xfea2d0) at util/hist.c:2850
-> > >  #5  0x0000000000446216 in hist_iter__top_callback (iter=3D0x7fffafff=
-6590, al=3D0x7fffafff6540, single=3Dtrue, arg=3D0x7fffffff9e00) at builtin-=
-top.c:737
-> > >  #6  0x0000000000689787 in hist_entry_iter__add (iter=3D0x7fffafff659=
-0, al=3D0x7fffafff6540, max_stack_depth=3D127, arg=3D0x7fffffff9e00) at uti=
-l/hist.c:1359
-> > >  #7  0x0000000000446710 in perf_event__process_sample (tool=3D0x7ffff=
-fff9e00, event=3D0x110d250, evsel=3D0xfea2d0, sample=3D0x7fffafff6760, mach=
-ine=3D0x108c968) at builtin-top.c:845
-> > >  #8  0x0000000000447735 in deliver_event (qe=3D0x7fffffffa120, qevent=
-=3D0x10fc200) at builtin-top.c:1211
-> > >  #9  0x000000000064ccae in do_flush (oe=3D0x7fffffffa120, show_progre=
-ss=3Dfalse) at util/ordered-events.c:245
-> > >  #10 0x000000000064d005 in __ordered_events__flush (oe=3D0x7fffffffa1=
-20, how=3DOE_FLUSH__TOP, timestamp=3D0) at util/ordered-events.c:324
-> > >  #11 0x000000000064d0ef in ordered_events__flush (oe=3D0x7fffffffa120=
-, how=3DOE_FLUSH__TOP) at util/ordered-events.c:342
-> > >  #12 0x00000000004472a9 in process_thread (arg=3D0x7fffffff9e00) at b=
-uiltin-top.c:1120
-> > >  #13 0x00007ffff6e7dba8 in start_thread (arg=3D<optimized out>) at pt=
-hread_create.c:448
-> > >  #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv/l=
-inux/x86_64/clone3.S:78
-> > >
-> > > The cause is that perf_env__find_br_cntr_info tries to access a
-> > > null pointer pmu_caps in the perf_env struct. A similar issue exists
-> > > for homogeneous core systems which use the cpu_pmu_caps structure.
-> > >
-> > > Fix this by populating cpu_pmu_caps and pmu_caps structures with
-> > > values from sysfs when calling perf top with branch stack sampling
-> > > enabled.
-> > >
-> > > [1], LBR event logging introduced here:
-> > > https://lore.kernel.org/all/20231025201626.3000228-5-kan.liang@linux.=
-intel.com/
-> > >
-> > > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > ---
-> > > v2: update commit message with more meaningful stack trace from
-> > >     gdb and indicate that affected systems are limited to CPU's
-> > >     with LBR event logging support and that both hybrid and
-> > >     non-hybrid core systems are affected.
-> > > ---
-> > >  tools/perf/builtin-top.c |   8 +++
-> > >  tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++++=
-++
-> > >  tools/perf/util/env.h    |   1 +
-> > >  3 files changed, 123 insertions(+)
-> > >
-> > > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > > index 1061f4eebc3f..c2688e4ef3c4 100644
-> > > --- a/tools/perf/builtin-top.c
-> > > +++ b/tools/perf/builtin-top.c
-> > > @@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
-> > >         if (opts->branch_stack && callchain_param.enabled)
-> > >                 symbol_conf.show_branchflag_count =3D true;
-> > >
-> > > +       if (opts->branch_stack) {
-> > > +               status =3D perf_env__read_core_pmu_caps(&perf_env);
-> > > +               if (status) {
-> > > +                       pr_err("PMU capability data is not available\=
-n");
-> > > +                       goto out_delete_evlist;
-> > > +               }
-> > > +       }
-> > > +
-> > >         sort__mode =3D SORT_MODE__TOP;
-> > >         /* display thread wants entries to be collapsed in a differen=
-t tree */
-> > >         perf_hpp_list.need_collapse =3D 1;
-> > > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> > > index 36411749e007..37ed6dc52cf3 100644
-> > > --- a/tools/perf/util/env.c
-> > > +++ b/tools/perf/util/env.c
-> > > @@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struct =
-perf_env *env)
-> > >         return env->nr_cpus_avail ? 0 : -ENOENT;
-> > >  }
-> > >
-> > > +static int __perf_env__read_core_pmu_caps(struct perf_pmu *pmu,
+> > Thanks Thomas! It should also work for core_lowpower on ArrowLake. I
+> > find some times that tma_l2_hit_latency passes for me. Trying a few
+> > more times I see other failures, but they all seem to be "No Metric
+> > Value Error" - perhaps these shouldn't fail the test. In the testing
+> > code we're passing '-a' for system wide profiling:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/tests/shell/lib/perf_metric_validation.py?h=3Dperf-to=
+ols-next#n380
+> > I believe this is done so that counters for things like AVX will
+> > gather values. I wonder if the tma_l2_hit_latency something is
+> > happening due to scaling counts:
+> > ```
+> > $ sudo /tmp/perf/perf stat -M tma_l2_hit_latency -a sleep 1
 > >
-> > Prefer "const struct perf_pmu *pmu" to show that it doesn't change with=
-in.
->
-> Ok, I will change that in a new version.
->
+> >  Performance counter stats for 'system wide':
 > >
-> > > +                                         int *nr_caps, char ***caps,
-> > > +                                         unsigned int *max_branches,
-> > > +                                         unsigned int *br_cntr_nr,
-> > > +                                         unsigned int *br_cntr_width=
-)
-> > > +{
-> > > +       struct perf_pmu_caps *pcaps =3D NULL;
-> > > +       char *ptr, **tmp;
-> > > +       int ret =3D 0;
-> > > +
-> > > +       *nr_caps =3D 0;
-> > > +       *caps =3D NULL;
-> > > +
-> > > +       if (!pmu->nr_caps)
-> > > +               return 0;
-> > > +
-> > > +       *caps =3D zalloc(sizeof(char *) * pmu->nr_caps);
-> > > +       if (!*caps)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       tmp =3D *caps;
-> > > +       list_for_each_entry(pcaps, &pmu->caps, list) {
-> > > +
-> > > +               if (asprintf(&ptr, "%s=3D%s", pcaps->name, pcaps->val=
-ue) < 0) {
-> > > +                       ret =3D -ENOMEM;
-> > > +                       goto error;
-> > > +               }
-> > > +
-> > > +               *tmp++ =3D ptr;
-> > > +
-> > > +               if (!strcmp(pcaps->name, "branches"))
-> > > +                       *max_branches =3D atoi(pcaps->value);
-> > > +
-> > > +               if (!strcmp(pcaps->name, "branch_counter_nr"))
-> > > +                       *br_cntr_nr =3D atoi(pcaps->value);
-> > > +
-> > > +               if (!strcmp(pcaps->name, "branch_counter_width"))
-> > > +                       *br_cntr_width =3D atoi(pcaps->value);
-> > > +       }
-> > > +       *nr_caps =3D pmu->nr_caps;
-> > > +       return 0;
-> > > +error:
-> > > +       while (tmp-- !=3D *caps)
-> > > +               free(*tmp);
-> > > +       free(*caps);
-> > > +       *caps =3D NULL;
-> > > +       *nr_caps =3D 0;
-> > > +       return ret;
-> > > +}
-> > > +
-> > > +int perf_env__read_core_pmu_caps(struct perf_env *env)
-> > > +{
-> > > +       struct perf_pmu *pmu =3D NULL;
-> > > +       struct pmu_caps *pmu_caps;
-> > > +       int nr_pmu =3D 0, i =3D 0, j;
-> > > +       int ret;
-> > > +
-> > > +       nr_pmu =3D perf_pmus__num_core_pmus();
-> > > +
-> > > +       if (!nr_pmu)
-> > > +               return -ENODEV;
-> > > +
-> > > +       if (nr_pmu =3D=3D 1) {
-> > > +               pmu =3D perf_pmus__scan_core(NULL);
+> >      7,987,903,325      cpu_core/TOPDOWN.SLOTS/          #    210.2 %
+> > tma_l2_hit_latency       (87.27%)
+> >      3,131,119,398      cpu_core/topdown-retiring/
+> >                          (87.27%)
+> >      1,910,718,811      cpu_core/topdown-mem-bound/
+> >                          (87.27%)
+> >        481,456,610      cpu_core/topdown-bad-spec/
+> >                          (87.27%)
+> >      1,681,347,944      cpu_core/topdown-fe-bound/
+> >                          (87.27%)
+> >      2,798,109,902      cpu_core/topdown-be-bound/
+> >                          (87.27%)
+> >        365,736,554      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
+> >                                   (87.27%)
+> >        327,668,588      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
+> >                                  (87.30%)
+> >         12,744,464      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
+> >                            (75.32%)
+> >      1,403,250,041      cpu_core/CPU_CLK_UNHALTED.THREAD/
+> >                           (87.65%)
+> >          6,657,480      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
+> >                           (87.66%)
+> >     59,424,499,192      TSC
+> >         40,830,608      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
+> >                           (62.46%)
+> >      1,461,544,380      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
+> >                            (74.79%)
+> >      1,008,604,319      duration_time
 > >
-> > There is perf_pmus__find_core_pmu for this, not sure why this is in
-> > pmu.h rather than pmus.h though.
+> >        1.004974560 seconds time elapsed
+> > ```
+> > The values in the parentheses is a scaling amount which should mean
+> > for event multiplexing but for hybrid the events aren't running when
+> > on the other core type, so we're seeing these odd multiplexing values
+> > and these are used to scale counts:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/lib/perf/evsel.c?h=3Dperf-tools-next#n599
+> > I find when I run a benchmark rather than "sleep" the issue seems
+> > harder to reproduce.
 >
-> Thanks, I will use perf_pmus__find_core_pmu() for this then. Should I inc=
-lude another patch moving
-> the prototype to pmus.h?
+> Ok chatting with Weilin and actually paying attention to warning
+> messages I think I see a problem. TSC (msr/tsc/) is aggregating data
+> across all CPUs (it is a software event and is a different performance
+> monitoring unit to cpu_core) while the counters are only on cpu_core.
+> So I think this means the TSC value is too large. However, even with
+> restricting the CPUs I see the >100% problem:
+> ```
+> $ perf stat -M tma_l2_hit_latency -C 0-15 -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>     27,985,670,146      cpu_core/TOPDOWN.SLOTS/          #    125.6 %
+> tma_l2_hit_latency       (87.22%)
+>      9,619,906,383      cpu_core/topdown-retiring/
+>                          (87.22%)
+>      2,333,124,385      cpu_core/topdown-mem-bound/
+>                          (87.22%)
+>      3,607,656,674      cpu_core/topdown-bad-spec/
+>                          (87.22%)
+>      9,839,779,867      cpu_core/topdown-fe-bound/
+>                          (87.22%)
+>      5,244,189,749      cpu_core/topdown-be-bound/
+>                          (87.22%)
+>        442,932,231      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
+>                                   (87.24%)
+>        360,126,840      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
+>                                  (87.63%)
+>         31,264,814      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
+>                            (75.26%)
+>      4,761,244,040      cpu_core/CPU_CLK_UNHALTED.THREAD/
+>                           (87.63%)
+>         28,429,277      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
+>                           (87.62%)
+>     33,863,490,835      TSC
+>         23,533,366      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
+>                           (62.25%)
+>      3,158,155,632      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
+>                            (74.63%)
+>      1,003,102,327      duration_time
+>
+>        1.001912038 seconds time elapsed
+> ```
+> So we still need to figure this one out. The multiplexing numbers
+> still worry me.
 
-That would be good, thanks!
+So I think the TSC bug is genuine, perhaps Kan has thoughts on how to
+restrict the cpu mask to just the core cpus. The tma_l2_hit_latency
+>100% bug appears to be global. I see the problem on a tigerlake:
+```
+$ perf stat --metric-no-threshold -M tma_l2_hit_latency -a sleep 1
+
+Performance counter stats for 'system wide':
+
+       46,745,378      MEM_LOAD_RETIRED.FB_HIT          #    105.8 %
+tma_l2_hit_latency
+    1,445,788,955      CPU_CLK_UNHALTED.REF_TSC
+    2,532,066,403      CPU_CLK_UNHALTED.THREAD
+   40,008,507,350      TSC
+       11,922,390      MEM_LOAD_RETIRED.L1_MISS
+        2,587,517      MEM_LOAD_RETIRED.L2_HIT
+    1,002,819,485      duration_time
+
+      1.002198593 seconds time elapsed
+```
+Anyway, I think this patch series should land and we can worry about
+this metric and the hybrid problems separately.
+
+Thanks,
 Ian
 
-> Tom
 > >
-> > Thanks,
-> > Ian
-> >
-> > > +               if (!pmu)
-> > > +                       return -ENODEV;
-> > > +               ret =3D perf_pmu__caps_parse(pmu);
-> > > +               if (ret < 0)
-> > > +                       return ret;
-> > > +               return __perf_env__read_core_pmu_caps(pmu, &env->nr_c=
-pu_pmu_caps,
-> > > +                                                     &env->cpu_pmu_c=
-aps,
-> > > +                                                     &env->max_branc=
-hes,
-> > > +                                                     &env->br_cntr_n=
-r,
-> > > +                                                     &env->br_cntr_w=
-idth);
-> > > +       }
-> > > +
-> > > +       pmu_caps =3D zalloc(sizeof(*pmu_caps) * nr_pmu);
-> > > +       if (!pmu_caps)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> > > +               if (perf_pmu__caps_parse(pmu) <=3D 0)
-> > > +                       continue;
-> > > +               ret =3D __perf_env__read_core_pmu_caps(pmu, &pmu_caps=
-[i].nr_caps,
-> > > +                                                    &pmu_caps[i].cap=
-s,
-> > > +                                                    &pmu_caps[i].max=
-_branches,
-> > > +                                                    &pmu_caps[i].br_=
-cntr_nr,
-> > > +                                                    &pmu_caps[i].br_=
-cntr_width);
-> > > +               if (ret)
-> > > +                       goto error;
-> > > +
-> > > +               pmu_caps[i].pmu_name =3D strdup(pmu->name);
-> > > +               if (!pmu_caps[i].pmu_name) {
-> > > +                       ret =3D -ENOMEM;
-> > > +                       goto error;
-> > > +               }
-> > > +               i++;
-> > > +       }
-> > > +
-> > > +       env->nr_pmus_with_caps =3D nr_pmu;
-> > > +       env->pmu_caps =3D pmu_caps;
-> > > +
-> > > +       return 0;
-> > > +error:
-> > > +       for (i =3D 0; i < nr_pmu; i++) {
-> > > +               for (j =3D 0; j < pmu_caps[i].nr_caps; j++)
-> > > +                       free(pmu_caps[i].caps[j]);
-> > > +               free(pmu_caps[i].caps);
-> > > +               free(pmu_caps[i].pmu_name);
-> > > +       }
-> > > +       free(pmu_caps);
-> > > +       return ret;
-> > > +}
-> > > +
-> > >  const char *perf_env__raw_arch(struct perf_env *env)
-> > >  {
-> > >         return env && !perf_env__read_arch(env) ? env->arch : "unknow=
-n";
-> > > diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> > > index d90e343cf1fa..135a1f714905 100644
-> > > --- a/tools/perf/util/env.h
-> > > +++ b/tools/perf/util/env.h
-> > > @@ -152,6 +152,7 @@ struct btf_node;
+> > > Thanks,
+> > > Tom
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  .../tests/shell/lib/perf_metric_validation.py   | 12 +++++++++---
+> > > >  tools/perf/tests/shell/stat_metrics_values.sh   | 17 +++++++++++--=
+----
+> > > >  2 files changed, 20 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b=
+/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > > index 0b94216c9c46..dea8ef1977bf 100644
+> > > > --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > > +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > > @@ -35,7 +35,8 @@ class TestError:
+> > > >
+> > > >
+> > > >  class Validator:
+> > > > -    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=
+=3DFalse, datafname=3D'', fullrulefname=3D'', workload=3D'true', metrics=3D=
+''):
+> > > > +    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=
+=3DFalse, datafname=3D'', fullrulefname=3D'',
+> > > > +                 workload=3D'true', metrics=3D'', cputype=3D'cpu')=
+:
+> > > >          self.rulefname =3D rulefname
+> > > >          self.reportfname =3D reportfname
+> > > >          self.rules =3D None
+> > > > @@ -43,6 +44,7 @@ class Validator:
+> > > >          self.metrics =3D self.__set_metrics(metrics)
+> > > >          self.skiplist =3D set()
+> > > >          self.tolerance =3D t
+> > > > +        self.cputype =3D cputype
+> > > >
+> > > >          self.workloads =3D [x for x in workload.split(",") if x]
+> > > >          self.wlidx =3D 0  # idx of current workloads
+> > > > @@ -377,7 +379,7 @@ class Validator:
+> > > >
+> > > >      def _run_perf(self, metric, workload: str):
+> > > >          tool =3D 'perf'
+> > > > -        command =3D [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
+> > > > +        command =3D [tool, 'stat', '--cputype', self.cputype, '-j'=
+, '-M', f"{metric}", "-a"]
+> > > >          wl =3D workload.split()
+> > > >          command.extend(wl)
+> > > >          print(" ".join(command))
+> > > > @@ -443,6 +445,8 @@ class Validator:
+> > > >                  if 'MetricName' not in m:
+> > > >                      print("Warning: no metric name")
+> > > >                      continue
+> > > > +                if 'Unit' in m and m['Unit'] !=3D self.cputype:
+> > > > +                    continue
+> > > >                  name =3D m['MetricName'].lower()
+> > > >                  self.metrics.add(name)
+> > > >                  if 'ScaleUnit' in m and (m['ScaleUnit'] =3D=3D '1%=
+' or m['ScaleUnit'] =3D=3D '100%'):
+> > > > @@ -578,6 +582,8 @@ def main() -> None:
+> > > >      parser.add_argument(
+> > > >          "-wl", help=3D"Workload to run while data collection", def=
+ault=3D"true")
+> > > >      parser.add_argument("-m", help=3D"Metric list to validate", de=
+fault=3D"")
+> > > > +    parser.add_argument("-cputype", help=3D"Only test metrics for =
+the given CPU/PMU type",
+> > > > +                        default=3D"cpu")
+> > > >      args =3D parser.parse_args()
+> > > >      outpath =3D Path(args.output_dir)
+> > > >      reportf =3D Path.joinpath(outpath, 'perf_report.json')
+> > > > @@ -586,7 +592,7 @@ def main() -> None:
+> > > >
+> > > >      validator =3D Validator(args.rule, reportf, debug=3Dargs.debug=
+,
+> > > >                            datafname=3Ddatafile, fullrulefname=3Dfu=
+llrule, workload=3Dargs.wl,
+> > > > -                          metrics=3Dargs.m)
+> > > > +                          metrics=3Dargs.m, cputype=3Dargs.cputype=
+)
+> > > >      ret =3D validator.test()
+> > > >
+> > > >      return ret
+> > > > diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/=
+perf/tests/shell/stat_metrics_values.sh
+> > > > index 279f19c5919a..30566f0b5427 100755
+> > > > --- a/tools/perf/tests/shell/stat_metrics_values.sh
+> > > > +++ b/tools/perf/tests/shell/stat_metrics_values.sh
+> > > > @@ -16,11 +16,16 @@ workload=3D"perf bench futex hash -r 2 -s"
+> > > >  # Add -debug, save data file and full rule file
+> > > >  echo "Launch python validation script $pythonvalidator"
+> > > >  echo "Output will be stored in: $tmpdir"
+> > > > -$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "=
+${workload}"
+> > > > -ret=3D$?
+> > > > -rm -rf $tmpdir
+> > > > -if [ $ret -ne 0 ]; then
+> > > > -     echo "Metric validation return with erros. Please check metri=
+cs reported with errors."
+> > > > -fi
+> > > > +for cputype in /sys/bus/event_source/devices/cpu_*; do
+> > > > +     cputype=3D$(basename "$cputype")
+> > > > +     echo "Testing metrics for: $cputype"
+> > > > +     $PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir =
+-wl "${workload}" \
+> > > > +             -cputype "${cputype}"
+> > > > +     ret=3D$?
+> > > > +     rm -rf $tmpdir
+> > > > +     if [ $ret -ne 0 ]; then
+> > > > +             echo "Metric validation return with errors. Please ch=
+eck metrics reported with errors."
+> > > > +     fi
+> > > > +done
+> > > >  exit $ret
+> > > >
 > > >
-> > >  extern struct perf_env perf_env;
-> > >
-> > > +int perf_env__read_core_pmu_caps(struct perf_env *env);
-> > >  void perf_env__exit(struct perf_env *env);
-> > >
-> > >  int perf_env__kernel_is_64_bit(struct perf_env *env);
-> > > --
-> > > 2.49.0
-> > >
-> >
->
