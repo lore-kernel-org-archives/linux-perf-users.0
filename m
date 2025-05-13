@@ -1,179 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522B62C1799;
-	Tue, 13 May 2025 20:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D168B1F3FD0;
+	Tue, 13 May 2025 20:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747168685; cv=none; b=iEHKxiJs3nV1ZyGWOocopTdBCrDlbft1bQf8TGzZD+YVdnDdRch1mMMvzsCcW5/QuQAX22e90VR08oe5+jHtnJTFZCg6QmKN9nCn4QDXnhfrsR8Xu8Dg8RasseimFuNeLRCtuWvg3sbygsN0Hg9E18Ts5IowvZx3bx36Cp6DuEg=
+	t=1747169019; cv=none; b=bnsSEJY6EL2l3YpJUHEvCr5bmvZtcr6O+L7A7i1XQ4iW6qYBtO0woFd+oVGEOrcSZDalsQRgq3VcMPT3MFBpG+XhNFobpkGNwdQTEi/lWVDYYPDWxVaZkRtdDuly0QCnjbaDqUZjElBj32NaOvgFRyxqTwjCSm0tHLeE6n2/A/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747168685; c=relaxed/simple;
-	bh=agLNp8oAxzQaWYhjfHFlOBrApju2Hbb0chhD8+zYEOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E9duIGLx0Fj6biFNhDDuBBV4lNeLNdy0IW9Q5v9w6gszlPp9jzFgYSd/l6rEjG8bbMnaqIMDeb1DUBt/iRZx5KQWZUZu76iVeuPfWKjKUC5L5mkGLEXIPu7ZOPhoM5AeJlH2tjLNIErYPDyL1Lm9ixeYtlQRt5Kj8/Xwb/fCEt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SlMflK2O; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747169019; c=relaxed/simple;
+	bh=DlzoO2fu8n/uCk0v+sIlLnDoi+5ozdMq6NjBF4QfH1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YtB32K8PjWYN///dyo2cZsWee5C2cq417lKhKOyeE3OSR5ElYKyF6B+ZakBpwgj7p9ptN0F/02E552IvpC6xrpxMV31DiVMQBYw3ctVrY+rkB/eMgaZoVEOF9/oq9HcvvRFVcVofsqYljq7/3fedYAzQavAPzEa5Yc+CeC7uc2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMVckfZB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SlMflK2O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747168683; x=1778704683;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=agLNp8oAxzQaWYhjfHFlOBrApju2Hbb0chhD8+zYEOA=;
-  b=SlMflK2Ozr16aF5H5ehYlRXNlpcUmvALZCqGgA13XyBw7BpNk+2COTp8
-   pSaOxDQ1JcXidMDw4sQGHKQdTSmkoGrPqfHalPqcKy/G2XhircdVErQQH
-   ZW7inRo2Fs6wZfwCVi/dSklMdbW3TUq3YzRAUQblr4cNnOYtuQgUZanr/
-   wfpC4e9MsBrj4acQnGzL7aXvDH4nv8e3gogyuzCH6Y6cKoupR98dcb+qk
-   l3TEwI7sK0TT8sFMXZ9sDstSKugozphKbE/ShCxwm8gFm1UquWnousGHN
-   RbQStn5lYbOr5lkKsFHiGdmg27SA65Z7CC3sirJL9am3YaP1N+tiYpIQK
-   A==;
-X-CSE-ConnectionGUID: V2wVW8IIT1yC6ehFsK5WXg==
-X-CSE-MsgGUID: +Dc6+vhnR8yIvD6SqIYo6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="49160486"
-X-IronPort-AV: E=Sophos;i="6.15,286,1739865600"; 
-   d="scan'208";a="49160486"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 13:38:00 -0700
-X-CSE-ConnectionGUID: UCq+j34SQnyxy4tBG8PDfQ==
-X-CSE-MsgGUID: VT1VdeJ9T1Sfv0wsLdaadw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,286,1739865600"; 
-   d="scan'208";a="138241737"
-Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by fmviesa008.fm.intel.com with ESMTP; 13 May 2025 13:37:59 -0700
-From: Sohil Mehta <sohil.mehta@intel.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMVckfZB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE053C4CEE4;
+	Tue, 13 May 2025 20:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747169019;
+	bh=DlzoO2fu8n/uCk0v+sIlLnDoi+5ozdMq6NjBF4QfH1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AMVckfZB1GImH8ldE/nI0p4bsH+Li/T8YfxZ8tGNw+iZrFpVEo5L83N+gosebCwZy
+	 vZK7AJt/fK+w4af7Bu0ho/WkWpW5bouupmG8oPNjEbVz+XS48Z1VQxm4LxElMK/K3U
+	 B83QtuQ5fLOuRBtfmZLVJgNfhPnacCBv/9DW8RYeSaKxs4Apiy6ey0XyDc56sYfTlN
+	 HxikQju+Yd31QOjyHiL6192f9l9zZsKpI3hkj3Jeok17wNd9/0rZ/kCnKS6EQbmPox
+	 JNduMBTvtJ4geQmGn+3IGDrKmy6Qsuq66iMny5b0+mWQgbOOEvJA7kM5zfAvVdruVh
+	 uhbBi7FEFvTew==
+Date: Tue, 13 May 2025 17:43:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v6 8/9] perf/x86: Enable NMI-source reporting for perfmon
-Date: Tue, 13 May 2025 13:38:02 -0700
-Message-ID: <20250513203803.2636561-9-sohil.mehta@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250513203803.2636561-1-sohil.mehta@intel.com>
-References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: make -C tools/perf build-test failing on aarch64
+Message-ID: <aCOu-CoYBcX3LNN8@x1>
+References: <aB6vFFcRErPVt7p9@x1>
+ <95bd54bf-09b7-4444-94a7-87ab9a3035e6@linaro.org>
+ <de9470c6-de22-4136-b390-6dcc056495bd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <de9470c6-de22-4136-b390-6dcc056495bd@linaro.org>
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+On Tue, May 13, 2025 at 11:05:16AM +0100, James Clark wrote:
+> On 11/05/2025 18:46, James Clark wrote:
+> > On 10/05/2025 2:42 am, Arnaldo Carvalho de Melo wrote:
+> > >     I noticed that upstream is failing on aarch64:
 
-Program the designated PMI NMI-source vector into the local vector table
-for the PMU. An NMI for the PMU would directly invoke the PMI handler
-without polling other NMI handlers, resulting in reduced PMI delivery
-latency.
+<SNIP>
 
-Co-developed-by: Zeng Guang <guang.zeng@intel.com>
-Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Tested-by: Sandipan Das <sandipan.das@amd.com> # AMD overlapping bits
----
-v6: Picked up a tested-by tag.
+> > > I think this is related to:
 
-v5: No significant change.
----
- arch/x86/events/core.c       | 4 ++--
- arch/x86/events/intel/core.c | 6 +++---
- arch/x86/include/asm/apic.h  | 1 +
- 3 files changed, 6 insertions(+), 5 deletions(-)
+> > > commit bfb713ea53c746b07ae69fe97fa9b5388e4f34f9 (perf-tools)
+> > > Author: James Clark <james.clark@linaro.org>
+> > > Date:   Thu Apr 17 14:55:50 2025 +0100
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 031e908f0d61..42b270526631 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1695,7 +1695,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 	 * This generic handler doesn't seem to have any issues where the
- 	 * unmasking occurs so it was left at the top.
- 	 */
--	apic_write(APIC_LVTPC, APIC_DM_NMI);
-+	apic_write(APIC_LVTPC, PERF_NMI);
+> > >      perf tools: Fix arm64 build by generating unistd_64.h
+
+> > > Can you please take a look?
+
+> > Hmm yeah looks like it's caused by that. I'm travelling tomorrow but
+> > I'll try to take a look.
  
- 	for_each_set_bit(idx, x86_pmu.cntr_mask, X86_PMC_IDX_MAX) {
- 		if (!test_bit(idx, cpuc->active_mask))
-@@ -1737,7 +1737,7 @@ void perf_events_lapic_init(void)
- 	/*
- 	 * Always use NMI for PMU
- 	 */
--	apic_write(APIC_LVTPC, APIC_DM_NMI);
-+	apic_write(APIC_LVTPC, PERF_NMI);
- }
- 
- static int
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 09d2d66c9f21..87c624686c58 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3202,7 +3202,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
- 	 * NMI handler.
- 	 */
- 	if (!late_ack && !mid_ack)
--		apic_write(APIC_LVTPC, APIC_DM_NMI);
-+		apic_write(APIC_LVTPC, PERF_NMI);
- 	intel_bts_disable_local();
- 	cpuc->enabled = 0;
- 	__intel_pmu_disable_all(true);
-@@ -3239,7 +3239,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
- 
- done:
- 	if (mid_ack)
--		apic_write(APIC_LVTPC, APIC_DM_NMI);
-+		apic_write(APIC_LVTPC, PERF_NMI);
- 	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
- 	cpuc->enabled = pmu_enabled;
- 	if (pmu_enabled)
-@@ -3252,7 +3252,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
- 	 * Haswell CPUs.
- 	 */
- 	if (late_ack)
--		apic_write(APIC_LVTPC, APIC_DM_NMI);
-+		apic_write(APIC_LVTPC, PERF_NMI);
- 	return handled;
- }
- 
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 99033bfb26ea..d637717d42bd 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -30,6 +30,7 @@
- #define BT_NMI			(APIC_DM_NMI | NMIS_VECTOR_BT)
- #define KGDB_NMI		(APIC_DM_NMI | NMIS_VECTOR_KGDB)
- #define MCE_NMI			(APIC_DM_NMI | NMIS_VECTOR_MCE)
-+#define PERF_NMI		(APIC_DM_NMI | NMIS_VECTOR_PMI)
- 
- /*
-  * Debugging macros
--- 
-2.43.0
+> Sent the fix, hopefully 3rd time lucky.
 
+Thanks a bunch! It seems we will not need a 4th. :-)
+ 
+> I know there is the build-test target but I had let my setup bitrot so I
+> wasn't running it. I don't know if you have ever shared any of your docker
+> containers that you use for build testing?
+
+I keep them at:
+
+https://github.com/acmel/linux-tools-container-builds
+
+The README should be enough to get you going, if you find some
+difficulty, please lemme know.
+
+I use this since forever and made them available at github when Daniel
+Bristot started maintaining his tools in the kernels sources, the idea
+was for him to also use to test build his tools.
+
+It'll be great if you find them useful and, better, wire it up to some
+sort of CI you're using.
+
+It does a subset of what 'make -C tools/perf build-test' does, but the
+idea for them is to switch to do the full build-test target and also to
+run 'perf test', that would be restricted to whatever perms a the
+containers are given.
+
+Nowadays with parallel 'perf test' and it having being polished to work
+with less perms, that seems like a worthy goal to pursue.
+ 
+> I will also try to get that target added to our CI. We're only running a
+> normal build and then "perf test" there.
+
+That will be really nice of you, wiring up these things so that when I
+run it all goes as expected will be great!
+
+- Arnaldo
