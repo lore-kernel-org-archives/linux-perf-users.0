@@ -1,182 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44C31E1E13;
-	Tue, 13 May 2025 20:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9F342A80
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 20:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747169532; cv=none; b=uG/W0baJLeVoNz0DLohb5QuXaISaqHncM4EMn0161e6y+nkmZT2HuhIfw2+Timo97AU5gr8yLQiZPVv4iN4S3QMr9jBj5RlLk7qONg4Fx5aFP428lbHq/BZoUTq9rgtGIiJu4zglF05otFfVrLauPZ3Xm/0taByZnk/izPVyLEA=
+	t=1747169983; cv=none; b=sggeuFY2iTlUqtgBp56gPGyFx4jTBilawNUIWWaUUTKgFhjiJP4UIwEx+Pcep7HMtq5bjaUTGjiXGRxedA/2i16d6JA18AcUvJV1CKCPjOzpgxbFsMdLJ4RhYYHiIkRPxBO9mahtYC0/PTfBOnivz1ImSTKfKT1Fg190WT067S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747169532; c=relaxed/simple;
-	bh=45izZRFiOaJ74+qHrbyGcZHN/6lAmsP2Y+eEWlL5m7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJX6yh9QSJficXOIdnHungcLianVZmgz0Cg9Rxfb+8P2XT4Sx4m9L+eQiNwaZlQHTOWEgzni0qkiWzQHqxgzAuGLP5wbEXfS0La5ReVo2v5NxnRXtgJI71mTgkI2O1Xgaoedw1uU5Q6xkzfGmGzJ7exS8z6GKf6Yy8usX3Uhfpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9slKa/y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747169983; c=relaxed/simple;
+	bh=kmoujT613lINq5POisBnj8k0q5mR078aRV2JQyCa9YQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X1PlElgnl1FGJKKqiGo1d9zT0/mFwXyE5eGnEHNrb3IiDDwV0la8zEou+WLPxlV8tjYCC0fEVd/3PUgEJEkll/lU+INU7ECvNDyosBK9UKM4CJt/JQyQw0D+GhT2+UMtIwXDPpgrkT7u2Jyf4EosxMOjBeGddpm+8XgQ3WjibMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1xt8DBBL; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9slKa/y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025C4C4CEE4;
-	Tue, 13 May 2025 20:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747169532;
-	bh=45izZRFiOaJ74+qHrbyGcZHN/6lAmsP2Y+eEWlL5m7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9slKa/ySO302GZuBu6pmGs8ek/VS7FHeRpgdiaqTpccpjjbRWBFgKA87HweUHzv/
-	 Sq/SXy+Zrt9Nk88xB4Sf5POAQH9BmNdo6PdM06Mvdf3Bc7n75ZNLpMYVnINdsIdosV
-	 7z/XxHvJ3g/CljVn4j0DnA3xtmmFOlIG9+XRD5UBLT5s1p6QCrANcRXWD0K+P6Junw
-	 4cubvacyWVEILth1BaTpmYTXY/ipfS11JIUmLBnoEX5l7uPqL5rE5I6WdrQyY6X+gv
-	 jxQes/xMwy1JQ3ISAnM6XgaT3OST2PpysbhM2/03D0r28NjajbSv89brgd9zdQUhmf
-	 4h3BC7/ppOudA==
-Date: Tue, 13 May 2025 17:52:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf report: Add 'tgid' sort key
-Message-ID: <aCOw-fzNUN0sh0H_@x1>
-References: <20250509210421.197245-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1xt8DBBL"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e39fbad5fso13195ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 May 2025 13:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747169982; x=1747774782; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kmoujT613lINq5POisBnj8k0q5mR078aRV2JQyCa9YQ=;
+        b=1xt8DBBLFGEBCEhH71EydtNAsD83WdywTFTFoY6FohMH5yq1hxQyU0d6uD/WnhQDVR
+         usdJuNiuuCSIhFFacoODenw/7xjoZGc8KwyNPPYJaYKwccDNYiRXWu0YM9PKB2Bon3Lw
+         nbK1wUiYmyE7uTppEf5j9wO3tntLiHj9x3r9HFhMkkFRwDb9xaLvZ1LlknrJQAaC+aju
+         M4FNAezG5OYfYT2imMZE6VeEe6BogL6f5UXl23XB6XuYLYe+YVwqiRgt28F9hTwuNng1
+         Wv4TZZlgEWJljq6pkr+FzK2v1UEunHKibO8XkX7kehrirLnR58JPTUyJ2U23WwcenzIH
+         V2WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747169982; x=1747774782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kmoujT613lINq5POisBnj8k0q5mR078aRV2JQyCa9YQ=;
+        b=FFT21iWWIlMuUT7vAuoZfaf1TpGMiHav+vsEADwsDMqpBHalaoHoq/qVUceXbSWyIy
+         jUiF3PSX0PtPgwseMTPBztcEk3kw9r6Y4it2yWf8hv6EEUxZTmFi7O8RKUyqu1xjkV+M
+         xtKddgyRygbPT5xJ96q2Aefd9ukvuaxGGYcDGYHuuo0kLpZzr/8qo0Q+kryu+RoOkA0D
+         ssauTLxMqVBQ3UcNMg8IRMq6yBR1o9sZQji3inTO5g8rrgInmm00HDC+fbfNeL042gJD
+         j9kxUh3cQt8HlrIVoTLLeyQDjAhNQvJzqJqkMTzy9buDtKFOl00bIQTvgZPQLgGVlK/+
+         RBZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIUc1CmnEN2zXvBsA3fAwJn0dCpVq01ck0krkzAmJ0eyrEpdXkQVL5ffq5bK0zbqlKL6AjIfMjMljR+G7DIqJ+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkI+out2EI98CnQOrIAWZ7Ta7WpAuaXuBV89gTdMRPfc8zyaqb
+	az3lSTRyYFGwW3TzETDuJuELs96TtTlxetWsIaVnZwxwVlrEMnpvMMgQmrEDpJkP47B+qjg1N59
+	xlb7k3fxnhbnQxuVfkxjpi24kv/fK0+dxz738zaAT
+X-Gm-Gg: ASbGncu4GeXi6qeS0lPVM57UDOvBBjO/99X4Z85oYkZp10BRuOqJ57iQN99YVypo8EB
+	RNYdfzAgb71adLFTMhQ0I7ENpdXkMlUJSaDfhMKjopetn+kuuIwiAdqI4vr8xTnb17IaYsMSAm+
+	7EwfU0LRVwLgMvXqmjKFTtegT1sMyTl/Y2He2pFkJMWEGWL+3lB80mIsf6B4rwSg==
+X-Google-Smtp-Source: AGHT+IEHJcjpKAtOS86nQV+xU9mV44SrVY+/XlpOPb9EojLJPjbR4OqS16VP12w9iA5csSFCoG51WilhKP4l+phrj0U=
+X-Received: by 2002:a17:903:f83:b0:21d:dba1:dd72 with SMTP id
+ d9443c01a7336-2319ab2117amr121865ad.15.1747169981479; Tue, 13 May 2025
+ 13:59:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509210421.197245-1-namhyung@kernel.org>
+References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
+ <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
+ <aCI0oDBSz86S9fz-@x1> <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
+ <aCOwnUUVKx798Uza@x1>
+In-Reply-To: <aCOwnUUVKx798Uza@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 May 2025 13:59:28 -0700
+X-Gm-Features: AX0GCFsVt-eZ2CzDOIaHjUDdhu6L7-cbOlm1bATvBY8CUXJTAsFZBElBTukfvfI
+Message-ID: <CAP-5=fXK9Jru+ZqeTSuaTmOTmpF3JDHDswUOcmdOyLSP1Go_Gg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
+ counting perf events
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maddy@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 02:04:21PM -0700, Namhyung Kim wrote:
-> Sometimes we need to analyze the data in process level but current sort
-> keys only work on thread level.  Let's add 'tgid' sort key for that as
-> 'pid' is already taken for thread.
-> 
-> This will look mostly the same, but it only uses tgid instead of tid.
-> Here's an example of a process with two threads (thloop).
-> 
->   $ perf record -- perf test -w thloop
-> 
->   $ perf report --stdio -s tgid,pid -H
->   ...
->   #
->   #    Overhead  Tgid:Command / Pid:Command
->   # ...........  ..........................
->   #
->      100.00%     2018407:perf
->          50.34%     2018407:perf
->          49.66%     2018409:perf
-> 
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
+On Tue, May 13, 2025 at 1:50=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+[snip]
+> Right, I like the effort he is making into having perf more usable in
+> python, and I encourage him to think about the issues you raised so that
+> we can come to some good abstractions.
 
+Thanks Arnaldo, can we be tolerant to API changes in the python from a
+"regression" point-of-view? Like avoiding the notion of indices?
+Presumably such a fix would also need fixing in all the perf python
+scripts, but the external users I worry about. My sense is the number
+of external users is minimal, for example, toplev I don't believe is a
+user [1].
 
+Ian
 
-Thanks, applied to perf-tools-next,
-
-- Arnaldo
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-report.txt |  1 +
->  tools/perf/util/hist.h                   |  1 +
->  tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
->  tools/perf/util/sort.h                   |  1 +
->  4 files changed, 41 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index 3376c471057506d9..acef3ff4178eff66 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -94,6 +94,7 @@ OPTIONS
->  
->  	- comm: command (name) of the task which can be read via /proc/<pid>/comm
->  	- pid: command and tid of the task
-> +	- tgid: command and tgid of the task
->  	- dso: name of library or module executed at the time of sample
->  	- dso_size: size of library or module executed at the time of sample
->  	- symbol: name of function executed at the time of sample
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 355198fd70281f43..c64254088fc77246 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -42,6 +42,7 @@ enum hist_column {
->  	HISTC_TIME,
->  	HISTC_DSO,
->  	HISTC_THREAD,
-> +	HISTC_TGID,
->  	HISTC_COMM,
->  	HISTC_CGROUP_ID,
->  	HISTC_CGROUP,
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index 8efafa7c10822ee9..45e6546539600a46 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -141,6 +141,43 @@ struct sort_entry sort_thread = {
->  	.se_width_idx	= HISTC_THREAD,
->  };
->  
-> +/* --sort tgid */
-> +
-> +static int64_t
-> +sort__tgid_cmp(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +	return thread__pid(right->thread) - thread__pid(left->thread);
-> +}
-> +
-> +static int hist_entry__tgid_snprintf(struct hist_entry *he, char *bf,
-> +				       size_t size, unsigned int width)
-> +{
-> +	int tgid = thread__pid(he->thread);
-> +	const char *comm = NULL;
-> +
-> +	/* display comm of the thread-group leader */
-> +	if (thread__pid(he->thread) == thread__tid(he->thread)) {
-> +		comm = thread__comm_str(he->thread);
-> +	} else {
-> +		struct maps *maps = thread__maps(he->thread);
-> +		struct thread *leader = machine__find_thread(maps__machine(maps),
-> +							     tgid, tgid);
-> +		if (leader) {
-> +			comm = thread__comm_str(leader);
-> +			thread__put(leader);
-> +		}
-> +	}
-> +	width = max(7U, width) - 8;
-> +	return repsep_snprintf(bf, size, "%7d:%-*.*s", tgid, width, width, comm ?: "");
-> +}
-> +
-> +struct sort_entry sort_tgid = {
-> +	.se_header	= "   Tgid:Command",
-> +	.se_cmp		= sort__tgid_cmp,
-> +	.se_snprintf	= hist_entry__tgid_snprintf,
-> +	.se_width_idx	= HISTC_TGID,
-> +};
-> +
->  /* --sort simd */
->  
->  static int64_t
-> @@ -2508,6 +2545,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
->  
->  static struct sort_dimension common_sort_dimensions[] = {
->  	DIM(SORT_PID, "pid", sort_thread),
-> +	DIM(SORT_TGID, "tgid", sort_tgid),
->  	DIM(SORT_COMM, "comm", sort_comm),
->  	DIM(SORT_DSO, "dso", sort_dso),
->  	DIM(SORT_SYM, "symbol", sort_sym),
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index 6e92ac62b9c80a0b..a742ab7f3c677f48 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -73,6 +73,7 @@ enum sort_type {
->  	SORT_SYM_OFFSET,
->  	SORT_ANNOTATE_DATA_TYPE_CACHELINE,
->  	SORT_PARALLELISM,
-> +	SORT_TGID,
->  
->  	/* branch stack specific sort keys */
->  	__SORT_BRANCH_STACK,
-> -- 
-> 2.49.0.1015.ga840276032-goog
+[1] https://github.com/andikleen/pmu-tools
