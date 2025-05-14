@@ -1,169 +1,94 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730DB1E9B0C;
-	Wed, 14 May 2025 20:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AC28E583;
+	Wed, 14 May 2025 20:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253291; cv=none; b=c5GkGpu2K1gY0iVNFLGuYgedHq0sszHw/wtz3PzZ+BdZBXbKXBYaII15AauucPaz0ooLkwc7narwU9VZzLUMwBkUJbwCspsamcRgO3Fi6sBfMpqyTDwgzsZgZisIQW5/bNBU/iiL/LGLIQ5Sr/1Mxjb6DyWu2ptWvCY5zXFon0w=
+	t=1747253408; cv=none; b=Ji5cwNKlFGJuOdybdqLND6gaugYhFyqyI0r68m4io8TP4gwVDhrhgIHZ7cNCuDrgbozavrC7mHuG2Qna2fm/qdDY/DSx/kt9oZY8/kvOcy4mdQffGuLajI8e61I1EDnAwpju0C6dX6u3YsyjkOghS3CqQZAQrEHP7uvGniow668=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253291; c=relaxed/simple;
-	bh=X3N2aVqCYNyB+V7LQh7hbMkDswvtRNWzTyi4qd7K6kE=;
+	s=arc-20240116; t=1747253408; c=relaxed/simple;
+	bh=Vor2JmERlhiBjTMLvMnGJFx3PllRrl1yk8TtqIk3sY8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M0eJOmeN2qwjbauZ3jRruk08FJWpjZR1rGpICF2XGxQIUVDjRkNBRLisotHyoWxKdqm21dKkyaLob3wysm1c6WV1EeUF5c8uDKj6GmW15PdESpWHM0Wr+rCwr2zsc0aMW+a7jVJ81qZvCKciVsGi7lvZZNeL2k6ILg2SLGx1eh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SdkimYli; arc=none smtp.client-ip=209.85.219.173
+	 To:Cc:Content-Type; b=TNP9h8rfCnS43g4OPSfkyHK7i0rZ4r4+0f/aT36wh3GAjPWZ0T5rhWR7M7E2Na+otiAlyrmjTO3DI+WPLL3qwrp3jVPzxnIIYw2yFDCnw+VLbtiT+tr/WmKJXB6H+Y5Y27ZvBmQvuHxYRvQgRuTy3vu22AP2OuFm+QBGNkw2hxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PG5OPFnH; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdkimYli"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e740a09eb00so227096276.0;
-        Wed, 14 May 2025 13:08:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG5OPFnH"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7080dd5fe92so1743417b3.3;
+        Wed, 14 May 2025 13:10:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747253287; x=1747858087; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747253406; x=1747858206; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PnMFZJ+Y+vsiV2dHjLhQlDtDDqCoEieHp1SijjKcO3o=;
-        b=SdkimYli/4i2iogdl+A7wNuiekp8x8o5YdoU7XkHFTxmKqDrdEqcsIM7miX8VipraX
-         fAer1UWXiZDVj3g/+yphMsKhfCwaj7pdA8Yw22XPI2IQqJQdtHTjf2h+6xXNzdEXCbhU
-         dsju9R+73jW7C2x7+SLAYGfJhQmr4I9KPPYSgniRGjnVfY+CKbkaLqVFqTm/sqZjXkRs
-         5nBUGWO21sm05IhFeCgchNBqU69T/vf9L9XrubIZPWBQ46JzmkW2bxyxO0f6uZeLn6kC
-         iySY7FRZWP0b+tI4VPKqLXc37zh1c/uZTlsODrLOQ5jouG6pmIBt7JSF1kT/WIhSk+0s
-         8v5A==
+        bh=yC0JYTBLCAjFMJ5IHciqczec5NK+wwTHRVRJnm/CnUs=;
+        b=PG5OPFnH2bjHc2zTZ3GDEZEdigNrTS5ZdzX/xhv/KVE6sj3CdfDKsaQgS/rUr7PgnX
+         rTAO8Pk77I9iNtYlVId37DLo+hnjys1evksYmLQUJmzpk3SGiwzb6Glj9lhiFaHtZINr
+         sXREWom/0IXBYoI/1v54lnxQEPMPfUq96FZ44+9p75Rjnw+3DGIv/FeCOvxG7aSjPogM
+         DTcf7595ydyb78onE2iXwmY7PV7spdtKA9tyRElxD6iD4Q+Hul4wKLqNHFgGzbg9GlPu
+         6RPBxn/S0wKDzojNGBmGE4KIVira0GMAECDYz2Ewi1cE3vfxewcvQjSKhdHTHBBMN0Ju
+         bp1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747253287; x=1747858087;
+        d=1e100.net; s=20230601; t=1747253406; x=1747858206;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PnMFZJ+Y+vsiV2dHjLhQlDtDDqCoEieHp1SijjKcO3o=;
-        b=MQEHuIB3gu/egDeIyLOyQ5V0Vt26CFKdUKrNHxC3JPrytLQdRzQzvzgJzx3i8nmlZY
-         Jgkd84EmDC0jox5zL+oKkPbHZbNmU8+QZ1Uc0NeOIDQORdn7eL93Zt4H6bx1uGZNkaYM
-         HsjX8WmHrGavBEodasM3F7lT5Trx9zXnNQuk/EPqm2V4q3VH5vg5big0NslSCLOqiEZk
-         EIqOrOtdLvY5qKJZBiK6hh2zvOjTewJt1x6wSsEWwWQ+cts9IuQTNUWr+xAuDCwW9ue7
-         rmthzCHmIKsmHYOLsHIX8yRthASOlvIx+R3vhQaCQ5tlYpG+8KmByJ229mNs1mibmzfU
-         /atw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMofEZwX4QNG71Z34C5bDdM3EOT1ilaDnQOzS3drPN0o6NHHy63nZyVqlOGQ/zLs0JbZY=@vger.kernel.org, AJvYcCUj3Qq2sl3LOqFraMVYLJqR8SFYH+MvuiqcauFCMe3DhC2qQvNU+rQgm8FwhfNWyKhmQWqWVUtULroFs5VX@vger.kernel.org, AJvYcCW3xbn+LklVPp3svfvYoLCP0Jpeh8pdaOh/1kgmkjDmWwOEVn/AnmwZ3aI2I3qCLk7Xbs0hcYuj+5N85ennCLLePw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhkUXyxOZFCQpHwi9sisbFLvJw22NFaxPouqd3va9RKUXn/XaU
-	NOuTVqYR8NQhGVRtouK0YAgMC3oxIj+lZUdEt3yh5CW0RFrkOJ+LrRlmx3YNUd29DwOV8Jq8E8X
-	OmAZIGFXe7Ap2Cm6ChKwTIupzXmYuAJW8HpMQjA==
-X-Gm-Gg: ASbGncvvVkJOzeEaYSPvMdHQxB26j7zfIfYsqIyNDNkoliDJaGiCpnldeWVmNTr+kXR
-	cD/ET2Nwp3VVvvEOjPF3pDB0K+b+okmMbtF1ZrR5FhkhKg5FyjzTSTcCRYBTyLivfHuJPAvupiM
-	yC0o8VJgej8yTc0kGDfxCL0n5mDd9HKGE=
-X-Google-Smtp-Source: AGHT+IG0ENkGoRAv2XFTfyYLledASg8yeQV6WEFCuVbEtFlCEJIFWwU581QBunws9E5mQlHdoeVQh5wBcothZ116WlI=
-X-Received: by 2002:a05:6902:15ca:b0:e7a:b192:e5c2 with SMTP id
- 3f1490d57ef6-e7b3d501912mr6481642276.19.1747253287101; Wed, 14 May 2025
- 13:08:07 -0700 (PDT)
+        bh=yC0JYTBLCAjFMJ5IHciqczec5NK+wwTHRVRJnm/CnUs=;
+        b=Q3k5auFvR0uavWfBZlxVkK54xMpjbfI7lzFQ6IjZW0GTZ+6PbJzp7GoLQv3dhQc9bM
+         5X3txWkrnZgvVQA56u/9MMioIZDX5obbnw72nd+sk5jiNVuCnnG1n4bY1F37XR2RjFfS
+         86f5NWrUu/q+BBDexUsaxgKgMYaP6hZfWUaokVMFL3H8RRRv1WFpZRRpAueAFgmvl7Eb
+         uPx6EmpVCXkbx2p5vBEOJTVauNb7Cmofn6wwyCzUqpOo6FuNGWN6dcPSxztTrnM/rCSR
+         DFZ/P9zEaJ+SajvoC/JgEjDl98fQLCsForR+BpzsPbagA8MwMV6482nBLNfPFI/VACxg
+         4w7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVxaufyDJwA8Y1Rc4AE0RRwiZAJ14nDsSZQoeyIWebRVqP6BuCbQw9UhEFXo08ra0Um9IxB95VHPbsISv5WKGH+ww==@vger.kernel.org, AJvYcCVys2O1h8OFdEuk2cNhIx6GRLjdVlzSRIak8tgE5D/++Mn75s61RQKx+ZyfKXf8uxeqH6R6mSIpWUFA/dk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS2ACr2ZoVuq3McsdT5AsVkoZzE4nr1A6AnGMeESktNWZvt165
+	Jp6wcdVd2h6+wejCA+Htci7cH50BBk+PmdN/mvrWQi/W0K0/NMh+3yJ7NAJXwq/tTfgRk09cyy1
+	PkfZEtXiwcYODgXpaGQTMf0gFeLydMQqnEXTSRw==
+X-Gm-Gg: ASbGncszlj+cUrrEf4AAxevjyS904eBZnaValvVCE70xU+bkvGAkvXQhFou4V2L3/cd
+	BXXT5jDRhHh8YgfSCKa15bsCJ9GeAv4GIImTuWKXgpBxE4erYtXHkEKt3EMwdImCVR4/Cr+e03V
+	xtN8DbzSIrBIgD1dhQyuFGj2GyMDI52hU=
+X-Google-Smtp-Source: AGHT+IG21FJyi+kfSLXEbQ9XYQljr3Q2+lTXlm9xHhZAiZrLk1xHBcTQUEthvNVzwmylHK8H6BQ4/5ZXRUgM4wijX4k=
+X-Received: by 2002:a05:690c:640c:b0:709:164a:fec with SMTP id
+ 00721157ae682-70c7f1437c2mr71180407b3.17.1747253405693; Wed, 14 May 2025
+ 13:10:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501225337.928470-1-namhyung@kernel.org>
-In-Reply-To: <20250501225337.928470-1-namhyung@kernel.org>
+References: <20250502204056.973977-1-namhyung@kernel.org>
+In-Reply-To: <20250502204056.973977-1-namhyung@kernel.org>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 14 May 2025 13:07:56 -0700
-X-Gm-Features: AX0GCFuHPMQ0gNn4Bd4_zoBwRfbhq0Y3tec7aNeRJupUAz4w81z66_u9FkcNAc4
-Message-ID: <CAH0uvogTqNzDd5+xxR-VaGFY0r8=TzBxcXVYN9yxj9TykF5L=A@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Support --summary-mode=cgroup
+Date: Wed, 14 May 2025 13:09:55 -0700
+X-Gm-Features: AX0GCFvvwFy1hO7UqGryskqTZR4hWpkamqCCUqEGvSy7CE3r7BC_54bHt4evydo
+Message-ID: <CAH0uvoi552j-5a-rqR7CbiycUiuz1Rres76hK=1rqiDS-9qbOg@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Show zero value in STRARRAY
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
 	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello Namhyung,
 
-Just a single comment although this has been applied.
-
-On Thu, May 1, 2025 at 3:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+On Fri, May 2, 2025 at 1:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
-> Add a new summary mode to collect stats for each cgroup.
+> The STRARRAY macro is to print values in a pre-defined array.  But
+> sometimes it hides the value because it's 0.  The value of 0 can have a
+> meaning in this case so set 'show_zero' field.
 >
->   $ sudo ./perf trace -as --bpf-summary --summary-mode=3Dcgroup -- sleep =
-1
+> For example, it can show CREATE_MAP cmd in the bpf syscall.
 >
->    Summary of events:
->
->    cgroup /user.slice/user-657345.slice/user@657345.service/session.slice=
-/org.gnome.Shell@x11.service, 535 events
->
->      syscall            calls  errors  total       min       avg       ma=
-x       stddev
->                                        (msec)    (msec)    (msec)    (mse=
-c)        (%)
->      --------------- --------  ------ -------- --------- --------- ------=
----     ------
->      ppoll                 15      0   373.600     0.004    24.907   197.=
-491     55.26%
->      poll                  15      0     1.325     0.001     0.088     0.=
-369     38.76%
->      close                 66      0     0.567     0.007     0.009     0.=
-026      3.55%
->      write                150      0     0.471     0.001     0.003     0.=
-010      3.29%
->      recvmsg               94     83     0.290     0.000     0.003     0.=
-037     16.39%
->      ioctl                 26      0     0.237     0.001     0.009     0.=
-096     50.13%
->      timerfd_create        66      0     0.236     0.003     0.004     0.=
-024      8.92%
->      timerfd_settime       70      0     0.160     0.001     0.002     0.=
-012      7.66%
->      writev                10      0     0.118     0.001     0.012     0.=
-019     18.17%
->      read                   9      0     0.021     0.001     0.002     0.=
-004     14.07%
->      getpid                14      0     0.019     0.000     0.001     0.=
-004     20.28%
->
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-<SNIP>
-
-> +static int update_cgroup_stats(struct hashmap *hash, struct syscall_key =
-*map_key,
-> +                              struct syscall_stats *map_data)
-> +{
-> +       struct syscall_data *data;
-> +       struct syscall_node *nodes;
-> +
-> +       if (!hashmap__find(hash, map_key->cgroup, &data)) {
-> +               data =3D zalloc(sizeof(*data));
-> +               if (data =3D=3D NULL)
-> +                       return -ENOMEM;
-> +
-> +               data->key =3D map_key->cgroup;
-> +               if (hashmap__add(hash, data->key, data) < 0) {
-> +                       free(data);
-> +                       return -ENOMEM;
-> +               }
-> +       }
-> +
-> +       /* update thread total stats */
-> +       data->nr_events +=3D map_data->count;
-> +       data->total_time +=3D map_data->total_time;
-> +
-> +       nodes =3D reallocarray(data->nodes, data->nr_nodes + 1, sizeof(*n=
-odes));
-> +       if (nodes =3D=3D NULL)
-> +               return -ENOMEM;
-> +
-> +       data->nodes =3D nodes;
-> +       nodes =3D &data->nodes[data->nr_nodes++];
-> +       nodes->syscall_nr =3D map_key->nr;
-> +
-> +       /* each thread has an entry for each syscall, just use the stat *=
-/
-
-This comment shouldn't be here.
-
-Otherwise,
-
-Reviewed-by: Howard Chu <howardchu95@gmail.com>
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks,
 Howard
