@@ -1,129 +1,210 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50081FF7B0;
-	Wed, 14 May 2025 06:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94494A23
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 14:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204259; cv=none; b=cYo4wvgOhwHd7aeBMSIA6c6oWHAqcbhxj2S9B6fZwN6MClsdjIFqlQInnVcpNcs2lajVSRFk8FURrRl3XLyGWjp8pFIyVJgiqNeJE5/UGfxO/BvYcomiWhy4K6aHAhvXM/Xvngv2NlwO69HWw5aditPf4+Uk34rYCqyah3FxHVM=
+	t=1747232152; cv=none; b=RYwDplX3mTHbDz7G3zmqcH8kD25Z1oSWwubtLno1ICDx+lh7i10cs1d5MV4Lr/fnv1dzVeCD1sopMVyc5T/FHZU+fBv2tzoAAwDLcyk2uMOGHQifVCzXNjt5efT5Ku/fpcBCJZJYdQqSgqnAAvhEwnFEDRgrWAAm34j9codbHz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204259; c=relaxed/simple;
-	bh=X/PMX4gFsSln85c3wxBJ0Z3RAuoCm0t+XCLinqgK2ug=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aKYKmLBLo0Z4cIEpjcV91A6+LOyFmw6R596BsmBG0Z98AQVfIEB20cuiNqraoIYxnJJL6xcsRQ5mtwBd1ZlJ5rWrrMLZxzM9aBuIoyrkCv4gO6Ike1J2+AQfXdy4Q6X7BeK7arWrMUvJubg4UrLRqt2jQrtIXg15zQdAVbkP7ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zy3PJ63jXz4f3lDq;
-	Wed, 14 May 2025 14:30:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 13FC61A12EF;
-	Wed, 14 May 2025 14:30:55 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgDnSl+NOCRovzV0MQ--.23862S6;
-	Wed, 14 May 2025 14:30:54 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	yeoreum.yun@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH Fix perf cgroup problem 2/2] perf/core: Fix WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0) in perf_cgroup_switch
-Date: Wed, 14 May 2025 06:47:58 +0000
-Message-Id: <20250514064758.4156497-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514064758.4156497-1-luogengkun@huaweicloud.com>
-References: <20250514064758.4156497-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1747232152; c=relaxed/simple;
+	bh=Vni+4rSFtgKkhj4M9hes19xnkZVVVh6560vIbrsuwcs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LOnyGhWASqBWk6kN27nHH8T9nOaY37PBmh/nPUZ1XuY7nusD3uHx+nXTwmHsk75RoUn7TNxujni4N+aniFu4dFwFjRrep1I+4gx2B3uiSj/SrOU/V2FOz1J7yE9K9y6f/UIgZPN8QrWP0cHvIe67TDfpAyUMveEwXDreg77BKao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b9dQZtUd; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9dQZtUd"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e540658a0so8415505ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 07:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747232149; x=1747836949; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7ibtTN1MnsJc6E1eBxUxx8I+Mw5Swe/fTJWwFyUmjo=;
+        b=b9dQZtUdVp761zGXUN1GOvgKa6cUUwdVurdewUUUiRSa2084aZ8YRXSnFRhlEZEAYs
+         e3Y/B3kHN2Z9CUhtxiDCYY7TQENsrAgzWB2UsixUjkwtvrxSa9kOxEA/kxm17FzTF3Kd
+         MnIBqJnd2AuRHOQ3VCYIVOzkgjT/ueiquMoM9iQGrXhUMYRb35veN5k8smQyApM0kL4Q
+         66UUIuCOzuFIBcf/RhIBY56JehE6RArmn8nHwTPxcR4out09W/p78FNgpK6pKsWtatl7
+         qjZp9iH/6ffDh72kjOLGO/bERGnuha1nLlSv5pykERnb3AXSUIEMh2FSUAEbwutkUKSw
+         786Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747232149; x=1747836949;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7ibtTN1MnsJc6E1eBxUxx8I+Mw5Swe/fTJWwFyUmjo=;
+        b=UlUkcVOchi+Nug6jFVKQjsSLrD4wedQejzWgCtoy5m/mAuz3aQjfk0PRv4ZgNkeaw6
+         IHNPEs1cawoUPH2JyhliGdM0pqvLL+5RMwR0gf7UnRNCNh3M1BOxerUapuECAkqZmNcs
+         lQyn/ruAxGUPRBqjn8YwGe+ATJQwhSpy4MV9R9OgcTxioOMkXowJHUvgVFqeFbtH4oPx
+         zlypWHbs0sQaowQc+IgEvVhLgsT726zaCUnOFmUAY47UsTw9+jvBU37GZQKMxWl26vEt
+         hu14YO7INF5U8kBT4Grjo8AlbSZjgCkQFezzvh3J1gsezHHOqQz6oWrn87NELmFaYgto
+         D4Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWv9exq+9YpFFz1aJLZz8lWSo4KC6c+3KL5BoxOooKIyjMN6ko2ZqjB6i/zF3nblmLTgsgH9WhRT8iBfTEtmoK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBhlwOZUmQAXGcjc2Y8o2MZngBfCcLR72OiKrd2p26Q9ZdT1P0
+	4Md6jh2xYotkkFGXtYphM0Gwa4cddaPawUYgg+lmFQkMmXcYjVv8DKm1xnQUqSQn+ath5stDGnc
+	A7g==
+X-Google-Smtp-Source: AGHT+IF9L3gdmcUnBmViiAIB+CbEBP/3GNzYJ74W69/RQCJXO9WEtDuMKsjbGgOXh1LtWeoxFLt4egw1KwI=
+X-Received: from plbmb16.prod.google.com ([2002:a17:903:990:b0:223:4788:2e83])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a4e:b0:22e:50f2:1450
+ with SMTP id d9443c01a7336-23197fc77f2mr53990535ad.22.1747232149047; Wed, 14
+ May 2025 07:15:49 -0700 (PDT)
+Date: Wed, 14 May 2025 07:15:42 -0700
+In-Reply-To: <20250513203803.2636561-2-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnSl+NOCRovzV0MQ--.23862S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7tryrtr45JFW8tw4kAFy3XFb_yoW8ZFy8pa
-	1kCrW2kws5WFnIqa45K34vv3WIqw4Fqa98W34qkr4fCrW5Xr13XF1xWw43JF15CFs7tFy3
-	trZ09r1Yk34UKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
-	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI
-	0_Jw0_GFyl42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E
-	4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
-	JbIYCTnIWIevJa73UjIFyTuYvjxUFSdyUUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Mime-Version: 1.0
+References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-2-sohil.mehta@intel.com>
+Message-ID: <aCSljsvI0A-HC_DT@google.com>
+Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
+ entry point from KVM
+From: Sean Christopherson <seanjc@google.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-There may be concurrency between perf_cgroup_switch and
-perf_cgroup_event_disable. Consider the following scenario: after a new
-perf cgroup event is created on CPU0, the new event might not trigger
-reprogramm, leaving ctx->is_active as 0. In this case, when CPU1 disables
-the perf event, it executes __perf_remove_from_context->list_del_event->
-perf_cgroup_event_disable on CPU1, resulting in a race with
-perf_cgroup_switch running on CPU0.
+On Tue, May 13, 2025, Sohil Mehta wrote:
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 5c5766467a61..1d43d4a2f6b6 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7079,7 +7079,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
+>  
+>  	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+>  	if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
+> +		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector, 0);
+>  	else
+>  		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+>  	kvm_after_interrupt(vcpu);
+> @@ -7393,7 +7393,8 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+>  	    is_nmi(vmx_get_intr_info(vcpu))) {
+>  		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+>  		if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
+> +			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR,
+> +					    vmx_get_exit_qual(vcpu));
+>  		else
+>  			vmx_do_nmi_irqoff();
+>  		kvm_after_interrupt(vcpu);
 
-To fix this problem, expand the lock-holding critical section in
-perf_cgroup_switch.
+As a prep patch, what if we provide separate wrappers for IRQ vs. NMI?  That way
+KVM doesn't need to shove a '0' literal for the IRQ case.  There isn't that much
+code that's actually shared between the two, once you account for KVM having to
+hardcode the NMI information.
 
-Fixes: db4a835601b7 ("perf/core: Set cgroup in CPU contexts for new cgroup events")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+Compile tested only...
+
+--
+From: Sean Christopherson <seanjc@google.com>
+Date: Wed, 14 May 2025 07:07:55 -0700
+Subject: [PATCH] x86/fred: Provide separate IRQ vs. NMI wrappers for "entry"
+ from KVM
+
+Provide separate wrappers for forwarding IRQs vs NMIs from KVM in
+anticipation of adding support for NMI source reporting, which will add
+an NMI-only parameter, i.e. will further pollute the current API with a
+param that is a hardcoded for one of the two call sites.
+
+Opportunistically tag the non-FRED NMI wrapper __always_inline, as the
+compiler could theoretically generate a function call and trigger and a
+(completely benign) "leaving noinstr" warning.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- kernel/events/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/fred.h | 24 +++++++++++++++++++-----
+ arch/x86/kvm/vmx/vmx.c      |  4 ++--
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ecb4d852a006..fae1f68cbca5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -931,20 +931,20 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
- 	struct perf_cgroup *cgrp;
+diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
+index 2a29e5216881..dfb4f5e6a37a 100644
+--- a/arch/x86/include/asm/fred.h
++++ b/arch/x86/include/asm/fred.h
+@@ -10,6 +10,7 @@
  
-+	cgrp = perf_cgroup_from_task(task, NULL);
-+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	/*
- 	 * cpuctx->cgrp is set when the first cgroup event enabled,
- 	 * and is cleared when the last cgroup event disabled.
- 	 */
- 	if (READ_ONCE(cpuctx->cgrp) == NULL)
--		return;
-+		goto unlock;
+ #include <asm/asm.h>
+ #include <asm/trapnr.h>
++#include <asm/irq_vectors.h>
  
- 	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+ /*
+  * FRED event return instruction opcodes for ERET{S,U}; supported in
+@@ -70,14 +71,26 @@ __visible void fred_entry_from_user(struct pt_regs *regs);
+ __visible void fred_entry_from_kernel(struct pt_regs *regs);
+ __visible void __fred_entry_from_kvm(struct pt_regs *regs);
  
--	cgrp = perf_cgroup_from_task(task, NULL);
- 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
--		return;
-+		goto unlock;
+-/* Can be called from noinstr code, thus __always_inline */
+-static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
++/* Must be called from noinstr code, thus __always_inline */
++static __always_inline void fred_nmi_from_kvm(void)
+ {
+ 	struct fred_ss ss = {
+ 		.ss     =__KERNEL_DS,
+-		.type   = type,
++		.type   = EVENT_TYPE_NMI,
++		.vector = NMI_VECTOR,
++		.nmi    = true,
++		.lm     = 1,
++	};
++
++	asm_fred_entry_from_kvm(ss);
++}
++
++static inline void fred_irq_from_kvm(unsigned int vector)
++{
++	struct fred_ss ss = {
++		.ss     =__KERNEL_DS,
++		.type   = EVENT_TYPE_EXTINT,
+ 		.vector = vector,
+-		.nmi    = type == EVENT_TYPE_NMI,
+ 		.lm     = 1,
+ 	};
  
--	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	perf_ctx_disable(&cpuctx->ctx, true);
+@@ -109,7 +122,8 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs) { ret
+ static inline void cpu_init_fred_exceptions(void) { }
+ static inline void cpu_init_fred_rsps(void) { }
+ static inline void fred_complete_exception_setup(void) { }
+-static inline void fred_entry_from_kvm(unsigned int type, unsigned int vector) { }
++static __always_inline void fred_nmi_from_kvm(void) { }
++static inline void fred_irq_from_kvm(unsigned int vector) { }
+ static inline void fred_sync_rsp0(unsigned long rsp0) { }
+ static inline void fred_update_rsp0(void) { }
+ #endif /* CONFIG_X86_FRED */
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 5c5766467a61..271f92fee76b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7079,7 +7079,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
  
- 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
-@@ -962,6 +962,7 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
- 
- 	perf_ctx_enable(&cpuctx->ctx, true);
-+unlock:
- 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
- }
- 
--- 
-2.34.1
+ 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+ 	if (cpu_feature_enabled(X86_FEATURE_FRED))
+-		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
++		fred_irq_from_kvm(vector);
+ 	else
+ 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+ 	kvm_after_interrupt(vcpu);
+@@ -7393,7 +7393,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	    is_nmi(vmx_get_intr_info(vcpu))) {
+ 		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+ 		if (cpu_feature_enabled(X86_FEATURE_FRED))
+-			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
++			fred_nmi_from_kvm();
+ 		else
+ 			vmx_do_nmi_irqoff();
+ 		kvm_after_interrupt(vcpu);
 
+base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
+--
