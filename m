@@ -1,210 +1,127 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94494A23
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 14:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83661B0F2C
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 15:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232152; cv=none; b=RYwDplX3mTHbDz7G3zmqcH8kD25Z1oSWwubtLno1ICDx+lh7i10cs1d5MV4Lr/fnv1dzVeCD1sopMVyc5T/FHZU+fBv2tzoAAwDLcyk2uMOGHQifVCzXNjt5efT5Ku/fpcBCJZJYdQqSgqnAAvhEwnFEDRgrWAAm34j9codbHz4=
+	t=1747235157; cv=none; b=n4Azyeqyb2BnUMWvN1NJSZPDV5w7TTnLE/kp1k0CiN9LKNk4QZAxI+Q27gz8cLVOkgox1svGc7aCvgz369ao5YRqtA+vdguLk/R3pu95w6DDj11OE9yL2sRxAL0ieBUpgZoDK0z9Vmah76VfRpB9d6Xdas9cxZcXObhAPuuUxLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232152; c=relaxed/simple;
-	bh=Vni+4rSFtgKkhj4M9hes19xnkZVVVh6560vIbrsuwcs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LOnyGhWASqBWk6kN27nHH8T9nOaY37PBmh/nPUZ1XuY7nusD3uHx+nXTwmHsk75RoUn7TNxujni4N+aniFu4dFwFjRrep1I+4gx2B3uiSj/SrOU/V2FOz1J7yE9K9y6f/UIgZPN8QrWP0cHvIe67TDfpAyUMveEwXDreg77BKao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b9dQZtUd; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1747235157; c=relaxed/simple;
+	bh=zRHXtSXUEZEEK3PTfkjYgUsuNXEAzDR8CZiqeWbwF34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JyrBchmsnB4CdQBsuO74H55z1CgjTwNT+2RMoULQ2o2soqoV8zlVIsPFWTIeO0W4FFwvNpaexP7PUGQFxWDfECmzuHf52hxyzQlV/f97z9qmQXOF9+lYjPAh9vR5/WNuIVkbiEICM2q8ZbnreU413zFlXpIhz8WiFSv3e6rALRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GcEgDbMo; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9dQZtUd"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e540658a0so8415505ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 07:15:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GcEgDbMo"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so177465ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 08:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747232149; x=1747836949; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t7ibtTN1MnsJc6E1eBxUxx8I+Mw5Swe/fTJWwFyUmjo=;
-        b=b9dQZtUdVp761zGXUN1GOvgKa6cUUwdVurdewUUUiRSa2084aZ8YRXSnFRhlEZEAYs
-         e3Y/B3kHN2Z9CUhtxiDCYY7TQENsrAgzWB2UsixUjkwtvrxSa9kOxEA/kxm17FzTF3Kd
-         MnIBqJnd2AuRHOQ3VCYIVOzkgjT/ueiquMoM9iQGrXhUMYRb35veN5k8smQyApM0kL4Q
-         66UUIuCOzuFIBcf/RhIBY56JehE6RArmn8nHwTPxcR4out09W/p78FNgpK6pKsWtatl7
-         qjZp9iH/6ffDh72kjOLGO/bERGnuha1nLlSv5pykERnb3AXSUIEMh2FSUAEbwutkUKSw
-         786Q==
+        d=google.com; s=20230601; t=1747235155; x=1747839955; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OBwEDCsbuMxxVbCaLe0ZDfbDjJ026rxYJRU1vXl/qr4=;
+        b=GcEgDbMoFMDt8RNGLXom+WFmtoKUGJKpwa+Dyi9JUI3kH1QKAnU25HgQ/2Tkln3kAq
+         LN952blIFVLVMp3RrAw950LiRwXfPayoew5IzNU7eBkEDnMwnZ4bUyx0pTQN68zQGldv
+         4SGDg/9EyKbIlrHMzlJrpDndz47Lrd8BdEMci9bBpAhzqk+YQs0E306dK9QhkVLHlqE2
+         jU3WAIBA3mPKHVNURDf9uDy9JE6Um0MRK+bKEM5q/YXeKebNLr1ajkRWr5uhQkW09GGj
+         IZFVYyfMs4ggQrbzBKGMa2KxQRVxIuVggGbSofqVA40k+dndYsdfhIorUCwOYXdEpDGk
+         CB/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747232149; x=1747836949;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t7ibtTN1MnsJc6E1eBxUxx8I+Mw5Swe/fTJWwFyUmjo=;
-        b=UlUkcVOchi+Nug6jFVKQjsSLrD4wedQejzWgCtoy5m/mAuz3aQjfk0PRv4ZgNkeaw6
-         IHNPEs1cawoUPH2JyhliGdM0pqvLL+5RMwR0gf7UnRNCNh3M1BOxerUapuECAkqZmNcs
-         lQyn/ruAxGUPRBqjn8YwGe+ATJQwhSpy4MV9R9OgcTxioOMkXowJHUvgVFqeFbtH4oPx
-         zlypWHbs0sQaowQc+IgEvVhLgsT726zaCUnOFmUAY47UsTw9+jvBU37GZQKMxWl26vEt
-         hu14YO7INF5U8kBT4Grjo8AlbSZjgCkQFezzvh3J1gsezHHOqQz6oWrn87NELmFaYgto
-         D4Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWv9exq+9YpFFz1aJLZz8lWSo4KC6c+3KL5BoxOooKIyjMN6ko2ZqjB6i/zF3nblmLTgsgH9WhRT8iBfTEtmoK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBhlwOZUmQAXGcjc2Y8o2MZngBfCcLR72OiKrd2p26Q9ZdT1P0
-	4Md6jh2xYotkkFGXtYphM0Gwa4cddaPawUYgg+lmFQkMmXcYjVv8DKm1xnQUqSQn+ath5stDGnc
-	A7g==
-X-Google-Smtp-Source: AGHT+IF9L3gdmcUnBmViiAIB+CbEBP/3GNzYJ74W69/RQCJXO9WEtDuMKsjbGgOXh1LtWeoxFLt4egw1KwI=
-X-Received: from plbmb16.prod.google.com ([2002:a17:903:990:b0:223:4788:2e83])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a4e:b0:22e:50f2:1450
- with SMTP id d9443c01a7336-23197fc77f2mr53990535ad.22.1747232149047; Wed, 14
- May 2025 07:15:49 -0700 (PDT)
-Date: Wed, 14 May 2025 07:15:42 -0700
-In-Reply-To: <20250513203803.2636561-2-sohil.mehta@intel.com>
+        d=1e100.net; s=20230601; t=1747235155; x=1747839955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OBwEDCsbuMxxVbCaLe0ZDfbDjJ026rxYJRU1vXl/qr4=;
+        b=CsKZkCd9zGS/fuHzLZGthiAQofxAN+X+rk4GWw6QjpzFpIgPleTFjJOgq/y6oV+GIW
+         8VHjxx9TcU4wZzdXhvVNfRW6nZTo/DI9qzGtGkruImgvmkJwcMKIq4ujby6Eu9CttlIW
+         4j6hiehWiq5dmuE/yh9TXbuZ9ijxbZD9ggB3gOtFreD6pnZPyDfZC3qDRfTFSHZRP8Zv
+         f4/1XirfB7600+lC/znMpLZ3gREFkb+leiyfLgLgJnGWQKj97xoVe0te3auqRIL3IVYZ
+         cdZzP3yuvn+am1XioGRdl+MTyRG9wwYBzGeI7hxObye2q6Yi+Url6kQJpBIFqGmgeiLz
+         Japg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFrWXForTTEbeztw30kDItJFizp+zwbrq1y64VSWcEaZFjlMt1tD/PHOsPB0+uD1lefa+k57mij8FBGvx52csb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQLWIoDjGNk/wviOloqwhJm1YsTqb0M3DeS7rcp7iINU0ck4a8
+	QMhd43ANdknzXaBH+hC9CQCgkH6Nbn7irghl1TVoPdRmkWV4rz/ixi0G68hZ4jHc78qaA9BBw5v
+	ukWT1p56mQfFfT88z4oVQzoQJ3ZlXp1SyMWRfDY89
+X-Gm-Gg: ASbGnculvgxmKt1A+1/Lz9/JGgDYIzGx96yrtepWQs5d5SCH5/Qr7+k8kkRs4l7ker3
+	mZg2a/x9JaTOEi+8lwEXsq2/1X1LKfBdzlAaMC1qoFzWvR5ttLobEybJQMRl1evuGFg/51mwXQn
+	oZkFe+mqTglSHL+uRWt0O7QClIaBLZzHHKmfv+c5w9A0thWVjm5q3jvWfqKRbpLg==
+X-Google-Smtp-Source: AGHT+IHI/F+qf+jjIVI/t0RACaAA5362bq72lQw/BShbJITOcV6N2SAlxkQFjmupoAJ6GQBB/mbrwIOCeXIztyL6nGg=
+X-Received: by 2002:a05:6e02:17c9:b0:3d9:6e2d:c7ed with SMTP id
+ e9e14a558f8ab-3db706435a0mr3229695ab.15.1747235154528; Wed, 14 May 2025
+ 08:05:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-2-sohil.mehta@intel.com>
-Message-ID: <aCSljsvI0A-HC_DT@google.com>
-Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
- entry point from KVM
-From: Sean Christopherson <seanjc@google.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+MIME-Version: 1.0
+References: <20250513231813.13846-1-thomas.falcon@intel.com>
+In-Reply-To: <20250513231813.13846-1-thomas.falcon@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 14 May 2025 08:05:43 -0700
+X-Gm-Features: AX0GCFtnwnSh7WBr6q1x7iyJ1LE0u_2hQI7GYeSBL4LD5fFxhKoET9QpVquX4y0
+Message-ID: <CAP-5=fXJtkjJ34d-Rk_APUxXuummZpwPWawUWea3NHMaRFCD3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v1] perf: move perf_pmus__find_core_pmu() prototype to pmus.h
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025, Sohil Mehta wrote:
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 5c5766467a61..1d43d4a2f6b6 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7079,7 +7079,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
->  
->  	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
->  	if (cpu_feature_enabled(X86_FEATURE_FRED))
-> -		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
-> +		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector, 0);
->  	else
->  		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
->  	kvm_after_interrupt(vcpu);
-> @@ -7393,7 +7393,8 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
->  	    is_nmi(vmx_get_intr_info(vcpu))) {
->  		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
->  		if (cpu_feature_enabled(X86_FEATURE_FRED))
-> -			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
-> +			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR,
-> +					    vmx_get_exit_qual(vcpu));
->  		else
->  			vmx_do_nmi_irqoff();
->  		kvm_after_interrupt(vcpu);
+On Tue, May 13, 2025 at 4:18=E2=80=AFPM Thomas Falcon <thomas.falcon@intel.=
+com> wrote:
+>
+> perf_pmus__find_core_pmu() is implemented in util/pmus.c but its
+> prototpye is in util/pmu.h. Move it to util/pmus.h.
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 
-As a prep patch, what if we provide separate wrappers for IRQ vs. NMI?  That way
-KVM doesn't need to shove a '0' literal for the IRQ case.  There isn't that much
-code that's actually shared between the two, once you account for KVM having to
-hardcode the NMI information.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Compile tested only...
+Thanks!
+Ian
 
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Wed, 14 May 2025 07:07:55 -0700
-Subject: [PATCH] x86/fred: Provide separate IRQ vs. NMI wrappers for "entry"
- from KVM
-
-Provide separate wrappers for forwarding IRQs vs NMIs from KVM in
-anticipation of adding support for NMI source reporting, which will add
-an NMI-only parameter, i.e. will further pollute the current API with a
-param that is a hardcoded for one of the two call sites.
-
-Opportunistically tag the non-FRED NMI wrapper __always_inline, as the
-compiler could theoretically generate a function call and trigger and a
-(completely benign) "leaving noinstr" warning.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/fred.h | 24 +++++++++++++++++++-----
- arch/x86/kvm/vmx/vmx.c      |  4 ++--
- 2 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
-index 2a29e5216881..dfb4f5e6a37a 100644
---- a/arch/x86/include/asm/fred.h
-+++ b/arch/x86/include/asm/fred.h
-@@ -10,6 +10,7 @@
- 
- #include <asm/asm.h>
- #include <asm/trapnr.h>
-+#include <asm/irq_vectors.h>
- 
- /*
-  * FRED event return instruction opcodes for ERET{S,U}; supported in
-@@ -70,14 +71,26 @@ __visible void fred_entry_from_user(struct pt_regs *regs);
- __visible void fred_entry_from_kernel(struct pt_regs *regs);
- __visible void __fred_entry_from_kvm(struct pt_regs *regs);
- 
--/* Can be called from noinstr code, thus __always_inline */
--static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
-+/* Must be called from noinstr code, thus __always_inline */
-+static __always_inline void fred_nmi_from_kvm(void)
- {
- 	struct fred_ss ss = {
- 		.ss     =__KERNEL_DS,
--		.type   = type,
-+		.type   = EVENT_TYPE_NMI,
-+		.vector = NMI_VECTOR,
-+		.nmi    = true,
-+		.lm     = 1,
-+	};
-+
-+	asm_fred_entry_from_kvm(ss);
-+}
-+
-+static inline void fred_irq_from_kvm(unsigned int vector)
-+{
-+	struct fred_ss ss = {
-+		.ss     =__KERNEL_DS,
-+		.type   = EVENT_TYPE_EXTINT,
- 		.vector = vector,
--		.nmi    = type == EVENT_TYPE_NMI,
- 		.lm     = 1,
- 	};
- 
-@@ -109,7 +122,8 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs) { ret
- static inline void cpu_init_fred_exceptions(void) { }
- static inline void cpu_init_fred_rsps(void) { }
- static inline void fred_complete_exception_setup(void) { }
--static inline void fred_entry_from_kvm(unsigned int type, unsigned int vector) { }
-+static __always_inline void fred_nmi_from_kvm(void) { }
-+static inline void fred_irq_from_kvm(unsigned int vector) { }
- static inline void fred_sync_rsp0(unsigned long rsp0) { }
- static inline void fred_update_rsp0(void) { }
- #endif /* CONFIG_X86_FRED */
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 5c5766467a61..271f92fee76b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7079,7 +7079,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
- 
- 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
- 	if (cpu_feature_enabled(X86_FEATURE_FRED))
--		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
-+		fred_irq_from_kvm(vector);
- 	else
- 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
- 	kvm_after_interrupt(vcpu);
-@@ -7393,7 +7393,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	    is_nmi(vmx_get_intr_info(vcpu))) {
- 		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
- 		if (cpu_feature_enabled(X86_FEATURE_FRED))
--			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
-+			fred_nmi_from_kvm();
- 		else
- 			vmx_do_nmi_irqoff();
- 		kvm_after_interrupt(vcpu);
-
-base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
---
+> ---
+>  tools/perf/util/pmu.h  | 1 -
+>  tools/perf/util/pmus.h | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index a1fdd6d50c53..d38a63ba4583 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -298,7 +298,6 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *p=
+mus, int dirfd, const char
+>                                   bool eager_load);
+>  struct perf_pmu *perf_pmu__create_placeholder_core_pmu(struct list_head =
+*core_pmus);
+>  void perf_pmu__delete(struct perf_pmu *pmu);
+> -struct perf_pmu *perf_pmus__find_core_pmu(void);
+>
+>  const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)=
+;
+>  bool perf_pmu__is_fake(const struct perf_pmu *pmu);
+> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+> index 8def20e615ad..d6a8d95af376 100644
+> --- a/tools/perf/util/pmus.h
+> +++ b/tools/perf/util/pmus.h
+> @@ -33,5 +33,6 @@ struct perf_pmu *perf_pmus__add_test_hwmon_pmu(int hwmo=
+n_dir,
+>                                                const char *sysfs_name,
+>                                                const char *name);
+>  struct perf_pmu *perf_pmus__fake_pmu(void);
+> +struct perf_pmu *perf_pmus__find_core_pmu(void);
+>
+>  #endif /* __PMUS_H */
+> --
+> 2.49.0
+>
