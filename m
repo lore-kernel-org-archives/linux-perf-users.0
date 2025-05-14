@@ -1,94 +1,94 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AC28E583;
-	Wed, 14 May 2025 20:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7831AAE13;
+	Wed, 14 May 2025 20:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253408; cv=none; b=Ji5cwNKlFGJuOdybdqLND6gaugYhFyqyI0r68m4io8TP4gwVDhrhgIHZ7cNCuDrgbozavrC7mHuG2Qna2fm/qdDY/DSx/kt9oZY8/kvOcy4mdQffGuLajI8e61I1EDnAwpju0C6dX6u3YsyjkOghS3CqQZAQrEHP7uvGniow668=
+	t=1747253755; cv=none; b=cBAjSRsiZkpOo9gcmXTfDr9qFgFL6aWjeZ2hQhPkLFiynyWErmE6GVHiD6oG/676trmGAhguNGM/jn1mEbzGzXsktOTaC+PXg4GKUNCth4aleNVjpj97uJkNn/RdyzY9/DR6n3V35+rEH4qKkKa4nAqxk3VrItKSYGmpSOjImjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253408; c=relaxed/simple;
-	bh=Vor2JmERlhiBjTMLvMnGJFx3PllRrl1yk8TtqIk3sY8=;
+	s=arc-20240116; t=1747253755; c=relaxed/simple;
+	bh=ieyfvDKH3Tt+g6Km/oF0YWXewNAFY2nA/w5dLdkWUnw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TNP9h8rfCnS43g4OPSfkyHK7i0rZ4r4+0f/aT36wh3GAjPWZ0T5rhWR7M7E2Na+otiAlyrmjTO3DI+WPLL3qwrp3jVPzxnIIYw2yFDCnw+VLbtiT+tr/WmKJXB6H+Y5Y27ZvBmQvuHxYRvQgRuTy3vu22AP2OuFm+QBGNkw2hxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PG5OPFnH; arc=none smtp.client-ip=209.85.128.170
+	 To:Cc:Content-Type; b=FtQOAfaSEyWpRvLKAV3gYuOijEK303FHuUYkbn91vDaNUrIhp+Bw0uVWhKoCgUCAGKpOD/u+k+0e7ko7G+A91OsHXo7Rzi2HMrK3NcGyqaVikezWICxJzfVApjYx+lRX6JnP20p0aRhHNGbAss68YaDiAwJiR4yvKN6vHzx7mS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUirXAm2; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG5OPFnH"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7080dd5fe92so1743417b3.3;
-        Wed, 14 May 2025 13:10:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUirXAm2"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-709a4f97149so11061957b3.1;
+        Wed, 14 May 2025 13:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747253406; x=1747858206; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747253753; x=1747858553; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yC0JYTBLCAjFMJ5IHciqczec5NK+wwTHRVRJnm/CnUs=;
-        b=PG5OPFnH2bjHc2zTZ3GDEZEdigNrTS5ZdzX/xhv/KVE6sj3CdfDKsaQgS/rUr7PgnX
-         rTAO8Pk77I9iNtYlVId37DLo+hnjys1evksYmLQUJmzpk3SGiwzb6Glj9lhiFaHtZINr
-         sXREWom/0IXBYoI/1v54lnxQEPMPfUq96FZ44+9p75Rjnw+3DGIv/FeCOvxG7aSjPogM
-         DTcf7595ydyb78onE2iXwmY7PV7spdtKA9tyRElxD6iD4Q+Hul4wKLqNHFgGzbg9GlPu
-         6RPBxn/S0wKDzojNGBmGE4KIVira0GMAECDYz2Ewi1cE3vfxewcvQjSKhdHTHBBMN0Ju
-         bp1Q==
+        bh=ieyfvDKH3Tt+g6Km/oF0YWXewNAFY2nA/w5dLdkWUnw=;
+        b=CUirXAm2gVGrFtXKdjxOAX+qV5VWUdHXhfAHv+jF3qip2O6mvtYY1Fl6JeDlwrQ3rs
+         RtrfpLAM2vTGPTnrw0jEUFkS5A6kswmfeWxR4dYLNbA32zFgDvoPEhs/edwC7Q9LOs07
+         PlDHuZ6K8hkwAfMlPNjiYyOYB41NyPuoinoKpLoBic8lWBV5MfJ2XXTOdUxhWFUwQ1w4
+         hHlVn1/wZlXCtoOb1v/cl8fsd2VTa+ZSUD2YhA7mLrDPOqCsfPjIkKB8ZRIYG1/z2+ez
+         eazyWti2hggFNAxlfZ32TuRf0EOOCGiK52TAj9iuhxLhgDvcAV9gC1nUOXExfB1JeFRQ
+         mcFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747253406; x=1747858206;
+        d=1e100.net; s=20230601; t=1747253753; x=1747858553;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yC0JYTBLCAjFMJ5IHciqczec5NK+wwTHRVRJnm/CnUs=;
-        b=Q3k5auFvR0uavWfBZlxVkK54xMpjbfI7lzFQ6IjZW0GTZ+6PbJzp7GoLQv3dhQc9bM
-         5X3txWkrnZgvVQA56u/9MMioIZDX5obbnw72nd+sk5jiNVuCnnG1n4bY1F37XR2RjFfS
-         86f5NWrUu/q+BBDexUsaxgKgMYaP6hZfWUaokVMFL3H8RRRv1WFpZRRpAueAFgmvl7Eb
-         uPx6EmpVCXkbx2p5vBEOJTVauNb7Cmofn6wwyCzUqpOo6FuNGWN6dcPSxztTrnM/rCSR
-         DFZ/P9zEaJ+SajvoC/JgEjDl98fQLCsForR+BpzsPbagA8MwMV6482nBLNfPFI/VACxg
-         4w7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVxaufyDJwA8Y1Rc4AE0RRwiZAJ14nDsSZQoeyIWebRVqP6BuCbQw9UhEFXo08ra0Um9IxB95VHPbsISv5WKGH+ww==@vger.kernel.org, AJvYcCVys2O1h8OFdEuk2cNhIx6GRLjdVlzSRIak8tgE5D/++Mn75s61RQKx+ZyfKXf8uxeqH6R6mSIpWUFA/dk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS2ACr2ZoVuq3McsdT5AsVkoZzE4nr1A6AnGMeESktNWZvt165
-	Jp6wcdVd2h6+wejCA+Htci7cH50BBk+PmdN/mvrWQi/W0K0/NMh+3yJ7NAJXwq/tTfgRk09cyy1
-	PkfZEtXiwcYODgXpaGQTMf0gFeLydMQqnEXTSRw==
-X-Gm-Gg: ASbGncszlj+cUrrEf4AAxevjyS904eBZnaValvVCE70xU+bkvGAkvXQhFou4V2L3/cd
-	BXXT5jDRhHh8YgfSCKa15bsCJ9GeAv4GIImTuWKXgpBxE4erYtXHkEKt3EMwdImCVR4/Cr+e03V
-	xtN8DbzSIrBIgD1dhQyuFGj2GyMDI52hU=
-X-Google-Smtp-Source: AGHT+IG21FJyi+kfSLXEbQ9XYQljr3Q2+lTXlm9xHhZAiZrLk1xHBcTQUEthvNVzwmylHK8H6BQ4/5ZXRUgM4wijX4k=
-X-Received: by 2002:a05:690c:640c:b0:709:164a:fec with SMTP id
- 00721157ae682-70c7f1437c2mr71180407b3.17.1747253405693; Wed, 14 May 2025
- 13:10:05 -0700 (PDT)
+        bh=ieyfvDKH3Tt+g6Km/oF0YWXewNAFY2nA/w5dLdkWUnw=;
+        b=Zno8AXtyOcDaKWVGVacDfucgR1JWyKs7gDhIMtXUSEy9V/7p9x+Y4qzUB8XrFXavpB
+         CSUv5EvxIJGpmrnHB8PUo7VTjmrms8q6RJkQ+/7u8EYVIMwyxsjn7SQRD/NdwD82lDlw
+         Let8f8MYYiD61e5wPLa0UgNftg/1gkPpk7gfqDByyEr+1giEKSd5wnxempZS9pQ7zuYO
+         UKfw84RgxBIMQp/OUh6yxrp4kDFxzxNDheNsXneb768CtOKZ1wsRqKIacBiacDjH3OwS
+         dk/ABPGKSLmeizRGwZz/0lcfPV+bQjmB0L2Ds5kZg02unw+Swq8gE4c489lOIMlqPoCz
+         OOmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQKIODQ/DTz5P7cqrRX9+PAVfi9oBPcRpTsQQXdmE3SSVQT1CjVqryBf3ym7C8Q/gqgr4609jusWl9aqM=@vger.kernel.org, AJvYcCWjBW2J0szypJ+DpTUS9WrWu9zbKuK3an78vZIP0QBMGwDvTuAfPxOHf0iSc9tHp+kr4ExTlgXRxntmKYNXzM8Mbg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSx+W2DutHC+J4BdZ/a6Jh4DO8NtE7eDMhmA3vIjDcErryXtDS
+	IZNaj5e8ManxxDzFh/qXPAxUspFFBveqEJ9tmLIsyHOsb+KcKL92ENbEXFqM08cVftkoCIN1VgG
+	iFT+RnJFdno/DEzA04pDjZBsSFSa0Yaw=
+X-Gm-Gg: ASbGncu6Ezel1G8WN/akmB0LuHcK/tNaBfbfmgs1SZLp4SW9+k9DC4i67GvEQqjYtNk
+	kbBaZF34zTQ8IIvTJOjc6SCvMR+pgPaMP6koCBNaPNo3p1RJQo3xRuIdSD7c0+hJ2PP/AUcUsSU
+	u4cUpKjl4r+E5vOC5lpC40PVHxNfXTIWk=
+X-Google-Smtp-Source: AGHT+IFOOSjOZL5iEK1QRY+ztchNvmiMN9GfWBVhSD7ciQx9AFNwSjJpCGURNAbJE0PuPWPxSFMVNzDcsNYCoDAbQqE=
+X-Received: by 2002:a05:690c:3507:b0:6fd:33a1:f4b with SMTP id
+ 00721157ae682-70c8fcf8098mr15190807b3.4.1747253753010; Wed, 14 May 2025
+ 13:15:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502204056.973977-1-namhyung@kernel.org>
-In-Reply-To: <20250502204056.973977-1-namhyung@kernel.org>
+References: <20250501022809.449767-1-howardchu95@gmail.com>
+ <aBjfrUqFe444h_CF@x1> <CAP-5=fXMwyGm5KUecSS4pUhgBB_py=R_c0LqEYfnjyRrf4bcMQ@mail.gmail.com>
+ <CA+JHD93FaugH5ny6+bBkciwoWzLN5RKCbtBq77V2bi8Rs15-UQ@mail.gmail.com>
+ <CAP-5=fX8+nyvisxybD6gWBhJd=GpuMiBkSA+CqnLuUc7Mx2KHw@mail.gmail.com> <CA+JHD935y5ky0EWrG4okShjizP9JDp1hOoUiCNT3c6WUj0k1VA@mail.gmail.com>
+In-Reply-To: <CA+JHD935y5ky0EWrG4okShjizP9JDp1hOoUiCNT3c6WUj0k1VA@mail.gmail.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 14 May 2025 13:09:55 -0700
-X-Gm-Features: AX0GCFvvwFy1hO7UqGryskqTZR4hWpkamqCCUqEGvSy7CE3r7BC_54bHt4evydo
-Message-ID: <CAH0uvoi552j-5a-rqR7CbiycUiuz1Rres76hK=1rqiDS-9qbOg@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Show zero value in STRARRAY
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+Date: Wed, 14 May 2025 13:15:42 -0700
+X-Gm-Features: AX0GCFuC8RUg7OBCnE4NUp_-OeKZBEFLwQSN4xHj8h6GBU9BTam8I9U0_MK6xlY
+Message-ID: <CAH0uvohK3ER-KODvgc3aApLOebR4v=SeprenvRxxbJqwUQW6jw@mail.gmail.com>
+Subject: Re: [PATCH v16 00/10] perf record --off-cpu: Dump off-cpu samples directly
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, gautam@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
+Hello,
 
-On Fri, May 2, 2025 at 1:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> The STRARRAY macro is to print values in a pre-defined array.  But
-> sometimes it hides the value because it's 0.  The value of 0 can have a
-> meaning in this case so set 'show_zero' field.
->
-> For example, it can show CREATE_MAP cmd in the bpf syscall.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Thank you, Ian and Arnaldo, for testing this. I apologize for not
+responding sooner =E2=80=94 I don't think that'll happen again (these are m=
+y
+patches, after all).
 
-Acked-by: Howard Chu <howardchu95@gmail.com>
+Wow, it's applied. Guess I'll treat myself to some Kung Pao chicken tonight=
+.
 
-Thanks,
+Thanks guys,
 Howard
