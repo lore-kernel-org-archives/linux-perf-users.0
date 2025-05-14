@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE20428689C;
-	Wed, 14 May 2025 15:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AA0283FFA;
+	Wed, 14 May 2025 15:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235690; cv=none; b=UNmWTmCzuht3Veixx1Mv3PaAXLNyRPbC0cND7YZrpeN3cM8ACLktGYoxU2cg12aPKdDOudpLpk2ODLtBBoQa81fDeeTqO0qJjrue+koVd1VmbhHW9ZsFOoeDtBq9APm0ybl7nHoMl+fVX/tGMmm+RBgqe8GNqKovHZuS19bU4BA=
+	t=1747235690; cv=none; b=igpA87xSGX5n2q5hPIChZ6PU8UMtJNCvbvq8aLOVKV02Vs7AIWlc9iKsqcdPcgA1k2UKURru7oePDHquHu/P57kXKrFv9pgEMQHp0ejBePiI6eUpX8mXrdIXeKLZDm/ayOZOsNbnEECIW7ywkTdLwYB/bkLvG9owwggnyGiN1lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747235690; c=relaxed/simple;
-	bh=jtzi1Dswis+7E8s5xuD4Q5RcegCZpv4/8lL3qUWjHa0=;
+	bh=L2nENQRMXr7cm7P8wvgZXQuelIQ1McOEGuf1n8wrLNc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=leICoVuFKNNz66Fqy1A/+qvLhXOyVpDSi13+cqLvz0c9GyrnX4gsvz4puFlcK7hokYYmhfVQyp/mo0AkRtjn0zbbLH0uLomuikCaMxA833jeT7I9YPRIfUqNut1FXOFHlFJr12cyE9cjNHZvIQgDuFju/Wb/o16dH+kJZFp2EY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IAhDzjbJ; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=M24STAt0c0bsjwjPiBYA6QdrjkILkkTMfLUZGEM1Ft7dAEdfZIs3aS29Y/M/tzLsU3d+CGXaAODAvOWaQ0UKkPZf6IW8y2SD8T4PyE9hnCnTVs0pa8GRqHJ7pfovBZAdw3HvIQ9jXKPDqgmQkHKBz1pJE9NhZW13Ue4syPSd6Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VwUfkSAi; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IAhDzjbJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VwUfkSAi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747235689; x=1778771689;
+  t=1747235688; x=1778771688;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jtzi1Dswis+7E8s5xuD4Q5RcegCZpv4/8lL3qUWjHa0=;
-  b=IAhDzjbJlfsKjjqTPw4QRvxLpUzo1x+8WHhQXQBUNis7ZIkwKAEl44CB
-   x/NLR0JpDNga+UTVn+6qTDV95MsofGQY8rN9IwLe2Wsl9rNdbRwRlPKt+
-   LsiTXtdGTI3MXokg2E60FMFegd+kJgX7MKfCBGqj00JTUndvzp3f0CuEL
-   VvGfuRFGXBdcLPziI5Wsg1okl18qkMuQXcUGNSKLIyLnJ0HbdWpL51jOx
-   +h2i2bSS7LarD3mqi0tPOkVsAopa5oCiacjJdou3Br69gN63UbddIRo+B
-   k3dWadmpamq9BqPGLrDubwQCTGbgOxq/r+XKsjQRtAssRvGoLdSf3fRp2
+  bh=L2nENQRMXr7cm7P8wvgZXQuelIQ1McOEGuf1n8wrLNc=;
+  b=VwUfkSAiNWGNLDIyIFrgNr1Tfe0KLo2Q8+9linaeff38XkWtNjDbjL76
+   Z4m02f947RrfL0egx7x8PFJbbztPLu9WT99CfKwjPrgUqU8rKR/UDnsew
+   C9dkwW1eyl67qPDRjxBoJw5BI+5ZWg08zQgGkRgTBG11ChIeY58ME3xBf
+   E3BydHVcm+onYRqfnQrzDXeVOKawbapR6Tgu8X5rjx9ZKals4zgCVwVCv
+   nGyD+yo6HfBRyyujUwtTka7SLwu4phXStAyT6SWe5jPikuRXMgMZxtIyj
+   Usm9ICWDfqzFS73YUUY6bXJLhRe52omw4MtGtzKW6jDDMlXh/rXSTGOk7
    w==;
-X-CSE-ConnectionGUID: qYIT3d0zTTGYBKQI8zJajQ==
-X-CSE-MsgGUID: xrSx1r5eTxqjXAWCd3Pzqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49072758"
+X-CSE-ConnectionGUID: 9aPlbFMYTM6iOgWY1XYODw==
+X-CSE-MsgGUID: busp4fLUStieOAFn3xRHOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49072744"
 X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="49072758"
+   d="scan'208";a="49072744"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:14:46 -0700
-X-CSE-ConnectionGUID: b9U4YqtdR0+x9gn5tnQ9/Q==
-X-CSE-MsgGUID: BgFcYL/QQCa57Xepg6UOjg==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:14:45 -0700
+X-CSE-ConnectionGUID: j1d1npWEQYK184NLh4CAxQ==
+X-CSE-MsgGUID: gYZgcIb6QBuZVSdGR/Edug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="142939171"
+   d="scan'208";a="142939167"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by fmviesa005.fm.intel.com with ESMTP; 14 May 2025 08:14:45 -0700
 From: kan.liang@linux.intel.com
@@ -55,10 +55,10 @@ Cc: eranian@google.com,
 	ctshao@google.com,
 	tmricht@linux.ibm.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: [PATCH V2 08/15] perf/apple_m1: Remove driver-specific throttle support
-Date: Wed, 14 May 2025 08:13:54 -0700
-Message-Id: <20250514151401.2547932-9-kan.liang@linux.intel.com>
+	linux-s390@vger.kernel.org
+Subject: [PATCH V2 06/15] s390/perf: Remove driver-specific throttle support
+Date: Wed, 14 May 2025 08:13:52 -0700
+Message-Id: <20250514151401.2547932-7-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250514151401.2547932-1-kan.liang@linux.intel.com>
 References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
@@ -80,25 +80,42 @@ event_limit. It already does an inatomic event disable. The pmu->stop
 is not required either.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
 ---
- drivers/perf/apple_m1_cpu_pmu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/s390/kernel/perf_cpum_cf.c | 2 --
+ arch/s390/kernel/perf_cpum_sf.c | 5 +----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
-index df9a28ba69dc..81b6f1a62349 100644
---- a/drivers/perf/apple_m1_cpu_pmu.c
-+++ b/drivers/perf/apple_m1_cpu_pmu.c
-@@ -474,8 +474,7 @@ static irqreturn_t m1_pmu_handle_irq(struct arm_pmu *cpu_pmu)
- 		if (!armpmu_event_set_period(event))
- 			continue;
- 
--		if (perf_event_overflow(event, &data, regs))
--			m1_pmu_disable_event(event);
-+		perf_event_overflow(event, &data, regs);
+diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+index e657fad7e376..6a262e198e35 100644
+--- a/arch/s390/kernel/perf_cpum_cf.c
++++ b/arch/s390/kernel/perf_cpum_cf.c
+@@ -980,8 +980,6 @@ static int cfdiag_push_sample(struct perf_event *event,
  	}
  
- 	cpu_pmu->start(cpu_pmu);
+ 	overflow = perf_event_overflow(event, &data, &regs);
+-	if (overflow)
+-		event->pmu->stop(event, 0);
+ 
+ 	perf_event_update_userpage(event);
+ 	return overflow;
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index ad22799d8a7d..91469401f2c9 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1072,10 +1072,7 @@ static int perf_push_sample(struct perf_event *event,
+ 	overflow = 0;
+ 	if (perf_event_exclude(event, &regs, sde_regs))
+ 		goto out;
+-	if (perf_event_overflow(event, &data, &regs)) {
+-		overflow = 1;
+-		event->pmu->stop(event, 0);
+-	}
++	overflow = perf_event_overflow(event, &data, &regs);
+ 	perf_event_update_userpage(event);
+ out:
+ 	return overflow;
 -- 
 2.38.1
 
