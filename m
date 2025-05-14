@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A0728314C;
-	Wed, 14 May 2025 15:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1EF2749F1;
+	Wed, 14 May 2025 15:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235686; cv=none; b=a/8UnEOszOHXniaFOLAt7Dy7e2r1QWghV82PjV7TNq63352bK/O/jMbwL+hl+1wWngtgtHWraiOnZZZQxYBnXnh+w+QYHuTEJ2a3qDGn6v5vlsedr+W5jjME7jK8aJBbLToiAiN7x0h/unPlO+EuQu7X6Yh/g3FKyV4CI4AlRU0=
+	t=1747235687; cv=none; b=A6dwk5WSE2ftSE9E1kZY7wlHQ6+u71+c5asqLzqyobbRoNjMDnJAqyPkoAV3prH+OU5IAxVoBlQxT904F3rQpfrl5a9W25q89U0joTpXUFfWLOJVI9PcFu+U9QSqSI0wfapuK0H+zZunwU1sQDtmC2kUjJ9fSkPFUZEtIxyvVSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235686; c=relaxed/simple;
-	bh=t6/LBgg+1aMJsZFJL58x9sXMIDVKAcDStYgCa68l14o=;
+	s=arc-20240116; t=1747235687; c=relaxed/simple;
+	bh=0hRB1IvQlzGriWaTL732AEH9Fmh4KKnhaup08Q0Jp/4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F/Lf2mD9yvFFJ/HHZry7hNRD9QCqFcXJgGHGjxg9JNkV6B9PPqa9BQ5P6i62UwAm/ESQz52Uc98trwZUqmP+yAaNvQ6cQahuWc0ci0uAqye54grPiGm89PO2zO4uT7W0+uv15yoE3TZYn9SYdLNVTaggAtyMOzpaI3219YJgc2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Du1xuYlY; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=BRwih52cce0q5dSr0Q+IpznmmaCXxMLigAsSAdhhnU5uGOZwnpUULMinsr/3Ebx4lwNiB6TgVi9YT0IGizyYJplmri7bN7/LsXIpGI3ac9WJUIthwpKqD5wEjiuGe2yiddiO136tcckB9Q4Pcg8AMr+FshK8FSIjytPyFHI9E1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L4KNQBKD; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Du1xuYlY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L4KNQBKD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747235685; x=1778771685;
+  t=1747235686; x=1778771686;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=t6/LBgg+1aMJsZFJL58x9sXMIDVKAcDStYgCa68l14o=;
-  b=Du1xuYlYFNohsp2Ijx7Mxy2bEoSX8UGO8yiRhEHcifEni6NPPWyVdle5
-   XEBd3AcNaXZw+yHmHJCC4mLKox2Ytbx/mF9rMnz7VT7qNkE8KD2tk6x3S
-   1QSrUqBAhT2gEdBOEFX/6BrPGhCBzaISrxjnA24bbk25lveqmPOjgvuFl
-   4B578X/h8S10gP4z0FINVn8Nfu/6Bywoao0MgVsIyt1l7vdVC+zMVC6Hc
-   aldNnCAyfQ41UqkeCYFWZPtK9ssdorpKcNAfvY4TSJ9Iptd2EbaFFu73E
-   VQ9lnjrusIujQ9Pu8lhG/yNUFhrqBNkqGMyrhD0VweZvcTcllT8P/jNVY
-   A==;
-X-CSE-ConnectionGUID: +IQBdefzQJejHq0azXge3Q==
-X-CSE-MsgGUID: ElBzWMqIQI+JjbQeu6Y4fA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49072705"
+  bh=0hRB1IvQlzGriWaTL732AEH9Fmh4KKnhaup08Q0Jp/4=;
+  b=L4KNQBKDlXrM8wvYhKpFmv7GOCCxTzhBCo28I5z5RxVA+4bZz+0qr3am
+   NLjbIpe8Fbd+VGWxqx7Nb+c74oDUFSizz8Pcto5wghblVxax+Uvfarlin
+   1V87syDJI0/9fEcpHn07M9C96eSoGSLH+oHlW+f/CxpdxWlQ66rAM+MH5
+   zOMyeQoIaawhyR+YjIspcKGp26ukMpkoHutMZ75/HMynnf9708oQkletw
+   o8solHDhmQo34WPcUuV53vxRLM3cTCQtyZuNdGRo5lQDs/fHcXf7hwBpZ
+   yBms+T5wJSAZIsMz5q8INrf0UxSLlZ5MVgtZSnj5P+xJvM0l6C47SVH2G
+   w==;
+X-CSE-ConnectionGUID: rXFmLqM6Sjm7Zj30fWl68g==
+X-CSE-MsgGUID: J/I3yQiuRVKndNd6kN6bkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49072719"
 X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="49072705"
+   d="scan'208";a="49072719"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:14:43 -0700
-X-CSE-ConnectionGUID: FEOF1dHnR6CPlhZtRQDy0g==
-X-CSE-MsgGUID: dztFy6CMTf6z/e3GuJlvUg==
+X-CSE-ConnectionGUID: ZwAYKfp0R7mD55WQIr3nOA==
+X-CSE-MsgGUID: UlfTyqo8Qkitcobp/Y9ixA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="142939153"
+   d="scan'208";a="142939161"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa005.fm.intel.com with ESMTP; 14 May 2025 08:14:42 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 14 May 2025 08:14:43 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,10 +54,12 @@ To: peterz@infradead.org,
 Cc: eranian@google.com,
 	ctshao@google.com,
 	tmricht@linux.ibm.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 01/15] perf: Fix the throttle logic for a group
-Date: Wed, 14 May 2025 08:13:47 -0700
-Message-Id: <20250514151401.2547932-2-kan.liang@linux.intel.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: [PATCH V2 03/15] perf/x86/amd: Remove driver-specific throttle support
+Date: Wed, 14 May 2025 08:13:49 -0700
+Message-Id: <20250514151401.2547932-4-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250514151401.2547932-1-kan.liang@linux.intel.com>
 References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
@@ -71,164 +73,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The current throttle logic doesn't work well with a group, e.g., the
-following sampling-read case.
+The throttle support has been added in the generic code. Remove
+the driver-specific throttle support.
 
-$ perf record -e "{cycles,cycles}:S" ...
+Besides the throttle, perf_event_overflow may return true because of
+event_limit. It already does an inatomic event disable. The pmu->stop
+is not required either.
 
-$ perf report -D | grep THROTTLE | tail -2
-            THROTTLE events:        426  ( 9.0%)
-          UNTHROTTLE events:        425  ( 9.0%)
-
-$ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
-0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
-... sample_read:
-.... group nr 2
-..... id 0000000000000327, value 000000000cbb993a, lost 0
-..... id 0000000000000328, value 00000002211c26df, lost 0
-
-The second cycles event has a much larger value than the first cycles
-event in the same group.
-
-The current throttle logic in the generic code only logs the THROTTLE
-event. It relies on the specific driver implementation to disable
-events. For all ARCHs, the implementation is similar. Only the event is
-disabled, rather than the group.
-
-The logic to disable the group should be generic for all ARCHs. Add the
-logic in the generic code. The following patch will remove the buggy
-driver-specific implementation.
-
-The throttle only happens when an event is overflowed. Stop the entire
-group when any event in the group triggers the throttle.
-The MAX_INTERRUPTS is set to all throttle events.
-
-The unthrottled could happen in 3 places.
-- event/group sched. All events in the group are scheduled one by one.
-  All of them will be unthrottled eventually. Nothing needs to be
-  changed.
-- The perf_adjust_freq_unthr_events for each tick. Needs to restart the
-  group altogether.
-- The __perf_event_period(). The whole group needs to be restarted
-  altogether as well.
-
-With the fix,
-$ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
-0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
-... sample_read:
-.... group nr 2
-..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
-..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
-
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Sandipan Das <sandipan.das@amd.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
 
 Changes since V1:
-- Apply the suggested throttle/unthrottle functions from Peter.
-  The MAX_INTERRUPTS and throttle logs are applied to all events.
-- Update the description and comments accordingly
+- Add Reviewed-by from Ravi
 
- kernel/events/core.c | 58 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 44 insertions(+), 14 deletions(-)
+ arch/x86/events/amd/core.c | 3 +--
+ arch/x86/events/amd/ibs.c  | 4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a84abc2b7f20..a270fcda766d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2734,6 +2734,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
- static void perf_log_throttle(struct perf_event *event, int enable);
- static void perf_log_itrace_start(struct perf_event *event);
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 30d6ceb4c8ad..5e64283b9bf2 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1003,8 +1003,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
  
-+static void perf_event_unthrottle(struct perf_event *event, bool start)
-+{
-+	event->hw.interrupts = 0;
-+	if (start)
-+		event->pmu->start(event, 0);
-+	perf_log_throttle(event, 1);
-+}
-+
-+static void perf_event_throttle(struct perf_event *event)
-+{
-+	event->pmu->stop(event, 0);
-+	event->hw.interrupts = MAX_INTERRUPTS;
-+	perf_log_throttle(event, 0);
-+}
-+
-+static void perf_event_unthrottle_group(struct perf_event *event, bool start)
-+{
-+	struct perf_event *sibling, *leader = event->group_leader;
-+
-+	perf_event_unthrottle(leader, leader != event || start);
-+	for_each_sibling_event(sibling, leader)
-+		perf_event_unthrottle(sibling, sibling != event || start);
-+}
-+
-+static void perf_event_throttle_group(struct perf_event *event)
-+{
-+	struct perf_event *sibling, *leader = event->group_leader;
-+
-+	perf_event_throttle(leader);
-+	for_each_sibling_event(sibling, leader)
-+		perf_event_throttle(sibling);
-+}
-+
- static int
- event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
- {
-@@ -4389,10 +4422,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
- 		hwc = &event->hw;
+ 		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
  
- 		if (hwc->interrupts == MAX_INTERRUPTS) {
--			hwc->interrupts = 0;
--			perf_log_throttle(event, 1);
--			if (!event->attr.freq || !event->attr.sample_freq)
--				event->pmu->start(event, 0);
-+			perf_event_unthrottle_group(event,
-+				!event->attr.freq || !event->attr.sample_freq);
- 		}
- 
- 		if (!event->attr.freq || !event->attr.sample_freq)
-@@ -6421,14 +6452,6 @@ static void __perf_event_period(struct perf_event *event,
- 	active = (event->state == PERF_EVENT_STATE_ACTIVE);
- 	if (active) {
- 		perf_pmu_disable(event->pmu);
--		/*
--		 * We could be throttled; unthrottle now to avoid the tick
--		 * trying to unthrottle while we already re-started the event.
--		 */
--		if (event->hw.interrupts == MAX_INTERRUPTS) {
--			event->hw.interrupts = 0;
--			perf_log_throttle(event, 1);
--		}
- 		event->pmu->stop(event, PERF_EF_UPDATE);
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
  	}
  
-@@ -6436,6 +6459,14 @@ static void __perf_event_period(struct perf_event *event,
+ 	/*
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 0252b7ea8bca..4bbbca02aeb1 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -1373,9 +1373,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		hwc->sample_period = perf_ibs->min_period;
  
- 	if (active) {
- 		event->pmu->start(event, PERF_EF_RELOAD);
-+		/*
-+		 * Once the period is force-reset, the event starts immediately.
-+		 * But the event/group could be throttled. Unthrottle the
-+		 * event/group now to avoid the next tick trying to unthrottle
-+		 * while we already re-started the event/group.
-+		 */
-+		if (event->hw.interrupts == MAX_INTERRUPTS)
-+			perf_event_unthrottle_group(event, false);
- 		perf_pmu_enable(event->pmu);
- 	}
- }
-@@ -10326,8 +10357,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
- 	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
- 		__this_cpu_inc(perf_throttled_count);
- 		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
--		hwc->interrupts = MAX_INTERRUPTS;
--		perf_log_throttle(event, 0);
-+		perf_event_throttle_group(event);
- 		ret = 1;
- 	}
- 
+ out:
+-	if (throttle) {
+-		perf_ibs_stop(event, 0);
+-	} else {
++	if (!throttle) {
+ 		if (perf_ibs == &perf_ibs_op) {
+ 			if (ibs_caps & IBS_CAPS_OPCNTEXT) {
+ 				new_config = period & IBS_OP_MAX_CNT_EXT_MASK;
 -- 
 2.38.1
 
