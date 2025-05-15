@@ -1,306 +1,564 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B135223DE9
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 16:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61FA2550C7
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 17:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747326561; cv=none; b=QnkPJ3c/uviCyKDte9rbk3tiiS5madyEkCwbpU8wJzqY8Mi/rAI8hTdzFcuHyrAkxXU5IXR1ETMC/KeZPYcCkHZgEeKfn3wvCnNtSJ5W+1/8N1gUU0CDSXLa0RLSID5V3DUIyABY4ZkVcMzp/F+DvOIn4BVC+oBXYYfZg2CR9uo=
+	t=1747328500; cv=none; b=sB1ySj50nO95lApdFRLIpj+9p3d+YKEoUP3ZVUAOmyGoiQQHrimGXjBCvsn9qrRShTdHDGYlqAgFxI4du/AXLkDfKQXLpq9aN2QIr59mRNHWHzxDrjthDBCaQv7bQuLPJZGpi6x0bl7hL/nBrryS9rkd8I8sBhpTPRGWjnPrJTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747326561; c=relaxed/simple;
-	bh=Dpe5GUytD/ZBfI9RSwk6yyNyU3qFGXl1KlZv7Wh3PnY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AVo820zAlMcAiqKv/iBFWg8weWUS9gdNM7Hth+M9tvvf0lsf7Yr5eDq0E4vP5lPpm6ztegCAbRIShUqerV5dFTgSVYFHZfHeWbZeS6BQ+a6b9usEDwWbUhWGm2bJRItZLbkyRWBAvJvQLSXjoB9P8Mz/cprSb9V1XQlDDboVhnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ISFL80QA; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1747328500; c=relaxed/simple;
+	bh=ZaUuu5sDYE82g5eRtyelATQ3QtWX8/G3oIE0+uijdt8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MnCw9rA3rzdvDpBI10J3WUHOJlhTPLvQPY8ro4Sk8h4yYjaTzVGogMGVMKu/H1CoxDMuDWvA7B+0gUrEU/cToJM80xITrqkpPdw872jWUplqRc1xd5DGNKsGSBnCp5VVQeW4W3D1mvD5Gn90T0wPcYaXtZ4kh5b8uP3/w4EdJAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xs/ISmvB; arc=none smtp.client-ip=209.85.166.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ISFL80QA"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-740774348f6so1098558b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 09:29:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xs/ISmvB"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so4395ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 10:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747326558; x=1747931358; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=33G1FuWPJhrQeT4tEtrokH8++dgRv3pDhHxeoQfcB18=;
-        b=ISFL80QALiu45+yxd4seLdnOVcdG52kTWsSbi7lUqMrIY0ugzLiyaVbJX/6no29Maq
-         ibvep4ZHgdwdC7CTxp35vfOYjjcaJHh2fh7/EJK59C7SCEE4W4aZYzl9A9248L06dt4o
-         ilY3K6elbaReICBIg44ucg6hF4rdWxawCk1eyhI/JMEbnBm5LUSjKu2kPidBzvQgjCCk
-         Mq9Y3M9RgfPQJ553e8ulBztj/X1hh/T+6TcFu143PfZAOS6jTCvN3wpug5SflRjtBJrO
-         v9BQ1jmaLV2+v+PpokQnKCp56wroMyrzkCJb6h9TxgdglvtiF4PIn8RjbUK1d36oGhu7
-         U7Fw==
+        d=google.com; s=20230601; t=1747328496; x=1747933296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UEXxcf8jVezm4hhZlGfp1oOcj9QgfqWp1O8soXS6zp8=;
+        b=xs/ISmvBiLW6jhSIKVFQjXxGd+Xl5McvBa2I5A1nBt4P5MVK2kZP6oS+Q0aKVyTTST
+         iJDCDZ+PnXH+jbKNMKAhGpEfMU63Dz+i77EgSzF6YCd4TV0ExbKilsKt9ICnBB4KlFvr
+         Y2kiVzIlH5BZHjIvrVBWIjWFhGtEOnXVyLWydgjdkD7yHIVWZLYChH7JRd0FAibDdpa6
+         5DZ9tEdsyIYfu/2AE0iv4H3hEjPo3LchxLFEnWVT4YKMqjtUIL5YD/pjPYvJNwDn32qI
+         TdbKT8cZWNMn171ngxgc5avq3bdmcf4Oj41TQKNauCX5kypb9Dw39eAMC4sFI7GQXNIv
+         gW8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747326558; x=1747931358;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=33G1FuWPJhrQeT4tEtrokH8++dgRv3pDhHxeoQfcB18=;
-        b=vNqMKSAdtukLyGwMb2mea8q074Ly5O2X2ca4xKZB1ds5CH7Cje9K6NxHh/Qvg6mo9J
-         gnEbAuY5xIBnhj3HYTj0ifFnnibRQnBFsXBkN/38N17USZpSKlkm+wvuEPLq7QIxE4Vn
-         eUVq32H2n4xUKFxf89tVZfksGROMWEAlSSc4fGKU6TzE7pPwFqFusMuJEFyc4YbXnKa4
-         IXjoKmqVe7DQuBS5ydDYrcnoN90BOn9hC2NlSt3Qt3PKYpzMI4pBIiS//FG8GNkrzaa6
-         SZsq8iWgMSXTUcvxl63LXnLGlfJ8YgBQflviXRSIdMB3HvfTFFoT/Xv8+IK6+etkJYyZ
-         oY7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWjaozA1zLRHoBgKeN+LbvHtOXjJGDe8t3NwzTpDZiI4YvHL/ZroWGkzcCKJqYAWwB15r+EO7KZHZ7aGwASek3s@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+FFtaXyc1JqG4x1urxb249QnOm3BD7XPEoleaHkcgrjwkYVlX
-	PPhEt1Vn9sLJm5AWBrPS2dp6zkoxdL3exbA4cANd4BqQnlbdckVbaR412lOtGy9C8yysfJF4qcN
-	+IArELA==
-X-Google-Smtp-Source: AGHT+IG6i4Ql7QxdqDS+namDmxhrAYEcLOTNClrETOX5R5KqFJpjaHYTWyhnRXJ27aSZiPLgy5D8PFJ682M=
-X-Received: from pgar27.prod.google.com ([2002:a05:6a02:2e9b:b0:b1f:866e:b28a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d88:b0:215:db66:2a32
- with SMTP id adf61e73a8af0-216219ba60emr236442637.33.1747326558483; Thu, 15
- May 2025 09:29:18 -0700 (PDT)
-Date: Thu, 15 May 2025 09:29:17 -0700
-In-Reply-To: <20250324173121.1275209-30-mizhang@google.com>
+        d=1e100.net; s=20230601; t=1747328496; x=1747933296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UEXxcf8jVezm4hhZlGfp1oOcj9QgfqWp1O8soXS6zp8=;
+        b=VIRua0RSc7DxOHVhR9vaje9uDAQ35LihKmr6Xn25qSyixscR0SjXXJTRZRcjIGkLd4
+         CNQHjNyO9ZA7ih0CLOItKo21bJfbvhzCcupjgM0nqMRwcSL9e5rvQsKw/E4UROS6MOsQ
+         L7cb56EU/enxJkT0DgjKuOz5eXW8T+jnXpcTJwXUuSLIzadmBl+6E9Ns5ULASmWlKUO7
+         SG2xZAHKZPdeIv0v2Ttwc55EYuavj7KbR9vtg4ic2bbG2QeEjlhieTEfv9u/1Wjk1PYs
+         c/687WcORt7+fg39HJVgQmDJIyOsgpxH/a1OygPFfyZDHulWoinXMflvn6cXFEJcbGwp
+         F/Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqKKKXo2NAMhnA1CFhNBNdH2ESQd/dM5wBtAh5ZVps41gT4o2kb4xay64ZaqGCxa+yueJ5WvTwJglF5kZcezXp@vger.kernel.org
+X-Gm-Message-State: AOJu0YznFB+nIztAFNC1QhcVKy38GKPmQMv3r1hlcSsnojeGEN84miYD
+	SutuNsp9Vly19Eg9wlRHdIW/A1xmickSQdXxSW0XqnpQuCja1u6+9CKNCw+ICms9uSUQBQrw7Cn
+	AOriGbYaBbMV6tFupRZcg1z3GoSErFrl1SHrjeDwr
+X-Gm-Gg: ASbGncsiYkdqTT93wM2fOT4mta9wbe9BQ4pCiJfu7XpL5tuCYOTTrMbpyURPJqrKa66
+	TIuqAYnclFoG0JpazgqXTgLweR3/Idyqd0QxwNq6jJgUHz3i9pDkR/h0keku7LD1h3JkBSpM08B
+	FDwS22FF+qnj9pySN9WTorwwq9DVXxBN5N+NpplzWRH6NuLABLU5MjI4Xj901w5A==
+X-Google-Smtp-Source: AGHT+IHlnFsWr83+eL7jSyG5VQ49GP19H1yDohnU6rUJ++x3gcGbuMdKHC0HFKgKjm6+nk3PkKXkrhe4iSwVdk6lxrk=
+X-Received: by 2002:a05:6e02:2306:b0:3cf:f8c0:417a with SMTP id
+ e9e14a558f8ab-3db77f14049mr4476285ab.0.1747328495326; Thu, 15 May 2025
+ 10:01:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-30-mizhang@google.com>
-Message-ID: <aCYWXXpFcx33uVPi@google.com>
-Subject: Re: [PATCH v4 29/38] KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
+MIME-Version: 1.0
+References: <20250515043818.236807-1-irogers@google.com> <909e988c-6e7c-4de1-b5b3-d5de119e4f35@linux.intel.com>
+In-Reply-To: <909e988c-6e7c-4de1-b5b3-d5de119e4f35@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 15 May 2025 10:01:23 -0700
+X-Gm-Features: AX0GCFu6kJCSuPZuCfi9gYV9C4GIihEsiHuC3dZ8IfGachhWZRZBJUOc_jIPW_Q
+Message-ID: <CAP-5=fUP=oENY8DFhGt4TFBJzyqbYaFRpj2huaJz4xfDu1GLmg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on graniterapids
+To: "Liang, Kan" <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-> index 9159bf1a4730..35f27366c277 100644
-> --- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
-> +++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
-> @@ -22,6 +22,8 @@ KVM_X86_PMU_OP(init)
->  KVM_X86_PMU_OP_OPTIONAL(reset)
->  KVM_X86_PMU_OP_OPTIONAL(deliver_pmi)
->  KVM_X86_PMU_OP_OPTIONAL(cleanup)
-> +KVM_X86_PMU_OP(put_guest_context)
-> +KVM_X86_PMU_OP(load_guest_context)
+On Thu, May 15, 2025 at 9:06=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2025-05-15 12:38 a.m., Ian Rogers wrote:
+> > On graniterapids the cache home agent (CHA) and memory controller
+> > (IMC) PMUs all have their cpumask set to per-socket information. In
+> > order for per NUMA node aggregation to work correctly the PMUs cpumask
+> > needs to be set to CPUs for the relevant sub-NUMA grouping.
+> >
+> > For example, on a 2 socket graniterapids machine with sub NUMA
+> > clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
+> > "0,120" leading to aggregation only on NUMA nodes 0 and 3:
+> > ```
+> > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a slee=
+p 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
+> > N0        1     19,242,894,228      UNC_M_CLOCKTICKS
+> > N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
+> > N3        1     19,240,741,498      UNC_M_CLOCKTICKS
+> >
+> >        1.002113847 seconds time elapsed
+> > ```
+> >
+> > By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
+> > the correctly 6 NUMA node aggregations are achieved:
+> > ```
+> > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a slee=
+p 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
+> > N0        0      6,424,021,142      UNC_M_CLOCKTICKS
+> > N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
+> > N1        1      6,424,308,338      UNC_M_CLOCKTICKS
+> > N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
+> > N2        0      6,424,227,402      UNC_M_CLOCKTICKS
+> > N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
+> > N3        0      6,423,752,086      UNC_M_CLOCKTICKS
+> > N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
+> > N4        1      6,422,393,266      UNC_M_CLOCKTICKS
+> > N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
+> > N5        0      6,421,842,618      UNC_M_CLOCKTICKS
+> >
+> >        1.003406645 seconds time elapsed
+> > ```
+> >
+> > In general, having the perf tool adjust cpumasks isn't desirable as
+> > ideally the PMU driver would be advertising the correct cpumask.
+> >
+>
+> Strictly speaking, the information used here is the CHA and IMC topology
+> information, not a cpumask.
+>
+> The cpumask in the uncore driver implies the scope of the PMU. Usually,
+> it's the first CPU of each socket/die.
 
-For KVM, the "guest_context" part is largely superfluous, as KVM always operates
-on guest state, e.g. kvm_fpu_{load,put}().
+I think it is understandable that things have diverged as previously
+socket and NUMA topologies were equivalent. Should cpumasks be
+documented like we have for the PMU names:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-to=
+ols-next
+I think without documentation the behavior of the `perf tool` is the
+expected use of the file. If the perf tool isn't behaving correctly
+then it is a bug in the driver. I see a lot of such bugs, mainly not
+on Intel platforms, where the cpumask is missing and then taken by the
+perf tool to mean the cpumask is all online CPUs; which is very bad
+for uncore devices leading to counts multiplied by the number of CPUs
+and multiplexing. I think there is similar confusion over the meaning
+of the CPUs in the cpumask. They are the CPUs perf should open an
+event on, for uncore you can specify other CPUs and this may be a way
+to spread kernel overhead, for core the meaning is different. In the
+perf tool implementation we use cpumasks to guide setting the thread
+affinity to try to lower the system call overheads. I worry different
+people assume different things and then these things start fighting
+against each other - such as setting a CPU to try to lower overhead
+but instead incurring IPI overheads.
 
-I do think we should squeeze in "mediated" somewhere, otherwise the it's hard to
-see that these are specific to the mediated PMU.
+> The topology information discloses how the uncore units connect to the
+> HW components, e.g., die, node...
+> There should be another interface for it. An example is the UPI topology
+> information.
+> https://lore.kernel.org/lkml/20221117122833.3103580-7-alexander.antonov@l=
+inux.intel.com/
+>
+> But I think utilizing the cpumask to imply the topology as this patch
+> does should be a good idea.
 
-So probably mediated_{load,put}()?
+I'm not sure how I'd hook up the topology information. On skylakex for
+a UPI device I see:
+```
+$ ls /sys/devices/uncore_upi_0/
+cpumask  die0  die1  format  perf_event_mux_interval_ms  power
+subsystem  type  uevent
+$ cat /sys/devices/uncore_upi_0/cpumask
+0,18
+$ cat /sys/devices/uncore_upi_0/die0
+upi_1,die_1
+$ cat /sys/devices/uncore_upi_0/die1
+upi_1,die_0
+```
+There's work to connect this up with NUMA.
 
->  #undef KVM_X86_PMU_OP
->  #undef KVM_X86_PMU_OP_OPTIONAL
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 7ee74bbbb0aa..4117a382739a 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -568,6 +568,10 @@ struct kvm_pmu {
->  	u64 raw_event_mask;
->  	struct kvm_pmc gp_counters[KVM_MAX_NR_GP_COUNTERS];
->  	struct kvm_pmc fixed_counters[KVM_MAX_NR_FIXED_COUNTERS];
-> +	u32 gp_eventsel_base;
-> +	u32 gp_counter_base;
-> +	u32 fixed_base;
-> +	u32 cntr_shift;
+> But I still incline not to add it to the kernel at least for now. Because=
+,
+> - The current method is based on some assumptions, e.g., the hardware id
+> and logical id of Notes and CHAs follow the ascending order. It should
+> work for the vast majority of cases. But it's not reliable compared to
+> retrieving from a register.
+> - Perf tool is more flexible. It can be easily deployed on an old
+> environment without the need to update the kernel.
+> - The cpumask codes are shared among uncore PMUs in the uncore driver.
+> It requires a big refactor to support per uncore PMU specific cpumask.
+> It may not be worth doing it only for GNR.
+>
+> Let's support it in the perf tool x86 code for now. We may move it to
+> the uncore driver later once the above items have changed.
 
-Gah, my bad, "shift" was a terrible suggestion.  It should be "stride".
+Agreed. At least this patch is a proof of concept that doing this
+fixes --per-node while keeping --per-socket also working.
 
-> @@ -306,6 +313,10 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
->  int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
->  void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel);
->  bool vcpu_pmu_can_enable(struct kvm_vcpu *vcpu);
-> +void kvm_pmu_put_guest_pmcs(struct kvm_vcpu *vcpu);
-> +void kvm_pmu_load_guest_pmcs(struct kvm_vcpu *vcpu);
-> +void kvm_pmu_put_guest_context(struct kvm_vcpu *vcpu);
-> +void kvm_pmu_load_guest_context(struct kvm_vcpu *vcpu);
->  
->  bool is_vmware_backdoor_pmc(u32 pmc_idx);
->  bool kvm_rdpmc_in_guest(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-> index 1a7e3a897fdf..7e0d84d50b74 100644
-> --- a/arch/x86/kvm/svm/pmu.c
-> +++ b/arch/x86/kvm/svm/pmu.c
-> @@ -175,6 +175,22 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	return 1;
->  }
->  
-> +static inline void amd_update_msr_base(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	if (kvm_pmu_has_perf_global_ctrl(pmu) ||
-> +	    guest_cpu_cap_has(vcpu, X86_FEATURE_PERFCTR_CORE)) {
-> +		pmu->gp_eventsel_base = MSR_F15H_PERF_CTL0;
-> +		pmu->gp_counter_base = MSR_F15H_PERF_CTR0;
-> +		pmu->cntr_shift = 2;
-> +	} else {
-> +		pmu->gp_eventsel_base = MSR_K7_EVNTSEL0;
-> +		pmu->gp_counter_base = MSR_K7_PERFCTR0;
-> +		pmu->cntr_shift = 1;
-> +	}
-> +}
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/x86/util/pmu.c | 259 ++++++++++++++++++++++++++++++++-
+> >  1 file changed, 254 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/=
+pmu.c
+> > index 8712cbbbc712..38c800c6e9c8 100644
+> > --- a/tools/perf/arch/x86/util/pmu.c
+> > +++ b/tools/perf/arch/x86/util/pmu.c
+> > @@ -8,6 +8,8 @@
+> >  #include <linux/perf_event.h>
+> >  #include <linux/zalloc.h>
+> >  #include <api/fs/fs.h>
+> > +#include <api/io_dir.h>
+> > +#include <internal/cpumap.h>
+> >  #include <errno.h>
+> >
+> >  #include "../../../util/intel-pt.h"
+> > @@ -16,7 +18,247 @@
+> >  #include "../../../util/fncache.h"
+> >  #include "../../../util/pmus.h"
+> >  #include "mem-events.h"
+> > +#include "util/debug.h"
+> >  #include "util/env.h"
+> > +#include "util/header.h"
+> > +
+> > +static bool x86__is_intel_graniterapids(void)
+> > +{
+> > +     static bool checked_if_graniterapids;
+> > +     static bool is_graniterapids;
+> > +
+> > +     if (!checked_if_graniterapids) {
+> > +             const char *graniterapids_cpuid =3D "GenuineIntel-6-A[DE]=
+";
+> > +             char *cpuid =3D get_cpuid_str((struct perf_cpu){0});
+> > +
+> > +             is_graniterapids =3D cpuid && strcmp_cpuid_str(graniterap=
+ids_cpuid, cpuid) =3D=3D 0;
+> > +             free(cpuid);
+> > +             checked_if_graniterapids =3D true;
+> > +     }
+> > +     return is_graniterapids;
+> > +}
+> > +
+> > +static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+> > +{
+> > +     struct perf_cpu_map *cpus;
+> > +     char *buf =3D NULL;
+> > +     size_t buf_len;
+> > +
+> > +     if (sysfs__read_str(sysfs_path, &buf, &buf_len) < 0)
+> > +             return NULL;
+> > +
+> > +     cpus =3D perf_cpu_map__new(buf);
+> > +     free(buf);
+> > +     return cpus;
+> > +}
+> > +
+> > +static int snc_nodes_per_l3_cache(void)
+> > +{
+> > +     static bool checked_snc;
+> > +     static int snc_nodes;
+> > +
+> > +     if (!checked_snc) {
+> > +             struct perf_cpu_map *node_cpus =3D
+> > +                     read_sysfs_cpu_map("devices/system/node/node0/cpu=
+list");
+> > +             struct perf_cpu_map *cache_cpus =3D
+> > +                     read_sysfs_cpu_map("devices/system/cpu/cpu0/cache=
+/index3/shared_cpu_list");
+> > +
+> > +             snc_nodes =3D perf_cpu_map__nr(cache_cpus) / perf_cpu_map=
+__nr(node_cpus);
+> > +             perf_cpu_map__put(cache_cpus);
+> > +             perf_cpu_map__put(node_cpus);
+> > +             checked_snc =3D true;
+> > +     }
+> > +     return snc_nodes;
+> > +}
+> > +
+> > +static bool starts_with(const char *str, const char *prefix)
+> > +{
+> > +     return !strncmp(prefix, str, strlen(prefix));
+> > +}
+> > +
+> > +static int num_chas(void)
+> > +{
+> > +     static bool checked_chas;
+> > +     static int num_chas;
+> > +
+> > +     if (!checked_chas) {
+> > +             int fd =3D perf_pmu__event_source_devices_fd();
+> > +             struct io_dir dir;
+> > +             struct io_dirent64 *dent;
+> > +
+> > +             if (fd < 0)
+> > +                     return -1;
+> > +
+> > +             io_dir__init(&dir, fd);
+> > +
+> > +             while ((dent =3D io_dir__readdir(&dir)) !=3D NULL) {
+> > +                     /* Note, dent->d_type will be DT_LNK and so isn't=
+ a useful filter. */
+> > +                     if (starts_with(dent->d_name, "uncore_cha_"))
+> > +                             num_chas++;
+> > +             }
+> > +             close(fd);
+> > +             checked_chas =3D true;
+> > +     }
+> > +     return num_chas;
+> > +}
+> > +
+> > +#define MAX_SNCS 6
+> > +
+> > +static int uncore_cha_snc(struct perf_pmu *pmu)
+> > +{
+> > +     // CHA SNC numbers are ordered correspond to the CHAs number.
+> > +     unsigned int cha_num;
+> > +     int num_cha, chas_per_node, cha_snc;
+> > +     int snc_nodes =3D snc_nodes_per_l3_cache();
+> > +
+> > +     if (snc_nodes <=3D 1)
+> > +             return 0;
+> > +
+> > +     num_cha =3D num_chas();
+> > +     if (num_cha <=3D 0) {
+> > +             pr_warning("Unexpected: no CHAs found\n");
+> > +             return 0;
+> > +     }
+> > +
+> > +     /* Compute SNC for PMU. */
+> > +     if (sscanf(pmu->name, "uncore_cha_%u", &cha_num) !=3D 1) {
+> > +             pr_warning("Unexpected: unable to compute CHA number '%s'=
+\n", pmu->name);
+> > +             return 0;
+> > +     }
+> > +     chas_per_node =3D num_cha / snc_nodes;
+> > +     cha_snc =3D cha_num / chas_per_node;
+> > +
+> > +     /* Range check cha_snc. for unexpected out of bounds. */
+> > +     return cha_snc >=3D MAX_SNCS ? 0 : cha_snc;
+> > +}
+> > +
+> > +static int uncore_imc_snc(struct perf_pmu *pmu)
+> > +{
+> > +     // Compute the IMC SNC using lookup tables.
+> > +     unsigned int imc_num;
+> > +     int snc_nodes =3D snc_nodes_per_l3_cache();
+> > +     const u8 snc2_map[] =3D {1, 1, 0, 0, 1, 1, 0, 0};
+> > +     const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+> > +     const u8 *snc_map;
+> > +     size_t snc_map_len;
+> > +
+> > +     switch (snc_nodes) {
+> > +     case 2:
+> > +             snc_map =3D snc2_map;
+> > +             snc_map_len =3D ARRAY_SIZE(snc2_map);
+> > +             break;
+> > +     case 3:
+> > +             snc_map =3D snc3_map;
+> > +             snc_map_len =3D ARRAY_SIZE(snc3_map);
+> > +             break;
+> > +     default:
+> > +             /* Error or no lookup support for SNC with >3 nodes. */
+> > +             return 0;
+> > +     }
+> > +
+> > +     /* Compute SNC for PMU. */
+> > +     if (sscanf(pmu->name, "uncore_imc_%u", &imc_num) !=3D 1) {
+> > +             pr_warning("Unexpected: unable to compute IMC number '%s'=
+\n", pmu->name);
+> > +             return 0;
+> > +     }
+> > +     if (imc_num >=3D snc_map_len) {
+> > +             pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_n=
+um, snc_nodes);
+> > +             return 0;
+> > +     }
+> > +     return snc_map[imc_num];
+> > +}
+> > +
+> > +static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+> > +{
+> > +     static bool checked_cpu_adjust[MAX_SNCS];
+> > +     static int cpu_adjust[MAX_SNCS];
+> > +     struct perf_cpu_map *node_cpus;
+> > +     char node_path[] =3D "devices/system/node/node0/cpulist";
+> > +
+> > +     /* Was adjust already computed? */
+> > +     if (checked_cpu_adjust[pmu_snc])
+> > +             return cpu_adjust[pmu_snc];
+> > +
+> > +     /* SNC0 doesn't need an adjust. */
+> > +     if (pmu_snc =3D=3D 0) {
+> > +             cpu_adjust[0] =3D 0;
+> > +             checked_cpu_adjust[0] =3D true;
+> > +             return 0;
+> > +     }
+> > +
+> > +     /*
+> > +      * Use NUMA topology to compute first CPU of the NUMA node, we wa=
+nt to
+> > +      * adjust CPU 0 to be this and similarly for other CPUs if there =
+is >1
+> > +      * socket.
+> > +      */
+> > +     node_path[24] =3D pmu_snc; // Shift node0 to be node<pmu_snc>.
+>
+> I think scnprintf should be a prefer way to update the idx. E.g.,
+>
+> #define NODE_PATH       "devices/system/node/node%d/cpulist"
+>
+> scnprintf(node_path, MAX_PATH, NODE_PATH, pmu_snc);
 
-Moving quoted text around to organize responses...
+I'm concerned throughout the code about making things slow when
+--per-node isn't a particular common option. Perhaps it will be for
+graniterapids. The values of pmu_snc are 0 to 6 so this is sound but I
+can cover this with an assert.
 
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 796b7bc4affe..ed17ab198dfb 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -460,6 +460,17 @@ static void intel_pmu_enable_fixed_counter_bits(struct kvm_pmu *pmu, u64 bits)
->  		pmu->fixed_ctr_ctrl_rsvd &= ~intel_fixed_bits_by_idx(i, bits);
->  }
->  
-> +static inline void intel_update_msr_base(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	pmu->gp_eventsel_base = MSR_P6_EVNTSEL0;
-> +	pmu->gp_counter_base = fw_writes_is_enabled(vcpu) ?
-> +			       MSR_IA32_PMC0 : MSR_IA32_PERFCTR0;
+>
+> > +     node_cpus =3D read_sysfs_cpu_map(node_path);
+> > +     cpu_adjust[pmu_snc] =3D perf_cpu_map__cpu(node_cpus, 0).cpu;
+> > +     checked_cpu_adjust[pmu_snc] =3D true;
+> > +     perf_cpu_map__put(node_cpus);
+> > +     return cpu_adjust[pmu_snc];
+> > +}
+> > +
+> > +static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu =
+*pmu, bool cha)
+> > +{
+> > +     // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in=
+ the
+> > +     // topology. For example, a two socket graniterapids machine may =
+be set
+> > +     // up with 3-way SNC meaning there are 6 NUMA nodes that should b=
+e
+> > +     // displayed with --per-node. The cpumask of the CHA and IMC PMUs
+> > +     // reflects per-socket information meaning, for example, uncore_c=
+ha_60
+> > +     // on a two socket graniterapids machine with 120 cores per socke=
+t will
+> > +     // have a cpumask of "0,120". This cpumask needs adjusting to "40=
+,160"
+> > +     // to reflect that uncore_cha_60 is used for the 2nd SNC of each
+> > +     // socket. Without the adjustment events on uncore_cha_60 will ap=
+pear in
+> > +     // node 0 and node 3 (in our example 2 socket 3-way set up), but =
+with
+> > +     // the adjustment they will appear in node 1 and node 4. The numb=
+er of
+> > +     // CHAs is typically larger than the number of cores. The CHA num=
+bers
+> > +     // are assumed to split evenly and inorder wrt core numbers. Ther=
+e are
+> > +     // fewer memory IMC PMUs than cores and mapping is handled using =
+lookup
+> > +     // tables.
+> > +     static struct perf_cpu_map *cha_adjusted[MAX_SNCS];
+> > +     static struct perf_cpu_map *imc_adjusted[MAX_SNCS];
+> > +     struct perf_cpu_map **adjusted =3D cha ? cha_adjusted : imc_adjus=
+ted;
+> > +     int idx, pmu_snc, cpu_adjust;
+> > +     struct perf_cpu cpu;
+> > +     bool alloc;
+> > +
+> > +     // Cpus from the kernel holds first CPU of each socket. e.g. 0,12=
+0
+> > +     assert(perf_cpu_map__cpu(pmu->cpus, 0).cpu =3D=3D 0);
+>
+> Can it just simply return if a non-0 is detected?
+> In case, the uncore driver is updated later. This can be treated as a
+> fallback solution.
 
-This is wrong.  And I unintentionally proved that it's wrong, by goofing when I
-fixed up this code and using MSR_IA32_PERFCTR0 instead of MSR_IA32_PMC0.
+Sure. The assert should fire in non-debug builds and was supposed to
+catch if the kernel driver had changed wrt expectations in the code
+here. Doing the return seems good as it should mean some level of
+compatibility between the perf tool and different kernel driver
+versions were the cpumask to change. I'll add it in v3.
 
-Whether or not the guest supports full-width writes is irrelevant, because support
-for FW writes doesn't change the width of the counters.  Just because the *guest* 
-can't directly write all e.g. 48 bits doesn't mean clobbering bits 47:32 is ok.
+Thanks,
+Ian
 
-Similarly, on the AMD side, using the legacy interface in KVM is unnecessary.
-The guest may be limited to those MSRs, but KVM has a hard dependency on PMU v2,
-so just unconditionally use MSR_F15H_PERF_CTR0 (and for the record, because I
-had to look it up, the newfangled MSRs on AMD are aliased to the legacy MSRs for
-0..3).
-
-Very happily, that means the MSRs don't need to be per-PMU, and they don't even
-need to be configured at runtime for a given vendor.  Simply require FW writes
-on Intel to enable the mediated PMU, and then hardcode the GP base to MSR_IA32_PMC0.
-
-> +static void amd_put_guest_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
-> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
-> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, pmu->global_status);
-> +
-> +	/* Clear global status bits if non-zero */
-> +	if (pmu->global_status)
-> +		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, pmu->global_status);
-> +
-> +	kvm_pmu_put_guest_pmcs(vcpu);
-> +}
-> +
-> +static void amd_load_guest_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	u64 global_status;
-> +
-> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
-
-Back when I suggested we give up on trying to handle PMCs and eventsels in common
-x86, this WRMSR didn't exist.  Now that it does, I don't see anything that prevents
-invoking kvm_pmu_{load,put}_guest_pmcs() from common x86, KVM just needs to clear
-GLOBAL_CTRL before setting eventsels and PMCs.
-
-For the load path:
-
-	/*
-	 * Disable all counters before loading event selectors and PMCs so that
-	 * KVM doesn't enable or load guest counters while host events are
-	 * active.  VMX will enable/disabled counters at VM-Enter/VM-Exit by
-	 * atomically loading PERF_GLOBAL_CONTROL.  SVM effectively performs
-	 * the switch by configuring all events to be GUEST_ONLY.
-	 */
-	wrmsrl(kvm_pmu_ops.PERF_GLOBAL_CTRL, 0);
-
-	kvm_pmu_load_guest_pmcs(vcpu);
-
-	kvm_pmu_call(mediated_load)(vcpu);
-
-And for the put path, just reverse the ordering:
-
-	/*
-	 * Defer handling of PERF_GLOBAL_CTRL to vendor code.  On Intel, it's
-	 * atomically cleared on VM-Exit, i.e. doesn't need to be clear here.
-	 */
-	kvm_pmu_call(mediated_put)(vcpu);
-
-	kvm_pmu_put_guest_pmcs(vcpu);
-
-	perf_put_guest_context();
-
-On Intel, PERF_GLOBAL_CTRL is cleared on VM-Exit, and on AMD, the vendor hook
-will clear it.  The fact that vendor code sets other MSRs is irrelevant, what
-matters is that all counters are quieseced.
-
-I think it's still worth having helpers, but they can be static locals.
-
-> +
-> +	kvm_pmu_load_guest_pmcs(vcpu);
-> +
-> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, global_status);
-> +	/* Clear host global_status MSR if non-zero. */
-> +	if (global_status)
-> +		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, global_status);
-> +
-> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET, pmu->global_status);
-> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
-> +}
-> +
->  static void intel_pmu_update_msr_intercepts(struct kvm_vcpu *vcpu)
-> @@ -809,6 +822,50 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
->  	}
->  }
->  
-> +static void intel_put_guest_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	/* Global ctrl register is already saved at VM-exit. */
-> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
-> +
-> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
-> +	if (pmu->global_status)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
-> +
-> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
-> +
-> +	/*
-> +	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
-> +	 * also avoid these guest fixed counters get accidentially enabled
-> +	 * during host running when host enable global ctrl.
-> +	 */
-> +	if (pmu->fixed_ctr_ctrl_hw)
-> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
-> +
-> +	kvm_pmu_put_guest_pmcs(vcpu);
-> +}
-> +
-> +static void intel_load_guest_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	u64 global_status, toggle;
-> +
-> +	/* Clear host global_ctrl MSR if non-zero. */
-> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-> +
-> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
-> +	toggle = pmu->global_status ^ global_status;
-> +	if (global_status & toggle)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
-> +	if (pmu->global_status & toggle)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
-> +
-> +	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
-> +
-> +	kvm_pmu_load_guest_pmcs(vcpu);
-> +}
+> Thanks,
+> Kan> +
+> > +     pmu_snc =3D cha ? uncore_cha_snc(pmu) : uncore_imc_snc(pmu);
+> > +     if (pmu_snc =3D=3D 0) {
+> > +             // No adjustment necessary for the first SNC.
+> > +             return;
+> > +     }
+> > +
+> > +     alloc =3D adjusted[pmu_snc] =3D=3D NULL;
+> > +     if (alloc) {
+> > +             // Hold onto the perf_cpu_map globally to avoid recomputa=
+tion.
+> > +             cpu_adjust =3D uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
+;
+> > +             adjusted[pmu_snc] =3D perf_cpu_map__empty_new(perf_cpu_ma=
+p__nr(pmu->cpus));
+> > +             if (!adjusted[pmu_snc])
+> > +                     return;
+> > +     }
+> > +
+> > +     perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
+> > +             // Compute the new cpu map values or if not allocating, a=
+ssert
+> > +             // that they match expectations. asserts will be removed =
+to
+> > +             // avoid overhead in NDEBUG builds.
+> > +             if (alloc) {
+> > +                     adjusted[pmu_snc]->map[idx].cpu =3D cpu.cpu + cpu=
+_adjust;
+> > +             } else if (idx =3D=3D 0) {
+> > +                     cpu_adjust =3D perf_cpu_map__cpu(adjusted[pmu_snc=
+], idx).cpu - cpu.cpu;
+> > +                     assert(uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
+ =3D=3D cpu_adjust);
+> > +             } else {
+> > +                     assert(perf_cpu_map__cpu(adjusted[pmu_snc], idx).=
+cpu =3D=3D
+> > +                            cpu.cpu + cpu_adjust);
+> > +             }
+> > +     }
+> > +
+> > +     perf_cpu_map__put(pmu->cpus);
+> > +     pmu->cpus =3D perf_cpu_map__get(adjusted[pmu_snc]);
+> > +}
+> >
+> >  void perf_pmu__arch_init(struct perf_pmu *pmu)
+> >  {
+> > @@ -49,10 +291,17 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+> >
+> >               perf_mem_events__loads_ldlat =3D 0;
+> >               pmu->mem_events =3D perf_mem_events_amd_ldlat;
+> > -     } else if (pmu->is_core) {
+> > -             if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> > -                     pmu->mem_events =3D perf_mem_events_intel_aux;
+> > -             else
+> > -                     pmu->mem_events =3D perf_mem_events_intel;
+> > +     } else {
+> > +             if (pmu->is_core) {
+> > +                     if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> > +                             pmu->mem_events =3D perf_mem_events_intel=
+_aux;
+> > +                     else
+> > +                             pmu->mem_events =3D perf_mem_events_intel=
+;
+> > +             } else if (x86__is_intel_graniterapids()) {
+> > +                     if (starts_with(pmu->name, "uncore_cha_"))
+> > +                             gnr_uncore_cha_imc_adjust_cpumask_for_snc=
+(pmu, /*cha=3D*/true);
+> > +                     else if (starts_with(pmu->name, "uncore_imc_"))
+> > +                             gnr_uncore_cha_imc_adjust_cpumask_for_snc=
+(pmu, /*cha=3D*/false);
+> > +             }
+> >       }
+> >  }
+>
