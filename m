@@ -1,155 +1,370 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5FE2951DF;
-	Thu, 15 May 2025 05:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B939296FC8;
+	Thu, 15 May 2025 06:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747287966; cv=none; b=PMPljOXf7B8GDS9FJ0yxJMhuZc6A5mKfn95wkZZ9SHL613JSqD2+CrbmPHocdsfwX9/5kEi6pI1TlWZQGPOq2mVlM1Cq6Dt9IyMroLtsaBjhoz4nDn2xMlfoo/0d6RTgvzqWOFUH8N8eWCJnseCHFwcsxbV0qrfVvm0kLKiomyQ=
+	t=1747290899; cv=none; b=cX47sEGNcc2w1nQgKBcUilNF62MMDWxpL6u+NwCky3yP6ptkAhrUUK6dqqkGOf/EiCosVi87xkRBABCjfQgY+PxCO16IFUx9YktJMr29FpFcRe2G+6rvakqw9VbipHOZaQiq+jl1SUarA6rfPsM4HtL7T7qK13QRLnx96HFbynQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747287966; c=relaxed/simple;
-	bh=nWgDAOIXKZ2IPfTE1uaEbLd4e6rx6r6ee9joklJj4pA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IG+RLlUWvB3QoN/ZpERPcuQTn7YWukOVS4l989tQlPm8KKlWrn3ohlM9fHr/+9Z469VmafTff4wFNWuv4ecWdk6XQv1Yeata60pADvHOh2mbvYvypVOIj+LLeyeiLaa5TaEKBN+owCfkwWZbJzn8SZrVKU6+MQOj0pc7KzVZzds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RS4CGm7y; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747290899; c=relaxed/simple;
+	bh=n71QVhN4fQP9N7cpZ7JHQO5yCtlXjiP3svvxPrAkgWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aejN2eqUTMg8P4vl0Piao2Tcy+PA66wQ2wXF567YsBb0XjvvohYksKsx65eNTEAyVU8r9svsN03++NYgMd4Rdep9XW5RmHzTVqhz1Vo/oWZIAHTg6getNEeYarLC33QG1qzOlcdtdlXCah4toVvEhOf7skEfuqSyDgGM2ZiHwBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aKKXZsli; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RS4CGm7y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747287965; x=1778823965;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nWgDAOIXKZ2IPfTE1uaEbLd4e6rx6r6ee9joklJj4pA=;
-  b=RS4CGm7ybfxHSxrN1a0FhnuVvHZ64DsKQWDsJrZM7lmYnYlCGeiZxjk9
-   gZpFvONXRzBq+ADcq+MqnAlYTtYImTNTHj1IGapR1/GQF9xze02Cvre25
-   bBq2YGg1/KA7ekVwnJ0vCXZbh8Og1kWbidrkXFB6MYIKtRyo97atfhfZ2
-   s/adVLSqlr0BfAMP+hA8U3zM2FqgM3aja5GQYjE9ILx898sYaBKhGPwGt
-   BVmG4VH/W78OppGbyQd1R0sPgZQ/j902VIFd28iSe94UL5glQtL49SqfE
-   PMD9hFWW4fCWUEA4JXe5rNLl6L5zc6OZbo3dd/upcxfqRSvd8sofAvTtY
-   Q==;
-X-CSE-ConnectionGUID: 0EgnPkabSpqyQ6okkDmOpw==
-X-CSE-MsgGUID: l9pySCPtQhKhXF5/lfpgsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49144083"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="49144083"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:46:04 -0700
-X-CSE-ConnectionGUID: i+/fNnEKQk+uwN3n571WJw==
-X-CSE-MsgGUID: 6Ys/it48SaGfY9gtAnoUMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138763941"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:45:58 -0700
-Message-ID: <ed365c1a-259c-43b4-b08b-9364986968d9@linux.intel.com>
-Date: Thu, 15 May 2025 13:45:56 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aKKXZsli"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EM4WhL004251;
+	Thu, 15 May 2025 06:34:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=ilqngs9o98RWxztFbRc42XvuL8kNsUV9/ftKEW5S8
+	Cs=; b=aKKXZsliJOrnYcxOD2MZuDqtnPwybqyiIiUgt+qat1/Z8eX7H/IADqfFC
+	7VeyuLBKPlvXzS1R0yONcR8NWF7DcbHQC7MppymCUg5PSy+J9InQ0Qx6zQpkDAtO
+	8nF1N/Xtivfp1x/SC9bX4KHFQqLIJaBF5I3zVxIfhz+hokzv/PgDaq/NPt9z7qYx
+	2HQN7vEXRRK7W1LYllQjx4dbA3qSNdUaDVMwMke6/alY2S1elAiVfQbYp/6evAQw
+	Tlk/H12MSyBdxwlkyg5ixvr35qa/pt9zLRl/+ob/pOngcW3LLwqUe/U8aXaRSqMS
+	9qj5LnifitSMRbyDJiFti5iMWjupA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mvd3c99y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 06:34:48 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54F32RrS026656;
+	Thu, 15 May 2025 06:34:47 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpgph6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 06:34:47 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54F6YhWh52953368
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 May 2025 06:34:43 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3379C200BB;
+	Thu, 15 May 2025 06:34:43 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 366AB201F1;
+	Thu, 15 May 2025 06:34:13 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 May 2025 06:34:13 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>
+Subject: [PATCH] perf ftrace: Restore to original trace settings on exit
+Date: Thu, 15 May 2025 08:34:07 +0200
+Message-ID: <20250515063407.3025338-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <aCU6EjbXzPct9v7B@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCU6EjbXzPct9v7B@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FlNzHUI9n733Ve7cY8OdV3pqwzf9NrTK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDA1OCBTYWx0ZWRfXwXLQqqj/lDjN Hhmu43wipkxuquemksBLECy1myCSJf9DlZtZgK4p+CbBGxWi60KQpEtaJ2++E5d7jt4V874fPbm tKMIIXq/lgfPf6t++TMeO2u+p3E0X27lIqwK6ZwVjWWnjifly7NFVpSS7LYmWItaIbESZDNvUVN
+ 6MeL3KBgpW+QGENPkY9g4FqhYv+ceto3RrsQyegtJktTffX7IfXjxHpR/QTajVjb8JyP+8OV7v2 IV8sDskMDM4stZw+1oeme1paSDEd5T5AoFu9DuwOBBG9HfXnjvWtNp8rm8nHivXlMJfM+kW4qeh KKiuTZcQzwlurVVrBdJSSWjNA6tGh1a5nLH/traeUuDdXKxPSsaPOpmobEj6z72i94Q7bFDY2A6
+ Cb5b/ZdTBHggXeRS24wRtpGmecyzohtt7tmweAqLXaiytleYS5nOJc82suJew5humTJIPEas
+X-Proofpoint-ORIG-GUID: FlNzHUI9n733Ve7cY8OdV3pqwzf9NrTK
+X-Authority-Analysis: v=2.4 cv=GbEXnRXL c=1 sm=1 tr=0 ts=68258b08 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=f-qP7UiU29b3Nm1CaBMA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_02,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150058
 
+Executing perf ftrace commands ftrace, profile and latency
+leave tracing disabled as can seen in this output:
 
-On 5/15/2025 8:49 AM, Sean Christopherson wrote:
-> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> Dapeng Mi (18):
->>   KVM: x86/pmu: Introduce enable_mediated_pmu global parameter
->>   KVM: x86/pmu: Check PMU cpuid configuration from user space
->>   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
->>   KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
->>   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
->>   KVM: VMX: Add macros to wrap around
->>     {secondary,tertiary}_exec_controls_changebit()
->>   KVM: x86/pmu: Check if mediated vPMU can intercept rdpmc
->>   KVM: x86/pmu/vmx: Save/load guest IA32_PERF_GLOBAL_CTRL with
->>     vm_exit/entry_ctrl
->>   KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
->>   KVM: x86/pmu: Setup PMU MSRs' interception mode
->>   KVM: x86/pmu: Handle PMU MSRs interception and event filtering
->>   KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
->>   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
->>   KVM: nVMX: Add macros to simplify nested MSR interception setting
->>   KVM: selftests: Add mediated vPMU supported for pmu tests
->>   KVM: Selftests: Support mediated vPMU for vmx_pmu_caps_test
->>   KVM: Selftests: Fix pmu_counters_test error for mediated vPMU
->>   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
->>
->> Kan Liang (8):
->>   perf: Support get/put mediated PMU interfaces
->>   perf: Skip pmu_ctx based on event_type
->>   perf: Clean up perf ctx time
->>   perf: Add a EVENT_GUEST flag
->>   perf: Add generic exclude_guest support
->>   perf: Add switch_guest_ctx() interface
->>   perf/x86: Support switch_guest_ctx interface
->>   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
->>
->> Mingwei Zhang (5):
->>   perf/x86: Forbid PMI handler when guest own PMU
->>   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
->>     x86_pmu_cap
->>   KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
->>   KVM: x86/pmu: introduce eventsel_hw to prepare for pmu event filtering
->>   KVM: nVMX: Add nested virtualization support for mediated PMU
->>
->> Sandipan Das (4):
->>   perf/x86/core: Do not set bit width for unavailable counters
->>   KVM: x86/pmu: Add AMD PMU registers to direct access list
->>   KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
->>     write to event selectors
->>   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
->>
->> Xiong Zhang (3):
->>   x86/irq: Factor out common code for installing kvm irq handler
->>   perf: core/x86: Register a new vector for KVM GUEST PMI
->>   KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
-> I ran out of time today and didn't get emails send for all patches.  I'm planning
-> on getting that done tomorrow.
->
-> I already have most of the proposed changes implemented:
->
->   https://github.com/sean-jc/linux.git x86/mediated_pmu
->
-> It compiles and doesn't explode, but it's not fully functional (PMU tests fail).
-> I'll poke at it over the next few days, but if someone is itching to figure out
-> what I broke, then by all means.
->
-> Given that I've already made many modifications (I have a hard time reviewing a
-> series this big without editing as I go), unless someone objects, I'll post v5
-> (and v6+ as needed), though that'll like be days/weeks as I need to get it working,
-> and want to do more passes over the code, shortlogs, and changelogs. 
+ # echo 1 > /sys/kernel/debug/tracing/tracing_on
+ # cat /sys/kernel/debug/tracing/tracing_on
+ 1
+ # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
+ # cat /sys/kernel/debug/tracing/tracing_on
+ 0
+ #
 
-Sean, thank you very much for reviewing and refactoring the patchset. I
-would look at the code and check it locally in next several days as well.
+The tracing_on file is not restored to its value before the command.
+Fix this behavior and restore the trace setting to what
+is was before the invocation of the command.
+On Fedora 41 and 42 tracing is turned on by default.
 
+The root cause is function reset_tracing_files() which
+writes zero (0) into file tracing_on.
+
+Read tracing files on start of the program and
+restore these values just before exit.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Suggested-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+---
+ tools/perf/builtin-ftrace.c | 226 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 226 insertions(+)
+
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 7caa18d5ffc3..11ead75fe0f7 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -299,6 +299,228 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+ 	return 0;
+ }
+ 
++static int read_tracing_file(const char *name, char *buf, size_t size)
++{
++	int ret = -1;
++	char *file;
++	int fd;
++
++	file = get_tracing_file(name);
++	if (!file) {
++		pr_debug("cannot get tracing file: %s\n", name);
++		return -1;
++	}
++
++	fd = open(file, O_RDONLY);
++	if (fd < 0) {
++		pr_debug("cannot open tracing file: %s: %s\n",
++			 name, str_error_r(errno, buf, size));
++		goto out;
++	}
++
++	/* read contents to stdout */
++	while (true) {
++		int n = read(fd, buf, size);
++
++		if (n == 0)
++			break;
++		else if (n < 0)
++			goto out_close;
++		buf += n;
++		size -= n;
++	}
++	ret = 0;
++
++out_close:
++	close(fd);
++out:
++	put_tracing_file(file);
++	return ret;
++}
++
++static int read_tracing_option_file(const char *name, char *val, size_t size)
++{
++	char *file;
++	int ret;
++
++	if (asprintf(&file, "options/%s", name) < 0)
++		return -1;
++
++	ret = read_tracing_file(file, val, size);
++	free(file);
++	return ret;
++}
++
++/*
++ * Save the initial trace file setting to restore them after the tests.
++ * This ensures the setting are the same as before the invocation
++ * of the program.
++ */
++static struct trace_file_list {		/* List of tracing files */
++	const char *filename;		/* File name */
++	char *contents;			/* Contents to restore */
++	int (*read_fct)(const char *fn, char *buf, size_t buf_sz);		/* Read function */
++	int (*write_fct)(const char *fn, const char *buf);		/* Write function */
++} trace_file_list[] = {
++	[0] = {
++		.filename = "tracing_on",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[1] = {
++		.filename = "current_tracer",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[2] = {
++		.filename = "set_ftrace_pid",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[3] = {
++		.write_fct = write_tracing_file,
++		.read_fct = read_tracing_file,
++		.filename = "max_graph_depth",
++	},
++	[4] = {
++		.filename = "tracing_thresh",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[5] = {
++		.filename = "tracing_cpumask",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[6] = {
++		.filename = "set_ftrace_filter",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[7] = {
++		.filename = "set_ftrace_notrace",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[8] = {
++		.filename = "set_graph_function",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++	[9] = {
++		.filename = "set_graph_notrace",
++		.read_fct = read_tracing_file,
++		.write_fct = write_tracing_file,
++	},
++			/* Files in .../options/ directory */
++	[10] = {
++		.filename = "function-fork",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[11] = {
++		.filename = "func_stack_trace",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[12] = {
++		.filename = "sleep-time",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[13] = {
++		.filename = "funcgraph-irqs",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[14] = {
++		.filename = "funcgraph-proc",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[15] = {
++		.filename = "funcgraph-abstime",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[16] = {
++		.filename = "funcgraph-tail",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[17] = {
++		.filename = "latency-format",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++	[18] = {
++		.filename = "irq-info",
++		.read_fct = read_tracing_option_file,
++		.write_fct = write_tracing_option_file,
++	},
++};
++
++static void free_tracing_content(void)
++{
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(trace_file_list); ++i)
++		zfree(&trace_file_list[i].contents);
++}
++
++/*
++ * Return a copy of the input string.
++ * Remove a trailing newline. It will be appended in the write
++ * function when values are restored before program termination.
++ * Change "no pid" or comment sign '#' at the beginning and replace it
++ * by an empty string. This resets to the default behavior indicated
++ * by the output. Those strings are not accepted as file input.
++ */
++static char *copy_tracing_file(char *buf)
++{
++	char *c = strrchr(buf, '\n');
++
++	if (c)
++		*c = '\0';
++	if (*buf == '#' || !strncmp(buf, "no pid", 6))
++		*buf = '\0';
++	return strdup(buf);
++}
++
++static int save_tracing_files(void)
++{
++	char buf[4096];
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(trace_file_list); ++i) {
++		struct trace_file_list *tp = &trace_file_list[i];
++
++		memset(buf, 0, sizeof(buf));
++		if ((*tp->read_fct)(tp->filename, buf, sizeof(buf)) < 0)
++			goto out;
++		tp->contents = copy_tracing_file(buf);
++		if (!tp->contents)
++			goto out;
++	}
++	return 0;
++
++out:
++	free_tracing_content();
++	return -1;
++}
++
++static void restore_tracing_files(void)
++{
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(trace_file_list); ++i) {
++		struct trace_file_list *tp = &trace_file_list[i];
++
++		(*tp->write_fct)(tp->filename, tp->contents);
++	}
++	free_tracing_content();
++}
++
+ static int set_tracing_pid(struct perf_ftrace *ftrace)
+ {
+ 	int i;
+@@ -1687,6 +1909,9 @@ int cmd_ftrace(int argc, const char **argv)
+ 	};
+ 	enum perf_ftrace_subcommand subcmd = PERF_FTRACE_NONE;
+ 
++	if (save_tracing_files())
++		return -1;
++
+ 	INIT_LIST_HEAD(&ftrace.filters);
+ 	INIT_LIST_HEAD(&ftrace.notrace);
+ 	INIT_LIST_HEAD(&ftrace.graph_funcs);
+@@ -1839,5 +2064,6 @@ int cmd_ftrace(int argc, const char **argv)
+ 	delete_filter_func(&ftrace.graph_funcs);
+ 	delete_filter_func(&ftrace.nograph_funcs);
+ 
++	restore_tracing_files();
+ 	return ret;
+ }
+-- 
+2.49.0
 
