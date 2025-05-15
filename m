@@ -1,312 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA19821CA07;
-	Thu, 15 May 2025 18:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948931F4163
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 19:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747334367; cv=none; b=VaXyuYFrbsTpbk+3LIE2Cgc5cbg0Xn9tQp1+or1YOrV5B90Mzlj6f1Z3qV5eML4Jgm4KWSM1qIBG8n9ws4y7GNPcfwUz6cD0vZ3LYXXACny+rHsZOJ4pWh0FAz+2K5zhF7k0wa4yhO/v42XICBkuSrgsJAK58X+m08314ftBooU=
+	t=1747335978; cv=none; b=AUaNQ+lPlyIk9GsMrD3Jl6hjhkoluSpNXSgsth83vmBbzQsZBuJKvs6NcFQi18/2J6UMX1gfv0StOoT+atOLufD6whUb6cJ3LmVTFEburGQlv4taSFLsuJMcB22bX7pxusc3rP03MJWmUjKxSPGP657ZbX54U457NV+BY5Iu7vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747334367; c=relaxed/simple;
-	bh=RmNrUco0zxz/y4TKei1Fbe1gISOzYB3qxdMUh9Ndukc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ilvmcjKoxGB6klAAwiF3Jemc5laMXQ7pAz7gRNlQ+ArHXxk3tHKH9J3nTBuWM3ubeUj3Re0iGenKwL9ymPLKWq5CcjO6Gjv39hwYij2B7FRcdd8TcmIJ2ysIh8s1FdG2E1cZ2roe9lgoTQ6Nk88Ps1u9xDadkVGmjPJsWRFC9qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kYJ/zPjj; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747335978; c=relaxed/simple;
+	bh=CnL0sloZkje+Gy9jckN96zccVLpEiTSNRW+B4JDbs5Y=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=av+7+4P6WN297TcsL4aQ2GcXWfsfNF2LWuVDG7BAPzwk/n/WyqqXLe2JI2Dw/znYFC0zElLb3aR7hnb/KaGxHiwa41dCtDvvIux0ml1RC2sKR6F9KxbVoEhltlMjd5YPBEj5McawjJ3A4VCxndvH9HlhFI/EEY7fYaJzyfvkMdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u8gD5bD3; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kYJ/zPjj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747334366; x=1778870366;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RmNrUco0zxz/y4TKei1Fbe1gISOzYB3qxdMUh9Ndukc=;
-  b=kYJ/zPjj9cy+GDjpiNTlf85ZBmfjeSyAv/e25Y/Gsyl9WPVkm59wphva
-   jE80mvPRK66rFE1SLBZCPwTDiV/5p/nKAkOL+joH+9KrlyhJ7M/mpEeMK
-   4L7g3NZXjk9cZsOgHk8H+bjvBoTQmDS0YcYiykdV14JPnKOGNmjCqd8ek
-   GdCXSGQmkNOmk/uJuK+WZau7NFpLwayo7DoiotYwRYQbpDJlx7AgmWR77
-   eRROqL1a661JRZA9df1caXZ/GZwGZ4o+PUXKjBaqEqbb2pGFObl2BlHWB
-   ggQeCXPe8vbUs9Mfq9zMIWeYBYN31qDn1Ite8mVyxnKsZol9rt3wI4Sz1
-   w==;
-X-CSE-ConnectionGUID: nO+rdsScQamkYaqryIT69w==
-X-CSE-MsgGUID: FFLvCVVJQLaCQtYabVs1LA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49161438"
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="49161438"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 11:39:26 -0700
-X-CSE-ConnectionGUID: /hvQEoTZRM68LLzqRtoI+A==
-X-CSE-MsgGUID: o/DXloZFTNC8zWnTsiU6xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="138354531"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 11:39:24 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 6CF2D20B5736;
-	Thu, 15 May 2025 11:39:21 -0700 (PDT)
-Message-ID: <4aaf67ab-aa5c-41e6-bced-3cb000172c52@linux.intel.com>
-Date: Thu, 15 May 2025 14:39:20 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u8gD5bD3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so1490447a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 12:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747335976; x=1747940776; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLPqD/um8R1X6WXUHjnXwyW6WNUpCfKj1WPzSpe7c+Y=;
+        b=u8gD5bD3RAgyHbZ1P3Jn/KcnmSX3vkdx+bnKAQwKXR28uwazNcms5KIhHp5s9oNOw4
+         HS6XvFMJfbcsyXanK3tiLlvZ/1uEAACC7bR0+BPvMAf7FE6038rVmPkTD/S68SfLUa7x
+         VbKtnUX+hiqIO6Kj+/KfEBhfU0c9gcXXqwYsjNqDwBNLpEVEbPW04ANS62azcBDPJoli
+         /InLMeGWY/WTQdm5rGjp6QIzk8Ndex8bZtY7BmYZbZ84ssxOVkn+RoxVXhklVc2owJV7
+         +z1UBYskUDlpQMEKor9LqERun0P2RdvYvBLUJcd6yB8QsQUi/F902L12tBv0b7mjoOE5
+         n4YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747335976; x=1747940776;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLPqD/um8R1X6WXUHjnXwyW6WNUpCfKj1WPzSpe7c+Y=;
+        b=pTyuJSyGT4iOJGPSyNZN7x/D/87WCfCzigQJgx/wf4d6g4GpKlqIpWW79k0AsT3yaL
+         o24bdKesb3/RfeDdvAIeVxTBts64zEwwcszifpFqu4FSsDnqLQ+rZqoXN1XOweRRdnXd
+         yK2PJ/4fLVoTq+HeFP+qf//YyWRFrC1lu0vZ3CMIZLDYwoKhAEstnOPm8dLwAWhNa+2R
+         gS++7seUG+ANGk6UAKwZL8P/FFgiP9vzWc6hQDTAG+VdSvmxViJ5Vf4MBABssFMbqk1o
+         /5onhqx9FC/cyAonj2ekzH7lsb4gSUUaX4ZEsjzYV+DfIRgDpwOSepAt16P26bKfrUyG
+         mO0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWar7zAzebd4uNOkPWHS+whyMVzWixJK/zHBYRLqAcrlbZUwX9Q3ayco/lfhDtfDkJMuRJQ0GXz9by2HLIfurjZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywepm1oT4tTPZbXOzBs/ol1FlYY6trjBxeHhI5t6AhRzKBJHbO+
+	DZ40nU/fByGI5RobCHS1MUPEy8ikY2sUzh28fbL45kSGdXf6QqXji4JHohAtBL1gN9reJ69i64Y
+	RIRBK9w==
+X-Google-Smtp-Source: AGHT+IENNFvaXlYo+BqzOoVnfUajKC5r6pRv5u9QDBMqQirkEdvSRp0jQC+k8xHSU7HIox0eXH/Z7cf4jZY=
+X-Received: from pjn12.prod.google.com ([2002:a17:90b:570c:b0:2ef:8055:93d9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dd1:b0:301:c5cb:7b13
+ with SMTP id 98e67ed59e1d1-30e7d501e03mr664683a91.3.1747335975881; Thu, 15
+ May 2025 12:06:15 -0700 (PDT)
+Date: Thu, 15 May 2025 12:06:14 -0700
+In-Reply-To: <bac13842-9d15-4664-a20d-4916abcdc3e7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/38] perf: Add generic exclude_guest support
-To: Sean Christopherson <seanjc@google.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>,
- Eranian Stephane <eranian@google.com>, Shukla Manali
- <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-6-mizhang@google.com>
- <20250425111352.GF1166@noisy.programming.kicks-ass.net>
- <aCUlCApeDM9Uy4a0@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aCUlCApeDM9Uy4a0@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-24-mizhang@google.com>
+ <aCU4Uuhzo_ovR7r8@google.com> <bac13842-9d15-4664-a20d-4916abcdc3e7@linux.intel.com>
+Message-ID: <aCY7JkJA25D2HfXF@google.com>
+Subject: Re: [PATCH v4 23/38] KVM: x86/pmu: Configure the interception of PMU MSRs
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
+On Thu, May 15, 2025, Dapeng Mi wrote:
+> On 5/15/2025 8:41 AM, Sean Christopherson wrote:
+> >> +	if (kvm_mediated_pmu_enabled(vcpu) && kvm_pmu_has_perf_global_ctrl(pmu) &&
+> > Just require the guest to have PERF_GLOBAL_CTRL, I don't see any reason to support
+> > v1 PMUs.  It adds complexity and weirdness, and I can't imagine there's a use case.
 
-
-On 2025-05-14 7:19 p.m., Sean Christopherson wrote:
-> On Fri, Apr 25, 2025, Peter Zijlstra wrote:
->> On Mon, Mar 24, 2025 at 05:30:45PM +0000, Mingwei Zhang wrote:
->>
->>> @@ -6040,6 +6041,71 @@ void perf_put_mediated_pmu(void)
->>>  }
->>>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
->>>  
->>> +static inline void perf_host_exit(struct perf_cpu_context *cpuctx)
->>> +{
->>> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
->>> +	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
->>> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
->>> +	if (cpuctx->task_ctx) {
->>> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
->>> +		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
->>> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
->>> +	}
->>> +}
->>> +
->>> +/* When entering a guest, schedule out all exclude_guest events. */
->>> +void perf_guest_enter(void)
->>> +{
->>> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->>> +
->>> +	lockdep_assert_irqs_disabled();
->>> +
->>> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->>> +
->>> +	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest)))
->>> +		goto unlock;
->>> +
->>> +	perf_host_exit(cpuctx);
->>> +
->>> +	__this_cpu_write(perf_in_guest, true);
->>> +
->>> +unlock:
->>> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->>> +}
->>> +EXPORT_SYMBOL_GPL(perf_guest_enter);
->>> +
->>> +static inline void perf_host_enter(struct perf_cpu_context *cpuctx)
->>> +{
->>> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
->>> +	if (cpuctx->task_ctx)
->>> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
->>> +
->>> +	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
->>> +
->>> +	if (cpuctx->task_ctx)
->>> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
->>> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
->>> +}
->>> +
->>> +void perf_guest_exit(void)
->>> +{
->>> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->>> +
->>> +	lockdep_assert_irqs_disabled();
->>> +
->>> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->>> +
->>> +	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
->>> +		goto unlock;
->>> +
->>> +	perf_host_enter(cpuctx);
->>> +
->>> +	__this_cpu_write(perf_in_guest, false);
->>> +unlock:
->>> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->>> +}
->>> +EXPORT_SYMBOL_GPL(perf_guest_exit);
->>
->> This naming is confusing on purpose? Pick either guest/host and stick
->> with it.
-> 
-> +1.  I also think the inner perf_host_{enter,exit}() helpers are superflous.
-> These flows
-> 
-> After a bit of hacking, and with a few spoilers, this is what I ended up with
-> (not anywhere near fully tested).  I like following KVM's kvm_xxx_{load,put}()
-> nomenclature to tie everything together, so I went with "guest" instead of "host"
-> even though the majority of work being down is to shedule out/in host context.
-> 
-> /* When loading a guest's mediated PMU, schedule out all exclude_guest events. */
-> void perf_load_guest_context(unsigned long data)
-> {
-> 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-> 
-> 	lockdep_assert_irqs_disabled();
-> 
-> 	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> 
-> 	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
-> 		goto unlock;
-> 
-> 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-> 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
-> 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
-> 	if (cpuctx->task_ctx) {
-> 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
-> 		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
-> 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
-> 	}
-> 
-> 	arch_perf_load_guest_context(data);
-> 
-> 	__this_cpu_write(guest_ctx_loaded, true);
-> 
-> unlock:
-> 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> }
-> EXPORT_SYMBOL_GPL(perf_load_guest_context);
-> 
-> void perf_put_guest_context(void)
-> {
-> 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-> 
-> 	lockdep_assert_irqs_disabled();
-> 
-> 	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> 
-> 	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
-> 		goto unlock;
-> 
-> 	arch_perf_put_guest_context();
-
-It will set the guest_ctx_loaded to false.
-The update_context_time() invoked in the perf_event_sched_in() will not
-get a chance to update the guest time.
-
-I think something as below should work.
-
-- Disable all in the PMU (disable global control)
-- schedule in the host counters (but not run yet since the global
-control of the PMU is disabled)
-- arch_perf_put_guest_context()
-- Enable all in the PMU (Enable global control. The host counters now start)
-
-void perf_put_guest_context(void)
-{
-	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-
-	lockdep_assert_irqs_disabled();
-
-	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-
-	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
-		goto unlock;
-
-	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-	if (cpuctx->task_ctx)
-		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
-
-	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
-
-	arch_perf_put_guest_context();
-
-	if (cpuctx->task_ctx)
-		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
-	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
-
-unlock:
-	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-}
-
-
-
-Similar to the perf_load_guest_context().
-
-- Disable all in the PMU (disable global control)
-- schedule out all the host counters
-- arch_perf_load_guest_context()
-- Enable all in the PMU (enable global control)
-
-void perf_load_guest_context(unsigned long data)
-{
-	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-
-	lockdep_assert_irqs_disabled();
-
-	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-
-	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
-		goto unlock;
-
-	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
-	if (cpuctx->task_ctx) {
-		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
-		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
-	}
-
-	arch_perf_load_guest_context(data);
-
-	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
-	if (cpuctx->task_ctx)
-		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
-unlock:
-	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-}
-
-
-Thanks,
-Kan
-
-> 
-> 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-> 	if (cpuctx->task_ctx)
-> 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
-> 
-> 	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
-> 
-> 	if (cpuctx->task_ctx)
-> 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
-> 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
-> 
-> 	__this_cpu_write(guest_ctx_loaded, false);
-> unlock:> 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-> }
-> EXPORT_SYMBOL_GPL(perf_put_guest_context);
-
+I take that back, there absolutely are use cases, especially for AMD.  Any VM
+shape that exists today should be compatible with the mediated PMU.  And I was
+dead wrong about adding complexity; KVM already needs to intercept GLOBAL_CTRL
+if the guest has fewer PMCs than hardware, so incorporating this check is all of
+two lines of code.
