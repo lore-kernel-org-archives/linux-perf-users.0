@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3984B1E54;
-	Thu, 15 May 2025 05:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5FE2951DF;
+	Thu, 15 May 2025 05:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747287537; cv=none; b=QzsmymAYJ2YghziywZJvOCj7jIeFAqf8x6pI6WUHy9cQqSDjj8V76zye+KLGp4OVIt8I5C0MzqgKqWsx1qbJvF/kNPhpXgzw1yh88gCWT9bZByy6ukYYZqOoTPO/pn7573fDAch6yd+ft/MKDuOsZ2x4lje9HuJjNRILaiG2OXE=
+	t=1747287966; cv=none; b=PMPljOXf7B8GDS9FJ0yxJMhuZc6A5mKfn95wkZZ9SHL613JSqD2+CrbmPHocdsfwX9/5kEi6pI1TlWZQGPOq2mVlM1Cq6Dt9IyMroLtsaBjhoz4nDn2xMlfoo/0d6RTgvzqWOFUH8N8eWCJnseCHFwcsxbV0qrfVvm0kLKiomyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747287537; c=relaxed/simple;
-	bh=XqcUkZHXIgok8l24svkuW7o9mZPcMaO36R3fz+K+l+w=;
+	s=arc-20240116; t=1747287966; c=relaxed/simple;
+	bh=nWgDAOIXKZ2IPfTE1uaEbLd4e6rx6r6ee9joklJj4pA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I5W96YA5y7tm4/IctOjHeKGDVjJ80vv4C+5sdZsyKUW57iWWdlUHngY+ga58Xq2hctL12uMgpXPTlDSlKdc9NVAnQA6udYXeSOMAXBXOArK/nFVVtnA3wdVqlqGtjcLbrcUQyQmn6fPeCVWIQb72g7UapcN6j99A9mrN7iMPmlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPBCW3R5; arc=none smtp.client-ip=198.175.65.9
+	 In-Reply-To:Content-Type; b=IG+RLlUWvB3QoN/ZpERPcuQTn7YWukOVS4l989tQlPm8KKlWrn3ohlM9fHr/+9Z469VmafTff4wFNWuv4ecWdk6XQv1Yeata60pADvHOh2mbvYvypVOIj+LLeyeiLaa5TaEKBN+owCfkwWZbJzn8SZrVKU6+MQOj0pc7KzVZzds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RS4CGm7y; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPBCW3R5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RS4CGm7y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747287536; x=1778823536;
+  t=1747287965; x=1778823965;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=XqcUkZHXIgok8l24svkuW7o9mZPcMaO36R3fz+K+l+w=;
-  b=HPBCW3R5ifp8+O1O0myW8ZK8hbLLNxDQQAf1tp6a+dB63gqf1wkSOBK/
-   TbHhCNkfq+SprbVNP0OQ23XpQ9IB1r6HueDB1Eyk9++B7/ZG1XWGUUaVO
-   IKDBLrH0f54riiJa2BTUnhn6rgDZUsPf1cfWc57aG2hFXZpZOj5z9HSwP
-   THYZKrOSYI/8v8Lg55F+u2+vxRxYllNanzdRwPzbSWSrW2JBLhxeLSz3/
-   nLkN/ZAbh5BMIxZiImk6pGNtlYBnjsNj4SBNbCRODlItt2FUB+8NHMkiR
-   uHPOpl3PhWvXsUnmQDvTWaSo+M+d2BORChTDnVqWP655ISAAx0ZCknUkJ
+  bh=nWgDAOIXKZ2IPfTE1uaEbLd4e6rx6r6ee9joklJj4pA=;
+  b=RS4CGm7ybfxHSxrN1a0FhnuVvHZ64DsKQWDsJrZM7lmYnYlCGeiZxjk9
+   gZpFvONXRzBq+ADcq+MqnAlYTtYImTNTHj1IGapR1/GQF9xze02Cvre25
+   bBq2YGg1/KA7ekVwnJ0vCXZbh8Og1kWbidrkXFB6MYIKtRyo97atfhfZ2
+   s/adVLSqlr0BfAMP+hA8U3zM2FqgM3aja5GQYjE9ILx898sYaBKhGPwGt
+   BVmG4VH/W78OppGbyQd1R0sPgZQ/j902VIFd28iSe94UL5glQtL49SqfE
+   PMD9hFWW4fCWUEA4JXe5rNLl6L5zc6OZbo3dd/upcxfqRSvd8sofAvTtY
    Q==;
-X-CSE-ConnectionGUID: K2eNHVUCT42kyMoLW8JQ/g==
-X-CSE-MsgGUID: b4ZIZdWwQSqbI+vAA9PiGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71717948"
+X-CSE-ConnectionGUID: 0EgnPkabSpqyQ6okkDmOpw==
+X-CSE-MsgGUID: l9pySCPtQhKhXF5/lfpgsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49144083"
 X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="71717948"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:38:56 -0700
-X-CSE-ConnectionGUID: IkGhXpNhTzOpl0I+Mve6LA==
-X-CSE-MsgGUID: L+k1zYZEQJm1Uoj8tyM+ww==
+   d="scan'208";a="49144083"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:46:04 -0700
+X-CSE-ConnectionGUID: i+/fNnEKQk+uwN3n571WJw==
+X-CSE-MsgGUID: 6Ys/it48SaGfY9gtAnoUMw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138129524"
+   d="scan'208";a="138763941"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:38:50 -0700
-Message-ID: <c1a18d0f-c166-4084-b764-46377cb11e57@linux.intel.com>
-Date: Thu, 15 May 2025 13:38:47 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:45:58 -0700
+Message-ID: <ed365c1a-259c-43b4-b08b-9364986968d9@linux.intel.com>
+Date: Thu, 15 May 2025 13:45:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 27/38] KVM: x86/pmu: Handle PMU MSRs interception and
- event filtering
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
 To: Sean Christopherson <seanjc@google.com>,
  Mingwei Zhang <mizhang@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -73,82 +72,84 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Shukla Manali <Manali.Shukla@amd.com>,
  Nikunj Dadhania <nikunj.dadhania@amd.com>
 References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-28-mizhang@google.com> <aCU4qAjgUCUa5Mgz@google.com>
+ <aCU6EjbXzPct9v7B@google.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCU4qAjgUCUa5Mgz@google.com>
+In-Reply-To: <aCU6EjbXzPct9v7B@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 5/15/2025 8:43 AM, Sean Christopherson wrote:
-> Again, be more precise.
->
+On 5/15/2025 8:49 AM, Sean Christopherson wrote:
 > On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Dapeng Mi (18):
+>>   KVM: x86/pmu: Introduce enable_mediated_pmu global parameter
+>>   KVM: x86/pmu: Check PMU cpuid configuration from user space
+>>   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+>>   KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
+>>   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+>>   KVM: VMX: Add macros to wrap around
+>>     {secondary,tertiary}_exec_controls_changebit()
+>>   KVM: x86/pmu: Check if mediated vPMU can intercept rdpmc
+>>   KVM: x86/pmu/vmx: Save/load guest IA32_PERF_GLOBAL_CTRL with
+>>     vm_exit/entry_ctrl
+>>   KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
+>>   KVM: x86/pmu: Setup PMU MSRs' interception mode
+>>   KVM: x86/pmu: Handle PMU MSRs interception and event filtering
+>>   KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
+>>   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+>>   KVM: nVMX: Add macros to simplify nested MSR interception setting
+>>   KVM: selftests: Add mediated vPMU supported for pmu tests
+>>   KVM: Selftests: Support mediated vPMU for vmx_pmu_caps_test
+>>   KVM: Selftests: Fix pmu_counters_test error for mediated vPMU
+>>   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
 >>
->> Mediated vPMU needs to intercept EVENTSELx and FIXED_CNTR_CTRL MSRs to
->> filter out guest malicious perf events. Either writing these MSRs or
->> updating event filters would call reprogram_counter() eventually. Thus
->> check if the guest event should be filtered out in reprogram_counter().
->> If so, clear corresponding EVENTSELx MSR or FIXED_CNTR_CTRL field to
->> ensure the guest event won't be really enabled at vm-entry.
+>> Kan Liang (8):
+>>   perf: Support get/put mediated PMU interfaces
+>>   perf: Skip pmu_ctx based on event_type
+>>   perf: Clean up perf ctx time
+>>   perf: Add a EVENT_GUEST flag
+>>   perf: Add generic exclude_guest support
+>>   perf: Add switch_guest_ctx() interface
+>>   perf/x86: Support switch_guest_ctx interface
+>>   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
 >>
->> Besides, mediated vPMU intercepts the MSRs of these guest not owned
->> counters and it just needs simply to read/write from/to pmc->counter.
+>> Mingwei Zhang (5):
+>>   perf/x86: Forbid PMI handler when guest own PMU
+>>   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
+>>     x86_pmu_cap
+>>   KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+>>   KVM: x86/pmu: introduce eventsel_hw to prepare for pmu event filtering
+>>   KVM: nVMX: Add nested virtualization support for mediated PMU
 >>
->> Suggested-by: Sean Christopherson <seanjc@google.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Co-developed-by: Mingwei Zhang <mizhang@google.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  arch/x86/kvm/pmu.c | 27 +++++++++++++++++++++++++++
->>  arch/x86/kvm/pmu.h |  3 +++
->>  2 files changed, 30 insertions(+)
+>> Sandipan Das (4):
+>>   perf/x86/core: Do not set bit width for unavailable counters
+>>   KVM: x86/pmu: Add AMD PMU registers to direct access list
+>>   KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
+>>     write to event selectors
+>>   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
 >>
->> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->> index 63143eeb5c44..e9100dc49fdc 100644
->> --- a/arch/x86/kvm/pmu.c
->> +++ b/arch/x86/kvm/pmu.c
->> @@ -305,6 +305,11 @@ static void pmc_update_sample_period(struct kvm_pmc *pmc)
->>  
->>  void pmc_write_counter(struct kvm_pmc *pmc, u64 val)
->>  {
->> +	if (kvm_mediated_pmu_enabled(pmc->vcpu)) {
->> +		pmc->counter = val & pmc_bitmask(pmc);
->> +		return;
->> +	}
->> +
->>  	/*
->>  	 * Drop any unconsumed accumulated counts, the WRMSR is a write, not a
->>  	 * read-modify-write.  Adjust the counter value so that its value is
->> @@ -455,6 +460,28 @@ static int reprogram_counter(struct kvm_pmc *pmc)
->>  	bool emulate_overflow;
->>  	u8 fixed_ctr_ctrl;
->>  
->> +	if (kvm_mediated_pmu_enabled(pmu_to_vcpu(pmu))) {
->> +		bool allowed = check_pmu_event_filter(pmc);
->> +
->> +		if (pmc_is_gp(pmc)) {
->> +			if (allowed)
->> +				pmc->eventsel_hw |= pmc->eventsel &
->> +						    ARCH_PERFMON_EVENTSEL_ENABLE;
->> +			else
->> +				pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
->> +		} else {
->> +			int idx = pmc->idx - KVM_FIXED_PMC_BASE_IDX;
->> +
->> +			if (allowed)
->> +				pmu->fixed_ctr_ctrl_hw = pmu->fixed_ctr_ctrl;
->> +			else
->> +				pmu->fixed_ctr_ctrl_hw &=
->> +					~intel_fixed_bits_by_idx(idx, 0xf);
->> +		}
->> +
->> +		return 0;
-> I think it's worth adding a helper for this, as it makes things a bit more
-> self-documenting in terms of when KVM needs to "reprogram" mediated PMU PMCs.
+>> Xiong Zhang (3):
+>>   x86/irq: Factor out common code for installing kvm irq handler
+>>   perf: core/x86: Register a new vector for KVM GUEST PMI
+>>   KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
+> I ran out of time today and didn't get emails send for all patches.  I'm planning
+> on getting that done tomorrow.
+>
+> I already have most of the proposed changes implemented:
+>
+>   https://github.com/sean-jc/linux.git x86/mediated_pmu
+>
+> It compiles and doesn't explode, but it's not fully functional (PMU tests fail).
+> I'll poke at it over the next few days, but if someone is itching to figure out
+> what I broke, then by all means.
+>
+> Given that I've already made many modifications (I have a hard time reviewing a
+> series this big without editing as I go), unless someone objects, I'll post v5
+> (and v6+ as needed), though that'll like be days/weeks as I need to get it working,
+> and want to do more passes over the code, shortlogs, and changelogs. 
 
-Sure. Thanks.
+Sean, thank you very much for reviewing and refactoring the patchset. I
+would look at the code and check it locally in next several days as well.
 
 
