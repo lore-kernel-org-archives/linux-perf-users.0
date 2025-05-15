@@ -1,65 +1,65 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60123135A53
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 23:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9520C47F
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 00:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747265456; cv=none; b=KJiNViq2qGyU1eBF0V35pY1Bwrh0F5gU4vJuNdf69BJNtsaDqZXJT7KUDry3pxt/Pqbf62rK6L/HfJApTLtGlQrjZPTQZVqkhN2N8dN3hZktdyjQ7bA/EEOXO9plMmqfROiZRDn+BzoogX/yclybX5yBED/LcTUX5ZKVOSMMduA=
+	t=1747267221; cv=none; b=t3iQMSAbuG57X9wIt91azpXohhjuaeiabcxaVhB+wD70QoKK5aCPpWoBOUUGBtn4xVbkl84NZ405jCigfOxQK8I0biIFPVI86NEu1zmF4EsxwK8inIg7b0InIaU9+O1AnsyR7OqVXb8AaQlwNSJ9IbQCCh01PyKt4KUb67Oj4T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747265456; c=relaxed/simple;
-	bh=8IwAmJ0usLb0XmLJEmRAj1KQT7kUoSHh+GUD4ztFINU=;
+	s=arc-20240116; t=1747267221; c=relaxed/simple;
+	bh=XUwDyLw5/4WxSPmLB0tULktlt1YSPQcfNDFK4JJ3UgI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VvCQuRuQTe3exFWNNr/a5vmihXv3X8BDR8uFkM+3kBguSvNafIdplI6kMvYYt0sO8rJ5PO5MD8VBxtpT02m1kwjaeYVUctn+HKv3WuY8vt6K750IFvHezO+nWD5u9juP/RIKGGrr863R1Lh7xV9z9kDaPH8yTGZjtmtDHbzYTxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rhS8+rB6; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=VtNrQZ7MRjmjSHN2piB22395h1tBk/rRyHCsGd4SspGnYwD1ldvv60IBIdfHpHeucstqQlZ+ZLvoZLBbQr1UBaRWGC7uXLvNslnc+wW7rClqtQ31cEfD1o63TuWvUSytCwZWEWCQnCrRoiJXzESx/ixxzZnKOFwvLQc2nvZZyd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4PgPaJEs; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rhS8+rB6"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c4bdd0618so333912a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 16:30:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4PgPaJEs"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394792f83cso306509b3a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 17:00:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747265453; x=1747870253; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747267219; x=1747872019; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4/upwCU1p7ZhRZCIWHVB5zuv5a/gxQLx/KwiZLDsIs=;
-        b=rhS8+rB6n5ez4I56fUlA2ea8yo2iMu8mHM4munJorrMkjZ4JK0fe6kOQpePclO/gRM
-         LE8FWui0h6m8RKwc0n7dHRFM/H/lL5x+7xRFg6ALmnIL6k+oyWoGM3xGoB4MxX6ps6vS
-         fM7R1ORHSZquSl8kYImaTs+VcCvSgf+IbOihdLZbZLxsat3vfEZBKkvjUfL2ZYCcXKdx
-         9Q/jGgOLe3dEHLhW6D4TyNAsOofvZsbo7nKVs667kRgenKkZxkYqHIyHgc4kzRRGvfm3
-         R+tpC7hEnI84pJufBOZtD9rb6+uiwieEEmV3SLGvNE/jrKCQbMpxKDCNZ02bEMRhAZwo
-         Edaw==
+        bh=TlJJVY9lFXBl5aa6vrGZ3X+o2Y5gO/1RKuzRIMBedTA=;
+        b=4PgPaJEsMv2EiQpQrpehalu77nU95qUo+MY5mjpFxwEmNW7JS/LVVWaI1mv70jpJEQ
+         pic5urODW8wECi11VfN59nDobOLqwrKDSd5kUydmUfZidnM1oDu4qdvqnKACWrsxbmLu
+         Tg8PdHNS2K6ywPIEKr+uU2IYmy2NBQQ20CyvmQrKBbwJRy4nJqtp8oahM5hK8t5iWFm0
+         WWttAjhiDcQ3h/Vt1wVuwzTn3vRJm2KZT8wMCswD/mTwvAD7coddYc5BPmWfvdzFN+UQ
+         wOGcYMGDJJU1RhWD4fmvgxfi/mgpA5//omluwLQACy9Kzu5IUaVZi8a6zlj6EUzLJOe0
+         manw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747265453; x=1747870253;
+        d=1e100.net; s=20230601; t=1747267219; x=1747872019;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4/upwCU1p7ZhRZCIWHVB5zuv5a/gxQLx/KwiZLDsIs=;
-        b=DxpTN5BMkcZKPlw31dJRe21FOT4NkXtO4KELx5JKYkBM9VTSTTv1irCrkV1jsr/WzC
-         DLTMmS9BgYuUQIdjTEt2XFzeKGayvroGKBo5jlc62FKL/YkXDNyK3GUQo9w6weV24XMI
-         uzA5d0OqWzcaod9YY0C0tANsdJhMI8GqTxGBjdxi8FtmOVOd2bS572PusrXploRmp3CR
-         sKoYDgHpRTL3KnDnQsHC7LROmIRqoaOVMkc+YdUOctTJ6C4GHaD9cRtiHZ4czbEpUpsz
-         //pbA966lgiLaZa0OMZOIgmSzmk+4IGfIzxi88A+VtgdTEZWjQiX0fuoUvC5dK3uzCFw
-         zrow==
-X-Forwarded-Encrypted: i=1; AJvYcCV13Ii3Q3J7MU8+YGNrBaDxEDIs+ZNfPPX6miIS9fy5PQOK3PizcvPE4PGRgpzodwIwlt9LLZLIAt8Czlsu1lIr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW5HUr1nI5XkM/gn8l4fjyDZMtPJOQ5KewSBxLhat+87fdyDGZ
-	Q+do34rh5cbE4oSh3aEsHSL9BkppHNsVIZPwLbmni5stVcld/yqJn4IxFmCz73nvF1K9pLx7vv+
-	aXg==
-X-Google-Smtp-Source: AGHT+IFAtfFAcg5G+bktrxdFp1CjONIgOLPqtbYX0j8nNBPhJiLTtnFl1U1b1LHV+tCsNxvNYjV//Y0pDCQ=
-X-Received: from pjbee14.prod.google.com ([2002:a17:90a:fc4e:b0:301:1bf5:2f07])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5292:b0:2ff:5357:1c7f
- with SMTP id 98e67ed59e1d1-30e2e64260bmr8268883a91.30.1747265453399; Wed, 14
- May 2025 16:30:53 -0700 (PDT)
-Date: Wed, 14 May 2025 16:30:51 -0700
-In-Reply-To: <20250324173121.1275209-10-mizhang@google.com>
+        bh=TlJJVY9lFXBl5aa6vrGZ3X+o2Y5gO/1RKuzRIMBedTA=;
+        b=prlKPQzdDD+miCAfXQnezfj6FKN/jHULr9ZNIvLTRaiiSH5TB6pLwN2haM84YouHvF
+         Swsewq+IPDmtB3Snpb2rFye/m1rn5N5VBjfOYjnYkOu0un0k3KazilnoRYhu1SvnlMh1
+         jgqThW3L/eNlHBUc1l5tvxCqzGgyB/zTimFTUbc0Rh1H5Ak1d6RKSFEC2V5Nm9zMBArq
+         7m28OfklNq4UQTXqSeaVe17QA/bEtm6N6HasDyL33/0OsQCM3AoAbRr4fHhu2ZDVnAIh
+         pbqa05KgpZEbJ4CoB7THCQtgfvz4WWz8yk+61IL8cuSI0pyQj1XWLLTjnPr8Apx+y+Y+
+         v/4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWlXqELC/A2AokbK9Zl3qst+AFpabcVmIhR/nXDk+AcbzDFcqyhwM0HVFuyu5gg/SykTf2UPuH5fb2S4rDwqvmL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW9aXgoTJz8+/LckeY2QYdl7k1FxRK1Zvw+Tj/94El5eUZinGX
+	YpGrkrQSaC7mJGfGiPetvAxXWWg3JMeZvmve4Z6pf9amj8c510PeP3c5DEvzhFoBsGSydj+EaMG
+	ZXQ==
+X-Google-Smtp-Source: AGHT+IEHBbPUeQde2g3FySUvI+0JlrKcjlKZyfOpIZMlkRvVqTwOi/0XchtIZWlB6QuVKlDRiXI5fZZvczI=
+X-Received: from pgam17.prod.google.com ([2002:a05:6a02:2b51:b0:af9:5717:cfbb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d88:b0:1f5:5ca4:2744
+ with SMTP id adf61e73a8af0-215ff0d4647mr6806295637.17.1747267218995; Wed, 14
+ May 2025 17:00:18 -0700 (PDT)
+Date: Wed, 14 May 2025 17:00:17 -0700
+In-Reply-To: <20250324173121.1275209-12-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-10-mizhang@google.com>
-Message-ID: <aCUnq4M33yTj_t1F@google.com>
-Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-12-mizhang@google.com>
+Message-ID: <aCUukXIC_9cxHQd3@google.com>
+Subject: Re: [PATCH v4 11/38] perf/x86: Forbid PMI handler when guest own PMU
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -78,50 +78,65 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+> If a guest PMI is delivered after VM-exit, the KVM maskable interrupt will
+> be held pending until EFLAGS.IF is set. In the meantime, if the logical
+> processor receives an NMI for any reason at all, perf_event_nmi_handler()
+> will be invoked. If there is any active perf event anywhere on the system,
+> x86_pmu_handle_irq() will be invoked, and it will clear
+> IA32_PERF_GLOBAL_STATUS. By the time KVM's PMI handler is invoked, it will
+> be a mystery which counter(s) overflowed.
 > 
-> When entering/exiting a guest, some contexts for a guest have to be
-> switched. For examples, there is a dedicated interrupt vector for
-> guests on Intel platforms.
+> When LVTPC is using KVM PMI vecotr, PMU is owned by guest, Host NMI let
+> x86_pmu_handle_irq() run, x86_pmu_handle_irq() restore PMU vector to NMI
+> and clear IA32_PERF_GLOBAL_STATUS, this breaks guest vPMU passthrough
+> environment.
 > 
-> When PMI switch into a new guest vector, guest_lvtpc value need to be
-> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
-> bit should be cleared also, then PMI can be generated continuously
-> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
-> and switch_guest_ctx().
+> So modify perf_event_nmi_handler() to check perf_in_guest per cpu variable,
+> and if so, to simply return without calling x86_pmu_handle_irq().
 > 
-> Add a dedicated list to track all the pmus with the PASSTHROUGH cap, which
-> may require switching the guest context. It can avoid going through the
-> huge pmus list.
-> 
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Suggested-by: Jim Mattson <jmattson@google.com>
 > Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > ---
->  include/linux/perf_event.h | 17 +++++++++++--
->  kernel/events/core.c       | 51 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 65 insertions(+), 3 deletions(-)
+>  arch/x86/events/core.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 37187ee8e226..58c1cf6939bf 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -584,6 +584,11 @@ struct pmu {
->  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->  	 */
->  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
-> +
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 28161d6ff26d..96a173bbbec2 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -54,6 +54,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+>  	.pmu = &pmu,
+>  };
+>  
+> +static DEFINE_PER_CPU(bool, pmi_vector_is_nmi) = true;
+
+I strongly prefer guest_ctx_loaded.  pmi_vector_is_nmi very inflexible and
+doesn't communicate *why* perf's NMI handler needs to ignore NMIs
+
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+>  DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
+> @@ -1737,6 +1739,24 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+>  	u64 finish_clock;
+>  	int ret;
+>  
 > +	/*
-> +	 * Switch guest context when a guest enter/exit, e.g., interrupt vectors.
+> +	 * When guest pmu context is loaded this handler should be forbidden from
+> +	 * running, the reasons are:
+> +	 * 1. After perf_guest_enter() is called, and before cpu enter into
+> +	 *    non-root mode, host non-PMI NMI could happen, but x86_pmu_handle_irq()
+> +	 *    restore PMU to use NMI vector, which destroy KVM PMI vector setting.
+> +	 * 2. When VM is running, host non-PMI NMI causes VM exit, KVM will
+> +	 *    call host NMI handler (vmx_vcpu_enter_exit()) first before KVM save
+> +	 *    guest PMU context (kvm_pmu_put_guest_context()), as x86_pmu_handle_irq()
+> +	 *    clear global_status MSR which has guest status now, then this destroy
+> +	 *    guest PMU status.
+> +	 * 3. After VM exit, but before KVM save guest PMU context, host non-PMI NMI
+> +	 *    could happen, x86_pmu_handle_irq() clear global_status MSR which has
+> +	 *    guest status now, then this destroy guest PMU status.
 > +	 */
-> +	void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
 
-IMO, putting this in "struct pmu" is unnecessarily convoluted and complex, and a
-poor fit for what needs to be done.  The only usage of the hook is for the CPU to
-swap the LVTPC, and the @data payload communicates exactly that.  I.e. this has
-one user, and can't reasonably be extended to other users without some ugliness.
-
-And if by some miracle there's no CPU pmu in perf, KVM's mediated PMU still needs
-to swap to its PMI IRQ.  So rather than per-PMU hook along with a list and a
-spinlock, just make this an arch hook.  And if all of the mediated PMU code is
-guarded by a Kconfig, then perf doesn't even needs __weak stubs.
+This *might* be useful for a changelog, but even then it's probably overkill.
+NMIs can happen at any time, that's the full the story.  Enumerating the exact
+edge cases adds a lot of noise and not much value.
