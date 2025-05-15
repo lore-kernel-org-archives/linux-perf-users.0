@@ -1,56 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C22E29995C;
-	Thu, 15 May 2025 12:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244E2581;
+	Thu, 15 May 2025 13:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313759; cv=none; b=Nf3OcWm5t3WbVfdY2Q9jhSuTV8U6IjDx/LtQFymhVMrY4h4F9bYbIWx7B/mGqgs5WTZqDTAX0Nb+7CFZ2mUOxAkLAQuXXH9cwOxi1+O6vixNGelmSEMIQnOs7ARVukACp5i3vIxj/S4WHsgWyptzlZVML+0DDqfUx/eGPU/KyyA=
+	t=1747314978; cv=none; b=dbKIFz215gldemHYxoKqH2j4ntajPv2DTGO8ObD3iPA2id+9QQnMMR0armpC0pE2a3c9GD2d3A01KUnBI18EUGhCyfUl5vixjVocF7JZDFsApFRr68vh77Hc/pTfWoVIgqrLqT2ZaVVzMrEP+tEvkXdqyddihwSosJVkmPp8qTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313759; c=relaxed/simple;
-	bh=/UPaLoHrddNLbUn4Gl4Qnrk7JCOj1PaZElu2uhtUnBM=;
+	s=arc-20240116; t=1747314978; c=relaxed/simple;
+	bh=/foRtK30244Y6vx7qd0F0GOygInRY+jAMjfoJ/j1WrE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aEOfwm8lEuiaAKEHSJYyqAXjpedqp0k/98lF7ig/kMzgqZ+Pu+84JECsGiI1l2IxosnDZ65Wbc7fin1rYkHbjx0q0G+IGVQ0mgSSd+6O0zSVQ96aZ/ee9n42nKuwPb4/Nh+rrFoLyzTedd9mOMmgCkD4Z2lGONY6NLYhQOgrPuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=givRzcZf; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=f5UMRCjhsBstSPbFltRH+EASMvj2ItS5m8eTD5N8P/joQDxCl43bd+0GHD8+c+TtHDDRTstiz2Ug2lV1uh0mYoVlBMeKQxWJAk/IJjOq6xtBghw8oi+X5lLVxlhGP4Cbu6qwaTf8UIvJKEurbRPT2ZmLKO/HacZQS1/TZqWfDq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ekz6JbB7; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="givRzcZf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747313758; x=1778849758;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/UPaLoHrddNLbUn4Gl4Qnrk7JCOj1PaZElu2uhtUnBM=;
-  b=givRzcZflhELqhy+hl5Z7OezqrfbYVTlpqYW3u6TnSx7xbs5p8HSnYSn
-   dP+hg3hHmWzLeAAy8BbGlQJx8zOkVIF7tVdlGdbd3Yn0HE9d7LZLpKhgy
-   ZvPQHm76XtgYJ2V5EypR3fVs2ekb5D75txWYJsAvepkaZjCaJ1DzRdEax
-   n489xWN/jN8jkr4lWF5o79XncErxmFg8hurhg8JJXSKVLWu7yLlPid00o
-   lRspS53Bbigp8QNjpsYjo2jFe1YjY2ZX8gu15fXDiRtIhA+Jg+DfB+mju
-   SSnLdt8VJDZaUjNsjYa8NOlbCVbNoFePCuafMdlZAXb+LszEXup6aIeuN
-   A==;
-X-CSE-ConnectionGUID: 3VGrFW+5Tjet9bEPpap8Ug==
-X-CSE-MsgGUID: +VaPTpjFSPycXqj9cwqU1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49383691"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="49383691"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:55:57 -0700
-X-CSE-ConnectionGUID: m5Tos1AaRqm1HtzVEP/+qw==
-X-CSE-MsgGUID: SiOtB6pBT2mpVjmCiYL4PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="138862525"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:55:57 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 413C720B5736;
-	Thu, 15 May 2025 05:55:06 -0700 (PDT)
-Message-ID: <4a44b8cb-7c73-4926-8b9f-1f63929ea48f@linux.intel.com>
-Date: Thu, 15 May 2025 08:55:05 -0400
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ekz6JbB7"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FCgBGF004810;
+	Thu, 15 May 2025 13:15:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=K8eSWs
+	kk7y1WnwI4RQTrKWmfmUf+E2VpeXbQUkcUybc=; b=ekz6JbB7iUMeaJO8Zgm/xD
+	HiKuN5VxsRPhASWlfw3z9j/4ZXlKZHTlh0+qiPamAMwQzafpe5Shdj99iezgRgoz
+	mmQdzP1STPkxj9Kn028nFKNbe2JP9+8/DjUzKqLPqAAvSCQFUxqKnYrkDlwhMJtr
+	3OWwiCzuYfUad9CBOvc7mnDZVguFNN27n60vE6mMpkpvc8EEmkBI32maBTtpPqov
+	mTFJL4ZbDKXCO1gRAmJIfGMgYSpFSZqLqNwlAKR7tlxp7o6/ZjitC0SPHebcm/GS
+	+A/46xynLr6IwE+5rVrkJxxu+DRoMZUfb44AaF5FN5FvWZecQY2OGRLSWQkhDW0w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ndfjs5h4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:15:58 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54FD9JMO003541;
+	Thu, 15 May 2025 13:15:57 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ndfjs5h2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:15:57 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54FAls4p026947;
+	Thu, 15 May 2025 13:15:57 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpjavc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:15:57 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54FDFtfr33555120
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 May 2025 13:15:55 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5FFF32006A;
+	Thu, 15 May 2025 13:15:55 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0C0BC20067;
+	Thu, 15 May 2025 13:15:55 +0000 (GMT)
+Received: from [9.152.212.229] (unknown [9.152.212.229])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 May 2025 13:15:54 +0000 (GMT)
+Message-ID: <ec0827aa-0bae-4625-ad60-f1a1765a4811@linux.ibm.com>
+Date: Thu, 15 May 2025 15:15:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,220 +69,99 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 01/15] perf: Fix the throttle logic for a group
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com
+Subject: Re: [PATCH V2 06/15] s390/perf: Remove driver-specific throttle
+ support
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: eranian@google.com, ctshao@google.com, linux-s390@vger.kernel.org
 References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
- <20250514151401.2547932-2-kan.liang@linux.intel.com>
- <20250515094300.GC412060@e132581.arm.com>
+ <20250514151401.2547932-7-kan.liang@linux.intel.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250515094300.GC412060@e132581.arm.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20250514151401.2547932-7-kan.liang@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: TiGGmCsi-Q4CEQDqJeIsc5m_1DEQCo2c
+X-Authority-Analysis: v=2.4 cv=ecg9f6EH c=1 sm=1 tr=0 ts=6825e90e cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=3pcsZ_9yFVMwK54gUSUA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: _xFvpzNXaCvkt0etVGSLJ4aTiaHA05X6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDEyOSBTYWx0ZWRfX00XKEgoWCOzp H3lB03YVH+jZWCa/UwtLfav8AUW+QPtdjmuVQ9mDElOouHi6fNfP5SCQ3xcxc8WEJs4GVRoxnQd ah8WwpSpfchkibE54oAicenS7Iev+pj0iuuUy7paXW8gkVcVzOr8VxKxSprloUi5PEmUdv51pfE
+ CcwHO16L/UWcfHsBfpFg8msOwx9/x85jDxF2WRky8/fQTC1h/JN59ygteY2CCkB62sSTCCslZYX p4vsBZLoSuopVeyskF82oq48AcwIvUGKKkbYY/YkfzXjivg9JiYv7Rw9En3MbFRknwaTB8Y/i3a 2Vp0CVrvDuUC7PPUI9bTsS+yl8Zpzu+LHB4CEvyvqXwmyeyJB7Pb1GxyafB+wHfVqfKcDube5lb
+ nrnvEtgxqQq4BSAbFv8Efql+sFlroIJ2HVilet9Mo5uWstIfRgZQCipLZZJe1fzEizSAy2YT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_05,2025-05-14_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150129
 
-
-
-On 2025-05-15 5:43 a.m., Leo Yan wrote:
-> On Wed, May 14, 2025 at 08:13:47AM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The current throttle logic doesn't work well with a group, e.g., the
->> following sampling-read case.
->>
->> $ perf record -e "{cycles,cycles}:S" ...
->>
->> $ perf report -D | grep THROTTLE | tail -2
->>             THROTTLE events:        426  ( 9.0%)
->>           UNTHROTTLE events:        425  ( 9.0%)
->>
->> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
->> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
->> ... sample_read:
->> .... group nr 2
->> ..... id 0000000000000327, value 000000000cbb993a, lost 0
->> ..... id 0000000000000328, value 00000002211c26df, lost 0
->>
->> The second cycles event has a much larger value than the first cycles
->> event in the same group.
->>
->> The current throttle logic in the generic code only logs the THROTTLE
->> event. It relies on the specific driver implementation to disable
->> events. For all ARCHs, the implementation is similar. Only the event is
->> disabled, rather than the group.
->>
->> The logic to disable the group should be generic for all ARCHs. Add the
->> logic in the generic code. The following patch will remove the buggy
->> driver-specific implementation.
->>
->> The throttle only happens when an event is overflowed. Stop the entire
->> group when any event in the group triggers the throttle.
->> The MAX_INTERRUPTS is set to all throttle events.
->>
->> The unthrottled could happen in 3 places.
->> - event/group sched. All events in the group are scheduled one by one.
->>   All of them will be unthrottled eventually. Nothing needs to be
->>   changed.
->> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
->>   group altogether.
->> - The __perf_event_period(). The whole group needs to be restarted
->>   altogether as well.
->>
->> With the fix,
->> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
->> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
->> ... sample_read:
->> .... group nr 2
->> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
->> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
->>
->> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>
->> Changes since V1:
->> - Apply the suggested throttle/unthrottle functions from Peter.
->>   The MAX_INTERRUPTS and throttle logs are applied to all events.
->> - Update the description and comments accordingly
->>
->>  kernel/events/core.c | 58 +++++++++++++++++++++++++++++++++-----------
->>  1 file changed, 44 insertions(+), 14 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index a84abc2b7f20..a270fcda766d 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -2734,6 +2734,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
->>  static void perf_log_throttle(struct perf_event *event, int enable);
->>  static void perf_log_itrace_start(struct perf_event *event);
->>  
->> +static void perf_event_unthrottle(struct perf_event *event, bool start)
->> +{
->> +	event->hw.interrupts = 0;
->> +	if (start)
->> +		event->pmu->start(event, 0);
->> +	perf_log_throttle(event, 1);
->> +}
->> +
->> +static void perf_event_throttle(struct perf_event *event)
->> +{
->> +	event->pmu->stop(event, 0);
->> +	event->hw.interrupts = MAX_INTERRUPTS;
->> +	perf_log_throttle(event, 0);
->> +}
->> +
->> +static void perf_event_unthrottle_group(struct perf_event *event, bool start)
->> +{
->> +	struct perf_event *sibling, *leader = event->group_leader;
->> +
->> +	perf_event_unthrottle(leader, leader != event || start);
->> +	for_each_sibling_event(sibling, leader)
->> +		perf_event_unthrottle(sibling, sibling != event || start);
+On 5/14/25 17:13, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Seems to me that the condition "leader != event || start" is bit tricky
-> (similarly for the check "sibling != event || start").
+> The throttle support has been added in the generic code. Remove
+> the driver-specific throttle support.
 > 
-> If a session sets the frequency (with option -F in perf tool), the
-> following flow is triggered:
+> Besides the throttle, perf_event_overflow may return true because of
+> event_limit. It already does an inatomic event disable. The pmu->stop
+> is not required either.
 > 
->   perf_adjust_freq_unthr_events()
->     `> perf_event_unthrottle_group(event, false);
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> ---
+>  arch/s390/kernel/perf_cpum_cf.c | 2 --
+>  arch/s390/kernel/perf_cpum_sf.c | 5 +----
+>  2 files changed, 1 insertion(+), 6 deletions(-)
 > 
-> The argument "start" is false, so all sibling events will be enabled,
-> but the event pointed by the "event" argument remains disabled.  
+> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+> index e657fad7e376..6a262e198e35 100644
+> --- a/arch/s390/kernel/perf_cpum_cf.c
+> +++ b/arch/s390/kernel/perf_cpum_cf.c
+> @@ -980,8 +980,6 @@ static int cfdiag_push_sample(struct perf_event *event,
+>  	}
+>  
+>  	overflow = perf_event_overflow(event, &data, &regs);
+> -	if (overflow)
+> -		event->pmu->stop(event, 0);
+>  
+>  	perf_event_update_userpage(event);
+>  	return overflow;
+> diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+> index ad22799d8a7d..91469401f2c9 100644
+> --- a/arch/s390/kernel/perf_cpum_sf.c
+> +++ b/arch/s390/kernel/perf_cpum_sf.c
+> @@ -1072,10 +1072,7 @@ static int perf_push_sample(struct perf_event *event,
+>  	overflow = 0;
+>  	if (perf_event_exclude(event, &regs, sde_regs))
+>  		goto out;
+> -	if (perf_event_overflow(event, &data, &regs)) {
+> -		overflow = 1;
+> -		event->pmu->stop(event, 0);
+> -	}
+> +	overflow = perf_event_overflow(event, &data, &regs);
+>  	perf_event_update_userpage(event);
+>  out:
+>  	return overflow;
 
-Right. Because the following code will adjust the period of the event
-and start it.
-The PMU is disabled at the moment. There is no difference in starting
-the leader first or the member first.
+I have installed patch 1 and 6 on top of the linux-next kernel today.
+The results look good, much better than before, but I still do not
+get both counter values in sync on each iteration all the time.
 
-> Though
-> the __perf_event_period() function will enables all events with adjusted
-> period, but it is still risky for counting discrepancy caused by the
-> flow described above.
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 
-The __perf_event_period() is similar. The event in both cases has to
-adjust the period before re-start the event, which has to be done
-outside of the perf_event_unthrottle_group().
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-Thanks,
-Kan>
-> Thanks,
-> Leo
-> 
->> +}
->> +
->> +static void perf_event_throttle_group(struct perf_event *event)
->> +{
->> +	struct perf_event *sibling, *leader = event->group_leader;
->> +
->> +	perf_event_throttle(leader);
->> +	for_each_sibling_event(sibling, leader)
->> +		perf_event_throttle(sibling);
->> +}
->> +
->>  static int
->>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
->>  {
->> @@ -4389,10 +4422,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->>  		hwc = &event->hw;
->>  
->>  		if (hwc->interrupts == MAX_INTERRUPTS) {
->> -			hwc->interrupts = 0;
->> -			perf_log_throttle(event, 1);
->> -			if (!event->attr.freq || !event->attr.sample_freq)
->> -				event->pmu->start(event, 0);
->> +			perf_event_unthrottle_group(event,
->> +				!event->attr.freq || !event->attr.sample_freq);
->>  		}
->>  
->>  		if (!event->attr.freq || !event->attr.sample_freq)
->> @@ -6421,14 +6452,6 @@ static void __perf_event_period(struct perf_event *event,
->>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
->>  	if (active) {
->>  		perf_pmu_disable(event->pmu);
->> -		/*
->> -		 * We could be throttled; unthrottle now to avoid the tick
->> -		 * trying to unthrottle while we already re-started the event.
->> -		 */
->> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
->> -			event->hw.interrupts = 0;
->> -			perf_log_throttle(event, 1);
->> -		}
->>  		event->pmu->stop(event, PERF_EF_UPDATE);
->>  	}
->>  
->> @@ -6436,6 +6459,14 @@ static void __perf_event_period(struct perf_event *event,
->>  
->>  	if (active) {
->>  		event->pmu->start(event, PERF_EF_RELOAD);
->> +		/*
->> +		 * Once the period is force-reset, the event starts immediately.
->> +		 * But the event/group could be throttled. Unthrottle the
->> +		 * event/group now to avoid the next tick trying to unthrottle
->> +		 * while we already re-started the event/group.
->> +		 */
->> +		if (event->hw.interrupts == MAX_INTERRUPTS)
->> +			perf_event_unthrottle_group(event, false);
->>  		perf_pmu_enable(event->pmu);
->>  	}
->>  }
->> @@ -10326,8 +10357,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
->>  		__this_cpu_inc(perf_throttled_count);
->>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->> -		hwc->interrupts = MAX_INTERRUPTS;
->> -		perf_log_throttle(event, 0);
->> +		perf_event_throttle_group(event);
->>  		ret = 1;
->>  	}
->>  
->> -- 
->> 2.38.1
->>
->>
-> 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
