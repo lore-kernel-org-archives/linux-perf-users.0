@@ -1,65 +1,66 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE238F66
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 00:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0961F72605
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 00:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269717; cv=none; b=J5Rqvfn5dhhC5CLOsjpKi1B5yima5ZzXsTiUwTlZ0+DDEnW+uRdPmrjmeynmmsy2Yz36wEzeBwVqpGwqZy0A+11grclB/14Oa4dS7sovjqu6JazMAVplrQBsi4UrCqG8CNqD6cMJAdId4JQ+pZ1M0yrjZlbOXDdXwarRbL1LvNo=
+	t=1747269748; cv=none; b=Eid/aYncsT61mxxkOebtyNJpODzADcljby1ZBL9eXKR5bAjRXbEVqjUWrINnqgt4DxNNq0IvfMsbvn0zEi5q3kKjXaQlP/F739jxV55S8c/4vE4UEyCc/uwtT5NW8wdsnuxewE+2I66lc+DJstCv1uQCQp3LJwtOqEOd5HDSASA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269717; c=relaxed/simple;
-	bh=iFfSERXqavDusfX1VCYEGypsr/UbOLQkpthUgOBORHo=;
+	s=arc-20240116; t=1747269748; c=relaxed/simple;
+	bh=obx/PLZ6UIcwrs7uFv57ytnLd/749bN6ofjc/xYVY9g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nlT04WjUtbUTA0SJx1NJpEBt4j4lIv82A8B8+7syuUpf2CgzdMwY/DuG1QZJqBCSTl4eUkkTcPlCDsLnHkV8dzdAZzASLsAjIEuPRWrbNhQHs5gRiFoVW6Dx3F8AI4y3uIqFN1ty61cX6f8bVyFMEyV2IFwUoxxhgswHr0c/NNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u1ISadiA; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=C5m74ydgnOvXN6kf8vmntlKglrF3c1PtsaxY+BY99kNKzLsiGEUc7HncDKMfHjP9lOenOKaoYbkKeWRIBzfNZ49QA99VezE3/E5iJF/BV39toCdFmwluX9ZoVSqvAw5RuhhiwA1olSt5H4YwD2gicvYkWC1nJeO0U1JRdcN14Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qp/SqBWx; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u1ISadiA"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ac9abbd4bso651592a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 17:41:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qp/SqBWx"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-741a845cab2so540764b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 May 2025 17:42:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747269715; x=1747874515; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747269746; x=1747874546; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ip9lVrq9USVSeXSDB7Ry76GsvvsCyjvJx3E1UJmIZxg=;
-        b=u1ISadiAZpAaCftabQ06ASHhPH/NGcJx2PrPazkovU5v0dj+iy3oYUZ7KNLNDXrRee
-         YodszaCJgd/yLiNRsG2eyN/c3ndUs5TyavEBUR6Jo4vMwES8nZTTC43qx/bhA2uFuLCz
-         2Vlj89TejxcoL4ygvleWDkLXw4DQ1VgQC1TldwB735MiDa69qXFXjFRoB/xENsfA1j9F
-         6VtXi6jCjOLCArZ5p34VYOSZ9IBZhp+/ntLMNm11cuZztYJ1X89D5wW3oSoJWfiX5SIA
-         o99DFrnmKDNzG6QRGZTpk7H86vQ9d5Le40+LbPc6a5q6TGSUKr8j9juFNsiTio8yFD4i
-         kpYw==
+        bh=7lXQTySoZYBcx+77niflWXedrq2Xx/F460KNE+k8S/c=;
+        b=qp/SqBWxOXq/Ic61hIJ+Z2ASMpBiyG38ziHJr//11C9+8FIFMYXXoO7jmvjPMvXRtR
+         hxRsMVWXUg2IR9VOz1y0uykkNqKZ1VWP4jx+aEQasvNty/XBTlAIwynyQDhPCk7oN1RX
+         gOc/SCbznUMRZdnWs44UZCpka4oV93npH4tFk6EDep6pqR2KHA5JBhAdajHGySRNlh12
+         3Y62DjsngLvFKV02aRdLdGQTU0jMxKm4Pu210x0AT761Ev6Ad9RhOujCFNA/GvijiZkf
+         hTJCCuCfiK4FMWX1X3b+T8ue9/Ka5n3PCxDahl6t3rr6zmJszNWvzm+GuWF53lYcONj/
+         vICQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747269715; x=1747874515;
+        d=1e100.net; s=20230601; t=1747269746; x=1747874546;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ip9lVrq9USVSeXSDB7Ry76GsvvsCyjvJx3E1UJmIZxg=;
-        b=u/5FsJ5lJ7UPDaBuZ9NMbAwX/riIGW9v2ZfC4p0+YIc6tmw2MXDkgepghWg1rbGvnJ
-         sJzjTP2GVPf0C+pZ6X7FaOPP1YZfqU88TNqwcEjBS8simtpKobuhZpDNt6ooPhhS4+4X
-         zrM0ZsFuAHa031c91LBjOUqrqd/zadp8wmT4wNBh8yFdrQgaEadWgreQIYbS+exG1jzN
-         OthWS6mf1rSt00cH+U9L5TdQZV91QA3QZeYYF7Xy7fPqmp2GjVcBfNlZp0O2D9wWoaTh
-         IE1y3TSPoVwBHpPPah6EgJkQm4yueyMnSKzFptiOvkZhqB0pLJ1H0oI+W3bEWe7CO+wL
-         BRtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHQ2Xb//c7Gp9PwPv8JGQZk7ixMdsWEerbMcyWl7H+/FhBjJJpglzWVbiMQ+hDLlN578OkSbrPcRyzqTYiNl/j@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXS1Mkmd4JbmIs2W47ziRoX2i+ydt3jhljg3dmCEdB4ZSceuFS
-	ZHpAkrTzqbIZWNOwafXf4re5oByLEx0PT8YvjSILC4kIaEHyDIFvGKO9gysA47i+a+0qN5+VuT0
-	n9w==
-X-Google-Smtp-Source: AGHT+IEQQ2m9ChwSAgqTmcRTO2wVdgVG7h1KF3HTjNgQHsWD0J4xMyzMFU8Gl88ps+nHWYhsRW6yQlC7s94=
-X-Received: from pjboe15.prod.google.com ([2002:a17:90b:394f:b0:2ef:7af4:5e8e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:55c7:b0:30c:5604:f646
- with SMTP id 98e67ed59e1d1-30e519309bfmr943173a91.25.1747269715611; Wed, 14
- May 2025 17:41:55 -0700 (PDT)
-Date: Wed, 14 May 2025 17:41:54 -0700
-In-Reply-To: <20250324173121.1275209-24-mizhang@google.com>
+        bh=7lXQTySoZYBcx+77niflWXedrq2Xx/F460KNE+k8S/c=;
+        b=HW/Tv9/8W33g2H7TPazZl7SNSs4fiUh2jbF8G96c7wN/G9/EEUPrAy3fQA71VwGAZx
+         5ucGdRTrefOAZvHZAmt4UWv1zqL8kRfp32fmEHasLphkhbOjvNF6Q2CtxjkFMPOymUhI
+         v/hEkwpKakHzmmmeSUrFoYm/5b+i/2uYq0V68qrG4YAZ5ajk1LGjyjKYllwJG/RQ5WKi
+         XSVGA1lKFUR/DgiduQJehUpq9EkoTfYkKspph76wstgxNdiN3bOvu2ycTKwrJJ9KULmo
+         6fIvf6VsIOljkBJa3vd9d109adodG4PV8gSTQrPLJNlEOwtc3GXA+2dlwC/Tfe4aZb7B
+         ukQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtxm/opBH0jtMUKJfwzHnsIg9ZSP2DU73iSnzW31HO7UPXnt2LE5om07drbnlYlb9u/Lt6jGVyO6LnJbTeujVj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsdzJkcC4yPP5/AO4ZWDCJ6rZErRTbts7Jz3fo/K/SQAqzRWYo
+	XJaEhg1nYrfKgHbkEx4kkEG1NuhWTqHgWmz78adFBFYOQxuXyfxYOi3huOy1BtSvNK2oLAuAkLF
+	yaA==
+X-Google-Smtp-Source: AGHT+IGqxLXceYPydbCzXDD6iL7DFmjD1CvfNfOZAnmDRwybRZ8Dhg2v8MOu1RtV/6HVzmq7qJop18AXyQc=
+X-Received: from pfwz36.prod.google.com ([2002:a05:6a00:1da4:b0:736:5ca8:c79a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1897:b0:736:53f2:87bc
+ with SMTP id d2e1a72fcca58-742984f64d9mr965977b3a.13.1747269746181; Wed, 14
+ May 2025 17:42:26 -0700 (PDT)
+Date: Wed, 14 May 2025 17:42:24 -0700
+In-Reply-To: <20250324173121.1275209-27-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-24-mizhang@google.com>
-Message-ID: <aCU4Uuhzo_ovR7r8@google.com>
-Subject: Re: [PATCH v4 23/38] KVM: x86/pmu: Configure the interception of PMU MSRs
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-27-mizhang@google.com>
+Message-ID: <aCU4cHtvjwDordxW@google.com>
+Subject: Re: [PATCH v4 26/38] KVM: x86/pmu: Introduce eventsel_hw to prepare
+ for pmu event filtering
 From: Sean Christopherson <seanjc@google.com>
 To: Mingwei Zhang <mizhang@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -77,24 +78,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Nikunj Dadhania <nikunj.dadhania@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 
-Again, use more precise language.  "Configure interceptions" is akin to "do work".
-It gives readers a vague idea of what's going on, but this
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> -	pmu->fixed_ctr_ctrl = pmu->global_ctrl = pmu->global_status = 0;
+> +	pmu->fixed_ctr_ctrl = pmu->fixed_ctr_ctrl_hw = 0;
+> +	pmu->global_ctrl = pmu->global_status = 0;
 
-  KVM: x86/pmu: Disable interception of select PMU MSRs for mediated vPMUs
-
-is just as concise, and more descriptive.
-
-> +	/*
-> +	 * In mediated vPMU, intercept global PMU MSRs when guest PMU only owns
-> +	 * a subset of counters provided in HW or its version is less than 2.
-> +	 */
-> +	if (kvm_mediated_pmu_enabled(vcpu) && kvm_pmu_has_perf_global_ctrl(pmu) &&
-> +	    pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp)
-
-This logic belongs in common code.  Just because AMD doesn't have fixed counters
-doesn't mean KVM can't have a superfluous "0 == 0" check.
-
-> +	if (kvm_mediated_pmu_enabled(vcpu) && kvm_pmu_has_perf_global_ctrl(pmu) &&
-
-Just require the guest to have PERF_GLOBAL_CTRL, I don't see any reason to support
-v1 PMUs.  It adds complexity and weirdness, and I can't imagine there's a use case.
+VMCS needs to be updated.
