@@ -1,115 +1,172 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C53253F20
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 17:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656861DDD1;
+	Thu, 15 May 2025 17:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328578; cv=none; b=kVjNrPI/03h5xiahY6/kS5uDsxxwOyvb+gVHs03KDgDJfolbIX3I9qjkVLIbPNFx/3CJMUz6kboelUbfhOpzDi8tbDa2Xv1rok7BNHZKZDBVFKHnqsK9n1NI8+FNI4L6EkLV+5DEwkh5HVx7G2RCgjB9hp+NOaPavvwiS1Rb080=
+	t=1747329386; cv=none; b=Kdkb6m0ZlrkzFVBeZ6jPoWgvgwnXYzKCG9AZlYvcAEygbTk0nadTQP8Ro/2tssBxOz40IzX9TFNAdmdQ8yjViToMeWgMUq+RMOns5pRl1gxC8sXsox0aABPJRCwLtyHK4BRfFGWWjGeJB7gA9O3leWPaUKyU3tK0KtpAiTDfyu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328578; c=relaxed/simple;
-	bh=OGYwNu0jk1S3G/lLoWUkF5yx6pm23cVo7q8IIitvTz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NDm/AjUWXM6y/gkyFSPbh9sBiUnzWG+XXDdOOuW5t2W7OCDcsVEhS2kf0DMv0kJFOFq+NU+NyPUl7CyYWxIyU3Ftg2SWAKB5E4jMxiHwCKzFCKVLjrKrRtrCP5IOK7rQM1464ZDe3Hsg4K/C5KdwC3zIsKIZKWE3VjvK5XiLABc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GnSuNQXx; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747329386; c=relaxed/simple;
+	bh=Vw4WEkclDr1GGKoxm4vvIt6vwMIbQuuQMXPj+KoindA=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=C1gngxCWJHCNBWkG2SpYpgn+d0oEHdfzNYWhs1mT53cuIdLJqi9hBDztDgD9j8VnMlL9OIMAd3DJfB6mqPDIm/AjZ76HFD8kmfIjMy99jAc3wRfHKqv4zJSj9SmMo8B59TppS2GsZX2KjeH5mufLmZPzeqc61WF2b21cUnip5LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fKlAN+Te; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Co839R3z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GnSuNQXx"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3da73d35c11so4385ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 May 2025 10:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747328576; x=1747933376; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OGYwNu0jk1S3G/lLoWUkF5yx6pm23cVo7q8IIitvTz0=;
-        b=GnSuNQXxenm/7ClQAXtLqQedGykC32k3AnsWJF7jHVmX9+p2MRlb5fjSST+7eCUus9
-         oDKDxXZzuPvbDN7EbvZTxnD9neGm9kUpf+UDAobRQuNeSnql7YRzj5QzkisYZrPy3GcZ
-         Ol0z5s/473q+NICw8DRXlBqoP5FzGXvqViedLJm29vOsvU53aFdEiPuOEGKKGDAz7eob
-         ShDRIX5ienyurE5EJxcQ5n6yBuPZFilLLSMbeUIbJbYvRWIRglHpBZSRMvlooG4dEUqP
-         0ttZrZyV9YRJYdQZxIDZNZdGNTW46Sri1thr6gjPm+/Q1cxThmoCy9VY/e8o7I6bpBm5
-         E0mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747328576; x=1747933376;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OGYwNu0jk1S3G/lLoWUkF5yx6pm23cVo7q8IIitvTz0=;
-        b=JUqwqwihALUbcgAvT0UkbFRFIR3A04f2HqWePUW6AcPysLZ992/KsKPI8V/rfojdOC
-         LZXKv9WA1nCoMaGmu+DiUrBYiCMZKCIyEg8XgdLATNgOPxxVKylhhwxeRLT/5hDmDVF2
-         Vwk7fz7pRlaMw5yXDs00MmsrkCOiFT3qVrDwIkgvOkV3XxhiwsNd3lgntcMLBI61rcFH
-         Ut6jjkCAhy8WbQAS0OKOCBRtLJ2FXwrCmKJF0jm/K+JLlmC2tO2yuRm9Gq4JjXufyzyX
-         t/fKYks6ORtnE2EirEaZdynyyYb0LTcl2NncU34Lnatquh9ukESbzOJxmgsONR5qeV7u
-         aQdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXolkxO4qX/Zbn/VlPfgW6NTcfemiv+FXnRoLnu0fKxm0J2+SCfU+nVG14AM0qHKaoHWteBGNrfpqGoWJgqccu6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6rOVjxIQk6rPTwgTdG1iccQQ5oJldFjISV+jar2ON8GzWmaDv
-	SVzHEXA5PY37O6phkFqOnAMjCigBCioNm0+yMs0Sxe4Gud1J9tKBIpVRPh4VyXypyFB6bNUzuQI
-	pWNgT0wUsS4Vbq7cGK/iR1ZhMS7k6sGFnphKbeJOM
-X-Gm-Gg: ASbGncsmQW+uvp5yRWWTeY8V9vKljQPhuXEugyH81Ol+SCzosOmKMmyaTV7poDYgfPQ
-	+hXUjPMxO4DNBaNiemgStchyTY6sl6JsuEuMYYogHETgCdt5Ujn/IsIBThn9ztgO7YsCytnM4Mj
-	EqwuT9AsYceoCX80f1Z9YWMmYNecdQmn5TNxgvQ7VVKlCXsp1xpj18k2lGMjVurQ==
-X-Google-Smtp-Source: AGHT+IHxdfz0mUPuqpeQZwKMnEADRuicx+FbV97LYx8B8R1KseloBXxlGIrVN11rnuFNQv8xvQuSRFZkI6fQAr02/JE=
-X-Received: by 2002:a05:6e02:3f05:b0:3a7:cd21:493f with SMTP id
- e9e14a558f8ab-3db780720edmr5332565ab.26.1747328575703; Thu, 15 May 2025
- 10:02:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fKlAN+Te";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Co839R3z"
+Date: Thu, 15 May 2025 17:16:21 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747329382;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u30DGWx84jmgZeTyazFg+3FQdniCQfpgI//ck4i7XuY=;
+	b=fKlAN+Te57M9lwCsybgPc4jximkBWF2Tt9FtJBKivr/FWQiiJIyi4AEZ5uRGxAz0R6e3Pe
+	4oZsvTLlnr0Da9N9QFAuOuIgoLwllp/5tUDUmDIqN/MCwK7egPaWnOFEVM3Ai813BRty5d
+	225JtMguSHhqXNILE+kTfcwy6bJH28yW9DmZiTFlLfiS+IhgaoCaVsw/NTQSQF2X3jhmdJ
+	x6ysEsOEz1go5fG8+M+XLFFadV0TEauOKttNGUw1j5zwsA2gH7zEN0GT9G+1gfIh56hjc2
+	k/5NrqHC4G8lYzZng+hhuunk85xd+0ikX4FBoYosi5XrL+E9I1dQfbwA7qRKRQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747329382;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u30DGWx84jmgZeTyazFg+3FQdniCQfpgI//ck4i7XuY=;
+	b=Co839R3zCDxtrOISgMwmh9dwdJmPoDZQw4uogv64WQey8etNrR1PSNIUdSCa1vSvZ598Gt
+	00Nf0Q9GxW810qCg==
+From: "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel: Fix segfault with PEBS-via-PT with
+ sample_freq
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-perf-users@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250508134452.73960-1-adrian.hunter@intel.com>
+References: <20250508134452.73960-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515043818.236807-1-irogers@google.com> <aCYTG12gSmv0OtXN@x1> <aCYTaveeziFiF3kw@x1>
-In-Reply-To: <aCYTaveeziFiF3kw@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 15 May 2025 10:02:44 -0700
-X-Gm-Features: AX0GCFvL-RsYL31pl_fpwdtPF-hl9LiQ91_3-p-5OwxlTjO6Ww7GFCr4hdbUbWM
-Message-ID: <CAP-5=fWBdCVSM_QLcLJ66g+LC0ykrJbZA6mQUsH_++xLormFzQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on graniterapids
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Weilin Wang <weilin.wang@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174732938125.406.12231233963068767961.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 9:16=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, May 15, 2025 at 01:15:26PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, May 14, 2025 at 09:38:18PM -0700, Ian Rogers wrote:
-> > > On graniterapids the cache home agent (CHA) and memory controller
-> > > (IMC) PMUs all have their cpumask set to per-socket information. In
-> > > order for per NUMA node aggregation to work correctly the PMUs cpumas=
-k
-> > > needs to be set to CPUs for the relevant sub-NUMA grouping.
-> >
-> > I'm blindly applying it as I can't test these changes, and I think this
-> > is bad.
->
-> In the end the only review/action I could do was to turn:
->
-> Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clust=
-ers
->
-> Into:
->
-> Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumasks for sub-NUMA clus=
-ters
->
-> :-(
->
-> Besides the build tests, etc.
+The following commit has been merged into the perf/urgent branch of tip:
 
-It isn't the easiest to test. Let me add Weilin Wang on v3 as I think
-she has a graniterapids and could hopefully provide a tested-by tag
-:-)
+Commit-ID:     99bcd91fabada0dbb1d5f0de44532d8008db93c6
+Gitweb:        https://git.kernel.org/tip/99bcd91fabada0dbb1d5f0de44532d8008db93c6
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Thu, 08 May 2025 16:44:52 +03:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 15 May 2025 18:15:54 +02:00
 
-Thanks,
-Ian
+perf/x86/intel: Fix segfault with PEBS-via-PT with sample_freq
 
-> - Arnaldo
+Currently, using PEBS-via-PT with a sample frequency instead of a sample
+period, causes a segfault.  For example:
+
+    BUG: kernel NULL pointer dereference, address: 0000000000000195
+    <NMI>
+    ? __die_body.cold+0x19/0x27
+    ? page_fault_oops+0xca/0x290
+    ? exc_page_fault+0x7e/0x1b0
+    ? asm_exc_page_fault+0x26/0x30
+    ? intel_pmu_pebs_event_update_no_drain+0x40/0x60
+    ? intel_pmu_pebs_event_update_no_drain+0x32/0x60
+    intel_pmu_drain_pebs_icl+0x333/0x350
+    handle_pmi_common+0x272/0x3c0
+    intel_pmu_handle_irq+0x10a/0x2e0
+    perf_event_nmi_handler+0x2a/0x50
+
+That happens because intel_pmu_pebs_event_update_no_drain() assumes all the
+pebs_enabled bits represent counter indexes, which is not always the case.
+In this particular case, bits 60 and 61 are set for PEBS-via-PT purposes.
+
+The behaviour of PEBS-via-PT with sample frequency is questionable because
+although a PMI is generated (PEBS_PMI_AFTER_EACH_RECORD), the period is not
+adjusted anyway.
+
+Putting that aside, fix intel_pmu_pebs_event_update_no_drain() by passing
+the mask of counter bits instead of 'size'.  Note, prior to the Fixes
+commit, 'size' would be limited to the maximum counter index, so the issue
+was not hit.
+
+Fixes: 722e42e45c2f1 ("perf/x86: Support counter mask")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+Link: https://lore.kernel.org/r/20250508134452.73960-1-adrian.hunter@intel.com
+---
+ arch/x86/events/intel/ds.c |  9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 9b20acc..8d86e91 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2465,8 +2465,9 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_
+ 				setup_pebs_fixed_sample_data);
+ }
+ 
+-static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int size)
++static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, u64 mask)
+ {
++	u64 pebs_enabled = cpuc->pebs_enabled & mask;
+ 	struct perf_event *event;
+ 	int bit;
+ 
+@@ -2477,7 +2478,7 @@ static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int
+ 	 * It needs to call intel_pmu_save_and_restart_reload() to
+ 	 * update the event->count for this case.
+ 	 */
+-	for_each_set_bit(bit, (unsigned long *)&cpuc->pebs_enabled, size) {
++	for_each_set_bit(bit, (unsigned long *)&pebs_enabled, X86_PMC_IDX_MAX) {
+ 		event = cpuc->events[bit];
+ 		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
+ 			intel_pmu_save_and_restart_reload(event, 0);
+@@ -2512,7 +2513,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+ 	}
+ 
+ 	if (unlikely(base >= top)) {
+-		intel_pmu_pebs_event_update_no_drain(cpuc, size);
++		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
+ 		return;
+ 	}
+ 
+@@ -2626,7 +2627,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+ 	       (hybrid(cpuc->pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED);
+ 
+ 	if (unlikely(base >= top)) {
+-		intel_pmu_pebs_event_update_no_drain(cpuc, X86_PMC_IDX_MAX);
++		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
+ 		return;
+ 	}
+ 
