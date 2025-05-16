@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3A9280039;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E867A27AC4D;
 	Fri, 16 May 2025 18:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420170; cv=none; b=iYRylZ54x93FKpWeoPkRM6fjd+xCAlRyvDe6Yls+I5Z7JGCYVcO2EKeM9IjOkex7nJ0FkxZEh/P+oI9pa1l6XtNmIhkNjOYMzvKVWrQyZmEsuVd2h9CMTcbcH8x/jqGF12kPt91izvRKYvGdDnMwS9zs/ubVzib/jiHU/IrY81A=
+	t=1747420171; cv=none; b=dEo/lb45YDKj/cE46BtycnaX1aoZ+Tl1J3TwqEAXhwB3A8dlmAh5ZuyLwS4dGTQgcQoOBfyB5k0ZJkDc2Y4I671VcU/8FZa+M8T7lKgn5J29gTbEdYwwEaKNM48vshKSYJdbMjvGLzD/D+SiLHlQ53QWMBUgM6SKCri5WkvGh8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420170; c=relaxed/simple;
-	bh=F4Te9Lur/xFSTBMdpmhCbCj26jVQpoawEm3xShr4VJE=;
+	s=arc-20240116; t=1747420171; c=relaxed/simple;
+	bh=rrfPQWQxUpl+1TbJT7SuB/unJ120m8U+rV6GjI5dzKk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=us4gSFHKNk6bR7zeSVB8NPJSnb6d9a8755ue7IJ5q2HV5uF8Mcakcm1pHpgK260xkgkSB9VHH/SNPcL5x/Drp5SnyZ/A8mhrp355a098SC1yDtSjivBysVF0MHB8SbwVDxnCU9BUqqjI3ChWqSwcgZfoVJUbxxO76HLFlttxR58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXFpkhA0; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=sumlo0PW3LyZVohNJPK0PRqCS4e3Jg15LklScmB/HrdRfqzRbrp2GSHqTmAbX3N8HMmwZNr47YA0dUeNuRyJ87jkTJuoDaRB+QhRaJkGYq39K8UmZwpjLxRMR6aiGRyn9waaeHKVmpVgZMNcWly1BjswisIy5q98/2RvbMZVbz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YGJ5sR8w; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXFpkhA0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YGJ5sR8w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747420168; x=1778956168;
+  t=1747420169; x=1778956169;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=F4Te9Lur/xFSTBMdpmhCbCj26jVQpoawEm3xShr4VJE=;
-  b=hXFpkhA0hlRzIM3NXe/XNc2YowFRz+qiRQbV1jG+/I9PJ1xxConSDkJ2
-   8ZLNIOgVdGAcM9HxGCAkC+2r/Oy4hnxlVOOW9dZakgBnshRVCHemMzLjO
-   K+1Fd5Y7FjsSN0OMvjib3tlJZUEyiPGzJQw8CD5r0xOyvs+4qfJ+V+7Y/
-   C9GwdOAXjyOw5ZJKv1XGGdO5oIMWuDRGnF+c6MSeBkiQA8mpKQ6jD9ebj
-   NCopKABNOwDOoOULKleXd0qK+1R/EdiQqVO/RppnshuGyEQvBQf1KOvLU
-   z3cvPDSbVoXD9I8X8a4Lw8vxpvX4rp1ZiQnbVienRbNPxw6gpbsWEU/c6
+  bh=rrfPQWQxUpl+1TbJT7SuB/unJ120m8U+rV6GjI5dzKk=;
+  b=YGJ5sR8wF/UzJ9iCWR9ltnypemNTkBkqJ9FBfCzsAIMC5uNTdZ+qk3Yd
+   t0gkqH37tXsdY2XFK0ox8SKDSSrUw1tbS6Ws7k5aua3yCdkyKcqtnWS3h
+   7fJDDh5gsW/2ob8K8kBe2HsD4F5EEoY4kSRjctuSlniXZpS0t1x8jBZXG
+   IM7RK0VrIg+BcfNRmG/BEc749Vbt/Iwv6CHBDZFusCBQvu81TtaEUAlkZ
+   ccJoEPFsLjCEygUa2hS8IxtbtBBPpcJDYx89/LIn1QHbYq5ten93+xTI/
+   UwqnpZApEIjAfLcHCN7tBFDMZYjCuVpvediph3NG7RqTOqGEZHE9018bz
    g==;
-X-CSE-ConnectionGUID: N0alcjjMRlC3y+h/xNEgiQ==
-X-CSE-MsgGUID: jg5YishDSCW6ba2UBcsi7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328874"
+X-CSE-ConnectionGUID: Kd8ALGHrTZWLRwyh095PCw==
+X-CSE-MsgGUID: EapHDjHVTZq6peo+QpUNBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328884"
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49328874"
+   d="scan'208";a="49328884"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:24 -0700
-X-CSE-ConnectionGUID: UBs/ihSUS9CKF92ke3GkYA==
-X-CSE-MsgGUID: jZ7zldPVSQqDVnoqwuidxQ==
+X-CSE-ConnectionGUID: b9INNUNXTxm5M/F446xQug==
+X-CSE-MsgGUID: HTzrRv8lTLa9qlfqYLfWLQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="169802618"
+   d="scan'208";a="169802619"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:23 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:24 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -56,11 +56,13 @@ Cc: eranian@google.com,
 	tmricht@linux.ibm.com,
 	leo.yan@arm.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Vineet Gupta <vgupta@ikernel.org>,
-	linux-snps-arc@lists.infradead.org
-Subject: [PATCH V3 11/16] arc/perf: Remove driver-specific throttle support
-Date: Fri, 16 May 2025 11:28:48 -0700
-Message-Id: <20250516182853.2610284-12-kan.liang@linux.intel.com>
+	Guo Ren <guoren@kernel.org>,
+	Mao Han <han_mao@c-sky.com>,
+	Guo Ren <ren_guo@c-sky.com>,
+	linux-csky@vger.kernel.org
+Subject: [PATCH V3 12/16] csky/perf: Remove driver-specific throttle support
+Date: Fri, 16 May 2025 11:28:49 -0700
+Message-Id: <20250516182853.2610284-13-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250516182853.2610284-1-kan.liang@linux.intel.com>
 References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
@@ -81,30 +83,29 @@ Besides the throttle, perf_event_overflow may return true because of
 event_limit. It already does an inatomic event disable. The pmu->stop
 is not required either.
 
+Acked-by: Guo Ren <guoren@kernel.org>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Vineet Gupta <vgupta@ikernel.org>
-Cc: linux-snps-arc@lists.infradead.org
+Cc: Mao Han <han_mao@c-sky.com>
+Cc: Guo Ren <ren_guo@c-sky.com>
+Cc: linux-csky@vger.kernel.org
 ---
- arch/arc/kernel/perf_event.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/csky/kernel/perf_event.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
-index 6e5a651cd75c..ed6d4f0cd621 100644
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -599,10 +599,8 @@ static irqreturn_t arc_pmu_intr(int irq, void *dev)
- 
- 		arc_perf_event_update(event, &event->hw, event->hw.idx);
+diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.c
+index e5f18420ce64..e0a36acd265b 100644
+--- a/arch/csky/kernel/perf_event.c
++++ b/arch/csky/kernel/perf_event.c
+@@ -1139,8 +1139,7 @@ static irqreturn_t csky_pmu_handle_irq(int irq_num, void *dev)
  		perf_sample_data_init(&data, 0, hwc->last_period);
--		if (arc_pmu_event_set_period(event)) {
--			if (perf_event_overflow(event, &data, regs))
--				arc_pmu_stop(event, 0);
--		}
-+		if (arc_pmu_event_set_period(event))
-+			perf_event_overflow(event, &data, regs);
+ 		csky_pmu_event_set_period(event);
  
- 		active_ints &= ~BIT(idx);
- 	} while (active_ints);
+-		if (perf_event_overflow(event, &data, regs))
+-			csky_pmu_stop_event(event);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	csky_pmu_enable(&csky_pmu.pmu);
 -- 
 2.38.1
 
