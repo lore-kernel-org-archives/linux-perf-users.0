@@ -1,151 +1,111 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1B172608
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 13:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5EF76410;
+	Fri, 16 May 2025 13:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402593; cv=none; b=PxGhZHjMJVvqM1nqXjuEhJ5IcU3mfdM0eeYqf6Uj6kjFUcSaD/MIKKc7O4zVXypYsn3Q2d8UX8QS1HhnqAbI0F+Ks93B8gjDyDdCMQp6NfXdNFRimacSjE8QIsrYzLdBs7hXHXG8G7E9Cc+p1aqT90CqXLb7KybEFwD2proKkHA=
+	t=1747403044; cv=none; b=pxzIOTkQYu3H4c2Sbl69pSAag16Zd1QPLIzOsMarsaql+2YPNa7kzcATGgvgkDH1egK0A1Jf7rlR4wLakgKjM5fXJmjWXLeZsWbR0+iYAcc4nGjDLRBD7lwBGrAEdRBhOM3bikYMugrY47owLWyfkD9Mo8DIcrw+0Khb/0L7rqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402593; c=relaxed/simple;
-	bh=gzBy5TTcFJ3Ju+lkxl17/Cv2ww6IlyXb3lMPvTTW0+Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U8gMiiUl8Zb6YHHVqgXYBAqjSyEGOutK4yw26lBjppRWTG9XgWZEuQiXB1/QBW5G1ksQbpej+oUraF6hDvk4vETsYK+hVipK1r0tQGQSh2SuhBiOr9X8QIjsyMjd/z+4twQL4Gga/Z6ZZvmEsf+VcKzdQwiXMHHAkHPqKeMWS28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=htm8yxHC; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747403044; c=relaxed/simple;
+	bh=LGjIHSIG+XagOZzQXytTkKRnm7d4FWeI4xnR8vvYEfU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QQw6XFrRUKIVrAV5vWCGYfNr5uuMqyrua5/WVZbfRll/y33fjAI7Wo8hHb5ZyvB4oHBo5J467rZASS8ykmvmvySYt87gCnZrPc9/2V8WmZykws79axas04xEFWjgtz/0WKgbltIHmc8vImx7gsBWp8LIIpXwubGBzULUHFqGSjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o9opEJAT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ACEKClsL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="htm8yxHC"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7401179b06fso1760522b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 06:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747402591; x=1748007391; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sr0VF1D9f4EdiXRgig2Y19NqlMlaKz9LNUFtzyrU4Tw=;
-        b=htm8yxHCwbnujK5LXLcVoxYrpuPDdapk/TVsm2G1KX0VWhKO9UZWCDKcK+fBD/H4d1
-         BIyv5yfojAxEp1QqGfgnvZmaMRaH5MgnZJgqHTpyb2VdM8811I3B4x5ndZO41cixfs1n
-         vJIMFKrlVXU1ZYuDVBtycpiP/lu+Q4AGT1L0rbN3K7RVu/+wM/DtdVK6JTwchoQ0mu8+
-         YLuODh+kkPP1Vm0/a9fkdy1w+Agh7UiGK5xDe/r8u/6O2KiajcecSZ2Mu/G9d9vGRO2U
-         YzhcD2pT4X8v/4XGnVeHrwzB0DhJl9lJ5czRbesFlKRfFdj3Pt8GbHQfRV6WVocKjbVh
-         j5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747402591; x=1748007391;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sr0VF1D9f4EdiXRgig2Y19NqlMlaKz9LNUFtzyrU4Tw=;
-        b=CUnFd5pOBk2UCReK5S+PAKRouz5NDmd6PzuQdvNlysO3Zk2IKtpWichzii2P7ys9SS
-         wKPM7KR/EuA04YFZdB3RWgN20uJjFQzgiC7lWdfT6/NlXO9u+IbZTAnhGpVWJ32VwS6X
-         D3tu7WK189gMu8csnRmwX+XRLE03LQTN2bgV5dHIiJua5i4njfg+yG3pskw8p5htxC8g
-         qxK2n0NmbuE/ptGBJGIAlPu5McQZ9Sarak0Y5mfsovF0zzFq5U4+barBxKLExl4k2Izx
-         LQ3m9rhX7/iH0zDAEUZffWram1r8pB8phiR2L6/t3G7g92PAnJAwXDdicC8nw1mTEkL8
-         rIlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTUPUIjTcecyPOMf/JUaTbdA4iQ3Y5DbFgB3cOAzehfL7qzSNTd4lFSVy+fNR50ORHEyrezTMno2r3W6D2/797@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyThpaOJ7dfqr7gfQGs/3wrxMs9PxACTKiiNQ9YAPCYGdyyAEt
-	nlhyu153/IFey5tnNlya8ytm3LAd+Xf349KtleTcrAPbLM1be++S4djIGKD77G0Zv/I8LuSEm+a
-	uC3PDGQ==
-X-Google-Smtp-Source: AGHT+IEhdLfsUKZfqxAmSSK/NZ6cCAotywEPb/wMxpYTMH4NdwOB83MvM0a738g3iK2/V7i3Nl+pBDtNm2c=
-X-Received: from pfbkm42.prod.google.com ([2002:a05:6a00:3c6a:b0:736:3e92:66d7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d1f:b0:1f3:3690:bf32
- with SMTP id adf61e73a8af0-216218c644dmr4974759637.18.1747402591371; Fri, 16
- May 2025 06:36:31 -0700 (PDT)
-Date: Fri, 16 May 2025 06:36:30 -0700
-In-Reply-To: <20250324173121.1275209-26-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o9opEJAT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ACEKClsL"
+Date: Fri, 16 May 2025 13:43:58 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747403040;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vnBoKr5uj3m1kFiIwkCWqj0I87Ub0/GDTZtCjUbg5Ig=;
+	b=o9opEJATUWMvLyKcLommtovUUUloBKDSDgdQ4YD3KB61ceWlU+WD52L4mLVclI5N+gQ2E5
+	5Ct+Mkydkp3xfoy5c7WdFM2zy4IBkahjlfhxqMUURTzpv00dOqXEljUKmtQ5d157Lk/vOT
+	qvqgft/rqyUw+Oi/ayWu7a02OlkxD4N4awJXOPXxFuSnZak72USqLPZ3KZewk11WH+q8/n
+	Fr8u/inQkE+Heq1iRxPgdX+t5rCosqyiYUpNv2bOwlKNCWvl6Qf4ytvFWdwOC7VEE+VQ1g
+	McJzCYLJYdDq9ILPZ3tdkCC4ZByrRIT6nA6gulZsXctZAoqkS1RT5/s8QH3SNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747403040;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vnBoKr5uj3m1kFiIwkCWqj0I87Ub0/GDTZtCjUbg5Ig=;
+	b=ACEKClsLOAA5JEnWcuFhXwnjk+5RoWCPeLJ2rGJoPURpZvcquDjxpL5eH4zmEi71+UJilJ
+	OIQJkIUnHn4CySDg==
+From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/amd/core: Fix Family 17h+ instruction
+ cache events
+Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3C2f475a1ba4b240111e69644fc2d5bf93b2e39c99=2E17466?=
+ =?utf-8?q?18724=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+References: =?utf-8?q?=3C2f475a1ba4b240111e69644fc2d5bf93b2e39c99=2E174661?=
+ =?utf-8?q?8724=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-26-mizhang@google.com>
-Message-ID: <aCc_Xh4hSCL4eVV8@google.com>
-Subject: Re: [PATCH v4 25/38] KVM: x86/pmu: Add AMD PMU registers to direct
- access list
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Message-ID: <174740303900.406.5499797802401271693.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> From: Sandipan Das <sandipan.das@amd.com>
-> 
-> Add all PMU-related MSRs (including legacy K7 MSRs) to the list of
-> possible direct access MSRs.  Most of them will not be intercepted when
-> using passthrough PMU.
-> 
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 24 ++++++++++++++++++++++++
->  arch/x86/kvm/svm/svm.h |  2 +-
->  2 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index a713c803a3a3..bff351992468 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -143,6 +143,30 @@ static const struct svm_direct_access_msrs {
->  	{ .index = X2APIC_MSR(APIC_TMICT),		.always = false },
->  	{ .index = X2APIC_MSR(APIC_TMCCT),		.always = false },
->  	{ .index = X2APIC_MSR(APIC_TDCR),		.always = false },
-> +	{ .index = MSR_K7_EVNTSEL0,			.always = false },
+The following commit has been merged into the perf/urgent branch of tip:
 
-These are always intercepted, i.e. don't belong in this list.
+Commit-ID:     ebe176981c14b5f6472718f9894db35816749120
+Gitweb:        https://git.kernel.org/tip/ebe176981c14b5f6472718f9894db35816749120
+Author:        Sandipan Das <sandipan.das@amd.com>
+AuthorDate:    Wed, 07 May 2025 17:42:04 +05:30
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 16 May 2025 15:32:59 +02:00
 
-> +	{ .index = MSR_K7_PERFCTR0,			.always = false },
-> +	{ .index = MSR_K7_EVNTSEL1,			.always = false },
-> +	{ .index = MSR_K7_PERFCTR1,			.always = false },
-> +	{ .index = MSR_K7_EVNTSEL2,			.always = false },
-> +	{ .index = MSR_K7_PERFCTR2,			.always = false },
-> +	{ .index = MSR_K7_EVNTSEL3,			.always = false },
-> +	{ .index = MSR_K7_PERFCTR3,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL0,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR0,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL1,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR1,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL2,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR2,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL3,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR3,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL4,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR4,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL5,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR5,			.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_CTL,	.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_STATUS,	.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,	.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET,	.always = false },
->  	{ .index = MSR_INVALID,				.always = false },
->  };
+perf/x86/amd/core: Fix Family 17h+ instruction cache events
 
-As with the Intel patch, this absolutely belongs in the patch that supports
-disabling intercepts.
+PMCx080 and PMCx081 report incorrect IC accesses and misses respectively
+for all Family 17h and later processors. PMCx060 unit mask 0x10 replaces
+PMCx081 for counting IC misses but there is no suitable replacement for
+counting IC accesses.
 
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 9d7cdb8fbf87..ae71bf5f12d0 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
->  #define	IOPM_SIZE PAGE_SIZE * 3
->  #define	MSRPM_SIZE PAGE_SIZE * 2
->  
-> -#define MAX_DIRECT_ACCESS_MSRS	48
-> +#define MAX_DIRECT_ACCESS_MSRS	72
->  #define MSRPM_OFFSETS	32
->  extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
->  extern bool npt_enabled;
-> -- 
-> 2.49.0.395.g12beb8f557-goog
-> 
+Fixes: 0e3b74e26280 ("perf/x86/amd: Update generic hardware cache events for Family 17h")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-perf-users@vger.kernel.org
+Link: https://lore.kernel.org/r/2f475a1ba4b240111e69644fc2d5bf93b2e39c99.1746618724.git.sandipan.das@amd.com
+---
+ arch/x86/events/amd/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 30d6ceb..52860b9 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -148,8 +148,8 @@ static __initconst const u64 amd_hw_cache_event_ids_f17h
+ },
+ [C(L1I)] = {
+ 	[C(OP_READ)] = {
+-		[C(RESULT_ACCESS)] = 0x0080, /* Instruction cache fetches  */
+-		[C(RESULT_MISS)]   = 0x0081, /* Instruction cache misses   */
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0x1060, /* L2$ access from IC Miss */
+ 	},
+ 	[C(OP_WRITE)] = {
+ 		[C(RESULT_ACCESS)] = -1,
