@@ -1,184 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD45219E0;
-	Fri, 16 May 2025 13:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FB32CCDB
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 13:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402092; cv=none; b=dN76cG4oL7QePs6ezamm5GbR8Q5AMW22FhY0W5KAJ83WjlneVmzj2uZllWP6Gmht2ZkmfcCXikfzJeZXOd4wOzIOgTwLs3Y4eZwRDjqbmMSoPJajdL4vAmapxOwF84xI/lksSYiXw82f9z8FEHIhmU0RqZhqLxSbEPE9NxurfTI=
+	t=1747402415; cv=none; b=pmtLH9M9ZBHoDoF7CFLHHZCFqZDnqNMzVB1Hg0LgMpVLNngRu71e5HmPSvcOJf//EE4BTDBf/dqAczTA5J7gxlVa6YW1sJQNNWiGKdf/zGBq+HphDGZQ/jQ79ccd3zkAORaZPObwsF9/esvfdfRHumM8sq86bLb52UVeVpe5Mm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402092; c=relaxed/simple;
-	bh=G6CMzWauq5+AzogSdJMeQVmUl+TKhUo8l0EXfMlhalY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fp9IKSajqf/jJMTdDjS51wp8vOkP8i6cf6VWoB29KV42Xc4NlIw/0U2qzxSI2JIjpi6D2kiVpSFbmks5vJlBx+mn2kacl5TmBoSa0qY4l37O7SAWIeuWRbOHjKglArUTkmw7dI05ypO8MVYJKtphtOmOCFqREoKRS/fOOGi3qZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k4Vi/6ly; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747402415; c=relaxed/simple;
+	bh=FRhZIy8C0eW0eRV1rO4kuguYk5yijvbkKsK/cWBDRgs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oVSagIPbTQ5e0UIfkcJmnlIVNPask5tSh6KBkh4psQTfXl7ETqpzmCBvHGMwglI0FPwcu1V1WJjtLPz4gCIdiAblDZC94fuLZ/bQ49swlaYR0TC1yJNdAgbRp5WmdgrRvRdDT+n/3f+aK+7hqdpbUQnc9cNckmD5s3mZ9AREngw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FncOLA1C; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k4Vi/6ly"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747402091; x=1778938091;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=G6CMzWauq5+AzogSdJMeQVmUl+TKhUo8l0EXfMlhalY=;
-  b=k4Vi/6ly2k1Qql8LVHzqqFZa7oLbWZhOm2GrOlxe4ap6nJ+oQN2B0yjU
-   b4tQRR2nzn7EgQyjv1phMM56PN9RKJSsIMC4R31H68RgnWlmhbD0iC/qi
-   6hxHRYP+5I/ODYNH+/QStyO+qHp0DNKBDCmkyJTtw7AY43vdMhoP1hjuF
-   uKq+QaGj46VNDjzdRbnqrb/Y9jyhujSoJYl/xsn9GW7GM8ay9T1wQPKOj
-   JL0Od3oUTYJPlMkcMOdVVrL/O/vFjHh39/QuSNL7+WY9a7nu8Dsl0SZQl
-   T8Rj9cKh4Gzc7xDzdzTfJKsHT1bRQUn/4XVb4kxCgEsAwA/ae7FO4eLTd
-   g==;
-X-CSE-ConnectionGUID: pNqcDumXRTK+8L4iBLs+Vg==
-X-CSE-MsgGUID: jRrlq64rTIuvogVR9UcIig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53045832"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="53045832"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:28:10 -0700
-X-CSE-ConnectionGUID: NkgiRhwHQbiqQX9YY7ptUw==
-X-CSE-MsgGUID: GxJFaurSSN+30mOuiqx8eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="143936128"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:28:10 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CBC5220B5736;
-	Fri, 16 May 2025 06:28:08 -0700 (PDT)
-Message-ID: <b0d1b369-3d1a-47a5-befe-9c723ed5bb79@linux.intel.com>
-Date: Fri, 16 May 2025 09:28:07 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FncOLA1C"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e3b59e46eso37967835ad.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 06:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747402413; x=1748007213; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KDGUVX2RwhNLT5NPXxVSV0DdRBsVZS86wObxxPPsbk8=;
+        b=FncOLA1Ci+PPI8KkrI4MVo2B1SzWYk4GQH5SBxaCnhOV/Jl/JikxORZrdmn2KLl4Is
+         NHiOJZpi8akdmXOxXG8zUf7mTNTwnCkeGFriZydIOEBn3kj2HVXzSy9QTK40ncVXowFE
+         hq6mqs9bLx7MUMhxtmYyL/yFJluuI+E5fKnmF3rko5LP0+YrpD5IdCTqZJm+QlTxpTrq
+         qnwdLZC3uiMvzA0aL4sdWrrHYkp0RapQ2oHxAUL/66ZGPBmT926BSPZ/EtkiiBnS7aTA
+         1KIRlIkmZq9pys74X/vdh6H3wQLV6zZ0MTx44IIBTkbn++g2pmPIXk2tMA/5I0rNwGoI
+         Y4bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747402413; x=1748007213;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KDGUVX2RwhNLT5NPXxVSV0DdRBsVZS86wObxxPPsbk8=;
+        b=KxQv2C2l/JxiKekE0lQhMvMG4M+hwZN6w/geG3bi63/8VZSHj/uL2H1qldEzOACvn8
+         y0heHIWOeRCm+gqXeoRIIiObKeETlX0W0JR9k7whU4EfUkW7L9ZN6v5rg8nylA9Z/d/5
+         kgVga+sdqz2V21Vl/+I3GClQ904W/X47BC9DFVZUu2BhoJ4xyLW21cV5B4UAthgX3I7k
+         l1Gx9NU8drj4e4nGf6ODFP0fQKBO6A4O40PpxctWDV7kemZH3ebht8JAHVm5pxbfYa5h
+         /Eb1/p/0s42ds3llTMEmSnUJUN+Y90/zYHe88PxaUsexzuedmT+37pzxVbPuuBlQU9Xn
+         iysA==
+X-Forwarded-Encrypted: i=1; AJvYcCWW1G2UIESv4crj0a6suXUM9KcOrZA1uO9DLsRbzlRij5v6vJxwAzOP8LTojvwE7jdtMvR6mSAb0PYCmpesNKaX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0Pi1juZynxTjqpp5fS+q28RfwYJV2yQmZ/U6Hx7H4sjmW74Qa
+	LLkaHYS5PFBNvs5ty7QrJl5EW+FfJ1XjZn/J6IP6EHOW0LP0tIxleXA6KWEXSTWSJ5QOLor/p0h
+	kVqbuBw==
+X-Google-Smtp-Source: AGHT+IGqXXBKxkrM7eRDYiPnM7bRnqmiBwCU1lHICfCxR4zzeniMzTPy5RM6XoGiiUxm0AtX4CbnBEq/OEA=
+X-Received: from plgm8.prod.google.com ([2002:a17:902:f648:b0:223:f7b1:99cc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c949:b0:224:5a8:ba29
+ with SMTP id d9443c01a7336-231de3ba251mr35699265ad.43.1747402413061; Fri, 16
+ May 2025 06:33:33 -0700 (PDT)
+Date: Fri, 16 May 2025 06:33:31 -0700
+In-Reply-To: <20250324173121.1275209-33-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 01/15] perf: Fix the throttle logic for a group
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com
-References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
- <20250514151401.2547932-2-kan.liang@linux.intel.com>
- <20250515094300.GC412060@e132581.arm.com>
- <4a44b8cb-7c73-4926-8b9f-1f63929ea48f@linux.intel.com>
- <20250516125146.GE412060@e132581.arm.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250516125146.GE412060@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-33-mizhang@google.com>
+Message-ID: <aCc-q_udsn8o1vBT@google.com>
+Subject: Re: [PATCH v4 32/38] KVM: nVMX: Add nested virtualization support for
+ mediated PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
+This shortlog is unnecessarily confusing.  It reads as if supported for running
+L2 in a vCPU with a mediated PMU is somehow lacking.
 
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> Add nested virtualization support for mediated PMU by combining the MSR
+> interception bitmaps of vmcs01 and vmcs12.
 
-On 2025-05-16 8:51 a.m., Leo Yan wrote:
-> On Thu, May 15, 2025 at 08:55:05AM -0400, Liang, Kan wrote:
+Do not phrase changelogs related to nested virtualization in terms of enabling a
+_KVM_ feature.  KVM has no control over what hypervisor runs in L1.  It's a-ok to
+provide example use cases, but they need to be just that, examples.
+
+> Readers may argue even without this patch, nested virtualization works for
+> mediated PMU because L1 will see Perfmon v2 and will have to use legacy vPMU
+> implementation if it is Linux. However, any assumption made on L1 may be
+> invalid, e.g., L1 may not even be Linux.
 > 
-> [...]
+> If both L0 and L1 pass through PMU MSRs, the correct behavior is to allow
+> MSR access from L2 directly touch HW MSRs, since both L0 and L1 passthrough
+> the access.
 > 
->>>> +static void perf_event_unthrottle_group(struct perf_event *event, bool start)
->>>> +{
->>>> +	struct perf_event *sibling, *leader = event->group_leader;
->>>> +
->>>> +	perf_event_unthrottle(leader, leader != event || start);
->>>> +	for_each_sibling_event(sibling, leader)
->>>> +		perf_event_unthrottle(sibling, sibling != event || start);
->>>
->>> Seems to me that the condition "leader != event || start" is bit tricky
->>> (similarly for the check "sibling != event || start").
->>>
->>> If a session sets the frequency (with option -F in perf tool), the
->>> following flow is triggered:
->>>
->>>   perf_adjust_freq_unthr_events()
->>>     `> perf_event_unthrottle_group(event, false);
->>>
->>> The argument "start" is false, so all sibling events will be enabled,
->>> but the event pointed by the "event" argument remains disabled.  
->>
->> Right. Because the following code will adjust the period of the event
->> and start it.
->> The PMU is disabled at the moment. There is no difference in starting
->> the leader first or the member first.
+> However, in current implementation, if without adding anything for nested,
+> KVM always set MSR interception bits in vmcs02. This leads to the fact that
+> L0 will emulate all MSR read/writes for L2, leading to errors, since the
+> current mediated vPMU never implements set_msr() and get_msr() for any
+> counter access except counter accesses from the VMM side.
 > 
-> Thanks for explaination. In the case above, as you said, all events will
-> be enabled either in perf_event_unthrottle_group() or in
-> perf_adjust_freq_unthr_events() with a recalculated period.
+> So fix the issue by setting up the correct MSR interception for PMU MSRs.
+
+This is not a fix.  
+
+    KVM: nVMX: Disable PMU MSR interception as appropriate while running L2
+    
+    Merge KVM's PMU MSR interception bitmaps with those of L1, i.e. merge the
+    bitmaps of vmcs01 and vmcs12, e.g. so that KVM doesn't interpose on MSR
+    accesses unnecessarily if L1 exposes a mediated PMU (or equivalent) to L2.
+
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 > 
-> Just a minor suggestion. Seems to me, the parameter "start" actually
-> means "only_enable_sibling". For more readable, the function can be
-> refine as:
-> 
-> static void perf_event_unthrottle_group(struct perf_event *event,
->                                         bool only_enable_sibling)
-> {
-> 	struct perf_event *sibling, *leader = event->group_leader;
-> 
-> 	perf_event_unthrottle(leader,
->                 only_enable_sibling ? leader != event : true);
->         ...
-> }
-> 
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index cf557acf91f8..dbec40cb55bc 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -626,6 +626,36 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
+>  #define nested_vmx_merge_msr_bitmaps_rw(msr) \
+>  	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_RW)
+>  
+> +/*
+> + * Disable PMU MSRs interception for nested VM if L0 and L1 are
+> + * both mediated vPMU.
+> + */
 
-It should work for the perf_adjust_freq_unthr_events(), which only start
-the leader. But it's possible that the __perf_event_period() update a
-sibling, not leader.
+Again, KVM has no idea what is running in L1.  Drop this.
 
-I think I can check the name to bool event_has_start.
-Is the name OK?
+> +static void nested_vmx_merge_pmu_msr_bitmaps(struct kvm_vcpu *vcpu,
+> +					     unsigned long *msr_bitmap_l1,
+> +					     unsigned long *msr_bitmap_l0)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> +	int i;
+> +
+> +	if (!kvm_mediated_pmu_enabled(vcpu))
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a270fcda766d..b1cb07fa9c18 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2749,13 +2749,13 @@ static void perf_event_throttle(struct
-perf_event *event)
- 	perf_log_throttle(event, 0);
- }
+This is a worthwhile check, but a comment would be helpful:
 
--static void perf_event_unthrottle_group(struct perf_event *event, bool
-start)
-+static void perf_event_unthrottle_group(struct perf_event *event, bool
-event_has_start)
- {
- 	struct perf_event *sibling, *leader = event->group_leader;
+	/*
+	 * Skip the merges if the vCPU doesn't have a mediated PMU MSR, i.e. if
+	 * none of the MSRs can possibly be passed through to L1.
+	 */
+	if (!kvm_vcpu_has_mediated_pmu(vcpu))
+		return;
 
--	perf_event_unthrottle(leader, leader != event || start);
-+	perf_event_unthrottle(leader, event_has_start ? leader != event : true);
- 	for_each_sibling_event(sibling, leader)
--		perf_event_unthrottle(sibling, sibling != event || start);
-+		perf_event_unthrottle(sibling, event_has_start ? sibling != event :
-true);
- }
+> +		return;
+> +
+> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
+> +		nested_vmx_merge_msr_bitmaps_rw(MSR_ARCH_PERFMON_EVENTSEL0 + i);
 
- static void perf_event_throttle_group(struct perf_event *event)
-@@ -4423,7 +4423,7 @@ static void perf_adjust_freq_unthr_events(struct
-list_head *event_list)
+This is unnecessary, KVM always intercepts event selectors.
 
- 		if (hwc->interrupts == MAX_INTERRUPTS) {
- 			perf_event_unthrottle_group(event,
--				!event->attr.freq || !event->attr.sample_freq);
-+				(event->attr.freq && event->attr.sample_freq));
- 		}
+> +		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PERFCTR0 + i);
+> +		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PMC0 + i);
+> +	}
+> +
+> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
+> +		nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR0 + i);
+> +
+> +	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR_CTRL);
 
- 		if (!event->attr.freq || !event->attr.sample_freq)
-@@ -6466,7 +6466,7 @@ static void __perf_event_period(struct perf_event
-*event,
- 		 * while we already re-started the event/group.
- 		 */
- 		if (event->hw.interrupts == MAX_INTERRUPTS)
--			perf_event_unthrottle_group(event, false);
-+			perf_event_unthrottle_group(event, true);
- 		perf_pmu_enable(event->pmu);
- 	}
- }
+Same thing here.
 
-Thanks,
-Kan
-
+> +	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_GLOBAL_CTRL);
+> +	nested_vmx_merge_msr_bitmaps_read(MSR_CORE_PERF_GLOBAL_STATUS);
+> +	nested_vmx_merge_msr_bitmaps_write(MSR_CORE_PERF_GLOBAL_OVF_CTRL);
+> +}
