@@ -1,50 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3272110E5;
-	Fri, 16 May 2025 02:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6611FAA;
+	Fri, 16 May 2025 05:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747363058; cv=none; b=dYwIWVL+x0fqO5uo9/3ZTW2oRuvo9xAKOqe+fgan/0jzgtFLfbx8Iay7xtHWHmJPtethg/QcjetjBZzitdRgDohCeQDbj+3FQ5FHTqAUje4a6jbYKRLkaTZjmJTTn5uM94WMdZumjB7rmmLF3S6z147bRO7i8dc/A4aViESihUQ=
+	t=1747372188; cv=none; b=BeDmQRFioWxZMyccGtTCJvYxyCpKIpOh4pAImr8nUwbZccF3f8UgvJQrYR+y2pOA6rbFFU17Ze2s8v/biny/K2WPoAaeOyXhU9Wq8uHgsZYBInlO0IQM6vAcQXCArcYP9goYxRv4a2004HKOTcVpvi8xaA4zGWC3x/OoY3MC418=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747363058; c=relaxed/simple;
-	bh=Q6ZDWA9yvz8aRWhSDSs2GRbngR5LSltaq/6JtHPTBuI=;
+	s=arc-20240116; t=1747372188; c=relaxed/simple;
+	bh=zkXf08t1kOFSPVt7zYYAWpnNk1dzmcrSRaAqQW/Bc78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z6UP+yItXzdunI1LbPJJPyDMRmokuK1+RAjR2WQoZraLO3/shPypax7mIr1iX2d6056VUD3B+w2eEMH5CDyTdPTKdQWdyaTw9muHZyvawgf3ClxhApCrUsDTsXur05T82DmGGfl+Iu5VPB5sZX1C4HIceTswefduoF4KKfkKFdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZhpQ4jY9; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=c5FnJ/19wIQO0LbbRYHzAq5yaR1koev/WeIGgJGx8wK/ODcGJ/9z0dVh8MmIcnIjEV7VAEsvY3tCisk5oKoFTg+h92QTYRfUUvtXadgvFWhNC89tYYN2HrBbqhzwsSoqwKRK7jAgyhuVMMXqYmRHaZJCjXitqj4sJqpJ6EKCWk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jsB7cFUa; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZhpQ4jY9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747363056; x=1778899056;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Q6ZDWA9yvz8aRWhSDSs2GRbngR5LSltaq/6JtHPTBuI=;
-  b=ZhpQ4jY95qzjxIf2xTdFhFpAtfX+XMQ1S97Hxf+HxrSNdwKjqs+OWYKf
-   Gt+PG73wZYp30O8GesbR20U+lNqK02cU30PeBUu8U8dSPHrXLPqqSLZxB
-   sn84cXI66eYtif75iedicZzFXEaK6ysQI5pChGzAskfopzFgwwVK/1+XR
-   tuk/SId4dVlB2v/CLW4YADh9FUYNADO3yMyaz02jfdPemzt/cHUm/Yphw
-   4Q7oCtQUb78IdtDB/bqkOIR4Y7Md86Jlwie23lBOVUnBXaXFxll0yh02x
-   Vl1L9JMEA5PbSQqe0SfjSj8tb40U927MbXul1g2/8LNY1Y6qFCjio2S7J
-   g==;
-X-CSE-ConnectionGUID: QkBxejomSJGloJcsvD4q2g==
-X-CSE-MsgGUID: uPGp2l7JTxagnWSsRXxAdg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="48577739"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="48577739"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 19:37:35 -0700
-X-CSE-ConnectionGUID: 6SXgd0j3Q0Sm/OF03Q0egw==
-X-CSE-MsgGUID: Q9Nmp0fVRsOZ/bcp9TOhcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="169492757"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 19:37:29 -0700
-Message-ID: <60c594d0-d048-485b-83b9-a3b81b12c5a7@linux.intel.com>
-Date: Fri, 16 May 2025 10:37:27 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jsB7cFUa"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FMiCZP004723;
+	Fri, 16 May 2025 05:09:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=RmZYoy
+	yHVUW6jfArWFGMz/n6QUl176kVFb/Wptu38dM=; b=jsB7cFUa5wpTx//HNObOUD
+	DK/y3eTacMoDtxnwlNr3P/CLmRkMLa/zPdkbZTflsXR+/yJG7Gi4LQ5CalVRLP8U
+	Uo6/Srv/sUFV11MgIYLPaIBcrfm4TWwaYNppP8Ztan2En4zO7u0fBXJn7+fLTFcE
+	X61V3mAPuHPfTX02XxDHpyWHCD10LDpnb6vuHgOUJLmcSyYF9HYZ8XsLMZvuV6Xo
+	D8VM0AV1hGlFi5jO14JFs00GF20Iosw563jstyefuQvDcLL0ymfScPONNzD0xDMN
+	HRzGCYlcPkvPzkK0r7qJfmPai65bEZBqx/iF9PWhrA0ZI0LxTqYeiqngMp3LgfhQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46navu5s6e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 05:09:41 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54G59feA004187;
+	Fri, 16 May 2025 05:09:41 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46navu5s6d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 05:09:40 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54G21KHs026912;
+	Fri, 16 May 2025 05:09:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpnw3f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 05:09:39 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54G59aM651577266
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 05:09:36 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 275B0200CE;
+	Fri, 16 May 2025 05:09:36 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB87B200C9;
+	Fri, 16 May 2025 05:09:35 +0000 (GMT)
+Received: from [9.111.28.47] (unknown [9.111.28.47])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 16 May 2025 05:09:35 +0000 (GMT)
+Message-ID: <c7b9977e-1088-40a5-8f34-26b1705338b8@linux.ibm.com>
+Date: Fri, 16 May 2025 07:09:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,276 +69,113 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 29/38] KVM: x86/pmu: Switch host/guest PMU context at
- vm-exit/vm-entry
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-30-mizhang@google.com> <aCYWXXpFcx33uVPi@google.com>
+Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, irogers@google.com
+References: <20250430140611.599078-1-tmricht@linux.ibm.com>
+ <aBT0a5lGzUSLpWpX@x1>
+ <CAJpZYjWW07J8J40ygx6-5q_rfKEoz2g0VYCC=Go3PM2pBKvDRw@mail.gmail.com>
+ <aBUY-zaI6BxRvWWS@x1> <aCYOEwgBLWyK7g3q@x1>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCYWXXpFcx33uVPi@google.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <aCYOEwgBLWyK7g3q@x1>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: u_eN1CZa1-GBxIwcmFFeDLeEdZRr1QkI
+X-Authority-Analysis: v=2.4 cv=XK4wSRhE c=1 sm=1 tr=0 ts=6826c895 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=QIhr-27iAAAA:8 a=QwvT5auMhl7adgpLMvwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cgaYBWEFosGJW4rWv5Lf:22
+X-Proofpoint-GUID: XxPIFgka_fgjBt9SJ9vHynb9-dqfsM7C
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA0NiBTYWx0ZWRfX0mJlNobBfZ8P YWQwqGOZkJ/kq5V8iVPzuPLJ5N/CnQcm9MrE89XYw16tslPIhSo1aUMw6Y3gBDzA0O39YzhMbFP cKESdiHv8z7/41cpIrIfVqUGOu7V4wvwCPk1mu/bcOs58He4Dw1lN/Iz+b6UgPsfi1c+UBLCMuV
+ e6h+pR2XOCj9SbPQMASMq8NdNBU4i9XOFaamid3f+ZjEAlbk+VJPw+VqS7fWJH/p0UwGTte53lB KSg9wlBU/PG1qczvEpcLKyVvSlJdiAOt0dPybXu61q3SCwbW/R6fDf03NqKzGsn6Hegv/mwq9AL WJHobehP+rI7y3Lst3ol40XCjFYLs8nC65fRba+aU4ZEJG/yaYB1+Wse6BiDsXnAzenQtU1axI7
+ /u24W42R9Nzj700lU0C3EkY54ct6ZZKZmA8l3CviUfIoIj24P1xW15VRz6mvJbf1FUA1jbQA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_02,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=961 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 adultscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160046
 
+On 5/15/25 17:53, Arnaldo Carvalho de Melo wrote:
+> On Fri, May 02, 2025 at 04:11:55PM -0300, Arnaldo Carvalho de Melo wrote:
+>> On Fri, May 02, 2025 at 11:21:07AM -0700, Chun-Tse Shao wrote:
+>>> Hi Arnaldo,
+>>>
+>>> I submitted the patch v1 and Thomas helped me to modify and submit v2
+>>> and v3 while I was OOO. In this case I am not sure which one should be
+>>> the author, maybe just keep it as Thomas.
+>>
+>> >From the tags provided, I think it would be best to list you as the
+>> author and Thomas a a Co-developer, like mentioned in:
+>>
+>> Documentation/process/submitting-patches.rst
+>>
+>> Co-developed-by: states that the patch was co-created by multiple developers;
+>> it is used to give attribution to co-authors (in addition to the author
+>> attributed by the From: tag) when several people work on a single patch.  Since
+>> Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
+>> followed by a Signed-off-by: of the associated co-author.  Standard sign-off
+>> procedure applies, i.e. the ordering of Signed-off-by: tags should reflect the
+>> chronological history of the patch insofar as possible, regardless of whether
+>> the author is attributed via From: or Co-developed-by:.  Notably, the last
+>> Signed-off-by: must always be that of the developer submitting the patch.
+>>
+>> Note, the From: tag is optional when the From: author is also the person (and
+>> email) listed in the From: line of the email header.
+>>
+>> Example of a patch submitted by the From: author::
+>>
+>>         <changelog>
+>>
+>>         Co-developed-by: First Co-Author <first@coauthor.example.org>
+>>         Signed-off-by: First Co-Author <first@coauthor.example.org>
+>>         Co-developed-by: Second Co-Author <second@coauthor.example.org>
+>>         Signed-off-by: Second Co-Author <second@coauthor.example.org>
+>>         Signed-off-by: From Author <from@author.example.org>
+>>
+>> Example of a patch submitted by a Co-developed-by: author::
+>>
+>>         From: From Author <from@author.example.org>
+>>
+>>         <changelog>
+>>
+>>         Co-developed-by: Random Co-Author <random@coauthor.example.org>
+>>         Signed-off-by: Random Co-Author <random@coauthor.example.org>
+>>         Signed-off-by: From Author <from@author.example.org>
+>>         Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
+>>         Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
+> 
+> I was expecting some reaction from you or Thomas, but since I got a ping
+> from Thomas for this not being processed, I'll process it according to
+> my assessment of this thread.
+> 
+> Thanks,
+> 
+> - Arnaldo
+> 
+> 
 
-On 5/16/2025 12:29 AM, Sean Christopherson wrote:
-> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
->> index 9159bf1a4730..35f27366c277 100644
->> --- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
->> +++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
->> @@ -22,6 +22,8 @@ KVM_X86_PMU_OP(init)
->>  KVM_X86_PMU_OP_OPTIONAL(reset)
->>  KVM_X86_PMU_OP_OPTIONAL(deliver_pmi)
->>  KVM_X86_PMU_OP_OPTIONAL(cleanup)
->> +KVM_X86_PMU_OP(put_guest_context)
->> +KVM_X86_PMU_OP(load_guest_context)
-> For KVM, the "guest_context" part is largely superfluous, as KVM always operates
-> on guest state, e.g. kvm_fpu_{load,put}().
->
-> I do think we should squeeze in "mediated" somewhere, otherwise the it's hard to
-> see that these are specific to the mediated PMU.
->
-> So probably mediated_{load,put}()?
+Thanks Arnaldo,
 
-After moving all PMC's manipulation into kvm common code, these two helper
-actually only manipulates global shared MSRs right now, not sure if add
-extra "global" word to the ops name which makes the name more descriptive.
-But considering we may add more other MSRs like PEBS MSRs in these 2
-helpers, I'm ok for mediated_{load,put}.
+sorry, but I was not aware that you were waiting for feedback from us.
+I am fine with your assessment, I actually care more about the patch
+being picked...
 
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
->
->>  #undef KVM_X86_PMU_OP
->>  #undef KVM_X86_PMU_OP_OPTIONAL
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index 7ee74bbbb0aa..4117a382739a 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -568,6 +568,10 @@ struct kvm_pmu {
->>  	u64 raw_event_mask;
->>  	struct kvm_pmc gp_counters[KVM_MAX_NR_GP_COUNTERS];
->>  	struct kvm_pmc fixed_counters[KVM_MAX_NR_FIXED_COUNTERS];
->> +	u32 gp_eventsel_base;
->> +	u32 gp_counter_base;
->> +	u32 fixed_base;
->> +	u32 cntr_shift;
-> Gah, my bad, "shift" was a terrible suggestion.  It should be "stride".
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
-Yes.
+Geschäftsführung: David Faller
 
-
->
->> @@ -306,6 +313,10 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
->>  int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
->>  void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel);
->>  bool vcpu_pmu_can_enable(struct kvm_vcpu *vcpu);
->> +void kvm_pmu_put_guest_pmcs(struct kvm_vcpu *vcpu);
->> +void kvm_pmu_load_guest_pmcs(struct kvm_vcpu *vcpu);
->> +void kvm_pmu_put_guest_context(struct kvm_vcpu *vcpu);
->> +void kvm_pmu_load_guest_context(struct kvm_vcpu *vcpu);
->>  
->>  bool is_vmware_backdoor_pmc(u32 pmc_idx);
->>  bool kvm_rdpmc_in_guest(struct kvm_vcpu *vcpu);
->> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
->> index 1a7e3a897fdf..7e0d84d50b74 100644
->> --- a/arch/x86/kvm/svm/pmu.c
->> +++ b/arch/x86/kvm/svm/pmu.c
->> @@ -175,6 +175,22 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>  	return 1;
->>  }
->>  
->> +static inline void amd_update_msr_base(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +
->> +	if (kvm_pmu_has_perf_global_ctrl(pmu) ||
->> +	    guest_cpu_cap_has(vcpu, X86_FEATURE_PERFCTR_CORE)) {
->> +		pmu->gp_eventsel_base = MSR_F15H_PERF_CTL0;
->> +		pmu->gp_counter_base = MSR_F15H_PERF_CTR0;
->> +		pmu->cntr_shift = 2;
->> +	} else {
->> +		pmu->gp_eventsel_base = MSR_K7_EVNTSEL0;
->> +		pmu->gp_counter_base = MSR_K7_PERFCTR0;
->> +		pmu->cntr_shift = 1;
->> +	}
->> +}
-> Moving quoted text around to organize responses...
->
->> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->> index 796b7bc4affe..ed17ab198dfb 100644
->> --- a/arch/x86/kvm/vmx/pmu_intel.c
->> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->> @@ -460,6 +460,17 @@ static void intel_pmu_enable_fixed_counter_bits(struct kvm_pmu *pmu, u64 bits)
->>  		pmu->fixed_ctr_ctrl_rsvd &= ~intel_fixed_bits_by_idx(i, bits);
->>  }
->>  
->> +static inline void intel_update_msr_base(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +
->> +	pmu->gp_eventsel_base = MSR_P6_EVNTSEL0;
->> +	pmu->gp_counter_base = fw_writes_is_enabled(vcpu) ?
->> +			       MSR_IA32_PMC0 : MSR_IA32_PERFCTR0;
-> This is wrong.  And I unintentionally proved that it's wrong, by goofing when I
-> fixed up this code and using MSR_IA32_PERFCTR0 instead of MSR_IA32_PMC0.
->
-> Whether or not the guest supports full-width writes is irrelevant, because support
-> for FW writes doesn't change the width of the counters.  Just because the *guest* 
-> can't directly write all e.g. 48 bits doesn't mean clobbering bits 47:32 is ok.
->
-> Similarly, on the AMD side, using the legacy interface in KVM is unnecessary.
-> The guest may be limited to those MSRs, but KVM has a hard dependency on PMU v2,
-> so just unconditionally use MSR_F15H_PERF_CTR0 (and for the record, because I
-> had to look it up, the newfangled MSRs on AMD are aliased to the legacy MSRs for
-> 0..3).
->
-> Very happily, that means the MSRs don't need to be per-PMU, and they don't even
-> need to be configured at runtime for a given vendor.  Simply require FW writes
-> on Intel to enable the mediated PMU, and then hardcode the GP base to MSR_IA32_PMC0.
-
-Since mediated vPMU requires the HW PMU version is 4 at least, so I think
-it's safe to set GP base to MSR_IA32_PMC0.
-
-
->
->> +static void amd_put_guest_context(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +
->> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
->> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
->> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, pmu->global_status);
->> +
->> +	/* Clear global status bits if non-zero */
->> +	if (pmu->global_status)
->> +		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, pmu->global_status);
->> +
->> +	kvm_pmu_put_guest_pmcs(vcpu);
->> +}
->> +
->> +static void amd_load_guest_context(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +	u64 global_status;
->> +
->> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
-> Back when I suggested we give up on trying to handle PMCs and eventsels in common
-> x86, this WRMSR didn't exist.  Now that it does, I don't see anything that prevents
-> invoking kvm_pmu_{load,put}_guest_pmcs() from common x86, KVM just needs to clear
-> GLOBAL_CTRL before setting eventsels and PMCs.
->
-> For the load path:
->
-> 	/*
-> 	 * Disable all counters before loading event selectors and PMCs so that
-> 	 * KVM doesn't enable or load guest counters while host events are
-> 	 * active.  VMX will enable/disabled counters at VM-Enter/VM-Exit by
-> 	 * atomically loading PERF_GLOBAL_CONTROL.  SVM effectively performs
-> 	 * the switch by configuring all events to be GUEST_ONLY.
-> 	 */
-> 	wrmsrl(kvm_pmu_ops.PERF_GLOBAL_CTRL, 0);
->
-> 	kvm_pmu_load_guest_pmcs(vcpu);
->
-> 	kvm_pmu_call(mediated_load)(vcpu);
->
-> And for the put path, just reverse the ordering:
->
-> 	/*
-> 	 * Defer handling of PERF_GLOBAL_CTRL to vendor code.  On Intel, it's
-> 	 * atomically cleared on VM-Exit, i.e. doesn't need to be clear here.
-> 	 */
-> 	kvm_pmu_call(mediated_put)(vcpu);
->
-> 	kvm_pmu_put_guest_pmcs(vcpu);
->
-> 	perf_put_guest_context();
->
-> On Intel, PERF_GLOBAL_CTRL is cleared on VM-Exit, and on AMD, the vendor hook
-> will clear it.  The fact that vendor code sets other MSRs is irrelevant, what
-> matters is that all counters are quieseced.
->
-> I think it's still worth having helpers, but they can be static locals.
-
-Agree.
-
-
->
->> +
->> +	kvm_pmu_load_guest_pmcs(vcpu);
->> +
->> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, global_status);
->> +	/* Clear host global_status MSR if non-zero. */
->> +	if (global_status)
->> +		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, global_status);
->> +
->> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET, pmu->global_status);
->> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
->> +}
->> +
->>  static void intel_pmu_update_msr_intercepts(struct kvm_vcpu *vcpu)
->> @@ -809,6 +822,50 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
->>  	}
->>  }
->>  
->> +static void intel_put_guest_context(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +
->> +	/* Global ctrl register is already saved at VM-exit. */
->> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
->> +
->> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
->> +	if (pmu->global_status)
->> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
->> +
->> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
->> +
->> +	/*
->> +	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
->> +	 * also avoid these guest fixed counters get accidentially enabled
->> +	 * during host running when host enable global ctrl.
->> +	 */
->> +	if (pmu->fixed_ctr_ctrl_hw)
->> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
->> +
->> +	kvm_pmu_put_guest_pmcs(vcpu);
->> +}
->> +
->> +static void intel_load_guest_context(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->> +	u64 global_status, toggle;
->> +
->> +	/* Clear host global_ctrl MSR if non-zero. */
->> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
->> +
->> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
->> +	toggle = pmu->global_status ^ global_status;
->> +	if (global_status & toggle)
->> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
->> +	if (pmu->global_status & toggle)
->> +		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
->> +
->> +	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
->> +
->> +	kvm_pmu_load_guest_pmcs(vcpu);
->> +}
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
