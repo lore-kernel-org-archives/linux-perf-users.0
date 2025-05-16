@@ -1,111 +1,147 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5EF76410;
-	Fri, 16 May 2025 13:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E2F188734;
+	Fri, 16 May 2025 14:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403044; cv=none; b=pxzIOTkQYu3H4c2Sbl69pSAag16Zd1QPLIzOsMarsaql+2YPNa7kzcATGgvgkDH1egK0A1Jf7rlR4wLakgKjM5fXJmjWXLeZsWbR0+iYAcc4nGjDLRBD7lwBGrAEdRBhOM3bikYMugrY47owLWyfkD9Mo8DIcrw+0Khb/0L7rqQ=
+	t=1747404004; cv=none; b=YP9rkWUw+fkR+O1xx2pN34oX4MOdfNYdeu9AUy4SuNVwP+ksLCFj9iBlgmnJk6yzmSPp2OJvISYsFMFjRkDwAMK5xeBPi9VImXR4oBmBHssZI/PT4g5qWcUsu5rUq0/x8XFfUXvUAqqPOVZe1aaGZJCuVTSPsTH4pFDCIhysIlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403044; c=relaxed/simple;
-	bh=LGjIHSIG+XagOZzQXytTkKRnm7d4FWeI4xnR8vvYEfU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QQw6XFrRUKIVrAV5vWCGYfNr5uuMqyrua5/WVZbfRll/y33fjAI7Wo8hHb5ZyvB4oHBo5J467rZASS8ykmvmvySYt87gCnZrPc9/2V8WmZykws79axas04xEFWjgtz/0WKgbltIHmc8vImx7gsBWp8LIIpXwubGBzULUHFqGSjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o9opEJAT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ACEKClsL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747404004; c=relaxed/simple;
+	bh=BvTzr413V6VBxtMA82ZSx+N0EIx/GNeVC6zTvua2xLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbOniCPSXClYuGmPRtNMgcytDvId7SkjLiTX3EqGQFvCP8WXFGl4eZMZynK5l+y+4AbU3VPakdo2XpwCk0UY5Lu+fTdZ85wBxeEBvakXBdVGZMPQptfF78IlCoPNqx+SNDr0Lfiry6rIydSaPYbonERkuDH1BboOmx5dBlRWPY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZFYVSq7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o9opEJAT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ACEKClsL"
-Date: Fri, 16 May 2025 13:43:58 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747403040;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vnBoKr5uj3m1kFiIwkCWqj0I87Ub0/GDTZtCjUbg5Ig=;
-	b=o9opEJATUWMvLyKcLommtovUUUloBKDSDgdQ4YD3KB61ceWlU+WD52L4mLVclI5N+gQ2E5
-	5Ct+Mkydkp3xfoy5c7WdFM2zy4IBkahjlfhxqMUURTzpv00dOqXEljUKmtQ5d157Lk/vOT
-	qvqgft/rqyUw+Oi/ayWu7a02OlkxD4N4awJXOPXxFuSnZak72USqLPZ3KZewk11WH+q8/n
-	Fr8u/inQkE+Heq1iRxPgdX+t5rCosqyiYUpNv2bOwlKNCWvl6Qf4ytvFWdwOC7VEE+VQ1g
-	McJzCYLJYdDq9ILPZ3tdkCC4ZByrRIT6nA6gulZsXctZAoqkS1RT5/s8QH3SNg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747403040;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vnBoKr5uj3m1kFiIwkCWqj0I87Ub0/GDTZtCjUbg5Ig=;
-	b=ACEKClsLOAA5JEnWcuFhXwnjk+5RoWCPeLJ2rGJoPURpZvcquDjxpL5eH4zmEi71+UJilJ
-	OIQJkIUnHn4CySDg==
-From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/amd/core: Fix Family 17h+ instruction
- cache events
-Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C2f475a1ba4b240111e69644fc2d5bf93b2e39c99=2E17466?=
- =?utf-8?q?18724=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3C2f475a1ba4b240111e69644fc2d5bf93b2e39c99=2E174661?=
- =?utf-8?q?8724=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZFYVSq7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BD9C4CEED;
+	Fri, 16 May 2025 14:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747404003;
+	bh=BvTzr413V6VBxtMA82ZSx+N0EIx/GNeVC6zTvua2xLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JZFYVSq7ATDSktvpGBHE8mAJThrw46Bb0fWjBMvnv19GsxTp4CmFa3YWRguMsxOe2
+	 TCFXekBFpJu5UFtvW8g7RPiH4g978YWFGzyfn9qW4krrzD80MD/XvWcHaEmzQPXkmU
+	 J9n+bbp2S1l/fp4yfEGwruHU5FwpTGJUjm5ROVn91XPIm9lfzeHs09jRLYZry1ktUJ
+	 70KmoBr+CYjrBvduMkEA7ty3mCJvr8oFhog02M+XFNm2s2biQc4ZOcCbqwbR4apbYD
+	 7kZnMbhBWfYY+lOOwWLW+DxB3W2lJnkOGb6Hn9ATVh6Zkpg0qeQXLD9yecVu3SR5hH
+	 P1ZOgr9cdp0Fw==
+Date: Fri, 16 May 2025 14:59:59 +0100
+From: Will Deacon <will@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/ptrace: Make user_hwdebug_state.dbg_regs[] array
+ size as ARM_MAX_BRP
+Message-ID: <20250516135958.GA13612@willie-the-truck>
+References: <20250421055212.123774-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174740303900.406.5499797802401271693.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421055212.123774-1-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Mon, Apr 21, 2025 at 11:22:12AM +0530, Anshuman Khandual wrote:
+> Array elements inside 'struct user_hwdebug_state.dbg_regs[]' are inherently
+> coupled with maximum breakpoints or watchpoints which could be present on a
+> platform and which are defined with macros ARM_MAX_[BRP|WRP].
+> 
+> Rather than explicitly trying to keep the array elements in sync with these
+> macros and then adding a BUILD_BUG_ON() just to ensure continued compliance
+> , move these two macros into the uapi ptrace header itself thus making them
+> available both for user space and kernel.
+> 
+> While here also ensure that ARM_MAX_BRP and ARM_MAX_WRP are always the same
+> via a new BUILD_BUG_ON(). This helps in making sure that user_hwdebug_state
+> structure remains usable both for breakpoint and watchpoint registers set
+> via ptrace() system call interface.
+> 
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This patch applies on v6.15-rc3
+> 
+>  arch/arm64/include/asm/hw_breakpoint.h |  7 -------
+>  arch/arm64/include/uapi/asm/ptrace.h   | 10 +++++++++-
+>  arch/arm64/kernel/hw_breakpoint.c      |  9 +++++++++
+>  3 files changed, 18 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
+> index bd81cf17744a..63c21b515647 100644
+> --- a/arch/arm64/include/asm/hw_breakpoint.h
+> +++ b/arch/arm64/include/asm/hw_breakpoint.h
+> @@ -75,13 +75,6 @@ static inline void decode_ctrl_reg(u32 reg,
+>  #define ARM_KERNEL_STEP_ACTIVE	1
+>  #define ARM_KERNEL_STEP_SUSPEND	2
+>  
+> -/*
+> - * Limits.
+> - * Changing these will require modifications to the register accessors.
+> - */
+> -#define ARM_MAX_BRP		16
+> -#define ARM_MAX_WRP		16
+> -
+>  /* Virtual debug register bases. */
+>  #define AARCH64_DBG_REG_BVR	0
+>  #define AARCH64_DBG_REG_BCR	(AARCH64_DBG_REG_BVR + ARM_MAX_BRP)
+> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+> index 0f39ba4f3efd..8683f541a467 100644
+> --- a/arch/arm64/include/uapi/asm/ptrace.h
+> +++ b/arch/arm64/include/uapi/asm/ptrace.h
+> @@ -99,6 +99,14 @@ struct user_fpsimd_state {
+>  	__u32		__reserved[2];
+>  };
+>  
+> +/*
+> + * Maximum number of breakpoint and watchpoint registers
+> + * on the platform. These macros get used both in kernel
+> + * and user space as well.
+> + */
+> +#define ARM_MAX_BRP		16
+> +#define ARM_MAX_WRP		16
+> +
+>  struct user_hwdebug_state {
+>  	__u32		dbg_info;
+>  	__u32		pad;
+> @@ -106,7 +114,7 @@ struct user_hwdebug_state {
+>  		__u64	addr;
+>  		__u32	ctrl;
+>  		__u32	pad;
+> -	}		dbg_regs[16];
+> +	}		dbg_regs[ARM_MAX_BRP];	/* Or ARM_MAX_WRP */
+>  };
+>  
+>  /* SVE/FP/SIMD state (NT_ARM_SVE & NT_ARM_SSVE) */
+> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> index 722ac45f9f7b..9bc51682713d 100644
+> --- a/arch/arm64/kernel/hw_breakpoint.c
+> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> @@ -981,6 +981,15 @@ static int __init arch_hw_breakpoint_init(void)
+>  {
+>  	int ret;
+>  
+> +	/*
+> +	 * Maximum supported breakpoint and watchpoint registers must
+> +	 * always be the same - regardless of actual register numbers
+> +	 * found on a given platform. This is because the user facing
+> +	 * ptrace structure 'user_hwdebug_state' actually depends on
+> +	 * these macros to be the same.
+> +	 */
+> +	BUILD_BUG_ON(ARM_MAX_BRP != ARM_MAX_WRP);
 
-Commit-ID:     ebe176981c14b5f6472718f9894db35816749120
-Gitweb:        https://git.kernel.org/tip/ebe176981c14b5f6472718f9894db35816749120
-Author:        Sandipan Das <sandipan.das@amd.com>
-AuthorDate:    Wed, 07 May 2025 17:42:04 +05:30
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 16 May 2025 15:32:59 +02:00
+Sorry, but I don't understand why this patch is an improvement over what
+we have.
 
-perf/x86/amd/core: Fix Family 17h+ instruction cache events
-
-PMCx080 and PMCx081 report incorrect IC accesses and misses respectively
-for all Family 17h and later processors. PMCx060 unit mask 0x10 replaces
-PMCx081 for counting IC misses but there is no suitable replacement for
-counting IC accesses.
-
-Fixes: 0e3b74e26280 ("perf/x86/amd: Update generic hardware cache events for Family 17h")
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org
-Link: https://lore.kernel.org/r/2f475a1ba4b240111e69644fc2d5bf93b2e39c99.1746618724.git.sandipan.das@amd.com
----
- arch/x86/events/amd/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 30d6ceb..52860b9 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -148,8 +148,8 @@ static __initconst const u64 amd_hw_cache_event_ids_f17h
- },
- [C(L1I)] = {
- 	[C(OP_READ)] = {
--		[C(RESULT_ACCESS)] = 0x0080, /* Instruction cache fetches  */
--		[C(RESULT_MISS)]   = 0x0081, /* Instruction cache misses   */
-+		[C(RESULT_ACCESS)] = 0,
-+		[C(RESULT_MISS)]   = 0x1060, /* L2$ access from IC Miss */
- 	},
- 	[C(OP_WRITE)] = {
- 		[C(RESULT_ACCESS)] = -1,
+Will
