@@ -1,186 +1,162 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974A92620E7
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 17:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E5B27D766;
+	Fri, 16 May 2025 18:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747415443; cv=none; b=uHokDMoqQQWQb6Q4yS30j5ot1a2r8KNfKR+GXsGGZqx2cayQJmCarGhbSP8VXlnhRtkKXqNMv2pa/VtA6RA7VlC47vU0KsGxUtEjryu9H/AX4+SnjrCV4xblcgyflMwpn4pxXeP/keX3BQ/axRXrEwc3XBU9uvRAmPZ3ez5Wpck=
+	t=1747420162; cv=none; b=B/Iv7FSOG/ZoeFalIXlViLpYoS1hB4k3dRZosiA1Ew89O2+SojI7HCM0y33xE6ZfK/qfwrndlvi2Dv7sGtnAzx2vngXAijubTWdtSjAW/fqV77twaSPGLVOP4eAElsP1X26kiKeM3vb6rY6IlmUy88//k9fAf5M4PCuDvogJ7As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747415443; c=relaxed/simple;
-	bh=G6qWcf2f0b0ZiprK6YnOZRU4oWNHGHo/J34bbeqy3AY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z2G2f15dQWWEjXl9nbUcKxN//ndYOMv6O3QfQxMzl1WEfSVBEMAijgdvmjqqziSAUaoYPEviJAXJgxxdQHECjddPom4bfakFzAw7vQFXPvT00LE8OK3/qRNNz8Ccpno4/vKjjFSEMwxjHYPEEVjlR2Rm21odiPobZ3S4Q0QZD14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k5fcNovM; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747420162; c=relaxed/simple;
+	bh=F5v+X75TI1z2DmZCu4oTc6EMB0xD1BlN+j0QoXwycsA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxKdTKutHk5NMkg/6ym8VmEXLguNs9G/ofePphWrb7kZ5NYRzMzNvWtO7VRXFKcfTurA7PgrWwVfBZxMUIXWrKuNC24FJMCv9JjQ1HCFO4CpuR0ZOjNUTuXRuqwbxsdJHPx8DCBY6tMgvCOXY+E0SoeFck8FWT6N69PJ0bSmJnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KrjIupDX; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k5fcNovM"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6000f2f217dso3614875a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 10:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747415440; x=1748020240; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gerRkJKHTQKNvQo9k3X99QHawPSXLzta86cYlEnhtcc=;
-        b=k5fcNovMyxgMBUQASf44vbsDXb/ZiOxy1rXPzsFaCG/jn664RFBwRzlFHXgMzH+9WA
-         VSTeoRSgiHLzWrb89vLuoVadP/YK40ePAulRKCgO8uwFGKx869VCclu4DGNwn1GCvRA9
-         DO16Cs0uwm865qX92l3l5t+KSJAyiQSNFedEWe15NEwApFdnSz6HrKL72fLQXcJUsTkc
-         liA1xxpwQI1R8RSjCHy7ZW/OhFe4RbqOxuA23ecOhDOpryRcee3E338Q+yE9FnuAJfPp
-         p9Yzs38i9bA7uRFgdNvekujhCkfIrvuTDJnIY5jV3PZKgaiwf4szcUkTd6PiBLakH97L
-         3FJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747415440; x=1748020240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gerRkJKHTQKNvQo9k3X99QHawPSXLzta86cYlEnhtcc=;
-        b=qm0e5EJ4wTDDR/BASn2iR3CvtKtPg53VwApb7xtlR+kdzGVm2dhxBALSBiBetmgWFE
-         SVpELzGNqeV6nnl61IDLlojamlPzsJ7gd7SzaCEWcvkOkbw0SeHM+svTLkAHYpGlx7mz
-         cCDMcLmoXfBuxI2GvN3wAQSmo9oVnronDRAUrsOmTA80m8Gs0DJfLqdYmVXI5r7+cJje
-         qeFlU41WiDE3PkcZG6JIh8wWy7E0VOhZOdp4j70wHKUJOd7pqTeTp+vM2lb+3YjXpk/z
-         2BIEm4uHsAL+/GFSFlNROMWXlTHCQJSJK60gDfuk3geeFpH3V1m03y+MhfzmLj0OUjRD
-         tNag==
-X-Forwarded-Encrypted: i=1; AJvYcCU+DEU77WCNb567vJhMOzcpf6KOABAeTdzRr8PSOWNZdC35CtLKyVnENnhyOG82jUNyAWKoFpRBIcMCJpB2iXKM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVx9WlfBsBlN3lyRmncj9INI1f1Auvh8RdnuBSxgWpSG8Pe/5h
-	fnglbRk6ZMDPgHxx8sJdVkRfCrmSq2/8plSfB3/xf4dIry8zhQ6w6QZtRlL/xuTPkp9Giu85xjR
-	Ps8qrq+vfWdKTXfSU9SbRUhKZ6HBs7ZbNn96QZalK
-X-Gm-Gg: ASbGncvn+MnpyibdoEJoJXU3jez2q8LmNfM0Ix3tp4tlGk9CLciD2T968YX0WkDNo/F
-	Y9zRiMZ/MenUhSRf8Xi4EbFD3mxtnQyAua2G3hWzN0jiXQX1FR4a88Qj7FQ1pn/c+JMIzKD9ZMD
-	fbrTGJRma6whCDz0xU3Ml7EODtGkBRo6ca7w5A4b+cWA==
-X-Google-Smtp-Source: AGHT+IH3dUSAi6c1I9L11RyH3JvAS1lfke58i5i+2bvcKcpNPnFkk++9/uDN4MZ8LU+4SM8H+CNaUrMhVbgkifEKQaU=
-X-Received: by 2002:a17:907:980d:b0:ad2:3f1f:7965 with SMTP id
- a640c23a62f3a-ad52d43838fmr435418166b.4.1747415439480; Fri, 16 May 2025
- 10:10:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KrjIupDX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747420161; x=1778956161;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=F5v+X75TI1z2DmZCu4oTc6EMB0xD1BlN+j0QoXwycsA=;
+  b=KrjIupDXmJHpqVyrAfKQixWix4XhGZ6SgZiQCdnXfJzALmLn9AkVDMIS
+   FH8xABSpUKteDUoEpsm85MPWw3dq3WBJwWChryhzXrDQ6GcX64WzZOgyr
+   fQpfVZDBVW4YDY3C2DBu7E9xI6fXRVeKXmPmj1nju/7EWYL9fm0D7oA1k
+   CiGI8koWeNzbpkp4AmkslEy3VxLkR1v2HcXMwgkygHSWuy4vw2+9INDhH
+   UqZrGEi6orq3MzmWgWHUQbTWYtAblgc5Fy5mYM+LHIyQf4aIizeVA8r6G
+   drLfHU0B0J2PxZNXUaTyI+yhyL+O8P0G6PHBqbtOhhZWuJBihQ+53QDoZ
+   A==;
+X-CSE-ConnectionGUID: F+uLjmaHRnuFfiMcjGtxMw==
+X-CSE-MsgGUID: SmdcqjQbRz+NHBwCOQtX1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328788"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="49328788"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:20 -0700
+X-CSE-ConnectionGUID: bkyRZkbbRpmBiYV5WyKIIw==
+X-CSE-MsgGUID: 4YmH+m5pR8WCBM/6eDB5Hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="169802595"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:19 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	irogers@google.com,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: eranian@google.com,
+	ctshao@google.com,
+	tmricht@linux.ibm.com,
+	leo.yan@arm.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V3 00/16] perf: Fix the throttle logic for group
+Date: Fri, 16 May 2025 11:28:37 -0700
+Message-Id: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303183646.327510-1-ctshao@google.com> <Z9TXabugl374M3bA@google.com>
- <Z9hFJtEKfsGGUDMg@x1> <Z9hLKsZOfouM3K7H@x1> <Z9hR8M-SQ5TD2qMX@google.com>
- <Z9iHiTv_ud6GEhJh@x1> <CAJpZYjXwUz7x1XUF7AzgYR6PZo_igrwK9BkxGx_3N0pCs1YRvw@mail.gmail.com>
- <Z9iY7HFebiSaWZJQ@x1> <Z9kBAhEKKphn8JL6@google.com>
-In-Reply-To: <Z9kBAhEKKphn8JL6@google.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Fri, 16 May 2025 10:10:27 -0700
-X-Gm-Features: AX0GCFuxZaVWDjQvfXAkXFtuvUXS80ty4Z15Tq9hfM3hchhkS1MSN6mO7AulQsg
-Message-ID: <CAJpZYjVeMrjN09kaVCBs97q8_hnsgwwo7s0C0ctL5Kt0_FknBQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf record: Add 8-byte aligned event type PERF_RECORD_COMPRESSED2
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, terrelln@fb.com, leo.yan@arm.com, 
-	james.clark@linaro.org, christophe.leroy@csgroup.eu, ben.gainey@arm.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Ping.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-For suggestions from Namhyung and Arnaldo, it was merged in:
+Changes since V2:
+- Add a cleanup patch to check if an event is in freq mode
+- Rename the parameter of the perf_event_unthrottle_group()
+- Add Tested-by from Leo and Thomas
+- Add Acked-by from Guo Ren
 
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/co=
-mmit/?h=3Dperf-tools-next&id=3Db1b26ce8bb0eab1d058353ab6fa1a2b652a9a020
+Changes since V1:
+- Apply the suggested throttle/unthrottle functions from Peter.
+  The MAX_INTERRUPTS and throttle logs are applied to all events.
+- Update the description and comments accordingly
+- Add Reviewed-by from Ravi and Max
 
-Thanks,
-CT
+The sampling read doesn't work well with a group.
+The issue was originally found by the 'Basic leader sampling test' case
+failed on s390.
+https://lore.kernel.org/all/20250228062241.303309-1-tmricht@linux.ibm.com/
 
-On Mon, Mar 17, 2025 at 10:13=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hello,
->
-> On Mon, Mar 17, 2025 at 06:49:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Mar 17, 2025 at 02:45:39PM -0700, Chun-Tse Shao wrote:
-> > > On Mon, Mar 17, 2025 at 1:35=E2=80=AFPM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Mon, Mar 17, 2025 at 09:46:40AM -0700, Namhyung Kim wrote:
-> > > > > On Mon, Mar 17, 2025 at 01:17:46PM -0300, Arnaldo Carvalho de Mel=
-o wrote:
-> > > > > > On Mon, Mar 17, 2025 at 12:52:09PM -0300, Arnaldo Carvalho de M=
-elo wrote:
-> > > > > > > Checking the discussion and the patch.
-> > > > > >
-> > > > > > My first impression yesterday when I saw this on the smartphone=
- was: how
-> > > > > > will an old perf binary handle the new PERF_RECORD_COMPRESSED2?=
- Will it
-> > > > > > ignore it while emitting a warning, since it can be skipped and=
- then
-> > > > > > what we will get a partial view?
-> > > > > >
-> > > > > > Having some session output showing how an older perf binary han=
-dles
-> > > > > > PERF_RECORD_COMPRESS2 would be informative.
-> > > > >
-> > > > > I think it'll show the below warning:
-> > > > >
-> > > > >   <offset> [<size>]: failed to process type: 83
-> > > >
-> > > > Right that is what I got:
-> > > >
-> > > > =E2=AC=A2 [acme@toolbox perf-tools-next]$ perf.old script -i /tmp/p=
-erf.data.ck8
-> > > > 0xbf0 [0x250]: failed to process type: 83 [Invalid argument]
-> > > > =E2=AC=A2 [acme@toolbox perf-tools-next]$
-> > > >
-> > > > I think we should change that to something more informative, like:
-> > > >
-> > > > 0xbf0 [0x250]: failed to process unknown type 83, please update per=
-f.
->
-> That would be nice, but there are cases it can fail even without new
-> record formats.  So it should also check if the type number is greater
-> than or equal to the max.
->
-> > > >
-> > > > And then does it stop at that record it doesn't grok?
-> > > >
-> > > >         if ((skip =3D perf_session__process_event(session, event, h=
-ead, "pipe")) < 0) {
-> > > >                 pr_err("%#" PRIx64 " [%#x]: failed to process type:=
- %d\n",
-> > > >                        head, event->header.size, event->header.type=
-);
-> > > >                 err =3D -EINVAL;
-> > > >                 goto out_err;
-> > > >         }
-> > > >
-> > > >         head +=3D size;
-> > > >
-> > > > So we're stopping there.
-> > > >
-> > > > Maybe we can just warn and skip?
-> > >
-> > > Thank you Arnaldo, it is a good suggestion and I will work on this la=
-ter.
-> >
-> > Thank you for considering that, really appreciated!
->
-> It would be hard to process misaligned data though.  Probably we also
-> want to add a check to make sure it's properly aligned.
->
-> Thanks,
-> Namhyung
->
-> >
-> > perf deals with so much stuff and code flux that all the help that we
-> > can get is what is needed for it to continue to be relevant and useful.
-> >
-> > After all what is the point of a tool that produces bad results? :-)
-> >
-> > - Arnaldo
-> >
-> > > -CT
-> > >
-> > > >
-> > > > Anyway, the series as is seems ok.
-> > > >
-> > > > I'll test a bit more and send my Tested-by
-> > > >
-> > > > - Arnaldo
+Stephane debugged it and found it was caused by the throttling logic.
+https://lore.kernel.org/all/CABPqkBQzCMNS_PfLZBWVuX9o8Z55PovwJvpVWMWzyeExFJ5R4Q@mail.gmail.com/
+
+The throttle logic is generic and shared by all ARCHs.
+It also impacts other ARCHs, e.g., X86.
+
+On an Intel GNR machine,
+$ perf record -e "{cycles,cycles}:S" ...
+
+$ perf report -D | grep THROTTLE | tail -2
+            THROTTLE events:        426  ( 9.0%)
+          UNTHROTTLE events:        425  ( 9.0%)
+
+$ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+... sample_read:
+.... group nr 2
+..... id 0000000000000327, value 000000000cbb993a, lost 0
+..... id 0000000000000328, value 00000002211c26df, lost 0
+
+The patch set tries to provide a generic fix for the group throttle
+support. So the buggy driver-specific implementation can be removed.
+
+The patch set is verified on newer Intel platforms (Kan), ARM (Leo Yan),
+and s390 (Thomas Richter).
+
+Kan Liang (16):
+  perf: Clean up event in freq mode check
+  perf: Fix the throttle logic for a group
+  perf/x86/intel: Remove driver-specific throttle support
+  perf/x86/amd: Remove driver-specific throttle support
+  perf/x86/zhaoxin: Remove driver-specific throttle support
+  powerpc/perf: Remove driver-specific throttle support
+  s390/perf: Remove driver-specific throttle support
+  perf/arm: Remove driver-specific throttle support
+  perf/apple_m1: Remove driver-specific throttle support
+  alpha/perf: Remove driver-specific throttle support
+  arc/perf: Remove driver-specific throttle support
+  csky/perf: Remove driver-specific throttle support
+  loongarch/perf: Remove driver-specific throttle support
+  sparc/perf: Remove driver-specific throttle support
+  xtensa/perf: Remove driver-specific throttle support
+  mips/perf: Remove driver-specific throttle support
+
+ arch/alpha/kernel/perf_event.c       | 11 ++---
+ arch/arc/kernel/perf_event.c         |  6 +--
+ arch/csky/kernel/perf_event.c        |  3 +-
+ arch/loongarch/kernel/perf_event.c   |  3 +-
+ arch/mips/kernel/perf_event_mipsxx.c |  3 +-
+ arch/powerpc/perf/core-book3s.c      |  6 +--
+ arch/powerpc/perf/core-fsl-emb.c     |  3 +-
+ arch/s390/kernel/perf_cpum_cf.c      |  2 -
+ arch/s390/kernel/perf_cpum_sf.c      |  5 +-
+ arch/sparc/kernel/perf_event.c       |  3 +-
+ arch/x86/events/amd/core.c           |  3 +-
+ arch/x86/events/amd/ibs.c            |  4 +-
+ arch/x86/events/core.c               |  3 +-
+ arch/x86/events/intel/core.c         |  6 +--
+ arch/x86/events/intel/ds.c           |  7 ++-
+ arch/x86/events/intel/knc.c          |  3 +-
+ arch/x86/events/intel/p4.c           |  3 +-
+ arch/x86/events/zhaoxin/core.c       |  3 +-
+ arch/xtensa/kernel/perf_event.c      |  3 +-
+ drivers/perf/apple_m1_cpu_pmu.c      |  3 +-
+ drivers/perf/arm_pmuv3.c             |  3 +-
+ drivers/perf/arm_v6_pmu.c            |  3 +-
+ drivers/perf/arm_v7_pmu.c            |  3 +-
+ drivers/perf/arm_xscale_pmu.c        |  6 +--
+ kernel/events/core.c                 | 73 ++++++++++++++++++++--------
+ 25 files changed, 84 insertions(+), 87 deletions(-)
+
+-- 
+2.38.1
+
