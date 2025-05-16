@@ -1,139 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60C439ACC;
-	Fri, 16 May 2025 14:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFCD19D084
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 14:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747406332; cv=none; b=f2cga5lXoURjMAcXxcbvfwdOxXKJBNtG6D8oArcxlN6cSkXmITKsy/JhK+I4SK3Kkyy29QSD85vDjQbOVwJX1iiRlwuy+FE7YLHQcSc35l/+YA7827P15mGrTq65Hm1dUoSK3WHyAdtc4gjNu8XcZUMC7Cwbcl7UAGGZgUfjrG4=
+	t=1747406705; cv=none; b=Q7IQ8tqynOUgWIXI/dDS5ohuWNOCpNgTXBPAtpjhPnoVMNVykpPTGeUnVuUf99TGp5vAgnbVoJwR60PIYOA1rfdHZ3SQcRDkCDedaBYfBLliL3mgLqvM3d8tA7mQ1YByMnV38mI2oOljVj10qbKbq+FrMhhdKuANZaGp3BDVoZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747406332; c=relaxed/simple;
-	bh=l46kwxbPoNzDDSweacWIRFfRPs/0kNJkrBDYOOUaEF4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ocTwR5MF024g/hkBxpmXMM/8HtUqeshzM2dhlqirxIGg7guf5csynxSJwt/nZThX/EENokhUHSzsZfMEVIezUylQjSiyJPPQlAeHDpsR2w1ymyZDLZkQDWW434mLP92YrShSvCuC9erMTeWzhoSLUjlO/JRS0lG9lfPy9XlgLOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrFLqBwc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747406705; c=relaxed/simple;
+	bh=ai4HsUXe8Hf6sgaIpmcQ3fB9qzjUu4+7671cWfxzTsc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TvqrpnLBRP3P6fUstSDqAVS/QYtgulbGqUg7nUP4g/1CijfQQqnY+rmYGFk8TeK8N/XMfuIgVRMVzLyci+YxTfmLNRgdHJLTZjrZKsiKVg/PKmeOT/FNGMht/6v5ukgO7+tZL89K95u7Ltp/Dcx/BwoFan8X6AgPDsjC26MIKfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uH3oPosz; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrFLqBwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17874C4CEE4;
-	Fri, 16 May 2025 14:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747406332;
-	bh=l46kwxbPoNzDDSweacWIRFfRPs/0kNJkrBDYOOUaEF4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZrFLqBwc+bmZgKP4ysNa27JWlVVh2fI3XBE0Q4rbGJ5tmnj7DN0xElAYQKtyHv+cD
-	 U/Qkg5apYb4d/VNOCBoN9GuU1IuQJSoxW2pLDWHET9IPNfUNxaCTsBoSPikjPQhogX
-	 cTXcFCeE+/mSMv0UVbvnb6axASj8+CsiwwfLYfUKMcGg+R3HlcBDLI05cYakndF3KG
-	 MkRyb+z+eTQgJQz7oTIROYcTHqpDX0Qk2eq4UTWhQNmQMnbyqAxqwSL+ug1uIzi4dO
-	 IShlEdMPWduVz+UaElDFaAiDDuFPo6yemYxY9hs/JRYwXj1EvngevKbZKKSBWqv214
-	 OAn0K5e6diF1Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFwD3-00FaaK-A8;
-	Fri, 16 May 2025 15:38:49 +0100
-Date: Fri, 16 May 2025 15:38:48 +0100
-Message-ID: <8634d4fwnb.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	leo.yan@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH 01/10] arm64: sysreg: Add new PMSIDR_EL1 and PMSFCR_EL1 fields
-In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-1-dd480e8e4851@linaro.org>
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
-	<20250506-james-perf-feat_spe_eft-v1-1-dd480e8e4851@linaro.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uH3oPosz"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74299055c3dso2774660b3a.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 07:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747406703; x=1748011503; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxpWO6d9RGjAdSroDlrJKpnDNm7YQaegewDBnMK2Spc=;
+        b=uH3oPosztB48FWUBaOZobTU4C6fJCfrxU1ukw5ExcGD3P1MTmO/z9rK38yiwd3NAqE
+         nQj3zIXF5RS9LpfGka2ur2ZMa7WsXFpm3s4x2kDjsxiR6xUmMcRACBbaRRqPajI4zRY6
+         Bgl+y6NJAR/cXmCiqUlNTN+O/PEABZWf8yHOaIvW/EA7wJYyJoDMI+MSap1Urzj0CfmE
+         n7g01DxrBstx+XiCDeNxWqSUPzM6iXoytAT2qFe8HhPcpa5dsLQleYQjqBqWyELYwVyQ
+         mHBQa2rZh6cw1iUxF1zEJHw4euKXj1SGnQp15PCHS8uC66EjIp69sTdurH/5RFjJ3FR4
+         5Jfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747406703; x=1748011503;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxpWO6d9RGjAdSroDlrJKpnDNm7YQaegewDBnMK2Spc=;
+        b=V4C63vqv9Qdd7y2Jk7oJA7VQKPw5pCZdYqaOAQv+76hLRQfoPRXaoKdQ9PmC5LFPIB
+         UFBlg3sl2YOtMhp7q6pWSp0aD0Hf3wtzjHM5qAqpU2JGZTBDhNz1E8iCBpCt3KKy543G
+         L39Ht8Q6cf39TV47yvAk1wuh4QwSMLVwC7QCPq6txCR1Yd4YivlnFFlBiHDWcCJUiX6K
+         nuCgPvWnpzE4iWtbCmTzDl00Hot2nziMhopk5DN71CSPeI18DFvZn5Ru7puBemHc3f7A
+         Tc/ljHDsdMbLf01LCn4QIyjMpTcHfSZk7YE5sd8I+4i9MeCQBcdpmFuXgKKNU5pEbdl5
+         xkMA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/xVCy1PHE6chR092A2Y2ZuH7bc6Uy0mrHCypgiJw/C2wZqPAJmt1/L5RFH0isXgtspbRgIaNJs5+dpBtq14wR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFa6uCX+p97mIJjJPBq+fKbWyosftfksTyVBiRIwV266m++JcV
+	QmKImyndhQMxloCpfG+HWAxZeuJFMgOtopA4HCJzqEM5fZ1qTuM2Y5Chz/w/gCButLeW7LznjYw
+	1V4HY+Q==
+X-Google-Smtp-Source: AGHT+IFUIIMoWvWfo/p1yEuFxXr/0VSd/5n+vRtdSY5Ojpq4Jm9/+IMOBJg1hmy8i1Fg/Wi7gFvmjRxoy+4=
+X-Received: from pfbdf3.prod.google.com ([2002:a05:6a00:4703:b0:740:41eb:584c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2e9b:b0:73e:1e21:b653
+ with SMTP id d2e1a72fcca58-742a978e6a3mr5100316b3a.5.1747406702664; Fri, 16
+ May 2025 07:45:02 -0700 (PDT)
+Date: Fri, 16 May 2025 07:45:01 -0700
+In-Reply-To: <aCc_LmORNibXBt8V@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: james.clark@linaro.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, leo.yan@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-25-mizhang@google.com>
+ <aCc_LmORNibXBt8V@google.com>
+Message-ID: <aCdPbZiYmtni4Bjs@google.com>
+Subject: Re: [PATCH v4 24/38] KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, 06 May 2025 12:41:33 +0100,
-James Clark <james.clark@linaro.org> wrote:
+On Fri, May 16, 2025, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> > Reject PMU MSRs interception explicitly in
+> > vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
+> > specially handled in intel_passthrough_pmu_msrs().
+> > 
+> > Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> > Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 38ecf3c116bd..7bb16bed08da 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -165,7 +165,7 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+> >  
+> >  /*
+> >   * List of MSRs that can be directly passed to the guest.
+> > - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+> > + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
+
+Except y'all forgot to actually do the "special" handling, vmx_msr_filter_changed()
+needs to refresh the PMU MSR filters.  Only the x2APIC MSRs are excluded from
+userspace filtering (see kvm_msr_allowed()), everything else can be intercepted
+by userespace.  E.g. if an MSR filter is set _before_ PMU refresh, KVM's behavior
+will diverge from a filter that is set after PMU refresh.
+
+> >   */
+> >  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+> >  	MSR_IA32_SPEC_CTRL,
+> > @@ -691,6 +691,16 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+> >  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+> >  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+> >  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+> > +	case MSR_IA32_PMC0 ...
+> > +		MSR_IA32_PMC0 + KVM_MAX_NR_GP_COUNTERS - 1:
+> > +	case MSR_IA32_PERFCTR0 ...
+> > +		MSR_IA32_PERFCTR0 + KVM_MAX_NR_GP_COUNTERS - 1:
+> > +	case MSR_CORE_PERF_FIXED_CTR0 ...
+> > +		MSR_CORE_PERF_FIXED_CTR0 + KVM_MAX_NR_FIXED_COUNTERS - 1:
+> > +	case MSR_CORE_PERF_GLOBAL_STATUS:
+> > +	case MSR_CORE_PERF_GLOBAL_CTRL:
+> > +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+> > +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
+> >  		return -ENOENT;
+> >  	}
 > 
-> Add new fields and registers that are introduced for the features
-> FEAT_SPE_CRR (call return records), FEAT_SPE_EFT (extended filtering),
-> FEAT_SPE_FPF (floating point flag), FEAT_SPE_FDS (data source
-> filtering), FEAT_SPE_ALTCLK and FEAT_SPE_SME.
->
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  arch/arm64/tools/sysreg | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index bdf044c5d11b..80d57c83a5f5 100644
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -2205,11 +2205,20 @@ Field	0	RND
->  EndSysreg
->  
->  Sysreg	PMSFCR_EL1	3	0	9	9	4
-> -Res0	63:19
-> +Res0	63:53
-> +Field	52	SIMDm
-> +Field	51	FPm
-> +Field	50	STm
-> +Field	49	LDm
-> +Field	48	Bm
-> +Res0	47:21
-> +Field	20	SIMD
-> +Field	19	FP
->  Field	18	ST
->  Field	17	LD
->  Field	16	B
-> -Res0	15:4
-> +Res0	15:5
-> +Field	4	FDS
->  Field	3	FnE
->  Field	2	FL
->  Field	1	FT
-> @@ -2226,7 +2235,12 @@ Field	15:0	MINLAT
->  EndSysreg
->  
->  Sysreg	PMSIDR_EL1	3	0	9	9	7
-> -Res0	63:25
-> +Res0	63:33
-> +Field	32	SME
-> +Field	31:28	ALTCLK
-> +Field	27	FPF
-> +Field	26	EFT
-> +Field	25	CRR
+> This belongs in the patch that configures interception.  A better split would be
+> to have an Intel patch and an AMD patch, 
 
-These are described as enumerations in the JSON file (see [1]).
-
-	M.
-
-[1] https://lore.kernel.org/all/20250506164348.346001-7-maz@kernel.org
-
--- 
-Without deviation from the norm, progress is not possible.
+I take that back, splitting the Intel and AMD logic makes is just as messy,
+because the control logic is very much shared between VMX and SVM.
