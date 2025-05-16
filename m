@@ -1,97 +1,132 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B1BA4B1E4A;
-	Fri, 16 May 2025 13:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA6929D0D
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 13:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401866; cv=none; b=W/Wh4WpPHbQHiuwQVn9/o+h2XCrp/sP1akWzkBHkoYfrKN/6tqXqAP/xcslYzTNGi7Q08uIHLffn8nHUxF7LtdoRrmZm37OM7G+D10SG60IlXYmceIUVVjmDH3K7K0HkBUscdpYXOYHQwrSkyLOP0iNGR7tXgdsrkbZXfyxXWqw=
+	t=1747401996; cv=none; b=qdcRKC8Jsq5NhKFtRQd7EyITeLDQgoDmkNtght/Snj5xX56wZFenBsUhqIeqTdx65bl125PJ0gWtFN7Rh8JHSwRw36fN0mXl9EfYl/K2cvGhoCpr24SiaHKtnUi8Hl0EEUCbMPE/xXCH3e4KVu9J1B3Bw3Af0caPUKolHRBBY60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401866; c=relaxed/simple;
-	bh=6/jcxTEdm9wXe+6OlFOP2LEwhHepytwKIl2c/ZL4CKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXbAcE7olPKVtBC56TneHZMx6Lgvjpc3qsQKmOh/QL3F9atT9KX4AAYUmqiedZ5FOvjYfXT9fhDf9cTsbr80vgV+nSHhUhbpEplkL1x7gqZYeax353+xezyPrjTUReAI6FeMjJ9rwpThLxJR+nvmHL6s4ivizaaR8TZOpjsI84A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD6E6169C;
-	Fri, 16 May 2025 06:24:05 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CCC83F673;
-	Fri, 16 May 2025 06:24:17 -0700 (PDT)
-Date: Fri, 16 May 2025 14:24:12 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	irogers@google.com, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-	Rob Herring <robh@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH V2 07/15] perf/arm: Remove driver-specific throttle
- support
-Message-ID: <20250516132412.GF412060@e132581.arm.com>
-References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
- <20250514151401.2547932-8-kan.liang@linux.intel.com>
+	s=arc-20240116; t=1747401996; c=relaxed/simple;
+	bh=oOqs3k0tlpF5HjyzxYG4IK2pdYHASxUiUCxNE7N6sVQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tQVq3e6cyhyKvzM1DJn3QS172ucsqteJ6387inCPbgUi4X4bB/C8AFaJ+MjK8hKvOAtx/ikcMMJMk3JRTY21ZbjhOXU78Jq7LREPYdKNimnOYoXVS/sw65LaOabOZSqw75eQ0RFbHwqgP6g0Boke652vi7X/ytbg97z7ML+rkL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NjT84hXe; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NjT84hXe"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30c06465976so2208124a91.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 May 2025 06:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747401994; x=1748006794; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jUF92U1DJmFEjkB/6aO1QXrYLsPasET5mz/HpdkaAk0=;
+        b=NjT84hXecCf9KCtiUY32vsnEwyF0h8tmXlIMd/UlrjQVnCLXQwbfPy6FAgLewRkDSe
+         FK/kvajs/JV6xEsk20fi9J3CHDw3hhjT9pArWxOFAAT0EE8h+Uf95rIAJolFtVBHHklE
+         UQc+UA05tS2DaMJ6hylE8SoCF9HvAmVoOThNQpd/AZHZP3DlMv1BooB1fznhuVzm2P5u
+         CwLNsMNzPZibm/llen7xkyHQd3aeQw5cR52t5AlaE367br4iI2FjBK0JO9/U2V9bWYyp
+         cTElatBDShYV9ZN0V2vFtxrr4bokU/sKEKbkJhPwN+8y/ob/C+19chKQeasl7rcBgmpA
+         Jfyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747401994; x=1748006794;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jUF92U1DJmFEjkB/6aO1QXrYLsPasET5mz/HpdkaAk0=;
+        b=dwI9IE0BWaMRv7HbopFvAvY1EI/AOuXXMr+4VqbKZszeNmTvR/J+qrhCvuyZ84zD3x
+         srAZoP+U1JalXBeJ6clG0iDtzNhnNfTvAD5d7Tebh3BAXj0ixiCBJixBjaqjh6VEv+8Z
+         q9QFAVtXTEUFfKMX4rEMy6d/ltSzTEOIXKOp1ZVZAjWZ+OAjBI6pYSIxb0pIdCxZRBbJ
+         0PIFBpoVgtmXy7ON+z3RNXoiz1Bqx6QDfvE24g0+D2dorNyUceofsD3N2k2+G2t4jh9K
+         52VM3978Sf7eTI/7FzZ6lhbna7+yY6AcKof0GlWi4yAfJa53gJIsyeyIGqpdJPBofYll
+         2CKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUykE8nt9NNxNnlFbpwVNp9t6qhr4GROdjR35VjIN/ybRwfPGjWRGWbfzrGDf62aWTCAmP4CrkMrIsIxWpQo/Eu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS5oS9rdn/QF/XyA9MVDFNzb/fselUAX3cmQRw9N9rv06t2uJM
+	8RInAt9e1n/JAlxuewKPLwW60DwVfJXbdjGWarODbQZEtBLQwIE2JbBAw10eneM3KHGQx3DlCoy
+	yfdMoww==
+X-Google-Smtp-Source: AGHT+IENAvEw35fiE7fP5luIXtFIoumLYQF+Tnj/cRu9Hs0uoimDXOXKxgPyre23vv5rc2HSAcjSbPWRUJQ=
+X-Received: from pjbsb5.prod.google.com ([2002:a17:90b:50c5:b0:2fc:1158:9fe5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c88e:b0:2fe:b937:2a51
+ with SMTP id 98e67ed59e1d1-30e7d5d91f8mr5440318a91.33.1747401994585; Fri, 16
+ May 2025 06:26:34 -0700 (PDT)
+Date: Fri, 16 May 2025 06:26:32 -0700
+In-Reply-To: <20250324173121.1275209-30-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514151401.2547932-8-kan.liang@linux.intel.com>
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-30-mizhang@google.com>
+Message-ID: <aCc9CKw3DGXXQbbe@google.com>
+Subject: Re: [PATCH v4 29/38] KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, May 14, 2025 at 08:13:53AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The throttle support has been added in the generic code. Remove
-> the driver-specific throttle support.
-> 
-> Besides the throttle, perf_event_overflow may return true because of
-> event_limit. It already does an inatomic event disable. The pmu->stop
-> is not required either.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring (Arm) <robh@kernel.org>
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> ---
->  drivers/perf/arm_pmuv3.c      | 3 +--
->  drivers/perf/arm_v6_pmu.c     | 3 +--
->  drivers/perf/arm_v7_pmu.c     | 3 +--
->  drivers/perf/arm_xscale_pmu.c | 6 ++----
->  4 files changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index e506d59654e7..3db9f4ed17e8 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -887,8 +887,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
->  		 * an irq_work which will be taken care of in the handling of
->  		 * IPI_IRQ_WORK.
->  		 */
-> -		if (perf_event_overflow(event, &data, regs))
-> -			cpu_pmu->disable(event);
-> +		perf_event_overflow(event, &data, regs);
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> +	/*
+> +	 * Clear hardware selector MSR content and its counter to avoid
+> +	 * leakage and also avoid this guest GP counter get accidentally
+> +	 * enabled during host running when host enable global ctrl.
+> +	 */
+> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
+> +		pmc = &pmu->gp_counters[i];
+> +		eventsel_msr = pmc_msr_addr(pmu, pmu->gp_eventsel_base, i);
+> +		counter_msr = pmc_msr_addr(pmu, pmu->gp_counter_base, i);
+> +
+> +		rdpmcl(i, pmc->counter);
+> +		rdmsrl(eventsel_msr, pmc->eventsel_hw);
 
-I did a test for Arm PMUv3, sometimes I can get consistent result
-crossing events, but I still saw discrepancy in some runs:
+As pointed out by Dapeng offlist, this RDMSR is unnecessary since event selector
+MSRs are always intercepted.
 
-   # perf record -c 400 -C 4,5,6,7 -e "{cycles,cycles}:S" -- sleep 5
+> +		if (pmc->counter)
+> +			wrmsrl(counter_msr, 0);
+> +		if (pmc->eventsel_hw)
+> +			wrmsrl(eventsel_msr, 0);
+> +	}
+> +
+> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
+> +		pmc = &pmu->fixed_counters[i];
+> +		counter_msr = pmc_msr_addr(pmu, pmu->fixed_base, i);
+> +
+> +		rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i, pmc->counter);
+> +		if (pmc->counter)
+> +			wrmsrl(counter_msr, 0);
+> +	}
+> +
+> +}
+> +static void intel_put_guest_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	/* Global ctrl register is already saved at VM-exit. */
+> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
+> +
+> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
+> +	if (pmu->global_status)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
+> +
+> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
 
-   # perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
-   7 5691046123610 0x63670 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1): 0/0:
-   0xffff80008137a6d0 period: 400 addr: 0
-   ... sample_read:
-   .... group nr 2
-   ..... id 00000000000000bf, value 000000000019d7a7, lost 0
-   ..... id 00000000000000c3, value 000000000019d3f9, lost 0
+And same thing here.  Though I'm confused as to why KVM always intercept
+FIXED_CTR_CTRL.
 
-Though it does not dismiss discrepancy totally (maybe it depends on
-hardware mechanism), I do see this series can mitigate the issue
-significantly.
+/me rummages around the SDM
 
-Tested-by: Leo Yan <leo.yan@arm.com>
+Ahh, because there are Any Thread bits in there.  That absolutely needs to be
+called out, probably in the interception logic in pmu_intel.c.  I'll add a comment.
