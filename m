@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1684C27FB09;
-	Fri, 16 May 2025 18:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3B727F73A;
+	Fri, 16 May 2025 18:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420166; cv=none; b=Vsmdzlm5FKwAnHcEGbIsQWjIQaFOziNFomMLSvcX5fw5pC2oFdlx7K+F5hZfuOJJHM4+/bFj3IgIoF9bbgturi+gP8Lo5mW6HjRK3Koo9rS4M+q8IZTvhlJmsqRoHmn/EsMdvENTJtmO70Nn7VXKD3P2zU3c2eraJLNF7uPqACc=
+	t=1747420167; cv=none; b=lUY1YlSTMPlZCH/Iz4mCvv/hJKRHRg9I257y4YovnKkgMU72YyBYje2sP4zViiWPwgU/oGCT4BU8eBb6ViAxtJ8M4dZ3ttxDCZGGX/xMZYJ0ZlzWkxYjFwPYaIDgjR3isFliob0kVEkj8rz2et49Oq0VlBwnqhnG52dXk6KKaQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420166; c=relaxed/simple;
-	bh=JYonQVJrRjxKJDpe7nXWSwniUE7wi5IkJhEj5Hcl77E=;
+	s=arc-20240116; t=1747420167; c=relaxed/simple;
+	bh=s+EyXjLUXo0M2dfj157AL5fvrY36sWvSBJ2tuImTWtk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WbbwXY5vuYUvyUSLOv7Q7J1xTo01/2aBQN6zeIPaKNMiO5ihluQRpuf8XlxQ0drVbtiK6piKlCqn4N7EgpG1PVoUxLy3h3Pm3/+PiCsTuXqdgqrMjAeBw+ore+zqRu4OAfqn7UT/RKY32JqKHict8tbZY9yGmpNdCLhTi6RmG7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LJCWZ5Cc; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=WeZELLkWy2JtNFPoZF2F6v9gcAcC6Ial7B2UNghjDjGuJcBUmvhPZsoLiV2B/RplLQfccQAWO8+RTz1p8mLAkYHhhPptKbr7GcWoQdoPks+iVcoBxWx3W2T7KIPTN6qprI4F2yn3CikH0YqUa7LRirmxOP5nOl7mAEI1ZY8TJ+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n/3FQJvy; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LJCWZ5Cc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n/3FQJvy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1747420165; x=1778956165;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JYonQVJrRjxKJDpe7nXWSwniUE7wi5IkJhEj5Hcl77E=;
-  b=LJCWZ5CcO8CA0o8AuwueA35xewanGVCnCJtgrvE1+P7jOrrvrgaTkTwz
-   TzWT8NTbfCKQbCAiUFfag0PC4SnNKIyyQ2FT9g2wKCaUo1pQdAj616f6i
-   lvc6cfUrUbK7vah58KUvTBhOZ03owS+YpwmTgwUJAp9shJakdEyXwFJGn
-   1zYs3Kn7+EyOHqGLPsfieGyxnG4z3XAB/naXE9L7CfF7yYQqtnQbKLtnF
-   NCVJS+aF0zU89aAGvGID3hbNteDxHltFZ4B91mtvusP9uH1PLKlUeNtox
-   cH3dtUNRfp98AwGtV7Vqcw/qLt6eH1Qyg6pUFT46jzmj2WEH//s0febNf
-   Q==;
-X-CSE-ConnectionGUID: fcoy2zGISzig+w8RjM7KdQ==
-X-CSE-MsgGUID: XHELI8iKRPeECbd6OPH2bg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328842"
+  bh=s+EyXjLUXo0M2dfj157AL5fvrY36sWvSBJ2tuImTWtk=;
+  b=n/3FQJvyXnu8zaiuhSLIuksR+gMgqxXx7Jf9XIQWVB1je+r3+QQgpCL6
+   rzqZEcduVP8bzbuhgm61fs+7jyLqG/qV4vfBPGU5e7aZDxxmUPs4sWfsV
+   Wosyct8gBZYUutrS4tWyoJVMIH/zeSFMHbFeCBL/odG7Kw6oUkhmiCGsn
+   Qb+CEly4mUIPhqUlIHrrcwIEEe0ldjxtCGE5mkMxT4KqfSrWH4yE+8Agp
+   Hmq9/9gGiadgsCw42nxrInP6qCeEuuWx7YHoXJn7adgNvD1iBLe2E2Pid
+   LS+47Vw7HX2czC4VQDuawJnKIGlMlcDpz3FU68Qt3RWxdbsoU0mPi3nE0
+   g==;
+X-CSE-ConnectionGUID: 7QQPApb2SEyTa8y/GpK4OQ==
+X-CSE-MsgGUID: JGQKBhMsQBuBUdixCbvmZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328833"
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49328842"
+   d="scan'208";a="49328833"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:22 -0700
-X-CSE-ConnectionGUID: 4V+UjDLzRzCpwocAtIrbrA==
-X-CSE-MsgGUID: BNyDIG5iTf+vs6e7Kc/TgQ==
+X-CSE-ConnectionGUID: JhatOYD3R/aJuVTali1oXA==
+X-CSE-MsgGUID: PJZxwUZ2Qo+BlYBDLBCcQg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="169802612"
+   d="scan'208";a="169802609"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:22 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:21 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -56,10 +56,12 @@ Cc: eranian@google.com,
 	tmricht@linux.ibm.com,
 	leo.yan@arm.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	linux-s390@vger.kernel.org
-Subject: [PATCH V3 07/16] s390/perf: Remove driver-specific throttle support
-Date: Fri, 16 May 2025 11:28:44 -0700
-Message-Id: <20250516182853.2610284-8-kan.liang@linux.intel.com>
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH V3 06/16] powerpc/perf: Remove driver-specific throttle support
+Date: Fri, 16 May 2025 11:28:43 -0700
+Message-Id: <20250516182853.2610284-7-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250516182853.2610284-1-kan.liang@linux.intel.com>
 References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
@@ -80,44 +82,48 @@ Besides the throttle, perf_event_overflow may return true because of
 event_limit. It already does an inatomic event disable. The pmu->stop
 is not required either.
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
- arch/s390/kernel/perf_cpum_cf.c | 2 --
- arch/s390/kernel/perf_cpum_sf.c | 5 +----
- 2 files changed, 1 insertion(+), 6 deletions(-)
+ arch/powerpc/perf/core-book3s.c  | 6 ++----
+ arch/powerpc/perf/core-fsl-emb.c | 3 +--
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
-index e657fad7e376..6a262e198e35 100644
---- a/arch/s390/kernel/perf_cpum_cf.c
-+++ b/arch/s390/kernel/perf_cpum_cf.c
-@@ -980,8 +980,6 @@ static int cfdiag_push_sample(struct perf_event *event,
+diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+index 42ff4d167acc..8b0081441f85 100644
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -2344,12 +2344,10 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+ 			ppmu->get_mem_weight(&data.weight.full, event->attr.sample_type);
+ 			data.sample_flags |= PERF_SAMPLE_WEIGHT_TYPE;
+ 		}
+-		if (perf_event_overflow(event, &data, regs))
+-			power_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	} else if (period) {
+ 		/* Account for interrupt in case of invalid SIAR */
+-		if (perf_event_account_interrupt(event))
+-			power_pmu_stop(event, 0);
++		perf_event_account_interrupt(event);
  	}
+ }
  
- 	overflow = perf_event_overflow(event, &data, &regs);
--	if (overflow)
--		event->pmu->stop(event, 0);
+diff --git a/arch/powerpc/perf/core-fsl-emb.c b/arch/powerpc/perf/core-fsl-emb.c
+index d2ffcc7021c5..7120ab20cbfe 100644
+--- a/arch/powerpc/perf/core-fsl-emb.c
++++ b/arch/powerpc/perf/core-fsl-emb.c
+@@ -635,8 +635,7 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
  
- 	perf_event_update_userpage(event);
- 	return overflow;
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index ad22799d8a7d..91469401f2c9 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1072,10 +1072,7 @@ static int perf_push_sample(struct perf_event *event,
- 	overflow = 0;
- 	if (perf_event_exclude(event, &regs, sde_regs))
- 		goto out;
--	if (perf_event_overflow(event, &data, &regs)) {
--		overflow = 1;
--		event->pmu->stop(event, 0);
--	}
-+	overflow = perf_event_overflow(event, &data, &regs);
- 	perf_event_update_userpage(event);
- out:
- 	return overflow;
+ 		perf_sample_data_init(&data, 0, last_period);
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			fsl_emb_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ }
+ 
 -- 
 2.38.1
 
