@@ -1,90 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E5414A639;
-	Fri, 16 May 2025 15:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74811C4A13;
+	Fri, 16 May 2025 15:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409526; cv=none; b=PkQSFqrIbWsGjyJ13Hq41mCp0nM1Ij8fiE9wwYXPd92aDhu0hBpmRZnsyJ/e19TlPjvXDCROMaa7V2upavVJBq18W10m5d5t+qRbix+M50RXyXz/Ygh2QIgYH1wE1Q07jyG2Bu9EURDR8eknGdMucRZNvTtRqjEIclw1DDXYI34=
+	t=1747409883; cv=none; b=NBty8CCl/gsZnT3YAvZJIv+zpsIUmDNLnnvqCLyWUJxTh1cP0BcuH8wTwMapSCwBSGV5GLhesufCQ2+ofyT4HhD1wrCcLznwQ+0u5mu58Hbd6kzeiY/QpQy/+yW4E+NNhItwPN7cMAHAMiXEpIsYqNK29pVvAHlSl0WLFEWDVu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409526; c=relaxed/simple;
-	bh=UGQd2vpEGtZoNWxqSs0iTpV6XWH9Pxv+t8tsGF8k1Ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2gvZgtte6QaSrnJ4zHVZCfhIOYTUGYjJxYYZz36telj7MPIrhXcOiGhkpdEkTdCHNZfNo4yWeyKxVqKigrZ+DG7My6OzsZ7J3muh/L70Bz5g7NBOAB9wJHtvUU0AAWKi3CDnmqVCvpUYs9/ECoSbPFRhF2L1SXB9VlqqY859uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 338B6169C;
-	Fri, 16 May 2025 08:31:51 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C36823F673;
-	Fri, 16 May 2025 08:32:02 -0700 (PDT)
-Date: Fri, 16 May 2025 16:31:58 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-Message-ID: <20250516153158.GH412060@e132581.arm.com>
-References: <20250331172759.115604-1-leo.yan@arm.com>
- <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
- <20250401091422.GA115840@e132581.arm.com>
- <CAP-5=fUGLy9xGmMO+6PXvfviB4U8Q8O7H3iTSSqEf72vin8gDA@mail.gmail.com>
- <20250402090516.GG115840@e132581.arm.com>
+	s=arc-20240116; t=1747409883; c=relaxed/simple;
+	bh=mWfA5wFotzL7PgvhLsuhMnP0blXpL73q8Aed7VwJXjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WNnzQuMf27SW4wvac0YfIZ8gTrJvO0LkpFLUb4ZyTr7nKwQNQnd0ZGWy3Sfxlo3lbZOvYOfQNmWWgqkyRa+FCMtfK9W2d2SCZBu6GBjks3silq4NVaJjRNbB7bjA5cUdOWSVXFJH+m6j5E61hl4MjD9/3aNE/SHPjVxtLZXT54c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXR7+1UJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXR7+1UJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A443FC4CEED;
+	Fri, 16 May 2025 15:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747409883;
+	bh=mWfA5wFotzL7PgvhLsuhMnP0blXpL73q8Aed7VwJXjA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AXR7+1UJQRenyC+XQwFTOEdHhgEEiVar1Hn/5duO4TJs5Bd/gwUufTuX5FHcZtGC4
+	 zGzDr7ItcG0BEdLjxtSE2nJnImE0ejnGSIFkJWDxMIby7eODAn2rydigNVxGrVjzN3
+	 SOGelPJ8WIWfriWL+bIKYaN4Ak7ti+WbW3uIf+dI7kSw+4IzDFKbicg2qY9pxsahyW
+	 X4c31GqKelZ3ccSzH62l4COQXLcS7IERUKlxBKxlMolYp9QCAKQ/kNypyptbCYxdCi
+	 hHcuySGy4QnSsM443IDg4DWlGujuOLpKOi7U1ZJS67sxNM1DQs/O4svFlHQf/sEfc9
+	 KbwZRpDJMkU+g==
+From: Will Deacon <will@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] perf/arm-cmn: Initialise cmn->cpu earlier
+Date: Fri, 16 May 2025 16:37:47 +0100
+Message-Id: <174740513926.2577946.7646762362706357412.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <b12fccba6b5b4d2674944f59e4daad91cd63420b.1747069914.git.robin.murphy@arm.com>
+References: <b12fccba6b5b4d2674944f59e4daad91cd63420b.1747069914.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402090516.GG115840@e132581.arm.com>
 
-Hi Ian, Namhyung,
+On Mon, 12 May 2025 18:11:54 +0100, Robin Murphy wrote:
+> For all the complexity of handling affinity for CPU hotplug, what we've
+> apparently managed to overlook is that arm_cmn_init_irqs() has in fact
+> always been setting the *initial* affinity of all IRQs to CPU 0, not the
+> CPU we subsequently choose for event scheduling. Oh dear.
+> 
+> 
 
-[ - Mailing list ]
+Applied to will (for-next/perf), thanks!
 
-On Wed, Apr 02, 2025 at 10:05:16AM +0100, Leo Yan wrote:
-> On Tue, Apr 01, 2025 at 12:54:12PM -0700, Ian Rogers wrote:
-> > On Tue, Apr 1, 2025 at 2:14 AM Leo Yan <leo.yan@arm.com> wrote:
-> > >
-> > > On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
-> > >
-> > > [...]
-> > >
-> > > > I'm reminded of a Java check I wrote for this:
-> > >
-> > > Nice short article.
-> > >
-> > > > In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
-> > > > clean those warnings up a bit.
-> > >
-> > > I checked a bit and seems GCC has no this flag, but it makes sense for
-> > > me to enable the flag for Clang.
-> > >
-> > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks a lot, Ian.
-> > 
-> > I made a small variation to the change in:
-> > https://lore.kernel.org/lkml/20250401182347.3422199-10-irogers@google.com/
-> > to avoid a subtract and just directly compare the values.
+[1/1] perf/arm-cmn: Initialise cmn->cpu earlier
+      https://git.kernel.org/will/c/597704e20106
 
-Do you mind to pick up my this patch? :) Our internal CI reports the
-test case 109_Track_with_sched_switch failure daily, I am just wandering
-if we could apply the fix quickly.
+Cheers,
+-- 
+Will
 
-Ian is working on a patch series for resolving the Clang warning which
-also includes a fix [1], if Ian could extract the fix for the compar()
-function in switch-tracking.c, this either would be fine for me.
-
-Thanks a lot for your helping!
-
-Leo
-
-[1] https://lore.kernel.org/linux-perf-users/20250401182347.3422199-10-irogers@google.com/
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
