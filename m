@@ -1,73 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCD0B665;
-	Sat, 17 May 2025 13:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9EF101C8
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 May 2025 15:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747486953; cv=none; b=ZH7KHq4lQLeelHY2+rE63tdDrqLZiLAJU1awzv55ZqatRObi7gOm7FoDTn7rg9Z1wGK5iXUA+1boGI22VBQJcHYHIp6Caf1jAM5v0xDsuPzsrpYBJKOFGioSqqi+ssHqpMrIqu61l8wZ61CjR86VdngtJT/2kH111OObr3ZGhQw=
+	t=1747495788; cv=none; b=ZdQZ/a4lKkPxaYCHEu7cf3COpOuSRgOYh2jB4HXjDxZeQvV01oVTuvji+ZfF74D/2X4bPr2go/s8Kh5EqinbK192Z6E4GSL+VAemIUsF7AFmvcRAyRZEnDB49ltKlWWpeyREGP5buy5oZKExCxJsIV+3+KtjOrV5W8y5M1N7QvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747486953; c=relaxed/simple;
-	bh=2AaCjBtkXEOIDgFVhyZEuiN1dgO8b8PReIiLMAVQqJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OglsvY92jNVE18OdaiMIJCOt7W5VD7C8iWhKrUu5uEPRKii11Xrv6yzijxaI9dQQpNDG5GgNY1fK/kqr6zduI95hqAP/kPN++Cf3ztOpJgXETc0dORvueYMKX36sdgTovv/TNTiUauZedyewDosp7QIpAtqfbT0G0hGj5EfJwsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9XuBHin; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747495788; c=relaxed/simple;
+	bh=E76WBjaIXE7yacVKMjhiwfWfY1MnQgFTPSKDJiMs9fo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l0eV/W/tDIjxG1bCwnk9cSU/vIngSZSbJjRd2+1f+koiawFuYVIEt0+NoClwoZzD9hykKVT2+p/CHR3rzF/lYYfvXAqmagxrc4xDF/v/hGEHE+hYfvMB2vg6Xp5fnoA7o2/uOjKdC5Xcym7YGkIxBh7FNMaRaJk5SEvHkB04utM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ioJqMfZO; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9XuBHin"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD8EC4CEE3;
-	Sat, 17 May 2025 13:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747486950;
-	bh=2AaCjBtkXEOIDgFVhyZEuiN1dgO8b8PReIiLMAVQqJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K9XuBHint1ni3bXimqNa5kbtgiIr2PneAQsjzO6427yadhKDdqQQH3MkI33ztVsD7
-	 krNeVp7mZeLy/qAURUQaaEwG/XhApVUdhtUimc8ca4fbD6Mhbcp328RFq6E1PKI1o9
-	 j0RLTJgMoPLmJEjPAOrg/yp1CfdXdDNPNtr2FqpW7sbMSXEJPeBjVbg9VgoiZVAKCH
-	 kRsKL/mm45hoPHLSI+HKPK41lYanmi/3pLFufdTMhYE9gCV9HFnfam0qIvU9mylV2U
-	 N0YGZF8EOIryoEsgmV24r8r6zbrCO5f1G3hCeidNpwB/1B3xPpsE6o2IGHla2u5CyA
-	 mqbPPbGaxRkCQ==
-Date: Sat, 17 May 2025 15:02:26 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Sandipan Das <sandipan.das@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org, x86@kernel.org
-Subject: Re: [tip: perf/urgent] perf/x86/amd/core: Fix Family 17h+
- instruction cache events
-Message-ID: <aCiI4lcWIe6GYW4_@gmail.com>
-References: <174740303900.406.5499797802401271693.tip-bot2@tip-bot2>
- <c409c331-da7d-7424-e0db-a4c61ea423ca@maine.edu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioJqMfZO"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e732386e4b7so3193226276.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 May 2025 08:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747495786; x=1748100586; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=E76WBjaIXE7yacVKMjhiwfWfY1MnQgFTPSKDJiMs9fo=;
+        b=ioJqMfZO/lEZWIiZKHAovWBH7JdB1eNUMlIgve1y1xKLbRfTdsah/lbaiiAkQksU+e
+         4eQpVvM1MawwVEzmAJx2r/f3gbpM6iM4NeYl1YZx592pnsk/Ii6hWGMzuIjYIf8PREcy
+         pYyBTw1KhhYsl08f2JXEx+WjRhkZSKbLbIwPvDYfeveMB7xZqHatxJwuHS+o3OhVs9jF
+         MNJgpt0nqaJCrfcRdGCaqFapd5INFLkBzyThr/89RTcCfWhQe750GOMjac4mmIWJWHvu
+         X1VmSRgVbkoZuKhN/SSy9pIxlrbqZBE1v6G+R5QLvKs1GkBh1ERGg956MXSXDiBb+1NK
+         tXEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747495786; x=1748100586;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E76WBjaIXE7yacVKMjhiwfWfY1MnQgFTPSKDJiMs9fo=;
+        b=KbYEpihuQNVcX9+F1qjFjObvKHXy6+GvkXOWWpZQ4oVZm+sDvmy5zGZC9IR/st4wvO
+         aqq9Q3VbeSiO/IbdznaYX4epmjVz0CxBAGDvwW4+bP2JC5iS/L4uwwRVCi44nS0heO60
+         LT+CNonHWcBt4kDpMhjnyy0fCzx0bUIUNEYC8fOoEwhE6IR9P/fDFnR6NdF1+B3yiPxe
+         1U1QqQCah8Fnrv20s2mwI4a41fsIsmYI987DCfb8QsPbV624Mt/sgTvXyDriPv+u+I3V
+         EGOAvBKNY1UlRClIpMVU2RGkXaEpbV7ukvbftMMaCKdxRrzKOhW+brke4H00dIzGwicK
+         JrLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqa2EqdxhBeevu5MD1TmmbJsitqX+bkfPZURlsoAM+RlTVMROlXeqoQNZGqwh4roRxAzyg5ZGUOF6xuHFrn3F/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQF+UCmlD+RoBxya6DqlJVeC7X/OLPWbvyl27vEfZswhVPk40/
+	WLV8QkoXWschkIjsW7LdCvimtL/SoQyo7RwkwSfpdmZGTVoBhtZkzPhas5puN4kUUbHbAYjTa4o
+	FFOnNu8PTmmXG8fFv4OvMXmp70EnLOwY=
+X-Gm-Gg: ASbGncuprLEwvlsouLGBrtXSOxADDxYlKrMfswmnBr32qtetwLkxNdH0a9/ixr1x6fm
+	o2+hm0G6N3WijI2ves9fgdE6TphDYqtQM4GpOZ6i+3mgVGbJ1RUUxwSJMJ/G3IAfhx/L2EbBAme
+	hhCqvxOAeV1GCg+anF6MVly7ErB7oXaspPtL3tZ8uLLg==
+X-Google-Smtp-Source: AGHT+IEsiu5rV0QV1nk+pfQ+4LNesn+fe3v2t+t3datFGMERtDHCG+MB168xqle6pAo6/riBknRaYq0yRzx2bVGz/ug=
+X-Received: by 2002:a05:690c:3390:b0:70a:192d:122 with SMTP id
+ 00721157ae682-70cab0c30eamr86182857b3.30.1747495785979; Sat, 17 May 2025
+ 08:29:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c409c331-da7d-7424-e0db-a4c61ea423ca@maine.edu>
+References: <20250403160411.159238-2-ashelat@redhat.com> <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
+In-Reply-To: <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Sat, 17 May 2025 08:29:34 -0700
+X-Gm-Features: AX0GCFsr1353X2e8cV39IrVjQWdEPsa1DyU0MUemO2_PDI_6ESvRrPvy7cj4kRw
+Message-ID: <CAH0uvoh7kE==UksrqVEXCdm_oxf0wbEcbwVVm8QxY5TevbJN+Q@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: always print return value for syscalls with
+ set errpid
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
-* Vince Weaver <vincent.weaver@maine.edu> wrote:
-
-> On Fri, 16 May 2025, tip-bot2 for Sandipan Das wrote:
-> 
-> > The following commit has been merged into the perf/urgent branch of tip:
-> > 
-> 
-> > perf/x86/amd/core: Fix Family 17h+ instruction cache events
-> > 
-> > PMCx080 and PMCx081 report incorrect IC accesses and misses respectively
-> > for all Family 17h and later processors. PMCx060 unit mask 0x10 replaces
-> > PMCx081 for counting IC misses but there is no suitable replacement for
-> > counting IC accesses.
-> 
-> can you link to the errata document that describes this problem as well as 
-> maybe give a rundown of how and why this breaks?
-
-I've delayed this patch until these details are cleared up.
+Ping.
 
 Thanks,
-
-	Ingo
+Howard
