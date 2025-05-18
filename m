@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9591D15B102;
-	Sun, 18 May 2025 17:51:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF961953A1
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 May 2025 18:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747590709; cv=none; b=JATkO+VfwJPM4xtWlYqwvC6hwgzbRNcmUwq3Owj0mCk45GcnX0fMijSEx/ortET4xSAWh/z8a0NMSqzcPeZHuxpXLZ9yULZ40bFNrUOkAk9XhgxE3G7fP20sCfkdQjtUFnX/RQ6ncHioDT64SqKGdZHHjVM2t27sCmWbU3SG76c=
+	t=1747591370; cv=none; b=fqorxEhydUhwepKWQfpDR61c9Cj5g3NR/aWNIsPzS3DH0L1KXoiJXKIJrQCpQ7pHbFZIq2CX285NThtSObitLm/iLEI0Hv1A5JtnlVw9LVJ+7ePbxpLqMioCGoJAqOKreXIiDGSiqa3DDZ6o7KBAn1vFBB+lapye+ZN2XjFIOLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747590709; c=relaxed/simple;
-	bh=SMiqwSNrbD6/e8s/PbJRcyKXJ/c2KljONFhW7rWYVfY=;
+	s=arc-20240116; t=1747591370; c=relaxed/simple;
+	bh=DzL+TXBFb/L4JlINohZkeBFeqts884s0d2JZvneyMio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W9kSHjaU9+Pp5kr205D/0+19znv+ClAmCHA8hpyGUR2BglAb/NiVhNO1orSX5paP6eOaNPBkxkjkRzsTGG8ymeuB0GEyqyoWj7+mYebMZ+W/Rqq44bBFcvLBvVNe58zIiSJEQ0/+izyn2Om8s2446kxlc6GvemgxqILdZEXg97g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+fNoLU2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H31R5vNyih6ZEJO4uJtOkgbQkOjlN2wB7zQlQ63ucw5O46P5waTwvEh+DeMzvAK+4832wYBBnXkWPw1+JrmAgLMCRfx/MjnuUuXkcWssFwDD+zxdiGUKkcQmhI+i8O6jmRtkRg0Chj1F1y+F4Q1JKW8Rbv56YfLVVvtJcsoPctE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6yRr6Cw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+fNoLU2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82791C4CEE7;
-	Sun, 18 May 2025 17:51:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6yRr6Cw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 402B2C4CEE7;
+	Sun, 18 May 2025 18:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747590709;
-	bh=SMiqwSNrbD6/e8s/PbJRcyKXJ/c2KljONFhW7rWYVfY=;
+	s=k20201202; t=1747591369;
+	bh=DzL+TXBFb/L4JlINohZkeBFeqts884s0d2JZvneyMio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O+fNoLU2V1/pzxDZavz7TjxQCEdvnahSqNOqjZ86ToAduPYig1hMToJnClvM6txe8
-	 xSGpnmjyjjCWylLXGR1J0/q3zsLYxR+as0Y1PNbay03CkrZ48ZpEn6Lm+6EWpdNJNZ
-	 FlniMLAQpJ5OT+98sj/dQexEwiRoiOeByXQsR4lpozzsD1lrhYDrYtOi34nRvX3uTi
-	 9P0B+f2Vwvq6CF5wD5TabBbwUUbBCKY2sJy+O2PmEpmbC+y/kY07VxclVcN6JlmM4s
-	 fPoVrgHUAXLq6n0CjzuIhzxi/RbaUd5PSysxjVYo4+CCYcWcM+9caXNoTNSivDCJkA
-	 I456LbsoDAoXQ==
-Date: Sun, 18 May 2025 10:51:47 -0700
+	b=B6yRr6CwUBvfI0Ys53HEguqE4f1u76k0KX0Nsps2SDF9RYcR5A0EHhDPUyLNPTdaI
+	 hruaQvNQZCPn4Plkk5a2RHC/txuY7Mzm2VAZBUhIg+djVkbTtMj46p0J+6HhBnDvjl
+	 TZmf9XlGvVAfND7erxK5uO7eoDUDpkHsl7JOqihay1TzJMkC1NtYTueavkRvoD68JF
+	 3dc/frcjP9y2YRrTwts0Pk1is13NPDMis09D+D399wXHWPY4ymtyJD/F3+Ub43e40c
+	 auWCn/Qdys5fO1f7A0Se8YXAA/3p8BbZoLiJiiNnQnmUMQ7jryjdMuCWVKpete0Dnj
+	 boNKZDyzKjptA==
+Date: Sun, 18 May 2025 11:02:47 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] perf test trace BTF: Use --sort-events in BTF
- general tests
-Message-ID: <aCoeM4qTk5YnGIsT@google.com>
-References: <20250517163230.1237469-1-howardchu95@gmail.com>
- <20250517163230.1237469-6-howardchu95@gmail.com>
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Subject: Re: [PATCH] perf trace: always print return value for syscalls with
+ set errpid
+Message-ID: <aCogx3jPtKTQOPa0@google.com>
+References: <20250403160411.159238-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,149 +47,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250517163230.1237469-6-howardchu95@gmail.com>
+In-Reply-To: <20250403160411.159238-2-ashelat@redhat.com>
 
-On Sat, May 17, 2025 at 09:32:30AM -0700, Howard Chu wrote:
-> Without the '--sort-events' flag, perf trace doesn't receive and process
-> events based on their arrival time, thus PERF_RECORD_COMM event that
-> assigns the correct comm to a PID, may be delivered and processed after
-> regular samples, causing trace outputs not having a 'comm', e.g.
-> 'mv', instead, having the default PID placeholder, e.g. ':14514'.
+On Thu, Apr 03, 2025 at 12:04:12PM -0400, Anubhav Shelat wrote:
+> Currently some syscalls that have errpid set to true do not print a
+> return value in perf trace. The syscalls that were consistently
+> observed were set_robust_list and rseq. This is because perf cannot find
+> their child process. This change ensures that the return value is always
+> printed.
 > 
-> Hopefully this answers Namhyung's question in [1].
+> Before:
+>      0.256 ( 0.001 ms): set_robust_list(head: 0x7f09c77dba20, len: 24)                        =
+>      0.259 ( 0.001 ms): rseq(rseq: 0x7f09c77dc0e0, rseq_len: 32, sig: 1392848979)             =
+> After:
+>      0.270 ( 0.002 ms): set_robust_list(head: 0x7f0bb14a6a20, len: 24)                        = 0
+>      0.273 ( 0.002 ms): rseq(rseq: 0x7f0bb14a70e0, rseq_len: 32, sig: 1392848979)             = 0
 
-Thanks, it makes sense.  Maybe it migrated to another CPU after exec.
-
-> 
-> You can simply justify the statement with this diff:
-> 
-> ---8<---
-
-Please do not use this in the format patch emails.  This makes git treat
-the following contents as commit body so it'll be added to the commit as
-if it's a valid change.  Maybe adding some spaces at the beginning of
-each line help.  But I think it's better if you publish it somewhere else
-and add a link instead.
+I'm ok with the change but I'm not sure if they are right syscalls.  It
+seems neither of syscalls return a thread id.
 
 Thanks,
 Namhyung
 
+> 
+> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> ---
+>  tools/perf/builtin-trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index edab0ff60b3c..f042afed5b74 100644
+> index 6ac51925ea42..c192f0219b2b 100644
 > --- a/tools/perf/builtin-trace.c
 > +++ b/tools/perf/builtin-trace.c
-> @@ -4204,6 +4204,7 @@ static int trace__deliver_event(struct trace *trace, union perf_event *event)
->  {
->  	int err;
-> 
-> +	printf("[debug] deliver\n");
->  	if (!trace->sort_events)
->  		return __trace__deliver_event(trace, event);
-> 
-> diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-> index 8aa456d7c2cd..76df9886429e 100644
-> --- a/tools/perf/util/comm.c
-> +++ b/tools/perf/util/comm.c
-> @@ -213,6 +213,7 @@ int comm__override(struct comm *comm, const char *str, u64 timestamp, bool exec)
->  	new = comm_strs__findnew(str);
->  	if (!new)
->  		return -ENOMEM;
-> +	printf("[OVERRIDE] old %s new %s str %s\n", old->str, new->str, str);
-> 
->  	comm_str__put(old);
->  	comm->comm_str = new;
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2531b373f2cf..5a501fe304d2 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -578,6 +578,7 @@ int machine__process_comm_event(struct machine *machine, union perf_event *event
->  	if (dump_trace)
->  		perf_event__fprintf_comm(event, stdout);
-> 
-> +	printf("[debug] machine__process_comm_event\n");
->  	if (thread == NULL ||
->  	    __thread__set_comm(thread, event->comm.comm, sample->time, exec)) {
->  		dump_printf("problem processing PERF_RECORD_COMM, skipping event.\n");
-> 
-> Now, simply run this command multiple times:
->     $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
-> And you should see two types of results:
-> 
->     $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
->     [debug] deliver
->     [debug] machine__process_comm_event
->     [OVERRIDE] old :1221169 new mv str mv
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
-> 	 0.000 ( 0.013 ms): mv/1221169 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
->     [debug] deliver
-> 
->     $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
-> 	 0.000 ( 0.014 ms): :1221398/1221398 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
->     [debug] deliver
->     [debug] deliver
->     [debug] machine__process_comm_event
->     [OVERRIDE] old :1221398 new mv str mv
->     [debug] deliver
->     [debug] deliver
->     [debug] deliver
-> 
-> Anyway, use --sort-events in BTF general tests to avoid :PID, a comm is
-> preferred.
-> 
-> [1]: https://lore.kernel.org/linux-perf-users/Z_AeswETE5xLcPT8@google.com/
-> 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/tests/shell/trace_btf_general.sh | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> index e78e653fc8f1..a15cdb5fa309 100755
-> --- a/tools/perf/tests/shell/trace_btf_general.sh
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -27,7 +27,7 @@ check_vmlinux() {
+> @@ -3005,8 +3005,8 @@ errno_print: {
+>  	else if (sc->fmt->errpid) {
+>  		struct thread *child = machine__find_thread(trace->host, ret, ret);
 >  
->  trace_test_string() {
->    echo "Testing perf trace's string augmentation"
-> -  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
-> +  output="$(perf trace --sort-events -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
->    if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
->    then
->      printf "String augmentation test failed, output:\n$output"
-> @@ -38,7 +38,7 @@ trace_test_string() {
->  trace_test_buffer() {
->    echo "Testing perf trace's buffer augmentation"
->    # echo will insert a newline (\10) at the end of the buffer
-> -  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
-> +  output="$(perf trace --sort-events -e write --max-events=1 -- echo "${buffer}" 2>&1)"
->    if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
->    then
->      printf "Buffer augmentation test failed, output:\n$output"
-> @@ -48,7 +48,7 @@ trace_test_buffer() {
->  
->  trace_test_struct_btf() {
->    echo "Testing perf trace's struct augmentation"
-> -  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
-> +  output="$(perf trace --sort-events -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
->    if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
->    then
->  	printf "BTF struct augmentation test failed, output:\n$output"
+> +		fprintf(trace->output, "%ld", ret);
+>  		if (child != NULL) {
+> -			fprintf(trace->output, "%ld", ret);
+>  			if (thread__comm_set(child))
+>  				fprintf(trace->output, " (%s)", thread__comm_str(child));
+>  			thread__put(child);
 > -- 
-> 2.45.2
+> 2.48.1
 > 
