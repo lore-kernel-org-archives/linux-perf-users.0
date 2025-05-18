@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451E815B971;
-	Sun, 18 May 2025 17:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F291733EA;
+	Sun, 18 May 2025 17:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747589817; cv=none; b=EzNiA8X7bu0/adJ0hmXKBlZNMC7T1+eXq+7wK2LQ8Fc5xJ5xwuRu0zrLHpoSZiCbFJhA2vD/2Lxf1GAl5tVM93gr/wwJnAHmhUTA92i1VwtLFUwl4kEfpGC7pHTvWlV3kjIsjGollNoe6XyfHfu9NEmxZXZir1X4NAdfE9JmqJc=
+	t=1747589938; cv=none; b=t5opGTjdA700jlYYkBDbQRRFkmZctT2KDfD4vJltUCBJ7nbM8BP2pcpjuwF1cL5fXu1bxqofCFtrGc5GQa9JuAbs4icXatmhtrbDQMOR72wOiE1Z+jyial8ys6ImsSoOsFVWQoCZHKMSesA7Lq1mTtnOGu97P4bSaiyZJTjCx6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747589817; c=relaxed/simple;
-	bh=qO52H0fsR4aRohAdm3P77B/RedYm7B+ayCGLW/gsMbI=;
+	s=arc-20240116; t=1747589938; c=relaxed/simple;
+	bh=1rcFx6S0KdiGhIZJMwa0fKOgFgcI8zc8sWDeyHYjAas=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDvwCATOcga74l4rP/cHdC0e3Zrw5X+Ea24sIvuGE621YXy0zt5lObKegv81y3zLRSEc2gcmFaCORUTU7yGeU4beBZpvQRMHaoZz1HVIeEB3W7BhfOkpR0hZGUP6MbShhYBUPaZBpiJyYQDnK098HzJGC9Pf10rN/V1kPJ8bXoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4u/0Pvj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WsXeE2xBJ5lAjfnejlDnTv4WFw21o/kgu/svQ8dl4rqOM66JNaR/r/qW9JXHtYDVXFoFi747wUTVcFDWt2I018YZliW3Z0ygrK7u8RHOn2vMQYe0tQRxZGJpATDog8Ith0zylRcOMCyoCfSnKlfDy5nz0YQ3h3wx0TJcMWEMG3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0sqxmNU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4u/0Pvj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B98C4CEE9;
-	Sun, 18 May 2025 17:36:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0sqxmNU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0782C4CEE7;
+	Sun, 18 May 2025 17:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747589816;
-	bh=qO52H0fsR4aRohAdm3P77B/RedYm7B+ayCGLW/gsMbI=;
+	s=k20201202; t=1747589937;
+	bh=1rcFx6S0KdiGhIZJMwa0fKOgFgcI8zc8sWDeyHYjAas=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J4u/0Pvjq88DjWo0ksK8MpqcBUqVc3Q0alyNP2vqCnw312KN/+4d4LfjN/BuxIlL1
-	 zNSA0qRMB2XocXLHldhJe+on/CKocG34zQM/Wf+WMUKcY2n+DsN8m6Dwy/T2Atq0I4
-	 VVqXjEvaRA6gv9kLzjti1gOWtfm0Y6/F/X2tNpp2vooLj564ssXd2KqfI2TIOGyc2G
-	 EdWj1x1gJl69vhuk6gp85/U1t5EKBiiYfRP76pZIF8Ok1Wn8WeHcQ5btsu9rcvaDm2
-	 QyTKfdJIId09jVAz46IDrD1JDaZBT1Ne/RwaT7jz05wrKx/kO11Vs1SilCurIE3Sxm
-	 BvKDFGBqQ03RQ==
-Date: Sun, 18 May 2025 10:36:54 -0700
+	b=r0sqxmNUKelsGsObyfIz2r7Jg1+To6iW1iChzD9J0xtLMDPaD7PXl66oIe1UKhJwe
+	 j8STJewCSlQxmLyPtuZvKToOREdTJcVeiIJHcx+DDI0aes20G54TCSuaM5JSjd5MUG
+	 PhXgDstk3ntk8jzaXsm2ar6TI3O390h5mwA0TWh7DvfdNwcLd1uX0WXHkVt1j/N8Q2
+	 hhtYyBPlamaeuaiIqs7K8GekkbUHkDFKOlSrlElIYHmDZEJ+vBpI5Kl7VEm5dWnZHQ
+	 IpBEdhVbd2R+vf+bLP4bCdCAV9kLRNKPMIiC92vetJiSViZC7h/1I2i3MDYxE+r6Jk
+	 2yjzVaJf91YdA==
+Date: Sun, 18 May 2025 10:38:55 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Howard Chu <howardchu95@gmail.com>
 Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
@@ -34,11 +34,11 @@ Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
 	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/5] perf test trace: Remove set -e and print trace
- test's error messages
-Message-ID: <aCoatnYe6z61xdcb@google.com>
+Subject: Re: [PATCH v1 4/5] perf test trace: Remove set -e for BTF general
+ tests
+Message-ID: <aCobLyqonDU4qnzv@google.com>
 References: <20250517163230.1237469-1-howardchu95@gmail.com>
- <20250517163230.1237469-3-howardchu95@gmail.com>
+ <20250517163230.1237469-5-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,112 +47,103 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250517163230.1237469-3-howardchu95@gmail.com>
+In-Reply-To: <20250517163230.1237469-5-howardchu95@gmail.com>
 
-Hi Howard,
-
-On Sat, May 17, 2025 at 09:32:27AM -0700, Howard Chu wrote:
-> Currently perf test utilizes the set -e option in shell that exit
-> immediately if a command exits with a non-zero status, this prevents
-> further error handling and introduces ambiguity. This patch removes set
-> -e and prints the error message after invoking perf trace during perf
-> tests.
-
-I think it's fine to exits with non-zero inside 'if' statements.  But
-it won't work if you want to move it out of the 'if' statements.  I'm
-not sure how it'd work in a subshll for the assignment.  But it'd be ok
-to remove 'set -e' anyway since the test checks the result manually.
-
-Thanks,
-Namhyung
-
-> 
-> In my case, the command that exits with a non-zero status is perf
-> trace instead of grep, because it can't find the 'timer:hrtimer_setup'
-> tracepoint, see below.
+On Sat, May 17, 2025 at 09:32:29AM -0700, Howard Chu wrote:
+> Remove set -e and print error messages in BTF general tests.
 > 
 > Before:
->     $ sudo /tmp/perf test enum -vv
->     107: perf trace enum augmentation tests:
->     107: perf trace enum augmentation tests                              : Running
+>     $ sudo /tmp/perf test btf -vv
+>     108: perf trace BTF general tests:
+>     108: perf trace BTF general tests                                    : Running
 >     --- start ---
->     test child forked, pid 783533
->     Checking if vmlinux exists
->     Tracing syscall landlock_add_rule
->     Tracing non-syscall tracepoint syscall
+>     test child forked, pid 889299
+>     Checking if vmlinux BTF exists
+>     Testing perf trace's string augmentation
+>     String augmentation test failed
 >     ---- end(-1) ----
->     107: perf trace enum augmentation tests                              : FAILED!
+>     108: perf trace BTF general tests                                    : FAILED!
 > 
 > After:
->     $ sudo /tmp/perf test enum -vv
->     107: perf trace enum augmentation tests:
->     107: perf trace enum augmentation tests                              : Running
+>     $ sudo /tmp/perf test btf -vv
+>     108: perf trace BTF general tests:
+>     108: perf trace BTF general tests                                    : Running
 >     --- start ---
->     test child forked, pid 851658
->     Checking if vmlinux exists
->     Tracing syscall landlock_add_rule
->     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_start
->     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup,timer:hrtimer_start, output:
->     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
-> 			 \___ unknown tracepoint
-> 
->     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not found.
->     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feature?.
-> 
->     Run 'perf list' for a list of valid events
-> 
->      Usage: perf trace [<options>] [<command>]
-> 	or: perf trace [<options>] -- <command> [<options>]
-> 	or: perf trace record [<options>] [<command>]
-> 	or: perf trace record [<options>] -- <command> [<options>]
-> 
-> 	-e, --event <event>   event/syscall selector. use 'perf list' to list available events---- end(-1) ----
->     107: perf trace enum augmentation tests                              : FAILED!
+>     test child forked, pid 886551
+>     Checking if vmlinux BTF exists
+>     Testing perf trace's string augmentation
+>     String augmentation test failed, output:
+>     :886566/886566 renameat2(CWD, "/tmp/file1_RcMa", CWD, "/tmp/file2_RcMa", NOREPLACE) = 0---- end(-1) ----
+>     108: perf trace BTF general tests                                    : FAILED!
 > 
 > Signed-off-by: Howard Chu <howardchu95@gmail.com>
 > ---
->  tools/perf/tests/shell/trace_btf_enum.sh | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+>  tools/perf/tests/shell/trace_btf_general.sh | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-> index b3775209a0b1..cd4c8754f5d4 100755
-> --- a/tools/perf/tests/shell/trace_btf_enum.sh
-> +++ b/tools/perf/tests/shell/trace_btf_enum.sh
+> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+> index a25d8744695e..e78e653fc8f1 100755
+> --- a/tools/perf/tests/shell/trace_btf_general.sh
+> +++ b/tools/perf/tests/shell/trace_btf_general.sh
 > @@ -3,7 +3,6 @@
 >  # SPDX-License-Identifier: GPL-2.0
 >  
 >  err=0
 > -set -e
 >  
->  syscall="landlock_add_rule"
->  non_syscall="timer:hrtimer_setup,timer:hrtimer_start"
-> @@ -34,22 +33,24 @@ trace_landlock() {
->      return
->    fi
+>  # shellcheck source=lib/probe.sh
+>  . "$(dirname $0)"/lib/probe.sh
+> @@ -28,10 +27,10 @@ check_vmlinux() {
 >  
-> -  if perf trace -e $syscall $TESTPROG 2>&1 | \
-> -     grep -q -E ".*landlock_add_rule\(ruleset_fd: 11, rule_type: (LANDLOCK_RULE_PATH_BENEATH|LANDLOCK_RULE_NET_PORT), rule_attr: 0x[a-f0-9]+, flags: 45\) = -1.*"
-> +  output="$(perf trace -e $syscall $TESTPROG 2>&1)"
-> +  if echo "$output" | grep -q -E ".*landlock_add_rule\(ruleset_fd: 11, rule_type: (LANDLOCK_RULE_PATH_BENEATH|LANDLOCK_RULE_NET_PORT), rule_attr: 0x[a-f0-9]+, flags: 45\) = -1.*"
+>  trace_test_string() {
+>    echo "Testing perf trace's string augmentation"
+> -  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
+> -    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
+> +  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
+> +  if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
 >    then
->      err=0
->    else
-> +	printf "[syscall failure] Failed to trace syscall $syscall, output:\n$output"
+> -    echo "String augmentation test failed"
+> +    printf "String augmentation test failed, output:\n$output"
+
+Looks like you need "\n" after the output as well.
+
+>      err=1
+>    fi
+>  }
+> @@ -39,20 +38,20 @@ trace_test_string() {
+>  trace_test_buffer() {
+>    echo "Testing perf trace's buffer augmentation"
+>    # echo will insert a newline (\10) at the end of the buffer
+> -  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
+> -    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+> +  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
+> +  if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+>    then
+> -    echo "Buffer augmentation test failed"
+> +    printf "Buffer augmentation test failed, output:\n$output"
+
+Ditto.  And probably for the previous patch too.
+
 >      err=1
 >    fi
 >  }
 >  
->  trace_non_syscall() {
-> -  echo "Tracing non-syscall tracepoint ${non-syscall}"
-> -  if perf trace -e $non_syscall --max-events=1 2>&1 | \
-> -     grep -q -E '.*timer:hrtimer_.*\(.*mode: HRTIMER_MODE_.*\)$'
-> +  echo "Tracing non-syscall tracepoint ${non_syscall}"
-> +  output="$(perf trace -e $non_syscall --max-events=1 2>&1)"
-> +  if echo "$output" | grep -q -E '.*timer:hrtimer_.*\(.*mode: HRTIMER_MODE_.*\)$'
+>  trace_test_struct_btf() {
+>    echo "Testing perf trace's struct augmentation"
+> -  if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
+> -    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
+> +  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
+> +  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
 >    then
->      err=0
->    else
-> +	printf "[tracepoint failure] Failed to trace tracepoint $non_syscall, output:\n$output"
+> -    echo "BTF struct augmentation test failed"
+> +	printf "BTF struct augmentation test failed, output:\n$output"
+
+And here as well.
+
+Thanks,
+Namhyung
+
+
 >      err=1
 >    fi
 >  }
