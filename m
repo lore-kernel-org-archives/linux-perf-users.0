@@ -1,58 +1,58 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1B39FD9;
-	Sun, 18 May 2025 18:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0259B39FD9;
+	Sun, 18 May 2025 18:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747591929; cv=none; b=clvz5PK1QEB4QEz27VBpRifUJ9GBd/TQHZWCJOXRzZHcL8c1Rz/ZXi+8C2+px23au2YrpfaymQJ3WYTyXoPRk1JFMZYXKKUomN/3ch7U0/FFQx77bKoxxmhjNs05h/v9t/fxUHifJ0yb8gHTGuqbVrFbTkgDYDL2kWobC2V5gpI=
+	t=1747592086; cv=none; b=R9RpQ2CyLkDL1aN3boL7jopfzpsK1Y5veJ9IPr9QF0dm31HaG5yzot2Dv1x86nNrWxLOSaUHv8O6vu8GCMvvOl2GyzFrNYHhsWh9SN/0/vuQGLSDOrQ7iEf6RLa7HpB5DkdVBQIcE415lAfNhn3JuVDc7W6Q8LjERDiu91Var9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747591929; c=relaxed/simple;
-	bh=xLrfGRIolCn+y1r+mkvbyYvCu2T4QGg3/8reVJO2b2w=;
+	s=arc-20240116; t=1747592086; c=relaxed/simple;
+	bh=3XZqXp7z6xmhy+qESAoJBE0/Qm/c75kBrkL2RC4mJ9E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZhcUkbu8dWMjo3sY/WCPNuYZu/EgaN5R0jRxPr2YJAJax/De6nWrtuTCsbqpGdeM3VJg8W3bF9fk1cM4tsm1Cm2POElZ2F6cRoitiKhDi9kmjdGitDDX8NjcCMVT33t1iZHzboe1f3hklSuqp7Zy7f0nHqw3OuRfYGR/+kIskSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uysvgk5v; arc=none smtp.client-ip=209.85.128.180
+	 To:Cc:Content-Type; b=NNbQNjMVJaUjvIDn5zA9cL23plI+PKqKSCKAk+LySc85m/iExQrAzQpweAoPa+31CvyALkRNRxSBWMfnHOX7VYA5LYJygLVfxSPHTrnQOqt0vJkZt2+1Q51S/3AS1bYHpXlTFP5hjG40aY/jodg9hlUw4MvzBqbfp/dDjJ3V/3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eeMetdAX; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uysvgk5v"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70cca430085so5220487b3.3;
-        Sun, 18 May 2025 11:12:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeMetdAX"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70ccb7effb0so3374617b3.0;
+        Sun, 18 May 2025 11:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747591926; x=1748196726; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747592084; x=1748196884; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XHn+msd7NQ+wMbD7YZtQnX8pW0NnLTWIdaNDr3YivAU=;
-        b=Uysvgk5vBIb7HOtOPYxoD6IiahnB3tUFzoY4aOnOwQH1+g37VOaDxv+kuEoJPP0CaL
-         KQ2n6OVIbUqPXqmxEMJ/av3cPHcpJ7SKK48AOGCV7sqMBJzULJtKttbUshKtz7FR14xK
-         N91Ap+kz8AZd7FFG8jtc8vt6vsreZ8MPyT6Z54smgyaGIpx2h+xqm/R/2/PVdhNuHEEz
-         WS3PUnLQeK8xHTNJQEAIhl7+2kkOPAidMDqcnq4BCLNMTkBAr9lg4XaPJzEYBFxiKl2u
-         febhJha9eETavuR5wqzTbX8qCl6wiHY6mLW5ChJOdA5hkqE92pHbQeyeeb2A8vdZyZoE
-         r7JQ==
+        bh=eyaRn8VkCxgCCGc7WET29gPJFWKcVTgXcDNhGYjKQ3c=;
+        b=eeMetdAXY/4PfhjWoMnLb2unvXcf3odLGupm7VNwXD8j7uoxZ9V4aojx0PxEkjunRr
+         PHmBEZTLD3HL+6PD7b/Dgvd++EP8G4g5EmSlqv7c/Pe+UDHXWY84roABtbxc0vH87BbZ
+         oPvTR7fbp21A87oVoWtoMG3J2nWZsscBjRcFwzjbZ7dU9gwHSYa9Up9OHaWtdAhzIwPF
+         4A1HDVRSy+2UHf1vbHraDJmdll7ar2qA8uy+4Wl6m7dK7uPa83XsDphX7t5pG6SaNm6v
+         92jMEdmOBWFBPBw/uk8XavqV82nmKW0aZLmEapFOyaZBV3AnZz3xqjOsrVj1ZUMRb22f
+         0qIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747591926; x=1748196726;
+        d=1e100.net; s=20230601; t=1747592084; x=1748196884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XHn+msd7NQ+wMbD7YZtQnX8pW0NnLTWIdaNDr3YivAU=;
-        b=F9KW4ryvW+O/12mcKUQLIzXrDVPytQUQ1F18AEEbNP8KsycFD6lkSaGm/x4Jz4cUV/
-         rrce+hRZYyQbcKoEwTRQ6KIYpkpDv2jPSPQ2RMdlxrmDX1OvHU4cPmwPTTvEtgH42M7m
-         pqrTs+IqQUEdoMbYWiKmxI/qD8V6AJrTijDSf5gm6sfArJ0j2cxGyED/D3+e7ui/RSAm
-         W9wOg1iQDaJhCqXvUPtGbd7NvAsSv2REZ+/bOnkVqRpg8GN45hRF1cHIbUG+1H6nLoAo
-         DB5iWPLU/PzaOC04BJcSUmQKORFK75nP/y2IZN1C9siMmee8kFKkJkMSuZjfOyvIBI2J
-         QOCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEGmRhr9pNTPWqOlbhdPRrEt05KYGBLSNOVC6ZzYcShx0/j+TO9/uzsrRGMPpnbiuSeeNrZvD5EvwHIA8=@vger.kernel.org, AJvYcCXRGqKii6QI/0mb6uiU3Jq2OscVFcikAhQSz/JooQHWSePu6te21g51bg7sHpqX9N3I2aar2lYZajIHHCHC9w74/w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkaedUh8WMmY++xZz2VFeLusNrJFFiVIWBjMLL5N2bKFDQo1Ng
-	JV27L5N/kHW+0hwoHz1rq2z2GdA2OEDbGxJY6NlcsPYNMxOImjLL9ciN/4WsQT25yAVyO3o2Eg3
-	NppqV5CVRpg93zIs62OZSsV1MN6sPRP4=
-X-Gm-Gg: ASbGncue+w1Udb9u1mVIOci/yhfWROBBdwZAMwQ/tefe0B+6TDGUv3KUmXzHltfranp
-	v4n1tGu0LX2NFZ0VmJA5oAOAjQphWW0nNmGfTuOaJhlIYzc0r/enlquNSJhtLNbFGqm6QmTFsdv
-	es3WPtig05aBZus903xkUPw4p/Ji7H4HycS3RO9HtOeg==
-X-Google-Smtp-Source: AGHT+IGE50CS8gt2jpoH952jZjCUyVs+crWub7hI76UX6jM9UkUopcnMA7SCZADbxyox5nTnz0xe6c7N4D+G+fKkzQc=
-X-Received: by 2002:a05:690c:ed4:b0:708:21e9:a20d with SMTP id
- 00721157ae682-70caafa9779mr142654417b3.16.1747591926464; Sun, 18 May 2025
- 11:12:06 -0700 (PDT)
+        bh=eyaRn8VkCxgCCGc7WET29gPJFWKcVTgXcDNhGYjKQ3c=;
+        b=uMPEXTnURXjCxjKcUUgInCy6syQyQHyI20DJdiJuz1T1Vw7nCG6MU3Kw3uzN/OUHS8
+         xzPKPUo9UfZbLB9P2jM09KHSA2Q4waMHgeLPEeqMd/GebSMQzJvG1J2IPrLu0ZaLjdpP
+         yjSXvC9iNCk33Eg0xb0UslbD2XYv6VWzip22RUAHiatnFiJhKIMQqkvF/a+taNubQwO2
+         eprZXyb0Yv7umEFbRLzdbEWHSBvjBKvR/iVishHRyP6Zv4HksZzVmGiFJMb9sv+9uRdF
+         mQF9Q5qtyWmv3bbEkvAFJLRGAGIZdOLSBUo1Hptdo6+2YqemUr3VmpIUSimeZQyFwhsr
+         zuXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsnb0loBjV7G8W2jcuvw3exV4xY0wRLwhvQeoKVGOCPWg4MAOALjSr147aL9UUbsjFWAPUkk8jE1qxOLQ=@vger.kernel.org, AJvYcCXRqbNVvYWzeDAc5oyblfTIb9Z8gCntEeIZ1IooEX+2Z0lGudlldT0lTvzsrGO9wAthT/6Q84BqAHy+zC+7WG4edw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwYtZDKqOyOnLLK1EYRyRH1mlOSM0YLO4fpHvazhhjdmNWYUoF
+	y06BtxEgigls/EEiuUrvc1OUWpQfK35v66o3CIMQZLPTVj6Rz/uI1aDReeq9cpPrPvOz/83R4TU
+	DZJazKY1W4Rc1H9/P76OTiijcDzewAPA=
+X-Gm-Gg: ASbGncvL+Kyk9KJ8NMfuQyVx1lti4uqpCfCrf4JF0pcGy1Y4JSV98i/gHRMZhReyH25
+	+qGvP39NwddV/5qw06bQbxepe8ajZwvCm0KUsVPjUmZOgPAS+qP28e/kaCfRk+jrN6wxiDjVVUs
+	wLZ5LkHS530hyNwDZBTMDCJAMx+1aSQBI=
+X-Google-Smtp-Source: AGHT+IFWGjT6PCx09EclVxoZ1Fnk5SduO2JEZH/wt1gmeZZ8Dh5OQtWul5dKME8XTtN8PPhaXUPNhtGaDqGGo5z4758=
+X-Received: by 2002:a05:690c:9b12:b0:709:1d50:87d with SMTP id
+ 00721157ae682-70ca7bade72mr155233897b3.34.1747592083894; Sun, 18 May 2025
+ 11:14:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,14 +60,14 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250517163230.1237469-1-howardchu95@gmail.com>
- <20250517163230.1237469-6-howardchu95@gmail.com> <aCoeM4qTk5YnGIsT@google.com>
-In-Reply-To: <aCoeM4qTk5YnGIsT@google.com>
+ <20250517163230.1237469-3-howardchu95@gmail.com> <aCoatnYe6z61xdcb@google.com>
+In-Reply-To: <aCoatnYe6z61xdcb@google.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Sun, 18 May 2025 11:11:55 -0700
-X-Gm-Features: AX0GCFtkO8mLJpOXKojWTdB5XqQg2vXOzejauZOW4x2PvyFGkHt4qxLwP-vlOME
-Message-ID: <CAH0uvohjmuahjP1Xrz3h9FmK7R1zE_jP-czxt2s_5pPx_nMu2w@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] perf test trace BTF: Use --sort-events in BTF
- general tests
+Date: Sun, 18 May 2025 11:14:33 -0700
+X-Gm-Features: AX0GCFsxSmPJdkdKd07lxTO7X_4UXX0noSOMax6KuF3EBhQA4NnSVjBx96V3IMw
+Message-ID: <CAH0uvojxBvx0KC5xVem59zD8Uu8A883GA98uT1_tGdyYk1tqig@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] perf test trace: Remove set -e and print trace
+ test's error messages
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com, 
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
@@ -78,33 +78,24 @@ Content-Transfer-Encoding: quoted-printable
 
 Hello Namhyung,
 
-On Sun, May 18, 2025 at 10:51=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+On Sun, May 18, 2025 at 10:36=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> On Sat, May 17, 2025 at 09:32:30AM -0700, Howard Chu wrote:
-> > Without the '--sort-events' flag, perf trace doesn't receive and proces=
-s
-> > events based on their arrival time, thus PERF_RECORD_COMM event that
-> > assigns the correct comm to a PID, may be delivered and processed after
-> > regular samples, causing trace outputs not having a 'comm', e.g.
-> > 'mv', instead, having the default PID placeholder, e.g. ':14514'.
-> >
-> > Hopefully this answers Namhyung's question in [1].
+> Hi Howard,
 >
-> Thanks, it makes sense.  Maybe it migrated to another CPU after exec.
+> On Sat, May 17, 2025 at 09:32:27AM -0700, Howard Chu wrote:
+> > Currently perf test utilizes the set -e option in shell that exit
+> > immediately if a command exits with a non-zero status, this prevents
+> > further error handling and introduces ambiguity. This patch removes set
+> > -e and prints the error message after invoking perf trace during perf
+> > tests.
 >
-> >
-> > You can simply justify the statement with this diff:
-> >
-> > ---8<---
->
-> Please do not use this in the format patch emails.  This makes git treat
-> the following contents as commit body so it'll be added to the commit as
-> if it's a valid change.  Maybe adding some spaces at the beginning of
-> each line help.  But I think it's better if you publish it somewhere else
-> and add a link instead.
+> I think it's fine to exits with non-zero inside 'if' statements.  But
+> it won't work if you want to move it out of the 'if' statements.  I'm
+> not sure how it'd work in a subshll for the assignment.  But it'd be ok
+> to remove 'set -e' anyway since the test checks the result manually.
 
-Sorry. I will delete this scissor in v2.
+Yeah it won't exit from the non-zero status from the if statement. Thanks.
 
 Thanks,
 Howard
