@@ -1,181 +1,226 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C99A1EB5DA;
-	Sun, 18 May 2025 19:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7044717E0;
+	Sun, 18 May 2025 19:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747595409; cv=none; b=VaqM2Rhmq5/0a5CBFaKeibM7JIqZGqpfRA+H3ZGz3mphR24/2NV4R4Is3InSrSAa9fxoLC7uiOIBMUa/hIRKxKd/jjpNnQ3xRaiRjvhhen17wiLVJ8re4Yzfrj2CGCraO4c6kRFicYhW+9ZNj7eUe4oFtPvDIxXZE9ZZT7pCPwM=
+	t=1747595936; cv=none; b=bSKhVDpH8KRQjrVpPRUGuJcXr2xWXxzL25QzNN+uJZBr+DmBdAXG2Rh26P5lCYNKoOSdHys4m26WjTSYa1u0Qje2/7zbCY4HVR9Ekvn8ZSy8zLA04BIg6/60FebWYlGWBvXWVLfsvTbvJIq3RneUxENLGKn4IeRXRfANl3CMciA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747595409; c=relaxed/simple;
-	bh=z0CasqAEvTfFdfOdHo4OuX7jWHBbJ5PPksEWEZz0WwQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D9If7d7C7znPGj3hafHOVFKZXr0Q1dUmDKlmdROIxoLMyKvcMeZrcujY5otoCZEvksvIxVYdGZTngYcyLBGEtuIpKQEMhFmaIhDF0pEx7016FMO3MTWv1S6qMMrMTHAE36lmuKSJ6a2cwOXesnMAx8iAhimhpyz+q2VrprOaqMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVFjzAnb; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747595936; c=relaxed/simple;
+	bh=fRF3CpaQ3ZagL4PfcD5Ss7lAjLAo3ddXRCFd78Uxo0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHRG16ZDDTbZKGSBBl90Sh+owyDeXrzUZiaTXyXPBzqcmye3eRiXByTHvR3MJouGLLtr18Osw6hiRGRe72vaK6xox2I01W+Eu6GmfHJOgU1oXoHX5/6bX8blD3tUl9+KduqIxn54fBU+qtAgUpsLpfIDfbeOjByV8WLoimgt/lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDJ45YVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVFjzAnb"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af5085f7861so2374723a12.3;
-        Sun, 18 May 2025 12:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747595407; x=1748200207; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UPASqWbwMcCUMi4ZOjE3DcJ6mOdKDFpi0lCkuF6a4EE=;
-        b=QVFjzAnb2p0UcjrleaQ95tNKCgo5rYBxqRsT1bCix39Gwke0xIT9UnrnDxzHUtXmEo
-         5byTltgTkYjC2K67kOUcvs1CaUToLA09a+nPAMLu2zMBaNG1ctLVuLTUjuBIAVb4Wygz
-         vPRU0NhG7bW2L2HcPR23AVOSWJfdcW5w0B3Gm5Qj3ihb14MnK9ZaQ0iBMsyltFNkIjXT
-         UebEWTQ2ajQRbKAwpCi4IGNU3JTEvYz6P/u0TY6ywMhjZso/rkH3lmX63Fsjb1sKwpvN
-         Fe+HerLV+cHq8iyhtzhMtsMix5UyyFuNPENTAAbpgUCIUaduJa1iGL3BLoHmRBHSHGnq
-         QmeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747595407; x=1748200207;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UPASqWbwMcCUMi4ZOjE3DcJ6mOdKDFpi0lCkuF6a4EE=;
-        b=K4ge7veIQwyJKgEf/UioKEpWXxYyd1YTnIMBdxXB/kgf5jXjuFj64oe/UBIq69lWXp
-         4qSpysfPgQs8ja/MuHtldl+HCyvZNW27qPxAqHhvvsyzSfdwnvkFfulSEPZfFHdj1Yvo
-         E7ujGRUGf53f0MRqTjyHxrvOCvl/P09w/14HSPRb8t9BWwrW+hJ7gjaVIpqC3/779IIs
-         avxcR+0bR8uQ1oP9Q1Ok+OL2qQRJr9uVuC7uZVjLUhdEsnYuXd9mNkzYQpkevN42ZvJM
-         HIOfsYq3L+1RtA96SNmxIqns6oyP0YB51I+DLkd8JyNKoLw1cbj7VFE3P//87peq/n3T
-         umlg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRE78jcW3HnpWBGMr438rpJie0RZFG1tLBGb05D1dMR6fKKA51pRu6JS2puXqfeboJoLCUBYviWHG+tmw=@vger.kernel.org, AJvYcCWWzKDlU3/ZyIv0eGMZGhhjn1xXrFq67AApjRBcM3EV27eFVgW5YX1bCXXpDShTfgO7pvM7n+3zr6HyP3fUzFo/9Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoJqHyFtThHSwQnbhnxJ2iS1ZfE0DjoooRqK21Es2xInCiDkCW
-	dJvj2Gp1+sR6InJIdoKgBVSVQJqswZxhjz2dF95zoOoRUxKPUPXob/Xc
-X-Gm-Gg: ASbGncthXRk+4w7d58MTxFM/vZS7C+kXbaGPtdRfQ9DhimufChrt4o2uzyJz8zdEBuW
-	NJa/hw5HW9X+bo6SUZ2Yg4cEux250EFiq0+mU49Y4IJ0nPZfm3nzMIe9C/C/fI+sTTNysh0wiNQ
-	tqf33EJJx6hj3xnVGIUpRpZPpbCVZ42EMkHro/4IB3nR21RQAdjjQqltDmSfTvGS++jBd8mfefD
-	n1fpmDYqLfns9AyjIYPIilqdBd7t1TU1ipSrGZoZmgcJwCcnl1PwHbbjP4v7UeJRFVIFUonfG7X
-	EQwqOwF2OQjZ6p6lkRo74MWMRC/z9uFAxDB6r/PIAOaOxwIsmEtjUanGvDIofSNod9hqgS/c0uv
-	tNNpToECvRfZMfzOSceh/6FjUgHNvquw=
-X-Google-Smtp-Source: AGHT+IGsxIQ3q9cWJ+EyipAsTSsuKiCIUqXrsmQgjMFkJsHTFQ15ruIkysVpxTG60OserRb8uwfGEg==
-X-Received: by 2002:a17:902:ea12:b0:22e:7f20:52c6 with SMTP id d9443c01a7336-231de317d0dmr136676575ad.23.1747595407360;
-        Sun, 18 May 2025 12:10:07 -0700 (PDT)
-Received: from howard-ubuntu.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adafedsm46022135ad.56.2025.05.18.12.10.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 May 2025 12:10:07 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	peterz@infradead.org,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v2 5/5] perf test trace BTF: Use --sort-events in BTF general tests
-Date: Sun, 18 May 2025 12:09:57 -0700
-Message-ID: <20250518190957.58932-6-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250518190957.58932-1-howardchu95@gmail.com>
-References: <20250518190957.58932-1-howardchu95@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDJ45YVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781FBC4CEE7;
+	Sun, 18 May 2025 19:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747595935;
+	bh=fRF3CpaQ3ZagL4PfcD5Ss7lAjLAo3ddXRCFd78Uxo0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lDJ45YVLzKQzlxEPHXoajXjbdqu88ca7c2Jt8gOVyv6CuBu8QoTOnxsRpdyRy1Wkp
+	 CarUbjO5t2mcPFWPNlOiq7KAlu8wqZoGbxQLj4pmx5Bz92VTpeXUuIOfOjytVqmbWP
+	 QmIgjRHeIkysxWkOajm2K0u4tTcQ4aOFPUXTsc3JOJBLk72CpTY4/YXrHIwUK1GjFD
+	 tIU19PPppnTCA8vG96STx4Z8rq1E6dLfbFWbMQobqLg67u7zOancTPVrVgXiu9I4b6
+	 aN1SR+8TNKCYPqYqhW71KYVFn6VrswbHb0FFkqJ/t7IfjhCGY8nW2YMLg9W3cP56CZ
+	 E8IfBt7QIyBcw==
+Date: Sun, 18 May 2025 12:18:54 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, irogers@google.com,
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, eranian@google.com,
+	ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com
+Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
+Message-ID: <aCoynoKRbpnOZ7QE@google.com>
+References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+ <20250516182853.2610284-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250516182853.2610284-3-kan.liang@linux.intel.com>
 
-Without the '--sort-events' flag, perf trace doesn't receive and process
-events based on their arrival time, thus PERF_RECORD_COMM event that
-assigns the correct comm to a PID, may be delivered and processed after
-regular samples, causing trace outputs not having a 'comm', e.g.
-'mv', instead, having the default PID placeholder, e.g. ':14514'.
+Hi Kan,
 
-Hopefully this answers Namhyung's question in [1].
+On Fri, May 16, 2025 at 11:28:39AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
+> 
+> $ perf record -e "{cycles,cycles}:S" ...
+> 
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
+> 
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> 
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+> 
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. For all ARCHs, the implementation is similar. Only the event is
+> disabled, rather than the group.
+> 
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+> 
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle.
+> The MAX_INTERRUPTS is set to all throttle events.
+> 
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+> 
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
 
-You can simply justify the statement with this diff: [2].
+Thanks for working on this!
 
-Now, simply run this command multiple times:
-    $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
-And you should see two types of results:
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  kernel/events/core.c | 60 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 44 insertions(+), 16 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index af78ec118e8f..52490c2ce45b 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2739,6 +2739,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
+>  static void perf_log_throttle(struct perf_event *event, int enable);
+>  static void perf_log_itrace_start(struct perf_event *event);
+>  
+> +static void perf_event_unthrottle(struct perf_event *event, bool start)
+> +{
+> +	event->hw.interrupts = 0;
+> +	if (start)
+> +		event->pmu->start(event, 0);
+> +	perf_log_throttle(event, 1);
+> +}
+> +
+> +static void perf_event_throttle(struct perf_event *event)
+> +{
+> +	event->pmu->stop(event, 0);
+> +	event->hw.interrupts = MAX_INTERRUPTS;
+> +	perf_log_throttle(event, 0);
+> +}
+> +
+> +static void perf_event_unthrottle_group(struct perf_event *event, bool skip_start_event)
+> +{
+> +	struct perf_event *sibling, *leader = event->group_leader;
+> +
+> +	perf_event_unthrottle(leader, skip_start_event ? leader != event : true);
+> +	for_each_sibling_event(sibling, leader)
+> +		perf_event_unthrottle(sibling, skip_start_event ? sibling != event : true);
 
-    $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
-    [debug] deliver
-    [debug] machine__process_comm_event
-    [OVERRIDE] old :1221169 new mv str mv
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-	 0.000 ( 0.013 ms): mv/1221169 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
-    [debug] deliver
+This will add more PERF_RECORD_THROTTLE records for sibling events.
+Maybe we can generate it for the actual target event only?
 
-    $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
-	 0.000 ( 0.014 ms): :1221398/1221398 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
-    [debug] deliver
-    [debug] deliver
-    [debug] machine__process_comm_event
-    [OVERRIDE] old :1221398 new mv str mv
-    [debug] deliver
-    [debug] deliver
-    [debug] deliver
+Also the condition for skip_start_event is if it's a freq event.
+I think we can skip pmu->start() if the sibling is also a freq event.
+I remember KVM folks concern about the number of PMU accesses as it
+can cause VM exits.
 
-Anyway, use --sort-events in BTF general tests to avoid :PID, a comm is
-preferred.
+Thanks,
+Namhyung
 
-[1]: https://lore.kernel.org/linux-perf-users/Z_AeswETE5xLcPT8@google.com/
-[2]: https://gist.githubusercontent.com/Sberm/6b72b2a1cf1c62244f1f996481769baf/raw/529667bd74a2e7e1953bbd4be545bf875da8a3e7/unsorted.patch
-
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/tests/shell/trace_btf_general.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-index 5fa50d815203..30cd3a53f868 100755
---- a/tools/perf/tests/shell/trace_btf_general.sh
-+++ b/tools/perf/tests/shell/trace_btf_general.sh
-@@ -27,7 +27,7 @@ check_vmlinux() {
- 
- trace_test_string() {
-   echo "Testing perf trace's string augmentation"
--  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
-+  output="$(perf trace --sort-events -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
-   if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-   then
-     printf "String augmentation test failed, output:\n$output\n"
-@@ -38,7 +38,7 @@ trace_test_string() {
- trace_test_buffer() {
-   echo "Testing perf trace's buffer augmentation"
-   # echo will insert a newline (\10) at the end of the buffer
--  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
-+  output="$(perf trace --sort-events -e write --max-events=1 -- echo "${buffer}" 2>&1)"
-   if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-   then
-     printf "Buffer augmentation test failed, output:\n$output\n"
-@@ -48,7 +48,7 @@ trace_test_buffer() {
- 
- trace_test_struct_btf() {
-   echo "Testing perf trace's struct augmentation"
--  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
-+  output="$(perf trace --sort-events -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
-   if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-   then
- 	printf "BTF struct augmentation test failed, output:\n$output\n"
--- 
-2.45.2
-
+> +}
+> +
+> +static void perf_event_throttle_group(struct perf_event *event)
+> +{
+> +	struct perf_event *sibling, *leader = event->group_leader;
+> +
+> +	perf_event_throttle(leader);
+> +	for_each_sibling_event(sibling, leader)
+> +		perf_event_throttle(sibling);
+> +}
+> +
+>  static int
+>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
+>  {
+> @@ -4393,12 +4426,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
+>  
+>  		hwc = &event->hw;
+>  
+> -		if (hwc->interrupts == MAX_INTERRUPTS) {
+> -			hwc->interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -			if (!is_event_in_freq_mode(event))
+> -				event->pmu->start(event, 0);
+> -		}
+> +		if (hwc->interrupts == MAX_INTERRUPTS)
+> +			perf_event_unthrottle_group(event, is_event_in_freq_mode(event));
+>  
+>  		if (!is_event_in_freq_mode(event))
+>  			continue;
+> @@ -6426,14 +6455,6 @@ static void __perf_event_period(struct perf_event *event,
+>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
+>  	if (active) {
+>  		perf_pmu_disable(event->pmu);
+> -		/*
+> -		 * We could be throttled; unthrottle now to avoid the tick
+> -		 * trying to unthrottle while we already re-started the event.
+> -		 */
+> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
+> -			event->hw.interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -		}
+>  		event->pmu->stop(event, PERF_EF_UPDATE);
+>  	}
+>  
+> @@ -6441,6 +6462,14 @@ static void __perf_event_period(struct perf_event *event,
+>  
+>  	if (active) {
+>  		event->pmu->start(event, PERF_EF_RELOAD);
+> +		/*
+> +		 * Once the period is force-reset, the event starts immediately.
+> +		 * But the event/group could be throttled. Unthrottle the
+> +		 * event/group now to avoid the next tick trying to unthrottle
+> +		 * while we already re-started the event/group.
+> +		 */
+> +		if (event->hw.interrupts == MAX_INTERRUPTS)
+> +			perf_event_unthrottle_group(event, true);
+>  		perf_pmu_enable(event->pmu);
+>  	}
+>  }
+> @@ -10331,8 +10360,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
+>  		__this_cpu_inc(perf_throttled_count);
+>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+> -		hwc->interrupts = MAX_INTERRUPTS;
+> -		perf_log_throttle(event, 0);
+> +		perf_event_throttle_group(event);
+>  		ret = 1;
+>  	}
+>  
+> -- 
+> 2.38.1
+> 
