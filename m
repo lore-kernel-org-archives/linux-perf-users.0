@@ -1,124 +1,151 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FAA1E3DE8;
-	Sun, 18 May 2025 22:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252C93595D;
+	Mon, 19 May 2025 04:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747607563; cv=none; b=Tex3nETZKtvwO257bTh9hmrmw2QsgwvWt8Rm4IlBEqhsADRnq72Yz/moVOG7WvQamJvXDXx/ziJrW/Jprq/TdVtWV+RfB49GBQ5T6fM9cR9jCiyKKWIfGaTF0b9vD/xsheB9ykUQmePBBlP2UuzCPfgLJMH+zEqi3zK1szoe86s=
+	t=1747628194; cv=none; b=I7QrKYQKzClIB0dBuC21KJVIG19E7CO85pvY32O2h9Voe6L7qKOFrzaC9CimdAkWZvIwGPfxdU8oI0u4Ug4AD4kdfcF/DBT+oCrXYv9g/TQD+GZMfhv+USiVWdlxtoDGl5KSqTRYk4B50Hk02bRRS+dns1C4yiza95aQQYgY/VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747607563; c=relaxed/simple;
-	bh=l9oO+/3NrbBbHunrq3cjDnNKvd58oHtVQzOEatObfVc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BRy3d0OeqYQFqNcSGvjvtbg8wEB2tUf/oUHFJ0rcCdBqO0xMSySpQvoHhcAQTNV8ILCBWbEbdXKIrYXOjQ9lymuWdvxa/CQb5OHwgTmq5XjkH5YB2NVyxexRq3Yn3qVURelUd6ZGTRpMO5dTsNVC/plAH3cBclLX61/3eSjxX4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PKc3afgx; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747628194; c=relaxed/simple;
+	bh=GkMzPKhO1OJ4iGbuKLJGKxX4Kn//36QU7IIlwR3PDeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cUin/EA43/CWqifeqb87/s9hhcjKne1aPYaSFViZ821+fYf/xw3dKxyhspnTBS3+ZINO9Ui7iVYXkEd27iUWDFqt18wd/zjw17m648rIn1WfgWd1OM1xvrS36zH7hHiy+UhlQpXTjKA+kKZYaFGdA7oefEaVwRXjqXQxBSMIJdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWfSYr5r; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKc3afgx"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7b99f387e8so387751276.0;
-        Sun, 18 May 2025 15:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747607560; x=1748212360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M66bK3dRTJqGwsSXfd10GV6EVRjCRceJqLJ9oPjIqRA=;
-        b=PKc3afgxbE/Pr2kkehlgk403C8i2SOelWpVOM3SWg2uT0xlaIEfe2P9cNqVryQdw5u
-         B9FONuxVfD2mAe+gEUoXrGnKVWRSclwbK4hYiD4rlrG/tINr35OdrBI9qMZ1BApEAQuX
-         XMAS3efhNYDnANcUrg8awZuHiK1LbnH3Iapt9yzXgvpwYd3gJ2Lf1P1296rJGv9zCGZv
-         xfOmXaBtedJS9Nr2gczLERJSNFme6JodGcDyOwrHW8X3s99kVKY4EiOFeD3IRqaYvEcw
-         SqCI2C+CXpmVUaezm5kUCqlWxFIcbHmaplof/BVw9oTMwuEL4mggznSSI5KjnCr0FsYo
-         uhzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747607560; x=1748212360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M66bK3dRTJqGwsSXfd10GV6EVRjCRceJqLJ9oPjIqRA=;
-        b=fg5BfJpFSPsHBM2xvD3jtWyiTfzNjxms48T9IiFOmWcBmrWrqqrmavV23ERpcEGSXv
-         6yKCN7s7eMiYiQ755hmWtYZeNgNo2DYPB4R8I7lpuZkK2qm4kfCd4tXwP+K5UaECVAll
-         8kr0i0pmLw53B6F/FYs6Evl1KOtAntV9ui4fqMvgvOZNO2g2Ihu6bWdqClqlw9aAqnHy
-         s8As8YJ33gam6xyhJzRzHAhvz5kq2SmISnTgAfw3CPV6iZlq5/ymvRTTvw47/6Vjb3Ju
-         w+U7S/YmZTQ7vP6PDSOEEe788j4bVQ34ddei0TM4lO77nLHoI79d2OqksiQkQnnzQTrd
-         kpDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSRJGDZdGby8t+CdRyf1IJ2i27rvWGbY1TWrFvs7zGQRGoLAsCy2raUnvjt/0WG4rKyQsKJEtCUTDIbY0=@vger.kernel.org, AJvYcCX0Q/xqxsX66DID1fAZAonLp0hhSkEnyd7WhCC8GFeX9Y8maIap6+O5xFTmqgRDHXRcLn0oqjF/fYpU6S99GEL2Yw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6Jds7NI4EvmDU4h1R8NhBO1rgC+4P4Oq+/tJDY/QVHBjTvECQ
-	OePnGxFXdxmtGz5uQAydRiWVOyPhdL4ODKRkhRV7Pcv5W0Xq3EB8BEpHIKOsq1O1J4kmnEVvs9w
-	W8thEP+5mgW5aZG23JXpX2/T9OomEYUo=
-X-Gm-Gg: ASbGncvd7wy8KAZJhn4vn6qm/b4ZUh/XU2TmJxD8MYd54rhCjcn40ye+UsG59wyXwAj
-	2Dfa9T3bYth4X/cU+RbtKtMqxIFFq2vbP20xAxMbsXEljTmHcz4HNIv3tSXbnT7WzrYHF1pB84H
-	b2FczyPbm/bas5DqrSpAbFv0Mv7dT8mgM=
-X-Google-Smtp-Source: AGHT+IECkLuerWwWCZ8/5bUyWO8gJLyLQhn2frnslLKmzaGYonKaIWNoj58CUC2Eq1FOPS8OImRM6FB0R5qC/bqULA8=
-X-Received: by 2002:a05:690c:f8c:b0:708:c91b:4ae0 with SMTP id
- 00721157ae682-70ca79f1ee4mr182294077b3.16.1747607560182; Sun, 18 May 2025
- 15:32:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWfSYr5r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747628193; x=1779164193;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GkMzPKhO1OJ4iGbuKLJGKxX4Kn//36QU7IIlwR3PDeI=;
+  b=dWfSYr5r3sghRmbIjtol93SMAZxOb8H83IbRkARgqquB+5yJWdfjJMxv
+   8MkgaUvwuPBcUV9Iv/Hcgtzc5lOL+OwdtEUVonOC20mAF4GFxulzbDI9u
+   GQoGrQab3sPTzKMgADw5a45xdE7CyrfC6PmtCjJi4rk+ocOzR7TcJVS3i
+   VpQcTvlgwMv5tiB62TSENmf5l2TyrcXyeAAP7369iwrn3tz1kvBBckIhE
+   gC+C3pa2bbwYvnF+tMjxYxnRslQJCPIKdHvowNWoLxFlnzhAiRO+vKrpD
+   A7wDfKyr3LOKZjP3oaqx+/NYndzVXJX5GHkl7Z3HzdSjjfxVX6bc5P+k+
+   Q==;
+X-CSE-ConnectionGUID: oOPmePK1TTang6PdHFgEPw==
+X-CSE-MsgGUID: NvZaNoCfReCGKddB8G+Piw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="49211699"
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="49211699"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 21:16:32 -0700
+X-CSE-ConnectionGUID: wqfTlkbITeSgE7GYYrO7Ag==
+X-CSE-MsgGUID: S9+KVYSwQNi4o9/a+DoLFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,300,1739865600"; 
+   d="scan'208";a="139162322"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 21:16:21 -0700
+Message-ID: <b29fc40d-4c05-44db-975f-b40d3c188c88@linux.intel.com>
+Date: Mon, 19 May 2025 12:16:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
- <CAH0uvoju7bFsJPeqaDBzSFzM3GZkaTWgfcgEtcBr9dpn=T-e2g@mail.gmail.com>
-In-Reply-To: <CAH0uvoju7bFsJPeqaDBzSFzM3GZkaTWgfcgEtcBr9dpn=T-e2g@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Sun, 18 May 2025 15:32:29 -0700
-X-Gm-Features: AX0GCFuNw3NOH3oJcA7Ra31VoEffHrw1oo-rqqaYgrgNjeCng5qvzUHcoGIPL7g
-Message-ID: <CAH0uvogAkSeERCHS_P9UYu3Km=7Eu1Ja-9-EyaYu2BMf=dQCkA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 27/38] KVM: x86/pmu: Handle PMU MSRs interception and
+ event filtering
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-28-mizhang@google.com>
+ <2d0d274c-6bc0-43c7-a8a8-92aa11872675@linux.intel.com>
+ <aCemClX6rKnVFqLt@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCemClX6rKnVFqLt@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-BTW thanks for testing this series, I will add your tested-by
 
-Thanks,
-Howard
+On 5/17/2025 4:54 AM, Sean Christopherson wrote:
+> On Fri, May 16, 2025, Dapeng Mi wrote:
+>> On 3/25/2025 1:31 AM, Mingwei Zhang wrote:
+>>> +	if (kvm_mediated_pmu_enabled(pmu_to_vcpu(pmu))) {
+>>> +		bool allowed = check_pmu_event_filter(pmc);
+>>> +
+>>> +		if (pmc_is_gp(pmc)) {
+>>> +			if (allowed)
+>>> +				pmc->eventsel_hw |= pmc->eventsel &
+>>> +						    ARCH_PERFMON_EVENTSEL_ENABLE;
+>>> +			else
+>>> +				pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
+>>> +		} else {
+>>> +			int idx = pmc->idx - KVM_FIXED_PMC_BASE_IDX;
+>>> +
+>>> +			if (allowed)
+>>> +				pmu->fixed_ctr_ctrl_hw = pmu->fixed_ctr_ctrl;
+>> Sean, just found there is a potential bug here.  The
+>> "pmu->fixed_ctr_ctrl_hw" should not be assigned to "pmu->fixed_ctr_ctrl"
+>> here, otherwise the other filtered fixed counter (not this allowed fixed
+>> counter) could be enabled accidentally.
+>>
+>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>> index ba9d336f1d1d..f32e5f66f73b 100644
+>> --- a/arch/x86/kvm/pmu.c
+>> +++ b/arch/x86/kvm/pmu.c
+>> @@ -473,7 +473,8 @@ static int reprogram_counter(struct kvm_pmc *pmc)
+>>                         int idx = pmc->idx - KVM_FIXED_PMC_BASE_IDX;
+>>
+>>                         if (allowed)
+>> -                               pmu->fixed_ctr_ctrl_hw = pmu->fixed_ctr_ctrl;
+>> +                               pmu->fixed_ctr_ctrl_hw |= pmu->fixed_ctr_ctrl &
+>> +                                              
+>> intel_fixed_bits_by_idx(idx, 0xf);
+> Hmm, I think that's fine, since pmu->fixed_ctr_ctrl should have changed?  But I'd
 
-On Sun, May 18, 2025 at 3:26=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
+Not exactly. Assume guest enables the fixed counter 0 and 1, then
+pmu->fixed_ctr_ctrl would be 0xbb. At the first time, user disables the
+fixed counter 0 by KVM event filter, then pmu->fixed_ctr_ctrl_hw would be
+0xb0, secondly user disables the fixed counter 1 as well, so
+pmu->fixed_ctr_ctrl_hw is 0x0. At the third time, user re-enables fixed
+counter 1, so pmu->fixed_ctr_ctrl_hw is expected to be 0xb0, but it's not
+actually. Although the 1st calling (for fixed counter 0) to
+reprogram_counter() would disable it, but the 2nd calling (for fixed
+counter 1) to reprogram_counter() accidentally enables it
+(pmu->fixed_ctr_ctrl_hw becomes 0xbb eventually). This is incorrect.
+
+
+> rather play it safe and do (completely untested):
 >
-> Hello Ian,
+> 	if (pmc_is_gp(pmc)) {
+> 		pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
+> 		if (allowed)
+> 			pmc->eventsel_hw |= pmc->eventsel &
+> 					    ARCH_PERFMON_EVENTSEL_ENABLE;
+> 	} else {
+> 		u64 mask = intel_fixed_bits_by_idx(pmc->idx - KVM_FIXED_PMC_BASE_IDX, 0xf);
 >
-> On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.=
-com> wrote:
-> > >
-> > > Currently, BTF tests fail constantly, this series fixes two major rea=
-sons
-> > > why they fail, and makes the error messages acquired when using '-vv'
-> > > more verbose, so when they fail, one can easily diagnose the problem.
-> > >
-> > > Before:
-> > >     $ sudo /tmp/perf test enum -vv
-> > >     107: perf trace enum augmentation tests:
-> > >     107: perf trace enum augmentation tests                          =
-    : Running
-> > >     --- start ---
->
-> <SNIP>
->
-> > > Changes in v2:
-> > > - Add an extra newline after error messages
-> > > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
-> > > - Take the debug diff for explanation out of patch 5 to make it apply
-> > >   normally
-> > > - Add base-commit in this cover letter
-> >
-> > Thanks Howard! I did some testing but see failures that may be
-> > pre-existing issues:
->
-> I don't know the command you used but if this is the result of 'perf
-> test trace', it is the parallelism issue. I will fix it once I'm back
-> from Costco :).
->
-> Thanks,
-> Howard
+> 		pmu->fixed_ctr_ctrl_hw &= ~mask;
+> 		if (allowed)
+> 			pmu->fixed_ctr_ctrl_hw |= pmu->fixed_ctr_ctrl & mask;
+> 	}
+
+The code looks good.
+
+
