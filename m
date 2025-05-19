@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A3220F4B;
-	Mon, 19 May 2025 21:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34B2220F53;
+	Mon, 19 May 2025 21:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690910; cv=none; b=b2XdMiCJ03MTMeHbfrzUGn9z4UuTZZJpBvslM6JaZ4YaCbE6zio4RUPk3/TPZXeK0Gk2kCk/XKMeNJ2z7pNqR4yZMkk81FATd0cE9fmgkioYlgZ7fSDiHmpulSn0E8iCXYdzU3Rw4PT7S9bqzZheilunDqvmK6rVAryDt/q7ryM=
+	t=1747690914; cv=none; b=mcvx70cwqAuo80SofyfdyzWLONnFV2N9tFZSb71z5ksjSBn8gNBt7nZh7n0Xy5xyaxc0Nd6Ibk+TlNpU01pl+uhqkNAS4/xY02Kdm1hjGJ87GImmSCPCqQ0pXmCQxVk7jrgg5b20fbJard1MNqHQugyj+ubOO4Muo05sJJ52RHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690910; c=relaxed/simple;
-	bh=fqqLEIImalo83m2rdOHiX4hyGLQa56MhhbmesxMuw4w=;
+	s=arc-20240116; t=1747690914; c=relaxed/simple;
+	bh=ABHTPNeUoxMe4QiIS5I9q9cNqFeQQ5os1WOfZQrI2W0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dCVmpkWivd61vHsoARLKUr3VRxu7mXjAws4FKzUUEY8biwcuQ35Y+7xvq9i6dNSBiXisFIFBReFHOiPyGmX45jY+7oWe3lYBhuQHdsYtI8Ifs+/2ROAH8tQG5rIPGI4g0IlRkroKTs3IBY6btjTNRqLB2XxfbrGN418nSyJin34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjfKVabE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QXnvcOlb2Y0/AoYpSfCTaMMOi4KnnP42cBzyARydqalDNMKpc+AMDgDcCUsnINIAUe8Micrfhu7xF1EDKKVgrU6c8vO8ahdp1eaEm86COQx9ajf9JZs5IXmRO/sqK76bK21pCGRNGlJbTLROGz2xpKIe7/kjkk+yg9ZOR1YQ/Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8fDCn5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjfKVabE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6A5C4CEE4;
-	Mon, 19 May 2025 21:41:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8fDCn5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C3E3C4CEEB;
+	Mon, 19 May 2025 21:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747690909;
-	bh=fqqLEIImalo83m2rdOHiX4hyGLQa56MhhbmesxMuw4w=;
+	s=k20201202; t=1747690913;
+	bh=ABHTPNeUoxMe4QiIS5I9q9cNqFeQQ5os1WOfZQrI2W0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pjfKVabENsexaBzhZds4OZ2ab9bOI6LyZRgsShv02vb24ECnUias7G4MSizJezcmB
-	 5uPQEeNkAYktFLCX64M1O78oqVppFtbh0UAascBMrmfpQWXK5VO9yedS2ge0AHNID6
-	 ZE3ntN2Ubwfp2UhnuE0Wqe25ntnAWiRXqXi7pbANiqd3y+KOrfkE92LH8IKnSv6Y2K
-	 jZA3RHWbV+MwFSBfKIoFpNHkCVKX/nMHsv/o+0+gh7R0VoXgja13hk1BUkNXT1rBiC
-	 i6qfQ74/DMKDb04R3VTGC4YT3twxNMbxUJFKuYgVhyvpBHmbRB1oDTXPQRL7/+uqCa
-	 3tgf4/CbItfQg==
+	b=n8fDCn5/R90nOKD4wN1fd6OTU7ThXbHkD1EtnfH62OjsDbXgQQWvqGMdPOMXaGlDS
+	 ujbohQuweK+KtAihdYZ6Tn11PzwRidpMri6Wa+YS3edsbtH5I1Wqk2hCfsl+NSUAco
+	 d/XINqIWJrD6Da5T8esBjXbS1qAqc0lh49S+VGVYJuekAr8oq84m1i8ALEBEV7U93n
+	 Nmjt7vS7Wnmq/9ixd+tf7QOOykFJc0s8/DqC2NBpiJd50t3etzTVZzW4Kg7UnKVO8F
+	 qL/U46SVyqVDKkgjYKXN71cG7xcxQvZEbgis1jmLqhIT3faKReZEJ6gOurUQS3JlWe
+	 Tqqq8FTAb1VGA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,13 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH 3/7] tools headers x86 cpufeatures: Sync with the kernel sources to pick ZEN6 and Indirect Target Selection (ITS) bits
-Date: Mon, 19 May 2025 18:41:22 -0300
-Message-ID: <20250519214126.1652491-4-acme@kernel.org>
+	Peng Jiang <jiang.peng9@zte.com.cn>
+Subject: [PATCH 4/7] tools headers: Sync the linux/unaligned.h copy with the kernel sources
+Date: Mon, 19 May 2025 18:41:23 -0300
+Message-ID: <20250519214126.1652491-5-acme@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519214126.1652491-1-acme@kernel.org>
 References: <20250519214126.1652491-1-acme@kernel.org>
@@ -59,71 +56,56 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick the changes from:
+To pick up the changes in:
 
-  24ee8d9432b5744f ("x86/CPU/AMD: Add X86_FEATURE_ZEN6")
-  2665281a07e19550 ("x86/its: Add "vmexit" option to skip mitigation on some CPUs")
-  8754e67ad4ac692c ("x86/its: Add support for ITS-safe indirect thunk")
-  159013a7ca18c271 ("x86/its: Enumerate Indirect Target Selection (ITS) bug")
+  acea9943271b6290 ("vdso: Address variable shadowing in macros")
 
-This causes these perf files to be rebuilt and brings some X86_FEATURE
-that will be used when updating the copies of
-tools/arch/x86/lib/mem{cpy,set}_64.S with the kernel sources:
-
-      CC       /tmp/build/perf/bench/mem-memcpy-x86-64-asm.o
-      CC       /tmp/build/perf/bench/mem-memset-x86-64-asm.o
-
-And addresses this perf build warning:
+Addressing this perf tools build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+    diff -u tools/include/linux/unaligned.h include/linux/unaligned.h
 
 Please see tools/include/uapi/README for further details.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: James Clark <james.clark@linaro.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Peng Jiang <jiang.peng9@zte.com.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Link: https://lore.kernel.org/r/
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/include/vdso/unaligned.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 6c2c152d8a67b9bf..30144ef9ef02fb62 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -75,7 +75,7 @@
- #define X86_FEATURE_CENTAUR_MCR		( 3*32+ 3) /* "centaur_mcr" Centaur MCRs (= MTRRs) */
- #define X86_FEATURE_K8			( 3*32+ 4) /* Opteron, Athlon64 */
- #define X86_FEATURE_ZEN5		( 3*32+ 5) /* CPU based on Zen5 microarchitecture */
--/* Free                                 ( 3*32+ 6) */
-+#define X86_FEATURE_ZEN6		( 3*32+ 6) /* CPU based on Zen6 microarchitecture */
- /* Free                                 ( 3*32+ 7) */
- #define X86_FEATURE_CONSTANT_TSC	( 3*32+ 8) /* "constant_tsc" TSC ticks at a constant rate */
- #define X86_FEATURE_UP			( 3*32+ 9) /* "up" SMP kernel running on UP */
-@@ -481,6 +481,7 @@
- #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
- #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
- #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due to downclocking */
-+#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32 + 9) /* Use thunk for indirect branches in lower half of cacheline */
+diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
+index eee3d2a4dbe4d3df..ff0c06b6513eff61 100644
+--- a/tools/include/vdso/unaligned.h
++++ b/tools/include/vdso/unaligned.h
+@@ -2,14 +2,14 @@
+ #ifndef __VDSO_UNALIGNED_H
+ #define __VDSO_UNALIGNED_H
  
- /*
-  * BUG word(s)
-@@ -533,4 +534,6 @@
- #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Branch History Injection */
- #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB omits return target predictions */
- #define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user" CPU is affected by Spectre variant 2 attack between user processes */
-+#define X86_BUG_ITS			X86_BUG(1*32 + 6) /* "its" CPU is affected by Indirect Target Selection */
-+#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG(1*32 + 7) /* "its_native_only" CPU is affected by ITS, VMX is not affected */
- #endif /* _ASM_X86_CPUFEATURES_H */
+-#define __get_unaligned_t(type, ptr) ({						\
+-	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
+-	__pptr->x;								\
++#define __get_unaligned_t(type, ptr) ({							\
++	const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr);	\
++	__get_pptr->x;									\
+ })
+ 
+-#define __put_unaligned_t(type, val, ptr) do {					\
+-	struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);		\
+-	__pptr->x = (val);							\
++#define __put_unaligned_t(type, val, ptr) do {						\
++	struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr);		\
++	__put_pptr->x = (val);								\
+ } while (0)
+ 
+ #endif /* __VDSO_UNALIGNED_H */
 -- 
 2.49.0
 
