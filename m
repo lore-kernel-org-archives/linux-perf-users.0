@@ -1,85 +1,64 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6222690F4;
-	Mon, 19 May 2025 08:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F1EBB67A;
+	Mon, 19 May 2025 10:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747643735; cv=none; b=Jr0m42k7YLLCuW6AINT3HRVglSuWjYdsjqOTd9UweKRDJajrbD05c9OPGHlN6DN9siwTc7RVIUd09m4stIe3qoJJnszWru/RtQJhH/r3JnScokMO/p8LJqMSlvL5+HnM2mtsKk4deHr/SZusnyjSJQyiJteLXjrTAY9OEm/53KI=
+	t=1747652177; cv=none; b=UaNXs06gkY9kP0/nQP13NpdEY+jc28SBJTgCIkrAOurSPpnbrZRjWJ0nFMdqjoBv6DNPUIWOsLkU6/8+zrk844lhmrH7HgO/mOmGgn0a+nzPuhQMWANS9DgjF/Aaufe290+5J1zYep+dJNIuf35A4+1sGJPKm/eTPfBf/PckOQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747643735; c=relaxed/simple;
-	bh=YUoMEn93nAO88K9IbCoI8bOPO2Y4Oh7dNF5L0fwzwrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrDHzH9S9InYhvZc9j5/Z/HcqWylNIM8m306k5Z04xNsqHyoj09ipiS3UKSzvDU9r1nbBrMyJHAOpS6Q63XnNg0LBb02ZQlvsrFkqwOWey8VD7cCSCczmMSevT8HbzcJy8oLqT1vUcpeSs2NsbMHfBu9Nxjcf8So9Ty2EieypWc=
+	s=arc-20240116; t=1747652177; c=relaxed/simple;
+	bh=7VwxsNrW+cwWOrfAvoZHgDyT4R04Oisli3beyzq8R+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=orZ8v28RpAu5goBMcSSGRL7pCr084gugORp1824L9menrEuiYNj7IgxRzy6nkodR+/NXkjdU60TQmk3ZZS7M0OJ/N0TDUwTguK13TUr0cvDBoLSX3IIiB1S/CvXUvs8WoZtuyiJ3HtHfXJjpWqND7PWw4xW4Ds+epJXyzMvzXdY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6D3F2403;
-	Mon, 19 May 2025 01:35:19 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E1283F5A1;
-	Mon, 19 May 2025 01:35:32 -0700 (PDT)
-Date: Mon, 19 May 2025 09:35:28 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Jakub Brnak <jbrnak@redhat.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test probe_vfs_getname: Correct probe line for
- updated kernel code
-Message-ID: <20250519083528.GJ412060@e132581.arm.com>
-References: <20250516090532.916743-1-leo.yan@arm.com>
- <aCeIz921q6ljJqmm@x1>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 704CB1655;
+	Mon, 19 May 2025 03:56:01 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 715913F6A8;
+	Mon, 19 May 2025 03:56:13 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	ilkka@os.amperecomputing.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/arm-cmn: Add CMN S3 ACPI binding
+Date: Mon, 19 May 2025 11:56:04 +0100
+Message-Id: <7dafe147f186423020af49d7037552ee59c60e97.1747652164.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCeIz921q6ljJqmm@x1>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 03:49:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, May 16, 2025 at 10:05:32AM +0100, Leo Yan wrote:
+An ACPI binding for CMN S3 was not yet finalised when the driver support
+was originally written, but v1.2 of DEN0093 "ACPI for Arm Components"
+has at last been published; support ACPI systems using the proper HID.
 
-[...]
+Cc: stable@vger.kernel.org
+Fixes: 0dc2f4963f7e ("perf/arm-cmn: Support CMN S3")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-cmn.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Well, I'd say we should add, not update, i.e. a new perf should continue
-> to work on an older kernel, so please consider the following patch.
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index e385f187a084..403850b1040d 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2651,6 +2651,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
+ 	{ "ARMHC600", PART_CMN600 },
+ 	{ "ARMHC650" },
+ 	{ "ARMHC700" },
++	{ "ARMHC003" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
+-- 
+2.39.2.101.g768bb238c484.dirty
 
-The change is fine with me. I sent patch v2 based on the idea.
-
-Thanks a lot for suggestion!
-
-Leo
-
-> - Arnaldo
-> 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 89f72a4c818c712b..aa867e28eadc46bc 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -13,8 +13,17 @@ cleanup_probe_vfs_getname() {
->  add_probe_vfs_getname() {
->  	add_probe_verbose=$1
->  	if [ $had_vfs_getname -eq 1 ] ; then
-> -		result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
-> -		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
-> +		# Please keep the older regexps so that this will pass on older kernels as well
-> +		# as in the most recent one.
-> +
-> +		result_initname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+initname.*"
-> +		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_initname_re" | sed -r "s/$result_initname_re/\1/")
-> +
-> +		if [ -z "$line" ] ; then
-> +			result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
-> +			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
-> +		fi
-> +
->  		if [ -z "$line" ] ; then
->  			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
->  			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
