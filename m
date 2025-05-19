@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085AF22171D;
-	Mon, 19 May 2025 21:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB1F221D80;
+	Mon, 19 May 2025 21:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690922; cv=none; b=JWRq3dFXLdgLVIz5kgxTgCAC8sB3mOzM8mpznPBjYdz8RwthYuVy38ikKOHbn4rtrUOSBPAhQS+RxO4qKNrez5xLyGejvSVUpfs5kFJaUm0znLAPMX0MYy+c7CyK25H04MuE8pp7JnD4Cw0UkXHJMDo43UmoK38vqsqS4+zIyuw=
+	t=1747690926; cv=none; b=XI/X2iY6d5MDRkVNg2CC7MBxuY6FbkXMPLw79uI0fXFQy9jE9+Z/ygPtGfq4+NmafctaK+zkWgE3GrKlyvJ9H5zA7N6yuJEaBCh7QEXkemzeBcCCiKrbgxAI7nph0ML2j+GPJ3iBOWxSuBrBMfLAus3LN7gXfb/Kd52pHzBNlCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690922; c=relaxed/simple;
-	bh=KEtAi64eL1fj21roRuyeRfQz0hlDeWxU2t/F8tyzaIw=;
+	s=arc-20240116; t=1747690926; c=relaxed/simple;
+	bh=hSFbYg8OWGPPQrOY28FmY6n86ImIh7i2KLy+D4o/8Fs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mWixfFDlfzgQLdRhHdUgzLOAmAxM2NtJGyKcO4WaqXUICOZWFtVUdKZrXPkf8lNNIB/rO7VAMjo9ODhsdt0ZXJXBJ/rNm+uEsjfnzASHKWomkfYcFD4kqCSa8rJBy3MdvamLZ/W3G6EXSSUDOHPdQeYeOccGWpI8nQNCw/HOG5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkZJEc7U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c5rZjwGOYFfyX7pOK52DedIld6Cmsjp+mi5OaIaKUnD9+OjITr18QLInp5M/SG/uVV99Y2/wNf/iQH/EAq7LinsflS0liiCAUwvfMLt7j4+Pt7Igq31qIYf5URag4ZYnXMZZlgfRWmRlZBRZnmtq6sv3Kat99bsBtAFZmfSB1LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stHw1mRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkZJEc7U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED652C4CEE9;
-	Mon, 19 May 2025 21:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stHw1mRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FF3C4CEE4;
+	Mon, 19 May 2025 21:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747690921;
-	bh=KEtAi64eL1fj21roRuyeRfQz0hlDeWxU2t/F8tyzaIw=;
+	s=k20201202; t=1747690925;
+	bh=hSFbYg8OWGPPQrOY28FmY6n86ImIh7i2KLy+D4o/8Fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DkZJEc7UNR/3ygjSnnIQ5i0CYgBcFBdamh25CPLUVy7gOX4NMVVrrLYJZPHWH9b+Y
-	 fb6xKuuIGHHSkxDGwpqKtylLpSpEj1bwk5/XR0KnJdCcitzGgLWtQEB6McGZX1Vq5d
-	 YFAdLoLzDdkMAOeW7TWx20vLaklI+h3fWVO8JVJztisSe8gjBLtD0PbZo8jTwX8JCN
-	 uwwjGc9Jdgc7mVNpaeo4Co+qtmY6vjmcocjgyw3ZErKumkvPA7jiSWkCVjct2iJfe2
-	 ER9B9RiOEY9D7LswHCpSE4qHcH462LN2Gr6bQ+xGI7TO6rhHywbL6kNA44f/po0W/X
-	 Pzhf0Kh4HVyzQ==
+	b=stHw1mRajJxtnKs2g7cdpPgek066WnIpMC1BPlb5mZ6z0ki33D1S14rV3vEoDFfFs
+	 RJ/dJ31YBKkPfDOk1/B2l/y1/a7bvgg4uVobA/2ZBEBCfWTdyKvjP10mc18YR5iIT4
+	 lMR2+PDOQkJPa4GOJqzGo3/JJl1FT9Z1eeaZ69XLlvv+/dQrfc9Y/4G5RXLPlsce/g
+	 UwkWBAYRVH5CIvSXsmrnOqSeg2pNTvRC/tuYXVYKr50x6sCmAbAw1WjeiYSxRyAs4D
+	 QEBk6zXqvDj3M8j4uWzyjEyg/JIUDt5A2dlcqvVehPtPK7jgm6ZlgVBv6+dlxTYDVu
+	 wXyMtgJ2w7ZOQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
 	Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 6/7] tools headers compiler: Pick the const_true() define from the kernel sources
-Date: Mon, 19 May 2025 18:41:25 -0300
-Message-ID: <20250519214126.1652491-7-acme@kernel.org>
+Subject: [PATCH 7/7] tools headers: Synchronize linux/bits.h with the kernel sources
+Date: Mon, 19 May 2025 18:41:26 -0300
+Message-ID: <20250519214126.1652491-8-acme@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250519214126.1652491-1-acme@kernel.org>
 References: <20250519214126.1652491-1-acme@kernel.org>
@@ -57,9 +57,19 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The sync of include/linux/bits.h with the kernel sources will make use
-of this define, so add it to the tools/include/linux/compiler. variant
-used to build tools/ living code.
+To pick up the changes in this cset:
+
+  0312e94abe484b9e ("treewide: fix typo 'unsigned __init128' -> 'unsigned __int128'")
+
+This addresses these perf build warnings:
+
+  Warning: Kernel ABI header differences:
+    diff -u tools/include/linux/bits.h include/linux/bits.h
+
+This required picking the const_true() define in linux/compiler.h as a
+prep patch as that macro is used in the new linux/bits.h
+
+Please see tools/include/uapi/README for further details.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
@@ -72,42 +82,25 @@ Cc: Yury Norov <yury.norov@gmail.com>
 Link: https://lore.kernel.org/r/
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/compiler.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/include/linux/bits.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
-index 9c05a59f01842c34..d627e66a04a6192e 100644
---- a/tools/include/linux/compiler.h
-+++ b/tools/include/linux/compiler.h
-@@ -81,6 +81,28 @@
- #define __is_constexpr(x) \
- 	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
- 
-+/*
-+ * Similar to statically_true() but produces a constant expression
-+ *
-+ * To be used in conjunction with macros, such as BUILD_BUG_ON_ZERO(),
-+ * which require their input to be a constant expression and for which
-+ * statically_true() would otherwise fail.
-+ *
-+ * This is a trade-off: const_true() requires all its operands to be
-+ * compile time constants. Else, it would always returns false even on
-+ * the most trivial cases like:
-+ *
-+ *   true || non_const_var
-+ *
-+ * On the opposite, statically_true() is able to fold more complex
-+ * tautologies and will return true on expressions such as:
-+ *
-+ *   !(non_const_var * 8 % 4)
-+ *
-+ * For the general case, statically_true() is better.
-+ */
-+#define const_true(x) __builtin_choose_expr(__is_constexpr(x), x, false)
-+
- #ifdef __ANDROID__
+diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
+index 8de2914e65101463..14fd0ca9a6cd1733 100644
+--- a/tools/include/linux/bits.h
++++ b/tools/include/linux/bits.h
+@@ -20,9 +20,8 @@
+  */
+ #if !defined(__ASSEMBLY__)
+ #include <linux/build_bug.h>
+-#define GENMASK_INPUT_CHECK(h, l) \
+-	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+-		__is_constexpr((l) > (h)), (l) > (h), 0)))
++#include <linux/compiler.h>
++#define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
+ #else
  /*
-  * FIXME: Big hammer to get rid of tons of:
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
 -- 
 2.49.0
 
