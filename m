@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231AE1D7984
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 22:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA9C16A94A
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 22:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747694812; cv=none; b=XC9A5SSXOeWva+SBx/+Te052WXWebVXcJ9reYPOuba3I3zT8Qfa0AiPSrQ4Hm+gSrOaYQITsWWZ04iNm1Zjz5JV1BiBZ93VXE7KVH7TlxtjMcxxBxpM4JxBvNm/7tbTLlO1AfJsXUrtEDObYJro/mv6TdRNsIWno8Fj/pv5Ckd4=
+	t=1747694815; cv=none; b=kYKiaJ+CLnX486eD6TDWCycOvHg2mhak9Kb+CS5HXIDFOw6wn8651mHBQgiF/967giZhcwF6uu3Tvj3sTZc+yaFepocy9Ob2S+fmDOD95kKyc+V1U7qay24NxPNRqvS7OmNtsKckB3wFflFN4OXZO67yUUiwIk55aQEpmHNqalk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747694812; c=relaxed/simple;
-	bh=I7I2sRbvItFxCmQj4vPhU9oUJu99f14BP1WCs3BzVNA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=I1qoLTectT7ds7ABuo86RhaWJ1FasGP0bUx+d8aGlf0kZ9Xv8VU4bamjcnazx2z87Do2GPKOzJgAhm789vq04lvR5AbIYvZusxTS5vczuQBrZIL4WXwpJY4drgosAHn0FeGStXGf49uaCZIlXY+a36dZE70yd/FHrkvrfo4trnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yUZfv0Ry; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1747694815; c=relaxed/simple;
+	bh=hampTiEqcM64fslRupocPnzv6w7Y1qqL0QZORCAGJ5g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=ogxJa6NVvtmA+x6B8esi2SWv5t3LNOdH0OJbAYWFxfGvZwGySii7FTVDUOZpgg47EtzotuZ7DJ2fwtA4BPXOAWvaho8YuNKQ6+a7rmwpShrafTJbcAXCyaVhb+3YBGb+ogwFUr6q+OP30n0eVEbkOqgvbEviOdkYpdcVapGC6MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RONU30kC; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yUZfv0Ry"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742b01ad1a5so4805695b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 15:46:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RONU30kC"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231de0e1ca3so28816115ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 15:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747694810; x=1748299610; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=drkhaIiLDTSEyMyeVkIjGYcSDU5tMRWddFy401r3wfM=;
-        b=yUZfv0RyfDhnNt1HxpkVKQi4BFvMlNmBjnRJyb7MpdIBMbS78ndJD/iOjWWlCuH4xE
-         WIweXkNEa0SR7GVC5QzacHg4HHPcfbzsum9mmBoX46ThwFM5WrQgrqRnZc0hKC4Z/yAm
-         Jt+xdWPG5ClGiPcfOQzcPyOPCU1V+5UHGhfW68eWI1GuMwZriHji8kC4Tn35eVve6+IW
-         2QfWpRKI/pj4YItSwLAmkPzRD8K2RnWdwFBWfuqvRHXwQVfPFoH/Je6iTqqe+Om4oCOP
-         v32ugrbyNS0l7v1GvDHxnAbMz/AXdhFRkl1Rm8+P1VipYqhKVoScbXvr3Fch6ZtgKzf9
-         5j9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747694810; x=1748299610;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1747694812; x=1748299612; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=drkhaIiLDTSEyMyeVkIjGYcSDU5tMRWddFy401r3wfM=;
-        b=K52O6ekV31qPavTZNWZEaX+YS5p7TJQtnK3/ukR5tc5VMMASdlL4MNmxclGEtLPccK
-         qpdB8+FjHMcmUgDoHAnfNc29kTujVrCnlCJ2L0Ku0wFfL3WKFF/N/m3xrD8qQn8HUJJY
-         EpWwQJh1nSneOoIZIEPDjhq2fAV3yklrM/4kWe2WFar6kPWZkpRsdEBc7AgPtZtOoNh/
-         91ZAT+a9tiyTCF9m/KaZjw+6JuI+K8quq9wyw1OiRtmQ5/+4dtnHhFRA355feCGING7W
-         vihewLj2InMEY+msWDBmXdvwclJT6C0Kr/CJsJW6R+GtWhLsKAnM4ClKizFW5K7W6Ouz
-         w6Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ25CGnxUQ+0uyZ+SONVRjnvqNlEBghhJfvKqSUWb/eBnOY0Sp8zGEGC9gcBNX4gEdR+rc8dU+PIeYe98ULm+7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi573jvCuJsQjlH1PAwWs8vVBnxw9lYlZjTemREifnjGmnCdfj
-	vh8poaHIslvx668GFTqZDKi17nmMJWs1wa6Idj/kC9UT+kFBKrsm8HwuD1FWhUOVI7RkasPOqrI
-	MkCGk+johkA==
-X-Google-Smtp-Source: AGHT+IFS2B4zNJvVlte18uhhB7AZ/JaHnQshp/6/xrgjD5y92JvbJ4A+a3mLnC79I8+y1spNu0RRK9FLDfz7
-X-Received: from pfij19.prod.google.com ([2002:aa7:8013:0:b0:742:a97f:55eb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e0b:b0:736:34a2:8a18
- with SMTP id d2e1a72fcca58-742acd75e6amr22243628b3a.24.1747694810372; Mon, 19
- May 2025 15:46:50 -0700 (PDT)
-Date: Mon, 19 May 2025 15:46:43 -0700
+        bh=E9B7fD98tiHNIK7g1ap3uCvtfvAjWJDBjHAW2LaV36I=;
+        b=RONU30kC77cvJCpzIxYluKjYchENZbp13NNW3B9i/sEamMXfFRGpuspbQ1XVg+2Kjm
+         hg6ZMzozHGjMyLuN4BQX0STKiqmIfdcrgwIEFGfMrnbMrCVvEDbHEXHcT5t/0bVYX9s7
+         fW2C/mWckOTZQ50o6KaeK1kILfrdlmf0W6n4ZgXmRhN+ZW+2MYSJeru3OMwsT7/jJOhN
+         7R8FUmUUensHsTwxtx6fe/RyWwxaKHqS3VA4EptRdlQV0OznccMErdQkQG6kIQTyjokr
+         U3cVJOIcfmePkfhoOlwGkaQuLEOTgRGsYdE2EuwkxTtldwJGbC96A4GBoiUYYpFvL1Ri
+         2qcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747694812; x=1748299612;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E9B7fD98tiHNIK7g1ap3uCvtfvAjWJDBjHAW2LaV36I=;
+        b=wRJbbeer30a7QZAsPEZJWrQMqCObivaQHf43N2EJfbapHzLsByAbA0S6KRmOwV7k/R
+         PZBpszFGOOPKgW6NTCPWF5cR2kQLvtOnhKHvQ7abtfOf8fqhphjStB7ZXuFpBjhTuKzq
+         aM9lr186IRPT4u/dy7cTQwcNv7cg1IdyJMu88bCCN5ngPiw2nn1nPWmxjJQTJ6ubqylR
+         E6EWGn8qWNmmExjPWLtri24tOAPvVxnXRVGQaMgR55u94CMDt3Bk8CIDWee61lUNDihv
+         NWeDhtG5epJpm1+MY2sQX9T4nU/hFPmQAVDuxEoODrcB84jCB2vOUZNDG9BwO/gCh/Tr
+         FC+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVzgGKXii7lIym5bG8t2ChsCZvXk9aOv6CqQH5Ktab1FesRA4xyYM7L2XF0wSGhf3AgV9auPpave/nKeHSwWG5w@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl46IOcJdo4lis99WNApMJBlsDuk3PsVmG3OPKrON0vyU56oQ9
+	cMNl1xAP/PC3mwAqahHwztj+SvkClFqMSwrB5jVaR9lQCH1Mi8xVuFft31UW7n+m1C10elfW2th
+	VE2tZdNR3Pw==
+X-Google-Smtp-Source: AGHT+IGKk00Z52yIOLFbplK0BmTXlnSsVEn/uFG6HYB3tI9b1ssiet2LR2dH2LCBFQMTRhNGanF5YaYrEvW0
+X-Received: from plpe4.prod.google.com ([2002:a17:903:3c24:b0:22e:4288:ad7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2ec8:b0:224:1943:c65
+ with SMTP id d9443c01a7336-231d44e64e6mr204413365ad.14.1747694812083; Mon, 19
+ May 2025 15:46:52 -0700 (PDT)
+Date: Mon, 19 May 2025 15:46:44 -0700
+In-Reply-To: <20250519224645.1810891-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250519224645.1810891-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519224645.1810891-1-irogers@google.com>
-Subject: [PATCH v1 1/3] perf dso: Minor refactor to allow Wthread-safety analysis
+Message-ID: <20250519224645.1810891-2-irogers@google.com>
+Subject: [PATCH v1 2/3] perf rwsem: Add thread-safety annotations
 From: Ian Rogers <irogers@google.com>
 To: langfei@huawei.com, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,115 +76,148 @@ To: langfei@huawei.com, Peter Zijlstra <peterz@infradead.org>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-The pattern:
-```
-if (x) {
-   lock(...)
-}
-block1;
-if (x) {
-   unlock(...)
-}
-```
-defeats clang's -Wthread-safety analysis where it complains of locks
-held on one path and not another. Add helper functions for "block1"
-then restructure as:
-```
-if (x) {
-   lock(...);
-   block1();
-   unlock(...);
-} else {
-   block1();
-}
-```
+Add annotations used by clang's -Wthread-safety. Fix dsos compilation
+errors caused by a lock of annotations.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dso.c | 45 +++++++++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 19 deletions(-)
+ tools/perf/util/dsos.c  |  3 +++
+ tools/perf/util/mutex.h | 11 +++++++++++
+ tools/perf/util/rwsem.c |  4 ++++
+ tools/perf/util/rwsem.h | 10 +++++-----
+ 4 files changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 8619b6eea62d..057fcf4225ac 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1349,6 +1349,16 @@ struct dso *machine__findnew_kernel(struct machine *machine, const char *name,
- 	return dso;
- }
- 
-+static void __dso__set_long_name_id(struct dso *dso, const char *name, bool name_allocated)
-+{
-+	if (dso__long_name_allocated(dso))
-+		free((char *)dso__long_name(dso));
-+
-+	RC_CHK_ACCESS(dso)->long_name = name;
-+	RC_CHK_ACCESS(dso)->long_name_len = strlen(name);
-+	dso__set_long_name_allocated(dso, name_allocated);
-+}
-+
- static void dso__set_long_name_id(struct dso *dso, const char *name, bool name_allocated)
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index e0998e2a7c4e..4d213017d202 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -157,6 +157,7 @@ static struct dso *__dsos__find_by_longname_id(struct dsos *dsos,
+ 					       const char *name,
+ 					       const struct dso_id *id,
+ 					       bool write_locked)
++	SHARED_LOCKS_REQUIRED(dsos->lock)
  {
- 	struct dsos *dsos = dso__dsos(dso);
-@@ -1362,18 +1372,11 @@ static void dso__set_long_name_id(struct dso *dso, const char *name, bool name_a
- 		 * renaming the dso.
- 		 */
- 		down_write(&dsos->lock);
--	}
--
--	if (dso__long_name_allocated(dso))
--		free((char *)dso__long_name(dso));
--
--	RC_CHK_ACCESS(dso)->long_name = name;
--	RC_CHK_ACCESS(dso)->long_name_len = strlen(name);
--	dso__set_long_name_allocated(dso, name_allocated);
--
--	if (dsos) {
-+		__dso__set_long_name_id(dso, name, name_allocated);
- 		dsos->sorted = false;
- 		up_write(&dsos->lock);
-+	} else {
-+		__dso__set_long_name_id(dso, name, name_allocated);
- 	}
- }
+ 	struct dsos__key key = {
+ 		.long_name = name,
+@@ -262,6 +263,7 @@ static int dsos__find_id_cb(struct dso *dso, void *data)
  
-@@ -1451,6 +1454,16 @@ void dso__set_long_name(struct dso *dso, const char *name, bool name_allocated)
- 	dso__set_long_name_id(dso, name, name_allocated);
- }
- 
-+static void __dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
-+{
-+	if (dso__short_name_allocated(dso))
-+		free((char *)dso__short_name(dso));
-+
-+	RC_CHK_ACCESS(dso)->short_name		  = name;
-+	RC_CHK_ACCESS(dso)->short_name_len	  = strlen(name);
-+	dso__set_short_name_allocated(dso, name_allocated);
-+}
-+
- void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
+ static struct dso *__dsos__find_id(struct dsos *dsos, const char *name, const struct dso_id *id,
+ 				   bool cmp_short, bool write_locked)
++	SHARED_LOCKS_REQUIRED(dsos->lock)
  {
- 	struct dsos *dsos = dso__dsos(dso);
-@@ -1464,17 +1477,11 @@ void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
- 		 * renaming the dso.
- 		 */
- 		down_write(&dsos->lock);
--	}
--	if (dso__short_name_allocated(dso))
--		free((char *)dso__short_name(dso));
--
--	RC_CHK_ACCESS(dso)->short_name		  = name;
--	RC_CHK_ACCESS(dso)->short_name_len	  = strlen(name);
--	dso__set_short_name_allocated(dso, name_allocated);
--
--	if (dsos) {
-+		__dso__set_short_name(dso, name, name_allocated);
- 		dsos->sorted = false;
- 		up_write(&dsos->lock);
-+	} else {
-+		__dso__set_short_name(dso, name, name_allocated);
- 	}
+ 	struct dso *res;
+ 
+@@ -338,6 +340,7 @@ static struct dso *__dsos__addnew_id(struct dsos *dsos, const char *name, const
  }
  
+ static struct dso *__dsos__findnew_id(struct dsos *dsos, const char *name, const struct dso_id *id)
++	SHARED_LOCKS_REQUIRED(dsos->lock)
+ {
+ 	struct dso *dso = __dsos__find_id(dsos, name, id, false, /*write_locked=*/true);
+ 
+diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+index 62d258c71ded..38458f00846f 100644
+--- a/tools/perf/util/mutex.h
++++ b/tools/perf/util/mutex.h
+@@ -42,6 +42,12 @@
+ /* Documents functions that acquire a lock in the body of a function, and do not release it. */
+ #define EXCLUSIVE_LOCK_FUNCTION(...)  __attribute__((exclusive_lock_function(__VA_ARGS__)))
+ 
++/*
++ * Documents functions that acquire a shared (reader) lock in the body of a
++ * function, and do not release it.
++ */
++#define SHARED_LOCK_FUNCTION(...)  __attribute__((shared_lock_function(__VA_ARGS__)))
++
+ /*
+  * Documents functions that expect a lock to be held on entry to the function,
+  * and release it in the body of the function.
+@@ -55,6 +61,9 @@
+ /* Documents a function that expects a mutex to be held prior to entry. */
+ #define EXCLUSIVE_LOCKS_REQUIRED(...) __attribute__((exclusive_locks_required(__VA_ARGS__)))
+ 
++/* Documents a function that expects a shared (reader) lock to be held prior to entry. */
++#define SHARED_LOCKS_REQUIRED(...) __attribute__((shared_locks_required(__VA_ARGS__)))
++
+ /* Turns off thread safety checking within the body of a particular function. */
+ #define NO_THREAD_SAFETY_ANALYSIS __attribute__((no_thread_safety_analysis))
+ 
+@@ -66,9 +75,11 @@
+ #define LOCKS_EXCLUDED(...)
+ #define LOCK_RETURNED(x)
+ #define EXCLUSIVE_LOCK_FUNCTION(...)
++#define SHARED_LOCK_FUNCTION(...)
+ #define UNLOCK_FUNCTION(...)
+ #define EXCLUSIVE_TRYLOCK_FUNCTION(...)
+ #define EXCLUSIVE_LOCKS_REQUIRED(...)
++#define SHARED_LOCKS_REQUIRED(...)
+ #define NO_THREAD_SAFETY_ANALYSIS
+ 
+ #endif
+diff --git a/tools/perf/util/rwsem.c b/tools/perf/util/rwsem.c
+index 5109167f27f7..9d26832398db 100644
+--- a/tools/perf/util/rwsem.c
++++ b/tools/perf/util/rwsem.c
+@@ -27,6 +27,7 @@ int exit_rwsem(struct rw_semaphore *sem)
+ }
+ 
+ int down_read(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
+ {
+ #if RWS_ERRORCHECK
+ 	mutex_lock(&sem->mtx);
+@@ -37,6 +38,7 @@ int down_read(struct rw_semaphore *sem)
+ }
+ 
+ int up_read(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
+ {
+ #if RWS_ERRORCHECK
+ 	mutex_unlock(&sem->mtx);
+@@ -47,6 +49,7 @@ int up_read(struct rw_semaphore *sem)
+ }
+ 
+ int down_write(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
+ {
+ #if RWS_ERRORCHECK
+ 	mutex_lock(&sem->mtx);
+@@ -57,6 +60,7 @@ int down_write(struct rw_semaphore *sem)
+ }
+ 
+ int up_write(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
+ {
+ #if RWS_ERRORCHECK
+ 	mutex_unlock(&sem->mtx);
+diff --git a/tools/perf/util/rwsem.h b/tools/perf/util/rwsem.h
+index ef5cbc31d967..b102d8143181 100644
+--- a/tools/perf/util/rwsem.h
++++ b/tools/perf/util/rwsem.h
+@@ -10,7 +10,7 @@
+  */
+ #define RWS_ERRORCHECK 0
+ 
+-struct rw_semaphore {
++struct LOCKABLE rw_semaphore {
+ #if RWS_ERRORCHECK
+ 	struct mutex mtx;
+ #else
+@@ -21,10 +21,10 @@ struct rw_semaphore {
+ int init_rwsem(struct rw_semaphore *sem);
+ int exit_rwsem(struct rw_semaphore *sem);
+ 
+-int down_read(struct rw_semaphore *sem);
+-int up_read(struct rw_semaphore *sem);
++int down_read(struct rw_semaphore *sem) SHARED_LOCK_FUNCTION(sem);
++int up_read(struct rw_semaphore *sem) UNLOCK_FUNCTION(sem);
+ 
+-int down_write(struct rw_semaphore *sem);
+-int up_write(struct rw_semaphore *sem);
++int down_write(struct rw_semaphore *sem) EXCLUSIVE_LOCK_FUNCTION(sem);
++int up_write(struct rw_semaphore *sem) UNLOCK_FUNCTION(sem);
+ 
+ #endif /* _PERF_RWSEM_H */
 -- 
 2.49.0.1101.gccaa498523-goog
 
