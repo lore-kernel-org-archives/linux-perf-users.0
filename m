@@ -1,318 +1,206 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D421C8603;
-	Mon, 19 May 2025 15:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EE91D5AD4;
+	Mon, 19 May 2025 15:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747666884; cv=none; b=aW5//azH+VCEN398oXvzpojjnHEfuUWXmQBaHqbuF4Ju0td/HUE6NviqJYslQmXW2G6BRdBPIsadXBg9Q8tM4Pcf89PxnhSo9E5MslLjRkYs202loOsXOYrm+uLa2t1FFjVNZLhCAxZyL5Bgf+vhllplORTvDL1KhgqkYvbCno8=
+	t=1747667189; cv=none; b=szcbzEvEA7eAzuAxTd7G68Kz43i9ntDOMJIuSA8lcyHtD2DxIrnKUY9CWc3DOyP86drOTXTSar2ilLJf/WlJ1XprRy7vGbenyhFsoBep+o6aeTEAKnLgf882IiSyJ2/KaEAF3MPvc+laxp7wstFW0alvokInQqHxTJjFQP1aDYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747666884; c=relaxed/simple;
-	bh=zm4TrJpRFR6yDTlSW5Gxco8bMqo4caurhb3KmPiKRVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yx0OiwwDGjvlwUxsb98dA6ELUV9DcFT0CbiBKd14pF8h9774CwmAfKNQQFrOFhQuFs/flCB8H7CxuVrgmg96AdHMrjAwPFeC3YRSu307sHbKex8e1h8kXeMvMLhXQAJ932dBnJ2smSIpgBg6g+xnzrX6mKiWnNIOf2uK85y6u08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsaIYhKv; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747667189; c=relaxed/simple;
+	bh=NxCscuWDEk40ScYO6BS2xsUrg53DUDC+eeyYtmp5F9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U4Ge/q5NX48+RBcM1tjlfL0YCvcDI6yEyVK+qLV0FJbDCqVS+NgmIwpAqkttDGiu17GSx3cU5xJB3w5axqsC+UnPep14fk3qJw6b9b1x6bieiOiMowyBOAvxacP8RH49zMVzT/v0P8XHiMXLuPz2esfR7CuVZ/bztHT1HG92l3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyKlxc9J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsaIYhKv"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7c5d4709caso1023700276.1;
-        Mon, 19 May 2025 08:01:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747666881; x=1748271681; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sRb4XhZMBAOQbB7tZB9QA1WsfehPlP9dH/A+kuAvHmo=;
-        b=HsaIYhKvi4+kOrZ75GUqwgnHLA+2tQ1eQDzWt+B14EXgDXaIJtTGJ2PLjKL7Ur+mnU
-         jGz504N7tG+cjbob92U8cVW+oqaxY7gkU+M9Ga1WvYx7eLhWZKNlhLRsR7+JJPj0LZ6x
-         gqo0MB0BzE0Tt0Mawlh0+bvitV3fuliYcNsA3hTJIkTy7f+msuxE+s14DrpLsqfeFtNi
-         Jvq/ybPhi5AJJ5DYa4v1J5/Q35P5RkZ0dMlmzMinQiXSj/5APJwcS4JnmzPMnjCRzR/5
-         Ey6WtbdxNdT/4FRlhua1oJz8OG0SPF67myLgTfrplefA6l82wBXFBuqhhU9zwxoc0BQs
-         ckrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747666881; x=1748271681;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sRb4XhZMBAOQbB7tZB9QA1WsfehPlP9dH/A+kuAvHmo=;
-        b=LGDYkzIiwa1y0kFLeSfh7yeXvEJkw0OABMOmILRSyACz0QC+QtsEAnq3FFiIb8SRb/
-         TGryhMjVYFnUtyK5bvmw7/M1EwqFGaaSYLZ9reOhcTiN5R9wH4YqNdQOy7Ll80bKHsr7
-         mXKo0dlDS/yZON701g3qJVaIJdby8mkUb+CdlXRReiBRL/wwnd+H8uBOCJFFd/sBa5yg
-         RV6FDA4nj69QAlnTGJsxGbPWVL0h8JoDh86UGktIWSGZll9W463QJunXiEI9+9oZ1QF8
-         yiaIb4brdXVu0f93TqHa3mea3OpxSqeW5GbK5u20JwK7v7UjvQb+10xopotyhQI0AvZZ
-         6v8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVhXVJUpm7OscXDzWKmTi14CMfZrf2pAamSAtIldDWhs1l+hpRQo7Uu2Y+VUZAWbfaUfHgiH9ytfn3boI4=@vger.kernel.org, AJvYcCXSlR+fU/Mb3eP3lvuGWSYz0MpDBO3+ay5ZW+U/zVnWeH+g3AFeet86/OhIGVIBVTH/0r2ff+X7OmMwap0FxCuQJw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQMbmxdTLBkyus1WZhctQDXwIoqqx24fGJvkSOSpBiGv+FVDVV
-	u6thv642PfZx6gpEbjy6Bedhkr8OZ3YcbNZ5ebffimUEHGxsfYksWk+0RLit/5VHzxyKI3wSiiJ
-	1IHEQZXM0WaiSN7ILGmN+yfLMPvz31GI=
-X-Gm-Gg: ASbGncujX2uylHzPvGx7+XZFWVARq3RQBVWwYmzaIRDVqDnBl1UeXVBpqYszFZs+tcV
-	BZISB714yNfcBJVqWQp0+Ui5wSkrro94s4Nvdhm0xVGWhRZMqr36Gl9VC6F85gVRdOSLKxEB+2t
-	lclNIjPPopQnhojrugZN8I0u55t0aQQo1igRFWh3OdiQ==
-X-Google-Smtp-Source: AGHT+IEcq2bwl85yPze827Gxy1c1YoVKRDcb42Qx7C/EXEZt46Ixh9wq2+Q7ScWqn2QChLZwCLcW/3hyV+m139mn7EA=
-X-Received: by 2002:a05:6902:228e:b0:e72:85a8:cd14 with SMTP id
- 3f1490d57ef6-e7b6d55485fmr15818761276.34.1747666881119; Mon, 19 May 2025
- 08:01:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyKlxc9J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFAFC4CEE9;
+	Mon, 19 May 2025 15:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747667188;
+	bh=NxCscuWDEk40ScYO6BS2xsUrg53DUDC+eeyYtmp5F9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PyKlxc9JGfp8zqj+F7Qo0tV+o1iYgCctIO5AHaP9Js5pqYnaaldq2+b32dJmiapmM
+	 OPgDd1FtR8UdhM/f6W10ClhUUlXzZ9qcG+iCOL9KYzyrg8kJXeML64MoOM0HRBci98
+	 /K+O0amOXixJxEna0qr8KNl+0Gbx4wy9U1Rd5muimUpe5zJqAbA1R6rk15olRjM6rL
+	 u2BVzsXM7XUUNpEnlA/GKgXUx0UcxbM+l6aOABY/JWXsZC8sEMX2q0+8ceuXjpMvtx
+	 EkM0n9Feo1KtJIWu+foOa12t7SJgAlkLBeBas0qmM1S/iY98JYUUK3930sW+IatGGI
+	 NJjuJvUsxg6xg==
+Date: Mon, 19 May 2025 16:06:22 +0100
+From: Will Deacon <will@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v21 4/4] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <20250519150621.GA17177@willie-the-truck>
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Mon, 19 May 2025 08:01:10 -0700
-X-Gm-Features: AX0GCFsOksR90zOFboBmVHNAfMqgv-_s-jAcFJIR6S3wX8BeOtLJk_y3xnRBrSM
-Message-ID: <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello Ian,
+Hey Rob,
 
-I jumped to a conclusion, there are reasons other than running tests
-in parallel.
+On Mon, Apr 07, 2025 at 12:41:33PM -0500, Rob Herring (Arm) wrote:
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> The ARMv9.2 architecture introduces the optional Branch Record Buffer
+> Extension (BRBE), which records information about branches as they are
+> executed into set of branch record registers. BRBE is similar to x86's
+> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+> (BHRB).
 
-On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
-m> wrote:
-> >
-> > Currently, BTF tests fail constantly, this series fixes two major reaso=
-ns
-> > why they fail, and makes the error messages acquired when using '-vv'
-> > more verbose, so when they fail, one can easily diagnose the problem.
-> >
-> > Before:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
-> >     test child forked, pid 783533
-> >     Checking if vmlinux exists
-> >     Tracing syscall landlock_add_rule
-> >     Tracing non-syscall tracepoint syscall
-> >     ---- end(-1) ----
-> >     107: perf trace enum augmentation tests                            =
-  : FAILED!
-> >
-> > After:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
-> >     test child forked, pid 851658
-> >     Checking if vmlinux exists
-> >     Tracing syscall landlock_add_rule
-> >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_st=
-art
-> >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup=
-,timer:hrtimer_start, output:
-> >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
-> >                          \___ unknown tracepoint
-> >
-> >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not fo=
-und.
-> >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable t=
-his feature?.
-> >
-> >     Run 'perf list' for a list of valid events
-> >
-> >      Usage: perf trace [<options>] [<command>]
-> >         or: perf trace [<options>] -- <command> [<options>]
-> >         or: perf trace record [<options>] [<command>]
-> >         or: perf trace record [<options>] -- <command> [<options>]
-> >
-> >         -e, --event <event>   event/syscall selector. use 'perf list' t=
-o list available events---- end(-1) ----
-> >     107: perf trace enum augmentation tests                            =
-  : FAILED!
-> >
-> > Changes in v2:
-> > - Add an extra newline after error messages
-> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
-> > - Take the debug diff for explanation out of patch 5 to make it apply
-> >   normally
-> > - Add base-commit in this cover letter
->
-> Thanks Howard! I did some testing but see failures that may be
-> pre-existing issues:
->
-> ```
-> --- start ---
-> test child forked, pid 264236
-> Checking if vmlinux exists
-> Tracing syscall landlock_add_rule
-> [syscall failure] Failed to trace syscall landlock_add_rule, output:
->
+Since you picked this up from v19, the driver has changed considerably
+and I presume you will be continuing to extend it in future as the
+architecture progresses. Perhaps having you listed as Author (and
+crucially, in git blame :p) with Anshuman as a Co-developed-by: would be
+more appropriate?
 
-I think this doesn't have any output, a sign of failure of collection
-on the BPF side.
+> ---
+>  drivers/perf/Kconfig         |  11 +
+>  drivers/perf/Makefile        |   1 +
+>  drivers/perf/arm_brbe.c      | 802 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/perf/arm_brbe.h      |  47 +++
+>  drivers/perf/arm_pmu.c       |  15 +-
+>  drivers/perf/arm_pmuv3.c     | 129 ++++++-
+>  include/linux/perf/arm_pmu.h |   8 +
+>  7 files changed, 1006 insertions(+), 7 deletions(-)
 
-> ---- end(-1) ----
-> 107: perf trace enum augmentation tests                              : FA=
-ILED!
-> --- start ---
-> test child forked, pid 264248
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> String augmentation test failed, output:
->
+Do you know if James Clark's tests [1] are going to be respun for the
+perf tool? It would be handy to have some way to test this new
+functionality.
 
-Here too.
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 4e268de351c4..3be60ff4236d 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -223,6 +223,17 @@ config ARM_SPE_PMU
+>  	  Extension, which provides periodic sampling of operations in
+>  	  the CPU pipeline and reports this via the perf AUX interface.
+>  
+> +config ARM64_BRBE
+> +	bool "Enable support for branch stack sampling using FEAT_BRBE"
+> +	depends on ARM_PMUV3 && ARM64
+> +	default y
+> +	help
+> +	  Enable perf support for Branch Record Buffer Extension (BRBE) which
+> +	  records all branches taken in an execution path. This supports some
+> +	  branch types and privilege based filtering. It captures additional
+> +	  relevant information such as cycle count, misprediction and branch
+> +	  type, branch privilege level etc.
 
-> ---- end(-1) ----
-> --- start ---
-> test child forked, pid 278774
-> Checking if vmlinux exists
-> Tracing syscall landlock_add_rule
-> [syscall failure] Failed to trace syscall landlock_add_rule, output:
->      0.000 (         ): perf/278843 landlock_add_rule(ruleset_fd: 11,
-> rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffdcf1dad90,
-> flags: 45) ...
+It's a shame that this can't be modular, but I suppose the tight
+integration with the CPU PMU driver precludes that. Oh well.
 
-This is strange to me. No return value, no elapsed time. Judging from
-experience this comes from the lack of the second sys_exit event that
-sets both of them.
+> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> new file mode 100644
+> index 000000000000..2f254bd40af3
+> --- /dev/null
+> +++ b/drivers/perf/arm_brbe.c
 
-> ---- end(-1) ----
-> 107: perf trace enum augmentation tests                              : FA=
-ILED!
-> --- start ---
-> test child forked, pid 279196
-> Checking if vmlinux exists
-> Tracing syscall landlock_add_rule
-> [syscall failure] Failed to trace syscall landlock_add_rule, output:
->      0.000 (         ): perf/279262 landlock_add_rule(ruleset_fd: 11,
-> rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff37a70fd0,
-> flags: 45) ...
+(The driver code looks fine to me but I'd like an Ack from Mark on the
+UAPI).
 
-Ditto.
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 2f33e69a8caf..df9867c0dc57 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -99,7 +99,7 @@ static const struct pmu_irq_ops percpu_pmunmi_ops = {
+>  	.free_pmuirq = armpmu_free_percpu_pmunmi
+>  };
+>  
+> -static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
+> +DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
+>  static DEFINE_PER_CPU(int, cpu_irq);
+>  static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
+>  
+> @@ -317,6 +317,11 @@ armpmu_del(struct perf_event *event, int flags)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
+>  
+> +	if (has_branch_stack(event)) {
+> +		hw_events->branch_users--;
+> +		perf_sched_cb_dec(event->pmu);
+> +	}
 
-> ---- end(-1) ----
-> 107: perf trace enum augmentation tests                              : FA=
-ILED!
-> 108: perf trace BTF general tests                                    : FA=
-ILED!
-> --- start ---
-> test child forked, pid 278187
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> Testing perf trace's buffer augmentation
-> Testing perf trace's struct augmentation
-> BTF struct augmentation test failed, output:
-> sleep/278352 clock_nanosleep(0, 0, {1,1,}, 0x7ffd31550f50) =3D 0
+Shouldn't we decrement this *after* calling armpmu_stop()?
 
-This is the difference in libbpf's btf_dump's behavior. I grepped
-"grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\},
-0x[0-9a-f]+\) +=3D +[0-9]+$"", the {1, 1,} didn't match. On my machine
-it is '{1,}'
-~~~
-sudo /tmp/perf trace --sort-events -e clock_nanosleep --force-btf
---max-events=3D1 -- sleep 1
-sleep/338371 clock_nanosleep(0, 0, {1,}, 0x7ffeb4e9dd10) =3D 0
-~~~
+> +
+>  	armpmu_stop(event, PERF_EF_UPDATE);
+>  	hw_events->events[idx] = NULL;
+>  	armpmu->clear_event_idx(hw_events, event);
 
-Which is strange, I thought we used the same libbpf from the kernel
-tree and statically link it. Why is it different on our machines?
-FWIW, I do have libbpf installed on my system, from their github
-repo's main branch.
-~~~
-$ cat /usr/include/bpf/libbpf_version.h
-/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-/* Copyright (C) 2021 Facebook */
-#ifndef __LIBBPF_VERSION_H
-#define __LIBBPF_VERSION_H
+[...]
 
-#define LIBBPF_MAJOR_VERSION 1
-#define LIBBPF_MINOR_VERSION 6
+> +static int branch_records_alloc(struct arm_pmu *armpmu)
+> +{
+> +	struct perf_branch_stack *branch_stack_cpu;
+> +	struct perf_branch_stack __percpu *branch_stack;
+> +	size_t size = struct_size(branch_stack_cpu, entries, brbe_num_branch_records(armpmu));
+> +	int cpu;
+> +
+> +	branch_stack = __alloc_percpu_gfp(size, __alignof__(*branch_stack_cpu),
+> +					  GFP_KERNEL);
+> +	if (!branch_stack)
+> +		return -ENOMEM;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		struct pmu_hw_events *events_cpu;
+> +
+> +		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
+> +		branch_stack_cpu = per_cpu_ptr(branch_stack, cpu);
+> +		events_cpu->branch_stack = branch_stack_cpu;
+> +	}
+> +	return 0;
+>  }
 
-#endif /* __LIBBPF_VERSION_H */
-~~~
+How does this work in a heterogeneous system? Shouldn't we at least
+scope the allocation to the CPUs associated with this PMU?
 
-But I thought we used the same 1.6.x version from the tree...
-~~~
-$ cat tools/lib/bpf/libbpf_version.h
-/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-/* Copyright (C) 2021 Facebook */
-#ifndef __LIBBPF_VERSION_H
-#define __LIBBPF_VERSION_H
+>  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+> @@ -1255,7 +1367,15 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>  	if (ret)
+>  		return ret;
+>  
+> -	return probe.present ? 0 : -ENODEV;
+> +	if (!probe.present)
+> +		return -ENODEV;
+> +
+> +	if (brbe_num_branch_records(cpu_pmu)) {
+> +		ret = branch_records_alloc(cpu_pmu);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+>  }
+>  
+>  static void armv8pmu_disable_user_access_ipi(void *unused)
+> @@ -1314,6 +1434,7 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+>  	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
+>  
+>  	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
+> +	cpu_pmu->pmu.sched_task		= armv8pmu_sched_task;
 
-#define LIBBPF_MAJOR_VERSION 1
-#define LIBBPF_MINOR_VERSION 6
+Can we avoid assigning this unless BRBE actually probed?
 
-#endif /* __LIBBPF_VERSION_H */
-~~~
+Will
 
-> ---- end(-1) ----
-> 108: perf trace BTF general tests                                    : FA=
-ILED!
-> --- start ---
-> test child forked, pid 278775
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> Testing perf trace's buffer augmentation
-> Buffer augmentation test failed, output:
-> buffer content
-
-This should have two lines of output, the second line is missing,
-something to do with the BPF collection I mentioned above.
-~~~
-$ sudo /tmp/perf/perf trace --sort-events -e write --force-btf
---max-events=3D1 -- echo "buffer content"
-buffer content
-echo/393319 write(1, buffer content\10, 15) =3D 15
-~~~
-
-> ---- end(-1) ----
-> 108: perf trace BTF general tests                                    : FA=
-ILED!
-> --- start ---
-> test child forked, pid 279547
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> Testing perf trace's buffer augmentation
-> Testing perf trace's struct augmentation
-> BTF struct augmentation test failed, output:
-> sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
-
-Same '{1,1,}' appears.
-
-> ---- end(-1) ----
-> 108: perf trace BTF general tests                                    : FA=
-ILED!
-> --- start ---
-> test child forked, pid 264252
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.333 MB /tmp/temporary_file.pl459 ]
-> Failed: cannot find *nanosleep syscall
-
-This test was written by Namhyung, again it failed to collect some samples.
-
-> ---- end(-1) ----
-> 110: perf trace record and replay                                    : FA=
-ILED!
-> --- start ---
-> test child forked, pid 278193
-> testing: perf trace -s -- true
-> Error: cannot find enough pattern ^\s*(open|read|close).*[0-9]+%$ in the =
-output
-
-May also be a loss of samples.
-
-There are some problems. From the output you provided, I can see the
-obvious sample loss in perf trace, and the differing behavior in
-libbpf's btf_dump. Fixing them.
-
-Thanks,
-Howard
+[1] https://gitlab.arm.com/linux-arm/linux-jc/-/commit/3a7ddce70c2daadb63fcc511de0a89055ca48b32
