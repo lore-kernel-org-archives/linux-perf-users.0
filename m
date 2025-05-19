@@ -1,225 +1,318 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B35F3F9D2
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 14:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D421C8603;
+	Mon, 19 May 2025 15:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747666661; cv=none; b=HFZ7+QuZvbSkumN4gcOKKlJ8CnJ8lzmuQ3aVSh1XP9S+OB7mZKgmPrQ3ZzqzaVbB4U4GNa9R9Pi5naVp5ZHNfzx6TakYAGeY5QhzeLKU8lA5jMX5eionbvWQf/Ma/9l9zio4dR97cgJNpXsc3aPdxtfOa88S2K9FcZqHtWXH2us=
+	t=1747666884; cv=none; b=aW5//azH+VCEN398oXvzpojjnHEfuUWXmQBaHqbuF4Ju0td/HUE6NviqJYslQmXW2G6BRdBPIsadXBg9Q8tM4Pcf89PxnhSo9E5MslLjRkYs202loOsXOYrm+uLa2t1FFjVNZLhCAxZyL5Bgf+vhllplORTvDL1KhgqkYvbCno8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747666661; c=relaxed/simple;
-	bh=b+Ie30yNc08cdgH1mXLisN39MBFst8Jdtojb7d+0Ol8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pSC4AQm2HclM9Q5P+LvWwGJclswriT3HK+hSz8VsWPtZspign39aPQZYD0297ewV3bNO6o/Zteo+77+Z6aQWrS7N5IxU2Qtrh90DEiQuWGIj3FJXE6GKfq4wjHtcJHEcZNkyTdJ2lThbuppVf8ods+uE+vV/94nq3+fhfRZMQsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F353F1516;
-	Mon, 19 May 2025 07:57:20 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D8D3F6A8;
-	Mon, 19 May 2025 07:57:32 -0700 (PDT)
-Message-ID: <91c20c05-9607-4f98-ba00-a70b85862e60@arm.com>
-Date: Mon, 19 May 2025 15:57:31 +0100
+	s=arc-20240116; t=1747666884; c=relaxed/simple;
+	bh=zm4TrJpRFR6yDTlSW5Gxco8bMqo4caurhb3KmPiKRVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yx0OiwwDGjvlwUxsb98dA6ELUV9DcFT0CbiBKd14pF8h9774CwmAfKNQQFrOFhQuFs/flCB8H7CxuVrgmg96AdHMrjAwPFeC3YRSu307sHbKex8e1h8kXeMvMLhXQAJ932dBnJ2smSIpgBg6g+xnzrX6mKiWnNIOf2uK85y6u08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsaIYhKv; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsaIYhKv"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7c5d4709caso1023700276.1;
+        Mon, 19 May 2025 08:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747666881; x=1748271681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sRb4XhZMBAOQbB7tZB9QA1WsfehPlP9dH/A+kuAvHmo=;
+        b=HsaIYhKvi4+kOrZ75GUqwgnHLA+2tQ1eQDzWt+B14EXgDXaIJtTGJ2PLjKL7Ur+mnU
+         jGz504N7tG+cjbob92U8cVW+oqaxY7gkU+M9Ga1WvYx7eLhWZKNlhLRsR7+JJPj0LZ6x
+         gqo0MB0BzE0Tt0Mawlh0+bvitV3fuliYcNsA3hTJIkTy7f+msuxE+s14DrpLsqfeFtNi
+         Jvq/ybPhi5AJJ5DYa4v1J5/Q35P5RkZ0dMlmzMinQiXSj/5APJwcS4JnmzPMnjCRzR/5
+         Ey6WtbdxNdT/4FRlhua1oJz8OG0SPF67myLgTfrplefA6l82wBXFBuqhhU9zwxoc0BQs
+         ckrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747666881; x=1748271681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sRb4XhZMBAOQbB7tZB9QA1WsfehPlP9dH/A+kuAvHmo=;
+        b=LGDYkzIiwa1y0kFLeSfh7yeXvEJkw0OABMOmILRSyACz0QC+QtsEAnq3FFiIb8SRb/
+         TGryhMjVYFnUtyK5bvmw7/M1EwqFGaaSYLZ9reOhcTiN5R9wH4YqNdQOy7Ll80bKHsr7
+         mXKo0dlDS/yZON701g3qJVaIJdby8mkUb+CdlXRReiBRL/wwnd+H8uBOCJFFd/sBa5yg
+         RV6FDA4nj69QAlnTGJsxGbPWVL0h8JoDh86UGktIWSGZll9W463QJunXiEI9+9oZ1QF8
+         yiaIb4brdXVu0f93TqHa3mea3OpxSqeW5GbK5u20JwK7v7UjvQb+10xopotyhQI0AvZZ
+         6v8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVhXVJUpm7OscXDzWKmTi14CMfZrf2pAamSAtIldDWhs1l+hpRQo7Uu2Y+VUZAWbfaUfHgiH9ytfn3boI4=@vger.kernel.org, AJvYcCXSlR+fU/Mb3eP3lvuGWSYz0MpDBO3+ay5ZW+U/zVnWeH+g3AFeet86/OhIGVIBVTH/0r2ff+X7OmMwap0FxCuQJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQMbmxdTLBkyus1WZhctQDXwIoqqx24fGJvkSOSpBiGv+FVDVV
+	u6thv642PfZx6gpEbjy6Bedhkr8OZ3YcbNZ5ebffimUEHGxsfYksWk+0RLit/5VHzxyKI3wSiiJ
+	1IHEQZXM0WaiSN7ILGmN+yfLMPvz31GI=
+X-Gm-Gg: ASbGncujX2uylHzPvGx7+XZFWVARq3RQBVWwYmzaIRDVqDnBl1UeXVBpqYszFZs+tcV
+	BZISB714yNfcBJVqWQp0+Ui5wSkrro94s4Nvdhm0xVGWhRZMqr36Gl9VC6F85gVRdOSLKxEB+2t
+	lclNIjPPopQnhojrugZN8I0u55t0aQQo1igRFWh3OdiQ==
+X-Google-Smtp-Source: AGHT+IEcq2bwl85yPze827Gxy1c1YoVKRDcb42Qx7C/EXEZt46Ixh9wq2+Q7ScWqn2QChLZwCLcW/3hyV+m139mn7EA=
+X-Received: by 2002:a05:6902:228e:b0:e72:85a8:cd14 with SMTP id
+ 3f1490d57ef6-e7b6d55485fmr15818761276.34.1747666881119; Mon, 19 May 2025
+ 08:01:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf/arm-ni: Support sharing IRQs within an NI
- instance
-To: Will Deacon <will@kernel.org>
-Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, allen.wang@hj-micro.com,
- peter.du@hj-micro.com, andy.xu@hj-micro.com
-References: <cover.1747149165.git.robin.murphy@arm.com>
- <c7ac53d0f608d92d96e4e2827e253a9cb2a337bb.1747149165.git.robin.murphy@arm.com>
- <20250519122956.GA16848@willie-the-truck>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250519122956.GA16848@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Mon, 19 May 2025 08:01:10 -0700
+X-Gm-Features: AX0GCFsOksR90zOFboBmVHNAfMqgv-_s-jAcFJIR6S3wX8BeOtLJk_y3xnRBrSM
+Message-ID: <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
+ error messages verbose
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19/05/2025 1:29 pm, Will Deacon wrote:
-> On Tue, May 13, 2025 at 04:39:00PM +0100, Robin Murphy wrote:
->> From: Shouping Wang <allen.wang@hj-micro.com>
->>
->> NI-700 has a distinct PMU interrupt output for each Clock Domain,
->> however some integrations may still combine these together externally.
->> The initial driver didn't attempt to support this, in anticipation of a
->> more general solution for IRQ sharing between system PMU instances, but
->> that's still a way off, so let's make this intermediate step for now to
->> at least allow sharing IRQs within an individual NI instance.
->>
->> Now that CPU affinity and migration are cleaned up, it's fairly
->> straightforward to adopt similar logic to arm-cmn, to identify CDs with
->> a common interrupt and loop over them directly in the handler.
->>
->> Signed-off-by: Shouping Wang <allen.wang@hj-micro.com>
->> [ rm: Rework for affinity handling, cosmetics, new commit message ]
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   drivers/perf/arm-ni.c | 78 ++++++++++++++++++++++++++++---------------
->>   1 file changed, 51 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
->> index 168750e78fc4..ca033c8785ff 100644
->> --- a/drivers/perf/arm-ni.c
->> +++ b/drivers/perf/arm-ni.c
->> @@ -102,6 +102,7 @@ struct arm_ni_unit {
->>   struct arm_ni_cd {
->>   	void __iomem *pmu_base;
->>   	u16 id;
->> +	s8 irq_friend;
-> 
-> Why not just store the pointer to the cd as opposed to a relative offset?
+Hello Ian,
 
-Same reason as in arm-cmn - we know we're referencing another entry 
-within the same array, so a full pointer costs 8 bytes of memory to be 
-mostly redundant, while the offset fits in existing padding so costs 
-nothing. In this case we could actually encode an absolute index just as 
-easily as a relative offset since we have at most 32 CDs, but since you 
-and Mark tend to prefer consistency across drivers where they do similar 
-things, following the exact same pattern as arm-cmn feels like the 
-clearest option (and in that existing case it is more significant, since 
-arm-cmn's offset range is only +/-3, but somewhere in the middle of an 
-array of many hundreds.)
+I jumped to a conclusion, there are reasons other than running tests
+in parallel.
 
->>   	int num_units;
->>   	int irq;
->>   	struct pmu pmu;
->> @@ -448,33 +449,37 @@ static irqreturn_t arm_ni_handle_irq(int irq, void *dev_id)
->>   {
->>   	struct arm_ni_cd *cd = dev_id;
->>   	irqreturn_t ret = IRQ_NONE;
->> -	u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
->>   
->> -	if (reg & (1U << NI_CCNT_IDX)) {
->> -		ret = IRQ_HANDLED;
->> -		if (!(WARN_ON(!cd->ccnt))) {
->> -			arm_ni_event_read(cd->ccnt);
->> -			arm_ni_init_ccnt(cd);
->> +	for (;;) {
-> 
-> Could this be a do { ... } while (cd) loop instead?
+On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
+m> wrote:
+> >
+> > Currently, BTF tests fail constantly, this series fixes two major reaso=
+ns
+> > why they fail, and makes the error messages acquired when using '-vv'
+> > more verbose, so when they fail, one can easily diagnose the problem.
+> >
+> > Before:
+> >     $ sudo /tmp/perf test enum -vv
+> >     107: perf trace enum augmentation tests:
+> >     107: perf trace enum augmentation tests                            =
+  : Running
+> >     --- start ---
+> >     test child forked, pid 783533
+> >     Checking if vmlinux exists
+> >     Tracing syscall landlock_add_rule
+> >     Tracing non-syscall tracepoint syscall
+> >     ---- end(-1) ----
+> >     107: perf trace enum augmentation tests                            =
+  : FAILED!
+> >
+> > After:
+> >     $ sudo /tmp/perf test enum -vv
+> >     107: perf trace enum augmentation tests:
+> >     107: perf trace enum augmentation tests                            =
+  : Running
+> >     --- start ---
+> >     test child forked, pid 851658
+> >     Checking if vmlinux exists
+> >     Tracing syscall landlock_add_rule
+> >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_st=
+art
+> >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup=
+,timer:hrtimer_start, output:
+> >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
+> >                          \___ unknown tracepoint
+> >
+> >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not fo=
+und.
+> >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable t=
+his feature?.
+> >
+> >     Run 'perf list' for a list of valid events
+> >
+> >      Usage: perf trace [<options>] [<command>]
+> >         or: perf trace [<options>] -- <command> [<options>]
+> >         or: perf trace record [<options>] [<command>]
+> >         or: perf trace record [<options>] -- <command> [<options>]
+> >
+> >         -e, --event <event>   event/syscall selector. use 'perf list' t=
+o list available events---- end(-1) ----
+> >     107: perf trace enum augmentation tests                            =
+  : FAILED!
+> >
+> > Changes in v2:
+> > - Add an extra newline after error messages
+> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
+> > - Take the debug diff for explanation out of patch 5 to make it apply
+> >   normally
+> > - Add base-commit in this cover letter
+>
+> Thanks Howard! I did some testing but see failures that may be
+> pre-existing issues:
+>
+> ```
+> --- start ---
+> test child forked, pid 264236
+> Checking if vmlinux exists
+> Tracing syscall landlock_add_rule
+> [syscall failure] Failed to trace syscall landlock_add_rule, output:
+>
 
-I did try, but it still ends up looking just as clunky if not more so - 
-I assume I must have gone through the same exercise 5 years ago for 
-arm-cmn to have ended up this way :)
+I think this doesn't have any output, a sign of failure of collection
+on the BPF side.
 
->> +		u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
->> +
->> +		if (reg & (1U << NI_CCNT_IDX)) {
->> +			ret = IRQ_HANDLED;
->> +			if (!(WARN_ON(!cd->ccnt))) {
->> +				arm_ni_event_read(cd->ccnt);
->> +				arm_ni_init_ccnt(cd);
->> +			}
->>   		}
->> -	}
->> -	for (int i = 0; i < NI_NUM_COUNTERS; i++) {
->> -		if (!(reg & (1U << i)))
->> -			continue;
->> -		ret = IRQ_HANDLED;
->> -		if (!(WARN_ON(!cd->evcnt[i]))) {
->> -			arm_ni_event_read(cd->evcnt[i]);
->> -			arm_ni_init_evcnt(cd, i);
->> +		for (int i = 0; i < NI_NUM_COUNTERS; i++) {
->> +			if (!(reg & (1U << i)))
->> +				continue;
->> +			ret = IRQ_HANDLED;
->> +			if (!(WARN_ON(!cd->evcnt[i]))) {
->> +				arm_ni_event_read(cd->evcnt[i]);
->> +				arm_ni_init_evcnt(cd, i);
->> +			}
->>   		}
->> +		writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
->> +		if (!cd->irq_friend)
->> +			return ret;
->> +		cd += cd->irq_friend;
->>   	}
->> -	writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
->> -	return ret;
->>   }
->>   
->>   static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_start)
->>   {
->>   	struct arm_ni_cd *cd = ni->cds + node->id;
->>   	const char *name;
->> -	int err;
->>   
->>   	cd->id = node->id;
->>   	cd->num_units = node->num_components;
->> @@ -534,20 +539,11 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
->>   		       cd->pmu_base + NI_PMCR);
->>   	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMCNTENCLR);
->>   	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMOVSCLR);
->> -	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENSET);
->>   
->>   	cd->irq = platform_get_irq(to_platform_device(ni->dev), cd->id);
->>   	if (cd->irq < 0)
->>   		return cd->irq;
->>   
->> -	err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
->> -			       IRQF_NOBALANCING | IRQF_NO_THREAD,
->> -			       dev_name(ni->dev), cd);
->> -	if (err)
->> -		return err;
->> -
->> -	irq_set_affinity(cd->irq, cpumask_of(ni->cpu));
->> -
->>   	cd->pmu = (struct pmu) {
->>   		.module = THIS_MODULE,
->>   		.parent = ni->dev,
->> @@ -593,6 +589,30 @@ static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
->>   	node->num_components = readl_relaxed(base + NI_CHILD_NODE_INFO);
->>   }
->>   
->> +static int arm_ni_init_irqs(struct arm_ni *ni)
->> +{
->> +	int err;
->> +
->> +	ni_for_each_cd(ni, cd) {
->> +		for (struct arm_ni_cd *prev = cd; prev-- > ni->cds; ) {
->> +			if (prev->irq == cd->irq) {
->> +				prev->irq_friend = cd - prev;
-> 
-> Can't this race with the read of `irq_friend` in the interrupt handler?
+> ---- end(-1) ----
+> 107: perf trace enum augmentation tests                              : FA=
+ILED!
+> --- start ---
+> test child forked, pid 264248
+> Checking if vmlinux BTF exists
+> Testing perf trace's string augmentation
+> String augmentation test failed, output:
+>
 
-Not in any way that matters. Any IRQ at this point would be a spurious 
-one left latched at the interrupt controller after we've already reset 
-all the PMUs. The handler can hardly observe a torn partial store of 1 
-byte, so either it'll see a valid irq_friend or none. Either way we'll 
-eventually return IRQ_NONE, EOI the phantom IRQ and be done.
+Here too.
 
-I'm not entertaining the idea of somehow being preempted here for long 
-enough for userspace to notice the already-registered PMUs (even though 
-the module load hasn't yet finished...), open an event and have it count 
-enough to genuinely overflow, because that would be in the order of at 
-least tens of seconds if not minutes.
+> ---- end(-1) ----
+> --- start ---
+> test child forked, pid 278774
+> Checking if vmlinux exists
+> Tracing syscall landlock_add_rule
+> [syscall failure] Failed to trace syscall landlock_add_rule, output:
+>      0.000 (         ): perf/278843 landlock_add_rule(ruleset_fd: 11,
+> rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffdcf1dad90,
+> flags: 45) ...
 
-> Similarly, how do you handle the race between the interrupt firing on
-> one CD and the friend CD being torn down on e.g. the remove path?
+This is strange to me. No return value, no elapsed time. Judging from
+experience this comes from the lack of the second sys_exit event that
+sets both of them.
 
-Again, we've already disabled *all* the PMUs (and explicitly cleared 
-their PMINTENs to leave no doubt) in arm_ni_remove(). After that, devres 
-ordering will then free the IRQs themselves before the CDs ever get freed.
+> ---- end(-1) ----
+> 107: perf trace enum augmentation tests                              : FA=
+ILED!
+> --- start ---
+> test child forked, pid 279196
+> Checking if vmlinux exists
+> Tracing syscall landlock_add_rule
+> [syscall failure] Failed to trace syscall landlock_add_rule, output:
+>      0.000 (         ): perf/279262 landlock_add_rule(ruleset_fd: 11,
+> rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7fff37a70fd0,
+> flags: 45) ...
 
->> +				goto enable_irq;
->> +			}
->> +		}
->> +		err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
->> +				       IRQF_NOBALANCING | IRQF_NO_THREAD,
->> +				       dev_name(ni->dev), cd);
-> 
-> What's the reason not to use IRQF_SHARED and register multiple handlers?
-> I'm sure there is one, but capturing that in a comment would help to
-> justify the manual multiplexing.
+Ditto.
 
-The usual perf reason - IRQF_SHARED allows any *other* random driver to 
-also request the same IRQ and then mess with its affinity behind our back.
+> ---- end(-1) ----
+> 107: perf trace enum augmentation tests                              : FA=
+ILED!
+> 108: perf trace BTF general tests                                    : FA=
+ILED!
+> --- start ---
+> test child forked, pid 278187
+> Checking if vmlinux BTF exists
+> Testing perf trace's string augmentation
+> Testing perf trace's buffer augmentation
+> Testing perf trace's struct augmentation
+> BTF struct augmentation test failed, output:
+> sleep/278352 clock_nanosleep(0, 0, {1,1,}, 0x7ffd31550f50) =3D 0
+
+This is the difference in libbpf's btf_dump's behavior. I grepped
+"grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\},
+0x[0-9a-f]+\) +=3D +[0-9]+$"", the {1, 1,} didn't match. On my machine
+it is '{1,}'
+~~~
+sudo /tmp/perf trace --sort-events -e clock_nanosleep --force-btf
+--max-events=3D1 -- sleep 1
+sleep/338371 clock_nanosleep(0, 0, {1,}, 0x7ffeb4e9dd10) =3D 0
+~~~
+
+Which is strange, I thought we used the same libbpf from the kernel
+tree and statically link it. Why is it different on our machines?
+FWIW, I do have libbpf installed on my system, from their github
+repo's main branch.
+~~~
+$ cat /usr/include/bpf/libbpf_version.h
+/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+/* Copyright (C) 2021 Facebook */
+#ifndef __LIBBPF_VERSION_H
+#define __LIBBPF_VERSION_H
+
+#define LIBBPF_MAJOR_VERSION 1
+#define LIBBPF_MINOR_VERSION 6
+
+#endif /* __LIBBPF_VERSION_H */
+~~~
+
+But I thought we used the same 1.6.x version from the tree...
+~~~
+$ cat tools/lib/bpf/libbpf_version.h
+/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
+/* Copyright (C) 2021 Facebook */
+#ifndef __LIBBPF_VERSION_H
+#define __LIBBPF_VERSION_H
+
+#define LIBBPF_MAJOR_VERSION 1
+#define LIBBPF_MINOR_VERSION 6
+
+#endif /* __LIBBPF_VERSION_H */
+~~~
+
+> ---- end(-1) ----
+> 108: perf trace BTF general tests                                    : FA=
+ILED!
+> --- start ---
+> test child forked, pid 278775
+> Checking if vmlinux BTF exists
+> Testing perf trace's string augmentation
+> Testing perf trace's buffer augmentation
+> Buffer augmentation test failed, output:
+> buffer content
+
+This should have two lines of output, the second line is missing,
+something to do with the BPF collection I mentioned above.
+~~~
+$ sudo /tmp/perf/perf trace --sort-events -e write --force-btf
+--max-events=3D1 -- echo "buffer content"
+buffer content
+echo/393319 write(1, buffer content\10, 15) =3D 15
+~~~
+
+> ---- end(-1) ----
+> 108: perf trace BTF general tests                                    : FA=
+ILED!
+> --- start ---
+> test child forked, pid 279547
+> Checking if vmlinux BTF exists
+> Testing perf trace's string augmentation
+> Testing perf trace's buffer augmentation
+> Testing perf trace's struct augmentation
+> BTF struct augmentation test failed, output:
+> sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
+
+Same '{1,1,}' appears.
+
+> ---- end(-1) ----
+> 108: perf trace BTF general tests                                    : FA=
+ILED!
+> --- start ---
+> test child forked, pid 264252
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.333 MB /tmp/temporary_file.pl459 ]
+> Failed: cannot find *nanosleep syscall
+
+This test was written by Namhyung, again it failed to collect some samples.
+
+> ---- end(-1) ----
+> 110: perf trace record and replay                                    : FA=
+ILED!
+> --- start ---
+> test child forked, pid 278193
+> testing: perf trace -s -- true
+> Error: cannot find enough pattern ^\s*(open|read|close).*[0-9]+%$ in the =
+output
+
+May also be a loss of samples.
+
+There are some problems. From the output you provided, I can see the
+obvious sample loss in perf trace, and the differing behavior in
+libbpf's btf_dump. Fixing them.
 
 Thanks,
-Robin.
+Howard
