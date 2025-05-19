@@ -1,106 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7407121B90B;
-	Mon, 19 May 2025 21:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F24142E83;
+	Mon, 19 May 2025 21:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690197; cv=none; b=OaYNt83jlfZzKuHvmL9L4rdSaT1OTf0PTIz/BkWcN7/TfM1iNrPKx3SK/YrsGKItOosavbktGnmquXwDN0M43GD81HSOREVhL0TGETtEjyUMtMujyU7fsUVs9Q8BvrXjIWcBZSrjnthDIM8hxCrEmOxuia/qRj/jnkcJprNyLjw=
+	t=1747690897; cv=none; b=C2akho77tcDt7OSUQIA9BP4x0Eo4Ts7TM/hQ2zcYsvEXeZHwSomeQnCCyp3DLbeaVj+18nGMj1FJEaqYmSm94jzJz7Ja3uMJ3LSRU1ZB1Xf+LupHvjRvlbQ2V2AWMGRHvW/0AXWTk8dtaMg6SAQtZ4uf2/RGnuOgQFdgd1fXKac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690197; c=relaxed/simple;
-	bh=6l1+foseQkfqqrpdmpS8Wj/Q1b5T2b7yzzZECfXaLos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WsxIOmYac29fFxpmGiVykJoTyNZduoTogucTYG0AX5l7HQ2ty0wgjcmHgH3aPqwd8U++dw8jPkoCgSv4cUn4Yx5UDTs7Sh5Wp0Mn3IrQ5jBxCshdueuGMqs/9i624sL+IMLzXXRgkQGHxfKY+2LUzBpZ03eLYMF42M6wdUIeqZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKgQsChE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747690897; c=relaxed/simple;
+	bh=LLeR1oMBT5ro5QhhHvzjzuKsHgpJLFACybDlcYjBios=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jn9iT23HafG93fM7UQXf5WldbZhDbkg9cIQO8X499rwVaqty8E8z184ZUDERijOBbO+sGFRJZ6X39OuoSAGOujt0577Eu+jNXFdu9ZDfO9WzGAaxmp8UDUjxnsgMuOytl8MvFyh8NhzpuQw8VBO5TJe1oLIsAZoJpl4a3488eo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4lUxS4L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKgQsChE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D5AC4CEE9;
-	Mon, 19 May 2025 21:29:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4lUxS4L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE6DCC4CEE4;
+	Mon, 19 May 2025 21:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747690195;
-	bh=6l1+foseQkfqqrpdmpS8Wj/Q1b5T2b7yzzZECfXaLos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iKgQsChEBoqABS7s9IE8MKm3xz0wGq2Rp7cENpiRrpiqX/hTnDO2qDYOGKMjm7qJX
-	 ihVlLkeJ6Ifkb8hcAb2JyuBMa+E3ffg2wdc/ATioHLS6IZRXrO5A3kaKNsZnBI/WZ+
-	 IKhILPwEox0flqJFSpGFy1GkeqLgLmOc2ZbItUDm3ZbGjE88gMUVHL+X780Ini+7Hx
-	 AIZebhMD+65Bg/ROld30IbQAJDrMqQz3VmuVJtFlEmwMD135AjhC8QEJvcFcXOZF2R
-	 WlrzwjO7slSxFSnXBmFCZ8zGf1nbf9VcDzwrm728QSL19JtkfLhIcpuORpHCT+ZKtf
-	 EdLLxdsGzScAQ==
-Date: Mon, 19 May 2025 18:29:52 -0300
+	s=k20201202; t=1747690897;
+	bh=LLeR1oMBT5ro5QhhHvzjzuKsHgpJLFACybDlcYjBios=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X4lUxS4L5eYKXfgC5xwsQptthR27YMnDxp4Z0WIg8CVPQqnBj27LhOWlAKMxokAn0
+	 AqeOGQ4moEvEB5yEn1sm5VKane5Kqvv7e97v/zzWg6rzmO6vUxo6kswhKomfvXNEeH
+	 +xQGQr/mQ9m/eZlH3wAhJd+cIM/AL4SvgPZX9GDlJP4yI7sRaCLfS6J6sMqan5yabv
+	 KycQyfEMFSmFfSAklK/1Gn3qgJfdQWEF4/DWOLU+fMxUHYAR8DjfA+IwENXgCP8DLZ
+	 cROuhVD11Daif0eOWpwHnLpzbOvXuhWgA8wJT0lpRiHpNr5eFnwFhZqHmwrLKncoNl
+	 U4cAMLSMQAHaA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Jakub Brnak <jbrnak@redhat.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf test probe_vfs_getname: Add regex for searching
- probe line
-Message-ID: <aCui0LRXwy3Vx9Io@x1>
-References: <20250519082755.1669187-1-leo.yan@arm.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	I Hsin Cheng <richard120310@gmail.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peng Jiang <jiang.peng9@zte.com.cn>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Yury Norov <yury.norov@gmail.com>
+Subject: [PATCH FYI 0/7] Updating some kernel headers with the kernel sources
+Date: Mon, 19 May 2025 18:41:19 -0300
+Message-ID: <20250519214126.1652491-1-acme@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519082755.1669187-1-leo.yan@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 09:27:55AM +0100, Leo Yan wrote:
-> Since commit 611851010c74 ("fs: dedup handling of struct filename init
-> and refcounts bumps"), the kernel has been refactored to use a new
-> inline function initname(), moving name initialization into it.
-> 
-> As a result, the perf probe test can no longer find the source line that
-> matches the defined regular expressions. This causes the script to fail
-> when attempting to add probes.
-> 
-> Add a regular expression to search for the call site of initname(). This
-> provides a valid source line number for adding the probe. Keeps the
-> older regular expressions for passing test on older kernels.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks, tested and applied.
+Just FYI,
+
+	Updating some kernel headers with the kernel sources.
 
 - Arnaldo
 
-> 
-> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Fixes: 611851010c74 ("fs: dedup handling of struct filename init and refcounts bumps")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
-> 
-> Changes from v1:
-> - Keep old regexps to be compatible with older kernels (Arnaldo)
-> 
->  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 89f72a4c818c..58debce9ab42 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -13,8 +13,16 @@ cleanup_probe_vfs_getname() {
->  add_probe_vfs_getname() {
->  	add_probe_verbose=$1
->  	if [ $had_vfs_getname -eq 1 ] ; then
-> -		result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
-> -		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
-> +		result_initname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+initname.*"
-> +		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_initname_re" | sed -r "s/$result_initname_re/\1/")
-> +
-> +		# Search the old regular expressions so that this will
-> +		# pass on older kernels as well.
-> +		if [ -z "$line" ] ; then
-> +			result_filename_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*"
-> +			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_filename_re" | sed -r "s/$result_filename_re/\1/")
-> +		fi
-> +
->  		if [ -z "$line" ] ; then
->  			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
->  			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
-> -- 
-> 2.34.1
-> 
+Arnaldo Carvalho de Melo (7):
+  tools include UAPI: Sync linux/vhost.h with the kernel sources
+  tools arch x86: Sync the msr-index.h copy with the kernel sources
+  tools headers x86 cpufeatures: Sync with the kernel sources to pick
+    ZEN6 and Indirect Target Selection (ITS) bits
+  tools headers: Sync the linux/unaligned.h copy with the kernel sources
+  tools headers: Synchronize uapi/linux/bits.h with the kernel sources
+  tools headers compiler: Pick the const_true() define from the kernel
+    sources
+  tools headers: Synchronize linux/bits.h with the kernel sources
+
+ tools/arch/x86/include/asm/cpufeatures.h      |  5 ++++-
+ tools/arch/x86/include/asm/msr-index.h        |  8 +++++++
+ tools/include/linux/bits.h                    |  5 ++---
+ tools/include/linux/compiler.h                | 22 +++++++++++++++++++
+ tools/include/uapi/linux/bits.h               |  8 ++-----
+ tools/include/vdso/unaligned.h                | 12 +++++-----
+ .../trace/beauty/include/uapi/linux/vhost.h   |  4 ++--
+ 7 files changed, 46 insertions(+), 18 deletions(-)
+
+-- 
+2.49.0
+
