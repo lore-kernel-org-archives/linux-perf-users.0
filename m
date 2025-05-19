@@ -1,121 +1,271 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE471C5F09;
-	Mon, 19 May 2025 19:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A532321171D;
+	Mon, 19 May 2025 19:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747682882; cv=none; b=Mxaf7aRP9HAkIC/49JfeMHMqIwiWMExyIsGIrEYppjPQdVS6vydLH41wZiym07CEhQMc4PCkaMzSNAK4BYv+1Crxy9jh7Rbu52YkKMEC4XGY0UoDYQjq32CC0u+LMlNHTUlQCqTSxsxv/vA0Qp/Q7h5Rh6PLath/XDu43JDT8bE=
+	t=1747683078; cv=none; b=Rbs4/LkuJDXX+gbflZ7x9l6dVru4zUx6efrIzBnkX8UF2vT7iuhWc6BqjVq3UOnaqzQUj4A9TLfz9W5gk5cU5vIvMdDII+UZ9tPTDHR2Z+82Ll0XP9oeW1vJ7Vt714+JZRYGH8I/mhob0+LZWinf3OhPXKBOcJgyKOBVEvdVimo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747682882; c=relaxed/simple;
-	bh=J/lwxIGutpbFGhKxDXy9adQ3buGYYRjY+k3yyOE2b6E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MfdHLzmfN+b/O4bZr6kECd4nCHZgKM5cz4gXTQrKfUC2XeZZe9KbQvAKo7+43tMS7mtqvgPz+QOuNAS18aK3JY0ejPGwS/94j2qim0pW2SIbFpxYyG/6lsTbfzqKr0ocjdEU2qdZRsjy+zgObTkPKDp4NiPzrfRy/nLu3ne7nqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hAiZBhrm; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747683078; c=relaxed/simple;
+	bh=gNg/DaGQnuA//ujvR2i1hxwQU/CrZUxguVa5vf6EakQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FOliP20VD/hVL6vXsGtjtGcePQKTibFp7b0nV+g1MiFTmgAs3k9ZegDvNSuHfJ223dY0JJ1n+ygJe2eINhTQzkvgFlvG3oWt8bGkd2O3lwnq6SmwprcMp5amu5X1ZXiN/od7gWPDqvSvvw+EkQ3p9ftiGiKEjASvPIzIN3Y11Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4IBLEQs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAiZBhrm"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70427fb838cso43858917b3.2;
-        Mon, 19 May 2025 12:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747682880; x=1748287680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VoV1+Lw5ibts/6EFMn7/BLTkQ8dTt57TVCoKSoS91Ww=;
-        b=hAiZBhrmfc6igG5kHIwIUbkVWv/cOnV+SKUsecncsLqTVhQgZE22XLG+YacnxUhzXN
-         DKd1E52/L2zurMs/P8HRItEbbWN6BqGf55Klha6+/xZCpBVDLZ0Xwo/qQvm3IZyztFO6
-         lMLDiDYCOrovgOA5ai7EQtYkkmPtPvyo2MGMxeZnX9BDehaa/Tady7Sf9O3y9cxnAoHP
-         /baRKEMcFPntUSaAx3tzOGRIAeifuvx7Q4IR/C0gVT55l4uCXR4tfjhUJ/YVSA3tZmTQ
-         D2jrdy//Bf5bDFJU7jGQXzLrx3YOaBzZ0OzX0phao6pQYs0SHW/Sd6eIaFaWryOkZAIl
-         3hKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747682880; x=1748287680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VoV1+Lw5ibts/6EFMn7/BLTkQ8dTt57TVCoKSoS91Ww=;
-        b=f2mXHiAdVc76A3/kcI7N008o5Z3OYaXx1eDg2DUgAbg5h+ERNiWjN4W0sYfo/SjbJy
-         QPMAmK1tksJTfgh8lnEZu1Sb/NDhntQSQFSTr9ul6ZO5Lmybn4Q7izwmnHQ1+uWja0w+
-         hBw5KQeikLOmDs1Y0WJ3Cb9FjVYZSk01o6xQRiG7Mhqfp3VFmXt+462yuOiiuj2BALlI
-         t2mIUuweHCinLdLV6ccr2FgANQeokbShsJeXMV7xF5O8Sb1RsGcv2h2T8zYAVwMEEhWt
-         E+rfEYkJOop05tWj9JDJOwZeBHYOmoY28kZRAHUmAh2IfFVMce9UGXHeSYEiHHkWxNsp
-         6lTA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5nr3ry04uqCpXstGUprA0Mh8IG7kTFPDS7YMImwZZefGN4oD1/FRZVKHDl5JhrEEVDF5lpSS04o1DWu0gbBVa4w==@vger.kernel.org, AJvYcCWY8DpHw7TQGHCjnBZMUmFXd+TThSm3vFOktt8FdTI3iqGXiYvlKQA78EEQo76Zt/B86lqkkYPiIfaYvnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfL118kosHqUEVH0i7RQY6r8OfWo/38IH/u0cFXVL1eSaG7r/h
-	C4QTQTzM3RTyBeb8sUW5p8wFi5jYX2asTnXyKTcYWen9/CE0ty8vToSDH9ZJF/x9EDw5PtQKIe5
-	XoO3zVjO8WcM2lEAV3WWFDGB9V6zxmuk=
-X-Gm-Gg: ASbGncvRE3/5g1bUZghcjl+6Fmf63whfVa1Ayy25+vH3hmXFjbbPzm7KHVeIBhv4F/s
-	eLzMIozOZwKQBf030IkRxblHYvSPyvq64PQt4D/IfncPfanYeVfi4Hiu1zZeuJlzsD0m5q6YbSO
-	FDEpYRj1jb1rU/S79dLxBDjdpqWB6JZoM=
-X-Google-Smtp-Source: AGHT+IHG33w5ybR7ZRFLvWBmnxjW08sw/GjRIOleTLgAqVjUiXOQX5Pt6R7kC+RWcHmyqbzzTbm/gc0KinaqqVwlrOY=
-X-Received: by 2002:a05:690c:6908:b0:70d:e044:8e4e with SMTP id
- 00721157ae682-70de044e21fmr8487077b3.8.1747682880001; Mon, 19 May 2025
- 12:28:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4IBLEQs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB437C4CEE4;
+	Mon, 19 May 2025 19:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747683078;
+	bh=gNg/DaGQnuA//ujvR2i1hxwQU/CrZUxguVa5vf6EakQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M4IBLEQs1j7rqqlJMrer+R9eK8Uu3wPF+8htwN6MfYqavo8fsdG+TXKGawl6qgll5
+	 Xpvk34Sp9b7SEw4th06cWm2bmnLa13ffJ27fy+ghspt2o0WcFg2l8TQcATKoz+TwOQ
+	 jWE1aurFQNUwWjz7BNJG/vizT7BUJFIdovfI1e3IOiRqAQ7Unb8KiGZl2RkPop2qVU
+	 PVq1+vpoI7HR2+ywAgau9Lr57jXx7He1nii4IIrpwI1BtK7lSHtrRlP6OZrZx7I2Te
+	 E2Z7oiA5zZelFCeZ7xmX6xLkC2JP+CDAb3IXmvUDj3qi60rFFsVtw5jK+atauATUAk
+	 2zyk+YDbKYeUA==
+Date: Mon, 19 May 2025 14:31:16 -0500
+From: Rob Herring <robh@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v21 2/4] arm64: Handle BRBE booting requirements
+Message-ID: <20250519193116.GA2650608-robh@kernel.org>
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-2-ff187ff6c928@kernel.org>
+ <20250519140713.GA16991@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
- <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com> <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com>
-In-Reply-To: <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Mon, 19 May 2025 12:27:48 -0700
-X-Gm-Features: AX0GCFuPZtHWgRTm1OIkMixlaXcNMNMkHI5tKZ81phwvlgrcvmv5hwEpwvVOnzk
-Message-ID: <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519140713.GA16991@willie-the-truck>
 
-Hello Ian,
+On Mon, May 19, 2025 at 03:07:15PM +0100, Will Deacon wrote:
+> On Mon, Apr 07, 2025 at 12:41:31PM -0500, Rob Herring (Arm) wrote:
+> > From: Anshuman Khandual <anshuman.khandual@arm.com>
+> > 
+> > To use the Branch Record Buffer Extension (BRBE), some configuration is
+> > necessary at EL3 and EL2. This patch documents the requirements and adds
+> > the initial EL2 setup code, which largely consists of configuring the
+> > fine-grained traps and initializing a couple of BRBE control registers.
+> > 
+> > Before this patch, __init_el2_fgt() would initialize HDFGRTR_EL2 and
+> > HDFGWTR_EL2 with the same value, relying on the read/write trap controls
+> > for a register occupying the same bit position in either register. The
+> > 'nBRBIDR' trap control only exists in bit 59 of HDFGRTR_EL2, while bit
+> > 59 of HDFGWTR_EL2 is RES0, and so this assumption no longer holds.
+> > 
+> > To handle HDFGRTR_EL2 and HDFGWTR_EL2 having (slightly) different bit
+> > layouts, __init_el2_fgt() is changed to accumulate the HDFGRTR_EL2 and
+> > HDFGWTR_EL2 control bits separately. While making this change the
+> > open-coded value (1 << 62) is replaced with
+> > HDFG{R,W}TR_EL2_nPMSNEVFR_EL1_MASK.
+> > 
+> > The BRBCR_EL1 and BRBCR_EL2 registers are unusual and require special
+> > initialisation: even though they are subject to E2H renaming, both have
+> > an effect regardless of HCR_EL2.TGE, even when running at EL2, and
+> > consequently both need to be initialised. This is handled in
+> > __init_el2_brbe() with a comment to explain the situation.
+> > 
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > Cc: Oliver Upton <oliver.upton@linux.dev>
+> > Reviewed-by: Leo Yan <leo.yan@arm.com>
+> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> > [Mark: rewrite commit message, fix typo in comment]
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+> > Tested-by: James Clark <james.clark@linaro.org>
+> > ---
+> > v20:
+> >  - Document that MDCR_EL3.SBRBE can be 0b01 also
+> >  - Fix "HDFGWTR_EL2 is RES0" in commit msg
+> > ---
+> >  Documentation/arch/arm64/booting.rst | 21 +++++++++
+> >  arch/arm64/include/asm/el2_setup.h   | 86 ++++++++++++++++++++++++++++++++++--
+> >  2 files changed, 104 insertions(+), 3 deletions(-)
+> 
+> It would be good to have an Ack from the kvm/arm64 side on this, but in
+> the meantime I've left some comments inline.
+> 
+> > diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> > index dee7b6de864f..a627c1e0e4a0 100644
+> > --- a/Documentation/arch/arm64/booting.rst
+> > +++ b/Documentation/arch/arm64/booting.rst
+> > @@ -358,6 +358,27 @@ Before jumping into the kernel, the following conditions must be met:
+> >  
+> >      - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
+> >  
+> > +  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
+> 
+> This doesn't make sense ^^^
 
-On Mon, May 19, 2025 at 10:00=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
+You mean it should be "with the Branch Record Buffer Extension feature" 
+instead?
 
-<SNIP>
+> 
+> > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> > index ebceaae3c749..e7fcba1e7d8e 100644
+> > --- a/arch/arm64/include/asm/el2_setup.h
+> > +++ b/arch/arm64/include/asm/el2_setup.h
+> > @@ -189,6 +189,39 @@
+> >  .Lskip_set_cptr_\@:
+> >  .endm
+> >  
+> > +/*
+> > + * Configure BRBE to permit recording cycle counts and branch mispredicts.
+> > + *
+> > + * At any EL, to record cycle counts BRBE requires that both BRBCR_EL2.CC=1 and
+> > + * BRBCR_EL1.CC=1.
+> > + *
+> > + * At any EL, to record branch mispredicts BRBE requires that both
+> > + * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
+> > + *
+> > + * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to BRBCR_EL2, but
+> > + * the {CC,MPRED} bits in the real BRBCR_EL1 register still apply.
+> > + *
+> > + * Set {CC,MPRED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we only
+> > + * need to enable/disable these in BRBCR_EL1 regardless of whether the kernel
+> > + * ends up executing in EL1 or EL2.
+> > + */
+> > +.macro __init_el2_brbe
+> > +	mrs	x1, id_aa64dfr0_el1
+> > +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> > +	cbz	x1, .Lskip_brbe_\@
+> > +
+> > +	mov_q	x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
+> > +	msr_s	SYS_BRBCR_EL2, x0
+> > +
+> > +	__check_hvhe .Lset_brbe_nvhe_\@, x1
+> > +	msr_s	SYS_BRBCR_EL12, x0	// VHE
+> > +	b	.Lskip_brbe_\@
+> > +
+> > +.Lset_brbe_nvhe_\@:
+> > +	msr_s	SYS_BRBCR_EL1, x0	// NVHE
+> > +.Lskip_brbe_\@:
+> 
+> Why do we have to poke BRBCR_EL12/BRBCR_EL1 here rather than in the BRBE
+> driver code?
 
-> ```
-> --- start ---
-> test child forked, pid 279547
-> Checking if vmlinux BTF exists
-> Testing perf trace's string augmentation
-> Testing perf trace's buffer augmentation
-> Testing perf trace's struct augmentation
-> BTF struct augmentation test failed, output:
-> sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
+Yeah, I think we can drop this. Originally, the driver did not touch 
+SYS_BRBCR_EL12, but it turns out we need to for freeze on overflow to 
+work correctly with VHE (see the comment in the driver for 
+SYS_BRBCR_EL12 access).
 
-Thank you so much for testing it :)
+The only other reason I can come up with is some fields reset to UNKNOWN 
+and there may be no driver. However, the important ones, ExBRE, reset to 
+0, so we should be fine.
 
-My bad, I have just realized this is because of the data in the
-timespec, nothing to do with libbpf... The tv_nsec has a value of 1. I
-think the 'sleep' on your machine has a different implementation. On
-my machine, the second member has a value of 0, see below:
-~~~
-$ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
-     0.000 (1000.196 ms): sleep/54261 clock_nanosleep(rqtp: { .tv_sec:
-1, .tv_nsec: 0 }, rmtp: 0x7ffe13529550) =3D 0
 
-$ strace -e clock_nanosleep -- sleep 1
-clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D0}, 0x7fff859365a=
-0) =3D 0
-+++ exited with 0 +++
-~~~
+> > +.endm
+> > +
+> >  /* Disable any fine grained traps */
+> >  .macro __init_el2_fgt
+> >  	mrs	x1, id_aa64mmfr0_el1
+> > @@ -196,16 +229,48 @@
+> >  	cbz	x1, .Lskip_fgt_\@
+> >  
+> >  	mov	x0, xzr
+> > +	mov	x2, xzr
+> >  	mrs	x1, id_aa64dfr0_el1
+> >  	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+> >  	cmp	x1, #3
+> >  	b.lt	.Lskip_spe_fgt_\@
+> > +
+> >  	/* Disable PMSNEVFR_EL1 read and write traps */
+> > -	orr	x0, x0, #(1 << 62)
+> > +	orr	x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
+> > +	orr	x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
+> >  
+> >  .Lskip_spe_fgt_\@:
+> > +#ifdef CONFIG_ARM64_BRBE
+> 
+> Why is this gated on CONFIG_ARM64_BRBE?
 
-Can you please run any of the commands above and see what
-happens(please change the perf executable path)? If you get 'rqtp: {
-.tv_sec: 1, .tv_nsec: 1 }' then I will just make the regex less
-strict, because it differs between different 'sleep' implementations
-instead of having anything to do with perf itself.
+Shrug. We don't do that anywhere else, so I'll drop it.
 
-Thanks,
-Howard
+> > +	mrs	x1, id_aa64dfr0_el1
+> > +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> > +	cbz	x1, .Lskip_brbe_reg_fgt_\@
+> > +
+> > +	/*
+> > +	 * Disable read traps for the following registers
+> > +	 *
+> > +	 * [BRBSRC|BRBTGT|RBINF]_EL1
+> > +	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> > +	 */
+> > +	orr	x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
+> > +
+> > +	/*
+> > +	 * Disable write traps for the following registers
+> > +	 *
+> > +	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
+> > +	 */
+> > +	orr	x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
+> > +
+> > +	/* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
+> > +	orr	x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
+> > +	orr	x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
+> > +
+> > +	/* Disable read traps for BRBIDR_EL1 */
+> > +	orr	x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
+> > +
+> > +.Lskip_brbe_reg_fgt_\@:
+> 
+> I think this label should become .Lset_debug_fgt_\@:. That way, we have
+> a clear point at which we're done with HDFG*TR_EL2. We can zero x0 and
+> x2 and from then on we can focus on HFG*TR + HFGITR.
+> 
+> nit: the existing .Lskip_debug_fgt_\@ label looks to be misnamed -- it
+> should probably be .Lskip_sme_fgt_\@ ?
+> 
+> > +#endif /* CONFIG_ARM64_BRBE */
+> >  	msr_s	SYS_HDFGRTR_EL2, x0
+> > -	msr_s	SYS_HDFGWTR_EL2, x0
+> > +	msr_s	SYS_HDFGWTR_EL2, x2
+> 
+> nit: It would be cleaner to use x0/x1 for the pair of trap registers
+> but I can see that would be a more invasive change.
+
+That would not be worth the churn IMO. We'd want to just swap x1 and x2 
+everywhere so we consistently use x2 for ID registers. 
+
+And then I'd be to blame for *all* this wonderful code. ;)
+
+> 
+> >  	mov	x0, xzr
+> >  	mrs	x1, id_aa64pfr1_el1
+> > @@ -246,7 +311,21 @@
+> >  .Lset_fgt_\@:
+> >  	msr_s	SYS_HFGRTR_EL2, x0
+> >  	msr_s	SYS_HFGWTR_EL2, x0
+> > -	msr_s	SYS_HFGITR_EL2, xzr
+> > +	mov	x0, xzr
+> > +#ifdef CONFIG_ARM64_BRBE
+> > +	mrs	x1, id_aa64dfr0_el1
+> > +	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> > +	cbz	x1, .Lskip_brbe_insn_fgt_\@
+> 
+> It would probably scale better if we unconditionally stick x2 in
+> HFGITR_EL2 and zero that register in '.Lset_debug_fgt_\@'. We still have
+> two checks for BRBE, but at least '.Lset_fgt_\@' could just stick to
+> writing the registers.
+
+All that looks doable.
+
+Rob
