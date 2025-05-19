@@ -1,141 +1,140 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065CE21B196
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 19:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2071E8338
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 19:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747684352; cv=none; b=kECY65jd3/Z7/g3CcStECV4rMJyUbkD7S6TdzBCR1x1ibw0bd42xnB+lnPFujRBeou4O3DzVNrxYhWw1LLFxUHklmS12YG0lJ8dtgWXMlBXn4UaDO60at6gALOw9JTkIzQxVj4D5ScYp4NidECIS2sAXG5HceagXm5l1nS48vYM=
+	t=1747684730; cv=none; b=LOifm8BpgoZtVhihvDYGEUpruZndX3T/QJ2UloSGJv+a/aaRF26Df7dMD6xYvINnb7g1U+9HH0nziv6cAdkyLA69tFERBRyxrK5isnWSuDWxcT4ZU7xMfaqYXFzcawP9fEkwqQxPOm3HggsAEgtFNmwN9U6hSOTRFCRfiqTFcZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747684352; c=relaxed/simple;
-	bh=eSrz67FjkchHelHVafOEmeAWHUr6NPRPEc/rDzBRpBU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sDi+6QJkZvc1UhQqEhErjfYbDXjOxgUYynk015dULfh9CwSpL5MxKi6eiFZ0jmfAnlM34mGwwxXPDTxAmbbwbZkWB1d4yaqN1aCjivWaVH+9wrm2A1JFXH+FGzQeO1c0PY8UpTWCYZOHoOztM/rXePYj94d3QN6eN6RIWetlRas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BP/HmT3w; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1747684730; c=relaxed/simple;
+	bh=1ItMlTSBt/ShO1E43j0VuSmsnzkNYsBrJyS/xfbv5Ro=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JT7amYK5EAOY5hoSM7bHJOONDfGv7+EtU+Mcg3E0u9uVLIVbYYmCyccXj8NuksYFXfk/GDoIIY4JSZCotACz09qtFxDXdmaNpJk5LgB8ofEcPHGqyAmLxxHyWU1+OOHQ3XKRK5gKMwDeVijinJ9OI6+X52fkMOB/NadcRkKleyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JCiTwCZy; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BP/HmT3w"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-707d49f9c3bso66120327b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 12:52:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JCiTwCZy"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3dc77edaa4aso138195ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 12:58:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747684349; x=1748289149; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tPgXaI8tTFRwCefa6hNl0JPB2ZmpLpvML91z05dCmvc=;
-        b=BP/HmT3wqOXkbxBe3cWLT6uQWQCGlIZh4j7Rh1epn3t5yEta1kTjlgwd23r/r7TDJH
-         FaYQb0WU3hCLhJi50HcUb+pPOEIT8kCfP15pr2OpONd0tXWhGJi1LU43a0iR7NhwmQOC
-         lZ9vkJOin1+kx4MLJpzCfAxGOLGxtvWq/pMecXcVDXdM19i2iOyirSISdD2OOyLcHbGU
-         Vwoh2szLwZ4DhSZmkC5gSVv6x1hVdymHqJ0AieQtIMoJeeRDbalSMiwNmmHsc4uK6f2t
-         mBrXTsABAJdcAQHCQ59JM3MliQi+3S+x67+qaaHqWn0w9/zBobrxrSQiuXlf04hO2EoX
-         wVHQ==
+        d=google.com; s=20230601; t=1747684728; x=1748289528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u+wsf+LBeaNM/2tu3T6ki2N6cQiKsksKjUDwoakXyHI=;
+        b=JCiTwCZykWGLgUMO/MoKN4W2k1Rp9vCcY+E322IvUubspclP1GWyi0qEaBLDBMqqi0
+         4/UMIezgygW5m3kUdHkCsZj3kp705sYHoIrOhdZFR6qulPGsbiUHoHNV9Rmqo+aRtmdK
+         WjvohUpLfTCRdapEdSZXPzGYe8iTCBx+4yvGfoO2NW3whkPJ3GoUTDJc45XkMxGGfDi2
+         i+gsOiRy+C6Si8ZHah1Q7hdcsPnerL4xJahuFeubViNlFf7HNLNyYIGsZyf6RxTs4M5O
+         KBPHHSJbtBZXK9I/oGlx5B6aFKqYfOyMcm2voBMZpnO19keYHo6rXuj7vcge3d0TzyKm
+         oD7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747684349; x=1748289149;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tPgXaI8tTFRwCefa6hNl0JPB2ZmpLpvML91z05dCmvc=;
-        b=tjZfwTNSXjYRnM4uJ7KMDd76VnPiOq38HK+26GMJGydtTp7FoK8Rv07EpkI9rWk31r
-         xVtfNc1DLGe49RcCJwToerDFI25q2Wqq5/FaXe89AEgqadeyC+WMFEkUi2DPtyO2zdEs
-         8SsXCLlMJ8WhGLqvRQVZWeJUeDb2HXKmobPMd8euJ1U4bJrMmHTzcS/qRVHbHrWHl6pN
-         6efueSi/a0X6r16AHevQ7pzUeTzCziUgwsMSAlIn+HIyWYyUY1HLh5C6xGcAyY9BXnrN
-         WRUu/GqXpQUuAWuov/vj4DR5FJfkOXwguks2A53n6edBIek8ogL0HX/y0+ffECLjdeh5
-         422Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnVEMEU6rmDXZ+l/7WGwfRxY+rsCW5054D8/pUQRP8eetWVFj1RDgqzIthSdrL2Jt64frmHqXnoV5Q79mcwZw8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlG4xaaw98Qp8NGe36ycqfeW//qYi/E9k6zEUpAq2avA6emxsT
-	bch3tX+L8qwfCkd0COlMU4Fy0+OPITr67UDLCi99HPN960Ww9S2dQaytoQLJYwdg4eNC6JIlKKF
-	EoQHKuKOXyw==
-X-Google-Smtp-Source: AGHT+IE5I8VoxfmFAqXpjWibQjEDWEqVKRsT3H7Fw6rw3klfVG1MgxDQDM9hd8bGKD0W7XqOKDtbBGECTEBK
-X-Received: from ybdm17.prod.google.com ([2002:a05:6902:6b11:b0:e7a:b53d:558])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:488e:b0:e7b:9972:5cc
- with SMTP id 3f1490d57ef6-e7b997206c0mr7412820276.24.1747684348890; Mon, 19
- May 2025 12:52:28 -0700 (PDT)
-Date: Mon, 19 May 2025 12:51:44 -0700
-In-Reply-To: <20250519195148.1708988-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1747684728; x=1748289528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u+wsf+LBeaNM/2tu3T6ki2N6cQiKsksKjUDwoakXyHI=;
+        b=g2zLgm+jtWtEmOHdU6mzMsJgBUBND9kmq4m95B9/FP34Gq26XJIhnpsWhCUSpfZuXH
+         WS9WXcniFdGQOx5t4sAzK+qBIgfQP4G+F718J1iduwq3MQhG2khK62JIIyRgbMNb3QWb
+         YgId/Mf/9Unhs1u4zx2MniDlLHPnfWX6mUTBJTBw0w6SYiV93dyZXJE0pB51PVk0MhkL
+         1FIRIlhitiw8cJPxHV1hcZxrjxLbI5W1CXoGiZcWkchLLiGhg65j/Wl6PIhJjwn6Ifg7
+         3U2plMloTBjKLa1k5hFcYy9jIAs5aB67mPdxi566A7mpo4ZJ1WOvTWzQMgQ91N6SICmm
+         R4Og==
+X-Forwarded-Encrypted: i=1; AJvYcCXoMVq9ISLJ0Qw0BPDwfN+uI1lafcQAzBHNFjCxgRUJb2Xq/kfttbUI7P+weXQ1l04aM9FDzUfH2qFNY95UyTSf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwVVU3LGVYykw3MdDR2GtErHRZJd1v2NFSIZ+p1DgJd/BgnOEv
+	bgbHlPngugX3GoiU1sICT0otHPfDP8zLoC/dXEWhxgUaKXe+Fca9gWpNlocrJOxk72nbgWBYCtt
+	f83cI+bxDDnPHdMeT4TTuAh3CoJz5EboZDFkZlV+z
+X-Gm-Gg: ASbGnctlygfrBFCXf0iA9N7JnlV4iusi+1yZVLB9rhXfgPGsiSWlIOclOimWT0Ei0/G
+	rEQn+xtLlS31YiJooGJH4Io9OP1qLqlXxxwSm1YSKm34G346wqcKGfaUqhINkxM2sOb7VABAO1u
+	fWHRAmlkYzF78/TrXYnbwjFZPKr5l+eU/gB/5mT5WY2VwqoiV+4fcmhvAuMdNRtrXehOUZRnGj
+X-Google-Smtp-Source: AGHT+IF3NG4riWCj70W1ip8g722W/OSv9N5vCb4lgszsMb+3aFb9ORFS8jrS9y+V6o+naREGvwl20DU7tMCXOWpayuQ=
+X-Received: by 2002:a05:6e02:2184:b0:3db:8537:e450 with SMTP id
+ e9e14a558f8ab-3dc5d6164acmr7320835ab.20.1747684727399; Mon, 19 May 2025
+ 12:58:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519195148.1708988-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250519195148.1708988-8-irogers@google.com>
-Subject: [PATCH v3 7/7] perf python: Add counting.py as example for counting
- perf events
+MIME-Version: 1.0
+References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+ <CAH0uvog3kt=QR1T6uXMBmecDWsh-8UWKXukJ-rRk3in7fud4Eg@mail.gmail.com>
+ <CAP-5=fU_UUKmu0gTmODXCG5JUK6MRFOTFU+LCJTfA5yTP+aomA@mail.gmail.com> <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
+In-Reply-To: <CAH0uvogRdA15hhyq=9SmJiHWwoARBEBdAh3PA9pOXVbBBo5ODg@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-To: Gautam Menghani <gautam@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: maddy@linux.ibm.com
+Date: Mon, 19 May 2025 12:58:34 -0700
+X-Gm-Features: AX0GCFuEBhgUMS6lypmTs7xxRmttSCOq9w7q1VtwxoyFkY97QYVR1ycJy_Ib5vY
+Message-ID: <CAP-5=fWX7m-3j31pNAXqkNmtr0i3rxAHPC96h=sQ5q31WyNDLg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
+ error messages verbose
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Gautam Menghani <gautam@linux.ibm.com>
+On Mon, May 19, 2025 at 12:28=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
+ wrote:
+>
+> Hello Ian,
+>
+> On Mon, May 19, 2025 at 10:00=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+>
+> <SNIP>
+>
+> > ```
+> > --- start ---
+> > test child forked, pid 279547
+> > Checking if vmlinux BTF exists
+> > Testing perf trace's string augmentation
+> > Testing perf trace's buffer augmentation
+> > Testing perf trace's struct augmentation
+> > BTF struct augmentation test failed, output:
+> > sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) =3D 0
+>
+> Thank you so much for testing it :)
+>
+> My bad, I have just realized this is because of the data in the
+> timespec, nothing to do with libbpf... The tv_nsec has a value of 1. I
+> think the 'sleep' on your machine has a different implementation. On
+> my machine, the second member has a value of 0, see below:
+> ~~~
+> $ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
+>      0.000 (1000.196 ms): sleep/54261 clock_nanosleep(rqtp: { .tv_sec:
+> 1, .tv_nsec: 0 }, rmtp: 0x7ffe13529550) =3D 0
+>
+> $ strace -e clock_nanosleep -- sleep 1
+> clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D0}, 0x7fff85936=
+5a0) =3D 0
+> +++ exited with 0 +++
+> ~~~
+>
+> Can you please run any of the commands above and see what
+> happens(please change the perf executable path)? If you get 'rqtp: {
+> .tv_sec: 1, .tv_nsec: 1 }' then I will just make the regex less
+> strict, because it differs between different 'sleep' implementations
+> instead of having anything to do with perf itself.
 
-Add counting.py - a python version of counting.c to demonstrate
-measuring and reading of counts for given perf events.
+Ack. Here is the output:
+```
+$ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
+    0.000 (1000.208 ms): sleep/1710732 clock_nanosleep(rqtp: {
+.tv_sec: 1, .tv_nsec: 1 }, rmtp: 0x7ffc091f4090) =3D 0
+$ strace -e clock_nanosleep -- sleep 1
+clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=3D1, tv_nsec=3D1}, 0x7ffe51f3cd0=
+0) =3D 0
++++ exited with 0 +++
+```
 
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-Ian modified from v2 to make the API take a CPU and thread then
-compute from these the appropriate indices. This was discussed as the
-preferred API with Arnaldo:
-https://lore.kernel.org/linux-perf-users/20250512055748.479786-1-gautam@linux.ibm.com/
-The use of a thread_map and cpu_map was also removed to make the code
-cleaner, instead the cpus and threads of the parsed evsel are
-used. Support for command line events is also added. The indent is
-reduced from 8 to 4 to match the preferred python PEP8 indent.
----
- tools/perf/python/counting.py | 36 +++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100755 tools/perf/python/counting.py
+Thanks,
+Ian
 
-diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.py
-new file mode 100755
-index 000000000000..02121d2bb11d
---- /dev/null
-+++ b/tools/perf/python/counting.py
-@@ -0,0 +1,36 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+# -*- python -*-
-+# -*- coding: utf-8 -*-
-+
-+import argparse
-+import perf
-+
-+def main(event: str):
-+    evlist = perf.parse_events(event)
-+
-+    for evsel in evlist:
-+        evsel.read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
-+
-+    evlist.open()
-+    evlist.enable()
-+
-+    count = 100000
-+    while count > 0:
-+        count -= 1
-+
-+    evlist.disable()
-+
-+    for evsel in evlist:
-+        for cpu in evsel.cpus():
-+            for thread in evsel.threads():
-+                counts = evsel.read(cpu, thread)
-+                print(f"For {evsel} val: {counts.val} enable: {counts.ena} run: {counts.run}")
-+
-+    evlist.close()
-+
-+if __name__ == '__main__':
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument('-e', '--event', help="Events to open", default="cpu-clock,task-clock")
-+    args = ap.parse_args()
-+    main(args.event)
--- 
-2.49.0.1101.gccaa498523-goog
-
+>
+> Thanks,
+> Howard
