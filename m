@@ -1,109 +1,96 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B701DB15F;
-	Tue, 20 May 2025 03:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C421854;
+	Tue, 20 May 2025 06:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747712896; cv=none; b=PSCEffWan0RpLCFFC1HMq6ssckXwY0cnd2qcdL0v9heT0LsI83B47uONP3T6foMFOk5prPNyM3bpKDBPngiiSVgVD40GqpP35kffP0z5s+XPWU72oOZMOCbbB4PT0p0m7+e4BL9MNPs7oJpFr5MVyZK7onk93A77ffeeXef07uM=
+	t=1747722630; cv=none; b=fExFLI/QFjc+r/JgyyJEHDANecUI3vctdrOxKvu8iQN5f5I9rYgsnLQ13J2Fa0stS0NscKQXOStim9rKKORmQLy0JsoJcJp6mTnX/Qr7IMP8ibvSZiZFyqa8VT24qKH3llg4Qml6ATuFidQQeN+4O1Osg0ufy+P7lIIm1Py91M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747712896; c=relaxed/simple;
-	bh=Lp+djizd4Z/CYSeOSr37deLNjfM+PJIH68jSk2+QK7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRh7ByoDCGh3Nk57oMY45uPEe4K+EMfvm4eqmFRSm/7TAWab6BrD/G9iQu0mf+8SM6M7Tn2diVcxkwaC13rzWkEwpafTWDB3codYurRWDzN+h1rlaBAdBAaMEe8nCv95FkS3tyNzxoEr7poLEAUykWPfKCoocsJYSyMzC+VUiww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8cMh0Iy; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8cMh0Iy"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23205d55bf4so21562505ad.2;
-        Mon, 19 May 2025 20:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747712894; x=1748317694; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QECoVdB3z/ftBgsSiAYe8Vk505pn0CFxH77lWtWEAqc=;
-        b=c8cMh0IyxGrYvFdXe3opvEPDN+AEfDOWS0bDfPgeQ54NpTgYnu9yw2m0H1NEGAMh7E
-         c3DLedzKVOMqNdTl/3KP/4w2FNO5GvkKHn+xO/l9fKxm93lh3N/RZ0g98NbG1fTAXTiV
-         tYTdBx9pTuhNnD2QNTw0hp/0mcPnNG/gI06RTqeB215X+uXbDei+DkoK+48HozMZHIL8
-         7xGqkk29SICPnbSEV0fKzNfRUhMQjiPvSnqX/ImhYE7OpYpf4g/PS6ctrtA7H/M9S8uH
-         aoYn+34QAlvcEVb6wqX+Vt0XIVbq5rY8gcLQzIldE6O4rubIyti2E6xh3FK9K47zUpcw
-         LavQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747712894; x=1748317694;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QECoVdB3z/ftBgsSiAYe8Vk505pn0CFxH77lWtWEAqc=;
-        b=WTvIutnOTpxpiDnc+kALRluTHh2+TPsCVYka4T+0iYC5fqtxdhydBusv4dmzBieOw6
-         a/q0riqipfiYgBNAC/WAwXEPD261Yl12FJ4+jJigoChXA/qg4KyioFFiJ/Rbrjp15x1S
-         dTsFCQZLgRpXws3W/S9vQrGU0KGL6QHx8FUMj5K7GJEyAyZT6XaLZbmkhClIvnU8Rjrq
-         t8oKMFyeElQbMcnscC/IpgIxUtCuN1fv6RbGj4i+P/OnSJz8pjgECstSo9b1nDKNF3kt
-         NznQEEQnr42PzKY37BFWSmHDtHsno8pke9fMuZYyvKfaMxkPXw1NsbQgfdkD5FTzjW2j
-         bHNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUo2UPoGAjHsdDFRLkvmEWASURy5nlcbjlBRbobbSeqV/ZxQDWZ4no0nfyhXoD5Oqojy4+WBOsTsC5wMQw/QGLbAg==@vger.kernel.org, AJvYcCXWkmC1acXGd4r+qbNY9ixwuPPJu3Cv2fnAfzwxnt3d3U2fasCPlWi4Hj3Aj9j/D1+mgGgDbBu35Rmq5hg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLtQHdzeWT0J45O3SeRxB6tNmNl9Wa5cT8dzTMkmnkPjB+nKKp
-	wAnsFgX46Z74SBv55ciXBJunbB8hhCKLCx+okDo20GSw9xIJCNCRU7BP
-X-Gm-Gg: ASbGncvkizUUiuXMVu4O8Z2ms79WJrzoemMY9Hfw7ijrXuE2KlsckkfxDd5M1V3/3Ay
-	TSQTrKKj6Z0CV3h+qTzrehsPrTMjvWsPf92gwPofNhHTy1KfZgUveWd6VWJkAOcR6RSIah6ifyp
-	Rf+nuehDXx82gsPjFk4YNNzKO5ySpg5NmgpNKEonEZHMT95CiF6HKbyry/f+SzJaFeXyZlDXfwq
-	En55rfjV+E9x2bDcLPWSiCXyAtCV1p4/CE5/WPEB2/rGnNe9mlD7xhyNGIjDLwWrP99jTgMEuMl
-	QMTc/PtHlwhPOHgLyY3YxKuK+CL5uZVHwM2m9ffzfkXgju0zgu4S+WIgFLpvfA==
-X-Google-Smtp-Source: AGHT+IGZ4W4X6eCfr+cSRAd9w6mjBe5iHSpecvTvRl0uxTw0///FfG6d8lfPRUpqK4Q4WIeIBFUfQQ==
-X-Received: by 2002:a17:902:e84b:b0:232:59b:58fe with SMTP id d9443c01a7336-232059b5b4dmr146516715ad.1.1747712893826;
-        Mon, 19 May 2025 20:48:13 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac94a0sm67701655ad.2.2025.05.19.20.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 20:48:13 -0700 (PDT)
-Date: Mon, 19 May 2025 23:48:11 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1747722630; c=relaxed/simple;
+	bh=pC7hcoBItm/p4ikdY5pstS8S6ncVBZrRXfm7pjZ61Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rp+2BXd8XkaqsYh1Xz8b+Z/eEMHJkUussR5o5Unu1soalqDWPFHyFYknjvnhTCuM717DhiL1LiPtAPCotBt6ODtb+w2mjhrXFG7qJGooIQ1RP478GQF8aZOHXL+GnxQiGABVj1bsDgKQ+XhFSTytg0p/7w4eK7vzpTalDGnRqiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxWXF1ISxoEA3zAA--.152S3;
+	Tue, 20 May 2025 14:30:13 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxu8RxISxo+8fiAA--.53745S2;
+	Tue, 20 May 2025 14:30:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	I Hsin Cheng <richard120310@gmail.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peng Jiang <jiang.peng9@zte.com.cn>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
- sources
-Message-ID: <aCv7e4Jr0s6ViN1I@yury>
-References: <20250519214126.1652491-1-acme@kernel.org>
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH for 6.14.y] perf tools: Fix build error for LoongArch
+Date: Tue, 20 May 2025 14:30:09 +0800
+Message-ID: <20250520063009.23504-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519214126.1652491-1-acme@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxu8RxISxo+8fiAA--.53745S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFy3tr4kKFy5XFWDArykXrc_yoW8Ar1UpF
+	sxC34DtFWrWryrArnrur1IgFy8Gw4DX342qFy0kr45ZwnIgr9IqF97Xas8KFyxWa9FgrW0
+	vrWSkay5GF48XabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-On Mon, May 19, 2025 at 06:41:19PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Just FYI,
-> 
-> 	Updating some kernel headers with the kernel sources.
-> 
-> - Arnaldo
+There exists the following error when building perf tools on LoongArch:
 
-For patches 5, 6 and 7:
-Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+  CC      util/syscalltbl.o
+In file included from util/syscalltbl.c:16:
+tools/perf/arch/loongarch/include/syscall_table.h:2:10: fatal error: asm/syscall_table_64.h: No such file or directory
+    2 | #include <asm/syscall_table_64.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
 
-Would you like me to take those in bitmap-for-next?
+This is because the generated syscall header is syscalls_64.h rather
+than syscall_table_64.h. The above problem was introduced from v6.14,
+then the header syscall_table.h has been removed from mainline tree
+in commit af472d3c4454 ("perf syscalltbl: Remove syscall_table.h"),
+just fix it only for the linux-6.14.y branch of stable tree.
 
-Thanks,
-Yury
+By the way, no need to fix the mainline tree and there is no upstream
+git id for this patch.
+
+How to reproduce:
+
+  git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+  cd linux && git checkout origin/linux-6.14.y
+  make JOBS=1 -C tools/perf
+
+Fixes: fa70857a27e5 ("perf tools loongarch: Use syscall table")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/perf/arch/loongarch/include/syscall_table.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/arch/loongarch/include/syscall_table.h b/tools/perf/arch/loongarch/include/syscall_table.h
+index 9d0646d3455c..b53e31c15805 100644
+--- a/tools/perf/arch/loongarch/include/syscall_table.h
++++ b/tools/perf/arch/loongarch/include/syscall_table.h
+@@ -1,2 +1,2 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/syscall_table_64.h>
++#include <asm/syscalls_64.h>
+-- 
+2.42.0
+
