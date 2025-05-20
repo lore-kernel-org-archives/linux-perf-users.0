@@ -1,199 +1,125 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB5122DA15;
-	Tue, 20 May 2025 13:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543E21CD3F;
+	Tue, 20 May 2025 14:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748799; cv=none; b=vDeDCPPZqT48XC9DlXwwjTdt7gLqr5Zofu78a4NIJNEVSxuYW+G7boP7tBlPzVnRbO+BurHb93B+DlVYt62gBkzPihw1tuqEtxfczFspu/dyArXBrabBXiqAXVtmuf58ltWPtdJAVF7m2LfJzZexcgdXikadx9R4/0n4DAXCP8o=
+	t=1747750588; cv=none; b=Su0uihqpjSodvvRLaxtm0E5kTCbC3DbRuHEYHAxzlisgpv8ZdWGUG1grWadvaR5Inug40KNxsC6LaOMJ7b0KaQ0GDdl53fYYwKeHeDxGg0CSGf2wP1SBXwg1cM2lwg/S9g8VloBkc+gQ+EXo6DyUXOjUD0nmxDXN3Udi0CTcapY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747748799; c=relaxed/simple;
-	bh=A3ymgb18BnOuOySJr5/XRA0C9ZYBVPd49CK+UkvTeoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8tY3LD7q/OVK1QefhINkxvO6ViBFfr6IwQcmPE0UP0WysY3JfTeBXZd0Vft9nl7GoKvQsjjpQuujk5piR0PFicrkqJ8ypmtihgKCump4wC65MEbOqPRCtBbBkG/PY48KFdcyNZtRPD8DEJo0Zk0c5uVqZ/ZguHqKSRrHAiQOm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 709A31516;
-	Tue, 20 May 2025 06:46:23 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CBB93F5A1;
-	Tue, 20 May 2025 06:46:36 -0700 (PDT)
-Date: Tue, 20 May 2025 14:46:32 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH 07/10] perf: arm_spe: Add support for filtering on data
- source
-Message-ID: <20250520134632.GR412060@e132581.arm.com>
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
- <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
+	s=arc-20240116; t=1747750588; c=relaxed/simple;
+	bh=hIJkv1ReHr7jiOitm2gMHNm3E6sjizaqBmXRx8axdfI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q32bKFhjpxtrrD51tT2SuTkjeeyMJFXuxIk9GWA2+S8U4GAiI4iU+zmm902UDAAmFPu80AGHV4w8Pm45K2Dossd8QMOUBWSDs1xttitnOJLBZRHAF7CEHqRD5IDyjfbTxbLw/iYoQgauGy3J//OfZL7mJmofDsXx/qx70swFveA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lyYAp8jJ; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lyYAp8jJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747750587; x=1779286587;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hIJkv1ReHr7jiOitm2gMHNm3E6sjizaqBmXRx8axdfI=;
+  b=lyYAp8jJVidKUZeWiI41W9RfMbilNP/8tpv6D0V/x2etZgQuTtOjnEGl
+   6U4Ldjx3xh0/cLulqplM0x3rYAAiCYWZP+D35EQT7N450jGo2jRR+HiRZ
+   sqOHT1mc+tRh09EPYB+/+0uYWN6x5IDUA7l3wF4/nRoZYWAuXSvEpityz
+   phy4zA8PSFakGkp9BUF5BNveXPvIZY/gk0T3iBsjUCFBaAEFFKuYuRaKk
+   0U1h/zlnZcgif8U3nPP1gu+Zix91CpdzKRxwIEChH/s+ZrRE/ULgy9Wyp
+   XOCQkN0wX905R3o3vKaNQLRbI3i0Un7xCcngJ9+TTcO3kF4PqyR/P4iEi
+   A==;
+X-CSE-ConnectionGUID: dd5bAoCpSx+ewWW8snwHvQ==
+X-CSE-MsgGUID: eOnwi1VTRG6BooAT05+2tA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67242443"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="67242443"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:26 -0700
+X-CSE-ConnectionGUID: eShhJpjKR3GhdSefT9W/rA==
+X-CSE-MsgGUID: o7UqvB0eTWy8cjRnjx5FIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="170720126"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:24 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D22CC20B5736;
+	Tue, 20 May 2025 07:16:22 -0700 (PDT)
+Message-ID: <1e380367-aaad-4c02-bc10-b85b25dd2274@linux.intel.com>
+Date: Tue, 20 May 2025 10:16:21 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
+To: Ingo Molnar <mingo@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com, leo.yan@arm.com
+References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+ <20250516182853.2610284-3-kan.liang@linux.intel.com>
+ <aChHXShBhoDBgPX7@gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <aChHXShBhoDBgPX7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 12:41:39PM +0100, James Clark wrote:
-> SPE_FEAT_FDS adds the ability to filter on the data source of packets.
-> Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
-> when any of the filter bits are set.
+
+
+On 2025-05-17 4:22 a.m., Ingo Molnar wrote:
 > 
-> Each bit maps to data sources 0-63 described by bits[0:5] in the data
-> source packet (although the full range of data source is 16 bits so
-> higher value data sources can't be filtered on). The filter is an OR of
-> all the bits, so for example setting bits 0 and 3 filters packets from
-> data sources 0 OR 3.
+> * kan.liang@linux.intel.com <kan.liang@linux.intel.com> wrote:
+> 
+>> The throttle only happens when an event is overflowed. Stop the entire
+>> group when any event in the group triggers the throttle.
+>> The MAX_INTERRUPTS is set to all throttle events.
+> 
+> Since this is a relatively long series with a healthy dose of 
+> breakage-risk, I'm wondering about bisectability:
+> 
+>  - patch #2 auto-throttles groups, ie. stops the PMU
+> 
+>  - patches #3-#16 removes explicit PMU-stop calls.
+> 
+> In the interim commits, will the double PMU-stop in drivers not updated 
+> yet do anything noticeable, such as generate warnings, etc?
+> 
 
-As Arm ARM says:
+The short answer is no.
 
-  0b0 : If PMSFCR_EL1.FDS is 1, do not record load operations that have
-        bits [5:0] of the Data Source packet set to <m>.
-  0b1 : Load operations with Data Source <m> are unaffected by
-        PMSFCR_EL1.FDS.
+Here are the details for different ARCHs.
 
-We need extra handling for this configuration (0b0 means filtering,
-0b1 means no affaction):
+There is a active_mask to track the active counter/event in X86. The
+current implementation checks the corresponding bit first. If it is
+already cleared, do nothing. It avoids the double PMU-stop. I've tested
+on my machine.
+AMD and Zhaoxin shares the same x86_pmu_stop() as Intel. They are OK as
+well.
 
-- By default, the driver should set all bits in the 'data_src_filter'
-  field.
+powerpc, S390, ARC, sparc and xtensa utilize the PERF_HES_STOPPED flag
+instead. If the flag has been set, do nothing. It can also avoids the
+double PMU-stop.
 
-- The perf tool needs an extra patch in userspace to initialize all
-  bits in config4 unless user specify other values.
+ARM, apple m1, csky, loongarch and mips invoke the disable_event, rather
+than PMU stop. The disable_event unconditionally disables the counter
+register. It doesn't check if the register is already disabled. But I
+don't think double writing a register can trigger any issue.
+
+Alpha utilizes the PERF_HES_STOPPED flag. But it seems still writes the
+counter register even it's already disabled. Because the cpuc->enabled
+is used to check whether to write to the register. It's not updated in
+the alpha_pmu_stop(). But again, I don't think double writing a register
+can trigger any issue.
 
 Thanks,
-Leo
+Kan
 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  drivers/perf/arm_spe_pmu.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 9309b846f642..d04318411f77 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -87,6 +87,7 @@ struct arm_spe_pmu {
->  #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
->  #define SPE_PMU_FEAT_DISCARD			(1UL << 7)
->  #define SPE_PMU_FEAT_EFT			(1UL << 8)
-> +#define SPE_PMU_FEAT_FDS			(1UL << 9)
->  #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
->  	u64					features;
->  
-> @@ -232,6 +233,10 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
->  #define ATTR_CFG_FLD_inv_event_filter_LO	0
->  #define ATTR_CFG_FLD_inv_event_filter_HI	63
->  
-> +#define ATTR_CFG_FLD_data_src_filter_CFG	config4	/* PMSDSFR_EL1 */
-> +#define ATTR_CFG_FLD_data_src_filter_LO	0
-> +#define ATTR_CFG_FLD_data_src_filter_HI	63
-> +
->  GEN_PMU_FORMAT_ATTR(ts_enable);
->  GEN_PMU_FORMAT_ATTR(pa_enable);
->  GEN_PMU_FORMAT_ATTR(pct_enable);
-> @@ -248,6 +253,7 @@ GEN_PMU_FORMAT_ATTR(float_filter);
->  GEN_PMU_FORMAT_ATTR(float_filter_mask);
->  GEN_PMU_FORMAT_ATTR(event_filter);
->  GEN_PMU_FORMAT_ATTR(inv_event_filter);
-> +GEN_PMU_FORMAT_ATTR(data_src_filter);
->  GEN_PMU_FORMAT_ATTR(min_latency);
->  GEN_PMU_FORMAT_ATTR(discard);
->  
-> @@ -268,6 +274,7 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
->  	&format_attr_float_filter_mask.attr,
->  	&format_attr_event_filter.attr,
->  	&format_attr_inv_event_filter.attr,
-> +	&format_attr_data_src_filter.attr,
->  	&format_attr_min_latency.attr,
->  	&format_attr_discard.attr,
->  	NULL,
-> @@ -286,6 +293,9 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
->  	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
->  		return 0;
->  
-> +	if (attr == &format_attr_data_src_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_FDS))
-> +		return 0;
-> +
->  	if ((attr == &format_attr_branch_filter_mask.attr ||
->  	     attr == &format_attr_load_filter_mask.attr ||
->  	     attr == &format_attr_store_filter_mask.attr ||
-> @@ -406,6 +416,9 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
->  	if (ATTR_CFG_GET_FLD(attr, inv_event_filter))
->  		reg |= PMSFCR_EL1_FnE;
->  
-> +	if (ATTR_CFG_GET_FLD(attr, data_src_filter))
-> +		reg |= PMSFCR_EL1_FDS;
-> +
->  	if (ATTR_CFG_GET_FLD(attr, min_latency))
->  		reg |= PMSFCR_EL1_FL;
->  
-> @@ -430,6 +443,12 @@ static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
->  	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
->  }
->  
-> +static u64 arm_spe_event_to_pmsdsfr(struct perf_event *event)
-> +{
-> +	struct perf_event_attr *attr = &event->attr;
-> +	return ATTR_CFG_GET_FLD(attr, data_src_filter);
-> +}
-> +
->  static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
->  {
->  	struct arm_spe_pmu_buf *buf = perf_get_aux(handle);
-> @@ -788,6 +807,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->  	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
->  		return -EOPNOTSUPP;
->  
-> +	if (arm_spe_event_to_pmsdsfr(event) &&
-> +	    !(spe_pmu->features & SPE_PMU_FEAT_FDS))
-> +		return -EOPNOTSUPP;
-> +
->  	if (attr->exclude_idle)
->  		return -EOPNOTSUPP;
->  
-> @@ -857,6 +880,11 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
->  		write_sysreg_s(reg, SYS_PMSNEVFR_EL1);
->  	}
->  
-> +	if (spe_pmu->features & SPE_PMU_FEAT_FDS) {
-> +		reg = arm_spe_event_to_pmsdsfr(event);
-> +		write_sysreg_s(reg, SYS_PMSDSFR_EL1);
-> +	}
-> +
->  	reg = arm_spe_event_to_pmslatfr(event);
->  	write_sysreg_s(reg, SYS_PMSLATFR_EL1);
->  
-> @@ -1116,6 +1144,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  	if (FIELD_GET(PMSIDR_EL1_EFT, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_EFT;
->  
-> +	if (FIELD_GET(PMSIDR_EL1_FDS, reg))
-> +		spe_pmu->features |= SPE_PMU_FEAT_FDS;
-> +
->  	/* This field has a spaced out encoding, so just use a look-up */
->  	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
->  	switch (fld) {
-> 
-> -- 
-> 2.34.1
-> 
