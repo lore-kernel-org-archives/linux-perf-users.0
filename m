@@ -1,107 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED579289370;
-	Tue, 20 May 2025 18:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7DB248F75;
+	Tue, 20 May 2025 18:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765046; cv=none; b=P4xtXnDFX6/Nyr6BkQqUqf+8DWKNfEs9vd/bddbj68FXzPaZZEMIJerCannbJKkFih/jE7wczq+eBeVJvcQ5BRxUcY2POuad8WmNG9eTJWEfMkC17tIItbRjZcNsSujQ188YkPYKKndwdpJ6eqgBV5f/cUQS9H7KiaZm3rdomoE=
+	t=1747767034; cv=none; b=b1KnUfPnWToR8z3/xo+bHuGXm+UKPITi/rIHXdYIgmMouojM45AsW0N5uCsAIEy9cAfz4ouZCe6gmHFnxmNtuZxXM8OLroIep9Q8Of9nvePWywGc7IBB0UkQMlsrmdm9ITT5k/AwYHhmDdPmQTgzrp1p21n6XEdwE655IjVG1i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765046; c=relaxed/simple;
-	bh=W83BuCBEGVgUrqk/CNpFhmFYGiaT4zNHiSxidabkeh4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s0Z96rhtW2BuJsOMBju9tvZfE7U3Mo5/n00ehlrNkLBeRJTbLVoAkkVz568g025K/NYlpvAotTFa7gjRAhpwlz6ZaSz9cu4Jb5mv/uOTaRqifTfMai8IEqxdaWDCQViHIh+ad7UeJHgb3zcNMMlvrCpfalpd3tdfwITh8FZfPPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k28WW5Sr; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1747767034; c=relaxed/simple;
+	bh=4Xz+qUHB2YCNCR2CV7QYNfulgNvPj70zCp9v+dNVwig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BV8TOVabC5hRixJw6XHN6OQyS0IiQnnjadXWbFM/nAPlbd0U5mgHBG0NsZh2BL140pyWoN7gFQNqC7NqMRKQx/AMP6Z9SbcyhiuRa1SpO8rtXjmlKw18zgF3LZ3iajCihlJat8BOcD8T+LrG/cpkCZ07wRXfPDrITwevw4NKaAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwhZZdYD; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k28WW5Sr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwhZZdYD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747765045; x=1779301045;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=W83BuCBEGVgUrqk/CNpFhmFYGiaT4zNHiSxidabkeh4=;
-  b=k28WW5Sr21gZcGXPKSkK/mDziqHBROdeHGkLKP6OIaZ+fJVxy6opMA1F
-   2tpcvZPqBMJqoGBJrOGn/MyEVFbsKbYxCxokhdEftZ8ESowgGRbTXBfeF
-   X3Wkdtik0oz//B+1s7cQrfJSZfttTZx1poI0ReIIy5a/df0jPYrZIsPuo
-   +pFq+t6QlOX0ZXIJr/BLyxGe4ZZd5Je0wWk30JwHSH3diCwkSDZh0YNEq
-   xkUL1kGUEbQsKU1qSw1lKeVm2c6l4sNbPRGv5YHHAF96Vc+xsEYmgYymQ
-   GfPRZpm1yu3fNZ2dr/G/onrpTw1aWwWHtMa/9qVK17GO3qXFLxJmmPv3R
+  t=1747767033; x=1779303033;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4Xz+qUHB2YCNCR2CV7QYNfulgNvPj70zCp9v+dNVwig=;
+  b=bwhZZdYDBnBQONXGGBqd/VT6CtxKDbiDXMGoBF/xOOUQRl6WvOVbSDUb
+   oKU5Ap77UR1myCMBLuKo2gQNVwNNJZ4lQsSaL9xJEEbVDrKMFCsJR5u5Z
+   2zWNGdq2WmKDDe1XyCcaBBNYVlrQjdNVe1wvVLCU/Vklmj4Rds83A7sN1
+   67agHcTk3eiAGeRWXBgBwDDmPdxDbATTXmiEai8v0T+kX+6no8FLajPLl
+   yD6ShZByd518WBgyQFAckYKBNXpSc1tlu9bpbvygaWsjGDpxcPyLYVG9n
+   7R3vHaGVC20HDg7lJ2ot8pCAJXiYGBH9+ub3vrBJW1gtgiXiVHZHSJis4
    Q==;
-X-CSE-ConnectionGUID: Co81dHvPQImnN1Yh+cfmqg==
-X-CSE-MsgGUID: 73Q3a8S3Sk6lL5+UeQ1bNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49848063"
+X-CSE-ConnectionGUID: TjO85QopSf+tZLHcHj/WKA==
+X-CSE-MsgGUID: 6BEDDGCeTuCbUJGoSeW7PA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="59946398"
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49848063"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:17:14 -0700
-X-CSE-ConnectionGUID: IRyZBA6xRXK9/tMskgqUFQ==
-X-CSE-MsgGUID: MvsA5NJFQOmUedhDBhk8nA==
+   d="scan'208";a="59946398"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:50:31 -0700
+X-CSE-ConnectionGUID: XEW4GmabSG2u9P81egzzEw==
+X-CSE-MsgGUID: 9Lv+wtraReqXT+hvIqH6Hw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144514724"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa003.jf.intel.com with ESMTP; 20 May 2025 11:17:14 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	leo.yan@arm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org
-Subject: [PATCH V4 16/16] mips/perf: Remove driver-specific throttle support
-Date: Tue, 20 May 2025 11:16:44 -0700
-Message-Id: <20250520181644.2673067-17-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250520181644.2673067-1-kan.liang@linux.intel.com>
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+   d="scan'208";a="140708012"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:50:31 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id CAD4A20B5736;
+	Tue, 20 May 2025 11:50:28 -0700 (PDT)
+Message-ID: <800f99f6-a1bf-41f3-bc65-67fbe4c61368@linux.intel.com>
+Date: Tue, 20 May 2025 14:50:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/38] perf: Add a EVENT_GUEST flag
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
+ Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>,
+ Eranian Stephane <eranian@google.com>, Shukla Manali
+ <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-5-mizhang@google.com> <aCrWqhaID9-b_jmr@google.com>
+ <09ed8cb5-707d-4b13-b230-cff4fab02b72@linux.intel.com>
+ <aCzBDaHdELjiKHfc@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <aCzBDaHdELjiKHfc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The throttle support has been added in the generic code. Remove
-the driver-specific throttle support.
 
-Besides the throttle, perf_event_overflow may return true because of
-event_limit. It already does an inatomic event disable. The pmu->stop
-is not required either.
+On 2025-05-20 1:51 p.m., Namhyung Kim wrote:
+>>>> @@ -1089,6 +1094,7 @@ struct bpf_perf_event_data_kern {
+>>>>   */
+>>>>  struct perf_cgroup_info {
+>>>>  	struct perf_time_ctx		time;
+>>>> +	struct perf_time_ctx		timeguest;
+>>>>  	int				active;
+>>>>  };
+>>>>  
+>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>>> index e38c8b5e8086..7a2115b2c5c1 100644
+>>>> --- a/kernel/events/core.c
+>>>> +++ b/kernel/events/core.c
+>>>> @@ -163,7 +163,8 @@ enum event_type_t {
+>>>>  	/* see ctx_resched() for details */
+>>>>  	EVENT_CPU	= 0x10,
+>>>>  	EVENT_CGROUP	= 0x20,
+>>>> -	EVENT_FLAGS	= EVENT_CGROUP,
+>>>> +	EVENT_GUEST	= 0x40,
+>>> It's not clear to me if this flag is for events to include guests or
+>>> exclude them.  Can you please add a comment?
+>>>
+>> /*
+>>  * There are guest events. The for_each_epc() iteration can
+>>  * skip those PMUs which doesn't support guest events via the
+>>  * MEDIATED_VPMU. It is also used to indicate the start/end of
+>>  * guest events to calculate the guest running time.
+>>  */
+> Thanks for the explanation.  So it's for events with !exclude_guest on
+> host 
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org
----
- arch/mips/kernel/perf_event_mipsxx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The above "guest events" means that the events in a guest. The KVM
+should only invokes the interface when a guest requires PMU.
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index c4d6b09136b1..196a070349b0 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -791,8 +791,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc,
- 	if (!mipspmu_event_set_period(event, hwc, idx))
- 		return;
- 
--	if (perf_event_overflow(event, data, regs))
--		mipsxx_pmu_disable_event(idx);
-+	perf_event_overflow(event, data, regs);
- }
- 
- 
--- 
-2.38.1
+For the host, for now, only the event with exclude_guest is supported.
+The !exclude_guest event on host must be failed to be created if there
+is a running VM.
 
+and to do some operation only for host-only events on mediated
+> vPMUs.
+
+Yes.
+
+Update the comments as below.
+
+/*
+ * There are events in a guest enabled with MEDIATED_VPMU.
+ * The flag can be used in two places.
+ * - The for_each_epc() iteration can skip those PMUs which
+ *   doesn't support the events in a guest via the MEDIATED_VPMU.
+ * - Indicate the start/end point of the events in a guest.
+ *   The guest running time can be deducted for the
+ *   host-only (exclude_guest) events.
+ */
+
+Thanks,
+Kan
