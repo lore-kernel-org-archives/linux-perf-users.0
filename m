@@ -1,143 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60FB25C711
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 May 2025 07:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC0A266EEA;
+	Tue, 20 May 2025 09:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747725616; cv=none; b=URM4vhHk0U57lyTtxEjmKAcufxG3qRN4KAfOdGWvl6ldoACbdej5T0TeWY0f5F7kbqotUmO360724dp0/qSslDV6zLpHosk+NPyh1NrsIgvybGyPnPXU4LReGZh93IcrDbT9C6s1QqiQoQNdan0bcgXRaDlLCQgCRqPLqD+ykBQ=
+	t=1747732915; cv=none; b=kYA8RRuHZXx4xUCK8U567UM9GKhWlsyuHHrl7qPRIj3a8gy4Vu9b5AnrMBYsw0kN1EqnUMVOR2csl5YJ3x8fexgnR+r5X5MMT5pzMc/2gdkYmI2ijIlZwKDB0QcqBYHHZhq5Oogr7KqT9d9rT9CFIPut4oDMYnx4s/xQTtVtirY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747725616; c=relaxed/simple;
-	bh=cP7Qsu978JdO14VIy+ZgrNiEsOq8tQhEus1xNAKU9xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOzi+BoEPKFQU0JR5sTu9ydEiQdaITRRaM02JSjuoUC2dmtm+iU8NmSwjGLVuE250TqhPkEZTVB6MCRSJ4tp8ORtjx+wYvgjsndrpJbpNkulkKij6oz+21oYB8KVOgtT2eC7k7oflo8aC9yx3A2mXo6G6ABT4a0rtYsYdMM2xJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LVesLqYE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747732915; c=relaxed/simple;
+	bh=nRck76upIrqayF48r0JMEfKggSJcdZp1u2tGZS16wqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X6i8eqIGnAkYIAiywQqGxubfd+1dWDwZ/QRxr80+PWbYRHnl84lVt6mm2RrTU5kdIZ1BtfWCOahSsBCvW/d1uw6xqFo10id8FQ8mgYDJZnedNMu5gEBcLxAbYcMv0J1+G7H0dQnbvkMPuLibTnmJjeVIRmjIqJkrwvdw4+YtJB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JGbX0jbF; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LVesLqYE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747725613;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fQTn3idRl0VQlk8k3SIRDqs4SeWLMUWz5azl60Juisk=;
-	b=LVesLqYEhbqdIvt320cxRe6JPcjcNZ2lAdLzo1vJSjDKa/i+Y3wUmRwIy6qtAZWxu/f7z2
-	g0vdjTpInYvP+gt+8ZtIC8SWtJOmVPsQXpK1J9Cz1CIYXMLqwD1Xmkd+7QTV0c4tvCK3gc
-	ZiBk0gGsPgMZFg/UGvYuNgbr+OBGcbo=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-611-bu9Zh-zxPB-1ipqmwqXXKA-1; Tue, 20 May 2025 03:20:12 -0400
-X-MC-Unique: bu9Zh-zxPB-1ipqmwqXXKA-1
-X-Mimecast-MFC-AGG-ID: bu9Zh-zxPB-1ipqmwqXXKA_1747725611
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so2003622f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 May 2025 00:20:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747725611; x=1748330411;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fQTn3idRl0VQlk8k3SIRDqs4SeWLMUWz5azl60Juisk=;
-        b=iTi/xkrzvIRIGd9P8sKBbrUgcFYbQpUOysP/zJXXuSvlc1/pbTltPI0UyYwOdhGtj8
-         Cx4iXte9hmCnNkPTWCFgwxjB9a8Bn0btxKM2BMfNzByqsgpYNmLyldxiF+rEpkZmJErA
-         ZKeV+K2WeoQAV5sugzYu3moikgYI7kmPHr/7M2NHFDAnl0dEt2ss7i8JI41W/j5rPkaE
-         axYlBbyZXEhIV2LhxA0OyTR+Zeov2z6TkBxQXr9kXNk9XEUbv5phve7Q3hTLThDz1rkn
-         K2hK6IggqcihjnMBvQo1umB/XLJEiQ3iTb8r7iszTSEmGZF0MC1h04IuLQw6eLvOjjdV
-         HkLw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7+wrP5qvNslXfyM/r6a2ozynOGpqY4syDPkw+k2JKJMyo/FMZS6UlDV7uoHkRHKVMxaNj7fBs4ZmK53H/UZQs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHZTTi1T0RZiNfJpb+PEKxppuVas1IFzGQh6QTjB4u7YHFVU2N
-	jrX6bvf5gbh6LhWAK1Ba/uVokb4sBvDuxRhVqafwZPNsTDwsVvdjbXVJCecRqhTjNMWCTcqeDgQ
-	GGWU1LmqKTSv0wwSIKuEeThoIZNbml2QVBeUl+ITo3av1kS8zKQ3WnFqV2CsISFqkLRFflfM=
-X-Gm-Gg: ASbGncvG1iapwXg4VwSudajKyylkQXZn1WJrNjFCQUjVZcuR2Yn6xLZBv37t501To2y
-	qS0Cyu6OK1JmzNV3Cis7F2IblFTooHLAvv6nYBSRTYY66anmpquwGtZS/d9LomNlgMEg79aPIPY
-	vzwAKDQ0Kr3cYHTMu1IybO9QKU9hx2jb0HSHsa/m68K4eLJlhxPbA8qGHhCj/2Atmn3RbFIxf7C
-	6NtvUs+S5jvyi/skcBjEV06qGPnzZx20VEHFUUxTxeKU8NB35kBfGbmQji5ZiugdiPFRgq80tDU
-	kBgeOOD2XNMIp7MhkOeU5fub26r1d8AJdGOXidjdNYEWywXpFk3kt8nqwmSf
-X-Received: by 2002:a05:6000:2384:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a35fde361amr11701755f8f.0.1747725611050;
-        Tue, 20 May 2025 00:20:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMxpZctuxlPRTxO/eDif5ZtBRMhbiuIwkMb+0+eYZU8wMz06n9FB1hYZCoVHkP5hJIZwrLuA==
-X-Received: by 2002:a05:6000:2384:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a35fde361amr11701718f8f.0.1747725610479;
-        Tue, 20 May 2025 00:20:10 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef01besm19228605e9.10.2025.05.20.00.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 00:20:09 -0700 (PDT)
-Date: Tue, 20 May 2025 09:20:04 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH 1/7] tools include UAPI: Sync linux/vhost.h with the
- kernel sources
-Message-ID: <cek234mjuzbh3w4jvwhpx2oundb23tmxjaa2q35ul7bu7todum@hqkjcbnf3fzf>
-References: <20250519214126.1652491-1-acme@kernel.org>
- <20250519214126.1652491-2-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JGbX0jbF"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7K1NC012077;
+	Tue, 20 May 2025 09:21:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=m2Upju
+	Q/5KwMg+65JZtPR4E0vx7qlZD6xAt9dld09JI=; b=JGbX0jbFVwGCRv0iByTjJW
+	kVSzg+KBv3LpDWCKR7tviyfCr12E+nFR0y+G4a68Haf9vTqx1BulUOCHtXQsEcmf
+	H8w4h5Pj+lzN5iAfyH/TJGUkcNszJS3e/MKmVZaMZlDJqesbrFQ+xFJhmrm4Bhdg
+	iRCrKUTqleaxFSlNti10cHja6JtmKMlUTM/A7F9ICW4q7/i+Wtu4laOfRueN0MDq
+	WgcA9yy12xTnN6gqTEgj1xMU6KZ6IirqxgWfCKjV/P1qsxDtmuDG5yLN+6Tv6Xfq
+	4EuQ3eiVFTo05O5XxPTBoI7vdB1LVZUCI/0QssYN20jTkUaxZ42RVX1rGkGDXvwQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rab734y5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 09:21:44 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54K87GZX015958;
+	Tue, 20 May 2025 09:21:43 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g2aspj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 09:21:43 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54K9LdJl55705870
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 09:21:39 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACEB220244;
+	Tue, 20 May 2025 09:21:39 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C52C20242;
+	Tue, 20 May 2025 09:21:39 +0000 (GMT)
+Received: from [9.152.212.130] (unknown [9.152.212.130])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 20 May 2025 09:21:39 +0000 (GMT)
+Message-ID: <1660a81e-e057-44d3-be99-ec91fbf512e7@linux.ibm.com>
+Date: Tue, 20 May 2025 11:21:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250519214126.1652491-2-acme@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf ftrace: Use process/session specific trace
+ settings
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Alexander Egorenkov <egorenar@linux.ibm.com>
+References: <20250519145235.56006-1-tmricht@linux.ibm.com>
+ <aCvGF547Y3eteLRK@google.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <aCvGF547Y3eteLRK@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=682c49a8 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=uxB-eVp_abppLh5YTSIA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: XvjZbF10tOtyVpdm3aWD2c0FeYSTQV1q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA3NCBTYWx0ZWRfX3ckwVGefrPpf as27ZneEG13UyW1uUbXzpVs7aKQeK+Rhq8AWD4fwE/woXS/SDZqRKbA9fX05fQqGBdGKh4sUbDc Ul8v4tHxQBYJdsHkudyLaK/+vCl6GoAhOIAbcw5f4z2IEF0Q1509z/tfHPQZJlczTp1NTeb0Nn3
+ XiFJCXgzkqDmS2zij7aOWx66hkZa30SIujhABjl4eHQ+c0/vDxPFPfQy1uJuHcMrYicU1hXFmMn /K5vC3XGe4MndrPN9EXcp8Ba0g6WflcmbjGIubx++RtRmoeArVWvqR0ALt4zNUjvcbBuCQVvGiw IfbQYnwkMOPHn8kTGoD93Yhk4/zYd6hynxWUydgGUdhWdnxjOXQ/aU+apdq0K/Jc2Gp9mE/+P/N
+ 0YMqTFx7uBvolq+b6vqzQd6w+zfQR0bU/MW/0OiDk6rMNgyW4c/G6fuzFxuxkW3f9IfQO4Qe
+X-Proofpoint-GUID: XvjZbF10tOtyVpdm3aWD2c0FeYSTQV1q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200074
 
-On Mon, May 19, 2025 at 06:41:20PM -0300, Arnaldo Carvalho de Melo wrote:
->From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
->To get the changes in:
->
->  a940e0a685575424 ("vhost: fix VHOST_*_OWNER documentation")
->
->That just changed lines in comments
->
->This addresses this perf build warning:
->
->  Warning: Kernel ABI header differences:
->    diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
->
->Please see tools/include/uapi/README for further details.
->
->Cc: Adrian Hunter <adrian.hunter@intel.com>
->Cc: Ian Rogers <irogers@google.com>
->Cc: James Clark <james.clark@linaro.org>
->Cc: Jiri Olsa <jolsa@kernel.org>
->Cc: Kan Liang <kan.liang@linux.intel.com>
->Cc: Michael S. Tsirkin <mst@redhat.com>
->Cc: Namhyung Kim <namhyung@kernel.org>
->Cc: Stefano Garzarella <sgarzare@redhat.com>
->Link: https://lore.kernel.org/r/
->Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->---
-> tools/perf/trace/beauty/include/uapi/linux/vhost.h | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
+On 5/20/25 02:00, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, May 19, 2025 at 04:52:35PM +0200, Thomas Richter wrote:
+>> V1 --> V2: Add Suggestion from Arnaldo Cavalho de Melo confirmed by
+>>            Steven Rostedt. Use rmdir(../tracing/instances/dir) to stop
+>> 	   process/session specific tracing and delete all 
+>> 	   process/session specific setings.
+>>
+>> Executing perf ftrace commands ftrace, profile and latency
+>> leave tracing disabled as can seen in this output:
+>>
+>>  # echo 1 > /sys/kernel/debug/tracing/tracing_on
+>>  # cat /sys/kernel/debug/tracing/tracing_on
+>>  1
+>>  # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
+>>  # cat /sys/kernel/debug/tracing/tracing_on
+>>  0
+>>  #
+>>
+>> The tracing_on file is not restored to its value before the command.
+>> Fix this behavior and restore the trace setting to what
+>> is was before the invocation of the command.
+>> On Fedora 41 and 42 tracing is turned on by default.
+>>
+>> This patch use the .../tracing/instances/XXX subdirectory feature.
+>> Each perf ftrace invocation creates its own session/process
+>> specific subdirectory and does not change the global state
+>> in the .../tracing directory itself.
+>>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+>> ---
+>>  tools/perf/builtin-ftrace.c | 105 +++++++++++++++++++++++++++++++-----
+>>  1 file changed, 91 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+>> index 7caa18d5ffc3..3faf96e7185e 100644
+>> --- a/tools/perf/builtin-ftrace.c
+>> +++ b/tools/perf/builtin-ftrace.c
+>> @@ -38,6 +38,8 @@
+>>  #include "util/units.h"
+>>  #include "util/parse-sublevel-options.h"
+>>  
+>> +#include <sys/stat.h>
+> 
+> The standard header files are placed in the above.  Let's put it there.
+> 
+>> +
+>>  #define DEFAULT_TRACER  "function_graph"
+>>  
+>>  static volatile sig_atomic_t workload_exec_errno;
+>> @@ -45,6 +47,8 @@ static volatile sig_atomic_t done;
+>>  
+>>  static struct stats latency_stats;  /* for tracepoints */
+>>  
+>> +static char tracing_instance[PATH_MAX];	/* Trace instance directory */
+>> +
+>>  static void sig_handler(int sig __maybe_unused)
+>>  {
+>>  	done = true;
+>> @@ -100,6 +104,34 @@ static bool is_ftrace_supported(void)
+>>  	return supported;
+>>  }
+>>  
+>> +/*
+>> + * Wrapper to test if a file in directory .../tracing/instances/XXX
+>> + * exists. If so return the .../tracing/instances/XXX file for use.
+>> + * Otherwise the file exists only in directory .../tracing and
+>> + * is applicable to all instances, for example file available_filter_functions.
+>> + * Return that file name in this case.
+> 
+> Not sure if it's needed.  Can we call get_tracing_file() directly for
+> the global files?
+> 
+[SNIP]
+>> +static char *get_tracing_instance_file(const char *name)
 
-Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+Not really, some files are not available in the tracing/instances/XXX
+directory, for example 
 
->
->diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
->index b95dd84eef2db231..d4b3e2ae1314d1fc 100644
->--- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
->+++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
->@@ -28,10 +28,10 @@
->
-> /* Set current process as the (exclusive) owner of this file descriptor.  This
->  * must be called before any other vhost command.  Further calls to
->- * VHOST_OWNER_SET fail until VHOST_OWNER_RESET is called. */
->+ * VHOST_SET_OWNER fail until VHOST_RESET_OWNER is called. */
-> #define VHOST_SET_OWNER _IO(VHOST_VIRTIO, 0x01)
-> /* Give up ownership, and reset the device to default values.
->- * Allows subsequent call to VHOST_OWNER_SET to succeed. */
->+ * Allows subsequent call to VHOST_SET_OWNER to succeed. */
-> #define VHOST_RESET_OWNER _IO(VHOST_VIRTIO, 0x02)
->
-> /* Set up/modify memory layout */
->-- 
->2.49.0
->
+   ret = read_tracing_file_by_line("available_filter_functions",         
+                                   list_function_cb, filter);  
 
+That file is not created in the instances subdirectory:
+ # pwd
+/sys/kernel/debug/tracing
+[
+# find . -name tracing_on | grep -E '(\.|foo)/t'
+./instances/foo/tracing_on
+./tracing_on
+# find . -name available_filter_functions | grep -E '(\.|foo)/a'
+./available_filter_functions
+#
+
+The easiest approach is to always test for file existance in the
+instances/XXX directory first and if it is missing, fall back
+to the tracing directory. Otherwise the file location has to
+be known by file name.
+The other files which are not created in the instances/XXX subdirectory
+are
+  max_graph_depth, tracing_thres, set_graph_function and set_graph_notrace.
+
+Hope this helps.
+
+I will add all your other rewiev comment and submit V3.
+
+Thanks a lot
+    
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
