@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A1B25C6EE;
-	Tue, 20 May 2025 18:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247BA2798FA;
+	Tue, 20 May 2025 18:17:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765034; cv=none; b=J0eRhjhNsnKhajlGUnvRTKu87IFEJFWdpvxWSlJQh3HTp5XduU+xBm3pCC9BKIoTl86Obt9EpjK1G/0CYJY1E16/mHed/UdrgKeT7rZ5qiV9v5He5RiLBOdaQ5OLdFivKjiN346CGY8arZO4+DafdgQ7DTDS8xUXMtHlSAWhPNg=
+	t=1747765036; cv=none; b=nqglr7etXHDNqbKlxuqgEV5LH4iZOTIa503/jbDJOES26l8MhCJ4TOVOD3Y3pCGv9E0dqFGVeitu3kVkjO1HxDcNUK534bYpo3TAeHXw6+FX2LxBrp53lMqD4hDFYBO01YD9vTazswUeM0JjziBam4itMeAMYGgTR9LyWfwsrMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765034; c=relaxed/simple;
-	bh=LiGSznwfHLmlZyrkMeJ7xe9lmKUKXlsLL9kcCHQt1+Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NYT/bAK63k+e0b6xZ82GiNn88q50O7QrVmg+QITDUOfDVfz4uwecwp1gGj3XWzND9uu+iKaujVHM6MOWK3PworSNbi6cEXU2G0XYDoz8Jr+VpmXzDdWqFlP3UCQ/6mwmGqcMoWQjd3inBNScbFSyFNMWJbAKe1NxEZpZbQx0YYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHqAZzbP; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1747765036; c=relaxed/simple;
+	bh=25j5vFEsBU7YPCN2sAyzRM/ZIyTaWwct8v5PeU7SHZk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jup33YD8nTH73yH7cFgJWCWtZIxztXOTg13jhhepfojePGjXqNGMS12riPAFSJeGbLYbKl6GLftR7squRD+3na513QeGZQpjXNeUabAAWM9VjKDsEpZhTx/Hc1QDlKREpXzeJFZ6j5K04vzR0qXgKiSsTmaiHm3nfYq36Ry5Cyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OPjGmPbp; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHqAZzbP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPjGmPbp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747765033; x=1779301033;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=LiGSznwfHLmlZyrkMeJ7xe9lmKUKXlsLL9kcCHQt1+Q=;
-  b=FHqAZzbP9GFCxHeQZv2GeFIKvnOmUWh8TmY8tjDpDSCaWe/GP40aLlM7
-   O+DHrgDJYLSaHgDPgT93+t7H/XSYndVAvqNU3au2nCP8yowrNbpJT81ZF
-   cZ80HPUxjW1qydjVO4TAQeg13dd1dAWWzYXzlKuBOyh2u3QUiG50PRgNQ
-   VvbgKHMmdVkpOCjOhV/pBaijeFxos9ZN7PXj/Oyj5na7Zp8Ou+zG/eA8v
-   GFVEQHNGDjqNfRse5AyjKOGfTwB6jOkddEEZhYV/mwQTJHwgFyscprrdu
-   VHz95Ye122gbZErJipnJBXSQB4n6/P72iaMsJDUapqRq2VkSxciYd9BTd
-   A==;
-X-CSE-ConnectionGUID: 3ApVnJDMR0uVygkc4QEi9g==
-X-CSE-MsgGUID: nTKgZmkxSdWl7St8dbDLXg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49847936"
+  t=1747765035; x=1779301035;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=25j5vFEsBU7YPCN2sAyzRM/ZIyTaWwct8v5PeU7SHZk=;
+  b=OPjGmPbpqdhURMSR6TCJ3ScM2GNijGujKI3T9/pZ6vtQQVRZ664Sipu6
+   c80P/Vf2WzxYUrfdPXpTa7OiZLcwVHGotb3F9qENXx/BuZiq8iQVPv5XM
+   x0iPESPTv4TR0y5Mkjvfq/VprovF7TbXnYSv9cQzSqYx4hitWFDpp8vuf
+   RdYauMLLxpXmEVUS7DG3dvLcWDe6u/alkYL+2oyTHJnJ5d3P0W3z0CZNP
+   g5jrWERwb6qJCeADXPqKeFEucDT4izu/+TMU5COfkWSrhcWwlGcFUYn9o
+   L5E/ytrU8p4ewM5G+QvrB21DunLia2yVzBpvgvs2OsFe1b0mlOWwBVpPt
+   Q==;
+X-CSE-ConnectionGUID: HzxgwxW1R8+KMyXFQMQN8Q==
+X-CSE-MsgGUID: p44wuas0S8CmcLBmUcrVuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49847961"
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49847936"
+   d="scan'208";a="49847961"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:17:12 -0700
-X-CSE-ConnectionGUID: VCWLyY67R/mTSodmR9ORyA==
-X-CSE-MsgGUID: 9jhj8W1xQGart9nULCpNBg==
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:17:13 -0700
+X-CSE-ConnectionGUID: LFIbr82xTlaH6zyIPqrotw==
+X-CSE-MsgGUID: XOFD5mFLTOe38gHhmlOvxw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144514703"
+   d="scan'208";a="144514706"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by orviesa003.jf.intel.com with ESMTP; 20 May 2025 11:17:12 -0700
 From: kan.liang@linux.intel.com
@@ -55,10 +56,12 @@ Cc: eranian@google.com,
 	tmricht@linux.ibm.com,
 	leo.yan@arm.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 00/16] perf: Fix the throttle logic for group
-Date: Tue, 20 May 2025 11:16:28 -0700
-Message-Id: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+Subject: [PATCH V4 03/16] perf/x86/intel: Remove driver-specific throttle support
+Date: Tue, 20 May 2025 11:16:31 -0700
+Message-Id: <20250520181644.2673067-4-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,100 +72,113 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Changes since V3:
-- Add a new patch to only dump the throttle log for the leader
-- Apply the perf_event_unthrottle() in event_sched_in() as well
-- Not include the cleanup patch since it has been merged
-- Add Acked-by from Vineet
+The throttle support has been added in the generic code. Remove
+the driver-specific throttle support.
 
-Changes since V2:
-- Add a cleanup patch to check if an event is in freq mode
-- Rename the parameter of the perf_event_unthrottle_group()
-- Add Tested-by from Leo and Thomas
-- Add Acked-by from Guo Ren
+Besides the throttle, perf_event_overflow may return true because of
+event_limit. It already does an inatomic event disable. The pmu->stop
+is not required either.
 
-Changes since V1:
-- Apply the suggested throttle/unthrottle functions from Peter.
-  The MAX_INTERRUPTS and throttle logs are applied to all events.
-- Update the description and comments accordingly
-- Add Reviewed-by from Ravi and Max
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/core.c       | 3 +--
+ arch/x86/events/intel/core.c | 6 ++----
+ arch/x86/events/intel/ds.c   | 7 +++----
+ arch/x86/events/intel/knc.c  | 3 +--
+ arch/x86/events/intel/p4.c   | 3 +--
+ 5 files changed, 8 insertions(+), 14 deletions(-)
 
-The sampling read doesn't work well with a group.
-The issue was originally found by the 'Basic leader sampling test' case
-failed on s390.
-https://lore.kernel.org/all/20250228062241.303309-1-tmricht@linux.ibm.com/
-
-Stephane debugged it and found it was caused by the throttling logic.
-https://lore.kernel.org/all/CABPqkBQzCMNS_PfLZBWVuX9o8Z55PovwJvpVWMWzyeExFJ5R4Q@mail.gmail.com/
-
-The throttle logic is generic and shared by all ARCHs.
-It also impacts other ARCHs, e.g., X86.
-
-On an Intel GNR machine,
-$ perf record -e "{cycles,cycles}:S" ...
-
-$ perf report -D | grep THROTTLE | tail -2
-            THROTTLE events:        426  ( 9.0%)
-          UNTHROTTLE events:        425  ( 9.0%)
-
-$ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
-0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
-... sample_read:
-.... group nr 2
-..... id 0000000000000327, value 000000000cbb993a, lost 0
-..... id 0000000000000328, value 00000002211c26df, lost 0
-
-The patch set tries to provide a generic fix for the group throttle
-support. So the buggy driver-specific implementation can be removed.
-
-The patch set is verified on newer Intel platforms (Kan), ARM (Leo Yan),
-and s390 (Thomas Richter).
-
-Kan Liang (16):
-  perf: Fix the throttle logic for a group
-  perf: Only dump the throttle log for the leader
-  perf/x86/intel: Remove driver-specific throttle support
-  perf/x86/amd: Remove driver-specific throttle support
-  perf/x86/zhaoxin: Remove driver-specific throttle support
-  powerpc/perf: Remove driver-specific throttle support
-  s390/perf: Remove driver-specific throttle support
-  perf/arm: Remove driver-specific throttle support
-  perf/apple_m1: Remove driver-specific throttle support
-  alpha/perf: Remove driver-specific throttle support
-  arc/perf: Remove driver-specific throttle support
-  csky/perf: Remove driver-specific throttle support
-  loongarch/perf: Remove driver-specific throttle support
-  sparc/perf: Remove driver-specific throttle support
-  xtensa/perf: Remove driver-specific throttle support
-  mips/perf: Remove driver-specific throttle support
-
- arch/alpha/kernel/perf_event.c       | 11 ++---
- arch/arc/kernel/perf_event.c         |  6 +--
- arch/csky/kernel/perf_event.c        |  3 +-
- arch/loongarch/kernel/perf_event.c   |  3 +-
- arch/mips/kernel/perf_event_mipsxx.c |  3 +-
- arch/powerpc/perf/core-book3s.c      |  6 +--
- arch/powerpc/perf/core-fsl-emb.c     |  3 +-
- arch/s390/kernel/perf_cpum_cf.c      |  2 -
- arch/s390/kernel/perf_cpum_sf.c      |  5 +-
- arch/sparc/kernel/perf_event.c       |  3 +-
- arch/x86/events/amd/core.c           |  3 +-
- arch/x86/events/amd/ibs.c            |  4 +-
- arch/x86/events/core.c               |  3 +-
- arch/x86/events/intel/core.c         |  6 +--
- arch/x86/events/intel/ds.c           |  7 ++-
- arch/x86/events/intel/knc.c          |  3 +-
- arch/x86/events/intel/p4.c           |  3 +-
- arch/x86/events/zhaoxin/core.c       |  3 +-
- arch/xtensa/kernel/perf_event.c      |  3 +-
- drivers/perf/apple_m1_cpu_pmu.c      |  3 +-
- drivers/perf/arm_pmuv3.c             |  3 +-
- drivers/perf/arm_v6_pmu.c            |  3 +-
- drivers/perf/arm_v7_pmu.c            |  3 +-
- drivers/perf/arm_xscale_pmu.c        |  6 +--
- kernel/events/core.c                 | 68 ++++++++++++++++++++--------
- 25 files changed, 79 insertions(+), 87 deletions(-)
-
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 186e31cd0c14..8a2f73333a50 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1730,8 +1730,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 
+ 		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	if (handled)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index b7562d66c6ea..a8309a67693e 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3138,8 +3138,7 @@ static void x86_pmu_handle_guest_pebs(struct pt_regs *regs,
+ 			continue;
+ 
+ 		perf_sample_data_init(data, 0, event->hw.last_period);
+-		if (perf_event_overflow(event, data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, data, regs);
+ 
+ 		/* Inject one fake event is enough. */
+ 		break;
+@@ -3282,8 +3281,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 		if (has_branch_stack(event))
+ 			intel_pmu_lbr_save_brstack(&data, cpuc, event);
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	return handled;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 58c054fa56b5..f8610f7196f0 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2368,8 +2368,7 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
+ 		 * All but the last records are processed.
+ 		 * The last one is left to be able to call the overflow handler.
+ 		 */
+-		if (perf_event_overflow(event, data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, data, regs);
+ 	}
+ 
+ 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
+@@ -2597,8 +2596,8 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+ 		if (error[bit]) {
+ 			perf_log_lost_samples(event, error[bit]);
+ 
+-			if (iregs && perf_event_account_interrupt(event))
+-				x86_pmu_stop(event, 0);
++			if (iregs)
++				perf_event_account_interrupt(event);
+ 		}
+ 
+ 		if (counts[bit]) {
+diff --git a/arch/x86/events/intel/knc.c b/arch/x86/events/intel/knc.c
+index 3e8ec049b46d..384589168c1a 100644
+--- a/arch/x86/events/intel/knc.c
++++ b/arch/x86/events/intel/knc.c
+@@ -254,8 +254,7 @@ static int knc_pmu_handle_irq(struct pt_regs *regs)
+ 
+ 		perf_sample_data_init(&data, 0, last_period);
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	/*
+diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
+index c85a9fc44355..126d5ae264cb 100644
+--- a/arch/x86/events/intel/p4.c
++++ b/arch/x86/events/intel/p4.c
+@@ -1072,8 +1072,7 @@ static int p4_pmu_handle_irq(struct pt_regs *regs)
+ 			continue;
+ 
+ 
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
+ 	}
+ 
+ 	if (handled)
 -- 
 2.38.1
 
