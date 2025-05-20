@@ -1,318 +1,143 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B9725D1E9
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 May 2025 06:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60FB25C711
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 May 2025 07:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723567; cv=none; b=pdKMBgMqviQ1HCVhRNnCy46AWVlVY4mvivYA0q9VGlzo2V7hk28n8r7fTXRCngY6xYPknu46Z8mdMFLhoFcVvvlW5qmbHraRaaIbuDmwuzhC8bbXQf2rgkHf81aDWw3/x59oxzMClDqGTV/b2ksyujJJsqa3oXCoqjn5MpbC26g=
+	t=1747725616; cv=none; b=URM4vhHk0U57lyTtxEjmKAcufxG3qRN4KAfOdGWvl6ldoACbdej5T0TeWY0f5F7kbqotUmO360724dp0/qSslDV6zLpHosk+NPyh1NrsIgvybGyPnPXU4LReGZh93IcrDbT9C6s1QqiQoQNdan0bcgXRaDlLCQgCRqPLqD+ykBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747723567; c=relaxed/simple;
-	bh=7dFcpXzoMhDPmapILvqvqqslgVEbg8FBhVPRbfSd5KU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IvBF0Ynq9U2u9cSFD8wZO0cjr9qKVZDiqY/oUc4caVkQsvO1xZOXAk45TGaknLd2hwjTFsuXs8vcsOWXEoYYS88d3VajRhaIObCLE6HOqw4aXxkwxBXoEakbG3eEkMiHCBs33OIU/g/nh3mocXVkiqEfzw02yCbnvzIHm6jyQqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MEgmHkdN; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747725616; c=relaxed/simple;
+	bh=cP7Qsu978JdO14VIy+ZgrNiEsOq8tQhEus1xNAKU9xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jOzi+BoEPKFQU0JR5sTu9ydEiQdaITRRaM02JSjuoUC2dmtm+iU8NmSwjGLVuE250TqhPkEZTVB6MCRSJ4tp8ORtjx+wYvgjsndrpJbpNkulkKij6oz+21oYB8KVOgtT2eC7k7oflo8aC9yx3A2mXo6G6ABT4a0rtYsYdMM2xJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LVesLqYE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MEgmHkdN"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d6f933152so7982198e87.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 May 2025 23:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747723563; x=1748328363; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XEscknlu0WPibPrm55AVy8FsseHSHUo+KXViZ4nJwrY=;
-        b=MEgmHkdNbCMoKzJcbiZGdPJGKm1TOL2bL427jaB6jPYqqm/djQ9VNqwPCWKHGR3cg0
-         p1RSVMVRFUaX5eCFFZt89j3hrvfH74C69rruOJlfqLixyiM7b1GJg1KKkPHOsbK27jZF
-         RDuX5lZBxjwHHWO1osfC316RvcjvworEShIZEDGRU8Ln5kNzwrNDQBQqEe0NVkuLHO28
-         A3+BPR8MauiGo+U4kxPBd4kQIbO7LhwCv3iRQosGfep5iy9ZGkyxFRpRyuiGOguMjIUq
-         08g91AH7DEdwas6nErmy/2KBrCJy8IAy0opgCu/3gFBRQlpWgm+eqeBGyChUKhvCu+Ac
-         pMyQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LVesLqYE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747725613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fQTn3idRl0VQlk8k3SIRDqs4SeWLMUWz5azl60Juisk=;
+	b=LVesLqYEhbqdIvt320cxRe6JPcjcNZ2lAdLzo1vJSjDKa/i+Y3wUmRwIy6qtAZWxu/f7z2
+	g0vdjTpInYvP+gt+8ZtIC8SWtJOmVPsQXpK1J9Cz1CIYXMLqwD1Xmkd+7QTV0c4tvCK3gc
+	ZiBk0gGsPgMZFg/UGvYuNgbr+OBGcbo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-611-bu9Zh-zxPB-1ipqmwqXXKA-1; Tue, 20 May 2025 03:20:12 -0400
+X-MC-Unique: bu9Zh-zxPB-1ipqmwqXXKA-1
+X-Mimecast-MFC-AGG-ID: bu9Zh-zxPB-1ipqmwqXXKA_1747725611
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so2003622f8f.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 May 2025 00:20:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747723563; x=1748328363;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XEscknlu0WPibPrm55AVy8FsseHSHUo+KXViZ4nJwrY=;
-        b=cv/XqIzedxRZfY2QAaW7x5YEMD4svYPivk2aLTNXbyGp0O78uFQNF+PTtXbGVdtsdE
-         eNG2YvGALJ2L2cNZAwvJ5CeLagLb5BAjPs9+ZstbEqh9FEYRdUBWeDoZJabp/WjWuqdU
-         JoyVHbR+g/owUBwBkTMAT5hJgsXPYzZOfMvbQCBvJ5KEP95rP4+bqsdZbBeZY0Cm/pZz
-         6uI9aj6KlrVJdTiLcF/BLgi/9US+AHwdbfFI3NGnGOOH2mKOTccBIs1rFzbPNucen30V
-         YUrKfgzGClfLDzpQwLpHBsFwAPvthuZZkZ5NlYUBO3qenIxiPQFDiIqEteArFa7jpkVE
-         6RSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWo3C0IcuKv1a+ZmrObmsaFD9Ji4tW06FVd9xkTI4Njip4LXpMdbeUMq5pzxp1OvY5TLcKODiajyrZ9fv3HsNcR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr2smMmfoJCJYr7qDMtTfRwImEc9WFXBp8oao25lX/JE5jyscF
-	XqdpBNpC82qOE/RK4SBh4v8cqLEkI3Gds+EsjdoaRXKIR5K/qZABtmJtgMaJ+oJGc6rKm0NTUmS
-	PITCmwrmh6U+wUnrK8aXY2bcyrID1xym7r5pbI0Xy
-X-Gm-Gg: ASbGncs50jF9yVmlk2w31JDky6XF/741gyJu9QT4S9SWlXVuKA6C6p4arWs+PTkIkTm
-	ktzi/4tDllHTU0d/Bx2GFCHF1XNHYXG8j4YAL98q4STr2/Yupc8ko1YBGXNAUiLHaKJoaQvQpOh
-	R5elIQ55gjdyKtJzruXpfifKqfAJ8JoOz6moub96gRYa8OxzsmEm420kIZz/I07zOr7DsFPAkba
-	CMY
-X-Google-Smtp-Source: AGHT+IGrYL4QvinCB5HgJ5HkA6eossHBvn+dYCxUaELh4Eh2fewnluQwzz+btR/dTm7W0Ve1UGuoHfDKZxq9qu7iUVI=
-X-Received: by 2002:a05:6512:3d91:b0:549:7354:e4d1 with SMTP id
- 2adb3069b0e04-550e98fca76mr4492829e87.38.1747723562774; Mon, 19 May 2025
- 23:46:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747725611; x=1748330411;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fQTn3idRl0VQlk8k3SIRDqs4SeWLMUWz5azl60Juisk=;
+        b=iTi/xkrzvIRIGd9P8sKBbrUgcFYbQpUOysP/zJXXuSvlc1/pbTltPI0UyYwOdhGtj8
+         Cx4iXte9hmCnNkPTWCFgwxjB9a8Bn0btxKM2BMfNzByqsgpYNmLyldxiF+rEpkZmJErA
+         ZKeV+K2WeoQAV5sugzYu3moikgYI7kmPHr/7M2NHFDAnl0dEt2ss7i8JI41W/j5rPkaE
+         axYlBbyZXEhIV2LhxA0OyTR+Zeov2z6TkBxQXr9kXNk9XEUbv5phve7Q3hTLThDz1rkn
+         K2hK6IggqcihjnMBvQo1umB/XLJEiQ3iTb8r7iszTSEmGZF0MC1h04IuLQw6eLvOjjdV
+         HkLw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7+wrP5qvNslXfyM/r6a2ozynOGpqY4syDPkw+k2JKJMyo/FMZS6UlDV7uoHkRHKVMxaNj7fBs4ZmK53H/UZQs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHZTTi1T0RZiNfJpb+PEKxppuVas1IFzGQh6QTjB4u7YHFVU2N
+	jrX6bvf5gbh6LhWAK1Ba/uVokb4sBvDuxRhVqafwZPNsTDwsVvdjbXVJCecRqhTjNMWCTcqeDgQ
+	GGWU1LmqKTSv0wwSIKuEeThoIZNbml2QVBeUl+ITo3av1kS8zKQ3WnFqV2CsISFqkLRFflfM=
+X-Gm-Gg: ASbGncvG1iapwXg4VwSudajKyylkQXZn1WJrNjFCQUjVZcuR2Yn6xLZBv37t501To2y
+	qS0Cyu6OK1JmzNV3Cis7F2IblFTooHLAvv6nYBSRTYY66anmpquwGtZS/d9LomNlgMEg79aPIPY
+	vzwAKDQ0Kr3cYHTMu1IybO9QKU9hx2jb0HSHsa/m68K4eLJlhxPbA8qGHhCj/2Atmn3RbFIxf7C
+	6NtvUs+S5jvyi/skcBjEV06qGPnzZx20VEHFUUxTxeKU8NB35kBfGbmQji5ZiugdiPFRgq80tDU
+	kBgeOOD2XNMIp7MhkOeU5fub26r1d8AJdGOXidjdNYEWywXpFk3kt8nqwmSf
+X-Received: by 2002:a05:6000:2384:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a35fde361amr11701755f8f.0.1747725611050;
+        Tue, 20 May 2025 00:20:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMxpZctuxlPRTxO/eDif5ZtBRMhbiuIwkMb+0+eYZU8wMz06n9FB1hYZCoVHkP5hJIZwrLuA==
+X-Received: by 2002:a05:6000:2384:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a35fde361amr11701718f8f.0.1747725610479;
+        Tue, 20 May 2025 00:20:10 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef01besm19228605e9.10.2025.05.20.00.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 00:20:09 -0700 (PDT)
+Date: Tue, 20 May 2025 09:20:04 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH 1/7] tools include UAPI: Sync linux/vhost.h with the
+ kernel sources
+Message-ID: <cek234mjuzbh3w4jvwhpx2oundb23tmxjaa2q35ul7bu7todum@hqkjcbnf3fzf>
+References: <20250519214126.1652491-1-acme@kernel.org>
+ <20250519214126.1652491-2-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aBmei7cMf-MzzX5W@google.com> <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
- <aBmvmmRKpeVd6aT3@google.com> <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
- <aBm1x2as1fraHXHz@google.com> <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
- <aBvwFPRwA2LVQJkO@google.com> <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
- <aCdo6Vz2MVv3N0kk@google.com> <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
- <aCveO4qQGy03ow5p@google.com>
-In-Reply-To: <aCveO4qQGy03ow5p@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 20 May 2025 08:45:51 +0200
-X-Gm-Features: AX0GCFt6kuazUMi1HHsonhi3PXMwv4ckzIBmVYwKEQLE4hJRGbY88fLOglLbUlk
-Message-ID: <CACT4Y+YdnQebkGTQJ9yhLs2j12WBYk2ReiBAq5cE+wtu1RRU5A@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250519214126.1652491-2-acme@kernel.org>
 
-On Tue, 20 May 2025 at 03:43, Namhyung Kim <namhyung@kernel.org> wrote:
+On Mon, May 19, 2025 at 06:41:20PM -0300, Arnaldo Carvalho de Melo wrote:
+>From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> On Mon, May 19, 2025 at 08:00:49AM +0200, Dmitry Vyukov wrote:
-> > On Fri, 16 May 2025 at 18:33, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > Sorry for the delay.
-> > >
-> > > On Thu, May 08, 2025 at 02:24:08PM +0200, Dmitry Vyukov wrote:
-> > > > On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
-> > > > > > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > > > > Where does the patch check that this mode is used only for system-wide profiles?
-> > > > > > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
-> > > > > > > > >
-> > > > > > > > > Basically yes, but you can use --sample-cpu to add it.
-> > > > > > > >
-> > > > > > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
-> > > > > > >
-> > > > > > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
-> > > > > > >
-> > > > > > > We may disable latency column by default in this case and show warning
-> > > > > > > if it's requested.  Or we may add a new attribute to emit sched-switch
-> > > > > > > records only for idle tasks and enable the latency report only if the
-> > > > > > > data has sched-switch records.
-> > > > > > >
-> > > > > > > What do you think?
-> > > > > >
-> > > > > > Depends on what problem we are trying to solve:
-> > > > > >
-> > > > > > 1. Enabling latency profiling for system-wide mode.
-> > > > > >
-> > > > > > 2. Switch events bloating trace too much.
-> > > > > >
-> > > > > > 3. Lost switch events lead to imprecise accounting.
-> > > > > >
-> > > > > > The patch mentions all 3 :)
-> > > > > > But I think 2 and 3 are not really specific to system-wide mode.
-> > > > > > An active single process profile can emit more samples than a
-> > > > > > system-wide profile on a lightly loaded system.
-> > > > >
-> > > > > True.  But we don't need to care about lightly loaded systems as they
-> > > > > won't cause problems.
-> > > > >
-> > > > >
-> > > > > > Similarly, if we rely on switch events for system-wide mode, then it's
-> > > > > > equally subject to the lost events problem.
-> > > > >
-> > > > > Right, but I'm afraid practically it'll increase the chance of lost
-> > > > > in system-wide mode.  The default size of the sample for system-wide
-> > > > > is 56 byte and the size of the switch is 48 byte.  And the default
-> > > > > sample frequency is 4000 Hz but it cannot control the rate of the
-> > > > > switch.  I saw around 10000 Hz of switches per CPU on my work env.
-> > > > >
-> > > > > >
-> > > > > > For problem 1: we can just permit --latency for system wide mode and
-> > > > > > fully rely on switch events.
-> > > > > > It's not any worse than we do now (wrt both profile size and lost events).
-> > > > >
-> > > > > This can be an option and it'd work well on lightly loaded systems.
-> > > > > Maybe we can just try it first.  But I think it's better to have an
-> > > > > option to make it work on heavily loaded systems.
-> > > > >
-> > > > > >
-> > > > > > For problem 2: yes, we could emit only switches to idle tasks. Or
-> > > > > > maybe just a fake CPU sample for an idle task? That's effectively what
-> > > > > > we want, then your current accounting code will work w/o any changes.
-> > > > > > This should help wrt trace size only for system-wide mode (provided
-> > > > > > that user already enables CPU accounting for other reasons, otherwise
-> > > > > > it's unclear what's better -- attaching CPU to each sample, or writing
-> > > > > > switch events).
-> > > > >
-> > > > > I'm not sure how we can add the fake samples.  The switch events will be
-> > > > > from the kernel and we may add the condition in the attribute.
-> > > > >
-> > > > > And PERF_SAMPLE_CPU is on by default in system-wide mode.
-> > > > >
-> > > > > >
-> > > > > > For problem 3: switches to idle task won't really help. There can be
-> > > > > > lots of them, and missing any will lead to wrong accounting.
-> > > > >
-> > > > > I don't know how severe the situation will be.  On heavily loaded
-> > > > > systems, the idle task won't run much and data size won't increase.
-> > > > > On lightly loaded systems, increased data will likely be handled well.
-> > > > >
-> > > > >
-> > > > > > A principled approach would be to attach a per-thread scheduler
-> > > > > > quantum sequence number to each CPU sample. The sequence number would
-> > > > > > be incremented on every context switch. Then any subset of CPU should
-> > > > > > be enough to understand when a task was scheduled in and out
-> > > > > > (scheduled in on the first CPU sample with sequence number N, and
-> > > > > > switched out on the last sample with sequence number N).
-> > > > >
-> > > > > I'm not sure how it can help.  We don't need the switch info itself.
-> > > > > What's needed is when the CPU was idle, right?
-> > > >
-> > > > I mean the following.
-> > > > Each sample has a TID.
-> > > > We add a SEQ field, which is per-thread and is incremented after every
-> > > > rescheduling of the thread.
-> > > >
-> > > > When we see the last sample for (TID,SEQ), we pretend there is SCHED
-> > > > OUT event for this thread at this timestamp. When we see the first
-> > > > sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
-> > > > thread at this timestamp.
-> > > >
-> > > > These SCHED IN/OUT events are not injected by the kernel. We just
-> > > > pretend they happen for accounting purposes. We may actually
-> > > > materialize them in the perf tool, or me may just update parallelism
-> > > > as if they happen.
-> > >
-> > > Thanks for the explanation.  But I don't think it needs the SEQ and
-> > > SCHED IN/OUT generated from it to track lost records.  Please see below.
-> > >
-> > > >
-> > > > With this scheme we can lose absolutely any subset of samples, and
-> > > > still get very precise accounting. When we lose samples, the profile
-> > > > of course becomes a bit less precise, but the effect is local and
-> > > > recoverable.
-> > > >
-> > > > If we lose the last/first event for (TID,SEQ), then we slightly
-> > > > shorten/postpone the thread accounting in the process parallelism
-> > > > level. If we lose a middle (TID,SEQ), then parallelism is not
-> > > > affected.
-> > >
-> > > I'm afraid it cannot check parallelism by just seeing the current thread.
-> > > I guess it would need information from other threads even if it has same
-> > > SEQ.
-> >
-> > Yes, we still count parallelism like you do in this patch, we just use
-> > the SEQ info instead of CPU numbers and explicit switch events.
+>To get the changes in:
 >
-> I mean after record lost, let's say
+>  a940e0a685575424 ("vhost: fix VHOST_*_OWNER documentation")
 >
->   t1: SAMPLE for TID 1234, seq 10  (parallelism = 4)
->   t2: LOST
->   t3: SAMPLE for TID 1234, seq 10  (parallelism = ?)
+>That just changed lines in comments
 >
-> I don't think we can continue to use parallelism of 4 after LOST even if
-> it has the same seq because it cannot know if other threads switched on
-> other CPUs.  Then do we need really the seq?
-
-I do not understand the problem you describe.
-We just keep updating parallelism according to the algorithm I
-described. It works fine in the presence of lost events.
-
-
-> > > Also postpone thread accounting can be complex.  I think it should wait
-> > > for all other threads to get a sample.  Maybe some threads exited and
-> > > lost too.
-> >
-> > Yes, in order to understand what's the last event for (TID,SEQ) we
-> > need to look ahead and find the event (TID,SEQ+1). The easiest way to
-> > do it would be to do 2 passes over the trace. That's the cost of
-> > saving trace space + being resilient to lost events.
-> >
-> > Do you see any other issues with this scheme besides requiring 2 passes?
+>This addresses this perf build warning:
 >
-> Well.. 2 pass itself can be a problem due to slowness it'd bring.  Some
-> people complain about the speed of perf report as of now.
+>  Warning: Kernel ABI header differences:
+>    diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
+>
+>Please see tools/include/uapi/README for further details.
+>
+>Cc: Adrian Hunter <adrian.hunter@intel.com>
+>Cc: Ian Rogers <irogers@google.com>
+>Cc: James Clark <james.clark@linaro.org>
+>Cc: Jiri Olsa <jolsa@kernel.org>
+>Cc: Kan Liang <kan.liang@linux.intel.com>
+>Cc: Michael S. Tsirkin <mst@redhat.com>
+>Cc: Namhyung Kim <namhyung@kernel.org>
+>Cc: Stefano Garzarella <sgarzare@redhat.com>
+>Link: https://lore.kernel.org/r/
+>Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>---
+> tools/perf/trace/beauty/include/uapi/linux/vhost.h | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Is trace processing CPU-bound or memory-bound? If it's CPU-bound, then
-the second pass may be OK-ish, since we will need minimal CPU
-processing during the first pass.
+Acked-by: Stefano Garzarella <sgarzare@redhat.com>
 
+>
+>diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>index b95dd84eef2db231..d4b3e2ae1314d1fc 100644
+>--- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>+++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>@@ -28,10 +28,10 @@
+>
+> /* Set current process as the (exclusive) owner of this file descriptor.  This
+>  * must be called before any other vhost command.  Further calls to
+>- * VHOST_OWNER_SET fail until VHOST_OWNER_RESET is called. */
+>+ * VHOST_SET_OWNER fail until VHOST_RESET_OWNER is called. */
+> #define VHOST_SET_OWNER _IO(VHOST_VIRTIO, 0x01)
+> /* Give up ownership, and reset the device to default values.
+>- * Allows subsequent call to VHOST_OWNER_SET to succeed. */
+>+ * Allows subsequent call to VHOST_SET_OWNER to succeed. */
+> #define VHOST_RESET_OWNER _IO(VHOST_VIRTIO, 0x02)
+>
+> /* Set up/modify memory layout */
+>-- 
+>2.49.0
+>
 
-> I think we can simply reset the parallelism in all processes after LOST
-> and set current process to the idle task.  It'll catch up as soon as it
-> sees samples from all CPUs.
-
-I guess we can approximate parallelism as you described here:
-
-> Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
-> CPU and clear the current thread after some period (2x of given freq?).
-
-We probably don't need to do anything special for lost events in this
-scheme at all. If the gap caused by lost events is tiny, then we
-consider nothing happened. If the gap is large enough, then we
-consider the CPU as idle for the duration of the gap. Either way it
-will be handled on common grounds.
-
-But tuning of these heuristics + testing and verification may be a bit
-of a problem. I would hate to end up with a tool which I won't trust.
-
-Here:
-"after some period (2x of given freq?)"
-do you mean 2x average/median period, or 1/2 average/median period?
-(2x freq is 1/2 period)
-
-Ideally, we consider a CPU idle after 1/2 period after it switched to
-the idle task and we stop receiving samples.
-But on the other hand, we don't want to consider it constantly
-becoming idle, when it's just doing normal sampling with the normal
-period...
-
-So ideally the algorithm should be something like:
-let's say average/median sampling period is P
-we got last sample for CPU X at time T
-if by time T+2P we have not seen any other sample on CPU X, then
-consider CPU X idle since T+0.5P
-
-But this would also require either 2 passes over the data, or some
-kind of look ahead similar to the algo I proposed...
-
-Also, do we take the median period? or average? do we update it over
-time (say, if CPU freq changes)? do we count it globally, or per CPU
-(in case CPUs run at different freqs)?
-
-
-
-
-
-
-
-
-
-> > > In my approach, I can clear the current thread from all CPUs when it
-> > > sees a LOST record and restart calculation of parallelism.
-> > >
-> > > >
-> > > > The switches from a thread to itself is not a problem. We will just
-> > > > inject a SCHED OUT followed by SCHED IN. But exactly the same happens
-> > > > now when the kernel injects these events.
-> > > >
-> > > > But if we switch to idle task and got no samples for some period of
-> > > > time on the CPU, then we properly inject SCHED OUT/IN that will
-> > > > account for the thread not actually running.
-> > >
-> > > Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
-> > > CPU and clear the current thread after some period (2x of given freq?).
-> > > But it may slow down perf report as it'd check all CPUs for each sample.
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
