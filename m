@@ -1,142 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7315026A1CC;
-	Tue, 20 May 2025 16:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D90276054;
+	Tue, 20 May 2025 16:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757412; cv=none; b=cfjyTJd9y9A16CPgU08/tWttacUx2+5MQnwYOdizuXgjJjQ1nPQPTw96t6GHGhV6KQN/jkLJc4z30a8ASE7/iV8r+/OCOLDvK7hljntWoFVXCVsRLXgBoyj77Z6wcSfzPvU5YXExQ7/4+APL0lXQ56B/cloT9E/A7nW11gcJNSg=
+	t=1747757523; cv=none; b=rarZ2hQfIZool7de6AyDLFRQJRdCt0mKGY+TSWiWPSiYt5+9jk6JBpkmO7VKpm1kb/tjDoPkkD48RSk4NManvNLSMmpOOiQKGW9T0d28c1UaiasIjbkytIj1QLEka+VYGoV8ngGWWP/stH5CfhY9GQP43bAq/jq4Wwu/qbOyTFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757412; c=relaxed/simple;
-	bh=ErlHlMGeCflWV/46sY9cMO1F7pLkz/dFsaYh/d+ovXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYuTzwQP3a2rZrOsgYWPcFjA8IQwz+IeSfNChijQY49A48UCP7WzygdHcMYGJoKJbWK4q7NmwOeVFZucDmfssyueRX2lpQ2j3gPgn/M2nmXLpi7P5CzW5CewStCbHb/9p+SJYuREKyc0WBGWB5UsR9qTIdFkhVYWx4kInUbfYt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BCAB1516;
-	Tue, 20 May 2025 09:09:56 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 211903F5A1;
-	Tue, 20 May 2025 09:10:09 -0700 (PDT)
-Date: Tue, 20 May 2025 17:10:03 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH 07/10] perf: arm_spe: Add support for filtering on data
- source
-Message-ID: <20250520161003.GT412060@e132581.arm.com>
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
- <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
- <20250520134632.GR412060@e132581.arm.com>
- <443141db-6950-4a15-83be-ad9e9c0e03a0@linaro.org>
+	s=arc-20240116; t=1747757523; c=relaxed/simple;
+	bh=U6lo7wpJePXrQN+8jqAd6+6cxb+SFV2VYr+GvxVd548=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nqAIM6Hw5W/O9sgBvOsHO2Awj5Pa6Fa68R6lxxrMOK9O5rniPYwpoNmFMWnXLpiESdVaxBgUD14GLd9pDQFDtQ/kHA8h3A5YobWBGJa1lQBo73j9QltOFpPYFjtjKoyZLNrYURORhLl1Kte8hR+UIQNLDE9V78339yK/jx2wZYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dMMaR+AF; arc=none smtp.client-ip=193.252.22.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dMMaR+AF"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id HPQYu9zeCFfBZHPQfuCi6a; Tue, 20 May 2025 18:03:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1747756989;
+	bh=U6lo7wpJePXrQN+8jqAd6+6cxb+SFV2VYr+GvxVd548=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=dMMaR+AFCHRDRqO/p9iL5eji6THqnlwGIZf0pOLqdvEGZ76W4qhMTn+EiagUzdWxQ
+	 CPytae6VjbfmGmLazR6+oB1RU1rhqxBt1Z7DKF4xxVCUDXmf1cpRc6UvyrT6rwNAbZ
+	 n9H2RMmZaDVOECX0m/P5L7y9wBPZZvgiL993jini4zAjlyKJjscVr9e3XnujHeOyxj
+	 PPJU1TFkfamk71h0rw3hVUKHM2ITkdhzgDXEIMvbi9pXjqE8acGw8o6b2jfI0Qw1oN
+	 1LMgj7K/GD1Gapjq6CGwjHJE3SCvoujZuArtvIQ260vmRZuCWJaFE3kpl2UWI6fe+O
+	 Vse/wByRNa1Mg==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 20 May 2025 18:03:09 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
+Date: Wed, 21 May 2025 01:02:49 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <443141db-6950-4a15-83be-ad9e9c0e03a0@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
+ sources
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ I Hsin Cheng <richard120310@gmail.com>, "Michael S . Tsirkin"
+ <mst@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Peng Jiang <jiang.peng9@zte.com.cn>, Stefano Garzarella
+ <sgarzare@redhat.com>, Yazen Ghannam <yazen.ghannam@amd.com>,
+ Yury Norov <yury.norov@gmail.com>
+References: <20250519214126.1652491-1-acme@kernel.org>
+ <CAMZ6RqJUf=LpczMNu9WwLik9i-4tJHYENvM3d15nxjNM+_vc5w@mail.gmail.com>
+ <aCylQUlY3W7rbZAs@x1>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <aCylQUlY3W7rbZAs@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 04:00:59PM +0100, James Clark wrote:
-> On 20/05/2025 2:46 pm, Leo Yan wrote:
-> > On Tue, May 06, 2025 at 12:41:39PM +0100, James Clark wrote:
-> > > SPE_FEAT_FDS adds the ability to filter on the data source of packets.
-> > > Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
-> > > when any of the filter bits are set.
-> > > 
-> > > Each bit maps to data sources 0-63 described by bits[0:5] in the data
-> > > source packet (although the full range of data source is 16 bits so
-> > > higher value data sources can't be filtered on). The filter is an OR of
-> > > all the bits, so for example setting bits 0 and 3 filters packets from
-> > > data sources 0 OR 3.
-> > 
-> > As Arm ARM says:
-> > 
-> >    0b0 : If PMSFCR_EL1.FDS is 1, do not record load operations that have
-> >          bits [5:0] of the Data Source packet set to <m>.
-> >    0b1 : Load operations with Data Source <m> are unaffected by
-> >          PMSFCR_EL1.FDS.
-> > 
-> > We need extra handling for this configuration (0b0 means filtering,
-> > 0b1 means no affaction):
-> > 
-> > - By default, the driver should set all bits in the 'data_src_filter'
-> >    field.
-> > 
-> > - The perf tool needs an extra patch in userspace to initialize all
-> >    bits in config4 unless user specify other values.
-> > 
-> 
-> Did you take into account PMSFCR_EL1.FDS being set automatically?
+On 21/05/2025 at 00:52, Arnaldo Carvalho de Melo wrote:
+> On Tue, May 20, 2025 at 09:44:05AM +0900, Vincent Mailhol wrote:
+>> On Tue. 20 May 2025 at 06:41, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Good point. TBH, I did not give it enough consideration until your
-remdinding, but let me elaborate on why I suggested the approach above.
+(...)
 
-> I think the wording is slightly confusing but I tested it on the model and it works.
-> 
-> If PMSFCR_EL1.FDS == 0 then PMSDSFR_EL1 does nothing, and if the data source
-> filter isn't set by the user then FDS isn't set so there's no need to set
-> all the bits in the filter to 1. Once the user asks for any filter then we
-> set FDS, at which point it's whatever filter they asked for. They can set
-> all the bits if they want, or just one.
-> 
-> This is same way PMSFCR_EL1.FT already works. If the user asks for any
-> filter then it's set automatically, but we don't allow the user to ask for
-> "no filters" but with FT set.
-> 
-> So the only thing we can't do is filter out samples with _any_ data source.
-> Which would be PMSFCR_EL1.FDS == 1 and PMSDSFR_EL1 == 0. But I don't think
-> that's useful, and there are other filters to get you all or most of the way
-> there.
+> I think there is value in doing it now, as it clears up the build
+> warnings and solves already one prep work that syncing would entail,
+> namely the inclusion of const_true() in the tools compiler.h file.
 
-My suggestion is coming for handling the case you mentioned.  Let us see
-the combinations:
+Ack.
 
- PMSFCR_EL1.FDS == 0
- PMSDSFR_EL1 == 0xFFFF,FFFF,FFFF,FFFF
-   No filtering on data source
+> I think I can take your "I am not objecting to this series in any way."
+> as an Acked-by?
 
- PMSFCR_EL1.FDS == 1
- PMSDSFR_EL1 == 0xFFFF,FFFF,FFFF,FFFF
-   No filtering on data source
+Sure. You can add my Acked-by to patch 6 and 7 (the ones in which you put me in
+CC). I did not have a look at the other ones (and do not plan to do so).
 
- PMSFCR_EL1.FDS == 0
- PMSDSFR_EL1 == 0x0
-   No filtering on data source
 
- PMSFCR_EL1.FDS == 1
- PMSDSFR_EL1 == 0x0
-   Filtering on all data source
+Yours sincerely,
+Vincent Mailhol
 
-If 'PMSFCR_EL1.FDS == 0 and PMSDSFR_EL1 == 0xFFFF,FFFF,FFFF,FFFF' is
-initialized state, when a user set all bits to '1' for the data source
-filter, then no matter we enable or disable FDS bit, it can work as
-expected for disabling filtering.
-
-If 'PMSFCR_EL1.FDS == 0 and PMSDSFR_EL1 == 0x0' is the init state, as
-you said, when user passed 0xFFFF,FFFF,FFFF,FFFF for data filter, we
-cannot distinguish it from the init state, as a result, we will fail
-to handle this case.
-
-How about you think?
-
-Thanks,
-Leo
