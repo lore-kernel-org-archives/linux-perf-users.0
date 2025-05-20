@@ -1,125 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543E21CD3F;
-	Tue, 20 May 2025 14:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95873EEDE;
+	Tue, 20 May 2025 14:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750588; cv=none; b=Su0uihqpjSodvvRLaxtm0E5kTCbC3DbRuHEYHAxzlisgpv8ZdWGUG1grWadvaR5Inug40KNxsC6LaOMJ7b0KaQ0GDdl53fYYwKeHeDxGg0CSGf2wP1SBXwg1cM2lwg/S9g8VloBkc+gQ+EXo6DyUXOjUD0nmxDXN3Udi0CTcapY=
+	t=1747751257; cv=none; b=KtV1rDeLAjvMTb9vsf5Hc7zR/rsDR4PfVMhBViTb8ELoCOUkCWp+95nxH7sAoafN3/ubIzxDGsuSN2qH5VCt00dskmja9XasRqeQ1MPEbDYv5eSiS1sr+h6pSSA5wuSCwPN1lQ5tbhPhef7pZzAUOCk/OVTyzR2bGXwjOl1jsCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750588; c=relaxed/simple;
-	bh=hIJkv1ReHr7jiOitm2gMHNm3E6sjizaqBmXRx8axdfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q32bKFhjpxtrrD51tT2SuTkjeeyMJFXuxIk9GWA2+S8U4GAiI4iU+zmm902UDAAmFPu80AGHV4w8Pm45K2Dossd8QMOUBWSDs1xttitnOJLBZRHAF7CEHqRD5IDyjfbTxbLw/iYoQgauGy3J//OfZL7mJmofDsXx/qx70swFveA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lyYAp8jJ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lyYAp8jJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747750587; x=1779286587;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hIJkv1ReHr7jiOitm2gMHNm3E6sjizaqBmXRx8axdfI=;
-  b=lyYAp8jJVidKUZeWiI41W9RfMbilNP/8tpv6D0V/x2etZgQuTtOjnEGl
-   6U4Ldjx3xh0/cLulqplM0x3rYAAiCYWZP+D35EQT7N450jGo2jRR+HiRZ
-   sqOHT1mc+tRh09EPYB+/+0uYWN6x5IDUA7l3wF4/nRoZYWAuXSvEpityz
-   phy4zA8PSFakGkp9BUF5BNveXPvIZY/gk0T3iBsjUCFBaAEFFKuYuRaKk
-   0U1h/zlnZcgif8U3nPP1gu+Zix91CpdzKRxwIEChH/s+ZrRE/ULgy9Wyp
-   XOCQkN0wX905R3o3vKaNQLRbI3i0Un7xCcngJ9+TTcO3kF4PqyR/P4iEi
-   A==;
-X-CSE-ConnectionGUID: dd5bAoCpSx+ewWW8snwHvQ==
-X-CSE-MsgGUID: eOnwi1VTRG6BooAT05+2tA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67242443"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="67242443"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:26 -0700
-X-CSE-ConnectionGUID: eShhJpjKR3GhdSefT9W/rA==
-X-CSE-MsgGUID: o7UqvB0eTWy8cjRnjx5FIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="170720126"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:16:24 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D22CC20B5736;
-	Tue, 20 May 2025 07:16:22 -0700 (PDT)
-Message-ID: <1e380367-aaad-4c02-bc10-b85b25dd2274@linux.intel.com>
-Date: Tue, 20 May 2025 10:16:21 -0400
+	s=arc-20240116; t=1747751257; c=relaxed/simple;
+	bh=qkddlyGzgWxZ2S7WfRKRTHx50r7NWDVAx95Wa2/ov+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mm0six/rl08oALcbtap9xI8AEECUyGxPg+jJFjAUBuZ98fRpYryDt/2KHeP0i8u0N5siXnSSFTXuP8sv0FAIYNWtWM6taqAZMM6JU6BwrTViGY0xeweyLDJ7YvdDsRglpMBOXBbvANRDSjBzfMZFWGtcCnAFrfawUNvpe/IT1tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50AD2152B;
+	Tue, 20 May 2025 07:27:20 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F2DF3F6A8;
+	Tue, 20 May 2025 07:27:33 -0700 (PDT)
+Date: Tue, 20 May 2025 15:27:29 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH 10/10] perf docs: arm-spe: Document new SPE filtering
+ features
+Message-ID: <20250520142729.GS412060@e132581.arm.com>
+References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
+ <20250506-james-perf-feat_spe_eft-v1-10-dd480e8e4851@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
-To: Ingo Molnar <mingo@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, leo.yan@arm.com
-References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
- <20250516182853.2610284-3-kan.liang@linux.intel.com>
- <aChHXShBhoDBgPX7@gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aChHXShBhoDBgPX7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-10-dd480e8e4851@linaro.org>
 
-
-
-On 2025-05-17 4:22 a.m., Ingo Molnar wrote:
+On Tue, May 06, 2025 at 12:41:42PM +0100, James Clark wrote:
+> FEAT_SPE_EFT and FEAT_SPE_FDS etc have new user facing format attributes
+> so document them. Also document existing 'event_filter' bits that were
+> missing from the doc and the fact that latency values are stored in the
+> weight field.
 > 
-> * kan.liang@linux.intel.com <kan.liang@linux.intel.com> wrote:
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/Documentation/perf-arm-spe.txt | 86 ++++++++++++++++++++++++++++---
+>  1 file changed, 78 insertions(+), 8 deletions(-)
 > 
->> The throttle only happens when an event is overflowed. Stop the entire
->> group when any event in the group triggers the throttle.
->> The MAX_INTERRUPTS is set to all throttle events.
+> diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
+> index 37afade4f1b2..a90da9f36d93 100644
+> --- a/tools/perf/Documentation/perf-arm-spe.txt
+> +++ b/tools/perf/Documentation/perf-arm-spe.txt
+> @@ -141,27 +141,60 @@ Config parameters
+>  These are placed between the // in the event and comma separated. For example '-e
+>  arm_spe/load_filter=1,min_latency=10/'
+>  
+> -  branch_filter=1     - collect branches only (PMSFCR.B)
+> -  event_filter=<mask> - filter on specific events (PMSEVFR) - see bitfield description below
+> +  event_filter=<mask> - logical AND filter on specific events (PMSEVFR) - see bitfield description below
+> +  inv_event_filter=<mask> - logical AND to filter out specific events (PMSNEVFR, FEAT_SPEv1p2) - see bitfield description below
+
+According to Arm ARM for PMSNEVFR_EL1: "The overall inverted filter is
+the logical OR of these filters."
+
+Note for the subtle differences.  PMSEVFR_EL1 (Event filter) uses AND
+logic but PMSNEVFR_EL1 (Inverted Event filter) uses OR logic.
+
+>    jitter=1            - use jitter to avoid resonance when sampling (PMSIRR.RND)
+> -  load_filter=1       - collect loads only (PMSFCR.LD)
+>    min_latency=<n>     - collect only samples with this latency or higher* (PMSLATFR)
+>    pa_enable=1         - collect physical address (as well as VA) of loads/stores (PMSCR.PA) - requires privilege
+>    pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
+> -  store_filter=1      - collect stores only (PMSFCR.ST)
+>    ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
+>    discard=1           - enable SPE PMU events but don't collect sample data - see 'Discard mode' (PMBLIMITR.FM = DISCARD)
+> +  data_src_filter=<mask> - mask to filter from 0-63 possible data sources (PMSDSFR, FEAT_SPE_FDS) - See 'Data source filtering'
+>  
+>  +++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
+>  than only the execution latency.
+>  
+> -Only some events can be filtered on; these include:
+> +Only some events can be filtered on using 'event_filter' bits. The overall
+> +filter is the logical AND of these bits, for example if bits 3 and 5 are set
+> +only samples that have both L1D cache refill and TLB walk are recorded. When
+> +FEAT_SPEv1p2 is implemented 'inv_event_filter' can also be used to filter on
+> +events that do _not_ have the target bit set. Filter bits for both event_filter
+> +and inv_event_filter are:
+
+Could we clarify what result if the same bit is set for both
+event_filter and inv_event_filter?  Even if it is undefined.
+
+> -  bit 1     - instruction retired (i.e. omit speculative instructions)
+> +  bit 1     - Instruction retired (i.e. omit speculative instructions)
+> +  bit 2     - L1D access (FEAT_SPEv1p4)
+>    bit 3     - L1D refill
+> +  bit 4     - TLB access (FEAT_SPEv1p4)
+>    bit 5     - TLB refill
+> -  bit 7     - mispredict
+> -  bit 11    - misaligned access
+> +  bit 6     - Not taken event (FEAT_SPEv1p2)
+> +  bit 7     - Mispredict
+> +  bit 8     - Last level cache access (FEAT_SPEv1p4)
+> +  bit 9     - Last level cache miss (FEAT_SPEv1p4)
+> +  bit 10    - Remote access (FEAT_SPEv1p4)
+> +  bit 11    - Misaligned access (FEAT_SPEv1p1)
+> +  bit 12-15 - IMPLEMENTATION DEFINED events (when implemented)
+> +  bit 16    - FEAT_TME transactions
+
+Transaction (FEAT_TME)
+
+> +  bit 17    - Partial or empty SME or SVE predicate (FEAT_SPEv1p1)
+> +  bit 18    - Empty SME or SVE predicate (FEAT_SPEv1p1)
+> +  bit 19    - L2D access (FEAT_SPEv1p4)
+> +  bit 20    - L2D miss (FEAT_SPEv1p4)
+> +  bit 21    - Cache data modified (FEAT_SPEv1p4)
+> +  bit 22    - Recently fetched (FEAT_SPEv1p4)
+> +  bit 23    - Data snooped (FEAT_SPEv1p4)
+> +  bit 24    - Streaming SVE mode event when FEAT_SPE_SME is implemented, or
+> +              IMPLEMENTATION DEFINED event 24 (when implemented)
+
+IMPLEMENTATION DEFINED event 24 (only versions less than FEAT_SPEv1p4)
+
+> +  bit 25    - SMCU or external coprocessor operation event when FEAT_SPE_SME is implemented, or
+> +              IMPLEMENTATION DEFINED event 25 (when implemented)
+
+IMPLEMENTATION DEFINED event 24 (only versions less than FEAT_SPEv1p4)
+
+> +  bit 26-31 - IMPLEMENTATION DEFINED events (only versions less than FEAT_SPEv1p4)
+> +  bit 48-63 - IMPLEMENTATION DEFINED events (when implemented)
+> +
+> +For IMPLEMENTATION DEFINED bits, refer to the CPU TRM if these bits are
+> +implemented.
+> +
+> +The driver will reject events if requested filter bits require unimplemented SPE
+> +versions, but will not reject filter bits for unimplemented IMPDEF bits or when
+> +their related feature is not present (e.g. SME). For example, if FEAT_SPEv1p2 is
+> +not implemented, filtering on "Not taken event" (bit 6) will be rejected.
+>  
+>  So to sample just retired instructions:
+>  
+> @@ -171,6 +204,29 @@ or just mispredicted branches:
+>  
+>    perf record -e arm_spe/event_filter=0x80/ -- ./mybench
+>  
+> +When set, the following filters can be used to select samples that match any of
+> +the operation types (OR filtering). If only one is set then only samples of that
+> +type are collected:
+> +
+> +  branch_filter=1     - Collect branches (PMSFCR.B)
+> +  load_filter=1       - Collect loads (PMSFCR.LD)
+> +  store_filter=1      - Collect stores (PMSFCR.ST)
+
+Could we move the 'simd_filter' and 'float_filter' at here?  Something
+like:
+
+When extended filtering is supported (FEAT_SPE_EFT), SIMD and float
+pointer operations can be collected:
+
+    simd_filter=1         - Collect SIMD loads, stores and operations (PMSFCR.SIMD)
+    float_filter=1        - Collect floating point loads, stores and operations (PMSFCR.FP)
+
+Then we can talk about filter mask bits.
+
+> +When extended filtering is supported (FEAT_SPE_EFT), operation type filters can
+> +be changed to AND and also new filters are added. For example samples could be
+> +selected if they are store AND SIMD by setting
+> +'store_filter=1,simd_filter=1,store_filter_mask=1,simd_filter_mask=1'. The new
+> +filters are as follows:
+> +
+> +  branch_filter_mask=1  - Change branch filter behavior from OR to AND (PMSFCR.Bm)
+> +  load_filter_mask=1    - Change load filter behavior from OR to AND (PMSFCR.LDm)
+> +  store_filter_mask=1   - Change store filter behavior from OR to AND (PMSFCR.STm)
+> +  simd_filter_mask=1    - Change SIMD filter behavior from OR to AND (PMSFCR.SIMDm)
+> +  float_filter_mask=1   - Change floating point filter behavior from OR to AND (PMSFCR.FPm)
+> +
+> +  simd_filter=1         - Collect SIMD loads, stores and operations (PMSFCR.SIMD)
+> +  float_filter=1        - Collect floating point loads, stores and operations (PMSFCR.FP)
+> +
+>  Viewing the data
+>  ~~~~~~~~~~~~~~~~~
+>  
+> @@ -204,6 +260,10 @@ Memory access details are also stored on the samples and this can be viewed with
+>  
+>    perf report --mem-mode
+>  
+> +The latency value from the SPE sample is stored in the 'weight' field of the
+> +Perf samples and can be displayed in Perf script and report outputs by enabling
+> +its display from the command line.
+> +
+>  Common errors
+>  ~~~~~~~~~~~~~
+>  
+> @@ -247,6 +307,16 @@ to minimize output. Then run perf stat:
+>    perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
+>    perf stat -e SAMPLE_FEED_LD
+>  
+> +Data source filtering
+> +~~~~~~~~~~~~~~~~~~~~~
+> +
+> +When FEAT_SPE_FDS is present, 'data_src_filter' can be used as a mask to filter
+> +a subset (0 - 63) of possible data source IDs. The full range of data sources is
+> +0 - 65 535 although these are unlikely to be used in practice. Data sources are
+
+s/65 535/65535/
+
+> +IMPDEF so refer to the TRM for the mappings. Each bit N of the filter maps to
+> +data source N. The filter is an OR of all the bits, so for example setting bits
+> +0 and 3 filters on packets from data sources 0 OR 3.
+
+Please correct this, as setting the bit to 1 means no effect.
+
+> +
+>  SEE ALSO
+>  --------
+>  
 > 
-> Since this is a relatively long series with a healthy dose of 
-> breakage-risk, I'm wondering about bisectability:
+> -- 
+> 2.34.1
 > 
->  - patch #2 auto-throttles groups, ie. stops the PMU
-> 
->  - patches #3-#16 removes explicit PMU-stop calls.
-> 
-> In the interim commits, will the double PMU-stop in drivers not updated 
-> yet do anything noticeable, such as generate warnings, etc?
-> 
-
-The short answer is no.
-
-Here are the details for different ARCHs.
-
-There is a active_mask to track the active counter/event in X86. The
-current implementation checks the corresponding bit first. If it is
-already cleared, do nothing. It avoids the double PMU-stop. I've tested
-on my machine.
-AMD and Zhaoxin shares the same x86_pmu_stop() as Intel. They are OK as
-well.
-
-powerpc, S390, ARC, sparc and xtensa utilize the PERF_HES_STOPPED flag
-instead. If the flag has been set, do nothing. It can also avoids the
-double PMU-stop.
-
-ARM, apple m1, csky, loongarch and mips invoke the disable_event, rather
-than PMU stop. The disable_event unconditionally disables the counter
-register. It doesn't check if the register is already disabled. But I
-don't think double writing a register can trigger any issue.
-
-Alpha utilizes the PERF_HES_STOPPED flag. But it seems still writes the
-counter register even it's already disabled. Because the cpuc->enabled
-is used to check whether to write to the register. It's not updated in
-the alpha_pmu_stop(). But again, I don't think double writing a register
-can trigger any issue.
-
-Thanks,
-Kan
-
