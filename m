@@ -1,147 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7DB248F75;
-	Tue, 20 May 2025 18:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0725B66D;
+	Tue, 20 May 2025 19:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747767034; cv=none; b=b1KnUfPnWToR8z3/xo+bHuGXm+UKPITi/rIHXdYIgmMouojM45AsW0N5uCsAIEy9cAfz4ouZCe6gmHFnxmNtuZxXM8OLroIep9Q8Of9nvePWywGc7IBB0UkQMlsrmdm9ITT5k/AwYHhmDdPmQTgzrp1p21n6XEdwE655IjVG1i4=
+	t=1747769939; cv=none; b=QKA3dBf1J0phubxoO/4yUkSkBLk4RZM6Tn2FleKHlk8jZv2CkjxkbS4sUKuHOUyd1+/5k2vUY9/jjpukN76HLip0w0pFbe3kBFna9jofE24+/O4haObwTwXUfA/Kr3kBS83iGNWPLQZB+AINSsF5opvSrTLcAFzdh2rZ6aAcYic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747767034; c=relaxed/simple;
-	bh=4Xz+qUHB2YCNCR2CV7QYNfulgNvPj70zCp9v+dNVwig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BV8TOVabC5hRixJw6XHN6OQyS0IiQnnjadXWbFM/nAPlbd0U5mgHBG0NsZh2BL140pyWoN7gFQNqC7NqMRKQx/AMP6Z9SbcyhiuRa1SpO8rtXjmlKw18zgF3LZ3iajCihlJat8BOcD8T+LrG/cpkCZ07wRXfPDrITwevw4NKaAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwhZZdYD; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747769939; c=relaxed/simple;
+	bh=hvfz3f70a+l77rLPSk8ZwDyqvzU4xNGTCHx63U5c1VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mEogvaiUaZzYO7PKHgdcT1B2FilqW7kUI6y7KyzhffEMY1Q0Lbrtcpj0vGYM+N7LmvPsSzVd5n1fYWvhyH4HTPwegWlLA1R71aKRlvwkCMmeru2DgW0QJdZ8oI9ByQdyMObQN452uWE6gbzo11ONWUTPapT64zOEWc7fseWT6Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJPCb4mT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwhZZdYD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747767033; x=1779303033;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4Xz+qUHB2YCNCR2CV7QYNfulgNvPj70zCp9v+dNVwig=;
-  b=bwhZZdYDBnBQONXGGBqd/VT6CtxKDbiDXMGoBF/xOOUQRl6WvOVbSDUb
-   oKU5Ap77UR1myCMBLuKo2gQNVwNNJZ4lQsSaL9xJEEbVDrKMFCsJR5u5Z
-   2zWNGdq2WmKDDe1XyCcaBBNYVlrQjdNVe1wvVLCU/Vklmj4Rds83A7sN1
-   67agHcTk3eiAGeRWXBgBwDDmPdxDbATTXmiEai8v0T+kX+6no8FLajPLl
-   yD6ShZByd518WBgyQFAckYKBNXpSc1tlu9bpbvygaWsjGDpxcPyLYVG9n
-   7R3vHaGVC20HDg7lJ2ot8pCAJXiYGBH9+ub3vrBJW1gtgiXiVHZHSJis4
-   Q==;
-X-CSE-ConnectionGUID: TjO85QopSf+tZLHcHj/WKA==
-X-CSE-MsgGUID: 6BEDDGCeTuCbUJGoSeW7PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="59946398"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="59946398"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:50:31 -0700
-X-CSE-ConnectionGUID: XEW4GmabSG2u9P81egzzEw==
-X-CSE-MsgGUID: 9Lv+wtraReqXT+hvIqH6Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140708012"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:50:31 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CAD4A20B5736;
-	Tue, 20 May 2025 11:50:28 -0700 (PDT)
-Message-ID: <800f99f6-a1bf-41f3-bc65-67fbe4c61368@linux.intel.com>
-Date: Tue, 20 May 2025 14:50:27 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJPCb4mT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB498C4CEE9;
+	Tue, 20 May 2025 19:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747769938;
+	bh=hvfz3f70a+l77rLPSk8ZwDyqvzU4xNGTCHx63U5c1VM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OJPCb4mTDOL7sAWboKmCyamIkKMFR2ns+d0zmwPz8i0OFmGhMjoUkmwH3M0ojUVmK
+	 EiDDg4Mh6yHKZymNDW0ZjSx5mHypyCRXmu/F1QVPqa2CDLPNPPdGFCp23zFNtgPyQR
+	 9J5W3+zXzvRJqG1zLSXjv+Mi0JQ5Dgoc0j9wmlqTUh/HTuw2EM4F2nbYcAdX0grawl
+	 CL7S28i1jZhn5jhD/oisS09mpebX0ISJ3WABSWYSVRa1cItMThBElyGKExjR0OgGCc
+	 HlL5y1QAJj5b9tPPw8blsE3jTV6xxGaA7pE5G1sUOzb3smThkFUnjAbPXsrSjlmp+K
+	 n2/uJDOkyZsUw==
+Date: Tue, 20 May 2025 16:38:53 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	I Hsin Cheng <richard120310@gmail.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peng Jiang <jiang.peng9@zte.com.cn>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Yury Norov <yury.norov@gmail.com>
+Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
+ sources
+Message-ID: <aCzaTQJ9vwjjc22V@x1>
+References: <20250519214126.1652491-1-acme@kernel.org>
+ <CAMZ6RqJUf=LpczMNu9WwLik9i-4tJHYENvM3d15nxjNM+_vc5w@mail.gmail.com>
+ <aCylQUlY3W7rbZAs@x1>
+ <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/38] perf: Add a EVENT_GUEST flag
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>,
- Eranian Stephane <eranian@google.com>, Shukla Manali
- <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-5-mizhang@google.com> <aCrWqhaID9-b_jmr@google.com>
- <09ed8cb5-707d-4b13-b230-cff4fab02b72@linux.intel.com>
- <aCzBDaHdELjiKHfc@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aCzBDaHdELjiKHfc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
 
+On Wed, May 21, 2025 at 01:02:49AM +0900, Vincent Mailhol wrote:
+> On 21/05/2025 at 00:52, Arnaldo Carvalho de Melo wrote:
+> > On Tue, May 20, 2025 at 09:44:05AM +0900, Vincent Mailhol wrote:
+> >> On Tue. 20 May 2025 at 06:41, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> (...)
+> 
+> > I think there is value in doing it now, as it clears up the build
+> > warnings and solves already one prep work that syncing would entail,
+> > namely the inclusion of const_true() in the tools compiler.h file.
+> 
+> Ack.
+> 
+> > I think I can take your "I am not objecting to this series in any way."
+> > as an Acked-by?
+> 
+> Sure. You can add my Acked-by to patch 6 and 7 (the ones in which you put me in
+> CC). I did not have a look at the other ones (and do not plan to do so).
 
+Thanks, just did it,
 
-On 2025-05-20 1:51 p.m., Namhyung Kim wrote:
->>>> @@ -1089,6 +1094,7 @@ struct bpf_perf_event_data_kern {
->>>>   */
->>>>  struct perf_cgroup_info {
->>>>  	struct perf_time_ctx		time;
->>>> +	struct perf_time_ctx		timeguest;
->>>>  	int				active;
->>>>  };
->>>>  
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index e38c8b5e8086..7a2115b2c5c1 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -163,7 +163,8 @@ enum event_type_t {
->>>>  	/* see ctx_resched() for details */
->>>>  	EVENT_CPU	= 0x10,
->>>>  	EVENT_CGROUP	= 0x20,
->>>> -	EVENT_FLAGS	= EVENT_CGROUP,
->>>> +	EVENT_GUEST	= 0x40,
->>> It's not clear to me if this flag is for events to include guests or
->>> exclude them.  Can you please add a comment?
->>>
->> /*
->>  * There are guest events. The for_each_epc() iteration can
->>  * skip those PMUs which doesn't support guest events via the
->>  * MEDIATED_VPMU. It is also used to indicate the start/end of
->>  * guest events to calculate the guest running time.
->>  */
-> Thanks for the explanation.  So it's for events with !exclude_guest on
-> host 
-
-The above "guest events" means that the events in a guest. The KVM
-should only invokes the interface when a guest requires PMU.
-
-For the host, for now, only the event with exclude_guest is supported.
-The !exclude_guest event on host must be failed to be created if there
-is a running VM.
-
-and to do some operation only for host-only events on mediated
-> vPMUs.
-
-Yes.
-
-Update the comments as below.
-
-/*
- * There are events in a guest enabled with MEDIATED_VPMU.
- * The flag can be used in two places.
- * - The for_each_epc() iteration can skip those PMUs which
- *   doesn't support the events in a guest via the MEDIATED_VPMU.
- * - Indicate the start/end point of the events in a guest.
- *   The guest running time can be deducted for the
- *   host-only (exclude_guest) events.
- */
-
-Thanks,
-Kan
+- Arnaldo
