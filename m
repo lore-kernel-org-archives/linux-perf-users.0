@@ -1,89 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66825E440;
-	Tue, 20 May 2025 22:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA4521516E;
+	Tue, 20 May 2025 22:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747779267; cv=none; b=uDsBpAwQ2piSxaTiEn69jEaw0J4SwOgpjProx/na936uAxRkgnOsgEgq805odd1KNa62UKwd0pJ8hAk4XQzj9rMOmYMW2x2ETidzWgGjSRYkon/bE4ybi7TajAa516ce8gwUc+k/QkQG/hsO6HnjDSfOIOmID/sMhqr9hgg2GlA=
+	t=1747779739; cv=none; b=qdpMKEz4UDCoi6k8l61iaAY4uw34Whb/0/oJaG4rXK/ytDOYkGhe3nV9i5p0VPvi5CmUJkW1NH3J7WOsn8U8LltemsjVlDBTb+fNF1i3y8i37k44U36cn6JfWULh1gv0iGp/4VXSI8KM6IgETVrMulcGGqzRsk8BYt1dsbrXWlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747779267; c=relaxed/simple;
-	bh=1a+y93hIub8/pSVvLmPKFLuPjxNtRlTjBHf2JqedxYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNiCg2v2qX5982l9gjFWwTzX02J76Qw8vJ350aQBXibAZoc0lQP+NRrPfhUMgeRViozssPmkXPU37VCqai8QcLUz/fiHphI1JSjWUKppQe1DQQWcLWsnTxLKytqeBHO9+9fMl4e2/bvzKAik25R4ffGGKvCmIQgBFphhTG5sk50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGm0uLxc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747779739; c=relaxed/simple;
+	bh=PSFnRhdA6dv0Ibd3iDpTetyUbHtuWoDiaLttMv9a8UA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MuTFjfVZddhlyoAzjKw9Bvh/QC7Gaf7QUxb4Gth5n1IAmr1dsOnQcXnTlX1OHqV7qOKw2lWVirBVuBwmODfJUoQKkiE8e5MgE1Hm079cunXgE+Ex1h7CnfNOZ+y+COpIoLYRhQqUXQmz1INcQqxKRFYgSYKcdtc9CkevNajqKK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqEQU7Qx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGm0uLxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03409C4CEEF;
-	Tue, 20 May 2025 22:14:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqEQU7Qx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 005B1C4CEF0;
+	Tue, 20 May 2025 22:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747779266;
-	bh=1a+y93hIub8/pSVvLmPKFLuPjxNtRlTjBHf2JqedxYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kGm0uLxc4vwvkdSvImwL4uPLradBjvvRNXTO93ScNuVgibIzAJ7IBVYlwrbcQP/ui
-	 1ueIGgPBHVZNlcSg7zqQ9pGi4G5UyyOu381/gKPXWaGbTObfK8SaKnyyVhCTrLatYc
-	 DBO3TEsh9pj7WZ1xGEMyRRx5cVd+cpR6CPJa4rujmaAs8PuOklZMa5IOPsfQJfqN1p
-	 BfknnVpPpRNMKtp1m4Vw2+Q4lm3eq1CNWqvYtE1uknaB4nBukdKxmj6NJO81IDHk0p
-	 C2kfjgacAAG89NivGN0R99a2QUfiJD2Mm5Ci5MYfMAmuJlOrhUC6lxXHtsB5BTKw4S
-	 B4CCG6iQnnMkg==
-Date: Tue, 20 May 2025 15:14:24 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Increase syscall handler map size to 1024
-Message-ID: <aCz-wD2Syq8mj2_0@google.com>
-References: <20250519232539.831842-1-namhyung@kernel.org>
- <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
- <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
+	s=k20201202; t=1747779739;
+	bh=PSFnRhdA6dv0Ibd3iDpTetyUbHtuWoDiaLttMv9a8UA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uqEQU7Qx052CYgFoK14TYHm07pqL9HttCt0RkS5DIje8K9StJYmkNw9g+u8tq/2wr
+	 5RGm2y07KmQKKlHfkI1YJiunsSMpznKqf/w90actLrdnMjGb1VjKjpKSU4aDlVbR16
+	 XrvTMp7yjpCiU37oOD8ximJLfxaqKVdiRePRN/Yq6OIODft51LuYb3uRnt5BWxjJ24
+	 RfLjGHALLZyGQyg5sDTBh8GEDc+MD3xMZibDeL98zsHY2qUrhRHqmtJ0RkN9/ZC1N9
+	 34lihYFSdcOg5sPQX+YgaFbGCT5bMgac90T6OXSipHOkysUbowsKJq6bQYrbJr8RFD
+	 7SGYVaSrjqcjA==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad1f6aa2f84so1188029366b.0;
+        Tue, 20 May 2025 15:22:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU058q+FZQZKNQqMT/RGXYe0vpSU076LH3nYJLPZ6ExyMBd/iby7zjRh8m18sJ38TCYoys+y9B5H/Iw86zS@vger.kernel.org, AJvYcCUnwo/fa26DZrfjovYRj1CM2I+AWgOZ3FX+8KZHYCX6fyzBOpGqUGcUCrl1XZNTOp2cAxpOu9eAnvw=@vger.kernel.org, AJvYcCXDW1wcREyPxuMDgzAYCW8ml13Y78iiLFnozp5fyKeEEGwA2IoE0R6dgupgXxjJXhnzptT0vNWipXpBspb6nhyKBQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJvc2BCWgWupTqT7zUJGKXvLDLD5wyGhYBOHIPMDpSkQp+tByK
+	y8UjW+eCzQdhMqZdh5Tpkv74HhEv6+EI23LQqyZHVFTXkNJHSAontCdrjLEyFp1L/NUZjCWvOGT
+	SvxuZjEVPvO++3LO6AZzbQYUNN4dRPQ==
+X-Google-Smtp-Source: AGHT+IGov0hihbX3nMjv/1exgX1GdOXfquBDi24JqrrM+xtngJD67Rk/E6K9Ejlx6ygNLKgOhEILcowTjixD7Xd6Yss=
+X-Received: by 2002:a17:907:3f08:b0:ad5:67f3:73ea with SMTP id
+ a640c23a62f3a-ad567f37579mr886028566b.21.1747779737495; Tue, 20 May 2025
+ 15:22:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org> <20250519150621.GA17177@willie-the-truck>
+ <20250519215651.GB2650608-robh@kernel.org>
+In-Reply-To: <20250519215651.GB2650608-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 20 May 2025 17:22:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL2KgLQGXRLZJ3txuvytqbRRkdK1nM=5_URO2gH_nZMWw@mail.gmail.com>
+X-Gm-Features: AX0GCFtFzlmCBASIuU0YBO76uu_wIfpgFX6QwQXx6mNBYPf-UQnVG91SPo_aQCM
+Message-ID: <CAL_JsqL2KgLQGXRLZJ3txuvytqbRRkdK1nM=5_URO2gH_nZMWw@mail.gmail.com>
+Subject: Re: [PATCH v21 4/4] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
-
-On Tue, May 20, 2025 at 08:05:37AM -0700, Ian Rogers wrote:
-> On Mon, May 19, 2025 at 4:36 PM Howard Chu <howardchu95@gmail.com> wrote:
+On Mon, May 19, 2025 at 4:59=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Mon, May 19, 2025 at 04:06:22PM +0100, Will Deacon wrote:
+> > Hey Rob,
 > >
-> > Hello Namhyung,
+> > On Mon, Apr 07, 2025 at 12:41:33PM -0500, Rob Herring (Arm) wrote:
+> > > From: Anshuman Khandual <anshuman.khandual@arm.com>
+> > >
+> > > The ARMv9.2 architecture introduces the optional Branch Record Buffer
+> > > Extension (BRBE), which records information about branches as they ar=
+e
+> > > executed into set of branch record registers. BRBE is similar to x86'=
+s
+> > > Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+> > > (BHRB).
 > >
-> > On Mon, May 19, 2025 at 4:25 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
-> > > max entries of 512.  Usually syscall numbers are smaller than this but
-> > > x86 has x32 ABI where syscalls start from 512.
-> > >
-> > > That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middle
-> > > of the loop when it accesses those keys.  As the loop iteration is not
-> > > ordered by syscall numbers anymore, the failure can affect non-x32
-> > > syscalls.
-> > >
-> > > Let's increase the map size to 1024 so that it can handle those ABIs
-> > > too.  While most systems won't need this, increasing the size will be
-> > > safer for potential future changes.
-> 
-> Do we need to worry about MIPS where syscalls can be offset by 1000s?
-> https://lore.kernel.org/lkml/8ed7dfb2-1e4d-4aa4-a04b-0397a89365d1@app.fastmail.com/
+> > Since you picked this up from v19, the driver has changed considerably
+> > and I presume you will be continuing to extend it in future as the
+> > architecture progresses. Perhaps having you listed as Author (and
+> > crucially, in git blame :p) with Anshuman as a Co-developed-by: would b=
+e
+> > more appropriate?
+>
+> Shrug.
 
-Argh..
+I did a comparison to v18 arm_brbe.c. It was 1134 lines. I (and Mark)
+have removed 332 lines and changed 369 lines. So a little more than
+half remains, but the unchanged parts are a lot of 1 line helper
+functions, brackets and whitespace. So given the more complex parts
+have changed, I will change the authorship.
 
-> We could do with a map that combines BPF_MAP_TYPE_HASH with the tails
-> calls of BPF_MAP_TYPE_PROG_ARRAY.
-
-Right, it'd complicate things but I think it's doable.
-
-Thanks,
-Namhyung
-
+Rob
