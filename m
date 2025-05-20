@@ -1,211 +1,262 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149E126FD8B;
-	Tue, 20 May 2025 10:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737423; cv=none; b=q+EQmLixsfem2F1Wu5nI6S5HWbSge8LuB/IAjO3PHTgOeVAp2T6NqayA/VCKZnVdenH58sQe5/snfEbbBj3G2MJ83EAVr2t6UKkJc8b40l+QtKYrnLaWuPSiqCFtnn+VyKVHISPWFyQkrUSZYE7PQRfqFZGtXeqg6GfVOtMaFKI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737423; c=relaxed/simple;
-	bh=8P+PeAk1ffcVBmib8pv1vtzYDhW5m/TICvR1L6ZpuQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XBNyRo9NvBEKIchSlScIZkHrqGUxpmubOmo/TfEqm6GatlurWAm9bRRy/cLTXCtEg6sEMhV2od4uCkRVTK5dhUlTIktc0Pus2yXrpOni0HN1rLaT7oE0OGo3LiYFV6mOoZa0fWT36Es7sSopPqCqIRGXBklFMeeMkfsanuY6KyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N+6TpxHP; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5E31EB5DA;
+	Tue, 20 May 2025 11:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747738901; cv=fail; b=TFReCSZ8V071pMqmio3YYtHWNeEAw5K+WIp2ppaavi5lZh0/O1xrM+NwgzqE4C0uZBaFRwnlfop5WlTqcyK9FvDllo0ULk7FCWSnnqh2kmqbOVYsohGoPy9YscZCFvbCSDvbq7FBpqzpsMQlZr+CSL3oNWRXu89qzeuKO6Z6m78=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747738901; c=relaxed/simple;
+	bh=yPPVfOyOGUhfwNjESjZykWRu/FTBfOeipDaDB/LItw0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=k5Fs5O01GC6PJSkjp9vjICCqpAcXvkODoz0uVasOr9pu2Fm3+t9yXv/HBM74ptgqKFNR+TTKTWmCCgBTEp2lT6mWAIL4sbGt/8J8cDm6jW5Eo2DJx6QJ2XBy4Ssp8NE5sQERZGDalSjIMxDEeJp/HufNHyoZI7jC8i5HiyZprs4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pf3/LHz0; arc=fail smtp.client-ip=40.107.244.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N+6TpxHP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PrBDpKNLE2QNKUOOwZ955vTK9TBp0M7rfERlp1Wzdps=; b=N+6TpxHPLX3ANst+9I1P20wm9I
-	wDOpmw4u996gp5pIZd5AJ47p2eGekUtdz2e2kt7CfabQcU0Y61Mu2I6tUbA2GwGVDdqTxk0wbBonD
-	wb82P7uhOcMxhjCSA7PpDsXG37JS7AL2pTkzOD+BCPnnORRn7NZ/qMb1qOjlfurqWvzkKgaSzYi/4
-	cwnQ9G3zuywnuBMuRLtwP0C2RZK464QPquc/SFpHDI/jy+Hj1oDgRB2Eb8LLYoYhTE93aho+0L1i6
-	j8d6yQkoKfTmc/aR5aG0GzTJPMUKDhX6z5HmIgyKuPWBREYILp5LqX6AtPPadq+sN91O0k8tqEZNH
-	o4VD8+2A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHKL2-000000039VU-2Iwu;
-	Tue, 20 May 2025 10:36:48 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 17B3D300677; Tue, 20 May 2025 12:36:48 +0200 (CEST)
-Date: Tue, 20 May 2025 12:36:47 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
-	yu.c.chen@intel.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	rostedt@goodmis.org, vincent.guittot@linaro.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
-	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
-	tj@kernel.org, sshegde@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, santosh.shukla@amd.com,
-	ananth.narayan@amd.com, sandipan.das@amd.com,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v3 4/8] perf sched stats: Add support for report
- subcommand
-Message-ID: <20250520103647.GH16434@noisy.programming.kicks-ass.net>
-References: <20250311120230.61774-1-swapnil.sapkal@amd.com>
- <20250311120230.61774-5-swapnil.sapkal@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pf3/LHz0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IOCf/srJAs0s5QGGBMON6XETVT83/VAV5zFRybDejAQcN5/piLCl3xT57l1eoCzqU0DeeMKapcKS1WBOlL4jV8ZZ6k9JXDnw8XjDUnC6mb4TcFUQtaJsPqIfrH0KplRemj3l/4Ge84Hbym4q3We9Mf63CIwhl9UYBX1WeS2SkliGJliyB63M+MmR5bR4lRNSwyE/1LOYi3AryW359O00e1O94y6HpEZgxBuLN8325GhmcAkm5f00YI41lxULfogmoJpyKO7VhdDohaX5Oebg7pTId1VWTAGTgkMBB8cBY8NMv2KoE7sKDcsaHQqRWEwiTqXoLxrNWoGjgf71Chbyxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rtZsqtC7WCi8rTmwpWv/LIyxKiagDw5WsQnAuq33mqs=;
+ b=o7WkrJC2zohrmVKuTnrPzKhCZw7pqhyU0zG8e4Cp39jkwpvs55gnEspBFVcR8wqEjwJ+CgLUHpgKJvvcjEmbrOcKUg8R1fQ7Qe+KurJDhZ3TvgtidBHKMWeKPlMlBoZdWgbBCJAf+2rablnDLWN31tz3nhpkAEgisAgCBVFBTyHZgHKS+VA8OHjzCqE1kafJiGSdDXL+1aVbt61XVdR1lpJ/dx40Wn8O+s/Z/3HaYpYVwjuwlqUjKUr/7KAe0JV4UsVvW05gps3Svo/d3JllMT2+/TW/hxwt59H5CfE+N5as9evZAnUfCbXxllktHym1fZ3z1+XyJWqEWFURzmk68Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rtZsqtC7WCi8rTmwpWv/LIyxKiagDw5WsQnAuq33mqs=;
+ b=pf3/LHz05HXntxZK2Qs5RiYUaoouzP2s8SmB6hIuFyVMK354WFyRUYqUa4P01L7HjoO2oJHGdrUSH/M7O+XHqBInXcZXN0pSf7BeivtkMllsbW9riclGKoDwdNAgjsp7brZ71aPopPq+ZrjglvOkiqWxVhE0x5H9VPI1EusJo9s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by LV8PR12MB9417.namprd12.prod.outlook.com (2603:10b6:408:204::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Tue, 20 May
+ 2025 11:01:37 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 11:01:37 +0000
+Message-ID: <804ac0d6-22f7-40c3-9ff5-e5f9d863d37e@amd.com>
+Date: Tue, 20 May 2025 16:31:29 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: IBS perf test failures on 9950x3d
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <aCfuGXUnNIbnYo_r@x1>
+ <33e86415-c90d-420a-b7a8-6a360769aea4@amd.com> <aColYM3RqE4T5t5c@google.com>
+ <aCt4akGLsuuC4aLP@x1>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <aCt4akGLsuuC4aLP@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0038.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:277::9) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311120230.61774-5-swapnil.sapkal@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|LV8PR12MB9417:EE_
+X-MS-Office365-Filtering-Correlation-Id: 662276ad-8584-4958-21a5-08dd978db108
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?em4rMk9wUkNjd21DU2UvU0R0dWk0UHNKTzNsN3lxcTZpdExqWjl6VE93cUxG?=
+ =?utf-8?B?S3BqYlhuS3ZaY2JjOVgxQjNJU1pRVG1EdUpJQ0cxNzUzaDJyVVh0UlA5dlV3?=
+ =?utf-8?B?U2RQbmY1RDVqNlFQWUx2UGwrdm80RnhxZ24vWmVlZHZ2YnZlL2x5em0wb1R0?=
+ =?utf-8?B?L01LUDV4Wk8xZWllQ2JUblZwWWpoNmoxWU9tYXJFNHhVZGhIbEJjOFRvYVo2?=
+ =?utf-8?B?T1dNa0ZvRjk1dlhCV09Raml4ZGpiYkZDT2xlNXFiS01RN3RFK2ZvQ3kvWkE4?=
+ =?utf-8?B?cVVpWTBVSzNzU3FqSUFkT1p2SmdoU3BTRnB0V3FTRU01RFRsaHc2TWFBNW1i?=
+ =?utf-8?B?Y0NJSm9hRzJkbWQrQ3E0NjNrbktnRCtSYjZCMFc3WURSVjZjNUR2QW16VW8r?=
+ =?utf-8?B?dTRVS2l2QmdKa1JWZEJWUjJjTGE3RFdYK0hxc0VjTmNjUTd2V3JMZ3Y5cVRR?=
+ =?utf-8?B?bzVqbkpRT0xpRVZsTTE4OWxwc2VnVmZpLzVodDZqVkY2UTlkTWorTmFHU1VV?=
+ =?utf-8?B?ZWRyVmkza0xQQ1lMaVVkOTZOeWJUWk9kNlJIcVhoT2psYWhXek9aYlJlU0Fk?=
+ =?utf-8?B?cDJXbzQ4cjVmMUk1eDVCLzBtVmpUa2pyNjZKdUxZMk4wWm9sbDM5WTk5Wm1o?=
+ =?utf-8?B?QXRhUGtVSjUxQUNkMlhMd2psdG1FSGMybWN2aHBLS2JnaVhOQ1c4aEVUNHpP?=
+ =?utf-8?B?b2Z5RmpUd1lTSFQyM09ubGhHV2JJUnlOS1llbVV2Vzh5RFp2ZGM4c0t6TkJK?=
+ =?utf-8?B?Myt1ZHhWVjJwM2NGNWhyTDl4dTg0RG5oSEpxeDNBNW5IZDJGTUlQY2oycGE3?=
+ =?utf-8?B?WjdwTlZxbVQ1R1duSncrQTdWd1JDbk15bkRiSy9oVVJpSjhTdFFtYUFla082?=
+ =?utf-8?B?dmROYk5XUnc3bWc0T3psblRsMklLZi9zandWTWoyVHI0VkZHZ1BtY1oyalMw?=
+ =?utf-8?B?S1NVTGFlc3ZodXJ4KzVmS0Y2L1NnYy9ZRjkyM0lOdTZMc2lNMXl3cW1nNUxB?=
+ =?utf-8?B?NzhFM1VZMEUzd2pIVW1OaFpEYmpLbEJ0eXh4dXM3Mm9MTzhjb0VLMXh5SjlL?=
+ =?utf-8?B?WWZ1U0hRNDBuSUdtY2xqS2JTYk1wMFl0YnA5UWJHdWhEQllJUDRvVVVMaWxX?=
+ =?utf-8?B?dmJmdzFvL0lybWJsSFhrODRpOWF1ZzhlaytMRVBqUDZ2dFYzK2hSeTNGK2tL?=
+ =?utf-8?B?TUlZQXJUb2ZlSUpHTnNoU2U1K2Z0R2ZBbW9iRGwzRzI5OTVjUzBCRkhGRWYw?=
+ =?utf-8?B?L2Y1ai9KVUV5cklyMTNDZm9Ba05QU0wvQ01NTmUzQWR1dEFvRVEzZUxCVnJv?=
+ =?utf-8?B?WFk5eHVhdWROTWxQdk8vc1ZRYnJUN0d6cnhMUVJlOEE2R3dweURiL3Y3enRq?=
+ =?utf-8?B?R2kyMjdDQUdlaExWVUVudjhWNXBpQnNrVXZoWkFzbnd6amJNNW4vSy9Oa1pn?=
+ =?utf-8?B?QTBtWFoyVDJWWkdzZTlkNW1kSGU0NjdmU3lVcHpnMnppWWxJMVpYeFJUS1l3?=
+ =?utf-8?B?a0FnZFFIQWdFMG54RGxPbVovaHFobjBOTlh3ZzhNSDJGRDBjVEttUWc2cDU1?=
+ =?utf-8?B?citYL2JjWWxUak41dnZCUSs3SGtGeHZsejNETGJ4ekhoTFNzQUVUek9INTBN?=
+ =?utf-8?B?ZFBsN1kreWdmQ0FLY0J1cUs5OUQ2Y3gvN0ZlVXY4dEZDM2lZbzl3OHFtTEx4?=
+ =?utf-8?B?NGFzWEU5S3duZ2lXWG8zbDA1M1cyd1J5K3I1TEtPZjZmdWdRL3dkVlBHQU9j?=
+ =?utf-8?B?SWltbHM5MlVsdlhBT3VIbXhkYmg2TU82THNENUVMOXU1ckN6QUwrMGhETVgv?=
+ =?utf-8?B?LytWcUdzeHk0aGhBNVdERWJYL0VYbThIMWlIc0lKUmdVMllWZGM2QTZVc1pW?=
+ =?utf-8?Q?rqWbEpJ35KAvh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R3R3UEVkdmhraXJOdkg3L094QnBUWEgwYzB2SWFZRFVxREwyTkZRbGlGMndV?=
+ =?utf-8?B?b1I3YmZZaS9PQzJQWGp6MXp4Qk95VW1rN2c0WEtRUFlYZVcwMG02OFU0cVRn?=
+ =?utf-8?B?Y3R4QXJmdHoyb3krZWRvNkcyOXdBMkVPUEZUOFpETEpjYTdxVnBhVEhSK2pz?=
+ =?utf-8?B?TEZpeTR6V3ZQZERodWEyQ2NDQlRTakJjTmFhWCtxVmhLSWhjaDVnMWplR3px?=
+ =?utf-8?B?MzlvOWszdFEva3hIR0ZTaDdrc1RCWUFQOXRkYlJpdzN1T3pLUmx1UXpMS1p1?=
+ =?utf-8?B?cEdqVjJOUzZGbTRWaW5qd3duWlBxZnVXMmp3dDVURW8rNGdzTUhvL0lpTE9t?=
+ =?utf-8?B?ZUIzbkxLRGVYTWRWcVQyMmhDenpkNlpBS0JOWVN0cjB1YjlTRGg1dUU5YUd3?=
+ =?utf-8?B?NGUxWEY3ZlhScHV0TmtrQW1mdlQ1UUw3Q2d3ZWE4YWtETDE4TjRZT0dURGpZ?=
+ =?utf-8?B?bGNOUEIrUStITFVNTHEvMW5JSjdBN2tONWJGM1A3YXI5M01MNldkbks3MlZ4?=
+ =?utf-8?B?cUkvd1ZVRUozazJaZHl1M2xkTVRxbkY5cEhnRVJmK3h4RjBsNUNsRDY2bzNQ?=
+ =?utf-8?B?TDB6N2dUd1ZoMUk5RlRWaWR0RjZjb21XNGFNYnBWUytEcWdHSGwvZkFGa0FL?=
+ =?utf-8?B?d3NCM3VKV3E1TTdlWEptRk8zM1o4NXB3TU9pM3FkQks0em5nNFEwazZ5YTF3?=
+ =?utf-8?B?dVFtMXBpYmEwM3JSRzFlRDl4bEJaMnpCcE5YMEtSM2IzUmVpSmtYUER1TU1i?=
+ =?utf-8?B?YzVzUmtjMDhJMG42ek4rb0dIdTFtc3BEbGxlM09US0FGK05XczRUYklkencv?=
+ =?utf-8?B?aFhaM3dUd1lBZ1FvUmJUTEpwZTBRSXVlSjRycTQ2ZGwyQy84OHQwcjRWNE5B?=
+ =?utf-8?B?UXNONjFmRGhzTDNRd2NLWDhuL1N1dWFFL09JMnVNbmdnYzJtQVZLZ0ZPMmxQ?=
+ =?utf-8?B?Y1ZaNXdiaEErdTM3VUUxOXpuL0xuN015VEZwNmRYR1MwVjFOUmFKOTgzKy8v?=
+ =?utf-8?B?TlIzQkNFbDMrdnRJNjdYRVIwOGtxWHR2SFFoL3RWQmhIak5tTXZtK3R6OGZT?=
+ =?utf-8?B?QTdhb0ZlN1hFQVorR3pqS1NQVzFtUlNncGVzMWNKNmVJM25qNG1KdWQzTmFh?=
+ =?utf-8?B?dTZ4WE5NZzc0QndVeUZXTWo4UFQ5bjlvMUdUQkIvandOSE1XK0c0WE84bllT?=
+ =?utf-8?B?N0sxWjVMa3FnUXZkbEdmejdpU3hORFVFRmtyQlBTWS9YdnFpVGVUZHBDMDE5?=
+ =?utf-8?B?SVdaSmc0RGlxbndkdms1YXlFY1IxbjJhUkFJdkQ5aks1RSt6Qlp5U0FUNHRW?=
+ =?utf-8?B?MDIrVVpkdVI0ZmduK2pxVVVCWUM2anh1MzBUQ09XRm5MVFhMclE3M3ZCK2NV?=
+ =?utf-8?B?TE44RmhMemJuUjVCNjZlK2RrUHQ2Y0I2K25RaHFleVFaNnlmVGVBTWhaQnJY?=
+ =?utf-8?B?YWJlTjdESmtpSmJ0cWM1NTNTTnN0cVhZU1JRQlJWQU4zZXpDY3FIdkN2Nkxl?=
+ =?utf-8?B?YmlHMGFFOWNjZXNQVG1VMmc3aVo0YUtoK2Jra0xkK1lUa1dNK0pLelZvL3cx?=
+ =?utf-8?B?T1ovN2Q3ekNXSitqdUMra2s0ZDFIcDBweGJDc0lEK0xxcm51Y3pZQ0NjMmMw?=
+ =?utf-8?B?WDd3anAvREJ3cUJNMFRYSnlTK1Z6enZWa2pQQXNlZVpYZkpONUh2dGlmQXBS?=
+ =?utf-8?B?QWltRWdoakttQW9tVG40UU1PZmd5d2c0UkQ0T3o2a3U4bmpUUFBydUtGeDRU?=
+ =?utf-8?B?R1NKMldKVWsxcmNDL3J1UDBPaFp5Vmc4WWRwYys3RldkWE5uNnhIY1BHdUxa?=
+ =?utf-8?B?cVYzNHNTR1AxcG9obGNhOWdWejdtYzJwTUhNenAzdnM0azJLeVBhR3BIL3dr?=
+ =?utf-8?B?U3FPSXFwWHFZUnozZ3paQmZvMjJBVVQ3YkY4RXZudDBIVWQ5T3FiL2crelRz?=
+ =?utf-8?B?UlhUOHJQNWJ1Zk1TUUFKdXozK2tYM29qM2F2aGlYWDl1UFR1SkNzSFlzbEdH?=
+ =?utf-8?B?N21NYnMxUUFJRnp6VVl1djRnc0RYWUF4Z1BsUDZWMWFTVG1JZWI0d1o4b3pa?=
+ =?utf-8?B?djZJVVJJL3ZsOHZ1WmFEaWZQcXpGMjhIT1FJcE1QRk5OOEhMaG1ISkE2YVNj?=
+ =?utf-8?Q?wM6kE+S2Ut7lNBQK4eGN+CN2e?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 662276ad-8584-4958-21a5-08dd978db108
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 11:01:37.6682
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L0WL4tJJ6Kj7BQu8jXH8iZsRLcosb9aLynSjApFNaFpPHMzAEmVUtI+GsNzNzuksir4Vrxlsdk4TE4xYT/pQRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9417
 
-On Tue, Mar 11, 2025 at 12:02:26PM +0000, Swapnil Sapkal wrote:
-> `perf sched stats record` captures two sets of samples. For workload
-> profile, first set right before workload starts and second set after
-> workload finishes. For the systemwide profile, first set at the
-> beginning of profile and second set on receiving SIGINT signal.
+Hi Arnaldo,
+
+> Telling that to the user and possibly skipping the test if viable using
+> uname to get the version and if less than v6.15-rc1 print "Skip (needs
+> v6.15-rc1 or newer)" may be an option.
 > 
-> Add `perf sched stats report` subcommand that will read both the set
-> of samples, get the diff and render a final report. Final report prints
-> scheduler stat at cpu granularity as well as sched domain granularity.
-> 
-> Example usage:
-> 
->   # perf sched stats record
->   # perf sched stats report
-> 
+> Then if the bug somehow reappears, people running 'perf test' will flag
+> it.
 
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Category idle> ");
->  #endif
-> +DOMAIN_FIELD(__u32, idle_lb_count,
-> +	     "load_balance() count on cpu idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_balanced,
-> +	     "load_balance() found balanced on cpu idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_failed,
-> +	     "load_balance() move task failed on cpu idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_imbalance,
-> +	     "imbalance sum on cpu idle", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_gained,
-> +	     "pull_task() count on cpu idle", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_hot_gained,
-> +	     "pull_task() when target task was cache-hot on cpu idle", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_nobusyq,
-> +	     "load_balance() failed to find busier queue on cpu idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, idle_lb_nobusyg,
-> +	     "load_balance() failed to find busier group on cpu idle", "%11u", true, v15);
-> +#ifdef DERIVED_CNT_FIELD
-> +DERIVED_CNT_FIELD("load_balance() success count on cpu idle", "%11u",
-> +		  idle_lb_count, idle_lb_balanced, idle_lb_failed, v15);
-> +#endif
-> +#ifdef DERIVED_AVG_FIELD
-> +DERIVED_AVG_FIELD("avg task pulled per successful lb attempt (cpu idle)", "%11.2Lf",
-> +		  idle_lb_count, idle_lb_balanced, idle_lb_failed, idle_lb_gained, v15);
-> +#endif
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Category busy> ");
-> +#endif
-> +DOMAIN_FIELD(__u32, busy_lb_count,
-> +	     "load_balance() count on cpu busy", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_balanced,
-> +	     "load_balance() found balanced on cpu busy", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_failed,
-> +	     "load_balance() move task failed on cpu busy", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_imbalance,
-> +	     "imbalance sum on cpu busy", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_gained,
-> +	     "pull_task() count on cpu busy", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_hot_gained,
-> +	     "pull_task() when target task was cache-hot on cpu busy", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_nobusyq,
-> +	     "load_balance() failed to find busier queue on cpu busy", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, busy_lb_nobusyg,
-> +	     "load_balance() failed to find busier group on cpu busy", "%11u", true, v15);
-> +#ifdef DERIVED_CNT_FIELD
-> +DERIVED_CNT_FIELD("load_balance() success count on cpu busy", "%11u",
-> +		  busy_lb_count, busy_lb_balanced, busy_lb_failed, v15);
-> +#endif
-> +#ifdef DERIVED_AVG_FIELD
-> +DERIVED_AVG_FIELD("avg task pulled per successful lb attempt (cpu busy)", "%11.2Lf",
-> +		  busy_lb_count, busy_lb_balanced, busy_lb_failed, busy_lb_gained, v15);
-> +#endif
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Category newidle> ");
-> +#endif
-> +DOMAIN_FIELD(__u32, newidle_lb_count,
-> +	     "load_balance() count on cpu newly idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_balanced,
-> +	     "load_balance() found balanced on cpu newly idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_failed,
-> +	     "load_balance() move task failed on cpu newly idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_imbalance,
-> +	     "imbalance sum on cpu newly idle", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_gained,
-> +	     "pull_task() count on cpu newly idle", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_hot_gained,
-> +	     "pull_task() when target task was cache-hot on cpu newly idle", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_nobusyq,
-> +	     "load_balance() failed to find busier queue on cpu newly idle", "%11u", true, v15);
-> +DOMAIN_FIELD(__u32, newidle_lb_nobusyg,
-> +	     "load_balance() failed to find busier group on cpu newly idle", "%11u", true, v15);
-> +#ifdef DERIVED_CNT_FIELD
-> +DERIVED_CNT_FIELD("load_balance() success count on cpu newly idle", "%11u",
-> +		  newidle_lb_count, newidle_lb_balanced, newidle_lb_failed, v15);
-> +#endif
-> +#ifdef DERIVED_AVG_FIELD
-> +DERIVED_AVG_FIELD("avg task pulled per successful lb attempt (cpu newly idle)", "%11.2Lf",
-> +		  newidle_lb_count, newidle_lb_balanced, newidle_lb_failed, newidle_lb_gained, v15);
-> +#endif
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Category active_load_balance()> ");
-> +#endif
-> +DOMAIN_FIELD(__u32, alb_count,
-> +	     "active_load_balance() count", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, alb_failed,
-> +	     "active_load_balance() move task failed", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, alb_pushed,
-> +	     "active_load_balance() successfully moved a task", "%11u", false, v15);
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Category sched_balance_exec()> ");
-> +#endif
-> +DOMAIN_FIELD(__u32, sbe_count,
-> +	     "sbe_count is not used", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, sbe_balanced,
-> +	     "sbe_balanced is not used", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, sbe_pushed,
-> +	     "sbe_pushed is not used", "%11u", false, v15);
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Category sched_balance_fork()> ");
-> +#endif
-> +DOMAIN_FIELD(__u32, sbf_count,
-> +	     "sbf_count is not used", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, sbf_balanced,
-> +	     "sbf_balanced is not used", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, sbf_pushed,
-> +	     "sbf_pushed is not used", "%11u", false, v15);
-> +#ifdef DOMAIN_CATEGORY
-> +DOMAIN_CATEGORY(" <Wakeup Info> ");
-> +#endif
-> +DOMAIN_FIELD(__u32, ttwu_wake_remote,
-> +	     "try_to_wake_up() awoke a task that last ran on a diff cpu", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, ttwu_move_affine,
-> +	     "try_to_wake_up() moved task because cache-cold on own cpu", "%11u", false, v15);
-> +DOMAIN_FIELD(__u32, ttwu_move_balance,
-> +	     "try_to_wake_up() started passive balancing", "%11u", false, v15);
-> +#endif /* DOMAIN_FIELD */
+Sure. Attaching a patch at the end.
 
-So I have one request for a future version of this. Could we please add
-a knob to print the output using the field name instead of the fancy
-pants description?
+> And I think having it in 'perf test' as well may make the feature to be
+> tested more widely, both by those who run selftests as well as by people
+> trying just 'perf test'.
 
-It is *MUCH* easier to grep the field name in the code than to try and
-figure out wth this description is on about :-)
+Yeah, that was precisely the reason I did it in 'perf test'.
 
-That is, ttwu_wake_remote is infinitely better than "try_to_wake_up()
-awake a task that last ran on a diff cpu" and so on.
+Thanks,
+Ravi
 
-I realize I might be weird, but it should be simple enough to add and it
-makes my life easier :-)
+---
+From fb8c9f77231a9361a5055c45e75aed3d2414f685 Mon Sep 17 00:00:00 2001
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Date: Tue, 20 May 2025 05:32:48 +0000
+Subject: [PATCH] perf test amd: Skip amd-ibs-period test on kernel < v6.15
+
+Bunch of IBS kernel fixes went in v6.15-rc1 [1]. The amd-ibs-period test
+will fail Without those kernel patches. Skip the test on system running
+kernel older than v6.15 to distinguish genuine new failures vs known
+failure due to old kernel.
+
+Since all the related IBS fixes went in -rc1 itself, the ">= 6.15" check
+will work for any custom compiled v6.15-* kernel as well.
+
+Link: https://lore.kernel.org/r/20250115054438.1021-1-ravi.bangoria@amd.com [1]
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Closes: https://lore.kernel.org/r/aCfuGXUnNIbnYo_r@x1
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ tools/perf/arch/x86/tests/amd-ibs-period.c | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/tools/perf/arch/x86/tests/amd-ibs-period.c b/tools/perf/arch/x86/tests/amd-ibs-period.c
+index 7c77d86f369d..223e059e04de 100644
+--- a/tools/perf/arch/x86/tests/amd-ibs-period.c
++++ b/tools/perf/arch/x86/tests/amd-ibs-period.c
+@@ -3,6 +3,7 @@
+ #include <sys/syscall.h>
+ #include <sys/mman.h>
+ #include <sys/ioctl.h>
++#include <sys/utsname.h>
+ #include <string.h>
+ 
+ #include "arch-tests.h"
+@@ -912,6 +913,29 @@ static unsigned int get_perf_event_max_sample_rate(void)
+ 	return max_sample_rate;
+ }
+ 
++/*
++ * Bunch of IBS sample period fixes that this test exercise went in v6.15.
++ * Skip the test on older kernels to distinguish between test failure due
++ * to a new bug vs known failure due to older kernel.
++ */
++static bool kernel_v6_15_or_newer(void)
++{
++	struct utsname utsname;
++	char *endptr = NULL;
++	long major, minor;
++
++	if (uname(&utsname) < 0) {
++		pr_debug("uname() failed. [%m]");
++		return false;
++	}
++
++	major = strtol(utsname.release, &endptr, 10);
++	endptr++;
++	minor = strtol(endptr, NULL, 10);
++
++	return major >= 6 && minor >= 15;
++}
++
+ int test__amd_ibs_period(struct test_suite *test __maybe_unused,
+ 			 int subtest __maybe_unused)
+ {
+@@ -931,6 +955,11 @@ int test__amd_ibs_period(struct test_suite *test __maybe_unused,
+ 	if (!x86__is_amd_cpu() || !fetch_pmu || !op_pmu)
+ 		return TEST_SKIP;
+ 
++	if (!kernel_v6_15_or_newer()) {
++		pr_debug("Need v6.15 or newer kernel. Skipping.\n");
++		return TEST_SKIP;
++	}
++
+ 	perf_exe(perf, sizeof(perf));
+ 
+ 	if (sched_affine(0))
+-- 
+2.43.0
