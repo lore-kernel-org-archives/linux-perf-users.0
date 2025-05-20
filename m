@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B7A255227;
-	Tue, 20 May 2025 22:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66825E440;
+	Tue, 20 May 2025 22:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747778562; cv=none; b=pMSX2CRFFNv25V51g5W/B+d1DTEiPFqYgWsd80ekw/EvW0wJdaiywmTGKwV+GUuzoTQPg2Ts5FGE4PdiN6iBF2OwlxBYzLgcYaBRXg7+f8QHqm5+ur85u/DAIARrP5OAxH+LSCl8AExodRiyfzzniVKWAiqHRK49UlMIZgAKeJ4=
+	t=1747779267; cv=none; b=uDsBpAwQ2piSxaTiEn69jEaw0J4SwOgpjProx/na936uAxRkgnOsgEgq805odd1KNa62UKwd0pJ8hAk4XQzj9rMOmYMW2x2ETidzWgGjSRYkon/bE4ybi7TajAa516ce8gwUc+k/QkQG/hsO6HnjDSfOIOmID/sMhqr9hgg2GlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747778562; c=relaxed/simple;
-	bh=ANtapAnA3Ce5KZ8i8qQUgB9zrNU8S7iRnHX8Mr2B8wk=;
+	s=arc-20240116; t=1747779267; c=relaxed/simple;
+	bh=1a+y93hIub8/pSVvLmPKFLuPjxNtRlTjBHf2JqedxYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AtpuxFNm2T1rdYngXkQajjXWWfmKdZoGNKsu1WJCZ+0aX2oAYzXkFoHUviZF+Oup1t7faLok6mvwz//WzD6JEYrVspLA786zpaiz7CdXU1MY5YtApDqG4poXMVV2hTKSNCSyJS5dcrDgIXvpMRAiY6pyZXCucdevx0gMEw7Z/Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZzf82Sa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNiCg2v2qX5982l9gjFWwTzX02J76Qw8vJ350aQBXibAZoc0lQP+NRrPfhUMgeRViozssPmkXPU37VCqai8QcLUz/fiHphI1JSjWUKppQe1DQQWcLWsnTxLKytqeBHO9+9fMl4e2/bvzKAik25R4ffGGKvCmIQgBFphhTG5sk50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGm0uLxc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZzf82Sa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5CEFC4CEE9;
-	Tue, 20 May 2025 22:02:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGm0uLxc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03409C4CEEF;
+	Tue, 20 May 2025 22:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747778562;
-	bh=ANtapAnA3Ce5KZ8i8qQUgB9zrNU8S7iRnHX8Mr2B8wk=;
+	s=k20201202; t=1747779266;
+	bh=1a+y93hIub8/pSVvLmPKFLuPjxNtRlTjBHf2JqedxYQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OZzf82Sa738tC5R8nor2Op30+UjqD71FQCzjRPpIOWxzzXGwNEHTl5PtcB8aXCfcS
-	 AkYNPw9u+CDAbBeOyCHqa9/xVIQy1kQQ22TdP0iZhiYran1GfWnYAPMD+T/i99sb2U
-	 vodpyGofNuTvHs3Pk4ZUysGW6GwKwsSOEgmdy9Rbz2y32gbvSdOyhTs2kkNS4yfSI+
-	 w6JKzD9xez9kRmVQ3wpTaFD5xWqEnD8wDjAoHOS7pLCJU3ehUPlSblZmNbNBHqyijK
-	 gGQgPsMvah9jMHWNtGiDzIQ5NOJ6hvAijASeBTfBnxkRNHE4GhnSGCZCnOYMdXqmfG
-	 1BgDSp/rmZF4A==
-Date: Tue, 20 May 2025 15:02:40 -0700
+	b=kGm0uLxc4vwvkdSvImwL4uPLradBjvvRNXTO93ScNuVgibIzAJ7IBVYlwrbcQP/ui
+	 1ueIGgPBHVZNlcSg7zqQ9pGi4G5UyyOu381/gKPXWaGbTObfK8SaKnyyVhCTrLatYc
+	 DBO3TEsh9pj7WZ1xGEMyRRx5cVd+cpR6CPJa4rujmaAs8PuOklZMa5IOPsfQJfqN1p
+	 BfknnVpPpRNMKtp1m4Vw2+Q4lm3eq1CNWqvYtE1uknaB4nBukdKxmj6NJO81IDHk0p
+	 C2kfjgacAAG89NivGN0R99a2QUfiJD2Mm5Ci5MYfMAmuJlOrhUC6lxXHtsB5BTKw4S
+	 B4CCG6iQnnMkg==
+Date: Tue, 20 May 2025 15:14:24 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, irogers@google.com,
-	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, eranian@google.com,
-	ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com
-Subject: Re: [PATCH V4 02/16] perf: Only dump the throttle log for the leader
-Message-ID: <aCz8AMGRfIOxo9AN@google.com>
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-3-kan.liang@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Howard Chu <howardchu95@gmail.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Increase syscall handler map size to 1024
+Message-ID: <aCz-wD2Syq8mj2_0@google.com>
+References: <20250519232539.831842-1-namhyung@kernel.org>
+ <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
+ <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,55 +49,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250520181644.2673067-3-kan.liang@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
 
-On Tue, May 20, 2025 at 11:16:30AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The PERF_RECORD_THROTTLE records are dumped for all throttled events.
-> It's not necessary for group events, which are throttled altogether.
-> 
-> Optimize it by only dump the throttle log for the leader.
-> 
-> The sample right after the THROTTLE record must be generated by the
-> actual target event. It is good enough for the perf tool to locate the
-> actual target event.
-> 
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Hi Ian,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Tue, May 20, 2025 at 08:05:37AM -0700, Ian Rogers wrote:
+> On Mon, May 19, 2025 at 4:36 PM Howard Chu <howardchu95@gmail.com> wrote:
+> >
+> > Hello Namhyung,
+> >
+> > On Mon, May 19, 2025 at 4:25 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
+> > > max entries of 512.  Usually syscall numbers are smaller than this but
+> > > x86 has x32 ABI where syscalls start from 512.
+> > >
+> > > That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middle
+> > > of the loop when it accesses those keys.  As the loop iteration is not
+> > > ordered by syscall numbers anymore, the failure can affect non-x32
+> > > syscalls.
+> > >
+> > > Let's increase the map size to 1024 so that it can handle those ABIs
+> > > too.  While most systems won't need this, increasing the size will be
+> > > safer for potential future changes.
+> 
+> Do we need to worry about MIPS where syscalls can be offset by 1000s?
+> https://lore.kernel.org/lkml/8ed7dfb2-1e4d-4aa4-a04b-0397a89365d1@app.fastmail.com/
+
+Argh..
+
+> We could do with a map that combines BPF_MAP_TYPE_HASH with the tails
+> calls of BPF_MAP_TYPE_PROG_ARRAY.
+
+Right, it'd complicate things but I think it's doable.
 
 Thanks,
 Namhyung
 
-> ---
->  kernel/events/core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 915698f47682..cd559501cfbd 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2744,14 +2744,16 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->  	event->hw.interrupts = 0;
->  	if (start)
->  		event->pmu->start(event, 0);
-> -	perf_log_throttle(event, 1);
-> +	if (event == event->group_leader)
-> +		perf_log_throttle(event, 1);
->  }
->  
->  static void perf_event_throttle(struct perf_event *event)
->  {
->  	event->pmu->stop(event, 0);
->  	event->hw.interrupts = MAX_INTERRUPTS;
-> -	perf_log_throttle(event, 0);
-> +	if (event == event->group_leader)
-> +		perf_log_throttle(event, 0);
->  }
->  
->  static void perf_event_unthrottle_group(struct perf_event *event, bool skip_start_event)
-> -- 
-> 2.38.1
-> 
