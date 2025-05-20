@@ -1,48 +1,57 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C066926F468;
-	Tue, 20 May 2025 10:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149E126FD8B;
+	Tue, 20 May 2025 10:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737366; cv=none; b=WdC/dpHnqoU3vK1zS8neDEfuBbc24Iiz+Q9NcIiOpaClHORrRmOdzPbA9pte68FwbEvBM0HT4U5Sn8ILKKxqqSYUR/4b92xR5KHu8b6qxKm1BdrfUiXneH4J6ldquMQmNRbvpS04ng+pHGk1Cw3fpyOyA99imGBbCMC8uAiHuro=
+	t=1747737423; cv=none; b=q+EQmLixsfem2F1Wu5nI6S5HWbSge8LuB/IAjO3PHTgOeVAp2T6NqayA/VCKZnVdenH58sQe5/snfEbbBj3G2MJ83EAVr2t6UKkJc8b40l+QtKYrnLaWuPSiqCFtnn+VyKVHISPWFyQkrUSZYE7PQRfqFZGtXeqg6GfVOtMaFKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737366; c=relaxed/simple;
-	bh=w7K5pMtdrZyVLt797Uyr9uyQu/cmuG0bNkwUckl/TuY=;
+	s=arc-20240116; t=1747737423; c=relaxed/simple;
+	bh=8P+PeAk1ffcVBmib8pv1vtzYDhW5m/TICvR1L6ZpuQs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3FqR7ECKYbNN+BsRItG+dG1Ilf1I25Q5KedEv93DoHMWAul8KomMhN2TcWXUbjS4qXBJEbj+l8FWsvScsZrN+t0XPsKXVSVOICRpm3/vZltjL+wytnJIeOSb5UQWh1yKf3DqwgoY+8hDKvfoAVeKE5YKiE6oja94oe/PGudOos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC3CF1516;
-	Tue, 20 May 2025 03:35:49 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC6343F6A8;
-	Tue, 20 May 2025 03:36:02 -0700 (PDT)
-Date: Tue, 20 May 2025 11:35:58 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH 03/10] perf: arm_spe: Add support for FEAT_SPE_EFT
- extended filtering
-Message-ID: <20250520103558.GM412060@e132581.arm.com>
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
- <20250506-james-perf-feat_spe_eft-v1-3-dd480e8e4851@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBNyRo9NvBEKIchSlScIZkHrqGUxpmubOmo/TfEqm6GatlurWAm9bRRy/cLTXCtEg6sEMhV2od4uCkRVTK5dhUlTIktc0Pus2yXrpOni0HN1rLaT7oE0OGo3LiYFV6mOoZa0fWT36Es7sSopPqCqIRGXBklFMeeMkfsanuY6KyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N+6TpxHP; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N+6TpxHP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PrBDpKNLE2QNKUOOwZ955vTK9TBp0M7rfERlp1Wzdps=; b=N+6TpxHPLX3ANst+9I1P20wm9I
+	wDOpmw4u996gp5pIZd5AJ47p2eGekUtdz2e2kt7CfabQcU0Y61Mu2I6tUbA2GwGVDdqTxk0wbBonD
+	wb82P7uhOcMxhjCSA7PpDsXG37JS7AL2pTkzOD+BCPnnORRn7NZ/qMb1qOjlfurqWvzkKgaSzYi/4
+	cwnQ9G3zuywnuBMuRLtwP0C2RZK464QPquc/SFpHDI/jy+Hj1oDgRB2Eb8LLYoYhTE93aho+0L1i6
+	j8d6yQkoKfTmc/aR5aG0GzTJPMUKDhX6z5HmIgyKuPWBREYILp5LqX6AtPPadq+sN91O0k8tqEZNH
+	o4VD8+2A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHKL2-000000039VU-2Iwu;
+	Tue, 20 May 2025 10:36:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 17B3D300677; Tue, 20 May 2025 12:36:48 +0200 (CEST)
+Date: Tue, 20 May 2025 12:36:47 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, james.clark@arm.com, ravi.bangoria@amd.com,
+	yu.c.chen@intel.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	rostedt@goodmis.org, vincent.guittot@linaro.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	gautham.shenoy@amd.com, kprateek.nayak@amd.com,
+	juri.lelli@redhat.com, yangjihong@bytedance.com, void@manifault.com,
+	tj@kernel.org, sshegde@linux.ibm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, santosh.shukla@amd.com,
+	ananth.narayan@amd.com, sandipan.das@amd.com,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v3 4/8] perf sched stats: Add support for report
+ subcommand
+Message-ID: <20250520103647.GH16434@noisy.programming.kicks-ass.net>
+References: <20250311120230.61774-1-swapnil.sapkal@amd.com>
+ <20250311120230.61774-5-swapnil.sapkal@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,167 +60,152 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-3-dd480e8e4851@linaro.org>
+In-Reply-To: <20250311120230.61774-5-swapnil.sapkal@amd.com>
 
-On Tue, May 06, 2025 at 12:41:35PM +0100, James Clark wrote:
-> FEAT_SPE_EFT (optional from Armv9.4) adds mask bits for the existing
-> load, store and branch filters. It also adds two new filter bits for
-> SIMD and floating point with their own associated mask bits. The current
-> filters only allow OR filtering on samples that are load OR store etc,
-> and the new mask bits allow setting part of the filter to an AND, for
-> example filtering samples that are store AND SIMD. With mask bits set to
-> 0, the OR behavior is preserved, so the unless any masks are explicitly
-> set old filters will behave the same.
+On Tue, Mar 11, 2025 at 12:02:26PM +0000, Swapnil Sapkal wrote:
+> `perf sched stats record` captures two sets of samples. For workload
+> profile, first set right before workload starts and second set after
+> workload finishes. For the systemwide profile, first set at the
+> beginning of profile and second set on receiving SIGINT signal.
 > 
-> Add them all and make them behave the same way as existing format bits,
-> hidden and return EOPNOTSUPP if set when the feature doesn't exist.
+> Add `perf sched stats report` subcommand that will read both the set
+> of samples, get the diff and render a final report. Final report prints
+> scheduler stat at cpu granularity as well as sched domain granularity.
 > 
-> Signed-off-by: James Clark <james.clark@linaro.org>
+> Example usage:
+> 
+>   # perf sched stats record
+>   # perf sched stats report
+> 
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category idle> ");
+>  #endif
+> +DOMAIN_FIELD(__u32, idle_lb_count,
+> +	     "load_balance() count on cpu idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_balanced,
+> +	     "load_balance() found balanced on cpu idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_failed,
+> +	     "load_balance() move task failed on cpu idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_imbalance,
+> +	     "imbalance sum on cpu idle", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_gained,
+> +	     "pull_task() count on cpu idle", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_hot_gained,
+> +	     "pull_task() when target task was cache-hot on cpu idle", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_nobusyq,
+> +	     "load_balance() failed to find busier queue on cpu idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, idle_lb_nobusyg,
+> +	     "load_balance() failed to find busier group on cpu idle", "%11u", true, v15);
+> +#ifdef DERIVED_CNT_FIELD
+> +DERIVED_CNT_FIELD("load_balance() success count on cpu idle", "%11u",
+> +		  idle_lb_count, idle_lb_balanced, idle_lb_failed, v15);
+> +#endif
+> +#ifdef DERIVED_AVG_FIELD
+> +DERIVED_AVG_FIELD("avg task pulled per successful lb attempt (cpu idle)", "%11.2Lf",
+> +		  idle_lb_count, idle_lb_balanced, idle_lb_failed, idle_lb_gained, v15);
+> +#endif
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category busy> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, busy_lb_count,
+> +	     "load_balance() count on cpu busy", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_balanced,
+> +	     "load_balance() found balanced on cpu busy", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_failed,
+> +	     "load_balance() move task failed on cpu busy", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_imbalance,
+> +	     "imbalance sum on cpu busy", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_gained,
+> +	     "pull_task() count on cpu busy", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_hot_gained,
+> +	     "pull_task() when target task was cache-hot on cpu busy", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_nobusyq,
+> +	     "load_balance() failed to find busier queue on cpu busy", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, busy_lb_nobusyg,
+> +	     "load_balance() failed to find busier group on cpu busy", "%11u", true, v15);
+> +#ifdef DERIVED_CNT_FIELD
+> +DERIVED_CNT_FIELD("load_balance() success count on cpu busy", "%11u",
+> +		  busy_lb_count, busy_lb_balanced, busy_lb_failed, v15);
+> +#endif
+> +#ifdef DERIVED_AVG_FIELD
+> +DERIVED_AVG_FIELD("avg task pulled per successful lb attempt (cpu busy)", "%11.2Lf",
+> +		  busy_lb_count, busy_lb_balanced, busy_lb_failed, busy_lb_gained, v15);
+> +#endif
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category newidle> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, newidle_lb_count,
+> +	     "load_balance() count on cpu newly idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_balanced,
+> +	     "load_balance() found balanced on cpu newly idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_failed,
+> +	     "load_balance() move task failed on cpu newly idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_imbalance,
+> +	     "imbalance sum on cpu newly idle", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_gained,
+> +	     "pull_task() count on cpu newly idle", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_hot_gained,
+> +	     "pull_task() when target task was cache-hot on cpu newly idle", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_nobusyq,
+> +	     "load_balance() failed to find busier queue on cpu newly idle", "%11u", true, v15);
+> +DOMAIN_FIELD(__u32, newidle_lb_nobusyg,
+> +	     "load_balance() failed to find busier group on cpu newly idle", "%11u", true, v15);
+> +#ifdef DERIVED_CNT_FIELD
+> +DERIVED_CNT_FIELD("load_balance() success count on cpu newly idle", "%11u",
+> +		  newidle_lb_count, newidle_lb_balanced, newidle_lb_failed, v15);
+> +#endif
+> +#ifdef DERIVED_AVG_FIELD
+> +DERIVED_AVG_FIELD("avg task pulled per successful lb attempt (cpu newly idle)", "%11.2Lf",
+> +		  newidle_lb_count, newidle_lb_balanced, newidle_lb_failed, newidle_lb_gained, v15);
+> +#endif
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category active_load_balance()> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, alb_count,
+> +	     "active_load_balance() count", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, alb_failed,
+> +	     "active_load_balance() move task failed", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, alb_pushed,
+> +	     "active_load_balance() successfully moved a task", "%11u", false, v15);
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category sched_balance_exec()> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, sbe_count,
+> +	     "sbe_count is not used", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, sbe_balanced,
+> +	     "sbe_balanced is not used", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, sbe_pushed,
+> +	     "sbe_pushed is not used", "%11u", false, v15);
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Category sched_balance_fork()> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, sbf_count,
+> +	     "sbf_count is not used", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, sbf_balanced,
+> +	     "sbf_balanced is not used", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, sbf_pushed,
+> +	     "sbf_pushed is not used", "%11u", false, v15);
+> +#ifdef DOMAIN_CATEGORY
+> +DOMAIN_CATEGORY(" <Wakeup Info> ");
+> +#endif
+> +DOMAIN_FIELD(__u32, ttwu_wake_remote,
+> +	     "try_to_wake_up() awoke a task that last ran on a diff cpu", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, ttwu_move_affine,
+> +	     "try_to_wake_up() moved task because cache-cold on own cpu", "%11u", false, v15);
+> +DOMAIN_FIELD(__u32, ttwu_move_balance,
+> +	     "try_to_wake_up() started passive balancing", "%11u", false, v15);
+> +#endif /* DOMAIN_FIELD */
 
-> ---
->  drivers/perf/arm_spe_pmu.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index d9f6d229dce8..9309b846f642 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -86,6 +86,7 @@ struct arm_spe_pmu {
->  #define SPE_PMU_FEAT_ERND			(1UL << 5)
->  #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
->  #define SPE_PMU_FEAT_DISCARD			(1UL << 7)
-> +#define SPE_PMU_FEAT_EFT			(1UL << 8)
->  #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
->  	u64					features;
->  
-> @@ -197,6 +198,27 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
->  #define ATTR_CFG_FLD_discard_CFG		config	/* PMBLIMITR_EL1.FM = DISCARD */
->  #define ATTR_CFG_FLD_discard_LO			35
->  #define ATTR_CFG_FLD_discard_HI			35
-> +#define ATTR_CFG_FLD_branch_filter_mask_CFG	config	/* PMSFCR_EL1.Bm */
-> +#define ATTR_CFG_FLD_branch_filter_mask_LO	36
-> +#define ATTR_CFG_FLD_branch_filter_mask_HI	36
-> +#define ATTR_CFG_FLD_load_filter_mask_CFG	config	/* PMSFCR_EL1.LDm */
-> +#define ATTR_CFG_FLD_load_filter_mask_LO	37
-> +#define ATTR_CFG_FLD_load_filter_mask_HI	37
-> +#define ATTR_CFG_FLD_store_filter_mask_CFG	config	/* PMSFCR_EL1.STm */
-> +#define ATTR_CFG_FLD_store_filter_mask_LO	38
-> +#define ATTR_CFG_FLD_store_filter_mask_HI	38
-> +#define ATTR_CFG_FLD_simd_filter_CFG		config	/* PMSFCR_EL1.SIMD */
-> +#define ATTR_CFG_FLD_simd_filter_LO		39
-> +#define ATTR_CFG_FLD_simd_filter_HI		39
-> +#define ATTR_CFG_FLD_simd_filter_mask_CFG	config	/* PMSFCR_EL1.SIMDm */
-> +#define ATTR_CFG_FLD_simd_filter_mask_LO	40
-> +#define ATTR_CFG_FLD_simd_filter_mask_HI	40
-> +#define ATTR_CFG_FLD_float_filter_CFG		config	/* PMSFCR_EL1.FP */
-> +#define ATTR_CFG_FLD_float_filter_LO		41
-> +#define ATTR_CFG_FLD_float_filter_HI		41
-> +#define ATTR_CFG_FLD_float_filter_mask_CFG	config	/* PMSFCR_EL1.FPm */
-> +#define ATTR_CFG_FLD_float_filter_mask_LO	42
-> +#define ATTR_CFG_FLD_float_filter_mask_HI	42
->  
->  #define ATTR_CFG_FLD_event_filter_CFG		config1	/* PMSEVFR_EL1 */
->  #define ATTR_CFG_FLD_event_filter_LO		0
-> @@ -215,8 +237,15 @@ GEN_PMU_FORMAT_ATTR(pa_enable);
->  GEN_PMU_FORMAT_ATTR(pct_enable);
->  GEN_PMU_FORMAT_ATTR(jitter);
->  GEN_PMU_FORMAT_ATTR(branch_filter);
-> +GEN_PMU_FORMAT_ATTR(branch_filter_mask);
->  GEN_PMU_FORMAT_ATTR(load_filter);
-> +GEN_PMU_FORMAT_ATTR(load_filter_mask);
->  GEN_PMU_FORMAT_ATTR(store_filter);
-> +GEN_PMU_FORMAT_ATTR(store_filter_mask);
-> +GEN_PMU_FORMAT_ATTR(simd_filter);
-> +GEN_PMU_FORMAT_ATTR(simd_filter_mask);
-> +GEN_PMU_FORMAT_ATTR(float_filter);
-> +GEN_PMU_FORMAT_ATTR(float_filter_mask);
->  GEN_PMU_FORMAT_ATTR(event_filter);
->  GEN_PMU_FORMAT_ATTR(inv_event_filter);
->  GEN_PMU_FORMAT_ATTR(min_latency);
-> @@ -228,8 +257,15 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
->  	&format_attr_pct_enable.attr,
->  	&format_attr_jitter.attr,
->  	&format_attr_branch_filter.attr,
-> +	&format_attr_branch_filter_mask.attr,
->  	&format_attr_load_filter.attr,
-> +	&format_attr_load_filter_mask.attr,
->  	&format_attr_store_filter.attr,
-> +	&format_attr_store_filter_mask.attr,
-> +	&format_attr_simd_filter.attr,
-> +	&format_attr_simd_filter_mask.attr,
-> +	&format_attr_float_filter.attr,
-> +	&format_attr_float_filter_mask.attr,
->  	&format_attr_event_filter.attr,
->  	&format_attr_inv_event_filter.attr,
->  	&format_attr_min_latency.attr,
-> @@ -250,6 +286,16 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
->  	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
->  		return 0;
->  
-> +	if ((attr == &format_attr_branch_filter_mask.attr ||
-> +	     attr == &format_attr_load_filter_mask.attr ||
-> +	     attr == &format_attr_store_filter_mask.attr ||
-> +	     attr == &format_attr_simd_filter.attr ||
-> +	     attr == &format_attr_simd_filter_mask.attr ||
-> +	     attr == &format_attr_float_filter.attr ||
-> +	     attr == &format_attr_float_filter_mask.attr) &&
-> +	     !(spe_pmu->features & SPE_PMU_FEAT_EFT))
-> +		return 0;
-> +
->  	return attr->mode;
->  }
->  
-> @@ -341,8 +387,15 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
->  	u64 reg = 0;
->  
->  	reg |= FIELD_PREP(PMSFCR_EL1_LD, ATTR_CFG_GET_FLD(attr, load_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_LDm, ATTR_CFG_GET_FLD(attr, load_filter_mask));
->  	reg |= FIELD_PREP(PMSFCR_EL1_ST, ATTR_CFG_GET_FLD(attr, store_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_STm, ATTR_CFG_GET_FLD(attr, store_filter_mask));
->  	reg |= FIELD_PREP(PMSFCR_EL1_B, ATTR_CFG_GET_FLD(attr, branch_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_Bm, ATTR_CFG_GET_FLD(attr, branch_filter_mask));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_SIMD, ATTR_CFG_GET_FLD(attr, simd_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_SIMDm, ATTR_CFG_GET_FLD(attr, simd_filter_mask));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_FP, ATTR_CFG_GET_FLD(attr, float_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_FPm, ATTR_CFG_GET_FLD(attr, float_filter_mask));
->  
->  	if (reg)
->  		reg |= PMSFCR_EL1_FT;
-> @@ -716,6 +769,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->  	u64 reg;
->  	struct perf_event_attr *attr = &event->attr;
->  	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
-> +	const u64 feat_spe_eft_bits = PMSFCR_EL1_LDm | PMSFCR_EL1_STm |
-> +				      PMSFCR_EL1_Bm | PMSFCR_EL1_SIMD |
-> +				      PMSFCR_EL1_SIMDm | PMSFCR_EL1_FP |
-> +				      PMSFCR_EL1_FPm;
->  
->  	/* This is, of course, deeply driver-specific */
->  	if (attr->type != event->pmu->type)
-> @@ -761,6 +818,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_LAT))
->  		return -EOPNOTSUPP;
->  
-> +	if ((reg & feat_spe_eft_bits) &&
-> +	    !(spe_pmu->features & SPE_PMU_FEAT_EFT))
-> +		return -EOPNOTSUPP;
-> +
->  	if (ATTR_CFG_GET_FLD(&event->attr, discard) &&
->  	    !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
->  		return -EOPNOTSUPP;
-> @@ -1052,6 +1113,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  	if (spe_pmu->pmsver >= ID_AA64DFR0_EL1_PMSVer_V1P2)
->  		spe_pmu->features |= SPE_PMU_FEAT_DISCARD;
->  
-> +	if (FIELD_GET(PMSIDR_EL1_EFT, reg))
-> +		spe_pmu->features |= SPE_PMU_FEAT_EFT;
-> +
->  	/* This field has a spaced out encoding, so just use a look-up */
->  	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
->  	switch (fld) {
-> 
-> -- 
-> 2.34.1
-> 
+So I have one request for a future version of this. Could we please add
+a knob to print the output using the field name instead of the fancy
+pants description?
+
+It is *MUCH* easier to grep the field name in the code than to try and
+figure out wth this description is on about :-)
+
+That is, ttwu_wake_remote is infinitely better than "try_to_wake_up()
+awake a task that last ran on a diff cpu" and so on.
+
+I realize I might be weird, but it should be simple enough to add and it
+makes my life easier :-)
