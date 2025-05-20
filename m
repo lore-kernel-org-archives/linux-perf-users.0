@@ -1,88 +1,220 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0725B66D;
-	Tue, 20 May 2025 19:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C451288C04;
+	Tue, 20 May 2025 20:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747769939; cv=none; b=QKA3dBf1J0phubxoO/4yUkSkBLk4RZM6Tn2FleKHlk8jZv2CkjxkbS4sUKuHOUyd1+/5k2vUY9/jjpukN76HLip0w0pFbe3kBFna9jofE24+/O4haObwTwXUfA/Kr3kBS83iGNWPLQZB+AINSsF5opvSrTLcAFzdh2rZ6aAcYic=
+	t=1747771352; cv=none; b=VYTY5pKD0rZOMGsWqkAhw/B2J9QGxBb2D4jNtrxl8Xxq7Swa6dYzH2ffBcVVWhQEB+jktFCCcYx7pTjk6qtMSx1g5xN5gtewdYD6S7lJlI/jK1xlTyAoNlnW+rzXJyjtEn5sfdK/eYT62xDbYhnrRyUqRD4Bq+aIx95W/89vhwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747769939; c=relaxed/simple;
-	bh=hvfz3f70a+l77rLPSk8ZwDyqvzU4xNGTCHx63U5c1VM=;
+	s=arc-20240116; t=1747771352; c=relaxed/simple;
+	bh=gdB/aUFh/EfFdDW3zJSjo8/8Qk4K6QKnp6agplPsdH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEogvaiUaZzYO7PKHgdcT1B2FilqW7kUI6y7KyzhffEMY1Q0Lbrtcpj0vGYM+N7LmvPsSzVd5n1fYWvhyH4HTPwegWlLA1R71aKRlvwkCMmeru2DgW0QJdZ8oI9ByQdyMObQN452uWE6gbzo11ONWUTPapT64zOEWc7fseWT6Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJPCb4mT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLtybYrY4HZDuhkpiwRTQ27HzLxYW0xTJI1LjA3Ys6va7Mp0ZFaONVVKS+EcWBY9EUjMu9spJxBd6Epe8Ap6WFFL0wGelUZft35Wc/qpu6llqYEP2TwvuYu7AULoHPyaLmPHuL9Psh3LGuKMjyzkWoaiCOzPzO6/gYshByN7Pbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h60fgItG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJPCb4mT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB498C4CEE9;
-	Tue, 20 May 2025 19:38:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h60fgItG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDA2C4CEE9;
+	Tue, 20 May 2025 20:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747769938;
-	bh=hvfz3f70a+l77rLPSk8ZwDyqvzU4xNGTCHx63U5c1VM=;
+	s=k20201202; t=1747771351;
+	bh=gdB/aUFh/EfFdDW3zJSjo8/8Qk4K6QKnp6agplPsdH4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJPCb4mTDOL7sAWboKmCyamIkKMFR2ns+d0zmwPz8i0OFmGhMjoUkmwH3M0ojUVmK
-	 EiDDg4Mh6yHKZymNDW0ZjSx5mHypyCRXmu/F1QVPqa2CDLPNPPdGFCp23zFNtgPyQR
-	 9J5W3+zXzvRJqG1zLSXjv+Mi0JQ5Dgoc0j9wmlqTUh/HTuw2EM4F2nbYcAdX0grawl
-	 CL7S28i1jZhn5jhD/oisS09mpebX0ISJ3WABSWYSVRa1cItMThBElyGKExjR0OgGCc
-	 HlL5y1QAJj5b9tPPw8blsE3jTV6xxGaA7pE5G1sUOzb3smThkFUnjAbPXsrSjlmp+K
-	 n2/uJDOkyZsUw==
-Date: Tue, 20 May 2025 16:38:53 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	I Hsin Cheng <richard120310@gmail.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peng Jiang <jiang.peng9@zte.com.cn>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
- sources
-Message-ID: <aCzaTQJ9vwjjc22V@x1>
-References: <20250519214126.1652491-1-acme@kernel.org>
- <CAMZ6RqJUf=LpczMNu9WwLik9i-4tJHYENvM3d15nxjNM+_vc5w@mail.gmail.com>
- <aCylQUlY3W7rbZAs@x1>
- <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
+	b=h60fgItGfIxOvadalfWdc89HnSZCZc5zitiLlB9I1kbjYZXWYnXyVW8On1otNd0QB
+	 InUVV/ltU7pYux8T6wVDbWmRbfxJNW9js1LTNuWoOLd2tsBlY5ia1+XK8QwH6poSx9
+	 R6p16ovf2o8fMKugEQm6GPdctTs0RaERTNPTyIQ20FfPKgIviSOfWVFrHSHxOyXVDB
+	 Q+Um+3T1FzBF9A6zAjMrsWEOKPdAMCdl6z+dizRQJSYQEVdMVYULmbleXXa0Y3j56G
+	 m9VlTpVueZqkikflfbRP1QlViR0/DMNqw7euvRZWk0HpfZfKNt60o1inAxX7INCa8K
+	 tnk+xC8WFERKw==
+Date: Tue, 20 May 2025 13:02:29 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: peterz@infradead.org, mingo@redhat.com, irogers@google.com,
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, eranian@google.com,
+	ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com
+Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
+Message-ID: <aCzf1epMZn20K55q@google.com>
+References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+ <20250516182853.2610284-3-kan.liang@linux.intel.com>
+ <aCoynoKRbpnOZ7QE@google.com>
+ <8e2c5349-571d-4436-a10e-ae1a50ed6b1f@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
+In-Reply-To: <8e2c5349-571d-4436-a10e-ae1a50ed6b1f@linux.intel.com>
 
-On Wed, May 21, 2025 at 01:02:49AM +0900, Vincent Mailhol wrote:
-> On 21/05/2025 at 00:52, Arnaldo Carvalho de Melo wrote:
-> > On Tue, May 20, 2025 at 09:44:05AM +0900, Vincent Mailhol wrote:
-> >> On Tue. 20 May 2025 at 06:41, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Tue, May 20, 2025 at 10:47:21AM -0400, Liang, Kan wrote:
 > 
-> (...)
 > 
-> > I think there is value in doing it now, as it clears up the build
-> > warnings and solves already one prep work that syncing would entail,
-> > namely the inclusion of const_true() in the tools compiler.h file.
+> On 2025-05-18 3:18 p.m., Namhyung Kim wrote:
+> > Hi Kan,
+> > 
+> > On Fri, May 16, 2025 at 11:28:39AM -0700, kan.liang@linux.intel.com wrote:
+> >> From: Kan Liang <kan.liang@linux.intel.com>
+> >>
+> >> The current throttle logic doesn't work well with a group, e.g., the
+> >> following sampling-read case.
+> >>
+> >> $ perf record -e "{cycles,cycles}:S" ...
+> >>
+> >> $ perf report -D | grep THROTTLE | tail -2
+> >>             THROTTLE events:        426  ( 9.0%)
+> >>           UNTHROTTLE events:        425  ( 9.0%)
+> >>
+> >> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> >> ... sample_read:
+> >> .... group nr 2
+> >> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> >> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> >>
+> >> The second cycles event has a much larger value than the first cycles
+> >> event in the same group.
+> >>
+> >> The current throttle logic in the generic code only logs the THROTTLE
+> >> event. It relies on the specific driver implementation to disable
+> >> events. For all ARCHs, the implementation is similar. Only the event is
+> >> disabled, rather than the group.
+> >>
+> >> The logic to disable the group should be generic for all ARCHs. Add the
+> >> logic in the generic code. The following patch will remove the buggy
+> >> driver-specific implementation.
+> >>
+> >> The throttle only happens when an event is overflowed. Stop the entire
+> >> group when any event in the group triggers the throttle.
+> >> The MAX_INTERRUPTS is set to all throttle events.
+> >>
+> >> The unthrottled could happen in 3 places.
+> >> - event/group sched. All events in the group are scheduled one by one.
+> >>   All of them will be unthrottled eventually. Nothing needs to be
+> >>   changed.
+> >> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+> >>   group altogether.
+> >> - The __perf_event_period(). The whole group needs to be restarted
+> >>   altogether as well.
+> >>
+> >> With the fix,
+> >> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> >> ... sample_read:
+> >> .... group nr 2
+> >> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> >> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> > 
+> > Thanks for working on this!
+> > 
+> >>
+> >> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> >> ---
+> >>  kernel/events/core.c | 60 ++++++++++++++++++++++++++++++++------------
+> >>  1 file changed, 44 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> >> index af78ec118e8f..52490c2ce45b 100644
+> >> --- a/kernel/events/core.c
+> >> +++ b/kernel/events/core.c
+> >> @@ -2739,6 +2739,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
+> >>  static void perf_log_throttle(struct perf_event *event, int enable);
+> >>  static void perf_log_itrace_start(struct perf_event *event);
+> >>  
+> >> +static void perf_event_unthrottle(struct perf_event *event, bool start)
+> >> +{
+> >> +	event->hw.interrupts = 0;
+> >> +	if (start)
+> >> +		event->pmu->start(event, 0);
+> >> +	perf_log_throttle(event, 1);
+> >> +}
+> >> +
+> >> +static void perf_event_throttle(struct perf_event *event)
+> >> +{
+> >> +	event->pmu->stop(event, 0);
+> >> +	event->hw.interrupts = MAX_INTERRUPTS;
+> >> +	perf_log_throttle(event, 0);
+> >> +}
+> >> +
+> >> +static void perf_event_unthrottle_group(struct perf_event *event, bool skip_start_event)
+> >> +{
+> >> +	struct perf_event *sibling, *leader = event->group_leader;
+> >> +
+> >> +	perf_event_unthrottle(leader, skip_start_event ? leader != event : true);
+> >> +	for_each_sibling_event(sibling, leader)
+> >> +		perf_event_unthrottle(sibling, skip_start_event ? sibling != event : true);
+> > 
+> > This will add more PERF_RECORD_THROTTLE records for sibling events.
 > 
-> Ack.
+> Yes
 > 
-> > I think I can take your "I am not objecting to this series in any way."
-> > as an Acked-by?
+> > Maybe we can generate it for the actual target event only?
 > 
-> Sure. You can add my Acked-by to patch 6 and 7 (the ones in which you put me in
-> CC). I did not have a look at the other ones (and do not plan to do so).
+> The current code cannot track the actual target event for unthrottle.
+> Because the MAX_INTERRUPTS are set for all events when event_throttle.
 
-Thanks, just did it,
+Right.
 
-- Arnaldo
+> 
+> But I think we can only add a PERF_RECORD_THROTTLE record for the leader
+> event, which can reduce the number of THROTTLE records.
+
+Sounds good.
+
+> 
+> The sample right after the THROTTLE record must be generated by the
+> actual target event. I think it should be good enough for the perf tool
+> to locate the event.
+
+IIRC perf tool doesn't track which event is throttled, but yeah, it'd be
+possible to use the next sample to locate it.
+
+> 
+> I will add the below patch as a separate improvement in V4.
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 52490c2ce45b..cd559501cfbd 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2744,14 +2744,16 @@ static void perf_event_unthrottle(struct
+> perf_event *event, bool start)
+>   	event->hw.interrupts = 0;
+>   	if (start)
+>   	event->pmu->start(event, 0);
+> -	perf_log_throttle(event, 1);
+> +	if (event == event->group_leader)
+> +		perf_log_throttle(event, 1);
+>   }
+> 
+>   static void perf_event_throttle(struct perf_event *event)
+>   {
+>   	event->pmu->stop(event, 0);
+>   	event->hw.interrupts = MAX_INTERRUPTS;
+> -	perf_log_throttle(event, 0);
+> +	if (event == event->group_leader)
+> +		perf_log_throttle(event, 0);
+>   }
+
+Looks good.
+
+> 
+> 
+> > 
+> > Also the condition for skip_start_event is if it's a freq event.
+> > I think we can skip pmu->start() if the sibling is also a freq event.
+> 
+> The skip_start_event is if it will be start later separately. It intends
+> to avoid the double start.
+> 
+> In the perf_adjust_freq_unthr_events(), it will only adjust and start
+> the leader event, not group. If we skip pmu->start() for a freq sibling
+> event, it will not start until the next context switch.
+
+Oh, I missed that it only has leaders in the active list.
+
+Thanks,
+Namhyung
+
