@@ -1,205 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021E02356B8;
-	Wed, 21 May 2025 13:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B0A270548;
+	Wed, 21 May 2025 13:22:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833655; cv=none; b=r+PLZ3oQ5Giscmv7GhTbePYO49JpU4cgzmYo1Y7G+DeShkLLqcDxe4F3Lz5KJa4SZyAsJjyBWAQN2Flgzkm5JColRZGX0gU1OsT8v8NC05NL3nQjcXv/Mtzqc3bC4j/DuCxoNFq47u7ZUmpqlo+LQF93mLQR94KsPyBxDA5DIXs=
+	t=1747833732; cv=none; b=Uudp9ffDKcqFaAmeZvVPYRyOJ2rtUnU7pT92njXR4YLxDCPO1irm9CEdK8j6CteUsTIlLt6nDS71MEoZNopmAQNIHuWS0ZZTcQuWgeylVzQEW8wCc+XD4CzFnvkgZGTDvZfKi00Wt0bYua8lze8cW4JUwIbNsPMgDVkAYzYeO6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833655; c=relaxed/simple;
-	bh=QV4yK2hdnVnPbG4+FrwDEmlzNcQ54yHXdjN0E1nJArg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBvWEjbzSD3ZlezFCjtqHeiKy47moaKeAKbMBydj4j4cfhD9F5VgQi2Ot1b5q9l8JTIcqr0e3/N6Cso9DdR5CReN14c7zcLTNIcyqc+bnv5uao1nRCJZ6ASZI/4d7WMGYV0Zys1UfHlPdGFPWWbpn3jVcu+OQex5TYNpW03hFEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz1xdeY/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747833732; c=relaxed/simple;
+	bh=EX4ui2tQT7UMETR1W+xK25rJPJELgoGDLpEuPhuzklw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bsXw8bW4GHdo0WjrHtSXpUhb60NtltfO9+//SsF78MpmMyQLkAWMG6u1ZpJhe06UI4D4QKAnJV9UIkTfyurnEt6+VyMivqzfs8HsVF6VnodkA25fFab6dwKT5XZwy/Ry90ksrKY2ltFSAz0lkLf44IEJNofwzpJqgjT45R/xNgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6jBTMek; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz1xdeY/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24134C4CEE4;
-	Wed, 21 May 2025 13:20:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6jBTMek"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBF4C4CEE7;
+	Wed, 21 May 2025 13:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747833653;
-	bh=QV4yK2hdnVnPbG4+FrwDEmlzNcQ54yHXdjN0E1nJArg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mz1xdeY/QPHCQbpqW9YLMXj3bxMFPssdJH0C0K4GT/BUMmGTR93G0dgcis8DMBozs
-	 YP/b8B2bWkXH60z94+TQqwmsGm8EGUJWwqHuZAkdGKzGvKAyjteKhGt6wRYNV8FO1e
-	 D9jHd2m+QL7iRIVq5PlMru57TVJOvDsQWpaWxpfJsN1DOMBImxx1XNCjWyDCJZW7ZC
-	 qXtl8M49PS/HmPEyyZa+ak/8H+1qaASVYLxEAcvWa2SuSxP3hdX6RuCgCtz/JlU0cs
-	 qePwY7H6A8GENPHxze8c1fs3U32wvtz+q79I1SiiV7eXXKYtTdbgXg6CQQr0uIZt83
-	 S8G/9xtNsJtPQ==
-Date: Wed, 21 May 2025 10:20:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Gautam Menghani <gautam@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	s=k20201202; t=1747833729;
+	bh=EX4ui2tQT7UMETR1W+xK25rJPJELgoGDLpEuPhuzklw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E6jBTMekBv+UH9ycukXQK3H0XIxjnYZg58I9raQ05E10M9qL3PlndBrrRB12kMb08
+	 iqktE52OFdoAFLtISTnJFqKBhKN6BdmAjziVHoh95aCf7PaCdh9+0fllYKDz6oCBk+
+	 6Q+Q7u3ytdNjmawsULl8BmV8rLtnCf/C4DViZyhMpbkOXa/d7hZVJT49XCTw/Ik1DD
+	 S2u5NI+atPUaOeHnw6+813IgVJvh92MGCgJ/+k4L2qd9kIeNJS86XhcWACfsUuRx7T
+	 MMFLYsUWhGzRyyRgwQVdL+eguZVorq2GrBcVSfnaikocXW3qRLNswt4DtvbPiskgkg
+	 FRmF6L9gww5xA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uHjOZ-00GwxK-Fd;
+	Wed, 21 May 2025 14:22:07 +0100
+Date: Wed, 21 May 2025 14:22:06 +0100
+Message-ID: <86r00idrpd.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
-Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
- to return counter data
-Message-ID: <aC3TMl2MJL1_BASE@x1>
-References: <20250519195148.1708988-1-irogers@google.com>
- <20250519195148.1708988-5-irogers@google.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v22 4/5] KVM: arm64: nvhe: Disable branch generation in nVHE guests
+In-Reply-To: <20250520-arm-brbe-v19-v22-4-c1ddde38e7f8@kernel.org>
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+	<20250520-arm-brbe-v19-v22-4-c1ddde38e7f8@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519195148.1708988-5-irogers@google.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robh@kernel.org, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, james.clark@linaro.org, anshuman.khandual@arm.com, leo.yan@arm.com, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
-> From: Gautam Menghani <gautam@linux.ibm.com>
+On Tue, 20 May 2025 23:27:39 +0100,
+"Rob Herring (Arm)" <robh@kernel.org> wrote:
 > 
-> Add support for perf_counts_values struct to enable the python
-> bindings to read and return the counter data.
-
-This (and another one in this series) are coming from Ian, that didn't
-modify them, so we need a Signed-off-by: Ian, as per:
-
-Documentation/process/submitting-patches.rst
-
----
-Any further SoBs (Signed-off-by:'s) following the author's SoB are from
-people handling and transporting the patch, but were not involved in its
-development. SoB chains should reflect the **real** route a patch took
-as it was propagated to the maintainers and ultimately to Linus, with
-the first SoB entry signalling primary authorship of a single author.
----
-
-I'm adding them to my local branch, please ack this,
-
-Thanks,
-
-- Arnaldo
- 
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> While BRBE can record branches within guests, the host recording
+> branches in guests is not supported by perf (though events are).
+> Support for BRBE in guests will supported by providing direct access
+> to BRBE within the guests. That is how x86 LBR works for guests.
+> Therefore, BRBE needs to be disabled on guest entry and restored on
+> exit.
+> 
+> For nVHE, this requires explicit handling for guests. Before
+> entering a guest, save the BRBE state and disable the it. When
+> returning to the host, restore the state.
+> 
+> For VHE, it is not necessary. We initialize
+> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
+> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
+> branch recording in the host. When entering the guest, we set
+> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
+> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
+> running a guest.
+> 
+> Should recording in guests (by the host) ever be desired, the perf ABI
+> will need to be extended to distinguish guest addresses (struct
+> perf_branch_entry.priv) for starters. BRBE records would also need to be
+> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
+> be distinguished.
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+> Tested-by: James Clark <james.clark@linaro.org>
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 91 insertions(+), 1 deletion(-)
+> v20:
+>  - Reword commit message about no guest recording.
+>  - Add BRBE to __kvm_vcpu_run() synchronization comment
 > 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index ead3afd2d996..1cbddfe77c7c 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
->  	return PyType_Ready(&pyrf_thread_map__type);
->  }
->  
-> +struct pyrf_counts_values {
-> +	PyObject_HEAD
-> +
-> +	struct perf_counts_values values;
-> +};
-> +
-> +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
-> +
-> +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
-> +{
-> +	Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
-> +}
-> +
-> +#define counts_values_member_def(member, ptype, help) \
-> +	{ #member, ptype, \
-> +	  offsetof(struct pyrf_counts_values, values.member), \
-> +	  0, help }
-> +
-> +static PyMemberDef pyrf_counts_values_members[] = {
-> +	counts_values_member_def(val, Py_T_ULONG, "Value of event"),
-> +	counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
-> +	counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
-> +	counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
-> +	counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
-> +	{NULL}
-> +};
-> +
-> +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
-> +{
-> +	PyObject *vals = PyList_New(5);
-> +
-> +	if (!vals)
-> +		return NULL;
-> +	for (int i = 0; i < 5; i++)
-> +		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
-> +
-> +	return vals;
-> +}
-> +
-> +static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
-> +					 void *closure)
-> +{
-> +	Py_ssize_t size;
-> +	PyObject *item = NULL;
-> +
-> +	if (!PyList_Check(list)) {
-> +		PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
-> +		return -1;
-> +	}
-> +
-> +	size = PyList_Size(list);
-> +	for (Py_ssize_t i = 0; i < size; i++) {
-> +		item = PyList_GetItem(list, i);
-> +		if (!PyLong_Check(item)) {
-> +			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
-> +			return -1;
-> +		}
-> +		self->values.values[i] = PyLong_AsLong(item);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static PyGetSetDef pyrf_counts_values_getset[] = {
-> +	{"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
-> +		"Name field", NULL},
-> +	{NULL}
-> +};
-> +
-> +static PyTypeObject pyrf_counts_values__type = {
-> +	PyVarObject_HEAD_INIT(NULL, 0)
-> +	.tp_name	= "perf.counts_values",
-> +	.tp_basicsize	= sizeof(struct pyrf_counts_values),
-> +	.tp_dealloc	= (destructor)pyrf_counts_values__delete,
-> +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-> +	.tp_doc		= pyrf_counts_values__doc,
-> +	.tp_members	= pyrf_counts_values_members,
-> +	.tp_getset	= pyrf_counts_values_getset,
-> +};
-> +
-> +static int pyrf_counts_values__setup_types(void)
-> +{
-> +	pyrf_counts_values__type.tp_new = PyType_GenericNew;
-> +	return PyType_Ready(&pyrf_counts_values__type);
-> +}
-> +
->  struct pyrf_evsel {
->  	PyObject_HEAD
->  
-> @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
->  	    pyrf_evlist__setup_types() < 0 ||
->  	    pyrf_evsel__setup_types() < 0 ||
->  	    pyrf_thread_map__setup_types() < 0 ||
-> -	    pyrf_cpu_map__setup_types() < 0)
-> +	    pyrf_cpu_map__setup_types() < 0 ||
-> +	    pyrf_counts_values__setup_types() < 0)
->  		return module;
->  
->  	/* The page_size is placed in util object. */
-> @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
->  	Py_INCREF(&pyrf_cpu_map__type);
->  	PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
->  
-> +	Py_INCREF(&pyrf_counts_values__type);
-> +	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
-> +
->  	dict = PyModule_GetDict(module);
->  	if (dict == NULL)
->  		goto error;
-> -- 
-> 2.49.0.1101.gccaa498523-goog
+> v19:
+>  - Rework due to v6.14 debug flag changes
+>  - Redo commit message
+> ---
+>  arch/arm64/include/asm/kvm_host.h  |  2 ++
+>  arch/arm64/kvm/debug.c             |  4 ++++
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 32 ++++++++++++++++++++++++++++++++
+>  arch/arm64/kvm/hyp/nvhe/switch.c   |  2 +-
+>  4 files changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index e98cfe7855a6..e3f1e7b5ce52 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -654,6 +654,7 @@ struct kvm_host_data {
+>  #define KVM_HOST_DATA_FLAG_HAS_TRBE			1
+>  #define KVM_HOST_DATA_FLAG_TRBE_ENABLED			4
+>  #define KVM_HOST_DATA_FLAG_EL1_TRACING_CONFIGURED	5
+> +#define KVM_HOST_DATA_FLAG_HAS_BRBE			6
+
+Just as a heads up: this is going to clash with what is currently
+queued in -next (bits 6 and 7 are already claimed).
+
+Otherwise,
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
