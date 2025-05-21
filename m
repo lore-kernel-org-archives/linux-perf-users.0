@@ -1,92 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37E222B8B9;
-	Wed, 21 May 2025 20:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB6E280CE3;
+	Wed, 21 May 2025 20:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747857714; cv=none; b=TtJQ25Vzy4pQu5/ni+I9HAu9Jq1V+2in4IRlgzjaGua1MvfhT++bBid3W8tMwOZp4yizPwK7E2RG4APYGPOe3/CM4VbOsY/byFexkOykaoSlyh9dANNYxYhlcGZTLBRCptCdUmwmeb4zpSw09bKNvAlOiT8i4R3L1oYxG5P8ESI=
+	t=1747857798; cv=none; b=IMq/y4Efsv19laDtXVkm9nZspY/ykn1qQMnDF7DjUbdBEeLeBp6wDO0bwFQg1RXNuYCoLSc+cunxpa7oyigSKu6SkMSYGbPcSK62fugfnqwsPnIYZJag7UJAk1m9JyEOcy/R/7fqtiCQmlxOo5xJ1U/j9B5vM1lx5bG9LSn3hn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747857714; c=relaxed/simple;
-	bh=8oYbHgi3dSN5sYtlh/M8hB45JGShP32FfZWXEuCKwsE=;
+	s=arc-20240116; t=1747857798; c=relaxed/simple;
+	bh=c/lBvX1t0gd9nnoWFybO/osjBDzkiXG4M59v4FZ8sf8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WpufVu42eo/L/1ceLHwBzvqPKkgKQ+ipgFsy7gopQT7UEqFCtabKtkpLV3ZZgMxnmphlkQWGED96xvZ0IEdnhvUPOWzm5bK25W6GeFaTbEIJab4qty+3/IPnOfCSlyIF1iQQy79dmmkNubjgKg1WIocurrbdmQivpR06TwM9sI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHwsJb1g; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iy7VHtaVmEb1HBryVWpldctvQMgNLsbm3Av2CbAhGnyhCxeKITNQ/u1chCc9SaWVqfiW0YhUfUZII3viSKf2HCyz4m7pwGiolbmVxJhTMWcBHU5+yrmXdOVpCcNO8LJVy/pPamn2VxjRLSGef+8xBDbOL3Kin/7/V2+biZfORXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mWWZj7R6; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHwsJb1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6E29C4CEE4;
-	Wed, 21 May 2025 20:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747857714;
-	bh=8oYbHgi3dSN5sYtlh/M8hB45JGShP32FfZWXEuCKwsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qHwsJb1guGYXx1+pNKHsKaypiXjembrKX2sSgoSJ0j7QCGEEdPPUWbBntdksMO/SU
-	 fNkU7WW01z68lrC57WN7qyTKJPc/XT4rOUHUi91E541kElQdob7QADDDTjxxCJWFV6
-	 Wf68LGqXGj9AfTH9UnvpbwRgoxMnazzv5OYjTPnvkje4QZ3hfviKHfAkR6XMuXy0/B
-	 lmA0ikIcLg9UfQlnGciH4+5dSLQVAN0WAQUXv1z9XQYzFCoAYBDWVFcfWM/ZWO4Nz0
-	 god95dJdtAkDsSJFcODryRQajeFr2LwhRB4l72jkRSbzXx3xv+z+m/5Ygba584mf9k
-	 HqhLf0FEC5Ewg==
-Date: Wed, 21 May 2025 13:01:52 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Yongwei Ma <yongwei.ma@intel.com>,
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Jim Mattson <jmattson@google.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Eranian Stephane <eranian@google.com>,
-	Shukla Manali <Manali.Shukla@amd.com>,
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
-Message-ID: <aC4xMGPUjGHzKcHB@google.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-10-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mWWZj7R6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747857796; x=1779393796;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c/lBvX1t0gd9nnoWFybO/osjBDzkiXG4M59v4FZ8sf8=;
+  b=mWWZj7R6p1Vh7kllJhmVHa7xhtd4hebgxuCp5MhJ+xH9Dy30pYMxGX7p
+   E2EHHu0qjhEtadQdeFU/ghSqY/coYE54TUg7bTavXkq65p+Nn1O++gPdG
+   bmWTlE//JGNW3TUekdnZH9/O1K+LSiqxQkbFb2v2wEhPuqYg1iGXIZSLN
+   2KzbCTiL8ZcEbxk1tNXLcmf7UgRap9IaoJIChubiQG2rFCMnU1KAkabuO
+   ESfe1J5vxQU8kKUkoUcKi1Vj3ci6wkwFZvH/fwiq/XbOWyj9CbIO/vdsr
+   pZt7B7+bOrTWfd3WXU0LplXEMoIZnanNuW0pExrE7XpjN5PmJCUa4/zrI
+   Q==;
+X-CSE-ConnectionGUID: 7JYa0CTQQZmFJ2Xheg2tJQ==
+X-CSE-MsgGUID: Fa0PApTkSGCrreJYA9DnQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49559854"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="49559854"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:03:15 -0700
+X-CSE-ConnectionGUID: 3Bdhf4yrTLmOUTqYJ8mFWA==
+X-CSE-MsgGUID: LOiko2IMQqO7hPfwYYrSYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="140132394"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 21 May 2025 13:03:09 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHped-000OZc-0Q;
+	Wed, 21 May 2025 20:03:07 +0000
+Date: Thu, 22 May 2025 04:02:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org
+Cc: oe-kbuild-all@lists.linux.dev, bhupesh@igalia.com,
+	kernel-dev@igalia.com, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	oliver.sang@intel.com, lkp@intel.com, laoar.shao@gmail.com,
+	pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
+	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+	mgorman@suse.de
+Subject: Re: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm'
+ to a more safer implementation
+Message-ID: <202505220326.5yDQHjnt-lkp@intel.com>
+References: <20250521062337.53262-3-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250324173121.1275209-10-mizhang@google.com>
+In-Reply-To: <20250521062337.53262-3-bhupesh@igalia.com>
 
-On Mon, Mar 24, 2025 at 05:30:49PM +0000, Mingwei Zhang wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> When entering/exiting a guest, some contexts for a guest have to be
-> switched. For examples, there is a dedicated interrupt vector for
-> guests on Intel platforms.
-> 
-> When PMI switch into a new guest vector, guest_lvtpc value need to be
-> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
-> bit should be cleared also, then PMI can be generated continuously
-> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
-> and switch_guest_ctx().
-> 
-> Add a dedicated list to track all the pmus with the PASSTHROUGH cap, which
+Hi Bhupesh,
 
-s/PASSTHROUGH/MEDIATED_VPMU/ ?
+kernel test robot noticed the following build warnings:
 
-Thanks,
-Namhyung
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on tip/sched/core akpm-mm/mm-everything linus/master v6.15-rc7 next-20250521]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250521-142443
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250521062337.53262-3-bhupesh%40igalia.com
+patch subject: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to a more safer implementation
+config: arc-randconfig-002-20250522 (https://download.01.org/0day-ci/archive/20250522/202505220326.5yDQHjnt-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505220326.5yDQHjnt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505220326.5yDQHjnt-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from fs/coredump.c:20:
+   fs/coredump.c: In function 'do_coredump':
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:655:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure(
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:730:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("Core dump to %s aborted: "
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:725:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("Core dump to %s aborted: "
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:618:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("over core_pipe_limit, skipping core dump");
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:642:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("|%s pipe failed", cn.corename);
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:625:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("%s failed to allocate memory", __func__);
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:611:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("RLIMIT_CORE is set to 1, aborting core");
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:591:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("format_corename failed, aborting core");
+       ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:752:4: note: in expansion of macro 'coredump_report_failure'
+       coredump_report_failure("Core dump to |%s disabled", cn.corename);
+       ^~~~~~~~~~~~~~~~~~~~~~~
+   fs/coredump.c: In function 'validate_coredump_safety':
+>> include/linux/coredump.h:57:7: warning: array subscript 16 is above array bounds of 'char[16]' [-Warray-bounds]
+      comm[TASK_COMM_LEN] = '\0'; \
+      ~~~~^~~~~~~~~~~~~~~
+   include/linux/coredump.h:63:43: note: in expansion of macro '__COREDUMP_PRINTK'
+    #define coredump_report_failure(fmt, ...) __COREDUMP_PRINTK(KERN_WARNING, fmt, ##__VA_ARGS__)
+                                              ^~~~~~~~~~~~~~~~~
+   fs/coredump.c:1006:3: note: in expansion of macro 'coredump_report_failure'
+      coredump_report_failure("Unsafe core_pattern used with fs.suid_dumpable=2: "
+      ^~~~~~~~~~~~~~~~~~~~~~~
 
 
-> may require switching the guest context. It can avoid going through the
-> huge pmus list.
-> 
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+vim +57 include/linux/coredump.h
+
+    46	
+    47	/*
+    48	 * Logging for the coredump code, ratelimited.
+    49	 * The TGID and comm fields are added to the message.
+    50	 */
+    51	
+    52	#define __COREDUMP_PRINTK(Level, Format, ...) \
+    53		do {	\
+    54			char comm[TASK_COMM_LEN];	\
+    55			/* This will always be NUL terminated. */ \
+    56			memcpy(comm, current->comm, TASK_COMM_LEN); \
+  > 57			comm[TASK_COMM_LEN] = '\0'; \
+    58			printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
+    59				task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
+    60		} while (0)	\
+    61	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
