@@ -1,115 +1,124 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9191C1A23AA
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 22:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF12134AC
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 22:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747867519; cv=none; b=BLU618f6+AQC6dDvV27hTwaNRrFUxYOGjQTbK34Fb2stMz17PtZRYf7FnjcsaMZRyl1FJ42eNrSvMSVIzhFEKHutJxAYxdDfqddUbX/j6sNBQ7NLZcR8lRo2CAkVmSRaIXOKVuR374Fs7xowVWBaW8jqwCUxgZD2XahsPBSCjQg=
+	t=1747868052; cv=none; b=ZoNyAomEza6AaudWaKEX3QnCE3njLmOUgA1YTdauZl2BON3LxdE2p6RVXw8aczaHJBECoM9m17C90d3TDKdFSbKXM5YaxvDSaNNYKx9tTU1c7KCfx/19SrZja2T65LgI78bfSXUExLYSqzJBrEcKfV91kP+BcgihulUJbbf8H/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747867519; c=relaxed/simple;
-	bh=xZgJo2U5Oqlv+e+ZIxQH/yIo94gPJK+soITSMOLMTbQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EyXLBzCRz2GnRdcDjOvkIxPUvyPrxBGPx9LhjTMl9JtCCZc4j6yqWkuQUMO7ujSoyDZg7rxTKi8W5zcBWnp1/u+yC2V57n4GOPS7u2vGRW+HiMWRLJ+VBDYcbrB9sk9pbn6t5gcB88h60DB9FD/c31e4cw49qS6FKEnHiM4VUgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hu9qRlG9; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1747868052; c=relaxed/simple;
+	bh=QAggP+lM/j8Yzi2qMtUyogpJwyHr1XRiUmUWlJAfYEw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Ns8NIiFCCWYQul2ajornoLYM9qIFFiDbWk6+3jwYigMytN3FKHdWUoMK4NUEBTPSbCySmxG++ujIzmzwnCvGDBDtFqVPV3ShSOHo95YsHlVQwda3Ywcxi9RnM4+Hm6DvHGnV5jIXOJbhznULZ8PnMObtCaQFKM429n1zzuhjK+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gcwl7eQ+; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hu9qRlG9"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742b01ad1a5so7844779b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 15:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gcwl7eQ+"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74299055c3dso10043444b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 15:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747867517; x=1748472317; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+        d=google.com; s=20230601; t=1747868050; x=1748472850; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=RfHI5fGKLQI+x+/KKWzuEGZWb5ffWuVi94dEzPRM36E=;
-        b=hu9qRlG9EglB6Q4FKIOmcrU6UfxUd1Eh6C/9zdSMvSxrDoJyPHvNGpTDSW2YmJN6Wj
-         bTdN5CNLUxs8m6KGIFqjHpmmc4jwfMVsIoiOGEZanDluyaqPN9WF3NExEzCxSWEIkXD+
-         blo788tfuFDMmmlGC+IOPtaxGsLS536DqaylhETbeEw/GHtuX2G493wb9bw3ZIP3ZpF1
-         +HJKg0qpUy0QVfKH4inKERJFYZdL4lViKSX546qrN+YXSqp8vtqQC8lNJYva/HHolN53
-         sxlbtxbC6zWZEwY1Igu5mwLzFJS8hlSzkSOuVSpg9yVMlFlJOsphg43kR+4v0+08+Cc8
-         DnDQ==
+        bh=e5xiyzjaDsO3It6y2mmvth2hLq6HIh9F/ymtgdkp/7U=;
+        b=Gcwl7eQ+/HoLQU70ZlZ/T0YR/dHm8iCeMinI0s9iOAn4x6RYyPtdKih5TD0ClVFssE
+         efUVrLXg4GOr76nYcgqW77MgabBYfhJSjyZuqB+uc8cWdVjOkbRShPbyFYZnPWbDe+b3
+         NXWyNDUbHXUoNRjgdMDYE9hI+qlJgMsfoePYx0jfeXEEDPCrzBAXf36Mb4f6JsbgwsG0
+         rwSz/uJOP3VYxkwXQn1uZSpyExlRUQXEfo3qiMfR9xX8c5fVdrx9NuKgFv1+PLABNlZn
+         /YlkMcR7hHxj+2op+cWPSbqBkQWjhZRfEHP/nC4rXjKm2udBRVXJemoPN3U4lhjYfaL8
+         WrPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747867517; x=1748472317;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=1e100.net; s=20230601; t=1747868050; x=1748472850;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RfHI5fGKLQI+x+/KKWzuEGZWb5ffWuVi94dEzPRM36E=;
-        b=tdafcr/LLnSUCUVnXOC5REjNFGRAfxi+8TpdsBx0rE54tTuW0hE1fz9thJNsSz4j99
-         LkMhjgyLTiUCZjIU+1pajqzKDV3vNfzwvDBIg9bQoivk07uAz4hH2W9cOELqvRM7rCSc
-         8Gq/vyzzY1aoz+EvB2d7RDbbG/QZhqa/m9xKhsEpx0mbTLGcunXHnEN/QOtPVc6GGqWH
-         GWLSQujmHWHJnSOrbWIywggjQj+jqXOXqOGFWioF8JqSieVNUxVggQRaJn95XbNdnmbg
-         v5bYledeoKESJnd5xz5ITUYtZM67sDdayHMy1WoKxpgG/wao7oM5uVJfgEMEw2fQnggp
-         rTUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtf8W6q+sohCY51qFFu1u7vM5FGl88KtcaKURqN+AMIEmt/Om54FkjS6qwZb5HLTFIesbhPFobX+wQk/6zAhzP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw26e6mxl5FDX9uESg/aV+axyQTRqaqj95+GFbSLxCxCt2NcE08
-	3+N9eiUkUQuLG1PU533JZTvHxfwwgu0KXidb1bQx0l6SfGxKkj7uBHu4Z9Jqm6wWetSJhAORiIt
-	CiXhIKw==
-X-Google-Smtp-Source: AGHT+IFszDobkiUraJeHgcNFZihIdTuBuhQC8bh9e/uK8oYBjvn0Ued33hZeuVzToZnZSjSAqeU04nhT2iI=
-X-Received: from pfwz39.prod.google.com ([2002:a05:6a00:1da7:b0:740:3f40:b53b])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3492:b0:742:9bd3:cd1f
- with SMTP id d2e1a72fcca58-742acd728eamr28948980b3a.23.1747867516825; Wed, 21
- May 2025 15:45:16 -0700 (PDT)
-Date: Wed, 21 May 2025 15:44:44 -0700
+        bh=e5xiyzjaDsO3It6y2mmvth2hLq6HIh9F/ymtgdkp/7U=;
+        b=Hq37r6LLVNqOLhubYSVKqPhmz2U/Wb+zvl/EnkXJfpwe0T4czqTE4xxZiC/9vOTbS9
+         wGK8qE8MsFAhKpeSDod+h83Z1s1mRWTLAGR3kWOby7dhvDfi9VwBh7ABVYXZCDDNorQk
+         PVJDyQ85QQActUftdnF6TpHyHgB9+PiLPzxr9IVjeI4XvdkWH2psv97mFhTWzvhV3uzA
+         vY3aFg3elYS/VeSWt7h+zSjGiKvM6en2K5+GzfMCr0tbsfSEOA7Mru9RGEp0rkc4fs60
+         rIJ9yVvYncJh0B0w4GtVOn1YeqWCi9qKZqPG/iF09QpBj6BnyprDeFgzWAX5NZdU2Vj4
+         lPmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtlE5FlQ9Y2rZN9UO+HBsBwgPZfVbWMolAgNOEgDz/t/9bXY7/7NSFzkwU/NLTQzg+p4eLMxL5xGIhVcNws3YJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRi/cyOAGFI+Z4MFWaM/gg70PQuFdf2FOuID2xOl2+oBrk8gYw
+	fIsJ6wfp59rjlh2mdOriszPdpbUOV9PZuSWBqTU2EdIWNvgeRXGkFdCZy5pABvvhh4gxw3iqrr3
+	Wza+KkA==
+X-Google-Smtp-Source: AGHT+IFFAeeYwZo8g7rnKGgMqq9ef4KSzj7XjVvtF1mrE7Ad+JDdHJD4QWr288U1fWDVQWnorSbC+q7HAbM=
+X-Received: from pfux21.prod.google.com ([2002:a05:6a00:bd5:b0:740:b53a:e67f])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3a14:b0:740:67ce:1d8b
+ with SMTP id d2e1a72fcca58-742a97b7a1bmr31736812b3a.7.1747868050314; Wed, 21
+ May 2025 15:54:10 -0700 (PDT)
+Date: Wed, 21 May 2025 15:53:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-Message-ID: <20250521224513.1104129-1-ctshao@google.com>
-Subject: [PATCH v1] perf test: Restrict uniquifying test to machines with uncore_imc
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
+Message-ID: <20250521225307.743726-1-yuzhuo@google.com>
+Subject: [PATCH v1 0/4] perf: Remove libcrypto dependency
+From: Yuzhuo Jing <yuzhuo@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Liang Kan <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
+	James Clark <james.clark@linaro.org>, Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yuzhuo Jing <yuzhuo@google.com>, 
+	Yang Jihong <yangjihong@bytedance.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-The test would fail if target machine does not have `uncore_imc` devices.
-Since event uniquifying behavior is similar among different
-architectures, we are restricting the test to only run on machines with
-`uncore_imc` devices.
+Currently, genelf.c is the only file in the perf tool that depends on
+libcrypto (e.g. openssl), which only uses it to calculate a SHA1/MD5
+Build ID.  This patch series pulls in the SHA1 implementation from the
+kernel tree, and removes the libcrypto dependency from perf.  This also
+switches the default Build ID calculation method from MD5 to the more
+commonly used SHA1.
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/tests/shell/stat+event_uniquifying.sh | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Yuzhuo Jing (4):
+  perf utils: Add support functions for sha1 utils
+  perf tools: Add sha1 utils
+  perf genelf: Remove libcrypto dependency and use sha1 utils
+  tools: Remove libcrypto dependency
 
-diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
-index 5ec35c52b7d9..5a51fbaa13bb 100755
---- a/tools/perf/tests/shell/stat+event_uniquifying.sh
-+++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-@@ -9,7 +9,8 @@ perf_tool=perf
- err=0
+ tools/build/Makefile.feature            |   2 -
+ tools/build/feature/Makefile            |   4 -
+ tools/build/feature/test-all.c          |   5 -
+ tools/build/feature/test-libcrypto.c    |  25 -----
+ tools/include/linux/bitops.h            |  10 ++
+ tools/include/linux/compiler.h          |  17 ++++
+ tools/include/linux/string.h            |  22 +++++
+ tools/perf/Documentation/perf-check.txt |   1 -
+ tools/perf/Makefile.config              |  13 ---
+ tools/perf/Makefile.perf                |   3 -
+ tools/perf/builtin-check.c              |   1 -
+ tools/perf/tests/make                   |   4 +-
+ tools/perf/util/Build                   |   2 +
+ tools/perf/util/genelf.c                |  72 ++------------
+ tools/perf/util/sha1.c                  | 122 ++++++++++++++++++++++++
+ tools/perf/util/sha1.h                  |  41 ++++++++
+ tools/perf/util/sha1_base.h             | 103 ++++++++++++++++++++
+ tools/perf/util/sha1_generic.c          |  49 ++++++++++
+ 18 files changed, 373 insertions(+), 123 deletions(-)
+ delete mode 100644 tools/build/feature/test-libcrypto.c
+ create mode 100644 tools/perf/util/sha1.c
+ create mode 100644 tools/perf/util/sha1.h
+ create mode 100644 tools/perf/util/sha1_base.h
+ create mode 100644 tools/perf/util/sha1_generic.c
 
- test_event_uniquifying() {
--  # We use `clockticks` to verify the uniquify behavior.
-+  # We use `clockticks` in `uncore_imc` to verify the uniquify behavior.
-+  pmu="uncore_imc"
-   event="clockticks"
-
-   # If the `-A` option is added, the event should be uniquified.
-@@ -43,11 +44,17 @@ test_event_uniquifying() {
-   echo "stat event uniquifying test"
-   uniquified_event_array=()
-
-+  # Skip if the machine does not have `uncore_imc` device.
-+  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
-+    echo "Target does not support pmu ${pmu} [Skipped]"
-+    return
-+  fi
-+
-   # Check how many uniquified events.
-   while IFS= read -r line; do
-     uniquified_event=$(echo "$line" | awk '{print $1}')
-     uniquified_event_array+=("${uniquified_event}")
--  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]")
-+  done < <(${perf_tool} list -v ${event} | grep ${pmu})
-
-   perf_command="${perf_tool} stat -e $event -A -o ${stat_output} -- true"
-   $perf_command
---
-2.49.0.1143.g0be31eac6b-goog
+-- 
+2.49.0.1164.gab81da1b16-goog
 
