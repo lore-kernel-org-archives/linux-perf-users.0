@@ -1,222 +1,253 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E35280311
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 19:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DF11DB366;
+	Wed, 21 May 2025 19:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747855207; cv=none; b=QyEGOYSN76agBkF3AInWdC8goVJMfcIOUb4sxZEqU2YJjjWOafc1yOPhm7leBFk1G7RVXyM9R59Djdx6vxRkBNPVN83a1kg0efYpWoaPkTgiU9z3iMEsfRgsWb2l17wdd3NMpfDJAayc7bHCcOOV5VfYK4DndbwMQDPk90SYXXg=
+	t=1747856822; cv=none; b=gsNzh7n0wmM/bxEK/pmUuwPiQ3XeqPqI0/yQG9ct6e8QfSbpISDqcGbgr3SGLNRUj3tYcq/74G/6AVPr2yj2ciBrcVERAMdkDlEM5z76Lg0GusjfSjnWgpvbrNI+CNhso1Mj2VX4/b1Xl7yMBqURiwfpMxqOCDW2BUPp4Vx+a/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747855207; c=relaxed/simple;
-	bh=GnB/O/EVmri7y38J/jByIJMb+SeoeRsKY/K6vIHsCKE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r2s2zaFl/jKXYNmzi/5e2xymXF8pH4AIKh+kXGyzs26IaPhOxgO32D6hc2czwkXkTZoStzSMWwiscy4xsb5XGRDrNnrCkQIwdfT2HJM5ILhdrrzoWVOwxJ+GvBw3iU5/0FIrHEmEUWoRWllNqK/7HZKj8btQVpWYBkhWRbPZ0/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+9Yx/HK; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747856822; c=relaxed/simple;
+	bh=KxpWvHTalFPpk1hq7k7Wbo/HtUjiTpk6l+sdAkRIWhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lj1O85uRVOvg8zJ/hMq14A60M0UzhAatHnRhxy8XS5sc3HIGeFO7Fa5AG5e2TbwaJ2+1N3VinPRswr41Rh3/ko9GCvaSKZcu5kEwNBNgt/xVnXnqUC5ZQdt+FQZRJbrhZkJSScVTm9bVWxAT+AvS7mQfKugAPtI0Jn/I2gEgqGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpZgLqQh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+9Yx/HK"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso145675ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 12:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747855205; x=1748460005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
-        b=B+9Yx/HKUh89ktiaXr2A9kMuU9Be+GxdSDzGNhi9EoFPJApW2dbxYfmGSxOfr1Ud1E
-         ZVhQ+Zjt/5slJ3859Q02l7OaVY9NMMTmnZtPJostrw8I4vGolNqGRGaRsfUZC0cWmE8o
-         nLT6u6rhy8I/E/AdKU7YP4lL6bjd90Jfi5exybqtorRPcpIUX1YisgRU3la8kniM6Lq5
-         5wS+ZXVyveNxkKz8w+H/W2P1OHkV5o9PhbOc3eQEmKlc3rG1bM8WU/qrDJdOf1BEqdii
-         DvIthJJpLexNKXOmzFNeXbxjunITOy0dHdI3kIn4CBfl6q4kOJErJYNxpmk7DA0a7cQR
-         7b0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747855205; x=1748460005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
-        b=Rn4MaUvi2F1IR91LTdbiJyQqhf4iqU9IniBsYv8JU3rKvlBI77yL1ziSFgN1eQ0GTu
-         6TFxkmGUvlKHwoYYhf/7/2GH1OPPyBpf06+HUqIdwWxepGSS+micKmH9aDWGrg9HEBdd
-         gwpdotiA7jImmCyPDpdtSxWC05647Q2x2XQXcokssc9dlzDDa9SYNnp+Jzf3oJpFiG2Z
-         F4y0P0Uw6s4vNVDnhzZmpyyPurLHIKC16usgpFDgXud8cKBMGQkVwn0SJl/fM5q2vgsE
-         nKw68h1jgqxXvbK5/mh5IqLMyUU7dy4bIB/Qx0JS18KNno8uyg3GalmS+1F0Ojz7ZFDC
-         wDXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpWqLYUpKe2E8xnUTuqxYftzU4tRp4zV7Cba51AqVHiGJblLUC0xjfCYl19UTosejLD6Kl7mNvAEuOMLMwJbxE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8Xc8dW26S5ZOV65bBvvOAzFWnrSjyTVD/Rlrs4AVCrJ8oe/HD
-	SSCi4WbNzwwZWgBG4tG2Zw5IbQdG2jCBSKjtNZVrGhB25OUisERHh5aaLnkXovsQTsElr/ZdT77
-	gpi+glpAdoLdmkCyNQH9T0FAHJw2yR+V+c46sKf6n
-X-Gm-Gg: ASbGncvNHl3i0RDkE5yyIR6R7SLBA9f6M8w831UaM0ARYT71PO65gq4izBwxcJgeEvF
-	+x3/X43s5h4PU/rUnv3P4e9Y4McKEtftvTyxetjqjZpsjA9rz2EOTW5zIfki9nhQlLuht0MPmAJ
-	yoh3GGgUGZuYy2ySu+z+KbLTcbbW0/S3N7jqyHc4ZeRiHzAbCI3CnWJICUfdGc5vq32FX8Sk8=
-X-Google-Smtp-Source: AGHT+IEdThBAtZZFOyQI8ndZvd6+jvPSbtIqyrmJS1pfB4JA/e7fLaaSpaoPZZQa+W07/lnsfHpHN7t7x36UfN9ThKE=
-X-Received: by 2002:a92:c052:0:b0:3dc:8895:4260 with SMTP id
- e9e14a558f8ab-3dc8895434bmr2451035ab.19.1747855204420; Wed, 21 May 2025
- 12:20:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpZgLqQh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4B9C4CEE4;
+	Wed, 21 May 2025 19:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747856821;
+	bh=KxpWvHTalFPpk1hq7k7Wbo/HtUjiTpk6l+sdAkRIWhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JpZgLqQhf9Gd3fgj4H32L1DV7Ehmo+s9ISIGTeT8abVqeACe68Tb8B+Fh3OkLwG4Y
+	 OAuU3Y/kqJVEJAfMR3uSEMSLYo+CHg0Io2c7j3ZJE3ag+N8+UbJ988ttLsO64/vHXk
+	 P0VVh8DZzPild9O2L49j3wlFNKsUw4BO34/yZ65euEjZYv9zHDl4Rh9TLlm42W6oPb
+	 XmZz0/gPTQgjJqOBc+ZtgwnR/fiJHAc5/KMyKb03Y92fWZVUdBKbHzZdG9Txj3q0dL
+	 sW9E/ub3hLENJI6RwV7NJ3/e/MkTmkCWEAmIibj+zFEgHb+6u85FLslk6gSUB0SVJb
+	 wc0jjc5wpUiug==
+Date: Wed, 21 May 2025 12:46:59 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Shukla Manali <Manali.Shukla@amd.com>,
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Subject: Re: [PATCH v4 04/38] perf: Add a EVENT_GUEST flag
+Message-ID: <aC4ts1M2srhVTpP1@google.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-5-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521135500.677508-1-irogers@google.com> <20250521135500.677508-4-irogers@google.com>
- <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com> <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
- <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
-In-Reply-To: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 May 2025 12:19:52 -0700
-X-Gm-Features: AX0GCFu4PPYG7j8QdsCgxl3Fa-IYTZcsame8vgyYD43SyJeG4LuLy-sh2dDPJAA
-Message-ID: <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and header
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250324173121.1275209-5-mizhang@google.com>
 
-On Wed, May 21, 2025 at 11:14=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
->
->
->
-> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
-> >>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> >>> index 7b6cde87d2af..13ef0d188a96 100644
-> >>> --- a/tools/perf/builtin-top.c
-> >>> +++ b/tools/perf/builtin-top.c
-> >>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
-> >>>
-> >>>       setup_browser(false);
-> >>>
-> >>> -     if (setup_sorting(top.evlist) < 0) {
-> >>> +     top.session =3D perf_session__new(/*data=3D*/NULL, /*tool=3D*/N=
-ULL);
-> >>> +     if (IS_ERR(top.session)) {
-> >>> +             status =3D PTR_ERR(top.session);
-> >>> +             top.session =3D NULL;
-> >>> +             goto out_delete_evlist;
-> >>> +     }
-> >>> +
-> >>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
-> >> I doubt a valide env can be got in perf_session__new(), since there is
-> >> no perf.data in perf top.
-> >> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
-> >> env->arch.
-> > I think the current code is making things harder than it should be, we
-> > should work away from perf_env__arch and strings, instead using EM_
-> > values which we can default to EM_HOST avoiding any runtime costs.
-> > Looking at perf_env__arch:
-> > ```
-> > const char *perf_env__arch(struct perf_env *env)
-> > {
-> >         char *arch_name;
-> >
-> >         if (!env || !env->arch) { /* Assume local operation */
-> >                 static struct utsname uts =3D { .machine[0] =3D '\0', }=
-;
-> >                 if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
-> >                         return NULL;
-> >                 arch_name =3D uts.machine;
-> >         } else
-> >                 arch_name =3D env->arch;
-> >
-> >         return normalize_arch(arch_name);
-> > }
-> > ```
-> > in this case env->arch =3D=3D NULL and so the uname machine will be use=
-d.
-> > For perf_env__raw_arch the behavior is similar but it populates the
-> > env:
-> > ```
-> > static int perf_env__read_arch(struct perf_env *env)
-> > {
-> >         struct utsname uts;
-> >
-> >         if (env->arch)
-> >                 return 0;
-> >
-> >         if (!uname(&uts))
-> >                 env->arch =3D strdup(uts.machine);
-> >
-> >         return env->arch ? 0 : -ENOMEM;
-> > }
-> >
-> > const char *perf_env__raw_arch(struct perf_env *env)
-> > {
-> >         return env && !perf_env__read_arch(env) ? env->arch : "unknown"=
-;
-> > }
-> > ```
-> > Aside from caching the arch, the main difference is that
-> > normalize_arch isn't called. Not having normalize_arch means the code
-> > in arch_support_sort_key and arch_perf_header_entry would need to
-> > handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
-> > etc. As I'd prefer not handle all those cases I think the way the code
-> > is is best given how the env code is currently structured.
->
-> Right. The perf_env__raw_arch() doesn't improve anything.
-> But I still don't like &top.session->header.env.
-> Because I don't think you can get any useful information from
-> top.session->header.env. It just brings confusions. (It seems an env is
-> retrieved, but it is actually not.)
+On Mon, Mar 24, 2025 at 05:30:44PM +0000, Mingwei Zhang wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Current perf doesn't explicitly schedule out all exclude_guest events
+> while the guest is running. There is no problem with the current
+> emulated vPMU. Because perf owns all the PMU counters. It can mask the
+> counter which is assigned to an exclude_guest event when a guest is
+> running (Intel way), or set the corresponding HOSTONLY bit in evsentsel
+> (AMD way). The counter doesn't count when a guest is running.
+> 
+> However, either way doesn't work with the introduced passthrough vPMU.
+> A guest owns all the PMU counters when it's running. The host should not
+> mask any counters. The counter may be used by the guest. The evsentsel
+> may be overwritten.
+> 
+> Perf should explicitly schedule out all exclude_guest events to release
+> the PMU resources when entering a guest, and resume the counting when
+> exiting the guest.
+> 
+> It's possible that an exclude_guest event is created when a guest is
+> running. The new event should not be scheduled in as well.
+> 
+> The ctx time is shared among different PMUs. The time cannot be stopped
+> when a guest is running. It is required to calculate the time for events
+> from other PMUs, e.g., uncore events. Add timeguest to track the guest
+> run time. For an exclude_guest event, the elapsed time equals
+> the ctx time - guest time.
+> Cgroup has dedicated times. Use the same method to deduct the guest time
+> from the cgroup time as well.
+> 
+> Co-developed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  include/linux/perf_event.h |   6 ++
+>  kernel/events/core.c       | 209 +++++++++++++++++++++++++++++--------
+>  2 files changed, 169 insertions(+), 46 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index a2fd1bdc955c..7bda1e20be12 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -999,6 +999,11 @@ struct perf_event_context {
+>  	 */
+>  	struct perf_time_ctx		time;
+>  
+> +	/*
+> +	 * Context clock, runs when in the guest mode.
+> +	 */
+> +	struct perf_time_ctx		timeguest;
+> +
+>  	/*
+>  	 * These fields let us detect when two contexts have both
+>  	 * been cloned (inherited) from a common ancestor.
+> @@ -1089,6 +1094,7 @@ struct bpf_perf_event_data_kern {
+>   */
+>  struct perf_cgroup_info {
+>  	struct perf_time_ctx		time;
+> +	struct perf_time_ctx		timeguest;
+>  	int				active;
+>  };
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index e38c8b5e8086..7a2115b2c5c1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -163,7 +163,8 @@ enum event_type_t {
+>  	/* see ctx_resched() for details */
+>  	EVENT_CPU	= 0x10,
+>  	EVENT_CGROUP	= 0x20,
+> -	EVENT_FLAGS	= EVENT_CGROUP,
+> +	EVENT_GUEST	= 0x40,
+> +	EVENT_FLAGS	= EVENT_CGROUP | EVENT_GUEST,
+>  	/* compound helpers */
+>  	EVENT_ALL         = EVENT_FLEXIBLE | EVENT_PINNED,
+>  	EVENT_TIME_FROZEN = EVENT_TIME | EVENT_FROZEN,
+> @@ -435,6 +436,7 @@ static atomic_t nr_include_guest_events __read_mostly;
+>  
+>  static atomic_t nr_mediated_pmu_vms;
+>  static DEFINE_MUTEX(perf_mediated_pmu_mutex);
+> +static DEFINE_PER_CPU(bool, perf_in_guest);
+>  
+>  /* !exclude_guest event of PMU with PERF_PMU_CAP_MEDIATED_VPMU */
+>  static inline bool is_include_guest_event(struct perf_event *event)
+> @@ -738,6 +740,9 @@ static bool perf_skip_pmu_ctx(struct perf_event_pmu_context *pmu_ctx,
+>  {
+>  	if ((event_type & EVENT_CGROUP) && !pmu_ctx->nr_cgroups)
+>  		return true;
+> +	if ((event_type & EVENT_GUEST) &&
+> +	    !(pmu_ctx->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU))
+> +		return true;
+>  	return false;
+>  }
+>  
+> @@ -788,6 +793,39 @@ static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, boo
+>  	WRITE_ONCE(time->offset, time->time - time->stamp);
+>  }
+>  
+> +static_assert(offsetof(struct perf_event_context, timeguest) -
+> +	      offsetof(struct perf_event_context, time) ==
+> +	      sizeof(struct perf_time_ctx));
+> +
+> +#define T_TOTAL		0
+> +#define T_GUEST		1
+> +
+> +static inline u64 __perf_event_time_ctx(struct perf_event *event,
+> +					struct perf_time_ctx *times)
+> +{
+> +	u64 time = times[T_TOTAL].time;
+> +
+> +	if (event->attr.exclude_guest)
+> +		time -= times[T_GUEST].time;
+> +
+> +	return time;
+> +}
+> +
+> +static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
+> +					    struct perf_time_ctx *times,
+> +					    u64 now)
+> +{
+> +	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest)) {
+> +		/*
+> +		 * (now + times[total].offset) - (now + times[guest].offset) :=
+> +		 * times[total].offset - times[guest].offset
+> +		 */
+> +		return READ_ONCE(times[T_TOTAL].offset) - READ_ONCE(times[T_GUEST].offset);
 
-Well there's a certain consistency in using the session env to set up
-the sorting, etc. This pre-exists this change with nearly every
-builtin-* file doing `symbol__init(&session->header.env);`. perf top
-does `symbol__init(NULL);`:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1811
-but the code now has lazy initialization patterns and handling NULL as
-a special case of meaning host machine:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/symbol.c?h=3Dperf-tools-next#n2350
+So this will remove both time_enabled and time_running.  I think it's
+fine as the events are not multiplexed, but some curious users may
+wonder why the time_enabled is less than expected. :)
 
-> In the perf top, &perf_env is used for the existing cases. If any env
-> fields are not available, perf_env__read_XXX() is invoked to get the
-> information.
-> I think we may follow the existing usage, e.g.,
-> setup_sorting(top.evlist, &perf_env).
 
-So using the global perf_env rather than NULL feels preferable but I
-think the global perf_env should be deleted. Whenever I see the global
-perf_env in use I think the code has a bug as the perf_env should be
-coming from the session or the machine. The global perf_env can have
-no meaning for cases like `perf diff` where more than one
-file/header/env is open at a time. The global perf_env variable's
-existence encourages bad or broken code, so deleting it should avoid
-errors in code. Another place these issues can occur is with TPEBS
-where we're maintaining multiple sessions for sampling alongside
-counting.
+> +	}
+> +
+> +	return now + READ_ONCE(times[T_TOTAL].offset);
+> +}
+> +
 
-> Alternatively, it looks like the perf top doesn't support --weight. The
-> env->arch should never be used. If so, a NULL can be used as well, E.g.,
-> setup_sorting(top.evlist, NULL).
+[SNIP] 
+> @@ -6285,23 +6400,25 @@ void perf_event_update_userpage(struct perf_event *event)
+>  	if (!rb)
+>  		goto unlock;
+>  
+> -	/*
+> -	 * compute total_time_enabled, total_time_running
+> -	 * based on snapshot values taken when the event
+> -	 * was last scheduled in.
+> -	 *
+> -	 * we cannot simply called update_context_time()
+> -	 * because of locking issue as we can be called in
+> -	 * NMI context
+> -	 */
+> -	calc_timer_values(event, &now, &enabled, &running);
+> -
+> -	userpg = rb->user_page;
+>  	/*
+>  	 * Disable preemption to guarantee consistent time stamps are stored to
+>  	 * the user page.
+>  	 */
+>  	preempt_disable();
+> +
+> +	/*
+> +	 * compute total_time_enabled, total_time_running
+> +	 * based on snapshot values taken when the event
+> +	 * was last scheduled in.
+> +	 *
+> +	 * we cannot simply called update_context_time()
 
-So I don't like NULL because then we have lazy initialization of host
-data and NULL meaning use host. I don't like the global perf_env
-variable as it has a code smell about it. I think moving the session
-initialization earlier in perf top so its env, although unpopulated,
-can be used is consistent with `perf report` - this is consistent with
-`perf top` being `perf record` glued together with `perf report`. So I
-think the change here is the smallest and most sensible.
-
-Longer term let's delete the global perf_env variable,  perf_env__arch
-should be switched to a perf_env__e_machine as then we can avoid uname
-calls just to determine the machine architecture, etc.
+s/called/call.  I know you just moved the code though. :)
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Kan
->
+
+> +	 * because of locking issue as we can be called in
+> +	 * NMI context
+> +	 */
+> +	calc_timer_values(event, &now, &enabled, &running);
+> +
+> +	userpg = rb->user_page;
+> +
+>  	++userpg->lock;
+>  	barrier();
+>  	userpg->index = perf_event_index(event);
+> -- 
+> 2.49.0.395.g12beb8f557-goog
+> 
