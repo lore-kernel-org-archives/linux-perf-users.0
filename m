@@ -1,177 +1,353 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE83232392;
-	Wed, 21 May 2025 06:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C198923507F
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 07:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747808653; cv=none; b=QgbWpgKbTzz4TPEH8ykSqFvhfBk1w2TXUpFOO4Y+s1hWjOiUjK6wHYgv4uEZ+tLaoy0jhwLWPL2UOg+/6lUXuiWhLV99PZvMAs2GYIgrRyV2PAWhaEBofA180vErf8IhMv4InDDum7zKJN1DBEx9AnsZUeKHUSre9L5XZmTJlE0=
+	t=1747812616; cv=none; b=DDgrYNU9EF0aF51ON0ZqLndb2xmxF50M4lFVcvpS+zXLKerP2QSOUyVbLVorN9aTJ9uAQYEzjb1Ipf//McCi79N7OjNvY3Jgxl8DvPHi6yxFYfgvRN0mdylXKzLJXNgZm3dt54Avl7+aGVRMMaqVo+gz13JBGGP2lANRDxRj00A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747808653; c=relaxed/simple;
-	bh=Uv1ghNSaGNfo9bLBlcnVeQUqJDAm9OedV6fo1rEZFrc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BBHuAwyr86jAt8vK7ZAfiflgp22UCU3FUEAzlgQUye/1MLMsxm2YEyKNv/1uLECl2YkQVoZNCLxhSe52BqsljbAyGIiTEws1qAmDwvG4ReG6rBq497XTQQPyrjo7I8kRMWr9sTnR/dp9BFrcumgmQqAwYlog5BxUIS9HW7fBv+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Mxe5soRx; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747812616; c=relaxed/simple;
+	bh=jWTBHPiY2LJpSPN5cLKpwiRnaGqWoKhlVu027p//pHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m/Feyi8NZR6OjJlvxuy1HMG9AArn9zXcMlJrYaXR/k73pwcBEiS7FhYqMbIkDBUXhIERLN7MuRVByqd+XDHznJiRylGBBF+ed9DwVB+d9NBPZEc0CMRS8aypVfGeoVnCpfS0nSYm3u0wQNzU4UM5jMk+ljobBrjyqtejXUP5tKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xAZ86eZS; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Mxe5soRx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=FLnlNaHrEaw8H+WX1bi4GYpuBsRULfbnbCOgBsPrKvQ=; b=Mxe5soRx264DMUPK1JWNdwLPXq
-	Rc0m42aIbWFiKQUIOURK8pq9srnIElIwgHAq7LKN2EpVwchaVyX4fJ3X//9EiLTrvomEW4EbqrgJe
-	Fid5k4RG3Tyd+DJNgOrPPtYnnHrFxQ3UQFjVD3/rbS1h7YJThFGcfwyNBG6FV6Uiv+g7fGxrAZjlM
-	i1xEn1VKgAoi2i21zAZlZ6wXw1fxEmnpOYBXuTGJGNsuapRmTszTeT47VZc+ayEBR7/R6GuV1/lPj
-	HfMp0evtjenf3bRvx25pdSBp/6VncScW1rSM1Vo4t4DGDD0sXJZAcMO6lrPraAqzSiOLaKfaPaKiK
-	DaO4j4lQ==;
-Received: from [223.233.70.209] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uHcs4-00B3oN-O7; Wed, 21 May 2025 08:24:09 +0200
-From: Bhupesh <bhupesh@igalia.com>
-To: akpm@linux-foundation.org
-Cc: bhupesh@igalia.com,
-	kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	oliver.sang@intel.com,
-	lkp@intel.com,
-	laoar.shao@gmail.com,
-	pmladek@suse.com,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com,
-	andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl,
-	peterz@infradead.org,
-	willy@infradead.org,
-	david@redhat.com,
-	viro@zeniv.linux.org.uk,
-	keescook@chromium.org,
-	ebiederm@xmission.com,
-	brauner@kernel.org,
-	jack@suse.cz,
-	mingo@redhat.com,
-	juri.lelli@redhat.com,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
-Date: Wed, 21 May 2025 11:53:37 +0530
-Message-Id: <20250521062337.53262-4-bhupesh@igalia.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250521062337.53262-1-bhupesh@igalia.com>
-References: <20250521062337.53262-1-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xAZ86eZS"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-329107e3f90so36149841fa.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 00:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747812612; x=1748417412; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=A1+3inoKrUzfO+YHkCsiBNm62kM9H+CVu38LISaGbNE=;
+        b=xAZ86eZSoPZDmxLSVDstmYCsDrdM4/TMaJQsDAQkitOHwVm0I+epdWMitrwITUFx4c
+         DjTPPcEKqWtKO+ebxw0GqdSTHJUUP6Plrs4UmceUTl6boMc8DHG5VVXGRnMaA3woTL7U
+         0BrDumb2ljOF0gouCJHvYrmt+3ggjTVtlSpR59SKugqw6njZIqyFihLmiw/kxwMimf4f
+         91ZgDqm2Uhyo5I99psVkiPkxpy2Hw2YHEkP9KIrHoMX3AF7KKQd13C7vTAsWrOiRy4DS
+         JmNvHC1UQiJ6W9tzADYrTyD3bLv1rzENbaJq6jXOItgmqA+TQfLPk8QBd9fkyIMneAFy
+         eZ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747812612; x=1748417412;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A1+3inoKrUzfO+YHkCsiBNm62kM9H+CVu38LISaGbNE=;
+        b=LZ5E9/Q1xt1vcsMXHZM5WGYp4rbLoIrJPHpDxmkl063HKY+ngZ9I15CQk8odKijm10
+         bkZcUy3IcvzZiJaBFMhHQmAtYTgkdoazYsytwN+suNVm6TpidKbZmrfd40W1jBGG3UOU
+         b1+HpCnD4ECutDardyvsSSxOTldDMTQ6dzgm+nbpudwoiAOfSNUJ+dv+HqjIkCUPTLDL
+         PrmHyE3Mdb/aJ8r2f/Xt8n0lrGR/KNXpWNfRtaDEB47TVyfVsRTbqCuj+a2GCiCDwb4p
+         Ld2Lq9Qr9JyR1mYzSRuKf+SqUZSvzSsTjjsGm/TRD+Vo1ek/NB2dT/ABL/bxCRr6lljI
+         Oq/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUekpqETUnRB4LF6dZ8jkTrG00l9AtWSN3Fi9J+qN8ilC3EqgYpgOtuX8ULTu/oHgV3HCO2Wq2MgHYEz6hmsO4C@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKP6BwPk8TPNtRS11KHLakXGd/pCWdao9Wdwzml8twMfub8r44
+	qGw2H3kyuTTvHcvS1L9qvMARDXZvLIsl6UkpAczu+k0EHx8Qb61DfydgxNvIH4NYem/b2aiA7bC
+	QeINI3VpvaZmVeyPvh9/Y8w2fEhJMgo5mp3JQQufZ
+X-Gm-Gg: ASbGnctq38rR2rHAQvFSSiGs904uHHT3442f+NKDw7AN+QV6RuxF/TSZxYMoKZZ9ojG
+	DqwQ8WP9q0tZOsn4C4jSgfEmI5KNwF9MCEVULOeDnKuhq5j38S/YTHQqLnG1xGzQxvy611ysYWf
+	xCWNumy0/fdPPuab7U9p7psxxP8YT5iiuzJ71eHn71JIcNf2LINilTrMvnvcxfuuw9tuiKn5thw
+	/0=
+X-Google-Smtp-Source: AGHT+IGSvy7Siu4AiaNik05iCJBy5qiUsIzD79e1PIP+TnkhvIZ2A36VRc2qp5O4NTJAEt/EefTF8bQwhmUoUmIJ4hU=
+X-Received: by 2002:a05:651c:3131:b0:30c:2d44:c212 with SMTP id
+ 38308e7fff4ca-328096b5832mr74124961fa.9.1747812611407; Wed, 21 May 2025
+ 00:30:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <aBmvmmRKpeVd6aT3@google.com> <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
+ <aBm1x2as1fraHXHz@google.com> <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
+ <aBvwFPRwA2LVQJkO@google.com> <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+ <aCdo6Vz2MVv3N0kk@google.com> <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
+ <aCveO4qQGy03ow5p@google.com> <CACT4Y+YdnQebkGTQJ9yhLs2j12WBYk2ReiBAq5cE+wtu1RRU5A@mail.gmail.com>
+ <aC0HH45JCBTchZMc@google.com>
+In-Reply-To: <aC0HH45JCBTchZMc@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 21 May 2025 09:30:00 +0200
+X-Gm-Features: AX0GCFt3rThHgR-m1qIaYUr-PDVwjL6sHjrGM4Xsu7psCVibkIamwFzNDSZJU_s
+Message-ID: <CACT4Y+apAJ_m9W=P2hsGvWrGZnTzxB+9qgJg=ujjU8OWCVcUoQ@mail.gmail.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Historically due to the 16-byte length of TASK_COMM_LEN, the
-users of 'tsk->comm' are restricted to use a fixed-size target
-buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+On Wed, 21 May 2025 at 00:50, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > Hello,
+> > > > >
+> > > > > Sorry for the delay.
+> > > > >
+> > > > > On Thu, May 08, 2025 at 02:24:08PM +0200, Dmitry Vyukov wrote:
+> > > > > > On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
+> > > > > > > > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > > > > > > > Where does the patch check that this mode is used only for system-wide profiles?
+> > > > > > > > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
+> > > > > > > > > > >
+> > > > > > > > > > > Basically yes, but you can use --sample-cpu to add it.
+> > > > > > > > > >
+> > > > > > > > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
+> > > > > > > > >
+> > > > > > > > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
+> > > > > > > > >
+> > > > > > > > > We may disable latency column by default in this case and show warning
+> > > > > > > > > if it's requested.  Or we may add a new attribute to emit sched-switch
+> > > > > > > > > records only for idle tasks and enable the latency report only if the
+> > > > > > > > > data has sched-switch records.
+> > > > > > > > >
+> > > > > > > > > What do you think?
+> > > > > > > >
+> > > > > > > > Depends on what problem we are trying to solve:
+> > > > > > > >
+> > > > > > > > 1. Enabling latency profiling for system-wide mode.
+> > > > > > > >
+> > > > > > > > 2. Switch events bloating trace too much.
+> > > > > > > >
+> > > > > > > > 3. Lost switch events lead to imprecise accounting.
+> > > > > > > >
+> > > > > > > > The patch mentions all 3 :)
+> > > > > > > > But I think 2 and 3 are not really specific to system-wide mode.
+> > > > > > > > An active single process profile can emit more samples than a
+> > > > > > > > system-wide profile on a lightly loaded system.
+> > > > > > >
+> > > > > > > True.  But we don't need to care about lightly loaded systems as they
+> > > > > > > won't cause problems.
+> > > > > > >
+> > > > > > >
+> > > > > > > > Similarly, if we rely on switch events for system-wide mode, then it's
+> > > > > > > > equally subject to the lost events problem.
+> > > > > > >
+> > > > > > > Right, but I'm afraid practically it'll increase the chance of lost
+> > > > > > > in system-wide mode.  The default size of the sample for system-wide
+> > > > > > > is 56 byte and the size of the switch is 48 byte.  And the default
+> > > > > > > sample frequency is 4000 Hz but it cannot control the rate of the
+> > > > > > > switch.  I saw around 10000 Hz of switches per CPU on my work env.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > For problem 1: we can just permit --latency for system wide mode and
+> > > > > > > > fully rely on switch events.
+> > > > > > > > It's not any worse than we do now (wrt both profile size and lost events).
+> > > > > > >
+> > > > > > > This can be an option and it'd work well on lightly loaded systems.
+> > > > > > > Maybe we can just try it first.  But I think it's better to have an
+> > > > > > > option to make it work on heavily loaded systems.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > For problem 2: yes, we could emit only switches to idle tasks. Or
+> > > > > > > > maybe just a fake CPU sample for an idle task? That's effectively what
+> > > > > > > > we want, then your current accounting code will work w/o any changes.
+> > > > > > > > This should help wrt trace size only for system-wide mode (provided
+> > > > > > > > that user already enables CPU accounting for other reasons, otherwise
+> > > > > > > > it's unclear what's better -- attaching CPU to each sample, or writing
+> > > > > > > > switch events).
+> > > > > > >
+> > > > > > > I'm not sure how we can add the fake samples.  The switch events will be
+> > > > > > > from the kernel and we may add the condition in the attribute.
+> > > > > > >
+> > > > > > > And PERF_SAMPLE_CPU is on by default in system-wide mode.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > For problem 3: switches to idle task won't really help. There can be
+> > > > > > > > lots of them, and missing any will lead to wrong accounting.
+> > > > > > >
+> > > > > > > I don't know how severe the situation will be.  On heavily loaded
+> > > > > > > systems, the idle task won't run much and data size won't increase.
+> > > > > > > On lightly loaded systems, increased data will likely be handled well.
+> > > > > > >
+> > > > > > >
+> > > > > > > > A principled approach would be to attach a per-thread scheduler
+> > > > > > > > quantum sequence number to each CPU sample. The sequence number would
+> > > > > > > > be incremented on every context switch. Then any subset of CPU should
+> > > > > > > > be enough to understand when a task was scheduled in and out
+> > > > > > > > (scheduled in on the first CPU sample with sequence number N, and
+> > > > > > > > switched out on the last sample with sequence number N).
+> > > > > > >
+> > > > > > > I'm not sure how it can help.  We don't need the switch info itself.
+> > > > > > > What's needed is when the CPU was idle, right?
+> > > > > >
+> > > > > > I mean the following.
+> > > > > > Each sample has a TID.
+> > > > > > We add a SEQ field, which is per-thread and is incremented after every
+> > > > > > rescheduling of the thread.
+> > > > > >
+> > > > > > When we see the last sample for (TID,SEQ), we pretend there is SCHED
+> > > > > > OUT event for this thread at this timestamp. When we see the first
+> > > > > > sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
+> > > > > > thread at this timestamp.
+> > > > > >
+> > > > > > These SCHED IN/OUT events are not injected by the kernel. We just
+> > > > > > pretend they happen for accounting purposes. We may actually
+> > > > > > materialize them in the perf tool, or me may just update parallelism
+> > > > > > as if they happen.
+> > > > >
+> > > > > Thanks for the explanation.  But I don't think it needs the SEQ and
+> > > > > SCHED IN/OUT generated from it to track lost records.  Please see below.
+> > > > >
+> > > > > >
+> > > > > > With this scheme we can lose absolutely any subset of samples, and
+> > > > > > still get very precise accounting. When we lose samples, the profile
+> > > > > > of course becomes a bit less precise, but the effect is local and
+> > > > > > recoverable.
+> > > > > >
+> > > > > > If we lose the last/first event for (TID,SEQ), then we slightly
+> > > > > > shorten/postpone the thread accounting in the process parallelism
+> > > > > > level. If we lose a middle (TID,SEQ), then parallelism is not
+> > > > > > affected.
+> > > > >
+> > > > > I'm afraid it cannot check parallelism by just seeing the current thread.
+> > > > > I guess it would need information from other threads even if it has same
+> > > > > SEQ.
+> > > >
+> > > > Yes, we still count parallelism like you do in this patch, we just use
+> > > > the SEQ info instead of CPU numbers and explicit switch events.
+> > >
+> > > I mean after record lost, let's say
+> > >
+> > >   t1: SAMPLE for TID 1234, seq 10  (parallelism = 4)
+> > >   t2: LOST
+> > >   t3: SAMPLE for TID 1234, seq 10  (parallelism = ?)
+> > >
+> > > I don't think we can continue to use parallelism of 4 after LOST even if
+> > > it has the same seq because it cannot know if other threads switched on
+> > > other CPUs.  Then do we need really the seq?
+> >
+> > I do not understand the problem you describe.
+> > We just keep updating parallelism according to the algorithm I
+> > described. It works fine in the presence of lost events.
+>
+> Do you think it's ok to use 4 if seq is the same?  I'm afraid it'd be
+> inaccurate.
 
-To fix the same, Linus suggested in [1] that we can add the
-following union inside 'task_struct':
-       union {
-               char    comm[TASK_COMM_LEN];
-               char    comm_ext[TASK_COMM_EXT_LEN];
-       };
+It will be inaccurate briefly for the period of 1 sample if we lost
+specifically the last/first sample of a thread scheduling quantum. And
+then it will recover and will be precise.
 
-and then modify '__set_task_comm()' to pass 'tsk->comm_ext'
-to the existing users.
+But it's exactly the same in your scheme, right. If we stopped seeing
+events on a CPU due to lost events, we will assume it's not running.
 
-This would mean that:
-(1) The old common pattern of just printing with '%s' and tsk->comm
-    would just continue to work (as it is):
+And generally lost events will always lead to imprecision. That's
+unavoidable. It's only important if the imprecision is limited and
+proportional to the number of lost events. And this is the case for
+the SEQ scheme.
 
-        pr_alert("BUG: Bad page state in process %s  pfn:%05lx\n",
-                current->comm, page_to_pfn(page));
 
-(2) And, the memcpy() users of 'tsk->comm' would need to be made more
-    stable by ensuring that the destination buffer always has a closing
-    NUL character (done already in the preceding patch in this series).
+> > > > > Also postpone thread accounting can be complex.  I think it should wait
+> > > > > for all other threads to get a sample.  Maybe some threads exited and
+> > > > > lost too.
+> > > >
+> > > > Yes, in order to understand what's the last event for (TID,SEQ) we
+> > > > need to look ahead and find the event (TID,SEQ+1). The easiest way to
+> > > > do it would be to do 2 passes over the trace. That's the cost of
+> > > > saving trace space + being resilient to lost events.
+> > > >
+> > > > Do you see any other issues with this scheme besides requiring 2 passes?
+> > >
+> > > Well.. 2 pass itself can be a problem due to slowness it'd bring.  Some
+> > > people complain about the speed of perf report as of now.
+> >
+> > Is trace processing CPU-bound or memory-bound? If it's CPU-bound, then
+> > the second pass may be OK-ish, since we will need minimal CPU
+> > processing during the first pass.
+>
+> It depends on the size of data, but I guess it's CPU-bound in most cases.
+>
+> >
+> >
+> > > I think we can simply reset the parallelism in all processes after LOST
+> > > and set current process to the idle task.  It'll catch up as soon as it
+> > > sees samples from all CPUs.
+> >
+> > I guess we can approximate parallelism as you described here:
+> >
+> > > Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
+> > > CPU and clear the current thread after some period (2x of given freq?).
+> >
+> > We probably don't need to do anything special for lost events in this
+> > scheme at all. If the gap caused by lost events is tiny, then we
+> > consider nothing happened. If the gap is large enough, then we
+> > consider the CPU as idle for the duration of the gap. Either way it
+> > will be handled on common grounds.
+>
+> How do you know if it's tiny?  Do you mean the seq remains after lost?
 
-So, eventually:
-- users who want the existing 'TASK_COMM_LEN' behavior will get it
-  (existing ABIs would continue to work),
-- users who just print out 'tsk->comm' as a string will get the longer
-  new "extended comm",
-- users who do 'sizeof(->comm)' will continue to get the old value
-  because of the union.
+I was talking about your scheme based on CPU numbers.
 
-[1]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com
 
-Signed-off-by: Bhupesh <bhupesh@igalia.com>
----
- fs/exec.c             | 6 +++---
- include/linux/sched.h | 8 ++++++--
- 2 files changed, 9 insertions(+), 5 deletions(-)
+> > But tuning of these heuristics + testing and verification may be a bit
+> > of a problem. I would hate to end up with a tool which I won't trust.
+> >
+> > Here:
+> > "after some period (2x of given freq?)"
+> > do you mean 2x average/median period, or 1/2 average/median period?
+> > (2x freq is 1/2 period)
+>
+> Oh, sorry.  It's 2x period.
+>
+> >
+> > Ideally, we consider a CPU idle after 1/2 period after it switched to
+> > the idle task and we stop receiving samples.
+> > But on the other hand, we don't want to consider it constantly
+> > becoming idle, when it's just doing normal sampling with the normal
+> > period...
+> >
+> > So ideally the algorithm should be something like:
+> > let's say average/median sampling period is P
+> > we got last sample for CPU X at time T
+> > if by time T+2P we have not seen any other sample on CPU X, then
+> > consider CPU X idle since T+0.5P
+> >
+> > But this would also require either 2 passes over the data, or some
+> > kind of look ahead similar to the algo I proposed...
+>
+> I think we can do it in 1 pass.  For each sample,
+>
+>   for_each_cpu(cpu) {
+>       if (current[cpu]->last_timestamp + 2*period < sample->timestamp) {
+>           if (current[cpu]->thread != idle) {
+>               current[cpu]->thread->parallelism--;
+>               current[cpu]->thread = idle;
+>           }
+>       }
+>   }
+>
+>   leader = machine__findnew_thread(machine, sample->pid);
+>   current[sample->cpu]->last_timestamp = sample->timestamp;
+>
+>   if (current[sample->cpu]->thread != leader) {
+>       if (current[sample->cpu]->thread != idle)
+>           current[sample->cpu]->thread->parallelism--;
+>
+>       current[sample->cpu]->thread = leader;
+>       leader->parallelism++;
+>   }
+>
+>   sample->parallelism = leader->parallelism;
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 1f5fdd2e096e..3b39fbfc8fe4 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1077,11 +1077,11 @@ static int unshare_sighand(struct task_struct *me)
-  */
- void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
- {
--	size_t len = min(strlen(buf), sizeof(tsk->comm) - 1);
-+	size_t len = min(strlen(buf), sizeof(tsk->comm_ext) - 1);
- 
- 	trace_task_rename(tsk, buf);
--	memcpy(tsk->comm, buf, len);
--	memset(&tsk->comm[len], 0, sizeof(tsk->comm) - len);
-+	memcpy(tsk->comm_ext, buf, len);
-+	memset(&tsk->comm_ext[len], 0, sizeof(tsk->comm_ext) - len);
- 	perf_event_comm(tsk, exec);
- }
- 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 704222114dcc..2605207170b4 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -316,6 +316,7 @@ struct user_event_mm;
-  */
- enum {
- 	TASK_COMM_LEN = 16,
-+	TASK_COMM_EXT_LEN = 64,
- };
- 
- extern void sched_tick(void);
-@@ -1165,7 +1166,10 @@ struct task_struct {
- 	 *   - logic inside set_task_comm() will ensure it is always NUL-terminated and
- 	 *     zero-padded
- 	 */
--	char				comm[TASK_COMM_LEN];
-+	union {
-+		char			comm[TASK_COMM_LEN];
-+		char			comm_ext[TASK_COMM_EXT_LEN];
-+	};
- 
- 	struct nameidata		*nameidata;
- 
-@@ -2005,7 +2009,7 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
-  */
- #define get_task_comm(buf, tsk) ({			\
- 	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
--	strscpy_pad(buf, (tsk)->comm);			\
-+	strscpy_pad(buf, (tsk)->comm_ext);		\
- 	buf;						\
- })
- 
--- 
-2.38.1
+As I described, for this simple 1 pass algorithm, I am afraid of imprecision.
+The thread has not continued to run for 2 periods. I run for 0-1 period.
 
+
+
+> > Also, do we take the median period? or average? do we update it over
+> > time (say, if CPU freq changes)? do we count it globally, or per CPU
+> > (in case CPUs run at different freqs)?
+>
+> Oh, perf tools use default frequency of 4000 Hz.
+
+Is the actual sample rate reasonably precise across time/CPUs?
+
+> Maybe we can use this
+> only for the frequency mode which means user didn't use -c option or
+> similar in the event description.
+>
+> Thanks,
+> Namhyung
+>
