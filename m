@@ -1,180 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F0D1624CE;
-	Wed, 21 May 2025 18:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6092356B2
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 18:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747851241; cv=none; b=A57zbdUsGih218/w2TywuS0zGkB/3J3FWhBpGd50K4PVkciv4Pi3o7tj57Xtx+OliJ/V3oJJpn5lXm+97L7wrpCUc2NJ/PvdYLfCBwA9RGaHJVzZsl+TZCuS25sSTv5UL+9b8dq5a/CPQFILhnQ2NXYlmZ+LJOHBFArfe6l+BTQ=
+	t=1747853009; cv=none; b=qSlIeLRF/Sthv6S4pZt/H3CCL5qZrCjgXezkU+COaaPaDGGka/aPkm6Q/8cdmwQAqqcCcU9GioBZXZ5nAbexj9S11GSgouCkFfSJ8koVSCPb2XE4CwFtz2DWOh+OzJnablMQFC5WAzKcXKAWYc59t7L899X+DeX2vBVXKq9JcLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747851241; c=relaxed/simple;
-	bh=IVRrr3bXX1aOFwL4/OoLF2L3j9b8aaTdFDzcimwf2uE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P5eAc9LZDuw+NR129WqHmQhlu7s4CEge7zkd81wt/nInwKW1jhvxFCD0g1geUB8gqBqrhL7xA4RUIAYHWKefMhFN0Ev6WmamkobQ3VwNIY2nW7PuuRYAqmw4G9ETsnHWrwxPYbUplo1PiPQjvb/L4hhOVPTiSVJKYLLxsINTl20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eJikY25a; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747853009; c=relaxed/simple;
+	bh=l9hm75yhfpKOgU+9IKCqQB1osT3ELi9nMlq987rTA8Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LJb562CnZJ1kqJqTarla2gw2sOqFBLuxOeJ6d7qOVAt9Dqdlj5nMRpqjxNgcDak4GyunLii6MuazeE644jCw86rNOoF2yD6oP2uckFsqLlBnN5SXIk+LA0Z7mG7/WBoPnojHNjEReZ+q/5uOYgCaq2yeeEYKbqucsaR6HFw/2hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NRYOmvSS; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eJikY25a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747851240; x=1779387240;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IVRrr3bXX1aOFwL4/OoLF2L3j9b8aaTdFDzcimwf2uE=;
-  b=eJikY25a7SfCYfgFPIK3KmH7lPUJfAb/vb/p+qbSUaHeJi22znoeoX+8
-   tryFYxti8mc0f4r5rFZQuQNwf3ZB4AjMmWRS3BEqLJkbraRaSP2eK09Dn
-   RlOqeESo+JM0lxBzkhl33SI20kW+UsFadwwqGV7y5+omdEdPPFdVVQ3Kp
-   NoKQSMR87sCxo2jzf/zsM9FvdYCsZ6f5Z9+RZ4WCjCrnL8Dknf2vyBc6Q
-   mL9snSfRRoE0pC0YkcAHbyvTHzgn2FakQkhytFw2SiRxTNAsCwCoQjwSA
-   sxrLCq3APKIYBeNAbHnjAkECePLmPgP8qbmlQGw2rSg4PjjCs38w/ey1/
-   w==;
-X-CSE-ConnectionGUID: 8gKRQ71TR9q6bTWHzF9Nqg==
-X-CSE-MsgGUID: AQUxvczcQ9i1WS5UhFcEBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49550221"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="49550221"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:13:59 -0700
-X-CSE-ConnectionGUID: jNk7/eBMTU+K36IIfe3xfA==
-X-CSE-MsgGUID: s6uLh/mXS6yj5C4PU+kURw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="145453010"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:13:58 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9A5A020B5736;
-	Wed, 21 May 2025 11:13:55 -0700 (PDT)
-Message-ID: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
-Date: Wed, 21 May 2025 14:13:54 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NRYOmvSS"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3108d5156e8so1335743a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 11:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747853007; x=1748457807; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1uvnzAtGqqihUzW/r4zpFQWHLi2txWfCNzgNR6sDzto=;
+        b=NRYOmvSStwUW2BHH+mDk5SgLEjhPit5UPdgYXm3djeBThxgRPjxyJQQ+QnjYtKhTu1
+         j2yjE4xkpjSYoUrL83vNn+p4l7givh5wjSt9dqkQXbJqq/BficW0Iof7nDtvUgp7kixP
+         ZMjyj/EzuTlWbmAzq8yk3ut9V4SdB5tI/Zxb3vLzKGscRtrjA3HpyMjYDr9f2X2+xVc0
+         eemrUYPX+eWmOF7fG4lxRe+q4uYelo35Bc7Xze/NOLrF0EUzpFtS8JL/Djm57vKKUXqL
+         zMuySh+cUo6hmhjPKuuGJOqppRj4yR85H4ZUdtTi5d9F6wwY7bUBa7f2NlWCQVMlEung
+         n9IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747853007; x=1748457807;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1uvnzAtGqqihUzW/r4zpFQWHLi2txWfCNzgNR6sDzto=;
+        b=OdcpJz/nB3zA4Z42vR4ZUbPqK5eqT+cHvbWwVQwtHiyo67xxdVibua1EZoeKMWszEh
+         Q4cMNlwQd2CEmSUbpwtPrgl2l8jMLXYE/425AoQQp2T6PaEiwo3p68kp3nhLjaJBRpCv
+         DRc/FsSkMY/d4Mc1G/tuLKlPoMVZWeYRyXwkySzcyt3wiWgzfjTUSs69CYgXcIYRe7IS
+         9bCMcqipn8hFbP3Gsbz6g1Ar6Jx8oKpFs7aCw80cVxoIOaEao0oFoOVd/Xz08eOgdHtH
+         ifollksPvCO06KWGxTq28zBFsAbuyjt/aGYLMYm0TC1Hk7IyVZcevaZfUgbs9yiKBKhD
+         xEvw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5OwzkRYgxA/Vv84d1eRJ7EcyKubMYDD5nOBUaqM46p6QYtbWlxb1VaNXVefN88BvTAs+sURggvn35h/K8v4eJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1xDn7VjYdizco2EEprKt/N7yrniW9C9utczVe4TZRGdUTVpyk
+	j9UNh0UTyo3MIUWb7iNCsw6vZ8UR/9PEqJ4d9ZElq+KwCzKbWILXeP5uYK4pdkKcX3NaNdnQM2E
+	AEk/tRg==
+X-Google-Smtp-Source: AGHT+IGncHV/5i3Y3ABZHLp8TXbERrxZ+ADd5PUtj9jxbItkw8Bb/dtD2z+ZUy9jx9X+TqnA9jiY57WslHY=
+X-Received: from pjtu7.prod.google.com ([2002:a17:90a:c887:b0:2ea:29de:af10])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c09:b0:310:8d9a:95b6
+ with SMTP id 98e67ed59e1d1-3108d9ae7eemr5602447a91.25.1747853007278; Wed, 21
+ May 2025 11:43:27 -0700 (PDT)
+Date: Wed, 21 May 2025 11:43:25 -0700
+In-Reply-To: <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and
- header
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
- Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>,
- Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
- Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
- Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming
- <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>,
- Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250521135500.677508-1-irogers@google.com>
- <20250521135500.677508-4-irogers@google.com>
- <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
- <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-15-mizhang@google.com>
+ <aCUwvXPKD0ANKFb7@google.com> <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
+Message-ID: <aC4ezRH8msD6yUhC@google.com>
+Subject: Re: [PATCH v4 14/38] KVM: x86/pmu: Introduce enable_mediated_pmu
+ global parameter
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 15, 2025, Dapeng Mi wrote:
+> On 5/15/2025 8:09 AM, Sean Christopherson wrote:
+> > On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> >> +	return vcpu->kvm->arch.enable_pmu &&
+> > This is superfluous, pmu->version should never be non-zero without the =
+PMU being
+> > enabled at the VM level.
+>=20
+> Strictly speaking, "arch.enable_pmu" and pmu->version doesn't indicates
+> fully same thing.=C2=A0 "arch.enable_pmu" indicates whether PMU function =
+is
+> enabled in KVM, but the "pmu->version" comes from user space configuratio=
+n.
+> In theory user space could configure a "0"=C2=A0 PMU version just like
+> pmu_counters_test does. Currently I'm not sure if the check for
+> "pmu->version" can be removed, let me have a double check.
 
+Gah, sorry, my comment was vague and confusing.  What I was trying to say i=
+s that
+the vcpu->kvm->arch.enable_pmu check is superfluous and can be dropped.
 
-On 2025-05-21 12:16 p.m., Ian Rogers wrote:
->>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
->>> index 7b6cde87d2af..13ef0d188a96 100644
->>> --- a/tools/perf/builtin-top.c
->>> +++ b/tools/perf/builtin-top.c
->>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
->>>
->>>       setup_browser(false);
->>>
->>> -     if (setup_sorting(top.evlist) < 0) {
->>> +     top.session = perf_session__new(/*data=*/NULL, /*tool=*/NULL);
->>> +     if (IS_ERR(top.session)) {
->>> +             status = PTR_ERR(top.session);
->>> +             top.session = NULL;
->>> +             goto out_delete_evlist;
->>> +     }
->>> +
->>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
->> I doubt a valide env can be got in perf_session__new(), since there is
->> no perf.data in perf top.
->> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
->> env->arch.
-> I think the current code is making things harder than it should be, we
-> should work away from perf_env__arch and strings, instead using EM_
-> values which we can default to EM_HOST avoiding any runtime costs.
-> Looking at perf_env__arch:
-> ```
-> const char *perf_env__arch(struct perf_env *env)
-> {
->         char *arch_name;
-> 
->         if (!env || !env->arch) { /* Assume local operation */
->                 static struct utsname uts = { .machine[0] = '\0', };
->                 if (uts.machine[0] == '\0' && uname(&uts) < 0)
->                         return NULL;
->                 arch_name = uts.machine;
->         } else
->                 arch_name = env->arch;
-> 
->         return normalize_arch(arch_name);
-> }
-> ```
-> in this case env->arch == NULL and so the uname machine will be used.
-> For perf_env__raw_arch the behavior is similar but it populates the
-> env:
-> ```
-> static int perf_env__read_arch(struct perf_env *env)
-> {
->         struct utsname uts;
-> 
->         if (env->arch)
->                 return 0;
-> 
->         if (!uname(&uts))
->                 env->arch = strdup(uts.machine);
-> 
->         return env->arch ? 0 : -ENOMEM;
-> }
-> 
-> const char *perf_env__raw_arch(struct perf_env *env)
-> {
->         return env && !perf_env__read_arch(env) ? env->arch : "unknown";
-> }
-> ```
-> Aside from caching the arch, the main difference is that
-> normalize_arch isn't called. Not having normalize_arch means the code
-> in arch_support_sort_key and arch_perf_header_entry would need to
-> handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
-> etc. As I'd prefer not handle all those cases I think the way the code
-> is is best given how the env code is currently structured.
+> >> +	kvm->arch.enable_pmu =3D enable_pmu && !enable_mediated_pmu;
+> > So I tried to run a QEMU with this and it failed, because QEMU expected=
+ the PMU
+> > to be enabled and tried to write to PMU MSRs.  I haven't dug through th=
+e QEMU
+> > code, but I assume that QEMU rightly expects that passing in PMU in CPU=
+ID when
+> > KVM_GET_SUPPORTED_CPUID says its supported will result in the VM having=
+ a PMU.
+>=20
+> As long as the module parameter "enable_mediated_pmu" is enabled, qemu
+> needs below extra code to enable mediated vPMU, otherwise PMU is disabled
+> in KVM.
+>=20
+> https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel=
+.com/
+>=20
+> > I.e. by trying to get cute with backwards compatibility, I think we bro=
+ke backwards
+> > compatiblity.  At this point, I'm leaning toward making the module para=
+m off-by-default,
+> > but otherwise not messing with the behavior of kvm->arch.enable_pmu.  N=
+ot sure if
+> > that has implications for KVM_PMU_CAP_DISABLE though.
+>=20
+> I'm not sure if it's a kind of break for backwards compatibility.=C2=A0 A=
+s long
+> as "enable_mediated_pmu" is not enabled, the qemu doesn't need any change=
+s,
+> the legacy vPMU can still be enabled by old qemu version. But if user wan=
+t
+> to enable mediated vPMU, so they should use the new version qemu which ha=
+s
+> the capability to enable mediated vPMU, it sounds reasonable for me.
 
-Right. The perf_env__raw_arch() doesn't improve anything.
-But I still don't like &top.session->header.env.
-Because I don't think you can get any useful information from
-top.session->header.env. It just brings confusions. (It seems an env is
-retrieved, but it is actually not.)
+I agree it's reasonable to require a userspace update to take advantage of =
+new
+features, what I don't like is what happens if userspace _hasn't_ been upda=
+ted.
+I also don't love that forcing a userspace update in this case is more than=
+ a bit
+contrived.  It's very doable to let existing userspace utilize the mediated=
+ PMU,
+forcing KVM_CAP_PMU_CAPABILITY is essentially KVM punting a problem to user=
+space.
 
-In the perf top, &perf_env is used for the existing cases. If any env
-fields are not available, perf_env__read_XXX() is invoked to get the
-information.
-I think we may follow the existing usage, e.g.,
-setup_sorting(top.evlist, &perf_env).
+And the complications with the mediated PMU don't really have anything to d=
+o with
+the VMM, they're more about all the other tasks and daemons running on the =
+system,
+e.g. that might be using perf.
 
-Alternatively, it looks like the perf top doesn't support --weight. The
-env->arch should never be used. If so, a NULL can be used as well, E.g.,
-setup_sorting(top.evlist, NULL).
+Thinking more about this, the problem isn't so much that enabling mediated =
+PMUs
+by default is undesirable, it's that giving userspace a binary choise doesn=
+'t
+provide enough flexibility.  E.g. for single-user QEMU-based use cases (inc=
+luding
+my use of QEMU), requiring a new QEMU is painful and annoying, and so havin=
+g an
+on-by-default option would be nice.
 
-Thanks,
-Kan
+But for use cases that already utilize KVM_CAP_PMU_CAPABILITY, e.g. to expl=
+icitly
+disable PMUs for a subset of VMs, on-by-default is very undesirable, e.g. w=
+ould
+require KVM to support KVM_PMU_CAP_DISABLE, and would generate unnecessary =
+noise
+and contention in perf.
 
+So, what if we simply make enable_mediated_pmu a tri-state of sorts?
+
+  0   =3D=3D disabled
+  > 0 =3D=3D enabled for all VMs (no opt-in or opt-out supported)
+  < 0 =3D=3D enabled, but off by default (requires opt-in)
+
+Then use cases like my personal usage of QEMU can run with enable_mediated_=
+pmu=3D1,
+while use cases like Google Cloud can run with enable_mediated_pmu=3D-1, an=
+d everyone
+is happy (hopefully), without too much added complexity in KVM.
