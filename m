@@ -1,145 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B0A270548;
-	Wed, 21 May 2025 13:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5264E72606
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 13:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833732; cv=none; b=Uudp9ffDKcqFaAmeZvVPYRyOJ2rtUnU7pT92njXR4YLxDCPO1irm9CEdK8j6CteUsTIlLt6nDS71MEoZNopmAQNIHuWS0ZZTcQuWgeylVzQEW8wCc+XD4CzFnvkgZGTDvZfKi00Wt0bYua8lze8cW4JUwIbNsPMgDVkAYzYeO6w=
+	t=1747835306; cv=none; b=m2idIw0iMUUEfCJeLDJB9oPXflUVn4PsoyxPGmnFnZEdBw1NT4XN+7bNTPicHhf1e/T1Q8Z3hfIc5Y3k6+RjlKiS/0Xx8/lReX+aV+udZ4Ks9VrNH6FQ/9L78YXhhTbjPJumCwF7E70cb4gag+83cYiA2veC+0pSoSAIirEbYnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833732; c=relaxed/simple;
-	bh=EX4ui2tQT7UMETR1W+xK25rJPJELgoGDLpEuPhuzklw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bsXw8bW4GHdo0WjrHtSXpUhb60NtltfO9+//SsF78MpmMyQLkAWMG6u1ZpJhe06UI4D4QKAnJV9UIkTfyurnEt6+VyMivqzfs8HsVF6VnodkA25fFab6dwKT5XZwy/Ry90ksrKY2ltFSAz0lkLf44IEJNofwzpJqgjT45R/xNgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6jBTMek; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747835306; c=relaxed/simple;
+	bh=tZmrPtKq9NBVoM5sBtvwoKj+O3b1ayp2YkLwz3fWz20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h2A/ufgwcUbnS/m70FH0XmtMVUXLY1ZYQJI0xYNV/AvWLcQ/nV+JjP8FdM+oO14SmZ2zoQ4csU4CAFFqXRLu2jK7afQXWiL5KWPh+FJhNBVf3WbnmVdMD1ZvbeoaL0+mKHuvKYm9bMbC2axDYyQUMz2RKZ5XvIlJVL5jn5L6EV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kEhabt9I; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6jBTMek"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBF4C4CEE7;
-	Wed, 21 May 2025 13:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747833729;
-	bh=EX4ui2tQT7UMETR1W+xK25rJPJELgoGDLpEuPhuzklw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E6jBTMekBv+UH9ycukXQK3H0XIxjnYZg58I9raQ05E10M9qL3PlndBrrRB12kMb08
-	 iqktE52OFdoAFLtISTnJFqKBhKN6BdmAjziVHoh95aCf7PaCdh9+0fllYKDz6oCBk+
-	 6Q+Q7u3ytdNjmawsULl8BmV8rLtnCf/C4DViZyhMpbkOXa/d7hZVJT49XCTw/Ik1DD
-	 S2u5NI+atPUaOeHnw6+813IgVJvh92MGCgJ/+k4L2qd9kIeNJS86XhcWACfsUuRx7T
-	 MMFLYsUWhGzRyyRgwQVdL+eguZVorq2GrBcVSfnaikocXW3qRLNswt4DtvbPiskgkg
-	 FRmF6L9gww5xA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uHjOZ-00GwxK-Fd;
-	Wed, 21 May 2025 14:22:07 +0100
-Date: Wed, 21 May 2025 14:22:06 +0100
-Message-ID: <86r00idrpd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v22 4/5] KVM: arm64: nvhe: Disable branch generation in nVHE guests
-In-Reply-To: <20250520-arm-brbe-v19-v22-4-c1ddde38e7f8@kernel.org>
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
-	<20250520-arm-brbe-v19-v22-4-c1ddde38e7f8@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kEhabt9I"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso63925ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 06:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747835304; x=1748440104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OxlheM5lEmnt1MM3GdEBAW8Kn3rstbnprh4CdxgItUw=;
+        b=kEhabt9ImR2tn5SvWAg4t6OXdLJUgE8Ey8sHRdvth91oNO2UIyPn8ZiUAZODa7JASm
+         H4U1t5huxudAmMP8vIkcOr/1nBitsP38rPt2qa9TC2GeTT+xTxxI9qeh1FUtCFiJEBuL
+         UiNcXTKWAB1wotghO1eyYa38fhfn8b4p4mPu/axSH9PkbeLnqVWLwDnG2RgPg0eQ+jPg
+         JepPxB72yYx/nUyAwcLgMIkRD/y/SPHP9hxPWyoNQoUFjUV2fLQphaWBEtCjZoYMz7gX
+         0Wmilvn6zbtUTmQxmg8kUN/yIgvCywMkli4b7GUHEW6iL+fzpvZx3g9joG76vxjy/Aqo
+         nNkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747835304; x=1748440104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OxlheM5lEmnt1MM3GdEBAW8Kn3rstbnprh4CdxgItUw=;
+        b=fDv3+pRJ+Vi3OMiSULqov/TtUEXT7tLhMRpUB9BuMchC6nCJ7b8nNs33HAqdlUh/Gq
+         KY8n+4OSlwB4cDQ2eLX2CWyeY14vQBfDJP0pmsRQspgNQ8+9xSom/ZtAfoWlkyPXYtKt
+         7MxC5LYWT2wpzFVOaLkgbgDCLKfeXWNtaC8j2062cKQI4ZOwU1VJjpD1LXeOXRAWdoTd
+         EHOwV6E930U9sxaxmS/iHull0dK0EBUxIcLc57UKR45/ZwpwBQh5yz0uP/ZKTEASF2vI
+         s3V4iQSvpIKYSKciQd3iVGBkefcGw5fhl8Wj1RTygq15u9fNO7z29NpvxK4kvx04BIrx
+         b/gA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoQK3VVfLsyGFBizTW51H6/2aeZra/BMXLABRa3328WFjZGDHSr9zHgfkXRL5smkT/8ytOBxRZFvUsf3Uj4JKC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8rsbCDkhd6+82h5GKzPrPJGaAqxRNg816zAiF70zLWLMYq/hB
+	BjBjb+RXJOjrjfqoZhKsJlhMdUHW1a3zOSqQLohRhAYLrLI9PLdUEwHWq91N6flfU6HdPCap2+4
+	V02wo2zO45BF3h7e71QWzv8XlZM/+7ewx+7kDj/lw
+X-Gm-Gg: ASbGncsQs1ZPOJaOLyNb4DcGKt/P9w4N04ZR+yZ/d/JGiy95kW9ZtwTt001MFX7/HYl
+	1aecUnrZatob/hyVywQy4cb1EWw5qSogiDEzCgf/bgCfFCBEdG2Q4eUHXaxHSskGHCpfs7vB+//
+	geEO+Ni7SEShbJ65/LyHxKluS9D6Oz7aa6Sicgd03lWc5e
+X-Google-Smtp-Source: AGHT+IHeC3oqFSgaSqVqnlVsrRLoNPF0gPsQUeBcI7ysFF8RkEVB62BJa8yOpnMhrjZ5pr9UqIZimBxfrtcYIG88gNc=
+X-Received: by 2002:a05:6e02:c85:b0:3dc:7faa:e939 with SMTP id
+ e9e14a558f8ab-3dc7faaecb8mr5109685ab.23.1747835303953; Wed, 21 May 2025
+ 06:48:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: robh@kernel.org, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, james.clark@linaro.org, anshuman.khandual@arm.com, leo.yan@arm.com, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250521052029.658800-1-irogers@google.com> <20250521052029.658800-2-irogers@google.com>
+ <8f162665-be8d-4299-9442-a677e935999b@intel.com>
+In-Reply-To: <8f162665-be8d-4299-9442-a677e935999b@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 May 2025 06:48:11 -0700
+X-Gm-Features: AX0GCFugq0Va_fvHZm5B5rFZ2v7ADlvXVfexnQfQqaSFfsH3ZJYnUqpKCOmjaGc
+Message-ID: <CAP-5=fXF89BsMy7OTh5z4tc1Sxk-mua2LgaZRCsaFQTpR_SHyA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] perf sample: Remove arch notion of sample parsing
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 23:27:39 +0100,
-"Rob Herring (Arm)" <robh@kernel.org> wrote:
-> 
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> While BRBE can record branches within guests, the host recording
-> branches in guests is not supported by perf (though events are).
-> Support for BRBE in guests will supported by providing direct access
-> to BRBE within the guests. That is how x86 LBR works for guests.
-> Therefore, BRBE needs to be disabled on guest entry and restored on
-> exit.
-> 
-> For nVHE, this requires explicit handling for guests. Before
-> entering a guest, save the BRBE state and disable the it. When
-> returning to the host, restore the state.
-> 
-> For VHE, it is not necessary. We initialize
-> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
-> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
-> branch recording in the host. When entering the guest, we set
-> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
-> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
-> running a guest.
-> 
-> Should recording in guests (by the host) ever be desired, the perf ABI
-> will need to be extended to distinguish guest addresses (struct
-> perf_branch_entry.priv) for starters. BRBE records would also need to be
-> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
-> be distinguished.
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-> Tested-by: James Clark <james.clark@linaro.org>
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v20:
->  - Reword commit message about no guest recording.
->  - Add BRBE to __kvm_vcpu_run() synchronization comment
-> 
-> v19:
->  - Rework due to v6.14 debug flag changes
->  - Redo commit message
-> ---
->  arch/arm64/include/asm/kvm_host.h  |  2 ++
->  arch/arm64/kvm/debug.c             |  4 ++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 32 ++++++++++++++++++++++++++++++++
->  arch/arm64/kvm/hyp/nvhe/switch.c   |  2 +-
->  4 files changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index e98cfe7855a6..e3f1e7b5ce52 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -654,6 +654,7 @@ struct kvm_host_data {
->  #define KVM_HOST_DATA_FLAG_HAS_TRBE			1
->  #define KVM_HOST_DATA_FLAG_TRBE_ENABLED			4
->  #define KVM_HOST_DATA_FLAG_EL1_TRACING_CONFIGURED	5
-> +#define KVM_HOST_DATA_FLAG_HAS_BRBE			6
+On Wed, May 21, 2025 at 1:14=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> > diff --git a/tools/perf/include/perf/perf_dlfilter.h b/tools/perf/inclu=
+de/perf/perf_dlfilter.h
+> > index 16fc4568ac53..ec154fd937e7 100644
+> > --- a/tools/perf/include/perf/perf_dlfilter.h
+> > +++ b/tools/perf/include/perf/perf_dlfilter.h
+> > @@ -38,7 +38,7 @@ enum {
+> >  struct perf_dlfilter_sample {
+> >       __u32 size; /* Size of this structure (for compatibility checking=
+) */
+> >       __u16 ins_lat;          /* Refer PERF_SAMPLE_WEIGHT_TYPE in <linu=
+x/perf_event.h> */
+> > -     __u16 p_stage_cyc;      /* Refer PERF_SAMPLE_WEIGHT_TYPE in <linu=
+x/perf_event.h> */
+> > +     __u16 p_stage_cyc_or_retire_lat; /* Refer PERF_SAMPLE_WEIGHT_TYPE=
+ in <linux/perf_event.h> */
+>
+> Don't rename dlfilter API identifiers.  It will break dlfilter
+> compilation for anyone using the old identifier in their dlfilters.
 
-Just as a heads up: this is going to clash with what is currently
-queued in -next (bits 6 and 7 are already claimed).
+Thanks, I will fix it in v2.
 
-Otherwise,
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Ian
