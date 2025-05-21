@@ -1,813 +1,199 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2082.outbound.protection.outlook.com [40.107.96.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B860230BD5
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 05:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747804850; cv=none; b=qzSJnB1c3EAQIw7pqIkaA7UnJJVIbK+okjp6KJjGen/j92W6bMOvDu7A+QqjgRhoIUZ2dECW3Qx6Xt82xOsYvt5/yDWPvhamOOCO8tAJZGNW1CAKBYRp4TFAkguVFsKyT9AjJHuyEA3Kg6diqJEk0g1KJ1RLpo5jFL/dq6lZjZw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747804850; c=relaxed/simple;
-	bh=gK+Mucf2kShnVMtfsmBrEQ45z0/hHVq5z9DoLv/zTLA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=EeMKgngC+TfCZFrAM/4C9jJqZLbkxQe3oIXxzMeeJxhKeJATzTKU9zN27NFRuH8cRaGNGsbRshsktUEYWYbPIcfcxKxZ4Vl0RK/LCKk9SGS8kLde0oofUqxRyZhCC1tmUTC2yoH0QDcpuAaXIWiCh3IBVY3BDqGsG9fx2T4Ra1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ILlo41hy; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5054317D;
+	Wed, 21 May 2025 05:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747805466; cv=fail; b=XkQsW13cEChSw9saDHv+xR42vyFo/I6NZfmdPZZhLwb2n7E9Ee9/XxZ0zX2/TfAdBWzUZjfZhf9WgXIUOWe4CYuu5Fy7V5RS07S3UhANcyIgQUUjinH69UvGz0MWfuWIVNt5GQWTh+/gFlj9l+Zpn3U2CXMXRkbKQ1jr+DzxWdU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747805466; c=relaxed/simple;
+	bh=twUeT+zOviDtSS8fvW1bR21ap1wI068Dbfklg46wf3o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Swk20+2sh8vVwGw2g8b15OEVpFpQNBuqhqvzt1+zW+ijBbJA5Gn49TOk7eU7GahhJkApj1mztlJdnNc9wgI0mTZy2gTRZUlkyYVbiFRtqR08lfYnUy9Re6qKNKlk526l7aGI8C+MErOP+plk5iEzVQxQvXThUgFR2U5JgkEu5hU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nMUPtifQ; arc=fail smtp.client-ip=40.107.96.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ILlo41hy"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-70deb82de2fso13211217b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 May 2025 22:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747804846; x=1748409646; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4gJnMxpsaSjZ+6o2NjI2WYwxrpxXBL9KkCJLzhye5/Y=;
-        b=ILlo41hyJZtsDmBS69NJbb7EmXZcoQEpo4wMlfhF9CP2gGdufpcBFfcw7IwRL+h7IY
-         7CjR1VfDfpt4AtwVpjitJglfzOfQMGMLqruD3Bv0c+xeQ9+u08peRfgtY2SWA+3Kptz6
-         4SjOO0C1r7ee2qL/xkUts+pIl70+yU6ivVP9iJRpNfUVhUE6tko46YbNa3x6bDJEjFSd
-         5E3jx42u+n3+gg0xqQUQ5uoFp+XEs+fOjVfuom8JF5j4tpyPAPQbFVl6SmWgq7eUNebC
-         91XDG9qIhZogI5ipu5aSLYvOvjY90gBymTM9skkh0pBVU6I5H2Pxsi/PIQrX80IkWS4l
-         XJdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747804846; x=1748409646;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4gJnMxpsaSjZ+6o2NjI2WYwxrpxXBL9KkCJLzhye5/Y=;
-        b=PEkHtli+uf5s4GvwS32PS7KfEn3sQYaF5ikIBhQygcp3jGKAg7ubnOmmkWPnspddgR
-         TUL2ktfGqwoe1yI5RcOKuIzy75rJ3PASEiffD6ZUqeALcJuKPx0sVuLYkRMCT9lbi5eu
-         YZW3mE0MMzoYN4n3MotGD/tfcNUTZakKjuiAc4k2qayb9JXbNGW3XX4wpeDAMizh13uJ
-         3PJwF1wEhLlXKKnEYM9Qq4uyTcu/6z5Jo5mKMkF/eeogPBKKVarETVojxfdUpBxo9fY3
-         T2A8gWleU+7/T4+AeNSNfMivGCnoP8JYNS31yez+64jb084IMmS2NbnyABzJR6/PvdIW
-         LJOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWO7zErrCF1krIk13PXZYPVQt2J6yPCO+GXG/7JZoAiOcdT5jTvM00tE7pLGNe20LHHZwazbt3Fdk1YTWtyZItx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA8h8NSO/808yD7IhQCzm05HLnVXCwMnT+7YtVzKRD+OaNnKUF
-	XinluyzDKaVCDtUQCMITBBeOBOQGCEni2TgvFBRqnwxImm+O+49jywFdjWs4q+oybMcRsL9d3HD
-	8Jr0Cf+ljvQ==
-X-Google-Smtp-Source: AGHT+IE7SRx+BDr7tS9kCtwxn6KSJdV4215Qd9UyNCt0JI/hnziiqUFWUlcG454z0fisHMyHDKDMeE+N6PFy
-X-Received: from ybuv15.prod.google.com ([2002:a05:6902:108f:b0:e75:c58e:4240])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:2785:b0:e7b:b0b5:ce6d
- with SMTP id 3f1490d57ef6-e7bb0b5cf43mr13145593276.40.1747804846357; Tue, 20
- May 2025 22:20:46 -0700 (PDT)
-Date: Tue, 20 May 2025 22:20:29 -0700
-In-Reply-To: <20250521052029.658800-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nMUPtifQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ov8OStvi3e2Avv3EOOFVz/vNaATY5mYizCk5nGJvzNvhYdvQ9gvN9iReBftHkTjo3qZoAfDqcjPxwmZQZ7pSDSETWiMtIIDpECQoFk8P3nWZ0dbNp2JcWfx3g3lAMVaT5YvkyHrK+ftEEVz+mokbs+qjZ+MTeriHlsJOgQ43VaggDMBlBhlAHExFPbppwqANI8TVf4/W41rXm93m8rsZs89Gwi9M4SNhYu+zBPmkT/3/NdWrQAxQg9qCqUTtBxfcbYcTGVK3K/kXkdLO5O1WTq4DpvD/BFkkt8zQSHga57o0Fj9SirE8oCKeM2h3Cd+7mZdQka8Z0cvG6oUYI4l2Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fI7myCmLpMpW7zwLUWO8GADf0aw47OwNIL/QpCH17Ek=;
+ b=vXFDwjB4ukEHWAEK7RZ2LPf6Qbt9O61syiZsyumTWhIPFLpTBsfHplR7hvbUbMJamfBT6kmGzuUTcK/M0fg6RPeSul32LPDHIhX4ddJ8Uxs/mUv/ZBnM723YWywaYYf/fESPyut1bb+WTv2RSQxudvRT3TPwLMmM1NpoTeGrX9OOAqyp6Sk2qpj9DAFAxwtpXvKxEAav9b+5Eh39tY2/UCjEt/c/IzNBoW4mxPed4gEpMtLmPjGnB9yju8ad/9GBI2D79J6OF69cKH47u9VWC+yK5lUrHJ+pzeQN7tWDx525NJvivuBG+auBiTRwe0uUaJun5l6wAjX9XmtbDQcrhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fI7myCmLpMpW7zwLUWO8GADf0aw47OwNIL/QpCH17Ek=;
+ b=nMUPtifQ30fjicSwF4ZREob/A2UDeMKhDOG+pfxmzpO1cmkVm3nri1PnThvalqo3mMdPBnY33oHe4/tBflz1JyH5SpYX8uHS5LHnlvI1UUcJwelObsRjGsiFuBmXJn9X7rFeipDGjxjGxvZuvsAbVTZDrChTQhEu2DyjaYFnxmE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by CYXPR12MB9426.namprd12.prod.outlook.com (2603:10b6:930:e3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.19; Wed, 21 May
+ 2025 05:31:02 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::2efc:dc9f:3ba8:3291%6]) with mapi id 15.20.8746.030; Wed, 21 May 2025
+ 05:31:02 +0000
+Message-ID: <82853f34-cd5a-43d7-81de-8e40144503e1@amd.com>
+Date: Wed, 21 May 2025 11:00:54 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [tip: perf/urgent] perf/x86/amd/core: Fix Family 17h+ instruction
+ cache events
+To: Ingo Molnar <mingo@kernel.org>, Vince Weaver <vincent.weaver@maine.edu>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
+ x86@kernel.org
+References: <174740303900.406.5499797802401271693.tip-bot2@tip-bot2>
+ <c409c331-da7d-7424-e0db-a4c61ea423ca@maine.edu> <aCiI4lcWIe6GYW4_@gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <aCiI4lcWIe6GYW4_@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0180.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:be::17) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250521052029.658800-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250521052029.658800-4-irogers@google.com>
-Subject: [PATCH v1 3/3] perf sort: Use perf_env to set arch sort keys and header
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|CYXPR12MB9426:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e94b16e-c638-46d1-4cab-08dd9828ac7e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ak41Q3BMN0ZwYS9GTDZ2VEQyYi9Qelc4QVJNRlk5YTVQWW9qZ2lyeFllOGxk?=
+ =?utf-8?B?S2x3WDl1Zmk1VmZKMnpHdVNPbnZsdVF6ZGRldFVXV05SNjh3UHFNZE1iQTVH?=
+ =?utf-8?B?bXdlYkFRZ1JtcUkxelNBS1lUNUVJK01lV2FwcGQwTWtzMVo1M0Mxdm5FMGF6?=
+ =?utf-8?B?SkxSVFQzRTdyMDdFRmJrYnBOVGtQaHFYVU9SZEVjZElncjlFZnFsZ3BMNmE2?=
+ =?utf-8?B?Rm1yQUpxaUdsWkZxa0pPalVNWGc4MXBCaHRZRUphcTRzUnFsKzhOOTZlQjdM?=
+ =?utf-8?B?Z0RpNXgvK1pyRk1zaWVlVExDQSs4bGIrM2t4TDNZQ2ZDKzFkSVYwR292TDJX?=
+ =?utf-8?B?eFpyRGJrZmFTSHR3cTJESlQrT1czWUNDd0NuZmlicm9CVlhtSVRTajBvUHM4?=
+ =?utf-8?B?L0E4YzRxcEJVQ1llcFJ6VWNvbnFhZVVuNzNkcmVRSnY4dHRmcmRhY1NTbDR2?=
+ =?utf-8?B?eGU4ZktIOUFkNGNndFNVdkIySjE0cmFwUFRUdWU2dHFkK1NjS2oyay8zVmJH?=
+ =?utf-8?B?YXJGbS9RUWUwdUlBeFJMcmpPT0pqS3ZkMU1oZlA5NDFkVE9jNHhUNVZDZkJX?=
+ =?utf-8?B?M0hUR1gydmNrMWxTcmVvallHTnhsZkg0aDNEUXVJRFBxcjVVRVRtZkRyM1ds?=
+ =?utf-8?B?MGRjOTRBQkRvUkY5elJMTkt5dHo2aGZacVVYT2RxUGFaN3dtRkNYbU1kdUhQ?=
+ =?utf-8?B?bEhpcllYeEQ3S2xIZlRIcUtRU0ZhL0F4Q0dwdWFBR2NBSmR4eUdTRlg2RkhV?=
+ =?utf-8?B?cVlSdzZEc1RRQi9MNnZ5VEFhcXpDdVRocFdNUk4wNXpZUjBpY3dWbUNNdHM2?=
+ =?utf-8?B?elllSmsvL0NSaTM1S20zdmpUSmdyREtVNHBoaTZ0Nkw4Z0Rnd1Z5UTZCNGpX?=
+ =?utf-8?B?WlFMVC9hdHpaVXFuOVA3Y3A1dWdEeHlLVzN4cURETUZLeWkxOGlZVWU5RGVV?=
+ =?utf-8?B?elhtTXhDaHdqVUx3SHg5Z21ycEwrU3I3RW1TZTZQU1F1QlZZekdBdVBHNnNv?=
+ =?utf-8?B?L1FKSkNuTU9wTWhEbkhsdDBZSXdXWFhVOWFLNmdLV2ljVThZbVJHd3g0Nkgx?=
+ =?utf-8?B?S3pTRHVoSGJhMk9lS2svc0NVcUY4cnVSa0JybWw3SVl6R0VwZ3NQY2doWUtp?=
+ =?utf-8?B?aXpkOHl3UmNWcmtSQ3BhRHNaYUdVd0hXTjJrbUs1REplb3YzMW4wYUlmai9X?=
+ =?utf-8?B?bDlVMEFDTGlkZFh6MTI3VGppOGswRG5iYkNXSkxiY0hqWWtGZ3pGQktTdkFl?=
+ =?utf-8?B?dkZja0V0SGtDRTdkQ2pQNWlZczRoR0JxT0t5d1hoTmZxbFBxdVJUK1p6cFhD?=
+ =?utf-8?B?bFg0bnZRNlRUWVZ1c2VqZ0pXbDF2dVRxVUswT2pnM2VLNSt2c2ZseVV5LzJF?=
+ =?utf-8?B?R2IvUVk4dDh6TlkwbiszUSs3OCt2Z3lTR3ZOVXBVOWd1NklwY3Q3OGVMSXVM?=
+ =?utf-8?B?MGNacGUzSWRIRnhYZzcxVW1RRFJ5UFI5ZE81cjVSdWRDU2NTSFJWVUp6bGp5?=
+ =?utf-8?B?MUgzOG13dWpHTXUvZThOTUptdFhhN3QrZ25zbTBlMVNLQWdibmVCbkR5NU1a?=
+ =?utf-8?B?VFd1TzRkdVNvSjdzbHdtQ3ZjcWlPNis0aWwrQ0w4UEJXZkdGUnROTEdXZGlK?=
+ =?utf-8?B?RVJmUXpUVUZEM254d0M4SmIxV0c1SnkxUDRaTHVUczRtVTRDVjRwV2oxMHBx?=
+ =?utf-8?B?eUoyd0V5UWtuTHlLK0RqZVA4NzB6Mk9pQjltWlo3MlluOXptSEIzZ2JJRDRZ?=
+ =?utf-8?B?V2sza0c0Y2xWVVcxN1FGRU9JcXUwcDFFZnR6UDI3WEh4bTFBUGlXRm5NRWV2?=
+ =?utf-8?B?a0FGSkNITStQK2VrZWsrWktQVDVQYWJldTR2UVEwMXZYQzU5VXV0VVlNUU1J?=
+ =?utf-8?B?ak9uK3dMemNPSnBXY2NYWllYN1RJWW1WYnkxTk5Vb3IwMXc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MDczdXVUZExEcHBwblZ6M21sQ1o2TkRXeEkyWGRVbmxnM3Brb2E5VWg4ejdz?=
+ =?utf-8?B?OXNuN285cFUwTnNma2d5ZnJFOWdJQmU4cHdJT0djb2V4TTVwWGlGUEEwUXFj?=
+ =?utf-8?B?OXc5NUN1UWxlOU9NVnFZdUFleVBCSldoMEJJRzA2VjEvVFQ5QnBnNVpMU2lF?=
+ =?utf-8?B?ckkzSUtVeHM0STU1OVQ5Y0c3TUhkaEQwS01Sczdyb2trL1EwRVdlUHQ0L3Nl?=
+ =?utf-8?B?TU5QcERpR1FjNDlLL1VDb0l1RUZMRmNqT3p4Q1V2TGZKRE15TkkveVFxRytV?=
+ =?utf-8?B?eVVnSjBxZ2ZlRkxxY1FNNUllN0tmZ0xGMTlacXcrTnJTcDZLT2Q1NmN5Umh1?=
+ =?utf-8?B?c3ZRYmU5MThsRGFBZkxpQU5zd1RaQUJKcHdrVTJEdDFrT0hmYkFGMW5FNDh2?=
+ =?utf-8?B?QVBuZEJ1NGc4MXFJQWpWSFdDM2NGREdRZlNsbTZqbE9TVzg2MzQ3djlDN3Ar?=
+ =?utf-8?B?b3MrRnJVWm1tamk2cWxFV0hvZFA5SXFUZ0ZoL2FBS1pCZ21DVUgySFQ4cWxC?=
+ =?utf-8?B?b0pyK3ZJaXZZTGY4N0NVL3pxQ3dPbU80R0RPV2Q5Q095dUt0WWhmMWdEZURD?=
+ =?utf-8?B?S2lSMVdHd2xGOW9hMlI5WGYrRGJwbFA5QmRxVko4dTJuSVEvWEM4VHdwTndh?=
+ =?utf-8?B?UERqMzJVZkIwSjZWZkhGV2tWK2J4am11WG1OTE9kRjhNNUt6ODBCVDQ4NnJr?=
+ =?utf-8?B?N21iTkoybjlsc0xyeUtqVGF4SnE0WWlUNkNaYjhuaWkreDJENVZRb3N3c2tO?=
+ =?utf-8?B?MnFWcE16MStDcWtsSFRKU01iVnJkZWJiQkdnREV3YXhmWUEwdzJRT25Ia21u?=
+ =?utf-8?B?eEJIejF6Q2NjRTAvTUlKb0ZLRGgyYjJreFNyUjdTMzZBT3NwSmJrY0NSeEgv?=
+ =?utf-8?B?KzdWRUdkMlFaOG4xaGVtbUV3aGg0VUJjd1NyQWtvM1NnRm9HSFNmSHBEa1BQ?=
+ =?utf-8?B?R3pEMlBtWmEyd01TWmVkV1pPTFpqR0ZtZ2xwOXVzckdnRDI2VDZDcGNtcjFy?=
+ =?utf-8?B?aWxaMUN3SVpUZ0VWM3cxRXlzblpqSStidC9RQUpGdVRzeU5kZGZVMWhmYmJn?=
+ =?utf-8?B?aHEydjM5UDFxbEVwb0dIT0E3U3VOZEdrS1c2UlBVd1owNEpCSVFYTzRyS3Fs?=
+ =?utf-8?B?NkpoN05abFJmWFd2RXlHbW1OZU5zYWlYODJSV0xYOGhLSlF2ZFNsd2hhdFBY?=
+ =?utf-8?B?VlU4cXpRVGFENUJzaWhidXd4ckFYMjlZdHp0MjVKRW9jSmlZd0hJYW5iTW8x?=
+ =?utf-8?B?NGNSSU9nSE9wbFpoSWZVUFNiUnlqdzVNR1EzWlhmYzV4dUoxZGg5c0hURHlV?=
+ =?utf-8?B?RXluVWdJV3pVWFRnUE1jU2xxWTJNQmRFVnZJcHlSZmlZRXQvVGFtM3ppZ09v?=
+ =?utf-8?B?ZTl5Z2tnZjQ5cFk4aFN4N0theWFlTVlVL2s4TzJMYkNXTHJSOWFqUTFnaTI2?=
+ =?utf-8?B?cGxzLzJUN1BsYmxFNXBlL1l3MXRodlRMalFjejBLbHNIM2VVK3E2N3VlYnY5?=
+ =?utf-8?B?dUJmMWtZUDc2OS9UYmpIU2plQ1lGM3oyRDFzQzh1WUYxYUcvSWd3L3BKUVlK?=
+ =?utf-8?B?NHBpblFMV3hPTEpvNm5kTUtjRmk3dEtpdVVydnRhWXpyZ1FQaVh0SzZxb3VW?=
+ =?utf-8?B?bUJOQytHNmlRT0ZyOURMbGFjSGoxZ2M3Qm5VQ21ESVkwY0NJTkV2aG5EbEY5?=
+ =?utf-8?B?cU1pd3lEZnRNWkdJY2o5Qzd3T3V1d1VZU2RENk1vcnJlTEo4YzFDcThqMjZK?=
+ =?utf-8?B?WEplU0tjdWxZYVd6M051SVJKZUhDZkdnVTRTVjBMUnUzL2tCd0xENmhqd2lv?=
+ =?utf-8?B?eHR2YU1vV09oODZNZVgvbmdSa1NzMUE1elRPYjhnWUpvRmhZSjI3dmVhRmJ1?=
+ =?utf-8?B?VzNlbXcyeS9TdTBLNnlncHVoTzA3UnFtamVQOG9HUk9aY3NkdUcvTnZMc0VC?=
+ =?utf-8?B?czVBcVVLeTIzS1Ywc1l3QWRTM2cyTTlncEVMK0hQNXJIdHQyWWQ5WlZONHBY?=
+ =?utf-8?B?RzArdGc0S2NVcDU1TWlhVWFXbUhsWHhEVHlKYjFlU3hTUS9xMndRUWFiYzJZ?=
+ =?utf-8?B?SXMrWWpqZ2ZUdEJteWtpTklCV1dNRUN4ZHhNYzg4VCtVN1J0dnBpa3l1NTlU?=
+ =?utf-8?Q?YG9bUj4dS7MlB3GmcGBrPMKm3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e94b16e-c638-46d1-4cab-08dd9828ac7e
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 05:31:02.1044
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DbajMabsJiv0GzVJx1BQmaidGplxKiVxLZXUOZApErHgVihU11YFJLeOvTNilo8xMi2oLamvL/2de2bhlsur2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9426
 
-Previously arch_support_sort_key and arch_perf_header_entry used a
-weak symbol to compile as appropriate for x86 and powerpc. A
-limitation to this is that the handling of a data file could vary in
-cross-platform development. Change to using the perf_env of the
-current session to determine the architecture kind and set the sort
-key and header entries as appropriate.
+On 5/17/2025 6:32 PM, Ingo Molnar wrote:
+> 
+> * Vince Weaver <vincent.weaver@maine.edu> wrote:
+> 
+>> On Fri, 16 May 2025, tip-bot2 for Sandipan Das wrote:
+>>
+>>> The following commit has been merged into the perf/urgent branch of tip:
+>>>
+>>
+>>> perf/x86/amd/core: Fix Family 17h+ instruction cache events
+>>>
+>>> PMCx080 and PMCx081 report incorrect IC accesses and misses respectively
+>>> for all Family 17h and later processors. PMCx060 unit mask 0x10 replaces
+>>> PMCx081 for counting IC misses but there is no suitable replacement for
+>>> counting IC accesses.
+>>
+>> can you link to the errata document that describes this problem as well as 
+>> maybe give a rundown of how and why this breaks?
+> 
+> I've delayed this patch until these details are cleared up.
+> 
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/powerpc/util/Build   |  1 -
- tools/perf/arch/powerpc/util/event.c | 34 ----------------
- tools/perf/arch/x86/util/event.c     | 19 ---------
- tools/perf/builtin-annotate.c        |  2 +-
- tools/perf/builtin-c2c.c             | 53 +++++++++++++-----------
- tools/perf/builtin-diff.c            |  2 +-
- tools/perf/builtin-report.c          |  2 +-
- tools/perf/builtin-top.c             | 16 ++++----
- tools/perf/tests/hists_cumulate.c    |  8 ++--
- tools/perf/tests/hists_filter.c      |  8 ++--
- tools/perf/tests/hists_link.c        |  8 ++--
- tools/perf/tests/hists_output.c      | 10 ++---
- tools/perf/util/event.h              |  3 --
- tools/perf/util/sort.c               | 61 ++++++++++++++++++++--------
- tools/perf/util/sort.h               |  5 ++-
- 15 files changed, 104 insertions(+), 128 deletions(-)
- delete mode 100644 tools/perf/arch/powerpc/util/event.c
+Both of these events were removed from the Processor Programming Reference
+starting with Zen 2. Errata is missing for Zen 1 but it is known that these
+events are broken. A quick test like the following will show that PMCx081
+undercounts IC misses compared to PMCx060 with unit mask 0x10.
 
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index ed82715080f9..fdd6a77a3432 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -5,7 +5,6 @@ perf-util-y += mem-events.o
- perf-util-y += pmu.o
- perf-util-y += sym-handling.o
- perf-util-y += evsel.o
--perf-util-y += event.o
- 
- perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
- 
-diff --git a/tools/perf/arch/powerpc/util/event.c b/tools/perf/arch/powerpc/util/event.c
-deleted file mode 100644
-index 024ac8b54c33..000000000000
---- a/tools/perf/arch/powerpc/util/event.c
-+++ /dev/null
-@@ -1,34 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/types.h>
--#include <linux/string.h>
--#include <linux/zalloc.h>
--
--#include "../../../util/event.h"
--#include "../../../util/synthetic-events.h"
--#include "../../../util/machine.h"
--#include "../../../util/tool.h"
--#include "../../../util/map.h"
--#include "../../../util/debug.h"
--#include "../../../util/sample.h"
--
--const char *arch_perf_header_entry(const char *se_header)
--{
--	if (!strcmp(se_header, "Local INSTR Latency"))
--		return "Finish Cyc";
--	else if (!strcmp(se_header, "INSTR Latency"))
--		return "Global Finish_cyc";
--	else if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
--		return "Dispatch Cyc";
--	else if (!strcmp(se_header, "Pipeline Stage Cycle"))
--		return "Global Dispatch_cyc";
--	return se_header;
--}
--
--int arch_support_sort_key(const char *sort_key)
--{
--	if (!strcmp(sort_key, "p_stage_cyc"))
--		return 1;
--	if (!strcmp(sort_key, "local_p_stage_cyc"))
--		return 1;
--	return 0;
--}
-diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
-index 576c1c36046c..3cd384317739 100644
---- a/tools/perf/arch/x86/util/event.c
-+++ b/tools/perf/arch/x86/util/event.c
-@@ -91,22 +91,3 @@ int perf_event__synthesize_extra_kmaps(const struct perf_tool *tool,
- }
- 
- #endif
--
--const char *arch_perf_header_entry(const char *se_header)
--{
--	if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
--		return "Local Retire Latency";
--	else if (!strcmp(se_header, "Pipeline Stage Cycle"))
--		return "Retire Latency";
--
--	return se_header;
--}
--
--int arch_support_sort_key(const char *sort_key)
--{
--	if (!strcmp(sort_key, "p_stage_cyc"))
--		return 1;
--	if (!strcmp(sort_key, "local_p_stage_cyc"))
--		return 1;
--	return 0;
--}
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 9833c2c82a2f..a2d41614ef5e 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -947,7 +947,7 @@ int cmd_annotate(int argc, const char **argv)
- 			annotate_opts.show_br_cntr = true;
- 	}
- 
--	if (setup_sorting(NULL) < 0)
-+	if (setup_sorting(/*evlist=*/NULL, &annotate.session->header.env) < 0)
- 		usage_with_options(annotate_usage, options);
- 
- 	ret = __cmd_annotate(&annotate);
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e2e257bcc461..324368aabfa2 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -195,12 +195,14 @@ static struct hist_entry_ops c2c_entry_ops = {
- 
- static int c2c_hists__init(struct c2c_hists *hists,
- 			   const char *sort,
--			   int nr_header_lines);
-+			   int nr_header_lines,
-+			   struct perf_env *env);
- 
- static struct c2c_hists*
- he__get_c2c_hists(struct hist_entry *he,
- 		  const char *sort,
--		  int nr_header_lines)
-+		  int nr_header_lines,
-+		  struct perf_env *env)
- {
- 	struct c2c_hist_entry *c2c_he;
- 	struct c2c_hists *hists;
-@@ -214,7 +216,7 @@ he__get_c2c_hists(struct hist_entry *he,
- 	if (!hists)
- 		return NULL;
- 
--	ret = c2c_hists__init(hists, sort, nr_header_lines);
-+	ret = c2c_hists__init(hists, sort, nr_header_lines, env);
- 	if (ret) {
- 		free(hists);
- 		return NULL;
-@@ -350,7 +352,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 
- 		mi = mi_dup;
- 
--		c2c_hists = he__get_c2c_hists(he, c2c.cl_sort, 2);
-+		c2c_hists = he__get_c2c_hists(he, c2c.cl_sort, 2, machine->env);
- 		if (!c2c_hists)
- 			goto free_mi;
- 
-@@ -1966,7 +1968,8 @@ static struct c2c_fmt *get_format(const char *name)
- 	return c2c_fmt;
- }
- 
--static int c2c_hists__init_output(struct perf_hpp_list *hpp_list, char *name)
-+static int c2c_hists__init_output(struct perf_hpp_list *hpp_list, char *name,
-+				  struct perf_env *env __maybe_unused)
- {
- 	struct c2c_fmt *c2c_fmt = get_format(name);
- 	int level = 0;
-@@ -1980,14 +1983,14 @@ static int c2c_hists__init_output(struct perf_hpp_list *hpp_list, char *name)
- 	return 0;
- }
- 
--static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name)
-+static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name, struct perf_env *env)
- {
- 	struct c2c_fmt *c2c_fmt = get_format(name);
- 	struct c2c_dimension *dim;
- 
- 	if (!c2c_fmt) {
- 		reset_dimensions();
--		return sort_dimension__add(hpp_list, name, NULL, 0);
-+		return sort_dimension__add(hpp_list, name, /*evlist=*/NULL, env, /*level=*/0);
- 	}
- 
- 	dim = c2c_fmt->dim;
-@@ -2008,7 +2011,7 @@ static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name)
- 										\
- 		for (tok = strtok_r((char *)_list, ", ", &tmp);			\
- 				tok; tok = strtok_r(NULL, ", ", &tmp)) {	\
--			ret = _fn(hpp_list, tok);				\
-+			ret = _fn(hpp_list, tok, env);				\
- 			if (ret == -EINVAL) {					\
- 				pr_err("Invalid --fields key: `%s'", tok);	\
- 				break;						\
-@@ -2021,7 +2024,8 @@ static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name)
- 
- static int hpp_list__parse(struct perf_hpp_list *hpp_list,
- 			   const char *output_,
--			   const char *sort_)
-+			   const char *sort_,
-+			   struct perf_env *env)
- {
- 	char *output = output_ ? strdup(output_) : NULL;
- 	char *sort   = sort_   ? strdup(sort_) : NULL;
-@@ -2052,7 +2056,8 @@ static int hpp_list__parse(struct perf_hpp_list *hpp_list,
- 
- static int c2c_hists__init(struct c2c_hists *hists,
- 			   const char *sort,
--			   int nr_header_lines)
-+			   int nr_header_lines,
-+			   struct perf_env *env)
- {
- 	__hists__init(&hists->hists, &hists->list);
- 
-@@ -2066,15 +2071,16 @@ static int c2c_hists__init(struct c2c_hists *hists,
- 	/* Overload number of header lines.*/
- 	hists->list.nr_header_lines = nr_header_lines;
- 
--	return hpp_list__parse(&hists->list, NULL, sort);
-+	return hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
- }
- 
- static int c2c_hists__reinit(struct c2c_hists *c2c_hists,
- 			     const char *output,
--			     const char *sort)
-+			     const char *sort,
-+			     struct perf_env *env)
- {
- 	perf_hpp__reset_output_field(&c2c_hists->list);
--	return hpp_list__parse(&c2c_hists->list, output, sort);
-+	return hpp_list__parse(&c2c_hists->list, output, sort, env);
- }
- 
- #define DISPLAY_LINE_LIMIT  0.001
-@@ -2207,8 +2213,9 @@ static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
- 	return 0;
- }
- 
--static int resort_cl_cb(struct hist_entry *he, void *arg __maybe_unused)
-+static int resort_cl_cb(struct hist_entry *he, void *arg)
- {
-+	struct perf_env *env = arg;
- 	struct c2c_hist_entry *c2c_he;
- 	struct c2c_hists *c2c_hists;
- 	bool display = he__display(he, &c2c.shared_clines_stats);
-@@ -2222,7 +2229,7 @@ static int resort_cl_cb(struct hist_entry *he, void *arg __maybe_unused)
- 		c2c_he->cacheline_idx = idx++;
- 		calc_width(c2c_he);
- 
--		c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort);
-+		c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort, env);
- 
- 		hists__collapse_resort(&c2c_hists->hists, NULL);
- 		hists__output_resort_cb(&c2c_hists->hists, NULL, filter_cb);
-@@ -2333,7 +2340,7 @@ static int resort_shared_cl_cb(struct hist_entry *he, void *arg __maybe_unused)
- 	return 0;
- }
- 
--static int hists__iterate_cb(struct hists *hists, hists__resort_cb_t cb)
-+static int hists__iterate_cb(struct hists *hists, hists__resort_cb_t cb, void *arg)
- {
- 	struct rb_node *next = rb_first_cached(&hists->entries);
- 	int ret = 0;
-@@ -2342,7 +2349,7 @@ static int hists__iterate_cb(struct hists *hists, hists__resort_cb_t cb)
- 		struct hist_entry *he;
- 
- 		he = rb_entry(next, struct hist_entry, rb_node);
--		ret = cb(he, NULL);
-+		ret = cb(he, arg);
- 		if (ret)
- 			break;
- 		next = rb_next(&he->rb_node);
-@@ -2448,7 +2455,7 @@ static void print_cacheline(struct c2c_hists *c2c_hists,
- 	hists__fprintf(&c2c_hists->hists, false, 0, 0, 0, out, false);
- }
- 
--static void print_pareto(FILE *out)
-+static void print_pareto(FILE *out, struct perf_env *env)
- {
- 	struct perf_hpp_list hpp_list;
- 	struct rb_node *nd;
-@@ -2473,7 +2480,7 @@ static void print_pareto(FILE *out)
- 			    "dcacheline";
- 
- 	perf_hpp_list__init(&hpp_list);
--	ret = hpp_list__parse(&hpp_list, cl_output, NULL);
-+	ret = hpp_list__parse(&hpp_list, cl_output, /*evlist=*/NULL, env);
- 
- 	if (WARN_ONCE(ret, "failed to setup sort entries\n"))
- 		return;
-@@ -2538,7 +2545,7 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
- 	fprintf(out, "=================================================\n");
- 	fprintf(out, "#\n");
- 
--	print_pareto(out);
-+	print_pareto(out, &session->header.env);
- }
- 
- #ifdef HAVE_SLANG_SUPPORT
-@@ -3095,7 +3102,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 		goto out_session;
- 	}
- 
--	err = c2c_hists__init(&c2c.hists, "dcacheline", 2);
-+	err = c2c_hists__init(&c2c.hists, "dcacheline", 2, &session->header.env);
- 	if (err) {
- 		pr_debug("Failed to initialize hists\n");
- 		goto out_session;
-@@ -3179,13 +3186,13 @@ static int perf_c2c__report(int argc, const char **argv)
- 	else if (c2c.display == DISPLAY_SNP_PEER)
- 		sort_str = "tot_peer";
- 
--	c2c_hists__reinit(&c2c.hists, output_str, sort_str);
-+	c2c_hists__reinit(&c2c.hists, output_str, sort_str, &session->header.env);
- 
- 	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
- 
- 	hists__collapse_resort(&c2c.hists.hists, NULL);
- 	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
--	hists__iterate_cb(&c2c.hists.hists, resort_cl_cb);
-+	hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, &session->header.env);
- 
- 	ui_progress__finish();
- 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index ae490d58af92..f6735cf02329 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -2003,7 +2003,7 @@ int cmd_diff(int argc, const char **argv)
- 		sort__mode = SORT_MODE__DIFF;
- 	}
- 
--	if (setup_sorting(NULL) < 0)
-+	if (setup_sorting(/*evlist=*/NULL, &data__files[0].session->header.env) < 0)
- 		usage_with_options(diff_usage, options);
- 
- 	setup_pager();
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index f0299c7ee025..8be6e7c3bd22 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1776,7 +1776,7 @@ int cmd_report(int argc, const char **argv)
- 	}
- 
- 	if ((last_key != K_SWITCH_INPUT_DATA && last_key != K_RELOAD) &&
--	    (setup_sorting(session->evlist) < 0)) {
-+	    (setup_sorting(session->evlist, &session->header.env) < 0)) {
- 		if (sort_order)
- 			parse_options_usage(report_usage, options, "s", 1);
- 		if (field_order)
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 7b6cde87d2af..13ef0d188a96 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
- 
- 	setup_browser(false);
- 
--	if (setup_sorting(top.evlist) < 0) {
-+	top.session = perf_session__new(/*data=*/NULL, /*tool=*/NULL);
-+	if (IS_ERR(top.session)) {
-+		status = PTR_ERR(top.session);
-+		top.session = NULL;
-+		goto out_delete_evlist;
-+	}
-+
-+	if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
- 		if (sort_order)
- 			parse_options_usage(top_usage, options, "s", 1);
- 		if (field_order)
-@@ -1820,13 +1827,6 @@ int cmd_top(int argc, const char **argv)
- 		signal(SIGWINCH, winch_sig);
- 	}
- 
--	top.session = perf_session__new(NULL, NULL);
--	if (IS_ERR(top.session)) {
--		status = PTR_ERR(top.session);
--		top.session = NULL;
--		goto out_delete_evlist;
--	}
--
- 	if (!evlist__needs_bpf_sb_event(top.evlist))
- 		top.record_opts.no_bpf_event = true;
- 
-diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
-index 1e0f5a310fd5..3eb9ef8d7ec6 100644
---- a/tools/perf/tests/hists_cumulate.c
-+++ b/tools/perf/tests/hists_cumulate.c
-@@ -295,7 +295,7 @@ static int test1(struct evsel *evsel, struct machine *machine)
- 	symbol_conf.cumulate_callchain = false;
- 	evsel__reset_sample_bit(evsel, CALLCHAIN);
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 	callchain_register_param(&callchain_param);
- 
- 	err = add_hist_entries(hists, machine);
-@@ -442,7 +442,7 @@ static int test2(struct evsel *evsel, struct machine *machine)
- 	symbol_conf.cumulate_callchain = false;
- 	evsel__set_sample_bit(evsel, CALLCHAIN);
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 	callchain_register_param(&callchain_param);
- 
- 	err = add_hist_entries(hists, machine);
-@@ -500,7 +500,7 @@ static int test3(struct evsel *evsel, struct machine *machine)
- 	symbol_conf.cumulate_callchain = true;
- 	evsel__reset_sample_bit(evsel, CALLCHAIN);
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 	callchain_register_param(&callchain_param);
- 
- 	err = add_hist_entries(hists, machine);
-@@ -684,7 +684,7 @@ static int test4(struct evsel *evsel, struct machine *machine)
- 	symbol_conf.cumulate_callchain = true;
- 	evsel__set_sample_bit(evsel, CALLCHAIN);
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 
- 	callchain_param = callchain_param_default;
- 	callchain_register_param(&callchain_param);
-diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
-index 4b2e4f2fbe48..1cebd20cc91c 100644
---- a/tools/perf/tests/hists_filter.c
-+++ b/tools/perf/tests/hists_filter.c
-@@ -131,10 +131,6 @@ static int test__hists_filter(struct test_suite *test __maybe_unused, int subtes
- 		goto out;
- 	err = TEST_FAIL;
- 
--	/* default sort order (comm,dso,sym) will be used */
--	if (setup_sorting(NULL) < 0)
--		goto out;
--
- 	machines__init(&machines);
- 
- 	/* setup threads/dso/map/symbols also */
-@@ -145,6 +141,10 @@ static int test__hists_filter(struct test_suite *test __maybe_unused, int subtes
- 	if (verbose > 1)
- 		machine__fprintf(machine, stderr);
- 
-+	/* default sort order (comm,dso,sym) will be used */
-+	if (setup_sorting(evlist, machine->env) < 0)
-+		goto out;
-+
- 	/* process sample events */
- 	err = add_hist_entries(evlist, machine);
- 	if (err < 0)
-diff --git a/tools/perf/tests/hists_link.c b/tools/perf/tests/hists_link.c
-index 5b6f1e883466..996f5f0b3bd1 100644
---- a/tools/perf/tests/hists_link.c
-+++ b/tools/perf/tests/hists_link.c
-@@ -303,10 +303,6 @@ static int test__hists_link(struct test_suite *test __maybe_unused, int subtest
- 		goto out;
- 
- 	err = TEST_FAIL;
--	/* default sort order (comm,dso,sym) will be used */
--	if (setup_sorting(NULL) < 0)
--		goto out;
--
- 	machines__init(&machines);
- 
- 	/* setup threads/dso/map/symbols also */
-@@ -317,6 +313,10 @@ static int test__hists_link(struct test_suite *test __maybe_unused, int subtest
- 	if (verbose > 1)
- 		machine__fprintf(machine, stderr);
- 
-+	/* default sort order (comm,dso,sym) will be used */
-+	if (setup_sorting(evlist, machine->env) < 0)
-+		goto out;
-+
- 	/* process sample events */
- 	err = add_hist_entries(evlist, machine);
- 	if (err < 0)
-diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
-index 33b5cc8352a7..ee5ec8bda60e 100644
---- a/tools/perf/tests/hists_output.c
-+++ b/tools/perf/tests/hists_output.c
-@@ -146,7 +146,7 @@ static int test1(struct evsel *evsel, struct machine *machine)
- 	field_order = NULL;
- 	sort_order = NULL; /* equivalent to sort_order = "comm,dso,sym" */
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 
- 	/*
- 	 * expected output:
-@@ -248,7 +248,7 @@ static int test2(struct evsel *evsel, struct machine *machine)
- 	field_order = "overhead,cpu";
- 	sort_order = "pid";
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 
- 	/*
- 	 * expected output:
-@@ -304,7 +304,7 @@ static int test3(struct evsel *evsel, struct machine *machine)
- 	field_order = "comm,overhead,dso";
- 	sort_order = NULL;
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 
- 	/*
- 	 * expected output:
-@@ -378,7 +378,7 @@ static int test4(struct evsel *evsel, struct machine *machine)
- 	field_order = "dso,sym,comm,overhead,dso";
- 	sort_order = "sym";
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 
- 	/*
- 	 * expected output:
-@@ -480,7 +480,7 @@ static int test5(struct evsel *evsel, struct machine *machine)
- 	field_order = "cpu,pid,comm,dso,sym";
- 	sort_order = "dso,pid";
- 
--	setup_sorting(NULL);
-+	setup_sorting(/*evlist=*/NULL, machine->env);
- 
- 	/*
- 	 * expected output:
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 119bce37f4fd..3b97a31736c5 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -390,9 +390,6 @@ extern unsigned int proc_map_timeout;
- #define PAGE_SIZE_NAME_LEN	32
- char *get_page_size_name(u64 size, char *str);
- 
--const char *arch_perf_header_entry(const char *se_header);
--int arch_support_sort_key(const char *sort_key);
--
- static inline bool perf_event_header__cpumode_is_guest(u8 cpumode)
- {
- 	return cpumode == PERF_RECORD_MISC_GUEST_KERNEL ||
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index dda4ef0b5a73..ccab10cd24a5 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2526,19 +2526,44 @@ struct sort_dimension {
- 	int			taken;
- };
- 
--int __weak arch_support_sort_key(const char *sort_key __maybe_unused)
-+static int arch_support_sort_key(const char *sort_key, struct perf_env *env)
- {
-+	const char *arch = perf_env__arch(env);
-+
-+	if (!strcmp("x86", arch) || !strcmp("powerpc", arch)) {
-+		if (!strcmp(sort_key, "p_stage_cyc"))
-+			return 1;
-+		if (!strcmp(sort_key, "local_p_stage_cyc"))
-+			return 1;
-+	}
- 	return 0;
- }
- 
--const char * __weak arch_perf_header_entry(const char *se_header)
--{
-+static const char *arch_perf_header_entry(const char *se_header, struct perf_env *env)
-+{
-+	const char *arch = perf_env__arch(env);
-+
-+	if (!strcmp("x86", arch)) {
-+		if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
-+			return "Local Retire Latency";
-+		else if (!strcmp(se_header, "Pipeline Stage Cycle"))
-+			return "Retire Latency";
-+	} else if (!strcmp("powerpc", arch)) {
-+		if (!strcmp(se_header, "Local INSTR Latency"))
-+			return "Finish Cyc";
-+		else if (!strcmp(se_header, "INSTR Latency"))
-+			return "Global Finish_cyc";
-+		else if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
-+			return "Dispatch Cyc";
-+		else if (!strcmp(se_header, "Pipeline Stage Cycle"))
-+			return "Global Dispatch_cyc";
-+	}
- 	return se_header;
- }
- 
--static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
-+static void sort_dimension_add_dynamic_header(struct sort_dimension *sd, struct perf_env *env)
- {
--	sd->entry->se_header = arch_perf_header_entry(sd->entry->se_header);
-+	sd->entry->se_header = arch_perf_header_entry(sd->entry->se_header, env);
- }
- 
- #define DIM(d, n, func) [d] = { .name = n, .entry = &(func) }
-@@ -3590,7 +3615,7 @@ int hpp_dimension__add_output(unsigned col, bool implicit)
- }
- 
- int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
--			struct evlist *evlist,
-+			struct evlist *evlist, struct perf_env *env,
- 			int level)
- {
- 	unsigned int i, j;
-@@ -3603,7 +3628,7 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
- 	 */
- 	for (j = 0; j < ARRAY_SIZE(arch_specific_sort_keys); j++) {
- 		if (!strcmp(arch_specific_sort_keys[j], tok) &&
--				!arch_support_sort_key(tok)) {
-+		    !arch_support_sort_key(tok, env)) {
- 			return 0;
- 		}
- 	}
-@@ -3616,7 +3641,7 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
- 
- 		for (j = 0; j < ARRAY_SIZE(dynamic_headers); j++) {
- 			if (sd->name && !strcmp(dynamic_headers[j], sd->name))
--				sort_dimension_add_dynamic_header(sd);
-+				sort_dimension_add_dynamic_header(sd, env);
- 		}
- 
- 		if (sd->entry == &sort_parent && parent_pattern) {
-@@ -3712,13 +3737,13 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
- }
- 
- /* This should match with sort_dimension__add() above */
--static bool is_hpp_sort_key(const char *key)
-+static bool is_hpp_sort_key(const char *key, struct perf_env *env)
- {
- 	unsigned i;
- 
- 	for (i = 0; i < ARRAY_SIZE(arch_specific_sort_keys); i++) {
- 		if (!strcmp(arch_specific_sort_keys[i], key) &&
--		    !arch_support_sort_key(key)) {
-+		    !arch_support_sort_key(key, env)) {
- 			return false;
- 		}
- 	}
-@@ -3740,7 +3765,7 @@ static bool is_hpp_sort_key(const char *key)
- }
- 
- static int setup_sort_list(struct perf_hpp_list *list, char *str,
--			   struct evlist *evlist)
-+			   struct evlist *evlist, struct perf_env *env)
- {
- 	char *tmp, *tok;
- 	int ret = 0;
-@@ -3769,7 +3794,7 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
- 		}
- 
- 		if (*tok) {
--			if (is_hpp_sort_key(tok)) {
-+			if (is_hpp_sort_key(tok, env)) {
- 				/* keep output (hpp) sort keys in the same level */
- 				if (prev_was_hpp) {
- 					bool next_same = (level == next_level);
-@@ -3782,7 +3807,7 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
- 				prev_was_hpp = false;
- 			}
- 
--			ret = sort_dimension__add(list, tok, evlist, level);
-+			ret = sort_dimension__add(list, tok, evlist, env, level);
- 			if (ret == -EINVAL) {
- 				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
- 					ui__error("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
-@@ -3911,7 +3936,7 @@ static char *setup_overhead(char *keys)
- 	return keys;
- }
- 
--static int __setup_sorting(struct evlist *evlist)
-+static int __setup_sorting(struct evlist *evlist, struct perf_env *env)
- {
- 	char *str;
- 	const char *sort_keys;
-@@ -3951,7 +3976,7 @@ static int __setup_sorting(struct evlist *evlist)
- 		}
- 	}
- 
--	ret = setup_sort_list(&perf_hpp_list, str, evlist);
-+	ret = setup_sort_list(&perf_hpp_list, str, evlist, env);
- 
- 	free(str);
- 	return ret;
-@@ -4187,16 +4212,16 @@ static int __setup_output_field(void)
- 	return ret;
- }
- 
--int setup_sorting(struct evlist *evlist)
-+int setup_sorting(struct evlist *evlist, struct perf_env *env)
- {
- 	int err;
- 
--	err = __setup_sorting(evlist);
-+	err = __setup_sorting(evlist, env);
- 	if (err < 0)
- 		return err;
- 
- 	if (parent_pattern != default_parent_pattern) {
--		err = sort_dimension__add(&perf_hpp_list, "parent", evlist, -1);
-+		err = sort_dimension__add(&perf_hpp_list, "parent", evlist, env, -1);
- 		if (err < 0)
- 			return err;
- 	}
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index a742ab7f3c67..d7787958e06b 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -6,6 +6,7 @@
- #include "hist.h"
- 
- struct option;
-+struct perf_env;
- 
- extern regex_t parent_regex;
- extern const char *sort_order;
-@@ -130,7 +131,7 @@ extern struct sort_entry sort_thread;
- 
- struct evlist;
- struct tep_handle;
--int setup_sorting(struct evlist *evlist);
-+int setup_sorting(struct evlist *evlist, struct perf_env *env);
- int setup_output_field(void);
- void reset_output_field(void);
- void sort__setup_elide(FILE *fp);
-@@ -145,7 +146,7 @@ bool is_strict_order(const char *order);
- int hpp_dimension__add_output(unsigned col, bool implicit);
- void reset_dimensions(void);
- int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
--			struct evlist *evlist,
-+			struct evlist *evlist, struct perf_env *env,
- 			int level);
- int output_field_add(struct perf_hpp_list *list, const char *tok, int *level);
- int64_t
--- 
-2.49.0.1112.g889b7c5bd8-goog
+$ perf stat -e "{cpu/event=0x81/,cpu/event=0x60,umask=0x10/}" ./ic-miss
 
+ Performance counter stats for './ic-miss':
+
+             2,105      cpu/event=0x81/u
+            30,826      cpu/event=0x60,umask=0x10/u
+
+       1.650143599 seconds time elapsed
+
+       1.646070000 seconds user
+       0.000998000 seconds sys
+
+If its acceptable, I can send out a v2 with the details above.
