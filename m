@@ -1,262 +1,269 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48CC18BBB9
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 17:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAC7261588
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 17:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747849155; cv=none; b=t2ttPpP9NUHxV9GAMCKnI+9OOX+ruJVbp/9hlcA8BGG29dGdVJEMqlzWi74nkwbYwpFQ0rQBpnKPdnvg7HBNQqNixmXRSPGcZxeAkmf5SRIhpkmbV2NS/balfor5ADD9xRjdAxcZPLROWow+yvLY06stxK0SClaSzBO0BqXGaz4=
+	t=1747849239; cv=none; b=nbSWVQ0+PvuQoEacd9RSeAT/HA3DsxCN7YBCmDfOm4ETmGWkcN2bOL0n64PYQ+VdsnaCPsobTj69peyvcN31rr8ENxdQppITpIeV0YNIF0uiOFKd9zUmeuuYH4SJWInk+alfv8BTss9fV4xdbfKM5CN0qDJrBo31MYM5sYuhJ5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747849155; c=relaxed/simple;
-	bh=xxdv/sOBKLxWyKENi19fsAunir3Rg819HaALHiYzrB4=;
+	s=arc-20240116; t=1747849239; c=relaxed/simple;
+	bh=PTXGIeTnGMX3g14xDrtXMvbBpa+Qj89XVKtEUS0m+gI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZeLtIRElF4QD1OhSyvzMWpyWZVrWDDn2rSfbFgIfFZ007CtilwoZI+rJXzbVm7GmU/tXGm2HsO74yrB7L4qJrYoUE9IK/q9OT9Pq3BXNTdXBnrrZcrAHW0TkhsK0DmFejlH4Cx32LN3IzBSm4gLejSa6XllfWGWNeBADi0xOTuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RZ2kgTF5; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=G1KA10adPuhpWFaU7Pt1FFtfoBbDABF2akJOyUmEcS1Tkb9/kSkIP+5PqjYr9fI4ZWBNA8ANI4Vl6r0iNyc+98kehO48Dvjm/UDy46Y/mKT4k1iXx1AqkziucjxtpQnnHZJSGuAPfNiDKvrb5081mwjL8Sgw3Y7/8KabhHkC3AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=iPFubfBF; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RZ2kgTF5"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so938065ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 10:39:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="iPFubfBF"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-442ed8a275fso88345225e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 10:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747849153; x=1748453953; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747849235; x=1748454035; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pqVVTcgANAyNaY0Ppr50pnoF48ZHi7cLyBFt3UHbis0=;
-        b=RZ2kgTF5hKJEftrCZeWjiMosB7CLLGNvgJ1vW+0vaVV9coUfSETuPMRoq71m4tjWKh
-         9/gMHuHwy8o9IGXv/Fs1onWCM675lIKSCUmDSHuk0JAZNobQ1/xmQ7o5BzfAxYNd9g3a
-         naR9FvAVxxKpuGqnCpUx3OSYARC6uBxSmtfwX0rCDJHQWbBnmjr/JwW59Ji6WeqgbdoD
-         AE05EMTzbYdtYOTh1zGrTSHXLOllg/Pzc9BFNz9A7/HtYh5suORV3oiOVbjetAAyNNeB
-         vzuVsXlbMJUS5pbAVeCe/7nLRz4h9TAo+mFyxpiLAyOoHDlwaihyonOyoxrdS25KsPZ1
-         PIbg==
+        bh=S1jGbAJIfAmBuq60m9cLcCzR1qg6oy8JqAOHCwyna+M=;
+        b=iPFubfBFq1U7+lyjpkYEKj1r+LqVAb7glIITTdRy35gmwA2px1XD43X0lpxFzg81fw
+         0RIZqf7oF8U+XkUtHIENECUt+EOcXS4k61apboclbgcGX8boybD+cUY/Yn1K+7vGzTuT
+         ri5fbAVmuUkPdKLAybvIaLJrt7wAH+tOOajtWPQtRn7hH4oZe/qsEvPiPdJ4wSIdZNwx
+         rWTdosydmbQ/0Hzu/qEH8b5g1qjUC8E2MlqslBYh4QgD6eHzAAfvQZIdYyELd6+xKD07
+         jqoNoWKbYLTav3a0LzH9gWotqtVRRcsyjA/KqEc3Ix6Odz9z/KbPRs3iefqpgPnTX6PF
+         x9VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747849153; x=1748453953;
+        d=1e100.net; s=20230601; t=1747849235; x=1748454035;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pqVVTcgANAyNaY0Ppr50pnoF48ZHi7cLyBFt3UHbis0=;
-        b=AKE4trW6s2vNYIakMknq+PAceuZjU7noXGtijtlnZncZ5uM2osFzRDJJ5+wSL1rV0A
-         8cKUY30sHy5//9Dxxus4BqNjgC5rmc9YWWogdu0gysuGNyLzur547iTk76tuE0X2Ldyi
-         IOFesmeKFYdkHiJZgNOUgWZEFWmFkuvtl0SiAhgpgnrzaPeK7mxuL3R681sXg0UE1VD6
-         jn+3a7NJeeXasUel8PCRnzxgWvrSCfI66/L/8i85Nopps0bUBdBwe7ZKYBCIUxZ50ICf
-         Wie/nwFSWoHYaOtngdkYZF1H+hjdvBW5/xQn7VvNeVRnIJEmxjbfe/MK/AH0LIQu/dOK
-         OSJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWr4T9oFoefjZ705zLjxwyXZvxCdbpeJ7ApNVVOuoeWYKRzXIS/OziTgUcJcL1mOTC5+n7hU1eM9bH9wj2d7+Il@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzqzed1nKclgJK3rc8mprie9S0A4rTnVeypY4LF0Z7wrumVL3h7
-	sDOutbAZYcWS4JsFZEHVWBR3eIhVxZqZ9sECcpsENX2+Uu9KRit8Tu9ObywEnlccnKIyH2Y0lKT
-	0KKYTmwkt6jusxyS6k+J5a4n9x6Ymip+QLdAgZkib
-X-Gm-Gg: ASbGncvqhmcoXDc5Y2P3iWCAQsaDST+JwTWPI/pcY1Nf/0zQp+adDUv3cTPRoWqUdmh
-	lJbkbJo89Suq98FzcXvXDtoYLfTSvljHJY4ViDOhZpHvbeCB0EGxjQfm/tGbROb71lyKwO6vNiN
-	KCV9Rrx0cJYJPhAGr5Q/SkBv0kOMpjDUKR9HWOZf6jjuws3iLm1vA3VRULDcXST20czO8K8Tgt
-X-Google-Smtp-Source: AGHT+IHawetcghXX9NFpqB2El7GERB4e19tFpZ08tDfTdOyQOXDNGq8QQWdT7JUuayl+jvBSMxLoH+D0Frsv5xlPjp4=
-X-Received: by 2002:a92:c610:0:b0:3dc:6151:5903 with SMTP id
- e9e14a558f8ab-3dc6151598bmr11635425ab.10.1747849152558; Wed, 21 May 2025
- 10:39:12 -0700 (PDT)
+        bh=S1jGbAJIfAmBuq60m9cLcCzR1qg6oy8JqAOHCwyna+M=;
+        b=fwzxDjrDWLE6prDq1m9/Ws6RgkqmNk0AXaXvw5bj7/u7tEpRjtBOzvj3w5hQc94eqa
+         6O2OMz8hLL39+kYwQRtNButjGJi/auBKPE91N6XU5CDiqKgGk+86COJAZyouysrEmx+t
+         NDEQJyDBUVXO/nDxsCdirAP7NbSo6rtvYfi3U6z5zApNB9DQSzI+i/8Fwl8zi+8HQZZE
+         Az+QZY/nK697ooI2/IjWbOOw6Lsrwh9iGsSYY/jznG2VdKkFMk5QwgAIjB/2ExZIXemh
+         YSXnNnqw5HEEJQbLa8bv4zP+E5iCN4KSv2UQHOqD5Tb03wpu8pIj4z6yB5GdZEyO0iSo
+         nX/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXbZ+fRIqjDQZ64V4AaBtfVf5XKEgSYQ2jBD8hWBaArt7z2HJL33wcfYOM6tkvUsXwH1NW2N/Zb9VK529D0Iy1M@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEabWpbaKeoCk3PKAhMKm3M9EXC/PNV+j1rnJbVlrw7h8sPWch
+	JerUmfF1yYyoO99vzsdxtf7Nhu6o074CSVyanRvlrp/VEJpB+nNOk0tgRcxHlqY90oHZkm0beOG
+	oI81L/gNkVxySfTaHO2lc3O7moFQ1obq3kITPvZif9PJDVbsSQ6ochqw=
+X-Gm-Gg: ASbGncsvh0PvS+uzt/n/wNQViFnJQ1yowZNNJBnWWo+uDFYzEP0zIMn4yr6K9Qbga12
+	jNyGC+9hg/s7SPChg4ww7tsLzopsS4Zc2bgcwsUxa5EO345GMxzE3qZwIpiUf9tmbuvFSyp4tru
+	k/aBUQd7fikMfmBUUxdmcGHaFQS35hbaQwUss6P8o8dIE94E7i/okwMfaVUhAXuYUJqg==
+X-Google-Smtp-Source: AGHT+IF7t556SFgYKCEZNLGSlvhLTbE8zyePAWqPOGCGeXQD0OKNEoiW7nBffL6Xodz6FR//5os8RUXoFUs57s9QzV4=
+X-Received: by 2002:a05:600c:154f:b0:43c:eeee:b713 with SMTP id
+ 5b1f17b1804b1-442fd664a29mr161787315e9.20.1747849235122; Wed, 21 May 2025
+ 10:40:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250406163412.897313-1-likhitha@linux.ibm.com>
- <E58C5DCA-5F52-4B61-A816-DE932BA40FDA@linux.ibm.com> <baad9d65-07b1-4a19-aea6-5ba5d60da98e@linux.ibm.com>
- <1b1450a8-f091-4091-981d-76b27f61be24@linux.ibm.com> <D1C1E5D6-085A-41D1-85AB-52809C956BFB@linux.ibm.com>
- <aAvKg8K2fyrZ6zy4@x1> <wqewmdha3bx7pmxqwbna26qnl55fcejqsjs4b2zhuciddpb3b5@7ztolpf6erwo>
- <aCO156Qh5mbeR4Sk@x1> <528d4af0-8e8f-4ab8-a1d0-d0bb937e4f53@linux.ibm.com>
- <CAP-5=fXT0edO0pjO0Ks8vGHgO=iwfuu+Bs5pfccZQhwfSo9mgw@mail.gmail.com> <8dba0ba8-84dd-4a86-96fd-d72de11d40e0@linux.ibm.com>
-In-Reply-To: <8dba0ba8-84dd-4a86-96fd-d72de11d40e0@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 May 2025 10:39:01 -0700
-X-Gm-Features: AX0GCFtUnl_iQ8wT7uBIF4YnzRMvP0awHE3KnyEMzB99tkkYipM1OWGGzbbgGgU
-Message-ID: <CAP-5=fXN4q_55Y9P2JkjreFasGh0NmRQ8_t2=GujyPeUJYeHjA@mail.gmail.com>
-Subject: Re: [PATCH] tools/lib/perf: Fix -Werror=alloc-size-larger-than in cpumap.c
-To: Likhitha Korrapati <likhitha@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>
+References: <20250116230955.867152-1-rkanwal@rivosinc.com> <20250116230955.867152-2-rkanwal@rivosinc.com>
+ <CAP-5=fU9ovvb-JopPqQfNaj6xtL=u_WZO-b56RdhBmUw4mY0ZA@mail.gmail.com>
+ <CAECbVCvX8St8sXh9pTnyO_94-cJT_DB4MyggtS_-PXqWNtXDXw@mail.gmail.com>
+ <CAECbVCui6ZgHBXBr3LdVGd16ERe0GgAnA1zy_zOQZVTU3bPoWw@mail.gmail.com> <CAP-5=fUy0QfmazuNq1yJzAxsuM7wD3zD=KAVMGHuw0wXvez1ww@mail.gmail.com>
+In-Reply-To: <CAP-5=fUy0QfmazuNq1yJzAxsuM7wD3zD=KAVMGHuw0wXvez1ww@mail.gmail.com>
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Date: Wed, 21 May 2025 18:40:24 +0100
+X-Gm-Features: AX0GCFuGfEgMYyqBQoNOMkZCo0wBsBMY3yB9bZY3USVl_oy_pisRJUdYTWzGPgk
+Message-ID: <CAECbVCtCDrXu4w5s=3o85GVKRb9o566W-v04wWMO=VgjOOpRHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] perf: Increase the maximum number of samples to 256.
+To: Ian Rogers <irogers@google.com>
+Cc: ak@linux.intel.com, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, ajones@ventanamicro.com, 
+	anup@brainfault.org, acme@kernel.org, atishp@rivosinc.com, 
+	beeman@rivosinc.com, brauner@kernel.org, conor@kernel.org, heiko@sntech.de, 
+	mingo@redhat.com, james.clark@arm.com, renyu.zj@linux.alibaba.com, 
+	jolsa@kernel.org, jisheng.teoh@starfivetech.com, palmer@dabbelt.com, 
+	will@kernel.org, kaiwenxue1@gmail.com, vincent.chen@sifive.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 10:28=E2=80=AFAM Likhitha Korrapati
-<likhitha@linux.ibm.com> wrote:
->
-> Hi Ian,
->
-> On 5/21/25 21:15, Ian Rogers wrote:
-> > On Wed, May 21, 2025 at 6:03=E2=80=AFAM Likhitha Korrapati
-> > <likhitha@linux.ibm.com> wrote:
-> >>
-> >> Hi Arnaldo,
-> >>
-> >> On 5/14/25 02:43, Arnaldo Carvalho de Melo wrote:
-> >>> On Fri, May 02, 2025 at 01:14:32PM +0530, Mukesh Kumar Chaurasiya wro=
+I am not sure tbh. I have never worked with this part of perf tool before.
+I think someone else with a deeper understanding of perf can answer
+this better. I will also try to go through it to build some understanding.
+
+Also, I think this can be done as a new work item/series. Currently I am
+just trying to increase the number of entries the remove_loops function
+can process. Going through the commit description now, I feel like
+I have not done a good job of describing the change.
+
+Basically when I use --branch-history option on report cmd to
+add the branches to callstack, the remove_loops logic complains
+about the size of the sample and discards the sample as
+corrupted sample because it's been hardcoded to process
+maximum of 127 entries.
+
+Here is the patch that added this option:
+https://lore.kernel.org/all/1415844328-4884-3-git-send-email-andi@firstfloo=
+r.org/T/#u
+
+Thanks
+Rajnesh
+
+On Wed, May 21, 2025 at 4:36=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
 te:
-> >>>> On Fri, Apr 25, 2025 at 02:46:43PM -0300, Arnaldo Carvalho de Melo w=
-rote:
-> >>>>> Maybe that max() call in perf_cpu_map__intersect() somehow makes th=
-e
-> >>>>> compiler happy.
-> >>>
-> >>>>> And in perf_cpu_map__alloc() all calls seems to validate it.
-> >>>
-> >>>>> Like:
-> >>>
-> >>>>> +++ b/tools/lib/perf/cpumap.c
-> >>>>> @@ -411,7 +411,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **o=
-rig, struct perf_cpu_map *other)
-> >>>>>           }
-> >>>>>
-> >>>>>           tmp_len =3D __perf_cpu_map__nr(*orig) + __perf_cpu_map__n=
-r(other);
-> >>>>> -       tmp_cpus =3D malloc(tmp_len * sizeof(struct perf_cpu));
-> >>>>> +       tmp_cpus =3D calloc(tmp_len, sizeof(struct perf_cpu));
-> >>>>>           if (!tmp_cpus)
-> >>>>>                   return -ENOMEM;
-> >>>
-> >>>>> =E2=AC=A2 [acme@toolbx perf-tools-next]$
-> >>>
-> >>>>> And better, do the max size that the compiler is trying to help us
-> >>>>> catch?
-> >>>
-> >>>> Isn't it better to use perf_cpu_map__nr. That should fix this proble=
-m.
-> >>>
-> >>> Maybe, have you tried it?
-> >>
-> >> I have tried this method and it works.
-> >>
-> >> --- a/tools/lib/perf/cpumap.c
-> >> +++ b/tools/lib/perf/cpumap.c
-> >> @@ -410,7 +410,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig=
-,
-> >> struct perf_cpu_map *other)
-> >>                   return 0;
-> >>           }
-> >>
-> >> -       tmp_len =3D max(__perf_cpu_map__nr(*orig), __perf_cpu_map__nr(=
-other));
-> >> +       tmp_len =3D perf_cpu_map__nr(*orig) +  perf_cpu_map__nr(other)=
-;
-> >>           tmp_cpus =3D malloc(tmp_len * sizeof(struct perf_cpu));
-> >>           if (!tmp_cpus)
-> >>                   return -ENOMEM;
-> >>
-> >> I will send a V2 with this change if this looks good.
+>
+> On Wed, May 21, 2025 at 3:47=E2=80=AFAM Rajnesh Kanwal <rkanwal@rivosinc.=
+com> wrote:
 > >
-> > How is this different from the existing code:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/lib/perf/cpumap.c?h=3Dperf-tools-next#n423
-> > ```
-> >          tmp_len =3D __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(oth=
-er);
-> >          tmp_cpus =3D malloc(tmp_len * sizeof(struct perf_cpu));
-> >          if (!tmp_cpus)
-> >                  return -ENOMEM;
-> > ```
+> > On Thu, Apr 17, 2025 at 1:51=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivosin=
+c.com> wrote:
+> > >
+> > > + Adding Andi Kleen.
+> > >
+> > > On Thu, Feb 20, 2025 at 6:51=E2=80=AFPM Ian Rogers <irogers@google.co=
+m> wrote:
+> > > >
+> > > > On Thu, Jan 16, 2025 at 3:10=E2=80=AFPM Rajnesh Kanwal <rkanwal@riv=
+osinc.com> wrote:
+> > > > >
+> > > > > RISCV CTR extension support a maximum depth of 256 last branch re=
+cords.
+> > > > > The 127 entries limit results in corrupting CTR entries for RISC-=
+V if
+> > > > > configured to be 256 entries. This will not impact any other arch=
+itectures
+> > > > > as it is just increasing maximum limit of possible entries.
+> > > >
+> > > > I wonder if rather than a constant this code should just use the au=
+to
+> > > > resizing hashmap code?
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/tools/perf/util/hashmap.h
+> > > >
+> > > > I assume the value of 127 comes from perf_event.h's PERF_MAX_STACK_=
+DEPTH:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/include/uapi/linux/perf_event.h#n1252
+> > > >
+> > > > Perhaps these constants shouldn't exist. The perf-record man page m=
+entions:
+> > > > sysctl.kernel.perf_event_max_stack
+> > > > which I believe gets a value from
+> > > > /proc/sys/kernel/perf_event_max_stack, so maybe these should be
+> > > > runtime determined constants rather than compile time.
 > >
-> > Thanks,
-> > Ian
+> > While working on this, I came across the following two patches. It
+> > looks like what
+> > you have suggested, it was tried before but later on Arnaldo reverted t=
+he change
+> > from report and script cmds due to reasons mentioned in the second patc=
+h.
+> >
+> > https://lore.kernel.org/lkml/1461767472-8827-31-git-send-email-acme@ker=
+nel.org/
+> > https://lore.kernel.org/lkml/1463696493-27528-8-git-send-email-acme@ker=
+nel.org/
 >
-> I gave the wrong diff. Here is the corrected diff.
+> Thanks Rajnash, agreed on what you found. I wonder to resolve the
+> issue we could add a header feature:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/header.h?h=3Dperf-tools-next#n21
+> for max stack depth.
 >
-> --- a/tools/lib/perf/cpumap.c
-> +++ b/tools/lib/perf/cpumap.c
-> @@ -410,7 +410,7 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig,
-> struct perf_cpu_map *other)
->                  return 0;
->          }
->
-> -       tmp_len =3D __perf_cpu_map__nr(*orig) + __perf_cpu_map__nr(other)=
-;
-> +       tmp_len =3D perf_cpu_map__nr(*orig) + perf_cpu_map__nr(other);
->          tmp_cpus =3D malloc(tmp_len * sizeof(struct perf_cpu));
->          if (!tmp_cpus)
->                  return -ENOMEM;
->
->
-> I am using perf_cpu_map__nr instead of __perf_cpu_map__nr.
-
-Ok, why is that a fix? The function declarations are near identical
-and perf_cpu_map__nr is implemented in terms of __perf_cpu_map__nr:
-```
-static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-{
-        return RC_CHK_ACCESS(cpus)->nr;
-}
-int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-{
-        return cpus ? __perf_cpu_map__nr(cpus) : 1;
-}
-```
-My guess is that being static allows all of the code to be analyzed in
-the compilation unit and thereby create the warning/error, your change
-is just defeating the analysis. The analysis could easily kick in
-again for Link Time Optimization. I'd prefer making these `__nr`
-functions return `unsigned int` or size_t over changes like this.
-
-Thanks,
-Ian
-
 > Thanks,
-> Likhitha.
+> Ian
 >
+> > Regards
+> > Rajnesh
 > >
-> >> Thanks
-> >> Likhitha.
-> >>
-> >>>
-> >>>> One question I have, in perf_cpu_map__nr, the function is returning
-> >>>> 1 in case *cpus is NULL. Is it ok to do that? wouldn't it cause prob=
-lems?
-> >>>
-> >>> Indeed this better be documented, as by just looking at:
-> >>>
-> >>> int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-> >>> {
-> >>>           return cpus ? __perf_cpu_map__nr(cpus) : 1;
-> >>> }
-> >>>
-> >>> It really doesn't make much sense to say that a NULL map has one entr=
-y.
-> >>>
-> >>> But the next functions are:
-> >>>
-> >>> bool perf_cpu_map__has_any_cpu_or_is_empty(const struct perf_cpu_map =
-*map)
-> >>> {
-> >>>           return map ? __perf_cpu_map__cpu(map, 0).cpu =3D=3D -1 : tr=
-ue;
-> >>> }
-> >>>
-> >>> bool perf_cpu_map__is_any_cpu_or_is_empty(const struct perf_cpu_map *=
-map)
-> >>> {
-> >>>           if (!map)
-> >>>                   return true;
-> >>>
-> >>>           return __perf_cpu_map__nr(map) =3D=3D 1 && __perf_cpu_map__=
-cpu(map, 0).cpu =3D=3D -1;
-> >>> }
-> >>>
-> >>> bool perf_cpu_map__is_empty(const struct perf_cpu_map *map)
-> >>> {
-> >>>           return map =3D=3D NULL;
-> >>> }
-> >>>
-> >>> So it seems that a NULL cpu map means "any/all CPU) and a map with ju=
-st
-> >>> one entry would have as its content "-1" that would mean "any/all CPU=
-".
-> >>>
-> >>> Ian did work on trying to simplify/clarify this, so maybe he can chim=
-e
-> >>> in :-)
-> >>>
-> >>> - Arnaldo
-> >>
 > >
->
+> > > >
+> > >
+> > > Thanks Ian for your feedback. I am not sure if it's feasible to use a=
+uto
+> > > resizing hashmap here. On each sample of 256 entries we will be doing
+> > > 6 callocs and transferring a whole lot of entries in hashmap_grow. We
+> > > can't reuse old hashmap as well. On each sample we bear the same cost
+> > >
+> > > But I do agree this should be more dynamic but the maximum number
+> > > of entries remove_loops can process is limited by the type of chash a=
+rray
+> > > here. I can change it and related logic to use uint16_t or higher but=
+ we
+> > > will still have a cap on the number of entries.
+> > >
+> > > PERF_MAX_BRANCH_DEPTH seems to be denoting what remove_loops
+> > > can process. This is being used by thread__resolve_callchain_sample t=
+o
+> > > check if the sample is processable before calling remove_loops. I thi=
+nk
+> > > this can't be changed to use perf_event_max_stack. But I can rename
+> > > this macro to avoid confusion.
+> > >
+> > > I didn't notice PERF_MAX_STACK_DEPTH. This seems to be defined in
+> > > multiple places and touches bpf as well. I agree that we should avoid
+> > > using this macro and use runtime determined value instead. Tbh I don'=
+t
+> > > have super in-depth perf understanding. I will give this a try and se=
+nd a
+> > > patch in the next update. It would be helpful if you can review it.
+> > >
+> > > Thanks
+> > > -Rajnesh
+> > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > > Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+> > > > > ---
+> > > > >  tools/perf/util/machine.c | 21 ++++++++++++++-------
+> > > > >  1 file changed, 14 insertions(+), 7 deletions(-)
+> > > > >
+> > > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.=
+c
+> > > > > index 27d5345d2b30..f2eb3c20274e 100644
+> > > > > --- a/tools/perf/util/machine.c
+> > > > > +++ b/tools/perf/util/machine.c
+> > > > > @@ -2174,25 +2174,32 @@ static void save_iterations(struct iterat=
+ions *iter,
+> > > > >                 iter->cycles +=3D be[i].flags.cycles;
+> > > > >  }
+> > > > >
+> > > > > -#define CHASHSZ 127
+> > > > > -#define CHASHBITS 7
+> > > > > -#define NO_ENTRY 0xff
+> > > > > +#define CHASHBITS 8
+> > > > > +#define NO_ENTRY 0xffU
+> > > > >
+> > > > > -#define PERF_MAX_BRANCH_DEPTH 127
+> > > > > +#define PERF_MAX_BRANCH_DEPTH 256
+> > > > >
+> > > > >  /* Remove loops. */
+> > > > > +/* Note: Last entry (i=3D=3Dff) will never be checked against NO=
+_ENTRY
+> > > > > + * so it's safe to have an unsigned char array to process 256 en=
+tries
+> > > > > + * without causing clash between last entry and NO_ENTRY value.
+> > > > > + */
+> > > > >  static int remove_loops(struct branch_entry *l, int nr,
+> > > > >                         struct iterations *iter)
+> > > > >  {
+> > > > >         int i, j, off;
+> > > > > -       unsigned char chash[CHASHSZ];
+> > > > > +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+> > > > >
+> > > > >         memset(chash, NO_ENTRY, sizeof(chash));
+> > > > >
+> > > > > -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
+> > > > > +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+> > > > >
+> > > > >         for (i =3D 0; i < nr; i++) {
+> > > > > -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ=
+;
+> > > > > +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is=
+ not
+> > > > > +                * needed as hash_64 will anyway limit the hash
+> > > > > +                * to CHASHBITS
+> > > > > +                */
+> > > > > +               int h =3D hash_64(l[i].from, CHASHBITS);
+> > > > >
+> > > > >                 /* no collision handling for now */
+> > > > >                 if (chash[h] =3D=3D NO_ENTRY) {
+> > > > > --
+> > > > > 2.34.1
+> > > > >
