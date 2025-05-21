@@ -1,88 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224162367D4;
-	Wed, 21 May 2025 11:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D51264A92;
+	Wed, 21 May 2025 12:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825399; cv=none; b=lSdtEWHKSBbN1fo+9JpylthRhTLUhXVjOJ0nhzQuQfPPTSziSbPma1HIo1uvXZbTuAObRlqOezE5LP15Y3gLRiuE+Uz8Gm9CDMshvCGMuQ94UrK2xgCnAdoQncdXHroK2C7V/xtd8AWuacWPTumy/j55iZWyyCzwu99ZNGENEzY=
+	t=1747829149; cv=none; b=dgALn+/PrmZCKoaiCS52vynaK4rkBlbpF7GzGCctudmF9l5lbvfIHvkk27qVKEHQFVlOi3Q7hqPxoc+CmS1+jv+jvb3IO7QxRqW/RdKie3QHpRM1nyJGADr882W+cWV5G7PEkzArKBoWmQRnZzXWbR/kI5HpY15zecRH1+E71AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825399; c=relaxed/simple;
-	bh=QAUAYNKmlM0RlaNjGicH9GqKIAhlrFtqHhssH2BVJ88=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RrC+NppFHUwhe36PVgJOGukn5n4GmCIaywa/Wh1IIF4jiZVAvmNFlqWrRWTVZzxqJM7unknryq7L3crPthz5te829hI14phofOEG4FG1OOAZnszL98xs0SBjqOrV4f+N72UgLUXsLwBl7tWZJzvizMUqlRL0BWdbC49xWEkeaUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtShJ3KJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747829149; c=relaxed/simple;
+	bh=6y6pA2v91iQmSvQgFz0Uojt+/84qWji3dUd8c5vCkkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=idWlK6KTJb2doRgBcLHm1vuWcwbS/Kdz/L7OSz1lNemOuIF0dFLmD/+S619MRE9oObfefI7GgpmX+gp5wJ9P9O6Pyhh70jQn/Lm4QgBqdedZhDP3szK/oGvTIMRw1voM7ogkcNnXtUkFONshEmBKOXIQ2DCK1h3I0c1+cqfDzyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pxlgghmO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtShJ3KJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0738DC4CEEA;
-	Wed, 21 May 2025 11:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747825398;
-	bh=QAUAYNKmlM0RlaNjGicH9GqKIAhlrFtqHhssH2BVJ88=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VtShJ3KJfMOydCfX5LajLrW/grN0PgqMTvj8HUyAMTJ5FEC1IsFZMNmbHkxRz87Xz
-	 UkbWY81F+ziNXmhvlfU2JLD4NvHSCGjDlybRT19p8UrwW8Vp2AUaLTBRl5HY4FPEhF
-	 L0ceKaiyVl6ctqBuDIzw9rSu7lzWfTWsV+KFVhJd2VhtLoxMRuSdqUXMbaUFMlYUY6
-	 fGlMt/nulJ2DFsJ+T3D5JJwWcjlqWF7qjCGOk+W3Jc+HVrSyPIVzDEkc8ZlOPlP+pX
-	 sYB71O1EVTh1ixylTXJDmFRLmL3fcachHtO1Vu8T/T7obmGPUSweDn6Tz+Cd1fzFlR
-	 EGKRY/rOOkROw==
-From: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	Mark Brown <broonie@kernel.org>,
-	Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v22 0/5] arm64/perf: Enable branch stack sampling
-Date: Wed, 21 May 2025 12:01:18 +0100
-Message-Id: <174782307035.3423409.3825975640964405604.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pxlgghmO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fiwT5IEBfiiewAOT9kPl+ck8nR9/bB1A4OgJlEVgr4w=; b=pxlgghmOtwAjfkB5+OFBi+X16q
+	CIldROuYOtG65qBi/T1OmF9JzmMDUj2tRHenO4jH/OrGMrOwx3bvfvmOOdPMqvBBVwx8sr+sG89Pp
+	Gh2EdoAIxGHbXQV3dskV5JrwErhXiClfC051cA+F141HG83ExLpCY3hU+oL4qXp1AeH70u8DfhHWk
+	mEruWH94WUvG286y74YuXmn1bRX/MPngMEWGqPXBRt9c/F0HRPJ868HdiOPmDEkSxDeJql2Z1wJUB
+	AVxOSYRFHcQUT30ZVYrcT1AZE3ASlpFE0IFx7hGe6Cm8yDbNzqKyl94cF8BC5qB37jrCZoYQbfUwL
+	wNEdK4Jg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHiCc-00000004ctY-0qD5;
+	Wed, 21 May 2025 12:05:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A0548300583; Wed, 21 May 2025 14:05:41 +0200 (CEST)
+Date: Wed, 21 May 2025 14:05:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@redhat.com, namhyung@kernel.org, irogers@google.com,
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, eranian@google.com,
+	ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com
+Subject: Re: [PATCH V4 02/16] perf: Only dump the throttle log for the leader
+Message-ID: <20250521120541.GD39944@noisy.programming.kicks-ass.net>
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-3-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520181644.2673067-3-kan.liang@linux.intel.com>
 
-On Tue, 20 May 2025 17:27:35 -0500, Rob Herring (Arm) wrote:
-> This series enables perf branch stack sampling support on arm64 via a
-> v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details
-> on BRBE can be found in the Arm ARM[1] chapter D18.
+On Tue, May 20, 2025 at 11:16:30AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> I've picked up this series from Anshuman. v19 and later versions have
-> been reworked quite a bit by Mark and myself. The bulk of those changes
-> are in patch 5.
+> The PERF_RECORD_THROTTLE records are dumped for all throttled events.
+> It's not necessary for group events, which are throttled altogether.
 > 
-> [...]
+> Optimize it by only dump the throttle log for the leader.
+> 
+> The sample right after the THROTTLE record must be generated by the
+> actual target event. It is good enough for the perf tool to locate the
+> actual target event.
 
-Applied the '__init_el2_fgt' label cleanup to arm64 (for-next/entry), thanks!
+So while both patches change behaviour; the first patch should preserve
+all that was done and simply do more. OTOH this patch explicitly changes
+behaviour in that what was done, is now no longer done.
 
-[2/5] arm64: el2_setup.h: Make __init_el2_fgt labels consistent, again
-      https://git.kernel.org/arm64/c/54b8070548c6
+Are we very sure there isn't a tool that expect per event throttle
+messages?
 
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+I'll take the patches, but I'm somewhat suspect of this one.
