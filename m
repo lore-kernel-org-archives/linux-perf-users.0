@@ -1,185 +1,222 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6092356B2
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 18:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E35280311
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 19:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747853009; cv=none; b=qSlIeLRF/Sthv6S4pZt/H3CCL5qZrCjgXezkU+COaaPaDGGka/aPkm6Q/8cdmwQAqqcCcU9GioBZXZ5nAbexj9S11GSgouCkFfSJ8koVSCPb2XE4CwFtz2DWOh+OzJnablMQFC5WAzKcXKAWYc59t7L899X+DeX2vBVXKq9JcLE=
+	t=1747855207; cv=none; b=QyEGOYSN76agBkF3AInWdC8goVJMfcIOUb4sxZEqU2YJjjWOafc1yOPhm7leBFk1G7RVXyM9R59Djdx6vxRkBNPVN83a1kg0efYpWoaPkTgiU9z3iMEsfRgsWb2l17wdd3NMpfDJAayc7bHCcOOV5VfYK4DndbwMQDPk90SYXXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747853009; c=relaxed/simple;
-	bh=l9hm75yhfpKOgU+9IKCqQB1osT3ELi9nMlq987rTA8Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LJb562CnZJ1kqJqTarla2gw2sOqFBLuxOeJ6d7qOVAt9Dqdlj5nMRpqjxNgcDak4GyunLii6MuazeE644jCw86rNOoF2yD6oP2uckFsqLlBnN5SXIk+LA0Z7mG7/WBoPnojHNjEReZ+q/5uOYgCaq2yeeEYKbqucsaR6HFw/2hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NRYOmvSS; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1747855207; c=relaxed/simple;
+	bh=GnB/O/EVmri7y38J/jByIJMb+SeoeRsKY/K6vIHsCKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r2s2zaFl/jKXYNmzi/5e2xymXF8pH4AIKh+kXGyzs26IaPhOxgO32D6hc2czwkXkTZoStzSMWwiscy4xsb5XGRDrNnrCkQIwdfT2HJM5ILhdrrzoWVOwxJ+GvBw3iU5/0FIrHEmEUWoRWllNqK/7HZKj8btQVpWYBkhWRbPZ0/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+9Yx/HK; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NRYOmvSS"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3108d5156e8so1335743a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 11:43:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+9Yx/HK"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso145675ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 12:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747853007; x=1748457807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1uvnzAtGqqihUzW/r4zpFQWHLi2txWfCNzgNR6sDzto=;
-        b=NRYOmvSStwUW2BHH+mDk5SgLEjhPit5UPdgYXm3djeBThxgRPjxyJQQ+QnjYtKhTu1
-         j2yjE4xkpjSYoUrL83vNn+p4l7givh5wjSt9dqkQXbJqq/BficW0Iof7nDtvUgp7kixP
-         ZMjyj/EzuTlWbmAzq8yk3ut9V4SdB5tI/Zxb3vLzKGscRtrjA3HpyMjYDr9f2X2+xVc0
-         eemrUYPX+eWmOF7fG4lxRe+q4uYelo35Bc7Xze/NOLrF0EUzpFtS8JL/Djm57vKKUXqL
-         zMuySh+cUo6hmhjPKuuGJOqppRj4yR85H4ZUdtTi5d9F6wwY7bUBa7f2NlWCQVMlEung
-         n9IQ==
+        d=google.com; s=20230601; t=1747855205; x=1748460005; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
+        b=B+9Yx/HKUh89ktiaXr2A9kMuU9Be+GxdSDzGNhi9EoFPJApW2dbxYfmGSxOfr1Ud1E
+         ZVhQ+Zjt/5slJ3859Q02l7OaVY9NMMTmnZtPJostrw8I4vGolNqGRGaRsfUZC0cWmE8o
+         nLT6u6rhy8I/E/AdKU7YP4lL6bjd90Jfi5exybqtorRPcpIUX1YisgRU3la8kniM6Lq5
+         5wS+ZXVyveNxkKz8w+H/W2P1OHkV5o9PhbOc3eQEmKlc3rG1bM8WU/qrDJdOf1BEqdii
+         DvIthJJpLexNKXOmzFNeXbxjunITOy0dHdI3kIn4CBfl6q4kOJErJYNxpmk7DA0a7cQR
+         7b0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747853007; x=1748457807;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1uvnzAtGqqihUzW/r4zpFQWHLi2txWfCNzgNR6sDzto=;
-        b=OdcpJz/nB3zA4Z42vR4ZUbPqK5eqT+cHvbWwVQwtHiyo67xxdVibua1EZoeKMWszEh
-         Q4cMNlwQd2CEmSUbpwtPrgl2l8jMLXYE/425AoQQp2T6PaEiwo3p68kp3nhLjaJBRpCv
-         DRc/FsSkMY/d4Mc1G/tuLKlPoMVZWeYRyXwkySzcyt3wiWgzfjTUSs69CYgXcIYRe7IS
-         9bCMcqipn8hFbP3Gsbz6g1Ar6Jx8oKpFs7aCw80cVxoIOaEao0oFoOVd/Xz08eOgdHtH
-         ifollksPvCO06KWGxTq28zBFsAbuyjt/aGYLMYm0TC1Hk7IyVZcevaZfUgbs9yiKBKhD
-         xEvw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5OwzkRYgxA/Vv84d1eRJ7EcyKubMYDD5nOBUaqM46p6QYtbWlxb1VaNXVefN88BvTAs+sURggvn35h/K8v4eJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1xDn7VjYdizco2EEprKt/N7yrniW9C9utczVe4TZRGdUTVpyk
-	j9UNh0UTyo3MIUWb7iNCsw6vZ8UR/9PEqJ4d9ZElq+KwCzKbWILXeP5uYK4pdkKcX3NaNdnQM2E
-	AEk/tRg==
-X-Google-Smtp-Source: AGHT+IGncHV/5i3Y3ABZHLp8TXbERrxZ+ADd5PUtj9jxbItkw8Bb/dtD2z+ZUy9jx9X+TqnA9jiY57WslHY=
-X-Received: from pjtu7.prod.google.com ([2002:a17:90a:c887:b0:2ea:29de:af10])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c09:b0:310:8d9a:95b6
- with SMTP id 98e67ed59e1d1-3108d9ae7eemr5602447a91.25.1747853007278; Wed, 21
- May 2025 11:43:27 -0700 (PDT)
-Date: Wed, 21 May 2025 11:43:25 -0700
-In-Reply-To: <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
+        d=1e100.net; s=20230601; t=1747855205; x=1748460005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
+        b=Rn4MaUvi2F1IR91LTdbiJyQqhf4iqU9IniBsYv8JU3rKvlBI77yL1ziSFgN1eQ0GTu
+         6TFxkmGUvlKHwoYYhf/7/2GH1OPPyBpf06+HUqIdwWxepGSS+micKmH9aDWGrg9HEBdd
+         gwpdotiA7jImmCyPDpdtSxWC05647Q2x2XQXcokssc9dlzDDa9SYNnp+Jzf3oJpFiG2Z
+         F4y0P0Uw6s4vNVDnhzZmpyyPurLHIKC16usgpFDgXud8cKBMGQkVwn0SJl/fM5q2vgsE
+         nKw68h1jgqxXvbK5/mh5IqLMyUU7dy4bIB/Qx0JS18KNno8uyg3GalmS+1F0Ojz7ZFDC
+         wDXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpWqLYUpKe2E8xnUTuqxYftzU4tRp4zV7Cba51AqVHiGJblLUC0xjfCYl19UTosejLD6Kl7mNvAEuOMLMwJbxE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8Xc8dW26S5ZOV65bBvvOAzFWnrSjyTVD/Rlrs4AVCrJ8oe/HD
+	SSCi4WbNzwwZWgBG4tG2Zw5IbQdG2jCBSKjtNZVrGhB25OUisERHh5aaLnkXovsQTsElr/ZdT77
+	gpi+glpAdoLdmkCyNQH9T0FAHJw2yR+V+c46sKf6n
+X-Gm-Gg: ASbGncvNHl3i0RDkE5yyIR6R7SLBA9f6M8w831UaM0ARYT71PO65gq4izBwxcJgeEvF
+	+x3/X43s5h4PU/rUnv3P4e9Y4McKEtftvTyxetjqjZpsjA9rz2EOTW5zIfki9nhQlLuht0MPmAJ
+	yoh3GGgUGZuYy2ySu+z+KbLTcbbW0/S3N7jqyHc4ZeRiHzAbCI3CnWJICUfdGc5vq32FX8Sk8=
+X-Google-Smtp-Source: AGHT+IEdThBAtZZFOyQI8ndZvd6+jvPSbtIqyrmJS1pfB4JA/e7fLaaSpaoPZZQa+W07/lnsfHpHN7t7x36UfN9ThKE=
+X-Received: by 2002:a92:c052:0:b0:3dc:8895:4260 with SMTP id
+ e9e14a558f8ab-3dc8895434bmr2451035ab.19.1747855204420; Wed, 21 May 2025
+ 12:20:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-15-mizhang@google.com>
- <aCUwvXPKD0ANKFb7@google.com> <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
-Message-ID: <aC4ezRH8msD6yUhC@google.com>
-Subject: Re: [PATCH v4 14/38] KVM: x86/pmu: Introduce enable_mediated_pmu
- global parameter
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20250521135500.677508-1-irogers@google.com> <20250521135500.677508-4-irogers@google.com>
+ <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com> <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
+ <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
+In-Reply-To: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 May 2025 12:19:52 -0700
+X-Gm-Features: AX0GCFu4PPYG7j8QdsCgxl3Fa-IYTZcsame8vgyYD43SyJeG4LuLy-sh2dDPJAA
+Message-ID: <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and header
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="utf-8"
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025, Dapeng Mi wrote:
-> On 5/15/2025 8:09 AM, Sean Christopherson wrote:
-> > On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> >> +	return vcpu->kvm->arch.enable_pmu &&
-> > This is superfluous, pmu->version should never be non-zero without the =
-PMU being
-> > enabled at the VM level.
->=20
-> Strictly speaking, "arch.enable_pmu" and pmu->version doesn't indicates
-> fully same thing.=C2=A0 "arch.enable_pmu" indicates whether PMU function =
-is
-> enabled in KVM, but the "pmu->version" comes from user space configuratio=
-n.
-> In theory user space could configure a "0"=C2=A0 PMU version just like
-> pmu_counters_test does. Currently I'm not sure if the check for
-> "pmu->version" can be removed, let me have a double check.
+On Wed, May 21, 2025 at 11:14=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>
+>
+>
+> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
+> >>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> >>> index 7b6cde87d2af..13ef0d188a96 100644
+> >>> --- a/tools/perf/builtin-top.c
+> >>> +++ b/tools/perf/builtin-top.c
+> >>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
+> >>>
+> >>>       setup_browser(false);
+> >>>
+> >>> -     if (setup_sorting(top.evlist) < 0) {
+> >>> +     top.session =3D perf_session__new(/*data=3D*/NULL, /*tool=3D*/N=
+ULL);
+> >>> +     if (IS_ERR(top.session)) {
+> >>> +             status =3D PTR_ERR(top.session);
+> >>> +             top.session =3D NULL;
+> >>> +             goto out_delete_evlist;
+> >>> +     }
+> >>> +
+> >>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
+> >> I doubt a valide env can be got in perf_session__new(), since there is
+> >> no perf.data in perf top.
+> >> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
+> >> env->arch.
+> > I think the current code is making things harder than it should be, we
+> > should work away from perf_env__arch and strings, instead using EM_
+> > values which we can default to EM_HOST avoiding any runtime costs.
+> > Looking at perf_env__arch:
+> > ```
+> > const char *perf_env__arch(struct perf_env *env)
+> > {
+> >         char *arch_name;
+> >
+> >         if (!env || !env->arch) { /* Assume local operation */
+> >                 static struct utsname uts =3D { .machine[0] =3D '\0', }=
+;
+> >                 if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
+> >                         return NULL;
+> >                 arch_name =3D uts.machine;
+> >         } else
+> >                 arch_name =3D env->arch;
+> >
+> >         return normalize_arch(arch_name);
+> > }
+> > ```
+> > in this case env->arch =3D=3D NULL and so the uname machine will be use=
+d.
+> > For perf_env__raw_arch the behavior is similar but it populates the
+> > env:
+> > ```
+> > static int perf_env__read_arch(struct perf_env *env)
+> > {
+> >         struct utsname uts;
+> >
+> >         if (env->arch)
+> >                 return 0;
+> >
+> >         if (!uname(&uts))
+> >                 env->arch =3D strdup(uts.machine);
+> >
+> >         return env->arch ? 0 : -ENOMEM;
+> > }
+> >
+> > const char *perf_env__raw_arch(struct perf_env *env)
+> > {
+> >         return env && !perf_env__read_arch(env) ? env->arch : "unknown"=
+;
+> > }
+> > ```
+> > Aside from caching the arch, the main difference is that
+> > normalize_arch isn't called. Not having normalize_arch means the code
+> > in arch_support_sort_key and arch_perf_header_entry would need to
+> > handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
+> > etc. As I'd prefer not handle all those cases I think the way the code
+> > is is best given how the env code is currently structured.
+>
+> Right. The perf_env__raw_arch() doesn't improve anything.
+> But I still don't like &top.session->header.env.
+> Because I don't think you can get any useful information from
+> top.session->header.env. It just brings confusions. (It seems an env is
+> retrieved, but it is actually not.)
 
-Gah, sorry, my comment was vague and confusing.  What I was trying to say i=
-s that
-the vcpu->kvm->arch.enable_pmu check is superfluous and can be dropped.
+Well there's a certain consistency in using the session env to set up
+the sorting, etc. This pre-exists this change with nearly every
+builtin-* file doing `symbol__init(&session->header.env);`. perf top
+does `symbol__init(NULL);`:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1811
+but the code now has lazy initialization patterns and handling NULL as
+a special case of meaning host machine:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/symbol.c?h=3Dperf-tools-next#n2350
 
-> >> +	kvm->arch.enable_pmu =3D enable_pmu && !enable_mediated_pmu;
-> > So I tried to run a QEMU with this and it failed, because QEMU expected=
- the PMU
-> > to be enabled and tried to write to PMU MSRs.  I haven't dug through th=
-e QEMU
-> > code, but I assume that QEMU rightly expects that passing in PMU in CPU=
-ID when
-> > KVM_GET_SUPPORTED_CPUID says its supported will result in the VM having=
- a PMU.
->=20
-> As long as the module parameter "enable_mediated_pmu" is enabled, qemu
-> needs below extra code to enable mediated vPMU, otherwise PMU is disabled
-> in KVM.
->=20
-> https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel=
-.com/
->=20
-> > I.e. by trying to get cute with backwards compatibility, I think we bro=
-ke backwards
-> > compatiblity.  At this point, I'm leaning toward making the module para=
-m off-by-default,
-> > but otherwise not messing with the behavior of kvm->arch.enable_pmu.  N=
-ot sure if
-> > that has implications for KVM_PMU_CAP_DISABLE though.
->=20
-> I'm not sure if it's a kind of break for backwards compatibility.=C2=A0 A=
-s long
-> as "enable_mediated_pmu" is not enabled, the qemu doesn't need any change=
-s,
-> the legacy vPMU can still be enabled by old qemu version. But if user wan=
-t
-> to enable mediated vPMU, so they should use the new version qemu which ha=
-s
-> the capability to enable mediated vPMU, it sounds reasonable for me.
+> In the perf top, &perf_env is used for the existing cases. If any env
+> fields are not available, perf_env__read_XXX() is invoked to get the
+> information.
+> I think we may follow the existing usage, e.g.,
+> setup_sorting(top.evlist, &perf_env).
 
-I agree it's reasonable to require a userspace update to take advantage of =
-new
-features, what I don't like is what happens if userspace _hasn't_ been upda=
-ted.
-I also don't love that forcing a userspace update in this case is more than=
- a bit
-contrived.  It's very doable to let existing userspace utilize the mediated=
- PMU,
-forcing KVM_CAP_PMU_CAPABILITY is essentially KVM punting a problem to user=
-space.
+So using the global perf_env rather than NULL feels preferable but I
+think the global perf_env should be deleted. Whenever I see the global
+perf_env in use I think the code has a bug as the perf_env should be
+coming from the session or the machine. The global perf_env can have
+no meaning for cases like `perf diff` where more than one
+file/header/env is open at a time. The global perf_env variable's
+existence encourages bad or broken code, so deleting it should avoid
+errors in code. Another place these issues can occur is with TPEBS
+where we're maintaining multiple sessions for sampling alongside
+counting.
 
-And the complications with the mediated PMU don't really have anything to d=
-o with
-the VMM, they're more about all the other tasks and daemons running on the =
-system,
-e.g. that might be using perf.
+> Alternatively, it looks like the perf top doesn't support --weight. The
+> env->arch should never be used. If so, a NULL can be used as well, E.g.,
+> setup_sorting(top.evlist, NULL).
 
-Thinking more about this, the problem isn't so much that enabling mediated =
-PMUs
-by default is undesirable, it's that giving userspace a binary choise doesn=
-'t
-provide enough flexibility.  E.g. for single-user QEMU-based use cases (inc=
-luding
-my use of QEMU), requiring a new QEMU is painful and annoying, and so havin=
-g an
-on-by-default option would be nice.
+So I don't like NULL because then we have lazy initialization of host
+data and NULL meaning use host. I don't like the global perf_env
+variable as it has a code smell about it. I think moving the session
+initialization earlier in perf top so its env, although unpopulated,
+can be used is consistent with `perf report` - this is consistent with
+`perf top` being `perf record` glued together with `perf report`. So I
+think the change here is the smallest and most sensible.
 
-But for use cases that already utilize KVM_CAP_PMU_CAPABILITY, e.g. to expl=
-icitly
-disable PMUs for a subset of VMs, on-by-default is very undesirable, e.g. w=
-ould
-require KVM to support KVM_PMU_CAP_DISABLE, and would generate unnecessary =
-noise
-and contention in perf.
+Longer term let's delete the global perf_env variable,  perf_env__arch
+should be switched to a perf_env__e_machine as then we can avoid uname
+calls just to determine the machine architecture, etc.
 
-So, what if we simply make enable_mediated_pmu a tri-state of sorts?
+Thanks,
+Ian
 
-  0   =3D=3D disabled
-  > 0 =3D=3D enabled for all VMs (no opt-in or opt-out supported)
-  < 0 =3D=3D enabled, but off by default (requires opt-in)
-
-Then use cases like my personal usage of QEMU can run with enable_mediated_=
-pmu=3D1,
-while use cases like Google Cloud can run with enable_mediated_pmu=3D-1, an=
-d everyone
-is happy (hopefully), without too much added complexity in KVM.
+> Thanks,
+> Kan
+>
