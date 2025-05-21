@@ -1,1026 +1,982 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC81222576
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 16:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904F1202F7C
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 16:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843415; cv=none; b=Uh89xk75Tvni58y3qIVg0GE2xsK2Tvl3SzzN1UGylw6P0mYrm0iouoOkTREh3zL0qXCiXw9j465427Ldh+h8WHszBhJjG+GpFQzbyXcSXF6ExHrsKFKtlhQ3XBNopwHZApRvWi7lfHMhU4h1hG/2DyzOYELJ1TOqTAMGrielMc4=
+	t=1747844183; cv=none; b=j4x6gntcYgfKuFz77Sct7KzaJrrsJVrbQmnoP7E1T4CaoKagu5xhE4RRtoYsU+sJ/ZlD1YkaOaXV96INyY6fcvQApnke9+rMVWz9D/80O45O6M/e/Kff0ADQk/EqbDX0bYSExwcIT/OkHuhd2JtoAFtwV7TZJ/RyTrncyb/GKDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843415; c=relaxed/simple;
-	bh=+G1fLnhlhXxr3ZvzaeMtgU9tO7CyP2QhZJSqVPjlpQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bi4y+JAiJIehHKfThQNWDDq9e5XU2qGRGd00+EXpVvBf+I/ztjT1IJgKm2im9mB86+kXP6BOiEdBZd8bLLfJC75CB+xlvw2zMUH2SlWoxl4zXcsEUsBWyV2aAUjNfk3PamwNnVnZ92xSVJXoUFLmF6yYeJ+AWj2TE6e01H+qhkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GNu8O8W8; arc=none smtp.client-ip=209.85.221.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747844183; c=relaxed/simple;
+	bh=w37+fZhPBWglQNVwjleFuAaeC/0//dKTW+ZT0j0JWnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=af36KRC8l8A2AhVqQf8SHiD/sKQ2DV/9N8s7ORv1x0HaZ4Gn89VnXQaLivktdhs6OleA8Uva3xzoDvqRFc/v6FwcR7N889riRkDoVOauHuWUm39z3oECI6kCqeU/pHevdrP0Vgn7EaHgZK50ansu2J1rMNTO+YIgPeHiNZ5QGgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uJMT/fvk; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNu8O8W8"
-Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so4426702f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 09:03:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uJMT/fvk"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so992245ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 May 2025 09:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747843410; x=1748448210; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DU4DhTBi3w0I71OaugEdufXKgnJcnr7ZOAufcx7ncBk=;
-        b=GNu8O8W8bg6velrllXu8TLHN3w0ilsTRRZqt3uG/UDlycWApE7jZ3Seeku3b0t6TgO
-         2teXmo2azN7IjPc/jEd+g4FGfcxk3/94GczPetqxmFSUPnmLJ7Oxnn8BsUeweiMrukEd
-         OxFSLAnuXCb4LE/zsRophnD9eXdUfIwxAjiiaFqkHyk5dGQdl3hPizSYSU1wSld/Lu17
-         5eZtlHZFdj+KIJ0t8M9YNRKapRkdEVW2DSU6+FE3yDtqHy3R84U73T+yKnir1RMzzAG8
-         SDZJC2ebTrNZ3n4t7gZkAzAJHMa1HHD66h3iyxoiNrMIQt2/FDg3W9B66Dtx2utwRazO
-         VyWg==
+        d=google.com; s=20230601; t=1747844177; x=1748448977; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PJCpgch7Qh9Gr9lPbzv7OjFa/SqUdCi8Z66tY+WUKDE=;
+        b=uJMT/fvkstg55x1BTbPL7JXC47uyTf6q464j2KE+ahnZ/2H2pldbXdZuUsFiCfEikI
+         ErYRXlpwSxfSg1ZIAy8eNB470iVTpQ2PK8339MUba40CSisY8lYbmtFbF/ANfi3Pg2Hh
+         Kdct8NhhYYyaTwonT5DqNmA2/2MBds66W+LzaQqpHulw7PGzZ/slGZX7//y9Mm2Qbx51
+         oMf+Qw9VXQdWIC/kV+OQ4XD2t5z1pSlb5nl9GeGk8bjxNpW6Wkw62eElitk+6JM3nTKZ
+         a5RZb/AthfJjkjjoExEb9SDyP8vEKEfv8NqJvko+91g1hCympO99z9xVS2kogH7u0Lvl
+         JB6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747843410; x=1748448210;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DU4DhTBi3w0I71OaugEdufXKgnJcnr7ZOAufcx7ncBk=;
-        b=AGe4lmTS1JNg0F5oxYv56DCrRWysyiWi3OCgGB1dnrSP5H0O0iRq9K5VHTDohUoQXh
-         FLw5hyHK4G1l9OHHQMgzRTffkXPxFQwwt3TX/7krUgxN8mN15oQWqNvQpgy7kDSEJ4/P
-         +N9NY6m6liVpnJOpT1+jA/wDhROG5NzsqiemUSuRx9eGWzxeG7y8FeG9PCf65j58zwPe
-         mcfXriUyv6YDn3fdR9oUvoROXhbWyzWe17V2zrQV54ZYQyuOcrqcxB0glC4q6RaYQnLZ
-         V99nhOI0+5fRl7Cw4DU8JLB9297rgQq89NGTe7mE4pXri1lePovG3KlcWlMVLRVjvblA
-         6Cuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkRB6ZD1S8+uolp39FSelz+iLv8FvpBJffe57+sp3QzoJ4rqo7E30fwP90v+TiNZQhCaaaQdVgWC8p0ud/nSpl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0awVRzYkzrRlSbqiIUOPvSoaK8ly2E6ZXoeTsWzQvBW6A4k3r
-	RJFYEIAVNGyta7zfYesc+wA+bpf4KBJCWBpC7NoTVHJAuPxYMkzaUL0tSrVpqag7BcpnGGUxexf
-	owUTGr2+1oLYh
-X-Gm-Gg: ASbGncsVzkYP+8k2tUnVCBarcXhQUe9y+HyY2Tr0Wq9P1ZfJ+SoFbtSh9+2d6DZdqNZ
-	/Y0G/ogG8w4HemkjglEya39FftHI6V/EEdDvK3qePLRPBMhqMrZH6MyLTcDI5k8zKzOb8FTjTDP
-	wZf080ILg/+mg0jYRd7eVCdYfF6vKPScrxWsegWFZSEOIi4bG8AwHfhy6oOEuQueHby61Dmujit
-	1mjFIrFT+A42ou+jrXD2OWHgTxApUd1RsmwguQdR6XbtSToiu/0JcQO0C5hyhqj6DR0Z3iYwEYH
-	NvXfdHtmpFQvdaY8uRZmK1avlfDmCRsSLb9MxDvHjhsSqoWiZv9Nul2y
-X-Google-Smtp-Source: AGHT+IEyoKY3tJdYtp+J+rpSWxW2aCfooQOr4u9kTfdzhat/VkGak9kEFjV0g/x//GNnE1pWPg2izg==
-X-Received: by 2002:a05:6000:2901:b0:3a3:5c89:7a66 with SMTP id ffacd0b85a97d-3a35fe66207mr17376036f8f.4.1747843410137;
-        Wed, 21 May 2025 09:03:30 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d263sm19819082f8f.3.2025.05.21.09.03.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 09:03:29 -0700 (PDT)
-Message-ID: <925bf014-cea8-4cf0-9517-46291db729f2@linaro.org>
-Date: Wed, 21 May 2025 17:03:28 +0100
+        d=1e100.net; s=20230601; t=1747844177; x=1748448977;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PJCpgch7Qh9Gr9lPbzv7OjFa/SqUdCi8Z66tY+WUKDE=;
+        b=IqjgccHsuyVuYcdETlHwkFX8fNx3ZHybwd50uGupi+XNdVIgG+oZlTs5i0leNcScL+
+         PQiE4EJ/uM29OHaRnHSUFBrf1ygEDMfdKYx/7l+6lrpq1QNXm0Fy89WXOy1Wz2rmTl1q
+         IACy+zvv3084wTJI5In5/dBnj5SR0GIUPEGi3JMSLGZKMBH+VdS9RoTA6jK4ZXGW7n9O
+         to502b9PFibHD0a0j8mu+8gkiPm6AkqGJWkyCXarzhRY+SS+mZSDqMoHx77gGtJUoZPa
+         nUyQSRE7PpwOL74P94G8/Z/wj11IZzXFMb17/ul97RZ2FixjUHn8218h/CsUSWyCfjOv
+         54XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQNuiM2wzn0WpELObolGmVRK7xIXwcVI5ayBT89w7sfl1Ny3mfp6UGlDERteT/jBPHgGdH1F89YI0GLfXh+bvu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBRNLqvwfD370LLExmVF6HNYZnSjUuP3fyXz+mFO+a3X4QUuDA
+	r9exFuWVF67aUyBwGGzJuYmokYz/KjeOgFDlveInqoPzcVYNFki0yeqxgkH1KSRo2fRZ9TWFx0e
+	s6LoBXiyDYBtYQsZmtUUBAd9igVGx3rDuMP/PdZ71
+X-Gm-Gg: ASbGncvCbDKuIQG6o9wIT0XAlb0rqD3xEYSzgQChOS6P90WKdCe7RpCCF8sBpTIuSza
+	7/YnVGTTNbH81kvea+D/PikL7puxyFGU6JjkLY5cIXxIzTSYCjbb41uzbjo6LnjihEPsTy1o4rE
+	K3FU7xDZfNW4r7D09vahLT4Wo8oW42RU3yyeGg81E3aaMtOnveT51DPaUkLihxREc4YA2rJh/U
+X-Google-Smtp-Source: AGHT+IE1BHZA9asSakhZbrnoU268tJRrUHQKSE6NEXokGwYYxC4DFdzwkaVVN6iDIcc2Pmba14udXYcUaB7qMr+Jd8U=
+X-Received: by 2002:a05:6e02:1688:b0:3dc:75c6:c2be with SMTP id
+ e9e14a558f8ab-3dc75c6c7camr11804555ab.27.1747844176849; Wed, 21 May 2025
+ 09:16:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v22 5/5] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
- <20250520-arm-brbe-v19-v22-5-c1ddde38e7f8@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250520-arm-brbe-v19-v22-5-c1ddde38e7f8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250521135500.677508-1-irogers@google.com> <20250521135500.677508-4-irogers@google.com>
+ <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
+In-Reply-To: <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 May 2025 09:16:04 -0700
+X-Gm-Features: AX0GCFthpE0j2TQjt4JMbuVXTzaJ9LkvZKaOI_Xyfn1pA1-2Im45Ae_Ico_9XBI
+Message-ID: <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and header
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 21, 2025 at 8:50=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2025-05-21 9:54 a.m., Ian Rogers wrote:
+> > Previously arch_support_sort_key and arch_perf_header_entry used a
+> > weak symbol to compile as appropriate for x86 and powerpc. A
+> > limitation to this is that the handling of a data file could vary in
+> > cross-platform development. Change to using the perf_env of the
+> > current session to determine the architecture kind and set the sort
+> > key and header entries as appropriate.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/powerpc/util/Build   |  1 -
+> >  tools/perf/arch/powerpc/util/event.c | 34 ----------------
+> >  tools/perf/arch/x86/util/event.c     | 19 ---------
+> >  tools/perf/builtin-annotate.c        |  2 +-
+> >  tools/perf/builtin-c2c.c             | 53 +++++++++++++-----------
+> >  tools/perf/builtin-diff.c            |  2 +-
+> >  tools/perf/builtin-report.c          |  2 +-
+> >  tools/perf/builtin-top.c             | 16 ++++----
+> >  tools/perf/tests/hists_cumulate.c    |  8 ++--
+> >  tools/perf/tests/hists_filter.c      |  8 ++--
+> >  tools/perf/tests/hists_link.c        |  8 ++--
+> >  tools/perf/tests/hists_output.c      | 10 ++---
+> >  tools/perf/util/event.h              |  3 --
+> >  tools/perf/util/sort.c               | 61 ++++++++++++++++++++--------
+> >  tools/perf/util/sort.h               |  5 ++-
+> >  15 files changed, 104 insertions(+), 128 deletions(-)
+> >  delete mode 100644 tools/perf/arch/powerpc/util/event.c
+> >
+> > diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/power=
+pc/util/Build
+> > index ed82715080f9..fdd6a77a3432 100644
+> > --- a/tools/perf/arch/powerpc/util/Build
+> > +++ b/tools/perf/arch/powerpc/util/Build
+> > @@ -5,7 +5,6 @@ perf-util-y +=3D mem-events.o
+> >  perf-util-y +=3D pmu.o
+> >  perf-util-y +=3D sym-handling.o
+> >  perf-util-y +=3D evsel.o
+> > -perf-util-y +=3D event.o
+> >
+> >  perf-util-$(CONFIG_LIBDW) +=3D skip-callchain-idx.o
+> >
+> > diff --git a/tools/perf/arch/powerpc/util/event.c b/tools/perf/arch/pow=
+erpc/util/event.c
+> > deleted file mode 100644
+> > index 024ac8b54c33..000000000000
+> > --- a/tools/perf/arch/powerpc/util/event.c
+> > +++ /dev/null
+> > @@ -1,34 +0,0 @@
+> > -// SPDX-License-Identifier: GPL-2.0
+> > -#include <linux/types.h>
+> > -#include <linux/string.h>
+> > -#include <linux/zalloc.h>
+> > -
+> > -#include "../../../util/event.h"
+> > -#include "../../../util/synthetic-events.h"
+> > -#include "../../../util/machine.h"
+> > -#include "../../../util/tool.h"
+> > -#include "../../../util/map.h"
+> > -#include "../../../util/debug.h"
+> > -#include "../../../util/sample.h"
+> > -
+> > -const char *arch_perf_header_entry(const char *se_header)
+> > -{
+> > -     if (!strcmp(se_header, "Local INSTR Latency"))
+> > -             return "Finish Cyc";
+> > -     else if (!strcmp(se_header, "INSTR Latency"))
+> > -             return "Global Finish_cyc";
+> > -     else if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
+> > -             return "Dispatch Cyc";
+> > -     else if (!strcmp(se_header, "Pipeline Stage Cycle"))
+> > -             return "Global Dispatch_cyc";
+> > -     return se_header;
+> > -}
+> > -
+> > -int arch_support_sort_key(const char *sort_key)
+> > -{
+> > -     if (!strcmp(sort_key, "p_stage_cyc"))
+> > -             return 1;
+> > -     if (!strcmp(sort_key, "local_p_stage_cyc"))
+> > -             return 1;
+> > -     return 0;
+> > -}
+> > diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/uti=
+l/event.c
+> > index 576c1c36046c..3cd384317739 100644
+> > --- a/tools/perf/arch/x86/util/event.c
+> > +++ b/tools/perf/arch/x86/util/event.c
+> > @@ -91,22 +91,3 @@ int perf_event__synthesize_extra_kmaps(const struct =
+perf_tool *tool,
+> >  }
+> >
+> >  #endif
+> > -
+> > -const char *arch_perf_header_entry(const char *se_header)
+> > -{
+> > -     if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
+> > -             return "Local Retire Latency";
+> > -     else if (!strcmp(se_header, "Pipeline Stage Cycle"))
+> > -             return "Retire Latency";
+> > -
+> > -     return se_header;
+> > -}
+> > -
+> > -int arch_support_sort_key(const char *sort_key)
+> > -{
+> > -     if (!strcmp(sort_key, "p_stage_cyc"))
+> > -             return 1;
+> > -     if (!strcmp(sort_key, "local_p_stage_cyc"))
+> > -             return 1;
+> > -     return 0;
+> > -}
+> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotat=
+e.c
+> > index 9833c2c82a2f..a2d41614ef5e 100644
+> > --- a/tools/perf/builtin-annotate.c
+> > +++ b/tools/perf/builtin-annotate.c
+> > @@ -947,7 +947,7 @@ int cmd_annotate(int argc, const char **argv)
+> >                       annotate_opts.show_br_cntr =3D true;
+> >       }
+> >
+> > -     if (setup_sorting(NULL) < 0)
+> > +     if (setup_sorting(/*evlist=3D*/NULL, &annotate.session->header.en=
+v) < 0)
+> >               usage_with_options(annotate_usage, options);
+> >
+> >       ret =3D __cmd_annotate(&annotate);
+> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > index e2e257bcc461..324368aabfa2 100644
+> > --- a/tools/perf/builtin-c2c.c
+> > +++ b/tools/perf/builtin-c2c.c
+> > @@ -195,12 +195,14 @@ static struct hist_entry_ops c2c_entry_ops =3D {
+> >
+> >  static int c2c_hists__init(struct c2c_hists *hists,
+> >                          const char *sort,
+> > -                        int nr_header_lines);
+> > +                        int nr_header_lines,
+> > +                        struct perf_env *env);
+> >
+> >  static struct c2c_hists*
+> >  he__get_c2c_hists(struct hist_entry *he,
+> >                 const char *sort,
+> > -               int nr_header_lines)
+> > +               int nr_header_lines,
+> > +               struct perf_env *env)
+> >  {
+> >       struct c2c_hist_entry *c2c_he;
+> >       struct c2c_hists *hists;
+> > @@ -214,7 +216,7 @@ he__get_c2c_hists(struct hist_entry *he,
+> >       if (!hists)
+> >               return NULL;
+> >
+> > -     ret =3D c2c_hists__init(hists, sort, nr_header_lines);
+> > +     ret =3D c2c_hists__init(hists, sort, nr_header_lines, env);
+> >       if (ret) {
+> >               free(hists);
+> >               return NULL;
+> > @@ -350,7 +352,7 @@ static int process_sample_event(const struct perf_t=
+ool *tool __maybe_unused,
+> >
+> >               mi =3D mi_dup;
+> >
+> > -             c2c_hists =3D he__get_c2c_hists(he, c2c.cl_sort, 2);
+> > +             c2c_hists =3D he__get_c2c_hists(he, c2c.cl_sort, 2, machi=
+ne->env);
+> >               if (!c2c_hists)
+> >                       goto free_mi;
+> >
+> > @@ -1966,7 +1968,8 @@ static struct c2c_fmt *get_format(const char *nam=
+e)
+> >       return c2c_fmt;
+> >  }
+> >
+> > -static int c2c_hists__init_output(struct perf_hpp_list *hpp_list, char=
+ *name)
+> > +static int c2c_hists__init_output(struct perf_hpp_list *hpp_list, char=
+ *name,
+> > +                               struct perf_env *env __maybe_unused)
+> >  {
+> >       struct c2c_fmt *c2c_fmt =3D get_format(name);
+> >       int level =3D 0;
+> > @@ -1980,14 +1983,14 @@ static int c2c_hists__init_output(struct perf_h=
+pp_list *hpp_list, char *name)
+> >       return 0;
+> >  }
+> >
+> > -static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *=
+name)
+> > +static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *=
+name, struct perf_env *env)
+> >  {
+> >       struct c2c_fmt *c2c_fmt =3D get_format(name);
+> >       struct c2c_dimension *dim;
+> >
+> >       if (!c2c_fmt) {
+> >               reset_dimensions();
+> > -             return sort_dimension__add(hpp_list, name, NULL, 0);
+> > +             return sort_dimension__add(hpp_list, name, /*evlist=3D*/N=
+ULL, env, /*level=3D*/0);
+> >       }
+> >
+> >       dim =3D c2c_fmt->dim;
+> > @@ -2008,7 +2011,7 @@ static int c2c_hists__init_sort(struct perf_hpp_l=
+ist *hpp_list, char *name)
+> >                                                                        =
+       \
+> >               for (tok =3D strtok_r((char *)_list, ", ", &tmp);        =
+         \
+> >                               tok; tok =3D strtok_r(NULL, ", ", &tmp)) =
+{        \
+> > -                     ret =3D _fn(hpp_list, tok);                      =
+         \
+> > +                     ret =3D _fn(hpp_list, tok, env);                 =
+         \
+> >                       if (ret =3D=3D -EINVAL) {                        =
+           \
+> >                               pr_err("Invalid --fields key: `%s'", tok)=
+;      \
+> >                               break;                                   =
+       \
+> > @@ -2021,7 +2024,8 @@ static int c2c_hists__init_sort(struct perf_hpp_l=
+ist *hpp_list, char *name)
+> >
+> >  static int hpp_list__parse(struct perf_hpp_list *hpp_list,
+> >                          const char *output_,
+> > -                        const char *sort_)
+> > +                        const char *sort_,
+> > +                        struct perf_env *env)
+> >  {
+> >       char *output =3D output_ ? strdup(output_) : NULL;
+> >       char *sort   =3D sort_   ? strdup(sort_) : NULL;
+> > @@ -2052,7 +2056,8 @@ static int hpp_list__parse(struct perf_hpp_list *=
+hpp_list,
+> >
+> >  static int c2c_hists__init(struct c2c_hists *hists,
+> >                          const char *sort,
+> > -                        int nr_header_lines)
+> > +                        int nr_header_lines,
+> > +                        struct perf_env *env)
+> >  {
+> >       __hists__init(&hists->hists, &hists->list);
+> >
+> > @@ -2066,15 +2071,16 @@ static int c2c_hists__init(struct c2c_hists *hi=
+sts,
+> >       /* Overload number of header lines.*/
+> >       hists->list.nr_header_lines =3D nr_header_lines;
+> >
+> > -     return hpp_list__parse(&hists->list, NULL, sort);
+> > +     return hpp_list__parse(&hists->list, /*output=3D*/NULL, sort, env=
+);
+> >  }
+> >
+> >  static int c2c_hists__reinit(struct c2c_hists *c2c_hists,
+> >                            const char *output,
+> > -                          const char *sort)
+> > +                          const char *sort,
+> > +                          struct perf_env *env)
+> >  {
+> >       perf_hpp__reset_output_field(&c2c_hists->list);
+> > -     return hpp_list__parse(&c2c_hists->list, output, sort);
+> > +     return hpp_list__parse(&c2c_hists->list, output, sort, env);
+> >  }
+> >
+> >  #define DISPLAY_LINE_LIMIT  0.001
+> > @@ -2207,8 +2213,9 @@ static int filter_cb(struct hist_entry *he, void =
+*arg __maybe_unused)
+> >       return 0;
+> >  }
+> >
+> > -static int resort_cl_cb(struct hist_entry *he, void *arg __maybe_unuse=
+d)
+> > +static int resort_cl_cb(struct hist_entry *he, void *arg)
+> >  {
+> > +     struct perf_env *env =3D arg;
+> >       struct c2c_hist_entry *c2c_he;
+> >       struct c2c_hists *c2c_hists;
+> >       bool display =3D he__display(he, &c2c.shared_clines_stats);
+> > @@ -2222,7 +2229,7 @@ static int resort_cl_cb(struct hist_entry *he, vo=
+id *arg __maybe_unused)
+> >               c2c_he->cacheline_idx =3D idx++;
+> >               calc_width(c2c_he);
+> >
+> > -             c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort=
+);
+> > +             c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort=
+, env);
+> >
+> >               hists__collapse_resort(&c2c_hists->hists, NULL);
+> >               hists__output_resort_cb(&c2c_hists->hists, NULL, filter_c=
+b);
+> > @@ -2333,7 +2340,7 @@ static int resort_shared_cl_cb(struct hist_entry =
+*he, void *arg __maybe_unused)
+> >       return 0;
+> >  }
+> >
+> > -static int hists__iterate_cb(struct hists *hists, hists__resort_cb_t c=
+b)
+> > +static int hists__iterate_cb(struct hists *hists, hists__resort_cb_t c=
+b, void *arg)
+> >  {
+> >       struct rb_node *next =3D rb_first_cached(&hists->entries);
+> >       int ret =3D 0;
+> > @@ -2342,7 +2349,7 @@ static int hists__iterate_cb(struct hists *hists,=
+ hists__resort_cb_t cb)
+> >               struct hist_entry *he;
+> >
+> >               he =3D rb_entry(next, struct hist_entry, rb_node);
+> > -             ret =3D cb(he, NULL);
+> > +             ret =3D cb(he, arg);
+> >               if (ret)
+> >                       break;
+> >               next =3D rb_next(&he->rb_node);
+> > @@ -2448,7 +2455,7 @@ static void print_cacheline(struct c2c_hists *c2c=
+_hists,
+> >       hists__fprintf(&c2c_hists->hists, false, 0, 0, 0, out, false);
+> >  }
+> >
+> > -static void print_pareto(FILE *out)
+> > +static void print_pareto(FILE *out, struct perf_env *env)
+> >  {
+> >       struct perf_hpp_list hpp_list;
+> >       struct rb_node *nd;
+> > @@ -2473,7 +2480,7 @@ static void print_pareto(FILE *out)
+> >                           "dcacheline";
+> >
+> >       perf_hpp_list__init(&hpp_list);
+> > -     ret =3D hpp_list__parse(&hpp_list, cl_output, NULL);
+> > +     ret =3D hpp_list__parse(&hpp_list, cl_output, /*evlist=3D*/NULL, =
+env);
+> >
+> >       if (WARN_ONCE(ret, "failed to setup sort entries\n"))
+> >               return;
+> > @@ -2538,7 +2545,7 @@ static void perf_c2c__hists_fprintf(FILE *out, st=
+ruct perf_session *session)
+> >       fprintf(out, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D\n");
+> >       fprintf(out, "#\n");
+> >
+> > -     print_pareto(out);
+> > +     print_pareto(out, &session->header.env);
+> >  }
+> >
+> >  #ifdef HAVE_SLANG_SUPPORT
+> > @@ -3095,7 +3102,7 @@ static int perf_c2c__report(int argc, const char =
+**argv)
+> >               goto out_session;
+> >       }
+> >
+> > -     err =3D c2c_hists__init(&c2c.hists, "dcacheline", 2);
+> > +     err =3D c2c_hists__init(&c2c.hists, "dcacheline", 2, &session->he=
+ader.env);
+> >       if (err) {
+> >               pr_debug("Failed to initialize hists\n");
+> >               goto out_session;
+> > @@ -3179,13 +3186,13 @@ static int perf_c2c__report(int argc, const cha=
+r **argv)
+> >       else if (c2c.display =3D=3D DISPLAY_SNP_PEER)
+> >               sort_str =3D "tot_peer";
+> >
+> > -     c2c_hists__reinit(&c2c.hists, output_str, sort_str);
+> > +     c2c_hists__reinit(&c2c.hists, output_str, sort_str, &session->hea=
+der.env);
+> >
+> >       ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting..."=
+);
+> >
+> >       hists__collapse_resort(&c2c.hists.hists, NULL);
+> >       hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl=
+_cb);
+> > -     hists__iterate_cb(&c2c.hists.hists, resort_cl_cb);
+> > +     hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, &session->heade=
+r.env);
+> >
+> >       ui_progress__finish();
+> >
+> > diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+> > index ae490d58af92..f6735cf02329 100644
+> > --- a/tools/perf/builtin-diff.c
+> > +++ b/tools/perf/builtin-diff.c
+> > @@ -2003,7 +2003,7 @@ int cmd_diff(int argc, const char **argv)
+> >               sort__mode =3D SORT_MODE__DIFF;
+> >       }
+> >
+> > -     if (setup_sorting(NULL) < 0)
+> > +     if (setup_sorting(/*evlist=3D*/NULL, &data__files[0].session->hea=
+der.env) < 0)
+> >               usage_with_options(diff_usage, options);
+> >
+> >       setup_pager();
+> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > index f0299c7ee025..8be6e7c3bd22 100644
+> > --- a/tools/perf/builtin-report.c
+> > +++ b/tools/perf/builtin-report.c
+> > @@ -1776,7 +1776,7 @@ int cmd_report(int argc, const char **argv)
+> >       }
+> >
+> >       if ((last_key !=3D K_SWITCH_INPUT_DATA && last_key !=3D K_RELOAD)=
+ &&
+> > -         (setup_sorting(session->evlist) < 0)) {
+> > +         (setup_sorting(session->evlist, &session->header.env) < 0)) {
+> >               if (sort_order)
+> >                       parse_options_usage(report_usage, options, "s", 1=
+);
+> >               if (field_order)
+> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> > index 7b6cde87d2af..13ef0d188a96 100644
+> > --- a/tools/perf/builtin-top.c
+> > +++ b/tools/perf/builtin-top.c
+> > @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
+> >
+> >       setup_browser(false);
+> >
+> > -     if (setup_sorting(top.evlist) < 0) {
+> > +     top.session =3D perf_session__new(/*data=3D*/NULL, /*tool=3D*/NUL=
+L);
+> > +     if (IS_ERR(top.session)) {
+> > +             status =3D PTR_ERR(top.session);
+> > +             top.session =3D NULL;
+> > +             goto out_delete_evlist;
+> > +     }
+> > +
+> > +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
+>
+> I doubt a valide env can be got in perf_session__new(), since there is
+> no perf.data in perf top.
+> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
+> env->arch.
 
+I think the current code is making things harder than it should be, we
+should work away from perf_env__arch and strings, instead using EM_
+values which we can default to EM_HOST avoiding any runtime costs.
+Looking at perf_env__arch:
+```
+const char *perf_env__arch(struct perf_env *env)
+{
+        char *arch_name;
 
-On 20/05/2025 11:27 pm, Rob Herring (Arm) wrote:
-> The ARMv9.2 architecture introduces the optional Branch Record Buffer
-> Extension (BRBE), which records information about branches as they are
-> executed into set of branch record registers. BRBE is similar to x86's
-> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
-> (BHRB).
-> 
-> BRBE supports filtering by exception level and can filter just the
-> source or target address if excluded to avoid leaking privileged
-> addresses. The h/w filter would be sufficient except when there are
-> multiple events with disjoint filtering requirements. In this case, BRBE
-> is configured with a union of all the events' desired branches, and then
-> the recorded branches are filtered based on each event's filter. For
-> example, with one event capturing kernel events and another event
-> capturing user events, BRBE will be configured to capture both kernel
-> and user branches. When handling event overflow, the branch records have
-> to be filtered by software to only include kernel or user branch
-> addresses for that event. In contrast, x86 simply configures LBR using
-> the last installed event which seems broken.
-> 
-> It is possible on x86 to configure branch filter such that no branches
-> are ever recorded (e.g. -j save_type). For BRBE, events with a
-> configuration that will result in no samples are rejected.
-> 
-> Recording branches in KVM guests is not supported like x86. However,
-> perf on x86 allows requesting branch recording in guests. The guest
-> events are recorded, but the resulting branches are all from the host.
-> For BRBE, events with branch recording and "exclude_host" set are
-> rejected. Requiring "exclude_guest" to be set did not work. The default
-> for the perf tool does set "exclude_guest" if no exception level
-> options are specified. However, specifying kernel or user events
-> defaults to including both host and guest. In this case, only host
-> branches are recorded.
-> 
-> BRBE can support some additional exception branch types compared to
-> x86. On x86, all exceptions other than syscalls are recorded as IRQ.
-> With BRBE, it is possible to better categorize these exceptions. One
-> limitation relative to x86 is we cannot distinguish a syscall return
-> from other exception returns. So all exception returns are recorded as
-> ERET type. The FIQ branch type is omitted as the only FIQ user is Apple
-> platforms which don't support BRBE. The debug branch types are omitted
-> as there is no clear need for them.
-> 
-> BRBE records are invalidated whenever events are reconfigured, a new
-> task is scheduled in, or after recording is paused (and the records
-> have been recorded for the event). The architecture allows branch
-> records to be invalidated by the PE under implementation defined
-> conditions. It is expected that these conditions are rare.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Co-developed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Co-developed-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Tested-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v22:
->   - Move branch stack disabling after armpmu_stop() in armpmu_del()
->   - Fix branch_records_alloc() to work on heterogeneous systems
->   - Make setting .sched_task function ptr conditional on BRBE support
-> 
-> v21:
->   - update .sched_task() parameters. task_struct added in v6.15
-> 
-> v20:
->   - Fix sparse percpu warning in branch_records_alloc()
->   - Use pr_debug instead of pr_debug_once. Add debug print on all error
->     cases when event.attr is rejected.
->   - Add back some arm64 specific exception types
->   - Convert 'call' from user to kernel to syscall as appropriate
->   - Drop requiring event and branch privileges to match
->   - Only enable exceptions and exception returns if recording kernel
->     branches
->   - Add "branches" caps sysfs attribute like x86
->   - Drop some unused defines
->   - Use u64 instead of unsigned long for branch record fields
->   - use min() in brbinf_get_cycles()
->   - Reword comment about FZP and MDCR_EL2.HPMN interaction
->   - Add comments on assumptions about calling brbe_enable()
->   - Merge capture_brbe_flags() into perf_entry_from_brbe_regset()
->   - Rework BRBE invalidation to avoid invalidating in interrupt handler
->     when no handled events capture the branch stack.
->   - Also clear BRBCR_ELx in brbe_disable(). This is for KVM nVHE checks
->     if BRBE is enabled.
-> 
-> v19:
-> - Drop saving of branch records when task scheduled out. (Mark)
-> - Got rid of added armpmu ops. All BRBE support contained within pmuv3
->    code.
-> - Dropped armpmu.num_branch_records as reg_brbidr has same info.
-> - Make sched_task() callback actually get called. Enabling requires a
->    call to perf_sched_cb_inc().
-> - Fix freeze on overflow for VHE
-> - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
->    it when BRBE is enabled.
-> - Drop all the Arm specific exception branches. Not a clear need for
->    them.
-> - Simplify enable/disable to avoid RMW and document ISBs needed
-> - Fix handling of branch 'cycles' reading. CC field is
->    mantissa/exponent, not an integer.
-> - Save BRBFCR and BRBCR settings in event->hw.branch_reg.config and
->    event->hw.extra_reg.config to avoid recalculating the register value
->    each time the event is installed.
-> - Rework s/w filtering to better match h/w filtering
-> - Reject events with disjoint event filter and branch filter
-> - Reject events if exclude_host is set
-> 
-> v18: https://lore.kernel.org/all/20240613061731.3109448-6-anshuman.khandual@arm.com/
-> ---
->   drivers/perf/Kconfig         |  11 +
->   drivers/perf/Makefile        |   1 +
->   drivers/perf/arm_brbe.c      | 802 +++++++++++++++++++++++++++++++++++++++++++
->   drivers/perf/arm_brbe.h      |  47 +++
->   drivers/perf/arm_pmu.c       |  16 +-
->   drivers/perf/arm_pmuv3.c     | 125 ++++++-
->   include/linux/perf/arm_pmu.h |   8 +
->   7 files changed, 1003 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 4e268de351c4..3be60ff4236d 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -223,6 +223,17 @@ config ARM_SPE_PMU
->   	  Extension, which provides periodic sampling of operations in
->   	  the CPU pipeline and reports this via the perf AUX interface.
->   
-> +config ARM64_BRBE
-> +	bool "Enable support for branch stack sampling using FEAT_BRBE"
-> +	depends on ARM_PMUV3 && ARM64
-> +	default y
-> +	help
-> +	  Enable perf support for Branch Record Buffer Extension (BRBE) which
-> +	  records all branches taken in an execution path. This supports some
-> +	  branch types and privilege based filtering. It captures additional
-> +	  relevant information such as cycle count, misprediction and branch
-> +	  type, branch privilege level etc.
-> +
->   config ARM_DMC620_PMU
->   	tristate "Enable PMU support for the ARM DMC-620 memory controller"
->   	depends on (ARM64 && ACPI) || COMPILE_TEST
-> diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-> index de71d2574857..192fc8b16204 100644
-> --- a/drivers/perf/Makefile
-> +++ b/drivers/perf/Makefile
-> @@ -23,6 +23,7 @@ obj-$(CONFIG_STARFIVE_STARLINK_PMU) += starfive_starlink_pmu.o
->   obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
->   obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
->   obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-> +obj-$(CONFIG_ARM64_BRBE) += arm_brbe.o
->   obj-$(CONFIG_ARM_DMC620_PMU) += arm_dmc620_pmu.o
->   obj-$(CONFIG_MARVELL_CN10K_TAD_PMU) += marvell_cn10k_tad_pmu.o
->   obj-$(CONFIG_MARVELL_CN10K_DDR_PMU) += marvell_cn10k_ddr_pmu.o
-> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-> new file mode 100644
-> index 000000000000..2f254bd40af3
-> --- /dev/null
-> +++ b/drivers/perf/arm_brbe.c
-> @@ -0,0 +1,802 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Branch Record Buffer Extension Driver.
-> + *
-> + * Copyright (C) 2022-2025 ARM Limited
-> + *
-> + * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-> + */
-> +#include <linux/types.h>
-> +#include <linux/bitmap.h>
-> +#include <linux/perf/arm_pmu.h>
-> +#include "arm_brbe.h"
-> +
-> +#define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
-> +				   BRBFCR_EL1_INDIRECT | \
-> +				   BRBFCR_EL1_RTN      | \
-> +				   BRBFCR_EL1_INDCALL  | \
-> +				   BRBFCR_EL1_DIRCALL  | \
-> +				   BRBFCR_EL1_CONDDIR)
-> +
-> +/*
-> + * BRBTS_EL1 is currently not used for branch stack implementation
-> + * purpose but BRBCR_ELx.TS needs to have a valid value from all
-> + * available options. BRBCR_ELx_TS_VIRTUAL is selected for this.
-> + */
-> +#define BRBCR_ELx_DEFAULT_TS      FIELD_PREP(BRBCR_ELx_TS_MASK, BRBCR_ELx_TS_VIRTUAL)
-> +
-> +/*
-> + * BRBE Buffer Organization
-> + *
-> + * BRBE buffer is arranged as multiple banks of 32 branch record
-> + * entries each. An individual branch record in a given bank could
-> + * be accessed, after selecting the bank in BRBFCR_EL1.BANK and
-> + * accessing the registers i.e [BRBSRC, BRBTGT, BRBINF] set with
-> + * indices [0..31].
-> + *
-> + * Bank 0
-> + *
-> + *	---------------------------------	------
-> + *	| 00 | BRBSRC | BRBTGT | BRBINF |	| 00 |
-> + *	---------------------------------	------
-> + *	| 01 | BRBSRC | BRBTGT | BRBINF |	| 01 |
-> + *	---------------------------------	------
-> + *	| .. | BRBSRC | BRBTGT | BRBINF |	| .. |
-> + *	---------------------------------	------
-> + *	| 31 | BRBSRC | BRBTGT | BRBINF |	| 31 |
-> + *	---------------------------------	------
-> + *
-> + * Bank 1
-> + *
-> + *	---------------------------------	------
-> + *	| 32 | BRBSRC | BRBTGT | BRBINF |	| 00 |
-> + *	---------------------------------	------
-> + *	| 33 | BRBSRC | BRBTGT | BRBINF |	| 01 |
-> + *	---------------------------------	------
-> + *	| .. | BRBSRC | BRBTGT | BRBINF |	| .. |
-> + *	---------------------------------	------
-> + *	| 63 | BRBSRC | BRBTGT | BRBINF |	| 31 |
-> + *	---------------------------------	------
-> + */
-> +#define BRBE_BANK_MAX_ENTRIES	32
-> +
-> +struct brbe_regset {
-> +	u64 brbsrc;
-> +	u64 brbtgt;
-> +	u64 brbinf;
-> +};
-> +
-> +#define PERF_BR_ARM64_MAX (PERF_BR_MAX + PERF_BR_NEW_MAX)
-> +
-> +struct brbe_hw_attr {
-> +	int	brbe_version;
-> +	int	brbe_cc;
-> +	int	brbe_nr;
-> +	int	brbe_format;
-> +};
-> +
-> +#define BRBE_REGN_CASE(n, case_macro) \
-> +	case n: case_macro(n); break
-> +
-> +#define BRBE_REGN_SWITCH(x, case_macro)				\
-> +	do {							\
-> +		switch (x) {					\
-> +		BRBE_REGN_CASE(0, case_macro);			\
-> +		BRBE_REGN_CASE(1, case_macro);			\
-> +		BRBE_REGN_CASE(2, case_macro);			\
-> +		BRBE_REGN_CASE(3, case_macro);			\
-> +		BRBE_REGN_CASE(4, case_macro);			\
-> +		BRBE_REGN_CASE(5, case_macro);			\
-> +		BRBE_REGN_CASE(6, case_macro);			\
-> +		BRBE_REGN_CASE(7, case_macro);			\
-> +		BRBE_REGN_CASE(8, case_macro);			\
-> +		BRBE_REGN_CASE(9, case_macro);			\
-> +		BRBE_REGN_CASE(10, case_macro);			\
-> +		BRBE_REGN_CASE(11, case_macro);			\
-> +		BRBE_REGN_CASE(12, case_macro);			\
-> +		BRBE_REGN_CASE(13, case_macro);			\
-> +		BRBE_REGN_CASE(14, case_macro);			\
-> +		BRBE_REGN_CASE(15, case_macro);			\
-> +		BRBE_REGN_CASE(16, case_macro);			\
-> +		BRBE_REGN_CASE(17, case_macro);			\
-> +		BRBE_REGN_CASE(18, case_macro);			\
-> +		BRBE_REGN_CASE(19, case_macro);			\
-> +		BRBE_REGN_CASE(20, case_macro);			\
-> +		BRBE_REGN_CASE(21, case_macro);			\
-> +		BRBE_REGN_CASE(22, case_macro);			\
-> +		BRBE_REGN_CASE(23, case_macro);			\
-> +		BRBE_REGN_CASE(24, case_macro);			\
-> +		BRBE_REGN_CASE(25, case_macro);			\
-> +		BRBE_REGN_CASE(26, case_macro);			\
-> +		BRBE_REGN_CASE(27, case_macro);			\
-> +		BRBE_REGN_CASE(28, case_macro);			\
-> +		BRBE_REGN_CASE(29, case_macro);			\
-> +		BRBE_REGN_CASE(30, case_macro);			\
-> +		BRBE_REGN_CASE(31, case_macro);			\
-> +		default: WARN(1, "Invalid BRB* index %d\n", x);	\
-> +		}						\
-> +	} while (0)
-> +
-> +#define RETURN_READ_BRBSRCN(n) \
-> +	return read_sysreg_s(SYS_BRBSRC_EL1(n))
-> +static inline u64 get_brbsrc_reg(int idx)
-> +{
-> +	BRBE_REGN_SWITCH(idx, RETURN_READ_BRBSRCN);
-> +	return 0;
-> +}
-> +
-> +#define RETURN_READ_BRBTGTN(n) \
-> +	return read_sysreg_s(SYS_BRBTGT_EL1(n))
-> +static u64 get_brbtgt_reg(int idx)
-> +{
-> +	BRBE_REGN_SWITCH(idx, RETURN_READ_BRBTGTN);
-> +	return 0;
-> +}
-> +
-> +#define RETURN_READ_BRBINFN(n) \
-> +	return read_sysreg_s(SYS_BRBINF_EL1(n))
-> +static u64 get_brbinf_reg(int idx)
-> +{
-> +	BRBE_REGN_SWITCH(idx, RETURN_READ_BRBINFN);
-> +	return 0;
-> +}
-> +
-> +static u64 brbe_record_valid(u64 brbinf)
-> +{
-> +	return FIELD_GET(BRBINFx_EL1_VALID_MASK, brbinf);
-> +}
-> +
-> +static bool brbe_invalid(u64 brbinf)
-> +{
-> +	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_NONE;
-> +}
-> +
-> +static bool brbe_record_is_complete(u64 brbinf)
-> +{
-> +	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_FULL;
-> +}
-> +
-> +static bool brbe_record_is_source_only(u64 brbinf)
-> +{
-> +	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_SOURCE;
-> +}
-> +
-> +static bool brbe_record_is_target_only(u64 brbinf)
-> +{
-> +	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_TARGET;
-> +}
-> +
-> +static int brbinf_get_in_tx(u64 brbinf)
-> +{
-> +	return FIELD_GET(BRBINFx_EL1_T_MASK, brbinf);
-> +}
-> +
-> +static int brbinf_get_mispredict(u64 brbinf)
-> +{
-> +	return FIELD_GET(BRBINFx_EL1_MPRED_MASK, brbinf);
-> +}
-> +
-> +static int brbinf_get_lastfailed(u64 brbinf)
-> +{
-> +	return FIELD_GET(BRBINFx_EL1_LASTFAILED_MASK, brbinf);
-> +}
-> +
-> +static u16 brbinf_get_cycles(u64 brbinf)
-> +{
-> +	u32 exp, mant, cycles;
-> +	/*
-> +	 * Captured cycle count is unknown and hence
-> +	 * should not be passed on to userspace.
-> +	 */
-> +	if (brbinf & BRBINFx_EL1_CCU)
-> +		return 0;
-> +
-> +	exp = FIELD_GET(BRBINFx_EL1_CC_EXP_MASK, brbinf);
-> +	mant = FIELD_GET(BRBINFx_EL1_CC_MANT_MASK, brbinf);
-> +
-> +	if (!exp)
-> +		return mant;
-> +
-> +	cycles = (mant | 0x100) << (exp - 1);
-> +
-> +	return min(cycles, U16_MAX);
-> +}
-> +
-> +static int brbinf_get_type(u64 brbinf)
-> +{
-> +	return FIELD_GET(BRBINFx_EL1_TYPE_MASK, brbinf);
-> +}
-> +
-> +static int brbinf_get_el(u64 brbinf)
-> +{
-> +	return FIELD_GET(BRBINFx_EL1_EL_MASK, brbinf);
-> +}
-> +
-> +void brbe_invalidate(void)
-> +{
-> +	// Ensure all branches before this point are recorded
-> +	isb();
-> +	asm volatile(BRB_IALL_INSN);
-> +	// Ensure all branch records are invalidated after this point
-> +	isb();
-> +}
-> +
-> +static bool valid_brbe_nr(int brbe_nr)
-> +{
-> +	return brbe_nr == BRBIDR0_EL1_NUMREC_8 ||
-> +	       brbe_nr == BRBIDR0_EL1_NUMREC_16 ||
-> +	       brbe_nr == BRBIDR0_EL1_NUMREC_32 ||
-> +	       brbe_nr == BRBIDR0_EL1_NUMREC_64;
-> +}
-> +
-> +static bool valid_brbe_cc(int brbe_cc)
-> +{
-> +	return brbe_cc == BRBIDR0_EL1_CC_20_BIT;
-> +}
-> +
-> +static bool valid_brbe_format(int brbe_format)
-> +{
-> +	return brbe_format == BRBIDR0_EL1_FORMAT_FORMAT_0;
-> +}
-> +
-> +static bool valid_brbidr(u64 brbidr)
-> +{
-> +	int brbe_format, brbe_cc, brbe_nr;
-> +
-> +	brbe_format = FIELD_GET(BRBIDR0_EL1_FORMAT_MASK, brbidr);
-> +	brbe_cc = FIELD_GET(BRBIDR0_EL1_CC_MASK, brbidr);
-> +	brbe_nr = FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, brbidr);
-> +
-> +	return valid_brbe_format(brbe_format) && valid_brbe_cc(brbe_cc) && valid_brbe_nr(brbe_nr);
-> +}
-> +
-> +static bool valid_brbe_version(int brbe_version)
-> +{
-> +	return brbe_version == ID_AA64DFR0_EL1_BRBE_IMP ||
-> +	       brbe_version == ID_AA64DFR0_EL1_BRBE_BRBE_V1P1;
-> +}
-> +
-> +static void select_brbe_bank(int bank)
-> +{
-> +	u64 brbfcr;
-> +
-> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-> +	brbfcr &= ~BRBFCR_EL1_BANK_MASK;
-> +	brbfcr |= SYS_FIELD_PREP(BRBFCR_EL1, BANK, bank);
-> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-> +	/*
-> +	 * Arm ARM (DDI 0487K.a) D.18.4 rule PPBZP requires explicit sync
-> +	 * between setting BANK and accessing branch records.
-> +	 */
-> +	isb();
-> +}
-> +
-> +static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
-> +{
-> +	entry->brbinf = get_brbinf_reg(idx);
-> +
-> +	if (brbe_invalid(entry->brbinf))
-> +		return false;
-> +
-> +	entry->brbsrc = get_brbsrc_reg(idx);
-> +	entry->brbtgt = get_brbtgt_reg(idx);
-> +	return true;
-> +}
-> +
-> +/*
-> + * Generic perf branch filters supported on BRBE
-> + *
-> + * New branch filters need to be evaluated whether they could be supported on
-> + * BRBE. This ensures that such branch filters would not just be accepted, to
-> + * fail silently. PERF_SAMPLE_BRANCH_HV is a special case that is selectively
-> + * supported only on platforms where kernel is in hyp mode.
-> + */
-> +#define BRBE_EXCLUDE_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_ABORT_TX	| \
-> +				     PERF_SAMPLE_BRANCH_IN_TX		| \
-> +				     PERF_SAMPLE_BRANCH_NO_TX		| \
-> +				     PERF_SAMPLE_BRANCH_CALL_STACK	| \
-> +				     PERF_SAMPLE_BRANCH_COUNTERS)
-> +
-> +#define BRBE_ALLOWED_BRANCH_TYPES   (PERF_SAMPLE_BRANCH_ANY		| \
-> +				     PERF_SAMPLE_BRANCH_ANY_CALL	| \
-> +				     PERF_SAMPLE_BRANCH_ANY_RETURN	| \
-> +				     PERF_SAMPLE_BRANCH_IND_CALL	| \
-> +				     PERF_SAMPLE_BRANCH_COND		| \
-> +				     PERF_SAMPLE_BRANCH_IND_JUMP	| \
-> +				     PERF_SAMPLE_BRANCH_CALL)
-> +
-> +
-> +#define BRBE_ALLOWED_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_USER		| \
-> +				     PERF_SAMPLE_BRANCH_KERNEL		| \
-> +				     PERF_SAMPLE_BRANCH_HV		| \
-> +				     BRBE_ALLOWED_BRANCH_TYPES		| \
-> +				     PERF_SAMPLE_BRANCH_NO_FLAGS	| \
-> +				     PERF_SAMPLE_BRANCH_NO_CYCLES	| \
-> +				     PERF_SAMPLE_BRANCH_TYPE_SAVE	| \
-> +				     PERF_SAMPLE_BRANCH_HW_INDEX	| \
-> +				     PERF_SAMPLE_BRANCH_PRIV_SAVE)
-> +
-> +#define BRBE_PERF_BRANCH_FILTERS    (BRBE_ALLOWED_BRANCH_FILTERS	| \
-> +				     BRBE_EXCLUDE_BRANCH_FILTERS)
-> +
-> +/*
-> + * BRBE supports the following functional branch type filters while
-> + * generating branch records. These branch filters can be enabled,
-> + * either individually or as a group i.e ORing multiple filters
-> + * with each other.
-> + *
-> + * BRBFCR_EL1_CONDDIR  - Conditional direct branch
-> + * BRBFCR_EL1_DIRCALL  - Direct call
-> + * BRBFCR_EL1_INDCALL  - Indirect call
-> + * BRBFCR_EL1_INDIRECT - Indirect branch
-> + * BRBFCR_EL1_DIRECT   - Direct branch
-> + * BRBFCR_EL1_RTN      - Subroutine return
-> + */
-> +static u64 branch_type_to_brbfcr(int branch_type)
-> +{
-> +	u64 brbfcr = 0;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-> +		brbfcr |= BRBFCR_EL1_BRANCH_FILTERS;
-> +		return brbfcr;
-> +	}
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
-> +		brbfcr |= BRBFCR_EL1_INDCALL;
-> +		brbfcr |= BRBFCR_EL1_DIRCALL;
-> +	}
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-> +		brbfcr |= BRBFCR_EL1_RTN;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
-> +		brbfcr |= BRBFCR_EL1_INDCALL;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_COND)
-> +		brbfcr |= BRBFCR_EL1_CONDDIR;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP)
-> +		brbfcr |= BRBFCR_EL1_INDIRECT;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
-> +		brbfcr |= BRBFCR_EL1_DIRCALL;
-> +
-> +	return brbfcr;
-> +}
-> +
-> +/*
-> + * BRBE supports the following privilege mode filters while generating
-> + * branch records.
-> + *
-> + * BRBCR_ELx_E0BRE - EL0 branch records
-> + * BRBCR_ELx_ExBRE - EL1/EL2 branch records
-> + *
-> + * BRBE also supports the following additional functional branch type
-> + * filters while generating branch records.
-> + *
-> + * BRBCR_ELx_EXCEPTION - Exception
-> + * BRBCR_ELx_ERTN     -  Exception return
-> + */
-> +static u64 branch_type_to_brbcr(int branch_type)
-> +{
-> +	u64 brbcr = BRBCR_ELx_FZP | BRBCR_ELx_DEFAULT_TS;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
-> +		brbcr |= BRBCR_ELx_E0BRE;
-> +
-> +	/*
-> +	 * When running in the hyp mode, writing into BRBCR_EL1
-> +	 * actually writes into BRBCR_EL2 instead. Field E2BRE
-> +	 * is also at the same position as E1BRE.
-> +	 */
-> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
-> +		brbcr |= BRBCR_ELx_ExBRE;
-> +
-> +	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
-> +		if (is_kernel_in_hyp_mode())
-> +			brbcr |= BRBCR_ELx_ExBRE;
-> +	}
-> +
-> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
-> +		brbcr |= BRBCR_ELx_CC;
-> +
-> +	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS))
-> +		brbcr |= BRBCR_ELx_MPRED;
-> +
-> +	/*
-> +	 * The exception and exception return branches could be
-> +	 * captured, irrespective of the perf event's privilege.
-> +	 * If the perf event does not have enough privilege for
-> +	 * a given exception level, then addresses which falls
-> +	 * under that exception level will be reported as zero
-> +	 * for the captured branch record, creating source only
-> +	 * or target only records.
-> +	 */
-> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL) {
-> +		if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-> +			brbcr |= BRBCR_ELx_EXCEPTION;
-> +			brbcr |= BRBCR_ELx_ERTN;
-> +		}
-> +
-> +		if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
-> +			brbcr |= BRBCR_ELx_EXCEPTION;
-> +
-> +		if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-> +			brbcr |= BRBCR_ELx_ERTN;
-> +	}
-> +	return brbcr;
-> +}
-> +
-> +bool brbe_branch_attr_valid(struct perf_event *event)
-> +{
-> +	u64 branch_type = event->attr.branch_sample_type;
-> +
-> +	/*
-> +	 * Ensure both perf branch filter allowed and exclude
-> +	 * masks are always in sync with the generic perf ABI.
-> +	 */
-> +	BUILD_BUG_ON(BRBE_PERF_BRANCH_FILTERS != (PERF_SAMPLE_BRANCH_MAX - 1));
-> +
-> +	if (branch_type & BRBE_EXCLUDE_BRANCH_FILTERS) {
-> +		pr_debug("requested branch filter not supported 0x%llx\n", branch_type);
-> +		return false;
-> +	}
-> +
-> +	/* Ensure at least 1 branch type is enabled */
-> +	if (!(branch_type & BRBE_ALLOWED_BRANCH_TYPES)) {
-> +		pr_debug("no branch type enabled 0x%llx\n", branch_type);
-> +		return false;
-> +	}
-> +
-> +	/*
-> +	 * No branches are recorded in guests nor nVHE hypervisors, so
-> +	 * excluding the host or both kernel and user is invalid.
-> +	 *
-> +	 * Ideally we'd just require exclude_guest and exclude_hv, but setting
-> +	 * event filters with perf for kernel or user don't set exclude_guest.
-> +	 * So effectively, exclude_guest and exclude_hv are ignored.
-> +	 */
-> +	if (event->attr.exclude_host || (event->attr.exclude_user && event->attr.exclude_kernel)) {
-> +		pr_debug("branch filter in hypervisor or guest only not supported 0x%llx\n", branch_type);
-> +		return false;
-> +	}
-> +
-> +	event->hw.branch_reg.config = branch_type_to_brbfcr(event->attr.branch_sample_type);
-> +	event->hw.extra_reg.config = branch_type_to_brbcr(event->attr.branch_sample_type);
-> +
-> +	return true;
-> +}
-> +
-> +unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
-> +{
-> +	return FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, armpmu->reg_brbidr);
-> +}
-> +
-> +void brbe_probe(struct arm_pmu *armpmu)
-> +{
-> +	u64 aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
-> +	u32 brbe;
-> +
-> +	brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
-> +	if (!valid_brbe_version(brbe))
-> +		return;
-> +
-> +	u64 brbidr = read_sysreg_s(SYS_BRBIDR0_EL1);
-> +	if (!valid_brbidr(brbidr))
-> +		return;
-> +
-> +	armpmu->reg_brbidr = brbidr;
-> +}
-> +
-> +/*
-> + * BRBE is assumed to be disabled/paused on entry
-> + */
-> +void brbe_enable(const struct arm_pmu *arm_pmu)
-> +{
-> +	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
-> +	u64 brbfcr = 0, brbcr = 0;
-> +
-> +	/*
-> +	 * Merge the permitted branch filters of all events.
-> +	 */
-> +	for (int i = 0; i < ARMPMU_MAX_HWEVENTS; i++) {
-> +		struct perf_event *event = cpuc->events[i];
-> +
-> +		if (event && has_branch_stack(event)) {
-> +			brbfcr |= event->hw.branch_reg.config;
-> +			brbcr |= event->hw.extra_reg.config;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * In VHE mode with MDCR_EL2.HPMN equal to PMCR_EL0.N, BRBCR_EL1.FZP
-> +	 * controls freezing the branch records on counter overflow rather than
-> +	 * BRBCR_EL2.FZP (which writes to BRBCR_EL1 are redirected to).
-> +	 * The exception levels are enabled/disabled in BRBCR_EL2, so keep EL1
-> +	 * and EL0 recording disabled for guests.
-> +	 *
-> +	 * As BRBCR_EL1 CC and MPRED bits also need to match, use the same
-> +	 * value for both registers just masking the exception levels.
-> +	 */
-> +	if (is_kernel_in_hyp_mode())
-> +		write_sysreg_s(brbcr & ~(BRBCR_ELx_ExBRE | BRBCR_ELx_E0BRE), SYS_BRBCR_EL12);
-> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
-> +	isb(); // Ensure BRBCR_ELx settings take effect before unpausing
-> +
-> +	// Finally write SYS_BRBFCR_EL to unpause BRBE
-> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-> +	// Synchronization in PMCR write ensures ordering WRT PMU enabling
-> +}
-> +
-> +void brbe_disable(void)
-> +{
-> +	/*
-> +	 * No need for synchronization here as synchronization in PMCR write
-> +	 * ensures ordering and in the interrupt handler this is a NOP as
-> +	 * we're already paused.
-> +	 */
-> +	write_sysreg_s(BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-> +	write_sysreg_s(0, SYS_BRBCR_EL1);
-> +}
-> +
-> +static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2] = {
-> +	[BRBINFx_EL1_TYPE_DIRECT_UNCOND] = { PERF_BR_UNCOND, 0 },
-> +	[BRBINFx_EL1_TYPE_INDIRECT] = { PERF_BR_IND, 0 },
-> +	[BRBINFx_EL1_TYPE_DIRECT_LINK] = { PERF_BR_CALL, 0 },
-> +	[BRBINFx_EL1_TYPE_INDIRECT_LINK] = { PERF_BR_IND_CALL, 0 },
-> +	[BRBINFx_EL1_TYPE_RET] = { PERF_BR_RET, 0 },
-> +	[BRBINFx_EL1_TYPE_DIRECT_COND] = { PERF_BR_COND, 0 },
-> +	[BRBINFx_EL1_TYPE_CALL] = { PERF_BR_CALL, 0 },
-> +	[BRBINFx_EL1_TYPE_ERET] = { PERF_BR_ERET, 0 },
-> +	[BRBINFx_EL1_TYPE_IRQ] = { PERF_BR_IRQ, 0 },
-> +	[BRBINFx_EL1_TYPE_TRAP] = { PERF_BR_IRQ, 0 },
-> +	[BRBINFx_EL1_TYPE_SERROR] = { PERF_BR_SERROR, 0 },
-> +	[BRBINFx_EL1_TYPE_ALIGN_FAULT] = { PERF_BR_EXTEND_ABI, PERF_BR_NEW_FAULT_ALGN },
-> +	[BRBINFx_EL1_TYPE_INSN_FAULT] = { PERF_BR_EXTEND_ABI, PERF_BR_NEW_FAULT_INST },
-> +	[BRBINFx_EL1_TYPE_DATA_FAULT] = { PERF_BR_EXTEND_ABI, PERF_BR_NEW_FAULT_DATA },
-> +};
-> +
-> +static void brbe_set_perf_entry_type(struct perf_branch_entry *entry, u64 brbinf)
-> +{
-> +	int brbe_type = brbinf_get_type(brbinf);
-> +
-> +	if (brbe_type <= BRBINFx_EL1_TYPE_DEBUG_EXIT) {
-> +		const int *br_type = brbe_type_to_perf_type_map[brbe_type];
-> +
-> +		entry->type = br_type[0];
-> +		entry->new_type = br_type[1];
-> +	}
-> +}
-> +
-> +static int brbinf_get_perf_priv(u64 brbinf)
-> +{
-> +	int brbe_el = brbinf_get_el(brbinf);
-> +
-> +	switch (brbe_el) {
-> +	case BRBINFx_EL1_EL_EL0:
-> +		return PERF_BR_PRIV_USER;
-> +	case BRBINFx_EL1_EL_EL1:
-> +		return PERF_BR_PRIV_KERNEL;
-> +	case BRBINFx_EL1_EL_EL2:
-> +		if (is_kernel_in_hyp_mode())
-> +			return PERF_BR_PRIV_KERNEL;
-> +		return PERF_BR_PRIV_HV;
-> +	default:
-> +		pr_warn_once("%d - unknown branch privilege captured\n", brbe_el);
-> +		return PERF_BR_PRIV_UNKNOWN;
-> +	}
-> +}
-> +
-> +static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *entry,
-> +					const struct perf_event *event)
-> +{
-> +	struct brbe_regset bregs;
-> +	u64 brbinf;
-> +
-> +	if (!__read_brbe_regset(&bregs, index))
-> +		return false;
-> +
-> +	brbinf = bregs.brbinf;
-> +	perf_clear_branch_entry_bitfields(entry);
-> +	if (brbe_record_is_complete(brbinf)) {
-> +		entry->from = bregs.brbsrc;
-> +		entry->to = bregs.brbtgt;
-> +	} else if (brbe_record_is_source_only(brbinf)) {
-> +		entry->from = bregs.brbsrc;
-> +		entry->to = 0;
-> +	} else if (brbe_record_is_target_only(brbinf)) {
-> +		entry->from = 0;
-> +		entry->to = bregs.brbtgt;
-> +	}
-> +
-> +	brbe_set_perf_entry_type(entry, brbinf);
-> +
-> +	if (!branch_sample_no_cycles(event))
-> +		entry->cycles = brbinf_get_cycles(brbinf);
-> +
-> +	if (!branch_sample_no_flags(event)) {
-> +		/* Mispredict info is available for source only and complete branch records. */
-> +		if (!brbe_record_is_target_only(brbinf)) {
-> +			entry->mispred = brbinf_get_mispredict(brbinf);
-> +			entry->predicted = !entry->mispred;
-> +		}
-> +
-> +		/*
-> +		 * Currently TME feature is neither implemented in any hardware
-> +		 * nor it is being supported in the kernel. Just warn here once
-> +		 * if TME related information shows up rather unexpectedly.
-> +		 */
-> +		if (brbinf_get_lastfailed(brbinf) || brbinf_get_in_tx(brbinf))
-> +			pr_warn_once("Unknown transaction states\n");
-> +	}
-> +
-> +	/*
-> +	 * Branch privilege level is available for target only and complete
-> +	 * branch records.
-> +	 */
-> +	if (!brbe_record_is_source_only(brbinf))
-> +		entry->priv = brbinf_get_perf_priv(brbinf);
-> +
-> +	return true;
-> +}
-> +
-> +#define PERF_BR_ARM64_ALL (				\
-> +	BIT(PERF_BR_COND) |				\
-> +	BIT(PERF_BR_UNCOND) |				\
-> +	BIT(PERF_BR_IND) |				\
-> +	BIT(PERF_BR_CALL) |				\
-> +	BIT(PERF_BR_IND_CALL) |				\
-> +	BIT(PERF_BR_RET))
-> +
-> +#define PERF_BR_ARM64_ALL_KERNEL (			\
-> +	BIT(PERF_BR_SYSCALL) |				\
-> +	BIT(PERF_BR_IRQ) |				\
-> +	BIT(PERF_BR_SERROR) |				\
-> +	BIT(PERF_BR_MAX + PERF_BR_NEW_FAULT_ALGN) |	\
-> +	BIT(PERF_BR_MAX + PERF_BR_NEW_FAULT_DATA) |	\
-> +	BIT(PERF_BR_MAX + PERF_BR_NEW_FAULT_INST))
-> +
-> +static void prepare_event_branch_type_mask(u64 branch_sample,
-> +					   unsigned long *event_type_mask)
-> +{
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_ANY) {
-> +		if (branch_sample & PERF_SAMPLE_BRANCH_KERNEL)
-> +			bitmap_from_u64(event_type_mask,
-> +				BIT(PERF_BR_ERET) | PERF_BR_ARM64_ALL |
-> +				PERF_BR_ARM64_ALL_KERNEL);
-> +		else
-> +			bitmap_from_u64(event_type_mask, PERF_BR_ARM64_ALL);
-> +		return;
-> +	}
-> +
-> +	bitmap_zero(event_type_mask, PERF_BR_ARM64_MAX);
-> +
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_ANY_CALL) {
-> +		if (branch_sample & PERF_SAMPLE_BRANCH_KERNEL)
-> +			bitmap_from_u64(event_type_mask, PERF_BR_ARM64_ALL_KERNEL);
-> +
-> +		set_bit(PERF_BR_CALL, event_type_mask);
-> +		set_bit(PERF_BR_IND_CALL, event_type_mask);
-> +	}
-> +
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_IND_JUMP)
-> +		set_bit(PERF_BR_IND, event_type_mask);
-> +
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_COND)
-> +		set_bit(PERF_BR_COND, event_type_mask);
-> +
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_CALL)
-> +		set_bit(PERF_BR_CALL, event_type_mask);
-> +
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_IND_CALL)
-> +		set_bit(PERF_BR_IND_CALL, event_type_mask);
-> +
-> +	if (branch_sample & PERF_SAMPLE_BRANCH_ANY_RETURN) {
-> +		set_bit(PERF_BR_RET, event_type_mask);
-> +
-> +		if (branch_sample & PERF_SAMPLE_BRANCH_KERNEL)
-> +			set_bit(PERF_BR_ERET, event_type_mask);
-> +	}
-> +}
-> +
-> +/*
-> + * BRBE is configured with an OR of permissions from all events, so there may
-> + * be events which have to be dropped or events where just the source or target
-> + * address has to be zeroed.
-> + */
-> +static bool filter_branch_privilege(struct perf_branch_entry *entry, u64 branch_sample_type)
-> +{
-> +	/* We can only have a half record if permissions have not been expanded */
-> +	if (!entry->from || !entry->to)
-> +		return true;
-> +
-> +	bool from_user = access_ok((void __user *)(unsigned long)entry->from, 4);
-> +	bool to_user = access_ok((void __user *)(unsigned long)entry->to, 4);
-> +	bool exclude_kernel = !((branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) ||
-> +		(is_kernel_in_hyp_mode() && (branch_sample_type & PERF_SAMPLE_BRANCH_HV)));
-> +
-> +	/*
-> +	 * If record is within a single exception level, just need to either
-> +	 * drop or keep the entire record.
-> +	 */
-> +	if (from_user == to_user)
-> +		return ((entry->priv == PERF_BR_PRIV_KERNEL) && !exclude_kernel) ||
-> +			((entry->priv == PERF_BR_PRIV_USER) &&
-> +			 (branch_sample_type & PERF_SAMPLE_BRANCH_USER));
-> +
-> +	// Fixup calls which are syscalls
-> +	if (entry->type == PERF_BR_CALL && from_user && !to_user)
-> +		entry->type = PERF_BR_SYSCALL;
-> +
-> +	/*
-> +	 * Record is across exception levels, mask addresses for the exception
-> +	 * level we're not capturing.
-> +	 */
-> +	if (!(branch_sample_type & PERF_SAMPLE_BRANCH_USER)) {
-> +		if (from_user)
-> +			entry->from = 0;
-> +		if (to_user)
-> +			entry->to = 0;
-> +	}
-> +
-> +	if (exclude_kernel) {
-> +		if (!from_user)
-> +			entry->from = 0;
-> +		if (!to_user)
-> +			entry->to = 0;
-> +	}
-> +	return true;
-> +}
-> +
-> +static bool filter_branch_type(struct perf_branch_entry *entry,
-> +			       const unsigned long *event_type_mask)
-> +{
-> +	if (entry->type == PERF_BR_EXTEND_ABI)
-> +		return test_bit(PERF_BR_MAX + entry->new_type, event_type_mask);
-> +	else
-> +		return test_bit(entry->type, event_type_mask);
-> +}
-> +
-> +static bool filter_branch_record(struct perf_branch_entry *entry,
-> +				 u64 branch_sample,
-> +				 const unsigned long *event_type_mask)
-> +{
-> +	return filter_branch_type(entry, event_type_mask) &&
-> +		filter_branch_privilege(entry, branch_sample);
+        if (!env || !env->arch) { /* Assume local operation */
+                static struct utsname uts =3D { .machine[0] =3D '\0', };
+                if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
+                        return NULL;
+                arch_name =3D uts.machine;
+        } else
+                arch_name =3D env->arch;
 
-filter_branch_privilege() sometimes changes the branch type for 
-PERF_BR_SYSCALL so I think it should come before filter_branch_type(). I 
-didn't see any actual issue caused by this, but it's a bit hard to 
-review to see if it's working correctly.
+        return normalize_arch(arch_name);
+}
+```
+in this case env->arch =3D=3D NULL and so the uname machine will be used.
+For perf_env__raw_arch the behavior is similar but it populates the
+env:
+```
+static int perf_env__read_arch(struct perf_env *env)
+{
+        struct utsname uts;
 
-Ideally any mutation would be done with a more explicitly named function 
-than 'filter'.
+        if (env->arch)
+                return 0;
 
-James
+        if (!uname(&uts))
+                env->arch =3D strdup(uts.machine);
 
+        return env->arch ? 0 : -ENOMEM;
+}
+
+const char *perf_env__raw_arch(struct perf_env *env)
+{
+        return env && !perf_env__read_arch(env) ? env->arch : "unknown";
+}
+```
+Aside from caching the arch, the main difference is that
+normalize_arch isn't called. Not having normalize_arch means the code
+in arch_support_sort_key and arch_perf_header_entry would need to
+handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
+etc. As I'd prefer not handle all those cases I think the way the code
+is is best given how the env code is currently structured.
+
+Thanks,
+Ian
+
+> Thanks,
+> Kan
+>
+> >               if (sort_order)
+> >                       parse_options_usage(top_usage, options, "s", 1);
+> >               if (field_order)
+> > @@ -1820,13 +1827,6 @@ int cmd_top(int argc, const char **argv)
+> >               signal(SIGWINCH, winch_sig);
+> >       }
+> >
+> > -     top.session =3D perf_session__new(NULL, NULL);
+> > -     if (IS_ERR(top.session)) {
+> > -             status =3D PTR_ERR(top.session);
+> > -             top.session =3D NULL;
+> > -             goto out_delete_evlist;
+> > -     }
+> > -
+> >       if (!evlist__needs_bpf_sb_event(top.evlist))
+> >               top.record_opts.no_bpf_event =3D true;
+> >
+> > diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists=
+_cumulate.c
+> > index 1e0f5a310fd5..3eb9ef8d7ec6 100644
+> > --- a/tools/perf/tests/hists_cumulate.c
+> > +++ b/tools/perf/tests/hists_cumulate.c
+> > @@ -295,7 +295,7 @@ static int test1(struct evsel *evsel, struct machin=
+e *machine)
+> >       symbol_conf.cumulate_callchain =3D false;
+> >       evsel__reset_sample_bit(evsel, CALLCHAIN);
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >       callchain_register_param(&callchain_param);
+> >
+> >       err =3D add_hist_entries(hists, machine);
+> > @@ -442,7 +442,7 @@ static int test2(struct evsel *evsel, struct machin=
+e *machine)
+> >       symbol_conf.cumulate_callchain =3D false;
+> >       evsel__set_sample_bit(evsel, CALLCHAIN);
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >       callchain_register_param(&callchain_param);
+> >
+> >       err =3D add_hist_entries(hists, machine);
+> > @@ -500,7 +500,7 @@ static int test3(struct evsel *evsel, struct machin=
+e *machine)
+> >       symbol_conf.cumulate_callchain =3D true;
+> >       evsel__reset_sample_bit(evsel, CALLCHAIN);
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >       callchain_register_param(&callchain_param);
+> >
+> >       err =3D add_hist_entries(hists, machine);
+> > @@ -684,7 +684,7 @@ static int test4(struct evsel *evsel, struct machin=
+e *machine)
+> >       symbol_conf.cumulate_callchain =3D true;
+> >       evsel__set_sample_bit(evsel, CALLCHAIN);
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >
+> >       callchain_param =3D callchain_param_default;
+> >       callchain_register_param(&callchain_param);
+> > diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_f=
+ilter.c
+> > index 4b2e4f2fbe48..1cebd20cc91c 100644
+> > --- a/tools/perf/tests/hists_filter.c
+> > +++ b/tools/perf/tests/hists_filter.c
+> > @@ -131,10 +131,6 @@ static int test__hists_filter(struct test_suite *t=
+est __maybe_unused, int subtes
+> >               goto out;
+> >       err =3D TEST_FAIL;
+> >
+> > -     /* default sort order (comm,dso,sym) will be used */
+> > -     if (setup_sorting(NULL) < 0)
+> > -             goto out;
+> > -
+> >       machines__init(&machines);
+> >
+> >       /* setup threads/dso/map/symbols also */
+> > @@ -145,6 +141,10 @@ static int test__hists_filter(struct test_suite *t=
+est __maybe_unused, int subtes
+> >       if (verbose > 1)
+> >               machine__fprintf(machine, stderr);
+> >
+> > +     /* default sort order (comm,dso,sym) will be used */
+> > +     if (setup_sorting(evlist, machine->env) < 0)
+> > +             goto out;
+> > +
+> >       /* process sample events */
+> >       err =3D add_hist_entries(evlist, machine);
+> >       if (err < 0)
+> > diff --git a/tools/perf/tests/hists_link.c b/tools/perf/tests/hists_lin=
+k.c
+> > index 5b6f1e883466..996f5f0b3bd1 100644
+> > --- a/tools/perf/tests/hists_link.c
+> > +++ b/tools/perf/tests/hists_link.c
+> > @@ -303,10 +303,6 @@ static int test__hists_link(struct test_suite *tes=
+t __maybe_unused, int subtest
+> >               goto out;
+> >
+> >       err =3D TEST_FAIL;
+> > -     /* default sort order (comm,dso,sym) will be used */
+> > -     if (setup_sorting(NULL) < 0)
+> > -             goto out;
+> > -
+> >       machines__init(&machines);
+> >
+> >       /* setup threads/dso/map/symbols also */
+> > @@ -317,6 +313,10 @@ static int test__hists_link(struct test_suite *tes=
+t __maybe_unused, int subtest
+> >       if (verbose > 1)
+> >               machine__fprintf(machine, stderr);
+> >
+> > +     /* default sort order (comm,dso,sym) will be used */
+> > +     if (setup_sorting(evlist, machine->env) < 0)
+> > +             goto out;
+> > +
+> >       /* process sample events */
+> >       err =3D add_hist_entries(evlist, machine);
+> >       if (err < 0)
+> > diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_o=
+utput.c
+> > index 33b5cc8352a7..ee5ec8bda60e 100644
+> > --- a/tools/perf/tests/hists_output.c
+> > +++ b/tools/perf/tests/hists_output.c
+> > @@ -146,7 +146,7 @@ static int test1(struct evsel *evsel, struct machin=
+e *machine)
+> >       field_order =3D NULL;
+> >       sort_order =3D NULL; /* equivalent to sort_order =3D "comm,dso,sy=
+m" */
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >
+> >       /*
+> >        * expected output:
+> > @@ -248,7 +248,7 @@ static int test2(struct evsel *evsel, struct machin=
+e *machine)
+> >       field_order =3D "overhead,cpu";
+> >       sort_order =3D "pid";
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >
+> >       /*
+> >        * expected output:
+> > @@ -304,7 +304,7 @@ static int test3(struct evsel *evsel, struct machin=
+e *machine)
+> >       field_order =3D "comm,overhead,dso";
+> >       sort_order =3D NULL;
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >
+> >       /*
+> >        * expected output:
+> > @@ -378,7 +378,7 @@ static int test4(struct evsel *evsel, struct machin=
+e *machine)
+> >       field_order =3D "dso,sym,comm,overhead,dso";
+> >       sort_order =3D "sym";
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >
+> >       /*
+> >        * expected output:
+> > @@ -480,7 +480,7 @@ static int test5(struct evsel *evsel, struct machin=
+e *machine)
+> >       field_order =3D "cpu,pid,comm,dso,sym";
+> >       sort_order =3D "dso,pid";
+> >
+> > -     setup_sorting(NULL);
+> > +     setup_sorting(/*evlist=3D*/NULL, machine->env);
+> >
+> >       /*
+> >        * expected output:
+> > diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> > index 119bce37f4fd..3b97a31736c5 100644
+> > --- a/tools/perf/util/event.h
+> > +++ b/tools/perf/util/event.h
+> > @@ -390,9 +390,6 @@ extern unsigned int proc_map_timeout;
+> >  #define PAGE_SIZE_NAME_LEN   32
+> >  char *get_page_size_name(u64 size, char *str);
+> >
+> > -const char *arch_perf_header_entry(const char *se_header);
+> > -int arch_support_sort_key(const char *sort_key);
+> > -
+> >  static inline bool perf_event_header__cpumode_is_guest(u8 cpumode)
+> >  {
+> >       return cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL ||
+> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > index dda4ef0b5a73..ccab10cd24a5 100644
+> > --- a/tools/perf/util/sort.c
+> > +++ b/tools/perf/util/sort.c
+> > @@ -2526,19 +2526,44 @@ struct sort_dimension {
+> >       int                     taken;
+> >  };
+> >
+> > -int __weak arch_support_sort_key(const char *sort_key __maybe_unused)
+> > +static int arch_support_sort_key(const char *sort_key, struct perf_env=
+ *env)
+> >  {
+> > +     const char *arch =3D perf_env__arch(env);
+> > +
+> > +     if (!strcmp("x86", arch) || !strcmp("powerpc", arch)) {
+> > +             if (!strcmp(sort_key, "p_stage_cyc"))
+> > +                     return 1;
+> > +             if (!strcmp(sort_key, "local_p_stage_cyc"))
+> > +                     return 1;
+> > +     }
+> >       return 0;
+> >  }
+> >
+> > -const char * __weak arch_perf_header_entry(const char *se_header)
+> > -{
+> > +static const char *arch_perf_header_entry(const char *se_header, struc=
+t perf_env *env)
+> > +{
+> > +     const char *arch =3D perf_env__arch(env);
+> > +
+> > +     if (!strcmp("x86", arch)) {
+> > +             if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
+> > +                     return "Local Retire Latency";
+> > +             else if (!strcmp(se_header, "Pipeline Stage Cycle"))
+> > +                     return "Retire Latency";
+> > +     } else if (!strcmp("powerpc", arch)) {
+> > +             if (!strcmp(se_header, "Local INSTR Latency"))
+> > +                     return "Finish Cyc";
+> > +             else if (!strcmp(se_header, "INSTR Latency"))
+> > +                     return "Global Finish_cyc";
+> > +             else if (!strcmp(se_header, "Local Pipeline Stage Cycle")=
+)
+> > +                     return "Dispatch Cyc";
+> > +             else if (!strcmp(se_header, "Pipeline Stage Cycle"))
+> > +                     return "Global Dispatch_cyc";
+> > +     }
+> >       return se_header;
+> >  }
+> >
+> > -static void sort_dimension_add_dynamic_header(struct sort_dimension *s=
+d)
+> > +static void sort_dimension_add_dynamic_header(struct sort_dimension *s=
+d, struct perf_env *env)
+> >  {
+> > -     sd->entry->se_header =3D arch_perf_header_entry(sd->entry->se_hea=
+der);
+> > +     sd->entry->se_header =3D arch_perf_header_entry(sd->entry->se_hea=
+der, env);
+> >  }
+> >
+> >  #define DIM(d, n, func) [d] =3D { .name =3D n, .entry =3D &(func) }
+> > @@ -3590,7 +3615,7 @@ int hpp_dimension__add_output(unsigned col, bool =
+implicit)
+> >  }
+> >
+> >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+> > -                     struct evlist *evlist,
+> > +                     struct evlist *evlist, struct perf_env *env,
+> >                       int level)
+> >  {
+> >       unsigned int i, j;
+> > @@ -3603,7 +3628,7 @@ int sort_dimension__add(struct perf_hpp_list *lis=
+t, const char *tok,
+> >        */
+> >       for (j =3D 0; j < ARRAY_SIZE(arch_specific_sort_keys); j++) {
+> >               if (!strcmp(arch_specific_sort_keys[j], tok) &&
+> > -                             !arch_support_sort_key(tok)) {
+> > +                 !arch_support_sort_key(tok, env)) {
+> >                       return 0;
+> >               }
+> >       }
+> > @@ -3616,7 +3641,7 @@ int sort_dimension__add(struct perf_hpp_list *lis=
+t, const char *tok,
+> >
+> >               for (j =3D 0; j < ARRAY_SIZE(dynamic_headers); j++) {
+> >                       if (sd->name && !strcmp(dynamic_headers[j], sd->n=
+ame))
+> > -                             sort_dimension_add_dynamic_header(sd);
+> > +                             sort_dimension_add_dynamic_header(sd, env=
+);
+> >               }
+> >
+> >               if (sd->entry =3D=3D &sort_parent && parent_pattern) {
+> > @@ -3712,13 +3737,13 @@ int sort_dimension__add(struct perf_hpp_list *l=
+ist, const char *tok,
+> >  }
+> >
+> >  /* This should match with sort_dimension__add() above */
+> > -static bool is_hpp_sort_key(const char *key)
+> > +static bool is_hpp_sort_key(const char *key, struct perf_env *env)
+> >  {
+> >       unsigned i;
+> >
+> >       for (i =3D 0; i < ARRAY_SIZE(arch_specific_sort_keys); i++) {
+> >               if (!strcmp(arch_specific_sort_keys[i], key) &&
+> > -                 !arch_support_sort_key(key)) {
+> > +                 !arch_support_sort_key(key, env)) {
+> >                       return false;
+> >               }
+> >       }
+> > @@ -3740,7 +3765,7 @@ static bool is_hpp_sort_key(const char *key)
+> >  }
+> >
+> >  static int setup_sort_list(struct perf_hpp_list *list, char *str,
+> > -                        struct evlist *evlist)
+> > +                        struct evlist *evlist, struct perf_env *env)
+> >  {
+> >       char *tmp, *tok;
+> >       int ret =3D 0;
+> > @@ -3769,7 +3794,7 @@ static int setup_sort_list(struct perf_hpp_list *=
+list, char *str,
+> >               }
+> >
+> >               if (*tok) {
+> > -                     if (is_hpp_sort_key(tok)) {
+> > +                     if (is_hpp_sort_key(tok, env)) {
+> >                               /* keep output (hpp) sort keys in the sam=
+e level */
+> >                               if (prev_was_hpp) {
+> >                                       bool next_same =3D (level =3D=3D =
+next_level);
+> > @@ -3782,7 +3807,7 @@ static int setup_sort_list(struct perf_hpp_list *=
+list, char *str,
+> >                               prev_was_hpp =3D false;
+> >                       }
+> >
+> > -                     ret =3D sort_dimension__add(list, tok, evlist, le=
+vel);
+> > +                     ret =3D sort_dimension__add(list, tok, evlist, en=
+v, level);
+> >                       if (ret =3D=3D -EINVAL) {
+> >                               if (!cacheline_size() && !strncasecmp(tok=
+, "dcacheline", strlen(tok)))
+> >                                       ui__error("The \"dcacheline\" --s=
+ort key needs to know the cacheline size and it couldn't be determined on t=
+his system");
+> > @@ -3911,7 +3936,7 @@ static char *setup_overhead(char *keys)
+> >       return keys;
+> >  }
+> >
+> > -static int __setup_sorting(struct evlist *evlist)
+> > +static int __setup_sorting(struct evlist *evlist, struct perf_env *env=
+)
+> >  {
+> >       char *str;
+> >       const char *sort_keys;
+> > @@ -3951,7 +3976,7 @@ static int __setup_sorting(struct evlist *evlist)
+> >               }
+> >       }
+> >
+> > -     ret =3D setup_sort_list(&perf_hpp_list, str, evlist);
+> > +     ret =3D setup_sort_list(&perf_hpp_list, str, evlist, env);
+> >
+> >       free(str);
+> >       return ret;
+> > @@ -4187,16 +4212,16 @@ static int __setup_output_field(void)
+> >       return ret;
+> >  }
+> >
+> > -int setup_sorting(struct evlist *evlist)
+> > +int setup_sorting(struct evlist *evlist, struct perf_env *env)
+> >  {
+> >       int err;
+> >
+> > -     err =3D __setup_sorting(evlist);
+> > +     err =3D __setup_sorting(evlist, env);
+> >       if (err < 0)
+> >               return err;
+> >
+> >       if (parent_pattern !=3D default_parent_pattern) {
+> > -             err =3D sort_dimension__add(&perf_hpp_list, "parent", evl=
+ist, -1);
+> > +             err =3D sort_dimension__add(&perf_hpp_list, "parent", evl=
+ist, env, -1);
+> >               if (err < 0)
+> >                       return err;
+> >       }
+> > diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+> > index a742ab7f3c67..d7787958e06b 100644
+> > --- a/tools/perf/util/sort.h
+> > +++ b/tools/perf/util/sort.h
+> > @@ -6,6 +6,7 @@
+> >  #include "hist.h"
+> >
+> >  struct option;
+> > +struct perf_env;
+> >
+> >  extern regex_t parent_regex;
+> >  extern const char *sort_order;
+> > @@ -130,7 +131,7 @@ extern struct sort_entry sort_thread;
+> >
+> >  struct evlist;
+> >  struct tep_handle;
+> > -int setup_sorting(struct evlist *evlist);
+> > +int setup_sorting(struct evlist *evlist, struct perf_env *env);
+> >  int setup_output_field(void);
+> >  void reset_output_field(void);
+> >  void sort__setup_elide(FILE *fp);
+> > @@ -145,7 +146,7 @@ bool is_strict_order(const char *order);
+> >  int hpp_dimension__add_output(unsigned col, bool implicit);
+> >  void reset_dimensions(void);
+> >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+> > -                     struct evlist *evlist,
+> > +                     struct evlist *evlist, struct perf_env *env,
+> >                       int level);
+> >  int output_field_add(struct perf_hpp_list *list, const char *tok, int =
+*level);
+> >  int64_t
+>
