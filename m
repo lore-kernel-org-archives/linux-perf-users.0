@@ -1,64 +1,65 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B04D2D3217
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 May 2025 23:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086962D29CA
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 May 2025 23:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747956381; cv=none; b=FQCOy+OwtnJNCm7MiTsiARfMEh+RsEsV4AePYyjExCQORxzXoaE3CjmHBLOdIoGd80cJCtI+e2d1lOYTO/GuEA8apKCFcqBNxxUQLo2AU9AffVaTD4qvsl4u//e/hw5CYAKxkBCdmwLjwRAsT/kB/niCCeLWXT8EKLbsqUZDOfM=
+	t=1747956382; cv=none; b=kKkmYBcOic0XpwapAzgPIaT6NUwjKcHKft/ek/mZKQoYH6TmyzYsGY42OreM6VxN6dfjULsVqOM5c7WMQQsCIHky02CqyctkgQ41ImZqvrEkxMl/+Igj5Nzw9dH3beXrHW1XvIcRv2TUg/KpXhdl1QbxTasIGjO+blOC/CfajKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747956381; c=relaxed/simple;
-	bh=Xt+9J5CINKC67/Xf9FTS32L9c6buwlWjqj4FpG7qyTQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FcHGf/FK2bBc0qjItPt2nOpzxxjUv++b4KVH3o+1EIEtW9wopQyF/MbtMbJiMEeSZ5ny/nYR/LH4i5wNDPFc0yEK/kCKa+Puf291ode3+0Tgak6e4MyrX/5Q5eO1jWXksELZiHQ6EDi8ZxTTV11q+pPbxoXpdRvpreIKcTQfeOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VuS0Wz1w; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1747956382; c=relaxed/simple;
+	bh=FOp1y09/3SytdmvNsRNI8bjrwNGWBMKFRpE30aP/AEg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=on9Am4wznJlqz76/lgNeYugKyrm2gEs+CQWWvlmEGOnzymD47GR9AgFS4McZiqbzVoGC0y584B5LPrRHtt/JMszKKuxLYVhBuQtv/oVKNkBVi63YUK7SbiiPJO/RKWj5n1Io8uOXiKH1nOPvWa3b/YiPI1DQjm9W/r1KUhexs9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bA0WeckT; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VuS0Wz1w"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so52970265e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 May 2025 16:26:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bA0WeckT"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a374f727dbso3727971f8f.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 May 2025 16:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747956376; x=1748561176; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8XVL2AzLr3r7KuN+VtnlIKRIu/pZqkSiU9SK0eyPQ0=;
-        b=VuS0Wz1wlK53wX53HMbyZymqFXpoVMBypRb2ZCvhKOlRGDU4uk8R1dr84voOSrJpWf
-         O3qbDRfGbB7KrkSCjdSYq+vVSh85IEpLD0+mLSWQGPxtzA/KW/7eu/J/NbhuZ8Dfmfww
-         uZ3YSfOSrPsr0wVw6n4EScv7jEFAMqpDwLWbaHSwsL8SrZEbZEOPJSu3WPsUIN7IvA4N
-         Ao6eF84d9cv3R8qCziO6ZT0HbSUuG4dggwd2tJzzCxNaQgkAxRJWvUb8NV0wnP75h9K9
-         Pkf9kDCIwTckTv0Vl15lINjiEev0hYiLbBWH/f6e7eP3qL2NCuBMWPernQOz4gdVXoGL
-         Lbxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747956376; x=1748561176;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747956378; x=1748561178; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+8XVL2AzLr3r7KuN+VtnlIKRIu/pZqkSiU9SK0eyPQ0=;
-        b=I7IMtA3b/HFyDqy6XiLuY4Ex4lMNPv9DUYXLtbRoupHuElnxqWOxXe+VluhveN5/+L
-         tzcUDsvnmjWX72zdJprYfSBO7Qwe/aUKIhibjRkDRHjuOmYrDwTizBXwo9pDArzWRq2F
-         AWO11EyWbowvfEA8IqWf2wqhrnBjVZKyfSMNFNomJoqQgkMl4rFBPC/UGxFn0u8SrwvE
-         GgOBHWX48nJ8bDF5nSPqiUdgg+OOqv3caAt7i2Lfl7TxTQ1XfW9tB/3gRuEvqDiGV4yA
-         xuU4GW1dORU5idLrtCR5yckCYqEXNACP1msaT1lbZnLoKFCEN+7tWTJakJuHgV+sPllB
-         mR8A==
-X-Gm-Message-State: AOJu0Yz93uastjupfVcUabba2OOmjQogbso5pBMzutrpVA54CU+/l4dO
-	MnJTvh7rTpOqvIuX2hoE2JREeo29u6RCKSGvo5dmGf4VCSXArGKeIyEJd9anM9v508w=
-X-Gm-Gg: ASbGncup7iMzqfG2pKziT6sFQfACKmLjWgwD5Zvqk49qa9QSCExrB5cYWmgkXSmIxGn
-	necfwu6MroegAblZcp6HHTyLk3K30LVMHbpsyHIAe76MqqIPRmWZoRdD7W5eCfO7zCaDTw+CqvD
-	VWFKCEhy1b41TkqVKhsRZLtXmBU/n2qYgVIf34TmXFvr9eAwpraJfImXbYMArlzFFEeFP9PgxFG
-	SxpdZIC0HULUasDaYEYZDnJ4V8DaEdPXOyumg3k5HW3sjF7j1Bk/w3pqT4gp1NcSlep8Ekp/PTC
-	ZItb3oFZGUwRsmHZW7sEfzkm7ohrjYIovW3B/L/NIzYX6fUH/i0D/w==
-X-Google-Smtp-Source: AGHT+IGEJr3BKVh5rl646evQq6jfB80g3xvgIKAUhdZFT4W8GWtoUdBDEHTxPzLL+VQCxlsQGQXhTw==
-X-Received: by 2002:a05:600c:34c4:b0:43c:ee62:33f5 with SMTP id 5b1f17b1804b1-442fd6752e7mr277601475e9.27.1747956376376;
-        Thu, 22 May 2025 16:26:16 -0700 (PDT)
+        bh=l53aiezq63VwGVulH0Yi9XQBVwtNa/T40ZWDbw9c1U8=;
+        b=bA0WeckTYVEWROV07KpSEjHgHCe9Eb64CmQKTSE7au1aVTCdlYWjCoYVWYZtDMQaDi
+         OawMgvVRGhOgbvVS40NDYKjp4q0JjcmHXnPMWacBV0SKr75pxXPtKafmaWPgc2M6BQcu
+         gz6FdUmbYQKUWIrq6aFYxeinnSD5WU0AQaEQT5Rjl6LwfhGwNDDlVV9BQfqSeD+BRda9
+         RNpC0EE400ByWQ115BLULyZbXEzpUHWExkf2JKeUJOqgXBOYR9rH4HK+UwcPcAwtl+SG
+         C0oYGxvat2jXdHS10CDpvBhDTEcLf+YiW2ikU2KfwNxYDycEFk2ACkD2v6xHbjtKcrMf
+         ZtiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747956378; x=1748561178;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l53aiezq63VwGVulH0Yi9XQBVwtNa/T40ZWDbw9c1U8=;
+        b=D1sVOo6+eW06drGDqBu7WjvsM2b0z+gEgUGfYABD4V+x2y79t2HnrmvoM7qmOBcXHG
+         nObQN7jklTWIvYBFpP6lpN7AgfD6dReqwZVT6bWwc66yeqjUmr6XRqu141j28NV3b8UZ
+         DU6rjIRkINEvgHkpkTEaWctr7VUROCUGmz8Yc2VRAMGCkbeo5xk2Hf3cGqizufD49l9C
+         75J88ovlrB22O7RWGOZ9wFUKQDcYrfiQUFpG0YZa2/HGQHCAOMFBDwmfrH1h+c5nAgVJ
+         K6MPf0QFnZ9m6SPRYJJ08+/ls9WN2J9DXmZheI5uM7TNR4JEmsTh1I2lZww1eXxY1uh4
+         sbuA==
+X-Gm-Message-State: AOJu0Yz1vlpjV3nMdyllr03CiDRbtHAc7BBRbHoTpaNDObF+MY9ZMG9C
+	mi0IWvFZkh0rYLG0fnRWLiG3XuS2uc2yJ6UuPxf+cgc+/cPjXKPaUqIpcdWU6hgB8kw=
+X-Gm-Gg: ASbGncsiNTE+/qUDY8mvtlpQXFsZxBAMSwmK3UC+sZdZ/NEVejVs03dAdeRToLGYwoo
+	wXOCZ1RfAN3fsD/PGwZkrKTXsIHjbLuXFh3AjNAtAwMuCZVWrhUXiAAHLjrxcgknWjhjGMAHDSO
+	AaHwxUMh/9OwVhWXWrdH7T40VJIgQiyV+6tjAcLsizKlLe+clMz/jUuvSdFo9WmYClbjP1Hyxn3
+	p8zFR4UjBTDxH5fdD1kfR5LIlhHhKlorQKaN05hJz2kZOhgMP8zKfHz87NFF8h6Mc5CzNQPl+Qz
+	LiySS6kWasxA+i8jjDxjpeOWEUY5Mcv8M6ZKyN6BPiPeS8yCIEsoTA==
+X-Google-Smtp-Source: AGHT+IHAmL4SGVYuRfQdx4Te1SZB2AHBQgY26GyZwg325ZZdeZGi5gjiCaXcu6MypqA+Dk0jD2u8ww==
+X-Received: by 2002:a05:6000:2903:b0:3a3:6f26:5816 with SMTP id ffacd0b85a97d-3a36f265984mr15292194f8f.36.1747956378244;
+        Thu, 22 May 2025 16:26:18 -0700 (PDT)
 Received: from [127.0.1.1] ([2a02:c7c:75ac:6300:c05a:35d:17ae:e731])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f04334sm117825395e9.10.2025.05.22.16.26.15
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f04334sm117825395e9.10.2025.05.22.16.26.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 16:26:16 -0700 (PDT)
+        Thu, 22 May 2025 16:26:18 -0700 (PDT)
 From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Subject: [PATCH v3 0/7] riscv: pmu: Add support for Control Transfer
- Records Ext.
-Date: Fri, 23 May 2025 00:25:06 +0100
-Message-Id: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
+Date: Fri, 23 May 2025 00:25:08 +0100
+Subject: [PATCH v3 2/7] riscv: pmu: Add Control transfer records CSR
+ definations.
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,10 +68,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFKyL2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0Mz3SQT3eSSovjSguKSotTE3PgyY10jA5M0kySDJHMTC0MloMaCotS
- 0zAqwodGxtbUA8z9ytWQAAAA=
-X-Change-ID: 20250416-b4-ctr_upstream_v3-204f4b0b7481
+Message-Id: <20250523-b4-ctr_upstream_v3-v3-2-ad355304ba1c@rivosinc.com>
+References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
+In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -88,125 +88,133 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
  devicetree@vger.kernel.org, Rajnesh Kanwal <rkanwal@rivosinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747956375; l=5043;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747956375; l=3834;
  i=rkanwal@rivosinc.com; s=20250522; h=from:subject:message-id;
- bh=Xt+9J5CINKC67/Xf9FTS32L9c6buwlWjqj4FpG7qyTQ=;
- b=voXbtY/BvjLgr1Qk+pdKoA/M9txQ+Uo8IZDt/nVzmOvCl9hu8Lrpi2vmzjOnKtVTdNeWIIAkS
- zuOwbL5C0z1CmtoSdzyA2XjmkKpBnAPcjkCDaiTFuIC9KKpMB7oMk1P
+ bh=FOp1y09/3SytdmvNsRNI8bjrwNGWBMKFRpE30aP/AEg=;
+ b=VAKiiJbUQk/CKnHQk537iR4eh6srfGqgxMprrnILqLhhp+3+U+RkJeqfMk302Xmwyi5fnxrYd
+ Ogwp9C565GICK4Ub/rWcyt+4/fWPFEieJZE2YOTuQ8gYHwDi31VfK57
 X-Developer-Key: i=rkanwal@rivosinc.com; a=ed25519;
  pk=aw8nvncslGKHEmTBTJqvkP/4tj6pijL8fwRRym/GuS8=
 
-This series enables Control Transfer Records extension support on riscv
-architecture. This extension is similar to Arch LBR in x86 and BRBE in ARM.
-The Extension has been ratified and latest release can be found here [0]
+Adding CSR defines for RISCV Control Transfer Records extension [0]
+along with bit-field macros for each CSR.
 
-CTR extension depends on both the implementation of S-mode and Sscsrind
-extension v1.0.0 [1]. CTR access ctrsource, ctrtartget and ctrdata CSRs
-using sscsrind extension.
-
-The series is based on Smcdeleg/Ssccfg counter delegation extension [2]
-patches [3]. CTR itself doesn't depend on counter delegation support. This
-rebase is basically to include the Smcsrind patches.
-
-The last patch is in the perf tool to allow processing 256 entries. Without
-this perf seems to consider that sample as corrupted and discards it.
-
-Here is the link to a quick guide [4] to setup and run a basic perf demo on
-Linux to use CTR Ext.
-
-Qemu patches are merged upstream:
-https://lore.kernel.org/qemu-devel/20250205-b4-ctr_upstream_v6-v6-0-439d8e06c8ef@rivosinc.com/
-
-Opensbi patch is merged upstream:
-https://lore.kernel.org/opensbi/20250307124451.122828-1-rkanwal@rivosinc.com/
-
-Linux kernel patches can be found here:
-https://github.com/rajnesh-kanwal/linux/tree/b4/ctr_upstream_v3
-
-[0]: https://github.com/riscv/riscv-control-transfer-records/releases/tag/v1.0
-[1]: https://github.com/riscvarchive/riscv-indirect-csr-access/releases/tag/v1.0.0
-[2]: https://github.com/riscvarchive/riscv-smcdeleg-ssccfg/releases/tag/v1.0.0
-[3]: https://lore.kernel.org/lkml/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com/
-[4]: https://github.com/rajnesh-kanwal/linux/wiki/Running-CTR-basic-demo-on-QEMU-RISC%E2%80%90V-Virt-machine
-
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Jiri Olsa <jolsa@kernel.org>
-To: Ian Rogers <irogers@google.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-To: Liang, Kan <kan.liang@linux.intel.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-To: Albert Ou <aou@eecs.berkeley.edu>
-To: Alexandre Ghiti <alex@ghiti.fr>
-To: Atish Kumar Patra <atishp@rivosinc.com>
-To: Anup Patel <anup@brainfault.org>
-To: Will Deacon <will@kernel.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Beeman Strong <beeman@rivosinc.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Conor Dooley <conor@kernel.org>
-Cc: devicetree@vger.kernel.org
+[0]: https://github.com/riscv/riscv-control-transfer-records
 
 Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
 ---
-Changelog:
-v3:
-- Added missing To/Cc, especially devicetree@vger.kernel.org
-- Changed the commit description to better describe the need of
-  perf tool change that increases max sample size processing
-  capacity of remove_loops function.
-- Minor fixes found while doing a virtualization PoC.
-- Added the missing commit and repository information to dt-bindings,
-  indicating where the extension was ratified.
+ arch/riscv/include/asm/csr.h | 83 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-v2
-- Added context save/restore support for tasks using CTR feature.
-- https://lore.kernel.org/lkml/20250116230955.867152-1-rkanwal@rivosinc.com/ 
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 8b2f5ae1d60efadbec90eab4b1a3637488a9431f..3aef621657603483e1cafd036f126692a731a333 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -331,6 +331,85 @@
+ 
+ #define CSR_SCOUNTOVF		0xda0
+ 
++/* M-mode Control Transfer Records CSRs */
++#define CSR_MCTRCTL		0x34e
++
++/* S-mode Control Transfer Records CSRs */
++#define CSR_SCTRCTL		0x14e
++#define CSR_SCTRSTATUS		0x14f
++#define CSR_SCTRDEPTH		0x15f
++
++/* VS-mode Control Transfer Records CSRs */
++#define CSR_VSCTRCTL		0x24e
++
++/* xctrtl CSR bits. */
++#define CTRCTL_U_ENABLE		_AC(0x1, UL)
++#define CTRCTL_S_ENABLE		_AC(0x2, UL)
++#define CTRCTL_M_ENABLE		_AC(0x4, UL)
++#define CTRCTL_RASEMU		_AC(0x80, UL)
++#define CTRCTL_STE		_AC(0x100, UL)
++#define CTRCTL_MTE		_AC(0x200, UL)
++#define CTRCTL_BPFRZ		_AC(0x800, UL)
++#define CTRCTL_LCOFIFRZ		_AC(0x1000, UL)
++#define CTRCTL_EXCINH		_AC(0x200000000, UL)
++#define CTRCTL_INTRINH		_AC(0x400000000, UL)
++#define CTRCTL_TRETINH		_AC(0x800000000, UL)
++#define CTRCTL_NTBREN		_AC(0x1000000000, UL)
++#define CTRCTL_TKBRINH		_AC(0x2000000000, UL)
++#define CTRCTL_INDCALL_INH	_AC(0x10000000000, UL)
++#define CTRCTL_DIRCALL_INH	_AC(0x20000000000, UL)
++#define CTRCTL_INDJUMP_INH	_AC(0x40000000000, UL)
++#define CTRCTL_DIRJUMP_INH	_AC(0x80000000000, UL)
++#define CTRCTL_CORSWAP_INH	_AC(0x100000000000, UL)
++#define CTRCTL_RET_INH		_AC(0x200000000000, UL)
++#define CTRCTL_INDOJUMP_INH	_AC(0x400000000000, UL)
++#define CTRCTL_DIROJUMP_INH	_AC(0x800000000000, UL)
++
++/* sctrstatus CSR bits. */
++#define SCTRSTATUS_WRPTR_MASK	0xFF
++#define SCTRSTATUS_FROZEN	_AC(0x80000000, UL)
++
++#ifdef CONFIG_RISCV_M_MODE
++#define CTRCTL_KERNEL_ENABLE	CTRCTL_M_ENABLE
++#else
++#define CTRCTL_KERNEL_ENABLE	CTRCTL_S_ENABLE
++#endif
++
++/* sctrdepth CSR bits. */
++#define SCTRDEPTH_MASK		0x7
++
++#define SCTRDEPTH_MIN		0x0 /* 16 Entries. */
++#define SCTRDEPTH_MAX		0x4 /* 256 Entries. */
++
++/* ctrsource, ctrtarget and ctrdata CSR bits. */
++#define CTRSOURCE_VALID		0x1ULL
++#define CTRTARGET_MISP		0x1ULL
++
++#define CTRDATA_TYPE_MASK	0xF
++#define CTRDATA_CCV		0x8000
++#define CTRDATA_CCM_MASK	0xFFF0000
++#define CTRDATA_CCE_MASK	0xF0000000
++
++#define CTRDATA_TYPE_NONE			0
++#define CTRDATA_TYPE_EXCEPTION			1
++#define CTRDATA_TYPE_INTERRUPT			2
++#define CTRDATA_TYPE_TRAP_RET			3
++#define CTRDATA_TYPE_NONTAKEN_BRANCH		4
++#define CTRDATA_TYPE_TAKEN_BRANCH		5
++#define CTRDATA_TYPE_RESERVED_6			6
++#define CTRDATA_TYPE_RESERVED_7			7
++#define CTRDATA_TYPE_INDIRECT_CALL		8
++#define CTRDATA_TYPE_DIRECT_CALL		9
++#define CTRDATA_TYPE_INDIRECT_JUMP		10
++#define CTRDATA_TYPE_DIRECT_JUMP		11
++#define CTRDATA_TYPE_CO_ROUTINE_SWAP		12
++#define CTRDATA_TYPE_RETURN			13
++#define CTRDATA_TYPE_OTHER_INDIRECT_JUMP	14
++#define CTRDATA_TYPE_OTHER_DIRECT_JUMP		15
++
++#define CTR_ENTRIES_FIRST	0x200
++#define CTR_ENTRIES_LAST	0x2ff
++
+ #define CSR_SSTATUS		0x100
+ #define CSR_SIE			0x104
+ #define CSR_STVEC		0x105
+@@ -523,6 +602,8 @@
+ # define CSR_TOPEI	CSR_MTOPEI
+ # define CSR_TOPI	CSR_MTOPI
+ 
++# define CSR_CTRCTL     CSR_MCTRCTL
++
+ # define SR_IE		SR_MIE
+ # define SR_PIE		SR_MPIE
+ # define SR_PP		SR_MPP
+@@ -553,6 +634,8 @@
+ # define CSR_TOPEI	CSR_STOPEI
+ # define CSR_TOPI	CSR_STOPI
+ 
++# define CSR_CTRCTL     CSR_SCTRCTL
++
+ # define SR_IE		SR_SIE
+ # define SR_PIE		SR_SPIE
+ # define SR_PP		SR_SPP
 
-v1:
-- https://lore.kernel.org/lkml/20240529185337.182722-1-rkanwal@rivosinc.com/
----
-
----
-Rajnesh Kanwal (7):
-      perf: Increase the maximum number of branches remove_loops() can process.
-      riscv: pmu: Add Control transfer records CSR definations.
-      riscv: Add Control Transfer Records extension parsing
-      riscv: pmu: Add infrastructure for Control Transfer Record
-      riscv: pmu: Add driver for Control Transfer Records Ext.
-      riscv: pmu: Integrate CTR Ext support in riscv_pmu_dev driver
-      dt-bindings: riscv: add Sxctr ISA extension description
-
- .../devicetree/bindings/riscv/extensions.yaml      |  28 +
- MAINTAINERS                                        |   1 +
- arch/riscv/include/asm/csr.h                       |  83 +++
- arch/riscv/include/asm/hwcap.h                     |   4 +
- arch/riscv/kernel/cpufeature.c                     |   2 +
- drivers/perf/Kconfig                               |  11 +
- drivers/perf/Makefile                              |   1 +
- drivers/perf/riscv_ctr.c                           | 612 +++++++++++++++++++++
- drivers/perf/riscv_pmu_common.c                    |  25 +-
- drivers/perf/riscv_pmu_dev.c                       |  82 +++
- drivers/perf/riscv_pmu_legacy.c                    |   2 +
- include/linux/perf/riscv_pmu.h                     |  55 ++
- tools/perf/util/machine.c                          |  21 +-
- 13 files changed, 918 insertions(+), 9 deletions(-)
----
-base-commit: e0200e37637e573cd68f522ecd550be87e304c6c
-change-id: 20250416-b4-ctr_upstream_v3-204f4b0b7481
-
-Best regards,
 -- 
-Rajnesh Kanwal
+2.43.0
 
