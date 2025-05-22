@@ -1,168 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FA2280311;
-	Thu, 22 May 2025 22:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19402D321B
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 May 2025 23:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747953469; cv=none; b=COiHlGAlqaMe2aS9VGsiIPTwSu69Ug9SMMfoESXqc9yHxSQQ8p032AxtUIjuqYn0lLZF/Imwyoi5YIZSZMqiaOMarfz0UJEua/FtkXolP5mjX3hgcsHZNYczzOUs0QSSMo0rB5bkTZqIq9lpY/Bdxye5uoO6sY3bhtnDB/ru0tI=
+	t=1747956380; cv=none; b=f78s1TvFKZDCWJGXERaa1siZdFy/PCGl8xcsTQWzyil/J3q2adtzTHMaOqNVFj1z+IO/9RXqPoQ6ucozVNvJkfV4tTfhJ5Om0pJfPmEl+pJFfnIzpl3wPDuQ5TvBXSvItBc8M/f2/WwXfVYDt9xjx9pvFaMcVZlajwfPS2S4/Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747953469; c=relaxed/simple;
-	bh=wAYw4cAScuwWFKUFB4xQmNEcChfCTqByK7DhFmO09p8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IumBKsxB9CVi1beBWHPpNvQMbS1kwUAr/VYhZDH03/yralwDap0vJsZb1FhwCXtS9LDh3OYbrBcIX/d7KiWw/eJy/OyJ4wVH1BOCo9E4yraRT2aUt0/deWzwZKHOrCKLVNW46LHHL+aQywAXb0sCo/owMe+zzDTFYnxzu9GuY0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrXF/OL/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747956380; c=relaxed/simple;
+	bh=yRzc0icmCI3Wfp8FtEoLTbRp1C8aPjfzbWi+UvR2NUk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mYJCRLixxORfbB3+0GdsN8H9+QRsSs9/Twx1VOvh0vlkzS5akkgGLKlsAkmdmI2VCNnv2/7WUfsddvhSZeGo2FJptK7QJM/KLjwxn2OPvfg48z8zHaWFudZoM/YmkIWtW/GyAqQEO4/GkyHnmdk1zviKCBoHoWl6536dXZP0Em8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kjYUwQQ2; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrXF/OL/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06AB9C4CEEB;
-	Thu, 22 May 2025 22:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747953469;
-	bh=wAYw4cAScuwWFKUFB4xQmNEcChfCTqByK7DhFmO09p8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FrXF/OL/+3isBGPYBrjoDcQAr1mTj6ZU6IIttlTkSuTE3ef6CNFIy+A92GyzGkOnV
-	 sydzDF5gmTUwYpMF+HeeI9eeBoaEPDmTELFsiRLiAYmPmKfQ4sSISamRj+lUIzWdC/
-	 pG541ruW02i7X1Nxn93KYTaZDmJlWp3xVefrdGDaXzD6dnb7w49DAa5LRH/GR0yfJY
-	 QwX1BnXxUpDxyVRa3t0gmVHaYaoh5X5RbEDwG8Eeep6HUZzPkDsSKVUo9P5dV7HBCE
-	 408MyxNNr8eZVTL+Uwsh2SAbjzbZ7+b0TJ5EhKrZ6STz9ZT0jKC5g2M+vvBrrlzEgg
-	 coK8E84c99Hkw==
-Date: Thu, 22 May 2025 19:37:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Gautam Menghani <gautam@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
-Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
- to return counter data
-Message-ID: <aC-nOmMADRlnqkP8@x1>
-References: <20250519195148.1708988-1-irogers@google.com>
- <20250519195148.1708988-5-irogers@google.com>
- <aC-jR0b3mji4oJ7Q@x1>
- <CAP-5=fXdpT3-=e4cqZN4fBJK1c4TnYC1ZVV5Q5zTjmf7T7Fffg@mail.gmail.com>
- <aC-m7G-AVJP6sDD3@x1>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kjYUwQQ2"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so93759245e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 May 2025 16:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747956377; x=1748561177; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dKVNMuDSduacbIBYKcZNnzCtGR0eRj8WvfLgYTzDz7M=;
+        b=kjYUwQQ20ICED7JofCgsYJKVwkIAK+g1K/cv21Gqlg8dz3A43DDvoNoADjh16Vqx/s
+         +g1mcOSyxKjsJOb11WY3VYZw5jAy798a3yKVDj/88103NVc4RSQVrMZY+k9Rd1ajOdCL
+         XKNsN6xUHgCc3WnXguz9UCsDpXmqC6rHOwpB4n92aJwlBgaVtubRYT2AYwxl47/3JFEa
+         FjhOBZfpBQz+mmRoDQiAMpFfOj+7RT4Wf0pR2NLpFGXmASyXVV12MeYxbLVzoROcoHik
+         W9e8N+mhsgnWk5Y3wX0bzHBLRJmHraLL9pxvdmMs2RugNAcSQuLhTO0z1spyXjh6b8j2
+         oaYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747956377; x=1748561177;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dKVNMuDSduacbIBYKcZNnzCtGR0eRj8WvfLgYTzDz7M=;
+        b=FlVL90p3YaA8BFbkO1jTf4hx4wl3baC82JdPTMtr/qTiqvt9wal5A9Lh/iou27jZOD
+         HoV1eXZrRvAcvRzf/g5XNWg3j5vgT+iai6Oe1WcSI84p8lv49NeeqePOkDH9e1rKFNjM
+         +T7ttLOZoo/CkMJCsOd+dIYrip4gmWH41XiiqNja9Gdr4tVbN25L8N8s0idGF+Mir4Wk
+         OweZVy1U/v3b/fldUtxJmkprJUTnlltjNXyxv3WYcttPymNzAE68C6PYjXrsJc/CcVtL
+         xR2HZ4nPOACMKGeaV1B3uOSwJmx9oacbxf3WJnHeKF7nJiEANS8g1WomiHllhn0kPGfI
+         WDMg==
+X-Gm-Message-State: AOJu0Yz668IO6bj2HJgSc2Lfb6t+u58FHsVFehL7Gg/DhCDS9mrFW9Wr
+	oqiOsjgArz7Am9882kL0iOiUgqXXKqXFk86PLhIgP2/FiKMoYnUcEvbitLuE8UpbnpY=
+X-Gm-Gg: ASbGncvLHfIGEpUFkTxanffuoIdydXH5FjubCK5gwhr+EIB7Je3oDHErvAJMl+J93ld
+	PRaFndLD6HzQ4A1K3VtCFtSyMW6XdE++y44boJm8K8GshNAAEn3dk0ubsomxmmOQCZTT3AlCll0
+	5H2g9mxDBvfW1GwcDSm6HVwYgBsmr57npHC0hgjy0CPiyt4rDthNwFjKcrZbZJcFP8Dx5IL7g4u
+	jGs2+iJheK0LoX+ZVDobx140fa54wHyP9iww+NqoIkX2TNmWEWTcdcFHzR2dZAwFGRKwopA6540
+	Jt5Ty8Gs5z5GEGPmsCefxYaz24z6bdQGZY3jwVKrVnYgJrZgrHgnFA==
+X-Google-Smtp-Source: AGHT+IG6EHMwWLdGi5KKzk4nvM0cwE/VEL6TR7m61EKgB/eRoEgtVitn+rOSsP5hXJxsGHaL7N+kKQ==
+X-Received: by 2002:a05:600c:8411:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-44b6d1d39b6mr6921755e9.8.1747956377309;
+        Thu, 22 May 2025 16:26:17 -0700 (PDT)
+Received: from [127.0.1.1] ([2a02:c7c:75ac:6300:c05a:35d:17ae:e731])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f04334sm117825395e9.10.2025.05.22.16.26.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 16:26:17 -0700 (PDT)
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Date: Fri, 23 May 2025 00:25:07 +0100
+Subject: [PATCH v3 1/7] perf: Increase the maximum number of branches
+ remove_loops() can process.
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aC-m7G-AVJP6sDD3@x1>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
+References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
+In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Atish Kumar Patra <atishp@rivosinc.com>, 
+ Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Beeman Strong <beeman@rivosinc.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
+ devicetree@vger.kernel.org, Rajnesh Kanwal <rkanwal@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747956375; l=1919;
+ i=rkanwal@rivosinc.com; s=20250522; h=from:subject:message-id;
+ bh=yRzc0icmCI3Wfp8FtEoLTbRp1C8aPjfzbWi+UvR2NUk=;
+ b=eXHAPMGQUlSkoKw/ZujHfDdVrgUDThW/41UrEOojqu5cpgpKRvW3csxhNcSG5dQjunGp++UGp
+ BxjZ3PfI7eeCjvpIQxYxdbhtwmDvg9UZA3QLufVRs12DfstYvvJmpYm
+X-Developer-Key: i=rkanwal@rivosinc.com; a=ed25519;
+ pk=aw8nvncslGKHEmTBTJqvkP/4tj6pijL8fwRRym/GuS8=
 
-On Thu, May 22, 2025 at 07:36:31PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 22, 2025 at 03:32:44PM -0700, Ian Rogers wrote:
-> > On Thu, May 22, 2025 at 3:20 PM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
-> > > > From: Gautam Menghani <gautam@linux.ibm.com>
-> > > >
-> > > > Add support for perf_counts_values struct to enable the python
-> > > > bindings to read and return the counter data.
-> > > >
-> > > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> > > > ---
-> > > >  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
-> > > >  1 file changed, 91 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> > > > index ead3afd2d996..1cbddfe77c7c 100644
-> > > > --- a/tools/perf/util/python.c
-> > > > +++ b/tools/perf/util/python.c
-> > > > @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
-> > > >       return PyType_Ready(&pyrf_thread_map__type);
-> > > >  }
-> > > >
-> > > > +struct pyrf_counts_values {
-> > > > +     PyObject_HEAD
-> > > > +
-> > > > +     struct perf_counts_values values;
-> > > > +};
-> > > > +
-> > > > +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
-> > > > +
-> > > > +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
-> > > > +{
-> > > > +     Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
-> > > > +}
-> > > > +
-> > > > +#define counts_values_member_def(member, ptype, help) \
-> > > > +     { #member, ptype, \
-> > > > +       offsetof(struct pyrf_counts_values, values.member), \
-> > > > +       0, help }
-> > > > +
-> > > > +static PyMemberDef pyrf_counts_values_members[] = {
-> > > > +     counts_values_member_def(val, Py_T_ULONG, "Value of event"),
-> > > > +     counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
-> > > > +     counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
-> > > > +     counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
-> > > > +     counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
-> > > > +     {NULL}
-> > > > +};
-> > >
-> > > So the above is failing on a aarch64 debian (rpi5):
-> > >
-> > > acme@raspberrypi:~/git/perf-tools-next $ dpkg -S /usr/include/python3.11/structmember.h
-> > > libpython3.11-dev:arm64: /usr/include/python3.11/structmember.h
-> > > acme@raspberrypi:~/git/perf-tools-next $
-> > >
-> > > Where it only has:
-> > >
-> > > acme@raspberrypi:~/git/perf-tools-next $ grep -r Py_T_ULONG /usr/include/
-> > > acme@raspberrypi:~/git/perf-tools-next $ grep -rw Py_T_ULONG /usr/include/
-> > > acme@raspberrypi:~/git/perf-tools-next $ grep -rw T_ULONG /usr/include/
-> > > /usr/include/python3.11/structmember.h:#define T_ULONG     12
-> > > acme@raspberrypi:~/git/perf-tools-next $
-> > >
-> > > while on fedora 42 x86_64:
-> > >
-> > > ⬢ [acme@toolbx perf-tools-next]$ grep -rw Py_T_ULONG /usr/include/
-> > > /usr/include/python3.13/descrobject.h:#define Py_T_ULONG     12
-> > > /usr/include/python3.13/structmember.h:#define T_ULONG     Py_T_ULONG
-> > > ⬢ [acme@toolbx perf-tools-next]$
-> > >
-> > > So I'm making it use the T_ULONG and others as all the other PyMemberDef
-> > > arrays in tools/perf/util/python.c, ok?
-> > 
-> > The fix makes sense to me. Checking the documentation it seems
-> > Py_T_ULONG is preferred:
-> > https://docs.python.org/3/c-api/structures.html#member-types
-> > perhaps we can add:
-> > ```
-> > #ifndef Py_T_ULONG
-> > #define Py_T_ULONG T_ULONG
-> > #endif
-> > ```
-> > so that we use the approach matching the documentation while fixing
-> > the RaspberryPi issue.
-> 
-> That can be done as a followup, as there are lots of preexisting usage
-> for struct method definitions.
+RISCV CTR extension supports a maximum depth of 256 last branch records.
+Currently remove_loops() can only process 127 entries at max. This leads
+to samples with more than 127 entries being skipped. This change simply
+updates the remove_loops() logic to be able to process 256 entries.
 
-And there is one other issue:
+Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+---
+ tools/perf/util/machine.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-  LINK    /tmp/build/perf/perf
-  GEN     /tmp/build/perf/python/perf.cpython-36m-x86_64-linux-gnu.so
-/git/perf-6.15.0-rc7/tools/perf/util/python.c:653:7: error: missing field 'type' initializer [-Werror,-Wmissing-field-initializers]
-  653 |         {NULL}
-      |              ^
-/git/perf-6.15.0-rc7/tools/perf/util/python.c:695:7: error: missing field 'get' initializer [-Werror,-Wmissing-field-initializers]
-  695 |         {NULL}
-      |              ^
-2 errors generated.
-error: command 'clang' failed with exit status 1
-cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such file or directory
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2d51badfbf2e2d1588fa4fdd42ef6c8fea35bf0e..5414528b9d336790decfb42a4f6a4da6c6b68b07 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2176,25 +2176,32 @@ static void save_iterations(struct iterations *iter,
+ 		iter->cycles += be[i].flags.cycles;
+ }
+ 
+-#define CHASHSZ 127
+-#define CHASHBITS 7
+-#define NO_ENTRY 0xff
++#define CHASHBITS 8
++#define NO_ENTRY 0xffU
+ 
+-#define PERF_MAX_BRANCH_DEPTH 127
++#define PERF_MAX_BRANCH_DEPTH 256
+ 
+ /* Remove loops. */
++/* Note: Last entry (i==ff) will never be checked against NO_ENTRY
++ * so it's safe to have an unsigned char array to process 256 entries
++ * without causing clash between last entry and NO_ENTRY value.
++ */
+ static int remove_loops(struct branch_entry *l, int nr,
+ 			struct iterations *iter)
+ {
+ 	int i, j, off;
+-	unsigned char chash[CHASHSZ];
++	unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+ 
+ 	memset(chash, NO_ENTRY, sizeof(chash));
+ 
+-	BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
++	BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+ 
+ 	for (i = 0; i < nr; i++) {
+-		int h = hash_64(l[i].from, CHASHBITS) % CHASHSZ;
++		/* Remainder division by PERF_MAX_BRANCH_DEPTH is not
++		 * needed as hash_64 will anyway limit the hash
++		 * to CHASHBITS
++		 */
++		int h = hash_64(l[i].from, CHASHBITS);
+ 
+ 		/* no collision handling for now */
+ 		if (chash[h] == NO_ENTRY) {
 
+-- 
+2.43.0
 
-I'll look at this after dinner.
-
-- Arnaldo
