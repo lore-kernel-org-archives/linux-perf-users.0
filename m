@@ -1,175 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7BE191484;
-	Thu, 22 May 2025 17:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916018CC1D;
+	Thu, 22 May 2025 17:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747933850; cv=none; b=G1eD2QM1K4ylVZ2F1hzzc/TMudDHS/U2guTL65zW4AiXK8qI/biJIxrA+Kprg3Rsn2Ktt+3qg5o5cwsYS+PUrNd5SKii65pqiUGeOmwi1WozfgNW/bB8GEy0i/BLNSdS8vvWUSMlD3ljL769YqCf+W6fnuDheXltb9W59q+0bvk=
+	t=1747934448; cv=none; b=AreDKDJJqbv0y/XX40w7R1XK02GCEu4/HszTRf+j9Yf7hN0dr1LNiAOc38ekv6Rt0Q5BIT6RsMNOI/sBzBtdaPXLJxjrzbUBWK7yEiocrJ9CZx3VbyykXw1ti7w2qELHQBu4M598nC2JFsAaFhzrPAm47vAe0M/FcO/FVm2UxlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747933850; c=relaxed/simple;
-	bh=z+fyZkrdZTOMZrboCG9T2VLWlXBRAa8ZR92oVx0ubCg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=otmVX2pFhmuYvywSAbWdh7BBxtDbgjDLmnkI0ekWXw/nJBsyx9R6m5ZfHmWX3w6Yu1o6gz5VjDD0wtPOPXz4uPV7uKvjeUi0leYsVsngGZBZ2+dk3KQVeFYknEu90HpWRn7mG2o5OcGdvDXo0A9vua719qInhH5dsJ/gnhBDd2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNDTQ2Az; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747934448; c=relaxed/simple;
+	bh=f0XMvMxyxmQO+2lM8j8iwFTLKsVl26kGRvuGKeTW2FI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gyHmQX0vd0PIGZgmFP39WP/rP9xk9LaF6ieCw8TDDZ6yb21osWHHURjkmjbyXoOLOJ3p9Vs8Axd5+eJL1rxRpPvDJCRboz24hibjljLIuNSm9avBk7o4xikaILaVpKeDi/h3i9cX/j1TQyT/UEQltPIYd7LBJ18Yi4cFqCSeTOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dImguw1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNDTQ2Az"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8121C4CEF6;
-	Thu, 22 May 2025 17:10:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dImguw1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0759C4CEF4;
+	Thu, 22 May 2025 17:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747933849;
-	bh=z+fyZkrdZTOMZrboCG9T2VLWlXBRAa8ZR92oVx0ubCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CNDTQ2AzQwH6vK5TQ8W0UJ8iHX+ApXApvTYsKKFJbYZZFpmVN6+Ww1tQraYiKHMZv
-	 uh8UyL/5dA4pSmKzRqph83A+vLIKAUOHkwAZhe20/B5imxtPcGLgmeaiycIH4Z3qr0
-	 BIJcLIzlQwtzYS3J7cr9cVCzGvzZ5gCr3LXNfXbZSMnRPTYpmtj/yxhzRMFcjpaaPr
-	 t+B2cbsjg0Kt7H14iqloIiPAmUnEfFBnVa2e/dJAJCuTE0NQ653irSNBJdnm6DP1lI
-	 4hL8XwjZKDBk94bt7+VAcOpuali+ulaGcBn6YnPyHvydUxL4I8Y34g9LAUoU0JhJ0t
-	 M7cYSwik1pgLA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [PATCH 3/3] perf test: Add AMD IBS sw filter test
-Date: Thu, 22 May 2025 10:10:44 -0700
-Message-ID: <20250522171044.1075583-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
-In-Reply-To: <20250522171044.1075583-1-namhyung@kernel.org>
-References: <20250522171044.1075583-1-namhyung@kernel.org>
+	s=k20201202; t=1747934447;
+	bh=f0XMvMxyxmQO+2lM8j8iwFTLKsVl26kGRvuGKeTW2FI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dImguw1T60mad+h3HSsvAIAGBZoPyTPvysg0PLKfbw7ZusucDBwWkXb/t8dv8WMOU
+	 ZZ6aAsxZ3NJaHzMeK/jILjLP3f8g/G5mfEWuPVyaHDO7YU2O0/3emWRgm3pOcU/MoM
+	 JmlGrDbi1bgSs7VKOTVEUhua/5BFdd5TCnrm1JsexjraKyYjwoxxR/waR0FmqALK7U
+	 xbqfkbyRGTquiPEsVtBNQYh/T7x6txLXkXBg1QEvdEh+0GNyr9mlk8LW4muXOp/J3t
+	 wYvzYg2cpvpsRfSGiwFDKDnCHx7VRengnDHNYN1c1iRuk7Zj09NcuXByPiXItZX38l
+	 KVc5EXz0yFjaw==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac34257295dso1339062266b.2;
+        Thu, 22 May 2025 10:20:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXT1/6UD6XBHV1JonEYQL83WmOLTqSbLuSoXXgaYBLlGMDKtdWHtPOqDV39cvtHgvoVS2QCpRiAS0=@vger.kernel.org, AJvYcCVgpdCRHCeBWsPqcw4v0ko0LAS0O/yxV7mAdAKLLo15EzOWmfRZeA9i36m6ThmJBZcYaMENVugZUgwO/AfaJU6a8A==@vger.kernel.org, AJvYcCWHsSwGOiHjE6vkKn7iKwfN2UTTtLgRspCyQIPzw7DY8BzjuReaomOD5TZcV8XMMOtUH3PJ/Kn5wlhQw5HB@vger.kernel.org
+X-Gm-Message-State: AOJu0YydNwJe1+3AVpaKYlVtmtTdUIpYPn8qRTGXsZY+w8SbAmcZzGvU
+	f541O1zAvQYPeW+SG1YLN6jtQFX0yCDUZUTJJXbE8shoJIDjB/SwqzQLn0JP2cg7kDgK5JDUQ+0
+	g4HGjV1J6GOV9l5pQqDhpmNBytDqQ8A==
+X-Google-Smtp-Source: AGHT+IGAYYG+vIgGuI/ayC2uGqWgyniPCcMHhUSyeQcygsPjUjSYmhf9rYJn77siFd52fYZ5ibkezDZJq/F4ygapM/I=
+X-Received: by 2002:a17:907:3f08:b0:ad5:6939:8333 with SMTP id
+ a640c23a62f3a-ad569398704mr1462923066b.37.1747934446333; Thu, 22 May 2025
+ 10:20:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+ <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org> <aC9NhvYzajduVm7y@e133380.arm.com>
+In-Reply-To: <aC9NhvYzajduVm7y@e133380.arm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 22 May 2025 12:20:35 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
+X-Gm-Features: AX0GCFvVXljRLS6CQowdkTNTXjrD3dK31miPdgViETu3tYaW68KPRqx4Jf1fUa0
+Message-ID: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
+Subject: Re: [PATCH v22 2/5] arm64: el2_setup.h: Make __init_el2_fgt labels
+ consistent, again
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The kernel v6.14 added 'swfilt' to support privilege filtering in
-software so that IBS can be used by regular users.  Add a test case in
-x86 to verify the behavior.
+On Thu, May 22, 2025 at 11:15=E2=80=AFAM Dave Martin <Dave.Martin@arm.com> =
+wrote:
+>
+> On Tue, May 20, 2025 at 05:27:37PM -0500, Rob Herring (Arm) wrote:
+> > From: Anshuman Khandual <anshuman.khandual@arm.com>
+> >
+> > Commit 5b39db6037e7 ("arm64: el2_setup.h: Rename some labels to be more
+> > diff-friendly") reworked the labels in __init_el2_fgt to say what's
+> > skipped rather than what the target location is. The exception was
+> > "set_fgt_" which is where registers are written. In reviewing the BRBE
+> > additions, Will suggested "set_debug_fgt_" where HDFGxTR_EL2 are
+> > written. Doing that would partially revert commit 5b39db6037e7 undoing
+> > the goal of minimizing additions here, but it would follow the
+> > convention for labels where registers are written.
+> >
+> > So let's do both. Branches that skip something go to a "skip" label and
+> > places that set registers have a "set" label. This results in some
+> > double labels, but it makes things entirely consistent.
+> >
+> > While we're here, the SME skip label was incorrectly named, so fix it.
+> >
+> > Reported-by: Will Deacon <will@kernel.org>
+> > Cc: Dave Martin <Dave.Martin@arm.com>
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> > This one can be applied even if the rest of the series is not.
+> >
+> > v22:
+> >  - New patch
+> > ---
+> >  arch/arm64/include/asm/el2_setup.h | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/as=
+m/el2_setup.h
+> > index ebceaae3c749..30f57b0334a3 100644
+> > --- a/arch/arm64/include/asm/el2_setup.h
+> > +++ b/arch/arm64/include/asm/el2_setup.h
+> > @@ -204,19 +204,21 @@
+> >       orr     x0, x0, #(1 << 62)
+> >
+> >  .Lskip_spe_fgt_\@:
+> > +
+> > +.Lset_debug_fgt_\@:
+>
+> Dangling label?  There doesn't seem to be any branch to it in this
+> series, unless I've missed something.
 
-  $ sudo perf test -vv 'IBS software filter'
-  111: AMD IBS software filtering:
-  --- start ---
-  test child forked, pid 178826
-  check availability of IBS swfilt
-  run perf record with modifier and swfilt
-  [ perf record: Woken up 3 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB /dev/null ]
-  [ perf record: Woken up 3 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB /dev/null ]
-  [ perf record: Woken up 3 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB /dev/null ]
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB /dev/null ]
-  check number of samples with swfilt
-  [ perf record: Woken up 3 times to write data ]
-  [ perf record: Captured and wrote 0.037 MB - ]
-  [ perf record: Woken up 3 times to write data ]
-  [ perf record: Captured and wrote 0.041 MB - ]
-  ---- end(0) ----
-  111: AMD IBS software filtering                                      : Ok
+I tried to explain that in the commit message. To have both what you
+wanted and what Will suggested, you end up with 2 labels in between
+the last skip and setting registers.
 
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/arch/x86/tests/Build               |  1 +
- .../arch/x86/tests/shell/amd-ibs-swfilt.sh    | 67 +++++++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100755 tools/perf/arch/x86/tests/shell/amd-ibs-swfilt.sh
-
-diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
-index 5e00cbfd2d569bb9..317602fbc744316a 100644
---- a/tools/perf/arch/x86/tests/Build
-+++ b/tools/perf/arch/x86/tests/Build
-@@ -14,6 +14,7 @@ perf-test-y += amd-ibs-period.o
- 
- ifdef SHELLCHECK
-   SHELL_TESTS := gen-insn-x86-dat.sh
-+  SHELL_TESTS += $(shell find shell -executable -type f -name '*.sh')
-   SHELL_TEST_LOGS := $(SHELL_TESTS:%=%.shellcheck_log)
- else
-   SHELL_TESTS :=
-diff --git a/tools/perf/arch/x86/tests/shell/amd-ibs-swfilt.sh b/tools/perf/arch/x86/tests/shell/amd-ibs-swfilt.sh
-new file mode 100755
-index 0000000000000000..83937aa687ccd859
---- /dev/null
-+++ b/tools/perf/arch/x86/tests/shell/amd-ibs-swfilt.sh
-@@ -0,0 +1,67 @@
-+#!/bin/sh
-+# AMD IBS software filtering
-+
-+echo "check availability of IBS swfilt"
-+
-+# check if IBS PMU is available
-+if [ ! -d /sys/bus/event_source/devices/ibs_op ]; then
-+    echo "[SKIP] IBS PMU does not exist"
-+    exit 2
-+fi
-+
-+# check if IBS PMU has swfilt format
-+if [ ! -f /sys/bus/event_source/devices/ibs_op/format/swfilt ]; then
-+    echo "[SKIP] IBS PMU does not have swfilt"
-+    exit 2
-+fi
-+
-+echo "run perf record with modifier and swfilt"
-+
-+# setting any modifiers should fail
-+perf record -B -e ibs_op//u -o /dev/null true 2> /dev/null
-+if [ $? -eq 0 ]; then
-+    echo "[FAIL] IBS PMU should not accept exclude_kernel"
-+    exit 1
-+fi
-+
-+# setting it with swfilt should be fine
-+perf record -B -e ibs_op/swfilt/u -o /dev/null true
-+if [ $? -ne 0 ]; then
-+    echo "[FAIL] IBS op PMU cannot handle swfilt for exclude_kernel"
-+    exit 1
-+fi
-+
-+# setting it with swfilt=1 should be fine
-+perf record -B -e ibs_op/swfilt=1/k -o /dev/null true
-+if [ $? -ne 0 ]; then
-+    echo "[FAIL] IBS op PMU cannot handle swfilt for exclude_user"
-+    exit 1
-+fi
-+
-+# check ibs_fetch PMU as well
-+perf record -B -e ibs_fetch/swfilt/u -o /dev/null true
-+if [ $? -ne 0 ]; then
-+    echo "[FAIL] IBS fetch PMU cannot handle swfilt for exclude_kernel"
-+    exit 1
-+fi
-+
-+# check system wide recording
-+perf record -aB --synth=no -e ibs_op/swfilt/k -o /dev/null true
-+if [ $? -ne 0 ]; then
-+    echo "[FAIL] IBS op PMU cannot handle swfilt in system-wide mode"
-+    exit 1
-+fi
-+
-+echo "check number of samples with swfilt"
-+
-+kernel_sample=$(perf record -e ibs_op/swfilt/u -o- true | perf script -i- -F misc | grep -c ^K)
-+if [ ${kernel_sample} -ne 0 ]; then
-+    echo "[FAIL] unexpected kernel samples: " ${kernel_sample}
-+    exit 1
-+fi
-+
-+user_sample=$(perf record -e ibs_fetch/swfilt/k -o- true | perf script -i- -F misc | grep -c ^U)
-+if [ ${user_sample} -ne 0 ]; then
-+    echo "[FAIL] unexpected user samples: " ${user_sample}
-+    exit 1
-+fi
--- 
-2.49.0.1164.gab81da1b16-goog
-
+Rob
