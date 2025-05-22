@@ -1,135 +1,213 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94089269CFA;
-	Thu, 22 May 2025 22:11:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F8D26B96F;
+	Thu, 22 May 2025 22:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747951904; cv=none; b=sca8UREPt+Wi1jP6whsNMAqTYIaA0XIZhFRSaDMKsJMlaBt5oVDSHUU6tOIJYWVHzy+1IIsHAMgkvBE9HjyaRL41947dVMVy6U8azDNOiAqE44WY3F/azNkrleSctJpcZbtMbKrK1w2jn2CTyvsuvdasoXk7frtTLgvJ47smOPs=
+	t=1747952457; cv=none; b=denvYE8tnxcnLBrK8RamzZbzB4bLNBMMSeHHAm7lBoXUJj92zxag80mxW2wGZxjbQxoxowTvvOo2K3PHKynzjmC3AHpElyDMj7d9ckeHLgppYIoTpYGgzLwS/fnAmuC/P53PXLAn3W2mFdVCfphvpHKdmwwlf36z6qObOiY7Mkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747951904; c=relaxed/simple;
-	bh=KZiFQSdib5SAC4/JvoIWXS6NRECRieWGZ7Tfu3oNlvs=;
+	s=arc-20240116; t=1747952457; c=relaxed/simple;
+	bh=dVDrWKoaeesLRoXCHObxVsyqMqgIy+JXfIFLh9pO2d0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tg68xcNu/KpCyE+H+IKCWyEO09JPmNKvV5QmMx5Oq4vBi2K3w8EBCmCyHFLfGx6Mr2W1hx883C107xKIH3UQw54d9rpORBf7AvBUD3K4Ljz0A4RdmanmAiNRlUaLxlE/bpARkGftL5Aw7i2tAwamgEKttw2OgBHgwxjsKP2alIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5M1xSyC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pFxGeE1DCGVkoIfT91sQQtmvHArkC/Y/HOKbCv4m3meto6OxUYbLU0NWKQ1Zz4gBoRyqZJbn1TxheKSmn02Sg4f6G6hOA9qSFJYMJRTBfRyWaAJ/EwUWjaHpMwjzv/uKYdOA7fjgUmXluaRetcR9fiPrDThXeQAHnO0oj18uOoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnfRoa1J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5M1xSyC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04787C4CEE4;
-	Thu, 22 May 2025 22:11:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnfRoa1J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5526CC4CEEB;
+	Thu, 22 May 2025 22:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747951904;
-	bh=KZiFQSdib5SAC4/JvoIWXS6NRECRieWGZ7Tfu3oNlvs=;
+	s=k20201202; t=1747952457;
+	bh=dVDrWKoaeesLRoXCHObxVsyqMqgIy+JXfIFLh9pO2d0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k5M1xSyCLAaTzrGsViDJk/UZITks+AuMEgusboQ3J3QPmFPax50ttimc4GWI6nWFn
-	 pBlXxxgBEZCKHNlYz1Y1OFZaB5hwRlzqTqIEHYCSCkeWC9a2KvYZJjyoN0ldcK4bUF
-	 Uo1rkZSDzRH+B01crReH2jA7snhqYbC5THBZT0R0lJRPhy6WVyd2dtFc8E+zi5A0tg
-	 BNkXlYNsvyR2eLYuUqb1izVqaKvar50bauW2DxBbOCBp3yX4oXNsMWCjkXP6v8Sjsl
-	 J5nQhrJ2LcezDcr0VPJa7JEMeakduAbqrrYqarinIggJl79zecVg16VypxOB4y5TFq
-	 W6f2QhbIqMrmg==
-Date: Thu, 22 May 2025 19:11:41 -0300
+	b=XnfRoa1JVaE5HSMaUwOq4y9ptbtkDVd0gwCUZd74m0Sg0aDm6uG9UzMBH6Qs+pqOe
+	 Sdmsd9NmgYOCZVP2D9POGPRM950b0RddA5BltuJVgdUHTyzPHikL++CfF6YAZmngwG
+	 cJs9suQ/WeqOZ2obt3Rkx6aWtuXfH7o4otvVvfzDNkQrZ/CRqQqz+u7gD0Ux3u+Cef
+	 o2u2NOsr7Fc7CABVBIUHHwJJfHs/3CNvvN0fZ7hA2PRmUNsOu95b3H+TBSi4nsPYQR
+	 s7Y/RK/5ocVEx1zT9FegZ9wwCALpSXPJS/3lOTVWkCv22fpdz4M0ft/LjczR8v2Kiq
+	 uvRHNnNPL6RqA==
+Date: Thu, 22 May 2025 19:20:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
-Message-ID: <aC-hHTgArwlF_zu9@x1>
-References: <20250522142551.1062417-1-namhyung@kernel.org>
- <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
- <aC9VoTL_Cv4R7J-j@x1>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
+Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
+ to return counter data
+Message-ID: <aC-jR0b3mji4oJ7Q@x1>
+References: <20250519195148.1708988-1-irogers@google.com>
+ <20250519195148.1708988-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aC9VoTL_Cv4R7J-j@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250519195148.1708988-5-irogers@google.com>
 
-On Thu, May 22, 2025 at 01:49:37PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 22, 2025 at 08:33:16AM -0700, Howard Chu wrote:
-> > $ sudo /tmp/perf/perf test -vv 112
-> > 112: perf trace summary:
-> > 112: perf trace summary
-> > --- start ---
-> > test child forked, pid 1574993
-> > testing: perf trace -s -- true
-> > testing: perf trace -S -- true
-> > testing: perf trace -s --summary-mode=thread -- true
-> > testing: perf trace -S --summary-mode=total -- true
-> > testing: perf trace -as --summary-mode=thread --no-bpf-summary -- true
-> > testing: perf trace -as --summary-mode=total --no-bpf-summary -- true
-> > testing: perf trace -as --summary-mode=thread --bpf-summary -- true
-> > testing: perf trace -as --summary-mode=total --bpf-summary -- true
-> > testing: perf trace -aS --summary-mode=total --bpf-summary -- true
-> > testing: perf trace -as --summary-mode=cgroup --bpf-summary -- true
-> > testing: perf trace -aS --summary-mode=cgroup --bpf-summary -- true
-> > ---- end(0) ----
-> > 112: perf trace summary                                              : Ok
- 
-> Thanks, tested and applied to perf-tools-next,
+On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
+> From: Gautam Menghani <gautam@linux.ibm.com>
+> 
+> Add support for perf_counts_values struct to enable the python
+> bindings to read and return the counter data.
+> 
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+>  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 91 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index ead3afd2d996..1cbddfe77c7c 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
+>  	return PyType_Ready(&pyrf_thread_map__type);
+>  }
+>  
+> +struct pyrf_counts_values {
+> +	PyObject_HEAD
+> +
+> +	struct perf_counts_values values;
+> +};
+> +
+> +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
+> +
+> +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
+> +{
+> +	Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
+> +}
+> +
+> +#define counts_values_member_def(member, ptype, help) \
+> +	{ #member, ptype, \
+> +	  offsetof(struct pyrf_counts_values, values.member), \
+> +	  0, help }
+> +
+> +static PyMemberDef pyrf_counts_values_members[] = {
+> +	counts_values_member_def(val, Py_T_ULONG, "Value of event"),
+> +	counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
+> +	counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
+> +	counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
+> +	counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
+> +	{NULL}
+> +};
 
-But then when running all the tests, since this does system wide
-tracing, it fails:
+So the above is failing on a aarch64 debian (rpi5):
 
-112: perf trace summary                                              : FAILED!
+acme@raspberrypi:~/git/perf-tools-next $ dpkg -S /usr/include/python3.11/structmember.h
+libpython3.11-dev:arm64: /usr/include/python3.11/structmember.h
+acme@raspberrypi:~/git/perf-tools-next $
 
-It works with the following patch applied, please check and ack/review:
+Where it only has:
 
-From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Thu, 22 May 2025 19:01:47 -0300
-Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
+acme@raspberrypi:~/git/perf-tools-next $ grep -r Py_T_ULONG /usr/include/
+acme@raspberrypi:~/git/perf-tools-next $ grep -rw Py_T_ULONG /usr/include/
+acme@raspberrypi:~/git/perf-tools-next $ grep -rw T_ULONG /usr/include/
+/usr/include/python3.11/structmember.h:#define T_ULONG     12
+acme@raspberrypi:~/git/perf-tools-next $
 
-And it is being successfull only when running alone, probably because
-there are some tests that add the vfs_getname probe that gets used by
-'perf trace' and alter how it does syscall arg pathname resolution.
+while on fedora 42 x86_64:
 
-This should be removed or made a fallback to the preferred BPF mode of
-getting syscall parameters, but till then, run this in exclusive mode.
+⬢ [acme@toolbx perf-tools-next]$ grep -rw Py_T_ULONG /usr/include/
+/usr/include/python3.13/descrobject.h:#define Py_T_ULONG     12
+/usr/include/python3.13/structmember.h:#define T_ULONG     Py_T_ULONG
+⬢ [acme@toolbx perf-tools-next]$
 
-For reference, here are some of the tests that run close to this one:
+So I'm making it use the T_ULONG and others as all the other PyMemberDef
+arrays in tools/perf/util/python.c, ok?
 
-  127: perf record offcpu profiling tests                              : Ok
-  128: perf all PMU test                                               : Ok
-  129: perf stat --bpf-counters test                                   : Ok
-  130: Check Arm CoreSight trace data recording and synthesized samples: Skip
-  131: Check Arm CoreSight disassembly script completes without errors : Skip
-  132: Check Arm SPE trace data recording and synthesized samples      : Skip
-  133: Test data symbol                                                : Ok
-  134: Miscellaneous Intel PT testing                                  : Skip
-  135: test Intel TPEBS counting mode                                  : Skip
-  136: perf script task-analyzer tests                                 : Ok
-  137: Check open filename arg using perf trace + vfs_getname          : Ok
-  138: perf trace summary                                              : Ok
+- Arnaldo
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/trace_summary.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index bb350dfabdc2bf5e..49766524dc21b534 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -1,5 +1,5 @@
- #!/bin/sh
--# perf trace summary
-+# perf trace summary (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
- # Check that perf trace works with various summary mode
--- 
-2.49.0
-
+> +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
+> +{
+> +	PyObject *vals = PyList_New(5);
+> +
+> +	if (!vals)
+> +		return NULL;
+> +	for (int i = 0; i < 5; i++)
+> +		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
+> +
+> +	return vals;
+> +}
+> +
+> +static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
+> +					 void *closure)
+> +{
+> +	Py_ssize_t size;
+> +	PyObject *item = NULL;
+> +
+> +	if (!PyList_Check(list)) {
+> +		PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
+> +		return -1;
+> +	}
+> +
+> +	size = PyList_Size(list);
+> +	for (Py_ssize_t i = 0; i < size; i++) {
+> +		item = PyList_GetItem(list, i);
+> +		if (!PyLong_Check(item)) {
+> +			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
+> +			return -1;
+> +		}
+> +		self->values.values[i] = PyLong_AsLong(item);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static PyGetSetDef pyrf_counts_values_getset[] = {
+> +	{"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
+> +		"Name field", NULL},
+> +	{NULL}
+> +};
+> +
+> +static PyTypeObject pyrf_counts_values__type = {
+> +	PyVarObject_HEAD_INIT(NULL, 0)
+> +	.tp_name	= "perf.counts_values",
+> +	.tp_basicsize	= sizeof(struct pyrf_counts_values),
+> +	.tp_dealloc	= (destructor)pyrf_counts_values__delete,
+> +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+> +	.tp_doc		= pyrf_counts_values__doc,
+> +	.tp_members	= pyrf_counts_values_members,
+> +	.tp_getset	= pyrf_counts_values_getset,
+> +};
+> +
+> +static int pyrf_counts_values__setup_types(void)
+> +{
+> +	pyrf_counts_values__type.tp_new = PyType_GenericNew;
+> +	return PyType_Ready(&pyrf_counts_values__type);
+> +}
+> +
+>  struct pyrf_evsel {
+>  	PyObject_HEAD
+>  
+> @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	    pyrf_evlist__setup_types() < 0 ||
+>  	    pyrf_evsel__setup_types() < 0 ||
+>  	    pyrf_thread_map__setup_types() < 0 ||
+> -	    pyrf_cpu_map__setup_types() < 0)
+> +	    pyrf_cpu_map__setup_types() < 0 ||
+> +	    pyrf_counts_values__setup_types() < 0)
+>  		return module;
+>  
+>  	/* The page_size is placed in util object. */
+> @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	Py_INCREF(&pyrf_cpu_map__type);
+>  	PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
+>  
+> +	Py_INCREF(&pyrf_counts_values__type);
+> +	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
+> +
+>  	dict = PyModule_GetDict(module);
+>  	if (dict == NULL)
+>  		goto error;
+> -- 
+> 2.49.0.1101.gccaa498523-goog
