@@ -1,129 +1,98 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C1A140E5F;
-	Thu, 22 May 2025 15:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AE9686358;
+	Thu, 22 May 2025 16:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747928010; cv=none; b=AfG7STOjOfmWQufrQLEZ++N5vposZP9YTtcfGxP0xQmwVADYBCqKIOK3gEvMKYz2KQDfB/6MZ3iRmwIkJkP4xHnqRGX/J30AyngLKqW10wdf0umdwTloWgfz7kE+fhJdH0nWYtxVnqjzxpLyoDmhMjx6LhTNLTb2pxq78QE0530=
+	t=1747930514; cv=none; b=leUn1qh8Cf+jOwwayjRAgkcG+xQGSyVBg7w41tkTOvHoE3ucCDAJYPkspPVgnKs933/xMykYXkGz6HltlXSFDlMMWig8EV8SPvMfce4EVx8ZQXTV7inT+GcBCHlPPYFAcF2OGJsTPBeX/PTKPOT7Muug3ztsUoy2DkeHJqgpAyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747928010; c=relaxed/simple;
-	bh=dHbAZ5ERAu9TTa4RNxr44TpsvhQH6Iiw4sMrY5lwR1c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IJDa+FFiEfGEtfbY4NWzcbdFMjbEQspq2eGxVxDFwkyYrNjBQ/EuwTPACce2LWXlk7GPPkvQ3ivMCc6+jNzurksJwi/qEPPrnQ/4TghYOEQ5XMbw6ZbQhCXV6AuHQaMFGP89EKwySTbcsodeY1ZOma/sbKClDVRQrKmeqYN1YyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilC5D9yV; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilC5D9yV"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e0ffe1b8eso4188047b3.3;
-        Thu, 22 May 2025 08:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747928008; x=1748532808; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iMK/MFWIIEvUH8F/i4Odtp6TUa8tGn+mmKMDt/mcwx8=;
-        b=ilC5D9yVIrIcR0gTZfd/sLwIDm1vnA3jRj8XbY0L/a0xU8kccqueaCMQ4C9/hjRb+q
-         Uucx8vwW2n3XyK15WrdSNYmNkc7Kk/kys8NtG6bopgpGs/dvb+LbUjgb0bM4/a1ABGSL
-         +ToEsH7Xm9/wSPsiHqkkrbYICIETJrQ27C5DRrQVyyVUGCJbLOgYNs61T9m8SylN8xNU
-         uIOZVG0mQ0hWrxta3erNQVphg8L83368gR6Pe6RF7q7EBbD94oKH8GEUlSTvcadDe/MB
-         hiWdS9I1FL0A92VX+v+nN0gV48W/4sFetsnJt4TE5ftjiCk63KwHZXnIh0n6wIKIsZji
-         2LwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747928008; x=1748532808;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iMK/MFWIIEvUH8F/i4Odtp6TUa8tGn+mmKMDt/mcwx8=;
-        b=E1sLSWw1Tt/ESmSte2F5uAsujEns9B4lRVgdRA3KlwN9uVVnlBSUEKafWoUjmlvQDh
-         dcn6++GbqXsBkrOOdZFp/GVoB87CnptzLiI3yGHqu2bfZyq/ZCKtW2egvv+3L/gbgO8Y
-         Ns6mUYFJz1KTcYLjzQH8Mc7G5w+8T6f1fEmOg7Zgy6jrF3k/Be+WAADhDteZ/1uDNGhk
-         X4mIGsYE5obc32Z4u1Djx5Ob+VhrkEUHpgzbka5dcZN5+MhUgDCFnqOqps9SMPt5naG4
-         HTYaZ3BJgmwC6/6V1mVrwPe8WK5PfLQujA8hAm94IlTKFaNK0uTG5lT8uMWLaXJ+dQq9
-         8D2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUw4a/K0dQ4lWiDUT79TepRuxmBW5tY9RJKD4lH9iYlYdf1TGEkGMKTorDMZRPUwIHzs+9E5G2JPI9WMFQ=@vger.kernel.org, AJvYcCX6ggM0voHP22MN0Mpip0VbY2VTN3g+0HSJV7z6Zxr1A9HAtuOoJNAqxCTcqHx7R4FTDsljTP/74oA0rmqUn3lxtw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP+WEg1+lCyDufNYmDK7c2IBA7ketIW1k2VTUzxO2j9aMgJEPU
-	D/pdCk+suYkyvgkXjwpmqex/xtL5V1Tl3cIkO7kfUo0PgOGLvFNeqA7Zkfgx+TQxhm3hIvP4wIM
-	zVhxFxCQAuxcLX2KiwvDMUpOb3bNCwaa3zA2nNE8=
-X-Gm-Gg: ASbGncsqvn3hX6c/AxYBR+hs61g88e6qdTkT26DEvyeQ/3Q/n3NJee4GX3m+0fGolU4
-	Zkd8Q+NhJPyy1YJ5huBKxMkR2CLXyiJn2dLl9zbIgejs8E+LBv/z5jKNNIyHz0yDiwwZ3a7rqn2
-	d2s7GEM8KlTxk4Wb9D2JN9qpsORJ23qIU=
-X-Google-Smtp-Source: AGHT+IE+OMv2HBvBJG4aoJT50PGnOPQvFyT/WhD/QprHbsIm8Cr73du3UbW2p3WsRhgX8+joNh4kjIOmxvL02IKTYZU=
-X-Received: by 2002:a05:690c:f0a:b0:70d:ecdd:9bd0 with SMTP id
- 00721157ae682-70decdda036mr138687757b3.27.1747928008112; Thu, 22 May 2025
- 08:33:28 -0700 (PDT)
+	s=arc-20240116; t=1747930514; c=relaxed/simple;
+	bh=B86oQzXDGwPGfXAvGevtUP+BpvzTXxAlz1S8MFh34Us=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4O0+sVXLayAAnXQym913ogFHPeUuwnSuJdivn0OqCrtoTLKcifHawioCzcs/8bmF/y68kprIuyZ2k1r8fcNxLnKIwq+Whi9kaDU5W/gU9yB6Ge2ZxNz1zpmGUt3f6+A8AXDLWVkIv6Wyo/Gktr6j6nnWzKrQQ4hFvagN9sdQwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 312CA1A2D;
+	Thu, 22 May 2025 09:14:56 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9E8D3F5A1;
+	Thu, 22 May 2025 09:15:07 -0700 (PDT)
+Date: Thu, 22 May 2025 17:15:02 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v22 2/5] arm64: el2_setup.h: Make __init_el2_fgt labels
+ consistent, again
+Message-ID: <aC9NhvYzajduVm7y@e133380.arm.com>
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+ <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522142551.1062417-1-namhyung@kernel.org>
-In-Reply-To: <20250522142551.1062417-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 22 May 2025 08:33:16 -0700
-X-Gm-Features: AX0GCFtUI4DeH14Jj96mverXmQ2fc7ha8kiVT9GJOGezMBuEuFWDVHll6Bv1DMk
-Message-ID: <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org>
 
-Hello Namhyung,
+On Tue, May 20, 2025 at 05:27:37PM -0500, Rob Herring (Arm) wrote:
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> Commit 5b39db6037e7 ("arm64: el2_setup.h: Rename some labels to be more
+> diff-friendly") reworked the labels in __init_el2_fgt to say what's
+> skipped rather than what the target location is. The exception was
+> "set_fgt_" which is where registers are written. In reviewing the BRBE
+> additions, Will suggested "set_debug_fgt_" where HDFGxTR_EL2 are
+> written. Doing that would partially revert commit 5b39db6037e7 undoing
+> the goal of minimizing additions here, but it would follow the
+> convention for labels where registers are written.
+> 
+> So let's do both. Branches that skip something go to a "skip" label and
+> places that set registers have a "set" label. This results in some
+> double labels, but it makes things entirely consistent.
+> 
+> While we're here, the SME skip label was incorrectly named, so fix it.
+> 
+> Reported-by: Will Deacon <will@kernel.org>
+> Cc: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> This one can be applied even if the rest of the series is not.
+> 
+> v22:
+>  - New patch
+> ---
+>  arch/arm64/include/asm/el2_setup.h | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index ebceaae3c749..30f57b0334a3 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -204,19 +204,21 @@
+>  	orr	x0, x0, #(1 << 62)
+>  
+>  .Lskip_spe_fgt_\@:
+> +
+> +.Lset_debug_fgt_\@:
 
-$ sudo /tmp/perf/perf test -vv 112
-112: perf trace summary:
-112: perf trace summary
---- start ---
-test child forked, pid 1574993
-testing: perf trace -s -- true
-testing: perf trace -S -- true
-testing: perf trace -s --summary-mode=3Dthread -- true
-testing: perf trace -S --summary-mode=3Dtotal -- true
-testing: perf trace -as --summary-mode=3Dthread --no-bpf-summary -- true
-testing: perf trace -as --summary-mode=3Dtotal --no-bpf-summary -- true
-testing: perf trace -as --summary-mode=3Dthread --bpf-summary -- true
-testing: perf trace -as --summary-mode=3Dtotal --bpf-summary -- true
-testing: perf trace -aS --summary-mode=3Dtotal --bpf-summary -- true
-testing: perf trace -as --summary-mode=3Dcgroup --bpf-summary -- true
-testing: perf trace -aS --summary-mode=3Dcgroup --bpf-summary -- true
----- end(0) ----
-112: perf trace summary                                              : Ok
+Dangling label?  There doesn't seem to be any branch to it in this
+series, unless I've missed something.
 
+[...]
 
-On Thu, May 22, 2025 at 7:25=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
->   $ sudo ./perf test -vv 112
->   112: perf trace summary:
->   --- start ---
->   test child forked, pid 1018940
->   testing: perf trace -s -- true
->   testing: perf trace -S -- true
->   testing: perf trace -s --summary-mode=3Dthread -- true
->   testing: perf trace -S --summary-mode=3Dtotal -- true
->   testing: perf trace -as --summary-mode=3Dthread --no-bpf-summary -- tru=
-e
->   testing: perf trace -as --summary-mode=3Dtotal --no-bpf-summary -- true
->   testing: perf trace -as --summary-mode=3Dthread --bpf-summary -- true
->   testing: perf trace -as --summary-mode=3Dtotal --bpf-summary -- true
->   testing: perf trace -aS --summary-mode=3Dtotal --bpf-summary -- true
->   testing: perf trace -as --summary-mode=3Dcgroup --bpf-summary -- true
->   testing: perf trace -aS --summary-mode=3Dcgroup --bpf-summary -- true
->   ---- end(0) ----
->   112: perf trace summary                                              : =
-Ok
->
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Reviewed-by: Howard Chu <howardchu95@gmail.com>
-
-Thanks,
-Howard
+Cheers
+---Dave
