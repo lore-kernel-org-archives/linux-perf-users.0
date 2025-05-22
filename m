@@ -1,71 +1,73 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBA221299;
-	Thu, 22 May 2025 06:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE231990C7;
+	Thu, 22 May 2025 06:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747894726; cv=none; b=JphN4QcOvy8b8rkS266zDNwWTe1WIzsQ/YjqN2qsXRmBIhYCO3mu/wBWJk3KbvdhHGyIvZ+ueJqjQKUkS5gWZrQTkkV5m40t87VzHOxWowZ8WiMlRZ8D4HgMfRMQqoGPkvxIlCimYOhd+eINh2qPew6o6Au2jM2h6JZV9eMqR5k=
+	t=1747895291; cv=none; b=R5luMJwSL1b05zFa1jwQnQEMEmBBWx3m7/W0oz2O87VZHePgZzTT30Aff406I7Mcvr60DglaPzjSv0hrHZpKw105dPP1jPbzBLHaFdHGBzvAl0rwvb9u3+BNzN1kzvgmVnrtXE8gwmvsdgontxmxrqq5UZtl4Idkhoe4ZAtr/AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747894726; c=relaxed/simple;
-	bh=oJwpwh3y/PB/CRwAnhTVlwmZnDJ+bo5bOGacgDgyPgM=;
+	s=arc-20240116; t=1747895291; c=relaxed/simple;
+	bh=IIJCYP06utjIpQePw7Ee28zeTx591O6yUKU04K0rZgM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=elgyvn5A/paEOh8FAsZSFL/7XpJ6uuFnrIcwTqAdD5pnxT6nwtLGnxnDjaWvsvL3mKIawsridVbDKBdduraDbzuIDiTIaPq074oiM3c9vWgnY8ptt27v+N7Esf+YdZcW+AJcV5jo2hDzmDQJ0V/4WGt2bE3ddwPXjCWCfdFdJiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jtlqP6ON; arc=none smtp.client-ip=209.85.219.47
+	 To:Cc:Content-Type; b=rluotKtb/KkYXGb7FykQHGYI0BCq2OYakwHqsr6gBwU4YTnIjbq/HNkLSe+RAJCf9JvNW50hdLrZQZ52N0/zr9a4jK2HjXkOTRt7xWFIbSIBdKCpeXL9GZDs8pBNNGfdok6vUCcVC07kxWwhc4ihwOQBCitZEQUL1hHkHEH1Ajc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijio7bIj; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtlqP6ON"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f8b2682d61so64540796d6.0;
-        Wed, 21 May 2025 23:18:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijio7bIj"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4766cb762b6so81223051cf.0;
+        Wed, 21 May 2025 23:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747894724; x=1748499524; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747895289; x=1748500089; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZAiWBeRbrCxTSOGaCOh6cmRAxFgzgObkS3PNJgd3CaA=;
-        b=jtlqP6ONURCWDpLtAkvyvHvQxSOEUqu73DUOCdIOOf3CV58s7eCW17qrwGCX81Cr3l
-         qe1zEyXWQPzGTAG5YkwWvFTrbv5ShjgUy3iluhl8c/QwjkcM3+NYChaSIGTOjtrbRcjn
-         fV0oGYHTTcBNWlSBbhjn6J0YNN+8SzXJq4u/T8CnLsaeTxJ/WFiTEZsPSHLGxwQi4tW5
-         kTQ1VDzvpfcPyavFiZ38bNoMDKtiANubeL5XBINvkjTvfjnC3ptSAGMQAYt1VWx34cfk
-         q/khVoLBGcW0KWMzNq8KOLmue+sKi+9Q9YGlPUB08Roqm8ivxw/1A3UVW4u73DEaOQuQ
-         hwLQ==
+        bh=LHD6lCcHX2Pr8p6sdmSMfutAANjYi9IRIcXl5X7HkKk=;
+        b=ijio7bIjzxIUN8LUYwBKktIAiat02/jCKYAAbd1oUdm20NHr6+FeWa88u+XIGmaClI
+         1rmCyYleMF8zc1PfAaSJKq2qLh8lgK4v6Y6j/JVC5mT3/kRf29IN6LcisJhgjAlMCZiU
+         2eixnk4MQc9HKn2fF6jO4wPeyIp/7uoupPzlLiLo86DBCQYPp/rqzbFFf00xH0Pe+6Rv
+         DfznijtCKiTpqmWUHgPZGpncStcaY41OfsbHCqdf7VN9FLfkCPBxXoPWt+imxOJQr3hn
+         9WFSuHSH77UKNCCM+bTkz0WruD+ljWp/TiJTXLB8M28FWthngXp7shvV5MpyTpubE0e7
+         YQ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747894724; x=1748499524;
+        d=1e100.net; s=20230601; t=1747895289; x=1748500089;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZAiWBeRbrCxTSOGaCOh6cmRAxFgzgObkS3PNJgd3CaA=;
-        b=filnXYNMyGdI2o35EQ5E0PGlKyZ1laJ9M9yc/pDezZcd95lgrCvqzuyM/SQ3013rcD
-         vVeI+Ke5NZ9K482TRjRODcoiEkI4C43nONj8qsvFEmWQ8UNaghEJsWHyzMJ/bfosx6MR
-         d3Nimm8a8FeilXyrAeSgd0x9DSXiSZZfo0r4yK+hnIOfE1FVbKvwDhL5mcgT09l/SAWR
-         QKTrvNbdqdRg9pLOFehIxKjlM4vvQ8W8a1JXuQ0ZW2LhLZUxcUc07JJ2FzlumMaGrrQQ
-         zIey8KIPM6FXV/TVu1awKhXGIj5aEjx4TUlvLAoMVVDhEPzA+02Fp2fBDVcJcateSLuA
-         57Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqwXGvTsy6GmrRL58EpDENpKYF5v0x2GQfV8xAdPQiB8N97jbXhKuHMYeFGbzXM18lkWXyfoHaVXu95Qje@vger.kernel.org, AJvYcCVVk24zxwO2CfxBu5gwoXoY/Z3eSq/txoRSEXeWE9dKHIi3Mknk1EkhGbcuN8lc0cO0eV4jL71zepJSIqsC8VQnEAG3@vger.kernel.org, AJvYcCVsF540uDeOqs49t9Zsphqq71l6yABY4M5tLWhqj88CaRKsqq/vm4VeinWWeBOyxV7DX1IVNI+bknmPJbyyRg==@vger.kernel.org, AJvYcCWK7nR7r7lejoD4FhlghZSPHwXUFvGb11BWc/A+YavrsfGIboO8Kb6I8Nn5yz4+P6L0Rmp+7B4p5ZKochEzQInqQw==@vger.kernel.org, AJvYcCX6qdDuw2I1AQhz10pwaCnbqXueItJZ6SJH+QnDupV7HT03ZUWXvabygbi/9LK105B3hWY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySyjIueKVYuae8O/lRaig9jeRzt1wy5uCHnn0kNXlb781o87/H
-	lubtPcyAjqFq5FRHPNJKrNca2Es25H+PrMjyJxOqYPDqftCmg9k3tlDlWLjnaKXrkZPtTD6J1o7
-	DBdGOBgKo8OR/ZB+HXiH7/GY1mUAGlg6yh/95WGc=
-X-Gm-Gg: ASbGncsp6439ghwdYm14x2E0zoUXDqo+F5BNFytwpyVqyPJuK5nIKM6CtbiPPoOPRxF
-	/qWOOGCnm4mTp95vQyK+zaNuaC69HLuMcSinMmbhfdidNKA6NC7P7unRQdHLo6eDbaEpxGbBA3j
-	2fmLMlRfSVU8raK8/tSuHpdMUBJPDcF+k+Eg==
-X-Google-Smtp-Source: AGHT+IF095o7KgziV/OiFOYLZCRqF+WnHMajqtqVaevy/ymBVxl78I9yj22rngIrp0rCYHfgWrpJMft76skDMOt1D4U=
-X-Received: by 2002:ad4:5aa3:0:b0:6e4:2e5b:8d3f with SMTP id
- 6a1803df08f44-6f8b12bab99mr292229976d6.14.1747894724203; Wed, 21 May 2025
- 23:18:44 -0700 (PDT)
+        bh=LHD6lCcHX2Pr8p6sdmSMfutAANjYi9IRIcXl5X7HkKk=;
+        b=nFgsf8OxEcjgiMaWwiD+H7WNwWfXAYoWYPw/ldDWfTrRrKFm8AVzxu2jN+XFntSEFD
+         CXhBWiVRj12dr0vzBqb5dt79lSC7IdW7qnN7cAVPbv87UN6hdMAlcbYxpM0HxyJA13oS
+         COOMW8Yc6TEhW0c6hyvxX0mrr0wi5NiLvGt6AxrsWZaJ74yLQz9Nn1ND3U5WkK/ZrJg3
+         PrZPpmZCsyFbGta0x0GHuuexuWfqkYdy4N+AEzEgKRrsCXwgJYzpY5/fEJ2JbrRPfJ50
+         nGK6LidXSBBm1YQAVDN0Fg2hBj7HEGgOrCoHNk+EFkj9RRrDvQ9TFIDNbNKpnF/XB2XQ
+         669w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsbCrOPWSAgrbOZH/304DS73SFBnyJGC43FleB+HHs+HBowWbpxtiZb3IxsG/vhIhtdnk0l8wUSvl8WM/r@vger.kernel.org, AJvYcCV7UOdDitrm3Q+/pM3dsultxjcKsveXsp+EprxQMB26vZkUwNk53yo9DGNmR54H4Q/ajNPniFpEWuhwTuM0ccstcj9H@vger.kernel.org, AJvYcCWztYPlx7xwUfgfC3Lz9Eh4V4NdrmjNuUV5Wp7ZP74HjG5HoXakPg/lkeYOI32Dr8TcMre2iwFay4yDku+t8HgE9Q==@vger.kernel.org, AJvYcCX8fDk8lS+IERD4rrYrKMfB5BYxJRoogFcXMy8Imrv8QzH+0BqGnR22dMD5bJDm/JG0bZo=@vger.kernel.org, AJvYcCXERnl2ZdkW27GpICKBcp/vkXxxFb9A/B+bwQPW9fd5+vaKBImGum9SrP9Kjn36rn4Oa7GBl4VqvGqzaCo3bg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFfc2BbJt7SbZJKGtZo5Lw8b39k8f7l730oC5Ww6wLWD7Hfor2
+	aMm2o9Id2B9WYAQywZh0Pe5uMAa0hotLPfZoY9itL4Lrx0wTCxgdMZgTCMk24aMKQEGkMO+s3VW
+	0yiS653AKTKPj2sQU9MLbaFlsKApA/9w=
+X-Gm-Gg: ASbGncsQQJasCwy0dPuEcNJIg6bcjvONzPg65Gs0JccQWbxT/IG7xK5GiGoBv7gVplt
+	if/adz1EkyQoZ8BnpXbaSEQI6ZJXzXy0B+boh3Elyp9AI56VcUttX3ufeoWZcibEw9mlzG0mV6/
+	W0KnRm3cFaYzUh2PVUzCNL3VRHTv6Fm+Q6sw1ju46m+bBj
+X-Google-Smtp-Source: AGHT+IEbl6ReOpb49RwwL8AZJ/9Sol4SvQN4M0UGm1K51odVAmk0xoRFec0CSuR4PFQ6HC9MD2pnvl3mwXOmXHsstbQ=
+X-Received: by 2002:a05:622a:1e8b:b0:48d:66ee:662a with SMTP id
+ d75a77b69052e-494ae58b769mr436574031cf.26.1747895289152; Wed, 21 May 2025
+ 23:28:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521062337.53262-1-bhupesh@igalia.com> <20250521062337.53262-2-bhupesh@igalia.com>
-In-Reply-To: <20250521062337.53262-2-bhupesh@igalia.com>
+References: <20250521062337.53262-1-bhupesh@igalia.com> <20250521062337.53262-3-bhupesh@igalia.com>
+ <CALOAHbCm_ggnxAtHMx07MUgnW01RiymD6MpR7coJOiokR4v52A@mail.gmail.com>
+In-Reply-To: <CALOAHbCm_ggnxAtHMx07MUgnW01RiymD6MpR7coJOiokR4v52A@mail.gmail.com>
 From: Yafang Shao <laoar.shao@gmail.com>
-Date: Thu, 22 May 2025 14:18:08 +0800
-X-Gm-Features: AX0GCFun7VcY0TRnwHC-yCRhsLLHNlgDgzjUoPDV-Se0yjKg_DkRUffEwpWoMp8
-Message-ID: <CALOAHbA9P0af7oVg+QTfFfn5TAyV0+vu+jeNG3DVHcO-OEsVVg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] exec: Remove obsolete comments
+Date: Thu, 22 May 2025 14:27:33 +0800
+X-Gm-Features: AX0GCFsGdF0c_dPvPXc154mXKd8pL9O5JIppXmD9XtCHG7b0h4OOt3XBeUQIsTU
+Message-ID: <CALOAHbDNBQN6m9SzK6MegwapUQ9vm4NgcZgyp=aepG8RA8J7UA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to
+ a more safer implementation
 To: Bhupesh <bhupesh@igalia.com>
 Cc: akpm@linux-foundation.org, kernel-dev@igalia.com, 
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
@@ -81,66 +83,57 @@ Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 2:24=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wrote:
+On Thu, May 22, 2025 at 2:15=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
 >
-> Patch 3a3f61ce5e0b ("exec: Make sure task->comm is always NUL-terminated"=
-),
-> replaced 'strscpy_pad()' with 'memcpy()' implementations inside
-> '__set_task_comm()'.
+> On Wed, May 21, 2025 at 2:24=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wrot=
+e:
+> >
+> > As Linus mentioned in [1], currently we have several memcpy() use-cases
+> > which use 'current->comm' to copy the task name over to local copies.
+> > For an example:
+> >
+> >  ...
+> >  char comm[TASK_COMM_LEN];
+> >  memcpy(comm, current->comm, TASK_COMM_LEN);
+> >  ...
+> >
+> > These should be modified so that we can later implement approaches
+> > to handle the task->comm's 16-byte length limitation (TASK_COMM_LEN)
+> > is a more modular way (follow-up patches do the same):
+> >
+> >  ...
+> >  char comm[TASK_COMM_LEN];
+> >  memcpy(comm, current->comm, TASK_COMM_LEN);
+> >  comm[TASK_COMM_LEN - 1] =3D '\0';
+> >  ...
+> >
+> > The relevant 'memcpy()' users were identified using the following searc=
+h
+> > pattern:
+> >  $ git grep 'memcpy.*->comm\>'
 >
-> However a few left-over comments are still there, which mention
-> the usage of 'strscpy_pad()' inside '__set_task_comm()'.
+> Hello Bhupesh,
 >
-> Remove those obsolete comments.
+> Several BPF programs currently read task->comm directly, as seen in:
 >
-> While at it, also remove an obsolete comment regarding 'task_lock()'
-> usage while handing 'task->comm'.
+> // tools/testing/selftests/bpf/progs/test_skb_helpers.c [0]
+> bpf_probe_read_kernel_str(&comm, sizeof(comm), &task->comm);
 >
-> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> This approach may cause issues after the follow-up patch.
+> I believe we should replace it with the safer bpf_get_current_comm()
+> or explicitly null-terminate it with "comm[sizeof(comm) - 1] =3D '\0'".
+> Out-of-tree BPF programs like BCC[1] or bpftrace[2] relying on direct
+> task->comm access may also break and require updates.
+>
+> [0]. https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tre=
+e/tools/testing/selftests/bpf/progs/test_skb_helpers.c#n26
+> [1]. https://github.com/iovisor/bcc
+> [2]. https://github.com/bpftrace/bpftrace
 
-Acked-by: Yafang Shao <laoar.shao@gmail.com>
-
-> ---
->  include/linux/sched.h | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 8c60a42f9d00..704222114dcc 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1162,10 +1162,8 @@ struct task_struct {
->          *
->          * - normally initialized begin_new_exec()
->          * - set it with set_task_comm()
-> -        *   - strscpy_pad() to ensure it is always NUL-terminated and
-> +        *   - logic inside set_task_comm() will ensure it is always NUL-=
-terminated and
->          *     zero-padded
-> -        *   - task_lock() to ensure the operation is atomic and the name=
- is
-> -        *     fully updated.
->          */
->         char                            comm[TASK_COMM_LEN];
->
-> @@ -1997,7 +1995,7 @@ extern void __set_task_comm(struct task_struct *tsk=
-, const char *from, bool exec
->   *   User space can randomly change their names anyway, so locking for r=
-eaders
->   *   doesn't make sense. For writers, locking is probably necessary, as =
-a race
->   *   condition could lead to long-term mixed results.
-> - *   The strscpy_pad() in __set_task_comm() can ensure that the task com=
-m is
-> + *   The logic inside __set_task_comm() should ensure that the task comm=
- is
->   *   always NUL-terminated and zero-padded. Therefore the race condition=
- between
->   *   reader and writer is not an issue.
->   *
-> --
-> 2.38.1
->
-
+Hmm, upon checking, I confirmed that bpf_probe_read_kernel_str()
+already ensures the destination string is null-terminated. Therefore,
+this change is unnecessary. Please disregard my previous comment.
 
 --=20
 Regards
