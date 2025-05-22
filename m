@@ -1,98 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FAA28D83C;
-	Thu, 22 May 2025 15:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C1A140E5F;
+	Thu, 22 May 2025 15:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747926328; cv=none; b=Tf7FcVNFzkcW1eRXt8q66JRgC1qntKX9Wvld8Deuh5k5vnjbXRQLTxovs8wLmCV+h4mKRpeFF9aSGwGVGxJReYdKN2o8rVP/0TCBFpFy9+4EXIMCxu7n9l1NeMtJF89NYhYBj4beX1zdLFnatywXzn4m6KpBwIYUVZEVHAdVEgU=
+	t=1747928010; cv=none; b=AfG7STOjOfmWQufrQLEZ++N5vposZP9YTtcfGxP0xQmwVADYBCqKIOK3gEvMKYz2KQDfB/6MZ3iRmwIkJkP4xHnqRGX/J30AyngLKqW10wdf0umdwTloWgfz7kE+fhJdH0nWYtxVnqjzxpLyoDmhMjx6LhTNLTb2pxq78QE0530=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747926328; c=relaxed/simple;
-	bh=QCwBzjkhTS0fWQNm/uc3ctFPsORSVaqbTt6L7wL56dQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iFC2+iWK9gKChev4DIi2A+uJ60MX2WlB7Yg7csAsMngEosj8O/EsPEYzV+t1owDuWEGrND6C/wWwSAxyQNS7ZlZ1qHMb+iptonUzADO5KcMXAdd+j4LoZwFyR2n83EjX6Tayr3yKD2vhZWZh5ui33CtXtHtmBZC7ak+kl4hhCMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CCD31A2D;
-	Thu, 22 May 2025 08:05:11 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0B4D23F673;
-	Thu, 22 May 2025 08:05:22 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] perf/aux: Properly launch pending disable flow
-Date: Thu, 22 May 2025 16:05:10 +0100
-Message-Id: <20250522150510.2942814-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747928010; c=relaxed/simple;
+	bh=dHbAZ5ERAu9TTa4RNxr44TpsvhQH6Iiw4sMrY5lwR1c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IJDa+FFiEfGEtfbY4NWzcbdFMjbEQspq2eGxVxDFwkyYrNjBQ/EuwTPACce2LWXlk7GPPkvQ3ivMCc6+jNzurksJwi/qEPPrnQ/4TghYOEQ5XMbw6ZbQhCXV6AuHQaMFGP89EKwySTbcsodeY1ZOma/sbKClDVRQrKmeqYN1YyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilC5D9yV; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilC5D9yV"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e0ffe1b8eso4188047b3.3;
+        Thu, 22 May 2025 08:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747928008; x=1748532808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iMK/MFWIIEvUH8F/i4Odtp6TUa8tGn+mmKMDt/mcwx8=;
+        b=ilC5D9yVIrIcR0gTZfd/sLwIDm1vnA3jRj8XbY0L/a0xU8kccqueaCMQ4C9/hjRb+q
+         Uucx8vwW2n3XyK15WrdSNYmNkc7Kk/kys8NtG6bopgpGs/dvb+LbUjgb0bM4/a1ABGSL
+         +ToEsH7Xm9/wSPsiHqkkrbYICIETJrQ27C5DRrQVyyVUGCJbLOgYNs61T9m8SylN8xNU
+         uIOZVG0mQ0hWrxta3erNQVphg8L83368gR6Pe6RF7q7EBbD94oKH8GEUlSTvcadDe/MB
+         hiWdS9I1FL0A92VX+v+nN0gV48W/4sFetsnJt4TE5ftjiCk63KwHZXnIh0n6wIKIsZji
+         2LwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747928008; x=1748532808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iMK/MFWIIEvUH8F/i4Odtp6TUa8tGn+mmKMDt/mcwx8=;
+        b=E1sLSWw1Tt/ESmSte2F5uAsujEns9B4lRVgdRA3KlwN9uVVnlBSUEKafWoUjmlvQDh
+         dcn6++GbqXsBkrOOdZFp/GVoB87CnptzLiI3yGHqu2bfZyq/ZCKtW2egvv+3L/gbgO8Y
+         Ns6mUYFJz1KTcYLjzQH8Mc7G5w+8T6f1fEmOg7Zgy6jrF3k/Be+WAADhDteZ/1uDNGhk
+         X4mIGsYE5obc32Z4u1Djx5Ob+VhrkEUHpgzbka5dcZN5+MhUgDCFnqOqps9SMPt5naG4
+         HTYaZ3BJgmwC6/6V1mVrwPe8WK5PfLQujA8hAm94IlTKFaNK0uTG5lT8uMWLaXJ+dQq9
+         8D2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUw4a/K0dQ4lWiDUT79TepRuxmBW5tY9RJKD4lH9iYlYdf1TGEkGMKTorDMZRPUwIHzs+9E5G2JPI9WMFQ=@vger.kernel.org, AJvYcCX6ggM0voHP22MN0Mpip0VbY2VTN3g+0HSJV7z6Zxr1A9HAtuOoJNAqxCTcqHx7R4FTDsljTP/74oA0rmqUn3lxtw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP+WEg1+lCyDufNYmDK7c2IBA7ketIW1k2VTUzxO2j9aMgJEPU
+	D/pdCk+suYkyvgkXjwpmqex/xtL5V1Tl3cIkO7kfUo0PgOGLvFNeqA7Zkfgx+TQxhm3hIvP4wIM
+	zVhxFxCQAuxcLX2KiwvDMUpOb3bNCwaa3zA2nNE8=
+X-Gm-Gg: ASbGncsqvn3hX6c/AxYBR+hs61g88e6qdTkT26DEvyeQ/3Q/n3NJee4GX3m+0fGolU4
+	Zkd8Q+NhJPyy1YJ5huBKxMkR2CLXyiJn2dLl9zbIgejs8E+LBv/z5jKNNIyHz0yDiwwZ3a7rqn2
+	d2s7GEM8KlTxk4Wb9D2JN9qpsORJ23qIU=
+X-Google-Smtp-Source: AGHT+IE+OMv2HBvBJG4aoJT50PGnOPQvFyT/WhD/QprHbsIm8Cr73du3UbW2p3WsRhgX8+joNh4kjIOmxvL02IKTYZU=
+X-Received: by 2002:a05:690c:f0a:b0:70d:ecdd:9bd0 with SMTP id
+ 00721157ae682-70decdda036mr138687757b3.27.1747928008112; Thu, 22 May 2025
+ 08:33:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250522142551.1062417-1-namhyung@kernel.org>
+In-Reply-To: <20250522142551.1062417-1-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 22 May 2025 08:33:16 -0700
+X-Gm-Features: AX0GCFtUI4DeH14Jj96mverXmQ2fc7ha8kiVT9GJOGezMBuEuFWDVHll6Bv1DMk
+Message-ID: <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If an AUX event overruns, the event core layer intends to disable the
-event by setting the 'pending_disable' flag. Unfortunately, the event
-is not actually disabled afterwards.
+Hello Namhyung,
 
-Since commit ca6c21327c6a ("perf: Fix missing SIGTRAPs"), the
-'pending_disable' flag was changed to a boolean toggles. However, the
-AUX event code was not updated accordingly. The flag ends up holding a
-CPU number. If this number is zero, the flag is taken as false and the
-IRQ work is never triggered.
+$ sudo /tmp/perf/perf test -vv 112
+112: perf trace summary:
+112: perf trace summary
+--- start ---
+test child forked, pid 1574993
+testing: perf trace -s -- true
+testing: perf trace -S -- true
+testing: perf trace -s --summary-mode=3Dthread -- true
+testing: perf trace -S --summary-mode=3Dtotal -- true
+testing: perf trace -as --summary-mode=3Dthread --no-bpf-summary -- true
+testing: perf trace -as --summary-mode=3Dtotal --no-bpf-summary -- true
+testing: perf trace -as --summary-mode=3Dthread --bpf-summary -- true
+testing: perf trace -as --summary-mode=3Dtotal --bpf-summary -- true
+testing: perf trace -aS --summary-mode=3Dtotal --bpf-summary -- true
+testing: perf trace -as --summary-mode=3Dcgroup --bpf-summary -- true
+testing: perf trace -aS --summary-mode=3Dcgroup --bpf-summary -- true
+---- end(0) ----
+112: perf trace summary                                              : Ok
 
-Later, with commit 2b84def990d3 ("perf: Split __perf_pending_irq() out
-of perf_pending_irq()"), a new IRQ work 'pending_disable_irq' was
-introduced to handle event disabling. The AUX event path was not updated
-to kick off the work queue.
 
-To fix this issue, when an AUX ring buffer overrun is detected, call
-perf_event_disable_inatomic() to initiate the pending disable flow.
+On Thu, May 22, 2025 at 7:25=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+>   $ sudo ./perf test -vv 112
+>   112: perf trace summary:
+>   --- start ---
+>   test child forked, pid 1018940
+>   testing: perf trace -s -- true
+>   testing: perf trace -S -- true
+>   testing: perf trace -s --summary-mode=3Dthread -- true
+>   testing: perf trace -S --summary-mode=3Dtotal -- true
+>   testing: perf trace -as --summary-mode=3Dthread --no-bpf-summary -- tru=
+e
+>   testing: perf trace -as --summary-mode=3Dtotal --no-bpf-summary -- true
+>   testing: perf trace -as --summary-mode=3Dthread --bpf-summary -- true
+>   testing: perf trace -as --summary-mode=3Dtotal --bpf-summary -- true
+>   testing: perf trace -aS --summary-mode=3Dtotal --bpf-summary -- true
+>   testing: perf trace -as --summary-mode=3Dcgroup --bpf-summary -- true
+>   testing: perf trace -aS --summary-mode=3Dcgroup --bpf-summary -- true
+>   ---- end(0) ----
+>   112: perf trace summary                                              : =
+Ok
+>
+> Cc: Howard Chu <howardchu95@gmail.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Fixes: ca6c21327c6a ("perf: Fix missing SIGTRAPs")
-Fixes: 2b84def990d3 ("perf: Split __perf_pending_irq() out of perf_pending_irq()")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- kernel/events/ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index d2aef87c7e9f..aa9a759e824f 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -441,7 +441,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
- 		 * store that will be enabled on successful return
- 		 */
- 		if (!handle->size) { /* A, matches D */
--			event->pending_disable = smp_processor_id();
-+			perf_event_disable_inatomic(handle->event);
- 			perf_output_wakeup(handle);
- 			WRITE_ONCE(rb->aux_nest, 0);
- 			goto err_put;
-@@ -526,7 +526,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
- 
- 	if (wakeup) {
- 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
--			handle->event->pending_disable = smp_processor_id();
-+			perf_event_disable_inatomic(handle->event);
- 		perf_output_wakeup(handle);
- 	}
- 
--- 
-2.34.1
-
+Thanks,
+Howard
