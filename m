@@ -1,240 +1,323 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838C7293730
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 15:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE5A29710B;
+	Fri, 23 May 2025 16:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748015530; cv=none; b=Z3verGP85HU69gGLGHkHKGR3hZJKz3/pddRppqpfnr8NJAPyMmpASOQBC27u/WBwii1kBfhuv/8mk+nye+UdwmF4M6L5mcYOVrm7CwQrRwJYGQcIbqsj8SijDbVslK0xYzrz10KLqeuXREs5eQ1TTfQqdykgM7ishEDUYKXfbAs=
+	t=1748019061; cv=none; b=QeIrL+KrLz1HldB6pJn1Fi06ui2kNowaUd3YrmoXGQF6Hq5ZMeq7UmXTj4G+hZo3N5BZEbd+ZffD/nSC9kw2rDiuHUVEwuNnawa1ffO1sqiflWTcJ35ZgU6HNHWkfEIp2FceAryfny7cL0hPWvOyKWVhgt4EgiN4jZJXHGL2u34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748015530; c=relaxed/simple;
-	bh=6Ci2ffzHFklOZlPZ/8TLi4kYhpDoFdShZWx0phelz7s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mbVfM5W4T1Nn2wUCoy+CcvyLXxUMo/dRQsK3JW64i+cR5hdkZlB5QlzKAdPfwMJtekYExVejGsr16l2IXP6bOG825lhZhYc5I6Ec9dCiY5t/4bcDYEUPXlMlM2Xy31gkBvd5H624pJwQFj3sGHcZGCCsg5bKkylvBKX8Y8X1wzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VfhQ0rMF; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748019061; c=relaxed/simple;
+	bh=WuiDYU6mQ5G7Po69eXlQ+1PbC7cDj2slTQKn7DAJzWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTbicwL43kiny69GNWeV/dObOlK/d058A1VWdHEyrZ/DM2CXwTaqd3Q9wdxmrFZ80Rf10E4yYNqY/nAS/WponMYGv4m8NutnFJoWgfhpEfXMiqsFn5dc+Yhm/xAi87sfBhwumRJA9FNbtE6caLiROEHz4GMSAGbLeob+zCidDw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMIVy9JY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VfhQ0rMF"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3db82534852so190155ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 08:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748015527; x=1748620327; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XtCV5IRM1zP4VKEPyGngJ45l352CV0c9r+ha/qRRcUo=;
-        b=VfhQ0rMFWOZ0T/V2rS1bMiyrnWsRXiDiywigPWI3NJmVmEAqyyf1j/l7JcUvpYAEE3
-         BWn6e4KfMDLnQI4WcmHbcHytuaQJS0tLlPCb4AkZvrZ+TC5zZNn2pbZdtQnk/LRKK0es
-         PpBD80ghN7g+jHwxIyudxRmH2oC8n6EO4sJs4+UbRB7Uc2RVqO+XFtqSMrv/+EMEMKCW
-         sPHB7/OzqkZ+rEe/tckQMnXBYXOe/KaPPcCIa0tVN+Z/eiaDKB7y1n1z+LJqlVt30hCi
-         tgbezOd70jGrCkuPZFSWt7NTLSTnH4wTwfy0V6SjTlaBk1DniZ6obxj0R8cdWnu1DRuS
-         USHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748015527; x=1748620327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XtCV5IRM1zP4VKEPyGngJ45l352CV0c9r+ha/qRRcUo=;
-        b=SWATvXdo1aVP2dpLDYtQNJUhZQ7q+lj0CXHGtWYSZ1kZYZepCBh60gp+lGEdBr/dWY
-         XoWO/UPXgjAsfn1pVO8Q+jzIQg/3Gb60DUSdHa7HZzlRyDSvvKysEXrvX6Bu71GCji3j
-         IXz+svyqvBMH6Hs61ucL+K5+Ngxh4KTNhDYaHxEyFlj6CUixrbdW0mswKakwrOeCzvSC
-         hYC7iV8WghQlrk5pgZn2DxuqFskkOEKyB11wwpcqocWPIT/seJUir2x6YhmJR3i2uRwI
-         Kx5TU+ZuYS+9LDvpW5eIK76t8KuoVuS31+RjTlefoB3x/Ry6rcu3fvrYh7vW6x8c8Swm
-         E7Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/niXuLjygtEnTspKfL/CsEUzxgJHgk7kVt308SSlNrYbl2y2HWhPLcZWf7E8c3k03d8oEwoSLgama4R7GQLTw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsM8HrogwXBb59b+jqjEgbGsZ3Ot4TNe3sf28u1aWx3VEKGwLu
-	5hB4tGW7tosyoe1dM6kxLJyk1J0AwL6HbVZCTD7014swpXzSh9TgxJOw4OncdU8JfGnHEbRpj1k
-	aL+sjdwhwZxHdr4Sm8ACiARtkWy9AEzCOU/lSabdp
-X-Gm-Gg: ASbGncugEh3uKtsPNnVtMRMC81ArojgQaWP/Rglim71VECHVeFdgvOwDkOasiAa78a0
-	bHMSZPqcIXHPZ6/V1Ikr8lkQwDjrEsD1GqTgkVlajXJNJ6saI/unymDKdZdpjBunZSydpW9dW9D
-	xbQq/fdAnMiJXImZtayB0ZfthM91NCFdK6UA34IB/aofGI
-X-Google-Smtp-Source: AGHT+IGCx5IQO/aafjcEB4ZP4xKmAxJz98hnNoE1ekMPoEKLzWQ7g9JRRFUVegf2BwJ7/s4lyfp6bQASwE+H7sb/qzE=
-X-Received: by 2002:a05:6e02:380d:b0:3d9:6498:ea24 with SMTP id
- e9e14a558f8ab-3dc93ed5824mr3166685ab.6.1748015527268; Fri, 23 May 2025
- 08:52:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SMIVy9JY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25744C4CEF0;
+	Fri, 23 May 2025 16:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748019060;
+	bh=WuiDYU6mQ5G7Po69eXlQ+1PbC7cDj2slTQKn7DAJzWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SMIVy9JYBrw5M8WDXhmlmWXR8UBHXLznDW4c9vqmRDc026wCifPbYhSRlWWEYJV4T
+	 tD9jGOTcPDa93W1v9A7cxt2jxCmToHl9gIlglI0PDP7aYbWo9qCZHmrxACtJK4Nj38
+	 2FxwDy7I0zxQexQzgNZpkd1lt8br1xmHMRsSJ+3VMXx9YZINInPEpCewQXKCDdpTUB
+	 grr0lCmzhG2bdxkUgokWVql7cRos1Fi6jzroSt2oN5IcI8RUL0NbFtAmbpL5na4xLh
+	 /1SQXHLbbM7uNm+yBj+gncJ8YrXShaSi/MDWRG0aZWr3nsn732Uj/dHZ5SDe5CZ9GK
+	 HyU/bommNxgyQ==
+Date: Fri, 23 May 2025 13:50:57 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
+Message-ID: <aDCncXryXGaOuDNl@x1>
+References: <20250522171044.1075583-1-namhyung@kernel.org>
+ <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
+ <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521135500.677508-1-irogers@google.com> <20250521135500.677508-4-irogers@google.com>
- <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com> <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
- <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com> <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
- <c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux.intel.com>
-In-Reply-To: <c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 23 May 2025 08:51:55 -0700
-X-Gm-Features: AX0GCFs20fnHOKGzIOxOvuqnljN_QalrV1pNnkFkYY7r4dSAXY3nZdwsaM0FlFM
-Message-ID: <CAP-5=fWXgEMf7ZesTg6+JJ_nV1s1ZM4xPm2R1umXSYkM208ZmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and header
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
 
-On Fri, May 23, 2025 at 7:51=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
-> On 2025-05-21 3:19 p.m., Ian Rogers wrote:
-> > On Wed, May 21, 2025 at 11:14=E2=80=AFAM Liang, Kan <kan.liang@linux.in=
-tel.com> wrote:
-> >>
-> >> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
-> >>>>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> >>>>> index 7b6cde87d2af..13ef0d188a96 100644
-> >>>>> --- a/tools/perf/builtin-top.c
-> >>>>> +++ b/tools/perf/builtin-top.c
-> >>>>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
-> >>>>>
-> >>>>>       setup_browser(false);
-> >>>>>
-> >>>>> -     if (setup_sorting(top.evlist) < 0) {
-> >>>>> +     top.session =3D perf_session__new(/*data=3D*/NULL, /*tool=3D*=
-/NULL);
-> >>>>> +     if (IS_ERR(top.session)) {
-> >>>>> +             status =3D PTR_ERR(top.session);
-> >>>>> +             top.session =3D NULL;
-> >>>>> +             goto out_delete_evlist;
-> >>>>> +     }
-> >>>>> +
-> >>>>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) =
-{
-> >>>> I doubt a valide env can be got in perf_session__new(), since there =
-is
-> >>>> no perf.data in perf top.
-> >>>> Maybe just need to invoke the perf_env__raw_arch() instead to fill t=
-he
-> >>>> env->arch.
-> >>> I think the current code is making things harder than it should be, w=
-e
-> >>> should work away from perf_env__arch and strings, instead using EM_
-> >>> values which we can default to EM_HOST avoiding any runtime costs.
-> >>> Looking at perf_env__arch:
-> >>> ```
-> >>> const char *perf_env__arch(struct perf_env *env)
-> >>> {
-> >>>         char *arch_name;
-> >>>
-> >>>         if (!env || !env->arch) { /* Assume local operation */
-> >>>                 static struct utsname uts =3D { .machine[0] =3D '\0',=
- };
-> >>>                 if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
-> >>>                         return NULL;
-> >>>                 arch_name =3D uts.machine;
-> >>>         } else
-> >>>                 arch_name =3D env->arch;
-> >>>
-> >>>         return normalize_arch(arch_name);
-> >>> }
-> >>> ```
-> >>> in this case env->arch =3D=3D NULL and so the uname machine will be u=
-sed.
-> >>> For perf_env__raw_arch the behavior is similar but it populates the
-> >>> env:
-> >>> ```
-> >>> static int perf_env__read_arch(struct perf_env *env)
-> >>> {
-> >>>         struct utsname uts;
-> >>>
-> >>>         if (env->arch)
-> >>>                 return 0;
-> >>>
-> >>>         if (!uname(&uts))
-> >>>                 env->arch =3D strdup(uts.machine);
-> >>>
-> >>>         return env->arch ? 0 : -ENOMEM;
-> >>> }
-> >>>
-> >>> const char *perf_env__raw_arch(struct perf_env *env)
-> >>> {
-> >>>         return env && !perf_env__read_arch(env) ? env->arch : "unknow=
-n";
-> >>> }
-> >>> ```
-> >>> Aside from caching the arch, the main difference is that
-> >>> normalize_arch isn't called. Not having normalize_arch means the code
-> >>> in arch_support_sort_key and arch_perf_header_entry would need to
-> >>> handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
-> >>> etc. As I'd prefer not handle all those cases I think the way the cod=
-e
-> >>> is is best given how the env code is currently structured.
-> >>
-> >> Right. The perf_env__raw_arch() doesn't improve anything.
-> >> But I still don't like &top.session->header.env.
-> >> Because I don't think you can get any useful information from
-> >> top.session->header.env. It just brings confusions. (It seems an env i=
-s
-> >> retrieved, but it is actually not.)
-> >
-> > Well there's a certain consistency in using the session env to set up
-> > the sorting, etc. This pre-exists this change with nearly every
-> > builtin-* file doing `symbol__init(&session->header.env);`. perf top
-> > does `symbol__init(NULL);`:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1811
-> > but the code now has lazy initialization patterns and handling NULL as
-> > a special case of meaning host machine:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/symbol.c?h=3Dperf-tools-next#n2350
-> >
-> >> In the perf top, &perf_env is used for the existing cases. If any env
-> >> fields are not available, perf_env__read_XXX() is invoked to get the
-> >> information.
-> >> I think we may follow the existing usage, e.g.,
-> >> setup_sorting(top.evlist, &perf_env).
-> >
-> > So using the global perf_env rather than NULL feels preferable but I
-> > think the global perf_env should be deleted. Whenever I see the global
-> > perf_env in use I think the code has a bug as the perf_env should be
-> > coming from the session or the machine. The global perf_env can have
-> > no meaning for cases like `perf diff` where more than one
-> > file/header/env is open at a time. The global perf_env variable's
-> > existence encourages bad or broken code, so deleting it should avoid
-> > errors in code. Another place these issues can occur is with TPEBS
-> > where we're maintaining multiple sessions for sampling alongside
-> > counting.
-> >
-> >> Alternatively, it looks like the perf top doesn't support --weight. Th=
-e
-> >> env->arch should never be used. If so, a NULL can be used as well, E.g=
-.,
-> >> setup_sorting(top.evlist, NULL).
-> >
-> > So I don't like NULL because then we have lazy initialization of host
-> > data and NULL meaning use host. I don't like the global perf_env
-> > variable as it has a code smell about it. I think moving the session
-> > initialization earlier in perf top so its env, although unpopulated,
-> > can be used is consistent with `perf report` - this is consistent with
-> > `perf top` being `perf record` glued together with `perf report`. So I
-> > think the change here is the smallest and most sensible.
-> >
-> > Longer term let's delete the global perf_env variable,  perf_env__arch
-> > should be switched to a perf_env__e_machine as then we can avoid uname
-> > calls just to determine the machine architecture, etc.
-> >
->
-> I'm fine with the session's env, as long as there is a consistent env
-> source in the perf top. Because in the recent perf top fixes, we
-> randomly pick the env source. Thomas's patch used the global env, but
-> this one chose the session's env. It brings confusions.
-> https://lore.kernel.org/lkml/20250513231813.13846-2-thomas.falcon@intel.c=
-om/
->
-> Could you please send a clean up patch to address the inconsistency?
+On Fri, May 23, 2025 at 11:48:26AM +0100, James Clark wrote:
+> On 22/05/2025 9:09 pm, Ian Rogers wrote:
+> > On Thu, May 22, 2025 at 10:10 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > This is a preparation for shell tests belong to an arch.
 
-Will do, thanks Kan!
+> > I keep repeating that I don't like arch and I think ideally we'd be
+> > getting rid of the C arch tests. I just sent out a patch doing this
+> > for 1 test:
+> > https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com/
+> > We should be able to make perf, tests, etc. dependent on a PMU rather
+> > than an architecture. This means that running perf built for ARM will
+> > be able to do things running on an instruction emulator on x86. It
+ 
+> In this case for Arm SPE and Coresight you can only generate trace by
+> running on a full model or a real CPU, so I'm not sure if we could ever get
+> close to running on just an emulator.
+ 
+> > means the tool, the kernel APIs, etc. are generic and new
+> > architectures like RISC-V can test things. It means cross-platform
+> > (record on 1 machine type, report on another) can work without
+> > tripping over load bearing architecture ifdefs. It means that we
+ 
+> I have thought about adding some generic decoding side tests for SPE and
+> Coresight, but couldn't really get past the fact that you need to put the
+> trace dump _and_ the binaries traced into the git repo.
 
-Ian
+So, we could have some .perfconfig setting that states the user wants to
+auto-download the tracefiles if not present locally.
+
+If not available locally and not explicitely authorized via
+"test.coresight_traces_download=yes" or some more suitable name, then it
+would skip the test and show as the reason the lack of needed trace
+files, with a hint about how to enable it, something like:
+
+176: Coresight hw trace decoding      : Skip   (Enable fetching via 'perf test test.coresight_trace_download=yes')
+
+We are already auto-downloading debuginfo files (not the whole packages,
+just for the needed build-id) in some cases, like:
+
+root@x1:~# pahole --running_kernel_vmlinux
+/usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
+root@x1:~#
+root@x1:~# time perf probe -L icmp_rcv > /dev/null
+
+real	0m2.046s
+user	0m1.550s
+sys	0m0.486s
+root@x1:~#
+
+But if I move that file:
+
+root@x1:~# pahole --running_kernel_vmlinux
+/usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
+root@x1:~# mv /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux ~
+root@x1:~# pahole --running_kernel_vmlinux
+vmlinux
+root@x1:~#
+
+Oops, it searches the current directory too ;)
+
+root@x1:~# mkdir hideout
+root@x1:~# mv vmlinux hideout/
+root@x1:~# pahole --running_kernel_vmlinux
+pahole: couldn't find a vmlinux that matches the running kernel
+HINT: Maybe you're inside a container or missing a debuginfo package?
+root@x1:~#
+
+Now:
+
+root@x1:~# time perf probe -L icmp_rcv | head
+
+Takes a while, in other term:
+
+root@x1:~# ps ax|grep 'perf probe' | grep -v grep
+1755681 pts/13   S+     0:00 perf probe -L icmp_rcv
+root@x1:~# 
+root@x1:~# perf trace -p 1755681 --summary sleep 10s
+
+ Summary of events:
+
+ perf (1755681), 4756 events, 100.0%
+
+   syscall            calls  errors  total       min       avg       max       stddev
+                                     (msec)    (msec)    (msec)    (msec)        (%)
+   --------------- --------  ------ -------- --------- --------- ---------     ------
+   poll                 606      0  9645.195     0.000    15.916   757.894     16.65%
+   write                580      0    17.904     0.004     0.031     0.237      3.41%
+   recvfrom            1191    374     8.380     0.001     0.007     0.083      3.58%
+   sendto                 1      0     0.026     0.026     0.026     0.026      0.00%
+
+
+root@x1:~#
+
+root@x1:~# perf trace -p 1755681 -e write --max-stack 16 --max-events 1
+     0.000 ( 0.103 ms): perf/1755681 write(fd: 5, buf: \219*\0\26\230\1\11\136\4\0\0\192\0\5'g\0\0\150\1pid\0p\1487\172h\0\0\1, count: 10157) = 10157
+                                       syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
+                                       syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
+                                       syscall_exit_to_user_mode ([kernel.kallsyms])
+                                       do_syscall_64 ([kernel.kallsyms])
+                                       entry_SYSCALL_64_after_hwframe ([kernel.kallsyms])
+                                       __GI___libc_write (/usr/lib64/libc.so.6)
+                                       chop_write.lto_priv.0 (/usr/lib64/libcurl.so.4.8.0)
+                                       <invalid> (inlined)
+                                       inflate_stream (/usr/lib64/libcurl.so.4.8.0)
+                                       <invalid> (inlined)
+                                       cw_download_write (/usr/lib64/libcurl.so.4.8.0)
+                                       <invalid> (inlined)
+                                       <invalid> (inlined)
+                                       Curl_readwrite (/usr/lib64/libcurl.so.4.8.0)
+                                       multi_runsingle (/usr/lib64/libcurl.so.4.8.0)
+                                       curl_multi_perform (/usr/lib64/libcurl.so.4.8.0)
+                                       perform_queries (/usr/lib64/libdebuginfod-0.192.so)
+                                       debuginfod_query_server_by_buildid (/usr/lib64/libdebuginfod-0.192.so)
+                                       open_debuginfo (/home/acme/bin/perf)
+                                       __show_line_range (/home/acme/bin/perf)
+                                       show_line_range (/home/acme/bin/perf)
+                                       __cmd_probe (/home/acme/bin/perf)
+root@x1:~#
+
+Those <invalid> ones...
+
+unwind: curl_multi_perform:ip = 0x7f6e7ab33464 (0x4e464)
+unwind: access_mem addr 0x7ffe829cec08, val 2b324d40, offset 1480
+unwind: access_mem addr 0x7ffe829cec30, val 7ffe829d01f0, offset 1520
+unwind: access_mem addr 0x7ffe829cec10, val 2b32b9e4, offset 1488
+unwind: access_mem addr 0x7ffe829cec18, val ffffffff, offset 1496
+unwind: access_mem addr 0x7ffe829cec20, val 0, offset 1504
+unwind: access_mem addr 0x7ffe829cec28, val 0, offset 1512
+unwind: access_mem addr 0x7ffe829cec38, val 7f6e7b326c5f, offset 1528
+unwind: perform_queries:ip = 0x7f6e7b324b2d (0x5b2d)
+unwind: access_mem addr 0x7ffe829d01c8, val 7ffe829d0260, offset 7048
+unwind: access_mem addr 0x7ffe829d01f0, val 7ffe829d0320, offset 7088
+unwind: access_mem addr 0x7ffe829d01d0, val 0, offset 7056
+unwind: access_mem addr 0x7ffe829d01d8, val 0, offset 7064
+unwind: access_mem addr 0x7ffe829d01e0, val 2b2db8c0, offset 7072
+unwind: access_mem addr 0x7ffe829d01e8, val 2b324d40, offset 7080
+unwind: access_mem addr 0x7ffe829d01f8, val 6792ef, offset 7096
+unwind: debuginfod_query_server_by_buildid:ip = 0x7f6e7b326c5e (0x7c5e)
+unwind: access_mem addr 0x7ffe829d02f8, val 2b2dace0, offset 7352
+unwind: access_mem addr 0x7ffe829d0320, val 7ffe829d05b0, offset 7392
+unwind: access_mem addr 0x7ffe829d0300, val 0, offset 7360
+unwind: access_mem addr 0x7ffe829d0308, val 2b2dace0, offset 7368
+unwind: access_mem addr 0x7ffe829d0310, val 0, offset 7376
+unwind: access_mem addr 0x7ffe829d0318, val 0, offset 7384
+unwind: access_mem addr 0x7ffe829d0328, val 67aaff, offset 7400
+unwind: open_debuginfo:ip = 0x6792ee (0x2792ee)
+unwind: access_mem addr 0x7ffe829d0588, val 0, offset 8008
+unwind: access_mem addr 0x7ffe829d05b0, val 7ffe829d0620, offset 8048
+unwind: access_mem addr 0x7ffe829d0590, val 0, offset 8016
+unwind: access_mem addr 0x7ffe829d0598, val 2b2dace0, offset 8024
+unwind: access_mem addr 0x7ffe829d05a0, val 0, offset 8032
+unwind: access_mem addr 0x7ffe829d05a8, val 0, offset 8040
+unwind: access_mem addr 0x7ffe829d05b8, val 67b0ea, offset 8056
+unwind: __show_line_range:ip = 0x67aafe (0x27aafe)
+unwind: access_mem addr 0x7ffe829d05f8, val 0, offset 8120
+unwind: access_mem addr 0x7ffe829d0620, val 7ffe829d1180, offset 8160
+unwind: access_mem addr 0x7ffe829d0600, val 7ffe829d06a0, offset 8128
+unwind: access_mem addr 0x7ffe829d0608, val 8, offset 8136
+unwind: access_mem addr 0x7ffe829d0610, val 2b2d74d0, offset 8144
+unwind: access_mem addr 0x7ffe829d0618, val 6df140, offset 8152
+unwind: access_mem addr 0x7ffe829d0628, val 4979b3, offset 8168
+unwind: show_line_range:ip = 0x67b0e9 (0x27b0e9)
+unwind: no map for 7ffe829d1158
+unwind: access_mem 0x7ffe829d1158 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: no map for 7ffe829d1180
+unwind: access_mem 0x7ffe829d1180 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: no map for 7ffe829d1160
+unwind: access_mem 0x7ffe829d1160 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: no map for 7ffe829d1168
+unwind: access_mem 0x7ffe829d1168 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: no map for 7ffe829d1170
+unwind: access_mem 0x7ffe829d1170 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: no map for 7ffe829d1178
+unwind: access_mem 0x7ffe829d1178 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: no map for 7ffe829d1188
+unwind: access_mem 0x7ffe829d1188 not inside range 0x7ffe829ce640-0x7ffe829d0640
+unwind: __cmd_probe:ip = 0x4979b2 (0x979b2)
+     0.000 ( 0.102 ms): perf/1755681 write(fd: 5, buf: \197\10\17K\137\0\0\0\9ops\0\197\11#y\4\1\0\8\1\176+E\0\197\12\15]\0\0, count: 16384) = 16384
+                                       syscall_exit_to_user_mode_prepare ([kernel.kallsyms])
+
+
+Anyway, I'm digressing, I need to make this auto-download similar to
+what I proposed above for the coresight traces needed by the tests you
+think about adding for decoding in all platforms, which I encourage you
+to do.
+
+> Not only would this benefit testing on other arches like you say, but
+> it would also lock down that decoding of a known file doesn't regress
+> which we can't currently do by generating new trace every time the
+> test runs.
+
+Right.
+ 
+> If we ever added this they would be separate tests though so they could go
+> in the top level folder, where the ones in the arch folder would continue to
+> do record and decode. Maybe naming the folders by PMU could work, but you
+> could also have both PMU name and arch name folders like:
+ 
+> Recording/requires hardware:
+ 
+>   tools/perf/arch/arm64/tests/shell/cs_etm/
+ 
+> Cross platform decode tests:
+ 
+>   tools/perf/tests/shell/cs_etm/
+ 
+> Which would mirror how the source files are currently laid out:
+ 
+>  tools/perf/arch/arm/util/cs-etm.c
+>  tools/perf/util/cs-etm.c
+
+Yeah, I think we can experiment with this and take advantage of the
+effort Namhyung already put into this, and then revisit later, after
+trying this for a while.
+
+Ah, finally:
+
+root@x1:~# time perf probe -L icmp_rcv | head 
+<icmp_rcv@/root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/source-d5d23b89-#usr#src#debug#kernel-6.13.9#linux-6.13.9-100.fc40.x86_64#net#ipv4#icmp.c:0>
+      0  int icmp_rcv(struct sk_buff *skb)
+         {
+      2  	enum skb_drop_reason reason = SKB_DROP_REASON_NOT_SPECIFIED;
+         	struct rtable *rt = skb_rtable(skb);
+         	struct net *net = dev_net_rcu(rt->dst.dev);
+         	struct icmphdr *icmph;
+         
+         	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb)) {
+      8  		struct sec_path *sp = skb_sec_path(skb);
+
+real	9m20.630s
+user	0m5.427s
+sys	0m2.127s
+root@x1:~#
+
+And now:
+
+root@x1:~# pahole --running_kernel_vmlinux
+/root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo
+root@x1:~#
+
+Also:
+
+root@x1:~# file /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo
+/root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=aa3c82b4a13f9c0e0301bebb20fe958c4db6f362, with debug_info, not stripped
+root@x1:~# file hideout/vmlinux
+hideout/vmlinux: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=aa3c82b4a13f9c0e0301bebb20fe958c4db6f362, with debug_info, not stripped
+root@x1:~#
+
+root@x1:~# sha256sum /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo hideout/vmlinux
+6e998df9b235ed50ea4d7c6d997450cb7bd6691537e525f002630ae123bc0084  /root/.cache/debuginfod_client/aa3c82b4a13f9c0e0301bebb20fe958c4db6f362/debuginfo
+6e998df9b235ed50ea4d7c6d997450cb7bd6691537e525f002630ae123bc0084  hideout/vmlinux
+root@x1:~#
+
+But:
+
+root@x1:~# rpm -qf /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
+kernel-debuginfo-6.13.9-100.fc40.x86_64
+root@x1:~# rpm -V kernel-debuginfo-6.13.9-100.fc40.x86_64
+missing     /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
+root@x1:~#
+
+Lets fix this:
+
+root@x1:~# mv hideout/vmlinux /usr/lib/debug/lib/modules/6.13.9-100.fc40.x86_64/vmlinux
+root@x1:~# rpm -V kernel-debuginfo-6.13.9-100.fc40.x86_64
+root@x1:~#
+
+Cheers,
+
+- Arnaldo
