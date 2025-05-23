@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B8D1ADC67;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C14213235;
 	Fri, 23 May 2025 22:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748038918; cv=none; b=XMu6Tafm2LJ+FVhAO4Rc7Ou3Ja1OoKG0P7QpworjEy3uf3AphCGz9HsJtbwj9fXC8E8Sy13ctOqSau/lkV9dG5ZhzPG0VdvTd5AW78fcnNtNRfdwE0X7fQ/PdwVX6l5jwbrbAkSmWyWacN7++hoqEFTiakWqB4ejJUCrf4CePc8=
+	t=1748038919; cv=none; b=YkxIL7BOVzbHnO9zRsOB8tI8M+NxajMim2vmJm43DA5/WQPKIgpKg04bnZA8WEPl9XPJjWFDmX6mXS7K8yUw6amGhbXukeyVPBOgDwVK5KeFyTx39kFJu59r1HwOyGHhIzWshfNKuKKZGxcrR62b5iH9cPICWEsbYp+nIDsSo/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748038918; c=relaxed/simple;
-	bh=AiDAoyQjHRv2JDTsgsxGZeHVPr7H6J1azUzkcdYGflg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UOoGLLC2nv2c9mTVx2hoiBra7pRdMs9txYadZSexI2FUI7tFoa1gAKrHWfWGY/+MdGJZESjMSUKlclH8GlcE0Sp7M93E18niPX2M+JcUup9t9hv171XExYDzLA9mzRyUx3Sd2gPJbHA8SpB5/F1tzcSTm2n+YWe1eX3vmniVyrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4xh3qfX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748038919; c=relaxed/simple;
+	bh=PvEftXP3gEm/AqF0/6fxz9CRmi5dmdQgMS8gGZ6dLd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fE95WG9muLPKRoVUG7i2nsOQa2u95TD00hN208hhLCUoBNzBfvTXkTLSOntXC8h5vP84cnFBl/U4i/jaH/fZyfHj4qkwkhPekShK7lttFjB/2JIlC/7kZDT9BzeFFUoNncdSChAcD0bWqbwAkhD+Ec5x/ubBhDEunGJzS23ECP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mY0ZK9oB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4xh3qfX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E805C4CEEF;
-	Fri, 23 May 2025 22:21:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mY0ZK9oB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C91C4CEF3;
+	Fri, 23 May 2025 22:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748038918;
-	bh=AiDAoyQjHRv2JDTsgsxGZeHVPr7H6J1azUzkcdYGflg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Z4xh3qfXOt31hAXeYQCqZzobkM2LLD4tPVMEuzNnrMHPNuhLP1igFwOSu2Z/tMm3h
-	 LIpcmF+ZtJNhmODyPHm3QoyeARMFTiA/SSdYJEMQuhXobRWBIdPhZSodYMNdoali+V
-	 WGXjLdBlWn9+qlgUM1f+kMQ/XyHvFFBXl+yNk7iJ4CEKylqxp1aooWXl0gMkT7Im3C
-	 zOtvf6P+dAbkZYMwzNDmjn3AhK57IuuDBPaeuXcpWyIYsUgNJnTNW6wpqfrvMagsro
-	 Zain0DzBXjcyDSux6hNb4U8cobtwGSUT8vjFHHdRpaSkhf7K3qDSuJAZJGtCOcyMz1
-	 7Rf/tFFZFFcZg==
+	bh=PvEftXP3gEm/AqF0/6fxz9CRmi5dmdQgMS8gGZ6dLd4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mY0ZK9oB17ZB8QZBB4dbbfamitGDZcQIMJxoFh+ZGgELs7Auf2ViC3h/9ZmMWR0Mu
+	 q9AA2j0a47l3YnBya7rY8iTzX5ERZdLtQ3SMVBkti+UqXRLuwDR9PPWtZePXJNltcM
+	 9Z7pfymbMEWmTZe2A7HacTb8k0MlA0wRXM84loaL+ghbf9dFojHuysAlQ5nhbHyg5S
+	 5ptGtCEwBZggJZCEV89lIQaY1bTDbto4qQLAzFpGC5dLpXYQPz1xV3Ny9wNzRoXKNg
+	 dzt3dv1et/FC95XPXSsRM667lp/R5wCliDFsdu3ur2+hMdomjSTMAIkspOR3nharwL
+	 Qcsh6jWDS1qMg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,10 +39,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ravi Bangoria <ravi.bangoria@amd.com>,
 	Leo Yan <leo.yan@arm.com>,
 	Stephane Eranian <eranian@google.com>
-Subject: [PATCH 1/3] perf mem: Describe overhead calculation in brief
-Date: Fri, 23 May 2025 15:21:55 -0700
-Message-ID: <20250523222157.1259998-1-namhyung@kernel.org>
+Subject: [PATCH 2/3] perf mem: Display sort order only if it's available
+Date: Fri, 23 May 2025 15:21:56 -0700
+Message-ID: <20250523222157.1259998-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
+In-Reply-To: <20250523222157.1259998-1-namhyung@kernel.org>
+References: <20250523222157.1259998-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,48 +53,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ravi Bangoria <ravi.bangoria@amd.com>
+IOW it's not used when -F option is used alone.  Let's make it
+conditional to skip printing incorrect information.
 
-Unlike perf-report which uses sample period for overhead calculation,
-perf-mem overhead is calculated using sample weight. Describe perf-mem
-overhead calculation method in it's man page.
-
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-mem.txt | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ tools/perf/builtin-report.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-index a9e3c71a220557d4..965e73d377724607 100644
---- a/tools/perf/Documentation/perf-mem.txt
-+++ b/tools/perf/Documentation/perf-mem.txt
-@@ -137,6 +137,25 @@ REPORT OPTIONS
- In addition, for report all perf report options are valid, and for record
- all perf record options.
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index f0299c7ee0254a37..e662e1c3a7c6b6ec 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -529,7 +529,10 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
  
-+OVERHEAD CALCULATION
-+--------------------
-+Unlike linkperf:perf-report[1], which calculates overhead from the actual
-+sample period, perf-mem overhead is calculated using sample weight. E.g.
-+there are two samples in perf.data file, both with the same sample period,
-+but one sample with weight 180 and the other with weight 20:
-+
-+  $ perf script -F period,data_src,weight,ip,sym
-+  100000    629080842 |OP LOAD|LVL L3 hit|...     20       7e69b93ca524 strcmp
-+  100000   1a29081042 |OP LOAD|LVL RAM hit|...   180   ffffffff82429168 memcpy
-+
-+  $ perf report -F overhead,symbol
-+  50%   [.] strcmp
-+  50%   [k] memcpy
-+
-+  $ perf mem report -F overhead,symbol
-+  90%   [k] memcpy
-+  10%   [.] strcmp
-+
- SEE ALSO
- --------
- linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
+ 	if (rep->mem_mode) {
+ 		ret += fprintf(fp, "\n# Total weight : %" PRIu64, nr_events);
+-		ret += fprintf(fp, "\n# Sort order   : %s", sort_order ? : default_mem_sort_order);
++		if (sort_order || !field_order) {
++			ret += fprintf(fp, "\n# Sort order   : %s",
++				       sort_order ? : default_mem_sort_order);
++		}
+ 	} else
+ 		ret += fprintf(fp, "\n# Event count (approx.): %" PRIu64, nr_events);
+ 
 -- 
 2.49.0.1151.ga128411c76-goog
 
