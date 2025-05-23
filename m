@@ -1,159 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB44E22338;
-	Fri, 23 May 2025 17:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1EC81749
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 17:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748022506; cv=none; b=ZIyf6oqN1bkPe7EonYTm7s5PbJgpL+2KOu1pl+H/BAjEGsXpY4mr++6HlGhOR1py87coxHbvCzYllf8FhDu4aWVjkcPY9qxY4HxeqAjcMePLerDxKOF7D8pVJWTxsOZuLXyb/Xc8YgvxAz5N5NFA1fE+iil2bL28PZM7eJTk6zM=
+	t=1748022860; cv=none; b=opPerMkDagZIzbTCeWUn2n0Lc46TLkIDvTfySYWagcxDnLMj130JCtOVBuFv9xEi/Hq5uo3PjjQoB8pw2JsilWUyLE4wVVDkicyaQrXvv0eVMJUfw/rkvtr9rmUql2RbrP+f7ByWmaLEFyzdb4VWpniuloAdbvwym6SBXiT0xB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748022506; c=relaxed/simple;
-	bh=AqUynDC3Sw8C6ZtTMriTAeGFMTNBji4jXiQmc/rbw2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b1yIC3caKW9BqaZjR2EMzdmTrPJIxNGgnPm5RSpE/YC29dyeng/CYNGgkrIdiwOVvzwGe318PmZIrGLlfCFUlTX7XEEyudse22VL0hkET/W5S8QFVTsgfVRYa0YmVd8uod6DFSRfy7aahh13zsDAQkKPwC5L25Ut9zTOgjs1Bgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uj1T2rMY; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748022860; c=relaxed/simple;
+	bh=mHx9nrqeslMmeOqW9EqCQiUHsNIyWWN9PxW0Wy4QUxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lIXd+Fw1gSiLQiBPed0gLGvp3AnF6E4v8gJIk/7Yh6K7/0ED+5V1OFR2rYDTlQSpHUSph7PKQN92V7oYxvVPzPi2zCFD2Gr57dJVbl4kzVMJFO7zPEBy7E2CzIuNaJPB1/7JXRLMGzCaXXQSjxQhXaHTnQqWaHvOCW0PfBgE0Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f+P/0FQO; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uj1T2rMY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748022504; x=1779558504;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AqUynDC3Sw8C6ZtTMriTAeGFMTNBji4jXiQmc/rbw2o=;
-  b=Uj1T2rMYNnVhnHXtN/RnP04tZ1CWrrf6meRJMiClT/em1VWtJgTL9MDX
-   DYzGHU8S4kF5p6FvlsvT5KyQnsip+ucOzPvuvE7Ug/NXkWsOAcB7+sk2E
-   V3KM52bnREc+oTfqB3hB1II/GuECO/LFiUquQuKyhR8nbjUyvNb1lcg7K
-   6qKIoBcsLRQWZcuXncz3B1CUmW8ck63tvAsnn+cN8Ioaomh15KWwQp4qd
-   827m8XptPtTyysZtCOS17M2rZsxulhZqywvgHLra6x9iVR2+DnOIlbF7Z
-   4Vbk88w/ZXogxcAjJHCDCx9fpDbVhop8uW/lqA09aTJhbAJfS++vzNigE
-   g==;
-X-CSE-ConnectionGUID: jugNgIZWQ066tu/rZ/IvjA==
-X-CSE-MsgGUID: AYASXsoTTJCzt7KzI7G55g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="37712255"
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="37712255"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 10:48:24 -0700
-X-CSE-ConnectionGUID: lJrSde5yS5yz0+ah3FyjYQ==
-X-CSE-MsgGUID: VO9IXjEZT1W8X0PcYRPbOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
-   d="scan'208";a="141740316"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 23 May 2025 10:48:18 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIWVD-000QdI-2N;
-	Fri, 23 May 2025 17:48:15 +0000
-Date: Sat, 24 May 2025 01:48:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Rajnesh Kanwal <rkanwal@rivosinc.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Beeman Strong <beeman@rivosinc.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	Rajnesh Kanwal <rkanwal@rivosinc.com>
-Subject: Re: [PATCH v3 5/7] riscv: pmu: Add driver for Control Transfer
- Records Ext.
-Message-ID: <202505240131.OJkUGGvA-lkp@intel.com>
-References: <20250523-b4-ctr_upstream_v3-v3-5-ad355304ba1c@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+P/0FQO"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3db82534852so16295ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 10:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748022856; x=1748627656; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PcE201KoRNJYhD4feI9Zb+U9J1PL6BFh8gHFJfl+wqk=;
+        b=f+P/0FQOD74M30xGM+HQadVRLy4NVVOWHAiEqzk2vQfeo5BMSLgTQTFAFqqalHtkAw
+         OhwT2jHWS7eoxdFDFApJxbZf6+WHCtYy3KIw3g5fp2K8U2Gzc0IUAiqwfVTQyS1aYtfw
+         vzarKhBYlJ/ya9AYsq+TldkM5a6HCUr7QKtUSRsAt//3aYAkdRy1NlISqb5TF2of5mlt
+         UgoOWxVxIGi2kQbWkgMzJd7tsaouo0DwoidcI7v3m6PBpTtxFNzeMLov8/YvRpYwZBQI
+         U8N/ON5ZsRBox+Kpuk+iN2C6X3jtEfZ5p9ZOj/WQavzf/9vHUvLqVzTNE0dbrskZVX4H
+         K6wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748022856; x=1748627656;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PcE201KoRNJYhD4feI9Zb+U9J1PL6BFh8gHFJfl+wqk=;
+        b=JjIfOKTiHittNtKBoe8WKKYwwfwwgUwhDQsRw2czXpzry9jiTJvAcM2tY6PRcmiOjQ
+         Fru/Zcj9JnCSvtBKsGTJOVfNiLqLCT5Rbs3onOtRXdxeyyPTaX0PO+zI+7/uZcyJ9hH+
+         3hMU7NITDoUJNMxqQ8RQPPOre4zkzgTIQ9G7pxV3EltiBR73bYBqb9FYLH32M9z9BimQ
+         /GLxg/79Auepgvn2qKFSD0DyUN+3QaNoBG0dyJxokyNhM/Bky1G3JaZeQ69fd9UlNmRe
+         3d2yJ70HW8KV2qBtjFchgtOMadNdUR3ZFC1lGJMHNkWFpCygqJtu5ghYegnwlmrnXQL4
+         LM9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWJUYjBiOQ6f/8GMMMtH/DhUalT2TWCI8m1tDRigyL5MuVbGLdnf66ij/zgqHUQk09zhxa2Sz3rxgNoRQzGbYaI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTuNNmJrCGUACpL3uUx37D+KdRrC+H4qHzi+bHxkOPo6zeXxd3
+	JVbGW7nuoKyF13yFxRpnqfkhjlwqnWl3qdjz84ChUQXILgstip/mwLQDud02cZCMy6bhuF1MNke
+	5N45TOOkiqNnz7VUKBSNRUx95WGoj3N3VffqZ0j45
+X-Gm-Gg: ASbGncvvN2IXzOS0uVBOPbRNl96gD0gCejmDP8MkEDD5rAv4iMSVBQJK21sthI4+qym
+	3swNWYsg2yjpuRoEcdeMv0dCC2f8/Brr0Q2FI3XiuNV+i1swmzIACkT90FjXf8VvOaQmz32mcnZ
+	2bR/GcOQkJtJt7qk9lq1J1M3fTbDEcz75iOdAQjIK6Y6Nv
+X-Google-Smtp-Source: AGHT+IG5pJa6XNSEbq3AwCPNtrUfQOv1uHdn1F546Kd1DuB4oclakA7CB0Ovhv8zyPXbUxN2tE+LNNJLyOP3Ctk1zc0=
+X-Received: by 2002:a92:cda7:0:b0:3dc:7be3:2712 with SMTP id
+ e9e14a558f8ab-3dc942d4f30mr4135655ab.29.1748022855717; Fri, 23 May 2025
+ 10:54:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-5-ad355304ba1c@rivosinc.com>
+References: <20250522171044.1075583-1-namhyung@kernel.org> <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
+ <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
+In-Reply-To: <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 23 May 2025 10:54:02 -0700
+X-Gm-Features: AX0GCFv5o_BFbcay3SpWqv2Ef3jWnyQrNSCxEBiptddIrv5ki4ovE1puhXHTsuA
+Message-ID: <CAP-5=fWUZ78s1DMzQV8SP0U8Hb=TnCwB1_t2_o+3UcoJeyi=0Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
+To: James Clark <james.clark@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rajnesh,
+On Fri, May 23, 2025 at 3:48=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> On 22/05/2025 9:09 pm, Ian Rogers wrote:
+> > On Thu, May 22, 2025 at 10:10=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> >>
+> >> This is a preparation for shell tests belong to an arch.
+> >
+> > I keep repeating that I don't like arch and I think ideally we'd be
+> > getting rid of the C arch tests. I just sent out a patch doing this
+> > for 1 test:
+> > https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com=
+/
+> > We should be able to make perf, tests, etc. dependent on a PMU rather
+> > than an architecture. This means that running perf built for ARM will
+> > be able to do things running on an instruction emulator on x86. It
+>
+> In this case for Arm SPE and Coresight you can only generate trace by
+> running on a full model or a real CPU, so I'm not sure if we could ever
+> get close to running on just an emulator.
 
-kernel test robot noticed the following build warnings:
+Ok, that's the SPE and coresight PMUs, shouldn't the bulk of "perf
+test" pass under an emulator and those tests skip when the PMUs aren't
+there?
 
-[auto build test WARNING on e0200e37637e573cd68f522ecd550be87e304c6c]
+> > means the tool, the kernel APIs, etc. are generic and new
+> > architectures like RISC-V can test things. It means cross-platform
+> > (record on 1 machine type, report on another) can work without
+> > tripping over load bearing architecture ifdefs. It means that we
+>
+> I have thought about adding some generic decoding side tests for SPE and
+> Coresight, but couldn't really get past the fact that you need to put
+> the trace dump _and_ the binaries traced into the git repo. Not only
+> would this benefit testing on other arches like you say, but it would
+> also lock down that decoding of a known file doesn't regress which we
+> can't currently do by generating new trace every time the test runs.
+>
+> If we ever added this they would be separate tests though so they could
+> go in the top level folder, where the ones in the arch folder would
+> continue to do record and decode. Maybe naming the folders by PMU could
+> work, but you could also have both PMU name and arch name folders like:
+>
+> Recording/requires hardware:
+>
+>    tools/perf/arch/arm64/tests/shell/cs_etm/
+>
+> Cross platform decode tests:
+>
+>    tools/perf/tests/shell/cs_etm/
+>
+> Which would mirror how the source files are currently laid out:
+>
+>   tools/perf/arch/arm/util/cs-etm.c
+>   tools/perf/util/cs-etm.c
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rajnesh-Kanwal/perf-Increase-the-maximum-number-of-branches-remove_loops-can-process/20250523-073341
-base:   e0200e37637e573cd68f522ecd550be87e304c6c
-patch link:    https://lore.kernel.org/r/20250523-b4-ctr_upstream_v3-v3-5-ad355304ba1c%40rivosinc.com
-patch subject: [PATCH v3 5/7] riscv: pmu: Add driver for Control Transfer Records Ext.
-config: riscv-randconfig-002-20250523 (https://download.01.org/0day-ci/archive/20250524/202505240131.OJkUGGvA-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240131.OJkUGGvA-lkp@intel.com/reproduce)
+So this a digression, I don't necessarily disagree with it. Back to
+adding arch-specific shell tests, we should be working hard to not
+target work to a particular architecture. Making code, tests, etc.
+specific to an architecture means someone, quite often myself, has to
+come along later and undo the damage. Hybrid being a very large and
+long case in point where >1 core PMU was hard coded to only work
+within the tool for two specific PMUs. To be specific as to why
+notions of architecture in the code base are actively harmful (off the
+top of my head):
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240131.OJkUGGvA-lkp@intel.com/
+1) architecture isn't a specific enough term as PMUs are always
+evolving so we need to support figuring this out, not just hiding the
+affected code by an ifdef or build option;
 
-All warnings (new ones prefixed by >>):
+2) lower and more problematic test coverage (will we shellcheck an ARM
+test on x86? we're lowering the container coverage or requiring it to
+be run on multiple architectures);
 
-   In file included from arch/riscv/kernel/asm-offsets.c:12:
-   In file included from arch/riscv/include/asm/kvm_host.h:23:
-   In file included from arch/riscv/include/asm/kvm_vcpu_pmu.h:12:
->> include/linux/perf/riscv_pmu.h:156:76: warning: omitting the parameter name in a function definition is a C2x extension [-Wc2x-extensions]
-     156 | static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
-         |                                                                            ^
-   include/linux/perf/riscv_pmu.h:158:13: warning: unused function 'riscv_pmu_ctr_add' [-Wunused-function]
-     158 | static void riscv_pmu_ctr_add(struct perf_event *event) { }
-         |             ^~~~~~~~~~~~~~~~~
-   include/linux/perf/riscv_pmu.h:159:13: warning: unused function 'riscv_pmu_ctr_del' [-Wunused-function]
-     159 | static void riscv_pmu_ctr_del(struct perf_event *event) { }
-         |             ^~~~~~~~~~~~~~~~~
-   3 warnings generated.
---
-   In file included from arch/riscv/kernel/asm-offsets.c:12:
-   In file included from arch/riscv/include/asm/kvm_host.h:23:
-   In file included from arch/riscv/include/asm/kvm_vcpu_pmu.h:12:
->> include/linux/perf/riscv_pmu.h:156:76: warning: omitting the parameter name in a function definition is a C2x extension [-Wc2x-extensions]
-     156 | static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
-         |                                                                            ^
-   include/linux/perf/riscv_pmu.h:158:13: warning: unused function 'riscv_pmu_ctr_add' [-Wunused-function]
-     158 | static void riscv_pmu_ctr_add(struct perf_event *event) { }
-         |             ^~~~~~~~~~~~~~~~~
-   include/linux/perf/riscv_pmu.h:159:13: warning: unused function 'riscv_pmu_ctr_del' [-Wunused-function]
-     159 | static void riscv_pmu_ctr_del(struct perf_event *event) { }
-         |             ^~~~~~~~~~~~~~~~~
-   3 warnings generated.
+3) the tests need to be able to handle being on the architecture with
+or without the PMU (such as under a hypervisor);
+3.1) the without PMU case is a very frequent source of my patching
+tests as most people test on a bare metal development machines and
+forget continuous testing environments;
+3.2) this kind of support can enable continuous testing efforts that
+are run under an emulator. If a cloud has no ARM offering they can at
+least emulator test, and SuSE have at least offered this. Google may
+or may not run testing through emulators and tests need to handle it,
+we have and do carry patches for this;
+
+4) broken cross-platform support, such as with sample parsing where
+decoding a sample is missing pieces when not done on x86 (come on,
+this is terrible and we don't want more of it);
+
+5) the tests do and should make use of common library code for things
+like checking the perf event permissions, this code lives in
+tools/perf/tests/shell/lib but the arch dependencies go where? We
+shouldn't reinvent the shell testing environment per architecture.
 
 
-vim +156 include/linux/perf/riscv_pmu.h
+I get that vendors would quite like things not to work on other
+architectures, or for event parsing [1], testing, etc. to be in some
+way crippled and require architecture specific reinvention. Why should
+their engineers invest in infrastructure and testing that could
+benefit someone else? Heck sometimes it feels like vendors may be
+doing everything in their power via broken PMU names, event names,
+etc. to make common infrastructure break when not run in their arch
+specific way [2]? I see things differently and indeed when things go
+wrong vendors argue that the generic code/behaviors needs to be
+changed (I'm thinking of Mark Rutland on Apple PMU support and the
+generic behavior changes made at that time that are now not carried
+through leading to event parsing and display inconsistencies as well
+as RISC-V needing to adopt a different event lookup strategy).
 
-   152	
-   153	static inline bool riscv_pmu_ctr_valid(struct perf_event *event) { return false; }
-   154	static inline void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc,
-   155					      struct perf_event *event) { }
- > 156	static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
-   157						    bool sched_in) { }
-   158	static void riscv_pmu_ctr_add(struct perf_event *event) { }
-   159	static void riscv_pmu_ctr_del(struct perf_event *event) { }
-   160	static inline void riscv_pmu_ctr_enable(struct perf_event *event) { }
-   161	static inline void riscv_pmu_ctr_disable(struct perf_event *event) { }
-   162	static inline void riscv_pmu_ctr_dying_cpu(void) { }
-   163	static inline void riscv_pmu_ctr_starting_cpu(void) { }
-   164	static inline int riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu) { return 0; }
-   165	static inline void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu) { }
-   166	
+I want the perf tool to have its behavior be generic. The kernel has
+an arch directory for understandable reasons, for the perf tool the
+key thing is the PMU and we've been building out the infrastructure
+for this. Should the perf tool have every event, metric or syscall
+number for every architecture? For cross-platform work it doesn't seem
+like a completely terrible idea. I'm sensitive to binary size [3] so
+I'm not pushing on it.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Anyway, this change is unnecessary as the current skipping behavior
+works and is better for the reasons enumerated above. This change gets
+a very large nack from me. I'm supportive of more IBS coverage in the
+rest of the series, but this change isn't required for that.
+
+Thanks,
+Ian
+
+[1] https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com=
+/
+[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/drivers/perf/arm_cspmu/arm_cspmu.c?h=3Dperf-tools-next#n150
+- please call it cpu_cycles to avoid ambiguity with the legacy event.
+[3] https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
+
+
+
+> Thanks
+> James
+>
+> > benefit from more testing on generic pieces of code on all
+> > architectures - like sample parsing. We can always strcmp the PMU name
+> > or the architecture at runtime.
+> >
+> > Structure wise we could have:
+> > tools/perf/pmu/ibs_op/tests/
+> > tools/perf/pmu/ibs_op/tests/shell
+> >
+> > It feels noisy compared to just having the shell test in
+> > tools/perf/tests/shell skip when the PMU isn't present. There are also
+> > things like library dependencies that aren't clear when we have >1
+> > directory. I'd prefer if new testing followed the existing model
+> > rather than this.
+> >
+> > Thanks,
+> > Ian
+> >
