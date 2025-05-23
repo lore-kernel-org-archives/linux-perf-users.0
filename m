@@ -1,107 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CE82DCBE1;
-	Fri, 23 May 2025 01:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E143C2DCBE1;
+	Fri, 23 May 2025 01:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747965111; cv=none; b=qPCcsrzcplVIQr/7JncE7zD0waqFRtcu1pqFol2YlxdMQGiEws3uIA41c7uD/hn+M/MtZxG2x8/3kv/1AEcSOO8NMgOZhex1jNgoXqR1Px+EitIjjpetIptkUDyvx7P6vPIYSm6Exsk/SugN82a2y2bQ0uvPORUk7vDE7tBfZnw=
+	t=1747965347; cv=none; b=CpZd1kfAPKpDl4sP/FCNEjjeE+hyc14m2wVzD7+DYy4x+FyH4LDNm3awJC0U0yysMk9116Y+XazGbtUhyJPVDe3BKVb0nlu//0hnjzhuV6zxDIKd+fnNyw28NjJvKq0z2bt9TlfcV2uT9MJqb6tyXE/9UCL9ryY2XMBEmr09Op0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747965111; c=relaxed/simple;
-	bh=8S+It+iOZUj7PzQhjL+wxzQATMEcIxRIc0xwYa5veuM=;
+	s=arc-20240116; t=1747965347; c=relaxed/simple;
+	bh=WLRYBZzVBC+vgSIVR38d+O8tfcmu/HYiOZH436LZdMQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UC5+RwQ8dWuO5/iiPoKwFqKrD7yfhuBLAbdFGemXbTccj3cv2Io2Ozlwv5MfOJCIgkJcGmgG++NaoX2HCHpZHJHzFBcTweGJYj9LlSJjV0y82aBED+8vyYhlq8gUNS3q9vSiFAhQF6vgwEqrAl2jfTy58pHuW8+3ivkwiW/0gdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArdZegg3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hygTkg6LmLYmj+BuHyDBdY9EZjJB0f1IWpkw+VEjXAnILuKPwbEs0hxtESOhzL8lHFwlw24kVwVTq0gaj+zfNpevGHC48ZL8R5EMOnupHLu7eLa/oh8qK4aWknncXhsyM5yr3elWAb3MbbRLJC+hu/QnUOXqUd3kDF0rj9n+JWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkG/ue3g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArdZegg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 483B8C4CEE4;
-	Fri, 23 May 2025 01:51:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkG/ue3g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E6E9C4CEE4;
+	Fri, 23 May 2025 01:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747965110;
-	bh=8S+It+iOZUj7PzQhjL+wxzQATMEcIxRIc0xwYa5veuM=;
+	s=k20201202; t=1747965346;
+	bh=WLRYBZzVBC+vgSIVR38d+O8tfcmu/HYiOZH436LZdMQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ArdZegg34/+WQEnnQxMgxsln8hSUNpzbj5nyEB+iCKxWGdHCkMuSSHg04ml3igFqL
-	 ObKpUmJ5S52wOO7HseXTDWl9Y1ojP1c73ChJUdr6e3y7URM95DXMdTP72TGg43n9dr
-	 jiMNdUgiIJx6wwoImp2OZLdC3/OWX5FkBwq2D70uUmj794WWnlcxuPSl6I9OIMyUxx
-	 1GKy8cdL9ga0pvWtn71wlhZIXfhHvBxzr1uEv6sYHWMHJ6caZ0mvUkxc9tkwRKupia
-	 PqhLd5SIBktte6jmD1om5cXR/fPhCn9zEyynkpaxWx0YcP/LvKB54sxSwCW1ZESsVu
-	 k9nhRILl28faA==
-Date: Thu, 22 May 2025 22:51:47 -0300
+	b=bkG/ue3gp5RlGClgHNH86IC5Gu85n80scKYZoZLCT8yLiTqzfffcTpwelDTmxx9bn
+	 poWMxNLh3cXobxjeA6+ibFLYukPB8J8e1iJlkp5bU6acfI46BYJK7KAadoDysStSrI
+	 FUf0EKxcK2soG/CRg4jQbtTq0xgHfi5T46dpu/v6Zv4L5BL/0Wd36of3RblV0GovcJ
+	 vh4RFejoJkfOP/gyu1HK/pLS2vGwnA2tcivf1QPmeaKWOuZypImxjrNmIONb7H3poz
+	 am+70OEhfn4CrY3XTCeHxOf/fVOO0zcwIJ/UTUN8hS3d1rUBmgLlAPzVTtObDS7jpH
+	 HsEuLQVlMfH0Q==
+Date: Thu, 22 May 2025 22:55:43 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>,
+To: Leo Yan <leo.yan@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-Message-ID: <aC_Us1xcKCmYFy_5@x1>
+Message-ID: <aC_Vn95vYqcXul03@x1>
 References: <20250331172759.115604-1-leo.yan@arm.com>
- <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
- <20250401091422.GA115840@e132581.arm.com>
- <CAP-5=fUGLy9xGmMO+6PXvfviB4U8Q8O7H3iTSSqEf72vin8gDA@mail.gmail.com>
- <20250402090516.GG115840@e132581.arm.com>
- <20250516153158.GH412060@e132581.arm.com>
- <aCvgbd5dZrF0YJg7@google.com>
- <aC_UKwuokMuf-kzD@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aC_UKwuokMuf-kzD@x1>
+In-Reply-To: <20250331172759.115604-1-leo.yan@arm.com>
 
-On Thu, May 22, 2025 at 10:49:31PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, May 19, 2025 at 06:52:45PM -0700, Namhyung Kim wrote:
-> > Hi Leo,
-> > 
-> > On Fri, May 16, 2025 at 04:31:58PM +0100, Leo Yan wrote:
-> > > Hi Ian, Namhyung,
-> > > 
-> > > [ - Mailing list ]
-> > > 
-> > > On Wed, Apr 02, 2025 at 10:05:16AM +0100, Leo Yan wrote:
-> > > > On Tue, Apr 01, 2025 at 12:54:12PM -0700, Ian Rogers wrote:
-> > > > > On Tue, Apr 1, 2025 at 2:14 AM Leo Yan <leo.yan@arm.com> wrote:
-> > > > > >
-> > > > > > On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
-> > > > > >
-> > > > > > [...]
-> > > > > >
-> > > > > > > I'm reminded of a Java check I wrote for this:
-> > > > > >
-> > > > > > Nice short article.
-> > > > > >
-> > > > > > > In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
-> > > > > > > clean those warnings up a bit.
-> > > > > >
-> > > > > > I checked a bit and seems GCC has no this flag, but it makes sense for
-> > > > > > me to enable the flag for Clang.
-> > > > > >
-> > > > > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > > > >
-> > > > > > Thanks a lot, Ian.
-> > > > > 
-> > > > > I made a small variation to the change in:
-> > > > > https://lore.kernel.org/lkml/20250401182347.3422199-10-irogers@google.com/
-> > > > > to avoid a subtract and just directly compare the values.
-> > > 
-> > > Do you mind to pick up my this patch? :) Our internal CI reports the
-> > > test case 109_Track_with_sched_switch failure daily, I am just wandering
-> > > if we could apply the fix quickly.
-> > 
-> > Arnaldo is taking care of patches for v6.15.
-> > 
-> > Arnaldo, can you please take this?
+On Mon, Mar 31, 2025 at 06:27:59PM +0100, Leo Yan wrote:
+> The test might fail on the Arm64 platform with the error:
 > 
-> >From what I understood it people agreed to pick Ian's patch, ok.
+>   perf test -vvv "Track with sched_switch"
+>   Missing sched_switch events
+> 
+> The issue is caused by incorrect handling of timestamp comparisons. The
+> comparison result, a signed 64-bit value, was being directly cast to an
+> int, leading to incorrect sorting for sched events.
+> 
+> Fix this by explicitly returning 0, 1, or -1 based on whether the result
+> is zero, positive, or negative.
+> 
+> Fixes: d44bc5582972 ("perf tests: Add a test for tracking with sched_switch")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-But that is part of a larger patch, so since Ian reviewed Leo's patch,
-I'll end up picking the more contained one, no bandwidth to check all
-the other parts now.
+How can I reproduce this?
 
-- Arnaldo
+Testing on a rpi5, 64-bit debian, this test passes:
+
+root@raspberrypi:~# uname -a
+Linux raspberrypi 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux
+root@raspberrypi:~# perf test -vvv "Track with sched_switch" |& tail -50
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+cycles event
+sched_switch: cpu: 3 prev_tid 208750 next_tid 0
+sched_switch: cpu: 2 prev_tid 0 next_tid 195941
+sched_switch: cpu: 2 prev_tid 195941 next_tid 208748
+sched_switch: cpu: 2 prev_tid 208748 next_tid 0
+sched_switch: cpu: 3 prev_tid 0 next_tid 208750
+sched_switch: cpu: 3 prev_tid 208750 next_tid 34
+sched_switch: cpu: 3 prev_tid 34 next_tid 0
+sched_switch: cpu: 0 prev_tid 0 next_tid 208750
+sched_switch: cpu: 0 prev_tid 208750 next_tid 21
+sched_switch: cpu: 0 prev_tid 21 next_tid 0
+sched_switch: cpu: 1 prev_tid 0 next_tid 208750
+sched_switch: cpu: 1 prev_tid 208750 next_tid 24
+sched_switch: cpu: 1 prev_tid 24 next_tid 0
+sched_switch: cpu: 2 prev_tid 0 next_tid 208750
+sched_switch: cpu: 2 prev_tid 208750 next_tid 29
+sched_switch: cpu: 3 prev_tid 0 next_tid 208750
+sched_switch: cpu: 2 prev_tid 29 next_tid 0
+sched_switch: cpu: 3 prev_tid 208750 next_tid 34
+sched_switch: cpu: 3 prev_tid 34 next_tid 0
+sched_switch: cpu: 0 prev_tid 0 next_tid 208750
+sched_switch: cpu: 1 prev_tid 0 next_tid 208750
+sched_switch: cpu: 2 prev_tid 0 next_tid 208750
+sched_switch: cpu: 3 prev_tid 0 next_tid 208750
+507 events recorded
+---- end(0) ----
+109: Track with sched_switch                                         : Ok
+root@raspberrypi:~#
