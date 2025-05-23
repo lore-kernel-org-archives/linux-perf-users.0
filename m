@@ -1,50 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280F82DCBE7;
-	Fri, 23 May 2025 03:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8E02874FF;
+	Fri, 23 May 2025 08:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972128; cv=none; b=V/GJYdjkgJ1URUx13vfsZbxu0EW8Sr5jm7Ti5iu4TTuiqv2G3ryukSNzbfN4YG8g2azA8owWVeGxg4RFOmCOSyigk6ATscVbTErzH+yQHBNbdqE+sKL735hSPR5AG7+grdh7SpEMs9mIfLA36IkY6hUTS/GKOuatfV2TfXyusz8=
+	t=1747987845; cv=none; b=H9Y1Zdok1JA9rSzktTyzj0ENp7DpypfecUs5Wa2jh3INXa211XlZUAUgvupVkXdOA77OK94rcXfz+cp0+8m7UzCKw4/3QEzi1ikoX7BqhW+pA2RsfcNglN7ZISd+a54QOQ4x4l20CfFDNJyzGFHluwaPwjipp1ZnEYxF38XKcCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972128; c=relaxed/simple;
-	bh=hU4E11daZQRWPop+eXf7dItbrTLSr07eegr9d9rLyLc=;
+	s=arc-20240116; t=1747987845; c=relaxed/simple;
+	bh=Pn6soPY7JUJ+aSD2s52N7FMA70X0mdacM1Xy6nBn0iM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W/Ih2cb3aAAm/oUm+8JcqiLAK6YAKsQIDSndyLFlzvZgQcUEJgyApO6XvZy44UmzVFcZFygQoOHUk0g2Igt0p4uiY7R+3g98y4HL1w+o3VmQHbuDLlDK1x1Uecmr8IOVd+Xr4mYLuu1j/+nTCN4BxtyaajUed3DPzKnUxOsjobM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lj/rQ3Gi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lj/rQ3Gi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AC07C4CEE9;
-	Fri, 23 May 2025 03:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747972127;
-	bh=hU4E11daZQRWPop+eXf7dItbrTLSr07eegr9d9rLyLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lj/rQ3GiGLdiau+P57zmneGhBgAfMwOjMvBLctFhT75R1EPvZ5B+giVnFwI5eHxa9
-	 RiMiquG8Ahu7fzGgL53Px/BnaD5MqSe+XkulE8WW3VtGLO3jgYvTq7mHJmnXO8HT0k
-	 IVlm+pa2SWgRZfx0S+157FDTqcymr66Laaajra42Cmav0gUZ5rF4VwxfkSUBOljdMj
-	 Zu+1bGtmcY67IjZpTYe/CyKwnE1FIQawVg8S5ZD4PBl0KY2UIPvReTE3pKq0rTvPqd
-	 l4BA/NIs6ebHPA4YP0vqH8f8LYR9cjI9h0XPmOzzN1clAgzBOWk0XqocxYh+JpDqIl
-	 CK9+q1olWtQ9g==
-Date: Thu, 22 May 2025 20:48:44 -0700
-From: Kees Cook <kees@kernel.org>
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
-	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
-Message-ID: <202505222041.B639D482FB@keescook>
-References: <20250521062337.53262-1-bhupesh@igalia.com>
- <20250521062337.53262-4-bhupesh@igalia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pu58d+2z5xlZFd1DBjtZweFuU6Jta6gTgpQW6JzGgjjzJkpJRVII2uJdxm9T8PvMRsYsCB96CGyWiWlrN8fOhc/HPHSnhGNud9SqT6BP7h/5P5e0UoOAEvRxaZfw9R1Fsa7LJWDXIoTEV4FRgswH59t5867j0RpQSwJN7lMkOfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7B011758;
+	Fri, 23 May 2025 01:10:26 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B44AE3F6A8;
+	Fri, 23 May 2025 01:10:40 -0700 (PDT)
+Date: Fri, 23 May 2025 09:10:36 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
+Message-ID: <20250523081036.GB2566836@e132581.arm.com>
+References: <20250331172759.115604-1-leo.yan@arm.com>
+ <aC_Vn95vYqcXul03@x1>
+ <aC_WFRe_4HjVPUrM@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,31 +39,82 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521062337.53262-4-bhupesh@igalia.com>
+In-Reply-To: <aC_WFRe_4HjVPUrM@x1>
 
-On Wed, May 21, 2025 at 11:53:37AM +0530, Bhupesh wrote:
-> Historically due to the 16-byte length of TASK_COMM_LEN, the
-> users of 'tsk->comm' are restricted to use a fixed-size target
-> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
-> 
-> To fix the same, Linus suggested in [1] that we can add the
-> following union inside 'task_struct':
->        union {
->                char    comm[TASK_COMM_LEN];
->                char    comm_ext[TASK_COMM_EXT_LEN];
->        };
+On Thu, May 22, 2025 at 10:57:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, May 22, 2025 at 10:55:46PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, Mar 31, 2025 at 06:27:59PM +0100, Leo Yan wrote:
+> > > The test might fail on the Arm64 platform with the error:
+> > > 
+> > >   perf test -vvv "Track with sched_switch"
+> > >   Missing sched_switch events
+> > > 
+> > > The issue is caused by incorrect handling of timestamp comparisons. The
+> > > comparison result, a signed 64-bit value, was being directly cast to an
+> > > int, leading to incorrect sorting for sched events.
+> > > 
+> > > Fix this by explicitly returning 0, 1, or -1 based on whether the result
+> > > is zero, positive, or negative.
+> > > 
+> > > Fixes: d44bc5582972 ("perf tests: Add a test for tracking with sched_switch")
+> > > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > 
+> > How can I reproduce this?
+> > 
+> > Testing on a rpi5, 64-bit debian, this test passes:
 
-I remain unconvinced that this is at all safe. With the existing
-memcpy() and so many places using %s and task->comm, this feels very
-very risky to me.
+Sorry that I did not give precise info for reproducing the failure.
+The case does not fail everytime, usually I can trigger the failure
+after run 20 ~ 30 times:
 
-Can we just make it separate, instead of a union? Then we don't have to
-touch comm at all.
+# while true; do perf test "Track with sched_switch"; done
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : FAILED!
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : FAILED!
+106: Track with sched_switch                                         : Ok
+106: Track with sched_switch                                         : Ok
 
-> and then modify '__set_task_comm()' to pass 'tsk->comm_ext'
-> to the existing users.
+I used cross compiler to build Perf tool on my host machine and tested on
+Debian / Juno board.  Generally, I think this issue is not very specific
+to GCC versions.  As both internal CI and my local env can reproduce the
+issue.
 
-We can use set_task_comm() to set both still...
+Please let me know if need any more info.  Thanks!
 
--- 
-Kees Cook
+
+---8<---
+
+My Host Build compiler:
+
+# aarch64-linux-gnu-gcc --version
+aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+
+Juno Board:
+
+# lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU/Linux 12 (bookworm)
+Release:        12
+Codename:       bookworm
