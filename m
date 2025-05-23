@@ -1,36 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8E02874FF;
-	Fri, 23 May 2025 08:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F9822686F
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 09:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987845; cv=none; b=H9Y1Zdok1JA9rSzktTyzj0ENp7DpypfecUs5Wa2jh3INXa211XlZUAUgvupVkXdOA77OK94rcXfz+cp0+8m7UzCKw4/3QEzi1ikoX7BqhW+pA2RsfcNglN7ZISd+a54QOQ4x4l20CfFDNJyzGFHluwaPwjipp1ZnEYxF38XKcCE=
+	t=1747993211; cv=none; b=PTpF0oNHARpNZivzast2kKjiMY85vBIX5AC1W/1zhTfUus8oU9IwmrFL2U4geAJB7r2dwVmBb2X79PcYu/os/vggtmpXITjandbYd+T37cw1uJbWwgXVOBnd0zt7v7hTqY8DsL0g6ssp0dF3XLNjUvCCvynF82V7o+kMtTEFhDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987845; c=relaxed/simple;
-	bh=Pn6soPY7JUJ+aSD2s52N7FMA70X0mdacM1Xy6nBn0iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pu58d+2z5xlZFd1DBjtZweFuU6Jta6gTgpQW6JzGgjjzJkpJRVII2uJdxm9T8PvMRsYsCB96CGyWiWlrN8fOhc/HPHSnhGNud9SqT6BP7h/5P5e0UoOAEvRxaZfw9R1Fsa7LJWDXIoTEV4FRgswH59t5867j0RpQSwJN7lMkOfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7B011758;
-	Fri, 23 May 2025 01:10:26 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B44AE3F6A8;
-	Fri, 23 May 2025 01:10:40 -0700 (PDT)
-Date: Fri, 23 May 2025 09:10:36 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-Message-ID: <20250523081036.GB2566836@e132581.arm.com>
-References: <20250331172759.115604-1-leo.yan@arm.com>
- <aC_Vn95vYqcXul03@x1>
- <aC_WFRe_4HjVPUrM@x1>
+	s=arc-20240116; t=1747993211; c=relaxed/simple;
+	bh=EyjIJJ1aJToH0hBOVAR+EF+V4bSXXfa03bGAG1Wq7yc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CGUz6c2QaK2IDqkfSJ1K9NmfaZIzjHDHipELOyfWSeqWCZkqPn0P/3dXmw6bWlGFGs2Is3sLHx8hhDBnz/fhQAlfwdG17Z/cxo7IUp6IjPrHhbAMWPsNHEVMq9UdnFabYYgPqGreK1sphwXeNVO0i/Gpj6YlmjaCbwrocnf3nHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hy8+Abc5; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hy8+Abc5"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a37d24e607so3077086f8f.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 02:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747993208; x=1748598008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PmM7wl7FfXANU3+HoiZcpwWBrDC/gYVSs/BA58caBms=;
+        b=hy8+Abc5A4/XW+63VgDf3+BNSX2ukieLdkuV5SZTG7uZYGo8cNaF475Ob3Yg+167mZ
+         OCB1Mtat+uQYW/1FEhRF9Wx2VkYk40XAzfg7s2LtRbs5ZS2dolfWWECYmjMkol5tcFC8
+         lWRfUufY3MRohOJiWmGNB9Wv1Z6Rg69/QpOvnPcHtsG0ixVAX7eYPSsEERb9QJ3o06NT
+         /8qin1CEctylI+IqAVU+cxyd8BsDuWycmjKTuLFPv0kCF3tedZL6CzjrW6YOiszwUIoQ
+         VZOrdkRJC70DnIIBP51h0tvfi5lFsW23u0p1iVxLJuCOxVJ+fPWA9h+oz9FfahZ7jZK7
+         HPvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747993208; x=1748598008;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PmM7wl7FfXANU3+HoiZcpwWBrDC/gYVSs/BA58caBms=;
+        b=Fe7AiLAyfUJBAs+ZjUHvxsh2/qO4wj+lZH9tKHqWCT0B4O05jHl2OUWCoV28e4PWNU
+         VXOfM2VVWAzsyyEyEtFtddwyuSjn5LqZtlcJglAr5D67y9RMe0NnhYxQCR09nxyHqp6m
+         3nVSgfm47hTXyfyIbXW3XRRYIoyiUn8i14LzsMjeSfuDeU2RSnbel9U+aha3FmP2mXq9
+         DPTXWpZwCjcOmjYW//fVk4oaKqRrRpjo9rebkFi2X7vaOiglETqy+z5kwuUIXslwoinA
+         xlIphuJUj14+ZyZmvMbxRNwy8GtG5PJ1CxRRg4Ig2ci3s6Mdp6UTWWEjsyQxGF/z3t7L
+         Xd6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVSnqu9/DR6CCy307wDjS5412LmSir98OUwVF2ZKKjJPiceOO5FyoDaP/ObhmTGVdmCEIcOvS2AZdftJSKXKBSl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTsyZ6cr2scZ8JqzRbnn59yO8nn/WlC1MU9jveyTdapnAg0t3N
+	DcfAxt9omFKXMzqlKqlDeuAEQUypSpS6AJ71/CQEvjolkBY1VKHRZeY/QbzCVY5+KvE=
+X-Gm-Gg: ASbGncv+t3pBqlYswX4AsPLnOWAfpcw5CBPHsUYXh7Ot3rK8+QFyFSrx7d/F7hKnapA
+	fsmv1t0QuD+IycdsFf4gxP/zhQC8Gn2dODTH3rlVmsehjtdc4DuIJn/AYEHi91O3lGsO+rtj86j
+	4GAieWH7CGj6pIPI7ttVcxYC3O6u5Sxck0zKswpqDtX7ZpGqes0cM+t8nnGcZuNaMGBs3m7JxXo
+	mMwTY1npbIVNFM779uz4hleSRfqb0VqAucB8RK0UirdIISFyDbI8Ud3EMc3Fbdu9cx4CG55w2l5
+	v1+31wkLdRXOft56UqX25B5P2PTJpVFEPIPv5plTiQVdhH6WLRv7fHRZPCNJ9zjLJlc=
+X-Google-Smtp-Source: AGHT+IGZNy6iLufcbGr1Cm4vscuZZ5cosVeDu++QGebNauJZVQ9784C5I6lmRFlz/knjxPIF4kXi1w==
+X-Received: by 2002:a05:6000:40c9:b0:3a1:fc5c:dec7 with SMTP id ffacd0b85a97d-3a35fe67788mr24039998f8f.21.1747993207620;
+        Fri, 23 May 2025 02:40:07 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca88a34sm25709566f8f.70.2025.05.23.02.40.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 02:40:07 -0700 (PDT)
+Date: Fri, 23 May 2025 12:40:03 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Bhupesh <bhupesh@igalia.com>,
+	akpm@linux-foundation.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, bhupesh@igalia.com,
+	kernel-dev@igalia.com, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	oliver.sang@intel.com, laoar.shao@gmail.com, pmladek@suse.com,
+	rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+	arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
+	andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl,
+	peterz@infradead.org, willy@infradead.org, david@redhat.com,
+	viro@zeniv.linux.org.uk, keescook@chromium.org,
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
+	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+	mgorman@suse.de
+Subject: Re: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm'
+ to a more safer implementation
+Message-ID: <202505221104.qV4Iy0rA-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,82 +84,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aC_WFRe_4HjVPUrM@x1>
+In-Reply-To: <20250521062337.53262-3-bhupesh@igalia.com>
 
-On Thu, May 22, 2025 at 10:57:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, May 22, 2025 at 10:55:46PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Mar 31, 2025 at 06:27:59PM +0100, Leo Yan wrote:
-> > > The test might fail on the Arm64 platform with the error:
-> > > 
-> > >   perf test -vvv "Track with sched_switch"
-> > >   Missing sched_switch events
-> > > 
-> > > The issue is caused by incorrect handling of timestamp comparisons. The
-> > > comparison result, a signed 64-bit value, was being directly cast to an
-> > > int, leading to incorrect sorting for sched events.
-> > > 
-> > > Fix this by explicitly returning 0, 1, or -1 based on whether the result
-> > > is zero, positive, or negative.
-> > > 
-> > > Fixes: d44bc5582972 ("perf tests: Add a test for tracking with sched_switch")
-> > > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > 
-> > How can I reproduce this?
-> > 
-> > Testing on a rpi5, 64-bit debian, this test passes:
+Hi Bhupesh,
 
-Sorry that I did not give precise info for reproducing the failure.
-The case does not fail everytime, usually I can trigger the failure
-after run 20 ~ 30 times:
+kernel test robot noticed the following build warnings:
 
-# while true; do perf test "Track with sched_switch"; done
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : FAILED!
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : FAILED!
-106: Track with sched_switch                                         : Ok
-106: Track with sched_switch                                         : Ok
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I used cross compiler to build Perf tool on my host machine and tested on
-Debian / Juno board.  Generally, I think this issue is not very specific
-to GCC versions.  As both internal CI and my local env can reproduce the
-issue.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250521-142443
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250521062337.53262-3-bhupesh%40igalia.com
+patch subject: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to a more safer implementation
+config: powerpc64-randconfig-r071-20250522 (https://download.01.org/0day-ci/archive/20250522/202505221104.qV4Iy0rA-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
 
-Please let me know if need any more info.  Thanks!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202505221104.qV4Iy0rA-lkp@intel.com/
 
+New smatch warnings:
+fs/coredump.c:591 do_coredump() error: buffer overflow 'comm' 16 <= 16
+fs/coredump.c:1006 validate_coredump_safety() error: buffer overflow 'comm' 16 <= 16
 
----8<---
+vim +/comm +591 fs/coredump.c
 
-My Host Build compiler:
+a78282e2c94f4c Linus Torvalds               2024-09-26  524  void do_coredump(const kernel_siginfo_t *siginfo)
+10c28d937e2cca Alex Kelly                   2012-09-26  525  {
+10c28d937e2cca Alex Kelly                   2012-09-26  526  	struct core_state core_state;
+10c28d937e2cca Alex Kelly                   2012-09-26  527  	struct core_name cn;
+10c28d937e2cca Alex Kelly                   2012-09-26  528  	struct mm_struct *mm = current->mm;
+10c28d937e2cca Alex Kelly                   2012-09-26  529  	struct linux_binfmt * binfmt;
+10c28d937e2cca Alex Kelly                   2012-09-26  530  	const struct cred *old_cred;
+10c28d937e2cca Alex Kelly                   2012-09-26  531  	struct cred *cred;
+a78282e2c94f4c Linus Torvalds               2024-09-26  532  	int retval = 0;
+10c28d937e2cca Alex Kelly                   2012-09-26  533  	int ispipe;
+315c69261dd3fa Paul Wise                    2019-08-02  534  	size_t *argv = NULL;
+315c69261dd3fa Paul Wise                    2019-08-02  535  	int argc = 0;
+fbb1816942c044 Jann Horn                    2015-09-09  536  	/* require nonrelative corefile path and be extra careful */
+fbb1816942c044 Jann Horn                    2015-09-09  537  	bool need_suid_safe = false;
+acdedd99b0f3bf Oleg Nesterov                2013-04-30  538  	bool core_dumped = false;
+10c28d937e2cca Alex Kelly                   2012-09-26  539  	static atomic_t core_dump_count = ATOMIC_INIT(0);
+10c28d937e2cca Alex Kelly                   2012-09-26  540  	struct coredump_params cprm = {
+5ab1c309b34488 Denys Vlasenko               2012-10-04  541  		.siginfo = siginfo,
+10c28d937e2cca Alex Kelly                   2012-09-26  542  		.limit = rlimit(RLIMIT_CORE),
+10c28d937e2cca Alex Kelly                   2012-09-26  543  		/*
+10c28d937e2cca Alex Kelly                   2012-09-26  544  		 * We must use the same mm->flags while dumping core to avoid
+10c28d937e2cca Alex Kelly                   2012-09-26  545  		 * inconsistency of bit flags, since this flag is not protected
+10c28d937e2cca Alex Kelly                   2012-09-26  546  		 * by any locks.
+10c28d937e2cca Alex Kelly                   2012-09-26  547  		 */
+10c28d937e2cca Alex Kelly                   2012-09-26  548  		.mm_flags = mm->flags,
+95c5436a488384 Eric W. Biederman            2022-03-08  549  		.vma_meta = NULL,
+8603b6f58637ce Oleksandr Natalenko          2022-09-03  550  		.cpu = raw_smp_processor_id(),
+10c28d937e2cca Alex Kelly                   2012-09-26  551  	};
+10c28d937e2cca Alex Kelly                   2012-09-26  552  
+5ab1c309b34488 Denys Vlasenko               2012-10-04  553  	audit_core_dumps(siginfo->si_signo);
+10c28d937e2cca Alex Kelly                   2012-09-26  554  
+10c28d937e2cca Alex Kelly                   2012-09-26  555  	binfmt = mm->binfmt;
+a78282e2c94f4c Linus Torvalds               2024-09-26  556  	if (!binfmt || !binfmt->core_dump)
+10c28d937e2cca Alex Kelly                   2012-09-26  557  		goto fail;
+a78282e2c94f4c Linus Torvalds               2024-09-26  558  	if (!__get_dumpable(cprm.mm_flags))
+10c28d937e2cca Alex Kelly                   2012-09-26  559  		goto fail;
+10c28d937e2cca Alex Kelly                   2012-09-26  560  
+10c28d937e2cca Alex Kelly                   2012-09-26  561  	cred = prepare_creds();
+a78282e2c94f4c Linus Torvalds               2024-09-26  562  	if (!cred)
+10c28d937e2cca Alex Kelly                   2012-09-26  563  		goto fail;
+10c28d937e2cca Alex Kelly                   2012-09-26  564  	/*
+10c28d937e2cca Alex Kelly                   2012-09-26  565  	 * We cannot trust fsuid as being the "true" uid of the process
+10c28d937e2cca Alex Kelly                   2012-09-26  566  	 * nor do we know its entire history. We only know it was tainted
+10c28d937e2cca Alex Kelly                   2012-09-26  567  	 * so we dump it as root in mode 2, and only into a controlled
+10c28d937e2cca Alex Kelly                   2012-09-26  568  	 * environment (pipe handler or fully qualified path).
+10c28d937e2cca Alex Kelly                   2012-09-26  569  	 */
+e579d2c259be42 Kees Cook                    2013-02-27  570  	if (__get_dumpable(cprm.mm_flags) == SUID_DUMP_ROOT) {
+10c28d937e2cca Alex Kelly                   2012-09-26  571  		/* Setuid core dump mode */
+10c28d937e2cca Alex Kelly                   2012-09-26  572  		cred->fsuid = GLOBAL_ROOT_UID;	/* Dump root private */
+fbb1816942c044 Jann Horn                    2015-09-09  573  		need_suid_safe = true;
+10c28d937e2cca Alex Kelly                   2012-09-26  574  	}
+10c28d937e2cca Alex Kelly                   2012-09-26  575  
+5ab1c309b34488 Denys Vlasenko               2012-10-04  576  	retval = coredump_wait(siginfo->si_signo, &core_state);
+10c28d937e2cca Alex Kelly                   2012-09-26  577  	if (retval < 0)
+10c28d937e2cca Alex Kelly                   2012-09-26  578  		goto fail_creds;
+10c28d937e2cca Alex Kelly                   2012-09-26  579  
+10c28d937e2cca Alex Kelly                   2012-09-26  580  	old_cred = override_creds(cred);
+10c28d937e2cca Alex Kelly                   2012-09-26  581  
+315c69261dd3fa Paul Wise                    2019-08-02  582  	ispipe = format_corename(&cn, &cprm, &argv, &argc);
+10c28d937e2cca Alex Kelly                   2012-09-26  583  
+10c28d937e2cca Alex Kelly                   2012-09-26  584  	if (ispipe) {
+315c69261dd3fa Paul Wise                    2019-08-02  585  		int argi;
+10c28d937e2cca Alex Kelly                   2012-09-26  586  		int dump_count;
+10c28d937e2cca Alex Kelly                   2012-09-26  587  		char **helper_argv;
+907ed1328d2a74 Lucas De Marchi              2013-04-30  588  		struct subprocess_info *sub_info;
+10c28d937e2cca Alex Kelly                   2012-09-26  589  
+10c28d937e2cca Alex Kelly                   2012-09-26  590  		if (ispipe < 0) {
+c114e9948c2b6a Roman Kisel                  2024-07-18 @591  			coredump_report_failure("format_corename failed, aborting core");
+e7fd1549aeb83e Oleg Nesterov                2013-07-03  592  			goto fail_unlock;
 
-# aarch64-linux-gnu-gcc --version
-aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+>               /* This will always be NUL terminated. */ \
+> -             memcpy(comm, current->comm, sizeof(comm)); \
+> +             memcpy(comm, current->comm, TASK_COMM_LEN); \
+> +             comm[TASK_COMM_LEN] = '\0'; \
+                     ^^^^^^^^^^^^^^
+This was supposed to be "TASK_COMM_LEN - 1".  Also the comment says
+it's not required...
 
-Juno Board:
+10c28d937e2cca Alex Kelly                   2012-09-26  593  		}
+10c28d937e2cca Alex Kelly                   2012-09-26  594  
+10c28d937e2cca Alex Kelly                   2012-09-26  595  		if (cprm.limit == 1) {
+10c28d937e2cca Alex Kelly                   2012-09-26  596  			/* See umh_pipe_setup() which sets RLIMIT_CORE = 1.
 
-# lsb_release -a
-No LSB modules are available.
-Distributor ID: Debian
-Description:    Debian GNU/Linux 12 (bookworm)
-Release:        12
-Codename:       bookworm
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
