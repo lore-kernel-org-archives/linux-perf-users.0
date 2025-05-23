@@ -1,152 +1,131 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF118199E8D
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 10:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FADAE552;
+	Fri, 23 May 2025 12:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747997311; cv=none; b=pWu4rKA1xHKhIIPU0AvxXetnOaFlwdX8J8MdaxGlGxucXA8VtdL41LSN3fczfw6ktNnxiKmBJ4Lt26qdkP1SfvWf16wmGfgQ8tKhFkX1PkNK50nO/1zsPsnkL7oYF5QnE55hJh5yNPDulqMwb2CNxxBhJyuF2eXIsmyhWGFixXk=
+	t=1748003523; cv=none; b=GRJfuANkoH5tdyrqlNxq59cEwFlqwBf3Gns7SloyEHrpxwCjc/d6K3HPF3LTpscQS+H3feU0M5zij0C/7CAPJQwmLFLil+ASgbCep6PPaWSH0Hcreb2+kXjnnHfarXzCJITrw+9d3teUASRqFExO4nQB8JzIe9RVBeHnCoRBMgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747997311; c=relaxed/simple;
-	bh=XSkjldj97M+e+of8exBXRT5HBVLvhJohJVhRpJQP3e4=;
+	s=arc-20240116; t=1748003523; c=relaxed/simple;
+	bh=j0CL94Rb8NLPTthjduF/9Bmuzez0jW0NPtqEk9wPUBI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VU9ryw1Rtz81idRUW3/lu0fmmi6Ax1u+fcANCnwE9/HqOAWcmLsurQ65hXCyncnx67rdo8AD540EJ4JXZlGIdnnTUhT/UAFJFWZXVE7gy210Dt50iI3VB/2RckHzcvI7UFe/4O1dA1GGQjDBq3UIu8lnk6yJHLvVHHv1xANxsRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WL1ujVP7; arc=none smtp.client-ip=209.85.221.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=Pswo0odFB2QdP2BogO4d0RRAitpMVEeEQ9mGGSG24iYGvndxNJbXgzo3smTP2v8TphyPF0Lj9QOwI7Ysz/OqA4CFwCERcGXUm3Li/9RurBQgW48Vp4DuqhZ4Vmtkk5/QIM1G+Kt5+Xd3Hk3axvHmdhz8MmBs5yqVzwL6YRHD6Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dtTyykSV; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WL1ujVP7"
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-3a361b8a664so7042991f8f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 May 2025 03:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747997308; x=1748602108; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=voTvJwrPQGdruYP3pP85QbrJKMnqHgErZTAD/Bt3JTY=;
-        b=WL1ujVP7glMXqYU5DDByo8KfOXPc3ZQp10JJPv4askDNPAxOMQpKpL0lYKLiN/GygZ
-         F1FVoLPmHeAcdXfAdSJN4tHuXebWHuqxYmE++bF6boKI5HOHlQtqk2VBntFcwzMjk+YZ
-         P30ItrfxIMSlSeNoRKK0n1GNvZGQJ0XLSE0mhcSCapg/9/IedJbREgc+VqwVR+V6vDBe
-         o4HTBhK+JFWYZpy+M7cy6/SsXmUZoRVJ3C86NHd7dcHu3TXZAVFTpQ2egMwZGtmYsAKR
-         iLBQiJvleYkf8rx8JUldeyfPvSbeN6V1lBzc5yzVR4J7HkXmEvM392kN377JcGgCVVbR
-         poeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747997308; x=1748602108;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=voTvJwrPQGdruYP3pP85QbrJKMnqHgErZTAD/Bt3JTY=;
-        b=g/m/KFW1YrQWnZ7J1UBvr9Nm0HfT1mYHs8NXH7iC/BFgyzhxI6ncfvnW3k+0q9i4EJ
-         yuU+KXSjkW7uQIOPd2JwgrBEczvxGbjbAwYX7Haq8+l3cowLW+yqZ9LIk7lvJAd2jsux
-         QRG3R7iLhMAfEWXfIerPVKjNfsVW7epT0NV5maqH6Xm0FBNF7goyRYIxJLbEQiP/Dgwy
-         OCa/b2mMarjbd3TeBb8u2xSNGjljN4OVQMNRaTL7Xsx7gOhK4NIhGz/Ov1lgFN6V94S4
-         JUJHESALMkiDYc2ZJnQjPO7GERDnYDrspUBVZDERpOhpzKk6udT/YspkVO1Ml/JrUOU1
-         yLEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVv0R1i80am7lJ87/uiGbbUonb9WCZSszpQAhk3/sat7e3/y4XF689q9C8TwxBp2t/rYiTs3SZmTrJLz0pATPRn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ2cXEuZJTFXmDbRlu6SFGJw2jyTw/3IhlzUWhFNEJDCOnn1I3
-	ZJqPDfjy2kEsApKg8V+cMpJfeabLB9//7kv+smskavMqB9aNcYJ4jllcjXExP5/MnJM=
-X-Gm-Gg: ASbGnct8CaIhKjsSO/+Z13WF8AuHJ4IG5nrJmrVivdbM9D0cWF5OKsluA3c7933atmz
-	CCxSSe9EfcYg4t+/s8yv/48orEV/So1754/sEtR9tKM+kHDtUaJi2br18f82aD58VJpHDL1m99d
-	tNG256KBKTVLgg9SJgM8D6xm2Wt4wW7VNlIG/pJSvpGu4sTo7O8jm4G5/FHfil4XbXoWa841TF1
-	Sbp7vRaX2UUC3mq0u9cTCXROF7Y2Pm5uGm4NdtzkRDQr83YPm8J2kkF1H3pRBl8H0YdhD05fX3n
-	jToxiJoevw3n1+eiHET/LCqRzqN/k2m99o0uwBsB3JPmScstJayUsDrT
-X-Google-Smtp-Source: AGHT+IHx452QUcQ50JNdz8iXNSQilMKwUd4fVnA5wB1quLhPZnMwRd8x17z5rpX7t8/Vn6MdMihR6Q==
-X-Received: by 2002:a05:6000:2085:b0:3a3:ec58:ea41 with SMTP id ffacd0b85a97d-3a3ec58eb7dmr11166636f8f.48.1747997308045;
-        Fri, 23 May 2025 03:48:28 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a3674fed67sm21892603f8f.89.2025.05.23.03.48.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 May 2025 03:48:27 -0700 (PDT)
-Message-ID: <4763aca8-a140-4291-b12e-e03cc0d82bdd@linaro.org>
-Date: Fri, 23 May 2025 11:48:26 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dtTyykSV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yO0EwDZrf4fd992J3B8iCK71Ip2ga1Ayg9UxqoNl3Zw=; b=dtTyykSVssYRpd4G7j3B1bGx7I
+	XaQ18MuK8E645S1dcEUB3aD0MCqSWaQrM8s5x4zd7EMH21QPKvZLczSBuupJvoATKwLzkNDz0oKzu
+	zRbXx08nyKMkS4pymGSq4SQkGRV4apCr3ONB78Zr+sphNCIq0b5ob9xUJVBTi4ubC2cBJjSY073Yg
+	TlVq/YRLU9Q8wN57CZXZ59s6qDswZVnBXNVx9kQo/74OSSCd0nasd+9qRZOek6hwqtuzv+2YP6iek
+	fyTrBrCqR79iZ46ueTEXEhkuBrtjifNRI9A58IN0M1VTKXjMtLMZi/CidjNG0DgWI0g/DPPgrACDo
+	Fy4F4v/A==;
+Received: from [223.233.76.245] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uIRZ1-00CB4g-9x; Fri, 23 May 2025 14:31:51 +0200
+Message-ID: <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
+Date: Fri, 23 May 2025 18:01:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-References: <20250522171044.1075583-1-namhyung@kernel.org>
- <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
+To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org
+References: <20250521062337.53262-1-bhupesh@igalia.com>
+ <20250521062337.53262-4-bhupesh@igalia.com>
+ <202505222041.B639D482FB@keescook>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202505222041.B639D482FB@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Hi Kees,
 
+Thanks for the review.
 
-On 22/05/2025 9:09 pm, Ian Rogers wrote:
-> On Thu, May 22, 2025 at 10:10 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On 5/23/25 9:18 AM, Kees Cook wrote:
+> On Wed, May 21, 2025 at 11:53:37AM +0530, Bhupesh wrote:
+>> Historically due to the 16-byte length of TASK_COMM_LEN, the
+>> users of 'tsk->comm' are restricted to use a fixed-size target
+>> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
 >>
->> This is a preparation for shell tests belong to an arch.
-> 
-> I keep repeating that I don't like arch and I think ideally we'd be
-> getting rid of the C arch tests. I just sent out a patch doing this
-> for 1 test:
-> https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com/
-> We should be able to make perf, tests, etc. dependent on a PMU rather
-> than an architecture. This means that running perf built for ARM will
-> be able to do things running on an instruction emulator on x86. It
+>> To fix the same, Linus suggested in [1] that we can add the
+>> following union inside 'task_struct':
+>>         union {
+>>                 char    comm[TASK_COMM_LEN];
+>>                 char    comm_ext[TASK_COMM_EXT_LEN];
+>>         };
+> I remain unconvinced that this is at all safe. With the existing
+> memcpy() and so many places using %s and task->comm, this feels very
+> very risky to me.
+>
+> Can we just make it separate, instead of a union? Then we don't have to
+> touch comm at all.
 
-In this case for Arm SPE and Coresight you can only generate trace by 
-running on a full model or a real CPU, so I'm not sure if we could ever 
-get close to running on just an emulator.
+I understand your apprehensions, but I think we have covered _almost_ 
+all the existing use-cases as of now:
 
-> means the tool, the kernel APIs, etc. are generic and new
-> architectures like RISC-V can test things. It means cross-platform
-> (record on 1 machine type, report on another) can work without
-> tripping over load bearing architecture ifdefs. It means that we
+1. memcpy() users: Handled by [PATCH 2/3] of this series, where we 
+identify existing users using the following search
+     pattern:
+        $ git grep 'memcpy.*->comm\>'
 
-I have thought about adding some generic decoding side tests for SPE and 
-Coresight, but couldn't really get past the fact that you need to put 
-the trace dump _and_ the binaries traced into the git repo. Not only 
-would this benefit testing on other arches like you say, but it would 
-also lock down that decoding of a known file doesn't regress which we 
-can't currently do by generating new trace every time the test runs.
+2. %s usage: I checked this at multiple places and can confirm that %s 
+usage to print out 'tsk->comm' (as a string), get the longer
+     new "extended comm".
 
-If we ever added this they would be separate tests though so they could 
-go in the top level folder, where the ones in the arch folder would 
-continue to do record and decode. Maybe naming the folders by PMU could 
-work, but you could also have both PMU name and arch name folders like:
+3. users who do 'sizeof(->comm)' will continue to get the old value 
+because of the union.
 
-Recording/requires hardware:
+The problem with having two separate comms: tsk->comm and tsk->ext_comm, 
+instead of a union is two fold:
+(a). If we keep two separate statically allocated comms: tsk->comm and 
+tsk->ext_comm in struct task_struct, we need to basically keep 
+supporting backward compatibility / ABI via tsk->comm and ask new 
+user-land users to move to tsk->ext_comm.
 
-   tools/perf/arch/arm64/tests/shell/cs_etm/
+(b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
 
-Cross platform decode tests:
+I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
 
-   tools/perf/tests/shell/cs_etm/
+Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
 
-Which would mirror how the source files are currently laid out:
+[1]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
+[2]. https://lore.kernel.org/lkml/CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com/
 
-  tools/perf/arch/arm/util/cs-etm.c
-  tools/perf/util/cs-etm.c
+Please let me know your views.
 
-Thanks
-James
+Thanks,
+Bhupesh
 
-> benefit from more testing on generic pieces of code on all
-> architectures - like sample parsing. We can always strcmp the PMU name
-> or the architecture at runtime.
-> 
-> Structure wise we could have:
-> tools/perf/pmu/ibs_op/tests/
-> tools/perf/pmu/ibs_op/tests/shell
-> 
-> It feels noisy compared to just having the shell test in
-> tools/perf/tests/shell skip when the PMU isn't present. There are also
-> things like library dependencies that aren't clear when we have >1
-> directory. I'd prefer if new testing followed the existing model
-> rather than this.
-> 
-> Thanks,
-> Ian
-> 
+>> and then modify '__set_task_comm()' to pass 'tsk->comm_ext'
+>> to the existing users.
+> We can use set_task_comm() to set both still...
+>
+
