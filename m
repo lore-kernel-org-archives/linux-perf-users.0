@@ -1,131 +1,228 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FADAE552;
-	Fri, 23 May 2025 12:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5582D202F9A;
+	Fri, 23 May 2025 14:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748003523; cv=none; b=GRJfuANkoH5tdyrqlNxq59cEwFlqwBf3Gns7SloyEHrpxwCjc/d6K3HPF3LTpscQS+H3feU0M5zij0C/7CAPJQwmLFLil+ASgbCep6PPaWSH0Hcreb2+kXjnnHfarXzCJITrw+9d3teUASRqFExO4nQB8JzIe9RVBeHnCoRBMgg=
+	t=1748011864; cv=none; b=KSln9flsJzMAJqaDgrIz0sggRiKhzQ0FAL6gyVGtMkptEyVCY3+pG3iVEK++1oArj7l0tZoFelRBRYhiKMs40TDMKdcW9sBJvDUzWmcGcMobW74KNBYsBiSYX51WokY0yVPg1G1+270c3ns0vW+SblULYt1QBzmkY2+2gg0RwP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748003523; c=relaxed/simple;
-	bh=j0CL94Rb8NLPTthjduF/9Bmuzez0jW0NPtqEk9wPUBI=;
+	s=arc-20240116; t=1748011864; c=relaxed/simple;
+	bh=iQNEWUeLCB352bTu3ok5V6qZW15EZquP6l1y9wrUrVo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pswo0odFB2QdP2BogO4d0RRAitpMVEeEQ9mGGSG24iYGvndxNJbXgzo3smTP2v8TphyPF0Lj9QOwI7Ysz/OqA4CFwCERcGXUm3Li/9RurBQgW48Vp4DuqhZ4Vmtkk5/QIM1G+Kt5+Xd3Hk3axvHmdhz8MmBs5yqVzwL6YRHD6Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dtTyykSV; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=dxzNs7UkcNsjpNmugY49UnYzs4GH6yVhtRU+JE9s7xEkxxSBBh35uCn6O4meejrXqFBvOzBiQOEasi3iNBgjjknhMCc3xX4NZS+npIUZ6zU8915twFS5KinTyj7PGAqnTEqkEa47cGAQSmiM/Qc8Z312E0Rh93wxBAlMwWtgrrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=coIpBfJv; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dtTyykSV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yO0EwDZrf4fd992J3B8iCK71Ip2ga1Ayg9UxqoNl3Zw=; b=dtTyykSVssYRpd4G7j3B1bGx7I
-	XaQ18MuK8E645S1dcEUB3aD0MCqSWaQrM8s5x4zd7EMH21QPKvZLczSBuupJvoATKwLzkNDz0oKzu
-	zRbXx08nyKMkS4pymGSq4SQkGRV4apCr3ONB78Zr+sphNCIq0b5ob9xUJVBTi4ubC2cBJjSY073Yg
-	TlVq/YRLU9Q8wN57CZXZ59s6qDswZVnBXNVx9kQo/74OSSCd0nasd+9qRZOek6hwqtuzv+2YP6iek
-	fyTrBrCqR79iZ46ueTEXEhkuBrtjifNRI9A58IN0M1VTKXjMtLMZi/CidjNG0DgWI0g/DPPgrACDo
-	Fy4F4v/A==;
-Received: from [223.233.76.245] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uIRZ1-00CB4g-9x; Fri, 23 May 2025 14:31:51 +0200
-Message-ID: <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
-Date: Fri, 23 May 2025 18:01:41 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="coIpBfJv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748011863; x=1779547863;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iQNEWUeLCB352bTu3ok5V6qZW15EZquP6l1y9wrUrVo=;
+  b=coIpBfJvctMCMq5+iXjDJRytoCizoIrpgBbqnYRlUHJ4++nxUq+sBKrK
+   oh4nd5uPcN3IYI+LT1P6hZFNOHdJe5xb/ISb7l4ggIBcbcRi5SgSzlXG6
+   wmaVvIVB082zR9liwTA3d1G/q3J/GPVD1J0mmkoCeB+0+y0rTTrShEtdr
+   dpGIl1FSeT7Aivtkna6VYV0hTA4ANzyfQ8jdWFIvlODN4xxC59t4ePFzw
+   NdWiFXYZSkb4X5kbcwdHi7zxU/NmfNqJUfjFvqYnH/kknpsqVgrQz1cGr
+   f4nEeriiKQXhCqJ7VjnAjSOdgBqnogQOS0sVlGdSFediaB6Q253hm1YmD
+   w==;
+X-CSE-ConnectionGUID: 9kPrQ/4MRR6yvBdOqM9Dnw==
+X-CSE-MsgGUID: qc0sEfCvTa2iyS56BNtyLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61475178"
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="61475178"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 07:51:02 -0700
+X-CSE-ConnectionGUID: cot97aG8Sl6Sk3nzhwRTlw==
+X-CSE-MsgGUID: jH6Cx1IFTq2CHlSbh3IE8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,309,1739865600"; 
+   d="scan'208";a="164414225"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 07:51:01 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id CAA1D20B5736;
+	Fri, 23 May 2025 07:50:57 -0700 (PDT)
+Message-ID: <c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux.intel.com>
+Date: Fri, 23 May 2025 10:50:56 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and
+ header
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
+ Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>,
+ Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+ Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming
+ <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>,
+ Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250521135500.677508-1-irogers@google.com>
+ <20250521135500.677508-4-irogers@google.com>
+ <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
+ <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
+ <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
+ <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
 Content-Language: en-US
-To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- linux-trace-kernel@vger.kernel.org
-References: <20250521062337.53262-1-bhupesh@igalia.com>
- <20250521062337.53262-4-bhupesh@igalia.com>
- <202505222041.B639D482FB@keescook>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202505222041.B639D482FB@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Kees,
 
-Thanks for the review.
 
-On 5/23/25 9:18 AM, Kees Cook wrote:
-> On Wed, May 21, 2025 at 11:53:37AM +0530, Bhupesh wrote:
->> Historically due to the 16-byte length of TASK_COMM_LEN, the
->> users of 'tsk->comm' are restricted to use a fixed-size target
->> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+On 2025-05-21 3:19 p.m., Ian Rogers wrote:
+> On Wed, May 21, 2025 at 11:14 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >>
->> To fix the same, Linus suggested in [1] that we can add the
->> following union inside 'task_struct':
->>         union {
->>                 char    comm[TASK_COMM_LEN];
->>                 char    comm_ext[TASK_COMM_EXT_LEN];
->>         };
-> I remain unconvinced that this is at all safe. With the existing
-> memcpy() and so many places using %s and task->comm, this feels very
-> very risky to me.
->
-> Can we just make it separate, instead of a union? Then we don't have to
-> touch comm at all.
+>>
+>>
+>> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
+>>>>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+>>>>> index 7b6cde87d2af..13ef0d188a96 100644
+>>>>> --- a/tools/perf/builtin-top.c
+>>>>> +++ b/tools/perf/builtin-top.c
+>>>>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
+>>>>>
+>>>>>       setup_browser(false);
+>>>>>
+>>>>> -     if (setup_sorting(top.evlist) < 0) {
+>>>>> +     top.session = perf_session__new(/*data=*/NULL, /*tool=*/NULL);
+>>>>> +     if (IS_ERR(top.session)) {
+>>>>> +             status = PTR_ERR(top.session);
+>>>>> +             top.session = NULL;
+>>>>> +             goto out_delete_evlist;
+>>>>> +     }
+>>>>> +
+>>>>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
+>>>> I doubt a valide env can be got in perf_session__new(), since there is
+>>>> no perf.data in perf top.
+>>>> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
+>>>> env->arch.
+>>> I think the current code is making things harder than it should be, we
+>>> should work away from perf_env__arch and strings, instead using EM_
+>>> values which we can default to EM_HOST avoiding any runtime costs.
+>>> Looking at perf_env__arch:
+>>> ```
+>>> const char *perf_env__arch(struct perf_env *env)
+>>> {
+>>>         char *arch_name;
+>>>
+>>>         if (!env || !env->arch) { /* Assume local operation */
+>>>                 static struct utsname uts = { .machine[0] = '\0', };
+>>>                 if (uts.machine[0] == '\0' && uname(&uts) < 0)
+>>>                         return NULL;
+>>>                 arch_name = uts.machine;
+>>>         } else
+>>>                 arch_name = env->arch;
+>>>
+>>>         return normalize_arch(arch_name);
+>>> }
+>>> ```
+>>> in this case env->arch == NULL and so the uname machine will be used.
+>>> For perf_env__raw_arch the behavior is similar but it populates the
+>>> env:
+>>> ```
+>>> static int perf_env__read_arch(struct perf_env *env)
+>>> {
+>>>         struct utsname uts;
+>>>
+>>>         if (env->arch)
+>>>                 return 0;
+>>>
+>>>         if (!uname(&uts))
+>>>                 env->arch = strdup(uts.machine);
+>>>
+>>>         return env->arch ? 0 : -ENOMEM;
+>>> }
+>>>
+>>> const char *perf_env__raw_arch(struct perf_env *env)
+>>> {
+>>>         return env && !perf_env__read_arch(env) ? env->arch : "unknown";
+>>> }
+>>> ```
+>>> Aside from caching the arch, the main difference is that
+>>> normalize_arch isn't called. Not having normalize_arch means the code
+>>> in arch_support_sort_key and arch_perf_header_entry would need to
+>>> handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
+>>> etc. As I'd prefer not handle all those cases I think the way the code
+>>> is is best given how the env code is currently structured.
+>>
+>> Right. The perf_env__raw_arch() doesn't improve anything.
+>> But I still don't like &top.session->header.env.
+>> Because I don't think you can get any useful information from
+>> top.session->header.env. It just brings confusions. (It seems an env is
+>> retrieved, but it is actually not.)
+> 
+> Well there's a certain consistency in using the session env to set up
+> the sorting, etc. This pre-exists this change with nearly every
+> builtin-* file doing `symbol__init(&session->header.env);`. perf top
+> does `symbol__init(NULL);`:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/builtin-top.c?h=perf-tools-next#n1811
+> but the code now has lazy initialization patterns and handling NULL as
+> a special case of meaning host machine:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/symbol.c?h=perf-tools-next#n2350
+> 
+>> In the perf top, &perf_env is used for the existing cases. If any env
+>> fields are not available, perf_env__read_XXX() is invoked to get the
+>> information.
+>> I think we may follow the existing usage, e.g.,
+>> setup_sorting(top.evlist, &perf_env).
+> 
+> So using the global perf_env rather than NULL feels preferable but I
+> think the global perf_env should be deleted. Whenever I see the global
+> perf_env in use I think the code has a bug as the perf_env should be
+> coming from the session or the machine. The global perf_env can have
+> no meaning for cases like `perf diff` where more than one
+> file/header/env is open at a time. The global perf_env variable's
+> existence encourages bad or broken code, so deleting it should avoid
+> errors in code. Another place these issues can occur is with TPEBS
+> where we're maintaining multiple sessions for sampling alongside
+> counting.
+> 
+>> Alternatively, it looks like the perf top doesn't support --weight. The
+>> env->arch should never be used. If so, a NULL can be used as well, E.g.,
+>> setup_sorting(top.evlist, NULL).
+> 
+> So I don't like NULL because then we have lazy initialization of host
+> data and NULL meaning use host. I don't like the global perf_env
+> variable as it has a code smell about it. I think moving the session
+> initialization earlier in perf top so its env, although unpopulated,
+> can be used is consistent with `perf report` - this is consistent with
+> `perf top` being `perf record` glued together with `perf report`. So I
+> think the change here is the smallest and most sensible.
+> 
+> Longer term let's delete the global perf_env variable,  perf_env__arch
+> should be switched to a perf_env__e_machine as then we can avoid uname
+> calls just to determine the machine architecture, etc.
+> 
 
-I understand your apprehensions, but I think we have covered _almost_ 
-all the existing use-cases as of now:
+I'm fine with the session's env, as long as there is a consistent env
+source in the perf top. Because in the recent perf top fixes, we
+randomly pick the env source. Thomas's patch used the global env, but
+this one chose the session's env. It brings confusions.
+https://lore.kernel.org/lkml/20250513231813.13846-2-thomas.falcon@intel.com/
 
-1. memcpy() users: Handled by [PATCH 2/3] of this series, where we 
-identify existing users using the following search
-     pattern:
-        $ git grep 'memcpy.*->comm\>'
-
-2. %s usage: I checked this at multiple places and can confirm that %s 
-usage to print out 'tsk->comm' (as a string), get the longer
-     new "extended comm".
-
-3. users who do 'sizeof(->comm)' will continue to get the old value 
-because of the union.
-
-The problem with having two separate comms: tsk->comm and tsk->ext_comm, 
-instead of a union is two fold:
-(a). If we keep two separate statically allocated comms: tsk->comm and 
-tsk->ext_comm in struct task_struct, we need to basically keep 
-supporting backward compatibility / ABI via tsk->comm and ask new 
-user-land users to move to tsk->ext_comm.
-
-(b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
-
-I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
-
-Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
-
-[1]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
-[2]. https://lore.kernel.org/lkml/CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com/
-
-Please let me know your views.
+Could you please send a clean up patch to address the inconsistency?
 
 Thanks,
-Bhupesh
-
->> and then modify '__set_task_comm()' to pass 'tsk->comm_ext'
->> to the existing users.
-> We can use set_task_comm() to set both still...
->
+Kan
 
