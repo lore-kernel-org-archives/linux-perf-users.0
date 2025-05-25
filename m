@@ -1,86 +1,43 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384D51DF260
-	for <linux-perf-users@vger.kernel.org>; Sat, 24 May 2025 10:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F428145B3E;
+	Sun, 25 May 2025 09:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748084303; cv=none; b=K3bWymj9NSKomMHvrGjAcZ9NvWrv2f/o30b4cxfeoyM9MpTK5ohd4y3fIqgEhsElzaIiJvHbJDSZDNVsKkuHfNpR5exAVFKBQBcr+kG0O+SmUKgaaU+jH4aysOoWL5Q6+ULlTAdRC3QTj/SYNxwyEswMP/mizk2qS1Eo3IqDun4=
+	t=1748165561; cv=none; b=vACya+aXR3WaDGB7mXpN2+Rl162LYZ/TWMofG6iwXfhPQie7FW+sC4r+R7qoeAj3tiwFUfQAhOLN3GfeSzYNY+CybdzOPMX9fxGyjGF68anExXV7NGk30JlUv5Ub32XR5CdfiCBEIfyNzX5M2w6dcyZ33ann9ZdfQ44/1aS5oyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748084303; c=relaxed/simple;
-	bh=Q12FylRBeL663OoZ9YGf5lMA2yPzt4+m/Ww+fftkKwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sW9EqaUWBpCGhdHEmbgcvfRGXVXzrAxZ/BWGOtvk6wtJ6772/12RrAe4JMVHnT+qXM5TCcLPHpV8VF3J5VsmaLs11usq518p1kRKOhtEd6k8/n6pAQquuTyOc/En2QEQo3CqxaGlFKjCRJDTlCDGTEgB3SMIveHSCigGyAr1tCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M4rYuLEB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748165561; c=relaxed/simple;
+	bh=kl24Ua0UelZhR/nAFsC2xKWJof/FjZSiqCRD9U6PU50=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EF5tB4fITqku7byXDxbl6PcB79NPNrkePVK3/F46H0mhXV8412y8RYnqVG9VMJy/z/FxL/ekpEwfr/0BOU10Dd7JXKoW4vU6ainXOvkqkKR57ED5xLQsJSa0/l9kWMVeu7gPg4eUDN5N+XOsLfmm10hqv4caLQdcKqn4Q3blrKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0XTeH17; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4rYuLEB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748084300;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SK6lTrLghVp8Tcty26pMJozCMpWvjbgpAsSbPEUlhNQ=;
-	b=M4rYuLEBmgTI8TcX4hRPklamTLyg1At3ZNJbHOAI/1OkI24CqELwk9uoF/Jw1mIGNyNXx4
-	ojkGRhW8BVERo7oTPwKs/Ah0pf94z5ke+JFv9ttQTBuaE07ONba4dBr3rrPsicDZB85WMY
-	W8Zi/OGk1X1NWoXVBZ6zZ2FYPO4sjxs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-275-RawaEDL_M-C_myUhsAxCWA-1; Sat, 24 May 2025 06:58:18 -0400
-X-MC-Unique: RawaEDL_M-C_myUhsAxCWA-1
-X-Mimecast-MFC-AGG-ID: RawaEDL_M-C_myUhsAxCWA_1748084297
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso826931f8f.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 24 May 2025 03:58:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748084297; x=1748689097;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SK6lTrLghVp8Tcty26pMJozCMpWvjbgpAsSbPEUlhNQ=;
-        b=Y/y69+en5fYeVLv+lL91cgo1rhScNHVJiLIdL1ogtjZ+Qrrwmxux+QvFTKBw2+H0jH
-         5Z+7S+xUBmtKV5FAf8GTTjshJ5qBT6fZALK2oq58R8ESlpNfZ8uI0aPMLdH7UwDuuv6L
-         OU+ORZw0oXf7+ONBp68ylbWrUihbk87WDK9XnYsfk3ttfCGPs9px/ityGqezXBJQbidZ
-         x+1d94vfXGdVwA1w34FWDveZzcD8oN2ZbrZF+7H0PTAQpXmUShGe+rLiXC8uck4J81XZ
-         WhiDdO0g1BVmmu1zImqBItyd6Tkv8HZnvMf2caWq62J54C2nmjz+G20r3zcw4Rn4wycU
-         1k1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV1vqItNNzL+ax6eV7YyRVRWorox2ivgeU4E5RPZwbgMOu11PNBl/Pqrf7CcKONDrNYAvkF/cC1KVbTh/RG4TCn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1M+KaCylhPsZtFISxoKRq55xCC2hjxxtX6MThmcD/xZdOhLNQ
-	+HSZyyl/NJFUmTU/Q77oZOwNmZQS5l6bqfZ29mj+dHYm1OSJ8/0kgrz6iImDQGUbYHZ33k1RUI2
-	tO0FpvzvZw38CV4Ti/DmDcUMvpOfKtGl6eCK7UQ4rwBqwsjm1JNGn19cf6ad/uDEY6f3feOw=
-X-Gm-Gg: ASbGnctMB+Ikj+L/0/JjK531t+874rqsmfEI8LGjbIE+pHUVqo0CFZjzLp94yoIU6uf
-	8t+MxcofrORyREvP2nOfUL+lNBFjA9mCeJgjuYf4iIJUgU6SQixBvvcno99Vldq5Pgr+Fb6qO3A
-	yAm34SGmz+ebHA/d9s8+0f/hlEE1frQFXbQg+uvmr54TctyhuwdfBHZL0NIe3q9f9HmDGMVeN48
-	goe0v8WaeSh2SBrzy7311yCNXkyVM/bt7Fg+KnzijEylXywvqngOWGFYJuy3y5ACObRq7fX3NS7
-	hnJZ0Q==
-X-Received: by 2002:a05:6000:2289:b0:3a3:7bad:2b95 with SMTP id ffacd0b85a97d-3a4ca756cc2mr1908651f8f.29.1748084296978;
-        Sat, 24 May 2025 03:58:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOTLaWTmBRxNpW25Igp3sD+EItSM6UN1YCba+6ZKtRV9AV6RTZLoAbkr29tYUl1NFH9wZKDw==
-X-Received: by 2002:a05:6000:2289:b0:3a3:7bad:2b95 with SMTP id ffacd0b85a97d-3a4ca756cc2mr1908626f8f.29.1748084296586;
-        Sat, 24 May 2025 03:58:16 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8896dsm29238227f8f.73.2025.05.24.03.58.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 May 2025 03:58:15 -0700 (PDT)
-Date: Sat, 24 May 2025 06:58:12 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0XTeH17"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC7CC4CEEA;
+	Sun, 25 May 2025 09:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748165560;
+	bh=kl24Ua0UelZhR/nAFsC2xKWJof/FjZSiqCRD9U6PU50=;
+	h=Date:From:To:Cc:Subject:From;
+	b=p0XTeH17AiwultY3X+mQDAj7Dql55yDdALkzHAN7YSCoX7tIXgXhbmu4UI4KnB/+7
+	 zAqFkLgTDKFqXxNpTqjEtGDNWQ1ScU/vkwRsz3R65T3+Qfrd7BzkLztzw1GjKKIKea
+	 VUJ7qd7+u3UpO4Q0XoVHhszANEtRQdUS8/bDQCqzKEoSsk1SoaoR89VtZ8DR7KVeZQ
+	 o5O8dFUWk70IM6YT29yy109aPi3FZ6NUBxdXLw7TaQV0B9EeLiKohicvXkF59CWEQw
+	 BTl3KZzEPXRroxblacUJpU90N1wdRyDUMWoCnp0vHxzktwg9srjnjK5posm1qOxk2h
+	 n7MXB+2kTPAiw==
+Date: Sun, 25 May 2025 11:32:35 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: Re: [PATCH 1/7] tools include UAPI: Sync linux/vhost.h with the
- kernel sources
-Message-ID: <20250524065806-mutt-send-email-mst@kernel.org>
-References: <20250519214126.1652491-1-acme@kernel.org>
- <20250519214126.1652491-2-acme@kernel.org>
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] Performance events updates for v6.16
+Message-ID: <aDLjswBHxzKz1gx2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -89,58 +46,206 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250519214126.1652491-2-acme@kernel.org>
 
-On Mon, May 19, 2025 at 06:41:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> To get the changes in:
-> 
->   a940e0a685575424 ("vhost: fix VHOST_*_OWNER documentation")
-> 
-> That just changed lines in comments
-> 
-> This addresses this perf build warning:
-> 
->   Warning: Kernel ABI header differences:
->     diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
-> 
-> Please see tools/include/uapi/README for further details.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Stefano Garzarella <sgarzare@redhat.com>
-> Link: https://lore.kernel.org/r/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Linus,
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Please pull the latest perf/core Git tree from:
 
-> ---
->  tools/perf/trace/beauty/include/uapi/linux/vhost.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
-> index b95dd84eef2db231..d4b3e2ae1314d1fc 100644
-> --- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
-> +++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
-> @@ -28,10 +28,10 @@
->  
->  /* Set current process as the (exclusive) owner of this file descriptor.  This
->   * must be called before any other vhost command.  Further calls to
-> - * VHOST_OWNER_SET fail until VHOST_OWNER_RESET is called. */
-> + * VHOST_SET_OWNER fail until VHOST_RESET_OWNER is called. */
->  #define VHOST_SET_OWNER _IO(VHOST_VIRTIO, 0x01)
->  /* Give up ownership, and reset the device to default values.
-> - * Allows subsequent call to VHOST_OWNER_SET to succeed. */
-> + * Allows subsequent call to VHOST_SET_OWNER to succeed. */
->  #define VHOST_RESET_OWNER _IO(VHOST_VIRTIO, 0x02)
->  
->  /* Set up/modify memory layout */
-> -- 
-> 2.49.0
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2025-05-25
 
+   # HEAD: e7d952cc39fca34386ec9f15f68cb2eaac01b5ae perf/headers: Clean up <linux/perf_event.h> a bit
+
+Performance events updates for v6.16:
+
+Core & generic-arch updates:
+
+ - Add support for dynamic constraints and propagate it to
+   the Intel driver (Kan Liang)
+
+ - Fix & enhance driver-specific throttling support (Kan Liang)
+
+ - Record sample last_period before updating on the
+   x86 and PowerPC platforms (Mark Barnett)
+
+ - Make perf_pmu_unregister() usable (Peter Zijlstra)
+
+ - Unify perf_event_free_task() / perf_event_exit_task_context()
+   (Peter Zijlstra)
+
+ - Simplify perf_event_release_kernel() and perf_event_free_task()
+   (Peter Zijlstra)
+
+ - Allocate non-contiguous AUX pages by default (Yabin Cui)
+
+Uprobes updates:
+
+ - Add support to emulate NOP instructions (Jiri Olsa)
+
+ - selftests/bpf: Add 5-byte NOP uprobe trigger benchmark (Jiri Olsa)
+
+x86 Intel PMU enhancements:
+
+ - Support Intel Auto Counter Reload [ACR] (Kan Liang)
+
+ - Add PMU support for Clearwater Forest (Dapeng Mi)
+
+ - Arch-PEBS preparatory changes: (Dapeng Mi)
+
+   - Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
+   - Decouple BTS initialization from PEBS initialization
+   - Introduce pairs of PEBS static calls
+
+x86 AMD PMU enhancements:
+
+ - Use hrtimer for handling overflows in the AMD uncore driver
+   (Sandipan Das)
+
+ - Prevent UMC counters from saturating (Sandipan Das)
+
+Fixes and cleanups:
+
+ - Fix put_ctx() ordering (Frederic Weisbecker)
+
+ - Fix irq work dereferencing garbage (Frederic Weisbecker)
+
+ - Misc fixes and cleanups (Changbin Du, Frederic Weisbecker,
+   Ian Rogers, Ingo Molnar, Kan Liang, Peter Zijlstra, Qing Wang,
+   Sandipan Das, Thorsten Blum)
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Changbin Du (1):
+      perf/x86/intel/ds: Remove redundant assignments to sample.period
+
+Dapeng Mi (5):
+      perf/x86/intel: Add PMU support for Clearwater Forest
+      perf/x86/intel: Parse CPUID archPerfmonExt leaves for non-hybrid CPUs
+      perf/x86/intel: Decouple BTS initialization from PEBS initialization
+      perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
+      perf/x86/intel: Introduce pairs of PEBS static calls
+
+Frederic Weisbecker (5):
+      perf/core: Fix put_ctx() ordering
+      perf: Fix failing inherit_event() doing extra refcount decrement on parent
+      perf: Fix irq work dereferencing garbage
+      perf: Remove too early and redundant CPU hotplug handling
+      perf: Fix confusing aux iteration
+
+Ian Rogers (1):
+      perf/uapi: Fix PERF_RECORD_SAMPLE comments in <uapi/linux/perf_event.h>
+
+Ingo Molnar (2):
+      perf/uapi: Clean up <uapi/linux/perf_event.h> a bit
+      perf/headers: Clean up <linux/perf_event.h> a bit
+
+Jiri Olsa (2):
+      uprobes/x86: Add support to emulate NOP instructions
+      selftests/bpf: Add 5-byte NOP uprobe trigger benchmark
+
+Kan Liang (24):
+      perf/x86: Add dynamic constraint
+      perf/x86/intel: Track the num of events needs late setup
+      perf: Extend the bit width of the arch-specific flag
+      perf/x86/intel: Add CPUID enumeration for the auto counter reload
+      perf/x86/intel: Support auto counter reload
+      perf/x86/intel: Check the X86 leader for ACR group
+      perf/x86: Optimize the is_x86_event
+      perf/core: Add the is_event_in_freq_mode() helper to simplify the code
+      perf: Fix the throttle logic for a group
+      perf: Only dump the throttle log for the leader
+      perf/x86/intel: Remove driver-specific throttle support
+      perf/x86/amd: Remove driver-specific throttle support
+      perf/x86/zhaoxin: Remove driver-specific throttle support
+      powerpc/perf: Remove driver-specific throttle support
+      s390/perf: Remove driver-specific throttle support
+      perf/arm: Remove driver-specific throttle support
+      perf/apple_m1: Remove driver-specific throttle support
+      alpha/perf: Remove driver-specific throttle support
+      arc/perf: Remove driver-specific throttle support
+      csky/perf: Remove driver-specific throttle support
+      loongarch/perf: Remove driver-specific throttle support
+      sparc/perf: Remove driver-specific throttle support
+      xtensa/perf: Remove driver-specific throttle support
+      mips/perf: Remove driver-specific throttle support
+
+Mark Barnett (1):
+      perf/arch: Record sample last_period before updating on the x86 and PowerPC platforms
+
+Peter Zijlstra (10):
+      perf: Ensure bpf_perf_link path is properly serialized
+      perf: Simplify child event tear-down
+      perf: Simplify perf_event_free_task() wait
+      perf: Simplify perf_event_release_kernel()
+      perf: Unify perf_event_free_task() / perf_event_exit_task_context()
+      perf: Rename perf_event_exit_task(.child)
+      perf: Make perf_pmu_unregister() useable
+      perf/core: Fix perf-stat / read()
+      perf/core: Fix event->parent life-time issue
+      perf/core: Fix event timekeeping merge
+
+Qing Wang (1):
+      perf/core: Fix broken throttling when max_samples_per_tick=1
+
+Sandipan Das (5):
+      perf/x86/amd/uncore: Remove unused 'struct amd_uncore_ctx::node' member
+      perf/x86/intel/uncore: Use HRTIMER_MODE_HARD for detecting overflows
+      perf/x86/amd/uncore: Use hrtimer for handling overflows
+      perf/x86/amd/uncore: Add parameter to configure hrtimer
+      perf/x86/amd/uncore: Prevent UMC counters from saturating
+
+Thorsten Blum (2):
+      perf/x86/intel/bts: Rename local bts_buffer variables for clarity
+      perf/x86/intel/bts: Replace offsetof() with struct_size()
+
+Yabin Cui (1):
+      perf/aux: Allocate non-contiguous AUX pages by default
+
+
+ arch/alpha/kernel/perf_event.c                     |  11 +-
+ arch/arc/kernel/perf_event.c                       |   6 +-
+ arch/csky/kernel/perf_event.c                      |   3 +-
+ arch/loongarch/kernel/perf_event.c                 |   3 +-
+ arch/mips/kernel/perf_event_mipsxx.c               |   3 +-
+ arch/powerpc/perf/core-book3s.c                    |   9 +-
+ arch/powerpc/perf/core-fsl-emb.c                   |   6 +-
+ arch/s390/kernel/perf_cpum_cf.c                    |   2 -
+ arch/s390/kernel/perf_cpum_sf.c                    |   5 +-
+ arch/sparc/kernel/perf_event.c                     |   3 +-
+ arch/x86/events/amd/core.c                         |   3 +-
+ arch/x86/events/amd/ibs.c                          |   4 +-
+ arch/x86/events/amd/uncore.c                       | 103 +++-
+ arch/x86/events/core.c                             |  37 +-
+ arch/x86/events/intel/bts.c                        | 150 ++---
+ arch/x86/events/intel/core.c                       | 345 ++++++++++-
+ arch/x86/events/intel/ds.c                         |  55 +-
+ arch/x86/events/intel/knc.c                        |   7 +-
+ arch/x86/events/intel/lbr.c                        |   2 +-
+ arch/x86/events/intel/p4.c                         |   3 +-
+ arch/x86/events/intel/pt.c                         |   2 +
+ arch/x86/events/intel/uncore.c                     |  12 +-
+ arch/x86/events/perf_event.h                       |  45 +-
+ arch/x86/events/perf_event_flags.h                 |  41 +-
+ arch/x86/events/zhaoxin/core.c                     |   3 +-
+ arch/x86/include/asm/msr-index.h                   |   4 +
+ arch/x86/include/asm/perf_event.h                  |   1 +
+ arch/x86/kernel/uprobes.c                          |   5 +
+ arch/xtensa/kernel/perf_event.c                    |   3 +-
+ drivers/perf/apple_m1_cpu_pmu.c                    |   3 +-
+ drivers/perf/arm_pmuv3.c                           |   3 +-
+ drivers/perf/arm_v6_pmu.c                          |   3 +-
+ drivers/perf/arm_v7_pmu.c                          |   3 +-
+ drivers/perf/arm_xscale_pmu.c                      |   6 +-
+ include/linux/cpuhotplug.h                         |   1 -
+ include/linux/perf_event.h                         | 298 ++++++----
+ include/uapi/linux/perf_event.h                    | 657 +++++++++++----------
+ kernel/cpu.c                                       |   5 -
+ kernel/events/core.c                               | 609 +++++++++++++------
+ kernel/events/ring_buffer.c                        |  29 +-
+ tools/include/uapi/linux/perf_event.h              | 657 +++++++++++----------
+ tools/testing/selftests/bpf/bench.c                |  12 +
+ tools/testing/selftests/bpf/benchs/bench_trigger.c |  42 ++
+ .../selftests/bpf/benchs/run_bench_uprobes.sh      |   2 +-
+ 44 files changed, 1996 insertions(+), 1210 deletions(-)
