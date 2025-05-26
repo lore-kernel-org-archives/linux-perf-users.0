@@ -1,109 +1,134 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F47A1EB5C2
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 May 2025 11:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333327454;
+	Mon, 26 May 2025 11:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748257610; cv=none; b=mIfUu6zJn/aZHUJdudIZL3AU1PeLvAKFibpcBjrejY6VMxddD3Sfn5JMt6v7ZS/pWWkQhDHbPZs5gn3REsxLf4Xxm/v1uv3H+p/BRgwdBObfFFkbsXYNzoFSR4kPnl7RxyizO5xdxnNXKetkUvD0ycGfOgUo48RKB4eeOA47Gd4=
+	t=1748258054; cv=none; b=KtJEebJo7U5LmGe0ioPq9grMxeJjFfrgbi8b5RYqpvqyD9i4NG3LmAn/xAcOt2FBs9tq6J+uaxvMfQFb9/CfMXyjxDVOHrMTOLiaUUWIm6BarDMHHb/vGXyUqfOGDW7bKWBMF+84KXWcYwXlNS1rddfQ56k0wle3d4NosrN2+bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748257610; c=relaxed/simple;
-	bh=bZVrbFtLLb6xWMkxlIOLz4L0KQi2gJoiftZUhISdV0Q=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DmUJ70IY7rwE+r3OJHM868LZ4wXV0kuyGrjMOtJqGWNOjaDU3VmH9SVYdD4gnbiBr3Xc7CsNgaaV4lsQAplc/He29ehy0IAOTx+id/BNIyBnNuBcd1ruQM0ZyPnQLMbZn3S/sWnc5XAknMPtdlUio4kGxVswta6zNyLvQix8l2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b5XwS6RyWz13KdP;
-	Mon, 26 May 2025 19:04:56 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id B8E2A1402EA;
-	Mon, 26 May 2025 19:06:38 +0800 (CST)
-Received: from kwepemq200018.china.huawei.com (7.202.195.108) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 26 May 2025 19:06:38 +0800
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemq200018.china.huawei.com (7.202.195.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 26 May 2025 19:06:37 +0800
-CC: <yangyicong@hisilicon.com>, <namhyung@kernel.org>,
-	<catalin.marinas@arm.com>, <will@kernel.org>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <mark.rutland@arm.com>, <jolsa@kernel.org>,
-	<john.g.garry@oracle.com>, <james.clark@linaro.org>, <leo.yan@linux.dev>,
-	<irogers@google.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <jonathan.cameron@huawei.com>,
-	<hejunhao3@huawei.com>, <linuxarm@huawei.com>, <wangyushan12@huawei.com>,
-	<caijingtao@huawei.com>, <xueshan2@huawei.com>, <prime.zeng@hisilicon.com>,
-	Joe Mario <jmario@redhat.com>
-Subject: Re: [PATCH v2 0/3] Add support for SPE Data Source packet on
- HiSilicon HIP12
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20250425033845.57671-1-yangyicong@huawei.com>
- <d06b1e86-b6b8-3909-65bb-45b7cd70d263@huawei.com> <aC3oFxuEbVEHd3Pb@x1>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <f5afc098-def8-fa83-db9e-32837eadec0c@huawei.com>
-Date: Mon, 26 May 2025 19:06:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1748258054; c=relaxed/simple;
+	bh=hVGhZucvzX5ojlygkfesTT5oBv5VBt6Jo24Z6T3XFmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUhqbOMVN6Ia0uLYWqdAbkF2yDtR1wm0BoUDAoweigvw6oeF/TlcqPYwVAK1abtaixLuQx7u5Oglv+v0IxTF+iHUYCg17REJxwXJlcdIob8Jb8JZTe8e5iYwOea3SouNixi8LK33tzy/2SU1XmxAiA835acCCKZG0Uqw3XMnvK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dOgOkcgW; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dOgOkcgW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sRNyPwXExErBy/8kJGAzUEFc8FCKqjhWu+hUzGskcX8=; b=dOgOkcgW3891K46lC3h/P8Giqy
+	j5wpFWLFbNsIvtu/CSMhuFpyXc2GMmf/qW7htsdUuVeQHy4WDIcUcklGJ/ViGPPunnUieV9Q4IDtY
+	70vmdgOjsG/48WsDWWmRsgX30TeD25TnjOsUCjtkWJ8k3jGqeGKxRcEtaaR8bnvQ6O//TGBBuqxEm
+	T9eJVseaQnlwEULmm3DUUsYFcCO4JUm3QzyGMhJ7MbX7DRjfIxy6Nuz+t721q3JL8uYv2FRdti1TE
+	iXAOOvdxAotvmC56UVFnZM0j6AKJPYx3gSPt4AVRPNX7xCbTzeO3zT+lJmLdb3I0e/ttaelmWVQne
+	f2AjMJBg==;
+Received: from [223.233.79.88] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uJVmL-00DHZz-KJ; Mon, 26 May 2025 13:14:01 +0200
+Message-ID: <1bc43d6c-2650-0670-8c2a-25e8d36cfb7c@igalia.com>
+Date: Mon, 26 May 2025 16:43:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aC3oFxuEbVEHd3Pb@x1>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq200018.china.huawei.com (7.202.195.108)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org
+References: <20250521062337.53262-1-bhupesh@igalia.com>
+ <20250521062337.53262-4-bhupesh@igalia.com>
+ <202505222041.B639D482FB@keescook>
+ <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
+ <202505231346.52F291C54@keescook>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202505231346.52F291C54@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Arnaldo,
+Hi Kees,
 
-On 2025/5/21 22:49, Arnaldo Carvalho de Melo wrote:
-> On Wed, May 14, 2025 at 11:38:42AM +0800, Yicong Yang wrote:
->> a gentle ping on this..
-> 
-> So this involves both kernel and tooling, as soon as someone merges the
-> kernel part, I can try and get to the user part,
+On 5/24/25 2:25 AM, Kees Cook wrote:
+> On Fri, May 23, 2025 at 06:01:41PM +0530, Bhupesh Sharma wrote:
+>> 2. %s usage: I checked this at multiple places and can confirm that %s usage
+>> to print out 'tsk->comm' (as a string), get the longer
+>>      new "extended comm".
+> As an example of why I don't like this union is that this is now lying
+> to the compiler. e.g. a %s of an object with a known size (sizeof(comm))
+> may now run off the end of comm without finding a %NUL character... this
+> is "safe" in the sense that the "extended comm" is %NUL terminated, but
+> it makes the string length ambiguous for the compiler (and any
+> associated security hardening).
 
-is it still possible to catch up with this cycle? Kernel part has been picked up [1].
+Right.
 
-thanks.
-
-[1] https://lore.kernel.org/linux-arm-kernel/174790933967.1291842.14160046478134585349.b4-ty@kernel.org/
-
-> 
-> - Arnaldo
->  
->> Thanks.
+>
+>> 3. users who do 'sizeof(->comm)' will continue to get the old value because
+>> of the union.
+> Right -- this is exactly where I think it can get very very wrong,
+> leaving things unterminated.
+>
+>> The problem with having two separate comms: tsk->comm and tsk->ext_comm,
+>> instead of a union is two fold:
+>> (a). If we keep two separate statically allocated comms: tsk->comm and
+>> tsk->ext_comm in struct task_struct, we need to basically keep supporting
+>> backward compatibility / ABI via tsk->comm and ask new user-land users to
+>> move to tsk->ext_comm.
 >>
->> On 2025/4/25 11:38, Yicong Yang wrote:
->>> From: Yicong Yang <yangyicong@hisilicon.com>
->>>
->>> Add support for Data Source packet on HIP12. Support counting L2 HITM for c2c
->>> statistic since it was missing.
->>>
->>> Change since v2:
->>> - split the kernel/userspace changes into different patch
->>> - revise some mem_snoop decoding according to the discussion
->>> - count missing L2 HITM for c2c statistic
->>> Link: https://lore.kernel.org/linux-perf-users/20250408122809.37884-1-yangyicong@huawei.com/
->>>
->>> Yicong Yang (3):
->>>   arm64: cputype: Add cputype definition for HIP12
->>>   perf arm-spe: Add support for SPE Data Source packet on HiSilicon
->>>     HIP12
->>>   perf mem: Count L2 HITM for c2c statistic
->>>
->>>  arch/arm64/include/asm/cputype.h              |  2 +
->>>  tools/arch/arm64/include/asm/cputype.h        |  2 +
->>>  .../util/arm-spe-decoder/arm-spe-decoder.h    | 17 ++++
->>>  tools/perf/util/arm-spe.c                     | 96 +++++++++++++++++++
->>>  tools/perf/util/mem-events.c                  |  5 +-
->>>  5 files changed, 121 insertions(+), 1 deletion(-)
->>>
-> 
-> .
-> 
+>> (b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
+>>
+>> I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
+>>
+>> Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
+> Right -- I agree we need them statically allocated. But I think a union
+> is going to be really error-prone.
+>
+> How about this: rename task->comm to something else (task->comm_str?),
+> increase its size and then add ABI-keeping wrappers for everything that
+> _must_ have the old length.
+>
+> Doing this guarantees we won't miss anything (since "comm" got renamed),
+> and during the refactoring all the places where the old length is required
+> will be glaringly obvious. (i.e. it will be harder to make mistakes
+> about leaving things unterminated.)
+>
+
+Ok, I got your point. Let me explore then how best a ABI-keeping wrapper 
+can be introduced.
+I am thinking of something like:
+
+abi_wrapper_get_task_comm {
+
+     if (requested_comm_length <= 16)
+         return 16byte comm with NUL terminator; // old comm (16-bytes)
+     else
+         return 64byte comm with NUL terminator; // extended comm (64-bytes)
+     ....
+}
+
+Please let me know if this looks better. Accordingly I will start with 
+v5 changes.
+
+Thanks,
+Bhupesh
