@@ -1,151 +1,96 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAC324DD17
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 09:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C671FF1A0;
+	Tue, 27 May 2025 10:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748339997; cv=none; b=ZZaagE7FpcnD6aw4pE3YsISLv+Zt55g/jRhyaWYkM3e9pBkRF4Rf8TOhOyps0F795dEr/pxyrRI93WRYPszKAsbOMvjZkA6KZ1I9O9VwN3ike8cZEfPELiINV6uIptHPYwG4MX1bNu3zAMBSM8qyxwc512vSGGAUNJknie/F210=
+	t=1748340777; cv=none; b=bTvVI8KrSkl7/NBEog4/VF7/JVFwxZOGF+uIPAMfgRu3uv570StZLAJPyc+FRuacWiCbrzA4Yo8wm2T7tjLPeIliFQceN7SVvVdZGvmO3z4hPhqFg/5ULiIAxk1kneovfv4xzK3hnwbWrLGvQkOEJvU7Lu8Cp/h9PmNEM3qzzIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748339997; c=relaxed/simple;
-	bh=MzOvGX8O+4utQ4eU3Iajmah5bipRwCmAxAIkr/YrneE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gHim2iW97+PdgnP8c6APTxs6/iWfjZKqsOX4V25cNAy1ja4K8iAFCM5PmMT6CQLciYvnSCfLeYTDe9uXTReMBdKNVZS8TtRDUbOiUnHKjYlICSGUTtYHHy31Mo7W//wqrnbdyVqPfVgp5TbMzMyqNwcJpjyJ0d47wpkA1rwboaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VnQLdZeL; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VnQLdZeL"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a37a243388so3222959f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 02:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748339994; x=1748944794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o4DLlx+hKQhw+ENgyFAqY2PL5hW4DHMG/cxZu2R2Xik=;
-        b=VnQLdZeL7eOji61GOi7HPGKca7NmU8WKZcqkehppqcA4IRKmDSOKCJrlYt4HlmKPpa
-         eU6KKNINEfg8PZk3Pwek9poAcCqF/Tv5Y4by5Yc6Apt0pdGRpVlB/T+CcDEV60/pGIHu
-         MD5er/23EVDP2Bsyzxdj7696KH8cZjSXkY23qXG7Q7/ekSiI8NR5tZb85VCPQC04iWMS
-         PrsdakJ7e0TJbq451Nple24CBk5DGAZpZW0pV0BWfN2SZi6wBNb8MfOlIXHXaaSjM+Ky
-         Dd4wTBqQQ79dVBtPHsIj2JaAzYTbC94IWzgcAp1PZDmkyI4cbQEUh9+2m8p6VnXPfS2C
-         bb3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748339994; x=1748944794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o4DLlx+hKQhw+ENgyFAqY2PL5hW4DHMG/cxZu2R2Xik=;
-        b=dSXDNDBdbCJHlwoIBJr2IZa9hg/kQsVV5ewNJVJgoHdd+oC98/8L9+ivkrR+F1i6Dt
-         YEEk5vKyVG9ycWjbalHPtnlHcZQkn0Z3XOmpd1PnuqJPMF6OVAMev4nkJIk069k9vtKd
-         mcNGm6pM3/Bl2L1MC4g6Z7X37WtO8DXOJVBBo5cGETL45w3cT4I70bkrcRc+z5wtbVhE
-         CbCXUb9vss/6YKmXxSgIjnghvmWRaanx9kk7ky+lfXUvcH7cgkcQtIDdnmsilpkf9aAp
-         6vRuMhfqfECnnTGRXtnEEGgcEfzYvzfRVADOjBxPNHvvwNBLEfaSJvdZJjTUcPFmjPTX
-         KVOQ==
-X-Gm-Message-State: AOJu0YyNw5sKvF/gcy4Px6eLcaV5X3f1gh1iRcExoHNBVV+/tyDBJ9TV
-	/dWKpvBDnT8dAbrbDHfRg12XYEMnPV2KS6MIXmp2k1J4ZzppkyU6lQuasNdim4pXD/ulJAhZhco
-	gxxBT9mg9GXVfbrP+jBjFB4lP1N8K7PlTd0wmFcs21w==
-X-Gm-Gg: ASbGnctiD/U/fBm3JTk2vLnad/yxq3PYsTHjlHzI+Fx9Rh61TsXe7wsQnyVV8X2dySq
-	N3EHt3C4uiHsX7A/H2IC/SwFiKHBm8cBG+can5X7lkyzrU19FyY79idxCmETa+RqBZdiivZxLJ0
-	BPpfGS6EEH7HkDStyr4+xNCHmDqE5NVvg=
-X-Google-Smtp-Source: AGHT+IEW4jiGzBYUUJeQ+hZ9q3VAC3c3XCEXdCJkYQj3sC6I500v3SraZXfwDAQYqmh+I1E3eL9qo1sRnEJZg8HQc9I=
-X-Received: by 2002:a05:6000:240d:b0:3a4:d6ed:8e07 with SMTP id
- ffacd0b85a97d-3a4d6eda68cmr5556606f8f.32.1748339993821; Tue, 27 May 2025
- 02:59:53 -0700 (PDT)
+	s=arc-20240116; t=1748340777; c=relaxed/simple;
+	bh=ApCfWdY+JdAxG4XoYj79NdIh5DdFSANb3DdVg0jYXVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W8Hbxy7pHxVQlSSkk4FkI8ymUtHkoKX8YrYmJvE5JTEkhrg3WMmouTdV4gHxdU6vfgL1gHOXhy15VaJzIZkTw4IfdrS/qt/h6JL6m01ltYxQMAn0uDGA5OyTV6WsYZaCfKZHGoA8dERxwO5ahqMFzDeMMzgagsBxC3F8mjCQr/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5F0D14BF;
+	Tue, 27 May 2025 03:12:38 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 732773F5A1;
+	Tue, 27 May 2025 03:12:54 -0700 (PDT)
+Date: Tue, 27 May 2025 11:12:46 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/3] perf mem: Describe overhead calculation in brief
+Message-ID: <20250527101246.GG2566836@e132581.arm.com>
+References: <20250523222157.1259998-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com> <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
-In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
-From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Date: Tue, 27 May 2025 10:59:41 +0100
-X-Gm-Features: AX0GCFvLUhtMwBzFmk1b4gn3Tur4pK0okxD3qyqun7XWisCr-irbPglToM7Uhec
-Message-ID: <CAECbVCvPCsHVvm5QKQrw+DDLsZGaHMgCHyJ=cp_gFcAyiFA4ow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] perf: Increase the maximum number of branches
- remove_loops() can process.
-To: ak@linux.intel.com, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Atish Kumar Patra <atishp@rivosinc.com>, Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Beeman Strong <beeman@rivosinc.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523222157.1259998-1-namhyung@kernel.org>
 
-Adding Andi Kleen as this was originally written by him.
+On Fri, May 23, 2025 at 03:21:55PM -0700, Namhyung Kim wrote:
+> From: Ravi Bangoria <ravi.bangoria@amd.com>
+> 
+> Unlike perf-report which uses sample period for overhead calculation,
+> perf-mem overhead is calculated using sample weight. Describe perf-mem
+> overhead calculation method in it's man page.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
--Rajnesh
+For whole series:
 
-On Fri, May 23, 2025 at 12:26=E2=80=AFAM Rajnesh Kanwal <rkanwal@rivosinc.c=
-om> wrote:
->
-> RISCV CTR extension supports a maximum depth of 256 last branch records.
-> Currently remove_loops() can only process 127 entries at max. This leads
-> to samples with more than 127 entries being skipped. This change simply
-> updates the remove_loops() logic to be able to process 256 entries.
->
-> Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+
 > ---
->  tools/perf/util/machine.c | 21 ++++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2d51badfbf2e2d1588fa4fdd42ef6c8fea35bf0e..5414528b9d336790decfb42a4=
-f6a4da6c6b68b07 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2176,25 +2176,32 @@ static void save_iterations(struct iterations *it=
-er,
->                 iter->cycles +=3D be[i].flags.cycles;
->  }
->
-> -#define CHASHSZ 127
-> -#define CHASHBITS 7
-> -#define NO_ENTRY 0xff
-> +#define CHASHBITS 8
-> +#define NO_ENTRY 0xffU
->
-> -#define PERF_MAX_BRANCH_DEPTH 127
-> +#define PERF_MAX_BRANCH_DEPTH 256
->
->  /* Remove loops. */
-> +/* Note: Last entry (i=3D=3Dff) will never be checked against NO_ENTRY
-> + * so it's safe to have an unsigned char array to process 256 entries
-> + * without causing clash between last entry and NO_ENTRY value.
-> + */
->  static int remove_loops(struct branch_entry *l, int nr,
->                         struct iterations *iter)
->  {
->         int i, j, off;
-> -       unsigned char chash[CHASHSZ];
-> +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
->
->         memset(chash, NO_ENTRY, sizeof(chash));
->
-> -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
-> +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
->
->         for (i =3D 0; i < nr; i++) {
-> -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ;
-> +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is not
-> +                * needed as hash_64 will anyway limit the hash
-> +                * to CHASHBITS
-> +                */
-> +               int h =3D hash_64(l[i].from, CHASHBITS);
->
->                 /* no collision handling for now */
->                 if (chash[h] =3D=3D NO_ENTRY) {
->
-> --
-> 2.43.0
->
+>  tools/perf/Documentation/perf-mem.txt | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+> index a9e3c71a220557d4..965e73d377724607 100644
+> --- a/tools/perf/Documentation/perf-mem.txt
+> +++ b/tools/perf/Documentation/perf-mem.txt
+> @@ -137,6 +137,25 @@ REPORT OPTIONS
+>  In addition, for report all perf report options are valid, and for record
+>  all perf record options.
+>  
+> +OVERHEAD CALCULATION
+> +--------------------
+> +Unlike linkperf:perf-report[1], which calculates overhead from the actual
+> +sample period, perf-mem overhead is calculated using sample weight. E.g.
+> +there are two samples in perf.data file, both with the same sample period,
+> +but one sample with weight 180 and the other with weight 20:
+> +
+> +  $ perf script -F period,data_src,weight,ip,sym
+> +  100000    629080842 |OP LOAD|LVL L3 hit|...     20       7e69b93ca524 strcmp
+> +  100000   1a29081042 |OP LOAD|LVL RAM hit|...   180   ffffffff82429168 memcpy
+> +
+> +  $ perf report -F overhead,symbol
+> +  50%   [.] strcmp
+> +  50%   [k] memcpy
+> +
+> +  $ perf mem report -F overhead,symbol
+> +  90%   [k] memcpy
+> +  10%   [.] strcmp
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
+> -- 
+> 2.49.0.1151.ga128411c76-goog
+> 
