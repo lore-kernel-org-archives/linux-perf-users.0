@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBE520C026
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 06:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BD720E011
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 06:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748328148; cv=none; b=lYaY59Noq5cuK4sOrCvCpXuK1PBt6q3HQ1A1CklRDP3WbJfTzvoaUmtp76TrH8yks612m9VBNdhKoBdbwzHRPoSTGfgJTT+2ewuEm0Vp9w65/ZSB4ODmYDtX/Ba2+UEE7mpoWxkDBHcZowiji3NHWOGdemliYf55JjnbKKTp2Gc=
+	t=1748328150; cv=none; b=ESPY68xyQHsql5Todoy5MXZngoKXbP7Q86jF94hKEzZwB0Y4ybYpN+r17ehGQaNUtO3n5w4DYzdBJgU7WoKIcbA5iSB5BoX0wzurs1NNmq7uDj/Q5ZDSm3TkriVTKkVgiNmpXCiQWS7iyGqujJjsAPVqiz1fK4RToVeBXos4hRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748328148; c=relaxed/simple;
-	bh=yzNjmX59kG3whaHqOQeIyuVjWBTgpcE+Yqv8MqV6DW4=;
+	s=arc-20240116; t=1748328150; c=relaxed/simple;
+	bh=g1pTIiVCfL0YGf+X/ae4Tzq0BX6X5BVc25oBmqj1Uck=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=OxwRuUaZ/cLSKn0SE9YKCQHvV8TViOaUYKHLpr2fzBIw1s/jrEbdS3fxSI6pjvyXk2PPFaWkFV5Tu51IR2NrZOe43UYk5trLBpSE/SQhoPF75vzk85DBQZKTBMV2hJy3cit8BuABjzRJCMUK3VJYSlnit8Q/RdDo+pkIQDh+WlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QHjOhigz; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=aQafj7uDPQmRGRrWw+b2nNFVtoPGEDVIbtYVDMZFyr10fIudhtiuKCwyIvHzbncdujXmqjgGlZrgAylT5e4z5v7AjPwiy34kk3avWZnOmx5BNZik9Dv7YQbreQ2g3/uoIgVyUEwxJSTAa9kPTuapC8mK+EuTTB71I/rPugoz14U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VeBmrI++; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QHjOhigz"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7429f7f9ee3so2091242b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 May 2025 23:42:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VeBmrI++"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-740774348f6so2585472b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 May 2025 23:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748328146; x=1748932946; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748328148; x=1748932948; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9243hlKBPdeZ1Gi9lTPRhe1+dSif74gAofzJyXdpiIE=;
-        b=QHjOhigzIpkUOsnfBD84ZkeOtMWjFns4xmzlp+oUmNVxEj9HeFSgZo/yV5CjnzP6JT
-         bp3aUPWbcGpSODOfo8fnnSUKf8M0zboTcBBu6VNIQeaAX/cfcPX/jeImBn4eyTU9Kj1e
-         YrkCHmE8Nm67Z1058NSz7rdKZtXUL9wspi7ZqiFKQH3d9TmW0m1UjehsGfNaDPJzgxab
-         lp0iHOg33VSZVObtnbHKVbdwRrREl8fK3LUjxt2uLXg7VzJ8R9UE1DDDEJWQofm9WQ0H
-         y45pHpLEiE8eIduywGg+t8TXxW8iixfEXe/J49gTAubB/lfwUZZyaMuZYS2byk45KpdR
-         ymXA==
+        bh=qa+bZ6NfDiwN6emHRNVhAg+nUxfKRoBgxQCLCaEZspk=;
+        b=VeBmrI++xktFGYullQdyBFyxZwOhDU+YoUGEDAJoA28CLjhG47p8oG2CNg+jtCyYb+
+         AGBHFVKxgnT5VYACCE2mKqokpkiHreqCgSz61B2iiacd9eGIqtYBoGc+r6yrIFWrRjXH
+         EslH6T2nUnbpG84TWcdOuNkNMx358PuDtwHI1Fw2BCAPALdfjXOWnf6T8Cgb4SSFT9sk
+         7ejmgYMry8n3aQtla3tHnfvNsf410zfwjcR0Lz3hsDY+hzcV2ZxOSwom5sX4PYp3wcDH
+         fpNJlSIxbI/M7q+yLXiI7jTy5nC/URCdGghwBTiKkw8yVimzEvyYuJGGnTUMfX8uvz9G
+         WZ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748328146; x=1748932946;
+        d=1e100.net; s=20230601; t=1748328148; x=1748932948;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9243hlKBPdeZ1Gi9lTPRhe1+dSif74gAofzJyXdpiIE=;
-        b=Xw+DKC0sonOk6whpb4aYbyM1ISZGJQ1xilrWAS0XdZfDAeCQk8OcK9HTRO8XAlC2Ib
-         MIt9eyE2ygpWZbZBhnL5rUlLQsf0qrbY/o2Pp6zEepSBEnYxeLObXRCRhWVS2/xv28+d
-         j3aDyXHLj+s/9yYvpVp4z00S66aAN+nVyfwI1+uCG5jqqBy7BJd1tMLPAy1whaNfDzf+
-         OA4J+JlHvoksBn/k8+vceGLOE4Enx3QFmRxoKI3gPp/moyx3M3EyoBhOaweZYwjIPb0i
-         wfOSpYKtWraQ3htR7w77l4Wsr4hk6pBluBzymk0vjrXp9N5a0si5IaVB9amNfDcK97pu
-         es/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCULWD+V77FNQ6it2JtUpx+S9R9X2PLFTKzBGb5ijH0PUEW8xMhCUQn4dhmYfSuPwrJJ0Cw1UduLx7SZWaBIeJpW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlVXV7klUn5EBrqElcR9M5+wZwOqPTE10tQkFdfOpjiTEtrkTX
-	dErzn+sRykB9SAJPfHRk1+7GU+GqOsMWPKNrCNoldEiHEVDyLWqbE9+FupWuNivLkryI6XA9153
-	fPM5hM/SmyA==
-X-Google-Smtp-Source: AGHT+IFSaCGMgzGcQR5sH0WwCDihQ6b4O7L/EdB23UzxzbsOhbA+EnKf4bgJh66renmbJCUXk6BdAwgRNDxo
-X-Received: from pfbjc32.prod.google.com ([2002:a05:6a00:6ca0:b0:736:b315:f15e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4646:b0:742:ae7e:7da8
- with SMTP id d2e1a72fcca58-745fdfcc5e9mr17415149b3a.8.1748328145586; Mon, 26
- May 2025 23:42:25 -0700 (PDT)
-Date: Mon, 26 May 2025 23:41:52 -0700
+        bh=qa+bZ6NfDiwN6emHRNVhAg+nUxfKRoBgxQCLCaEZspk=;
+        b=jaZYFn+KzJrZb0Y0LqCrCqTKqAASI13IGkARxDmYgkZelOsA5NWat37ybo2oGO/hJL
+         JV1kYMnFH8JoR1mUv+BYsMShQHhDcrs+jVPR9oo0bGYHpPfY8uNSagU6HAcBba35Kk8M
+         xAZtYOm3MIT1Wo+euH7o5iPh2VilgGmZCcc3ICCa0CIThaGoGBw18zHr482b0vQtATFI
+         bsMqm5up1l1je4lo2GmRChG28lv4erxcZwOLSAdxeS0Qcu9vjTUjBfQO3QvNGAXFWEyA
+         Ivwm6OXpBonGQPtXchAKWLP16LUF9opDwtcNj5suWUel7jnaxa9VfWuBz7yvGYTQnkKW
+         YzTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVr9o9lfT3bRetZLaTvNJssWWUJcbY1+34lspIcwxpSGX5tRBsUjcTwbCPVitB3Ej9GHx2+cMc7GOQH2L7NU7gd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW3lhPEp5iqStS4Ty6yk4KHvH1EbB7k1eVrXf8334Swa1A666l
+	UZ7fNvUCg2jwOtNC/E0pHdX+LRHB0mO9kDsA64ibsfFe85AoVu02qPZypOZ42uoLQgH5Ss66Ckt
+	BtZqlpfrKTw==
+X-Google-Smtp-Source: AGHT+IFaY7Epe7TFUjEZoxVGrbJT8LG2DopMwMAi0GAGc08duoLIMdGL5EAMIRWUbJCsETCGf/3a/aibp3BX
+X-Received: from pfjd1.prod.google.com ([2002:a05:6a00:2441:b0:730:743a:f2b0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:ace:b0:740:6f69:8d94
+ with SMTP id d2e1a72fcca58-745fdac936dmr18806567b3a.0.1748328147867; Mon, 26
+ May 2025 23:42:27 -0700 (PDT)
+Date: Mon, 26 May 2025 23:41:53 -0700
 In-Reply-To: <20250527064153.149939-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250527064153.149939-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250527064153.149939-11-irogers@google.com>
-Subject: [PATCH v1 10/11] perf auxtrace: Pass perf_env from session through to
- mmap read
+Message-ID: <20250527064153.149939-12-irogers@google.com>
+Subject: [PATCH v1 11/11] perf env: Remove global perf_env
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -85,115 +84,104 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
- auxtrace_mmap__read and auxtrace_mmap__read_snapshot end up calling
- `evsel__env(NULL)` which returns the global perf_env variable for the
- host. Their only call is in perf record. Rather than use the global
- variable pass through the perf_env for `perf record`.
+The global perf_env was used for the host, but if a perf_env wasn't
+easy to come by it was used in a lot of places where potentially
+recorded and host data could be confused. Remove the global variable
+as now the majority of accesses retrieve the perf_env for the host
+from the session.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c |  8 ++++++--
- tools/perf/util/auxtrace.c  | 13 +++++++------
- tools/perf/util/auxtrace.h  |  6 ++++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ tools/perf/perf.c           | 3 ---
+ tools/perf/util/bpf-event.c | 2 +-
+ tools/perf/util/env.c       | 2 --
+ tools/perf/util/env.h       | 2 --
+ tools/perf/util/evsel.c     | 2 +-
+ tools/perf/util/session.c   | 2 +-
+ 6 files changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 406b2166a3e9..3f5b9add43d5 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -773,7 +773,9 @@ static int record__auxtrace_mmap_read(struct record *rec,
- {
- 	int ret;
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index f0617cc41f5f..88c60ecf3395 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -346,12 +346,9 @@ static int run_builtin(struct cmd_struct *p, int argc, const char **argv)
+ 		use_pager = 1;
+ 	commit_pager_choice();
  
--	ret = auxtrace_mmap__read(map, rec->itr, &rec->tool,
-+	ret = auxtrace_mmap__read(map, rec->itr,
-+				  perf_session__env(rec->session),
-+				  &rec->tool,
- 				  record__process_auxtrace);
- 	if (ret < 0)
- 		return ret;
-@@ -789,7 +791,9 @@ static int record__auxtrace_mmap_read_snapshot(struct record *rec,
- {
- 	int ret;
+-	perf_env__init(&perf_env);
+-	perf_env__set_cmdline(&perf_env, argc, argv);
+ 	status = p->fn(argc, argv);
+ 	perf_config__exit();
+ 	exit_browser(status);
+-	perf_env__exit(&perf_env);
  
--	ret = auxtrace_mmap__read_snapshot(map, rec->itr, &rec->tool,
-+	ret = auxtrace_mmap__read_snapshot(map, rec->itr,
-+					   perf_session__env(rec->session),
-+					   &rec->tool,
- 					   record__process_auxtrace,
- 					   rec->opts.auxtrace_snapshot_size);
- 	if (ret < 0)
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 03211c2623de..ebd32f1b8f12 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1890,7 +1890,7 @@ int __weak compat_auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail)
+ 	if (status)
+ 		return status & 0xff;
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index c67e3ec938d0..f27890d5cfbb 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -184,7 +184,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 	 * for perf-record and perf-report use header.env;
+ 	 * otherwise, use global perf_env.
+ 	 */
+-	env = session->data ? perf_session__env(session) : &perf_env;
++	env = perf_session__env(session);
+ 
+ 	arrays = 1UL << PERF_BPIL_JITED_KSYMS;
+ 	arrays |= 1UL << PERF_BPIL_JITED_FUNC_LENS;
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index b363c933e782..02cf7670a52b 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -17,8 +17,6 @@
+ #include "strbuf.h"
+ #include "trace/beauty/beauty.h"
+ 
+-struct perf_env perf_env;
+-
+ #ifdef HAVE_LIBBPF_SUPPORT
+ #include "bpf-event.h"
+ #include "bpf-utils.h"
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d90e343cf1fa..9c6eaaf68c3e 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -150,8 +150,6 @@ enum perf_compress_type {
+ struct bpf_prog_info_node;
+ struct btf_node;
+ 
+-extern struct perf_env perf_env;
+-
+ void perf_env__exit(struct perf_env *env);
+ 
+ int perf_env__kernel_is_64_bit(struct perf_env *env);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 24c93ea5ba0a..988fe5c4137a 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3849,7 +3849,7 @@ struct perf_env *evsel__env(struct evsel *evsel)
+ {
+ 	struct perf_session *session = evsel__session(evsel);
+ 
+-	return session ? perf_session__env(session) : &perf_env;
++	return session ? perf_session__env(session) : NULL;
  }
  
- static int __auxtrace_mmap__read(struct mmap *map,
--				 struct auxtrace_record *itr,
-+				 struct auxtrace_record *itr, struct perf_env *env,
- 				 const struct perf_tool *tool, process_auxtrace_t fn,
- 				 bool snapshot, size_t snapshot_size)
- {
-@@ -1900,7 +1900,7 @@ static int __auxtrace_mmap__read(struct mmap *map,
- 	size_t size, head_off, old_off, len1, len2, padding;
- 	union perf_event ev;
- 	void *data1, *data2;
--	int kernel_is_64_bit = perf_env__kernel_is_64_bit(evsel__env(NULL));
-+	int kernel_is_64_bit = perf_env__kernel_is_64_bit(env);
- 
- 	head = auxtrace_mmap__read_head(mm, kernel_is_64_bit);
- 
-@@ -2002,17 +2002,18 @@ static int __auxtrace_mmap__read(struct mmap *map,
- }
- 
- int auxtrace_mmap__read(struct mmap *map, struct auxtrace_record *itr,
--			const struct perf_tool *tool, process_auxtrace_t fn)
-+			struct perf_env *env, const struct perf_tool *tool,
-+			process_auxtrace_t fn)
- {
--	return __auxtrace_mmap__read(map, itr, tool, fn, false, 0);
-+	return __auxtrace_mmap__read(map, itr, env, tool, fn, false, 0);
- }
- 
- int auxtrace_mmap__read_snapshot(struct mmap *map,
--				 struct auxtrace_record *itr,
-+				 struct auxtrace_record *itr, struct perf_env *env,
- 				 const struct perf_tool *tool, process_auxtrace_t fn,
- 				 size_t snapshot_size)
- {
--	return __auxtrace_mmap__read(map, itr, tool, fn, true, snapshot_size);
-+	return __auxtrace_mmap__read(map, itr, env, tool, fn, true, snapshot_size);
- }
- 
- /**
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index b0db84d27b25..f001cbb68f8e 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -23,6 +23,7 @@ union perf_event;
- struct perf_session;
- struct evlist;
- struct evsel;
-+struct perf_env;
- struct perf_tool;
- struct mmap;
- struct perf_sample;
-@@ -512,10 +513,11 @@ typedef int (*process_auxtrace_t)(const struct perf_tool *tool,
- 				  size_t len1, void *data2, size_t len2);
- 
- int auxtrace_mmap__read(struct mmap *map, struct auxtrace_record *itr,
--			const struct perf_tool *tool, process_auxtrace_t fn);
-+			struct perf_env *env, const struct perf_tool *tool,
-+			process_auxtrace_t fn);
- 
- int auxtrace_mmap__read_snapshot(struct mmap *map,
--				 struct auxtrace_record *itr,
-+				 struct auxtrace_record *itr, struct perf_env *env,
- 				 const struct perf_tool *tool, process_auxtrace_t fn,
- 				 size_t snapshot_size);
- 
+ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 9b477cc73c85..94564b0f2b49 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -192,7 +192,7 @@ struct perf_session *__perf_session__new(struct perf_data *data,
+ 				symbol_conf.kallsyms_name = perf_data__kallsyms_name(data);
+ 		}
+ 	} else  {
+-		session->machines.host.env = host_env ?: &perf_env;
++		session->machines.host.env = host_env;
+ 	}
+ 	if (session->evlist)
+ 		session->evlist->session = session;
 -- 
 2.49.0.1151.ga128411c76-goog
 
