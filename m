@@ -1,31 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643421E4BE;
-	Tue, 27 May 2025 13:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED44CD2FB;
+	Tue, 27 May 2025 16:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351219; cv=none; b=ES0bJw4C50abG9OEirDhCgrgUkqwuFCTb0Uufbn55gbvAeLNgjawnlxn9O/fcg8Pe7UgO7ykL8/Pl/LKT3g7JNtgNnUFpNFTn0bAXa86bARrcsXDJvmsFACipa8UlFWL1UxhgHBv1/5oaGtSnCoLm2mfLYMYCWwyKZ2dzb0fgzo=
+	t=1748363017; cv=none; b=CUvelzsAjxjNENyOIcaCpls2+kaqGDr2BHMbKLngMoKl2+ltcyrzep+a1+71h/AFtJrZG90vA+pgxTPOkVJshwa3tqtTy9N/Rd5QOMhEVw6YfhltphEYGJm9XnRXo7Hbt2G4a09CjLDdB9JPolbIDMXtl4ufqX4uejyIao2/N68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351219; c=relaxed/simple;
-	bh=J/kzqgFZuQJnCLBIhfO4WyhTv+nsnJm0UqFIpedFc6c=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YahzAA/UWPzpoZMGIWc8zI/IJ5qhx6lEbbFzvkx0ej776LULhf+8pr5TiJLIEbiXwsT+J5KekrW8bSSu2wIw1qJ9nUsfK4yqqPgz5KmVTWoLKXv6wSjGDIlNAWJWS8kQWcgbAFg2d4teTaWLWjo4+tVjcyPO6tw9AalGRsvtvs8=
+	s=arc-20240116; t=1748363017; c=relaxed/simple;
+	bh=3gSEwh3yQrm8CDKuxh5nsCVALPNKzTjOfG4cW6XmXtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JVAhZ3Y3UYd9mOOYdIop/Ppm5Z80XNxItEAg10xaFu+6Pg2l5xzgOjd/HtwH+xahZA5yCkjsrwckom81116mvLTzTqPQVBSzcG/mQshjcmyezXtuJoDOSiaLmvHQwEarhP387kDnLekKAr6FbL2fzMmFplIIpiOmwi5a2yEGJnU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81FDA14BF;
-	Tue, 27 May 2025 06:06:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12AC714BF;
+	Tue, 27 May 2025 09:16:54 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AD593F673;
-	Tue, 27 May 2025 06:06:54 -0700 (PDT)
-Date: Tue, 27 May 2025 14:06:50 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AABFF3F5A1;
+	Tue, 27 May 2025 09:17:09 -0700 (PDT)
+Date: Tue, 27 May 2025 17:16:56 +0100
 From: Leo Yan <leo.yan@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_spe: Relax period restriction
-Message-ID: <20250527130650.GH2566836@e132581.arm.com>
-References: <20250527121827.3919495-1-leo.yan@arm.com>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	irogers@google.com, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
+	Aishwarya.TCV@arm.com
+Subject: Re: [PATCH V4 01/16] perf: Fix the throttle logic for a group
+Message-ID: <20250527161656.GJ2566836@e132581.arm.com>
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -34,50 +38,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527121827.3919495-1-leo.yan@arm.com>
+In-Reply-To: <20250520181644.2673067-2-kan.liang@linux.intel.com>
 
-Hi all,
+Hi Kan,
 
-On Tue, May 27, 2025 at 01:18:27PM +0100, Leo Yan wrote:
+[ + Aishwarya ]
+
+On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wrote:
 
 [...]
 
-> @@ -309,15 +309,22 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
->  static void arm_spe_event_sanitise_period(struct perf_event *event)
->  {
->  	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
-> +	struct device *dev = &spe_pmu->pdev->dev;
->  	u64 period = event->hw.sample_period;
->  	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
->  
-> -	if (period < spe_pmu->min_period)
-> -		period = spe_pmu->min_period;
-> -	else if (period > max_period)
-> +	if (period < spe_pmu->min_period) {
-> +		/* Period must set to a non-zero value */
-> +		if (!period)
-> +			period = 1;
+> @@ -10331,8 +10358,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
+>  		__this_cpu_inc(perf_throttled_count);
+>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+> -		hwc->interrupts = MAX_INTERRUPTS;
+> -		perf_log_throttle(event, 0);
+> +		perf_event_throttle_group(event);
+>  		ret = 1;
+>  	}
 
-I read the document again and found the interval granluarity is 256
-(8-bit).  So the change above is incorrect.
+Our (Arm) CI reports RCU stall that caused by this patch.  I can use a
+simple command to trigger system stuck with cpu-clock:
 
-I will send a new patch.  Sorry for inconvenience.
+  perf record -a -e cpu-clock -- sleep 2
+
+I confirmed that if removing throttling code for cpu-clock event, then
+the issue can be dimissed.  Based on reading code, the flow below:
+
+  hrtimer interrupt:
+   `> __perf_event_account_interrupt()
+       `> perf_event_throttle_group()
+           `> perf_event_throttle()
+               `> cpu_clock_event_stop()
+                   `> perf_swevent_cancel_hrtimer()
+                       `> hrtimer_cancel()  -> Inifite loop.
+
+In the hrtimer interrupt handler, it tries to cancel itself and causes
+inifite loop.  Please consider to fix the issue.
+
 
 Thanks,
 Leo
-
-> +
-> +		dev_warn_ratelimited(dev, "Period %llu < %u (recommended minimum interval).\n",
-> +				     period, spe_pmu->min_period);
-> +	} else if (period > max_period) {
->  		period = max_period;
-> -	else
-> +	} else {
->  		period &= max_period;
-> +	}
->  
->  	event->hw.sample_period = period;
->  }
-> -- 
-> 2.34.1
-> 
