@@ -1,145 +1,150 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8F41760
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 21:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F375C2101AE
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 21:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748379683; cv=none; b=hPsqIss4s5uT3ppmp7ftoFhwAPoLjtUih8O878SFUolNWP6qFC6Dvp4cBg4cznG+NupubQTd/ud9Sj8VSJPZOSZDhcsMl/ybKwR4I9oWeBS6vXolMGkZE3XuWOTU6CBtODHm0uAmsZu61BBAfE9dqWRA2XCJJnBy7BWc/CDxxcc=
+	t=1748380106; cv=none; b=ZwrMWVhe54N1xy7VocPlBC95PnaaNnUablhD+QLOT/cotKF1qZ2clcEzV+tLJdWMXfvFkh3QOoHFN0rlspFi/PqannLdr1O4b9mCRyTbxVeBTHhM3Gj3M2+d5sLfqPjXebKWMq3RonVOWqfsXxonTMFnoRapLVP9CsadNzs+sww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748379683; c=relaxed/simple;
-	bh=Q/my21LU81QWCNduAB8QYEpDktC2vzKK8+QiMKR3Ovc=;
+	s=arc-20240116; t=1748380106; c=relaxed/simple;
+	bh=Z7WVupvj16WfsVDhIQF8YtdP4WrWMtSMWgQEYIEu1vU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=qMgcu7NR/2d11y+2eHl+8VZoy8tNZgQ0GEbWIhMLEgvJkXD5GRyhxJczILtiEa2uy5Tp8+akERmtOkfAcv2OplFzYMhJ3Xj6F/vp+LZRWQj6AMdhu3r762zGaC1YOJ/FycRP2UC8hWvNdgsvmoxc/esmD3va/C3vRH4JlHOoWG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tHYr9pzu; arc=none smtp.client-ip=209.85.166.169
+	 To:Cc:Content-Type; b=o++yiCBglSTWRgqbmyO/TSlx5r7xqpLAdPkyJncZWqmROHdnHGmgrYlZYPFu4dgUZ5FTJkpoybVjWIGbjUunyU/eWwLjU1lEnNb3X8gZ9JOXkodL/URwREB7q9yJEn2pcK7+hC4mbBbeBigOdIhbDV34xt/uJhPUJwIj1N/PNAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vA0RSf52; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHYr9pzu"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso18835ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 14:01:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vA0RSf52"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3dd745f8839so44405ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 14:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748379681; x=1748984481; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1748380104; x=1748984904; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=saRBnVAV9ald8ATB6pKTuzMNGlKbn7cHBliMBSEPoXM=;
-        b=tHYr9pzujXAH14Ia0e2mIIWYtThauQgJ0pR+Gw8ZoWmnjUoD5x3pUtjrCYLPnkNEK3
-         xBHJ2QJ2ktNPCmHlsLNRCrWlqhsSZ5kGv20jPVpZC1Vq7k4e985uFL/8u/FHDjdJ/NFr
-         dSiERyU4C8hqwNxSkqv8xKGMie/51kK9l3KXQhvPk3FMvup11OvKJwuDPs5XWZBiAPsw
-         781ir7HzVNpLsmMXgiwwVpfSK9zGqZ5FHilJnxp805u2i5BjeJJWJ6KlNEOC0o6Mrk8G
-         c5Xlyo6KIkfA3owsGOflOf4l6kuavsZYsR4wXgb7AIOip6SEqfrYWXRs7aEdWvOWVnM0
-         TA3w==
+        bh=ubiEBlty5LLcHWhiL4ftQwDPhybt329gmxk4FbujYzU=;
+        b=vA0RSf52eAT3MzQ103gQTZdOlUel13IjLRI5yMuS1pR/POvoe+tzIAbDj9OdWkfcik
+         e6r5ohgxauLPsClKf2KFIAeO/aaEjLtnstBHoEZP9ICy1y5BEIG6wr56d1JhrGtNKXkB
+         ZXC6v5tUF8bwMkmgvXhv1PQCAi03oCIbL9o5EFgSe9uRgh3l0tvWg8MfdugQxd1GLVUH
+         3JVJE4dOtDMMcqEGWC6gWuJilWVoxUoChUe/QJQhD1ypa8hv3POedTRNlJth2J+3GwX3
+         QOpq0nSv37krXq+mMNs2UzYXe19D9h1U7avZ6m0gBE3FMv/NS6xa0ZE2d2gDAvLi+1Z4
+         aH4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748379681; x=1748984481;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1748380104; x=1748984904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=saRBnVAV9ald8ATB6pKTuzMNGlKbn7cHBliMBSEPoXM=;
-        b=vVXfMMSX9WUiO6OI59ZyNWqCLL9YbE/IjJ4geBhb+79ikvTP7X+R39K4RnR+jyvOad
-         GsKbVUWu0EwAFt/9eqlj4/fSHBDsVjfoB5Zj8lYC+ClmlZ0hikb1T66qDxBOMGmjA0a3
-         bbP5fat9faeIw6Nr0d0X12hwdwPum1maloqJVJhYEJTBWQUKtIcD4VZZj7yEz1GoOwxG
-         OwMd5jY/E5J9AR4n4QAUOxmcHLZsufv8X9dUeKZwRZBU/OC2a1USkdEEzV8xJ8DoUi67
-         347dbG/YVnqOBIOaIcNyhOpu8pLjveBl8fG6atyZArIOz6WvRXYUvZG9OTTXhnMrUrz8
-         In3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVMtVcTrr/waaJpePb1d1oGkM6SQlopqDzcqEA8rvN8N702JkyghuTTD3hV3f7+UKxmI2MVIitUq4Xlyb3laS8p@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoBua9kz4BtwMkDi8hq659DocD9CamLB5NXiice6BRj1GjyeoV
-	qJJ/lv33fA3yRpk1EV7zUwnDIP1aFgdD27pjWrPMFDMDuqTPcUreeNskObvyeci0u1v2vdUIsqa
-	pL/PRuT8/8SesVQ1gAqBlFLV9v4k6b1DmlA8qvT6b
-X-Gm-Gg: ASbGncvVbhm93UY3wAtgTEno0STyg4LTkb4aYEUqV80D90sEBDDOKrWC/Q8TOXm4/kE
-	DQuwYO4ymezwl2KLB1jOt6RiYTLzL7xbawxaMNfuFAnzYUDdW01CoV5KbKvQ0dlCuMIywU4u5/3
-	ZNov8AtaK+whH4N1E5fhWxX2hywNoV8rU3etVuFBwWx8kHoIzoF0R3/oJx0brO+Btx9ygP+eQyo
-	tF80yB7ZSw=
-X-Google-Smtp-Source: AGHT+IFGZy7sSmrUQDGt3B2pKCl4y7opyz0UYxFa5xUtmavk1LEzMR4Am76fNdf7KXmigSozBwZsxx9bF5jL7gv53+A=
-X-Received: by 2002:a05:6e02:1c26:b0:3dc:8116:44a8 with SMTP id
- e9e14a558f8ab-3dd88fc27f3mr815995ab.26.1748379680474; Tue, 27 May 2025
- 14:01:20 -0700 (PDT)
+        bh=ubiEBlty5LLcHWhiL4ftQwDPhybt329gmxk4FbujYzU=;
+        b=aZGXeboiw/uUM2baA2xohub4NHYwK7P7pFrh9so1tYGFvz6DLxTeRuUIa71IeHpzZs
+         IrppnhWtotuFc+h44fOSBy6MXR5twHKMqbnBFgLy3NNiY6D65difdm5DeXYQu0DAuSpO
+         voJnqrF82Ldm/rXV+vxyHFNITEnevIE7RG4pewgfeJtl0yjh7gFKkDz81NTlxX7NaNJe
+         7LlPJxMb98wh9fkK/IQW7uzEpt/hRI2kjBbW3VC1KYM0GGAHINcFuNOV4fwzNbB5xBy5
+         h7YapRzsIZxhqepUbYdjq0Udoo2pFcnAJTWNdTAe+gOKC4Px4/RLhGs6Gkr3jn1LIT1k
+         gt5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVf4Rg4KKjdi9NgXn+H+eUTFtUO1lhtiW9izNd+ak/hsmTtXvPBl9lsz0RF4EuyCoHFG5dRi6BTvVTexbZ+3LBU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu28zrcGeAvLOcBBkR98ZwmrlFNeu3CR3FNC6VWAEM6Mm8yE5Y
+	5/s786oYEsuhqOLsaL5Y5eOlKe53C3tjkRQtw5Gsby10DXTvLE0OxQPJ0IOkmfBbffNxY8uSSj/
+	lB8WpQq4TcYrl0Dh/h2vlUuzJlYXF/pkyCwcK4pRj
+X-Gm-Gg: ASbGncuyaPJiH9vWjIOD/kiG3MT/GwBoj1DqiT8/LvreyoFMZOzaCLJn2Hh90KMTVcH
+	8G106SmUII5keQWqvb/kZX+t+x/hi4BNwyr3eoT4DofxC/vtQ6byXj6R52knGlMKDyu2vQnHU91
+	Pr/PsQ8Y0kxalPJnF395bDHWDX2BoatYmyiLify0zAKJ4ndBym2wjcT+cHOkLvDykftd+zJQN9
+X-Google-Smtp-Source: AGHT+IH8GAJYpDplkuydkJu8WA/jhGPEYRVfjAxb8lYAz5mHHBeiaWfjPDPmvfhCEv1WeCyp1Cl49JqwlweQk7tq2MQ=
+X-Received: by 2002:a05:6e02:b46:b0:3d5:bb1f:843e with SMTP id
+ e9e14a558f8ab-3dd89c643f9mr217595ab.29.1748380103741; Tue, 27 May 2025
+ 14:08:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521165317.713463-1-irogers@google.com>
-In-Reply-To: <20250521165317.713463-1-irogers@google.com>
+References: <20250403202439.57791-1-irogers@google.com> <CAP-5=fXkayZ7pj+EctOtSBiTcGuyi6SHm9c5RZ3HyyPYcot9zA@mail.gmail.com>
+ <aBKz_Tg-s20Qsv6k@x1>
+In-Reply-To: <aBKz_Tg-s20Qsv6k@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 May 2025 14:01:08 -0700
-X-Gm-Features: AX0GCFtlnVS6B_OGSV0n49shLWA_6YYzfymGUo6EP9yC_fUFq12D5mhe5n9VNOM
-Message-ID: <CAP-5=fWWjx+SxwEHRY2Xju_0Bin3AypkpYz+8vnwuCd08Q1awA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Generic weight struct, use env for sort key and header
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Tue, 27 May 2025 14:08:12 -0700
+X-Gm-Features: AX0GCFvsfgIcbRHL9xzCP_HBfkVqBfuvNmKL4yVjwY42U8vH-HJaieCbVgbJ9dk
+Message-ID: <CAP-5=fXZy=2AqmA1L42x57BwndR4cgUTrR6j0S-aHSnMuF9x9A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Add support for a DRM tool like PMU
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Junhao He <hejunhao3@huawei.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Brendan Gregg <brendan@intel.com>, 
+	gabriel.munoz@intel.com, matthew.olson@intel.com, 
+	brandon.kammerdiener@intel.com, dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 9:53=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Apr 30, 2025 at 4:36=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> The arch directory is a barrier to cross-platform development as files
-> and behaviors within it are inherently platform specific. Sample
-> parsing should be generic but the PERF_SAMPLE_WEIGHT_STRUCT handling
-> was only present if building for x86 or powerpc. The sort key and
-> headers should be specific to the session that is being executed and
-> not to the machine perf is being run upon. These patches clean this
-> and associated code up.
+> On Wed, Apr 30, 2025 at 08:21:59AM -0700, Ian Rogers wrote:
+> > On Thu, Apr 3, 2025 at 1:24=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > >
+> > > DRM clients expose information through usage stats as documented in
+> > > Documentation/gpu/drm-usage-stats.rst (available online at
+> > > https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
+> > > PMU, similar to the hwmon PMU, that exposes DRM information.
 >
-> v3: Code reorganizations suggested by Kan Liang.
-> v2: Avoid changes to include/perf/perf_dlfilter.h as suggested by
->     Adrian Hunter.
+> Looks useful, I'll try to review and test tomorrow, but most probably
+> Friday, as tomorrow is labour day in this part of the world.
 
 Ping. Thanks,
 Ian
 
-> Ian Rogers (3):
->   perf sample: Remove arch notion of sample parsing
->   perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to common test
->   perf sort: Use perf_env to set arch sort keys and header
+> - Arnaldo
 >
->  tools/perf/arch/powerpc/util/Build         |   1 -
->  tools/perf/arch/powerpc/util/event.c       |  60 ----------
->  tools/perf/arch/x86/include/arch-tests.h   |   1 -
->  tools/perf/arch/x86/tests/Build            |   1 -
->  tools/perf/arch/x86/tests/arch-tests.c     |   2 -
->  tools/perf/arch/x86/tests/sample-parsing.c | 125 ---------------------
->  tools/perf/arch/x86/util/event.c           |  46 --------
->  tools/perf/builtin-annotate.c              |   2 +-
->  tools/perf/builtin-c2c.c                   |  53 +++++----
->  tools/perf/builtin-diff.c                  |   2 +-
->  tools/perf/builtin-report.c                |   2 +-
->  tools/perf/builtin-script.c                |   2 +-
->  tools/perf/builtin-top.c                   |  16 +--
->  tools/perf/tests/hists_cumulate.c          |   8 +-
->  tools/perf/tests/hists_filter.c            |   8 +-
->  tools/perf/tests/hists_link.c              |   8 +-
->  tools/perf/tests/hists_output.c            |  10 +-
->  tools/perf/tests/sample-parsing.c          |  14 +++
->  tools/perf/util/dlfilter.c                 |   2 +-
->  tools/perf/util/event.h                    |   5 -
->  tools/perf/util/evsel.c                    |  17 ++-
->  tools/perf/util/hist.c                     |   4 +-
->  tools/perf/util/hist.h                     |   2 +-
->  tools/perf/util/intel-tpebs.c              |   4 +-
->  tools/perf/util/sample.h                   |   5 +-
->  tools/perf/util/session.c                  |   2 +-
->  tools/perf/util/sort.c                     |  67 +++++++----
->  tools/perf/util/sort.h                     |   5 +-
->  tools/perf/util/synthetic-events.c         |  10 +-
->  29 files changed, 150 insertions(+), 334 deletions(-)
->  delete mode 100644 tools/perf/arch/powerpc/util/event.c
->  delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
->
-> --
-> 2.49.0.1143.g0be31eac6b-goog
->
+> > I'm reminded by Brendan Gregg's new blog:
+> > https://www.brendangregg.com/blog/2025-05-01/doom-gpu-flame-graphs.html
+> > that this is still outstanding. The patches also reduce some directory
+> > scanning for the hwmon "PMU", they are in Google's tree:
+> > https://github.com/googleprodkernel/linux-perf/blob/google_tools_master=
+/tools/perf/util/drm_pmu.c
+> >
+> > Thanks,
+> > Ian
+> >
+> > > v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
+> > >     trap cleanup.
+> > >
+> > > v2: Add support to only scan hwmon and drm PMUs if the event or PMU
+> > > wildcard can match. Add a test as requested by Namhyung. Add file
+> > > comments.
+> > >
+> > > v1:
+> > > https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.c=
+om/
+> > >
+> > > Ian Rogers (4):
+> > >   perf parse-events: Avoid scanning PMUs that can't contain events
+> > >   perf parse-events: Avoid scanning PMUs that can't match a wildcard
+> > >   perf drm_pmu: Add a tool like PMU to expose DRM information
+> > >   perf tests: Add a DRM PMU test
+> > >
+> > >  tools/perf/tests/shell/drm_pmu.sh |  78 ++++
+> > >  tools/perf/util/Build             |   1 +
+> > >  tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++=
+++
+> > >  tools/perf/util/drm_pmu.h         |  39 ++
+> > >  tools/perf/util/evsel.c           |   9 +
+> > >  tools/perf/util/parse-events.c    |  30 +-
+> > >  tools/perf/util/pmu.c             |  15 +
+> > >  tools/perf/util/pmu.h             |   4 +-
+> > >  tools/perf/util/pmus.c            | 101 ++++-
+> > >  tools/perf/util/pmus.h            |   2 +
+> > >  10 files changed, 952 insertions(+), 16 deletions(-)
+> > >  create mode 100755 tools/perf/tests/shell/drm_pmu.sh
+> > >  create mode 100644 tools/perf/util/drm_pmu.c
+> > >  create mode 100644 tools/perf/util/drm_pmu.h
+> > >
+> > > --
+> > > 2.49.0.504.g3bcea36a83-goog
+> > >
