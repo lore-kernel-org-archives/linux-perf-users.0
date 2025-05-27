@@ -1,38 +1,53 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C671FF1A0;
-	Tue, 27 May 2025 10:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1029F25484B;
+	Tue, 27 May 2025 10:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748340777; cv=none; b=bTvVI8KrSkl7/NBEog4/VF7/JVFwxZOGF+uIPAMfgRu3uv570StZLAJPyc+FRuacWiCbrzA4Yo8wm2T7tjLPeIliFQceN7SVvVdZGvmO3z4hPhqFg/5ULiIAxk1kneovfv4xzK3hnwbWrLGvQkOEJvU7Lu8Cp/h9PmNEM3qzzIE=
+	t=1748343044; cv=none; b=jd5QcvUVJnLqlCxq+elgIWKU09k+DKtNPGTj0hX4JQ3oMfta+zBgvEOo2NK5nS0+5EUBJ8cVKdNSicHnWWIOX8UGjnEGav+ULhTseHAFXXGJh8omsUHiU7Bu6elYioKA6tgofjPF96CZKS6P4BlznkMqbMRMVeKHdB88UYchwYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748340777; c=relaxed/simple;
-	bh=ApCfWdY+JdAxG4XoYj79NdIh5DdFSANb3DdVg0jYXVk=;
+	s=arc-20240116; t=1748343044; c=relaxed/simple;
+	bh=iChCSwBj+S41jBky5HpvDJ5GYFdj24X5Q19WyfZ61l4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W8Hbxy7pHxVQlSSkk4FkI8ymUtHkoKX8YrYmJvE5JTEkhrg3WMmouTdV4gHxdU6vfgL1gHOXhy15VaJzIZkTw4IfdrS/qt/h6JL6m01ltYxQMAn0uDGA5OyTV6WsYZaCfKZHGoA8dERxwO5ahqMFzDeMMzgagsBxC3F8mjCQr/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5F0D14BF;
-	Tue, 27 May 2025 03:12:38 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 732773F5A1;
-	Tue, 27 May 2025 03:12:54 -0700 (PDT)
-Date: Tue, 27 May 2025 11:12:46 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/3] perf mem: Describe overhead calculation in brief
-Message-ID: <20250527101246.GG2566836@e132581.arm.com>
-References: <20250523222157.1259998-1-namhyung@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BBdJaCaEWkWmStINwMVWQwPIT5ZwKbmY8PLbVeW1fYo8kG9bBFkEz0PafZpwot/QVzdaw8RRI1QgFwlIYyj7jxbHC8YWCODw4jmy0qw8s6EAx5WuRNM4Sb+T8LVl6C1u7bwQ6RN4N9jIax/om4ofmg8xqjyatpaAuCmCrTFVUGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fC12pMhU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fC12pMhU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86ACCC4CEEE;
+	Tue, 27 May 2025 10:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748343042;
+	bh=iChCSwBj+S41jBky5HpvDJ5GYFdj24X5Q19WyfZ61l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fC12pMhU7iPEXVlplCcUi3+eIAKiz7WknO0aoyXQ8C0BkMeB30LWHvcTEIpPyFsEz
+	 G7KSe57I++spsiqp5Ea6QU3XS0IPHXFx0sYWcJWuc03itsBENB6xBPrIZajOTZZJUA
+	 gbULJC2mebyoZw5ENZcznu44gGDJD5yjIaOm3qZRf77igm07mkaSE85g0ZIlWKAwC4
+	 yh+OI4FuUFGulIYMjXtmm56lhN5BF3Ryspb2Zf3chf3GR0QhOH9zilBOljOwrll5Ay
+	 vtF169JO8nkeocyvt2yVCkKJLsiJtZ9wgk4A5HfAON8/7hOih1fbPL1mbUEn5fkPnU
+	 Cx+FPT40shpRQ==
+Date: Tue, 27 May 2025 11:50:36 +0100
+From: Will Deacon <will@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v21 4/4] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+Message-ID: <20250527105035.GA26328@willie-the-truck>
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
+ <20250519150621.GA17177@willie-the-truck>
+ <20250519215651.GB2650608-robh@kernel.org>
+ <119c9a70-6ea8-46f0-b877-8a433d97ce84@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,56 +56,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523222157.1259998-1-namhyung@kernel.org>
+In-Reply-To: <119c9a70-6ea8-46f0-b877-8a433d97ce84@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, May 23, 2025 at 03:21:55PM -0700, Namhyung Kim wrote:
-> From: Ravi Bangoria <ravi.bangoria@amd.com>
+On Wed, May 21, 2025 at 04:58:42PM +0100, James Clark wrote:
 > 
-> Unlike perf-report which uses sample period for overhead calculation,
-> perf-mem overhead is calculated using sample weight. Describe perf-mem
-> overhead calculation method in it's man page.
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> On 19/05/2025 10:56 pm, Rob Herring wrote:
+> > On Mon, May 19, 2025 at 04:06:22PM +0100, Will Deacon wrote:
+> > > Hey Rob,
+> > > 
+> > > On Mon, Apr 07, 2025 at 12:41:33PM -0500, Rob Herring (Arm) wrote:
+> > > > From: Anshuman Khandual <anshuman.khandual@arm.com>
+> > > > 
+> > > > The ARMv9.2 architecture introduces the optional Branch Record Buffer
+> > > > Extension (BRBE), which records information about branches as they are
+> > > > executed into set of branch record registers. BRBE is similar to x86's
+> > > > Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+> > > > (BHRB).
+> > > 
+> > > Since you picked this up from v19, the driver has changed considerably
+> > > and I presume you will be continuing to extend it in future as the
+> > > architecture progresses. Perhaps having you listed as Author (and
+> > > crucially, in git blame :p) with Anshuman as a Co-developed-by: would be
+> > > more appropriate?
+> > 
+> > Shrug.
+> > 
+> > > > ---
+> > > >   drivers/perf/Kconfig         |  11 +
+> > > >   drivers/perf/Makefile        |   1 +
+> > > >   drivers/perf/arm_brbe.c      | 802 +++++++++++++++++++++++++++++++++++++++++++
+> > > >   drivers/perf/arm_brbe.h      |  47 +++
+> > > >   drivers/perf/arm_pmu.c       |  15 +-
+> > > >   drivers/perf/arm_pmuv3.c     | 129 ++++++-
+> > > >   include/linux/perf/arm_pmu.h |   8 +
+> > > >   7 files changed, 1006 insertions(+), 7 deletions(-)
+> > > 
+> > > Do you know if James Clark's tests [1] are going to be respun for the
+> > > perf tool? It would be handy to have some way to test this new
+> > > functionality.
+> > 
+> > Yes. I dropped them here because I've been told by Arnaldo in the past
+> > to send userspace stuff separately.
+> > 
+> 
+> That version of the test was out of date so I've pushed the new version
+> here: https://git.linaro.org/plugins/gitiles/people/james.clark/linux.git/+/16e4a18c2d5fc53736f05c9052b1d11d74909707
+> 
+> But I'll wait for the driver changes to be finalised before posting it. Or
+> Rob can take it back into the patchset.
 
-For whole series:
+Thanks, James. I just wanted to make sure that there was still a plan
+for upstreaming these separately from the driver. Have you had a chance
+to run them against this v21?
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
-> ---
->  tools/perf/Documentation/perf-mem.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-> index a9e3c71a220557d4..965e73d377724607 100644
-> --- a/tools/perf/Documentation/perf-mem.txt
-> +++ b/tools/perf/Documentation/perf-mem.txt
-> @@ -137,6 +137,25 @@ REPORT OPTIONS
->  In addition, for report all perf report options are valid, and for record
->  all perf record options.
->  
-> +OVERHEAD CALCULATION
-> +--------------------
-> +Unlike linkperf:perf-report[1], which calculates overhead from the actual
-> +sample period, perf-mem overhead is calculated using sample weight. E.g.
-> +there are two samples in perf.data file, both with the same sample period,
-> +but one sample with weight 180 and the other with weight 20:
-> +
-> +  $ perf script -F period,data_src,weight,ip,sym
-> +  100000    629080842 |OP LOAD|LVL L3 hit|...     20       7e69b93ca524 strcmp
-> +  100000   1a29081042 |OP LOAD|LVL RAM hit|...   180   ffffffff82429168 memcpy
-> +
-> +  $ perf report -F overhead,symbol
-> +  50%   [.] strcmp
-> +  50%   [k] memcpy
-> +
-> +  $ perf mem report -F overhead,symbol
-> +  90%   [k] memcpy
-> +  10%   [.] strcmp
-> +
->  SEE ALSO
->  --------
->  linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
-> -- 
-> 2.49.0.1151.ga128411c76-goog
-> 
+Will
