@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF371FFC59
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 06:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBE6202C48
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 06:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748328137; cv=none; b=sI6Pr+t2On9w/xgj5GwvC0eLyBLzD9X2SuqWRc/fjc5Xck+QkFW1rsjLvXhJhE3T8n0fSy7n/OcHVSjCF+5yAc+JkYAoaRq5N1HLFhaxG//5JjJvX8zECvYBsJoKIqkMwx/IXWhQShY318W0rC8p24Q7bEfakwD1xbk1qN/95Gg=
+	t=1748328139; cv=none; b=fgDw2TwDdgCd5KeHV48nVdGi00axTNtsWtK9lFI6/E4mkl+M6V5pi8Fe7THeYlqwi+frWYpHSxP7RPpON4NJX8iuha8OYZejZBdTSG0zwP0BgVlxp8n8eygPk13pE1cQMevcTFHScLtjONw3w5rPrf/HM8/7YB04s7Sr/95afcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748328137; c=relaxed/simple;
-	bh=f+bQ3Jv5bB9u7ogojqWPKsGXPSw5u7vrWgbYZOKwxlY=;
+	s=arc-20240116; t=1748328139; c=relaxed/simple;
+	bh=Lk3DRYGD+SHY8MhJeChpSoSm5juJjk9zmN2YQ0n2PfE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=BOERh0uUxWdeZLs/wb7w5NeecPshL5DPKIR9x6ZPQxDstC1P6pGGr9m2krrQckISiwtO1q9PlPVHvWMlEN+V5f2onNOlpEUg1qhcNqOYGCxyh+HrgRNkxFlo6GjWPrx0F4ghQGaMMa+HaWLh/dVl31kInHZqAasXNpwOARjpLxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2eLWwFFh; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=U+7qq1XfGxjvMxT28M9vv/iI2LYdQpsZGxYeyO4qiUlNbrinpTfFYAptqFGTHM1Ilo+4DzEi7JloWNWd4ZE3N90kjMqKoE/zJuEJUMUyjWqogJDZHqz4pCU7AxzP+Ew++as++r3f553tu9joXAyvQEZbdNmkiUkSwBgI2TjldNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ju6n2L4J; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2eLWwFFh"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22c31b55ac6so37935855ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 May 2025 23:42:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ju6n2L4J"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311044c615fso4623345a91.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 May 2025 23:42:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748328135; x=1748932935; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748328137; x=1748932937; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=osa5wtVgN75Qz2+/E2ShchmseliLYV0sbPvRf6suVCQ=;
-        b=2eLWwFFhdTBn45vFEU09Fc+yNBhRtfrjC9sP9B89nBp65td4hMgfvY3bIrGl/9mwY7
-         UspsF/x49NJ93FjAm9iOMulQn6dsujprqzJKiMSGicvILSQD1EWk0c2KyyL+ZetBhlx8
-         OsJigHMBLtRE0+lO8pqJbxKKQLmwHKPSCb48EmxGHQ2964rIbvt60Yb3B0lX50LS9nYo
-         gdc3ZabxoaamPHYHJRWB3QlXLpAIUcl/XKpOagNqDbO1V0gThhHe2DFwZk81h571tT4r
-         Hg97UrzzWWdJDtLTpRztcy0AQIL+Xemd9N4EZm0qw41U/xmdklJ0a2CcsjjTfaJIUjQL
-         vbWw==
+        bh=EQf+Z2part0hsdtY7//u4THJS4IDXYFor1XjnfmY5gg=;
+        b=Ju6n2L4J20KAC9sgf78Ugd8Yl98oMoR0nR/OGKZsTFC+hOBE9ULc6xM6gY8r9sOStl
+         ZJ8rfrL+gSlVEefICXc6poTKqePftIc6p0p9zE7Zsrib/kS3ixg/wd3qFEcogJAtVDFB
+         b+Bf0iblK3kCfPgihxSdtZRt680sfwEwvufg8lckEDnfr3uHjgva65Hto8Fhj2L9fd6v
+         XkM1rQ0/5T/3hOkKLyEpN46vudUWKtBT63415zMA/uZbQ/hn401pca6YFknLKTfxjDYJ
+         hUjrDI6R/ZGEzNCL2RndhbUP0TPuLaaNzZd8GtLBG5JYldOPdlHEZ2lpDS5V4lQ96aa8
+         1RPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748328135; x=1748932935;
+        d=1e100.net; s=20230601; t=1748328137; x=1748932937;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=osa5wtVgN75Qz2+/E2ShchmseliLYV0sbPvRf6suVCQ=;
-        b=weC1pYAGJ+4uGwrEUzaUGmWF/eQItQ/55GTUNk8phNPcwCzb9HsGKVyRSagrxwe417
-         EmN8DwBksgxAAxZDkyIuEi8ujos6AnHV6aqgu5XrFnQpeBtAXlJhEwvCwykKa5pFsAQq
-         QZ0TU36f5mr6j6+tPLjfEeXKFqK0q6fQwuo7fL7jyRy1tgQ7hAxN0RGx0Na1eZv8uGpy
-         IQdEqhQXQnDSSHBaCeu6mL8NQ8BaqC+Xne1qsQ5M7ht5dQ+JlzjDe7wVjMQIxY9wfKct
-         MVDpuIbYwIXvo+M9bpkxsOUl2Wf5FeI3sU5TCo+JvZe/aOg9Ffq1rD2ghqTVdluTR0Ee
-         h5Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCVfGaA8aeItrPCCQedl94+BuNkJw96Le66YWFnnTHVu6A6hasso8p8QGBtOJY3phhyRqlKCYP1GCvkHssKrItIu@vger.kernel.org
-X-Gm-Message-State: AOJu0YypPhgZdk8nBHKmbDV1/28PhjveQuS/MYefpWsaVZ6zlbh6IC81
-	Df8nOIMx/nLlytgwiwAAPa89vxgMVJoGpc9nn7IwUOqxgolP7XphmBp79RMk1EGV3KWpDsISXvV
-	nGZCSk8Ac6A==
-X-Google-Smtp-Source: AGHT+IHBlK8YqoPMAr7xh9aEs9BuP63hCf3vUPjkswlC+FGyc/S92WE6qVaUgB/MfYWJFOpNBewMgTCnn2Lz
-X-Received: from plgf13.prod.google.com ([2002:a17:902:ce8d:b0:234:711c:9397])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2402:b0:234:8aad:73cd
- with SMTP id d9443c01a7336-2348aad7438mr34457945ad.30.1748328134808; Mon, 26
- May 2025 23:42:14 -0700 (PDT)
-Date: Mon, 26 May 2025 23:41:47 -0700
+        bh=EQf+Z2part0hsdtY7//u4THJS4IDXYFor1XjnfmY5gg=;
+        b=wEJQmBCP7m3OlWMfwIxxtb/m4TkW+OaJRBKzcMhbXNNPuaV/HzPa+7+QOCiaT/wJGm
+         f/g2gCMFZZOofcY6z/Rbg/0NqDRwOBXeZclEdValu6gmUZFFu+iNllndDPcHn6Cbp+zr
+         WGrfl0BVyHJKN6VAjhLFqenEk7QlhcyzdtpUiZ8IVMee3jdCnbuRXPXn6DD6LccBWL2L
+         BQ9xrc2byaFvpbBjFlg10g+o0a4Sq8gGss45TMIJbVfEJjYJnuI4TcRl8VtS2XrEA4a4
+         Q5v0UKEy17bQlixMD+/0WU09gCTPjBGffhAH4IwJJQG24ilwE8y5U50QbGHNHN6jAk0p
+         SOQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVL89iOp6rcx04Va5CzP9wabhfaRYfkiKOEa9UnYEWHnBp0PidGMTo4hqRfZknuhRrLrEaQcq4TvcGUowxeuS/E@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKii3XgcGOIvzU6g0p1ws9zx7CZ0vXF4ZLywjH+JaQH8GMuQqt
+	XbYPoiQpw7YVcWMOHOa5kl2+7lClYuhzVhW1o+iDQczJY3v2j5LQQ7OzOD3tieVIVt8MpVDYQv7
+	1+y091m3v2w==
+X-Google-Smtp-Source: AGHT+IH63nXw7pXDu0b2FYWDPpqXAyJ0WhvWKd5PccXZpsPz9a+Wx6sv15yS8l2Bt2yFk1APhDR1qWujVQuT
+X-Received: from pjbpq14.prod.google.com ([2002:a17:90b:3d8e:b0:311:2c1f:b0d8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f0d:b0:309:f407:5ad1
+ with SMTP id 98e67ed59e1d1-311108a1d6amr22190394a91.14.1748328137381; Mon, 26
+ May 2025 23:42:17 -0700 (PDT)
+Date: Mon, 26 May 2025 23:41:48 -0700
 In-Reply-To: <20250527064153.149939-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250527064153.149939-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250527064153.149939-6-irogers@google.com>
-Subject: [PATCH v1 05/11] perf test: Avoid use perf_env
+Message-ID: <20250527064153.149939-7-irogers@google.com>
+Subject: [PATCH v1 06/11] perf top: Make perf_env locally scoped
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -84,140 +84,113 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-The perf_env global variable holds the host perf_env data but its use
-is hit and miss. Switch to using local perf_env variables and ensure
-scoped perf_env__init and perf_env__exit. This loses command line
-setting of the perf_env, but this doesn't matter for tests. So the
-perf_env is fully initialized, clear it with memset in perf_env__init.
+The use of the global host perf_env variable is potentially
+inconsistent within the code. Switch perf top to using a locally
+scoped variable that is generally accessed through the session.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/code-reading.c  |  5 +++-
- tools/perf/tests/dlfilter-test.c | 50 ++++++++++++++++++--------------
- tools/perf/util/env.c            |  1 +
- 3 files changed, 33 insertions(+), 23 deletions(-)
+ tools/perf/builtin-top.c | 35 ++++++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index cf6edbe697b2..4b2461e93b2b 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -651,11 +651,13 @@ static int do_test_code_reading(bool try_kcore)
- 	struct dso *dso;
- 	const char *events[] = { "cycles", "cycles:u", "cpu-clock", "cpu-clock:u", NULL };
- 	int evidx = 0;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 3c89568dd6d0..9ca0617047fd 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1301,7 +1301,7 @@ static int __cmd_top(struct perf_top *top)
+ 	perf_set_multithreaded();
+ 
+ 	if (perf_hpp_list.socket) {
+-		ret = perf_env__read_cpu_topology_map(&perf_env);
++		ret = perf_env__read_cpu_topology_map(perf_session__env(top->session));
+ 		if (ret < 0) {
+ 			char errbuf[BUFSIZ];
+ 			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
+@@ -1624,6 +1624,7 @@ int cmd_top(int argc, const char **argv)
+ 		NULL
+ 	};
+ 	int status = hists__init();
 +	struct perf_env host_env;
  
- 	pid = getpid();
+ 	if (status < 0)
+ 		return status;
+@@ -1639,12 +1640,17 @@ int cmd_top(int argc, const char **argv)
  
- 	machine = machine__new_host();
--	machine->env = &perf_env;
+ 	status = perf_config(perf_top_config, &top);
+ 	if (status)
+-		return status;
++		goto out_delete_evlist;
+ 	/*
+ 	 * Since the per arch annotation init routine may need the cpuid, read
+ 	 * it here, since we are not getting this from the perf.data header.
+ 	 */
+-	status = perf_env__read_cpuid(&perf_env);
 +	perf_env__init(&host_env);
-+	machine->env = &host_env;
++	status = perf_env__set_cmdline(&host_env, argc, argv);
++	if (status)
++		goto out_delete_evlist;
++
++	status = perf_env__read_cpuid(&host_env);
+ 	if (status) {
+ 		/*
+ 		 * Some arches do not provide a get_cpuid(), so just use pr_debug, otherwise
+@@ -1661,18 +1667,24 @@ int cmd_top(int argc, const char **argv)
  
- 	ret = machine__create_kernel_maps(machine);
- 	if (ret < 0) {
-@@ -798,6 +800,7 @@ static int do_test_code_reading(bool try_kcore)
- 	perf_cpu_map__put(cpus);
- 	perf_thread_map__put(threads);
- 	machine__delete(machine);
+ 	if (disassembler_style) {
+ 		annotate_opts.disassembler_style = strdup(disassembler_style);
+-		if (!annotate_opts.disassembler_style)
+-			return -ENOMEM;
++		if (!annotate_opts.disassembler_style) {
++			status = -ENOMEM;
++			goto out_delete_evlist;
++		}
+ 	}
+ 	if (objdump_path) {
+ 		annotate_opts.objdump_path = strdup(objdump_path);
+-		if (!annotate_opts.objdump_path)
+-			return -ENOMEM;
++		if (!annotate_opts.objdump_path) {
++			status = -ENOMEM;
++			goto out_delete_evlist;
++		}
+ 	}
+ 	if (addr2line_path) {
+ 		symbol_conf.addr2line_path = strdup(addr2line_path);
+-		if (!symbol_conf.addr2line_path)
+-			return -ENOMEM;
++		if (!symbol_conf.addr2line_path) {
++			status = -ENOMEM;
++			goto out_delete_evlist;
++		}
+ 	}
+ 
+ 	status = symbol__validate_sym_arguments();
+@@ -1826,7 +1838,7 @@ int cmd_top(int argc, const char **argv)
+ 		top.session = NULL;
+ 		goto out_delete_evlist;
+ 	}
+-	top.session->env = &perf_env;
++	top.session->env = &host_env;
+ 
+ 	if (!evlist__needs_bpf_sb_event(top.evlist))
+ 		top.record_opts.no_bpf_event = true;
+@@ -1841,7 +1853,7 @@ int cmd_top(int argc, const char **argv)
+ 			goto out_delete_evlist;
+ 		}
+ 
+-		if (evlist__add_bpf_sb_event(top.sb_evlist, &perf_env)) {
++		if (evlist__add_bpf_sb_event(top.sb_evlist, &host_env)) {
+ 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
+ 			status = -EINVAL;
+ 			goto out_delete_evlist;
+@@ -1863,6 +1875,7 @@ int cmd_top(int argc, const char **argv)
+ 	evlist__delete(top.evlist);
+ 	perf_session__delete(top.session);
+ 	annotation_options__exit();
 +	perf_env__exit(&host_env);
  
- 	return err;
+ 	return status;
  }
-diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
-index 54f59d1246bc..6427e3382711 100644
---- a/tools/perf/tests/dlfilter-test.c
-+++ b/tools/perf/tests/dlfilter-test.c
-@@ -319,11 +319,12 @@ static int run_perf_script(struct test_data *td)
- 
- static int test__dlfilter_test(struct test_data *td)
- {
-+	struct perf_env host_env;
- 	u64 sample_type = TEST_SAMPLE_TYPE;
- 	pid_t pid = 12345;
- 	pid_t tid = 12346;
- 	u64 id = 99;
--	int err;
-+	int err = TEST_OK;
- 
- 	if (get_dlfilters_path(td->name, td->dlfilters, PATH_MAX))
- 		return test_result("dlfilters not found", TEST_SKIP);
-@@ -353,37 +354,42 @@ static int test__dlfilter_test(struct test_data *td)
- 
- 	pr_debug("Creating new host machine structure\n");
- 	td->machine = machine__new_host();
--	td->machine->env = &perf_env;
-+	perf_env__init(&host_env);
-+	td->machine->env = &host_env;
- 
- 	td->fd = creat(td->perf_data_file_name, 0644);
- 	if (td->fd < 0)
- 		return test_result("Failed to create test perf.data file", TEST_FAIL);
- 
- 	err = perf_header__write_pipe(td->fd);
--	if (err < 0)
--		return test_result("perf_header__write_pipe() failed", TEST_FAIL);
--
-+	if (err < 0) {
-+		err = test_result("perf_header__write_pipe() failed", TEST_FAIL);
-+		goto out;
-+	}
- 	err = write_attr(td, sample_type, &id);
--	if (err)
--		return test_result("perf_event__synthesize_attr() failed", TEST_FAIL);
--
--	if (write_comm(td->fd, pid, tid, "test-prog"))
--		return TEST_FAIL;
--
--	if (write_mmap(td->fd, pid, tid, MAP_START, 0x10000, 0, td->prog_file_name))
--		return TEST_FAIL;
--
--	if (write_sample(td, sample_type, id, pid, tid) != TEST_OK)
--		return TEST_FAIL;
--
-+	if (err) {
-+		err = test_result("perf_event__synthesize_attr() failed", TEST_FAIL);
-+		goto out;
-+	}
-+	if (write_comm(td->fd, pid, tid, "test-prog")) {
-+		err = TEST_FAIL;
-+		goto out;
-+	}
-+	if (write_mmap(td->fd, pid, tid, MAP_START, 0x10000, 0, td->prog_file_name)) {
-+		err = TEST_FAIL;
-+		goto out;
-+	}
-+	if (write_sample(td, sample_type, id, pid, tid) != TEST_OK) {
-+		err = TEST_FAIL;
-+		goto out;
-+	}
- 	if (verbose > 1)
- 		system_cmd("%s script -i %s -D", td->perf, td->perf_data_file_name);
- 
--	err = run_perf_script(td);
--	if (err)
--		return TEST_FAIL;
--
--	return TEST_OK;
-+	err = run_perf_script(td) ? TEST_FAIL : TEST_OK;
-+out:
-+	perf_env__exit(&host_env);
-+	return err;
- }
- 
- static void unlink_path(const char *path)
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 36411749e007..b363c933e782 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -254,6 +254,7 @@ void perf_env__exit(struct perf_env *env)
- 
- void perf_env__init(struct perf_env *env)
- {
-+	memset(env, 0, sizeof(*env));
- #ifdef HAVE_LIBBPF_SUPPORT
- 	env->bpf_progs.infos = RB_ROOT;
- 	env->bpf_progs.btfs = RB_ROOT;
 -- 
 2.49.0.1151.ga128411c76-goog
 
