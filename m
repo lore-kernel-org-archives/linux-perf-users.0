@@ -1,187 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA873288509;
-	Tue, 27 May 2025 19:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EA419F43A
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 20:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374211; cv=none; b=i1ULprJ4NGvTdogMWfGQGZoOmjl6eTJDeF1Dm/QbgDzAPLwcX62UaoTVQfS36hvtgp8is7BqKKNHLbWdKHbgmkwETofQqbxfx+D5L4fSTtQ7lUwEuMB46soNr2AtzSKT+bszLrd+4Zc9qFlwdJ+rkolHA6prm+YJ1ZS6Et1Dr54=
+	t=1748378029; cv=none; b=ORaPlx4XC1QLS0wN83j+mL1e1jD5+ZEUSz6BTCN91YGlL72+DMs4MIbgadDOZOtWb1MzJIHP4lHe9mwOWSvy5rW6Lnhf9ESo7EqBsycE2+jWRGbaJEePrXBeBFKHM+aEfvRxh+q7rpAtvyG8OILKTVlN19C/yjcem3rXF8WVCFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374211; c=relaxed/simple;
-	bh=Vdfstct6hVRyw6WWOWyiBNMF1lwa3qrocEjN3fPYDhc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JL/rlMg68RvxfWliwveIrGMVPiTJidOEUxTBfRNIHn+YhljTYBdpP6ZVduqzcW9HPPaPcCctSEqawTngnR/PMhs7BX+7I5QNXwQw4Z9OwKCtc5z8Cgw4gE/4PLhkxNk+gx0ddqLqPvusgZcUOoAyzMEThhP4OdV4LaLQx+r7o0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdZ5T188; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748378029; c=relaxed/simple;
+	bh=DjtB8BRpaDcJZqUnxCsmRkSL3YrC18x5DJNTYGMvAhM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t3Zyo3WMHq2gkrFq0/CXUVyqNqWm52sLLz5tigTrgh9kjZzArRBI8IT4zlBYx5NzOKiSeNhm5DuzDY6YKCSmE69iW5Zk1OWSd4+dzEEIiWXZxrrcGen+6CcljsVnDPLmdMv10uIpcx8g1o1kTDuLUIqLbSe8WX/pA7+hkgrHdbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j0RQUW43; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdZ5T188"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748374210; x=1779910210;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Vdfstct6hVRyw6WWOWyiBNMF1lwa3qrocEjN3fPYDhc=;
-  b=EdZ5T188TwDVDCMvBTz93/Xcn1V5nZr363yEhG1FScEItHQvi5dvCxft
-   rXxTD55OEYy7nYE2WBfWTjjAtaBZ5yPRrFRJ2LFTICe7igAOQ/38xxMuM
-   0pE1WI5U344806l7Ii9IkpJ6vKPbhaz5ocS7VjrLksI5k/jL+JdLQPZQY
-   /QCJKXS8XUVmV7t4g2TuxOglHPLz+fttHdp03IeD9UzWNppmGYCJvywB8
-   bFRKwjxbyduwcmvxVcL9aYgWwsHaZyg0CvbEsNOoY15TAqqRp2GFHVZ5l
-   nQ+rlcuAK5SsDBgGkev/4mnJVmjacQ07yCve1Sk374H9I6aFoTghUcgfr
-   Q==;
-X-CSE-ConnectionGUID: CrY570NPThi82nVTacn5RA==
-X-CSE-MsgGUID: PNFSCfnJTdq+QELgHI1xng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="49492388"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="49492388"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:30:09 -0700
-X-CSE-ConnectionGUID: xPvRFW1MQxCT7gpiGyeZdA==
-X-CSE-MsgGUID: 3nJhJjrYRTmUv1PmE2EYpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="147709756"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:30:09 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 8797220B5736;
-	Tue, 27 May 2025 12:30:07 -0700 (PDT)
-Message-ID: <44e1c864-a6e1-41a8-9f11-0ea25999131c@linux.intel.com>
-Date: Tue, 27 May 2025 15:30:06 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j0RQUW43"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3dd745f8839so39815ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 13:33:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748378027; x=1748982827; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8vMM0EfVdDxW43a+3ih4QwmwFQMtKuGgo1WFCc3wMKY=;
+        b=j0RQUW43ESZFahMBtCvM59fV6ryepuWVZAwk29kRQkYmp89GKgi7c2x+Rp7pLP2Wu1
+         6njdb8pKqD5VY8sj0oHFwmB0qPvfu+kHxv19vw8Cl6xSuLv/AX5EjwbxYJ7DNQJZmhH+
+         b4qTF2+YNi5+rMOIpd92qJ/VMLyY19G1wbXx9fN+8QQ2zsuy6aAytG/lBzgai0Dj3ZNa
+         Gu9GSJgi6le3ViI0WsS+ouZHQdjhh4oCjGtl8Sgsa5IWwiU/jEhRShwtzZ2mhmgQB/DY
+         qanCg7U3Mar6Xd7tYHYtB84kZWfDmiSPY7nSo3/iReuso1k5NOFz/P81pUUo8w6VRDkr
+         T5rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748378027; x=1748982827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8vMM0EfVdDxW43a+3ih4QwmwFQMtKuGgo1WFCc3wMKY=;
+        b=gQLKvD6fTnQEWYUx0XzXFWQdKWIUnAQFFxgfQxsgg3j93VH7pU6H7qFglAJFrrDr9L
+         H2OwGdxanLT+NfMtxKw7pYsMDMcIpVCjo091vyatuYcrBlv/0NtK/kPtR4V73Se1k8FA
+         KhxKrS9Zp1sEGMUqJBf45X0m9BetcR3xLbJ6wLlW2CgmbnlGORKIY9kZ+TPNgzWVv3LV
+         yc127aYJ8D4daLGFmektgnruigkf4EzD26gAKoYFT5XVgoHALFWOd6M76CrodipLsPM2
+         XLo2uqEcEOOB9hWw/RNC7y7OVc76v+s+Fi6tRZmK4V5LgZiylnU94cZ2+ssO5DZSGBLV
+         Xl7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUg7tYH6UgaN8vwo/rbn2zhkSiXS3yR+XRQeTCSvHsWQtPWIk8zzAXlM3Anrvxwn6sY8fucJc8kIrEHnuod/Sjf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza2eSRDHh6KbRH6WMqzq3qSo82IRf+lKgtz6d6aXt5tl6lYpTm
+	OLyj4dpQgWlrTzNuUEdlZv1UpPWQnpTMqrbxhLGXfNAkd1KJ5BSWDQLhoEnNxDPfVrG5tBx6JYo
+	8M0yCT8+6uKsiKp86eP3myh6n4Y/IxUyTlnr/jA8s
+X-Gm-Gg: ASbGncsaaIIV1ossVJuLsRFvVirZZ5jPjeVAMf78majITDcV5jyRkmXq/3BNOFhLrj1
+	PfAQv7jCBcrIKGxyzQkZtdLldfKtqH9unKA7hMm8MggMyn1Fy6g7Sgyfxv2qpnAlRAG/myANvaI
+	iWZonj3Vrd5fJcIpVjSx/7NbE/9vroB1JIxeY45BgDibguGYEFThrDin/qtNWxTNdtvvDFqHCp
+X-Google-Smtp-Source: AGHT+IFVysUrX9/RWGVD8jifme4FsJobwQ5MaMQpoCCukjVl5luhg+u6mLupYV+mhQR95neYD0HRetp3woSgDEpO6ag=
+X-Received: by 2002:a05:6e02:1c26:b0:3dc:8116:44a8 with SMTP id
+ e9e14a558f8ab-3dd88fc27f3mr702425ab.26.1748378027062; Tue, 27 May 2025
+ 13:33:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 01/16] perf: Fix the throttle logic for a group
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, Aishwarya.TCV@arm.com
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-2-kan.liang@linux.intel.com>
- <20250527161656.GJ2566836@e132581.arm.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250527161656.GJ2566836@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250402211301.4153441-1-irogers@google.com> <Z_Af-KAKuOlqALH6@google.com>
+In-Reply-To: <Z_Af-KAKuOlqALH6@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 May 2025 13:33:35 -0700
+X-Gm-Features: AX0GCFutG5SackukbvsjFVPBuPGu8DTDm9ChuUzENA6lOgs8-Mu_3g5DN2PAm10
+Message-ID: <CAP-5=fUiWm9kq2fhT-9+8LOmC2Yen9Mw2P8yPLTJH+nk83nmmA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu: Avoid segv for missing name/alias_name in wildcarding
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 4, 2025 at 11:07=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Apr 02, 2025 at 02:13:01PM -0700, Ian Rogers wrote:
+> > The pmu name or alias_name fields may be NULL and should be skipped if
+> > so. This is done in all loops of perf_pmu___name_match except the
+> > final wildcard loop which was an oversight.
+> >
+> > Fixes: c786468a3585 ("perf pmu: Rename name matching for no suffix or w=
+ildcard variants")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-
-On 2025-05-27 12:16 p.m., Leo Yan wrote:
-> Hi Kan,
-> 
-> [ + Aishwarya ]
-> 
-> On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wrote:
-> 
-> [...]
-> 
->> @@ -10331,8 +10358,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
->>  		__this_cpu_inc(perf_throttled_count);
->>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->> -		hwc->interrupts = MAX_INTERRUPTS;
->> -		perf_log_throttle(event, 0);
->> +		perf_event_throttle_group(event);
->>  		ret = 1;
->>  	}
-> 
-> Our (Arm) CI reports RCU stall that caused by this patch.  I can use a
-> simple command to trigger system stuck with cpu-clock:
-> 
->   perf record -a -e cpu-clock -- sleep 2
-> 
-> I confirmed that if removing throttling code for cpu-clock event, then
-> the issue can be dimissed.  Based on reading code, the flow below:
-> 
->   hrtimer interrupt:
->    `> __perf_event_account_interrupt()
->        `> perf_event_throttle_group()
->            `> perf_event_throttle()
->                `> cpu_clock_event_stop()
->                    `> perf_swevent_cancel_hrtimer()
->                        `> hrtimer_cancel()  -> Inifite loop.
-> 
-> In the hrtimer interrupt handler, it tries to cancel itself and causes
-> inifite loop.  Please consider to fix the issue.
-> 
-
-The cpu-clock and task_clock are two special SW events, which rely on
-the hrtimer. I missed them when checking the SW events. :(
-
-For the two events, instead of invoking the stop(), the
-HRTIMER_NORESTART is returned to stop the timer. Invoking the stop()
-cause the issue.
-
-There may be two ways to fix it.
-- Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
-the stop is invoked by the throttle.
-- Introduce a PMU flag to track the case. Avoid the event_stop in
-perf_event_throttle() if the flag is detected.
-
-The latter looks more generic. It may be used if there are other cases
-that want to avoid the stop. So the latter is implemented as below.
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 947ad12dfdbe..66f02f46595c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -303,6 +303,7 @@ struct perf_event_pmu_context;
- #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
- #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-+#define PERF_PMU_CAP_NO_THROTTLE_STOP		0x0400
-
- /**
-  * pmu::scope
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8327ab0ee641..596597886d96 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2655,7 +2655,8 @@ static void perf_event_unthrottle(struct
-perf_event *event, bool start)
-
- static void perf_event_throttle(struct perf_event *event)
- {
--	event->pmu->stop(event, 0);
-+	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
-+		event->pmu->stop(event, 0);
- 	event->hw.interrupts = MAX_INTERRUPTS;
- 	perf_log_throttle(event, 0);
- }
-@@ -11846,7 +11847,8 @@ static int cpu_clock_event_init(struct
-perf_event *event)
- static struct pmu perf_cpu_clock = {
- 	.task_ctx_nr	= perf_sw_context,
-
--	.capabilities	= PERF_PMU_CAP_NO_NMI,
-+	.capabilities	= PERF_PMU_CAP_NO_NMI |
-+			  PERF_PMU_CAP_NO_THROTTLE_STOP,
- 	.dev		= PMU_NULL_DEV,
-
- 	.event_init	= cpu_clock_event_init,
-@@ -11928,7 +11930,8 @@ static int task_clock_event_init(struct
-perf_event *event)
- static struct pmu perf_task_clock = {
- 	.task_ctx_nr	= perf_sw_context,
-
--	.capabilities	= PERF_PMU_CAP_NO_NMI,
-+	.capabilities	= PERF_PMU_CAP_NO_NMI |
-+			  PERF_PMU_CAP_NO_THROTTLE_STOP,
- 	.dev		= PMU_NULL_DEV,
-
- 	.event_init	= task_clock_event_init,
-
+Ping.
 
 Thanks,
-Kan
+Ian
 
-
+> Thanks,
+> Namhyung
+>
+> > ---
+> >  tools/perf/util/pmu.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 31f1e617eb20..d27bdf421c19 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -2060,7 +2060,9 @@ static bool perf_pmu___name_match(const struct pe=
+rf_pmu *pmu, const char *to_mat
+> >       }
+> >       for (size_t i =3D 0; i < ARRAY_SIZE(names); i++) {
+> >               const char *name =3D names[i];
+> > -
+> > +
+> > +             if (!name)
+> > +                     continue;
+> >               if (wildcard && perf_pmu__match_wildcard_uncore(name, to_=
+match))
+> >                       return true;
+> >               if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(n=
+ame, to_match))
+> > --
+> > 2.49.0.504.g3bcea36a83-goog
+> >
