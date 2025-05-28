@@ -1,147 +1,110 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5673234
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 21:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCFD1DF273
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 03:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748382776; cv=none; b=HghrFB9zbLOZJmtdrm5V8amhcTWfhpzHGLYltKPjtOzIfNhyfAWcSQ5wjkq1LUU2Qvx70SvjENXHLPVCFmGdZaq5YM6I87QLzvMums4Asre23oeiaFshxfIRRSavda2UDW5PCngNqek6gL8A9MsLXujATvAVEiogdiHohxM4sg0=
+	t=1748402802; cv=none; b=ndRFE4caaSmOLgoibZ7Plxtt06viRNuqPHG6Dgwq7Y3EMjPAffac4nphAKdb9UgRfR82p4kFVKMKoksnss52bhoTvVo5whQNFOqfJ4nqn/dewRN6oS2aMrK2GKqhiUiMO5g9fNNPxnlljFUOb1ROmg3lmnMxBI6SlDU6uAo5n3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748382776; c=relaxed/simple;
-	bh=NajqaMwzak2ZVvXTy1LnEbealGJdqp9h9PckD2MrsnM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UCAS6z1uZcn8fyvct36iBL5wths3FR08EaxxMy8e3enCdd8svsCQ85Ah7X80RgTrYl2ebqD03VX+vxDm0kBiJmL2xKKlIMdFQlVX+XkHvlDTA1cfOpg+5/qXq3YL9brmeKmrlcrAz/+J3f2tWKIjpPlXI7kNIOxbhMWZnHW4hHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qTu8asSc; arc=none smtp.client-ip=209.85.166.171
+	s=arc-20240116; t=1748402802; c=relaxed/simple;
+	bh=rNzkr9PD/Dn687T+AGetBIv/1kfPiIBsjmnIT83qck4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=VBZlvQE24hIzz1xAziAal1v5Oo6A0HkeJ8KZR/hAdG93f4DwfpEZxh0HCswj8VJ/LhJYbcZ/B76fLq5VmOt46KiNQ2IUMGjIsYeSQKMzLXyuS0kSPLKlxw6SIrdBt10+aSYVK3ZwKjvBRTsRGrQbXx6b2t4fTYq8g3DwqUUsG3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q2dUn5jV; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qTu8asSc"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso29475ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 14:52:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q2dUn5jV"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c37558eccso1496714a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 May 2025 20:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748382774; x=1748987574; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nzy/VP72yEkDUxgyVW5whFWNlXXozP4lwanJ50OlT08=;
-        b=qTu8asSclUdczT+2ecciVMS/9GtUzWFFG1rTsc+q4bxn8wnLDpQKZ5onrW0MshLnmH
-         V6ReJ+bhl0oGM7YgNuW1PxX7W5dkmtTFwlgk1aY31KB8/NqLYMbuINE6o5YqC0SsgkaP
-         HBMelfZWhKB7ZIQXULzxe7MciM9xRmEDv/kJ0yjTU1h0FqCtzJyoG3Tte8yrfv96EAUK
-         W5/5lYAsySL/xNUzDx4BTU+6Ko5NgPNddpREtDMPt5eXbYTdVzv4TWgiNSgEE3fjUsRp
-         hGO+Pi3LU88pQyH3lTHOQ6WoYIA4X7e2o+wco1HAPI6ng7w6xDxJtJ0eR6iPy1+KIhWr
-         2l9Q==
+        d=google.com; s=20230601; t=1748402800; x=1749007600; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qthGPSnrY3//sB/RtQQS5H9LtWVtNZRKXA0sksz8t9E=;
+        b=Q2dUn5jVZeX/+/mi+5W92XiMHFs0yaoHvCSoo2Y819Ar2q5QXeaolfyTwT5rvZlr3R
+         gZjfkJrAfVJDN85p5hpcoND1fHWMogJhLA9GOTpO7WGCObUJiESVeL/N/7CYka30CWKJ
+         LTHZHSZHOiAkQwyoGihY6KsLcVM2mUomVUfUBqzE+R78jbpKWzZBZyC3ne5/36M5nZj4
+         zJvCQWQrzhSvS4UpBy7moL4Hq6HHfiV5AWwPiGgW12ScmYSquHde6ByyzzrXKGpXa8/D
+         hK78av9MI7u711cUnhG6XRnn+nCpgqsKy0OMhpnUe60aX2fBDzgYtv66Hcc3FwCl+ebQ
+         AoAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748382774; x=1748987574;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nzy/VP72yEkDUxgyVW5whFWNlXXozP4lwanJ50OlT08=;
-        b=s8QTEvvVmTdkFW7bMJsltqDWqaeMrdG+tRN9zU2XxOi9lxnLeTbbEyIWF/91LmsI9c
-         AB+Dxsi7718h9PooAkYxC7G35NACYyBZroPhM+aXryDesuykNhtPjCDHtkbYM2ZHzX3X
-         xDtpg6NL4opiK4WHfI/KbFf9CWXmAowD40jghN7mw9/LX2RjVAjwx651ZNDnPdP6N4QT
-         qmi2/fDQ6Gw1OgbB2Pg7hpBzCzdP0C1inpArbQ+Avvkl+kNq2NDjpSPNGEMojTjvccKQ
-         3hphx0vPovnv6FaQET9MwEf6GNWzAW6DEjRDrLEXEaYOe7i0GBHzcJG5MuAtYvn8jHNm
-         eRQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWs6o6J43qkobXubSW6Ffqfvn5P80lfLoEnqlRxALKrwuwIZ/LbNwpmrJ0EuWQTyR4Dz2eY2ma/STW66vQ8j6F7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1wsVJ+HxEdj2povztMyCP9ZwhJc02oWyoyiznfMXzW0q2JRUi
-	5LzGhzr9B52TY5xx+Rkra/uSPqc65d0giUKhR0lt2bkcKk+62YVRWIm2pDPSBkkGUV7QnnK52hh
-	mR7F1Mxf8yBVIrQbB1o0V2YFgPs7l3LlJCQMyxF6e
-X-Gm-Gg: ASbGncuuR5on80onln9Yni0yWycZXm8xXOHzyzQjd91WuSGDtUlZ4hg6h9GVGJ6PzmT
-	YSfoxhHQpzDA5Id0qRugOsa2e+vacbIXMA/2CRU2hJWsU7/L5H0ZF23XEtJX48hqCjTopBedLcD
-	qTjHiy+kUL+FXGEIwfXR24yViPdndtoLL+PTkJr+8EIojlXrqpnksFtaWPrM2Kz7Q957HtVQ5Z
-X-Google-Smtp-Source: AGHT+IF/X/d3ehgRBp3+RuMKNjyxr4o+rJWM+7S6FJZ0zE8aw5lm5Q/+wDtlGaOZJXxw2jrY/SoQ1HqZJ1vSLGyJoeY=
-X-Received: by 2002:a05:6e02:2302:b0:3dc:6fb2:dac7 with SMTP id
- e9e14a558f8ab-3dd88f5058amr1391775ab.10.1748382774033; Tue, 27 May 2025
- 14:52:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748402800; x=1749007600;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qthGPSnrY3//sB/RtQQS5H9LtWVtNZRKXA0sksz8t9E=;
+        b=pxcoz1vaT4K8XV1dHJuFajcMb18sbslAMJ5J0KIa9igN8O9Qji+Likqu+IHVyLLBgz
+         NP7dMh/Kbs2yJRTpSywfl99eea5cSyvUn1x82bSH1nK2SLHlsczR6L8i+1n8liJHYmeM
+         tgrhzlgNNOpqGF0iDBDwbBVMYqk3nAOc/b9VFot+9P4wQm5hFENrM/DsxOehLlzedp9C
+         XaISrn31CHDX3sIAfeTk+7r5jlWU1Nc7GeduyI3D1j1SIOtN1RaaWQl0jgVajk5rIYDg
+         FDvqNbwdKp4CNdi5n11p3SCF6HpuGoBK5bXisDu2he+bhcRJF226Si4My3xJ6D8nbRD+
+         0ucw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuBQLZomEmuoAdM1NDmHl4w3yYeBPkhcopy+zk10EZNY10kttjKK3I9Sye0Bt9t/TkJ0n+vZ9qxweONKVXq/RY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4UTDQpnI1nfFODcWN2gXOGbOhKPsW1gIRPeeGEfUfZlhrrLr0
+	tkP9LJy0lTcCvvZGnAANsMUjLVwaA++/BZNG8PgEB+u/smHLRBXV4rFBTKT05ODc9fI5vGR7OKi
+	B4Y9hDLlTKQ==
+X-Google-Smtp-Source: AGHT+IEieyR9hfyUbMGNfOASge5qq2XRjAhfP7DHYG9bUxzx9nIbSVq4zNmmetxMqCCk80MpvM4NnSqoC0uW
+X-Received: from pgbfq14.prod.google.com ([2002:a05:6a02:298e:b0:b2d:aac5:e874])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c6cd:b0:1fd:e9c8:cf3b
+ with SMTP id adf61e73a8af0-2188c32800bmr26426139637.30.1748402800192; Tue, 27
+ May 2025 20:26:40 -0700 (PDT)
+Date: Tue, 27 May 2025 20:26:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250402211301.4153441-1-irogers@google.com> <Z_Af-KAKuOlqALH6@google.com>
- <CAP-5=fUiWm9kq2fhT-9+8LOmC2Yen9Mw2P8yPLTJH+nk83nmmA@mail.gmail.com> <aDYnLedM8RT17FHx@x1>
-In-Reply-To: <aDYnLedM8RT17FHx@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1238.gf8c92423fb-goog
+Message-ID: <20250528032637.198960-1-irogers@google.com>
+Subject: [PATCH v2 0/7] Various asan and test fixes
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 May 2025 14:52:42 -0700
-X-Gm-Features: AX0GCFsymAJ2MGDqkcBSLY_tqzADwkSXe8XrJLlBH-xRrruWMpTuGsuArIlRpOU
-Message-ID: <CAP-5=fWciArAOkiJDhahxvL3S0zWCNHVEK2msPNT58W9otDOqQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu: Avoid segv for missing name/alias_name in wildcarding
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 1:57=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, May 27, 2025 at 01:33:35PM -0700, Ian Rogers wrote:
-> > On Fri, Apr 4, 2025 at 11:07=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > > On Wed, Apr 02, 2025 at 02:13:01PM -0700, Ian Rogers wrote:
-> > > > The pmu name or alias_name fields may be NULL and should be skipped=
- if
-> > > > so. This is done in all loops of perf_pmu___name_match except the
-> > > > final wildcard loop which was an oversight.
->
-> > > > Fixes: c786468a3585 ("perf pmu: Rename name matching for no suffix =
-or wildcard variants")
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
->
-> > Ping.
->
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < ./20250402_irogers_p=
-erf_pmu_avoid_segv_for_missing_name_alias_name_in_wildcarding.mbx
-> patching file tools/perf/util/pmu.c
-> Hunk #1 FAILED at 2060.
-> 1 out of 1 hunk FAILED -- saving rejects to file tools/perf/util/pmu.c.re=
-j
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ cat tools/perf/util/pmu.c.rej
-> --- tools/perf/util/pmu.c
-> +++ tools/perf/util/pmu.c
-> @@ -2060,7 +2060,9 @@ static bool perf_pmu___name_match(const struct perf=
-_pmu *pmu, const char *to_mat
->         }
->         for (size_t i =3D 0; i < ARRAY_SIZE(names); i++) {
->                 const char *name =3D names[i];
-> -
-> +
-> +               if (!name)
-> +                       continue;
->                 if (wildcard && perf_pmu__match_wildcard_uncore(name, to_=
-match))
->                         return true;
->                 if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(n=
-ame, to_match))
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ git log --oneline -5 tools/perf/=
-util/pmu.c
-> 754baf426e099fbf perf pmu: Change aliases from list to hashmap
-> 255f5b6d060be5a4 perf parse-events: Add "cpu" term to set the CPU an even=
-t is recorded on
-> fa1332a8011eebe1 perf mem/c2c amd: Add ldlat support
-> fc807b6bde6ad332 perf pmu-events: Add retirement latency to JSON events i=
-nside of perf
-> 58b8b5d142a8bd5c perf cpumap: Increment reference count for online cpumap
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> Can you please take a look?
+When testing removing perf_env with asan I noticed a number of test
+failures either because of asan issues or because of building with
+NO_LIBELF=1 and NO_LIBBPF=1 to avoid false memory leaks. Address these
+issues so that real test failures stand out.
 
-Done.
-https://lore.kernel.org/lkml/20250527215035.187992-1-irogers@google.com/
-Not sure what put patch off given the small nature of the change.
+v2: Fix wrong elf size use in filename__read_build_id fix. Add
+    thread__comm_lock fix.
 
-Thanks,
-Ian
+Ian Rogers (7):
+  perf symbol: Fix use-after-free in filename__read_build_id
+  perf test demangle-java: Don't segv if demangling fails
+  perf symbol: Move demangling code out of symbol-elf.c
+  perf intel-tpebs: Avoid race when evlist is being deleted
+  perf test intel-pt: Skip jitdump test if no libelf
+  perf test trace_summary: Skip --bpf-summary tests if no libbpf
+  perf thread: Avoid recursively taking thread__comm_lock
 
-> - Arnaldo
+ tools/perf/tests/demangle-java-test.c   |   5 +
+ tools/perf/tests/shell/test_intel_pt.sh |   5 +
+ tools/perf/tests/shell/trace_summary.sh |   6 +
+ tools/perf/util/demangle-cxx.h          |   2 +
+ tools/perf/util/intel-tpebs.c           |  12 +-
+ tools/perf/util/symbol-elf.c            |  86 ------------
+ tools/perf/util/symbol-minimal.c        | 175 ++++++++++--------------
+ tools/perf/util/symbol.c                |  87 ++++++++++++
+ tools/perf/util/thread.c                |  17 ++-
+ 9 files changed, 198 insertions(+), 197 deletions(-)
+
+-- 
+2.49.0.1238.gf8c92423fb-goog
+
