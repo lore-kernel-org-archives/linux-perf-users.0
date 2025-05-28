@@ -1,388 +1,135 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BEC1FDE09
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 21:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D322D22370F;
+	Wed, 28 May 2025 21:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748466545; cv=none; b=JSXAD/fgpcyzpuSuI4x6ZH7MDaT2WOTR9u0ZuBj1D2RwvV7Ei1z+aYI8shVbNwMkvXZL2cbnxr4nJBc5UxrkoTkXagNJUfivc/24Y9cAcy6ZYyGYCwU9AXTycxVzSeHnBLpLtNUIWAP8P9I+yeFktpGExZwTEDQgjUdYPJVV5jU=
+	t=1748469561; cv=none; b=e/wAq8TzJE/xSsLTsJKhdy7SED0ABJJgILFEN3xpDHZuzUpsIh/wNHQrBtwkeom1L5/A6T3d8+PwPG3oCxbG0hPsGixotU9mislNhb6nXeWeE9juPNfSHllwtJ4JGlWJ73apPW3u4LKsdNA2PsxxF4ig56uRZMuamy3EV21ETOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748466545; c=relaxed/simple;
-	bh=LIQqj/rBG4WJ9Who6aNm8nmVF5Zg8C2dGZq6Mmu5uXE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=WAu0b2wFENdA18kFoTBNptlmKoqwD97sX6CBO3Ue1eH4moeV9xrp2fEFFDhKIrfLBUtUSm6wrLWWoAEkF1oajhpsWikVA8gogr9/eRRY/CRTWCTdOFTs3wgRl1c118QPj6sgXKxSkSiDPypfmeQC78guxbjqNLzWDEIKPV+lcac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pvt8rGyG; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1748469561; c=relaxed/simple;
+	bh=rTSHTbWhD0fIYsIngS/eYKjGxuLf3+dx2sFLpQ/GdZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWq8ytWUFKTG6sekfOWcCOf7jcjv56su0BsQTghb+UXP1rLxkBUKnlVWCT+aMoUvFv4gpOtd4M/UXsyrY5fXfSu6G40H9R5pr3DBaR5u42zulTzzuutMIbblXqtJaDwQeUtygv8Odlee5mqyXg+R4UsIBn0VRf+DsxXs+e065bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cbjd9J45; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pvt8rGyG"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23202dacd94so3240065ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 14:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748466543; x=1749071343; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Fgz4RLpwM5kTcN0bNVkBpOujZlSaW0l8gHcBwYFiKWw=;
-        b=pvt8rGyGD4Jhka+GB2O/Th3WwmgPfghY8ZkIUD47dCkKJ84uCqYST9DmcJe/neqtXd
-         BEGPvq4ph4sX3UeFBupNaV0Xr2kYtpyL603JpAShBu9OmCnZv3/hQ7knDsPSqeidTS5W
-         2szKSr9z3rQgWPH35lXzBetb17ij1001MAIgjQ6AbkM1m+OO47oVPT4YVdpjbpM2BQ/M
-         N0Dpvf8etruwMVH/nLkL/7BWPV19fRxpbBB0yw//wUCp2o95n2VKkBw+RMBFat83vRwk
-         AGOjhTYLbBEzZW3uTpDcQkuTa9qZfU3+tBGP25jGVjzcoSGKh3eVrxyZPUORKf7p+dwv
-         g2qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748466543; x=1749071343;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fgz4RLpwM5kTcN0bNVkBpOujZlSaW0l8gHcBwYFiKWw=;
-        b=LCKbGGlEV2PZTDvF6DVdE//rQQR1XpKQKxW8vZVPoKlQwuwWBMK21qu2zAb1WxEOGv
-         lB9LtI42s1SFTCOXk5nPBOxTEtt4wWtw4hUxjGJAfosm21k8QxXU2KreIIajB2JByHf9
-         qpbJecGkpBf48ka+YfUiiGRyu7TTw3vVqOPJpavvYyCZAHMjJHhFW99zZtpJt9hQTqE6
-         j/AfO641ohM0SnrQe3rNRLFx/SjNoySpGyorwsmifF37h9QA0yDaFsBqn/0eQDQmLlXu
-         /Yvgl1fL1MSPjpM0Oyt8LaMdQZJkf9RRfJukehmpLY9cmhDUEqaBoPai42qRpIj9W2TA
-         rZzw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3yI51B4ZrbQfKBx+94ST1YZqJPCGNkeJ3sszGT9soigriCuIBQGztuUXvAUtFwbAFvEsx/cQz6MnZV+jvK4s/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSSt53GdN2+xfazpgoLCC6EEvpeWhjZ4dNGzUpkhwP65vgRGQl
-	1NcO58X7AaKgC+kdFlIlprxINCo4quvA81H12lqBXO0Ppe2SHxQ1nXW0Auo4XN/6m8aALdMV0T3
-	YGCIPJIauhw==
-X-Google-Smtp-Source: AGHT+IHEuBh0mTSW0osNedaN9qHRnf++NfYvmP1VWxvfmSTBGmGBn6W3fdTiYgeI8fDDxSyFi1cnq5SSmGu7
-X-Received: from plky7.prod.google.com ([2002:a17:902:7007:b0:234:6701:babc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:46c4:b0:234:a033:b6f6
- with SMTP id d9443c01a7336-234a033ba9bmr124093795ad.31.1748466543024; Wed, 28
- May 2025 14:09:03 -0700 (PDT)
-Date: Wed, 28 May 2025 14:08:58 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cbjd9J45"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B68C4CEE3;
+	Wed, 28 May 2025 21:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748469561;
+	bh=rTSHTbWhD0fIYsIngS/eYKjGxuLf3+dx2sFLpQ/GdZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cbjd9J45sepFgn5GqkwPTv4ImwQvkxSKOkk5dGqw3h6OSW/Vb7pCPFRvFKb3GtJM0
+	 gSGanIZX6tlE0026pDYsp3H7s03uSkytwXvkXyI7UIKT3QLXlTWdgQ2vJpsPz3z9Jj
+	 EPceE/0C4VYrxsGQTLKrMYlLQPMixw3DCCLV2mlGUZ4oSuVRZeXQCWO+OldrgI/PfC
+	 LGF185uk/BbMT2fSqcWiAl23fMlM/T3gFnk3eTnHmdrQTAbgF+J+3MA9uHXIVH1gBO
+	 OL8wFKl3BpusYiHl1B/5XniEY1ffF2XlY9IEb7umAkETvKAAsh44sp6yn04ifOVYxY
+	 QK3K9yH3GY1Wg==
+Date: Wed, 28 May 2025 14:59:19 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's
+ -Wunreachable-code
+Message-ID: <aDeHN4DeYS3i-5jY@google.com>
+References: <20250410202647.1899125-1-irogers@google.com>
+ <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+ <aDdU1npHL2Vczhsa@google.com>
+ <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
+ <aDdqcfuAuk78eKXD@google.com>
+ <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250528210858.499898-1-irogers@google.com>
-Subject: [PATCH v3] perf symbol: Move demangling code out of symbol-elf.c
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
 
-symbol-elf.c is used when building with libelf, symbol-minimal is used
-otherwise. There is no reason the demangling code with no dependencies
-on libelf is part of symbol-elf.c so move to symbol.c. This allows
-demangling tests to pass with NO_LIBELF=1.
+On Wed, May 28, 2025 at 01:32:10PM -0700, Ian Rogers wrote:
+> On Wed, May 28, 2025 at 12:56 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
+> > > On Wed, May 28, 2025 at 11:24 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> > > > > On Fri, Apr 11, 2025 at 3:14 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > >
+> > > > > > On Fri, Apr 11, 2025 at 2:34 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Hi Ian,
+> > > > > > >
+> > > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > > > > > Clang's unreachable code warning is able to catch bugs like the famous
+> > > > > > > > "goto fail" which gcc's unreachable code warning fails to warn about
+> > > > > > > > (it will complain about misleading indent). The changes here are
+> > > > > > > > sufficient to get perf building with clang with -Wunreachable code,
+> > > > > > > > but they don't really fix any bugs. Posting as an RFC to see if anyone
+> > > > > > > > things this is worth pursuing.
+> > > > > > >
+> > > > > > > I'm not sure if it's useful and don't see what kind of bugs it can
+> > > > > > > address.  The proposed changes don't look like an improvement.
+> > > > > >
+> > > > > > The goto fail case was in OpenSSL the code from a bad merge:
+> > > > > > ```
+> > > > > > if (...)
+> > > > > >   goto fail;
+> > > > > >   goto fail;
+> > > > > > ```
+> > > > > > Meaning the fail path was always taken and checking on the non-fail
+> > > > > > code never executed. Newer GCCs will warn of this because of the
+> > > > > > "misleading indent" but  clang won't. It is easy to imagine similar
+> > > > > > mistakes creeping in, so using compiler warnings to avoid the bug
+> > > > > > could be useful.
+> > > >
+> > > > It doesn't look very convincing to me but it might be valuable in some
+> > > > rare cases.  But the proposed changes - basically replace exit() to
+> > > > __builtin_unreachable() - seem weird.  Why is calling it a problem?  I
+> > > > guess it already has some kind of annotation like "noreturn"?
+> > >
+> > > Yep. The exit is incorrect (depending on your notion of correct, I'd
+> > > go with clang's notion as they've had to consider this for a while) as
+> > > it can never be executed. I've added the __builtin_unreachable() to
+> > > document that you can never get to that statement, as otherwise it can
+> > > make the code readability harder with the code looking like it will
+> > > fall through after calling something like usage_with_options (which is
+> > > noreturn). In unoptimized builds __builtin_unreachable() will fail if
+> > > executed, so it is a bit more active than just a comment.
+> >
+> > Oh I see, usage_with_options() calls exit() inside so any code after
+> > that won't be executed.  Hmm.. isn't it better to remove those codes
+> > then?
+> 
+> Not sure I follow. The patch does remove the code but it replaces it
+> with __builtin_unreachable() to basically state that the code here and
+> below can never be reached. Do you mean remove the exit from
+> usage_with_options? Then we'd need to fix all the callers, which would
+> be a larger patch. Perhaps it should be usage_with_options_and_exit()
+> to make it clearer that the code doesn't return. I was after doing
+> what was minimal for -Wunreachable-code but while trying to keep the
+> code clear.
 
-Structurally, while moving the functions rename demangle_sym to
-dso__demangle_sym which is already a function exposed in symbol.h and
-the only purpose of which in symbol-elf.c was to call
-demangle_sym. Change the calls to demangle_sym in symbol-elf.c to
-calls to dso__demangle_sym.
+No, I meant we may not need the __builtin_unreachable() at the callsites.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v3. Separate patch as most of v2 landed already. Fix issues with
-    libelf build while merging dso__demangle_sym and demangle_sym to
-    remove some unneeded complexity.
-    The thread comm_lock fix also isn't included:
-https://lore.kernel.org/lkml/20250528032637.198960-8-irogers@google.com/
-    as discussion on that has moved to a revert by Arnaldo:
-https://lore.kernel.org/lkml/aDcyVLVpZRui1ole@x1/
----
- tools/perf/util/demangle-cxx.h   |  2 +
- tools/perf/util/symbol-elf.c     | 92 ++------------------------------
- tools/perf/util/symbol-minimal.c |  7 ---
- tools/perf/util/symbol.c         | 82 ++++++++++++++++++++++++++++
- 4 files changed, 87 insertions(+), 96 deletions(-)
+Would it complain this code?
 
-diff --git a/tools/perf/util/demangle-cxx.h b/tools/perf/util/demangle-cxx.h
-index 26b5b66c0b4e..9359937a881a 100644
---- a/tools/perf/util/demangle-cxx.h
-+++ b/tools/perf/util/demangle-cxx.h
-@@ -2,6 +2,8 @@
- #ifndef __PERF_DEMANGLE_CXX
- #define __PERF_DEMANGLE_CXX 1
- 
-+#include <stdbool.h>
-+
- #ifdef __cplusplus
- extern "C" {
- #endif
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 8734e8b6cf84..01818abd02df 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -13,17 +13,12 @@
- #include "maps.h"
- #include "symbol.h"
- #include "symsrc.h"
--#include "demangle-cxx.h"
--#include "demangle-ocaml.h"
--#include "demangle-java.h"
--#include "demangle-rust-v0.h"
- #include "machine.h"
- #include "vdso.h"
- #include "debug.h"
- #include "util/copyfile.h"
- #include <linux/ctype.h>
- #include <linux/kernel.h>
--#include <linux/log2.h>
- #include <linux/zalloc.h>
- #include <linux/string.h>
- #include <symbol/kallsyms.h>
-@@ -280,82 +275,6 @@ static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
- 	return -1;
- }
- 
--static bool want_demangle(bool is_kernel_sym)
--{
--	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
--}
--
--/*
-- * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
-- * version.
-- */
--#ifndef HAVE_CXA_DEMANGLE_SUPPORT
--char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
--		       bool modifiers __maybe_unused)
--{
--#ifdef HAVE_LIBBFD_SUPPORT
--	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
--
--	return bfd_demangle(NULL, str, flags);
--#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
--	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
--
--	return cplus_demangle(str, flags);
--#else
--	return NULL;
--#endif
--}
--#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
--
--static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
--{
--	struct demangle rust_demangle = {
--		.style = DemangleStyleUnknown,
--	};
--	char *demangled = NULL;
--
--	/*
--	 * We need to figure out if the object was created from C++ sources
--	 * DWARF DW_compile_unit has this, but we don't always have access
--	 * to it...
--	 */
--	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
--		return demangled;
--
--	rust_demangle_demangle(elf_name, &rust_demangle);
--	if (rust_demangle_is_known(&rust_demangle)) {
--		/* A rust mangled name. */
--		if (rust_demangle.mangled_len == 0)
--			return demangled;
--
--		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
--		     buf_len < 1024 * 1024; buf_len += 32) {
--			char *tmp = realloc(demangled, buf_len);
--
--			if (!tmp) {
--				/* Failure to grow output buffer, return what is there. */
--				return demangled;
--			}
--			demangled = tmp;
--			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
--							   /*alternate=*/true) == OverflowOk)
--				return demangled;
--		}
--		/* Buffer exceeded sensible bounds, return what is there. */
--		return demangled;
--	}
--
--	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
--	if (demangled)
--		return demangled;
--
--	demangled = ocaml_demangle_sym(elf_name);
--	if (demangled)
--		return demangled;
--
--	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
--}
--
- struct rel_info {
- 	u32		nr_entries;
- 	u32		*sorted;
-@@ -641,7 +560,7 @@ static bool get_plt_got_name(GElf_Shdr *shdr, size_t i,
- 	/* Get the associated symbol */
- 	gelf_getsym(di->dynsym_data, vr->sym_idx, &sym);
- 	sym_name = elf_sym__name(&sym, di->dynstr_data);
--	demangled = demangle_sym(di->dso, 0, sym_name);
-+	demangled = dso__demangle_sym(di->dso, /*kmodule=*/0, sym_name);
- 	if (demangled != NULL)
- 		sym_name = demangled;
- 
-@@ -839,7 +758,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 		gelf_getsym(syms, get_rel_symidx(&ri, idx), &sym);
- 
- 		elf_name = elf_sym__name(&sym, symstrs);
--		demangled = demangle_sym(dso, 0, elf_name);
-+		demangled = dso__demangle_sym(dso, /*kmodule=*/0, elf_name);
- 		if (demangled)
- 			elf_name = demangled;
- 		if (*elf_name)
-@@ -868,11 +787,6 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 	return 0;
- }
- 
--char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
--{
--	return demangle_sym(dso, kmodule, elf_name);
--}
--
- /*
-  * Align offset to 4 bytes as needed for note name and descriptor data.
-  */
-@@ -1861,7 +1775,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 			}
- 		}
- 
--		demangled = demangle_sym(dso, kmodule, elf_name);
-+		demangled = dso__demangle_sym(dso, kmodule, elf_name);
- 		if (demangled != NULL)
- 			elf_name = demangled;
- 
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index 36c1d3090689..c73fe2e09fe9 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -355,13 +355,6 @@ void symbol__elf_init(void)
- {
- }
- 
--char *dso__demangle_sym(struct dso *dso __maybe_unused,
--			int kmodule __maybe_unused,
--			const char *elf_name __maybe_unused)
--{
--	return NULL;
--}
--
- bool filename__has_section(const char *filename __maybe_unused, const char *sec __maybe_unused)
- {
- 	return false;
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index fe801880afea..8b30c6f16a9e 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -19,6 +19,11 @@
- #include "build-id.h"
- #include "cap.h"
- #include "cpumap.h"
-+#include "debug.h"
-+#include "demangle-cxx.h"
-+#include "demangle-java.h"
-+#include "demangle-ocaml.h"
-+#include "demangle-rust-v0.h"
- #include "dso.h"
- #include "util.h" // lsdir()
- #include "debug.h"
-@@ -36,6 +41,7 @@
- #include "header.h"
- #include "path.h"
- #include <linux/ctype.h>
-+#include <linux/log2.h>
- #include <linux/zalloc.h>
- 
- #include <elf.h>
-@@ -2648,3 +2654,79 @@ int symbol__validate_sym_arguments(void)
- 	}
- 	return 0;
- }
-+
-+static bool want_demangle(bool is_kernel_sym)
-+{
-+	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
-+}
-+
-+/*
-+ * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
-+ * version.
-+ */
-+#ifndef HAVE_CXA_DEMANGLE_SUPPORT
-+char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
-+		       bool modifiers __maybe_unused)
-+{
-+#ifdef HAVE_LIBBFD_SUPPORT
-+	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
-+
-+	return bfd_demangle(NULL, str, flags);
-+#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
-+	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
-+
-+	return cplus_demangle(str, flags);
-+#else
-+	return NULL;
-+#endif
-+}
-+#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
-+
-+char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
-+{
-+	struct demangle rust_demangle = {
-+		.style = DemangleStyleUnknown,
-+	};
-+	char *demangled = NULL;
-+
-+	/*
-+	 * We need to figure out if the object was created from C++ sources
-+	 * DWARF DW_compile_unit has this, but we don't always have access
-+	 * to it...
-+	 */
-+	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
-+		return demangled;
-+
-+	rust_demangle_demangle(elf_name, &rust_demangle);
-+	if (rust_demangle_is_known(&rust_demangle)) {
-+		/* A rust mangled name. */
-+		if (rust_demangle.mangled_len == 0)
-+			return demangled;
-+
-+		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
-+		     buf_len < 1024 * 1024; buf_len += 32) {
-+			char *tmp = realloc(demangled, buf_len);
-+
-+			if (!tmp) {
-+				/* Failure to grow output buffer, return what is there. */
-+				return demangled;
-+			}
-+			demangled = tmp;
-+			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
-+							   /*alternate=*/true) == OverflowOk)
-+				return demangled;
-+		}
-+		/* Buffer exceeded sensible bounds, return what is there. */
-+		return demangled;
-+	}
-+
-+	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
-+	if (demangled)
-+		return demangled;
-+
-+	demangled = ocaml_demangle_sym(elf_name);
-+	if (demangled)
-+		return demangled;
-+
-+	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
-+}
--- 
-2.49.0.1204.g71687c7c1d-goog
+  if (some_bad_option_use)
+    usage_with_options(...);
+
+  /* normal code path */
+
+Thanks,
+Namhyung
 
