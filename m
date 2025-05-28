@@ -1,34 +1,45 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851E928D8DB;
-	Wed, 28 May 2025 16:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D7828E57E;
+	Wed, 28 May 2025 17:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449050; cv=none; b=oVfZGBA8oNxIeN0Uay20T5SvhkVniFdt7qH24MJx2SBuTB5sCVGK6omkaOi08VvCB1x29dm8ud8NpbyTn1LOvcMaRk3Jnneu+SIwcdlAgSysaojCa7AQl/OQ9WW972r8XqcwGMDWOtgMWYLxEytLD5jUXr/Ny+YsINxijVMjeME=
+	t=1748452282; cv=none; b=ZiGEgxvHpCjKG9whf/02iOOs3BQucBkhrroziQrJF/Rb2wHgI/rKpbO8gP8etLNnQv2d1CGMW0zr2v/hg/IJTWlJkNKSYwBtQBD4UuQtA2vsLDh0d8Q7WKR78CPdxNGYIIULOIRegqgOfDbxqPRmQ8C1cZ5pmJtYfit/96DBMrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449050; c=relaxed/simple;
-	bh=UhXhHXqGnsFxg+kHq1kEOUu4fzlnoiBRxONX9YRLNjs=;
+	s=arc-20240116; t=1748452282; c=relaxed/simple;
+	bh=68VnENCT5sJ2AEdFh4eOwOKX9EsCLWBTdHaZUNKLp/A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PP2/WPIDvGmrDHa/Tymmd0KC8uyS4uMYfDueEApYwBXvc+ugIpBK/Nw0VDD5SbIhofoJa/UrC4zcxgI+WW8UFBUXj/PpIDKWVB3cWDBQvp0Uuh5uc0VdzzMa2fIrADeNzNts9mObmU19Ly2cT2Bp41V2qoGPl+fp7TVIO2JtCCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2732D1A2D;
-	Wed, 28 May 2025 09:17:11 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C3353F673;
-	Wed, 28 May 2025 09:17:27 -0700 (PDT)
-Date: Wed, 28 May 2025 17:17:22 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	irogers@google.com, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-	Aishwarya TCV <aishwarya.tcv@arm.com>
-Subject: Re: [PATCH] perf: Fix the throttle error of some clock events
-Message-ID: <20250528161722.GL2566836@e132581.arm.com>
-References: <20250528144823.2996185-1-kan.liang@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jsB0kaL/EJ1Ik8akbdML824CGGz1MVCPmTyl7ZhvRq03/X9zCjBgscSe0AeLa3HUFA78gk9d+sygAEyG1krKTKp7ct9CPnu4/qzQYqjwSmSER+0OI9RdG4v+YKBF9b4Wge7uKPS0VXuu42qZwf9ElLBg/zV4zAE+WxKaSgjhAWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtwtvaCF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtwtvaCF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4416C4CEE3;
+	Wed, 28 May 2025 17:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748452282;
+	bh=68VnENCT5sJ2AEdFh4eOwOKX9EsCLWBTdHaZUNKLp/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gtwtvaCFNrBnLSYT0HTL9oBd6k0psK3Lc+RyQIVJsBBZ8dXuFvPsSntbMmBTR710y
+	 VhkR385AUwqHC5KlF4VlSkZ8AzqYo1Jg5OYTnX9xmH6qYyxTI3zSlMZx12h8Qys/ee
+	 zmSUrMj1p26cOM3koYd+ePLbqDQb8tHO9GKuXbh6ydY37XN1oxzwuRo5X64fHhpsbv
+	 xEGJqX9fK4ANUIEFK+iNDXA3Gka68u6O3LTsei0vgAsU/XqUkqAbVQuWjvbxt9SpmG
+	 nVSY/q5HAM80Oxhur2gYc/upf0JW3Y0OGjNs8ZXiXvEjuKsQwKzp1Ri9vEJh/Wus/Q
+	 N5IAn8dmxUz9w==
+Date: Wed, 28 May 2025 14:11:19 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v2] perf tools: Fix incorrect --user-regs comments
+Message-ID: <aDdDt9O1O4gky_st@x1>
+References: <20250403060810.196028-1-dapeng1.mi@linux.intel.com>
+ <35efdc62-fc2b-40c7-9fbd-25fc6028fa6b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,114 +48,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250528144823.2996185-1-kan.liang@linux.intel.com>
+In-Reply-To: <35efdc62-fc2b-40c7-9fbd-25fc6028fa6b@linux.intel.com>
 
-On Wed, May 28, 2025 at 07:48:23AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The Arm CI reports RCU stall, which can be reproduced by the below perf
-> command.
->   perf record -a -e cpu-clock -- sleep 2
-> 
-> The cpu-clock and task_clock are two special SW events, which rely on
-> the hrtimer. Instead of invoking the stop(), the HRTIMER_NORESTART is
-> returned to stop the timer. Because the hrtimer interrupt handler cannot
-> cancel itself, which causes infinite loop.
-> 
-> There may be two ways to fix it.
-> - Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
-> the stop is invoked by the throttle.
-> - Introduce a PMU flag to track the case. Avoid the event_stop in
-> perf_event_throttle() if the flag is detected.
-> 
-> The latter looks more generic. It may be used if there are more other
-> cases that want to avoid the stop later. The latter is implemented.
-> 
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+On Wed, May 28, 2025 at 03:03:13PM +0800, Mi, Dapeng wrote:
+> Kindly ping... Thanks.
 
-Thanks for adding me and my colleague's name!
+Thanks, applied to perf-tools-next,
 
-> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  include/linux/perf_event.h |  1 +
->  kernel/events/core.c       | 23 ++++++++++++++++++++---
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 947ad12dfdbe..66f02f46595c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -303,6 +303,7 @@ struct perf_event_pmu_context;
->  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
->  #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-> +#define PERF_PMU_CAP_NO_THROTTLE_STOP		0x0400
-
-When applying the patch on the top of tip/sched/core, I found it is
-conflict with a new added PERF_PMU_CAP_AUX_PREFER_LARGE.  So need to
-change the PERF_PMU_CAP_NO_THROTTLE_STOP to 0x0800.
-
-With the change, I tested on Arm64 board with two commands:
-
-  perf record -a -e cpu-clock -- sleep 2
-  perf test "perftool-testsuite_report"
-
-Tested-by: Leo Yan <leo.yan@arm.com>
-
-Thanks for quick fixing.
-
->  /**
->   * pmu::scope
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 8327ab0ee641..4df274705038 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2655,7 +2655,22 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->  
->  static void perf_event_throttle(struct perf_event *event)
->  {
-> -	event->pmu->stop(event, 0);
-> +	/*
-> +	 * Some PMUs, e.g., cpu-clock and task_clock, may rely on
-> +	 * a special mechanism (hrtimer) to manipulate counters.
-> +	 * The regular stop doesn't work, since the hrtimer interrupt
-> +	 * handler cannot cancel itself.
-> +	 *
-> +	 * The stop should be avoided for such cases. Let the
-> +	 * driver-specific code handle it.
-> +	 *
-> +	 * The counters will eventually be disabled in the driver-specific
-> +	 * code. In unthrottle, they still need to be re-enabled.
-> +	 * There is no handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
-> +	 * the perf_event_unthrottle().
-> +	 */
-> +	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
-> +		event->pmu->stop(event, 0);
->  	event->hw.interrupts = MAX_INTERRUPTS;
->  	perf_log_throttle(event, 0);
->  }
-> @@ -11846,7 +11861,8 @@ static int cpu_clock_event_init(struct perf_event *event)
->  static struct pmu perf_cpu_clock = {
->  	.task_ctx_nr	= perf_sw_context,
->  
-> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
-> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
-> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->  	.dev		= PMU_NULL_DEV,
->  
->  	.event_init	= cpu_clock_event_init,
-> @@ -11928,7 +11944,8 @@ static int task_clock_event_init(struct perf_event *event)
->  static struct pmu perf_task_clock = {
->  	.task_ctx_nr	= perf_sw_context,
->  
-> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
-> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
-> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->  	.dev		= PMU_NULL_DEV,
->  
->  	.event_init	= task_clock_event_init,
-> -- 
-> 2.38.1
-> 
+- Arnaldo
+ 
+> On 4/3/2025 2:08 PM, Dapeng Mi wrote:
+> > The comment of "--user-regs" option is not correct, fix it.
+> >
+> > "on interrupt," -> "in user space,"
+> >
+> > Fixes: 84c417422798 ("perf record: Support direct --user-regs arguments")
+> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-record.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index ba20bf7c011d..d56273a0e241 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -3480,7 +3480,7 @@ static struct option __record_options[] = {
+> >  		    "sample selected machine registers on interrupt,"
+> >  		    " use '-I?' to list register names", parse_intr_regs),
+> >  	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+> > -		    "sample selected machine registers on interrupt,"
+> > +		    "sample selected machine registers in user space,"
+> >  		    " use '--user-regs=?' to list register names", parse_user_regs),
+> >  	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+> >  		    "Record running/enabled time of read (:S) events"),
+> >
+> > base-commit: 35d13f841a3d8159ef20d5e32a9ed3faa27875bc
