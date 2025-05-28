@@ -1,128 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5870F20125F;
-	Wed, 28 May 2025 20:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF91220F39
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 20:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463214; cv=none; b=T1BHbXRHBX2yMumSLi734XvmsnNQp+2OvRPK04iwZpb1nuPPhro/cw5ROlOROTnHctsQNcKyrmhAQxguhvgFUc5eQm6OelCV348UZfDoQ4oTIuW0RX6x/Q6Fl3S59uQYez1cKASt2W9XRWsaz0HQOcAxh9tLL/N2oDOlXU/Qlyk=
+	t=1748464344; cv=none; b=NAE+4ZeMPXOYSjMaUUVMWT3pi7hHWoOGrJDKJ1xXlnHnQajUa4NeLi0ylaRU4D8I5phoaeR0Xh1t+MXcZH4hUmdgFfWFbcxkwaUTrMHB02DRin/tGl8UqBS5sdCXlWhu2o645KgkbWVvLir/Vv/yxS/blIpeLOEvwcZEPArg5Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463214; c=relaxed/simple;
-	bh=H/q7p0NOjUgTX/uIjMDeBfLzozjaxRdEErrF+u5VULw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O6jY6uYC3WdWqZtWaO6oahIFc5wKi/8DNW6Uj6wSW0/P7W3O601cHe1h7KkFg3g0t5+k7V45/nuDVL9ASu87cpfl4Sg8V+cgLCpfTq/4IU2PLy+gkrAqa99KUq5WVBoXgV2HmqcTlKVjPsGjYG/YVMTLU/TBqNlmq8+Dcqk3CSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kuPk+UZV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748464344; c=relaxed/simple;
+	bh=cqzg8Nrs2RZmTh//Eb9TZWrUR64FfEAGu16wIkkYdAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HFX7MIC0lLZnqsoPRzXH/6ab3mwjw4gY+gfyIsPygLJH8XyNLZ0d0DSbFewjk6N1uquTifpzvudi3LqMmeBfN9I+pNu03z8w0q6lp6iv/UmHnhP3ytfz+Rfvq/dzm0IOtDf7/SxdVY+zRGeTY/V9868Fh8gaX8h4xCzRB1mQGNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EDyg0zd9; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kuPk+UZV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A943AC4CEE3;
-	Wed, 28 May 2025 20:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748463214;
-	bh=H/q7p0NOjUgTX/uIjMDeBfLzozjaxRdEErrF+u5VULw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kuPk+UZVYlNH/Be9UX72m/FQN/N5v2WzcINgv//zzn+OGIedhffD5LOV98DpPytgK
-	 +iMwC9jAZDJa6AHqXZ/6KqFnBuwVzkt/S2wh4FgnqY7FOQNtm+rzZdsdjdVAJOAxCo
-	 fY0HyX+pbyU49fD2/qoeN5mtZjfEPi0LOteeaDnDYBeF2ZAttZVDkoGaCuHey5yv0L
-	 7STL96gz9tnFUr6C8fb+OSJUsiL8WTZ+S+ErEbUtjw4iVbNI6iYm+k0iGjuVwrOUx9
-	 JwQDOaq5uGza9OJr/6urI6uqKaXfbbSuIvzlgYbEeCejXWwrE/eL2WjfyL+VR9mZDK
-	 XK/QHTAJu5jow==
-Date: Wed, 28 May 2025 13:13:31 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] perf intel-tpebs: Avoid race when evlist is being
- deleted
-Message-ID: <aDdua_Kp6Dz91xwm@google.com>
-References: <20250528032637.198960-1-irogers@google.com>
- <20250528032637.198960-5-irogers@google.com>
- <aDdNk1IOqtyM44AX@google.com>
- <CAP-5=fUmrnOUOBWcypD=Q7bCSQ3HTnicRXhr8nmSRqcbZv7Mmw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDyg0zd9"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dd89a85414so54915ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 13:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748464342; x=1749069142; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5ArJMZMVl2LGkS46qbZimujHcHlerzQiWnjpA0Sru5c=;
+        b=EDyg0zd9WoMAXGYqL44CIGrO2Nfy6tslK/NTrvGJ28wx7zUjSgX/D4gxJ67b0Narz7
+         RIC78+wW5UkRzwZnSoIYcpG4QYVwU9CKIlwQAOTxJTfRJQerBxgECpEVRk4HRrljCqZL
+         a0mW1KWEZwqr7KShAfwkUKQ+JAuJCTRvtM6KW0wVa2loXaC/0rzozgSC/sjMpMuMvlu2
+         0QemHv0SSRiFw9FbkPUC+ZWp4lS+KgdzFNicHrU839fSedOmjcMLR0Angqy0hbhiNNYi
+         YLxnpvV1Xe5fGz3d2WMWJ0p73SnhIYSqDlgVBznWrVJoAKh4Md3Mm6HxXcNPOdZw24OH
+         snzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748464342; x=1749069142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ArJMZMVl2LGkS46qbZimujHcHlerzQiWnjpA0Sru5c=;
+        b=TnY51xYtNu81qmVDjFUovCtUbN3NPMx3jwHEE3KvfffWyniJDhBRxLUEHgyjqvXlSC
+         rL7ZHa0nlRXjyLG8hb4nwFDi6f6KelzDaULCcBo7BtQCjhzp572nGCK13YsfRrJQAIY1
+         4aEPf0WrmKPmUKmVLCa/QHXWLW+4rkl3HJvc106LlRKpZ8eUZPXHJL3tRocloyWRkDFO
+         iJLthtWXBGC15Ny+mPuCWP7HPsRSrSR2lq1SiYS3haKB9fpJdTjDvVMCseuBgZM1u4/o
+         yU8AcaxROA4Dcvy5YqYwE4Dm/ZQgPoOILWJXFIl4N1mfHALB91/I3bOiDHGADsimvZl+
+         tsuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKXQg5jy9i8MDWM1fIyMUP0J6O7KrPMUd0CtVJ0XNgd/uHavhnlaEZvDg3daJtWZAhvW2+9K2LHs/x27gw41b4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyNHbJhZf29QS/6Kj3wzNhKm0FzZLBIta9HcyIOwQqqiLUYJEq
+	jj5kGf9qw+o/DGpeodfUQe2vU4UqVTlazn0VoovcmuWDNuTg/mLLGHWijChINFz8zOwrFCT77jJ
+	KC04I//FP2MsCn6BUbWaWYgf3n3IwKcuHvFKD6zTD
+X-Gm-Gg: ASbGncu55/7rrzXi1Q3IZaJB5ELIrC2DXqeEBoM/W7L0Xq3b6d23TXCHIj8ZUcyHEb3
+	n3+TVbMvb8Sy23dYuxOi90qFtTtVFCbHs3QaSuBu0rE0EgnRiOl/+ARJEIqnEgj8EZNGhtqQStk
+	QVj3J9D2UlvYAzmRuBOCMcBDfhq4rHwT6/b6js8iuYI8+416eiaogPpLgCO4A9OGKSpxqq8Sse
+X-Google-Smtp-Source: AGHT+IFxbYf/KKgtCHgkR2g2hC0aOo7l94jOkHSdvspLVMHrtQQvMGCJs9feaLc4Sb7/kUdAI99/uigeUUrlItn6an0=
+X-Received: by 2002:a05:6e02:3e90:b0:3dc:7350:b0c with SMTP id
+ e9e14a558f8ab-3dd91cc5c41mr800305ab.16.1748464341947; Wed, 28 May 2025
+ 13:32:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUmrnOUOBWcypD=Q7bCSQ3HTnicRXhr8nmSRqcbZv7Mmw@mail.gmail.com>
+References: <20250410202647.1899125-1-irogers@google.com> <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+ <aDdU1npHL2Vczhsa@google.com> <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
+ <aDdqcfuAuk78eKXD@google.com>
+In-Reply-To: <aDdqcfuAuk78eKXD@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 28 May 2025 13:32:10 -0700
+X-Gm-Features: AX0GCFurQFzXfvz3EqLi-jVNrcInm9hsA2oagIcDmbIRIUFQSZV7VWoEaX9DxkU
+Message-ID: <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's -Wunreachable-code
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 11:02:44AM -0700, Ian Rogers wrote:
-> On Wed, May 28, 2025 at 10:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Wed, May 28, 2025 at 12:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
+> > On Wed, May 28, 2025 at 11:24=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> > > > On Fri, Apr 11, 2025 at 3:14=E2=80=AFPM Ian Rogers <irogers@google.=
+com> wrote:
+> > > > >
+> > > > > On Fri, Apr 11, 2025 at 2:34=E2=80=AFPM Namhyung Kim <namhyung@ke=
+rnel.org> wrote:
+> > > > > >
+> > > > > > Hi Ian,
+> > > > > >
+> > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > > > > Clang's unreachable code warning is able to catch bugs like t=
+he famous
+> > > > > > > "goto fail" which gcc's unreachable code warning fails to war=
+n about
+> > > > > > > (it will complain about misleading indent). The changes here =
+are
+> > > > > > > sufficient to get perf building with clang with -Wunreachable=
+ code,
+> > > > > > > but they don't really fix any bugs. Posting as an RFC to see =
+if anyone
+> > > > > > > things this is worth pursuing.
+> > > > > >
+> > > > > > I'm not sure if it's useful and don't see what kind of bugs it =
+can
+> > > > > > address.  The proposed changes don't look like an improvement.
+> > > > >
+> > > > > The goto fail case was in OpenSSL the code from a bad merge:
+> > > > > ```
+> > > > > if (...)
+> > > > >   goto fail;
+> > > > >   goto fail;
+> > > > > ```
+> > > > > Meaning the fail path was always taken and checking on the non-fa=
+il
+> > > > > code never executed. Newer GCCs will warn of this because of the
+> > > > > "misleading indent" but  clang won't. It is easy to imagine simil=
+ar
+> > > > > mistakes creeping in, so using compiler warnings to avoid the bug
+> > > > > could be useful.
+> > >
+> > > It doesn't look very convincing to me but it might be valuable in som=
+e
+> > > rare cases.  But the proposed changes - basically replace exit() to
+> > > __builtin_unreachable() - seem weird.  Why is calling it a problem?  =
+I
+> > > guess it already has some kind of annotation like "noreturn"?
 > >
-> > Hi Ian,
-> >
-> > On Tue, May 27, 2025 at 08:26:34PM -0700, Ian Rogers wrote:
-> > > Reading through the evsel->evlist may seg fault if a sample arrives
-> > > when the evlist is being deleted. Detect this case and ignore samples
-> > > arriving when the evlist is being deleted.
-> > >
-> > > Fixes: bcfab08db7fb ("perf intel-tpebs: Filter non-workload samples")
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/intel-tpebs.c | 12 ++++++++++--
-> > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-> > > index 4ad4bc118ea5..3b92ebf5c112 100644
-> > > --- a/tools/perf/util/intel-tpebs.c
-> > > +++ b/tools/perf/util/intel-tpebs.c
-> > > @@ -162,9 +162,17 @@ static bool is_child_pid(pid_t parent, pid_t child)
-> > >
-> > >  static bool should_ignore_sample(const struct perf_sample *sample, const struct tpebs_retire_lat *t)
-> > >  {
-> > > -     pid_t workload_pid = t->evsel->evlist->workload.pid;
-> > > -     pid_t sample_pid = sample->pid;
-> > > +     pid_t workload_pid, sample_pid = sample->pid;
-> > >
-> > > +     /*
-> > > +      * During evlist__purge the evlist will be removed prior to the
-> > > +      * evsel__exit calling evsel__tpebs_close and taking the
-> > > +      * tpebs_mtx. Avoid a segfault by ignoring samples in this case.
-> > > +      */
-> > > +     if (t->evsel->evlist == NULL)
-> > > +             return true;
-> > > +
-> > > +     workload_pid = t->evsel->evlist->workload.pid;
-> >
-> > I'm curious if there's a chance of TOCTOU race.  It'd certainly help
-> > the segfault but would this code prevent it completely?
-> 
-> Good point. I think the race is already small as it doesn't happen
-> without sanitizers for me.
-> Thinking about the evlist problem. When a destructor (evlist__delete)
-> it is generally assumed the code is being single threaded and in C++
-> clang's -Wthread-safety will ignore destructors for this reason
-> (annoying imo as it hides bugs). I don't see a good way to solve that
-> for the evlist and evsel for the TPEBS case without using reference
-> counting. Adding reference counts to evlist and evsel would be do-able
-> as we could use reference count checking, but it would be a large and
-> invasive change. Wdyt?
+> > Yep. The exit is incorrect (depending on your notion of correct, I'd
+> > go with clang's notion as they've had to consider this for a while) as
+> > it can never be executed. I've added the __builtin_unreachable() to
+> > document that you can never get to that statement, as otherwise it can
+> > make the code readability harder with the code looking like it will
+> > fall through after calling something like usage_with_options (which is
+> > noreturn). In unoptimized builds __builtin_unreachable() will fail if
+> > executed, so it is a bit more active than just a comment.
+>
+> Oh I see, usage_with_options() calls exit() inside so any code after
+> that won't be executed.  Hmm.. isn't it better to remove those codes
+> then?
 
-Would it be possible to kill the TPEBS thread before deleting evlist?
+Not sure I follow. The patch does remove the code but it replaces it
+with __builtin_unreachable() to basically state that the code here and
+below can never be reached. Do you mean remove the exit from
+usage_with_options? Then we'd need to fix all the callers, which would
+be a larger patch. Perhaps it should be usage_with_options_and_exit()
+to make it clearer that the code doesn't return. I was after doing
+what was minimal for -Wunreachable-code but while trying to keep the
+code clear.
 
 Thanks,
-Namhyung
+Ian
 
+> Thanks,
+> Namhyung
+>
