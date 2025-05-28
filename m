@@ -1,63 +1,63 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806E821B9D8;
-	Wed, 28 May 2025 19:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5D621C188;
+	Wed, 28 May 2025 19:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748459518; cv=none; b=XRNa05FX2QsRRKXDbBbhUKbVrFYlTkDcSflly5zKbCDHKE+Nnzwdb2RsWjAzqQNCWUZH0Ex7ufsbfic5gMVklo/5oav2MM94brhRZImVsonHD0l/S1Z5coZPTx/hjSgzzruT8iLL80iD1Nm1zr6Tti22XFw0ohIWMmBXRrxygjY=
+	t=1748459519; cv=none; b=cT4vOmkxINj7iTBglBwRSQZvrXmFfNItQ6ZmxGjUw82FWmW/W8YmvJ8mD7ztVwYD+TWXHYCIQxkEZF/4btRvcByrDssVIe3ttjXjzhnNiNu9Lu/nMi4Wn0obcJJ2gF6ndqjFXSDyuft63UpfjTTu5ABYRMtyO8D9oG8p6Qc6nRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748459518; c=relaxed/simple;
-	bh=HG/dOz1lUTBRbsbrIN5BoAJntNUMI8JcyM3yL1TC0mg=;
+	s=arc-20240116; t=1748459519; c=relaxed/simple;
+	bh=pYg8TLTjgS0BjbaSB6NlASqTqqK6Bkw6JNseF6OIUqo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XCD5amBvRcX5E3sud28Xo8vYP/tAWvMh7Ovo6j89iw4Ffdx/s0h+avKhWxMIkJ+6jJu9SO9S1Tq1xSjWe8xThAwJrNQ03u3o45pHzbONMOlDnHRmYU3bza+0irmMBj21gh0k796C0G0Fx1Vk6zAgBCbq4D74YUFosBLGSEWA+G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2FJsASX; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=bY/96FI+G3xcWBbffOd0/exav4KhBCMCF3wS10dto93U81Osl3xUvF//9r6L3K9na4m1kft4+zC615MnL/l3RDK0aJbK/RUZm9Yxm4fffJRMslBvCorywjYLKd93L9oRNSYi7t0BmUFDfQBvJsPDTF/alNZKtul1OrWvQETkLBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwVnAXpU; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2FJsASX"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2345c60507bso1754615ad.0;
-        Wed, 28 May 2025 12:11:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwVnAXpU"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23461842024so2226245ad.0;
+        Wed, 28 May 2025 12:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748459516; x=1749064316; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748459517; x=1749064317; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=twBj1QB2d3zPEN2bcWML/rrXbWI+c5IxpKvrPzrniRQ=;
-        b=X2FJsASX4G6r97j3Yoq9aBXkI5CNKE8KemHjAABzGLLhJslmdM6gveoHR9tsFxp78e
-         /krgHyWT6Ua6l8+hSV9vkaCzB7q+AOEI7O53IhZ3mn8LbCGJLswScEiqOnvM6f4ee/zr
-         PUkE7WrYlhWzDN+hYt/0MyVBcCYLYUFQhxhYdQYn6pZvPhZv6kmxuo/Oa72cIW84Qvoo
-         WuRXanZDVks/jns0bK+Ibs4HFoptcQjHBtumUDqURJ0Di25o83p2bExAoDJVaNU84EX1
-         Nvl/QtowOr2z9Z6R0SbYbUPlU5ZPyHFdkx6MemK95u1ppAOyBC6soh4RX1hE7Kef9eCi
-         2JVw==
+        bh=Gg68t38uPzYyo7Ew0hkP+phW30lhRktPX+3plUsKhsk=;
+        b=fwVnAXpUJoB1xVxlMauOuuSYc+PRdvRwSmkU45F5zlj0t808U7gTFIuZ4DspusjWlu
+         JoJih/QtFQJA54jsnmPoeBiCg1vHAOE9ghYHYGx4nW3wNrScoxYqkXbN5UmsQTYsaftk
+         x+VShgP0+8h6PsO3/jW43hsPOvSDhGeHpv6/BTnQ+CkPJvuKBDtJji2qqQhvxbu/dOia
+         W0lPI5y+3FaRxI4sy834wnqWxU2Y5rJVlHhfWNLOIE+YTRCLNNZtPBHULRjJ4+LHgPXK
+         GIlPiR4ZDZS5VY7adpwYieIpLxAdvmUe8FqO6hrb3T2NaVs2Vb7RxxAtkpnrcKD8Owjk
+         qgzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748459516; x=1749064316;
+        d=1e100.net; s=20230601; t=1748459517; x=1749064317;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=twBj1QB2d3zPEN2bcWML/rrXbWI+c5IxpKvrPzrniRQ=;
-        b=ZEkwuZ7oiwQ4ghU5p/t7Fn9eOuWxmiKQkOXVK34FaOajvrXdZe/C/Vry10rehTWLIJ
-         0TDMW9t+gVs62ZcUvAV0rAhUl6PN608akkEuLc51LKrLhnip0+UixsaWBEz7t5ajWPGq
-         Hlu3SZnsEbqPwdxMABGBPXgQEn28pJsiXMtkN5bIey8oH0HEVKb9flHNuOujiCwDIwJa
-         jBArXHeWWdQIF+RuR5uDyTphoLzEutUMqDZygdb8EQda3aIZP95qTI/1JPewsU68DnrJ
-         ziwzW0+wGYoNsxRWGODFW5PkBrVGd2GGdodILxP2sQthipGBv6a68YyGCqV8ZQZ/3s4b
-         bTqw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/BsDevVugyQmve2OCyFa02rbwMiqvkadBEVA9rFq3oyvI05+7C0i2FI04fmoNNxqr8Mx+U9crdF7EGmM=@vger.kernel.org, AJvYcCXCk1Tk36KnafeimZQ3cZcDD9blqtP+QhhyqnMGcpRcgsOQVNQoQphcieux/HulucS3GA5kVkaav/Fd8ZeFe5gvOA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqEruH+T158XNTWv1ya5UR8o+VAXruIlZuPVHd01RQoDUPlq5E
-	0GqSVWZRWkSDOp3XftbGUjV9HtdcHAQsUINyZC/8Lkrvf0sxV1Q4u3zF
-X-Gm-Gg: ASbGncsdiC3KneRTI/rdUgpksB5PAwwK8gLG/71DnfmbQ5YSR0mGWRJG1RR7m43In6V
-	0/6ZQQVq6qSGaBuEUfVdDnAlRLf7uLVXebP/vtYoowfqqsHyUKcpm8kxQr2ujdqxWg1OqYiAaLI
-	amZeFw3KwxiPvTac5EdyIJdS46bS1OefzGWPtx6ApJRYPJ+t+ODzKLuT2IX8FNrqSL0m7VT342W
-	g7Xb38LhrkbLcS0gZvLy79xh2kdSucPgI1on4RxhVKaWOXiWJGJH7XlNDrr7UqpUvkfCZPl3EMj
-	FliJ6kzwejcuWq4RXQFZgYEON/dhLvPHFv4zqzWm0/R/RgOCon9xvGZ1L6Q1ska7rGCajBw02Cs
-	3IBiu93+9JDY=
-X-Google-Smtp-Source: AGHT+IFSKJqYrzDEq0yFr0vnEyb3QGCo+SFpMf5205tduRWVj66BoOL2uuFmly9WlBuzA4C4GQzVhA==
-X-Received: by 2002:a17:903:19f0:b0:22d:b243:2fee with SMTP id d9443c01a7336-23414f5a9e6mr258801175ad.13.1748459515593;
-        Wed, 28 May 2025 12:11:55 -0700 (PDT)
+        bh=Gg68t38uPzYyo7Ew0hkP+phW30lhRktPX+3plUsKhsk=;
+        b=TnsHOwvxADPmI4/f9W4uX5oAypp3DDLSW7X5w7YJ/BcnquE5VyzvvGPdFfkV9j+9t7
+         WyKZgV3O7me6UW5ODHF8pYUWOqu1d8PE0iRjfwcJuiRlxpCkYE1zDraQ33G8axUxomuX
+         q2HZhTymLzBCC1O6GjedHkEMa5d2MAXbdZJdZaj3vuuEA0uB6tZRzSfQagU+n5R045Zy
+         ZkFunl0+m0jGaJv6eYvbh86uAUy4RK07D+PMYNv9iIOCJqWdVPGAXbVWkWM1ork5SQSO
+         IGHAxVgVHbzYl4QLNmcbPJFlHWSDOiM2NPrPgwJ61FLWDYIAhCrOjtoeq4Hzc2YIS7QM
+         QYGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXew3NSxNwaabr8gv+d8DAeOys+j8NTBSAA+kv+5nLTbHcgyDu3uVmbR88MvERmgegvQ/Zo2BVCVGgbOmg=@vger.kernel.org, AJvYcCXjz15P+REZ0BK3ifz7MV7u2gr7Y8ijO/H8M3OFSq1hmCrSA6fi55be1h4FKSN0Vilx6nUOuCYdcKfEKGxjclAMZg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1zLxxpK96aA9E7T1BEWrEEv36bGmfmKz82VFm7d51p/4E+rPR
+	65QemHDWEzUPTJbRhB+UXc1KF62jiRJjgVp2fbBsLR6qDfNcUWT0CYtG
+X-Gm-Gg: ASbGnctZ46AlhFCHOeV43uZqCtrWuxJMQK2FDwdgYj48NvUVHejpL7nV/FywAyospQK
+	h+/y3gmTZLrXbKMDTWIhxxyp0bb6NXXWBVZvCzzrdpmT9W4OCHvRZnM1akE6DZuv7UzhY9mYxez
+	8EzrhwEmi02z1Z/QYOl9IbQOR3DPOjPY5t501nOaOuY0C6K0M+WCJr23phu2vRXQMYPl27OL3hW
+	WiQHjiaMufrRR68enQH/IGjA0eY1Q9CYPJoF+LcGzeZlPNhD1UuAftHIpxsoG2bg5skQj+ENN3x
+	EDFL1fbWYJAq3fLVh9etGGc8Sx7G7Lfw7stU6+MayucPj+Xf+Vebs563+h5w7DrpLJcd4+/9Qrx
+	mqPRz+RZSa5I=
+X-Google-Smtp-Source: AGHT+IHg54B8ME0h/66c3zO4zLIROfXSjulX5yjdTcUyOVLMBcGQlPD4gqAX6TXV3N/6wrFFeLtpZQ==
+X-Received: by 2002:a17:903:2306:b0:234:e655:a62e with SMTP id d9443c01a7336-234e65635c1mr26256165ad.9.1748459517130;
+        Wed, 28 May 2025 12:11:57 -0700 (PDT)
 Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm15172215ad.169.2025.05.28.12.11.54
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm15172215ad.169.2025.05.28.12.11.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 12:11:55 -0700 (PDT)
+        Wed, 28 May 2025 12:11:56 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: mingo@redhat.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v3 3/6] perf test trace: Stop tracing hrtimer_setup event in trace enum test
-Date: Wed, 28 May 2025 12:11:45 -0700
-Message-ID: <20250528191148.89118-4-howardchu95@gmail.com>
+Subject: [PATCH v3 4/6] perf test trace: Remove set -e for BTF general tests
+Date: Wed, 28 May 2025 12:11:46 -0700
+Message-ID: <20250528191148.89118-5-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528191148.89118-1-howardchu95@gmail.com>
 References: <20250528191148.89118-1-howardchu95@gmail.com>
@@ -86,74 +86,90 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The event 'timer:hrtimer_setup' is relatively new, for older kernels,
-perf trace enum tests won't run as the event 'timer:hrtimer_setup'
-cannot be found.
-
-It was originally called 'timer:hrtimer_init', before being renamed in:
-
-commit 244132c4e577 ("tracing/timers: Rename the hrtimer_init event to hrtimer_setup")
-
-Using timer:hrtimer_start should be enough for current testing, and
-hopefully 'start' won't be renamed in the future.
+Remove set -e and print error messages in BTF general tests.
 
 Before:
-    $ sudo /tmp/perf test enum -vv
-    107: perf trace enum augmentation tests:
-    107: perf trace enum augmentation tests                              : Running
+    $ sudo /tmp/perf test btf -vv
+    108: perf trace BTF general tests:
+    108: perf trace BTF general tests                                    : Running
     --- start ---
-    test child forked, pid 786187
-    Checking if vmlinux exists
-    Tracing syscall landlock_add_rule
-    Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_start
-    [tracepoint failure] Failed to trace timer:hrtimer_setup,timer:hrtimer_start tracepoint, output:
-    event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
-			 \___ unknown tracepoint
-
-    Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not found.
-    Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feature?.
-
-    Run 'perf list' for a list of valid events
-
-     Usage: perf trace [<options>] [<command>]
-	or: perf trace [<options>] -- <command> [<options>]
-	or: perf trace record [<options>] [<command>]
-	or: perf trace record [<options>] -- <command> [<options>]
-
-	-e, --event <event>   event/syscall selector. use 'perf list' to list available events
+    test child forked, pid 889299
+    Checking if vmlinux BTF exists
+    Testing perf trace's string augmentation
+    String augmentation test failed
     ---- end(-1) ----
-    107: perf trace enum augmentation tests                              : FAILED!
+    108: perf trace BTF general tests                                    : FAILED!
 
 After:
-    $ sudo /tmp/perf test enum -vv
-    107: perf trace enum augmentation tests:
-    107: perf trace enum augmentation tests                              : Running
+    $ sudo /tmp/perf test btf -vv
+    108: perf trace BTF general tests:
+    108: perf trace BTF general tests                                    : Running
     --- start ---
-    test child forked, pid 808547
-    Checking if vmlinux exists
-    Tracing syscall landlock_add_rule
-    Tracing non-syscall tracepoint timer:hrtimer_start
-    ---- end(0) ----
-    107: perf trace enum augmentation tests                              : Ok
+    test child forked, pid 886551
+    Checking if vmlinux BTF exists
+    Testing perf trace's string augmentation
+    String augmentation test failed, output:
+    :886566/886566 renameat2(CWD, "/tmp/file1_RcMa", CWD, "/tmp/file2_RcMa", NOREPLACE) = 0---- end(-1) ----
+    108: perf trace BTF general tests                                    : FAILED!
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/tests/shell/trace_btf_enum.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/trace_btf_general.sh | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-index f59ba34fac4c..c37017bfeb5e 100755
---- a/tools/perf/tests/shell/trace_btf_enum.sh
-+++ b/tools/perf/tests/shell/trace_btf_enum.sh
-@@ -5,7 +5,7 @@
+diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+index a25d8744695e..5fa50d815203 100755
+--- a/tools/perf/tests/shell/trace_btf_general.sh
++++ b/tools/perf/tests/shell/trace_btf_general.sh
+@@ -3,7 +3,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
  err=0
+-set -e
  
- syscall="landlock_add_rule"
--non_syscall="timer:hrtimer_setup,timer:hrtimer_start"
-+non_syscall="timer:hrtimer_start"
+ # shellcheck source=lib/probe.sh
+ . "$(dirname $0)"/lib/probe.sh
+@@ -28,10 +27,10 @@ check_vmlinux() {
  
- TESTPROG="perf test -w landlock"
+ trace_test_string() {
+   echo "Testing perf trace's string augmentation"
+-  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
+-    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
++  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
++  if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
+   then
+-    echo "String augmentation test failed"
++    printf "String augmentation test failed, output:\n$output\n"
+     err=1
+   fi
+ }
+@@ -39,20 +38,20 @@ trace_test_string() {
+ trace_test_buffer() {
+   echo "Testing perf trace's buffer augmentation"
+   # echo will insert a newline (\10) at the end of the buffer
+-  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
+-    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
++  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
++  if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+   then
+-    echo "Buffer augmentation test failed"
++    printf "Buffer augmentation test failed, output:\n$output\n"
+     err=1
+   fi
+ }
  
+ trace_test_struct_btf() {
+   echo "Testing perf trace's struct augmentation"
+-  if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
+-    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
++  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
++  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
+   then
+-    echo "BTF struct augmentation test failed"
++	printf "BTF struct augmentation test failed, output:\n$output\n"
+     err=1
+   fi
+ }
 -- 
 2.45.2
 
