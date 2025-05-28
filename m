@@ -1,207 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CF828C5D0;
-	Wed, 28 May 2025 15:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FFF627817D;
+	Wed, 28 May 2025 16:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447937; cv=none; b=VV7vVxnhOGyaAooUShcADnuT5rSzMwBP1jkFAZmhtob84p/wvnNhCIWqOEZf7FIvhAtBT45ROfAHXIm9mhHJh9EatB3JX9Jz2isRQYm+ltworv/Teh6li9Y+rjWQOOoL26TXttD94mC1O4f0SAX3McF7oEpresIoFdCXiKqRMkU=
+	t=1748448560; cv=none; b=tchcmLfnlgpmHPWJy0aK6qhO4hh4S89euPjpN59rhUi4NYtyL/ZWxIE1Mh3TAlxUac+V25SQfeNQh1TGcjwH8lySbaJvJ3cBtK/3pThHfKi8uNdSCZyZ+3g/+NlCi5ZUzPZOU+AL03miVFbrR3dKpBpFNrqFO9ZNc1dGsEbj4yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447937; c=relaxed/simple;
-	bh=xKowylPyTdzZfPOURaXcphgFk7iTFVGDPZA0kg7cWTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nKYFSiSzFk6CQJ/juPkWbGXsEz0OJZoJ5Rcetn882M4jhPIeyVDTSQXied1rfUhb5yogwzs3Jz69e6kfUL49vqyBxTRH80u/ZNGB/dhHH3EMdT3WtLJD+Hdl1/EEGr6sRtvKgQZ/jFR4lh8MxUkb7LNmkJpMf1l887hZZ16Yu+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrtVL2cb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrtVL2cb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99952C4CEE3;
-	Wed, 28 May 2025 15:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748447937;
-	bh=xKowylPyTdzZfPOURaXcphgFk7iTFVGDPZA0kg7cWTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RrtVL2cbP+6dJkhkxrxYdcnXryUcMIlBpp2b7KxMbNPx55IFR5QvEseVCG45enlzM
-	 GMbM1ZD5Yx7uzeCtuWPi+Wxr0kges79m1AfjE/NUJoxKwUG46JbmY5vwqThWQHKyQr
-	 3wMVyhS4QzkOdSD8jGts5sQemxrdCChiyxYw/foL5WwM23a3ZajhGo083EHbfduqqT
-	 Fio8UQy1xlQd171NSbWUPGYwtMEjRDvMA4dWCQa0SPdDufZ9IoE3a/Uucc69oPHwDk
-	 J6nRIbfG+r//UIl8rmYgJHqHzZ5U0oesNpuTUJXZGxfw7f+BEqgHk84IhIKEPEeaiq
-	 lS38LXDYI62+g==
-Date: Wed, 28 May 2025 12:58:54 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Bill Wendling <morbo@google.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	Fei Lang <langfei@huawei.com>, Howard Chu <howardchu95@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] Revert "perf thread: Ensure comm_lock held for
- comm_list"
-Message-ID: <aDcyvvOKZkRYbjul@x1>
-References: <aDcyVLVpZRui1ole@x1>
+	s=arc-20240116; t=1748448560; c=relaxed/simple;
+	bh=O2qtelB4US+cJIhzPme3LIw1Jt2jPMgLescTbOZA/UE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jT+NIGTPkbdbfNCpJMihc7xENwkERpzYdQDPBX3PF/o9RTFa7cV0YCs/nidGtl4Cf7T8fhmHUl1Nsi3Ue5Bsk87TTuW8TJ/O5DsfKAc4pVe1vto6Iil6kq2bVXGUYIEKNe5f/p+SSm2fVZ+YCGCqb2UnuhxPsAD1X8jd/LmZiSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FEFF1A2D;
+	Wed, 28 May 2025 09:09:01 -0700 (PDT)
+Received: from [10.57.48.160] (unknown [10.57.48.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C4D93F673;
+	Wed, 28 May 2025 09:09:14 -0700 (PDT)
+Message-ID: <4f5c956e-19e7-4df0-b1f2-d8750c0af4d7@arm.com>
+Date: Wed, 28 May 2025 17:09:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDcyVLVpZRui1ole@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 3/4] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Content-Language: en-GB
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ James Clark <james.clark@linaro.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Ian,
-
-	This one had hit perf-tools-next, so I'm reverting it till we
-figure out, since I'm trying to finish processing patches real soon now
-for this window, to give it some time to soak in linux-next.
-
-	I noticed that sometimes when trying to exit 'perf top' it just
-sat there, so doing a bisect I ended up on this one, had no time to
-properly investigate it.
-
-- Arnaldo
-
-On Wed, May 28, 2025 at 12:57:11PM -0300, Arnaldo Carvalho de Melo wrote:
-> This reverts commit 8f454c95817d15ee529d58389612ea4b34f5ffb3.
+On 07/04/2025 18:41, Rob Herring (Arm) wrote:
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
 > 
-> 'perf top' is freezing on exit sometimes, bisected to this one, revert.
+> While BRBE can record branches within guests, the host recording
+> branches in guests is not supported by perf (though events are).
+> Support for BRBE in guests will supported by providing direct access
+> to BRBE within the guests. That is how x86 LBR works for guests.
+> Therefore, BRBE needs to be disabled on guest entry and restored on
+> exit.
 > 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-> Cc: Fei Lang <langfei@huawei.com>
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/comm.c   |  2 --
->  tools/perf/util/thread.c | 17 ++++-------------
->  tools/perf/util/thread.h |  9 ++++-----
->  3 files changed, 8 insertions(+), 20 deletions(-)
+> For nVHE, this requires explicit handling for guests. Before
+> entering a guest, save the BRBE state and disable the it. When
+> returning to the host, restore the state.
 > 
-> diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-> index 9880247a2c3364cb..8aa456d7c2cd2d74 100644
-> --- a/tools/perf/util/comm.c
-> +++ b/tools/perf/util/comm.c
-> @@ -24,7 +24,6 @@ static struct comm_strs {
->  static void comm_strs__remove_if_last(struct comm_str *cs);
->  
->  static void comm_strs__init(void)
-> -	NO_THREAD_SAFETY_ANALYSIS /* Inherently single threaded due to pthread_once. */
->  {
->  	init_rwsem(&_comm_strs.lock);
->  	_comm_strs.capacity = 16;
-> @@ -120,7 +119,6 @@ static void comm_strs__remove_if_last(struct comm_str *cs)
->  }
->  
->  static struct comm_str *__comm_strs__find(struct comm_strs *comm_strs, const char *str)
-> -	SHARED_LOCKS_REQUIRED(comm_strs->lock)
->  {
->  	struct comm_str **result;
->  
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index c202b98b36c29215..415c0e5d1e751a47 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -41,7 +41,6 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
->  }
->  
->  struct thread *thread__new(pid_t pid, pid_t tid)
-> -	NO_THREAD_SAFETY_ANALYSIS /* Allocation/creation is inherently single threaded. */
->  {
->  	RC_STRUCT(thread) *_thread = zalloc(sizeof(*_thread));
->  	struct thread *thread;
-> @@ -203,29 +202,22 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
->  
->  struct comm *thread__comm(struct thread *thread)
->  {
-> -	struct comm *res = NULL;
-> +	if (list_empty(thread__comm_list(thread)))
-> +		return NULL;
->  
-> -	down_read(thread__comm_lock(thread));
-> -	if (!list_empty(thread__comm_list(thread)))
-> -		res = list_first_entry(thread__comm_list(thread), struct comm, list);
-> -	up_read(thread__comm_lock(thread));
-> -	return res;
-> +	return list_first_entry(thread__comm_list(thread), struct comm, list);
->  }
->  
->  struct comm *thread__exec_comm(struct thread *thread)
->  {
->  	struct comm *comm, *last = NULL, *second_last = NULL;
->  
-> -	down_read(thread__comm_lock(thread));
->  	list_for_each_entry(comm, thread__comm_list(thread), list) {
-> -		if (comm->exec) {
-> -			up_read(thread__comm_lock(thread));
-> +		if (comm->exec)
->  			return comm;
-> -		}
->  		second_last = last;
->  		last = comm;
->  	}
-> -	up_read(thread__comm_lock(thread));
->  
->  	/*
->  	 * 'last' with no start time might be the parent's comm of a synthesized
-> @@ -241,7 +233,6 @@ struct comm *thread__exec_comm(struct thread *thread)
->  
->  static int ____thread__set_comm(struct thread *thread, const char *str,
->  				u64 timestamp, bool exec)
-> -	EXCLUSIVE_LOCKS_REQUIRED(thread__comm_lock(thread))
->  {
->  	struct comm *new, *curr = thread__comm(thread);
->  
-> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> index 56e08c8ae005e82b..cd574a896418ac94 100644
-> --- a/tools/perf/util/thread.h
-> +++ b/tools/perf/util/thread.h
-> @@ -236,15 +236,14 @@ static inline struct rw_semaphore *thread__namespaces_lock(struct thread *thread
->  	return &RC_CHK_ACCESS(thread)->namespaces_lock;
->  }
->  
-> -static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
-> +static inline struct list_head *thread__comm_list(struct thread *thread)
->  {
-> -	return &RC_CHK_ACCESS(thread)->comm_lock;
-> +	return &RC_CHK_ACCESS(thread)->comm_list;
->  }
->  
-> -static inline struct list_head *thread__comm_list(struct thread *thread)
-> -	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
-> +static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
->  {
-> -	return &RC_CHK_ACCESS(thread)->comm_list;
-> +	return &RC_CHK_ACCESS(thread)->comm_lock;
->  }
->  
->  static inline u64 thread__db_id(const struct thread *thread)
-> -- 
-> 2.49.0
+> For VHE, it is not necessary. We initialize
+> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
+> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
+> branch recording in the host. When entering the guest, we set
+> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
+> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
+> running a guest.
 > 
+> Should recording in guests (by the host) ever be desired, the perf ABI
+> will need to be extended to distinguish guest addresses (struct
+> perf_branch_entry.priv) for starters. BRBE records would also need to be
+> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
+> be distinguished.
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+> Tested-by: James Clark <james.clark@linaro.org>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+
