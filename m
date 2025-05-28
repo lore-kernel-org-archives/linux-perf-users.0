@@ -1,143 +1,191 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B71B74420;
-	Wed, 28 May 2025 15:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEE3286436;
+	Wed, 28 May 2025 15:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447684; cv=none; b=ed9YB+ya4CZEApNJ8fpFyURuSOaBfCROJ9fovHOxg30UizWPvEx4ictFiqIZeMAtAgFWa4tbOGIILOMMPAfrWl6yHYKCeCvl3lQqMY0uveAKwdE4+ypwO98QfPQSN9Nu0M0enGnn3ovR7+4FC+zc8H0kw/5YfQj/pCG55cz7++8=
+	t=1748447831; cv=none; b=na6V1yS9zGNrvZVcnOMCHyPaBr3AhDMHn13JB2u8v6fodMqAy9b9QKBlsk8QQ9nO8HygzUMnM+FgrsOSOtsi9usTdss0v0rZqnukYOotoXzJ5umz3WCkGcVlGO7uCAbk6bDvn1bVkFGnYz5X9Ql96nFoZkPRkS2O9I5RjAseEGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447684; c=relaxed/simple;
-	bh=Dw/g/lE1rQzkBlq4qZ/qURcgH6xjlgUmtkzi7h8i4P8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CpR48DMOaLLuiglhPaXw8C5Ko0bwH3NZDIoDisjaKsUDg255VyHxQ0tg7GgIawlfzG8GLIXAsmeFFMasw/SmGfJ9TwQOfX6bzl8gN38pV4dICGEM2OmXuJoVb89XjZwGBuveolR9OJhl4O1O7GsmQfIQ1320gUIZr85euZKISv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6v9Z09hfz6H6py;
-	Wed, 28 May 2025 23:50:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E14461400CA;
-	Wed, 28 May 2025 23:54:31 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
- 2025 17:54:31 +0200
-Date: Wed, 28 May 2025 16:54:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alireza Sanaee <alireza.sanaee@huawei.com>
-CC: <devicetree@vger.kernel.org>, <robh@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <mark.rutland@arm.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <krzk@kernel.org>,
-	<dianders@chromium.org>, <catalin.marinas@arm.com>, <suzuki.poulose@arm.com>,
-	<mike.leach@linaro.org>, <james.clark@linaro.org>,
-	<linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
-	<gshan@redhat.com>, <ruanjinjie@huawei.com>, <saravanak@google.com>
-Subject: Re: [PATCH v3 1/7] of: add infra for finding CPU id from phandle
-Message-ID: <20250528165429.00000d4d@huawei.com>
-In-Reply-To: <20250512080715.82-2-alireza.sanaee@huawei.com>
-References: <20250512080715.82-1-alireza.sanaee@huawei.com>
-	<20250512080715.82-2-alireza.sanaee@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748447831; c=relaxed/simple;
+	bh=cunEx1GQ+Vp/hksXrb/eoFZg/bDuO6fnKXClUzKr/m0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BxCB3PxWLwY1fZhHAS/r9UznnqDWAwSRnINoqCtzccj6/vZuLEZMlUlhK1BJuleZ8L4IKA55wSqSTtMoqbWaTrGwdqeQacmXuIoBsgYdN/QHTRbnCNPFZJMMZLBvojRrhFhHi4JCcnNmRY/VeYcFAbQ6DVcuOX4KwSc13GOxXo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nr6kWEEw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nr6kWEEw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A8AC4CEE3;
+	Wed, 28 May 2025 15:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748447831;
+	bh=cunEx1GQ+Vp/hksXrb/eoFZg/bDuO6fnKXClUzKr/m0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Nr6kWEEw6soS8hsA4ePXvWPyPI+PUVJvlTNOxbL8fLYXLSXmRIVvIUjCb/ZRjHMjg
+	 Nf+P234/HSWhq1aIc5c5y539DTTOTyd3QRxFXZzpJMHRqh4VlNHPaAQooz4mQuKbKu
+	 7zYjPS8X0zhxPYplXmkfin0n/17u5ZBDxToUU18B9hP83Blil+h9USSOOT4BDnR1Lx
+	 nqHd1LkgoXLNkAFdBXocOO+CyKnxgbvINSbf7t1irM4mrJgemqkvoqmEBm/wY9ai1m
+	 XharRn5flp7HFNBlzROLzpXJoKFIJnFZIjeiX/71vdM/3N/O3R0DpuyMEpr0Y4d2it
+	 MK+ggwblqeDuA==
+Date: Wed, 28 May 2025 12:57:08 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Bill Wendling <morbo@google.com>,
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
+	Fei Lang <langfei@huawei.com>, Howard Chu <howardchu95@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] Revert "perf thread: Ensure comm_lock held for comm_list"
+Message-ID: <aDcyVLVpZRui1ole@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 12 May 2025 09:07:09 +0100
-Alireza Sanaee <alireza.sanaee@huawei.com> wrote:
+This reverts commit 8f454c95817d15ee529d58389612ea4b34f5ffb3.
 
-> Get CPU id from phandle. Many drivers get do this by getting hold of CPU
-> node first through a phandle and then find the CPU ID using the relevant
-> function. This commit encapsulates cpu node finding and improves
-> readability.
-> 
-> The API interface requires two parameters, 1) node, 2) pointer to CPU
-> node. API sets the pointer to the CPU node and allows the driver to play
-> with the CPU itself, for logging purposes for instance.
-> 
-> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
-> ---
->  drivers/of/cpu.c   | 29 +++++++++++++++++++++++++++++
->  include/linux/of.h |  9 +++++++++
->  2 files changed, 38 insertions(+)
-> 
-> diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
-> index 5214dc3d05ae..fba17994fc20 100644
-> --- a/drivers/of/cpu.c
-> +++ b/drivers/of/cpu.c
-> @@ -173,6 +173,35 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
->  }
->  EXPORT_SYMBOL(of_cpu_node_to_id);
->  
-> +/**
-> + * of_cpu_phandle_to_id: Get the logical CPU number for a given device_node
-> + *
-> + * @node: Pointer to the device_node containing CPU phandle.
-> + * @cpu_np: Pointer to the device_node for CPU.
-> + * @cpu_idx: The index of the CPU in the list of CPUs.
-> + *
-> + * Return: The logical CPU number of the given CPU device_node or -ENODEV if
-> + * the CPU is not found, or if the node is NULL, it returns -1. On success,
-> + * cpu_np will always point to the retrieved CPU device_node with refcount
-> + * incremented, use of_node_put() on it when done.
-> + */
-> +int of_cpu_phandle_to_id(const struct device_node *node,
-> +			 struct device_node **cpu_np,
-> +			 uint8_t cpu_idx)
-> +{
-> +	if (!node)
-> +		return -1;
-> +
-> +	*cpu_np = of_parse_phandle(node, "cpu", 0);
-> +	if (!*cpu_np)
-> +		*cpu_np = of_parse_phandle(node, "cpus", cpu_idx);
-> +			if (!*cpu_np)
-> +				return -ENODEV;
+'perf top' is freezing on exit sometimes, bisected to this one, revert.
 
-Indent has gone a bit crazy here.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+Cc: Fei Lang <langfei@huawei.com>
+Cc: Howard Chu <howardchu95@gmail.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/comm.c   |  2 --
+ tools/perf/util/thread.c | 17 ++++-------------
+ tools/perf/util/thread.h |  9 ++++-----
+ 3 files changed, 8 insertions(+), 20 deletions(-)
 
-> +
-> +	return of_cpu_node_to_id(*cpu_np);
-> +}
-> +EXPORT_SYMBOL(of_cpu_phandle_to_id);
-> +
->  /**
->   * of_get_cpu_state_node - Get CPU's idle state node at the given index
->   *
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index eaf0e2a2b75c..194f1cb0f6c6 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -360,6 +360,8 @@ extern const void *of_get_property(const struct device_node *node,
->  extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
->  extern struct device_node *of_cpu_device_node_get(int cpu);
->  extern int of_cpu_node_to_id(struct device_node *np);
-> +extern int of_cpu_phandle_to_id(const struct device_node *np,
-> +				struct device_node **cpu_np, uint8_t cpu_idx);
->  extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
->  extern struct device_node *of_get_cpu_state_node(const struct device_node *cpu_node,
->  						 int index);
-> @@ -662,6 +664,13 @@ static inline int of_cpu_node_to_id(struct device_node *np)
->  	return -ENODEV;
->  }
->  
-> +static inline int of_cpu_phandle_to_id(const struct device_node *np,
-> +				       struct device_node **cpu_np,
-> +				       uint8_t cpu_idx)
-> +{
-> +	return -ENODEV;
-> +}
-> +
->  static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
->  {
->  	return NULL;
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index 9880247a2c3364cb..8aa456d7c2cd2d74 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -24,7 +24,6 @@ static struct comm_strs {
+ static void comm_strs__remove_if_last(struct comm_str *cs);
+ 
+ static void comm_strs__init(void)
+-	NO_THREAD_SAFETY_ANALYSIS /* Inherently single threaded due to pthread_once. */
+ {
+ 	init_rwsem(&_comm_strs.lock);
+ 	_comm_strs.capacity = 16;
+@@ -120,7 +119,6 @@ static void comm_strs__remove_if_last(struct comm_str *cs)
+ }
+ 
+ static struct comm_str *__comm_strs__find(struct comm_strs *comm_strs, const char *str)
+-	SHARED_LOCKS_REQUIRED(comm_strs->lock)
+ {
+ 	struct comm_str **result;
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index c202b98b36c29215..415c0e5d1e751a47 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -41,7 +41,6 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
+ }
+ 
+ struct thread *thread__new(pid_t pid, pid_t tid)
+-	NO_THREAD_SAFETY_ANALYSIS /* Allocation/creation is inherently single threaded. */
+ {
+ 	RC_STRUCT(thread) *_thread = zalloc(sizeof(*_thread));
+ 	struct thread *thread;
+@@ -203,29 +202,22 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
+ 
+ struct comm *thread__comm(struct thread *thread)
+ {
+-	struct comm *res = NULL;
++	if (list_empty(thread__comm_list(thread)))
++		return NULL;
+ 
+-	down_read(thread__comm_lock(thread));
+-	if (!list_empty(thread__comm_list(thread)))
+-		res = list_first_entry(thread__comm_list(thread), struct comm, list);
+-	up_read(thread__comm_lock(thread));
+-	return res;
++	return list_first_entry(thread__comm_list(thread), struct comm, list);
+ }
+ 
+ struct comm *thread__exec_comm(struct thread *thread)
+ {
+ 	struct comm *comm, *last = NULL, *second_last = NULL;
+ 
+-	down_read(thread__comm_lock(thread));
+ 	list_for_each_entry(comm, thread__comm_list(thread), list) {
+-		if (comm->exec) {
+-			up_read(thread__comm_lock(thread));
++		if (comm->exec)
+ 			return comm;
+-		}
+ 		second_last = last;
+ 		last = comm;
+ 	}
+-	up_read(thread__comm_lock(thread));
+ 
+ 	/*
+ 	 * 'last' with no start time might be the parent's comm of a synthesized
+@@ -241,7 +233,6 @@ struct comm *thread__exec_comm(struct thread *thread)
+ 
+ static int ____thread__set_comm(struct thread *thread, const char *str,
+ 				u64 timestamp, bool exec)
+-	EXCLUSIVE_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+ 	struct comm *new, *curr = thread__comm(thread);
+ 
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 56e08c8ae005e82b..cd574a896418ac94 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -236,15 +236,14 @@ static inline struct rw_semaphore *thread__namespaces_lock(struct thread *thread
+ 	return &RC_CHK_ACCESS(thread)->namespaces_lock;
+ }
+ 
+-static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
++static inline struct list_head *thread__comm_list(struct thread *thread)
+ {
+-	return &RC_CHK_ACCESS(thread)->comm_lock;
++	return &RC_CHK_ACCESS(thread)->comm_list;
+ }
+ 
+-static inline struct list_head *thread__comm_list(struct thread *thread)
+-	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
++static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
+ {
+-	return &RC_CHK_ACCESS(thread)->comm_list;
++	return &RC_CHK_ACCESS(thread)->comm_lock;
+ }
+ 
+ static inline u64 thread__db_id(const struct thread *thread)
+-- 
+2.49.0
 
