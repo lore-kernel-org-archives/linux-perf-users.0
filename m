@@ -1,159 +1,194 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF91220F39
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 20:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6838F6B
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 20:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748464344; cv=none; b=NAE+4ZeMPXOYSjMaUUVMWT3pi7hHWoOGrJDKJ1xXlnHnQajUa4NeLi0ylaRU4D8I5phoaeR0Xh1t+MXcZH4hUmdgFfWFbcxkwaUTrMHB02DRin/tGl8UqBS5sdCXlWhu2o645KgkbWVvLir/Vv/yxS/blIpeLOEvwcZEPArg5Ds=
+	t=1748464699; cv=none; b=cl99K9I8I5Q+4zmLtCm8Q8VFqjtkv0D/zs9++WjXaK16WocuqRCll64Sr7h7VJXISDNVeyV3pZEckydfvFBQ/s/4YQqBm3xaVYyIaWp+Q7+Qs71gl1AMHPDEwpSyt1wWUxztKICL1XHDspxqUm90e1mglAnNkbz8vtdyR+rD3KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748464344; c=relaxed/simple;
-	bh=cqzg8Nrs2RZmTh//Eb9TZWrUR64FfEAGu16wIkkYdAs=;
+	s=arc-20240116; t=1748464699; c=relaxed/simple;
+	bh=Sk0KsMgaB+xZjKeQ1toE0XUKUHEAW+cJu2j+0JU8sA8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HFX7MIC0lLZnqsoPRzXH/6ab3mwjw4gY+gfyIsPygLJH8XyNLZ0d0DSbFewjk6N1uquTifpzvudi3LqMmeBfN9I+pNu03z8w0q6lp6iv/UmHnhP3ytfz+Rfvq/dzm0IOtDf7/SxdVY+zRGeTY/V9868Fh8gaX8h4xCzRB1mQGNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EDyg0zd9; arc=none smtp.client-ip=209.85.166.179
+	 To:Cc:Content-Type; b=nzUyNymq36hYYEq2o9rga0qNzunm12/PE8uRyGm7Wk6TO72HxpoZ1TYunTJVAS2lXb+ZhBfQ4EIojoPIv7eBXvYPntqkym1dO74jQ7pR/nX0nVtIlJ9VefZXVVa/AEt8k4p0UCmZ5kcRdExuAP06g/RReToX34Kr3Q7g9K8GtRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3SwInS51; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDyg0zd9"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dd89a85414so54915ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 13:32:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3SwInS51"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso10815ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 13:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748464342; x=1749069142; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748464695; x=1749069495; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5ArJMZMVl2LGkS46qbZimujHcHlerzQiWnjpA0Sru5c=;
-        b=EDyg0zd9WoMAXGYqL44CIGrO2Nfy6tslK/NTrvGJ28wx7zUjSgX/D4gxJ67b0Narz7
-         RIC78+wW5UkRzwZnSoIYcpG4QYVwU9CKIlwQAOTxJTfRJQerBxgECpEVRk4HRrljCqZL
-         a0mW1KWEZwqr7KShAfwkUKQ+JAuJCTRvtM6KW0wVa2loXaC/0rzozgSC/sjMpMuMvlu2
-         0QemHv0SSRiFw9FbkPUC+ZWp4lS+KgdzFNicHrU839fSedOmjcMLR0Angqy0hbhiNNYi
-         YLxnpvV1Xe5fGz3d2WMWJ0p73SnhIYSqDlgVBznWrVJoAKh4Md3Mm6HxXcNPOdZw24OH
-         snzQ==
+        bh=CysRy/6eh5eLY4N+6IpIoDvJtx8LW/RoAsL4riwmZR8=;
+        b=3SwInS51qeTN/UN/iFV/9FdlQRD2tY04D3lMfNROVV1VR8hNdEM4i4XfcSXUPG/HS1
+         VkmfXL/I/ZZ/SPqXk99MnF66u8FqDBG3/7HADYbfamr4jPH4bGljzRBDdZgF5hZNtiBs
+         AE6FrHnjGaiW+B+uMsfPPF/YL2dIrbgN89Fcrc7pcI68qzMxADtaNqZkXd/p8UvcArV7
+         hNAcM4RAncbTIBfi0xy1jf7iH9sIyogaQbjITG+uKjPPlxBvq8dOF6Aolpgh2vd3vikI
+         Aqi5bTxAY0IhQ4AYjSvAIsvMk6lXHuEX4sEKYTYt9S7Ax9sI+sqYOPjdG1zSCJKFHtel
+         6E8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748464342; x=1749069142;
+        d=1e100.net; s=20230601; t=1748464695; x=1749069495;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5ArJMZMVl2LGkS46qbZimujHcHlerzQiWnjpA0Sru5c=;
-        b=TnY51xYtNu81qmVDjFUovCtUbN3NPMx3jwHEE3KvfffWyniJDhBRxLUEHgyjqvXlSC
-         rL7ZHa0nlRXjyLG8hb4nwFDi6f6KelzDaULCcBo7BtQCjhzp572nGCK13YsfRrJQAIY1
-         4aEPf0WrmKPmUKmVLCa/QHXWLW+4rkl3HJvc106LlRKpZ8eUZPXHJL3tRocloyWRkDFO
-         iJLthtWXBGC15Ny+mPuCWP7HPsRSrSR2lq1SiYS3haKB9fpJdTjDvVMCseuBgZM1u4/o
-         yU8AcaxROA4Dcvy5YqYwE4Dm/ZQgPoOILWJXFIl4N1mfHALB91/I3bOiDHGADsimvZl+
-         tsuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKXQg5jy9i8MDWM1fIyMUP0J6O7KrPMUd0CtVJ0XNgd/uHavhnlaEZvDg3daJtWZAhvW2+9K2LHs/x27gw41b4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyNHbJhZf29QS/6Kj3wzNhKm0FzZLBIta9HcyIOwQqqiLUYJEq
-	jj5kGf9qw+o/DGpeodfUQe2vU4UqVTlazn0VoovcmuWDNuTg/mLLGHWijChINFz8zOwrFCT77jJ
-	KC04I//FP2MsCn6BUbWaWYgf3n3IwKcuHvFKD6zTD
-X-Gm-Gg: ASbGncu55/7rrzXi1Q3IZaJB5ELIrC2DXqeEBoM/W7L0Xq3b6d23TXCHIj8ZUcyHEb3
-	n3+TVbMvb8Sy23dYuxOi90qFtTtVFCbHs3QaSuBu0rE0EgnRiOl/+ARJEIqnEgj8EZNGhtqQStk
-	QVj3J9D2UlvYAzmRuBOCMcBDfhq4rHwT6/b6js8iuYI8+416eiaogPpLgCO4A9OGKSpxqq8Sse
-X-Google-Smtp-Source: AGHT+IFxbYf/KKgtCHgkR2g2hC0aOo7l94jOkHSdvspLVMHrtQQvMGCJs9feaLc4Sb7/kUdAI99/uigeUUrlItn6an0=
-X-Received: by 2002:a05:6e02:3e90:b0:3dc:7350:b0c with SMTP id
- e9e14a558f8ab-3dd91cc5c41mr800305ab.16.1748464341947; Wed, 28 May 2025
- 13:32:21 -0700 (PDT)
+        bh=CysRy/6eh5eLY4N+6IpIoDvJtx8LW/RoAsL4riwmZR8=;
+        b=g2xR026zKA8eunNZqKcoi02KgIuvTDO7PH7E4FSiUYoxTeY9+iar35g7NUj1/bMRYR
+         6bha5x7Xt4o5D+c3J8RnQZsdYrABnXEC9qd6a/CfD2srXvgWTV6jTXzfjwiStPJrNZHj
+         0Hl5A+foJu+76jmqJRGB9cgS394zqmC5o/uK0xJOpDaUW//IZNJgF8w/K77PFlRJb+wT
+         FsWXgkhUsv0z4Bw66bWmM93ZllsyYvpRareY4bec9KwgyAeLMm5CvBn6uYrRzCzy5FOb
+         VmFB8H1jaFuGmLW5cvqL99KQv1c57YjveeHOdI7yPkPCHAZ6LlbBn4tqRdXxQZDO3N71
+         DwCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV82PJkJRUbMvbZv3l8NvIPqKg+Ou2trfBKMqiBP5f8+Pl44HdAjvQ1+NjCoz6lAXeyPMzUpiqUqb66AII/xdHP@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMcuqqNxNKAPvQAlifCqzLyfJ0SeyKcjd32MljADmCBdqGU1H0
+	rE9ehRKI9keo3o4q0WHsp8hCEUSlnNqPdD85l1i9lYKPQl04nj4u0ZObJQ9AiDYxpHYSoGTp6Fs
+	OpUFzg7eRVykqQumZyQMxiLn7ttxIO3i3lF3soUfd
+X-Gm-Gg: ASbGncu/7fswknHcL+dY5ME3h8gG2YEIFeVDHPsr/Ru+JIDMiTwTqoprCQTJp3FIpFd
+	0I1LN1aXU4uejAWrMQgMkFvjsPKpnzl6UtKYr2O8G7wtTdkFtufHROo9YYP693FHX4UELssYuo2
+	HPBax26/VA+CPzo3sYVG42pR6ke4s4FA/F/eL41Nx2XGpqHtzFXYEQZeGt2I0oUviGgtLVGAmi
+X-Google-Smtp-Source: AGHT+IE9bzHVt/yUEPZJKDRNU4/P3m0whhwjx11oXjO87AScLkBfxZoU0C1CnCERqAW+9+XcXXaK/T5DZtWDKt5e4aE=
+X-Received: by 2002:a05:6e02:1a0b:b0:3dc:670e:ad5f with SMTP id
+ e9e14a558f8ab-3dd91cc4504mr906045ab.14.1748464695389; Wed, 28 May 2025
+ 13:38:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410202647.1899125-1-irogers@google.com> <Z_mK9BVv16MT7shL@z2>
- <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
- <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
- <aDdU1npHL2Vczhsa@google.com> <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
- <aDdqcfuAuk78eKXD@google.com>
-In-Reply-To: <aDdqcfuAuk78eKXD@google.com>
+References: <20250521165317.713463-1-irogers@google.com> <20250521165317.713463-2-irogers@google.com>
+ <aC43Et06tyrBOrsT@google.com> <CAP-5=fUYUDq6hmd+e3_E7HCRPYuy-0KLE+gLuSCWAHh3A5wJLA@mail.gmail.com>
+ <aDdR0pCNSmxCEyEZ@google.com> <CAP-5=fVv9+0UdYDNQ52T-QgKfUYBL-pgRwd_ac3jp7KW8sxrRw@mail.gmail.com>
+ <aDdtWlUbDZtM9pvg@google.com>
+In-Reply-To: <aDdtWlUbDZtM9pvg@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 28 May 2025 13:32:10 -0700
-X-Gm-Features: AX0GCFurQFzXfvz3EqLi-jVNrcInm9hsA2oagIcDmbIRIUFQSZV7VWoEaX9DxkU
-Message-ID: <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's -Wunreachable-code
+Date: Wed, 28 May 2025 13:38:03 -0700
+X-Gm-Features: AX0GCFv-h49dYmQU2vung1CGzOzr11YPBVSw5C9RIXQXF3GPgA73aQr5Xf0vg88
+Message-ID: <CAP-5=fXaaQv5eFTheW52CNc-5Zhmfow2aZ59vnJy74XL2oEcfw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf sample: Remove arch notion of sample parsing
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+	James Clark <james.clark@linaro.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Howard Chu <howardchu95@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Matt Fleming <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 12:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Wed, May 28, 2025 at 1:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
-> > On Wed, May 28, 2025 at 11:24=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+> On Wed, May 28, 2025 at 11:27:06AM -0700, Ian Rogers wrote:
+> > On Wed, May 28, 2025 at 11:11=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
 org> wrote:
 > > >
-> > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
-> > > > On Fri, Apr 11, 2025 at 3:14=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
+> > > On Wed, May 21, 2025 at 02:15:24PM -0700, Ian Rogers wrote:
+> > > > On Wed, May 21, 2025 at 1:27=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
 > > > > >
-> > > > > On Fri, Apr 11, 2025 at 2:34=E2=80=AFPM Namhyung Kim <namhyung@ke=
-rnel.org> wrote:
-> > > > > >
-> > > > > > Hi Ian,
-> > > > > >
-> > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
-> > > > > > > Clang's unreachable code warning is able to catch bugs like t=
-he famous
-> > > > > > > "goto fail" which gcc's unreachable code warning fails to war=
-n about
-> > > > > > > (it will complain about misleading indent). The changes here =
-are
-> > > > > > > sufficient to get perf building with clang with -Wunreachable=
- code,
-> > > > > > > but they don't really fix any bugs. Posting as an RFC to see =
-if anyone
-> > > > > > > things this is worth pursuing.
-> > > > > >
-> > > > > > I'm not sure if it's useful and don't see what kind of bugs it =
-can
-> > > > > > address.  The proposed changes don't look like an improvement.
+> > > > > On Wed, May 21, 2025 at 09:53:15AM -0700, Ian Rogers wrote:
+> > > > > > By definition arch sample parsing and synthesis will inhibit ce=
+rtain
+> > > > > > kinds of cross-platform record then analysis (report, script,
+> > > > > > etc.). Remove arch_perf_parse_sample_weight and
+> > > > > > arch_perf_synthesize_sample_weight replacing with a common
+> > > > > > implementation. Combine perf_sample p_stage_cyc and retire_lat =
+to
+> > > > > > capture the differing uses regardless of compiled for architect=
+ure.
 > > > > >
-> > > > > The goto fail case was in OpenSSL the code from a bad merge:
-> > > > > ```
-> > > > > if (...)
-> > > > >   goto fail;
-> > > > >   goto fail;
-> > > > > ```
-> > > > > Meaning the fail path was always taken and checking on the non-fa=
-il
-> > > > > code never executed. Newer GCCs will warn of this because of the
-> > > > > "misleading indent" but  clang won't. It is easy to imagine simil=
-ar
-> > > > > mistakes creeping in, so using compiler warnings to avoid the bug
-> > > > > could be useful.
-> > >
-> > > It doesn't look very convincing to me but it might be valuable in som=
+> > > > > Can you please do this without renaming?  It can be a separate pa=
+tch but
+> > > > > I think we can just leave it.
+> > > >
+> > > > It is not clear what the use of the union is. Presumably it is a
+> > > > tagged union but there is no tag as the union value to use is impli=
+ed
+> > > > by either being built on x86_64 or powerpc. The change removes the
+> > > > notion of this code being built for x86_64 or powerpc and so the un=
+ion
+> > > > value to use isn't clear (e.g. should arm use p_stage_cyc or
+> > > > retire_lat from the union), hence combining to show that it could b=
 e
-> > > rare cases.  But the proposed changes - basically replace exit() to
-> > > __builtin_unreachable() - seem weird.  Why is calling it a problem?  =
-I
-> > > guess it already has some kind of annotation like "noreturn"?
+> > > > one or the other. The code could be:
+> > > > ```
+> > > > #ifdef __x86_64__
+> > > >        u16 p_stage_cyc;
+> > > > #elif defined(powerpc)
+> > > >        u16 retire_lat;
+> > > > #endif
+> > > > ```
+> > > > but this isn't cross-platform.
+> > >
+> > > Right, we probably don't want it.
+> > >
+> > >
+> > > > The change in hist.h of
+> > > > ```
+> > > > @@ -255,7 +255,7 @@ struct hist_entry {
+> > > >         u64                     code_page_size;
+> > > >         u64                     weight;
+> > > >         u64                     ins_lat;
+> > > > -       u64                     p_stage_cyc;
+> > > > +       u64                     p_stage_cyc_or_retire_lat;
+> > > > ```
+> > > > could be a follow up CL, but then we lose something of what the fie=
+ld
+> > > > is holding given the value is just a copy of that same named value =
+in
+> > > > perf_sample. The code only inserts 34 lines and so the churn of doi=
+ng
+> > > > that seemed worse than having the change in a single patch for
+> > > > clarity.
+> > >
+> > > Assuming other archs can add something later, we won't rename the fie=
+ld
+> > > again.  So I can live with the ugly union fields.  If we really want =
+to
+> > > rename it, I prefer calling it just 'weight3' and let the archs handl=
+e
+> > > the display name only.
 > >
-> > Yep. The exit is incorrect (depending on your notion of correct, I'd
-> > go with clang's notion as they've had to consider this for a while) as
-> > it can never be executed. I've added the __builtin_unreachable() to
-> > document that you can never get to that statement, as otherwise it can
-> > make the code readability harder with the code looking like it will
-> > fall through after calling something like usage_with_options (which is
-> > noreturn). In unoptimized builds __builtin_unreachable() will fail if
-> > executed, so it is a bit more active than just a comment.
+> > But that's my point (or in other words maybe you've missed my point) .
+> > Regardless of arch we should display p_stage_cyc if processing a
+> > perf.data file from a PowerPC as determined from the perf_env in the
+> > perf.data file, or retire_lat if processing a perf.data file from x86.
 >
-> Oh I see, usage_with_options() calls exit() inside so any code after
-> that won't be executed.  Hmm.. isn't it better to remove those codes
-> then?
+> Agreed.
+>
+>
+> > The arch of the perf build is entirely irrelevant and calling the
+> > variable an opaque weight3 will require something that will need to be
+> > disambiguate it elsewhere in the code. The goal in variable names
+> > should be to be intention revealing, which I think
+> > p_stage_cyc_or_retire_lat is doing better than weight3, which is
+> > something of a regression from the existing but inaccurate
+> > p_stage_cyc.
+>
+> Yeah, but I worried if it would end up with
+> 'p_stage_cyc_or_retire_lat_or_something_else' later.
 
-Not sure I follow. The patch does remove the code but it replaces it
-with __builtin_unreachable() to basically state that the code here and
-below can never be reached. Do you mean remove the exit from
-usage_with_options? Then we'd need to fix all the callers, which would
-be a larger patch. Perhaps it should be usage_with_options_and_exit()
-to make it clearer that the code doesn't return. I was after doing
-what was minimal for -Wunreachable-code but while trying to keep the
-code clear.
+Perhaps it should be:
+```
+union {
+  u16 raw;
+  u16 p_stage_cyc;
+  u16 retire_lat;
+} weight3;
+```
+to try to best capture this. `xyz.weight3.raw` when the PowerPC or x86
+use isn't known, etc. In the histogram code the u16 is a u64.
 
 Thanks,
 Ian
