@@ -1,103 +1,99 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713BE35942;
-	Wed, 28 May 2025 04:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D501DF26B;
+	Wed, 28 May 2025 07:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748405858; cv=none; b=PO1HmwDhOuetvXWeiC9OzxqieU8USZc7OHLrOtzXISpaQNTjrUe++hUCEJCY2EThe8xhT6ybiM9aO+NaXH4MqWBvJRi/JpqlrS7vXACsjIkFgq7SoqRt54djzjP3xx8OAw6Y+nJaN0V2xu5NjaIVqXkCXpHp4Qm9rGYZKYopM80=
+	t=1748415801; cv=none; b=BHGoncyYDCKzSXSBQZsjWVqCjJXVwO9oW7gpubpTR3ATtQVmX67du6vtV2ByG+feQWEPtPfPcB0K/pOirbwi6bsI9Dz1/xb/jQA6OjC+HJQUquEfcIcpiWGOCIAXYDXh15wpNMHtxEGoWvC8RwbXhwnibcXK2WSsSIzv9z18NP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748405858; c=relaxed/simple;
-	bh=gIK2jNLj7PiRi/n9fkxad7k+Zo8ms0qzbUkbvTzAz+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H/QlquGFW6zLmk4JjNhlS/Hx0y2L8FCWHSx6yZ3wyvupRQgc8y+tjf5WwfRJPTEMUlwX6WnN6UZYwvhEAqJhHu6NnNO9c/QSEDdFsCPYCMR3EvLxWsJbppDij8G8zffJ1ViSy6Cwx97mQqr1/Yr5+Ng3h9GHVEnhNUQzZVMQhHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJA5ckYW; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748415801; c=relaxed/simple;
+	bh=lmBB606/RhZ9VkViIQT3U8bRpJxkME4jwKV6IGAFURI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hUDSIZVh5+m10HO9ZpMDrVJwM1w+l4S/kEcG1s37zw8+qi/OGC7UZXbmbisKGyIrBtgap0II5cYBdW/gjHj3/RiUg7OSXnib7iHicISNf90LzQYNIYCkud0s5QUPlTK/+kTjJM1D4HBJdguECoPT4dOewHMa8S0GXzBjc5yDC34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i9TCD5OW; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJA5ckYW"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7dc83224d5so443441276.1;
-        Tue, 27 May 2025 21:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748405856; x=1749010656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gIK2jNLj7PiRi/n9fkxad7k+Zo8ms0qzbUkbvTzAz+w=;
-        b=OJA5ckYW6NopUu7hwgwRf6PHa/jMWQqUS7Llb0j/DX2SXt7kftlsIEvzksgjoY5gQ1
-         FaTmQjyf0hXTarC80AB5snl+iz8oWZK6ttiMgnLdJHJwxNJV2ir3Ttq3F8SuCuLoLJaW
-         kDJPiu/mLExy9piv7WJZZm3OZwhZfdellkoZCsOykw0j7rqnBZlxghNh+u+l0dVBx6OJ
-         Ibu8U0NJUVZdbdxfw5Syb4bDTTs/fGdgh7/1tBFxNnhZiakan6HzjRRQemCUUDglBsgt
-         djv2k2zL7cDAMzOylLjmS/VY8iZfA2D6jC0k62ZZgixj/LtsOzjBvYd6hFq9przM+khE
-         OJTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748405856; x=1749010656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gIK2jNLj7PiRi/n9fkxad7k+Zo8ms0qzbUkbvTzAz+w=;
-        b=wsHPFO0euKzHCZe9TSm9A1rEUMGNHc/D9e3PGzvJ5txh4DVX4t99v/IbRwoI7ASwbY
-         01jH02FN9mwe8NM0Clj8YxIvOxjmLrJPItFUwHOABl3H8kCMfdc2lgffI4xDysRmypNV
-         uKhwMpq6vn3J1Z4pyPce8rrHeOzf9QmpIPNza4TXyJ8OnOX6MYrwDFKU9QBrbs4dXNlv
-         MfYxC5zrvCZFDPMBP5Cjs+xvLB8YRcZsAoj6UqkJAHpowhEfdbl1SEaqeNnVHds8GcVU
-         nVVt1DllCEHOJvvNLEB7kMyMaBsjBf6F45g5WqSsqdYe+0NxoMyEXpanVlzjE82flOnE
-         n10Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV84Oyhq2Qh4ftZKPR4Ee8XINibWOG0v5FtRsx7TrSHsKGU4Nf2Ps7iWsOryIWMbRef7OCVYrqpH+w7UEC91oy5Cg==@vger.kernel.org, AJvYcCX7rT14Tn7+nI1w11ldOBk5pwoyDwiRGgdKoFtQKbskKoCxnkLMzqzyLINUYoq7LJKynmr9M+c6PV0BIKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj3sRLupHFi+Rt/2tdH6UauaVraoPhdRclmnTfcuZEeyb2A2fk
-	hxoCLnsxWbuxTzLHKocNyHmfhlUZlyKcfo72ub5f5nJ1drB2dkTWGOa3453zU2SkLaQwb9bzqX3
-	p67MBttiy9Zqo0vWHPZ8tfn2msKT0be0=
-X-Gm-Gg: ASbGnct5Kla8e/pqIQs8kjfxp8wkVzBs52sTJGToDI19uSpOSru7GCyU9FCZVnjAerL
-	0tXHIWSJx1PtFMMTA77XQNYMO+Tn+hpjL9BpObHxw/bARQGfNcGgJo1+D+lb+hPyzarSVDbIKEH
-	ueMBD1TXVzoFp86D27jsYVPoe1PcD/9WM=
-X-Google-Smtp-Source: AGHT+IEexpuRJ1vvdcYophv5hvwFX/OFfNUCCHcz8/hxPY31SkPnhwLAv1nUNkfrrbqW4GU91pvWcm26arQODUe40rU=
-X-Received: by 2002:a05:6902:1109:b0:e7d:a7c7:3f2e with SMTP id
- 3f1490d57ef6-e7dd031fc4bmr4445810276.3.1748405856297; Tue, 27 May 2025
- 21:17:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i9TCD5OW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748415800; x=1779951800;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lmBB606/RhZ9VkViIQT3U8bRpJxkME4jwKV6IGAFURI=;
+  b=i9TCD5OWrBdFFZUDurYIDoJL9GkiAk41SPACTE3lMvkRT7RNM3zRbKLl
+   gXn+PRaEd2eB9C/hjaHvTdfyuZsOEnIsUfB+HRFjuU2yC5IN80RA2yBDi
+   ff6cwB3vyQW3Sr3WvMB7anpgos/t3+wIyCQuC4Mt56SY5RFFZCpry5nU9
+   nwBA9ZhHsqP4PuRfdgvsFOGub5pDj/5SXPbhsXnaXkC3YKI+DhugWq6M6
+   Xlz6ckSXL44O9C+lO6pnt4nJsHJLDG7YaMO34KwLf5fRwwkZ7jGogm3B+
+   z8mj/ccMTzL9oX1QWFUsSRoJ/AkeZ9FEdZTqnftJNZ8TsRF0C1MkYT2Bb
+   A==;
+X-CSE-ConnectionGUID: XPrGdElkTuG27lOsvIFdHw==
+X-CSE-MsgGUID: aSZlMYqFRYK8Oo6VOgNO0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="75818277"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="75818277"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 00:03:18 -0700
+X-CSE-ConnectionGUID: 66S2hyaASfqzYGfACHdsKg==
+X-CSE-MsgGUID: NPjMyB11T/2HBuhIivlaFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="180385549"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 00:03:15 -0700
+Message-ID: <35efdc62-fc2b-40c7-9fbd-25fc6028fa6b@linux.intel.com>
+Date: Wed, 28 May 2025 15:03:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528032637.198960-1-irogers@google.com> <20250528032637.198960-7-irogers@google.com>
-In-Reply-To: <20250528032637.198960-7-irogers@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 27 May 2025 21:17:25 -0700
-X-Gm-Features: AX0GCFsByp54ESAL7HTGBpk-ibfmatGCNo6smxv07FCnf_glIPUAnURAOBPmNME
-Message-ID: <CAH0uvoiEY0kkz09TavHG-KHqtk7UNHyRLfYC382D_yhvrstBGw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] perf test trace_summary: Skip --bpf-summary tests
- if no libbpf
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
-	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2] perf tools: Fix incorrect --user-regs comments
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250403060810.196028-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250403060810.196028-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Ian,
+Kindly ping... Thanks.
 
-On Tue, May 27, 2025 at 8:26=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On 4/3/2025 2:08 PM, Dapeng Mi wrote:
+> The comment of "--user-regs" option is not correct, fix it.
 >
-> If perf is built without libbpf (e.g. NO_LIBBPF=3D1) then the
-> --bpf-summary perf trace tests will fail. Skip the tests as this is
-> expected behavior.
+> "on interrupt," -> "in user space,"
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Acked-by: Howard Chu <howardchu95@gmail.com>
-
-Thanks,
-Howard
+> Fixes: 84c417422798 ("perf record: Support direct --user-regs arguments")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-record.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index ba20bf7c011d..d56273a0e241 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3480,7 +3480,7 @@ static struct option __record_options[] = {
+>  		    "sample selected machine registers on interrupt,"
+>  		    " use '-I?' to list register names", parse_intr_regs),
+>  	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+> -		    "sample selected machine registers on interrupt,"
+> +		    "sample selected machine registers in user space,"
+>  		    " use '--user-regs=?' to list register names", parse_user_regs),
+>  	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+>  		    "Record running/enabled time of read (:S) events"),
+>
+> base-commit: 35d13f841a3d8159ef20d5e32a9ed3faa27875bc
