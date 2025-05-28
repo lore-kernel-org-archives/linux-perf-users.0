@@ -1,46 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD801D6195
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 18:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0449E15B102;
+	Wed, 28 May 2025 18:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748457671; cv=none; b=d8yHj+99PhyLqcrUlbQRQM8m7L6gxNpvYtInIbM/dvQJCI7GwV87M9OFBRXGN669rBLWDqPC2buCoBNZDEkXqXEssgiozHPtOtTsMDEY/2FTX2CtjIWbX0b8X1v9T/HwOc+uSrkX8LWIq4dbZRZKV/B8LapfgE/DfG9ZMGz1UFk=
+	t=1748458091; cv=none; b=ePhy1tvWE8K3kYFJ/Q/yY9WVjHX8HCCZVvHrU1fGB3JPG8eq7kly74jkqnMpkxCffTOvNh7cy1k5cnDdt1FFsikD3uLLNWK4yEmN1aaNJc7/rTzG0jm+niyA5a2Z0QSZOni8IYE5TqgHgeUI0w9tkP85k6UbflyuWYOLYrcIziM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748457671; c=relaxed/simple;
-	bh=anInPSvL/83FHSBSN+bKogNvYIU2+g5qwkPfCRkKlrQ=;
+	s=arc-20240116; t=1748458091; c=relaxed/simple;
+	bh=cT3taaq63q3YAPBypBJrgG0qDTsTKYvmsWAT6whtDTQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Immh5jE1DCk8tqo3NSS7sOWt7OveTkXTmSJuOGlJIEjDC0nu0ss/HGfDQg7rSVLnfWnVrRGXdPXF+B0HqgQd0XhhQo5I70BXC58MyQbxDw5/46hcSGETKZoTImKcAOAhlXgn/aBXPB0CMV+gDOAZYF+jwTdDls4sPmE+dWYHKjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=heE0mFq0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mOJSwUkmbDNB2fQMW0XDGIc31u3lo8p2BR1nGUFPshEYwjqdQCli9ixYGfXympvOyQVLiraDWabN3wvHkNi51NcuQhVTv9Xa9eDkREcIixlGROwgJZvMHS7Rg8Kd+43NQ3KbyN47AwFYO1ZLX9O5q94M/K+DB9OPaMEVFLqsm6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ds8wiysM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="heE0mFq0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B78FC4CEE3;
-	Wed, 28 May 2025 18:41:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ds8wiysM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC4E1C4CEE3;
+	Wed, 28 May 2025 18:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748457671;
-	bh=anInPSvL/83FHSBSN+bKogNvYIU2+g5qwkPfCRkKlrQ=;
+	s=k20201202; t=1748458090;
+	bh=cT3taaq63q3YAPBypBJrgG0qDTsTKYvmsWAT6whtDTQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=heE0mFq015GgFv7vFUJYPY4VrZ1v1CXcUmYPkadP2vVNN1sQqZRD2UHyLkpEXbt6U
-	 jK6+jqKie8+90EsWCmnZpplR/4jLYXHPW/sQk+SneMUo/qgZRBdrm93ve5WiZwUpTc
-	 omfti4V3dTbfq72HILqH69mLT3tX6Qk0k5nofv08SWtNL60br64h3HF1i3YP2VYcBX
-	 i0xYOasT0Tk5MFKF4vSOYXOt4x7RJ/BSfrYQ3JJD/rHSBkrsqzo0uZ/fcoUbQd9eDI
-	 QodwbMVbblOEOClpeediQ5fCyKJkWw/OzzvlCaEPCi/K4ALePAjQYbcPa0HPGyPzxf
-	 p5k5bn+6z8VpA==
-Date: Wed, 28 May 2025 15:41:08 -0300
+	b=Ds8wiysMk3+oOVEWIhlompRxFmapZ5XRRf5ICyI43r7ow5P3cFUIYKFp4Ra3p+ueV
+	 ScYMapxpx3xHyXqYCgSHLoe+tjAiHGaHn6x4FHNzJzutsUGCaYrblJAUSUxrlxaiF9
+	 X3suxEp9N9ZR3grBp23iWJvkrc8y7qKduhFwDdMOV2eFomlLxsOkedyXFgK+neUwA8
+	 DQIBf1SbKq/IWdS/MO5UgzI3FmSHF40exdeFjefNqbT043o4axRaBvJl6HU52WhE7n
+	 AcxzuarkCEucpiMU+PHwOvZkgY6UNp3YB3aXB8Mmx2jOGVX9xHX4dDXGj1pYa21evV
+	 9uoLZOdMbrzFQ==
+Date: Wed, 28 May 2025 15:48:07 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Anubhav Shelat <ashelat@redhat.com>, mpetlan@redhat.com,
-	namhyung@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org
-Subject: Re: [PATCH] perf trace: always print return value for syscalls with
- set errpid
-Message-ID: <aDdYxLLtNa4qT3ZF@x1>
-References: <20250403160411.159238-2-ashelat@redhat.com>
- <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Martin Liska <martin.liska@hey.com>,
+	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] perf: Default use of build IDs and improvements
+Message-ID: <aDdaZ0TMA5kwZ-iV@x1>
+References: <20250428213409.1417584-1-irogers@google.com>
+ <CAP-5=fVy6J+d1aoQwv6TMuybXWAhpeaJOvMmr3-jbsz5ig66kg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,39 +66,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVy6J+d1aoQwv6TMuybXWAhpeaJOvMmr3-jbsz5ig66kg@mail.gmail.com>
 
-On Thu, Apr 03, 2025 at 08:26:52PM -0700, Howard Chu wrote:
-> [Resend due to rejection by mailing list]
-> 
-> Hello Anubhav,
-> 
-> Thanks for doing this :)
-> 
-> On Thu, Apr 3, 2025 at 9:06 AM Anubhav Shelat <ashelat@redhat.com> wrote:
+On Tue, May 27, 2025 at 01:48:43PM -0700, Ian Rogers wrote:
+> On Mon, Apr 28, 2025 at 2:34 PM Ian Rogers <irogers@google.com> wrote:
 > >
-> > Currently some syscalls that have errpid set to true do not print a
-> > return value in perf trace. The syscalls that were consistently
-> > observed were set_robust_list and rseq. This is because perf cannot find
-> > their child process. This change ensures that the return value is always
-> > printed.
+> > Build ID mmap2 events have been available since Linux v5.12 and avoid
+> > certain races. Enable these by default as discussed in:
+> > https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
 > >
-> > Before:
-> >      0.256 ( 0.001 ms): set_robust_list(head: 0x7f09c77dba20, len: 24)                        =
-> >      0.259 ( 0.001 ms): rseq(rseq: 0x7f09c77dc0e0, rseq_len: 32, sig: 1392848979)             =
-> > After:
-> >      0.270 ( 0.002 ms): set_robust_list(head: 0x7f0bb14a6a20, len: 24)                        = 0
-> >      0.273 ( 0.002 ms): rseq(rseq: 0x7f0bb14a70e0, rseq_len: 32, sig: 1392848979)             = 0
+> > The dso_id is used to indentify a DSO that may change by being
+> > overwritten. The inode generation isn't present in /proc/pid/maps and
+> > so was already only optionally filled in. With build ID mmap events
+> > the other major, minor and inode varialbes aren't filled in. Change
+> > the dso_id implementation to make optional values explicit, rather
+> > than injecting a dso_id we want to improve it during find operations,
+> > add the buildid to the dso_id for sorting and so that matching fails
+> > when build IDs vary between DSOs.
 > >
-> > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> > Mark the callchain for buildids and not just the sample IP, fixing
+> > missing DSOs.
+> >
+> > Fix sample__for_each_callchain_node to populate the map even when
+> > symbols aren't computed.
+> >
+> > Other minor bits of build_id clean up.
+> >
+> > v3: Ensure the struct build_id is initialized empty prior to use as
+> >     read paths may fail (Namhyung).
+> >
+> > v2: Make marking DSOs still the default even with the defaulted build
+> >     ID mmap. The command line option still disables this to avoid
+> >     regressions. Add callchain patches and jitdump fix.
 > 
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> Ping. Thanks,
+> Ian
 
-Thanks, applied after rewording it a bit to mention that this not
-related to rseq/set_robust_list as those shouldn't be using errpid, but
-that the problem predates that and added this, where the problem
-started:
-
-Fixes: 11c8e39f5133aed9 ("perf trace: Infrastructure to show COMM strings for syscalls returning PIDs")
+⬢ [acme@toolbx perf-tools-next]$        git am ./v3_20250428_irogers_perf_default_use_of_build_ids_and_improvements.mbx
+Applying: perf callchain: Always populate the addr_location map when adding IP
+Applying: perf build-id: Reduce size of "size" variable
+Applying: perf build-id: Truncate to avoid overflowing the build_id data
+Applying: perf build-id: Change sprintf functions to snprintf
+Applying: perf build-id: Mark DSO in sample callchains
+Applying: perf build-id: Ensure struct build_id is empty before use
+Applying: perf dso: Move build_id to dso_id
+Applying: perf jitdump: Directly mark the jitdump DSO
+Applying: perf record: Make --buildid-mmap the default
+error: patch failed: tools/perf/builtin-record.c:3349
+error: tools/perf/builtin-record.c: patch does not apply
+Patch failed at 0009 perf record: Make --buildid-mmap the default
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbx perf-tools-next]$
 
 - Arnaldo
