@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA12C28E59E;
-	Wed, 28 May 2025 18:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA99028C2B3
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 18:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748457320; cv=none; b=ULzxRsVmw/t5eR60OTpSk7sNDEHqdbBRx2ZyCWzDw7Fh4WtBLlumeu0leQ1WzEeAkI24sSOSh8MaX9m/fMlKNF/HfcJpSpi3nlimTVKyVQeK3r/33mMnbvPbBHGoK9oLdPzywLbimkrOkMlHkEF0Y0cF7Bumne8kTtZujNGdbok=
+	t=1748457327; cv=none; b=LjYIU6DDKV5Pw6sZ+nM2awZjSywP2L6XGSKPErjlcn0rOkPZLSrj8c7Xfwzp/wjiEpgBgt+JzeteFMCM0VHAhs85DVvc13sSUNIIbK2XnrpPb8yZaiwhzRYiR2CdMA0vmP9Bt8VTUbs2OmyCpnJOWfHi073WrACkrJEM1UZMBN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748457320; c=relaxed/simple;
-	bh=sXCVV6kdPgQbjpG0tMeOMWH6XXP1dpXHjjuJ3paPNsk=;
+	s=arc-20240116; t=1748457327; c=relaxed/simple;
+	bh=bNwVIjro2hm2W/uPvcuRGNXSIOJ1ZT5+JyjzWLDylcc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y0tk6CD6FrNQUs+iDbbChSDzSoHyAPWt1MXxuQgw4MxBSAgOxs1dcYT1KKX0z80ppFEpJcA3D1emIU90jtQ/6zhGTQKi9bWdJ6O33L5tW1eCmq4/rmAAciFNqxeLImcsHTRED5nt9gaZF6HhoM20TlC1L9/tPPnyIIb/HF4Bdww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EyxoTjOY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=r7u/tWnUIlSlBn+xIFSnnNWGLcfTqWPPOPg9XnjqFmCa9akGUqvNtg/9tQI2qKnTAKiTs1kkUmoewBfKoQN4Sxm7cYBCoicJbFPxVN9o0zJOCvp3laXUm2y0F3gHuYhsqIxQVADiPBDh1gJuTW/aNP9I6jHamB/k/5u+DwbaMG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdrPj5M5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EyxoTjOY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4961CC4CEE3;
-	Wed, 28 May 2025 18:35:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdrPj5M5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F7BC4CEED;
+	Wed, 28 May 2025 18:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748457319;
-	bh=sXCVV6kdPgQbjpG0tMeOMWH6XXP1dpXHjjuJ3paPNsk=;
+	s=k20201202; t=1748457327;
+	bh=bNwVIjro2hm2W/uPvcuRGNXSIOJ1ZT5+JyjzWLDylcc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EyxoTjOYzd2GBs/jjMwThPF5Jd3ZClDUvT3+7wSgJADitXdj0cnK2tsACSTRlwNj7
-	 BF/2vi9mc/C4F/5New6v+8vKN86Zy2Qfl+rT9Ru8QfothPDJ3yOcTp9wZPnTIvo2Oe
-	 e60IoR9IwQlvxhbTucbKQpHaaqpQ6DcXyKhIetLH2VQn5+jIwRXUl3CaUM/MSY2w/F
-	 qCiw4I/uGpea6/6hZ+QNbCS5GgTH4e0HF4xfyqYzGE7UGmE3dw2aJYtu1B8izNfb+j
-	 +FQHhIjf6Ww+Pk1RcZf/IsQ2vgNlxJCX08tQpuYQ2sEr5YsbVNMlFEgSLBZIJjj0kp
-	 5H5rJxo9SEEjQ==
-Date: Wed, 28 May 2025 11:35:16 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf test: Add AMD IBS sw filter test
-Message-ID: <aDdXZJrPSJlCAcTs@google.com>
-References: <20250524002754.1266681-1-namhyung@kernel.org>
- <960adb81-2c77-4e77-b685-b3f3005cb286@amd.com>
- <aDYlyY2UbBxcMb9f@x1>
+	b=mdrPj5M5B2hoMHxdg5LHLBcmb6v8+oNRhnW5+4rcjFdU+8jzVTLku+oTmemMsoH9s
+	 3PgymRWsj6XoG7u8AYmJ2+viTVVBBIpADLmVr84r+H7+YPyry4ONTKR+laZklXj6nf
+	 MaP98VKpT2U8KrZ6bANCn336K0J4yaRbclCQcIOStZfm3L4nhESLF/BFlJZaur7wut
+	 Hf0QO3Srh4bKme0v2WGe5QqpVJgkPcNuwrvLUdtWMg/GE8N0k7TUBaXQv8FG1mPhc4
+	 CIxC/vRj931hmxF5jOrRLG7aU/lRAy6u2qAf7wgbDyRTOLMwCk9AEzKfU7fSnMvKsH
+	 yB7QgR6NQ5N/g==
+Date: Wed, 28 May 2025 15:35:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, mpetlan@redhat.com,
+	irogers@google.com, linux-perf-users@vger.kernel.org,
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Subject: Re: [PATCH] perf trace: always print return value for syscalls with
+ set errpid
+Message-ID: <aDdXbJijYfgyGEQ4@x1>
+References: <20250403160411.159238-2-ashelat@redhat.com>
+ <aCogx3jPtKTQOPa0@google.com>
+ <CA+G8DhK05FPgdLhN0LVYsDUTsJou4x4BxqycbPweGYgL_b4_VQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,81 +49,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aDYlyY2UbBxcMb9f@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G8DhK05FPgdLhN0LVYsDUTsJou4x4BxqycbPweGYgL_b4_VQ@mail.gmail.com>
 
-On Tue, May 27, 2025 at 05:51:21PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sat, May 24, 2025 at 03:17:13PM +0530, Ravi Bangoria wrote:
-> > Hi Namhyung,
-> > 
-> > On 24-May-25 5:57 AM, Namhyung Kim wrote:
-> > > The kernel v6.14 added 'swfilt' to support privilege filtering in
-> > > software so that IBS can be used by regular users.  Add a test case in
-> > > x86 to verify the behavior.
-> > > 
-> > >   $ sudo perf test -vv 'IBS software filter'
-> > >   113: AMD IBS software filtering:
-> > >   --- start ---
-> > >   test child forked, pid 178826
-> > >   check availability of IBS swfilt
-> > >   run perf record with modifier and swfilt
-> > >   [ perf record: Woken up 3 times to write data ]
-> > >   [ perf record: Captured and wrote 0.000 MB /dev/null ]
-> > >   [ perf record: Woken up 3 times to write data ]
-> > >   [ perf record: Captured and wrote 0.000 MB /dev/null ]
-> > >   [ perf record: Woken up 3 times to write data ]
-> > >   [ perf record: Captured and wrote 0.000 MB /dev/null ]
-> > >   [ perf record: Woken up 0 times to write data ]
-> > >   [ perf record: Captured and wrote 0.000 MB /dev/null ]
-> > >   check number of samples with swfilt
-> > >   [ perf record: Woken up 3 times to write data ]
-> > >   [ perf record: Captured and wrote 0.037 MB - ]
-> > >   [ perf record: Woken up 3 times to write data ]
-> > >   [ perf record: Captured and wrote 0.041 MB - ]
-> > >   ---- end(0) ----
-> > >   113: AMD IBS software filtering                                      : Ok
-> > > 
-> > > Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> > 
-> > A minor nit below ...
-> > 
-> > > +echo "check number of samples with swfilt"
-> > > +
-> > > +kernel_sample=$(perf record -e ibs_op/swfilt/u -o- true | perf script -i- -F misc | grep -c ^K)
-> > 
-> > "true" barely runs in userspace. So, many a times this "perf record"
-> > generates no samples :)
-> 
-> Right, something else, maybe one of those workloads:
-> 
-> acme@number:~/git/perf-tools-next$ perf test --list-workloads
-> noploop
-> thloop
-> leafloop
-> sqrtloop
-> brstack
-> datasym
-> landlock
-> acme@number:~/git/perf-tools-next$
-> 
-> root@number:~# time perf record -e ibs_op/swfilt/u perf test -w sqrtloop
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.160 MB perf.data (3976 samples) ]
-> 
-> real	0m1.588s
-> user	0m1.407s
-> sys	0m0.161s
-> root@number:~# perf script | wc -l
-> 3976
-> root@number:~#
-> 
-> But I'm applying the patch as is, we can replace the workload later.
+On Tue, May 27, 2025 at 12:34:34PM -0400, Anubhav Shelat wrote:
+>    Every time I ran perf trace I saw that the return value for only
+>    set_robust_list and rseq was empty, even though while stepping through
+>    the code the return value was 0. So I do think that these are the right
+>    syscalls.
+>    The cause of the problem is that no thread id is returned, so the logic
+>    skips printing the return value. The change ensures the return value
 
-Thanks, I can add some workload to create both kernel and user traffic.
-I think the current workloads run in user space mostly.
+Well:
 
-Thanks,
-Namhyung
+RETURN VALUE
+       The set_robust_list() and get_robust_list() system calls return zero when the operation is successful, an error code otherwise.
 
+and rset return -errno on failure, so they are both not returning a pid
+and should print errno when less than zero.
+
+>    always gets printed. Another solution would be to set errpid to false
+>    for both set_robust_list and rseq.
+
+Can you please send a new patch with this? please add a Fixes tag as
+well, for these two csets:
+
+⬢ [acme@toolbx perf-tools-next]$ git blame tools/perf/builtin-trace.c  | grep -E '"(rseq|set_robust_list)"'
+0c1019e3463b263a8 (Arnaldo Carvalho de Melo    2024-09-11 16:34:16 -0300 1351) 	{ .name	    = "rseq",	    .errpid = true,
+1de5b5dcb8353f365 (Arnaldo Carvalho de Melo    2024-09-11 17:10:33 -0300 1375) 	{ .name	    = "set_robust_list",	    .errpid = true,
+⬢ [acme@toolbx perf-tools-next]$ 
+
+My mistake, that was a copy'n'paste error, those '.errpid = true'
+shouldn't be there, as you noticed.
+
+The first patch from you is also valid, but due to a different reason,
+as Namhyung pointed out.
+
+So I'm applying it now.
+
+- Arnaldo
+
+>    Best, Anubhav
+
+>    On Sun, May 18, 2025 at 2:03 PM Namhyung Kim <[1]namhyung@kernel.org>
+>    wrote:
+> 
+>      On Thu, Apr 03, 2025 at 12:04:12PM -0400, Anubhav Shelat wrote:
+>      > Currently some syscalls that have errpid set to true do not print
+>      a
+>      > return value in perf trace. The syscalls that were consistently
+>      > observed were set_robust_list and rseq. This is because perf
+>      cannot find
+>      > their child process. This change ensures that the return value is
+>      always
+>      > printed.
+>      >
+>      > Before:
+>      >      0.256 ( 0.001 ms): set_robust_list(head: 0x7f09c77dba20, len:
+>      24)                        =
+>      >      0.259 ( 0.001 ms): rseq(rseq: 0x7f09c77dc0e0, rseq_len: 32,
+>      sig: 1392848979)             =
+>      > After:
+>      >      0.270 ( 0.002 ms): set_robust_list(head: 0x7f0bb14a6a20, len:
+>      24)                        = 0
+>      >      0.273 ( 0.002 ms): rseq(rseq: 0x7f0bb14a70e0, rseq_len: 32,
+>      sig: 1392848979)             = 0
+> 
+>      I'm ok with the change but I'm not sure if they are right syscalls.
+>      It
+>      seems neither of syscalls return a thread id.
+> 
+>      Thanks,
+>      Namhyung
+> 
+>      >
+>      > Signed-off-by: Anubhav Shelat <[2]ashelat@redhat.com>
+>      > ---
+>      >  tools/perf/builtin-trace.c | 2 +-
+>      >  1 file changed, 1 insertion(+), 1 deletion(-)
+>      >
+>      > diff --git a/tools/perf/builtin-trace.c
+>      b/tools/perf/builtin-trace.c
+>      > index 6ac51925ea42..c192f0219b2b 100644
+>      > --- a/tools/perf/builtin-trace.c
+>      > +++ b/tools/perf/builtin-trace.c
+>      > @@ -3005,8 +3005,8 @@ errno_print: {
+>      >       else if (sc->fmt->errpid) {
+>      >               struct thread *child =
+>      machine__find_thread(trace->host, ret, ret);
+>      >
+>      > +             fprintf(trace->output, "%ld", ret);
+>      >               if (child != NULL) {
+>      > -                     fprintf(trace->output, "%ld", ret);
+>      >                       if (thread__comm_set(child))
+>      >                               fprintf(trace->output, " (%s)",
+>      thread__comm_str(child));
+>      >                       thread__put(child);
+>      > --
+>      > 2.48.1
+>      >
+> 
+> References
+> 
+>    1. mailto:namhyung@kernel.org
+>    2. mailto:ashelat@redhat.com
