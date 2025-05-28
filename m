@@ -1,173 +1,383 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C441DF273;
-	Wed, 28 May 2025 22:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9446D221FB5;
+	Wed, 28 May 2025 22:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748469760; cv=none; b=WTjZ7m0wyXf4P0mWyhBF2c3Qd+F+j7urMqVz5Ap4RQCUH4zi0kSNb+eCeK14Gjvnc/jGlakqfMrNY+qU9krabcFwqfLfesBpF+M5L3y5750x4V1ik/GYJdn0YWDE75EDm51lHZqq7iLtg1ls8tvtPuOhJq9r3wuCPv/z9eF1apw=
+	t=1748469852; cv=none; b=D9pAed8TCmWWl44c86W6Y2WHYYSSIpiITIhC0oLm2I4p98MhmTQdw1orQw7xUsW6VrGVYVZ0LGh5EHfN38dofRIb3xkSH/mEISH2EMsNQYZ2+I6Uu4IAnp8C3a+Tdf5c6bey3GclDEDqbwB7tKQHNfxjlznqwPbkzXNKg9Pb1w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748469760; c=relaxed/simple;
-	bh=M3ZiUOldkUKxloo6ZCnoF0coLkgVKoNw3VgiFV0T2wc=;
+	s=arc-20240116; t=1748469852; c=relaxed/simple;
+	bh=XZ04ShYzZs7qqQzQ7gvel0qrFUQ7518RxyPLHTJ3FUE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YS+9JqWkpkF/0+G0ZoKFtJFDEAJNYvS4yGwRZ83Lt9xMvpI2K4EJvZMYCA0XBhikYG/pduQcSb86/lMv38puDgCMqxgD2nc4gXmmuHz8L6qpSQ+rV2kgT5mlGimoXVyju+ZJWJdKbX77c+bwbDPcQf74Vpesd9Z5GRWpvbCJSRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EC3UrlQk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lF3VOo6KVYlqFCQJhpPJ3SbHd9Ofc+/GYywu++h8LQYKl4fIvnt2JhkGY8QevXKfTqBxCzDSZNad92P8WWper+vn9cwaFCqmH+eOuizACYAR83SN5IXrJ6tKVECNhLD56K5kI02ZCcKmWYQrKQdp0119XGcsaS3t5jc7fDtbT64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oW0NLSZj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EC3UrlQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7486C4CEE3;
-	Wed, 28 May 2025 22:02:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oW0NLSZj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE80C4CEE3;
+	Wed, 28 May 2025 22:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748469759;
-	bh=M3ZiUOldkUKxloo6ZCnoF0coLkgVKoNw3VgiFV0T2wc=;
+	s=k20201202; t=1748469852;
+	bh=XZ04ShYzZs7qqQzQ7gvel0qrFUQ7518RxyPLHTJ3FUE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EC3UrlQkCxngwpLvQWSgJ8/JJmui4KKv3E1YDZm/Wyue34vqAhPuAjDkSdbDviK9d
-	 9v5OxPh+yJp901jDg3qGpDI9E6flHurZSIDSLi2gxqgkQUHfn3IXtIDo3ydrDV15zI
-	 hGbPez7WxDgLv/TKxb/Meehq/c4UL0t1zdHW5wXwUTDp326aTTKIWirOXA8+16yv96
-	 MO8+oBBqyEmnkpWG4PAyr9lO0+kMwremNWxFPMQeuTi3NWDJeMNtNrIgnOr9QrPIXk
-	 +SVExYg3zJGFgEotYKtvRakalwRfKcJYOH1LM8Up7AyDzAWhiuSYRJlfDcvA3G+ZcO
-	 ZkfWssAT3mQXQ==
-Date: Wed, 28 May 2025 15:02:37 -0700
-From: Namhyung Kim <namhyung@kernel.org>
+	b=oW0NLSZjMs+/iHOQq0vJPPrINn0p+VVVIAzjEjpdGEXkmE8zLX79ZyHVrEsdyvKqq
+	 lk5z+GuYb5NVsVhe6C57yBSer4o2oansI1ln0NZbI1Jz2OcOi1XmgvBotPwPYmq9Dy
+	 QYksKf2GkVx94EBKF51qKj96ZyCsid3TerbfTPQCTNBWPbW+S9D+nEHAytXsmb5O59
+	 WIUQ6+PnAEmLOs1MN1mEd6LEqpbr2YNOUBwo05fAUB0wQnwgZmVIrcOzsZf031MZ7b
+	 o9lToo9+hpwMooNb4vJgyXLeLFZl2JwrlNreVYM1icJrAGNm2UNCEIKp8Y+mvObtgw
+	 bdIVFh7+2Dysg==
+Date: Wed, 28 May 2025 19:04:08 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
 	James Clark <james.clark@linaro.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
-	Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
 	Howard Chu <howardchu95@gmail.com>,
 	Weilin Wang <weilin.wang@intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Matt Fleming <matt@readmodwrite.com>,
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>,
-	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 1/3] perf sample: Remove arch notion of sample parsing
-Message-ID: <aDeH_QfWHPa9KT1S@google.com>
-References: <20250521165317.713463-1-irogers@google.com>
- <20250521165317.713463-2-irogers@google.com>
- <aC43Et06tyrBOrsT@google.com>
- <CAP-5=fUYUDq6hmd+e3_E7HCRPYuy-0KLE+gLuSCWAHh3A5wJLA@mail.gmail.com>
- <aDdR0pCNSmxCEyEZ@google.com>
- <CAP-5=fVv9+0UdYDNQ52T-QgKfUYBL-pgRwd_ac3jp7KW8sxrRw@mail.gmail.com>
- <aDdtWlUbDZtM9pvg@google.com>
- <CAP-5=fXaaQv5eFTheW52CNc-5Zhmfow2aZ59vnJy74XL2oEcfw@mail.gmail.com>
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf symbol: Move demangling code out of symbol-elf.c
+Message-ID: <aDeIWI8DH9MOTy1z@x1>
+References: <20250528210858.499898-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXaaQv5eFTheW52CNc-5Zhmfow2aZ59vnJy74XL2oEcfw@mail.gmail.com>
+In-Reply-To: <20250528210858.499898-1-irogers@google.com>
 
-On Wed, May 28, 2025 at 01:38:03PM -0700, Ian Rogers wrote:
-> On Wed, May 28, 2025 at 1:09 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Wed, May 28, 2025 at 11:27:06AM -0700, Ian Rogers wrote:
-> > > On Wed, May 28, 2025 at 11:11 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Wed, May 21, 2025 at 02:15:24PM -0700, Ian Rogers wrote:
-> > > > > On Wed, May 21, 2025 at 1:27 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > >
-> > > > > > On Wed, May 21, 2025 at 09:53:15AM -0700, Ian Rogers wrote:
-> > > > > > > By definition arch sample parsing and synthesis will inhibit certain
-> > > > > > > kinds of cross-platform record then analysis (report, script,
-> > > > > > > etc.). Remove arch_perf_parse_sample_weight and
-> > > > > > > arch_perf_synthesize_sample_weight replacing with a common
-> > > > > > > implementation. Combine perf_sample p_stage_cyc and retire_lat to
-> > > > > > > capture the differing uses regardless of compiled for architecture.
-> > > > > >
-> > > > > > Can you please do this without renaming?  It can be a separate patch but
-> > > > > > I think we can just leave it.
-> > > > >
-> > > > > It is not clear what the use of the union is. Presumably it is a
-> > > > > tagged union but there is no tag as the union value to use is implied
-> > > > > by either being built on x86_64 or powerpc. The change removes the
-> > > > > notion of this code being built for x86_64 or powerpc and so the union
-> > > > > value to use isn't clear (e.g. should arm use p_stage_cyc or
-> > > > > retire_lat from the union), hence combining to show that it could be
-> > > > > one or the other. The code could be:
-> > > > > ```
-> > > > > #ifdef __x86_64__
-> > > > >        u16 p_stage_cyc;
-> > > > > #elif defined(powerpc)
-> > > > >        u16 retire_lat;
-> > > > > #endif
-> > > > > ```
-> > > > > but this isn't cross-platform.
-> > > >
-> > > > Right, we probably don't want it.
-> > > >
-> > > >
-> > > > > The change in hist.h of
-> > > > > ```
-> > > > > @@ -255,7 +255,7 @@ struct hist_entry {
-> > > > >         u64                     code_page_size;
-> > > > >         u64                     weight;
-> > > > >         u64                     ins_lat;
-> > > > > -       u64                     p_stage_cyc;
-> > > > > +       u64                     p_stage_cyc_or_retire_lat;
-> > > > > ```
-> > > > > could be a follow up CL, but then we lose something of what the field
-> > > > > is holding given the value is just a copy of that same named value in
-> > > > > perf_sample. The code only inserts 34 lines and so the churn of doing
-> > > > > that seemed worse than having the change in a single patch for
-> > > > > clarity.
-> > > >
-> > > > Assuming other archs can add something later, we won't rename the field
-> > > > again.  So I can live with the ugly union fields.  If we really want to
-> > > > rename it, I prefer calling it just 'weight3' and let the archs handle
-> > > > the display name only.
-> > >
-> > > But that's my point (or in other words maybe you've missed my point) .
-> > > Regardless of arch we should display p_stage_cyc if processing a
-> > > perf.data file from a PowerPC as determined from the perf_env in the
-> > > perf.data file, or retire_lat if processing a perf.data file from x86.
-> >
-> > Agreed.
-> >
-> >
-> > > The arch of the perf build is entirely irrelevant and calling the
-> > > variable an opaque weight3 will require something that will need to be
-> > > disambiguate it elsewhere in the code. The goal in variable names
-> > > should be to be intention revealing, which I think
-> > > p_stage_cyc_or_retire_lat is doing better than weight3, which is
-> > > something of a regression from the existing but inaccurate
-> > > p_stage_cyc.
-> >
-> > Yeah, but I worried if it would end up with
-> > 'p_stage_cyc_or_retire_lat_or_something_else' later.
+On Wed, May 28, 2025 at 02:08:58PM -0700, Ian Rogers wrote:
+> symbol-elf.c is used when building with libelf, symbol-minimal is used
+> otherwise. There is no reason the demangling code with no dependencies
+> on libelf is part of symbol-elf.c so move to symbol.c. This allows
+> demangling tests to pass with NO_LIBELF=1.
 > 
-> Perhaps it should be:
-> ```
-> union {
->   u16 raw;
->   u16 p_stage_cyc;
->   u16 retire_lat;
-> } weight3;
-> ```
-> to try to best capture this. `xyz.weight3.raw` when the PowerPC or x86
-> use isn't known, etc.
+> Structurally, while moving the functions rename demangle_sym to
+> dso__demangle_sym which is already a function exposed in symbol.h and
+> the only purpose of which in symbol-elf.c was to call
+> demangle_sym. Change the calls to demangle_sym in symbol-elf.c to
+> calls to dso__demangle_sym.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v3. Separate patch as most of v2 landed already. Fix issues with
+>     libelf build while merging dso__demangle_sym and demangle_sym to
+>     remove some unneeded complexity.
+>     The thread comm_lock fix also isn't included:
+> https://lore.kernel.org/lkml/20250528032637.198960-8-irogers@google.com/
+>     as discussion on that has moved to a revert by Arnaldo:
+> https://lore.kernel.org/lkml/aDcyVLVpZRui1ole@x1/
 
-Looks better.  But based on the offline discussion, it'd be better to
-just use 'u16 weight3'.
 
 
-> In the histogram code the u16 is a u64.
+Thanks, applied to perf-tools-next,
 
-Yep, because histogram entry aggregates sample weights.
+- Arnaldo
 
-Thanks,
-Namhyung
-
+> ---
+>  tools/perf/util/demangle-cxx.h   |  2 +
+>  tools/perf/util/symbol-elf.c     | 92 ++------------------------------
+>  tools/perf/util/symbol-minimal.c |  7 ---
+>  tools/perf/util/symbol.c         | 82 ++++++++++++++++++++++++++++
+>  4 files changed, 87 insertions(+), 96 deletions(-)
+> 
+> diff --git a/tools/perf/util/demangle-cxx.h b/tools/perf/util/demangle-cxx.h
+> index 26b5b66c0b4e..9359937a881a 100644
+> --- a/tools/perf/util/demangle-cxx.h
+> +++ b/tools/perf/util/demangle-cxx.h
+> @@ -2,6 +2,8 @@
+>  #ifndef __PERF_DEMANGLE_CXX
+>  #define __PERF_DEMANGLE_CXX 1
+>  
+> +#include <stdbool.h>
+> +
+>  #ifdef __cplusplus
+>  extern "C" {
+>  #endif
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 8734e8b6cf84..01818abd02df 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -13,17 +13,12 @@
+>  #include "maps.h"
+>  #include "symbol.h"
+>  #include "symsrc.h"
+> -#include "demangle-cxx.h"
+> -#include "demangle-ocaml.h"
+> -#include "demangle-java.h"
+> -#include "demangle-rust-v0.h"
+>  #include "machine.h"
+>  #include "vdso.h"
+>  #include "debug.h"
+>  #include "util/copyfile.h"
+>  #include <linux/ctype.h>
+>  #include <linux/kernel.h>
+> -#include <linux/log2.h>
+>  #include <linux/zalloc.h>
+>  #include <linux/string.h>
+>  #include <symbol/kallsyms.h>
+> @@ -280,82 +275,6 @@ static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
+>  	return -1;
+>  }
+>  
+> -static bool want_demangle(bool is_kernel_sym)
+> -{
+> -	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
+> -}
+> -
+> -/*
+> - * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
+> - * version.
+> - */
+> -#ifndef HAVE_CXA_DEMANGLE_SUPPORT
+> -char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
+> -		       bool modifiers __maybe_unused)
+> -{
+> -#ifdef HAVE_LIBBFD_SUPPORT
+> -	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+> -
+> -	return bfd_demangle(NULL, str, flags);
+> -#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+> -	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+> -
+> -	return cplus_demangle(str, flags);
+> -#else
+> -	return NULL;
+> -#endif
+> -}
+> -#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+> -
+> -static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+> -{
+> -	struct demangle rust_demangle = {
+> -		.style = DemangleStyleUnknown,
+> -	};
+> -	char *demangled = NULL;
+> -
+> -	/*
+> -	 * We need to figure out if the object was created from C++ sources
+> -	 * DWARF DW_compile_unit has this, but we don't always have access
+> -	 * to it...
+> -	 */
+> -	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
+> -		return demangled;
+> -
+> -	rust_demangle_demangle(elf_name, &rust_demangle);
+> -	if (rust_demangle_is_known(&rust_demangle)) {
+> -		/* A rust mangled name. */
+> -		if (rust_demangle.mangled_len == 0)
+> -			return demangled;
+> -
+> -		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
+> -		     buf_len < 1024 * 1024; buf_len += 32) {
+> -			char *tmp = realloc(demangled, buf_len);
+> -
+> -			if (!tmp) {
+> -				/* Failure to grow output buffer, return what is there. */
+> -				return demangled;
+> -			}
+> -			demangled = tmp;
+> -			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
+> -							   /*alternate=*/true) == OverflowOk)
+> -				return demangled;
+> -		}
+> -		/* Buffer exceeded sensible bounds, return what is there. */
+> -		return demangled;
+> -	}
+> -
+> -	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+> -	if (demangled)
+> -		return demangled;
+> -
+> -	demangled = ocaml_demangle_sym(elf_name);
+> -	if (demangled)
+> -		return demangled;
+> -
+> -	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+> -}
+> -
+>  struct rel_info {
+>  	u32		nr_entries;
+>  	u32		*sorted;
+> @@ -641,7 +560,7 @@ static bool get_plt_got_name(GElf_Shdr *shdr, size_t i,
+>  	/* Get the associated symbol */
+>  	gelf_getsym(di->dynsym_data, vr->sym_idx, &sym);
+>  	sym_name = elf_sym__name(&sym, di->dynstr_data);
+> -	demangled = demangle_sym(di->dso, 0, sym_name);
+> +	demangled = dso__demangle_sym(di->dso, /*kmodule=*/0, sym_name);
+>  	if (demangled != NULL)
+>  		sym_name = demangled;
+>  
+> @@ -839,7 +758,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+>  		gelf_getsym(syms, get_rel_symidx(&ri, idx), &sym);
+>  
+>  		elf_name = elf_sym__name(&sym, symstrs);
+> -		demangled = demangle_sym(dso, 0, elf_name);
+> +		demangled = dso__demangle_sym(dso, /*kmodule=*/0, elf_name);
+>  		if (demangled)
+>  			elf_name = demangled;
+>  		if (*elf_name)
+> @@ -868,11 +787,6 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+>  	return 0;
+>  }
+>  
+> -char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+> -{
+> -	return demangle_sym(dso, kmodule, elf_name);
+> -}
+> -
+>  /*
+>   * Align offset to 4 bytes as needed for note name and descriptor data.
+>   */
+> @@ -1861,7 +1775,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  			}
+>  		}
+>  
+> -		demangled = demangle_sym(dso, kmodule, elf_name);
+> +		demangled = dso__demangle_sym(dso, kmodule, elf_name);
+>  		if (demangled != NULL)
+>  			elf_name = demangled;
+>  
+> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+> index 36c1d3090689..c73fe2e09fe9 100644
+> --- a/tools/perf/util/symbol-minimal.c
+> +++ b/tools/perf/util/symbol-minimal.c
+> @@ -355,13 +355,6 @@ void symbol__elf_init(void)
+>  {
+>  }
+>  
+> -char *dso__demangle_sym(struct dso *dso __maybe_unused,
+> -			int kmodule __maybe_unused,
+> -			const char *elf_name __maybe_unused)
+> -{
+> -	return NULL;
+> -}
+> -
+>  bool filename__has_section(const char *filename __maybe_unused, const char *sec __maybe_unused)
+>  {
+>  	return false;
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index fe801880afea..8b30c6f16a9e 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -19,6 +19,11 @@
+>  #include "build-id.h"
+>  #include "cap.h"
+>  #include "cpumap.h"
+> +#include "debug.h"
+> +#include "demangle-cxx.h"
+> +#include "demangle-java.h"
+> +#include "demangle-ocaml.h"
+> +#include "demangle-rust-v0.h"
+>  #include "dso.h"
+>  #include "util.h" // lsdir()
+>  #include "debug.h"
+> @@ -36,6 +41,7 @@
+>  #include "header.h"
+>  #include "path.h"
+>  #include <linux/ctype.h>
+> +#include <linux/log2.h>
+>  #include <linux/zalloc.h>
+>  
+>  #include <elf.h>
+> @@ -2648,3 +2654,79 @@ int symbol__validate_sym_arguments(void)
+>  	}
+>  	return 0;
+>  }
+> +
+> +static bool want_demangle(bool is_kernel_sym)
+> +{
+> +	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
+> +}
+> +
+> +/*
+> + * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
+> + * version.
+> + */
+> +#ifndef HAVE_CXA_DEMANGLE_SUPPORT
+> +char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
+> +		       bool modifiers __maybe_unused)
+> +{
+> +#ifdef HAVE_LIBBFD_SUPPORT
+> +	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+> +
+> +	return bfd_demangle(NULL, str, flags);
+> +#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+> +	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+> +
+> +	return cplus_demangle(str, flags);
+> +#else
+> +	return NULL;
+> +#endif
+> +}
+> +#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+> +
+> +char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+> +{
+> +	struct demangle rust_demangle = {
+> +		.style = DemangleStyleUnknown,
+> +	};
+> +	char *demangled = NULL;
+> +
+> +	/*
+> +	 * We need to figure out if the object was created from C++ sources
+> +	 * DWARF DW_compile_unit has this, but we don't always have access
+> +	 * to it...
+> +	 */
+> +	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
+> +		return demangled;
+> +
+> +	rust_demangle_demangle(elf_name, &rust_demangle);
+> +	if (rust_demangle_is_known(&rust_demangle)) {
+> +		/* A rust mangled name. */
+> +		if (rust_demangle.mangled_len == 0)
+> +			return demangled;
+> +
+> +		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
+> +		     buf_len < 1024 * 1024; buf_len += 32) {
+> +			char *tmp = realloc(demangled, buf_len);
+> +
+> +			if (!tmp) {
+> +				/* Failure to grow output buffer, return what is there. */
+> +				return demangled;
+> +			}
+> +			demangled = tmp;
+> +			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
+> +							   /*alternate=*/true) == OverflowOk)
+> +				return demangled;
+> +		}
+> +		/* Buffer exceeded sensible bounds, return what is there. */
+> +		return demangled;
+> +	}
+> +
+> +	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+> +	if (demangled)
+> +		return demangled;
+> +
+> +	demangled = ocaml_demangle_sym(elf_name);
+> +	if (demangled)
+> +		return demangled;
+> +
+> +	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+> +}
+> -- 
+> 2.49.0.1204.g71687c7c1d-goog
+> 
