@@ -1,226 +1,221 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D657213E6A
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 23:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABE222F775;
+	Wed, 28 May 2025 23:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748474310; cv=none; b=BHWDxMg4fnB/siqyUOowgaYvqzvhRnDb6CDHGgzsCszENP6u1blzHg9DCILcVAkCk4N2xY5Ti+mpenLZecfbnPkCNLTnDR3HqKB7LLNcLMA/hAx+qAABOlaX2KBVDqsEOpG1ytN0++uaS6AY1aYr6Soly3dySxnlLJMmFC5Orf0=
+	t=1748476612; cv=none; b=nMU/boJCDAlunxY5IPZQ5oScjzag6aJcbKs/1vOIcOpdzOTT1alTPU6LyJjBYQpsXykd7UtzmiK9UAKKUuDhGi0uLxchP6vIfWsufzaXfIgbniP+3+DWz/kkJang9jPGV7GzCIcTECZHRUEfEucPjWSJGIuPB0LoryR6YVB9cVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748474310; c=relaxed/simple;
-	bh=ZgE0DI9a9mTY9wmrJHg8S+HRBGUE/t4iMybPPy30adI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a/UW/9jwe20kk80/BcE69nWQMCCXpm4zTqCEoioFWjCxe0k4u7VMPTWz23jx5bU562iT3VRkv4/XJp/D0mjPsk68zvaCp+wuJTRwDc1aQAg0LuUFj7X0xWSMEXTFRXvi7KPzePafZkRuZVtl6SEr5pnaM9VPStm1/BZR7JIn6ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2AnOrid3; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748476612; c=relaxed/simple;
+	bh=domoQ2WEo/v1iV79MDw5+2KwD8eHeSnei6MfxgMxz20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVHP4mYuqJqf9TCYWiqmYw1dqbeAyBjVv1xkERsQrqL9JwA3CAematx+CHciJKtsgT6OQcTDK97XIXVsMrd293Tkk5AKBpRhx4QJyhN5DBqXwlmaCF2qGhjB+nHjZI/wSquBigsxDxNS2dpphUObTIbCcsQfsIDIZNXnPNc+WAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gX+ZAPf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2AnOrid3"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso41325ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 16:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748474308; x=1749079108; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wr2SmmHn7WpXqUnHpYTLasaORThVlUKjDBWWjtMe31g=;
-        b=2AnOrid3KwYZJtnHt7Q71iBpsHKtT231WkQ8UB1OLgCsp+oXwAbncBNBtBQsDE5B1X
-         bqxchIWC49BprnQxc43zhQT/eu8lY00PWJnxaqNjLbpsHmATMi03iR754oBPptPqx+TZ
-         oYThZgQrieHoEfHrOF/46zwE8wkrV6/VMg1t7O7CgFseBDT0XLumfcyVGD9lWysNsElG
-         ezoZJ2qx5McizubuanHteESmTWidAJV0oG1DhdkO1YqOVu1XzU0/SVASCINQMS3K8JeM
-         o6v3lgJ3xEndiF7Nwb0mpy65PiYeruSqqM3qlA8c+HAxnAVc76l9Ssm/vDU1KbjsrFLE
-         gIfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748474308; x=1749079108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wr2SmmHn7WpXqUnHpYTLasaORThVlUKjDBWWjtMe31g=;
-        b=ODkDULEzz1nh+76P3PquzepofZ0GmREBxcbCRjm+kECfN8ExVgjxQ+oXvhV9SNZIl+
-         H69xhxcibSjh86YDwfQXBxBvIYuvUaXXkEUllsiZT5GD7KeNWiy4tl8Brm3qUDW7ctxV
-         jLXcYSrk7QInLnwigBUzQR6snftGL/s9cXYMiRjVKux8/EofrHWZJWttsGdy02p27BIF
-         pGzJ0oCW2mwDXY1rmhxaMihHTgdbbbiWkRhRANKysb7BpnmMGmqI7w1ph1KT7W9atDt/
-         B1WQthkVlUx5h9XR/l+VyKxaSBpXIwNtpkJLBSLttYpUAGZh0Ur4bF7WxFWEGnmwbElg
-         jLgA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4I207/SMOFZ00GHhcyoYmvfOCMx+a7THIWxgt4mK2540atqUYLiPQDdzLVtb31ieo4bFpLdZXEptYLxC4AA8f@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMQWpPdWTnrO3Nx9Cgr7jHWcymnTu+0BKfXKSUn7ntgsIvrAhW
-	MQOnZLgAqRPdeLuAM8PE2ggYL4xtScH7LsWTqUMeVBgYMdmzLaU7RfdrnjZnqpequEVbPqlW6CW
-	M99TBoRrGZs+p9ebfFuFFZ13MbutiXu62jHLMhi/Z
-X-Gm-Gg: ASbGnctcni7AVJk7IYakAHZFiRRA9u9/3r1yvYapuWkhsVCD2GKqeAUxTYkGcWP0pi2
-	TIQKMKQXXb+EfKSZ6jhbHrVwK9GrIg4Ta50B6sLBjwjG9UM2ULPo7wrJ9gtZ09oDQNxq6M90JhA
-	RTCqOxiMk6H+pQgtZ4cTsP+EAeVLMiVNJv47HMWMmXN3ChctKtGjxz1nPTdaJLFfqKhS6DmluT
-X-Google-Smtp-Source: AGHT+IHrQWnT1aoYjY0oeHltTf6GRFTqzvL9Q6WkxaAVD9sE+2fe2FKMHZRU2QBoTogMaiGikEG1uch6LTDxqqo2cNo=
-X-Received: by 2002:a05:6e02:3cc1:b0:3dc:832f:61cb with SMTP id
- e9e14a558f8ab-3dd9190accdmr1484855ab.0.1748474307353; Wed, 28 May 2025
- 16:18:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gX+ZAPf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976B1C4CEE3;
+	Wed, 28 May 2025 23:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748476611;
+	bh=domoQ2WEo/v1iV79MDw5+2KwD8eHeSnei6MfxgMxz20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gX+ZAPf28219dyQQWDTgBMjp0WVlvu/GEkPTfZAjB4OZWW2uhjrYDVq0Hh5MUqBp7
+	 5xHg31YzsuOZn16xPl3Hn5/k6Q+/FMtIudqYj5fwjFFfMxXrZrwE9DQiQE7vre46Gv
+	 KZzzkJIhrkyZY/jHWQkCfPT8dSALsIZWJepsMVKAWf+EqWL5ksGUKLLuvPx7jUnQy9
+	 fs2SrKF2FgU14B1ehFMb2Qh10dzqfibgBARe8AWWzswq6YLbHIww8j8WtVdWD5kHxN
+	 S9Ti+XP2wvJ87RbWLURjuxDSKu9scA4FdNtSDKeS/yB9FRcWnIEilvWLeTIofL1Y7B
+	 ooAodzFNZIDKg==
+Date: Wed, 28 May 2025 16:56:48 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Martin Liska <martin.liska@hey.com>,
+	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] perf record: Make --buildid-mmap the default
+Message-ID: <aDeiwDeDLXaLjlVN@google.com>
+References: <20250428213409.1417584-1-irogers@google.com>
+ <20250428213409.1417584-10-irogers@google.com>
+ <aDd0Wqy6yw6Tu0vg@google.com>
+ <CAP-5=fUMiWu5gSfBSTq+OnTRQ2E2gCw6gi7dmOxeTD-+UyYtFw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410202647.1899125-1-irogers@google.com> <Z_mK9BVv16MT7shL@z2>
- <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
- <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
- <aDdU1npHL2Vczhsa@google.com> <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
- <aDdqcfuAuk78eKXD@google.com> <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
- <aDeHN4DeYS3i-5jY@google.com>
-In-Reply-To: <aDeHN4DeYS3i-5jY@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 28 May 2025 16:18:16 -0700
-X-Gm-Features: AX0GCFsZnSL7nf1_A2btN6O7rfFVnUd3sZXE1H_YbANsSDeLH4pIccP91VNCf3w
-Message-ID: <CAP-5=fW0g_bhmHm-uyVRja7dhkw47K-PLAx5iubQEm4X+vTSAQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's -Wunreachable-code
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUMiWu5gSfBSTq+OnTRQ2E2gCw6gi7dmOxeTD-+UyYtFw@mail.gmail.com>
 
-On Wed, May 28, 2025 at 2:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, May 28, 2025 at 01:32:10PM -0700, Ian Rogers wrote:
-> > On Wed, May 28, 2025 at 12:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
-> > > > On Wed, May 28, 2025 at 11:24=E2=80=AFAM Namhyung Kim <namhyung@ker=
-nel.org> wrote:
-> > > > >
-> > > > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
-> > > > > > On Fri, Apr 11, 2025 at 3:14=E2=80=AFPM Ian Rogers <irogers@goo=
-gle.com> wrote:
-> > > > > > >
-> > > > > > > On Fri, Apr 11, 2025 at 2:34=E2=80=AFPM Namhyung Kim <namhyun=
-g@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > Hi Ian,
-> > > > > > > >
-> > > > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
-> > > > > > > > > Clang's unreachable code warning is able to catch bugs li=
-ke the famous
-> > > > > > > > > "goto fail" which gcc's unreachable code warning fails to=
- warn about
-> > > > > > > > > (it will complain about misleading indent). The changes h=
-ere are
-> > > > > > > > > sufficient to get perf building with clang with -Wunreach=
-able code,
-> > > > > > > > > but they don't really fix any bugs. Posting as an RFC to =
-see if anyone
-> > > > > > > > > things this is worth pursuing.
-> > > > > > > >
-> > > > > > > > I'm not sure if it's useful and don't see what kind of bugs=
- it can
-> > > > > > > > address.  The proposed changes don't look like an improveme=
-nt.
-> > > > > > >
-> > > > > > > The goto fail case was in OpenSSL the code from a bad merge:
-> > > > > > > ```
-> > > > > > > if (...)
-> > > > > > >   goto fail;
-> > > > > > >   goto fail;
-> > > > > > > ```
-> > > > > > > Meaning the fail path was always taken and checking on the no=
-n-fail
-> > > > > > > code never executed. Newer GCCs will warn of this because of =
-the
-> > > > > > > "misleading indent" but  clang won't. It is easy to imagine s=
-imilar
-> > > > > > > mistakes creeping in, so using compiler warnings to avoid the=
- bug
-> > > > > > > could be useful.
-> > > > >
-> > > > > It doesn't look very convincing to me but it might be valuable in=
- some
-> > > > > rare cases.  But the proposed changes - basically replace exit() =
-to
-> > > > > __builtin_unreachable() - seem weird.  Why is calling it a proble=
-m?  I
-> > > > > guess it already has some kind of annotation like "noreturn"?
-> > > >
-> > > > Yep. The exit is incorrect (depending on your notion of correct, I'=
-d
-> > > > go with clang's notion as they've had to consider this for a while)=
- as
-> > > > it can never be executed. I've added the __builtin_unreachable() to
-> > > > document that you can never get to that statement, as otherwise it =
-can
-> > > > make the code readability harder with the code looking like it will
-> > > > fall through after calling something like usage_with_options (which=
- is
-> > > > noreturn). In unoptimized builds __builtin_unreachable() will fail =
-if
-> > > > executed, so it is a bit more active than just a comment.
-> > >
-> > > Oh I see, usage_with_options() calls exit() inside so any code after
-> > > that won't be executed.  Hmm.. isn't it better to remove those codes
-> > > then?
+On Wed, May 28, 2025 at 01:47:47PM -0700, Ian Rogers wrote:
+> On Wed, May 28, 2025 at 1:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Not sure I follow. The patch does remove the code but it replaces it
-> > with __builtin_unreachable() to basically state that the code here and
-> > below can never be reached. Do you mean remove the exit from
-> > usage_with_options? Then we'd need to fix all the callers, which would
-> > be a larger patch. Perhaps it should be usage_with_options_and_exit()
-> > to make it clearer that the code doesn't return. I was after doing
-> > what was minimal for -Wunreachable-code but while trying to keep the
-> > code clear.
->
-> No, I meant we may not need the __builtin_unreachable() at the callsites.
->
-> Would it complain this code?
->
->   if (some_bad_option_use)
->     usage_with_options(...);
->
->   /* normal code path */
+> > On Mon, Apr 28, 2025 at 02:34:08PM -0700, Ian Rogers wrote:
+> > > Support for build IDs in mmap2 perf events has been present since
+> > > Linux v5.12:
+> > > https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
+> > > Build ID mmap events don't avoid the need to inject build IDs for DSO
+> > > touched by samples as the build ID cache is populated by perf
+> > > record. They can avoid some cases of symbol mis-resolution caused by
+> > > the file system changing from when a sample occurred and when the DSO
+> > > is sought. To disable build ID scanning
+> > >
+> > > Unlike the --buildid-mmap option, this doesn't disable the build ID
+> > > cache but it does disable the processing of samples looking for DSOs
+> > > to inject build IDs for. To disable the build ID cache the -B
+> > > (--no-buildid) option should be used.
+> > >
+> > > Making this option the default was raised on the list in:
+> > > https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/builtin-record.c        | 33 +++++++++++++++++++-----------
+> > >  tools/perf/util/symbol_conf.h      |  2 +-
+> > >  tools/perf/util/synthetic-events.c | 16 +++++++--------
+> > >  3 files changed, 30 insertions(+), 21 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > > index ba20bf7c011d..7b64013ba8c0 100644
+> > > --- a/tools/perf/builtin-record.c
+> > > +++ b/tools/perf/builtin-record.c
+> > > @@ -169,6 +169,7 @@ struct record {
+> > >       bool                    no_buildid_cache_set;
+> > >       bool                    buildid_all;
+> > >       bool                    buildid_mmap;
+> > > +     bool                    buildid_mmap_set;
+> > >       bool                    timestamp_filename;
+> > >       bool                    timestamp_boundary;
+> > >       bool                    off_cpu;
+> > > @@ -1795,6 +1796,7 @@ record__finish_output(struct record *rec)
+> > >                       data->dir.files[i].size = lseek(data->dir.files[i].fd, 0, SEEK_CUR);
+> > >       }
+> > >
+> > > +     /* Buildid scanning disabled or build ID in kernel and synthesized map events. */
+> > >       if (!rec->no_buildid) {
+> > >               process_buildids(rec);
+> > >
+> > > @@ -2966,6 +2968,8 @@ static int perf_record_config(const char *var, const char *value, void *cb)
+> > >                       rec->no_buildid = true;
+> > >               else if (!strcmp(value, "mmap"))
+> > >                       rec->buildid_mmap = true;
+> > > +             else if (!strcmp(value, "no-mmap"))
+> > > +                     rec->buildid_mmap = false;
+> > >               else
+> > >                       return -1;
+> > >               return 0;
+> > > @@ -3349,6 +3353,7 @@ static struct record record = {
+> > >               .ctl_fd_ack          = -1,
+> > >               .synth               = PERF_SYNTH_ALL,
+> > >       },
+> > > +     .buildid_mmap = true,
+> > >  };
+> > >
+> > >  const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
+> > > @@ -3514,8 +3519,8 @@ static struct option __record_options[] = {
+> > >                  "file", "vmlinux pathname"),
+> > >       OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
+> > >                   "Record build-id of all DSOs regardless of hits"),
+> > > -     OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
+> > > -                 "Record build-id in map events"),
+> > > +     OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
+> > > +                     "Legacy record build-id in map events option which is now the default. Behaves indentically to --no-buildid. Disable with --no-buildid-mmap"),
+> > >       OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
+> > >                   "append timestamp to output filename"),
+> > >       OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
+> > > @@ -4042,19 +4047,23 @@ int cmd_record(int argc, const char **argv)
+> > >               record.opts.record_switch_events = true;
+> > >       }
+> > >
+> > > +     if (!rec->buildid_mmap) {
+> > > +             pr_debug("Disabling build id in synthesized mmap2 events.\n");
+> > > +             symbol_conf.no_buildid_mmap2 = true;
+> > > +     } else if (rec->buildid_mmap_set) {
+> > > +             /*
+> > > +              * Explicitly passing --buildid-mmap disables buildid processing
+> > > +              * and cache generation.
+> > > +              */
+> > > +             rec->no_buildid = true;
+> > > +     }
+> > > +     if (rec->buildid_mmap && !perf_can_record_build_id()) {
+> > > +             pr_warning("Missing support for build id in kernel mmap events. Disable this warning with --no-buildid-mmap\n");
+> > > +             rec->buildid_mmap = false;
+> > > +     }
+> > >       if (rec->buildid_mmap) {
+> > > -             if (!perf_can_record_build_id()) {
+> > > -                     pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
+> > > -                     err = -EINVAL;
+> > > -                     goto out_opts;
+> > > -             }
+> > > -             pr_debug("Enabling build id in mmap2 events.\n");
+> > > -             /* Enable mmap build id synthesizing. */
+> > > -             symbol_conf.buildid_mmap2 = true;
+> > >               /* Enable perf_event_attr::build_id bit. */
+> > >               rec->opts.build_id = true;
+> > > -             /* Disable build id cache. */
+> > > -             rec->no_buildid = true;
+> > >       }
+> > >
+> > >       if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
+> > > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+> > > index cd9aa82c7d5a..7a80d2c14d9b 100644
+> > > --- a/tools/perf/util/symbol_conf.h
+> > > +++ b/tools/perf/util/symbol_conf.h
+> > > @@ -43,7 +43,7 @@ struct symbol_conf {
+> > >                       report_individual_block,
+> > >                       inline_name,
+> > >                       disable_add2line_warn,
+> > > -                     buildid_mmap2,
+> > > +                     no_buildid_mmap2,
+> > >                       guest_code,
+> > >                       lazy_load_kernel_maps,
+> > >                       keep_exited_threads,
+> > > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> > > index 69b98023ce74..638d7dd7fa4b 100644
+> > > --- a/tools/perf/util/synthetic-events.c
+> > > +++ b/tools/perf/util/synthetic-events.c
+> > > @@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
+> > >               event->mmap2.pid = tgid;
+> > >               event->mmap2.tid = pid;
+> > >
+> > > -             if (symbol_conf.buildid_mmap2)
+> > > +             if (!symbol_conf.no_buildid_mmap2)
+> >
+> > I find the double negation confusing.  Can we keep it positive?
+> 
+> Agreed double negation is broadly bad. Here I changed buildid_mmap2 to
+> no_buildid_mmap2 to convey that using build ID with mmap2 events was
+> the default and needed opting out of. Getting rid of the 'no_' is of
+> course possible, it will mean all symbol_confs will need to initialize
+> the value to true (which has minor binary size implications), I also
+> think it makes the intention of the code harder to understand.
 
-Right that would fix -Wunreachable, but the existing code would be:
-
-  if (some_bad_option_use) {
-    usage_with_options(...);
-    exit(..);
-  }
-  /* normal code path */
-
-Letting you know that "normal code path" couldn't be fallen into after
-usage_with_options(...). To make the behavior more obvious we could
-rename usage_with_options():
-
-  if (some_bad_option_use)
-    usage_with_options_and_exit(...);
-
-  /* normal code path */
-
-What I've done is:
-
-  if (some_bad_option_use) {
-    usage_with_options(...);
-    __builtin_unreachable();
-  }
-  /* normal code path */
-
-My reasoning is that usage_with_options() doesn't obviously on the
-face of it call exit and never return. To make that clear we could add
-a comment:
-
-  if (some_bad_option_use) {
-    usage_with_options(...);
-    /* usage_with_options never returns as it always calls exit */
-  }
-  /* normal code path */
-
-But my preference is to use __builtin_unreachable as that is the same
-as the comment but is also something the compiler can trap on were it
-not true.
+Well I think perf record is the only place to set it.  But I won't
+insist on it strongly.  Let's go with negative if you like.
 
 Thanks,
-Ian
+Namhyung
 
->
-> Thanks,
-> Namhyung
->
