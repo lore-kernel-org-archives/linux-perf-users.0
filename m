@@ -1,63 +1,63 @@
 Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5D621C188;
-	Wed, 28 May 2025 19:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EC621C9E0;
+	Wed, 28 May 2025 19:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748459519; cv=none; b=cT4vOmkxINj7iTBglBwRSQZvrXmFfNItQ6ZmxGjUw82FWmW/W8YmvJ8mD7ztVwYD+TWXHYCIQxkEZF/4btRvcByrDssVIe3ttjXjzhnNiNu9Lu/nMi4Wn0obcJJ2gF6ndqjFXSDyuft63UpfjTTu5ABYRMtyO8D9oG8p6Qc6nRE=
+	t=1748459520; cv=none; b=gD0muCOee5kRcj+7s68aUhaW7tT/WDqkiKgfboi5t2F+1YKnxAEIex/n+QbOrIItWGTgMVYBRAW3WRqgCb3upbHs+5NCkpuH09OEBO/6L7m9HZjUbK5RZyZa9Nw1L+/QnYOiSwdKKJL3oOpgVNEOE3+kgb3dlM7CrJrqeDbHysY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748459519; c=relaxed/simple;
-	bh=pYg8TLTjgS0BjbaSB6NlASqTqqK6Bkw6JNseF6OIUqo=;
+	s=arc-20240116; t=1748459520; c=relaxed/simple;
+	bh=z0CasqAEvTfFdfOdHo4OuX7jWHBbJ5PPksEWEZz0WwQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bY/96FI+G3xcWBbffOd0/exav4KhBCMCF3wS10dto93U81Osl3xUvF//9r6L3K9na4m1kft4+zC615MnL/l3RDK0aJbK/RUZm9Yxm4fffJRMslBvCorywjYLKd93L9oRNSYi7t0BmUFDfQBvJsPDTF/alNZKtul1OrWvQETkLBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwVnAXpU; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=oIBIS9LFIJJVSsnGLrcMgnrtHptXsZI1JuJyeEH670lZstU5tN4ja0nbw0nw3qnsDsODLnCUg9qS63fx6ELi9fcsbW8BVbZQVQFiWx0d2I87MgzOobvdm/6pSX4Izn6z6Tq1AEkcrHHZQFE0/xpRkykP70/4rvkow1UFMWlQHaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VR6fG1Fd; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwVnAXpU"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23461842024so2226245ad.0;
-        Wed, 28 May 2025 12:11:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VR6fG1Fd"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234f17910d8so2048385ad.3;
+        Wed, 28 May 2025 12:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748459517; x=1749064317; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748459518; x=1749064318; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gg68t38uPzYyo7Ew0hkP+phW30lhRktPX+3plUsKhsk=;
-        b=fwVnAXpUJoB1xVxlMauOuuSYc+PRdvRwSmkU45F5zlj0t808U7gTFIuZ4DspusjWlu
-         JoJih/QtFQJA54jsnmPoeBiCg1vHAOE9ghYHYGx4nW3wNrScoxYqkXbN5UmsQTYsaftk
-         x+VShgP0+8h6PsO3/jW43hsPOvSDhGeHpv6/BTnQ+CkPJvuKBDtJji2qqQhvxbu/dOia
-         W0lPI5y+3FaRxI4sy834wnqWxU2Y5rJVlHhfWNLOIE+YTRCLNNZtPBHULRjJ4+LHgPXK
-         GIlPiR4ZDZS5VY7adpwYieIpLxAdvmUe8FqO6hrb3T2NaVs2Vb7RxxAtkpnrcKD8Owjk
-         qgzw==
+        bh=UPASqWbwMcCUMi4ZOjE3DcJ6mOdKDFpi0lCkuF6a4EE=;
+        b=VR6fG1FdZyrbSv8tsZurKS2TKaf+fcLRPwWPz12ieuqfEZdvAMtKjwcSo8/tfEwSzx
+         anSngFcocQrG6UnUmL+vxcijy6csKiWazW2mp/s/H3UU3cXynEI1mzEjFZq0sdCmnazG
+         SJbXsZLH/9t6REpfGwHYNa1vgoROG1YyniQXEVNR3Y0daLKegliPjrtK4CTxnxkyqI+3
+         mJcXqzqzOI0+TXBw1085ctiDxCQhFpI2bIn1yDnDlbDNRzBrXPx3yY8t291x1igBtRUK
+         jybQO6lGqiWJWKFfgRXOn/gB+31hDNmB7tMxx04pXXMyWWwPPhMt7rrGN3oc7/DXvYxZ
+         Gylw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748459517; x=1749064317;
+        d=1e100.net; s=20230601; t=1748459518; x=1749064318;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gg68t38uPzYyo7Ew0hkP+phW30lhRktPX+3plUsKhsk=;
-        b=TnsHOwvxADPmI4/f9W4uX5oAypp3DDLSW7X5w7YJ/BcnquE5VyzvvGPdFfkV9j+9t7
-         WyKZgV3O7me6UW5ODHF8pYUWOqu1d8PE0iRjfwcJuiRlxpCkYE1zDraQ33G8axUxomuX
-         q2HZhTymLzBCC1O6GjedHkEMa5d2MAXbdZJdZaj3vuuEA0uB6tZRzSfQagU+n5R045Zy
-         ZkFunl0+m0jGaJv6eYvbh86uAUy4RK07D+PMYNv9iIOCJqWdVPGAXbVWkWM1ork5SQSO
-         IGHAxVgVHbzYl4QLNmcbPJFlHWSDOiM2NPrPgwJ61FLWDYIAhCrOjtoeq4Hzc2YIS7QM
-         QYGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXew3NSxNwaabr8gv+d8DAeOys+j8NTBSAA+kv+5nLTbHcgyDu3uVmbR88MvERmgegvQ/Zo2BVCVGgbOmg=@vger.kernel.org, AJvYcCXjz15P+REZ0BK3ifz7MV7u2gr7Y8ijO/H8M3OFSq1hmCrSA6fi55be1h4FKSN0Vilx6nUOuCYdcKfEKGxjclAMZg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1zLxxpK96aA9E7T1BEWrEEv36bGmfmKz82VFm7d51p/4E+rPR
-	65QemHDWEzUPTJbRhB+UXc1KF62jiRJjgVp2fbBsLR6qDfNcUWT0CYtG
-X-Gm-Gg: ASbGnctZ46AlhFCHOeV43uZqCtrWuxJMQK2FDwdgYj48NvUVHejpL7nV/FywAyospQK
-	h+/y3gmTZLrXbKMDTWIhxxyp0bb6NXXWBVZvCzzrdpmT9W4OCHvRZnM1akE6DZuv7UzhY9mYxez
-	8EzrhwEmi02z1Z/QYOl9IbQOR3DPOjPY5t501nOaOuY0C6K0M+WCJr23phu2vRXQMYPl27OL3hW
-	WiQHjiaMufrRR68enQH/IGjA0eY1Q9CYPJoF+LcGzeZlPNhD1UuAftHIpxsoG2bg5skQj+ENN3x
-	EDFL1fbWYJAq3fLVh9etGGc8Sx7G7Lfw7stU6+MayucPj+Xf+Vebs563+h5w7DrpLJcd4+/9Qrx
-	mqPRz+RZSa5I=
-X-Google-Smtp-Source: AGHT+IHg54B8ME0h/66c3zO4zLIROfXSjulX5yjdTcUyOVLMBcGQlPD4gqAX6TXV3N/6wrFFeLtpZQ==
-X-Received: by 2002:a17:903:2306:b0:234:e655:a62e with SMTP id d9443c01a7336-234e65635c1mr26256165ad.9.1748459517130;
-        Wed, 28 May 2025 12:11:57 -0700 (PDT)
+        bh=UPASqWbwMcCUMi4ZOjE3DcJ6mOdKDFpi0lCkuF6a4EE=;
+        b=CxRYPMTc0mNaCqo7jQ8qEi0cpBdCIlfhe+ziHJlzG86ftHoUjL3KOaC6JQ9Fb8aJJr
+         yexGBNu5uuYrc0H5SSp/hDfqZcKXy/kQ5Kl+tRjXqFh3/lc9VAnx+NicEMnKf5oeQ3zP
+         dHTunf0yrIydTkdeSEM1cTg2bWvFRCpdCqnkw14ki4MS7T9iQB6T0QJ03G6p5W3+hdVB
+         gF1ZehV4E16V+iaSP7tMvpKSmaKheINVx7Y3v2JLDzjSCHAod3ZwW6NyNxZmwsr4IeNJ
+         0/d2CvYBUioKdLgfyIgGBg4Kcap0nvaEaz/v/AD/WsDfdKaQ1QXz4zI2u10iLwsrKnIx
+         fdmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz3DnTG3mSYFgHJTd2cSiw9oCW6A/qJh15TR7sip+mREATH01eMRCwQWdO8+Z3xMLe5fh/fpSPuEiJYO8=@vger.kernel.org, AJvYcCXLYzjHQM4/mA20R6Q+hzhNm4Cs22W4Mtr5pdH1ec3QttEwGzqVqi0dnlx6ABQnL7JX7sRJeQpxaK2f3kpv5WbgqQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnWQ0rGMzheTw7tbXEglgz3KzzT08UBlKQm7DECdRYvACbXV/8
+	AR5XeSmmV1lfn/9smWsF6uiPzETca2KW/EtMGUEpwAbqjMS8jAObrILW
+X-Gm-Gg: ASbGncucXDdfg7lBee7R5NITVyscnFVHyRjKI4388iDcCzLy8eiwGjXCghmD4geZkJQ
+	IhtyHcW3yf94+WFa8Ztvx4HvjGK0U6pEWqZt644bEExXoYxcHTSaBcRVIQOSHa1+AN54tJQsYwX
+	+26tFKILExX7efdzMzvooxGro9F2qQmxZJLBFCIoxe3WhYoZ0SZuW1WeBbhRAFDWDsL7aBaJPlO
+	6OACkH1TIFz+Ro6wgx8btmDpDEHN3BjcQoUg+ZytXkycCIMnyWUl4UkikUWfBC10c7s1xC8J1CC
+	uavAHu3XUrv4vCucb8DuK+NQMY7C9VNRrhut89Gg55oillutdEQCa+PjLmQ1+6Ka/NJVJ3/w6VE
+	VoGXrjB0F8MU=
+X-Google-Smtp-Source: AGHT+IFNVo+OnHeeFkizMDit6woU+hKXUKf9ITrqjlo4oR9kFZG3EH+RCKYme07nPbuYwtPOq0PPlw==
+X-Received: by 2002:a17:902:e74b:b0:21f:768:cced with SMTP id d9443c01a7336-23414f3abb3mr235504275ad.8.1748459518550;
+        Wed, 28 May 2025 12:11:58 -0700 (PDT)
 Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm15172215ad.169.2025.05.28.12.11.55
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm15172215ad.169.2025.05.28.12.11.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 12:11:56 -0700 (PDT)
+        Wed, 28 May 2025 12:11:58 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc: mingo@redhat.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v3 4/6] perf test trace: Remove set -e for BTF general tests
-Date: Wed, 28 May 2025 12:11:46 -0700
-Message-ID: <20250528191148.89118-5-howardchu95@gmail.com>
+Subject: [PATCH v3 5/6] perf test trace BTF: Use --sort-events in BTF general tests
+Date: Wed, 28 May 2025 12:11:47 -0700
+Message-ID: <20250528191148.89118-6-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528191148.89118-1-howardchu95@gmail.com>
 References: <20250528191148.89118-1-howardchu95@gmail.com>
@@ -86,90 +86,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove set -e and print error messages in BTF general tests.
+Without the '--sort-events' flag, perf trace doesn't receive and process
+events based on their arrival time, thus PERF_RECORD_COMM event that
+assigns the correct comm to a PID, may be delivered and processed after
+regular samples, causing trace outputs not having a 'comm', e.g.
+'mv', instead, having the default PID placeholder, e.g. ':14514'.
 
-Before:
-    $ sudo /tmp/perf test btf -vv
-    108: perf trace BTF general tests:
-    108: perf trace BTF general tests                                    : Running
-    --- start ---
-    test child forked, pid 889299
-    Checking if vmlinux BTF exists
-    Testing perf trace's string augmentation
-    String augmentation test failed
-    ---- end(-1) ----
-    108: perf trace BTF general tests                                    : FAILED!
+Hopefully this answers Namhyung's question in [1].
 
-After:
-    $ sudo /tmp/perf test btf -vv
-    108: perf trace BTF general tests:
-    108: perf trace BTF general tests                                    : Running
-    --- start ---
-    test child forked, pid 886551
-    Checking if vmlinux BTF exists
-    Testing perf trace's string augmentation
-    String augmentation test failed, output:
-    :886566/886566 renameat2(CWD, "/tmp/file1_RcMa", CWD, "/tmp/file2_RcMa", NOREPLACE) = 0---- end(-1) ----
-    108: perf trace BTF general tests                                    : FAILED!
+You can simply justify the statement with this diff: [2].
+
+Now, simply run this command multiple times:
+    $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
+And you should see two types of results:
+
+    $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
+    [debug] deliver
+    [debug] machine__process_comm_event
+    [OVERRIDE] old :1221169 new mv str mv
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+	 0.000 ( 0.013 ms): mv/1221169 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
+    [debug] deliver
+
+    $ touch /tmp/file1 && sudo /tmp/perf trace -e renameat* -- mv /tmp/file1 /tmp/file2 && rm -f /tmp/file2
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+	 0.000 ( 0.014 ms): :1221398/1221398 renameat2(olddfd: CWD, oldname: "/tmp/file1", newdfd: CWD, newname: "/tmp/file2", flags: NOREPLACE) = 0
+    [debug] deliver
+    [debug] deliver
+    [debug] machine__process_comm_event
+    [OVERRIDE] old :1221398 new mv str mv
+    [debug] deliver
+    [debug] deliver
+    [debug] deliver
+
+Anyway, use --sort-events in BTF general tests to avoid :PID, a comm is
+preferred.
+
+[1]: https://lore.kernel.org/linux-perf-users/Z_AeswETE5xLcPT8@google.com/
+[2]: https://gist.githubusercontent.com/Sberm/6b72b2a1cf1c62244f1f996481769baf/raw/529667bd74a2e7e1953bbd4be545bf875da8a3e7/unsorted.patch
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/tests/shell/trace_btf_general.sh | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ tools/perf/tests/shell/trace_btf_general.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-index a25d8744695e..5fa50d815203 100755
+index 5fa50d815203..30cd3a53f868 100755
 --- a/tools/perf/tests/shell/trace_btf_general.sh
 +++ b/tools/perf/tests/shell/trace_btf_general.sh
-@@ -3,7 +3,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- err=0
--set -e
- 
- # shellcheck source=lib/probe.sh
- . "$(dirname $0)"/lib/probe.sh
-@@ -28,10 +27,10 @@ check_vmlinux() {
+@@ -27,7 +27,7 @@ check_vmlinux() {
  
  trace_test_string() {
    echo "Testing perf trace's string augmentation"
--  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
--    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-+  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
-+  if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
+-  output="$(perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
++  output="$(perf trace --sort-events -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1)"
+   if ! echo "$output" | grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
    then
--    echo "String augmentation test failed"
-+    printf "String augmentation test failed, output:\n$output\n"
-     err=1
-   fi
- }
-@@ -39,20 +38,20 @@ trace_test_string() {
+     printf "String augmentation test failed, output:\n$output\n"
+@@ -38,7 +38,7 @@ trace_test_string() {
  trace_test_buffer() {
    echo "Testing perf trace's buffer augmentation"
    # echo will insert a newline (\10) at the end of the buffer
--  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
--    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-+  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
-+  if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+-  output="$(perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1)"
++  output="$(perf trace --sort-events -e write --max-events=1 -- echo "${buffer}" 2>&1)"
+   if ! echo "$output" | grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
    then
--    echo "Buffer augmentation test failed"
-+    printf "Buffer augmentation test failed, output:\n$output\n"
-     err=1
-   fi
- }
+     printf "Buffer augmentation test failed, output:\n$output\n"
+@@ -48,7 +48,7 @@ trace_test_buffer() {
  
  trace_test_struct_btf() {
    echo "Testing perf trace's struct augmentation"
--  if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
--    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-+  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
-+  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
+-  output="$(perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
++  output="$(perf trace --sort-events -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
+   if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
    then
--    echo "BTF struct augmentation test failed"
-+	printf "BTF struct augmentation test failed, output:\n$output\n"
-     err=1
-   fi
- }
+ 	printf "BTF struct augmentation test failed, output:\n$output\n"
 -- 
 2.45.2
 
