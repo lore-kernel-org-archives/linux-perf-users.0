@@ -1,168 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8391B87C0;
-	Wed, 28 May 2025 17:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E30111AD;
+	Wed, 28 May 2025 18:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748455141; cv=none; b=fWETkTAGiEMQigmVKG1nUb0eIre9U0ljtF5EyrsLCBsZRxv/hb+0a9AapyyITT7MAv1+jbzTBglOV4FDLQX4U0n0pC8JWXlqMVDuo/G3OXdyRu6BzlLMWH+HBT5uX3Ufqz5xubZ2H+VaCIS3FZQn3AENc2gqmwDbBkTuCUi50W8=
+	t=1748455360; cv=none; b=jc4bJgIYNA7NXzoqrv+6X7yKgqCrPX09JCNOkxzFj5oahhwcqPFtHgAOTdkQZJrVAsqRchSdrmxjQCEGHSxBqa/EMKdATCQzyhjy5g97Au7XXslq6SVhvohJKQ+y07gicUFFSgk3rbKk8ht/v3qzgphsKp0fxR8119s+62VCQeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748455141; c=relaxed/simple;
-	bh=dWdT/BynBBuDSCyma1X+cQB7xQLt4r1AGcNl9ltXRbQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E+mdwKqAXmIF8AHvff1n5fhoEkN0rOV63z4LcqZJ+FWzIYn32EDcf5WihvToZBzFd6bPSHL8ADM4nV6uxlpC+jdYdo8Zb3RgzJXjqd1hWSHAUJUxGZWxHq6e52p7D3SNOraZ7T2cDqn1Wy6HAS8lZwLwLyj9z5aAGckQTJslYkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ge5Nqd/f; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748455360; c=relaxed/simple;
+	bh=7/N7kn9RRXKq6KqqskQq3WvBRPAvJG2NaFJSdCXo8LQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kLvAEDfsHp7nD2AU/tVWafGXl6OfJMTMDocYQbUrhw/4WbYEm47odcNjs4yW7TAL1NvAiVWfPskp6RJhHcQbvRIvqYASeLTmxc+pYltUR379BRA1oOvHquzSv8deYnGqcaNv2tgaRTLqaN4LyJsmSBJuG2DikX9tmp2+9u1s5q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhqpWeCZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ge5Nqd/f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748455139; x=1779991139;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=dWdT/BynBBuDSCyma1X+cQB7xQLt4r1AGcNl9ltXRbQ=;
-  b=ge5Nqd/fbZj2s6JHiBG448/m4yMMJRHODKngqxJCKWtseWVm17ldlJVE
-   PcEls/ewhNMqTbdbcQw9jJpzI/CyL6EXYG3zIfqmUby34HVZOKLg5OXSc
-   c5nRTNOTqd6Qfh8aIyD7ya/PSUmD/Q51SBzXizAiKu8/KUq7ZA55j1Ijc
-   LRpcTQOcS1mTXUv5Fb6ZhOogKqNmseEwVEjSXBj1uDHeA/bi48t961vx/
-   iLDdWDrZBZW4lmVo2happI7KBdgW/P7nQcSE+mBaTA2nuCMZ58iibebo2
-   eyVu3GkXHxPac3nBVad0nJyTbnlCN9KzFYF5go4GtxtMrJbDeOiIw2VRn
-   Q==;
-X-CSE-ConnectionGUID: BfMO+r4URxe9XcMmBXSYfA==
-X-CSE-MsgGUID: d3mFRUadSrebLDgEqzsqtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50648745"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="50648745"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 10:58:58 -0700
-X-CSE-ConnectionGUID: Zy20/L1sTQyvQQjMFfqx/Q==
-X-CSE-MsgGUID: ikwD+7d6Tsi3LwndxkjWXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="147193272"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa003.fm.intel.com with ESMTP; 28 May 2025 10:58:58 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	leo.yan@arm.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhqpWeCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 677B7C4CEE3;
+	Wed, 28 May 2025 18:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748455359;
+	bh=7/N7kn9RRXKq6KqqskQq3WvBRPAvJG2NaFJSdCXo8LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GhqpWeCZes79lHl8+Um6pC3HgwPQKhZM2/CZGQxxSuOyck59xHzjdiujxHpUIsl2s
+	 xzh/YWnvj3MB5dslZx/xjzntBYRjah2OufArbZp9hJuVCvHL/H93AmSrRdsW73olYS
+	 0eYyBMVcDxtJSrsZWBtWmu1k6DP+46iS+7uyfWidWGLMNJLt0Ba0wZ46S8J5xY9asi
+	 RPwgGE2qmANUNf3MsMXGoAFjUQ4sgVfCOzUmx+1s6r0FafT0LSNbEcLLqGaZc0/Thm
+	 aJLSoqZR29XsVEmhm3SNbBYIlQ6SozUvTKUE5FotvkUBvFRkWJDLM9cN8gPkadF5nu
+	 oGo0gK4MuHZGQ==
+Date: Wed, 28 May 2025 11:02:36 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>
-Subject: [PATCH V2] perf: Fix the throttle error of some clock events
-Date: Wed, 28 May 2025 10:58:32 -0700
-Message-Id: <20250528175832.2999139-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Various asan and test fixes
+Message-ID: <aDdPvCIYmSPXmBJG@google.com>
+References: <20250528032637.198960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250528032637.198960-1-irogers@google.com>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, May 27, 2025 at 08:26:30PM -0700, Ian Rogers wrote:
+> When testing removing perf_env with asan I noticed a number of test
+> failures either because of asan issues or because of building with
+> NO_LIBELF=1 and NO_LIBBPF=1 to avoid false memory leaks. Address these
+> issues so that real test failures stand out.
+> 
+> v2: Fix wrong elf size use in filename__read_build_id fix. Add
+>     thread__comm_lock fix.
+> 
+> Ian Rogers (7):
+>   perf symbol: Fix use-after-free in filename__read_build_id
+>   perf test demangle-java: Don't segv if demangling fails
+>   perf symbol: Move demangling code out of symbol-elf.c
+>   perf intel-tpebs: Avoid race when evlist is being deleted
+>   perf test intel-pt: Skip jitdump test if no libelf
+>   perf test trace_summary: Skip --bpf-summary tests if no libbpf
+>   perf thread: Avoid recursively taking thread__comm_lock
 
-The Arm CI reports RCU stall, which can be reproduced by the below perf
-command.
-  perf record -a -e cpu-clock -- sleep 2
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-The cpu-clock and task_clock are two special SW events, which rely on
-the hrtimer. Instead of invoking the stop(), the HRTIMER_NORESTART is
-returned to stop the timer. Because the hrtimer interrupt handler cannot
-cancel itself, which causes infinite loop.
+Thanks,
+Namhyung
 
-There may be two ways to fix it.
-- Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
-the stop is invoked by the throttle.
-- Introduce a PMU flag to track the case. Avoid the event_stop in
-perf_event_throttle() if the flag is detected.
-
-The latter looks more generic. It may be used if there are more other
-cases that want to avoid the stop later. The latter is implemented.
-
-Reported-by: Leo Yan <leo.yan@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-Tested-by: Leo Yan <leo.yan@arm.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V1:
-- Rebase on top of the latest tip.git
-- Add Tested-by from Leo
-
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 23 ++++++++++++++++++++---
- 2 files changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 52dc7cfab0e0..97a747a97a50 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -305,6 +305,7 @@ struct perf_event_pmu_context;
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
- #define PERF_PMU_CAP_AUX_PAUSE		0x0200
- #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
-+#define PERF_PMU_CAP_NO_THROTTLE_STOP	0x0800
- 
- /**
-  * pmu::scope
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..abd19bb571e3 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2656,7 +2656,22 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
- 
- static void perf_event_throttle(struct perf_event *event)
- {
--	event->pmu->stop(event, 0);
-+	/*
-+	 * Some PMUs, e.g., cpu-clock and task_clock, may rely on
-+	 * a special mechanism (hrtimer) to manipulate counters.
-+	 * The regular stop doesn't work, since the hrtimer interrupt
-+	 * handler cannot cancel itself.
-+	 *
-+	 * The stop should be avoided for such cases. Let the
-+	 * driver-specific code handle it.
-+	 *
-+	 * The counters will eventually be disabled in the driver-specific
-+	 * code. In unthrottle, they still need to be re-enabled.
-+	 * There is no handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
-+	 * the perf_event_unthrottle().
-+	 */
-+	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
-+		event->pmu->stop(event, 0);
- 	event->hw.interrupts = MAX_INTERRUPTS;
- 	if (event == event->group_leader)
- 		perf_log_throttle(event, 0);
-@@ -11848,7 +11863,8 @@ static int cpu_clock_event_init(struct perf_event *event)
- static struct pmu perf_cpu_clock = {
- 	.task_ctx_nr	= perf_sw_context,
- 
--	.capabilities	= PERF_PMU_CAP_NO_NMI,
-+	.capabilities	= PERF_PMU_CAP_NO_NMI |
-+			  PERF_PMU_CAP_NO_THROTTLE_STOP,
- 	.dev		= PMU_NULL_DEV,
- 
- 	.event_init	= cpu_clock_event_init,
-@@ -11930,7 +11946,8 @@ static int task_clock_event_init(struct perf_event *event)
- static struct pmu perf_task_clock = {
- 	.task_ctx_nr	= perf_sw_context,
- 
--	.capabilities	= PERF_PMU_CAP_NO_NMI,
-+	.capabilities	= PERF_PMU_CAP_NO_NMI |
-+			  PERF_PMU_CAP_NO_THROTTLE_STOP,
- 	.dev		= PMU_NULL_DEV,
- 
- 	.event_init	= task_clock_event_init,
--- 
-2.38.1
-
+> 
+>  tools/perf/tests/demangle-java-test.c   |   5 +
+>  tools/perf/tests/shell/test_intel_pt.sh |   5 +
+>  tools/perf/tests/shell/trace_summary.sh |   6 +
+>  tools/perf/util/demangle-cxx.h          |   2 +
+>  tools/perf/util/intel-tpebs.c           |  12 +-
+>  tools/perf/util/symbol-elf.c            |  86 ------------
+>  tools/perf/util/symbol-minimal.c        | 175 ++++++++++--------------
+>  tools/perf/util/symbol.c                |  87 ++++++++++++
+>  tools/perf/util/thread.c                |  17 ++-
+>  9 files changed, 198 insertions(+), 197 deletions(-)
+> 
+> -- 
+> 2.49.0.1238.gf8c92423fb-goog
+> 
