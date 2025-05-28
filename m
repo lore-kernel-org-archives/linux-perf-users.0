@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D7828E57E;
-	Wed, 28 May 2025 17:11:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BC528DF29;
+	Wed, 28 May 2025 17:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748452282; cv=none; b=ZiGEgxvHpCjKG9whf/02iOOs3BQucBkhrroziQrJF/Rb2wHgI/rKpbO8gP8etLNnQv2d1CGMW0zr2v/hg/IJTWlJkNKSYwBtQBD4UuQtA2vsLDh0d8Q7WKR78CPdxNGYIIULOIRegqgOfDbxqPRmQ8C1cZ5pmJtYfit/96DBMrA=
+	t=1748454203; cv=none; b=f7WYOXbRAKNRN2AiN30xxqP3hn0I5TXcRNTKZ49BeiW7sOhiAy+RcmJxBq258ZSCeXLqqroDTIAteF2iWpruMfPISznx0UE2fblBG5yxX2cJFFzxBL7hhKTKxZNQLc1iPC/mtIacWV3UaRH6bN6rsslUE7X1T99aZFdCoKpbSZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748452282; c=relaxed/simple;
-	bh=68VnENCT5sJ2AEdFh4eOwOKX9EsCLWBTdHaZUNKLp/A=;
+	s=arc-20240116; t=1748454203; c=relaxed/simple;
+	bh=CIwIRMFWWPspYFOu0BAz//9Xigosv8kDtL+WE9KyOl0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jsB0kaL/EJ1Ik8akbdML824CGGz1MVCPmTyl7ZhvRq03/X9zCjBgscSe0AeLa3HUFA78gk9d+sygAEyG1krKTKp7ct9CPnu4/qzQYqjwSmSER+0OI9RdG4v+YKBF9b4Wge7uKPS0VXuu42qZwf9ElLBg/zV4zAE+WxKaSgjhAWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtwtvaCF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gfz8dRp4bj3+FZ+WjRmhB7F9B8FdFxLQEwYFzWrUC1BA5xzBkUSOp+kAxd9/ujHXKhOiprjWiMOc/9CHPwbhscY4MgkF68uB30iJ2ey3a4+v/WqB/p2WmqEdh4QgHmoq4O+OXaVP+QSDhix6okZSP5A+jdVbGzAwi1iw1J8M/E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CS+iMhJw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtwtvaCF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4416C4CEE3;
-	Wed, 28 May 2025 17:11:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CS+iMhJw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E524DC4CEE3;
+	Wed, 28 May 2025 17:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748452282;
-	bh=68VnENCT5sJ2AEdFh4eOwOKX9EsCLWBTdHaZUNKLp/A=;
+	s=k20201202; t=1748454202;
+	bh=CIwIRMFWWPspYFOu0BAz//9Xigosv8kDtL+WE9KyOl0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gtwtvaCFNrBnLSYT0HTL9oBd6k0psK3Lc+RyQIVJsBBZ8dXuFvPsSntbMmBTR710y
-	 VhkR385AUwqHC5KlF4VlSkZ8AzqYo1Jg5OYTnX9xmH6qYyxTI3zSlMZx12h8Qys/ee
-	 zmSUrMj1p26cOM3koYd+ePLbqDQb8tHO9GKuXbh6ydY37XN1oxzwuRo5X64fHhpsbv
-	 xEGJqX9fK4ANUIEFK+iNDXA3Gka68u6O3LTsei0vgAsU/XqUkqAbVQuWjvbxt9SpmG
-	 nVSY/q5HAM80Oxhur2gYc/upf0JW3Y0OGjNs8ZXiXvEjuKsQwKzp1Ri9vEJh/Wus/Q
-	 N5IAn8dmxUz9w==
-Date: Wed, 28 May 2025 14:11:19 -0300
+	b=CS+iMhJwT/6lflEALZmsRKey2NAtkT/8TgnMmSfBwJwzgm0FihTDdFdzaDfKhS1DC
+	 RHYcZXFzX17fA/uvh6KZJENrkgRaNZbDbQcOW4LY6oAPRoRGX7HYheB9FJ0xrtwQSj
+	 i9fdEFquZZ23RoexgOlXfh/zc+o0BHmfT9EFHAvycsJ/KHEI8WC9LraOdQH0b28cDV
+	 U/PD2JvQLqxgwgip/sdF2/P2/TNXm/YdwHBBy59146ZSRdnT5hoXkPSR/UfBy3XRn6
+	 eC/wjFFnttEzrMUJe/Qg5q+mS4eaYxW+yozK4m4CJamISFdp2jGgHyfqS4eNqvU/q+
+	 TMLU1kCUD3SfA==
+Date: Wed, 28 May 2025 14:43:19 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Leo Yan <leo.yan@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v2] perf tools: Fix incorrect --user-regs comments
-Message-ID: <aDdDt9O1O4gky_st@x1>
-References: <20250403060810.196028-1-dapeng1.mi@linux.intel.com>
- <35efdc62-fc2b-40c7-9fbd-25fc6028fa6b@linux.intel.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/3] perf mem: Describe overhead calculation in brief
+Message-ID: <aDdLNw2f9aN5XPtp@x1>
+References: <20250523222157.1259998-1-namhyung@kernel.org>
+ <20250527101246.GG2566836@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,39 +49,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35efdc62-fc2b-40c7-9fbd-25fc6028fa6b@linux.intel.com>
+In-Reply-To: <20250527101246.GG2566836@e132581.arm.com>
 
-On Wed, May 28, 2025 at 03:03:13PM +0800, Mi, Dapeng wrote:
-> Kindly ping... Thanks.
+On Tue, May 27, 2025 at 11:12:46AM +0100, Leo Yan wrote:
+> On Fri, May 23, 2025 at 03:21:55PM -0700, Namhyung Kim wrote:
+> > From: Ravi Bangoria <ravi.bangoria@amd.com>
+> > 
+> > Unlike perf-report which uses sample period for overhead calculation,
+> > perf-mem overhead is calculated using sample weight. Describe perf-mem
+> > overhead calculation method in it's man page.
+> > 
+> > Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> For whole series:
+> 
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
 
 Thanks, applied to perf-tools-next,
 
 - Arnaldo
- 
-> On 4/3/2025 2:08 PM, Dapeng Mi wrote:
-> > The comment of "--user-regs" option is not correct, fix it.
-> >
-> > "on interrupt," -> "in user space,"
-> >
-> > Fixes: 84c417422798 ("perf record: Support direct --user-regs arguments")
-> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index ba20bf7c011d..d56273a0e241 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -3480,7 +3480,7 @@ static struct option __record_options[] = {
-> >  		    "sample selected machine registers on interrupt,"
-> >  		    " use '-I?' to list register names", parse_intr_regs),
-> >  	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
-> > -		    "sample selected machine registers on interrupt,"
-> > +		    "sample selected machine registers in user space,"
-> >  		    " use '--user-regs=?' to list register names", parse_user_regs),
-> >  	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
-> >  		    "Record running/enabled time of read (:S) events"),
-> >
-> > base-commit: 35d13f841a3d8159ef20d5e32a9ed3faa27875bc
