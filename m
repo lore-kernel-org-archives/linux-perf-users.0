@@ -1,105 +1,137 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2C921ABBB
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 14:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5355E21ABBB
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 14:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748529243; cv=none; b=Jn1n4fF7ZvNxHTH9+qvxoocrlu+s7r2C/qoCxo0gykY+yrWEOc+fWh7386oCSuEr5cHfsBdr+rzI3bG0jcuxAhLSqgWI2oyzkdZarM7dR6vD1OR2SN6/23QE+tfnRgTqTWmSdyhd5tpqfTGzPGqBsl96+xyS7RtPoQgG/4vR0qo=
+	t=1748529351; cv=none; b=Yn8MPk+QAETz239wHcnZ+E8FZMpAi2+PVR6wzW3Ix6akHujKkGNGPrtGOSmg9HTCVOrFS0xFQIt7dl0NQwG1g6OYfOntRga8A5G+YWSamVoZ23FoGz/FwK6nR1NZhLSFCCV2y69rqzFNMEoxWgKRZnkSrM2jZVXx5+SPbPPcUjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748529243; c=relaxed/simple;
-	bh=jwSwJvZfnajPNXxBTcE2Medy2cObX1A9gl5OPYBUnfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TLFGEKp/cd2duteokTo9HrZoslCpPkf0k/efGOHK7XxlzTN57rfUcGWA2eSOSopo7tsxHHw++uOPXFAzrPQ37YTaaBAF6hymh5IUXojGQI8zC6EkVKqcnWBMRlbvcRJHBJXmJR7ofJ/C2+BdhXGV4GIQBEQ5i7ipuZCX4T7KRKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OYxH3Kk5; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1748529351; c=relaxed/simple;
+	bh=5HRU1916V7EDad+LVmB03KBxNjqkrd+C+UTjhT4pJuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HYhxirEJjNm1u3EJwlXMc/ueqZzJap0mbCsjKOYxoKp/+IrSSzFYc7UnFZVFzeYYkGtTqfmMxK+RIZmYwfIIbs4g4hAUHUIsBIlLZV2qmhTtPHAc4qBxfZXXy0QGWfWTKfrV5KUOL6fE3dCRthh3xiRdcPU/6pbXBzilEo9SdIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EcYtO81v; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OYxH3Kk5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EcYtO81v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748529241;
+	s=mimecast20190719; t=1748529348;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nMMpWFBK11H+M3SWpdblJ5X0vncyK7tpnYPpe0HATuQ=;
-	b=OYxH3Kk5hVWWwq78/avYyVWt5iRSf8HeHMlMN+5ABc4QjZOdpRl34onhQ7L0QiAPr6Ogys
-	s//6cls0jtPPqkLS0/KuKev/JvHKg70ikmy6zre49SXytGa9bWcI94P/wJoiO8vQZQI80n
-	lrLwlodnPiDJKroC6puo5/7VeKyUd5U=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-628-UMfdz3Z9MgO1K3wqVOvNTg-1; Thu,
- 29 May 2025 10:33:57 -0400
-X-MC-Unique: UMfdz3Z9MgO1K3wqVOvNTg-1
-X-Mimecast-MFC-AGG-ID: UMfdz3Z9MgO1K3wqVOvNTg_1748529235
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6857B195609E;
-	Thu, 29 May 2025 14:33:55 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.88.199])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 92BFD30001B7;
-	Thu, 29 May 2025 14:33:51 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	james.clark@linaro.org,
-	Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH] perf trace: set errpid to false for rseq and set_robust_list
-Date: Thu, 29 May 2025 10:33:35 -0400
-Message-ID: <20250529143334.1469669-2-ashelat@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G3MCFV+ZoZVB2oSCQXdN/eZND9vkzq+izak/pnvW1n0=;
+	b=EcYtO81vV1QB+Yq6KY/te8EcDCOAfFabgtddPjFkp1iA20hyhBNpWiay1aByEhSE29IUTt
+	k7sbAqNMHaNmwYYCNUZKWed8Mo8DOv13DW33gjTApB6oZ9ErqtIrRlC3hgTJ+949N+f8Zb
+	3nFI/d9U2I81OO00Xm2IQv1Wyd+GHB4=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-vuKfc8DyPcGQDFNQTBMt4A-1; Thu, 29 May 2025 10:35:46 -0400
+X-MC-Unique: vuKfc8DyPcGQDFNQTBMt4A-1
+X-Mimecast-MFC-AGG-ID: vuKfc8DyPcGQDFNQTBMt4A_1748529345
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-32a6c630b70so9552951fa.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 07:35:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748529345; x=1749134145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G3MCFV+ZoZVB2oSCQXdN/eZND9vkzq+izak/pnvW1n0=;
+        b=q0GeQmgDSEpZ2iOODFk1wySpJTVdo4XJ2pmfhckV+FGmC2SlyN0+nHrLsZrpkbHcme
+         1Y2tNc0jkJ+sH41bJUdoIZwlHtnFNm5c0Qy2ESTTWE1v4tNThb4EYhzJ8x8ugk29CGvJ
+         ElGSfUQgsCY6Z3QBy6ji/yBWB2N+YEsAvEWY8JEAyYrmnkGojImHoYzKxK58MMOwMXuA
+         g1aDCVPpryE6PfiRoRYWZIibwfs5Vm6ylF+QfOxKWJkYMOaDmwXTPNaeKJ+X7Y8pSNwT
+         z8++Lt8o0uCrhYS9zHik91Ft3Th0Ld0mJgKm64sB8dny+FyzMOyxeApFxkznGdUTQ8an
+         8Wkw==
+X-Forwarded-Encrypted: i=1; AJvYcCW61cvGdbzxNi9AC305xhvuIZJjK1E+rNUMqACwGV1sjWCFgEo0SBdWDcF9dtVTrFx/0ooTzTO4/3uF8mTdNLXF@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq9dhYJA+19Vf8wJ9kXjS//Ng81pE+feazPnou04KTl7iWFKpb
+	V57rCmsff6Smz6xqyJpkeudd4HWOjSbRNBmdZslGwjDpGoIt0uHrqW3NQcqJf8Ty2iSerdWSWF/
+	tnrhv8PPlfpWOIPCOg32wMOasexUlzZZC7ASM95CqgZ/nsnMOUiuVLow5mbw55199KIqWomUCax
+	Ai+CP6bJJMw3ShVioeOHroFgdY1QLZPwAjsGmB2vkXfna0xQ==
+X-Gm-Gg: ASbGnctqPmLoKzKyxvloYa9S/pKyej98R56kYqYKq9Td7hKqyGEQedOQXlcvJmWVuZr
+	wiCXwOFJ3iTv6DIdIv/fyQMvsXHXrHcBCEVRiteicKCpto1tpkF9wFxWIN2anLob8oS2jZQ==
+X-Received: by 2002:a05:6512:3095:b0:553:2edd:a7e0 with SMTP id 2adb3069b0e04-5532f81c2f3mr2712165e87.16.1748529345232;
+        Thu, 29 May 2025 07:35:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZUPxRsnq516tbw1KHLqgx+uGG3jhNGo1aJuzLabfZyp4DEFJSBLGRdE2ouwQzDloFOdI6Rqsm7+lEA8E5PJQ=
+X-Received: by 2002:a05:6512:3095:b0:553:2edd:a7e0 with SMTP id
+ 2adb3069b0e04-5532f81c2f3mr2712156e87.16.1748529344856; Thu, 29 May 2025
+ 07:35:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20250403160411.159238-2-ashelat@redhat.com> <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
+ <aDdYxLLtNa4qT3ZF@x1>
+In-Reply-To: <aDdYxLLtNa4qT3ZF@x1>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Thu, 29 May 2025 10:35:33 -0400
+X-Gm-Features: AX0GCFs4Q7mnbUma7UttiEdULe8tNbtPjgdp03ftJvRbvvEtN7zsO8EwHKjpUDM
+Message-ID: <CA+G8DhKiamF_AdYgc6uzGUWPjg6YvePUb13T4v-Nibyab6YREg@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: always print return value for syscalls with
+ set errpid
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, mpetlan@redhat.com, namhyung@kernel.org, 
+	irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-rseq and set_robust_list don't return a pid, so set errpid for both to
-false.
+Sent the second patch for errpid.
 
-Fixes 0c1019e3463b2 and 1de5b5dcb8353.
+Best,
+Anubhav
 
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
- tools/perf/builtin-trace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 07eddd5c0baa..0e086b7c1495 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1348,7 +1348,7 @@ static const struct syscall_fmt syscall_fmts[] = {
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ },
- 		   [4] = { .scnprintf = SCA_RENAMEAT2_FLAGS, /* flags */ }, }, },
--	{ .name	    = "rseq",	    .errpid = true,
-+	{ .name	    = "rseq",	    .errpid = false,
- 	  .arg = { [0] = { .from_user = true /* rseq */, }, }, },
- 	{ .name	    = "rt_sigaction",
- 	  .arg = { [0] = { .scnprintf = SCA_SIGNUM, /* sig */ }, }, },
-@@ -1372,7 +1372,7 @@ static const struct syscall_fmt syscall_fmts[] = {
- 	{ .name	    = "sendto",
- 	  .arg = { [3] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ },
- 		   [4] = SCA_SOCKADDR_FROM_USER(addr), }, },
--	{ .name	    = "set_robust_list",	    .errpid = true,
-+	{ .name	    = "set_robust_list",	    .errpid = false,
- 	  .arg = { [0] = { .from_user = true /* head */, }, }, },
- 	{ .name	    = "set_tid_address", .errpid = true, },
- 	{ .name	    = "setitimer",
--- 
-2.49.0
+On Wed, May 28, 2025 at 2:41=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Thu, Apr 03, 2025 at 08:26:52PM -0700, Howard Chu wrote:
+> > [Resend due to rejection by mailing list]
+> >
+> > Hello Anubhav,
+> >
+> > Thanks for doing this :)
+> >
+> > On Thu, Apr 3, 2025 at 9:06=E2=80=AFAM Anubhav Shelat <ashelat@redhat.c=
+om> wrote:
+> > >
+> > > Currently some syscalls that have errpid set to true do not print a
+> > > return value in perf trace. The syscalls that were consistently
+> > > observed were set_robust_list and rseq. This is because perf cannot f=
+ind
+> > > their child process. This change ensures that the return value is alw=
+ays
+> > > printed.
+> > >
+> > > Before:
+> > >      0.256 ( 0.001 ms): set_robust_list(head: 0x7f09c77dba20, len: 24=
+)                        =3D
+> > >      0.259 ( 0.001 ms): rseq(rseq: 0x7f09c77dc0e0, rseq_len: 32, sig:=
+ 1392848979)             =3D
+> > > After:
+> > >      0.270 ( 0.002 ms): set_robust_list(head: 0x7f0bb14a6a20, len: 24=
+)                        =3D 0
+> > >      0.273 ( 0.002 ms): rseq(rseq: 0x7f0bb14a70e0, rseq_len: 32, sig:=
+ 1392848979)             =3D 0
+> > >
+> > > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> >
+> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
+>
+> Thanks, applied after rewording it a bit to mention that this not
+> related to rseq/set_robust_list as those shouldn't be using errpid, but
+> that the problem predates that and added this, where the problem
+> started:
+>
+> Fixes: 11c8e39f5133aed9 ("perf trace: Infrastructure to show COMM strings=
+ for syscalls returning PIDs")
+>
+> - Arnaldo
+>
 
