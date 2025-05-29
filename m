@@ -1,285 +1,189 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368CB253956
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 05:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E21F1DF73C;
+	Thu, 29 May 2025 06:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748496217; cv=none; b=c04fI0JHCfM0EFOq5sCiFbH09u+9ZH9XwyxSNqYkV7oUzcZrgV3Va7yTMYquGAl7Cnx+l1MyPAvO4hDNd1Llh/I8CGqzHNHtZjb0F2kcFCiAJf3z729jyJAzLMGhlQS/TSTCUEpcZP9Og6tehxLpX11NtzW9v5/+8DRhXrGEGQk=
+	t=1748501743; cv=none; b=NKAtfVpj+doGEFwWsp4RN0C1Tjf+NMQ9N9vOilxXgLf5zLEY9IsFw/1Do7Z3boG7LZGqeXf7+NpppCVHTDerf/R24ZKqo/I5oZsY9Tbg3KOjOFCjzDXhbcXWHj3zNdIhAw1BBNnacZmcveuKCbe4Sryfo5JaP3qKYh/SBSjIeME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748496217; c=relaxed/simple;
-	bh=0YK11AKqhjoRKYDxHvSIEJcOYyta3COzMYDd4Um1i7g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=f5krxVNiabE2KCKJ91Ik/luIacRampnLiiwP4diVYjtnziu/ML50/zajU6VNWg5jeI/EkgUenWTI1Y3OSvtKYdqmMsiAeUwmJcD2X24E8H16WPgYt44TCvjjpnxi1Cyqgm01V/ANNiRGRIKWZQEqAAVJJPvOyG3YByGCiqZFiXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n5bDGRiA; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1748501743; c=relaxed/simple;
+	bh=Ic3ge/A40lmJt9jmM2mNXrqmYWfBwRDGfc35/Hm2voM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XReEKvuSgITzWOAynlkGIPZhIDQd6pg7cPJCJ9k+/fEgYuIObQlPP4EMS6Z4rqaI76XXx00E5aJnoz56pLZS28pugd5IiMBvK+prwc04Cs+I1t0E5qV9WIr8TWmP23JG61l4R0RV3rM8dWHb8KxiclUJkQg+4QagQ9KLg+8987c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BNRty/Zy; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n5bDGRiA"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311cc665661so473006a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 22:23:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BNRty/Zy"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-310cf7f12e8so391834a91.2;
+        Wed, 28 May 2025 23:55:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748496215; x=1749101015; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M0tZJWunWeOBIfa57iIk43kpKwVpCuyAkS2URVOmbEY=;
-        b=n5bDGRiA3BBPOcsZdtRfb5DgDRuv5HIYgVY8wm3GmlGtErcltKe8koToDUzPzjkFtC
-         z6VsjOftBqDcjPjejmnrEzUmiCnr5kJ8TF33pHpAmAfQkFEA605qPbwoZ7GQS61XitFQ
-         hSYE+dU+uSS2eymhXCsgyZHxpcBs1dNYjTPf2ukeqxnuCs1a1z+WQGI09RLyLAM6u5iy
-         zOEfKOs5227SrsOQXIcW/7vDN4CIpFNqF8E98ks3Bw70RhImJLDol3s7yBvwHMUai0HK
-         MW2Tu1/VpYCzrbIO7ie/m5bdoCttAxAt9G7rH2JBg3vttB68f5kKHw5QlO7VRiGRiv9b
-         NE1g==
+        d=gmail.com; s=20230601; t=1748501740; x=1749106540; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BD+qAir3J3wEsfcmlmLlq3A1DJAYrekg3jdwRWctrKQ=;
+        b=BNRty/ZyxhOsJ0+4xk5hQXwES7hR3I6jqbc0KhNqYhkHkTjWyb1UUJYMn6ThspgHsV
+         qAddHD9uCGB8WPb7hg1c+u5rGfMEusyvkDoOPHUz0EbYopLQLiU2NSxE1U8YNTjVQIY6
+         FuGf+A6QIa+Y724Zdjv2GVDYlr20d4HapFNXqk2SzUC1pmfcUC9W2HAdBts0lZ7dsgrG
+         DFDLkSryLv4kvmxIzanbp84cCiH3kI1Mfmmy6qq8s6RQio0y/6S4wxzXfk/pz8eXzN2P
+         1DVYT4cEysmNdpdTx3S10AVuZ/IE+qqPhWio/0RcKODzZOD9TpDl2bdD2lTlyfw4yGLU
+         7bkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748496215; x=1749101015;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M0tZJWunWeOBIfa57iIk43kpKwVpCuyAkS2URVOmbEY=;
-        b=xG0wk2N7u5t+yYOd0VVn9h1yiOKEw1WhECyl3+RVszZYKbLO3lxtJ3pNxU+ksiupnQ
-         v+fmsR/pdySKd4SrHEcbSfxcGeN7UTVE1LHamdNFU1S5Da7LgmG04JOCwVbJB1J5V2G6
-         c27kPJc1er+ui0/PuLI5CIcO9P27CqVpDdSb1a0PvtAaqL+5WlpOygSlf8Ye6zcs3o8h
-         bfiY2lfC7qLnZQp8kKu2VfYZloRfYn+tMUbqi2SbtC/F4hSERrJJIZdoME1yE/KRrv37
-         /A0n4AxRe8cKCsufHToR4ijfd4EkV5pAHS4Q2Lpbc6BgRBTuem5aCMxsFfcMTFNesr/p
-         a5nA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKsRTYG30k6yPibM6zoPccZRh+S2iIdkNVgDbrJlbPfNVaCyW9h1KsVuYVqQ5tG46G0VMir6BVpyZHHqpzbj00@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf94vueiKKHpjTBoHA3GxrAgCte8WhkbgYtA0/m3QdYDnkp3+v
-	urCDba7MeUSsX2/lY9v5nqzBOJeADJSABmFa7Vgeyg6NqsZ1eHejtNWQ0WM/2PCt1ibt4ybLd9N
-	d4D8wLjumKg==
-X-Google-Smtp-Source: AGHT+IGTOXLMiSNzffXo3eesVNT7Gt1URo0B2f1tJZBy9jPPxv0O8tKXfajV4puFgEzIPfcTl/LVU2hcNQRo
-X-Received: from pjur3.prod.google.com ([2002:a17:90a:d403:b0:311:b070:3683])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f8c:b0:311:ea13:2e6e
- with SMTP id 98e67ed59e1d1-311ea13318cmr7219271a91.28.1748496215517; Wed, 28
- May 2025 22:23:35 -0700 (PDT)
-Date: Wed, 28 May 2025 22:23:22 -0700
-In-Reply-To: <20250529052322.381947-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1748501740; x=1749106540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BD+qAir3J3wEsfcmlmLlq3A1DJAYrekg3jdwRWctrKQ=;
+        b=prEM8BvSUbuUPMuO2snf/GWMAavgsltxT2YkrOeOI1ruceLltYKDGZ/cMfPoBtRvgf
+         X2kxvcfJbYN5jrpldDkl3hD0IIfmCr5pSr/TLPuinto6AYF2dA/pox5aeL6pLTXoJ/IR
+         M/EjsT41N7kzlDGjbOSvZP2b7fINVj25TQOaprbUR5gzUnIHliTitnf335D6B9nA10gk
+         BGQllT/05nijyHWp0ZQfhxr18WxivebmNL831/iCcfBNXduqZ+I/Hncbx0XfYf9eW+ZU
+         8EHg3qh5iZpUPDPzSff+vGO3SvkrTv6XdDZWT69H2wYs4NL6n2HjmdM+KWzoShZ3ZVNz
+         x2oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVw9YC6fLZKgbiLDtzA0AwCijB+iDzZs8GbrBZxw/A+Hm1VnnDA5jWPy008YZhjsanHEJGqFKxlkNBUyuE=@vger.kernel.org, AJvYcCXAp3QCQXNWc+80zYgtsEK4DCq3z3W9bwqwOidiH3H74vBXc5uE7TPF4T2X8FUuABd9QS6+bVE9aefjepMNK1IKvA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ76a5kxyo7ARuBbYCe/Zo5ESBHjUWnuZKOj3rmfCQPM1rDj9u
+	IXjMwmYrfpYspAjbAwJG/fdM2FJkn+kacLqj4iddSgY9WQQfuzpqIOj0
+X-Gm-Gg: ASbGncuFFWo0uqZY7E7P0Z79T3Pq4rd6AjLd80uiG8FSx91upd2TpYdwddrFe6kW+Ff
+	gcJ4k3piON0MMDfPHJKn5+9Mk2mcCeo08JNv6lbGwJ0d0WYx88AlRNFq1EqyeWgVRj+SvSf5EgR
+	xFyApT8V+38KXbqwZcBRQYRSuGgc+vvZwcBx9VmM4SGnmZPHvOp6rTKBB9EoXswHQ/2K8OFC7Fo
+	rb6WKkMvyLeoZqTR3ALzMAvUM3dJrICgOIjl/OVDxPshufWCbhZ7Q9svV8G8lAUG7XS3tvvFiLg
+	w5WJlTuHhmpjyZ23jg9AnElB4y7S8tb1xnk1jLuY7dy6lTTHqhERDHUAwYtKPiQKMTrPyA8rUhk
+	9akprxVC071Q=
+X-Google-Smtp-Source: AGHT+IGI2Uv0Eoh2SPkDQf7TIkmxw23EFGm9NI4uzvhhxvbI+H3V/8YYGq0T0XR3YyKDHHtfAbnWdg==
+X-Received: by 2002:a17:90b:1c0c:b0:312:29e:9ec9 with SMTP id 98e67ed59e1d1-312029ea2b7mr5715627a91.24.1748501740083;
+        Wed, 28 May 2025 23:55:40 -0700 (PDT)
+Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3121bdc3efcsm713803a91.45.2025.05.28.23.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 23:55:39 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>,
+	Song Liu <song@kernel.org>
+Subject: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf trace instances
+Date: Wed, 28 May 2025 23:55:36 -0700
+Message-ID: <20250529065537.529937-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250529052322.381947-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529052322.381947-2-irogers@google.com>
-Subject: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Symbolize stack traces by creating a live machine. Add this
-functionality to dump_stack and switch dump_stack users to use
-it. Switch TUI to use it. Add stack traces to the child test function
-which can be useful to diagnose blocked code.
+perf trace utilizes the tracepoint utility, the only filter in perf
+trace is a filter on syscall type. For example, if perf traces only
+openat, then it filters all the other syscalls, such as readlinkat,
+readv, etc.
 
-Example output:
-```
-  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-^C
-Signal (2) while running tests.
-Terminating tests with the same signal
-Internal test harness failure. Completing any started tests:
-:  8: PERF_RECORD_* events & perf_sample fields:
+This filtering is flawed. Consider this case: two perf trace
+instances are running at the same time, trace instance A tracing
+readlinkat, trace instance B tracing openat. When an openat syscall
+enters, it triggers both BPF programs (sys_enter) in both perf trace
+instances, these kernel functions will be executed:
 
-____ unexpected signal (2) ____
-    #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
-    #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
-    #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
-    #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
-    #4 0x7f4a91f01f68 in __sleep sleep.c:55
-    #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
-    #6 0x5590fb620b43 in run_test_child builtin-test.c:269
-    #7 0x5590fb5b83ab in start_command run-command.c:127
-    #8 0x5590fb621572 in start_test builtin-test.c:467
-    #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
-    #10 0x5590fb6225ea in cmd_test builtin-test.c:775
-    #11 0x5590fb5a9099 in run_builtin perf.c:351
-    #12 0x5590fb5a9340 in handle_internal_command perf.c:404
-    #13 0x5590fb5a9499 in run_argv perf.c:451
-    #14 0x5590fb5a97e2 in main perf.c:558
-    #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
-    #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-    #17 0x5590fb4fd6d1 in _start perf[436d1]
-```
+perf_syscall_enter
+  perf_call_bpf_enter
+    trace_call_bpf
+      bpf_prog_run_array
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+In bpf_prog_run_array:
+~~~
+while ((prog = READ_ONCE(item->prog))) {
+	run_ctx.bpf_cookie = item->bpf_cookie;
+	ret &= run_prog(prog, ctx);
+	item++;
+}
+~~~
+
+I'm not a BPF expert, but by tinkering I found that if one of the BPF
+programs returns 0, there will be no tracepoint sample. That is,
+
+(Is there a sample?) = ProgRetA | ProgRetB | ProgRetC
+
+Where ProgRetA is the return value of one of the BPF programs in the BPF
+program array.
+
+Go back to the case, when two perf trace instances are tracing two
+different syscalls, again, A is tracing readlinkat, B is tracing openat,
+when an openat syscall enters, it triggers the sys_enter program in
+instance A, call it ProgA, and the sys_enter program in instance B,
+ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
+even though ProgB returns 1; (Is there a sample?) = ProgRetA (0) |
+ProgRetB (1) = 0. So there won't be a tracepoint sample in B's output,
+when there really should be one.
+
+I also want to point out that openat and readlinkat have augmented
+output, so my example might not be accurate, but it does explain the
+current perf-trace-in-parallel dilemma.
+
+Now for augmented output, it is different. When it calls
+bpf_perf_event_output, there is a sample. There won't be no ProgRetA |
+ProgRetB... thing. So I will send another RFC patch to enable
+parallelism using this feature. Also, augmented_output creates a sample
+on it's own, so returning 1 will create a duplicated sample, when
+augmented, just return 0 instead.
+
+Is this approach perfect? Absolutely not, there will likely be some
+performance overhead on the kernel side. It is just a quick dirty fix
+that makes perf trace run in parallel without failing. This patch is an
+explanation on the reason of failures and possibly, a link used in a
+nack comment.
+
+Cc: Song Liu <song@kernel.org>
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
-v2: Fix NO_BACKTRACE=1 build (Arnaldo)
----
- tools/perf/tests/builtin-test.c | 15 +++++++-
- tools/perf/ui/tui/setup.c       |  2 +-
- tools/perf/util/debug.c         | 68 +++++++++++++++++++++++++++------
- tools/perf/util/debug.h         |  1 +
- 4 files changed, 73 insertions(+), 13 deletions(-)
+ .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 45d3d8b3317a..80375ca39a37 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,9 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+#include <execinfo.h>
-+#endif
- #include <poll.h>
- #include <unistd.h>
- #include <setjmp.h>
-@@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index e4352881e3fa..315fadf01321 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -546,13 +546,14 @@ int sys_enter(struct syscall_enter_args *args)
+ 	/*
+ 	 * Jump to syscall specific augmenter, even if the default one,
+ 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+-	 * unaugmented tracepoint payload.
++	 * unaugmented tracepoint payload. If augmented, return 0 to reduce a
++	 * duplicated tracepoint sample.
+ 	 */
+-	if (augment_sys_enter(args, &augmented_args->args))
+-		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
++	if (!augment_sys_enter(args, &augmented_args->args))
++		return 0;
  
- static void child_test_sig_handler(int sig)
- {
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	void *stackdump[32];
-+	size_t stackdump_size;
-+#endif
-+
-+	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-+	__dump_stack(stderr, stackdump, stackdump_size);
-+#endif
- 	siglongjmp(run_test_jmp_buf, sig);
+-	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+-	return 0;
++	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
++	return 1;
  }
  
-@@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
- 
- 	err = sigsetjmp(run_test_jmp_buf, 1);
- 	if (err) {
--		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
-+		/* Received signal. */
- 		err = err > 0 ? -err : -1;
- 		goto err_out;
- 	}
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index 16c6eff4d241..022534eed68c 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
- 
- 	printf("-------- backtrace --------\n");
- 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
--	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-+	__dump_stack(stdout, stackdump, size);
- 
- 	exit(0);
- }
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index f9ef7d045c92..0c7c6a9e158b 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -14,11 +14,18 @@
- #ifdef HAVE_BACKTRACE_SUPPORT
- #include <execinfo.h>
- #endif
-+#include "addr_location.h"
- #include "color.h"
--#include "event.h"
- #include "debug.h"
-+#include "event.h"
-+#include "machine.h"
-+#include "map.h"
- #include "print_binary.h"
-+#include "srcline.h"
-+#include "symbol.h"
-+#include "synthetic-events.h"
- #include "target.h"
-+#include "thread.h"
- #include "trace-event.h"
- #include "ui/helpline.h"
- #include "ui/ui.h"
-@@ -298,21 +305,60 @@ void perf_debug_setup(void)
- 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
+ SEC("tp/raw_syscalls/sys_exit")
+@@ -570,10 +571,7 @@ int sys_exit(struct syscall_exit_args *args)
+ 	 * unaugmented tracepoint payload.
+ 	 */
+ 	bpf_tail_call(args, &syscalls_sys_exit, exit_args.syscall_nr);
+-	/*
+-	 * If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+-	 */
+-	return 0;
++	return 1;
  }
  
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-+{
-+	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
-+	pid_t pid = getpid();
-+	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
-+	struct thread *thread = NULL;
-+
-+	if (machine)
-+		thread = machine__find_thread(machine, pid, pid);
-+
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	if (!machine || !thread) {
-+		/*
-+		 * Backtrace functions are async signal safe. Fall back on them
-+		 * if machine/thread creation fails.
-+		 */
-+		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
-+		machine__delete(machine);
-+		return;
-+	}
-+#endif
-+
-+	for (size_t i = 0; i < stackdump_size; i++) {
-+		struct addr_location al;
-+		u64 addr = (u64)stackdump[i];
-+		bool printed = false;
-+
-+		addr_location__init(&al);
-+		if (thread && thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al)) {
-+			al.sym = map__find_symbol(al.map, al.addr);
-+			if (al.sym) {
-+				fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
-+				printed = true;
-+			}
-+		}
-+		if (!printed)
-+			fprintf(file, "    #%zd %p ", i, stackdump[i]);
-+
-+		map__fprintf_srcline(al.map, al.addr, "", file);
-+		fprintf(file, "\n");
-+		addr_location__exit(&al);
-+	}
-+	thread__put(thread);
-+	machine__delete(machine);
-+}
-+
- /* Obtain a backtrace and print it to stdout. */
- #ifdef HAVE_BACKTRACE_SUPPORT
- void dump_stack(void)
- {
--	void *array[16];
--	size_t size = backtrace(array, ARRAY_SIZE(array));
--	char **strings = backtrace_symbols(array, size);
--	size_t i;
--
--	printf("Obtained %zd stack frames.\n", size);
--
--	for (i = 0; i < size; i++)
--		printf("%s\n", strings[i]);
-+	void *stackdump[32];
-+	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
- 
--	free(strings);
-+	__dump_stack(stdout, stackdump, size);
- }
- #else
- void dump_stack(void) {}
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index a4026d1fd6a3..6b737e195ce1 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
- void perf_debug_setup(void);
- int perf_quiet_option(void);
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
- void dump_stack(void);
- void sighandler_dump_stack(int sig);
- 
+ char _license[] SEC("license") = "GPL";
 -- 
-2.49.0.1204.g71687c7c1d-goog
+2.45.2
 
