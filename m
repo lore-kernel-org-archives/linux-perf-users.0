@@ -1,158 +1,201 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187B3C8EB;
-	Thu, 29 May 2025 07:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAAA28DB4A
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 09:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748502467; cv=none; b=JSl1rR82WSu2QyXVRsQmFeukbnzv1YhrX+ULRZqK6iPjpzTT23a9EHmzYUKfiE3VpMMfUjQRik5+rK4zSR3cZ7dm+hIi0TZ6yEtlW192Wt/swXJQB2FgeWzP5qyqs7fdT5lqX3td20C0hwTGM8tP6YouuVyU+ou2XUZX1k45hHs=
+	t=1748512107; cv=none; b=JZcmo/B+yj64M2YzPlVJw/76tl5HG2Ru/x0gGyKkvG3Gv4/3aKLC03axKkJSwHkPmwtwZx23U8DoiA/82dFkYHFXwXyGytgrtTwOtHj1e80mV3HXo966QXILUEO814aWurTOb+4dewGku/1rNu0+g7MVY8YvvHytF/i5gLz/nas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748502467; c=relaxed/simple;
-	bh=6cIekbriWiWKfaXCYAeZSta271blHf9u+hSq5kD2qLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iLN3UIYj2X/wEXiD9JECw3WAUZQouXi5yPiQL+nZod9h4CaAnZ5LdUQ/di/zNqrAy7g0RCHHyv/yxuUbsnwS0cH9I7yEWve3Dl3A/qDj5ggqdOmYlDxOL8JLte7+BLA5Gs+vCCKBU2RmBVWZsuppbTpvc2F7ejKvoNZg0JjuBQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlMYABlf; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748512107; c=relaxed/simple;
+	bh=mCBPF3CJ36k4V5dXJH2gpRnAP5FNb2FulINW8M6tPfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UL2HkgVfb2Ou9eIw2Ii6h24HwU4DtrPwHhwfvTsaAFiuE+iDEC7sO614UGWlULyKHWGtOSugm8s/mg6ZgO2VKSWBpEqVv77rJK+ugG6IOn8T9g+FWNlMm4ThM9yne8dM/0eartnFvIQDCfSGkx5JPH/Dzo0yNu4WLIdgOKSCZvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OJyLbDUW; arc=none smtp.client-ip=209.85.128.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlMYABlf"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e731a56e111so512898276.1;
-        Thu, 29 May 2025 00:07:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OJyLbDUW"
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so9184755e9.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 02:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748502464; x=1749107264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
-        b=SlMYABlfpapnzZbjZey7RE36bUXAZabI0IjJLr+em511CH/92x5uASEw15iYhIqDxK
-         EGoC2keudxkKPWgyvA5D2YMuu9TqS93lDqlG5Nhau3J88srLsM3+5D0iYcwA19Uvi9pY
-         8fucVTPRwtnewjHDRQb1e1pK/54QLqN1QgknnPY7RPsiQcAkdSRsTMjQYGJN94G78DxW
-         ckfJQGDJW3nehYVD8iUsKbQ9yO4WvO0i/InE4xvNLeZtCE16uy13y+WTJ/jtY7oFjF8E
-         lmEcqxQ5VKZ2wtqrQjLIPLwp3pjmuCffpsPFheYB6kh1oT7sjyjUyi/eBFhKhp/RtriC
-         4U9g==
+        d=linaro.org; s=google; t=1748512102; x=1749116902; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BaFVkQVJDKjRYWtNug3oA8cOPJXftESUXFz7M4SIesM=;
+        b=OJyLbDUWEbBQO61Qw8f3Z/PO0CAfQdxlUweiWMFETjxe+aIjZMzTFnQUMoNazwYmxh
+         gI54WVsxvf55MZ/sAXNSBo154EEQocUlF5pYuVwgp1SUAnWa09Zis/RoMQ8sB5Ao44rR
+         QlITn2EXAqMHG2bxk6VcHoEb1LWytE3j4MAJ2khD7hNMP1R1YqKin6Hk9IFQgn7DKk7b
+         JhevVCW3LvmicpUE0QZtbFtGqw3MJlkR8I5y1gJ1RmyUqyUCW+qn+3L/7UV5ufiHvRRJ
+         Oz+bTcYsrKCokb4KnoW3fubFEJpb9Z2su687aqZaF3ChTda3aaD7sXUDt74UXJBk02YA
+         /kZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748502464; x=1749107264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
-        b=eVk/BoplTAqaAXac7JOQ0RMOLH/vNghaTiot5XnDrovhGl4D+9bCe1YH+ou3+l6yxm
-         YQG68MR9tGyX3OZvpn93elCowfujIE/iQmk/g8+OaOPSD/CYtomu8KHbgs2vFl4ttecR
-         m6BBjFSF9fRDjbmgit7PdqKpsA39XEz23lRDEKjLDELx1O2q6yvPE9XgcN1QEo5Tib/l
-         IikpwE4XHcP5FsEyq4NZoIYUjRiYNSJh+UBszviLMZmQ045GXBYAbdR42GQrhf7mgPua
-         /0gcg+4IPXdMlUjZNGSicdpYnde9i9uI0yOH6nPO3Au0V5taQMfxFgS9qmUg5kQUfJ7d
-         dGow==
-X-Forwarded-Encrypted: i=1; AJvYcCVIiso0oMa6Lr9KFn2ApcwqiXE/0uQie9OT3oSFHjVZmKJSJsD2nkQnXMFHmP50BONPR8kTGdmG8aSgP/k/0P/Neg==@vger.kernel.org, AJvYcCXr40+sxf3HPl0FFmuJGWqjDgXomzEs/3IabxHy8W8WTOk2DxKpXTirzOuJ82GJvV2/RMsXCQ849znoJiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtbZeY/WY1v4e2kNYZ8ToUQ+88h+bN4n04+RN5OxR/ZUvDlOI5
-	fWnqOun9RlRDv4b6hqtwWv+IMTjTmbP3uXwEI+hmTxC9l3gR6EqZZhIxcCzlOGUJHB2LKC1j2mv
-	kvpKJDIWuejMM+q8lJvZ8thgRHnfpjPQ=
-X-Gm-Gg: ASbGncutmV1/IKr7niZQBGJ6c+eFLCECJcsR5YF47QqbwQPiWEAxtg9GuKNOl/Gxomc
-	Yum07ZBwW7GERO4QL2h653NvabWYti9eHPWBcZmfIpr8I4ZVmOYWBBEQ+J7Bmswc1uhfoNi8507
-	tcGVJKRmCdHYsdK8mmReZTJOGFGTheFac=
-X-Google-Smtp-Source: AGHT+IF2PD3oFwH+ZQPkCKJgOxl/2YbUzJRnx7lBd7GlzLkTmHFvlM+948C0FNI4foXBprodmm3x9TjEwqB8K0rdeU0=
-X-Received: by 2002:a05:6902:705:b0:e7d:9fa6:5fbd with SMTP id
- 3f1490d57ef6-e7d9fa661d8mr21744381276.30.1748502463961; Thu, 29 May 2025
- 00:07:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748512102; x=1749116902;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BaFVkQVJDKjRYWtNug3oA8cOPJXftESUXFz7M4SIesM=;
+        b=t1i9Ex/PP7tZ6kLqd3OUHkzcCeuYNo62zQxT75ux91uvRGu9wfavyI4ga5f2m+Pq/z
+         ybjXv5E8FH/epKeEm31VAxkQhSGK4fKk/SAeDTreZjhGnDTrP+PyOxkxWtIrQ/5VuuKO
+         RY/bSo9+KS0PNPGhoKo2m6rMovrsWs8ZgrM8zXrMuUTKUt3ctWjAWsPjfVoGDlthY6wy
+         DF5yJEWIMxNeRRseI1Liw+Qop/19rEpcONzBZHNgPQUgpDnlnAf7jeJD8B+xPlTBKAIa
+         0u/p+aYmPDCKNSRgKdsXdbbJU+cwahz/JkSqyfaM55fNsTHi3PEn81R2S27+pvdm/N0M
+         z/LA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMCP2UhLFlzsnRTulH7BbY0Yps//u0K+RxhmznT+4X5kESOSkmmoIhyZouBrfQl/VskZNKeYY6zA6nTrdP0KfI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfEfUOmrIpuXXbAKXSqmR3w1m0GEoATJTviw8udnlTCwNsKQpE
+	7AYct/WBTvas++qseHYHa5tukhiHcBTI+FWlma5rb6ffSrI0KSf+XufyU8UCqkSxYyU=
+X-Gm-Gg: ASbGncu2r17jJc5v8HBCuW4jj4iIvJsMQMFsdSD3dAIRVWxsbSIybPnlEXaOSxoIe5L
+	VvyT1KqtN0Xx9qnyQQ4QlkWCn+Saiq1mPlWCIq3Z/uhtS+Aa5aMEJkbTQElPyb+4DcsIW1VuRUm
+	GAJCktbVhPz8rU89OLiD88355oyxcH7bggTrnagiU0tTHECg7uhDsx0sfrsIojOlp3Q0uSxEvZA
+	ud8qwHrtp8OvT70BAav26u2XAbDRwyq8UvWT0nbNJttb3gCSRN1ZaNBeW2Os/4JkALzVwaQhSRM
+	8NXAvCzTdGFhyATtkH+ekC2HFeDS7wPm7ubSVu8DveIfT1dH+n20WcFP
+X-Google-Smtp-Source: AGHT+IGqR9/I2Bjkk0qR5H6OlZDpGRs84NmDbQcbBpPkkl4lqLIAxu7/3yK/uxy3vBcppOHkP1XOiw==
+X-Received: by 2002:a05:600c:4e14:b0:444:34c7:3ed9 with SMTP id 5b1f17b1804b1-44c955da4f7mr185008435e9.26.1748512101772;
+        Thu, 29 May 2025 02:48:21 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc27dd8sm15171385e9.26.2025.05.29.02.48.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 02:48:21 -0700 (PDT)
+Message-ID: <d412031a-cdfa-4983-8702-1e1bb93d5641@linaro.org>
+Date: Thu, 29 May 2025 10:48:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 29 May 2025 00:07:33 -0700
-X-Gm-Features: AX0GCFs2lparwpsWTkYFeYSMnbmbNHDg-hi5m0VylnxpQl3BZQy3B72nVEkdAZU
-Message-ID: <CAH0uvojyKi6tN2RfEsG25fn8G5G3iz+pWqjprm9qYaD_sA+i_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v22 0/5] arm64/perf: Enable branch stack sampling
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>,
+ Dave Martin <Dave.Martin@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Ian,
 
-On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
-m> wrote:
-> >
-> > Currently, BTF tests fail constantly, this series fixes two major reaso=
-ns
-> > why they fail, and makes the error messages acquired when using '-vv'
-> > more verbose, so when they fail, one can easily diagnose the problem.
-> >
-> > Before:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
-> >     test child forked, pid 783533
-> >     Checking if vmlinux exists
-> >     Tracing syscall landlock_add_rule
-> >     Tracing non-syscall tracepoint syscall
-> >     ---- end(-1) ----
-> >     107: perf trace enum augmentation tests                            =
-  : FAILED!
-> >
-> > After:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
-> >     test child forked, pid 851658
-> >     Checking if vmlinux exists
-> >     Tracing syscall landlock_add_rule
-> >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_st=
-art
-> >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup=
-,timer:hrtimer_start, output:
-> >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
-> >                          \___ unknown tracepoint
-> >
-> >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not fo=
-und.
-> >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable t=
-his feature?.
-> >
-> >     Run 'perf list' for a list of valid events
-> >
-> >      Usage: perf trace [<options>] [<command>]
-> >         or: perf trace [<options>] -- <command> [<options>]
-> >         or: perf trace record [<options>] [<command>]
-> >         or: perf trace record [<options>] -- <command> [<options>]
-> >
-> >         -e, --event <event>   event/syscall selector. use 'perf list' t=
-o list available events---- end(-1) ----
-> >     107: perf trace enum augmentation tests                            =
-  : FAILED!
-> >
-> > Changes in v2:
-> > - Add an extra newline after error messages
-> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
-> > - Take the debug diff for explanation out of patch 5 to make it apply
-> >   normally
-> > - Add base-commit in this cover letter
->
-> Thanks Howard! I did some testing but see failures that may be
-> pre-existing issues:
 
-Again, thank you for spending time testing this series! It has been
-some time... But hopefully this: [1] along with the BTF test v3: [2]
-can resolve the issues.
+On 20/05/2025 11:27 pm, Rob Herring (Arm) wrote:
+> This series enables perf branch stack sampling support on arm64 via a
+> v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details
+> on BRBE can be found in the Arm ARM[1] chapter D18.
+> 
+> I've picked up this series from Anshuman. v19 and later versions have
+> been reworked quite a bit by Mark and myself. The bulk of those changes
+> are in patch 5.
+> 
+> A git branch is here[2].
+> 
+> [1] https://developer.arm.com/documentation/ddi0487/latest/
+> [2] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git arm/brbe-v22
+> 
+> Changes in v22:
+>   - New patch reworking the labels in el2_setup.h
+>   - Move branch stack disabling after armpmu_stop() in armpmu_del()
+>   - Fix branch_records_alloc() to work on heterogeneous systems
+>   - Make setting .sched_task function ptr conditional on BRBE support
+>   - Reword booting.rst section name (s/feature/the/) and move next to
+>     other PMU related features instead of in the middle of SME features.
+>   - Drop setting SYS_BRBCR_EL1
+>   - Drop CONFIG_ARM64_BRBE ifdef
+>   - Rework initialization of HFGITR_EL2
+> 
+> v21:
+>   - https://lore.kernel.org/r/20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org
+>   - Drop clean-up patches 1-7 already applied
+>   - Rebase on v6.15-rc1
+> 
+> v20:
+>   - https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org
+>   - Added back some of the arm64 specific exception types. The x86 IRQ
+>     branches also include other exceptions like page faults. On arm64, we
+>     can distinguish the exception types, so we do. Also, to better
+>     align with x86, we convert 'call' branches which are user to kernel
+>     to 'syscall'.
+>   - Only enable exceptions and exception returns if recording kernel
+>     branches (matching x86)
+>   - Drop requiring event and branch privileges to match
+>   - Add "branches" caps sysfs attribute like x86
+>   - Reword comment about FZP and MDCR_EL2.HPMN interaction
+>   - Rework BRBE invalidation to avoid invalidating in interrupt handler
+>     when no handled events capture the branch stack (i.e. when there are
+>     multiple users).
+>   - Also clear BRBCR_ELx bits in brbe_disable(). This is for KVM nVHE
+>     checks if BRBE is enabled.
+>   - Document that MDCR_EL3.SBRBE can be 0b01 also
+> 
+> v19:
+>   - https://lore.kernel.org/all/20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org/
+>   - Drop saving of branch records when task scheduled out (Mark). Make
+>     sched_task() callback actually get called. Enabling requires a call
+>     to perf_sched_cb_inc(). So the saving of branch records never
+>     happened.
+>   - Got rid of added armpmu ops. All BRBE support is contained within
+>     pmuv3 code.
+>   - Fix freeze on overflow for VHE
+>   - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
+>     it when BRBE is enabled.
+>   - Drop all the Arm specific exception branches. Not a clear need for
+>     them.
+>   - Fix handling of branch 'cycles' reading. CC field is
+>     mantissa/exponent, not an integer.
+>   - Rework s/w filtering to better match h/w filtering
+>   - Reject events with disjoint event filter and branch filter or with
+>     exclude_host set
+>   - Dropped perf test patch which has been applied for 6.14
+>   - Dropped patch "KVM: arm64: Explicitly handle BRBE traps as UNDEFINED"
+>     which has been applied for 6.14
+> 
+> v18:
+>   - https://lore.kernel.org/all/20240613061731.3109448-1-anshuman.khandual@arm.com/
+> 
+> For v1-v17, see the above link. Not going to duplicate it all here...
+> 
+> Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+> ---
+> ---
+> Anshuman Khandual (4):
+>        arm64/sysreg: Add BRBE registers and fields
+>        arm64: el2_setup.h: Make __init_el2_fgt labels consistent, again
+>        arm64: Handle BRBE booting requirements
+>        KVM: arm64: nvhe: Disable branch generation in nVHE guests
+> 
+> Rob Herring (Arm) (1):
+>        perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)
+> 
+>   Documentation/arch/arm64/booting.rst |  21 +
+>   arch/arm64/include/asm/el2_setup.h   |  81 +++-
+>   arch/arm64/include/asm/kvm_host.h    |   2 +
+>   arch/arm64/include/asm/sysreg.h      |  17 +-
+>   arch/arm64/kvm/debug.c               |   4 +
+>   arch/arm64/kvm/hyp/nvhe/debug-sr.c   |  32 ++
+>   arch/arm64/kvm/hyp/nvhe/switch.c     |   2 +-
+>   arch/arm64/tools/sysreg              | 132 ++++++
+>   drivers/perf/Kconfig                 |  11 +
+>   drivers/perf/Makefile                |   1 +
+>   drivers/perf/arm_brbe.c              | 802 +++++++++++++++++++++++++++++++++++
+>   drivers/perf/arm_brbe.h              |  47 ++
+>   drivers/perf/arm_pmu.c               |  16 +-
+>   drivers/perf/arm_pmuv3.c             | 125 +++++-
+>   include/linux/perf/arm_pmu.h         |   8 +
+>   15 files changed, 1276 insertions(+), 25 deletions(-)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250129-arm-brbe-v19-24d5d9e5e623
+> 
+> Best regards,
 
-[1]: https://lore.kernel.org/linux-perf-users/20250529065537.529937-1-howar=
-dchu95@gmail.com/T/#u
-[2]: https://lore.kernel.org/linux-perf-users/20250528191148.89118-1-howard=
-chu95@gmail.com/T/#t
+Tested-by: James Clark <james.clark@linaro.org>
 
-Thanks,
-Howard
+
