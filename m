@@ -1,46 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2052.outbound.protection.outlook.com [40.107.100.52])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A93224AF0;
-	Thu, 29 May 2025 12:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB4221FBD;
+	Thu, 29 May 2025 12:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522128; cv=fail; b=aKKSiOlpAcSJQEuFIw+DqxHUvteay21vx5emuXClsAOGY/PLgJ1GKiFS7TmsbF5CKDi2RkZv8ypUapWz+rxNv6kfnBv9XjTInUUoPEZo1cWIZVN/E7t9K2/ZL8QG4KBZpxIULohGXNFH0Ne0xMJK2AjkycAaJZIkMK4ClQeqOLA=
+	t=1748522130; cv=fail; b=aacwrd/tKFUmqTZBKqL2cJ9ZyyxZOSQ70n33TyXZpiVAwbMYUwktedXtejcJ6lYqDQ6X0rGo5Ck54fV0CXTUziknmyZ8ijAIzWVHp/9B4AL6juf082Y/lSZBOYdvcD7vxs5py6g4ZJTeqR7fcd1VVpSXSirRR0+vFgm5BSJuirw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748522128; c=relaxed/simple;
-	bh=b7ZS2cd6P04Z+KBH0avUktFOZ5d0y0AgkkV2IcCCLTo=;
+	s=arc-20240116; t=1748522130; c=relaxed/simple;
+	bh=CDEwa6S6Yy9Dx21xHWoufb/SD4PFv2OVICg5VzjDm/Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dVL50yGamE1+sR4v/4XWTOl5pVlpWWCg7WkWKzKHGrdKW0Yr7QVo/BRH89O6uwfBXLA+bY26T5fi7sqe5KsDujuOkEyXSLLwfadfpUPBE4D1SHi8UD+cQ1huP+V4DxndTcvDeITs6r0iSAIakfljUj64mmegIkXD4VVFaZpZrV8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1owAawSU; arc=fail smtp.client-ip=40.107.100.52
+	 MIME-Version:Content-Type; b=fqmjsmgDR26sOyjiDFfbcBHAYISL9kbaOEnGyiZIgK2JYRSHlLe4Apw4F8PTWL8auiMuAFziinGg9WwDP7xmhrIEzBZ42iCclJvSmppwoRArBC87UVnIl9dDRuOWW908tFzYKpopWPqPeFPP3K1ovn3Z504nNtW3ZGiMm0knrsc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OvZ9NsvZ; arc=fail smtp.client-ip=40.107.243.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1owAawSU"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OvZ9NsvZ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b2H0qd3w8oDEIJCuGFprHEXeM+61laivVEWCC5OrxesQ70kQ4PXp7mI/kg+dmnA5x9AQSHVVZL8Dt+87i/3ucR7W0Vz8sjAOMiBPcE2Rl0s3NXQdse53GAtgEVnLLTBdlmQh2YG0m8l9HdxT0vNQ7mLqlam+MWSrnI3m9oMuBl+UmqGtaPKWp8DlFh8AtXztmUiDuz60IS7bXvzabtLI9v3jVxlzfMmsny3x76oRX6GsCCtIKpK2LekBsrpTzTQlgY5p6e/jttloq0Ne9k01bm2BXJf93k10rd3W8AOLgeFbdJ9/lm/382L8FAnFNE23HKEeSVRf3sjFJ/w/gyjvIg==
+ b=QZsbkUT/Rc7MAJeJZS4ImOoGSYCA8TunCX6JEkdwPmINNeRs3TaX3z43G/hdbtvvdsj//auFWoYSD034jh379NRngxlxQwsRuCHNGjLaVRdj/Ailjiwc2PfZW7pEdXcYdJoN1vHlzqQVpSS00SNs7MWyNcvzAyvnTXCqejOFEb2jzSICMNZtq/MsqTF05fAoYqA3lPlsUjMVWilV6LIojv4V0JQseUI2TOFR8etITKhtEw3M3ZfadQWA0mW/aYi1BRxQs06ftD24Ou5/dMQi6txXHltRuFJzvjLMsyhDpSteHdz72TlEL50g5JMHOxR2b/LZnh6WJOY2WL2b8IZCqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0ZyfSlNYr+LaLHbYoXFd8B5aGfRJDrahEKGNaQAhnfM=;
- b=DNy73tC1r+b4l3XtYwQcoD5F8fZn9UJ+rIAFEYr/k2cFPXQPZz3iDu3sHcvM/C2RFFLrCEohTpLmGY3G3ox/QMEkaWDO3gyaBkG5P3k2M8y3KSMZ07nXH1UJLtUJm0u+yWxit8A7iiFFc1IknHHyK7rXyYL4KgIjUbtrTIfEUbpYbpNBwH/+SQPFwMNOHMMAalLXioaYrmS3F8DfoHBfbJmwva/Wa67EwlzHomNSATN05f5unV+iA8vn+KGRiZif9tt7taH9H3U3JLqYvuA2XM7CEjz/AxBesTY4xid4U98WynlOdAs+tdXPeDfWluzxdHe5exv+JHIeUggjCz7Jnw==
+ bh=IsBI23w5tcmycbwOoEAg1O1LjHvswzN2cb8YHXf3Qc0=;
+ b=uvHEfF2dwaRvMLab+vAEKfgiOjjGOcsfkjseDl+xRpgLM6ahVTnxoUlKHjHy391Ci5jYo5suCMfFqoxrnY85Utpr0wUDYkYRX36E/OW7AA+49vnqWtspnINIucg0ToV1zOCf42razI1gCOJf2Bb81kcEbjCUrRdpx62yDD3PYubGZw6XHPAqvhuns3IJ+L6O7I8qY2OwulNSmiuzkafnh/5zgvLfFOKVNHzoZaA3QvtUsOW1387qZFiyS4VMg+8ncxrbkddNlOLjRwUhW83z/Q+LYE26+R8Z0Hw3GvjxhjGBazDX3jPlO9bqfpGQTHyh4ogwaJcXlKhpx6wHUDDm0g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0ZyfSlNYr+LaLHbYoXFd8B5aGfRJDrahEKGNaQAhnfM=;
- b=1owAawSUslPg3dcuuomy5IRRbjUMqz8IGiq+DQ9d2UF9NN6EUQxrdDer4VZAwcXpLLfj424RqL6gXKRxfGffh6t/EbZ59b4ngqKTZGXj80v3zBT2VHaXU8LrpBsBnTLJG0uLHcV6ul6Tt+Zobc6CRViKnJySg/gOtxpvsaE5XrE=
-Received: from SJ0PR05CA0105.namprd05.prod.outlook.com (2603:10b6:a03:334::20)
- by DM4PR12MB8500.namprd12.prod.outlook.com (2603:10b6:8:190::14) with
+ bh=IsBI23w5tcmycbwOoEAg1O1LjHvswzN2cb8YHXf3Qc0=;
+ b=OvZ9NsvZw3wLqDVXtJL6hVH1KDUnpSYwzHIHTGwz5D+1bX4XxYH5Hsqpo13LfneVvsPLN3NXWeS8buL0X6nPWPf1uD0WofCsDDV2F+sYMjlu1iBUAbbDYq2+oNqeZkPPJLLKkhV3Sm6V6AS480X3YuL91LE0i+ZIZO/835KZv9c=
+Received: from MW4PR03CA0133.namprd03.prod.outlook.com (2603:10b6:303:8c::18)
+ by MN2PR12MB4424.namprd12.prod.outlook.com (2603:10b6:208:26a::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Thu, 29 May
- 2025 12:35:21 +0000
-Received: from SJ1PEPF00002313.namprd03.prod.outlook.com
- (2603:10b6:a03:334:cafe::83) by SJ0PR05CA0105.outlook.office365.com
- (2603:10b6:a03:334::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 29 May
+ 2025 12:35:26 +0000
+Received: from SJ1PEPF00002312.namprd03.prod.outlook.com
+ (2603:10b6:303:8c:cafe::4e) by MW4PR03CA0133.outlook.office365.com
+ (2603:10b6:303:8c::18) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Thu,
- 29 May 2025 12:35:21 +0000
+ 29 May 2025 12:35:25 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002313.mail.protection.outlook.com (10.167.242.167) with Microsoft
+ SJ1PEPF00002312.mail.protection.outlook.com (10.167.242.166) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 12:35:20 +0000
+ 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 12:35:25 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
- 2025 07:35:15 -0500
+ 2025 07:35:20 -0500
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
 	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -65,9 +65,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Ingo Molnar <mingo@redhat.com>,
 	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, "Santosh
  Shukla" <santosh.shukla@amd.com>, Ananth Narayan <ananth.narayan@amd.com>,
 	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 1/4] perf/amd/ibs: Add load/store SW filters to IBS OP PMU
-Date: Thu, 29 May 2025 12:34:53 +0000
-Message-ID: <20250529123456.1801-2-ravi.bangoria@amd.com>
+Subject: [PATCH 2/4] perf mem/c2c amd: Wire IBS OP PMU load/store SW filter
+Date: Thu, 29 May 2025 12:34:54 +0000
+Message-ID: <20250529123456.1801-3-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250529123456.1801-1-ravi.bangoria@amd.com>
 References: <20250529123456.1801-1-ravi.bangoria@amd.com>
@@ -83,272 +83,205 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002313:EE_|DM4PR12MB8500:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9146b65f-0226-400e-a832-08dd9ead46c3
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002312:EE_|MN2PR12MB4424:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41d5ea6b-c451-4be7-9902-08dd9ead4980
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
+	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?g1YtvJqVDcfCDXlrfRABiulBBmDJWRu+XYOpLvUFS82SzcN1wdH9Ks6lZ0zG?=
- =?us-ascii?Q?cj7mtmlVlBEw2JpCUpzk1B0HdCb0+mKCs8iGwB/eK/A6Mg7YW2t5szY8KdIJ?=
- =?us-ascii?Q?Gw1J2davZryvTPVBKYqiK5tpCvEO0sh/4xmT5UfIsJKE0k3/Nbq89uxab0Qm?=
- =?us-ascii?Q?mM44qZCRhFnquQoncuOusOtiJAgwVHfu7fQNyopPPZ0Glk0YsrCo7hdUDKgL?=
- =?us-ascii?Q?1l+EmHtav/MYzHgkB2ZksE3pTcdHvHBhVmpCh6CKJuTBOlvZGvXIdZtCQBG1?=
- =?us-ascii?Q?6WlXaqwuHkLfUt+3B2TSRkZ86a/AThQ9vpj6K1Y3QQqMavso7PHHBtHE1QVg?=
- =?us-ascii?Q?50/Fm5tSIqU5mWuScgBUFQSO2Zscx6vHMqPXQF+D0mx3bJl3FRVGotwwyc3l?=
- =?us-ascii?Q?7ta6cDZEA6HwyzixRS0Flg5q3LuRCwXZNJyl8T2v4GvcOhH49QjKo2rUnY04?=
- =?us-ascii?Q?Dg0OkY69dy+6t03H+Xv7L4dzAXLIkyB6/KmOGJY9SGT7BDuONFl6YjHhuIpm?=
- =?us-ascii?Q?b8gC50a385z3rweuA88IQow3Ii+gKIfiMJceYUFteySS0wqDwWCbg4Xc4TRA?=
- =?us-ascii?Q?to0NJJ3YSq0BfgoId5ynQSP0OkhUO2tLmK2LzXpq+Wp3xnnn0quiPlpAKbuf?=
- =?us-ascii?Q?USOHJq9SncJr43Enj1WO8Rxxq+FhIQrzvfiPOu+y0QIwP2o5B1+xrvEFswq5?=
- =?us-ascii?Q?wau0yVdy/OomwjQLEqdg3Z49Vd63SzNQ63rh5pqmnhzfNckj7RFjl6xVzECc?=
- =?us-ascii?Q?Bdxsc21iKqKA8mg00ay/cjjdB5hMahxs9/2Th8EG7F3Onnv2Tg6VcWrwJpEs?=
- =?us-ascii?Q?gM0qYa/j/GSo5Jb9T5NXakI9H6654FrDBNiVtzUfzGZ3c30EtcmxRdYdJMhL?=
- =?us-ascii?Q?TpBoJrj0AlnFkx/lSkMOl1eaDAo4pONVH/FcjWB9DOH4rxc4zkA5Jmw0aq++?=
- =?us-ascii?Q?EAWTsSqZbE6WM4dJFGmoIvST5OEZ/vxhWIkEAozYVgVPiEOBjQW9VOrsmtV3?=
- =?us-ascii?Q?ZqIqSxhylbh2nlmbZsIXQY+3ecpSTvIMiAzyeGGNTggODpXi1P0FNCNc7zLh?=
- =?us-ascii?Q?fvhaKx3jfzM2RbW1f0uRc8ChEEMKDhguoPj5emH20epy4HM6Gt/69YJNYLBJ?=
- =?us-ascii?Q?bx8YIpWjVfPIgQfZT33d6eRCg5IGmUAFdwa5T/WRYDbwVXFilXE8HvzXgeJV?=
- =?us-ascii?Q?3RqZsxevrQauTLSe03XhJbKvw6Oln3LKoju/3c6X19FmQUryDsAYp179ZLVZ?=
- =?us-ascii?Q?AT5Xbw8rJncNDAS6DfVr47egIm2ghDpP2P2klpyD9PWE3SSJp5w3p0Jmrj7x?=
- =?us-ascii?Q?GHI5RdRx0/oj+20xtNWQjfMmItWvyWgSDK8KmvbD6LF24VnOOqlAl3tIh8u5?=
- =?us-ascii?Q?Qgxcb+jrORyTrkSlCghSHV24KOswK5sBK+CLZgWmEmCFj8UBgzh/c8PHw1Ex?=
- =?us-ascii?Q?fbmwXg79YgWPhoy3OKH462a9chuRX1aCTxj6G02ls4wRvZcPyIZjhZ1rfqPQ?=
- =?us-ascii?Q?oVn9w9V3grRAf3HzizW96d/QBwb/CATln94O?=
+	=?us-ascii?Q?+qGY7q4Ol31UN3zbgx2C945QMiz08qri6yuHTuGeRQp1T7b3LKYJqpXOYJWr?=
+ =?us-ascii?Q?lSQIFDuYYNPz7TfHEyzMxu0KnInWYiWI1jeN0o8KYL5tAg/RpeRR2vGTpSvn?=
+ =?us-ascii?Q?T2puWVyCseyEmrdlutao785NYL9P3+1JMk4zn50JOlg73Cfa1uj0mdSxpFt4?=
+ =?us-ascii?Q?mw88YZdaA+vRHD6CyOU2tCWVpnhZCCdQE2JrMCuWiLi4XUFrnNK2CYt7A8fH?=
+ =?us-ascii?Q?gyxhhA9PdsK7FDwtOkNdkYEaHmXIZRhXkfbr/SkEYWzIzleb77AKFiCct/dh?=
+ =?us-ascii?Q?SAXi99fMW/wxfHI1FORWADNAjQq04xzaAqxxej6YhPJ48SPDrS2zcM71X/4L?=
+ =?us-ascii?Q?yTiKNeIII5UlZZaF/z2gugcuF+VHt8wmvTRkSDrciTXn4UVe6sdEjS7M4Hc5?=
+ =?us-ascii?Q?sVqomZ30S1i90BtqK61odRqRR3x12xAo/AAUFmhctdDGgkGwkPUgng/q38OA?=
+ =?us-ascii?Q?oyh8MWhlA9FeiDeQliZkdGZO2R2dv83Uu8yVrlae/y5EwG/dqmvIZRQ8Q3xK?=
+ =?us-ascii?Q?I0XwXd3ToN+58l+Z2gpeAL8lMvO9l3AbilmydeKXvY4X8Pk65EMuURuMG0Lc?=
+ =?us-ascii?Q?Oltu2m2NfIiBg1M65hgfGhDWsyLanpIf9draJSUSvEZUgvnC5tHNw9oOX1h3?=
+ =?us-ascii?Q?uCy72DXjAGOgKtrKVqLOt9Meju3EgPZytDkraGIiVZxzjYpDua3gQe0kMo5T?=
+ =?us-ascii?Q?sXAUl4hLWtlLY5HSQQRipKu58IYNX4Nx7hG6AdDV/p3eM1LSHcXHczu9BSEa?=
+ =?us-ascii?Q?H19xS+zQunSwWb7S6uKTGydHcNOlDZTdcG8TtKaShp5aqwMIOm5+ro6FI0G5?=
+ =?us-ascii?Q?GNgg1ypqwjtM3RIW07EN5Inmdi+BNoZ69EIr95tS9lRkaC5VU5w2EixqULA8?=
+ =?us-ascii?Q?NYlts/+SwLn/suM89zGZn+sWkiP9QfqQkQCUtc7xMx8JHEP8ixF9sbPb3n7m?=
+ =?us-ascii?Q?xEeOccf+LE4Pk+Baa+LoV1a9Co21nFYZqfTia9kQ83zPp+6L/YBzB+0O0bT8?=
+ =?us-ascii?Q?4U0eDyg5BD90+Dy46KvVtgwySp2arAqtGg7J129gukVrwXDudOYTcsu7SWam?=
+ =?us-ascii?Q?ANyhogzNVzynMUkXmscTQxMdKNQifUVzbfzanMeusQAfJj3n5ZFRv9VS5t8/?=
+ =?us-ascii?Q?MjSxfkduz//sYJbkXtyxBhV+x7WDPmFwM23vBKQ9Zpinbt876hdjeyGZXbYd?=
+ =?us-ascii?Q?feKEsfuStj5U+agppywNEuhxUmIIPC4cZnFDV+bem+jYBhqVlYOuzpzau9m9?=
+ =?us-ascii?Q?72mRrl9rWXlBEpvKsxKqp/62NG0GcTQgYEvb5JQW4VBUVxlFCxHNkGMt90Ki?=
+ =?us-ascii?Q?qHDTLkd7K4fpNk+H6ec5LWpTGyTzI5yc+Ead1sNisMa8isnfNXBjTpDX+L7L?=
+ =?us-ascii?Q?GUPRaF4bM/EnMej4sBuKiuwi9XPHr9kQEWw0wXlg3IMgbiVKaeSVlil0zKja?=
+ =?us-ascii?Q?YJlz4Z67ZbgeMH9dSFC/Y4TUGKeeph7kJXxORBT0rX4+eMWDoqEeOhyCZo+H?=
+ =?us-ascii?Q?Ejveszi3E0WpqxJ2YgdL08P/ZydLNKeX5voR?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:35:20.8979
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:35:25.4915
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9146b65f-0226-400e-a832-08dd9ead46c3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41d5ea6b-c451-4be7-9902-08dd9ead4980
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002313.namprd03.prod.outlook.com
+	SJ1PEPF00002312.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8500
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4424
 
-Since current IBS OP PMU does not have the capability to tag only load/
-stores instructions, tools like perf mem/c2c ends up recording lots of
-unwanted samples. So, introduce a load/store software filter in the IBS
-OP PMU:
+Currently, perf mem/c2c tools on AMD records ibs_op// pmu event, which
+has no inherent load/store filtering capability. But with the addition
+of a SW based load/store filtering capability in IBS OP PMU, perf mem/
+c2c tools can now record load-only, store-only and load-store-only
+events. Wire them accordingly.
 
-  ibs_op/swfilt=1,ldop=1/         --> Only load samples
-  ibs_op/swfilt=1,stop=1/         --> Only store samples
-  ibs_op/swfilt=1,ldop=1,stop=1/  --> Load OR store samples
+Before:
+  $ perf mem record -v -e list
+  mem-ldst     ibs_op//          : available
 
-Other HW or SW filters in combination with this ldst filter are logical
-AND. For ex:
-
-  ibs_op/swfilt=1,ldop=1,stop=1/u is
-  "privilege == userspace && (ldop == 1 || stop == 1)"
-
-  ibs_op/swfilt=1,ldop=1,stop=1,l3missonly=1/ is
-  "l3missonly == 1 && (ldop == 1 || stop == 1)"
-
-An alternate approach is mem_op BPF filter:
-
-  perf record --filter "mem_op == load || mem_op == store" ...
-
-However, there are few issues with it:
-o BPF filter is called after preparing entire perf sample. If the sample
-  does not satisfy the filtering criteria, all the efforts of preparing
-  perf sample gets wasted.
-o BPF filter requires root privilege.
+After:
+  $ perf mem record -v -e list
+  mem-load     ibs_op/swfilt=1,ldop=1/  : available
+  mem-store    ibs_op/swfilt=1,stop=1/  : available
+  mem-ldst     ibs_op/swfilt=1,ldop=1,stop=1/: available
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- arch/x86/events/amd/ibs.c  | 73 +++++++++++++++++++++++++++++++++++---
- include/linux/perf_event.h | 14 ++++++++
- 2 files changed, 83 insertions(+), 4 deletions(-)
+ tools/perf/arch/x86/util/mem-events.c      | 12 ++++++++++
+ tools/perf/arch/x86/util/mem-events.h      |  2 ++
+ tools/perf/arch/x86/util/pmu.c             | 17 +++++++++-----
+ tools/perf/tests/shell/test_data_symbol.sh | 26 +++++++++++++---------
+ tools/perf/util/mem-events.c               |  2 +-
+ 5 files changed, 42 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 0252b7ea8bca..d18ce6464b27 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -31,6 +31,10 @@ static u32 ibs_caps;
- /* attr.config2 */
- #define IBS_SW_FILTER_MASK	1
- 
-+/* attr.config1 */
-+#define IBS_LDOP_FILTER_MASK	(1UL << 12)
-+#define IBS_STOP_FILTER_MASK	(1UL << 13)
-+
- /*
-  * IBS states:
-  *
-@@ -308,6 +312,11 @@ static int perf_ibs_init(struct perf_event *event)
- 	     event->attr.exclude_hv))
- 		return -EINVAL;
- 
-+	if (!(event->attr.config2 & IBS_SW_FILTER_MASK) &&
-+	    (event->attr.config1 & (IBS_LDOP_FILTER_MASK |
-+				    IBS_STOP_FILTER_MASK)))
-+		return -EINVAL;
-+
- 	ret = validate_group(event);
- 	if (ret)
- 		return ret;
-@@ -624,6 +633,10 @@ static struct attribute_group empty_caps_group = {
- PMU_FORMAT_ATTR(rand_en,	"config:57");
- PMU_FORMAT_ATTR(cnt_ctl,	"config:19");
- PMU_FORMAT_ATTR(swfilt,		"config2:0");
-+PMU_FORMAT_ATTR(ldop,		"config1:12"); /* IBS_LDOP_FILTER_MASK */
-+PMU_FORMAT_ATTR(stop,		"config1:13"); /* IBS_STOP_FILTER_MASK */
-+PMU_CAP_ATTR(swfilt_ldst,	"1");
-+
- PMU_EVENT_ATTR_STRING(l3missonly, fetch_l3missonly, "config:59");
- PMU_EVENT_ATTR_STRING(l3missonly, op_l3missonly, "config:16");
- PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_format, "config1:0-11");
-@@ -724,6 +737,8 @@ cnt_ctl_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- 
- static struct attribute *op_attrs[] = {
- 	&format_attr_swfilt.attr,
-+	&format_attr_ldop.attr,
-+	&format_attr_stop.attr,
- 	NULL,
+diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
+index b38f519020ff..0a034317b55c 100644
+--- a/tools/perf/arch/x86/util/mem-events.c
++++ b/tools/perf/arch/x86/util/mem-events.c
+@@ -32,3 +32,15 @@ struct perf_mem_event perf_mem_events_amd_ldlat[PERF_MEM_EVENTS__MAX] = {
+ 	E(NULL,		NULL,		NULL,	false,	0),
+ 	E("mem-ldst",	"%s/ldlat=%u/",	NULL,	true,	0),
  };
- 
-@@ -737,11 +752,21 @@ static struct attribute *op_l3missonly_attrs[] = {
- 	NULL,
- };
- 
-+static struct attribute *op_attrs_caps[] = {
-+	&cap_attr_swfilt_ldst.attr,
-+	NULL,
++
++struct perf_mem_event perf_mem_events_amd_swfilt[PERF_MEM_EVENTS__MAX] = {
++	E("mem-load",	"%s/swfilt=1,ldop=1/",		NULL,	false,	0),
++	E("mem-store",	"%s/swfilt=1,stop=1/",		NULL,	false,	0),
++	E("mem-ldst",	"%s/swfilt=1,ldop=1,stop=1/",	NULL,	false,	0),
 +};
 +
- static struct attribute_group group_op_formats = {
- 	.name = "format",
- 	.attrs = op_attrs,
- };
- 
-+static struct attribute_group group_op_caps = {
-+	.name = "caps",
-+	.attrs = op_attrs_caps,
++struct perf_mem_event perf_mem_events_amd_ldlat_swfilt[PERF_MEM_EVENTS__MAX] = {
++	E("mem-load",	"%s/ldlat=%u,swfilt=1,ldop=1/",		NULL,	true,	0),
++	E("mem-store",	"%s/swfilt=1,stop=1/",			NULL,	false,	0),
++	E("mem-ldst",	"%s/ldlat=%u,swfilt=1,ldop=1,stop=1/",	NULL,	true,	0),
 +};
-+
- static struct attribute *ibs_op_ldlat_format_attrs[] = {
- 	&ibs_op_ldlat_format.attr.attr,
- 	NULL,
-@@ -761,7 +786,7 @@ static struct attribute_group group_op_l3missonly = {
+diff --git a/tools/perf/arch/x86/util/mem-events.h b/tools/perf/arch/x86/util/mem-events.h
+index 11e09a256f5b..bde1e51f639c 100644
+--- a/tools/perf/arch/x86/util/mem-events.h
++++ b/tools/perf/arch/x86/util/mem-events.h
+@@ -7,5 +7,7 @@ extern struct perf_mem_event perf_mem_events_intel_aux[PERF_MEM_EVENTS__MAX];
  
- static const struct attribute_group *op_attr_groups[] = {
- 	&group_op_formats,
--	&empty_caps_group,
-+	&group_op_caps,
- 	NULL,
- };
+ extern struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX];
+ extern struct perf_mem_event perf_mem_events_amd_ldlat[PERF_MEM_EVENTS__MAX];
++extern struct perf_mem_event perf_mem_events_amd_swfilt[PERF_MEM_EVENTS__MAX];
++extern struct perf_mem_event perf_mem_events_amd_ldlat_swfilt[PERF_MEM_EVENTS__MAX];
  
-@@ -1148,13 +1173,23 @@ static bool perf_ibs_is_mem_sample_type(struct perf_ibs *perf_ibs,
- 			      PERF_SAMPLE_PHYS_ADDR);
- }
+ #endif /* _X86_MEM_EVENTS_H */
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index 58113482654b..34f25ec9cca6 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -271,7 +271,7 @@ static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool
  
-+static bool perf_ibs_ld_st_filter_event(struct perf_ibs *perf_ibs,
-+					struct perf_event *event)
-+{
-+	return perf_ibs == &perf_ibs_op &&
-+	       (event->attr.config2 & IBS_SW_FILTER_MASK) &&
-+	       (event->attr.config1 & (IBS_LDOP_FILTER_MASK |
-+				       IBS_STOP_FILTER_MASK));
-+}
-+
- static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs,
- 				   struct perf_event *event,
- 				   int check_rip)
+ void perf_pmu__arch_init(struct perf_pmu *pmu)
  {
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW ||
- 	    perf_ibs_is_mem_sample_type(perf_ibs, event) ||
--	    perf_ibs_ldlat_event(perf_ibs, event))
-+	    perf_ibs_ldlat_event(perf_ibs, event) ||
-+	    perf_ibs_ld_st_filter_event(perf_ibs, event))
- 		return perf_ibs->offset_max;
- 	else if (check_rip)
- 		return 3;
-@@ -1189,6 +1224,32 @@ static bool perf_ibs_is_kernel_br_target(struct perf_event *event,
- 			op_data.op_brn_ret && kernel_ip(br_target));
- }
+-	struct perf_pmu_caps *ldlat_cap;
++	struct perf_pmu_caps *ldlat_cap, *swfilt_ldst_cap;
  
-+/*
-+ * ibs_op/swfilt=1,ldop=1/         --> Only load samples
-+ * ibs_op/swfilt=1,stop=1/         --> Only store samples
-+ * ibs_op/swfilt=1,ldop=1,stop=1/  --> Load OR store samples
-+ */
-+static bool perf_ibs_ld_st_filter(struct perf_event *event,
-+				  struct perf_ibs_data *ibs_data)
-+{
-+	union ibs_op_data3 op_data3;
-+
-+	if (!(event->attr.config1 & (IBS_LDOP_FILTER_MASK |
-+				     IBS_STOP_FILTER_MASK))) {
-+		return false;
-+	}
-+
-+	op_data3.val = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
-+
-+	if ((event->attr.config1 & IBS_LDOP_FILTER_MASK) && op_data3.ld_op)
-+		return false;
-+
-+	if ((event->attr.config1 & IBS_STOP_FILTER_MASK) && op_data3.st_op)
-+		return false;
-+
-+	return true;
-+}
-+
- static bool perf_ibs_swfilt_discard(struct perf_ibs *perf_ibs, struct perf_event *event,
- 				    struct pt_regs *regs, struct perf_ibs_data *ibs_data,
- 				    int br_target_idx)
-@@ -1196,9 +1257,12 @@ static bool perf_ibs_swfilt_discard(struct perf_ibs *perf_ibs, struct perf_event
- 	if (perf_exclude_event(event, regs))
- 		return true;
+ #ifdef HAVE_AUXTRACE_SUPPORT
+ 	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
+@@ -295,11 +295,18 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ 			return;
  
--	if (perf_ibs != &perf_ibs_op || !event->attr.exclude_kernel)
-+	if (perf_ibs != &perf_ibs_op)
- 		return false;
- 
-+	if (!event->attr.exclude_kernel)
-+		goto ldst_filter;
+ 		ldlat_cap = perf_pmu__get_cap(pmu, "ldlat");
+-		if (!ldlat_cap || strcmp(ldlat_cap->value, "1"))
+-			return;
++		swfilt_ldst_cap = perf_pmu__get_cap(pmu, "swfilt_ldst");
 +
- 	if (perf_ibs_is_kernel_data_addr(event, ibs_data))
- 		return true;
++		if (ldlat_cap && !strcmp(ldlat_cap->value, "1")) {
++			perf_mem_events__loads_ldlat = 0;
  
-@@ -1206,7 +1270,8 @@ static bool perf_ibs_swfilt_discard(struct perf_ibs *perf_ibs, struct perf_event
- 	    perf_ibs_is_kernel_br_target(event, ibs_data, br_target_idx))
- 		return true;
- 
--	return false;
-+ldst_filter:
-+	return perf_ibs_ld_st_filter(event, ibs_data);
- }
- 
- static void perf_ibs_phyaddr_clear(struct perf_ibs *perf_ibs,
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0069ba6866a4..dedb92d5cd61 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1998,6 +1998,20 @@ _name##_show(struct device *dev,					\
- 									\
- static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
- 
-+#define PMU_CAP_ATTR_SHOW(_name, _cap)					\
-+static ssize_t								\
-+_name##_show(struct device *dev, struct device_attribute *attr,		\
-+	     char *page)						\
-+{									\
-+	BUILD_BUG_ON(sizeof(_cap) >= PAGE_SIZE);			\
-+	return sprintf(page, _cap "\n");				\
-+}
+-		perf_mem_events__loads_ldlat = 0;
+-		pmu->mem_events = perf_mem_events_amd_ldlat;
++			if (swfilt_ldst_cap && !strcmp(swfilt_ldst_cap->value, "1"))
++				pmu->mem_events = perf_mem_events_amd_ldlat_swfilt;
++			else
++				pmu->mem_events = perf_mem_events_amd_ldlat;
++		} else if (swfilt_ldst_cap && !strcmp(swfilt_ldst_cap->value, "1")) {
++			pmu->mem_events = perf_mem_events_amd_swfilt;
++		}
+ 	} else {
+ 		if (pmu->is_core) {
+ 			if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
+index d61b5659a46d..e2156c9a4bc9 100755
+--- a/tools/perf/tests/shell/test_data_symbol.sh
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -57,7 +57,7 @@ echo "Recording workload..."
+ is_amd=$(grep -E -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
+ if (($is_amd >= 1)); then
+ 	mem_events="$(perf mem record -v -e list 2>&1)"
+-	if ! [[ "$mem_events" =~ ^mem\-ldst.*ibs_op/(.*)/.*available ]]; then
++	if ! [[ "$mem_events" =~ mem\-ldst.*ibs_op/(.*)/.*available ]]; then
+ 		echo "ERROR: mem-ldst event is not matching"
+ 		exit 1
+ 	fi
+@@ -65,18 +65,22 @@ if (($is_amd >= 1)); then
+ 	# --ldlat on AMD:
+ 	# o Zen4 and earlier uarch does not support ldlat
+ 	# o Even on supported platforms, it's disabled (--ldlat=0) by default.
+-	ldlat=${BASH_REMATCH[1]}
+-	if [[ -n $ldlat ]]; then
+-		if ! [[ "$ldlat" =~ ldlat=0 ]]; then
+-			echo "ERROR: ldlat not initialized to 0?"
+-			exit 1
++	format=${BASH_REMATCH[1]}
++	if [[ $format =~ ldlat=(\d*) ]]; then
++		ldlat=${BASH_REMATCH[1]}
++		if [[ -n $ldlat ]]; then
++			if ! [[ "$ldlat" =~ ldlat=0 ]]; then
++				echo "ERROR: ldlat not initialized to 0?"
++				exit 1
++			fi
 +
-+#define PMU_CAP_ATTR(_name, _cap)					\
-+	PMU_CAP_ATTR_SHOW(_name, _cap)					\
-+									\
-+static struct device_attribute cap_attr_##_name = __ATTR_RO(_name)
-+
- /* Performance counter hotplug functions */
- #ifdef CONFIG_PERF_EVENTS
- int perf_event_init_cpu(unsigned int cpu);
++			mem_events="$(perf mem record -v --ldlat=150 -e list 2>&1)"
++			if ! [[ "$mem_events" =~ ^mem-ldst.*ibs_op/ldlat=150/.*available ]]; then
++				echo "ERROR: --ldlat not honored?"
++				exit 1
++			fi
+ 		fi
+ 
+-		mem_events="$(perf mem record -v --ldlat=150 -e list 2>&1)"
+-		if ! [[ "$mem_events" =~ ^mem-ldst.*ibs_op/ldlat=150/.*available ]]; then
+-			echo "ERROR: --ldlat not honored?"
+-			exit 1
+-		fi
+ 	fi
+ 
+ 	# perf mem/c2c internally uses IBS PMU on AMD CPU which doesn't
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 80b3069427bc..24afdd12bed2 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -93,7 +93,7 @@ static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
+ 	if (i == PERF_MEM_EVENTS__LOAD || i == PERF_MEM_EVENTS__LOAD_STORE) {
+ 		if (e->ldlat) {
+ 			if (!e->aux_event) {
+-				/* ARM and Most of Intel */
++				/* ARM, AMD and Most of Intel */
+ 				scnprintf(buf, buf_size,
+ 					  e->name, pmu->name,
+ 					  perf_mem_events__loads_ldlat);
 -- 
 2.43.0
 
