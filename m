@@ -1,246 +1,168 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2086.outbound.protection.outlook.com [40.107.220.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D44290D8C
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 11:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748518408; cv=none; b=Qtap8i41NxzM/kIXotG2n7qGuVkNCp8jBOM9CqZDMMnKJ+Y8jjMvnsDdHMXhC7/BXmcQPSIU+cKBiiriObSxHhWeOaPh4zgdlF0apxKsQIWxUeAodm4BfqQ6U7pDb1qNuHG3LhKmwHX037hT9ozET66EeH8XLRzXHUrHNCENIW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748518408; c=relaxed/simple;
-	bh=E1yjj826OV2i042EqOElXmFPrF8pEcz4phQ8lctqMVU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fwMo3CmHOtv8etGyPiXt+Z4yRWMhEr7LmFosMdlBDe4MQIF3bxN345W21PpuoOFvtnWkhBU+0zXAWhY7GGEl/EM4Kgfr2EK0wht16vsJVBHBTkmrnLGEF6BzwZVc2OynaMkESKDzztz/KwJEkX0Dcvve/nSWwFexSU/OvaX/fDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fc/RZXSL; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A831A704B;
+	Thu, 29 May 2025 12:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748522125; cv=fail; b=gg8KA2f9B0KNLz4AGdzgAPLCeIriRsuX2Sa5zzXfXigpBfqSsSFwt8X1GRX6n7Bz6b1NpH7rxRLpNtHn0KvjRUJvOCN/JfJRFxILryp2C3lKgMvPNyfG+vP/aJrfmzWnXxaF4m+bjgtJj3g8t0C7LnfKOFMPYS0QGNiVl4sSkiE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748522125; c=relaxed/simple;
+	bh=FIfbDFzf51O410nf+UQMwUllxm9rjvHGMJP4KOAUMGA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QzwLvwYwhWhpoe2g5iiUhDO5YFqSz2mzxbSH2DQGZvk2JqxJUTepXUkfNFH08N6rKDSlHBD3eXlIyAqvqu+nb1ysMMXDkdybPzGJSwBjXqXY0WyRDjadCy9TP3mX/kkAwA9be2frxJrXFG+akaMhLuogRx0DJcuAul0244JO334=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TVbmAO1Z; arc=fail smtp.client-ip=40.107.220.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fc/RZXSL"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-450d37d4699so1640865e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 04:33:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748518404; x=1749123204; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TxG8SPa3uepeFqsoLKl29LMbTYOpGZ70IvRiGVenFk8=;
-        b=fc/RZXSL81pqAVuRokshOxMxcYWZPGbMkL3muIio9Dvd6yqD3m5YvT8YjprFDKmJCI
-         oD9+co81lsqxx7AkJiZOZuvn42vzDjtB5XDbebiIkjCZBpXGyVrn3e1J4hoSzEXd7CV6
-         xfkZMPoNdkbtUxSRvq5BH7vbqOJhK2fTCoprUFj6HOg++WTFA8KVT7OcQE3Me7S0ma08
-         ivpTRaWhP0ImFUQ/bydvrGAONHsoCt8fgduU4mGHggP3vw5hxwm+VX/HUrN/s18qPQoy
-         z80cJw8lY50SFe1i5pNgjhwONJ4C4m5HBEwFiJoo0FUoJjz/eY9HsWne2zJJeQgus3/+
-         25Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748518404; x=1749123204;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TxG8SPa3uepeFqsoLKl29LMbTYOpGZ70IvRiGVenFk8=;
-        b=VxBYegdr1wAQl3osTnHZw5Ow+dEJfF9j/QupXrhjRb1mPrVrSP4bN7+oJRCCTDoIXr
-         sbm0G0qAz+fk85pw6gNEQy3AMKyhEwqv6j44WvuB3koGiMd1As+NIxZYzmpCxnv9kkju
-         88rfdfM+a0ZRcNDNKwCdF4F6guIp5UEijJek56GNmyVnuQU190qKFBq0p28fmIWLAuqG
-         3Ofd6KhWvFBvXx/oqZnwl0hamqxxaDxxEasMKrvLKcR0Bbb4ywc/RWVEW6/xGmQLoDAJ
-         DvbsR1pmiv1Sp69y7McW/2fANdof0JtO5M4E7VvYxzEoRJPkfjzAryQeFB4Pire+1Foz
-         KUsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVN3opcoqNy1CR41rgauXGVKnY8g/iyoVe1fxDF+lcApOtTfa3gAQVPCiAIKC1uauhSPnt+IBuIs2cFxTncvmhO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiYPu1V2y6JAYrfp9pU11qPQ9zOFVhYgpBecm24iuI2R3OMMkx
-	od1t4p9qDgf6mrrGHIpn22oONhdyHTz6uF7IwG1IgwS/yw9mm5jgiAwVy9Qm3DfukpT1lAeIyKF
-	k39tWJCBId7Ny
-X-Gm-Gg: ASbGncvVWjR8jq3WSK3S8lHMQPtexQiLM21eckyJsIlLWt/sacv8eQeNPp5buxCHeKt
-	WWEk6BRSWedKRTbaOmsxuOnf95Rg046BoTko/UItrBQoDtpcUnR1PQUf3XI02tL1RTKYI0WzrMB
-	qR8zfNfqAl4BKwYSIy67SwI4CbGO+W5uGlUlb060N8B/AyR3V94H7w9dypOyIKK+deXEUwQRq9e
-	8cjXSHL2zxYUinQLHhEflDtDMhdGXpqwer8bMgjtrPcfvr+qXN5VLLSX8E1olNA8jxMdwWWb1q+
-	pp2UwZeQKVrlIMGrqBRKIeBANOKm4Cz0qtuo6aHpJkAXriR7dmk6mdLkUP+D
-X-Google-Smtp-Source: AGHT+IFa3tbBIinQlu5QLSXdztzNSxtKZbpAOFxf4JVhGWyoTyRCcEYjmPGyAmzQyVI8/KRfEZZhCw==
-X-Received: by 2002:a05:600c:6749:b0:44b:eb56:1d48 with SMTP id 5b1f17b1804b1-45072545a0fmr59959615e9.4.1748518404390;
-        Thu, 29 May 2025 04:33:24 -0700 (PDT)
-Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc3785bsm17443945e9.40.2025.05.29.04.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 04:33:23 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Thu, 29 May 2025 12:30:32 +0100
-Subject: [PATCH v2 11/11] perf docs: arm-spe: Document new SPE filtering
- features
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TVbmAO1Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TJrp5OR0gzYtPrf0+z0GIn9ofdGfwj3WK6ZuqUoqLI7bQhmaAPKdMvyQKkyuxwD9PKK4uJd5jExd7g79H2mY2S6Xs1rw5BT+Nn8kKgThWm2pSB81WLbbGnAlKjXX30YI6xWyeDFu8j40YXKXN7G/IGUJIQa1B7tNkslWzmyol+AdgkcEqf86O6zwK8vfqsXoN8/TySWZ8Yo2Qf9FwAXXhvjEgG0QmvpxOB7NJY3tNfb1F5xZdXkKXAhJIilGVcOBnR3V3UJE+/7yoAYzBQq3xwyVGUQTr877BetaSMl/wGVTgPKKCPsM4YSl9UTGSbsFOc2pgwXf2/fWx1VE4mvAhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a4ZCO9D9XmA89Tu9y1UhlSbam0zcET0jaK+HxeFJCPs=;
+ b=BSFzN4nOEuSicWAj7hLqIC4Cg1MqntlpKooLQZOL4VS00L1JU7x9stxump+X+qu9Z8Te5qcgwa//zxnD9kRw5S23G2DGqdWSG7cNq1UB3NdKfsbohDnLVljrHDi4UEBE3kVYM+6otAoh1fmNr2xESmG8qKvNgaXMWrqc+gLDpoask2fM+QMo560yar0fB83hZ30vzuFiQTSZAAdBqiCYRFCKA4VGkJ/sGoA+3o0THs9OSuDJU8o3wv1wNdXGU9X6ClJacO0TqhAMjrxpDs+iosLiC/0wvIiAxRku4PFgbdKlWx4UkTJh/x+ssPTkPzxWWc79tIoJWfZHeRHzDL/gpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4ZCO9D9XmA89Tu9y1UhlSbam0zcET0jaK+HxeFJCPs=;
+ b=TVbmAO1ZRrHJiTktCVLos88OWNhgBK43GsxM6v+bcA01FgBHmypZxvM5m7EnMev3jyPnm7BGocuLyZoJtQwSNL+KcmMlIvFU7Sqh5BNYvzFKSDKomLis9pq2qWVlkvapHsW3LmRprM8ZT7fK92Ik1Yzj9AOAASDFo826wE1/1tI=
+Received: from BYAPR02CA0064.namprd02.prod.outlook.com (2603:10b6:a03:54::41)
+ by SA0PR12MB4384.namprd12.prod.outlook.com (2603:10b6:806:9f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Thu, 29 May
+ 2025 12:35:16 +0000
+Received: from SJ1PEPF00002316.namprd03.prod.outlook.com
+ (2603:10b6:a03:54:cafe::ac) by BYAPR02CA0064.outlook.office365.com
+ (2603:10b6:a03:54::41) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Thu,
+ 29 May 2025 12:35:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00002316.mail.protection.outlook.com (10.167.242.170) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 12:35:16 +0000
+Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
+ 2025 07:35:11 -0500
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+CC: Ravi Bangoria <ravi.bangoria@amd.com>, Ingo Molnar <mingo@redhat.com>,
+	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, "Kan
+ Liang" <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>,
+	"Leo Yan" <leo.yan@arm.com>, Joe Mario <jmario@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, "Santosh
+ Shukla" <santosh.shukla@amd.com>, Ananth Narayan <ananth.narayan@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: [PATCH 0/4] perf/amd/ibs: Introduce load/store SW filter
+Date: Thu, 29 May 2025 12:34:52 +0000
+Message-ID: <20250529123456.1801-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-james-perf-feat_spe_eft-v2-11-a01a9baad06a@linaro.org>
-References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
-In-Reply-To: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
- kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002316:EE_|SA0PR12MB4384:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60b1dd6b-9647-4763-50d0-08dd9ead43fd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rrqBE7F/9yVToxbxOjgZlwHSzZLLmete+7ZYetLnHKVWoDED3p7b+0OczwXz?=
+ =?us-ascii?Q?kohjEcQvdH+6j8bgCchI0QqO9ZnTDjJnE1R2ndZQTXprMshg8q/VknF4US50?=
+ =?us-ascii?Q?bGNcXL+poQPCytXPqvhONoMl/cy780Hnq+32GHqt8cf6QNvnGNWj7rFmTx3j?=
+ =?us-ascii?Q?Vgw8G62msepPoCkbDL7DM7QdChfn56XIO6yP9uXGLvtDNgGRFiMwZA3NGIK5?=
+ =?us-ascii?Q?AAwWdGrCpINkF3WLw6asRdFVE8mpLyryLlPJCwVKBuQscxNT+z+Oeyb+Q2y5?=
+ =?us-ascii?Q?jlmFUsUl7/9IGAqqVzUtMiHIomTXbmCql1DAuNcLQcqbNq28x/1RP3tLfTk4?=
+ =?us-ascii?Q?yImGjWFQor/FvhjcbmMGhMwxpjj7CAve1F13naKK15gH9vELaMbIEbdcSk8T?=
+ =?us-ascii?Q?9yTT2y+OJFwyPbgoEYOjtWT+hcxUBdYFm28dfx4pF3rqn8NiHCudnVXErPF0?=
+ =?us-ascii?Q?nwW7R0wEHtNkYpEcjx/WAyDgl1UX5IfYhWF1eFq18gabrit+wjyTb/x61b+2?=
+ =?us-ascii?Q?LkZO03zA+YbVD9XM1AbczEHNXiamBlHBbvWtp2aJKVdLJlXCiGYdroqO44gQ?=
+ =?us-ascii?Q?dYJMjFLMIwr+C0CmNA9mFYo6RBc44DFtmfiYyvcRiVHvQjTYbzXou8bGwMd/?=
+ =?us-ascii?Q?JLd10vVdTHuAw6gkCSKp6pSQlEuHqhl2ENr1l5I1XeCg4/NJmHt/WAE5mahJ?=
+ =?us-ascii?Q?g2w+z9OTVfrKTYkmsYGpjBZvWl3v+GOKFZ2QKer32GqRjKVTJal57QcNX8gO?=
+ =?us-ascii?Q?kpDY2sXY6b0/I8REhJtQi7lvxSIo9asypnWAH6wlWLYTfaDIPF8LTdNjAYz7?=
+ =?us-ascii?Q?Vtf7UZNh0sSEio0JbQZSvHSSYzMPBY5NKJPen0suKq6PH5EvLYK2UynfnqNe?=
+ =?us-ascii?Q?qr5yLqVCh3/nfd4fddXB8SRZAOOYOtlc9bBt3E0jiHisV+3p5xapVuvLzdeF?=
+ =?us-ascii?Q?lFisv4m5fWWErTlfUFkQEPd4zsVRpc8kaZoXCGPwbznlC32rFygAYQ982wXj?=
+ =?us-ascii?Q?L5vpkkfQ8+VxtAkIESpJ8klXYnl1jmXMR76N6eKMRuDLu9rzGd6QfoHmo5CF?=
+ =?us-ascii?Q?wexepPGc1woUUpzj7d8NhQPH4sOcqGvbI4SimIs5lxaJ3pcuW79seI59BILi?=
+ =?us-ascii?Q?B7dIN9G/v1dnr6z79to5h6F7OGzeBqSpEjT9WnGl677t20DAwF006l/5k+bS?=
+ =?us-ascii?Q?OCja6FthEve5nVy2++Qf1B+ipSA4dluxDwiOSg1uUXyHDlUSEQPeMDJRHnZ+?=
+ =?us-ascii?Q?ELIWNHhsm2gPnMpB33KlQIRxx8cSSYAcLdi3Rb1oIgQKJLrHoidlgsajAUto?=
+ =?us-ascii?Q?bVL/uG5w550cksKuOEuA4zjOwfryzGr4MX/Y2um8awk0c8B2EnywFobAz/wZ?=
+ =?us-ascii?Q?MUzrpHuP04nFc4TMS4uSSG+QLYFWYAXMAPZ0EUTk3GwczvlMeg9cFaCePS1E?=
+ =?us-ascii?Q?rPQz7lMzQMVPOSWjhZ4eASpaZEl1LmL9z3pHmYR0M9EwgeYChC+M4qwbWrsD?=
+ =?us-ascii?Q?l0QeZ6MZZg0XXCQkfBEtLVzYBQZnCxz5I2+LqmssIFnf1d5OOZQtS9i1Ig?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:35:16.2420
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60b1dd6b-9647-4763-50d0-08dd9ead43fd
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002316.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4384
 
-FEAT_SPE_EFT and FEAT_SPE_FDS etc have new user facing format attributes
-so document them. Also document existing 'event_filter' bits that were
-missing from the doc and the fact that latency values are stored in the
-weight field.
+Since current IBS OP PMU does not have the capability to tag only load/
+stores instructions, tools like perf mem/c2c ends up recording lots of
+unwanted samples. See for example [1]. All these unwanted samples are:
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/Documentation/perf-arm-spe.txt | 97 ++++++++++++++++++++++++++++---
- 1 file changed, 88 insertions(+), 9 deletions(-)
+1) Passed from kernel to userspace
+2) Stored in the perf.data file
+3) Processed every time while running perf mem/c2c report
+4) Skews perf mem/c2c overhead computations
 
-diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
-index 37afade4f1b2..4092b53b58d2 100644
---- a/tools/perf/Documentation/perf-arm-spe.txt
-+++ b/tools/perf/Documentation/perf-arm-spe.txt
-@@ -141,27 +141,65 @@ Config parameters
- These are placed between the // in the event and comma separated. For example '-e
- arm_spe/load_filter=1,min_latency=10/'
- 
--  branch_filter=1     - collect branches only (PMSFCR.B)
--  event_filter=<mask> - filter on specific events (PMSEVFR) - see bitfield description below
-+  event_filter=<mask> - logical AND filter on specific events (PMSEVFR) - see bitfield description below
-+  inv_event_filter=<mask> - logical OR to filter out specific events (PMSNEVFR, FEAT_SPEv1p2) - see bitfield description below
-   jitter=1            - use jitter to avoid resonance when sampling (PMSIRR.RND)
--  load_filter=1       - collect loads only (PMSFCR.LD)
-   min_latency=<n>     - collect only samples with this latency or higher* (PMSLATFR)
-   pa_enable=1         - collect physical address (as well as VA) of loads/stores (PMSCR.PA) - requires privilege
-   pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
--  store_filter=1      - collect stores only (PMSFCR.ST)
-   ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
-   discard=1           - enable SPE PMU events but don't collect sample data - see 'Discard mode' (PMBLIMITR.FM = DISCARD)
-+  data_src_filter=<mask> - mask to filter from 0-63 possible data sources (PMSDSFR, FEAT_SPE_FDS) - See 'Data source filtering'
- 
- +++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
- than only the execution latency.
- 
--Only some events can be filtered on; these include:
--
--  bit 1     - instruction retired (i.e. omit speculative instructions)
-+Only some events can be filtered on using 'event_filter' bits. The overall
-+filter is the logical AND of these bits, for example if bits 3 and 5 are set
-+only samples that have both 'L1D cache refill' AND 'TLB walk' are recorded. When
-+FEAT_SPEv1p2 is implemented 'inv_event_filter' can also be used to exclude
-+events that have any (OR) of the filter's bits set. For example setting bits 3
-+and 5 in 'inv_event_filter' will exclude any events that are either L1D cache
-+refill OR TLB walk. If the same bit is set in both filters it's UNPREDICTABLE
-+whether the sample is included or excluded. Filter bits for both event_filter
-+and inv_event_filter are:
-+
-+  bit 1     - Instruction retired (i.e. omit speculative instructions)
-+  bit 2     - L1D access (FEAT_SPEv1p4)
-   bit 3     - L1D refill
-+  bit 4     - TLB access (FEAT_SPEv1p4)
-   bit 5     - TLB refill
--  bit 7     - mispredict
--  bit 11    - misaligned access
-+  bit 6     - Not taken event (FEAT_SPEv1p2)
-+  bit 7     - Mispredict
-+  bit 8     - Last level cache access (FEAT_SPEv1p4)
-+  bit 9     - Last level cache miss (FEAT_SPEv1p4)
-+  bit 10    - Remote access (FEAT_SPEv1p4)
-+  bit 11    - Misaligned access (FEAT_SPEv1p1)
-+  bit 12-15 - IMPLEMENTATION DEFINED events (when implemented)
-+  bit 16    - Transaction (FEAT_TME)
-+  bit 17    - Partial or empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 18    - Empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 19    - L2D access (FEAT_SPEv1p4)
-+  bit 20    - L2D miss (FEAT_SPEv1p4)
-+  bit 21    - Cache data modified (FEAT_SPEv1p4)
-+  bit 22    - Recently fetched (FEAT_SPEv1p4)
-+  bit 23    - Data snooped (FEAT_SPEv1p4)
-+  bit 24    - Streaming SVE mode event (when FEAT_SPE_SME is implemented), or
-+              IMPLEMENTATION DEFINED event 24 (when implemented, only versions
-+              less than FEAT_SPEv1p4)
-+  bit 25    - SMCU or external coprocessor operation event when FEAT_SPE_SME is
-+              implemented, or IMPLEMENTATION DEFINED event 25 (when implemented,
-+              only versions less than FEAT_SPEv1p4)
-+  bit 26-31 - IMPLEMENTATION DEFINED events (only versions less than FEAT_SPEv1p4)
-+  bit 48-63 - IMPLEMENTATION DEFINED events (when implemented)
-+
-+For IMPLEMENTATION DEFINED bits, refer to the CPU TRM if these bits are
-+implemented.
-+
-+The driver will reject events if requested filter bits require unimplemented SPE
-+versions, but will not reject filter bits for unimplemented IMPDEF bits or when
-+their related feature is not present (e.g. SME). For example, if FEAT_SPEv1p2 is
-+not implemented, filtering on "Not taken event" (bit 6) will be rejected.
- 
- So to sample just retired instructions:
- 
-@@ -171,6 +209,31 @@ or just mispredicted branches:
- 
-   perf record -e arm_spe/event_filter=0x80/ -- ./mybench
- 
-+When set, the following filters can be used to select samples that match any of
-+the operation types (OR filtering). If only one is set then only samples of that
-+type are collected:
-+
-+  branch_filter=1     - Collect branches (PMSFCR.B)
-+  load_filter=1       - Collect loads (PMSFCR.LD)
-+  store_filter=1      - Collect stores (PMSFCR.ST)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), SIMD and float
-+pointer operations can also be selected:
-+
-+  simd_filter=1         - Collect SIMD loads, stores and operations (PMSFCR.SIMD)
-+  float_filter=1        - Collect floating point loads, stores and operations (PMSFCR.FP)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), operation type filters can
-+be changed to AND using _mask fields. For example samples could be selected if
-+they are store AND SIMD by setting 'store_filter=1,simd_filter=1,
-+store_filter_mask=1,simd_filter_mask=1'. The new masks are as follows:
-+
-+  branch_filter_mask=1  - Change branch filter behavior from OR to AND (PMSFCR.Bm)
-+  load_filter_mask=1    - Change load filter behavior from OR to AND (PMSFCR.LDm)
-+  store_filter_mask=1   - Change store filter behavior from OR to AND (PMSFCR.STm)
-+  simd_filter_mask=1    - Change SIMD filter behavior from OR to AND (PMSFCR.SIMDm)
-+  float_filter_mask=1   - Change floating point filter behavior from OR to AND (PMSFCR.FPm)
-+
- Viewing the data
- ~~~~~~~~~~~~~~~~~
- 
-@@ -204,6 +267,10 @@ Memory access details are also stored on the samples and this can be viewed with
- 
-   perf report --mem-mode
- 
-+The latency value from the SPE sample is stored in the 'weight' field of the
-+Perf samples and can be displayed in Perf script and report outputs by enabling
-+its display from the command line.
-+
- Common errors
- ~~~~~~~~~~~~~
- 
-@@ -247,6 +314,18 @@ to minimize output. Then run perf stat:
-   perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
-   perf stat -e SAMPLE_FEED_LD
- 
-+Data source filtering
-+~~~~~~~~~~~~~~~~~~~~~
-+
-+When FEAT_SPE_FDS is present, 'data_src_filter' can be used as a mask to filter
-+on a subset (0 - 63) of possible data source IDs. The full range of data sources
-+is 0 - 65535 although these are unlikely to be used in practice. Data sources
-+are IMPDEF so refer to the TRM for the mappings. Each bit N of the filter maps
-+to data source N. The filter is an OR of all the bits, so for example setting
-+bits 0 and 3 includes only packets from data sources 0 OR 3. When
-+'data_src_filter' is set to 0 data source filtering is disabled and all data
-+sources are included.
-+
- SEE ALSO
- --------
- 
+So, better to get rid of them early in the IBS NMI handler itself.
+Although SW filter is not an ideal solution, it's better compared to
+no filter at all.
+
+[1]: https://lore.kernel.org/r/aBTyYv_yXCPkn2d0@x1
+
+Patches are prepated on perf-tools-next/perf-tools-next (4d9b5146f0d9).
+
+
+Ravi Bangoria (4):
+  perf/amd/ibs: Add load/store SW filters to IBS OP PMU
+  perf mem/c2c amd: Wire IBS OP PMU load/store SW filter
+  perf test amd: Add IBS load/store swfilt tests
+  perf doc amd: Update perf-amd-ibs man page
+
+ arch/x86/events/amd/ibs.c                  | 73 ++++++++++++++++++++--
+ include/linux/perf_event.h                 | 14 +++++
+ tools/perf/Documentation/perf-amd-ibs.txt  | 72 +++++++++++++++------
+ tools/perf/arch/x86/util/mem-events.c      | 12 ++++
+ tools/perf/arch/x86/util/mem-events.h      |  2 +
+ tools/perf/arch/x86/util/pmu.c             | 17 +++--
+ tools/perf/tests/shell/amd-ibs-swfilt.sh   | 26 ++++++++
+ tools/perf/tests/shell/test_data_symbol.sh | 26 ++++----
+ tools/perf/util/mem-events.c               |  2 +-
+ 9 files changed, 205 insertions(+), 39 deletions(-)
 
 -- 
-2.34.1
+2.43.0
 
