@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5AC25CC50
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 04:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E0A25D20A
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 04:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493641; cv=none; b=bqcTOfJAI1dJIqpxwvGI6hsfpA9UelMnqa0sqxFlT4W+bu++nRj9Oe8oEZaRtFDNcB7YB5K3CgdCfGQfMZZCUFynzguTRlB4grmptqvoM196Mi3RDzqLb4vBdgGL7n7Fzye5Het9L+N3RB5lVQCp75lmrJFWVEC4kC1JvMfq1Bk=
+	t=1748493644; cv=none; b=LapqqtVbFT834zxzevnpuxONQ3ifipcP58za192NbPTsdomYIiQ7GZtxBWwD0MvgsZpi3Y5RSxh10mWeH8aAWcH/7I9pyr8nnZgDTGphBBXDx1igSctAfkw1YOBQgG4yxMGQ8ti3Ss6tCcRigdsAeOsEKz9uY1ekrtDI+F+/A3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748493641; c=relaxed/simple;
-	bh=njJn7n/5kLIH9BxF+z3EOdBKR9OtD/CADSM783LEAuo=;
+	s=arc-20240116; t=1748493644; c=relaxed/simple;
+	bh=tEPX+uZGCPtnbdtF9xb+Mc0WUL2DtIJaOpBwsvvjGGQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=MjHDHWfvSFEOgsPHIxePoAVuIersXnIEOovCCPqkD7AMcIzE10BtS0LLgnZ7odgFUazy18lsoeJ4fE2TrwHpi00woifXV9JgbdDfh0IVDJ3XXHOCeuadw5zZaJp1ILDlfELgXI8ckW9XiRp6+cAKsiL8EV8Wpxw9LEgNCVkAWwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l5aen7h0; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=am3O+i5INnMLZsrivS//hzSQPNQUUHydo2NJqcAwhgDGu8ycz4RVySEO7chb5XQkTBUu/NBnHb6v6pdja646oD1Xv8SoxTwl0b25dKbVmukNLp1gYStIgj2b2R3Zg4SbhFEuS8ArHoiY2IYmTMxh2JLVw7yb4ORtq1nQ0MC4Xnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jh8sec3j; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l5aen7h0"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23425b537aeso4277535ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 21:40:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jh8sec3j"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-740adfc7babso409208b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 21:40:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493639; x=1749098439; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748493641; x=1749098441; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5pnm6XAU4xFoMWfTd8OLWEtaFTFv8v2LBbG5v3SrDeM=;
-        b=l5aen7h0dDCbQTPEgFvVcu97it+t3umysoF33P/qi+iuzqRgoaiJeLtHSyrsB+QjpG
-         Dk3dhyn8cw9W+GG7oqhkP2HzIdw4SJgwQljzspRmqtQiA28rGHRLVwsy570i7ZfbAJ1p
-         8+bK/RcgINuKGO7d98ECl6Rv9C5Z83GsvGGP9FJB7Q5tQtJUWutc3+8khPGINwn1Slzn
-         D0OOauCTM/EUdmjbo9PGw2NLzMfi2fzvk6odX5Cn3n65j622FtqH+AMfBSjgL9kDk1Sr
-         LH/StmobectX8Zmx6O7oZJE6pP4ZjQt2u2Bx7sPdHvC5OleDvW8QzbiEXjdYzWzhdn+R
-         2xCg==
+        bh=PHcAoKcEAz6NjioNuyJCAtZJ04gYQ2Vd9rn/ckUmB94=;
+        b=jh8sec3j3SgYgX6yw3bbcU2CZ32SuTF3IO0PMnz6ZbxcJwl1oLumkHoFoZ2unVx9u3
+         qJyBvR3tPpTLfnoAR4rudexg4Sc61NMNuqfHmV9rTajqLDP2mHnGRyUYSobKPdEsHzcy
+         C6EnfnfjcYNhipY9cUSz2DcgItol1LMWqMMEdxbZdPEe0bD6vVZVxS5eMi00JwwZkvv1
+         V+xNzSN6x8Y5FqyBOHkeVFxxV7A8/EJtIFlzICtAXCF52CG2Nkl0ybXK9x4tuRDM2kIL
+         X+yqytjrDYCShmIw5Xh3bv4CWJufqYRCoeib8qB2RlnhXNHfIuy0x5gpbtKQHyCQiqdk
+         gqZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493639; x=1749098439;
+        d=1e100.net; s=20230601; t=1748493641; x=1749098441;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5pnm6XAU4xFoMWfTd8OLWEtaFTFv8v2LBbG5v3SrDeM=;
-        b=oVq3ahKrne3QtrNsjjeFLq+d9uZpUlO8wCYEgKRSutTSK2gmrDJBmtURN2hk6NOdm+
-         QxZ6Orx9Xf8E30bc5ST+et2g467/1snhy8eT0udD6I+OknN7vadXaTksAMN3VmMxZqlj
-         T0EbK9Tr0zfESchBO33hyFHeF+osxksr0wVZlWEkW4Vo4h0PJh8dApsD5TFAZ1BKONvD
-         uKVLKEf98bzmS8YfeZOBzrmwCumPJfH4HDq/L/+nqyZaXl1ca6aEqVcONgDE7lGbTh3l
-         MyjmeGAR5eYXWo6kXezQteJ1cozChptaSLrKdVRfA/bnq7uEWSCwUlGzkfy8hOmubrbv
-         enZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7sGSsOrLUoza+65SeUG9YH+Eo0ezB4GQbIJNsINrkfIqnF3ulS7A28ERQ/vUuozYHXR56w1gbi+fIm5mFsr/M@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy28E//uOaQAtkopsyzmm59IofABz9sF41ezlcd/J5hubOTIU4d
-	0m7nnP73RK6Iwin9TEuwX7VVIbI4GEWLetA1cjPQC42i4gw8+YepPnmuPTSk36sPNku5NiZhyjc
-	laDgDh4/3ZA==
-X-Google-Smtp-Source: AGHT+IEUdCPJiJpyqBaz6iiXCBXVzYTDWVBJoUhGLiGCMAHw7VkL+HZG9N9o2zdQKDxspEDQx15JDhYjLuti
-X-Received: from plwg3.prod.google.com ([2002:a17:902:f743:b0:235:6d5:688b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f611:b0:231:d7f9:dc6d
- with SMTP id d9443c01a7336-23414e9b517mr308516605ad.0.1748493638649; Wed, 28
- May 2025 21:40:38 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:52 -0700
+        bh=PHcAoKcEAz6NjioNuyJCAtZJ04gYQ2Vd9rn/ckUmB94=;
+        b=e47Y73cwsmfeFleVPjqbWQzQSp8/lh/I+Of8T+IobeC6CnlVr1F8UExuByA8GKnEOs
+         /IQNRZaib6QRGmQuJTsAl5ozKBnUTyIRbJjA59YIGVhploaMajUf8aMopDIlDoS6P5ti
+         E9XHA2v7I9OUkbcBkBKDXMqcLQkwdd1GFmMkZnkXzeyQqGCncqvsdzT9FtqSCktegCR0
+         o2/QMm02cerV5J+M+qVIiYxqrgkuesbz22/ZsThj9esW0KKcl+xaO6sPvdSi5YtC/END
+         pq1drgrpvhbrr0aCeGhmT+YL5CopfRSeSXw3KeFgSeXSlAIMpkJMAKGH1h2K+pcJDnJk
+         O5XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1/CXX5RD+m8EdQIxo8jEby4eagCPJ6HQvfZY9RNFFZ4bQ1/l2qIFPfX5jjhpOrKDNkdet8Y5Kzj4Pa1f9aBhV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy07Dc19GE132Y6/t50hrq+fnwkyMqsURCmHSoOC0CMdXgqQdyw
+	BoMGRQMK4FH8qkLpC+m6s55hU6RM8FUlVu1ZIcmkvVIuMp0soI/OWpCIXgGFqO+kQfno7D0UXId
+	bihIL99TDNQ==
+X-Google-Smtp-Source: AGHT+IHsVej8VGf59PVoV/WsAbQv48c+JHrK5n0nxvTWAbXE+gZjkEjQI9js0iwRPBSyxm6B0zMWcwEzk/jC
+X-Received: from pfbbd35.prod.google.com ([2002:a05:6a00:27a3:b0:737:30c9:fe46])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e13:b0:742:a77b:8c4
+ with SMTP id d2e1a72fcca58-745fde79251mr29384777b3a.3.1748493640647; Wed, 28
+ May 2025 21:40:40 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:53 -0700
 In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-17-irogers@google.com>
-Subject: [PATCH v4 16/24] perf top: Make perf_env locally scoped
+Message-ID: <20250529044000.759937-18-irogers@google.com>
+Subject: [PATCH v4 17/24] perf bench synthesize: Avoid use of global perf_env
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -89,123 +89,93 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-The use of the global host perf_env variable is potentially
-inconsistent within the code. Switch perf top to using a locally
-scoped variable that is generally accessed through the session.
+The benchmark doesn't use a data file and so the header perf_env isn't
+used. Stack allocate a host perf_env for use to avoid the use of the
+global perf_env.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-top.c | 39 +++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+ tools/perf/bench/synthesize.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index c63dda6a7017..2327496296be 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1301,7 +1301,7 @@ static int __cmd_top(struct perf_top *top)
- 	perf_set_multithreaded();
- 
- 	if (perf_hpp_list.socket) {
--		ret = perf_env__read_cpu_topology_map(&perf_env);
-+		ret = perf_env__read_cpu_topology_map(perf_session__env(top->session));
- 		if (ret < 0) {
- 			char errbuf[BUFSIZ];
- 			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
-@@ -1624,6 +1624,7 @@ int cmd_top(int argc, const char **argv)
- 		NULL
+diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+index 9b333276cbdb..79d99ba50284 100644
+--- a/tools/perf/bench/synthesize.c
++++ b/tools/perf/bench/synthesize.c
+@@ -114,10 +114,13 @@ static int run_single_threaded(void)
+ 		.pid = "self",
  	};
- 	int status = hists__init();
+ 	struct perf_thread_map *threads;
++	struct perf_env host_env;
+ 	int err;
+ 
+ 	perf_set_singlethreaded();
+-	session = perf_session__new(NULL, NULL);
++	perf_env__init(&host_env);
++	session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
++				      /*trace_event_repipe=*/false, &host_env);
+ 	if (IS_ERR(session)) {
+ 		pr_err("Session creation failed.\n");
+ 		return PTR_ERR(session);
+@@ -144,6 +147,7 @@ static int run_single_threaded(void)
+ 		perf_thread_map__put(threads);
+ 
+ 	perf_session__delete(session);
++	perf_env__exit(&host_env);
+ 	return err;
+ }
+ 
+@@ -154,17 +158,21 @@ static int do_run_multi_threaded(struct target *target,
+ 	u64 runtime_us;
+ 	unsigned int i;
+ 	double time_average, time_stddev, event_average, event_stddev;
+-	int err;
++	int err = 0;
+ 	struct stats time_stats, event_stats;
+ 	struct perf_session *session;
 +	struct perf_env host_env;
  
- 	if (status < 0)
- 		return status;
-@@ -1639,12 +1640,17 @@ int cmd_top(int argc, const char **argv)
- 
- 	status = perf_config(perf_top_config, &top);
- 	if (status)
--		return status;
-+		goto out_delete_evlist;
- 	/*
- 	 * Since the per arch annotation init routine may need the cpuid, read
- 	 * it here, since we are not getting this from the perf.data header.
- 	 */
--	status = perf_env__read_cpuid(&perf_env);
 +	perf_env__init(&host_env);
-+	status = perf_env__set_cmdline(&host_env, argc, argv);
-+	if (status)
-+		goto out_delete_evlist;
-+
-+	status = perf_env__read_cpuid(&host_env);
- 	if (status) {
- 		/*
- 		 * Some arches do not provide a get_cpuid(), so just use pr_debug, otherwise
-@@ -1661,18 +1667,24 @@ int cmd_top(int argc, const char **argv)
- 
- 	if (disassembler_style) {
- 		annotate_opts.disassembler_style = strdup(disassembler_style);
--		if (!annotate_opts.disassembler_style)
--			return -ENOMEM;
-+		if (!annotate_opts.disassembler_style) {
-+			status = -ENOMEM;
-+			goto out_delete_evlist;
+ 	init_stats(&time_stats);
+ 	init_stats(&event_stats);
+ 	for (i = 0; i < multi_iterations; i++) {
+-		session = perf_session__new(NULL, NULL);
+-		if (IS_ERR(session))
+-			return PTR_ERR(session);
+-
++		session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
++					      /*trace_event_repipe=*/false, &host_env);
++		if (IS_ERR(session)) {
++			err = PTR_ERR(session);
++			goto err_out;
 +		}
- 	}
- 	if (objdump_path) {
- 		annotate_opts.objdump_path = strdup(objdump_path);
--		if (!annotate_opts.objdump_path)
--			return -ENOMEM;
-+		if (!annotate_opts.objdump_path) {
-+			status = -ENOMEM;
-+			goto out_delete_evlist;
-+		}
- 	}
- 	if (addr2line_path) {
- 		symbol_conf.addr2line_path = strdup(addr2line_path);
--		if (!symbol_conf.addr2line_path)
--			return -ENOMEM;
-+		if (!symbol_conf.addr2line_path) {
-+			status = -ENOMEM;
-+			goto out_delete_evlist;
-+		}
- 	}
+ 		atomic_set(&event_count, 0);
+ 		gettimeofday(&start, NULL);
+ 		err = __machine__synthesize_threads(&session->machines.host,
+@@ -173,10 +181,8 @@ static int do_run_multi_threaded(struct target *target,
+ 						process_synthesized_event,
+ 						true, false,
+ 						nr_threads_synthesize);
+-		if (err) {
+-			perf_session__delete(session);
+-			return err;
+-		}
++		if (err)
++			goto err_out;
  
- 	status = symbol__validate_sym_arguments();
-@@ -1819,14 +1831,16 @@ int cmd_top(int argc, const char **argv)
- 		perf_top__update_print_entries(&top);
- 		signal(SIGWINCH, winch_sig);
- 	}
--	top.session->env = &perf_env;
+ 		gettimeofday(&end, NULL);
+ 		timersub(&end, &start, &diff);
+@@ -198,7 +204,9 @@ static int do_run_multi_threaded(struct target *target,
  
--	top.session = perf_session__new(NULL, NULL);
-+	top.session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
-+					  /*trace_event_repipe=*/false,
-+					  &host_env);
- 	if (IS_ERR(top.session)) {
- 		status = PTR_ERR(top.session);
- 		top.session = NULL;
- 		goto out_delete_evlist;
- 	}
-+	top.evlist->session = top.session;
- 
- 	if (!evlist__needs_bpf_sb_event(top.evlist))
- 		top.record_opts.no_bpf_event = true;
-@@ -1841,7 +1855,7 @@ int cmd_top(int argc, const char **argv)
- 			goto out_delete_evlist;
- 		}
- 
--		if (evlist__add_bpf_sb_event(top.sb_evlist, &perf_env)) {
-+		if (evlist__add_bpf_sb_event(top.sb_evlist, &host_env)) {
- 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
- 			status = -EINVAL;
- 			goto out_delete_evlist;
-@@ -1863,6 +1877,7 @@ int cmd_top(int argc, const char **argv)
- 	evlist__delete(top.evlist);
- 	perf_session__delete(top.session);
- 	annotation_options__exit();
+ 	printf("    Average time per event %.3f usec\n",
+ 		time_average / event_average);
+-	return 0;
++err_out:
 +	perf_env__exit(&host_env);
- 
- 	return status;
++	return err;
  }
+ 
+ static int run_multi_threaded(void)
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
