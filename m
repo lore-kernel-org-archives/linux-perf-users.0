@@ -1,183 +1,158 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A2A1891A9;
-	Thu, 29 May 2025 06:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187B3C8EB;
+	Thu, 29 May 2025 07:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748501998; cv=none; b=ZsqzYbkwCuzTRgaK/uVqU7oz3EzI4YRw7dyWz2l9+ZBy8TSzwcgO1yczxfxK1XA6PpxEOl+GQy7eEiK+561hq9CTqKFLC1o35EciEcgz/JQiIDpRde3ql+ZexuEzM5/khli4msKARhDBhqb9erLmBgQn2z0X7w7JUZNFHu8NrVU=
+	t=1748502467; cv=none; b=JSl1rR82WSu2QyXVRsQmFeukbnzv1YhrX+ULRZqK6iPjpzTT23a9EHmzYUKfiE3VpMMfUjQRik5+rK4zSR3cZ7dm+hIi0TZ6yEtlW192Wt/swXJQB2FgeWzP5qyqs7fdT5lqX3td20C0hwTGM8tP6YouuVyU+ou2XUZX1k45hHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748501998; c=relaxed/simple;
-	bh=ztOo2P+Kp25kZal9/S6GtVWn5jxb3IbOCVM//Ldz6T0=;
+	s=arc-20240116; t=1748502467; c=relaxed/simple;
+	bh=6cIekbriWiWKfaXCYAeZSta271blHf9u+hSq5kD2qLU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J3xUIre1YBI0tCQtKUnjuSgitgjtvvTwVBKes8XjN2pa5YznqDrSRck4SFlCdJgLKUkdSuBQwQQVAw1q7l4dDVFwG1EpYDy327aFbWPgs4ur+ywIAlEiv3WRkSmBZWu6e/AiG24I0yAU0PvNb4LK6pXF/QEGacif9aF68SWOAO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLDR1S8o; arc=none smtp.client-ip=209.85.219.172
+	 To:Cc:Content-Type; b=iLN3UIYj2X/wEXiD9JECw3WAUZQouXi5yPiQL+nZod9h4CaAnZ5LdUQ/di/zNqrAy7g0RCHHyv/yxuUbsnwS0cH9I7yEWve3Dl3A/qDj5ggqdOmYlDxOL8JLte7+BLA5Gs+vCCKBU2RmBVWZsuppbTpvc2F7ejKvoNZg0JjuBQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlMYABlf; arc=none smtp.client-ip=209.85.219.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLDR1S8o"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7da03bb0cdso359667276.3;
-        Wed, 28 May 2025 23:59:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlMYABlf"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e731a56e111so512898276.1;
+        Thu, 29 May 2025 00:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748501996; x=1749106796; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748502464; x=1749107264; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6QrBk1b7GzNv1v3qwcsG2e8o+iQmGaHfk9Jdu6G+hic=;
-        b=MLDR1S8oPRnyeZcN4Y3NfY62xyR2ZoCwWKTUfxl8vYZfDqS9yK8gvdZtzwSdP/kbtL
-         CoF5MioibhcBWfJGvow7Zk8OW+Ar8lGbq1zvbIrKPTjeTCT49gMeK+x/BMM0Ftk2pHre
-         TRGIZJcJcO1qCFWlYL/+6lXXRN+xhg3k0LNSYnFaWzxql3XYVrvxfYC8iLL3lgY2D/rV
-         CZUxP5mbk4pOrwAp2bB4zzcOmOFGK7FX2xL9wuZFmYHCQTksJJkMc9hLYYByu5xKTmKx
-         q7D/oTfoJDK3P+l7Fh0pkJdfpWTmE8dhlrzfnuyRRI3fxnlttERL2TFjREzfHA5yKEhJ
-         mrMA==
+        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
+        b=SlMYABlfpapnzZbjZey7RE36bUXAZabI0IjJLr+em511CH/92x5uASEw15iYhIqDxK
+         EGoC2keudxkKPWgyvA5D2YMuu9TqS93lDqlG5Nhau3J88srLsM3+5D0iYcwA19Uvi9pY
+         8fucVTPRwtnewjHDRQb1e1pK/54QLqN1QgknnPY7RPsiQcAkdSRsTMjQYGJN94G78DxW
+         ckfJQGDJW3nehYVD8iUsKbQ9yO4WvO0i/InE4xvNLeZtCE16uy13y+WTJ/jtY7oFjF8E
+         lmEcqxQ5VKZ2wtqrQjLIPLwp3pjmuCffpsPFheYB6kh1oT7sjyjUyi/eBFhKhp/RtriC
+         4U9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748501996; x=1749106796;
+        d=1e100.net; s=20230601; t=1748502464; x=1749107264;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6QrBk1b7GzNv1v3qwcsG2e8o+iQmGaHfk9Jdu6G+hic=;
-        b=ilXo+igjseTfxCriK88VcCdwGFUtQI4zsdNnTldS5+odFzxuLAwYvyeHY0gBWc1yWE
-         tcdIWusI/D3l0mcaUoCFNqSWe/e9SwmgcblEa7s21036D8P2+w+srMFrZraGHorY57Xz
-         xFMVrpPTXZb7HKWafPJurPHmEMmVYM3gFg9D1er+6Q65/LpcjrxLjjAzVF75TYbgEtho
-         AOIbXbk4aSmyRUCsLFFwCEaFx24Ry0obYWXfz37TIVrV2XJrO2pHvB5CicuUFyfttG9g
-         rdD3dFHq7ldN2dl+AYhqKaFmAJ0TT+/4TKE+eP58fu9Q/9WGLkx0yO7GKxdz741W2vBA
-         OXFA==
-X-Forwarded-Encrypted: i=1; AJvYcCU23U887aFPeloAtkOdoLKnNWtY/lum4KyoAaQ6u1/HFqo9wZjwqMAT4vHWdzpRHG/ps67nGycca63afEZm+mWUUA==@vger.kernel.org, AJvYcCUvGF2YcmSkD5td7D7cNQ+4/KZlsFeccUyqs+nIUwhhZTQXgTs4r3xDHdqFEp9Afe4xd8ExTo8KysrG50s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc7xJvtSY5BTILTR+6fznyn8Aw+h6akRDRPD+WIKoYfnQ8cn9R
-	bFKFH1OUyLdvEQ5b4BJQdDavwqlzByKjzFaZbQkk+UEmRIxcYkdcHjSOQV+gX2qwGD1yCXPkD2x
-	A1puResbWra2YF931DgVYr84A8HI9N8g=
-X-Gm-Gg: ASbGnctIEK5oSnyXw2KJgDGlN5SC3lru7zBhwIPlqlqdKrW03w4WeAtvqW0zfc5OkEE
-	B6R1B0hygNJxMXfcw6nZZndL4Td1ItlVUyIJe/bhLXYk3NiMlHqqpUK1r8l3GuwT+5AXHbJYyM4
-	zvEk4G09jKxvICMxb8wA9HoL4274ImrLU=
-X-Google-Smtp-Source: AGHT+IHaThjw8dKJ98/uoe+DRSmC/l1hnpdyZwjXDuIcqRBU86D/SoMcww9vk3zzSOJdIuAqv5qDhJjNOzOf9lgvyeo=
-X-Received: by 2002:a05:6902:450e:b0:e7d:9007:8685 with SMTP id
- 3f1490d57ef6-e7d91b453d8mr17018283276.41.1748501995673; Wed, 28 May 2025
- 23:59:55 -0700 (PDT)
+        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
+        b=eVk/BoplTAqaAXac7JOQ0RMOLH/vNghaTiot5XnDrovhGl4D+9bCe1YH+ou3+l6yxm
+         YQG68MR9tGyX3OZvpn93elCowfujIE/iQmk/g8+OaOPSD/CYtomu8KHbgs2vFl4ttecR
+         m6BBjFSF9fRDjbmgit7PdqKpsA39XEz23lRDEKjLDELx1O2q6yvPE9XgcN1QEo5Tib/l
+         IikpwE4XHcP5FsEyq4NZoIYUjRiYNSJh+UBszviLMZmQ045GXBYAbdR42GQrhf7mgPua
+         /0gcg+4IPXdMlUjZNGSicdpYnde9i9uI0yOH6nPO3Au0V5taQMfxFgS9qmUg5kQUfJ7d
+         dGow==
+X-Forwarded-Encrypted: i=1; AJvYcCVIiso0oMa6Lr9KFn2ApcwqiXE/0uQie9OT3oSFHjVZmKJSJsD2nkQnXMFHmP50BONPR8kTGdmG8aSgP/k/0P/Neg==@vger.kernel.org, AJvYcCXr40+sxf3HPl0FFmuJGWqjDgXomzEs/3IabxHy8W8WTOk2DxKpXTirzOuJ82GJvV2/RMsXCQ849znoJiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtbZeY/WY1v4e2kNYZ8ToUQ+88h+bN4n04+RN5OxR/ZUvDlOI5
+	fWnqOun9RlRDv4b6hqtwWv+IMTjTmbP3uXwEI+hmTxC9l3gR6EqZZhIxcCzlOGUJHB2LKC1j2mv
+	kvpKJDIWuejMM+q8lJvZ8thgRHnfpjPQ=
+X-Gm-Gg: ASbGncutmV1/IKr7niZQBGJ6c+eFLCECJcsR5YF47QqbwQPiWEAxtg9GuKNOl/Gxomc
+	Yum07ZBwW7GERO4QL2h653NvabWYti9eHPWBcZmfIpr8I4ZVmOYWBBEQ+J7Bmswc1uhfoNi8507
+	tcGVJKRmCdHYsdK8mmReZTJOGFGTheFac=
+X-Google-Smtp-Source: AGHT+IF2PD3oFwH+ZQPkCKJgOxl/2YbUzJRnx7lBd7GlzLkTmHFvlM+948C0FNI4foXBprodmm3x9TjEwqB8K0rdeU0=
+X-Received: by 2002:a05:6902:705:b0:e7d:9fa6:5fbd with SMTP id
+ 3f1490d57ef6-e7d9fa661d8mr21744381276.30.1748502463961; Thu, 29 May 2025
+ 00:07:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522142551.1062417-1-namhyung@kernel.org> <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
- <aC9VoTL_Cv4R7J-j@x1> <aC-hHTgArwlF_zu9@x1> <aDDy4FQe7sBwECL8@google.com>
-In-Reply-To: <aDDy4FQe7sBwECL8@google.com>
+References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 28 May 2025 23:59:44 -0700
-X-Gm-Features: AX0GCFvUB4AHXHI3CXK5FrvsQphFt_CGfX8AZNCotoRfo_fx8ZZO_f18V0VTW34
-Message-ID: <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
+Date: Thu, 29 May 2025 00:07:33 -0700
+X-Gm-Features: AX0GCFs2lparwpsWTkYFeYSMnbmbNHDg-hi5m0VylnxpQl3BZQy3B72nVEkdAZU
+Message-ID: <CAH0uvojyKi6tN2RfEsG25fn8G5G3iz+pWqjprm9qYaD_sA+i_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
+ error messages verbose
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Arnaldo and Namhyung,
+Hello Ian,
 
-On Fri, May 23, 2025 at 3:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Thu, May 22, 2025 at 07:11:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, May 22, 2025 at 01:49:37PM -0300, Arnaldo Carvalho de Melo wrot=
-e:
-> > > On Thu, May 22, 2025 at 08:33:16AM -0700, Howard Chu wrote:
-> > > > $ sudo /tmp/perf/perf test -vv 112
-> > > > 112: perf trace summary:
-> > > > 112: perf trace summary
-> > > > --- start ---
-> > > > test child forked, pid 1574993
-> > > > testing: perf trace -s -- true
-> > > > testing: perf trace -S -- true
-> > > > testing: perf trace -s --summary-mode=3Dthread -- true
-> > > > testing: perf trace -S --summary-mode=3Dtotal -- true
-> > > > testing: perf trace -as --summary-mode=3Dthread --no-bpf-summary --=
- true
-> > > > testing: perf trace -as --summary-mode=3Dtotal --no-bpf-summary -- =
-true
-> > > > testing: perf trace -as --summary-mode=3Dthread --bpf-summary -- tr=
-ue
-> > > > testing: perf trace -as --summary-mode=3Dtotal --bpf-summary -- tru=
-e
-> > > > testing: perf trace -aS --summary-mode=3Dtotal --bpf-summary -- tru=
-e
-> > > > testing: perf trace -as --summary-mode=3Dcgroup --bpf-summary -- tr=
-ue
-> > > > testing: perf trace -aS --summary-mode=3Dcgroup --bpf-summary -- tr=
-ue
-> > > > ---- end(0) ----
-> > > > 112: perf trace summary                                            =
-  : Ok
+> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
+m> wrote:
 > >
-> > > Thanks, tested and applied to perf-tools-next,
+> > Currently, BTF tests fail constantly, this series fixes two major reaso=
+ns
+> > why they fail, and makes the error messages acquired when using '-vv'
+> > more verbose, so when they fail, one can easily diagnose the problem.
 > >
-> > But then when running all the tests, since this does system wide
-> > tracing, it fails:
+> > Before:
+> >     $ sudo /tmp/perf test enum -vv
+> >     107: perf trace enum augmentation tests:
+> >     107: perf trace enum augmentation tests                            =
+  : Running
+> >     --- start ---
+> >     test child forked, pid 783533
+> >     Checking if vmlinux exists
+> >     Tracing syscall landlock_add_rule
+> >     Tracing non-syscall tracepoint syscall
+> >     ---- end(-1) ----
+> >     107: perf trace enum augmentation tests                            =
+  : FAILED!
 > >
-> > 112: perf trace summary                                              : =
-FAILED!
+> > After:
+> >     $ sudo /tmp/perf test enum -vv
+> >     107: perf trace enum augmentation tests:
+> >     107: perf trace enum augmentation tests                            =
+  : Running
+> >     --- start ---
+> >     test child forked, pid 851658
+> >     Checking if vmlinux exists
+> >     Tracing syscall landlock_add_rule
+> >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_st=
+art
+> >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup=
+,timer:hrtimer_start, output:
+> >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
+> >                          \___ unknown tracepoint
 > >
-> > It works with the following patch applied, please check and ack/review:
+> >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not fo=
+und.
+> >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable t=
+his feature?.
 > >
-> > From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date: Thu, 22 May 2025 19:01:47 -0300
-> > Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
+> >     Run 'perf list' for a list of valid events
 > >
-> > And it is being successfull only when running alone, probably because
-> > there are some tests that add the vfs_getname probe that gets used by
-> > 'perf trace' and alter how it does syscall arg pathname resolution.
+> >      Usage: perf trace [<options>] [<command>]
+> >         or: perf trace [<options>] -- <command> [<options>]
+> >         or: perf trace record [<options>] [<command>]
+> >         or: perf trace record [<options>] -- <command> [<options>]
 > >
-> > This should be removed or made a fallback to the preferred BPF mode of
-> > getting syscall parameters, but till then, run this in exclusive mode.
+> >         -e, --event <event>   event/syscall selector. use 'perf list' t=
+o list available events---- end(-1) ----
+> >     107: perf trace enum augmentation tests                            =
+  : FAILED!
 > >
-> > For reference, here are some of the tests that run close to this one:
-> >
-> >   127: perf record offcpu profiling tests                              =
-: Ok
-> >   128: perf all PMU test                                               =
-: Ok
-> >   129: perf stat --bpf-counters test                                   =
-: Ok
-> >   130: Check Arm CoreSight trace data recording and synthesized samples=
-: Skip
-> >   131: Check Arm CoreSight disassembly script completes without errors =
-: Skip
-> >   132: Check Arm SPE trace data recording and synthesized samples      =
-: Skip
-> >   133: Test data symbol                                                =
-: Ok
-> >   134: Miscellaneous Intel PT testing                                  =
-: Skip
-> >   135: test Intel TPEBS counting mode                                  =
-: Skip
-> >   136: perf script task-analyzer tests                                 =
-: Ok
-> >   137: Check open filename arg using perf trace + vfs_getname          =
-: Ok
-> >   138: perf trace summary                                              =
-: Ok
-> >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Howard Chu <howardchu95@gmail.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Changes in v2:
+> > - Add an extra newline after error messages
+> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
+> > - Take the debug diff for explanation out of patch 5 to make it apply
+> >   normally
+> > - Add base-commit in this cover letter
 >
-> Looks good to me.
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Thanks Howard! I did some testing but see failures that may be
+> pre-existing issues:
 
-Nacked (sorry). I think running them tests in parallel is great
-because it points out a problem that perf trace has. Please check out
-this approach: https://lore.kernel.org/linux-perf-users/20250529065537.5299=
-37-1-howardchu95@gmail.com/T/#u
+Again, thank you for spending time testing this series! It has been
+some time... But hopefully this: [1] along with the BTF test v3: [2]
+can resolve the issues.
+
+[1]: https://lore.kernel.org/linux-perf-users/20250529065537.529937-1-howar=
+dchu95@gmail.com/T/#u
+[2]: https://lore.kernel.org/linux-perf-users/20250528191148.89118-1-howard=
+chu95@gmail.com/T/#t
 
 Thanks,
 Howard
