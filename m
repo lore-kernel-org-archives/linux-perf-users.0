@@ -1,46 +1,46 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2069.outbound.protection.outlook.com [40.107.220.69])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2048.outbound.protection.outlook.com [40.107.93.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9979D225A2C;
-	Thu, 29 May 2025 12:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ABB224B1B;
+	Thu, 29 May 2025 12:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522136; cv=fail; b=AF74Mv+vv5181ADBcTRig37lHoMn1KnOorEMHp3xwbaKE2ydMpTqKq6bZnRczzqiw3CoAFwgDvgBNo1tX/oLkMakZSSbuToRndKDqhmSs0ZEKK7XLEN6CUb/GrRRbvuVTSV/SF4wd96MXuAhR0ljBeuQu6byA/LlUapMp/jgBFU=
+	t=1748522144; cv=fail; b=I52JgtF4/Fi7SxGTEzAdn4hCZtEwmPFMB1bDZ0vl3Q4oNzqchaiFRc4BA3aKnmU2lCrjhh2J4eHv+ENyEtkHfxBNcL9hmgpwMNGkavwbyDoMkf6XmL0m7f6JAlENZl0RnqyxYUFKqidXt1M/Sp4E5QUwONRO5Or6wuJapOOjgxU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748522136; c=relaxed/simple;
-	bh=r/A0hPlikeGJaW9Kqr/FNsYE5zSTLsbJywbRmbCsFwY=;
+	s=arc-20240116; t=1748522144; c=relaxed/simple;
+	bh=8m2dYGOUHlHtbHXKM20enZzd9/uxNZ9OvkWKr7rzQ4Y=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SDV7qLopn4WuQR0NN/wwr/cWOzdlM0825eGB1WJmuPz9/7LbiLuiizRec+B+EMD3U2JrEHwEcLzPS+8pUsn5FrqHEKEnT728AZcVAf1xpZmDd9klNMHzuSbn1SLwrXQgXy7ppStw1ZFoz2lNHks847AGABbJiycjbGePZ9nQZMM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R9CZVHkg; arc=fail smtp.client-ip=40.107.220.69
+	 MIME-Version:Content-Type; b=IMeX2HLw7YIVyLLWdAHcZ6aygg9llmkCVXFHeuYOsa/BNMDpe5mwKn1IB/tcMlbIImS0TJWSxoQwyay44S03yOxzckGSWFdZBb8qZXJUSQK2ggD3mpFdDgU5T2R+Oc48DS0ZDtqJA2NjTl+IJi6Ao6uKHjnEPvo+/iFNpFWls4c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wZcfiB2k; arc=fail smtp.client-ip=40.107.93.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R9CZVHkg"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wZcfiB2k"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nVZT1MYPueaW1eDj7lmau4jHPyBeOMO2XKqC055Lp/8Y6HBmoXVgb6kzPauwhMjZhRt3wOxeiDr2vlKv0FpEf71A9gApysPRNXOnaSb4ghMmUQCuce6/UvINCuNvbYnF82sa7kLHq/PGFVxofe7ci+5FhLpH0exMsDiDY2NKORu6ONO/wYcpzI/Fay//lbziJsflIUpMPlT8FXEGGrSTZ41F/OERicp9/Nfm8W1UujRBG1wsM1WnUkhXp7vMFHLSlRgSL0tV7JOe9LjKRpe9zCaa03ms5pzap+cEngiS7wREWlsrr4vFFsjZ8YHoeqZqV5TmgmRGJKqtEV1UbpajBA==
+ b=bV8Q3qBEEnE/3OuXdmvLdEA0xI2/3O7Lt6wtA/J4Ipb//fwrJgud9JSAiz1xRS+q1pQc4WnoOBsrDlXN+UKC18G3ONRiMqbZKOiwbe2cYOLNbrIaT5fYoSmWxaUv6JFM616/rBAi/C2BgZ++5tse6+empe45T8uwz3KXBTjxqCMJtdBufC2Eexk1r18Xkj2mNkM9IttXLApd/37A6KWVlhm9LVQtOEdYQImSnWrrN26AoIcf78q5ESQgXaDoKQeYIgFNUuVeQIjDcGsDM4nlgBB8J0pNcBm3Mypd4YJr1TcmKfkUMTx5A937+fifyIk1H5rjem97c/8Nj0zyocvx0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tp7FFhhUlw+PBwU9pm8ZkVDOkQGDtuCiHmNblgHOLUs=;
- b=wLe2rFuAHtFimDe4Od/TpOPy5lPpDKfPD0fD78qs0vMa4/+0gTTyaVXbrg4tFgM232nQc1XoGsEpEZ/bgrxoEuY9ZcgwE78OKLv4aPaiKVEbxbmMgeJYp7Tm4xSzNNIIYkkRcjUMTwQTkMX5SJG5zAtYVmTQxmzxB0CakOamP4aIrU/+BaJmALkMzdxyNAVB1uD5A5EVpi4r9WlUrlkVMsNlhPW8XG38aMMrSo58kzGKJqbYHbiVu62L/4OtWVc0ZpTnhzJ7qK2W4SdiobEXPbMAJXShk4hhSocFDpz6sbY2Vzz+t5ZKnBL6pOaNoctdgzzxhX16RhSxekr7q++SJw==
+ bh=DFAlZ/WkEXSqnCgSK1fYbKV/nr0l0cmpVFzf2Zq1NvI=;
+ b=sRPh9Eu8T3JtvQc3wsl+ralliECkQRMXs6HW14LauWBJuF968gLskrbu/bhmRxBek4yOdSs916tpAoStRpMk2D4v9bi0Gcu8fL3Yqj/4KermiWOcgufI7966rQ0zCUq8y7yniIQ/O+1h8WVOXwmB/x+g5lK7dg/z6nAReMraK4kIoym9a3Je5lQ3WbNNmyXOy5GTGLPV/1wFwNPCCcypqGPHLrHGQP9Sn+sf9Zi/UYVACOqD9iMFUWKPeYmKSRJuOEO0Axbdq7zPD+oTPqtakt/uw/u386glrZdD9GasRKcNXHh7yK1NHrGFXcj+VjgpaaBcFgGb0eBvzIEblTjbEg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tp7FFhhUlw+PBwU9pm8ZkVDOkQGDtuCiHmNblgHOLUs=;
- b=R9CZVHkgTJyWY860o8uyNFNOykY5qz/RH+s2Fzx3EXLJNCELguF2qOjMIA5I+9kC0HqKg+aiz6rcVvnWtUmlPnBVUpnmjF4YC1p6OcKuRDw1VtfAOKgLKFAD38V4bDgVHhcjKnyIhLnmkwmdAQd1EI+yOsCKPHdfXdblb90sg4k=
-Received: from SJ0PR13CA0146.namprd13.prod.outlook.com (2603:10b6:a03:2c6::31)
- by CY5PR12MB6252.namprd12.prod.outlook.com (2603:10b6:930:20::17) with
+ bh=DFAlZ/WkEXSqnCgSK1fYbKV/nr0l0cmpVFzf2Zq1NvI=;
+ b=wZcfiB2k9wXrrFN/8W06+zSJGvtDiBEnlpQMuMrojwlGrFRnKt0HC16Z07kBrw3Uu/kFN9kMWYL7Y0bBlIMxwL478oWbOl4QhVoBvPZJzOTkzAWbzhA0eewk7M6Y1kuGo3PwBoUrIbFTnpnAWZMeenI8qoutd0Twm0HCfJ/IzfM=
+Received: from SJ0PR05CA0102.namprd05.prod.outlook.com (2603:10b6:a03:334::17)
+ by IA0PR12MB8893.namprd12.prod.outlook.com (2603:10b6:208:484::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Thu, 29 May
- 2025 12:35:31 +0000
-Received: from SJ1PEPF00002311.namprd03.prod.outlook.com
- (2603:10b6:a03:2c6:cafe::6e) by SJ0PR13CA0146.outlook.office365.com
- (2603:10b6:a03:2c6::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.16 via Frontend Transport; Thu,
- 29 May 2025 12:35:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 29 May
+ 2025 12:35:35 +0000
+Received: from SJ1PEPF00002313.namprd03.prod.outlook.com
+ (2603:10b6:a03:334:cafe::27) by SJ0PR05CA0102.outlook.office365.com
+ (2603:10b6:a03:334::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.17 via Frontend Transport; Thu,
+ 29 May 2025 12:35:34 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002311.mail.protection.outlook.com (10.167.242.165) with Microsoft
+ SJ1PEPF00002313.mail.protection.outlook.com (10.167.242.167) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 12:35:30 +0000
+ 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 12:35:34 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
- 2025 07:35:25 -0500
+ 2025 07:35:29 -0500
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
 	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -65,9 +65,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Ingo Molnar <mingo@redhat.com>,
 	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, "Santosh
  Shukla" <santosh.shukla@amd.com>, Ananth Narayan <ananth.narayan@amd.com>,
 	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 3/4] perf test amd: Add IBS load/store swfilt tests
-Date: Thu, 29 May 2025 12:34:55 +0000
-Message-ID: <20250529123456.1801-4-ravi.bangoria@amd.com>
+Subject: [PATCH 4/4] perf doc amd: Update perf-amd-ibs man page
+Date: Thu, 29 May 2025 12:34:56 +0000
+Message-ID: <20250529123456.1801-5-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250529123456.1801-1-ravi.bangoria@amd.com>
 References: <20250529123456.1801-1-ravi.bangoria@amd.com>
@@ -83,95 +83,165 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002311:EE_|CY5PR12MB6252:EE_
-X-MS-Office365-Filtering-Correlation-Id: 100f8b31-2834-4748-a16f-08dd9ead4c42
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002313:EE_|IA0PR12MB8893:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb74c1a6-248b-46ae-d71f-08dd9ead4f13
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AmyZwo1HUG1EqspM24N8BvnGIHsJIj7QlvePRvCBAHep24DzqDkEzZzm9BJ/?=
- =?us-ascii?Q?NkcqIoLiC4NGCH7kzKhyZQb/2YXvou9Q2lvHQ7XrImUJXlW5fWvKTC0jtEvQ?=
- =?us-ascii?Q?UyESvpj+J3CvISjfWx6+8G0KFGuHjERVgEN/wJ9WePnH4V5E4+Fjb9a+NDCD?=
- =?us-ascii?Q?KuE1hQX6xb4SHHSh/Nbyxa2HngOPVplMlmF4lUS2qjarydvtBvd9zILO5Jjg?=
- =?us-ascii?Q?6EkRvCIF55KOXD940VXfZCsBKdQoeiiv0qQ/NV7/KYaDo6SFsiGh1DOAHEhO?=
- =?us-ascii?Q?hM2w1/xmM5wQMFXV4DWZntyCEQN2cjawHNsU/innVuJuVh5dwkBmMk5v9mdd?=
- =?us-ascii?Q?MVCJBFK7hwQRcoYgxBB/tOMe7hDqeESarXCRv1RR0at1T4sZvl2GAmOuPhtt?=
- =?us-ascii?Q?9yv6MZCflqRTgqfqLeJFik8RvlkeJngaBQx6K7GIf0gbAq7WgpuvCqLDVoA5?=
- =?us-ascii?Q?3p3c406EnMVkJ9szIjLnP/+W5AfWsBU4mQC0ox+S/iUs925n4Jt3oA1If12+?=
- =?us-ascii?Q?rHslJ+ItagDgjz9P6qvhRos/Z03hfBSGysEWVQ692+yrdLxmf3qXnTwNe5bd?=
- =?us-ascii?Q?uv4PXmnHwmFi1EHrCpAvoqqFJ8hXDDSyU0mRJO9Q2CkQ/1xtlpnRXc05N35q?=
- =?us-ascii?Q?lt729H8C7sz8e1puo/1vG24ieOpxKw90EV3n1dGNE0snh/eXukiWTPyCivSz?=
- =?us-ascii?Q?yfvj9+dE/VcZ1hyzdhEHXpjt+xW8RNhv6pJCdTJD/+RDSb1q0urDcKyo5Chy?=
- =?us-ascii?Q?z8pcv1zkgusetYCIva2e9/yJeBULP46D616BgyQB5L6vLlZpty+7QVZGYgnq?=
- =?us-ascii?Q?84viy/XieQ/Xd9g4hGXA2z2Wn8s2dQGNRNmXiM2UMnTONCHrUbgK6aIp5MBn?=
- =?us-ascii?Q?t7o+5CvF595HdB4N0/VhAoeBdRH5P6+2GIWYs2+Fn29vBpOzdWDdThABXbuG?=
- =?us-ascii?Q?+PtX+g3KC6cVVltpVGkmOKnihi+BzKBmLXyQS6+cQIRWhV3iG68ma0DQ/xCZ?=
- =?us-ascii?Q?hHUJCrDfKeuMp5fCdDXCFnSqpSgrPuTy8R0ZK2D4m0LAkhJcFpq/8ZpzIMUk?=
- =?us-ascii?Q?U1qSyjUduyqfo7n8d/Zbnm252O23KKjmjMAKwgeImL2ivbzdftMPg9vr24Js?=
- =?us-ascii?Q?stnIxaBMvrtMjN87iysCUQW1Q/O2O4IDXGicQ0OvP7n2kvYExdfmGoWkbKIW?=
- =?us-ascii?Q?/BohwvasARAfJwtYkGfmDLQCM/f4v/5MnaiR2b2LpS6mG7l+pBkwS8niDzri?=
- =?us-ascii?Q?WWkoJI5mrzeuI3PDJfHGNtcFL84BD8lpdD1TwRGVE31LjOyVGzogspOJ9iVG?=
- =?us-ascii?Q?SWGtWunfaUUL1icDoPeHt5uayl8mSy0oXDkYB0EwI/E0COYm41ZX2k/0g161?=
- =?us-ascii?Q?JtJYQ6lFmFHD06FyAFcOKpjqnkJb6onNh2paWH4vvSpseVLRchGBG1ilFq/c?=
- =?us-ascii?Q?yNpTEumyAJRqrLlrlpvOh5GDnTaexK06oBo4RPxYr/8UvNYJaA/vXaq+PK6u?=
- =?us-ascii?Q?r7vzsqkm8EI+KXyWl3JR8vXAwuV7NFz99GH8?=
+	=?us-ascii?Q?Pypg4iiqTONLh3efz2iWa88TggrlsBdlsvdZuVAVvFvzGLi9OI8LFU1ik+BA?=
+ =?us-ascii?Q?DQwYW2LRbbNoHcqt1r9BfiTiOwl99KjyLJqhFnU2U4nmaM3lvB52efWqdkbL?=
+ =?us-ascii?Q?JpCuOaSclwm+ZWF2+iMejND3vYmEDZm/CkBNdGE7lozCvMLkNvXTPrqFVG2d?=
+ =?us-ascii?Q?+4UbbfL/fMjQM+0WLf4iTRw351HnrPw6HHAcTMFczz/7SmR0rIKdE7j6QMfw?=
+ =?us-ascii?Q?emD60zJp3/AvIvvZ0zkIjBgO4FzMD7BrOHmcuiU8mM/ovX0x39gRykw/GkI9?=
+ =?us-ascii?Q?wpMPo5k+4k2xsd06AWjE8GtNoVMxgtRvDYM/vZfGYR1t2B3iXRxv+AEyVpfZ?=
+ =?us-ascii?Q?KzwNTS7HJnQVnquhhhETZfBAZ3eYr/YRbs2TTgYnUQZjG8ewgOiSRieFMSUY?=
+ =?us-ascii?Q?+zLaodUV1DPIxf2n7/mt9wj/m+R1MO3gxiJF0+GpM2g76VkETPj6K/vqXA1/?=
+ =?us-ascii?Q?NdVot+b2Md8T1thw05VIY1pCCt5VJTxKFdUSGZ84hTRcpq8ULpY7FP/AYBNI?=
+ =?us-ascii?Q?zpQlRb7YcixnaN4XvxQNVFV5l7NUcr3vb1BaDTMn5zflEkWBzZeK04awSPvB?=
+ =?us-ascii?Q?YV6a9bwAm/JFuTdeBLYmd1Gpa5o5p8lsl2zgVIl3v/m1s+vqwAgIaxACFtzJ?=
+ =?us-ascii?Q?9BlJ6BB8/mlFJigGyQe6N4X1Y87HJtkS+0JAnL5bk1zvlliOJJv2d3O/8hig?=
+ =?us-ascii?Q?XrsH94pez5ApDjT4DTXXM/1LA6T8C7dsC1TRhlwABDkB25+euIuoHDYThTJ/?=
+ =?us-ascii?Q?yI2mWeX0Ufc/2HHfJMeewPMz/+Px9tdBNHNCniVZlfFbIEsZVr6RildZEads?=
+ =?us-ascii?Q?L7+U7L4c7lppgMctdVAko+mVwrqFuanltX+2FcVrWf/JX73p7Ufo4XIlQ1OF?=
+ =?us-ascii?Q?l0JlMgf7mt+3BVUEcLubxvfJ3YocDDsZ5f+/Q6YAGE9PnUBmIRXxegvHXJ9a?=
+ =?us-ascii?Q?8KDSfvl8ajy7o6ny/KT0+xhxZXttBNrP5ywU+Yf5QoFSSAYAFOkkEUJupN05?=
+ =?us-ascii?Q?iX4y77gbbz2JyQX8a+l9gq4V8DIVcyeDzyIuq+rKli6dJ5YUPTkqCaDWSrr/?=
+ =?us-ascii?Q?JLc/Wq+RSfBPpQehBuIbKDpyF/xBscEpH1mMXkvbSpY6+dH4Cix+HhyB5gSo?=
+ =?us-ascii?Q?3MHD2hyQwsUC3gqLzvaH3TF74s/mUDj7eAnIf0vGAF8wRu0Baz82T/IJHr68?=
+ =?us-ascii?Q?Uf7+l+nataGPt2kWW3sd4pvYcdiq3HzelB2WoEPmauteR+hPeYjSQLZsa2LT?=
+ =?us-ascii?Q?yAu5yjrrKPiHr5ukzij1GUJAnclplvtYdcIzAvodPRF+z/uavrmH7vOLgTb/?=
+ =?us-ascii?Q?s6WKXrxyw7pPx78TtpE8gFIg+4q4lFHwp6NJCdT7vpzTsSO6JEtdrxS4RP9Z?=
+ =?us-ascii?Q?OF09pUQ4dY2+2uFN2S8bAxszeNBaka1aeZ1AOjhO3rSfqqCDekNp4G46q7AT?=
+ =?us-ascii?Q?u4q59qvzGUnR8BXKH360FmMm9ht45dBAQ5jJa5vKwf/qvMEPtpqjb4xdUH2K?=
+ =?us-ascii?Q?H5Kwzs1fSPaglhnXiWr9F+kGu5w6v+d6gG3R+T9tUAwGbrnoHmLObSFmEA?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:35:30.1183
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:35:34.8355
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 100f8b31-2834-4748-a16f-08dd9ead4c42
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb74c1a6-248b-46ae-d71f-08dd9ead4f13
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002311.namprd03.prod.outlook.com
+	SJ1PEPF00002313.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6252
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8893
 
-Add basic sanity tests for load-only, store-only and load-store-only
-sampling with IBS OP PMU.
+o Document software filtering capabilities provided by IBS kernel
+  driver.
+o After recent perf-mem hist updates [1], the perf-mem example command
+  in the perf-amd-ibs man page renders output differently. Unfortunately,
+  there is no way to get the same aggregated output now. So use alternate
+  command that can aggregate and show data at the command level.
+
+[1]: https://lore.kernel.org/r/20250430205548.789750-1-namhyung@kernel.org
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- tools/perf/tests/shell/amd-ibs-swfilt.sh | 26 ++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/perf/Documentation/perf-amd-ibs.txt | 72 +++++++++++++++++------
+ 1 file changed, 54 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/tests/shell/amd-ibs-swfilt.sh b/tools/perf/tests/shell/amd-ibs-swfilt.sh
-index 83937aa687cc..bc052a36a9b4 100755
---- a/tools/perf/tests/shell/amd-ibs-swfilt.sh
-+++ b/tools/perf/tests/shell/amd-ibs-swfilt.sh
-@@ -65,3 +65,29 @@ if [ ${user_sample} -ne 0 ]; then
-     echo "[FAIL] unexpected user samples: " ${user_sample}
-     exit 1
- fi
+diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
+index 55f80beae037..a543a68e3c94 100644
+--- a/tools/perf/Documentation/perf-amd-ibs.txt
++++ b/tools/perf/Documentation/perf-amd-ibs.txt
+@@ -33,9 +33,6 @@ if IBS is supported by the hardware and kernel.
+ IBS Op PMU supports two events: cycles and micro ops. IBS Fetch PMU supports
+ one event: fetch ops.
+ 
+-IBS PMUs do not have user/kernel filtering capability and thus it requires
+-CAP_SYS_ADMIN or CAP_PERFMON privilege.
+-
+ IBS VS. REGULAR CORE PMU
+ ------------------------
+ 
+@@ -160,6 +157,38 @@ System-wide profile, fetch ops event, sampling period: 100000, Random enable
+ 
+ etc.
+ 
++IBS SW FILTERING
++----------------
 +
-+echo "test load/store swfilt"
++IBS PMU driver provides few additional software filtering capabilities. When
++supported, kernel exposes config format through the following files:
 +
-+# load/store swfil
-+if [ -f /sys/bus/event_source/devices/ibs_op/caps/swfilt_ldst ]; then
-+	# test load only sampling
-+	non_load_sample=$(perf record -e ibs_op/swfilt=1,ldop=1/ --raw-samples -o- perf test -w sqrtloop | perf script -D -i- | grep -c "LdOp 0")
-+	if [ ${non_load_sample} -ne 0 ]; then
-+		echo "[FAIL] unexpected non-load samples: " ${non_load_sample}
-+		exit 1;
-+	fi
++  /sys/bus/event_source/devices/ibs_fetch/format/swfilt
++  /sys/bus/event_source/devices/ibs_op/format/swfilt
 +
-+	# test store only sampling
-+	non_store_sample=$(perf record -e ibs_op/swfilt=1,stop=1/ --raw-samples -o- perf test -w sqrtloop | perf script -D -i- | grep -c "StOp 0")
-+	if [ ${non_store_sample} -ne 0 ]; then
-+		echo "[FAIL] unexpected non-store samples: " ${non_store_sample}
-+		exit 1;
-+	fi
++1. Privilege (user/kernel) filtering. IBS PMUs do not support privilege
++filtering in hardware so IBS driver supports it as a software filter.
 +
-+	# test load/store only sampling
-+	non_load_store_sample=$(perf record -e ibs_op/swfilt=1,ldop=1,stop=1/ --raw-samples -o- perf test -w sqrtloop | perf script -D -i- | grep -c "LdOp 0 StOp 0")
-+	if [ ${non_load_store_sample} -ne 0 ]; then
-+		echo "[FAIL] unexpected non-load/store samples: " ${non_load_store_sample}
-+		exit 1;
-+	fi
-+fi
++  ibs_op/swfilt=1/u               --> Only usermode samples
++  ibs_op/swfilt=1/k               --> Only kernelmode samples
++  ibs_fetch/swfilt=1/u            --> Only usermode samples
++  ibs_fetch/swfilt=1/k            --> Only kernelmode samples
++
++  Privilege filtering is always available when "swfilt" is supported.
++  So, kernel does not expose any separate PMU capability for this.
++
++2. Load/Store sampling. IBS OP PMU do not support load/store filtering in
++hardware, so IBS driver supports it as a software filter.
++
++  ibs_op/swfilt=1,ldop=1/         --> Only load samples
++  ibs_op/swfilt=1,stop=1/         --> Only store samples
++  ibs_op/swfilt=1,ldop=1,stop=1/  --> Load OR store samples
++
++  Kernel creates following PMU capability file when load/store software
++  filtering is supported:
++
++  /sys/bus/event_source/devices/ibs_op/caps/swfilt_ldst
++
+ PERF MEM AND PERF C2C
+ ---------------------
+ 
+@@ -173,21 +202,28 @@ Below is a simple example of the perf mem tool.
+ A normal perf mem report output will provide detailed memory access profile.
+ However, it can also be aggregated based on output fields. For example:
+ 
+-	# perf mem report -F mem,sample,snoop
+-	Samples: 3M of event 'ibs_op//', Event count (approx.): 23524876
+-	Memory access                                 Samples  Snoop
+-	N/A                                           1903343  N/A
+-	L1 hit                                        1056754  N/A
+-	L2 hit                                          75231  N/A
+-	L3 hit                                           9496  HitM
+-	L3 hit                                           2270  N/A
+-	RAM hit                                          8710  N/A
+-	Remote node, same socket RAM hit                 3241  N/A
+-	Remote core, same node Any cache hit             1572  HitM
+-	Remote core, same node Any cache hit              514  N/A
+-	Remote node, same socket Any cache hit           1216  HitM
+-	Remote node, same socket Any cache hit            350  N/A
+-	Uncached hit                                       18  N/A
++	# perf mem report -s comm,mem -H --stdio
++	     Overhead       Samples  Command / Memory access
++	  .........................  ..........................................
++	    66.46%        471728     cc1
++	       34.70%          1393     RAM hit
++	       10.42%           370     Remote node, same socket RAM hit
++		6.73%         10239     L2 hit
++		5.84%        293953     N/A
++		3.26%        163803     L1 hit
++		3.16%          1796     L3 hit
++		1.29%            95     Remote core, same node Any cache hit
++		1.06%            73     Remote node, same socket Any cache hit
++		0.00%             6     Uncached hit
++	     9.45%         44994     sh
++		2.60%           131     RAM hit
++		2.21%           219     Remote core, same node Any cache hit
++		1.89%           190     Remote node, same socket Any cache hit
++		1.02%            52     Remote node, same socket RAM hit
++		0.72%           785     L2 hit
++		0.60%         30149     N/A
++		0.27%         13340     L1 hit
++             ...
+ 
+ Please refer to their man page for more detail.
+ 
 -- 
 2.43.0
 
