@@ -1,71 +1,72 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC09719E97A
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 17:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1CD20A5F3
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 18:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748540858; cv=none; b=iOrggszYuv2y+/g+HFpoFEA8F5g4ZZoWWxsjJ0UsDHR4EW0PRSuiA6G9+jhxJpUxC/TizcEcZf6Vi2nEiebBLb6tr6Ll3cifURkbYrBv3V79nWW5mRbiUp6TLGZrfFlfg5FA8LU2k7dtnMiddkiD3/5/ha+ao/uZt6rXNusMR8U=
+	t=1748542364; cv=none; b=omW1wICaCiYkAWpzANdOjU+1vz6AE7E6WaFsHvUHkSXbYDgaI6LC5IDtFxntpC+YV9O+l8IvfwMTXbDY9Kt2H7tJ/lYtwuZy2KyXkv2IrIzyu84c0StGdZqDPGQ0s4SiR4ekQ/xvIlafW0TKrWFQl1BtN1r3TUJgZ2vuzAmE2Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748540858; c=relaxed/simple;
-	bh=HbHocys9iUG4CKQt2nBc5xkBHk46pgbsMnTnBspfcoA=;
+	s=arc-20240116; t=1748542364; c=relaxed/simple;
+	bh=2ydsV6ZgSgtYzg9WHj2tNBO+Kkrb8FHOGa7JSsT4cvE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WjA4ijE5BcfYkgM6baiJc7ooKFw6SK8TyrIBtv3XqXuoT0TFj8pgsG71kxXrqOFzMol+asUjX5uMzIoPdBEoX7ao03wctibjZByWwiv2kzLiOBXm5e5ER4PLpHEp66ymoS3M1VkFzg/rW4UZi6GTjXv38AqcDRTwj79o3JEs10w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UjdkjISO; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=VT4nMjq0uCxJL/8o8V5gh3ThMJAR4C9pine5lPcxdsVo1bw5Rcc+bEbhS7SFbcd4BJ2Zmz2xHiRkGxBnbrAy6ibCpC3hq/6PJITqlKjLbRRnVhAfiLCh2aWij+DpgKB4o3Nir3jKuGSBHu1ihdbN7u94GWjuj3xuK5zTQRXxoqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ciTT6VCw; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UjdkjISO"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3dd745f8839so12665ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 10:47:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ciTT6VCw"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3dd89a85414so22675ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 11:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748540855; x=1749145655; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748542361; x=1749147161; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yE0ipkhs8HeEHqXkUMIR2vLt4OP+aFT5KMiHPVBOXno=;
-        b=UjdkjISOCDTaUniWHr8+hKOTp2eqdBiTL1LWKHfxHrSJHGWh0mF64ptNHTavtd5OvL
-         pwcGbPgsbOptWJ785P1xQkehrEmRSAUY5CLa0Stu51Q85QNlccjrQg7fEo47Sl8xjoWl
-         dtJcwNDwHXApyc8yCyqcEinzm2YgtpvXJWkS4rndOFfVodkRtsrLsEWmOfLSp4NbTC4q
-         q5WvKPlPkK26PAZbAsRh4MzIfKoisoh/BnE9yAoAcWnRlI9m6jircVtIr5NciV4Ms9Xs
-         yEtSDiRLh/umwKoA1IqKfPeYvNy++Gz3Ukyd8l7QRCCQJwEhLCCCe6P+7u5losHBtZ6Y
-         kZ5A==
+        bh=t61BLF3pwdRbHtqmxIlRuedsGVopWpGqVX7wxu8eCA0=;
+        b=ciTT6VCwzNC1efdfyJvIn9HUFACQjEQrxZ2ltnGfE4E7hIYQ1aGjmoQR2Kyzu2tVjl
+         kULkOIzdCb/xObo8gch9me+X1LwJnk+4siX+N7BlDL+lKjFnKVekyP+mfXnxYz8D/Fml
+         XlDti0aFJZkVGJZEDUME3djjvLJb7z8+yXp8ajTM5wNwq7CyYoKxbg8hwMEj8+jix/Ob
+         bge0InXwHkLSVWvPp7jBdYJu9fLbtoYOEqxoBqo1cNlyw50iJMnCXPgQwxhM71oxhkGa
+         vw3Jyds++cFS8+oxxiYIAU5U1dGLItMNN5KfrCv8n5rlxGI3NDbw198Hlp5WZzSlgc3b
+         wZEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748540855; x=1749145655;
+        d=1e100.net; s=20230601; t=1748542361; x=1749147161;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yE0ipkhs8HeEHqXkUMIR2vLt4OP+aFT5KMiHPVBOXno=;
-        b=r+tfhyefjJpb/TtOrgSNXsaVHJWxUsAf9fDn5vzXV/MeAyFt/qnQndKvTm8u6ODkB9
-         CoF2J/CGZyso0ZtkvHfz9eN1GTLJmV1zZKXIHaDevS51wH9KIs7UzaYVqahT6WJr4nJ5
-         9VZSQI1TYhdi2x49AS27g/8SI4tIz+zqmfRnd0AIp4aPZK1U+dBhpwNEHDXjsX0pXLLb
-         A01K5v9E7KGncyZMy1vOAsYnP68Ynao2UhsDKJcWU+EAbrOdEH7hvcCaOWNeHrQN3le8
-         KxgLBLJkh+ux6GL3J1mJ7og74SpZwhGQpDM49eOyAbDobEu1ojGU1MiI/x9Tv7/cKryD
-         ughQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmYlL5O/B8lY089zLlLSRjUe05Z8/r/2Wq/jFS2B16vZvquEHOaYgHdmCsifLxuY3tMvbTKCq7Awm7JWY3zCQp@vger.kernel.org
-X-Gm-Message-State: AOJu0YynMUCUsBveQZVpOibUH/Q7KMMX1fWlRM+45tVhdl0Sv4+bpA+7
-	7I/LsS8AJKYqBEsjBT9eL3+bMbS7IpGFdAz/vokYr6kkPlcuKl4oUrvmaRZBOyhX++fWHZggtPo
-	jEBPrkMYrMfT5jU/NDZ932aN3jDmAQaIsRB+wtNDz
-X-Gm-Gg: ASbGnctEO66cFzAOhZWWJbChUzT3tELMO8VCF4NEdXMJmWJi1Z/jee7ucnKVfM73ZUH
-	iXZrFuFbGs5yG0tkOJbbMQU4sx/6TExdQEK2sUZgyB1UJk8Tl61CXr1WMbLZRhsIOFgB1V7PuWT
-	OJU9SH9fWP+7tG24oSEC09IJNPRbDqki2srQ+mudXtVq67G+jfS1im77p/35gk2DDNUHdHQZOy
-X-Google-Smtp-Source: AGHT+IHCCdSEXUiGdfRyednmvAQMfYHGaskD102mXpZPg/eXarExfDq61XUwL9aw2hgnzh0NZJ9JKetLHYOoK+z35GM=
-X-Received: by 2002:a05:6e02:18cb:b0:3dc:7ffe:33e4 with SMTP id
- e9e14a558f8ab-3dd93102305mr4291085ab.5.1748540854498; Thu, 29 May 2025
- 10:47:34 -0700 (PDT)
+        bh=t61BLF3pwdRbHtqmxIlRuedsGVopWpGqVX7wxu8eCA0=;
+        b=QHaM/Y7jF3ns1r0lSnvxyfxm+JH/CieuLm0JUIwCVEUxYxewlOeHk5r1p7yo7tqP2m
+         eTg+v9F/ofWYkG4/m33KYKenXdHwFJ/ZA3tz0fE9ShhIR2bMT3hpowO39Gc3GTLJpYCb
+         8u1R72RXUtJXYvc6j8YtnkrLjV1l5b1N8sDVzB55NdJPbzN/E3OWwZ2ZwNEvk3SbFQE4
+         mlQMJ2w6wsid5sWx43GiC945WHKlAKRWnAvv1FJsFJaVoSAXD7z2RKKPybf3QPxqVQIJ
+         vk/8Hv45TqJwiO9lw8GMVCtgx0A0oeNMLy3DEArAQ1xNMLwcHKtife9Z62umpYxKyGTw
+         9rwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVz7wPl9vEtnB05KmUqbBy+ctOngdJIoYqwab1PvRk0dYOTnLakcV9F1kG8orIIfy3xzOAFGmw3TyaY/3rdDWmt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH+uFMXxtlMzxKGLYWeX9i7G+S68YX36PlBNS9V517euXdWYu0
+	xFUg9fg6GgF1vY9mP+fcKo+Ot62bXE5wMd4dpoFMI9X3sCNaRuWeAKP/FygKlbSOS0e1qyBG/Mn
+	UTABhpKzX7SZ97Adwgh2JzTTlF3VOktf2Vf201Wtd
+X-Gm-Gg: ASbGnctLfNtw98k0mqTR5TmYdphnnD4vt76QqOIVwsVZMCPoXAhcMWJXwKmcMCkkRtG
+	99ViU6Iqn9zyrWZAfFf1ZV+NkBFCk070t8QH3f/DuvJ3NH98r2OIVCEO7BEn2cfX5rhb7CdTGQG
+	mKsn6RnVanAnBKb7FDVZcauCIvACbhLmaHuOPd2CgyK6jWvBH6T66SBYsbxLYLWnnrrgX9oLqT
+X-Google-Smtp-Source: AGHT+IFOxXgNp9Va7YbjPZ2/YE+7+FTtmjid0G/+eVNqUuyY0OP65Esir2u+4V9ROh3ZWs16CI3IkXlDrAZVNvk5lyQ=
+X-Received: by 2002:a05:6e02:12e7:b0:3dc:7e01:6f6a with SMTP id
+ e9e14a558f8ab-3dd9a733adbmr212235ab.26.1748542360363; Thu, 29 May 2025
+ 11:12:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com> <20250521222725.3895192-3-blakejones@google.com>
-In-Reply-To: <20250521222725.3895192-3-blakejones@google.com>
+References: <20250521222725.3895192-1-blakejones@google.com> <20250521222725.3895192-4-blakejones@google.com>
+In-Reply-To: <20250521222725.3895192-4-blakejones@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 May 2025 10:47:22 -0700
-X-Gm-Features: AX0GCFtPE4eUZ4x4Qqtef2mhzTPd8hLWFCqibuLJF5L8NueR6M2Ow6xxU8v0AEI
-Message-ID: <CAP-5=fVn++LYR6PcRMf9wcBooALVHX2y=i_C6cLsDipN2EDsOg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+Date: Thu, 29 May 2025 11:12:28 -0700
+X-Gm-Features: AX0GCFs5NHiQ9pC1u_KblYSRHFkP21CoKtGP1NYtUB2Y_bNAnjGOYhiC4ZSsCjQ
+Message-ID: <CAP-5=fWZG-N8ZzRh6h1qRuEgFbxTCyEwGu1sZZy+YmnSeGgSSw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf: collect BPF metadata from new programs, and
+ display the new event
 To: Blake Jones <blakejones@google.com>
 Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
@@ -90,438 +91,310 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, May 21, 2025 at 3:27=E2=80=AFPM Blake Jones <blakejones@google.com>=
  wrote:
 >
-> Look for .rodata maps, find ones with 'bpf_metadata_' variables, extract
-> their values as strings, and create a new PERF_RECORD_BPF_METADATA
-> synthetic event using that data. The code gets invoked from the existing
-> routine perf_event__synthesize_one_bpf_prog().
+> This collects metadata for any BPF programs that were loaded during a
+> "perf record" run, and emits it at the end of the run. It also adds suppo=
+rt
+> for displaying the new PERF_RECORD_BPF_METADATA type.
+>
+> Here's some example "perf script -D" output for the new event type. The
+> ": unhandled!" message is from tool.c, analogous to other behavior there.
+> I've elided some rows with all NUL characters for brevity, and I wrapped
+> one of the >75-column lines to fit in the commit guidelines.
+>
+> 0x50fc8@perf.data [0x260]: event: 84
+> .
+> . ... raw event: size 608 bytes
+> .  0000:  54 00 00 00 00 00 60 02 62 70 66 5f 70 72 6f 67  T.....`.bpf_pr=
+og
+> .  0010:  5f 31 65 30 61 32 65 33 36 36 65 35 36 66 31 61  _1e0a2e366e56f=
+1a
+> .  0020:  32 5f 70 65 72 66 5f 73 61 6d 70 6c 65 5f 66 69  2_perf_sample_=
+fi
+> .  0030:  6c 74 65 72 00 00 00 00 00 00 00 00 00 00 00 00  lter..........=
+..
+> .  0040:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ..............=
+..
+> [...]
+> .  0110:  74 65 73 74 5f 76 61 6c 75 65 00 00 00 00 00 00  test_value....=
+..
+> .  0120:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ..............=
+..
+> [...]
+> .  0150:  34 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00  42............=
+..
+> .  0160:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ..............=
+..
+> [...]
+>
+> 0 0x50fc8 [0x260]: PERF_RECORD_BPF_METADATA \
+>       prog bpf_prog_1e0a2e366e56f1a2_perf_sample_filter
+>   entry 0:           test_value =3D 42
+> : unhandled!
 >
 > Signed-off-by: Blake Jones <blakejones@google.com>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
 > ---
->  tools/lib/perf/include/perf/event.h |  18 ++
->  tools/perf/util/bpf-event.c         | 310 ++++++++++++++++++++++++++++
->  tools/perf/util/bpf-event.h         |  13 ++
->  3 files changed, 341 insertions(+)
+>  tools/perf/builtin-inject.c                  |  1 +
+>  tools/perf/builtin-record.c                  |  8 +++
+>  tools/perf/builtin-script.c                  | 15 ++++-
+>  tools/perf/tests/shell/test_bpf_metadata.sh  | 67 ++++++++++++++++++++
+>  tools/perf/util/bpf-event.c                  | 46 ++++++++++++++
+>  tools/perf/util/bpf-event.h                  |  1 +
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c |  4 ++
+>  tools/perf/util/env.c                        | 19 +++++-
+>  tools/perf/util/env.h                        |  4 ++
+>  tools/perf/util/event.c                      | 21 ++++++
+>  tools/perf/util/event.h                      |  1 +
+>  tools/perf/util/header.c                     |  1 +
+>  tools/perf/util/session.c                    |  4 ++
+>  tools/perf/util/synthetic-events.h           |  2 +
+>  tools/perf/util/tool.c                       | 14 ++++
+>  tools/perf/util/tool.h                       |  3 +-
+>  16 files changed, 207 insertions(+), 4 deletions(-)
+>  create mode 100644 tools/perf/tests/shell/test_bpf_metadata.sh
 >
-> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include=
-/perf/event.h
-> index 09b7c643ddac..6608f1e3701b 100644
-> --- a/tools/lib/perf/include/perf/event.h
-> +++ b/tools/lib/perf/include/perf/event.h
-> @@ -467,6 +467,22 @@ struct perf_record_compressed2 {
->         char                     data[];
->  };
->
-> +#define BPF_METADATA_KEY_LEN   64
-> +#define BPF_METADATA_VALUE_LEN 256
-> +#define BPF_PROG_NAME_LEN      KSYM_NAME_LEN
-> +
-> +struct perf_record_bpf_metadata_entry {
-> +       char key[BPF_METADATA_KEY_LEN];
-> +       char value[BPF_METADATA_VALUE_LEN];
-> +};
-> +
-> +struct perf_record_bpf_metadata {
-> +       struct perf_event_header              header;
-> +       char                                  prog_name[BPF_PROG_NAME_LEN=
-];
-> +       __u64                                 nr_entries;
-> +       struct perf_record_bpf_metadata_entry entries[];
-> +};
-> +
->  enum perf_user_event_type { /* above any possible kernel type */
->         PERF_RECORD_USER_TYPE_START             =3D 64,
->         PERF_RECORD_HEADER_ATTR                 =3D 64,
-> @@ -489,6 +505,7 @@ enum perf_user_event_type { /* above any possible ker=
-nel type */
->         PERF_RECORD_COMPRESSED                  =3D 81,
->         PERF_RECORD_FINISHED_INIT               =3D 82,
->         PERF_RECORD_COMPRESSED2                 =3D 83,
-> +       PERF_RECORD_BPF_METADATA                =3D 84,
->         PERF_RECORD_HEADER_MAX
->  };
->
-> @@ -530,6 +547,7 @@ union perf_event {
->         struct perf_record_header_feature       feat;
->         struct perf_record_compressed           pack;
->         struct perf_record_compressed2          pack2;
-> +       struct perf_record_bpf_metadata         bpf_metadata;
->  };
->
->  #endif /* __LIBPERF_EVENT_H */
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index c81444059ad0..36d5676f025e 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-> @@ -1,13 +1,20 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <errno.h>
-> +#include <stddef.h>
-> +#include <stdint.h>
-> +#include <stdio.h>
->  #include <stdlib.h>
-> +#include <string.h>
->  #include <bpf/bpf.h>
->  #include <bpf/btf.h>
->  #include <bpf/libbpf.h>
-> +#include <linux/bpf.h>
->  #include <linux/btf.h>
->  #include <linux/err.h>
-> +#include <linux/perf_event.h>
->  #include <linux/string.h>
->  #include <internal/lib.h>
-> +#include <perf/event.h>
->  #include <symbol/kallsyms.h>
->  #include "bpf-event.h"
->  #include "bpf-utils.h"
-> @@ -151,6 +158,298 @@ static int synthesize_bpf_prog_name(char *buf, int =
-size,
->         return name_len;
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 11e49cafa3af..b15eac0716f7 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2530,6 +2530,7 @@ int cmd_inject(int argc, const char **argv)
+>         inject.tool.finished_init       =3D perf_event__repipe_op2_synth;
+>         inject.tool.compressed          =3D perf_event__repipe_op4_synth;
+>         inject.tool.auxtrace            =3D perf_event__repipe_auxtrace;
+> +       inject.tool.bpf_metadata        =3D perf_event__repipe_op2_synth;
+>         inject.tool.dont_split_sample_group =3D true;
+>         inject.session =3D __perf_session__new(&data, &inject.tool,
+>                                              /*trace_event_repipe=3D*/inj=
+ect.output.is_pipe);
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 136c0172799a..067e203f57c2 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -2161,6 +2161,12 @@ static int record__synthesize(struct record *rec, =
+bool tail)
+>         return err;
 >  }
 >
-> +#define BPF_METADATA_PREFIX "bpf_metadata_"
-> +#define BPF_METADATA_PREFIX_LEN (sizeof(BPF_METADATA_PREFIX) - 1)
-> +
-> +static bool name_has_bpf_metadata_prefix(const char **s)
+> +static void record__synthesize_final_bpf_metadata(struct record *rec)
 > +{
-> +       if (strncmp(*s, BPF_METADATA_PREFIX, BPF_METADATA_PREFIX_LEN) !=
-=3D 0)
-> +               return false;
-> +       *s +=3D BPF_METADATA_PREFIX_LEN;
-> +       return true;
+> +       perf_event__synthesize_final_bpf_metadata(rec->session,
+> +                                                 process_synthesized_eve=
+nt);
 > +}
 > +
-> +struct bpf_metadata_map {
-> +       struct btf *btf;
-> +       const struct btf_type *datasec;
-> +       void *rodata;
-> +       size_t rodata_size;
-> +       unsigned int num_vars;
-> +};
+>  static int record__process_signal_event(union perf_event *event __maybe_=
+unused, void *data)
+>  {
+>         struct record *rec =3D data;
+> @@ -2806,6 +2812,8 @@ static int __cmd_record(struct record *rec, int arg=
+c, const char **argv)
+>         trigger_off(&auxtrace_snapshot_trigger);
+>         trigger_off(&switch_output_trigger);
+>
+> +       record__synthesize_final_bpf_metadata(rec);
 > +
-> +static int bpf_metadata_read_map_data(__u32 map_id, struct bpf_metadata_=
-map *map)
+>         if (opts->auxtrace_snapshot_on_exit)
+>                 record__auxtrace_snapshot_exit(rec);
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 6c3bf74dd78c..4001e621b6cb 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -38,6 +38,7 @@
+>  #include "print_insn.h"
+>  #include "archinsn.h"
+>  #include <linux/bitmap.h>
+> +#include <linux/compiler.h>
+>  #include <linux/kernel.h>
+>  #include <linux/stringify.h>
+>  #include <linux/time64.h>
+> @@ -50,6 +51,7 @@
+>  #include <errno.h>
+>  #include <inttypes.h>
+>  #include <signal.h>
+> +#include <stdio.h>
+>  #include <sys/param.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+> @@ -2755,6 +2757,14 @@ process_bpf_events(const struct perf_tool *tool __=
+maybe_unused,
+>                            sample->tid);
+>  }
+>
+> +static int
+> +process_bpf_metadata_event(struct perf_session *session __maybe_unused,
+> +                          union perf_event *event)
 > +{
-> +       int map_fd;
-> +       struct bpf_map_info map_info;
-> +       __u32 map_info_len;
-> +       int key;
-> +       struct btf *btf;
-> +       const struct btf_type *datasec;
-> +       struct btf_var_secinfo *vsi;
-> +       unsigned int vlen, vars;
-> +       void *rodata;
-> +
-> +       map_fd =3D bpf_map_get_fd_by_id(map_id);
-> +       if (map_fd < 0)
-> +               return -1;
-> +
-> +       memset(&map_info, 0, sizeof(map_info));
-> +       map_info_len =3D sizeof(map_info);
-> +       if (bpf_obj_get_info_by_fd(map_fd, &map_info, &map_info_len) < 0)
-> +               goto out_close;
-> +
-> +       /* If it's not an .rodata map, don't bother. */
-> +       if (map_info.type !=3D BPF_MAP_TYPE_ARRAY ||
-> +           map_info.key_size !=3D sizeof(int) ||
-> +           map_info.max_entries !=3D 1 ||
-> +           !map_info.btf_value_type_id ||
-> +           !strstr(map_info.name, ".rodata")) {
-> +               goto out_close;
-> +       }
-> +
-> +       btf =3D btf__load_from_kernel_by_id(map_info.btf_id);
-> +       if (!btf)
-> +               goto out_close;
-> +       datasec =3D btf__type_by_id(btf, map_info.btf_value_type_id);
-> +       if (!btf_is_datasec(datasec))
-> +               goto out_free_btf;
-> +
-> +       /* If there aren't any variables with the "bpf_metadata_" prefix,
-> +        * don't bother.
-> +        */
-> +       vlen =3D btf_vlen(datasec);
-> +       vsi =3D btf_var_secinfos(datasec);
-> +       vars =3D 0;
-> +       for (unsigned int i =3D 0; i < vlen; i++, vsi++) {
-> +               const struct btf_type *t_var =3D btf__type_by_id(btf, vsi=
-->type);
-> +               const char *name =3D btf__name_by_offset(btf, t_var->name=
-_off);
-> +
-> +               if (name_has_bpf_metadata_prefix(&name))
-> +                       vars++;
-> +       }
-> +       if (vars =3D=3D 0)
-> +               goto out_free_btf;
-> +
-> +       rodata =3D calloc(1, map_info.value_size);
-> +       if (!rodata)
-> +               goto out_free_btf;
-> +       key =3D 0;
-> +       if (bpf_map_lookup_elem(map_fd, &key, rodata)) {
-> +               free(rodata);
-> +               goto out_free_btf;
-> +       }
-> +       close(map_fd);
-> +
-> +       map->btf =3D btf;
-> +       map->datasec =3D datasec;
-> +       map->rodata =3D rodata;
-> +       map->rodata_size =3D map_info.value_size;
-> +       map->num_vars =3D vars;
+> +       perf_event__fprintf(event, NULL, stdout);
 > +       return 0;
-> +
-> +out_free_btf:
-> +       btf__free(btf);
-> +out_close:
-> +       close(map_fd);
-> +       return -1;
 > +}
 > +
-> +struct format_btf_ctx {
-> +       char *buf;
-> +       size_t buf_size;
-> +       size_t buf_idx;
+>  static int process_text_poke_events(const struct perf_tool *tool,
+>                                     union perf_event *event,
+>                                     struct perf_sample *sample,
+> @@ -2877,8 +2887,9 @@ static int __cmd_script(struct perf_script *script)
+>                 script->tool.finished_round =3D process_finished_round_ev=
+ent;
+>         }
+>         if (script->show_bpf_events) {
+> -               script->tool.ksymbol =3D process_bpf_events;
+> -               script->tool.bpf     =3D process_bpf_events;
+> +               script->tool.ksymbol      =3D process_bpf_events;
+> +               script->tool.bpf          =3D process_bpf_events;
+> +               script->tool.bpf_metadata =3D process_bpf_metadata_event;
+>         }
+>         if (script->show_text_poke_events) {
+>                 script->tool.ksymbol   =3D process_bpf_events;
+> diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tes=
+ts/shell/test_bpf_metadata.sh
+> new file mode 100644
+> index 000000000000..ede31d5a3c36
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/test_bpf_metadata.sh
+> @@ -0,0 +1,67 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# BPF metadata collection test.
+> +
+> +set -e
+> +
+> +err=3D0
+> +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +
+> +cleanup() {
+> +       rm -f "${perfdata}"
+> +       rm -f "${perfdata}".old
+> +       trap - EXIT TERM INT
+> +}
+> +
+> +trap_cleanup() {
+> +       cleanup
+> +       exit 1
+> +}
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +test_bpf_metadata() {
+> +       echo "Checking BPF metadata collection"
+> +
+> +       # This is a basic invocation of perf record
+> +       # that invokes the perf_sample_filter BPF program.
+> +       if ! perf record -e task-clock --filter 'ip > 0' \
+> +                        -o "${perfdata}" sleep 1 2> /dev/null
+> +       then
+> +               echo "Basic BPF metadata test [Failed record]"
+> +               err=3D1
+> +               return
+> +       fi
+> +
+> +       # The perf_sample_filter BPF program has the following variable i=
+n it:
+> +       #
+> +       #   volatile const int bpf_metadata_test_value SEC(".rodata") =3D=
+ 42;
+> +       #
+> +       # This invocation looks for a PERF_RECORD_BPF_METADATA event,
+> +       # and checks that its content includes something for the above va=
+riable.
+> +       if ! perf script --show-bpf-events -i "${perfdata}" | awk '
+> +               /PERF_RECORD_BPF_METADATA.*perf_sample_filter/ {
+> +                       header =3D 1;
+> +               }
+> +               /^ *entry/ {
+> +                       if (header) { header =3D 0; entry =3D 1; }
+> +               }
+> +               $0 !~ /^ *entry/ {
+> +                       entry =3D 0;
+> +               }
+> +               /test_value/ {
+> +                       if (entry) print $NF;
+> +               }
+> +       ' | grep 42 > /dev/null
+> +       then
+> +               echo "Basic BPF metadata test [Failed invalid output]"
+> +               err=3D1
+> +               return
+> +       fi
+> +       echo "Basic BPF metadata test [Success]"
+> +}
+> +
+> +test_bpf_metadata
+> +
+> +cleanup
+> +exit $err
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 36d5676f025e..019832ec4802 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -450,6 +450,49 @@ static int synthesize_perf_record_bpf_metadata(const=
+ struct bpf_metadata *metada
+>         return err;
+>  }
+>
+> +struct bpf_metadata_final_ctx {
+> +       const struct perf_tool *tool;
+> +       perf_event__handler_t process;
+> +       struct machine *machine;
 > +};
 > +
-> +static void format_btf_cb(void *arg, const char *fmt, va_list ap)
+> +static void synthesize_final_bpf_metadata_cb(struct bpf_prog_info_node *=
+node,
+> +                                            void *data)
 > +{
-> +       int n;
-> +       struct format_btf_ctx *ctx =3D (struct format_btf_ctx *)arg;
+> +       struct bpf_metadata_final_ctx *ctx =3D (struct bpf_metadata_final=
+_ctx *)data;
+> +       struct bpf_metadata *metadata =3D node->metadata;
+> +       int err;
 > +
-> +       n =3D vsnprintf(ctx->buf + ctx->buf_idx, ctx->buf_size - ctx->buf=
-_idx,
-> +                     fmt, ap);
-> +       ctx->buf_idx +=3D n;
-> +       if (ctx->buf_idx >=3D ctx->buf_size)
-> +               ctx->buf_idx =3D ctx->buf_size;
-> +}
-> +
-> +static void format_btf_variable(struct btf *btf, char *buf, size_t buf_s=
-ize,
-> +                               const struct btf_type *t, const void *btf=
-_data)
-> +{
-> +       struct format_btf_ctx ctx =3D {
-> +               .buf =3D buf,
-> +               .buf_idx =3D 0,
-> +               .buf_size =3D buf_size,
-> +       };
-> +       const struct btf_dump_type_data_opts opts =3D {
-> +               .sz =3D sizeof(struct btf_dump_type_data_opts),
-> +               .skip_names =3D 1,
-> +               .compact =3D 1,
-> +               .print_strings =3D 1,
-> +       };
-> +       struct btf_dump *d;
-> +       size_t btf_size;
-> +
-> +       d =3D btf_dump__new(btf, format_btf_cb, &ctx, NULL);
-> +       btf_size =3D btf__resolve_size(btf, t->type);
-> +       btf_dump__dump_type_data(d, t->type, btf_data, btf_size, &opts);
-> +       btf_dump__free(d);
-> +}
-> +
-> +static void bpf_metadata_fill_event(struct bpf_metadata_map *map,
-> +                                   struct perf_record_bpf_metadata *bpf_=
-metadata_event)
-> +{
-> +       struct btf_var_secinfo *vsi;
-> +       unsigned int i, vlen;
-> +
-> +       memset(bpf_metadata_event->prog_name, 0, BPF_PROG_NAME_LEN);
-> +       vlen =3D btf_vlen(map->datasec);
-> +       vsi =3D btf_var_secinfos(map->datasec);
-> +
-> +       for (i =3D 0; i < vlen; i++, vsi++) {
-> +               const struct btf_type *t_var =3D btf__type_by_id(map->btf=
-,
-> +                                                              vsi->type)=
-;
-> +               const char *name =3D btf__name_by_offset(map->btf,
-> +                                                      t_var->name_off);
-> +               const __u64 nr_entries =3D bpf_metadata_event->nr_entries=
-;
-> +               struct perf_record_bpf_metadata_entry *entry;
-> +
-> +               if (!name_has_bpf_metadata_prefix(&name))
-> +                       continue;
-> +
-> +               if (nr_entries >=3D (__u64)map->num_vars)
-> +                       break;
-> +
-> +               entry =3D &bpf_metadata_event->entries[nr_entries];
-> +               memset(entry, 0, sizeof(*entry));
-> +               snprintf(entry->key, BPF_METADATA_KEY_LEN, "%s", name);
-> +               format_btf_variable(map->btf, entry->value,
-> +                                   BPF_METADATA_VALUE_LEN, t_var,
-> +                                   map->rodata + vsi->offset);
-> +               bpf_metadata_event->nr_entries++;
-> +       }
-> +}
-> +
-> +static void bpf_metadata_free_map_data(struct bpf_metadata_map *map)
-> +{
-> +       btf__free(map->btf);
-> +       free(map->rodata);
-> +}
-> +
-> +void bpf_metadata_free(struct bpf_metadata *metadata)
-> +{
 > +       if (metadata =3D=3D NULL)
 > +               return;
-> +       for (__u32 index =3D 0; index < metadata->nr_prog_names; index++)
-> +               free(metadata->prog_names[index]);
-> +       if (metadata->prog_names !=3D NULL)
-> +               free(metadata->prog_names);
-> +       if (metadata->event !=3D NULL)
-> +               free(metadata->event);
-> +       free(metadata);
+> +       err =3D synthesize_perf_record_bpf_metadata(metadata, ctx->tool,
+> +                                                 ctx->process, ctx->mach=
+ine);
+> +       if (err !=3D 0) {
+> +               const char *prog_name =3D metadata->prog_names[0];
+> +
+> +               if (prog_name !=3D NULL)
+> +                       pr_warning("Couldn't synthesize final BPF metadat=
+a for %s.\n", prog_name);
+> +               else
+> +                       pr_warning("Couldn't synthesize final BPF metadat=
+a.\n");
+> +       }
+> +       bpf_metadata_free(metadata);
+> +       node->metadata =3D NULL;
 > +}
 > +
-> +static struct bpf_metadata *bpf_metadata_alloc(__u32 nr_prog_tags,
-> +                                              __u32 nr_variables)
-> +{
-> +       struct bpf_metadata *metadata;
-> +
-> +       metadata =3D calloc(1, sizeof(struct bpf_metadata));
-> +       if (!metadata)
-> +               return NULL;
-> +
-> +       metadata->prog_names =3D calloc(nr_prog_tags, sizeof(char *));
-> +       if (!metadata->prog_names) {
-> +               bpf_metadata_free(metadata);
-> +               return NULL;
-> +       }
-> +       for (__u32 prog_index =3D 0; prog_index < nr_prog_tags; prog_inde=
-x++) {
-> +               metadata->prog_names[prog_index] =3D calloc(BPF_PROG_NAME=
-_LEN,
-> +                                                         sizeof(char));
-> +               if (!metadata->prog_names[prog_index]) {
-> +                       bpf_metadata_free(metadata);
-> +                       return NULL;
-> +               }
-> +               metadata->nr_prog_names++;
-> +       }
-> +
-> +       metadata->event_size =3D sizeof(metadata->event->bpf_metadata) +
-> +           nr_variables * sizeof(metadata->event->bpf_metadata.entries[0=
-]);
-> +       metadata->event =3D calloc(1, metadata->event_size);
-> +       if (!metadata->event) {
-> +               bpf_metadata_free(metadata);
-> +               return NULL;
-> +       }
-> +
-> +       return metadata;
-> +}
-> +
-> +static struct bpf_metadata *bpf_metadata_create(struct bpf_prog_info *in=
-fo)
-> +{
-> +       struct bpf_metadata *metadata;
-> +       const __u32 *map_ids =3D (__u32 *)(uintptr_t)info->map_ids;
-> +
-> +       for (__u32 map_index =3D 0; map_index < info->nr_map_ids; map_ind=
-ex++) {
-> +               struct perf_record_bpf_metadata *bpf_metadata_event;
-> +               struct bpf_metadata_map map;
-> +
-> +               if (bpf_metadata_read_map_data(map_ids[map_index], &map) =
-!=3D 0)
-> +                       continue;
-> +
-> +               metadata =3D bpf_metadata_alloc(info->nr_prog_tags, map.n=
-um_vars);
-> +               if (!metadata)
-> +                       continue;
-> +
-> +               bpf_metadata_event =3D &metadata->event->bpf_metadata;
-> +               *bpf_metadata_event =3D (struct perf_record_bpf_metadata)=
- {
-> +                       .header =3D {
-> +                               .type =3D PERF_RECORD_BPF_METADATA,
-> +                               .size =3D metadata->event_size,
-
-nit: Could we set the header.size in bpf_metadata_alloc to remove
-metadata->event_size. The code generally doesn't pass a pair of
-perf_event + size around as the size should be in the header.
-
-Thanks,
-Ian
-
-> +                       },
-> +                       .nr_entries =3D 0,
-> +               };
-> +               bpf_metadata_fill_event(&map, bpf_metadata_event);
-> +
-> +               for (__u32 index =3D 0; index < info->nr_prog_tags; index=
-++) {
-> +                       synthesize_bpf_prog_name(metadata->prog_names[ind=
-ex],
-> +                                                BPF_PROG_NAME_LEN, info,
-> +                                                map.btf, index);
-> +               }
-> +
-> +               bpf_metadata_free_map_data(&map);
-> +
-> +               return metadata;
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
-> +static int synthesize_perf_record_bpf_metadata(const struct bpf_metadata=
- *metadata,
-> +                                              const struct perf_tool *to=
-ol,
+> +void perf_event__synthesize_final_bpf_metadata(struct perf_session *sess=
+ion,
 > +                                              perf_event__handler_t proc=
-ess,
-> +                                              struct machine *machine)
+ess)
 > +{
-> +       union perf_event *event;
-> +       int err =3D 0;
+> +       struct perf_env *env =3D &session->header.env;
+> +       struct bpf_metadata_final_ctx ctx =3D {
+> +               .tool =3D session->tool,
+> +               .process =3D process,
+> +               .machine =3D &session->machines.host,
+> +       };
 > +
-> +       event =3D calloc(1, metadata->event_size + machine->id_hdr_size);
-> +       if (!event)
-> +               return -1;
-> +       memcpy(event, metadata->event, metadata->event_size);
-> +       memset((void *)event + event->header.size, 0, machine->id_hdr_siz=
-e);
-> +       event->header.size +=3D machine->id_hdr_size;
-> +       for (__u32 index =3D 0; index < metadata->nr_prog_names; index++)=
- {
-> +               memcpy(event->bpf_metadata.prog_name,
-> +                      metadata->prog_names[index], BPF_PROG_NAME_LEN);
-> +               err =3D perf_tool__process_synth_event(tool, event, machi=
-ne,
-> +                                                    process);
-> +               if (err !=3D 0)
-> +                       break;
-> +       }
-> +
-> +       free(event);
-> +       return err;
+> +       perf_env__iterate_bpf_prog_info(env, synthesize_final_bpf_metadat=
+a_cb,
+> +                                       &ctx);
 > +}
 > +
 >  /*
 >   * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
 >   * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
-> @@ -173,6 +472,7 @@ static int perf_event__synthesize_one_bpf_prog(struct=
+> @@ -590,6 +633,7 @@ static int perf_event__synthesize_one_bpf_prog(struct=
  perf_session *session,
->         const struct perf_tool *tool =3D session->tool;
->         struct bpf_prog_info_node *info_node;
->         struct perf_bpil *info_linear;
-> +       struct bpf_metadata *metadata;
->         struct bpf_prog_info *info;
->         struct btf *btf =3D NULL;
->         struct perf_env *env;
-> @@ -193,6 +493,7 @@ static int perf_event__synthesize_one_bpf_prog(struct=
- perf_session *session,
+>                 }
+>
+>                 info_node->info_linear =3D info_linear;
+> +               info_node->metadata =3D NULL;
+>                 if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+>                         free(info_linear);
+>                         free(info_node);
+> @@ -781,6 +825,7 @@ static void perf_env__add_bpf_info(struct perf_env *e=
+nv, u32 id)
 >         arrays |=3D 1UL << PERF_BPIL_JITED_INSNS;
 >         arrays |=3D 1UL << PERF_BPIL_LINE_INFO;
 >         arrays |=3D 1UL << PERF_BPIL_JITED_LINE_INFO;
@@ -529,69 +402,360 @@ ne,
 >
 >         info_linear =3D get_bpf_prog_info_linear(fd, arrays);
 >         if (IS_ERR_OR_NULL(info_linear)) {
-> @@ -301,6 +602,15 @@ static int perf_event__synthesize_one_bpf_prog(struc=
-t perf_session *session,
->                  */
->                 err =3D perf_tool__process_synth_event(tool, event,
->                                                      machine, process);
-> +
-> +               /* Synthesize PERF_RECORD_BPF_METADATA */
-> +               metadata =3D bpf_metadata_create(info);
-> +               if (metadata !=3D NULL) {
-> +                       err =3D synthesize_perf_record_bpf_metadata(metad=
-ata,
-> +                                                                 tool, p=
-rocess,
-> +                                                                 machine=
-);
-> +                       bpf_metadata_free(metadata);
-> +               }
->         }
->
->  out:
+> @@ -793,6 +838,7 @@ static void perf_env__add_bpf_info(struct perf_env *e=
+nv, u32 id)
+>         info_node =3D malloc(sizeof(struct bpf_prog_info_node));
+>         if (info_node) {
+>                 info_node->info_linear =3D info_linear;
+> +               info_node->metadata =3D bpf_metadata_create(&info_linear-=
+>info);
+>                 if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+>                         free(info_linear);
+>                         free(info_node);
 > diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-> index e2f0420905f5..007f0b4d21cb 100644
+> index 007f0b4d21cb..49a42c15bcc6 100644
 > --- a/tools/perf/util/bpf-event.h
 > +++ b/tools/perf/util/bpf-event.h
-> @@ -17,6 +17,13 @@ struct record_opts;
->  struct evlist;
->  struct target;
+> @@ -26,6 +26,7 @@ struct bpf_metadata {
 >
-> +struct bpf_metadata {
-> +       union perf_event *event;
-> +       size_t           event_size;
-> +       char             **prog_names;
-> +       __u64            nr_prog_names;
-> +};
-> +
 >  struct bpf_prog_info_node {
 >         struct perf_bpil                *info_linear;
+> +       struct bpf_metadata             *metadata;
 >         struct rb_node                  rb_node;
-> @@ -36,6 +43,7 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, str=
-uct perf_env *env);
->  void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
->                                       struct perf_env *env,
->                                       FILE *fp);
-> +void bpf_metadata_free(struct bpf_metadata *metadata);
->  #else
->  static inline int machine__process_bpf(struct machine *machine __maybe_u=
-nused,
->                                        union perf_event *event __maybe_un=
-used,
-> @@ -55,6 +63,11 @@ static inline void __bpf_event__print_bpf_prog_info(st=
-ruct bpf_prog_info *info _
->                                                     FILE *fp __maybe_unus=
-ed)
->  {
+>  };
 >
+> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/ut=
+il/bpf_skel/sample_filter.bpf.c
+> index b195e6efeb8b..b0265f000325 100644
+> --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> @@ -43,6 +43,10 @@ struct lost_count {
+>         __uint(max_entries, 1);
+>  } dropped SEC(".maps");
+>
+> +// This is used by tests/shell/record_bpf_metadata.sh
+> +// to verify that BPF metadata generation works.
+> +const int bpf_metadata_test_value SEC(".rodata") =3D 42;
+
+This is a bit random. For the non-BPF C code we have a build generated
+PERF-VERSION-FILE that contains something like `#define PERF_VERSION
+"6.15.rc7.ge450e74276d2"`. I wonder having something like (the section
+is almost certainly wrong):
+```
+volatile const char * const bpf_metadata_perf_version
+__attribute__((section(\".rodata\"), used, weak)) =3D PERF_VERSION;
+```
+with a build change something like:
+```
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index d4c7031b01a7..f825d9195d77 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1250,9 +1250,9 @@ else
+       $(Q)cp "$(VMLINUX_H)" $@
+endif
+
+-$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF)
+$(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
++$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF)
+$(OUTPUT)PERF-VERSION-FILE $(SKEL_OUT)/vml
+inux.h | $(SKEL_TMP_OUT)
+       $(QUIET_CLANG)$(CLANG) -g -O2 --target=3Dbpf $(CLANG_OPTIONS)
+$(BPF_INCLUDE) $(TOOLS_UAPI_INCL
+UDE) \
+-         -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
++         -include $(OUTPUT)PERF-VERSION-FILE -c $(filter
+util/bpf_skel/%.bpf.c,$^) -o $@
+
+$(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
+       $(QUIET_GENSKEL)$(BPFTOOL) gen skeleton $< > $@
+
+```
+would be more useful/meaningful. Perhaps the build could inject the
+variable to avoid duplicating it all the BPF skeletons.
+
+nit: I wonder for testing it would be interesting to have 0 and >1
+metadata values tested too. We may want to have test programs
+explicitly for that, in tools/perf/tests.
+
+Thanks,
+Ian
+
+
+> +
+>  volatile const int use_idx_hash;
+>
+>  void *bpf_cast_to_kern_ctx(void *) __ksym;
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 36411749e007..05a4f2657d72 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -3,8 +3,10 @@
+>  #include "debug.h"
+>  #include "env.h"
+>  #include "util/header.h"
+> -#include "linux/compiler.h"
+> +#include "util/rwsem.h"
+> +#include <linux/compiler.h>
+>  #include <linux/ctype.h>
+> +#include <linux/rbtree.h>
+>  #include <linux/string.h>
+>  #include <linux/zalloc.h>
+>  #include "cgroup.h"
+> @@ -89,6 +91,20 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_inf=
+o(struct perf_env *env,
+>         return node;
+>  }
+>
+> +void perf_env__iterate_bpf_prog_info(struct perf_env *env,
+> +                                    void (*cb)(struct bpf_prog_info_node=
+ *node,
+> +                                               void *data),
+> +                                    void *data)
+> +{
+> +       struct rb_node *first;
+> +
+> +       down_read(&env->bpf_progs.lock);
+> +       first =3D rb_first(&env->bpf_progs.infos);
+> +       for (struct rb_node *node =3D first; node !=3D NULL; node =3D rb_=
+next(node))
+> +               (*cb)(rb_entry(node, struct bpf_prog_info_node, rb_node),=
+ data);
+> +       up_read(&env->bpf_progs.lock);
 > +}
 > +
-> +static inline void bpf_metadata_free(struct bpf_metadata *metadata)
-> +{
-> +
+>  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_nod=
+e)
+>  {
+>         bool ret;
+> @@ -174,6 +190,7 @@ static void perf_env__purge_bpf(struct perf_env *env)
+>                 next =3D rb_next(&node->rb_node);
+>                 rb_erase(&node->rb_node, root);
+>                 zfree(&node->info_linear);
+> +               bpf_metadata_free(node->metadata);
+>                 free(node);
+>         }
+>
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index d90e343cf1fa..6819cb9b99ff 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -180,6 +180,10 @@ bool perf_env__insert_bpf_prog_info(struct perf_env =
+*env,
+>                                     struct bpf_prog_info_node *info_node)=
+;
+>  struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env =
+*env,
+>                                                         __u32 prog_id);
+> +void perf_env__iterate_bpf_prog_info(struct perf_env *env,
+> +                                    void (*cb)(struct bpf_prog_info_node=
+ *node,
+> +                                               void *data),
+> +                                    void *data);
+>  bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_nod=
+e);
+>  bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_n=
+ode);
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index 80c9ea682413..e81c2d87d76a 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -1,9 +1,12 @@
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <inttypes.h>
+> +#include <linux/compiler.h>
+>  #include <linux/kernel.h>
+>  #include <linux/types.h>
+>  #include <perf/cpumap.h>
+> +#include <perf/event.h>
+> +#include <stdio.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <unistd.h>
+> @@ -78,6 +81,7 @@ static const char *perf_event__names[] =3D {
+>         [PERF_RECORD_COMPRESSED]                =3D "COMPRESSED",
+>         [PERF_RECORD_FINISHED_INIT]             =3D "FINISHED_INIT",
+>         [PERF_RECORD_COMPRESSED2]               =3D "COMPRESSED2",
+> +       [PERF_RECORD_BPF_METADATA]              =3D "BPF_METADATA",
+>  };
+>
+>  const char *perf_event__name(unsigned int id)
+> @@ -504,6 +508,20 @@ size_t perf_event__fprintf_bpf(union perf_event *eve=
+nt, FILE *fp)
+>                        event->bpf.type, event->bpf.flags, event->bpf.id);
 >  }
->  #endif // HAVE_LIBBPF_SUPPORT
+>
+> +size_t perf_event__fprintf_bpf_metadata(union perf_event *event, FILE *f=
+p)
+> +{
+> +       struct perf_record_bpf_metadata *metadata =3D &event->bpf_metadat=
+a;
+> +       size_t ret;
+> +
+> +       ret =3D fprintf(fp, " prog %s\n", metadata->prog_name);
+> +       for (__u32 i =3D 0; i < metadata->nr_entries; i++) {
+> +               ret +=3D fprintf(fp, "  entry %d: %20s =3D %s\n", i,
+> +                              metadata->entries[i].key,
+> +                              metadata->entries[i].value);
+> +       }
+> +       return ret;
+> +}
+> +
+>  static int text_poke_printer(enum binary_printer_ops op, unsigned int va=
+l,
+>                              void *extra, FILE *fp)
+>  {
+> @@ -601,6 +619,9 @@ size_t perf_event__fprintf(union perf_event *event, s=
+truct machine *machine, FIL
+>         case PERF_RECORD_AUX_OUTPUT_HW_ID:
+>                 ret +=3D perf_event__fprintf_aux_output_hw_id(event, fp);
+>                 break;
+> +       case PERF_RECORD_BPF_METADATA:
+> +               ret +=3D perf_event__fprintf_bpf_metadata(event, fp);
+> +               break;
+>         default:
+>                 ret +=3D fprintf(fp, "\n");
+>         }
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index 664bf39567ce..67ad4a2014bc 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -370,6 +370,7 @@ size_t perf_event__fprintf_namespaces(union perf_even=
+t *event, FILE *fp);
+>  size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
+>  size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
+>  size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
+> +size_t perf_event__fprintf_bpf_metadata(union perf_event *event, FILE *f=
+p);
+>  size_t perf_event__fprintf_text_poke(union perf_event *event, struct mac=
+hine *machine,FILE *fp);
+>  size_t perf_event__fprintf(union perf_event *event, struct machine *mach=
+ine, FILE *fp);
+>
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index e3cdc3b7b4ab..7c477e2a93b3 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3161,6 +3161,7 @@ static int process_bpf_prog_info(struct feat_fd *ff=
+, void *data __maybe_unused)
+>                 /* after reading from file, translate offset to address *=
+/
+>                 bpil_offs_to_addr(info_linear);
+>                 info_node->info_linear =3D info_linear;
+> +               info_node->metadata =3D NULL;
+>                 if (!__perf_env__insert_bpf_prog_info(env, info_node)) {
+>                         free(info_linear);
+>                         free(info_node);
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index a320672c264e..38075059086c 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -12,6 +12,7 @@
+>  #include <sys/types.h>
+>  #include <sys/mman.h>
+>  #include <perf/cpumap.h>
+> +#include <perf/event.h>
+>
+>  #include "map_symbol.h"
+>  #include "branch.h"
+> @@ -1491,6 +1492,9 @@ static s64 perf_session__process_user_event(struct =
+perf_session *session,
+>         case PERF_RECORD_FINISHED_INIT:
+>                 err =3D tool->finished_init(session, event);
+>                 break;
+> +       case PERF_RECORD_BPF_METADATA:
+> +               err =3D tool->bpf_metadata(session, event);
+> +               break;
+>         default:
+>                 err =3D -EINVAL;
+>                 break;
+> diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthet=
+ic-events.h
+> index b9c936b5cfeb..ee29615d68e5 100644
+> --- a/tools/perf/util/synthetic-events.h
+> +++ b/tools/perf/util/synthetic-events.h
+> @@ -92,6 +92,8 @@ int perf_event__synthesize_threads(const struct perf_to=
+ol *tool, perf_event__han
+>  int perf_event__synthesize_tracing_data(const struct perf_tool *tool, in=
+t fd, struct evlist *evlist, perf_event__handler_t process);
+>  int perf_event__synth_time_conv(const struct perf_event_mmap_page *pc, c=
+onst struct perf_tool *tool, perf_event__handler_t process, struct machine =
+*machine);
+>  pid_t perf_event__synthesize_comm(const struct perf_tool *tool, union pe=
+rf_event *event, pid_t pid, perf_event__handler_t process, struct machine *=
+machine);
+> +void perf_event__synthesize_final_bpf_metadata(struct perf_session *sess=
+ion,
+> +                                              perf_event__handler_t proc=
+ess);
+>
+>  int perf_tool__process_synth_event(const struct perf_tool *tool, union p=
+erf_event *event, struct machine *machine, perf_event__handler_t process);
+>
+> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+> index 37bd8ac63b01..204ec03071bc 100644
+> --- a/tools/perf/util/tool.c
+> +++ b/tools/perf/util/tool.c
+> @@ -1,12 +1,15 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "data.h"
+>  #include "debug.h"
+> +#include "event.h"
+>  #include "header.h"
+>  #include "session.h"
+>  #include "stat.h"
+>  #include "tool.h"
+>  #include "tsc.h"
+> +#include <linux/compiler.h>
+>  #include <sys/mman.h>
+> +#include <stddef.h>
+>  #include <unistd.h>
+>
+>  #ifdef HAVE_ZSTD_SUPPORT
+> @@ -237,6 +240,16 @@ static int perf_session__process_compressed_event_st=
+ub(struct perf_session *sess
+>         return 0;
+>  }
+>
+> +static int perf_event__process_bpf_metadata_stub(struct perf_session *pe=
+rf_session __maybe_unused,
+> +                                                union perf_event *event)
+> +{
+> +       if (dump_trace)
+> +               perf_event__fprintf_bpf_metadata(event, stdout);
+> +
+> +       dump_printf(": unhandled!\n");
+> +       return 0;
+> +}
+> +
+>  void perf_tool__init(struct perf_tool *tool, bool ordered_events)
+>  {
+>         tool->ordered_events =3D ordered_events;
+> @@ -293,6 +306,7 @@ void perf_tool__init(struct perf_tool *tool, bool ord=
+ered_events)
+>         tool->compressed =3D perf_session__process_compressed_event_stub;
 >  #endif
+>         tool->finished_init =3D process_event_op2_stub;
+> +       tool->bpf_metadata =3D perf_event__process_bpf_metadata_stub;
+>  }
+>
+>  bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index db1c7642b0d1..18b76ff0f26a 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -77,7 +77,8 @@ struct perf_tool {
+>                         stat,
+>                         stat_round,
+>                         feature,
+> -                       finished_init;
+> +                       finished_init,
+> +                       bpf_metadata;
+>         event_op4       compressed;
+>         event_op3       auxtrace;
+>         bool            ordered_events;
 > --
 > 2.49.0.1143.g0be31eac6b-goog
 >
