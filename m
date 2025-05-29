@@ -1,137 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5355E21ABBB
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 14:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 258931C860C;
+	Thu, 29 May 2025 16:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748529351; cv=none; b=Yn8MPk+QAETz239wHcnZ+E8FZMpAi2+PVR6wzW3Ix6akHujKkGNGPrtGOSmg9HTCVOrFS0xFQIt7dl0NQwG1g6OYfOntRga8A5G+YWSamVoZ23FoGz/FwK6nR1NZhLSFCCV2y69rqzFNMEoxWgKRZnkSrM2jZVXx5+SPbPPcUjI=
+	t=1748535924; cv=none; b=uV2lXwL+b62o0Q4SXpIVfmKfIH4Yt18fVBdM4kyqHBuSHmyEpOgPyO6JFeXs3jZqPkxPlIfjxBv8Aqq9RfDoLFMFMsLIDWVN6Zto7k3hUdQ15itbjWahOfQ3h5gQFfMfzYS/bbfvWJAE4zM61PPk+B628cf3258u21oNFWWcZoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748529351; c=relaxed/simple;
-	bh=5HRU1916V7EDad+LVmB03KBxNjqkrd+C+UTjhT4pJuA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HYhxirEJjNm1u3EJwlXMc/ueqZzJap0mbCsjKOYxoKp/+IrSSzFYc7UnFZVFzeYYkGtTqfmMxK+RIZmYwfIIbs4g4hAUHUIsBIlLZV2qmhTtPHAc4qBxfZXXy0QGWfWTKfrV5KUOL6fE3dCRthh3xiRdcPU/6pbXBzilEo9SdIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EcYtO81v; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EcYtO81v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748529348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G3MCFV+ZoZVB2oSCQXdN/eZND9vkzq+izak/pnvW1n0=;
-	b=EcYtO81vV1QB+Yq6KY/te8EcDCOAfFabgtddPjFkp1iA20hyhBNpWiay1aByEhSE29IUTt
-	k7sbAqNMHaNmwYYCNUZKWed8Mo8DOv13DW33gjTApB6oZ9ErqtIrRlC3hgTJ+949N+f8Zb
-	3nFI/d9U2I81OO00Xm2IQv1Wyd+GHB4=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-528-vuKfc8DyPcGQDFNQTBMt4A-1; Thu, 29 May 2025 10:35:46 -0400
-X-MC-Unique: vuKfc8DyPcGQDFNQTBMt4A-1
-X-Mimecast-MFC-AGG-ID: vuKfc8DyPcGQDFNQTBMt4A_1748529345
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-32a6c630b70so9552951fa.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 07:35:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748529345; x=1749134145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G3MCFV+ZoZVB2oSCQXdN/eZND9vkzq+izak/pnvW1n0=;
-        b=q0GeQmgDSEpZ2iOODFk1wySpJTVdo4XJ2pmfhckV+FGmC2SlyN0+nHrLsZrpkbHcme
-         1Y2tNc0jkJ+sH41bJUdoIZwlHtnFNm5c0Qy2ESTTWE1v4tNThb4EYhzJ8x8ugk29CGvJ
-         ElGSfUQgsCY6Z3QBy6ji/yBWB2N+YEsAvEWY8JEAyYrmnkGojImHoYzKxK58MMOwMXuA
-         g1aDCVPpryE6PfiRoRYWZIibwfs5Vm6ylF+QfOxKWJkYMOaDmwXTPNaeKJ+X7Y8pSNwT
-         z8++Lt8o0uCrhYS9zHik91Ft3Th0Ld0mJgKm64sB8dny+FyzMOyxeApFxkznGdUTQ8an
-         8Wkw==
-X-Forwarded-Encrypted: i=1; AJvYcCW61cvGdbzxNi9AC305xhvuIZJjK1E+rNUMqACwGV1sjWCFgEo0SBdWDcF9dtVTrFx/0ooTzTO4/3uF8mTdNLXF@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq9dhYJA+19Vf8wJ9kXjS//Ng81pE+feazPnou04KTl7iWFKpb
-	V57rCmsff6Smz6xqyJpkeudd4HWOjSbRNBmdZslGwjDpGoIt0uHrqW3NQcqJf8Ty2iSerdWSWF/
-	tnrhv8PPlfpWOIPCOg32wMOasexUlzZZC7ASM95CqgZ/nsnMOUiuVLow5mbw55199KIqWomUCax
-	Ai+CP6bJJMw3ShVioeOHroFgdY1QLZPwAjsGmB2vkXfna0xQ==
-X-Gm-Gg: ASbGnctqPmLoKzKyxvloYa9S/pKyej98R56kYqYKq9Td7hKqyGEQedOQXlcvJmWVuZr
-	wiCXwOFJ3iTv6DIdIv/fyQMvsXHXrHcBCEVRiteicKCpto1tpkF9wFxWIN2anLob8oS2jZQ==
-X-Received: by 2002:a05:6512:3095:b0:553:2edd:a7e0 with SMTP id 2adb3069b0e04-5532f81c2f3mr2712165e87.16.1748529345232;
-        Thu, 29 May 2025 07:35:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZUPxRsnq516tbw1KHLqgx+uGG3jhNGo1aJuzLabfZyp4DEFJSBLGRdE2ouwQzDloFOdI6Rqsm7+lEA8E5PJQ=
-X-Received: by 2002:a05:6512:3095:b0:553:2edd:a7e0 with SMTP id
- 2adb3069b0e04-5532f81c2f3mr2712156e87.16.1748529344856; Thu, 29 May 2025
- 07:35:44 -0700 (PDT)
+	s=arc-20240116; t=1748535924; c=relaxed/simple;
+	bh=YyLoKZsWKbWRvLPGsT8AtP4lKJfTA3IbeNNRo7uXUY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NI6dXJDgKq2tNP4/d/YcM6UhjrkiAflgahEb6cKADKf/SFkHnFb8IYvFT+8Lbky6crvVpYY/flJDpht5b+RQ7MZ/V3F1OdDgrimNRwQZiz8zRk4F3MUlPtLNPRq5/lLeQJcoBMMb2nOGyyfp4xE4lefGxeO1a6ORwxSCQ1HViGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED9E2176A;
+	Thu, 29 May 2025 09:25:04 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85B843F673;
+	Thu, 29 May 2025 09:25:18 -0700 (PDT)
+Date: Thu, 29 May 2025 17:25:13 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v22 2/5] arm64: el2_setup.h: Make __init_el2_fgt labels
+ consistent, again
+Message-ID: <aDiBuC2JjAUNDq29@e133380.arm.com>
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+ <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org>
+ <aC9NhvYzajduVm7y@e133380.arm.com>
+ <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403160411.159238-2-ashelat@redhat.com> <CAH0uvoh8h2NAw3wbBwXAKyAHWS=QehM=pkBD8GOc+f7CcmedyA@mail.gmail.com>
- <aDdYxLLtNa4qT3ZF@x1>
-In-Reply-To: <aDdYxLLtNa4qT3ZF@x1>
-From: Anubhav Shelat <ashelat@redhat.com>
-Date: Thu, 29 May 2025 10:35:33 -0400
-X-Gm-Features: AX0GCFs4Q7mnbUma7UttiEdULe8tNbtPjgdp03ftJvRbvvEtN7zsO8EwHKjpUDM
-Message-ID: <CA+G8DhKiamF_AdYgc6uzGUWPjg6YvePUb13T4v-Nibyab6YREg@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: always print return value for syscalls with
- set errpid
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, mpetlan@redhat.com, namhyung@kernel.org, 
-	irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
 
-Sent the second patch for errpid.
+Hi,
 
-Best,
-Anubhav
-
-On Wed, May 28, 2025 at 2:41=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Apr 03, 2025 at 08:26:52PM -0700, Howard Chu wrote:
-> > [Resend due to rejection by mailing list]
+On Thu, May 22, 2025 at 12:20:35PM -0500, Rob Herring wrote:
+> On Thu, May 22, 2025 at 11:15 AM Dave Martin <Dave.Martin@arm.com> wrote:
 > >
-> > Hello Anubhav,
-> >
-> > Thanks for doing this :)
-> >
-> > On Thu, Apr 3, 2025 at 9:06=E2=80=AFAM Anubhav Shelat <ashelat@redhat.c=
-om> wrote:
+> > On Tue, May 20, 2025 at 05:27:37PM -0500, Rob Herring (Arm) wrote:
+> > > From: Anshuman Khandual <anshuman.khandual@arm.com>
 > > >
-> > > Currently some syscalls that have errpid set to true do not print a
-> > > return value in perf trace. The syscalls that were consistently
-> > > observed were set_robust_list and rseq. This is because perf cannot f=
-ind
-> > > their child process. This change ensures that the return value is alw=
-ays
-> > > printed.
+> > > Commit 5b39db6037e7 ("arm64: el2_setup.h: Rename some labels to be more
+> > > diff-friendly") reworked the labels in __init_el2_fgt to say what's
+> > > skipped rather than what the target location is. The exception was
+> > > "set_fgt_" which is where registers are written. In reviewing the BRBE
+> > > additions, Will suggested "set_debug_fgt_" where HDFGxTR_EL2 are
+> > > written. Doing that would partially revert commit 5b39db6037e7 undoing
+> > > the goal of minimizing additions here, but it would follow the
+> > > convention for labels where registers are written.
 > > >
-> > > Before:
-> > >      0.256 ( 0.001 ms): set_robust_list(head: 0x7f09c77dba20, len: 24=
-)                        =3D
-> > >      0.259 ( 0.001 ms): rseq(rseq: 0x7f09c77dc0e0, rseq_len: 32, sig:=
- 1392848979)             =3D
-> > > After:
-> > >      0.270 ( 0.002 ms): set_robust_list(head: 0x7f0bb14a6a20, len: 24=
-)                        =3D 0
-> > >      0.273 ( 0.002 ms): rseq(rseq: 0x7f0bb14a70e0, rseq_len: 32, sig:=
- 1392848979)             =3D 0
+> > > So let's do both. Branches that skip something go to a "skip" label and
+> > > places that set registers have a "set" label. This results in some
+> > > double labels, but it makes things entirely consistent.
 > > >
-> > > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> > > While we're here, the SME skip label was incorrectly named, so fix it.
+> > >
+> > > Reported-by: Will Deacon <will@kernel.org>
+> > > Cc: Dave Martin <Dave.Martin@arm.com>
+> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > > ---
+> > > This one can be applied even if the rest of the series is not.
+> > >
+> > > v22:
+> > >  - New patch
+> > > ---
+> > >  arch/arm64/include/asm/el2_setup.h | 10 +++++++---
+> > >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> > > index ebceaae3c749..30f57b0334a3 100644
+> > > --- a/arch/arm64/include/asm/el2_setup.h
+> > > +++ b/arch/arm64/include/asm/el2_setup.h
+> > > @@ -204,19 +204,21 @@
+> > >       orr     x0, x0, #(1 << 62)
+> > >
+> > >  .Lskip_spe_fgt_\@:
+> > > +
+> > > +.Lset_debug_fgt_\@:
 > >
-> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
->
-> Thanks, applied after rewording it a bit to mention that this not
-> related to rseq/set_robust_list as those shouldn't be using errpid, but
-> that the problem predates that and added this, where the problem
-> started:
->
-> Fixes: 11c8e39f5133aed9 ("perf trace: Infrastructure to show COMM strings=
- for syscalls returning PIDs")
->
-> - Arnaldo
->
+> > Dangling label?  There doesn't seem to be any branch to it in this
+> > series, unless I've missed something.
+> 
+> I tried to explain that in the commit message. To have both what you
+> wanted and what Will suggested, you end up with 2 labels in between
+> the last skip and setting registers.
 
+Hmm, I wasn't trying to advocate for adding dead labels in anticipation
+of their use, just to avoid labels whose names conflict with an
+anticipated future use.
+
+I guess this is harmless, but I may look at this again as and when...
+
+Cheers
+---Dave
