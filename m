@@ -1,63 +1,66 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45358255F4C
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 04:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3472550D8
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 04:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493619; cv=none; b=ZsRnpcWFjt+cELMs/punxxL12BjjrdrvpIv2afuEyTvgm9z2kEbWo72fTJQ6XIYp3ZWHYy3ebY9OmOXaUrYLD4cWOZznd7bwsACprWFw4MtpF7JuU1kNK6XZODUxVkIOU9KXAx2fJh2sW1URqgLswCbIUt7XujTeufo6lHCak98=
+	t=1748493619; cv=none; b=djh5F3zDlsz7V2txTEByG4uTvyHteHeaCQTFJBTIymdy0Dl8kHKMLqm/7SvSNN/Pi67OIaCy/WeQqMhK2cgp/gbgWQ1uMS1GY+61coUy8QxEWxBaG5hfTfmdbXSBcNS8L6yM6fzFHoyL6Hj4EkIAMXVBZg01KRmoS8d1y5lMGDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748493619; c=relaxed/simple;
-	bh=aFrpFYvlIvXpg1Tj5uNPfPoVYZcvO3tZnJDmRdrhrhs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=qrTuq+I3V7T3hC+LWVcI9EFxsEcVOxwh8GI3xsAP5HVv8lQgeUsIbyhg+s6ElV+q0guRrfYwz2eRfmAEOtsdAZFLRlCmZ8ae8jv3VzUlvqil4zgDB7eu80oAwZlquXBf8sNkYTJEigQZOZLO7Q4YitS/9nQg92fXGkHcbxuwqlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RiNn4FRx; arc=none smtp.client-ip=209.85.214.201
+	bh=8sjuAjOj2orpAYr10kkA5Z/nzFBBjR+5CoUq/1YdQGA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=m5CMki6Iq2cTq16QyjBt4Zau2P1xvsDeOxwPlft/b779FT+ayXyDZwQyHXEoNWq7nfFb+NpXdWmxTPHWfZrN9RqM0irvgH+Y9880tBiuwfc0Yp4puSSYM9kWg9xdzXqf73R17K1W747ngakYWBdf1gHcZ9D5/CVxnwqIu6b4x9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bg3msAMc; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RiNn4FRx"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231d13ac4d4so7625195ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 21:40:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bg3msAMc"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-231d13ac4d4so7625305ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 May 2025 21:40:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493616; x=1749098416; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=feh/jym2oHEnslKTIjWZYt4DUqSL44jvY+sDg4/IEqI=;
-        b=RiNn4FRxpy2hafvwDnqDeQ6180u75ZOp4BVMYobNmrSp05KvjLq0S1vXxSGOAhz0gC
-         suI9AFWWJKAYvhhTSsjjF4TXvPT6SxM3Mbf2KqFidpj4caTH0G3on2mq0cY1x3U7Vi+F
-         ni5EZXLUa9cz+NTHSDqnCnIIUZGCQTHfHkU6ZdLjfV0QY3dpgF7qXYcdGvHi4QKyfNer
-         tLx0Q3LcjeyhdC1Dhwclv6hNWCT7Zc1sBxGVv/4gL1JEiUI4hmzMy9wQHwIZWs9h+6gI
-         mRIezA4M5umZ4bK+t1x3TqNsQ9tjD8XsjHAtIYBfXUzi22JohfJBmaUexjx2BBm4e1QO
-         BWhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493616; x=1749098416;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1748493617; x=1749098417; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=feh/jym2oHEnslKTIjWZYt4DUqSL44jvY+sDg4/IEqI=;
-        b=QnEs/vRQVVvFvSWdI8iqfufUjppZ+0Ro0923c5QZDPX0jHAJKGDV9GkaJWdECibdNU
-         8iQJJmmK2zf7RafVUqAWPgZidxdL+zADlR7Io7RzGOYiS5qVmd2fmlXoSTuIpiwqiYbu
-         JPu8qH6a1Dh3SzCCQQt6KC/KS+tQ1YUAPSDa0WscB1U/kcBM2wizEC9PslBC6TFCwkvw
-         JuzX23gTbQIgV8SxLU/ztPjh4pcLPjg3aMmso6fO9gxxcIRVYFOwusMe0UR+3GZD9lHm
-         17BY4PKVF+mDVO1XfJZ1pQPgbT/dM1hqIWBnAMreAkLs/tTvpome6WNFJXljq7GydKLx
-         wjvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVh/ZK3alvEWdWK59qLajTh/N+74193I9QoUBMyWFb3xKtA+iP7nM7QHSshUiG3XZdZCsvcWQ7VF0maeLGfTsFB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJUHGBFlsk4hhVhfTued3zjirlGhb/wQfajY+pVBK4Vqfdj7Sh
-	EvKlowwP5y2eCG5lr35SWhNauswxiYh2qLrnAzkXDW9zl9MGGD3wx08yluWnESyaRNUY/Seqo0R
-	NavqoVwTpJg==
-X-Google-Smtp-Source: AGHT+IE9DkeyCY1QVXLsp7GDzh+26VXADc2ciYBErfTOIZpnPA7LP25m8FdDotskiLwaqIffj8WbJo4FuVhZ
-X-Received: from pjbnb15.prod.google.com ([2002:a17:90b:35cf:b0:311:f309:e314])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:35c3:b0:311:cc4e:516f
- with SMTP id 98e67ed59e1d1-311cc4e525amr9797006a91.31.1748493605805; Wed, 28
- May 2025 21:40:05 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:36 -0700
+        bh=J3cc4XfHjT63tW0sHOE7oV+T/kyDzOGhrcNlU3mn958=;
+        b=Bg3msAMcbToDTUynjMg4I0Ys7uLPNQyZVInyscrx1f+/Ha0R1vVb9oW3CLpfHxtJRk
+         bTsGKIAsZLTJM5lVFLkRqYpyLVCyZYMI7rC8fL7LFC22BzqlL4ECXi+8GMYjemodyatO
+         VsxkzvHkppTpaKgmrygxj9V6Eh61NO2LDDYvkGOWf2FnpSleSLxub7H58xBMFL+aHj6a
+         YzNBfWOtZmu/D/En4OBQIcyFQbS8Ku8gaZtCEJVIJBgvPV8jkHPVbl/pKMaQNxUfpUSk
+         GELMAV+hoy/pRfnGj9aVCwSGj6yIJAiE4W5e6En+GeFf5P0a0OeahXHVThtral/MWqEB
+         ROxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748493617; x=1749098417;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J3cc4XfHjT63tW0sHOE7oV+T/kyDzOGhrcNlU3mn958=;
+        b=mR2umWHHA7c0KL7rulKk5un05Sj21wg8GXWJ4NrLsVUYFrzfpAk8Tv7ezLOaLHrtiN
+         hdaS1WPcezjBXSJ1dy9kSk1GAFBWOx45GtwZ/coG1HR1QSt1+dBHOOX9taEht7yhPG5c
+         UwkIo+ddZx+fNxd2eG4VB5ZZaPXvteGxIzTFbQuJE7sd1ZyL/qMZ7bO38qcsFTJvA1bN
+         DUzpfYD8ZDodVGx5Ow0DrdpSbYvNU/fJfqmQs7Z5Bhv2VUqm9685LYJiQ6q24j+oKY2W
+         8l7WPsGdlfxWtuHluIPHnjOSazkeHCX20k3l37dVXL3kR51/7wdFPojymWLcFRdJzw4j
+         DfZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgeeh4h9c/0ndYoDE/y4dpNdU64R8ysB5VtoYjp4ODkNdKe1Azs1QJluBmCPnKQC9JZwympb6sPO8J/w/Uq8Ul@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeTtr9X9dgW/2m+8ZTTlj7urYbpHMG1x45e/NdwERQQX7aMYf+
+	FM020V3qFeHfkzLYvoPE3y+sjGwBJR8S3CcB2dfNO/stUmEns+Yhcp4zsm8N9YlBb/L7/brqHyS
+	Rl61LdXTQcw==
+X-Google-Smtp-Source: AGHT+IH+nZZXQ1e5vfxdxY87E7j36c97TAZI0T6FIGcXkXjpMxDQyv++Eq5U9c3zbazcw0Gy3vnoxfpD0cNc
+X-Received: from plbp4.prod.google.com ([2002:a17:903:1744:b0:223:225b:3d83])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1311:b0:234:bca7:2921
+ with SMTP id d9443c01a7336-234bca736d0mr74929435ad.33.1748493616471; Wed, 28
+ May 2025 21:40:16 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:41 -0700
+In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-1-irogers@google.com>
-Subject: [PATCH v4 00/24] perf: Make code more generic with modern defaults
+Message-ID: <20250529044000.759937-6-irogers@google.com>
+Subject: [PATCH v4 05/24] perf build-id: Mark DSO in sample callchains
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -86,193 +89,53 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series combines:
-"perf: Default use of build IDs and improvements"
-https://lore.kernel.org/lkml/20250428213409.1417584-1-irogers@google.com/
-"Remove global perf_env"
-https://lore.kernel.org/lkml/20250527064153.149939-1-irogers@google.com/
-"Generic weight struct, use env for sort key and header"
-https://lore.kernel.org/lkml/20250521135500.677508-1-irogers@google.com/
-This is done as the last 2 series depend on each other and the
-cleanups in the 1st have the potential to conflict with them.
+Previously only the sample IP's map DSO would be marked hit for the
+purposes of populating the build ID cache. Walk the call chain to mark
+all IPs and DSOs.
 
-"perf: Default use of build IDs and improvements"
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/build-id.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-Build ID mmap2 events have been available since Linux v5.12 and avoid
-certain races. Enable these by default as discussed in:
-https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
-
-The dso_id is used to indentify a DSO that may change by being
-overwritten. The inode generation isn't present in /proc/pid/maps and
-so was already only optionally filled in. With build ID mmap events
-the other major, minor and inode varialbes aren't filled in. Change
-the dso_id implementation to make optional values explicit, rather
-than injecting a dso_id we want to improve it during find operations,
-add the buildid to the dso_id for sorting and so that matching fails
-when build IDs vary between DSOs.
-
-Mark the callchain for buildids and not just the sample IP, fixing
-missing DSOs.
-
-Fix sample__for_each_callchain_node to populate the map even when
-symbols aren't computed.
-
-Other minor bits of build_id clean up.
-
-"Remove global perf_env"
-
-The global perf_env is used to hold host information, but it is also
-used as a fallback in a number of cases where the information may be
-bogus. Restructure the code so that the perf_env of the session is
-accessed. When necessary a locally scoped host perf_env is created and
-used.
-
-Cleaning up the inconsistency was requested by Kan Liang in:
-https://lore.kernel.org/lkml/c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux.intel.com/
-
-"Generic weight struct, use env for sort key and header"
-
-The arch directory is a barrier to cross-platform development as files
-and behaviors within it are inherently platform specific. Sample
-parsing should be generic but the PERF_SAMPLE_WEIGHT_STRUCT handling
-was only present if building for x86 or powerpc. The sort key and
-headers should be specific to the session that is being executed and
-not to the machine perf is being run upon. These patches clean this
-and associated code up.
-
-v4: Shorten to "weight3" histogram and sample variable, but comment
-    its use (Namhyung). Fix evsel__env use in `perf trace` where no
-    session was present. Assert the session is never passed a NULL
-    host_env when there is no data file and its associated env.
-
-Ian Rogers (24):
-  perf callchain: Always populate the addr_location map when adding IP
-  perf build-id: Reduce size of "size" variable
-  perf build-id: Truncate to avoid overflowing the build_id data
-  perf build-id: Change sprintf functions to snprintf
-  perf build-id: Mark DSO in sample callchains
-  perf build-id: Ensure struct build_id is empty before use
-  perf dso: Move build_id to dso_id
-  perf jitdump: Directly mark the jitdump DSO
-  perf record: Make --buildid-mmap the default
-  perf session: Add accessor for session->header.env
-  perf session: Add an env pointer for the current perf_env
-  perf evlist: Change env variable to session
-  perf header: Clean up use of perf_env
-  perf test: Avoid use perf_env
-  perf session: Add host_env argument to perf_session__new
-  perf top: Make perf_env locally scoped
-  perf bench synthesize: Avoid use of global perf_env
-  perf machine: Explicitly pass in host perf_env
-  perf auxtrace: Pass perf_env from session through to mmap read
-  perf trace: Avoid global perf_env with evsel__env
-  perf env: Remove global perf_env
-  perf sample: Remove arch notion of sample parsing
-  perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to common test
-  perf sort: Use perf_env to set arch sort keys and header
-
- tools/perf/arch/powerpc/util/Build            |   1 -
- tools/perf/arch/powerpc/util/event.c          |  60 ------
- tools/perf/arch/x86/include/arch-tests.h      |   1 -
- tools/perf/arch/x86/tests/Build               |   1 -
- tools/perf/arch/x86/tests/arch-tests.c        |   2 -
- tools/perf/arch/x86/tests/sample-parsing.c    | 125 ------------
- tools/perf/arch/x86/util/event.c              |  46 -----
- tools/perf/bench/inject-buildid.c             |   2 +-
- tools/perf/bench/synthesize.c                 |  30 +--
- tools/perf/builtin-annotate.c                 |   6 +-
- tools/perf/builtin-buildid-cache.c            |  22 +--
- tools/perf/builtin-buildid-list.c             |  11 +-
- tools/perf/builtin-c2c.c                      |  69 ++++---
- tools/perf/builtin-diff.c                     |   2 +-
- tools/perf/builtin-inject.c                   |  41 ++--
- tools/perf/builtin-kallsyms.c                 |  21 +-
- tools/perf/builtin-kmem.c                     |   2 +-
- tools/perf/builtin-kvm.c                      |   4 +-
- tools/perf/builtin-kwork.c                    |   2 +-
- tools/perf/builtin-lock.c                     |   4 +-
- tools/perf/builtin-mem.c                      |   2 +-
- tools/perf/builtin-record.c                   |  63 +++---
- tools/perf/builtin-report.c                   |  27 ++-
- tools/perf/builtin-sched.c                    |   8 +-
- tools/perf/builtin-script.c                   |  18 +-
- tools/perf/builtin-stat.c                     |  23 +--
- tools/perf/builtin-timechart.c                |   2 +-
- tools/perf/builtin-top.c                      |  58 ++++--
- tools/perf/builtin-trace.c                    |  38 ++--
- tools/perf/include/perf/perf_dlfilter.h       |   2 +-
- tools/perf/perf.c                             |   3 -
- tools/perf/tests/code-reading.c               |   6 +-
- tools/perf/tests/dlfilter-test.c              |  51 ++---
- tools/perf/tests/dwarf-unwind.c               |  10 +-
- tools/perf/tests/hists_cumulate.c             |   8 +-
- tools/perf/tests/hists_filter.c               |   8 +-
- tools/perf/tests/hists_link.c                 |   8 +-
- tools/perf/tests/hists_output.c               |  10 +-
- tools/perf/tests/mmap-thread-lookup.c         |   6 +-
- tools/perf/tests/pe-file-parsing.c            |   2 +-
- tools/perf/tests/sample-parsing.c             |  14 ++
- tools/perf/tests/sdt.c                        |   2 +-
- tools/perf/tests/symbols.c                    |  12 +-
- tools/perf/tests/topology.c                   |  39 ++--
- tools/perf/ui/browser.h                       |   4 +-
- tools/perf/ui/browsers/header.c               |   4 +-
- tools/perf/ui/browsers/hists.c                |   2 +-
- tools/perf/util/amd-sample-raw.c              |   2 +-
- tools/perf/util/arm-spe.c                     |   2 +-
- tools/perf/util/auxtrace.c                    |  13 +-
- tools/perf/util/auxtrace.h                    |   6 +-
- tools/perf/util/bpf-event.c                   |   2 +-
- tools/perf/util/branch.c                      |   2 +-
- tools/perf/util/build-id.c                    |  63 +++---
- tools/perf/util/build-id.h                    |   8 +-
- tools/perf/util/data-convert-bt.c             |  16 +-
- tools/perf/util/data-convert-json.c           |  36 ++--
- tools/perf/util/debuginfo.c                   |   2 +-
- tools/perf/util/disasm.c                      |   2 +-
- tools/perf/util/dlfilter.c                    |   2 +-
- tools/perf/util/dso.c                         | 111 ++++++-----
- tools/perf/util/dso.h                         |  75 ++++----
- tools/perf/util/dsos.c                        |  20 +-
- tools/perf/util/env.c                         |   3 +-
- tools/perf/util/env.h                         |   2 -
- tools/perf/util/event.c                       |   2 +-
- tools/perf/util/event.h                       |   5 -
- tools/perf/util/evlist.h                      |   2 +-
- tools/perf/util/evsel.c                       |  29 ++-
- tools/perf/util/evsel.h                       |   1 +
- tools/perf/util/header.c                      | 182 ++++++++++--------
- tools/perf/util/hist.c                        |   4 +-
- tools/perf/util/hist.h                        |   3 +-
- tools/perf/util/intel-tpebs.c                 |   4 +-
- tools/perf/util/jitdump.c                     |  21 +-
- tools/perf/util/machine.c                     |  42 ++--
- tools/perf/util/machine.h                     |   4 +-
- tools/perf/util/map.c                         |  15 +-
- tools/perf/util/map.h                         |   5 +-
- tools/perf/util/probe-event.c                 |   8 +-
- tools/perf/util/probe-file.c                  |   4 +-
- tools/perf/util/probe-finder.c                |   3 +-
- tools/perf/util/s390-cpumsf.c                 |   2 +-
- tools/perf/util/sample-raw.c                  |   7 +-
- tools/perf/util/sample-raw.h                  |   2 +-
- tools/perf/util/sample.h                      |   6 +-
- .../scripting-engines/trace-event-python.c    |   7 +-
- tools/perf/util/session.c                     |  20 +-
- tools/perf/util/session.h                     |   9 +-
- tools/perf/util/sort.c                        |  95 +++++----
- tools/perf/util/sort.h                        |   5 +-
- tools/perf/util/symbol-minimal.c              |   2 +-
- tools/perf/util/symbol.c                      |   7 +-
- tools/perf/util/symbol_conf.h                 |   2 +-
- tools/perf/util/synthetic-events.c            |  54 ++++--
- tools/perf/util/thread.c                      |   8 +-
- tools/perf/util/thread.h                      |   2 +-
- tools/perf/util/tool.c                        |   2 +-
- 98 files changed, 919 insertions(+), 894 deletions(-)
- delete mode 100644 tools/perf/arch/powerpc/util/event.c
- delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
-
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index aa35dceace90..3386fa8e1e7e 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -42,10 +42,20 @@
+ 
+ static bool no_buildid_cache;
+ 
++static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data __maybe_unused)
++{
++	struct map *map = node->ms.map;
++
++	if (map)
++		dso__set_hit(map__dso(map));
++
++	return 0;
++}
++
+ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 			   union perf_event *event,
+ 			   struct perf_sample *sample,
+-			   struct evsel *evsel __maybe_unused,
++			   struct evsel *evsel,
+ 			   struct machine *machine)
+ {
+ 	struct addr_location al;
+@@ -63,6 +73,11 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 		dso__set_hit(map__dso(al.map));
+ 
+ 	addr_location__exit(&al);
++
++	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
++					/*symbols=*/false, mark_dso_hit_callback, /*data=*/NULL);
++
++
+ 	thread__put(thread);
+ 	return 0;
+ }
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
