@@ -1,58 +1,58 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134EE211A29
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 23:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6779324EA9D
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 23:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748561252; cv=none; b=cEf59jjDaI0yhpe7nyTEwHiB3LwOA1DeI8w2CSqUcUXeGyhL0VFO9SCeHsIK2Ycr701BRmMy9HzUBNHVBCUSu7Ob9bwH3E1V4OoVJRBjoWDoRNqF9eC/wgPBRXgxiYtI+SK+59CRuL7/NkNPf7215BjXqRFg/GfB54qeVPDzPnw=
+	t=1748562612; cv=none; b=Hzgli15w6qh5Dsu+0j8MZGcvrGoQ4vTkWwpzw1Pkg89LW26FfU9Hoaa7JjaVZfb0ApGjbmthNp3qVCJ5gJT5vgUW5YT6hkhN5kmythvxSukwN+v//t3G7/3s4U9KgFvmWV4yaIxif41P39zkniePHg+3LdVWXfF7ZF2nb4p6K78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748561252; c=relaxed/simple;
-	bh=nkRgExktWkPoV4ASNKp4o0suzItHNI2KsTFhEZJS5/w=;
+	s=arc-20240116; t=1748562612; c=relaxed/simple;
+	bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NwZuqgQ1aR5mqSzOwMeYcc7G20RTwZ6DmPQCXGqEuu+qKfGvEBzwp/if9Out5N4ODO+nZ3K1Yos5AQjkGKYSmqjCXv9WNrwH7++PPnrvF1cMzgBcYWXiBGCC7D5VHS/47k+DyJJggji97w7NcjRVQt89QZTXzRL5aZyUzGJp1+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4WqP59rr; arc=none smtp.client-ip=209.85.166.175
+	 To:Cc:Content-Type; b=CZo+8c/ZFZCXT/3nurcNrsr/q6IRwXQYiUnaGYMrSe7A+XPA1E6fp8M2U8CwNcCD638QamEraK1EB9z8mETnMWGUuw1P1RCGvinSj7damWhDAxnH6oF+rMxMia80RLrbaKj8a5pDvnKdCYNJNFgDB/p/vaxOrHwTAu0aK2KsJ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5B1HEW0; arc=none smtp.client-ip=209.85.217.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4WqP59rr"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso48385ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 16:27:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5B1HEW0"
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e4564178bcso1624880137.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 16:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748561250; x=1749166050; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748562609; x=1749167409; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nkRgExktWkPoV4ASNKp4o0suzItHNI2KsTFhEZJS5/w=;
-        b=4WqP59rrvmiFjpBrP68AopwC4dYgVQAPI02wn37SBTrFts8Mogumqeel5QGko2K9Xa
-         8E6y25Xc2cHZNNNN79ikZlSynGV/+J10vhxC+03e9LPegILKJq2BMc6QhzNu1hqgonct
-         T8NOAhp0NJGSS01d8x3pbC3uHDs0VELwpOzhOzHUDERK+cJhVFVeUZRkV7mz/z/7BfYr
-         KniaAaUMPstQfIUYFjZpC1BPpxQRcpq4YPsVTvUz2mwArPVVyvthkoVg2V8yTEbxQkUN
-         0pR83CqVjCEoFtbfEz3RX6jLBXb8bc93hQ10UVtdaBTwXbry/n9A3nR6HwcQ8+trMGrT
-         RFhg==
+        bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
+        b=G5B1HEW02erwdwrVBnU0j7QU3YNmjD8SJE4Infef6tDUNcPJ6erziSn3dZmvYwYa+l
+         Tyraw2OR3WkLv3sJ2l3U/c7F0J6QzNYFWG6vtuASlCuS7CU4QyPTb7s+BhHZIbO92BUI
+         i+iN9/NIdGZp3ig2wV5W7yfwoq0gFF4HVfQJCTwkXyapaDWBsen+oNK/N4TtT9nAQHyw
+         /Lji2GaUwutmzguW/idrIQZG2kavcs7L28AadE35+tHjwYXuk7cFvAxPykZw8Pp44NXi
+         EJv60MaSzjchHE7/m8tqCVoPoWARXuPz46coEj6wKnLxSZZwBdEFxf9RQhXWRcWHFGnn
+         KKag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748561250; x=1749166050;
+        d=1e100.net; s=20230601; t=1748562609; x=1749167409;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nkRgExktWkPoV4ASNKp4o0suzItHNI2KsTFhEZJS5/w=;
-        b=hUmgpg4zL+FiP8Vcye0CmCRfHP5EeYXhKMUCv7mlXZcbvt2w7A6vBLlxXaFByBHB7L
-         F7VXjiTjXPgwc+k6qCtlNsEuVLJ1m3fcJEJ7yF0UrcCsyhDveyv3ISe888Kp6MA1KUSV
-         1/BkteP8eP+rbs0lk0O0gBLFik+b378x+ZKheKHUaDdmDXezW0DEQo6oItRBAdO1vMRz
-         11ZQTCjMfvWw9lAUQzI/Wmy+xtHUbTVO8RiiQuws1dAybzXFgoGaQGIiNJkQPlIxq17D
-         W9ByOEOt7Qk6NMO9A2qnwtUYXkk9ZMSV57zgH6LnZCHvqx3T9BRW+LIQy6Ei8pDNtjs0
-         Opqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwsUmriflQOPIZqPkE4CkAk7bcPZb93gFk0OiPRpWTW10Ethh82WTysPNaAH5ZF5OB3qQaQOxHDZMHXlpgNHTL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTBzSTFlmmmkN1Ylpi6jOtH0SSSo91DFQf4fVi4mDhvh30TpmB
-	qc/wdhu+8JXxpJrOtHEJETGU3UIbuZcIFyqRSpmY/m1quQl7oyNhK6H1W3AtmfDMO5shDrVLv/k
-	UeFoi0VCKLLsHulije2pS4BGzdkEFbPVokPhtv/L0
-X-Gm-Gg: ASbGncvbf40sCqrcssReQfCieLwTao8k4eP1ixZEX8wtKEGUpQG+ZsD6b+j7wLdBTjB
-	06/epjREfWhAlvGivsfwtnylre/1F3L7KS+3hgUjpnD5AG55JBGSDTchteHzywD448qBNwnxcUN
-	KgN2blmuX1BF/DutmrHvmh6BvaLhrZ/fL53M8i+LSdHGARMNaCJ20UPlE=
-X-Google-Smtp-Source: AGHT+IHLmy0nRSI3pD4dWzHG/KLXzBhm5OI0nmwhq4T9rKXhINbdxKGX8zoaRsASfBrRMpq6BoDM9QIWbwJsPqa32/0=
-X-Received: by 2002:a05:6e02:154b:b0:3dc:8116:44a8 with SMTP id
- e9e14a558f8ab-3dd9a7e4ba1mr1533675ab.26.1748561249792; Thu, 29 May 2025
- 16:27:29 -0700 (PDT)
+        bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
+        b=eXhgVFbK4NV5t6/FmHYbgXg9Q+LL/YeAuOPr7HrqvmGknV0N10PFJXdFO5HqYmIgO0
+         R5Ll8Yogm1l2bA32EH5g1suHkmTpaFOB2T/5u71NMz8DB5K5jyM6LpxHkzM0lSJ8j5SQ
+         X6qaXe9B4+sA28epTMcZlSwNMs+eANj+7wGzNRWz8qQ8WimA4WC5zb327wI1SsmPEfKb
+         I5gMcohC+71zi2DWWkh40nQYX3aEJoW/HrT9/BVMCNd5fwkPK2eKmEH+OyiE6lxikrIR
+         2ujERHeyIfbeHoaphGdGCk2akBm5j1WajDpCiCf3mGQNkPMHeRsuC/BV07WGL2QvFl2s
+         xjyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUv+hzWrRsA/X3jfkfauKJ/8G1Pjj3rvD6FZBJYVn+OOmXsT8WaD5w8Po5Zv3lxinBLoXxJv9yzPu7UyC1RysqB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7S4pVrCxhOb2m9mlnQDDvNivS66XzYa6/3uO8ef+xT9Vba3UH
+	ZK1bEz+FdR1q1VkeTdYofSZR/spIcKRxqiHrS4CUjmzZBP4R8koyv7FtcyjCK5/Zqw618i04EZ+
+	11irsywneQTH822gHafc+fs+oo1tXEdKCkNRbeZBs
+X-Gm-Gg: ASbGncvbGIfTIs4x9kn98RxxfFSUoxTGrb7tK1c48D3eN4wQSYeJqA8/RLS8Ex27On5
+	GE/x9j1FsN1M/cN0KHjQlcrLrcR14oHMcKstPKedQgaiby/Ji9mq/UbN6/UUKLRZ33aUfbnJPjR
+	KTGsudkMTomAoFbMMtwcm/jyQxKLVmrJFSApNxmHpGaJ8=
+X-Google-Smtp-Source: AGHT+IFt/ivTuvmPFrz20YmtJKKBjvwFbf5WtZzjBqYQF95rJUwlQrpq5rDMJHRKZAZ1A/zY+qqyl8WgCXnFzYIz3Uc=
+X-Received: by 2002:a05:6102:f9d:b0:4df:e510:242e with SMTP id
+ ada2fe7eead31-4e5ac0bc0e6mr7200256137.5.1748562608979; Thu, 29 May 2025
+ 16:50:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,15 +61,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250521222725.3895192-1-blakejones@google.com>
  <20250521222725.3895192-4-blakejones@google.com> <CAP-5=fWZG-N8ZzRh6h1qRuEgFbxTCyEwGu1sZZy+YmnSeGgSSw@mail.gmail.com>
- <CAP_z_Ch2SKwVcSV7ffV1Lbp=6TuKLyofSs1gpfBPMf6mV9-wHA@mail.gmail.com>
-In-Reply-To: <CAP_z_Ch2SKwVcSV7ffV1Lbp=6TuKLyofSs1gpfBPMf6mV9-wHA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 May 2025 16:27:17 -0700
-X-Gm-Features: AX0GCFuFUHoZigmrpc5J862lbtKYyW7pCTUFeDXVHf0lCXfWDnfxr2BAbxc_ILg
-Message-ID: <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
+ <CAP_z_Ch2SKwVcSV7ffV1Lbp=6TuKLyofSs1gpfBPMf6mV9-wHA@mail.gmail.com> <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
+From: Blake Jones <blakejones@google.com>
+Date: Thu, 29 May 2025 16:49:57 -0700
+X-Gm-Features: AX0GCFtrqvEMNdjlMwMgn5_lFeqF78T2xXt27TWAAtlEFWOjsQdw1dn9gHfduLI
+Message-ID: <CAP_z_Ci4X=GRJwKyUMUmypO-xvjuRUR-UPce5hzE_vPf2g_RLQ@mail.gmail.com>
 Subject: Re: [PATCH 3/3] perf: collect BPF metadata from new programs, and
  display the new event
-To: Blake Jones <blakejones@google.com>
+To: Ian Rogers <irogers@google.com>
 Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
 	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
@@ -90,73 +90,17 @@ Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 4:09=E2=80=AFPM Blake Jones <blakejones@google.com>=
- wrote:
->
-> Hi Ian,
->
-> Thanks for your comments!
->
-> On Thu, May 29, 2025 at 11:12=E2=80=AFAM Ian Rogers <irogers@google.com> =
-wrote:
-> > On Wed, May 21, 2025 at 3:27=E2=80=AFPM Blake Jones <blakejones@google.=
-com> wrote:
-> > > diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/per=
-f/util/bpf_skel/sample_filter.bpf.c
-> > > [...]
-> > > +// This is used by tests/shell/record_bpf_metadata.sh
-> > > +// to verify that BPF metadata generation works.
-> > > +const int bpf_metadata_test_value SEC(".rodata") =3D 42;
-> >
-> > This is a bit random.
->
-> Yeah, that's fair. I added it because it was a straightforward way to rel=
-iably
-> get a known value that I could observe from tests/shell/test_bpf_metadata=
-.sh.
->
-> > For the non-BPF C code we have a build generated
-> > PERF-VERSION-FILE that contains something like `#define PERF_VERSION
-> > "6.15.rc7.ge450e74276d2"`. I wonder having something like
-> ]> [...]
-> > would be more useful/meaningful. Perhaps the build could inject the
-> > variable to avoid duplicating it all the BPF skeletons.
->
-> I could do this if you'd like. It would make it harder for my test to che=
-ck
-> that it was reporting the right value, because the PERF-VERSION-FILE defi=
-nes
-> PERF_VERSION in a way that's useful for C programs but not shell scripts.
-> I'd just have the test check that it was reporting some string (maybe one
-> with at least one dot in it, if I can stably make that assumption). WDYT?
+On Thu, May 29, 2025 at 4:27=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+> It should be okay as you can compare the string against that reported
+> by `perf version`. On my build in `/tmp/perf`:
+> ```
+> $ /tmp/perf/perf version
+> perf version 6.15.rc7.gb9ac06abfde9
+> $ cat /tmp/perf/PERF-VERSION-FILE
+> #define PERF_VERSION "6.15.rc7.gb9ac06abfde9"
+> ```
 
-It should be okay as you can compare the string against that reported
-by `perf version`. On my build in `/tmp/perf`:
-```
-$ /tmp/perf/perf version
-perf version 6.15.rc7.gb9ac06abfde9
-$ cat /tmp/perf/PERF-VERSION-FILE
-#define PERF_VERSION "6.15.rc7.gb9ac06abfde9"
-```
+Oh, nice! I'll switch the test to use that instead.
 
-> > nit: I wonder for testing it would be interesting to have 0 and >1
-> > metadata values tested too. We may want to have test programs
-> > explicitly for that, in tools/perf/tests.
->
-> My testing right now depends pretty heavily on the fact that perf will lo=
-ad
-> sample_filter.bpf.o for me; this seems much better than trying to load a
-> BPF program manually from a test.
->
-> If I could find other perf invocations that would load other BPF programs
-> automatically, I could potentially test the "0 metadata" and ">1 metadata=
-"
-> cases. That would involve more BPF-program-specific modifications, though=
-,
-> which would be closer to the thing you objected to above. So to me this
-> doesn't seem worth the effort.
-
-Ok, and the main 1 metadata case is well covered by the test you added.
-
-Thanks,
-Ian
+Blake
