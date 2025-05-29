@@ -1,201 +1,152 @@
 Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAAA28DB4A
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 09:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169A528E605
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 11:33:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748512107; cv=none; b=JZcmo/B+yj64M2YzPlVJw/76tl5HG2Ru/x0gGyKkvG3Gv4/3aKLC03axKkJSwHkPmwtwZx23U8DoiA/82dFkYHFXwXyGytgrtTwOtHj1e80mV3HXo966QXILUEO814aWurTOb+4dewGku/1rNu0+g7MVY8YvvHytF/i5gLz/nas=
+	t=1748518392; cv=none; b=RS4gOEQE2A/jtcSjhIx1sXQiigJ3wKYVSahuLTqFcWVE2PtB2GMCXi9jxKoy911W9drnJQXApbru0ywrWZJgH6Ax4rSWjKP9SZCLnekvVAzVvtAlJ4hv18tcX2ZsMutHlO7PhglkyrB6G8HxLdRQ2vdzB6239IlXA5agd/k/zHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748512107; c=relaxed/simple;
-	bh=mCBPF3CJ36k4V5dXJH2gpRnAP5FNb2FulINW8M6tPfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UL2HkgVfb2Ou9eIw2Ii6h24HwU4DtrPwHhwfvTsaAFiuE+iDEC7sO614UGWlULyKHWGtOSugm8s/mg6ZgO2VKSWBpEqVv77rJK+ugG6IOn8T9g+FWNlMm4ThM9yne8dM/0eartnFvIQDCfSGkx5JPH/Dzo0yNu4WLIdgOKSCZvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OJyLbDUW; arc=none smtp.client-ip=209.85.128.68
+	s=arc-20240116; t=1748518392; c=relaxed/simple;
+	bh=bh4MgnxAaRyek2UdQKghPpoTWMGgrTm8WvxljGcyuvo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UZO5y/jkbVs2tPN1MC4lMBDLJ1kidLuiTjI203AwPTwmwrOzic6L4cpoqzR/0mMqloU+67B+jx5PLiZkvjKZ3N13hawTLHToOcbLz0PNqHjQQY5CpluQVg+XhfsyAMbVnD33xaVJKY6Zvcm4rFza/ELutiAF4VrWtILsGFGIsL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dj0GVNNq; arc=none smtp.client-ip=209.85.128.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OJyLbDUW"
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so9184755e9.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 02:48:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dj0GVNNq"
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so8581615e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 May 2025 04:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748512102; x=1749116902; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BaFVkQVJDKjRYWtNug3oA8cOPJXftESUXFz7M4SIesM=;
-        b=OJyLbDUWEbBQO61Qw8f3Z/PO0CAfQdxlUweiWMFETjxe+aIjZMzTFnQUMoNazwYmxh
-         gI54WVsxvf55MZ/sAXNSBo154EEQocUlF5pYuVwgp1SUAnWa09Zis/RoMQ8sB5Ao44rR
-         QlITn2EXAqMHG2bxk6VcHoEb1LWytE3j4MAJ2khD7hNMP1R1YqKin6Hk9IFQgn7DKk7b
-         JhevVCW3LvmicpUE0QZtbFtGqw3MJlkR8I5y1gJ1RmyUqyUCW+qn+3L/7UV5ufiHvRRJ
-         Oz+bTcYsrKCokb4KnoW3fubFEJpb9Z2su687aqZaF3ChTda3aaD7sXUDt74UXJBk02YA
-         /kZQ==
+        d=linaro.org; s=google; t=1748518388; x=1749123188; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9RGEjbS+3C/e9OMoWBvhsdf9eFJydSpRbxivnh7opTI=;
+        b=Dj0GVNNqb0n/uYbHCxZzMflMzbgSmDwQKEnSNwcylR2BIkLiklb5NnsY3fN3SJ9WU7
+         oSGdVxKXeWFluLY6dp7ClPcnnCVCp4LVp9nxSPxg5B+mylQ53ljWGrbJeos4CXrskB1L
+         Mhe9AAXOIB4+gUzwNbhXmVTzNxt3ZqooTvEA15zpcHtKw7mz9iCIG/CpqWMVRDUcbOty
+         7CkxJLqXaSF/XhdS3d94b+IOXbHIrLCbHIZBWDTbeYP5OMDMqo3lOCfj1dLh9Ix59HKF
+         8T3swe8+DqB+dDwoSD01HmT/r/ynLG0zdPNulLNyqcyrESpsrG8NyOB6PsmwZfpakvPx
+         Lleg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748512102; x=1749116902;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BaFVkQVJDKjRYWtNug3oA8cOPJXftESUXFz7M4SIesM=;
-        b=t1i9Ex/PP7tZ6kLqd3OUHkzcCeuYNo62zQxT75ux91uvRGu9wfavyI4ga5f2m+Pq/z
-         ybjXv5E8FH/epKeEm31VAxkQhSGK4fKk/SAeDTreZjhGnDTrP+PyOxkxWtIrQ/5VuuKO
-         RY/bSo9+KS0PNPGhoKo2m6rMovrsWs8ZgrM8zXrMuUTKUt3ctWjAWsPjfVoGDlthY6wy
-         DF5yJEWIMxNeRRseI1Liw+Qop/19rEpcONzBZHNgPQUgpDnlnAf7jeJD8B+xPlTBKAIa
-         0u/p+aYmPDCKNSRgKdsXdbbJU+cwahz/JkSqyfaM55fNsTHi3PEn81R2S27+pvdm/N0M
-         z/LA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMCP2UhLFlzsnRTulH7BbY0Yps//u0K+RxhmznT+4X5kESOSkmmoIhyZouBrfQl/VskZNKeYY6zA6nTrdP0KfI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfEfUOmrIpuXXbAKXSqmR3w1m0GEoATJTviw8udnlTCwNsKQpE
-	7AYct/WBTvas++qseHYHa5tukhiHcBTI+FWlma5rb6ffSrI0KSf+XufyU8UCqkSxYyU=
-X-Gm-Gg: ASbGncu2r17jJc5v8HBCuW4jj4iIvJsMQMFsdSD3dAIRVWxsbSIybPnlEXaOSxoIe5L
-	VvyT1KqtN0Xx9qnyQQ4QlkWCn+Saiq1mPlWCIq3Z/uhtS+Aa5aMEJkbTQElPyb+4DcsIW1VuRUm
-	GAJCktbVhPz8rU89OLiD88355oyxcH7bggTrnagiU0tTHECg7uhDsx0sfrsIojOlp3Q0uSxEvZA
-	ud8qwHrtp8OvT70BAav26u2XAbDRwyq8UvWT0nbNJttb3gCSRN1ZaNBeW2Os/4JkALzVwaQhSRM
-	8NXAvCzTdGFhyATtkH+ekC2HFeDS7wPm7ubSVu8DveIfT1dH+n20WcFP
-X-Google-Smtp-Source: AGHT+IGqR9/I2Bjkk0qR5H6OlZDpGRs84NmDbQcbBpPkkl4lqLIAxu7/3yK/uxy3vBcppOHkP1XOiw==
-X-Received: by 2002:a05:600c:4e14:b0:444:34c7:3ed9 with SMTP id 5b1f17b1804b1-44c955da4f7mr185008435e9.26.1748512101772;
-        Thu, 29 May 2025 02:48:21 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc27dd8sm15171385e9.26.2025.05.29.02.48.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 02:48:21 -0700 (PDT)
-Message-ID: <d412031a-cdfa-4983-8702-1e1bb93d5641@linaro.org>
-Date: Thu, 29 May 2025 10:48:20 +0100
+        d=1e100.net; s=20230601; t=1748518388; x=1749123188;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9RGEjbS+3C/e9OMoWBvhsdf9eFJydSpRbxivnh7opTI=;
+        b=GLQAp8Q193NhCbkrlmi4HPrPDj0Tj09uYI5CfyrkIfOVZ5j6+uZEDuUh0TVp5KuStL
+         MwG7qhZi4uboxCXbsMERdEwu3UTWUQfwvvWWVjbDFwpc1UrPqtKdg31nPAT1QbGuNMv1
+         yND6UsgPwOa4BjcI5HQY74eqH7GY4kGIjzHo0mr6SfuSfcmSsMEdXRlddRg3IwBAslh8
+         SoXH3kH87tJ5loxYucQvQMM8jcUl1gQMRd1Ld9NGHg9bEno5dgjcTRIDVfUkMbtgQEZK
+         fycVA7O69q9Iy6Du4LkJm+GbToBuIJGcWmagUdxFYybcEYBNfwrJ1jl6uoruIamCXg0M
+         ncTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaYg2SeNaE1nxhPvCdbVS/X5TohoIUE9Q/j7VGxqNeTf3QIXE2pARAmakLWqPjBgEgWbHJmWKadZZUvYDrxglU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDTtCpwytLI1qB7y1UqzQKyok8p9EwG+8nfuoBTXrbQ1wYKDR3
+	jACCfwWchkKHDcDbDoL31YNiguNHmnDcOmoowVVTEbcxps3k9fLO94DVF2uwjt/UG+1mF7u/hhA
+	tjlJfppRzOJXm
+X-Gm-Gg: ASbGncspgLMRar3vtXo3EKt57raqCeMeKEMQtwAa1nRkT3gKzR/as8ONgfESrioPzhm
+	8Hhhxa3Zq7iW2m2F+4W2SpVqtXkD1AIOS8iCtxAP70Gx4rPGv62Z9N/xnfPYsXjURNmhYvu0yLh
+	SZNiCKPwZfBmkWJVKDaVtyH+ootDwT132Be5oeTb7cheLfAS81UHDXKxOM72+7xdz5kj1lGxf89
+	k7V8Mjz4gnEUnTrLEq4MaEFj4ieirK968fNGGNf9DsuHUDWEYn/3gvVh1fZtI3CXYctG5DFVFuu
+	VAWueSfoqIhxGO2r555eflMYnApECYiHEiow8BILgl3QVszDmR/uQTjBiAh9
+X-Google-Smtp-Source: AGHT+IFDz2Nzk5rV8H17aE5jP5Yo1dXjiKY7Wt+ZcHiSvBCRbRuqUmfh+W28PJ1soWP3lufeYbHSmw==
+X-Received: by 2002:a05:600c:3482:b0:441:b00d:e9d1 with SMTP id 5b1f17b1804b1-450d055ba9fmr18892675e9.2.1748518388273;
+        Thu, 29 May 2025 04:33:08 -0700 (PDT)
+Received: from ho-tower-lan.lan ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc3785bsm17443945e9.40.2025.05.29.04.33.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 04:33:07 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v2 00/11] perf: arm_spe: Armv8.8 SPE features
+Date: Thu, 29 May 2025 12:30:21 +0100
+Message-Id: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v22 0/5] arm64/perf: Enable branch stack sampling
-To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>,
- Dave Martin <Dave.Martin@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE1FOGgC/33N0QqDIBTG8VcJr+c4mjXb1d5jRIgey7FpaMRG9
+ O6zYLCb7fJ/4Py+hSSMDhM5FwuJOLvkgs/BDwXRg/I9UmdyEw68gpJxelMPTHTEaKlFNXVpxA7
+ tROtaGyuMtNg0JH+PEa177vK1zT24NIX42odmtl0/ZvnTnBkFypXmYASctJaXu/MqhmOI/baxA
+ xXU/wFjhASUKGTFvoF2Xdc3cIeZJgABAAA=
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
+ kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.0
 
+Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+filtering, and SPE_FEAT_FDS data source filtering. The features are
+independent can be applied separately:
 
+  * Prerequisite sysreg changes - patches 1 - 2
+  * FEAT_SPEv1p4 - patch 3
+  * FEAT_SPE_EFT - patch 4
+  * FEAT_SPE_FDS - patches 5 - 8
+  * FEAT_SPE_FDS Perf tool changes - patches 9 - 11
 
-On 20/05/2025 11:27 pm, Rob Herring (Arm) wrote:
-> This series enables perf branch stack sampling support on arm64 via a
-> v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details
-> on BRBE can be found in the Arm ARM[1] chapter D18.
-> 
-> I've picked up this series from Anshuman. v19 and later versions have
-> been reworked quite a bit by Mark and myself. The bulk of those changes
-> are in patch 5.
-> 
-> A git branch is here[2].
-> 
-> [1] https://developer.arm.com/documentation/ddi0487/latest/
-> [2] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git arm/brbe-v22
-> 
-> Changes in v22:
->   - New patch reworking the labels in el2_setup.h
->   - Move branch stack disabling after armpmu_stop() in armpmu_del()
->   - Fix branch_records_alloc() to work on heterogeneous systems
->   - Make setting .sched_task function ptr conditional on BRBE support
->   - Reword booting.rst section name (s/feature/the/) and move next to
->     other PMU related features instead of in the middle of SME features.
->   - Drop setting SYS_BRBCR_EL1
->   - Drop CONFIG_ARM64_BRBE ifdef
->   - Rework initialization of HFGITR_EL2
-> 
-> v21:
->   - https://lore.kernel.org/r/20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org
->   - Drop clean-up patches 1-7 already applied
->   - Rebase on v6.15-rc1
-> 
-> v20:
->   - https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org
->   - Added back some of the arm64 specific exception types. The x86 IRQ
->     branches also include other exceptions like page faults. On arm64, we
->     can distinguish the exception types, so we do. Also, to better
->     align with x86, we convert 'call' branches which are user to kernel
->     to 'syscall'.
->   - Only enable exceptions and exception returns if recording kernel
->     branches (matching x86)
->   - Drop requiring event and branch privileges to match
->   - Add "branches" caps sysfs attribute like x86
->   - Reword comment about FZP and MDCR_EL2.HPMN interaction
->   - Rework BRBE invalidation to avoid invalidating in interrupt handler
->     when no handled events capture the branch stack (i.e. when there are
->     multiple users).
->   - Also clear BRBCR_ELx bits in brbe_disable(). This is for KVM nVHE
->     checks if BRBE is enabled.
->   - Document that MDCR_EL3.SBRBE can be 0b01 also
-> 
-> v19:
->   - https://lore.kernel.org/all/20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org/
->   - Drop saving of branch records when task scheduled out (Mark). Make
->     sched_task() callback actually get called. Enabling requires a call
->     to perf_sched_cb_inc(). So the saving of branch records never
->     happened.
->   - Got rid of added armpmu ops. All BRBE support is contained within
->     pmuv3 code.
->   - Fix freeze on overflow for VHE
->   - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
->     it when BRBE is enabled.
->   - Drop all the Arm specific exception branches. Not a clear need for
->     them.
->   - Fix handling of branch 'cycles' reading. CC field is
->     mantissa/exponent, not an integer.
->   - Rework s/w filtering to better match h/w filtering
->   - Reject events with disjoint event filter and branch filter or with
->     exclude_host set
->   - Dropped perf test patch which has been applied for 6.14
->   - Dropped patch "KVM: arm64: Explicitly handle BRBE traps as UNDEFINED"
->     which has been applied for 6.14
-> 
-> v18:
->   - https://lore.kernel.org/all/20240613061731.3109448-1-anshuman.khandual@arm.com/
-> 
-> For v1-v17, see the above link. Not going to duplicate it all here...
-> 
-> Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
-> ---
-> ---
-> Anshuman Khandual (4):
->        arm64/sysreg: Add BRBE registers and fields
->        arm64: el2_setup.h: Make __init_el2_fgt labels consistent, again
->        arm64: Handle BRBE booting requirements
->        KVM: arm64: nvhe: Disable branch generation in nVHE guests
-> 
-> Rob Herring (Arm) (1):
->        perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)
-> 
->   Documentation/arch/arm64/booting.rst |  21 +
->   arch/arm64/include/asm/el2_setup.h   |  81 +++-
->   arch/arm64/include/asm/kvm_host.h    |   2 +
->   arch/arm64/include/asm/sysreg.h      |  17 +-
->   arch/arm64/kvm/debug.c               |   4 +
->   arch/arm64/kvm/hyp/nvhe/debug-sr.c   |  32 ++
->   arch/arm64/kvm/hyp/nvhe/switch.c     |   2 +-
->   arch/arm64/tools/sysreg              | 132 ++++++
->   drivers/perf/Kconfig                 |  11 +
->   drivers/perf/Makefile                |   1 +
->   drivers/perf/arm_brbe.c              | 802 +++++++++++++++++++++++++++++++++++
->   drivers/perf/arm_brbe.h              |  47 ++
->   drivers/perf/arm_pmu.c               |  16 +-
->   drivers/perf/arm_pmuv3.c             | 125 +++++-
->   include/linux/perf/arm_pmu.h         |   8 +
->   15 files changed, 1276 insertions(+), 25 deletions(-)
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250129-arm-brbe-v19-24d5d9e5e623
-> 
-> Best regards,
+The first two features will work with old Perfs but a Perf change to
+parse the new config4 is required for the last feature.
 
-Tested-by: James Clark <james.clark@linaro.org>
+---
+Changes in v2:
+- Fix detection of FEAT_SPE_FDS in el2_setup.h
+- Pickup Marc Z's sysreg change instead which matches the json
+- Restructure and expand docs changes
+- Link to v1: https://lore.kernel.org/r/20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org
 
+---
+James Clark (10):
+      arm64: sysreg: Add new PMSFCR_EL1 fields and PMSDSFR_EL1 register
+      perf: arm_spe: Support FEAT_SPEv1p4 filters
+      perf: arm_spe: Add support for FEAT_SPE_EFT extended filtering
+      arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+      KVM: arm64: Add trap configs for PMSDSFR_EL1
+      perf: Add perf_event_attr::config4
+      perf: arm_spe: Add support for filtering on data source
+      tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+      perf tools: Add support for perf_event_attr::config4
+      perf docs: arm-spe: Document new SPE filtering features
+
+Marc Zyngier (1):
+      arm64: sysreg: Update PMSIDR_EL1 description
+
+ Documentation/arch/arm64/booting.rst      |  11 ++++
+ arch/arm64/include/asm/el2_setup.h        |  14 +++++
+ arch/arm64/include/asm/sysreg.h           |   7 +++
+ arch/arm64/kvm/emulate-nested.c           |   1 +
+ arch/arm64/kvm/sys_regs.c                 |   1 +
+ arch/arm64/tools/sysreg                   |  45 ++++++++++++--
+ drivers/perf/arm_spe_pmu.c                | 100 +++++++++++++++++++++++++++++-
+ include/uapi/linux/perf_event.h           |   2 +
+ tools/include/uapi/linux/perf_event.h     |   2 +
+ tools/perf/Documentation/perf-arm-spe.txt |  97 ++++++++++++++++++++++++++---
+ tools/perf/tests/parse-events.c           |  14 ++++-
+ tools/perf/util/parse-events.c            |  11 ++++
+ tools/perf/util/parse-events.h            |   1 +
+ tools/perf/util/parse-events.l            |   1 +
+ tools/perf/util/pmu.c                     |   8 +++
+ tools/perf/util/pmu.h                     |   1 +
+ 16 files changed, 301 insertions(+), 15 deletions(-)
+---
+base-commit: 90b83efa6701656e02c86e7df2cb1765ea602d07
+change-id: 20250312-james-perf-feat_spe_eft-66cdf4d8fe99
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
