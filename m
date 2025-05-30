@@ -1,63 +1,63 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90A821FF25
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 09:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D62F1E8323
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 09:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597431; cv=none; b=FTja+/7tARtp1m/3r4p5ums2L22xjNG2PBw0+EX11lECJ9wYSFncXSvxVX3MZkiGd7QpmdFSXiJfFjnMMW5UVzw3s2P0DUfhJMulOAy2lE7gfXMdCzyGX33elPpzul0SQONwQ1hT9raC8wkDQ6RNN5OF0qN5jnUsrGJrjUfZECM=
+	t=1748597448; cv=none; b=qmChmm4F79H/VuCIYlx+3gt8cq+kmFmAb90FafjlbREsHZTl9r5QCe8Xt6sN2kgDuECEh3oM9Pytb/JPf36JfDacxx+ftyHYMOoi3z2XfwPgTf1gHvIYF4Df0P6K8s4JpPSQ8UmyU8lB5sFAHMDm9oMNC1hSmgxdhTOWNBQ+gO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597431; c=relaxed/simple;
-	bh=DFUGROHVCTniD49Ozv49pSZ2hICpYueXEA09N4l6CVc=;
+	s=arc-20240116; t=1748597448; c=relaxed/simple;
+	bh=cZEQ0MqKbOvC/as7YQeo0L+z+hUgvHRxc+aL7T32ukk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DZ8MppoZkipq8W37vxO5a6irtjwKfdAtijHHh6DhuuK7I7xFLr73qbOPKwJtZ/F4tI2rmWLHfzvg2YtbocnZC8NCW0IMZNPebIlmjjbf6g3FA4jZbH4heZRa/RupSYEddB9IG2ur2aFU0Fc3knTrOu9dscmPDIqIN4m/G0s3btY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ihzlDemt; arc=none smtp.client-ip=209.85.215.169
+	 MIME-Version; b=VvlCeFZsusFWQfRe6gN0T2NIWT/I6MoxfYOiO8ZGu9S/0EhcbV9cPAJoN2xh76yLyS2zk4t04fgL1PcBs2gQZ92oSBn1/nhA7xAdmFgXsfgtal72QF8m6X/hrqLxn8uajh0bC5tpt+2pizdSbnSXAztlY8/toNtCn8Itb/A21hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZfFuStJw; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ihzlDemt"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af6a315b491so1532655a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 02:30:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZfFuStJw"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af6a315b491so1532830a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 02:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597429; x=1749202229; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748597444; x=1749202244; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=It0nagCB2dMHz+A5VnrcLdhvjSzG9DfFTU//7hpwVEI=;
-        b=ihzlDemthbTov5PXhPgH3PlMpPQsHOe4zKAOJCRsWUntI5rjURuIxsST5IrMwsmZXr
-         cMDEeCqiJd11fkseRgWWyviZqSJkK90CiEOQCi+63DZPZGAwHHbVuNqC/asOl1MrlB+U
-         B9XEHrLdr001jKPVuSAEHq2+C6XfUM/p8jWCMM4aE2JCGwafNiP5n7tD2YKVlCgT72A2
-         +YQ9G7z8HD8tX/VLki2z6cgf2nB9c3s2CKVZG0bq3TQqvrfq6HxAW6Vi6S1ieVoG/m0h
-         jJyF82BmP7J2fnlAb4gZu5bAYyrwIZ9M2HKGl+A/8fnY7L3tu3ITXC0hQjFrT7os80aw
-         jvlQ==
+        bh=MCkN3xSvk7RNOqtTsnso8pu1jgTl1XSXrm3OEL9CcBU=;
+        b=ZfFuStJwx/BN5fNeH96ss/AySEuyezo8B0bfDe8tMKyDwgL098ciD8jt8L7GdT+AlT
+         ghBvvwMCIn8m3u2zk+iDtRMlyZ4g0Zcp9gInoNmbl6OGZ4vXHi4HMNUYrwiqlHbvhgXR
+         rOFyRJhGmYpfIytDCZKohBYk3yZnd3yBQ9/4MUiB6ISpvVQSxazUuD+bvWfR3ni8HGYJ
+         2WTZMlh4DZ8KVZ1OBH3QcQq7I7T58qKyfJaDApCuMtPfvBwndFZarGroYdhHLjBTioAi
+         ksl/sMIeWv6qiH/hLRFjub5+vtaw/gEWfNwOEBIDS+PBybSHccw4P2ANkboLgheKQw8R
+         nL+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597429; x=1749202229;
+        d=1e100.net; s=20230601; t=1748597444; x=1749202244;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=It0nagCB2dMHz+A5VnrcLdhvjSzG9DfFTU//7hpwVEI=;
-        b=bOOoBSzFGz4OJPR9dKLIELwwovojRaYLtsczbnVCRn+8lJX494oTrZGLbVgSlVXe3w
-         mvRKEFv2TxC2P9x8bDI8u6Dk6a9XSL9yGoksUExx+FU/5x4Pj3duUWyotbvBwyacYvcW
-         vGHYUF3LDoMaA6B1W0iHriSipMmbmOkXV9uaDfT9A9/VsWkQEEPHP+RH1ZKtZ+HXbC6c
-         bmetESGiOJWerelwVC7k63/ETWhc88fNPbq3GTttDYG1lYix9zRd5FgyD7hVJXICvE50
-         05X7Paf3FAGPC6/SusYh5r5ua6LjGFeBHzG9EqHMuhoVAwSjP5GawW4PmVDw7uL6Isyf
-         Yo5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUc11GOEFzB9VYLlxxRmu8HwycFQm3M4DQNhcML+3HpkKghQ8xCAupceCYOXYoBInbN0caPk/WEMdsXNOmtviVq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4zSjOmoNLjAOf6NtKHIlmlb0LtbqI/6pFElxeIfp05UqFOD+K
-	5luWMrt/ZynNAx5bIZmNetu5bWgV2Ycl9KS9AInSOsUe05tNDaZ4xAyq7ljag+hqklg=
-X-Gm-Gg: ASbGncsngIlj6sxMpNBNOhKfbvg7yYeYIK8oBWWgtjvn389EvdFPMFAT2CbbgWsfZUQ
-	nNMdmn08YhOIvmUvfFILqMHG2+pjt4hn+gLx1mYYelACc9dwWapF3Lix0YVvm8G4pTV5FAFWasB
-	NTmfJ0/J9dg0+wPoyPTveu09yc7NfOorcVjWS/CeuAiY1F8acgaQIHjTlr5NPp9DCkKZOqvmEoT
-	I3XxzM1HU78Qt1mLcrf2OWm0EkNjfEJ2X8YS5u20XjdsDtOBb/3QTB9qRnRWCfRo4tuQJlNlhWU
-	q0qTtcxwreHmyeKZ+0QUhO2MrTrPpRKhhaz5s1eAWbovvT7sG+uahlKzQlXVMnqpXMH5RmNvTiX
-	pgVPUj+E6vTPmytxhByPY
-X-Google-Smtp-Source: AGHT+IHhFP+YSRyY0vGcXgga6NhFTtrcJFFIO4OfIe90gNYiOLxgktzPA73bwtmVpC1QBkXNF+uurw==
-X-Received: by 2002:a17:90b:4fd2:b0:311:f99e:7f4a with SMTP id 98e67ed59e1d1-31250427d15mr1963416a91.26.1748597428884;
-        Fri, 30 May 2025 02:30:28 -0700 (PDT)
+        bh=MCkN3xSvk7RNOqtTsnso8pu1jgTl1XSXrm3OEL9CcBU=;
+        b=LVpBR6vLxHfO1XyjS5fBgP8gFiUIEqanpjn7tYQ71Az8D87S6xEn2wsLskyvWuKPuN
+         wAm4McMCpEhwq0ArQzBQpeYeyX21PDUZoHudoLW191nhDXi+WU43dTUPf/c01kjoeuu2
+         vr5Ry+bUEBL6wAaz1hEZNterGgiVv3axA5Lz6fg2HcuTECH2ZSt7FbxU+5bP0wt6rMTI
+         WYcpxht3WTPGabEAr951ryap3glwuSrudfVJTwj7ipO3n+MIUjAF9nD7O+DQul1tDBp2
+         epa23xidVMB2tf7TVYOF7qFCyElBLa5rwS9wFMcrO07QBoQps5f3gd33Hvn2bZNk9SEb
+         1dag==
+X-Forwarded-Encrypted: i=1; AJvYcCVtoPDnZRuTWQQ/3gPjblMVuoZYjf36Qs/FH+jR9pA5GuwZX3mbLsyauxiieCZLOW1heYbYoSIHEOrr8szF3mzs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx+yJzHq9+L8r6nDbTZwadWOgZLE4GV0z6FiGSiUv1ggdO4CQv
+	ULQd0htPsgf6e/+2H+f8oGHI5leLySGXOw/+kQ8ocOvVqXPd6DSqyAW9vj0QeGY0lJU=
+X-Gm-Gg: ASbGncvQC1GEf7GbwaMw6gQ/QX2/34X7JABi3gNun8Ww/Zo+Vcgvp3nBE/ZvB8mAk96
+	nmLImlzFIDxe2EnCj9M5ya+pbNBOdoEw+nQJKgWUOqNW4CUBQpSxtuMOv3ImJjPTc1cTyOCsVav
+	7xn5XyHhHh3AylwYhALQeVVrUn91Gr4v07c4rRwh6V8ECwAvkI5YHn/bYHVxcPJqaHy+ZUauJPv
+	klq+G+EuTlE/nq7OwIsUz1GiTzDPJAG3+6IVLZ61nZ4jYBo/+9GgNeV64pVqHIjHA83K4d5IRu2
+	7DUJEaXspl+ubhHT76TbtiYqcyYAIogLzbfQVgnWs402wE5+BtzSUBvco4CzC/36qyOVxlEkWPs
+	JSUTzn31YlQ==
+X-Google-Smtp-Source: AGHT+IGxnH4FN8v0lfXoJ+KLdg1DAlTGeu78x7GO8KMsAYvLDaxWhgMloZ/K96UmZpYHSFOIcwKPxQ==
+X-Received: by 2002:a17:90b:2248:b0:311:ff18:b84b with SMTP id 98e67ed59e1d1-31250427cdamr2068655a91.25.1748597444187;
+        Fri, 30 May 2025 02:30:44 -0700 (PDT)
 Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.30.13
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.30.29
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:30:28 -0700 (PDT)
+        Fri, 30 May 2025 02:30:43 -0700 (PDT)
 From: Bo Li <libo.gcs85@bytedance.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -112,9 +112,9 @@ Cc: dietmar.eggemann@arm.com,
 	chengguozhu@bytedance.com,
 	sunjiadong.lff@bytedance.com,
 	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 08/35] RPAL: enable sender/receiver registration
-Date: Fri, 30 May 2025 17:27:36 +0800
-Message-Id: <a999df69234df38638909f3503d99bd6d8e54a84.1748594840.git.libo.gcs85@bytedance.com>
+Subject: [RFC v2 09/35] RPAL: enable address space sharing
+Date: Fri, 30 May 2025 17:27:37 +0800
+Message-Id: <2b5378f3686fd2831468e65c49609fbb19072b43.1748594840.git.libo.gcs85@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
@@ -126,459 +126,295 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In RPAL, there are two roles: the sender (caller) and the receiver (
-callee). This patch provides an interface for threads to register as
-a sender or a receiver with the kernel. Each sender and receiver has
-its own data structure, along with a block of memory shared between the
-user space and the kernel space, which is allocated through rpal_mmap().
+RPAL's memory sharing is implemented by copying p4d entries, which requires
+implementing corresponding interfaces. Meanwhile, copying p4d entries can
+cause the process's page table to contain p4d entries that do not belong to
+it, and RPAL needs to resolve compatibility issues with other subsystems
+caused by this.
+
+This patch implements the rpal_map_service() interface to complete the
+mutual copying of p4d entries between two RPAL services. For the copied p4d
+entries, RPAL adds a _PAGE_RPAL_IGN flag to them. This flag makes
+p4d_none() return true and p4d_present() return false, ensuring that these
+p4d entries are invisible to other kernel subsystems. The protection of p4d
+entries is guaranteed by the memory balloon, which ensures that the address
+space corresponding to the p4d entries is not used by the current service.
 
 Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
- arch/x86/rpal/Makefile   |   2 +-
- arch/x86/rpal/internal.h |   7 ++
- arch/x86/rpal/proc.c     |  12 +++
- arch/x86/rpal/service.c  |   6 ++
- arch/x86/rpal/thread.c   | 165 +++++++++++++++++++++++++++++++++++++++
- include/linux/rpal.h     |  79 +++++++++++++++++++
- include/linux/sched.h    |  15 ++++
- init/init_task.c         |   2 +
- kernel/fork.c            |   2 +
- 9 files changed, 289 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/rpal/thread.c
+ arch/x86/include/asm/pgtable.h       |  25 ++++
+ arch/x86/include/asm/pgtable_types.h |  11 ++
+ arch/x86/rpal/internal.h             |   2 +
+ arch/x86/rpal/mm.c                   | 175 +++++++++++++++++++++++++++
+ 4 files changed, 213 insertions(+)
 
-diff --git a/arch/x86/rpal/Makefile b/arch/x86/rpal/Makefile
-index a5926fc19334..89f745382c51 100644
---- a/arch/x86/rpal/Makefile
-+++ b/arch/x86/rpal/Makefile
-@@ -2,4 +2,4 @@
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 5ddba366d3b4..54351bfe4e47 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -1137,12 +1137,37 @@ static inline int pud_bad(pud_t pud)
+ #if CONFIG_PGTABLE_LEVELS > 3
+ static inline int p4d_none(p4d_t p4d)
+ {
++#if IS_ENABLED(CONFIG_RPAL)
++	p4dval_t p4dv = native_p4d_val(p4d);
++
++	/*
++	 * Since RPAL copy p4d entry to share address space,
++	 * it is important that other process will not manipulate
++	 * this copied p4d. Thus, make p4d_none() always return
++	 * 0 to bypass kernel page table logic on copied p4d.
++	 */
++	return (p4dv & _PAGE_RPAL_IGN) ||
++	       ((p4dv & ~(_PAGE_KNL_ERRATUM_MASK)) == 0);
++#else
+ 	return (native_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
++#endif
+ }
  
- obj-$(CONFIG_RPAL)		+= rpal.o
+ static inline int p4d_present(p4d_t p4d)
+ {
++#if IS_ENABLED(CONFIG_RPAL)
++	p4dval_t p4df = p4d_flags(p4d);
++
++	/*
++	 * Since RPAL copy p4d entry to share address space,
++	 * it is important that other process will not manipulate
++	 * this copied p4d. Thus, make p4d_present() always return
++	 * 0 to bypass kernel page table logic on copied p4d.
++	 */
++	return ((p4df & (_PAGE_PRESENT | _PAGE_RPAL_IGN)) == _PAGE_PRESENT);
++#else
+ 	return p4d_flags(p4d) & _PAGE_PRESENT;
++#endif
+ }
  
--rpal-y := service.o core.o mm.o proc.o
-+rpal-y := service.o core.o mm.o proc.o thread.o
+ static inline pud_t *p4d_pgtable(p4d_t p4d)
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b74ec5c3643b..781b0f5bc359 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -35,6 +35,13 @@
+ #define _PAGE_BIT_SOFT_DIRTY	_PAGE_BIT_SOFTW3 /* software dirty tracking */
+ #define _PAGE_BIT_KERNEL_4K	_PAGE_BIT_SOFTW3 /* page must not be converted to large */
+ #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
++/*
++ * _PAGE_BIT_SOFTW1 is used by _PAGE_BIT_SPECIAL.
++ * but we are not conflicted with _PAGE_BIT_SPECIAL
++ * as we use it only on p4d/pud level and _PAGE_BIT_SPECIAL
++ * is only used on pte level.
++ */
++#define _PAGE_BIT_RPAL_IGN	_PAGE_BIT_SOFTW1
+ 
+ #ifdef CONFIG_X86_64
+ #define _PAGE_BIT_SAVED_DIRTY	_PAGE_BIT_SOFTW5 /* Saved Dirty bit (leaf) */
+@@ -95,6 +102,10 @@
+ #define _PAGE_SOFT_DIRTY	(_AT(pteval_t, 0))
+ #endif
+ 
++#if IS_ENABLED(CONFIG_RPAL)
++#define _PAGE_RPAL_IGN	(_AT(pteval_t, 1) << _PAGE_BIT_RPAL_IGN)
++#endif
++
+ /*
+  * Tracking soft dirty bit when a page goes to a swap is tricky.
+  * We need a bit which can be stored in pte _and_ not conflict
 diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
-index 65fd14a26f0e..3559c9c6e868 100644
+index 3559c9c6e868..65f2cf4baf8f 100644
 --- a/arch/x86/rpal/internal.h
 +++ b/arch/x86/rpal/internal.h
-@@ -34,3 +34,10 @@ static inline void rpal_put_shared_page(struct rpal_shared_page *rsp)
+@@ -34,6 +34,8 @@ static inline void rpal_put_shared_page(struct rpal_shared_page *rsp)
  int rpal_mmap(struct file *filp, struct vm_area_struct *vma);
  struct rpal_shared_page *rpal_find_shared_page(struct rpal_service *rs,
  					       unsigned long addr);
-+
-+/* thread.c */
-+int rpal_register_sender(unsigned long addr);
-+int rpal_unregister_sender(void);
-+int rpal_register_receiver(unsigned long addr);
-+int rpal_unregister_receiver(void);
-+void exit_rpal_thread(void);
-diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
-index 86947dc233d0..8a1e4a8a2271 100644
---- a/arch/x86/rpal/proc.c
-+++ b/arch/x86/rpal/proc.c
-@@ -51,6 +51,18 @@ static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case RPAL_IOCTL_GET_SERVICE_ID:
- 		ret = put_user(cur->id, (int __user *)arg);
- 		break;
-+	case RPAL_IOCTL_REGISTER_SENDER:
-+		ret = rpal_register_sender(arg);
-+		break;
-+	case RPAL_IOCTL_UNREGISTER_SENDER:
-+		ret = rpal_unregister_sender();
-+		break;
-+	case RPAL_IOCTL_REGISTER_RECEIVER:
-+		ret = rpal_register_receiver(arg);
-+		break;
-+	case RPAL_IOCTL_UNREGISTER_RECEIVER:
-+		ret = rpal_unregister_receiver();
-+		break;
- 	default:
- 		return -EINVAL;
++int rpal_map_service(struct rpal_service *tgt);
++void rpal_unmap_service(struct rpal_service *tgt);
+ 
+ /* thread.c */
+ int rpal_register_sender(unsigned long addr);
+diff --git a/arch/x86/rpal/mm.c b/arch/x86/rpal/mm.c
+index 8a738c502d1d..f1003baae001 100644
+--- a/arch/x86/rpal/mm.c
++++ b/arch/x86/rpal/mm.c
+@@ -215,3 +215,178 @@ void rpal_exit_mmap(struct mm_struct *mm)
+ 		rpal_put_service(rs);
  	}
-diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index f29a046fc22f..42fb719dbb2a 100644
---- a/arch/x86/rpal/service.c
-+++ b/arch/x86/rpal/service.c
-@@ -176,6 +176,7 @@ struct rpal_service *rpal_register_service(void)
- 	mutex_init(&rs->mutex);
- 	rs->nr_shared_pages = 0;
- 	INIT_LIST_HEAD(&rs->shared_pages);
-+	atomic_set(&rs->thread_cnt, 0);
- 
- 	rs->bad_service = false;
- 	rs->base = calculate_base_address(rs->id);
-@@ -216,6 +217,9 @@ void rpal_unregister_service(struct rpal_service *rs)
- 	if (!rs)
- 		return;
- 
-+	while (atomic_read(&rs->thread_cnt) != 0)
-+		schedule();
-+
- 	delete_service(rs);
- 
- 	pr_debug("rpal: unregister service, id: %d, tgid: %d\n", rs->id,
-@@ -238,6 +242,8 @@ void exit_rpal(bool group_dead)
- 	if (!rs)
- 		return;
- 
-+	exit_rpal_thread();
-+
- 	current->rpal_rs = NULL;
- 	rpal_put_service(rs);
- 
-diff --git a/arch/x86/rpal/thread.c b/arch/x86/rpal/thread.c
-new file mode 100644
-index 000000000000..7550ad94b63f
---- /dev/null
-+++ b/arch/x86/rpal/thread.c
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * RPAL service level operations
-+ * Copyright (c) 2025, ByteDance. All rights reserved.
-+ *
-+ *     Author: Jiadong Sun <sunjiadong.lff@bytedance.com>
-+ */
-+
-+#include <linux/rpal.h>
-+
-+#include "internal.h"
-+
-+static void rpal_common_data_init(struct rpal_common_data *rcd)
-+{
-+	rcd->bp_task = current;
-+	rcd->service_id = rpal_current_service()->id;
-+}
-+
-+int rpal_register_sender(unsigned long addr)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_shared_page *rsp;
-+	struct rpal_sender_data *rsd;
-+	long ret = 0;
-+
-+	if (rpal_test_current_thread_flag(RPAL_SENDER_BIT)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	rsp = rpal_find_shared_page(cur, addr);
-+	if (!rsp) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (addr + sizeof(struct rpal_sender_call_context) >
-+	    rsp->user_start + rsp->npage * PAGE_SIZE) {
-+		ret = -EINVAL;
-+		goto put_shared_page;
-+	}
-+
-+	rsd = kzalloc(sizeof(*rsd), GFP_KERNEL);
-+	if (rsd == NULL) {
-+		ret = -ENOMEM;
-+		goto put_shared_page;
-+	}
-+
-+	rpal_common_data_init(&rsd->rcd);
-+	rsd->rsp = rsp;
-+	rsd->scc = (struct rpal_sender_call_context *)(addr - rsp->user_start +
-+						       rsp->kernel_start);
-+
-+	current->rpal_sd = rsd;
-+	rpal_set_current_thread_flag(RPAL_SENDER_BIT);
-+
-+	atomic_inc(&cur->thread_cnt);
-+
-+	return 0;
-+
-+put_shared_page:
-+	rpal_put_shared_page(rsp);
-+out:
-+	return ret;
-+}
-+
-+int rpal_unregister_sender(void)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_sender_data *rsd = current->rpal_sd;
-+	long ret = 0;
-+
-+	if (!rpal_test_current_thread_flag(RPAL_SENDER_BIT)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	rpal_put_shared_page(rsd->rsp);
-+	rpal_clear_current_thread_flag(RPAL_SENDER_BIT);
-+	kfree(rsd);
-+
-+	atomic_dec(&cur->thread_cnt);
-+
-+out:
-+	return ret;
-+}
-+
-+int rpal_register_receiver(unsigned long addr)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_receiver_data *rrd;
-+	struct rpal_shared_page *rsp;
-+	long ret = 0;
-+
-+	if (rpal_test_current_thread_flag(RPAL_RECEIVER_BIT)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	rsp = rpal_find_shared_page(cur, addr);
-+	if (!rsp) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (addr + sizeof(struct rpal_receiver_call_context) >
-+	    rsp->user_start + rsp->npage * PAGE_SIZE) {
-+		ret = -EINVAL;
-+		goto put_shared_page;
-+	}
-+
-+	rrd = kzalloc(sizeof(*rrd), GFP_KERNEL);
-+	if (rrd == NULL) {
-+		ret = -ENOMEM;
-+		goto put_shared_page;
-+	}
-+
-+	rpal_common_data_init(&rrd->rcd);
-+	rrd->rsp = rsp;
-+	rrd->rcc =
-+		(struct rpal_receiver_call_context *)(addr - rsp->user_start +
-+						      rsp->kernel_start);
-+
-+	current->rpal_rd = rrd;
-+	rpal_set_current_thread_flag(RPAL_RECEIVER_BIT);
-+
-+	atomic_inc(&cur->thread_cnt);
-+
-+	return 0;
-+
-+put_shared_page:
-+	rpal_put_shared_page(rsp);
-+out:
-+	return ret;
-+}
-+
-+int rpal_unregister_receiver(void)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_receiver_data *rrd = current->rpal_rd;
-+	long ret = 0;
-+
-+	if (!rpal_test_current_thread_flag(RPAL_RECEIVER_BIT)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	rpal_put_shared_page(rrd->rsp);
-+	rpal_clear_current_thread_flag(RPAL_RECEIVER_BIT);
-+	kfree(rrd);
-+
-+	atomic_dec(&cur->thread_cnt);
-+
-+out:
-+	return ret;
-+}
-+
-+void exit_rpal_thread(void)
-+{
-+	if (rpal_test_current_thread_flag(RPAL_SENDER_BIT))
-+		rpal_unregister_sender();
-+
-+	if (rpal_test_current_thread_flag(RPAL_RECEIVER_BIT))
-+		rpal_unregister_receiver();
-+}
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 986dfbd16fc9..c33425e896af 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -79,6 +79,11 @@
- 
- extern unsigned long rpal_cap;
- 
-+enum rpal_task_flag_bits {
-+	RPAL_SENDER_BIT,
-+	RPAL_RECEIVER_BIT,
-+};
-+
- /*
-  * Each RPAL process (a.k.a RPAL service) should have a pointer to
-  * struct rpal_service in all its tasks' task_struct.
-@@ -117,6 +122,9 @@ struct rpal_service {
- 	int nr_shared_pages;
- 	struct list_head shared_pages;
- 
-+	/* sender/receiver thread count */
-+	atomic_t thread_cnt;
-+
- 	/* delayed service put work */
- 	struct delayed_work delayed_put_work;
- 
-@@ -149,10 +157,55 @@ struct rpal_shared_page {
- 	struct list_head list;
- };
- 
-+struct rpal_common_data {
-+	/* back pointer to task_struct */
-+	struct task_struct *bp_task;
-+	/* service id of rpal_service */
-+	int service_id;
-+};
-+
-+/* User registers state */
-+struct rpal_task_context {
-+	u64 r15;
-+	u64 r14;
-+	u64 r13;
-+	u64 r12;
-+	u64 rbx;
-+	u64 rbp;
-+	u64 rip;
-+	u64 rsp;
-+};
-+
-+struct rpal_receiver_call_context {
-+	struct rpal_task_context rtc;
-+	int receiver_id;
-+};
-+
-+struct rpal_receiver_data {
-+	struct rpal_common_data rcd;
-+	struct rpal_shared_page *rsp;
-+	struct rpal_receiver_call_context *rcc;
-+};
-+
-+struct rpal_sender_call_context {
-+	struct rpal_task_context rtc;
-+	int sender_id;
-+};
-+
-+struct rpal_sender_data {
-+	struct rpal_common_data rcd;
-+	struct rpal_shared_page *rsp;
-+	struct rpal_sender_call_context *scc;
-+};
-+
- enum rpal_command_type {
- 	RPAL_CMD_GET_API_VERSION_AND_CAP,
- 	RPAL_CMD_GET_SERVICE_KEY,
- 	RPAL_CMD_GET_SERVICE_ID,
-+	RPAL_CMD_REGISTER_SENDER,
-+	RPAL_CMD_UNREGISTER_SENDER,
-+	RPAL_CMD_REGISTER_RECEIVER,
-+	RPAL_CMD_UNREGISTER_RECEIVER,
- 	RPAL_NR_CMD,
- };
- 
-@@ -165,6 +218,14 @@ enum rpal_command_type {
- 	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_KEY, u64 *)
- #define RPAL_IOCTL_GET_SERVICE_ID \
- 	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_ID, int *)
-+#define RPAL_IOCTL_REGISTER_SENDER \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_REGISTER_SENDER, unsigned long)
-+#define RPAL_IOCTL_UNREGISTER_SENDER \
-+	_IO(RPAL_IOCTL_MAGIC, RPAL_CMD_UNREGISTER_SENDER)
-+#define RPAL_IOCTL_REGISTER_RECEIVER \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_REGISTER_RECEIVER, unsigned long)
-+#define RPAL_IOCTL_UNREGISTER_RECEIVER \
-+	_IO(RPAL_IOCTL_MAGIC, RPAL_CMD_UNREGISTER_RECEIVER)
- 
- /**
-  * @brief get new reference to a rpal service, a corresponding
-@@ -200,8 +261,26 @@ static inline struct rpal_service *rpal_current_service(void)
- {
- 	return current->rpal_rs;
  }
 +
-+static inline void rpal_set_current_thread_flag(unsigned long bit)
++/*
++ * Since the user address space size of rpal process is 512G, which
++ * is the size of one p4d, we assume p4d entry will never change after
++ * rpal process is created.
++ */
++static int mm_link_p4d(struct mm_struct *dst_mm, p4d_t src_p4d,
++		       unsigned long addr)
 +{
-+	set_bit(bit, &current->rpal_flag);
-+}
++	spinlock_t *dst_ptl = &dst_mm->page_table_lock;
++	unsigned long flags;
++	pgd_t *dst_pgdp;
++	p4d_t p4d, *dst_p4dp;
++	p4dval_t p4dv;
++	int ret = 0;
 +
-+static inline void rpal_clear_current_thread_flag(unsigned long bit)
-+{
-+	clear_bit(bit, &current->rpal_flag);
-+}
++	BUILD_BUG_ON(CONFIG_PGTABLE_LEVELS < 4);
 +
-+static inline bool rpal_test_current_thread_flag(unsigned long bit)
-+{
-+	return test_bit(bit, &current->rpal_flag);
-+}
- #else
- static inline struct rpal_service *rpal_current_service(void) { return NULL; }
-+static inline void rpal_set_current_thread_flag(unsigned long bit) { }
-+static inline void rpal_clear_current_thread_flag(unsigned long bit) { }
-+static inline bool rpal_test_current_thread_flag(unsigned long bit) { return false; }
- #endif
- 
- void rpal_unregister_service(struct rpal_service *rs);
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index ad35b197543c..5f25cc09fb71 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -72,6 +72,9 @@ struct rcu_node;
- struct reclaim_state;
- struct robust_list_head;
- struct root_domain;
-+struct rpal_common_data;
-+struct rpal_receiver_data;
-+struct rpal_sender_data;
- struct rpal_service;
- struct rq;
- struct sched_attr;
-@@ -1648,6 +1651,18 @@ struct task_struct {
- 
- #ifdef CONFIG_RPAL
- 	struct rpal_service			*rpal_rs;
-+	unsigned long				rpal_flag;
++	mmap_write_lock(dst_mm);
++	spin_lock_irqsave(dst_ptl, flags);
++	dst_pgdp = pgd_offset(dst_mm, addr);
 +	/*
-+	 * The first member of both rpal_sd and rpal_rd has a type
-+	 * of struct rpal_common_data. So if we do not care whether
-+	 * it is a struct rpal_sender_data or a struct rpal_receiver_data,
-+	 * use rpal_cd instead of rpal_sd or rpal_rd.
++	 * dst_pgd must exists, otherwise we need to alloc pgd entry. When
++	 * src_p4d is freed, we also need to free the pgd entry. This should
++	 * be supported in the future.
 +	 */
-+	union {
-+		struct rpal_common_data *rpal_cd;
-+		struct rpal_sender_data *rpal_sd;
-+		struct rpal_receiver_data *rpal_rd;
-+	};
- #endif
- 
- 	/* CPU-specific state of this task: */
-diff --git a/init/init_task.c b/init/init_task.c
-index 0c5b1927da41..2eb08b96e66b 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -222,6 +222,8 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
- #endif
- #ifdef CONFIG_RPAL
- 	.rpal_rs = NULL,
-+	.rpal_flag = 0,
-+	.rpal_cd = NULL,
- #endif
- };
- EXPORT_SYMBOL(init_task);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 1d1c8484a8f2..01cd48eadf68 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1220,6 +1220,8 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
- 
- #ifdef CONFIG_RPAL
- 	tsk->rpal_rs = NULL;
-+	tsk->rpal_flag = 0;
-+	tsk->rpal_cd = NULL;
- #endif
- 	return tsk;
- 
++	if (unlikely(pgd_none_or_clear_bad(dst_pgdp))) {
++		rpal_err("cannot find pgd entry for addr 0x%016lx\n", addr);
++		ret = -EINVAL;
++		goto unlock;
++	}
++
++	dst_p4dp = p4d_offset(dst_pgdp, addr);
++	if (unlikely(!p4d_none_or_clear_bad(dst_p4dp))) {
++		rpal_err("p4d is previously mapped\n");
++		ret = -EINVAL;
++		goto unlock;
++	}
++
++	p4dv = p4d_val(src_p4d);
++
++	/*
++	 * Since RPAL copy p4d entry to share address space,
++	 * it is important that other process will not manipulate
++	 * this copied p4d. We need mark the copied p4d and make
++	 * p4d_present() and p4d_none() ignore such p4d.
++	 */
++	p4dv |= _PAGE_RPAL_IGN;
++
++	if (boot_cpu_has(X86_FEATURE_PTI))
++		p4d = native_make_p4d((~_PAGE_NX) & p4dv);
++	else
++		p4d = native_make_p4d(p4dv);
++
++	set_p4d(dst_p4dp, p4d);
++	spin_unlock_irqrestore(dst_ptl, flags);
++	mmap_write_unlock(dst_mm);
++
++	return 0;
++unlock:
++	spin_unlock_irqrestore(dst_ptl, flags);
++	mmap_write_unlock(dst_mm);
++	return ret;
++}
++
++static void mm_unlink_p4d(struct mm_struct *mm, unsigned long addr)
++{
++	spinlock_t *ptl = &mm->page_table_lock;
++	unsigned long flags;
++	pgd_t *pgdp;
++	p4d_t *p4dp;
++
++	mmap_write_lock(mm);
++	spin_lock_irqsave(ptl, flags);
++	pgdp = pgd_offset(mm, addr);
++	p4dp = p4d_offset(pgdp, addr);
++	p4d_clear(p4dp);
++	spin_unlock_irqrestore(ptl, flags);
++	mmap_write_unlock(mm);
++
++	flush_tlb_mm(mm);
++}
++
++static int get_mm_p4d(struct mm_struct *mm, unsigned long addr, p4d_t *srcp)
++{
++	spinlock_t *ptl;
++	unsigned long flags;
++	pgd_t *pgdp;
++	p4d_t *p4dp;
++	int ret = 0;
++
++	ptl = &mm->page_table_lock;
++	spin_lock_irqsave(ptl, flags);
++	pgdp = pgd_offset(mm, addr);
++	if (pgd_none(*pgdp)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	p4dp = p4d_offset(pgdp, addr);
++	if (p4d_none(*p4dp) || p4d_bad(*p4dp)) {
++		ret = -EINVAL;
++		goto out;
++	}
++	*srcp = *p4dp;
++
++out:
++	spin_unlock_irqrestore(ptl, flags);
++
++	return ret;
++}
++
++int rpal_map_service(struct rpal_service *tgt)
++{
++	struct rpal_service *cur = rpal_current_service();
++	struct mm_struct *cur_mm, *tgt_mm;
++	unsigned long cur_addr, tgt_addr;
++	p4d_t cur_p4d, tgt_p4d;
++	int ret = 0;
++
++	cur_mm = current->mm;
++	tgt_mm = tgt->mm;
++	if (!mmget_not_zero(tgt_mm)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	cur_addr = rpal_get_base(cur);
++	tgt_addr = rpal_get_base(tgt);
++
++	ret = get_mm_p4d(tgt_mm, tgt_addr, &tgt_p4d);
++	if (ret)
++		goto put_tgt;
++
++	ret = get_mm_p4d(cur_mm, cur_addr, &cur_p4d);
++	if (ret)
++		goto put_tgt;
++
++	ret = mm_link_p4d(cur_mm, tgt_p4d, tgt_addr);
++	if (ret)
++		goto put_tgt;
++
++	ret = mm_link_p4d(tgt_mm, cur_p4d, cur_addr);
++	if (ret) {
++		mm_unlink_p4d(cur_mm, tgt_addr);
++		goto put_tgt;
++	}
++
++put_tgt:
++	mmput(tgt_mm);
++out:
++	return ret;
++}
++
++void rpal_unmap_service(struct rpal_service *tgt)
++{
++	struct rpal_service *cur = rpal_current_service();
++	struct mm_struct *cur_mm, *tgt_mm;
++	unsigned long cur_addr, tgt_addr;
++
++	cur_mm = current->mm;
++	tgt_mm = tgt->mm;
++
++	cur_addr = rpal_get_base(cur);
++	tgt_addr = rpal_get_base(tgt);
++
++	if (mmget_not_zero(tgt_mm)) {
++		mm_unlink_p4d(tgt_mm, cur_addr);
++		mmput(tgt_mm);
++	} else {
++		/* If tgt has exited, then we get a NULL tgt_mm */
++		pr_debug("rpal: [%d] cannot find target mm\n", current->pid);
++	}
++	mm_unlink_p4d(cur_mm, tgt->base);
++}
 -- 
 2.20.1
 
