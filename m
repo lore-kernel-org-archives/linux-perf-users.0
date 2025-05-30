@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F381607A4;
-	Fri, 30 May 2025 13:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA687186284;
+	Fri, 30 May 2025 17:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748613573; cv=none; b=EwqxyshYV8tqmDH5aPmImwkl96tOnWZcbzTbnIftMZi4lDBt9ONa1NtQT+xu4Wgmi7DW6rUrZ+jTWrqQrGQp4Xvyq5kQv+5NXy5ZtKXPjk2YklZJffyjZS4WoUpJR8GrlrJI/2QgtnhF/aZKKGivi6dg8H+7zKftnGw0tYMrYds=
+	t=1748624592; cv=none; b=DD4cwYzmS7aKLxvbQ4TeSJOOyIFZ4wYKZD8AYFkPsDbTUeu1QkMPK1CxeYZB2/1WyO80A+jsjIBqWfZvTN3qKGwI7D7a3I4o8uPQyZbgLReNQr1b0w+H7i+Mh7B5WFN4IzBPpON3+wb7vBhFUvtTN2y8/8BIhBZCtvfNquzfO5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748613573; c=relaxed/simple;
-	bh=4lV3t8gZA4cyQiS37QlisNkHL008vb8770Fl3hunJlA=;
+	s=arc-20240116; t=1748624592; c=relaxed/simple;
+	bh=NfqFbKolECl1/oE1cuEzQtp/WJCpNHwOzjyns7R82hY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WCFIFQLo45lYXFt9vt3AyU1/Ne6ww+5VdnVk7AlkWzkVOsLB8zOO6AQ0OgYMh6lzsIQY2WVUnLqBHkrR23T78sxK4mT3q3F/Bff3FUmjYXc31I7d72l2GHDRz8uRqY9enpVIZTYIKH3/9NHhG9Telz/rXGvOINFmvQkd+h/MgBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WazTBLjn; arc=none smtp.client-ip=192.198.163.12
+	 In-Reply-To:Content-Type; b=N4D00RFztiVKB+8Oev8nu9zLgNmOms8sOKu8iqe4jKt/kFICpqW0VJDq4s14klTbcEhi790mT6r5Pb8QSmwkJWpapZYY1Yuof/cLi1K+dsQDMxC1wpMjgWNydHIwBqJDp8+CqSw7Kr7UuoGpVqSCZ80WMcVW38IWM2y/hdQQRdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQQ2PvlZ; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WazTBLjn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQQ2PvlZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748613572; x=1780149572;
+  t=1748624591; x=1780160591;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=4lV3t8gZA4cyQiS37QlisNkHL008vb8770Fl3hunJlA=;
-  b=WazTBLjnOdg2aaRWi5rFQdBKQtnPBaH2vKlfMaQ52wXC3eQ/RIJOcS4g
-   0pNdjiHa2xs4rxEuYy6F9Vg3BoNTXq902ndME0qnwWA7IcnB3yYBip6Pz
-   gwEKBrDFHQ1EtMLj+sQzTvPIaUHLqSEX/JfOb1CJhjmafWQCeVGn6gWPF
-   HIOmBm6ThUUmhRnY+LwYBjXNnN6AcOr88VxM2lYwKDCfeAuBKE+FqiI3Y
-   JeJgWn/AptDAwZE13w2Lt+nuYLvYjKZH8+oUit0c6Le38wpYmVWrWantW
-   SYkKLZUcdrEOFmtvftfgd6rBwtM4zkQH7DB4hhimz0z4Qu7wyZw6u1q7z
+  bh=NfqFbKolECl1/oE1cuEzQtp/WJCpNHwOzjyns7R82hY=;
+  b=FQQ2PvlZeccqe5u1vA2oO25yvzkjVjOLCf+X3PomF7miAaPKjbhNPzmL
+   sjSmBYKXh8HxsnzVopAVMv6nPuXwEeJ7254W6vgVc4B1zvIftgWkwsfsl
+   56cfHGGRDqXDRoEdR3WciT6CQpolDwE6OsY/rAl/8e/R0isZ2oGWO98WI
+   8kZRH08V2CINfGiUye1sYo8J/9SPsxvUU1BduBja7L4+EWZHmQg19EL0c
+   21Qm02QfWq5icR7Q/mH8TIq23BSEohUYIUfhWhL2b2QKDHfmT65KWMREv
+   3aaF3E1ZRH1D2TlcPeUI4tpYSIcz1onVfYj2byqLRMMcFUg5Kh9Cnb5nB
    A==;
-X-CSE-ConnectionGUID: 2EDjjlA1TzKvdS7E8QWlBw==
-X-CSE-MsgGUID: u6HWPZabT5ywlT9hmYP/lg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54500871"
+X-CSE-ConnectionGUID: TYfaXoF4SIOxLvg7ZYmE3w==
+X-CSE-MsgGUID: lgkpLjM9TtGyaExSaK2b8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="60981859"
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="54500871"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:59:31 -0700
-X-CSE-ConnectionGUID: tyWIxf77S+eTu8oioRT98w==
-X-CSE-MsgGUID: JkoSBStTTryxFNJEypUlRg==
+   d="scan'208";a="60981859"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:03:10 -0700
+X-CSE-ConnectionGUID: rb/OBHWGSf+6UYcWCh2fpA==
+X-CSE-MsgGUID: YzFQ5tC3S92B6z9UF8u0ZQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="144859678"
+   d="scan'208";a="181128897"
 Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.94]) ([10.125.110.94])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:59:30 -0700
-Message-ID: <304ea078-0f09-43d6-9dd2-264eb195e33e@intel.com>
-Date: Fri, 30 May 2025 06:59:29 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:03:09 -0700
+Message-ID: <ae794a43-19d0-4c51-a7bc-96427feac5e6@intel.com>
+Date: Fri, 30 May 2025 10:03:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 14/35] RPAL: enable page fault handling
+Subject: Re: [RFC v2 26/35] RPAL: enable MPK support
 To: Bo Li <libo.gcs85@bytedance.com>, tglx@linutronix.de, mingo@redhat.com,
  bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
  kees@kernel.org, akpm@linux-foundation.org, david@redhat.com,
@@ -72,7 +72,7 @@ Cc: dietmar.eggemann@arm.com, hpa@zytor.com, acme@kernel.org,
  chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
  chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
- <a7c183833cca723238d4173a6df771dd7e340762.1748594840.git.libo.gcs85@bytedance.com>
+ <a7da7fe131b0ce6582dbb77903745673d83a6195.1748594841.git.libo.gcs85@bytedance.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -118,34 +118,26 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <a7c183833cca723238d4173a6df771dd7e340762.1748594840.git.libo.gcs85@bytedance.com>
+In-Reply-To: <a7da7fe131b0ce6582dbb77903745673d83a6195.1748594841.git.libo.gcs85@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/30/25 02:27, Bo Li wrote:
->  arch/x86/mm/fault.c     | 271 ++++++++++++++++++++++++++++++++++++++++
->  arch/x86/rpal/mm.c      |  34 +++++
->  arch/x86/rpal/service.c |  24 ++++
->  arch/x86/rpal/thread.c  |  23 ++++
->  include/linux/rpal.h    |  81 ++++++++----
->  5 files changed, 412 insertions(+), 21 deletions(-)
+> RPAL leverages Memory Protection Keys (MPK) to safeguard shared memory
+> from illegal access and corruption by other processes. 
 
-I'm actually impressed again that you've managed to get this ported over
-to a newer kernel _and_ broken it up.
+... as long as nobody uses the completely unprivileged WRPKRU or XRSTOR
+instructions. Right?
 
-But just taking a quick peek at _one_ patch, this is far, far below the
-standards by which we do kernel development. This appears to have simply
-copied chunks of existing code, hacked it to work with "RPAL" and then
-#ifdef'd.
+... the instructions that are plainly available in super obscure
+libraries like glibc?
 
-This is, unfortunately, copying and pasting at its worst. It creates
-dual paths that inevitably bit rot in some way and are hard to maintain.
+This seems like a rather major oversight.
 
-So, just to be clear: it's a full an unequivocal NAK from me on this
-series. This introduces massive change, massive security risk, can't
-possibly be backward compatible, has no users (well, maybe one) and the
-series is not put together in anything remotely resembling how we like
-to do kernel development.
+Oh, speaking of major oversights, you stymied pkey_alloc() but forgot
+pkey_free(). There's nothing to stop folks from pkey_free()'ing a pkey
+that RPAL is using and then letting someone else allocate it.
 
-I'd appreciate if you could not cc me on future versions if you choose
-to go forward with this. But I urge you to stop now.
+Is this all for real and serious?
+
+
