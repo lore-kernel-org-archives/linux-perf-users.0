@@ -1,143 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA687186284;
-	Fri, 30 May 2025 17:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20E776034;
+	Fri, 30 May 2025 17:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624592; cv=none; b=DD4cwYzmS7aKLxvbQ4TeSJOOyIFZ4wYKZD8AYFkPsDbTUeu1QkMPK1CxeYZB2/1WyO80A+jsjIBqWfZvTN3qKGwI7D7a3I4o8uPQyZbgLReNQr1b0w+H7i+Mh7B5WFN4IzBPpON3+wb7vBhFUvtTN2y8/8BIhBZCtvfNquzfO5s=
+	t=1748625145; cv=none; b=ZxNjUVYsLuf+V3PF1rYiPxm9E4etmXA2Oj++/1KXp4HkgV4mnNjoGdV9eC320akNBRDI8nfjFz76M097pKSxYt5+6mtEHKtMCXzLAodSjvMvC924y8YMoUlUL31CyqP5NHcHck/MXbgRWe0pTj90/f7jg6Z19ybMe235D6AMXG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624592; c=relaxed/simple;
-	bh=NfqFbKolECl1/oE1cuEzQtp/WJCpNHwOzjyns7R82hY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N4D00RFztiVKB+8Oev8nu9zLgNmOms8sOKu8iqe4jKt/kFICpqW0VJDq4s14klTbcEhi790mT6r5Pb8QSmwkJWpapZYY1Yuof/cLi1K+dsQDMxC1wpMjgWNydHIwBqJDp8+CqSw7Kr7UuoGpVqSCZ80WMcVW38IWM2y/hdQQRdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQQ2PvlZ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748625145; c=relaxed/simple;
+	bh=1VPwN74SM0DtGVcv5AdvHJHGq0USSlu7yM1DezsOIVk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VgpgKzMq001JDeWt4LAcILOgYWa9wXiYdI6k3KUP8cvXbd+L5UXBJkKOi5tNNkL8YtHrnzUrvP+5n8yvdeMT1dqhOXSjmi2NRiT+jZL64iUXSpz6AmK6okgPz++cI8iordwISc1jqjR5mri7pXVjvWMRgMShIhuQGUQAsbp+jUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2hOTorm; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQQ2PvlZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748624591; x=1780160591;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NfqFbKolECl1/oE1cuEzQtp/WJCpNHwOzjyns7R82hY=;
-  b=FQQ2PvlZeccqe5u1vA2oO25yvzkjVjOLCf+X3PomF7miAaPKjbhNPzmL
-   sjSmBYKXh8HxsnzVopAVMv6nPuXwEeJ7254W6vgVc4B1zvIftgWkwsfsl
-   56cfHGGRDqXDRoEdR3WciT6CQpolDwE6OsY/rAl/8e/R0isZ2oGWO98WI
-   8kZRH08V2CINfGiUye1sYo8J/9SPsxvUU1BduBja7L4+EWZHmQg19EL0c
-   21Qm02QfWq5icR7Q/mH8TIq23BSEohUYIUfhWhL2b2QKDHfmT65KWMREv
-   3aaF3E1ZRH1D2TlcPeUI4tpYSIcz1onVfYj2byqLRMMcFUg5Kh9Cnb5nB
-   A==;
-X-CSE-ConnectionGUID: TYfaXoF4SIOxLvg7ZYmE3w==
-X-CSE-MsgGUID: lgkpLjM9TtGyaExSaK2b8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="60981859"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="60981859"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:03:10 -0700
-X-CSE-ConnectionGUID: rb/OBHWGSf+6UYcWCh2fpA==
-X-CSE-MsgGUID: YzFQ5tC3S92B6z9UF8u0ZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="181128897"
-Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.94]) ([10.125.110.94])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:03:09 -0700
-Message-ID: <ae794a43-19d0-4c51-a7bc-96427feac5e6@intel.com>
-Date: Fri, 30 May 2025 10:03:08 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2hOTorm"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70e3c6b88dbso17048027b3.0;
+        Fri, 30 May 2025 10:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748625143; x=1749229943; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2lNSOjAMfFroLOBhwot5JPzKj1zDI43B2TC6d+niusA=;
+        b=Y2hOTormSREZG+4tpRkFvh856er0z/zrpWyD6i9EEnVfeEYwy8dEJU5vP7rvhgjHum
+         LxHfmXIiaAAHn7hCW1iaBZhBHymJ4gsfLqEMyQFHEyQLMVCGfgNbMXq8MaZk1FIiATqJ
+         JHcE13bSGgpYxSvXctzSnfp5M5LBspkLa43jsM/QZXYMLZY9X/FmKZtEh4QNxH+nxUn5
+         +OU4iIR9paziR7g0HsEcRPd3dyjMVR3VnKXd8b60kQWbI1gSywchel9RZwE12FSW5oDJ
+         OtzTnPxztG6bl8vxsGsa94ZKiRW/3MKGLEAfLi5lC5KoFNTKOkkEhDbeFQANX0Jy3fxM
+         uK/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748625143; x=1749229943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2lNSOjAMfFroLOBhwot5JPzKj1zDI43B2TC6d+niusA=;
+        b=WkuZ/VNgm9i6c7BeEXp7AHVEnHM86aWFId1rM4Lkok8aGvWd+tcQSewm+AgvTs228Y
+         o6Tcs9QNA5GXaj/mtnStJTaDxc3mccojFYIXAeQuYVz3ZNjn5j20TdvHOgNF1BLW2MNj
+         7rSYV2j/lmithzLpBjKt0DXWZWtYi7DGoZWyFe1FH2reXRiGdyTGMnTaYN+qgM4/bqJ+
+         NyOyCqfF3J1iesf7FUepDqZbw7ascKLcnOrj6qaMq/kFVFXLREBXDTIBM/4qoSYgWWLi
+         jgUapJH7wRid0Lt4KlPE7qSYxhuchgTmW0K8mFo+lD6kAKcEYHaYtygP/wqPhN2+A+BF
+         YSEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVu0w7YS1CyQ/TbxjruBha1huJ3jJNSFFeh5MycBv+eYBjWd+vG46JF9amli5yFMBETdMlITpH0a8gdpCw=@vger.kernel.org, AJvYcCXOtw7azy5IRl7bRhTcLgFsMIaSQ4lguBafw/ZDXWUHyMKj3Fzf/w96Bu6ZXleBH/gmJuHXPF+N4AM0cJlUEXyXtw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUB1tTnhcVNtSBgxMwYxPMS9JYPZFtdB55gTcoEdAsk/qbG6Ym
+	TC/ktkvvsyMAzEKHnJvDAT2K2b6G5ETZA2J3hhgtIWyrs2GTAg4YOacFE/7k04KLRgrG9NttLK6
+	cMe6z6Z5CgnP7+m2tSqnyjGRD9PBWrE4=
+X-Gm-Gg: ASbGncvJfp0lgfQ/WNi2aioDLcsse9OoI1FWwAe0uKF4eyTxtaAIb2Ip1b2pTpP/1e/
+	gxBNrFxqNvz7rYcUAKycIgHh0tnRtNjxfX+eH+gWp9HaqOW7dyDIcm6/dYcweB2V4quhqG1yK9D
+	0qVB0HEQRfoLSh+QHkud+gecfJttQlBB99gmS/95RYcg==
+X-Google-Smtp-Source: AGHT+IFGWIoaeBGQO4MbFA/c0oijOLEFwSPammZOMT+8lREZY9DoJ17ZZKo6F+9pjJMEdrMDj8cpHSlcpXH6XT4Oo1A=
+X-Received: by 2002:a05:690c:5c0a:b0:70f:8835:b767 with SMTP id
+ 00721157ae682-70f97e3221dmr50164927b3.5.1748625142719; Fri, 30 May 2025
+ 10:12:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 26/35] RPAL: enable MPK support
-To: Bo Li <libo.gcs85@bytedance.com>, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
- kees@kernel.org, akpm@linux-foundation.org, david@redhat.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, peterz@infradead.org
-Cc: dietmar.eggemann@arm.com, hpa@zytor.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, jannh@google.com, pfalcato@suse.de, riel@surriel.com,
- harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
- dengliang.1214@bytedance.com, xieyongji@bytedance.com,
- chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
- chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
- <a7da7fe131b0ce6582dbb77903745673d83a6195.1748594841.git.libo.gcs85@bytedance.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <a7da7fe131b0ce6582dbb77903745673d83a6195.1748594841.git.libo.gcs85@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250522142551.1062417-1-namhyung@kernel.org> <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
+ <aC9VoTL_Cv4R7J-j@x1> <aC-hHTgArwlF_zu9@x1> <aDDy4FQe7sBwECL8@google.com>
+ <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com> <aDjHsJqV7L24qjvT@x1>
+In-Reply-To: <aDjHsJqV7L24qjvT@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 30 May 2025 10:12:11 -0700
+X-Gm-Features: AX0GCFtaB2Jxpo-c6Ap6Ay5XEjdoSur3ZLAvB0OctX21EMAXBJ2N2Kqp0shQsRM
+Message-ID: <CAH0uvoga2g88LM7giL+2RqyVreosSRnEoWGtsaaUeS3B8s5TDQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/30/25 02:27, Bo Li wrote:
-> RPAL leverages Memory Protection Keys (MPK) to safeguard shared memory
-> from illegal access and corruption by other processes. 
+Hello Arnaldo,
 
-... as long as nobody uses the completely unprivileged WRPKRU or XRSTOR
-instructions. Right?
+On Thu, May 29, 2025 at 1:46=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, May 28, 2025 at 11:59:44PM -0700, Howard Chu wrote:
+> > On Fri, May 23, 2025 at 3:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > On Thu, May 22, 2025 at 07:11:41PM -0300, Arnaldo Carvalho de Melo wr=
+ote:
+> > > > From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2=
+001
+> > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > Date: Thu, 22 May 2025 19:01:47 -0300
+> > > > Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive =
+mode
+>
+> > > > And it is being successfull only when running alone, probably becau=
+se
+> > > > there are some tests that add the vfs_getname probe that gets used =
+by
+> > > > 'perf trace' and alter how it does syscall arg pathname resolution.
+>
+> > > > This should be removed or made a fallback to the preferred BPF mode=
+ of
+> > > > getting syscall parameters, but till then, run this in exclusive mo=
+de.
+>
+> > > > For reference, here are some of the tests that run close to this on=
+e:
+>
+> > > >   127: perf record offcpu profiling tests                          =
+    : Ok
+> > > >   128: perf all PMU test                                           =
+    : Ok
+> > > >   129: perf stat --bpf-counters test                               =
+    : Ok
+> > > >   130: Check Arm CoreSight trace data recording and synthesized sam=
+ples: Skip
+> > > >   131: Check Arm CoreSight disassembly script completes without err=
+ors : Skip
+> > > >   132: Check Arm SPE trace data recording and synthesized samples  =
+    : Skip
+> > > >   133: Test data symbol                                            =
+    : Ok
+> > > >   134: Miscellaneous Intel PT testing                              =
+    : Skip
+> > > >   135: test Intel TPEBS counting mode                              =
+    : Skip
+> > > >   136: perf script task-analyzer tests                             =
+    : Ok
+> > > >   137: Check open filename arg using perf trace + vfs_getname      =
+    : Ok
+> > > >   138: perf trace summary                                          =
+    : Ok
+>
+> > > Looks good to me.
+>
+> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+>
+> > Nacked (sorry). I think running them tests in parallel is great
+> > because it points out a problem that perf trace has. Please check out
+> > this approach: https://lore.kernel.org/linux-perf-users/20250529065537.=
+529937-1-howardchu95@gmail.com/T/#u
+>
+> I'm not saying that perf trace shouldn't be used in parallel, but the
+> vfs_getname code, IIRC, checks for the existence of that probe to do
+> pathname collection (this predates the BPF method by a long time) and
+> then counts on it to do.
+>
+> There are tests that put it in place and then at the end remove it,
+> multiple tests.
+>
+> So there are possible races with that and out of being conservative I
+> made it exclusive for the time being.
 
-... the instructions that are plainly available in super obscure
-libraries like glibc?
+Thanks for explaining this.
 
-This seems like a rather major oversight.
+>
+> The plan is to remove that vfs_getname code in builtin-trace.c and then
+> the tests, as we have the BPF method that is way better and should allow
+> for parallel use.
 
-Oh, speaking of major oversights, you stymied pkey_alloc() but forgot
-pkey_free(). There's nothing to stop folks from pkey_free()'ing a pkey
-that RPAL is using and then letting someone else allocate it.
+Agreed.
 
-Is this all for real and serious?
+>
+> Probably in the meantime it would be better to mark the vfs_getname ones
+> as exclusive tho now that I that I wrote the above explanation... :-\
+>
+> - Arnaldo
 
+:)
 
+Thanks,
+Howard
