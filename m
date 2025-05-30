@@ -1,171 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23642905;
-	Fri, 30 May 2025 12:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F381607A4;
+	Fri, 30 May 2025 13:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748609201; cv=none; b=jbDlGf2CoE0hdu6JtdSDJNci4e5gDJYm9eXB0UT4konZRWm8FjiGSKbumitfBctGIClKobjks4y8oxUK+wVmjMrma0HVZuHRcxkmIPtik4Wcz/cGzEis4Y6POF5gtQvFiqCstvmKf/Zveaj5DgVe3cGlu6G5qI1JEYwxncb4yjg=
+	t=1748613573; cv=none; b=EwqxyshYV8tqmDH5aPmImwkl96tOnWZcbzTbnIftMZi4lDBt9ONa1NtQT+xu4Wgmi7DW6rUrZ+jTWrqQrGQp4Xvyq5kQv+5NXy5ZtKXPjk2YklZJffyjZS4WoUpJR8GrlrJI/2QgtnhF/aZKKGivi6dg8H+7zKftnGw0tYMrYds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748609201; c=relaxed/simple;
-	bh=UouTRDZWRFQY12UDfa8B7SZK9YSVYXlijP3sPSFSC+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a/jMV8DnuHuShXizNpQovk1USguCmfEmIaYI/jzCHDj4TIg15ed3Lhm9X0IMDE14vjIb8NR4efhieDx372zjJXK5TXik3dCzt54Y3bG/4TtVF8xH9xjtcHtbJ65fVpkXYecaFkiEIDlpuOnxWIZ8yZwVvlDFVwLj17V4O0eecvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNni6vbd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748613573; c=relaxed/simple;
+	bh=4lV3t8gZA4cyQiS37QlisNkHL008vb8770Fl3hunJlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WCFIFQLo45lYXFt9vt3AyU1/Ne6ww+5VdnVk7AlkWzkVOsLB8zOO6AQ0OgYMh6lzsIQY2WVUnLqBHkrR23T78sxK4mT3q3F/Bff3FUmjYXc31I7d72l2GHDRz8uRqY9enpVIZTYIKH3/9NHhG9Telz/rXGvOINFmvQkd+h/MgBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WazTBLjn; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNni6vbd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44DC5C4CEE9;
-	Fri, 30 May 2025 12:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748609200;
-	bh=UouTRDZWRFQY12UDfa8B7SZK9YSVYXlijP3sPSFSC+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MNni6vbdljirgsw19cRPr/LTI1gGIqFyBhU5hTAX6drSdzIgelY/wzaMVGGnKuK/2
-	 q4tSylmvZzlahNC6V18L4AhLFdMctn/GwEdOk4W5T+vaNf3R4md03NFOfiE+mz/gZj
-	 TLB8X7PZZuEducywcluQojApbsdkN8NsOOM87oc13zRS9x4mb0Fr/31BUhcOOnIerM
-	 nG/ehVIpH79FwQMdzPk7MFyRA1D5zC6hP4tCPtNZABVQF6S8tTZq/6eGV9yq4I/MUq
-	 FcKzl6mKGfZzJdAIAgNs2tTNKPSltTNPfYoZLevM2pAyVA3BkM6dLa4+Sk3SzBGukw
-	 F8hBQumgXeQ5w==
-Date: Fri, 30 May 2025 13:46:35 +0100
-From: Will Deacon <will@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/ptrace: Make user_hwdebug_state.dbg_regs[] array
- size as ARM_MAX_BRP
-Message-ID: <20250530124635.GB30463@willie-the-truck>
-References: <20250421055212.123774-1-anshuman.khandual@arm.com>
- <20250516135958.GA13612@willie-the-truck>
- <8f6bba3a-4cf6-44c2-abeb-8d419ca5a6c3@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WazTBLjn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748613572; x=1780149572;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4lV3t8gZA4cyQiS37QlisNkHL008vb8770Fl3hunJlA=;
+  b=WazTBLjnOdg2aaRWi5rFQdBKQtnPBaH2vKlfMaQ52wXC3eQ/RIJOcS4g
+   0pNdjiHa2xs4rxEuYy6F9Vg3BoNTXq902ndME0qnwWA7IcnB3yYBip6Pz
+   gwEKBrDFHQ1EtMLj+sQzTvPIaUHLqSEX/JfOb1CJhjmafWQCeVGn6gWPF
+   HIOmBm6ThUUmhRnY+LwYBjXNnN6AcOr88VxM2lYwKDCfeAuBKE+FqiI3Y
+   JeJgWn/AptDAwZE13w2Lt+nuYLvYjKZH8+oUit0c6Le38wpYmVWrWantW
+   SYkKLZUcdrEOFmtvftfgd6rBwtM4zkQH7DB4hhimz0z4Qu7wyZw6u1q7z
+   A==;
+X-CSE-ConnectionGUID: 2EDjjlA1TzKvdS7E8QWlBw==
+X-CSE-MsgGUID: u6HWPZabT5ywlT9hmYP/lg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54500871"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="54500871"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:59:31 -0700
+X-CSE-ConnectionGUID: tyWIxf77S+eTu8oioRT98w==
+X-CSE-MsgGUID: JkoSBStTTryxFNJEypUlRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144859678"
+Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.110.94]) ([10.125.110.94])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:59:30 -0700
+Message-ID: <304ea078-0f09-43d6-9dd2-264eb195e33e@intel.com>
+Date: Fri, 30 May 2025 06:59:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f6bba3a-4cf6-44c2-abeb-8d419ca5a6c3@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 14/35] RPAL: enable page fault handling
+To: Bo Li <libo.gcs85@bytedance.com>, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
+ kees@kernel.org, akpm@linux-foundation.org, david@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, peterz@infradead.org
+Cc: dietmar.eggemann@arm.com, hpa@zytor.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, jannh@google.com, pfalcato@suse.de, riel@surriel.com,
+ harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
+ dengliang.1214@bytedance.com, xieyongji@bytedance.com,
+ chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
+ chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+ <a7c183833cca723238d4173a6df771dd7e340762.1748594840.git.libo.gcs85@bytedance.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <a7c183833cca723238d4173a6df771dd7e340762.1748594840.git.libo.gcs85@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 30, 2025 at 09:19:53AM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 5/16/25 19:29, Will Deacon wrote:
-> > On Mon, Apr 21, 2025 at 11:22:12AM +0530, Anshuman Khandual wrote:
-> >> Array elements inside 'struct user_hwdebug_state.dbg_regs[]' are inherently
-> >> coupled with maximum breakpoints or watchpoints which could be present on a
-> >> platform and which are defined with macros ARM_MAX_[BRP|WRP].
-> >>
-> >> Rather than explicitly trying to keep the array elements in sync with these
-> >> macros and then adding a BUILD_BUG_ON() just to ensure continued compliance
-> >> , move these two macros into the uapi ptrace header itself thus making them
-> >> available both for user space and kernel.
-> >>
-> >> While here also ensure that ARM_MAX_BRP and ARM_MAX_WRP are always the same
-> >> via a new BUILD_BUG_ON(). This helps in making sure that user_hwdebug_state
-> >> structure remains usable both for breakpoint and watchpoint registers set
-> >> via ptrace() system call interface.
-> >>
-> >> Cc: Will Deacon <will@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >> Cc: linux-arm-kernel@lists.infradead.org
-> >> Cc: linux-perf-users@vger.kernel.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> >> ---
-> >> This patch applies on v6.15-rc3
-> >>
-> >>  arch/arm64/include/asm/hw_breakpoint.h |  7 -------
-> >>  arch/arm64/include/uapi/asm/ptrace.h   | 10 +++++++++-
-> >>  arch/arm64/kernel/hw_breakpoint.c      |  9 +++++++++
-> >>  3 files changed, 18 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
-> >> index bd81cf17744a..63c21b515647 100644
-> >> --- a/arch/arm64/include/asm/hw_breakpoint.h
-> >> +++ b/arch/arm64/include/asm/hw_breakpoint.h
-> >> @@ -75,13 +75,6 @@ static inline void decode_ctrl_reg(u32 reg,
-> >>  #define ARM_KERNEL_STEP_ACTIVE	1
-> >>  #define ARM_KERNEL_STEP_SUSPEND	2
-> >>  
-> >> -/*
-> >> - * Limits.
-> >> - * Changing these will require modifications to the register accessors.
-> >> - */
-> >> -#define ARM_MAX_BRP		16
-> >> -#define ARM_MAX_WRP		16
-> >> -
-> >>  /* Virtual debug register bases. */
-> >>  #define AARCH64_DBG_REG_BVR	0
-> >>  #define AARCH64_DBG_REG_BCR	(AARCH64_DBG_REG_BVR + ARM_MAX_BRP)
-> >> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
-> >> index 0f39ba4f3efd..8683f541a467 100644
-> >> --- a/arch/arm64/include/uapi/asm/ptrace.h
-> >> +++ b/arch/arm64/include/uapi/asm/ptrace.h
-> >> @@ -99,6 +99,14 @@ struct user_fpsimd_state {
-> >>  	__u32		__reserved[2];
-> >>  };
-> >>  
-> >> +/*
-> >> + * Maximum number of breakpoint and watchpoint registers
-> >> + * on the platform. These macros get used both in kernel
-> >> + * and user space as well.
-> >> + */
-> >> +#define ARM_MAX_BRP		16
-> >> +#define ARM_MAX_WRP		16
-> >> +
-> >>  struct user_hwdebug_state {
-> >>  	__u32		dbg_info;
-> >>  	__u32		pad;
-> >> @@ -106,7 +114,7 @@ struct user_hwdebug_state {
-> >>  		__u64	addr;
-> >>  		__u32	ctrl;
-> >>  		__u32	pad;
-> >> -	}		dbg_regs[16];
-> >> +	}		dbg_regs[ARM_MAX_BRP];	/* Or ARM_MAX_WRP */
-> >>  };
-> >>  
-> >>  /* SVE/FP/SIMD state (NT_ARM_SVE & NT_ARM_SSVE) */
-> >> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> >> index 722ac45f9f7b..9bc51682713d 100644
-> >> --- a/arch/arm64/kernel/hw_breakpoint.c
-> >> +++ b/arch/arm64/kernel/hw_breakpoint.c
-> >> @@ -981,6 +981,15 @@ static int __init arch_hw_breakpoint_init(void)
-> >>  {
-> >>  	int ret;
-> >>  
-> >> +	/*
-> >> +	 * Maximum supported breakpoint and watchpoint registers must
-> >> +	 * always be the same - regardless of actual register numbers
-> >> +	 * found on a given platform. This is because the user facing
-> >> +	 * ptrace structure 'user_hwdebug_state' actually depends on
-> >> +	 * these macros to be the same.
-> >> +	 */
-> >> +	BUILD_BUG_ON(ARM_MAX_BRP != ARM_MAX_WRP);
-> > 
-> > Sorry, but I don't understand why this patch is an improvement over what
-> > we have.
-> This is an improvement because
-> 
-> - user_hwdebug_state.dbg_regs[16] is hard coded for size without context
->   requiring explicit sync up when ARM_MAX_WRP/BRP changes to 64 later on
->   with FEAT_Debugv8p9. Defining the array size in terms of ARM_MAX_WRP/
->   BRP provides required context and also avoids the need for an explicit
->   hard coded sync up when those macros change.
-> 
-> - user_hwdebug_state.dbg_regs[16] gets used both for breakpoint registers
->   and watchpoint registers. Hence there is an inherent assumption that
->   ARM_MAX_BRP == ARM_MAX_WRP which should be ensured with a corresponding
->   assert.
+On 5/30/25 02:27, Bo Li wrote:
+>  arch/x86/mm/fault.c     | 271 ++++++++++++++++++++++++++++++++++++++++
+>  arch/x86/rpal/mm.c      |  34 +++++
+>  arch/x86/rpal/service.c |  24 ++++
+>  arch/x86/rpal/thread.c  |  23 ++++
+>  include/linux/rpal.h    |  81 ++++++++----
+>  5 files changed, 412 insertions(+), 21 deletions(-)
 
-Sorry, but I still don't see it. Plus, this is a UAPI header so I think
-it's no bad thing to require an "explicit sync up", assuming we can
-actually change this structure at all.
+I'm actually impressed again that you've managed to get this ported over
+to a newer kernel _and_ broken it up.
 
-Let's leave the code as it is, please.
+But just taking a quick peek at _one_ patch, this is far, far below the
+standards by which we do kernel development. This appears to have simply
+copied chunks of existing code, hacked it to work with "RPAL" and then
+#ifdef'd.
 
-Will
+This is, unfortunately, copying and pasting at its worst. It creates
+dual paths that inevitably bit rot in some way and are hard to maintain.
+
+So, just to be clear: it's a full an unequivocal NAK from me on this
+series. This introduces massive change, massive security risk, can't
+possibly be backward compatible, has no users (well, maybe one) and the
+series is not put together in anything remotely resembling how we like
+to do kernel development.
+
+I'd appreciate if you could not cc me on future versions if you choose
+to go forward with this. But I urge you to stop now.
