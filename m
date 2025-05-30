@@ -1,141 +1,153 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B925632;
-	Fri, 30 May 2025 00:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52878A92E;
+	Fri, 30 May 2025 03:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748564619; cv=none; b=aMHg79UNh4cJALdZQWJZ1nAqamMzRrdV79P8nNhOIOBlYLi5cgheGFVFwoi/4KWKci2t0NRppga5byzN2feQfb1nVeAK8+9loWB2TTrTv97jtCKgHyHJQ5ImxOJgCjNwDLfHLlw3k0m6GVtSxIb0Y6I2veWJaHEqJU4wCed2ihE=
+	t=1748577001; cv=none; b=diNd8rvzYo9myIwKrSg1L2xVKByRabs1HdGyqkjtOwBjV015y2lGbLgjC/Zbz2y5MZTgDcxnr2guHsCxCVhD6LpYVNWK+i/9nLb7mrvgAaSkaubar2JhskRvuBijaUv2dztOla/ByDTOyf1N2BJx1wgza7nm9a7wNrqZ/nzwSa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748564619; c=relaxed/simple;
-	bh=2vlOeyhQIDR0+7USJizUeUX8+sOLDb4bSLVbPI9eSMk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PCMXz26yr2Iq6ulOGGYhCID+k3qRYFn7nIAtJ/GHSI8r3jhV4CEjuuqzN1iKyGt/qsEBaFrBCl3s7a6oMKncL9ceGJEtyWaUNjcwQ/2M2jLhcr3rCqNhZo2CrbIzdyLzBTo+hDOG2H3OLuo17phygszNKEdU2q+KDz1z6zP6Jqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsplPxFP; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsplPxFP"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7db5c13088so1421450276.1;
-        Thu, 29 May 2025 17:23:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748564616; x=1749169416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zYKOFHvI/E+JwMzIQQe4YyK3jvIlNIviW3jk1OLofHI=;
-        b=AsplPxFPNlHZxDjvRB3/ySsybvkkAcy6IbBwOhRpiOTYS7Yage4D60SjOXDF6D6ZPa
-         BcFsuD4jxctkc6ix+tVMlNo2PcjZ3yWP2ivL5p92V4dUgu82D2R4tNGRXKBjQDuwymrO
-         bkDosMJnKUQvRDg0zuWrx/H4yI7mHnKC72gzB8ojYapyvQCcsQbrAGTywpEbN9nOd/qu
-         ra6Oh6HlAIRrQsoKKn5DAXs8BbpA+7Ni3Uf1898Ey+kb9o0axsJDueqIrBI5dq6f2P1p
-         ANy5Ta4jOu0khkm2VyPzR/GaQaccKNjiPHwy8CdB6yXrA0CrEYBBzeU1psBFSiA4etyd
-         c3eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748564616; x=1749169416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zYKOFHvI/E+JwMzIQQe4YyK3jvIlNIviW3jk1OLofHI=;
-        b=OQIEf/ZHBcdGuxXjp9YM9sspZa8V+AXshcFe6vSnpor1s3IulwL3DvGSenStXr39B3
-         Ql00Rs4UIsIEPXsKSUUabj63qkrOu1jdkb0UgnIjkMkD4rohbzcodNjY2tYV/VDufOj2
-         cPA4/0Y1lWnkNtIJnCYQnGCjRO9IW3ufkD9x8P0w64zRO5z6cHEgCoNz8btzGKWricJ2
-         ap6cnJ3qZjq+t6irdYppTuBtEyBDENS61quicyATv8aELYfbSBjtJEKwZZvCbbJlBGjB
-         viPIUDaU89e9A4panoG/DE/apn2V987eZvGzkqHv1LlgNNL0Ry5ilLO3xn0m4Y5842Yr
-         jSuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX1CK2FTZ+/YIz9FOabgps1hxmXp5eKBfn/CdJ2lvnAvOmShGEfoqB3yqSeOi9Eyl55Ju1jtoDCp3tI/IgSIxWHg==@vger.kernel.org, AJvYcCVbAWoa1RdkZcmpXUQFz9AT7ND1C5feZSz20NOnNuLpCTEtfPtcr3qEmO8j5p1vhVtlxo8/GRRBeZpXoks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF+h7PppglOgtWf9rDucjkcXOhTwkGU8iTtyBkJcJEaOx3aWKz
-	rwzCn+Le8UlOp5Ambm+mnyrhjuPv45yZ95SRSGv6sNQf3MlT1TEwymCHfXhysTbT1s+rwO95cis
-	QDUrEZslOKHo1i+Ubx0TTEcYayPR2e0I=
-X-Gm-Gg: ASbGnctroWU/43Ax/niTk/LXnyxALD4e7cxnDU16ExQPfefeRbDXIGIxF1mmefO/+QJ
-	amftk1Uc0hpDokCn/iQVVe36fxYG91GHevBW1bEMu1YkELiqSA0YYiKsi1xAwdu28oombPscIfz
-	Tpogq3xHsbey/8HCkPGzTkrEw22184big=
-X-Google-Smtp-Source: AGHT+IGr6RJ/yxqsH2YQMWdYvUdMh04bwGLC/nyDpNOTkQ6vpixJi7GxkXZb5cAT7wnk/2b3SnBl2H2UkH5jobfi7tg=
-X-Received: by 2002:a05:6902:2808:b0:e7f:6b9d:bde4 with SMTP id
- 3f1490d57ef6-e7f6f19d4c0mr8820648276.8.1748564616207; Thu, 29 May 2025
- 17:23:36 -0700 (PDT)
+	s=arc-20240116; t=1748577001; c=relaxed/simple;
+	bh=hupVuWNTHUjaEF6ZZ/p3LO17tuveX9vxzgAMn6RfA4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O+saFKu8uh9cCjRhoqPLUakUVTdPcGYuBLDirmZmkU3FBvVEb8yF3ILF286Fqpy5M9gQ88dHJiFjMfIPt2E2yjHNkbWpoAPKtz8j1UI79SymxjwZqlo74MQbmWcqo5fcpzmGPAbM+sfEnAMV4nepzcTaMUZLz8vsTNyiF/6lKrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AAC816F8;
+	Thu, 29 May 2025 20:49:41 -0700 (PDT)
+Received: from [10.164.18.46] (a077893.blr.arm.com [10.164.18.46])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50EB13F5A1;
+	Thu, 29 May 2025 20:49:56 -0700 (PDT)
+Message-ID: <8f6bba3a-4cf6-44c2-abeb-8d419ca5a6c3@arm.com>
+Date: Fri, 30 May 2025 09:19:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529065537.529937-1-howardchu95@gmail.com>
-In-Reply-To: <20250529065537.529937-1-howardchu95@gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 29 May 2025 17:23:25 -0700
-X-Gm-Features: AX0GCFuiRcsfJ-AnzJhHvt6nMc-4wXd6eGoXXSSUwy04Um8-md9PrF8G38uIfCE
-Message-ID: <CAH0uvogdtqrzxamPd2zW9uz2zPMz8r33Aojp2zYTJXn_E1EbfQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
- trace instances
-To: acme@kernel.org
-Cc: mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Song Liu <song@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/ptrace: Make user_hwdebug_state.dbg_regs[] array
+ size as ARM_MAX_BRP
+To: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland
+ <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250421055212.123774-1-anshuman.khandual@arm.com>
+ <20250516135958.GA13612@willie-the-truck>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250516135958.GA13612@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 11:55=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
- wrote:
->
-> perf trace utilizes the tracepoint utility, the only filter in perf
-> trace is a filter on syscall type. For example, if perf traces only
-> openat, then it filters all the other syscalls, such as readlinkat,
-> readv, etc.
->
-> This filtering is flawed. Consider this case: two perf trace
-> instances are running at the same time, trace instance A tracing
-> readlinkat, trace instance B tracing openat. When an openat syscall
-> enters, it triggers both BPF programs (sys_enter) in both perf trace
-> instances, these kernel functions will be executed:
->
-> perf_syscall_enter
->   perf_call_bpf_enter
->     trace_call_bpf
->       bpf_prog_run_array
->
-> In bpf_prog_run_array:
-> ~~~
-> while ((prog =3D READ_ONCE(item->prog))) {
->         run_ctx.bpf_cookie =3D item->bpf_cookie;
->         ret &=3D run_prog(prog, ctx);
->         item++;
-> }
-> ~~~
->
-> I'm not a BPF expert, but by tinkering I found that if one of the BPF
-> programs returns 0, there will be no tracepoint sample. That is,
->
-> (Is there a sample?) =3D ProgRetA | ProgRetB | ProgRetC
 
-Sorry, I meant ProgRetA & ProgRetB & ProgRetC.
 
->
-> Where ProgRetA is the return value of one of the BPF programs in the BPF
-> program array.
->
-> Go back to the case, when two perf trace instances are tracing two
-> different syscalls, again, A is tracing readlinkat, B is tracing openat,
-> when an openat syscall enters, it triggers the sys_enter program in
-> instance A, call it ProgA, and the sys_enter program in instance B,
-> ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
-> even though ProgB returns 1; (Is there a sample?) =3D ProgRetA (0) |
-> ProgRetB (1) =3D 0. So there won't be a tracepoint sample in B's output,
+On 5/16/25 19:29, Will Deacon wrote:
+> On Mon, Apr 21, 2025 at 11:22:12AM +0530, Anshuman Khandual wrote:
+>> Array elements inside 'struct user_hwdebug_state.dbg_regs[]' are inherently
+>> coupled with maximum breakpoints or watchpoints which could be present on a
+>> platform and which are defined with macros ARM_MAX_[BRP|WRP].
+>>
+>> Rather than explicitly trying to keep the array elements in sync with these
+>> macros and then adding a BUILD_BUG_ON() just to ensure continued compliance
+>> , move these two macros into the uapi ptrace header itself thus making them
+>> available both for user space and kernel.
+>>
+>> While here also ensure that ARM_MAX_BRP and ARM_MAX_WRP are always the same
+>> via a new BUILD_BUG_ON(). This helps in making sure that user_hwdebug_state
+>> structure remains usable both for breakpoint and watchpoint registers set
+>> via ptrace() system call interface.
+>>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> This patch applies on v6.15-rc3
+>>
+>>  arch/arm64/include/asm/hw_breakpoint.h |  7 -------
+>>  arch/arm64/include/uapi/asm/ptrace.h   | 10 +++++++++-
+>>  arch/arm64/kernel/hw_breakpoint.c      |  9 +++++++++
+>>  3 files changed, 18 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
+>> index bd81cf17744a..63c21b515647 100644
+>> --- a/arch/arm64/include/asm/hw_breakpoint.h
+>> +++ b/arch/arm64/include/asm/hw_breakpoint.h
+>> @@ -75,13 +75,6 @@ static inline void decode_ctrl_reg(u32 reg,
+>>  #define ARM_KERNEL_STEP_ACTIVE	1
+>>  #define ARM_KERNEL_STEP_SUSPEND	2
+>>  
+>> -/*
+>> - * Limits.
+>> - * Changing these will require modifications to the register accessors.
+>> - */
+>> -#define ARM_MAX_BRP		16
+>> -#define ARM_MAX_WRP		16
+>> -
+>>  /* Virtual debug register bases. */
+>>  #define AARCH64_DBG_REG_BVR	0
+>>  #define AARCH64_DBG_REG_BCR	(AARCH64_DBG_REG_BVR + ARM_MAX_BRP)
+>> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+>> index 0f39ba4f3efd..8683f541a467 100644
+>> --- a/arch/arm64/include/uapi/asm/ptrace.h
+>> +++ b/arch/arm64/include/uapi/asm/ptrace.h
+>> @@ -99,6 +99,14 @@ struct user_fpsimd_state {
+>>  	__u32		__reserved[2];
+>>  };
+>>  
+>> +/*
+>> + * Maximum number of breakpoint and watchpoint registers
+>> + * on the platform. These macros get used both in kernel
+>> + * and user space as well.
+>> + */
+>> +#define ARM_MAX_BRP		16
+>> +#define ARM_MAX_WRP		16
+>> +
+>>  struct user_hwdebug_state {
+>>  	__u32		dbg_info;
+>>  	__u32		pad;
+>> @@ -106,7 +114,7 @@ struct user_hwdebug_state {
+>>  		__u64	addr;
+>>  		__u32	ctrl;
+>>  		__u32	pad;
+>> -	}		dbg_regs[16];
+>> +	}		dbg_regs[ARM_MAX_BRP];	/* Or ARM_MAX_WRP */
+>>  };
+>>  
+>>  /* SVE/FP/SIMD state (NT_ARM_SVE & NT_ARM_SSVE) */
+>> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+>> index 722ac45f9f7b..9bc51682713d 100644
+>> --- a/arch/arm64/kernel/hw_breakpoint.c
+>> +++ b/arch/arm64/kernel/hw_breakpoint.c
+>> @@ -981,6 +981,15 @@ static int __init arch_hw_breakpoint_init(void)
+>>  {
+>>  	int ret;
+>>  
+>> +	/*
+>> +	 * Maximum supported breakpoint and watchpoint registers must
+>> +	 * always be the same - regardless of actual register numbers
+>> +	 * found on a given platform. This is because the user facing
+>> +	 * ptrace structure 'user_hwdebug_state' actually depends on
+>> +	 * these macros to be the same.
+>> +	 */
+>> +	BUILD_BUG_ON(ARM_MAX_BRP != ARM_MAX_WRP);
+> 
+> Sorry, but I don't understand why this patch is an improvement over what
+> we have.
+This is an improvement because
 
-Same, ProgRetA (0) & ProgRetB (1) =3D 0.
+- user_hwdebug_state.dbg_regs[16] is hard coded for size without context
+  requiring explicit sync up when ARM_MAX_WRP/BRP changes to 64 later on
+  with FEAT_Debugv8p9. Defining the array size in terms of ARM_MAX_WRP/
+  BRP provides required context and also avoids the need for an explicit
+  hard coded sync up when those macros change.
 
-> when there really should be one.
->
-> I also want to point out that openat and readlinkat have augmented
-> output, so my example might not be accurate, but it does explain the
-> current perf-trace-in-parallel dilemma.
->
-> Now for augmented output, it is different. When it calls
-> bpf_perf_event_output, there is a sample. There won't be no ProgRetA |
-> ProgRetB... thing. So I will send another RFC patch to enable
-
-Ditto.
-
-Thanks,
-Howard
+- user_hwdebug_state.dbg_regs[16] gets used both for breakpoint registers
+  and watchpoint registers. Hence there is an inherent assumption that
+  ARM_MAX_BRP == ARM_MAX_WRP which should be ensured with a corresponding
+  assert.
