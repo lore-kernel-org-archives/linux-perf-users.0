@@ -1,63 +1,63 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3FC21FF44
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 09:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECF12222A3
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 09:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597385; cv=none; b=tWLTaHMm229yiy3AQMYVshualQfboT2av+dqup9fyPRlucR73FEigjtsmVqonOWM/j1oCyLajcmF9WwtPBkDAqa/4Nek+ga3PwSE4IKVXoFbUxC3Cb5swn6A+EMGX8OQrM2NYfWTsubrwM4C1owLSDgPgt0/gw4yz4cvxxw2l/I=
+	t=1748597400; cv=none; b=ksQpxUdKmqiKqLlClUaaOMuTfHI4oG/7xTPtJC9kxnGtHjvPvO7IT34k3+vEb478xdW5n3qJ7bJKBXWLqsJUWn48VjrPfdahH8bWxu5O/ujx4IqfwuA1NXmTl772Ygf+Qvj3RJiOohZ8O3bk2c4t4WynYQt1OZlDjfc25/uiDro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597385; c=relaxed/simple;
-	bh=S20otgpxbfyI8rSmt5eNc2YoPuXrdf/0GSL9ciOvIuU=;
+	s=arc-20240116; t=1748597400; c=relaxed/simple;
+	bh=VIZG5AiWC/s7En/XmKPIO2DjZgsCQ6G5W9Jx/My9WHo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=klk/gWt1gRKFLSPwNeckFhfkKREcOSBlIGKMv+bHez0vlo9VZrfoOwWSxNKaFXt7Iqpw/wM7be2dt0uMXT90dpgpwT139Uiuaw0FODO4YsMouDtbTsTYnk98HvhsZzrShQQSfgnz/ssvacpwbvOOzM4O93hIbejRAsZ/Ha+Rhng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=iLObVoMY; arc=none smtp.client-ip=209.85.215.170
+	 MIME-Version; b=fvpkuSnPGtfbg/BAhDejjUOM2QLUZMMUAWAwlgDG9HvjY3wtshiUP1dlk0gyF+r0X3FaZrONnIMmTp9sU1LDkj57SQQuUfhH691/kWXU+YqgBMz4J9ni1Q1uRDOj2WWf27v0ru2VgMCIDluEbQ26/M5FmZm21VNPOD+JXwW65cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=WB6z6OIw; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="iLObVoMY"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so1086235a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 02:29:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="WB6z6OIw"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-311ef4fb549so1554383a91.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 02:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597383; x=1749202183; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748597398; x=1749202198; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fsVmARra3PYHgocOota+jP5MYor7RDP1xSKc/otYVfE=;
-        b=iLObVoMYwVTx9dhtWeCngYlgKCMrTA89+js5cJ0RTSqzOZ4UgePxNvcf8jYO6Y5tUF
-         yT6Cf/7ITvg0YCbz+hQnvej2YkXbHWclcB9TkFDxHJw3LvvBigI/TeocZ8YFUoiwAVD4
-         fOjac9/1X7ptj3WKAnchTLK2e7NoPagBOZwkI7Go4RbmNvkaynfvxYRWDqrl6gpkHwoU
-         T20DkUTDq2gcdh98euhWD4xZCLZjGfH3Se/xiCQxFmNzDLSq1NhA4/DflY0Dg5z84yJz
-         R12oC38E1BmVKU+fjwnStUPCB6XMzTlFwEQqFqV7NuTLfPTtNxGZvAcOxFW7YPGU5OQ0
-         zISA==
+        bh=rxNHqqJshuS1h1cgjJgJ0ZrC1Xqsxa5tk/BB5ji3hvs=;
+        b=WB6z6OIw5FMSobnxLBt+fPmPsX/NsOiTiisAYiUGKxuhRaLdy/ylTQVQVyf4Dg6kI/
+         Jx/wkwLFji+l2wZ7nS6xPiWQDqHH5Bv23q2M8bNC3MBIMq22NYwZcwzGKug2VkHWcFW5
+         Yhlmw5c+XWobbD+qMo7S/YQs4FZrJy3B/FQACXZ8HebyhjqZ8bH3u4Hlqs7/jglQejc4
+         rZiaNVK4g5bik6IOs5wiJQ13/WYUNFY3iiMIF1wvviEcKkIjVt8CnlhFQGEy0Vx3Bc6L
+         yTpm9aJ+BemoU+Pg6tleE3oHLwOY6LW4/wjv7hEosq+BxU+lCwMCi+6B0l+CcjM6f3Yh
+         GJgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597383; x=1749202183;
+        d=1e100.net; s=20230601; t=1748597398; x=1749202198;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fsVmARra3PYHgocOota+jP5MYor7RDP1xSKc/otYVfE=;
-        b=Sblx83OXNIrk2D/f3TwrxnhDYuO4AxGJQcxXMsEe5YYvDCI3SxZ1azlW3stWd2OHcV
-         XrHGOTNdSLEtwQbO+lAewE7JCUQdCzHamsNekfGRvdYo/F8Vieqc3XtViOgVyU+ZFalx
-         48kQXU1Q1LfwbaAj9iT5ilxiLCPyaWy29GV9wXBl2/hBcermu6Hqs2s4TMGHIM39KMXH
-         JM8ANKX1dLvcrJtj38rg2pxcIlVVX2hrxSoirUpWemMeD/4JTn1GgoIL7cEgN1HktyXR
-         taHk7Bzd+UrnPZBTK11YH0C4hiMBVQNdJSmDJLO080TSXhCdjRBweWGRqBH6CAj+y9Rx
-         m4Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCW02TA7UzEJHi0lENCARUbMGPbvzTwpQ2U8RcRGncMA3AE4DcWbyHerX/tLHJhHVvyT0wo0OEdSKlhQ0HQY0S3j@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAAB9rjofsSFfLC86dPRp1iCh9dJVY2NRY4PqRVMGcAokgLKSv
-	1tr5uLfEsUa1EAxaza2VKuuYCLW0IQInjEZHE7mrNFrzlXMg9CnTD0LlgMIlF3Zp4mc=
-X-Gm-Gg: ASbGncs/5rxOHtfzN2spnYt3+FkFykOwFtE1JLmMZI09au7ZfQwE2AAaeDUme1xx2sW
-	3tPhOULjWYdZw+yYGQPrfkAPLYdv8bHCYdrF3AYp3WHlbm/JL73m5b9Z/rlrNb9fnqoVwzlTY3V
-	16CGS1wfBCQ6dRlRX+QFirjTjsHOOR9W4DEz6nELHefa0/0ePRUue15aKUKyh6OR/rS4mHKP9J3
-	duz6rPfQmnks6NCwpgOnbscigqpmbrLXQ7yFlloLCCT/5zJ6kWmvUQ7fDRV0lQxOf7HC+BMXOdj
-	t/gby/EHSldHPo8Z6BViW/7RRFXxH/Xtf5wqVyKMI/60DuEXEi5Q16Gn21iX3hRR3via0om5DKN
-	GiEX34y/iUB3B0hFvid40EhNW4iWOnQY=
-X-Google-Smtp-Source: AGHT+IGDxz/qX0egNQr6P0EaiRBDIQcZ9ust5aoVSte6/Q83iWKLonGQ/1cLLq8vU8IelvR0XV1gQw==
-X-Received: by 2002:a17:90b:5344:b0:312:b4a:6342 with SMTP id 98e67ed59e1d1-31241e9c28fmr4334365a91.33.1748597382681;
-        Fri, 30 May 2025 02:29:42 -0700 (PDT)
+        bh=rxNHqqJshuS1h1cgjJgJ0ZrC1Xqsxa5tk/BB5ji3hvs=;
+        b=ZOXm4+8UQINLLPn1TyXNELGGm+4D+rdn//4T9Zk0jJDnMvcw8VIYdOEia6FyD3g26w
+         Fl9tPlJ0vBFuXcxNKMUt8GgS4DKAcsc2GTujeUBi/EFEskZwe+9xrKkgKkdmZHYFPLwd
+         FhP6Z3u61I4U+hrSgJ38OmgMD6El7+nEwIOSHIlcySgbUSinEDiDit9x1Cs+3/UbmyVO
+         yKhrgXK4piXHbdS+DwZ75KUETZB/hj+w2WPnZj+74H5EfrSc1c+QxmsU8U1nLy5rJCC2
+         +34dMBwQqtZebgutNf5v3pJ+b8pesCVg880IOooy8wmqQiSa/5A1IZ9PxGmariHkvzVv
+         lCAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQk5/Q3at6UL2APFPf05/PeRL1idCj4OFHgne9COGO4zlCk3D+GeFpxDMFIdS+pkB7GIm6mKnsVfGu4KghAUai@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9IdrakrME3UKicSEiK92qRnIk/m37lJfhpQSVJ+JbveXNeKtp
+	WAMcMewgTzcTcorcZvJazwk7U2n0lBGW4T22HL/zrCb2/Jc7XfdG8KwonchAUqzhcUw=
+X-Gm-Gg: ASbGncuBIA6bllNaFVQCZmdWxAV00ruLmmc3zJxJ7iu4zG2R1CCgm/WvGph31uhYwS4
+	AA7epUtnu8ZDn7S+mkLHATSmDWHfz/BuLJglgKiz6urjhA+GZ/ypQA+jv6sobz7War21sDPphye
+	dSuwhhxXiSZJAXHzmsCF2ptvrG9ldVLxXRWvf/Yq6s3oSwdFcYrSW2HrTSEEfxZP+ZwPBN2jDvd
+	5tszjcm5sPd1wRPalU/68vbn/n2GoV/FDivqabuh+O/IO0bDUoJKZfHE0vElBYGaYSYcNu+eVkm
+	27nGRhDkY9m97OYOdJPkzAImHvL/tJaeozOmySyFB4CzgflZWbdaHjW4qt7sefodlvJxkAg6Mus
+	n6ie3gL2Qkg==
+X-Google-Smtp-Source: AGHT+IGBCG8Y5BoAzUhA//fCiLwTsxIymub8I3vmhNOr1M4fJfMNuuh617dJ5r3jIttsydinbIXPuQ==
+X-Received: by 2002:a17:90b:39c5:b0:311:b5ac:6f5d with SMTP id 98e67ed59e1d1-31241e975d6mr4419282a91.29.1748597398101;
+        Fri, 30 May 2025 02:29:58 -0700 (PDT)
 Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.29.27
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.29.43
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:29:42 -0700 (PDT)
+        Fri, 30 May 2025 02:29:57 -0700 (PDT)
 From: Bo Li <libo.gcs85@bytedance.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -112,9 +112,9 @@ Cc: dietmar.eggemann@arm.com,
 	chengguozhu@bytedance.com,
 	sunjiadong.lff@bytedance.com,
 	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 05/35] RPAL: enable virtual address space partitions
-Date: Fri, 30 May 2025 17:27:33 +0800
-Message-Id: <a5737be8dc2fb2f5058f6536f081fed611bdd093.1748594840.git.libo.gcs85@bytedance.com>
+Subject: [RFC v2 06/35] RPAL: add user interface
+Date: Fri, 30 May 2025 17:27:34 +0800
+Message-Id: <de89b7dbd8277f809c61b1220cdca29875863fd6.1748594840.git.libo.gcs85@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
@@ -126,73 +126,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Each RPAL service occupies a contiguous 512GB virtual address space, with
-its base address determined by the id assigned during initialization. For
-userspace virtual address space beyond this 512GB range, we employ memory
-ballooning to occupy these regions, ensuring that processes do not utilize
-these virtual addresses.
+Add the userspace interface of RPAL. The interface makes use of /proc
+files. Compared with adding syscalls, /proc files provide more interfaces,
+such as mmap, poll, etc. These interfaces can facilitate RPAL to implement
+more complex kernel-space/user-space interaction functions in the future.
 
-Since the address space layout is determined when the process is loaded,
-RPAL sets the unused fields in the header of the ELF binary to the "RPAL"
-characters to alter the loading method of RPAL processes, enabling the
-process to be located within the correct 512GB address space upon loading.
+This patch implements the ioctl interface, The interfaces initially
+implemented include obtaining the RPAL version, and retrieving the key and
+ID of the RPAL service.
 
 Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
- arch/x86/mm/mmap.c      | 10 +++++
- arch/x86/rpal/Makefile  |  2 +-
- arch/x86/rpal/mm.c      | 70 +++++++++++++++++++++++++++++
- arch/x86/rpal/service.c |  8 ++++
- fs/binfmt_elf.c         | 98 ++++++++++++++++++++++++++++++++++++++++-
- include/linux/rpal.h    | 65 +++++++++++++++++++++++++++
- 6 files changed, 251 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/rpal/mm.c
+ arch/x86/rpal/Makefile   |  2 +-
+ arch/x86/rpal/core.c     |  3 ++
+ arch/x86/rpal/internal.h |  3 ++
+ arch/x86/rpal/proc.c     | 71 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/rpal.h     | 34 +++++++++++++++++++
+ 5 files changed, 112 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/rpal/proc.c
 
-diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-index 5ed2109211da..504f2b9a0e8e 100644
---- a/arch/x86/mm/mmap.c
-+++ b/arch/x86/mm/mmap.c
-@@ -19,6 +19,7 @@
- #include <linux/sched/mm.h>
- #include <linux/compat.h>
- #include <linux/elf-randomize.h>
-+#include <linux/rpal.h>
- #include <asm/elf.h>
- #include <asm/io.h>
- 
-@@ -119,6 +120,15 @@ static void arch_pick_mmap_base(unsigned long *base, unsigned long *legacy_base,
- 		*base = mmap_base(random_factor, task_size, rlim_stack);
- }
- 
-+#ifdef CONFIG_RPAL
-+void rpal_pick_mmap_base(struct mm_struct *mm, struct rlimit *rlim_stack)
-+{
-+	arch_pick_mmap_base(&mm->mmap_base, &mm->mmap_legacy_base,
-+			arch_rnd(RPAL_MAX_RAND_BITS), rpal_get_top(mm->rpal_rs),
-+			rlim_stack);
-+}
-+#endif
-+
- void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
- {
- 	if (mmap_is_legacy())
 diff --git a/arch/x86/rpal/Makefile b/arch/x86/rpal/Makefile
-index ee3698b5a9b3..2c858a8d7b9e 100644
+index 2c858a8d7b9e..a5926fc19334 100644
 --- a/arch/x86/rpal/Makefile
 +++ b/arch/x86/rpal/Makefile
 @@ -2,4 +2,4 @@
  
  obj-$(CONFIG_RPAL)		+= rpal.o
  
--rpal-y := service.o core.o
-+rpal-y := service.o core.o mm.o
-diff --git a/arch/x86/rpal/mm.c b/arch/x86/rpal/mm.c
+-rpal-y := service.o core.o mm.o
++rpal-y := service.o core.o mm.o proc.o
+diff --git a/arch/x86/rpal/core.c b/arch/x86/rpal/core.c
+index 495dbc1b1536..61f5d40b0157 100644
+--- a/arch/x86/rpal/core.c
++++ b/arch/x86/rpal/core.c
+@@ -13,11 +13,14 @@
+ int __init rpal_init(void);
+ 
+ bool rpal_inited;
++unsigned long rpal_cap;
+ 
+ int __init rpal_init(void)
+ {
+ 	int ret = 0;
+ 
++	rpal_cap = 0;
++
+ 	ret = rpal_service_init();
+ 	if (ret)
+ 		goto fail;
+diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
+index e44e6fc79677..c102a4c50515 100644
+--- a/arch/x86/rpal/internal.h
++++ b/arch/x86/rpal/internal.h
+@@ -6,6 +6,9 @@
+  *     Author: Jiadong Sun <sunjiadong.lff@bytedance.com>
+  */
+ 
++#define RPAL_COMPAT_VERSION 1
++#define RPAL_API_VERSION 1
++
+ extern bool rpal_inited;
+ 
+ /* service.c */
+diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
 new file mode 100644
-index 000000000000..f469bcf57b66
+index 000000000000..1ced30e25c15
 --- /dev/null
-+++ b/arch/x86/rpal/mm.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/x86/rpal/proc.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * RPAL service level operations
 + * Copyright (c) 2025, ByteDance. All rights reserved.
@@ -201,355 +203,120 @@ index 000000000000..f469bcf57b66
 + */
 +
 +#include <linux/rpal.h>
-+#include <linux/security.h>
-+#include <linux/mman.h>
-+#include <linux/mm.h>
++#include <linux/proc_fs.h>
 +
-+static inline int rpal_balloon_mapping(unsigned long base, unsigned long size)
++#include "internal.h"
++
++static int rpal_open(struct inode *inode,
++			     struct file *file)
 +{
-+	struct vm_area_struct *vma;
-+	unsigned long addr, populate;
-+	int is_fail = 0;
-+
-+	if (size == 0)
-+		return 0;
-+
-+	addr = do_mmap(NULL, base, size, PROT_NONE,
-+		       MAP_FIXED | MAP_ANONYMOUS | MAP_PRIVATE,
-+		       VM_DONTEXPAND | VM_PFNMAP | VM_DONTDUMP, 0, &populate,
-+		       NULL);
-+
-+	is_fail = base != addr;
-+
-+	if (is_fail) {
-+		pr_info("rpal: Balloon mapping 0x%016lx - 0x%016lx, %s, addr: 0x%016lx\n",
-+			base, base + size, is_fail ? "Fail" : "Success", addr);
-+	}
-+	vma = find_vma(current->mm, addr);
-+	if (vma->vm_start != addr || vma->vm_end != addr + size) {
-+		is_fail = 1;
-+		rpal_err("rpal: find vma 0x%016lx - 0x%016lx fail\n", addr,
-+			 addr + size);
-+	}
-+
-+	return is_fail;
++	return 0;
 +}
 +
-+#define RPAL_USER_TOP TASK_SIZE
-+
-+int rpal_balloon_init(unsigned long base)
++static int rpal_get_api_version_and_cap(void __user *p)
 +{
-+	unsigned long top;
-+	struct mm_struct *mm = current->mm;
++	struct rpal_version_info rvi;
 +	int ret;
 +
-+	top = base + RPAL_ADDR_SPACE_SIZE;
++	rvi.compat_version = RPAL_COMPAT_VERSION;
++	rvi.api_version = RPAL_API_VERSION;
++	rvi.cap = rpal_cap;
 +
-+	mmap_write_lock(mm);
++	ret = copy_to_user(p, &rvi, sizeof(rvi));
++	if (ret)
++		return -EFAULT;
 +
-+	if (base > mmap_min_addr) {
-+		ret = rpal_balloon_mapping(mmap_min_addr, base - mmap_min_addr);
-+		if (ret)
-+			goto out;
++	return 0;
++}
++
++static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	struct rpal_service *cur = rpal_current_service();
++	int ret = 0;
++
++	if (!cur)
++		return -EINVAL;
++
++	switch (cmd) {
++	case RPAL_IOCTL_GET_API_VERSION_AND_CAP:
++		ret = rpal_get_api_version_and_cap((void __user *)arg);
++		break;
++	case RPAL_IOCTL_GET_SERVICE_KEY:
++		ret = put_user(cur->key, (u64 __user *)arg);
++		break;
++	case RPAL_IOCTL_GET_SERVICE_ID:
++		ret = put_user(cur->id, (int __user *)arg);
++		break;
++	default:
++		return -EINVAL;
 +	}
-+
-+	ret = rpal_balloon_mapping(top, RPAL_USER_TOP - top);
-+	if (ret && base > mmap_min_addr)
-+		do_munmap(mm, mmap_min_addr, base - mmap_min_addr, NULL);
-+
-+out:
-+	mmap_write_unlock(mm);
 +
 +	return ret;
 +}
-diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index 55ecb7e0ef8c..caa4afa5a2c6 100644
---- a/arch/x86/rpal/service.c
-+++ b/arch/x86/rpal/service.c
-@@ -143,6 +143,11 @@ static void delete_service(struct rpal_service *rs)
- 	spin_unlock_irqrestore(&hash_table_lock, flags);
- }
- 
-+static inline unsigned long calculate_base_address(int id)
++
++const struct proc_ops proc_rpal_operations = {
++	.proc_open = rpal_open,
++	.proc_ioctl = rpal_ioctl,
++};
++
++static int __init proc_rpal_init(void)
 +{
-+	return RPAL_ADDRESS_SPACE_LOW + RPAL_ADDR_SPACE_SIZE * id;
-+}
-+
- struct rpal_service *rpal_register_service(void)
- {
- 	struct rpal_service *rs;
-@@ -168,6 +173,9 @@ struct rpal_service *rpal_register_service(void)
- 	if (unlikely(rs->key == RPAL_INVALID_KEY))
- 		goto key_fail;
- 
-+	rs->bad_service = false;
-+	rs->base = calculate_base_address(rs->id);
-+
- 	current->rpal_rs = rs;
- 
- 	rs->group_leader = get_task_struct(current);
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index a43363d593e5..9d27d9922de4 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -47,6 +47,7 @@
- #include <linux/dax.h>
- #include <linux/uaccess.h>
- #include <linux/rseq.h>
-+#include <linux/rpal.h>
- #include <asm/param.h>
- #include <asm/page.h>
- 
-@@ -814,6 +815,61 @@ static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
- 	return ret == -ENOENT ? 0 : ret;
- }
- 
-+#if IS_ENABLED(CONFIG_RPAL)
-+static int rpal_create_service(char *e_ident, struct rpal_service **rs,
-+			unsigned long *rpal_base, int *retval,
-+			struct linux_binprm *bprm, int executable_stack)
-+{
-+	/*
-+	 * The first 16 bytes of the elf binary is magic number, and the last
-+	 * 7 bytes of that is reserved and ignored. We use the last 4 bytes
-+	 * to indicate a rpal binary. If the last 4 bytes is "RPAL", then this
-+	 * is a rpal binary and we need to do register routinue.
-+	 */
-+	if (memcmp(e_ident + RPAL_MAGIC_OFFSET, RPAL_MAGIC, RPAL_MAGIC_LEN) ==
-+	    0) {
-+		unsigned long rpal_stack_top = STACK_TOP;
-+
-+		*rs = rpal_register_service();
-+		if (*rs != NULL) {
-+			*rpal_base = rpal_get_base(*rs);
-+			rpal_stack_top = *rpal_base + RPAL_ADDR_SPACE_SIZE;
-+			/*
-+			 * We need to recalculate the mmap_base, otherwise the address space
-+			 * layout randomization will not make any difference.
-+			 */
-+			rpal_pick_mmap_base(current->mm, &bprm->rlim_stack);
-+		}
-+		/*
-+		 * RPAL process only has a contiguous 512GB address space, Whose base
-+		 * address is given by its struct rpal_service. We need to rearrange
-+		 * the user stack in this 512GB address space.
-+		 */
-+		*retval = setup_arg_pages(bprm,
-+					  randomize_stack_top(rpal_stack_top),
-+					  executable_stack);
-+		/*
-+		 * We use memory ballon to avoid kernel allocating vma other than
-+		 * the process's 512GB memory.
-+		 */
-+		if (unlikely(*rs != NULL && rpal_balloon_init(*rpal_base))) {
-+			rpal_err("pid: %d, comm: %s: rpal balloon init fail\n",
-+					 current->pid, current->comm);
-+			rpal_unregister_service(*rs);
-+			*rs = NULL;
-+			*retval = -EINVAL;
-+			goto out;
-+		}
-+	} else {
-+		*retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
-+					  executable_stack);
-+	}
-+
-+out:
++	proc_create("rpal", 0644, NULL, &proc_rpal_operations);
 +	return 0;
 +}
-+#endif
-+
- static int load_elf_binary(struct linux_binprm *bprm)
- {
- 	struct file *interpreter = NULL; /* to shut gcc up */
-@@ -836,6 +892,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
- 	struct mm_struct *mm;
- 	struct pt_regs *regs;
-+#ifdef CONFIG_RPAL
-+	struct rpal_service *rs = NULL;
-+	unsigned long rpal_base;
-+#endif
- 
- 	retval = -ENOEXEC;
- 	/* First of all, some simple consistency checks */
-@@ -1008,10 +1068,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 
- 	setup_new_exec(bprm);
- 
-+#ifdef CONFIG_RPAL
-+	/* call original function if fails */
-+	if (rpal_create_service((char *)&elf_ex->e_ident, &rs, &rpal_base,
-+				&retval, bprm, executable_stack))
-+		retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
-+					 executable_stack);
-+#else
- 	/* Do this so that we can load the interpreter, if need be.  We will
- 	   change some of these later */
- 	retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
- 				 executable_stack);
-+#endif
-+
- 	if (retval < 0)
- 		goto out_free_dentry;
- 
-@@ -1055,6 +1124,22 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			 * is needed.
- 			 */
- 			elf_flags |= MAP_FIXED_NOREPLACE;
-+#ifdef CONFIG_RPAL
-+			/*
-+			 * If We load MAP_FIXED binary, it will either fail when
-+			 * doing mmap, as we have done the memory balloon before,
-+			 * or work well, where we are so lucky to have fixed address
-+			 * in it's RPAL address space. A MAP_FIXED binary should
-+			 * by no means be a RPAL service. Here we only print
-+			 * an error. Maybe we will handle it in the future.
-+			 */
-+			if (unlikely(rs != NULL)) {
-+				rpal_err(
-+					"pid: %d, common: %s, load a binary with MAP_FIXED segment\n",
-+					current->pid, current->comm);
-+				rs->bad_service = true;
-+			}
-+#endif
- 		} else if (elf_ex->e_type == ET_DYN) {
- 			/*
- 			 * This logic is run once for the first LOAD Program
-@@ -1128,6 +1213,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				/* Adjust alignment as requested. */
- 				if (alignment)
- 					load_bias &= ~(alignment - 1);
-+#ifdef CONFIG_RPAL
-+				if (rs != NULL) {
-+					load_bias &= RPAL_RAND_ADDR_SPACE_MASK;
-+					load_bias += rpal_base;
-+				}
-+#endif
- 				elf_flags |= MAP_FIXED_NOREPLACE;
- 			} else {
- 				/*
-@@ -1306,7 +1397,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	if (!IS_ENABLED(CONFIG_COMPAT_BRK) &&
- 	    IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
- 	    elf_ex->e_type == ET_DYN && !interpreter) {
--		elf_brk = ELF_ET_DYN_BASE;
-+#ifdef CONFIG_RPAL
-+		if (rs && !rs->bad_service)
-+			elf_brk = rpal_base;
-+		else
-+#endif
-+			elf_brk = ELF_ET_DYN_BASE;
- 		/* This counts as moving the brk, so let brk(2) know. */
- 		brk_moved = true;
- 	}
++fs_initcall(proc_rpal_init);
 diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 7b9d90b62b3f..f7c0de747f55 100644
+index f7c0de747f55..3bc2a2a44265 100644
 --- a/include/linux/rpal.h
 +++ b/include/linux/rpal.h
-@@ -15,11 +15,17 @@
- #include <linux/workqueue.h>
- #include <linux/hashtable.h>
- #include <linux/atomic.h>
-+#include <linux/sizes.h>
+@@ -77,6 +77,8 @@
+ #define RPAL_ADDRESS_SPACE_LOW  ((0UL) + RPAL_ADDR_SPACE_SIZE)
+ #define RPAL_ADDRESS_SPACE_HIGH ((0UL) + RPAL_NR_ADDR_SPACE * RPAL_ADDR_SPACE_SIZE)
  
- #define RPAL_ERROR_MSG "rpal error: "
- #define rpal_err(x...) pr_err(RPAL_ERROR_MSG x)
- #define rpal_err_ratelimited(x...) pr_err_ratelimited(RPAL_ERROR_MSG x)
- 
-+/* RPAL magic macros in binary elf header */
-+#define RPAL_MAGIC "RPAL"
-+#define RPAL_MAGIC_OFFSET 12
-+#define RPAL_MAGIC_LEN 4
-+
- /*
-  * The first 512GB is reserved due to mmap_min_addr.
-  * The last 512GB is dropped since stack will be initially
-@@ -30,6 +36,47 @@
- #define RPAL_FIRST_KEY _AC(1, UL)
- #define RPAL_INVALID_KEY _AC(0, UL)
- 
-+/*
-+ * Process Virtual Address Space Layout (For 4-level Paging)
-+ *  |-------------|
-+ *  |  No Mapping |
-+ *  |-------------| <-- 64 KB (mmap_min_addr)
-+ *  |     ...     |
-+ *  |-------------| <-- 1 * 512GB
-+ *  |  service 0  |
-+ *  |-------------| <-- 2 * 512 GB
-+ *  |  Service 1  |
-+ *  |-------------| <-- 3 * 512 GB
-+ *  |  Service 2  |
-+ *  |-------------| <-- 4 * 512 GB
-+ *  |     ...     |
-+ *  |-------------| <-- 255 * 512 GB
-+ *  | Service 254 |
-+ *  |-------------| <-- 128 TB
-+ *  |             |
-+ *  |     ...     |
-+ *  |-------------| <-- PAGE_OFFSET
-+ *  |             |
-+ *  |    Kernel   |
-+ *  |_____________|
-+ *
-+ */
-+#define RPAL_ADDR_SPACE_SIZE (_AC(512, UL) * SZ_1G)
-+/*
-+ * Since RPAL restricts the virtual address space used by a single
-+ * process to 512GB, the number of bits for address randomization
-+ * must be correspondingly reduced; otherwise, issues such as overlaps
-+ * in randomized addresses could occur. RPAL employs 20-bit (page number)
-+ * address randomization to balance security and usability.
-+ */
-+#define RPAL_RAND_ADDR_SPACE_MASK _AC(0xfffffff0, UL)
-+#define RPAL_MAX_RAND_BITS 20
-+
-+#define RPAL_NR_ADDR_SPACE 256
-+
-+#define RPAL_ADDRESS_SPACE_LOW  ((0UL) + RPAL_ADDR_SPACE_SIZE)
-+#define RPAL_ADDRESS_SPACE_HIGH ((0UL) + RPAL_NR_ADDR_SPACE * RPAL_ADDR_SPACE_SIZE)
++extern unsigned long rpal_cap;
 +
  /*
   * Each RPAL process (a.k.a RPAL service) should have a pointer to
   * struct rpal_service in all its tasks' task_struct.
-@@ -52,6 +99,10 @@ struct rpal_service {
- 	u64 key;
- 	/* virtual address space id */
- 	int id;
-+	/* virtual address space base address of this service */
-+	unsigned long base;
-+	/* bad rpal binary */
-+	bool bad_service;
+@@ -118,6 +120,38 @@ struct rpal_service {
+ 	atomic_t refcnt;
+ };
  
-     /*
-      * Fields above should never change after initialization.
-@@ -86,6 +137,16 @@ struct rpal_service *rpal_get_service(struct rpal_service *rs);
-  */
- void rpal_put_service(struct rpal_service *rs);
- 
-+static inline unsigned long rpal_get_base(struct rpal_service *rs)
-+{
-+	return rs->base;
-+}
++/*
++ * Following structures should have the same memory layout with user.
++ * It seems nothing being different between kernel and user structure
++ * padding by different C compilers on x86_64, so we need to do nothing
++ * special here.
++ */
++/* Begin */
++struct rpal_version_info {
++	int compat_version;
++	int api_version;
++	unsigned long cap;
++};
 +
-+static inline unsigned long rpal_get_top(struct rpal_service *rs)
-+{
-+	return rs->base + RPAL_ADDR_SPACE_SIZE;
-+}
++/* End */
 +
- #ifdef CONFIG_RPAL
- static inline struct rpal_service *rpal_current_service(void)
- {
-@@ -100,4 +161,8 @@ struct rpal_service *rpal_register_service(void);
- struct rpal_service *rpal_get_service_by_key(u64 key);
- void copy_rpal(struct task_struct *p);
- void exit_rpal(bool group_dead);
-+int rpal_balloon_init(unsigned long base);
++enum rpal_command_type {
++	RPAL_CMD_GET_API_VERSION_AND_CAP,
++	RPAL_CMD_GET_SERVICE_KEY,
++	RPAL_CMD_GET_SERVICE_ID,
++	RPAL_NR_CMD,
++};
 +
-+extern void rpal_pick_mmap_base(struct mm_struct *mm,
-+	struct rlimit *rlim_stack);
- #endif
++/* RPAL ioctl macro */
++#define RPAL_IOCTL_MAGIC 0x33
++#define RPAL_IOCTL_GET_API_VERSION_AND_CAP                        \
++	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_API_VERSION_AND_CAP, \
++	      struct rpal_version_info *)
++#define RPAL_IOCTL_GET_SERVICE_KEY \
++	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_KEY, u64 *)
++#define RPAL_IOCTL_GET_SERVICE_ID \
++	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_ID, int *)
++
+ /**
+  * @brief get new reference to a rpal service, a corresponding
+  *  rpal_put_service() should be called later by the caller.
 -- 
 2.20.1
 
