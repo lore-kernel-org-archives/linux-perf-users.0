@@ -1,63 +1,63 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754CE22126C
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 09:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F9422D7AC
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 09:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597493; cv=none; b=fc2rzicE+P8Ltn0RfToxYU84pVB0N0NyN1yHB6bSM9DKTZP2aIGS37zIwTyyoOGGNyKNUUQTCSnri/boxdkXzpGdnnZXudO9dQfuBzt9ChyzT572I06jPNRr0lK/HHqi4ewhn50Yx1I8fOwUf/aSmqVEdww3O9sLSYnLpi1XwCk=
+	t=1748597508; cv=none; b=THrlPfwU/dLelnXIWnsL1uTUhN0kcMNNU2irDrg8U31axfCicuN7vEsF1IQu8dgJ62H4oqIzsqi/3fohJPInsp9VZ/xeQimKerfhRXNYdNhLN0V0mzTdvZV/M/j4QjLpx8FFibG6/RDB9MNSWaYJ3oaXOMtDnby4HtHnk2I8v0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597493; c=relaxed/simple;
-	bh=CSDCXobBWZhtRTJYQJOr5+LQO5QZF5XuFGMveHLRtkY=;
+	s=arc-20240116; t=1748597508; c=relaxed/simple;
+	bh=x42OvKF8cu3SGLWZonaQOFG1mLKzqSw7oCqoTulLIhU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BqOeal2+/EsmNGtwnAB+vOAzGg290CE2+dF+qmoO8buSBg/HiaJkQsIlrKVqXXVq3Lm+m3DPBh4A0PjHnKVnC/3leyV1a/NVJEW1fTNOTaAuwNUKVur9rN0xWt0AjQdIQfUC3Dzxvw1YBqIC4i4xPQIKVVqsJmOPQK7xym6pdiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QMN/uMDJ; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=RnyYX6BhRrqJjsUPgCdp3Cp7NgmeRhZe+UZXmUctQyN0EW1lZGQjc+KxhON7z2iA1fMCpOwMCrZ0dyzIuUSWyWll7oiOLylCNOd7rIqjPHsBVYUtnislMmL1m2LJEEQ9e5aD7KwahPXkIUrFIW50dTd4yaI6s6nY6McS6Lcv+Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UIhFXuhK; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QMN/uMDJ"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3081f72c271so1407370a91.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 02:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UIhFXuhK"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so1087226a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 02:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597491; x=1749202291; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748597506; x=1749202306; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rWr/E1U9MoZB6J4RM+OE8fwerNiGURyoNSQ2TTxCRRo=;
-        b=QMN/uMDJAC+cia0D5Uie7ylDSB8V955tA2GjAZEnP/hpfefNtYZ2IY9p7iwvn3gjI/
-         y5nHUjhDjU7dtFQyJkLpP7cilJVsUFSds/l+kvPKRTW/6Ovy1bYNpnvZdgEJ9lQ7Wmb6
-         DQipz4gUfcFAB15jSSj6KTRpqTq5auBHaRUOTfIzpQUcMVWimE9wD9DmOijdlRvEg04P
-         SvIxTF1nIqA9QIu8kxTJwkl/ANtRZsdPSI3GZfdSyL4r96RjnGHu4Vxni0w7VpDUpldH
-         Szljcpzm05jHfapokWUMaZ8sdnRyXtpaIy0yx4Bd051fqrT6zKzazXQeUtiFLx1YM+C7
-         SiTA==
+        bh=lqEqFVUYhIQ6uCyFMSKyc3XjCtHWAqaCcpg8jFQsxWM=;
+        b=UIhFXuhKkT4Y96MhzklPzS+CDHR0Hw8VJ3D0QgE5uV/f0ZucyRKOfLHwT9vxTiLErV
+         j/R1Ct0aZGJOi9mfTNDGtDO/U7JHgHzd0D/7f3Z02wZCMehFDya7ysKmcdrLPqfa+Kgq
+         jdeAef2VgY6bSAmZeYcaxI75LLX8O8+ImWRe5C6OQmjNP64UgseKPtNB8/sBDld/OO7E
+         gBRLKl/EAGe2+e3mvcMrEiNKYFfPhqBslo/LfYZt0in/HfDVApFPGY4Fsbwe7TO0Ojl4
+         7tswhefuv5qkD9ggG7FBUkyGDBpgw0LY3WDOgW40Ng7qocSI1ce1YHVfSPN9ASiwORY7
+         nRAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597491; x=1749202291;
+        d=1e100.net; s=20230601; t=1748597506; x=1749202306;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rWr/E1U9MoZB6J4RM+OE8fwerNiGURyoNSQ2TTxCRRo=;
-        b=v8lv1yIcqGqA9WxE6bnNkot3q7699P/2gifQMeLcjIlKnzQ90LMCVUriPB+H3Qeuar
-         EkOgxnbZ1M+WsH4NcfRMJRhG28DTc/Ff0jEACWXf3PztLwaa/307C60sWUTpoEg2jMau
-         h0YKyq5+NbgXiWrRT6lDd5145pOzhkjHv+ii1vCdyFTuLX8CVCHlpZEGE7j5fovXQsgC
-         cOYM4qqvucWDYaKJUJvF0BcRlIXNpnT3lYzZVtVudtY7ld+6SZd3RyH89sxPJCM8pP61
-         3vDoupUUP24mjA0f+1OK7NxCtMHMFgY5qxiXl2meNwE/YXPGe8N9WkZqRvem6ohFeKkD
-         cVtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrkgN0wJDeyksqQzY6YJGnhD0xNY16Cnn1EqvarXgkxYdoyW98XNgZkQrgCSE+ztwKc5a41aW/xLbu+TPM8F/Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YyErlgEf52Xw6G4b1MDnvwgm2D4iSwzBJ8LCjiFLVXVFBPgt1hg
-	dn6xbBfmH5eJHSpfXJEX958R4kow4qW6x0+cvnOSORR9MVX8G5Ey+bshyxqZl3nyyOI=
-X-Gm-Gg: ASbGncuK28S1zWqcZiGCpIuuNcgxBPmLTxvQV7r7Sbib+9PAdRo0euNs3iSzqs96N1C
-	eUaQKXe7LBkTmGq7xbgOYuuc6BXH/ZeZdGz7lAgfsf6HkZlNiOHN7aPPyWLturQhZ6SRyx2wG+B
-	b86Ih11h11gOk2POl53hRgHIAvEfJh8E3+OgSxLvXAr8emH8ionIqRkDeiTVne140AGO0UjcKaI
-	I91/heFylMr0kLzO3/Bd/BCKr/TPW7N91osLfgl/5o94fjIwOT8B4AvpzdYB4VyYauHvnHYgAL7
-	9im6ZkbI4O/LQiW7IY1bS5n8r4IkY8bjpAyUtUPGnX4CKjUa2uM++s07PCL35f6l73pXjV3xa7b
-	23sU7KEUrd/nbxmNxhY2nE2vBPkALp+g=
-X-Google-Smtp-Source: AGHT+IHWxhBqxJC7pLUfy1wWPlfI3PTo1BKYuowDxnWEkooeR6TUqW9HSM93HT5AUTV5EBB5Y+mNrQ==
-X-Received: by 2002:a17:90b:48d2:b0:311:ad7f:3281 with SMTP id 98e67ed59e1d1-3125036ba85mr2606005a91.12.1748597490626;
-        Fri, 30 May 2025 02:31:30 -0700 (PDT)
+        bh=lqEqFVUYhIQ6uCyFMSKyc3XjCtHWAqaCcpg8jFQsxWM=;
+        b=McR6KyHuBT+BH6nyFfJRhajLimffnb7iOJdeCZFY3wKFBW/lUTuJGgAUSAd7F9Dq25
+         HlRUdweMcoZlih3bhtePunbha5ZgTibnNDYH7eDhinTGSdGzITJcQhcQFNHEaD8esvCE
+         hz8tc46iiyj0UweOynom95u04zHGwY/sbRoX/FxDawik6cWyObr8N2iHcjH2KAO2sPH6
+         oRVLf2Aydp1juuxMVi79WJaPaxOhCP1dI/zqRjWEbJmQLazfLEMKoWYLBOte0E0TliJt
+         5qd8oM/ogiW2SrCfmjShFmfUWzDHbmJBHaLoPG/V9Gk9j6XVc14wBfHZF7mkbIzmbQN0
+         4gZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNz0QkWy5NXPTZXTKnz5oJScTvifmP/Df07AKm2Wb7ucPxoyOyX2aHpfB9FQVsuqclGy4LAFwBWa4dwCLEgLnX@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjqP7WXZMtYGCR+Kw0OSkHcH7V6WmQPRnZ1Xemi2dR38vukYmV
+	2P7jrAt1zoxW3oIT3JwTwsjP9kXy8fRpjV0yJsqyMwiTa2kGdcxP5x7sCdhYyuzrACk=
+X-Gm-Gg: ASbGncvv2LqeuJckzz+GfMaR9MFJ28Xrro+jDwnMiENxI8nnNaYsAjbDEkISjwFHnCk
+	YbZF5Nnks64bEs4zLl9WUgQB9W2ghOT5FVHt2Mq3sU8PCtCBoqn9WOCuLYt/HeCCDe2DPYGYbUe
+	jBK97QpWWlJ53o+te5YCXySGg3f9iaJpBFpgvXbuxh9EqNLiLwgP1U1ozirDsYS6ErX+SSlPO8A
+	9A6QwPajS/EEedq7sqI029uzQja1zVg+u/2b8VrCiliiw0+RHYY4bxDOduU62fUkTGvjJLWeoR3
+	7D0j3IOTLzi9o0PVUkU4L3NszHnB+sA5vLSF5bTWRkIUA5KDXp1LnxjOiWwX/y4AZr5C9CKHQiC
+	cG0mcar1I5A==
+X-Google-Smtp-Source: AGHT+IGF62FX0HQNv9LilxlCiViF0h8d1bY/G1W0X5Q0qQ2cdYg03wna6Pf30NCPziT41+dazZ7wew==
+X-Received: by 2002:a17:90b:3b50:b0:312:1c83:58e9 with SMTP id 98e67ed59e1d1-3124150e464mr3530070a91.5.1748597505955;
+        Fri, 30 May 2025 02:31:45 -0700 (PDT)
 Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.31.15
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.31.31
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:31:30 -0700 (PDT)
+        Fri, 30 May 2025 02:31:45 -0700 (PDT)
 From: Bo Li <libo.gcs85@bytedance.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -112,9 +112,9 @@ Cc: dietmar.eggemann@arm.com,
 	chengguozhu@bytedance.com,
 	sunjiadong.lff@bytedance.com,
 	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 12/35] RPAL: enable service disable notification
-Date: Fri, 30 May 2025 17:27:40 +0800
-Message-Id: <20a49e36e1efc99b1489d81eb7b5fe8787fcee4c.1748594840.git.libo.gcs85@bytedance.com>
+Subject: [RFC v2 13/35] RPAL: add tlb flushing support
+Date: Fri, 30 May 2025 17:27:41 +0800
+Message-Id: <c1eeca7e95433f2e51eeae63375f41d7fafd4c5b.1748594840.git.libo.gcs85@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
@@ -126,211 +126,319 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a service is disabled, all services that request this service need
-to be notified.
+When a thread flushes the TLB, since the address space is shared,
+not only other threads in the current process but also other processes
+that share the address space may access the corresponding memory (related
+to the TLB flush). Therefore, the cpuset used for TLB flushing should be
+the union of the mm_cpumasks of all processes that share the address
+space.
 
-This patch use poll functions of file to implement such notification.
-When a service is disabled, it will notify all services that request it
-by set bit in others services' dead_key_bitmap. And the poll function
-will then issue a poll epoll event, other services can aware the service
-has been disabled.
-
-The key of disabled service can be read from the proc file.
+This patch extend flush_tlb_info to store other process's mm_struct,
+and when a CPU in the union of the mm_cpumasks if invoked to handle
+tlb flushing, it will check whether cpu_tlbstate.loaded_mm matches any
+of mm_structs stored in flush_tlb_info. If match, the CPU will do local
+tlb flushing for that mm_struct.
 
 Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
- arch/x86/rpal/proc.c    | 61 +++++++++++++++++++++++++++++++++++++++++
- arch/x86/rpal/service.c | 37 +++++++++++++++++++++++--
- include/linux/rpal.h    | 10 +++++++
- 3 files changed, 106 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/tlbflush.h |  10 ++
+ arch/x86/mm/tlb.c               | 172 ++++++++++++++++++++++++++++++++
+ arch/x86/rpal/internal.h        |   3 -
+ include/linux/rpal.h            |  12 +++
+ mm/rmap.c                       |   4 +
+ 5 files changed, 198 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
-index f001afd40562..16ac9612bfc5 100644
---- a/arch/x86/rpal/proc.c
-+++ b/arch/x86/rpal/proc.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/rpal.h>
- #include <linux/proc_fs.h>
-+#include <linux/poll.h>
- 
- #include "internal.h"
- 
-@@ -82,10 +83,70 @@ static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	return ret;
- }
- 
-+static ssize_t rpal_read(struct file *file, char __user *buf, size_t count,
-+		  loff_t *pos)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_poll_data *rpd;
-+	u64 released_keys[MAX_REQUEST_SERVICE];
-+	unsigned long flags;
-+	int nr_key = 0;
-+	int nr_byte = 0;
-+	int idx;
-+
-+	if (!cur)
-+		return -EINVAL;
-+
-+	rpd = &cur->rpd;
-+
-+	spin_lock_irqsave(&rpd->poll_lock, flags);
-+	idx = find_first_bit(rpd->dead_key_bitmap, RPAL_NR_ID);
-+	while (idx < RPAL_NR_ID) {
-+		released_keys[nr_key++] = rpd->dead_keys[idx];
-+		idx = find_next_bit(rpd->dead_key_bitmap, RPAL_NR_ID, idx + 1);
-+	}
-+	spin_unlock_irqrestore(&rpd->poll_lock, flags);
-+	nr_byte = nr_key * sizeof(u64);
-+
-+	if (copy_to_user(buf, released_keys, nr_byte)) {
-+		nr_byte = -EAGAIN;
-+		goto out;
-+	}
-+out:
-+	return nr_byte;
-+}
-+
-+static __poll_t rpal_poll(struct file *filep, struct poll_table_struct *wait)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	struct rpal_poll_data *rpd;
-+	unsigned long flags;
-+	__poll_t mask = 0;
-+
-+	if (unlikely(!cur)) {
-+		rpal_err("Not a rpal service\n");
-+		goto out;
-+	}
-+
-+	rpd = &cur->rpd;
-+
-+	poll_wait(filep, &rpd->rpal_waitqueue, wait);
-+
-+	spin_lock_irqsave(&rpd->poll_lock, flags);
-+	if (find_first_bit(rpd->dead_key_bitmap, RPAL_NR_ID) < RPAL_NR_ID)
-+		mask |= EPOLLIN | EPOLLRDNORM;
-+	spin_unlock_irqrestore(&rpd->poll_lock, flags);
-+
-+out:
-+	return mask;
-+}
-+
- const struct proc_ops proc_rpal_operations = {
- 	.proc_open = rpal_open,
-+	.proc_read = rpal_read,
- 	.proc_ioctl = rpal_ioctl,
- 	.proc_mmap = rpal_mmap,
-+	.proc_poll = rpal_poll,
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index e9b81876ebe4..f57b745af75c 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -227,6 +227,11 @@ struct flush_tlb_info {
+ 	u8			stride_shift;
+ 	u8			freed_tables;
+ 	u8			trim_cpumask;
++#ifdef CONFIG_RPAL
++	struct mm_struct **mm_list;
++	u64 *tlb_gen_list;
++	int nr_mm;
++#endif
  };
  
- static int __init proc_rpal_init(void)
-diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index 16a2155873a1..f490ab07301d 100644
---- a/arch/x86/rpal/service.c
-+++ b/arch/x86/rpal/service.c
-@@ -181,6 +181,9 @@ struct rpal_service *rpal_register_service(void)
- 	atomic_set(&rs->req_avail_cnt, MAX_REQUEST_SERVICE);
- 	bitmap_zero(rs->requested_service_bitmap, RPAL_NR_ID);
- 	spin_lock_init(&rs->lock);
-+	spin_lock_init(&rs->rpd.poll_lock);
-+	bitmap_zero(rs->rpd.dead_key_bitmap, RPAL_NR_ID);
-+	init_waitqueue_head(&rs->rpd.rpal_waitqueue);
- 
- 	rs->bad_service = false;
- 	rs->base = calculate_base_address(rs->id);
-@@ -296,6 +299,7 @@ static void remove_mapped_service(struct rpal_service *rs, int id, int type_bit)
- 
- 	clear_bit(type_bit, &node->type);
- 	if (type_bit == RPAL_REQUEST_MAP) {
-+		clear_bit(id, rs->rpd.dead_key_bitmap);
- 		clear_requested_service_bitmap(rs, id);
- 		atomic_inc(&rs->req_avail_cnt);
- 	}
-@@ -424,15 +428,30 @@ static int release_service(struct rpal_service *cur, struct rpal_service *tgt)
- 	return 0;
+ void flush_tlb_local(void);
+@@ -356,6 +361,11 @@ static inline void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *b
+ 	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
  }
  
-+static void rpal_notify_disable(struct rpal_poll_data *rpd, u64 key, int id)
-+{
-+	unsigned long flags;
-+	bool need_wake = false;
++#ifdef CONFIG_RPAL
++void rpal_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
++	struct mm_struct *mm);
++#endif
 +
-+	spin_lock_irqsave(&rpd->poll_lock, flags);
-+	if (!test_bit(id, rpd->dead_key_bitmap)) {
-+		need_wake = true;
-+		rpd->dead_keys[id] = key;
-+		set_bit(id, rpd->dead_key_bitmap);
+ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+ {
+ 	flush_tlb_mm(mm);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 39f80111e6f1..a0fe17b13887 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -12,6 +12,7 @@
+ #include <linux/task_work.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/mmu_context.h>
++#include <linux/rpal.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/mmu_context.h>
+@@ -1361,6 +1362,169 @@ void flush_tlb_multi(const struct cpumask *cpumask,
+ 	__flush_tlb_multi(cpumask, info);
+ }
+ 
++#ifdef CONFIG_RPAL
++static void rpal_flush_tlb_func_remote(void *info)
++{
++	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
++	struct flush_tlb_info *f = info;
++	struct flush_tlb_info tf = *f;
++	int i;
++
++	/* As it comes from RPAL path, f->mm cannot be NULL */
++	if (f->mm == loaded_mm) {
++		flush_tlb_func(f);
++		return;
 +	}
-+	spin_unlock_irqrestore(&rpd->poll_lock, flags);
-+	if (need_wake)
-+		wake_up_interruptible(&rpd->rpal_waitqueue);
++
++	for (i = 0; i < f->nr_mm; i++) {
++		/* We always have f->mm_list[i] != NULL */
++		if (f->mm_list[i] == loaded_mm) {
++			tf.mm = f->mm_list[i];
++			tf.new_tlb_gen = f->tlb_gen_list[i];
++			flush_tlb_func(&tf);
++			return;
++		}
++	}
 +}
 +
- static void rpal_release_service_all(void)
- {
- 	struct rpal_service *cur = rpal_current_service();
- 	struct rpal_service *tgt;
-+	struct rpal_mapped_service *node;
- 	int ret, i;
- 
- 	rpal_for_each_requested_service(cur, i) {
--		struct rpal_mapped_service *node;
--
- 		if (i == cur->id)
- 			continue;
- 		node = rpal_get_mapped_node(cur, i);
-@@ -449,6 +468,20 @@ static void rpal_release_service_all(void)
- 		}
- 		rpal_put_service(tgt);
- 	}
++static void rpal_flush_tlb_func_multi(const struct cpumask *cpumask,
++			       const struct flush_tlb_info *info)
++{
++	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
++	if (info->end == TLB_FLUSH_ALL)
++		trace_tlb_flush(TLB_REMOTE_SEND_IPI, TLB_FLUSH_ALL);
++	else
++		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
++				(info->end - info->start) >> PAGE_SHIFT);
 +
-+	for (i = 0; i < RPAL_NR_ID; i++) {
++	if (info->freed_tables || mm_in_asid_transition(info->mm))
++		on_each_cpu_mask(cpumask, rpal_flush_tlb_func_remote,
++				 (void *)info, true);
++	else
++		on_each_cpu_cond_mask(should_flush_tlb,
++				      rpal_flush_tlb_func_remote, (void *)info,
++				      1, cpumask);
++}
++
++static void rpal_flush_tlb_func_local(struct mm_struct *mm, int cpu,
++				      struct flush_tlb_info *info,
++				      u64 new_tlb_gen)
++{
++	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
++
++	if (loaded_mm == info->mm) {
++		lockdep_assert_irqs_enabled();
++		local_irq_disable();
++		flush_tlb_func(info);
++		local_irq_enable();
++	} else {
++		int i;
++
++		for (i = 0; i < info->nr_mm; i++) {
++			if (info->mm_list[i] == loaded_mm) {
++				lockdep_assert_irqs_enabled();
++				local_irq_disable();
++				info->mm = info->mm_list[i];
++				info->new_tlb_gen = info->tlb_gen_list[i];
++				flush_tlb_func(info);
++				info->mm = mm;
++				info->new_tlb_gen = new_tlb_gen;
++				local_irq_enable();
++			}
++		}
++	}
++}
++
++static void rpal_flush_tlb_mm_range(struct mm_struct *mm, int cpu,
++			     struct flush_tlb_info *info, u64 new_tlb_gen)
++{
++	struct rpal_service *cur = mm->rpal_rs;
++	cpumask_t merged_mask;
++	struct mm_struct *mm_list[MAX_REQUEST_SERVICE];
++	u64 tlb_gen_list[MAX_REQUEST_SERVICE];
++	int nr_mm = 0;
++	int i;
++
++	cpumask_copy(&merged_mask, mm_cpumask(mm));
++	if (cur) {
++		struct rpal_service *tgt;
++		struct mm_struct *tgt_mm;
++
++		rpal_for_each_requested_service(cur, i) {
++			struct rpal_mapped_service *node;
++
++			if (i == cur->id)
++				continue;
++			node = rpal_get_mapped_node(cur, i);
++			if (!rpal_service_mapped(node))
++				continue;
++
++			tgt = rpal_get_service(node->rs);
++			if (!tgt)
++				continue;
++			tgt_mm = tgt->mm;
++			if (!mmget_not_zero(tgt_mm)) {
++				rpal_put_service(tgt);
++				continue;
++			}
++			mm_list[nr_mm] = tgt_mm;
++			tlb_gen_list[nr_mm] = inc_mm_tlb_gen(tgt_mm);
++
++			nr_mm++;
++			cpumask_or(&merged_mask, &merged_mask,
++				   mm_cpumask(tgt_mm));
++			rpal_put_service(tgt);
++		}
++		info->mm_list = mm_list;
++		info->tlb_gen_list = tlb_gen_list;
++		info->nr_mm = nr_mm;
++	}
++
++	if (cpumask_any_but(&merged_mask, cpu) < nr_cpu_ids)
++		rpal_flush_tlb_func_multi(&merged_mask, info);
++	else
++		rpal_flush_tlb_func_local(mm, cpu, info, new_tlb_gen);
++
++	for (i = 0; i < nr_mm; i++)
++		mmput_async(mm_list[i]);
++}
++
++void rpal_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
++			      struct mm_struct *mm)
++{
++	struct rpal_service *cur = mm->rpal_rs;
++	struct rpal_service *tgt;
++	struct mm_struct *tgt_mm;
++	int i;
++
++	rpal_for_each_requested_service(cur, i) {
++		struct rpal_mapped_service *node;
++
 +		if (i == cur->id)
 +			continue;
 +
 +		node = rpal_get_mapped_node(cur, i);
++		if (!rpal_service_mapped(node))
++			continue;
++
 +		tgt = rpal_get_service(node->rs);
 +		if (!tgt)
 +			continue;
-+
-+		if (test_bit(RPAL_REVERSE_MAP, &node->type))
-+			rpal_notify_disable(&tgt->rpd, cur->key, cur->id);
++		tgt_mm = tgt->mm;
++		if (!mmget_not_zero(tgt_mm)) {
++			rpal_put_service(tgt);
++			continue;
++		}
++		inc_mm_tlb_gen(tgt_mm);
++		cpumask_or(&batch->cpumask, &batch->cpumask,
++			   mm_cpumask(tgt_mm));
++		mmu_notifier_arch_invalidate_secondary_tlbs(tgt_mm, 0, -1UL);
 +		rpal_put_service(tgt);
++		mmput_async(tgt_mm);
 +	}
- }
- 
- int rpal_release_service(u64 key)
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 1fe177523a36..b9622f0235bf 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -107,6 +107,13 @@ struct rpal_mapped_service {
- 	struct rpal_service *rs;
- };
- 
-+struct rpal_poll_data {
-+	spinlock_t poll_lock;
-+	u64 dead_keys[RPAL_NR_ID];
-+	DECLARE_BITMAP(dead_key_bitmap, RPAL_NR_ID);
-+	wait_queue_head_t rpal_waitqueue;
-+};
++}
++#endif
 +
  /*
-  * Each RPAL process (a.k.a RPAL service) should have a pointer to
-  * struct rpal_service in all its tasks' task_struct.
-@@ -161,6 +168,9 @@ struct rpal_service {
- 	struct rpal_mapped_service service_map[RPAL_NR_ID];
- 	DECLARE_BITMAP(requested_service_bitmap, RPAL_NR_ID);
+  * See Documentation/arch/x86/tlb.rst for details.  We choose 33
+  * because it is large enough to cover the vast majority (at
+@@ -1439,6 +1603,11 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
+ 				  new_tlb_gen);
  
-+	/* Notify service is released by others */
-+	struct rpal_poll_data rpd;
++#if IS_ENABLED(CONFIG_RPAL)
++	if (mm->rpal_rs)
++		rpal_flush_tlb_mm_range(mm, cpu, info, new_tlb_gen);
++	else {
++#endif
+ 	/*
+ 	 * flush_tlb_multi() is not optimized for the common case in which only
+ 	 * a local TLB flush is needed. Optimize this use-case by calling
+@@ -1456,6 +1625,9 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 		flush_tlb_func(info);
+ 		local_irq_enable();
+ 	}
++#if IS_ENABLED(CONFIG_RPAL)
++	}
++#endif
+ 
+ 	put_flush_tlb_info();
+ 	put_cpu();
+diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
+index c504b6efff64..cf6d608a994a 100644
+--- a/arch/x86/rpal/internal.h
++++ b/arch/x86/rpal/internal.h
+@@ -12,9 +12,6 @@
+ #include <linux/mm.h>
+ #include <linux/file.h>
+ 
+-#define RPAL_REQUEST_MAP 0x1
+-#define RPAL_REVERSE_MAP 0x2
+-
+ extern bool rpal_inited;
+ 
+ /* service.c */
+diff --git a/include/linux/rpal.h b/include/linux/rpal.h
+index b9622f0235bf..36be1ab6a9f3 100644
+--- a/include/linux/rpal.h
++++ b/include/linux/rpal.h
+@@ -80,6 +80,11 @@
+ /* No more than 15 services can be requested due to limitation of MPK. */
+ #define MAX_REQUEST_SERVICE 15
+ 
++enum {
++	RPAL_REQUEST_MAP,
++	RPAL_REVERSE_MAP,
++};
 +
- 	/* delayed service put work */
- 	struct delayed_work delayed_put_work;
+ extern unsigned long rpal_cap;
  
+ enum rpal_task_flag_bits {
+@@ -326,6 +331,13 @@ rpal_get_mapped_node(struct rpal_service *rs, int id)
+ 	return &rs->service_map[id];
+ }
+ 
++static inline bool rpal_service_mapped(struct rpal_mapped_service *node)
++{
++	unsigned long type = (1 << RPAL_REQUEST_MAP) | (1 << RPAL_REVERSE_MAP);
++
++	return (node->type & type) == type;
++}
++
+ #ifdef CONFIG_RPAL
+ static inline struct rpal_service *rpal_current_service(void)
+ {
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 67bb273dfb80..e68384f97ab9 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -682,6 +682,10 @@ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 		return;
+ 
+ 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, start, end);
++#ifdef CONFIG_RPAL
++	if (mm->rpal_rs)
++		rpal_tlbbatch_add_pending(&tlb_ubc->arch, mm);
++#endif
+ 	tlb_ubc->flush_required = true;
+ 
+ 	/*
 -- 
 2.20.1
 
