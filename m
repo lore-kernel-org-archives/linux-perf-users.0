@@ -1,181 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9544A13A244;
-	Fri, 30 May 2025 22:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30FA2853E2;
+	Fri, 30 May 2025 22:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748644415; cv=none; b=EjC6JpaUo7m+OYZoKZateEDoXLSZhHey+ncGn2Ps48a++apkFyC9Yr71levsHN4Q1fUudDaZgonvno/McpLSW64YJMAKFV3T+3g4ulW2L6NBlTFQ2q3iqqWuXjvXCwYFSXytn9dVVZrDQpS7Jj4swkjUS91PwVHlmsodd68G9v8=
+	t=1748644973; cv=none; b=oTjQ0ztaae4g2zV9RsH2efAk26DJ6f0ClTr3BT2XU4dmHpvN6LuDoJlitPa2d38hf72Yb0nCcsP34at0z0Sc3OjnlUkfp68oQLq7GDU2V7wPqzteCLtZHRJx85NlvRxryP2sPAjFe+ehSVEdYn5EzcCe71mRssQWJFFvFSiUrz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748644415; c=relaxed/simple;
-	bh=XUMRZgKqA8oESFfZgHdYtDuEBnlS6n1nrMPwbTLUUzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jlp7qyCIHigc8WdTzxHN16alzFEIpJCVkxpuxSQYIOfPBiazpODsuu2TjbS/7RR13ihVlY5YTScvkZGMkPE4YCkWXOWg4mDdJThztKmAFgLIPCv2Xgwpt9B4kI3sYIEKWXWlWVklUSHtWN4+GEltUKNZbwYhJOnneYcPbmFwatg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELNc42bR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748644973; c=relaxed/simple;
+	bh=B/iHNMvw8mF0JmcbV/Ww2Zu1GyyER0SInWNMF1ybJBs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pRDITXUwEAi14Z3Ysgz4szrHwX48xGpUGPC3MuHXC1vW3zyr+YrfnmMppt0nA0wV75uIQG31svdeVEisxMk1IUzMonOSvsKpS7X0xk2tkLacc8NzkqPj8dDQpH4dI740xxh8lf7ckrJb3CVFXW7Y91i59MQoEL+CWP67b9dK/o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cUql0G7M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELNc42bR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5306C4CEE9;
-	Fri, 30 May 2025 22:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748644415;
-	bh=XUMRZgKqA8oESFfZgHdYtDuEBnlS6n1nrMPwbTLUUzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ELNc42bR0yhf2cHIcwCx+1nPnSFyUld8O1VgqGoN8ZwdmTNVds8fhNZQVwG9hzbMY
-	 3/O3EZS8XqBMZupwlsMIyoU3IK8ScqrIvkraAha94LYSfJHPEw+VXECNAUvE4ET5fa
-	 /6df6zxDgv1Zz2dXBe35Jg3m3uVGKeWwtpApqQKL41/5439+p+54iTvBbBA5DzRFOw
-	 jzj/SLEp0FyrPCrR+wAIt69M6Dk1kh6zZQW9RwD7Y4ThRD5BdqODdNPG6NfubRWUCN
-	 qkvHuwZ5CX+nDGPaemf8kx9Pew3vHnLvXu/2DdHOyTmgfs98oY2lfNP75JYTrS/165
-	 sI3LKFm918Rkw==
-Date: Fri, 30 May 2025 15:33:33 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's
- -Wunreachable-code
-Message-ID: <aDoyPbQ38vZTCaNn@google.com>
-References: <20250410202647.1899125-1-irogers@google.com>
- <Z_mK9BVv16MT7shL@z2>
- <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
- <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
- <aDdU1npHL2Vczhsa@google.com>
- <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
- <aDdqcfuAuk78eKXD@google.com>
- <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
- <aDeHN4DeYS3i-5jY@google.com>
- <CAP-5=fW0g_bhmHm-uyVRja7dhkw47K-PLAx5iubQEm4X+vTSAQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cUql0G7M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A865BC4CEE9;
+	Fri, 30 May 2025 22:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1748644972;
+	bh=B/iHNMvw8mF0JmcbV/Ww2Zu1GyyER0SInWNMF1ybJBs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cUql0G7MM2YqNN/UBvnnZgBT5VGYfWKe1XBDEBCJVTML/dklTuCOChratyStM1z3r
+	 NJGXoD/xMliKV8+qGZt/n12lWHmh43UX9/OjWVD4xk4/ASqHI1bHx3hR+6ehcrgJ/t
+	 CSb9wxzn0ZeI/U2uCsz/KkL5wFRvOwr+0ymJ1WYM=
+Date: Fri, 30 May 2025 15:42:50 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Bo Li <libo.gcs85@bytedance.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
+ kees@kernel.org, david@redhat.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, peterz@infradead.org, dietmar.eggemann@arm.com,
+ hpa@zytor.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, jannh@google.com,
+ pfalcato@suse.de, riel@surriel.com, harry.yoo@oracle.com,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
+ dengliang.1214@bytedance.com, xieyongji@bytedance.com,
+ chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
+ chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
+Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
+Message-Id: <20250530154250.15caab4e3991de779aabe02c@linux-foundation.org>
+In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW0g_bhmHm-uyVRja7dhkw47K-PLAx5iubQEm4X+vTSAQ@mail.gmail.com>
 
-On Wed, May 28, 2025 at 04:18:16PM -0700, Ian Rogers wrote:
-> On Wed, May 28, 2025 at 2:59 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Wed, May 28, 2025 at 01:32:10PM -0700, Ian Rogers wrote:
-> > > On Wed, May 28, 2025 at 12:56 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
-> > > > > On Wed, May 28, 2025 at 11:24 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > >
-> > > > > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
-> > > > > > > On Fri, Apr 11, 2025 at 3:14 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Apr 11, 2025 at 2:34 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > Hi Ian,
-> > > > > > > > >
-> > > > > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
-> > > > > > > > > > Clang's unreachable code warning is able to catch bugs like the famous
-> > > > > > > > > > "goto fail" which gcc's unreachable code warning fails to warn about
-> > > > > > > > > > (it will complain about misleading indent). The changes here are
-> > > > > > > > > > sufficient to get perf building with clang with -Wunreachable code,
-> > > > > > > > > > but they don't really fix any bugs. Posting as an RFC to see if anyone
-> > > > > > > > > > things this is worth pursuing.
-> > > > > > > > >
-> > > > > > > > > I'm not sure if it's useful and don't see what kind of bugs it can
-> > > > > > > > > address.  The proposed changes don't look like an improvement.
-> > > > > > > >
-> > > > > > > > The goto fail case was in OpenSSL the code from a bad merge:
-> > > > > > > > ```
-> > > > > > > > if (...)
-> > > > > > > >   goto fail;
-> > > > > > > >   goto fail;
-> > > > > > > > ```
-> > > > > > > > Meaning the fail path was always taken and checking on the non-fail
-> > > > > > > > code never executed. Newer GCCs will warn of this because of the
-> > > > > > > > "misleading indent" but  clang won't. It is easy to imagine similar
-> > > > > > > > mistakes creeping in, so using compiler warnings to avoid the bug
-> > > > > > > > could be useful.
-> > > > > >
-> > > > > > It doesn't look very convincing to me but it might be valuable in some
-> > > > > > rare cases.  But the proposed changes - basically replace exit() to
-> > > > > > __builtin_unreachable() - seem weird.  Why is calling it a problem?  I
-> > > > > > guess it already has some kind of annotation like "noreturn"?
-> > > > >
-> > > > > Yep. The exit is incorrect (depending on your notion of correct, I'd
-> > > > > go with clang's notion as they've had to consider this for a while) as
-> > > > > it can never be executed. I've added the __builtin_unreachable() to
-> > > > > document that you can never get to that statement, as otherwise it can
-> > > > > make the code readability harder with the code looking like it will
-> > > > > fall through after calling something like usage_with_options (which is
-> > > > > noreturn). In unoptimized builds __builtin_unreachable() will fail if
-> > > > > executed, so it is a bit more active than just a comment.
-> > > >
-> > > > Oh I see, usage_with_options() calls exit() inside so any code after
-> > > > that won't be executed.  Hmm.. isn't it better to remove those codes
-> > > > then?
-> > >
-> > > Not sure I follow. The patch does remove the code but it replaces it
-> > > with __builtin_unreachable() to basically state that the code here and
-> > > below can never be reached. Do you mean remove the exit from
-> > > usage_with_options? Then we'd need to fix all the callers, which would
-> > > be a larger patch. Perhaps it should be usage_with_options_and_exit()
-> > > to make it clearer that the code doesn't return. I was after doing
-> > > what was minimal for -Wunreachable-code but while trying to keep the
-> > > code clear.
-> >
-> > No, I meant we may not need the __builtin_unreachable() at the callsites.
-> >
-> > Would it complain this code?
-> >
-> >   if (some_bad_option_use)
-> >     usage_with_options(...);
-> >
-> >   /* normal code path */
-> 
-> Right that would fix -Wunreachable, but the existing code would be:
-> 
->   if (some_bad_option_use) {
->     usage_with_options(...);
->     exit(..);
->   }
->   /* normal code path */
-> 
-> Letting you know that "normal code path" couldn't be fallen into after
-> usage_with_options(...). To make the behavior more obvious we could
-> rename usage_with_options():
-> 
->   if (some_bad_option_use)
->     usage_with_options_and_exit(...);
-> 
->   /* normal code path */
-> 
-> What I've done is:
-> 
->   if (some_bad_option_use) {
->     usage_with_options(...);
->     __builtin_unreachable();
->   }
->   /* normal code path */
-> 
-> My reasoning is that usage_with_options() doesn't obviously on the
-> face of it call exit and never return. To make that clear we could add
-> a comment:
-> 
->   if (some_bad_option_use) {
->     usage_with_options(...);
->     /* usage_with_options never returns as it always calls exit */
->   }
->   /* normal code path */
-> 
-> But my preference is to use __builtin_unreachable as that is the same
-> as the comment but is also something the compiler can trap on were it
-> not true.
+On Fri, 30 May 2025 17:27:28 +0800 Bo Li <libo.gcs85@bytedance.com> wrote:
 
-I see, thanks for the explanation.  That part looks ok then.
+> During testing, the client transmitted 1 million 32-byte messages, and we
+> computed the per-message average latency. The results are as follows:
+> 
+> *****************
+> Without RPAL: Message length: 32 bytes, Total TSC cycles: 19616222534,
+>  Message count: 1000000, Average latency: 19616 cycles
+> With RPAL: Message length: 32 bytes, Total TSC cycles: 1703459326,
+>  Message count: 1000000, Average latency: 1703 cycles
+> *****************
+> 
+> These results confirm that RPAL delivers substantial latency improvements
+> over the current epoll implementation—achieving a 17,913-cycle reduction
+> (an ~91.3% improvement) for 32-byte messages.
 
-Thanks,
-Namhyung
+Noted ;)
 
+Quick question:
+
+>  arch/x86/Kbuild                               |    2 +
+>  arch/x86/Kconfig                              |    2 +
+>  arch/x86/entry/entry_64.S                     |  160 ++
+>  arch/x86/events/amd/core.c                    |   14 +
+>  arch/x86/include/asm/pgtable.h                |   25 +
+>  arch/x86/include/asm/pgtable_types.h          |   11 +
+>  arch/x86/include/asm/tlbflush.h               |   10 +
+>  arch/x86/kernel/asm-offsets.c                 |    3 +
+>  arch/x86/kernel/cpu/common.c                  |    8 +-
+>  arch/x86/kernel/fpu/core.c                    |    8 +-
+>  arch/x86/kernel/nmi.c                         |   20 +
+>  arch/x86/kernel/process.c                     |   25 +-
+>  arch/x86/kernel/process_64.c                  |  118 +
+>  arch/x86/mm/fault.c                           |  271 ++
+>  arch/x86/mm/mmap.c                            |   10 +
+>  arch/x86/mm/tlb.c                             |  172 ++
+>  arch/x86/rpal/Kconfig                         |   21 +
+>  arch/x86/rpal/Makefile                        |    6 +
+>  arch/x86/rpal/core.c                          |  477 ++++
+>  arch/x86/rpal/internal.h                      |   69 +
+>  arch/x86/rpal/mm.c                            |  426 +++
+>  arch/x86/rpal/pku.c                           |  196 ++
+>  arch/x86/rpal/proc.c                          |  279 ++
+>  arch/x86/rpal/service.c                       |  776 ++++++
+>  arch/x86/rpal/thread.c                        |  313 +++
+
+The changes are very x86-heavy.  Is that a necessary thing?  Would
+another architecture need to implement a similar amount to enable RPAL?
+IOW, how much of the above could be made arch-neutral?
