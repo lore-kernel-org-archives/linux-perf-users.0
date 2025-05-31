@@ -1,167 +1,142 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAF013212A
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 May 2025 06:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DB2EED7;
+	Sat, 31 May 2025 07:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748673083; cv=none; b=Zv08kgdk6S057cwjPqqQldYIIFyI41OlJLU9ZRxr6sRK860Wjday9j5KgAvdSdAzx5lrfXvLtkqg8/BLcv0A2b7x5nGyn4DRr6peeKct6gBKdhbtpbUl5lyMHAdjGLm6qPJd/ZeunWcA+8RWvF3ZZIgptDMwviXdAexJmoRNt1A=
+	t=1748675810; cv=none; b=tGc7k4bwiFOxJvNqW0bvfEF0t4NW6OUHXh7TlLBYuTDjU50EmPpRDQ7Wgq+c/bunBphYXciyU+6vmo7sXGZHyFuj/wwri8LkKDarjrXd5o761POn0y+fbatKniMAGuyrYtihqkkN7lXvBeFdBQJlySRreErYya55ZGzTwxCKke4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748673083; c=relaxed/simple;
-	bh=CoXc0dCTOqLMCSZiQCdApcQAWyCSGk0wug+xWpDaT0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nAoOij45FvUBT9H/VAD2JTfPfhXVoEF+3dciGIodZ/6c38f2kHmjT8UwZrqsrnmIj4nnF9PWgMN4+fL3XRFRhka2Vb0Vd50lTqDk0n4yau+Pi//7eR9anYyJXod5stxSxp8naKE065yACNoo8xc4pdGmjEBXBHzB/Aaqrhhmydk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bUKubEWP; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748675810; c=relaxed/simple;
+	bh=zYe1+sXdqUMmr98YnXHwFBRq+aXOFiQG6wruVnbdSlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPS/tS4GqpWgRQY2y4u147ScQHBBt6NCg/IXkVpwsE+6VHhM0phBHKWNuwDFuAgyd/1nbkzaNGeIS3t0iLV82EuQXv3jv7hDV5XvcYXuIvhc0JSPOm8NGX0BGUJtXSrJlNl7hOT1OPDTHhsb77vryTQaQpSrhk7WpPLVRNoyPj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqnCQjCi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bUKubEWP"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-31062172698so27970021fa.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 23:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748673079; x=1749277879; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wWFXw3UdeTmdyAQraXFf2yqqkKSC8Rgoldk84MrVeHA=;
-        b=bUKubEWPFBycap9GfZ9dW2SJIFpcEbAYCWQbDmN9mRK0SNG2mT2DZJP+a9ZPsBe/yX
-         POJkfEdI0H5WKPJRh6aanNGWAzihWaFbM2eK4cuggMH2DH/sqHl88Y8gJsqEsv9IdSCP
-         leTnxz45/eaVhL6Y7jC2dLsDUX4yhc51EufN5oPPLOoxgtSXpTXAK8V33gRLOl1uK+rs
-         4r+5kOiU+WsrTugKJ9MlVWDyEpRns9oVKqf0N/eLZH82iiXOxuaKmlhuxpT8K2VT1ba9
-         SBkF92rNQ4pGEf8rig8ZgPQ65W8tYddQUQ85w6DhpUBOfK0Zc+B7S7eMrU/+n202t9la
-         +h4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748673079; x=1749277879;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wWFXw3UdeTmdyAQraXFf2yqqkKSC8Rgoldk84MrVeHA=;
-        b=wl0TpNnN5Crh2oMG+kcUSuE+UrzV3Z0ZgrRJz3ZB+/VgipBc0e7amgeCVa7B9LScuy
-         006kPEocSEOhKrGLCFjVNHYdkTPbeXGX6nps0VsjCvqE4VgwhdeZ7nrMx/IeBPNzIYTW
-         bFkBjXcrHnXmO3oOBzJiW9gcpTBLNanXzgTo9OVxFGG3qyhGNcQdYawG92mjqtNb0R3i
-         qzhba4PMQLsoCWdLR18kl1Co+LztAXP8pqZO0Y2oTO9kgty0v+0roeNKZeWMyiMn22j1
-         g5sW3nS1NIVdbrWU2Q0UaN9fLJGSzKH+QsVkRnq5k6cZOSj/WBHja/c0XizNlPItkgM2
-         GIjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUr6M0oYPdg8bfnwAnjvEDg6vlkudIuOXTFjcjEOYLWvYo5cz1IzYQ6EYthF1oTXg+GwFFtDwhahqbsibYt3sBT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM7q+M3+iqpGiM5i5Lcnaa6ZlUZQ5GDfMiJ40V1s6hW6unJknW
-	Vss8ArrxkfE1C31c4vQRn8EUoD/XiudnAmlN0HJ/WbhesRsMrTvakS2+sPv02OEzi6cZO3ejd2v
-	Cr0/l7OOGS0qt3Xt3AogoaxLvlsqND2OxUPFZbr1B
-X-Gm-Gg: ASbGncsUR1cEDnvAhz8ik23CEaYlwWPPKKxas3lGNW7FBfBJdN7xRyhZU55RMeXfU7c
-	sQmx4FPPmyuZMuARfPDDtRk7+OcSMQBow+HGB3Xiqzm0Tb1NVMA6LCw7qhEQX5v/Zf+nSx0PAdd
-	f6p0NYN591HAbw0EqWZTEKod4F4KrYaL86/ykzW7UBLM9jCTm74vztq61Z2nk1G/Ms4VitsMqqr
-	Yjd
-X-Google-Smtp-Source: AGHT+IHdLWbK7BMIbV54SHtKp6nI8Lx6kIibmwBh1RypY+YX9tUCTbr5mxcKqccGQisd29DGMy40FlXzf8vMWGvDJ7M=
-X-Received: by 2002:a05:651c:1470:b0:32a:88b8:9bb with SMTP id
- 38308e7fff4ca-32a9e9ce1c1mr2742301fa.11.1748673079299; Fri, 30 May 2025
- 23:31:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqnCQjCi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95955C4CEE3;
+	Sat, 31 May 2025 07:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748675809;
+	bh=zYe1+sXdqUMmr98YnXHwFBRq+aXOFiQG6wruVnbdSlU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bqnCQjCiCD2PbdPMeu84qfvj3Nx7yg7/rzrJ2htLvMM+rP8AmTcuFww7uFsPlBgb6
+	 5BxKRXheiIHLHM8HR27gVsdgqIhowEPm2lDDSt8sGqBtixIkypSI/iLBIu89/MuvXV
+	 Mkyc0eQhfUkyLpRFEWir3/XVPEGCuDKPWaC1/5kJIW7HIE3YyRWt6FWIlFT595E/DZ
+	 Od8df52QJx0jo/LUPW2H1bJELKIDCwk+WRLadZBn/p16U8yvyjsGvuQJH3ePnn6MAG
+	 5WZzuVvFtAjIgkW59InOd959UEMCxUuSC5FH/5MRtYIt9cyWd0L8SyxKHtlPekWcr+
+	 eFtvjLAdNQXAg==
+Date: Sat, 31 May 2025 09:16:35 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Bo Li <libo.gcs85@bytedance.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
+	kees@kernel.org, akpm@linux-foundation.org, david@redhat.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	peterz@infradead.org, dietmar.eggemann@arm.com, hpa@zytor.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, rostedt@goodmis.org,
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+	jannh@google.com, pfalcato@suse.de, riel@surriel.com,
+	harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, duanxiongchun@bytedance.com,
+	yinhongbo@bytedance.com, dengliang.1214@bytedance.com,
+	xieyongji@bytedance.com, chaiwen.cc@bytedance.com,
+	songmuchun@bytedance.com, yuanzhu@bytedance.com,
+	chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
+Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
+Message-ID: <aDqs0_c_vq96EWW6@gmail.com>
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
- <aCdo6Vz2MVv3N0kk@google.com> <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
- <aCveO4qQGy03ow5p@google.com> <CACT4Y+YdnQebkGTQJ9yhLs2j12WBYk2ReiBAq5cE+wtu1RRU5A@mail.gmail.com>
- <aC0HH45JCBTchZMc@google.com> <CACT4Y+apAJ_m9W=P2hsGvWrGZnTzxB+9qgJg=ujjU8OWCVcUoQ@mail.gmail.com>
- <CACT4Y+Z3Bbn3KcwhjOYAmzHWqRSZ4ywCrw8FNNxj5MrDUzFtVg@mail.gmail.com>
- <aDdYEH3lIYHAB-lk@google.com> <CACT4Y+Y=1aXG_25ONnfD4TxMbsrnW3uFOOL9yrcP+LYeh4pHpg@mail.gmail.com>
- <aDormwKnOYm_-Jgs@google.com>
-In-Reply-To: <aDormwKnOYm_-Jgs@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Sat, 31 May 2025 08:31:07 +0200
-X-Gm-Features: AX0GCFviC7XJS3BaHNpqUb4Z5Ty9Rd3yiY1UkSqSOuXvQPCVo1G2J50a8_DnJ94
-Message-ID: <CACT4Y+Z4Yr_jNV56NvdiJeUzMDmubFL5BtkACDXWaTGxZC2deg@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 
-On Sat, 31 May 2025 at 00:05, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Fri, May 30, 2025 at 07:50:45AM +0200, Dmitry Vyukov wrote:
-> > On Wed, 28 May 2025 at 20:38, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Tue, May 27, 2025 at 09:14:34AM +0200, Dmitry Vyukov wrote:
-> > > > On Wed, 21 May 2025 at 09:30, Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > > >
-> > > > > > Maybe we can use this
-> > > > > > only for the frequency mode which means user didn't use -c option or
-> > > > > > similar in the event description.
-> > > >
-> > > >
-> > > > All-in-all I think the best option for now is using CPU IDs to track
-> > > > parallelism as you suggested, but be more precise with idle detection.
-> > > > 2 passes over the trace may be fine to detect idle points. I see the
-> > > > most time now spent in hist_entry__cmp, which accesses other entries
-> > > > and is like a part of O(N*logN) processing, so a simple O(N) pass
-> > > > shouldn't slow it down much.
-> > > > That's what I would try. But I would also try to assess the precision
-> > > > of this approach by comparing with results of using explicit switch
-> > > > events.
-> > >
-> > > It's not clear to me how you want to maintain the idle info in the 2
-> > > pass approach.  Please feel free to propose something based on this
-> > > work.
-> >
-> >
-> > What part of it is unclear?
-> >
-> > Basically, in the first pass we only mark events as sched_out/in.
-> > When we don't see samples on a CPU for 2*period, we mark the previous
-> > sample on the CPU as sched_out:
-> >
-> >   // Assuming the period is stable across time and CPUs.
-> >   for_each_cpu(cpu) {
-> >       if (current[cpu]->last_timestamp + 2*period < sample->timestamp) {
-> >           if (current[cpu]->thread != idle)
-> >               current[cpu]->last_sample->sched_out = true;
-> >       }
-> >   }
-> >
-> >   leader = machine__findnew_thread(machine, sample->pid);
-> >   if (current[sample->cpu]->thread != leader) {
-> >     current[sample->cpu]->last_sample->sched_out = true;
-> >     sample->sched_in = true;
-> >   }
-> >   current[sample->cpu]->thread = leader;
-> >   current[sample->cpu]->last_sample = sample;
-> >   current[sample->cpu]->last_timestamp = sample->timestamp;
->
-> Oh, you wanted to save the info in the sample.  But I'm afraid it won't
-> work since it's stack allocated for one-time use in the
-> perf_session__deliver_event().
 
-No, I just showed the algorithm. I don't know perf well enough to say
-how to implement it.
+* Bo Li <libo.gcs85@bytedance.com> wrote:
 
-> > On the second pass we use the precomputed sched_in/out to calculate parallelism:
-> >
-> >   leader = machine__findnew_thread(machine, sample->pid);
-> >   if (sample->sched_in)
-> >     leader->parallelism++;
-> >   sample->parallelism = leader->parallelism;
-> >   if (sample->sched_out)
-> >     leader->parallelism--;
-> >
-> > This is more precise b/c we don't consider a thread running for
-> > 2*period after it stopped running.
->
-> IIUC it can make some samples have less parallelism right before
-> they go to idle.
->
-> > A more precise approach would probably be to consider the thread
-> > running for 0.5*period after the last sample (and similarly for
-> > 0.5*period before the first sample), but it would require injecting
-> > sched_in/out events into the trace at these points.
->
-> Yep, that will fix the issue.  But then how to inject the events is the
-> problem.
+> # Performance
+> 
+> To quantify the performance improvements driven by RPAL, we measured 
+> latency both before and after its deployment. Experiments were 
+> conducted on a server equipped with two Intel(R) Xeon(R) Platinum 
+> 8336C CPUs (2.30 GHz) and 1 TB of memory. Latency was defined as the 
+> duration from when the client thread initiates a message to when the 
+> server thread is invoked and receives it.
+> 
+> During testing, the client transmitted 1 million 32-byte messages, and we
+> computed the per-message average latency. The results are as follows:
+> 
+> *****************
+> Without RPAL: Message length: 32 bytes, Total TSC cycles: 19616222534,
+>  Message count: 1000000, Average latency: 19616 cycles
+> With RPAL: Message length: 32 bytes, Total TSC cycles: 1703459326,
+>  Message count: 1000000, Average latency: 1703 cycles
+> *****************
+> 
+> These results confirm that RPAL delivers substantial latency 
+> improvements over the current epoll implementation—achieving a 
+> 17,913-cycle reduction (an ~91.3% improvement) for 32-byte messages.
 
-Yes, but incorrect data is incomparably worse problem than writing a
-bit of code.
+No, these results do not necessarily confirm that.
+
+19,616 cycles per message on a vanilla kernel on a 2.3 GHz CPU suggests 
+a messaging performance of 117k messages/second or 8.5 usecs/message, 
+which is *way* beyond typical kernel interprocess communication 
+latencies on comparable CPUs:
+
+  root@localhost:~# taskset 1 perf bench sched pipe
+  # Running 'sched/pipe' benchmark:
+  # Executed 1000000 pipe operations between two processes
+
+       Total time: 2.790 [sec]
+
+       2.790614 usecs/op
+         358344 ops/sec
+
+And my 2.8 usecs result was from a kernel running inside a KVM sandbox 
+...
+
+( I used 'taskset' to bind the benchmark to a single CPU, to remove any 
+  inter-CPU migration noise from the measurement. )
+
+The scheduler parts of your series simply try to remove much of 
+scheduler and context switching functionality to create a special 
+fast-path with no FPU context switching and TLB flushing AFAICS, for 
+the purposes of message latency benchmarking in essence, and you then 
+compare it against the full scheduling and MM context switching costs 
+of full-blown Linux processes.
+
+I'm not convinced, at all, that this many changes are required to speed 
+up the usecase you are trying to optimize:
+
+  >  61 files changed, 9710 insertions(+), 4 deletions(-)
+
+Nor am I convinced that 9,700 lines of *new* code of a parallel 
+facility are needed, crudely wrapped in 1970s technology (#ifdefs), 
+instead of optimizing/improving facilities we already have...
+
+So NAK for the scheduler bits, until proven otherwise (and presented in 
+a clean fashion, which the current series is very far from).
+
+I'll be the first one to acknowledge that our process and MM context 
+switching overhead is too high and could be improved, and I have no 
+objections against the general goal of improving Linux inter-process 
+messaging performance either, I only NAK this particular 
+implementation/approach.
+
+Thanks,
+
+	Ingo
