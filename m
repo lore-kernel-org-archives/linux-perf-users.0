@@ -1,189 +1,167 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EBA610D;
-	Sat, 31 May 2025 00:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAF013212A
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 May 2025 06:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748649651; cv=none; b=TUp/5A6lTdfGaK4ERIWLEcH/DDCibRXnYg16hLxllOxAMYQZ7XRvLxidTalfbuGefQtkr2aszfnu9bUY+CCMnVEVE6QUeMKlbUDxJdB4zfy57HTT4LxcWmrOK06ZBbx1e++FhBfQlxxbxOBlI+9OOSb+xtvPneDKfwYrwZJtq04=
+	t=1748673083; cv=none; b=Zv08kgdk6S057cwjPqqQldYIIFyI41OlJLU9ZRxr6sRK860Wjday9j5KgAvdSdAzx5lrfXvLtkqg8/BLcv0A2b7x5nGyn4DRr6peeKct6gBKdhbtpbUl5lyMHAdjGLm6qPJd/ZeunWcA+8RWvF3ZZIgptDMwviXdAexJmoRNt1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748649651; c=relaxed/simple;
-	bh=cIU4rJEV3PzYfeAvMqrDFhPSSw49dpItRym8Lmw7BVE=;
+	s=arc-20240116; t=1748673083; c=relaxed/simple;
+	bh=CoXc0dCTOqLMCSZiQCdApcQAWyCSGk0wug+xWpDaT0k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YESixz7PaL/a9/5h1hR1eG0PR0jXdUVy537Nve8c+41Z+BfWH11VPe+UI4yWzdjVYRSJNwhReOU2Ra5L20wyIOFAmAiACwB91E/U9KE0Ny3swOYPFk68cxuXiCGuFZ57ZTKRjRKylSKoUkVHClu4E7asMtHDuG06kZIIka/rpVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MB+139uo; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=nAoOij45FvUBT9H/VAD2JTfPfhXVoEF+3dciGIodZ/6c38f2kHmjT8UwZrqsrnmIj4nnF9PWgMN4+fL3XRFRhka2Vb0Vd50lTqDk0n4yau+Pi//7eR9anYyJXod5stxSxp8naKE065yACNoo8xc4pdGmjEBXBHzB/Aaqrhhmydk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bUKubEWP; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MB+139uo"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e5e6ab7b8so24452957b3.1;
-        Fri, 30 May 2025 17:00:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bUKubEWP"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-31062172698so27970021fa.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 May 2025 23:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748649649; x=1749254449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VPJb86Hq4WNDSKvt4LG+mezjyW3VTAGngdOKgYawd4E=;
-        b=MB+139uo8ofSIMpwsNQhWaOLeMmTN8c9ItalTKNzKhcKsu813pAVIcQ2mEEgR2o1z9
-         k8CgOL95kcjOPhAyBH45t/qf9OEZJglTS3Rey6B8W7V/WHw1j1uu+xYBD/qSI4pD7rHj
-         e4s2RKfcYv6JFCSKdQnNqH8RxEvPPgsUMpNPSF47JPZKwO6YOk/qg+vtN8DXe1V10HUv
-         9jfYWoJFRGXI3dRlPs8Mzp3WNAxQfErkFP5dZeHxnO6WeXHEBLMzESqGUG9my/LQKxj/
-         RmZxTZysyci23Lq5hhi1UOhXNw9Rcc9esQPJkxyFjQHqYaFocECp+55cRIR6sbbjutmT
-         FYpQ==
+        d=google.com; s=20230601; t=1748673079; x=1749277879; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWFXw3UdeTmdyAQraXFf2yqqkKSC8Rgoldk84MrVeHA=;
+        b=bUKubEWPFBycap9GfZ9dW2SJIFpcEbAYCWQbDmN9mRK0SNG2mT2DZJP+a9ZPsBe/yX
+         POJkfEdI0H5WKPJRh6aanNGWAzihWaFbM2eK4cuggMH2DH/sqHl88Y8gJsqEsv9IdSCP
+         leTnxz45/eaVhL6Y7jC2dLsDUX4yhc51EufN5oPPLOoxgtSXpTXAK8V33gRLOl1uK+rs
+         4r+5kOiU+WsrTugKJ9MlVWDyEpRns9oVKqf0N/eLZH82iiXOxuaKmlhuxpT8K2VT1ba9
+         SBkF92rNQ4pGEf8rig8ZgPQ65W8tYddQUQ85w6DhpUBOfK0Zc+B7S7eMrU/+n202t9la
+         +h4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748649649; x=1749254449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VPJb86Hq4WNDSKvt4LG+mezjyW3VTAGngdOKgYawd4E=;
-        b=tPLnBnKC57Lb1t5M5pUCjLi+XHwNq/mMnzIf/fkeSSsGDGsN18ZZQ+ZqqCa1PW2nI3
-         NWJJeW24OE2EUzlG10rk7rQXwSe2Nt6c8uDxKfGw0lSGkb7N4BqJbOQVI8XG9xf4LD1P
-         c0OXLBLJb7ySO7em4JAyVjDcw2bZdG6wHST1DT3wC6l7cTy5/dfu+sb5MvyvIUXdFAyW
-         0KSBXrUyzmHLB6pKC61olyqbHhGZ+lh6g6mrhDhEbBlInIw3sdg4ZI8Jrzhw2Y7gFWsc
-         S8eg4gYG9SpD04lpvSX1MlwjEc4XYEJtHMg+iCnRKI2Svg/bN+di797o2VQE4xn+iRYp
-         +TOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSBhW9Jfh+S0QsrIs6g9ANAF2LarjPOsj39XdBMKYOiBEsf5gEBr+NvNczq5Fsu7OPi5Y0Yaa+fVZVJA+XL9ePTw==@vger.kernel.org, AJvYcCXG2v+SLpmmCZdnmhMlEgB9oaXimk9d98X2JlHuVA5XOiTx0geL9Jy91+dpRsD+FFYWfI0rdrnCGOtKbmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/oQVOp7vpD9BsJ888/0yQt4ab+Rf51ZmTQBqNnIdmK9wqnMJq
-	AVwTTXXzB3KysN1bJABAhX4X28V23RNoolhaGfbNxyDybgW0in24wvr1evsxfQoH/Xy7zXU4ibn
-	04tfGTrPsv76Vtt7F67Yq3ik9fV85yfg=
-X-Gm-Gg: ASbGncvE2g17VJdY15Hgxy3Y1cqWDtki0aygsEhZnynVfMDzh5X8PEeRxA1BRiDBpNJ
-	y6ugCegSk10sZObBf1TLQDi70HHAFbAk1S8z97QrNjNUtr3GVkaTsPyJiLCzvPsYSXubMeF91YU
-	0oU8e4c5cZCciY23jRxEoi9nqDrn2iFOW/1CdZdEEJsQ==
-X-Google-Smtp-Source: AGHT+IEPyuLhSLHkXG6WJzCAeyG/vrZUuV9j9e4k4Y81H5Z0PDz8DOepANj0Ak33uPiNDbMk60z4rZx65swrJndifNU=
-X-Received: by 2002:a05:690c:c0b:b0:70e:2a04:c768 with SMTP id
- 00721157ae682-70f97e9b96cmr78339537b3.14.1748649648856; Fri, 30 May 2025
- 17:00:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748673079; x=1749277879;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wWFXw3UdeTmdyAQraXFf2yqqkKSC8Rgoldk84MrVeHA=;
+        b=wl0TpNnN5Crh2oMG+kcUSuE+UrzV3Z0ZgrRJz3ZB+/VgipBc0e7amgeCVa7B9LScuy
+         006kPEocSEOhKrGLCFjVNHYdkTPbeXGX6nps0VsjCvqE4VgwhdeZ7nrMx/IeBPNzIYTW
+         bFkBjXcrHnXmO3oOBzJiW9gcpTBLNanXzgTo9OVxFGG3qyhGNcQdYawG92mjqtNb0R3i
+         qzhba4PMQLsoCWdLR18kl1Co+LztAXP8pqZO0Y2oTO9kgty0v+0roeNKZeWMyiMn22j1
+         g5sW3nS1NIVdbrWU2Q0UaN9fLJGSzKH+QsVkRnq5k6cZOSj/WBHja/c0XizNlPItkgM2
+         GIjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUr6M0oYPdg8bfnwAnjvEDg6vlkudIuOXTFjcjEOYLWvYo5cz1IzYQ6EYthF1oTXg+GwFFtDwhahqbsibYt3sBT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM7q+M3+iqpGiM5i5Lcnaa6ZlUZQ5GDfMiJ40V1s6hW6unJknW
+	Vss8ArrxkfE1C31c4vQRn8EUoD/XiudnAmlN0HJ/WbhesRsMrTvakS2+sPv02OEzi6cZO3ejd2v
+	Cr0/l7OOGS0qt3Xt3AogoaxLvlsqND2OxUPFZbr1B
+X-Gm-Gg: ASbGncsUR1cEDnvAhz8ik23CEaYlwWPPKKxas3lGNW7FBfBJdN7xRyhZU55RMeXfU7c
+	sQmx4FPPmyuZMuARfPDDtRk7+OcSMQBow+HGB3Xiqzm0Tb1NVMA6LCw7qhEQX5v/Zf+nSx0PAdd
+	f6p0NYN591HAbw0EqWZTEKod4F4KrYaL86/ykzW7UBLM9jCTm74vztq61Z2nk1G/Ms4VitsMqqr
+	Yjd
+X-Google-Smtp-Source: AGHT+IHdLWbK7BMIbV54SHtKp6nI8Lx6kIibmwBh1RypY+YX9tUCTbr5mxcKqccGQisd29DGMy40FlXzf8vMWGvDJ7M=
+X-Received: by 2002:a05:651c:1470:b0:32a:88b8:9bb with SMTP id
+ 38308e7fff4ca-32a9e9ce1c1mr2742301fa.11.1748673079299; Fri, 30 May 2025
+ 23:31:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529065537.529937-1-howardchu95@gmail.com> <aDpBTLoeOJ3NAw_-@google.com>
-In-Reply-To: <aDpBTLoeOJ3NAw_-@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 30 May 2025 17:00:38 -0700
-X-Gm-Features: AX0GCFsCmdUxSSdrpaZTMmTf7Dx-dvC86JWXGqYw0M3vC6ZjScciY6SKcijK2Lc
-Message-ID: <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
- trace instances
+References: <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+ <aCdo6Vz2MVv3N0kk@google.com> <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
+ <aCveO4qQGy03ow5p@google.com> <CACT4Y+YdnQebkGTQJ9yhLs2j12WBYk2ReiBAq5cE+wtu1RRU5A@mail.gmail.com>
+ <aC0HH45JCBTchZMc@google.com> <CACT4Y+apAJ_m9W=P2hsGvWrGZnTzxB+9qgJg=ujjU8OWCVcUoQ@mail.gmail.com>
+ <CACT4Y+Z3Bbn3KcwhjOYAmzHWqRSZ4ywCrw8FNNxj5MrDUzFtVg@mail.gmail.com>
+ <aDdYEH3lIYHAB-lk@google.com> <CACT4Y+Y=1aXG_25ONnfD4TxMbsrnW3uFOOL9yrcP+LYeh4pHpg@mail.gmail.com>
+ <aDormwKnOYm_-Jgs@google.com>
+In-Reply-To: <aDormwKnOYm_-Jgs@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Sat, 31 May 2025 08:31:07 +0200
+X-Gm-Features: AX0GCFviC7XJS3BaHNpqUb4Z5Ty9Rd3yiY1UkSqSOuXvQPCVo1G2J50a8_DnJ94
+Message-ID: <CACT4Y+Z4Yr_jNV56NvdiJeUzMDmubFL5BtkACDXWaTGxZC2deg@mail.gmail.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, acme@kernel.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Song Liu <song@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
-
-On Fri, May 30, 2025 at 4:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Sat, 31 May 2025 at 00:05, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> Hello,
+> On Fri, May 30, 2025 at 07:50:45AM +0200, Dmitry Vyukov wrote:
+> > On Wed, 28 May 2025 at 20:38, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Tue, May 27, 2025 at 09:14:34AM +0200, Dmitry Vyukov wrote:
+> > > > On Wed, 21 May 2025 at 09:30, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > >
+> > > > > > Maybe we can use this
+> > > > > > only for the frequency mode which means user didn't use -c option or
+> > > > > > similar in the event description.
+> > > >
+> > > >
+> > > > All-in-all I think the best option for now is using CPU IDs to track
+> > > > parallelism as you suggested, but be more precise with idle detection.
+> > > > 2 passes over the trace may be fine to detect idle points. I see the
+> > > > most time now spent in hist_entry__cmp, which accesses other entries
+> > > > and is like a part of O(N*logN) processing, so a simple O(N) pass
+> > > > shouldn't slow it down much.
+> > > > That's what I would try. But I would also try to assess the precision
+> > > > of this approach by comparing with results of using explicit switch
+> > > > events.
+> > >
+> > > It's not clear to me how you want to maintain the idle info in the 2
+> > > pass approach.  Please feel free to propose something based on this
+> > > work.
+> >
+> >
+> > What part of it is unclear?
+> >
+> > Basically, in the first pass we only mark events as sched_out/in.
+> > When we don't see samples on a CPU for 2*period, we mark the previous
+> > sample on the CPU as sched_out:
+> >
+> >   // Assuming the period is stable across time and CPUs.
+> >   for_each_cpu(cpu) {
+> >       if (current[cpu]->last_timestamp + 2*period < sample->timestamp) {
+> >           if (current[cpu]->thread != idle)
+> >               current[cpu]->last_sample->sched_out = true;
+> >       }
+> >   }
+> >
+> >   leader = machine__findnew_thread(machine, sample->pid);
+> >   if (current[sample->cpu]->thread != leader) {
+> >     current[sample->cpu]->last_sample->sched_out = true;
+> >     sample->sched_in = true;
+> >   }
+> >   current[sample->cpu]->thread = leader;
+> >   current[sample->cpu]->last_sample = sample;
+> >   current[sample->cpu]->last_timestamp = sample->timestamp;
 >
-> (Adding tracing folks)
+> Oh, you wanted to save the info in the sample.  But I'm afraid it won't
+> work since it's stack allocated for one-time use in the
+> perf_session__deliver_event().
 
-(That's so convenient wow)
+No, I just showed the algorithm. I don't know perf well enough to say
+how to implement it.
 
+> > On the second pass we use the precomputed sched_in/out to calculate parallelism:
+> >
+> >   leader = machine__findnew_thread(machine, sample->pid);
+> >   if (sample->sched_in)
+> >     leader->parallelism++;
+> >   sample->parallelism = leader->parallelism;
+> >   if (sample->sched_out)
+> >     leader->parallelism--;
+> >
+> > This is more precise b/c we don't consider a thread running for
+> > 2*period after it stopped running.
 >
-> On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:
-> > perf trace utilizes the tracepoint utility, the only filter in perf
-> > trace is a filter on syscall type. For example, if perf traces only
-> > openat, then it filters all the other syscalls, such as readlinkat,
-> > readv, etc.
-> >
-> > This filtering is flawed. Consider this case: two perf trace
-> > instances are running at the same time, trace instance A tracing
-> > readlinkat, trace instance B tracing openat. When an openat syscall
-> > enters, it triggers both BPF programs (sys_enter) in both perf trace
-> > instances, these kernel functions will be executed:
-> >
-> > perf_syscall_enter
-> >   perf_call_bpf_enter
-> >     trace_call_bpf
-> >       bpf_prog_run_array
-> >
-> > In bpf_prog_run_array:
-> > ~~~
-> > while ((prog =3D READ_ONCE(item->prog))) {
-> >       run_ctx.bpf_cookie =3D item->bpf_cookie;
-> >       ret &=3D run_prog(prog, ctx);
-> >       item++;
-> > }
-> > ~~~
-> >
-> > I'm not a BPF expert, but by tinkering I found that if one of the BPF
-> > programs returns 0, there will be no tracepoint sample. That is,
-> >
-> > (Is there a sample?) =3D ProgRetA & ProgRetB & ProgRetC
-> >
-> > Where ProgRetA is the return value of one of the BPF programs in the BP=
-F
-> > program array.
-> >
-> > Go back to the case, when two perf trace instances are tracing two
-> > different syscalls, again, A is tracing readlinkat, B is tracing openat=
-,
-> > when an openat syscall enters, it triggers the sys_enter program in
-> > instance A, call it ProgA, and the sys_enter program in instance B,
-> > ProgB, now ProgA will return 0 because ProgA cares about readlinkat onl=
-y,
-> > even though ProgB returns 1; (Is there a sample?) =3D ProgRetA (0) &
-> > ProgRetB (1) =3D 0. So there won't be a tracepoint sample in B's output=
-,
-> > when there really should be one.
+> IIUC it can make some samples have less parallelism right before
+> they go to idle.
 >
-> Sounds like a bug.  I think it should run bpf programs attached to the
-> current perf_event only.  Isn't it the case for tracepoint + perf + bpf?
-
-I really can't answer that question.
-
+> > A more precise approach would probably be to consider the thread
+> > running for 0.5*period after the last sample (and similarly for
+> > 0.5*period before the first sample), but it would require injecting
+> > sched_in/out events into the trace at these points.
 >
-> >
-> > I also want to point out that openat and readlinkat have augmented
-> > output, so my example might not be accurate, but it does explain the
-> > current perf-trace-in-parallel dilemma.
-> >
-> > Now for augmented output, it is different. When it calls
-> > bpf_perf_event_output, there is a sample. There won't be no ProgRetA &
-> > ProgRetB... thing. So I will send another RFC patch to enable
-> > parallelism using this feature. Also, augmented_output creates a sample
-> > on it's own, so returning 1 will create a duplicated sample, when
-> > augmented, just return 0 instead.
->
-> Yes, it's bpf-output and tracepoint respectively.  Maybe we should
-> always return 1 not to drop syscalls unintentionally and perf can
-> discard duplicated samples.
+> Yep, that will fix the issue.  But then how to inject the events is the
+> problem.
 
-I like this.
-
->
-> Another approach would be return 0 always and use bpf-output for
-> unaugmented syscalls too.  But I'm afraid it'd affect other perf tools
-> using tracepoints.
-
-Yep.
-
->
-> >
-> > Is this approach perfect? Absolutely not, there will likely be some
-> > performance overhead on the kernel side. It is just a quick dirty fix
-> > that makes perf trace run in parallel without failing. This patch is an
-> > explanation on the reason of failures and possibly, a link used in a
-> > nack comment.
->
-> Thanks for your work, but I'm afraid it'd still miss some syscalls as it
-> returns 0 sometimes.
-
-My bad... For example this:
-
-if (pid_filter__has(&pids_filtered, getpid()))
-   return 0;
-
-This patch is practically meaningless, but it passes the parallel tests.
-
-Thanks,
-Howard
+Yes, but incorrect data is incomparably worse problem than writing a
+bit of code.
