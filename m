@@ -1,48 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B261A9B39;
-	Sun,  1 Jun 2025 06:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFD929D0E;
+	Sun,  1 Jun 2025 17:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748760786; cv=none; b=MhegZqd83Waz5euuhVx02ft3sOFTY+eVV1aghQQoquiJe+zbvDlrBlnKlIH+2ObBD3xKyHWw04a0N7DyOo/m3x+j0v8cXXUGHNtvfzSvTcG/DpAhjDkgPR/NwWm7+KkWfxVGmdQGKy4/JmOBnd7L67cGsQjFhLlnYOjvZfPKg5E=
+	t=1748798839; cv=none; b=FgpdceX/9gsymX3XtQdmNQ8hhSTCwLWVxOTGHJ40KmrBkGxxcGIgb0BiZ7Ii032qC6KNU6wG/FYhoXKYmZcyaHIxguqjp/k1bJrDCmZRkPivDGBwPp+3BtRrykm9lFDzHvu4QgqlwR/CtdDL0XIp6EtnjaVthqnSGVKUTdy3S6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748760786; c=relaxed/simple;
-	bh=w8+QfNx+uCIISmTP+rtDGxlrj31TjIv8kOjYOA/n79A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hQp0LRq4b4IJXVfVf0d47Uv9HVZZgRXWRQ7fXl6Qt5xaI98A1Mrz+MR9ccRVsuPJHXvEm/hpjqlI/ndIuZ9p5tRAEcksBZ/Y4OYbZbij0tVPQj3gJm6+5d33YJWcUIkfQXIvpzmn01UA+XiZbsHTSbTHWGL6iw2qgvPNeXOOeoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmE4GxBC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748798839; c=relaxed/simple;
+	bh=0JIw9pnhtVwSmprjc3gPKxQnCvRU3b0Jw7lMThUT+j4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l01VM6lkrXrGZCUXnWsytele2JiupYVQJZCmRfNC//onXVzViUB5O5rvi3J69RDePbQoUck9ZIJn1EhmpD0CkgTOWBu63q/2xa7to/Tjo7vfokq+BYRA1WH/SBInvUq+siwE4S81hyrxvUZv4sFnOD3kelQvWiaOr7mk0NzR5bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFEpT9b7; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmE4GxBC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA35C4CEFA;
-	Sun,  1 Jun 2025 06:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748760786;
-	bh=w8+QfNx+uCIISmTP+rtDGxlrj31TjIv8kOjYOA/n79A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mmE4GxBCIffR64tod0PgumkxK1z3gc+5FWXaPhpx5lDBPh8y6ovzltIhz+0LB3bkz
-	 tVn4A/P6uO2Y6fH04Lm+K+MgjK9B82rZshP6NKbZpsr0WqEy3HS2DDnZFZwAk7T3ib
-	 5xSXPLAl90XpVpeQ81GhLm39cz3f50yg58rlQDTrJxYbu7ecK7c0y6lakCKA7CLw0A
-	 lnBY+Qxxw+h3u9p7NiJyQ4pVoueZm67rrdlf/QJwU0GuC9b3yU0nhXhKhqdfYM89Xz
-	 zE54Vgsh+sd88HnszXVWOMZl5HFBR5O7R+5+ouSZVxNUOYcQqBX61hOTJSUfwYiBra
-	 0nZqqCBJBoLgg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFEpT9b7"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c9907967so3814642b3a.1;
+        Sun, 01 Jun 2025 10:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748798836; x=1749403636; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qvHjG4CO77bT7r3bkmdR5FN9ms4HdQC9iQON6aBJJ4Q=;
+        b=CFEpT9b75UdfoZ6WWASGwSe7wIwqkQ+lCD6RLcQL2nj8w1sZLF1+crkClWmwNlqBRA
+         nEcZziO+vadd9kRTrJoueRgw8209mWdWETWEqgvQu7memO0bo3y2sWSdOE/N0JCYATWE
+         sUd28aHQJpal2uyhJyknHiHVY/wcucMsvBSoCqifcFmtVsQpqLc1nH71NBPAHZdPbAiR
+         rc74+uv7wx2Q0NMKwptZDzl4Gn8pqZ3jBF/yZvoUwElI1bdFBjl74JpvTQg4xUysQm/n
+         4O+zAyPa1up6NzSgsx2b9W5borFSqBtEZXvsb+YNTWr030IWGLuxdBK9r0QKJacuM1V8
+         2tWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748798836; x=1749403636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qvHjG4CO77bT7r3bkmdR5FN9ms4HdQC9iQON6aBJJ4Q=;
+        b=W3tzKeqgEtyGWmEGKMBOkqZBWEwVNIVj2dz3W9wf3dOy9Nj7yiIfGvlJV2M28oC+Jd
+         QGRBtNocdXiSehwC9dowzOtssFLLeckq7OSx/Wo8OvqE+MIs8KDbcJg91miQqV+AR1vD
+         3D87kJetkdDnsrrEbXu5FlVdLT0s0/fJWpnGVe0DR+gqcATiloEvU7G7qirdjHKACH3X
+         Tcp7aP/liQOuLMX6vnLEGCzBR7ieOoPrcBNd176PZ110jhKnwAxVUEViwIYGHBnHc+rn
+         lA2R3ACd+THbATwnOyV30RNaToe0/sfPXO6mezCt3iMr+61XD284HhAZ66KCHiYvKlQo
+         dKyw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ZfBXTnf0Or5NfaGImU9OeUXdSZTkziq9ksKpmEbN4goBpAK8+chaXLiE7M/ZtjkWfcLW+etG5bhRQak=@vger.kernel.org, AJvYcCV+fuGkvUFKmke1Mm2D684ZHQ8K5Evus5ws3qCBdInJ7IETyDXDaGagn/lzEhUWYnSlDrCoHryE8oKRmiNmV3UZjA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz00SAMyWflv63Bn5I+rvgAqFQmopP8izvJaV/xn9IckJZgLbzB
+	vIAHBXMoPcXO2VnGON2JQkLv1qk4Z3BoBIZ3Y2uT8ushpqm2CPuv5EGU
+X-Gm-Gg: ASbGnctoqD1dqi1bymFaWJtbFyMzt9DiJWZGFvlcQulJFQdE2j4NzD6mTswxo2oRlBV
+	+H2q1KBNWGtJDBeS9+XWymOa39BZaqmEvtXY6ALuA9+W7cJYslxD9cUFDulj+cawpfhg+SXkjWu
+	kmmNwJOqigRkxhRPEOom0ItAZ/YIXfI1TVP54NuvR27IUVN9hgwK58C2URicWmPGJjyhDv8WbVK
+	F/71i9viBe5xAaNOVvSAr9bM4Z2/hkc4g37y4pRaAWS4uAKBGpFh60ATw1/wLzytX1W+HfkeFBv
+	/NopKEDWX1CU5edvj5bCj5VWCER/XzhrhgotIpAlH8n54fCcpkPnCu+NBGQlTcX6kO81yP7tSkm
+	M1cfhWWFtntSwdWh213FCdN2kkwsxJi+C/RGuAE1Apw==
+X-Google-Smtp-Source: AGHT+IF1PiEGfKnZbZ92ZYamfQLHjj5IrW00BlwLQgui6Z4Bza85MSb7padK61VHTmmtCZM56IKM0g==
+X-Received: by 2002:a05:6a00:2301:b0:736:35d4:f03f with SMTP id d2e1a72fcca58-747d1835b73mr6725109b3a.6.1748798836019;
+        Sun, 01 Jun 2025 10:27:16 -0700 (PDT)
+Received: from howard-ubuntu.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe963cdsm6168675b3a.23.2025.06.01.10.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 10:27:15 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 6/6] perf annotate: Add 'y' hot key to toggle data type display
-Date: Sat, 31 May 2025 23:53:02 -0700
-Message-ID: <20250601065302.12531-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250601065302.12531-1-namhyung@kernel.org>
-References: <20250601065302.12531-1-namhyung@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf doc trace: Remove --map-dump documentation
+Date: Sun,  1 Jun 2025 10:27:11 -0700
+Message-ID: <20250601172711.714695-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,50 +82,36 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support data type display with a key press so that users can toggle the
-output dynamically on TUI.
+The --map-dump option was removed in (5e6da6be3082: "perf trace: Migrate
+BPF augmentation to use a skeleton"), this patch removes its remaining
+documentation.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: (5e6da6be3082: "perf trace: Migrate BPF augmentation to use a skeleton")
+
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/ui/browsers/annotate.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-trace.txt | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 686fa54e545e275c..cd1d452035a265d3 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -827,7 +827,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		"b             Toggle percent base [period/hits]\n"
- 		"B             Branch counter abbr list (Optional)\n"
- 		"?             Search string backwards\n"
--		"f             Toggle showing offsets to full address\n");
-+		"f             Toggle showing offsets to full address\n"
-+		"y             Toggle data type display\n");
- 			continue;
- 		case 'r':
- 			script_browse(NULL, NULL);
-@@ -947,6 +948,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		case 'f':
- 			annotation__toggle_full_addr(notes, ms);
- 			continue;
-+		case 'y':
-+			annotate_opts.code_with_type ^= 1;
-+			if (browser->dbg == NULL)
-+				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
-+			continue;
- 		case K_LEFT:
- 		case '<':
- 		case '>':
-@@ -1035,8 +1041,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index c1fb6056a0d3..973fede403a0 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -238,14 +238,6 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	the same beautifiers used in the strace-like enter+exit lines to augment the
+ 	tracepoint arguments.
  
- 	ret = annotate_browser__run(&browser, evsel, hbt);
- 
--	if (annotate_opts.code_with_type)
--		debuginfo__delete(browser.dbg);
-+	debuginfo__delete(browser.dbg);
- 	if(not_annotated)
- 		annotated_source__purge(notes->src);
- 
+---map-dump::
+-	Dump BPF maps setup by events passed via -e, for instance the augmented_raw_syscalls
+-	living in tools/perf/examples/bpf/augmented_raw_syscalls.c. For now this
+-	dumps just boolean map values and integer keys, in time this will print in hex
+-	by default and use BTF when available, as well as use functions to do pretty
+-	printing using the existing 'perf trace' syscall arg beautifiers to map integer
+-	arguments to strings (pid to comm, syscall id to syscall name, etc).
+-
+ --force-btf::
+ 	Use btf_dump to pretty print syscall argument data, instead of using hand-crafted pretty
+ 	printers. This option is intended for testing BTF integration in perf trace. btf_dump-based
 -- 
-2.49.0
+2.45.2
 
