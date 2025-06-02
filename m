@@ -1,112 +1,186 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91F1214811;
-	Sun,  1 Jun 2025 18:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8651684A4;
+	Mon,  2 Jun 2025 00:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748804380; cv=none; b=ZCO7BfG0Q5+9ia1LizEy00SGKpJl74XBYegFk20fjPsshlrSZ/gJEpXE21H8AsFCTKDDlGImOw6wxQ/jyDGFWwa5ORfrYD8dUtE2GX7vIrc9oOoFZBrRFtzsmiC1rjo5o3uv+3RApQoZjM/wuEpwYxg44OsrP7jTcoFzMMJS1tM=
+	t=1748824206; cv=none; b=JyzW3jmJ2TXMpl6T8Nu6YZztkE9uHUyysANq2WEq9aaSdGqaNvnMQJ2GHgS+tL16KwPeE8i8D1SDmIRf61gWMpnzJ/19txkprrCcw19xG37VTvgM2nKW3xSOufCKjl07m7btUQa+RMrbqzPQMVSg8sIafht9xMZ3/W1NkjbBm70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748804380; c=relaxed/simple;
-	bh=CYLV8wcogXdtY6I8xKrSP6yV3kKGzgHfcr3A9i96Yx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rzVPZWdAJgy+mkzzFEU9RdKYhZ6181RiGuuYoHP09Og9dBUSLiAaTNdSiBZyKhftihLYkGEL2rkNKgj63AVMGxFwF0qAiuxfw0QwrTtn4Unf+HOuUe6KiHhYInp9tIaD6AfhfVNRwQUiJmeKtM4phHpj+fHBRCRcuXzeT0KG1nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lpnu88Io; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1748824206; c=relaxed/simple;
+	bh=S9HzM07U1RDivk5UFSgGZdF+ElLyL6x0aAWqge4J4uM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sE+4k/kAj0Hs2CuAH7MPfY5DPj/jEJ542rGiXbNs56b39BfKeZJtG6QgPj59YSC/mw5NFXrStLh/RbaO271zN/q+VFQQx4dB4cp1Qo/fkvaSOc8Ap4DACOQs6BVmKJLl+dJ2NxDQYo3bSp8zQvJC6gBc0K0lbceB+2PQKyckZcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lrr8pvLp; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lpnu88Io"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso7801325a12.1;
-        Sun, 01 Jun 2025 11:59:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lrr8pvLp"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22c33677183so29901725ad.2;
+        Sun, 01 Jun 2025 17:30:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748804377; x=1749409177; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OIzFU3oveHSb3b2sYKrjUAfhi3Wxf+qS7iSQYpFodfw=;
-        b=Lpnu88IocyLWUAlXdtXCpePK2YemWqhcbfPJGEOKqNCnfbnrGiQER7kYnAw2erw7uv
-         VriGzTueIVwE9BicjFUhpY+kAJLkYEAsSBbcDbkLTyc6lIj1lLZ5AJ0LyBtP1I7NIlSI
-         Gw8hGm/Nyoz30EZidkQn+Iz+R4tYobFK5qBR2FPmT2eaPrDbDK837HVYiBD+KUdprIkK
-         KZWjN+B3ZSc3NNtolmVCZWIyzTwwSQ2d2gPrKJm1AIvm3RzwJq/C4cfooHDl/C1abQw9
-         Yrqcae4Q1pSNnrnDj66uqIsqU4IFgplYCOasvrbNo0gV9BNS2HtnxnUl+peM7O7L/Y3w
-         JG/A==
+        d=gmail.com; s=20230601; t=1748824204; x=1749429004; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ngVqkWKuuyrv3pS34wegFZrDD9qRIPEFwg45t/mtRWA=;
+        b=Lrr8pvLprOcVLRTv3s8nPeWIQeWc5/cRhpeZt7H8P/OCByhecVUD/g4sLFanNz0XlZ
+         e2F77Y6YYa9+TduoytWwJ44rrBKf8e45nkVPsHsLWWLgXTp+BpXVXQ7g5mkNSP08AG2/
+         k1d8Na0h8CeK5coKh3yqppZLiFEJaRSV06iPRggL8YfQeMBEfyIrYOe4jizIs5FNo+o7
+         v9s2QoDklDrSpYH3ZFJNEszAyuabJ0/hAuYs7XANYD38+qcsbWiSdWhHOskvGeZMYV/U
+         FF/bqAm7PH7cjS4jRKVphMFvyVV/17LR1A5/bUHknJAcbZaUaJ8Z+b1kacZkdZGkRnEd
+         5oog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748804377; x=1749409177;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OIzFU3oveHSb3b2sYKrjUAfhi3Wxf+qS7iSQYpFodfw=;
-        b=PvtPm08A6j1AP0qfrkV/gCX6zGMT1DpXEso606QBQjydaLJLl0hrCt3g5R5eXDWW23
-         YTRpxrEXwLhvLwTQiKvqMj8Nsr5Qo4kFYW1uZHbYnPYZ66LX7APojOSpTN6qIOWukyMr
-         9qimiLuTiFX0jRI4d3LXgJTeLQ83jXBvylmKCdzfcgN4s0qdENbAyot+b3DZtSFKsdrU
-         U5DOcbJX0O5ZW7tsNymLlkdDrZuwTWFrZkwXcXSpP8BbE95/kcbRRG3v6//jdskUqgba
-         4OALNewa2sWayTD/zVSqTqHmuJgOnzCHslKHBY4Ko7REt9TjQmb38fR3c439x3yi8DKW
-         8lcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXKORM8H5wsCscR+ZgxZ5NWYJFDbMmjGwRKkW6GpeLxy45t6D1AWmNy0bTYDiLbjxr40LwmrRwZU51@vger.kernel.org, AJvYcCVUGROQKpyu+uf/TThEdrmzwR3HIntt//LgO9+/GI/ZwAaUEQTYtN3KvnuYdJIGPm61WuCoI4fWNlavXd2t@vger.kernel.org, AJvYcCW/7XcCmNlVU9Xwnfjka8MPnqv+sekQ9hoLD2VVJ+mQ7x30xIxFXexB40JbvXiPmxgikYZaQQhk/m2ZIx/G0WU0QA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhPGlPbDaYnT9N1ZYMIRFqkSXjbzSPo+1VBDKewnZMg0oock47
-	dYy0oNPKtbIE3s6FdCVXYqemv4/Mg6mtSzQAE52Vfd82NeJlRBgDqshH
-X-Gm-Gg: ASbGncv2NvfedNUCBf6AOCpJQ8rdxdagrLH4lkOGLp3wRSAuCYLMCjJ5WuFNzUhmz4w
-	Ij5a1JE0iQNbSun1lLdHb93T/ch4x7gxbAC20zEkW+dzB+T1cs6ya77hY7D4P/Btz6P1c1JTMnr
-	uIS6wm0/NPJPzvzNng/hGB2vfPh3hJrHK+TTS3mrl8T5HdhrkMIiB9OQt+oiv2wR4V3hZLrNySI
-	iqFCaS0N0koqvxezaBe5mQErVw6MEX56lJVyp284FkvJr5Jc39hA9juiNDsTsG53TziaZtMC0hf
-	dnqUGIzbg4LZJ5aMCSW7lntpbtM8A2yrcrqpcKL29DNBH0B9mQRPXRsmECJIUVda9YefWvLkqVC
-	LUMrK/qEh4iFatyX/+VsX87jgtrEqhw==
-X-Google-Smtp-Source: AGHT+IEP2x5ZAxqIc1gsA4YFDwl3131Qs5D19FYWLp46cTsFeKuOi08zZGcuKt6dA7kp1G6jlmOOpw==
-X-Received: by 2002:a05:6402:90e:b0:601:a35e:6dd1 with SMTP id 4fb4d7f45d1cf-6056ef00a9amr8866615a12.21.1748804377131;
-        Sun, 01 Jun 2025 11:59:37 -0700 (PDT)
-Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-605ae6eb0e2sm3059856a12.3.2025.06.01.11.59.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Jun 2025 11:59:36 -0700 (PDT)
-Message-ID: <8d14bc8d-6a29-4317-9ee6-143a2919d17b@gmail.com>
-Date: Sun, 1 Jun 2025 21:59:35 +0300
+        d=1e100.net; s=20230601; t=1748824204; x=1749429004;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ngVqkWKuuyrv3pS34wegFZrDD9qRIPEFwg45t/mtRWA=;
+        b=vg9DppgmO1nxIgGjhX+Y5egJ0HbfsLaDTx4ttKaei8wxuZC69PG2QvqG8KzVcIsxp3
+         I1bKQlQPjPYWwhRMvcIz3LLwnLSuoUKHK4XRux+5tqZ0ejqrDl/tiquNEeYyXoZtWF8d
+         8YIRzLu+8s2tmYltV7toBHPCTEGLN0/2NNQpQYWcaPhC+Z4T53jHzrwqrdcgRiY6cyA7
+         TnkL3LMuWsjyHMskQ2xGl073h2SMpBjLer6mLxtS+ca3ptGn/YKgGGC+aUAoApKsQcTE
+         TZmFDSn3XCkkVLO+Q+6oMb07XQDc7qWjYMNJZuQqThhWcMLs7k1kkKCHtTNvO0JMcxWK
+         IaIg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6HLGV7N8jxffl41qQCxcDTxgx6/NYcPSrspusIVD4CF6CliZRNH+PPI5P9vWjdo+NWXA=@vger.kernel.org, AJvYcCW/HPIV/7eAgdxx6oU4LQjj9HQ3YXmuJNe1oYK0lDcRiYpL/fU/1tCEKpfPvTR03Q5IfFPhN3YEpjQnMcgl@vger.kernel.org, AJvYcCX2f6y8fpYSQ5cA2jaknlc54Bhhmcxm1O5DPuzIvHj5FsrJ+tI3E5uePUF+zbu5XZjiGuVoUBD2il1Ad0wegBlxKw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2zh3u9NCoYlB7QlfDz7uucoa83kFfYtJcTQjatui7KTVMSoqq
+	WNmjQ+L5zbivkuZajWoQ+teMsAmmH69/mVjSFC+0Pb4RVTNTUhCzOBXl
+X-Gm-Gg: ASbGncvrvj/L7JaggzjDlNS2yFokTCurvD5UnyiJoOSPT2chOwqHAuyYAdkB57EFUQD
+	/Bw6D0HBaneXxavi9v8sWF2AI8/GytAjtR6MMDzve+fQfW3Pztfco64dxdh0wAbpGDA31Zm5Qbw
+	7wg3VY1er1TsHu41/tX7+aanbAjKjA5J5iJ2XzI+JNNFFbPjZaqmpl5FSQa3VoEJW1hPN8Jzsa0
+	f0z2m2gE+YGWoc4/hfRzR8Lqx8rbnOilYDlGcxm5waQTTY0OU02zPdak4v1Ns4rFcHFTlOWdnWg
+	5uBxdnczqIwdJWhT9hMwvsIRvJXEk8YcEVlb1PxdELmm8BCQj7wtpXTdysZoHy8BrjsUyROe3ft
+	OecqrYI1dV7w+5hQ=
+X-Google-Smtp-Source: AGHT+IE6g4HtxWXwhqVCpk3sHq5jE7Vpsz3jkUldBiQJBorAXshRGs4uBBpiBBUSwxmB1I7WUlgKCA==
+X-Received: by 2002:a17:902:e851:b0:234:c65f:6c0c with SMTP id d9443c01a7336-235390e105fmr153686125ad.15.1748824203722;
+        Sun, 01 Jun 2025 17:30:03 -0700 (PDT)
+Received: from MacBook-Pro-49.local ([2001:558:600a:7:a83d:600f:32cc:235a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf471asm59935235ad.164.2025.06.01.17.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jun 2025 17:30:03 -0700 (PDT)
+Date: Sun, 1 Jun 2025 17:30:01 -0700
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com, 
+	leo.yan@arm.com, bpf@vger.kernel.org, andrii@kernel.org, ihor.solodrai@linux.dev, 
+	song@kernel.org, jolsa@kernel.org
+Subject: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle logic
+ for a group
+Message-ID: <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 11/21] drivers/perf: apple_m1: Add Apple A10/A10X/T2
- Support
-Content-Language: en-US
-To: Nick Chan <towinchenmi@gmail.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250510-apple-cpmu-v7-0-bd505cb6c520@gmail.com>
- <20250510-apple-cpmu-v7-11-bd505cb6c520@gmail.com>
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <20250510-apple-cpmu-v7-11-bd505cb6c520@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520181644.2673067-2-kan.liang@linux.intel.com>
 
-On 5/10/25 18:10, Nick Chan wrote:
-> Add support for the CPU PMU found in the Apple A10, A10X, T2 SoCs.
->
-> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-
-Tested-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-
+On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
+> 
+> $ perf record -e "{cycles,cycles}:S" ...
+> 
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
+> 
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> 
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+> 
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. For all ARCHs, the implementation is similar. Only the event is
+> disabled, rather than the group.
+> 
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+> 
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle.
+> The MAX_INTERRUPTS is set to all throttle events.
+> 
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+> 
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->  drivers/perf/apple_m1_cpu_pmu.c | 127 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 127 insertions(+)
-...
->  static int m1_pmu_ice_init(struct arm_pmu *cpu_pmu)
->  {
->  	cpu_pmu->name = "apple_icestorm_pmu";
-> @@ -1155,6 +1281,7 @@ static const struct of_device_id m1_pmu_of_device_ids[] = {
->  	{ .compatible = "apple,blizzard-pmu",	.data = m2_pmu_blizzard_init, },
->  	{ .compatible = "apple,icestorm-pmu",	.data = m1_pmu_ice_init, },
->  	{ .compatible = "apple,firestorm-pmu",	.data = m1_pmu_fire_init, },
-> +	{ .compatible = "apple,fusion-pmu",	.data = a10_pmu_fusion_init, },
->  	{ .compatible = "apple,twister-pmu",	.data = a9_pmu_twister_init, },
->  	{ .compatible = "apple,typhoon-pmu",	.data = a8_pmu_typhoon_init, },
->  	{ .compatible = "apple,cyclone-pmu",	.data = a7_pmu_cyclone_init, },
->
+>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++--------------
+>  1 file changed, 46 insertions(+), 20 deletions(-)
 
+This patch breaks perf hw events somehow.
+
+After merging this into bpf trees we see random "watchdog: BUG: soft lockup"
+with various stack traces followed up:
+[   78.620749] Sending NMI from CPU 8 to CPUs 0:
+[   76.387722] NMI backtrace for cpu 0
+[   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G           O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
+[   76.387722] Tainted: [O]=OOT_MODULE, [L]=SOFTLOCKUP
+[   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
+[   76.387722] Call Trace:
+[   76.387722]  <IRQ>
+[   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
+[   76.387722]  hrtimer_cancel+0x21/0x40
+[   76.387722]  cpu_clock_event_stop+0x64/0x70
+[   76.387722]  __perf_event_account_interrupt+0xcf/0x140
+[   76.387722]  __perf_event_overflow+0x36/0x340
+[   76.387722]  ? hrtimer_start_range_ns+0x2c1/0x420
+[   76.387722]  ? kvm_sched_clock_read+0x11/0x20
+[   76.387722]  perf_swevent_hrtimer+0xaf/0x100
+[   76.387722]  ? cpu_clock_event_add+0x6e/0x90
+[   76.387722]  ? event_sched_in+0xc3/0x190
+[   76.387722]  ? update_load_avg+0x87/0x3d0
+[   76.387722]  ? _raw_spin_unlock+0xe/0x20
+[   76.387722]  ? sched_balance_update_blocked_averages+0x59b/0x6a0
+[   76.387722]  ? ctx_sched_in+0x184/0x210
+[   76.387722]  ? kvm_sched_clock_read+0x11/0x20
+[   76.387722]  ? sched_clock_cpu+0x55/0x190
+[   76.387722]  ? perf_exclude_event+0x50/0x50
+[   76.387722]  __hrtimer_run_queues+0x111/0x290
+[   76.387722]  hrtimer_interrupt+0xff/0x240
+[   76.387722]  __sysvec_apic_timer_interrupt+0x4f/0x110
+[   76.387722]  sysvec_apic_timer_interrupt+0x6c/0x90
+
+After reverting:
+commit e800ac51202f ("perf: Only dump the throttle log for the leader")
+commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+everything is back to normal.
+
+There are many ways to reproduce.
+Any test that sets up perf hw event followed up by tests that IPIs all cpus.
+One way:
+selftests/bpf/test_progs -t stacktrace_build_id_nmi
+selftests/bpf/test_progs -t unpriv_bpf_disabled
+
+Please take a look.
