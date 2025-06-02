@@ -1,220 +1,115 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77849211C;
-	Mon,  2 Jun 2025 18:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8414BDDAB;
+	Mon,  2 Jun 2025 18:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748888114; cv=none; b=Yi+spty4PgoAvlsW1KL91b8GJzZp4xPPEFoFaLmTHAiEorMTMaCEGDljk7fqh+KzyfWfaNygAaukAxlTy4XPwjmyZJ9YsJP6biRrqCv9BjxPure1X051qqTVX28J+GFojBIS/YFrMuaY4+9JsCgoMadGguPGJBDclWdkDWi0pxg=
+	t=1748889756; cv=none; b=KzEO/ODompL0g1DiPqf9XWii96R1AHugjePP5SlY1nedgopsyGEUzaQaXxmXNuSDxbKsuFENsJ01N7Izpocj/kFLW6Ju8wmmtwCsCcaXYCKdkdyS6MMaKAyIELpWJXSFTN5ASxtXMvU7wxahqo+V4i3xUu3v1aHvL5CipDxzAl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748888114; c=relaxed/simple;
-	bh=hedc1slK+9Lv61TDwSQNxLU1CfM474XSEdPMgVna/Ck=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tuh+AhYFyAvATucMPKzcpzF5KJbF6ihR0csT1Iwz5GVA+GLoOlUr5s12eyQRg3xbR3VTH0EY0gsKyPtWtfvjqQ6ZfdqgxAEbNEy9qTLUO/AQu3g/UcgmRDA4TgzxdrdEEM8/TrBylbxWJV3Jxf3s2pbWSlWv4uW5ohO428exjZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DeC+kyPP; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeC+kyPP"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442f9043f56so28507635e9.0;
-        Mon, 02 Jun 2025 11:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748888111; x=1749492911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mX/pCZ6QPtF7g93rpLdt86rmKoHi6yL8n3t0sLvtHpg=;
-        b=DeC+kyPPIcVujpo05GyoYfXLyxu3sZzQTfiXD9D4SDPN8miMJVFKjbSt0VGFiHTdlk
-         Re469aXMTNoDig86b313tc+z5yocOMQLYbtaHXL4B2NJvUlER9RII7LYhCA58GPDeEbs
-         /14r1egkiMucq+i6fM3/UGhvw0KymPvhZmkiT+I0O1i0pQBblqQO6I3gmpO1HzXr3JdE
-         UzJm3xvboZP7yeqKSbDuD5Dymne1Lx5RoPHoW+IvINy8OaNxD76vsQz0zMO55gOvx6Kq
-         77CzB2sosacTIjInbo9mCqHfYdec1+nrrGnDpVSBgVvmbE3u+AEX4C6iKutJPE1Egr/K
-         ETrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748888111; x=1749492911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mX/pCZ6QPtF7g93rpLdt86rmKoHi6yL8n3t0sLvtHpg=;
-        b=sglPAajMXSRlcXYRTNdU9lLxTfgZlGGYNE4EWAG1eVuZQqk18YLWR4p1Og/+J5SLQ6
-         SOEPLIk5xylKniJSIQphwb0wnnv4xvvB10ygMjXWT/HBau8amDrhN0hbvqGFnsF8Kk4j
-         pYgVbN12iVuEqiPRU5ZFxMNk+cYxizqS6+P4PV22sNj3gYN/b5v72Z7+XDVIfTK8fGYx
-         2q7cxDZeCJMUTBWePREj+0EQqsfmDQl/EQzPt0RXDd9iVe1+ygMYJ0sJTF0TH6vA8NCi
-         kLtCqxj6N8zuKWpGGJkAN9Ware4lnsZ8Mh0Si+co44F6GVJ8HYWb5QjPnH4N4rwfbUF7
-         ZfwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWt1Bql4mz88cgpWC7y1bLcslulHbVOtLTCKDzUfYOkGRvBHMWpZM4Haq001BsuUKhYHgc=@vger.kernel.org, AJvYcCX9ytnvTB8F/Nls5yC1cv+SeRd1WxnKpUhQ7hreWnVj1bhPU17WkrG3DktIC+79/uPQB/sxrPQh1dJP9tu1wEsXKg==@vger.kernel.org, AJvYcCXib3QOcgJQkbcnx1tOq0FQdN47FxgHRyX3gclyTm14769Q0sZn9eH7fz/KK7bbT4cfffRp27GkM1Dmv8Ut@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXWaYgeK6cYNMIKwiwUaI5HvL4mT8jY2s9mAx0DUrIQQiDvz3A
-	ZhsoTl9wPE8Hd4Cv4yPofbFNhL+7iFT34oRsJ2D7NSsKJdp2GRiZ2fsnsX4bWVUIoFleAGzYIjl
-	oAAT5rNcl5vXHlBHQdIFrw9+QXlA0rm0=
-X-Gm-Gg: ASbGncvtV7OwwFBQHo+2fahwNqVZL2N3Umpg3UhCwybbZF8a2Ii9dtprdIRtEmRYDWi
-	yVjknclWrugCyARE/sUVRlmJZfxNmyO1uv0XI8mvriMQHcVm+4YbhbmxIuqdqbLiBu7hmWYo9Oy
-	ry9teTG56NV4mCuWoIz6GDcLUBPHo5LSId+pnc6XlmlvxSd5gN
-X-Google-Smtp-Source: AGHT+IGpJYuInbfHGFM0Zs7ZYiwunfyj5vlSoTMHxj6LUcKavVkEz4WNHuG4znOYLPTBJU4BgCL66MJAHdk+hUyWB1w=
-X-Received: by 2002:a05:6000:2dca:b0:3a4:e706:532b with SMTP id
- ffacd0b85a97d-3a4fe398f49mr6954997f8f.43.1748888110368; Mon, 02 Jun 2025
- 11:15:10 -0700 (PDT)
+	s=arc-20240116; t=1748889756; c=relaxed/simple;
+	bh=JXUGtBxMmZ3qxADNC8z55VEIcDThXMmxnX/W1hjZciU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GN5R64Uba+f0/qHU6NWBp6QkPvU1upfZ7lbwSj/ku1PeKb+XnuaKP55s1Hk7VNonKUDaSd+2XVocH2cWD9/0Vgv1ndB3TWvmt/E2/xwLZrt27DgHzU/1SjFmhOy7cK2ev7cwysLzhDPVv1nMAY8Hgo/zSBDCO43AG1teMux94TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04D801424;
+	Mon,  2 Jun 2025 11:42:17 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B0073F59E;
+	Mon,  2 Jun 2025 11:42:31 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	mingo@kernel.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	leo.yan@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	David Wang <00107082@163.com>
+Subject: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Date: Mon,  2 Jun 2025 19:40:49 +0100
+Message-Id: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-2-kan.liang@linux.intel.com> <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
- <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com> <CAADnVQL_v4SscxVK5fLxKo5Z4+LJtVfpvrJ4+ztu-ecPfxwrhQ@mail.gmail.com>
- <fb64520f-3890-4cdf-9c12-73d6b8de584b@linux.intel.com>
-In-Reply-To: <fb64520f-3890-4cdf-9c12-73d6b8de584b@linux.intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 2 Jun 2025 11:14:59 -0700
-X-Gm-Features: AX0GCFtaVFimDMEvqxIFdbLFiBresthrljCeNVzlQTI2Dmecz-iAlJlh5ai8MYA
-Message-ID: <CAADnVQ+h24Sez9iaa9DdwS9sWQ4m1LXeXQM7XMPKfZO7FmUtMg@mail.gmail.com>
-Subject: Re: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle
- logic for a group
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 2, 2025 at 10:51=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2025-06-02 12:24 p.m., Alexei Starovoitov wrote:
-> > On Mon, Jun 2, 2025 at 5:55=E2=80=AFAM Liang, Kan <kan.liang@linux.inte=
-l.com> wrote:
-> >>
-> >> Hi Alexei,
-> >>
-> >> On 2025-06-01 8:30 p.m., Alexei Starovoitov wrote:
-> >>> On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com w=
-rote:
-> >>>> From: Kan Liang <kan.liang@linux.intel.com>
-> >>>>
-> >>>> The current throttle logic doesn't work well with a group, e.g., the
-> >>>> following sampling-read case.
-> >>>>
-> >>>> $ perf record -e "{cycles,cycles}:S" ...
-> >>>>
-> >>>> $ perf report -D | grep THROTTLE | tail -2
-> >>>>             THROTTLE events:        426  ( 9.0%)
-> >>>>           UNTHROTTLE events:        425  ( 9.0%)
-> >>>>
-> >>>> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
-> >>>> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
-> >>>> ... sample_read:
-> >>>> .... group nr 2
-> >>>> ..... id 0000000000000327, value 000000000cbb993a, lost 0
-> >>>> ..... id 0000000000000328, value 00000002211c26df, lost 0
-> >>>>
-> >>>> The second cycles event has a much larger value than the first cycle=
-s
-> >>>> event in the same group.
-> >>>>
-> >>>> The current throttle logic in the generic code only logs the THROTTL=
-E
-> >>>> event. It relies on the specific driver implementation to disable
-> >>>> events. For all ARCHs, the implementation is similar. Only the event=
- is
-> >>>> disabled, rather than the group.
-> >>>>
-> >>>> The logic to disable the group should be generic for all ARCHs. Add =
-the
-> >>>> logic in the generic code. The following patch will remove the buggy
-> >>>> driver-specific implementation.
-> >>>>
-> >>>> The throttle only happens when an event is overflowed. Stop the enti=
-re
-> >>>> group when any event in the group triggers the throttle.
-> >>>> The MAX_INTERRUPTS is set to all throttle events.
-> >>>>
-> >>>> The unthrottled could happen in 3 places.
-> >>>> - event/group sched. All events in the group are scheduled one by on=
-e.
-> >>>>   All of them will be unthrottled eventually. Nothing needs to be
-> >>>>   changed.
-> >>>> - The perf_adjust_freq_unthr_events for each tick. Needs to restart =
-the
-> >>>>   group altogether.
-> >>>> - The __perf_event_period(). The whole group needs to be restarted
-> >>>>   altogether as well.
-> >>>>
-> >>>> With the fix,
-> >>>> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
-> >>>> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
-> >>>> ... sample_read:
-> >>>> .... group nr 2
-> >>>> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
-> >>>> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
-> >>>>
-> >>>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >>>> ---
-> >>>>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++-----------=
+commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
+changes the event->state update before list_del_event().
+This change prevents calling perf_cgroup_event_disable() as a result,
+cpuctx->cgrp can't be cleared properly and point to dangling point of cgroup.
+
+Because of this problem, some machin meets the below panic[0]:
+
+863.881960] sysved_call_function_sing le+0x4c/0xc0
+863.881301] asm_sysvec_call_function_single+0x16/0x20
+869.881344] RIP: 0633:0x7f9alcea3367
+663.681373] Code: 00 66 99 b8 ff ff ff ff c3 66 ....
+863.881524] RSP: 002b:00007fffa526fcf8 EFLAGS: 00000246
+869.881567] RAX: 0000562060c962d0 RBX: 0000000000000002 RCX: 00007f9a1cff1c60
+863.881625] RDX: 00007f9a0c000030 RSI: 00007f9alcff1c60 RDI: 00007f9a1ca91c20
+863.081682] RBP: 0000000000000001 R08: 0000000000000000 R09: 00007f9a1d6217a0
+869.881740] R10: 00007f9alca91c10 R11: 0000000000000246 R12: 00007f9a1d70c020
+869.881798] R13: 00007fffa5270030 R14: 00007fffa526fd00 R15: 0000000000000000
+863.881860] </TASK>
+863.881876) Modules linked in: snd_seq_dummy (E) snd_hrtimer (E)...
+...
+863.887142] button (E)
+863.912127] CR2: ffffe4afcc079650
+863.914593] --- [ end trace 0000000000000000 1--
+864.042750] RIP: 0010:ctx_sched_out+0x1ce/0x210
+864.045214] Code: 89 c6 4c 8b b9 de 00 00 00 48 ...
+864.050343] RSP: 0000:ffffaa4ec0f3fe60 EFLAGS: 00010086
+864.052929] RAX: 0000000000000002 RBX: ffff8e8eeed2a580 RCX: ffff8e8bded9bf00
+864.055518] RDX: 000000c92340b051 RSI: 000000c92340b051 RDI: ffff
+864.058093] RBP: 0000000000000000 R08: 0000000000000002 R09: 00
+864.060654] R10: 0000000000000000 R11: 0000000000000000 R12: 000
+864.063183] R13: ffff8e8eeed2a580 R14: 0000000000000007 R15: ffffe4afcc079650
+864.065729] FS: 00007f9a1ca91940 (0000) GS:ffff8e8f6b1c3000(0000) knIGS:0000000000000000
+864.068312] CS: 0010 DS: 0000 ES: 0000 CRO: 0000000080050033
+864.070898] CR2: ffffe4afcc079650 CR3: 00000001136d8000 CR4: 0000000000350ef0
+864.673523] Kernel panic - not syncing: Fatal exception in interrupt
+864.076410] Kernel Offset: 0xc00000 from 0xffffffff81000000 (relocation range: 0xff
+864.205401] --- [ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+To address this call the perf_cgroup_event_disable() properly before
+list_del_event() in __perf_remove_from_context().
+
+Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/ [0]
+Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Tested-by: David Wang <00107082@163.com>
 ---
-> >>>>  1 file changed, 46 insertions(+), 20 deletions(-)
-> >>>
-> >>> This patch breaks perf hw events somehow.
-> >>>
-> >>> After merging this into bpf trees we see random "watchdog: BUG: soft =
-lockup"
-> >>> with various stack traces followed up:
-> >>> [   78.620749] Sending NMI from CPU 8 to CPUs 0:
-> >>> [   76.387722] NMI backtrace for cpu 0
-> >>> [   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G       =
-    O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
-> >>> [   76.387722] Tainted: [O]=3DOOT_MODULE, [L]=3DSOFTLOCKUP
-> >>> [   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),=
- BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-> >>> [   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
-> >>> [   76.387722] Call Trace:
-> >>> [   76.387722]  <IRQ>
-> >>> [   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
-> >>> [   76.387722]  hrtimer_cancel+0x21/0x40
-> >>> [   76.387722]  cpu_clock_event_stop+0x64/0x70
-> >>
-> >>
-> >> The issues should be fixed by the patch.
-> >> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.=
-intel.com/
-> >>
-> >> Could you please give it a try?
-> >
-> > Thanks. It fixes it, but the commit log says that
-> > only cpu-clock and task_clock are affected,
-> > which are SW events.
->
-> Yes, only the two SW events are affected.
->
-> >
-> > While our tests are locking while setting up:
-> >
-> >         struct perf_event_attr attr =3D {
-> >                 .freq =3D 1,
-> >                 .type =3D PERF_TYPE_HARDWARE,
-> >                 .config =3D PERF_COUNT_HW_CPU_CYCLES,
-> >         };
-> >
-> > Is it because we run in x86 VM and HW_CPU_CYCLES is mapped
-> > to cpu-clock sw ?
->
-> No, that's from different PMU. We never map HW_CPU_CYCLES to a SW event.
-> It will error our if the PMU is not available.
->
-> I'm not familiar with your test case and env. At least, I saw
-> PERF_COUNT_SW_CPU_CLOCK is used in the case unpriv_bpf_disabled.
+ kernel/events/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I see. The first test was necessary to create throttle conditions
-for the 2nd test that actually used cpu-clock.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f..909b9d5a65c1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2498,6 +2498,10 @@ __perf_remove_from_context(struct perf_event *event,
+ 		state = PERF_EVENT_STATE_DEAD;
+ 	}
+ 	event_sched_out(event, ctx);
++
++	if (event->state > PERF_EVENT_STATE_OFF)
++		perf_cgroup_event_disable(event, ctx);
++
+ 	perf_event_set_state(event, min(event->state, state));
+ 
+ 	if (flags & DETACH_GROUP)
+-- 
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
-Feel free to add
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-
-I've applied your patch to bpf tree for now to stop the bleeding.
-Will drop it when the fix gets to Linus through perf trees.
