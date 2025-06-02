@@ -1,92 +1,191 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E48664A1E;
-	Mon,  2 Jun 2025 15:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4001DDC37;
+	Mon,  2 Jun 2025 16:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878403; cv=none; b=EEwTBDiZFGs00T+LNLeHBUFFCYtRyy5XX0P3ldA6voDA9dT5QOfAcT0+eweOO6jOXASNU5Cbm8A7QMj6A6ZPvQCb9eEAo9bhxabMN/LN0y41tpImOmVWsp7QfoNpRbEBrxZ6FRDskJSP0plmw1GqEMAfVr1REZxHsAxNavk9C/U=
+	t=1748881476; cv=none; b=CgdRCg9QuXuogQa/2skNBw1GIBEs+irAIG59YzHRsH+EQN9vLZI/Li2DCJ6mI9ywaAVqaQpzcoPCJHBtiGVNOFOgG3PPEK/EKrf3inPYli/fl9U8UrYIupJnDRLCOaGktUw0r/djIMDqKkHvEEXWyIfCjRuRXd2+DjG0Jgisb2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878403; c=relaxed/simple;
-	bh=re4PGiECHNFx9WXp4WOS/YuuBDf5tAzxxZHGBPAurCU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=JVRC/i1XbePwVyoYijjL44YIcX1QO3UuBJt6o2f8YdeJqcUOzhw0auWb+t4wVe13dg4GeF2MBzwU5QXi/LI/APIqVWwYFZPF66EiwmNbzrkawu6dtMPLXtx5rmqNm9od2WRz7uQqbuRWTQGH6srf8VekFxWwbFLD9kgExUA6yro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=hgSdaRNf reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748881476; c=relaxed/simple;
+	bh=VTBB6S6T9CYtENIK9amegBgyMcLfyoBbf6sQJw/Vg2k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a00ya5w2G2L/73bQes1y7f1/WZlbmTNlfZoljtYmPXnvUydTxoGclmh63FpxwpRalWW1VuNTwelXuV0P1ljFMO9OhbHDsSMWFkgG6ftO7qKh4H/5bkkYaylMZ/x+ZjgZtzZSSC4Q3rmTI3BUIwKuExkvsVqPi7Rlj1V4/GjNlhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iAMEls5B; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="hgSdaRNf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=oCeTEqONNQP62D+997YrgUyRDKBWkf3brV1BiFNF0RM=; b=h
-	gSdaRNfR7GSuzbQUb2TQHDAQy0jnnqUYgssYsOQWmt+IVrQOxBR3PWLpQzvILHGX
-	wipQCsI0+vZDahfhE/ufj1DV/u65GEcfHHwCFffhm1v61PZDRnRASy+o6++TYPt4
-	JNlQgpd/JDhnqu+eMCcrzwOQC2dMKuPuRxvDgxfVrE=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-138 (Coremail) ; Mon, 2 Jun 2025 23:32:51 +0800 (CST)
-Date: Mon, 2 Jun 2025 23:32:51 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mingo@kernel.org, leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG][6.15][perf] Kernel panic not syncing: Fatal exception in
- interrupt
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <aD2/hoB+KhLITSu3@e129823.arm.com>
-References: <aD2TspKH/7yvfYoO@e129823.arm.com>
- <aD2kz52p5NHpuXk3@e129823.arm.com> <aD2/hoB+KhLITSu3@e129823.arm.com>
-X-NTES-SC: AL_Qu2fCvSct0ss5yaRZukXn0oTju85XMCzuv8j3YJeN500iCXpxj8deXBJB3bmwcO1DSGtvxe+WQdfzMBlfLtgcYs26ctt3AgL4okYbvsMTE/U
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAMEls5B"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a36e090102so2655176f8f.2;
+        Mon, 02 Jun 2025 09:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748881473; x=1749486273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Hf4awDBXsGRvLnA3GnF3C2CVs5TAWdo9HF9pPM5WH0=;
+        b=iAMEls5BcOFW+9R/xNC8uG3epiHllwuc1QFs4hb92Z2fu+RvdrCGjQYAzWYt65a7jf
+         vmrwd9HEzC1VjX9wXm/WZSUS3GahCzHw1Puk54EuAcdvID9bq0QTs6maL8q84GQKkCk+
+         xujrpx/SbgXndBM24yP3E27Mxk1OAX37rMly4NZhVbLnT/28lIfEDCKu4TNBCx9axjMl
+         HihccNGlRGHDMk5pJ3u8q3Vj/tkIvW8hCbBNJZOhQS5InBNyEV25eBWw+SzO9yXgTyzD
+         Ojh/RGNEP1dD28tgWyZzy1uyba9z6mCAfiP4SyZhMiafshzn643RDfL+oyFWcMlPI/J1
+         c/eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748881473; x=1749486273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Hf4awDBXsGRvLnA3GnF3C2CVs5TAWdo9HF9pPM5WH0=;
+        b=VAfF13Ctu5f50qOvJGqwkxv7LP0VzBJH4V5ztEXSYfTInsP+RJTMZ4zTk7+yauLZyW
+         i1FAgUvNmqhIuakkKfgv4U8vvMqH9jBv2PSpwkdGsJB+b5OP9ekMQLXECInUxTmrJ+nn
+         eIFQ9aLa/KV3y4TklQaB8A/vLnV/WNQqzoJZ9GUt5NbtXUGPhGqpwikmPNSLhnbxV3sh
+         00/Du6/eR+V/QQGYXCLoHpcpQcPJAOhZcecZWqW9uLj36aE2Oj/f3OWDjeP9n0zcCJF2
+         mqHauWmgUrMgndSsEGJqXlCMOMqaoNBwFOrnVhgRTnGAxG91FUiffbPI2IRRm31KqNfQ
+         PlzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBpr5x3b05QzhyNOObmTAKHohiCeAq0xP8Y4tDLOoEyxqwRkjZr/ow4v0Z5hpC4iLeqqUL2Yk4RyJprF/0@vger.kernel.org, AJvYcCUWscuJVtheGYFt2PwGepczslaa9YimGIECkQuoZOH8kpOmuE9k17AKLFUmKWfm00XPnDU=@vger.kernel.org, AJvYcCWkBC1y9GMWUQaM7m0bO6xCjgyl+3fYWQwEAouTQ+5b7Ctzl3BeN40fbtlsiSZ1iySKlxXXHMApr2LZSVxbvRzEiQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YydtUVB9Y91dRxmbS+fN0Vq6SnIweAimL/WnQ2o+qoTKQXyC5Wx
+	6ZCn3MmPECnrKl6JW3Kj4l2P6t4yD+rNcNLh6N+QtDV5pIlznLXIGeLDA09GVBervY8rlO35iSg
+	jrA8Z3i23Lc6esSsfd8qlQ8WlbhtzHAD+Xrwl
+X-Gm-Gg: ASbGnctA5mXAWzhp5LBrRamvoVBzkE/TAZFkenZE0/DeuyvAulmzWvscltnkd+LL1DA
+	HgD8bu2o0nzD4Nf31VdwwehIfVZYPLSCF9Lp8i23QdwbQwaGtH9LwvPGtgBY1u9SQbxFLRpZdpN
+	pP+LDSLWSLAkDdHZ6D1FDbAKkjAmQCZ/PjM7Dvsq7gLwA+zvSK
+X-Google-Smtp-Source: AGHT+IHe08an4JNIFcJK4cpXI820F+nqTybaZjc6XNMNs55Ubnp7qLnvs85PIfG9HSe2TO0FnW/ObkqflH7Ctk5oroA=
+X-Received: by 2002:a05:6000:1447:b0:3a4:d41d:8f40 with SMTP id
+ ffacd0b85a97d-3a4f7a6d2bcmr10499625f8f.46.1748881472942; Mon, 02 Jun 2025
+ 09:24:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <72c1852.372d.19731462b73.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:iigvCgDXv9okxD1oJRoSAA--.22340W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBRgqmg9v1wKGAACso
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com> <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+ <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com>
+In-Reply-To: <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 2 Jun 2025 09:24:21 -0700
+X-Gm-Features: AX0GCFvADJbbPaSyYnAXh1Shx0VxwiPeDyPR931crj8K5fpdnLUXNqnq89qaelw
+Message-ID: <CAADnVQL_v4SscxVK5fLxKo5Z4+LJtVfpvrJ4+ztu-ecPfxwrhQ@mail.gmail.com>
+Subject: Re: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle
+ logic for a group
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-CkF0IDIwMjUtMDYtMDIgMjM6MTM6MTAsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
-b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPiA+IEJlZm9yZSBJIHN0YXJ0IHRlc3RpbmcsIEkg
-ZmVlbCBjb25jZXJuZWQgYWJvdXQgZm9sbG93aW5nIGNoYWluOgo+PiA+ID4KPj4gPiA+IC4va2Vy
-bmVsL2ZvcmsuYzoKPj4gPiA+IGJhZF9mb3JrX2NsZWFudXBfcGVyZjoKPj4gPiA+ICAgICBwZXJm
-X2V2ZW50X2ZyZWVfdGFzaygpCj4+ID4gPiAgICAgICAgIHBlcmZfZnJlZV9ldmVudCgpCj4+ID4g
-PiAgICAgICAgICAgICBsaXN0X2RlbF9ldmVudCgpCj4+ID4gPgo+PiA+ID4gVGhpcyBwYXRjaCBz
-ZWVtcyBjaGFuZ2VzIHRoZSBiZWhhdmlvciBpbiB0aGlzIGNhbGxjaGFpbi4KPj4gPiA+IFdvdWxk
-IHRoaXMgaGF2ZSBvdGhlciBzaWRlLWVmZmVjdD8KPj4gPgo+PiA+IFdoYXQgYmVoYXZpb3IgaXMg
-Y2hhbmdlZCB5b3UncmUgd29ycnkgYWJvdXQ/Cj4+ID4gYm90aCBlcnJvciBwYXRjaCBpcyBoYW5k
-bGVkIGJ5IF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCksCj4+ID4gVGhlcmUgd291bGRuJ3Qg
-YmUgbm8gcHJvYmxlbSBzaW5jZSB0aGlzIHBhdGNoIGp1c3QgbW92ZSB0aGUKPj4gPiB0aW1lIG9m
-IGRpc2FibGluZyBjZ3JvdXAgYmVmb3JlIGNoYW5naW5nIGV2ZW50IHN0YXRlLgo+PiA+Cj4+ID4g
-YWxzbywgdGhlIGNncm91cCBldmVudCBpcyBmb3Igb25seSBjcHVjdHggbm90IGFkZGVkIGluIHRh
-c2tjdHguCj4+ID4gU28sIHRoZXJlJ3Mgbm8gZWZmZWN0IGZvciBldmVudCBhdHRhY2hlZCBpbiB0
-YXNrY3R4Lgo+PiA+Cj4+ID4gVGhhbmtzLgo+Pgo+PiBBbSBJIHJlYWRpbmcgaXQgd3Jvbmc/Cj4+
-IFRoZSBjYWxsIGNoYWluIEkgbWVudGlvbmVkIGFib3ZlIGRvc2Ugbm90IHdhbGsgdGhyb3VnaCBf
-X3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dCwKPj4gSXQgaXMgYSBmYWlsIHBhdGggaW4gZm9yaywg
-d2hpY2ggaGFwcGVucyByYXJlbHksIGJ1dCBzdGlsbCBwb3NzaWJsZS4gSSBndWVzcy4uLgo+Cj5T
-aW5jZSBjb21taXQgOTA2NjEzNjUwMjFhCj4oInBlcmYgVW5pZnkgcGVyZl9ldmVudF9mcmVlX3Rh
-c2soKSAvIHBlcmZfZXZlbmV0X2V4aXRfdGFza19jb250ZXh0KCkiKQo+Cj5wZXJmX2V2ZW50X2Zy
-ZWVfdGFzaygpIGlzIGludGVncmF0ZWQgd2l0aCBwZXJmX2V2ZW50X2V4aXRfdGFza19jb250ZXh0
-KCkKPlNvLCBpdCBjYWxscyBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dCgpLgoKCkdvb2QgdG8g
-a25vd34KCj4KPkluIHY2LjE1LCBJIHRoaW5rIHlvdSBjYW4gdGVzdCB3aXRoIGJlbG93IGNoYW5n
-ZSBvbmx5Ogo+QEAgLTI0NzEsNiArMjQ1OSwxNiBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4
-dChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4KPiAgICAgICAgY3R4X3RpbWVfdXBkYXRlKGNw
-dWN0eCwgY3R4KTsKPgo+KyAgICAgICAvKgo+KyAgICAgICAgKiBJZiBldmVudCB3YXMgaW4gZXJy
-b3Igc3RhdGUsIHRoZW4ga2VlcCBpdAo+KyAgICAgICAgKiB0aGF0IHdheSwgb3RoZXJ3aXNlIGJv
-Z3VzIGNvdW50cyB3aWxsIGJlCj4rICAgICAgICAqIHJldHVybmVkIG9uIHJlYWQoKS4gVGhlIG9u
-bHkgd2F5IHRvIGdldCBvdXQKPisgICAgICAgICogb2YgZXJyb3Igc3RhdGUgaXMgYnkgZXhwbGlj
-aXQgcmUtZW5hYmxpbmcKPisgICAgICAgICogb2YgdGhlIGV2ZW50Cj4rICAgICAgICAqLwo+KyAg
-ICAgICBpZiAoZXZlbnQtPnN0YXRlID4gUEVSRl9FVkVOVF9TVEFURV9PRkYpCj4rICAgICAgICAg
-ICAgICAgcGVyZl9jZ3JvdXBfZXZlbnRfZGlzYWJsZShldmVudCwgY3R4KTsKPisKPiAgICAgICAg
-LyoKPiAgICAgICAgICogRW5zdXJlIGV2ZW50X3NjaGVkX291dCgpIHN3aXRjaGVzIHRvIE9GRiwg
-YXQgdGhlIHZlcnkgbGVhc3QKPiAgICAgICAgICogdGhpcyBhdm9pZHMgcmFpc2luZyBwZXJmX3Bl
-bmRpbmdfdGFzaygpIGF0IHRoaXMgdGltZS4KPgo+bm90IHdpdGggbW9kaWZpY2F0aW9uIHdpdGgg
-Imxpc3RfZGVsX2V2ZW50KCkiLgoKLi4uIEkgYXBwbHkgeW91ciBvcmlnaW5hbCBwYXRjaCBvbiA2
-LjE1LCB1cCB0byBub3csIDcgcm91bmRzIG9mIHRlc3Qgc2hvdyBubyBzaWduIG9mIGtlcm5lbCBw
-YW5pYy4KSSB0aGluaywgdGhlIHBhdGNoIGRvZXMgZml4IGl0LgoKVGVzdGVkLWJ5OiBEYXZpZCBX
-YW5nIDwwMDEwNzA4MkAxNjMuY29tPgoKClRoYW5rcwpEYXZpZAoK
+On Mon, Jun 2, 2025 at 5:55=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+> Hi Alexei,
+>
+> On 2025-06-01 8:30 p.m., Alexei Starovoitov wrote:
+> > On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wro=
+te:
+> >> From: Kan Liang <kan.liang@linux.intel.com>
+> >>
+> >> The current throttle logic doesn't work well with a group, e.g., the
+> >> following sampling-read case.
+> >>
+> >> $ perf record -e "{cycles,cycles}:S" ...
+> >>
+> >> $ perf report -D | grep THROTTLE | tail -2
+> >>             THROTTLE events:        426  ( 9.0%)
+> >>           UNTHROTTLE events:        425  ( 9.0%)
+> >>
+> >> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> >> ... sample_read:
+> >> .... group nr 2
+> >> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> >> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> >>
+> >> The second cycles event has a much larger value than the first cycles
+> >> event in the same group.
+> >>
+> >> The current throttle logic in the generic code only logs the THROTTLE
+> >> event. It relies on the specific driver implementation to disable
+> >> events. For all ARCHs, the implementation is similar. Only the event i=
+s
+> >> disabled, rather than the group.
+> >>
+> >> The logic to disable the group should be generic for all ARCHs. Add th=
+e
+> >> logic in the generic code. The following patch will remove the buggy
+> >> driver-specific implementation.
+> >>
+> >> The throttle only happens when an event is overflowed. Stop the entire
+> >> group when any event in the group triggers the throttle.
+> >> The MAX_INTERRUPTS is set to all throttle events.
+> >>
+> >> The unthrottled could happen in 3 places.
+> >> - event/group sched. All events in the group are scheduled one by one.
+> >>   All of them will be unthrottled eventually. Nothing needs to be
+> >>   changed.
+> >> - The perf_adjust_freq_unthr_events for each tick. Needs to restart th=
+e
+> >>   group altogether.
+> >> - The __perf_event_period(). The whole group needs to be restarted
+> >>   altogether as well.
+> >>
+> >> With the fix,
+> >> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> >> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> >> ... sample_read:
+> >> .... group nr 2
+> >> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> >> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> >>
+> >> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> >> ---
+> >>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++-------------=
+-
+> >>  1 file changed, 46 insertions(+), 20 deletions(-)
+> >
+> > This patch breaks perf hw events somehow.
+> >
+> > After merging this into bpf trees we see random "watchdog: BUG: soft lo=
+ckup"
+> > with various stack traces followed up:
+> > [   78.620749] Sending NMI from CPU 8 to CPUs 0:
+> > [   76.387722] NMI backtrace for cpu 0
+> > [   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G         =
+  O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
+> > [   76.387722] Tainted: [O]=3DOOT_MODULE, [L]=3DSOFTLOCKUP
+> > [   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
+IOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+> > [   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
+> > [   76.387722] Call Trace:
+> > [   76.387722]  <IRQ>
+> > [   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
+> > [   76.387722]  hrtimer_cancel+0x21/0x40
+> > [   76.387722]  cpu_clock_event_stop+0x64/0x70
+>
+>
+> The issues should be fixed by the patch.
+> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.int=
+el.com/
+>
+> Could you please give it a try?
+
+Thanks. It fixes it, but the commit log says that
+only cpu-clock and task_clock are affected,
+which are SW events.
+
+While our tests are locking while setting up:
+
+        struct perf_event_attr attr =3D {
+                .freq =3D 1,
+                .type =3D PERF_TYPE_HARDWARE,
+                .config =3D PERF_COUNT_HW_CPU_CYCLES,
+        };
+
+Is it because we run in x86 VM and HW_CPU_CYCLES is mapped
+to cpu-clock sw ?
