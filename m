@@ -1,92 +1,334 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CC81E2606
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Jun 2025 22:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F33F7080C
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Jun 2025 23:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748904031; cv=none; b=qX3+8gezZ4zC7yXm/u3m+B+EemMWvY9RnXPVUBYORQ2G40uCav6Q8QrVzG9T130yfH/y774zM1T8hM7jdHr6ASyc7jNHr1ISFwNraXReC8swlNSrvnFMT1MWt335zkF8dNdAeXfmOXeh/vilyopCzrtB3hFNBDxgsUnM/v0TI6Q=
+	t=1748908286; cv=none; b=Y8v247W1Xu45Q28FySw8lCV7pYcwMhbCGVi3HzOgZ9YzGbOshZobcLe8dYuiU0l0aQiZ8O2AUmiLBVmfJxufshEdAf1TkzjK0tpr5/fxvD2rAV3xr/SAZ3Sz9LNpPbcsAwzHFzhCrPTp4/XAyYRJTB4UPwqgajte3Y+gJD5nFzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748904031; c=relaxed/simple;
-	bh=Raej5S0fr0owynKaFtp+ssLwlG8DLE+hbQHXsl4GgeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWkEZodEXNRxApuRWPMiZEELJWLEtpT/joPVA0cX6y2Ei5uD4ZtUrYExEh35L5jgH8IVd23BJlBv+6zlajwTxAq96QP3wmpOjFaBcs3HNSXMBt2RSZVStMt58tR8hbt/lj2ONWifc8/5HMEjYV5bWBKiAVJbPz8v4kpPmESMe8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DRGlTg2l; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748908286; c=relaxed/simple;
+	bh=Gp8rOEMBvQyfyOkGkFjC5cb4A1mmOp6V4W/IbKcxMGw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Q9arrncVOD939V9RWPLkW763dKkmToxZWcf6I9uECMEfK4H7/xv5ZeyGlO4n1gtQ0de1xKhYia6urQBYIzvPE9Cw/7cCRJTp6JJUDaaF6VIKWHfnH+pnh/SPT65Q24y+SELU769SfmbcVgcj8iIX4pwXQxeiphtCeGjxjv3ezac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gu4VPl1F; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DRGlTg2l"
-Date: Mon, 2 Jun 2025 15:40:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748904017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pVDqG7Qru3dfMpTwDZ3dCGAw70KwMy1IAEgL6+IAtD0=;
-	b=DRGlTg2l6dj3mx3YU+Hkrx8unn1zTLt40R3DTpki2p/KXrAfQdCsBTXlNY3/1LiA5NL/C3
-	AKu5HQu4fMzKoqvysZOOGOi+dS5HDBNebnMVbg8Q3KTQ3HS+lmWRWnqZ0S7Jx7EQrbL9cC
-	j1ccMBNvsr0LPvKUOue0qfpmAfPYP1w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 16/17] KVM: arm64: Add ioctl to partition the PMU when
- supported
-Message-ID: <aD4oS1_tnMPlgDJ6@linux.dev>
-References: <20250602192702.2125115-1-coltonlewis@google.com>
- <20250602192702.2125115-17-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gu4VPl1F"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ea0e890ccso4687952a91.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Jun 2025 16:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748908284; x=1749513084; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dk4+owqQNHxfLdSzehkTZZ2/llGFNFZWt1ateStP9t8=;
+        b=Gu4VPl1FxDZ/ntQUE0/rDNqyIAj4nvkqZCV6HX04XR6VWrww5RrnGb+a44sgh8s/KF
+         md49APeU6XpkbzgNLYQsy8Ir19N3vE4T6O5CcJNZDQ8l3AoAv2SCHo0lZ1QkMnS3CAeA
+         mKfo2AYzw4bD3wE1pWFiZgSpAe23savIoscXTNED8cR44GZmqhBOESOSIDWaSi3cfx9M
+         9DjI14NfxUeBaDy9z3uVIaMHW04W/vSsbJsrKdPaFeG16wGhVwChbmoF8SK53xhTY9yN
+         xjz9T7MFnZfrSS2v0LwLz8O3HlONk9uw5bI9COZh1HsXx5krZY+rTuhJ5HNlkOdtM/1T
+         7LBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748908284; x=1749513084;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dk4+owqQNHxfLdSzehkTZZ2/llGFNFZWt1ateStP9t8=;
+        b=kiCHKHFup+ss6kpAbBdUU/Je3vWzFy0+xZ9ZlyVHIUTyDOcvmolPtPRnaa9//g39Iu
+         ZLhHWn/mddQB9w8W+B5hzbbjqB+YYxjpGPeiAsK3A0pFwgrYdfW3x297AGgMjO3v21Q1
+         L9KmNsTCBRItBPP5V8ZkjXoVwxmocwqdCB7rKMxckbFJprgf+OCO4L+iVI/QcfIrA+Uc
+         KHhFTBWiHcEGsE3EL2e4+SnV6wn/u7vJR+RWjeKSPPH35w64otoaykVWLEZ9ejpIbmH3
+         Zyq4EBDsNGXfxB2aFXNj9fd9DgFN819H2gdRCzbRxjjisfV5/sAb60OWESjDj8r8SA7J
+         yGUw==
+X-Gm-Message-State: AOJu0Yz99+R5275T39xumSf8NLJMsU9EMLSEVvLKK8TgY+/mHjPbVp9o
+	Idozqat+VW/eHlYlnYmL3n/45sYHrSz+nHf7roE8+mZOtlc7S2y3TEMiWvbRr18uD4X5og2tLFJ
+	H8Xv5aQ==
+X-Google-Smtp-Source: AGHT+IHU/6drj+dM1whBytUXQqdCww913o5IkJnaZED8ISZFjpU9lFbKAws8DQaneO3FH5a0aB4NgkaLd68=
+X-Received: from pjbcz16.prod.google.com ([2002:a17:90a:d450:b0:311:c20d:676d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4cce:b0:311:b0ec:135f
+ with SMTP id 98e67ed59e1d1-31250474eb6mr21467217a91.30.1748908284437; Mon, 02
+ Jun 2025 16:51:24 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon,  2 Jun 2025 16:51:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602192702.2125115-17-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602235121.55424-1-seanjc@google.com>
+Subject: [PATCH] perf/x86: KVM: Have perf define a dedicated struct for
+ getting guest PEBS data
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 02, 2025 at 07:27:01PM +0000, Colton Lewis wrote:
-> +	case KVM_ARM_PARTITION_PMU: {
+Have perf define a struct for getting guest PEBS data from KVM instead of
+poking into the kvm_pmu structure.  Passing in an entire "struct kvm_pmu"
+_as an opaque pointer_ to get at four fields is silly, especially since
+one of the fields exists purely to convey information to perf, i.e. isn't
+used by KVM.
 
-This should be a vCPU attribute similar to the other PMUv3 controls we
-already have. Ideally a single attribute where userspace tells us it
-wants paritioning and specifies the PMU ID to use. None of this can be
-changed after INIT'ing the PMU.
+Perf should also own its APIs, i.e. define what fields/data it needs, not
+rely on KVM to throw fields into data structures that effectively hold
+KVM-internal state.
 
-> +		struct arm_pmu *pmu;
-> +		u8 host_counters;
-> +
-> +		if (unlikely(!kvm_vcpu_initialized(vcpu)))
-> +			return -ENOEXEC;
-> +
-> +		if (!kvm_pmu_partition_supported())
-> +			return -EPERM;
-> +
-> +		if (copy_from_user(&host_counters, argp, sizeof(host_counters)))
-> +			return -EFAULT;
-> +
-> +		pmu = vcpu->kvm->arch.arm_pmu;
-> +		return kvm_pmu_partition(pmu, host_counters);
+Opportunistically rephrase the comment about cross-mapped counters to
+explain *why* PEBS needs to be disabled.
 
-Yeah, we really can't be changing the counters available to the ARM PMU
-driver at this point. What happens to host events already scheduled on
-the CPU?
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/events/core.c            |  5 +++--
+ arch/x86/events/intel/core.c      | 20 ++++++++++----------
+ arch/x86/events/perf_event.h      |  3 ++-
+ arch/x86/include/asm/kvm_host.h   |  9 ---------
+ arch/x86/include/asm/perf_event.h | 13 +++++++++++--
+ arch/x86/kvm/vmx/pmu_intel.c      | 18 +++++++++++++++---
+ arch/x86/kvm/vmx/vmx.c            | 11 +++++++----
+ arch/x86/kvm/vmx/vmx.h            |  2 +-
+ 8 files changed, 49 insertions(+), 32 deletions(-)
 
-Either the partition of host / KVM-owned counters needs to be computed
-up front (prior to scheduling events) or KVM needs a way to direct perf
-to reschedule events on the PMU based on the new operating constraints.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 139ad80d1df3..6080c3e6e191 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -703,9 +703,10 @@ void x86_pmu_disable_all(void)
+ 	}
+ }
+ 
+-struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
++struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
++						  struct x86_guest_pebs *guest_pebs)
+ {
+-	return static_call(x86_pmu_guest_get_msrs)(nr, data);
++	return static_call(x86_pmu_guest_get_msrs)(nr, guest_pebs);
+ }
+ EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index c5f385413392..364bba216cf4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -14,7 +14,6 @@
+ #include <linux/slab.h>
+ #include <linux/export.h>
+ #include <linux/nmi.h>
+-#include <linux/kvm_host.h>
+ 
+ #include <asm/cpufeature.h>
+ #include <asm/debugreg.h>
+@@ -4332,11 +4331,11 @@ static int intel_pmu_hw_config(struct perf_event *event)
+  * when it uses {RD,WR}MSR, which should be handled by the KVM context,
+  * specifically in the intel_pmu_{get,set}_msr().
+  */
+-static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
++static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr,
++							  struct x86_guest_pebs *guest_pebs)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
+-	struct kvm_pmu *kvm_pmu = (struct kvm_pmu *)data;
+ 	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
+ 	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
+ 	int global_ctrl, pebs_enable;
+@@ -4374,20 +4373,20 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		return arr;
+ 	}
+ 
+-	if (!kvm_pmu || !x86_pmu.pebs_ept)
++	if (!guest_pebs || !x86_pmu.pebs_ept)
+ 		return arr;
+ 
+ 	arr[(*nr)++] = (struct perf_guest_switch_msr){
+ 		.msr = MSR_IA32_DS_AREA,
+ 		.host = (unsigned long)cpuc->ds,
+-		.guest = kvm_pmu->ds_area,
++		.guest = guest_pebs->ds_area,
+ 	};
+ 
+ 	if (x86_pmu.intel_cap.pebs_baseline) {
+ 		arr[(*nr)++] = (struct perf_guest_switch_msr){
+ 			.msr = MSR_PEBS_DATA_CFG,
+ 			.host = cpuc->active_pebs_data_cfg,
+-			.guest = kvm_pmu->pebs_data_cfg,
++			.guest = guest_pebs->data_cfg,
+ 		};
+ 	}
+ 
+@@ -4395,7 +4394,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	arr[pebs_enable] = (struct perf_guest_switch_msr){
+ 		.msr = MSR_IA32_PEBS_ENABLE,
+ 		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+-		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
++		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & guest_pebs->enable,
+ 	};
+ 
+ 	if (arr[pebs_enable].host) {
+@@ -4403,8 +4402,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		arr[pebs_enable].guest = 0;
+ 	} else {
+ 		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
+-		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
+-		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
++		arr[pebs_enable].guest &= ~guest_pebs->cross_mapped_mask;
++		arr[global_ctrl].guest &= ~guest_pebs->cross_mapped_mask;
+ 		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+ 		arr[global_ctrl].guest |= arr[pebs_enable].guest;
+ 	}
+@@ -4412,7 +4411,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	return arr;
+ }
+ 
+-static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr, void *data)
++static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr,
++							 struct x86_guest_pebs *guest_pebs)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 46d120597bab..29ae9e442f2e 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -963,7 +963,8 @@ struct x86_pmu {
+ 	/*
+ 	 * Intel host/guest support (KVM)
+ 	 */
+-	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr, void *data);
++	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr,
++							struct x86_guest_pebs *guest_pebs);
+ 
+ 	/*
+ 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7bc174a1f1cb..2fe0d2520f14 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -583,15 +583,6 @@ struct kvm_pmu {
+ 	u64 pebs_data_cfg;
+ 	u64 pebs_data_cfg_rsvd;
+ 
+-	/*
+-	 * If a guest counter is cross-mapped to host counter with different
+-	 * index, its PEBS capability will be temporarily disabled.
+-	 *
+-	 * The user should make sure that this mask is updated
+-	 * after disabling interrupts and before perf_guest_get_msrs();
+-	 */
+-	u64 host_cross_mapped_mask;
+-
+ 	/*
+ 	 * The gate to release perf_events not marked in
+ 	 * pmc_in_use only once in a vcpu time slice.
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 812dac3f79f0..0edfc3e34813 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -646,11 +646,20 @@ static inline void perf_events_lapic_init(void)	{ }
+ static inline void perf_check_microcode(void) { }
+ #endif
+ 
++struct x86_guest_pebs {
++	u64	enable;
++	u64	ds_area;
++	u64	data_cfg;
++	u64	cross_mapped_mask;
++};
++
+ #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
+-extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
++extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
++							 struct x86_guest_pebs *guest_pebs);
+ extern void x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
+ #else
+-struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
++struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
++						  struct x86_guest_pebs *guest_pebs);
+ static inline void x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+ {
+ 	memset(lbr, 0, sizeof(*lbr));
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 77012b2eca0e..e6ff02b97677 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -705,11 +705,22 @@ static void intel_pmu_cleanup(struct kvm_vcpu *vcpu)
+ 		intel_pmu_release_guest_lbr_event(vcpu);
+ }
+ 
+-void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
++u64 intel_pmu_get_cross_mapped_mask(struct kvm_pmu *pmu)
+ {
+-	struct kvm_pmc *pmc = NULL;
++	u64 host_cross_mapped_mask;
++	struct kvm_pmc *pmc;
+ 	int bit, hw_idx;
+ 
++	if (!(pmu->pebs_enable & pmu->global_ctrl))
++		return 0;
++
++	/*
++	 * If a guest counter is cross-mapped to a host counter with a different
++	 * index, flag it for perf, as PEBS needs to be disabled for that
++	 * counter to avoid enabling PEBS on the wrong perf event.
++	 */
++	host_cross_mapped_mask = 0;
++
+ 	kvm_for_each_pmc(pmu, pmc, bit, (unsigned long *)&pmu->global_ctrl) {
+ 		if (!pmc_speculative_in_use(pmc) ||
+ 		    !pmc_is_globally_enabled(pmc) || !pmc->perf_event)
+@@ -721,8 +732,9 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
+ 		 */
+ 		hw_idx = pmc->perf_event->hw.idx;
+ 		if (hw_idx != pmc->idx && hw_idx > -1)
+-			pmu->host_cross_mapped_mask |= BIT_ULL(hw_idx);
++			host_cross_mapped_mask |= BIT_ULL(hw_idx);
+ 	}
++	return host_cross_mapped_mask;
+ }
+ 
+ struct kvm_pmu_ops intel_pmu_ops __initdata = {
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 5c5766467a61..2a496fd64edc 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7247,12 +7247,15 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+ 	struct perf_guest_switch_msr *msrs;
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
+ 
+-	pmu->host_cross_mapped_mask = 0;
+-	if (pmu->pebs_enable & pmu->global_ctrl)
+-		intel_pmu_cross_mapped_check(pmu);
++	struct x86_guest_pebs guest_pebs = {
++		.enable = pmu->pebs_enable,
++		.ds_area = pmu->ds_area,
++		.data_cfg = pmu->pebs_data_cfg,
++		.cross_mapped_mask = intel_pmu_get_cross_mapped_mask(pmu),
++	};
+ 
+ 	/* Note, nr_msrs may be garbage if perf_guest_get_msrs() returns NULL. */
+-	msrs = perf_guest_get_msrs(&nr_msrs, (void *)pmu);
++	msrs = perf_guest_get_msrs(&nr_msrs, &guest_pebs);
+ 	if (!msrs)
+ 		return;
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 951e44dc9d0e..bfcce24919d5 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -677,7 +677,7 @@ static inline bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu)
+ 	return !!vcpu_to_lbr_records(vcpu)->nr;
+ }
+ 
+-void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu);
++u64 intel_pmu_get_cross_mapped_mask(struct kvm_pmu *pmu);
+ int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu);
+ void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu);
+ 
 
-Thanks,
-Oliver
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+-- 
+2.49.0.1204.g71687c7c1d-goog
+
