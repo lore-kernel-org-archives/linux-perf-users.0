@@ -1,115 +1,224 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8414BDDAB;
-	Mon,  2 Jun 2025 18:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D55E13B797
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Jun 2025 19:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748889756; cv=none; b=KzEO/ODompL0g1DiPqf9XWii96R1AHugjePP5SlY1nedgopsyGEUzaQaXxmXNuSDxbKsuFENsJ01N7Izpocj/kFLW6Ju8wmmtwCsCcaXYCKdkdyS6MMaKAyIELpWJXSFTN5ASxtXMvU7wxahqo+V4i3xUu3v1aHvL5CipDxzAl0=
+	t=1748892540; cv=none; b=trAs94XJS9bF8LbUyA3oheqzjvPkqt1dSoOZFA3LX744tQrkPMZ4TqsfrNeta7EwGZl1FiPjPZbhCFX0uxY8T6DRC9wDQLpaLL1q1fl8FGx6RNx/Dir2pdRjAVuJjVDDJKCwA+EjHvARIezPrSD7M9CUuLGirvmZt06zWT2tELA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748889756; c=relaxed/simple;
-	bh=JXUGtBxMmZ3qxADNC8z55VEIcDThXMmxnX/W1hjZciU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GN5R64Uba+f0/qHU6NWBp6QkPvU1upfZ7lbwSj/ku1PeKb+XnuaKP55s1Hk7VNonKUDaSd+2XVocH2cWD9/0Vgv1ndB3TWvmt/E2/xwLZrt27DgHzU/1SjFmhOy7cK2ev7cwysLzhDPVv1nMAY8Hgo/zSBDCO43AG1teMux94TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04D801424;
-	Mon,  2 Jun 2025 11:42:17 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B0073F59E;
-	Mon,  2 Jun 2025 11:42:31 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	mingo@kernel.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	leo.yan@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	David Wang <00107082@163.com>
-Subject: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Date: Mon,  2 Jun 2025 19:40:49 +0100
-Message-Id: <20250602184049.4010919-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748892540; c=relaxed/simple;
+	bh=Bkp+RHmq5Zb8XC8EbWlPhlhfVe8QwDCY3ZtSkb5UPso=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aRJeMCez69I5zeC/d4R2uuUFAwXRgr3TzKGQ3La3Gc471qlVaZ0nOqahA+eDQSQfEqfKNRI5k3rbYAsCCkjt8mqkppUh+EHTWpu1JX3K/Jpe8xiAgYkA5xbnxY303d6xP5WN6qusXqOTQLEtozET2EJa5VdmPHuiDAPR7XQ12LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XDrZYzTf; arc=none smtp.client-ip=209.85.166.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XDrZYzTf"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-86cf0e77efcso599427339f.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Jun 2025 12:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748892537; x=1749497337; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XDqE8mFNSY/ZirLnr+lInzWb5qO4cUyD2wakE3p29r0=;
+        b=XDrZYzTfUvfcveiV/2SQ3WvdQeceqlug2ytLntPdDuPPTnoTrNaYRh6IRYgh70BxJn
+         G47KoGTrpJjSvRjiOBFHdgUhd2vjt0cbJZdDJLl2bu+2BeTgZ8YXnWeysk8346CeYH5b
+         vQnRmtDS6ZPDIjzZlunD/tSRQ6FugEnoOqSoDAMZ0D62yS4MuRJizK0IrMQZC+FtHBVB
+         ZrDUQcfO+Bh4uU3OfDCioGBfoGIG9eNmFcPFxphi7Ew0KKPrZ80Wm0peBY9chO2hPaWn
+         tngZne7iGzJ6LAR972Ppv7mIhuaiTUcDzRWjoobQYGtPtg3X9UccCbM5g22B86+LIphx
+         iFMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748892537; x=1749497337;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XDqE8mFNSY/ZirLnr+lInzWb5qO4cUyD2wakE3p29r0=;
+        b=SuVi6cjRDDsUvw3EVGJN1DXihy7bFgUBnB2Xzg6Q4BNL6CquAMFO/qpxf1MB7bmlHp
+         GCn9+X+osrBKJAbbh0jkLHb1UuLNSjhLl8vbTktH2/1BHGzNc17GTGJ2hjhdgFxh1YEI
+         tirmxoA/e3bbPQ0p4fqQpH7xRmJhwKQ3G6IIy5eEV91T5pqsWVolj5+PCB4cVEcUS405
+         AwtlPkkTfmwzhyvaR7TZyuezdvN8eZ2MFXaZW0+Gvnf3Dx/stlFcXXHnVauuXa2zDBjY
+         eqdJFqsp0gNAH9M/EVpArnB3udphMYetfCnWGWmMjWzXHKiRJPPBWeMo8BFh5k7rwE+B
+         7VGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXp2hlcNBR9cbzPtFnLSVDJdypkLRd8pGK2uU5knk0mvaI88ItSQwjziZFC48p26HHFH/zyHY+oprk4MDsP4bB1@vger.kernel.org
+X-Gm-Message-State: AOJu0YygpCnLV6zR4foqIRFkNBYhYgrVe+iNPotQgm3DjGVoYftU916d
+	i2sKylNBPaJc46FbwgeayyiMhPSuRhUjPkHy+5Ocq4RJzWs/1blFjRjItbfqwgBpajTS5zzYxX9
+	60N4gQCS/ZZB/YvsOqniig5ep4A==
+X-Google-Smtp-Source: AGHT+IFxeHQ76hpwbia1zMeQqWVTlfaiwmMC2Ena7lOl4cpvV3skj0sAcuon/x4Imo4A5kPFT2TaGxeLGLjA5Bo9DQ==
+X-Received: from ilbby12.prod.google.com ([2002:a05:6e02:260c:b0:3dd:b4dc:eb43])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:194b:b0:3dc:787f:2bc8 with SMTP id e9e14a558f8ab-3dda3363f25mr100622585ab.12.1748892537342;
+ Mon, 02 Jun 2025 12:28:57 -0700 (PDT)
+Date: Mon,  2 Jun 2025 19:26:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250602192702.2125115-1-coltonlewis@google.com>
+Subject: [PATCH 00/17] ARM64 PMU Partitioning
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-changes the event->state update before list_del_event().
-This change prevents calling perf_cgroup_event_disable() as a result,
-cpuctx->cgrp can't be cleared properly and point to dangling point of cgroup.
+Overview:
 
-Because of this problem, some machin meets the below panic[0]:
+This series implements a new PMU scheme on ARM, a partitioned PMU
+that exists alongside the existing emulated PMU and may be enabled by
+the kernel command line kvm.reserved_host_counters or by the vcpu
+ioctl KVM_ARM_PARTITION_PMU. This is a continuation of the RFC posted
+earlier this year. [1]
 
-863.881960] sysved_call_function_sing le+0x4c/0xc0
-863.881301] asm_sysvec_call_function_single+0x16/0x20
-869.881344] RIP: 0633:0x7f9alcea3367
-663.681373] Code: 00 66 99 b8 ff ff ff ff c3 66 ....
-863.881524] RSP: 002b:00007fffa526fcf8 EFLAGS: 00000246
-869.881567] RAX: 0000562060c962d0 RBX: 0000000000000002 RCX: 00007f9a1cff1c60
-863.881625] RDX: 00007f9a0c000030 RSI: 00007f9alcff1c60 RDI: 00007f9a1ca91c20
-863.081682] RBP: 0000000000000001 R08: 0000000000000000 R09: 00007f9a1d6217a0
-869.881740] R10: 00007f9alca91c10 R11: 0000000000000246 R12: 00007f9a1d70c020
-869.881798] R13: 00007fffa5270030 R14: 00007fffa526fd00 R15: 0000000000000000
-863.881860] </TASK>
-863.881876) Modules linked in: snd_seq_dummy (E) snd_hrtimer (E)...
-...
-863.887142] button (E)
-863.912127] CR2: ffffe4afcc079650
-863.914593] --- [ end trace 0000000000000000 1--
-864.042750] RIP: 0010:ctx_sched_out+0x1ce/0x210
-864.045214] Code: 89 c6 4c 8b b9 de 00 00 00 48 ...
-864.050343] RSP: 0000:ffffaa4ec0f3fe60 EFLAGS: 00010086
-864.052929] RAX: 0000000000000002 RBX: ffff8e8eeed2a580 RCX: ffff8e8bded9bf00
-864.055518] RDX: 000000c92340b051 RSI: 000000c92340b051 RDI: ffff
-864.058093] RBP: 0000000000000000 R08: 0000000000000002 R09: 00
-864.060654] R10: 0000000000000000 R11: 0000000000000000 R12: 000
-864.063183] R13: ffff8e8eeed2a580 R14: 0000000000000007 R15: ffffe4afcc079650
-864.065729] FS: 00007f9a1ca91940 (0000) GS:ffff8e8f6b1c3000(0000) knIGS:0000000000000000
-864.068312] CS: 0010 DS: 0000 ES: 0000 CRO: 0000000080050033
-864.070898] CR2: ffffe4afcc079650 CR3: 00000001136d8000 CR4: 0000000000350ef0
-864.673523] Kernel panic - not syncing: Fatal exception in interrupt
-864.076410] Kernel Offset: 0xc00000 from 0xffffffff81000000 (relocation range: 0xff
-864.205401] --- [ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+The high level overview and reason for the name is that this
+implementation takes advantage of recent CPU features to partition the
+PMU counters into a host-reserved set and a guest-reserved set. Guests
+are allowed untrapped hardware access to the most frequently used PMU
+registers and features for the guest-reserved counters only.
 
-To address this call the perf_cgroup_event_disable() properly before
-list_del_event() in __perf_remove_from_context().
+This untrapped hardware access significantly reduces the overhead of
+using performance monitoring capabilities such as the `perf` tool
+inside a guest VM. Register accesses that aren't trapping to KVM mean
+less time spent in the host kernel and more time on the workloads
+guests care about. This optimization especially shines during high
+`perf` sample rates or large numbers of events that require
+multiplexing hardware counters.
 
-Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/ [0]
-Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-Tested-by: David Wang <00107082@163.com>
----
- kernel/events/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Performance:
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..909b9d5a65c1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2498,6 +2498,10 @@ __perf_remove_from_context(struct perf_event *event,
- 		state = PERF_EVENT_STATE_DEAD;
- 	}
- 	event_sched_out(event, ctx);
-+
-+	if (event->state > PERF_EVENT_STATE_OFF)
-+		perf_cgroup_event_disable(event, ctx);
-+
- 	perf_event_set_state(event, min(event->state, state));
- 
- 	if (flags & DETACH_GROUP)
--- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+For example, the following tests were carried out on identical ARM
+machines with 10 general purpose counters with identical guest images
+run on QEMU, the only difference being my PMU implementation or the
+existing one. Some arguments have been simplified here to clarify the
+purpose of the test:
 
+1) time perf record -e ${FIFTEEN_HW_EVENTS} -F 1000 -- \
+   gzip -c tmpfs/random.64M.img >/dev/null
+
+On emulated PMU this command took 4.143s real time with 0.159s system
+time. On partitioned PMU this command took 3.139s real time with
+0.110s system time, runtime reductions of 24.23% and 30.82%.
+
+2) time perf stat -dd -- \
+   automated_specint2017.sh
+
+On emulated PMU this benchmark completed in 3789.16s real time with
+224.45s system time and a final benchmark score of 4.28. On
+partitioned PMU this benchmark completed in 3525.67s real time with
+15.98s system time and a final benchmark score of 4.56. That is a
+6.95% reduction in runtime, 92.88% reduction in system time, and
+6.54% improvement in overall benchmark score.
+
+Seeing these improvements on something as lightweight as perf stat is
+remarkable and implies there would have been a much greater
+improvement with perf record. I did not test that because I was not
+confident it would even finish in a reasonable time on the emulated
+PMU
+
+Test 3 was slightly different, I ran the workload in a VM with a
+single VCPU pinned to a physical CPU and analyzed from the host where
+the physical CPU spent its time using mpstat.
+
+3) perf record -e ${FIFTEEN_HW_EVENTS} -F 4000 -- \
+   stress-ng --cpu 0 --timeout 30
+
+Over a period of 30s the cpu running with the emulated PMU spent
+34.96% of the time in the host kernel and 55.85% of the time in the
+guest. The cpu running the partitioned PMU spent 0.97% of its time in
+the host kernel and 91.06% of its time in the guest.
+
+Taken together, these tests represent a remarkable performance
+improvement for anything perf related using this new PMU
+implementation.
+
+Caveats:
+
+Because the most consistent and performant thing to do was untrap
+PMCR_EL0, the number of counters visible to the guest via PMCR_EL0.N
+is always equal to the value KVM sets for MDCR_EL2.HPMN. Previously
+allowed writes to PMCR_EL0.N via {GET,SET}_ONE_REG no longer affect
+the guest.
+
+These improvements come at a cost to 7-35 new registers that must be
+swapped at every vcpu_load and vcpu_put if the feature is enabled. I
+have been informed KVM would like to avoid paying this cost when
+possible.
+
+One solution is to make the trapping changes and context swapping lazy
+such that the trapping changes and context swapping only take place
+after the guest has actually accessed the PMU so guests that never
+access the PMU never pay the cost.
+
+This is not done here because it is not crucial to the primary
+functionality and I thought review would be more productive as soon as
+I had something complete enough for reviewers to easily play with.
+
+However, this or any better ideas are on the table for inclusion in
+future re-rolls.
+
+[1] https://lore.kernel.org/kvmarm/20250213180317.3205285-1-coltonlewis@google.com/
+
+Colton Lewis (16):
+  arm64: cpufeature: Add cpucap for HPMN0
+  arm64: Generate sign macro for sysreg Enums
+  arm64: cpufeature: Add cpucap for PMICNTR
+  KVM: arm64: Reorganize PMU functions
+  KVM: arm64: Introduce method to partition the PMU
+  perf: arm_pmuv3: Generalize counter bitmasks
+  perf: arm_pmuv3: Keep out of guest counter partition
+  KVM: arm64: Set up FGT for Partitioned PMU
+  KVM: arm64: Writethrough trapped PMEVTYPER register
+  KVM: arm64: Use physical PMSELR for PMXEVTYPER if partitioned
+  KVM: arm64: Writethrough trapped PMOVS register
+  KVM: arm64: Context switch Partitioned PMU guest registers
+  perf: pmuv3: Handle IRQs for Partitioned PMU guest counters
+  KVM: arm64: Inject recorded guest interrupts
+  KVM: arm64: Add ioctl to partition the PMU when supported
+  KVM: arm64: selftests: Add test case for partitioned PMU
+
+Marc Zyngier (1):
+  KVM: arm64: Cleanup PMU includes
+
+ Documentation/virt/kvm/api.rst                |  16 +
+ arch/arm/include/asm/arm_pmuv3.h              |  24 +
+ arch/arm64/include/asm/arm_pmuv3.h            |  36 +-
+ arch/arm64/include/asm/kvm_host.h             | 208 +++++-
+ arch/arm64/include/asm/kvm_pmu.h              |  82 +++
+ arch/arm64/kernel/cpufeature.c                |  15 +
+ arch/arm64/kvm/Makefile                       |   2 +-
+ arch/arm64/kvm/arm.c                          |  24 +-
+ arch/arm64/kvm/debug.c                        |  13 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h       |  65 +-
+ arch/arm64/kvm/pmu-emul.c                     | 629 +----------------
+ arch/arm64/kvm/pmu-part.c                     | 358 ++++++++++
+ arch/arm64/kvm/pmu.c                          | 630 ++++++++++++++++++
+ arch/arm64/kvm/sys_regs.c                     |  54 +-
+ arch/arm64/tools/cpucaps                      |   2 +
+ arch/arm64/tools/gen-sysreg.awk               |   1 +
+ arch/arm64/tools/sysreg                       |   6 +-
+ drivers/perf/arm_pmuv3.c                      |  55 +-
+ include/kvm/arm_pmu.h                         | 199 ------
+ include/linux/perf/arm_pmu.h                  |  15 +-
+ include/linux/perf/arm_pmuv3.h                |  14 +-
+ include/uapi/linux/kvm.h                      |   4 +
+ tools/include/uapi/linux/kvm.h                |   2 +
+ .../selftests/kvm/arm64/vpmu_counter_access.c |  40 +-
+ virt/kvm/kvm_main.c                           |   1 +
+ 25 files changed, 1616 insertions(+), 879 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_pmu.h
+ create mode 100644 arch/arm64/kvm/pmu-part.c
+ delete mode 100644 include/kvm/arm_pmu.h
+
+
+base-commit: 1b85d923ba8c9e6afaf19e26708411adde94fba8
+--
+2.49.0.1204.g71687c7c1d-goog
