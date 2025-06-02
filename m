@@ -1,226 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8168717A30A;
-	Mon,  2 Jun 2025 20:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748897111; cv=fail; b=P4ibtkrd7Aazk6OZ2SV4NQmxEciJ0d/qBNDcg81QwziUh3FdUNxZVmRStsgmeTznHTi1cbuHOY1mmQi2n3lWuXMi63PGAv9cRFiZDosc50xop4ZGehA2nNHbIBo54I0+RFlSj+DEakPlJ3P2MPFgccSKIq69bNFceJOyD6UUrf4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748897111; c=relaxed/simple;
-	bh=StH6vIUj2kaa5piES7a263Pc6nXu/O30+t+RC0XzTsw=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fhqtpS+qJn15Q7Kk+S3WZSi9IxVawfZTnflUPcYooDmWmK7qItnnbtVi0OKfWXTMySXlODN36GeMPKzeIkF+f57U3ZXHxD/uHkg23EhE/H9lfPMVsvDa3IEEKhWSfO8Iii0Nui27QYTV1HPtEfsB9SvKk2its4xd/CcVhte8zLQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gswNcyA9; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7E722A7F9
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Jun 2025 21:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748900569; cv=none; b=hzNrm/6DEWAlXE6OCCYc88IgzHryFrDemSH6cBs+Nl6yA88nSI7mH7HbhTT3ObZcx/dr+cBQPz3hD7SpANmukD4V6zzJFj9OZESyd2mzOG3GvkMcgGo5vXskLtN+0AAUu88l4i+yIkkU8cSjbUd3ip+hvVuDBa9dVUWhMtKGn6s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748900569; c=relaxed/simple;
+	bh=ckaYtR2Fj0bTMmLPJv/DKzJ6ZVnPamOnPCJGUN8RsNU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=f9BERFG6gkj5SCWDt0rf/1yF45nzydqxKeH27igJPaJrs+6p1vDc7SPQIUX053hfk7DPU/zRuCbuJ6TQJFAnIb5rPJQ94Y0YjcjqZdXR37PdPli8GQkx/+JAnfFV51UnvyBkcisXBkuaCGcPxj8FGITLIK4NoTuf9jxAG1+Dwdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C/gE50r/; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gswNcyA9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748897110; x=1780433110;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=StH6vIUj2kaa5piES7a263Pc6nXu/O30+t+RC0XzTsw=;
-  b=gswNcyA9EGUAjdX3S89JbfaMwGdi4IUJ8f8/GQWB3oh/aaLN/0P8Ok/l
-   J0xTgkeKQOD+z+wQJpWQhyh9qN/Er8psKBWrqSABPAnK+jyiPOSmsTk0j
-   gKtQZNHLuMhw37Z1Qn8EhwSdbGOvlgxlaSH7a+TUUDdJRYPFtkShnFXJ1
-   ocCLxQNStmS1sA71SEkSnsqMrPNFWKOsaRnGdlmZGjpCpyNRf+D9RF/OI
-   /lh8LgTmTt6P5kC0YQheBk83JC99x9/givZZC8+4xx99P7IDeRj2bnpi+
-   O1TbzH1vbaEG0hefl+3rk4tjLpo9YhHr5zZLrKAiEhfqnwCc5EB5RyVv5
-   A==;
-X-CSE-ConnectionGUID: 4nKsb7pVQAOT5z00A5ub+Q==
-X-CSE-MsgGUID: 4FzzMjr+Sqy2Gk0CgwHe9w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50040568"
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="50040568"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 13:45:09 -0700
-X-CSE-ConnectionGUID: CQhzbe2WR5iNLGsT7Miv9Q==
-X-CSE-MsgGUID: IHYcZJ1oQ1ayNmvCb08FRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="149645625"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 13:45:09 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 2 Jun 2025 13:45:07 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 2 Jun 2025 13:45:07 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.74)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Mon, 2 Jun 2025 13:45:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jcxX6RoTlYuV2eE0DG9477JQO+1NswBrFGO4wJaSVKL/YhqidOaGEBzRDMf0qsl4/uz94GD7CrX+dLWB0PmYfkgMvcVH2UoJYgHomYucoqpRj6LZi6DKqSk/XM+LL3/XnGVfeM++J1yjGXjiRWgAI3EciEibQ4lgTRUUq29Lj1RsNl+AdZWftOA5VFsL03vM8AIRQEgosyoawP5JIJ6/4xSJ+jnRCG7zlHkemTe/x906IxZk9I9V7WRndXC0vA1QK1xFZS86EJ2N1UuC6HUahmLxp1k3lQCQtuFTMX/SGtJl6AvYUTCJrAx2qZcnyHE8VakH0VbITdKnDWggFy/LUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LZcpKvIxlF7kdwDHrjV7wnGLB3wGYhoT1WFEJLDGiAo=;
- b=sV/ouCd2AwWD8Vlf2rzTot2Y11H/DKk3nFq/HuKw3UMoF1HL3Oe95XMjsZjZzrPWORbiNgS9FjkMPBclz6IELI7iQRiKHpx9krJvnl2n8vkW28VLBUxE0/DK09MR8xM2Gx11otLPrXjAeVWYGiSdIjmPTqMzLVwFH4JH1oqUZroMoaSzS266mFNjT7MKy3vwDh/irWiYA6TQKSsk+GcIhOXB9dHq7yw4qAB4wh5d7WbYC9RbZpIzDl8YvyfyteCcod4c2f+Rg/DMPV+DnS8Ejm3vOwqzZaMNUTznW8rJkMnY5dyVf+vPDX+YuRftltHKX/z0NkmOo1sv4z/t1yHshg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
- by DS7PR11MB8828.namprd11.prod.outlook.com (2603:10b6:8:257::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.37; Mon, 2 Jun
- 2025 20:45:04 +0000
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b%4]) with mapi id 15.20.8769.025; Mon, 2 Jun 2025
- 20:45:04 +0000
-Message-ID: <e6cb58cd-bd0e-4453-adf1-126a4b830b96@intel.com>
-Date: Mon, 2 Jun 2025 13:45:02 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
- entry point from KVM
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>, Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Thomas
- Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "Peter
- Zijlstra" <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	"Kan Liang" <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-	Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>, Andrew
- Cooper <andrew.cooper3@citrix.com>, "Kirill A . Shutemov"
-	<kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, "Sandipan
- Das" <sandipan.das@amd.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-edac@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-References: <20250513203803.2636561-1-sohil.mehta@intel.com>
- <20250513203803.2636561-2-sohil.mehta@intel.com>
- <aCSljsvI0A-HC_DT@google.com>
- <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
- <aCaRvwnkXf07Mtue@google.com>
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <aCaRvwnkXf07Mtue@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR20CA0027.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::40) To BYAPR11MB3320.namprd11.prod.outlook.com
- (2603:10b6:a03:18::25)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C/gE50r/"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d84fe5f8so1140353b3a.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Jun 2025 14:42:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748900567; x=1749505367; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dq9rWg0WQtk35a/syIdVrxIN1jVZ3Xs4zsk5PWEtjOs=;
+        b=C/gE50r/vC4ZMqxFyUBaaqwgbBkNkKkfdQWqq397Ib7OxrDUhdLGq365w9HOEMktU7
+         34il4QMMfHNM96xl3B23gs0/g6CXRGubTCtFcHclDX3hnCMIpoezfJEoPeBTAY9keqig
+         uVKQYVFn3+eQDtRr4wenZGfF5rjQNZWTQaITNM50iVq17VV3V8VWyo6KlwlfbY3Qpqcy
+         lDbzPU79MSQacxH3HzdpRPILmS/DG3+eu59fkKvrOiPwoBq8z8C/d6npHmXXQyEEDwN0
+         yQK/kdisVjqQ1unHY8tCIpJEo50pf63ELrFAHUut96w/uIWQGeGF/aPs4Jtq0y5K1vub
+         xdwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748900567; x=1749505367;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dq9rWg0WQtk35a/syIdVrxIN1jVZ3Xs4zsk5PWEtjOs=;
+        b=ni3J7B+A1UORSWd8DOE+5+QLq+1oIoa7BH8SQbgZltXtcrqv3U1RIljIPoR9egnmQI
+         7Bdl39IaVheltRNOXXc9WVLTygz0FcyLInsqOhuJy4C08zySI6ytYOjtK6qjvtvohFDd
+         r6NBKNxWHIx2NIiYfRuitpr0KCcaZzsZ4jKpVuk6kVjhKRWn5a2bT0ujzAhKk3oiQCSo
+         AcDHUg3noBywId6YAIMQU0YEzlEyk8TpdEiGUw28QgaT/3JEF1wxGUh9oyijGPXbw0Sh
+         VDTxDMHT0YzALz7LtbxI0DvpU9CBI32KZD8KwsrTpOrG4Lm6n5ixmUPYKYpSLBDsfUeO
+         Y14A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwwds/k6xogcrbGP0pHrnYPWgMiS+nrgw+pUaJWmqplZYIJ54Ydd83Etu21c9DugqCnjgSNLitPSDeCV15I6Z3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzypgGD7gpWEicAvr6Kh5ffiIPIkTQH03n5RNt1fyTGmwrm3408
+	YchQLx9uMriDeCfvvySOLoM96RBK5T0qIUCxovlLPJrhfu7MCKM49EMTgJVAfyaUrJUSjVpswmb
+	iBiXcPA==
+X-Google-Smtp-Source: AGHT+IGP+igBSt2KbXYpY47Cum6/12d7ZKaJ7lAPbHVwRqO4FufM1cqAilI67WNoocjAfjBEbiMhF3OvXWQ=
+X-Received: from pfbhd7.prod.google.com ([2002:a05:6a00:6587:b0:746:2e5d:3e6a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:238b:b0:736:a540:c9ad
+ with SMTP id d2e1a72fcca58-747bda1a68amr19816923b3a.20.1748900567066; Mon, 02
+ Jun 2025 14:42:47 -0700 (PDT)
+Date: Mon, 2 Jun 2025 14:42:45 -0700
+In-Reply-To: <20250602192702.2125115-5-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|DS7PR11MB8828:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45623421-5867-444c-f4c2-08dda2165a28
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?eUFBWVFVbEhnRXBnbUFrOGhGTjJ2S2szNEZiVHJoQVg4aWhUM0FZQVJvK0ZT?=
- =?utf-8?B?dkVmOTNUSEIzVVlObWhZWlR6RnpDWnhkd2plcGc4UFk4Z0RGblo0U1lFTGN6?=
- =?utf-8?B?QkNEN2RhR2V0ZGZPbnpIWEFVL3FNR0swdDNwMmdSZ3o4b3Z1SVRONmNHaDVJ?=
- =?utf-8?B?MloxaDUyWEJqOFhaa0FsdENLTWd1Tk9LSkJKcTg5Rk9DZHJOa3lZejNTdkZ5?=
- =?utf-8?B?RnQ5cjdnZkJTM1poVHg0YzJ5QzFCTUZwTlhjWkpBU1Nidkc0cUwvbi9rOEow?=
- =?utf-8?B?L1M4aG5mYlFxN2I5WWxRajE0dUt3blEyeFdHVG0xcEE3YWNwdWhnaGo4MGVx?=
- =?utf-8?B?S3JuaVBmUUJTSnNrZWhreEorOUZoKzhMSTZlc0FXSVM1WFZGUFJsdHduZmow?=
- =?utf-8?B?Y1BmM3A5WHIyQnZiYXBpWU9wWHVvdGs1Z0Ixb3ZOK3hFeDVtWHptUytIaFhi?=
- =?utf-8?B?NU84UTErMmtBeDIxZTd4TEYrL1J4MXVTOWZpU3V2eUtHeWJwblkxc3did05L?=
- =?utf-8?B?SmVmRHBwRlR5bEFTVzZtZWptYWdUZ1Jpa1B0UlZYeFBzMkQzbVhNN21WbGdJ?=
- =?utf-8?B?MTJobDYwdCttU3hyMjBLUVBEbmcwRHkzS3kzeVNjTEIvK1FwbVorajN0VEpm?=
- =?utf-8?B?bUNKaVF4eVNTTC9Fb0ZqMUh4clFmamxmdUhHY3NySVllL0dmVVU5ZVFDWHJT?=
- =?utf-8?B?OHpJM1NRUEYyMUxKa09rNmZUL1l2QlhOaGxrWm9sMnZxQWVVejdXakg0MW5s?=
- =?utf-8?B?aFQxREdMRHYvdGlNRFM2R3Jmc1hBQjBwMXR5empBY2E5UlA1RUUwcUpUY25j?=
- =?utf-8?B?MWVxZHpaSEg1V2ZsRjVZeHdRZDE3OU5vWlRSVHp4U2laS3pxRXl6Z1RPZnRJ?=
- =?utf-8?B?VDR3ZDYrZ0FJMmJTeEtXUXgzYjJNNmxJT1FPcC9Ua0ZlcTQ2TExKdDVBaWdL?=
- =?utf-8?B?R2dmcGRnalQrNFM0d0ZXUzhkRzdFckZZV3k1UEFDakh3YzFpajRTZEs4SkJw?=
- =?utf-8?B?ZFlRa0pKcjZ3bHJ6ZEdoUk12NnUvWlZjK2xkS3VvUW11T0xnSG5mcUhUZnFr?=
- =?utf-8?B?N1d1MFh3MDBnbzJZWnpKbmlmbFAxbTlvSzhjS3QrRkppN3lRaG9rZHVWSnRl?=
- =?utf-8?B?TnpJbk5PeUhjRVgwRWw1RTB3QWU0eWFWQnJyWTN0V1prQk5hSDhKS3lpbUtJ?=
- =?utf-8?B?WjZFbWJxQ2Nna0N5VjlQYjVBcEc2MTZHbld4YkVYM1JmOHBTeG1MN0JOR1U1?=
- =?utf-8?B?bXQwd2Y1K2NtUmxlM0JJKzF4Wk5RSnFrcm05MmI3K29UcCtXTWxYRlpzb3l0?=
- =?utf-8?B?WVBhelNDM2ZRYmM2TE4yTTBucTd6RndpM1NsemxNWnVxZHZVMDk4bkJBa1pX?=
- =?utf-8?B?Unk2a2tvNnVueHBhM2d4SHF6UFpab3B4SXJQM1dzYU5MeXFKVm1QdXN2UVZN?=
- =?utf-8?B?QjFuK0xBdkpKd1RIRzdMeGFha00vcHRKenE0WGlRNDVmc05UL211cFdHcmlX?=
- =?utf-8?B?V3YyNTY4QVNJay9pc0tTenc4NTg1MW50b1RXV1lobS9TOTlmWk9rWU5xK01t?=
- =?utf-8?B?aGErbmlOQTAwVUd3WWN6Q1hGSlA0a2M5bWduaDQraDNCRitYNFg1TTBpRXlH?=
- =?utf-8?B?Rmd5NXlHbzFoRmtWRmpzeXlZSUJ4RllMbldrQnhZVlhFaDFBeVNlcjgzZnBu?=
- =?utf-8?B?QzRqa1lPTmIvUW5XL2FFNEdleFcxRHhzakNiTklPMmVobnFrOVlyeWcrbkZJ?=
- =?utf-8?B?enQyY2d6NjdpN2JPaEpuMWl4bkk2Y2c0YXN3T3lOUVh2TmJiVmIrL0F1M3Qr?=
- =?utf-8?B?azQ2bkI3MDhHczB1VWdNcUZWcFJCdE83a1hxUFVFRElFOUVEOWZpRSt1M3Fs?=
- =?utf-8?B?OTF6dFN3cWJMRVBhdkhGNXJUZEtvNzNxTEgyaUZWN1hFSGRmYnpQVW5OV0l3?=
- =?utf-8?Q?yuqUPlMa3Ns=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ei9QRVpITDNYSmNMZk9tNitRcXB0Y0UyM0VMdGlXdHhTemFleWhRRmFBZFp6?=
- =?utf-8?B?d01ydTA5ZFpiVFpDQlg5ekpXcW1GYTBIWmlyRGRUTm1YM0tiVTNJYkN0cVdt?=
- =?utf-8?B?ZDdPSWh3bHhGTmVlRUozaGVLeDNUQUk3aHlKaWxvT3hreVNpL3ZMaHBFNkRt?=
- =?utf-8?B?L1hpU0FpVGs5VjQ3S1R6dEUzd3VHOXhtdjVkNWI0aEVLMkQyeFVoYzRBS2Zz?=
- =?utf-8?B?ZVp2aGM2eGFvY2wrQVBaeUtUSEllN2pMakFHblZhNkc1OHFIKzUxKzN0cXo2?=
- =?utf-8?B?Y2gxZHFuZGdBS0xnU3dCYVNPdDRTa2JodW10bkxxT2xwWnJTYzQ2VEQ1aXJ6?=
- =?utf-8?B?cGIrMlozREVRYUxZTng4YVh4QUxTbjUwUHh6OFNGL0U0MVRwbzA0djBVWHpL?=
- =?utf-8?B?bUd5TTRQNDdSRExVT2RsTVBDcHZsUnlPaGhzVmNBME9nWnZMcG8vRDV5OUdx?=
- =?utf-8?B?dDQ5WEJzK29TRVh0L2dHZ1BVNTNCZW15VjNsVWFlajFMbHhRQmI4Q09OdUJZ?=
- =?utf-8?B?Smk4RnVVemJycW5UYUtHSzlXVXRYNERsbkhiaEJjMzI5MG5pNmRuV3BTNC91?=
- =?utf-8?B?akRpMkgzK3dNYnFRbHdjeVgrelFOTGlPbWdxcE5FK0U4dDZBcVI2U1N4VjhK?=
- =?utf-8?B?Ni8rTVg0SXVheVJKMFlvQ2VpYk1MNVdjY0Q5UzBEVkNEOGpiT3YxbHF1WHZK?=
- =?utf-8?B?dkt2MEpDcFhzNjNZV1d2dWp2cHdWWUlnS3JyNkF4aDlhMThSNHFPM09oVmRy?=
- =?utf-8?B?TkhqRlN2T3pIYkYzS2NFOEZWclFTVndhSVpVWGkvSzdLK0MyakNITVQ3ZGMv?=
- =?utf-8?B?ZnYvUnZoZWJnYzZrdG41M1Y1OXJ0Q1U3M1llM3VWOHpKMGlKQ20vUGRRbGRQ?=
- =?utf-8?B?UzQvL3grUUh0WTUraG0rNElFUzEvbXpKbVFDV3FPWVZvTU9MWUx0SW5zV0F2?=
- =?utf-8?B?ZFEyZzBIQVE2UVM4WFZFeDByMndFTURwZnJ4S1ZESzNWWnoxa0J1eEpTZTFK?=
- =?utf-8?B?OVFVSUhvN3Y5ekVjeHd3TElrRWZ1WFRFNjMvV3c5UXBnTFMxUXJlN1kzOFBE?=
- =?utf-8?B?SStEWnErU1lYMjA2OW1KbmJnWU9YY2I4K2ZwZmlvRHVKaHlTdVlWNytOT0wy?=
- =?utf-8?B?TkF4Z1FhaWp3NmMvdjZpZUdVZnhCYWlWdEtqbEc2WVljTE9rdHJtUDBQenFU?=
- =?utf-8?B?RVkzK2FEaFFOWUtWSjBDMVZLME9LMmhzWEFQUENQZzlDV05xQVJyeTE3ZHRp?=
- =?utf-8?B?dHJmM2JVVHQydjlkTmRMNEUzNWRwYm5Cc1RxclJBMVVmNlo3dkgrNFFVSzh2?=
- =?utf-8?B?cFI1SVpyTTV3K3hja2pFQi9jdlpMcS93NUk1YktKM2tod2w5TXVsRXViQXUw?=
- =?utf-8?B?cUpPelZFUE9TaGh1Rkl1WDBBNVBRMkw0M3NzdTYzRlpld3VqMTVYY0NMODg4?=
- =?utf-8?B?Um13UC9xeUFQdWpRcmdKVDV6VlJuTnFuYXBZNnQyZ3lKM1pFdWs4ajJ1b2pS?=
- =?utf-8?B?OGp0Y3VDMnhkQ25JTVh2b3BlTmFlc2ZaNW03Q0xuaG4xRDdUWlJJamI4UlBM?=
- =?utf-8?B?L2xJZ1Q5Y2lqcW42bHJoMlVSbDRrTmUrVHRkVkROTUF4b0tud054ZGwzOXlF?=
- =?utf-8?B?VUUwdjBFdmtZWVBwcW11Qnd1b3d6SjBKVk9JK2oySUc0ck5TNGp4bUFhS25Q?=
- =?utf-8?B?cVhJK1ZvelpOZktwL1ZQcjArMEZKaS9GbnE3S2l0L1RhL1ppQllQa0Jncll3?=
- =?utf-8?B?bms3QmtGcTJ2S0xuUXdCcEFkazNydjVxdHFRSEVneXBpUkZmTGk1d1dscm4r?=
- =?utf-8?B?NHVmOVRFd2syaGJCbHR0VnRpdVFabC9Oa24yVmhHaTQyUHlDeks4TWo2aWI5?=
- =?utf-8?B?WDJ1VU0yQzhFVVNybVU1alIzbTdZVW1jM2JTMmI2dXR4azYyR2EwSnlxWnRS?=
- =?utf-8?B?T2RObWVPY0E5RXdaWUQrR1JRVEdjZDc0VXEvaUJ4TE9SWk0vUzJIYlNqTmZm?=
- =?utf-8?B?RTR2bm1xMUx2OEIrVVNqRjNKdDlCV1hKOVpvSVVYL3BTQWxlNFhESndlWEZU?=
- =?utf-8?B?SUdMT0xhTWpyakRUdHB1RG82UkhQQUJYNTI3L0ZLajlCcFliaVUzaDN6S04x?=
- =?utf-8?Q?g1ol3RfSeDV+fpQxz6VmndPFa?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45623421-5867-444c-f4c2-08dda2165a28
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 20:45:04.3797
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vnm8lcfQoqbtgfL6WPiBw53UbXXF+j2wiptuoodxUHLBDshIM4IbmgDvv42MaJE9ANp810zBA0z1+CtVEIfjFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB8828
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+References: <20250602192702.2125115-1-coltonlewis@google.com> <20250602192702.2125115-5-coltonlewis@google.com>
+Message-ID: <aD4a1T7ZmBLNunxi@google.com>
+Subject: Re: [PATCH 04/17] KVM: arm64: Cleanup PMU includes
+From: Sean Christopherson <seanjc@google.com>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 5/15/2025 6:15 PM, Sean Christopherson wrote:
-> On Wed, May 14, 2025, Sohil Mehta wrote:
->> On 5/14/2025 7:15 AM, Sean Christopherson wrote:
->>> Compile tested only...
->>>
->>
->> No worries. I'll test it out. I am assuming you want this patch to go as
->> part of this series.
-> 
-> Yes please.  I can also post it separately, but that seems unnecessary.
+On Mon, Jun 02, 2025, Colton Lewis wrote:
+> * Delete kvm/arm_pmu.h. These functions are mostly internal to KVM and
+>   should go in asm/kvm_host.h.
 
-The proposed pre-patch works fine. I'll include in the next revision
-along with minor changes to patch 1.
+Ha!  I'm a hair too late, as usual.  I _just_ resurrected a patch[*] to move and
+rename all of the <kvm/arm_xxx.h> headers to <asm/kvm_xxx.h>.  If only I had
+posted on Friday when they were ready :-)
 
-Wondering if there is any feedback for the rest of the patches 2-9? They
-haven't received any comments and stay unmodified even with the new
-pre-patch.
+It's a relatively small series (mostly arm64 code movement), but it does touch
+all architectures due to giving the same treatment to kvm/iodev.h (and purging
+include/kvm entirely).
 
-Thanks,
-Sohil
+Any preference/thoughts on how to proceed?  My stuff obviously isn't urgent since
+I sat on the patches for almost two years.  On the other hand, the almost pure
+code movement would be a nice precursor to this patch, e.g. move and rename to
+asm/kvm_pmu.h before extracting chunks of code into asm/kvm_host.h.
+
+[*] https://lore.kernel.org/all/20230916003118.2540661-15-seanjc@google.com
+
+
+Diff stats for context:
+---
+Anish Ghulati (1):
+  KVM: arm64: Move arm_{psci,hypercalls}.h to an internal KVM path
+
+Sean Christopherson (7):
+  KVM: arm64: Include KVM headers to get forward declarations
+  KVM: arm64: Move ARM specific headers in include/kvm to arch directory
+  KVM: Move include/kvm/iodev.h to include/linux as kvm_iodev.h
+  KVM: MIPS: Stop adding virt/kvm to the arch include path
+  KVM: PPC: Stop adding virt/kvm to the arch include path
+  KVM: s390: Stop adding virt/kvm to the arch include path
+  KVM: Standardize include paths across all architectures
+
+ MAINTAINERS                                                | 1 -
+ .../arm64/include/asm/kvm_arch_timer.h                     | 2 ++
+ arch/arm64/include/asm/kvm_host.h                          | 7 +++----
+ include/kvm/arm_pmu.h => arch/arm64/include/asm/kvm_pmu.h  | 2 ++
+ .../kvm/arm_vgic.h => arch/arm64/include/asm/kvm_vgic.h    | 2 +-
+ arch/arm64/kvm/Makefile                                    | 2 --
+ arch/arm64/kvm/arch_timer.c                                | 5 ++---
+ arch/arm64/kvm/arm.c                                       | 6 +++---
+ {include => arch/arm64}/kvm/arm_hypercalls.h               | 0
+ {include => arch/arm64}/kvm/arm_psci.h                     | 0
+ arch/arm64/kvm/guest.c                                     | 2 +-
+ arch/arm64/kvm/handle_exit.c                               | 2 +-
+ arch/arm64/kvm/hyp/Makefile                                | 6 +++---
+ arch/arm64/kvm/hyp/include/hyp/switch.h                    | 4 ++--
+ arch/arm64/kvm/hyp/nvhe/switch.c                           | 4 ++--
+ arch/arm64/kvm/hyp/vhe/switch.c                            | 4 ++--
+ arch/arm64/kvm/hypercalls.c                                | 4 ++--
+ arch/arm64/kvm/pmu-emul.c                                  | 4 ++--
+ arch/arm64/kvm/psci.c                                      | 4 ++--
+ arch/arm64/kvm/pvtime.c                                    | 2 +-
+ arch/arm64/kvm/reset.c                                     | 3 +--
+ arch/arm64/kvm/trace_arm.h                                 | 2 +-
+ arch/arm64/kvm/trng.c                                      | 2 +-
+ arch/arm64/kvm/vgic/vgic-debug.c                           | 2 +-
+ arch/arm64/kvm/vgic/vgic-init.c                            | 2 +-
+ arch/arm64/kvm/vgic/vgic-irqfd.c                           | 2 +-
+ arch/arm64/kvm/vgic/vgic-kvm-device.c                      | 2 +-
+ arch/arm64/kvm/vgic/vgic-mmio-v2.c                         | 4 ++--
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c                         | 4 ++--
+ arch/arm64/kvm/vgic/vgic-mmio.c                            | 6 +++---
+ arch/arm64/kvm/vgic/vgic-v2.c                              | 2 +-
+ arch/arm64/kvm/vgic/vgic-v3-nested.c                       | 3 +--
+ arch/arm64/kvm/vgic/vgic-v3.c                              | 2 +-
+ arch/loongarch/include/asm/kvm_eiointc.h                   | 2 +-
+ arch/loongarch/include/asm/kvm_ipi.h                       | 2 +-
+ arch/loongarch/include/asm/kvm_pch_pic.h                   | 2 +-
+ arch/mips/include/asm/kvm_host.h                           | 3 +--
+ arch/mips/kvm/Makefile                                     | 2 --
+ arch/powerpc/kvm/Makefile                                  | 2 --
+ arch/powerpc/kvm/mpic.c                                    | 2 +-
+ arch/riscv/kvm/Makefile                                    | 2 --
+ arch/riscv/kvm/aia_aplic.c                                 | 2 +-
+ arch/riscv/kvm/aia_imsic.c                                 | 2 +-
+ arch/s390/kvm/Makefile                                     | 2 --
+ arch/x86/kvm/Makefile                                      | 1 -
+ arch/x86/kvm/i8254.h                                       | 2 +-
+ arch/x86/kvm/ioapic.h                                      | 2 +-
+ arch/x86/kvm/irq.h                                         | 2 +-
+ arch/x86/kvm/lapic.h                                       | 2 +-
+ include/{kvm/iodev.h => linux/kvm_iodev.h}                 | 0
+ virt/kvm/Makefile.kvm                                      | 2 ++
+ virt/kvm/coalesced_mmio.c                                  | 3 +--
+ virt/kvm/eventfd.c                                         | 2 +-
+ virt/kvm/kvm_main.c                                        | 3 +--
+ 54 files changed, 64 insertions(+), 77 deletions(-)
+ rename include/kvm/arm_arch_timer.h => arch/arm64/include/asm/kvm_arch_timer.h (98%)
+ rename include/kvm/arm_pmu.h => arch/arm64/include/asm/kvm_pmu.h (99%)
+ rename include/kvm/arm_vgic.h => arch/arm64/include/asm/kvm_vgic.h (99%)
+ rename {include => arch/arm64}/kvm/arm_hypercalls.h (100%)
+ rename {include => arch/arm64}/kvm/arm_psci.h (100%)
+ rename include/{kvm/iodev.h => linux/kvm_iodev.h} (100%)
+
+
+base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
+--
