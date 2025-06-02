@@ -1,160 +1,196 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EB6233CFC;
-	Mon,  2 Jun 2025 12:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7D6214A7C;
+	Mon,  2 Jun 2025 12:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748867652; cv=none; b=KPZrbNylHVW/GZih5hN7tSBfRGWZN8VcipKOAm9v9Qdk1C6PFmiwgD7rrAWZln/2xeRne07ShCv6CU0d2Gcq/O26lKg/G9Q04alZDiERBoOMoZiGM6gedd2C3AViN4D0uFXYTy1bbm028S/BEMkERHALWy3uPeayDPx/XkM4Zns=
+	t=1748868944; cv=none; b=AkZd3jNFYlW2c8BT9OG3IB0c+RpQ0OJHgIheOXDIgjBDHIrgz+SyNvO9h35kUXaF1Z30KqWVrebPNBC8Ynvx/hZy0Xz6+XW6xF7phyhr4JL0Iib2eNbthI48H1hdxs/eIChJ8G1eXzsR7zKxPVRm9vQR+MaRsUxujspi0zaYE4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748867652; c=relaxed/simple;
-	bh=cRQXcU2Ra7nEta5mNo/E/pC3EOrS0rm0kWNFyZCJqmk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=JJobhjuU7luULmjMwgyvoyPT4zCRqn+DV3YqnnsofMivdTPx1I/mO0BMKzVhJ4UWxC5MgnK3B/RYQ9jyLYidJi0uIsZeijSGNVulX2x/svwgo/te02bIBZFam5ylUgwUioo4aA225xlMfUI3ISIEBC+X3la0MKg+BUL47xt9/HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oQWZB2k1 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748868944; c=relaxed/simple;
+	bh=y9+IaaeJoUBPuK65ygBY5K30uxjC2G0ZhhZUVxyNCyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IFZdeNEs8OMWnqsNVJfLIK7rDuO6x+qLN9KBGiZrqHeRzYjzB57iA+DszKnG0mYfwEOdq+qCqXJ7Dw4rrpQCd+K3xhIuhbgz7p99/n1mU3icAp9/8lC7Rv5hLKUlisp6ducnePJh61OsElqvsL2tOZ3SpLDWQqYrQTPta/Fgz1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qlfme/q/; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oQWZB2k1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=EztYNPtjzWxGg2uPLBCx4cP2YXMaV72XRRVDsDC69zI=; b=o
-	QWZB2k1cET5yzYTRIkfGMzelYK5y46HoTmyC2b1lIlf9f/kuPHUZkJPlAJUfxrqe
-	GDolBB8G9p4RE8SZzs94mMyQeJxRR9zBh15uI4GnUEQNj+1AdGXriYTMCIWvurze
-	TXYoeiXv6/CpyJzFEW1DF4gU8PbySYPFxXBoca4nmY=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-142 (Coremail) ; Mon, 2 Jun 2025 20:33:37 +0800 (CST)
-Date: Mon, 2 Jun 2025 20:33:37 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: yeoreum.yun@arm.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mingo@kernel.org, yeoreum.yun@arm.com,
-	leo.yan@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG][6.15][perf] Kernel panic not syncing: Fatal exception in
- interrupt
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <aD2TspKH/7yvfYoO@e129823.arm.com>
-References: <aD2TspKH/7yvfYoO@e129823.arm.com>
-X-NTES-SC: AL_Qu2fCvSduE4q4SCbY+kXn0oTju85XMCzuv8j3YJeN500uCbQ9wsdeXBGOVjmwcO0BiGtvxeOewJn7vxgdq9CXJwJ7UJTt+S1JWBrHbGbBKdO
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qlfme/q/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748868942; x=1780404942;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=y9+IaaeJoUBPuK65ygBY5K30uxjC2G0ZhhZUVxyNCyI=;
+  b=Qlfme/q/RfUojPyWMg1/6I4lZ8dhB1kcSGzVnh3AJvgynaACTR25FRNE
+   dCX+4Ea5KfmgkAIOuVJzV6YMyX7ghHjKqgHZQ2je/mph1ddgNQ9AmKVak
+   z1G3d4OBYYNKfXEIEdAmDNiIa4SJebHuM8PffU2jv490XzNPkLmhhphtn
+   JfJZ88iwJHBdQEma6hIznwKqJlinYYayOgL6RafYdmEzWhcMyElUYwCL0
+   dmDtYENrWGvZf1ZqkZEYUrf/Ltl23Yfjf0BIKTTuj5CaT7Hi9x5+qbimT
+   8sPFJ3J9/M4kvchemaTjpLp8rCrMoDnfjQnqe1IAh9MGgDYlLVgz6BM5O
+   w==;
+X-CSE-ConnectionGUID: V+HzTEA6QROL7FLVVoYaEg==
+X-CSE-MsgGUID: MShqi+MERPuOM6zJmQd6pg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="49997138"
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="49997138"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 05:55:41 -0700
+X-CSE-ConnectionGUID: aUnRIk5STJCcfkg+ysGCDA==
+X-CSE-MsgGUID: 7zCLPVguQy+0DyRARrnRYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,203,1744095600"; 
+   d="scan'208";a="145474976"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 05:55:41 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7FC9B20B5736;
+	Mon,  2 Jun 2025 05:55:39 -0700 (PDT)
+Message-ID: <d3c6b899-7281-4f97-a449-96f506181bab@linux.intel.com>
+Date: Mon, 2 Jun 2025 08:55:38 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <83b4d26.3362.19730a21115.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:jigvCgD3Hykimj1oeiISAA--.19002W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hhgqmg9jvGL1wADs1
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: perf regression. Was: [PATCH V4 01/16] perf: Fix the throttle
+ logic for a group
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com, leo.yan@arm.com, bpf@vger.kernel.org,
+ andrii@kernel.org, ihor.solodrai@linux.dev, song@kernel.org, jolsa@kernel.org
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-2-kan.liang@linux.intel.com>
+ <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CgpBdCAyMDI1LTA2LTAyIDIwOjA2OjEwLCAiWWVvcmV1bSBZdW4iIDw+IHdyb3RlOgo+U29ycnkg
-dG8gbWFrZSBub2lzZSBhbGwuCj5JJ3ZlIGZvcmdvdHRlbiB0byBjYyBtYWlsaW5nIGxpc3QuCj5J
-ZiB5b3UgcmVjZWl2ZSBkdXBsaWNhdGUgbWFpbCwgU29ycnkgYWdhaW4uLi4KPgo+PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+SGkgRGF2aWQsCj4K
-Pj4gSGksCj4+Cj4+IENhdWdodCBhIGtlcm5lbCBwYW5pYyB3aGVuIHJlYm9vdGluZywgc3lzdGVt
-IHN0dWNrIHVudGlsIHByZXNzaW5nIHBvd2VyIGJ1dHRvbi4KPj4gSSBoYXZlIG9ubHkgYSBzY3Jl
-ZW5zaG90IHdoZW4gaXQgaGFwcGVucywgZm9sbG93aW5nIGxvZ3Mgd2VyZSBleHRyYWN0ZWQgZnJv
-bSBhCj4+IGNhcHR1cmVkIHBpY3R1cmUuCj4+Cj4+IDg2My44ODE5NjBdIHN5c3ZlZF9jYWxsX2Z1
-bmN0aW9uX3NpbmcgbGUrMHg0Yy8weGMwCj4+IDg2My44ODEzMDFdIGFzbV9zeXN2ZWNfY2FsbF9m
-dW5jdGlvbl9zaW5nbGUrMHgxNi8weDIwCj4+IDg2OS44ODEzNDRdIFJJUDogMDYzMzoweDdmOWFs
-Y2VhMzM2Nwo+PiA2NjMuNjgxMzczXSBDb2RlOiAwMCA2NiA5OSBiOCBmZiBmZiBmZiBmZiBjMyA2
-NiAuLi4uCj4+IDg2My44ODE1MjRdIFJTUDogMDAyYjowMDAwN2ZmZmE1MjZmY2Y4IEVGTEFHUzog
-MDAwMDAyNDYKPj4gODY5Ljg4MTU2N10gUkFYOiAwMDAwNTYyMDYwYzk2MmQwIFJCWDogMDAwMDAw
-MDAwMDAwMDAwMiBSQ1g6IDAwMDA3ZjlhMWNmZjFjNjAKPj4gODYzLjg4MTYyNV0gUkRYOiAwMDAw
-N2Y5YTBjMDAwMDMwIFJTSTogMDAwMDdmOWFsY2ZmMWM2MCBSREk6IDAwMDA3ZjlhMWNhOTFjMjAK
-Pj4gODYzLjA4MTY4Ml0gUkJQOiAwMDAwMDAwMDAwMDAwMDAxIFIwODogMDAwMDAwMDAwMDAwMDAw
-MCBSMDk6IDAwMDA3ZjlhMWQ2MjE3YTAKPj4gODY5Ljg4MTc0MF0gUjEwOiAwMDAwN2Y5YWxjYTkx
-YzEwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDA3ZjlhMWQ3MGMwMjAKPj4gODY5Ljg4
-MTc5OF0gUjEzOiAwMDAwN2ZmZmE1MjcwMDMwIFIxNDogMDAwMDdmZmZhNTI2ZmQwMCBSMTU6IDAw
-MDAwMDAwMDAwMDAwMDAKPj4gODYzLjg4MTg2MF0gPC9UQVNLPgo+PiA4NjMuODgxODc2KSBNb2R1
-bGVzIGxpbmtlZCBpbjogc25kX3NlcV9kdW1teSAoRSkgc25kX2hydGltZXIgKEUpLi4uCj4+IC4u
-Lgo+PiA4NjMuODg3MTQyXSBidXR0b24gKEUpCj4+IDg2My45MTIxMjddIENSMjogZmZmZmU0YWZj
-YzA3OTY1MAo+PiA4NjMuOTE0NTkzXSAtLS0gWyBlbmQgdHJhY2UgMDAwMDAwMDAwMDAwMDAwMCAx
-LS0KPj4gODY0LjA0Mjc1MF0gUklQOiAwMDEwOmN0eF9zY2hlZF9vdXQrMHgxY2UvMHgyMTAKPj4g
-ODY0LjA0NTIxNF0gQ29kZTogODkgYzYgNGMgOGIgYjkgZGUgMDAgMDAgMDAgNDggLi4uCj4+IDg2
-NC4wNTAzNDNdIFJTUDogMDAwMDpmZmZmYWE0ZWMwZjNmZTYwIEVGTEFHUzogMDAwMTAwODYKPj4g
-ODY0LjA1MjkyOV0gUkFYOiAwMDAwMDAwMDAwMDAwMDAyIFJCWDogZmZmZjhlOGVlZWQyYTU4MCBS
-Q1g6IGZmZmY4ZThiZGVkOWJmMDAKPj4gODY0LjA1NTUxOF0gUkRYOiAwMDAwMDBjOTIzNDBiMDUx
-IFJTSTogMDAwMDAwYzkyMzQwYjA1MSBSREk6IGZmZmYKPj4gODY0LjA1ODA5M10gUkJQOiAwMDAw
-MDAwMDAwMDAwMDAwIFIwODogMDAwMDAwMDAwMDAwMDAwMiBSMDk6IDAwCj4+IDg2NC4wNjA2NTRd
-IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAwMDAgUjEyOiAwMDAKPj4g
-ODY0LjA2MzE4M10gUjEzOiBmZmZmOGU4ZWVlZDJhNTgwIFIxNDogMDAwMDAwMDAwMDAwMDAwNyBS
-MTU6IGZmZmZlNGFmY2MwNzk2NTAKPj4gODY0LjA2NTcyOV0gRlM6IDAwMDA3ZjlhMWNhOTE5NDAg
-KDAwMDApIEdTOmZmZmY4ZThmNmIxYzMwMDAoMDAwMCkga25JR1M6MDAwMDAwMDAwMDAwMDAwMAo+
-PiA4NjQuMDY4MzEyXSBDUzogMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUk86IDAwMDAwMDAwODAw
-NTAwMzMKPj4gODY0LjA3MDg5OF0gQ1IyOiBmZmZmZTRhZmNjMDc5NjUwIENSMzogMDAwMDAwMDEx
-MzZkODAwMCBDUjQ6IDAwMDAwMDAwMDAzNTBlZjAKPj4gODY0LjY3MzUyM10gS2VybmVsIHBhbmlj
-IC0gbm90IHN5bmNpbmc6IEZhdGFsIGV4Y2VwdGlvbiBpbiBpbnRlcnJ1cHQKPj4gODY0LjA3NjQx
-MF0gS2VybmVsIE9mZnNldDogMHhjMDAwMDAgZnJvbSAweGZmZmZmZmZmODEwMDAwMDAgKHJlbG9j
-YXRpb24gcmFuZ2U6IDB4ZmYKPj4gODY0LjIwNTQwMV0gLS0tIFsgZW5kIEtlcm5lbCBwYW5pYyAt
-IG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0IF0tLS0KPj4KPj4gVGhp
-cyBoYXBwZW5zIGV2ZXIgc2luY2UgNi4xNS1yYzEsIGZyb20gdGltZSB0byB0aW1lLCBJIHdvdWxk
-IGdldCBrZXJuZWwgcGFuaWMgd2hlbgo+PiByZWJvb3Q7IGl0IGlzIG9ubHkgcmVjZW50bHkgdGhh
-dCBJIGZpZ3VyZWQgb3V0IGEgcHJlY2VkdXJlIHJlcHJvZHVjaW5nCj4+IHRoaXMgd2l0aCAqaGln
-aCogcHJvYmFiaWxpdHk6Cj4+Cj4+IDEuIGNyZWF0ZSBhIGNncm91cC4KPj4gMi4gcGVyZl9ldmVu
-dF9vcGVuKFBFUkZfRkxBR19GRF9DTE9FWEVDfFBFUkZfRkxBR19QSURfQ0dST1VQKSBmb3IgZWFj
-aCBjcHUgd2l0aCBmb2xsb3dpbmcgYXR0cnM6Cj4+IAlhdHRyLnR5cGUgPSBQRVJGX1RZUEVfU09G
-VFdBUkU7Cj4+IAlhdHRyLnNpemUgPSBzaXplb2YoYXR0cik7Cj4+IAlhdHRyLmNvbmZpZyA9IFBF
-UkZfQ09VTlRfU1dfQ1BVX0NMT0NLOwo+PiAJYXR0ci5zYW1wbGVfZnJlcSA9IDk5OTk7Cj4+IAlh
-dHRyLmZyZXEgPSAxOwo+PiAJYXR0ci53YWtldXBfZXZlbnRzID0gMTY7Cj4+IAlhdHRyLnNhbXBs
-ZV90eXBlID0gUEVSRl9TQU1QTEVfQ0FMTENIQUlOOwo+PiAJYXR0ci5zYW1wbGVfbWF4X3N0YWNr
-ID0gMzI7Cj4+IAlhdHRyLmV4Y2x1ZGVfY2FsbGNoYWluX3VzZXIgPSAxOwo+PiAzLiBjbG9zZSBh
-bGwgcGVyZl9ldmVudF9vcGVuIGFmdGVyIHNldmVyYWwgbWludXRlcwo+PiA0LiByZWJvb3QKPj4K
-Pj4gQW5kIGFmdGVyIGFuIGV4aGF1c3RpbmcgYmlzZWN0IG9uIGV2ZW50cy9jb3JlLmMsIChJIG5l
-ZWQgNSByb3VuZHMgdG8gY29uY2x1ZGUgYSBnb29kIGJpc2VjdCkKPj4gSSB0aGluayBJIHJlYWNo
-IHRoZSBjb25jbHVzaW9uLCB3aXRoIHZlcnkgaGlnaCBwcm9iYWJpbGl0eSwgdGhhdCB0aGlzIGlz
-IGNhdXNlZCBieQo+Pgo+PiBjb21taXQgYTNjM2M2NjY3MGNlZTExZWIxM2FhNDM5MDU5MDRiZjI5
-Y2I5MmQzMgo+PiBBdXRob3I6IFllb3JldW0gWXVuIDx5ZW9yZXVtLnl1bkBhcm0uY29tPgo+PiBE
-YXRlOiAgIFdlZCBNYXIgMjYgMDg6MjA6MDMgMjAyNSArMDAwMAo+Pgo+PiAgICBwZXJmL2NvcmU6
-IEZpeCBjaGlsZF90b3RhbF90aW1lX2VuYWJsZWQgYWNjb3VudGluZyBidWcgYXQgdGFzayBleGl0
-Cj4+Cj4+IFJldmVydGluZyB0aGlzIGNhbiBmaXggaXQ6IEkgcnVuIHRoZSB0ZXN0IDEwIHJvdW5k
-cywgbm8ga2VybmVsIHBhbmljIG9ic2VydmVkLgo+Pgo+PiBUaGUgY2hhbmdlcyBtYWRlIHRvIF9f
-cGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0IGJ5IGNvbW1pdCBhM2MzYzY2NjcoInBlcmYvY29yZToK
-Pj4gRml4IGNoaWxkX3RvdGFsX3RpbWVfZW5hYmxlZCBhY2NvdW50aW5nIGJ1ZyBhdCB0YXNrIGV4
-aXQiKSBoYXMgd2lkZXIgZWZmZWN0Cj4+IHRoYW4gdGhlIGNhbGxjaGFpbiBtZW50aW9uZWQgaW4g
-Y29tbWl0IG1lc3NhZ2UsIGFuZCBJIHRoaW5rIGFuIGVzYXkgZml4IHdvdWxkCj4+IGJlIGp1c3Qg
-cmVzdHJpY3RpbmcgdGhlIGVmZmVjdCB0byB0aGF0IGNhbGxjaGFpbiBvbmx5LCBhbmQgcmVzdG9y
-ZSBvdGhlciBjaGFuZ2VzIGJhY2suCj4+Cj4+IEkgaGF2ZSB0ZXN0IHRoZSBwYXRjaCBiZWxvdyBz
-ZXZlcmFsIHJvdW5kcywgYW5kIHNvIGZhciBzbyBnb29kLCBhbmQgSSB3aWxsIGhhdmUKPj4gbW9y
-ZSB0ZXN0cyBvbiBpdC4KPj4KPj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgV2FuZyA8MDAxMDcwODJA
-MTYzLmNvbT4KPgo+VGhhbmtzIGZvciB5b3VyIHJlcG9ydGluZyBhbmQgU29ycnkgZm9yIG15IGJh
-ZC4KPkJ5IG15IGNoYW5nZSwgdGhlIHRyYWNraW5nIG5yX2Nnb3J1cHMgaXMgYnJva2VuIHdoaWNo
-IGNvdWxkIG1ha2UgYSBkYW5nbGluZwo+cG9pbnRlciBmb3IgY3B1Y3R4LT5jZ3JwLgo+Cj5Db3Vs
-ZCB5b3UgdGVzdCB3aXRoIGJlbG93IGNoYW5nZSBwbGVhc2U/Cj4KPmRpZmYgLS1naXQgYS9rZXJu
-ZWwvZXZlbnRzL2NvcmUuYyBiL2tlcm5lbC9ldmVudHMvY29yZS5jCj5pbmRleCA5NWU3MDM4OTFi
-MjQuLmQwYTkwOTY3MzViOSAxMDA2NDQKPi0tLSBhL2tlcm5lbC9ldmVudHMvY29yZS5jCj4rKysg
-Yi9rZXJuZWwvZXZlbnRzL2NvcmUuYwo+QEAgLTIxMTYsMTggKzIxMTYsNiBAQCBsaXN0X2RlbF9l
-dmVudChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsIHN0cnVjdCBwZXJmX2V2ZW50X2NvbnRleHQg
-KmN0eCkKPiAgICAgICAgaWYgKGV2ZW50LT5ncm91cF9sZWFkZXIgPT0gZXZlbnQpCj4gICAgICAg
-ICAgICAgICAgZGVsX2V2ZW50X2Zyb21fZ3JvdXBzKGV2ZW50LCBjdHgpOwo+Cj4tICAgICAgIC8q
-Cj4tICAgICAgICAqIElmIGV2ZW50IHdhcyBpbiBlcnJvciBzdGF0ZSwgdGhlbiBrZWVwIGl0Cj4t
-ICAgICAgICAqIHRoYXQgd2F5LCBvdGhlcndpc2UgYm9ndXMgY291bnRzIHdpbGwgYmUKPi0gICAg
-ICAgICogcmV0dXJuZWQgb24gcmVhZCgpLiBUaGUgb25seSB3YXkgdG8gZ2V0IG91dAo+LSAgICAg
-ICAgKiBvZiBlcnJvciBzdGF0ZSBpcyBieSBleHBsaWNpdCByZS1lbmFibGluZwo+LSAgICAgICAg
-KiBvZiB0aGUgZXZlbnQKPi0gICAgICAgICovCj4tICAgICAgIGlmIChldmVudC0+c3RhdGUgPiBQ
-RVJGX0VWRU5UX1NUQVRFX09GRikgewo+LSAgICAgICAgICAgICAgIHBlcmZfY2dyb3VwX2V2ZW50
-X2Rpc2FibGUoZXZlbnQsIGN0eCk7Cj4tICAgICAgICAgICAgICAgcGVyZl9ldmVudF9zZXRfc3Rh
-dGUoZXZlbnQsIFBFUkZfRVZFTlRfU1RBVEVfT0ZGKTsKPi0gICAgICAgfQo+LQo+ICAgICAgICBj
-dHgtPmdlbmVyYXRpb24rKzsKPiAgICAgICAgZXZlbnQtPnBtdV9jdHgtPm5yX2V2ZW50cy0tOwo+
-IH0KPkBAIC0yNDcxLDYgKzI0NTksMTYgQEAgX19wZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoc3Ry
-dWN0IHBlcmZfZXZlbnQgKmV2ZW50LAo+Cj4gICAgICAgIGN0eF90aW1lX3VwZGF0ZShjcHVjdHgs
-IGN0eCk7Cj4KPisgICAgICAgLyoKPisgICAgICAgICogSWYgZXZlbnQgd2FzIGluIGVycm9yIHN0
-YXRlLCB0aGVuIGtlZXAgaXQKPisgICAgICAgICogdGhhdCB3YXksIG90aGVyd2lzZSBib2d1cyBj
-b3VudHMgd2lsbCBiZQo+KyAgICAgICAgKiByZXR1cm5lZCBvbiByZWFkKCkuIFRoZSBvbmx5IHdh
-eSB0byBnZXQgb3V0Cj4rICAgICAgICAqIG9mIGVycm9yIHN0YXRlIGlzIGJ5IGV4cGxpY2l0IHJl
-LWVuYWJsaW5nCj4rICAgICAgICAqIG9mIHRoZSBldmVudAo+KyAgICAgICAgKi8KPisgICAgICAg
-aWYgKGV2ZW50LT5zdGF0ZSA+IFBFUkZfRVZFTlRfU1RBVEVfT0ZGKQo+KyAgICAgICAgICAgICAg
-IHBlcmZfY2dyb3VwX2V2ZW50X2Rpc2FibGUoZXZlbnQsIGN0eCk7Cj4rCj4gICAgICAgIC8qCj4g
-ICAgICAgICAqIEVuc3VyZSBldmVudF9zY2hlZF9vdXQoKSBzd2l0Y2hlcyB0byBPRkYsIGF0IHRo
-ZSB2ZXJ5IGxlYXN0Cj4gICAgICAgICAqIHRoaXMgYXZvaWRzIHJhaXNpbmcgcGVyZl9wZW5kaW5n
-X3Rhc2soKSBhdCB0aGlzIHRpbWUuCj4KPlRoYW5rcwo+Cj4KPi0tCj5TaW5jZXJlbHksCj5ZZW9y
-ZXVtIFl1bgoKQmVmb3JlIEkgc3RhcnQgdGVzdGluZywgSSBmZWVsIGNvbmNlcm5lZCBhYm91dCBm
-b2xsb3dpbmcgY2hhaW46CgouL2tlcm5lbC9mb3JrLmM6CmJhZF9mb3JrX2NsZWFudXBfcGVyZjoK
-ICAgIHBlcmZfZXZlbnRfZnJlZV90YXNrKCkgCiAgICAgICAgcGVyZl9mcmVlX2V2ZW50KCkKICAg
-ICAgICAgICAgbGlzdF9kZWxfZXZlbnQoKQoKVGhpcyBwYXRjaCBzZWVtcyBjaGFuZ2VzIHRoZSBi
-ZWhhdmlvciBpbiB0aGlzIGNhbGxjaGFpbi4KV291bGQgdGhpcyBoYXZlIG90aGVyIHNpZGUtZWZm
-ZWN0PwoKCkRhdmlkCg==
+Hi Alexei,
+
+On 2025-06-01 8:30 p.m., Alexei Starovoitov wrote:
+> On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The current throttle logic doesn't work well with a group, e.g., the
+>> following sampling-read case.
+>>
+>> $ perf record -e "{cycles,cycles}:S" ...
+>>
+>> $ perf report -D | grep THROTTLE | tail -2
+>>             THROTTLE events:        426  ( 9.0%)
+>>           UNTHROTTLE events:        425  ( 9.0%)
+>>
+>> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+>> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+>> ... sample_read:
+>> .... group nr 2
+>> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+>> ..... id 0000000000000328, value 00000002211c26df, lost 0
+>>
+>> The second cycles event has a much larger value than the first cycles
+>> event in the same group.
+>>
+>> The current throttle logic in the generic code only logs the THROTTLE
+>> event. It relies on the specific driver implementation to disable
+>> events. For all ARCHs, the implementation is similar. Only the event is
+>> disabled, rather than the group.
+>>
+>> The logic to disable the group should be generic for all ARCHs. Add the
+>> logic in the generic code. The following patch will remove the buggy
+>> driver-specific implementation.
+>>
+>> The throttle only happens when an event is overflowed. Stop the entire
+>> group when any event in the group triggers the throttle.
+>> The MAX_INTERRUPTS is set to all throttle events.
+>>
+>> The unthrottled could happen in 3 places.
+>> - event/group sched. All events in the group are scheduled one by one.
+>>   All of them will be unthrottled eventually. Nothing needs to be
+>>   changed.
+>> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>>   group altogether.
+>> - The __perf_event_period(). The whole group needs to be restarted
+>>   altogether as well.
+>>
+>> With the fix,
+>> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+>> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+>> ... sample_read:
+>> .... group nr 2
+>> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+>> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+>>
+>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>  kernel/events/core.c | 66 ++++++++++++++++++++++++++++++--------------
+>>  1 file changed, 46 insertions(+), 20 deletions(-)
+> 
+> This patch breaks perf hw events somehow.
+> 
+> After merging this into bpf trees we see random "watchdog: BUG: soft lockup"
+> with various stack traces followed up:
+> [   78.620749] Sending NMI from CPU 8 to CPUs 0:
+> [   76.387722] NMI backtrace for cpu 0
+> [   76.387722] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G           O L      6.15.0-10818-ge0f0ee1c31de #1163 PREEMPT
+> [   76.387722] Tainted: [O]=OOT_MODULE, [L]=SOFTLOCKUP
+> [   76.387722] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+> [   76.387722] RIP: 0010:_raw_spin_lock_irqsave+0xc/0x40
+> [   76.387722] Call Trace:
+> [   76.387722]  <IRQ>
+> [   76.387722]  hrtimer_try_to_cancel.part.0+0x24/0xe0
+> [   76.387722]  hrtimer_cancel+0x21/0x40
+> [   76.387722]  cpu_clock_event_stop+0x64/0x70
+
+
+The issues should be fixed by the patch.
+https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+
+Could you please give it a try?
+
+Thanks,
+Kan
+
+
+> [   76.387722]  __perf_event_account_interrupt+0xcf/0x140
+> [   76.387722]  __perf_event_overflow+0x36/0x340
+> [   76.387722]  ? hrtimer_start_range_ns+0x2c1/0x420
+> [   76.387722]  ? kvm_sched_clock_read+0x11/0x20
+> [   76.387722]  perf_swevent_hrtimer+0xaf/0x100
+> [   76.387722]  ? cpu_clock_event_add+0x6e/0x90
+> [   76.387722]  ? event_sched_in+0xc3/0x190
+> [   76.387722]  ? update_load_avg+0x87/0x3d0
+> [   76.387722]  ? _raw_spin_unlock+0xe/0x20
+> [   76.387722]  ? sched_balance_update_blocked_averages+0x59b/0x6a0
+> [   76.387722]  ? ctx_sched_in+0x184/0x210
+> [   76.387722]  ? kvm_sched_clock_read+0x11/0x20
+> [   76.387722]  ? sched_clock_cpu+0x55/0x190
+> [   76.387722]  ? perf_exclude_event+0x50/0x50
+> [   76.387722]  __hrtimer_run_queues+0x111/0x290
+> [   76.387722]  hrtimer_interrupt+0xff/0x240
+> [   76.387722]  __sysvec_apic_timer_interrupt+0x4f/0x110
+> [   76.387722]  sysvec_apic_timer_interrupt+0x6c/0x90
+> 
+> After reverting:
+> commit e800ac51202f ("perf: Only dump the throttle log for the leader")
+> commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+> everything is back to normal.
+> 
+> There are many ways to reproduce.
+> Any test that sets up perf hw event followed up by tests that IPIs all cpus.
+> One way:
+> selftests/bpf/test_progs -t stacktrace_build_id_nmi
+> selftests/bpf/test_progs -t unpriv_bpf_disabled
+> 
+> Please take a look.
+> 
