@@ -1,130 +1,219 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64A21A76AE;
-	Tue,  3 Jun 2025 10:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366FE11CAF;
+	Tue,  3 Jun 2025 12:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748947527; cv=none; b=DwAU3F8Nmz8NVFcddpcTYJBVai71VZqr+uKePGHvKJjD2HCSFtFAlln9fSqQTYICRCyeVsfma6vzHDN0Z2/PRQKrRe6OcVu60xbysks2BjFILZSF6KxRW9husDuuhXDetkKN35pgJr83YYgxm4I1YWhlyHBsJMeL2tdKnO9oFG8=
+	t=1748954744; cv=none; b=k5e7unMJriSEdoAM4UeNNmEblIbNe5+oBMAPSDYo95wyOxyXxsQFKzaYyw6QiUJILB2ps/tvdS6s061h+Y25ZVPSLLT6Qk7/L3VPFkNDEh9gxRaUy3VxzxqcfVDSCPOQjKHr+UUgym6K9JOGQjJa/vfvpLsN121O2mRKXiSo5JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748947527; c=relaxed/simple;
-	bh=r9d4Av+7iiiS0LzcHOiwbSp+F4bLppgOlpxzsd68q+k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=qUTFiY2/fhVg2pMR/IBvuwu7B7774/KVBwQfLp7Yti+xVL0Y24dMyOHJOolH2bdC2kImxgXT72LxUk/+5SPZdOBPsDoiQnqKG0dst8XBYQWptGGfL2K+d5hHLT3qOHeLTpCOjwmuc/3QtowtDn7ogH9A8TDcglnWxEV8bxjhrIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EUC9+smu; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748954744; c=relaxed/simple;
+	bh=V5UWiQ2cd2GZDq83YkJb6HXdl0zlt3Ihyk4bCUmA5jM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SssQKzCowDDbH2LC7rTIoTjWOgl3PrGWzYafMiTGICNy5FLwA3bpraaGQ/Oy1z651yGi3JPut9j1kMmEm8/zLeSbBwTQFvSBa+3TF/v6MS+iRrhGuI9lmvK4DImipQvrrgRAa+x6T1ELYL7PVJsm1D33oeklbdaKBJ9iJK31ww8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EDhvxov/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EUC9+smu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=r9d4Av+7iiiS0LzcHOiwbSp+F4bLppgOlpxzsd68q+k=; b=E
-	UC9+smuiGxiWhzGVeWmj0OxsFEsVF+D1MBhLnp/GaHFMe/jm4i5ZX6MJD2Bzska9
-	JkdsQIy4W5KqjAnMuw4b0vCXL9eYds0tY7DxQxz1fxuvOC7BgrPjTZbco7KX0/7t
-	OldcL+Vq4ca2fjsQtVKJQqif1CKXCUD+cWxzSfPesY=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 18:44:58 +0800 (CST)
-Date: Tue, 3 Jun 2025 18:44:58 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Peter Zijlstra" <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mingo@kernel.org,
-	yeoreum.yun@arm.com, leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
- DETACH_EXIT not set
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
-References: <20250603032651.3988-1-00107082@163.com>
- <20250603083304.34132-1-00107082@163.com>
- <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
-X-NTES-SC: AL_Qu2fCvWfuEwi7iSeYOkZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJj/huWh5tQq/GtyvfB6EtTt
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EDhvxov/"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5536wXxH031594;
+	Tue, 3 Jun 2025 12:45:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=WsTFJJ
+	zNvHeSfLCtA5LsOyoO3yuPGZRu4LtJ9glu2r4=; b=EDhvxov/Rop/AWT5c5F+ev
+	my5OFqkmYmTK2+hlaZ1/Ph5dYe8FxzqzxdKgKjn+QiOtexPGH9IER9GliDwe3r2J
+	PTQz2vZKcLU6dmknRXG0jlKtj9ws2SLjmQ+FHpNmYeXsNSYj/SDmO11maXaCiMYr
+	22ZeWg8JJJucMlq1xhh/HlbMnlp/yczpHPtzSKX0ThWBOAkxNEi9r7AIc4A4sx1j
+	QcHZh0sDZV1oKr1qvn0m4+nzTi7HWyL/7bdbO/UQeBUPUpCt3TYvsSZH6ChoTHsq
+	W00J8JBt1mjMoBrQru6oIAR5wXFXfb9R5wANAz4PW8TtRIzOyFzTu+7k6+pp86xw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf04d4f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 12:45:29 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 553Cf60m023086;
+	Tue, 3 Jun 2025 12:45:24 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 471gf04d4a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 12:45:24 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 553A81qm028479;
+	Tue, 3 Jun 2025 12:45:24 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 470eakakv2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Jun 2025 12:45:24 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 553CjMEM32834256
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Jun 2025 12:45:22 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1D5BA5805E;
+	Tue,  3 Jun 2025 12:45:22 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2022A58052;
+	Tue,  3 Jun 2025 12:45:18 +0000 (GMT)
+Received: from [9.61.248.228] (unknown [9.61.248.228])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  3 Jun 2025 12:45:17 +0000 (GMT)
+Message-ID: <8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com>
+Date: Tue, 3 Jun 2025 18:15:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <2633d43d.ae30.1973564f5e5.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eCgvCgD3P8cr0j5ohAMTAA--.35885W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkA9hqmg+uMH2GgARsG
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] perf: Fix the throttle error of some clock events
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Athira Rajeev <atrajeev@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
+        leo.yan@arm.com, Aishwarya TCV <aishwarya.tcv@arm.com>
+References: <20250528175832.2999139-1-kan.liang@linux.intel.com>
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250528175832.2999139-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: wyXliENgdp2QtoF2R1PL3Sa3uY9peLpc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjAzMDEwOSBTYWx0ZWRfX8TXD4jvfA4++ D0y/ZXk99erNTDSxVkxJZD7aCVBmolNKr98ezndg18v5RftIJsBC0mtmF+pZ5hINDNYoSm99b+t am4YMjPIGu6Uf+UKis5YCv8wq1HwdBZnHcOIRfqgUzQ+dYh1rJCPea5z7z4oF+p+i2ToEt8iscW
+ yeXqdH+GpqnOgcJH+P5lbxFditQZp2w2EY4sDCEaq0KXwJZPrYV6KBbebBYXDO38BGAnTQWeD43 8EHkwkTvPgIxA9+EuPrithRfySO2k876vPSkp+wTkhXG0/JbzvdoBSlaNHj9DyEPbO5vgDwVZNz XzWLljzksSX1DchhnUtwjCy6YnQbtnmG8t3uRJQd4EDp4Xem6m7Gsz+oQEamsNwdBPsLW25PJwC
+ lf9PWoehoAmirIvfbSLn2IN8tPiKjbv3dLH2AdKQsNXINfo9AF7cyfWNn5ncTNZRkZcNl6RY
+X-Proofpoint-ORIG-GUID: Ak6jrcKSPN8OTB08XFQouZ6p0dAYbvDi
+X-Authority-Analysis: v=2.4 cv=c+WrQQ9l c=1 sm=1 tr=0 ts=683eee69 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8
+ a=KJf0t8lbo5Kj145lKHwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-03_01,2025-06-02_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 adultscore=0 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506030109
 
-CkF0IDIwMjUtMDYtMDMgMTc6MTM6NTIsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRl
-YWQub3JnPiB3cm90ZToKPk9uIFR1ZSwgSnVuIDAzLCAyMDI1IGF0IDA0OjMzOjA0UE0gKzA4MDAs
-IERhdmlkIFdhbmcgd3JvdGU6Cj4+IGNvbW1pdCBhM2MzYzY2NjcwY2UgKCJwZXJmL2NvcmU6IEZp
-eCBjaGlsZF90b3RhbF90aW1lX2VuYWJsZWQgYWNjb3VudGluZwo+PiBidWcgYXQgdGFzayBleGl0
-IikgbWFkZSBjaGFuZ2VzIHRvIF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkgdG8KPj4gY29v
-cmRpbmF0ZSBpdHMgY2hhbmdlcyB3aXRoIHBlcmZfZXZlbnRfZXhpdF9ldmVudCgpLCBidXQgdGhl
-IGNoYW5nZSBhcmUKPj4gdW5jb25kaXRpb25hbCwgaXQgaW1wYWN0cyBjYWxscGF0aHMgdG8gX19w
-ZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoKQo+PiBvdGhlciB0aGFuIGZyb20gcGVyZl9ldmVudF9l
-eGl0X2V2ZW50KCkuIE9uZSBvZiB0aGUgaW1wYWN0IGlzIHRvIGNncm91cCwKPj4gd2hpY2ggaXMg
-bm90IHByb3Blcmx5IGhhbmRsZWQgYW5kIHdvdWxkIGNhdXNlIGtlcm5lbCBwYW5pYyB3aXRoIGhp
-Z2gKPj4gcHJvYmFsaWJpdHkgZHVyaW5nIHJlYm9vdCBvbiBzb21lIHN5c3RlbVsxXS4KPgo+U29y
-cnksIGJ1dCBuby4gVGhpcyBkb2VzIG5vdCBkZXNjcmliZSB0aGUgcHJvYmxlbSBhZGVxdWF0ZWx5
-LiBJIHdvdWxkCj5oYXZlIHRvIGdvIHJlYWQgeW91ciBbMV0gdG8gZmlndXJlIG91dCB3aGF0IGlz
-IGFjdHVhbGx5IGJyb2tlbi4KPgo+VGhhdCBpcywgaGF2aW5nIHJlYWQgdGhlIGFib3ZlLCBJJ20g
-c3RpbGwgY2x1ZWxlc3MgYXMgdG8gd2hhdCB0aGUgYWN0dWFsCj5wcm9ibGVtIGlzLgoKd2VsbCwg
-c2hvcnQgc3RvcnkgaXMgY29tbWl0IGEzYzNjNjY2NzBjZSBpbnRyb2R1Y2UgYSBrZXJuZWwgcGFu
-aWMgd2hlbiByZWJvb3QgdGhlIHN5c3RlbQphZnRlciBwZXJmX2V2ZW50X29wZW4gd2l0aCBjZ3Jv
-dXAuCk15IHVuZGVyc3RhbmRpbmcgaXMgY29tbWl0IGEzYzNjNjY2NzBjZSBtYWtlIGNoYW5nZXMg
-dG8gY2FsbCBwYXRoCnBlcmZfZXZlbnRfZXhpdF9ldmVudCgpIC0tPiBfX3BlcmZfcmVtb3ZlX2Zy
-b21fY29udGV4dCgpLCBidXQgdGhpcyBjaGFuZ2VzIGFmZmVjdCBvdGhlcgpjYWxsIHBhdGggYXMg
-d2VsbCwgZm9yIGV4YW1wbGUKcGVyZl9ldmVudF9yZWxlYXNlX2tlcm5lbCgpIC0tPiBwZXJmX3Jl
-bW92ZV9mcm9tX2NvbnRleHQoKQooQXMgeWVvcmV1bS55dW5AYXJtLmNvbSBwb2ludGVkIG91dCwg
-IHRoZSBjaGFuZ2UgaW4gcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkgbWFkZQpwZXJmX2V2ZW50
-X3NldF9zdGF0ZSgpIGhhcHBlbmVkIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLCByZXN1bHRpbmcg
-aW4gcGVyZl9jZ3JvdXBfZXZlbnRfZGlzYWJsZSgpCm5vdCBjYWxsZWQuKQoKTXkgc3VnZ2VzdGlv
-biBoZXJlIGlzIHRvIGNvbmZpbmUgdGhlIGVmZmVjdCBvZiBjb21taXQgYTNjM2M2NjY3MGNlIG9u
-bHkgdG8gY2FsbCBjaGFpbgpwZXJmX2V2ZW50X2V4aXRfZXZlbnQoKSAtLT4gX19wZXJmX3JlbW92
-ZV9mcm9tX2NvbnRleHQoKQoKCihCdXQgdGhpcyB2MiB2ZXJzaW9uIGlzIHRvdGFsbHkgd3Jvbmcs
-IHNob3VsZCBiZSBpZ25vcmVkOyBpdCBicmVha3MgY29tbWl0IGEzYzNjNjY2NzBjZSkKCgoKPgo+
-PiBUbyBjb25maW5lIHRoZSBzaWRlIGVmZmVjdHMsIG1ha2UgdGhlIGNoYW5nZXMgdG8KPj4gX19w
-ZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoKSBjb25kaXRpb25hbCwgcmVzdG9yZSB0byBpdHMgcHJl
-dmlvdXMgc3RhdGUKPj4gZXhjZXB0IHdoZW4gREVUQUNIX0VYSVQgaXMgc2V0Lgo+PiAKPj4gQ2xv
-c2VzOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAxMTczNjAzLjM5MjAtMS0w
-MDEwNzA4MkAxNjMuY29tLyBbMV0KPj4gRml4ZXM6IGEzYzNjNjY2NzBjZSAoInBlcmYvY29yZTog
-Rml4IGNoaWxkX3RvdGFsX3RpbWVfZW5hYmxlZCBhY2NvdW50aW5nIGJ1ZyBhdCB0YXNrIGV4aXQi
-KQo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBXYW5nIDwwMDEwNzA4MkAxNjMuY29tPgo+PiAtLS0K
-Pj4gQ2hhbmdlczoKPj4gQWRkcmVzcyB5ZW9yZXVtLnl1bkBhcm0uY29tJ3MgY29uY2VybiBhYm91
-dCBtaXNzaW5nIGNncm91cCBldmVudC4KPj4gLS0tCj4+ICBrZXJuZWwvZXZlbnRzL2NvcmUuYyB8
-IDExICsrKysrKy0tLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA1IGRl
-bGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9ldmVudHMvY29yZS5jIGIva2Vy
-bmVsL2V2ZW50cy9jb3JlLmMKPj4gaW5kZXggOTVlNzAzODkxYjI0Li5lMmMwZjM0YjA3ODkgMTAw
-NjQ0Cj4+IC0tLSBhL2tlcm5lbC9ldmVudHMvY29yZS5jCj4+ICsrKyBiL2tlcm5lbC9ldmVudHMv
-Y29yZS5jCj4+IEBAIC0yNDY2LDcgKzI0NjYsNyBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4
-dChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4+ICAJCQkgICB2b2lkICppbmZvKQo+PiAgewo+
-PiAgCXN0cnVjdCBwZXJmX2V2ZW50X3BtdV9jb250ZXh0ICpwbXVfY3R4ID0gZXZlbnQtPnBtdV9j
-dHg7Cj4+IC0JZW51bSBwZXJmX2V2ZW50X3N0YXRlIHN0YXRlID0gUEVSRl9FVkVOVF9TVEFURV9P
-RkY7Cj4+ICsJZW51bSBwZXJmX2V2ZW50X3N0YXRlIGV4aXRfc3RhdGUgPSBQRVJGX0VWRU5UX1NU
-QVRFX0VYSVQ7Cj4+ICAJdW5zaWduZWQgbG9uZyBmbGFncyA9ICh1bnNpZ25lZCBsb25nKWluZm87
-Cj4+ICAKPj4gIAljdHhfdGltZV91cGRhdGUoY3B1Y3R4LCBjdHgpOwo+PiBAQCAtMjQ3NSwxOSAr
-MjQ3NSwyMCBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dChzdHJ1Y3QgcGVyZl9ldmVudCAq
-ZXZlbnQsCj4+ICAJICogRW5zdXJlIGV2ZW50X3NjaGVkX291dCgpIHN3aXRjaGVzIHRvIE9GRiwg
-YXQgdGhlIHZlcnkgbGVhc3QKPj4gIAkgKiB0aGlzIGF2b2lkcyByYWlzaW5nIHBlcmZfcGVuZGlu
-Z190YXNrKCkgYXQgdGhpcyB0aW1lLgo+PiAgCSAqLwo+PiAtCWlmIChmbGFncyAmIERFVEFDSF9F
-WElUKQo+PiAtCQlzdGF0ZSA9IFBFUkZfRVZFTlRfU1RBVEVfRVhJVDsKPj4gIAlpZiAoZmxhZ3Mg
-JiBERVRBQ0hfREVBRCkgewo+PiAgCQlldmVudC0+cGVuZGluZ19kaXNhYmxlID0gMTsKPj4gLQkJ
-c3RhdGUgPSBQRVJGX0VWRU5UX1NUQVRFX0RFQUQ7Cj4+ICsJCWV4aXRfc3RhdGUgPSBQRVJGX0VW
-RU5UX1NUQVRFX0RFQUQ7Cj4+ICAJfQo+PiAgCWV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsK
-Pj4gLQlwZXJmX2V2ZW50X3NldF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUp
-KTsKPj4gIAlpZiAoZmxhZ3MgJiBERVRBQ0hfR1JPVVApCj4+ICAJCXBlcmZfZ3JvdXBfZGV0YWNo
-KGV2ZW50KTsKPj4gIAlpZiAoZmxhZ3MgJiBERVRBQ0hfQ0hJTEQpCj4+ICAJCXBlcmZfY2hpbGRf
-ZGV0YWNoKGV2ZW50KTsKPj4gIAlsaXN0X2RlbF9ldmVudChldmVudCwgY3R4KTsKPj4gKwlpZiAo
-ZmxhZ3MgJiBERVRBQ0hfRVhJVCkKPj4gKwkJcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1p
-bihldmVudC0+c3RhdGUsIGV4aXRfc3RhdGUpKTsKPj4gKwlpZiAoZmxhZ3MgJiBERVRBQ0hfREVB
-RCkKPj4gKwkJZXZlbnQtPnN0YXRlID0gUEVSRl9FVkVOVF9TVEFURV9ERUFEOwo+Cj5VcmdoLCBu
-by4gVHJ5aW5nIHRvIHJldmVyc2UgZW5naW5lZXIgdGhlIGFib3ZlLCB0aGUgaW50ZW50IGFwcGVh
-cnMgdG8gYmUKPnRvIG5vdCBzZXQgT0ZGLgo+Cj5UaGlzIGNhbiBiZSBhY2hpZXZlZCBieSBkb2lu
-ZzoKPgo+LSAgICAgICBlbnVtIHBlcmZfZXZlbnRfc3RhdGUgc3RhdGUgPSBQRVJGX0VWRU5UX1NU
-QVRFX09GRjsKPisgICAgICAgZW51bSBwZXJmX2V2ZW50X3N0YXRlIHN0YXRlID0gZXZlbnQtPnN0
-YXRlOwo+Cj5ObyBvdGhlciBjaGFuZ2VzIHJlcXVpcmVkLiBZb3UgYWxzbyBtb3ZlIHRoZSBsb2Nh
-dGlvbiBvZgo+cGVyZl9ldmVudF9zZXRfc3RhdGUoKSwgYnV0IGl0IGlzIGVudGlyZWx5IHVuY2xl
-YXIgdG8gbWUgaWYgdGhhdCBpcwo+YWN0dWFsbHkgbmVlZGVkLgo+Cj5Xb3JzZSwgeW91IHNwbGl0
-IHRoZSBtZWFucyBvZiBzZXR0aW5nIHN0YXRlIC0tIHRoYXQgaXMgZW50aXJlbHkgdW5jYWxsZWQK
-PmZvci4gClllcywgdGhhdCBpcyB2ZXJ5IHdpcmVkIHRvIG1lIHRvby4uLi4uIGNvbW1pdCAgYTNj
-M2M2NjY3MGNlIHdhbnRzIHRvIHVzZSBwZXJmX2V2ZW50X3NldF9zdGF0ZSB0byB1cGRhdGUgdGlt
-ZSwKYnV0IHRoZSBvcmlnaW5hbCBjb2RlIHVzZSBqdXN0IGV2ZW50LT5zdGF0ZSA9IC4uLgoKCgoK
 
+On 28/05/25 11:28 pm, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The Arm CI reports RCU stall, which can be reproduced by the below perf
+> command.
+>    perf record -a -e cpu-clock -- sleep 2
+
+
+This issue is reported on IBM CI as well. But the issue is hit, while 
+running perf test (specifically while running  76: perf list tests)
+
+>
+> The cpu-clock and task_clock are two special SW events, which rely on
+> the hrtimer. Instead of invoking the stop(), the HRTIMER_NORESTART is
+> returned to stop the timer. Because the hrtimer interrupt handler cannot
+> cancel itself, which causes infinite loop.
+>
+> There may be two ways to fix it.
+> - Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
+> the stop is invoked by the throttle.
+> - Introduce a PMU flag to track the case. Avoid the event_stop in
+> perf_event_throttle() if the flag is detected.
+>
+> The latter looks more generic. It may be used if there are more other
+> cases that want to avoid the stop later. The latter is implemented.
+
+
+Tested this patch by applying on the linux-mainline kernel on IBM Power9 
+system, and it fixes the issue. Hence,
+
+
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+
+Regards,
+
+Venkat.
+
+>
+> Reported-by: Leo Yan <leo.yan@arm.com>
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+> Tested-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>
+> Changes since V1:
+> - Rebase on top of the latest tip.git
+> - Add Tested-by from Leo
+>
+>   include/linux/perf_event.h |  1 +
+>   kernel/events/core.c       | 23 ++++++++++++++++++++---
+>   2 files changed, 21 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 52dc7cfab0e0..97a747a97a50 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+>   #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+>   #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+>   #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+> +#define PERF_PMU_CAP_NO_THROTTLE_STOP	0x0800
+>   
+>   /**
+>    * pmu::scope
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f34c99f8ce8f..abd19bb571e3 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2656,7 +2656,22 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+>   
+>   static void perf_event_throttle(struct perf_event *event)
+>   {
+> -	event->pmu->stop(event, 0);
+> +	/*
+> +	 * Some PMUs, e.g., cpu-clock and task_clock, may rely on
+> +	 * a special mechanism (hrtimer) to manipulate counters.
+> +	 * The regular stop doesn't work, since the hrtimer interrupt
+> +	 * handler cannot cancel itself.
+> +	 *
+> +	 * The stop should be avoided for such cases. Let the
+> +	 * driver-specific code handle it.
+> +	 *
+> +	 * The counters will eventually be disabled in the driver-specific
+> +	 * code. In unthrottle, they still need to be re-enabled.
+> +	 * There is no handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
+> +	 * the perf_event_unthrottle().
+> +	 */
+> +	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
+> +		event->pmu->stop(event, 0);
+>   	event->hw.interrupts = MAX_INTERRUPTS;
+>   	if (event == event->group_leader)
+>   		perf_log_throttle(event, 0);
+> @@ -11848,7 +11863,8 @@ static int cpu_clock_event_init(struct perf_event *event)
+>   static struct pmu perf_cpu_clock = {
+>   	.task_ctx_nr	= perf_sw_context,
+>   
+> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
+> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
+> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
+>   	.dev		= PMU_NULL_DEV,
+>   
+>   	.event_init	= cpu_clock_event_init,
+> @@ -11930,7 +11946,8 @@ static int task_clock_event_init(struct perf_event *event)
+>   static struct pmu perf_task_clock = {
+>   	.task_ctx_nr	= perf_sw_context,
+>   
+> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
+> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
+> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
+>   	.dev		= PMU_NULL_DEV,
+>   
+>   	.event_init	= task_clock_event_init,
