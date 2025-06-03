@@ -1,144 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF761C3BEB;
-	Tue,  3 Jun 2025 21:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E2D23BCE4
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 21:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748987647; cv=none; b=JzUJp2/S0UfMPVeXl9JHolXXvyp5A1qB6NNkcAxjSfbqNufK4F8IOnFd3jzshGtyQnzS9LsE4Ukw0lt2vWpUR1vaFb8aWFzkDeJTqP9EBcBR8sUAOFfrSPJh8eDe4lX6Rs32WZ73bLvuiLBzvxJ3XUqHO32vAKs9KzaUGa5VV/Y=
+	t=1748987704; cv=none; b=Aw9omHdq8uKT/REBm3JBbIf+84E7p9zqQzlL/sIMD01z8oUEwTdhnWfy6RdwsBYEo35GcYxKsZVNlPsnjTxBFYU2slHEol4eLihh8HYu4VSxTJa2qP2ISwT93qCXaZyQMOU9yQmj/shYEQ1Y/QnLWUQ+fId5UJ/PC8Fo1gWVEZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748987647; c=relaxed/simple;
-	bh=r3bIn50CZlFg0yKKfQuYn8XClw3UnJCKvqITw9wTRWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qTAIHEF71ee9OP8K/bLjlc4u8g53KnYmmaDlq3zaC5qG6zPv9iu+xVjKW2K53pg8JWmNnTzK92WIvNoo8evsegubngoi5Uo0XPOVSYMpA504nnw5k5oWj5rch7740RiXldJwd1kROkGfBOOusz8+gFxhX0ZlNSWR29Vn25BKCM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EY7WQ6Ux; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748987704; c=relaxed/simple;
+	bh=M2XddcoG9PvQvUc5qK5I74/V0vhQT/NdRMUW0iOYGxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ynm/5ztG/YlH93sPwXS0DPOQ+jdsO8QNVdXVDKDE1cXDBBGt88rmawM+EnDhQrEoQJxqc1wvxAlL+NqphBvA+aTipoTdjwSzpS5iZC6yxLawZlG+mJGyFFyC1MTRyL4KuBBRxsTt1KQMD7AtdmajVxStoE1yXWeYSAw6kzBwFiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y8C34UnB; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EY7WQ6Ux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748987647; x=1780523647;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=r3bIn50CZlFg0yKKfQuYn8XClw3UnJCKvqITw9wTRWU=;
-  b=EY7WQ6UxllJfZ635kB8k8/Ioz1IP8ZHVvvPUR9KYqut3G/w+T9ezhF9j
-   MOfQd8jdYo2DGJH68dWTXo7irblpmfaXmy8Ccy9PbJXUoAzdmLxk2wxHK
-   2NmuTrx5f3VM2EhGL4AyZUF9TMIuO3wMzq3HQlB+92+IbJrKJF4L0ffWP
-   yxEvjZt2xoWYbUx5DMqqOmbg3Dcx58Q2PP2v8Ei/CYbWHOhb07+bMu3eO
-   9YSfty4eaJHRQgYrG+RwHhkFXfOSgMltjJJPUWq9j6xelaqrYVbouV1GX
-   CrpbbsW1Axahss0PUFZXzJATzFTel13IYz8pF31SLYYk2VZ1xt3YJm1Wr
-   A==;
-X-CSE-ConnectionGUID: qNJkiQBsTDuqa4WqFSakcg==
-X-CSE-MsgGUID: xfIcJXWWTH6asACVyeniMA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61312773"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="61312773"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:54:06 -0700
-X-CSE-ConnectionGUID: UEci+pVFSu+y+DJb8D1Vqg==
-X-CSE-MsgGUID: Z+6iJUqGSZaKwEs2b41ixw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="145307933"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.110.192]) ([10.125.110.192])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:54:04 -0700
-Message-ID: <58556be3-0516-4204-b19d-11cba7b21423@intel.com>
-Date: Tue, 3 Jun 2025 14:54:03 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y8C34UnB"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e5aa697e7eso204349137.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jun 2025 14:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748987702; x=1749592502; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K9WTUUrdCRqQFAEsgXpM/vXRnyBSDopcd6mTa19SWV8=;
+        b=y8C34UnB3Wp0ERqshL+RaWbzIH856q8aHDCyXMgC4m6vdnroEPNeuYGCnFUCwkmS4h
+         LZupBjzJAaEIOHmlwtJwzchc1NCXkSVchFqgboO7VfLISOs3lsWjtPnhWv2/k4dFrupa
+         +27DFUVoOZoVzBVCh+QdwdYe+bdQlivu8ZvJ8mzbfPEaArW8AtiJcYkeYQYJfw7YWXbA
+         pKP4thvmozg0cMxy1NypxiV20adEUf11yjw010/7Qbuow93P5fShMUCIPZVdMdIPEHTU
+         A0TSzGG9+plpsrnSuJ9hh24QtiG00U+LDJRjq+qBM3ubJdUwL2MmQ1bCbHMHyZ7UoSe9
+         0snQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748987702; x=1749592502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K9WTUUrdCRqQFAEsgXpM/vXRnyBSDopcd6mTa19SWV8=;
+        b=rgERoeaUla8MjBh0gaGCode1JNCkRTkJhfIyZuFsmyooYcG0q9KeF7jSvQ/Gx5rk36
+         kPa4Pam2xjm6qq3bsG+PEBtvgjufzfdvBhYorZShlXBlpbAJWTrciZJD2nDo5dG6oyqc
+         5D/p6dTA1OxhyJNsUXf4I2CYqxf/CXIOXGwtBjS85TXG5yBeZdQVkZPCZxLe6DBOv/nT
+         RtHCr0n7rdH6SZ2UI9lYpDX68i1cNf7LrxYc8SRU51Adp06eML/M0FBSWFtGuwbIht5C
+         s74MHUtnZMjAXIfyv4PsV7t0f2PsrlpV0FFuKkkhanBpT1tYhOpVe1dVP/3I3FnjBvkr
+         AqlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXYTuUU0Pd/AkaBWkVsHyCxQdaw/j74iZMUwUcibweSRhavPi5S0e2zuDRGF/EzHYp7J3Dy/VZE4tZDaONBJRD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmviHUQSCRQdNRetxVUaLdcn1eOzqFWgnQA6XT3DHlMYTLzzST
+	+1mHOsoB6qesP8ULoezOmxz/o3il15xZIt+AjvOjXXGYy0ekIe7VpxqvqYYYlZCyQxQiKqRzHN8
+	JD2/ZxKYHtCOkJnNXsx4sywTXKvUxzmyMbDD9rUxp
+X-Gm-Gg: ASbGncvyT0RecB9jGNEB3GPlNI9ezjvHhDnOalQy5Va4qnzySsCog+oyHcdJ2cbEsoj
+	js+55KJp+Pb0XgewpK49EdrkK4wuw84MXMhQrotGZMosnHv/gxHPeWLqr+EJUUoF1A0h7mByXJt
+	VG7ARZYnwHDzu1eDbjkprwKgAMLyR/iBY0u3SdCyZwqCS0IwVHTyIJxp3BHPRkEsqePDff8HmI8
+	w==
+X-Google-Smtp-Source: AGHT+IFnXDOFHa3mhYH2gzN7+DXpty3pkVkRbYJUm2hF3Btkmzwc6QS/7cxkEtVQaRcLoGHKssgYk+Sf5Ohq9SaiIdU=
+X-Received: by 2002:a05:6102:4585:b0:4e5:8d83:c50e with SMTP id
+ ada2fe7eead31-4e73616269fmr3053464137.10.1748987701736; Tue, 03 Jun 2025
+ 14:55:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/9] x86/nmi: Assign and register NMI-source vectors
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Xin Li <xin@zytor.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Sean Christopherson <seanjc@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
- Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
- Andrew Cooper <andrew.cooper3@citrix.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Andi Kleen <ak@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
- linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
- kvm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250513203803.2636561-1-sohil.mehta@intel.com>
- <20250513203803.2636561-5-sohil.mehta@intel.com>
- <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
- <67683e00-48fa-4aa8-91ff-8726a5374675@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <67683e00-48fa-4aa8-91ff-8726a5374675@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com> <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com> <aD9sxuFwwxwHGzNi@google.com>
+In-Reply-To: <aD9sxuFwwxwHGzNi@google.com>
+From: Blake Jones <blakejones@google.com>
+Date: Tue, 3 Jun 2025 14:54:50 -0700
+X-Gm-Features: AX0GCFscGBoWh-HQp20CLzl7V2idOwD3hN6O2fQxMHUnyvVWw0sFKDosABnxZx0
+Message-ID: <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/25 13:22, Sohil Mehta wrote:
-> With an enum, it's harder to figure out the exact sources when let's say
-> the source bitmap is printed as 0x0090.
+Hi Namhyung,
 
-Uhh, then don't print a bitmap. ;)
+On Tue, Jun 3, 2025 at 2:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+> > > IIUC the metadata is collected for each BPF program which may have
+> > > multiple subprograms.  Then this patch creates multiple PERF_RECORD_
+> > > BPF_METADATA for each subprogram, right?
+> > >
+> > > Can it be shared using the BPF program ID?
+> >
+> > In theory, yes, it could be shared. But I want to be able to correlate =
+them
+> > with the corresponding PERF_RECORD_KSYMBOL events, and KSYMBOL events f=
+or
+> > subprograms don't have the full-program ID, so I wouldn't be able to do=
+ that.
+>
+> It's unfortunate that KSYMBOL doesn't have the program ID, but IIRC the
+> following BPF_EVENT should have it.  I think it's safe to think KSYMBOLs
+> belong to the BPF_EVENT when they are from the same thread.
 
-/proc/cpuinfo doesn't print out CPUID leaves, it prints out bits mapped
-to strings.
+Hmmm. Is that documented and tested anywhere? Offhand it sounds like an
+implementation detail that I wouldn't feel great about depending on -
+certainly not without a strong guarantee that it wouldn't change.
 
-Look at the kmalloc trace points:
+Can you say more about why the duplicated records concern you?
 
-            Xorg-4589    [003] ..... 1568557.823993: kmalloc: ...
-gfp_flags=GFP_KERNEL
-            Xorg-4589    [003] ..... 1568557.823993: kmalloc: ...
-gfp_flags=GFP_KERNEL
-
-gfp_flags are a bitmap, yet they're mapped out with strings and symbolic
-names.
+Blake
