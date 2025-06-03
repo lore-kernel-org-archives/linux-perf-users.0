@@ -1,153 +1,143 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0057C26290;
-	Tue,  3 Jun 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682002AE8D;
+	Tue,  3 Jun 2025 14:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748958599; cv=none; b=AldPn/G4kEFGI+TaT/Os3kAKMv/T9NTX0GlWaRUMiEdxmJ+yunFAu+3IbgPUsLeZqCVqh8EZahZ/Ws1orvorV9v8vmaowzDVBfy4P3nq9HnqrV1EnZuJ3+/4hrkHIrhLihFNJyxp3TeJVXsNzT2+dcNs3ES3kbjgbZS3duDiN5Q=
+	t=1748959248; cv=none; b=rxSJBnEKulggEVPUcvCkR7OJ5lPkectxabqYv2yASVr5iYzT9q2rZ5Skb0DMyOGGMvoU7T0Ryccbgw2gNTG3jdqWR5d67bUQZU+8xN/8ytUcV+O+ezvVaz+vIQ54/Gr/8BXL6YgeIx/qfkKzmZgMab726yuy0ThwhTc9CioCrvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748958599; c=relaxed/simple;
-	bh=0qft8roO3BhMkBJROqNCAOJFha8+AZ4A+sT37xulpWM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=rZAEbKiYNgU1osYyK+bqfP8A66g2oyfOE/rCtskMLZPWyUoKYR1gpebuaZVgnh/I7Ek9tELjZMlZ7pEUDSAwVYog1RRz3lq9MhEQTn0117bFpPxEFnfl3eDRtUKjMBjx1nXgzHPbyllB9eJBdQXklM6mZ7HS8pbu327OgqSNhRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=CZ3pwL5t reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="CZ3pwL5t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=aLh7SmPBkBQLWmbv7psrQymqaKUMU+aDUy+SYzEszUw=; b=C
-	Z3pwL5t9BTQIbkSmh2gZz3TQtF/iohvi7EMQ4X8Ygk4rzgNZyTiF/FpAX5qfqlTe
-	ECSArZv0kWN/XSW1uCqFkALp1anIPWy9IqSWGSVg7rKs5SROyvcUVJcuYjJei/e7
-	PZXyzKvOtH+GDdShCWh3bi9DJBoVKX4vSzJRe87nq0=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-103 (Coremail) ; Tue, 3 Jun 2025 21:49:17 +0800 (CST)
-Date: Tue, 3 Jun 2025 21:49:17 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Peter Zijlstra" <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mingo@kernel.org,
-	yeoreum.yun@arm.com, leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
- DETACH_EXIT not set
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <6487969b.b907.19735e42e05.Coremail.00107082@163.com>
-References: <20250603032651.3988-1-00107082@163.com>
- <20250603083304.34132-1-00107082@163.com>
- <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
- <2633d43d.ae30.1973564f5e5.Coremail.00107082@163.com>
- <20250603125056.GI39944@noisy.programming.kicks-ass.net>
- <20250603125440.GA35970@noisy.programming.kicks-ass.net>
- <6487969b.b907.19735e42e05.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2fCvWet00u4SGdY+kXn0oTju85XMCzuv8j3YJeN500tSTX4wA4cW9GFHDV986uDAqhoAiVSRNw8OpieZNiVY4BISCOyU0xATAzW53hFcm6
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	s=arc-20240116; t=1748959248; c=relaxed/simple;
+	bh=LfQhyG+gAeQ7nIAhOL9ZjWWzy98MrKRoup70yuP6NiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nqvVWvM9twwjcMGUqenUoEDsQlKNZK1Sv+dr/6u3+hIrNFsoecQSPEqKKlbFJIol9pdDTOIARBCddT2VQ0f7lUPpbwHReJA4bu0YDFn5jzd5MBW2nV1U+1yCGVs/h9YECOX9gel2xYKGbdRbSIBvaOqZMInabgoCWVZF18io2wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D88012FC;
+	Tue,  3 Jun 2025 07:00:28 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC7D73F5A1;
+	Tue,  3 Jun 2025 07:00:44 -0700 (PDT)
+Date: Tue, 3 Jun 2025 15:00:40 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250603140040.GB8020@e132581.arm.com>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <b3624f4.bde4.197360db3ea.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZygvCgD3H+Je_T5o+yETAA--.13827W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAZhqmg+9NnRwgADs2
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602184049.4010919-1-yeoreum.yun@arm.com>
 
-CgoKQXQgMjAyNS0wNi0wMyAyMTowMzo1NSwgIkRhdmlkIFdhbmciIDwwMDEwNzA4MkAxNjMuY29t
-PiB3cm90ZToKPgo+QXQgMjAyNS0wNi0wMyAyMDo1NDo0MCwgIlBldGVyIFppamxzdHJhIiA8cGV0
-ZXJ6QGluZnJhZGVhZC5vcmc+IHdyb3RlOgo+Pk9uIFR1ZSwgSnVuIDAzLCAyMDI1IGF0IDAyOjUw
-OjU2UE0gKzAyMDAsIFBldGVyIFppamxzdHJhIHdyb3RlOgo+Pj4gT24gVHVlLCBKdW4gMDMsIDIw
-MjUgYXQgMDY6NDQ6NThQTSArMDgwMCwgRGF2aWQgV2FuZyB3cm90ZToKPj4+IAo+Pj4gCj4+PiA+
-IChBcyB5ZW9yZXVtLnl1bkBhcm0uY29tIHBvaW50ZWQgb3V0LCAgdGhlIGNoYW5nZSBpbiBwZXJm
-X3JlbW92ZV9mcm9tX2NvbnRleHQoKSBtYWRlCj4+PiA+IHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkg
-aGFwcGVuZWQgYmVmb3JlIGxpc3RfZGVsX2V2ZW50KCksIHJlc3VsdGluZyBpbiBwZXJmX2Nncm91
-cF9ldmVudF9kaXNhYmxlKCkKPj4+ID4gbm90IGNhbGxlZC4pCj4+PiAKPj4+IEFhaCwgZCcwaC4g
-TGV0IG1lIHNlZSB3aGF0IHdlIHNob3VsZCBkbyB0aGVyZS4KPj4KPj5Eb2VzIHRoaXMgaGVscD8g
-VGhpcyB3YXkgZXZlbnRfc2NoZWRfb3V0KCkgd2lsbCBjYWxsCj4+cGVyZl9jZ3JvdXBfZXZlbnRf
-ZGlzYWJsZSgpLgo+Pgo+Pgo+PmRpZmYgLS1naXQgYS9rZXJuZWwvZXZlbnRzL2NvcmUuYyBiL2tl
-cm5lbC9ldmVudHMvY29yZS5jCj4+aW5kZXggZjM0Yzk5ZjhjZThmLi5hZGJiMDM3MjgyNWYgMTAw
-NjQ0Cj4+LS0tIGEva2VybmVsL2V2ZW50cy9jb3JlLmMKPj4rKysgYi9rZXJuZWwvZXZlbnRzL2Nv
-cmUuYwo+PkBAIC0yNDk0LDkgKzI0OTQsOSBAQCBfX3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dChz
-dHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4+IAlpZiAoZmxhZ3MgJiBERVRBQ0hfUkVWT0tFKQo+
-PiAJCXN0YXRlID0gUEVSRl9FVkVOVF9TVEFURV9SRVZPS0VEOwo+PiAJaWYgKGZsYWdzICYgREVU
-QUNIX0RFQUQpIHsKPj4tCQlldmVudC0+cGVuZGluZ19kaXNhYmxlID0gMTsKPj4gCQlzdGF0ZSA9
-IFBFUkZfRVZFTlRfU1RBVEVfREVBRDsKPj4gCX0KPj4rCWV2ZW50LT5wZW5kaW5nX2Rpc2FibGUg
-PSAxOwo+PiAJZXZlbnRfc2NoZWRfb3V0KGV2ZW50LCBjdHgpOwo+PiAJcGVyZl9ldmVudF9zZXRf
-c3RhdGUoZXZlbnQsIG1pbihldmVudC0+c3RhdGUsIHN0YXRlKSk7Cj4+IAo+Cj5PaywgSSB3aWxs
-IGdpdmUgaXQgYSB0cnkgYW5kIHVwZGF0ZSBsYXRlci4KClNhZGx5IG5vLCBjYXVnaHQgYSBrZXJu
-ZWwgcGFuaWMgYXQgdGhlIGZpcnN0IHJvdW5kLi4uLgoKSSB0cmllZCB0byB1c2UgcGVyZiB0byBy
-ZXByb2R1Y2UgdGhpcywgYnV0IG5vIGx1Y2sgc28gZmFyLiBGb2xsb3dpbmcgaXMgdGhlIGNvZGUg
-SSB1c2VkIHRvIHJlcHJvZHVjZS4KCihUaGUgY29kZSBpcyBzaWxseSwgYnV0IHZhbGlkIEkgdGhp
-bmsuLi4uKQpUbyByZXByb2R1Y2UsIEkgdXNlIGZvbGxvd2luZyBzdGVwczoKT3BlbiB0d28gdGVy
-bWluYWxzOgoxLiBJbiB0ZXJtaW5hbCBBCm1rZGlyIC9zeXMvZnMvY2dyb3VwL215dGVzdAplY2hv
-ICQkID4gL3N5cy9mcy9jZ3JvdXAvbXl0ZXN0L2Nncm91cC5wcm9jcwoyLiBJbiB0ZXJtaW5hbCBC
-CltnKysgZm9sbG93aW5nIGNvZGUgaWYgbm90IGRvbmUgeWV0IGcrKyAtbyBwcm9maWxlciB4eC5j
-cHBdCi4vcHJvZmlsZXIgbXl0ZXN0CjMuIERvIHNvbWV0aGluZyBpbiB0ZXJtaW5hbCBBLCB1c3Vh
-bGx5IEkgd291bGQgcnVuIGZvbGxvd2luZyBjb21tYW5kIHVuZGVyIGtlcm5lbCBzb3VyY2UgdHJl
-ZQpmb3IgaSBpbiB7MS4uMjAwfTsgZG8gZmluZCAuLyAtbmFtZSBub3R0b2JlZm91bmQgPiAvZGV2
-L251bGw7IGRvbmUKNC4gd2FpdCBmb3IgNX4xMG1pbnRlcwo1LiBJbiB0ZXJtaW5hbCBCLCBjdHJs
-LUMgc3RvcCB0aGUgcHJvZmlsZXIKNi4gcmVib290CihPbiBteSBzeXN0ZW0sIHdpdGggNi4xNSBh
-dCBtb3N0IDQgcm91bmRzIG9mIHRlc3Qgd291bGQgY2F0Y2ggYSBrZXJuZWwgcGFuaWMuKQoKSSBj
-b3VsZCBub3QgcmVwcm9kdWNlIGl0IHdpdGggbXkgS1ZNLCBtYXliZSBJIG5lZWQgbW9yZSB0cmlh
-bHMuCk5vdCBzdXJlIHdoZXRoZXIgYW55b25lIGVsc2UgY291bGQgcmVwcm9kdWNlIHRoaXMuIAoK
-Ci0tLQojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8dW5p
-c3RkLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHN5cy9pb2N0bC5oPgojaW5jbHVk
-ZSA8bGludXgvcGVyZl9ldmVudC5oPgojaW5jbHVkZSA8YXNtL3VuaXN0ZC5oPgojaW5jbHVkZSA8
-c3lzL21tYW4uaD4KI2luY2x1ZGUgPHN5cy9zdGF0Lmg+CiNpbmNsdWRlIDxwb2xsLmg+CiNpbmNs
-dWRlIDxzaWduYWwuaD4KI2luY2x1ZGUgPGZjbnRsLmg+CiNpbmNsdWRlIDxlbGYuaD4KI2luY2x1
-ZGUgPHN0cmluZy5oPgoKI2luY2x1ZGUgPHZlY3Rvcj4KI2luY2x1ZGUgPHN0cmluZz4KI2luY2x1
-ZGUgPG1hcD4KI2luY2x1ZGUgPHVub3JkZXJlZF9tYXA+CiNpbmNsdWRlIDx1bm9yZGVyZWRfc2V0
-PgojaW5jbHVkZSA8YWxnb3JpdGhtPgp1c2luZyBuYW1lc3BhY2Ugc3RkOwoKCiNkZWZpbmUgTUFY
-TiAgNTEyCiNkZWZpbmUgTUFYQ1BVIDEyOAojZGVmaW5lIGVycm9yKG1zZykgZG8geyBwZXJyb3Io
-bXNnKTsgZXhpdCgxKTsgfSB3aGlsZSgwKQoKc3RhdGljIGxvbmcgcGVyZl9ldmVudF9vcGVuKHN0
-cnVjdCBwZXJmX2V2ZW50X2F0dHIgKnBlcmZfZXZlbnQsCgkJcGlkX3QgcGlkLCBpbnQgY3B1LCBp
-bnQgZ3JvdXBfZmQsIHVuc2lnbmVkIGxvbmcgZmxhZ3MpIHsKICAgIHJldHVybiBzeXNjYWxsKF9f
-TlJfcGVyZl9ldmVudF9vcGVuLCBwZXJmX2V2ZW50LAoJCSAgICBwaWQsIGNwdSwgZ3JvdXBfZmQs
-IGZsYWdzKTsKfQoKc3RydWN0IHBvbGxmZCBwb2xsc1tNQVhDUFVdOwovLyByZXMgZm9yIGNsZWFu
-dXAKc3RhdGljIGxvbmcgbG9uZyBwc2l6ZTsKbWFwPGludCwgcGFpcjx2b2lkKiwgbG9uZyBsb25n
-Pj4gcmVzOwpzdGF0aWMgbG9uZyBsb25nIGV2ZW50YyA9IDA7Cgp2b2lkIGludF9leGl0KGludCBf
-KSB7CiAgICBmb3IgKGF1dG8geDogcmVzKSB7CiAgICAgICAgYXV0byB5ID0geC5zZWNvbmQ7CiAg
-ICAgICAgdm9pZCogYWRkciA9IHkuZmlyc3Q7CiAgICAgICAgbXVubWFwKGFkZHIsICgxK01BWE4p
-KnBzaXplKTsKICAgICAgICBjbG9zZSh4LmZpcnN0KTsKICAgIH0KICAgIHJlcy5jbGVhcigpOwog
-ICAgcHJpbnRmKCJ0b3RhbCAlbGxkIGV2ZW50cyBjb2xsZWN0XG4iLCBldmVudGMpOwogICAgZXhp
-dCgwKTsKfQppbnQgcHJvY2Vzc19ldmVudChjaGFyICpiYXNlLCB1bnNpZ25lZCBsb25nIGxvbmcg
-c2l6ZSwgdW5zaWduZWQgbG9uZyBsb25nIG9mZnNldCkgewoJc3RydWN0IHBlcmZfZXZlbnRfaGVh
-ZGVyKiBwID0gTlVMTDsKCW9mZnNldCU9c2l6ZTsKCXAgPSAoc3RydWN0IHBlcmZfZXZlbnRfaGVh
-ZGVyKikgKGJhc2Urb2Zmc2V0KTsKCWV2ZW50YysrOwoJcmV0dXJuIHAtPnNpemU7Cn0KCmludCBt
-YWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsKCWlmIChhcmdjPDIpIHsgcHJpbnRmKCJOZWVk
-IGNncm91cCBuYW1lXG4iKTsgcmV0dXJuIDE7IH0KCWNoYXIgeGJbMjU2XTsKCXNucHJpbnRmKHhi
-LCBzaXplb2YoeGIpLCAiL3N5cy9mcy9jZ3JvdXAvJXMiLCBhcmd2WzFdKTsKCWludCBjZ3JvdXBf
-aWQgPSBvcGVuKHhiLCBPX0NMT0VYRUMpOwoJaWYgKGNncm91cF9pZCA8PSAwKSBlcnJvcigiZXJy
-b3Igb3BlbiBjZ3JvdXAgZGlyIik7CglpbnQgY3B1X251bSA9IHN5c2NvbmYoX1NDX05QUk9DRVNT
-T1JTX09OTE4pOwoJcHNpemUgPSBzeXNjb25mKF9TQ19QQUdFX1NJWkUpOyAvLyBnZXRwYWdlc2l6
-ZSgpOwoJc3RydWN0IHBlcmZfZXZlbnRfYXR0ciBhdHRyOwoJbWVtc2V0KCZhdHRyLCAwLCBzaXpl
-b2YoYXR0cikpOwoJYXR0ci50eXBlID0gUEVSRl9UWVBFX1NPRlRXQVJFOwoJYXR0ci5zaXplID0g
-c2l6ZW9mKGF0dHIpOwoJYXR0ci5jb25maWcgPSBQRVJGX0NPVU5UX1NXX0NQVV9DTE9DSzsKCWF0
-dHIuc2FtcGxlX2ZyZXEgPSA5OTk5Oy8vNzc3OyAvLyBhZGp1c3QgaXQKCWF0dHIuZnJlcSA9IDE7
-CglhdHRyLndha2V1cF9ldmVudHMgPSAxNjsKCWF0dHIuc2FtcGxlX3R5cGUgPSBQRVJGX1NBTVBM
-RV9DQUxMQ0hBSU47CglhdHRyLnNhbXBsZV9tYXhfc3RhY2sgPSAzMjsKCWF0dHIuZXhjbHVkZV9j
-YWxsY2hhaW5fdXNlciA9IDE7CgkvLyBzdGFydCBwZXJmIGV2ZW50CglpbnQgaSwgaywgZmQ7Cgl2
-b2lkKiBhZGRyOwoJZm9yIChpPTAsIGs9MDsgaTxjcHVfbnVtJiZpPE1BWENQVTsgaSsrKSB7CgkJ
-cHJpbnRmKCJhdHRhY2hpbmcgY3B1ICVkXG4iLCBpKTsKCQlmZCA9IHBlcmZfZXZlbnRfb3Blbigm
-YXR0ciwgY2dyb3VwX2lkLCBpLCAtMSwgUEVSRl9GTEFHX0ZEX0NMT0VYRUN8UEVSRl9GTEFHX1BJ
-RF9DR1JPVVApOwoJCWlmIChmZDwwKSBlcnJvcigiZmFpbCB0byBvcGVuIHBlcmYgZXZlbnQiKTsK
-CQlhZGRyID0gbW1hcChOVUxMLCAoMStNQVhOKSpwc2l6ZSwgUFJPVF9SRUFELCBNQVBfU0hBUkVE
-LCBmZCwgMCk7CgkJaWYgKGFkZHIgPT0gTUFQX0ZBSUxFRCkgZXJyb3IoIm1tYXAgZmFpbGVkIik7
-CgkJcmVzW2ZkXSA9IHthZGRyLCAwfTsKCQlwb2xsc1trXS5mZCA9IGZkOwoJCXBvbGxzW2tdLmV2
-ZW50cyA9IFBPTExJTjsKCQlwb2xsc1trXS5yZXZlbnRzID0gMDsKCQlrKys7Cgl9CglzaWduYWwo
-U0lHSU5ULCBpbnRfZXhpdCk7CglzaWduYWwoU0lHVEVSTSwgaW50X2V4aXQpOwoKCXVuc2lnbmVk
-IGxvbmcgbG9uZyBoZWFkOwoJaW50IGV2ZW50X3NpemU7CglzdHJ1Y3QgcGVyZl9ldmVudF9tbWFw
-X3BhZ2UgKm1wOwoJd2hpbGUgKHBvbGwocG9sbHMsIGssIC0xKT4wKSB7CgkJZm9yIChpPTA7IGk8
-azsgaSsrKSB7CgkJCWlmICgocG9sbHNbaV0ucmV2ZW50cyZQT0xMSU4pPT0wKSBjb250aW51ZTsK
-CQkJZmQgPSBwb2xsc1tpXS5mZDsKCQkJYWRkciA9IHJlc1tmZF0uZmlyc3Q7CgkJCW1wID0gKHN0
-cnVjdCBwZXJmX2V2ZW50X21tYXBfcGFnZSAqKWFkZHI7CgkJCWhlYWQgPSByZXNbZmRdLnNlY29u
-ZDsKCQkJaW9jdGwoZmQsIFBFUkZfRVZFTlRfSU9DX1BBVVNFX09VVFBVVCwgMSk7CgkJCWlmICho
-ZWFkPm1wLT5kYXRhX2hlYWQpIGhlYWQ9bXAtPmRhdGFfaGVhZDsKCQkJaGVhZCA9IG1wLT5kYXRh
-X2hlYWQtKChtcC0+ZGF0YV9oZWFkLWhlYWQpJW1wLT5kYXRhX3NpemUpOwoJCQl3aGlsZShoZWFk
-PG1wLT5kYXRhX2hlYWQpIHsKCQkJCWhlYWQgKz0gcHJvY2Vzc19ldmVudCgoY2hhciopYWRkcitt
-cC0+ZGF0YV9vZmZzZXQsIG1wLT5kYXRhX3NpemUsIGhlYWQpOwoJCQl9CgkJCXJlc1tmZF0uc2Vj
-b25kID0gbXAtPmRhdGFfaGVhZDsKCQkJaW9jdGwoZmQsIFBFUkZfRVZFTlRfSU9DX1BBVVNFX09V
-VFBVVCwgMCk7CgkJfQoJfQoJaW50X2V4aXQoMCk7CglyZXR1cm4gMDsKfQo=
+Hi Levi,
+
+On Mon, Jun 02, 2025 at 07:40:49PM +0100, Yeoreum Yun wrote:
+> commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
+> changes the event->state update before list_del_event().
+> This change prevents calling perf_cgroup_event_disable() as a result,
+> cpuctx->cgrp can't be cleared properly and point to dangling point of cgroup.
+> 
+> Because of this problem, some machin meets the below panic[0]:
+> 
+> 863.881960] sysved_call_function_sing le+0x4c/0xc0
+> 863.881301] asm_sysvec_call_function_single+0x16/0x20
+> 869.881344] RIP: 0633:0x7f9alcea3367
+> 663.681373] Code: 00 66 99 b8 ff ff ff ff c3 66 ....
+> 863.881524] RSP: 002b:00007fffa526fcf8 EFLAGS: 00000246
+> 869.881567] RAX: 0000562060c962d0 RBX: 0000000000000002 RCX: 00007f9a1cff1c60
+> 863.881625] RDX: 00007f9a0c000030 RSI: 00007f9alcff1c60 RDI: 00007f9a1ca91c20
+> 863.081682] RBP: 0000000000000001 R08: 0000000000000000 R09: 00007f9a1d6217a0
+> 869.881740] R10: 00007f9alca91c10 R11: 0000000000000246 R12: 00007f9a1d70c020
+> 869.881798] R13: 00007fffa5270030 R14: 00007fffa526fd00 R15: 0000000000000000
+> 863.881860] </TASK>
+> 863.881876) Modules linked in: snd_seq_dummy (E) snd_hrtimer (E)...
+> ...
+> 863.887142] button (E)
+> 863.912127] CR2: ffffe4afcc079650
+> 863.914593] --- [ end trace 0000000000000000 1--
+> 864.042750] RIP: 0010:ctx_sched_out+0x1ce/0x210
+> 864.045214] Code: 89 c6 4c 8b b9 de 00 00 00 48 ...
+> 864.050343] RSP: 0000:ffffaa4ec0f3fe60 EFLAGS: 00010086
+> 864.052929] RAX: 0000000000000002 RBX: ffff8e8eeed2a580 RCX: ffff8e8bded9bf00
+> 864.055518] RDX: 000000c92340b051 RSI: 000000c92340b051 RDI: ffff
+> 864.058093] RBP: 0000000000000000 R08: 0000000000000002 R09: 00
+> 864.060654] R10: 0000000000000000 R11: 0000000000000000 R12: 000
+> 864.063183] R13: ffff8e8eeed2a580 R14: 0000000000000007 R15: ffffe4afcc079650
+> 864.065729] FS: 00007f9a1ca91940 (0000) GS:ffff8e8f6b1c3000(0000) knIGS:0000000000000000
+> 864.068312] CS: 0010 DS: 0000 ES: 0000 CRO: 0000000080050033
+> 864.070898] CR2: ffffe4afcc079650 CR3: 00000001136d8000 CR4: 0000000000350ef0
+> 864.673523] Kernel panic - not syncing: Fatal exception in interrupt
+> 864.076410] Kernel Offset: 0xc00000 from 0xffffffff81000000 (relocation range: 0xff
+> 864.205401] --- [ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+> 
+> To address this call the perf_cgroup_event_disable() properly before
+> list_del_event() in __perf_remove_from_context().
+> 
+> Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/ [0]
+> Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> Tested-by: David Wang <00107082@163.com>
+> ---
+>  kernel/events/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f34c99f8ce8f..909b9d5a65c1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2498,6 +2498,10 @@ __perf_remove_from_context(struct perf_event *event,
+>  		state = PERF_EVENT_STATE_DEAD;
+>  	}
+>  	event_sched_out(event, ctx);
+> +
+> +	if (event->state > PERF_EVENT_STATE_OFF)
+> +		perf_cgroup_event_disable(event, ctx);
+> +
+
+As we discussed, seems to me, the issue is caused by an ambigous state
+machine transition:
+
+When a PMU event state is PERF_EVENT_STATE_EXIT, the current code does
+not transite the state to PERF_EVENT_STATE_OFF. As a result, the
+list_del_event() function skips to clean up cgroup pointer for non OFF
+states. This is different from the code prior to the commit a3c3c6667,
+which transits states EXIT -> INACTIVE -> OFF.
+
+My suggestion is not reliable. Roughly read code, except for the
+PERF_EVENT_STATE_EXIT case, I think other error cases should also clean
+up the cgroup pointer.  The reason is I don't see other places to
+clean up the cgroup pointer for these error cases:
+
+  PERF_EVENT_STATE_REVOKED
+  PERF_EVENT_STATE_DEAD
+
+Only in the PERF_EVENT_STATE_ERROR state, we don't need to cleanup
+cgroup as this has already been handled in merge_sched_in().
+
+So a correct condition would be:
+
+    if (event->state > PERF_EVENT_STATE_OFF ||
+        event->state <= PERF_EVENT_STATE_EXIT)
+        perf_cgroup_event_disable(event, ctx);
+
+And we need to remove the perf_cgroup_event_disable() from
+list_del_event() to avoid duplicate code.
+
+Perhaps a better approach for code consolidation would be to modify
+the conditions in list_del_event() to ensure the cgroup pointer is
+cleaned up in error cases. However, I'm not confident that this is the
+correct direction, so I would wait for suggestions from the maintainers.
+
+Thanks,
+Leo
