@@ -1,270 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D73221FB1;
-	Tue,  3 Jun 2025 20:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748982172; cv=none; b=tntBeCXsIemwSl2RWvgyv99O12H2cb1jTIwouUXnOgvzFAg8gPRM6zYnFbS59/9+WxhmdFpMnqt5H7ireyfpUZ7u3KZ4Mh92+VP4T3JnMq7vxL3GSHzcgnlkAhgC7+oxDAuSngLwezaV+y6jXeTE5/+oszgoR/7Z0lZXvmgv0GU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748982172; c=relaxed/simple;
-	bh=N89cRnHvv1Hm7SUg0rGql42+3NsIqu7kNkk+aRE7gPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Me6aStX4XDMY3/zEIDyvzbelL+4AYJB2c4T0+f0ofKFISnHstV+2933csIq3fTlUr1yUeFDSCR/EYJWu3bg7XXBifHcZ6wDp/B/QTiU/X8xaQ9Pw3mdJ8dE2sCT6Eatw4MWLYH27E/N4Lga5g+fQZhX8sY8gZUs4g4Fq0NIvzbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JUShLuT6; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD410C2E0;
+	Tue,  3 Jun 2025 20:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748982273; cv=fail; b=og+WrLScXTOgNiVRmSjPVmciqTVF7ILnnCSdbcLan2ZDvhjgE7vNuk2rmQbzoX5HdUfDy/QP/VBTcTRvZzcqQeNaNOj5ccRd8Q9IApE078KOp76beZcBIT4ZRTachH++rnYpGxNRJV4L+O8FsdI+aumqLPomIiiLidAfZ6gOgtk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748982273; c=relaxed/simple;
+	bh=o1Z1IVLZECNz9EGen6nE2nmuQROPpdIGmk5L0isgKrw=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IdbJy8YIpD9rKxGbcwVKsZ3m7x8tl+uHBRdE1jz0atWH7o8gkUcZ0Xgsn4OOs2Vbx5TSjTIXvVHGsyhE9cDbqS3II6L9Pe54QLDJv+GYZCwKqvqBDh+BdegaaS47I08NApDxzBfvRANrmsJR57FZUrG2Yspj37Iq4rQhoaNtWKw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ao7c0E5N; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUShLuT6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ao7c0E5N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748982171; x=1780518171;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=N89cRnHvv1Hm7SUg0rGql42+3NsIqu7kNkk+aRE7gPg=;
-  b=JUShLuT6dhf7IdtZggoPIJqoF3mwoJ5BtQCHe4fX5PFI3qPm8D8ObTn6
-   8z4bJmj0N4NISTtqXRZvAuo2vE6k3dXr+cbMnJ3HhD8iREJwJUa7RVaF+
-   x+LYFNyPEmvZUBAxLP25TtvFSnrdipm+U/DGOXwTxh9RV2B9D4RdxXPg+
-   cTZoOoR0s8zKOg8yaumL3MNBUIiGu675NEA7+VA8Oy0n0iX3C381ijqlL
-   VHhrgBC6Z0KwocFtg6ldx2AjDy3tL3ITe2DEZZLX2U9+Z8UlqYRvuABML
-   rt0XMcGuzG3n3NezmkDI9+exl34NiNOJGsLHZbaJF2NmlmOOArGq2JHlZ
-   g==;
-X-CSE-ConnectionGUID: xTqoz7+WTOO1CtDfXu0rgg==
-X-CSE-MsgGUID: di5ZClMFRRiX/bQ5m8iMVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="54703808"
+  t=1748982272; x=1780518272;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=o1Z1IVLZECNz9EGen6nE2nmuQROPpdIGmk5L0isgKrw=;
+  b=ao7c0E5N2dONTs2sO14ck41FvLvdLLLBm89rBA/BbPreYEkcRyQhx5ZM
+   SvcIrozupbmrbn0y+wEu5jDLNEw0F4u57oRxABGoBf0FojOkscj42vTO0
+   ZDumxKlsbaBvQw0tpWWGbfN/0jPL8aP05KdlV3kntUVd7oXcA4Cgk1Pmm
+   gVxjEhxcmiTwvr4MY+dJYJUSrAOpQcuAcpATvsDdNGcRNstUuGl9lWeuI
+   yRdowIxDLrTHyarVanlgR432q4amQp3hWsCV//9TrIbs+qEyntnmQ3d0Z
+   +hL5H4kQpjtybylOFVMMZgFgySdmpj5aVrSbZSTSyTgSJ9381oxbZ1b4p
+   A==;
+X-CSE-ConnectionGUID: VGKKn1XbSAOLol7BRRFu/Q==
+X-CSE-MsgGUID: uPdm7avCSfeU/q0OURPnTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="73571075"
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="54703808"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:22:50 -0700
-X-CSE-ConnectionGUID: FWzugVgRQ9Kyypvn0HHYjA==
-X-CSE-MsgGUID: J9eBQXsDQy2R5Fxnn6KLVw==
+   d="scan'208";a="73571075"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:24:24 -0700
+X-CSE-ConnectionGUID: FDbn1UDFQP6AIbp7aLnErQ==
+X-CSE-MsgGUID: Dhrmz31pQZOHJuUQSkGo4g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="175908057"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:22:50 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4CA4720B5736;
-	Tue,  3 Jun 2025 13:22:48 -0700 (PDT)
-Message-ID: <50ed4910-381a-40cf-bdc5-e008a5b28efb@linux.intel.com>
-Date: Tue, 3 Jun 2025 16:22:47 -0400
+   d="scan'208";a="144852059"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:24:23 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 3 Jun 2025 13:24:22 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 13:24:22 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.66) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 3 Jun 2025 13:24:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aiJtKXmrMVnXH49vJDhdHltYOcGu3JjM8vbtB6fXCmYrZO88Kof2FWqPxOlmoQsz3u+kx2ke3Wl+wBVn/KLO6lt9SIK51wzbZnqDzXMv5L+5L8EHtdl20vBj/KtOdntfMIGroNrU9WobwFM7cQyxOQD7Hxhi6blQUuD38/zflLfxcjO4uQDZ8T9FvSti6LCMawsXqLMxHu4dlLJAbYdpe/FsUEz/0wME7mVTHx9bOjNrX3AsywnvCF/TKzZmxNF+V0AdDT/te+cbXCSr2GnuaaGntjEMRcSJZ1bEKBmgvDri2IwvtsnTeVu7PUdpeVJ1NMRe7HpXCtPPtPWR+NsBvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o1Z1IVLZECNz9EGen6nE2nmuQROPpdIGmk5L0isgKrw=;
+ b=oXLaka8EPF2gsDoZUVHzE02PNAqEPLPAXpdKPDqAnSlgQkwiXQibDLhezkCy1A6aacryklLpkP3UNeAC0PqXxHUsU0y0ldWTnUC42m1wTyNuM0sS3aeU4rWN/tNf5dj7GnYJPwHsB1psD0iU+2p56lKNgHp3NKMgVvEkwjyJtUflio4tS26NP67sZA4aZzU2Qed3m24krE45gYq4UFh4uYLZuMHvk3wPhEL7toFA08SDRFYP/31TLddkNNooA7iOOPSbJTquw9IQVH43v0FANNbZHb3HOuchy3rJxy1t/1wZ5RYc+g9bP+RnMcy2lsaViTt7ixLs4dQ+T95RF/chjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by IA1PR11MB7728.namprd11.prod.outlook.com (2603:10b6:208:3f0::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Tue, 3 Jun
+ 2025 20:24:20 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%4]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
+ 20:24:20 +0000
+Message-ID: <519077fa-5fe2-4822-865d-88b8fa0d7648@intel.com>
+Date: Tue, 3 Jun 2025 13:24:19 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/9] x86/nmi: Extend the registration interface to
+ include the NMI-source vector
+Content-Language: en-US
+To: Dave Hansen <dave.hansen@intel.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Xin Li <xin@zytor.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+	<luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, "Sean
+ Christopherson" <seanjc@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+	"Zhang Rui" <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+	"Andrew Cooper" <andrew.cooper3@citrix.com>, "Kirill A . Shutemov"
+	<kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, "Sandipan
+ Das" <sandipan.das@amd.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-4-sohil.mehta@intel.com>
+ <4e6d865c-597f-4281-a07b-94aeffe938d6@intel.com>
+ <cd6e6d88-944c-40b2-a343-3d81415d9b64@intel.com>
+ <0982b21a-6861-4955-a6a4-4c9ee1aa5a72@intel.com>
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <0982b21a-6861-4955-a6a4-4c9ee1aa5a72@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR07CA0014.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::27) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] perf: Fix the throttle error of some clock events
-To: Ian Rogers <irogers@google.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, leo.yan@arm.com, Aishwarya TCV <aishwarya.tcv@arm.com>
-References: <20250528175832.2999139-1-kan.liang@linux.intel.com>
- <CAP-5=fUr0nqZ9KNsATeN64GHwUkHA4+uFpy34woOnboAVnOHgg@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUr0nqZ9KNsATeN64GHwUkHA4+uFpy34woOnboAVnOHgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|IA1PR11MB7728:EE_
+X-MS-Office365-Filtering-Correlation-Id: 832f6c36-c504-4514-e978-08dda2dc9f3a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WHF5dlJMdlp1S1hMM205dzhiZWlQaUhhRHMxbkZvS2NXbm1VV01XOEE4V0Nk?=
+ =?utf-8?B?czlwRDNOWlJxTThpTkI4Szd0b1doM3p2VjRjSlRwYW1XeStYZ3pTcVRZYnFp?=
+ =?utf-8?B?eHNLNGJ6dXRIZWFEZEpxRCtlRDZpdnFjM1d4Z0R4eEdwM2U5SkpjRFVuTnhF?=
+ =?utf-8?B?d0hlQ2o5WHE1QThqZ2QvL0xTeXhUVWxHbTZBaTVtM0ordk9GKzRoRTdjMzRN?=
+ =?utf-8?B?TXQ0RE5vRUJ0V0VXM3BkMGVhVnFBVWxFbEhnKy9HZlVOM0dWTk54dC9HM0dV?=
+ =?utf-8?B?RzRFQmVqTVNSOHdzUGpKSFpJb1JXM0VtUGhsa0JDRHBiYWJ0Wk9BVDR5Q09s?=
+ =?utf-8?B?ajRMSU15TG4rTEt2a0pMY2p3S3pIYTkvNFZHcnlFcjdIUUVsVVhaaVNMelBY?=
+ =?utf-8?B?eXhuTUR0REg4ZEs0RUJ1dGFzSGJTcGF2d2t1Z25pUHZsZjhDcEtFN1BIbTNr?=
+ =?utf-8?B?OTlybUhyaXFxUzd0T1kxTnlxZFd2TkU5TENHUjVDOXA4OWZnM3RmVXR6ZnNu?=
+ =?utf-8?B?NDVhRnVWcGtjWDA2T08vcG55V0RuL1R0V0hJYlZjWXJSRHYzNEg2NGhBWURk?=
+ =?utf-8?B?VGlyTDZpOS9VTldYeTBpcm1tYUJjSVBvT3N3Y2dyUmZDWENWcTI5cmYwVjhN?=
+ =?utf-8?B?SXRFRW1GWU1oZ1kybE9ZeU1NWjNYdFZmRHpVV2VwdDllZDlvcmdOajE3VUNo?=
+ =?utf-8?B?NzhMSDB2SFE4S2ZrSWNNTUo0SmtmUmVnV3k5TkZkdHdZWVphWldFRkJCd2ZX?=
+ =?utf-8?B?NkN2RDNtL3JEWnZLWVlTVkdjd0t6Z25FVi9GVHU1YllwSmlaU1h0RnVzOWZZ?=
+ =?utf-8?B?NlE1TFFtd3VvZy9ieXZoVUZTejQzZjdGbXZwalpxekVBVk9iejJqV2wveUpF?=
+ =?utf-8?B?ZnIxUlUvNGdkQ0FGeEtwVUNnT3ltSThpRzYydGswSUZHckpnWlFlWnR0QXJP?=
+ =?utf-8?B?NXE1Uk5VNUxnYjVHYXBIOGU1YTg3RjdZQVJxR2lRREp0MHBhQmNPQS9zUFZI?=
+ =?utf-8?B?L2JyOFQvM3JWTElkdzh2MXUxOGZ0OHFNZTFlTXhLSE15dzAzWW5qdGRud2ww?=
+ =?utf-8?B?UUhiMHUzWFJOdlppeWU1dlBhMUtISzgveXJ1TWREZzh5U0hPVXlzd1RxTkd4?=
+ =?utf-8?B?cnZPeE9jUXlPOXZwUk9lWW9oNytYb2JpVUlRcWJIUHkvWHowazJzeXhxa3JZ?=
+ =?utf-8?B?ak9aWnZZN1lyNENpaWRCek9vVEtzYml6bHo4Y25oQzhqbkFFMW5wdmt2ZHUr?=
+ =?utf-8?B?TkM3blNKSElUeHlvMEhGZ1hCK3pWeXZ3Y2hRcitHWmY4clpXUHVQcFZzWk5G?=
+ =?utf-8?B?VzlVL3dUWi92ODljZUZocnVrR1l0WEVmc3Z1RzFlYnZ3UHY4ODB2dHAyZGpL?=
+ =?utf-8?B?c1J3cUdkczZ2amtYYW5jdGxqalMwWThBUTFJcWRuMjhBK3NUUjdCeThmVFRW?=
+ =?utf-8?B?dFpMTG4rWUlDRndDeXgvM0lwdVFBRFBLMVJ5MGEwbFJMUCtmU1VmdUE5SHgx?=
+ =?utf-8?B?Q2hTUEgxNVBzSFJ5VWZkdTY1ZkJ4ZFlRMkQ3dzV0akJGWnlQa201UWtYZUVW?=
+ =?utf-8?B?U2FaNnMvZmg1alN0VUFIYUljUmx6YjRLS25za3NhNEJBaGxwNlg5Vkt1UkhJ?=
+ =?utf-8?B?NDM3QlB0bWZ2Uk5La0pjTy9YMG13NTNqRWxZZjZXWmFZRTEzcm1NNmEvajho?=
+ =?utf-8?B?TjJEWVJodTZqYnRpRlc1UzBDazc0VjRGaHMwSTZscytTZlY5ck5Hbi9RZFh5?=
+ =?utf-8?B?OGF1U0RZYW9tbERYbXJMdWJLWkJObmgzUXIzNVkxRGlkbWlyek1zWWZrRzZH?=
+ =?utf-8?B?RS9OYlF1eFZSVkpNbXpPcnJ1SHZVMVB5a2REcmdySllNamFoVFVSL2lyZTdL?=
+ =?utf-8?B?Y0gzMWhINGdMT2RNSGJ6dDVHRnpaUTU3MDgrMkFnOW5xak5aNE5ZdE8wRU1C?=
+ =?utf-8?Q?Pm9ufScOTac=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TVVhU2R1dXRjZjBCVWo0Nk16VFZyM1RFVjRWN0xHZElEbTk3cFhQcWZmMDY3?=
+ =?utf-8?B?WklYcVpDZkRMKzV6dlVxTENON1Ewb2JwVUlHam9QeHlvZ1docEF1WWZQUnNV?=
+ =?utf-8?B?N3BpVFVPT2JIS2FSdXkrMTVONThpMVVqWmFyQ0x5bm9mdVRNeUFqeEZVM1VX?=
+ =?utf-8?B?aGFGY0xJSmcrejhJanV5Y2xKZWJKU2w4TmVpSGowMGJvRjNNSGlsN3EwcmlT?=
+ =?utf-8?B?bzJZY3diZDFoVGFSU2xIZ2k4Y29zanpxbWlyQzNGZFN4YnloR0RyQzhibTlL?=
+ =?utf-8?B?VTJIZkZCK1Jhelp6aXl4N2JFUlhpVFcvZXlGZDhGK0hqVk9uSFFlZUt5OVFB?=
+ =?utf-8?B?b2t4SnI4c2JaQUFidUVkRXpzNzMxRTMrN015d0ZLbFc4WXNGNk9rYVBhVlJQ?=
+ =?utf-8?B?aE5tbHlqSnR5TnhjUlBRVERDTUhWdWRoVWNzb1k3VFZaVVkxWk9CeUpwZ2M1?=
+ =?utf-8?B?NkpSZ3pSamdPRW5jRGxHWlVoendMYklhV1J5cnNyN1c4TzZzQjVxWGhCMjdR?=
+ =?utf-8?B?UThqdU4wN0lIQXRONjBJUkoyZ1V4ZFlFcjhsay9YTnFMRkJjaEUzdHRzdE1U?=
+ =?utf-8?B?NndZaWJjSVRSSUhmYVMrZjYzZGNNWHBJYTREUXJPOGhqNUYrVy96NlcyQTVL?=
+ =?utf-8?B?ZUd3SUZBNnFYbmliNlF1a2NxeWJuVDQ5WEZQaXVxT1FOc1RLbkFRd0E5RGZo?=
+ =?utf-8?B?SWwyMnlaa2VZUmNHeUNPMlJKbENFUWVvR0FRUXVXK2pKSUxWQXIxWVdZaEZy?=
+ =?utf-8?B?TDgzMlFobUNWeDBZWXpNOTk3OGNjQ2hCV1ZCNStjb0tMTVRWSkcweHQzN2Rl?=
+ =?utf-8?B?Ull5eUFiUVNIVXAremFzRUdPVWZFaTdCS0NtQkQxUjhRZk1Ydkd1UGVMcHVv?=
+ =?utf-8?B?bE9zWE1BNEc1ZElKUnhITGVrS3pCWDlTUHRvVlNhai9JUUx1L2Z5N0tpS05F?=
+ =?utf-8?B?bHZGV3p6ZWZQZy9UMEdpSm9ud2Z5bTMvcG5BakttVzBoUlJqY1hMNFplRVFJ?=
+ =?utf-8?B?UVhsaXhJbVFZb2pCaEtGdGZwY0RKanVEZk1iMElKaXp4dmxqMzZqUE9TVGhU?=
+ =?utf-8?B?VDBsZmV5YWtPSjFvcXB5VWhROTVKZ05icGtrZXg4OGNCWWdPaW1VVnpiMDNs?=
+ =?utf-8?B?cm9uOUtNOFZaOWJaY1g2T09MS1lKdlJoWjhPemZYQ2JmS0xrZkJDSDJVci84?=
+ =?utf-8?B?dUtpQWowQmFSd2xhYW1QTXhTOVJURGVIdWRpeWdyVkpBcUw4RXR1VmdaMEZN?=
+ =?utf-8?B?dTRqdXBUUi9PTmFwU2s3cGVmKzR6WEhNQWw0YmJGK3lSdGNWd2xkR2grclFK?=
+ =?utf-8?B?SWx6eFBnWHJtUllPbEE0WitHMVJEMXNGU2JtUXBrelRNb1IxVGp3dThWeWM2?=
+ =?utf-8?B?RVZlOWkwRTMxSjdOSjZvelNtYlR5QW5WZ2hWSGhkb0lUQTQzOURBbVg5a1dY?=
+ =?utf-8?B?cDlDckIwWExSeDdTaWdsaVRHUVQrdnVneFFmbGtnRDdlaDlpVDhlNit6WnU5?=
+ =?utf-8?B?RGpBSjRMZ2dwd3dUblZZRHpwcFhYQ2t4TDNhdTB3c1paTVoyZ1F4SjFSR05B?=
+ =?utf-8?B?UU9XZzVzcmd2V1pGNXNXejl3YTExQm9rVEFPL0I5T3MwM1l5MCtZQTAzQkRS?=
+ =?utf-8?B?OWJIV3lZODFON1EzSDZTRTUva09HWmd5eW9qQWp3NWExcEdobzh2MEtXb1Iz?=
+ =?utf-8?B?RDhYRVpVNVlPd1hjOTRCNUVqNjhnUE93YXFaZU91UVlaa1dVRFdJelFJZ3FO?=
+ =?utf-8?B?eldoMVcrUi8wT1ljWGRVMjhqa21CeXBIQWF5cmNsR0d5L011T29XRDVmSERS?=
+ =?utf-8?B?clpDTmprNVkwV1lmQVBOZFpXOURZaGRYQTh6U2xUWEI2MEMyK2FRa1VYcmRx?=
+ =?utf-8?B?aWdRYnZWVlRKUUJ3ZXA2dTR4d3NUMGlDUlhBdDN0anFGaHlwZytZM0g0amVs?=
+ =?utf-8?B?L3RxSVVOU3VjMjdJVjZCZ3E1NGNiOGE1NWpOWGxzdWpkMHJtV3N3OStmU3B3?=
+ =?utf-8?B?TUQwMHlGcGRqMW9YTzc0ZDVSdkE3ekVyRG00N1NkU1NiMmJXS3hyRDAxSkdM?=
+ =?utf-8?B?UUcwTy9OOU15LzlQaFhnTTVjWjRXdjZYTmtETUw2dFB5dFVBemdScmtEK0hu?=
+ =?utf-8?Q?uyi4Y7p/2L+jRcTbRJeVfh+EY?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 832f6c36-c504-4514-e978-08dda2dc9f3a
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 20:24:20.6600
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wiR3oD6XS34a79t2H2wceFRdIsavu9URJhj1gkL+W/IRB18KLGUqD12GxM2zVNqI5GXVfCR9nEfPJwzqeOfbMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7728
+X-OriginatorOrg: intel.com
 
-
-
-On 2025-06-03 12:35 p.m., Ian Rogers wrote:
-> On Wed, May 28, 2025 at 10:59 AM <kan.liang@linux.intel.com> wrote:
+On 6/3/2025 11:19 AM, Dave Hansen wrote:
+> On 6/3/25 11:02, Sohil Mehta wrote:
+>> The 3rd parameter pertains to handler "flags". The only flag in use
+>> right now is NMI_FLAG_FIRST. Assuming that more flags might get added
+>> later, the 0 should probably correspond to NMI_FLAG_NONE. Agree?
 >>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The Arm CI reports RCU stall, which can be reproduced by the below perf
->> command.
->>   perf record -a -e cpu-clock -- sleep 2
->>
->> The cpu-clock and task_clock are two special SW events, which rely on
->> the hrtimer. Instead of invoking the stop(), the HRTIMER_NORESTART is
->> returned to stop the timer. Because the hrtimer interrupt handler cannot
->> cancel itself, which causes infinite loop.
-> 
-> I'm having a hard time understanding this. Currently in the code we
-> have two PMUs for cpu_clock and task_clock:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/kernel/events/core.c#n10729
-> ```
-> static struct pmu perf_cpu_clock; /* fwd declaration */
-> static struct pmu perf_task_clock;
-> ```
-> This is weird as both of them are programmed using type
-> PERF_TYPE_SOFTWARE (1) and there is a corresponding sysfs PMU at
-> `/sys/bus/event_source/devices/software/type` so wouldn't it make
-> sense for there to be 1 PMU? 
+>> The other option would be NMI_FLAG_LAST, which would be the opposite of
+>> NMI_FLAG_FIRST, but that seems shortsighted.
+> I don't feel as strongly about the flags. But this code has been there
+> for over a decade as-is, so I don't think we need to be planning to add
+> a bunch more flags.
 
-No, they don't use the type PERF_TYPE_SOFTWARE.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c#n14729
-
-They need different operators from the regular software events. I guess
-that's why they have a dedicated PMU.
-
-> Anyway, the stop functions are similar:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/kernel/events/core.c#n11804
-> ```
-> static void cpu_clock_event_stop(struct perf_event *event, int flags)
-> {
->         perf_swevent_cancel_hrtimer(event);
->         cpu_clock_event_update(event);
-> }
-> ...
-> static void task_clock_event_stop(struct perf_event *event, int flags)
-> {
->         perf_swevent_cancel_hrtimer(event);
->         task_clock_event_update(event, event->ctx->time);
-> }
-> ```
-> and I think you are talking about perf_swevent_cancel_hrtimer:
-> ```
-> static void perf_swevent_cancel_hrtimer(struct perf_event *event)
-> {
->         struct hw_perf_event *hwc = &event->hw;
-> 
->         if (is_sampling_event(event)) {
->                 ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
-> 
->                 hrtimer_cancel(&hwc->hrtimer);
->         }
-> }
-> ```
-> but I'm not seeing where HRTIMER_NORESTART comes into this.
-
-That's an issue introduced by the generic throttle patch set, which
-unconditionally invoke the event_stop() when throttle is triggered.
-
-It's wrong to call the hrtimer_cancel() to stop the timer in the timer
-handler. Because the hrtimer_cancel() waits for the handler to finish,
-which is a deadlock.
-
-The correct way (or original way) is to set a HRTIMER_NORESTART.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c#n11717
-
-So we need a method to specially handle the cpu_clock and task_clock.
-
-> 
->> There may be two ways to fix it.
->> - Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
->> the stop is invoked by the throttle.
->> - Introduce a PMU flag to track the case. Avoid the event_stop in
->> perf_event_throttle() if the flag is detected.
-> 
-> I'm not sure what the issue is with the hrtimer_cancel from the
-> explanation up to here. If we can't cancel the timer can we have the
-> timer callback perf_swevent_hrtimer drop the event?
-
-A callback is not required. Just ignore the
-perf_swevent_cancel_hrtimer() when it's invoked from
-perf_swevent_hrtimer(). It's similar to the first method (way) above.
-
-> 
-> I can see how the patch is working around the problem but from an API
-> point-of-view having PERF_PMU_CAP_NO_THROTTLE_STOP seems to be adding
-> more possible complexity to PMUs. Possibly if the software event stop
-> worked better it would help other future users too.
->
-
-The PERF_PMU_CAP_NO_THROTTLE_STOP should only be useful if there are
-some future special PMUs which doesn't want to stop by the generic code.
-To be honest, I have no idea if there will be such PMUs.
-If no such PMUs, we should not need the flag.
-> Sorry for my ignorance in this and I'm likely missing the reason this
-> is the best solution. I think improving the commit message would help
-> other future people and not just me.I will send a V3 to drop the flag and only apply the fix for the two
-clock events. We can have a comparison then.
-
-Thanks,
-Kan>
-> Thanks,
-> Ian
-> 
->> The latter looks more generic. It may be used if there are more other
->> cases that want to avoid the stop later. The latter is implemented.
->>
->> Reported-by: Leo Yan <leo.yan@arm.com>
->> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
->> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
->> Tested-by: Leo Yan <leo.yan@arm.com>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>
->> Changes since V1:
->> - Rebase on top of the latest tip.git
->> - Add Tested-by from Leo
->>
->>  include/linux/perf_event.h |  1 +
->>  kernel/events/core.c       | 23 ++++++++++++++++++++---
->>  2 files changed, 21 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 52dc7cfab0e0..97a747a97a50 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -305,6 +305,7 @@ struct perf_event_pmu_context;
->>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE  0x0100
->>  #define PERF_PMU_CAP_AUX_PAUSE         0x0200
->>  #define PERF_PMU_CAP_AUX_PREFER_LARGE  0x0400
->> +#define PERF_PMU_CAP_NO_THROTTLE_STOP  0x0800
->>
->>  /**
->>   * pmu::scope
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index f34c99f8ce8f..abd19bb571e3 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -2656,7 +2656,22 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->>
->>  static void perf_event_throttle(struct perf_event *event)
->>  {
->> -       event->pmu->stop(event, 0);
->> +       /*
->> +        * Some PMUs, e.g., cpu-clock and task_clock, may rely on
->> +        * a special mechanism (hrtimer) to manipulate counters.
->> +        * The regular stop doesn't work, since the hrtimer interrupt
->> +        * handler cannot cancel itself.
->> +        *
->> +        * The stop should be avoided for such cases. Let the
->> +        * driver-specific code handle it.
->> +        *
->> +        * The counters will eventually be disabled in the driver-specific
->> +        * code. In unthrottle, they still need to be re-enabled.
->> +        * There is no handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
->> +        * the perf_event_unthrottle().
->> +        */
->> +       if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
->> +               event->pmu->stop(event, 0);
->>         event->hw.interrupts = MAX_INTERRUPTS;
->>         if (event == event->group_leader)
->>                 perf_log_throttle(event, 0);
->> @@ -11848,7 +11863,8 @@ static int cpu_clock_event_init(struct perf_event *event)
->>  static struct pmu perf_cpu_clock = {
->>         .task_ctx_nr    = perf_sw_context,
->>
->> -       .capabilities   = PERF_PMU_CAP_NO_NMI,
->> +       .capabilities   = PERF_PMU_CAP_NO_NMI |
->> +                         PERF_PMU_CAP_NO_THROTTLE_STOP,
->>         .dev            = PMU_NULL_DEV,
->>
->>         .event_init     = cpu_clock_event_init,
->> @@ -11930,7 +11946,8 @@ static int task_clock_event_init(struct perf_event *event)
->>  static struct pmu perf_task_clock = {
->>         .task_ctx_nr    = perf_sw_context,
->>
->> -       .capabilities   = PERF_PMU_CAP_NO_NMI,
->> +       .capabilities   = PERF_PMU_CAP_NO_NMI |
->> +                         PERF_PMU_CAP_NO_THROTTLE_STOP,
->>         .dev            = PMU_NULL_DEV,
->>
->>         .event_init     = task_clock_event_init,
->> --
->> 2.38.1
->>
-> 
-
+Sure, I'll leave the flags as-is for now to keep the focus of this
+series on NMI-source.
