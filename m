@@ -1,122 +1,168 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64B0FA47;
-	Tue,  3 Jun 2025 02:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DF7AD23;
+	Tue,  3 Jun 2025 02:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748916167; cv=none; b=E3tjExriiNufCAr0MWzOiPy8hHH4bC58TM4cXMDsuJqswIDQlJy3SD8+UjbfMZ094uPoLL7aOJ0KZlvwOrn8WylSw41NnTAQWsPaZx6A9L38zT/CLAeonvpM2OHFqFS4TAuIIJ5TyeMnAAPCtEWLxNIxE9QKBawol9fALX0PDAM=
+	t=1748916883; cv=none; b=pu7GIV4Uh/gvkdE9nLukNAeR9oSeewmQqiZfMWAuP7cQBvULPC5WeVvxI2/lQwj2shmAxYVk1iDW6UiE/R4UvVxDLSB3tTl0c73tPhFqrTujsPiVQJyXbIx8Tvwjk5HbWnhaGHfD4dI5man3fo2vcy6PPlcLQHFvbPk/334Z2GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748916167; c=relaxed/simple;
-	bh=AB7taGPJNVOMSUMHjBNx630ACxRkKV1NT/QYiCEgMOc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=WqMdvxRaRiO2Gyo4DjvlqgVJkx/ISB1M9et0anAHINU4FPuLbJXxLt/T0hMVO8vdvSA89sFg79shafx1Lcjasms28EkY80p7aY9D17Um5usOFq9EEpuN+EtKgcxJrYiQDmYlI3X72LsuF9RNah2iz97cNVQkXRke64+zCvk/LMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=j2ug0Aif reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748916883; c=relaxed/simple;
+	bh=y8oBFuwHhFlEhkjWTDjbf0m9eyGhP7r/lbU9v9hLVYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D6XubYCCDsY1dCgt0OQ2lGkKzeG8X6Ro6gFyRToH3WKpVrQ2rkSEyLWHx1o8aqr3DSJoIvzjCk9ykpvwUUFw20fpe0Nn9zzsyNcTm82oFbVoeH9NaWRzadeVLzZODln5JGCRGBnO2yilDC5JwTDXhM5/fvUel+PQgZz7Ieyalmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ku2EBJ2t; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="j2ug0Aif"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=mcHfqe8UU8sPOJgw3g1JkNrG9x9xp2dzQdh7oL2hRWk=; b=j
-	2ug0Aif310C5jJRny/XEbwKq0X33xtI/Hu5KEQ8r2Dht3rp+TFV5hLo5BEGdw+gk
-	nP26TjSGiZyF9ASECKVfV9tuP1OSG380bL/Xe8O6GPuaq716IgqcBVYt4An8CcG3
-	qu4Umv3nbLiF2pZ2oOwialAnd0hyxDwFgr0Yr9uOXI=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-143 (Coremail) ; Tue, 3 Jun 2025 10:01:41 +0800 (CST)
-Date: Tue, 3 Jun 2025 10:01:41 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Yeoreum Yun" <yeoreum.yun@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re:[PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250602184049.4010919-1-yeoreum.yun@arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
-X-NTES-SC: AL_Qu2fCvWauUkr5yabYekZnEYQheY4XMKyuPkg1YJXOp80tybH4g4deXB7AFDkwcOjICOSvxerYgBD5MNQQahTc7z6s2g4/iiNDCQCd8LO/hSD
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ku2EBJ2t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748916881; x=1780452881;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=y8oBFuwHhFlEhkjWTDjbf0m9eyGhP7r/lbU9v9hLVYo=;
+  b=Ku2EBJ2t+eUiQ+hLxcUU/pJwJGQfAXD8jjQvDZXpSmlI6PPQgucvw6q+
+   ckVkYLKuvMWgR618h/1rx2wfMeDsjkXz4gcWTxOHOrLFSWuEAwVr+m5ZP
+   xBRSzG3MlnU/G3SVM79KRBwkXtKHBmjBgHcTQn+JEYh/64Jzc0PU/LIKV
+   Tcy6d9X1q8as6w5ZHqE2xLg6aSD6XOmgbfsfh4Ke9S/DoGvLLFPonYyw0
+   f/VjAQCAVfqOFdpMqGDvro1TNWyfJ3yhvD/MjtM2AwhpUGgsYob3pKZrl
+   QL6S9Vw56R5QM1x2He2+BJyvtLKoJFt7eoWz6k7Py+9hjG8fAIWL8zt55
+   Q==;
+X-CSE-ConnectionGUID: 34CP8NXDTUaRKMj+YcN+lA==
+X-CSE-MsgGUID: PK3y0+7ERMiq+ZbCThkauw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50806111"
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="50806111"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 19:14:41 -0700
+X-CSE-ConnectionGUID: FU2B+paLSUOKFVS1BgBgXw==
+X-CSE-MsgGUID: 47HY3mYyRpaxlEllrdS67Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,205,1744095600"; 
+   d="scan'208";a="149869266"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 19:14:36 -0700
+Message-ID: <15e4f7a6-7c68-4d89-8813-cd142eb4c416@linux.intel.com>
+Date: Tue, 3 Jun 2025 10:14:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3842c9a5.20ee.1973385e209.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:jygvCgD3n22GVz5ojVISAA--.54749W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hBgqmg+LTFWbAAEs8
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/intel: Fix IA32_PMC_x_CFG_B MSRs access
+ error
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250529080236.2552247-1-dapeng1.mi@linux.intel.com>
+ <aDq3S9lwO1YadCKT@gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aDq3S9lwO1YadCKT@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CkF0IDIwMjUtMDYtMDMgMDI6NDA6NDksICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
-b20+IHdyb3RlOgo+Y29tbWl0IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXggY2hpbGRfdG90YWxf
-dGltZV9lbmFibGVkIGFjY291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj5jaGFuZ2VzIHRoZSBl
-dmVudC0+c3RhdGUgdXBkYXRlIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLgo+VGhpcyBjaGFuZ2Ug
-cHJldmVudHMgY2FsbGluZyBwZXJmX2Nncm91cF9ldmVudF9kaXNhYmxlKCkgYXMgYSByZXN1bHQs
-Cj5jcHVjdHgtPmNncnAgY2FuJ3QgYmUgY2xlYXJlZCBwcm9wZXJseSBhbmQgcG9pbnQgdG8gZGFu
-Z2xpbmcgcG9pbnQgb2YgY2dyb3VwLgo+Cj5CZWNhdXNlIG9mIHRoaXMgcHJvYmxlbSwgc29tZSBt
-YWNoaW4gbWVldHMgdGhlIGJlbG93IHBhbmljWzBdOgo+Cj44NjMuODgxOTYwXSBzeXN2ZWRfY2Fs
-bF9mdW5jdGlvbl9zaW5nIGxlKzB4NGMvMHhjMAo+ODYzLjg4MTMwMV0gYXNtX3N5c3ZlY19jYWxs
-X2Z1bmN0aW9uX3NpbmdsZSsweDE2LzB4MjAKPjg2OS44ODEzNDRdIFJJUDogMDYzMzoweDdmOWFs
-Y2VhMzM2Nwo+NjYzLjY4MTM3M10gQ29kZTogMDAgNjYgOTkgYjggZmYgZmYgZmYgZmYgYzMgNjYg
-Li4uLgo+ODYzLjg4MTUyNF0gUlNQOiAwMDJiOjAwMDA3ZmZmYTUyNmZjZjggRUZMQUdTOiAwMDAw
-MDI0Ngo+ODY5Ljg4MTU2N10gUkFYOiAwMDAwNTYyMDYwYzk2MmQwIFJCWDogMDAwMDAwMDAwMDAw
-MDAwMiBSQ1g6IDAwMDA3ZjlhMWNmZjFjNjAKPjg2My44ODE2MjVdIFJEWDogMDAwMDdmOWEwYzAw
-MDAzMCBSU0k6IDAwMDA3ZjlhbGNmZjFjNjAgUkRJOiAwMDAwN2Y5YTFjYTkxYzIwCj44NjMuMDgx
-NjgyXSBSQlA6IDAwMDAwMDAwMDAwMDAwMDEgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTogMDAw
-MDdmOWExZDYyMTdhMAo+ODY5Ljg4MTc0MF0gUjEwOiAwMDAwN2Y5YWxjYTkxYzEwIFIxMTogMDAw
-MDAwMDAwMDAwMDI0NiBSMTI6IDAwMDA3ZjlhMWQ3MGMwMjAKPjg2OS44ODE3OThdIFIxMzogMDAw
-MDdmZmZhNTI3MDAzMCBSMTQ6IDAwMDA3ZmZmYTUyNmZkMDAgUjE1OiAwMDAwMDAwMDAwMDAwMDAw
-Cj44NjMuODgxODYwXSA8L1RBU0s+Cj44NjMuODgxODc2KSBNb2R1bGVzIGxpbmtlZCBpbjogc25k
-X3NlcV9kdW1teSAoRSkgc25kX2hydGltZXIgKEUpLi4uCj4uLi4KPjg2My44ODcxNDJdIGJ1dHRv
-biAoRSkKPjg2My45MTIxMjddIENSMjogZmZmZmU0YWZjYzA3OTY1MAo+ODYzLjkxNDU5M10gLS0t
-IFsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgMS0tCj44NjQuMDQyNzUwXSBSSVA6IDAwMTA6
-Y3R4X3NjaGVkX291dCsweDFjZS8weDIxMAo+ODY0LjA0NTIxNF0gQ29kZTogODkgYzYgNGMgOGIg
-YjkgZGUgMDAgMDAgMDAgNDggLi4uCj44NjQuMDUwMzQzXSBSU1A6IDAwMDA6ZmZmZmFhNGVjMGYz
-ZmU2MCBFRkxBR1M6IDAwMDEwMDg2Cj44NjQuMDUyOTI5XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDIg
-UkJYOiBmZmZmOGU4ZWVlZDJhNTgwIFJDWDogZmZmZjhlOGJkZWQ5YmYwMAo+ODY0LjA1NTUxOF0g
-UkRYOiAwMDAwMDBjOTIzNDBiMDUxIFJTSTogMDAwMDAwYzkyMzQwYjA1MSBSREk6IGZmZmYKPjg2
-NC4wNTgwOTNdIFJCUDogMDAwMDAwMDAwMDAwMDAwMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDIgUjA5
-OiAwMAo+ODY0LjA2MDY1NF0gUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAw
-MDAwMCBSMTI6IDAwMAo+ODY0LjA2MzE4M10gUjEzOiBmZmZmOGU4ZWVlZDJhNTgwIFIxNDogMDAw
-MDAwMDAwMDAwMDAwNyBSMTU6IGZmZmZlNGFmY2MwNzk2NTAKPjg2NC4wNjU3MjldIEZTOiAwMDAw
-N2Y5YTFjYTkxOTQwICgwMDAwKSBHUzpmZmZmOGU4ZjZiMWMzMDAwKDAwMDApIGtuSUdTOjAwMDAw
-MDAwMDAwMDAwMDAKPjg2NC4wNjgzMTJdIENTOiAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSTzog
-MDAwMDAwMDA4MDA1MDAzMwo+ODY0LjA3MDg5OF0gQ1IyOiBmZmZmZTRhZmNjMDc5NjUwIENSMzog
-MDAwMDAwMDExMzZkODAwMCBDUjQ6IDAwMDAwMDAwMDAzNTBlZjAKPjg2NC42NzM1MjNdIEtlcm5l
-bCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0Cj44NjQu
-MDc2NDEwXSBLZXJuZWwgT2Zmc2V0OiAweGMwMDAwMCBmcm9tIDB4ZmZmZmZmZmY4MTAwMDAwMCAo
-cmVsb2NhdGlvbiByYW5nZTogMHhmZgo+ODY0LjIwNTQwMV0gLS0tIFsgZW5kIEtlcm5lbCBwYW5p
-YyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0IF0tLS0KPgo+VG8g
-YWRkcmVzcyB0aGlzIGNhbGwgdGhlIHBlcmZfY2dyb3VwX2V2ZW50X2Rpc2FibGUoKSBwcm9wZXJs
-eSBiZWZvcmUKPmxpc3RfZGVsX2V2ZW50KCkgaW4gX19wZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQo
-KS4KPgo+TGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsL2FEMlRzcEtIJTJGN3l2Zllv
-T0BlMTI5ODIzLmFybS5jb20vIFswXQo+Rml4ZXM6IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXgg
-Y2hpbGRfdG90YWxfdGltZV9lbmFibGVkIGFjY291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj5T
-aWduZWQtb2ZmLWJ5OiBZZW9yZXVtIFl1biA8eWVvcmV1bS55dW5AYXJtLmNvbT4KPlRlc3RlZC1i
-eTogRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYzLmNvbT4KPi0tLQo+IGtlcm5lbC9ldmVudHMvY29y
-ZS5jIHwgNCArKysrCj4gMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+Cj5kaWZmIC0t
-Z2l0IGEva2VybmVsL2V2ZW50cy9jb3JlLmMgYi9rZXJuZWwvZXZlbnRzL2NvcmUuYwo+aW5kZXgg
-ZjM0Yzk5ZjhjZThmLi45MDliOWQ1YTY1YzEgMTAwNjQ0Cj4tLS0gYS9rZXJuZWwvZXZlbnRzL2Nv
-cmUuYwo+KysrIGIva2VybmVsL2V2ZW50cy9jb3JlLmMKPkBAIC0yNDk4LDYgKzI0OTgsMTAgQEAg
-X19wZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoc3RydWN0IHBlcmZfZXZlbnQgKmV2ZW50LAo+IAkJ
-c3RhdGUgPSBQRVJGX0VWRU5UX1NUQVRFX0RFQUQ7Cj4gCX0KPiAJZXZlbnRfc2NoZWRfb3V0KGV2
-ZW50LCBjdHgpOwo+Kwo+KwlpZiAoZXZlbnQtPnN0YXRlID4gUEVSRl9FVkVOVF9TVEFURV9PRkYp
-Cj4rCQlwZXJmX2Nncm91cF9ldmVudF9kaXNhYmxlKGV2ZW50LCBjdHgpOwo+Kwo+IAlwZXJmX2V2
-ZW50X3NldF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKPiAKPiAJaWYg
-KGZsYWdzICYgREVUQUNIX0dST1VQKQo+LS0gCj5MRVZJOntDM0Y0N0YzNy03NUQ4LTQxNEEtQThC
-QS0zOTgwRUM4QTQ2RDd9CgpJIHRoaW5rIHRoaXMgcGF0Y2ggaXMgbm8gYmV0dGVyIHRoYW4gbXkg
-cGF0Y2ggaW4gdGhlIG9yaWdpbmFsIHJlcG9ydApodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwv
-MjAyNTA2MDExNzM2MDMuMzkyMC0xLTAwMTA3MDgyQDE2My5jb20vCgoKVGhpcyBwYXRjaCBpcyBt
-b3JlIGFnZ3Jlc3NpdmUsICBpdCBhZGQgbW9yZSBjaGFuZ2VzIHRvIG9yaWdpbmFsIGxvZ2ljLCBz
-YW1lIHByYWN0aWNlIAphcyBpbiB0aGUgb2ZmZW5kaW5nIGNvbW1pdC4gIHdvdWxkIHJhaXNlIG1v
-cmUgY29uY2VybnMgYWJvdXQgaGlkZGVuIHNpZGUtZWZmZWN0LgoKRm9yIGV4YW1wbGUsIHRoaXMg
-Y29kZSAgaW4gbGlzdF9kZWxfZXZlbnQgc2hvdWxkIHJhaXNlIGNvbmNlcm4gYWJvdXQgdGhpcyBw
-YXRjaAogMjA5OSAgICAgICAgICAqIFdlIGNhbiBoYXZlIGRvdWJsZSBkZXRhY2ggZHVlIHRvIGV4
-aXQvaG90LXVucGx1ZyArIGNsb3NlLgogMjEwMCAgICAgICAgICAqLwogMjEwMSAgICAgICAgIGlm
-ICghKGV2ZW50LT5hdHRhY2hfc3RhdGUgJiBQRVJGX0FUVEFDSF9DT05URVhUKSkKIDIxMDIgICAg
-ICAgICAgICAgICAgIHJldHVybjsKCgpUaGFua3MKRGF2aWQK
+
+On 5/31/2025 4:01 PM, Ingo Molnar wrote:
+> * Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>
+>> When running perf_fuzzer on PTL, sometimes the below "unchecked MSR
+>>  access error" is seen when accessing IA32_PMC_x_CFG_B MSRs.
+>>
+>> [   55.611268] unchecked MSR access error: WRMSR to 0x1986 (tried to write 0x0000000200000001) at rIP: 0xffffffffac564b28 (native_write_msr+0x8/0x30)
+>> [   55.611280] Call Trace:
+>> [   55.611282]  <TASK>
+>> [   55.611284]  ? intel_pmu_config_acr+0x87/0x160
+>> [   55.611289]  intel_pmu_enable_acr+0x6d/0x80
+>> [   55.611291]  intel_pmu_enable_event+0xce/0x460
+>> [   55.611293]  x86_pmu_start+0x78/0xb0
+>> [   55.611297]  x86_pmu_enable+0x218/0x3a0
+>> [   55.611300]  ? x86_pmu_enable+0x121/0x3a0
+>> [   55.611302]  perf_pmu_enable+0x40/0x50
+>> [   55.611307]  ctx_resched+0x19d/0x220
+>> [   55.611309]  __perf_install_in_context+0x284/0x2f0
+>> [   55.611311]  ? __pfx_remote_function+0x10/0x10
+>> [   55.611314]  remote_function+0x52/0x70
+>> [   55.611317]  ? __pfx_remote_function+0x10/0x10
+>> [   55.611319]  generic_exec_single+0x84/0x150
+>> [   55.611323]  smp_call_function_single+0xc5/0x1a0
+>> [   55.611326]  ? __pfx_remote_function+0x10/0x10
+>> [   55.611329]  perf_install_in_context+0xd1/0x1e0
+>> [   55.611331]  ? __pfx___perf_install_in_context+0x10/0x10
+>> [   55.611333]  __do_sys_perf_event_open+0xa76/0x1040
+>> [   55.611336]  __x64_sys_perf_event_open+0x26/0x30
+>> [   55.611337]  x64_sys_call+0x1d8e/0x20c0
+>> [   55.611339]  do_syscall_64+0x4f/0x120
+>> [   55.611343]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>
+>> On PTL, GP counter 0 and 1 doesn't support auto counter reload feature,
+>> thus it would trigger a #GP when trying to write 1 on bit 0 of CFG_B MSR
+>> which requires to enable auto counter reload on GP counter 0.
+>>
+>> The root cause of causing this issue is the check for auto counter
+>> reload (ACR) counter mask from user space is incorrect in
+>> intel_pmu_acr_late_setup() helper. It leads to an invalid ACR counter
+>> mask from user space could be set into hw.config1 and then written into
+>> CFG_B MSRs and trigger the MSR access warning.
+>>
+>> e.g., User may create a perf event with ACR counter mask (config2=0xcb),
+>> and there is only 1 event created, so "cpuc->n_events" is 1.
+>>
+>> The correct check condition should be "i + idx >= cpuc->n_events"
+>> instead of "i + idx > cpuc->n_events" (it looks a typo). Otherwise,
+>> the counter mask would traverse twice and an invalid "cpuc->assign[1]"
+>> bit (bit 0) is set into hw.config1 and cause MSR accessing error.
+>>
+>> Besides, also check if the ACR counter mask corresponding events are
+>> ACR events. If not, filter out these counter mask. If a event is not a
+>> ACR event, it could be scheduled to an HW counter which doesn't support
+>> ACR. It's invalid to add their counter index in ACR counter mask.
+>>
+>> Furthermore, remove the WARN_ON_ONCE() since it's easily triggered as
+>> user could set any invalid ACR counter mask and the warning message
+>> could mislead users.
+>>
+>> Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/core.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 3a319cf6d364..8d046b1a237e 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -2994,7 +2994,8 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
+>>  			if (event->group_leader != leader->group_leader)
+>>  				break;
+>>  			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
+>> -				if (WARN_ON_ONCE(i + idx > cpuc->n_events))
+>> +				if (i + idx >= cpuc->n_events ||
+>> +				    !is_acr_event_group(cpuc->event_list[i + idx]))
+>>  					return;
+> Is this a normal condition?
+>
+>  - If it's normal then the 'return' is destructive, isn't it? Shouldn't 
+>    it be a 'break', if this condition is legitimate?
+>
+>  - If it's not normal, then the WARN_ON_ONCE() was justified, right?
+
+It's not normal.Strictly speaking, it's an invalid user configuration. It
+looks not reasonable to trigger a kernel space warning for an invalid user
+space configuration. It would mislead users and let users think there is
+something wrong in kernel. That's why to remove the WARN_ON_ONCE(). Thanks.
+
+
+>
+> Thanks,
+>
+> 	Ingo
