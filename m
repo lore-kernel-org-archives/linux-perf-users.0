@@ -1,551 +1,333 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD6C221739;
-	Tue,  3 Jun 2025 20:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748981705; cv=none; b=txruYCvkb0cpIh8bpsXFbSRhRVnv1h7HAQcmxoD2NQFfOcVppM86T66fbQQKoT+YJlPjhewwatnt1xlJo30Jfn2PFC7zKpwuUgHTFcQmRS1v+8+MP4c+cgWRu63bzO9u8wuprEZlWlebOhB5xmRtc11hMps3wBFjSrdpkxUNGVI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748981705; c=relaxed/simple;
-	bh=p8xgZQd9Ydumm3F8fmXPvBzq5GcnxxeEKAiHtLPaKPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BW5/0HSppT3s8ShkfCE9TxpEgo+yPSD+NAWY3jg6gAfF30MvFyW/fu3LjNx5mTCE42KuJZ2FmdwXC+4vdNr4SCL+2pe/U4aa+oqRXTSbdAndPH9QMH8D0QqlrR86NnhzxbeWNWtDVE1CmzOQU63aQ4dG55OMvOUhk8Bv708A7C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiIta3Jw; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEB3C2E0;
+	Tue,  3 Jun 2025 20:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748982154; cv=fail; b=fIOcB8jwNb5udxPsR0YD19+G0RIome6OcEl3BfSkhr1KZqUHtjqv6f5yAlJbPfJyO30fDlYghSZ2H2P/peuLz0V07bqLG/fr/Rj0dy2eHeJ32Qh97b0738+PvfeCJzMlImxZb3durpG6DXC7pe0xGVNWH4ZuNtjurnSHBYPRhAM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748982154; c=relaxed/simple;
+	bh=+Q+8XqWmzN2perMDQSCotAn5N0FZFJmRTLoOn4Y1+d8=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qFV3OJl+VLEqgtNCB8EgfcqzI1WUBaKPRy2jBDriCGVs1jrG0+lb6UMzfgQtMmjbFkVCfTQN9FhMFWlvl6P9V65YXtrm1hf4zzxamrG934icsL/LVEecBuRhsjFZHdgtcGLVwC4W29s1V6QWod7Mpu+cDpiinbYbdSy/i0p5FaQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3YqnNQR; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiIta3Jw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3EEAC4CEED;
-	Tue,  3 Jun 2025 20:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748981705;
-	bh=p8xgZQd9Ydumm3F8fmXPvBzq5GcnxxeEKAiHtLPaKPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PiIta3Jw50l5wqXAjnpI2REIhmHwI0Lzhj4hLEiBk4wGokWGgIEpbzPSdHbk7JXXs
-	 pktPIsY2ok0vnVJujiznapExh8nP1pj9UY24bqbFe0OpLMht34ZaeyIAnvWZyzvf9W
-	 Z//5id5A4itMihjPEFlGGLUjC+8BrdVkPulMdfl+2zKxPNT2Hh/xa8tIfvzVJQehPZ
-	 FRrXUdTIpjICNLE2VVgozKE7Rl3OtCN3+N9FRweyRKl018htFg5N65Y6oCID9rneaj
-	 IMau77Rn5/ZrvCUEG04c5NptDoXsziWundP4OiiRSRDZAyvvtMJ4+TN2Dd1okE8Ptm
-	 h6D0ffmAgtk9g==
-Date: Tue, 3 Jun 2025 13:15:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Blake Jones <blakejones@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	James Clark <james.clark@linaro.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
-Message-ID: <aD9Xxhwqpm8BDeKe@google.com>
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-3-blakejones@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3YqnNQR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748982153; x=1780518153;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=+Q+8XqWmzN2perMDQSCotAn5N0FZFJmRTLoOn4Y1+d8=;
+  b=j3YqnNQRAxAQkvq9bxWEx4eef6ln0iikqG9wyPBS9WJmU0rccKA3yGaP
+   pSq+ppPAQ/+KnZRyqa/eZQXBN7UbjELZfNWgKKQZbBv8T3SKsLkluWg6o
+   vegFmKy96EWjexHjVJO8LnweZHiVe+0y7foq9dNHttBLpcehefAO72mRj
+   0rGUgE1kzDBkpTQtPIyCj80DoWEroxzQtl3kpOXeFA0zy5ii/mlteBElc
+   vNQLK6PfMEEQyuUsEFwjkM7F2z6pRL5bmKWB8ubSvxeRxwAXL1oDs5Ti4
+   iu4KDIuXPy00e9wp93FIkYvTtBqTqJGo85SujjGnP/ZuT0/+Q8h5SNqei
+   w==;
+X-CSE-ConnectionGUID: AzY0io82RrOjhcQkzuYZ0w==
+X-CSE-MsgGUID: cQUqCVblRmi+2ochJjiJCA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="51039937"
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="51039937"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:22:32 -0700
+X-CSE-ConnectionGUID: VfAln0LrRu2Thmn6nzH/Ig==
+X-CSE-MsgGUID: eeLlSyueTA+FdCUyjPF6zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
+   d="scan'208";a="145938825"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 13:22:32 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 3 Jun 2025 13:22:30 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 3 Jun 2025 13:22:30 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.52) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 3 Jun 2025 13:22:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x+UbGQ04hj+f8k+tV3rFbRyvsMf4CWTQVsopkhfwMbZIE1/ASNahGIY7skPB3nfanT1KBh1CguwCuoKuG+rxn3ZBUX2/7GOu0HyTRLnAl3OzR9ef155tAVjSow4qaP/6Ocf3FM83+hoUda/LzalfXfF/qR6d5345r5yBR/crf1MbzEGapGcvTZwWpHqUeRlkCeXYuWnnQrFTp0HwOyrxebRI8kHS+IbmqsfgQBSCMWRZLV/+F4QOt1y4na3s/PXrV4ol0QQ3DQgWGlBeekCgifwaHrMKxWjX0fC6k4Zr+louPtNo6UHIHw0EKkaub49x4TBW/V8974V4VG+e2tl3jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OKai9dYlclEcz8iT/4M2OA8MVqP4pWAgOLaACiy8zKw=;
+ b=YDuG+qY0IsQzfMaM6HeBYywUwqqRLhKtdbZzS9diS8ai6lic8amo6rg5sk4DArBWsq6ac40pFi0dAwLWt2hoI9FASTh7RH2RMQo2Ar4zsUDtaWU+u7I0+qWOouQFrMqujUV89tArJOSrm8xWH+JFW104VjJY0gJ71pl4s48nLKBwm6WaAvYs0Dq3k8dXZfVGyk1H4YASqpJvmZe/790WMQGJUIC4bgBfB14SeHFRPJxgKW6JqmnXXzqky8x2Somk3KgdwNblzozGbVeQK5+hZdRTHZwwrBw4nQ+WXErZf/qwIkPaga0jAClg21lvHMLt9/eKcP+pneNy4PEMMG9okg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by PH7PR11MB8011.namprd11.prod.outlook.com (2603:10b6:510:24a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 3 Jun
+ 2025 20:22:28 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%4]) with mapi id 15.20.8792.034; Tue, 3 Jun 2025
+ 20:22:28 +0000
+Message-ID: <67683e00-48fa-4aa8-91ff-8726a5374675@intel.com>
+Date: Tue, 3 Jun 2025 13:22:26 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/9] x86/nmi: Assign and register NMI-source vectors
+Content-Language: en-US
+To: Dave Hansen <dave.hansen@intel.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Xin Li <xin@zytor.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+	<luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, "Sean
+ Christopherson" <seanjc@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+	"Zhang Rui" <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+	"Andrew Cooper" <andrew.cooper3@citrix.com>, "Kirill A . Shutemov"
+	<kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, "Sandipan
+ Das" <sandipan.das@amd.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-5-sohil.mehta@intel.com>
+ <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0169.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::24) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250521222725.3895192-3-blakejones@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|PH7PR11MB8011:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9895e9d-289a-4111-c986-08dda2dc5c12
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cUVmT2IyN1lpbHJPVVhIdk9QU3p1VnlNZ3BCZGwzWW55VlphM2tJS204YThE?=
+ =?utf-8?B?TjFQRkgwQU83UWVQaUZPTjVRTkNJVVplUG5vUmFsN0tmcEpuN2p2S2lCbEhl?=
+ =?utf-8?B?ejBXSm42Z0V1YmZHU0Q3SlRuNzI5NXpMSWRQUjFXVmw0ZDNiZXJObGZ1cmJx?=
+ =?utf-8?B?eDZhTmtWcGE3WWNMVG9RR0NpOVRsNjgrMjFsQ1ZRVDZYY3MzR3o3ZktrckZN?=
+ =?utf-8?B?eG4wU2FNSzQyWE52bTg0eGNhUmRGMlNjN0N6dlZpa2JLcE5XbU15M205RUJt?=
+ =?utf-8?B?TTVXNGphV0ZMZVdQNkg3MnRsbXVGRDhHNFZ3RVdFSzVpT2UxV3VnN3pucVp0?=
+ =?utf-8?B?U1RZMmNsRng5cThYclZqM0VXM0RnYi84ZVo3Z21nOVN3L3Z2NGN1Ymo5TEJ4?=
+ =?utf-8?B?am9hSzU1SEFhQ2lKVE0rekVYZDAvOGJZSmVlQTVEdVRqUUROT3IrZGJqZWRS?=
+ =?utf-8?B?RkhkWlRpVW1iTE5pbERVdy84MEMxRnJzZThrZlNXZy9RWGRFRVlPYXJHZlNj?=
+ =?utf-8?B?U3NnNnBtU3MzN3RvS2ZSTk9zM0JJYVlPT3VPbGo5Vkt0SjlEbDVVZ3JuVzVi?=
+ =?utf-8?B?bFdqSHJjWk1ocVdzbFMwUm9FUkl1aXhMRGJaajh4dEI5cVppalFRaFZxbVk1?=
+ =?utf-8?B?TXBVREE5SVd1RFdGRG8vcWdrWVd0WkJJZzhBTitZNEpuUitOb2xpR0VadWFD?=
+ =?utf-8?B?Y2d2N3RVaGdMcHNwWVlSQmJNSjlyVU1GSHllOUVrdFdUMWJRZ1ZIbFhla1Ar?=
+ =?utf-8?B?dDhPaHVTQ1lVT1ZTVEttbFZZQ0xPYVBPN2d6TG40aG1Kai9XTC9lK0lDaW53?=
+ =?utf-8?B?Qk1kdldoaGp1c2xabU9la0FmNUI3QVRXMEtYbmhYa0YyT284WkU4U0JudGYv?=
+ =?utf-8?B?MFhzYm1jUmgzcmduaFVSbFV1Sjd2RU5FVE9sOEhERm9CK2lnZmZXQU0vVWpR?=
+ =?utf-8?B?a1cxcGlXQ2RtRDNZSk15UlR2QVgxMnQxTTk1aEpwakpYNFQwQWhwVkY1OWNF?=
+ =?utf-8?B?VkpJNmRyVXV4Y2piK0szV28wVStweUlqY25MZVNNOUVHdG8rRXJJcFdrSGNI?=
+ =?utf-8?B?djY4c21uQVA0Z2JXUEtrV2VrZTFPZE90WWI0UW9aMDRWUkFZU2xQem9LL2Zi?=
+ =?utf-8?B?U0RXSWE1RDA0UitGOXZrT3VtZzdQa3FhQkk3R0g1dWdsNnIzTmZvalJNcFFK?=
+ =?utf-8?B?NkE5b1MrVk56WGhwT0ZYYzlXV2VzbE16T08xVzZFa2dUemluTFBJcDNGU0RI?=
+ =?utf-8?B?MXVFSmV4bUlieGtodUo1NjA3T2tKRnh1ZDh0Y0FsRjJ6SHVJdFZ1eTllUlln?=
+ =?utf-8?B?TUxqeWxrYUE1OHlzY3JZZkhaOW5ZQ0x6NTFXVzJwbml4TnNKbUgzeHcwRk1Z?=
+ =?utf-8?B?cnZqMG03ck4xbHVHNk1hUzAxZnliSE5aUEtLTlZ6RW9IdStHNXhveGRCVkdR?=
+ =?utf-8?B?OWY4YkVSWUs3N1JUY2htZ1JmMEpmNG5OM1F0L2duclJSaGZEdmdGd0JZZEx0?=
+ =?utf-8?B?Mzk1djZRUVBLSHJ3VzNlTndUWTI2NWlOM3NyYUxjQ29UdWlRdlRreGQreU01?=
+ =?utf-8?B?cDVCL254OUpQRkpqZU5EYWRMK215ZTRrZkVhK3ZoZlBKcHQ5WGozNDBKMHZZ?=
+ =?utf-8?B?S0pPeGtXV1c5L1A0MXpGT2hsVHBrQW93UzZYNFh0OEt0VGVEUnpyTGR0TE1Z?=
+ =?utf-8?B?eTJORUlRT3VDbnpUU2xmeTBZeDAwRkJFbnd4WGxTdS95UDN0M25CMytRTDRr?=
+ =?utf-8?B?VEFuQTduUm9tRCswbWkxenZveFdlRmEvU2pxRTdQbDFrTWRNanNUaGhGUUo4?=
+ =?utf-8?B?aEhmMXYreDI5V0puTGRNcHdjRHlUUW1oM09jZFZKMnBQcDdxdWFPQ05IMUky?=
+ =?utf-8?B?S3pxTXFZWjVyMndUMVkzaTZiOGxyNjArazZBZEplS05LY1pNMWRCY3NEcFlm?=
+ =?utf-8?Q?+h8MvrPJbuE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UWhQdjU4UzRZaUhLTGlHRnEvWUdxaENTZnJJVWo4ZHMreGptY0VtTWhDU1hj?=
+ =?utf-8?B?ZUd3TzlKSXcyTDgydXROWnVSempIdVBvdlZtRXhkemM0VVFWcjBMaVNwRjFG?=
+ =?utf-8?B?akZYOFhUbHIyaHJ4RmUrR3BwK2dNa2d4ZDM3d2FjYWRtSUY2RVJlcWdTYzRv?=
+ =?utf-8?B?aEpJR1lUNXRnY1BGYmFrV3BXVCttZE5ITnRQcUVIMVFrOElDV1JOMUdwK1ln?=
+ =?utf-8?B?MzBBTW1IdW1oQ0RWUk8vblRvWXUzYzZXMkZFM2FOR05pc2FVU1RDOXBmOCtC?=
+ =?utf-8?B?cWlHWWU4N1FDbE9JT0xiZTVLVjY2UDhCc29SN3hndUJJVXVRc1ZKMnM3UUZu?=
+ =?utf-8?B?TmFSU2pYMVhHaGlwMUVjMnJlM0wyMVBCVDBrcEY0U1kyNThkWVlkLzRicDdw?=
+ =?utf-8?B?VVB0dkRjVkFMRjZWcVBZMklnV29zQ0pQWWNNWmhZZ1pXQWtBSTJCRzVIaVh4?=
+ =?utf-8?B?M3dhK085VHcwazU3RC8zM0RIdjV3NTM3OTVYeU9jeHptYzZyYU5ITDVJREtr?=
+ =?utf-8?B?eVJhNDFQQlMyVWJqeitKd2QxVVFEQWxaZXMrdEk1ZmZLZGtyV3VKaUFoSDU5?=
+ =?utf-8?B?UmxmU3NSSHZ2SlZIakFYVkZRMFRONlY2U0lZR3lNd2dHWFg0NHh6a2FsdWNV?=
+ =?utf-8?B?SmpOc1FDYTM2OUZtd0dyMkwrTXljUzBTYlNqSytyZHN5aFZDV1c1aWJpTExI?=
+ =?utf-8?B?NDdGZUV6b3hIRnVCUzFvSDUxUy9BeU5ReUJ5SjVBMXRyUVJYcTRQcGY1dHJ4?=
+ =?utf-8?B?Vk0vbG1mY1Yxd0Y0UU03N0VsVi9BNlFRUlBOYWZuRGdaeVdRTVlzS3JkVTYz?=
+ =?utf-8?B?UVBSNlFjb3lRdUtTOE40c0tKb2NBUXN0bS9UT01IaGFwOFpvQ2RFVEQvMVBO?=
+ =?utf-8?B?ZFVjV3FPb3pvcUpHL1UzZDVZRVNQenV5RDZ0MHAxWVhpTUV6cmJHczhISzRv?=
+ =?utf-8?B?VW5tNnJQa0o1bTZKWXZJbXFGZ05pWmZDQnNvOHRWb0Q4NmVWTkRqd2xLRjhm?=
+ =?utf-8?B?Q0djSHN1bjhibzlYSDNGcjROMVhLeVJCUmh3ZnpWK1krc0lzM0htSEMwamIr?=
+ =?utf-8?B?Z013RGo3bkIzVUZSTThkODVSMTQrbk5JQkVrS1dkbFdQRFNJNDMzajVTMkJY?=
+ =?utf-8?B?QVFTUUpNdk4wcWVyRmZaL1NveW9TK1FxZnVZZzRMYzZVUUdwc2ZSdFQvaUpQ?=
+ =?utf-8?B?UTkveWFESXo0cGNkdVZLQjJUODNkM0EvV2RXMVJVNXpKK05NRUY1emZ2T2JC?=
+ =?utf-8?B?VzVTR01aUTRMaTVvZ0Yra2tBd2t0QU1uT245cHJjbFZxbGpBWkFIQ2pYMGtB?=
+ =?utf-8?B?Rm5ta2p6aUl1UHc2ZmNWQ1JvWjByenNjOVl2Umo3d3g3d2RQRXp0aDJvOEJJ?=
+ =?utf-8?B?Q0dMdjZwTmZQYlM4ODUwVHUvQ1BFTFBJZUIyY3YwTWpOKzd5NE5SeXE0dGRp?=
+ =?utf-8?B?SENaMXJzME8xSWUxeGt3OTZndDUrUnBSSHRUekN5dUhHRHhEQ1BOY09VdXhj?=
+ =?utf-8?B?VWwvVGpIMTd2WHh5Q0dpVWI5elYzbVZHY0p3cW5CVjlmZG9SUHpMcEtLekwx?=
+ =?utf-8?B?aDh4bTFYQ1hJUTJOSUtpTFZGazdGTDhwZkk1NXBuNERIZ1lmb0lmZTZwSUp0?=
+ =?utf-8?B?cWt3SldTNUV2NFZJSWhPSGFmaFRmNmEvUC9nRGo5Mi9ocSszRVMwTW1PR2Vv?=
+ =?utf-8?B?dFVNY2lKQldWVEFXYlgvZktEYXJqZzhKUktqL1NvL05DK3lGNUlXZHRxR01l?=
+ =?utf-8?B?Wnh2Tlk3bThIYk8weXUwN0tNcWVKdHduN2hKUFpoaTlJRk92VnVLNjlnUkZV?=
+ =?utf-8?B?ZUhKRllNeitERU81bFBucnZFSFdQdVJkdmxQU1pnaDV1ZjE3RWVvMEl0dVov?=
+ =?utf-8?B?VnRTZ0grU3RUdTQzTjN3OGI5MWdUM1hiMlpydVFyRFZKOCtSeTdGS2NZMU5a?=
+ =?utf-8?B?YUpWNmUxT25aM0J5UHRJdmdNL2JxN3Q4L0NjaW1qNlpvQmtBTVlQMmxQN0k0?=
+ =?utf-8?B?SlE5RVk4V1dObGk5cm1CVmxyRzBVQkhaZytEeDRpU0FFM1VUWTdnV2FMbjFS?=
+ =?utf-8?B?QjNaWXJsb2FUd2dFTlMrL29hTnJ4eHdsVXp4UDkrOU83WDAxUjVSdHNkeGZa?=
+ =?utf-8?Q?B2vXysiSTGbS0Ujr+BjM8x1UB?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9895e9d-289a-4111-c986-08dda2dc5c12
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 20:22:28.2163
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C1HcvQubsFR+mdj9ORojvRRwmUDhVe4PWYt4RdZG39f/BBV2qiJdvdnzkM1EV4sZJo//DzexfeRI2yZZ9Eppig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8011
+X-OriginatorOrg: intel.com
 
-On Wed, May 21, 2025 at 03:27:24PM -0700, Blake Jones wrote:
-> Look for .rodata maps, find ones with 'bpf_metadata_' variables, extract
-> their values as strings, and create a new PERF_RECORD_BPF_METADATA
-> synthetic event using that data. The code gets invoked from the existing
-> routine perf_event__synthesize_one_bpf_prog().
+On 6/3/2025 10:23 AM, Dave Hansen wrote:
+> On 5/13/25 13:37, Sohil Mehta wrote:
+> ...
+>> + * Vector 2 is reserved for external NMIs related to the Local APIC -
+>> + * LINT1. Some third-party chipsets may send NMI messages with a
+>> + * hardcoded vector of 2, which would result in bit 2 being set in the
+>> + * NMI-source bitmap.
+> 
+> This doesn't actually say what problem this causes. Is this better?
+> 
+> 	Third-party chipsets send NMI messages with a fixed vector of 2.
+> 	Using vector 2 for some other purpose would cause confusion
+> 	between those Local APIC messages and the other purpose. Avoid
+> 	using it.
+> 
 
-It would be great if you can show an example how those metadata is
-constructed and shared between BPF programs.
+Yes, that is better. Though, the behavior of these external NMIs isn't
+expected to consistent across all third-parties.
 
-IIUC the metadata is collected for each BPF program which may have
-multiple subprograms.  Then this patch creates multiple PERF_RECORD_
-BPF_METADATA for each subprogram, right?
+Third-party chipsets may send NMI messages with a fixed vector of 2.
+Using vector 2 for some other purpose would cause confusion between
+those external NMI messages and the other purpose. Avoid using it.
 
-Can it be shared using the BPF program ID?
+
+>> + * The vectors are in no particular priority order. Add new vector
+>> + * assignments sequentially in the list below.
+>> + */
+>> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sources */
+>> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+>> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector 2 */
+>> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+>> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+>> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+>> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+>> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
+>> +
+>> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
+> 
+> Would an enum fit here?
+> 
+
+I had experimented using an enum, but I avoided that approach because
+the source bitmap would also be visible to users/developers. For
+example, patch 9 includes it in the "unknown NMI" print. I am planning
+to add it to trace_nmi_handler() as well.
+
+With an enum, it's harder to figure out the exact sources when let's say
+the source bitmap is printed as 0x0090.
+
+enum nmi_source_vector {
+    NMIS_VECTOR_NONE,
+    NMIS_VECTOR_TEST,
+    NMIS_VECTOR_EXTERNAL,
+    NMIS_VECTOR_SMP_STOP,
+    NMIS_VECTOR_BT,
+    NMIS_VECTOR_KGDB,
+    NMIS_VECTOR_MCE,
+    NMIS_VECTOR_PMI,
+    ...,
+    NMIS_VECTOR_COUNT
+};
+
+Users would have to convert the enum back to numbers to make sense of
+the bitmap. It isn't bad but feels inconvenient.
+
+> You could also add a:
+> 
+> 	NMIS_VECTOR_COUNT
+> 
+> as the last entry and then just:
+> 
+> 	BUILD_BUG_ON(NMIS_VECTOR_COUNT >= 16);
+> 
+> somewhere.
+> 
+> I guess it's a little annoying that you need NMIS_VECTOR_EXTERNAL to
+> have a fixed value of 2, but I do like way the enum makes the type explicit.
+> 
+
+Yeah, fixing the external vector makes the enum annoying to use.
+
+We could probably define an enum in this unusual way to keep the table
+consistent and help users quickly refer bit offsets. But I am not sure
+if this is any better than the current macros.
+
+enum nmi_source_vector {
+    NMIS_VECTOR_NONE        = 0,
+    NMIS_VECTOR_TEST        = 1,
+    NMIS_VECTOR_EXTERNAL    = 2,
+    NMIS_VECTOR_SMP_STOP    = 3,
+    NMIS_VECTOR_BT          = 4,
+    NMIS_VECTOR_KGDB        = 5,
+    NMIS_VECTOR_MCE         = 6,
+    NMIS_VECTOR_PMI         = 7
+};
+
+Any suggestions?
 
 > 
-> Signed-off-by: Blake Jones <blakejones@google.com>
-> ---
->  tools/lib/perf/include/perf/event.h |  18 ++
->  tools/perf/util/bpf-event.c         | 310 ++++++++++++++++++++++++++++
->  tools/perf/util/bpf-event.h         |  13 ++
->  3 files changed, 341 insertions(+)
+>>  static int __init register_nmi_cpu_backtrace_handler(void)
+>>  {
+>> -	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_bt", 0);
+>> +	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_bt", NMIS_VECTOR_BT);
+>>  	return 0;
+>>  }
 > 
-> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-> index 09b7c643ddac..6608f1e3701b 100644
-> --- a/tools/lib/perf/include/perf/event.h
-> +++ b/tools/lib/perf/include/perf/event.h
-> @@ -467,6 +467,22 @@ struct perf_record_compressed2 {
->  	char			 data[];
->  };
->  
-> +#define BPF_METADATA_KEY_LEN   64
-> +#define BPF_METADATA_VALUE_LEN 256
-> +#define BPF_PROG_NAME_LEN      KSYM_NAME_LEN
-> +
-> +struct perf_record_bpf_metadata_entry {
-> +	char key[BPF_METADATA_KEY_LEN];
-> +	char value[BPF_METADATA_VALUE_LEN];
-> +};
-> +
-> +struct perf_record_bpf_metadata {
-> +	struct perf_event_header	      header;
-> +	char				      prog_name[BPF_PROG_NAME_LEN];
-> +	__u64				      nr_entries;
-> +	struct perf_record_bpf_metadata_entry entries[];
-> +};
-> +
->  enum perf_user_event_type { /* above any possible kernel type */
->  	PERF_RECORD_USER_TYPE_START		= 64,
->  	PERF_RECORD_HEADER_ATTR			= 64,
-> @@ -489,6 +505,7 @@ enum perf_user_event_type { /* above any possible kernel type */
->  	PERF_RECORD_COMPRESSED			= 81,
->  	PERF_RECORD_FINISHED_INIT		= 82,
->  	PERF_RECORD_COMPRESSED2			= 83,
-> +	PERF_RECORD_BPF_METADATA		= 84,
->  	PERF_RECORD_HEADER_MAX
->  };
->  
-> @@ -530,6 +547,7 @@ union perf_event {
->  	struct perf_record_header_feature	feat;
->  	struct perf_record_compressed		pack;
->  	struct perf_record_compressed2		pack2;
-> +	struct perf_record_bpf_metadata		bpf_metadata;
->  };
->  
->  #endif /* __LIBPERF_EVENT_H */
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index c81444059ad0..36d5676f025e 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-> @@ -1,13 +1,20 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <errno.h>
-> +#include <stddef.h>
-> +#include <stdint.h>
-> +#include <stdio.h>
->  #include <stdlib.h>
-> +#include <string.h>
->  #include <bpf/bpf.h>
->  #include <bpf/btf.h>
->  #include <bpf/libbpf.h>
-> +#include <linux/bpf.h>
->  #include <linux/btf.h>
->  #include <linux/err.h>
-> +#include <linux/perf_event.h>
->  #include <linux/string.h>
->  #include <internal/lib.h>
-> +#include <perf/event.h>
->  #include <symbol/kallsyms.h>
->  #include "bpf-event.h"
->  #include "bpf-utils.h"
-> @@ -151,6 +158,298 @@ static int synthesize_bpf_prog_name(char *buf, int size,
->  	return name_len;
->  }
->  
-> +#define BPF_METADATA_PREFIX "bpf_metadata_"
-> +#define BPF_METADATA_PREFIX_LEN (sizeof(BPF_METADATA_PREFIX) - 1)
-> +
-> +static bool name_has_bpf_metadata_prefix(const char **s)
-> +{
-> +	if (strncmp(*s, BPF_METADATA_PREFIX, BPF_METADATA_PREFIX_LEN) != 0)
-> +		return false;
-> +	*s += BPF_METADATA_PREFIX_LEN;
-> +	return true;
-> +}
-> +
-> +struct bpf_metadata_map {
-> +	struct btf *btf;
-> +	const struct btf_type *datasec;
-> +	void *rodata;
-> +	size_t rodata_size;
-> +	unsigned int num_vars;
-> +};
-> +
-> +static int bpf_metadata_read_map_data(__u32 map_id, struct bpf_metadata_map *map)
-> +{
-> +	int map_fd;
-> +	struct bpf_map_info map_info;
-> +	__u32 map_info_len;
-> +	int key;
-> +	struct btf *btf;
-> +	const struct btf_type *datasec;
-> +	struct btf_var_secinfo *vsi;
-> +	unsigned int vlen, vars;
-> +	void *rodata;
-> +
-> +	map_fd = bpf_map_get_fd_by_id(map_id);
-> +	if (map_fd < 0)
-> +		return -1;
-> +
-> +	memset(&map_info, 0, sizeof(map_info));
-> +	map_info_len = sizeof(map_info);
-> +	if (bpf_obj_get_info_by_fd(map_fd, &map_info, &map_info_len) < 0)
-> +		goto out_close;
-> +
-> +	/* If it's not an .rodata map, don't bother. */
-> +	if (map_info.type != BPF_MAP_TYPE_ARRAY ||
-> +	    map_info.key_size != sizeof(int) ||
-> +	    map_info.max_entries != 1 ||
-> +	    !map_info.btf_value_type_id ||
-> +	    !strstr(map_info.name, ".rodata")) {
-> +		goto out_close;
-> +	}
-> +
-> +	btf = btf__load_from_kernel_by_id(map_info.btf_id);
-> +	if (!btf)
-> +		goto out_close;
-> +	datasec = btf__type_by_id(btf, map_info.btf_value_type_id);
-> +	if (!btf_is_datasec(datasec))
-> +		goto out_free_btf;
-> +
-> +	/* If there aren't any variables with the "bpf_metadata_" prefix,
-> +	 * don't bother.
-> +	 */
-> +	vlen = btf_vlen(datasec);
-> +	vsi = btf_var_secinfos(datasec);
-> +	vars = 0;
-> +	for (unsigned int i = 0; i < vlen; i++, vsi++) {
-> +		const struct btf_type *t_var = btf__type_by_id(btf, vsi->type);
-> +		const char *name = btf__name_by_offset(btf, t_var->name_off);
-> +
-> +		if (name_has_bpf_metadata_prefix(&name))
-> +			vars++;
-> +	}
-> +	if (vars == 0)
-> +		goto out_free_btf;
-> +
-> +	rodata = calloc(1, map_info.value_size);
+> ... Oh you replaced _most_ of the random 0's in this patch. That helps
+> for sure.
 
-You can use 'zalloc()' instead, in other places too.
+There are still quite a few places left with an extra 0 at the end.
+Explicitly using NMIS_VECTOR_NONE for them should be useful.
 
 
-> +	if (!rodata)
-> +		goto out_free_btf;
-> +	key = 0;
-> +	if (bpf_map_lookup_elem(map_fd, &key, rodata)) {
-> +		free(rodata);
-> +		goto out_free_btf;
-> +	}
-> +	close(map_fd);
-> +
-> +	map->btf = btf;
-> +	map->datasec = datasec;
-> +	map->rodata = rodata;
-> +	map->rodata_size = map_info.value_size;
-> +	map->num_vars = vars;
-> +	return 0;
-> +
-> +out_free_btf:
-> +	btf__free(btf);
-> +out_close:
-> +	close(map_fd);
-> +	return -1;
-> +}
-> +
-> +struct format_btf_ctx {
-> +	char *buf;
-> +	size_t buf_size;
-> +	size_t buf_idx;
-> +};
-> +
-> +static void format_btf_cb(void *arg, const char *fmt, va_list ap)
-> +{
-> +	int n;
-> +	struct format_btf_ctx *ctx = (struct format_btf_ctx *)arg;
-> +
-> +	n = vsnprintf(ctx->buf + ctx->buf_idx, ctx->buf_size - ctx->buf_idx,
-> +		      fmt, ap);
-> +	ctx->buf_idx += n;
-> +	if (ctx->buf_idx >= ctx->buf_size)
-> +		ctx->buf_idx = ctx->buf_size;
-> +}
-> +
-> +static void format_btf_variable(struct btf *btf, char *buf, size_t buf_size,
-> +				const struct btf_type *t, const void *btf_data)
-> +{
-> +	struct format_btf_ctx ctx = {
-> +		.buf = buf,
-> +		.buf_idx = 0,
-> +		.buf_size = buf_size,
-> +	};
-> +	const struct btf_dump_type_data_opts opts = {
-> +		.sz = sizeof(struct btf_dump_type_data_opts),
-> +		.skip_names = 1,
-> +		.compact = 1,
-> +		.print_strings = 1,
-> +	};
-> +	struct btf_dump *d;
-> +	size_t btf_size;
-> +
-> +	d = btf_dump__new(btf, format_btf_cb, &ctx, NULL);
-> +	btf_size = btf__resolve_size(btf, t->type);
-> +	btf_dump__dump_type_data(d, t->type, btf_data, btf_size, &opts);
-> +	btf_dump__free(d);
-> +}
-> +
-> +static void bpf_metadata_fill_event(struct bpf_metadata_map *map,
-> +				    struct perf_record_bpf_metadata *bpf_metadata_event)
-> +{
-> +	struct btf_var_secinfo *vsi;
-> +	unsigned int i, vlen;
-> +
-> +	memset(bpf_metadata_event->prog_name, 0, BPF_PROG_NAME_LEN);
-> +	vlen = btf_vlen(map->datasec);
-> +	vsi = btf_var_secinfos(map->datasec);
-> +
-> +	for (i = 0; i < vlen; i++, vsi++) {
-> +		const struct btf_type *t_var = btf__type_by_id(map->btf,
-> +							       vsi->type);
-> +		const char *name = btf__name_by_offset(map->btf,
-> +						       t_var->name_off);
-> +		const __u64 nr_entries = bpf_metadata_event->nr_entries;
-> +		struct perf_record_bpf_metadata_entry *entry;
-> +
-> +		if (!name_has_bpf_metadata_prefix(&name))
-> +			continue;
-> +
-> +		if (nr_entries >= (__u64)map->num_vars)
-> +			break;
-> +
-> +		entry = &bpf_metadata_event->entries[nr_entries];
-> +		memset(entry, 0, sizeof(*entry));
-> +		snprintf(entry->key, BPF_METADATA_KEY_LEN, "%s", name);
-> +		format_btf_variable(map->btf, entry->value,
-> +				    BPF_METADATA_VALUE_LEN, t_var,
-> +				    map->rodata + vsi->offset);
-> +		bpf_metadata_event->nr_entries++;
-> +	}
-> +}
-> +
-> +static void bpf_metadata_free_map_data(struct bpf_metadata_map *map)
-> +{
-> +	btf__free(map->btf);
-> +	free(map->rodata);
-> +}
-> +
-> +void bpf_metadata_free(struct bpf_metadata *metadata)
-> +{
-> +	if (metadata == NULL)
-> +		return;
-> +	for (__u32 index = 0; index < metadata->nr_prog_names; index++)
-> +		free(metadata->prog_names[index]);
-> +	if (metadata->prog_names != NULL)
-> +		free(metadata->prog_names);
-> +	if (metadata->event != NULL)
-> +		free(metadata->event);
-
-No need to NULL change for free().
+> ret = register_nmi_handler(NMI_LOCAL, perf_ibs_nmi_handler, 0, "perf_ibs", 0);
+> register_nmi_handler(NMI_UNKNOWN, hv_nmi_unknown, NMI_FLAG_FIRST, "hv_nmi_unknown", 0);
+> retval = register_nmi_handler(NMI_UNKNOWN, kgdb_nmi_handler, 0, "kgdb", 0);
+> if (register_nmi_handler(NMI_UNKNOWN, uv_handle_nmi, 0, "uv", 0))
+> if (register_nmi_handler(NMI_LOCAL, uv_handle_nmi_ping, 0, "uvping", 0))
+> register_nmi_handler(NMI_LOCAL, ghes_notify_nmi, 0, "ghes", 0);
+> rv = register_nmi_handler(NMI_UNKNOWN, ipmi_nmi, 0, "ipmi", 0);
+> rc = register_nmi_handler(NMI_SERR, ecclog_nmi_handler, 0, IGEN6_NMI_NAME, 0);
+> retval = register_nmi_handler(NMI_UNKNOWN, hpwdt_pretimeout, 0, "hpwdt", 0);
+> retval = register_nmi_handler(NMI_SERR, hpwdt_pretimeout, 0, "hpwdt", 0);
+> retval = register_nmi_handler(NMI_IO_CHECK, hpwdt_pretimeout, 0, "hpwdt", 0);
 
 
-> +	free(metadata);
-> +}
-> +
-> +static struct bpf_metadata *bpf_metadata_alloc(__u32 nr_prog_tags,
-> +					       __u32 nr_variables)
-> +{
-> +	struct bpf_metadata *metadata;
-> +
-> +	metadata = calloc(1, sizeof(struct bpf_metadata));
-> +	if (!metadata)
-> +		return NULL;
-> +
-> +	metadata->prog_names = calloc(nr_prog_tags, sizeof(char *));
-> +	if (!metadata->prog_names) {
-> +		bpf_metadata_free(metadata);
-> +		return NULL;
-> +	}
-> +	for (__u32 prog_index = 0; prog_index < nr_prog_tags; prog_index++) {
-> +		metadata->prog_names[prog_index] = calloc(BPF_PROG_NAME_LEN,
-> +							  sizeof(char));
-> +		if (!metadata->prog_names[prog_index]) {
-> +			bpf_metadata_free(metadata);
-> +			return NULL;
-> +		}
-> +		metadata->nr_prog_names++;
-> +	}
-> +
-> +	metadata->event_size = sizeof(metadata->event->bpf_metadata) +
-> +	    nr_variables * sizeof(metadata->event->bpf_metadata.entries[0]);
-> +	metadata->event = calloc(1, metadata->event_size);
-> +	if (!metadata->event) {
-> +		bpf_metadata_free(metadata);
-> +		return NULL;
-> +	}
-> +
-> +	return metadata;
-> +}
-> +
-> +static struct bpf_metadata *bpf_metadata_create(struct bpf_prog_info *info)
-> +{
-> +	struct bpf_metadata *metadata;
-> +	const __u32 *map_ids = (__u32 *)(uintptr_t)info->map_ids;
-> +
-> +	for (__u32 map_index = 0; map_index < info->nr_map_ids; map_index++) {
-> +		struct perf_record_bpf_metadata *bpf_metadata_event;
-> +		struct bpf_metadata_map map;
-> +
-> +		if (bpf_metadata_read_map_data(map_ids[map_index], &map) != 0)
-> +			continue;
-> +
-> +		metadata = bpf_metadata_alloc(info->nr_prog_tags, map.num_vars);
-> +		if (!metadata)
-> +			continue;
-> +
-> +		bpf_metadata_event = &metadata->event->bpf_metadata;
-> +		*bpf_metadata_event = (struct perf_record_bpf_metadata) {
-> +			.header = {
-> +				.type = PERF_RECORD_BPF_METADATA,
-> +				.size = metadata->event_size,
-> +			},
-> +			.nr_entries = 0,
-> +		};
-> +		bpf_metadata_fill_event(&map, bpf_metadata_event);
-> +
-> +		for (__u32 index = 0; index < info->nr_prog_tags; index++) {
-> +			synthesize_bpf_prog_name(metadata->prog_names[index],
-> +						 BPF_PROG_NAME_LEN, info,
-> +						 map.btf, index);
-> +		}
-> +
-> +		bpf_metadata_free_map_data(&map);
-> +
-> +		return metadata;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static int synthesize_perf_record_bpf_metadata(const struct bpf_metadata *metadata,
-> +					       const struct perf_tool *tool,
-> +					       perf_event__handler_t process,
-> +					       struct machine *machine)
-> +{
-> +	union perf_event *event;
-> +	int err = 0;
-> +
-> +	event = calloc(1, metadata->event_size + machine->id_hdr_size);
-> +	if (!event)
-> +		return -1;
-> +	memcpy(event, metadata->event, metadata->event_size);
-> +	memset((void *)event + event->header.size, 0, machine->id_hdr_size);
-> +	event->header.size += machine->id_hdr_size;
-> +	for (__u32 index = 0; index < metadata->nr_prog_names; index++) {
-> +		memcpy(event->bpf_metadata.prog_name,
-> +		       metadata->prog_names[index], BPF_PROG_NAME_LEN);
-
-Is it possible to call synthesize_bpf_prog_name() directly to the
-event->bpf_metadata.prog_name instead of saving it metadata->prog_names?
-
-Thanks,
-Namhyung
 
 
-> +		err = perf_tool__process_synth_event(tool, event, machine,
-> +						     process);
-> +		if (err != 0)
-> +			break;
-> +	}
-> +
-> +	free(event);
-> +	return err;
-> +}
-> +
->  /*
->   * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
->   * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
-> @@ -173,6 +472,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
->  	const struct perf_tool *tool = session->tool;
->  	struct bpf_prog_info_node *info_node;
->  	struct perf_bpil *info_linear;
-> +	struct bpf_metadata *metadata;
->  	struct bpf_prog_info *info;
->  	struct btf *btf = NULL;
->  	struct perf_env *env;
-> @@ -193,6 +493,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
->  	arrays |= 1UL << PERF_BPIL_JITED_INSNS;
->  	arrays |= 1UL << PERF_BPIL_LINE_INFO;
->  	arrays |= 1UL << PERF_BPIL_JITED_LINE_INFO;
-> +	arrays |= 1UL << PERF_BPIL_MAP_IDS;
->  
->  	info_linear = get_bpf_prog_info_linear(fd, arrays);
->  	if (IS_ERR_OR_NULL(info_linear)) {
-> @@ -301,6 +602,15 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
->  		 */
->  		err = perf_tool__process_synth_event(tool, event,
->  						     machine, process);
-> +
-> +		/* Synthesize PERF_RECORD_BPF_METADATA */
-> +		metadata = bpf_metadata_create(info);
-> +		if (metadata != NULL) {
-> +			err = synthesize_perf_record_bpf_metadata(metadata,
-> +								  tool, process,
-> +								  machine);
-> +			bpf_metadata_free(metadata);
-> +		}
->  	}
->  
->  out:
-> diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-> index e2f0420905f5..007f0b4d21cb 100644
-> --- a/tools/perf/util/bpf-event.h
-> +++ b/tools/perf/util/bpf-event.h
-> @@ -17,6 +17,13 @@ struct record_opts;
->  struct evlist;
->  struct target;
->  
-> +struct bpf_metadata {
-> +	union perf_event *event;
-> +	size_t		 event_size;
-> +	char		 **prog_names;
-> +	__u64		 nr_prog_names;
-> +};
-> +
->  struct bpf_prog_info_node {
->  	struct perf_bpil		*info_linear;
->  	struct rb_node			rb_node;
-> @@ -36,6 +43,7 @@ int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
->  void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
->  				      struct perf_env *env,
->  				      FILE *fp);
-> +void bpf_metadata_free(struct bpf_metadata *metadata);
->  #else
->  static inline int machine__process_bpf(struct machine *machine __maybe_unused,
->  				       union perf_event *event __maybe_unused,
-> @@ -55,6 +63,11 @@ static inline void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info _
->  						    FILE *fp __maybe_unused)
->  {
->  
-> +}
-> +
-> +static inline void bpf_metadata_free(struct bpf_metadata *metadata)
-> +{
-> +
->  }
->  #endif // HAVE_LIBBPF_SUPPORT
->  #endif
-> -- 
-> 2.49.0.1143.g0be31eac6b-goog
-> 
+
