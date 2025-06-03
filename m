@@ -1,210 +1,137 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA93288CAF
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 18:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8495288C0E;
+	Tue,  3 Jun 2025 18:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748974614; cv=none; b=VT69ry3d84oRayW0UC0GVQTTBiRAXNag22sJZkyWczDUh/cuTJLKWYeebM4tdxtP5yP0tbSVe2FlKofCIrGcXXcixD8Y7udtiHUKIOub8Qh8HSzlcqKJeSxbKmBxWlv5OyA4NUYKAyrLlFUtGNcbBkYXc3WfJ6NZMVbEi8qAiQY=
+	t=1748974764; cv=none; b=oEQY2ewBBb1fXKlRcuKczeYvVhqQ43BX9CyIm/kxOIcAySrEh/woNObGRfK4RVosRu4MNsSJEUBPM9RIOXbnx1oXs+m0iNJ69nAhGEkC2Z9gkvpGjp/dvu9GjmshAX6zjRqkdqu/YlLQBErLnl7HMCSqkFzsqxUySAz0tdryL5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748974614; c=relaxed/simple;
-	bh=wBMwFZ65rrg8ho4R1itK1EGQahIG96i90ewd1ea9HYg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=icjbYkiUqbKBU5b5zR9BRY8QqIM9FOeWLjuKXxetXn4+ZVCuPreSk9MnDMylv/+Ogfd3zCli4g1Y/QshKYE231XCjKxc/aGBQvBDs260HWLLG3VlsBmBzIqCLTyEGiDPgZETDin7akNmNtSWjATgpOYvKMGBuNyDDp7jcj5YOL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FtvKk2i7; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1748974764; c=relaxed/simple;
+	bh=gh71zRs/2E/BEL0+uv3/UbmZsGGeaVLnfUHJOlBtkeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2iO1d5VtHEAxvQEBMVaSe99To9cB8yAYKPriVCiYbxNs7jxdeV0UkQkvO/GNrbU5UvJSs1KIdfDrhm6ujd2i2+s2Xy1H32GlsyjAD4nDtzvpuGT9eCTutJms54UxTYf+9yY+/EsTZRtaRQjVGFj1EClNwkxGWNsdaeWzdEDbRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CPc2QOUH; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FtvKk2i7"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747dd44048cso2387754b3a.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jun 2025 11:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748974612; x=1749579412; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XvHfZvteDDVqcCnEge2jWEzX4DjmZnrKZWBqnzvh3sM=;
-        b=FtvKk2i7DM7s4ZJvbtTccyj9kDRt5eJoEBNDFXUWW9GEP8doLWIVIgvoFmIJPpCEEV
-         xe/hSdd2qZhh+FK3/8zj9JddLw8fEqaDwawppFcwrb4ZIMkEH1WtNGJSuKfg/hnEiSy1
-         zOk0/zVEBjmCzJCyjRiv/6JIsaFxIwSlugA2WqEgjqAXD2IKZlFrbWqvJyoFC+J03O/W
-         hkADPPrM6q4leOkfUcx4/ETS0Kr94eXQi1vuHehWvdl0xDwRJtfXVfxvhcW/MMCfDBpJ
-         Ohj3RCV/0pl1VKycUaolJIi5Z9Oi+azEYLwrjydQsmOO1/7AAzWCbGCXElI7a+EvqYw9
-         Jrpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748974612; x=1749579412;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XvHfZvteDDVqcCnEge2jWEzX4DjmZnrKZWBqnzvh3sM=;
-        b=cMR/1OtqPnA33pcU9rlC1d0Hd3j2+TTX46f0DN1YYnZKXdrKQ+tBf5S9igqEv1o2pO
-         CoTPDcqm2mSggV0gdkrWqwGCyHADHdFJHB7M7LvWmJxmiwpJTq3Ds6HEP8Ao+fsTV78H
-         Z6AGvPjeFrODa06yZjS/YSUccOyTwndih2Sk6b7NiGwqQetGeeesvtJ5AXg9HWQITopg
-         MOaNMUzcsZiP+ZheHy6oPIRNvVjqY2rrqEihxRy/yKVUfRh6qLedBkJuK/s6QKk6fIZy
-         SW77uMv+M0MdyGvg0K+Rf9/BlKKC2Cbq+zyFw+DP95Nxwiyx7B0q0Bih3lUQGoAFQc9x
-         hR4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUShnwd5UeJ6YYXHk1ls6xn3YPmj73XNmF1e8kqqLVu3nhmC7rqGsUsyDUA4uFfaZQT7Pc3QJDQ6tyPeDUkXT3O@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRclGurJo+EIfS2ZJ2kV6RbcJNAaRQPM/JpBIIvNl3A+0itwcH
-	v9DokbJtcmK8EUsNoe4vShGX6WvMW+JWLY1UVlPRphFbD/7uD+4i+uGR9t4zboYevZ6cpL/HVUz
-	sI8XnGg==
-X-Google-Smtp-Source: AGHT+IEuYjk9n2uExO2tYukINHmxBE9zmSFBuDwroUnzVDGF4KT2eakPJ9ADydhQfQMyjArCbTyiOhGBzlU=
-X-Received: from pgbdh4.prod.google.com ([2002:a05:6a02:b84:b0:b2e:ce0c:b3fb])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3944:b0:1f5:8622:5ecb
- with SMTP id adf61e73a8af0-21ae00c7013mr33177374637.34.1748974612100; Tue, 03
- Jun 2025 11:16:52 -0700 (PDT)
-Date: Tue,  3 Jun 2025 11:15:54 -0700
-In-Reply-To: <20250603181634.1362626-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CPc2QOUH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748974762; x=1780510762;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gh71zRs/2E/BEL0+uv3/UbmZsGGeaVLnfUHJOlBtkeI=;
+  b=CPc2QOUHYe5SLpbDz3uMv93wu602RLSriOBbV61ndIk36p7bbeI7HGDM
+   /PXYLIPRSvLzObmKlYxIdzh+zaQAGdnwU0wbfo2y6rKPRUsGqxLN7peFR
+   usRn+8xFzM5/Jak9vjXn71CmTd1z3wCjAc0ljOiQYVo1tiTPFNFJ6AN7X
+   F3svYVL7TjsEgM4EKv4Xk2Y8gBFt3WMADxNS/CuEn0bvwibIgrMxgVu9f
+   rvASxAp9W5gyMb8tgsfJXbAAQDfyD9XqpGRT725jxtMPZBmeFrN7kkKvf
+   mYhdkbCoY01z+tLcNysjxS/BAiCVsz57WZN5x3B70+PYZmS/mBvPwV6hY
+   g==;
+X-CSE-ConnectionGUID: 3ScUM0HBTO+sSRFI7P3Ldw==
+X-CSE-MsgGUID: HVOYQm7QSuuDOp2gxnu6JA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="61294947"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="61294947"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 11:19:22 -0700
+X-CSE-ConnectionGUID: hs/MmAIIRQCO14oRK3ofWw==
+X-CSE-MsgGUID: VsnGh/oCQjel/7kccRxIPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="144963741"
+Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.110.192]) ([10.125.110.192])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 11:19:21 -0700
+Message-ID: <0982b21a-6861-4955-a6a4-4c9ee1aa5a72@intel.com>
+Date: Tue, 3 Jun 2025 11:19:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250603181634.1362626-1-ctshao@google.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250603181634.1362626-2-ctshao@google.com>
-Subject: [PATCH v4 2/2] perf evsel: Find process with busy PMUs for EBUSY
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
-	weilin.wang@intel.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/9] x86/nmi: Extend the registration interface to
+ include the NMI-source vector
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Xin Li <xin@zytor.com>, "H . Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Sean Christopherson <seanjc@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Andi Kleen <ak@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+ kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-4-sohil.mehta@intel.com>
+ <4e6d865c-597f-4281-a07b-94aeffe938d6@intel.com>
+ <cd6e6d88-944c-40b2-a343-3d81415d9b64@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <cd6e6d88-944c-40b2-a343-3d81415d9b64@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-It parses fdinfo with PMU type, comparing with the event which failed to
-open, and report the processes causing EBUSY error.
-
-Testing cycles and intel_pt//
-
-  $ ./perf stat -e cycles &
-  [1] 55569
-  $ ./perf stat -e intel_pt// &
-  [2] 55683
-  $ ./perf stat -e intel_pt//
-  Error:
-  The PMU intel_pt counters are busy and in use by another process.
-  Possible processes:
-  55683 ./perf stat -e intel_pt//
-
-Only perf with intel_pt was reported.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
-v4:
-  Removed the first patch in v3 since it is merged.
-  Retested to make sure the patch still work.
-
-v3: lore.kernel.org/20241106003007.2112584-3-ctshao@google.com/
- tools/perf/util/evsel.c | 79 +++++++++++++++++++++++++++++------------
- 1 file changed, 57 insertions(+), 22 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d55482f094bf..fa281ea15a25 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3619,7 +3619,8 @@ static bool find_process(const char *name)
- 	return ret ? false : true;
- }
-
--static int dump_perf_event_processes(char *msg, size_t size)
-+static int dump_perf_event_processes(const struct perf_event_attr *failed_attr,
-+				     char *msg, size_t size)
- {
- 	DIR *proc_dir;
- 	struct dirent *proc_entry;
-@@ -3660,29 +3661,61 @@ static int dump_perf_event_processes(char *msg, size_t size)
- 				continue;
- 			/* Take care as readlink doesn't null terminate the string. */
- 			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
--				int cmdline_fd;
--				ssize_t cmdline_size;
--
--				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
--				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
--				if (cmdline_fd == -1)
--					continue;
--				cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
--				close(cmdline_fd);
--				if (cmdline_size < 0)
-+				int fdinfo_fd;
-+				ssize_t fdinfo_size;
-+				char *line;
-+				u32 perf_event_type = UINT32_MAX;
-+
-+				/* Let's check the PMU type reserved by this process */
-+				scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
-+					  proc_entry->d_name, fd_entry->d_name);
-+				fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+				fdinfo_size = read(fdinfo_fd, buf, sizeof(buf) - 1);
-+				if (fdinfo_size < 0)
- 					continue;
--				buf[cmdline_size] = '\0';
--				for (ssize_t i = 0; i < cmdline_size; i++) {
--					if (buf[i] == '\0')
--						buf[i] = ' ';
-+				buf[fdinfo_size] = '\0';
-+
-+				line = strtok(buf, "\n");
-+				while (line != NULL) {
-+					if (sscanf(line,
-+						   "perf_event_attr.type:\t%u",
-+						   &perf_event_type) == 1)
-+						break;
-+					line = strtok(NULL, "\n");
- 				}
-
--				if (printed == 0)
--					printed += scnprintf(msg, size, "Possible processes:\n");
--
--				printed += scnprintf(msg + printed, size - printed,
--						"%s %s\n", proc_entry->d_name, buf);
--				break;
-+				/* Report the process which reserves the conflicted PMU. */
-+				/* If fdinfo does not contain PMU type, report it too. */
-+				if (perf_event_type == failed_attr->type ||
-+				    perf_event_type == UINT32_MAX) {
-+					int cmdline_fd;
-+					ssize_t cmdline_size;
-+
-+					scnprintf(buf, sizeof(buf),
-+						  "%s/cmdline",
-+						  proc_entry->d_name);
-+					cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+					if (cmdline_fd == -1)
-+						continue;
-+					cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
-+					close(cmdline_fd);
-+					if (cmdline_size < 0)
-+						continue;
-+					buf[cmdline_size] = '\0';
-+					for (ssize_t i = 0; i < cmdline_size; i++) {
-+						if (buf[i] == '\0')
-+							buf[i] = ' ';
-+					}
-+
-+					if (printed == 0)
-+						printed += scnprintf(
-+							msg, size,
-+							"Possible processes:\n");
-+
-+					printed += scnprintf(msg + printed, size - printed,
-+							"%s %s\n", proc_entry->d_name, buf);
-+					break;
-+				}
- 			}
- 		}
- 		closedir(fd_dir);
-@@ -3799,7 +3832,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			msg, size,
- 			"The PMU %s counters are busy and in use by another process.\n",
- 			evsel->pmu ? evsel->pmu->name : "");
--		return printed + dump_perf_event_processes(msg + printed, size - printed);
-+		return printed + dump_perf_event_processes(&evsel->core.attr,
-+							   msg + printed,
-+							   size - printed);
- 		break;
- 	case EINVAL:
- 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
---
-2.49.0.1204.g71687c7c1d-goog
-
+On 6/3/25 11:02, Sohil Mehta wrote:
+> The 3rd parameter pertains to handler "flags". The only flag in use
+> right now is NMI_FLAG_FIRST. Assuming that more flags might get added
+> later, the 0 should probably correspond to NMI_FLAG_NONE. Agree?
+> 
+> The other option would be NMI_FLAG_LAST, which would be the opposite of
+> NMI_FLAG_FIRST, but that seems shortsighted.
+I don't feel as strongly about the flags. But this code has been there
+for over a decade as-is, so I don't think we need to be planning to add
+a bunch more flags.
