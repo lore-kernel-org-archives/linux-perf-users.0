@@ -1,134 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266831482E7;
-	Tue,  3 Jun 2025 06:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4022EB1D;
+	Tue,  3 Jun 2025 06:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748933523; cv=none; b=FLfecIH0tTrECt0AFzsr/ObQj2gYJghuTXRz19I8KZi8e9vVJl86LBNHqXWhjvw30DMr9IQpAUayBjlX8EP0qr/wLr+0kyARJ5p8o/EBCOLajV6RiSp1gyk0Y7mzp+9stx9IK5Z1gVUYm83hUkD4BQq/BxcAwfveJM6Rr5yp6wU=
+	t=1748933724; cv=none; b=mf8WzhX+0QUIjIJdycX6iSDxbXcx7mDielFRln5aik0Datprw9cXy5uttYVrSjxn3MIdNP8astQSYEnstF24EKDt5OqXkijwuL+qyZCv+zQqrDQn1oM9bLN3lk7Vwm1gBkiqliv2JucB2uEMgAARQ2NtiNAzBw8E93jGltn2aHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748933523; c=relaxed/simple;
-	bh=Kjp0tuLw4XvD1ShgDjXom8aEbBouPSch+dAuZVlg1lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bbPm83fsGiBoJQ4e+pP052P9tULlPWvtUAMBQjPJIIcDWDtPNOm62T42sn3i8U/YAj2a7cTKk6zYX3YMEhpt/U9+rEekbA8I6QR3ufy11Bou68Wxw0nS5sB4riY3T4L+WjL9+85oSxwH7IM3Tr76Jfj7mxs87Ph5u9/3upM7qdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cp9ubILs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748933724; c=relaxed/simple;
+	bh=sCRpWwME+Mbt3J0XUqv5P9arPzVIC0WtJOh+8X7Ci/k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=IBE6Hj5UzpWnaAAyAfZNc/QR7+S9+nCQOvyjREjlJfBgrGGDkZj/48D4N/DWrbqROkje3HNagkPfQadV747qZdc5RqBF90HOMQ87HYoH6lVZUwa4OWpvCks9WjmS8uzONdIwAabQO/Pmv6Hj3xL8DicPspU2N1gSKlY/3D5j6xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HDjndiHD; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cp9ubILs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA8AC4CEED;
-	Tue,  3 Jun 2025 06:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748933522;
-	bh=Kjp0tuLw4XvD1ShgDjXom8aEbBouPSch+dAuZVlg1lc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cp9ubILs58FREDHmwfcXTl8H52EfWllmO2J0fZq/mnImXJRpewkU3Dj5Jkd2ZtHHB
-	 aX6aPQTM1xqYQKsOexgJP0gWMY4hquIuD3hKbJdOc48XFGFiH+OX6RCLbfqc2WomgU
-	 IWxwN52klZVJ6GdpmAh4Cms02mu8bw0QTZFRexRU5C6cvBeNXl6cBSXPkYg0LlcqKP
-	 i2HIclhrTkgfCWe/kDRFBzBZMbtbZpQigz7BEudTCxD3YEK2l+JXVTsc9RINhrezI3
-	 kPIgAa70f//PDY/7axp7PBSUIXBHgpma25WDymPfpsko3IDWHiozSt+ihOsvkCmHUp
-	 63/oCweUJ0/HQ==
-Date: Mon, 2 Jun 2025 23:52:00 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Joe Mario <jmario@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf/amd/ibs: Add load/store SW filters to IBS OP PMU
-Message-ID: <aD6bkAXjRllFvRTV@google.com>
-References: <20250529123456.1801-1-ravi.bangoria@amd.com>
- <20250529123456.1801-2-ravi.bangoria@amd.com>
- <aDq1iG3P9_BBnx7C@gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HDjndiHD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=sCRpWwME+Mbt3J0XUqv5P9arPzVIC0WtJOh+8X7Ci/k=; b=H
+	DjndiHDgL9RwomRluS1eJ7K5RpfByle8fER9udenNTfcOnzJN5jNndw89RdSr+q9
+	gCtgjXFbuwJvKnAr3J2fWkvkFjpuzy5zZwyKF6L6qjLJyMBv9VrBpv6sJ+v1mGT1
+	8JCObhhmDh9imASDZAWpV0apH6tDInaaCDwOnGhZ+s=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 3 Jun 2025 14:54:35 +0800 (CST)
+Date: Tue, 3 Jun 2025 14:54:35 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD6Xk2rdBjnVy6DA@e129823.arm.com>
+References: <aD6Xk2rdBjnVy6DA@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWYvE4s4yKQY+kZnEYQheY4XMKyuPkg1YJXOp80iCXQ3wodeXBxJkTkwcOOJiWSvxe8aSZS7+RTe4BFYbCvBmCFCyPKl5VdSW4IYej5
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aDq1iG3P9_BBnx7C@gmail.com>
+Message-ID: <5238de9d.6895.1973492091b.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iigvCgD3L9srnD5o9K8SAA--.26502W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBJhqmg+kwHr9AAHsV
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hello,
+CkF0IDIwMjUtMDYtMDMgMTQ6MzQ6NTksICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4+ID4gYXR0YWNoX3N0YXRlIGRvZXNuJ3QgcmVsYXRlZCBm
+b3IgZXZlbnQtPnN0YXRlIGNoYW5nZS4KPj4gPiBpZiBvbmUgZXZlbnQgYWxyZWFkeSBjbGVhcmVk
+IFBFUkZfQVRUQUNIX0NPTlRFWFQsIHRoYXQgZXZlbnQgaXMgY2FsbGVkCj4+ID4gdmlhIGxpc3Rf
+ZGVsX2V2ZW50KCkKPj4KPj4gTWF5YmUgdGhpcyBjb25jZXJuIGNvdWxkIGJlIGNsYXJpZmllZCwg
+d2hhdCBhYm91dCBvdGhlciBzdWJ0bGUgaW1wYWN0cy4KPj4gVGhlIGNoYW5nZSBzaG91bGQgYmUg
+dGhvcm91Z2ggcmV2aWV3ZWQsIGlmIHlvdSB3YW50IHRvIHB1c2ggaXQgZnVydGhlci4KPj4KPj4g
+SXQgdGFrZXMgbWUgbW9yZSB0aGFuIGEgbW9udGggdG8gZmlndXJlIG91dCBhIHByb2NlZHVyZSB0
+byByZXByb2R1Y2UgdGhlIGtlcm5lbCBwYW5pYyBidWcsCj4+IEl0IGlzICBqdXN0IHZlcnkgaGFy
+ZCB0byBjYXB0dXJlIGEgYnVnIGhhcHBlbnMgaW4gcmFyZSBzaXR1YXRpb24uCj4+Cj4+IEFuZCB5
+b3VyIHBhdGNoIGhhcyBhIGdsb2JhbCBpbXBhY3QsIGl0IGNoYW5nZXMgYmVoYXZpb3IgdW5uZWNl
+c3NhcmlseS4KPgo+VEJILCB0aGlzIHBhdGNoIGp1c3QgY2hhbmdlIG9mIHRpbWUgb2YgImV2ZW50
+LT5zdGF0ZSIgd2hpbGUgZG9pbmcsCj5BcyBteSBiYWQgbWlzcyB0aGUgZGlzYWJsZSBjZ29ydXAg
+cGVyZi4KPkkgdGhpbmsgdGhlcmUgc2VlbXMgbm8gb3RoZXIgc2lkZSBlZmZlY3QgZm9yIGNoYW5p
+bmcgc3RhdGUgd2hpbGUgaW4KPnJlbW92aW5nIGV2ZW50Lgo+QnV0LCBMZXQncyB3YWl0IGZvciBv
+dGhlciBwZW9wbGUncyByZXZpZXcuCj4KClRoZSAqcmlzayogaXMgdW5uZWNlc3NhcnksIHdlIGNh
+biBjb25maW5lIHRoZSBzY29wZSBvZiBERVRBQ0hfRVhJVC4KV2h5IGtlZXAgbWFraW5nIGdsb2Jh
+bCBjaGFuZ2VzIHdoZW4gY29uZmluZWQgY2hhbmdlcyBhcmUgYXZhaWxhYmxlPwoKCkRhdmlkCg==
 
-+ bpf list
-
-On Sat, May 31, 2025 at 09:53:44AM +0200, Ingo Molnar wrote:
-> 
-> * Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> 
-> > Since current IBS OP PMU does not have the capability to tag only load/
-> > stores instructions, tools like perf mem/c2c ends up recording lots of
-> > unwanted samples. So, introduce a load/store software filter in the IBS
-> > OP PMU:
-> > 
-> >   ibs_op/swfilt=1,ldop=1/         --> Only load samples
-> >   ibs_op/swfilt=1,stop=1/         --> Only store samples
-> >   ibs_op/swfilt=1,ldop=1,stop=1/  --> Load OR store samples
-> > 
-> > Other HW or SW filters in combination with this ldst filter are logical
-> > AND. For ex:
-> > 
-> >   ibs_op/swfilt=1,ldop=1,stop=1/u is
-> >   "privilege == userspace && (ldop == 1 || stop == 1)"
-> > 
-> >   ibs_op/swfilt=1,ldop=1,stop=1,l3missonly=1/ is
-> >   "l3missonly == 1 && (ldop == 1 || stop == 1)"
-> 
-> No objections, but:
-> 
-> > An alternate approach is mem_op BPF filter:
-> > 
-> >   perf record --filter "mem_op == load || mem_op == store" ...
-> > 
-> > However, there are few issues with it:
-> > o BPF filter is called after preparing entire perf sample. If the sample
-> >   does not satisfy the filtering criteria, all the efforts of preparing
-> >   perf sample gets wasted.
-> 
-> Could we add an 'early' BPF callback point as well, to fast-discard 
-> samples?
-
-I guess that would require a new BPF program type than PERF_EVENT and
-handle driver-specific details.
-
-> 
-> > o BPF filter requires root privilege.
-> 
-> Could we add 'built-in', 'safe' BPF scripts that are specifically 
-> prepared for perf events filtering purposes, that can be toggled by 
-> non-root users as well? These could be toggled by tooling via sysfs or 
-> so, or even via the perf syscall if that turns out to be the better 
-> approach.
-
-We have BPF filter framework in the perf tools and it can be run as
-normal user.  But root user should load and pin the BPF program prior
-to use like below.
-
-  $ sudo perf record --setup-filter pin
-
-  $ perf record -d -e ibs_op/swfilt/u --filter 'mem_op == load' ...
-
-Thanks,
-Namhyung
-
-> 
-> It would give us the flexibility and extensibility of BPF, combining it 
-> with the safety & compatibility of the filtering functionality being 
-> provided by the kernel.
-> 
-> It could be provided in the form of a BPF program crypto signature 
-> registry of upstream-approved BPF scripts for perf BPF callback(s),
-> or so. (While root could load any BPF script.)
-> 
-> Thanks,
-> 
-> 	Ingo
