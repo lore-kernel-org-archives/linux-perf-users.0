@@ -1,143 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682002AE8D;
-	Tue,  3 Jun 2025 14:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E972356C3;
+	Tue,  3 Jun 2025 14:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748959248; cv=none; b=rxSJBnEKulggEVPUcvCkR7OJ5lPkectxabqYv2yASVr5iYzT9q2rZ5Skb0DMyOGGMvoU7T0Ryccbgw2gNTG3jdqWR5d67bUQZU+8xN/8ytUcV+O+ezvVaz+vIQ54/Gr/8BXL6YgeIx/qfkKzmZgMab726yuy0ThwhTc9CioCrvo=
+	t=1748959415; cv=none; b=ULR0fjBLpD6gi9ngFr9p+V2HlhoxkuQhq3zDxEnwV49UkkjIctJhEnOS4LOvVnnlxA6bFAxlUtrxuWCgUekDGp4UvEX+AVbZMMyICX5ELYtCLeha0cCELEz5zQtKsq2oBFtwpgpODwnsSTQaYBRG1DUndpXlJBfWzg2B9J7olJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748959248; c=relaxed/simple;
-	bh=LfQhyG+gAeQ7nIAhOL9ZjWWzy98MrKRoup70yuP6NiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqvVWvM9twwjcMGUqenUoEDsQlKNZK1Sv+dr/6u3+hIrNFsoecQSPEqKKlbFJIol9pdDTOIARBCddT2VQ0f7lUPpbwHReJA4bu0YDFn5jzd5MBW2nV1U+1yCGVs/h9YECOX9gel2xYKGbdRbSIBvaOqZMInabgoCWVZF18io2wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D88012FC;
-	Tue,  3 Jun 2025 07:00:28 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC7D73F5A1;
-	Tue,  3 Jun 2025 07:00:44 -0700 (PDT)
-Date: Tue, 3 Jun 2025 15:00:40 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
+	s=arc-20240116; t=1748959415; c=relaxed/simple;
+	bh=pwIE30QMCig7fjCkc2DTK/ld/x9ovYw2kzOaBb+RcWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=pHby0zIrOrtCKL8O131yhsazpqjy6AyTQuqRs+fCTn8XGZnuLClKQpUg7Uaims9oTxC9QDJiwxk2Px+IwXugejXbtY8QmnzJBjOGpQCuRwrspyi/1cFjA34OqwprEntnUZqoO5O8JHuqn0B7EAKtbfGIiIhbickHqYOAW36qSFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=PVg/kYSG reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="PVg/kYSG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=M7Al/KHLw0HvdtmRejhXZXVdVgs2fxQYH6vUcx0wuok=; b=P
+	Vg/kYSGk1uYctobUjzplZZm0geCnR2cqShwYdHE44kyBoL8SyWHBjgq2AhtpPI5c
+	N4JFyEgCffW6sOL2Fw2ESaQwIYPdXszFxR138X6p80vSCgpF3sm3gVmD+IdvTbJ9
+	QremQwkEwX6G51Q8mxIj7O1q5mf6g58AWcz74ByggM=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-103 (Coremail) ; Tue, 3 Jun 2025 22:02:03 +0800 (CST)
+Date: Tue, 3 Jun 2025 22:02:03 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
 Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250603140040.GB8020@e132581.arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD77ih5zOrZyXVit@e129823.arm.com>
+References: <aD77ih5zOrZyXVit@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWetksp5SCRZekXn0oTju85XMCzuv8j3YJeN500tSTX4wA4cW9GFHDV986uDAqhoAiVSRNw8OpieZNiVY7Za4YOX4w+fQJuITaH7RjT
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+Message-ID: <45723708.beca.197361963d8.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:ZygvCgD3H+JbAD9oJCMTAA--.13866W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAZhqmg+9NnRwgAHsy
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hi Levi,
-
-On Mon, Jun 02, 2025 at 07:40:49PM +0100, Yeoreum Yun wrote:
-> commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-> changes the event->state update before list_del_event().
-> This change prevents calling perf_cgroup_event_disable() as a result,
-> cpuctx->cgrp can't be cleared properly and point to dangling point of cgroup.
-> 
-> Because of this problem, some machin meets the below panic[0]:
-> 
-> 863.881960] sysved_call_function_sing le+0x4c/0xc0
-> 863.881301] asm_sysvec_call_function_single+0x16/0x20
-> 869.881344] RIP: 0633:0x7f9alcea3367
-> 663.681373] Code: 00 66 99 b8 ff ff ff ff c3 66 ....
-> 863.881524] RSP: 002b:00007fffa526fcf8 EFLAGS: 00000246
-> 869.881567] RAX: 0000562060c962d0 RBX: 0000000000000002 RCX: 00007f9a1cff1c60
-> 863.881625] RDX: 00007f9a0c000030 RSI: 00007f9alcff1c60 RDI: 00007f9a1ca91c20
-> 863.081682] RBP: 0000000000000001 R08: 0000000000000000 R09: 00007f9a1d6217a0
-> 869.881740] R10: 00007f9alca91c10 R11: 0000000000000246 R12: 00007f9a1d70c020
-> 869.881798] R13: 00007fffa5270030 R14: 00007fffa526fd00 R15: 0000000000000000
-> 863.881860] </TASK>
-> 863.881876) Modules linked in: snd_seq_dummy (E) snd_hrtimer (E)...
-> ...
-> 863.887142] button (E)
-> 863.912127] CR2: ffffe4afcc079650
-> 863.914593] --- [ end trace 0000000000000000 1--
-> 864.042750] RIP: 0010:ctx_sched_out+0x1ce/0x210
-> 864.045214] Code: 89 c6 4c 8b b9 de 00 00 00 48 ...
-> 864.050343] RSP: 0000:ffffaa4ec0f3fe60 EFLAGS: 00010086
-> 864.052929] RAX: 0000000000000002 RBX: ffff8e8eeed2a580 RCX: ffff8e8bded9bf00
-> 864.055518] RDX: 000000c92340b051 RSI: 000000c92340b051 RDI: ffff
-> 864.058093] RBP: 0000000000000000 R08: 0000000000000002 R09: 00
-> 864.060654] R10: 0000000000000000 R11: 0000000000000000 R12: 000
-> 864.063183] R13: ffff8e8eeed2a580 R14: 0000000000000007 R15: ffffe4afcc079650
-> 864.065729] FS: 00007f9a1ca91940 (0000) GS:ffff8e8f6b1c3000(0000) knIGS:0000000000000000
-> 864.068312] CS: 0010 DS: 0000 ES: 0000 CRO: 0000000080050033
-> 864.070898] CR2: ffffe4afcc079650 CR3: 00000001136d8000 CR4: 0000000000350ef0
-> 864.673523] Kernel panic - not syncing: Fatal exception in interrupt
-> 864.076410] Kernel Offset: 0xc00000 from 0xffffffff81000000 (relocation range: 0xff
-> 864.205401] --- [ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-> 
-> To address this call the perf_cgroup_event_disable() properly before
-> list_del_event() in __perf_remove_from_context().
-> 
-> Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/ [0]
-> Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> Tested-by: David Wang <00107082@163.com>
-> ---
->  kernel/events/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f34c99f8ce8f..909b9d5a65c1 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2498,6 +2498,10 @@ __perf_remove_from_context(struct perf_event *event,
->  		state = PERF_EVENT_STATE_DEAD;
->  	}
->  	event_sched_out(event, ctx);
-> +
-> +	if (event->state > PERF_EVENT_STATE_OFF)
-> +		perf_cgroup_event_disable(event, ctx);
-> +
-
-As we discussed, seems to me, the issue is caused by an ambigous state
-machine transition:
-
-When a PMU event state is PERF_EVENT_STATE_EXIT, the current code does
-not transite the state to PERF_EVENT_STATE_OFF. As a result, the
-list_del_event() function skips to clean up cgroup pointer for non OFF
-states. This is different from the code prior to the commit a3c3c6667,
-which transits states EXIT -> INACTIVE -> OFF.
-
-My suggestion is not reliable. Roughly read code, except for the
-PERF_EVENT_STATE_EXIT case, I think other error cases should also clean
-up the cgroup pointer.  The reason is I don't see other places to
-clean up the cgroup pointer for these error cases:
-
-  PERF_EVENT_STATE_REVOKED
-  PERF_EVENT_STATE_DEAD
-
-Only in the PERF_EVENT_STATE_ERROR state, we don't need to cleanup
-cgroup as this has already been handled in merge_sched_in().
-
-So a correct condition would be:
-
-    if (event->state > PERF_EVENT_STATE_OFF ||
-        event->state <= PERF_EVENT_STATE_EXIT)
-        perf_cgroup_event_disable(event, ctx);
-
-And we need to remove the perf_cgroup_event_disable() from
-list_del_event() to avoid duplicate code.
-
-Perhaps a better approach for code consolidation would be to modify
-the conditions in list_del_event() to ensure the cgroup pointer is
-cleaned up in error cases. However, I'm not confident that this is the
-correct direction, so I would wait for suggestions from the maintainers.
-
-Thanks,
-Leo
+CkF0IDIwMjUtMDYtMDMgMjE6NDE6MzAsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPgo+PiA+ID4gQnV0IHRvIGZpeCBpdCwgIGlzbid0
+IGZvbGxvd2luZyBjaGFuZ2UgbGVzcyBhZ2dyZXNzaXZlPwo+PiA+ID4gICAgICAgICBldmVudF9z
+Y2hlZF9vdXQoZXZlbnQsIGN0eCk7Cj4+ID4gPiAtICAgICAgIHBlcmZfZXZlbnRfc2V0X3N0YXRl
+KGV2ZW50LCBtaW4oZXZlbnQtPnN0YXRlLCBzdGF0ZSkpOwo+PiA+ID4gICAgICAgICBpZiAoZmxh
+Z3MgJiBERVRBQ0hfR1JPVVApCj4+ID4gPiAgICAgICAgICAgICAgICAgcGVyZl9ncm91cF9kZXRh
+Y2goZXZlbnQpOwo+PiA+ID4gICAgICAgICBpZiAoZmxhZ3MgJiBERVRBQ0hfQ0hJTEQpCj4+ID4g
+PiAgICAgICAgICAgICAgICBwZXJmX2NoaWxkX2RldGFjaChldmVudCk7Cj4+ID4gPiAgICAgICAg
+IGxpc3RfZGVsX2V2ZW50KGV2ZW50LCBjdHgpOwo+PiA+ID4gKyAgICAgICBwZXJmX2V2ZW50X3Nl
+dF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKPj4gPgo+PiA+IElmIHBl
+cmZfY2hpbGRfZGV0YWNoKCkgaXMgY2FsbGVkIGZpcnN0IGFuZCBwZXJmX2V2ZW50X3NldF9zdGF0
+ZSgpIGNhbGwsCj4+ID4gc2luY2UgdGhlIHBhcmVudCBpcyByZW1vdmVkIGluIHBlcmZfY2hpbGRf
+ZGV0YXRjZWQsCj4+ID4gSXQgd291bGQgYmUgZmFpbGVkIHRvIGFjY291bnQgdGhlIHRvdGFsX2Vu
+YWJsZV90aW1lIHdoaWNoIGNhY3VsYXRpbmcKPj4gPiBjaGlsZF9ldmVudCdzIGVuYWJsZV90aW1l
+IHRvby4KPj4KPj4gVGhhbmtzIGZvciBjbGFyaWZ5aW5nIHRoaXMsCj4+IFNvIHRoZSB3aG9sZSBw
+b2ludCAgaW4gY29tbWl0IGEzYzNjNjY2NyBpcyB0byBtYWtlICBwZXJmX2V2ZW50X3NldF9zdGF0
+ZSgpIGhhcHBlbnMgYmVmb3JlIHBlcmZfY2hpbGRfZGV0YWNoKCksIHJpZ2h0Pwo+PiBJIGZlZWwg
+SSBnb3QgbG9zdCBzb21ld2hlcmUgd2hlbiBJIHJ1c2ggdG8gdGhpcyBzdWdnZXN0aW9uLiBCdXQg
+SSBzdGlsbCBkb24ndCB1bmRlcnN0YW5kIHdoeSBteSBwYXRjaHYxICBicmVha3MgY29tbWl0Cj4+
+IGEzYzNjNjY2NywgcmVhbGx5IGNvbmZ1c2VkLgo+Cj5JIGV4cGxhaW5lZCB0aGlzIGluOgo+ICAg
+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzVkMTdmMWQ3LjY2NmQuMTk3MzQ4Yjc4ZDEuQ29y
+ZW1haWwuMDAxMDcwODJAMTYzLmNvbS8KPgo+Pj4gSWYgdGhlcmUgaXMgc3BlY2lmaWMgY2hpbGQg
+Y3B1IGV2ZW50IHNwZWNpZmllZCBpbiBjcHUgMC4KPj4+ICAgMS4gY3B1IDAgLT4gYWN0aXZlCj4+
+PiAgIDIuIHNjaGV1bGRlZCB0byBjcHUxIC0+IGluYWN0aXZlCj4+PiAgIDMuIGNsb3NlIHRoZSBj
+cHUgZXZlbnQgZnJvbSBwYXJlbnQgLT4gaW5hY3RpdmUgY2xvc2UKPj4+Cj4+PiBDYW4gYmUgZmFp
+bGVkIHRvIGNvdW50IHRvdGFsX2VuYWJsZV90aW1lLgo+Cj4KPkNvbnNpZGVyIG9uZSBldmVudCB3
+aGljaCBhdHRhY2hlZCB0byB0YXNrY3R4IHdpdGggc3BlY2lmaWMgY3B1Lgo+SW4gY2FzZSBvZiB5
+b3VyIG9yaWdpbmFsIHBhdGNoIGlzIGZvciBvbmx5ICJERVRBQ0hfRVhJVCIgY2FzZS4KPkhlcmUg
+d2hhdCBJIG1lYW4sIHRoZSBldmVudCBpcyAiY2xvc2VkIi4KPkluIHRoaXMgY2FzZSwgYmFzZWQg
+b24geW91ciBwYXRjaCwgaXQgZG9lc24ndCBjYWxsIHRoZSBwZXJmX2V2ZW50X3NldF9zdGF0ZSgp
+Cj5iZWZvcmUgbGlzdF9kZWxfZXZlbnQoKSwgYnV0IHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkgaXMg
+Y2FsbGVkIGFmdGVyIGxpc3RfZGVsX2V2ZW50KCkuCgpEbyB5b3UgbWVhbiBpbiB0aGlzIGNhc2Us
+IHRoZSBldmVudCBpcyBub3QgcGFzc2VkIHRvIHBlcmZfZXZlbnRfZXhpdF9ldmVudCgpPwpCZWNh
+dXNlIGluIG15IG1pbmQsIGFzIGxvbmcgYXMgYSBldmVudCByZWFjaCBwZXJmX2V2ZW50X2V4aXRf
+ZXZlbnQsIERFVEFDSF9FWElUIGZsYWcgd291bGQgYWx3YXlzIGJlIHNldC4KcGVyZl9ldmVudF9l
+eGl0X2V2ZW50KCkKICAgLS0tPiBwZXJmX3JlbW92ZV9mcm9tX2NvbnRleHQoZXZlbnQsIGRldGFj
+aF9mbGFncyB8IERFVEFDSF9FWElUKTsgIDwtLS0KICAgICAgICAgICAgLS0tPiBfX3BlcmZfcmVt
+b3ZlX2Zyb21fY29udGV4dAogICAgICAgICAgICAgICAgICAgIC0tLS0+IHBlcmZfZXZlbnRfc2V0
+X3N0YXRlICAoREVUQUNIX0VYSVQgaXMgYWx3YXlzIHNldCBpbiB0aGlzIGNhbGwgcGF0aCkKICAg
+ICAgICAgICAgICAgICAgICAtLS0tPiBsaXN0X2RlbF9ldmVudAoKU28gSSBhbSBzdGlsbCBjb25m
+dXNlZCwgZXZlbiB3aXRoIGNwdSBzd2l0Y2gsIHRoZSBERVRBQ0hfRVhJVCBmbGFnIGlzIHN0aWxs
+IHRoZXJlLgpDb3VsZCB5b3UgZXhwbGFpbiBpdCB3aXRoIGEgY2FsbGNoYWluPwoKVGhhbmtzCkRh
+dmlkCgo+Cj5UaGFua3MKPgo+LS0KPlNpbmNlcmVseSwKPlllb3JldW0gWXVuCg==
