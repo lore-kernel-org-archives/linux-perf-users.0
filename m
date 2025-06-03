@@ -1,176 +1,188 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965171F4297
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 21:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CBA221FBE
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 21:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748986089; cv=none; b=PXVwaXMpdzCVZ+44kMqwznEniF99FN1ex/EYdSV3JLZhEGgYxw01G8wJ81gQDJVR1QNH/QKTJ1LcYrSApanShE/a1yBFCPEJej0gPoRiIBJWs9m+WZrJdwagidJ/sPdOe9Rmy0utII2E/AI0Q6YUa5oXc9XOGIqbk++h/0NYWs0=
+	t=1748986365; cv=none; b=RQ4E77/ci+tlj6OfSVxyGd0MgF7RN9y9p8euhnj05HAhrtP621YDiqgr16+oWlpM6oRQSWGUmHOTf8Ew5N4KFGc59QS36oj5NNLuSLNqM8/SMlIsIK4ckZEr8CpP3QTCh4Z2pxIenP2JyMxMBBqeknNHzThGsR4QGT66S65fYbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748986089; c=relaxed/simple;
-	bh=SUcs4ezYKO4bL6n9M4wwGaW5Kl1QdqF5O9xTiMlCOnI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EcdMa0k4xcO9+9X8UFm40S+0txyNGQMUUQXog7DVGyqaFXK4bIju/XvJ333vT6aZ5WMwWijFx8eUCv2arAnwnPR7QZp0hGys8iLQtHJx+G3b6lKC3eXdWt7Hg8v7HAErkYlXvQUxd/Z8+0ul8evqK/WfP5s0/Pv0KUPIlYCtY5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iwhqI0r8; arc=none smtp.client-ip=209.85.222.54
+	s=arc-20240116; t=1748986365; c=relaxed/simple;
+	bh=mRmmFnlPCP5qmGp8cqulc+n4NmAySDPtVlsv8iPw48Q=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=p8K2RUNSOOoew+sVLDJBqP2Nkj2xxdfpC06SCB+S2Qnq3/cVIlsry61O+xlwzIOeX52QCKVNXiHezlpKcJSlqdLqB6RYA9dPguSPa4rUghFvohn2boqa0pPtGdYRF2YveOepuZ1WewidMJCfPcOMVJ/FllxEmOYqxwRcD8RJ5X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K8FA1uSf; arc=none smtp.client-ip=209.85.166.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iwhqI0r8"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87ded9c6eb4so213028241.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jun 2025 14:28:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K8FA1uSf"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3dc9d335fffso119657375ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jun 2025 14:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748986086; x=1749590886; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v5ojcrIVgkEfEi/wrMb1iM7XDB/HOb9H8wYORbOpMVQ=;
-        b=iwhqI0r8XS3h1hEGLDhnfCwmGPoyGdchSnRZLiox3uJLwpl2rP1TXJrOx0kGiiv1Qv
-         2GVoTI6ZlK3uy1lGaIvGkb7tI5E0SXWYhIq8wDMjd9cZbtXxLqQhqLMaIEIapn1elmgf
-         k5zTJdSWS7Du+bfs2pAV3eku5B89zshzEMRWLEiFEYnuBftYHk/bHbi/P4s6By+CQSrK
-         SpigI0/PHr8bGJfoSSxDoGjlDgZMO52gNGvyO70mNHLvxNpreRnxF8sO4gAGKGOQzTlq
-         nn7pQb+NuDC6ZBgp0CSuWzI/X1cmsFL0LTwwh1RrZcDtmgHXy6scv5AaPF4rkCBnyOC2
-         Rf/Q==
+        d=google.com; s=20230601; t=1748986362; x=1749591162; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A0l5G93fC29AgVAtcdaJmVpgHO/IQHFXQv4WdPYaaHE=;
+        b=K8FA1uSfxXYjE7M/3EGc5Xqz1jBw8GcDGVwsHp27n1ZI7vHBo0QWT2qQjdijACY7BA
+         lwqOv2PA2bN5COEHIj2Wn68GG+8L7U6PfTrmvhlaXGpyEgz/xHgfGsQwKWU+X06EG/UE
+         2V8F6qw1w5fm+Ivo5jH9xnc9Mfk55rKMzVmVPqFSu6ppANUTxsRslGaFaCLNyadaEoxB
+         MdC5tLrVwVffEBkfLJYlp6EDqSKGHLSk/wqER1yM6wUATYBMlgrWkEGdCdrUK1yC7AmZ
+         mPOWsVnwgF7Gz0feqkFGxRyAB34+dtwPJMGpv1EPafIAEfKeeLEJ0Yoy/TEW/tygeHzU
+         ETQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748986086; x=1749590886;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v5ojcrIVgkEfEi/wrMb1iM7XDB/HOb9H8wYORbOpMVQ=;
-        b=fawplWu+wf9sX4d8JqijmjHMCdXib6I7ihPwaYHfJqfdVYEAbnyz6/summ5D74CRtp
-         Dul2xxnZ6HlYvVArXm1yBOFAUONu9k3BSwgPHCSLqjJvgau7bNOwKO0YJgv/O64BaCYs
-         zKZRZ55q8ZpatON7XhnqhQ9t7Xt573BY4+OdYJr5xIQZouchcLHVb+r83pQQslu2cXx9
-         WMZhdD1WxlXBGtiOYSXt1Z0hjSVLfgMmOry7ZnkVZ3W94qo2JHSn0KZlDpwwEbXrEm0Q
-         fuSwrVXTac5YDdm86GY5exreCqbe52t9OSGad5Wj8X8zHzxJOQX1lTOmS4gZIBBkrO9Q
-         NC3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW4KJxrfqKcpquh1k+ZiKF/4qTOgoNCyp93Dtr0fHB4TfGa0V30uMMUo+Iufe4hH12N5CyIagrXtfoFWNEBJC3o@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzN2ayRrZuEFCml/UaTOLxcFX8kX0miNt7dSN6gYIyNiOQj3pu
-	5AofIY6vF7nfZ2PkfVYm044DOpGsMEaUp4QM7KbIyTm4J7L2Rg1cIBzANnEd2V1e83alLuHjj7N
-	zLZ92D0O9fe5R7E2Lp4GGst2zYGfR0qNJ0K/upRpR
-X-Gm-Gg: ASbGncu40J2aPMOXP+I+RkAeZ50CneJDepyI0vtYy3cLFQtnFdppgly+4iPh9+Vjem/
-	/8kJvJFAbIds1m9Op07lZM86jT7reE/WnZn5P+fX2I9ytUefhNytx0QwXAxgSMmRYlwYcn2Ul02
-	zfoPxdHkbD2JrIGXY+FhrZgFtsQHCZFjU2ItmiZ45YRTsrH75/yGJsD/DINTJTnljm8orzy0d3w
-	j6xGl16w36e
-X-Google-Smtp-Source: AGHT+IGPufNgxZrRK47SQJAnzsbGTLBiIYxDJo93U7kPRNqPTlaECeMfrKAn6BbuqZ9O026msMwFSfTvqVvkhwFCr2A=
-X-Received: by 2002:a05:6102:6a8b:b0:4e1:ec70:536 with SMTP id
- ada2fe7eead31-4e73604f86bmr3729726137.4.1748986086263; Tue, 03 Jun 2025
- 14:28:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748986362; x=1749591162;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A0l5G93fC29AgVAtcdaJmVpgHO/IQHFXQv4WdPYaaHE=;
+        b=FwJUwk7wv2TubyTfXOhR00wU/c7B+fLP6ybIFND4/IyMB/ul/vIo/A0KoiqcWUX69e
+         9j8pP4WBPhVm/Adde97E9qdV25FnZKtCfZ7Dv/sspEXV7y2UAY5lEwcmZkUtqsHGc0DE
+         b87P09nFiWLxG/CT5cdVp/0monXlK7gIan0/E0G0m/ktfi7nH60pnWNfxqF/K7NnQpUz
+         KX8HJ3TtIi3DLN/Xjkgxn3pPG4Gw91UnYbgSVzodkZTy+OH5qJnxpTWYpQ+UaEga0eaH
+         d5dn1pHJk1t3FetTFDSCQlQzkIiOSJ3SZM/kBY8hK0zAswGh23BD35ieDLQDu+BKtYke
+         y9Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCURQSTn4BI6Szwoq59OCM3Fpfp2N1svmyShPAa/3g4uksiyGV/8lbopzdmxipagcdm+Cim0Rgqvfk2oCeC5iJSf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy4wfCdD/tRYWtf50WCBaHPQ036Uofs2wzKlHW0jro0LEfgfGu
+	ZVQ7aFq/nJK8KECyMfIFNZE+sYHFIyTRI95UblKwoMLmD7nisIHMq8vW8xrpHMSvsCMWYL/8gn+
+	IcjsNlg6gu3ofNLcIgjJtOSKZSg==
+X-Google-Smtp-Source: AGHT+IEpZcrefEWDzzUjOLjOnRYEdIFZat5s3G0oLfOvn/O8rphYPOQ1GWMYf3Wj71ilVVre/pSRPvqRpgjiaR79Qg==
+X-Received: from ilbbm14.prod.google.com ([2002:a05:6e02:330e:b0:3d9:2b64:6884])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a92:c241:0:b0:3dc:7a9a:44d5 with SMTP id e9e14a558f8ab-3ddbedc8c8fmr6231205ab.22.1748986362621;
+ Tue, 03 Jun 2025 14:32:42 -0700 (PDT)
+Date: Tue, 03 Jun 2025 21:32:41 +0000
+In-Reply-To: <aD4llDZwb_sC_Ptj@linux.dev> (message from Oliver Upton on Mon, 2
+ Jun 2025 15:28:36 -0700)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-3-blakejones@google.com> <aD9Xxhwqpm8BDeKe@google.com>
-In-Reply-To: <aD9Xxhwqpm8BDeKe@google.com>
-From: Blake Jones <blakejones@google.com>
-Date: Tue, 3 Jun 2025 14:27:53 -0700
-X-Gm-Features: AX0GCFvoOAekprdEsevG7NvEGepKfhZ3n_z3bWQsEz8WhnhItGs9NEkTscTn2Ng
-Message-ID: <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <gsnt4iww3406.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH 06/17] KVM: arm64: Introduce method to partition the PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Hi Namhyung,
+Oliver Upton <oliver.upton@linux.dev> writes:
 
-On Tue, Jun 3, 2025 at 1:15=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Wed, May 21, 2025 at 03:27:24PM -0700, Blake Jones wrote:
-> > Look for .rodata maps, find ones with 'bpf_metadata_' variables, extrac=
-t
-> > their values as strings, and create a new PERF_RECORD_BPF_METADATA
-> > synthetic event using that data. The code gets invoked from the existin=
-g
-> > routine perf_event__synthesize_one_bpf_prog().
->
-> It would be great if you can show an example how those metadata is
-> constructed and shared between BPF programs.
+> On Mon, Jun 02, 2025 at 07:26:51PM +0000, Colton Lewis wrote:
+>>   static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
+>>   {
+>> +	u8 hpmn = vcpu->kvm->arch.arm_pmu->hpmn;
+>> +
+>>   	preempt_disable();
 
-I've added the following to my commit message:
+>>   	/*
+>>   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
+>>   	 * to disable guest access to the profiling and trace buffers
+>>   	 */
+>> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
+>> -					 *host_data_ptr(nr_event_counters));
+>> -	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+>> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
+>> +	vcpu->arch.mdcr_el2 |= (MDCR_EL2_HPMD |
+>> +				MDCR_EL2_TPM |
 
-| For example, a BPF program with the following variables:
-|
-|     const char bpf_metadata_version[] SEC(".rodata") =3D "3.14159";
-|     int bpf_metadata_value[] SEC(".rodata") =3D 42;
-|
-| would generate a PERF_RECORD_BPF_METADATA record with:
-|
-|     .prog_name        =3D <BPF program name, e.g. "bpf_prog_a1b2c3_foo">
-|     .nr_entries       =3D 2
-|     .entries[0].key   =3D "version"
-|     .entries[0].value =3D "3.14159"
-|     .entries[1].key   =3D "value"
-|     .entries[1].value =3D "42"
-|
-| Each of the BPF programs and subprograms that share those variables would
-| get a distinct PERF_RECORD_BPF_METADATA record, with the ".prog_name" sho=
-wing
-| the name of each program or subprogram. The prog_name is deliberately the
-| same as the ".name" field in the corresponding PERF_RECORD_KSYMBOL record=
-.
+> This isn't safe, as there's no guarantee that kvm_arch::arm_pmu is
+> pointing that the PMU for this CPU. KVM needs to derive HPMN from some
+> per-CPU state, not anything tied to the VM/vCPU.
 
-> IIUC the metadata is collected for each BPF program which may have
-> multiple subprograms.  Then this patch creates multiple PERF_RECORD_
-> BPF_METADATA for each subprogram, right?
->
-> Can it be shared using the BPF program ID?
+I'm confused. Isn't this function preparing to run the vCPU on this
+CPU? Why would it be pointing at a different PMU?
 
-In theory, yes, it could be shared. But I want to be able to correlate them
-with the corresponding PERF_RECORD_KSYMBOL events, and KSYMBOL events for
-subprograms don't have the full-program ID, so I wouldn't be able to do tha=
-t.
+And HPMN is something that we only want set when running a vCPU, so
+there isn't any per-CPU state saying it should be anything but the
+default value (number of counters) outside that context.
 
-> > +     rodata =3D calloc(1, map_info.value_size);
->
-> You can use 'zalloc()' instead, in other places too.
+Unless you just mean I should check the number of counters again and
+make sure HPMN is not an invalid value.
 
-Fixed, thanks.
+>> +/**
+>> + * kvm_pmu_partition() - Partition the PMU
+>> + * @pmu: Pointer to pmu being partitioned
+>> + * @host_counters: Number of host counters to reserve
+>> + *
+>> + * Partition the given PMU by taking a number of host counters to
+>> + * reserve and, if it is a valid reservation, recording the
+>> + * corresponding HPMN value in the hpmn field of the PMU and clearing
+>> + * the guest-reserved counters from the counter mask.
+>> + *
+>> + * Passing 0 for @host_counters has the effect of disabling  
+>> partitioning.
+>> + *
+>> + * Return: 0 on success, -ERROR otherwise
+>> + */
+>> +int kvm_pmu_partition(struct arm_pmu *pmu, u8 host_counters)
+>> +{
+>> +	u8 nr_counters;
+>> +	u8 hpmn;
+>> +
+>> +	if (!kvm_pmu_reservation_is_valid(host_counters))
+>> +		return -EINVAL;
+>> +
+>> +	nr_counters = *host_data_ptr(nr_event_counters);
+>> +	hpmn = kvm_pmu_hpmn(host_counters);
+>> +
+>> +	if (hpmn < nr_counters) {
+>> +		pmu->hpmn = hpmn;
+>> +		/* Inform host driver of available counters */
+>> +		bitmap_clear(pmu->cntr_mask, 0, hpmn);
+>> +		bitmap_set(pmu->cntr_mask, hpmn, nr_counters);
+>> +		clear_bit(ARMV8_PMU_CYCLE_IDX, pmu->cntr_mask);
+>> +		if (pmuv3_has_icntr())
+>> +			clear_bit(ARMV8_PMU_INSTR_IDX, pmu->cntr_mask);
+>> +
+>> +		kvm_debug("Partitioned PMU with HPMN %u", hpmn);
+>> +	} else {
+>> +		pmu->hpmn = nr_counters;
+>> +		bitmap_set(pmu->cntr_mask, 0, nr_counters);
+>> +		set_bit(ARMV8_PMU_CYCLE_IDX, pmu->cntr_mask);
+>> +		if (pmuv3_has_icntr())
+>> +			set_bit(ARMV8_PMU_INSTR_IDX, pmu->cntr_mask);
+>> +
+>> +		kvm_debug("Unpartitioned PMU");
+>> +	}
+>> +
+>> +	return 0;
+>> +}
 
-> > +void bpf_metadata_free(struct bpf_metadata *metadata)
-> > +{
-> > +     if (metadata =3D=3D NULL)
-> > +             return;
-> > +     for (__u32 index =3D 0; index < metadata->nr_prog_names; index++)
-> > +             free(metadata->prog_names[index]);
-> > +     if (metadata->prog_names !=3D NULL)
-> > +             free(metadata->prog_names);
-> > +     if (metadata->event !=3D NULL)
-> > +             free(metadata->event);
->
-> No need to NULL change for free().
+> Hmm... Just in terms of code organization I'm not sure I like having KVM
+> twiddling with *host* support for PMUv3. Feels like the ARM PMU driver
+> should own partitioning and KVM just takes what it can get.
 
-I've removed the NULL checks.
+Okay. I can move the code.
 
-> > +static int synthesize_perf_record_bpf_metadata(
-> > [...]
-> > +     for (__u32 index =3D 0; index < metadata->nr_prog_names; index++)=
- {
-> > +             memcpy(event->bpf_metadata.prog_name,
-> > +                    metadata->prog_names[index], BPF_PROG_NAME_LEN);
->
-> Is it possible to call synthesize_bpf_prog_name() directly to the
-> event->bpf_metadata.prog_name instead of saving it metadata->prog_names?
+>> @@ -239,6 +245,13 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
+>>   	if (!pmuv3_implemented(kvm_arm_pmu_get_pmuver_limit()))
+>>   		return;
 
-Not with the way the code is currently structured - we need the BTF data
-to call synthesize_bpf_prog_name(), and that's allocated and freed inside
-of bpf_metadata_create().
+>> +	if (reserved_host_counters) {
+>> +		if (kvm_pmu_partition_supported())
+>> +			WARN_ON(kvm_pmu_partition(pmu, reserved_host_counters));
+>> +		else
+>> +			kvm_err("PMU Partition is not supported");
+>> +	}
+>> +
 
-Blake
+> Hasn't the ARM PMU been registered with perf at this point? Surely the
+> driver wouldn't be very pleased with us ripping counters out from under
+> its feet.
+
+AFAICT nothing in perf registration cares about the number of counters
+the PMU has. The PMUv3 driver tracks its own available counters through
+cntr_mask and I modify that during partition.
+
+Since this is still initialization of the PMU, I don't believe anything
+has had a chance to use a counter yet that will be ripped away.
+
+Aesthetically It makes since to change this if I move the partitioning
+code to the PMUv3 driver, but I think it's inconsequential to the
+function.
