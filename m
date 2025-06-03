@@ -1,179 +1,142 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD9628369A
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 09:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797F82AD02;
+	Tue,  3 Jun 2025 10:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748944230; cv=none; b=S0S5ZCt3S1/U7a2SB6fMRsgaggB1jUELNN5f4/0IYyCOOfOnN7LPs/DGUwkosye7lEMIEBnd5LnDx5Ovb74nryVMqrYhcp1Qdm/6qq8oLcPxt+nU1lh32i13JiCzuhH9tsRZc758+J3eUD0Qr1y5tFSTBk8Mny8zs8Kox40+mQg=
+	t=1748945391; cv=none; b=LNRHVzc7shUp4+V8BiF1cjMVry45WLib6Cl4RX6bN4epvTvW9Lx8fiE6+pwxrS5ySww1b7EOZkwhWIrU20VQtzyDIW+wF+RRKPpTGNiwP3SFQizqG6Ovbpx0IdUSvXzlD1ItVbA1v1Fogbo/oGuyHwozDKIKQ8/Y5ylj67S1O2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748944230; c=relaxed/simple;
-	bh=cYofdeohFRtCrlrs30kGtQgAlnzJghGw3tFBSu52gXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FRLhohs6/ECj3Osp9BHK2AuiKXvICet8UqaSQYIu6iZyHHsoCTDVygEi+ewrgPsc+BzuBA5MlFAp9BoAF5AvwMeQJjepRWIBzq7nSxD5CjYfvasVeNzj+Dte5IWRMEtT+CIKTd4JDUIp1SrTBmsQ9UXFvEsiWpWP4wyLKaWe21w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NjiOKPQD; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748945391; c=relaxed/simple;
+	bh=3hjD+iByGvCs6++WOizV3zbi5NJ3S1SQGoT0sztz+k0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=adhqq4clq+7g4vjevBYjLxqVDQ2K7cgVzY3rMg+BJEDI6kqSGZMSp2AD4XiWGwwhFJ2FAf0kooD7wYqMX/+6hAzFr5aZJt0gOhQmL6ik04kQ32iwGPaE1NlotddgB9SWWa3naIGyn2e/mSvWfxq+XuNtTY9FW+wCU9bo74humnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Xzc2Vqu1 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NjiOKPQD"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a375888297so3204944f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jun 2025 02:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748944226; x=1749549026; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YTiUXP9qqpwePncWUOCrudvn6ikDCRoeniFYV5C54HQ=;
-        b=NjiOKPQDlT6MnFwQx9uTIPQmWBMWRPdZlu/lgZdmBoHwNCx6v1eS4FM2gZ+nSwtL/O
-         FVep63rquqH5qPd+2WS5bOI2vYu5K3S0wn8Eb7ccdo/CEgeFwXouR3QX5JlKpyaXMIyF
-         AEXmnYhuyvWzRNWLbUn5grpmPFLlbosiKeIExZwCP+uzAT9AL6O4h0FaNEIO8srQcn5t
-         VUYQ25kkFz7DWqPY8GmTt1VDlxHQkCl5r+eW0Txe+W+sohDRwFYuL3OrMrRrXadCyO0e
-         WIo4yWDWzmzRl0+jlGX5hWeCv/swOjzBxhgT+2xsQCihz8G/kqABs1IcBeeuPzCPnhQu
-         Bplw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748944226; x=1749549026;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YTiUXP9qqpwePncWUOCrudvn6ikDCRoeniFYV5C54HQ=;
-        b=YfhlrzLEua8Wwv9Hxzkct4Q4DkGwRkX6LWtZvnaPg4GcDVFRbCt2RYr05Mf9qE1OuB
-         JFfbiEKxfh10DYq6r/36pVvyN/5HbYEjeVGSDFC4QN+0dR8d0oYROaZYTqX9wFBTVTjr
-         6ulduXq8aMHOWziiC1UZ2uy7eTf4z/+RnR3KSIHJhZlK0yGtvyw6p1CcQ5u0O5Z0T9Bx
-         iuXE4kYPPdVhFrPoaNHcd3gBToBt14uVgnOmrPUwBuXg+1jTMsp86KtBnzJ9hWOUSCe5
-         hNdFrRweKS5fPiDBj89Nlg/tmCuZuIm7qaWThYra9l76rTfm/FR7DcDS58mFNZCX4CCg
-         Pr0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUq70Tbx0w0wELX5yztchY4rnyC3OXumrx8lSorz/jFhp1N2jhkLpstrmEpvm7QMAqfg19vzprwOZ7ju/vDgZtw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4Ae/LhzGtDYpn2EfHV/UFoo4qQ3mGWP+GGXHCuw84ERfGEEia
-	zBnCPOlQ27BCouz+6wnLf/9Aat/UZVBqDDMHIPAZJTC3arnkWcOAFezo9/GbsteVqqc=
-X-Gm-Gg: ASbGncuSJASS6ujlE5dqVblrfAiewovXBvSNrJDBiun46LJeEVHVX30MYZbroX8/rZW
-	4K8MZaq63KgS0yN7p3CaWW+fpuiRLOe65C3/dReKnFOCkn/yOq3NYX+52TgN0Iz9rs1CMU1eFFo
-	imXSkVmPot4x55jj6umeMNBts8HQ4mhobQy4CzjnJITm4uL7KJwc5P+f/TF5RM7njtc3JW+LwIK
-	7v7w7MTVcGMA8ubOD7pDG0bARHTL1Q24eOI7yDBDlVuiYAB/xWJDT080cinA6x8Fkt+/Ac1Jf4D
-	IdavpuyElRij6QFcyTkkn9OgWMCyjuVPJWhxBoPWr+B1L3l5Va6zVar+
-X-Google-Smtp-Source: AGHT+IHsW44MmqwfDKjzghl/i3BzuGEINgERerQaDbyP3gu7SUf4muuyytvtJbMK7SPgP194SuthmQ==
-X-Received: by 2002:a05:6000:2892:b0:3a3:6478:e08 with SMTP id ffacd0b85a97d-3a514502388mr1696065f8f.23.1748944225608;
-        Tue, 03 Jun 2025 02:50:25 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c9d4sm17906246f8f.38.2025.06.03.02.50.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 02:50:25 -0700 (PDT)
-Message-ID: <2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
-Date: Tue, 3 Jun 2025 10:50:23 +0100
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Xzc2Vqu1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=wmAC6L4gRowUBaw8J0pObVc7lkFIDWgiRQmNYcnOcqQ=; b=X
+	zc2Vqu11UukjgFyXrRO74Q8uSNFdavDMCVXL52WzOts7ezxlLe7bXZimuxyBRFin
+	RIXcuK3dkPq1eLVzSYA+o6oGa0z4Srcv/Y4Y8cSEfiN1bPZVZSBUinOLhPIyDgwV
+	BBgBXUl4ucVaTfebaOoJPH8l+goA4mSCWiCVI9oRmc=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 18:08:47 +0800 (CST)
+Date: Tue, 3 Jun 2025 18:08:47 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD6+RGnAOyIS+tik@e129823.arm.com>
+References: <19514ed5.5692.19734522326.Coremail.00107082@163.com>
+ <aD6Xk2rdBjnVy6DA@e129823.arm.com> <aD6+RGnAOyIS+tik@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWfuksp4SiabOkZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJiPZ8veOEDDx3N7bvlbBUI/
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/11] KVM: arm64: Add trap configs for PMSDSFR_EL1
-To: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev
-References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
- <20250529-james-perf-feat_spe_eft-v2-6-a01a9baad06a@linaro.org>
- <867c1ze4pg.wl-maz@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <867c1ze4pg.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <619d4d6.a9c9.1973543d6d9.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eCgvCgD3_+iwyT5o2_0SAA--.37653W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkA9hqmg+uMH2GgAJse
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-
-
-On 29/05/2025 5:56 pm, Marc Zyngier wrote:
-> On Thu, 29 May 2025 12:30:27 +0100,
-> James Clark <james.clark@linaro.org> wrote:
->>
->> SPE data source filtering (SPE_FEAT_FDS) adds a new register
->> PMSDSFR_EL1, add the trap configs for it.
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   arch/arm64/kvm/emulate-nested.c | 1 +
->>   arch/arm64/kvm/sys_regs.c       | 1 +
->>   2 files changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/kvm/emulate-nested.c b/arch/arm64/kvm/emulate-nested.c
->> index 0fcfcc0478f9..05d3e6b93ae9 100644
->> --- a/arch/arm64/kvm/emulate-nested.c
->> +++ b/arch/arm64/kvm/emulate-nested.c
->> @@ -1169,6 +1169,7 @@ static const struct encoding_to_trap_config encoding_to_cgt[] __initconst = {
->>   	SR_TRAP(SYS_PMSIRR_EL1,		CGT_MDCR_TPMS),
->>   	SR_TRAP(SYS_PMSLATFR_EL1,	CGT_MDCR_TPMS),
->>   	SR_TRAP(SYS_PMSNEVFR_EL1,	CGT_MDCR_TPMS),
->> +	SR_TRAP(SYS_PMSDSFR_EL1,	CGT_MDCR_TPMS),
->>   	SR_TRAP(SYS_TRFCR_EL1,		CGT_MDCR_TTRF),
->>   	SR_TRAP(SYS_TRBBASER_EL1,	CGT_MDCR_E2TB),
->>   	SR_TRAP(SYS_TRBLIMITR_EL1,	CGT_MDCR_E2TB),
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 5dde9285afc8..9f544ac7b5a6 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -2956,6 +2956,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->>   	{ SYS_DESC(SYS_PMBLIMITR_EL1), undef_access },
->>   	{ SYS_DESC(SYS_PMBPTR_EL1), undef_access },
->>   	{ SYS_DESC(SYS_PMBSR_EL1), undef_access },
->> +	{ SYS_DESC(SYS_PMSDSFR_EL1), undef_access },
-> 
-> PMSDSFR_EL1 has an offset in the VNCR page (0x858), and must be
-> described as such. This is equally true for a bunch of other
-> SPE-related registers, so you might as well fix those while you're at
-> it.
-> 
-> Thanks,
-> 
-> 	M.
-> 
-
-I got a bit stuck with what that would look like with registers that are 
-only undef in case there was something that I missed, but do I just 
-document the offsets?
-
-+++ b/arch/arm64/include/asm/vncr_mapping.h
-@@ -87,6 +87,8 @@
-  #define VNCR_PMSICR_EL1         0x838
-  #define VNCR_PMSIRR_EL1         0x840
-  #define VNCR_PMSLATFR_EL1       0x848
-+#define VNCR_PMSNEVFR_EL1       0x850
-+#define VNCR_PMSDSFR_EL1        0x858
-
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -596,6 +596,16 @@ enum vcpu_sysreg {
-         VNCR(ICH_HCR_EL2),
-         VNCR(ICH_VMCR_EL2),
-
-+       /* SPE Registers */
-+       VNCR(PMBLIMITR_EL1),
-+       VNCR(PMBPTR_EL1),
-+       VNCR(PMBSR_EL1),
-+       VNCR(PMSCR_EL1),
-+       VNCR(PMSEVFR_EL1),
-+       VNCR(PMSICR_EL1),
-+       VNCR(PMSIRR_EL1),
-+       VNCR(PMSLATFR_EL1),
-
-
-And then sys_reg_descs[] remain as "{ SYS_DESC(SYS_PMBLIMITR_EL1), 
-undef_access }," rather than EL2_REG_VNCR() because we don't actually 
-want to change to bad_vncr_trap()?
-
-There are some other parts about fine grained traps and res0 bits for 
-NV, but they all already look to be setup correctly. Except 
-HDFGRTR2_EL2.nPMSDSFR_EL1, but it's inverted, none of the FGT2 traps are 
-configured currently and PMSDSFR_EL1 is already trapped by MDCR_EL2 anyway.
-
-Thanks
-James
-
+CkF0IDIwMjUtMDYtMDMgMTc6MjA6MDQsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWQsCj4KPj4gPiA+ID4gPgo+PiA+ID4gPiA+IEFsc28sIHlvdXIg
+cGF0Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVtIGRlc2NyaWJlIGluCj4+ID4gPiA+ID4gY29t
+bWl0IGEzYzNjNjY2NygicGVyZi9jb3JlOiBGaXggY2hpbGRfdG90YWxfdGltZV9lbmFibGVkIGFj
+Y291bnRpbmcgYnVnIGF0IHRhc2sgZXhpdCIpCj4+ID4gPiA+ID4gZm9yIElOQ0FUSVZFIGV2ZW50
+J3MgdG90YWxfZW5hYmxlX3RpbWUuCj4+ID4gPiA+Cj4+ID4gPiA+IEkgZG8gbm90IHRoaW5rIHNv
+Lgo+PiA+ID4gPiBDb3JyZWN0IG1lIGlmIEkgYW0gbWFraW5nIHNpbGx5ICBtaXN0YWtlcywKPj4g
+PiA+ID4gVGhlIHBhdGNoLCBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNjAzMDMy
+NjUxLjM5ODgtMS0wMDEwNzA4MkAxNjMuY29tLwo+PiA+ID4gPiBjYWxscyBwZXJmX2V2ZW50X3Nl
+dF9zdGF0ZSgpIGJhc2VkIG9uIERFVEFDSF9FWElUIGZsYWcsIHdoaWNoIGNvdmVyIHRoZSBJTkFD
+VElWRSBzdGF0ZSwgcmlnaHQ/Cj4+ID4gPiA+IElmIERFVEFDSF9FWElUIGlzIG5vdCB1c2VkIGZv
+ciB0aGlzIHB1cnBvc2U/IFRoZW4gd2h5IHNob3VsZCBpdCBleGlzdCBhdCB0aGUgZmlyc3QgcGxh
+Y2U/Cj4+ID4gPiA+IEkgdGhpbmsgSSBkb2VzIG5vdCByZXZlcnQgdGhlIHB1cnBvc2Ugb2YgY29t
+bWl0IGEzYzNjNjY2Ny4uLi4uQnV0IEkgY291bGQgYmUgd3JvbmcKPj4gPiA+ID4gV291bGQgeW91
+IHNob3cgYSBjYWxsIHBhdGggd2hlcmUgREVUQUNIX0VYSVQgaXMgbm90IHNldCwgYnV0IHRoZSBj
+aGFuZ2VzIGluIGNvbW1pdCBhM2MzYzY2NjcgaXMgc3RpbGwgbmVlZGVkPwo+PiA+ID4gPgo+PiA+
+ID4gPiBTb3JyeSBmb3IgbXkgYmFkIGV4cGxhaW5hdGlvbiB3aXRob3V0IGRldGFpbC4KPj4gPiA+
+ID4gVGhpbmsgYWJvdXQgY3B1IHNwZWNpZmljIGV2ZW50IGFuZCBjbG9zZWQgYnkgdGFzay4KPj4g
+PiA+ID4gSWYgdGhlcmUgaXMgc3BlY2lmaWMgY2hpbGQgY3B1IGV2ZW50IHNwZWNpZmllZCBpbiBj
+cHUgMC4KPj4gPiA+ID4gMS4gY3B1IDAgLT4gYWN0aXZlCj4+ID4gPiA+IDIuIHNjaGV1bGRlZCB0
+byBjcHUxIC0+IGluYWN0aXZlCj4+ID4gPiA+IDMuIGNsb3NlIHRoZSBjcHUgZXZlbnQgZnJvbSBw
+YXJlbnQgLT4gaW5hY3RpdmUgY2xvc2UKPj4gPiA+ID4KPj4gPiA+ID4gQ2FuIGJlIGZhaWxlZCB0
+byBjb3VudCB0b3RhbF9lbmFibGVfdGltZS4KPj4gPiA+Cj4+ID4gPiBJcyB0aGlzIGV4cGxhaW5p
+bmcgdGhlIHB1cnBvc2Ugb2YgY29tbWl0IGEzYzNjNjY2NyA/Cj4+ID4gPiBJIGFtIG5vdCBhcmd1
+aW5nIHdpdGggaXQuIEFuZCBJIGFsc28gbm90IHN1Z2dlc3QgcmV2ZXJ0aW5nIGl0LiAoaXQgaXMg
+anVzdCB0aGF0IHJldmVydGluZyBpdCBjYW4gZml4IHRoZSBrZXJuZWwgcGFuaWMuKQo+PiA+Cj4+
+ID4gSW4gY29tbWl0IGEzYzNjNjY2NywgSSBleHBsYWluIHRoZSBzcGVjaWZpYyBjYXNlIGJ1dCBu
+b3Qgd2l0aCBhYm92ZQo+PiA+IGNhc2UuIEJ1dCB0aGUgY29tbWl0J3MgcHVycG9zZSBpcyAiYWNj
+b3VudCB0b3RhbF9lbmFibGVfdGltZSIgcHJvcGVybHkuCj4+ID4KPj4gPiA+ID4gQW5kIGFsc28s
+IGNvbnNpZGVyaW5nIHRoZSB5b3VyIHBhdGNoLCBmb3IgREVUQUNIX0VYSVQgY2FzZSwKPj4gPiA+
+ID4gSWYgaXQgY2hhbmdlcyB0aGUgc3RhdGUgYmVmb3JlIGxpc3RfZGVsX2V2ZW50KCkgdGhhdCB3
+b3VsZG4ndCBkaXNhYmxlCj4+ID4gPiA+IHJlbGF0ZWQgdG8gdGhlIGNncm91cC4gU28gaXQgd291
+bGQgbWFrZSBjcHVjdHgtPmNncnAgcG9pbnRlciBjb3VsZCBiZSBkYW5nbGVkCj4+ID4gPiA+IGFz
+IHBhdGNoIGRlc2NyaWJlLi4uCj4+ID4gPiBObywgSSBkb24ndCB0aGluayBzby4KPj4gPiA+IGNo
+YW5nZSBzdGF0ZSBiZWZvcmUgbGlzdF9kZWxfZXZlbnQoKSwgdGhpcyBpcyB0aGUgc2FtZSBiZWhh
+dmlvciBiZWZvcmUgY29tbWl0IGEzYzNjNjY2NywgcmlnaHQ/Cj4+ID4gPiBBbmQgbm8gc3VjaCBr
+ZXJuZWwgcGFuaWMgaGFwcGVuZWQgIGJlZm9yZSBjb21taXQgYTNjM2M2NjY3Lgo+Pgo+PiBPaCEg
+SSB3YXMgd3JvbmcsIGJlZm9yZSBjb21taXQgYTNjM2M2NjY3LCAiY2hhbmdlIHN0YXRlIiBoYXBw
+ZW5lZCAqYWZ0ZXIqIGxpc3RfZGVsX2V2ZW50KCkKPj4gPgo+PiA+IFRoYXQncyB3aHkgbGlzdF9k
+ZWxfZXZlbnQoKSBoYW5kbGUgdGhlIHBlcmZfY2dyb3VwX2Rpc2FibGUoKSBiZWZvcmUgdGhlCj4+
+ID4gY29tbWl0IGEzYzNjNjY2Ny4gSG93ZXZlciBiZWNhdXNlIG9mICpteSBtaXN0YWtlKiwgSSd2
+ZSBmb3JnZXQgdG8KPj4gPiBwZXJmX2Nncm91cF9kaXNhYmxlKCkgcHJvcGVybHkgYmVmb3JlIGNo
+YW5nZSB0aGUgZXZlbnQgc3RhdGUuCj4+ID4gWWVzLCB5b3VyIHBhdGNoIGNhbiBtYWtlIGF2b2lk
+IHRoZSBwYW5pYyBzaW5jZSBhcyBzb29uIGFzIGV4aXQsCj4+ID4gdGhlIGV2ZW50LT5jZ3JwIHN3
+aXRjaGVkLgo+Pgo+PiBJIGNhbm5vdCBhZ3JlZSB3aXRoIHRoZSByZWFzb25pbmcsCj4+IFRoZSBw
+YW5pYyBkb3NlIG5vdCBoYXBwZW5lZCB3aGVuIGV4aXQsIGl0IGhhcHBlbmVkIHdoZW4gcmVib290
+L3NodXRkb3duLgo+PiAoSSBjbG9zZSBwZXJmX2V2ZW50X29wZW4gYmVmb3JlIHJlYm9vdCkKPj4g
+Pgo+PiA+IEhvd2V2ZXIsIGFzIEkgc2FpZCwgdGhlIElOQUNUSVZFIGV2ZW50IGNvdWxkIGJlIGZh
+aWxlZCB0byBjb3VudAo+PiA+dG90YWxfZW5hYmxlX3RpbWUuCj4+ID4KPj4gPiBTbywgc2V0IGV2
+ZW50IHNob3VsZCBiZSBvY2N1cmVkIGJlZm9yZSBsaXN0X2RlbF9ldmVudCgpLgo+PiA+QW5kIHNp
+bmNlIGl0J3MgZXZlbnQtPnN0YXRlIGNoYW5nZSBvbiByZW1vdmUuCj4+ID5JdCBzaG91bGRuJ3Qg
+aGF2ZSBhbnkgc2lkZSBlZmZlY3QgdGhlIHN0YXRlIGNoYW5nZSBpc24ndCBjYXVzZSBvZiB5b3Vy
+Cj4+ID4gcGFuaWMuIEJ1dCBtaXNzZWQgcGVyZl9jZ3JvdXBfZGlzYWJsZSgpLgo+Pgo+PiBBbnkg
+cHJvY2VkdXJlIHRvIGJyaW5nIG91dCB0aGUgaW1wYWN0IG9mIHRoaXMgbWlzc2VkIHBlcmZfY2dy
+b3VwX2Rpc2FibGUoKT8KPj4gTXkgc3lzdGVtIHNlZW1zIGFsbCBub3JtYWwsIHdoZXJlIHNob3Vs
+ZCBJIGNoZWNrIGl0Pwo+Cj5IZXJlIGlzIHBvc3NpYmxlIHNlbmFyaW86Cj4gIDEuIHBlcmYgZXZl
+bnQgb3BlbiB3aXRoIGNncm91cC4KPiAgMi4gcGVyZiBldmVudCBvcGVuIHdpdGggY3B1IGV2ZW50
+IChubyBjZ3JvdXApLgo+ICAzLiBhYm92ZSB0YXNrIHNldHMgdGhlIGNwdWN0eC0+Y2dycCB0aGUg
+c2FtZSB0byAoMSkuCj4gIDMuIGNsb3NlICgxKSBldmVudHMuCj4gICAgIGhlcmUsIHBlcmZfY2dy
+b3VwX2V2ZW50X2Rpc2FibGUoKSBpc24ndCBjYWxsZWQsCj4gICAgIGNwdWN0eC0+Y2dycCBzdGls
+bCBwb2ludCB0aGUgY2dyb3VwLgo+ICA0LiBieSBvdGhlciB0YXNrLCB0aGUgY2dyb3VwIGFuZCBp
+cyBkZXN0cm9pZWQuCj4gIDUuIGNsb3NlICgyKSBldmVudHMuCj4gICAgIGhlcmUsIGl0IGlzIGxh
+c3QgZXZlbnQsIGluIF9fcGVyZl9yZW1vdmVfZnJvbV9jb250ZXh0KCkKPiAgICAgYW5kIGxhc3Qg
+ZXZlbnQsIGl0IGNhbGxzIHVwZGF0ZV9jZ3JwX3RpbWVfZnJvbV9jcHVjdHgoKSwKPiAgICAgQW5k
+IHRoaXMgcmVmZXJzIGludmFsaWQgcG9pbnRlci4KCi4uLiBzZWVtcyB0b28gY29tcGxpY2F0ZWQg
+dG8gbWUgdG8gZ2l2ZSBpdCBhIHRyeS4KV291bGQgbm90IGRlc3Ryb3lpbmcgY2dyb3VwIHRyaWdn
+ZXIgc29tZSByZWFjdGlvbiB0byBjcHVjdHg/IApUaGVyZSBoYXMgdG8gYmUgc29tZSBjb25uZWN0
+aW9uIGJldHdlZW4gY2dyb3VwIGxpZmVjeWNsZSBhbmQgcGVyZiBjcHVjdHgtPmNncnAuCkhhdmUg
+eW91IHRyeSBpdCBvdXQ/IG9yIGl0IGlzIGp1c3QgdGhlb3JldGljYWw/IAoKCj4KPj4gQnV0IHRv
+IGZpeCBpdCwgIGlzbid0IGZvbGxvd2luZyBjaGFuZ2UgbGVzcyBhZ2dyZXNzaXZlPwo+PiAgICAg
+ICAgIGV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsKPj4gLSAgICAgICBwZXJmX2V2ZW50X3Nl
+dF9zdGF0ZShldmVudCwgbWluKGV2ZW50LT5zdGF0ZSwgc3RhdGUpKTsKPj4gICAgICAgICBpZiAo
+ZmxhZ3MgJiBERVRBQ0hfR1JPVVApCj4+ICAgICAgICAgICAgICAgICBwZXJmX2dyb3VwX2RldGFj
+aChldmVudCk7Cj4+ICAgICAgICAgaWYgKGZsYWdzICYgREVUQUNIX0NISUxEKQo+PiAgICAgICAg
+ICAgICAgICBwZXJmX2NoaWxkX2RldGFjaChldmVudCk7Cj4+ICAgICAgICAgbGlzdF9kZWxfZXZl
+bnQoZXZlbnQsIGN0eCk7Cj4+ICsgICAgICAgcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1p
+bihldmVudC0+c3RhdGUsIHN0YXRlKSk7Cj4KPklmIHBlcmZfY2hpbGRfZGV0YWNoKCkgaXMgY2Fs
+bGVkIGZpcnN0IGFuZCBwZXJmX2V2ZW50X3NldF9zdGF0ZSgpIGNhbGwsCj5zaW5jZSB0aGUgcGFy
+ZW50IGlzIHJlbW92ZWQgaW4gcGVyZl9jaGlsZF9kZXRhdGNlZCwKPkl0IHdvdWxkIGJlIGZhaWxl
+ZCB0byBhY2NvdW50IHRoZSB0b3RhbF9lbmFibGVfdGltZSB3aGljaCBjYWN1bGF0aW5nCj5jaGls
+ZF9ldmVudCdzIGVuYWJsZV90aW1lIHRvby4KClRoYW5rcyBmb3IgY2xhcmlmeWluZyB0aGlzLCAK
+U28gdGhlIHdob2xlIHBvaW50ICBpbiBjb21taXQgYTNjM2M2NjY3IGlzIHRvIG1ha2UgIHBlcmZf
+ZXZlbnRfc2V0X3N0YXRlKCkgaGFwcGVucyBiZWZvcmUgcGVyZl9jaGlsZF9kZXRhY2goKSwgcmln
+aHQ/CkkgZmVlbCBJIGdvdCBsb3N0IHNvbWV3aGVyZSB3aGVuIEkgcnVzaCB0byB0aGlzIHN1Z2dl
+c3Rpb24uIEJ1dCBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQgd2h5IG15IHBhdGNodjEgIGJyZWFr
+cyBjb21taXQgCmEzYzNjNjY2NywgcmVhbGx5IGNvbmZ1c2VkLgoKCj4KPlRoYW5rcwo+Cj4tLQo+
+U2luY2VyZWx5LAo+WWVvcmV1bSBZdW4K
