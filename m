@@ -1,188 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAAB139B;
-	Tue,  3 Jun 2025 04:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8802940B;
+	Tue,  3 Jun 2025 05:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748926584; cv=none; b=WTDXsCvyx2lnxAuymOib4BdLhMaRY6fVOxc9Kds5TqgTDNeChFqzOf0zvKSevDxojJ93CrzQEfqqXHhQSGjb/CbAwK2t0IzSEkziPpfFOnPVBA1/a3deNGbGYmjasX3ZD/sA2sXQIpM3NKHxMPZ0l4LyAdm7YvolkOUpIdVEjGI=
+	t=1748929538; cv=none; b=n0O309DqPi7XCzSCubVJ2t2ippOKpUnF3vlkFPNgymKlYLU8AK4PBhBlAhWToa0lhKd6+DWDBaFDYGPV3UIp7UekCGi2MyLYEJFr5mUDFvQ9P6COLzJrDfTfsFO55vbQoW+GZ3sAihWrctGsP/GtYlzib7yZU9trEFpmWSf0DDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748926584; c=relaxed/simple;
-	bh=Igko4L0daaGgQYSXk1QMDHStz33o8RX9bl/FJAt5rrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pqO2QQ2rK4OzLbp+L/ymOl9n0/Lg+IKvfWjLuZYOQ1yAtmL7gJe17H+PsmSub+kMPh2nlpzD2Trt5sLAPiW+rl+K8nCKdJ0yqCQuQUoQOowm3fNItZgzrg44kVN3F4aB2PJBFXdPTicB15XeAnOLtJ/DiR+nZ2CUnkZH/1ErSDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smadgrr1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748929538; c=relaxed/simple;
+	bh=CYCGRuhTa4KtUmbE3vts5S7yHCuIAzDmAh5o9A12UcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=hBTii6Ov8kgL7UbxhRd6UqW698ck/qKOWKroalbIIGlk1CBc5QjB6xt86+UzAm1iXOJxpNso+vsvwQ6seutRJPu78c5YxqRBGp9TWa7i5DVB1dNPeI1P9dS9Z7rN8ac8wBWWu1XWTrTW1IsnrfPVx+DwfKQryEvEyATSoR2S2yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=g5WSTILh reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smadgrr1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D43DC4CEED;
-	Tue,  3 Jun 2025 04:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748926583;
-	bh=Igko4L0daaGgQYSXk1QMDHStz33o8RX9bl/FJAt5rrg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Smadgrr1nY59GEmxpD9U1p+n0bwgct9dFGKJGj8L7jV4VMEu4BuyeHzvwOrzbjRHk
-	 V9VRusdDv41egiT+JUW5gPxhFbsOU5zXHjIBTZLTAU44QBmZ54ARbJ5n64/XjBAqNn
-	 eTMFIiQ5L80X84zNkbas5uP71dkq60l2khd4xtRNYuKC3LOIPJMkUTMUAl37DmiMXy
-	 4exQY7aSw4WGM4Up4Pn8r+2YqzdUf+srcf/H8B/0eJBTPUfXI7n3XUprl0Folz7RkY
-	 NcD0GCUihuZlH+9nBcm6yfFyiElw2636XGf0avtwWhHvmfRBR0Q5Hf1WvYv3qZBpmt
-	 va4yxOCL3CwQg==
-Date: Mon, 2 Jun 2025 21:56:21 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, acme@kernel.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="g5WSTILh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=hZ4OI3h5BZOm9FiTMfdV+zwC2HXeHr1OnNLrmtNoTUA=; b=g
+	5WSTILhNW95yNBr08TjNEaYIMpd9igvvL2xhtVRsqBSge8I19eRpXu0vVlbCLFEU
+	Ks7btgWV7N4+0sxRRPDygeeUWgF+nJpqBuVVXiga+It6SG/2fg4X0zxmfFR4yE32
+	OzxQZqG9gCpjp8BbThOoE7tyKl5FYN8zNxf5zhYuPU=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-138 (Coremail) ; Tue, 3 Jun 2025 13:44:47 +0800 (CST)
+Date: Tue, 3 Jun 2025 13:44:47 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Yeoreum Yun" <yeoreum.yun@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
- trace instances
-Message-ID: <aD6AdQRLNNGhwRSe@google.com>
-References: <20250529065537.529937-1-howardchu95@gmail.com>
- <aDpBTLoeOJ3NAw_-@google.com>
- <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
- <20250602181743.1c3dabea@gandalf.local.home>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <aD5+C41dsjvu9ZNP@e129823.arm.com>
+References: <aD5+C41dsjvu9ZNP@e129823.arm.com>
+X-NTES-SC: AL_Qu2fCvWZtkwj4SacbOkZnEYQheY4XMKyuPkg1YJXOp80iCXQ3wodeXBxJkTkwcOOJiWSvxe8aSZS7+RTe4BFYbAa3IrUHJfyeLXrOMPPSboW
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250602181743.1c3dabea@gandalf.local.home>
+Message-ID: <19514ed5.5692.19734522326.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iigvCgDXX9DQiz5oJ5gSAA--.25089W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAhhqmg+fYgVoAAHsC
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hi Steve,
-
-On Mon, Jun 02, 2025 at 06:17:43PM -0400, Steven Rostedt wrote:
-> On Fri, 30 May 2025 17:00:38 -0700
-> Howard Chu <howardchu95@gmail.com> wrote:
-> 
-> > Hello Namhyung,
-> > 
-> > On Fri, May 30, 2025 at 4:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > (Adding tracing folks)  
-> > 
-> > (That's so convenient wow)
-> 
-> Shouldn't the BPF folks be more relevant. I don't see any of the tracing
-> code involved here.
-
-Yep, they are CC'ed too.  And sorry I thought you are involved in this
-part of the code.
-
-> 
-> > 
-> > >
-> > > On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:  
-> > > > perf trace utilizes the tracepoint utility, the only filter in perf
-> > > > trace is a filter on syscall type. For example, if perf traces only
-> > > > openat, then it filters all the other syscalls, such as readlinkat,
-> > > > readv, etc.
-> > > >
-> > > > This filtering is flawed. Consider this case: two perf trace
-> > > > instances are running at the same time, trace instance A tracing
-> > > > readlinkat, trace instance B tracing openat. When an openat syscall
-> > > > enters, it triggers both BPF programs (sys_enter) in both perf trace
-> > > > instances, these kernel functions will be executed:
-> > > >
-> > > > perf_syscall_enter
-> > > >   perf_call_bpf_enter
-> > > >     trace_call_bpf
-> 
-> This is in bpf_trace.c (BPF related, not tracing related).
- 
-Ok, noted.
-
-Thanks,
-Namhyung
-
-> 
-> > > >       bpf_prog_run_array
-> > > >
-> > > > In bpf_prog_run_array:
-> > > > ~~~
-> > > > while ((prog = READ_ONCE(item->prog))) {
-> > > >       run_ctx.bpf_cookie = item->bpf_cookie;
-> > > >       ret &= run_prog(prog, ctx);
-> > > >       item++;
-> > > > }
-> > > > ~~~
-> > > >
-> > > > I'm not a BPF expert, but by tinkering I found that if one of the BPF
-> > > > programs returns 0, there will be no tracepoint sample. That is,
-> > > >
-> > > > (Is there a sample?) = ProgRetA & ProgRetB & ProgRetC
-> > > >
-> > > > Where ProgRetA is the return value of one of the BPF programs in the BPF
-> > > > program array.
-> > > >
-> > > > Go back to the case, when two perf trace instances are tracing two
-> > > > different syscalls, again, A is tracing readlinkat, B is tracing openat,
-> > > > when an openat syscall enters, it triggers the sys_enter program in
-> > > > instance A, call it ProgA, and the sys_enter program in instance B,
-> > > > ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
-> > > > even though ProgB returns 1; (Is there a sample?) = ProgRetA (0) &
-> > > > ProgRetB (1) = 0. So there won't be a tracepoint sample in B's output,
-> > > > when there really should be one.  
-> > >
-> > > Sounds like a bug.  I think it should run bpf programs attached to the
-> > > current perf_event only.  Isn't it the case for tracepoint + perf + bpf?  
-> > 
-> > I really can't answer that question.
-> > 
-> > >  
-> > > >
-> > > > I also want to point out that openat and readlinkat have augmented
-> > > > output, so my example might not be accurate, but it does explain the
-> > > > current perf-trace-in-parallel dilemma.
-> > > >
-> > > > Now for augmented output, it is different. When it calls
-> > > > bpf_perf_event_output, there is a sample. There won't be no ProgRetA &
-> > > > ProgRetB... thing. So I will send another RFC patch to enable
-> > > > parallelism using this feature. Also, augmented_output creates a sample
-> > > > on it's own, so returning 1 will create a duplicated sample, when
-> > > > augmented, just return 0 instead.  
-> > >
-> > > Yes, it's bpf-output and tracepoint respectively.  Maybe we should
-> > > always return 1 not to drop syscalls unintentionally and perf can
-> > > discard duplicated samples.  
-> > 
-> > I like this.
-> > 
-> > >
-> > > Another approach would be return 0 always and use bpf-output for
-> > > unaugmented syscalls too.  But I'm afraid it'd affect other perf tools
-> > > using tracepoints.  
-> > 
-> > Yep.
-> > 
-> > >  
-> > > >
-> > > > Is this approach perfect? Absolutely not, there will likely be some
-> > > > performance overhead on the kernel side. It is just a quick dirty fix
-> > > > that makes perf trace run in parallel without failing. This patch is an
-> > > > explanation on the reason of failures and possibly, a link used in a
-> > > > nack comment.  
-> > >
-> > > Thanks for your work, but I'm afraid it'd still miss some syscalls as it
-> > > returns 0 sometimes.  
-> > 
-> > My bad... For example this:
-> > 
-> > if (pid_filter__has(&pids_filtered, getpid()))
-> >    return 0;
-> > 
-> > This patch is practically meaningless, but it passes the parallel tests.
-> > 
-> > Thanks,
-> > Howard
-> 
+CkF0IDIwMjUtMDYtMDMgMTI6NDY6MDMsICJZZW9yZXVtIFl1biIgPHllb3JldW0ueXVuQGFybS5j
+b20+IHdyb3RlOgo+SGkgRGF2aWEsCj4KPj4gSSB0aGluayB0aGlzIHBhdGNoIGlzIG5vIGJldHRl
+ciB0aGFuIG15IHBhdGNoIGluIHRoZSBvcmlnaW5hbCByZXBvcnQKPj4gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvYWxsLzIwMjUwNjAxMTczNjAzLjM5MjAtMS0wMDEwNzA4MkAxNjMuY29tLwo+Pgo+
+PiBUaGlzIHBhdGNoIGlzIG1vcmUgYWdncmVzc2l2ZSwgIGl0IGFkZCBtb3JlIGNoYW5nZXMgdG8g
+b3JpZ2luYWwgbG9naWMsIHNhbWUgcHJhY3RpY2UKPj4gYXMgaW4gdGhlIG9mZmVuZGluZyBjb21t
+aXQuICB3b3VsZCByYWlzZSBtb3JlIGNvbmNlcm5zIGFib3V0IGhpZGRlbiBzaWRlLWVmZmVjdC4K
+Pj4KPj4gRm9yIGV4YW1wbGUsIHRoaXMgY29kZSAgaW4gbGlzdF9kZWxfZXZlbnQgc2hvdWxkIHJh
+aXNlIGNvbmNlcm4gYWJvdXQgdGhpcyBwYXRjaAo+PiAyMDk5ICAgICAgICAgICogV2UgY2FuIGhh
+dmUgZG91YmxlIGRldGFjaCBkdWUgdG8gZXhpdC9ob3QtdW5wbHVnICsgY2xvc2UuCj4+ICAyMTAw
+ICAgICAgICAgICovCj4+ICAyMTAxICAgICAgICAgaWYgKCEoZXZlbnQtPmF0dGFjaF9zdGF0ZSAm
+IFBFUkZfQVRUQUNIX0NPTlRFWFQpKQo+PiAgMjEwMiAgICAgICAgICAgICAgICAgcmV0dXJuOwo+
+Cj5hdHRhY2hfc3RhdGUgZG9lc24ndCByZWxhdGVkIGZvciBldmVudC0+c3RhdGUgY2hhbmdlLgo+
+aWYgb25lIGV2ZW50IGFscmVhZHkgY2xlYXJlZCBQRVJGX0FUVEFDSF9DT05URVhULCB0aGF0IGV2
+ZW50IGlzIGNhbGxlZAo+dmlhIGxpc3RfZGVsX2V2ZW50KCkKCk1heWJlIHRoaXMgY29uY2VybiBj
+b3VsZCBiZSBjbGFyaWZpZWQsIHdoYXQgYWJvdXQgb3RoZXIgc3VidGxlIGltcGFjdHMuClRoZSBj
+aGFuZ2Ugc2hvdWxkIGJlIHRob3JvdWdoIHJldmlld2VkLCBpZiB5b3Ugd2FudCB0byBwdXNoIGl0
+IGZ1cnRoZXIuCgpJdCB0YWtlcyBtZSBtb3JlIHRoYW4gYSBtb250aCB0byBmaWd1cmUgb3V0IGEg
+cHJvY2VkdXJlIHRvIHJlcHJvZHVjZSB0aGUga2VybmVsIHBhbmljIGJ1ZywKSXQgaXMgIGp1c3Qg
+dmVyeSBoYXJkIHRvIGNhcHR1cmUgYSBidWcgaGFwcGVucyBpbiByYXJlIHNpdHVhdGlvbi4KCkFu
+ZCB5b3VyIHBhdGNoIGhhcyBhIGdsb2JhbCBpbXBhY3QsIGl0IGNoYW5nZXMgYmVoYXZpb3IgdW5u
+ZWNlc3NhcmlseS4KCj4KPkFsc28sIHlvdXIgcGF0Y2ggY291bGRuJ3Qgc29sdmUgYSBwcm9ibGVt
+IGRlc2NyaWJlIGluCj5jb21taXQgYTNjM2M2NjY3KCJwZXJmL2NvcmU6IEZpeCBjaGlsZF90b3Rh
+bF90aW1lX2VuYWJsZWQgYWNjb3VudGluZyBidWcgYXQgdGFzayBleGl0IikKPmZvciBJTkNBVElW
+RSBldmVudCdzIHRvdGFsX2VuYWJsZV90aW1lLgoKSSBkbyBub3QgdGhpbmsgc28uCkNvcnJlY3Qg
+bWUgaWYgSSBhbSBtYWtpbmcgc2lsbHkgIG1pc3Rha2VzLApUaGUgcGF0Y2gsIGh0dHBzOi8vbG9y
+ZS5rZXJuZWwub3JnL2xrbWwvMjAyNTA2MDMwMzI2NTEuMzk4OC0xLTAwMTA3MDgyQDE2My5jb20v
+CmNhbGxzIHBlcmZfZXZlbnRfc2V0X3N0YXRlKCkgYmFzZWQgb24gREVUQUNIX0VYSVQgZmxhZywg
+d2hpY2ggY292ZXIgdGhlIElOQUNUSVZFIHN0YXRlLCByaWdodD8KSWYgREVUQUNIX0VYSVQgaXMg
+bm90IHVzZWQgZm9yIHRoaXMgcHVycG9zZT8gVGhlbiB3aHkgc2hvdWxkIGl0IGV4aXN0IGF0IHRo
+ZSBmaXJzdCBwbGFjZT8KSSB0aGluayBJIGRvZXMgbm90IHJldmVydCB0aGUgcHVycG9zZSBvZiBj
+b21taXQgYTNjM2M2NjY3Li4uLi5CdXQgSSBjb3VsZCBiZSB3cm9uZwpXb3VsZCB5b3Ugc2hvdyBh
+IGNhbGwgcGF0aCB3aGVyZSBERVRBQ0hfRVhJVCBpcyBub3Qgc2V0LCBidXQgdGhlIGNoYW5nZXMg
+aW4gY29tbWl0IGEzYzNjNjY2NyBpcyBzdGlsbCBuZWVkZWQ/CgoKRGF2aWQKCgo+Cj5UaGFua3Mu
+Cj4KPi0tCj5TaW5jZXJlbHksCj5ZZW9yZXVtIFl1bgo=
