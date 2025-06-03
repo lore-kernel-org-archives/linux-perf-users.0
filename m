@@ -1,249 +1,162 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012066.outbound.protection.outlook.com [52.101.66.66])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AAF2686AC;
-	Tue,  3 Jun 2025 07:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.66
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748935046; cv=fail; b=uNGriraRid1+Gc+OInaY8QYmPCEunu4VMI1ri6iYtnXDZbJ/jrGwA7J3hfUqbJNq2i9KSenVqpAwDredpim0VZio/WDD/jzP6TlgrpohcnWjD22c9F03tiTvSAd/xLxWtgCL0uSi+XdIArY3Lf5K7JWeT22WHIwTVz/onU5iuKc=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748935046; c=relaxed/simple;
-	bh=RMZeeXSyWaTX02cPh+wGBiG6R0JncDzoqTRp9uLWTEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QEgslDv7LnpGE/QSOO7918+TC2E203yb8pAfPZU9dVrDOUReNtgTd6JtWTuNJprBMwXBlS40MZE4pAxXunDCWgVo9gwFir/sSlEAKw4r+/nNFhdL44uO8l9ES1pDeUrwBJb0RIo2UdLfR9tLSxThKkJPpKmitIxrAYeo2rM5P1s=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=OxLIyA1Z; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=OxLIyA1Z; arc=fail smtp.client-ip=52.101.66.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A45E267F72;
+	Tue,  3 Jun 2025 07:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748935508; cv=none; b=trZpUrBrCiSF723YCwoZpIMxLDmrb2f5uNUOo/AgkfGmRf83Wl3g6D5Wj0zhdd1RDAaEq0LbxzZylTt5JNHbrVBdgXTF7+mInQ7VE3zwklWbY5vi1bURiRrJKSnLdU9VcD7IeTHoQ67XcnHhIjB/OGDLE7eO/U2RTNByQucgnFg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748935508; c=relaxed/simple;
+	bh=HSiydVzdKvNmaGbj4tGBgwBcK3tx9/JKEl44nSVv8DQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lo23EiUta9S1Ta6E+7BDGvm6vhbdQwe0i+nUo2x51154gjywfSJ31W2AnwMUsOUkOlDLMfI8vKjh86JLpkwv7Z/dPhG3gNwDwNTutNXQ5xIAI1eQj4Kw/em4/Vgt3T8+8/SNTY405ooYQWc2P9O/fYMX3sHubMSlWUnVyrkc7bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=pPDiTR0O; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="OxLIyA1Z";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="OxLIyA1Z"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=IOBhKH+hFQjZuJwItjCOYIPGYA9cMZGvAA9gMN4t8izN573XJMMVCuUgUxh53xHzHyhMT7DSKBtyqXDsLT3D7PXThIuHQp6wBiOu+TnBpFIogxbTJbtwNhvdptmbd2jPgl9JrLZypOny9f+R+3+exdDpVJaLISwb6TAyCjQUVTT8QNI1ubjzx5gq62DydDruo/sm5VDnkVBmigVz59QB0yvmBmXfZsgPHfXKkAG86Oj+Bles3Zkj7mfKXg3na/dk+2mSBmKg8NZoRzC31FXkmU6eeJaNdy5tJuObyTgdv5cnjuABdXHMqkP8S8+AMOvlPVZjuQKRXujakBP8FYRhwQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hI581lGmatDQWL/C2R2L+X0zHglhBjNWy5P/6hEVOc4=;
- b=GAau7+Zm7RSPVp0j9ZgEj+1zQdalLQAvITHeNwOG0Vzls4udL2n4AK9nVkG3dI6scv7MxLCRwRUSGs9HH85QkFjfZp15avz5P5D4v6uNr5gNsS6x2t6vqSJIivcYpRNGMk2vo2ZGQ5HdZfiqLBUiXhhylpvnsB5+vMV7IB6b7J1j3z50ou5DYC9BpMAWLOkAQTw7+wsM8bPMNyMv89Lcbd4VjpS6O5d8KpcHcA32kulDsK9V4q8GyHKXPEYAqqo3sDjjvaB96irvc0yVBcrmMeS0bZJ+mtZIVRDPZ/gWjYLvnfddwJI/thfdQJv9BnwOa5yZGXJ8wzYxCsmb7F+bkA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=infradead.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hI581lGmatDQWL/C2R2L+X0zHglhBjNWy5P/6hEVOc4=;
- b=OxLIyA1Z61eWzGSsEPVY0qxqSQElnFLdXurJo9YRj1XnvHTCNhFMYLF6eAKnq9YUqrAlSSehbFggf4vgN8EcBlOxI3JmdRRIL9bjMW1ezq7g0Dr5DvA2VrD8Bdi/7F1Hfcb2eIzaPPJaduzwGHgEO0tIFDupr9IEx4FIikL1GvY=
-Received: from DU7P194CA0015.EURP194.PROD.OUTLOOK.COM (2603:10a6:10:553::10)
- by GV1PR08MB10979.eurprd08.prod.outlook.com (2603:10a6:150:1f0::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 3 Jun
- 2025 07:17:16 +0000
-Received: from DB1PEPF000509F9.eurprd02.prod.outlook.com
- (2603:10a6:10:553:cafe::6b) by DU7P194CA0015.outlook.office365.com
- (2603:10a6:10:553::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.31 via Frontend Transport; Tue,
- 3 Jun 2025 07:17:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB1PEPF000509F9.mail.protection.outlook.com (10.167.242.155) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29
- via Frontend Transport; Tue, 3 Jun 2025 07:17:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VfCdNX3w6UZg5+rOC/pymHtghOQM82n62D+bXeZWUhZ97sYs07hEBU13goKa37NyKVSfLEU6jXYSGlhBrAk6cSh/89tPRhDTJp/EWatteF+SoSyWQlC49CC9l8656K/ad1rgL4VCmODB9Gc15Hv+Pqmj+xOjea+LwQwEdrnzaILFmeui3DTDhRuXAIix5ttDO/WRRka7TZTau09pGSpdwRo8pH1qQl0f1Zp2lblCRe6bpKb+6F/vR6A3L/9gzIWOoPEAJ6DL/q537KkK934NGzjmPxgOGnT2t/8vp+cP+0L/MBBc4KssFcMmVu9rtx2pMw8WMf3rPPpMlwDvpOXxCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hI581lGmatDQWL/C2R2L+X0zHglhBjNWy5P/6hEVOc4=;
- b=mt3g9j+kU7gG3tQCL+DZyfAjpbSFc3jeDrsp1BPInnf0GeffLbA/3CkExrlhhoJlP7m8W+aXqd+w/yZD8uf6EsvECHlOI7T31Q8p9YJQWfZNjGpFtLrFDd52AjFDjkSZvyxkvWA6Hz4F7Ot9EVh1JUvQ8fwMTPBuqpgs+67F9BRdmwe/aPQvFfFx5xU64jgn1Ql+NPKKXA8DLFjVzfYjXyO3SLuci866GkRaRtREbptVvJC5THE66lInXraW2p3uqeo4g0HiZtd9o0Fr7C+GcrkKOhSTh0k039qCAfD7Inw2IKw8+MLq9YIM/0jzkj9p6w7HGLd3TNXMdXW1e55uew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hI581lGmatDQWL/C2R2L+X0zHglhBjNWy5P/6hEVOc4=;
- b=OxLIyA1Z61eWzGSsEPVY0qxqSQElnFLdXurJo9YRj1XnvHTCNhFMYLF6eAKnq9YUqrAlSSehbFggf4vgN8EcBlOxI3JmdRRIL9bjMW1ezq7g0Dr5DvA2VrD8Bdi/7F1Hfcb2eIzaPPJaduzwGHgEO0tIFDupr9IEx4FIikL1GvY=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by GV2PR08MB9232.eurprd08.prod.outlook.com
- (2603:10a6:150:d9::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Tue, 3 Jun
- 2025 07:16:39 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%7]) with mapi id 15.20.8792.033; Tue, 3 Jun 2025
- 07:16:39 +0000
-Date: Tue, 3 Jun 2025 08:16:36 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: peterz@infradead.org, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, leo.yan@arm.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <aD6hVAuHGNZjrKpr@e129823.arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4939eff.64be.19734874658.Coremail.00107082@163.com>
-X-ClientProxiedBy: LO4P123CA0066.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:153::17) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pPDiTR0O"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5537NsUt3751369
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 3 Jun 2025 00:23:55 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5537NsUt3751369
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1748935440;
+	bh=aaqVJeEtJPDgcnRU0w0FJUnq7IQKBsxpIdRbtKHZrJU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pPDiTR0O8ZfuH4ZBXXem53qDgsBrgtwbyPKhPw8loprHjEIJ+poRsNC8BHju1vAUM
+	 uaSv6Hz92cC8H9Jo4UBrnkFn68dRBJQfMv1NeE6oNasLmT5zFRaC3Zz033C0GxKjMo
+	 JaEOVOv/vayvWeyuLP3g9xOtfkhf9wKQE9kj/eLPEjzlYXpJmLpIfIn+6H57P2PXdg
+	 W0ieqUTUcJaDxZKy59K45MYNVtLTrknk+iNkDxpxHSen0x3ETQp/tQHtwwFYbzwi3/
+	 C9oI03FnOhqMaLS9B+3BeQPHtMwjdLswD7ttRGPGTuZ15JQeEXm6Lx2dIHIeFuU7+I
+	 iv5aNX9wAn1UQ==
+Message-ID: <5276d1ff-be9c-4391-ae64-4f7451f6ced8@zytor.com>
+Date: Tue, 3 Jun 2025 00:23:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|GV2PR08MB9232:EE_|DB1PEPF000509F9:EE_|GV1PR08MB10979:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5345a0cf-69b8-49ad-7e1c-08dda26eab45
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?MQjszNi9XB6RryRfBGBTpIVtWUewaUXiBi0mdgHh2udD9Q8STIjjFQZ+AB3I?=
- =?us-ascii?Q?yexrHS4RL68rGRuz+iSUBANo3hKw65+y3/2z5YPOcvjAKjuZC1IiQx26kl6e?=
- =?us-ascii?Q?KnuBShKj/Iqp28vfwv3AY8Xf/icSuuy6XYT0SdWqjNikruo63ikkQyQePY4J?=
- =?us-ascii?Q?nT8vmIpK1Bws9GlDCUD8WT8t4/BeawTYav4IT1LCfVzEgYkC1gjbMQfOt/q2?=
- =?us-ascii?Q?I4MZjo7bWe4Tt/Bzx23BtHMoX4Cisj+Jo0bOLoFej8Th63ae+d0d6756DuAx?=
- =?us-ascii?Q?PUdd3jB3xBoz1w6RSpuglN/Ou7wO7Mqg6U2IBHwjp8yIN/TYQ44HGLil8awa?=
- =?us-ascii?Q?6doXEoDShN7zYO3LSgZoGpt1KjOrXPVGIgqtVmmFYovozR78eYYBWLIqE/6K?=
- =?us-ascii?Q?PAna3DocQC2wPptD19Z48vAE+uoH9pW/KCh2BhNWE++/HDGsmXOCK5t6XAt2?=
- =?us-ascii?Q?nc7AvDGm2rZTYa6FUPZQAT+tZ2UuNPrXZetLnCjdVFtlrdMJl29SfPrJb34M?=
- =?us-ascii?Q?cwAi7ukoCBRO/f0nFrEeB3JCHvRJCAI/YFh48o4x02FMEX0R/inH6/wIiyV4?=
- =?us-ascii?Q?iPYduV2563kThEpd89ez3MLED67mZHHDCngg/IzFd1SbMBWtJlwinpMhuWBP?=
- =?us-ascii?Q?xGJevUQWyrLhhjk4WTs7U5b+KnAYBg4CyI0m3ibxIJfExkm/cBqkgKkhJ16s?=
- =?us-ascii?Q?QgCsbbQXibxq9hYBo8Np8meOWHu11KeAGUptJRw98UIxYdRu7UBLx/W2Zz+A?=
- =?us-ascii?Q?JoPw0KYNfaAs424uHhLRd3LQpYTC/s5sOLy84uRjY3brsAOWmtsEQE8hyQbp?=
- =?us-ascii?Q?gpw3GeBy3ZknN7n6LmFWMG91okTcoD5kEYON90Kqvw2sPnlh01NBZ9a05htt?=
- =?us-ascii?Q?lzanjSCKQUjdYnwpCh0VS9uvHyWsUszDtpqeLV3Mc4lFiS0GYlycMSuZPsUP?=
- =?us-ascii?Q?ifXc1nH4HogS6DGCPJYObwHx2TVW5tEftHivRKglzCoRmVx//3Lk6JGUGBoD?=
- =?us-ascii?Q?W3OpfRvA1e/AA4WBCMe68dTfRyNabbsqWFVREJvb2KnuAiYSwXMtQY4X/jo5?=
- =?us-ascii?Q?KpIWI7Udykk6LPQ+FlprARK63H+pyyvfDSOYEFMlYTzbSnRNSI7r7ZLQVGJ3?=
- =?us-ascii?Q?Cw9TQnuL7M9HQ1n5fZ+Goh1FLPJHR9JR+go4lylvL54Bm6yL7MMQ8vhcftzu?=
- =?us-ascii?Q?fjt1eV6aiQtJ8qJMG2F69KbTYo/RqcnVVl2dxyCkG5XlD0+S9HCy+tGIPXih?=
- =?us-ascii?Q?DecRM5E5/H3z/AgUGXepJy/RHIKBAreIrro7DgpMhuTaaF2H4mwNYyOdctcF?=
- =?us-ascii?Q?uZkzquxWlyoIYcUwa+xAhEqtmQGU3Og+0JlCDViD8WeqRvmlSMJtLl9+jCH2?=
- =?us-ascii?Q?k1UHjtF9jQ5q5NYdsmos4GyUIXAAjOJ3072UeME4JNZtOtmVZBmZUGXB1TTE?=
- =?us-ascii?Q?c4612st66qDls6FnVC2qVLbnOOrndF8vIzUfJfOrL1y0+u7DagC5gg=3D=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB9232
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF000509F9.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	6c0cb7f3-9453-43f7-2cea-08dda26e9509
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|14060799003|35042699022|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vfr6hQd7caBr/mXbPcYLOfJhv2xALfNCXgZqBS2gShxnSHIJ7jlyHv+QPLn1?=
- =?us-ascii?Q?njGdf8qbdnRNrhUaUdVBpqGepHnZZFnpjjnTUoFcgB1zSJav620cx4ZLrcp/?=
- =?us-ascii?Q?AFU+l0dRg2+kjLHKXe8bSq56L2Rvb4o3v6+Ns2pPY3JTawMWyLiB5Ezm3O63?=
- =?us-ascii?Q?vx0PbozZvEehtIQ7qzUPHScNYMK0cNEdNa8WH+LEXkm17hZTZelIkYEfLDSM?=
- =?us-ascii?Q?vjFCdsMF2L3Hajq911QwPUY2+pBboonAI8Y3DDa0YTzJ40MsM/6a+CJYJ5t0?=
- =?us-ascii?Q?H0LQY6E6zkPL2OS2j3i4gTU0nmSfc2pm8faSx4h6EP5ClxK3tJCExXBS4wNv?=
- =?us-ascii?Q?yUHNvC7/hin2CRTDAUcroPrML/mdshqblM4TT1234VOCOjft3aZEg4iXE4pK?=
- =?us-ascii?Q?4u7vgEdk09VSbSmx/84UwgcPt9NET8BhUqWWBpgdboW3s3LgoKMl0dXkbAeq?=
- =?us-ascii?Q?I7rcHQyi3M3qP8SvV50ch93dhiukWeytxiqPwthYn9h+UVktVS+jpPlmxLbo?=
- =?us-ascii?Q?qZ99xvZymsN1xEjiO/5zGUzvQMvFu2KwcCuUZlR7O2Vtwudd6LciLAs5r/1H?=
- =?us-ascii?Q?w361HSY2Esb3Qyz/mr3ypQewZu7C1iiRhLiS+bOFeM2LdeuhSHnz/n0U9VN1?=
- =?us-ascii?Q?DX5fQAIbB1+hEk7+qjbaRNFTg/fPlTZ163rLvPmz34alNOp7Oj/VZU2fzpWW?=
- =?us-ascii?Q?mSIrIlMc14fICaiA4D98wZiXkDYalSrWYWlD9oMDUzcElFvBSOa3hIDO6HXo?=
- =?us-ascii?Q?ztGKJPb7hGpqkU9RrIrbwMrhqpRbzDfSosdYIshgvZxqqaAmn3uPRsEMFsFA?=
- =?us-ascii?Q?0ShX6hqIuCrw6f4ShXSn628dlDPmm8nAnTEXWG179MLqLQHJXZv3jU8fM6tt?=
- =?us-ascii?Q?U5cQMZ02GMXZ6bZNi5dy357ZXSNbWW732b5aDSZj1xdaoWjAXbXzjN9b1xh2?=
- =?us-ascii?Q?+0tlMTnhBJZM5AdWISkfh5jbHDTAYLPXmn4qMOCLTl+8UkzoOb+6I531n2ds?=
- =?us-ascii?Q?D8Sajo7pKgwrg31G01UMoUeqjNMqyToJF7WZpX+Hsmg5HfBBHOKodBIGj8Tx?=
- =?us-ascii?Q?Koq8Xx8KhcmpsxgkcCeT5U1FpznCn+A8XOKHUs+sDu0Pcsveap2asJ6mYCjp?=
- =?us-ascii?Q?6XW76G06FjIJNFwk69ZY1Cl8a3IczKCL2KgA0CpIL2WbE7bZ41LdBZsKBKuE?=
- =?us-ascii?Q?bTxIIdYroqN0j/kzKxgqW4/OHlRTsyZ3HJJF0WLTVBRoicZ8eynAZ2pFZPTe?=
- =?us-ascii?Q?FvIwRxnLFmS8/6yuvcMAs4zbi/2ji08sEuBrxpUK6NB9cBlhYEUS/8klet5P?=
- =?us-ascii?Q?lO55mFTPVn772+jD1iW2UphDURHBI8NYp8CKJG8gn6zKXRGLLuP4kIt/fGK/?=
- =?us-ascii?Q?AhltTb4PxuWzyPIUEk7e/fpysdTeEkyk5xFYYC0cCkTWhpJ1TpFpmh9r6qWt?=
- =?us-ascii?Q?5rwdA9o6WibuOSsOKFYfEEilj1KHs2z72lj2jeNlWwlCsRHaKDRfvnUAVXSf?=
- =?us-ascii?Q?BPYxGsJY+01uhROheiw1bIhTW+m0a0EGMEBfI1RaowpZizjCurrPs2uDpA?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(14060799003)(35042699022)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2025 07:17:15.9055
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5345a0cf-69b8-49ad-7e1c-08dda26eab45
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509F9.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB10979
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/9] x86/nmi: Extend the registration interface to
+ include the NMI-source vector
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-4-sohil.mehta@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250513203803.2636561-4-sohil.mehta@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi David,
+On 5/13/2025 1:37 PM, Sohil Mehta wrote:
+> To prepare for NMI-source reporting, add a source vector argument to the
+> NMI handler registration interface. Later, this will be used to
+> register NMI handlers with a unique source vector that can be used to
+> identify the originator of the NMI.
+> 
+> For now, just extend the interface and pass zero as the source vector
+> for all handlers. No functional change intended.
+> 
+> Originally-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 
-> >
-> > >
-> > > Also, your patch couldn't solve a problem describe in
-> > > commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-> > > for INCATIVE event's total_enable_time.
-> >
-> > I do not think so.
-> > Correct me if I am making silly  mistakes,
-> > The patch, https://lore.kernel.org/lkml/20250603032651.3988-1-00107082@163.com/
-> > calls perf_event_set_state() based on DETACH_EXIT flag, which cover the INACTIVE state, right?
-> > If DETACH_EXIT is not used for this purpose? Then why should it exist at the first place?
-> > I think I does not revert the purpose of commit a3c3c6667.....But I could be wrong
-> > Would you show a call path where DETACH_EXIT is not set, but the changes in commit a3c3c6667 is still needed?
-> >
-> > Sorry for my bad explaination without detail.
-> > Think about cpu specific event and closed by task.
-> > If there is specific child cpu event specified in cpu 0.
-> > 1. cpu 0 -> active
-> > 2. scheulded to cpu1 -> inactive
-> > 3. close the cpu event from parent -> inactive close
-> >
-> > Can be failed to count total_enable_time.
->
-> Is this explaining the purpose of commit a3c3c6667 ?
-> I am not arguing with it. And I also not suggest reverting it. (it is just that reverting it can fix the kernel panic.)
+Just two nits below, other than that:
 
-In commit a3c3c6667, I explain the specific case but not with above
-case. But the commit's purpose is "account total_enable_time" properly.
+Reviewed-by: Xin Li (Intel) <xin@zytor.com>
+> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+> index 79d88d12c8fb..f0a577bf7bba 100644
+> --- a/arch/x86/include/asm/nmi.h
+> +++ b/arch/x86/include/asm/nmi.h
+> @@ -54,6 +54,7 @@ struct nmiaction {
+>   	u64			max_duration;
+>   	unsigned long		flags;
+>   	const char		*name;
+> +	u8			source_vector;
+>   };
+>   
+>   /**
+> @@ -62,6 +63,7 @@ struct nmiaction {
+>    * @fn:   The NMI handler
+>    * @fg:   Flags associated with the NMI handler
+>    * @n:    Name of the NMI handler
+> + * @src:  NMI-source based vector for the NMI handler
 
-> > And also, considering the your patch, for DETACH_EXIT case,
-> > If it changes the state before list_del_event() that wouldn't disable
-> > related to the cgroup. So it would make cpuctx->cgrp pointer could be dangled
-> > as patch describe...
-> No, I don't think so.
-> change state before list_del_event(), this is the same behavior before commit a3c3c6667, right?
-> And no such kernel panic happened  before commit a3c3c6667.
+"NMI-source based" sounds weird to me.
 
-That's why list_del_event() handle the perf_cgroup_disable() before the
-commit a3c3c6667. However because of *my mistake*, I've forget to
-perf_cgroup_disable() properly before change the event state.
-Yes, your patch can make avoid the panic since as soon as exit,
-the event->cgrp switched.
+>    * @init: Optional __init* attributes for struct nmiaction
+>    *
+>    * Adds the provided handler to the list of handlers for the specified
+> @@ -75,13 +77,14 @@ struct nmiaction {
+>    *
+>    * Return: 0 on success, or an error code on failure.
+>    */
+> -#define register_nmi_handler(t, fn, fg, n, init...)	\
+> +#define register_nmi_handler(t, fn, fg, n, src, init...)	\
+>   ({							\
+>   	static struct nmiaction init fn##_na = {	\
+>   		.list = LIST_HEAD_INIT(fn##_na.list),	\
+>   		.handler = (fn),			\
+>   		.name = (n),				\
+>   		.flags = (fg),				\
+> +		.source_vector = (src),			\
+>   	};						\
+>   	__register_nmi_handler((t), &fn##_na);		\
+>   })
+Please keep the line-ending backslashes (\) aligned.
 
-However, as I said, the INACTIVE event could be failed to count
-total_enable_time.
-
-So, set event should be occured before list_del_event().
-And since it's event->state change on remove.
-It shouldn't have any side effect the state change isn't cause of your
-panic. But missed perf_cgroup_disable().
-
-Thanks.
---
-Sincerely,
-Yeoreum Yun
+I guess you want to keep the change minimal.
