@@ -1,87 +1,77 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935C81E519;
-	Tue,  3 Jun 2025 12:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57FDB12B73;
+	Tue,  3 Jun 2025 13:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748955292; cv=none; b=WXcb9FNvHJeafa+zV0ICMnTInlNu/ZETAYFS23z8UVu7pnl72p+gDW6AT0yJhRwmksQVj9EMCcViDzo1tg9TO/NbY+O/5zSzXJyrbsVA0M5zSiosfyt5VSwO+XoEZB0SYnMsY5LZNMm+vwepsfvalEfPzn6ZaD80HEi3IWtfu3A=
+	t=1748955864; cv=none; b=td/Flo8VmkwFbjqpNQxiEzIQznVkP/cbIgIvTi/9Y9utK38UjvQks66ulSBgNigJJNDKc4C8Fy5mOLVBxQ0pAZofedFGz60XEVaVsdBgePqRk0fMmlBna2lJPszpmNKagyaDOmYNCBQyChi1aIBeJEwCLvmg+T5grM8UPelYJ6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748955292; c=relaxed/simple;
-	bh=0zZTn88nHJTp3sqZm1uVAtQ8D7IKSdaaPX/1s7Jv4LY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=okwcdlqI2k4HGLstilS2gmeUh05r0kOtwR7uB6OVeycSdpj3hevi34Y+zIE2uOeqYfvjhHEoKR6NSYKPEfUUg8ekO+1ZG4BiWIuNOQlqB9Uk2z3Fjz9JL+ypNwAxzTxH20RY/die4qVBkYm62MB1e1GmULHiiMXWi6Oyp5Ts7mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XlOKoDoy; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748955864; c=relaxed/simple;
+	bh=LTts8eyV7N64hZQZ+j7Pro9m/Qtt9yprFoJa2t2YSxs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=DMYXDBHHMN3BTW/LYWYKfHIBeEhElVNsIL0n283cHV+NRw3Aa63RQUT9F0OnOeS0WiyMTP8MNMhOcbxhsIi4VMlRgo71YEbXMKdWASVgyjFjc1CfhrTPAx6E5pdFEjhlhDejH3XL2E5Y0aMC0yig5/R1bIksp2LCkLyIwmvyi1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=KP/1y5Ep reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlOKoDoy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gscpRI9+8A+XFtOn6r3eBXEQkaguajPtulDYPqJTeZQ=; b=XlOKoDoy4rxmsVQ5M6pIDDA1lm
-	E9+ci176+hoWKgTz95R8pfYymvCrb/2F2yuueTlrfFOqB89VhKr/G3semOngiK54N3h5KPxw5pz+z
-	Yv7uLHRyxQRIt1mgBLGQdj5QV3gm2Tavit5Z5LPyTy6oOVWujTQd7OSvFSs0+rJjONCrcEllMJxJ1
-	tMlsz2S/jrsKFZIY+qJCG/UFMkNW46kV7rU9umwVb6ZbX0z5BS00B2wzuzDCCqyc7Wqkt8om+6/1f
-	Y2hlfZ+ly0PhW9Bb1OydTjXT05Qn1qDycsbxNqmm5axzy121RapW5yRHgZHaFwGcwd49++HWEQFFK
-	/+0/qVpQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uMRA9-00000000l1q-2jXA;
-	Tue, 03 Jun 2025 12:54:41 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5C728300781; Tue,  3 Jun 2025 14:54:40 +0200 (CEST)
-Date: Tue, 3 Jun 2025 14:54:40 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: David Wang <00107082@163.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mingo@kernel.org, yeoreum.yun@arm.com, leo.yan@arm.com,
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="KP/1y5Ep"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=e1P63WWpE/yNP0EnN6fBqKkEw4tP8IuvstsE1GFOMro=; b=K
+	P/1y5EpnFFZ93GZc3fRvoMm1P9M57iQLhPhIcchf4rhs6yBNw4F7kC6hXR2Ih+nW
+	5lHdcc3Bvf4afWiKUCb/z5gLXy+gZGm1U8oY2fb2oSYntHGtRIxwmoI2TSNKZzM9
+	jOAunHGzsulNznkhz/J431Nv7q25fPXE7hfbVIatQU=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-120 (Coremail) ; Tue, 3 Jun 2025 21:03:55 +0800 (CST)
+Date: Tue, 3 Jun 2025 21:03:55 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Peter Zijlstra" <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mingo@kernel.org,
+	yeoreum.yun@arm.com, leo.yan@arm.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] perf/core: restore __perf_remove_from_context when
  DETACH_EXIT not set
-Message-ID: <20250603125440.GA35970@noisy.programming.kicks-ass.net>
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250603125440.GA35970@noisy.programming.kicks-ass.net>
 References: <20250603032651.3988-1-00107082@163.com>
  <20250603083304.34132-1-00107082@163.com>
  <20250603091352.GJ21197@noisy.programming.kicks-ass.net>
  <2633d43d.ae30.1973564f5e5.Coremail.00107082@163.com>
  <20250603125056.GI39944@noisy.programming.kicks-ass.net>
+ <20250603125440.GA35970@noisy.programming.kicks-ass.net>
+X-NTES-SC: AL_Qu2fCvWeukAo4ymYY+kZnEYQheY4XMKyuPkg1YJXOp80qiTS4SchZ25qJnLK9PmtFz2moQmoVjhMwclIUoR1QJjNy9VRbwqI51t+XSovUR5d
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603125056.GI39944@noisy.programming.kicks-ass.net>
+Message-ID: <6487969b.b907.19735e42e05.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eCgvCgD3X9K88j5oPBETAA--.38060W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBVhqmg+7Kd6qAACsD
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue, Jun 03, 2025 at 02:50:56PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 03, 2025 at 06:44:58PM +0800, David Wang wrote:
-> 
-> 
-> > (As yeoreum.yun@arm.com pointed out,  the change in perf_remove_from_context() made
-> > perf_event_set_state() happened before list_del_event(), resulting in perf_cgroup_event_disable()
-> > not called.)
-> 
-> Aah, d'0h. Let me see what we should do there.
-
-Does this help? This way event_sched_out() will call
-perf_cgroup_event_disable().
-
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..adbb0372825f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2494,9 +2494,9 @@ __perf_remove_from_context(struct perf_event *event,
- 	if (flags & DETACH_REVOKE)
- 		state = PERF_EVENT_STATE_REVOKED;
- 	if (flags & DETACH_DEAD) {
--		event->pending_disable = 1;
- 		state = PERF_EVENT_STATE_DEAD;
- 	}
-+	event->pending_disable = 1;
- 	event_sched_out(event, ctx);
- 	perf_event_set_state(event, min(event->state, state));
- 
+CkF0IDIwMjUtMDYtMDMgMjA6NTQ6NDAsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRl
+YWQub3JnPiB3cm90ZToKPk9uIFR1ZSwgSnVuIDAzLCAyMDI1IGF0IDAyOjUwOjU2UE0gKzAyMDAs
+IFBldGVyIFppamxzdHJhIHdyb3RlOgo+PiBPbiBUdWUsIEp1biAwMywgMjAyNSBhdCAwNjo0NDo1
+OFBNICswODAwLCBEYXZpZCBXYW5nIHdyb3RlOgo+PiAKPj4gCj4+ID4gKEFzIHllb3JldW0ueXVu
+QGFybS5jb20gcG9pbnRlZCBvdXQsICB0aGUgY2hhbmdlIGluIHBlcmZfcmVtb3ZlX2Zyb21fY29u
+dGV4dCgpIG1hZGUKPj4gPiBwZXJmX2V2ZW50X3NldF9zdGF0ZSgpIGhhcHBlbmVkIGJlZm9yZSBs
+aXN0X2RlbF9ldmVudCgpLCByZXN1bHRpbmcgaW4gcGVyZl9jZ3JvdXBfZXZlbnRfZGlzYWJsZSgp
+Cj4+ID4gbm90IGNhbGxlZC4pCj4+IAo+PiBBYWgsIGQnMGguIExldCBtZSBzZWUgd2hhdCB3ZSBz
+aG91bGQgZG8gdGhlcmUuCj4KPkRvZXMgdGhpcyBoZWxwPyBUaGlzIHdheSBldmVudF9zY2hlZF9v
+dXQoKSB3aWxsIGNhbGwKPnBlcmZfY2dyb3VwX2V2ZW50X2Rpc2FibGUoKS4KPgo+Cj5kaWZmIC0t
+Z2l0IGEva2VybmVsL2V2ZW50cy9jb3JlLmMgYi9rZXJuZWwvZXZlbnRzL2NvcmUuYwo+aW5kZXgg
+ZjM0Yzk5ZjhjZThmLi5hZGJiMDM3MjgyNWYgMTAwNjQ0Cj4tLS0gYS9rZXJuZWwvZXZlbnRzL2Nv
+cmUuYwo+KysrIGIva2VybmVsL2V2ZW50cy9jb3JlLmMKPkBAIC0yNDk0LDkgKzI0OTQsOSBAQCBf
+X3BlcmZfcmVtb3ZlX2Zyb21fY29udGV4dChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsCj4gCWlm
+IChmbGFncyAmIERFVEFDSF9SRVZPS0UpCj4gCQlzdGF0ZSA9IFBFUkZfRVZFTlRfU1RBVEVfUkVW
+T0tFRDsKPiAJaWYgKGZsYWdzICYgREVUQUNIX0RFQUQpIHsKPi0JCWV2ZW50LT5wZW5kaW5nX2Rp
+c2FibGUgPSAxOwo+IAkJc3RhdGUgPSBQRVJGX0VWRU5UX1NUQVRFX0RFQUQ7Cj4gCX0KPisJZXZl
+bnQtPnBlbmRpbmdfZGlzYWJsZSA9IDE7Cj4gCWV2ZW50X3NjaGVkX291dChldmVudCwgY3R4KTsK
+PiAJcGVyZl9ldmVudF9zZXRfc3RhdGUoZXZlbnQsIG1pbihldmVudC0+c3RhdGUsIHN0YXRlKSk7
+Cj4gCgpPaywgSSB3aWxsIGdpdmUgaXQgYSB0cnkgYW5kIHVwZGF0ZSBsYXRlci4K
