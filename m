@@ -1,59 +1,58 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A2C288C0E
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 18:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E2A288C23;
+	Tue,  3 Jun 2025 18:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748975042; cv=none; b=ZEQhSCzNImlbuIxCQbLJ9K4nmYDTI79pLfsrw0YIIrrDejCwU8Wga7Pv8rH9GQLLsGOVpopD7jQXZ+71fDgl6b0OemGQiiflhWQOnbzKMFQJ/1yWdtMIP0dyABUU16XxK/YWQq1utXoUaiWjQoD4dgVo5n/03OVPkxT6r1bqg6c=
+	t=1748976226; cv=none; b=OU0oXicmh2tDEgT2GIeTRqgzO1woV++aGf5AmB2n1RFtHxlR+e5mdhW5vMEVnV/tuvV5it7e22rC4k+32/B3HA/JOFffYzt1LERJqFoRM7WicH6LM84Lisk9uIK1P+0e1XN+rIcAU4tpkKKd8/bcSFKtAIq82BmSZ/6B3n90nR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748975042; c=relaxed/simple;
-	bh=eiutlgQbbFswcPoUKxtmnu9MmBbg4ONzk6H4t4P4Txs=;
+	s=arc-20240116; t=1748976226; c=relaxed/simple;
+	bh=kch8Nb5zEEuVRy69il7fuRGCjksvYPemCS0QdMlvh9o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jebtoqxQRIB3fnq1sL61stiWoXHWdwNc7w0islugsXLZvrDTa1GYlpPQdim7fEklC/i9LMJTuI1VyZfWRRPmeWSrYtOrET3IBb0i0OYNNezeiWB7+VNZ4lZF8BnASWZzKikRDGO68EtEN+CXO8ihkLEbEcMVQcGYz5HE6h7LQv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVOpRlVH; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=sbs2EI6Hbrr/S+0pfRX6/mPzPzi1LJrTifHLHealaEhQDIU1kOqSKLUrq5kudqSUwIXqCy+B4fnHel47EdFplnvlCyORF+USz4D/aiUA6/4fs3snjZhGaGueKCFUr+T5BPta54ieiAJKoSFQm6+7gCi2ynPj8clI958XCe8ZQR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZ1SFDya; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVOpRlVH"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e7374f2dc1so294501137.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jun 2025 11:24:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZ1SFDya"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so130440f8f.1;
+        Tue, 03 Jun 2025 11:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748975040; x=1749579840; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748976223; x=1749581023; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eiutlgQbbFswcPoUKxtmnu9MmBbg4ONzk6H4t4P4Txs=;
-        b=dVOpRlVHAcBXHpJQhH4vcXcBNz/Ol0E20S1mx2ADnDuicz5BYNsak535bHcfiUILTZ
-         TozmzIR1z9aQYODGbJFlBuervl8Pzid/5R6W1DgQcxFgwOinOVXQgt/0/1w6ZSQQ+ful
-         r5h0rB0lAX2nVuhtosyRRiee6ocD7tOSdIgDXNeVkvmCaS/pk4ZYUpTXwRfUwMLJioxt
-         UtCa4K357gfvhwoTARf2BHM3fBrvPig2HIn9pVIM3yjrP/kO3PACF+I857lGwVylPySc
-         PxVEPlFNZLpeAbCsgQzQiWK5F5u9D0YTINMaD4lfB+x8O+iTgRAqvG4BTrfKIWsg3J3Q
-         sglg==
+        bh=kch8Nb5zEEuVRy69il7fuRGCjksvYPemCS0QdMlvh9o=;
+        b=RZ1SFDya8Wh30DIZdv/yFFD6VYMHeiXoTSqVVuNLZHvtuMEZHua+zssM/hzclu00Lm
+         G5Y756/A53gn29St7a1vH3x5ET8scAT5JV+Q+MBw4zA2tsJMcaC0nfd+3UzL5FrnBT4p
+         6y5IFp9hOhBwQyL1e8jJIbf7YbUvbRta1EkAqBLjksPcsSj35fZDXw1g+dOsOomRPb4n
+         FJP/D4Wde6li3qVUWLZtx7ZmveBcA0pa5TUWGSVVkz7apkjKjndvEIJXxPJVcel/T6Fh
+         QG87q1a2yd5QfE1xtArT6WK3OYC3jMuqth1E2hyC+Nt9BKKDFw5kWR4UG7E7qlZnAQ9R
+         3yhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748975040; x=1749579840;
+        d=1e100.net; s=20230601; t=1748976223; x=1749581023;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eiutlgQbbFswcPoUKxtmnu9MmBbg4ONzk6H4t4P4Txs=;
-        b=GejIvAGC2yjtH/GsLhtubKTZMlJwKWrmpjTTFyyok/eXyNQFfkAMIDWuhy9ZK5hhxt
-         udV5NRkgTx70CaAIkEnRSp2wLfVZkOdtQRBqzLdcUvKAqwuPgr1GDHMwdRT9Q2289kgg
-         62NHi4TZ4RcDInSEBxJAnIEOcRSZXEVRyNA/Ozo3MQm4evUtqtYV8+fCwHv4vEG95NBu
-         WDP/H3lhKk4czbSAngmVo5vpn4au9ogkLaMmNlxesn42aHq+bAYpx4h9RDYywxIqDsVV
-         et6jTYw9VOWTs6e+cKUzB0BK7piGZOlbXo29b1hAwXq314dis4TlyplRp/k2xFCJn8fE
-         JEGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQEcxZKW9bv4M3X96KWSI7GrJneof0JxJNsbvLnTyFY4gsf31Wp7lH7T5TVzW0hc8I4Al04ShaAXO0QV19Vdrd@vger.kernel.org
-X-Gm-Message-State: AOJu0YweNjQCGJzKYgf+fYOnA3VMh2X7HW2NiFI06M214pa95lw0G0Mi
-	nBB8VUjdvLGVkggjoU4uvYmk6R7MIoCPhe94pH9bLy13sdTiXbp9Whu57HAx6fKofMxpjmnvwhy
-	E/yQQT+f980MzPAGBsuNhG/4dSwnfFlgqkDNanzPF
-X-Gm-Gg: ASbGnctzIvPM0vYaJjjhCAY7kf/d/a9vlUFwNQYiM/MEYVi5bU1Wvj1WBP7L3g+4xAn
-	96gEZ0TvjoQwHdl6X/w/A1JrtBOpAj5sluegGQ3/ALVhJVnY3BtljkshwoOlY/T9lrdakmvvin7
-	TsYmbZrbsYYmtGctoRDGbfBmOELCy81/w8nGl0Df+uwucLaibrgvubU/t1BzZoKBQfz/47rpQLg
-	NdlfEzV9Qc=
-X-Google-Smtp-Source: AGHT+IGu3iGfbqqsG3F9IVzijCh7yIShG1fCIQdA9Dgix1KcAW3sFId+iZ1kuCoUZV8YX2AkrDLGqQebTSC/08SGhzM=
-X-Received: by 2002:a05:6102:ccf:b0:4c5:1c2e:79f5 with SMTP id
- ada2fe7eead31-4e701b94cecmr9613373137.16.1748975039606; Tue, 03 Jun 2025
- 11:23:59 -0700 (PDT)
+        bh=kch8Nb5zEEuVRy69il7fuRGCjksvYPemCS0QdMlvh9o=;
+        b=KNlMojUM+PsxzvGYRUOU7fci3RvU4+j8/Fv2C4xWKPtvDPKZ/vafo0O/1schqYnHUG
+         HCepfvmxv6iV83L32bsdKSyPomq7XpCz9NSWAtl+nh3oLubQ3A7vzU4rQeg9/Ll99aGy
+         2h7AkARJf/IY9q4Ve2URaCgOESwpqs1PqRni99VKLshuZpjWMCnpCiRxtcxNst2jcBKP
+         ZuLLp+QahQVgHmviqBZKD6+LP+uEUALMWHAKHNYyCJeWkZB3BAfPLIwC9aNxCEtgQjCL
+         izJzhOcRCrO4KdQT/Xac25YyKzcGA9YSG/EbPKFu0k/GcK9xIEcHLRynnEy5qnWJL4s+
+         46wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKb2oTkW6RlJWkJYkEXI6dVWI5bV4cebdFVoZi/klk2Ie36sknoHzNn8dAKIoZ/2vaxmM=@vger.kernel.org, AJvYcCV1f5FP+mpRcGma13IkM6u9q2e5WUeOinP3NR03xsaGp6unbs4qWY0QWF4JSn7CG45Pwyaybg9TMAK5Q6YiF5Lb1w==@vger.kernel.org, AJvYcCXft3HM3L8wqFT2OGJhmkNOV9kg4Tl6un3LulczlVu9M1DO3FqncD+nYX9/ZcQGIDitxd0uNWDqZlVmQYbI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7aTAOa+7d8Rm70u+aylc1f3n+EwYQsnimpXHgiZippUKDtPBt
+	KyKf04Plq9noBALw1Vw6OmugxMbrBAzWXuk9o8FpVw721JS80pDU2VflCv9ASBHrMqJdws7NhOJ
+	nvcQc0tsT4AmQT8KuZWiI5MtiOXzpYZ4=
+X-Gm-Gg: ASbGnct0rBH8IlewOX+uyMu70uODgO5MTH81VwpeumRhrEKUB09wAlKFWz5PgB6Rv9f
+	mvZeF66j4hJSY/yz2dpukHyQ5O1sRURs0JxVvQGb/EwPqHUHHwR8C6wwoLlLqRFgKR7wn/cnps6
+	AqPRS22HQB9gtK8Mck1hn1Of/6h9T6HOwlO4RmLWpXWTEEaH+qS+jDHik0v6g=
+X-Google-Smtp-Source: AGHT+IHtAF6H5lxG7AUR9eWXQtiTtAAlk2tzZWQDxyPjZxQeyvoi6n/3OdG5W8tknilp89tmpfnxn3B+hx96ybhtJIo=
+X-Received: by 2002:a5d:5847:0:b0:3a4:ed9a:7016 with SMTP id
+ ffacd0b85a97d-3a5141cfce3mr3213641f8f.26.1748976222612; Tue, 03 Jun 2025
+ 11:43:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,15 +64,17 @@ References: <20250521222725.3895192-1-blakejones@google.com>
  <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
  <CAP_z_ChErhmooT5rhyXH8L-Ltkz3xdJ7PG20UKDpn9usMUgqTA@mail.gmail.com>
  <aDntjJcJsrQWfPkB@google.com> <CAP_z_CjLtMq_FvmijnFUQbD5UUw=T9jP_pHWCw5fS=38dgSh9g@mail.gmail.com>
-In-Reply-To: <CAP_z_CjLtMq_FvmijnFUQbD5UUw=T9jP_pHWCw5fS=38dgSh9g@mail.gmail.com>
-From: Blake Jones <blakejones@google.com>
-Date: Tue, 3 Jun 2025 11:23:48 -0700
-X-Gm-Features: AX0GCFszGyqeZR0Dklu6vwdsbGkQkC3kk6Dhkl4_uVAGYzvPlnmcKX43Rvyctf4
-Message-ID: <CAP_z_Ch8hKvGvot7140ShuCZOxkb+7M7Wpa4AY-D-Arp9P5ffg@mail.gmail.com>
+ <CAP_z_Ch8hKvGvot7140ShuCZOxkb+7M7Wpa4AY-D-Arp9P5ffg@mail.gmail.com>
+In-Reply-To: <CAP_z_Ch8hKvGvot7140ShuCZOxkb+7M7Wpa4AY-D-Arp9P5ffg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 3 Jun 2025 11:43:29 -0700
+X-Gm-Features: AX0GCFsPfQN6jWaDMpO2qBFUYadYsNqbhI_iC3UvHyKkQ97waCljVp6CsG0xuY4
+Message-ID: <CAADnVQ+pnP-L7WOxBHGfiT2yF5WBWa_6=UccnYib8ugm+o6G3Q@mail.gmail.com>
 Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
  as strings
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+To: Blake Jones <blakejones@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
 	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
 	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
@@ -87,33 +88,19 @@ Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
 	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
 	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
 	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The libbpf patch set is under discussion right now. Once it converges,
-is there a way to include those patches in the perf tree without
-waiting for them to go up to the main tree and then back down? Could I
-resend them here, or include them as the first part of my next patch
-series?
+On Tue, Jun 3, 2025 at 11:24=E2=80=AFAM Blake Jones <blakejones@google.com>=
+ wrote:
+>
+> The libbpf patch set is under discussion right now. Once it converges,
+> is there a way to include those patches in the perf tree without
+> waiting for them to go up to the main tree and then back down? Could I
+> resend them here, or include them as the first part of my next patch
+> series?
 
-Thanks in advance for the guidance.
-
-Blake
-
-On Sat, May 31, 2025 at 12:26=E2=80=AFAM Blake Jones <blakejones@google.com=
-> wrote:
->
-> Hi Namhyung,
->
-> On Fri, May 30, 2025 at 10:40=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > I think it's better to go to the bpf tree although it'd take longer to
-> > get your perf patches.
->
-> Thanks for the suggestion. I've sent this patch to the bpf tree, and I'll
-> resend the rest of this series once that change makes its way to this tre=
-e.
->
-> Blake
+Not really. libbpf is developed in kernel tree, sync to github
+and released from github.
