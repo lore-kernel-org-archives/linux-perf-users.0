@@ -1,197 +1,114 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9619A24BBE4
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Jun 2025 22:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807081A2643;
+	Tue,  3 Jun 2025 22:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748988152; cv=none; b=f/zmU74U+Ie6shHOaECxE5GP8TD3t+00pQZ7X+1KFeGtTf6yBr8p5xN7rSYqmQA5DNxFYOr1cKhct9hLG90tKEFgh/ItpRJ6iadW6kiv/UowuwAzC4iznQLJ637oMCND/TEj0T5kjBtKsLsEBqAT25ncsRAMrHZz37G4LF9fvCM=
+	t=1748988600; cv=none; b=SaYdIpLSQbLrRefqeMESOR0NVl6+f+plYdg+zt7K6+ieQZAWK09U/vMxDv8oirRnnRZIKjpUhtLX3+ZzQyjHN9Q3noLt2iDHgueE0ZPdEKW9zjDI1UEm2C2r7ZVz8cnv9L6k0vSCLzSiAk/Ed7uu59PFDCdLpfyVqZyTrOVSUeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748988152; c=relaxed/simple;
-	bh=5t6pSx2u95X5YcFVdkNUKGb9rqXxwfBLn0vDa4U2GyM=;
+	s=arc-20240116; t=1748988600; c=relaxed/simple;
+	bh=yDwtTU7q5ftKQNzN/brcoLgZJNUcYEqPo41Z09sqrYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vCMgllK4TwQaXmiqHGDXud1cqckDeOKPp+phNyHIu8eq39qZR/SkAUDu8SXDOc3UijHrLoewL/E6OPDBztbF8yEHin8ni1h9twc74erTz7zx/P23GMBglRM4PNHC39GoLRVXI0KToREM2mZlRTC1OjYxgmruZIUwszdUQ568AdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dk4b4e0r; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vq9qJypbB4RKsqWLi+p6nc+aZeEXtCbz3as2fXDClEGr8pIePcw2mLPSnQkIGd8Ybmdu3AbVoSVcVeaPN3iGXrvTnEZoCVxjzvet1zwN0N3e26kHKovfEhJFnmCgS9ZcQBBx7YxE36CchfM/Oppjh1UiyiEVhGRkvl5EvhZC9Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Apt0Rs/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dk4b4e0r"
-Date: Tue, 3 Jun 2025 15:02:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748988138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MYBLN18ggSpU1/ZnBt64YliW65vABIyi5xIBnaUOp24=;
-	b=dk4b4e0rO/wW9aCyG+NXQO6YRkCVUwQVLI4dYbglDpsOngGTqtDeLAsdEzAtU+ic9J/Mvb
-	/2ypH0EAxpXsVG6x9gO1djeyijHbtjQcP+aDQutvZ22djAlBhSfTubZLHVBjvyEHNpOhKt
-	lxfK2PTtvCJu2SG/k6dddNR+CoTrIfY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 06/17] KVM: arm64: Introduce method to partition the PMU
-Message-ID: <aD9w3Kj4-YoizKv5@linux.dev>
-References: <aD4llDZwb_sC_Ptj@linux.dev>
- <gsnt4iww3406.fsf@coltonlewis-kvm.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Apt0Rs/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BFDC4CEED;
+	Tue,  3 Jun 2025 22:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748988599;
+	bh=yDwtTU7q5ftKQNzN/brcoLgZJNUcYEqPo41Z09sqrYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Apt0Rs/FW6gf736dQ7/ejmjD8IszQ0GRdGw8RM8CkIvCUW5W90Q4FH11vJtYRblqv
+	 9rBtkWZtP1QBc0roa36IRl6YBNwscgbBxKPNYTLm4Q8S83ewbFYqEBU9gdQ4vErvcl
+	 AnSGRhGgcfbyionV6zX/0pca7M/EYPtc3JLL1wq3fLe35Vc2J/sK5kZHKxh4QpG6ov
+	 ELZ7m7pqIdkCakQNZ54g8b8Ajwo5NXI1mkl1QFCQNCOcb7m+RzgD2gkdblyBDywx7O
+	 ZLvgFm374M7uOMrUw9mIaP4CigRkLt9XBk4XZvoxaM8MfpnodsmvfUNDdmrmtcxIog
+	 sUBaoSIdiNSFg==
+Date: Tue, 3 Jun 2025 15:09:57 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Blake Jones <blakejones@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	James Clark <james.clark@linaro.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+Message-ID: <aD9yte49C_BM5oA9@google.com>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com>
+ <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
+ <aD9sxuFwwxwHGzNi@google.com>
+ <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <gsnt4iww3406.fsf@coltonlewis-kvm.c.googlers.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
 
-On Tue, Jun 03, 2025 at 09:32:41PM +0000, Colton Lewis wrote:
-> Oliver Upton <oliver.upton@linux.dev> writes:
+On Tue, Jun 03, 2025 at 02:54:50PM -0700, Blake Jones wrote:
+> Hi Namhyung,
 > 
-> > On Mon, Jun 02, 2025 at 07:26:51PM +0000, Colton Lewis wrote:
-> > >   static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu *vcpu)
-> > >   {
-> > > +	u8 hpmn = vcpu->kvm->arch.arm_pmu->hpmn;
-> > > +
-> > >   	preempt_disable();
+> On Tue, Jun 3, 2025 at 2:44 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > IIUC the metadata is collected for each BPF program which may have
+> > > > multiple subprograms.  Then this patch creates multiple PERF_RECORD_
+> > > > BPF_METADATA for each subprogram, right?
+> > > >
+> > > > Can it be shared using the BPF program ID?
+> > >
+> > > In theory, yes, it could be shared. But I want to be able to correlate them
+> > > with the corresponding PERF_RECORD_KSYMBOL events, and KSYMBOL events for
+> > > subprograms don't have the full-program ID, so I wouldn't be able to do that.
+> >
+> > It's unfortunate that KSYMBOL doesn't have the program ID, but IIRC the
+> > following BPF_EVENT should have it.  I think it's safe to think KSYMBOLs
+> > belong to the BPF_EVENT when they are from the same thread.
 > 
-> > >   	/*
-> > >   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
-> > >   	 * to disable guest access to the profiling and trace buffers
-> > >   	 */
-> > > -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
-> > > -					 *host_data_ptr(nr_event_counters));
-> > > -	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
-> > > +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, hpmn);
-> > > +	vcpu->arch.mdcr_el2 |= (MDCR_EL2_HPMD |
-> > > +				MDCR_EL2_TPM |
-> 
-> > This isn't safe, as there's no guarantee that kvm_arch::arm_pmu is
-> > pointing that the PMU for this CPU. KVM needs to derive HPMN from some
-> > per-CPU state, not anything tied to the VM/vCPU.
-> 
-> I'm confused. Isn't this function preparing to run the vCPU on this
-> CPU? Why would it be pointing at a different PMU?
+> Hmmm. Is that documented and tested anywhere? Offhand it sounds like an
+> implementation detail that I wouldn't feel great about depending on -
+> certainly not without a strong guarantee that it wouldn't change.
 
-Because arm64 is a silly ecosystem and system designers can glue
-together heterogenous CPU implementations. The arm_pmu that KVM is
-pointing at might only match a subset of CPUs, but vCPUs migrate at the
-whim of the scheduler (and userspace).
+Good point.  Maybe BPF folks have some idea?
 
-> And HPMN is something that we only want set when running a vCPU, so
-> there isn't any per-CPU state saying it should be anything but the
-> default value (number of counters) outside that context.
+Anyway the current code generates them together in a function.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c?h=v6.15#n9825
+
 > 
-> Unless you just mean I should check the number of counters again and
-> make sure HPMN is not an invalid value.
+> Can you say more about why the duplicated records concern you?
 
-As you've implemented it the host cannot schedule events in the guest
-range of counters regardless of context. You need to reconcile that
-global limit with the desires of the VMM on how many counters it wants
-presented to this particular guest.
-
-> > > +/**
-> > > + * kvm_pmu_partition() - Partition the PMU
-> > > + * @pmu: Pointer to pmu being partitioned
-> > > + * @host_counters: Number of host counters to reserve
-> > > + *
-> > > + * Partition the given PMU by taking a number of host counters to
-> > > + * reserve and, if it is a valid reservation, recording the
-> > > + * corresponding HPMN value in the hpmn field of the PMU and clearing
-> > > + * the guest-reserved counters from the counter mask.
-> > > + *
-> > > + * Passing 0 for @host_counters has the effect of disabling
-> > > partitioning.
-> > > + *
-> > > + * Return: 0 on success, -ERROR otherwise
-> > > + */
-> > > +int kvm_pmu_partition(struct arm_pmu *pmu, u8 host_counters)
-> > > +{
-> > > +	u8 nr_counters;
-> > > +	u8 hpmn;
-> > > +
-> > > +	if (!kvm_pmu_reservation_is_valid(host_counters))
-> > > +		return -EINVAL;
-> > > +
-> > > +	nr_counters = *host_data_ptr(nr_event_counters);
-> > > +	hpmn = kvm_pmu_hpmn(host_counters);
-> > > +
-> > > +	if (hpmn < nr_counters) {
-> > > +		pmu->hpmn = hpmn;
-> > > +		/* Inform host driver of available counters */
-> > > +		bitmap_clear(pmu->cntr_mask, 0, hpmn);
-> > > +		bitmap_set(pmu->cntr_mask, hpmn, nr_counters);
-> > > +		clear_bit(ARMV8_PMU_CYCLE_IDX, pmu->cntr_mask);
-> > > +		if (pmuv3_has_icntr())
-> > > +			clear_bit(ARMV8_PMU_INSTR_IDX, pmu->cntr_mask);
-> > > +
-> > > +		kvm_debug("Partitioned PMU with HPMN %u", hpmn);
-> > > +	} else {
-> > > +		pmu->hpmn = nr_counters;
-> > > +		bitmap_set(pmu->cntr_mask, 0, nr_counters);
-> > > +		set_bit(ARMV8_PMU_CYCLE_IDX, pmu->cntr_mask);
-> > > +		if (pmuv3_has_icntr())
-> > > +			set_bit(ARMV8_PMU_INSTR_IDX, pmu->cntr_mask);
-> > > +
-> > > +		kvm_debug("Unpartitioned PMU");
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> 
-> > Hmm... Just in terms of code organization I'm not sure I like having KVM
-> > twiddling with *host* support for PMUv3. Feels like the ARM PMU driver
-> > should own partitioning and KVM just takes what it can get.
-> 
-> Okay. I can move the code.
-> 
-> > > @@ -239,6 +245,13 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
-> > >   	if (!pmuv3_implemented(kvm_arm_pmu_get_pmuver_limit()))
-> > >   		return;
-> 
-> > > +	if (reserved_host_counters) {
-> > > +		if (kvm_pmu_partition_supported())
-> > > +			WARN_ON(kvm_pmu_partition(pmu, reserved_host_counters));
-> > > +		else
-> > > +			kvm_err("PMU Partition is not supported");
-> > > +	}
-> > > +
-> 
-> > Hasn't the ARM PMU been registered with perf at this point? Surely the
-> > driver wouldn't be very pleased with us ripping counters out from under
-> > its feet.
-> 
-> AFAICT nothing in perf registration cares about the number of counters
-> the PMU has. The PMUv3 driver tracks its own available counters through
-> cntr_mask and I modify that during partition.
-> 
-> Since this is still initialization of the PMU, I don't believe anything
-> has had a chance to use a counter yet that will be ripped away.
-
-Given that kvm_pmu_partition() is called from an ioctl, it is entirely
-possible that events have been scheduled prior to applying the
-partition.
-
-> Aesthetically It makes since to change this if I move the partitioning
-> code to the PMUv3 driver, but I think it's inconsequential to the
-> function.
-
-There are two *very* distinct functions w.r.t. partitioning:
-
- 1) Partitioning of a particular arm_pmu that says how many counters the
- host can use
-
- 2) VMM intentions to present a subset of the KVM-owned counter
- partition to its guest
-
-#1 is modifying *global* state, we really can't mess with that in the
-context of a single VM...
+More data means more chance to lost something.  I don't expect this is
+gonna be a practical concern but in general we should pursue less data.
 
 Thanks,
-Oliver
+Namhyung
+
