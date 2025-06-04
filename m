@@ -1,79 +1,194 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4CA148832;
-	Wed,  4 Jun 2025 15:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9036B18B47E;
+	Wed,  4 Jun 2025 15:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051018; cv=none; b=b9eWPggKb9+8TkORa1qA2jL94T5LBe7DIi7JUIEYsJGaKWjF/JxfD8BCSZ3eo2c+AIlzCuPX9St/ME+Ny5tEu4yufoDapa+F5sHjC0tUOt97ppWDOpjDm8QjXeGxB65ZFfzqrTED6QQOjgAJKbiXXpTno0iQdKVf6Qu9zZgEePk=
+	t=1749051075; cv=none; b=iLI3RX8bbplynwN+frUr33S8gqJuSqjBmTz3tC6YgQia1L9NEwx92A6k53aOC6tjkJKFdnOqFuNBDnyiXaU0/GpGdYzzHE+KLSLQAqU+KzLb2tPkx55Foq7ezOdPzOxlfttWZ94iBqs/qPsBwJvwmCUI7T8m1loYWEWuHcylzow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051018; c=relaxed/simple;
-	bh=IntO0/FbgwhgBAN77s9LpsP+6ciHFlDY2+k3/nq5G/0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Y2pTv81BJuPKeFdbEm7hrBizyHlqGLt8SevGA1k6MLJGXiWEnZ9HmqnEvw4M7JSFw5anBs08eMd1m21r51Wq1bU1dAO8SeCaJ8KbzyvuA8/xLWLrDXiusj+u68j+1U42ZJFn+Ig4PfQUMoTYtYcOTLn/mFiVDOiHISiXrxV9X7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=CWJt10XU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1749051075; c=relaxed/simple;
+	bh=xjwQ85hYcU1ZrPH6YnswDzMKpczKMUcTOpAQm5SeA+8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XpmkHcqmtthetSrGinZLCXtNTJilwv4M9Ux2Xxez1XP5Ii80DRlXz40BvuifTmR9yYQxtysQm9wIu6S/1TmQ5v7AHeJ9BYj7AllIeA0uleuMSmML+ej/sR+Nod9YwOiUXpRxT/4gBdH/Bpo3tNTULs01Kt73vG3s89K3gl3dYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFZ1SKoC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CWJt10XU"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 554FTfWR079172
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 4 Jun 2025 08:29:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 554FTfWR079172
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749050983;
-	bh=06DGrvhu1rhRSkUp5M4yyd9dVBhB/k8I9ffulUUuiZ4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=CWJt10XUfOPx1/nx9ZCg8yilsk+XhK7WFpAKz7w3Pr/GVmjyx931ADKMUVWGo0Cf9
-	 BK9swHAH6bLOv/AKCFf89kclJ1EVrzrOE5ozFO583Wit4qvaHJslPf69jO+Xb10G/y
-	 HDSkkCzpr8N1DBmV8tHNlTC8h/mVHLiic7FH6lWq0osexW4hVU8viTdhORNcLc+p/i
-	 dwHVhQJyhp+6OyOsKaysK8dMKK1zQmc1U0WCq3uvvRuPwkrwsLOyzkXBvK/6OA+No7
-	 f3TRDnipWQlRTtZnqnOhpWwXoiRZ3Q3qSirfp4/fq7x4AzXRpbjWyBI3ueoLvzfcrm
-	 Vu0ZiW4gOySHw==
-Date: Wed, 04 Jun 2025 08:29:42 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, Sohil Mehta <sohil.mehta@intel.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-CC: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_9/9=5D_x86/nmi=3A_Print_source_inf?=
- =?US-ASCII?Q?ormation_with_the_unknown_NMI_console_message?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <31507dc8-b1dc-4df3-bc0c-6958b4218746@zytor.com>
-References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-10-sohil.mehta@intel.com> <31507dc8-b1dc-4df3-bc0c-6958b4218746@zytor.com>
-Message-ID: <CC71F714-803B-44F3-A46D-308B75FB3FD0@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFZ1SKoC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB9DC4CEE4;
+	Wed,  4 Jun 2025 15:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749051074;
+	bh=xjwQ85hYcU1ZrPH6YnswDzMKpczKMUcTOpAQm5SeA+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RFZ1SKoCh5NLJ8Hir4XT3wS2hpvE9PKPaoXUwqK6A8Y6cyWPWxoiDHP0B3g97Ezw2
+	 oHmbFqVnwwa+1BujyqnxsP0HYVzTaaMYo6TvJmShbXRzO+7+74vAELoOyv7PXZfuuE
+	 vt8jqfGmV1yKX96vfbSYofPX1rrlrfdapV5NS/Q9kHfzwJkebOYVcgEkUqSvslFs+P
+	 qRMsf01mcU1aGfLgFUgwkHhPDv1PbR2dnAGoC4JMZ/2/DoRmTpjTQvOwvN9RywAc3o
+	 6IFzqzEnCBgdXkssXygB6MpnW+faE9oMjEnP1y9MXt03hRF5mZd6hxekaJkATa9hr4
+	 fyxQftlHoBWTQ==
+Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uMq59-003Fww-Fx;
+	Wed, 04 Jun 2025 16:31:11 +0100
+Date: Wed, 04 Jun 2025 16:31:08 +0100
+Message-ID: <87a56ned6r.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu
+ <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 06/11] KVM: arm64: Add trap configs for PMSDSFR_EL1
+In-Reply-To: <2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
+References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
+	<20250529-james-perf-feat_spe_eft-v2-6-a01a9baad06a@linaro.org>
+	<867c1ze4pg.wl-maz@kernel.org>
+	<2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 149.88.19.236
+X-SA-Exim-Rcpt-To: james.clark@linaro.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On June 3, 2025 9:55:32 AM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 5/13/2025 1:38 PM, Sohil Mehta wrote:
->> +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
->> +		pr_emerg_ratelimited("NMI-source bitmap is 0x%lx\n", fred_event_data=
-(regs));
+On Tue, 03 Jun 2025 10:50:23 +0100,
+James Clark <james.clark@linaro.org> wrote:
+> 
+> 
+> 
+> On 29/05/2025 5:56 pm, Marc Zyngier wrote:
+> > On Thu, 29 May 2025 12:30:27 +0100,
+> > James Clark <james.clark@linaro.org> wrote:
+> >> 
+> >> SPE data source filtering (SPE_FEAT_FDS) adds a new register
+> >> PMSDSFR_EL1, add the trap configs for it.
+> >> 
+> >> Signed-off-by: James Clark <james.clark@linaro.org>
+> >> ---
+> >>   arch/arm64/kvm/emulate-nested.c | 1 +
+> >>   arch/arm64/kvm/sys_regs.c       | 1 +
+> >>   2 files changed, 2 insertions(+)
+> >> 
+> >> diff --git a/arch/arm64/kvm/emulate-nested.c b/arch/arm64/kvm/emulate-nested.c
+> >> index 0fcfcc0478f9..05d3e6b93ae9 100644
+> >> --- a/arch/arm64/kvm/emulate-nested.c
+> >> +++ b/arch/arm64/kvm/emulate-nested.c
+> >> @@ -1169,6 +1169,7 @@ static const struct encoding_to_trap_config encoding_to_cgt[] __initconst = {
+> >>   	SR_TRAP(SYS_PMSIRR_EL1,		CGT_MDCR_TPMS),
+> >>   	SR_TRAP(SYS_PMSLATFR_EL1,	CGT_MDCR_TPMS),
+> >>   	SR_TRAP(SYS_PMSNEVFR_EL1,	CGT_MDCR_TPMS),
+> >> +	SR_TRAP(SYS_PMSDSFR_EL1,	CGT_MDCR_TPMS),
+> >>   	SR_TRAP(SYS_TRFCR_EL1,		CGT_MDCR_TTRF),
+> >>   	SR_TRAP(SYS_TRBBASER_EL1,	CGT_MDCR_E2TB),
+> >>   	SR_TRAP(SYS_TRBLIMITR_EL1,	CGT_MDCR_E2TB),
+> >> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> >> index 5dde9285afc8..9f544ac7b5a6 100644
+> >> --- a/arch/arm64/kvm/sys_regs.c
+> >> +++ b/arch/arm64/kvm/sys_regs.c
+> >> @@ -2956,6 +2956,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+> >>   	{ SYS_DESC(SYS_PMBLIMITR_EL1), undef_access },
+> >>   	{ SYS_DESC(SYS_PMBPTR_EL1), undef_access },
+> >>   	{ SYS_DESC(SYS_PMBSR_EL1), undef_access },
+> >> +	{ SYS_DESC(SYS_PMSDSFR_EL1), undef_access },
+> > 
+> > PMSDSFR_EL1 has an offset in the VNCR page (0x858), and must be
+> > described as such. This is equally true for a bunch of other
+> > SPE-related registers, so you might as well fix those while you're at
+> > it.
+> > 
+> > Thanks,
+> > 
+> > 	M.
+> > 
+> 
+> I got a bit stuck with what that would look like with registers that
+> are only undef in case there was something that I missed, but do I
+> just document the offsets?
+> 
+> +++ b/arch/arm64/include/asm/vncr_mapping.h
+> @@ -87,6 +87,8 @@
+>  #define VNCR_PMSICR_EL1         0x838
+>  #define VNCR_PMSIRR_EL1         0x840
+>  #define VNCR_PMSLATFR_EL1       0x848
+> +#define VNCR_PMSNEVFR_EL1       0x850
+> +#define VNCR_PMSDSFR_EL1        0x858
 >
->"0x%04lx"?
 
-Seems unnecessary to me to zero-pad it; it just makes small numbers harder=
- to read=2E We don't even use vector 12+ at this time, do we?
+This should be enough.
+
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -596,6 +596,16 @@ enum vcpu_sysreg {
+>         VNCR(ICH_HCR_EL2),
+>         VNCR(ICH_VMCR_EL2),
+> 
+> +       /* SPE Registers */
+> +       VNCR(PMBLIMITR_EL1),
+> +       VNCR(PMBPTR_EL1),
+> +       VNCR(PMBSR_EL1),
+> +       VNCR(PMSCR_EL1),
+> +       VNCR(PMSEVFR_EL1),
+> +       VNCR(PMSICR_EL1),
+> +       VNCR(PMSIRR_EL1),
+> +       VNCR(PMSLATFR_EL1),
+
+I don't see a point in having those until we actually have SPE support
+for guests, if ever, as these will potentially increase the size of
+the vcpu sysreg array for no good reason.
+
+> And then sys_reg_descs[] remain as "{ SYS_DESC(SYS_PMBLIMITR_EL1),
+> undef_access }," rather than EL2_REG_VNCR() because we don't actually
+> want to change to bad_vncr_trap()?
+
+This seem OK for now. We may want to refine this in the future though,
+as these registers cannot trap when NV is enabled. Yes, this is a bug
+in the architecture.
+
+> There are some other parts about fine grained traps and res0 bits for
+> NV, but they all already look to be setup correctly. Except
+> HDFGRTR2_EL2.nPMSDSFR_EL1, but it's inverted, none of the FGT2 traps
+> are configured currently and PMSDSFR_EL1 is already trapped by
+> MDCR_EL2 anyway.
+
+Can you elaborate on that? We have:
+
+	SR_FGT(SYS_PMSDSFR_EL1,		HDFGRTR2, nPMSDSFR_EL1, 0),
+
+which seems to match the spec.
+
+We also have full support for FEAT_FGT2 already (even if we have no
+support for the stuff they trap).
+
+Thanks,
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
