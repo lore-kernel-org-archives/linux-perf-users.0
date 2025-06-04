@@ -1,165 +1,196 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB76290BB0;
-	Wed,  4 Jun 2025 14:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0332D70810;
+	Wed,  4 Jun 2025 14:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045955; cv=none; b=SM+lBIIPvuLMTvFZ/kwxeIfJI2Zn1HWJ+lbUi2EL8I7mcJbGnrEX5zdCfevYVbhpnsad6Y/l+8aImx2Vio+m7RBwYHATSWy/GtYZcPTA4+PEr3wrIQZmvmuLM3OPUcdFdhCJlOBRdBi75J0TM7t7vq/BfPRlIx4FLObpZV3MtgQ=
+	t=1749046613; cv=none; b=mcs3vFSqanAxXuQt0CI8POG0agfhg9txlU2I/OZnsBM3va14Jh44w+TVaxfPNOvILEaegC1RLBtdvpTntq1O6652U7SdK5ceMbfv2A5fOgSrHOIHMDb+mV1sJXMuL+wsrchPXI6t8PlxSOrtc5aY1UzX1PDke+ZKwU6F2XHgaIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045955; c=relaxed/simple;
-	bh=Ak2W+o8IxIKSA2WZaZODaZ0/CBGDnqt8Ha3K2Qh6peE=;
+	s=arc-20240116; t=1749046613; c=relaxed/simple;
+	bh=/YWykEisRQ2WmTIDjG72mSa5eF+TJ63K3gwljHiPuBE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6yTRjsuYSPtdNZ048f8gzE+yHoIplqUN86WdXHVZ4JPk5+/wUX9cX8YR2k3UsXQ4aIAdbIOogzG1Wu1zLMnl39BoVeVpVnCeJ/t/z3XqGQj0Aelih74RRMBrwJXLbVBHUzdcaR5nlBpxckWWFweZXxRX8r1z5toKnhud6ykyRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7F781758;
-	Wed,  4 Jun 2025 07:05:34 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 562883F5A1;
-	Wed,  4 Jun 2025 07:05:49 -0700 (PDT)
-Date: Wed, 4 Jun 2025 15:05:43 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Baisheng Gao <baisheng.gao@unisoc.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bf73hQtT+BCvcwky9gYL1w+Msnc/ELY/CWLYm/dBVbWu5idwEl3gWKRxNRkjYZh/6vDMit7w1SpNqnuOkiPPlZCHCB7EG5DtWW7rSz0mxGCZt12h654rYlobJ4cnr27fNT5EuqO6gM/boWYD/LNwVjGmfd96/ZmEY4KxD4bZYnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YiqDS7o5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YiqDS7o5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QNl5vGajRvJwYB9vPMZwKE2YZ8Aq0k/Jqe04/75BEQQ=; b=YiqDS7o5oRM1rJDLzzov6oLFeh
+	XiW5LbKWoWlihyb1MEdtj2n6iZyd9dkUbopJnh0GUbx3Y5AMT57huRJctGlaf5KA7Xt+7tgLposOn
+	UsXCRNTbhgHXiRBJabcBVBDzSvvqbcSHV6HGQSTw1sLnl/kshU+h5mhvket7tvG02PQllQXvLFR59
+	QiKC7oYTu0t9ynzaCLDn2ZGBIfEDUZ7Vj2ZtyeARJQADCMR6DagT9CjkTzI3bwmDlsUGyZXL/C3M5
+	KWqD5mMBlTe4qJWkc+KIt1yJ/8ck2zVYh5ZsyTONE4Zj+VveA8+EHGGkIlNMWPJOLZvXLQr8Cvsb1
+	AtZ7SQcA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMov3-00000000uH8-2nkQ;
+	Wed, 04 Jun 2025 14:16:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8337F300787; Wed,  4 Jun 2025 16:16:40 +0200 (CEST)
+Date: Wed, 4 Jun 2025 16:16:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604141640.GL38114@noisy.programming.kicks-ass.net>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <20250604101821.GC8020@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+In-Reply-To: <20250604101821.GC8020@e132581.arm.com>
 
-On Thu, Apr 24, 2025 at 10:54:29AM +0800, Baisheng Gao wrote:
-> In order to fix the race condition between exit_mmap and
-> perf_output_sample below, forbidding to copy the user stack
-> of an exiting process.
+On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
+> On Wed, Jun 04, 2025 at 10:03:39AM +0200, Peter Zijlstra wrote:
+
+> > And now we have the sitation that __perf_remove_from_context() can do:
+> > 
+> >   {ACTIVE,INACTIVE,OFF,ERROR} -> {OFF,EXIT,REVOKED,DEAD}
 > 
->  Internal error: synchronous external abort: ffffffff96000010 [#1]
->   PREEMPT SMP
-
-That ESR value (0x96000010, which got sign-extended somewhere), is a
-synchronous external abort, not on translation table walk.
-
-That means that some memory access was translated to some PA where the
-endpoint responded with an error (and it strongly implies you're poking
-MMIO or a PA terminated early by the interconnect).
-
->  CPU: 3 PID: 2651 Comm: binder:2649_1 Tainted: G        W  OE
->   5.15.149-android13-8-00008-gbe074b05e5af-ab12096863 #1
->  Hardware name: Spreadtrum UMS9230 1H10 SoC (DT)
->  pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->  pc : __arch_copy_from_user+0x180/0x218
->  lr : arch_perf_out_copy_user+0xb0/0x17c
->  sp : ffffffc00801baf0
->  x29: ffffffc00801baf0 x28: ffffffc00801bbf8 x27: ffffffc00801bbe8
->  x26: 0000000000000000 x25: 0000000000001000 x24: 000000000000feb8
->  x23: 00000000000005f0 x22: ffffff80613c8000 x21: ffffff8143102a10
->  x20: 0000007c239643c0 x19: 00000000000005f0 x18: ffffffc00801d058
->  x17: ffffffc16e677000 x16: ffffffc008018000 x15: 0000007c239643c0
->  x14: 0000000000000002 x13: 0000000000000003 x12: ffffffc008000000
->  x11: ffffff8000090000 x10: ffffffc008090000 x9 : 0000007fffffffff
->  x8 : 0000007c239643c0 x7 : 000000000000feb8 x6 : ffffff8143102a10
->  x5 : ffffff8143103000 x4 : 0000000000000000 x3 : ffffff8093cad140
->  x2 : 0000000000000570 x1 : 0000007c239643c0 x0 : ffffff8143102a10
->  Call trace:
->   __arch_copy_from_user+0x180/0x218
->   perf_output_sample+0x14e4/0x1904
->   perf_event_output_forward+0x90/0x130
->   __perf_event_overflow+0xc8/0x17c
->   perf_swevent_hrtimer+0x124/0x290
->   __run_hrtimer+0x134/0x4a0
->   hrtimer_interrupt+0x2e4/0x560
->   arch_timer_handler_phys+0x5c/0xa0
->   handle_percpu_devid_irq+0xc0/0x374
->   handle_domain_irq+0xd8/0x160
->   gic_handle_irq.34215+0x58/0x26c
->   call_on_irq_stack+0x3c/0x70
->   do_interrupt_handler+0x44/0xa0
->   el1_interrupt+0x34/0x64
->   el1h_64_irq_handler+0x1c/0x2c
->   el1h_64_irq+0x7c/0x80
->   release_pages+0xac/0x9b4
->   tlb_finish_mmu+0xb0/0x238
->   exit_mmap+0x1b8/0x538
->   __mmput+0x40/0x274
->   mmput+0x40/0x134
->   exit_mm+0x3bc/0x72c
-
-The mmput() here happens after current->mm was set to NULL and the task
-entered lazy TLB mode.
-
-AFAICT, either:
-
-* Something has gone wrong such that the CPU is still using the
-  translation tables of the exiting task, and those are in some
-  inconsistent state.
-
-* Due to lazymm, the active_mm belongs to some other tas, and perf is
-  sampling from that other task's VA space (which does not correlate at
-  all with the pt_regs). That other task happens to have some MMIO
-  mapped.
-
-... either of which is a pretty horrid bug.
-
-Loooking at 5.15.149 and current HEAD (5abc7438f1e9), do_exit() calls
-exit_mm() before perf_event_exit_task(), so it looks
-like perf could sample from another task's mm.
-
-Yuck.
-
-Peter, does the above sound plausible to you?
-
-Mark.
-
->   do_exit+0x294/0x1160
->   do_group_exit+0xc8/0x174
->   get_signal+0x830/0x95c
->   do_signal+0x9c/0x2a8
->   do_notify_resume+0x98/0x1ac
->   el0_svc+0x5c/0x84
->   el0t_64_sync_handler+0x88/0xec
->   el0t_64_sync+0x1b8/0x1bc
+> A detailed transition is:
 > 
-> Signed-off-by: Baisheng Gao <baisheng.gao@unisoc.com>
-> ---
->  kernel/events/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>   Case 1: {ACTIVE} -> {INACTIVE} -> {OFF,EXIT,REVOKED,DEAD}
+
+It can also start with INACTIVE, but yeah..
+ 
+>   Case 2: {ERROR} -> {ERROR,EXIT,REVOKED,DEAD}
+>   Case 3: {OFF} -> {OFF,EXIT,REVOKED,DEAD}
+
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index e93c19565914..9c9b571b812d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7867,7 +7867,8 @@ void perf_output_sample(struct perf_output_handle *handle,
->                 }
->         }
+> > Where the {OFF,ERROR} -> * transition already have
+> > perf_cgroup_event_disable(), but the {ACTIVE,INACTIVE} -> * part has
+> > not.
 > 
-> -       if (sample_type & PERF_SAMPLE_STACK_USER) {
-> +       if (sample_type & PERF_SAMPLE_STACK_USER &&
-> +                       !(current->flags & PF_EXITING)) {
->                 perf_output_sample_ustack(handle,
->                                           data->stack_user_size,
->                                           data->regs_user.regs);
-> --
-> 2.34.1
+> Just a minor concern.
 > 
-> ________________________________
->  This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-> 本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+> I noticed perf_put_aux_event() sets the ERROR state for sibling events
+> of an AUX event. 
+
+There is also perf_remove_sibling_event(), which can cause ERROR.
+
+> IIUC, the AUX event is the group leader, so we only
+> need to clean up the cgroup pointer for the AUX event, and simply set
+> the ERROR state for its sibling events, correct?
+
+Not sure; I forever forget how the AUX events are supposed to work :-/
+
+It might be prudent to do something like so:
+
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f..e6583747838a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event *event, struct perf_event *aux_event)
+ }
+ 
+ static void put_event(struct perf_event *event);
+-static void event_sched_out(struct perf_event *event,
+-			    struct perf_event_context *ctx);
++static void __event_disable(struct perf_event *event,
++			    struct perf_event_context *ctx,
++			    enum perf_event_state state);
+ 
+ static void perf_put_aux_event(struct perf_event *event)
+ {
+@@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct perf_event *event)
+ 		 * state so that we don't try to schedule it again. Note
+ 		 * that perf_event_enable() will clear the ERROR status.
+ 		 */
+-		event_sched_out(iter, ctx);
+-		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
++		__event_disable(event, ctx, PERF_EVENT_STATE_ERROR);
+ 	}
+ }
+ 
+@@ -2242,18 +2242,6 @@ static inline struct list_head *get_event_list(struct perf_event *event)
+ 				    &event->pmu_ctx->flexible_active;
+ }
+ 
+-/*
+- * Events that have PERF_EV_CAP_SIBLING require being part of a group and
+- * cannot exist on their own, schedule them out and move them into the ERROR
+- * state. Also see _perf_event_enable(), it will not be able to recover
+- * this ERROR state.
+- */
+-static inline void perf_remove_sibling_event(struct perf_event *event)
+-{
+-	event_sched_out(event, event->ctx);
+-	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+-}
+-
+ static void perf_group_detach(struct perf_event *event)
+ {
+ 	struct perf_event *leader = event->group_leader;
+@@ -2289,8 +2277,15 @@ static void perf_group_detach(struct perf_event *event)
+ 	 */
+ 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
+ 
++		/*
++		 * Events that have PERF_EV_CAP_SIBLING require being part of
++		 * a group and cannot exist on their own, schedule them out
++		 * and move them into the ERROR state. Also see
++		 * _perf_event_enable(), it will not be able to recover this
++		 * ERROR state.
++		 */
+ 		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
+-			perf_remove_sibling_event(sibling);
++			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
+ 
+ 		sibling->group_leader = sibling;
+ 		list_del_init(&sibling->sibling_list);
+@@ -2562,6 +2557,19 @@ static void perf_remove_from_context(struct perf_event *event, unsigned long fla
+ 	event_function_call(event, __perf_remove_from_context, (void *)flags);
+ }
+ 
++static void __event_disable(struct perf_event *event,
++			    struct perf_event_context *ctx,
++			    enum perf_event_state state)
++{
++	if (event == event->group_leader)
++		group_sched_out(event, ctx);
++	else
++		event_sched_out(event, ctx);
++
++	perf_event_set_state(event, state);
++	perf_cgroup_event_disable(event, ctx);
++}
++
+ /*
+  * Cross CPU call to disable a performance event
+  */
+@@ -2575,15 +2583,7 @@ static void __perf_event_disable(struct perf_event *event,
+ 
+ 	perf_pmu_disable(event->pmu_ctx->pmu);
+ 	ctx_time_update_event(ctx, event);
+-
+-	if (event == event->group_leader)
+-		group_sched_out(event, ctx);
+-	else
+-		event_sched_out(event, ctx);
+-
+-	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+-	perf_cgroup_event_disable(event, ctx);
+-
++	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
+ 	perf_pmu_enable(event->pmu_ctx->pmu);
+ }
+ 
