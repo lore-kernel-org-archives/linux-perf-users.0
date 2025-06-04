@@ -1,154 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D520E71E;
-	Wed,  4 Jun 2025 17:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9473481AC8
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 17:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749057396; cv=none; b=S+gQZ/5LAbDKTO9CytwWCyuVbVHBxEfWHVMQjY8iQaGdj+U/7kEhtiJDf1z8RFMLEiV55FXoKXbU37HICffw8ILOa5rnTqL1gCqr6wX2cMoXb4aQK4wbk0ih0YQwRIGukMqtp1e9KDwvQyEOQNpn5tH/ybtAKj++QzGXCdyOm3o=
+	t=1749058597; cv=none; b=IQMUtElX7Hlt7/gMz5Zfc8OsDNcowo84839EHkNWt28ysJ02JZFMcTfr/kon52s9J93HpwY6DeTrzYQ52cn71HVITotO5eouOyfi2F6hKN6tkXK6JuUzzb/7kzSBCFEZjhhQ1++q7xvCYaC1c/Bxj5rdk5LeWdL3gjVHljAe/Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749057396; c=relaxed/simple;
-	bh=kjLd+ddb6deYgxmwwC4dNdpjsazgtApHNAXz/v7lLt8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PCB4sC2ppWu5qPbetl2eP3aTS4fV2SejgaeGc2ij1FrA37arYUSFc/aiCeeZKddmhmkeL25L2gzwEvdAKsrJv2ul7hfNBk7D/wppOrYnZxqUto+p6/HW5Q8qpGY0xJB5H2GGXLbUO9rzRgi0bgfELWCDg12H1vNvkUJQDA4ALZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=legGlQyY; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749058597; c=relaxed/simple;
+	bh=W+ra4HGapBDnhnWI6tSk/cIb8O9/vczqH+V+QKIW7Mk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=HpEpRhfpJTt518/19XVn9/kC1xLcLt8Ywo3XhX34frPLmzxNNj8wvPb94ZEcXv6WR1L7VMJUH4HqvykMWl/JVcbkyvZyjeUQJbSqgfB2Gf2r6fsgQXr6m5xZ8mGu4sTFRni+eqBaAfLxXN+JuZsqcg3kpdu/Czl5oluRR7uVXfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zS3YHmwT; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="legGlQyY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749057395; x=1780593395;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kjLd+ddb6deYgxmwwC4dNdpjsazgtApHNAXz/v7lLt8=;
-  b=legGlQyYqZ7wxYWTwPRMTZaVe0QEqWVC8quKGA/qgUVoDIbU/M2aKNzy
-   I4C1XB0ujiNene7+hUzIXrPsU36IH0m4KX0P7eKcXYBTkzVLx0ma3WE8b
-   mqqBD7gGrG7ftne46kQOvooCNzE6DJvEIQp5Ghg2RXfQe0PYEj/jXhclk
-   uta3xWHgFzP5Yd5fCUzvNNMPQpDqNq8rrEYXlinCYwfjTwUv50sSls3Pj
-   fkJdh7d1mBk5DOVQCWIBRr45rYpVLv8imJ103XHNurNcmnnPipKo0MvyX
-   /a9/B3P/ywjsStUMopEAikoyJz5Z4OLqzG/YF10rIh8iECxMmdY5eiNH8
-   A==;
-X-CSE-ConnectionGUID: bR2ajoBlTrag82TUZHL8QA==
-X-CSE-MsgGUID: +Wyx6HpCSta1UpApgE6Ihg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="73688075"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="73688075"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 10:16:30 -0700
-X-CSE-ConnectionGUID: FJy0HTRgQwOQUcGRKNBd1Q==
-X-CSE-MsgGUID: kUg5iJ9+TZO17cpeoK7Jdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="145594823"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa008.fm.intel.com with ESMTP; 04 Jun 2025 10:16:28 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Subject: [PATCH V3] perf: Fix the throttle error of some clock events
-Date: Wed,  4 Jun 2025 10:15:54 -0700
-Message-Id: <20250604171554.3909897-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zS3YHmwT"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c37558eccso24338a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 10:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749058595; x=1749663395; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yH53vIajMohtaLTL0xy062uwD/Qg39kJdcRHJgRTCow=;
+        b=zS3YHmwTSl39gZEbtZLEGx44T9duhe8EbNYzRS2QmZ5J8A9i4e3ahijrHtBwbvgngG
+         VKoXGhHhMkERaVm0MiCMWas41IViecTtSF+T2wreKk/EhRXT8X4YmDawEE4ri9PLDFgf
+         0AXU304N4giTjdQTzrZWoby1FQ40wEAdJTJWnWTx0xMd9Gf1nv6jw3os5rXei+a69p8D
+         l1826G92v//b6u7CEkhpWio1fWzRVraN9UcxtQXWXkr6msf/PGYZV1nymi0Oiy6ehfbd
+         btiE3R7RX6/dRoSZbAWx7YdrWnlgDX8w8oxosRbSGNpZVUCV5DF+NfO0xuxlYWxFZgA1
+         Vdhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749058595; x=1749663395;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yH53vIajMohtaLTL0xy062uwD/Qg39kJdcRHJgRTCow=;
+        b=RgvV8k00LuSHu3Q9I9iH6tV92FPjmPpKSj0lVjAcLrl8SRlqBrDtoQ0Yjdl/bEGsey
+         seq4MbZimtNpyHe68kOVWuGl4F7b9MW5Jl9Lj+h873F9/M4L2mAN1fA01MBMK7ZxzEwZ
+         ctEvZjukOc2Vlb+BUaqV5KvwXuy3mNRqd0IOBN0dLMU7aBBomySqyhwEvokIXUJXkQp2
+         hszfByPfBnSxmOKcJV3PtooC7VJJgFKomHVaW5vuUSk/gdN0ka4BfQiBcv8wbmhtf6Qx
+         JVw5CNb6enVtHjTCqiACktN+DGVVsGWEH4Ptb1Lhon/MAOODtHzDLVehEhjJueilQiwx
+         6/JA==
+X-Forwarded-Encrypted: i=1; AJvYcCUprAD1Okt302Ik6pXkmnestbAm80omIdVyp7Rvn6hgSuCqnYrMA8J9VKBGWUTJZVScCRXWO1GWzzmSc5mW396p@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuOkAjVwM9neNX5KMCVBnocTWO4J41G9rqJQPwgdvR8dZLSVFv
+	hUyvdibEhqW9fp/oRI8syjfqaPKkSl9cQzTrF38Znx2JBCH1bcg+tZiFWq/Je4VZgRBBH6WxJqY
+	bXrtESw==
+X-Google-Smtp-Source: AGHT+IGzuAdUDf81QyMjsbyBHOevok8TWD2sDKlL6MPGA6CJxWJGSBOSUL1PddzcyN3laNndUjrohax0x6E=
+X-Received: from pjbee16.prod.google.com ([2002:a17:90a:fc50:b0:312:14e5:174b])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:274b:b0:312:daf3:bac9
+ with SMTP id 98e67ed59e1d1-3130cea013emr5014860a91.34.1749058594837; Wed, 04
+ Jun 2025 10:36:34 -0700 (PDT)
+Date: Wed,  4 Jun 2025 10:36:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250604173632.2362759-1-yuzhuo@google.com>
+Subject: [PATCH v1] perf: Fix libjvmti.c sign compare error
+From: Yuzhuo Jing <yuzhuo@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Liang Kan <kan.liang@linux.intel.com>, Yuzhuo Jing <yuzhuo@google.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Fix the compile errors when compiling with -Werror=sign-compare.
 
-Both ARM and IBM CI reports RCU stall, which can be reproduced by the
-below perf command.
-  perf record -a -e cpu-clock -- sleep 2
+This is a follow-up patch to a previous patch series for a separate
+issue.  Link: https://lore.kernel.org/lkml/aC9lXhPFcs5fkHWH@x1/
 
-The issue is introduced by the generic throttle patch set, which
-unconditionally invoke the event_stop() when throttle is triggered.
-
-The cpu-clock and task-clock are two special SW events, which rely on
-the hrtimer. The throttle is invoked in the hrtimer handler. The
-event_stop()->hrtimer_cancel() waits for the handler to finish, which is
-a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
-be used to stop the timer.
-
-There may be two ways to fix it.
-- Introduce a PMU flag to track the case. Avoid the event_stop in
-  perf_event_throttle() if the flag is detected.
-  It has been implemented in the
-  https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
-  The new flag was thought to be an overkill for the issue.
-- Add a check in the event_stop. Return immediately if the throttle is
-  invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
-  method to stop the timer.
-
-The latter is implemented here.
-
-Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
-the order the same as perf_event_unthrottle(). Except the patch, no one
-checks the hw.interrupts in the stop(). There is no impact from the
-order change.
-
-Reported-by: Leo Yan <leo.yan@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
 ---
+ tools/perf/jvmti/libjvmti.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes since V2:
-- Apply a different way to fix the issue.
-  Remove all Tested-by since a different way is applied
-- Update the change log
-- Add more Reported-by
-
- kernel/events/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..46441c23475d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
- 
- static void perf_event_throttle(struct perf_event *event)
- {
--	event->pmu->stop(event, 0);
- 	event->hw.interrupts = MAX_INTERRUPTS;
-+	event->pmu->stop(event, 0);
- 	if (event == event->group_leader)
- 		perf_log_throttle(event, 0);
- }
-@@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (is_sampling_event(event)) {
-+	/*
-+	 * The throttle can be triggered in the hrtimer handler.
-+	 * The HRTIMER_NORESTART should be used to stop the timer,
-+	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
-+	 */
-+	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
- 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
- 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
- 
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index fcca275e5bf9..82514e6532b8 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -141,11 +141,11 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 	* Assume path name is class hierarchy, this is a common practice with Java programs
+ 	*/
+ 	if (*class_sign == 'L') {
+-		int j, i = 0;
++		size_t j, i = 0;
+ 		char *p = strrchr(class_sign, '/');
+ 		if (p) {
+ 			/* drop the 'L' prefix and copy up to the final '/' */
+-			for (i = 0; i < (p - class_sign); i++)
++			for (i = 0; i < (size_t)(p - class_sign); i++)
+ 				result[i] = class_sign[i+1];
+ 		}
+ 		/*
 -- 
-2.38.1
+2.50.0.rc1.591.g9c95f17f64-goog
 
