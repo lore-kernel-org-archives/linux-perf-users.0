@@ -1,63 +1,66 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE527174EE4
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 17:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E504918DF8D
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 17:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749059160; cv=none; b=i/Mv/VdMw1dnfb5Ezs+9zGX/apcbiHQyFHSMKS1fcKENFcuUoghqgcfe47LCOjPAMd1VAuDpK0fjWDgdgjgweTQ6T9/pBA17afGnp+ApQLq1vLO4POZWZtJ/tWJoVqZRyAIfICYjgXQzx7eWvf8E49d7dq+g1cftsWv0f/QInFQ=
+	t=1749059162; cv=none; b=bSkcdWsa6cBJNd5dcanR4b1ws0ZV0St5oMcubqgtlxdOA8CraMFdL0d2DAbKCwRabPyp5amhEa88WWVF4aidp3QOUmbwEtG/wTjDs6ewpzzluSSYjpXChqoPGAOFL5KROyAVtH0+K8LhCsR+hrxvM7rkHjihuFNIeXd3kMVsfYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749059160; c=relaxed/simple;
-	bh=qOvvciBxwW1inYl/V0OhUBXDZSpSnXUyvZeA1lLf+PY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=KD0v+bio5CKw3XAxJMdxyLig8qWLK92gIla/V9rnI83idlzyv1FKNjopwtahSA7fEQC548a827SIHG8K/bNQ4x981br90s949feuPG5gOwM3+Mgvva4BnGK0f48Gk+2QEqF+SFaBiY1bL4srBINo1NDlWzZ5sYRtphHZvDSHHnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IP5s7DrQ; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1749059162; c=relaxed/simple;
+	bh=mj6O7f7WcH/zJTyNj5dVGJmYfITex5422KtPR0vbY2M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=DeuTEskrjtPkgutOXUFIS1dN68GhkzEcGq/+z7tosb9mO76jlhKJskECJs59D4zMNkxeCU9wFHX/MM03RDOpbmog5W760+Qc/Hsmog/EvHK4mInEVxlW055xxGGxAqqmLKGlipCuof1UXASzFOBEjSyNfWmDRahwAaBHXEaQe4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L/UYpurF; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IP5s7DrQ"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23507382e64so595305ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 10:45:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L/UYpurF"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311fa374c2fso123076a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 10:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749059158; x=1749663958; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=H9QaFBLjYOuvDC3/QdBACigYzXP7h80yd3aL1h2SKHY=;
-        b=IP5s7DrQ5gCmLTbQKKFmV08a4EzdoWrocsjkf7e9ucNGkc3W7PZtmlGy+aSCgvvatc
-         T8jexCRtPqp4S5e7bRyAzEPT5wkxIV7ODt9OWREhQaGvUOojyRPVOkvOv1ssPITEvPdY
-         /fWh8FSv/t6oELZSU5qVz1MD2vGbm9b1we0042lRYCBm0OjqehSBOkxKz3SzGfYT4gmP
-         cch4QqF3QIsGQIjOq4IowkK7K4EQ8PUDH/u3ZgyoVTLaWP7gnYFd6l09iAMDY8XQ27kp
-         CIVQRmglF9MKrf9zXihBY7OCLtoVDI+L2G3ucAZxru1v1pVFYDMzHr9d3eOlBbQlb3jJ
-         B23Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749059158; x=1749663958;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1749059160; x=1749663960; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=H9QaFBLjYOuvDC3/QdBACigYzXP7h80yd3aL1h2SKHY=;
-        b=VzzpWl7awTCNmdDPDDCl2oZVVhqoUaodkt5xHu37gPleZM9H/NguuzF8LeAJNZYLtf
-         kdUFbdTclDUGMGOFG984fFRCIW9kwCd9LTyyeagNwXs2YKRRvVUBJ7rXontwW3Yc8cWJ
-         nCZwO3qaaUxiDGo8CyoNwgldNuGhgjf0G3cAqso3CvAJCD8MDVtpFVN9SIWv5MIAeYp5
-         xWEn15ggEC71hvrRVMkNvkxrHrBzevmDoKkUOlfQ0hJs2vUXfDCj+DRoYdx4IQNziKUT
-         ECQ4fOPeHLMT8C8wO/BUNFPNF2v7E7cHXlQ8PH+HurKYlxUAShQo5t4s6wzgHwTNraK2
-         9bWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpvNiDXp9Pz8tRk6khj6QCBfqiSFGv6HksaiJDaO/SHP1bHgE4Qn72fXY7QCQQxQJagPW2BAUZgN2XlYRjl9/3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0M1VagZDGNXm/zxRL8pqnEuF3A1KFjz+MytsVSHkr7alzxa19
-	RetysrcTU3amgHMZiORWaiV65ZZ4xIwBgxdWQZJh0BkSx9wRjlPfkxKGo0fd5Jy/nKShUIVNl1A
-	WOw29k4aCgg==
-X-Google-Smtp-Source: AGHT+IEDlB53AvhsCJwecps6nf/89lwn6FIydGbmAws37kN03WJuqK9+Jo0wPuncznBgMWyX+Lpa1rROiB2b
-X-Received: from plgc13.prod.google.com ([2002:a17:902:d48d:b0:234:9673:1d13])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce8e:b0:21a:8300:b9d5
- with SMTP id d9443c01a7336-235e114f0e6mr51959625ad.23.1749059158178; Wed, 04
- Jun 2025 10:45:58 -0700 (PDT)
-Date: Wed,  4 Jun 2025 10:45:34 -0700
+        bh=cr8AU18vrh9A9pbk1lgn8Z0KqD4pWB6L1KR+gFE/XN0=;
+        b=L/UYpurFMFckJRvZrZPVO29Iwr3/Q6Rdfl4st/QRvnlqz/MfCvqG4TPr4Ql//Dce7v
+         6iCU3CpsI9sV7HZFrsaKzAaMtW/tgjD3ijJoTpB22fV8A07DGwlcTflXXHjsqKmQZ/Kb
+         W6zBoF+EZm9qoVlzDPoDdrcnvgehYjwMgwD4Z6Y46GtBSF6slYpF+4kP8dW+em8JBJeY
+         TNFlaxjI9PPDV+mdQdr9cCgXXxmWQ93jG279+S9ZtIg9K8pioH7c3mcpUBrEuj2rVhQe
+         M/rRBux8gF1U+AyWTli3t2E5QDMy/T0xcZTESO33WkNGv23pn+Nr+XIlczEyvYsESDvt
+         6r6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749059160; x=1749663960;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cr8AU18vrh9A9pbk1lgn8Z0KqD4pWB6L1KR+gFE/XN0=;
+        b=g80j2J6AaNSR+OUIQIxjXE40Xi1jl+mGHzlQu9ILKZqUpLu4609jXqpmFa+KkohUl8
+         IlBfGO4X9bqUZrOELdN/jF9cYY+7nynF250sDkdswDJfoYLehRCkyTU9GOgKSYcTcVRD
+         oq2eJ+ecxQrRgSLGLqtuGfPu6kgrehF8PgPommsJoVtrDkFjyHLZxzuh5dmh+XK1JiO1
+         94nN+L2WJHNZflku8XKTAZ/vJ2dfOClFLaFTtUuSNhQ+aaPAghFx9GANgwTkMbQ1T7R3
+         IaiEnbYXeoBJ4CRD9rkbt5LFMnDC3L00dY0nqyQiflCYxycZrHymEh9yYrbqWaYrPIRa
+         1bHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDqeMvYSSkpqDxx0ZKxFwH2Jn3PUtqQlnjGlw524NmfHXD2a+r5cTsOJ6WJejBFqNrwJLbYDMxwF+hbT9tQ4Kx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFatV5sybG1IG/TGBOswsBTe/+oWQv/bSW2VHvgGZ6ii7WZt/O
+	CWsewO7VIQp3Lf01HvB7tOrFLErIk5wcRVRwQzyeHR/nJRxWSp8xn7OEQK0AkkiZodu4u5D4AMQ
+	J5zyLuSohPg==
+X-Google-Smtp-Source: AGHT+IEOHpDk1MKKyIDD4q4LfRorilSCWNnk3I7uuyrrodCqLKuvammmxhdoTFNTJO57M9BNCXCFuWEOQX2b
+X-Received: from pjvv11.prod.google.com ([2002:a17:90b:588b:b0:311:1a09:11ff])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5544:b0:311:c970:c9ce
+ with SMTP id 98e67ed59e1d1-3130cdd981dmr6224022a91.28.1749059160074; Wed, 04
+ Jun 2025 10:46:00 -0700 (PDT)
+Date: Wed,  4 Jun 2025 10:45:35 -0700
+In-Reply-To: <20250604174545.2853620-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250604174545.2853620-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250604174545.2853620-1-irogers@google.com>
-Subject: [PATCH v4 00/10] Move uid filtering to BPF filters
+Message-ID: <20250604174545.2853620-2-irogers@google.com>
+Subject: [PATCH v4 01/10] perf parse-events filter: Use evsel__find_pmu
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,74 +77,49 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than scanning /proc and skipping PIDs based on their UIDs, use
-BPF filters for uid filtering. The /proc scanning in thread_map is
-racy as the PID may exit before the perf_event_open causing perf to
-abort. BPF UID filters are more robust as they avoid the race. The
-/proc scanning also misses processes starting after the perf
-command. Add a helper for commands that support UID filtering and wire
-up. Remove the non-BPF UID filtering support given it doesn't work.
+Rather than manually scanning PMUs, use evsel__find_pmu that can use
+the PMU set during event parsing.
 
-v4: Add a warning message on top of Namhyung's BPF filter error message:
-https://lore.kernel.org/lkml/20250604054234.23608-1-namhyung@kernel.org/
-    in the parse_uid_filter helper. In TUI the warning is shown then
-    the BPF error shown, with stdio the warning appears below the BPF
-    errors.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
-    tmp.perf-tools-next.
-
-v2: Add a perf record uid test (Namhyung) and force setting
-    system-wide for perf trace and perf record (Namhyung). Ensure the
-    uid filter isn't set on tracepoint evsels.
-
-v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
-
-Ian Rogers (10):
-  perf parse-events filter: Use evsel__find_pmu
-  perf target: Separate parse_uid into its own function
-  perf parse-events: Add parse_uid_filter helper
-  perf record: Switch user option to use BPF filter
-  perf tests record: Add basic uid filtering test
-  perf top: Switch user option to use BPF filter
-  perf trace: Switch user option to use BPF filter
-  perf bench evlist-open-close: Switch user option to use BPF filter
-  perf target: Remove uid from target
-  perf thread_map: Remove uid options
-
- tools/perf/bench/evlist-open-close.c        | 36 ++++++++------
- tools/perf/builtin-ftrace.c                 |  1 -
- tools/perf/builtin-kvm.c                    |  2 -
- tools/perf/builtin-record.c                 | 27 ++++++-----
- tools/perf/builtin-stat.c                   |  4 +-
- tools/perf/builtin-top.c                    | 22 +++++----
- tools/perf/builtin-trace.c                  | 27 +++++++----
- tools/perf/tests/backward-ring-buffer.c     |  1 -
- tools/perf/tests/event-times.c              |  8 ++-
- tools/perf/tests/keep-tracking.c            |  2 +-
- tools/perf/tests/mmap-basic.c               |  2 +-
- tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
- tools/perf/tests/openat-syscall-tp-fields.c |  1 -
- tools/perf/tests/openat-syscall.c           |  2 +-
- tools/perf/tests/perf-record.c              |  1 -
- tools/perf/tests/perf-time-to-tsc.c         |  2 +-
- tools/perf/tests/shell/record.sh            | 26 ++++++++++
- tools/perf/tests/switch-tracking.c          |  2 +-
- tools/perf/tests/task-exit.c                |  1 -
- tools/perf/tests/thread-map.c               |  2 +-
- tools/perf/util/bpf-filter.c                |  2 +-
- tools/perf/util/evlist.c                    |  3 +-
- tools/perf/util/parse-events.c              | 47 +++++++++++++-----
- tools/perf/util/parse-events.h              |  1 +
- tools/perf/util/python.c                    | 10 ++--
- tools/perf/util/target.c                    | 54 +++------------------
- tools/perf/util/target.h                    | 15 ++----
- tools/perf/util/thread_map.c                | 32 ++----------
- tools/perf/util/thread_map.h                |  6 +--
- tools/perf/util/top.c                       |  4 +-
- tools/perf/util/top.h                       |  1 +
- 31 files changed, 164 insertions(+), 182 deletions(-)
-
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 2380de56a207..d96adf23dc94 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2564,9 +2564,8 @@ foreach_evsel_in_last_glob(struct evlist *evlist,
+ static int set_filter(struct evsel *evsel, const void *arg)
+ {
+ 	const char *str = arg;
+-	bool found = false;
+ 	int nr_addr_filters = 0;
+-	struct perf_pmu *pmu = NULL;
++	struct perf_pmu *pmu;
+ 
+ 	if (evsel == NULL) {
+ 		fprintf(stderr,
+@@ -2584,16 +2583,11 @@ static int set_filter(struct evsel *evsel, const void *arg)
+ 		return 0;
+ 	}
+ 
+-	while ((pmu = perf_pmus__scan(pmu)) != NULL)
+-		if (pmu->type == evsel->core.attr.type) {
+-			found = true;
+-			break;
+-		}
+-
+-	if (found)
++	pmu = evsel__find_pmu(evsel);
++	if (pmu) {
+ 		perf_pmu__scan_file(pmu, "nr_addr_filters",
+ 				    "%d", &nr_addr_filters);
+-
++	}
+ 	if (!nr_addr_filters)
+ 		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
+ 
 -- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
