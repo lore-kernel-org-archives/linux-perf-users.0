@@ -1,344 +1,197 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9702822F764
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 17:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793C91388;
+	Wed,  4 Jun 2025 17:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749059179; cv=none; b=AhUngjrzxx6vzfa33hE2KRWA2CIknbK0GTjtFbm8TROKVeIoGh5YtR5pEeBUYYRQj4CzUO8kD5PD44aUMxxdowK49jG8ABCbU+lkh33Opx8ISujbCkaU9kXBECRnPPos0/QCOs7F362UpEi1cYl281sEudIR/dtWK1HuplyjzBI=
+	t=1749059317; cv=none; b=q5aqGCK/Qq1AM/Z81XAmq2eTkPKTdnKLtI3dSLQzuJW9HyvxDEHGCXL80LEK/eka6utMBZmWVoPQ5yLrWoWpmr2Hp/ExkGVWjYJGQjuCC9wxycCds5CaeIdgUQf+P8uvr+Sc9yjN1ZrP04mDm9uqXO9HjouoqXsuiqOldZasgFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749059179; c=relaxed/simple;
-	bh=wZK+we/hMcP+LapTxOBOp7OwL1VcwIn5OCn/9I5QRgs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=SOaYl+KV8+dp+Pef3eu2VN5MgXKBstc8gv0QNxeA46SuYknSMnDj6mcMBKGZAw2FoHGgT/iJBcwKmniJ75I16QtAr2FigWK+jT0whFf9IXWCR1pxJGW4NiqX3aPl0L2CFz0yvaoFBzlTR6Q+gh8dSFf7tCOoChQcxsUVUPxiLGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bDEbAm5I; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1749059317; c=relaxed/simple;
+	bh=nojc7ekD5Ro3tMNjFvlT85R5eqNgsPcXApgFi3gVKVA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UvPl1/sYM6kYaQb2XmoGUSbFOZdBdrbmwlqbgr5LhvbfeCy+W7jufCM39WOOye33/TdT/sDGtpI6yDksh/vvrOc+k90RCGfK4TuK1BNAfn7EqEbus9XEJAf8dXCfPELBzXykidyeDn3VI+cwkcmJpQDrBaNrf7svArMpXttqVxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGpX3/Y7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDEbAm5I"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235e1d70d67so813585ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 10:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749059177; x=1749663977; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=INWoFAyj0eyA0CoTLK03m3e2rQOzGxqm2qpqJgTA5nM=;
-        b=bDEbAm5I2ez2kzCV3snMXewyiTKCclf1SVaYbz5zjEZFVvNwCY6/CIfgUnbM55Yy9l
-         ocWhS6pX5dxc6yl6ECT3iHi27jW2ArfghOUPALg+hj6UBj4WJSDZV2XXQ6tbEufVLJVK
-         tyZbDR6xPgAn2fib2BRSwTULSv/T8zt96Ya+yudF65IxyKnAYRU0xXBa2YCvtVao/g5t
-         AWXuUY9w9AZc+dCjSDbSZJeomqxSXuNTH3zQg+xfPfWVX+zW70NkNMF+LtgC8/VOsuSH
-         T5xapQ5588pAr/SWtX93O5ip6o683UkgbA0k9dJ9pDPMy43liGTxSzzG3cDTGN/I3h5E
-         4Szg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749059177; x=1749663977;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=INWoFAyj0eyA0CoTLK03m3e2rQOzGxqm2qpqJgTA5nM=;
-        b=VD87KyITFwxQgB8O3uv9ScegI8Ggk7rmI1TAP6vSiK5iQa1z9LZuJ036ETV3Llccap
-         gtpeKO6BSQthujQ/hCjaEss4BsqICOVvTQg2njUOdkCLekvHV/K26P70N0ALd7FZkm/X
-         0+ZAo50FbJ8MfDHT0vz1y0oxgvOS6rmbx4iaZKyYjSCXwrM+rvOQTiCYec0b+rSIkFwD
-         gW0Z3/YMYay/ifTcy7xmr6TK2FVE5mOWbGSGND+LHyTrd2vnsN5j1cEHqUZHvrBL6PXb
-         tZD9L0NG3H3Ksk/PV9pasgVDtrJNgfw0aBvtuN1oVD1CKkCQyf3PhkR9jPcpxMEnYnJL
-         7UIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVL+sDUvcFhqgZ3fr3D7gTsYT2mVFA4d2bjDdC9iRJQqZttq2b1yGU+QYn/eQwBS/1LrWK2TNa2SwDXxYWeqG+r@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEwz72eH7h4Il3/TVXm2LEqadaABSZZuoc4qQcIvR4sbkCNvrM
-	QiEOyYn4OHBo7gHlLUux87PJ7hL+wbyW1swt9I2FORE3F8zOJ6bcoVr7AiPsB34gIMzaR27m3iy
-	pUZSnsXxOHQ==
-X-Google-Smtp-Source: AGHT+IHf/o2yJ5U0aWyNBeTVAzHPKBxWcj2Zisq53jKHEVdYVi5j58GMSdeOjE+nsD91miCc3aK5+1l+S40a
-X-Received: from pgbcq12.prod.google.com ([2002:a05:6a02:408c:b0:b2c:4d7e:b626])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e5c4:b0:235:f70:fd44
- with SMTP id d9443c01a7336-235e115029cmr52934475ad.21.1749059176707; Wed, 04
- Jun 2025 10:46:16 -0700 (PDT)
-Date: Wed,  4 Jun 2025 10:45:44 -0700
-In-Reply-To: <20250604174545.2853620-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGpX3/Y7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BCFC4CEED;
+	Wed,  4 Jun 2025 17:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749059317;
+	bh=nojc7ekD5Ro3tMNjFvlT85R5eqNgsPcXApgFi3gVKVA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eGpX3/Y7IAyl/T6QXYm+AOsGTZNwYpRpZKndNWf8pfU3y1JbUDHLPGEV07xIkwlzc
+	 IT++u9cjD3knWSr/YHXgQmGgNEdr4Ejs/TKzWOjbf4qIdo75Myn/5gK10oGcQt1A4S
+	 Nj8o1eF9jHDutXCP3v2+HTnWmbNtvunW5qimfsZ2KlUxLTU4cb8LNhP1O2EZvRkeWn
+	 rATzv+NKTWruG7iNOeZJj7C8l0Smp7nsv2jYZT5dmXokZ4J9qqGgmxh8Y8Zj5V5m1K
+	 kHuyHOEULcrpeSQ42VfkMvFKv/CKfaVTDoCMAWHPPC45TbPhJA6dydMTwHNcSZygJ6
+	 /KoflHKjNW/dA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2] perf bpf-filter: Improve error messages
+Date: Wed,  4 Jun 2025 10:48:35 -0700
+Message-ID: <20250604174835.1852481-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.49.0.1266.g31b7d2e469-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250604174545.2853620-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250604174545.2853620-11-irogers@google.com>
-Subject: [PATCH v4 10/10] perf thread_map: Remove uid options
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Chun-Tse Shao <ctshao@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Hao Ge <gehao@kylinos.cn>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Gautam Menghani <gautam@linux.ibm.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Now the target doesn't have a uid, it is handled through BPF filters,
-remove the uid options to thread_map creation. Tidy up the functions
-used in tests to avoid passing unused arguments.
+The BPF filter needs libbpf/BPF-skeleton support and root privilege.
+Add error messages to help users understand the problem easily.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+When it's not build with BPF support (make BUILD_BPF_SKEL=0).
+
+  $ sudo perf record -e cycles --filter "pid != 0" true
+  Error: BPF filter is requested but perf is not built with BPF.
+  	Please make sure to build with libbpf and BPF skeleton.
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+          --filter <filter>
+                            event filter
+
+When it supports BPF but runs without root or CAP_BPF.  Note that it
+also checks pinned BPF filters.
+
+  $ perf record -e cycles --filter "pid != 0" -o /dev/null true
+  Error: BPF filter only works for users with the CAP_BPF capability!
+  	Please run 'perf record --setup-filter pin' as root first.
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+          --filter <filter>
+                            event filter
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/event-times.c             |  4 +--
- tools/perf/tests/keep-tracking.c           |  2 +-
- tools/perf/tests/mmap-basic.c              |  2 +-
- tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
- tools/perf/tests/openat-syscall.c          |  2 +-
- tools/perf/tests/perf-time-to-tsc.c        |  2 +-
- tools/perf/tests/switch-tracking.c         |  2 +-
- tools/perf/tests/thread-map.c              |  2 +-
- tools/perf/util/evlist.c                   |  2 +-
- tools/perf/util/python.c                   | 10 +++----
- tools/perf/util/thread_map.c               | 32 ++--------------------
- tools/perf/util/thread_map.h               |  6 ++--
- 12 files changed, 20 insertions(+), 48 deletions(-)
+v2) change fprintf() -> pr_err()  (Ian)
 
-diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
-index 2148024b4f4a..ae3b98bb42cf 100644
---- a/tools/perf/tests/event-times.c
-+++ b/tools/perf/tests/event-times.c
-@@ -62,7 +62,7 @@ static int attach__current_disabled(struct evlist *evlist)
+ tools/perf/util/bpf-filter.c | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/bpf-filter.h |  3 +++
+ tools/perf/util/cap.c        |  1 -
+ tools/perf/util/cap.h        |  5 +++++
+ 4 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+index a4fdf6911ec1c32e..92e2f054b45e91dd 100644
+--- a/tools/perf/util/bpf-filter.c
++++ b/tools/perf/util/bpf-filter.c
+@@ -52,6 +52,7 @@
+ #include <internal/xyarray.h>
+ #include <perf/threadmap.h>
  
- 	pr_debug("attaching to current thread as disabled\n");
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("thread_map__new\n");
- 		return -1;
-@@ -88,7 +88,7 @@ static int attach__current_enabled(struct evlist *evlist)
- 
- 	pr_debug("attaching to current thread as enabled\n");
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("failed to call thread_map__new\n");
- 		return -1;
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index 5a3b2bed07f3..eafb49eb0b56 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -78,7 +78,7 @@ static int test__keep_tracking(struct test_suite *test __maybe_unused, int subte
- 	int found, err = -1;
- 	const char *comm;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	CHECK_NOT_NULL__(threads);
- 
- 	cpus = perf_cpu_map__new_online_cpus();
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index bd2106628b34..04b547c6bdbe 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -46,7 +46,7 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
- 	char sbuf[STRERR_BUFSIZE];
- 	struct mmap *md;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (threads == NULL) {
- 		pr_debug("thread_map__new\n");
- 		return -1;
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index fb114118c876..3644d6f52c07 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -28,7 +28,7 @@ static int test__openat_syscall_event_on_all_cpus(struct test_suite *test __mayb
- 	struct evsel *evsel;
- 	unsigned int nr_openat_calls = 111, i;
- 	cpu_set_t cpu_set;
--	struct perf_thread_map *threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	struct perf_thread_map *threads = thread_map__new_by_tid(getpid());
- 	char sbuf[STRERR_BUFSIZE];
- 	char errbuf[BUFSIZ];
- 
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index 131b62271bfa..b54cbe5f1808 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -20,7 +20,7 @@ static int test__openat_syscall_event(struct test_suite *test __maybe_unused,
- 	int err = TEST_FAIL, fd;
- 	struct evsel *evsel;
- 	unsigned int nr_openat_calls = 111, i;
--	struct perf_thread_map *threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	struct perf_thread_map *threads = thread_map__new_by_tid(getpid());
- 	char sbuf[STRERR_BUFSIZE];
- 	char errbuf[BUFSIZ];
- 
-diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
-index d3e40fa5482c..d4437410c99f 100644
---- a/tools/perf/tests/perf-time-to-tsc.c
-+++ b/tools/perf/tests/perf-time-to-tsc.c
-@@ -90,7 +90,7 @@ static int test__perf_time_to_tsc(struct test_suite *test __maybe_unused, int su
- 	struct mmap *md;
- 
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	CHECK_NOT_NULL__(threads);
- 
- 	cpus = perf_cpu_map__new_online_cpus();
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 6b3aac283c37..5be294014d3b 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -351,7 +351,7 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
- 	const char *comm;
- 	int err = -1;
- 
--	threads = thread_map__new(-1, getpid(), UINT_MAX);
-+	threads = thread_map__new_by_tid(getpid());
- 	if (!threads) {
- 		pr_debug("thread_map__new failed!\n");
- 		goto out_err;
-diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-index 1fe521466bf4..54209592168d 100644
---- a/tools/perf/tests/thread-map.c
-+++ b/tools/perf/tests/thread-map.c
-@@ -115,7 +115,7 @@ static int test__thread_map_remove(struct test_suite *test __maybe_unused, int s
- 	TEST_ASSERT_VAL("failed to allocate map string",
- 			asprintf(&str, "%d,%d", getpid(), getppid()) >= 0);
- 
--	threads = thread_map__new_str(str, NULL, 0, false);
-+	threads = thread_map__new_str(str, /*tid=*/NULL, /*all_threads=*/false);
- 	free(str);
- 
- 	TEST_ASSERT_VAL("failed to allocate thread_map",
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index bed91bc88510..5664ebf6bbc6 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1006,7 +1006,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
- 	 * per-thread data. thread_map__new_str will call
- 	 * thread_map__new_all_cpus to enumerate all threads.
- 	 */
--	threads = thread_map__new_str(target->pid, target->tid, UINT_MAX, all_threads);
-+	threads = thread_map__new_str(target->pid, target->tid, all_threads);
- 
- 	if (!threads)
- 		return -1;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 321c333877fa..82666bcd2eda 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -566,14 +566,14 @@ struct pyrf_thread_map {
- static int pyrf_thread_map__init(struct pyrf_thread_map *pthreads,
- 				 PyObject *args, PyObject *kwargs)
- {
--	static char *kwlist[] = { "pid", "tid", "uid", NULL };
--	int pid = -1, tid = -1, uid = UINT_MAX;
-+	static char *kwlist[] = { "pid", "tid", NULL };
-+	int pid = -1, tid = -1;
- 
--	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|iii",
--					 kwlist, &pid, &tid, &uid))
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ii",
-+					 kwlist, &pid, &tid))
- 		return -1;
- 
--	pthreads->threads = thread_map__new(pid, tid, uid);
-+	pthreads->threads = thread_map__new(pid, tid);
- 	if (pthreads->threads == NULL)
- 		return -1;
- 	return 0;
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index b5f12390c355..ca193c1374ed 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -72,7 +72,7 @@ struct perf_thread_map *thread_map__new_by_tid(pid_t tid)
- 	return threads;
++#include "util/cap.h"
+ #include "util/debug.h"
+ #include "util/evsel.h"
+ #include "util/target.h"
+@@ -618,11 +619,38 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(enum perf_bpf_filter_term
+ 	return expr;
  }
  
--static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
-+static struct perf_thread_map *thread_map__new_all_cpus(void)
++static bool check_bpf_filter_capable(void)
++{
++	bool used_root;
++
++	if (perf_cap__capable(CAP_BPF, &used_root))
++		return true;
++
++	if (!used_root) {
++		/* Check if root already pinned the filter programs and maps */
++		int fd = get_pinned_fd("filters");
++
++		if (fd >= 0) {
++			close(fd);
++			return true;
++		}
++	}
++
++	pr_err("Error: BPF filter only works for %s!\n"
++	       "\tPlease run 'perf record --setup-filter pin' as root first.\n",
++	       used_root ? "root" : "users with the CAP_BPF capability");
++
++	return false;
++}
++
+ int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
  {
- 	DIR *proc;
- 	int max_threads = 32, items, i;
-@@ -98,15 +98,6 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 		if (*end) /* only interested in proper numerical dirents */
- 			continue;
+ 	YY_BUFFER_STATE buffer;
+ 	int ret;
  
--		snprintf(path, sizeof(path), "/proc/%s", dirent->d_name);
--
--		if (uid != UINT_MAX) {
--			struct stat st;
--
--			if (stat(path, &st) != 0 || st.st_uid != uid)
--				continue;
--		}
--
- 		snprintf(path, sizeof(path), "/proc/%d/task", pid);
- 		items = scandir(path, &namelist, filter, NULL);
- 		if (items <= 0) {
-@@ -157,24 +148,11 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 	goto out_closedir;
- }
++	if (!check_bpf_filter_capable())
++		return -EPERM;
++
+ 	buffer = perf_bpf_filter__scan_string(str);
  
--struct perf_thread_map *thread_map__new_all_cpus(void)
--{
--	return __thread_map__new_all_cpus(UINT_MAX);
--}
--
--struct perf_thread_map *thread_map__new_by_uid(uid_t uid)
--{
--	return __thread_map__new_all_cpus(uid);
--}
--
--struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid)
-+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid)
+ 	ret = perf_bpf_filter_parse(expr_head);
+diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+index 916ed7770b734f15..122477f2de44bb60 100644
+--- a/tools/perf/util/bpf-filter.h
++++ b/tools/perf/util/bpf-filter.h
+@@ -5,6 +5,7 @@
+ #include <linux/list.h>
+ 
+ #include "bpf_skel/sample-filter.h"
++#include "util/debug.h"
+ 
+ struct perf_bpf_filter_expr {
+ 	struct list_head list;
+@@ -38,6 +39,8 @@ int perf_bpf_filter__unpin(void);
+ static inline int perf_bpf_filter__parse(struct list_head *expr_head __maybe_unused,
+ 					 const char *str __maybe_unused)
  {
- 	if (pid != -1)
- 		return thread_map__new_by_pid(pid);
- 
--	if (tid == -1 && uid != UINT_MAX)
--		return thread_map__new_by_uid(uid);
--
- 	return thread_map__new_by_tid(tid);
++	pr_err("Error: BPF filter is requested but perf is not built with BPF.\n"
++		"\tPlease make sure to build with libbpf and BPF skeleton.\n");
+ 	return -EOPNOTSUPP;
  }
+ static inline int perf_bpf_filter__prepare(struct evsel *evsel __maybe_unused,
+diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+index 69d9a2bcd40bfdd1..24a0ea7e6d97749b 100644
+--- a/tools/perf/util/cap.c
++++ b/tools/perf/util/cap.c
+@@ -7,7 +7,6 @@
+ #include "debug.h"
+ #include <errno.h>
+ #include <string.h>
+-#include <linux/capability.h>
+ #include <sys/syscall.h>
+ #include <unistd.h>
  
-@@ -289,15 +267,11 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
- 	goto out;
- }
+diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
+index 0c6a1ff55f07340a..c1b8ac033ccc5826 100644
+--- a/tools/perf/util/cap.h
++++ b/tools/perf/util/cap.h
+@@ -3,6 +3,7 @@
+ #define __PERF_CAP_H
  
--struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid,
--				       uid_t uid, bool all_threads)
-+struct perf_thread_map *thread_map__new_str(const char *pid, const char *tid, bool all_threads)
- {
- 	if (pid)
- 		return thread_map__new_by_pid_str(pid);
+ #include <stdbool.h>
++#include <linux/capability.h>
  
--	if (!tid && uid != UINT_MAX)
--		return thread_map__new_by_uid(uid);
--
- 	if (all_threads)
- 		return thread_map__new_all_cpus();
+ /* For older systems */
+ #ifndef CAP_SYSLOG
+@@ -13,6 +14,10 @@
+ #define CAP_PERFMON	38
+ #endif
  
-diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
-index 00ec05fc1656..fc16d87f32fb 100644
---- a/tools/perf/util/thread_map.h
-+++ b/tools/perf/util/thread_map.h
-@@ -11,13 +11,11 @@ struct perf_record_thread_map;
- struct perf_thread_map *thread_map__new_dummy(void);
- struct perf_thread_map *thread_map__new_by_pid(pid_t pid);
- struct perf_thread_map *thread_map__new_by_tid(pid_t tid);
--struct perf_thread_map *thread_map__new_by_uid(uid_t uid);
--struct perf_thread_map *thread_map__new_all_cpus(void);
--struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid, uid_t uid);
-+struct perf_thread_map *thread_map__new(pid_t pid, pid_t tid);
- struct perf_thread_map *thread_map__new_event(struct perf_record_thread_map *event);
- 
- struct perf_thread_map *thread_map__new_str(const char *pid,
--		const char *tid, uid_t uid, bool all_threads);
-+		const char *tid, bool all_threads);
- 
- struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str);
++#ifndef CAP_BPF
++#define CAP_BPF		39
++#endif
++
+ /* Query if a capability is supported, used_root is set if the fallback root check was used. */
+ bool perf_cap__capable(int cap, bool *used_root);
  
 -- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
+2.49.0.1266.g31b7d2e469-goog
 
