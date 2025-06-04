@@ -1,214 +1,95 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B4F225A20;
-	Wed,  4 Jun 2025 10:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB8813AD1C;
+	Wed,  4 Jun 2025 12:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749032739; cv=none; b=CrDaWmnd7lul8Q/SqkoCnMrIKfd9mzzSYLlwbh+wac/a7iI6jSKNMHMfTJ92lhWgUQehXCtvLY+b8SgxIetJfv1uFbPRxin81FbIAEJmohYQ/vPWRD5Cu8CTddzaNk9Tqg5Y1C8lBKq+ar8ofMuICtPyXdh/OeccCflqtCpkU6A=
+	t=1749040659; cv=none; b=SJ5wliPd7sxtFFW69prdhuWI+mk+wSmmdYl5G4nHuRq28LDQDFb3+WECbaUxQmr7rnWx+GNOr5CXLvHOLi12uBU+tSP8eBRhFDrxWOXufBiaKarfE3Tc20uKprakad2+FvW2NIAGnG1GlOcSHij9/ksM7qEeiXBhwCOtFpcXoMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749032739; c=relaxed/simple;
-	bh=xL+N//WjnuF0hOc7kdx62x8VitK0nxlNLXcupQQspzk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uq7VxX2PbNJzLSUV3w68iBA5N6H1DyTUQcnwqWqgfNG7Sxohq7eG5Wa5P9zpkQczLJRr7esFepLR0vZ30QwYAt/wcu4OwBPQsKN63/xMtRWK6k9v2KV6AOACJUM7Bhe5XJgIBlJklzm29PVTD4OX0rwJTD5jmGxeDou4Rx+0Cig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgEQxibD; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749040659; c=relaxed/simple;
+	bh=OdkD+MODyORjWGw/yjTomTLFd2F+IeytQ1n613BMIAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGrVLFjrRsmk7pqdUIgiRbcZKF0HMVFn/GGASeACy9oyBJCDfFr7Vgs8KCw3If1J4GW/wVN0S4208kentAngj8ZaVJyjpL0EETZVwxurYN8qVk6A1jIkcHlZSepuiA84JSp7rysVXhXlzTOsYoq5uHM6BIxZ7Sg4p2tOVmXhKKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iryXm66a; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgEQxibD"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450d37d4699so33335885e9.0;
-        Wed, 04 Jun 2025 03:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749032736; x=1749637536; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yyzqZAFPiecVZ8v3jVi3mxvHGnKj1UzTNsDM6WLqpOU=;
-        b=UgEQxibDLapiBdm/1/HNLLsNesRLx6vy5kwALtzTbYFIHi2YnvD25d6wbzEephiEIo
-         yC0e7EOzhEuFhyC8modzDTH4/G+of8Pxd99EPd4SA+BSbo/xtIYxzr5Lxi3sb8E0fOoJ
-         lnl/WQ6QKhMuLtGPenczeQbk6BnQnnvb51kYuPQ+HWrpYmVBx4rfLlLMDfaZdcZ2qxwX
-         ugQ3S0z6pUERMIAFk0nPNeQSRqqN0r3LHkmPybQ24kSRinneRvV/xktk8w1YPdCEzXM4
-         t1L/V3V3qorK53JJ/b8yJDxZyWB73ZP57bLmuyC20ad9T8VOQ8z3zAIpxhgWwr7CTrPO
-         sDtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749032736; x=1749637536;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yyzqZAFPiecVZ8v3jVi3mxvHGnKj1UzTNsDM6WLqpOU=;
-        b=BDz3BmoLoK6xPvTry9AcFabRIItehJBHHLNN1qTA85D8/vegtrH6G8Ig26m5VpX/80
-         MpniZfDkcj6/RxV4jOKD/YAvel+tIpYL2nD8gIYjZug6UyG9Oq1ZFRBSp/VxTIP2E2R/
-         mL80NePLEEmWNffrpJIxwry0oKhnV625QxW6ZIS56mEU181GUJF8LQ5vDg05Q7P08vx1
-         8byi5F6nq7VncbBD1/yZdEIvJhBrmCpepSqDDSs/On/L7GC9E17iU1vuJqakx+2gd9zh
-         pqNISXp2pMCrrSM+PWQsKbBk/YXhQMMYPAcinHQfb0vUdsWwP8Pvuyw2t1YsDSE/FWmX
-         k2gA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC7hgsDC4TneJnh79UYKWxjNy/yXQsH3rV6PMlXl8U3qbIK5MgskECycXEL4fDo2usFj0PVvVX+nxoKzXRdz9F2Q==@vger.kernel.org, AJvYcCX5vwG03Hds8c8LJQqC/IB7vh0PdyuXYyX1Qd7dgyC2wU2k+aHKvK2kukoh+lvPIZVCA74=@vger.kernel.org, AJvYcCXttMm+C8a45D5WjLm7yviM23/skBnIMnszms4ujXplbrB3j6/GULhALEX7x0tJv291G7iTMUjsSJpAWEYB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+RI0/lFSnc5OJECfDzWnDlDwsLfhDQXZsdEYOKT2glJlCWMLO
-	1oC7Ebr7ZUJITsrRIQapYa2dAT1akOYstyPYptt+jNowhxKMNBpsOXgtoSZazOQyKzop7w==
-X-Gm-Gg: ASbGncs4U5XXWjYJaIMZODpcZ13G9pL3c6jNWu7ruZh3xRVg7eUaBot9kMi8M6foEn3
-	GOUjumnsnu1kg+BV4ZqS0v42c6h2WvxF/sx1qqmmUz8ARjcK7FfIsVQnh6cgLgT/fZ98Zzyx4Z2
-	4hjUibA1arTXlXJBvBiNuaP/lrPeAV49y5b2yigUFqLA3Ohsm9Ys5BcoqYny+4aVeDGwEo56CTC
-	CJkkijIqcBB7/356gKLxM92Kuo0NoCmtuuwN+l1FNsQbdCSjE8zFH8AQj/Pd0Q45OAGUVinyXFx
-	yXAok9EBYIeJYJVR5YXEcRedyTVHCx1cppNDG4s=
-X-Google-Smtp-Source: AGHT+IFymM6noBC/NQKxn6oL2pO5mt03fzXdx6wOmLhOIQ4wn2u93ARJ20EQbs1qQuX1oAkAWNMMWw==
-X-Received: by 2002:a05:600c:609b:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-451f0f247b4mr19281225e9.8.1749032735577;
-        Wed, 04 Jun 2025 03:25:35 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b849sm21424103f8f.14.2025.06.04.03.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 03:25:35 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 4 Jun 2025 12:25:33 +0200
-To: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, acme@kernel.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	adrian.hunter@intel.com, peterz@infradead.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iryXm66a"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=egLrzXjNAUuKfQLdddD0K8slsgz2ryPJgQoyPWELHWI=; b=iryXm66aJPrn3fFNGyydYrr1z+
+	Bf2iWSovX7QI361HrNo/XIL4dEvRJmGnF/Aovhp71kJ1zXQMbqxIMtfpBZo1LW6uHCwNxl3yI5nhN
+	4naAUk8KFOBkI+v+1ovLaIorZ5g5NIGFuMh8H3YPlMJJ7yyn6gIm/R1oKUqUzDhlg4BHrAE1iuWu4
+	imhLviXGBfjykkntSsd8pGhiPfwaWD6eyPJegIxhaM1fhRl6mD7iBCkdgQxWnWqGDI63QBGg9MgeF
+	86DhkDNpWIpWOvCmwPdiazrrF49H1ZdCKiPcVdLBKSmCcYyl8FAgfsnhiOirKl1misILATB1eIkfo
+	MgEI6HNA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMnN0-00000000ttB-0yu9;
+	Wed, 04 Jun 2025 12:37:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1EA0230078B; Wed,  4 Jun 2025 14:37:25 +0200 (CEST)
+Date: Wed, 4 Jun 2025 14:37:25 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Leo Yan <leo.yan@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
- trace instances
-Message-ID: <aEAfHYLEyc7xGy7E@krava>
-References: <20250529065537.529937-1-howardchu95@gmail.com>
- <aDpBTLoeOJ3NAw_-@google.com>
- <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
- <20250602181743.1c3dabea@gandalf.local.home>
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604123725.GJ38114@noisy.programming.kicks-ass.net>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <aEAau+v4qBQSt13s@e129823.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250602181743.1c3dabea@gandalf.local.home>
+In-Reply-To: <aEAau+v4qBQSt13s@e129823.arm.com>
 
-On Mon, Jun 02, 2025 at 06:17:43PM -0400, Steven Rostedt wrote:
-> On Fri, 30 May 2025 17:00:38 -0700
-> Howard Chu <howardchu95@gmail.com> wrote:
+On Wed, Jun 04, 2025 at 11:06:51AM +0100, Yeoreum Yun wrote:
+
+> >  - EXIT means task that the even was assigned to died, but child events
+> >    still live, and further children can still be created. But the event
+> >    itself will never be active again. It can only transition to
+> >    {REVOKED,DEAD};
 > 
-> > Hello Namhyung,
-> > 
-> > On Fri, May 30, 2025 at 4:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > (Adding tracing folks)  
-> > 
-> > (That's so convenient wow)
+> I have a slight quetions. after parent event set EXIT,
+> Does EXIT event should be inherited?
 > 
-> Shouldn't the BPF folks be more relevant. I don't see any of the tracing
-> code involved here.
+> for example
 > 
-> > 
-> > >
-> > > On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:  
-> > > > perf trace utilizes the tracepoint utility, the only filter in perf
-> > > > trace is a filter on syscall type. For example, if perf traces only
-> > > > openat, then it filters all the other syscalls, such as readlinkat,
-> > > > readv, etc.
-> > > >
-> > > > This filtering is flawed. Consider this case: two perf trace
-> > > > instances are running at the same time, trace instance A tracing
-> > > > readlinkat, trace instance B tracing openat. When an openat syscall
-> > > > enters, it triggers both BPF programs (sys_enter) in both perf trace
-> > > > instances, these kernel functions will be executed:
-> > > >
-> > > > perf_syscall_enter
-> > > >   perf_call_bpf_enter
-> > > >     trace_call_bpf
+>    parent task(0, ...) -> parent_event(0, parent_event:NULL)
+>      ` child_task(1, parent:0) -> child_event(1, parent_event:0)
+>          ` child_task(2, parent:1) -> child_event(2, parent_event:0)
 > 
-> This is in bpf_trace.c (BPF related, not tracing related).
+> In this case when parent task(0) is exited,
+> parent->event will be set as EXIT state.
 > 
-> -- Steve
-> 
-> 
-> > > >       bpf_prog_run_array
-> > > >
-> > > > In bpf_prog_run_array:
-> > > > ~~~
-> > > > while ((prog = READ_ONCE(item->prog))) {
-> > > >       run_ctx.bpf_cookie = item->bpf_cookie;
-> > > >       ret &= run_prog(prog, ctx);
-> > > >       item++;
-> > > > }
-> > > > ~~~
-> > > >
-> > > > I'm not a BPF expert, but by tinkering I found that if one of the BPF
-> > > > programs returns 0, there will be no tracepoint sample. That is,
-> > > >
-> > > > (Is there a sample?) = ProgRetA & ProgRetB & ProgRetC
-> > > >
-> > > > Where ProgRetA is the return value of one of the BPF programs in the BPF
-> > > > program array.
-> > > >
-> > > > Go back to the case, when two perf trace instances are tracing two
-> > > > different syscalls, again, A is tracing readlinkat, B is tracing openat,
-> > > > when an openat syscall enters, it triggers the sys_enter program in
-> > > > instance A, call it ProgA, and the sys_enter program in instance B,
-> > > > ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
-> > > > even though ProgB returns 1; (Is there a sample?) = ProgRetA (0) &
-> > > > ProgRetB (1) = 0. So there won't be a tracepoint sample in B's output,
-> > > > when there really should be one.  
-> > >
-> > > Sounds like a bug.  I think it should run bpf programs attached to the
-> > > current perf_event only.  Isn't it the case for tracepoint + perf + bpf?  
-> > 
-> > I really can't answer that question.
+> But suppose the child_task(2) try to fork (child_task3) and
+> inherit the event (create child_event(3, parent_event:0),
+> and at the fork, forking can observe the parent event state as "EXIT".
+> In thie situation why child_event(3, parent_event:0) should be created for
+> child_task(3)?
 
-bpf programs for tracepoint are executed before the perf event specific
-check/trigger in perf_trace_run_bpf_submit
+Yes. You set out to monitor the whole hierarchy, so any child created
+after the first task should be monitored, until such time that you close
+the event.
 
-bpf programs array is part of struct trace_event_call so it's global per
-tracepoint, not per perf event
+Notably, a fair number of daemons go about their business by explicitly
+closing their original task in order to detach from the tty.
 
-IIRC perf trace needs the perf event sample and the bpf program is there
-to do the filter and some other related stuff?
+Also, per the context switch optimization the original event doesn't
+need to stay with the original parent, it can end up on a random child.
 
-if that's the case I wonder we could switch bpf_prog_run_array logic
-to be permissive like below, and perhaps make that as tracepoint specific
-change, because bpf_prog_run_array is used in other place
-
-or make it somehow configurable.. otherwise I fear that might break existing
-use cases.. FWIW bpf ci tests [1] survived the change below
-
-jirka
-
-
-[1] https://github.com/kernel-patches/bpf/pull/9044
-
----
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 5b25d278409b..4ca8afe0217c 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -2218,12 +2218,12 @@ bpf_prog_run_array(const struct bpf_prog_array *array,
- 	const struct bpf_prog *prog;
- 	struct bpf_run_ctx *old_run_ctx;
- 	struct bpf_trace_run_ctx run_ctx;
--	u32 ret = 1;
-+	u32 ret = 0;
- 
- 	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "no rcu lock held");
- 
- 	if (unlikely(!array))
--		return ret;
-+		return 1;
- 
- 	run_ctx.is_uprobe = false;
- 
-@@ -2232,7 +2232,7 @@ bpf_prog_run_array(const struct bpf_prog_array *array,
- 	item = &array->items[0];
- 	while ((prog = READ_ONCE(item->prog))) {
- 		run_ctx.bpf_cookie = item->bpf_cookie;
--		ret &= run_prog(prog, ctx);
-+		ret |= run_prog(prog, ctx);
- 		item++;
- 	}
- 	bpf_reset_run_ctx(old_run_ctx);
