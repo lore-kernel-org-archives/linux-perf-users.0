@@ -1,157 +1,113 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DBF231828;
-	Wed,  4 Jun 2025 03:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2017548;
+	Wed,  4 Jun 2025 04:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749007440; cv=none; b=EotZwPUhR4BEdYk8BI7enw+WKvMXHrtPss3GSdB6TL3597qkso8I5JYJspziFllZ2YOaxZEbcMRLZBt7q7CCIpT7E6C6If0gaIe9MqdgyDFXz+AtHd/QrCSgx6aeJQ57r1boQpX/iUQNRtZkJ34Xz5r8zo0yvL1twBup0RPVa2Y=
+	t=1749012045; cv=none; b=E1hUJdcfTyRAFVNQGdngH3+CmwJGc2djIVBwqEuXR8CgCnKi0wQIp2rFBFPEZBfPjjlztBpIWekc/VZKSgnVCTyM89wRvUkh4jweaWgHVyV03SOduwAfz+bWo6uKlL6+ijsmg3d+LoGNnNlG22washpACVyvCvZe7Tqke2bCq9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749007440; c=relaxed/simple;
-	bh=KKCtxcNKDurQedRm8dJ/mP8QxHRVX5UPgpzxDkDohe8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y7K8UMwUDjZ4iJ7Lb0XCE4LZnRBYNZsonFSKqV9Ooz+DnK31XEK9/yQc4lagOY5yzgesTlOBk+WGcfQGPxynlO7AGyWMpEVvtMKXTZ7+HoRnx058+L7TBBu4Wn8iRNFn6uyQe3W+wq33ZhjfsqHMMhmKuryKc5zlFcYOeUSir7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bBtGJ4Hq3zKHND7;
-	Wed,  4 Jun 2025 11:23:52 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id F16FF1A118D;
-	Wed,  4 Jun 2025 11:23:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP1 (Coremail) with SMTP id cCh0CgC3GntEvD9ondLUOA--.11688S6;
-	Wed, 04 Jun 2025 11:23:50 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	davidcc@google.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH v2 2/2] perf/core: Fix WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0) in perf_cgroup_switch
-Date: Wed,  4 Jun 2025 03:39:24 +0000
-Message-Id: <20250604033924.3914647-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250604033924.3914647-1-luogengkun@huaweicloud.com>
-References: <20250604033924.3914647-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1749012045; c=relaxed/simple;
+	bh=ZgbX+lwsAkjzaGPYBrOziBHAng2N+Ia2h5D3wr3cvMA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=a1LWdL6uHwSIOPxQWQHP5e4jdvgpOzuDb8d7mnDq6T0iHR47cjy8PI2S2jhhpMvSnPKcJ4vYOBvO8R/wVEbUhdA1any7hI99XWEpyO2ZtbgHN3gt8rHAI0aywXYb8bjf6ajpEktfZG01N+B5t+ajf8RLJ3eciZVk7Qvrsux3Z/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T34RA5cF; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T34RA5cF"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55324587a53so527130e87.0;
+        Tue, 03 Jun 2025 21:40:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749012042; x=1749616842; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BBwcT2Y3AdeFqGjIta7dk28dffezr6AYbELS+PC829Q=;
+        b=T34RA5cFZcvgGk5Q6pEAlathUJtKdOlkF/NW2B6SFGCoIy/vcG1o9fXRUXMmEJ4Izr
+         Jq3yHUo7SJr3keK9pPfKwkjrmLjH47LN6sBq98nuxEXA62BFwWOVhvT7MGJLi9+N3Vxa
+         H9KPoFSlLLj6Pf3pTdcjrueUSrxBlg2hI+/0aQJHRHA+0hdlX4pijrA6pdTXs24lkf+S
+         C4qF6cFRv4KGlmKxpwcjZm65xo0fL8i1UKflMJtRnGykMBC/+/5f50ujb12TyCJSFLfE
+         4QiYYDfTs0s8W+x06uMWDeoOkn5M/xrOSYrBsX/NDvaaQ8689gY/2g+vQCbwU4sOdvy4
+         YgHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749012042; x=1749616842;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BBwcT2Y3AdeFqGjIta7dk28dffezr6AYbELS+PC829Q=;
+        b=IhcwGHoIrmpBkzQTIt6vxiX3m1dBN+AGpVzDQTdNkbK2ZCd56d5GTO/ntgsDspVdKb
+         Cr9yMGh64YWSLV9mOhTYGR+TJlOTSppQhce9mSog9cce2mjDa3d0zhjAvTXcI2e08Q21
+         f4wUYpaSI7WcJIg6IRa8sN1hIHB0LqDKNqNaBHxArQbYNXETMyGLUnxnCvsru/zRj0rP
+         bvo1G3isyBDjRbWMJ7AbjUvB+sWNxRh7DiRNHMvsPPd7scCs0Cl8cjFAl8323aQrjb6j
+         bBCtl2kLDApH1oH4PWyX2OQb6t20awtCR7q9lrPA4nBF3CpWTn9sZusQVXt1Rbt7LfH3
+         ve6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVE/PmNMmuci00LVT69ybtg5ZlgQSN2XeNrJGWErME2+MfGhIKMuDG4tM8L2R4JwywMfxePBibtT6rkq0BGYoLrzw==@vger.kernel.org, AJvYcCXE1pzszUBAUmfclC4mHsgNNtLkb5gTIhj9IQuheWcIOL0Bac3tx3FkZ6VHuZ2bkUBZhWdgrX3sv14UuoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9q36++xGMksDc18sz3vM3RlZwGHQQy1hW/jm7fae+tpJtxvez
+	r/ODPlsBm4TDCMp61NJCvzB7DFj4DXZAZoTAKvzEdZ8UUHsMBw9TBiVuHprtDO4URAHTnc3+ltI
+	EjboQZzZu/JeHSLtbth5LQNgXGXdXQhg=
+X-Gm-Gg: ASbGncuLafHLoaNZvO38WjepRkMs/OL1FxXkXAgzJLlB69smv4QkP0BB0yoCJhE6+Qw
+	dttEtGtsrJDLV3UN49BQEPP2l5Lpd0W8+/xWqy9VrrQeTlU/vNFYiR5aWHA2gx8gxWml7CIpq8f
+	88kOD2j+U8ajOwQn/O56GP748JtVTALtLlbH4=
+X-Google-Smtp-Source: AGHT+IHZqiswRY+fLCTY2SYxo+yPwCSLeNxQFExZTtLGO20c2u3Go0kPNDFA9tdiDaWF8Mp3AXwUtgOooWiQ0WIVV7Q=
+X-Received: by 2002:a05:6512:3f28:b0:550:e8b6:6996 with SMTP id
+ 2adb3069b0e04-5535315c114mr1434065e87.2.1749012041965; Tue, 03 Jun 2025
+ 21:40:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgC3GntEvD9ondLUOA--.11688S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF4DWr17XF1kuF1rZF1kXwb_yoW5GF47pa
-	n7CrW29ws5XF90qay5t34vq3W0qa1Fqa95Wr1jkw4ayrW5Xr1fXF4xCw43JF15AFn7JFy3
-	trZ0vr15C34UKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQXo7UUUUU=
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+From: Luka <luka.2016.cs@gmail.com>
+Date: Wed, 4 Jun 2025 12:40:30 +0800
+X-Gm-Features: AX0GCFv0gwTwReVMSJeOFrgjhgLxppQPcP4O-KuHCwh29kOjrUO2_v0Ieopskz0
+Message-ID: <CALm_T+0ad=OMonZ+370GOXWGHV0+SS_i3zmkrpN==Mz8Aa8PKw@mail.gmail.com>
+Subject: [Bug] WARNING in event_function in Linux kernel v6.12
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-There may be concurrency between perf_cgroup_switch and
-perf_cgroup_event_disable. Consider the following scenario: after a new
-perf cgroup event is created on CPU0, the new event may not trigger
-a reprogramming, causing ctx->is_active to be 0. In this case, when CPU1
-disables this perf event, it executes __perf_remove_from_context->
-list _del_event->perf_cgroup_event_disable on CPU1, which causes a race
-with perf_cgroup_switch running on CPU0.
+Dear Kernel Maintainers,
 
-The following describes the details of this concurrency scenario:
+I am writing to report a potential vulnerability identified in the
+upstream Linux Kernel version v6.12, corresponding to the following
+commit in the mainline repository:
 
-CPU0						CPU1
+Git Commit:  adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
 
-perf_cgroup_switch:
-   ...
-   # cpuctx->cgrp is not NULL here
-   if (READ_ONCE(cpuctx->cgrp) == NULL)
-   	return;
+This issue was discovered during the testing of the Android 16 AOSP
+kernel, which is based on Linux kernel version 6.12, specifically from
+the AOSP kernel branch:
 
-						perf_remove_from_context:
-						   ...
-						   raw_spin_lock_irq(&ctx->lock);
-						   ...
-						   # ctx->is_active == 0 because reprogramm is not
-						   # tigger, so CPU1 can do __perf_remove_from_context
-						   # for CPU0
-						   __perf_remove_from_context:
-						         perf_cgroup_event_disable:
-							    ...
-							    if (--ctx->nr_cgroups)
-							    ...
+AOSP kernel branch: android16-6.12
+Manifest path: kernel/common.git
+Source URL:  https://android.googlesource.com/kernel/common/+/refs/heads/android16-6.12
 
-   # this warning will happened because CPU1 changed
-   # ctx.nr_cgroups to 0.
-   WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+Although this kernel branch is used in Android 16 development, its
+base is aligned with the upstream Linux v6.12 release. I observed this
+issue while conducting stability and fuzzing tests on the Android 16
+platform and identified that the root cause lies in the upstream
+codebase.
 
-To fix this problem, expand the lock-holding critical section in
-perf_cgroup_switch.
 
-Fixes: db4a835601b7 ("perf/core: Set cgroup in CPU contexts for new cgroup events")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- kernel/events/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Bug Location: event_function+0x304/0x330 kernel/events/core.c:281
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 280d42b40b34..1e442897ebde 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -931,20 +931,20 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
- 	struct perf_cgroup *cgrp;
- 
-+	cgrp = perf_cgroup_from_task(task, NULL);
-+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	/*
- 	 * cpuctx->cgrp is set when the first cgroup event enabled,
- 	 * and is cleared when the last cgroup event disabled.
- 	 */
- 	if (READ_ONCE(cpuctx->cgrp) == NULL)
--		return;
-+		goto unlock;
- 
- 	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
- 
--	cgrp = perf_cgroup_from_task(task, NULL);
- 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
--		return;
-+		goto unlock;
- 
--	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 	perf_ctx_disable(&cpuctx->ctx, true);
- 
- 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
-@@ -962,6 +962,7 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
- 
- 	perf_ctx_enable(&cpuctx->ctx, true);
-+unlock:
- 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
- }
- 
--- 
-2.34.1
+Bug Report: https://hastebin.com/share/egafotaqot.css
 
+Entire Log: https://hastebin.com/share/miyonehava.perl
+
+
+Thank you very much for your time and attention. I sincerely apologize
+that I am currently unable to provide a reproducer for this issue.
+However, I am actively working on reproducing the problem, and I will
+make sure to share any findings or reproducing steps with you as soon
+as they are available.
+
+I greatly appreciate your efforts in maintaining the Linux kernel and
+your attention to this matter.
+
+Best regards,
+Luka
