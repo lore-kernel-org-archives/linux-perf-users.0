@@ -1,194 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9036B18B47E;
-	Wed,  4 Jun 2025 15:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF751DDC1;
+	Wed,  4 Jun 2025 15:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051075; cv=none; b=iLI3RX8bbplynwN+frUr33S8gqJuSqjBmTz3tC6YgQia1L9NEwx92A6k53aOC6tjkJKFdnOqFuNBDnyiXaU0/GpGdYzzHE+KLSLQAqU+KzLb2tPkx55Foq7ezOdPzOxlfttWZ94iBqs/qPsBwJvwmCUI7T8m1loYWEWuHcylzow=
+	t=1749051155; cv=none; b=nEKTrhTA7NUYgn6B+txtKVCrbE8W+nhl6KOECTJV/rYl4sSbKNMPD6aPiYGNV+53gKU1ApoC9odf1BnKf379MV+R24iN1bxHtkQdu6JK+OC6LbMeL3vkS7Cia7eINgthL0QfjuIk/WqOTmq45rzgBDfXYPtxQcvazjdxKZaR3JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051075; c=relaxed/simple;
-	bh=xjwQ85hYcU1ZrPH6YnswDzMKpczKMUcTOpAQm5SeA+8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XpmkHcqmtthetSrGinZLCXtNTJilwv4M9Ux2Xxez1XP5Ii80DRlXz40BvuifTmR9yYQxtysQm9wIu6S/1TmQ5v7AHeJ9BYj7AllIeA0uleuMSmML+ej/sR+Nod9YwOiUXpRxT/4gBdH/Bpo3tNTULs01Kt73vG3s89K3gl3dYM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFZ1SKoC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749051155; c=relaxed/simple;
+	bh=Oxj0L0vMUeF1rATIob8FyEydepIqKducGZ1bw6oENWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u4pFkqYiNXbX5m/Sjpzd3k2T2O7Vhi8+GNbPD4grKpOi2x8tJPtrGSlaqSDMARNz+CdgLodupmAjCrDsLmPOAGwaJ9SvTlOH2X1LU/FCs4va33GXCrtli9RwfhAXzcMHw5hiutcot179Kk8wH/ylliRQnLJkmWVNXMyJ0W/0SG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B6oP9n3H; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFZ1SKoC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB9DC4CEE4;
-	Wed,  4 Jun 2025 15:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749051074;
-	bh=xjwQ85hYcU1ZrPH6YnswDzMKpczKMUcTOpAQm5SeA+8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RFZ1SKoCh5NLJ8Hir4XT3wS2hpvE9PKPaoXUwqK6A8Y6cyWPWxoiDHP0B3g97Ezw2
-	 oHmbFqVnwwa+1BujyqnxsP0HYVzTaaMYo6TvJmShbXRzO+7+74vAELoOyv7PXZfuuE
-	 vt8jqfGmV1yKX96vfbSYofPX1rrlrfdapV5NS/Q9kHfzwJkebOYVcgEkUqSvslFs+P
-	 qRMsf01mcU1aGfLgFUgwkHhPDv1PbR2dnAGoC4JMZ/2/DoRmTpjTQvOwvN9RywAc3o
-	 6IFzqzEnCBgdXkssXygB6MpnW+faE9oMjEnP1y9MXt03hRF5mZd6hxekaJkATa9hr4
-	 fyxQftlHoBWTQ==
-Received: from [149.88.19.236] (helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uMq59-003Fww-Fx;
-	Wed, 04 Jun 2025 16:31:11 +0100
-Date: Wed, 04 Jun 2025 16:31:08 +0100
-Message-ID: <87a56ned6r.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu
- <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B6oP9n3H"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zSIx60s8W1RWmCAF04ar6XaDTCMxl8+rRsS7EF61guU=; b=B6oP9n3HnEWwmroXUatjSLp0PB
+	NtpK3WbsPpN8PGKdq4svfO035Bd6PjgODgScaDHOjm5fCSfybX4KxecZlOhU5NB5Lzifu0guXSMQ8
+	M+GjaTu2GusJh0wpNjx5civ2v535J9ZftwnpJa8/RbmiBq81Lx+ejCGF6kKjR50sZvmw0y5HC9V1Y
+	rYksRqKo6BWLnF2VO7fKZXe937u3FN6t9MXvcf8/DqXS6xRJn6k1ZQz+ZRZGaVM7qoyK6lKbU7mVG
+	lYfiEmEUWU8yHX+zaABzBqHAcXmAiDZvvLqmHkTW1b+dBS0P9bkL3EEoD2fcFjNrrUfhGEX2hssVb
+	fwxGiKsA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uMq6G-00000003ED3-1d8p;
+	Wed, 04 Jun 2025 15:32:20 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BD968300787; Wed,  4 Jun 2025 17:32:19 +0200 (CEST)
+Date: Wed, 4 Jun 2025 17:32:19 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 06/11] KVM: arm64: Add trap configs for PMSDSFR_EL1
-In-Reply-To: <2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
-References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
-	<20250529-james-perf-feat_spe_eft-v2-6-a01a9baad06a@linaro.org>
-	<867c1ze4pg.wl-maz@kernel.org>
-	<2fb1965b-bef9-4a8e-a1c7-c8a77d957b23@linaro.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
+	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
+Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
+ sample
+Message-ID: <20250604153219.GJ39944@noisy.programming.kicks-ass.net>
+References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+ <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
+ <20250604142437.GM38114@noisy.programming.kicks-ass.net>
+ <aEBeRfScZKD-7h5u@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 149.88.19.236
-X-SA-Exim-Rcpt-To: james.clark@linaro.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEBeRfScZKD-7h5u@J2N7QTR9R3>
 
-On Tue, 03 Jun 2025 10:50:23 +0100,
-James Clark <james.clark@linaro.org> wrote:
+On Wed, Jun 04, 2025 at 03:55:01PM +0100, Mark Rutland wrote:
+
+> I think we might need something in the perf core for cpu-bound events, assuming
+> those can also potentially make samples.
 > 
+> From a quick scan of perf_event_sample_format:
 > 
+> 	PERF_SAMPLE_IP			// safe
+> 	PERF_SAMPLE_TID			// safe
+> 	PERF_SAMPLE_TIME		// safe
+> 	PERF_SAMPLE_ADDR		// ???
+
+Safe, set by driver, or 0.
+
+> 	PERF_SAMPLE_READ		// ???
+
+This is basically read(2) on a fd, but in sample format. Only the count
+values. This good.
+
+> 	PERF_SAMPLE_CALLCHAIN		// may access mm
+
+Right.
+
+> 	PERF_SAMPLE_ID			// safe
+> 	PERF_SAMPLE_CPU			// safe
+> 	PERF_SAMPLE_PERIOD		// safe
+> 	PERF_SAMPLE_STREAM_ID		// ???
+safe
+
+> 	PERF_SAMPLE_RAW			// ???
+safe, this is random data returned by the driver
+
+> 	PERF_SAMPLE_BRANCH_STACK	// safe
+> 	PERF_SAMPLE_REGS_USER		// safe
+> 	PERF_SAMPLE_STACK_USER		// may access mm
+> 	PERF_SAMPLE_WEIGHT		// ???
+> 	PERF_SAMPLE_DATA_SRC		// ???
+Both should be safe, driver sets them.
+
+> 	PERF_SAMPLE_IDENTIFIER		// safe
+> 	PERF_SAMPLE_TRANSACTION		// ???
+Safe, another random thing the driver can set. This was for
+transactional memory stuff.
+
+> 	PERF_SAMPLE_REGS_INTR		// safe
+> 	PERF_SAMPLE_PHYS_ADDR		// safe; handles mm==NULL && addr < TASK_SIZE
+> 	PERF_SAMPLE_AUX			// ???
+
+Safe, should be driver, PT for Intel, or that CoreSight for ARM.
+
+> 	PERF_SAMPLE_CGROUP		// safe
+> 	PERF_SAMPLE_DATA_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
+> 	PERF_SAMPLE_CODE_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
+
+But does use init_mm when !mm, perf_get_page_size().
+
+> 	PERF_SAMPLE_WEIGHT_STRUCT	// ???
+Safe, driver bits again.
+
 > 
-> On 29/05/2025 5:56 pm, Marc Zyngier wrote:
-> > On Thu, 29 May 2025 12:30:27 +0100,
-> > James Clark <james.clark@linaro.org> wrote:
-> >> 
-> >> SPE data source filtering (SPE_FEAT_FDS) adds a new register
-> >> PMSDSFR_EL1, add the trap configs for it.
-> >> 
-> >> Signed-off-by: James Clark <james.clark@linaro.org>
-> >> ---
-> >>   arch/arm64/kvm/emulate-nested.c | 1 +
-> >>   arch/arm64/kvm/sys_regs.c       | 1 +
-> >>   2 files changed, 2 insertions(+)
-> >> 
-> >> diff --git a/arch/arm64/kvm/emulate-nested.c b/arch/arm64/kvm/emulate-nested.c
-> >> index 0fcfcc0478f9..05d3e6b93ae9 100644
-> >> --- a/arch/arm64/kvm/emulate-nested.c
-> >> +++ b/arch/arm64/kvm/emulate-nested.c
-> >> @@ -1169,6 +1169,7 @@ static const struct encoding_to_trap_config encoding_to_cgt[] __initconst = {
-> >>   	SR_TRAP(SYS_PMSIRR_EL1,		CGT_MDCR_TPMS),
-> >>   	SR_TRAP(SYS_PMSLATFR_EL1,	CGT_MDCR_TPMS),
-> >>   	SR_TRAP(SYS_PMSNEVFR_EL1,	CGT_MDCR_TPMS),
-> >> +	SR_TRAP(SYS_PMSDSFR_EL1,	CGT_MDCR_TPMS),
-> >>   	SR_TRAP(SYS_TRFCR_EL1,		CGT_MDCR_TTRF),
-> >>   	SR_TRAP(SYS_TRBBASER_EL1,	CGT_MDCR_E2TB),
-> >>   	SR_TRAP(SYS_TRBLIMITR_EL1,	CGT_MDCR_E2TB),
-> >> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> >> index 5dde9285afc8..9f544ac7b5a6 100644
-> >> --- a/arch/arm64/kvm/sys_regs.c
-> >> +++ b/arch/arm64/kvm/sys_regs.c
-> >> @@ -2956,6 +2956,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
-> >>   	{ SYS_DESC(SYS_PMBLIMITR_EL1), undef_access },
-> >>   	{ SYS_DESC(SYS_PMBPTR_EL1), undef_access },
-> >>   	{ SYS_DESC(SYS_PMBSR_EL1), undef_access },
-> >> +	{ SYS_DESC(SYS_PMSDSFR_EL1), undef_access },
-> > 
-> > PMSDSFR_EL1 has an offset in the VNCR page (0x858), and must be
-> > described as such. This is equally true for a bunch of other
-> > SPE-related registers, so you might as well fix those while you're at
-> > it.
-> > 
-> > Thanks,
-> > 
-> > 	M.
-> > 
-> 
-> I got a bit stuck with what that would look like with registers that
-> are only undef in case there was something that I missed, but do I
-> just document the offsets?
-> 
-> +++ b/arch/arm64/include/asm/vncr_mapping.h
-> @@ -87,6 +87,8 @@
->  #define VNCR_PMSICR_EL1         0x838
->  #define VNCR_PMSIRR_EL1         0x840
->  #define VNCR_PMSLATFR_EL1       0x848
-> +#define VNCR_PMSNEVFR_EL1       0x850
-> +#define VNCR_PMSDSFR_EL1        0x858
->
+> ... I think all the dodgy cases use mm somehow, so maybe the perf core
+> should check for current->mm?
 
-This should be enough.
+This then... I suppose.
 
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -596,6 +596,16 @@ enum vcpu_sysreg {
->         VNCR(ICH_HCR_EL2),
->         VNCR(ICH_VMCR_EL2),
-> 
-> +       /* SPE Registers */
-> +       VNCR(PMBLIMITR_EL1),
-> +       VNCR(PMBPTR_EL1),
-> +       VNCR(PMBSR_EL1),
-> +       VNCR(PMSCR_EL1),
-> +       VNCR(PMSEVFR_EL1),
-> +       VNCR(PMSICR_EL1),
-> +       VNCR(PMSIRR_EL1),
-> +       VNCR(PMSLATFR_EL1),
-
-I don't see a point in having those until we actually have SPE support
-for guests, if ever, as these will potentially increase the size of
-the vcpu sysreg array for no good reason.
-
-> And then sys_reg_descs[] remain as "{ SYS_DESC(SYS_PMBLIMITR_EL1),
-> undef_access }," rather than EL2_REG_VNCR() because we don't actually
-> want to change to bad_vncr_trap()?
-
-This seem OK for now. We may want to refine this in the future though,
-as these registers cannot trap when NV is enabled. Yes, this is a bug
-in the architecture.
-
-> There are some other parts about fine grained traps and res0 bits for
-> NV, but they all already look to be setup correctly. Except
-> HDFGRTR2_EL2.nPMSDSFR_EL1, but it's inverted, none of the FGT2 traps
-> are configured currently and PMSDSFR_EL1 is already trapped by
-> MDCR_EL2 anyway.
-
-Can you elaborate on that? We have:
-
-	SR_FGT(SYS_PMSDSFR_EL1,		HDFGRTR2, nPMSDSFR_EL1, 0),
-
-which seems to match the spec.
-
-We also have full support for FEAT_FGT2 already (even if we have no
-support for the stuff they trap).
-
-Thanks,
-
-	M.
-
--- 
-Jazz isn't dead. It just smells funny.
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f..49944e4ec3e7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7439,6 +7439,10 @@ perf_sample_ustack_size(u16 stack_size, u16 header_size,
+ 	if (!regs)
+ 		return 0;
+ 
++	/* No mm, no stack, no dump. */
++	if (!current->mm)
++		return 0;
++
+ 	/*
+ 	 * Check if we fit in with the requested stack size into the:
+ 	 * - TASK_SIZE
+@@ -8153,6 +8157,9 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ 	if (!kernel && !user)
+ 		return &__empty_callchain;
+ 
++	if (!current->mm)
++		user = false;
++
+ 	callchain = get_perf_callchain(regs, 0, kernel, user,
+ 				       max_stack, crosstask, true);
+ 	return callchain ?: &__empty_callchain;
