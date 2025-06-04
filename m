@@ -1,277 +1,176 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A06171A1
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 18:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8034111BF
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 20:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749061055; cv=none; b=F3hK9luxCQ846deQAyjATlGHQdaM5t2kcszNGqOt7FQDUcCZ6vQVPooQ2OLO4qXtovth/NXFD2ZrhMtaRPTaQYtM9m1WCpyKpyorUHEHjgtpiDhLFJlG0qTE4CQegBRHBNEP0MLpWYJxne4lNc9cp8NzcMVpVLNg12m+r1QfJDM=
+	t=1749067751; cv=none; b=ZDSNeR5BCQWanaOrZr+g1vpca2Xfxv/EbB5mBVEL/ZFAQ3NLqdkkr6SvQyWbtbWNd5m/FMa4iULAPHD2d0o/sR5HrGwzSm2DE2DofYre2MH97Tsyhj/vPCVpcDKJ7RZeRGc27i3uyp3Nm74IJX2b0n/ZIEF7XG1Eje5Uu4sQCc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749061055; c=relaxed/simple;
-	bh=psoh91nI2uI0Sy15561N6TGZ7CCZ0e/7pFH5VDdguCY=;
+	s=arc-20240116; t=1749067751; c=relaxed/simple;
+	bh=JeOoVB0bIPowliZ3Nqz1q2FpC5OCUaH8ypU+/TyDaMU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=myfkoFGdWXH4QKwVcc+0oIfsOjhyD43A79Qg2bYbBItfd2mH8B3SdZMShlppkvZocwZ0fmxZ0nCPzb1H+rQ0IAHg7Ll8+JszqWXVjv9x8oVY+DSjSBF1Evs1SGhA9HWPp+3rBm1yHY608WCVcSR0zlvvTJ5W6hWLqmwUuqgVrVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c40QDRH+; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=UdRbW15eFJSlJj940GTYlBJ2KFbIr1aRvs6k+EeydcGuQ1vK7ibu+sbRNHuAvAPZ19IdHXEsV+rBjDn3JyIAiWFscWWpf4hqUf7/rfaTQjcb3LoRMEzeZxEplGN9Qr6ve1g8DJ6dnBN0882gH3aZZaEMlsc+aVMZV7Sg+h2RcFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w2VY1pQ3; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c40QDRH+"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad51ef2424bso28313966b.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 11:17:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w2VY1pQ3"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso358175ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 13:09:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749061052; x=1749665852; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749067749; x=1749672549; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lj/ZRM00Y6bck08t7l8DzmjqoE1Rg6EPcxweeTc+cRY=;
-        b=c40QDRH+22d6Vb+dLa9JAyCadQjzz8TWWI/+xtM4PRnKRdyLCtul9H2PA2cw0wFjDy
-         8Mi5JLtbf/5bBlZv15800JQ4F2atvHRJ8OxnVZfV+PXfAHXVNzz7JCMqfRaKSYGfXswa
-         4kZpBlqKWrObb19JF/WauAKZMdlh0KeAJ34utdKOkwbUh/F/1UQVdGIX0q9sivL2C+ah
-         OhNlLL76TWN94+Rsu2Bg5kLJ6xNN5oBTNfV9Gjqd+HBpLk0OFt/zBaJGGCp09ciEEauM
-         g64fQidv59OvNFVPtaZ0irdHX4+zZkyS4AwfIjs1ANz87BKG5pPSGTA2MCt9oFfIe50+
-         9GLg==
+        bh=uQd/6lxEQmh10n4MdeZg3ZypUWfH+P8Jft7FB6Fs6q8=;
+        b=w2VY1pQ33HyWOZ2Ndwj3r8DDQza3CWk8SiPyoKFVUHmIfdoy0y8BxHKp259QCdXJfO
+         QC028AiXOmjhn1q8SLHLWz4Z3L2seM/oL0TEMWmZ+w8vTVudiIxUk3YrUW+EOzMxmDAG
+         MjmGvkCW+RudczKr90WB72DyNHHW8mbvLfDC11qSjam8kUL8/lTk+eudwcft4xWhNJNn
+         o79IOFwK1SFmFL5u205sN3+FK2lsJPeB2XmB+FSzfb1io3Ch9UeQEuA8ygmI1J84UAB9
+         RqeFVBELog2XohfRqwgy4f/CNLyiFhXKRZPOWVNudEg+LqfRNVz/x1keCnRcCO/pZIyH
+         7Wng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749061052; x=1749665852;
+        d=1e100.net; s=20230601; t=1749067749; x=1749672549;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lj/ZRM00Y6bck08t7l8DzmjqoE1Rg6EPcxweeTc+cRY=;
-        b=PhwwBRq933V+W/DHg+nlTVd68RMqBGAKz6+hY4gTPSymiscNCX8Xh7xMo6f8rB57yx
-         GjpHcWpVHbV8G1/+WuxDG1+yHhsKsUpV/6qxFN4+W6J7Warjm8Q+68NXeUN7BKDDhD66
-         U9y7Mj7vHdnkYp30pYSjhnl6JbQ7M0a1zH7wrVZ/24k13js4+Cmmav8JsOdjcnDR9oKU
-         ArVWp50x7UWsQc+QVLpP3vPxcKnXU4s0BNhXIatE3LYRg/LMr7ARTX0MDSwGtp1wtJfz
-         L49HL3bS/BnPW6jRQpPLUOEDexZK4nhCUOwF4uJYTZC0i1O4l3KAU0ld6XI5x68sVJ1D
-         czDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNIPhXFGmTrohRVUUAu4+OyjCY20umxf019D8B2i1byIVqhW6CHJyj1+Dm+okkuu2a5XTSV9eA2a4jMLZIZWcA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQhfkzcgWWncJpxs8BN+xOMvHuFDGJJdJpkJvLNH68h6EYaHv1
-	zQ9GpWfNUVdwXmtE6+Cntz8a1yCcvx32Q7dHJkCd7TBlex+EE+aebocmLHjxRnefVQ/xsShqvXi
-	AaGfxIW6VbtIl1Wf7GcLgvrPD+mVCts4A8IZFxp0m
-X-Gm-Gg: ASbGncu2jMYXdk2H3KKAPnagesIdZ5hpPgvKyNArFlgIn0iJNZgfi21k+uDqPiQSP+3
-	vP6JMoHJbPdbevPG/qASom2KMdK12OQhjGDPx0fTowFe504MEFJYAr5LVhtWQpN6G9P50xrnEJ/
-	dRkbgaWVdjk6QZF1sVMJj50SH4zC0TLqIbUnOa2ojDJfu5gfEQ5Gl4zH7N/aRfCq9/C8Ts5GQ=
-X-Google-Smtp-Source: AGHT+IEEYnFIfamNc0xCTG14sb0jyvopHlMsu5d+GsAMF5NnKMqT1Fw2V2XC4qCaskaDO8Sd+9KklLkmaA/Y7an7mAA=
-X-Received: by 2002:a17:906:f295:b0:ade:5ba:40e6 with SMTP id
- a640c23a62f3a-ade05ba425bmr78144366b.18.1749061052080; Wed, 04 Jun 2025
- 11:17:32 -0700 (PDT)
+        bh=uQd/6lxEQmh10n4MdeZg3ZypUWfH+P8Jft7FB6Fs6q8=;
+        b=A9MSnqyZcEV3AFBCXMjJStOanwge8H4av5CzjQWIQkDzglXLKbwyh1MaKlCiE8rTrd
+         meVtCL1m8/OoEjFLgsD8+1qI1IAlSdhuFM58JMDiL3dHK2bTBb/NOEiw2E4xTxIyjYgF
+         IW6o2YkfV21IRtq4EETiSWNzhnt7TbNQsxFL5enK/2zfaM1VC9ZSdFhoCsSwUP6TJeXO
+         ufV5UrfVa8sUFeCOuCPpyq1Z0yOujuSf6tIRZ9ESschRDmCqHzgjUwJIb+EG/Yb7zIAV
+         fPEH3qugdo7jnEKtQQ5vsA71f8w5I9io/0yIffYqsRpNHe2rvdrnIiSxJq00JWQvxVTh
+         qoYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdIPCmCugPiCCTDeTL8AklB9MTP0vDVfeGwu2S9mCG17fcMInFivR96FfFnfQ+0LLTpP9p5gE5N9go0Fo9uiBP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPI75KN3moEZt6z+VWJqaIQ4DO9SjW1j3UQOAcHS1WCaFF6cUW
+	TbLcwl6d03v94D6UvfzH4GQUHd9GcPZGt5PZ7aS01AUwd3Zr9biq861OUEPwLWkxcMJ9/moR7Y+
+	hxWZ/Rt3pX4p89NdXHqQW7Xd9LQozR7Nkj3r6oik+aMhCsIRyC4dBV4Nw
+X-Gm-Gg: ASbGncutUw0Re+VyyYkjWcNqMDNNFtcelKKvDNH43ADxiOaPBBhpM3hSRlRRhU1xai3
+	27KDwZANUVnLyQ3LGcApcJnTBHc2SgF3Ugs6k4XpI+MDiTmkorLikPy8PdtkOz2ykmmqeGNkfJ9
+	Xds5WBO/El7LVVcJCfAACiTamUUQLPYl0Ph7hTkC3a0oD/+G5dmv1Sey53VzmqO0VccTJgk6o=
+X-Google-Smtp-Source: AGHT+IFxxFvhMmlbkQhVjaeWObABV3WoeoOVT5fSHhijIuYsrBno4ADnY5diwgzhSEBnYHCkQ7K8VovdxIPM4tB5l28=
+X-Received: by 2002:a05:6e02:4d1:b0:3dd:b826:deca with SMTP id
+ e9e14a558f8ab-3ddc69d0cadmr520205ab.26.1749067748380; Wed, 04 Jun 2025
+ 13:09:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521225307.743726-1-yuzhuo@google.com> <20250521225307.743726-3-yuzhuo@google.com>
- <aC9lXhPFcs5fkHWH@x1>
-In-Reply-To: <aC9lXhPFcs5fkHWH@x1>
-From: Yuzhuo Jing <yuzhuo@google.com>
-Date: Wed, 4 Jun 2025 11:17:20 -0700
-X-Gm-Features: AX0GCFupmXsRt1tE_ch4UHdMNbeRq4klRtHqLWhzFMfMGav7I8d9s-ouD80bzCs
-Message-ID: <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf tools: Add sha1 utils
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
-	James Clark <james.clark@linaro.org>, Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+In-Reply-To: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 4 Jun 2025 13:08:57 -0700
+X-Gm-Features: AX0GCFu_ae4C-apM5oZSw0bUB-TV69VsOZiStuOFLxft_vnnKpidVhfv4nqHewo
+Message-ID: <CAP-5=fX9+XouUy=KeFbHw_GEMKjHteg_0OPvvohhe6hxgVP6UQ@mail.gmail.com>
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com, 
+	tmricht@linux.ibm.com, Leo Yan <leo.yan@arm.com>, 
+	Aishwarya TCV <aishwarya.tcv@arm.com>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Arnaldo,
-
-Thanks for testing the patches!
-
-> In file included from util/sha1_generic.c:18:
-> util/sha1_base.h: In function =E2=80=98sha1_base_do_finalize=E2=80=99:
-> util/sha1_base.h:77:21: error: comparison of integer expressions of diffe=
-rent signedness: =E2=80=98unsigned int=E2=80=99 and =E2=80=98int=E2=80=99 [=
--Werror=3Dsign-compare]
->    77 |         if (partial > bit_offset) {
->       |                     ^
-> cc1: all warnings being treated as errors
-
-Oh, I didn't see that on my GCC 14.2.  A quick fix would work:
-
---- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-+++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-@@ -71,7 +69,7 @@
- static inline int sha1_base_do_finalize(struct sha1_state *sctx,
-                                        sha1_block_fn *block_fn)
- {
--       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-+       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-        __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
-        unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
-
-
-To test it, I added -Werror=3Dsign-compare to my local Makefile.config to
-force the error.
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index d19d1f132726..9909611be301 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -225,9 +225,9 @@ endif
-
- # Treat warnings as errors unless directed not to
- ifneq ($(WERROR),0)
--  CORE_CFLAGS +=3D -Werror
--  CXXFLAGS +=3D -Werror
--  HOSTCFLAGS +=3D -Werror
-+  CORE_CFLAGS +=3D -Werror=3Dsign-compare -Werror
-+  CXXFLAGS +=3D -Werror=3Dsign-compare -Werror
-+  HOSTCFLAGS +=3D -Werror=3Dsign-compare -Werror
- endif
-
- ifndef DEBUG
-
-
-While testing with "make -C tools/perf -f tests/make make_debug", I saw
-similar compile errors in libjvmti.c:
-
-jvmti/libjvmti.c: In function =E2=80=98copy_class_filename=E2=80=99:
-jvmti/libjvmti.c:148:39: error: comparison of integer expressions of
-different signedness: =E2=80=98int=E2=80=99 and =E2=80=98long unsigned int=
-=E2=80=99
-[-Werror=3Dsign-compare]
-  148 |                         for (i =3D 0; i < (size_t)(p - class_sign);=
- i++)
-      |                                       ^
-jvmti/libjvmti.c:155:31: error: comparison of integer expressions of
-different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {a=
-ka =E2=80=98long unsigned int=E2=80=99}
-[-Werror=3Dsign-compare]
-  155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-&& j < strlen(file_name); j++, i++)
-      |                               ^
-jvmti/libjvmti.c:155:68: error: comparison of integer expressions of
-different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 {a=
-ka =E2=80=98long unsigned int=E2=80=99}
-[-Werror=3Dsign-compare]
-  155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-&& j < strlen(file_name); j++, i++)
-      |                                                                    =
-^
-
-I've just sent a separate patch to the mailing list:
-https://lore.kernel.org/lkml/20250604173632.2362759-1-yuzhuo@google.com/T/
-
-
-> Humm that part is the same as in the kernel...
+On Wed, Jun 4, 2025 at 10:16=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3Df =
-include/crypto/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {print =
-$3}')
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/=
-sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /tm=
-p/original
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3Df =
-tools/perf/util/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {print=
- $3}')
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/=
-sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /tm=
-p/copy
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ diff -u /tmp/original /tmp/copy
-> --- /tmp/original       2025-05-22 14:48:31.338406860 -0300
-> +++ /tmp/copy   2025-05-22 14:48:58.401603439 -0300
-> @@ -1,3 +1,7 @@
-> +
-> +       return 0;
-> +}
-> +
->  static inline int sha1_base_do_finalize(struct shash_desc *desc,
->                                         sha1_block_fn *block_fn)
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+> below perf command.
+>   perf record -a -e cpu-clock -- sleep 2
+>
+> The issue is introduced by the generic throttle patch set, which
+> unconditionally invoke the event_stop() when throttle is triggered.
+>
+> The cpu-clock and task-clock are two special SW events, which rely on
+> the hrtimer. The throttle is invoked in the hrtimer handler. The
+> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+> be used to stop the timer.
+>
+> There may be two ways to fix it.
+> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>   perf_event_throttle() if the flag is detected.
+>   It has been implemented in the
+>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.i=
+ntel.com/
+>   The new flag was thought to be an overkill for the issue.
+> - Add a check in the event_stop. Return immediately if the throttle is
+>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>   method to stop the timer.
+>
+> The latter is implemented here.
+>
+> Move event->hw.interrupts =3D MAX_INTERRUPTS before the stop(). It makes
+> the order the same as perf_event_unthrottle(). Except the patch, no one
+> checks the hw.interrupts in the stop(). There is no impact from the
+> order change.
+>
+> Reported-by: Leo Yan <leo.yan@arm.com>
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm=
+.com/
+> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jcc=
+djysza7tlc5fef@ktp4rffawgcw/
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293=
+@linux.ibm.com/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> ---
+>
+> Changes since V2:
+> - Apply a different way to fix the issue.
+>   Remove all Tested-by since a different way is applied
+> - Update the change log
+> - Add more Reported-by
+>
+>  kernel/events/core.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f34c99f8ce8f..46441c23475d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event=
+ *event, bool start)
+>
+>  static void perf_event_throttle(struct perf_event *event)
 >  {
-> @@ -13,10 +17,3 @@
+> -       event->pmu->stop(event, 0);
+>         event->hw.interrupts =3D MAX_INTERRUPTS;
+> +       event->pmu->stop(event, 0);
+>         if (event =3D=3D event->group_leader)
+>                 perf_log_throttle(event, 0);
+>  }
+> @@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct p=
+erf_event *event)
+>  {
+>         struct hw_perf_event *hwc =3D &event->hw;
 >
->                 block_fn(sctx, sctx->buffer, 1);
->         }
-> -
-> -       memset(sctx->buffer + partial, 0x0, bit_offset - partial);
-> -       *bits =3D cpu_to_be64(sctx->count << 3);
-> -       block_fn(sctx, sctx->buffer, 1);
-> -
-> -       return 0;
-> -}
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
-
-There were some other fixes that I made only to the perf tree version,
-while maintaining verbatim for other parts.  Here's a script that
-retains and compares only the copied parts.
-
-  # Ignore everything after sha1_transform
-  diff -u -B -I "^#include " <(sed -n
-'/EXPORT_SYMBOL(sha1_transform)/q;p' lib/crypto/sha1.c)
-tools/perf/util/sha1.c
-  diff -u -B -I "^#include " -I "sha1_zero_message_hash" -I "^struct
-sha1_state;$" -I "^void sha1_init(__u32 \*buf);$" \
-      <(sed 's/shash_desc/sha1_state/g;' include/crypto/sha1.h)
-tools/perf/util/sha1.h
-  diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
-      <(sed 's/shash_desc \*desc/sha1_state *sctx/g;
-/shash_desc_ctx(desc)/d' include/crypto/sha1_base.h)
-tools/perf/util/sha1_base.h
-  # Ignore everything after crypto_sha1_finup
-  diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
-      <(sed -n -e '/const u8
-sha1_zero_message_hash/,/EXPORT_SYMBOL_GPL(sha1_zero_message_hash)/d'
-\
-               -e 's/shash_desc/sha1_state/g;
-/EXPORT_SYMBOL(crypto_sha1_finup)/q;p' crypto/sha1_generic.c) \
-      tools/perf/util/sha1_generic.c
-
-And the changes are as below (including the quick fix above), with one
-changing the sign and integer type and another fixing type mismatch from
-const u8 * to const char *.
-
-Should we send another patch to the kernel tree version to fix the sign
-error, or we add rules to allow perf tree only changes?
-
---- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-+++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-@@ -71,7 +69,7 @@
- static inline int sha1_base_do_finalize(struct sha1_state *sctx,
-                                        sha1_block_fn *block_fn)
- {
--       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-+       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-        __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
-        unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
-
-@@ -95,7 +93,7 @@
-        __be32 *digest =3D (__be32 *)out;
-        int i;
-
--       for (i =3D 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
-+       for (i =3D 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
-                put_unaligned_be32(sctx->state[i], digest++);
-
-        memzero_explicit(sctx, sizeof(*sctx));
---- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-+++ tools/perf/util/sha1_generic.c      2025-05-16 10:52:59.219531034 -0700
-@@ -27,7 +23,7 @@
-        u32 temp[SHA1_WORKSPACE_WORDS];
-
-        while (blocks--) {
--               sha1_transform(sst->state, src, temp);
-+               sha1_transform(sst->state, (const char *)src, temp);
-                src +=3D SHA1_BLOCK_SIZE;
-        }
-        memzero_explicit(temp, sizeof(temp));
-
-Thanks!
-
-Best regards,
-Yuzhuo
+> -       if (is_sampling_event(event)) {
+> +       /*
+> +        * The throttle can be triggered in the hrtimer handler.
+> +        * The HRTIMER_NORESTART should be used to stop the timer,
+> +        * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
+> +        */
+> +       if (is_sampling_event(event) && (hwc->interrupts !=3D MAX_INTERRU=
+PTS)) {
+>                 ktime_t remaining =3D hrtimer_get_remaining(&hwc->hrtimer=
+);
+>                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
+>
+> --
+> 2.38.1
+>
