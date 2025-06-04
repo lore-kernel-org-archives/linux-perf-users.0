@@ -1,150 +1,140 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED5B1C861D
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 23:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F235224AF2;
+	Wed,  4 Jun 2025 23:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749078263; cv=none; b=iXRdNatt58wKWMdU00aHAYLD/IwWTaX1qBsFwlT2l4ygbzVZVlaX34r7lxujkyl0ql7EC4qeQpmpI376YOhXbruLKoD8jG/YSPkLCikts0xJ7nGb7tb04zE+Xc4U1pIi4pehrwwjz4KGjFfGzvr/cIQLJWDlzZ/UlJjnbv8dDeE=
+	t=1749079325; cv=none; b=QOk0oZMmaJZYpjYBF255bnzncSv50ZvhaBaz1oJKTpGkuxdlwerejvfMCh0UexhthpybzvAito7mSyZUdqXur1fPWlC1EEX4n87itAq/dkz5WF6LpcXiSPK11nSZs47H24Hduy+AzCM0wll+lxjYgj/lRNCwr/gUyVnPO2m99tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749078263; c=relaxed/simple;
-	bh=exRGgbwr9yCyeN9A0lefWzXikKL4jaZ58HpeXk6pkoc=;
+	s=arc-20240116; t=1749079325; c=relaxed/simple;
+	bh=DavXPLOA4qBd5zWmNksvx+nP6XzrqdzB4n6SWig+8aI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NWSyI+RW0A5vzoLWckWI7fqRvuvY3vl60B5uCyUfQm4h/f8Ar6UD1llDv/FinZqE9NWztUgEeAw0tKZM7eCw0RNIJOMA8//NguezbVeEKLYa1T7ZrWaopSXaqXtT2N4ck+w2GgjWTWo342IR3uxI14yC9dAJk2CY9pTFBIjXFws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rn2j89AA; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=qNaKpHj23MT+oO9VDQd8lD8waEOb9yPfMLJ7kSPdYOLhBhSIPIoYWWfJwWVVAixPnIVWphSLuH80wbc0d97zHo9LDk5aIqW9KaDvGHWbcyaDXATGoRaj0jkzp+6fpnYUNAIfAPpvSGL411IpK835y73OHeH5uAaCwLI0yvzQuMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Md8K6/ql; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rn2j89AA"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87ea7e659beso146727241.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 16:04:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Md8K6/ql"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442f9043f56so1810025e9.0;
+        Wed, 04 Jun 2025 16:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749078261; x=1749683061; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749079322; x=1749684122; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AmWygWroaE3CgfzylRy20SRQE724eqiHcqgPFBV3jdc=;
-        b=rn2j89AA1+ggWl/NrdUsr4E2vTn+Im0wURmdRqbt1JlGT9hd17tdubdhDHU7FDkHib
-         wCTmK9VhgFrAFR3OBFsWSS6QhtaGsJ3vXZGFzTCaiFLWd73sX84uTzc4GxX7vsSX7Mfs
-         zVZBj8SCaUQIWqt17oDDMC/hNEsK90426Uor6rKrOyFVZDhAZxkbECjIzVCRv8KLYnwy
-         1sTIIMPtfORJRyBB4Zk4br9BSdsFY4qGdtiKaT0gj9Yy4zb2/7UQPKtO8mQl/eMIa8Vj
-         mc8qcgK9Y3Y06FCyzX4r5Bkx0kHK0hm8xjZfw1p5Nc4br8/w7bFH2nfyM2H5+sdwJ33D
-         8JWw==
+        bh=KwwXcq9SvqSxAwcrttqQ535pq1SI2qaKboj674NPGys=;
+        b=Md8K6/qlv7yH+KUkzCxAuz+yHf9AUCFvRG2QIAh24SzuHxcZqG2NzjLXGErui94SFW
+         kS8eGf0IFrH8BnfY/wMmhHbI1LI+NW6nWEz1aupMn5O4WLDzhZeylXVX6C1W5sB36wGH
+         hbYdECdP6QJjUVlUvS2R8XZw1kTTxo7FZmJyviXHtQ8nGPftdfaXxzANT++BHmzkI/WV
+         E9R/BoFwXQIsGC0tmK6gFEnHr3e0UY13HEdYfxRmgoKoRfv3P2bSRbr4ZBH3nbv9411W
+         tSzLVyXbdAhQdnQ1nRbvW90/kU3AxHPdtMGGkiOyJ64aKl7gdLq3vQD4qLFZWHrwpkIP
+         mfow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749078261; x=1749683061;
+        d=1e100.net; s=20230601; t=1749079322; x=1749684122;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AmWygWroaE3CgfzylRy20SRQE724eqiHcqgPFBV3jdc=;
-        b=nwtbQIRBBWdlW2SwqQZM0lx0FKcOumy964PlG/HOmTOKJORE2PIyyGWERTa3m/FvHq
-         tf8AboAmpWZtQFtnihRa6lZWi3t1MhxTuxKikr3evLqJngepQaSo5K4QBAR9gTJlGYoJ
-         l2pBuwqHhMrEmCScY75cBS8WBSJ6zzGiqPLsQn2WiMdcgr1NCCzyYPDDcHv0vpr90pRM
-         lwUizogGG1ddwqfCsmB4XodMPOafe9F7xBKdruTV+wvJyYRBSIOY4bYyWxCyAXITu0SE
-         OD2m4GETo8xI6+bwfuq+07q5JydWvUpXcSx1z2r5lBrEszxfkRk+/LPvv2Vws4u9T2si
-         YsgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhCanjwFip+qBHlKA+igkL6+pv6UnpGY7c0JXdeS1LFKiCdradR9fyuegZnHDyOkjah4+KDyk2K9YOOBIzgwPs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvebwDZNjDDS51rir5yQ3OrD5qCHDaNh1NVL3prejpD9Oq++w1
-	QzNpOCk18Qz7m1StjOnTUbBKh86gKgzYGdDDVoR9PBtGOXdtlEB0NJJtrWXZqAVnzcAmys8xWa6
-	11BB7mv++snES45cq7bzaMfuR2VpsFC1w+hUHmnQL
-X-Gm-Gg: ASbGncsef2z+tprHO4OXd4HSES2LjGRxY9nQx95dWaufwUinqCHXSbZB9fwnMcqughB
-	73craVuT0aFbVwr8F1kcNimr0SCPTuEGUxKzmcA6fdCbViE2VGAlSEZT/iVSGWO9XaFxo3j5Gm2
-	yuchZ+iXCFrT9imtb0uV/n12C5lSNz7eZ2hEwveD6+Ydo=
-X-Google-Smtp-Source: AGHT+IHMQ0HEf1QGjZKS2FKHFK7WceR4QcvBJZVnXk0gSCJXLZWNY34EB7jNoARv3FwK/IDiJPQd/DA4fgwGFkmqZWo=
-X-Received: by 2002:a05:6102:4406:b0:4e6:e126:6238 with SMTP id
- ada2fe7eead31-4e746ce24bcmr4227663137.3.1749078260388; Wed, 04 Jun 2025
- 16:04:20 -0700 (PDT)
+        bh=KwwXcq9SvqSxAwcrttqQ535pq1SI2qaKboj674NPGys=;
+        b=CQhTVB83452YBRmf/89+6F9yxkDJ8Xy1riiSZK/Iw5LjA6D5VUEQzGBuMqo+Dd0zAO
+         tVnvihzvaVF6wM+7AET4BYWMTeBY5nJ9Jdfd2idZIwrLsomiiUELvOxKd+Fx8G+IlZcK
+         qXChsVrw9dKeah48hNxIpqQB75WrrzKeoilaiSVGGT6eZ+Q8x5927Zo8P6rxerE27ouu
+         RtySklYXZiZtD97ml16+XCIZtOrDgpZHbuC34QLzmhyNES29AwJQzBmBbaEhgB3EOkFQ
+         WM1I8drwh6rzrmXMKkRMJrpXtLQ8t0r47ME62ob4lzV+61ms0fRJM4JqvBU6FLQkzd02
+         ClRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAmFbFW39gl8uh6yaLuHRR0jaXju6Ql6E14Ftcrh60HpXpTbjgUrHB6NzsaCGtYfC9kmcXCJEpcfp4ww8RBitz1w==@vger.kernel.org, AJvYcCWws7sDP7D7LHDU82XnBXlYSdyCQmjWb/TDLp1PH+1Us4hFHB5WSmlXCCWqkGIzA5obdDIbLVXmYFupR0k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRNuHtVnu+MN7gu/dMzSj0ty5EJvGz87LXN07VO5ZJyXOL1lDj
+	4Q2iQDWyGDJ+p0OksvR4q6lDJIzW3nLcNuxSuJVx89JVWNnRsV/HnbPtgADM3K7JefmN2UEG3qM
+	Gl6AaIUN9Hf8THAT93RSMp93XJjomb7g=
+X-Gm-Gg: ASbGncukabOtACQUcZ2juI0vmMjuqi4JXyciPe/WK03sorVDdOwFhJmqr6sdhWbagzp
+	PxHx0o6ua2TLWCzmCNe7N+PlIi5VCqlkkoRz0ylvsd7Dj/0LMgrR+c4j0fC217T7w6GuwoAbLaf
+	UP73U3iFnzWW9DWbKDApvzk60TIk5puZko4mnRva6Afz+WU9FZ
+X-Google-Smtp-Source: AGHT+IESbyuxQraVYPxC7wpdKWHwDK9pwgCCWfCOD7IoCQsTYj+Al+j0Kzzq3CvQmANW2Q3K2lnOCzTfeKnvHVH7vkE=
+X-Received: by 2002:a05:600c:350b:b0:43d:17f1:2640 with SMTP id
+ 5b1f17b1804b1-451f0b209d8mr41552955e9.26.1749079322021; Wed, 04 Jun 2025
+ 16:22:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-3-blakejones@google.com> <aD9Xxhwqpm8BDeKe@google.com>
- <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
- <aD9sxuFwwxwHGzNi@google.com> <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
- <aD9yte49C_BM5oA9@google.com> <CAP_z_Cg0ZCfvEFpJpvhuRcUkjV_paCODw2J61D3YQMm7dg0aGg@mail.gmail.com>
- <aEC9UqkKeEj4on3M@google.com> <aEDEw7bCDAtEXfGC@x1>
-In-Reply-To: <aEDEw7bCDAtEXfGC@x1>
-From: Blake Jones <blakejones@google.com>
-Date: Wed, 4 Jun 2025 16:04:09 -0700
-X-Gm-Features: AX0GCFuBtJRBiLPJLWcckQqQphG1Vff1V02DcY2BL7rNUhiI2R9BuvLLkZ8arFw
-Message-ID: <CAP_z_CjQktMSMVhgX1gBkBh+0sAnWwAjUfBgJ1he1oaR7ULeRg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+In-Reply-To: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 4 Jun 2025 16:21:50 -0700
+X-Gm-Features: AX0GCFvq1shVE6kWYl-CEbSodT79t9asLkPcyvM5S6YpTFccl-wiy-eQ6M8qwhk
+Message-ID: <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Aishwarya TCV <aishwarya.tcv@arm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 4, 2025 at 3:12=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
-> So, the comment in:
+On Wed, Jun 4, 2025 at 10:16=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
-> tools/perf/util/bpf-event.c
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> Is:
+> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+> below perf command.
+>   perf record -a -e cpu-clock -- sleep 2
 >
->  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
->  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
->  * one PERF_RECORD_KSYMBOL is generated for each sub program.
+> The issue is introduced by the generic throttle patch set, which
+> unconditionally invoke the event_stop() when throttle is triggered.
 >
-> which is not so nicely worded tho :-\
+> The cpu-clock and task-clock are two special SW events, which rely on
+> the hrtimer. The throttle is invoked in the hrtimer handler. The
+> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+> be used to stop the timer.
 >
-> "One KSYMBOL per program", followed by "one KSYMBOL per sub program".
+> There may be two ways to fix it.
+> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>   perf_event_throttle() if the flag is detected.
+>   It has been implemented in the
+>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.i=
+ntel.com/
+>   The new flag was thought to be an overkill for the issue.
+> - Add a check in the event_stop. Return immediately if the throttle is
+>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>   method to stop the timer.
 >
-> But that matches the referenced:
+> The latter is implemented here.
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/k=
-ernel/events/core.c?h=3Dv6.15#n9825
+> Move event->hw.interrupts =3D MAX_INTERRUPTS before the stop(). It makes
+> the order the same as perf_event_unthrottle(). Except the patch, no one
+> checks the hw.interrupts in the stop(). There is no impact from the
+> order change.
+>
+> Reported-by: Leo Yan <leo.yan@arm.com>
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm=
+.com/
+> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jcc=
+djysza7tlc5fef@ktp4rffawgcw/
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293=
+@linux.ibm.com/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Indeed, we get one KSYMBOL per subprogram, but one BPF_EVENT per program.
-(I found that the term "subprogram" is used inconsistently; sometimes it
-includes the main program, while other times it doesn't. In the case of
-that comment, and the function perf_event__synthesize_one_bpf_prog, it does
-include the main program, which has sub_id =3D 0.)
+It seems the patch fixes one issue and introduces another ?
 
-> So, for these bpf_metadata_ variables, would that be strictly per
-> program or would it be perf 'sub program'?
+Looks like the throttle event is sticky.
+Once it's reached the perf_event no longer works ?
+Repro:
+test_progs -t perf_branches/perf_branches_no_hw
+#250/2   perf_branches/perf_branches_no_hw:OK
 
-These BPF metadata records would be generated for each subprogram.
+test_progs -t stacktrace_build_id_nmi
+#393     stacktrace_build_id_nmi:OK
 
-My goal here is to allow PERF_RECORD_SAMPLE events with IPs in BPF code
-to be associated with any metadata that describes that code. As the
-comment points out, each subprogram gets its own PERF_RECORD_KSYMBOL event,
-and that event indicates where the subprogram's starting and ending
-addresses are. With one PERF_RECORD_BPF_METADATA event per subprogram, it's
-then straightforward to associate the metadata with a range of IPs.
+test_progs -t perf_branches/perf_branches_no_hw
+perf_branches/perf_branches_no_hw:FAIL
 
-If I only generated the metadata records per program rather than per
-subprogram, I could only associate them with a PERF_RECORD_BPF_EVENT event.
-That event has the full program's tag, but it doesn't have a list of the
-subprogram tags for that program. So it doesn't have enough information on
-its own to construct the relevant list of virtual address ranges. And I'd
-be quite concerned about assuming that the BPF_EVENT events immediately
-follow their related KSYMBOL events, especially for events generated while
-the system was generating SAMPLE events.
-
-Blake
-
-> Couldn't get an answer from looking at tools/bpf/bpftool/prog.c, but
-> seems to be with progs, not subprogs, i.e. just the PERF_RECORD_KSYMBOL
-> associated with progs (not subprogs) will have those variables.
->
-> But then it seems those variables _are_ associated with at least one
-> PERF_RECORD_KSYMBOL, right?
+Maybe it's an unrelated bug.
