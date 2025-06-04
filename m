@@ -1,42 +1,40 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38F528FFCB;
-	Wed,  4 Jun 2025 14:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D911917F1;
+	Wed,  4 Jun 2025 15:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749048909; cv=none; b=ICwpzzsJldL5Ya37/JhvZT4V5TM2NMNzu5iBo85Yqr8oGbAPzf/wd544c98hIlO8R3n6iPFQNkqR3TucLgc4wb18y9DI8R89Q5rr74xvnY0Z6uhYP5NG6t3inQgzr5Q3dHLHGiFlthRatEjbx2TbCqnhxMdAy8sEppHIcQWTDpk=
+	t=1749050284; cv=none; b=NYB6FLCzBhJ9lJKYBXd4NX02x8gCuXMfAAMJJ9gl9UUusHvasZ/RHJmSUjmGitBMd5d0/7cF2c96wAx8kwzLOTkF89m3Nl/x0JNlDzpUrhm+F9bdHjW2Xi4+pF+Si+qqYPR5SMB+vAZCMQS6HBMZy+4n3VmY32qFr+Mq+ETGltQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749048909; c=relaxed/simple;
-	bh=HOlvILzQbzz5g/GGLiJxW+I2MtTR7FvGq/Gxnu+WYDU=;
+	s=arc-20240116; t=1749050284; c=relaxed/simple;
+	bh=s5zmxv3LU0w+4sopd0Re0HC/bbjNa73HY3q0HOETc+s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAEETUyZg56riBWVkFKPxKgf6xDk7jCwt7KXvHe3mlxquc+k+gN54diZ33GmX1pzgCGdJMoVnAkjpd7P/ZhwV8koctUyAWNmKi/D9u8EJZReYvZoXGP+ApjJHxuzhK4d0g80jN6F4P29KSlXbRrPHZjGh9iRneaIfr2GHIkjflQ=
+	 Content-Type:Content-Disposition:In-Reply-To; b=qscfGIBr5oIVE0VSwq1OGnGPFJ7IBGYMAF4zP0/DCLgd0BIargl4QVn+Kf9pD2QQPdc3ZB+Djyb0h3vcyWXCF7TWCX15POY90TROWzRTeAUmFB9ceKf3oS5aQbnuSo1e1FaJixQqsT0gaH+U68Dm2k+c2ANZeYl5Rmedy4UHyxY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6D3D1758;
-	Wed,  4 Jun 2025 07:54:49 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38F4D3F59E;
-	Wed,  4 Jun 2025 07:55:04 -0700 (PDT)
-Date: Wed, 4 Jun 2025 15:55:01 +0100
-From: Mark Rutland <mark.rutland@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D9601758;
+	Wed,  4 Jun 2025 08:17:44 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB493F59E;
+	Wed,  4 Jun 2025 08:18:00 -0700 (PDT)
+Date: Wed, 4 Jun 2025 16:17:56 +0100
+From: Leo Yan <leo.yan@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <aEBeRfScZKD-7h5u@J2N7QTR9R3>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
- <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
- <20250604142437.GM38114@noisy.programming.kicks-ass.net>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250604151756.GD8020@e132581.arm.com>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <20250604101821.GC8020@e132581.arm.com>
+ <20250604135801.GK38114@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,100 +43,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250604142437.GM38114@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250604135801.GK38114@noisy.programming.kicks-ass.net>
 
-On Wed, Jun 04, 2025 at 04:24:37PM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 04, 2025 at 03:05:43PM +0100, Mark Rutland wrote:
+On Wed, Jun 04, 2025 at 03:58:01PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
 > 
-> > Loooking at 5.15.149 and current HEAD (5abc7438f1e9), do_exit() calls
-> > exit_mm() before perf_event_exit_task(), so it looks
-> > like perf could sample from another task's mm.
-> > 
-> > Yuck.
-> > 
-> > Peter, does the above sound plausible to you?
+> > Totally agree. The comment would be very useful!
 > 
-> Yuck indeed. And yeah, we should probably re-arrange things there.
+> I have the below. Let me go read your email in more than 2 seconds to
+> see if I should amend things.
 > 
-> Something like so?
-
-That should plumb the hole for task-bound events, yep.
-
-I think we might need something in the perf core for cpu-bound events, assuming
-those can also potentially make samples.
-
-From a quick scan of perf_event_sample_format:
-
-	PERF_SAMPLE_IP			// safe
-	PERF_SAMPLE_TID			// safe
-	PERF_SAMPLE_TIME		// safe
-	PERF_SAMPLE_ADDR		// ???
-	PERF_SAMPLE_READ		// ???
-	PERF_SAMPLE_CALLCHAIN		// may access mm
-	PERF_SAMPLE_ID			// safe
-	PERF_SAMPLE_CPU			// safe
-	PERF_SAMPLE_PERIOD		// safe
-	PERF_SAMPLE_STREAM_ID		// ???
-	PERF_SAMPLE_RAW			// ???
-	PERF_SAMPLE_BRANCH_STACK	// safe
-	PERF_SAMPLE_REGS_USER		// safe
-	PERF_SAMPLE_STACK_USER		// may access mm
-	PERF_SAMPLE_WEIGHT		// ???
-	PERF_SAMPLE_DATA_SRC		// ???
-	PERF_SAMPLE_IDENTIFIER		// safe
-	PERF_SAMPLE_TRANSACTION		// ???
-	PERF_SAMPLE_REGS_INTR		// safe
-	PERF_SAMPLE_PHYS_ADDR		// safe; handles mm==NULL && addr < TASK_SIZE
-	PERF_SAMPLE_AUX			// ???
-	PERF_SAMPLE_CGROUP		// safe
-	PERF_SAMPLE_DATA_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
-	PERF_SAMPLE_CODE_PAGE_SIZE	// partial; doesn't check addr < TASK_SIZE
-	PERF_SAMPLE_WEIGHT_STRUCT	// ???
-
-... I think all the dodgy cases use mm somehow, so maybe the perf core
-should check for current->mm?
-
+> I'm not sure doing the INACTIVE->INACTIVE cycle in the ASCII art is
+> going to make it clearer, might leave that off. But yeah, possible.
 > 
 > ---
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 38645039dd8f..3407c16fc5a3 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -944,6 +944,15 @@ void __noreturn do_exit(long code)
->  	taskstats_exit(tsk, group_dead);
->  	trace_sched_process_exit(tsk, group_dead);
+> 
+> Subject: perf: Add comment to enum perf_event_state
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Wed Jun  4 10:21:38 CEST 2025
+> 
+> Better describe the event states.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/perf_event.h |   42 ++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 40 insertions(+), 2 deletions(-)
+> 
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -635,8 +635,46 @@ struct perf_addr_filter_range {
+>  	unsigned long			size;
+>  };
 >  
-> +	/*
-> +	 * Since samping can touch ->mm, make sure to stop everything before we
+> -/**
+> - * enum perf_event_state - the states of an event:
+> +/*
+> + * The normal states are:
+> + *
+> + *            ACTIVE    --.
+> + *               ^        |
+> + *               |        |
+> + *       sched_{in,out}() |
+> + *               |        |
+> + *               v        |
+> + *      ,---> INACTIVE  --+ <-.
+> + *      |                 |   |
+> + *      |                {dis,en}able()
+> + *   sched_in()           |   |
+> + *      |       OFF    <--' --+
+> + *      |                     |
+> + *      `--->  ERROR    ------'
+> + *
+> + * That is:
+> + *
+> + * sched_in:       INACTIVE          -> {ACTIVE,ERROR}
+> + * sched_out:      ACTIVE            -> INACTIVE
+> + * disable:        {ACTIVE,INACTIVE} -> OFF
+> + * enable:         {OFF,ERROR}       -> INACTIVE
+> + *
+> + * Where {OFF,ERROR} are disabled states.
+> + *
+> + * Then we have the {EXIT,REVOKED,DEAD} states which are various shades of
+> + * defunct events:
+> + *
+> + *  - EXIT means task that the even was assigned to died, but child events
+> + *    still live, and further children can still be created. But the event
+> + *    itself will never be active again. It can only transition to
+> + *    {REVOKED,DEAD};
+> + *
+> + *  - REVOKED means the PMU the event was associated with is gone; all
+> + *    functionality is stopped but the event is still alive. Can only
+> + *    transition to DEAD;
+> + *
+> + *  - DEAD event really is DYING tearing down state and freeing bits.
+> + *
 
-Typo: s/samping/sampling/
+LGTM:
 
-> +	 * tear it down.
-> +	 *
-> +	 * Also flushes inherited counters to the parent - before the parent
-> +	 * gets woken up by child-exit notifications.
-> +	 */
-> +	perf_event_exit_task(tsk);
-> +
->  	exit_mm();
->  
->  	if (group_dead)
-> @@ -959,14 +968,6 @@ void __noreturn do_exit(long code)
->  	exit_task_work(tsk);
->  	exit_thread(tsk);
->  
-> -	/*
-> -	 * Flush inherited counters to the parent - before the parent
-> -	 * gets woken up by child-exit notifications.
-> -	 *
-> -	 * because of cgroup mode, must be called before cgroup_exit()
-> -	 */
-> -	perf_event_exit_task(tsk);
-> -
->  	sched_autogroup_exit_task(tsk);
->  	cgroup_exit(tsk);
->  
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-Otherwise, that looks good to me!
-
-Mark.
+>   */
+>  enum perf_event_state {
+>  	PERF_EVENT_STATE_DEAD		= -5,
