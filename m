@@ -1,146 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70A129A2;
-	Wed,  4 Jun 2025 22:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED5B1C861D
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Jun 2025 23:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749075143; cv=none; b=UgUCiBANBw43q/wiNLYVi8JvQL0GeonIH34oGzsBwilf04TwqAGS9rfFlN0oOCfCQwxWc0Nd3U5eOv8+qCjqrPE+WbzEWO1CR4bQclUkcm+gmEmSUEnWcLp3qEtiKBIgEwGbHELjW90X0KdT5EW0u/D7OcNuTXD4U/PLTFkMjYE=
+	t=1749078263; cv=none; b=iXRdNatt58wKWMdU00aHAYLD/IwWTaX1qBsFwlT2l4ygbzVZVlaX34r7lxujkyl0ql7EC4qeQpmpI376YOhXbruLKoD8jG/YSPkLCikts0xJ7nGb7tb04zE+Xc4U1pIi4pehrwwjz4KGjFfGzvr/cIQLJWDlzZ/UlJjnbv8dDeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749075143; c=relaxed/simple;
-	bh=ZgNC/tzUGjuhabSWLf9s/V5Dj4iYLMJ7BsfBi8LCeDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXlxBfkTp7hI6am1UQYy8hwqeM3pFNkjwaRmA7lDAwDEaAF8kiUEJdmdvAtoBfg7S2l3mTZHPkYKk7M70As4GNR8LCByWQFpVmM5nI5b4ZUBVUhpyzVJT/UaGrXI9azLip6O+2X7aJIYxqJQAFpo+SO4RIHOPPR+onMVI41lRZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTNYLMal; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749078263; c=relaxed/simple;
+	bh=exRGgbwr9yCyeN9A0lefWzXikKL4jaZ58HpeXk6pkoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NWSyI+RW0A5vzoLWckWI7fqRvuvY3vl60B5uCyUfQm4h/f8Ar6UD1llDv/FinZqE9NWztUgEeAw0tKZM7eCw0RNIJOMA8//NguezbVeEKLYa1T7ZrWaopSXaqXtT2N4ck+w2GgjWTWo342IR3uxI14yC9dAJk2CY9pTFBIjXFws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rn2j89AA; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTNYLMal"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7931C4CEE4;
-	Wed,  4 Jun 2025 22:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749075142;
-	bh=ZgNC/tzUGjuhabSWLf9s/V5Dj4iYLMJ7BsfBi8LCeDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QTNYLMalq6elO/8yeakwihsxnK3xe5UkzqTnVdvj9JT74aJBxwpgy1Foz0W+0aoXj
-	 uZ3cbrt51gg0ovSDbusEIHfxRm1CiA7O19bpk/sC1M/4ZKRtoBLFKShyXV9S6ajM6+
-	 Q5QjVH8AAMxJqXMbNlQfQAESEXBmZtBKXxPJHRVBOJNpFXyP3uW3o0VXpPv4KQ8hdA
-	 XWTltp1U/6wqSQMnRagDlQJlYDY/l/foDyVLSJ02/Wkga+MhhIPC1ygW+418vVYkvm
-	 lR5Hp9HDqTuqZ1OpViq/XiN5etrqzbBv0L95mmk9Tdz9CVGno+7ds6Zdh+NVVjGCts
-	 IN744KBfKdVEA==
-Date: Wed, 4 Jun 2025 19:12:19 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Blake Jones <blakejones@google.com>, Song Liu <song@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	James Clark <james.clark@linaro.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
-Message-ID: <aEDEw7bCDAtEXfGC@x1>
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-3-blakejones@google.com>
- <aD9Xxhwqpm8BDeKe@google.com>
- <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
- <aD9sxuFwwxwHGzNi@google.com>
- <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
- <aD9yte49C_BM5oA9@google.com>
- <CAP_z_Cg0ZCfvEFpJpvhuRcUkjV_paCODw2J61D3YQMm7dg0aGg@mail.gmail.com>
- <aEC9UqkKeEj4on3M@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rn2j89AA"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87ea7e659beso146727241.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Jun 2025 16:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749078261; x=1749683061; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AmWygWroaE3CgfzylRy20SRQE724eqiHcqgPFBV3jdc=;
+        b=rn2j89AA1+ggWl/NrdUsr4E2vTn+Im0wURmdRqbt1JlGT9hd17tdubdhDHU7FDkHib
+         wCTmK9VhgFrAFR3OBFsWSS6QhtaGsJ3vXZGFzTCaiFLWd73sX84uTzc4GxX7vsSX7Mfs
+         zVZBj8SCaUQIWqt17oDDMC/hNEsK90426Uor6rKrOyFVZDhAZxkbECjIzVCRv8KLYnwy
+         1sTIIMPtfORJRyBB4Zk4br9BSdsFY4qGdtiKaT0gj9Yy4zb2/7UQPKtO8mQl/eMIa8Vj
+         mc8qcgK9Y3Y06FCyzX4r5Bkx0kHK0hm8xjZfw1p5Nc4br8/w7bFH2nfyM2H5+sdwJ33D
+         8JWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749078261; x=1749683061;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AmWygWroaE3CgfzylRy20SRQE724eqiHcqgPFBV3jdc=;
+        b=nwtbQIRBBWdlW2SwqQZM0lx0FKcOumy964PlG/HOmTOKJORE2PIyyGWERTa3m/FvHq
+         tf8AboAmpWZtQFtnihRa6lZWi3t1MhxTuxKikr3evLqJngepQaSo5K4QBAR9gTJlGYoJ
+         l2pBuwqHhMrEmCScY75cBS8WBSJ6zzGiqPLsQn2WiMdcgr1NCCzyYPDDcHv0vpr90pRM
+         lwUizogGG1ddwqfCsmB4XodMPOafe9F7xBKdruTV+wvJyYRBSIOY4bYyWxCyAXITu0SE
+         OD2m4GETo8xI6+bwfuq+07q5JydWvUpXcSx1z2r5lBrEszxfkRk+/LPvv2Vws4u9T2si
+         YsgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhCanjwFip+qBHlKA+igkL6+pv6UnpGY7c0JXdeS1LFKiCdradR9fyuegZnHDyOkjah4+KDyk2K9YOOBIzgwPs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvebwDZNjDDS51rir5yQ3OrD5qCHDaNh1NVL3prejpD9Oq++w1
+	QzNpOCk18Qz7m1StjOnTUbBKh86gKgzYGdDDVoR9PBtGOXdtlEB0NJJtrWXZqAVnzcAmys8xWa6
+	11BB7mv++snES45cq7bzaMfuR2VpsFC1w+hUHmnQL
+X-Gm-Gg: ASbGncsef2z+tprHO4OXd4HSES2LjGRxY9nQx95dWaufwUinqCHXSbZB9fwnMcqughB
+	73craVuT0aFbVwr8F1kcNimr0SCPTuEGUxKzmcA6fdCbViE2VGAlSEZT/iVSGWO9XaFxo3j5Gm2
+	yuchZ+iXCFrT9imtb0uV/n12C5lSNz7eZ2hEwveD6+Ydo=
+X-Google-Smtp-Source: AGHT+IHMQ0HEf1QGjZKS2FKHFK7WceR4QcvBJZVnXk0gSCJXLZWNY34EB7jNoARv3FwK/IDiJPQd/DA4fgwGFkmqZWo=
+X-Received: by 2002:a05:6102:4406:b0:4e6:e126:6238 with SMTP id
+ ada2fe7eead31-4e746ce24bcmr4227663137.3.1749078260388; Wed, 04 Jun 2025
+ 16:04:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEC9UqkKeEj4on3M@google.com>
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-3-blakejones@google.com> <aD9Xxhwqpm8BDeKe@google.com>
+ <CAP_z_Cj_8uTBGzaoFmi1f956dXi1qDnF4kqc49MSn0jDHYFfxg@mail.gmail.com>
+ <aD9sxuFwwxwHGzNi@google.com> <CAP_z_Cg+mPpdzxg-d+VV5J9t7vTTNXQmKLdnfuNETm1H40OA+g@mail.gmail.com>
+ <aD9yte49C_BM5oA9@google.com> <CAP_z_Cg0ZCfvEFpJpvhuRcUkjV_paCODw2J61D3YQMm7dg0aGg@mail.gmail.com>
+ <aEC9UqkKeEj4on3M@google.com> <aEDEw7bCDAtEXfGC@x1>
+In-Reply-To: <aEDEw7bCDAtEXfGC@x1>
+From: Blake Jones <blakejones@google.com>
+Date: Wed, 4 Jun 2025 16:04:09 -0700
+X-Gm-Features: AX0GCFuBtJRBiLPJLWcckQqQphG1Vff1V02DcY2BL7rNUhiI2R9BuvLLkZ8arFw
+Message-ID: <CAP_z_CjQktMSMVhgX1gBkBh+0sAnWwAjUfBgJ1he1oaR7ULeRg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf: collect BPF metadata from existing BPF programs
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 04, 2025 at 02:40:34PM -0700, Namhyung Kim wrote:
-> On Tue, Jun 03, 2025 at 03:29:35PM -0700, Blake Jones wrote:
-> > On Tue, Jun 3, 2025 at 3:10 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > Hmmm. Is that documented and tested anywhere? Offhand it sounds like an
-> > > > implementation detail that I wouldn't feel great about depending on -
-> > > > certainly not without a strong guarantee that it wouldn't change.
+On Wed, Jun 4, 2025 at 3:12=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+> So, the comment in:
+>
+> tools/perf/util/bpf-event.c
+>
+> Is:
+>
+>  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
+>  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
+>  * one PERF_RECORD_KSYMBOL is generated for each sub program.
+>
+> which is not so nicely worded tho :-\
+>
+> "One KSYMBOL per program", followed by "one KSYMBOL per sub program".
+>
+> But that matches the referenced:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/k=
+ernel/events/core.c?h=3Dv6.15#n9825
 
-> > > Good point.  Maybe BPF folks have some idea?
+Indeed, we get one KSYMBOL per subprogram, but one BPF_EVENT per program.
+(I found that the term "subprogram" is used inconsistently; sometimes it
+includes the main program, while other times it doesn't. In the case of
+that comment, and the function perf_event__synthesize_one_bpf_prog, it does
+include the main program, which has sub_id =3D 0.)
 
-> > > Anyway the current code generates them together in a function.
+> So, for these bpf_metadata_ variables, would that be strictly per
+> program or would it be perf 'sub program'?
 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c?h=v6.15#n9825
+These BPF metadata records would be generated for each subprogram.
 
-> > It certainly does, yeah. But I don't want to have that become another
-> > instance of https://www.hyrumslaw.com/.
+My goal here is to allow PERF_RECORD_SAMPLE events with IPs in BPF code
+to be associated with any metadata that describes that code. As the
+comment points out, each subprogram gets its own PERF_RECORD_KSYMBOL event,
+and that event indicates where the subprogram's starting and ending
+addresses are. With one PERF_RECORD_BPF_METADATA event per subprogram, it's
+then straightforward to associate the metadata with a range of IPs.
 
-> Thanks for sharing this.
+If I only generated the metadata records per program rather than per
+subprogram, I could only associate them with a PERF_RECORD_BPF_EVENT event.
+That event has the full program's tag, but it doesn't have a list of the
+subprogram tags for that program. So it doesn't have enough information on
+its own to construct the relevant list of virtual address ranges. And I'd
+be quite concerned about assuming that the BPF_EVENT events immediately
+follow their related KSYMBOL events, especially for events generated while
+the system was generating SAMPLE events.
 
-> I'm curious about the semantics of the KSYMBOL and BPF_EVENT.  And I
-> feel like there should be a connection between them.
+Blake
 
-So, the comment in:
-
-tools/perf/util/bpf-event.c
-
-Is:
-
- * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
- * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
- * one PERF_RECORD_KSYMBOL is generated for each sub program.
-
-which is not so nicely worded tho :-\
-
-"One KSYMBOL per program", followed by "one KSYMBOL per sub program".
-
-But that matches the referenced:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/events/core.c?h=v6.15#n9825
-
-So, for these bpf_metadata_ variables, would that be strictly per
-program or would it be perf 'sub program'?
-
-Couldn't get an answer from looking at tools/bpf/bpftool/prog.c, but
-seems to be with progs, not subprogs, i.e. just the PERF_RECORD_KSYMBOL
-associated with progs (not subprogs) will have those variables.
-
-But then it seems those variables _are_ associated with at least one
-PERF_RECORD_KSYMBOL, right?
-
-- Arnaldo
-
-> Song and Jiri, what do you think?
-
-> Thanks,
-> Namhyung
-
-> > > > Can you say more about why the duplicated records concern you?
-> > >
-> > > More data means more chance to lost something.  I don't expect this is
-> > > gonna be a practical concern but in general we should pursue less data.
-> > 
-> > That makes sense. In this case, it will only show up for BPF programs that
-> > define "bpf_metadata_" variables (which is already an opt-in action), and
-> > the number of variables a given program defines is likely to be quite small.
-> > So I think the cost of the marginal increase in data generated is outweighed
-> > by the usability and reliability benefits of being able to match these events
-> > 1:1 with the KSYMBOL events. If this proves to be a problem in practice,
-> > it can be revisited.
+> Couldn't get an answer from looking at tools/bpf/bpftool/prog.c, but
+> seems to be with progs, not subprogs, i.e. just the PERF_RECORD_KSYMBOL
+> associated with progs (not subprogs) will have those variables.
+>
+> But then it seems those variables _are_ associated with at least one
+> PERF_RECORD_KSYMBOL, right?
