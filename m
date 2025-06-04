@@ -1,127 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D911917F1;
-	Wed,  4 Jun 2025 15:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDE32F56;
+	Wed,  4 Jun 2025 15:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749050284; cv=none; b=NYB6FLCzBhJ9lJKYBXd4NX02x8gCuXMfAAMJJ9gl9UUusHvasZ/RHJmSUjmGitBMd5d0/7cF2c96wAx8kwzLOTkF89m3Nl/x0JNlDzpUrhm+F9bdHjW2Xi4+pF+Si+qqYPR5SMB+vAZCMQS6HBMZy+4n3VmY32qFr+Mq+ETGltQ=
+	t=1749050596; cv=none; b=m3xUZzLG/KKbuUk0A3a4NIIiQFEDDd4KKB4PXMd19xKb3s8V0rIIGy+ESEfU+PiIReSfrgGdZ6Su5rkC5gogY5Ou+UnE8NvWbJzMRl3guy49AAzZU6ccIXa+grsO8Qtq/1DKwbtIQFlAbUO4oNYnb2UQsCTH+eiDrHGsMJNaC8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749050284; c=relaxed/simple;
-	bh=s5zmxv3LU0w+4sopd0Re0HC/bbjNa73HY3q0HOETc+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qscfGIBr5oIVE0VSwq1OGnGPFJ7IBGYMAF4zP0/DCLgd0BIargl4QVn+Kf9pD2QQPdc3ZB+Djyb0h3vcyWXCF7TWCX15POY90TROWzRTeAUmFB9ceKf3oS5aQbnuSo1e1FaJixQqsT0gaH+U68Dm2k+c2ANZeYl5Rmedy4UHyxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D9601758;
-	Wed,  4 Jun 2025 08:17:44 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB493F59E;
-	Wed,  4 Jun 2025 08:18:00 -0700 (PDT)
-Date: Wed, 4 Jun 2025 16:17:56 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250604151756.GD8020@e132581.arm.com>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
- <20250604135801.GK38114@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1749050596; c=relaxed/simple;
+	bh=+lJcxQsjxseXi30qNXRxLB/y4R9OszpeMs9veRimWYg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=S3EuJH0cFS3iFjGR8OuOEgU1Yva3OFQxtqD1qtiKSdwnDPWYCXuFKJ6JXuZKy82LRxvaAlYI6YckCIkndnOBRobAvYtkJgO1OpttS6MIjKD9yVFc3rQZ8RB6MsazK5GeWr4ie2kTklh1NV3HgHFNM7ikjax95iCc+lxWw51VPWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FrpnwNfA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FrpnwNfA"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 554FMJIY076049
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 4 Jun 2025 08:22:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 554FMJIY076049
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749050541;
+	bh=NH2ltXtujZBqPJip4ancgNjYxroWFHWZyGX2p6NKPXc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=FrpnwNfA/rikkJwUqKavu+F3qP9DFDYIsBfs2A92z5aoMEvnWjkzfYojMhs98JXRn
+	 coeiXRhu75/wIJvdUSGvYY6BwK9I1KouJwNAN9odFoW5uUFHS1MptMWQREGT0rX2f8
+	 f6g6Q+cKIDEwQr8ORjzbF/t8oAIDaV9I+VMh75ax64t/EXUvl1y9/YnGNaWTT3lOUj
+	 2eXE0GUVgUxeIwkM/KBWkZkei92+bxbvFBLoD15xH8xydiCwjaggxg4UL8HaEoDOUz
+	 9ubB5Ku2C0uIWI1JSB4rzj+lfkQJeNqgS7twCkpv4PK+6euX/WeKwfNCvb4OXiSErp
+	 ZqMFdhLraiD6A==
+Date: Wed, 04 Jun 2025 08:22:19 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Dave Hansen <dave.hansen@intel.com>, Sohil Mehta <sohil.mehta@intel.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+CC: Xin Li <xin@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/9] x86/nmi: Assign and register NMI-source vectors
+User-Agent: K-9 Mail for Android
+In-Reply-To: <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-5-sohil.mehta@intel.com> <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+Message-ID: <31DB6043-44B2-43C1-B312-9B0DEC23C500@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604135801.GK38114@noisy.programming.kicks-ass.net>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 04, 2025 at 03:58:01PM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 04, 2025 at 11:18:21AM +0100, Leo Yan wrote:
-> 
-> > Totally agree. The comment would be very useful!
-> 
-> I have the below. Let me go read your email in more than 2 seconds to
-> see if I should amend things.
-> 
-> I'm not sure doing the INACTIVE->INACTIVE cycle in the ASCII art is
-> going to make it clearer, might leave that off. But yeah, possible.
-> 
-> ---
-> 
-> Subject: perf: Add comment to enum perf_event_state
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Wed Jun  4 10:21:38 CEST 2025
-> 
-> Better describe the event states.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/perf_event.h |   42 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 2 deletions(-)
-> 
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -635,8 +635,46 @@ struct perf_addr_filter_range {
->  	unsigned long			size;
->  };
->  
-> -/**
-> - * enum perf_event_state - the states of an event:
-> +/*
-> + * The normal states are:
-> + *
-> + *            ACTIVE    --.
-> + *               ^        |
-> + *               |        |
-> + *       sched_{in,out}() |
-> + *               |        |
-> + *               v        |
-> + *      ,---> INACTIVE  --+ <-.
-> + *      |                 |   |
-> + *      |                {dis,en}able()
-> + *   sched_in()           |   |
-> + *      |       OFF    <--' --+
-> + *      |                     |
-> + *      `--->  ERROR    ------'
-> + *
-> + * That is:
-> + *
-> + * sched_in:       INACTIVE          -> {ACTIVE,ERROR}
-> + * sched_out:      ACTIVE            -> INACTIVE
-> + * disable:        {ACTIVE,INACTIVE} -> OFF
-> + * enable:         {OFF,ERROR}       -> INACTIVE
-> + *
-> + * Where {OFF,ERROR} are disabled states.
-> + *
-> + * Then we have the {EXIT,REVOKED,DEAD} states which are various shades of
-> + * defunct events:
-> + *
-> + *  - EXIT means task that the even was assigned to died, but child events
-> + *    still live, and further children can still be created. But the event
-> + *    itself will never be active again. It can only transition to
-> + *    {REVOKED,DEAD};
-> + *
-> + *  - REVOKED means the PMU the event was associated with is gone; all
-> + *    functionality is stopped but the event is still alive. Can only
-> + *    transition to DEAD;
-> + *
-> + *  - DEAD event really is DYING tearing down state and freeing bits.
-> + *
+On June 3, 2025 10:23:42 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wr=
+ote:
+>On 5/13/25 13:37, Sohil Mehta wrote:
+>=2E=2E=2E
+>> + * Vector 2 is reserved for external NMIs related to the Local APIC -
+>> + * LINT1=2E Some third-party chipsets may send NMI messages with a
+>> + * hardcoded vector of 2, which would result in bit 2 being set in the
+>> + * NMI-source bitmap=2E
+>
+>This doesn't actually say what problem this causes=2E Is this better?
+>
+>	Third-party chipsets send NMI messages with a fixed vector of 2=2E
+>	Using vector 2 for some other purpose would cause confusion
+>	between those Local APIC messages and the other purpose=2E Avoid
+>	using it=2E
+>
+>> + * The vectors are in no particular priority order=2E Add new vector
+>> + * assignments sequentially in the list below=2E
+>> + */
+>> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sour=
+ces */
+>> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+>> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector=
+ 2 */
+>> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+>> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+>> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+>> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+>> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
+>> +
+>> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
+>
+>Would an enum fit here?
+>
+>You could also add a:
+>
+>	NMIS_VECTOR_COUNT
+>
+>as the last entry and then just:
+>
+>	BUILD_BUG_ON(NMIS_VECTOR_COUNT >=3D 16);
+>
+>somewhere=2E
+>
+>I guess it's a little annoying that you need NMIS_VECTOR_EXTERNAL to
+>have a fixed value of 2, but I do like way the enum makes the type explic=
+it=2E
+>
+>
+>>  static int __init register_nmi_cpu_backtrace_handler(void)
+>>  {
+>> -	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_b=
+t", 0);
+>> +	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_b=
+t", NMIS_VECTOR_BT);
+>>  	return 0;
+>>  }
+>
+>=2E=2E=2E Oh you replaced _most_ of the random 0's in this patch=2E That =
+helps
+>for sure=2E
 
-LGTM:
+The "may" here is important=2E *Most* sources are expected to send these a=
+s either a programmable MSI or as LINT1, which is programmable in the APIC,=
+ but since the vector hasn't mattered, we can't rule out that some hardware=
+ might have been built to send an MSI with a hard-coded vector, in which ca=
+se it is most likely they send either 0, 2 or 255=2E 0 and 255 will set the=
+ unknown source bit (0), but 2 is a legitimate source so it is defensive pr=
+ogramming to leave it fallow=2E
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
->   */
->  enum perf_event_state {
->  	PERF_EVENT_STATE_DEAD		= -5,
+Note also that although the current implementation is limited to 15 source=
+s (+ the unknown/lost source bit), the architecture allows for up to 63=2E
