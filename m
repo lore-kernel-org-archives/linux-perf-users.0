@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9156426AA82;
-	Thu,  5 Jun 2025 13:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4154F272E54;
+	Thu,  5 Jun 2025 13:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749131198; cv=none; b=QJPJcMdDXYFuNVPjqSfkl8kqxJJULPfTofBukjz2trfCt7WUm8hBFTo9NaL6WpK6LAA2MzVi/aYqL1c5xx1HwpOF/ptlnYJM121720Pgo7wD/LTWuxIAgR4mFoU8ro0H2ikAweUek4tT2Ztb9HyiTOc1U+SBBmmOPHxVUQwb4NY=
+	t=1749131489; cv=none; b=Mpl2uOiTuJbO2Zsjg7o26C/zoVyvpnF086teEg2NRciQbQzuV6jHu2k48JovAaD4KFGlnXHx64tenpWBowH0cnXgoCOeJ28Zq6MVMjZKwgoCnTZCwe/1bWTpmcq0LcSFm+0DQkUOb9DOVfW5mtzyGyi1oBpqIrFRKKevXJ62VOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749131198; c=relaxed/simple;
-	bh=Tpf9ItGaBou0FWnVAa3e7cYiVATjsvVi5B2ILbnbgAc=;
+	s=arc-20240116; t=1749131489; c=relaxed/simple;
+	bh=yAV1qmK+GD0TtFCwzR+lZZRLe8ffoaN7xhVT0oGq4Og=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eT9C+N4U1Ye5M8d9/dQThWSCUk+BiVNte4swuNT8yat/py8mvQPWuDgmEmiUyFW2MVu1vW65kh2kGcPQmDvl6VOiYnNtxBqClOzNbmYpH+dHl0WFMdYqjtdotrtzyqTGVZgRegy8YzP4Avxs63RHY3xaUPXG4FjoqHna8VAWTjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMUUy8l7; arc=none smtp.client-ip=198.175.65.9
+	 In-Reply-To:Content-Type; b=dW4VUKYBiBgqMus/nQ9j2EDmCSJrSVTI1UzPV6mkMp7E3uqaL8kP8w4Gj7I4RXX6XlsXYv5EKbO9fw3VUPOcpX86W46FrNEO6LcNQQHrQ0uYMNxGMIWeCkthJh53uotLZgzKNbcLfbKdCc3dQNVsTN8LvAUtTPxPzYn/C10SD84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CxIuH5PN; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMUUy8l7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CxIuH5PN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749131197; x=1780667197;
+  t=1749131488; x=1780667488;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Tpf9ItGaBou0FWnVAa3e7cYiVATjsvVi5B2ILbnbgAc=;
-  b=nMUUy8l7SCUuxShDmR9ax6+uSKS8uW5k7SClpA5juijbGL2oFVBH0PrL
-   kDQMQ0VBwukItViF8FYaKuyHiSitvxOEhRe76Q93PEYqSFbr/fziGR64f
-   AwHGFpcYAvhz+e5Hlyarj+ZJ+zOzRR1uoKeuXvmDYA/pkGLtmkhTqXSa7
-   L2+zRl63Eq+l2jDZSi9ducW8TU0tttMiDYj8hmoZMBtDEisAYSeeM5sra
-   ESJB3A09sIXYqoDj/dNLd4IfxLDmEhKF8WWAaiW5INR2Orv2U5CdmE7++
-   3A4ERZmPcWTZrYJxg85FiIC6GF7FzGMOb1y0Zx1VZqsBH6y5v994kg/Wf
-   w==;
-X-CSE-ConnectionGUID: RgKyhc41QJeGsd26H/HLLQ==
-X-CSE-MsgGUID: vbMp3goqRp2rErDWsQOYrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="73782036"
+  bh=yAV1qmK+GD0TtFCwzR+lZZRLe8ffoaN7xhVT0oGq4Og=;
+  b=CxIuH5PNgYHb9x48bRO35oenvhCIKm3iwgfLWTvlwqiFNmEPCMyTs0f0
+   tafhaYywKxDGS6/+rc8GviEFuE/xgKDje5Srg6wSsm20u4W9BMs9fCpBs
+   ga256pJkbn3PfPRjLnt2j+H+Ht8GbqEH9gpth5pphDcjbZ0cpTvtRgxVs
+   UW8xNTssm6xT4k+IkQ1bYbcF+EBIIyNunF45NU2sdn/TvQdM1G+R7+3uE
+   1IiHXcn4hg2HZWP/6Fr5pH7IFBGc86AwENmmOzRUOXktAUdf5lBmRqq0L
+   v8z92Dcx2litjoGWP7JNQVvBBX37VeECICRmp60Pf2eCDfgQvvwY4grja
+   Q==;
+X-CSE-ConnectionGUID: /XE7QyUqSsinz2eFqzaHdQ==
+X-CSE-MsgGUID: edBYGxpuSy21tWdcFWBJog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="62607354"
 X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="73782036"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:46:37 -0700
-X-CSE-ConnectionGUID: Kj+CZmbWSh+lfX1+Useb+w==
-X-CSE-MsgGUID: Iw4kSaOnQ46FeR9Srzp1cw==
+   d="scan'208";a="62607354"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:51:28 -0700
+X-CSE-ConnectionGUID: RGgWUE6UTwuS67os1UEwPA==
+X-CSE-MsgGUID: KygK6xT1S9CXI8J+gpPULA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="145391614"
+   d="scan'208";a="146474689"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:46:36 -0700
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:51:27 -0700
 Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B052E20B5736;
-	Thu,  5 Jun 2025 06:46:33 -0700 (PDT)
-Message-ID: <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
-Date: Thu, 5 Jun 2025 09:46:32 -0400
+	by linux.intel.com (Postfix) with ESMTPS id 4936120B5736;
+	Thu,  5 Jun 2025 06:51:25 -0700 (PDT)
+Message-ID: <1f97aa2e-c488-4800-ac7b-e7351f2a30ea@linux.intel.com>
+Date: Thu, 5 Jun 2025 09:51:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,28 +59,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
- "linux-perf-use." <linux-perf-users@vger.kernel.org>,
- Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+To: Ingo Molnar <mingo@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com, Leo Yan <leo.yan@arm.com>,
  Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
  Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
- <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+ <aEE7ug56bPS_ZJUQ@gmail.com>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+In-Reply-To: <aEE7ug56bPS_ZJUQ@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
-> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
->>
+On 2025-06-05 2:39 a.m., Ingo Molnar wrote:
+> 
+> * kan.liang@linux.intel.com <kan.liang@linux.intel.com> wrote:
+> 
 >> From: Kan Liang <kan.liang@linux.intel.com>
 >>
 >> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
@@ -122,40 +122,22 @@ On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
 >> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
 >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > 
-> It seems the patch fixes one issue and introduces another ?
+> Any idea which commit introduced this bug?
 > 
-> Looks like the throttle event is sticky.
-> Once it's reached the perf_event no longer works ?
-
-No. It should still work even the throttle is triggered.
-
-sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
-/proc/sys/kernel/perf_event_max_sample_rate'
-sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
-sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.564 MB perf.data (613 samples) ]
-sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.545 MB perf.data (502 samples) ]
-
-
-> Repro:
-> test_progs -t perf_branches/perf_branches_no_hw
-> #250/2   perf_branches/perf_branches_no_hw:OK
+> Was it:
 > 
-> test_progs -t stacktrace_build_id_nmi
-> #393     stacktrace_build_id_nmi:OK
-> 
-> test_progs -t perf_branches/perf_branches_no_hw
-> perf_branches/perf_branches_no_hw:FAIL
-> 
+>   9734e25fbf5a perf: Fix the throttle logic for a group
+>  
 
-Do you have more logs regarding where it's failed?
+Yes.
+Since it is still in the tip.git, I'm not sure if the commit ID is valid
+for the Fixes tag. so I didn't mention the commit ID in the log.
 
 Thanks,
-Kan> Maybe it's an unrelated bug.
+Kan
+
+> plus the followup driver updates?
+> > Thanks,
 > 
+> 	Ingo
 
