@@ -1,247 +1,160 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F2F255F3B
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Jun 2025 10:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13071C4A20;
+	Thu,  5 Jun 2025 11:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749120622; cv=none; b=A3pvdz7nroYNEP3ACRm3DhvPbfHeGjzsxCHodXI2t4SnG+a20LzFAhqTtn9oB0QwzjheuIUJn2cHsnrFCZs95zG2Ta1Da7eR+7TJJZXd7bfWQ2HP061Gmetsti1Abv1WtCanDi8enZCIqXW6xd/XbfDwCp8aQbbcjXUt7Lncd7Y=
+	t=1749121713; cv=none; b=hilgr9vfM5kbE0VI7hfN1zOUGC6hpoJHArn0zbKOFK28Z9MjRemrux8JL3r3vjuBtqTdcvvVx2w64rkT5XDl1+S6kAP43oN9cbdMLKhfwkZ0aimu974qrY955F5GoqJFsvbQMRjSq6jo/5MF1mdCCbGIvAl65l7IXBjG0DzICOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749120622; c=relaxed/simple;
-	bh=MMFbkI7zMPzBdRBdPQfb7pTJMjgrsMrJkf8SuH2PcGg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mkMo8EBNKEh9Kh5xPX9x0xfwtA6gXN71jLU8COXf4HGOQ5mWvTDMbL7KV8sYH1G0i1zYaJn9GqqoWCNUsPje6woc5bhJtofAP5+Az44xDgsvqs0Vv6yhG9oiQTED1Amxj/RdhG2mj+gHDYY94zFVbZpOKKEC/MHOBFgZFTjQ6cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5Yneaw9; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749121713; c=relaxed/simple;
+	bh=HMRu+i1hsgiHiaaZYlY71LYjWVULN4Wiwey34tQDl6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+BMlR5HyuyihQGZAkhczar1+uMTIhqRsqQdsBIy4EChiPoHbrH06hcHe+TBhaabjNOOpiQI3/lcI1I6r6FxLzXXX0HqBg4d6/fUllytx8MNnfrSvJ1Lh+AOYjjMmu3ED4+m1H4I1XTeJIzA+9S1490bpG9IPkdMrey1tz3APKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i6jfUp6K; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5Yneaw9"
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so5242135e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jun 2025 03:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749120618; x=1749725418; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TYtpnIAkK3WcCc9sKEGdtsuC5KifjqgSXfNa01d683g=;
-        b=s5Yneaw9KHvOhvd1NjYXiRndEXnRicPmtfIvSUpJbU4CCeD8zAHMw05ghUhtLD+CN9
-         04gMz20XVIlaXkPYZ6p6u/AFHBvE83BFdOmbcqUrZGCsksipl/+FssurC3dVPFIH2n/7
-         5AwcwzvmEQwUH9MjBGot+IjCqn+ovnNFszmQ5f17cijwjM2N+cEuIDD6TshMxKVX4JYl
-         gqsAkETajdXLmeBDTn/ahpqkei0SopherOOmOj37Gg8H2XO53TW69UoalfV4asZbQ1p/
-         bZyDiXQC2cTwyMrj402S5bLSVBYAhHj29o2DKqQToy1j/YsxvvQTiMavQytnkwUv7mbx
-         pvPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749120618; x=1749725418;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TYtpnIAkK3WcCc9sKEGdtsuC5KifjqgSXfNa01d683g=;
-        b=Mv6icX04PIFySC93TSJkhUHlgk1FO3yjb9YP/Q+E9/+VrEMp4d0YDbsA+DhY5cEDn2
-         JM5ywT8LJR8ITUOFyxUq7JLObzBhWPDImKbPL+ZBmvlPjBcbIcJZEczEVrJ30bLU406A
-         3jGXoLcwHulpQHdrPPdwp5m+WfSPiHtqzeEASNXEitRdStd4dSvUz/AqKRcqaK/Xgmn2
-         Z4ovvjId6v6qRWIM2Dmi+ApMwVWaiz5Rq12lE3s9RPPhSgaDcl1+ZkfAKjNZUzQnKNFq
-         KVj+I5wdECmZDbXQWvalOscgcEO+3qtkNtPbZ0zpLp5TE1URwTsVzn0uPmzxN9bYAwOG
-         2/HA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1kNRt2YYHZNrfA0tLEaLEcnmVbBj3LU6j0SC99Uzvmy/4gmPVZswiYcej3PbFNkYMPffNBv5B7qsQoUfqLml1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYV0BP4NTR/XPWHNHY8RYNOpGTHKi2oNLmk6ZZm+7r2O4NT7NB
-	J3lQWFDwm8hkgPEy6fqR53To6C/ITo7sstgDrVZZqBQiQeSVcJaKzabpN8THeSKYmYY=
-X-Gm-Gg: ASbGncvwjJ83HfhgnwHMIXlU4OI3xZA9LT2pGQYCLBSNh8vwnJvlM90e1EfVeSN5WG/
-	cGEtAg1cH0rVeIgkaEU6KO6Lte7EjNLZuKpcnoKnD3x4NLqbxusdkrmH+cpXKldBXopMSokJdhq
-	aEn1SC1McB8v2/gK7/N2DwcClRBPSqZCgxlieabyjlto7i1xZmTQtortflpfgTTMDbryMmvDulW
-	jwTc+prpqrIBrUc3mV4mViA4bMvxKKsUmLytydTxJduq/JUXRJrx72+dww5liTg+yEbh+ojanxJ
-	leWQo1A++ZSN53QSo39V7PhJD6H6nZcMtvxt1Y3vIRgGXewXGr3enAFLOEbc
-X-Google-Smtp-Source: AGHT+IF209QtdWKQIFSgWNU834ITMWh9f6gxkjT2rjm5O4GQe4Nyl3IJTR6vikF94ywt0/mEA5L8wg==
-X-Received: by 2002:a05:600c:548d:b0:43c:f597:d589 with SMTP id 5b1f17b1804b1-451f0b20d15mr54093555e9.27.1749120617749;
-        Thu, 05 Jun 2025 03:50:17 -0700 (PDT)
-Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f990cfe3sm20629965e9.23.2025.06.05.03.50.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 03:50:16 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Thu, 05 Jun 2025 11:49:08 +0100
-Subject: [PATCH v3 10/10] perf docs: arm-spe: Document new SPE filtering
- features
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i6jfUp6K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nzcwZQikZQA4ZQSmzmP28ryvumzddlmv0QFfHqKkX0Y=; b=i6jfUp6KuU2q9F5MtYoLfKE9VV
+	fLpAG94zGRz6tk0lkdvyxisLFjwL2lTI9vM9btp51VYjNIio2611hFZB9FJwX0GN89jPuZ75xCnJt
+	hwURE0ciIeD0cwyfF4R3rOBEg76Vkw7R+PZvuv7o0D8gPsVSgYhTUaMLxfTitDlot9k3+a1cqJuHN
+	R0jMzFzXlFFWtymdrBJuJJIaNPsP+E2jW7ycBcksrWZQz9M5i1nqRc2Zv3Hx6YlfJ/8iCvR1INWxP
+	/aIrEdLQ+W/LGnJuIkHAz/HvnqWFvIwERRaKRa8DlJcYWLZdyPQBIIjoSRL5eOKYNyVn1oIANB2tx
+	Yuu8Fn6g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uN8SG-000000019SB-0Nah;
+	Thu, 05 Jun 2025 11:08:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1DDDE3005AF; Thu,  5 Jun 2025 13:08:15 +0200 (CEST)
+Date: Thu, 5 Jun 2025 13:08:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Baisheng Gao <baisheng.gao@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
+	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
+Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
+ sample
+Message-ID: <20250605110815.GQ39944@noisy.programming.kicks-ass.net>
+References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+ <aEBSt2LN7YhxYX7N@J2N7QTR9R3>
+ <20250604142437.GM38114@noisy.programming.kicks-ass.net>
+ <aEBeRfScZKD-7h5u@J2N7QTR9R3>
+ <20250604153219.GJ39944@noisy.programming.kicks-ass.net>
+ <aEBvd8fIdjlTV53j@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-james-perf-feat_spe_eft-v3-10-71b0c9f98093@linaro.org>
-References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
-In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
- kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEBvd8fIdjlTV53j@J2N7QTR9R3>
 
-FEAT_SPE_EFT and FEAT_SPE_FDS etc have new user facing format attributes
-so document them. Also document existing 'event_filter' bits that were
-missing from the doc and the fact that latency values are stored in the
-weight field.
+On Wed, Jun 04, 2025 at 05:08:23PM +0100, Mark Rutland wrote:
+> That looks good to me!
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-Tested-by: Leo Yan <leo.yan@arm.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
+I now haz the below patch.
+
 ---
- tools/perf/Documentation/perf-arm-spe.txt | 97 ++++++++++++++++++++++++++++---
- 1 file changed, 88 insertions(+), 9 deletions(-)
+Subject: perf: Fix sample vs do_exit()
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Thu Jun 5 12:31:45 CEST 2025
 
-diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
-index 37afade4f1b2..4092b53b58d2 100644
---- a/tools/perf/Documentation/perf-arm-spe.txt
-+++ b/tools/perf/Documentation/perf-arm-spe.txt
-@@ -141,27 +141,65 @@ Config parameters
- These are placed between the // in the event and comma separated. For example '-e
- arm_spe/load_filter=1,min_latency=10/'
+Baisheng Gao reported an ARM64 crash, which Mark decoded as being a
+synchronous external abort -- most likely due to trying to access
+MMIO in bad ways.
+
+The crash further shows perf trying to do a user stack sample while in
+exit_mmap()'s tlb_finish_mmu() -- i.e. while tearing down the address
+space it is trying to access.
+
+It turns out that we stop perf after we tear down the userspace mm; a
+receipie for disaster, since perf likes to access userspace for
+various reasons.
+
+Flip this order by moving up where we stop perf in do_exit().
+
+Additionally, harden PERF_SAMPLE_CALLCHAIN and PERF_SAMPLE_STACK_USER
+to abort when the current task does not have an mm (exit_mm() makes
+sure to set current->mm = NULL; before commencing with the actual
+teardown). Such that CPU wide events don't trip on this same problem.
+
+Fixes: c5ebcedb566e ("perf: Add ability to attach user stack dump to sample")
+Reported-by: Baisheng Gao <baisheng.gao@unisoc.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |    7 +++++++
+ kernel/exit.c        |   17 +++++++++--------
+ 2 files changed, 16 insertions(+), 8 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7439,6 +7439,10 @@ perf_sample_ustack_size(u16 stack_size,
+ 	if (!regs)
+ 		return 0;
  
--  branch_filter=1     - collect branches only (PMSFCR.B)
--  event_filter=<mask> - filter on specific events (PMSEVFR) - see bitfield description below
-+  event_filter=<mask> - logical AND filter on specific events (PMSEVFR) - see bitfield description below
-+  inv_event_filter=<mask> - logical OR to filter out specific events (PMSNEVFR, FEAT_SPEv1p2) - see bitfield description below
-   jitter=1            - use jitter to avoid resonance when sampling (PMSIRR.RND)
--  load_filter=1       - collect loads only (PMSFCR.LD)
-   min_latency=<n>     - collect only samples with this latency or higher* (PMSLATFR)
-   pa_enable=1         - collect physical address (as well as VA) of loads/stores (PMSCR.PA) - requires privilege
-   pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
--  store_filter=1      - collect stores only (PMSFCR.ST)
-   ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
-   discard=1           - enable SPE PMU events but don't collect sample data - see 'Discard mode' (PMBLIMITR.FM = DISCARD)
-+  data_src_filter=<mask> - mask to filter from 0-63 possible data sources (PMSDSFR, FEAT_SPE_FDS) - See 'Data source filtering'
++	/* No mm, no stack, no dump. */
++	if (!current->mm)
++		return 0;
++
+ 	/*
+ 	 * Check if we fit in with the requested stack size into the:
+ 	 * - TASK_SIZE
+@@ -8150,6 +8154,9 @@ perf_callchain(struct perf_event *event,
+ 	const u32 max_stack = event->attr.sample_max_stack;
+ 	struct perf_callchain_entry *callchain;
  
- +++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
- than only the execution latency.
++	if (!current->mm)
++		user = false;
++
+ 	if (!kernel && !user)
+ 		return &__empty_callchain;
  
--Only some events can be filtered on; these include:
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -944,6 +944,15 @@ void __noreturn do_exit(long code)
+ 	taskstats_exit(tsk, group_dead);
+ 	trace_sched_process_exit(tsk, group_dead);
+ 
++	/*
++	 * Since sampling can touch ->mm, make sure to stop everything before we
++	 * tear it down.
++	 *
++	 * Also flushes inherited counters to the parent - before the parent
++	 * gets woken up by child-exit notifications.
++	 */
++	perf_event_exit_task(tsk);
++
+ 	exit_mm();
+ 
+ 	if (group_dead)
+@@ -959,14 +968,6 @@ void __noreturn do_exit(long code)
+ 	exit_task_work(tsk);
+ 	exit_thread(tsk);
+ 
+-	/*
+-	 * Flush inherited counters to the parent - before the parent
+-	 * gets woken up by child-exit notifications.
+-	 *
+-	 * because of cgroup mode, must be called before cgroup_exit()
+-	 */
+-	perf_event_exit_task(tsk);
 -
--  bit 1     - instruction retired (i.e. omit speculative instructions)
-+Only some events can be filtered on using 'event_filter' bits. The overall
-+filter is the logical AND of these bits, for example if bits 3 and 5 are set
-+only samples that have both 'L1D cache refill' AND 'TLB walk' are recorded. When
-+FEAT_SPEv1p2 is implemented 'inv_event_filter' can also be used to exclude
-+events that have any (OR) of the filter's bits set. For example setting bits 3
-+and 5 in 'inv_event_filter' will exclude any events that are either L1D cache
-+refill OR TLB walk. If the same bit is set in both filters it's UNPREDICTABLE
-+whether the sample is included or excluded. Filter bits for both event_filter
-+and inv_event_filter are:
-+
-+  bit 1     - Instruction retired (i.e. omit speculative instructions)
-+  bit 2     - L1D access (FEAT_SPEv1p4)
-   bit 3     - L1D refill
-+  bit 4     - TLB access (FEAT_SPEv1p4)
-   bit 5     - TLB refill
--  bit 7     - mispredict
--  bit 11    - misaligned access
-+  bit 6     - Not taken event (FEAT_SPEv1p2)
-+  bit 7     - Mispredict
-+  bit 8     - Last level cache access (FEAT_SPEv1p4)
-+  bit 9     - Last level cache miss (FEAT_SPEv1p4)
-+  bit 10    - Remote access (FEAT_SPEv1p4)
-+  bit 11    - Misaligned access (FEAT_SPEv1p1)
-+  bit 12-15 - IMPLEMENTATION DEFINED events (when implemented)
-+  bit 16    - Transaction (FEAT_TME)
-+  bit 17    - Partial or empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 18    - Empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 19    - L2D access (FEAT_SPEv1p4)
-+  bit 20    - L2D miss (FEAT_SPEv1p4)
-+  bit 21    - Cache data modified (FEAT_SPEv1p4)
-+  bit 22    - Recently fetched (FEAT_SPEv1p4)
-+  bit 23    - Data snooped (FEAT_SPEv1p4)
-+  bit 24    - Streaming SVE mode event (when FEAT_SPE_SME is implemented), or
-+              IMPLEMENTATION DEFINED event 24 (when implemented, only versions
-+              less than FEAT_SPEv1p4)
-+  bit 25    - SMCU or external coprocessor operation event when FEAT_SPE_SME is
-+              implemented, or IMPLEMENTATION DEFINED event 25 (when implemented,
-+              only versions less than FEAT_SPEv1p4)
-+  bit 26-31 - IMPLEMENTATION DEFINED events (only versions less than FEAT_SPEv1p4)
-+  bit 48-63 - IMPLEMENTATION DEFINED events (when implemented)
-+
-+For IMPLEMENTATION DEFINED bits, refer to the CPU TRM if these bits are
-+implemented.
-+
-+The driver will reject events if requested filter bits require unimplemented SPE
-+versions, but will not reject filter bits for unimplemented IMPDEF bits or when
-+their related feature is not present (e.g. SME). For example, if FEAT_SPEv1p2 is
-+not implemented, filtering on "Not taken event" (bit 6) will be rejected.
+ 	sched_autogroup_exit_task(tsk);
+ 	cgroup_exit(tsk);
  
- So to sample just retired instructions:
- 
-@@ -171,6 +209,31 @@ or just mispredicted branches:
- 
-   perf record -e arm_spe/event_filter=0x80/ -- ./mybench
- 
-+When set, the following filters can be used to select samples that match any of
-+the operation types (OR filtering). If only one is set then only samples of that
-+type are collected:
-+
-+  branch_filter=1     - Collect branches (PMSFCR.B)
-+  load_filter=1       - Collect loads (PMSFCR.LD)
-+  store_filter=1      - Collect stores (PMSFCR.ST)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), SIMD and float
-+pointer operations can also be selected:
-+
-+  simd_filter=1         - Collect SIMD loads, stores and operations (PMSFCR.SIMD)
-+  float_filter=1        - Collect floating point loads, stores and operations (PMSFCR.FP)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), operation type filters can
-+be changed to AND using _mask fields. For example samples could be selected if
-+they are store AND SIMD by setting 'store_filter=1,simd_filter=1,
-+store_filter_mask=1,simd_filter_mask=1'. The new masks are as follows:
-+
-+  branch_filter_mask=1  - Change branch filter behavior from OR to AND (PMSFCR.Bm)
-+  load_filter_mask=1    - Change load filter behavior from OR to AND (PMSFCR.LDm)
-+  store_filter_mask=1   - Change store filter behavior from OR to AND (PMSFCR.STm)
-+  simd_filter_mask=1    - Change SIMD filter behavior from OR to AND (PMSFCR.SIMDm)
-+  float_filter_mask=1   - Change floating point filter behavior from OR to AND (PMSFCR.FPm)
-+
- Viewing the data
- ~~~~~~~~~~~~~~~~~
- 
-@@ -204,6 +267,10 @@ Memory access details are also stored on the samples and this can be viewed with
- 
-   perf report --mem-mode
- 
-+The latency value from the SPE sample is stored in the 'weight' field of the
-+Perf samples and can be displayed in Perf script and report outputs by enabling
-+its display from the command line.
-+
- Common errors
- ~~~~~~~~~~~~~
- 
-@@ -247,6 +314,18 @@ to minimize output. Then run perf stat:
-   perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
-   perf stat -e SAMPLE_FEED_LD
- 
-+Data source filtering
-+~~~~~~~~~~~~~~~~~~~~~
-+
-+When FEAT_SPE_FDS is present, 'data_src_filter' can be used as a mask to filter
-+on a subset (0 - 63) of possible data source IDs. The full range of data sources
-+is 0 - 65535 although these are unlikely to be used in practice. Data sources
-+are IMPDEF so refer to the TRM for the mappings. Each bit N of the filter maps
-+to data source N. The filter is an OR of all the bits, so for example setting
-+bits 0 and 3 includes only packets from data sources 0 OR 3. When
-+'data_src_filter' is set to 0 data source filtering is disabled and all data
-+sources are included.
-+
- SEE ALSO
- --------
- 
-
--- 
-2.34.1
-
