@@ -1,193 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB27527510C;
-	Thu,  5 Jun 2025 16:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E841DFF8;
+	Thu,  5 Jun 2025 17:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749142725; cv=none; b=Aqd84/vKtbHwt0RoH6Q5V2qweCWNJ9ThL7vzPV7DG7cvpAqzqMjGimjsZ6IUNI46qf5FuVjQ3Pgr9VTtGb3T1ItU7ChKCU40OicPhUsQZTOCjm4O8km0pcIDz7qRqGnxl26UVWFHei6HQRX9Pig5/7ZaouWLZ2oDJBX1juAF1lc=
+	t=1749144094; cv=none; b=Kyf+JIBjse1wuPelIgBK7hFiou29JyB/ObB8bDHrNpYvGo5uU1qee+qMil5U9DON01WVXtJQkKZc5o6f8pbkIgABCZZOPDhLxbO22iOPL40lED6UFXT+iGnA6/kTmp+zIdiqw8/+HvupmyguwhqeAHStvWE1caHrQemXutcD1+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749142725; c=relaxed/simple;
-	bh=V+RGtOXj+Div4Ph+uYyTLz/ZlWZWtTVuSKRa6XJvkRE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Hc5FIBh8aAz/W56GOnPpkd19TP2JF5QHIyh98tY6rQLy1QvPmu4rwxczHbBf8HvM+kcalP7SdqaLnC7Rw5Va658R5kXG7dfbiX/fVHWjujdxbzBou9GU5TrDPD5eHa4kkR5fcgoEfr5CQxyl4ORCvQiu3gZk6RQGcyw4x1CBYyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glcvHbI4; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glcvHbI4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749142724; x=1780678724;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=V+RGtOXj+Div4Ph+uYyTLz/ZlWZWtTVuSKRa6XJvkRE=;
-  b=glcvHbI4xhobYW25ZHxH7O9sHXcvSMH1H7Za+biUkRDgWXEElhCTqSCd
-   NMUVqdN8+ye+jl+Dzn5/bG9Vvx9olYRdymUXmCY0AxMxY55XY1VliZMPA
-   Z+Qo6fpV1JNjUoad/HEINYOCB+CSZTSZcG4QvN7ps1GAz/+uic/RW7tjD
-   IevtiUbufM0wOULrGGsqb/5Who/V0tjjGgunrkcXZS5yfGYXSkzeL4C8U
-   bh64wZQ2utYsxObrot8/fQUTWXsuBosO2uIignWjox6oH/cIe+Bw1drlT
-   SPGv5j+zXq3qnYMEiPHZOT5vG/YZM5blvj9uW4esXytVkr1YKhbCxhgLF
-   Q==;
-X-CSE-ConnectionGUID: t3BHrIU1SNaO1+81gNGmxQ==
-X-CSE-MsgGUID: 9fCVKPXMSIGrPwpERi65tg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55081374"
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="55081374"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:43 -0700
-X-CSE-ConnectionGUID: NOPijMEIR2+RuRTbWL0dyg==
-X-CSE-MsgGUID: WSA14enaRF+vDbDZschLWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
-   d="scan'208";a="150833768"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:43 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0285C20B5736;
-	Thu,  5 Jun 2025 09:58:40 -0700 (PDT)
-Message-ID: <b5c3cc21-26d6-4e87-84de-fa99909bdf1c@linux.intel.com>
-Date: Thu, 5 Jun 2025 12:58:38 -0400
+	s=arc-20240116; t=1749144094; c=relaxed/simple;
+	bh=GTyfTFDpQ/QXc5ClJokHVK49buVYWxHthMCjuGsSSuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X/Qg5XdrqlXEUyptRlz3nQVoyfXoHZFCGi+0YpAG/pVO8ZjlRD/fYnD34Zxw0vKziYfl7OVKjRZVlEcUkOzXgiDAyqukFGT+m/wcGm4FNl6cqRpqu1y4bfQhlyu/tql4tyCl+Tq0FVHWFBmdROtq4HfqtMjxJf80r68vBBuFSw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5671F12FC;
+	Thu,  5 Jun 2025 10:21:13 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76A7F3F5A1;
+	Thu,  5 Jun 2025 10:21:30 -0700 (PDT)
+Date: Thu, 5 Jun 2025 18:21:26 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
+Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
+Message-ID: <20250605172126.GG8020@e132581.arm.com>
+References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
+ <20250603140040.GB8020@e132581.arm.com>
+ <20250603144414.GC38114@noisy.programming.kicks-ass.net>
+ <20250604080339.GB35970@noisy.programming.kicks-ass.net>
+ <20250604101821.GC8020@e132581.arm.com>
+ <20250604141640.GL38114@noisy.programming.kicks-ass.net>
+ <20250604154639.GE8020@e132581.arm.com>
+ <20250605112921.GR39944@noisy.programming.kicks-ass.net>
+ <20250605123343.GD35970@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
- "linux-perf-use." <linux-perf-users@vger.kernel.org>,
- Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
- Aishwarya TCV <aishwarya.tcv@arm.com>,
- Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
- <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
- <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605123343.GD35970@noisy.programming.kicks-ass.net>
 
+On Thu, Jun 05, 2025 at 02:33:43PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 05, 2025 at 01:29:21PM +0200, Peter Zijlstra wrote:
+> 
+> > But yes, slightly confusing. Let me see if I can make a less confusing
+> > patch, and if not, sprinkle comments.
+> 
+> I've settled on the below.
+> 
+> ---
+> Subject: perf: Fix cgroup state vs ERROR
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Thu Jun 5 12:37:11 CEST 2025
+> 
+> While chasing down a missing perf_cgroup_event_disable() elsewhere,
+> Leo Yan found that both perf_put_aux_event() and
+> perf_remove_sibling_event() were also missing one.
+> 
+> Specifically, the rule is that events that switch to OFF,ERROR need to
+> call perf_cgroup_event_disable().
+> 
+> Unify the disable paths to ensure this.
+> 
+> Fixes: ab43762ef010 ("perf: Allow normal events to output AUX data")
+> Fixes: 9f0c4fa111dc ("perf/core: Add a new PERF_EV_CAP_SIBLING event capability")
+> Reported-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/events/core.c |   51 ++++++++++++++++++++++++++++++---------------------
+>  1 file changed, 30 insertions(+), 21 deletions(-)
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event
+>  }
+>  
+>  static void put_event(struct perf_event *event);
+> -static void event_sched_out(struct perf_event *event,
+> -			    struct perf_event_context *ctx);
+> +static void __event_disable(struct perf_event *event,
+> +			    struct perf_event_context *ctx,
+> +			    enum perf_event_state state);
+>  
+>  static void perf_put_aux_event(struct perf_event *event)
+>  {
+> @@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct pe
+>  		 * state so that we don't try to schedule it again. Note
+>  		 * that perf_event_enable() will clear the ERROR status.
+>  		 */
+> -		event_sched_out(iter, ctx);
+> -		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> +		__event_disable(iter, ctx, PERF_EVENT_STATE_ERROR);
+>  	}
+>  }
+>  
+> @@ -2242,18 +2242,6 @@ static inline struct list_head *get_even
+>  				    &event->pmu_ctx->flexible_active;
+>  }
+>  
+> -/*
+> - * Events that have PERF_EV_CAP_SIBLING require being part of a group and
+> - * cannot exist on their own, schedule them out and move them into the ERROR
+> - * state. Also see _perf_event_enable(), it will not be able to recover
+> - * this ERROR state.
+> - */
+> -static inline void perf_remove_sibling_event(struct perf_event *event)
+> -{
+> -	event_sched_out(event, event->ctx);
+> -	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> -}
+> -
+>  static void perf_group_detach(struct perf_event *event)
+>  {
+>  	struct perf_event *leader = event->group_leader;
+> @@ -2289,8 +2277,15 @@ static void perf_group_detach(struct per
+>  	 */
+>  	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
+>  
+> +		/*
+> +		 * Events that have PERF_EV_CAP_SIBLING require being part of
+> +		 * a group and cannot exist on their own, schedule them out
+> +		 * and move them into the ERROR state. Also see
+> +		 * _perf_event_enable(), it will not be able to recover this
+> +		 * ERROR state.
+> +		 */
+>  		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
+> -			perf_remove_sibling_event(sibling);
+> +			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
+>  
+>  		sibling->group_leader = sibling;
+>  		list_del_init(&sibling->sibling_list);
+> @@ -2562,6 +2557,15 @@ static void perf_remove_from_context(str
+>  	event_function_call(event, __perf_remove_from_context, (void *)flags);
+>  }
+>  
+> +static void __event_disable(struct perf_event *event,
+> +			    struct perf_event_context *ctx,
+> +			    enum perf_event_state state)
+> +{
+> +	event_sched_out(event, ctx);
+> +	perf_cgroup_event_disable(event, ctx);
+> +	perf_event_set_state(event, state);
+> +}
+> +
+>  /*
+>   * Cross CPU call to disable a performance event
+>   */
+> @@ -2576,13 +2580,18 @@ static void __perf_event_disable(struct
+>  	perf_pmu_disable(event->pmu_ctx->pmu);
+>  	ctx_time_update_event(ctx, event);
+>  
+> +	/*
+> +	 * When disabling a group leader, the whole group becomes ineligible
+> +	 * to run, so schedule out the full group.
+> +	 */
+>  	if (event == event->group_leader)
+>  		group_sched_out(event, ctx);
+> -	else
+> -		event_sched_out(event, ctx);
+>  
+> -	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+> -	perf_cgroup_event_disable(event, ctx);
+> +	/*
+> +	 * But only mark the leader OFF; the siblings will remain
+> +	 * INACTIVE.
+> +	 */
+> +	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
 
+Here, a group lead will invoke event_sched_out() twice: one is in
+group_sched_out() (above) andin __event_disable(). This would be fine,
+as the second call to event_sched_out() will directly bail out due to
+the following condition:
 
-On 2025-06-05 9:46 a.m., Liang, Kan wrote:
-> 
-> 
-> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
->> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
->>>
->>> From: Kan Liang <kan.liang@linux.intel.com>
->>>
->>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
->>> below perf command.
->>>   perf record -a -e cpu-clock -- sleep 2
->>>
->>> The issue is introduced by the generic throttle patch set, which
->>> unconditionally invoke the event_stop() when throttle is triggered.
->>>
->>> The cpu-clock and task-clock are two special SW events, which rely on
->>> the hrtimer. The throttle is invoked in the hrtimer handler. The
->>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
->>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
->>> be used to stop the timer.
->>>
->>> There may be two ways to fix it.
->>> - Introduce a PMU flag to track the case. Avoid the event_stop in
->>>   perf_event_throttle() if the flag is detected.
->>>   It has been implemented in the
->>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
->>>   The new flag was thought to be an overkill for the issue.
->>> - Add a check in the event_stop. Return immediately if the throttle is
->>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
->>>   method to stop the timer.
->>>
->>> The latter is implemented here.
->>>
->>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
->>> the order the same as perf_event_unthrottle(). Except the patch, no one
->>> checks the hw.interrupts in the stop(). There is no impact from the
->>> order change.
->>>
->>> Reported-by: Leo Yan <leo.yan@arm.com>
->>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
->>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
->>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
->>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
->>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
->>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>
->> It seems the patch fixes one issue and introduces another ?
->>
->> Looks like the throttle event is sticky.
->> Once it's reached the perf_event no longer works ?
-> 
-> No. It should still work even the throttle is triggered.
-> 
-> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
-> /proc/sys/kernel/perf_event_max_sample_rate'
-> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
-> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.564 MB perf.data (613 samples) ]
-> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.545 MB perf.data (502 samples) ]
-> 
-> 
->> Repro:
->> test_progs -t perf_branches/perf_branches_no_hw
->> #250/2   perf_branches/perf_branches_no_hw:OK
->>
->> test_progs -t stacktrace_build_id_nmi
->> #393     stacktrace_build_id_nmi:OK
->>
->> test_progs -t perf_branches/perf_branches_no_hw
->> perf_branches/perf_branches_no_hw:FAIL
->>
-> 
-> Do you have more logs regarding where it's failed?
-> 
-> Thanks,
-> Kan> Maybe it's an unrelated bug.
+  if (event->state != PERF_EVENT_STATE_ACTIVE)
+      return;
 
-I tried the tests on my machine. I don't see any issues.
+I think you have already noticed this minor redundancy.
 
-sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
-perf_branches/perf_branches_no_hw
-#240/2   perf_branches/perf_branches_no_hw:OK
-#240     perf_branches:OK
-Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
-stacktrace_build_id_nmi
-#376     stacktrace_build_id_nmi:OK
-Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
-perf_branches/perf_branches_no_hw
-#240/2   perf_branches/perf_branches_no_hw:OK
-#240     perf_branches:OK
-Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
-stacktrace_build_id_nmi
-#376     stacktrace_build_id_nmi:OK
-Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
-perf_branches/perf_branches_no_hw
-#240/2   perf_branches/perf_branches_no_hw:OK
-#240     perf_branches:OK
-Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
+And thanks for the explaination in your another reply, it makes sense to
+me.
 
-Thanks,
-Kan
+Leo
+
+>  	perf_pmu_enable(event->pmu_ctx->pmu);
+>  }
