@@ -1,170 +1,264 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C382749D9;
-	Thu,  5 Jun 2025 19:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E1427C163;
+	Thu,  5 Jun 2025 20:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749153594; cv=none; b=on0cPuZ4zN0YmxyShqFcjXM0Psi5sTJ//ZBJ1h1YjV5CK9L0FsQaCyyjvv78VBs4DkeCG9KwnyDRRJsRFIHiJ3XYtu7OD18u7esR2YspJ/+e+yNqqPJSEs8YR4n80A2Df312QKx4773uGb2J6yQUKEpxvtswu1hM91iMfpS2DGc=
+	t=1749155078; cv=none; b=UUoaJFi0sOuU+V3Wxsscp5b6bxf3N5+1ruYIhiUYHt0lZjW6RApKXqkfBmZrUXD1Ymof7ARl20DHEYfiiQVbNXq+lsYyR5h7QmzmXXiry6CqOz7X0dfSZXsSbXaHYv3YEhD/4lg7LcrewhG5Hyp+ufVKhDz+GdSMF+QMK+OucZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749153594; c=relaxed/simple;
-	bh=QxGdSy46tMoMI7VgXy9BBcpt63FiDyWWo1u7zMYA8NM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MOPeek8NUB+GKdwGcOX4q3/VttMDx8J0zL5r+CoY0o512Jclf1LnSNxZf2+Vt4zhZb96cn+7cf7gRej+Ce8/t6OJ6Ep/HbxH6S7vpEMP7ZseIuaxgQ9SmGHkPP0i+UQT/OU8I+xX9IpJsdiALmOFzBOdG/5qW/2Rc1Cc86LWi1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6uy7XI2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749155078; c=relaxed/simple;
+	bh=2xEW5RG5lQq8nfJEmdLnGnTJamYOUI5Rm7JOLsqkuVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mKXBvM8nUFRHrCSDKQTmPg1u89YC8FnTOAW+Y0qlpDtkxoPozojO8qMEbJbj6ExlJltGSrLzFKak1NLZMa69wxIW+wyzTE4+JW3ceNei5R5Rtpfa0fR9GoOV/Hnt9nCwRMYjoz3reI1bIzrv4U7zaghKhD9m+DKfKClQ65zgYqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DDmvjUGH; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6uy7XI2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8B5C4CEEB;
-	Thu,  5 Jun 2025 19:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749153594;
-	bh=QxGdSy46tMoMI7VgXy9BBcpt63FiDyWWo1u7zMYA8NM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u6uy7XI2JrhN5ZxVSn+zgBj4Ph4hkUCIry9gm+RUhmZ2cOePTPKEx6WV1ljAl65B+
-	 e35m2IfGWM/w7CJcEkIoLGOoB/0J8OImhkAoVVMicWtcVb2PM+b98iGw0qjG6kvfNQ
-	 g1bk9OFwj+P/a6NgzAtCq65W8fUv4g97fZ8z0cuwrMWl16kKzen/sdC1VpFj3VZbop
-	 8zGqVcLI3GxMtkPSlDzjD0bq/J33T7YcdSME/9aAhcIzHy2QJvxuGGOOAogvdIs4jR
-	 qyh3rihe2Q5yu1if1QD5eRerSFBKE2aupxFDUHaJy08d8F6mo7GsaI7DowR7SfME2v
-	 QREUawtVyHxBg==
-Date: Thu, 5 Jun 2025 16:59:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 2/6] perf annotate: Remove __annotation_line__write()
-Message-ID: <aEH3NwfDVq2LT0b6@x1>
-References: <20250601065302.12531-1-namhyung@kernel.org>
- <20250601065302.12531-3-namhyung@kernel.org>
- <aEH2KoxicdjYUW1g@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DDmvjUGH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749155076; x=1780691076;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2xEW5RG5lQq8nfJEmdLnGnTJamYOUI5Rm7JOLsqkuVA=;
+  b=DDmvjUGHCIDIcFxsBj4EgftCEPHYsbtxD+vd/a8Arfd3WZ2AyOiU9OkJ
+   Md/34ChUpeW6bCx8ocX3hx+N2EwLuBbmKzo15OF+ZUfE2+a/nXO/sYABQ
+   wBSi72rjkY7gf0O1Jj4qn5FLSV+H0SO2uKR3MMNwqL34hqXWxkgEimBLr
+   wopprRv6JDo28PFQK08XOFv2Ce/3a4K9eciQEbQVvokBN510e8c70JGCE
+   Md/SVsKL7hoF7fZnujfls/ZjLf78jbGy9dEK8i0wr6QwCKUCXHePeAF0t
+   XcfqSrzDt6AHe+1LEMT/Tktv9cNC7Qd6abXe9F/0laVrD8bug8gRZ02Ia
+   w==;
+X-CSE-ConnectionGUID: DDV4BkxySBOMU+Zpy0VIEQ==
+X-CSE-MsgGUID: uTdLCtuoRx6nR6NW54+lmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="62654469"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="62654469"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 13:24:34 -0700
+X-CSE-ConnectionGUID: CC0lPI03R7+ZR0220w9Tqg==
+X-CSE-MsgGUID: 6r48t8XDTRGs54qqs0Lk8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="146204263"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 13:24:34 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 9A8DE20B5736;
+	Thu,  5 Jun 2025 13:24:31 -0700 (PDT)
+Message-ID: <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com>
+Date: Thu, 5 Jun 2025 16:24:30 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEH2KoxicdjYUW1g@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+ <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+ <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025 at 04:55:26PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sat, May 31, 2025 at 11:52:58PM -0700, Namhyung Kim wrote:
-> > Get rid of the internal function and convert function arguments into
-> > local variables if they are used more then twice.
+
+
+On 2025-06-05 2:45 p.m., Alexei Starovoitov wrote:
+> On Thu, Jun 5, 2025 at 6:46 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+>>> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>>>> below perf command.
+>>>>   perf record -a -e cpu-clock -- sleep 2
+>>>>
+>>>> The issue is introduced by the generic throttle patch set, which
+>>>> unconditionally invoke the event_stop() when throttle is triggered.
+>>>>
+>>>> The cpu-clock and task-clock are two special SW events, which rely on
+>>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>>>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>>>> be used to stop the timer.
+>>>>
+>>>> There may be two ways to fix it.
+>>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>>>   perf_event_throttle() if the flag is detected.
+>>>>   It has been implemented in the
+>>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>>   The new flag was thought to be an overkill for the issue.
+>>>> - Add a check in the event_stop. Return immediately if the throttle is
+>>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>>>   method to stop the timer.
+>>>>
+>>>> The latter is implemented here.
+>>>>
+>>>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>>>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>>>> checks the hw.interrupts in the stop(). There is no impact from the
+>>>> order change.
+>>>>
+>>>> Reported-by: Leo Yan <leo.yan@arm.com>
+>>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> It seems the patch fixes one issue and introduces another ?
+>>>
+>>> Looks like the throttle event is sticky.
+>>> Once it's reached the perf_event no longer works ?
+>>
+>> No. It should still work even the throttle is triggered.
+>>
+>> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+>> /proc/sys/kernel/perf_event_max_sample_rate'
+>> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
 > 
-> "more than once"? "twice or more"?
+> With the patch applied above command hangs in my VM:
+> 
+> # perf record -a -e cpu-clock -c10000 -- sleep 1
+> [   43.656855] hrtimer: interrupt took 21640 ns
+> [   68.561052] watchdog: BUG: soft lockup - CPU#0 stuck for 41s! [perf:2253]
+> [   68.561056] Modules linked in: bpf_preload
+> [   68.561060] CPU: 0 UID: 0 PID: 2253 Comm: perf Not tainted
+> 6.15.0-12294-gc89e5202e569 #1172 PREEMPT
+> [   68.561062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+> [   68.561063] RIP: 0010:handle_softirqs+0x77/0x2a0
+> [   68.561070] Code: 6b 96 02 00 01 00 00 bd 0a 00 00 00 44 89 64 24
+> 14 89 6c 24 10 40 88 7c 24 04 31 c0 65 66 89 05 5f 6b 96 02 fb bb ff
+> ff ff ff <48> c7 c0 c0 f
+> [   68.561071] RSP: 0018:ffa0000000003fa0 EFLAGS: 00000246
+> [   68.561072] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: 00000000000006e0
+> [   68.561073] RDX: 0000000000000007 RSI: ff1100010212e100 RDI: 0000000000000000
+> [   68.561074] RBP: 000000000000000a R08: 0000000000000000 R09: 7fffffffffffffff
+> [   68.561074] R10: 00000005a3af2140 R11: 0000000000004601 R12: 0000000000400100
+> [   68.561075] R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
+> [   68.561111] FS:  00007fa1b536f780(0000) GS:ff110004abe26000(0000)
+> knlGS:0000000000000000
+> [   68.561112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   68.561113] CR2: 0000000001c67a30 CR3: 000000010f2f3003 CR4: 00000000003716f0
+> [   68.561113] Call Trace:
+> [   68.561170]  <IRQ>
+> [   68.561174]  irq_exit_rcu+0x91/0xb0
+> [   68.561176]  sysvec_apic_timer_interrupt+0x71/0x90
+> [   68.561181]  </IRQ>
+> [   68.561181]  <TASK>
+> [   68.561182]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> [   68.561184] RIP: 0010:generic_exec_single+0x33/0x120
+> [   68.561188] Code: 65 39 3d 5c 4d 89 02 74 28 3b 3d b8 f5 17 02 0f
+> 83 de 00 00 00 89 f8 48 0f a3 05 d8 f1 17 02 0f 83 ce 00 00 00 e8 bd
+> fe ff ff <31> c0 5b 5d 9
+> [   68.561189] RSP: 0018:ffa00000025a3cc0 EFLAGS: 00000206
+> [   68.561190] RAX: 0000000000000000 RBX: ffffffff8145b310 RCX: ff110004abe26000
+> [   68.561190] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ff1100042fa26540
+> [   68.561191] RBP: 0000000000000202 R08: 0000000000000000 R09: 0000000000000000
+> [   68.561191] R10: ffa00000025a3ee0 R11: 0000000000000000 R12: ffa00000025a3d40
+> [   68.561192] R13: ff11000100881220 R14: ff11000100880fc0 R15: 0000000000000000
+> [   68.561192]  ? sw_perf_event_destroy+0x70/0x70
+> [   68.561197]  smp_call_function_single+0xc4/0x110
+> [   68.561199]  ? sw_perf_event_destroy+0x70/0x70
+> [   68.561200]  event_function_call+0x160/0x170
+> [   68.561202]  ? ctx_resched+0x2d0/0x2d0
+> [   68.561205]  ? perf_event_set_state+0x60/0x60
+> [   68.561206]  ? _perf_event_disable+0x50/0x50
+> [   68.561208]  perf_event_for_each_child+0x37/0x80
+> [   68.561209]  ? _perf_event_disable+0x50/0x50
+> [   68.561211]  _perf_ioctl+0x1df/0xad0
+> [   68.561213]  ? __set_cpus_allowed_ptr+0x71/0x80
+> [   68.561216]  ? avc_has_perm+0x72/0x160
+> [   68.561219]  ? ldsem_down_write+0x1bb/0x1fc
+> [   68.561222]  perf_ioctl+0x42/0x70
+> [   68.561224]  __x64_sys_ioctl+0x8f/0xd0
+> [   68.561226]  do_syscall_64+0x46/0x160
+> [   68.561228]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> 
+> but only after a fresh boot.
+> 
+> If I run bpf selftests before that it works.
+> Like test_progs -t stacktrace_build_id_nmi
+> followed by the same
+> perf record -a -e cpu-clock ..
+> it works fine.
+> 
 
-Well, its "more than twice", as you did:
+There should be a bug in V3. When stops in the throttle, the event
+should not be updated, stop(event, 0). But the cpu_clock_event_stop()
+doesn't handle the flag. That changes the behavior a little bit.
 
--               if (change_color)
-+               if (wops->change_color)
-                        color = obj__set_color(obj, HE_COLORSET_ADDR);
-                obj__printf(obj, bf);
--               if (change_color)
-+               if (wops->change_color)
-                        obj__set_color(obj, color);
+Could you please try the below patch and see if it helps?
 
-Ok, I wouldn't touch this, i.e. would leave all as local variables that
-way the patch would be smaller :-)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index cd85b1820e7d..b6c57ba24e78 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct
+perf_event *event, bool start)
 
-So its just 'then once' to 'than once' the fixup.
+ static void perf_event_throttle(struct perf_event *event)
+ {
+-	event->pmu->stop(event, 0);
+ 	event->hw.interrupts = MAX_INTERRUPTS;
++	event->pmu->stop(event, 0);
+ 	if (event == event->group_leader)
+ 		perf_log_throttle(event, 0);
+ }
+@@ -11777,7 +11777,12 @@ static void perf_swevent_cancel_hrtimer(struct
+perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
 
-- Arnaldo
+-	if (is_sampling_event(event)) {
++	/*
++	 * The throttle can be triggered in the hrtimer handler.
++	 * The HRTIMER_NORESTART should be used to stop the timer,
++	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
++	 */
++	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
 
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/annotate.c | 49 ++++++++++++++++----------------------
-> >  1 file changed, 20 insertions(+), 29 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > index 264a212b47df850c..48fac08c4c9502b1 100644
-> > --- a/tools/perf/util/annotate.c
-> > +++ b/tools/perf/util/annotate.c
-> > @@ -1934,24 +1934,25 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
-> >  	return -ENOMEM;
-> >  }
-> >  
-> > -static void __annotation_line__write(struct annotation_line *al, struct annotation *notes,
-> > -				     bool first_line, bool current_entry, bool change_color, int width,
-> > -				     void *obj, unsigned int percent_type,
-> > -				     int  (*obj__set_color)(void *obj, int color),
-> > -				     void (*obj__set_percent_color)(void *obj, double percent, bool current),
-> > -				     int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current),
-> > -				     void (*obj__printf)(void *obj, const char *fmt, ...),
-> > -				     void (*obj__write_graph)(void *obj, int graph))
-> > -
-> > -{
-> > -	double percent_max = annotation_line__max_percent(al, percent_type);
-> > -	int pcnt_width = annotation__pcnt_width(notes),
-> > -	    cycles_width = annotation__cycles_width(notes);
-> > +void annotation_line__write(struct annotation_line *al, struct annotation *notes,
-> > +			    struct annotation_write_ops *wops)
-> > +{
-> > +	bool current_entry = wops->current_entry;
-> > +	double percent_max = annotation_line__max_percent(al, annotate_opts.percent_type);
-> > +	int width = wops->width;
-> > +	int pcnt_width = annotation__pcnt_width(notes);
-> > +	int cycles_width = annotation__cycles_width(notes);
-> >  	bool show_title = false;
-> >  	char bf[256];
-> >  	int printed;
-> > -
-> > -	if (first_line && (al->offset == -1 || percent_max == 0.0)) {
-> > +	void *obj = wops->obj;
-> > +	int  (*obj__set_color)(void *obj, int color) = wops->set_color;
-> > +	void (*obj__set_percent_color)(void *obj, double percent, bool current) = wops->set_percent_color;
-> > +	int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current) = wops->set_jumps_percent_color;
-> > +	void (*obj__printf)(void *obj, const char *fmt, ...) = wops->printf;
-> > +	void (*obj__write_graph)(void *obj, int graph) = wops->write_graph;
-> > +
-> > +	if (wops->first_line && (al->offset == -1 || percent_max == 0.0)) {
-> >  		if (notes->branch && al->cycles) {
-> >  			if (al->cycles->ipc == 0.0 && al->cycles->avg == 0)
-> >  				show_title = true;
-> > @@ -1965,7 +1966,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
-> >  		for (i = 0; i < al->data_nr; i++) {
-> >  			double percent;
-> >  
-> > -			percent = annotation_data__percent(&al->data[i], percent_type);
-> > +			percent = annotation_data__percent(&al->data[i],
-> > +							   annotate_opts.percent_type);
-> >  
-> >  			obj__set_percent_color(obj, percent, current_entry);
-> >  			if (symbol_conf.show_total_period) {
-> > @@ -2101,10 +2103,10 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
-> >  			}
-> >  		}
-> >  
-> > -		if (change_color)
-> > +		if (wops->change_color)
-> >  			color = obj__set_color(obj, HE_COLORSET_ADDR);
-> >  		obj__printf(obj, bf);
-> > -		if (change_color)
-> > +		if (wops->change_color)
-> >  			obj__set_color(obj, color);
-> >  
-> >  		disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
-> > @@ -2114,17 +2116,6 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
-> >  
-> >  }
-> >  
-> > -void annotation_line__write(struct annotation_line *al, struct annotation *notes,
-> > -			    struct annotation_write_ops *wops)
-> > -{
-> > -	__annotation_line__write(al, notes, wops->first_line, wops->current_entry,
-> > -				 wops->change_color, wops->width, wops->obj,
-> > -				 annotate_opts.percent_type,
-> > -				 wops->set_color, wops->set_percent_color,
-> > -				 wops->set_jumps_percent_color, wops->printf,
-> > -				 wops->write_graph);
-> > -}
-> > -
-> >  int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
-> >  		      struct arch **parch)
-> >  {
-> > -- 
-> > 2.49.0
+@@ -11832,7 +11837,8 @@ static void cpu_clock_event_start(struct
+perf_event *event, int flags)
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
+ 	perf_swevent_cancel_hrtimer(event);
+-	cpu_clock_event_update(event);
++	if (flags & PERF_EF_UPDATE)
++		cpu_clock_event_update(event);
+ }
+
+ static int cpu_clock_event_add(struct perf_event *event, int flags)
+
+
+Thanks,
+Kan
+
