@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EAC223DF1;
-	Thu,  5 Jun 2025 21:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479651E7C03;
+	Thu,  5 Jun 2025 21:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749157962; cv=none; b=jWItoZRKVaD6UMkJCwioA3KLutiU46c7rKKWRGcIR8xZZKhRNQoCSbdZUh7dWjOAlVStZy1uQo/48s6sotkClLTotL4oghlaF0srgpIOnd+S4Ca9+cVxM/zFi8mteJh8G+MFtvTJ+jgrggXZGbeh1mbbIMVyR0moBbaltSAuC7E=
+	t=1749158184; cv=none; b=Z6gyVY7zBoSbcmdd7DF/lYiFnyxAAnjvYuP6XJnHUTU183VKoedEtMbBlTQqF7t7BmVF20LW00tI76jYD+E9BgciYgnCklUv0Khiq0tkK19XNajtIP4cq9nns3EmnuTHmWZNh2GEA+vZWuulZKlh8s9h2o6sS4atJ2WxAVDfDe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749157962; c=relaxed/simple;
-	bh=E68LmhCReqJaa8c0bb4Z5dTVK2OKwRICpy+jtrk0fyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeVtl7pjeyz8rPdee23f9yNNu1zqEPROWVES+zWXV8/ndcOJ1NcsG/Jfm7RO5Ofsb3e9nq2yyew4Z6roxAHRqkDcHS3CXFM0mF0F2hvKWY+MNXffTx43gCQqsW93B4bihXuq6io+lA/mjNXdlKsg7p1aaFC44rHm9n9TQ1J65XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVS91JNi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749158184; c=relaxed/simple;
+	bh=AafT3RGYRZdiJ+9sjWOv+ipYlHsW8qokTYJ2bjP8fjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aSt2B3uIpVtq2Xbp6/n3m76ErdxTWhQ9+8Wp3+G+5D9qxjJIgvAOnP7vIPjMcqC5QUDGNaBo3+Au4QmdHdy8VjiRSclPbIpboJQFlESJ+MEj4O1T2vsKDnnUour+Z6cWPnvfjl5EgynS3BzTwZbpUtvScYDt1C/6Yw7X4x1u/m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzPLgt1i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVS91JNi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8ADC4CEE7;
-	Thu,  5 Jun 2025 21:12:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzPLgt1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C68EC4CEE7;
+	Thu,  5 Jun 2025 21:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749157961;
-	bh=E68LmhCReqJaa8c0bb4Z5dTVK2OKwRICpy+jtrk0fyE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mVS91JNiqbGBzl3h+h3hlDuuvJzDxjUKCrBYM0bEx4e0yNzT1pyQQtIS4tZXkVS7i
-	 JD6RQA8Cd+9U/8pcMDwcx20A0y3esrTslmNkqlpwsfGF57T3nzTicRGi131qF3C2f6
-	 uwMHfqXl6hvaXUp2ovoKk/2mn2hXDzaMsBhiJcrsjjSzmn4tqkVNt9VrjJEr89dkhE
-	 xk4YGLsw7t6ues0R0VGmdvU5cPau7D8qZykCZBdh/EUjqoHinP+SQT9r5LCez7axp0
-	 V36RJ/gpiTBKeUE6rgTxQz6suIeyy+22PpObB4PH4eI/VlW8ofsJq15Hf9UkDzpuBk
-	 MTNXpHDzC2ZBw==
-Date: Thu, 5 Jun 2025 18:12:38 -0300
+	s=k20201202; t=1749158183;
+	bh=AafT3RGYRZdiJ+9sjWOv+ipYlHsW8qokTYJ2bjP8fjc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZzPLgt1i5ARTo1JdQ+QidHAjGhZwiW3pNsCmuj7Qj0s3P8++jn6tD11+ro4cSOOMP
+	 XWxLKbRquFd0Net7vUVZwF3Yg/yVAtXgJQPsFrm4aGuPlYGCml/dzbBUUo2RNANnnZ
+	 gxxIEROF7rrYzwXQZUry718Dv/leEUoyJtUwBT/77MMiuJ0wKNf74cw5kRUTgSw3F5
+	 qB1vjnc4jeYScaV8dB7fCsEos7u36dll89qnxA1CFzS0O+rMPHt+DF2rGHN+uIhEGd
+	 p/CvIYA3d7wGOqoO7po6uMf5llyS9AiqbqkIMliKu2I2yAI/BnTPTmBfEw+VttEPmt
+	 M8mVb82NUMeTA==
+Date: Thu, 5 Jun 2025 18:16:20 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 6/6] perf annotate: Add 'y' hot key to toggle data type
- display
-Message-ID: <aEIIRmb6SNOroSJJ@x1>
-References: <20250601065302.12531-1-namhyung@kernel.org>
- <20250601065302.12531-7-namhyung@kernel.org>
- <aEICHsZPYbN5KWTa@x1>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@kernel.org>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf top/report TUI: Provide visual cue when starting
+ annotation
+Message-ID: <aEIJJIiuRTVjPaPT@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,89 +46,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEICHsZPYbN5KWTa@x1>
 
-On Thu, Jun 05, 2025 at 05:46:22PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sat, May 31, 2025 at 11:53:02PM -0700, Namhyung Kim wrote:
-> > Support data type display with a key press so that users can toggle the
-> > output dynamically on TUI.
-> 
-> 'd', 'T', control+d, control+t are all available, why 'y'? :-)
-> 
-> Apart from these minor nits,
+Sometimes it takes a while for the annotation to be presented after
+pressing 'a' in the 'perf top'/'report' TUI, provide a visual cue
+informing that the annotation has started for that symbol.
 
-There is one issue I noticed now that Ingo mentioned earlier, if you
-press 'y' to get Data type display we better add some visual cue that
-this is toggled, like was done for source code view in:
+This is the quick and most of the time improvement, but for some cases
+its better to improve on it by having a cancellable progress bar, which
+is now in my TODO list.
 
-commit c6043d35c0f3eb5bcbeb6309e10c4ae33d203841
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue Apr 8 19:03:43 2025 -0300
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/ui/browsers/annotate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-    perf ui browser annotate: Show in the title the source code view toggle
-    
-    Ingo reported that having a visual cue if the source code view is
-    enabled will help in noticing a bug when no source is presented.
-    
-    Change the title scnprintf routine for the annotation browser to do
-    that.
-    
-    Suggested-by: Ingo Molnar <mingo@kernel.org>
-
-Also I did it with a simple perf.data file, no data stuff in it,
-probably it is best to show that if what is required for it to work is
-present in the perf.data file.
-
-Or to tell what is needed for that hotkey/feature to work, which I think
-is even better and more informative.
-
-- Arnaldo
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index cd1d452035a265d3..66ffeb96db29532c 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -2,6 +2,7 @@
+ #include "../browser.h"
+ #include "../helpline.h"
+ #include "../ui.h"
++#include "../util.h"
+ #include "../../util/annotate.h"
+ #include "../../util/debug.h"
+ #include "../../util/debuginfo.h"
+@@ -1016,6 +1017,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 		return -1;
  
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> - Arnaldo
->  
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/ui/browsers/annotate.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > index 686fa54e545e275c..cd1d452035a265d3 100644
-> > --- a/tools/perf/ui/browsers/annotate.c
-> > +++ b/tools/perf/ui/browsers/annotate.c
-> > @@ -827,7 +827,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> >  		"b             Toggle percent base [period/hits]\n"
-> >  		"B             Branch counter abbr list (Optional)\n"
-> >  		"?             Search string backwards\n"
-> > -		"f             Toggle showing offsets to full address\n");
-> > +		"f             Toggle showing offsets to full address\n"
-> > +		"y             Toggle data type display\n");
-> >  			continue;
-> >  		case 'r':
-> >  			script_browse(NULL, NULL);
-> > @@ -947,6 +948,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> >  		case 'f':
-> >  			annotation__toggle_full_addr(notes, ms);
-> >  			continue;
-> > +		case 'y':
-> > +			annotate_opts.code_with_type ^= 1;
-> > +			if (browser->dbg == NULL)
-> > +				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
-> > +			continue;
-> >  		case K_LEFT:
-> >  		case '<':
-> >  		case '>':
-> > @@ -1035,8 +1041,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >  
-> >  	ret = annotate_browser__run(&browser, evsel, hbt);
-> >  
-> > -	if (annotate_opts.code_with_type)
-> > -		debuginfo__delete(browser.dbg);
-> > +	debuginfo__delete(browser.dbg);
-> >  	if(not_annotated)
-> >  		annotated_source__purge(notes->src);
-> >  
-> > -- 
-> > 2.49.0
-> > 
+ 	if (not_annotated || !sym->annotate2) {
++		ui__info_window("Annotating", sym->name);
+ 		err = symbol__annotate2(ms, evsel, &browser.arch);
+ 		if (err) {
+ 			char msg[BUFSIZ];
+-- 
+2.49.0
+
