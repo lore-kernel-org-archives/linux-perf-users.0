@@ -1,93 +1,138 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AC81FCCF8
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Jun 2025 21:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EAC223DF1;
+	Thu,  5 Jun 2025 21:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749157412; cv=none; b=bNc4UM3ejXaRne5fx5c3cHCMexDQMDO9BcGUcmRY8VUdzP/FfoNZ9dYXsxHkOgNI+65x3jW42bA6fNFQKKQrGa6FQdNQEMDsOMefZ5I4hAauTd8wEuzH+U/+RDW36ptJ/WgF6MtbJ+8VFRLrk+Y0BrOZmFkAom/0fJm2vdk0xV0=
+	t=1749157962; cv=none; b=jWItoZRKVaD6UMkJCwioA3KLutiU46c7rKKWRGcIR8xZZKhRNQoCSbdZUh7dWjOAlVStZy1uQo/48s6sotkClLTotL4oghlaF0srgpIOnd+S4Ca9+cVxM/zFi8mteJh8G+MFtvTJ+jgrggXZGbeh1mbbIMVyR0moBbaltSAuC7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749157412; c=relaxed/simple;
-	bh=hPeudKWhQ4RbVYkTTt7D3cuJu5GzpC7mlVjqr+LrW3E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ctsaXihEk0OhbeNqB+woe+Ud4u84+sSxH/I1XaYJqKsXoB0DKudchnJAvwE68ir40uhcSGMTG5mmg5UWJEZqXWKWId1aEkkoHL/LOhTaHwrLSHaxRa/sghF7uaIHLu5VIyHvBglpsNIYrTqhmL1ITMioImS1YVgpoiV5ymLQ4WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=OeTCyz3W; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1749157962; c=relaxed/simple;
+	bh=E68LmhCReqJaa8c0bb4Z5dTVK2OKwRICpy+jtrk0fyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oeVtl7pjeyz8rPdee23f9yNNu1zqEPROWVES+zWXV8/ndcOJ1NcsG/Jfm7RO5Ofsb3e9nq2yyew4Z6roxAHRqkDcHS3CXFM0mF0F2hvKWY+MNXffTx43gCQqsW93B4bihXuq6io+lA/mjNXdlKsg7p1aaFC44rHm9n9TQ1J65XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVS91JNi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="OeTCyz3W"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fae04a3795so16580106d6.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jun 2025 14:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1749157410; x=1749762210; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yYv/BBqpPR/j3uwNGj5iM8dPA3cPsdOTHli866hFVas=;
-        b=OeTCyz3WbpKInG3GBWQDdzDtcMCYGK0EYkMwYCJc9Rd6CgJfTkeiq1UAdXBRMpt19P
-         km8kWCtwLIzf9EI9tUEX8SCvth1OAoKDFVuRLzxCWoWoa6dlSgQm8pSywFnKZ1IgWSP3
-         ZRTTge0LLRFXwjkwWjlohHBJ1NxGRJFQpoU5U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749157410; x=1749762210;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yYv/BBqpPR/j3uwNGj5iM8dPA3cPsdOTHli866hFVas=;
-        b=jGY1f5FZEXorBskqq+aqZJ4o60g5EeMmn3mrh1cUhMjdU/ggWVrj6PQvq4EmOkaqjC
-         pE0PtGZrei6U+qLBPVt8GZuKp0aohPM4zU9RtWaMgYHwgB3oMK0TvlkDSx45ymt1Ru6Z
-         hgphV/4RxbLp+Nnf0tBqupkWactE7KTCcZKJUsT3mJLuC+F2hrD8lMGEYNVHQEJqQNBY
-         v8p7e0eMJK2KDXGy1OFEpdsqMCUG4F4UsADezxcMpm5p1PwXORXQGi2RrKT6tML2zTOF
-         yWGrfssVjF2/suxtNGZVODnejEOSF0fzNGD/yBPQTcJ4z0i35YBPqWf1MrVAZFVukT3c
-         EFPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLcMgEswxg81rvwuZV9V0vMQl+HhNFLrK/1+ShCEHcRgj/ZCf1+BFCsPJtGMeoWo1RIklqzBzZOWr8J03Q6zPm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUUNaqC/0xQ7sSkfwcM9cyoXnMRxEdxXp/VjvPbPL+mPyjyhzX
-	HXuhoshPoQIaM133QMzc0TTY0kxooHidmzK9y1WkpEnBr3pVvOX+V6Naci7lcRgwZw==
-X-Gm-Gg: ASbGncvzByibvodaLaMXNuBp/huuDbwIqOh9bha8DOELcWq4l/az/W5NuC9avTvKnyk
-	SY5X9k/dZDXRAe5zXlI5nfpaM2t2rrx3NsuwLQwN+gJb5Cz/q0urBixN15CkORESo91ExVg4kiR
-	AewCuiO9mFX42JoahIab8zkeMsgPQlwPXBF8wMUaDPxq8eJF4/twXHnj+L3ec5LyhfbL+IDt9Mp
-	NK/w+EBkFtwGiVLzVZ0oob06CpmxJ9cqDXmGp/dnKLu6HhEgTpsRxffrY78Xl5vR5l6xRWsUR0P
-	B9JLWOmNJMsgkhZtDiXV4B4XjpG3NTPhtYxxxLMiPtgLFnepyo1c6YKmyNiNcTTFKAe0AOQ=
-X-Google-Smtp-Source: AGHT+IFbnGNEIN/7Iacj9GEJZ/AzfVbRazHzR8ojLNpScIs9K/r0gWT4rEk0OkKS9cjVlYMEz1VS7g==
-X-Received: by 2002:ad4:5f0f:0:b0:6e4:2e5f:c03b with SMTP id 6a1803df08f44-6fb08f655f8mr15482596d6.22.1749157409918;
-        Thu, 05 Jun 2025 14:03:29 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09b366f5sm500916d6.117.2025.06.05.14.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 14:03:29 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Thu, 5 Jun 2025 17:03:28 -0400 (EDT)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>, Chen Yu <yu.c.chen@intel.com>, 
-    Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [perf] fuzzer quickly crashes kernel, possibly memcg related
-In-Reply-To: <b07f0716-c335-4b6d-bf49-26dd24015d10@linux.intel.com>
-Message-ID: <bbd92696-a413-5440-eb65-e2caed0d6a98@maine.edu>
-References: <4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu> <b07f0716-c335-4b6d-bf49-26dd24015d10@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVS91JNi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8ADC4CEE7;
+	Thu,  5 Jun 2025 21:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749157961;
+	bh=E68LmhCReqJaa8c0bb4Z5dTVK2OKwRICpy+jtrk0fyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mVS91JNiqbGBzl3h+h3hlDuuvJzDxjUKCrBYM0bEx4e0yNzT1pyQQtIS4tZXkVS7i
+	 JD6RQA8Cd+9U/8pcMDwcx20A0y3esrTslmNkqlpwsfGF57T3nzTicRGi131qF3C2f6
+	 uwMHfqXl6hvaXUp2ovoKk/2mn2hXDzaMsBhiJcrsjjSzmn4tqkVNt9VrjJEr89dkhE
+	 xk4YGLsw7t6ues0R0VGmdvU5cPau7D8qZykCZBdh/EUjqoHinP+SQT9r5LCez7axp0
+	 V36RJ/gpiTBKeUE6rgTxQz6suIeyy+22PpObB4PH4eI/VlW8ofsJq15Hf9UkDzpuBk
+	 MTNXpHDzC2ZBw==
+Date: Thu, 5 Jun 2025 18:12:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCH 6/6] perf annotate: Add 'y' hot key to toggle data type
+ display
+Message-ID: <aEIIRmb6SNOroSJJ@x1>
+References: <20250601065302.12531-1-namhyung@kernel.org>
+ <20250601065302.12531-7-namhyung@kernel.org>
+ <aEICHsZPYbN5KWTa@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEICHsZPYbN5KWTa@x1>
 
-On Thu, 5 Jun 2025, Liang, Kan wrote:
-
+On Thu, Jun 05, 2025 at 05:46:22PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Sat, May 31, 2025 at 11:53:02PM -0700, Namhyung Kim wrote:
+> > Support data type display with a key press so that users can toggle the
+> > output dynamically on TUI.
 > 
-> This should be a known issue introduced by
-> 9734e25fbf5a perf: Fix the throttle logic for a group
+> 'd', 'T', control+d, control+t are all available, why 'y'? :-)
 > 
-> The patch can fix it.
-> https://lore.kernel.org/lkml/20250604171554.3909897-1-kan.liang@linux.intel.com/
+> Apart from these minor nits,
 
-I'm testing with this patch and it does seem to fix the problem.
+There is one issue I noticed now that Ingo mentioned earlier, if you
+press 'y' to get Data type display we better add some visual cue that
+this is toggled, like was done for source code view in:
 
-thanks,
+commit c6043d35c0f3eb5bcbeb6309e10c4ae33d203841
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Tue Apr 8 19:03:43 2025 -0300
 
-Vince Weaver
-vincent.weaver@maine.edu
+    perf ui browser annotate: Show in the title the source code view toggle
+    
+    Ingo reported that having a visual cue if the source code view is
+    enabled will help in noticing a bug when no source is presented.
+    
+    Change the title scnprintf routine for the annotation browser to do
+    that.
+    
+    Suggested-by: Ingo Molnar <mingo@kernel.org>
+
+Also I did it with a simple perf.data file, no data stuff in it,
+probably it is best to show that if what is required for it to work is
+present in the perf.data file.
+
+Or to tell what is needed for that hotkey/feature to work, which I think
+is even better and more informative.
+
+- Arnaldo
+ 
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> - Arnaldo
+>  
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/ui/browsers/annotate.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index 686fa54e545e275c..cd1d452035a265d3 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -827,7 +827,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >  		"b             Toggle percent base [period/hits]\n"
+> >  		"B             Branch counter abbr list (Optional)\n"
+> >  		"?             Search string backwards\n"
+> > -		"f             Toggle showing offsets to full address\n");
+> > +		"f             Toggle showing offsets to full address\n"
+> > +		"y             Toggle data type display\n");
+> >  			continue;
+> >  		case 'r':
+> >  			script_browse(NULL, NULL);
+> > @@ -947,6 +948,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >  		case 'f':
+> >  			annotation__toggle_full_addr(notes, ms);
+> >  			continue;
+> > +		case 'y':
+> > +			annotate_opts.code_with_type ^= 1;
+> > +			if (browser->dbg == NULL)
+> > +				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
+> > +			continue;
+> >  		case K_LEFT:
+> >  		case '<':
+> >  		case '>':
+> > @@ -1035,8 +1041,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >  
+> >  	ret = annotate_browser__run(&browser, evsel, hbt);
+> >  
+> > -	if (annotate_opts.code_with_type)
+> > -		debuginfo__delete(browser.dbg);
+> > +	debuginfo__delete(browser.dbg);
+> >  	if(not_annotated)
+> >  		annotated_source__purge(notes->src);
+> >  
+> > -- 
+> > 2.49.0
+> > 
