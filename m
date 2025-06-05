@@ -1,191 +1,161 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCA88488;
-	Thu,  5 Jun 2025 12:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9156426AA82;
+	Thu,  5 Jun 2025 13:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749126835; cv=none; b=C5r4PWA/rzpqxhFsgdn9sCF92M+KWKCX8wAnx1HcE+D7uasIyrrVEaCM5aXets4dOOCp01U+DKNDCTk4OLXWCG5l9hkS62yJeL2ie14Dzo+Ip39oFSh/4deqiV4OWWJve6ZLtf//QNqppfqbgdLq/OEgxM+hzzdUuhcc7XUU5uk=
+	t=1749131198; cv=none; b=QJPJcMdDXYFuNVPjqSfkl8kqxJJULPfTofBukjz2trfCt7WUm8hBFTo9NaL6WpK6LAA2MzVi/aYqL1c5xx1HwpOF/ptlnYJM121720Pgo7wD/LTWuxIAgR4mFoU8ro0H2ikAweUek4tT2Ztb9HyiTOc1U+SBBmmOPHxVUQwb4NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749126835; c=relaxed/simple;
-	bh=oSg0BWQhTBYi4pRNfN5FZqVnrstvVSk2pbDgIsNr8O0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PWW0eZVFq+TVlXnaMJV2KHU6ViV8ZHEcLSFSIDRLh66NKq7NTJNZ8DXu5BNDFXswITEldJyxHNIbjY6Y0OMevLn88kT8G9QkxjUfcasd9DM5LP6+765WF4S7HzubSqPrVZ0xu3bNACSWUfTT5Cbjz7RpJ07MtxMH+i41yYiY8EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ddBo4wVd; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749131198; c=relaxed/simple;
+	bh=Tpf9ItGaBou0FWnVAa3e7cYiVATjsvVi5B2ILbnbgAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eT9C+N4U1Ye5M8d9/dQThWSCUk+BiVNte4swuNT8yat/py8mvQPWuDgmEmiUyFW2MVu1vW65kh2kGcPQmDvl6VOiYnNtxBqClOzNbmYpH+dHl0WFMdYqjtdotrtzyqTGVZgRegy8YzP4Avxs63RHY3xaUPXG4FjoqHna8VAWTjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMUUy8l7; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ddBo4wVd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xJHjIyrqVhzyFs1QdOrPnjGgaN4xPKZQLhRy3L1nySg=; b=ddBo4wVdR1yo2OyDoim0aGXJon
-	ZtI6amPXG8QgireXbsqr5/Xk5Wv3iE2KdKJFVH4XchYMqXvqUyZKuZPl6MV0KbQ9zrrJgve1r6W36
-	pUz8/tqx7g7u18UaO4UU7fdE/5gZGyRXi6oOI9RXKmiw3nygNmm/heV/GJqPLuxii7TCe7mPilR1m
-	i1i+5WUFc/nO8XF+sp53jnQ3gOJX95/b5F5VzPD+AD0L8CWEp06zScJN1ZMZJ32Eg8b2aO3pbRWa7
-	eJuuDrUWY829OP5TtWdSR/r73O/IRDdO0Ocb9tsD7Dcm5f/K3026tozIlscFxVFQAQEdMBsd3SP7C
-	lDCfKLcQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uN9my-00000004EXg-1Wkf;
-	Thu, 05 Jun 2025 12:33:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B46693005AF; Thu,  5 Jun 2025 14:33:43 +0200 (CEST)
-Date: Thu, 5 Jun 2025 14:33:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, mingo@redhat.com, mingo@kernel.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Wang <00107082@163.com>
-Subject: Re: [PATCH 1/1] perf/core: fix dangling cgroup pointer in cpuctx
-Message-ID: <20250605123343.GD35970@noisy.programming.kicks-ass.net>
-References: <20250602184049.4010919-1-yeoreum.yun@arm.com>
- <20250603140040.GB8020@e132581.arm.com>
- <20250603144414.GC38114@noisy.programming.kicks-ass.net>
- <20250604080339.GB35970@noisy.programming.kicks-ass.net>
- <20250604101821.GC8020@e132581.arm.com>
- <20250604141640.GL38114@noisy.programming.kicks-ass.net>
- <20250604154639.GE8020@e132581.arm.com>
- <20250605112921.GR39944@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMUUy8l7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749131197; x=1780667197;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Tpf9ItGaBou0FWnVAa3e7cYiVATjsvVi5B2ILbnbgAc=;
+  b=nMUUy8l7SCUuxShDmR9ax6+uSKS8uW5k7SClpA5juijbGL2oFVBH0PrL
+   kDQMQ0VBwukItViF8FYaKuyHiSitvxOEhRe76Q93PEYqSFbr/fziGR64f
+   AwHGFpcYAvhz+e5Hlyarj+ZJ+zOzRR1uoKeuXvmDYA/pkGLtmkhTqXSa7
+   L2+zRl63Eq+l2jDZSi9ducW8TU0tttMiDYj8hmoZMBtDEisAYSeeM5sra
+   ESJB3A09sIXYqoDj/dNLd4IfxLDmEhKF8WWAaiW5INR2Orv2U5CdmE7++
+   3A4ERZmPcWTZrYJxg85FiIC6GF7FzGMOb1y0Zx1VZqsBH6y5v994kg/Wf
+   w==;
+X-CSE-ConnectionGUID: RgKyhc41QJeGsd26H/HLLQ==
+X-CSE-MsgGUID: vbMp3goqRp2rErDWsQOYrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="73782036"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="73782036"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:46:37 -0700
+X-CSE-ConnectionGUID: Kj+CZmbWSh+lfX1+Useb+w==
+X-CSE-MsgGUID: Iw4kSaOnQ46FeR9Srzp1cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="145391614"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 06:46:36 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id B052E20B5736;
+	Thu,  5 Jun 2025 06:46:33 -0700 (PDT)
+Message-ID: <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+Date: Thu, 5 Jun 2025 09:46:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605112921.GR39944@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025 at 01:29:21PM +0200, Peter Zijlstra wrote:
 
-> But yes, slightly confusing. Let me see if I can make a less confusing
-> patch, and if not, sprinkle comments.
 
-I've settled on the below.
+On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>> below perf command.
+>>   perf record -a -e cpu-clock -- sleep 2
+>>
+>> The issue is introduced by the generic throttle patch set, which
+>> unconditionally invoke the event_stop() when throttle is triggered.
+>>
+>> The cpu-clock and task-clock are two special SW events, which rely on
+>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>> be used to stop the timer.
+>>
+>> There may be two ways to fix it.
+>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>   perf_event_throttle() if the flag is detected.
+>>   It has been implemented in the
+>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>   The new flag was thought to be an overkill for the issue.
+>> - Add a check in the event_stop. Return immediately if the throttle is
+>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>   method to stop the timer.
+>>
+>> The latter is implemented here.
+>>
+>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>> checks the hw.interrupts in the stop(). There is no impact from the
+>> order change.
+>>
+>> Reported-by: Leo Yan <leo.yan@arm.com>
+>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> It seems the patch fixes one issue and introduces another ?
+> 
+> Looks like the throttle event is sticky.
+> Once it's reached the perf_event no longer works ?
 
----
-Subject: perf: Fix cgroup state vs ERROR
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Jun 5 12:37:11 CEST 2025
+No. It should still work even the throttle is triggered.
 
-While chasing down a missing perf_cgroup_event_disable() elsewhere,
-Leo Yan found that both perf_put_aux_event() and
-perf_remove_sibling_event() were also missing one.
+sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+/proc/sys/kernel/perf_event_max_sample_rate'
+sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
+sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.564 MB perf.data (613 samples) ]
+sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.545 MB perf.data (502 samples) ]
 
-Specifically, the rule is that events that switch to OFF,ERROR need to
-call perf_cgroup_event_disable().
 
-Unify the disable paths to ensure this.
+> Repro:
+> test_progs -t perf_branches/perf_branches_no_hw
+> #250/2   perf_branches/perf_branches_no_hw:OK
+> 
+> test_progs -t stacktrace_build_id_nmi
+> #393     stacktrace_build_id_nmi:OK
+> 
+> test_progs -t perf_branches/perf_branches_no_hw
+> perf_branches/perf_branches_no_hw:FAIL
+> 
 
-Fixes: ab43762ef010 ("perf: Allow normal events to output AUX data")
-Fixes: 9f0c4fa111dc ("perf/core: Add a new PERF_EV_CAP_SIBLING event capability")
-Reported-by: Leo Yan <leo.yan@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   51 ++++++++++++++++++++++++++++++---------------------
- 1 file changed, 30 insertions(+), 21 deletions(-)
+Do you have more logs regarding where it's failed?
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2149,8 +2149,9 @@ perf_aux_output_match(struct perf_event
- }
- 
- static void put_event(struct perf_event *event);
--static void event_sched_out(struct perf_event *event,
--			    struct perf_event_context *ctx);
-+static void __event_disable(struct perf_event *event,
-+			    struct perf_event_context *ctx,
-+			    enum perf_event_state state);
- 
- static void perf_put_aux_event(struct perf_event *event)
- {
-@@ -2183,8 +2184,7 @@ static void perf_put_aux_event(struct pe
- 		 * state so that we don't try to schedule it again. Note
- 		 * that perf_event_enable() will clear the ERROR status.
- 		 */
--		event_sched_out(iter, ctx);
--		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-+		__event_disable(iter, ctx, PERF_EVENT_STATE_ERROR);
- 	}
- }
- 
-@@ -2242,18 +2242,6 @@ static inline struct list_head *get_even
- 				    &event->pmu_ctx->flexible_active;
- }
- 
--/*
-- * Events that have PERF_EV_CAP_SIBLING require being part of a group and
-- * cannot exist on their own, schedule them out and move them into the ERROR
-- * state. Also see _perf_event_enable(), it will not be able to recover
-- * this ERROR state.
-- */
--static inline void perf_remove_sibling_event(struct perf_event *event)
--{
--	event_sched_out(event, event->ctx);
--	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
--}
--
- static void perf_group_detach(struct perf_event *event)
- {
- 	struct perf_event *leader = event->group_leader;
-@@ -2289,8 +2277,15 @@ static void perf_group_detach(struct per
- 	 */
- 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
- 
-+		/*
-+		 * Events that have PERF_EV_CAP_SIBLING require being part of
-+		 * a group and cannot exist on their own, schedule them out
-+		 * and move them into the ERROR state. Also see
-+		 * _perf_event_enable(), it will not be able to recover this
-+		 * ERROR state.
-+		 */
- 		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
--			perf_remove_sibling_event(sibling);
-+			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
- 
- 		sibling->group_leader = sibling;
- 		list_del_init(&sibling->sibling_list);
-@@ -2562,6 +2557,15 @@ static void perf_remove_from_context(str
- 	event_function_call(event, __perf_remove_from_context, (void *)flags);
- }
- 
-+static void __event_disable(struct perf_event *event,
-+			    struct perf_event_context *ctx,
-+			    enum perf_event_state state)
-+{
-+	event_sched_out(event, ctx);
-+	perf_cgroup_event_disable(event, ctx);
-+	perf_event_set_state(event, state);
-+}
-+
- /*
-  * Cross CPU call to disable a performance event
-  */
-@@ -2576,13 +2580,18 @@ static void __perf_event_disable(struct
- 	perf_pmu_disable(event->pmu_ctx->pmu);
- 	ctx_time_update_event(ctx, event);
- 
-+	/*
-+	 * When disabling a group leader, the whole group becomes ineligible
-+	 * to run, so schedule out the full group.
-+	 */
- 	if (event == event->group_leader)
- 		group_sched_out(event, ctx);
--	else
--		event_sched_out(event, ctx);
- 
--	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
--	perf_cgroup_event_disable(event, ctx);
-+	/*
-+	 * But only mark the leader OFF; the siblings will remain
-+	 * INACTIVE.
-+	 */
-+	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
- 
- 	perf_pmu_enable(event->pmu_ctx->pmu);
- }
+Thanks,
+Kan> Maybe it's an unrelated bug.
+> 
+
