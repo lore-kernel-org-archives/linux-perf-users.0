@@ -1,101 +1,193 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0C2201278
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Jun 2025 16:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB27527510C;
+	Thu,  5 Jun 2025 16:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749140700; cv=none; b=U/T8hOVYrOBGFvaKJXvsm0mrLj8Ms9Jl7K8X6aiw0hTKHaMiqG291D9Ewr9Ygzf6dDcl4UcK9FijozmvLXI3IE/06i88Nvsicpp1BA+eEuObRPtXqPI+aa2BLzEdrhqHwqfyx6Y9KuHSYEDd55NVilco6zmpCrTUMQsEcjvtybU=
+	t=1749142725; cv=none; b=Aqd84/vKtbHwt0RoH6Q5V2qweCWNJ9ThL7vzPV7DG7cvpAqzqMjGimjsZ6IUNI46qf5FuVjQ3Pgr9VTtGb3T1ItU7ChKCU40OicPhUsQZTOCjm4O8km0pcIDz7qRqGnxl26UVWFHei6HQRX9Pig5/7ZaouWLZ2oDJBX1juAF1lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749140700; c=relaxed/simple;
-	bh=69oEO7zcAr3dJMq3PBSt2OfIM+fVCtkmNf4+PVh9zM0=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=j11DO4+3ECksg6IWG+wOD3POqJ8NV/0yak7s2oUSsH81QoG3tk/mdh4YigmZlKqjxVX9p7DfPFUbE4MQXw+/7aWW2lPOAhfZu8j5CJL/MkJIZfoVJF2GZ+ajSYoXnU5b7Kh6+XFWJiihmONNXqwT1YohJhvC1/rM5mbJ2kFmmik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=UimMyjtZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XvVHBdWG; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
+	s=arc-20240116; t=1749142725; c=relaxed/simple;
+	bh=V+RGtOXj+Div4Ph+uYyTLz/ZlWZWtTVuSKRa6XJvkRE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Hc5FIBh8aAz/W56GOnPpkd19TP2JF5QHIyh98tY6rQLy1QvPmu4rwxczHbBf8HvM+kcalP7SdqaLnC7Rw5Va658R5kXG7dfbiX/fVHWjujdxbzBou9GU5TrDPD5eHa4kkR5fcgoEfr5CQxyl4ORCvQiu3gZk6RQGcyw4x1CBYyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glcvHbI4; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="UimMyjtZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XvVHBdWG"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id CC9DA1140149;
-	Thu,  5 Jun 2025 12:24:57 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Thu, 05 Jun 2025 12:24:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:message-id:mime-version
-	:reply-to:subject:subject:to:to; s=fm1; t=1749140697; x=
-	1749227097; bh=hPhNBAFqOftPy3LRhGmRXKx8EXscCTv4vGEuCX+jKV4=; b=U
-	imMyjtZhOj76uAIJuhiTid5M6P2RZDmStR2e0rZbYSeAdMuQhVoyC4F9oR9/fpuz
-	9T/Oc6/LaozLDPYx3owr05wfg6Xah9xJha09q2SpYoOs0zjghZBLq956+J5nEala
-	qQnFuYmqfykyneV0a+KzTgFXb4kL8MpiF2HTnF5n1a0dgx4A7/j94YC92osvIDQw
-	CWQCOzK5gBV7Gwrkv4zuMmmfttMEJbSNFbfCzKNv8hmOAcASw1QKfBs/jNDwybHP
-	Zgz4+5ZdJ1YyB7Dg2gjQOS9go5nCE2GXMvlvUuOl9io+a1hrtL9Ef5fr59rRorKK
-	uc2430AjdZ5AMq780c/vg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1749140697; x=1749227097; bh=hPhNBAFqOftPy3LRhGmRXKx8EXsc
-	CTv4vGEuCX+jKV4=; b=XvVHBdWGyLWznPUE4wD/w4jqbpT665YPOFm3MTrwC8HV
-	9zFEEQH05ldTW0+JxWHqa7Y4v4VczMxN66bYYkhmBfng8Nv5WZxq+Bj1AUntVn68
-	m2wR3fOdkW/mF0N556Nnx96weRDFzHmszr92UjDvID/Y1So3AQrFXWAT0VK7W3Zc
-	fX4IxoNVdQi9WbBUqdjSr1iD1zfPIrffKcbvrI7pykqzgPK8fDfkbFXjNqGk6Jmv
-	VYj1Uj6KF6pbWjMrtbVtLUBOglbUjr1Kb9pzmBWBQc9nf93Dnm+dxpUqNoz8rtsI
-	nWDDMI8V5KjGJJ/0NcBhLZ+dVY6Juf3IkYqlABqAwg==
-X-ME-Sender: <xms:2cRBaGSQCpXdlkaUu4qnXnR649Bx8M7TqhoF6D6RcAXHu3xpwFoolA>
-    <xme:2cRBaLxuXw-t6bB7nyWq4-k2ao8ofXkJPRU6HPJu1zoabU9pysrhKYFOrd4ijiCf2
-    0F8kFQX7_gemEqogcY>
-X-ME-Received: <xmr:2cRBaD1mz13N3LkttgO6bkIO9tPg4fCzyNypPb98ryNu_uVQlMIc3l_pofDyYp2YYlzeGWFJz5wEUdNXrBn_QR6yVX88dCusrbk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdefkeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefkuffhvf
-    evffgtgfgfggesthhqredttderjeenucfhrhhomhepofhitghhvghlucfnihhnugcuoehm
-    ihgthhgvlhesmhhitghhvghlqdhslhhmrdhnrghmvgeqnecuggftrfgrthhtvghrnhepud
-    etveekvdejgeekkeffueejvdehtdfhueefudelvdehffekleegudeiueetgfffnecuffho
-    mhgrihhnpehkvghrnhgvlhdrohhrghdpkhgvhihogihiuggvrdhorhhgpdhfvgguohhrrg
-    hprhhojhgvtghtrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhhitghhvghlsehmihgthhgvlhdqshhlmhdrnhgrmhgvpdhnsggprh
-    gtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhp
-    vghrfhdquhhsvghrshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrtg
-    hmvgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:2cRBaCDCSLLiDSCYv0o58saNJudJQL47Inf-kOCEWbiDIPXlPu09mQ>
-    <xmx:2cRBaPgrJzmrlLnJckToBVFNOtKv5NHBtYa67pT0_woPhUuW2QL3_A>
-    <xmx:2cRBaOoktaB6G82w0ZEjf5CqR3-SJkDvqENOzCltrg8kag6B1A89ng>
-    <xmx:2cRBaCiFoJJ6PooZ7XAkMC7S1mPLO6JpHqrCDXiEoNmOrivrFW1ygQ>
-    <xmx:2cRBaFOiX-CNTY5cNiCoAeNDemSexwWLejPLPRVNdafVjPhLpOaTl5wy>
-Feedback-ID: i71264891:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 5 Jun 2025 12:24:57 -0400 (EDT)
-Message-ID: <c5ac84be0a119d3dd432edf36196d07ad562b34c.camel@michel-slm.name>
-Subject: perf-tools v6.15 tarball not uploaded?
-From: Michel Lind <michel@michel-slm.name>
-To: linux-perf-users@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Date: Thu, 05 Jun 2025 11:24:50 -0500
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glcvHbI4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749142724; x=1780678724;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=V+RGtOXj+Div4Ph+uYyTLz/ZlWZWtTVuSKRa6XJvkRE=;
+  b=glcvHbI4xhobYW25ZHxH7O9sHXcvSMH1H7Za+biUkRDgWXEElhCTqSCd
+   NMUVqdN8+ye+jl+Dzn5/bG9Vvx9olYRdymUXmCY0AxMxY55XY1VliZMPA
+   Z+Qo6fpV1JNjUoad/HEINYOCB+CSZTSZcG4QvN7ps1GAz/+uic/RW7tjD
+   IevtiUbufM0wOULrGGsqb/5Who/V0tjjGgunrkcXZS5yfGYXSkzeL4C8U
+   bh64wZQ2utYsxObrot8/fQUTWXsuBosO2uIignWjox6oH/cIe+Bw1drlT
+   SPGv5j+zXq3qnYMEiPHZOT5vG/YZM5blvj9uW4esXytVkr1YKhbCxhgLF
+   Q==;
+X-CSE-ConnectionGUID: t3BHrIU1SNaO1+81gNGmxQ==
+X-CSE-MsgGUID: 9fCVKPXMSIGrPwpERi65tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55081374"
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="55081374"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:43 -0700
+X-CSE-ConnectionGUID: NOPijMEIR2+RuRTbWL0dyg==
+X-CSE-MsgGUID: WSA14enaRF+vDbDZschLWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,212,1744095600"; 
+   d="scan'208";a="150833768"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 09:58:43 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0285C20B5736;
+	Thu,  5 Jun 2025 09:58:40 -0700 (PDT)
+Message-ID: <b5c3cc21-26d6-4e87-84de-fa99909bdf1c@linux.intel.com>
+Date: Thu, 5 Jun 2025 12:58:38 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+ <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Arnaldo,
 
-I noticed the kernel.org mirrors don't have perf tarballs newer than
-6.14.0 - https://mirrors.edge.kernel.org/pub/linux/kernel/tools/perf/
 
-Will they be uploaded soon? Presumably I can just generate the tarball
-myself for now from the Git tag.
+On 2025-06-05 9:46 a.m., Liang, Kan wrote:
+> 
+> 
+> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+>> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>>
+>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>>> below perf command.
+>>>   perf record -a -e cpu-clock -- sleep 2
+>>>
+>>> The issue is introduced by the generic throttle patch set, which
+>>> unconditionally invoke the event_stop() when throttle is triggered.
+>>>
+>>> The cpu-clock and task-clock are two special SW events, which rely on
+>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>>> be used to stop the timer.
+>>>
+>>> There may be two ways to fix it.
+>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>>   perf_event_throttle() if the flag is detected.
+>>>   It has been implemented in the
+>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>   The new flag was thought to be an overkill for the issue.
+>>> - Add a check in the event_stop. Return immediately if the throttle is
+>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>>   method to stop the timer.
+>>>
+>>> The latter is implemented here.
+>>>
+>>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>>> checks the hw.interrupts in the stop(). There is no impact from the
+>>> order change.
+>>>
+>>> Reported-by: Leo Yan <leo.yan@arm.com>
+>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> It seems the patch fixes one issue and introduces another ?
+>>
+>> Looks like the throttle event is sticky.
+>> Once it's reached the perf_event no longer works ?
+> 
+> No. It should still work even the throttle is triggered.
+> 
+> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+> /proc/sys/kernel/perf_event_max_sample_rate'
+> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
+> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.564 MB perf.data (613 samples) ]
+> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.545 MB perf.data (502 samples) ]
+> 
+> 
+>> Repro:
+>> test_progs -t perf_branches/perf_branches_no_hw
+>> #250/2   perf_branches/perf_branches_no_hw:OK
+>>
+>> test_progs -t stacktrace_build_id_nmi
+>> #393     stacktrace_build_id_nmi:OK
+>>
+>> test_progs -t perf_branches/perf_branches_no_hw
+>> perf_branches/perf_branches_no_hw:FAIL
+>>
+> 
+> Do you have more logs regarding where it's failed?
+> 
+> Thanks,
+> Kan> Maybe it's an unrelated bug.
+
+I tried the tests on my machine. I don't see any issues.
+
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+perf_branches/perf_branches_no_hw
+#240/2   perf_branches/perf_branches_no_hw:OK
+#240     perf_branches:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+stacktrace_build_id_nmi
+#376     stacktrace_build_id_nmi:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+perf_branches/perf_branches_no_hw
+#240/2   perf_branches/perf_branches_no_hw:OK
+#240     perf_branches:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+stacktrace_build_id_nmi
+#376     stacktrace_build_id_nmi:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+sdp@d404e6bce080:~/tip/tools/testing/selftests/bpf$ sudo ./test_progs -t
+perf_branches/perf_branches_no_hw
+#240/2   perf_branches/perf_branches_no_hw:OK
+#240     perf_branches:OK
+Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+
 
 Thanks,
-
---=20
- _o) Michel Lind
-_( ) identities:
-https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
-     README:     https://fedoraproject.org/wiki/User:Salimma#README
+Kan
