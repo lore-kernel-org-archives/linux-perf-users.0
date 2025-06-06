@@ -1,209 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150622746A;
-	Fri,  6 Jun 2025 19:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6225820F07E;
+	Fri,  6 Jun 2025 19:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749236695; cv=none; b=UpUiuIdTmyaBW/mkFQYQ1GJoS0ip4lehoTFund7SqJwxuTpIXVUDQZt3wmak+S6eGgThzwoXnmeuT12stuU7JB+Ij+zSSz02oRWkOn2UreX//GkOohnW1fZHJfBVh59aAphyMJZeKX1fH5+nMPLrppSPErp9/B0scjfaPvM/FUk=
+	t=1749237985; cv=none; b=JlOuUJMCik88E84D5B4SKKTqAUx7jXAAs7T3eesgWv0/mYJtee1IaHsrSnLmxqdS8OPiyopMnRTMCtlkIcvmTIUO+FH7jLXjUXSMTC4YXr2OKYHjw341GFLXjRClFiwVnUn9ROW1E0ql+G8eVSnonFTxRn/rxSnM2HuWqdbxd7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749236695; c=relaxed/simple;
-	bh=fuYqdoV1jvKU3tUKFTnTsNAh6QOQSVphydcsDKTi/LQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gO9yUxRk5KJ4w0l5LlMQqZSnfEscjsVflHIfKN5d3Yrh62cEHlSeoJnaNzM3/T2MSwOxKQO4TjqZ7iO58ctcBsG6+lzscImPnLHvVZECXvC5k3GvcHrm6Zvq5dnTeNRNvuXxUeRCib+4Z28xI+9WeXmL0Ia1zB3iZIW7jf24ex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIjkbpRy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749237985; c=relaxed/simple;
+	bh=eQ2dskS72qyDCGS/gcS1WruDT9RQ+RjLSHe5YZogRwQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aSGBQlDXCt7gMGcJNIsF7fTu5X6u68BLirOjLS21JgflTD3EENuRKaVQqYSgnIZG/nSIdDVpc74ULFKSn19wDrM88DprULmMtKetqX7HJFB05uaO1wvIHPVFbfwXGVlP7ptjoYSUkqT5prTNQKVTgyieErGO+KaVv1LwwrlZy0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n5bQE7m/; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIjkbpRy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DD0C4CEEB;
-	Fri,  6 Jun 2025 19:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749236694;
-	bh=fuYqdoV1jvKU3tUKFTnTsNAh6QOQSVphydcsDKTi/LQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GIjkbpRyH44Mlt7GAnAgaOAIRy4YqXVlLPyuoVWVvX6QHHsLAwoMb+ZYgdpLWu/RD
-	 mplKgMnNVeZrWGOyXae6f34CJGx03x4xZDU4+b6+62FMvLAW6Y9PYF+TR780QTFmpu
-	 ElB1/EOBJpmqs0nPQYHs3mJ/BlteV9moMfLKVQ5ivTWSj4aaundU3qGIgpMce2FiLK
-	 VtBCar1apDUTvlccIvzLiW6c//Peg8571g/tinuHpTtBB6P0ryRkKFjjMdzoQ2tmPL
-	 tWuzbm5GdhoqEpfT/Uz+M+hAxpYMG7yhXghzjF2i+eaFWiMJ9SlPBPEbHMMqwFk9QP
-	 tiNyMi/Q+54Dg==
-Date: Fri, 6 Jun 2025 12:04:52 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Blake Jones <blakejones@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n5bQE7m/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749237984; x=1780773984;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eQ2dskS72qyDCGS/gcS1WruDT9RQ+RjLSHe5YZogRwQ=;
+  b=n5bQE7m/FRHInqDlOUjjh7aEhEny2PeqQVYjyiv8wTrukM99/2K86Q6t
+   ns40H2/WtuE+3pvP0DVIxeGtcpazA/P9r5hhdISwzocbVy5xuY/0z+v0y
+   2cUg7E8J3Y8OTFe3E/Otqv5NoRiYN6+n2u2f/J02/M8+i6c2oayDUjnP7
+   Ny8/xHV5LpzAUUBxnb0v9srrb+bA0Z1uqOanAMY4Ud+Ylfxw9iNjoSqeA
+   SfCnhI9sDX2mP+yDqnocIUcvAKPY3wGnPvvy2lJ5TrARgI89V6Xjn6ZaJ
+   nAlwRzthmoKpBYDf0K+lDyeYnls3Ra6ybkGJWieWrr9GA8kGURA23UrJ4
+   w==;
+X-CSE-ConnectionGUID: b9JInJAEQfqB2a3RnQxuvg==
+X-CSE-MsgGUID: VTodKeDsSJCcuA5BVpjtQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51541681"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="51541681"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 12:26:23 -0700
+X-CSE-ConnectionGUID: 3Lm5fxB6QWOfTicoSqtyBg==
+X-CSE-MsgGUID: 87uFDH2ERoCHAvK6kca6hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="169101100"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa002.fm.intel.com with ESMTP; 06 Jun 2025 12:26:22 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	irogers@google.com,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: eranian@google.com,
+	ctshao@google.com,
+	tmricht@linux.ibm.com,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] perf: detect support for libbpf's emit_strings
- option
-Message-ID: <aEM71LulKhuEinN6@google.com>
-References: <20250605233934.1881839-1-blakejones@google.com>
- <20250605233934.1881839-2-blakejones@google.com>
+	Leo Yan <leo.yan@arm.com>,
+	Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH V4] perf: Fix the throttle error of some clock events
+Date: Fri,  6 Jun 2025 12:25:46 -0700
+Message-Id: <20250606192546.915765-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250605233934.1881839-2-blakejones@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025 at 04:39:31PM -0700, Blake Jones wrote:
-> This creates a config option that detects libbpf's ability to display
-> character arrays as strings, which was just added to the BPF tree
-> (https://git.kernel.org/bpf/bpf-next/c/87c9c79a02b4).
-> 
-> To test this change, I built perf (from later in this patch set) with:
-> 
-> - static libbpf (default, using source from kernel tree)
-> - dynamic libbpf (LIBBPF_DYNAMIC=1 LIBBPF_INCLUDE=/usr/local/include)
-> 
-> For both the static and dynamic versions, I used headers with and without
-> the ".emit_strings" option.
-> 
-> I verified that of the four resulting binaries, the two with
-> ".emit_strings" would successfully record BPF_METADATA events, and the two
-> without wouldn't.  All four binaries would successfully display
-> BPF_METADATA events, because the relevant bit of libbpf code is only used
-> during "perf record".
-> 
-> Signed-off-by: Blake Jones <blakejones@google.com>
-> ---
->  tools/build/Makefile.feature              |  1 +
->  tools/build/feature/Makefile              |  4 ++++
->  tools/build/feature/test-libbpf-strings.c | 10 ++++++++++
->  tools/perf/Documentation/perf-check.txt   |  1 +
->  tools/perf/Makefile.config                | 12 ++++++++++++
->  tools/perf/builtin-check.c                |  1 +
->  6 files changed, 29 insertions(+)
->  create mode 100644 tools/build/feature/test-libbpf-strings.c
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 57bd995ce6af..541ea3cc53e9 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -126,6 +126,7 @@ FEATURE_TESTS_EXTRA :=                  \
->           llvm                           \
->           clang                          \
->           libbpf                         \
-> +         libbpf-strings                 \
->           libbpf-btf__load_from_kernel_by_id \
->           libbpf-bpf_prog_load           \
->           libbpf-bpf_object__next_program \
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Please check out tmp.perf-tools-next branch which made some changes in
-the area.
+Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+below perf command.
+  perf record -a -e cpu-clock -- sleep 2
 
-Thanks,
-Namhyung
+The issue is introduced by the generic throttle patch set, which
+unconditionally invoke the event_stop() when throttle is triggered.
 
+The cpu-clock and task-clock are two special SW events, which rely on
+the hrtimer. The throttle is invoked in the hrtimer handler. The
+event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+be used to stop the timer.
 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b8b5fb183dd4..327bb501fd2b 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -59,6 +59,7 @@ FILES=                                          \
->           test-lzma.bin                          \
->           test-bpf.bin                           \
->           test-libbpf.bin                        \
-> +         test-libbpf-strings.bin                \
->           test-get_cpuid.bin                     \
->           test-sdt.bin                           \
->           test-cxx.bin                           \
-> @@ -360,6 +361,9 @@ $(OUTPUT)test-libbpf-bpf_program__set_insns.bin:
->  $(OUTPUT)test-libbpf-btf__raw_data.bin:
->  	$(BUILD) -lbpf
->  
-> +$(OUTPUT)test-libbpf-strings.bin:
-> +	$(BUILD)
-> +
->  $(OUTPUT)test-sdt.bin:
->  	$(BUILD)
->  
-> diff --git a/tools/build/feature/test-libbpf-strings.c b/tools/build/feature/test-libbpf-strings.c
-> new file mode 100644
-> index 000000000000..83e6c45f5c85
-> --- /dev/null
-> +++ b/tools/build/feature/test-libbpf-strings.c
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <bpf/btf.h>
-> +
-> +int main(void)
-> +{
-> +	struct btf_dump_type_data_opts opts;
-> +
-> +	opts.emit_strings = 0;
-> +	return opts.emit_strings;
-> +}
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> index a764a4629220..799982d8d868 100644
-> --- a/tools/perf/Documentation/perf-check.txt
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -52,6 +52,7 @@ feature::
->                  dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
->                  auxtrace                /  HAVE_AUXTRACE_SUPPORT
->                  libbfd                  /  HAVE_LIBBFD_SUPPORT
-> +                libbpf-strings          /  HAVE_LIBBPF_STRINGS_SUPPORT
->                  libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
->                  libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
->                  libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d1ea7bf44964..647ade45e4e5 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -595,8 +595,20 @@ ifndef NO_LIBELF
->            LIBBPF_STATIC := 1
->            $(call detected,CONFIG_LIBBPF)
->            CFLAGS += -DHAVE_LIBBPF_SUPPORT
-> +          ifneq ($(OUTPUT),)
-> +            LIBBPF_INCLUDE = $(abspath $(OUTPUT))/libbpf/include
-> +          else
-> +            LIBBPF_INCLUDE = $(CURDIR)/libbpf/include
-> +          endif
->          endif
->        endif
-> +
-> +      FEATURE_CHECK_CFLAGS-libbpf-strings="-I$(LIBBPF_INCLUDE)"
-> +      $(call feature_check,libbpf-strings)
-> +      ifeq ($(feature-libbpf-strings), 1)
-> +        $(call detected,CONFIG_LIBBPF_STRINGS)
-> +        CFLAGS += -DHAVE_LIBBPF_STRINGS_SUPPORT
-> +      endif
->      endif
->    endif # NO_LIBBPF
->  endif # NO_LIBELF
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> index 9a509cb3bb9a..f4827f0ddb47 100644
-> --- a/tools/perf/builtin-check.c
-> +++ b/tools/perf/builtin-check.c
-> @@ -43,6 +43,7 @@ struct feature_status supported_features[] = {
->  	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
->  	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
->  	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
-> +	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
->  	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
->  	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
->  	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
-> -- 
-> 2.50.0.rc0.604.gd4ff7b7c86-goog
-> 
+There may be two ways to fix it.
+- Introduce a PMU flag to track the case. Avoid the event_stop in
+  perf_event_throttle() if the flag is detected.
+  It has been implemented in the
+  https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+  The new flag was thought to be an overkill for the issue.
+- Add a check in the event_stop. Return immediately if the throttle is
+  invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+  method to stop the timer.
+
+The latter is implemented here.
+
+Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+the order the same as perf_event_unthrottle(). Except the patch, no one
+checks the hw.interrupts in the stop(). There is no impact from the
+order change.
+
+When stops in the throttle, the event should not be updated,
+stop(event, 0). But the cpu_clock_event_stop() doesn't handle the flag.
+In logic, it's wrong. But it didn't bring any problems with the old
+code, because the stop() was not invoked when handling the throttle.
+Checking the flag before updating the event.
+
+Reported-by: Leo Yan <leo.yan@arm.com>
+Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+Closes: https://lore.kernel.org/lkml/4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu/
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+
+The patch is to fix the issue introduced by
+
+  9734e25fbf5a perf: Fix the throttle logic for a group
+
+It is still in the tip.git, I'm not sure if the commit ID is valid. So
+the Fixes tag is not added.
+
+There are some discussions regarding to a soft lockup issue.
+That is an existing issue, which are not introduced by the above change.
+It should be fixed separately.
+https://lore.kernel.org/lkml/CAADnVQ+Lx0HWEM8xdLC80wco3BTUPAD_2dQ-3oZFiECZMcw2aQ@mail.gmail.com/
+
+Changes since V3:
+- Check before update in event_stop()
+- Add Reviewed-by from Ian
+
+ kernel/events/core.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f34c99f8ce8f..cc77f127e11a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ 
+ static void perf_event_throttle(struct perf_event *event)
+ {
+-	event->pmu->stop(event, 0);
+ 	event->hw.interrupts = MAX_INTERRUPTS;
++	event->pmu->stop(event, 0);
+ 	if (event == event->group_leader)
+ 		perf_log_throttle(event, 0);
+ }
+@@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (is_sampling_event(event)) {
++	/*
++	 * The throttle can be triggered in the hrtimer handler.
++	 * The HRTIMER_NORESTART should be used to stop the timer,
++	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
++	 */
++	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+ 
+@@ -11804,7 +11809,8 @@ static void cpu_clock_event_start(struct perf_event *event, int flags)
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
+ 	perf_swevent_cancel_hrtimer(event);
+-	cpu_clock_event_update(event);
++	if (flags & PERF_EF_UPDATE)
++		cpu_clock_event_update(event);
+ }
+ 
+ static int cpu_clock_event_add(struct perf_event *event, int flags)
+@@ -11882,7 +11888,8 @@ static void task_clock_event_start(struct perf_event *event, int flags)
+ static void task_clock_event_stop(struct perf_event *event, int flags)
+ {
+ 	perf_swevent_cancel_hrtimer(event);
+-	task_clock_event_update(event, event->ctx->time);
++	if (flags & PERF_EF_UPDATE)
++		task_clock_event_update(event, event->ctx->time);
+ }
+ 
+ static int task_clock_event_add(struct perf_event *event, int flags)
+-- 
+2.38.1
+
