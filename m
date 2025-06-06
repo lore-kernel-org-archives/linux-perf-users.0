@@ -1,123 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D9413EFF3;
-	Fri,  6 Jun 2025 15:02:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6357613DBA0;
+	Fri,  6 Jun 2025 15:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749222124; cv=none; b=LCMtJdAo0kwEwe+SC2o8NWEvER7Aji4GS++L8HY7EkldteICS6k+pmbXJxIBz9bULcDlMb2y2AdPOqhy2HbvxOmn0OoD0vuhqavWqctQOPgOeIQSJWzloPn80mldsmLWkne0gohLKJeuWgDZG/2xTmMc/oKYWbyqp7zV7bxGQHQ=
+	t=1749224278; cv=none; b=etc6pK1HJd694rfFBK6o3KhNGKugGid3XnU8p1kCs5E3Lu3e8usiOE57T9AH+LTyWY9eC8XG2MOCJmdIfEf+M0BLktd9NirbtAdCkT1CdK2Y6rDCvlMLC7H/3TNdJbxDY7d9NswNK3gnUHpSBOBVtgzGV7EkukwSILHgq7HVhJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749222124; c=relaxed/simple;
-	bh=O8kB7jya7MJUklWdBDfGyAbIfXaS0eU41lUunp/mlxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IXk/GtOXcNTtB31+7yfdDAJBz62e3BeJ16K2GMI+CIwzMdlG1UdL+uqAFeO2Rg//+fOXRnPOyeDrji97EqAvx55rjM+zlKt3wfMbupZYf0hkIuwTXXD3A2buvRpjT809/3VcqMAEM+QuBMos1O44xDk5sQQHVbQmLbt+E0u52OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkev1l3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749224278; c=relaxed/simple;
+	bh=PJ9atPS4bsZVal3++1yzNZRHe20wMZYu+nKTUqy5wCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BWu/dYIPUj5CjXm5+oxdKeOFKrR/PhtAgxBhV1EXJLYpaCSHKdt3sllDKlqJ9J1Qfzu6sFtqcmNBRVwZcCffhpR4JurRe2WObc3AP30L8v4F1skAGO5qXksFcxYZefcLtEujub8gzIfMECWGNY6n9D+oi3IirTD0r4jZNbgAxxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O97hB+bs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkev1l3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E514C4CEEB;
-	Fri,  6 Jun 2025 15:02:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O97hB+bs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D41C4CEEB;
+	Fri,  6 Jun 2025 15:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749222124;
-	bh=O8kB7jya7MJUklWdBDfGyAbIfXaS0eU41lUunp/mlxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dkev1l3UmZlruTsci+pGK3iQ5QRzp0CffMyW+Xyk3TGHFzHNIQikq3gt4ohBsBHy2
-	 ROTsG6QrCKXMRqkPC+5/isMlCadCLeL/DnbC9R6Z6EFlT5+e+KzGg2/n9ExCaGs+Zo
-	 J66aQr4SEwJBkCBD/U6BMQjvRctm/MnhKHejdZj0YF0oCtvghT098E6S8ceSujM+yQ
-	 fXT50Ri7ASBflKYQPVX9ntx6q+5l7oncvV/0GuqTfMPKu4FbYAd/5Xk9NzYWnJrnv3
-	 sbFftXbjfEHBjSuBUvetFF6HcUrxteovFUwjzWd/SY2oBhOH/0qUXKesjwCw+cVFZg
-	 boKBnkDbBe2eA==
-Date: Fri, 6 Jun 2025 12:02:01 -0300
+	s=k20201202; t=1749224277;
+	bh=PJ9atPS4bsZVal3++1yzNZRHe20wMZYu+nKTUqy5wCE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=O97hB+bs7nvpAmHSxmuM4Sm7KWAGcRTgOpArRr9v7oSDE9EBSm6KbrGrEu3fYX5be
+	 ph24h22vO4GrXR7BI7+uNqxT1mSGo7Q0krrikqFZCBvJLT/TEXy4cFKtR6fpCCs7mt
+	 KgLlmJ6C66BRjPu9XAnJC7FhnlLO+1BcAEPjRYw7cnPYeyMBChK6C5LEt9MHlMhxZt
+	 n9CKS9TfECZhuMzDrcWK8+1pmNG67lj/eoL6eaPm0kyWyBDwK68K9ZuwnB4O/mTWhY
+	 Ypwq3MvwXOOx9gKt83LMbZdSHUqTb7fqEr4rZY/5fCflEy6gUolrLcGi6cWmDZiMGL
+	 RlK+oZQ/pisJQ==
+Date: Fri, 6 Jun 2025 12:37:55 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
+To: Lorenz Bauer <lmb@isovalent.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf top/report TUI: Provide visual cue when
- starting annotation
-Message-ID: <aEMC6a3BCbSWfcuz@x1>
-References: <aEIJJIiuRTVjPaPT@x1>
- <aEJdAs9P8m2ZiY5Y@google.com>
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: BTF loading failing on perf
+Message-ID: <aEMLU2li1x2bAO4w@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aEJdAs9P8m2ZiY5Y@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025 at 08:14:10PM -0700, Namhyung Kim wrote:
-> On Thu, Jun 05, 2025 at 06:16:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Sometimes it takes a while for the annotation to be presented after
-> > pressing 'a' in the 'perf top'/'report' TUI, provide a visual cue
-> > informing that the annotation has started for that symbol.
- 
-> It's probably because objdump takes long to process DWARF.  I think I
-> need to update this.
- 
-> https://lore.kernel.org/linux-perf-users/Z_gunJ9C3H25Uo9Q@google.com/
+root@number:~# perf trace -e openat --max-events=1
+libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+     0.000 ( 0.016 ms): ptyxis-agent/4375 openat(dfd: CWD, filename: "/proc/6593/cmdline", flags: RDONLY|CLOEXEC) = 13
+root@number:~#
 
-Humm, in this case I had explicitely asked for using objdump:
+openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) = 258
+mmap(NULL, 6519699, PROT_READ, MAP_PRIVATE, 258, 0) = -1 ENODEV (No such device)
+libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
 
-root@number:~# cat ~/.perfconfig 
-# this file is auto-generated.
-[annotate]
-	disassemblers = objdump
+root@number:~# ls -la /sys/kernel/btf/vmlinux 
+-r--r--r--. 1 root root 6519699 Jun  6 12:19 /sys/kernel/btf/vmlinux
+root@number:~# uname -a
+Linux number 6.14.9-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 29 14:27:53 UTC 2025 x86_64 GNU/Linux
+root@number:~# head /etc/os-release 
+NAME="Fedora Linux"
+VERSION="42 (Workstation Edition)"
+RELEASE_TYPE=stable
+ID=fedora
+VERSION_ID=42
+VERSION_CODENAME=""
+PLATFORM_ID="platform:f42"
+PRETTY_NAME="Fedora Linux 42 (Workstation Edition)"
+ANSI_COLOR="0;38;2;60;110;180"
+LOGO=fedora-logo-icon
+root@number:~# rpm -q glibc-devel
+package glibc-devel is not installed
+root@number:~# rpm -q glibc
+glibc-2.41-5.fc42.x86_64
 root@number:~# 
 
-So, yeah, its objdump running but in my case there was no DWARF
-involved, it was just a big C++ app, so the ELF files were big and
-objdump takes a long time even without DWARF.
+Reverting the patch below "cures" the problem.
 
-One way or the other, your patch switching to use objdump when 's' is
-pressed is a good one, please update it :-)
+⬢ [acme@toolbx perf-tools]$ git log --oneline -10 tools/lib/bpf/
+370118ff875244d4 (HEAD -> perf-tools) Revert "libbpf: Use mmap to parse vmlinux BTF from sysfs"
+90b83efa6701656e Merge tag 'bpf-next-6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next
+3c0421c93ce4ff0f libbpf: Use mmap to parse vmlinux BTF from sysfs
+4e29128a9acec2a6 libbpf/btf: Fix string handling to support multi-split BTF
+d0445d7dd3fd9b15 libbpf: Check bpf_map_skeleton link for NULL
+fd5fd538a1f4b34c libbpf: Use proper errno value in nlattr
+62e23f183839c3d7 libbpf: Improve BTF dedup handling of "identical" BTF types
+41d4ce6df3f49453 bpf: Fix uninitialized values in BPF_{CORE,PROBE}_READ
+358b1c0f56ebb699 libbpf: Use proper errno value in linker
+8e64c387c942229c libbpf: Add identical pointer detection to btf_dedup_is_equiv()
+⬢ [acme@toolbx perf-tools]$
+
+root@number:~# perf -v
+perf version 6.15.g370118ff8752
+root@number:~# perf trace -e connect --max-events=5
+     0.000 ( 0.021 ms): DNS Res~ver #4/7932 connect(fd: 102, uservaddr: { .family: LOCAL, path: /run/systemd/r }, addrlen: 42) = 0
+     0.304 ( 0.013 ms): systemd-resolv/1420 connect(fd: 25, uservaddr: { .family: INET, port: 53, addr: 186.208.78.194 }, addrlen: 16) = 0
+     0.371 ( 0.002 ms): systemd-resolv/1420 connect(fd: 26, uservaddr: { .family: INET, port: 53, addr: 186.208.78.194 }, addrlen: 16) = 0
+     0.591 ( 0.009 ms): DNS Res~ver #2/7523 connect(fd: 104, uservaddr: { .family: LOCAL, path: /run/systemd/r }, addrlen: 42) = 0
+     0.731 ( 0.006 ms): systemd-resolv/1420 connect(fd: 28, uservaddr: { .family: INET, port: 53, addr: 186.208.78.194 }, addrlen: 16) = 0
+root@number:~# 
+
+Ideas?
 
 - Arnaldo
- 
-> Thanks,
-> Namhyung
-> 
-> > 
-> > This is the quick and most of the time improvement, but for some cases
-> > its better to improve on it by having a cancellable progress bar, which
-> > is now in my TODO list.
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/ui/browsers/annotate.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > index cd1d452035a265d3..66ffeb96db29532c 100644
-> > --- a/tools/perf/ui/browsers/annotate.c
-> > +++ b/tools/perf/ui/browsers/annotate.c
-> > @@ -2,6 +2,7 @@
-> >  #include "../browser.h"
-> >  #include "../helpline.h"
-> >  #include "../ui.h"
-> > +#include "../util.h"
-> >  #include "../../util/annotate.h"
-> >  #include "../../util/debug.h"
-> >  #include "../../util/debuginfo.h"
-> > @@ -1016,6 +1017,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >  		return -1;
-> >  
-> >  	if (not_annotated || !sym->annotate2) {
-> > +		ui__info_window("Annotating", sym->name);
-> >  		err = symbol__annotate2(ms, evsel, &browser.arch);
-> >  		if (err) {
-> >  			char msg[BUFSIZ];
-> > -- 
-> > 2.49.0
-> > 
+
+⬢ [acme@toolbx perf-tools]$ git bisect good
+3c0421c93ce4ff0f5f2612666122c34fc941d569 is the first bad commit
+commit 3c0421c93ce4ff0f5f2612666122c34fc941d569
+Author: Lorenz Bauer <lmb@isovalent.com>
+Date:   Tue May 20 14:01:19 2025 +0100
+
+    libbpf: Use mmap to parse vmlinux BTF from sysfs
+    
+    Teach libbpf to use mmap when parsing vmlinux BTF from /sys. We don't
+    apply this to fall-back paths on the regular file system because there
+    is no way to ensure that modifications underlying the MAP_PRIVATE
+    mapping are not visible to the process.
+    
+    Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
+    Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+    Tested-by: Alan Maguire <alan.maguire@oracle.com>
+    Acked-by: Andrii Nakryiko <andrii@kernel.org>
+    Link: https://lore.kernel.org/bpf/20250520-vmlinux-mmap-v5-3-e8c941acc414@isovalent.com
+
+ tools/lib/bpf/btf.c | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 71 insertions(+), 18 deletions(-)
+⬢ [acme@toolbx perf-tools]$
