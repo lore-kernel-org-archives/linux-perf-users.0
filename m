@@ -1,300 +1,361 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDA01EFF9A
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Jun 2025 18:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91E21DF755;
+	Fri,  6 Jun 2025 18:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749234463; cv=none; b=TlHCtYV2MNprfEqrabSPDXfBXDCpqHg6KoKrByS+vUtlsxrkO8uD343xH66xsBNE/dZxMnPHomPBpQz9ipIZhLeL6030A/mWw/kTRp9jK8c/6hQl04yztxFUG3yuKg2WfLFmchIq2NP7q2neNdRsZUnCnm+99DNvGu7v6o/P338=
+	t=1749235094; cv=none; b=Y34AqO1X8OLyrfkcbCCIW7M8Nw+/9VhJ24R5CFAo6/ErvnRKb1hl279YxmIDvm/mBckU963/2EZQyjcNm2J5619d6MrSt8zvIc4Zwt4PRYgbjo+9T2Z8N7LtxY+YlQ8PDp6qASBefbeIPGMFIRmiwt+1Nfo3ngzYYpYtURpAa30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749234463; c=relaxed/simple;
-	bh=7Mrtp/ujC7IUUY/xhLK4hRCZlis7yEUVD6oZar6upKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rIkUV6MgDVHfIZfS1b1rmEiQYew+TaZjH9XAiMzho/VQChhUXsOQJfH7bPawjsNELkT3m/YbLRVoykaW1ugWCjPuKPtOiQWmn9em8R6Y9chRlSsTDbQomT7W6SRk3kG1JE9P+t60q/SSCIxBTpsbr+IrD9G8YjPK3btNCSIAv+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VzZQZc97; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749235094; c=relaxed/simple;
+	bh=mnkIYm5as7Z1Cu5ulhxwtqKGq1GmdAMjAkwSthSVZ8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ee9pmE6U6zamY+2lnwxSsCxAHeJUxZvKBbk9QD4480R5kSlXpsfa7HRWx6+6IZDfC4d367L6ZtMwjqBgsYEYgGDzF5b2zkzYfW/5M42eZhupoGroqiScNuNub+5apEUGzDsoN5Z1szirt8dpm+DvjmEVnQE0/cNJIsKYx29ntso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Crh/JRiQ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VzZQZc97"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo23055ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jun 2025 11:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749234460; x=1749839260; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UH9iNsg9TJrDDcNjF332Ex2YPRc93vYZGAZZ8zWp6+s=;
-        b=VzZQZc97ww68pRZPgS3ffiVLRmzPQ1dSmpIwly+jEjkOYqbaOCgo3nDWMbRn2YY4iL
-         AW8gP3N9sgD6Pe18zejBoxiRGheAfeM2o6R0Ss+unL9aCd594+ylgyfgviLE3azJ349p
-         N0tLhFDvpARnUyxxoBZlhAA3u7RMXIxq8kiqEcAlhXtaQ/UOK0MjAJ94Ni+szO5NJ+UH
-         9yYt17NuCyUM3ksiV/RHv7QN2VsRCMbBVLPmGtOzS18ttq4LbPuLHCZjjbt4C1ih40KO
-         egmepWKQ/MoQM+QCkyzDXBXYyGt6K74wdFGZ1bmuC7s5WMrJ2oXO46nvdbK7li1cyCMs
-         sm5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749234460; x=1749839260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UH9iNsg9TJrDDcNjF332Ex2YPRc93vYZGAZZ8zWp6+s=;
-        b=FTzSz8fjbemL4v4Qs1w8hoQET8oZP2KIavzM8JWGLN4USdqhbgpQeASvZByQ2x6vvl
-         6j9pXdELFixJR9kFuIfsj186R22QkfIZ5KAc5Qh8A5mvakuW4xfZxPdXO3OVXVGNrpNg
-         x8tCzAIXQ8qcc3P+ORsl/uFRmb93w7QqDDNVGIi+SOWVb37dVhl1fIDgApPHKz33SBBA
-         eqIK/F4W+1NzQ/V5F9LAhs93G4nzizuNUiCyXjQGYIrKTLZjmF9OUI505/74mrpb/tqi
-         frpEln8n0ieTWPkE454Yoh1uSBhwJDN7GlBmWHm9S4+cxojIyJ8gCWKT8YSK+oxZEGdz
-         Qxfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCk3AinqYim+bRAw97c5u/n0XaBDC+Y5i5tp2BI3OXEViyFryGZb/N1KyClFU8Z9fcxcnPqu8GlI3XBitKPmQG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT9Y75DaPRy6FdyhthTzeCeomAz89BjgE0Jc23d4UGxzHQLJOO
-	kYVypukGGJsWAt5Ov6JJ6I8UAK8rbJrWusf5quA3LPMUQ4SIgJ/MLz3+HKSBlx6CRxxTH4t9t/2
-	yYQDeYH+kBzV64Ixeccx/rdjMrJ/lYF2tKCv0xjgz
-X-Gm-Gg: ASbGncsUXcxlPj28sa8f09+LhRDYw1MD5vmHae/ijUdtmFCux2QFcGQb53Ef+pYtHWI
-	TIHfkNJnwgYMWSXOJVMm5acy+frHpCgcGgu66IO26X+QNhuuCY+7WzfCjayd0tCzqtO+R1dDjM4
-	AZ/oA5ewivcg3fq66XW8wPKWOJqWtUGbaS7io0cGrDWw4i
-X-Google-Smtp-Source: AGHT+IEJXe0nz5dAwhgVL5WD4u2+k2DG6pcgtJF8RoF6Fyj1dX4bmbkKisdB8JLUuxOTTt9TvaiXB+XWXumzd7r17lQ=
-X-Received: by 2002:a05:6e02:398c:b0:3dc:670e:ad5f with SMTP id
- e9e14a558f8ab-3ddd74d763dmr339265ab.14.1749234460177; Fri, 06 Jun 2025
- 11:27:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Crh/JRiQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749235093; x=1780771093;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mnkIYm5as7Z1Cu5ulhxwtqKGq1GmdAMjAkwSthSVZ8M=;
+  b=Crh/JRiQ4rhg50auhoshte/hjxKALtcrpGyEmmaipFrcmcUyCZzvCxH3
+   xE7Fe8RhXHODO9hsbQGYRBzDY4m0rAHkaTgnuIj7MASrOIWg5erEWlXlf
+   OSniGT4PcacVulJflKHzo+K4e7DRT1izFnb6uht187Ni/5y++GCMpnYBi
+   Cm42SdOyc6TRY6UXLMqjAobT4+XUUO3VfwwyjekhwbU4gnQuLkNPYoDpE
+   6hRWhkQM6EjiE6LazvQPU6u0ouPCYB2UWI397dGdLfPvrXf82QBKz2vx5
+   1vfrFNy5kTMcDALs2WQ295p2mXQAST4gocOstOAfBI8GFlxfptVD9hhb1
+   A==;
+X-CSE-ConnectionGUID: eGiP8S2qQOWQ3Gjt2l5qDw==
+X-CSE-MsgGUID: LBtL4i1ERuaKaMVK7HRDdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51251358"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="51251358"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 11:38:12 -0700
+X-CSE-ConnectionGUID: x2V57cr+QvyOHQtrqybn2A==
+X-CSE-MsgGUID: 6AL+BN2rTI2FnUs5qUJ7OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="183093110"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 11:38:12 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id EB4BE20B5736;
+	Fri,  6 Jun 2025 11:38:09 -0700 (PDT)
+Message-ID: <62855572-5961-4548-a961-d05d14a3659f@linux.intel.com>
+Date: Fri, 6 Jun 2025 14:38:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521225307.743726-1-yuzhuo@google.com> <20250521225307.743726-3-yuzhuo@google.com>
- <aC9lXhPFcs5fkHWH@x1> <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
-In-Reply-To: <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 6 Jun 2025 11:27:28 -0700
-X-Gm-Features: AX0GCFsJf9BoOQBJo9u8SiBY-wGn-QaijMbtUCmBq-anRCNCzEGR20_B5-Gw7iw
-Message-ID: <CAP-5=fV11L=5cBaYcd0ftVyk8=Tm4+NWCoTG+MBnAwjEogS5iA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf tools: Add sha1 utils
-To: Yuzhuo Jing <yuzhuo@google.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Eric Biggers <ebiggers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, James Clark <james.clark@linaro.org>, 
-	Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+ <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+ <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
+ <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com>
+ <CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com>
+ <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com>
+ <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
+ <e671d9e9-7da5-4f04-8584-fd743fce1202@linux.intel.com>
+ <CAADnVQ+BF5FjZgqgh08+uoZgkVqE-QG33kYKoMjErZDX5Lh-nw@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAADnVQ+BF5FjZgqgh08+uoZgkVqE-QG33kYKoMjErZDX5Lh-nw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 4, 2025 at 11:17=E2=80=AFAM Yuzhuo Jing <yuzhuo@google.com> wro=
-te:
->
-> Hi Arnaldo,
->
-> Thanks for testing the patches!
->
-> > In file included from util/sha1_generic.c:18:
-> > util/sha1_base.h: In function =E2=80=98sha1_base_do_finalize=E2=80=99:
-> > util/sha1_base.h:77:21: error: comparison of integer expressions of dif=
-ferent signedness: =E2=80=98unsigned int=E2=80=99 and =E2=80=98int=E2=80=99=
- [-Werror=3Dsign-compare]
-> >    77 |         if (partial > bit_offset) {
-> >       |                     ^
-> > cc1: all warnings being treated as errors
->
-> Oh, I didn't see that on my GCC 14.2.  A quick fix would work:
->
-> --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-> +++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-> @@ -71,7 +69,7 @@
->  static inline int sha1_base_do_finalize(struct sha1_state *sctx,
->                                         sha1_block_fn *block_fn)
->  {
-> -       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-> +       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64=
-);
->         __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
->         unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
->
->
-> To test it, I added -Werror=3Dsign-compare to my local Makefile.config to
-> force the error.
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d19d1f132726..9909611be301 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -225,9 +225,9 @@ endif
->
->  # Treat warnings as errors unless directed not to
->  ifneq ($(WERROR),0)
-> -  CORE_CFLAGS +=3D -Werror
-> -  CXXFLAGS +=3D -Werror
-> -  HOSTCFLAGS +=3D -Werror
-> +  CORE_CFLAGS +=3D -Werror=3Dsign-compare -Werror
-> +  CXXFLAGS +=3D -Werror=3Dsign-compare -Werror
-> +  HOSTCFLAGS +=3D -Werror=3Dsign-compare -Werror
->  endif
->
->  ifndef DEBUG
->
->
-> While testing with "make -C tools/perf -f tests/make make_debug", I saw
-> similar compile errors in libjvmti.c:
->
-> jvmti/libjvmti.c: In function =E2=80=98copy_class_filename=E2=80=99:
-> jvmti/libjvmti.c:148:39: error: comparison of integer expressions of
-> different signedness: =E2=80=98int=E2=80=99 and =E2=80=98long unsigned in=
-t=E2=80=99
-> [-Werror=3Dsign-compare]
->   148 |                         for (i =3D 0; i < (size_t)(p - class_sign=
-); i++)
->       |                                       ^
-> jvmti/libjvmti.c:155:31: error: comparison of integer expressions of
-> different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 =
-{aka =E2=80=98long unsigned int=E2=80=99}
-> [-Werror=3Dsign-compare]
->   155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-> && j < strlen(file_name); j++, i++)
->       |                               ^
-> jvmti/libjvmti.c:155:68: error: comparison of integer expressions of
-> different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 =
-{aka =E2=80=98long unsigned int=E2=80=99}
-> [-Werror=3Dsign-compare]
->   155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-> && j < strlen(file_name); j++, i++)
->       |                                                                  =
-  ^
->
-> I've just sent a separate patch to the mailing list:
-> https://lore.kernel.org/lkml/20250604173632.2362759-1-yuzhuo@google.com/T=
-/
 
-Thanks Yuzhuo! I guess this happened because jvmti.h is missing in the
-test container. It seems to make sense to add -Wsign-compare to the
-standard CFLAGS to lower the chance of breaking this container again.
 
-> > Humm that part is the same as in the kernel...
-> >
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3D=
-f include/crypto/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {prin=
-t $3}')
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypt=
-o/sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /=
-tmp/original
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3D=
-f tools/perf/util/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {pri=
-nt $3}')
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypt=
-o/sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /=
-tmp/copy
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ diff -u /tmp/original /tmp/cop=
-y
-> > --- /tmp/original       2025-05-22 14:48:31.338406860 -0300
-> > +++ /tmp/copy   2025-05-22 14:48:58.401603439 -0300
-> > @@ -1,3 +1,7 @@
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static inline int sha1_base_do_finalize(struct shash_desc *desc,
-> >                                         sha1_block_fn *block_fn)
-> >  {
-> > @@ -13,10 +17,3 @@
-> >
-> >                 block_fn(sctx, sctx->buffer, 1);
-> >         }
-> > -
-> > -       memset(sctx->buffer + partial, 0x0, bit_offset - partial);
-> > -       *bits =3D cpu_to_be64(sctx->count << 3);
-> > -       block_fn(sctx, sctx->buffer, 1);
-> > -
-> > -       return 0;
-> > -}
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> There were some other fixes that I made only to the perf tree version,
-> while maintaining verbatim for other parts.  Here's a script that
-> retains and compares only the copied parts.
->
->   # Ignore everything after sha1_transform
->   diff -u -B -I "^#include " <(sed -n
-> '/EXPORT_SYMBOL(sha1_transform)/q;p' lib/crypto/sha1.c)
-> tools/perf/util/sha1.c
->   diff -u -B -I "^#include " -I "sha1_zero_message_hash" -I "^struct
-> sha1_state;$" -I "^void sha1_init(__u32 \*buf);$" \
->       <(sed 's/shash_desc/sha1_state/g;' include/crypto/sha1.h)
-> tools/perf/util/sha1.h
->   diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
->       <(sed 's/shash_desc \*desc/sha1_state *sctx/g;
-> /shash_desc_ctx(desc)/d' include/crypto/sha1_base.h)
-> tools/perf/util/sha1_base.h
->   # Ignore everything after crypto_sha1_finup
->   diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
->       <(sed -n -e '/const u8
-> sha1_zero_message_hash/,/EXPORT_SYMBOL_GPL(sha1_zero_message_hash)/d'
-> \
->                -e 's/shash_desc/sha1_state/g;
-> /EXPORT_SYMBOL(crypto_sha1_finup)/q;p' crypto/sha1_generic.c) \
->       tools/perf/util/sha1_generic.c
->
-> And the changes are as below (including the quick fix above), with one
-> changing the sign and integer type and another fixing type mismatch from
-> const u8 * to const char *.
->
-> Should we send another patch to the kernel tree version to fix the sign
-> error, or we add rules to allow perf tree only changes?
+On 2025-06-06 1:42 p.m., Alexei Starovoitov wrote:
+> On Fri, Jun 6, 2025 at 6:05 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2025-06-05 8:39 p.m., Alexei Starovoitov wrote:
+>>> On Thu, Jun 5, 2025 at 4:50 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025-06-05 4:46 p.m., Alexei Starovoitov wrote:
+>>>>> On Thu, Jun 5, 2025 at 1:24 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2025-06-05 2:45 p.m., Alexei Starovoitov wrote:
+>>>>>>> On Thu, Jun 5, 2025 at 6:46 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+>>>>>>>>> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>>>>>>>
+>>>>>>>>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>>>>>>>>>> below perf command.
+>>>>>>>>>>   perf record -a -e cpu-clock -- sleep 2
+>>>>>>>>>>
+>>>>>>>>>> The issue is introduced by the generic throttle patch set, which
+>>>>>>>>>> unconditionally invoke the event_stop() when throttle is triggered.
+>>>>>>>>>>
+>>>>>>>>>> The cpu-clock and task-clock are two special SW events, which rely on
+>>>>>>>>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>>>>>>>>>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>>>>>>>>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>>>>>>>>>> be used to stop the timer.
+>>>>>>>>>>
+>>>>>>>>>> There may be two ways to fix it.
+>>>>>>>>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>>>>>>>>>   perf_event_throttle() if the flag is detected.
+>>>>>>>>>>   It has been implemented in the
+>>>>>>>>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>>>>>>>>   The new flag was thought to be an overkill for the issue.
+>>>>>>>>>> - Add a check in the event_stop. Return immediately if the throttle is
+>>>>>>>>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>>>>>>>>>   method to stop the timer.
+>>>>>>>>>>
+>>>>>>>>>> The latter is implemented here.
+>>>>>>>>>>
+>>>>>>>>>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>>>>>>>>>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>>>>>>>>>> checks the hw.interrupts in the stop(). There is no impact from the
+>>>>>>>>>> order change.
+>>>>>>>>>>
+>>>>>>>>>> Reported-by: Leo Yan <leo.yan@arm.com>
+>>>>>>>>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>>>>>>>>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>>>>>>>>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>>>>>>>>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>>>>>>>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>>>>>>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>>>>>>>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>>>>>>>
+>>>>>>>>> It seems the patch fixes one issue and introduces another ?
+>>>>>>>>>
+>>>>>>>>> Looks like the throttle event is sticky.
+>>>>>>>>> Once it's reached the perf_event no longer works ?
+>>>>>>>>
+>>>>>>>> No. It should still work even the throttle is triggered.
+>>>>>>>>
+>>>>>>>> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+>>>>>>>> /proc/sys/kernel/perf_event_max_sample_rate'
+>>>>>>>> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+>>>>>>>> [ perf record: Woken up 1 times to write data ]
+>>>>>>>> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
+>>>>>>>
+>>>>>>> With the patch applied above command hangs in my VM:
+>>>>>>>
+>>>>>>> # perf record -a -e cpu-clock -c10000 -- sleep 1
+>>>>>>> [   43.656855] hrtimer: interrupt took 21640 ns
+>>>>>>> [   68.561052] watchdog: BUG: soft lockup - CPU#0 stuck for 41s! [perf:2253]
+>>>>>>> [   68.561056] Modules linked in: bpf_preload
+>>>>>>> [   68.561060] CPU: 0 UID: 0 PID: 2253 Comm: perf Not tainted
+>>>>>>> 6.15.0-12294-gc89e5202e569 #1172 PREEMPT
+>>>>>>> [   68.561062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+>>>>>>> BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+>>>>>>> [   68.561063] RIP: 0010:handle_softirqs+0x77/0x2a0
+>>>>>>> [   68.561070] Code: 6b 96 02 00 01 00 00 bd 0a 00 00 00 44 89 64 24
+>>>>>>> 14 89 6c 24 10 40 88 7c 24 04 31 c0 65 66 89 05 5f 6b 96 02 fb bb ff
+>>>>>>> ff ff ff <48> c7 c0 c0 f
+>>>>>>> [   68.561071] RSP: 0018:ffa0000000003fa0 EFLAGS: 00000246
+>>>>>>> [   68.561072] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: 00000000000006e0
+>>>>>>> [   68.561073] RDX: 0000000000000007 RSI: ff1100010212e100 RDI: 0000000000000000
+>>>>>>> [   68.561074] RBP: 000000000000000a R08: 0000000000000000 R09: 7fffffffffffffff
+>>>>>>> [   68.561074] R10: 00000005a3af2140 R11: 0000000000004601 R12: 0000000000400100
+>>>>>>> [   68.561075] R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
+>>>>>>> [   68.561111] FS:  00007fa1b536f780(0000) GS:ff110004abe26000(0000)
+>>>>>>> knlGS:0000000000000000
+>>>>>>> [   68.561112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>>>> [   68.561113] CR2: 0000000001c67a30 CR3: 000000010f2f3003 CR4: 00000000003716f0
+>>>>>>> [   68.561113] Call Trace:
+>>>>>>> [   68.561170]  <IRQ>
+>>>>>>> [   68.561174]  irq_exit_rcu+0x91/0xb0
+>>>>>>> [   68.561176]  sysvec_apic_timer_interrupt+0x71/0x90
+>>>>>>> [   68.561181]  </IRQ>
+>>>>>>> [   68.561181]  <TASK>
+>>>>>>> [   68.561182]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+>>>>>>> [   68.561184] RIP: 0010:generic_exec_single+0x33/0x120
+>>>>>>> [   68.561188] Code: 65 39 3d 5c 4d 89 02 74 28 3b 3d b8 f5 17 02 0f
+>>>>>>> 83 de 00 00 00 89 f8 48 0f a3 05 d8 f1 17 02 0f 83 ce 00 00 00 e8 bd
+>>>>>>> fe ff ff <31> c0 5b 5d 9
+>>>>>>> [   68.561189] RSP: 0018:ffa00000025a3cc0 EFLAGS: 00000206
+>>>>>>> [   68.561190] RAX: 0000000000000000 RBX: ffffffff8145b310 RCX: ff110004abe26000
+>>>>>>> [   68.561190] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ff1100042fa26540
+>>>>>>> [   68.561191] RBP: 0000000000000202 R08: 0000000000000000 R09: 0000000000000000
+>>>>>>> [   68.561191] R10: ffa00000025a3ee0 R11: 0000000000000000 R12: ffa00000025a3d40
+>>>>>>> [   68.561192] R13: ff11000100881220 R14: ff11000100880fc0 R15: 0000000000000000
+>>>>>>> [   68.561192]  ? sw_perf_event_destroy+0x70/0x70
+>>>>>>> [   68.561197]  smp_call_function_single+0xc4/0x110
+>>>>>>> [   68.561199]  ? sw_perf_event_destroy+0x70/0x70
+>>>>>>> [   68.561200]  event_function_call+0x160/0x170
+>>>>>>> [   68.561202]  ? ctx_resched+0x2d0/0x2d0
+>>>>>>> [   68.561205]  ? perf_event_set_state+0x60/0x60
+>>>>>>> [   68.561206]  ? _perf_event_disable+0x50/0x50
+>>>>>>> [   68.561208]  perf_event_for_each_child+0x37/0x80
+>>>>>>> [   68.561209]  ? _perf_event_disable+0x50/0x50
+>>>>>>> [   68.561211]  _perf_ioctl+0x1df/0xad0
+>>>>>>> [   68.561213]  ? __set_cpus_allowed_ptr+0x71/0x80
+>>>>>>> [   68.561216]  ? avc_has_perm+0x72/0x160
+>>>>>>> [   68.561219]  ? ldsem_down_write+0x1bb/0x1fc
+>>>>>>> [   68.561222]  perf_ioctl+0x42/0x70
+>>>>>>> [   68.561224]  __x64_sys_ioctl+0x8f/0xd0
+>>>>>>> [   68.561226]  do_syscall_64+0x46/0x160
+>>>>>>> [   68.561228]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>>>>>>
+>>>>>>> but only after a fresh boot.
+>>>>>>>
+>>>>>>> If I run bpf selftests before that it works.
+>>>>>>> Like test_progs -t stacktrace_build_id_nmi
+>>>>>>> followed by the same
+>>>>>>> perf record -a -e cpu-clock ..
+>>>>>>> it works fine.
+>>>>>>>
+>>>>>>
+>>>>>> There should be a bug in V3. When stops in the throttle, the event
+>>>>>> should not be updated, stop(event, 0). But the cpu_clock_event_stop()
+>>>>>> doesn't handle the flag. That changes the behavior a little bit.
+>>>>>>
+>>>>>> Could you please try the below patch and see if it helps?
+>>>>>>
+>>>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>>>>> index cd85b1820e7d..b6c57ba24e78 100644
+>>>>>> --- a/kernel/events/core.c
+>>>>>> +++ b/kernel/events/core.c
+>>>>>> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct
+>>>>>> perf_event *event, bool start)
+>>>>>>
+>>>>>>  static void perf_event_throttle(struct perf_event *event)
+>>>>>>  {
+>>>>>> -       event->pmu->stop(event, 0);
+>>>>>>         event->hw.interrupts = MAX_INTERRUPTS;
+>>>>>> +       event->pmu->stop(event, 0);
+>>>>>>         if (event == event->group_leader)
+>>>>>>                 perf_log_throttle(event, 0);
+>>>>>>  }
+>>>>>> @@ -11777,7 +11777,12 @@ static void perf_swevent_cancel_hrtimer(struct
+>>>>>> perf_event *event)
+>>>>>>  {
+>>>>>>         struct hw_perf_event *hwc = &event->hw;
+>>>>>>
+>>>>>> -       if (is_sampling_event(event)) {
+>>>>>> +       /*
+>>>>>> +        * The throttle can be triggered in the hrtimer handler.
+>>>>>> +        * The HRTIMER_NORESTART should be used to stop the timer,
+>>>>>> +        * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
+>>>>>> +        */
+>>>>>> +       if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+>>>>>>                 ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+>>>>>>                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
+>>>>>>
+>>>>>> @@ -11832,7 +11837,8 @@ static void cpu_clock_event_start(struct
+>>>>>> perf_event *event, int flags)
+>>>>>>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
+>>>>>>  {
+>>>>>>         perf_swevent_cancel_hrtimer(event);
+>>>>>> -       cpu_clock_event_update(event);
+>>>>>> +       if (flags & PERF_EF_UPDATE)
+>>>>>> +               cpu_clock_event_update(event);
+>>>>>>  }
+>>>>>
+>>>>> Nope. The last hunk didn't make any difference.
+>>>>> Same soft lockup.
+>>>>
+>>>> Thanks for the verification.
+>>>>
+>>>> I have some questions, could you please help to clarify?
+>>>>
+>>>> - What's the value of proc/sys/kernel/perf_event_max_sample_rate in the
+>>>> test?
+>>>
+>>> 100000
+>>>
+>>>> - Can the soft lockup issue be produced by both bpf selftests and the
+>>>> perf record command? Or just the perf record command?
+>>>
+>>> just perf record.
+>>>
+>>>> - Can the soft lockup issue be reproduced with the v2 patchset?
+>>>> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>
+>>> yes. With v2
+>>> perf record -a -e cpu-clock -c10000 -- sleep 1
+>>>
+>>> soft locks up as well with the same stack trace.
+>>>
+>>>> - Furthermore, can the soft lockup issue be reproduced after reverting
+>>>> the recent generic throttle logic fix?
+>>>> commit e800ac51202f ("perf: Only dump the throttle log for the leader")
+>>>> commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+>>>
+>>> yes.
+>>>
+>>> perf record -a -e cpu-clock -- sleep 1
+>>> works
+>>>
+>>> but
+>>> perf record -a -e cpu-clock -c100 -- sleep 1
+>>> locks up.
+>>> -c1, -c100, -c10000 all lockup.
+>>
+>> Thanks for the confirmation.
+>>
+>> The soft lockup issue is likely an existing issue in virtualization,
+>> unrelated to the recent throttle patches.
+>>
+>> The issue should be caused by the overwhelming overflows.
+>> The -c means fixed period. It's too small for the SW event in VM.
+>> For 1 GHZ CPU, the -c10000 will trigger 100000 samples per second.
+>> -c1 will trigger 1000000000 samples per second.
+>> The perf_event_max_sample_rate is set to 100000. The throttle mechanism
+>> should be triggered for the above case, but even with 100000 samples per
+>> second. It seems still be big number in virtualization.
+>>
+>> There is no such issue without -c. I think it's because of the
+>> auto-adjust mechanism for the freq mode. The period is automatically
+>> adjusted, so a reasonable number of samples can be generated per second.
+>>
+>> If you change the proc/sys/kernel/perf_event_max_sample_rate to a small
+>> value, e.g., 1000, I think the issue should be gone.
+>>
+>> Could you please give a try?
+> 
+> Smaller value helps, but this is not an acceptable workaround.
+> The kernel shouldn't lock up like that with a simple perf command.
 
-I believe there will need to be a set of patches for the kernel sha1
-code (fixing -Wsign-compare, any other typing issues) and a set of
-patches for perf with the check-headers.sh updated as your scripts
-check above. The perf patches shouldn't assume kernel patches have
-landed. The perf check-headers.sh produces a warning but doesn't stop
-the perf build. When the kernel changes land we can update the perf
-check-headers.sh expectations.
+Right, but the soft lockup is a different issue. Even without the recent
+generic throttle logic change, it still can be triggered, right?
+
+How does the below sound?
+I will send a V4 with the small change I made yesterday. Please help to
+verify it and see if it fixes your original report (test_progs cases).
+If yes, let's merge it first, so it can unblock other people (ARM CI,
+IBM CI, Vince...).
+
+Then I will go back and see what I can do for this long-standing issue
+in VM.
 
 Thanks,
-Ian
+Kan
 
-> --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-> +++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-> @@ -71,7 +69,7 @@
->  static inline int sha1_base_do_finalize(struct sha1_state *sctx,
->                                         sha1_block_fn *block_fn)
->  {
-> -       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-> +       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64=
-);
->         __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
->         unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
->
-> @@ -95,7 +93,7 @@
->         __be32 *digest =3D (__be32 *)out;
->         int i;
->
-> -       for (i =3D 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
-> +       for (i =3D 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
->                 put_unaligned_be32(sctx->state[i], digest++);
->
->         memzero_explicit(sctx, sizeof(*sctx));
-> --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-> +++ tools/perf/util/sha1_generic.c      2025-05-16 10:52:59.219531034 -07=
-00
-> @@ -27,7 +23,7 @@
->         u32 temp[SHA1_WORKSPACE_WORDS];
->
->         while (blocks--) {
-> -               sha1_transform(sst->state, src, temp);
-> +               sha1_transform(sst->state, (const char *)src, temp);
->                 src +=3D SHA1_BLOCK_SIZE;
->         }
->         memzero_explicit(temp, sizeof(temp));
->
-> Thanks!
->
-> Best regards,
-> Yuzhuo
+
+
