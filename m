@@ -1,194 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6225820F07E;
-	Fri,  6 Jun 2025 19:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4001534EC
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Jun 2025 19:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749237985; cv=none; b=JlOuUJMCik88E84D5B4SKKTqAUx7jXAAs7T3eesgWv0/mYJtee1IaHsrSnLmxqdS8OPiyopMnRTMCtlkIcvmTIUO+FH7jLXjUXSMTC4YXr2OKYHjw341GFLXjRClFiwVnUn9ROW1E0ql+G8eVSnonFTxRn/rxSnM2HuWqdbxd7w=
+	t=1749239982; cv=none; b=N/C8zUtWBRYlsvECtskG48scEIXdWenbTEind/66qoGlfmumVtNpw2Z1GW2xWg9bLyttJmknoxfx9Gxh1zEQ/LackJNmP55FhivbKq774AvTXZSuKOMKBJnLS/nBctb74u13bIoy4dAhan/fU9zGEPkpqVwfdE1BxfKVa+xyMbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749237985; c=relaxed/simple;
-	bh=eQ2dskS72qyDCGS/gcS1WruDT9RQ+RjLSHe5YZogRwQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aSGBQlDXCt7gMGcJNIsF7fTu5X6u68BLirOjLS21JgflTD3EENuRKaVQqYSgnIZG/nSIdDVpc74ULFKSn19wDrM88DprULmMtKetqX7HJFB05uaO1wvIHPVFbfwXGVlP7ptjoYSUkqT5prTNQKVTgyieErGO+KaVv1LwwrlZy0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n5bQE7m/; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749239982; c=relaxed/simple;
+	bh=QbLyy1UkIqmAE109A59if/o3tV7eSEy/bU+JC4B5e2c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ttFCDxQVzM5bfEhzL41w6SgeVMrXlwAAC6P1jN8dMFnsaScUszoxuKmq0lSTdwmKKdcnFVttj0MbZdHo0GEuOCuAfewN/tsp7jpdqzJ5Lkhcz1DhNVgksQqIaT0k55s+EBnYEffPrHNpEH7ZpXPHW3NZWbH72dYHRxNGysvTwr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=b/7WUp5F; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=i8HsdEqq; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n5bQE7m/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749237984; x=1780773984;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=eQ2dskS72qyDCGS/gcS1WruDT9RQ+RjLSHe5YZogRwQ=;
-  b=n5bQE7m/FRHInqDlOUjjh7aEhEny2PeqQVYjyiv8wTrukM99/2K86Q6t
-   ns40H2/WtuE+3pvP0DVIxeGtcpazA/P9r5hhdISwzocbVy5xuY/0z+v0y
-   2cUg7E8J3Y8OTFe3E/Otqv5NoRiYN6+n2u2f/J02/M8+i6c2oayDUjnP7
-   Ny8/xHV5LpzAUUBxnb0v9srrb+bA0Z1uqOanAMY4Ud+Ylfxw9iNjoSqeA
-   SfCnhI9sDX2mP+yDqnocIUcvAKPY3wGnPvvy2lJ5TrARgI89V6Xjn6ZaJ
-   nAlwRzthmoKpBYDf0K+lDyeYnls3Ra6ybkGJWieWrr9GA8kGURA23UrJ4
-   w==;
-X-CSE-ConnectionGUID: b9JInJAEQfqB2a3RnQxuvg==
-X-CSE-MsgGUID: VTodKeDsSJCcuA5BVpjtQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51541681"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="51541681"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 12:26:23 -0700
-X-CSE-ConnectionGUID: 3Lm5fxB6QWOfTicoSqtyBg==
-X-CSE-MsgGUID: 87uFDH2ERoCHAvK6kca6hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="169101100"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa002.fm.intel.com with ESMTP; 06 Jun 2025 12:26:22 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH V4] perf: Fix the throttle error of some clock events
-Date: Fri,  6 Jun 2025 12:25:46 -0700
-Message-Id: <20250606192546.915765-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="b/7WUp5F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i8HsdEqq"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id ACE2C1380324;
+	Fri,  6 Jun 2025 15:59:38 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 06 Jun 2025 15:59:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1749239978; x=
+	1749326378; bh=ATrXQVKBafWP25eyTCb2DITloA6vSkgE4MXf2OOOKE8=; b=b
+	/7WUp5FoOliZIBjmRWVFiDQNzv0aY4nVUAYEquCgcUKwCNaXPoHTeYlo57bb1KbQ
+	6kxCAKHnSefIwhVfZpT+WXje40aoKolsRv2/HVi1Mo3VTtBDEo5XQkOTNZ/iOEr3
+	8qfMePviiT6GCyavDFAIhSRKmBBYdu030TbrlO3S6o52zm74FMAmrBENYODaKxbn
+	wAmVXHxcGAD16dkZZVIOHYi2LrlU57w/jjVRkh2AVkZVRDpuiLZIVc8goOhbDuLw
+	tXAEoCMpBXnPrnUytFpGYXwhmWJ558T3sxbnhEnhsGC/p0CZnOOLB+aPrCKJfeGV
+	BtLLPmw5Ih+AChIW9L5Pg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1749239978; x=1749326378; bh=ATrXQVKBafWP25eyTCb2DITloA6vSkgE4MX
+	f2OOOKE8=; b=i8HsdEqq4OAJmhrASNqKC8rD3ZK14PFOOJGXFpHlx8kt4d2cxHu
+	abR4x0dOKjS2flzWEt6ayOh/ZA9AyZD5ohalosczSxPAW0QK8h3Kt02VgPqAt1h0
+	cqEh8iWhATDK29ZHj0+tVrg9MF/nhcYv99x1VjHHss54AK/CS4tlweIZJFF/5tos
+	2pT1vKOEHAat620GIoscmLk2/K/75whHm6QIfKY0F5Wrv44rJvhz3wnps0kbXbLJ
+	8FgTTZ40mq9idzeid2bn9IY73XrKOQxxfcGH8DcbvXafMTE/A+xIf3MI8bfXgc4F
+	PHdP90XDQktOerEwseO2wLK32+HFsRhgDtA==
+X-ME-Sender: <xms:qkhDaLYcqVUHSvDmIvTEf2fTsHqiPCI4qAdjqUETQoQPOGRPTLG2Qg>
+    <xme:qkhDaKbZivxdi1mLQOkF1E7J2ek4HngqrO4rLXLCMP6OlXzovF1EfHo79_mZ4SroK
+    kVW53MwXkKWyrKKGCg>
+X-ME-Received: <xmr:qkhDaN8nEtcxhLTML_nU4nWn1wCnmfDFSwyqpQKLLaG4qFlGSjLuJGghgjbnLR41DEtorhgSOCkueMdsZ4y_Zu5IKudqvClFsNA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepkffuhffvveffjghftggfggesghdtreertderjeen
+    ucfhrhhomhepofhitghhvghlucfnihhnugcuoehmihgthhgvlhesmhhitghhvghlqdhslh
+    hmrdhnrghmvgeqnecuggftrfgrthhtvghrnhepueeggfefhfelhedukeffveefveejvefg
+    feeggffggefgheeljeejhfefffeileejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    dpkhgvhihogihiuggvrdhorhhgpdhfvgguohhrrghprhhojhgvtghtrdhorhhgnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhitghhvghlse
+    hmihgthhgvlhdqshhlmhdrnhgrmhgvpdhnsggprhgtphhtthhopeefpdhmohguvgepshhm
+    thhpohhuthdprhgtphhtthhopegrtghmvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eplhhinhhugidqphgvrhhfqdhushgvrhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhhordhorhhg
+X-ME-Proxy: <xmx:qkhDaBrABEtv55F8CDRVZY984GAUvjsnjvYKZfWmsl3Nd4-h42jCNg>
+    <xmx:qkhDaGrr2BVo976QPHGHtBmdfOPFcPap4psrq28UCnct3_rZsqvGoA>
+    <xmx:qkhDaHQUfKMm0BS4O0dVNAoRfx505GSQoFYqkAVIz_Cd5vkYgb-_aA>
+    <xmx:qkhDaOp-wvvV3oayZOZ6PaFprbNBUzt9-6JmEx3rlZQRaAA1_7AZHw>
+    <xmx:qkhDaFlsmGl5chGhKblnS13BibHYLkp2kbqIxQBwGgq72fwXgxIm3ZRp>
+Feedback-ID: i71264891:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 6 Jun 2025 15:59:38 -0400 (EDT)
+Message-ID: <a4ac0d06699b0d69262953ce49c740d66590e05b.camel@michel-slm.name>
+Subject: Re: perf-tools v6.15 tarball not uploaded?
+From: Michel Lind <michel@michel-slm.name>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
+Date: Fri, 06 Jun 2025 14:59:27 -0500
+In-Reply-To: <aEHylyR4hGaqZ6C8@x1>
+References: <c5ac84be0a119d3dd432edf36196d07ad562b34c.camel@michel-slm.name>
+	 <aEHylyR4hGaqZ6C8@x1>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-yn7ikUnQDzO4OIbh/PUw"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-Both ARM and IBM CI reports RCU stall, which can be reproduced by the
-below perf command.
-  perf record -a -e cpu-clock -- sleep 2
+--=-yn7ikUnQDzO4OIbh/PUw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The issue is introduced by the generic throttle patch set, which
-unconditionally invoke the event_stop() when throttle is triggered.
+On Thu, 2025-06-05 at 16:40 -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jun 05, 2025 at 11:24:50AM -0500, Michel Lind wrote:
+> > Hi Arnaldo,
+> >=20
+> > I noticed the kernel.org mirrors don't have perf tarballs newer
+> > than
+> > 6.14.0 -
+> > https://mirrors.edge.kernel.org/pub/linux/kernel/tools/perf/
+> >=20
+> > Will they be uploaded soon? Presumably I can just generate the
+> > tarball
+> > myself for now from the Git tag.
+>=20
+> Its there now:
+>=20
+> https://www.kernel.org/pub/linux/kernel/tools/perf/v6.15.0/perf-6.15.0.ta=
+r.xz
+>=20
+Thanks! This works great on x86_64, on arm64 it's failing because some
+files that are needed to generate unistd_64.h per James' commits
+starting Apr 29 are not there.
 
-The cpu-clock and task-clock are two special SW events, which rely on
-the hrtimer. The throttle is invoked in the hrtimer handler. The
-event_stop()->hrtimer_cancel() waits for the handler to finish, which is
-a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
-be used to stop the timer.
+(I tried copying the files that show up in the error log, but
+eventually hit a wall - for the Hyperscale build I'm going to get
+around it for now by just generating the file on CentOS Stream 9 and
+Stream 10 VMs, but I'll try soldiering on a bit to get this fixed
+properly next week)
 
-There may be two ways to fix it.
-- Introduce a PMU flag to track the case. Avoid the event_stop in
-  perf_event_throttle() if the flag is detected.
-  It has been implemented in the
-  https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
-  The new flag was thought to be an overkill for the issue.
-- Add a check in the event_stop. Return immediately if the throttle is
-  invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
-  method to stop the timer.
+These are the files I had to add so far for those curious
 
-The latter is implemented here.
+# needed to build uapi-asm-generic on arm64, see
+tools/lib/perf/Makefile
+Source1:      =20
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/sc=
+ripts/Makefile.asm-headers?h=3Dv%{tag_version}#/Makefile.asm-headers
+Source2:      =20
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/sc=
+ripts/Kbuild.include?h=3Dv%{tag_version}#/Kbuild.include
+Source3:      =20
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/in=
+clude/uapi/asm-generic/Kbuild?h=3Dv%{tag_version}#/uapi-asm-generic-Kbuild
 
-Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
-the order the same as perf_event_unthrottle(). Except the patch, no one
-checks the hw.interrupts in the stop(). There is no impact from the
-order change.
+...
 
-When stops in the throttle, the event should not be updated,
-stop(event, 0). But the cpu_clock_event_stop() doesn't handle the flag.
-In logic, it's wrong. But it didn't bring any problems with the old
-code, because the stop() was not invoked when handling the throttle.
-Checking the flag before updating the event.
+%ifarch aarch64
+cp -p %{SOURCE1} scripts/
+cp -p %{SOURCE2} scripts/
+mkdir -p include/uapi/asm-generic/
+cp -p %{SOURCE3} include/uapi/asm-generic/Kbuild
+%endif
 
-Reported-by: Leo Yan <leo.yan@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Closes: https://lore.kernel.org/lkml/4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu/
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
+Best regards,
 
-The patch is to fix the issue introduced by
+--=20
+ _o) Michel Lind
+_( ) identities:
+https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
+     README:     https://fedoraproject.org/wiki/User:Salimma#README
 
-  9734e25fbf5a perf: Fix the throttle logic for a group
+--=-yn7ikUnQDzO4OIbh/PUw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-It is still in the tip.git, I'm not sure if the commit ID is valid. So
-the Fixes tag is not added.
+-----BEGIN PGP SIGNATURE-----
 
-There are some discussions regarding to a soft lockup issue.
-That is an existing issue, which are not introduced by the above change.
-It should be fixed separately.
-https://lore.kernel.org/lkml/CAADnVQ+Lx0HWEM8xdLC80wco3BTUPAD_2dQ-3oZFiECZMcw2aQ@mail.gmail.com/
+iI0EABYKADUWIQRdzi5+nDsc/9M1wdeLIp0vfMwE8gUCaENInxccbWljaGVsQG1p
+Y2hlbC1zbG0ubmFtZQAKCRCLIp0vfMwE8leGAQDXeHEEMxM5xE3i2OUm/SiAq3ax
+278/TRpfPEnshN0lDwEArurmzFLyyw/4fkQ9k+uQzaonHnM9t7Xf/O8DsoBkWQo=
+=VdqC
+-----END PGP SIGNATURE-----
 
-Changes since V3:
-- Check before update in event_stop()
-- Add Reviewed-by from Ian
-
- kernel/events/core.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f34c99f8ce8f..cc77f127e11a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
- 
- static void perf_event_throttle(struct perf_event *event)
- {
--	event->pmu->stop(event, 0);
- 	event->hw.interrupts = MAX_INTERRUPTS;
-+	event->pmu->stop(event, 0);
- 	if (event == event->group_leader)
- 		perf_log_throttle(event, 0);
- }
-@@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (is_sampling_event(event)) {
-+	/*
-+	 * The throttle can be triggered in the hrtimer handler.
-+	 * The HRTIMER_NORESTART should be used to stop the timer,
-+	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
-+	 */
-+	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
- 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
- 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
- 
-@@ -11804,7 +11809,8 @@ static void cpu_clock_event_start(struct perf_event *event, int flags)
- static void cpu_clock_event_stop(struct perf_event *event, int flags)
- {
- 	perf_swevent_cancel_hrtimer(event);
--	cpu_clock_event_update(event);
-+	if (flags & PERF_EF_UPDATE)
-+		cpu_clock_event_update(event);
- }
- 
- static int cpu_clock_event_add(struct perf_event *event, int flags)
-@@ -11882,7 +11888,8 @@ static void task_clock_event_start(struct perf_event *event, int flags)
- static void task_clock_event_stop(struct perf_event *event, int flags)
- {
- 	perf_swevent_cancel_hrtimer(event);
--	task_clock_event_update(event, event->ctx->time);
-+	if (flags & PERF_EF_UPDATE)
-+		task_clock_event_update(event, event->ctx->time);
- }
- 
- static int task_clock_event_add(struct perf_event *event, int flags)
--- 
-2.38.1
-
+--=-yn7ikUnQDzO4OIbh/PUw--
