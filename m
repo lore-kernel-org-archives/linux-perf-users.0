@@ -1,108 +1,108 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A209F1A9B3D;
-	Fri,  6 Jun 2025 18:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899461E32CF;
+	Fri,  6 Jun 2025 19:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235257; cv=none; b=D+3ycytpaSwoWKYR5g9RwSXJr+fl/ijwAMUEdJbdYP5n10+rNx5KRNJ1UDpWhCVk6Zv/OVn2Jx/+yuvCoGKVSqUYy3ODYarOQJL7DuMOvFKKo3fAYPFEJgY6Lz5UIn2fEfT4wksUZg1CgpXtW3qNnnp/AMADM7/edi3glxdYRFU=
+	t=1749236556; cv=none; b=kYpQGWt3wTaNJGwK6zYRVGqLyykLa/IMDofjVBwv2Ia1ouqMwrST5rQtMbuX+PgcP4lgcZAq5hPMyjSNWvuOmpC5CkZNdkTMrBM47pp1O/WKBhyVKHi536Q20vMB8qnf2jBSI0GaNp10yUDsJMLBxcDwJeZRS4ivJu2ujlxobQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235257; c=relaxed/simple;
-	bh=nd7Qy1kKKrpW7iUlYYWs5D47amWIruf/C+4oEJHy2tg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=il86nYMhaaM9hUK/JAPCPqPYgfKHtefUi58liXsIyEdP9AzFKOkMwiI9Pjjj5UvrEEbz8CS+phSFXVnNGCkpFPWvybhplw8dlY8E4dtYoK7O07Z6lC6JlYNNWBO/pUs5B6zHxOBZIdc6Tkk9Mi94XP6efZCAPv7f5E3E9NlM9Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EFk9e5WV; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749236556; c=relaxed/simple;
+	bh=a4zS+f4/L3VUhoY85jKW59MyAD/HA3R1PKujB+DYmJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eoh8A+iDEnC7DEAFpcsZpx/c1g24fTmFoRi0UBBIH5gXYhiEO9sc74c+9Och/ruJXKC3cgmySER/0lPL1DS4laQHUFNFfS2pzTyBGC3QpJ7gMGymuzgIoC4244Cq+6zsqN+dgnxGvSrPb/bW43Cz1b6gyMTp+6qdjpyVOUhnNgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBTFSRIm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFk9e5WV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a510432236so1889310f8f.0;
-        Fri, 06 Jun 2025 11:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749235254; x=1749840054; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nd7Qy1kKKrpW7iUlYYWs5D47amWIruf/C+4oEJHy2tg=;
-        b=EFk9e5WVVO84xElPcApefsTpOxjQm/LXGJl6nJsA4L+uW8c87eXqAhKG2/0m2AV+ZU
-         M3NR1ZgJcD1zfBoqnXuKWgOHrOXr6VeTWvSeKAnzC7+RwjxkuEMoDs0PdaYIfy7afkgs
-         EyoJMlOmFtqNxDIzy8ReCLSkYLsMw5vxCS3Bjoc5WCp8G7vWzyQHwJyyy9Me27VU72ew
-         /Z0tcYXIUUpTMQcoOvCxjup8fA9Le6AeHzjZStWACK8qSqc3ZqoEP3mpF79BylSQmEM5
-         /6xZN91e0wOgUZE9dSjDnyyFSK8xIiTbnQg/mACRxw1GQsr4KPH54WM+XDvqW9OFlG7V
-         ge7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749235254; x=1749840054;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nd7Qy1kKKrpW7iUlYYWs5D47amWIruf/C+4oEJHy2tg=;
-        b=sw+AOS2fcwPPZStERa/uYa9+BDJzM0yosDflWNv0HRH+T5H2Vc2CwCOTtoI7YT1m70
-         LTX5mNav7E3rYQ4Xd9Zqc8aKIOh3X2UOEZF+57zAvWdem5ye55QLsoCuX2Eq2nT82qz6
-         0wevxTQZLU9PDIK726dLVMPg5nqlLV9tMXu2xjjvPmoRQ6z1uUbsP5zcvRYMRNV3nOsJ
-         rX0/2zC9RuZ/+wBvJhhmRd+YHF6i2tu1ERDGzqLOUprXUXhTxSTlWaOu8HPvmg0NgQyA
-         +OEa8wDhgThRoWwwzghLQf/WH3XGuSsnzJkFU9CHu9zxSb/U8TaBZ1g/nVnVfaT8KU/X
-         Uvdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9RGZOGv4K5dNtKQL97F9F79LhQu3gCIwWylHZWiHCKT/ls6L86JiT97CzpJw9zKe3SATBY4l+A+ALnSbfWahbTA==@vger.kernel.org, AJvYcCXiSyA8G/j4IrHugAd0xlAtduoA3JAKKd7PR4cUcwVdn+XaUO2ZJ6LrIaCtBVSa37gSEeRrWlW+9ZUcmd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLfsxGQf3mwIbdaeIKoXsSgHZyiwX7mlSfgygnbtabtQJKHpUi
-	mwc8heeMOzYLpuipIPNWh7sLUAU1ggKhjfTWqrr7pfN2y1egK2W8AxW2y79ca+Uc++TcRYZSd5e
-	v6KmFxygR3yW6aKohW++8TywnLbzsLas=
-X-Gm-Gg: ASbGncsM1wi77EPtQuysVxlgVUCS/ykV5VPq0eHExOCGTcXlhuwnmxyCV6A8MGNF8i1
-	6DRdiN0WuoxPTohWEEcl721jVicm604A8XqAwleM5OC9ag5UJ8rKnIWVuwnS1J/bIRG5LUeoo1J
-	EcYBjlXNYs4mkzH4AiahnLzFSHiqO+OA2eTQTeaQsTlbqUHWVtcjzYoO892ULcPhLi4lezNpYp
-X-Google-Smtp-Source: AGHT+IEQC9fQv4kactTxAWCEV5FEKsh8+pWuznPByHUXwGxhx2zG6vfYXUSSolmJqWbq7PYgzAf1pMhycgsUql7zMoY=
-X-Received: by 2002:a05:6000:2c0f:b0:3a1:fcd6:1e6b with SMTP id
- ffacd0b85a97d-3a531cea596mr3919566f8f.57.1749235253903; Fri, 06 Jun 2025
- 11:40:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBTFSRIm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F37C4CEEE;
+	Fri,  6 Jun 2025 19:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749236556;
+	bh=a4zS+f4/L3VUhoY85jKW59MyAD/HA3R1PKujB+DYmJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XBTFSRImwUhWTqHbK3GfkpIJqT2MWRLvOL4xH3c7LmW34WhWjxRKRo0mZxD+Hd3b1
+	 no+GIK+ZbTIdtrj6/Jm+3yEgNxfLjMNQhTn+GhHIq6jrHc9buqX4II2lMNv1FvFWkj
+	 +bv4HHrfouLV/lZXaH7d7grOHFeBUgtFLM6xgv9Ht4nmse9RQoPI7eY2iBGLdmg5/B
+	 DBZ6u1r0bpqFQsUEAE2eQi3qh2pphPyPXvOHzbdtJHijqosHN7CNEHzBOQYeVSKqbj
+	 3fUHTjoyUSbqchAUk0qunoCsnuqFuU0DeNIva7aHBxfQlkplwThO13LMeHvzxjTUEj
+	 nWH1z18hVLYnA==
+Date: Fri, 6 Jun 2025 12:02:33 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Blake Jones <blakejones@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Yujie Liu <yujie.liu@intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] perf: collect BPF metadata from new programs, and
+ display the new event
+Message-ID: <aEM7SeSC7yup7TJ7@google.com>
+References: <20250605233934.1881839-1-blakejones@google.com>
+ <20250605233934.1881839-4-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
- <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
- <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com> <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
- <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com> <CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com>
- <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com> <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
- <e671d9e9-7da5-4f04-8584-fd743fce1202@linux.intel.com> <CAADnVQ+BF5FjZgqgh08+uoZgkVqE-QG33kYKoMjErZDX5Lh-nw@mail.gmail.com>
- <62855572-5961-4548-a961-d05d14a3659f@linux.intel.com>
-In-Reply-To: <62855572-5961-4548-a961-d05d14a3659f@linux.intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 6 Jun 2025 11:40:42 -0700
-X-Gm-Features: AX0GCFtYIWSj9Zm31iledCXOdsdilNNRG7OvYgbHaQCOc03GFL-2U6jFc8NK87g
-Message-ID: <CAADnVQ+Lx0HWEM8xdLC80wco3BTUPAD_2dQ-3oZFiECZMcw2aQ@mail.gmail.com>
-Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Aishwarya TCV <aishwarya.tcv@arm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250605233934.1881839-4-blakejones@google.com>
 
-On Fri, Jun 6, 2025 at 11:38=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
-> Right, but the soft lockup is a different issue. Even without the recent
-> generic throttle logic change, it still can be triggered, right?
->
-> How does the below sound?
-> I will send a V4 with the small change I made yesterday. Please help to
-> verify it and see if it fixes your original report (test_progs cases).
-> If yes, let's merge it first, so it can unblock other people (ARM CI,
-> IBM CI, Vince...).
+Hi Blake,
 
-sounds good. definitely address the regression asap,
-since BPF CI is also blocked.
+On Thu, Jun 05, 2025 at 04:39:33PM -0700, Blake Jones wrote:
+> This collects metadata for any BPF programs that were loaded during a
+> "perf record" run, and emits it at the end of the run. It also adds support
+> for displaying the new PERF_RECORD_BPF_METADATA type.
 
-> Then I will go back and see what I can do for this long-standing issue
-> in VM.
+Can you please split the final synthesis and the processing/display
+parts?  I prefer commits doing one at a time.
+
 >
-> Thanks,
-> Kan
->
->
->
+> Here's some example "perf script -D" output for the new event type. The
+> ": unhandled!" message is from tool.c, analogous to other behavior there.
+> I've elided some rows with all NUL characters for brevity, and I wrapped
+> one of the >75-column lines to fit in the commit guidelines.
+> 
+> 0x50fc8@perf.data [0x260]: event: 84
+> .
+> . ... raw event: size 608 bytes
+> .  0000:  54 00 00 00 00 00 60 02 62 70 66 5f 70 72 6f 67  T.....`.bpf_prog
+> .  0010:  5f 31 65 30 61 32 65 33 36 36 65 35 36 66 31 61  _1e0a2e366e56f1a
+> .  0020:  32 5f 70 65 72 66 5f 73 61 6d 70 6c 65 5f 66 69  2_perf_sample_fi
+> .  0030:  6c 74 65 72 00 00 00 00 00 00 00 00 00 00 00 00  lter............
+> .  0040:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> [...]
+> .  0110:  74 65 73 74 5f 76 61 6c 75 65 00 00 00 00 00 00  test_value......
+> .  0120:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> [...]
+> .  0150:  34 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00  42..............
+> .  0160:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> [...]
+> 
+> 0 0x50fc8 [0x260]: PERF_RECORD_BPF_METADATA \
+>       prog bpf_prog_1e0a2e366e56f1a2_perf_sample_filter
+>   entry 0:           test_value = 42
+> : unhandled!
+
+Looks good, thanks!
+Namhyung
