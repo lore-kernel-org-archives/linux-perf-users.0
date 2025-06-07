@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA67021CA13;
-	Sat,  7 Jun 2025 23:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E98321D3E2;
+	Sat,  7 Jun 2025 23:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749338744; cv=none; b=ZSFG2//hsjmQTch1tuTCYGlL1g5HHE49YHdT4fV1hA0n/4eqKpw/li5RVKr2AOd+luggvmGkbIegAAB00zXAiMcBWtJFY3TPXCabxn620tZ/ugsT5eR2aeiyReciye1dOj9naJnJI52XdvNdmyteWLlB1QkawL3jM6j/ac0n/e0=
+	t=1749338745; cv=none; b=knWPz3Slk+bYupESmArYl0aniJCclPSyNt/aY1YxZxxmDb9YhYMx4Ovy0juK6Sk2eDhilkxE1NWf910borSdtdt+0m5CzUZXKZUinjzpk37dP42/HHZ2mMRdIdWYcXWmrExXPOzCB/04gfBWMN8xf0V3a/au/f6cU7UP63zbujw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749338744; c=relaxed/simple;
-	bh=MNnJC1Iw8l3zhx++zNwnC5pdp8BO0/MPYBFQNUUoGCg=;
+	s=arc-20240116; t=1749338745; c=relaxed/simple;
+	bh=v12hSautNxmZv9EkO3eAVCynaibzZFY8FELph7xTy9g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AIp2ehEug1bXa+9AExZEL+4Ib0QBF/QerKqIqRnQsUE4Fg9R7tiwv1Pfce14pUcyX9ayS+v5lL8+QaW2ToCryR8Wsu6MN9w8jsGEhDznD0139cOhf+Mar37O74JBt1KNSMD+VBBLtfBspXOlGRKpHlkIjUjBpYmuMBfIKofHYSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUES6ppX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=faFDIhDQT3QNXPTXpr5lG7MzOKDBtiEoR6tNqbGDifyeBWQVa7HOEJZb/XhRZcuwz+HZRhpr1ZwFt2rtth432wPYIiO9xrKHAGQjJibiaHsqEssyjWfoHnXbjIRhry2G++ZjeC+y+5XdifIMK0PJ0uebZQExGrzl3VsAPuLhSDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcDy083C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUES6ppX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532B0C4CEFE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcDy083C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D16AFC4CEF1;
 	Sat,  7 Jun 2025 23:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749338744;
-	bh=MNnJC1Iw8l3zhx++zNwnC5pdp8BO0/MPYBFQNUUoGCg=;
+	s=k20201202; t=1749338745;
+	bh=v12hSautNxmZv9EkO3eAVCynaibzZFY8FELph7xTy9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUES6ppXWirkoWBer/iBiEeHinoYZAcb+8d50KFBeWUD4QsQQHkefry3MrgwahsIr
-	 ep8mzLx40d1Xzas8gqHLnkrBBpIpOR2CWRy/3oS5/slEJo/rYGrsqvfiXNe8gJYFvC
-	 YXUrI5BSaIBneVr11A+j1Qv7BM72XGidanCS439/pUo5XiEGzjKNoQgIKNv2S8G2QN
-	 1YHDlwdRQnlXPuSFx928Mm8tBxS6MzVQCkKmk5+jnd7o2dUvBHNHQC1aUqQsOLaEsm
-	 v9KrzoGRKkLel/R3vghSBaoPJ7C1zmvV7bRRsEOGFquTyjMNlUlbp6biHAgs/Di5DI
-	 q58/Fkjhknwjw==
+	b=BcDy083C+NB3s5zaH8cVnbsx5ZGWv8dCSuJeKSY3tLbhtVsvXdFIv3vO7Ang6OFLN
+	 INurd3qIXevisNBSqeehyMutz4u/2b/wwPVl0MyO+rHWa5/yHLdY0a+Wnl37QFPfy2
+	 YIFb1wy7IrrRQ2N1FBmTT42PsneZx85Zh+WOxQiSfQveDE/iH/FdQftC5wCj7sFLah
+	 yUUNG5JXf5P4gY3PPNUewyYW6gQA7d82Wcc0ptWZQVcSZlzx//joPc/AC1ST7m/mYH
+	 Oy2zgf73REIgBvgrGOZmVkkc+1hQ4wtIYj0lus8ooUXS/IGwELjmY2RDVI3Z/It5yF
+	 NPPnXuGo5eS3w==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH v2 6/7] perf annotate: Add 'T' hot key to toggle data type display
-Date: Sat,  7 Jun 2025 16:25:39 -0700
-Message-ID: <20250607232540.89488-7-namhyung@kernel.org>
+Subject: [PATCH v2 7/7] perf annotate: Show warning when debuginfo is not available
+Date: Sat,  7 Jun 2025 16:25:40 -0700
+Message-ID: <20250607232540.89488-8-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250607232540.89488-1-namhyung@kernel.org>
 References: <20250607232540.89488-1-namhyung@kernel.org>
@@ -51,65 +51,94 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support data type display with a key press so that users can toggle the
-output dynamically on TUI.  Also display "[Type]" in the title line if
-it's enabled.
+When user requests data-type annotation but no DWARF info is available,
+show a warning message about it.
+
+  Warning:
+  DWARF debuginfo not found.
+
+  Data-type in this DSO will not be displayed.
+  Please make sure to have debug information.
+
+  Press any key...
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/ui/browsers/annotate.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 17 +++++++++++++++++
+ tools/perf/util/dso.h             | 11 +++++++++++
+ 2 files changed, 28 insertions(+)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 686fa54e545e275c..b0b31a121941daec 100644
+index b0b31a121941daec..a690a464105f302c 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -451,9 +451,10 @@ static void ui_browser__init_asm_mode(struct ui_browser *browser)
- static int sym_title(struct symbol *sym, struct map *map, char *title,
- 		     size_t sz, int percent_type)
- {
--	return snprintf(title, sz, "%s  %s [Percent: %s]", sym->name,
-+	return snprintf(title, sz, "%s  %s [Percent: %s] %s", sym->name,
- 			dso__long_name(map__dso(map)),
--			percent_type_str(percent_type));
-+			percent_type_str(percent_type),
-+			annotate_opts.code_with_type ? "[Type]" : "");
+@@ -730,6 +730,20 @@ static int annotate__scnprintf_title(struct hists *hists, char *bf, size_t size)
+ 	return printed;
  }
  
- /*
-@@ -827,7 +828,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		"b             Toggle percent base [period/hits]\n"
- 		"B             Branch counter abbr list (Optional)\n"
- 		"?             Search string backwards\n"
--		"f             Toggle showing offsets to full address\n");
-+		"f             Toggle showing offsets to full address\n"
-+		"T             Toggle data type display\n");
++static void annotate_browser__debuginfo_warning(struct annotate_browser *browser)
++{
++	struct map_symbol *ms = browser->b.priv;
++	struct dso *dso = map__dso(ms->map);
++
++	if (browser->dbg == NULL && annotate_opts.code_with_type &&
++	    !dso__debuginfo_warned(dso)) {
++		ui__warning("DWARF debuginfo not found.\n\n"
++			    "Data-type in this DSO will not be displayed.\n"
++			    "Please make sure to have debug information.");
++		dso__set_debuginfo_warned(dso);
++	}
++}
++
+ static int annotate_browser__run(struct annotate_browser *browser,
+ 				 struct evsel *evsel,
+ 				 struct hist_browser_timer *hbt)
+@@ -760,6 +774,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 
+ 	annotation_br_cntr_abbr_list(&br_cntr_text, evsel, false);
+ 
++	annotate_browser__debuginfo_warning(browser);
++
+ 	while (1) {
+ 		key = ui_browser__run(&browser->b, delay_secs);
+ 
+@@ -954,6 +970,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			if (browser->dbg == NULL)
+ 				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
+ 			annotate_browser__show(&browser->b, title, help);
++			annotate_browser__debuginfo_warning(browser);
  			continue;
- 		case 'r':
- 			script_browse(NULL, NULL);
-@@ -947,6 +949,12 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		case 'f':
- 			annotation__toggle_full_addr(notes, ms);
- 			continue;
-+		case 'T':
-+			annotate_opts.code_with_type ^= 1;
-+			if (browser->dbg == NULL)
-+				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
-+			annotate_browser__show(&browser->b, title, help);
-+			continue;
  		case K_LEFT:
  		case '<':
- 		case '>':
-@@ -1035,8 +1043,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index c87564471f9b01b1..42dadcc85a0e9150 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -282,6 +282,7 @@ DECLARE_RC_STRUCT(dso) {
+ 	u8		 hit:1;
+ 	u8		 annotate_warned:1;
+ 	u8		 auxtrace_warned:1;
++	u8		 debuginfo_warned:1;
+ 	u8		 short_name_allocated:1;
+ 	u8		 long_name_allocated:1;
+ 	u8		 is_64_bit:1;
+@@ -342,6 +343,16 @@ static inline void dso__set_annotate_warned(struct dso *dso)
+ 	RC_CHK_ACCESS(dso)->annotate_warned = 1;
+ }
  
- 	ret = annotate_browser__run(&browser, evsel, hbt);
- 
--	if (annotate_opts.code_with_type)
--		debuginfo__delete(browser.dbg);
-+	debuginfo__delete(browser.dbg);
- 	if(not_annotated)
- 		annotated_source__purge(notes->src);
- 
++static inline bool dso__debuginfo_warned(const struct dso *dso)
++{
++	return RC_CHK_ACCESS(dso)->debuginfo_warned;
++}
++
++static inline void dso__set_debuginfo_warned(struct dso *dso)
++{
++	RC_CHK_ACCESS(dso)->debuginfo_warned = 1;
++}
++
+ static inline bool dso__auxtrace_warned(const struct dso *dso)
+ {
+ 	return RC_CHK_ACCESS(dso)->auxtrace_warned;
 -- 
 2.49.0
 
