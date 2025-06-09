@@ -1,67 +1,50 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4908C257AFE;
-	Mon,  9 Jun 2025 07:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D709E16132F;
+	Mon,  9 Jun 2025 08:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455035; cv=none; b=Sq0CvUowlz4sBocNucAM2NTQCzjtP/3gzd426QLTHN5NlrYqQ/22UxNphlBMuOOoB7SUVZNuhYeuZHcITQs1ubpVdLkJGJQIT78fOU82fq6+ObVgegqzczO7lQCnfK7BoHmumJWTijzin/TNRCCMaXVGFT3zJV+yScXrZmI7wmA=
+	t=1749457207; cv=none; b=EuOEn6ToiK+Lp4l3dqF0+13JD00s1dirGCwWGj/VsjAnRpRXTmwjwqgnlsWu47YxuP0c/CvQKekzJxHs3SeeNPSICDJReG52gUSl5XHPjWDzG38TPw+oa9OHHHUNfq7bCg0uUrOPS2yHQNhsU7LMlxeacbmnAF+OCgkWvGjaduk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455035; c=relaxed/simple;
-	bh=txkj+wOMrqyHZaw+DGAkhHTPU5noNCM6fqXNyuwhj4I=;
+	s=arc-20240116; t=1749457207; c=relaxed/simple;
+	bh=kwntOc4hY51FIlXoQ8D6vBa7fodcbPh623aO1q5/+F4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YCg+u7EO3NXLOHxpOXqpPHpkgrac/GTVWJiFaf3NVbN22hzgyOOM1M3Pjg4J1s1VqK+92yFg6uKjirgrKXhuZ3FRlt2lV7t9jEy7PMJENwKyp2n7RNfWeLxyobCBBKYOj9cVOmdHUzoq21nu1K/zL8qjFZmo6KuFuzSL2iAMJQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R8vH+ubX; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=SASReZgvXBmdZfKM3oMm2NkqMDtMDNv1D+fdnDg9u5c4pbjkxKXDAh3eDS6FnuxrNz5BZ944cg1s02zmX8vdGctmE35Um8AIu+fRac7eB7mAh5Fbpqp7ciK7S32vzhelaWSNEMAq7v8XcbJQnp4j5DrURDjDUsbxKnJJyHOKXUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g2AVG6fX; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R8vH+ubX"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5591j3SF016020;
-	Mon, 9 Jun 2025 07:43:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gDVdN8
-	Yat8T3mGPbJ4HCMwJa6fqRGq+MBn3zVXY7Abc=; b=R8vH+ubXOdGhOQts2R72XD
-	lUWN7s4mV5O8PHCtofSMh2h6O1/8FGKhTs/Ng8i8xUCp8TMMkGZnLKdTEjaGjQHu
-	2dAG2dLNDbpV1e2V6D4A9yJxNlq8I2DhovIyaM1qTbIyHfdwvr1vMS5AtOQogU3u
-	rjYYv4hGufpy1p+jx/OtxgHgGEYSTUREMYToFpIkCpZGzisd3xq4KYUbyuXgtaLf
-	/raJX+3RqoMANorD5qe9gqwooevDryeCglRKIyOin3nzYPvs0pETLsFVcGdypmgR
-	oVC+5s9Km43LRcekLL99qsxEn9rxFqsLGWBByvKE7lonVyZGBc830sn1tOMWGfSQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474hhdpm7r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 07:43:37 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5597ha0R021334;
-	Mon, 9 Jun 2025 07:43:36 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474hhdpm7n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 07:43:36 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55979Rad019586;
-	Mon, 9 Jun 2025 07:43:35 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4752f24dt2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 07:43:35 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5597hUkQ27853520
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Jun 2025 07:43:30 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE3EB58045;
-	Mon,  9 Jun 2025 07:43:34 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 04CA558050;
-	Mon,  9 Jun 2025 07:43:30 +0000 (GMT)
-Received: from [9.61.250.8] (unknown [9.61.250.8])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  9 Jun 2025 07:43:29 +0000 (GMT)
-Message-ID: <a10fb51a-d789-453f-8962-583959beb4ea@linux.ibm.com>
-Date: Mon, 9 Jun 2025 13:13:28 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g2AVG6fX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749457205; x=1780993205;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kwntOc4hY51FIlXoQ8D6vBa7fodcbPh623aO1q5/+F4=;
+  b=g2AVG6fXQEsIfXxR2Yo0UfeikI2cpuF8TPDNhE2kEaUMp5LLsREvyjRa
+   RNnHSYiRmE1CBP8qGfhGgoy61Ad/w1tb/5jjxM+pTpnh1ygnyOY6ZigxH
+   pdx65e3I1nwjPmsX11cLdI/6Axt5U7CoDadG8iZ60OSoxgKroi26Xi9fg
+   gJVs3z5F59I0PMKwnMVjm08JhjPYAARBcaepk8XH9OqdMCYbEDFJudHEx
+   CchOBjGTqniP+I3ImXGDsX6KpCBxm4NX3WDeoNQP+oWFAr1YVQo/1vjFk
+   qy3v6HQVPs5mBROjtmRQfCal5DCGTBSWqosCvgE8/kWrGe4ogpEFHl/XP
+   Q==;
+X-CSE-ConnectionGUID: 3clUjE4mS6ysFT4zcUNA7g==
+X-CSE-MsgGUID: N6kM7qOCRjSnvKY9RCy3fw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="62882592"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="62882592"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 01:20:04 -0700
+X-CSE-ConnectionGUID: HhDhvHC/Snmp72KWSYqqrg==
+X-CSE-MsgGUID: 5OdNbC44TlmExGr4VqKjVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="151442481"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 01:20:01 -0700
+Message-ID: <d6d79bd0-f6f1-4cd9-aa63-5ddc32985dfd@linux.intel.com>
+Date: Mon, 9 Jun 2025 16:19:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,168 +52,288 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4] perf: Fix the throttle error of some clock events
-Content-Language: en-GB
-To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
-        namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-        Leo Yan <leo.yan@arm.com>, Aishwarya TCV <aishwarya.tcv@arm.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Vince Weaver <vincent.weaver@maine.edu>
-References: <20250606192546.915765-1-kan.liang@linux.intel.com>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <20250606192546.915765-1-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] perf/x86: KVM: Have perf define a dedicated struct for
+ getting guest PEBS data
+To: Sean Christopherson <seanjc@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+References: <20250602235121.55424-1-seanjc@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250602235121.55424-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=DLGP4zNb c=1 sm=1 tr=0 ts=684690a9 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=pGLkceISAAAA:8
- a=1XWaLZrsAAAA:8 a=DdKJZxPaou0ld4zBaDAA:9 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-GUID: 2_xXqHmiHaEcbO081SQQ9fGpyJ_1RUxL
-X-Proofpoint-ORIG-GUID: RbTo3kmworXVuGGiV9Gr3ESf_1VI-iql
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA1NiBTYWx0ZWRfX+XAlyWjaZo8v qGNDW3uX62kURb8DQtOWl8feN/2N1PtO1rewtMClIrSghaEUJQ3y3yV8gNI+776Fl2rCUMxEsxK XICJD+0KQ97RW5LmATFcv29phAqjddeeLbKZt0cJnWO11+wqBo6dVN2sLTlXvKBHV5lTwGeytqg
- Ya26/J2sTtiw3MlicTn7uDy6leMAKjQzfC4zcBYLmFaXeTgD/wB+YiGPu4Z0hX4oQ+GFbppRXym HeU8qNHNuCx2k4IBQiCZ5IkBBCUp/P1Ax4SSRg48dNJf2dz8qh+NoAvpmE2AY3Bkf1AgrlAyAcw 3meCM/X9dO2lfZNJe67KyEv2G/wHa1ra+1HTpfgedGaeWcEGD/LaGEbri6d9Ortpt0dRomVchE3
- OIwtCcb3jr4Ttd3cCX40XhYVCcyyj3SLDKjcS3z+RFCzlvH6NnmGv+CI4ubyUWpplRln9JON
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
- adultscore=0 mlxscore=0 spamscore=0 bulkscore=0 impostorscore=0
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506090056
 
 
-On 07/06/25 12:55 am, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+On 6/3/2025 7:51 AM, Sean Christopherson wrote:
+> Have perf define a struct for getting guest PEBS data from KVM instead of
+> poking into the kvm_pmu structure.  Passing in an entire "struct kvm_pmu"
+> _as an opaque pointer_ to get at four fields is silly, especially since
+> one of the fields exists purely to convey information to perf, i.e. isn't
+> used by KVM.
 >
-> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
-> below perf command.
->    perf record -a -e cpu-clock -- sleep 2
+> Perf should also own its APIs, i.e. define what fields/data it needs, not
+> rely on KVM to throw fields into data structures that effectively hold
+> KVM-internal state.
 >
-> The issue is introduced by the generic throttle patch set, which
-> unconditionally invoke the event_stop() when throttle is triggered.
+> Opportunistically rephrase the comment about cross-mapped counters to
+> explain *why* PEBS needs to be disabled.
 >
-> The cpu-clock and task-clock are two special SW events, which rely on
-> the hrtimer. The throttle is invoked in the hrtimer handler. The
-> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
-> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
-> be used to stop the timer.
->
-> There may be two ways to fix it.
-> - Introduce a PMU flag to track the case. Avoid the event_stop in
->    perf_event_throttle() if the flag is detected.
->    It has been implemented in the
->    https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
->    The new flag was thought to be an overkill for the issue.
-> - Add a check in the event_stop. Return immediately if the throttle is
->    invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
->    method to stop the timer.
->
-> The latter is implemented here.
->
-> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
-> the order the same as perf_event_unthrottle(). Except the patch, no one
-> checks the hw.interrupts in the stop(). There is no impact from the
-> order change.
->
-> When stops in the throttle, the event should not be updated,
-> stop(event, 0). But the cpu_clock_event_stop() doesn't handle the flag.
-> In logic, it's wrong. But it didn't bring any problems with the old
-> code, because the stop() was not invoked when handling the throttle.
-> Checking the flag before updating the event.
->
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
-> Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-> Closes: https://lore.kernel.org/lkml/4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu/
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
-
-
-Tested this patch by applying on top of 6.16.0-rc1, and it fixes the 
-reported issue. Hence,
-
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-Regards,
-
-Venkat.
-
+>  arch/x86/events/core.c            |  5 +++--
+>  arch/x86/events/intel/core.c      | 20 ++++++++++----------
+>  arch/x86/events/perf_event.h      |  3 ++-
+>  arch/x86/include/asm/kvm_host.h   |  9 ---------
+>  arch/x86/include/asm/perf_event.h | 13 +++++++++++--
+>  arch/x86/kvm/vmx/pmu_intel.c      | 18 +++++++++++++++---
+>  arch/x86/kvm/vmx/vmx.c            | 11 +++++++----
+>  arch/x86/kvm/vmx/vmx.h            |  2 +-
+>  8 files changed, 49 insertions(+), 32 deletions(-)
 >
-> The patch is to fix the issue introduced by
->
->    9734e25fbf5a perf: Fix the throttle logic for a group
->
-> It is still in the tip.git, I'm not sure if the commit ID is valid. So
-> the Fixes tag is not added.
->
-> There are some discussions regarding to a soft lockup issue.
-> That is an existing issue, which are not introduced by the above change.
-> It should be fixed separately.
-> https://lore.kernel.org/lkml/CAADnVQ+Lx0HWEM8xdLC80wco3BTUPAD_2dQ-3oZFiECZMcw2aQ@mail.gmail.com/
->
-> Changes since V3:
-> - Check before update in event_stop()
-> - Add Reviewed-by from Ian
->
->   kernel/events/core.c | 15 +++++++++++----
->   1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f34c99f8ce8f..cc77f127e11a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->   
->   static void perf_event_throttle(struct perf_event *event)
->   {
-> -	event->pmu->stop(event, 0);
->   	event->hw.interrupts = MAX_INTERRUPTS;
-> +	event->pmu->stop(event, 0);
->   	if (event == event->group_leader)
->   		perf_log_throttle(event, 0);
->   }
-> @@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
->   {
->   	struct hw_perf_event *hwc = &event->hw;
->   
-> -	if (is_sampling_event(event)) {
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 139ad80d1df3..6080c3e6e191 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -703,9 +703,10 @@ void x86_pmu_disable_all(void)
+>  	}
+>  }
+>  
+> -struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
+> +struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
+> +						  struct x86_guest_pebs *guest_pebs)
+>  {
+> -	return static_call(x86_pmu_guest_get_msrs)(nr, data);
+> +	return static_call(x86_pmu_guest_get_msrs)(nr, guest_pebs);
+>  }
+>  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
+>  
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index c5f385413392..364bba216cf4 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/export.h>
+>  #include <linux/nmi.h>
+> -#include <linux/kvm_host.h>
+>  
+>  #include <asm/cpufeature.h>
+>  #include <asm/debugreg.h>
+> @@ -4332,11 +4331,11 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>   * when it uses {RD,WR}MSR, which should be handled by the KVM context,
+>   * specifically in the intel_pmu_{get,set}_msr().
+>   */
+> -static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+> +static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr,
+> +							  struct x86_guest_pebs *guest_pebs)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
+> -	struct kvm_pmu *kvm_pmu = (struct kvm_pmu *)data;
+>  	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
+>  	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
+>  	int global_ctrl, pebs_enable;
+> @@ -4374,20 +4373,20 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  		return arr;
+>  	}
+>  
+> -	if (!kvm_pmu || !x86_pmu.pebs_ept)
+> +	if (!guest_pebs || !x86_pmu.pebs_ept)
+>  		return arr;
+>  
+>  	arr[(*nr)++] = (struct perf_guest_switch_msr){
+>  		.msr = MSR_IA32_DS_AREA,
+>  		.host = (unsigned long)cpuc->ds,
+> -		.guest = kvm_pmu->ds_area,
+> +		.guest = guest_pebs->ds_area,
+>  	};
+>  
+>  	if (x86_pmu.intel_cap.pebs_baseline) {
+>  		arr[(*nr)++] = (struct perf_guest_switch_msr){
+>  			.msr = MSR_PEBS_DATA_CFG,
+>  			.host = cpuc->active_pebs_data_cfg,
+> -			.guest = kvm_pmu->pebs_data_cfg,
+> +			.guest = guest_pebs->data_cfg,
+>  		};
+>  	}
+>  
+> @@ -4395,7 +4394,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  	arr[pebs_enable] = (struct perf_guest_switch_msr){
+>  		.msr = MSR_IA32_PEBS_ENABLE,
+>  		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+> -		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+> +		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & guest_pebs->enable,
+>  	};
+>  
+>  	if (arr[pebs_enable].host) {
+> @@ -4403,8 +4402,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  		arr[pebs_enable].guest = 0;
+>  	} else {
+>  		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
+> -		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
+> -		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
+> +		arr[pebs_enable].guest &= ~guest_pebs->cross_mapped_mask;
+> +		arr[global_ctrl].guest &= ~guest_pebs->cross_mapped_mask;
+>  		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+>  		arr[global_ctrl].guest |= arr[pebs_enable].guest;
+>  	}
+> @@ -4412,7 +4411,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>  	return arr;
+>  }
+>  
+> -static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr, void *data)
+> +static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr,
+> +							 struct x86_guest_pebs *guest_pebs)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index 46d120597bab..29ae9e442f2e 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -963,7 +963,8 @@ struct x86_pmu {
+>  	/*
+>  	 * Intel host/guest support (KVM)
+>  	 */
+> -	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr, void *data);
+> +	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr,
+> +							struct x86_guest_pebs *guest_pebs);
+>  
+>  	/*
+>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 7bc174a1f1cb..2fe0d2520f14 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -583,15 +583,6 @@ struct kvm_pmu {
+>  	u64 pebs_data_cfg;
+>  	u64 pebs_data_cfg_rsvd;
+>  
+> -	/*
+> -	 * If a guest counter is cross-mapped to host counter with different
+> -	 * index, its PEBS capability will be temporarily disabled.
+> -	 *
+> -	 * The user should make sure that this mask is updated
+> -	 * after disabling interrupts and before perf_guest_get_msrs();
+> -	 */
+> -	u64 host_cross_mapped_mask;
+> -
+>  	/*
+>  	 * The gate to release perf_events not marked in
+>  	 * pmc_in_use only once in a vcpu time slice.
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+> index 812dac3f79f0..0edfc3e34813 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -646,11 +646,20 @@ static inline void perf_events_lapic_init(void)	{ }
+>  static inline void perf_check_microcode(void) { }
+>  #endif
+>  
+> +struct x86_guest_pebs {
+> +	u64	enable;
+> +	u64	ds_area;
+> +	u64	data_cfg;
+> +	u64	cross_mapped_mask;
+> +};
+> +
+>  #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
+> -extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
+> +extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
+> +							 struct x86_guest_pebs *guest_pebs);
+>  extern void x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
+>  #else
+> -struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
+> +struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
+> +						  struct x86_guest_pebs *guest_pebs);
+>  static inline void x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+>  {
+>  	memset(lbr, 0, sizeof(*lbr));
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 77012b2eca0e..e6ff02b97677 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -705,11 +705,22 @@ static void intel_pmu_cleanup(struct kvm_vcpu *vcpu)
+>  		intel_pmu_release_guest_lbr_event(vcpu);
+>  }
+>  
+> -void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
+> +u64 intel_pmu_get_cross_mapped_mask(struct kvm_pmu *pmu)
+>  {
+> -	struct kvm_pmc *pmc = NULL;
+> +	u64 host_cross_mapped_mask;
+> +	struct kvm_pmc *pmc;
+>  	int bit, hw_idx;
+>  
+> +	if (!(pmu->pebs_enable & pmu->global_ctrl))
+> +		return 0;
+> +
 > +	/*
-> +	 * The throttle can be triggered in the hrtimer handler.
-> +	 * The HRTIMER_NORESTART should be used to stop the timer,
-> +	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
+> +	 * If a guest counter is cross-mapped to a host counter with a different
+> +	 * index, flag it for perf, as PEBS needs to be disabled for that
+> +	 * counter to avoid enabling PEBS on the wrong perf event.
 > +	 */
-> +	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
->   		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->   		local64_set(&hwc->period_left, ktime_to_ns(remaining));
->   
-> @@ -11804,7 +11809,8 @@ static void cpu_clock_event_start(struct perf_event *event, int flags)
->   static void cpu_clock_event_stop(struct perf_event *event, int flags)
->   {
->   	perf_swevent_cancel_hrtimer(event);
-> -	cpu_clock_event_update(event);
-> +	if (flags & PERF_EF_UPDATE)
-> +		cpu_clock_event_update(event);
->   }
->   
->   static int cpu_clock_event_add(struct perf_event *event, int flags)
-> @@ -11882,7 +11888,8 @@ static void task_clock_event_start(struct perf_event *event, int flags)
->   static void task_clock_event_stop(struct perf_event *event, int flags)
->   {
->   	perf_swevent_cancel_hrtimer(event);
-> -	task_clock_event_update(event, event->ctx->time);
-> +	if (flags & PERF_EF_UPDATE)
-> +		task_clock_event_update(event, event->ctx->time);
->   }
->   
->   static int task_clock_event_add(struct perf_event *event, int flags)
+> +	host_cross_mapped_mask = 0;
+> +
+>  	kvm_for_each_pmc(pmu, pmc, bit, (unsigned long *)&pmu->global_ctrl) {
+>  		if (!pmc_speculative_in_use(pmc) ||
+>  		    !pmc_is_globally_enabled(pmc) || !pmc->perf_event)
+> @@ -721,8 +732,9 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
+>  		 */
+>  		hw_idx = pmc->perf_event->hw.idx;
+>  		if (hw_idx != pmc->idx && hw_idx > -1)
+> -			pmu->host_cross_mapped_mask |= BIT_ULL(hw_idx);
+> +			host_cross_mapped_mask |= BIT_ULL(hw_idx);
+>  	}
+> +	return host_cross_mapped_mask;
+>  }
+>  
+>  struct kvm_pmu_ops intel_pmu_ops __initdata = {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 5c5766467a61..2a496fd64edc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7247,12 +7247,15 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+>  	struct perf_guest_switch_msr *msrs;
+>  	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
+>  
+> -	pmu->host_cross_mapped_mask = 0;
+> -	if (pmu->pebs_enable & pmu->global_ctrl)
+> -		intel_pmu_cross_mapped_check(pmu);
+> +	struct x86_guest_pebs guest_pebs = {
+> +		.enable = pmu->pebs_enable,
+> +		.ds_area = pmu->ds_area,
+> +		.data_cfg = pmu->pebs_data_cfg,
+> +		.cross_mapped_mask = intel_pmu_get_cross_mapped_mask(pmu),
+> +	};
+>  
+>  	/* Note, nr_msrs may be garbage if perf_guest_get_msrs() returns NULL. */
+> -	msrs = perf_guest_get_msrs(&nr_msrs, (void *)pmu);
+> +	msrs = perf_guest_get_msrs(&nr_msrs, &guest_pebs);
+>  	if (!msrs)
+>  		return;
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 951e44dc9d0e..bfcce24919d5 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -677,7 +677,7 @@ static inline bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu)
+>  	return !!vcpu_to_lbr_records(vcpu)->nr;
+>  }
+>  
+> -void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu);
+> +u64 intel_pmu_get_cross_mapped_mask(struct kvm_pmu *pmu);
+>  int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu);
+>  void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu);
+>  
+>
+> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+
+LGTM.
+
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+
