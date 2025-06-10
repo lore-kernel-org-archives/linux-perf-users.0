@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF4519A2A3;
-	Tue, 10 Jun 2025 20:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D78282FA;
+	Tue, 10 Jun 2025 21:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749587273; cv=none; b=pZiAEy+TyGKnltuIfyIsuBeyJet5IrQjeW3jwynopE0hleP+7JBpA7u1AuKdFxhGPe63lkNAeBQViQ5BbADRCkpCr415g6OIUlKfcZ8tIO8mcARIXVCmcIid6gy+pFvwNo3AiLktY3BBIemYTG7HYmkAmStpoWGK9wX2MMi8zSY=
+	t=1749590938; cv=none; b=qfkC4D0kF3JmZm2J6w6WhdcIkJ3SrgF2vPkAbBPGbdesKU1MVmns3ChwkFN32USD92XaSNFDqZITixHp8ZAk+yhVAnI1CnTSUN+gzyoRjdVNsdu6ucAkOvf8rqd8Csao39bkJB3RZNXsDkOzqwtqM1Z5CcVvqcc+wYJH1c/h/WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749587273; c=relaxed/simple;
-	bh=OBATaljqe7OlYBaQ2tb4RndzBirGurBJZMppglRXGGs=;
+	s=arc-20240116; t=1749590938; c=relaxed/simple;
+	bh=4jlHEBvCUIKK0y1nievx0icWbWSW6pRbq6+2yts7pig=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3TqTfD8g015KYwe1Z9i6L1V6JsUU+ai8d9979WJP3LpNaUCNbmmfkz4kRSBOl6oP0VkV5fxC43OSmy5UJwaatkcD3NEm0Xxtb5YeNINeyUqt5qeuX3+dfumwFolm4SPs9c1NqVOTMu+HqbPjECm/5TjUgA6F3ZSpAljQuX6ISE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHpIE1Mk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Olijoxgslu5ERvYBlLIhzR+neNvTG+hgiTbFlITqZ0ouo/CUxWKHXX1jHLViQQhAlDcwvvvFG5kQfP1qbjQFsWqE1FxBjfcgIZH//1uq8aiEyvdSMmz8TXNemPDVOlX11sT5Lcy2kz60BiWazDnl7d9aMrK4RN9z9ZfUxcggRtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snJI6iMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHpIE1Mk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E42C4CEED;
-	Tue, 10 Jun 2025 20:27:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snJI6iMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B6BC4CEED;
+	Tue, 10 Jun 2025 21:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749587272;
-	bh=OBATaljqe7OlYBaQ2tb4RndzBirGurBJZMppglRXGGs=;
+	s=k20201202; t=1749590937;
+	bh=4jlHEBvCUIKK0y1nievx0icWbWSW6pRbq6+2yts7pig=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cHpIE1Mk2XFWtAhR2CZ3B92HfI5Xb1WfDD2LLtaNuGA2gDcEz+/49tknOmQ4ICiqA
-	 S3+R3umZXhrkfJD7x0ULtfERbdIZafUEniZlHr77xpBGEdOFKs+QVsylY9ClTXcNsW
-	 OBjaZX9NrWV70sZVLoqYMmjNaoqIVot+BbjlAyBuIuwqxo/iTS2QULxcBE+XJnclFe
-	 hiDY5Mxk3kwfNXdHv93LbyR77MH3Abd4vYwhnevfWttnh9ClTkb8biGHPoGHv+rlLf
-	 U9x0vQMKaTiPyaix3NG8+mFTdagugpJCKe8W2/VZkVFqx8z1DbOJD2SYPH/BqzDvJc
-	 3UJsr0zz7hUjQ==
-Date: Tue, 10 Jun 2025 17:27:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Leo Yan <leo.yan@arm.com>, Lorenz Bauer <lmb@isovalent.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: BTF loading failing on perf
-Message-ID: <aEiVRcpvllECCrwS@x1>
-References: <aEMLU2li1x2bAO4w@x1>
- <20250606161406.GH8020@e132581.arm.com>
- <CAEf4BzY2UEe9e53Ums=d-mMVgBdc5JnVAboKz1LLmvKRk5O=jA@mail.gmail.com>
- <aENKD6yUCN9UXves@x1>
+	b=snJI6iMJDN4bQD8zSpaA4srJ/clNCmrQazao9Bi2klr8JjgDkRZwN1ZOaodZETn5T
+	 Q+NrCCTeRp7i7uIUncLNHmAYwI7DjlqtD3/nfylShiplY1jbkx9dlCNeNtNSZpzbud
+	 1XOddvXvmc+ss2xROvLjvtIrDFQXsySbj9TOuQSFfVMr5BSzBbXM2o+/4SvqyIIpzU
+	 82HRKB/udazzucyDOqQRd2uhNupFnef8fh7MhXzjE9WgeBLvzb5xBe9lF6E4sC3SYv
+	 Mn3NX38bXQvoMo+uSpcJmqOfWGG2NS7bTrZZDkPZKybsd/z0kDuyMBsEEac5NNHd2z
+	 q/F0J+HOCQHow==
+Date: Tue, 10 Jun 2025 14:28:55 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Julian Vetter <julian@outer-limits.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools: Remove the check for packed_struct.h header
+Message-ID: <aEijl0Xdk9NRJhdN@google.com>
+References: <20250603133635.3685397-1-julian@outer-limits.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,80 +49,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aENKD6yUCN9UXves@x1>
+In-Reply-To: <20250603133635.3685397-1-julian@outer-limits.org>
 
-On Fri, Jun 06, 2025 at 05:05:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Jun 06, 2025 at 09:20:57AM -0700, Andrii Nakryiko wrote:
-> > On Fri, Jun 6, 2025 at 9:14 AM Leo Yan <leo.yan@arm.com> wrote:
-> > > On Fri, Jun 06, 2025 at 12:37:55PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > root@number:~# perf trace -e openat --max-events=1
-> > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
-> > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
-> > > >      0.000 ( 0.016 ms): ptyxis-agent/4375 openat(dfd: CWD, filename: "/proc/6593/cmdline", flags: RDONLY|CLOEXEC) = 13
-> > > > root@number:~#
-> > > >
-> > > > openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) = 258
-> > > > mmap(NULL, 6519699, PROT_READ, MAP_PRIVATE, 258, 0) = -1 ENODEV (No such device)
-> > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
-> > >
-> > > Have you included the commit below in the kernel side?
-> > 
-> > It doesn't matter, libbpf should silently fallback to non-mmap() way,
-> 
-> Right, it has to work with older kernels, etc.
-> 
-> > and it clearly doesn't.
-> 
-> > We need something like this:
-> > +++ b/tools/lib/bpf/btf.c
-> > @@ -1384,12 +1384,12 @@ static struct btf *btf_parse_raw_mmap(const
-> > char *path, struct btf *base_btf)
-> > 
-> >         fd = open(path, O_RDONLY);
-> >         if (fd < 0)
-> > -               return libbpf_err_ptr(-errno);
-> > +               return ERR_PTR(-errno);
-> > 
-> >         if (fstat(fd, &st) < 0) {
-> >                 err = -errno;
-> >                 close(fd);
-> > -               return libbpf_err_ptr(err);
-> > +               return ERR_PTR(err);
-> >         }
-> > 
-> >         data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-> > @@ -1397,7 +1397,7 @@ static struct btf *btf_parse_raw_mmap(const char
-> > *path, struct btf *base_btf)
-> >         close(fd);
-> > 
-> >         if (data == MAP_FAILED)
-> > -               return libbpf_err_ptr(err);
-> > +               return ERR_PTR(err);
-> > 
-> >         btf = btf_new(data, st.st_size, base_btf, true);
-> >         if (IS_ERR(btf))
-> > 
-> > libbpf_err_ptr() should be used for user-facing API functions, they
-> > return NULL on error and set errno, so checking for IS_ERR() is wrong
-> > here.
-> 
-> And the only user of the above function is:
-> 
->                 btf = btf_parse_raw_mmap(sysfs_btf_path, NULL);
->                 if (IS_ERR(btf))
->                         btf = btf__parse(sysfs_btf_path, NULL);
-> 
-> That expects ERR_PTR() to then use IS_ERR().
-> 
-> I think this could be automated with something like coccinnele(sp)?
- 
-> Anyway, I tested the patch above and it seems to fix the issue, so:
- 
-> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hello,
 
-Was this fixed/merged?
+On Tue, Jun 03, 2025 at 03:36:35PM +0200, Julian Vetter wrote:
+> The functions in the header 'unaligned/packed_struct.h' were deprecated,
+> and not used anymore, thus the header was removed. So, we can also
+> remove the check in 'check-headers.sh'.
 
-- Arnaldo
+Can you please provide the commit ID that removed the header?
+
+Thanks,
+Namhyung
+
+> 
+> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+> ---
+>  tools/perf/check-headers.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index e9fab20e9330..cee372312974 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -188,7 +188,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
+>  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+>  check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
+>  check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
+> -check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+> +check include/linux/unaligned.h '-I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+>  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
+>  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
+>  check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
+> -- 
+> 2.34.1
+> 
