@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1888A248F63;
-	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B432248F5D;
+	Tue, 10 Jun 2025 18:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580742; cv=none; b=lT39nW1i1f9AREesMKrXWLoPZs3lBd5PpBqFiIvOxS8JIMc09H7nleErTnHuphK55E9jVI5NLQVJFACCdl/893hZ4rOTn89skYu7qu5R45zyL4pp4zXn2RmibsXIhKa01G+txqFMB5ZRTa/0n+jVPBUWU6thJKIJ94IGHB9C/Xk=
+	t=1749580742; cv=none; b=Y52fJwXwZH26DtLsRDvjjnzRW0aw2Spa0UP8VeMadwDtiLHcWsxZsFHEYXX8ib2axjCvIKJ28meb2JYe3Gt/Ft6rfCVinXoBe3ir/RRE2uBNFOqONBsHcXZpzjLBq6VJpI2i6D+l4vqG8Cstu2Xbl71xq1pq9onIDMylqm97dUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749580742; c=relaxed/simple;
-	bh=wuxiZLoYC/AdfEaqPEMocOUJMEC63L49Uwa4SCkPFF8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=EsobyBtH5EiyIdip1tc3HEErqrUaEGSbnrq8igjx6/lqkYtewp9GngKfmZFgLDgTyHaUnNDpbD9oW/8gYNVKaZTKYnoTBBhrrmd+P6x4pw3s2EYrQSCect822e7jWgzDj4Jfys9jkkHiP5AeboXY9VVMQDA/MGNHBnUw0khLJyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0kW5d5L; arc=none smtp.client-ip=10.30.226.201
+	bh=OVsOzPzWsnVW8JbvOw87afxktbnPMRAztX8I84TWDiU=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ralnfhOVcv/bggtfxxPFo+9FJS6q76McOX+l6eiPIFuD0IHfTvH5A8PLX/plzx0SkqFNiFBaAmwSldYgOqBRCsBE6ImnYJ7SjqMAAA/XJ3pX6dqPhzIRKqechebPdoVQLJdKqtv7mBgYv+UnWZenEZfxbuMB7pXLHS+jBcpLZSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJZHANML; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0kW5d5L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD4BC4CEF4;
-	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJZHANML"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14860C4CEF3;
+	Tue, 10 Jun 2025 18:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749580741;
-	bh=wuxiZLoYC/AdfEaqPEMocOUJMEC63L49Uwa4SCkPFF8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=p0kW5d5LD9/rjbqqgAqruhCUisM4chEzud94zxOEtZ//hF6wRXvlCwC1iIPO4567A
-	 CnLg9yqr1APHLegOZZW52+YeYuVX/WJQ4Vm9C7Vo21oxdYJRLMgsGwECm+19agmVie
-	 0zg6USeND++yh9wq3QZdPjlMZrWgLoyyHpo4iyiuT2wd7NAtC+84DyR6Wbs7JQNa0v
-	 U8kprqrxEzxhYuJGKVAIamGRwi3dk6i/DtH8l8hk+4BUlk1cLRo2t8SX76+VoUEYvJ
-	 AB8cx6ABuu9qzQdeKnB+PrYYiUeONdmEn2vn0vLgI80dXr4nG0D5bGrW4oCc2aNJOX
-	 skrtGDntZg3Ng==
+	s=k20201202; t=1749580742;
+	bh=OVsOzPzWsnVW8JbvOw87afxktbnPMRAztX8I84TWDiU=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=NJZHANMLsVGaWKxkm2COuE/t8NbCmAqiX7Dn6aAI1uo3zce1EsWBb8Ca4iFDmD6NU
+	 SK22v04BiGzyTflCPdjKeSNXRYgt8mwuPer3euIHiBU1dwatBCTnsN1xLSvs5W34/J
+	 OVNIb1w6JCkTKR/qYlY8t2vre2BUzHfcm07qWzBErET8zTqblBAoUUVOh4o8aOZf7W
+	 Nj7wpaKUkbiLBs+n43j9+XIRYYBCvea34HZirC9MmugaepVapd0hMTSFTrnIGok/QQ
+	 jYVGOnDW3ENtekMZOXKi9CnV4BXTVVPkaC2fdO1Or4LkYUjnc6pNThiu+hFW97R50y
+	 F+Wtly4KMv8nw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Howard Chu <howardchu95@gmail.com>
-Cc: mingo@redhat.com, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
- adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250528191148.89118-1-howardchu95@gmail.com>
-References: <20250528191148.89118-1-howardchu95@gmail.com>
-Subject: Re: [PATCH v3 0/6] perf test trace: Reduce test failures and make
- error messages verbose
-Message-Id: <174958074126.4039944.17488945500661997155.b4-ty@kernel.org>
-Date: Tue, 10 Jun 2025 11:39:01 -0700
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Liang Kan <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yuzhuo Jing <yuzhuo@google.com>
+In-Reply-To: <20250604173632.2362759-1-yuzhuo@google.com>
+References: <20250604173632.2362759-1-yuzhuo@google.com>
+Subject: Re: [PATCH v1] perf: Fix libjvmti.c sign compare error
+Message-Id: <174958074204.4039944.12003562719667856301.b4-ty@kernel.org>
+Date: Tue, 10 Jun 2025 11:39:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,24 +50,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 28 May 2025 12:11:42 -0700, Howard Chu wrote:
-> Currently, BTF tests fail constantly, this series fixes two major reasons
-> why they fail, and makes the error messages acquired when using '-vv'
-> more verbose, so when they fail, one can easily diagnose the problem.
+On Wed, 04 Jun 2025 10:36:32 -0700, Yuzhuo Jing wrote:
+> Fix the compile errors when compiling with -Werror=sign-compare.
 > 
-> Before:
->     $ sudo /tmp/perf test enum -vv
->     107: perf trace enum augmentation tests:
->     107: perf trace enum augmentation tests                              : Running
->     --- start ---
->     test child forked, pid 783533
->     Checking if vmlinux exists
->     Tracing syscall landlock_add_rule
->     Tracing non-syscall tracepoint syscall
->     ---- end(-1) ----
->     107: perf trace enum augmentation tests                              : FAILED!
+> This is a follow-up patch to a previous patch series for a separate
+> issue.  Link: https://lore.kernel.org/lkml/aC9lXhPFcs5fkHWH@x1/
 > 
-> [...]
+> 
 Applied to perf-tools-next, thanks!
 
 Best regards,
