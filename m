@@ -1,48 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2292459E5;
-	Tue, 10 Jun 2025 20:21:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37CE264A77;
+	Tue, 10 Jun 2025 20:25:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749586864; cv=none; b=qnc/L8SssbPyFtuSUp/fNN47oNaBvsPoo0DBSz7iAkDlTLw4E8SQGt2hlvPUQSR1BAJRoF9XJzUbUmfPX1yc4835AWO2MpElYGtwjhOfY+/CxiLe/UNV/xJoXiRnMInQ4690dxZ3AXVNpeSBw2oE/AF5a8feBsXS6KuybK5D81A=
+	t=1749587117; cv=none; b=RlDUH/f+lXagbY2MJlH1gr2E30H73iMpx35x/yEkBRXlCdpbFFtYznOngCCJSv/BHmKdDqxDCY/CcQFZQqIYOxbcJC7iYKlanu0nrqx9YA5306adxfjBKVlptN2kQYeFZercPKhp8OWvhRDoFGKdD0EqTJVvMvYgGajuzGOUmnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749586864; c=relaxed/simple;
-	bh=LEifNSrBrcNzpAJHHLhm0Tgx0opLdvBmGm0BoqrjRzo=;
+	s=arc-20240116; t=1749587117; c=relaxed/simple;
+	bh=3JhNaFKU4fAX0PjKiEpwFEj36Ijx7tlYiQ1yVdzkVm8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RBzL+yTyTAPR4Q3gLIFjlv0qG8fLRW8uljCLka5RW27jfcKrFu4B4DscfKj/n50+N5g4YslkLCIxDbFALVgMjP9KKh7yS3TQJx3oC2MNoQbmuKwoA+3GBjLduO2VrXaksBp9UqpJGoRXJgpSXEY7fUw4oigRhY2fNzErWrPo5HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9VXL7hr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XcMF/jTSxASkzyoThod+8aZm+TNROe/uGc0JrxzyMA7+bRRbo7UiC/wdoc2Cz6pWoKcyGm+Z4jfbcIJPeK7aCK8QFJnA6QY5DUHJRRyHoCwbSJ9jPQqkMPsAZ6nMJ3oeL5c8i9aiPsScKjqSoJHB7SOgr+8eN8mzRK6bPLI00aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJY/C8uS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9VXL7hr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B910C4CEED;
-	Tue, 10 Jun 2025 20:21:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJY/C8uS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C278CC4CEED;
+	Tue, 10 Jun 2025 20:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749586863;
-	bh=LEifNSrBrcNzpAJHHLhm0Tgx0opLdvBmGm0BoqrjRzo=;
+	s=k20201202; t=1749587117;
+	bh=3JhNaFKU4fAX0PjKiEpwFEj36Ijx7tlYiQ1yVdzkVm8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C9VXL7hrkL7cfMDvL/Y+ijQs+Qkbh5yasySGr1CgWd4CvVVtzBHdPHTuH3yi/fZRl
-	 cvZcu+qYYLKcLcO0OIkDL9nYJXvOl166yLo1Li250aNgBpyVCDB9nAOCwtHN8Hsh9u
-	 fj2brdvkRBju3ut2sXB/+ApUMcMr5t/47xQVVNDFdmgACFK31HZbUcEYaj99Rnewu+
-	 z/kDslY3ngAcOjTxInyRICdndrbZNLlKcW6rVMSn9hLxPcn6yVbruV2eMLm4UXUPX4
-	 RHlE5kx4AKAr0RI19bP7sCK0WXVFxTzaFIErdWe06rEND9GZNSp119r72mp0rIEUzb
-	 fdDuk2HxJE8oA==
-Date: Tue, 10 Jun 2025 13:21:01 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Falcon, Thomas" <thomas.falcon@intel.com>,
-	Ian Rogers <irogers@google.com>
+	b=TJY/C8uSdS4V4MdS75lL+3C5T7IgZxJkb3K5DbycJvfvW4ouZj9AI2cw+oHsQbLII
+	 iM5sjGqOcdvQRo6yQpj6tktDq39eCS644OcAF0f9Uaz8xB20VFjd8x55Zc8QYFJ/21
+	 d43XqqoZv5PRA4YbhQL2e92KOlhukSW8EbJ97rc/GPDyxuNuahl4BF+N90ykvEAoE0
+	 lGCBvbpLzcrJzWgkTKNc6cVxrBKKPOkzJCdHh4iSZKnVQ3ZWy2Hszg8gzAn8CX/uAq
+	 erm5gSTz+5fL3kyxRArg+MDgERR+tJruG598QWTI0Hobq/ek5wZLqfU/3A66Znyaul
+	 Ky1t6iRqjUQow==
+Date: Tue, 10 Jun 2025 17:25:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
 Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
 	"peterz@infradead.org" <peterz@infradead.org>,
-	"acme@kernel.org" <acme@kernel.org>,
 	"mingo@redhat.com" <mingo@redhat.com>,
 	"mark.rutland@arm.com" <mark.rutland@arm.com>,
 	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	"irogers@google.com" <irogers@google.com>,
 	"jolsa@kernel.org" <jolsa@kernel.org>,
 	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 Subject: Re: [PATCH 2/2 v3] perf top: populate PMU capabilities data in
  perf_env
-Message-ID: <aEiTrRNyeqFsYwR6@google.com>
+Message-ID: <aEiUqtB9Zg9ZBQO6@x1>
 References: <20250513231813.13846-1-thomas.falcon@intel.com>
  <20250513231813.13846-2-thomas.falcon@intel.com>
  <a327dc2e5837a743a08403b5ad58dbe5e8c4f926.camel@intel.com>
@@ -52,24 +52,15 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <a327dc2e5837a743a08403b5ad58dbe5e8c4f926.camel@intel.com>
 
-Hello,
-
 On Mon, Jun 09, 2025 at 04:21:39PM +0000, Falcon, Thomas wrote:
 > Ping?
-
-Sorry for the delay, I'll process the series as it's reviewed by Ian.
-Ian, it may clash with your perf_env cleanup though.
-
-Also note that please don't mix patch versions.  The 1/2 is v1 and 2/2
-v3 - it makes b4 confused.
-
-Thanks,
-Namhyung
-
+> 
+> Thanks,
+> Tom
 > 
 > On Tue, 2025-05-13 at 18:18 -0500, Thomas Falcon wrote:
 > > Calling perf top with branch filters enabled on Intel CPU's
@@ -167,12 +158,18 @@ Namhyung
 > > +		return 0;
 > > +
 > > +	*caps = zalloc(sizeof(char *) * pmu->nr_caps);
+
+calloc?
+
 > > +	if (!*caps)
 > > +		return -ENOMEM;
 > > +
 > > +	tmp = *caps;
 > > +	list_for_each_entry(pcaps, &pmu->caps, list) {
 > > +
+
+Needless blank line
+
 > > +		if (asprintf(&ptr, "%s=%s", pcaps->name, pcaps->value) < 0) {
 > > +			ret = -ENOMEM;
 > > +			goto error;
@@ -188,14 +185,27 @@ Namhyung
 > > +
 > > +		if (!strcmp(pcaps->name, "branch_counter_width"))
 > > +			*br_cntr_width = atoi(pcaps->value);
+
+else if?
+
+I.e. why test it repeatedly when it can't be the three of them?
+
+What if it is not one of these three? Free and error out?
+
 > > +	}
 > > +	*nr_caps = pmu->nr_caps;
 > > +	return 0;
 > > +error:
 > > +	while (tmp-- != *caps)
 > > +		free(*tmp);
+
+zfree(tmp)
+
 > > +	free(*caps);
 > > +	*caps = NULL;
+
+zfree(caps)
+
 > > +	*nr_caps = 0;
 > > +	return ret;
 > > +}
@@ -203,11 +213,18 @@ Namhyung
 > > +int perf_env__read_core_pmu_caps(struct perf_env *env)
 > > +{
 > > +	struct perf_pmu *pmu = NULL;
+
+why init it to NULL if it will be initialized to something else later on
+before being used?
+
 > > +	struct pmu_caps *pmu_caps;
 > > +	int nr_pmu = 0, i = 0, j;
 > > +	int ret;
 > > +
 > > +	nr_pmu = perf_pmus__num_core_pmus();
+
+nr_pmu = 0 followed by this call?
+
 > > +
 > > +	if (!nr_pmu)
 > > +		return -ENODEV;
@@ -259,6 +276,9 @@ Namhyung
 > > +			free(pmu_caps[i].caps[j]);
 > > +		free(pmu_caps[i].caps);
 > > +		free(pmu_caps[i].pmu_name);
+
+zfree in all the frees above?
+
 > > +	}
 > > +	free(pmu_caps);
 > > +	return ret;
