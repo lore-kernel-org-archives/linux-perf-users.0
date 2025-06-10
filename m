@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1006A248F5D
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Jun 2025 18:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1888A248F63;
+	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580742; cv=none; b=neOubmJopRYJF9TtuIt/tHTkQhjm2u7vKrQTd9SUmjAWQRmC8xPmfBeH4radyF7Or8VjfxUZ6fHBWnzmDHHgj/Sil0NU/G7B/mtfjmPQTlBW75jOvggHfV3KXBGiB5WpFKCEB86CdVtZCUxYxgTWG5lvgmw0Or2zH6/5QLFnpsc=
+	t=1749580742; cv=none; b=lT39nW1i1f9AREesMKrXWLoPZs3lBd5PpBqFiIvOxS8JIMc09H7nleErTnHuphK55E9jVI5NLQVJFACCdl/893hZ4rOTn89skYu7qu5R45zyL4pp4zXn2RmibsXIhKa01G+txqFMB5ZRTa/0n+jVPBUWU6thJKIJ94IGHB9C/Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749580742; c=relaxed/simple;
-	bh=15pIpnNos5iGvM5I+iqupXCkoE9UJEv/zeYKHgc0GNs=;
+	bh=wuxiZLoYC/AdfEaqPEMocOUJMEC63L49Uwa4SCkPFF8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NFn9x33W7Mk17/bfv0UAJXEH/E2P5/jYwp58xZNpBGo7p/FGf0QkAqLVnAO2PUa5Sdsu4Li+oWWoT8D2M5j8Y/WVbdv2JeHV7JqeX13jw+8LX6Awl8Esm86OeZz5zHkFFGPq0oEbNscGCcKszHDSHiqVRhbDv4mFL0YDn3E+dso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0ob59Ny; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=EsobyBtH5EiyIdip1tc3HEErqrUaEGSbnrq8igjx6/lqkYtewp9GngKfmZFgLDgTyHaUnNDpbD9oW/8gYNVKaZTKYnoTBBhrrmd+P6x4pw3s2EYrQSCect822e7jWgzDj4Jfys9jkkHiP5AeboXY9VVMQDA/MGNHBnUw0khLJyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0kW5d5L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0ob59Ny"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C06C4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0kW5d5L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD4BC4CEF4;
 	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749580741;
-	bh=15pIpnNos5iGvM5I+iqupXCkoE9UJEv/zeYKHgc0GNs=;
+	bh=wuxiZLoYC/AdfEaqPEMocOUJMEC63L49Uwa4SCkPFF8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=I0ob59Nyq/3MxiBL2XSO4dkRSXKCwWB4JKdAiy/dbn7LtYFfgzr6wesxsqSTtiJqE
-	 6M5mxw3AL4hne2c70tjpuIN967FwYbCYDd47hYge4/n/75GB1v3DzDvsyt+YSQAzBv
-	 aAkt3a4uA8+xifjQ8UJS8QWoI+g4Q/QOQ+dC5v/D1Bd8I42byimA5I72q9uPL+Si05
-	 0RilI23l96AK9DEuIgJMhOgKJihu2RYVW8mrx1NTxBvJuXAqEyBBYjwFCJX+c4ZIIg
-	 xyvRxc0MSMdWV/lvpbREJ1xRoZtuO/FmIJD6+zsxLple4Pme8VkfPHdEqOqEYxjVmY
-	 acFI6gl2Nxj+w==
+	b=p0kW5d5LD9/rjbqqgAqruhCUisM4chEzud94zxOEtZ//hF6wRXvlCwC1iIPO4567A
+	 CnLg9yqr1APHLegOZZW52+YeYuVX/WJQ4Vm9C7Vo21oxdYJRLMgsGwECm+19agmVie
+	 0zg6USeND++yh9wq3QZdPjlMZrWgLoyyHpo4iyiuT2wd7NAtC+84DyR6Wbs7JQNa0v
+	 U8kprqrxEzxhYuJGKVAIamGRwi3dk6i/DtH8l8hk+4BUlk1cLRo2t8SX76+VoUEYvJ
+	 AB8cx6ABuu9qzQdeKnB+PrYYiUeONdmEn2vn0vLgI80dXr4nG0D5bGrW4oCc2aNJOX
+	 skrtGDntZg3Ng==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, 
- Aditya Bodkhe <adityab1@linux.ibm.com>
-Cc: Aditya Bodkhe <aditya.b1@linux.ibm.com>, 
- Disha Goel <disgoel@linux.ibm.com>, Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <20250429065132.36839-1-adityab1@linux.ibm.com>
-References: <20250429065132.36839-1-adityab1@linux.ibm.com>
-Subject: Re: [PATCH v3] perf script: perf script tests fails with segfault
-Message-Id: <174958074175.4039944.2017691718666760818.b4-ty@kernel.org>
+To: acme@kernel.org, Howard Chu <howardchu95@gmail.com>
+Cc: mingo@redhat.com, mark.rutland@arm.com, 
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+ adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250528191148.89118-1-howardchu95@gmail.com>
+References: <20250528191148.89118-1-howardchu95@gmail.com>
+Subject: Re: [PATCH v3 0/6] perf test trace: Reduce test failures and make
+ error messages verbose
+Message-Id: <174958074126.4039944.17488945500661997155.b4-ty@kernel.org>
 Date: Tue, 10 Jun 2025 11:39:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -46,19 +48,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 29 Apr 2025 12:21:32 +0530, Aditya Bodkhe wrote:
-> perf script: pert script tests fails with segmentation fault as below:
+On Wed, 28 May 2025 12:11:42 -0700, Howard Chu wrote:
+> Currently, BTF tests fail constantly, this series fixes two major reasons
+> why they fail, and makes the error messages acquired when using '-vv'
+> more verbose, so when they fail, one can easily diagnose the problem.
 > 
->  92: perf script tests:
->  --- start ---
-> test child forked, pid 103769
-> DB test
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.012 MB /tmp/perf-test-script.7rbftEpOzX/perf.data (9 samples) ]
-> /usr/libexec/perf-core/tests/shell/script.sh: line 35: 103780 Segmentation fault      (core dumped) perf script -i "${perfdatafile}" -s "${db_test}"
->  --- Cleaning up ---
->  ---- end(-1) ----
-> 	92: perf script tests                                               : FAILED!
+> Before:
+>     $ sudo /tmp/perf test enum -vv
+>     107: perf trace enum augmentation tests:
+>     107: perf trace enum augmentation tests                              : Running
+>     --- start ---
+>     test child forked, pid 783533
+>     Checking if vmlinux exists
+>     Tracing syscall landlock_add_rule
+>     Tracing non-syscall tracepoint syscall
+>     ---- end(-1) ----
+>     107: perf trace enum augmentation tests                              : FAILED!
 > 
 > [...]
 Applied to perf-tools-next, thanks!
