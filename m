@@ -1,94 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F6F25B682
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14DF25C83E;
+	Wed, 11 Jun 2025 09:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632631; cv=none; b=VLp3erlVF62CcOlZ8xrYxjfBYl14wVwKpiJAFBV6xfXqgK7d49aSHFJXZvKKp4WoF6U/kLJv7dSN5pzvDLNsY/fhdJQK1s1FSZ/yO7S1ziog4rN+3MKrBjuWY7Qs0ZySooFJNz4/oSwwbaSa1CehZt05nPZhnx18+SMoyQJ3vXM=
+	t=1749633947; cv=none; b=KdHJda4tUDnnJRVHuUHJkKJ+e26uf9i/rfA+3vk0iWRDFeBIBV7A9eDRnuxfpFwUlx47FyvlUd5qKet2bf2LHQiV05uXvuE2rx4FFbvN/BLPjEdh8mhLVCPIBeRxxAsw3W89t5AvJV8Aml/JQTvin5Zf98jTUFl+sXshn6l6Zm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632631; c=relaxed/simple;
-	bh=gcNHWEPxMAhCNg3T9OJ5l7Jvp/kYYtNEvD+YnKVYfhc=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXg5YbxBR1XC8/u4t4fZ6Eq473rgWvNBWoT9/F3Xor7VTMSVzoHo+lIV/itkPv2vvqqHWUWsIvHCpb94YB/EzgwJ4g0nsOscJklsNr6hP4I/zxKvbGVODHp6CM4/e4jvgL9EmadQeZPYv/ao2zfxvALWuVzCVjYJuRGrQzRPmnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 789E41688;
-	Wed, 11 Jun 2025 02:03:22 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A70C93F59E;
-	Wed, 11 Jun 2025 02:03:41 -0700 (PDT)
-Date: Wed, 11 Jun 2025 10:03:37 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf: arm_spe: Relax period restriction
-Message-ID: <20250611090337.GS8020@e132581.arm.com>
-References: <20250528132501.129586-1-leo.yan@arm.com>
+	s=arc-20240116; t=1749633947; c=relaxed/simple;
+	bh=C2eY2wgLZDRyRHC2BZzzTnEymlDbxP4PU6gFORhZ98Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tFm88pdVLAyHxtZmiq+Kuwgf8DaCGgHXsr/iAMMfBQs1wVlAJAu+wwRS//DphOukvyl55kweU6UR7a+heDC2tMbtN1mij30NXRjpaa2JhBSebN4SieXukuEC3/JTRDBmgQfhKgJJUuNUIN+4kriH7uzCD6ssBr7P+hpuy6dU5DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VuEuQbAk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=slDVcyq5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VuEuQbAk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="slDVcyq5"
+Date: Wed, 11 Jun 2025 11:25:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749633944;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/OrJEKAMLQzuR12xpBYqySl3lqI/7yOMuJ3BDm7j4Fw=;
+	b=VuEuQbAkM2Pev2WXVKRGZ8nL0SMZncS1T3tSJFSAXUdTPfmyBseHyRdv8T5BnmgcEukgwz
+	n6V1icHd+yh+Oi5Z5/R9AZz5skpDAyr+VknQ23JPFRz0caPgv0+kknvR2f9rN2XB77swwf
+	rl3ceu57HfNHkF409Rm0GqSP/zAsUQ1fP9NKKVmkHOuACKrO94nqpKgrFTBE6xW2FLlKvv
+	HYtII/2O83EnTfHpRFEwE+jaUAUz/PP/FJ5uRtUhpB6UpzRGxzR1oAUfg8aDrKeao8P4bV
+	+J86rcU+6bcVQsCLsdQ1GHXS5EdPxutjld4TJzDsoPwkTaCJAufz3kzc+Xz3+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749633944;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/OrJEKAMLQzuR12xpBYqySl3lqI/7yOMuJ3BDm7j4Fw=;
+	b=slDVcyq53Fh4hrqej/McVRQG0UUzVu9mc7d0c0UQxow2Hj7FwNdpZJWdS3BG0EA8oyV1ky
+	L5DQwbmH3fRDgRCg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	acme@kernel.org
+Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
+Message-ID: <20250611092542.F4ooE2FL@linutronix.de>
+References: <aEh6xO14wDSCFUDr@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250528132501.129586-1-leo.yan@arm.com>
+In-Reply-To: <aEh6xO14wDSCFUDr@google.com>
 
-On Wed, May 28, 2025 at 02:25:01PM +0100, Leo Yan wrote:
-> The minimum interval specified the PMSIDR_EL1.Interval field is a
-> hardware recommendation. However, this value is set by hardware designer
-> before the production. It may not accurately reflects actual hardware
-> limitations, and tools currently have no way to test shorter periods.
-> 
-> This change relaxes the limitation by allowing any non-zero periods.
-> This gives chance for experimenting smaller periods.
-> 
-> The downside is that small periods may increase the risk of AUX ring
-> buffer overruns. When an overrun occurs, the perf core layer will
-> trigger an irq work to disable the event and wake up the tool in user
-> space to read the trace data. After the tool finishes reading, it will
-> re-enable the AUX event.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+On 2025-06-10 11:34:44 [-0700], Namhyung Kim wrote:
+> Hello,
+Hi,
 
-Gentle ping. thanks!
+> I've updated the perf-tools-next to v6.16-rc1 and found a build error
+> like below on alpine linux 3.18.
+> 
+>   In file included from bench/futex.c:6:
+>   /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
+>      88 | struct prctl_mm_map {
+>         |        ^~~~~~~~~~~~
+>   In file included from bench/futex.c:5:
+>   /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
+>     134 | struct prctl_mm_map {
+>         |        ^~~~~~~~~~~~
+>   make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
+> 
+> git bisect says it's the first commit introduced the failure.
 
-> ---
-> 
-> Changes from v1:
-> - Shifted bits with FIELD_PREP().
-> - Removed warning log which is not quite useful. (James Clark)
-> 
->  drivers/perf/arm_spe_pmu.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 3efed8839a4e..e40e5daa838d 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -308,12 +308,16 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
->  
->  static void arm_spe_event_sanitise_period(struct perf_event *event)
->  {
-> -	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
->  	u64 period = event->hw.sample_period;
->  	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
->  
-> -	if (period < spe_pmu->min_period)
-> -		period = spe_pmu->min_period;
-> +	/*
-> +	 * As per the Arm ARM (DDI 0487 L.a), section D24.7.12 PMSIRR_EL1,
-> +	 * Sampling Interval Reload Register, the INTERVAL field (bits [31:8])
-> +	 * states: "Software must set this to a nonzero value."
-> +	 */
-> +	if (period < FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1))
-> +		period = FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1);
->  	else if (period > max_period)
->  		period = max_period;
->  	else
-> -- 
-> 2.34.1
-> 
+Hmm. So your /usr/include/sys/prctl.h and
+/linux/tools/include/uapi/linux/prctl.h both provide struct
+prctl_mm_map but their include guard must be different.
+
+My /usr/include/sys/prctl.h is provided by glibc and contains the
+prctl() declaration. It includes also linux/prctl.h.
+The tools/include/uapi/linux/prctl.h is the same as
+/usr/include/linux/prctl.h.
+
+The /usr/include/sys/prctl.h on alpine linux is different. This is
+probably coming from musl. It contains the PR_* definition and the
+prctl() declaration. So it clashes here because now the one struct is
+available twice.
+
+The man page for prctl(2) says:
+|       #include <linux/prctl.h>  /* Definition of PR_* constants */
+|       #include <sys/prctl.h>
+
+so musl doesn't follow this.
+
+To align with the other builds, I guess the following help:
+
+diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
+index 26382e4d8d4ce..540261f299b1d 100644
+--- a/tools/perf/bench/futex.c
++++ b/tools/perf/bench/futex.c
+@@ -2,7 +2,6 @@
+ #include <err.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <linux/prctl.h>
+ #include <sys/prctl.h>
+ 
+ #include "futex.h"
+
+Sebastian
