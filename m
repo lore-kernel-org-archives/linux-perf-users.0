@@ -1,1395 +1,371 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03FD29B772;
-	Wed, 11 Jun 2025 18:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664891; cv=none; b=EFzA44wFHEA6H3i0ed2L+YUsUHRvF6h+fHjQdEVZr4m4rrSGEoS3sUr/P350RfG+4hyf4Jvms6HbmcMjbCmZA28tE+SIHhs4693sHdzEiF/E5+lnI4kvOng/9BFLAlmaap92DJRF5N1mO3wn8ont+RJD0vy1Y4+TSg3jwwJI0NQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664891; c=relaxed/simple;
-	bh=YcQlqVSSGhq68+89aAXidcdxUGzdPJFo9Kra5fqeNN0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pXhm3PggdwC274ttxX0SIzplquEO7AW2WpZupkyiMINuoPmj5q+h6gP21xCAghTa/Y3UJWs2LG5F5aB9L4/3SLTwmIa+Y/6ae5U3OAMbPBSR1kMZg25IsbbdG456gefFH+WX/9whsguUvALagm/MGTfERwGpIZoz2GGmO2GW9MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bl1aey++; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DB113A3F2;
+	Wed, 11 Jun 2025 18:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749665905; cv=fail; b=JFFVPwy8zekIJcxJyY1PeZUpToiyZp/uw7MdQrhQFrK3EKe27OYy7IscefmV9+8Abqsl6A2RzS3oXv+0iPYaKzMl9T4o/2atXhGZkDNs7/ZqTMMAk7Ys7LRV8kY+Mz6hAZK8WJrjNcbjBEO+V1OjkBmEB2qXBEBeZo0QwQEj1/4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749665905; c=relaxed/simple;
+	bh=BlB322RgvlMjfH7nDueXPnd5S7k8hzreNzsU/4BIqM4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MqgIW7LyBy7ocJpWcUe3WgjgeBtf/I69N1mhW464oMZqdvnkzUUonMtX3ZqrK0y0dDPd45unGK/jBwa+tTxyn0vFgz2K0O5tZ69TcwAWdHZhTXSwCqiCVaQJqaCahV7b37b/CmqIWe0ZsB6w/PWwSVPJakk54HcLY2hR4QRNxJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTW76xI1; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bl1aey++"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F0B9C4CEE3;
-	Wed, 11 Jun 2025 18:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749664891;
-	bh=YcQlqVSSGhq68+89aAXidcdxUGzdPJFo9Kra5fqeNN0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bl1aey+++OBGdG2aWz9JakG4YXk6oStl3PhnidRwxIp1apZ27xcLJsQ8kkWSIcsol
-	 F7kaTPXPkxvo9R3zlQEbtvcXmO5+69X8HGbkQR2cwPOEWT8zr+VUmaZlO/6aL2wgnh
-	 h7F/ypZ/u5a92sgqwnFoj7cPJ/s99uEY/1G8GMWA2lLKQ80vGLlsLYtPkF7+y7vnI1
-	 YjWEHynh6QeILohy3ErOEZGSjg+r0FJkvFZnyL3zzmEsWS9MNulUOEcy7ojY8ulPbB
-	 GBmC26H/HpYeYmHs753D4BFNnnyrVHjJkBpIxY/32gWS4hIXgqFDQvDizPzZg9uk3O
-	 oBzTWfwtXDdjQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Wed, 11 Jun 2025 13:01:14 -0500
-Subject: [PATCH v23 4/4] perf: arm_pmuv3: Add support for the Branch Record
- Buffer Extension (BRBE)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTW76xI1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749665904; x=1781201904;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=BlB322RgvlMjfH7nDueXPnd5S7k8hzreNzsU/4BIqM4=;
+  b=OTW76xI1HCbGnqYA8IkukXDn9GiOxsXIxhK6MQ7n1t6L0NhJmIKkPJMz
+   ocYerbj+mD5D5D92BP8hQ27Y+LB9SxDOhB/JCwELXs4mhENVRQKt8RECs
+   g83vIkHV6CtxVpVyTN9wd+INXRBcOEnaZs6u9wgyByO/uoVNSVtIUfNrA
+   KRa1eTF5RWpnFPjWQrWgsr+2CXDcaD4LmeddKcLE7shRSaZ39ZPvCyoaM
+   UfVt1ASCJ4PjkbOJrbKo3WqfRehCQZeryAzOQ/1KzAwMsirFLjumJ4EUg
+   nxzwostwgzxtucl0nIojXyclDDiAY3yrXp4duZlgdBjmQUZkLz6jQ8TqR
+   Q==;
+X-CSE-ConnectionGUID: 4EHGFDzNQYSFHzb2g83dEw==
+X-CSE-MsgGUID: CPR0bBPsR+2VdmGeYy54Aw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51737079"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="51737079"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:18:23 -0700
+X-CSE-ConnectionGUID: WlHbpCyQTUiQ7cJ0R6GD8w==
+X-CSE-MsgGUID: +VGPoVjVQs+hSUlg7ERgug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="152541024"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:18:22 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 11:18:22 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 11:18:22 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.75)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 11:18:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l7MEIskREqI8rJ6AFLf4NLuTcH4U8J5VF8V+n8D9P0Nxi+2zRfk8mud1DO5mKoExNhLjSMIKg6TAHHa1QRRgBWbaVWWCPUZiyJPyWf0mwMnSabD4Dvwxj9GOryfGZQu4fnT+gN6cRuXUwh5CIMX5QkkzzVwR8z4f1aWS4MaSPn4OuW8rwyECuQKxrtfygMxh0BMQbuDH9OSKI8ji6ph/5qW2tUA8Ur77MPHPsSG6JhfNMV1Vk+XeZxxFL5rEtopbMitwi+g9wwAcRc+wu59r6dz1xBBt5af46lpmPIr1ijII0LvW6jiCptS0Kxv4hZ/4gIR2bP9or0tj1XUny1Az8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BlB322RgvlMjfH7nDueXPnd5S7k8hzreNzsU/4BIqM4=;
+ b=YKutfYwW7/ZrMkbIxx05fv0cCysGrRpmcTNWgnjqKsE9mVidbCqIcPIVCFw2qS8fUXbs1uK10nc44QRew1y1z8y3bDXPHO0V5fIjtq27itchkTXMrJbJHp5iU5fGaTqWsdakoAZdb7GUTW2FkPv+KITvRoCYaQCjpXZmWNEyYBOkgPjUiChgducTvhrd3Qv85RzyC74Uj8QD/uEDOrcxLma+yq0JAQxFWJlCypSZq0gcTsCMbcUKg0hDgfWhizYKQKBnumqVeZ1/hvRrou0Uzg5AlhScac4Cxt0mxROEUGscuV2De7B9rgq/puOvscNpqTF2rjqlHyxSr6JnKmWKlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
+ by LV3PR11MB8604.namprd11.prod.outlook.com (2603:10b6:408:1ae::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.33; Wed, 11 Jun
+ 2025 18:18:20 +0000
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b]) by CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b%3]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
+ 18:18:19 +0000
+From: "Falcon, Thomas" <thomas.falcon@intel.com>
+To: "namhyung@kernel.org" <namhyung@kernel.org>, "irogers@google.com"
+	<irogers@google.com>
+CC: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org"
+	<acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "Hunter, Adrian"
+	<adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2 v3] perf top: populate PMU capabilities data in
+ perf_env
+Thread-Topic: [PATCH 2/2 v3] perf top: populate PMU capabilities data in
+ perf_env
+Thread-Index: AQHbxF1Wi390zgPnOkKJ8kPrSTjDorP7LGwAgAHVNoCAAXAMAA==
+Date: Wed, 11 Jun 2025 18:18:19 +0000
+Message-ID: <94612a9d92f4d3820e8c293b0e184ab11971bf36.camel@intel.com>
+References: <20250513231813.13846-1-thomas.falcon@intel.com>
+	 <20250513231813.13846-2-thomas.falcon@intel.com>
+	 <a327dc2e5837a743a08403b5ad58dbe5e8c4f926.camel@intel.com>
+	 <aEiTrRNyeqFsYwR6@google.com>
+In-Reply-To: <aEiTrRNyeqFsYwR6@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|LV3PR11MB8604:EE_
+x-ms-office365-filtering-correlation-id: d9b13fe6-be96-405a-e557-08dda9145815
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?MXhUK0ovRnd6bEo2NTdyUFg1b0M0aFFFbHBYUUF6b2VGSXJzVy94eFBkZDMv?=
+ =?utf-8?B?UE5DR2RmUFVhVDJUd1M4cFRxTjZuaUtTNW9zUmhQRnBzdGFUQUdKTHMwY3VX?=
+ =?utf-8?B?Z0NybldiM2NZeWxJNjZLMy9nczN1TW5aaG9Ydnd2ZTk3Q3ZhUjQrWGtGQkRn?=
+ =?utf-8?B?ejM2cDVndDdpQjRpbENydUd0Ymt3SlA0ekZ1SzBSNlc5T0pRajhYNWdkcTgx?=
+ =?utf-8?B?T1JONHlBQmtSRXBWUE1WRGFEYStBMkxwMHBDWE9mNzVYSTBDWGpzSmZFTnVI?=
+ =?utf-8?B?ODhuWU9Fbmg2c096UjQxa0hmdzhFYjRDNVE1dWtNL1cwNXJkV1hwNzQvc2dh?=
+ =?utf-8?B?T2VZc3lsV05KeE9kOU50bHVMQUlTM09iT3c4VzBSa2puRktIM1hkamdkZHNy?=
+ =?utf-8?B?ZmhiaEZJazJrSGptTDd5R2pSb0RweEloOVZNV29lSEdzMDJhUU1lMUJpTzR2?=
+ =?utf-8?B?MlhpWWRsdTRTcG9mdmpLM0JIMzMra3U1OTVPZUVVcE9oTFl0VW5UdW5GRzB6?=
+ =?utf-8?B?Zlh1eDV2Z2t6UDRmWGxnWXU1WHpaMjVDbllQOENJNVN6WDRSeU8rY3ZlcXp2?=
+ =?utf-8?B?dkRoZGd4bmdtazdPNzJoZi9ueHhXTVZkUDJFSWEybStkUU5XU2ZnTTcyQ3g1?=
+ =?utf-8?B?cHc0WUhncGpRTGJPNWNrUFV0TmxIMnRrSzg4WG1TUGhRNlc1MHZaWGw0S0ZO?=
+ =?utf-8?B?dVcySXordFFvVHY2OGVQakxlMVdrNmVLRnluRUpRdHJtdjdlNkRGMElkd3FT?=
+ =?utf-8?B?Mm5ZUFl5bEFPYmt5cGorOGFtbjE3TExxSzhycTA2SVNxNEtYQkNENCtwcnhX?=
+ =?utf-8?B?KzBhSGFhQ1I2NjRBaEQ4SDdTc1JidThySlBXNExpUnlMdzFML2kxUVcwcVIw?=
+ =?utf-8?B?dDJ1MkdwZGpPRTRMRUgwRTFlQjBlbHRucjl5SnZHYVBWa205azdDRENGL1VH?=
+ =?utf-8?B?aHpmMmI4Z0h0OWlEQVA0cWd2TkFuaVVhQmNtYVNrQi9hYm85ZXRyL3RJZW1V?=
+ =?utf-8?B?cWdDcGpqSGFySVc3cUZkNmZDL0N2RnI0cGhRUmIwT1dJeHlISGJKQ3k0cWI5?=
+ =?utf-8?B?LzRaZkZISFc1L0t6V2dHWVZIYWdUeklnSlV0djlCeVRkSE9yTEF4TW5UbzFq?=
+ =?utf-8?B?N0pKUDFIQmxXS3BsRGorR2RkVnU0b1kzeTc2VW5PVi9BQVVmMSt5VFN2WFgy?=
+ =?utf-8?B?WWlNMnFITGhDVTFtb0RTeldzM0VXZlN4REFRR2JncUtTTnJEbnpXa1BZeFZI?=
+ =?utf-8?B?aFB4UksvNmE2YUhDMWpCS2NLQTFtNjhtMjhjdGZNN1JjOEEvVlF4ZW80SUNl?=
+ =?utf-8?B?bmxOeFpwY0VjTTNkdzYzQ3hTVTFGMjNXNDVDbys3M3dPbkdNa3dWdVMwN2Fy?=
+ =?utf-8?B?NHJPRlF3U0JBdWRwL0MxMDVpSVVIejA1Syt2UENwV0FCUmQwTDZ2SG1TbVFX?=
+ =?utf-8?B?NkhCajl3Y1I5ZWpKeTF5WHE5ZkwzUnR0TTZ5MWVBQXY1cGE0ZU5USjhOUlF3?=
+ =?utf-8?B?ZHZNdjRxRlFUT2dtSkoxNHFxTE84bSs0N3E5QWU4TXIxU3FwTDhySXo2TGdy?=
+ =?utf-8?B?dFNqNjBQKzBjeFVhMmt1YWZ1dmJ2alRvdXNVZE1VVW1wUzNKUzE5bHJZQURF?=
+ =?utf-8?B?U3NDUGtFSGtxM0hFUE5ab3hadm04TWtYUU5CbVh6dG5zMmRpMGJSY1hNUUZG?=
+ =?utf-8?B?OFk1QkIvRUVveVNRdkpwcFRCUG0rcHNvcGZNN09XN2JvenB6OEFreWNIOGds?=
+ =?utf-8?B?ckZxUm9RN2J5Y25abmJkV2xiMnVFVVUzTVh6NnRkc2VOY1NvSU5YdDJKVjM0?=
+ =?utf-8?B?eWYwTkFLTG1VYlJSd0lJaG9ZYWJNZ1hiZFlDNjd4K2tEMFY1Z0ozMWUrdm5J?=
+ =?utf-8?B?ajZscHQ4YkUxVmxoRHlSaUcwYjNHNURCLzVlQVlpOUhOUG85VVFCWEUvQ2wr?=
+ =?utf-8?B?b1M3c3RIY1hFNXJ3elpzKzd0YUVRUkRqckc0L3N4NzVmWElmUmExUHU3Y045?=
+ =?utf-8?Q?S6t6IHwcv0wbRiwUPa36Q0lxPyZwy0=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UVpSM05RNXVBOUFiM1JqMFMyZHhySTdyTkgyWDd4c1g5QytxeU4xaHd1bXZB?=
+ =?utf-8?B?UVJRK2ZwdkxBN05HbksvdUJ1cnQxUzN1cU1ZQzZCNDQrcXZRVkV0bm55cVJo?=
+ =?utf-8?B?UE8wWHpjN25uM0JiSndjQmpBYUVlbHRQeUhnT3J4TXB5YWZZb3Rva2QyanJD?=
+ =?utf-8?B?MWZpTTRhZWVYeTlmQzFFejRyRnpSY2ZPcTdIMUNTTUFQLzMwZWdjUCtobUUw?=
+ =?utf-8?B?T2tQQmcvWDVWbk5yTWFYTkNxaXpyUkUrV1Brb2ltanlwOEFVaGczUWtQSU02?=
+ =?utf-8?B?YS9QeVU0UmhJeW5zbzNJM2IvNjk1ZHdKMkNHaXFBbGJHWENGWmxQRkNxUjFE?=
+ =?utf-8?B?UmYxak5GbHpRMGVkQWZ6NkxOYytyZDEzZ0tWeGhyZ2J4YUV0Rk9GYkRIb01D?=
+ =?utf-8?B?NXNhTEVsRTJjVlBOdlNVRHlWaGh6WlBqUVdxdFV2N3JWM0tIOTdxV2hRV2kr?=
+ =?utf-8?B?djR2RnVrN09XTnVxczd6bzFERldMUm8wa0JROXljeXBLenJYVnBVdzdKWC8v?=
+ =?utf-8?B?VERRWkNSTlhqaGNWWVdqdjFYb0NBb2ZvZE5XZ2hDQ1Y0b0RVcXlNZ0VxTWYw?=
+ =?utf-8?B?V1NERkdUNmpvZUVnWlRrWVRRT2ZNOXV0Q2dyREEwTWJoblVqUjNkTHRXSHpt?=
+ =?utf-8?B?VDZ2cHVOcU1NRkZiNnJKWEZiTEhuMU5CS2dnQ0xSSDFaVjNaSHNtZkVJUEhS?=
+ =?utf-8?B?dGpoMHRnNWdqKzFzOXVDLzNwdWNzeXdPTzg1YlN0ejF0NWhRKzVwR0xiU2dX?=
+ =?utf-8?B?d2JweC9MbXZWWnpiS2hQWDVIeCtlc2Vibm8vV0U1K0pJM29MenF5OERBQzF0?=
+ =?utf-8?B?RHBjUC94bnBCN00rdjl1aUhvZy9BaFZkYTlSbXc3eUtodmo5TE1hZFRSNTdy?=
+ =?utf-8?B?MGUzTEtCNnMwblRTclhVV1lUVUxuNUZoTzNkckgzeFNTQTJ1ck9yTk8rVjdO?=
+ =?utf-8?B?VFlCa1BWSzdLa2NIamJpMmtGY3UxUjNiMDF5SnNFWVFCVTZ1Q0prZUc5OWFM?=
+ =?utf-8?B?NEFXaGk5Y25mMndMZ0VSUVgxWUhBQy9ZTVJYNStZV2ZPdjdWb1JrTFpNSVVK?=
+ =?utf-8?B?QUFQdk8xOEdiN1g4ZURPWWcxMCtjcUltRFhxK2ZLSDZGVkpyNzNvbU1udnhT?=
+ =?utf-8?B?cDNnYkhmdU9RNDlFN0dVeEhydlR4emVWTXQzcnhCVmxrNEl3Qk5ZZjVFREt1?=
+ =?utf-8?B?d3B5RU9IeG85bWRTcE9OZ2R3Y3ViYklHSlBGOTd6M2QzMTdZRUIxd1BFZGk2?=
+ =?utf-8?B?VnFYeUNwYUo3dHZpLzJxTjlpNk1KblhMVmVaaUdsV2tlRXk5ZDZONkE3OFpl?=
+ =?utf-8?B?YWt6K0tjczBNeldiUXJjQktaS08zamsvNWUyYkdVS0RHc2pDNEJMeEtvSmxD?=
+ =?utf-8?B?Qi80TEVFM29HamxqZmphT2dkSzVkQTc0STUxd0doOGRKcE40bS9rWkxsOFQ4?=
+ =?utf-8?B?d25pVW1jdzd0WU00R0FxdS9TWk5MTHE1OEtMOThhOStpemtiQVRobkNEdVlU?=
+ =?utf-8?B?VHVBVnQ3L3AxMHdZZ0sxUkNUMEt3MUFnTGpvUGZkRzBscHlUMGNYRmdWck1Q?=
+ =?utf-8?B?dE9RRjdXTERVTU5qUjZoL1BubStDeUhJQnlKSmEzbFFjTlo2Z0UzTXo4eWJm?=
+ =?utf-8?B?Q1BCZVJMVGd4b3RPdWJpMEFRK2JMaENuL1Fza09Qb282cFNIMVRNOFkyN1Q0?=
+ =?utf-8?B?SE1sMlpZdkNSSGNFZCtvTTBBWTRXWDFPR1NwdDIvWXA3QVU3UGhBdlB0Zkc2?=
+ =?utf-8?B?L3pTTmdQMmcvdGM4SGZtbW5CM0hSemREYjB6MlRpbyttQmVaWkt3Z3l3VTdt?=
+ =?utf-8?B?dTN4dngzNmhUcUFiemRHYlJHZWwxYTRvaTNLcVQvZDVJTWZkTW9uTDBMV3hx?=
+ =?utf-8?B?WUR3Y256emxCNGNEdjBKdjRZbHhMd3U4cTZwVmF1cnVCUCtKck5WNXlPWUZo?=
+ =?utf-8?B?Qkw1c08zbjErSUI5cElieXV1U2FqMUR0YnNwcitmMWZWdE52Q1NuL1JGRWFO?=
+ =?utf-8?B?ZEszaWVUSjRFZUxqQzBvZ2ZnZWd0Zkc5K0pLNzg1ZUgzcEkzdWFCQ3cyckhn?=
+ =?utf-8?B?eHBaRmx5cVRsR002SGpKZ1hSaEhtRFRJRzVJc2hqU1QzWG1iMWZtMGNGMUtr?=
+ =?utf-8?B?Q1N5OFM1SXFncFdyMWMySWdvNDVMZXRHUEEwVjlBVmFyeWJKMzQ5UmlCaUc4?=
+ =?utf-8?B?akE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2391FCC8C6779148BB533B825FE2ED9D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-arm-brbe-v19-v23-4-e7775563036e@kernel.org>
-References: <20250611-arm-brbe-v19-v23-0-e7775563036e@kernel.org>
-In-Reply-To: <20250611-arm-brbe-v19-v23-0-e7775563036e@kernel.org>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>, 
- Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- kvmarm@lists.linux.dev
-X-Mailer: b4 0.15-dev
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9b13fe6-be96-405a-e557-08dda9145815
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 18:18:19.8563
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SaAwB5TBqKzry6C5O2ThUb2bOWFMfQG/cNFGleTLq4THVNsfe5wFuNxcCKMNREy6sIJqyoV9nW/jhPoVkUj6qQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8604
+X-OriginatorOrg: intel.com
 
-The ARMv9.2 architecture introduces the optional Branch Record Buffer
-Extension (BRBE), which records information about branches as they are
-executed into set of branch record registers. BRBE is similar to x86's
-Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
-(BHRB).
-
-BRBE supports filtering by exception level and can filter just the
-source or target address if excluded to avoid leaking privileged
-addresses. The h/w filter would be sufficient except when there are
-multiple events with disjoint filtering requirements. In this case, BRBE
-is configured with a union of all the events' desired branches, and then
-the recorded branches are filtered based on each event's filter. For
-example, with one event capturing kernel events and another event
-capturing user events, BRBE will be configured to capture both kernel
-and user branches. When handling event overflow, the branch records have
-to be filtered by software to only include kernel or user branch
-addresses for that event. In contrast, x86 simply configures LBR using
-the last installed event which seems broken.
-
-It is possible on x86 to configure branch filter such that no branches
-are ever recorded (e.g. -j save_type). For BRBE, events with a
-configuration that will result in no samples are rejected.
-
-Recording branches in KVM guests is not supported like x86. However,
-perf on x86 allows requesting branch recording in guests. The guest
-events are recorded, but the resulting branches are all from the host.
-For BRBE, events with branch recording and "exclude_host" set are
-rejected. Requiring "exclude_guest" to be set did not work. The default
-for the perf tool does set "exclude_guest" if no exception level
-options are specified. However, specifying kernel or user events
-defaults to including both host and guest. In this case, only host
-branches are recorded.
-
-BRBE can support some additional exception branch types compared to
-x86. On x86, all exceptions other than syscalls are recorded as IRQ.
-With BRBE, it is possible to better categorize these exceptions. One
-limitation relative to x86 is we cannot distinguish a syscall return
-from other exception returns. So all exception returns are recorded as
-ERET type. The FIQ branch type is omitted as the only FIQ user is Apple
-platforms which don't support BRBE. The debug branch types are omitted
-as there is no clear need for them.
-
-BRBE records are invalidated whenever events are reconfigured, a new
-task is scheduled in, or after recording is paused (and the records
-have been recorded for the event). The architecture allows branch
-records to be invalidated by the PE under implementation defined
-conditions. It is expected that these conditions are rare.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Co-developed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Co-developed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
-v23:
- - Drop the syscall fixup and directly convert BRBE CALL type to perf
-   SYSCALL as only calls to higher EL generate a CALL event
-
-v22:
- - Move branch stack disabling after armpmu_stop() in armpmu_del()
- - Fix branch_records_alloc() to work on heterogeneous systems
- - Make setting .sched_task function ptr conditional on BRBE support
-
-v21:
- - update .sched_task() parameters. task_struct added in v6.15
-
-v20:
- - Fix sparse percpu warning in branch_records_alloc()
- - Use pr_debug instead of pr_debug_once. Add debug print on all error
-   cases when event.attr is rejected.
- - Add back some arm64 specific exception types
- - Convert 'call' from user to kernel to syscall as appropriate
- - Drop requiring event and branch privileges to match
- - Only enable exceptions and exception returns if recording kernel
-   branches
- - Add "branches" caps sysfs attribute like x86
- - Drop some unused defines
- - Use u64 instead of unsigned long for branch record fields
- - use min() in brbinf_get_cycles()
- - Reword comment about FZP and MDCR_EL2.HPMN interaction
- - Add comments on assumptions about calling brbe_enable()
- - Merge capture_brbe_flags() into perf_entry_from_brbe_regset()
- - Rework BRBE invalidation to avoid invalidating in interrupt handler
-   when no handled events capture the branch stack.
- - Also clear BRBCR_ELx in brbe_disable(). This is for KVM nVHE checks
-   if BRBE is enabled.
-
-v19:
-- Drop saving of branch records when task scheduled out. (Mark)
-- Got rid of added armpmu ops. All BRBE support contained within pmuv3
-  code.
-- Dropped armpmu.num_branch_records as reg_brbidr has same info.
-- Make sched_task() callback actually get called. Enabling requires a
-  call to perf_sched_cb_inc().
-- Fix freeze on overflow for VHE
-- The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
-  it when BRBE is enabled.
-- Drop all the Arm specific exception branches. Not a clear need for
-  them.
-- Simplify enable/disable to avoid RMW and document ISBs needed
-- Fix handling of branch 'cycles' reading. CC field is
-  mantissa/exponent, not an integer.
-- Save BRBFCR and BRBCR settings in event->hw.branch_reg.config and
-  event->hw.extra_reg.config to avoid recalculating the register value
-  each time the event is installed.
-- Rework s/w filtering to better match h/w filtering
-- Reject events with disjoint event filter and branch filter
-- Reject events if exclude_host is set
-
-v18: https://lore.kernel.org/all/20240613061731.3109448-6-anshuman.khandual@arm.com/
----
- drivers/perf/Kconfig         |  11 +
- drivers/perf/Makefile        |   1 +
- drivers/perf/arm_brbe.c      | 798 +++++++++++++++++++++++++++++++++++++++++++
- drivers/perf/arm_brbe.h      |  47 +++
- drivers/perf/arm_pmu.c       |  16 +-
- drivers/perf/arm_pmuv3.c     | 125 ++++++-
- include/linux/perf/arm_pmu.h |   8 +
- 7 files changed, 999 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index 278c929dc87a..a9188dec36fe 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -223,6 +223,17 @@ config ARM_SPE_PMU
- 	  Extension, which provides periodic sampling of operations in
- 	  the CPU pipeline and reports this via the perf AUX interface.
- 
-+config ARM64_BRBE
-+	bool "Enable support for branch stack sampling using FEAT_BRBE"
-+	depends on ARM_PMUV3 && ARM64
-+	default y
-+	help
-+	  Enable perf support for Branch Record Buffer Extension (BRBE) which
-+	  records all branches taken in an execution path. This supports some
-+	  branch types and privilege based filtering. It captures additional
-+	  relevant information such as cycle count, misprediction and branch
-+	  type, branch privilege level etc.
-+
- config ARM_DMC620_PMU
- 	tristate "Enable PMU support for the ARM DMC-620 memory controller"
- 	depends on (ARM64 && ACPI) || COMPILE_TEST
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index de71d2574857..192fc8b16204 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_STARFIVE_STARLINK_PMU) += starfive_starlink_pmu.o
- obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
- obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
- obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-+obj-$(CONFIG_ARM64_BRBE) += arm_brbe.o
- obj-$(CONFIG_ARM_DMC620_PMU) += arm_dmc620_pmu.o
- obj-$(CONFIG_MARVELL_CN10K_TAD_PMU) += marvell_cn10k_tad_pmu.o
- obj-$(CONFIG_MARVELL_CN10K_DDR_PMU) += marvell_cn10k_ddr_pmu.o
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-new file mode 100644
-index 000000000000..acdde61a8559
---- /dev/null
-+++ b/drivers/perf/arm_brbe.c
-@@ -0,0 +1,798 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Branch Record Buffer Extension Driver.
-+ *
-+ * Copyright (C) 2022-2025 ARM Limited
-+ *
-+ * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-+ */
-+#include <linux/types.h>
-+#include <linux/bitmap.h>
-+#include <linux/perf/arm_pmu.h>
-+#include "arm_brbe.h"
-+
-+#define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
-+				   BRBFCR_EL1_INDIRECT | \
-+				   BRBFCR_EL1_RTN      | \
-+				   BRBFCR_EL1_INDCALL  | \
-+				   BRBFCR_EL1_DIRCALL  | \
-+				   BRBFCR_EL1_CONDDIR)
-+
-+/*
-+ * BRBTS_EL1 is currently not used for branch stack implementation
-+ * purpose but BRBCR_ELx.TS needs to have a valid value from all
-+ * available options. BRBCR_ELx_TS_VIRTUAL is selected for this.
-+ */
-+#define BRBCR_ELx_DEFAULT_TS      FIELD_PREP(BRBCR_ELx_TS_MASK, BRBCR_ELx_TS_VIRTUAL)
-+
-+/*
-+ * BRBE Buffer Organization
-+ *
-+ * BRBE buffer is arranged as multiple banks of 32 branch record
-+ * entries each. An individual branch record in a given bank could
-+ * be accessed, after selecting the bank in BRBFCR_EL1.BANK and
-+ * accessing the registers i.e [BRBSRC, BRBTGT, BRBINF] set with
-+ * indices [0..31].
-+ *
-+ * Bank 0
-+ *
-+ *	---------------------------------	------
-+ *	| 00 | BRBSRC | BRBTGT | BRBINF |	| 00 |
-+ *	---------------------------------	------
-+ *	| 01 | BRBSRC | BRBTGT | BRBINF |	| 01 |
-+ *	---------------------------------	------
-+ *	| .. | BRBSRC | BRBTGT | BRBINF |	| .. |
-+ *	---------------------------------	------
-+ *	| 31 | BRBSRC | BRBTGT | BRBINF |	| 31 |
-+ *	---------------------------------	------
-+ *
-+ * Bank 1
-+ *
-+ *	---------------------------------	------
-+ *	| 32 | BRBSRC | BRBTGT | BRBINF |	| 00 |
-+ *	---------------------------------	------
-+ *	| 33 | BRBSRC | BRBTGT | BRBINF |	| 01 |
-+ *	---------------------------------	------
-+ *	| .. | BRBSRC | BRBTGT | BRBINF |	| .. |
-+ *	---------------------------------	------
-+ *	| 63 | BRBSRC | BRBTGT | BRBINF |	| 31 |
-+ *	---------------------------------	------
-+ */
-+#define BRBE_BANK_MAX_ENTRIES	32
-+
-+struct brbe_regset {
-+	u64 brbsrc;
-+	u64 brbtgt;
-+	u64 brbinf;
-+};
-+
-+#define PERF_BR_ARM64_MAX (PERF_BR_MAX + PERF_BR_NEW_MAX)
-+
-+struct brbe_hw_attr {
-+	int	brbe_version;
-+	int	brbe_cc;
-+	int	brbe_nr;
-+	int	brbe_format;
-+};
-+
-+#define BRBE_REGN_CASE(n, case_macro) \
-+	case n: case_macro(n); break
-+
-+#define BRBE_REGN_SWITCH(x, case_macro)				\
-+	do {							\
-+		switch (x) {					\
-+		BRBE_REGN_CASE(0, case_macro);			\
-+		BRBE_REGN_CASE(1, case_macro);			\
-+		BRBE_REGN_CASE(2, case_macro);			\
-+		BRBE_REGN_CASE(3, case_macro);			\
-+		BRBE_REGN_CASE(4, case_macro);			\
-+		BRBE_REGN_CASE(5, case_macro);			\
-+		BRBE_REGN_CASE(6, case_macro);			\
-+		BRBE_REGN_CASE(7, case_macro);			\
-+		BRBE_REGN_CASE(8, case_macro);			\
-+		BRBE_REGN_CASE(9, case_macro);			\
-+		BRBE_REGN_CASE(10, case_macro);			\
-+		BRBE_REGN_CASE(11, case_macro);			\
-+		BRBE_REGN_CASE(12, case_macro);			\
-+		BRBE_REGN_CASE(13, case_macro);			\
-+		BRBE_REGN_CASE(14, case_macro);			\
-+		BRBE_REGN_CASE(15, case_macro);			\
-+		BRBE_REGN_CASE(16, case_macro);			\
-+		BRBE_REGN_CASE(17, case_macro);			\
-+		BRBE_REGN_CASE(18, case_macro);			\
-+		BRBE_REGN_CASE(19, case_macro);			\
-+		BRBE_REGN_CASE(20, case_macro);			\
-+		BRBE_REGN_CASE(21, case_macro);			\
-+		BRBE_REGN_CASE(22, case_macro);			\
-+		BRBE_REGN_CASE(23, case_macro);			\
-+		BRBE_REGN_CASE(24, case_macro);			\
-+		BRBE_REGN_CASE(25, case_macro);			\
-+		BRBE_REGN_CASE(26, case_macro);			\
-+		BRBE_REGN_CASE(27, case_macro);			\
-+		BRBE_REGN_CASE(28, case_macro);			\
-+		BRBE_REGN_CASE(29, case_macro);			\
-+		BRBE_REGN_CASE(30, case_macro);			\
-+		BRBE_REGN_CASE(31, case_macro);			\
-+		default: WARN(1, "Invalid BRB* index %d\n", x);	\
-+		}						\
-+	} while (0)
-+
-+#define RETURN_READ_BRBSRCN(n) \
-+	return read_sysreg_s(SYS_BRBSRC_EL1(n))
-+static inline u64 get_brbsrc_reg(int idx)
-+{
-+	BRBE_REGN_SWITCH(idx, RETURN_READ_BRBSRCN);
-+	return 0;
-+}
-+
-+#define RETURN_READ_BRBTGTN(n) \
-+	return read_sysreg_s(SYS_BRBTGT_EL1(n))
-+static u64 get_brbtgt_reg(int idx)
-+{
-+	BRBE_REGN_SWITCH(idx, RETURN_READ_BRBTGTN);
-+	return 0;
-+}
-+
-+#define RETURN_READ_BRBINFN(n) \
-+	return read_sysreg_s(SYS_BRBINF_EL1(n))
-+static u64 get_brbinf_reg(int idx)
-+{
-+	BRBE_REGN_SWITCH(idx, RETURN_READ_BRBINFN);
-+	return 0;
-+}
-+
-+static u64 brbe_record_valid(u64 brbinf)
-+{
-+	return FIELD_GET(BRBINFx_EL1_VALID_MASK, brbinf);
-+}
-+
-+static bool brbe_invalid(u64 brbinf)
-+{
-+	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_NONE;
-+}
-+
-+static bool brbe_record_is_complete(u64 brbinf)
-+{
-+	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_FULL;
-+}
-+
-+static bool brbe_record_is_source_only(u64 brbinf)
-+{
-+	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_SOURCE;
-+}
-+
-+static bool brbe_record_is_target_only(u64 brbinf)
-+{
-+	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_TARGET;
-+}
-+
-+static int brbinf_get_in_tx(u64 brbinf)
-+{
-+	return FIELD_GET(BRBINFx_EL1_T_MASK, brbinf);
-+}
-+
-+static int brbinf_get_mispredict(u64 brbinf)
-+{
-+	return FIELD_GET(BRBINFx_EL1_MPRED_MASK, brbinf);
-+}
-+
-+static int brbinf_get_lastfailed(u64 brbinf)
-+{
-+	return FIELD_GET(BRBINFx_EL1_LASTFAILED_MASK, brbinf);
-+}
-+
-+static u16 brbinf_get_cycles(u64 brbinf)
-+{
-+	u32 exp, mant, cycles;
-+	/*
-+	 * Captured cycle count is unknown and hence
-+	 * should not be passed on to userspace.
-+	 */
-+	if (brbinf & BRBINFx_EL1_CCU)
-+		return 0;
-+
-+	exp = FIELD_GET(BRBINFx_EL1_CC_EXP_MASK, brbinf);
-+	mant = FIELD_GET(BRBINFx_EL1_CC_MANT_MASK, brbinf);
-+
-+	if (!exp)
-+		return mant;
-+
-+	cycles = (mant | 0x100) << (exp - 1);
-+
-+	return min(cycles, U16_MAX);
-+}
-+
-+static int brbinf_get_type(u64 brbinf)
-+{
-+	return FIELD_GET(BRBINFx_EL1_TYPE_MASK, brbinf);
-+}
-+
-+static int brbinf_get_el(u64 brbinf)
-+{
-+	return FIELD_GET(BRBINFx_EL1_EL_MASK, brbinf);
-+}
-+
-+void brbe_invalidate(void)
-+{
-+	// Ensure all branches before this point are recorded
-+	isb();
-+	asm volatile(BRB_IALL_INSN);
-+	// Ensure all branch records are invalidated after this point
-+	isb();
-+}
-+
-+static bool valid_brbe_nr(int brbe_nr)
-+{
-+	return brbe_nr == BRBIDR0_EL1_NUMREC_8 ||
-+	       brbe_nr == BRBIDR0_EL1_NUMREC_16 ||
-+	       brbe_nr == BRBIDR0_EL1_NUMREC_32 ||
-+	       brbe_nr == BRBIDR0_EL1_NUMREC_64;
-+}
-+
-+static bool valid_brbe_cc(int brbe_cc)
-+{
-+	return brbe_cc == BRBIDR0_EL1_CC_20_BIT;
-+}
-+
-+static bool valid_brbe_format(int brbe_format)
-+{
-+	return brbe_format == BRBIDR0_EL1_FORMAT_FORMAT_0;
-+}
-+
-+static bool valid_brbidr(u64 brbidr)
-+{
-+	int brbe_format, brbe_cc, brbe_nr;
-+
-+	brbe_format = FIELD_GET(BRBIDR0_EL1_FORMAT_MASK, brbidr);
-+	brbe_cc = FIELD_GET(BRBIDR0_EL1_CC_MASK, brbidr);
-+	brbe_nr = FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, brbidr);
-+
-+	return valid_brbe_format(brbe_format) && valid_brbe_cc(brbe_cc) && valid_brbe_nr(brbe_nr);
-+}
-+
-+static bool valid_brbe_version(int brbe_version)
-+{
-+	return brbe_version == ID_AA64DFR0_EL1_BRBE_IMP ||
-+	       brbe_version == ID_AA64DFR0_EL1_BRBE_BRBE_V1P1;
-+}
-+
-+static void select_brbe_bank(int bank)
-+{
-+	u64 brbfcr;
-+
-+	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-+	brbfcr &= ~BRBFCR_EL1_BANK_MASK;
-+	brbfcr |= SYS_FIELD_PREP(BRBFCR_EL1, BANK, bank);
-+	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-+	/*
-+	 * Arm ARM (DDI 0487K.a) D.18.4 rule PPBZP requires explicit sync
-+	 * between setting BANK and accessing branch records.
-+	 */
-+	isb();
-+}
-+
-+static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
-+{
-+	entry->brbinf = get_brbinf_reg(idx);
-+
-+	if (brbe_invalid(entry->brbinf))
-+		return false;
-+
-+	entry->brbsrc = get_brbsrc_reg(idx);
-+	entry->brbtgt = get_brbtgt_reg(idx);
-+	return true;
-+}
-+
-+/*
-+ * Generic perf branch filters supported on BRBE
-+ *
-+ * New branch filters need to be evaluated whether they could be supported on
-+ * BRBE. This ensures that such branch filters would not just be accepted, to
-+ * fail silently. PERF_SAMPLE_BRANCH_HV is a special case that is selectively
-+ * supported only on platforms where kernel is in hyp mode.
-+ */
-+#define BRBE_EXCLUDE_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_ABORT_TX	| \
-+				     PERF_SAMPLE_BRANCH_IN_TX		| \
-+				     PERF_SAMPLE_BRANCH_NO_TX		| \
-+				     PERF_SAMPLE_BRANCH_CALL_STACK	| \
-+				     PERF_SAMPLE_BRANCH_COUNTERS)
-+
-+#define BRBE_ALLOWED_BRANCH_TYPES   (PERF_SAMPLE_BRANCH_ANY		| \
-+				     PERF_SAMPLE_BRANCH_ANY_CALL	| \
-+				     PERF_SAMPLE_BRANCH_ANY_RETURN	| \
-+				     PERF_SAMPLE_BRANCH_IND_CALL	| \
-+				     PERF_SAMPLE_BRANCH_COND		| \
-+				     PERF_SAMPLE_BRANCH_IND_JUMP	| \
-+				     PERF_SAMPLE_BRANCH_CALL)
-+
-+
-+#define BRBE_ALLOWED_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_USER		| \
-+				     PERF_SAMPLE_BRANCH_KERNEL		| \
-+				     PERF_SAMPLE_BRANCH_HV		| \
-+				     BRBE_ALLOWED_BRANCH_TYPES		| \
-+				     PERF_SAMPLE_BRANCH_NO_FLAGS	| \
-+				     PERF_SAMPLE_BRANCH_NO_CYCLES	| \
-+				     PERF_SAMPLE_BRANCH_TYPE_SAVE	| \
-+				     PERF_SAMPLE_BRANCH_HW_INDEX	| \
-+				     PERF_SAMPLE_BRANCH_PRIV_SAVE)
-+
-+#define BRBE_PERF_BRANCH_FILTERS    (BRBE_ALLOWED_BRANCH_FILTERS	| \
-+				     BRBE_EXCLUDE_BRANCH_FILTERS)
-+
-+/*
-+ * BRBE supports the following functional branch type filters while
-+ * generating branch records. These branch filters can be enabled,
-+ * either individually or as a group i.e ORing multiple filters
-+ * with each other.
-+ *
-+ * BRBFCR_EL1_CONDDIR  - Conditional direct branch
-+ * BRBFCR_EL1_DIRCALL  - Direct call
-+ * BRBFCR_EL1_INDCALL  - Indirect call
-+ * BRBFCR_EL1_INDIRECT - Indirect branch
-+ * BRBFCR_EL1_DIRECT   - Direct branch
-+ * BRBFCR_EL1_RTN      - Subroutine return
-+ */
-+static u64 branch_type_to_brbfcr(int branch_type)
-+{
-+	u64 brbfcr = 0;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-+		brbfcr |= BRBFCR_EL1_BRANCH_FILTERS;
-+		return brbfcr;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
-+		brbfcr |= BRBFCR_EL1_INDCALL;
-+		brbfcr |= BRBFCR_EL1_DIRCALL;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-+		brbfcr |= BRBFCR_EL1_RTN;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
-+		brbfcr |= BRBFCR_EL1_INDCALL;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_COND)
-+		brbfcr |= BRBFCR_EL1_CONDDIR;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP)
-+		brbfcr |= BRBFCR_EL1_INDIRECT;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
-+		brbfcr |= BRBFCR_EL1_DIRCALL;
-+
-+	return brbfcr;
-+}
-+
-+/*
-+ * BRBE supports the following privilege mode filters while generating
-+ * branch records.
-+ *
-+ * BRBCR_ELx_E0BRE - EL0 branch records
-+ * BRBCR_ELx_ExBRE - EL1/EL2 branch records
-+ *
-+ * BRBE also supports the following additional functional branch type
-+ * filters while generating branch records.
-+ *
-+ * BRBCR_ELx_EXCEPTION - Exception
-+ * BRBCR_ELx_ERTN     -  Exception return
-+ */
-+static u64 branch_type_to_brbcr(int branch_type)
-+{
-+	u64 brbcr = BRBCR_ELx_FZP | BRBCR_ELx_DEFAULT_TS;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_USER)
-+		brbcr |= BRBCR_ELx_E0BRE;
-+
-+	/*
-+	 * When running in the hyp mode, writing into BRBCR_EL1
-+	 * actually writes into BRBCR_EL2 instead. Field E2BRE
-+	 * is also at the same position as E1BRE.
-+	 */
-+	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
-+		brbcr |= BRBCR_ELx_ExBRE;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
-+		if (is_kernel_in_hyp_mode())
-+			brbcr |= BRBCR_ELx_ExBRE;
-+	}
-+
-+	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES))
-+		brbcr |= BRBCR_ELx_CC;
-+
-+	if (!(branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS))
-+		brbcr |= BRBCR_ELx_MPRED;
-+
-+	/*
-+	 * The exception and exception return branches could be
-+	 * captured, irrespective of the perf event's privilege.
-+	 * If the perf event does not have enough privilege for
-+	 * a given exception level, then addresses which falls
-+	 * under that exception level will be reported as zero
-+	 * for the captured branch record, creating source only
-+	 * or target only records.
-+	 */
-+	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL) {
-+		if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-+			brbcr |= BRBCR_ELx_EXCEPTION;
-+			brbcr |= BRBCR_ELx_ERTN;
-+		}
-+
-+		if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
-+			brbcr |= BRBCR_ELx_EXCEPTION;
-+
-+		if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-+			brbcr |= BRBCR_ELx_ERTN;
-+	}
-+	return brbcr;
-+}
-+
-+bool brbe_branch_attr_valid(struct perf_event *event)
-+{
-+	u64 branch_type = event->attr.branch_sample_type;
-+
-+	/*
-+	 * Ensure both perf branch filter allowed and exclude
-+	 * masks are always in sync with the generic perf ABI.
-+	 */
-+	BUILD_BUG_ON(BRBE_PERF_BRANCH_FILTERS != (PERF_SAMPLE_BRANCH_MAX - 1));
-+
-+	if (branch_type & BRBE_EXCLUDE_BRANCH_FILTERS) {
-+		pr_debug("requested branch filter not supported 0x%llx\n", branch_type);
-+		return false;
-+	}
-+
-+	/* Ensure at least 1 branch type is enabled */
-+	if (!(branch_type & BRBE_ALLOWED_BRANCH_TYPES)) {
-+		pr_debug("no branch type enabled 0x%llx\n", branch_type);
-+		return false;
-+	}
-+
-+	/*
-+	 * No branches are recorded in guests nor nVHE hypervisors, so
-+	 * excluding the host or both kernel and user is invalid.
-+	 *
-+	 * Ideally we'd just require exclude_guest and exclude_hv, but setting
-+	 * event filters with perf for kernel or user don't set exclude_guest.
-+	 * So effectively, exclude_guest and exclude_hv are ignored.
-+	 */
-+	if (event->attr.exclude_host || (event->attr.exclude_user && event->attr.exclude_kernel)) {
-+		pr_debug("branch filter in hypervisor or guest only not supported 0x%llx\n", branch_type);
-+		return false;
-+	}
-+
-+	event->hw.branch_reg.config = branch_type_to_brbfcr(event->attr.branch_sample_type);
-+	event->hw.extra_reg.config = branch_type_to_brbcr(event->attr.branch_sample_type);
-+
-+	return true;
-+}
-+
-+unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
-+{
-+	return FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, armpmu->reg_brbidr);
-+}
-+
-+void brbe_probe(struct arm_pmu *armpmu)
-+{
-+	u64 aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
-+	u32 brbe;
-+
-+	brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
-+	if (!valid_brbe_version(brbe))
-+		return;
-+
-+	u64 brbidr = read_sysreg_s(SYS_BRBIDR0_EL1);
-+	if (!valid_brbidr(brbidr))
-+		return;
-+
-+	armpmu->reg_brbidr = brbidr;
-+}
-+
-+/*
-+ * BRBE is assumed to be disabled/paused on entry
-+ */
-+void brbe_enable(const struct arm_pmu *arm_pmu)
-+{
-+	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
-+	u64 brbfcr = 0, brbcr = 0;
-+
-+	/*
-+	 * Merge the permitted branch filters of all events.
-+	 */
-+	for (int i = 0; i < ARMPMU_MAX_HWEVENTS; i++) {
-+		struct perf_event *event = cpuc->events[i];
-+
-+		if (event && has_branch_stack(event)) {
-+			brbfcr |= event->hw.branch_reg.config;
-+			brbcr |= event->hw.extra_reg.config;
-+		}
-+	}
-+
-+	/*
-+	 * In VHE mode with MDCR_EL2.HPMN equal to PMCR_EL0.N, BRBCR_EL1.FZP
-+	 * controls freezing the branch records on counter overflow rather than
-+	 * BRBCR_EL2.FZP (which writes to BRBCR_EL1 are redirected to).
-+	 * The exception levels are enabled/disabled in BRBCR_EL2, so keep EL1
-+	 * and EL0 recording disabled for guests.
-+	 *
-+	 * As BRBCR_EL1 CC and MPRED bits also need to match, use the same
-+	 * value for both registers just masking the exception levels.
-+	 */
-+	if (is_kernel_in_hyp_mode())
-+		write_sysreg_s(brbcr & ~(BRBCR_ELx_ExBRE | BRBCR_ELx_E0BRE), SYS_BRBCR_EL12);
-+	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
-+	isb(); // Ensure BRBCR_ELx settings take effect before unpausing
-+
-+	// Finally write SYS_BRBFCR_EL to unpause BRBE
-+	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-+	// Synchronization in PMCR write ensures ordering WRT PMU enabling
-+}
-+
-+void brbe_disable(void)
-+{
-+	/*
-+	 * No need for synchronization here as synchronization in PMCR write
-+	 * ensures ordering and in the interrupt handler this is a NOP as
-+	 * we're already paused.
-+	 */
-+	write_sysreg_s(BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-+	write_sysreg_s(0, SYS_BRBCR_EL1);
-+}
-+
-+static const int brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2] = {
-+	[BRBINFx_EL1_TYPE_DIRECT_UNCOND] = { PERF_BR_UNCOND, 0 },
-+	[BRBINFx_EL1_TYPE_INDIRECT] = { PERF_BR_IND, 0 },
-+	[BRBINFx_EL1_TYPE_DIRECT_LINK] = { PERF_BR_CALL, 0 },
-+	[BRBINFx_EL1_TYPE_INDIRECT_LINK] = { PERF_BR_IND_CALL, 0 },
-+	[BRBINFx_EL1_TYPE_RET] = { PERF_BR_RET, 0 },
-+	[BRBINFx_EL1_TYPE_DIRECT_COND] = { PERF_BR_COND, 0 },
-+	[BRBINFx_EL1_TYPE_CALL] = { PERF_BR_SYSCALL, 0 },
-+	[BRBINFx_EL1_TYPE_ERET] = { PERF_BR_ERET, 0 },
-+	[BRBINFx_EL1_TYPE_IRQ] = { PERF_BR_IRQ, 0 },
-+	[BRBINFx_EL1_TYPE_TRAP] = { PERF_BR_IRQ, 0 },
-+	[BRBINFx_EL1_TYPE_SERROR] = { PERF_BR_SERROR, 0 },
-+	[BRBINFx_EL1_TYPE_ALIGN_FAULT] = { PERF_BR_EXTEND_ABI, PERF_BR_NEW_FAULT_ALGN },
-+	[BRBINFx_EL1_TYPE_INSN_FAULT] = { PERF_BR_EXTEND_ABI, PERF_BR_NEW_FAULT_INST },
-+	[BRBINFx_EL1_TYPE_DATA_FAULT] = { PERF_BR_EXTEND_ABI, PERF_BR_NEW_FAULT_DATA },
-+};
-+
-+static void brbe_set_perf_entry_type(struct perf_branch_entry *entry, u64 brbinf)
-+{
-+	int brbe_type = brbinf_get_type(brbinf);
-+
-+	if (brbe_type <= BRBINFx_EL1_TYPE_DEBUG_EXIT) {
-+		const int *br_type = brbe_type_to_perf_type_map[brbe_type];
-+
-+		entry->type = br_type[0];
-+		entry->new_type = br_type[1];
-+	}
-+}
-+
-+static int brbinf_get_perf_priv(u64 brbinf)
-+{
-+	int brbe_el = brbinf_get_el(brbinf);
-+
-+	switch (brbe_el) {
-+	case BRBINFx_EL1_EL_EL0:
-+		return PERF_BR_PRIV_USER;
-+	case BRBINFx_EL1_EL_EL1:
-+		return PERF_BR_PRIV_KERNEL;
-+	case BRBINFx_EL1_EL_EL2:
-+		if (is_kernel_in_hyp_mode())
-+			return PERF_BR_PRIV_KERNEL;
-+		return PERF_BR_PRIV_HV;
-+	default:
-+		pr_warn_once("%d - unknown branch privilege captured\n", brbe_el);
-+		return PERF_BR_PRIV_UNKNOWN;
-+	}
-+}
-+
-+static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *entry,
-+					const struct perf_event *event)
-+{
-+	struct brbe_regset bregs;
-+	u64 brbinf;
-+
-+	if (!__read_brbe_regset(&bregs, index))
-+		return false;
-+
-+	brbinf = bregs.brbinf;
-+	perf_clear_branch_entry_bitfields(entry);
-+	if (brbe_record_is_complete(brbinf)) {
-+		entry->from = bregs.brbsrc;
-+		entry->to = bregs.brbtgt;
-+	} else if (brbe_record_is_source_only(brbinf)) {
-+		entry->from = bregs.brbsrc;
-+		entry->to = 0;
-+	} else if (brbe_record_is_target_only(brbinf)) {
-+		entry->from = 0;
-+		entry->to = bregs.brbtgt;
-+	}
-+
-+	brbe_set_perf_entry_type(entry, brbinf);
-+
-+	if (!branch_sample_no_cycles(event))
-+		entry->cycles = brbinf_get_cycles(brbinf);
-+
-+	if (!branch_sample_no_flags(event)) {
-+		/* Mispredict info is available for source only and complete branch records. */
-+		if (!brbe_record_is_target_only(brbinf)) {
-+			entry->mispred = brbinf_get_mispredict(brbinf);
-+			entry->predicted = !entry->mispred;
-+		}
-+
-+		/*
-+		 * Currently TME feature is neither implemented in any hardware
-+		 * nor it is being supported in the kernel. Just warn here once
-+		 * if TME related information shows up rather unexpectedly.
-+		 */
-+		if (brbinf_get_lastfailed(brbinf) || brbinf_get_in_tx(brbinf))
-+			pr_warn_once("Unknown transaction states\n");
-+	}
-+
-+	/*
-+	 * Branch privilege level is available for target only and complete
-+	 * branch records.
-+	 */
-+	if (!brbe_record_is_source_only(brbinf))
-+		entry->priv = brbinf_get_perf_priv(brbinf);
-+
-+	return true;
-+}
-+
-+#define PERF_BR_ARM64_ALL (				\
-+	BIT(PERF_BR_COND) |				\
-+	BIT(PERF_BR_UNCOND) |				\
-+	BIT(PERF_BR_IND) |				\
-+	BIT(PERF_BR_CALL) |				\
-+	BIT(PERF_BR_IND_CALL) |				\
-+	BIT(PERF_BR_RET))
-+
-+#define PERF_BR_ARM64_ALL_KERNEL (			\
-+	BIT(PERF_BR_SYSCALL) |				\
-+	BIT(PERF_BR_IRQ) |				\
-+	BIT(PERF_BR_SERROR) |				\
-+	BIT(PERF_BR_MAX + PERF_BR_NEW_FAULT_ALGN) |	\
-+	BIT(PERF_BR_MAX + PERF_BR_NEW_FAULT_DATA) |	\
-+	BIT(PERF_BR_MAX + PERF_BR_NEW_FAULT_INST))
-+
-+static void prepare_event_branch_type_mask(u64 branch_sample,
-+					   unsigned long *event_type_mask)
-+{
-+	if (branch_sample & PERF_SAMPLE_BRANCH_ANY) {
-+		if (branch_sample & PERF_SAMPLE_BRANCH_KERNEL)
-+			bitmap_from_u64(event_type_mask,
-+				BIT(PERF_BR_ERET) | PERF_BR_ARM64_ALL |
-+				PERF_BR_ARM64_ALL_KERNEL);
-+		else
-+			bitmap_from_u64(event_type_mask, PERF_BR_ARM64_ALL);
-+		return;
-+	}
-+
-+	bitmap_zero(event_type_mask, PERF_BR_ARM64_MAX);
-+
-+	if (branch_sample & PERF_SAMPLE_BRANCH_ANY_CALL) {
-+		if (branch_sample & PERF_SAMPLE_BRANCH_KERNEL)
-+			bitmap_from_u64(event_type_mask, PERF_BR_ARM64_ALL_KERNEL);
-+
-+		set_bit(PERF_BR_CALL, event_type_mask);
-+		set_bit(PERF_BR_IND_CALL, event_type_mask);
-+	}
-+
-+	if (branch_sample & PERF_SAMPLE_BRANCH_IND_JUMP)
-+		set_bit(PERF_BR_IND, event_type_mask);
-+
-+	if (branch_sample & PERF_SAMPLE_BRANCH_COND)
-+		set_bit(PERF_BR_COND, event_type_mask);
-+
-+	if (branch_sample & PERF_SAMPLE_BRANCH_CALL)
-+		set_bit(PERF_BR_CALL, event_type_mask);
-+
-+	if (branch_sample & PERF_SAMPLE_BRANCH_IND_CALL)
-+		set_bit(PERF_BR_IND_CALL, event_type_mask);
-+
-+	if (branch_sample & PERF_SAMPLE_BRANCH_ANY_RETURN) {
-+		set_bit(PERF_BR_RET, event_type_mask);
-+
-+		if (branch_sample & PERF_SAMPLE_BRANCH_KERNEL)
-+			set_bit(PERF_BR_ERET, event_type_mask);
-+	}
-+}
-+
-+/*
-+ * BRBE is configured with an OR of permissions from all events, so there may
-+ * be events which have to be dropped or events where just the source or target
-+ * address has to be zeroed.
-+ */
-+static bool filter_branch_privilege(struct perf_branch_entry *entry, u64 branch_sample_type)
-+{
-+	/* We can only have a half record if permissions have not been expanded */
-+	if (!entry->from || !entry->to)
-+		return true;
-+
-+	bool from_user = access_ok((void __user *)(unsigned long)entry->from, 4);
-+	bool to_user = access_ok((void __user *)(unsigned long)entry->to, 4);
-+	bool exclude_kernel = !((branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) ||
-+		(is_kernel_in_hyp_mode() && (branch_sample_type & PERF_SAMPLE_BRANCH_HV)));
-+
-+	/*
-+	 * If record is within a single exception level, just need to either
-+	 * drop or keep the entire record.
-+	 */
-+	if (from_user == to_user)
-+		return ((entry->priv == PERF_BR_PRIV_KERNEL) && !exclude_kernel) ||
-+			((entry->priv == PERF_BR_PRIV_USER) &&
-+			 (branch_sample_type & PERF_SAMPLE_BRANCH_USER));
-+
-+	/*
-+	 * Record is across exception levels, mask addresses for the exception
-+	 * level we're not capturing.
-+	 */
-+	if (!(branch_sample_type & PERF_SAMPLE_BRANCH_USER)) {
-+		if (from_user)
-+			entry->from = 0;
-+		if (to_user)
-+			entry->to = 0;
-+	}
-+
-+	if (exclude_kernel) {
-+		if (!from_user)
-+			entry->from = 0;
-+		if (!to_user)
-+			entry->to = 0;
-+	}
-+	return true;
-+}
-+
-+static bool filter_branch_type(struct perf_branch_entry *entry,
-+			       const unsigned long *event_type_mask)
-+{
-+	if (entry->type == PERF_BR_EXTEND_ABI)
-+		return test_bit(PERF_BR_MAX + entry->new_type, event_type_mask);
-+	else
-+		return test_bit(entry->type, event_type_mask);
-+}
-+
-+static bool filter_branch_record(struct perf_branch_entry *entry,
-+				 u64 branch_sample,
-+				 const unsigned long *event_type_mask)
-+{
-+	return filter_branch_type(entry, event_type_mask) &&
-+		filter_branch_privilege(entry, branch_sample);
-+}
-+
-+void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
-+				const struct perf_event *event)
-+{
-+	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
-+	int nr_hw = brbe_num_branch_records(cpu_pmu);
-+	int nr_banks = DIV_ROUND_UP(nr_hw, BRBE_BANK_MAX_ENTRIES);
-+	int nr_filtered = 0;
-+	u64 branch_sample_type = event->attr.branch_sample_type;
-+	DECLARE_BITMAP(event_type_mask, PERF_BR_ARM64_MAX);
-+
-+	prepare_event_branch_type_mask(branch_sample_type, event_type_mask);
-+
-+	for (int bank = 0; bank < nr_banks; bank++) {
-+		int nr_remaining = nr_hw - (bank * BRBE_BANK_MAX_ENTRIES);
-+		int nr_this_bank = min(nr_remaining, BRBE_BANK_MAX_ENTRIES);
-+
-+		select_brbe_bank(bank);
-+
-+		for (int i = 0; i < nr_this_bank; i++) {
-+			struct perf_branch_entry *pbe = &branch_stack->entries[nr_filtered];
-+
-+			if (!perf_entry_from_brbe_regset(i, pbe, event))
-+				goto done;
-+
-+			if (!filter_branch_record(pbe, branch_sample_type, event_type_mask))
-+				continue;
-+
-+			nr_filtered++;
-+		}
-+	}
-+
-+done:
-+	brbe_invalidate();
-+	branch_stack->nr = nr_filtered;
-+}
-diff --git a/drivers/perf/arm_brbe.h b/drivers/perf/arm_brbe.h
-new file mode 100644
-index 000000000000..b7c7d8796c86
---- /dev/null
-+++ b/drivers/perf/arm_brbe.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Branch Record Buffer Extension Helpers.
-+ *
-+ * Copyright (C) 2022-2025 ARM Limited
-+ *
-+ * Author: Anshuman Khandual <anshuman.khandual@arm.com>
-+ */
-+
-+struct arm_pmu;
-+struct perf_branch_stack;
-+struct perf_event;
-+
-+#ifdef CONFIG_ARM64_BRBE
-+void brbe_probe(struct arm_pmu *arm_pmu);
-+unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu);
-+void brbe_invalidate(void);
-+
-+void brbe_enable(const struct arm_pmu *arm_pmu);
-+void brbe_disable(void);
-+
-+bool brbe_branch_attr_valid(struct perf_event *event);
-+void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
-+				const struct perf_event *event);
-+#else
-+static inline void brbe_probe(struct arm_pmu *arm_pmu) { }
-+static inline unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
-+{
-+	return 0;
-+}
-+
-+static inline void brbe_invalidate(void) { }
-+
-+static inline void brbe_enable(const struct arm_pmu *arm_pmu) { };
-+static inline void brbe_disable(void) { };
-+
-+static inline bool brbe_branch_attr_valid(struct perf_event *event)
-+{
-+	WARN_ON_ONCE(!has_branch_stack(event));
-+	return false;
-+}
-+
-+static void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
-+				       const struct perf_event *event)
-+{
-+}
-+#endif
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 2f33e69a8caf..5c310e803dd7 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -99,7 +99,7 @@ static const struct pmu_irq_ops percpu_pmunmi_ops = {
- 	.free_pmuirq = armpmu_free_percpu_pmunmi
- };
- 
--static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
-+DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
- static DEFINE_PER_CPU(int, cpu_irq);
- static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
- 
-@@ -318,6 +318,12 @@ armpmu_del(struct perf_event *event, int flags)
- 	int idx = hwc->idx;
- 
- 	armpmu_stop(event, PERF_EF_UPDATE);
-+
-+	if (has_branch_stack(event)) {
-+		hw_events->branch_users--;
-+		perf_sched_cb_dec(event->pmu);
-+	}
-+
- 	hw_events->events[idx] = NULL;
- 	armpmu->clear_event_idx(hw_events, event);
- 	perf_event_update_userpage(event);
-@@ -345,6 +351,11 @@ armpmu_add(struct perf_event *event, int flags)
- 	/* The newly-allocated counter should be empty */
- 	WARN_ON_ONCE(hw_events->events[idx]);
- 
-+	if (has_branch_stack(event)) {
-+		hw_events->branch_users++;
-+		perf_sched_cb_inc(event->pmu);
-+	}
-+
- 	event->hw.idx = idx;
- 	hw_events->events[idx] = event;
- 
-@@ -509,8 +520,7 @@ static int armpmu_event_init(struct perf_event *event)
- 		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
- 		return -ENOENT;
- 
--	/* does not support taken branch sampling */
--	if (has_branch_stack(event))
-+	if (has_branch_stack(event) && !armpmu->reg_brbidr)
- 		return -EOPNOTSUPP;
- 
- 	return __hw_perf_event_init(event);
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 3db9f4ed17e8..256c5ee8709c 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -25,6 +25,8 @@
- #include <linux/smp.h>
- #include <linux/nmi.h>
- 
-+#include "arm_brbe.h"
-+
- /* ARMv8 Cortex-A53 specific event types. */
- #define ARMV8_A53_PERFCTR_PREF_LINEFILL				0xC2
- 
-@@ -438,7 +440,19 @@ static ssize_t threshold_max_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(threshold_max);
- 
-+static ssize_t branches_show(struct device *dev,
-+			     struct device_attribute *attr, char *page)
-+{
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
-+
-+	return sysfs_emit(page, "%d\n", brbe_num_branch_records(cpu_pmu));
-+}
-+
-+static DEVICE_ATTR_RO(branches);
-+
- static struct attribute *armv8_pmuv3_caps_attrs[] = {
-+	&dev_attr_branches.attr,
- 	&dev_attr_slots.attr,
- 	&dev_attr_bus_slots.attr,
- 	&dev_attr_bus_width.attr,
-@@ -446,9 +460,22 @@ static struct attribute *armv8_pmuv3_caps_attrs[] = {
- 	NULL,
- };
- 
-+static umode_t caps_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
-+
-+	if (i == 0)
-+		return brbe_num_branch_records(cpu_pmu) ? attr->mode : 0;
-+
-+	return attr->mode;
-+}
-+
- static const struct attribute_group armv8_pmuv3_caps_attr_group = {
- 	.name = "caps",
- 	.attrs = armv8_pmuv3_caps_attrs,
-+	.is_visible = caps_is_visible,
- };
- 
- /*
-@@ -806,9 +833,10 @@ static void armv8pmu_disable_event(struct perf_event *event)
- 	armv8pmu_disable_event_irq(event);
- }
- 
--static void armv8pmu_start(struct arm_pmu *cpu_pmu)
-+static void armv8pmu_restart(struct arm_pmu *cpu_pmu)
- {
- 	struct perf_event_context *ctx;
-+	struct pmu_hw_events *hw_events = this_cpu_ptr(cpu_pmu->hw_events);
- 	int nr_user = 0;
- 
- 	ctx = perf_cpu_task_ctx();
-@@ -822,16 +850,44 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- 
- 	kvm_vcpu_pmu_resync_el0();
- 
-+	if (hw_events->branch_users)
-+		brbe_enable(cpu_pmu);
-+
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
- }
- 
-+static void armv8pmu_start(struct arm_pmu *cpu_pmu)
-+{
-+	struct pmu_hw_events *hw_events = this_cpu_ptr(cpu_pmu->hw_events);
-+
-+	if (hw_events->branch_users)
-+		brbe_invalidate();
-+
-+	armv8pmu_restart(cpu_pmu);
-+}
-+
- static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
- {
-+	struct pmu_hw_events *hw_events = this_cpu_ptr(cpu_pmu->hw_events);
-+
-+	if (hw_events->branch_users)
-+		brbe_disable();
-+
- 	/* Disable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() & ~ARMV8_PMU_PMCR_E);
- }
- 
-+static void read_branch_records(struct pmu_hw_events *cpuc,
-+				struct perf_event *event,
-+				struct perf_sample_data *data)
-+{
-+	struct perf_branch_stack *branch_stack = cpuc->branch_stack;
-+
-+	brbe_read_filtered_entries(branch_stack, event);
-+	perf_sample_save_brstack(data, event, branch_stack, NULL);
-+}
-+
- static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
- {
- 	u64 pmovsr;
-@@ -882,6 +938,13 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
- 		if (!armpmu_event_set_period(event))
- 			continue;
- 
-+		/*
-+		 * PMU IRQ should remain asserted until all branch records
-+		 * are captured and processed into struct perf_sample_data.
-+		 */
-+		if (has_branch_stack(event))
-+			read_branch_records(cpuc, event, &data);
-+
- 		/*
- 		 * Perf event overflow will queue the processing of the event as
- 		 * an irq_work which will be taken care of in the handling of
-@@ -889,7 +952,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
- 		 */
- 		perf_event_overflow(event, &data, regs);
- 	}
--	armv8pmu_start(cpu_pmu);
-+	armv8pmu_restart(cpu_pmu);
- 
- 	return IRQ_HANDLED;
- }
-@@ -938,7 +1001,7 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
- 
- 	/* Always prefer to place a cycle counter into the cycle counter. */
- 	if ((evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) &&
--	    !armv8pmu_event_get_threshold(&event->attr)) {
-+	    !armv8pmu_event_get_threshold(&event->attr) && !has_branch_stack(event)) {
- 		if (!test_and_set_bit(ARMV8_PMU_CYCLE_IDX, cpuc->used_mask))
- 			return ARMV8_PMU_CYCLE_IDX;
- 		else if (armv8pmu_event_is_64bit(event) &&
-@@ -987,6 +1050,19 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
- 	return event->hw.idx + 1;
- }
- 
-+static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx,
-+				struct task_struct *task, bool sched_in)
-+{
-+	struct arm_pmu *armpmu = *this_cpu_ptr(&cpu_armpmu);
-+	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
-+
-+	if (!hw_events->branch_users)
-+		return;
-+
-+	if (sched_in)
-+		brbe_invalidate();
-+}
-+
- /*
-  * Add an event filter to a given event.
-  */
-@@ -1004,6 +1080,13 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	if (has_branch_stack(perf_event)) {
-+		if (!brbe_num_branch_records(cpu_pmu) || !brbe_branch_attr_valid(perf_event))
-+			return -EOPNOTSUPP;
-+
-+		perf_event->attach_state |= PERF_ATTACH_SCHED_CB;
-+	}
-+
- 	/*
- 	 * If we're running in hyp mode, then we *are* the hypervisor.
- 	 * Therefore we ignore exclude_hv in this configuration, since
-@@ -1070,6 +1153,11 @@ static void armv8pmu_reset(void *info)
- 	/* Clear the counters we flip at guest entry/exit */
- 	kvm_clr_pmu_events(mask);
- 
-+	if (brbe_num_branch_records(cpu_pmu)) {
-+		brbe_disable();
-+		brbe_invalidate();
-+	}
-+
- 	/*
- 	 * Initialize & Reset PMNC. Request overflow interrupt for
- 	 * 64 bit cycle counter but cheat in armv8pmu_write_counter().
-@@ -1238,6 +1326,25 @@ static void __armv8pmu_probe_pmu(void *info)
- 		cpu_pmu->reg_pmmir = read_pmmir();
- 	else
- 		cpu_pmu->reg_pmmir = 0;
-+
-+	brbe_probe(cpu_pmu);
-+}
-+
-+static int branch_records_alloc(struct arm_pmu *armpmu)
-+{
-+	size_t size = struct_size_t(struct perf_branch_stack, entries,
-+				    brbe_num_branch_records(armpmu));
-+	int cpu;
-+
-+	for_each_cpu(cpu, &armpmu->supported_cpus) {
-+		struct pmu_hw_events *events_cpu;
-+
-+		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
-+		events_cpu->branch_stack = kmalloc(size, GFP_KERNEL);
-+		if (!events_cpu->branch_stack)
-+			return -ENOMEM;
-+	}
-+	return 0;
- }
- 
- static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-@@ -1254,7 +1361,15 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
- 	if (ret)
- 		return ret;
- 
--	return probe.present ? 0 : -ENODEV;
-+	if (!probe.present)
-+		return -ENODEV;
-+
-+	if (brbe_num_branch_records(cpu_pmu)) {
-+		ret = branch_records_alloc(cpu_pmu);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
- }
- 
- static void armv8pmu_disable_user_access_ipi(void *unused)
-@@ -1313,6 +1428,8 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
- 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
- 
- 	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
-+	if (brbe_num_branch_records(cpu_pmu))
-+		cpu_pmu->pmu.sched_task		= armv8pmu_sched_task;
- 
- 	cpu_pmu->name			= name;
- 	cpu_pmu->map_event		= map_event;
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 6dc5e0cd76ca..93c9a26492fc 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -70,6 +70,11 @@ struct pmu_hw_events {
- 	struct arm_pmu		*percpu_pmu;
- 
- 	int irq;
-+
-+	struct perf_branch_stack	*branch_stack;
-+
-+	/* Active events requesting branch records */
-+	unsigned int		branch_users;
- };
- 
- enum armpmu_attr_groups {
-@@ -115,6 +120,7 @@ struct arm_pmu {
- 	/* PMUv3 only */
- 	int		pmuver;
- 	u64		reg_pmmir;
-+	u64		reg_brbidr;
- #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
- 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
- #define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
-@@ -126,6 +132,8 @@ struct arm_pmu {
- 
- #define to_arm_pmu(p) (container_of(p, struct arm_pmu, pmu))
- 
-+DECLARE_PER_CPU(struct arm_pmu *, cpu_armpmu);
-+
- u64 armpmu_event_update(struct perf_event *event);
- 
- int armpmu_event_set_period(struct perf_event *event);
-
--- 
-2.47.2
-
+T24gVHVlLCAyMDI1LTA2LTEwIGF0IDEzOjIxIC0wNzAwLCBOYW1oeXVuZyBLaW0gd3JvdGU6DQo+
+IEhlbGxvLA0KPiANCj4gT24gTW9uLCBKdW4gMDksIDIwMjUgYXQgMDQ6MjE6MzlQTSArMDAwMCwg
+RmFsY29uLCBUaG9tYXMgd3JvdGU6DQo+ID4gUGluZz8NCj4gDQo+IFNvcnJ5IGZvciB0aGUgZGVs
+YXksIEknbGwgcHJvY2VzcyB0aGUgc2VyaWVzIGFzIGl0J3MgcmV2aWV3ZWQgYnkgSWFuLg0KPiBJ
+YW4sIGl0IG1heSBjbGFzaCB3aXRoIHlvdXIgcGVyZl9lbnYgY2xlYW51cCB0aG91Z2guDQo+IA0K
+PiBBbHNvIG5vdGUgdGhhdCBwbGVhc2UgZG9uJ3QgbWl4IHBhdGNoIHZlcnNpb25zLiAgVGhlIDEv
+MiBpcyB2MSBhbmQgMi8yDQo+IHYzIC0gaXQgbWFrZXMgYjQgY29uZnVzZWQuDQo+IA0KPiBUaGFu
+a3MsDQo+IE5hbWh5dW5nDQoNClRoYW5rcyENCg0KVG9tDQoNCj4gDQo+ID4gDQo+ID4gT24gVHVl
+LCAyMDI1LTA1LTEzIGF0IDE4OjE4IC0wNTAwLCBUaG9tYXMgRmFsY29uIHdyb3RlOg0KPiA+ID4g
+Q2FsbGluZyBwZXJmIHRvcCB3aXRoIGJyYW5jaCBmaWx0ZXJzIGVuYWJsZWQgb24gSW50ZWwgQ1BV
+J3MNCj4gPiA+IHdpdGggYnJhbmNoIGNvdW50ZXJzIGxvZ2dpbmcgKEEuSy5BIExCUiBldmVudCBs
+b2dnaW5nIFsxXSkgc3VwcG9ydA0KPiA+ID4gcmVzdWx0cyBpbiBhIHNlZ2ZhdWx0Lg0KPiA+ID4g
+DQo+ID4gPiBUaHJlYWQgMjcgInBlcmYiIHJlY2VpdmVkIHNpZ25hbCBTSUdTRUdWLCBTZWdtZW50
+YXRpb24gZmF1bHQuDQo+ID4gPiBbU3dpdGNoaW5nIHRvIFRocmVhZCAweDdmZmZhZmZmNzZjMCAo
+TFdQIDk0OTAwMyldDQo+ID4gPiBwZXJmX2Vudl9fZmluZF9icl9jbnRyX2luZm8gKGVudj0weGY2
+NmRjMCA8cGVyZl9lbnY+LCBucj0weDAsIHdpZHRoPTB4N2ZmZmFmZmY2MmMwKSBhdCB1dGlsL2Vu
+di5jOjY1Mw0KPiA+ID4gNjUzCQkJKndpZHRoID0gZW52LT5jcHVfcG11X2NhcHMgPyBlbnYtPmJy
+X2NudHJfd2lkdGggOg0KPiA+ID4gKGdkYikgYnQNCj4gPiA+ICAjMCAgcGVyZl9lbnZfX2ZpbmRf
+YnJfY250cl9pbmZvIChlbnY9MHhmNjZkYzAgPHBlcmZfZW52PiwgbnI9MHgwLCB3aWR0aD0weDdm
+ZmZhZmZmNjJjMCkgYXQgdXRpbC9lbnYuYzo2NTMNCj4gPiA+ICAjMSAgMHgwMDAwMDAwMDAwNWIx
+NTk5IGluIHN5bWJvbF9fYWNjb3VudF9icl9jbnRyIChicmFuY2g9MHg3ZmZmY2MzZGI1ODAsIGV2
+c2VsPTB4ZmVhMmQwLCBvZmZzZXQ9MTIsIGJyX2NudHI9OCkgYXQgdXRpbC9hbm5vdGF0ZS5jOjM0
+NQ0KPiA+ID4gICMyICAweDAwMDAwMDAwMDA1YjE3ZmIgaW4gc3ltYm9sX19hY2NvdW50X2N5Y2xl
+cyAoYWRkcj01NjU4MTcyLCBzdGFydD01NjU4MTYwLCBzeW09MHg3ZmZmY2MwZWU0MjAsIGN5Y2xl
+cz01MzksIGV2c2VsPTB4ZmVhMmQwLCBicl9jbnRyPTgpIGF0IHV0aWwvYW5ub3RhdGUuYzozODkN
+Cj4gPiA+ICAjMyAgMHgwMDAwMDAwMDAwNWIxOTc2IGluIGFkZHJfbWFwX3N5bWJvbF9fYWNjb3Vu
+dF9jeWNsZXMgKGFtcz0weDdmZmZjZDdiMDFkMCwgc3RhcnQ9MHg3ZmZmY2Q3YjAyYjAsIGN5Y2xl
+cz01MzksIGV2c2VsPTB4ZmVhMmQwLCBicl9jbnRyPTgpIGF0IHV0aWwvYW5ub3RhdGUuYzo0MjIN
+Cj4gPiA+ICAjNCAgMHgwMDAwMDAwMDAwNjhkNTdmIGluIGhpc3RfX2FjY291bnRfY3ljbGVzIChi
+cz0weDExMGQyODgsIGFsPTB4N2ZmZmFmZmY2NTQwLCBzYW1wbGU9MHg3ZmZmYWZmZjY3NjAsIG5v
+bmFueV9icmFuY2hfbW9kZT1mYWxzZSwgdG90YWxfY3ljbGVzPTB4MCwgZXZzZWw9MHhmZWEyZDAp
+IGF0IHV0aWwvaGlzdC5jOjI4NTANCj4gPiA+ICAjNSAgMHgwMDAwMDAwMDAwNDQ2MjE2IGluIGhp
+c3RfaXRlcl9fdG9wX2NhbGxiYWNrIChpdGVyPTB4N2ZmZmFmZmY2NTkwLCBhbD0weDdmZmZhZmZm
+NjU0MCwgc2luZ2xlPXRydWUsIGFyZz0weDdmZmZmZmZmOWUwMCkgYXQgYnVpbHRpbi10b3AuYzo3
+MzcNCj4gPiA+ICAjNiAgMHgwMDAwMDAwMDAwNjg5Nzg3IGluIGhpc3RfZW50cnlfaXRlcl9fYWRk
+IChpdGVyPTB4N2ZmZmFmZmY2NTkwLCBhbD0weDdmZmZhZmZmNjU0MCwgbWF4X3N0YWNrX2RlcHRo
+PTEyNywgYXJnPTB4N2ZmZmZmZmY5ZTAwKSBhdCB1dGlsL2hpc3QuYzoxMzU5DQo+ID4gPiAgIzcg
+IDB4MDAwMDAwMDAwMDQ0NjcxMCBpbiBwZXJmX2V2ZW50X19wcm9jZXNzX3NhbXBsZSAodG9vbD0w
+eDdmZmZmZmZmOWUwMCwgZXZlbnQ9MHgxMTBkMjUwLCBldnNlbD0weGZlYTJkMCwgc2FtcGxlPTB4
+N2ZmZmFmZmY2NzYwLCBtYWNoaW5lPTB4MTA4Yzk2OCkgYXQgYnVpbHRpbi10b3AuYzo4NDUNCj4g
+PiA+ICAjOCAgMHgwMDAwMDAwMDAwNDQ3NzM1IGluIGRlbGl2ZXJfZXZlbnQgKHFlPTB4N2ZmZmZm
+ZmZhMTIwLCBxZXZlbnQ9MHgxMGZjMjAwKSBhdCBidWlsdGluLXRvcC5jOjEyMTENCj4gPiA+ICAj
+OSAgMHgwMDAwMDAwMDAwNjRjY2FlIGluIGRvX2ZsdXNoIChvZT0weDdmZmZmZmZmYTEyMCwgc2hv
+d19wcm9ncmVzcz1mYWxzZSkgYXQgdXRpbC9vcmRlcmVkLWV2ZW50cy5jOjI0NQ0KPiA+ID4gICMx
+MCAweDAwMDAwMDAwMDA2NGQwMDUgaW4gX19vcmRlcmVkX2V2ZW50c19fZmx1c2ggKG9lPTB4N2Zm
+ZmZmZmZhMTIwLCBob3c9T0VfRkxVU0hfX1RPUCwgdGltZXN0YW1wPTApIGF0IHV0aWwvb3JkZXJl
+ZC1ldmVudHMuYzozMjQNCj4gPiA+ICAjMTEgMHgwMDAwMDAwMDAwNjRkMGVmIGluIG9yZGVyZWRf
+ZXZlbnRzX19mbHVzaCAob2U9MHg3ZmZmZmZmZmExMjAsIGhvdz1PRV9GTFVTSF9fVE9QKSBhdCB1
+dGlsL29yZGVyZWQtZXZlbnRzLmM6MzQyDQo+ID4gPiAgIzEyIDB4MDAwMDAwMDAwMDQ0NzJhOSBp
+biBwcm9jZXNzX3RocmVhZCAoYXJnPTB4N2ZmZmZmZmY5ZTAwKSBhdCBidWlsdGluLXRvcC5jOjEx
+MjANCj4gPiA+ICAjMTMgMHgwMDAwN2ZmZmY2ZTdkYmE4IGluIHN0YXJ0X3RocmVhZCAoYXJnPTxv
+cHRpbWl6ZWQgb3V0PikgYXQgcHRocmVhZF9jcmVhdGUuYzo0NDgNCj4gPiA+ICAjMTQgMHgwMDAw
+N2ZmZmY2ZjAxYjhjIGluIF9fR0lfX19jbG9uZTMgKCkgYXQgLi4vc3lzZGVwcy91bml4L3N5c3Yv
+bGludXgveDg2XzY0L2Nsb25lMy5TOjc4DQo+ID4gPiANCj4gPiA+IFRoZSBjYXVzZSBpcyB0aGF0
+IHBlcmZfZW52X19maW5kX2JyX2NudHJfaW5mbyB0cmllcyB0byBhY2Nlc3MgYQ0KPiA+ID4gbnVs
+bCBwb2ludGVyIHBtdV9jYXBzIGluIHRoZSBwZXJmX2VudiBzdHJ1Y3QuIEEgc2ltaWxhciBpc3N1
+ZSBleGlzdHMNCj4gPiA+IGZvciBob21vZ2VuZW91cyBjb3JlIHN5c3RlbXMgd2hpY2ggdXNlIHRo
+ZSBjcHVfcG11X2NhcHMgc3RydWN0dXJlLg0KPiA+ID4gDQo+ID4gPiBGaXggdGhpcyBieSBwb3B1
+bGF0aW5nIGNwdV9wbXVfY2FwcyBhbmQgcG11X2NhcHMgc3RydWN0dXJlcyB3aXRoDQo+ID4gPiB2
+YWx1ZXMgZnJvbSBzeXNmcyB3aGVuIGNhbGxpbmcgcGVyZiB0b3Agd2l0aCBicmFuY2ggc3RhY2sg
+c2FtcGxpbmcNCj4gPiA+IGVuYWJsZWQuDQo+ID4gPiANCj4gPiA+IFsxXSwgTEJSIGV2ZW50IGxv
+Z2dpbmcgaW50cm9kdWNlZCBoZXJlOg0KPiA+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxs
+LzIwMjMxMDI1MjAxNjI2LjMwMDAyMjgtNS1rYW4ubGlhbmdAbGludXguaW50ZWwuY29tLw0KPiA+
+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgRmFsY29uIDx0aG9tYXMuZmFsY29uQGlu
+dGVsLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gdjM6IGNvbnN0aWZ5IHN0cnVjdCBwZXJmX3BtdSAq
+cG11IGluIF9fcGVyZl9lbnZfX3JlYWRfY29yZV9wbXVfY2FwcygpDQo+ID4gPiAgICAgdXNlIHBl
+cmZfcG11c19fZmluZF9jb3JlX3BtdSgpIGluc3RlYWQgb2YgcGVyZl9wbXVzX19zY2FuX2NvcmUo
+TlVMTCkNCj4gPiA+IA0KPiA+ID4gdjI6IHVwZGF0ZSBjb21taXQgbWVzc2FnZSB3aXRoIG1vcmUg
+bWVhbmluZ2Z1bCBzdGFjayB0cmFjZSBmcm9tDQo+ID4gPiAgICAgZ2RiIGFuZCBpbmRpY2F0ZSB0
+aGF0IGFmZmVjdGVkIHN5c3RlbXMgYXJlIGxpbWl0ZWQgdG8gQ1BVJ3MNCj4gPiA+ICAgICB3aXRo
+IExCUiBldmVudCBsb2dnaW5nIHN1cHBvcnQgYW5kIHRoYXQgYm90aCBoeWJyaWQgYW5kDQo+ID4g
+PiAgICAgbm9uLWh5YnJpZCBjb3JlIHN5c3RlbXMgYXJlIGFmZmVjdGVkLg0KPiA+ID4gLS0tDQo+
+ID4gPiAgdG9vbHMvcGVyZi9idWlsdGluLXRvcC5jIHwgICA4ICsrKw0KPiA+ID4gIHRvb2xzL3Bl
+cmYvdXRpbC9lbnYuYyAgICB8IDExNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysNCj4gPiA+ICB0b29scy9wZXJmL3V0aWwvZW52LmggICAgfCAgIDEgKw0KPiA+ID4gIDMg
+ZmlsZXMgY2hhbmdlZCwgMTIzIGluc2VydGlvbnMoKykNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdp
+dCBhL3Rvb2xzL3BlcmYvYnVpbHRpbi10b3AuYyBiL3Rvb2xzL3BlcmYvYnVpbHRpbi10b3AuYw0K
+PiA+ID4gaW5kZXggZjlmMzEzOTFiZGRiLi5jOWQ2Nzk0MTA1OTEgMTAwNjQ0DQo+ID4gPiAtLS0g
+YS90b29scy9wZXJmL2J1aWx0aW4tdG9wLmMNCj4gPiA+ICsrKyBiL3Rvb2xzL3BlcmYvYnVpbHRp
+bi10b3AuYw0KPiA+ID4gQEAgLTE3MjksNiArMTcyOSwxNCBAQCBpbnQgY21kX3RvcChpbnQgYXJn
+YywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ID4gPiAgCWlmIChvcHRzLT5icmFuY2hfc3RhY2sgJiYg
+Y2FsbGNoYWluX3BhcmFtLmVuYWJsZWQpDQo+ID4gPiAgCQlzeW1ib2xfY29uZi5zaG93X2JyYW5j
+aGZsYWdfY291bnQgPSB0cnVlOw0KPiA+ID4gIA0KPiA+ID4gKwlpZiAob3B0cy0+YnJhbmNoX3N0
+YWNrKSB7DQo+ID4gPiArCQlzdGF0dXMgPSBwZXJmX2Vudl9fcmVhZF9jb3JlX3BtdV9jYXBzKCZw
+ZXJmX2Vudik7DQo+ID4gPiArCQlpZiAoc3RhdHVzKSB7DQo+ID4gPiArCQkJcHJfZXJyKCJQTVUg
+Y2FwYWJpbGl0eSBkYXRhIGlzIG5vdCBhdmFpbGFibGVcbiIpOw0KPiA+ID4gKwkJCWdvdG8gb3V0
+X2RlbGV0ZV9ldmxpc3Q7DQo+ID4gPiArCQl9DQo+ID4gPiArCX0NCj4gPiA+ICsNCj4gPiA+ICAJ
+c29ydF9fbW9kZSA9IFNPUlRfTU9ERV9fVE9QOw0KPiA+ID4gIAkvKiBkaXNwbGF5IHRocmVhZCB3
+YW50cyBlbnRyaWVzIHRvIGJlIGNvbGxhcHNlZCBpbiBhIGRpZmZlcmVudCB0cmVlICovDQo+ID4g
+PiAgCXBlcmZfaHBwX2xpc3QubmVlZF9jb2xsYXBzZSA9IDE7DQo+ID4gPiBkaWZmIC0tZ2l0IGEv
+dG9vbHMvcGVyZi91dGlsL2Vudi5jIGIvdG9vbHMvcGVyZi91dGlsL2Vudi5jDQo+ID4gPiBpbmRl
+eCAzNjQxMTc0OWUwMDcuLjY3MzU3ODZhMWQyMiAxMDA2NDQNCj4gPiA+IC0tLSBhL3Rvb2xzL3Bl
+cmYvdXRpbC9lbnYuYw0KPiA+ID4gKysrIGIvdG9vbHMvcGVyZi91dGlsL2Vudi5jDQo+ID4gPiBA
+QCAtNDE2LDYgKzQxNiwxMjAgQEAgc3RhdGljIGludCBwZXJmX2Vudl9fcmVhZF9ucl9jcHVzX2F2
+YWlsKHN0cnVjdCBwZXJmX2VudiAqZW52KQ0KPiA+ID4gIAlyZXR1cm4gZW52LT5ucl9jcHVzX2F2
+YWlsID8gMCA6IC1FTk9FTlQ7DQo+ID4gPiAgfQ0KPiA+ID4gIA0KPiA+ID4gK3N0YXRpYyBpbnQg
+X19wZXJmX2Vudl9fcmVhZF9jb3JlX3BtdV9jYXBzKGNvbnN0IHN0cnVjdCBwZXJmX3BtdSAqcG11
+LA0KPiA+ID4gKwkJCQkJICBpbnQgKm5yX2NhcHMsIGNoYXIgKioqY2FwcywNCj4gPiA+ICsJCQkJ
+CSAgdW5zaWduZWQgaW50ICptYXhfYnJhbmNoZXMsDQo+ID4gPiArCQkJCQkgIHVuc2lnbmVkIGlu
+dCAqYnJfY250cl9uciwNCj4gPiA+ICsJCQkJCSAgdW5zaWduZWQgaW50ICpicl9jbnRyX3dpZHRo
+KQ0KPiA+ID4gK3sNCj4gPiA+ICsJc3RydWN0IHBlcmZfcG11X2NhcHMgKnBjYXBzID0gTlVMTDsN
+Cj4gPiA+ICsJY2hhciAqcHRyLCAqKnRtcDsNCj4gPiA+ICsJaW50IHJldCA9IDA7DQo+ID4gPiAr
+DQo+ID4gPiArCSpucl9jYXBzID0gMDsNCj4gPiA+ICsJKmNhcHMgPSBOVUxMOw0KPiA+ID4gKw0K
+PiA+ID4gKwlpZiAoIXBtdS0+bnJfY2FwcykNCj4gPiA+ICsJCXJldHVybiAwOw0KPiA+ID4gKw0K
+PiA+ID4gKwkqY2FwcyA9IHphbGxvYyhzaXplb2YoY2hhciAqKSAqIHBtdS0+bnJfY2Fwcyk7DQo+
+ID4gPiArCWlmICghKmNhcHMpDQo+ID4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiA+ICsNCj4g
+PiA+ICsJdG1wID0gKmNhcHM7DQo+ID4gPiArCWxpc3RfZm9yX2VhY2hfZW50cnkocGNhcHMsICZw
+bXUtPmNhcHMsIGxpc3QpIHsNCj4gPiA+ICsNCj4gPiA+ICsJCWlmIChhc3ByaW50ZigmcHRyLCAi
+JXM9JXMiLCBwY2Fwcy0+bmFtZSwgcGNhcHMtPnZhbHVlKSA8IDApIHsNCj4gPiA+ICsJCQlyZXQg
+PSAtRU5PTUVNOw0KPiA+ID4gKwkJCWdvdG8gZXJyb3I7DQo+ID4gPiArCQl9DQo+ID4gPiArDQo+
+ID4gPiArCQkqdG1wKysgPSBwdHI7DQo+ID4gPiArDQo+ID4gPiArCQlpZiAoIXN0cmNtcChwY2Fw
+cy0+bmFtZSwgImJyYW5jaGVzIikpDQo+ID4gPiArCQkJKm1heF9icmFuY2hlcyA9IGF0b2kocGNh
+cHMtPnZhbHVlKTsNCj4gPiA+ICsNCj4gPiA+ICsJCWlmICghc3RyY21wKHBjYXBzLT5uYW1lLCAi
+YnJhbmNoX2NvdW50ZXJfbnIiKSkNCj4gPiA+ICsJCQkqYnJfY250cl9uciA9IGF0b2kocGNhcHMt
+PnZhbHVlKTsNCj4gPiA+ICsNCj4gPiA+ICsJCWlmICghc3RyY21wKHBjYXBzLT5uYW1lLCAiYnJh
+bmNoX2NvdW50ZXJfd2lkdGgiKSkNCj4gPiA+ICsJCQkqYnJfY250cl93aWR0aCA9IGF0b2kocGNh
+cHMtPnZhbHVlKTsNCj4gPiA+ICsJfQ0KPiA+ID4gKwkqbnJfY2FwcyA9IHBtdS0+bnJfY2FwczsN
+Cj4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiArZXJyb3I6DQo+ID4gPiArCXdoaWxlICh0bXAtLSAh
+PSAqY2FwcykNCj4gPiA+ICsJCWZyZWUoKnRtcCk7DQo+ID4gPiArCWZyZWUoKmNhcHMpOw0KPiA+
+ID4gKwkqY2FwcyA9IE5VTEw7DQo+ID4gPiArCSpucl9jYXBzID0gMDsNCj4gPiA+ICsJcmV0dXJu
+IHJldDsNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiAraW50IHBlcmZfZW52X19yZWFkX2NvcmVf
+cG11X2NhcHMoc3RydWN0IHBlcmZfZW52ICplbnYpDQo+ID4gPiArew0KPiA+ID4gKwlzdHJ1Y3Qg
+cGVyZl9wbXUgKnBtdSA9IE5VTEw7DQo+ID4gPiArCXN0cnVjdCBwbXVfY2FwcyAqcG11X2NhcHM7
+DQo+ID4gPiArCWludCBucl9wbXUgPSAwLCBpID0gMCwgajsNCj4gPiA+ICsJaW50IHJldDsNCj4g
+PiA+ICsNCj4gPiA+ICsJbnJfcG11ID0gcGVyZl9wbXVzX19udW1fY29yZV9wbXVzKCk7DQo+ID4g
+PiArDQo+ID4gPiArCWlmICghbnJfcG11KQ0KPiA+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4g
+PiArDQo+ID4gPiArCWlmIChucl9wbXUgPT0gMSkgew0KPiA+ID4gKwkJcG11ID0gcGVyZl9wbXVz
+X19maW5kX2NvcmVfcG11KCk7DQo+ID4gPiArCQlpZiAoIXBtdSkNCj4gPiA+ICsJCQlyZXR1cm4g
+LUVOT0RFVjsNCj4gPiA+ICsJCXJldCA9IHBlcmZfcG11X19jYXBzX3BhcnNlKHBtdSk7DQo+ID4g
+PiArCQlpZiAocmV0IDwgMCkNCj4gPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ID4gKwkJcmV0dXJu
+IF9fcGVyZl9lbnZfX3JlYWRfY29yZV9wbXVfY2FwcyhwbXUsICZlbnYtPm5yX2NwdV9wbXVfY2Fw
+cywNCj4gPiA+ICsJCQkJCQkgICAgICAmZW52LT5jcHVfcG11X2NhcHMsDQo+ID4gPiArCQkJCQkJ
+ICAgICAgJmVudi0+bWF4X2JyYW5jaGVzLA0KPiA+ID4gKwkJCQkJCSAgICAgICZlbnYtPmJyX2Nu
+dHJfbnIsDQo+ID4gPiArCQkJCQkJICAgICAgJmVudi0+YnJfY250cl93aWR0aCk7DQo+ID4gPiAr
+CX0NCj4gPiA+ICsNCj4gPiA+ICsJcG11X2NhcHMgPSB6YWxsb2Moc2l6ZW9mKCpwbXVfY2Fwcykg
+KiBucl9wbXUpOw0KPiA+ID4gKwlpZiAoIXBtdV9jYXBzKQ0KPiA+ID4gKwkJcmV0dXJuIC1FTk9N
+RU07DQo+ID4gPiArDQo+ID4gPiArCXdoaWxlICgocG11ID0gcGVyZl9wbXVzX19zY2FuX2NvcmUo
+cG11KSkgIT0gTlVMTCkgew0KPiA+ID4gKwkJaWYgKHBlcmZfcG11X19jYXBzX3BhcnNlKHBtdSkg
+PD0gMCkNCj4gPiA+ICsJCQljb250aW51ZTsNCj4gPiA+ICsJCXJldCA9IF9fcGVyZl9lbnZfX3Jl
+YWRfY29yZV9wbXVfY2FwcyhwbXUsICZwbXVfY2Fwc1tpXS5ucl9jYXBzLA0KPiA+ID4gKwkJCQkJ
+CSAgICAgJnBtdV9jYXBzW2ldLmNhcHMsDQo+ID4gPiArCQkJCQkJICAgICAmcG11X2NhcHNbaV0u
+bWF4X2JyYW5jaGVzLA0KPiA+ID4gKwkJCQkJCSAgICAgJnBtdV9jYXBzW2ldLmJyX2NudHJfbnIs
+DQo+ID4gPiArCQkJCQkJICAgICAmcG11X2NhcHNbaV0uYnJfY250cl93aWR0aCk7DQo+ID4gPiAr
+CQlpZiAocmV0KQ0KPiA+ID4gKwkJCWdvdG8gZXJyb3I7DQo+ID4gPiArDQo+ID4gPiArCQlwbXVf
+Y2Fwc1tpXS5wbXVfbmFtZSA9IHN0cmR1cChwbXUtPm5hbWUpOw0KPiA+ID4gKwkJaWYgKCFwbXVf
+Y2Fwc1tpXS5wbXVfbmFtZSkgew0KPiA+ID4gKwkJCXJldCA9IC1FTk9NRU07DQo+ID4gPiArCQkJ
+Z290byBlcnJvcjsNCj4gPiA+ICsJCX0NCj4gPiA+ICsJCWkrKzsNCj4gPiA+ICsJfQ0KPiA+ID4g
+Kw0KPiA+ID4gKwllbnYtPm5yX3BtdXNfd2l0aF9jYXBzID0gbnJfcG11Ow0KPiA+ID4gKwllbnYt
+PnBtdV9jYXBzID0gcG11X2NhcHM7DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiAwOw0KPiA+ID4g
+K2Vycm9yOg0KPiA+ID4gKwlmb3IgKGkgPSAwOyBpIDwgbnJfcG11OyBpKyspIHsNCj4gPiA+ICsJ
+CWZvciAoaiA9IDA7IGogPCBwbXVfY2Fwc1tpXS5ucl9jYXBzOyBqKyspDQo+ID4gPiArCQkJZnJl
+ZShwbXVfY2Fwc1tpXS5jYXBzW2pdKTsNCj4gPiA+ICsJCWZyZWUocG11X2NhcHNbaV0uY2Fwcyk7
+DQo+ID4gPiArCQlmcmVlKHBtdV9jYXBzW2ldLnBtdV9uYW1lKTsNCj4gPiA+ICsJfQ0KPiA+ID4g
+KwlmcmVlKHBtdV9jYXBzKTsNCj4gPiA+ICsJcmV0dXJuIHJldDsNCj4gPiA+ICt9DQo+ID4gPiAr
+DQo+ID4gPiAgY29uc3QgY2hhciAqcGVyZl9lbnZfX3Jhd19hcmNoKHN0cnVjdCBwZXJmX2VudiAq
+ZW52KQ0KPiA+ID4gIHsNCj4gPiA+ICAJcmV0dXJuIGVudiAmJiAhcGVyZl9lbnZfX3JlYWRfYXJj
+aChlbnYpID8gZW52LT5hcmNoIDogInVua25vd24iOw0KPiA+ID4gZGlmZiAtLWdpdCBhL3Rvb2xz
+L3BlcmYvdXRpbC9lbnYuaCBiL3Rvb2xzL3BlcmYvdXRpbC9lbnYuaA0KPiA+ID4gaW5kZXggZDkw
+ZTM0M2NmMWZhLi4xMzVhMWY3MTQ5MDUgMTAwNjQ0DQo+ID4gPiAtLS0gYS90b29scy9wZXJmL3V0
+aWwvZW52LmgNCj4gPiA+ICsrKyBiL3Rvb2xzL3BlcmYvdXRpbC9lbnYuaA0KPiA+ID4gQEAgLTE1
+Miw2ICsxNTIsNyBAQCBzdHJ1Y3QgYnRmX25vZGU7DQo+ID4gPiAgDQo+ID4gPiAgZXh0ZXJuIHN0
+cnVjdCBwZXJmX2VudiBwZXJmX2VudjsNCj4gPiA+ICANCj4gPiA+ICtpbnQgcGVyZl9lbnZfX3Jl
+YWRfY29yZV9wbXVfY2FwcyhzdHJ1Y3QgcGVyZl9lbnYgKmVudik7DQo+ID4gPiAgdm9pZCBwZXJm
+X2Vudl9fZXhpdChzdHJ1Y3QgcGVyZl9lbnYgKmVudik7DQo+ID4gPiAgDQo+ID4gPiAgaW50IHBl
+cmZfZW52X19rZXJuZWxfaXNfNjRfYml0KHN0cnVjdCBwZXJmX2VudiAqZW52KTsNCj4gPiANCg0K
