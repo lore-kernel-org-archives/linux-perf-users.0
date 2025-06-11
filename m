@@ -1,157 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5230A95C;
-	Wed, 11 Jun 2025 15:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595E31DE2A4
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 15:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654379; cv=none; b=iiCa3522pixpbsaICZQ+9UMIA0NBmHUqVaa/yDEsPuqfEUokMzerCfq4kR/7uXKzZCG6T/glm6RKryKmCMM1cq4fwFkoEsARtd9uNUD+j6qogSdmnUWPFGJFk4NbOtb/aPwBrr5pozjoh9qCzgfiVENpc12VYq4RVvmI8RkdBvk=
+	t=1749654753; cv=none; b=Q11CBAGpf0hy5lvw1l0XfTwiwZ1x0DMgoQrlsOHtlKGAy3E3CSai1JE1Md0DtLHXgFxBPdsx5dbBDfSHoG/eE/iOwys9pAtToD3enBuJ7ojTsjUq6J0CUqTMl+yr/k+oIxyDM0WLlKLCuEZyQXAB28CTKkUmoH9GD1g0sv+r2tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654379; c=relaxed/simple;
-	bh=aCkGDuI3v8qqrSp/lgc7mwahaXmCdy/S1VGipRF8Wjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bo4re0qTztKaW4vpeF7WYJoe0yUIRDsdA2OtQNojEkPjX21jmlSkAMP/qdb3DphRNHPUJJKhZgA5tOe9E/3DtV1uVQwoC6DlJO6d/Ka7Y0RQ0EHS0Y3r0HOaxRIShhFoBPtcP+hBK3z/g+S+BFKGtww6dOjwWoCNSXuNELK74YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SdgNGd4N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kvLTiNMX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749654753; c=relaxed/simple;
+	bh=CpDpksR03m+W/KR5W/pURdBtrJRZER/h23noEbaiE4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mPKopTdHrVzA/uqbJo+Muvp76XQJwvpvtOBOK6u5B1gb2qi62ocWyCgGyl7Che/vokhnRNL2myvLZcdylo6pWn4g1NOOhCt94oTv8Gvg+Le+Woi2GDyFfavAuTRQPwvsWiuXWm7EGLXJmHJ3zrRVQVdwuPguZcjGTpZdKQaPM8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gS0sMT0Z; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SdgNGd4N";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kvLTiNMX"
-Date: Wed, 11 Jun 2025 17:06:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749654376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gjvHM+RNwqsHkW9Rr7fWxpTn4Yk9ccBYDYjbQTaoxoE=;
-	b=SdgNGd4NoenkJU0zTfISKg+r4GdlotOifbGfmThZm7iV4vu6631Gpux2LHGXmGV2Nk+yMy
-	WN6om+l59PK0lK7a06k9wltbA+7hgQ7dyegODxm2gk/dTCtxKq+Cav037KCA8Kpc6gFZvV
-	nG5IKnT5PLFbHMRaeTvL2j/sUjgTiQgMTVrPQY02yez5q/L57T6HxkQbRRe32KFCtOShg4
-	Bqvjg0HXyHYD+5OaaS6gl1RHMAisqo51+QLHajmT402t1m/pAUtRC56+sYiq/38nATQGxQ
-	0P3iAdHtuNxl5bm/2ihUc31VpCZXBk1u7ctT618EeE++WBR3R5dAfdNuDGErnw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749654376;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gjvHM+RNwqsHkW9Rr7fWxpTn4Yk9ccBYDYjbQTaoxoE=;
-	b=kvLTiNMXDmgiDh2qQ5KrRSD1PvbALQP7GHjr08YoOBL4x4djSk5rYljZ33UB798KTf7b5k
-	VwkJjEMeXMGAAlCw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <20250611150615.FcVIIhgA@linutronix.de>
-References: <aEh6xO14wDSCFUDr@google.com>
- <20250611092542.F4ooE2FL@linutronix.de>
- <aEmBOO0bSJYSvX2i@x1>
- <aEmY259Mx92D60KG@x1>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gS0sMT0Z"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso10442f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 08:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749654749; x=1750259549; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xXzBZQldP73BbRZZS65Vo9wcTrZxZnhNR3p8LsxSWO0=;
+        b=gS0sMT0ZqXZxOeBRkwfxJ4B392d8AFTg2TKV2pVh/M6AocAAHGRz80l/5crnEdL3UB
+         kBkrbwmI18BdrHhIcmAhW1q8zZnSHh0CIbbq63vEgNoSLqWHjB/HrAROyXDGQ1Z47ZYa
+         060rj8k9BVw97V5gWPpez3Mx+ZfOJqEhsqKasC5qz50cXNzhlshh2qmxsnoXS9tmkywU
+         si2aJG0pYaOKCcXyboPkmL4H44QrFbwkW1esgJrQCT+YuUDSEIo55JOea9Gv+tAeJjw/
+         y26wp9QfTrxwFIluLTpXzCm9/fWMR7OD80R6H76KQ1iZlR47W6veqVi6qSrSvyoWa6xK
+         XYSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749654749; x=1750259549;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xXzBZQldP73BbRZZS65Vo9wcTrZxZnhNR3p8LsxSWO0=;
+        b=HxYRP+tzTHS0OhyU1Dz9v0HAo0207+LF8P57HhiqWG3DtTq02ugERMJfS0bzzAuT8G
+         5pshfhjGMubRqOYQSDqo/xC2VQdKSsED/OYj6Fln3Qw3KBtEB89fV3DMePVeBW2ETalQ
+         tRFlTf6HSnihkJwNjdgfuixPzbzQZPLMaKiSxNFzbZgg0zmqZ0yBUIVioa8sndCSZpJE
+         bt7A90ZTcX6dc53aHtgKY9xwud+SMJ+C2Jb0KV6kpxxjihYYXao377MhVDwz2TNBniyV
+         MaR5LXTyobZyi48fYILemOTeSnCJbSs7D7/EOSFFdYrohlMlrznZUo4IjzS+VKDd4Jpc
+         dDqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVerZ+0cV/pGNjp8M2U3duVNbPAbkj+2OqT7aIq/B7DKEnboEkEBcirJxNiXGA6PcST8F7gTUTqY3/Ygz8bBbpA@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLnX83eBfMda52dT+G2tp0dtdlBn9wWtMqyV3Y0t2Y1bZ3ujc8
+	K2hD90e9ChR6D2zcbTPFWAQ1nC75BqCk74iwDt2mF4gjreqtWFyZPa2tVKKLvMtW//E=
+X-Gm-Gg: ASbGncuXye8OuuVXH2KTT11z16bVxfLIpWBK7J2+EvkC49I/5o8RlvyWa2sZnR+KaKM
+	xH7EPON/2gyHoKbnMlOuc4sobLjqxrgpIikak/l63CuYsbVvjdN/XeB1wgjmpoEC7cfvdk7kc0m
+	krB9o5owby9njob0403M6PsjzOlLZpW7s5mCpofcecifp49ie8nm0RPsofFJE/JjPODkjUjo06C
+	N6BNCWznEb0YKN48vHzxICocADqOuBCRwWREUDpL6j/K15aWIuIHffD0xzWRv1a6HxPbsxoh24T
+	eKkAuQ6hnxnJk7d0s7SCr1hSgshz5RffldqMcuHN1ZeA2eFIx+HlNF7+vA6zei/26bE=
+X-Google-Smtp-Source: AGHT+IGjRZp6QoSgWwB91XKzm+h5aA4BVHOOkZHH3LrJev657ZvvnKDi3bNUVbObVY3dZRrMSs35iw==
+X-Received: by 2002:a05:6000:4305:b0:3a5:1266:3e96 with SMTP id ffacd0b85a97d-3a558695737mr3092005f8f.15.1749654749616;
+        Wed, 11 Jun 2025 08:12:29 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5324520e7sm15619819f8f.84.2025.06.11.08.12.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 08:12:29 -0700 (PDT)
+Message-ID: <bcf75597-0665-49fe-bd85-7613ff508302@linaro.org>
+Date: Wed, 11 Jun 2025 16:12:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aEmY259Mx92D60KG@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf: arm_spe: Relax period restriction
+To: Leo Yan <leo.yan@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org
+References: <20250528132501.129586-1-leo.yan@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250528132501.129586-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-11 11:55:23 [-0300], Arnaldo Carvalho de Melo wrote:
-> commit 8386dc356158fc50c55831c96b1248e01d112ebc
-> Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Date:   Wed Jun 11 11:25:42 2025 +0200
+
+
+On 28/05/2025 2:25 pm, Leo Yan wrote:
+> The minimum interval specified the PMSIDR_EL1.Interval field is a
+> hardware recommendation. However, this value is set by hardware designer
+> before the production. It may not accurately reflects actual hardware
+> limitations, and tools currently have no way to test shorter periods.
 > 
->     perf bench futex: Fix prctl include in musl libc
->     
->     Namhyung Kim reported:
->     
->       I've updated the perf-tools-next to v6.16-rc1 and found a build error
->       like below on alpine linux 3.18.
->     
->         In file included from bench/futex.c:6:
->         /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
->            88 | struct prctl_mm_map {
->               |        ^~~~~~~~~~~~
->         In file included from bench/futex.c:5:
->         /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
->           134 | struct prctl_mm_map {
->               |        ^~~~~~~~~~~~
->         make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
->     
->       git bisect says it's the first commit introduced the failure.
->     
->     So your /usr/include/sys/prctl.h and
->     /linux/tools/include/uapi/linux/prctl.h both provide struct prctl_mm_map
->     but their include guard must be different.
->     
->     My /usr/include/sys/prctl.h is provided by glibc and contains the
->     prctl() declaration. It includes also linux/prctl.h.  The
->     tools/include/uapi/linux/prctl.h is the same as
->     /usr/include/linux/prctl.h.
->     
->     The /usr/include/sys/prctl.h on alpine linux is different. This is
->     probably coming from musl. It contains the PR_* definition and the
->     prctl() declaration.  So it clashes here because now the one struct is
->     available twice.
->     
->     The man page for prctl(2) says:
->     
->     |       #include <linux/prctl.h>  /* Definition of PR_* constants */
->     |       #include <sys/prctl.h>
->     
->     so musl doesn't follow this.
->     
->     So align with the other builds.
->     
->     Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->     Reported-by: Namhyung Kim <namhyung@kernel.org>
->     Link: https://lore.kernel.org/r/20250611092542.F4ooE2FL@linutronix.de
-
-s/Link/Closes/
-
->     [ Remove one more in tools/perf/bench/futex-hash.c and conditionally define PR_FUTEX_HASH and friends ]
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> This change relaxes the limitation by allowing any non-zero periods.
+> This gives chance for experimenting smaller periods.
 > 
-> diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> index fdf133c9520f73a4..d2d6d7f3ea331c84 100644
-> --- a/tools/perf/bench/futex-hash.c
-> +++ b/tools/perf/bench/futex-hash.c
-> @@ -18,7 +18,6 @@
->  #include <stdlib.h>
->  #include <linux/compiler.h>
->  #include <linux/kernel.h>
-> -#include <linux/prctl.h>
->  #include <linux/zalloc.h>
->  #include <sys/time.h>
->  #include <sys/mman.h>
-> diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-> index 26382e4d8d4ce2ff..4c4fee107e5912d5 100644
-> --- a/tools/perf/bench/futex.c
-> +++ b/tools/perf/bench/futex.c
-> @@ -2,11 +2,18 @@
->  #include <err.h>
->  #include <stdio.h>
->  #include <stdlib.h>
-> -#include <linux/prctl.h>
->  #include <sys/prctl.h>
->  
-This is what I had locally and was waiting for confirmation.
+> The downside is that small periods may increase the risk of AUX ring
+> buffer overruns. When an overrun occurs, the perf core layer will
+> trigger an irq work to disable the event and wake up the tool in user
+> space to read the trace data. After the tool finishes reading, it will
+> re-enable the AUX event.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+> 
+> Changes from v1:
+> - Shifted bits with FIELD_PREP().
+> - Removed warning log which is not quite useful. (James Clark)
+> 
+>   drivers/perf/arm_spe_pmu.c | 10 +++++++---
+>   1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index 3efed8839a4e..e40e5daa838d 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -308,12 +308,16 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
+>   
+>   static void arm_spe_event_sanitise_period(struct perf_event *event)
+>   {
+> -	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
+>   	u64 period = event->hw.sample_period;
+>   	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
+>   
+> -	if (period < spe_pmu->min_period)
+> -		period = spe_pmu->min_period;
+> +	/*
+> +	 * As per the Arm ARM (DDI 0487 L.a), section D24.7.12 PMSIRR_EL1,
+> +	 * Sampling Interval Reload Register, the INTERVAL field (bits [31:8])
+> +	 * states: "Software must set this to a nonzero value."
+> +	 */
+> +	if (period < FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1))
+> +		period = FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1);
+>   	else if (period > max_period)
+>   		period = max_period;
+>   	else
 
->  #include "futex.h"
->  
-> +#ifndef PR_FUTEX_HASH
-> +#define PR_FUTEX_HASH                   78
-> +# define PR_FUTEX_HASH_SET_SLOTS        1
-> +# define FH_FLAG_IMMUTABLE              (1ULL << 0)
-> +# define PR_FUTEX_HASH_GET_SLOTS        2
-> +# define PR_FUTEX_HASH_GET_IMMUTABLE    3
-> +#endif // PR_FUTEX_HASH
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-Is this needed? Aren't these defines coming from that local copy?
-
->  void futex_set_nbuckets_param(struct bench_futex_parameters *params)
->  {
->  	unsigned long flags;
-
-Sebastian
