@@ -1,227 +1,171 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9461D20F067
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 16:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C094FA50;
+	Wed, 11 Jun 2025 18:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659687; cv=none; b=Na2tDzsO/3+SgMgxhKUOEPhYvpZgKrfkKO2f6E31c1mK+UHv92XJGgbEvEKttxwXzlyDZchAPzNjboai5DPwxuBX2zXUZEHueR33e6K4isGMFq/13HpBhQ8Ul1KS9Q+G2aOhaT3wtCp8IVRy91ewMC4urd8rlSa5x8ZhD8sJDks=
+	t=1749664886; cv=none; b=TmDj8I9hAa3atuI6Y0RlEIIztFh2Rb260abIrHylqnQdJb5DOJsbk+7q5jnF3yDoTEmlWnhRN0wyf/hTFIZoJ2vA316xzPlFE2XewnnsnQ2xHJuia/jR8TeokhaYCba3sUsfKfc0iGZmReb1w2HvYmqNF8A5nipxWtpQh2unc30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659687; c=relaxed/simple;
-	bh=mbIIuZuXsk8BtnF3xW7j/7Zir3sexa6SLZptvq/m6/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=SAKNOSybJn0ElWqSAlC77fcqyDjDDKaW45nRwhtiB3uBWdnaExnDlcE1rknBdD3c6JT3QDxUyvMDg8fWZMi8GJlHAzVSzm92/me/8uhjbfln5Yd22F9xGpLayHEu2AHmoTSHW97KcYLeanROFGE9MzRhEkvqLtXxWvsPQWBdHAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LQVvx3SE; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749664886; c=relaxed/simple;
+	bh=1ueyvC8/mCJFw9JuGdrNLssNoMYyC/92vpBFO+JeLC0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VHEpBd+8RPFLI3mIPZSWeQ6Rrc7eFCKfokREm6qY6cdaWVUqy2OsZd0X/vmG40SYHqeMgcahmkzrKQygOFd3yfWuWiiJjtx/3Rx+pi8vHK0Yvp0ozLCDOlh9pyUgHxoeq/Jp95m/UEvOkvDLwdBxTFtCceWxuipOLz5J9kfT9IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPFcmaGF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LQVvx3SE"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so164615ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749659685; x=1750264485; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xkBwmXKDCmkZmq8tDnjPEVuHAVyvcz2YHx5IjGyY7E0=;
-        b=LQVvx3SEqOTW2vCY8pINalBEOO6DGjyO8S18BttBMjUXLOhWex+E88C7rTLEZ86vR7
-         zoWfUXmrnj+dJoH7419O0kmDQaN74pu5ODqoIhrsPtbLRWVV4gmtNhKV8Ttasx+rKkkp
-         ZmqvQW2L7YykEGu7eipg8cE05fnvvk1NxbkhSNPQL5a5kGl3snajaJGDPkoMY7oasRC+
-         7P30xHj4WSGw5MwUDv5IsaVClNkvdCVfR5jPbdYNNdUzrCZSOj2dZVOKisk4eMq99/Iy
-         ob1J1/w1mVDsnxWcU4+tmxE5Uf42+5vAdG0MXd4q7F4PW2y2ypl0AQZTXfcFgVDtzxZP
-         jx+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749659685; x=1750264485;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xkBwmXKDCmkZmq8tDnjPEVuHAVyvcz2YHx5IjGyY7E0=;
-        b=nmu7B/TUK/k90XhaUY6G2yfsFKu866kC8P4XX3jY+nwDWipJRee9IulS6jVLVA2OME
-         H97QEWSUmGQAB+NHiuxwAU4Pt4o9ltQ37UeAd/foLYrxwyWKNleHsXhndHsx6vYVuDZI
-         G7txcJ6h1aFhSGCLBdXN3ssH/ReQioq/JalmEZMFeLNIq7n84rJ5fdmaU1KznrVbRo+v
-         6z57embtJvDSguwV0Z1eC8EjMIQ1i4pR9QrBDynut9wtIv24J9DKO+cQtjR9Pd/GgzaR
-         MLb9qt17CoDXSHuElNPX9yToygd0VY7i+fCMRIPryX6jM8nnTAtTpNOD7jqM7DNxFbrx
-         oqqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVndXGMtM0hbHch+WYiel3GGuFEf7JtGUfSeiXM75CN3nYdfluVzA+GXxE5JosJCbAVYR6A5F9BHbn4/M/Q0v46@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxFTf8RvbdQlKG0EK62O4xqYA1Ja5EbDHhc/ZHa6S1oz+ltESN
-	jnqAzPyVcTfQpXTaqmq/ArJKJxusVKjMRoZ5idSkox8tUacNa0tQqdF3KelR0BTQPl83bM6syvS
-	57Rc5kreMrugttgirpBM1Wqu4fsaw5N0VNaNtMItJ
-X-Gm-Gg: ASbGncsIQdtuVJlIAfyylbMt+99eZdN0YQLfCIKRgJZAS1WtM0pVY8Lb6BjTtmUMTLZ
-	1hI6lywG/OJfk7U96IDIhBAOicJqrryHICOxmIdoa0vi1g/W4SA2RYBQ3r+8PKwNvUJLCNCgAyR
-	lgMEQor+RTMfl7ETTZSvRb04UiQdRnWvbseLEM2q/kTmbjrZEQnwuvgpydoE84Ejcq6Neuzc/1Z
-	jdyHVo/ew==
-X-Google-Smtp-Source: AGHT+IGqxSMXUvEfETSpT+5PxTvAtMzZguwXKe2j9dZe76RzJXaMiWmm2tM870jUEnAiZpohFjz2U6912nnWhgcvGcc=
-X-Received: by 2002:a05:6e02:1c06:b0:3dc:5c65:75f8 with SMTP id
- e9e14a558f8ab-3ddf5d34548mr3411005ab.11.1749659684347; Wed, 11 Jun 2025
- 09:34:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPFcmaGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D83BC4CEEA;
+	Wed, 11 Jun 2025 18:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749664886;
+	bh=1ueyvC8/mCJFw9JuGdrNLssNoMYyC/92vpBFO+JeLC0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BPFcmaGFRTtopyRxTH7ClVtgpG9UO5hMbqtKHdZ43Lkqf49KdenbiYvigOSdVKxfk
+	 gsxkF5MaZ1in1Jbgk7SxoCK+3k460w/bZe4qKU0jQ5Md8QEjBnnS6HZXwsW/9fYTl5
+	 NFXpIHyEAssjZT48SJ0XTyfgSbxY1Hj1S44F0h5BPYd19fzI9XCJ2Ymw2BK+yo+O9S
+	 cKOawkuPvA5O5K3OhP19AWXYHzr+wawzwvoCS/0u6Dp/F2Jp5U2Bx7y8FhmV2rPGnS
+	 Jm3HyDZHC/hjjchmnTDHiWLXln8rGFuQXuHYI+CCd6Oo+bsBXcCpuMO2rhjFcHGWeH
+	 85FmMBTLzP+Qg==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH v23 0/4] arm64/perf: Enable branch stack sampling
+Date: Wed, 11 Jun 2025 13:01:10 -0500
+Message-Id: <20250611-arm-brbe-v19-v23-0-e7775563036e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611160206.552030-1-irogers@google.com>
-In-Reply-To: <20250611160206.552030-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Jun 2025 09:34:33 -0700
-X-Gm-Features: AX0GCFvavzaFt4IKavvNUXSgpyjP16GBPN8teViN5j5b3bmqk0ToKERWN0QVqNY
-Message-ID: <CAP-5=fWC+doaVd5rEMWJXSQi_db_Wu2tyAe5Lm6jnQjcwXkF+w@mail.gmail.com>
-Subject: Re: [PATCH v2 00/15] New perf ilist app
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGbESWgC/2XNwW7CMAyA4VdBOS/Idpo24cR7oB0gcSDa1qIUV
+ Uyo7z6XHUrLIZFs5fvzUD2XzL3abR6q8JD73LUykPnYqHA5tmfWOcpCEZAFJK+P5Uefyon1gF5
+ TFW30bLkmo4RcC6d8f/YOnzJfcn/ryu8zL++n9X9JrmVpOqAxoAFwQMbZ/ReXlr+3XTmrqTUQv
+ Hh0K08gvmLviVIgdvzucfYVNGuP4lNC16RUB0/u3dPsrXy38iQ+YIyRjeMmLf04jn/gFR5/bAE
+ AAA==
+X-Change-ID: 20250129-arm-brbe-v19-24d5d9e5e623
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev
 
-On Wed, Jun 11, 2025 at 9:02=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> This patch series builds up to the addition of a new ilist app written
-> in python using textual [1] for the UI. The app presents perf PMUs and
-> events, displays the event information as in `perf list` while at the
-> bottom of the console showing recent activity of the event in total
-> and across all CPUs.
->
-> The first part of the patches are a few perf and perf python C API
-> fixes, most importantly the counter reading in python supports tool
-> PMUs.
->
-> The second part of the patches adds event json for the software PMU
-> and makes the tracepoint PMU support iteration of events and the
-> like. Without these improvements the tracepoint and software PMUs will
-> appear to have no events in the ilist app. As the software PMU moves
-> parsing to json, the legacy hard coded parsing is removed. This has
-> proven controversial for hardware events and so that cleanup isn't
-> done here.
->
-> The final patch adds the ilist command. To run it you need the updated
-> perf.cpython.so in your PYTHONPATH and then execute the
-> script. Expanding PMUs and then selecting events will cause event
-> informatin to be displayed in the top-right and the counters values to
-> be displayed as sparklines and counts in the bottom half of the
-> screen.
->
-> Some thoughts on the series:
->
->  - The PMU changes will conflict with the addition of the DRM PMU:
->    https://lore.kernel.org/lkml/20250403202439.57791-1-irogers@google.com=
-/
->    when these two are merged together ilist will show yet more
->    counters. It'd be nice if the DRM stuff could land and then I can
->    rebase these patches.
->
->  - The parse-events clean up of the software and tracepoint PMU. The
->    software PMU hard coding to be legacy first has similar issues and
->    will conflict with the clean up in:
->    https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.co=
-m/
->    Moving the software work to json means we don't need special parse
->    events terms for software events, etc. We can just treat things
->    like regular PMUs with json, etc. I'd much rather we had less
->    special case logic so that series is best rebased on top of this
->    work and it should drop the changes for software terms, etc. which
->    this series removes. Maybe one day the whole event parsing can be
->    much more regular in how PMUs are treated but there's always
->    "cycles".
->
->  - Should python libraries have feature tests? How does this get
->    packaged outside the kernel tree? I think these are open
->    questions. Clearly textual is kind of a big dependency and we've
->    largely been moving in the direction of fewer dependencies
->    recently. Hopefully the app makes it clear why I think this one is
->    worth carrying. We carry libslang as a dependency and I think
->    textual clearly far surpasses it.
->
->  - How to launch? Currently I run tools/perf/python/ilist.py but it
->    would be much nicer if we could do `perf ilist` much as we do for
->    perf-archive.sh. There are probably other scripts that should be
->    perf commands like flamegraph and gecko. It'd be nice to follow up
->    the series with something to make using these commands easy.
+This series enables perf branch stack sampling support on arm64 via a 
+v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details 
+on BRBE can be found in the Arm ARM[1] chapter D18.
 
-Some more thoughts:
- - The number of events can be quite extensive and so a search UI
-would be a good addition. I'd rather it be follow up work.
- - The legacy events for hardware and hardware cache lack json, PMU
-alias data, .. and so only partially show up. Ugh, legacy events.
- - A dialog is shown when an event fails to open, it should probably
-mention more things related to perf permissions, run as root, etc.
-More follow up work imo.
- - Showing metrics would be great. Follow up work.
- - Textual web (https://github.com/Textualize/textual-web) integration
-so you can see the output in a browser would be great. Follow up work.
- - The sparklines are against the max in the counts recently read,
-maybe this should be something smarter like the maximum possible, or
-over time, or over all CPUs.. Follow up work.
- - People likely have thoughts on the way the UI is, like should the
-counts be after the spark lines, etc. I think with the python being
-only 238 lines (stat-display.c and stat-shadow.c are over >2000 lines)
-things should be pretty hackable and we can work on things over time.
-The patch is something of a proof-of-concept for that reason, but it
-is also something useful, hence posting it.
+I've picked up this series from Anshuman. v19 and later versions have 
+been reworked quite a bit by Mark and myself. The bulk of those changes 
+are in patch 5.
 
-Thanks,
-Ian
+A git branch is here[2].
 
+[1] https://developer.arm.com/documentation/ddi0487/latest/
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git arm/brbe-v23
 
-> [1] https://textual.textualize.io/
->
-> v2: In the jevents event description duplication, some minor changes
->     accidentally missed from v1 meaning that in v1 the descriptions
->     were still duplicated. Expand the cover letter with some thoughts
->     on the series.
->
-> Ian Rogers (15):
->   perf hwmon_pmu: Avoid shortening hwmon PMU name
->   perf parse-events: Minor tidy up of event_type helper
->   perf python: In str(evsel) use the evsel__pmu_name helper
->   perf python: Fix thread check in pyrf_evsel__read
->   perf python: Correct pyrf_evsel__read for tool PMUs
->   perf python: Add basic PMU abstraction and pmus sequence
->   perf python: Add function returning dictionary of all events on a PMU
->   perf jevents: If the long_desc and desc are identical then drop the
->     long_desc
->   perf jevents: Add common software event json
->   perf pmu: Tolerate failure to read the type for wellknown PMUs
->   perf parse-events: Remove non-json software events
->   perf tp_pmu: Factor existing tracepoint logic to new file
->   perf tp_pmu: Add event APIs
->   perf list: Remove tracepoint printing code
->   perf ilist: Add new python ilist command
->
->  tools/perf/builtin-list.c                     |  47 ++--
->  .../arch/common/common/software.json          |  92 ++++++
->  tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++++++++-------
->  tools/perf/pmu-events/jevents.py              |  18 +-
->  tools/perf/python/ilist.py                    | 238 ++++++++++++++++
->  tools/perf/util/Build                         |   1 +
->  tools/perf/util/evsel.c                       |  21 +-
->  tools/perf/util/hwmon_pmu.c                   |   2 +-
->  tools/perf/util/parse-events.c                | 225 +++++----------
->  tools/perf/util/parse-events.h                |   3 +-
->  tools/perf/util/parse-events.l                |  38 +--
->  tools/perf/util/parse-events.y                |  29 +-
->  tools/perf/util/pmu.c                         |  44 ++-
->  tools/perf/util/print-events.c                |  95 -------
->  tools/perf/util/print-events.h                |   1 -
->  tools/perf/util/python.c                      | 248 +++++++++++++++-
->  tools/perf/util/tp_pmu.c                      | 209 ++++++++++++++
->  tools/perf/util/tp_pmu.h                      |  19 ++
->  18 files changed, 1144 insertions(+), 452 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/common/common/software.jso=
-n
->  create mode 100755 tools/perf/python/ilist.py
->  create mode 100644 tools/perf/util/tp_pmu.c
->  create mode 100644 tools/perf/util/tp_pmu.h
->
-> --
-> 2.50.0.rc0.642.g800a2b2222-goog
->
+v23:
+ - Rebase on v6.16-rc1 dropping already applied el2_setup.h clean-ups
+ - Drop the SYSCALL fixup and convert all BRBE CALL events to SYSCALL
+
+v22:
+ - https://lore.kernel.org/all/20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org/
+ - New patch reworking the labels in el2_setup.h
+ - Move branch stack disabling after armpmu_stop() in armpmu_del()
+ - Fix branch_records_alloc() to work on heterogeneous systems
+ - Make setting .sched_task function ptr conditional on BRBE support
+ - Reword booting.rst section name (s/feature/the/) and move next to
+   other PMU related features instead of in the middle of SME features.
+ - Drop setting SYS_BRBCR_EL1
+ - Drop CONFIG_ARM64_BRBE ifdef
+ - Rework initialization of HFGITR_EL2
+
+v21:
+ - https://lore.kernel.org/r/20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org
+ - Drop clean-up patches 1-7 already applied
+ - Rebase on v6.15-rc1
+
+v20:
+ - https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org
+ - Added back some of the arm64 specific exception types. The x86 IRQ 
+   branches also include other exceptions like page faults. On arm64, we 
+   can distinguish the exception types, so we do. Also, to better 
+   align with x86, we convert 'call' branches which are user to kernel 
+   to 'syscall'.
+ - Only enable exceptions and exception returns if recording kernel
+   branches (matching x86)
+ - Drop requiring event and branch privileges to match
+ - Add "branches" caps sysfs attribute like x86
+ - Reword comment about FZP and MDCR_EL2.HPMN interaction
+ - Rework BRBE invalidation to avoid invalidating in interrupt handler
+   when no handled events capture the branch stack (i.e. when there are 
+   multiple users).
+ - Also clear BRBCR_ELx bits in brbe_disable(). This is for KVM nVHE 
+   checks if BRBE is enabled.
+ - Document that MDCR_EL3.SBRBE can be 0b01 also
+
+v19:
+ - https://lore.kernel.org/all/20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org/
+ - Drop saving of branch records when task scheduled out (Mark). Make 
+   sched_task() callback actually get called. Enabling requires a call 
+   to perf_sched_cb_inc(). So the saving of branch records never 
+   happened.
+ - Got rid of added armpmu ops. All BRBE support is contained within 
+   pmuv3 code.
+ - Fix freeze on overflow for VHE
+ - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
+   it when BRBE is enabled.
+ - Drop all the Arm specific exception branches. Not a clear need for
+   them.
+ - Fix handling of branch 'cycles' reading. CC field is
+   mantissa/exponent, not an integer.
+ - Rework s/w filtering to better match h/w filtering
+ - Reject events with disjoint event filter and branch filter or with 
+   exclude_host set
+ - Dropped perf test patch which has been applied for 6.14
+ - Dropped patch "KVM: arm64: Explicitly handle BRBE traps as UNDEFINED"
+   which has been applied for 6.14
+
+v18:
+ - https://lore.kernel.org/all/20240613061731.3109448-1-anshuman.khandual@arm.com/
+
+For v1-v17, see the above link. Not going to duplicate it all here...
+
+Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+---
+---
+Anshuman Khandual (3):
+      arm64/sysreg: Add BRBE registers and fields
+      arm64: Handle BRBE booting requirements
+      KVM: arm64: nvhe: Disable branch generation in nVHE guests
+
+Rob Herring (Arm) (1):
+      perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)
+
+ Documentation/arch/arm64/booting.rst |  21 +
+ arch/arm64/include/asm/el2_setup.h   |  71 +++-
+ arch/arm64/include/asm/kvm_host.h    |   2 +
+ arch/arm64/include/asm/sysreg.h      |  16 +-
+ arch/arm64/kvm/debug.c               |   4 +
+ arch/arm64/kvm/hyp/nvhe/debug-sr.c   |  32 ++
+ arch/arm64/kvm/hyp/nvhe/switch.c     |   2 +-
+ arch/arm64/tools/sysreg              | 132 ++++++
+ drivers/perf/Kconfig                 |  11 +
+ drivers/perf/Makefile                |   1 +
+ drivers/perf/arm_brbe.c              | 798 +++++++++++++++++++++++++++++++++++
+ drivers/perf/arm_brbe.h              |  47 +++
+ drivers/perf/arm_pmu.c               |  16 +-
+ drivers/perf/arm_pmuv3.c             | 125 +++++-
+ include/linux/perf/arm_pmu.h         |   8 +
+ 15 files changed, 1265 insertions(+), 21 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250129-arm-brbe-v19-24d5d9e5e623
+
+Best regards,
+-- 
+Rob Herring (Arm) <robh@kernel.org>
+
