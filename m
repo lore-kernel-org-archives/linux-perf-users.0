@@ -1,362 +1,339 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEABB20322
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 18:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136FB17A31F
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 18:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749666652; cv=none; b=Je2LX7gTOKpe/iCUZzdAtCg5qHpk8tfgeM2dsR1AgeMRKs21qLDAk4OzGXEqb2EdBTjtlmtQhx6JgEiRUMspWxliR1wELym/urazUM+2M+jL/4FjlntI1Kb5915G1Hi1rkngisODmfeaTfDj+rDwViJu2CDZ3IK8tgYPMnMm2Jc=
+	t=1749666863; cv=none; b=g8P55AXZzIWJiRbZtUTIJxXGG7CDJRrTxp184l8YheF4KZ8TDjKwxQF3gsQOOHhAEAakWOxzMD1eahd1civd8K1vbh0hsuRfhhp/0tnEGGp1vxD4NRZ7P5rnjQb8XFH9Ro1Ii5hYUfdZumbFGn2iOy0Dhs7XmvhWRVQlsdIw6pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749666652; c=relaxed/simple;
-	bh=zkvhFn1dvwpij2C+2+79I7Odk3udbvUK4Cuuv6jZ/sM=;
+	s=arc-20240116; t=1749666863; c=relaxed/simple;
+	bh=GbW8vIi8sHcJtz0rWCiAkjJ9O24kUulgDNBzwNR5a/8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pft1TggoND9ScICSvPWKl0Ahe1yxW2nGt2kp27ICBdWbpr2bP7MXlS6lAiXFRFoIYVIYqv3CQKp8qShA66zdPo3/6e2jAn9TuNYYJZ6GkWVtAHAGurVR6ws4OM5ZtKYf9pBSWDA7QCQ0nuWd+sojzPD/H2IE9XBw3NyMSl2YsuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xzMDeO2/; arc=none smtp.client-ip=209.85.166.174
+	 To:Cc:Content-Type; b=DEUh4w7c2bMDVAxlXaJm8DpMA32INhkneFzEo6dX8sM+6IfMVil+ix4Sf4k9X4iOpDH+FdgVEZ2EnZG1kuwST+4GA9ua2bts1Q4uM+/ASp5mR8kDvOkO4xjZZ8cO3VN4dH41n6uIpf15aE93/hrHGu4Nn+YOXzECEmWX3Wu04VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pp1YOKGU; arc=none smtp.client-ip=209.85.166.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xzMDeO2/"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so20755ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 11:30:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pp1YOKGU"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so29005ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 11:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749666650; x=1750271450; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749666861; x=1750271661; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LUlFrf885uk7hWniA9ruK8KO9M4PebPn0BtPXR5B7Mc=;
-        b=xzMDeO2/D4dTBsAcah5vgkV5oyyA519exYMspKhDMC5MMz9Mx+J6TvXYWYEXk5saok
-         BDjfG61hiqLmNscLJny2igziXcpwgNDNDSJWD+7PnPIouYCmTf7EYLRmURkCbouS/u4s
-         lFkFJLoHKkMAFly3Hzd11xK6K3tEoSUND68UsLa2eKBrhDGhGhae62y2zXjYAQQLVZWa
-         Tsh7bvvRMpV4bAfOOk0dgQnWphN10+/ve2tOp0z0+V6NYaBe1Ca7DL+KHMLXYWCRzTFN
-         zZuYYpZUrL4LOl0TTwVVQBZaPWPT9EuQkQmjai8naJssWTJEngQ9Vl7uj0IOZGnE4zJI
-         sviw==
+        bh=oFEvHzR/X9XIwCUPCxEplfWyfIoa5hqq/0O3xWFKrL4=;
+        b=Pp1YOKGUbZWSDkWgxBL/u+Cy+U6A//PK/U/1NFVFWGs4+nk76LABWQN8QSChkS72Qh
+         /j0d3iC+qwfYjRuqg8UV3JgPxy3cvi+Wb9m2v3pvoi1ycDVE1/Drsqo4EqNIVe3TLaCq
+         gwvT1rI9aC1p0ay1tpLqAlQ2jQzRccX4p7iTHGcK+TRwDwbNYK42TybkZ9pUSBopsMHP
+         TDYVjCUoTKy0K/iMT9eTw6hZS2a1oEFCadmmKYhpsgLoL4WhJHrE9q5+J1WKt+yB0Jj6
+         6/Dxr5v4/Qr0ZRgU7S1hqj7Co7GQXEKBxU5R4iH/MCpfaUqcN5mGFYnwbDb18KNbxs+M
+         OldQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749666650; x=1750271450;
+        d=1e100.net; s=20230601; t=1749666861; x=1750271661;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LUlFrf885uk7hWniA9ruK8KO9M4PebPn0BtPXR5B7Mc=;
-        b=VAk8GuqDWzzc+Qr0/n6Oe9lOR6yYM9FP6GYr/djHiBKa3E9yycX7heFyqd9phSiLEA
-         rHQJ2xX4f2dLlTCGv+oRJB9G2LF7xq2m1sSegx7M3lPwADXTjsoikTtyyuMmdAhHb9Bd
-         Zpo3MwbzBQq0pagE5WveXfbyUFy16q6OMaNrxA+GkN9XtJgqGiDBkWL3YoO3sOc4eMmJ
-         H/MVv6Ef0Kbc+zdS5ythbwkhHnk2+0CpnF0B8Ft3OUqmyOJeeC5/defMx1UnZ8DzD0oK
-         6xKoXRvnmj8ydHAzvutilYwnzo/9LRTpA/V6XVEUj1Nc8ZJarE22ZR/oDafY8DT9/eF+
-         092w==
-X-Forwarded-Encrypted: i=1; AJvYcCVxtkdPrFbWotvVf0K0PZlsiIPjC0ponq4sgDIZarFpnWl4Afi3SRntFNvjZuMLlMh2gJfONkzWOsi268+e6rej@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ4PZamaebwRsyySWpkP48DfGip/CnhM07sBH/3Vg1T00AeMgM
-	i5+zzqyoAdUmvs1tCkRcScc1qbQCSVK1J7c8PtEKMBaHA2ZjvjYpZhvCOEBW5s9J+KDmaYbXSXn
-	r9ls4J3tVgk6L3X6YdTRrcnoAZ1ETp9G8LZgK0nSC
-X-Gm-Gg: ASbGncvi5VwIvBIMicTJw2LlDh2xmXaNHLwEAbEi27B/H/B0lD45yZcgwvOUne4l9cm
-	gdaLhenTWwVzZBEufAtJ+nqVhMfwr/ndGmFKY6aqLOX2O3ez82D4D4ZHxuib1UcZzjDEXKRB4bN
-	nUDSgqFmOmtTG1sBERba2HxCBWhL6Mkrtcn6lYzO+K3n6IqHPTu9/P3ds6A65lpOqlI6nA0fRT
-X-Google-Smtp-Source: AGHT+IH/+QRsmw4yQlHvwXqxi/8a6kcY01H0TF3efMaj9RHNRIXHnvBFBU8jO4rnfXVJeDoBihVcBun5bRzKCqyEcDQ=
-X-Received: by 2002:a05:6e02:2292:b0:3da:7c33:509c with SMTP id
- e9e14a558f8ab-3ddfb312ed9mr130645ab.11.1749666649497; Wed, 11 Jun 2025
- 11:30:49 -0700 (PDT)
+        bh=oFEvHzR/X9XIwCUPCxEplfWyfIoa5hqq/0O3xWFKrL4=;
+        b=XDQF5HdnQpFHDpZQAy97VYY0C/JoMIV7gSBi92oKCCQGaTP9dIucD90Ks5/PYDIwiD
+         dd9vodUM0gGt2QFIolB7PBZ4jkGOLbl8/BVFp5eCUyjkvxPIBXZraDP1znaeVn8NEq1V
+         LMoCtdHi6DXdROyHfMfW3YAQNB0RZuzH4z6s+67QnxBB2LkR6FvYL6kmvA8jvYM43e+N
+         Igd6vUgNg2DaEPqAVrZZivOaqBwGGoNmAFHYEQNDF6/KYFDcVQWikkunRuVywSYZuyRB
+         BloLnH4FQal3L+8lrEMmgYR9RGiIzP0PXQw5LQ//VooE+BNwoES8cPu1d0ZnZJbASxpS
+         rAjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrrnPdBM4uZ69v7Xpb1IEkjZEcYXT4e8cnp6gt7qK9eCb1/tT2Ge9N629gIZdDDdMLdthpES7M/ff97WEMMThb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFwRkFH4DQOUX3ShBxJ6ki+iIg+5lMc/4hGyBNaKrXr+0hwYxZ
+	kTwpubjotG9UGH0TxD9QfkmMRJkVIua7NuR601Il6ju/0HiSB3FtzKxsnb3IFajfVrko3B9ykDC
+	aEMTRl49aPdQlEVS9o7Nd3OmNXqdjGm3yWKEtWwwe
+X-Gm-Gg: ASbGncuMloJcWuQVwFfTM+gRDqHqONmwYx6fQ1/WzjNObVHAd93HBO4Ideg9V5GcCRS
+	A7Ys05ry8o127ZUylLhffZkyIR/tSufNmx97dgFD/hCiNbM3hXdgvDsnQrJ1flhEqkqlP2tx5sR
+	2AUk40OdSPTCYKyXe6sSIg09Ug3rKWuNyFMwtKBkdfvMgcsYdIDsbT5s21jFd4yxav0Sfsk69j
+X-Google-Smtp-Source: AGHT+IHW3WD/+5EMCeUCm1LToMk4pqjQKTn5VJP1IfR9gBkY9l/ACbNUWe3Kj3oB3FFtojZ1X1P93xhG9i96lAN4U+Y=
+X-Received: by 2002:a05:6e02:218c:b0:3dd:f4d6:1bbb with SMTP id
+ e9e14a558f8ab-3ddfb30a850mr104465ab.3.1749666860570; Wed, 11 Jun 2025
+ 11:34:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513231813.13846-1-thomas.falcon@intel.com>
- <20250513231813.13846-2-thomas.falcon@intel.com> <a327dc2e5837a743a08403b5ad58dbe5e8c4f926.camel@intel.com>
- <aEiTrRNyeqFsYwR6@google.com> <94612a9d92f4d3820e8c293b0e184ab11971bf36.camel@intel.com>
-In-Reply-To: <94612a9d92f4d3820e8c293b0e184ab11971bf36.camel@intel.com>
+References: <20250529044000.759937-1-irogers@google.com> <aEh3qcfleSr4B9j9@google.com>
+In-Reply-To: <aEh3qcfleSr4B9j9@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Jun 2025 11:30:38 -0700
-X-Gm-Features: AX0GCFtxRWButhz0X3DrX8soJFOSdnNuhj7TZWYTYYJcovCHYvEqaVc2ZT0qW24
-Message-ID: <CAP-5=fU9fz8-91eRH72r9GQYXOOoSQ9DZB9sJPZu5ZZOeu4QnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v3] perf top: populate PMU capabilities data in perf_env
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "namhyung@kernel.org" <namhyung@kernel.org>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
+Date: Wed, 11 Jun 2025 11:34:09 -0700
+X-Gm-Features: AX0GCFs-fQ3Dhl1mflJxLnE85HKM_UFcTuS6VEd2LnxZL2nYgK2a0dITob_fYAg
+Message-ID: <CAP-5=fUQ-9s2pzi1sLqonSOPAnhV+rsZL11bQcsco5_v7=TovQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/24] perf: Make code more generic with modern defaults
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Zixian Cai <fzczx123@gmail.com>, Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Ben Gainey <ben.gainey@arm.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	Martin Liska <martin.liska@hey.com>, =?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
+	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 11:18=E2=80=AFAM Falcon, Thomas <thomas.falcon@inte=
-l.com> wrote:
+On Tue, Jun 10, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> On Tue, 2025-06-10 at 13:21 -0700, Namhyung Kim wrote:
-> > Hello,
+> Hi Ian,
+>
+> On Wed, May 28, 2025 at 09:39:36PM -0700, Ian Rogers wrote:
+> > This patch series combines:
+> > "perf: Default use of build IDs and improvements"
+> > https://lore.kernel.org/lkml/20250428213409.1417584-1-irogers@google.co=
+m/
+> > "Remove global perf_env"
+> > https://lore.kernel.org/lkml/20250527064153.149939-1-irogers@google.com=
+/
+> > "Generic weight struct, use env for sort key and header"
+> > https://lore.kernel.org/lkml/20250521135500.677508-1-irogers@google.com=
+/
+> > This is done as the last 2 series depend on each other and the
+> > cleanups in the 1st have the potential to conflict with them.
 > >
-> > On Mon, Jun 09, 2025 at 04:21:39PM +0000, Falcon, Thomas wrote:
-> > > Ping?
+> > "perf: Default use of build IDs and improvements"
 > >
-> > Sorry for the delay, I'll process the series as it's reviewed by Ian.
-> > Ian, it may clash with your perf_env cleanup though.
+> > Build ID mmap2 events have been available since Linux v5.12 and avoid
+> > certain races. Enable these by default as discussed in:
+> > https://lore.kernel.org/linux-perf-users/CAP-5=3DfXP7jN_QrGUcd55_QH5J-Y=
+-FCaJ6=3DNaHVtyx0oyNh8_-Q@mail.gmail.com/
+> >
+> > The dso_id is used to indentify a DSO that may change by being
+> > overwritten. The inode generation isn't present in /proc/pid/maps and
+> > so was already only optionally filled in. With build ID mmap events
+> > the other major, minor and inode varialbes aren't filled in. Change
+> > the dso_id implementation to make optional values explicit, rather
+> > than injecting a dso_id we want to improve it during find operations,
+> > add the buildid to the dso_id for sorting and so that matching fails
+> > when build IDs vary between DSOs.
+> >
+> > Mark the callchain for buildids and not just the sample IP, fixing
+> > missing DSOs.
+> >
+> > Fix sample__for_each_callchain_node to populate the map even when
+> > symbols aren't computed.
+> >
+> > Other minor bits of build_id clean up.
+>
+> I've tried to pick the build-id part, but I got a build error like this:
+>
+>   util/probe-finder.c: In function 'find_probe_point_lazy':
+>   util/probe-finder.c:863:25: error: implicit declaration of function 'bu=
+ild_id__sprintf';
+>   did you mean 'build_id__snprintf'? [-Werror=3Dimplicit-function-declara=
+tion]
+>     863 |                         build_id__sprintf(&bid, sbuild_id);
+>         |                         ^~~~~~~~~~~~~~~~~
+>   --
+>   util/probe-event.c: In function '__show_line_range':
+>   util/probe-event.c:1093:17: error: implicit declaration of function 'bu=
+ild_id__sprintf';
+>   did you mean 'build_id__snprintf'? [-Werror=3Dimplicit-function-declara=
+tion]
+>    1093 |                 build_id__sprintf(&bid, sbuild_id);
+>         |                 ^~~~~~~~~~~~~~~~~
+>   tests/sdt.c: In function 'build_id_cache__add_file':
+>   tests/sdt.c:40:9: error: implicit declaration of function 'build_id__sp=
+rintf';
+>   did you mean 'build_id__snprintf'? [-Werror=3Dimplicit-function-declara=
+tion]
+>      40 |         build_id__sprintf(&bid, sbuild_id);
+>         |         ^~~~~~~~~~~~~~~~~
+>
+> >
+> > "Remove global perf_env"
+> >
+> > The global perf_env is used to hold host information, but it is also
+> > used as a fallback in a number of cases where the information may be
+> > bogus. Restructure the code so that the perf_env of the session is
+> > accessed. When necessary a locally scoped host perf_env is created and
+> > used.
+> >
+> > Cleaning up the inconsistency was requested by Kan Liang in:
+> > https://lore.kernel.org/lkml/c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux=
+.intel.com/
+>
+> And I got some conflicts here.
 
-Ack. Thanks Namhyung, I figured that would happen, Kan pointed out
-similar hence wanting the perf_env cleanup, I'll resolve the
-differences as and when.
+Sorry for the build breakage and conflicts, I'll send a v5 to address
+them but it'll try to hang on for Thomas' perf top change:
+https://lore.kernel.org/lkml/20250513231813.13846-2-thomas.falcon@intel.com=
+/
+so as to not also need a v6.
 
 Thanks,
 Ian
 
-> > Also note that please don't mix patch versions.  The 1/2 is v1 and 2/2
-> > v3 - it makes b4 confused.
-> >
-> > Thanks,
-> > Namhyung
->
-> Thanks!
->
-> Tom
+> Please take a look, thanks!
+> Namhyung
 >
 > >
-> > >
-> > > On Tue, 2025-05-13 at 18:18 -0500, Thomas Falcon wrote:
-> > > > Calling perf top with branch filters enabled on Intel CPU's
-> > > > with branch counters logging (A.K.A LBR event logging [1]) support
-> > > > results in a segfault.
-> > > >
-> > > > Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
-> > > > [Switching to Thread 0x7fffafff76c0 (LWP 949003)]
-> > > > perf_env__find_br_cntr_info (env=3D0xf66dc0 <perf_env>, nr=3D0x0, w=
-idth=3D0x7fffafff62c0) at util/env.c:653
-> > > > 653                       *width =3D env->cpu_pmu_caps ? env->br_cn=
-tr_width :
-> > > > (gdb) bt
-> > > >  #0  perf_env__find_br_cntr_info (env=3D0xf66dc0 <perf_env>, nr=3D0=
-x0, width=3D0x7fffafff62c0) at util/env.c:653
-> > > >  #1  0x00000000005b1599 in symbol__account_br_cntr (branch=3D0x7fff=
-cc3db580, evsel=3D0xfea2d0, offset=3D12, br_cntr=3D8) at util/annotate.c:34=
-5
-> > > >  #2  0x00000000005b17fb in symbol__account_cycles (addr=3D5658172, =
-start=3D5658160, sym=3D0x7fffcc0ee420, cycles=3D539, evsel=3D0xfea2d0, br_c=
-ntr=3D8) at util/annotate.c:389
-> > > >  #3  0x00000000005b1976 in addr_map_symbol__account_cycles (ams=3D0=
-x7fffcd7b01d0, start=3D0x7fffcd7b02b0, cycles=3D539, evsel=3D0xfea2d0, br_c=
-ntr=3D8) at util/annotate.c:422
-> > > >  #4  0x000000000068d57f in hist__account_cycles (bs=3D0x110d288, al=
-=3D0x7fffafff6540, sample=3D0x7fffafff6760, nonany_branch_mode=3Dfalse, tot=
-al_cycles=3D0x0, evsel=3D0xfea2d0) at util/hist.c:2850
-> > > >  #5  0x0000000000446216 in hist_iter__top_callback (iter=3D0x7fffaf=
-ff6590, al=3D0x7fffafff6540, single=3Dtrue, arg=3D0x7fffffff9e00) at builti=
-n-top.c:737
-> > > >  #6  0x0000000000689787 in hist_entry_iter__add (iter=3D0x7fffafff6=
-590, al=3D0x7fffafff6540, max_stack_depth=3D127, arg=3D0x7fffffff9e00) at u=
-til/hist.c:1359
-> > > >  #7  0x0000000000446710 in perf_event__process_sample (tool=3D0x7ff=
-fffff9e00, event=3D0x110d250, evsel=3D0xfea2d0, sample=3D0x7fffafff6760, ma=
-chine=3D0x108c968) at builtin-top.c:845
-> > > >  #8  0x0000000000447735 in deliver_event (qe=3D0x7fffffffa120, qeve=
-nt=3D0x10fc200) at builtin-top.c:1211
-> > > >  #9  0x000000000064ccae in do_flush (oe=3D0x7fffffffa120, show_prog=
-ress=3Dfalse) at util/ordered-events.c:245
-> > > >  #10 0x000000000064d005 in __ordered_events__flush (oe=3D0x7fffffff=
-a120, how=3DOE_FLUSH__TOP, timestamp=3D0) at util/ordered-events.c:324
-> > > >  #11 0x000000000064d0ef in ordered_events__flush (oe=3D0x7fffffffa1=
-20, how=3DOE_FLUSH__TOP) at util/ordered-events.c:342
-> > > >  #12 0x00000000004472a9 in process_thread (arg=3D0x7fffffff9e00) at=
- builtin-top.c:1120
-> > > >  #13 0x00007ffff6e7dba8 in start_thread (arg=3D<optimized out>) at =
-pthread_create.c:448
-> > > >  #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv=
-/linux/x86_64/clone3.S:78
-> > > >
-> > > > The cause is that perf_env__find_br_cntr_info tries to access a
-> > > > null pointer pmu_caps in the perf_env struct. A similar issue exist=
-s
-> > > > for homogeneous core systems which use the cpu_pmu_caps structure.
-> > > >
-> > > > Fix this by populating cpu_pmu_caps and pmu_caps structures with
-> > > > values from sysfs when calling perf top with branch stack sampling
-> > > > enabled.
-> > > >
-> > > > [1], LBR event logging introduced here:
-> > > > https://lore.kernel.org/all/20231025201626.3000228-5-kan.liang@linu=
-x.intel.com/
-> > > >
-> > > > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > > ---
-> > > > v3: constify struct perf_pmu *pmu in __perf_env__read_core_pmu_caps=
-()
-> > > >     use perf_pmus__find_core_pmu() instead of perf_pmus__scan_core(=
-NULL)
-> > > >
-> > > > v2: update commit message with more meaningful stack trace from
-> > > >     gdb and indicate that affected systems are limited to CPU's
-> > > >     with LBR event logging support and that both hybrid and
-> > > >     non-hybrid core systems are affected.
-> > > > ---
-> > > >  tools/perf/builtin-top.c |   8 +++
-> > > >  tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++=
-++++
-> > > >  tools/perf/util/env.h    |   1 +
-> > > >  3 files changed, 123 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > > > index f9f31391bddb..c9d679410591 100644
-> > > > --- a/tools/perf/builtin-top.c
-> > > > +++ b/tools/perf/builtin-top.c
-> > > > @@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
-> > > >   if (opts->branch_stack && callchain_param.enabled)
-> > > >           symbol_conf.show_branchflag_count =3D true;
-> > > >
-> > > > + if (opts->branch_stack) {
-> > > > +         status =3D perf_env__read_core_pmu_caps(&perf_env);
-> > > > +         if (status) {
-> > > > +                 pr_err("PMU capability data is not available\n");
-> > > > +                 goto out_delete_evlist;
-> > > > +         }
-> > > > + }
-> > > > +
-> > > >   sort__mode =3D SORT_MODE__TOP;
-> > > >   /* display thread wants entries to be collapsed in a different tr=
-ee */
-> > > >   perf_hpp_list.need_collapse =3D 1;
-> > > > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> > > > index 36411749e007..6735786a1d22 100644
-> > > > --- a/tools/perf/util/env.c
-> > > > +++ b/tools/perf/util/env.c
-> > > > @@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struc=
-t perf_env *env)
-> > > >   return env->nr_cpus_avail ? 0 : -ENOENT;
-> > > >  }
-> > > >
-> > > > +static int __perf_env__read_core_pmu_caps(const struct perf_pmu *p=
-mu,
-> > > > +                                   int *nr_caps, char ***caps,
-> > > > +                                   unsigned int *max_branches,
-> > > > +                                   unsigned int *br_cntr_nr,
-> > > > +                                   unsigned int *br_cntr_width)
-> > > > +{
-> > > > + struct perf_pmu_caps *pcaps =3D NULL;
-> > > > + char *ptr, **tmp;
-> > > > + int ret =3D 0;
-> > > > +
-> > > > + *nr_caps =3D 0;
-> > > > + *caps =3D NULL;
-> > > > +
-> > > > + if (!pmu->nr_caps)
-> > > > +         return 0;
-> > > > +
-> > > > + *caps =3D zalloc(sizeof(char *) * pmu->nr_caps);
-> > > > + if (!*caps)
-> > > > +         return -ENOMEM;
-> > > > +
-> > > > + tmp =3D *caps;
-> > > > + list_for_each_entry(pcaps, &pmu->caps, list) {
-> > > > +
-> > > > +         if (asprintf(&ptr, "%s=3D%s", pcaps->name, pcaps->value) =
-< 0) {
-> > > > +                 ret =3D -ENOMEM;
-> > > > +                 goto error;
-> > > > +         }
-> > > > +
-> > > > +         *tmp++ =3D ptr;
-> > > > +
-> > > > +         if (!strcmp(pcaps->name, "branches"))
-> > > > +                 *max_branches =3D atoi(pcaps->value);
-> > > > +
-> > > > +         if (!strcmp(pcaps->name, "branch_counter_nr"))
-> > > > +                 *br_cntr_nr =3D atoi(pcaps->value);
-> > > > +
-> > > > +         if (!strcmp(pcaps->name, "branch_counter_width"))
-> > > > +                 *br_cntr_width =3D atoi(pcaps->value);
-> > > > + }
-> > > > + *nr_caps =3D pmu->nr_caps;
-> > > > + return 0;
-> > > > +error:
-> > > > + while (tmp-- !=3D *caps)
-> > > > +         free(*tmp);
-> > > > + free(*caps);
-> > > > + *caps =3D NULL;
-> > > > + *nr_caps =3D 0;
-> > > > + return ret;
-> > > > +}
-> > > > +
-> > > > +int perf_env__read_core_pmu_caps(struct perf_env *env)
-> > > > +{
-> > > > + struct perf_pmu *pmu =3D NULL;
-> > > > + struct pmu_caps *pmu_caps;
-> > > > + int nr_pmu =3D 0, i =3D 0, j;
-> > > > + int ret;
-> > > > +
-> > > > + nr_pmu =3D perf_pmus__num_core_pmus();
-> > > > +
-> > > > + if (!nr_pmu)
-> > > > +         return -ENODEV;
-> > > > +
-> > > > + if (nr_pmu =3D=3D 1) {
-> > > > +         pmu =3D perf_pmus__find_core_pmu();
-> > > > +         if (!pmu)
-> > > > +                 return -ENODEV;
-> > > > +         ret =3D perf_pmu__caps_parse(pmu);
-> > > > +         if (ret < 0)
-> > > > +                 return ret;
-> > > > +         return __perf_env__read_core_pmu_caps(pmu, &env->nr_cpu_p=
-mu_caps,
-> > > > +                                               &env->cpu_pmu_caps,
-> > > > +                                               &env->max_branches,
-> > > > +                                               &env->br_cntr_nr,
-> > > > +                                               &env->br_cntr_width=
-);
-> > > > + }
-> > > > +
-> > > > + pmu_caps =3D zalloc(sizeof(*pmu_caps) * nr_pmu);
-> > > > + if (!pmu_caps)
-> > > > +         return -ENOMEM;
-> > > > +
-> > > > + while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> > > > +         if (perf_pmu__caps_parse(pmu) <=3D 0)
-> > > > +                 continue;
-> > > > +         ret =3D __perf_env__read_core_pmu_caps(pmu, &pmu_caps[i].=
-nr_caps,
-> > > > +                                              &pmu_caps[i].caps,
-> > > > +                                              &pmu_caps[i].max_bra=
-nches,
-> > > > +                                              &pmu_caps[i].br_cntr=
-_nr,
-> > > > +                                              &pmu_caps[i].br_cntr=
-_width);
-> > > > +         if (ret)
-> > > > +                 goto error;
-> > > > +
-> > > > +         pmu_caps[i].pmu_name =3D strdup(pmu->name);
-> > > > +         if (!pmu_caps[i].pmu_name) {
-> > > > +                 ret =3D -ENOMEM;
-> > > > +                 goto error;
-> > > > +         }
-> > > > +         i++;
-> > > > + }
-> > > > +
-> > > > + env->nr_pmus_with_caps =3D nr_pmu;
-> > > > + env->pmu_caps =3D pmu_caps;
-> > > > +
-> > > > + return 0;
-> > > > +error:
-> > > > + for (i =3D 0; i < nr_pmu; i++) {
-> > > > +         for (j =3D 0; j < pmu_caps[i].nr_caps; j++)
-> > > > +                 free(pmu_caps[i].caps[j]);
-> > > > +         free(pmu_caps[i].caps);
-> > > > +         free(pmu_caps[i].pmu_name);
-> > > > + }
-> > > > + free(pmu_caps);
-> > > > + return ret;
-> > > > +}
-> > > > +
-> > > >  const char *perf_env__raw_arch(struct perf_env *env)
-> > > >  {
-> > > >   return env && !perf_env__read_arch(env) ? env->arch : "unknown";
-> > > > diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> > > > index d90e343cf1fa..135a1f714905 100644
-> > > > --- a/tools/perf/util/env.h
-> > > > +++ b/tools/perf/util/env.h
-> > > > @@ -152,6 +152,7 @@ struct btf_node;
-> > > >
-> > > >  extern struct perf_env perf_env;
-> > > >
-> > > > +int perf_env__read_core_pmu_caps(struct perf_env *env);
-> > > >  void perf_env__exit(struct perf_env *env);
-> > > >
-> > > >  int perf_env__kernel_is_64_bit(struct perf_env *env);
-> > >
->
+> > "Generic weight struct, use env for sort key and header"
+> >
+> > The arch directory is a barrier to cross-platform development as files
+> > and behaviors within it are inherently platform specific. Sample
+> > parsing should be generic but the PERF_SAMPLE_WEIGHT_STRUCT handling
+> > was only present if building for x86 or powerpc. The sort key and
+> > headers should be specific to the session that is being executed and
+> > not to the machine perf is being run upon. These patches clean this
+> > and associated code up.
+> >
+> > v4: Shorten to "weight3" histogram and sample variable, but comment
+> >     its use (Namhyung). Fix evsel__env use in `perf trace` where no
+> >     session was present. Assert the session is never passed a NULL
+> >     host_env when there is no data file and its associated env.
+> >
+> > Ian Rogers (24):
+> >   perf callchain: Always populate the addr_location map when adding IP
+> >   perf build-id: Reduce size of "size" variable
+> >   perf build-id: Truncate to avoid overflowing the build_id data
+> >   perf build-id: Change sprintf functions to snprintf
+> >   perf build-id: Mark DSO in sample callchains
+> >   perf build-id: Ensure struct build_id is empty before use
+> >   perf dso: Move build_id to dso_id
+> >   perf jitdump: Directly mark the jitdump DSO
+> >   perf record: Make --buildid-mmap the default
+> >   perf session: Add accessor for session->header.env
+> >   perf session: Add an env pointer for the current perf_env
+> >   perf evlist: Change env variable to session
+> >   perf header: Clean up use of perf_env
+> >   perf test: Avoid use perf_env
+> >   perf session: Add host_env argument to perf_session__new
+> >   perf top: Make perf_env locally scoped
+> >   perf bench synthesize: Avoid use of global perf_env
+> >   perf machine: Explicitly pass in host perf_env
+> >   perf auxtrace: Pass perf_env from session through to mmap read
+> >   perf trace: Avoid global perf_env with evsel__env
+> >   perf env: Remove global perf_env
+> >   perf sample: Remove arch notion of sample parsing
+> >   perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to common test
+> >   perf sort: Use perf_env to set arch sort keys and header
+> >
+> >  tools/perf/arch/powerpc/util/Build            |   1 -
+> >  tools/perf/arch/powerpc/util/event.c          |  60 ------
+> >  tools/perf/arch/x86/include/arch-tests.h      |   1 -
+> >  tools/perf/arch/x86/tests/Build               |   1 -
+> >  tools/perf/arch/x86/tests/arch-tests.c        |   2 -
+> >  tools/perf/arch/x86/tests/sample-parsing.c    | 125 ------------
+> >  tools/perf/arch/x86/util/event.c              |  46 -----
+> >  tools/perf/bench/inject-buildid.c             |   2 +-
+> >  tools/perf/bench/synthesize.c                 |  30 +--
+> >  tools/perf/builtin-annotate.c                 |   6 +-
+> >  tools/perf/builtin-buildid-cache.c            |  22 +--
+> >  tools/perf/builtin-buildid-list.c             |  11 +-
+> >  tools/perf/builtin-c2c.c                      |  69 ++++---
+> >  tools/perf/builtin-diff.c                     |   2 +-
+> >  tools/perf/builtin-inject.c                   |  41 ++--
+> >  tools/perf/builtin-kallsyms.c                 |  21 +-
+> >  tools/perf/builtin-kmem.c                     |   2 +-
+> >  tools/perf/builtin-kvm.c                      |   4 +-
+> >  tools/perf/builtin-kwork.c                    |   2 +-
+> >  tools/perf/builtin-lock.c                     |   4 +-
+> >  tools/perf/builtin-mem.c                      |   2 +-
+> >  tools/perf/builtin-record.c                   |  63 +++---
+> >  tools/perf/builtin-report.c                   |  27 ++-
+> >  tools/perf/builtin-sched.c                    |   8 +-
+> >  tools/perf/builtin-script.c                   |  18 +-
+> >  tools/perf/builtin-stat.c                     |  23 +--
+> >  tools/perf/builtin-timechart.c                |   2 +-
+> >  tools/perf/builtin-top.c                      |  58 ++++--
+> >  tools/perf/builtin-trace.c                    |  38 ++--
+> >  tools/perf/include/perf/perf_dlfilter.h       |   2 +-
+> >  tools/perf/perf.c                             |   3 -
+> >  tools/perf/tests/code-reading.c               |   6 +-
+> >  tools/perf/tests/dlfilter-test.c              |  51 ++---
+> >  tools/perf/tests/dwarf-unwind.c               |  10 +-
+> >  tools/perf/tests/hists_cumulate.c             |   8 +-
+> >  tools/perf/tests/hists_filter.c               |   8 +-
+> >  tools/perf/tests/hists_link.c                 |   8 +-
+> >  tools/perf/tests/hists_output.c               |  10 +-
+> >  tools/perf/tests/mmap-thread-lookup.c         |   6 +-
+> >  tools/perf/tests/pe-file-parsing.c            |   2 +-
+> >  tools/perf/tests/sample-parsing.c             |  14 ++
+> >  tools/perf/tests/sdt.c                        |   2 +-
+> >  tools/perf/tests/symbols.c                    |  12 +-
+> >  tools/perf/tests/topology.c                   |  39 ++--
+> >  tools/perf/ui/browser.h                       |   4 +-
+> >  tools/perf/ui/browsers/header.c               |   4 +-
+> >  tools/perf/ui/browsers/hists.c                |   2 +-
+> >  tools/perf/util/amd-sample-raw.c              |   2 +-
+> >  tools/perf/util/arm-spe.c                     |   2 +-
+> >  tools/perf/util/auxtrace.c                    |  13 +-
+> >  tools/perf/util/auxtrace.h                    |   6 +-
+> >  tools/perf/util/bpf-event.c                   |   2 +-
+> >  tools/perf/util/branch.c                      |   2 +-
+> >  tools/perf/util/build-id.c                    |  63 +++---
+> >  tools/perf/util/build-id.h                    |   8 +-
+> >  tools/perf/util/data-convert-bt.c             |  16 +-
+> >  tools/perf/util/data-convert-json.c           |  36 ++--
+> >  tools/perf/util/debuginfo.c                   |   2 +-
+> >  tools/perf/util/disasm.c                      |   2 +-
+> >  tools/perf/util/dlfilter.c                    |   2 +-
+> >  tools/perf/util/dso.c                         | 111 ++++++-----
+> >  tools/perf/util/dso.h                         |  75 ++++----
+> >  tools/perf/util/dsos.c                        |  20 +-
+> >  tools/perf/util/env.c                         |   3 +-
+> >  tools/perf/util/env.h                         |   2 -
+> >  tools/perf/util/event.c                       |   2 +-
+> >  tools/perf/util/event.h                       |   5 -
+> >  tools/perf/util/evlist.h                      |   2 +-
+> >  tools/perf/util/evsel.c                       |  29 ++-
+> >  tools/perf/util/evsel.h                       |   1 +
+> >  tools/perf/util/header.c                      | 182 ++++++++++--------
+> >  tools/perf/util/hist.c                        |   4 +-
+> >  tools/perf/util/hist.h                        |   3 +-
+> >  tools/perf/util/intel-tpebs.c                 |   4 +-
+> >  tools/perf/util/jitdump.c                     |  21 +-
+> >  tools/perf/util/machine.c                     |  42 ++--
+> >  tools/perf/util/machine.h                     |   4 +-
+> >  tools/perf/util/map.c                         |  15 +-
+> >  tools/perf/util/map.h                         |   5 +-
+> >  tools/perf/util/probe-event.c                 |   8 +-
+> >  tools/perf/util/probe-file.c                  |   4 +-
+> >  tools/perf/util/probe-finder.c                |   3 +-
+> >  tools/perf/util/s390-cpumsf.c                 |   2 +-
+> >  tools/perf/util/sample-raw.c                  |   7 +-
+> >  tools/perf/util/sample-raw.h                  |   2 +-
+> >  tools/perf/util/sample.h                      |   6 +-
+> >  .../scripting-engines/trace-event-python.c    |   7 +-
+> >  tools/perf/util/session.c                     |  20 +-
+> >  tools/perf/util/session.h                     |   9 +-
+> >  tools/perf/util/sort.c                        |  95 +++++----
+> >  tools/perf/util/sort.h                        |   5 +-
+> >  tools/perf/util/symbol-minimal.c              |   2 +-
+> >  tools/perf/util/symbol.c                      |   7 +-
+> >  tools/perf/util/symbol_conf.h                 |   2 +-
+> >  tools/perf/util/synthetic-events.c            |  54 ++++--
+> >  tools/perf/util/thread.c                      |   8 +-
+> >  tools/perf/util/thread.h                      |   2 +-
+> >  tools/perf/util/tool.c                        |   2 +-
+> >  98 files changed, 919 insertions(+), 894 deletions(-)
+> >  delete mode 100644 tools/perf/arch/powerpc/util/event.c
+> >  delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
+> >
+> > --
+> > 2.49.0.1204.g71687c7c1d-goog
+> >
