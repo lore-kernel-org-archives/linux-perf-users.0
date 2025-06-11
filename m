@@ -1,207 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4419526A1D0;
-	Wed, 11 Jun 2025 14:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6BE2857CF
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 14:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653727; cv=none; b=JJtOYicXxErxpqhAOJl/OJ1SNoVD1QzBHuJuPkAWXcwjp14gk0kZn478iD7ecxeh0YkmqWAaUnOOowlQ1gVNUKivgEYoBt6iEMedJUAjGfFPH351bsd5kiTAZ0rCoGC7oBZiTCdGqpKDwBw68Q3Tbr0zfMRzcdmvuWzbqtzsRIM=
+	t=1749653846; cv=none; b=BuF2Sh3895VESACGP3FO5P4i8Mf9GIgJmy8pGaOeuG50FvOsWwL+dcOVuyhKwqp5Y1X5lzd1qBqRRV4iKeuF9tMIbIZA4GKOErTQj11avYyRvpe/YBiuBUiNuz3/WDpXsgFWr0fjrRqxeN6SBjyyeUHxRPPw9NFzKPb3036h8XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653727; c=relaxed/simple;
-	bh=FBCkRe+k8+xEOZprRRR6Xd/hIQOAiqScmRcgOoffXqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jjlDa6XCcg6r910m8/+GDxpCZxxmgk9S6jKd0NF4A4ygb1ESp/ISSK5g3eu3swCjvTHhc7//3gwFDZcf58bNMQbWxuO/kGtEBghsIXjiShskVgMs/hRdFr/pdsf5ORQWuwNld2sFrDZq4kRZRVHjrg2Uisz21hgK3cGvDuxUcFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbqwceu/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749653846; c=relaxed/simple;
+	bh=ELj3Eejh8zZB55e7jcM1QY1zMfyaK6qINNEc1hne0DY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=B+3kTxkoB6oUeeGV/tLcMcTXVJWM19l2AOUapYSXwC2BY+Lr8+I7kCc+FSKvdNk1qFDXbkzePcY4R/cTqAF/WJIUcEgsaRLESOyiesPAJ+Nhc8g5ejHR99oT9SzXHhz2Lnzw47DhUou+cgwKmG+eA40WknayCg/MXy9Y1N/ZAxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=ej6Gkzlf; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbqwceu/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB59C4CEE3;
-	Wed, 11 Jun 2025 14:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749653726;
-	bh=FBCkRe+k8+xEOZprRRR6Xd/hIQOAiqScmRcgOoffXqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kbqwceu/CVnCeD/ZqrAmfbcKVp7vzEOTzeCz535VVOuZZHRdB4e1PyOPm7JOhpgSQ
-	 X0sWh8xY5DD6iJ5vs3IDmV1dHvTxnL7RHwJSN4nboRc4K/5nGz7KOegoNw/gpQVeiJ
-	 Qw3vdO1WfVSYSKfD+HJqlfMfuLlvUwzW+RCLzUnMFzElTi8s+bK10pKVBk+cqmH1MW
-	 893QodfZqTa3Uhf0e0QUWlulx6ANvdgxklDPNi63HtDZqn12CRIOj8KLqiYLHLL8yw
-	 +aQHVEL5SXXQ10/ZYMhg8U46K/JBo3CSUwn+KPzMMPCnMyCB6V5GZaSj/58xjuzLDv
-	 jDctSmQco4sTw==
-Date: Wed, 11 Jun 2025 11:55:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <aEmY259Mx92D60KG@x1>
-References: <aEh6xO14wDSCFUDr@google.com>
- <20250611092542.F4ooE2FL@linutronix.de>
- <aEmBOO0bSJYSvX2i@x1>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="ej6Gkzlf"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fabb948e5aso69507196d6.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 07:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1749653844; x=1750258644; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6Qz0T1i5QiFEXMgdpN0GXNYPbCCjSkcApaqYIRUnfk=;
+        b=ej6GkzlfIdRRSDfsQfLzR4KXe18v0X/ORZ5BvP4vzItPvpdFGt5PAAnYyRlIVMGhC5
+         OaWDVEvuFh94f+qsJ5kafar2qbDvPRvzsHDFTeCaEdvolzPg+uhJ04Qp938kBY8NBvSa
+         fBl+5l/p9FcojlgI+r7xdZ9SJ487ZHEJrrah0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749653844; x=1750258644;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6Qz0T1i5QiFEXMgdpN0GXNYPbCCjSkcApaqYIRUnfk=;
+        b=clL9tY2qgSsQlkvqTiLzkSD+azSZoMMrZQ/UkKIRf6Pbnsletu9Rheb9D07wZLuyjZ
+         AiPWVFLaZLdUNa+hXYtnR2T35kHEvp2K6NMGVH6IMDmg6TL32nmb9YDMcE2n0Tx0JUo0
+         PrWi62BUCxUS2nf89vFJPTkzwSm9exFwE+ddp/bplwaQ0/WF4Z5CB+7aLb/sznsfCSTE
+         FshvXD/7x3fIbRgT/+T9o/OiXdXnaolOpub8UQfgNMjDRURvXxbl4Sp+WaeaSKXq9LXH
+         6WIMv6z8gINxApcsVDpl3Sc8XzRnkHGY+vTiCzEm2EacgDWDRDj5xePcwDILC1Ma7IZR
+         U90w==
+X-Forwarded-Encrypted: i=1; AJvYcCVGQyBOHeuHmepVhor6/goPxwBUh6kHGkiKCOtQDqFMEJatD9qgw3iywRi/s/LqS8Yv6NzALkwWQ4JTnXM6RTBX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuqXy0lo2sfPuMT/2yu5sEve0h3N1/aQO6vd6sXPRKyosKEzfH
+	zpT/g1DJWfJZb5FSVOEeuEf36et97BsVgFxzlbLM81POwR1l99K28RUplmh1P5IyWg==
+X-Gm-Gg: ASbGncssYTtkJ0NvGFtQ0z+cu4ottenLakHruoz8vg7VrKYzKS0YMc2peoVGIehgyti
+	oysojBx2AS8UxW149752xFhbKEs5IJ+5VuZ6yIeXT7oLVNw0rNnlzt7bIhJwlpbE9XzyUCjW0zi
+	dI0ZdlD4hqhBhvEPR4+PTlcP3Shg1gHs9xfzUH2/DiBprHlcgsC+TIZO/M3StzyiPN+E+iIA78h
+	x7AxwiKNYw45gccr0SIp/rx1cM/8eVgFYOPmWrwjaRkPHQU2Izu96UVs+nRf+ZqBnNXq96dfMZn
+	nKv2GuhxIwBBL+Hy6yJw74N3zMYibKIunYLzdVGdJbcG/yGbYLmhPvpENrrqF3xBzQzMhmP9BBM
+	ncUZ1ug==
+X-Google-Smtp-Source: AGHT+IEw7wk+RzMxqv25pZXw2YGIKgdnXxzz3CvYscPGSpMRH5hHiPD652+vsvjKuc+tm1+2B7BIiw==
+X-Received: by 2002:a05:6214:2626:b0:6fb:25f:ac78 with SMTP id 6a1803df08f44-6fb2c386dd3mr44270966d6.40.1749653844011;
+        Wed, 11 Jun 2025 07:57:24 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09b36647sm82322106d6.113.2025.06.11.07.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 07:57:23 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Wed, 11 Jun 2025 10:57:22 -0400 (EDT)
+To: Vince Weaver <vincent.weaver@maine.edu>
+cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+    "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] crashing bug in icl_update_topdown_event
+In-Reply-To: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu>
+Message-ID: <080706b6-ed21-540d-dfae-ae27d130d796@maine.edu>
+References: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEmBOO0bSJYSvX2i@x1>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jun 11, 2025 at 10:14:32AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jun 11, 2025 at 11:25:42AM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-06-10 11:34:44 [-0700], Namhyung Kim wrote:
-> > > Hello,
-> > Hi,
-> > 
-> > > I've updated the perf-tools-next to v6.16-rc1 and found a build error
-> > > like below on alpine linux 3.18.
-> > > 
-> > >   In file included from bench/futex.c:6:
-> > >   /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
-> > >      88 | struct prctl_mm_map {
-> > >         |        ^~~~~~~~~~~~
-> > >   In file included from bench/futex.c:5:
-> > >   /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
-> > >     134 | struct prctl_mm_map {
-> > >         |        ^~~~~~~~~~~~
-> > >   make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
-> > > 
-> > > git bisect says it's the first commit introduced the failure.
-> > 
-> > Hmm. So your /usr/include/sys/prctl.h and
-> > /linux/tools/include/uapi/linux/prctl.h both provide struct
-> > prctl_mm_map but their include guard must be different.
-> > 
-> > My /usr/include/sys/prctl.h is provided by glibc and contains the
-> > prctl() declaration. It includes also linux/prctl.h.
-> > The tools/include/uapi/linux/prctl.h is the same as
-> > /usr/include/linux/prctl.h.
-> > 
-> > The /usr/include/sys/prctl.h on alpine linux is different. This is
-> > probably coming from musl. It contains the PR_* definition and the
-> > prctl() declaration. So it clashes here because now the one struct is
-> > available twice.
-> > 
-> > The man page for prctl(2) says:
-> > |       #include <linux/prctl.h>  /* Definition of PR_* constants */
-> > |       #include <sys/prctl.h>
-> > 
-> > so musl doesn't follow this.
-> > 
-> > To align with the other builds, I guess the following help:
-> 
-> So I noticed this as well in perf-tools/perf-tools, I'm trying with your
-> patch applied, lets see...
+On Wed, 11 Jun 2025, Vince Weaver wrote:
 
-Can I keep this as below?
+> Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
+> CPU: 23 UID: 0 PID: 0 Comm: swapper/23
+> Tainted: [W]=WARN
+> Hardware name: Dell Inc. Precision 9660/0VJ762
+> RIP: 0010:native_read_pmc+0x7/0x40
+> Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
+> RSP: 000:fffb03100273de8 EFLAGS: 00010046
 
-With it:
+one additional note that's probably relevant, this is on a hybrid CPU 
+machine, so CPUs 16-23 are atom cores that don't support topdown.
 
-toolsbuilder@five:~$ time dm from alpine:3.16
-   5   130.36 alpine:3.16                   : Ok   gcc (Alpine 11.2.1_git20220219) 11.2.1 20220219 , Alpine clang version 13.0.1 flex 2.6.4
-   6   100.65 alpine:3.17                   : Ok   gcc (Alpine 12.2.1_git20220924-r4) 12.2.1 20220924 , Alpine clang version 15.0.7 flex 2.6.4
-   7    90.44 alpine:3.18                   : Ok   gcc (Alpine 12.2.1_git20220924-r10) 12.2.1 20220924 , Alpine clang version 16.0.6 flex 2.6.4
-   8   106.18 alpine:3.19                   : Ok   gcc (Alpine 13.2.1_git20231014) 13.2.1 20231014 , Alpine clang version 17.0.5 flex 2.6.4
-   9   108.16 alpine:3.20                   : Ok   gcc (Alpine 13.2.1_git20240309) 13.2.1 20240309 , Alpine clang version 17.0.6 flex 2.6.4
-  10   111.19 alpine:3.22                   : Ok   gcc (Alpine 14.2.0) 14.2.0 , Alpine clang version 20.1.6 flex 2.6.4
-  11   109.28 alpine:edge                   : Ok   gcc (Alpine 14.2.0) 14.2.0 , Alpine clang version 19.1.4 flex 2.6.4
-  12    92.62 amazonlinux:2023              : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 15.0.7 (AWS 15.0.7-3.amzn2023.0.4) flex 2.6.4
-  13    98.43 amazonlinux:devel             : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
-  14    17.24 archlinux:base                : FAIL gcc version 14.2.1 20240805 (GCC) 
-    <command-line>: error: "_FORTIFY_SOURCE" redefined [-Werror]
-    <command-line>: note: this is the location of the previous definition
-    cc1: all warnings being treated as errors
-    error: command '/usr/sbin/gcc' failed with exit code 1
-  15    97.65 centos:stream                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-21) , clang version 17.0.6 (Red Hat 17.0.6-1.module_el8+767+9fa966b8) flex 2.6.1
+So the crash is probably because for whatever reason the kernel is trying 
+to read topdown events on an unsupported core and triggering a GPF.
 
-The archlinux one is unrelated. More are building now.
-
-- Arnaldo
-
-commit 8386dc356158fc50c55831c96b1248e01d112ebc
-Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Date:   Wed Jun 11 11:25:42 2025 +0200
-
-    perf bench futex: Fix prctl include in musl libc
-    
-    Namhyung Kim reported:
-    
-      I've updated the perf-tools-next to v6.16-rc1 and found a build error
-      like below on alpine linux 3.18.
-    
-        In file included from bench/futex.c:6:
-        /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
-           88 | struct prctl_mm_map {
-              |        ^~~~~~~~~~~~
-        In file included from bench/futex.c:5:
-        /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
-          134 | struct prctl_mm_map {
-              |        ^~~~~~~~~~~~
-        make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
-    
-      git bisect says it's the first commit introduced the failure.
-    
-    So your /usr/include/sys/prctl.h and
-    /linux/tools/include/uapi/linux/prctl.h both provide struct prctl_mm_map
-    but their include guard must be different.
-    
-    My /usr/include/sys/prctl.h is provided by glibc and contains the
-    prctl() declaration. It includes also linux/prctl.h.  The
-    tools/include/uapi/linux/prctl.h is the same as
-    /usr/include/linux/prctl.h.
-    
-    The /usr/include/sys/prctl.h on alpine linux is different. This is
-    probably coming from musl. It contains the PR_* definition and the
-    prctl() declaration.  So it clashes here because now the one struct is
-    available twice.
-    
-    The man page for prctl(2) says:
-    
-    |       #include <linux/prctl.h>  /* Definition of PR_* constants */
-    |       #include <sys/prctl.h>
-    
-    so musl doesn't follow this.
-    
-    So align with the other builds.
-    
-    Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-    Reported-by: Namhyung Kim <namhyung@kernel.org>
-    Link: https://lore.kernel.org/r/20250611092542.F4ooE2FL@linutronix.de
-    [ Remove one more in tools/perf/bench/futex-hash.c and conditionally define PR_FUTEX_HASH and friends ]
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index fdf133c9520f73a4..d2d6d7f3ea331c84 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -18,7 +18,6 @@
- #include <stdlib.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
--#include <linux/prctl.h>
- #include <linux/zalloc.h>
- #include <sys/time.h>
- #include <sys/mman.h>
-diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-index 26382e4d8d4ce2ff..4c4fee107e5912d5 100644
---- a/tools/perf/bench/futex.c
-+++ b/tools/perf/bench/futex.c
-@@ -2,11 +2,18 @@
- #include <err.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include <linux/prctl.h>
- #include <sys/prctl.h>
- 
- #include "futex.h"
- 
-+#ifndef PR_FUTEX_HASH
-+#define PR_FUTEX_HASH                   78
-+# define PR_FUTEX_HASH_SET_SLOTS        1
-+# define FH_FLAG_IMMUTABLE              (1ULL << 0)
-+# define PR_FUTEX_HASH_GET_SLOTS        2
-+# define PR_FUTEX_HASH_GET_IMMUTABLE    3
-+#endif // PR_FUTEX_HASH
-+
- void futex_set_nbuckets_param(struct bench_futex_parameters *params)
- {
- 	unsigned long flags;
+Vince
