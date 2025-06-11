@@ -1,228 +1,389 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214FF213224;
-	Wed, 11 Jun 2025 21:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AA7246766
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 22:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678646; cv=none; b=m9DJAFhODjHvmBFfs1IkcJXVXpgQ0Lrk2hrgJ1aZI9tsjV4sDrutVKbdNqDoSy8ihq5lLAgEqiqianLnCQUQbheCGRAYPVh95EetyJKKhS/CAIUlkDgxfahe/u7qQcSbmSKVlRUS4js7hunuvknI0AYbu6QY0qpyBggA3qfDUqs=
+	t=1749679545; cv=none; b=V60Nsa+wv2g5XJvV3k1gP3gl313/ZFl+2cTv64e9Cek80HgdRyqQvOIFT7hRpxK/IZwHQBwR7szgYOYMTh/VOZQ8/JmQW8l3Ps+MmIMw1iiooSshnFCcNqUtR4W6S1SKxo5z7VUmVQOeLSeddNLnC7MOtYTUY2sJ1AmRqdRhaV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678646; c=relaxed/simple;
-	bh=RWVYRiPZVmtgySePvK9Fgk/us/xzILqK49c9tQBEmKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IdoVgtmYBOgtkP1iLHWLp36WREh01Dr7AtultV91PMxTwmE8Y9ij8VPZgjJDi9gfLDzuHqIW6uaegM5G4dY4izhNbaY5W1WV+P05zLiaKW6BqBLijI3RTeFc5aWnZClPkuHIfdpza+t1Jj+KnFxW8cYMc17dpTRgKCpeGkxbAkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcnJ7GRH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749679545; c=relaxed/simple;
+	bh=sEX77P0MO+vil+ZpOisgyJ/HTy6z2qtfwCCpVReEcp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oaA5ZFXMJtCkKdS8gv31AM92P03mX/4Ht3Tfox5Zda9pYvssCM44AD7bQ0iBj767bqcLkOWQOQD1j1Tf0wm5GM6oDqCg4f0dt58FWNeX71mGVk/JDSGpR/Hmf663CKtTTMirl5sB6ikI8q2JTm8Kh+UTStUF0Hf/MlGld3Oz3Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CEqy3A7v; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcnJ7GRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8EAC4CEE3;
-	Wed, 11 Jun 2025 21:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678645;
-	bh=RWVYRiPZVmtgySePvK9Fgk/us/xzILqK49c9tQBEmKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dcnJ7GRHk/Kwn8dcnC5nqRlP0OflMqeJ1nrPjz2f4GyiXhngjxoLt6f9DOnkeYnLQ
-	 usw51rZIB0VUV6CO+0LmnkfJuNZx7mJ7BkJKHJP/7aLn7xa2XKurgYQN/fpek4EraY
-	 6//0wsrEyfFn7eBmEw5Ng2VM5TDqHt1XXLc0HTaw2HKQrL9E/180ED4ZJ9GVCBghwx
-	 2GgHZTAiPcWvoyTkh5fVEvFdlVISrsxTJrDUyaqWThYGBCYr9LRhseRLVJq2xDXRPR
-	 VGiVatkdQVjOMK3NgPRWSqIlbHMp37jQnDhYszTB0sGE3f91h6SehWNCc2hKakkwDD
-	 fkKQJBuRSDZAg==
-Date: Wed, 11 Jun 2025 14:50:43 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <aEn6M_DTUHx9_hMS@google.com>
-References: <aEh6xO14wDSCFUDr@google.com>
- <20250611092542.F4ooE2FL@linutronix.de>
- <aEmBOO0bSJYSvX2i@x1>
- <aEmY259Mx92D60KG@x1>
- <20250611150615.FcVIIhgA@linutronix.de>
- <aEnSbBaFYgd4Gr9u@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CEqy3A7v"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so57945ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 15:05:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749679541; x=1750284341; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=reLosr06TrLHFm6cpSf4Kzju6Dfoth2pVMr4f8PSzO4=;
+        b=CEqy3A7v8Asr4oQi6hIX8f+6uUmteob5HvfNzQzISondBR4O6sBbBDUNtzK0L3oUTq
+         TjGbZ2YovLbhqZ6xi8jMHprDyUylo5Bh/gCg2qxSBktKOBO00AqMJXD191Cu62l94Jgj
+         225oEvojAWr+BMLKmKAcfBOMxhfMTQ081aBVWmq7c7rv5KgG48IIToFHP5pJonq69yKN
+         Kl2rp9iStUkMAP5oo0gEMa+FSXKhK1Pu1cXwed0mx279VSVLH+dGxZAFaBm1H0sYWH+l
+         ghOT83TB7zMNYm/BAjYOxnB/aL6TAzz1boNluBhJqarSKZe72swV//jXvXFXu6rU2taA
+         K3Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749679541; x=1750284341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=reLosr06TrLHFm6cpSf4Kzju6Dfoth2pVMr4f8PSzO4=;
+        b=wgJnXFq7c9fPtXSaw3ztfP89Jok6S2f7wCbYc4qVW8p4COR9ObA0jqWTZArmkqSjGh
+         tg+IlATWo/YiG1TpXXieVYeRTQXITVRKBDwahvIfau/hvnMWNY6QszJViy82TXy5ZHIk
+         AazEinNqfiC4aML0S9VWcl3ccvekwd+cft5jHnEgY9LLNS+mnvYfY9KKcbVLS/pdA1ai
+         3ckURKfaRGHtK+qOTXMVBC/ZEiv83r3zA/eDTyr1SvH7t3LevufFEQQklmRVFhW2/tDO
+         IO3T0LPSJ8KgmSgfsTHHzDaesc8AQJSnv670/Wx3hVF7r2jFm+p/erOKWJ2Oj879wK5W
+         KhoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjncrdwTu3F1eUf0f5Z79nyjs9idILO93iGqiZUAvEaJ3nFWYcBtzoGyPUi2O1d7/mdUmoK0z43yj8SdDpLgr0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCDGqBIIfafS5tvvUU5QL9+vC+1n+JydBt9nebYGTTA+nwG0yf
+	Pkg0VNlN33Ch0NWeEBCL/VulCCJvC8Nlyh4b9uKrI59dHd5f9bnjoFZNEvWs11ydWsQsAtm+ZkY
+	ldngCTTTXtmGCetbQ/3Qp5BHfxYMmBWbJVOGa8kGt
+X-Gm-Gg: ASbGncsQrl2wkn0j0A7JgeplU3yk9qNoYGrY6Zf3adkd6UxUMXHTLao5+yxxkxNeibQ
+	w9wj0dM8y2FjGbBEweaiQ4gnqoKLdJWt57BglVerHoHJoqZid+VH8EwFCDQwFm3SmDDd+pdpaM4
+	v/xMVptmfteEwBcdxNzcfPipJ5Vlgg1mDX6CvI0eKJa0mZaHUfKBcdQSFLpdz6D0oJwfwK5xcA
+X-Google-Smtp-Source: AGHT+IHzdVBH834oO8Lcw+o27OrEeNpQDQLxdJapoXf2t/m8DK0uNcG4r/C4ZFy5u8MaZVT3YQGcfmPKa5Dn0P51gZs=
+X-Received: by 2002:a05:6e02:1d84:b0:3dc:802f:2617 with SMTP id
+ e9e14a558f8ab-3ddfb49fb55mr886665ab.28.1749679540684; Wed, 11 Jun 2025
+ 15:05:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEnSbBaFYgd4Gr9u@x1>
+References: <20250529052322.381947-1-irogers@google.com> <20250529052322.381947-2-irogers@google.com>
+ <aDjBtuxyumBrn70B@x1> <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
+ <CAP-5=fXg-gQVYwdLpWkkD+egqpq1KbPjUt3cXXa+Msm5hSU9PA@mail.gmail.com> <CAP-5=fVGptvc5KQUJ3uE9DNh693Z1oYkt6GMQG+MfFa3Nf09Hw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVGptvc5KQUJ3uE9DNh693Z1oYkt6GMQG+MfFa3Nf09Hw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 11 Jun 2025 15:05:28 -0700
+X-Gm-Features: AX0GCFtVCbjp6-ULeZ2SwT4D9b2MO37UUZDVM9-6Nj_kwFmhRFQOy9P4jyU3gWg
+Message-ID: <CAP-5=fWbXEv+MLtsF30PTOGMz9Wcu7WG2TkF5x=so9DBm6eKvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Andi Kleen <ak@linux.intel.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 04:01:00PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jun 11, 2025 at 05:06:15PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-06-11 11:55:23 [-0300], Arnaldo Carvalho de Melo wrote:
-> > > commit 8386dc356158fc50c55831c96b1248e01d112ebc
-> > > Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > Date:   Wed Jun 11 11:25:42 2025 +0200
-> > > 
-> > >     perf bench futex: Fix prctl include in musl libc
-> > >     
-> > >     Namhyung Kim reported:
-> > >     
-> > >       I've updated the perf-tools-next to v6.16-rc1 and found a build error
-> > >       like below on alpine linux 3.18.
-> > >     
-> > >         In file included from bench/futex.c:6:
-> > >         /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
-> > >            88 | struct prctl_mm_map {
-> > >               |        ^~~~~~~~~~~~
-> > >         In file included from bench/futex.c:5:
-> > >         /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
-> > >           134 | struct prctl_mm_map {
-> > >               |        ^~~~~~~~~~~~
-> > >         make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
-> > >     
-> > >       git bisect says it's the first commit introduced the failure.
-> > >     
-> > >     So your /usr/include/sys/prctl.h and
-> > >     /linux/tools/include/uapi/linux/prctl.h both provide struct prctl_mm_map
-> > >     but their include guard must be different.
-> > >     
-> > >     My /usr/include/sys/prctl.h is provided by glibc and contains the
-> > >     prctl() declaration. It includes also linux/prctl.h.  The
-> > >     tools/include/uapi/linux/prctl.h is the same as
-> > >     /usr/include/linux/prctl.h.
-> > >     
-> > >     The /usr/include/sys/prctl.h on alpine linux is different. This is
-> > >     probably coming from musl. It contains the PR_* definition and the
-> > >     prctl() declaration.  So it clashes here because now the one struct is
-> > >     available twice.
-> > >     
-> > >     The man page for prctl(2) says:
-> > >     
-> > >     |       #include <linux/prctl.h>  /* Definition of PR_* constants */
-> > >     |       #include <sys/prctl.h>
-> > >     
-> > >     so musl doesn't follow this.
-> > >     
-> > >     So align with the other builds.
-> > >     
-> > >     Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > >     Reported-by: Namhyung Kim <namhyung@kernel.org>
-> > >     Link: https://lore.kernel.org/r/20250611092542.F4ooE2FL@linutronix.de
->  
-> > s/Link/Closes/
-> 
-> ok
->  
-> > >     [ Remove one more in tools/perf/bench/futex-hash.c and conditionally define PR_FUTEX_HASH and friends ]
-> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> > > index fdf133c9520f73a4..d2d6d7f3ea331c84 100644
-> > > --- a/tools/perf/bench/futex-hash.c
-> > > +++ b/tools/perf/bench/futex-hash.c
-> > > @@ -18,7 +18,6 @@
-> > >  #include <stdlib.h>
-> > >  #include <linux/compiler.h>
-> > >  #include <linux/kernel.h>
-> > > -#include <linux/prctl.h>
-> > >  #include <linux/zalloc.h>
-> > >  #include <sys/time.h>
-> > >  #include <sys/mman.h>
-> > > diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-> > > index 26382e4d8d4ce2ff..4c4fee107e5912d5 100644
-> > > --- a/tools/perf/bench/futex.c
-> > > +++ b/tools/perf/bench/futex.c
-> > > @@ -2,11 +2,18 @@
-> > >  #include <err.h>
-> > >  #include <stdio.h>
-> > >  #include <stdlib.h>
-> > > -#include <linux/prctl.h>
-> > >  #include <sys/prctl.h>
-> > >  
-> > This is what I had locally and was waiting for confirmation.
-> > 
-> > >  #include "futex.h"
-> > >  
-> > > +#ifndef PR_FUTEX_HASH
-> > > +#define PR_FUTEX_HASH                   78
-> > > +# define PR_FUTEX_HASH_SET_SLOTS        1
-> > > +# define FH_FLAG_IMMUTABLE              (1ULL << 0)
-> > > +# define PR_FUTEX_HASH_GET_SLOTS        2
-> > > +# define PR_FUTEX_HASH_GET_IMMUTABLE    3
-> > > +#endif // PR_FUTEX_HASH
-> > 
-> > Is this needed? Aren't these defines coming from that local copy?
-> 
-> So, these are, as you say, in the copied linux/prctl.h, but in musl libc
-> we have:
-> 
-> /tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h 
-> struct prctl_mm_map {
-> /tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h 
-> struct prctl_mm_map {
-> /tmp/perf-6.16.0-rc1 $
-> 
-> And sys/prctl.h doesn't include linux/prctl.h, if we do it, we get
-> multiple definitions for 'struct prctl_mm_map'.
-> 
-> While in fedora (probably in all the others, haven't checked, but no
-> failure on them from my last container set build tests):
-> 
-> ⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h
-> struct prctl_mm_map {
-> ⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h
-> ⬢ [acme@toolbx perf-tools]$
-> 
-> furthermore fedora's sys/prctl.h includes linux/prctl.h, while musl libc
-> doesn't.
-> 
-> I thought this would be something fixed in newer alpine versions, but
-> no:
-> 
-> toolsbuilder@five:~$ grep FAIL dm.log.old/summary 
->    5    19.53 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
->    6    20.83 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
->    7    13.94 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10) 
->    8    16.60 alpine:3.19                   : FAIL gcc version 13.2.1 20231014 (Alpine 13.2.1_git20231014) 
->    9    15.72 alpine:3.20                   : FAIL gcc version 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
->   10    16.38 alpine:3.22                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
->   11    15.09 alpine:edge                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
-> toolsbuilder@five:~$
-> 
-> So the easiest way out of this seems to be not to explicitely include
-> linux/prctl.h and define the new stuff conditionally, as I did, right?
+On Tue, Jun 3, 2025 at 2:55=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Mon, Jun 2, 2025 at 10:32=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Thu, May 29, 2025 at 3:02=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Thu, May 29, 2025 at 1:21=E2=80=AFPM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > On Wed, May 28, 2025 at 10:23:22PM -0700, Ian Rogers wrote:
+> > > > > Symbolize stack traces by creating a live machine. Add this
+> > > > > functionality to dump_stack and switch dump_stack users to use
+> > > > > it. Switch TUI to use it. Add stack traces to the child test func=
+tion
+> > > > > which can be useful to diagnose blocked code.
+> > > > >
+> > > > > Example output:
+> > > > > ```
+> > > > >   8: PERF_RECORD_* events & perf_sample fields                   =
+    : Running (1 active)
+> > > > > ^C
+> > > > > Signal (2) while running tests.
+> > > > > Terminating tests with the same signal
+> > > > > Internal test harness failure. Completing any started tests:
+> > > > > :  8: PERF_RECORD_* events & perf_sample fields:
+> > > >
+> > > > So you are testing it with:
+> > > >
+> > > > root@number:~# perf test PERF_RECORD
+> > > >   8: PERF_RECORD_* events & perf_sample fields                     =
+  : Running (1 active)
+> > > > ^C
+> > > > Signal (2) while running tests.
+> > > > Terminating tests with the same signal
+> > > > Internal test harness failure. Completing any started tests:
+> > > >   8: PERF_RECORD_* events & perf_sample fields                     =
+  : Skip (permissions)
+> > > > root@number:~#
+> > > >
+> > > > ?
+> > >
+> > > You are running the test as a child and by default the child test
+> > > output is only displayed if verbose is enabled. I use verbose=3D2 bel=
+ow
+> > > as verbose=3D1 won't display anything unless the child test gives a f=
+ail
+> > > exit value:
+> > > ```
+> > > $ git log --oneline
+> > > b9ac06abfde9 perf debug: Add function symbols to dump_stack
+> > > e561806265ed perf machine: Factor creating a "live" machine out of dw=
+arf-unwind
+> > > 628e124404b3 perf tests switch-tracking: Fix timestamp comparison
+> > > $ make -C tools/perf O=3D/tmp/perf
+> > > ...
+> > > $ sudo /tmp/perf/perf test -vv PERF_RECORD
+> > >  8: PERF_RECORD_* events & perf_sample fields:
+> > >  8: PERF_RECORD_* events & perf_sample fields                       :
+> > > Running (1 active)
+> > > ^C
+> > > Signal (2) while running tests.
+> > > Terminating tests with the same signal
+> > > Internal test harness failure. Completing any started tests:
+> > > :  8: PERF_RECORD_* events & perf_sample fields:
+> > >
+> > > ---- unexpected signal (2) ----
+> > >    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
+> > >    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+> > >    #2 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
+> > >    #3 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c=
+:72
+> > >    #4 0x7f855c6f1393 in __nanosleep nanosleep.c:26
+> > >    #5 0x7f855c702d68 in __sleep sleep.c:55
+> > >    #6 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
+> > >    #7 0x5617ec45e4f0 in run_test_child builtin-test.c:0
+> > >    #8 0x5617ec3faf0d in start_command run-command.c:127
+> > >    #9 0x5617ec45f433 in __cmd_test builtin-test.c:0
+> > >    #10 0x5617ec45faff in cmd_test perf[147aff]
+> > >    #11 0x5617ec3ed960 in run_builtin perf.c:0
+> > >    #12 0x5617ec3edc7b in handle_internal_command perf.c:0
+> > >    #13 0x5617ec368d33 in main perf[50d33]
+> > >    #14 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.=
+h:74
+> > >    #15 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:1=
+28
+> > >    #16 0x5617ec369381 in _start perf[51381]
+> > >
+> > > ---- unexpected signal (2) ----
+> > >    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
+> > >    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+> > >    #2 0x7f855c6a3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c=
+:45
+> > >    #3 0x7f855c649fd9 in __GI___sigprocmask sigprocmask.c:26
+> > >    #4 0x7f855c72601b in __longjmp_chk longjmp.c:36
+> > >    #5 0x5617ec45e600 in print_test_result.isra.0 builtin-test.c:0
+> > >    #6 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+> > >    #7 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
+> > >    #8 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c=
+:72
+> > >    #9 0x7f855c6f1393 in __nanosleep nanosleep.c:26
+> > >    #10 0x7f855c702d68 in __sleep sleep.c:55
+> > >    #11 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
+> > >    #12 0x5617ec45e4f0 in run_test_child builtin-test.c:0
+> > >    #13 0x5617ec3faf0d in start_command run-command.c:127
+> > >    #14 0x5617ec45f433 in __cmd_test builtin-test.c:0
+> > >    #15 0x5617ec45faff in cmd_test perf[147aff]
+> > >    #16 0x5617ec3ed960 in run_builtin perf.c:0
+> > >    #17 0x5617ec3edc7b in handle_internal_command perf.c:0
+> > >    #18 0x5617ec368d33 in main perf[50d33]
+> > >    #19 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.=
+h:74
+> > >    #20 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:1=
+28
+> > >    #21 0x5617ec369381 in _start perf[51381]
+> > >  8: PERF_RECORD_* events & perf_sample fields                       :
+> > > Skip (permissions)
+> > > ```
+> > >
+> > >
+> > > > I built it with DEBUG=3D1 and without, and with your patch, followi=
+ng your
+> > > > example output, I'm not being able to reproduce.
+> > > >
+> > > > Tried it as well with:
+> > > >
+> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ cat segv.patch
+> > > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > > > index 8b30c6f16a9eeac1..e55d86f1097d6d79 100644
+> > > > --- a/tools/perf/util/symbol.c
+> > > > +++ b/tools/perf/util/symbol.c
+> > > > @@ -402,6 +402,8 @@ static struct symbol *symbols__find(struct rb_r=
+oot_cached *symbols, u64 ip)
+> > > >  {
+> > > >         struct rb_node *n;
+> > > >
+> > > > +       *(int *)NULL =3D 0;
+> > > > +
+> > > >         if (symbols =3D=3D NULL)
+> > > >                 return NULL;
+> > > >
+> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < segv.patch
+> > > > patching file tools/perf/util/symbol.c
+> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ m
+> > > > rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf=
+-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission de=
+nied
+> > > > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf=
+'
+> > > >   BUILD:   Doing 'make -j32' parallel build
+> > > > Warning: Kernel ABI header differences:
+> > > >   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include=
+/asm/cputype.h
+> > > >
+> > > > Auto-detecting system features:
+> > > > ...                                   libdw: [ on  ]
+> > > > ...                                   glibc: [ on  ]
+> > > > ...                                  libelf: [ on  ]
+> > > > ...                                 libnuma: [ on  ]
+> > > > ...                  numa_num_possible_cpus: [ on  ]
+> > > > ...                                 libperl: [ on  ]
+> > > > ...                               libpython: [ on  ]
+> > > > ...                               libcrypto: [ on  ]
+> > > > ...                             libcapstone: [ on  ]
+> > > > ...                               llvm-perf: [ on  ]
+> > > > ...                                    zlib: [ on  ]
+> > > > ...                                    lzma: [ on  ]
+> > > > ...                               get_cpuid: [ on  ]
+> > > > ...                                     bpf: [ on  ]
+> > > > ...                                  libaio: [ on  ]
+> > > > ...                                 libzstd: [ on  ]
+> > > >
+> > > >   INSTALL libsubcmd_headers
+> > > >   INSTALL libperf_headers
+> > > >   INSTALL libapi_headers
+> > > >   INSTALL libsymbol_headers
+> > > >   INSTALL libbpf_headers
+> > > >   CC      /tmp/build/perf-tools-next/util/symbol.o
+> > > >   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
+> > > >   LD      /tmp/build/perf-tools-next/perf-util-in.o
+> > > >   AR      /tmp/build/perf-tools-next/libperf-util.a
+> > > >   LINK    /tmp/build/perf-tools-next/perf
+> > > >   GEN     /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64=
+-linux-gnu.so
+> > > >   INSTALL binaries
+> > > >   INSTALL tests
+> > > >   INSTALL libperf-jvmti.so
+> > > >   INSTALL libexec
+> > > >   INSTALL perf-archive
+> > > >   INSTALL perf-iostat
+> > > >   INSTALL perl-scripts
+> > > >   INSTALL python-scripts
+> > > >   INSTALL dlfilters
+> > > >   INSTALL perf_completion-script
+> > > >   INSTALL perf-tip
+> > > > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> > > >  18: 'import perf' in python                                       =
+  : Ok
+> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> > > >
+> > > > root@number:~# perf top
+> > > > perf: Segmentation fault
+> > > > -------- backtrace --------
+> > > > Segmentation fault (core dumped)
+> > > > root@number:~#
+> > > >
+> > > > Tried also with this, but probably something else is at play:
+> > > >
+> > > > root@number:~# perf probe -x ~/bin/perf dump_stack
+> > > > Added new event:
+> > > >   probe_perf:dump_stack (on dump_stack in /home/acme/bin/perf)
+> > > >
+> > > > You can now use it in all perf tools, such as:
+> > > >
+> > > >         perf record -e probe_perf:dump_stack -aR sleep 1
+> > > >
+> > > > root@number:~#
+> > > > root@number:~# perf trace -e probe_perf:dump_stack/max-stack=3D16/ =
+perf top
+> > > > perf: Segmentation fault
+> > > > -------- backtrace --------
+> > > > root@number:~#
+> > > >
+> > > > Running perf trace on a separate terminal it also doesn't catch
+> > > > dump_stack being called (that probe point).
+> > > >
+> > > > root@number:~# perf top --stdio
+> > > >    PerfTop:       0 irqs/sec  kernel: 0.0%  exact:  0.0% lost: 0/0 =
+drop: 0/0 [4000Hz cycles:P],  (all, 32 CPUs)
+> > > > -------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+--------------------------
+> > > >
+> > > > perf: Segmentation fault
+> > > > Segmentation fault (core dumped)
+> > > > root@number:~#
+> > > >
+> > > > root@number:~# nm ~/bin/perf | grep dump_stack
+> > > > 0000000000637eaa T __dump_stack
+> > > > 00000000006380fa T dump_stack
+> > > > 000000000063816b T sighandler_dump_stack
+> > > > root@number:~#
+> > > >
+> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ rpm -q glibc
+> > > > glibc-2.41-5.fc42.x86_64
+> > > > root@number:~# uname -a
+> > > > Linux number 6.14.8-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May =
+22 19:26:02 UTC 2025 x86_64 GNU/Linux
+> > > > root@number:~#
+> > > >
+> > > > What am I missing?
+> > >
+> > > For perf top I can do:
+> > > ```
+> > > $ sudo /tmp/perf/perf top
+> > > ```
+> > > in a different terminal:
+> > > ```
+> > > $ sudo killall -11 perf
+> > > ```
+> > > then back in the first terminal:
+> > > ```
+> > > perf: Segmentation fault
+> > > -------- backtrace --------
+> > >    #0 0x55ee68647918 in ui__signal_backtrace setup.c:110
+> > >    #1 0x7fe2d3849df0 in __restore_rt libc_sigaction.c:0
+> > >    #2 0x7fe2d38a49ee in __syscall_cancel_arch syscall_cancel.S:56
+> > >    #3 0x7fe2d3899668 in __internal_syscall_cancel cancellation.c:54
+> > >    #4 0x7fe2d38996ad in __syscall_cancel cancellation.c:79
+> > >    #5 0x7fe2d390d9c6 in __poll poll.c:43
+> > >    #6 0x55ee6855dfcb in fdarray__poll array.c:139
+> > >    #7 0x55ee68565a05 in perf_evlist__poll evlist.c:391
+> > >    #8 0x55ee68673b5a in evlist__poll evlist.c:594
+> > >    #9 0x55ee684e7a61 in __cmd_top builtin-top.c:1369
+> > >    #10 0x55ee684e9a6c in cmd_top builtin-top.c:1856
+> > >    #11 0x55ee6855d1f0 in run_builtin perf.c:351
+> > >    #12 0x55ee6855d497 in handle_internal_command perf.c:404
+> > >    #13 0x55ee6855d5f0 in run_argv perf.c:451
+> > >    #14 0x55ee6855d939 in main perf.c:558
+> > >    #15 0x7fe2d3833ca8 in __libc_start_call_main libc_start_call_main.=
+h:74
+> > >    #16 0x7fe2d3833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:1=
+28
+> > >    #17 0x55ee684b0a91 in _start perf[4ca91]
+> > > ```
+> > > As the same symbol code is used for the backtrace then adding the seg=
+v
+> > > there is likely causing a segv in the signal handler in __dump_stack.
+> >
+> > Just to note, it would be nice for this to land as I need to rebase:
+> > https://lore.kernel.org/lkml/20250529044000.759937-19-irogers@google.co=
+m/
+> > due to the machine changes. I believe the patches are WAI as shown in
+> > the output.
+>
+> Ok, I see this made it into v6.16 PR:
+> https://lore.kernel.org/lkml/20250603203501.1961487-1-acme@kernel.org/
 
-Yep, it fixes my build too.  Without the defines, I see
-
-  bench/futex.c: In function 'futex_set_nbuckets_param':
-  bench/futex.c:25:45: error: 'FH_FLAG_IMMUTABLE' undeclared (first use in this function)
-     25 |         flags = params->buckets_immutable ? FH_FLAG_IMMUTABLE : 0;
-        |                                             ^~~~~~~~~~~~~~~~~
-  bench/futex.c:25:45: note: each undeclared identifier is reported only once for each function it appears in
-  bench/futex.c:26:21: error: 'PR_FUTEX_HASH' undeclared (first use in this function)
-     26 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, flags);
-        |                     ^~~~~~~~~~~~~
-    CC      /build/ui/browsers/annotate-data.o
-  bench/futex.c:26:36: error: 'PR_FUTEX_HASH_SET_SLOTS' undeclared (first use in this function)
-     26 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, flags);
-        |                                    ^~~~~~~~~~~~~~~~~~~~~~~
-  bench/futex.c: In function 'futex_print_nbuckets':
-  bench/futex.c:39:21: error: 'PR_FUTEX_HASH' undeclared (first use in this function)
-     39 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-        |                     ^~~~~~~~~~~~~
-  bench/futex.c:39:36: error: 'PR_FUTEX_HASH_GET_SLOTS' undeclared (first use in this function)
-     39 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-        |                                    ^~~~~~~~~~~~~~~~~~~~~~~
-  bench/futex.c:53:52: error: 'PR_FUTEX_HASH_GET_IMMUTABLE' undeclared (first use in this function)
-     53 |                         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
-        |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-  make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
-
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+Actually just the first patch. I'll rebase and resend just patch 2 as v3.
 
 Thanks,
-Namhyung
-
-
-> 
-> - Arnaldo
->  
-> > >  void futex_set_nbuckets_param(struct bench_futex_parameters *params)
-> > >  {
-> > >  	unsigned long flags;
-> > 
-> > Sebastian
+Ian
