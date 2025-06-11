@@ -1,350 +1,178 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6772A23373B
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 03:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613604; cv=none; b=kUatzm/44Nd8bQBJ8eSpUNqJWvNPJeKsRx6exUNfEzUSPMdUcZ4GSA6NUG5ORUZBvuM6A6U/Zn2koaFqH3KHnSaeIB92k12MJBXW7ZwEN2l1d1Z8f0eCOvRp5NPVaoIPPfUxZxAUoaCq5sryA2zdJOwqIgmBAt2u322ti3Ph6DI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613604; c=relaxed/simple;
-	bh=UhDacTxzGBlAhgf5EQouh306VnId5+8DUuadwaTOx0A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=AYa8eka+dPCQcD0jfoGbTySvKun13GI/Wr2RpNNO7d5q14ZK1UwwSYR/sPCUs4lXWpMubxO2ZxuO4foGv5KR9SPsx6G4kSQshxiB0vbQkZDpexeqGJFZCgRUOwatzlJDTKekEcdx16tUjvFKUY7U9zQYPl91DPltigkGYJ3Kv5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CH+FAVeO; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBE3224B06;
+	Wed, 11 Jun 2025 05:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749619699; cv=fail; b=SRfuNody3kl4t4KYT2YHx4bOm6L1N3yCiAglum+gUG5oKQ8x4lHhlrsm677cDc8JwNfmXLoa2M5/dLL8QGMTGNY+rqIMRXBl/FlW6nB7y9yYlRq5YG1mB0VtknOzJ2EFqNWMAyaTOAAc2nSRmqOIDtJmlLU6timfLviCFuiKTX4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749619699; c=relaxed/simple;
+	bh=uBScSCCPVg1vl29dJwH3sqx4+GYV85qCfp2GK6Lo90w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f2Oq/kWcL+jbn94t/5/CkH8mn5QSa23RjoBV6NKiRLeQbBcVHmFQEPHTYllh2CENLnTXB1vZH8o4GPO+ZEtCUABzgcGHI/wOQrbjNEugMrhkGe9hBXBlX0674czqwQwdEvqjZ09Nl0LrZFBHTO8UP+jIBe/7QrxjK7xiXSyZ3SE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OjM/uGOh; arc=fail smtp.client-ip=40.107.244.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CH+FAVeO"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7462aff55bfso5177621b3a.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jun 2025 20:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749613602; x=1750218402; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CArExhgG4tSc5pEJvn7VsqeZBJ/Kf/ScNPd3hlaxRoY=;
-        b=CH+FAVeONZP17su0CknJKipya8uht6/fk8E3wwlpgQ57JPJYqCh7yuZpLHDahga1e/
-         cTynKk0aVbbWA3RWwp/jgZK7JXTrab0zhSEmQ5i0TIbJg4ddsUyzldNEYlP3eusLXRUj
-         z53yINcWbpDJkT8H05THA0XOJ6QLp+Sa0BuMeBIHivOtYbDVnjUCYM9esit1+ce35iwY
-         055YI1iPG5cLRHwYXAHu4mTBkM9nG4xzEDKuQMoAIhFkK8B+1nSfd1PwSZVZotJBD6fz
-         0R53dgtSkgaAZh4ubl9Hfp8L9pAW/EBRXifLej/a4+P99BMRbwhZdqqvwfcIHDunSoq8
-         9WDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749613602; x=1750218402;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CArExhgG4tSc5pEJvn7VsqeZBJ/Kf/ScNPd3hlaxRoY=;
-        b=TOIzbwgmj1bOm1n88h7vqXA0uJIF4d+2HN9weHnU8r36yg+MEqDtBoWG6uHk+jmg60
-         XBepVonTpB9n9iS1yrK2Nsr3Gk+0P7OKCZGROe/zvsXWYoLDQgcUixRk/KVdPGcWsb4p
-         4tAYhrpnFzTTmh4pEqZUPMd36wHK9c0ixrL5mpRySv2KVAWqbSshRvHPSnZViTmujsS3
-         HZThwPyPkBAkRSSvMY+JVbsZtkrN5VIFJdhT7cDL7+9C70G4XhNqkipqhBh512Z4vP2L
-         LC2QKSdwKe8pFuga++s9PNA2G9otFuuDOvqciVGa2YUgTnl3YyuVJ23I4O5H8wFT6+Ue
-         A5VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDWTF+HIqcq/1KeDCepUv7PDuA8V9bixxhaQLEM72Ze1RhYNlEajXjSBkk1j7V8r4jFNzKMSXMnzAkWYz5OTrc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3Z1RewCE4k2YZxBzYbpBnPNwPOdyFJXxEXeZbA8Bb+obK939k
-	khPOt0kLnOgBnA4SBPD6gfQVG4adkdh/Z867gPAWye0yty0ivhVxq4eNmdLjSe8YHbvmFWv6CnY
-	4F3HzYx4Jzw==
-X-Google-Smtp-Source: AGHT+IFpVKlbNH7GAWFI47IKyzuCwQ0PNTE+1sIzECsvNCmllZ25PK4HNoB/bSehj6l/l4+MwUMzRS8h9HJK
-X-Received: from pfbil9.prod.google.com ([2002:a05:6a00:8d49:b0:746:2d8f:cac1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3a17:b0:742:aecc:c47c
- with SMTP id d2e1a72fcca58-7486cb480damr2717688b3a.7.1749613601704; Tue, 10
- Jun 2025 20:46:41 -0700 (PDT)
-Date: Tue, 10 Jun 2025 20:45:29 -0700
-In-Reply-To: <20250611034529.508842-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OjM/uGOh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Loj6oF1CBBBHefSII3BA6WaYRYsCFKnigSF+EZ7QHD34hz1QdJ20ZzIXdMb5kE0HvHylrej/H6eIr5ZZBB275lORI010S8IVCo875UiAXCUoiq3BfegMvMy4qm23SY0QCUqGFPOSDPVl9Osfk9+Zr/Th23uB4ACS1XcSJzwQHnn5p2K/H2dAEUGALTmzCUkuG875ewdny6dJSpOv9d7zo9k3UfW4JiL5IT+zjODNP5cb+097GrmNg+8fkrj9e/lDVLQEmRFe+z48q1eiaioSMIA1DDNP9Pai8vmstRKTxvwnca8tn5NVyDSpwb3ssxmjZfuTvSBRk70Mzt+FaTMU/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T0hkpmGIcEDkpZBA/HfLji10IO/IG0Sgj/djBfcSvwg=;
+ b=NqW+l4tCubVVrkEjea1u2hcbxsB9K4wmOA+MfXDMBh+GkQwjwjcLBDYV7yibmDs7LUPoRkgnvJo5LPd3daDpzF8bY2roy4pCx9Nu0N2zGiXUKXXEaIYEpT14j+4aJKz5aOH8L9Dsk3adyGILAwnxlJMm63udsY9bKqxh6+PVqEsRe6WDNq2ayfFmIqYfCcADSnmYjuunsAOwr83ReKiDW3fnLQmdKxnGBKYJF9VcEb8ZeevH+TBalhf5qFjEqdTu/eiUXZ7wZe7yXu2Z8mLckAno5FbUkG+kqdr8rd05bWST/284/2iWlQnQhXwwLLGaouu4j760QoPD69njOvZEWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T0hkpmGIcEDkpZBA/HfLji10IO/IG0Sgj/djBfcSvwg=;
+ b=OjM/uGOhPvlmtm7S73WzDgxlwzg/O/jVQkcs3wJ4j9Lba7zkvLq5+VYBAx6qyz0PVVSRnVcOAIDFSatIKIvXjuZHGwcWfz8PKMFZrwkYrqoNVPheHNId4B7J5lQs4mlbPJ0yDadEasSrERQcviK4mM0LG3Po6/bbONJ9HFXRvdw=
+Received: from PH7P223CA0012.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::9)
+ by SA1PR12MB7176.namprd12.prod.outlook.com (2603:10b6:806:2bd::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.37; Wed, 11 Jun
+ 2025 05:28:13 +0000
+Received: from CY4PEPF0000EE36.namprd05.prod.outlook.com
+ (2603:10b6:510:338:cafe::bd) by PH7P223CA0012.outlook.office365.com
+ (2603:10b6:510:338::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Wed,
+ 11 Jun 2025 05:28:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE36.mail.protection.outlook.com (10.167.242.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Wed, 11 Jun 2025 05:28:12 +0000
+Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Jun
+ 2025 00:28:01 -0500
+From: Shivank Garg <shivankg@amd.com>
+To: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<kan.liang@linux.intel.com>, <willy@infradead.org>, <rostedt@goodmis.org>,
+	<apopple@nvidia.com>, <david@redhat.com>, <akpm@linux-foundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-mm@kvack.org>, Shivank Garg
+	<shivankg@amd.com>
+Subject: [PATCH V2] mm: use folio_expected_ref_count() helper for reference counting
+Date: Wed, 11 Jun 2025 05:27:07 +0000
+Message-ID: <20250611052706.515408-2-shivankg@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611034529.508842-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611034529.508842-16-irogers@google.com>
-Subject: [PATCH v1 15/15] perf ilist: Add new python ilist command
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE36:EE_|SA1PR12MB7176:EE_
+X-MS-Office365-Filtering-Correlation-Id: f41d2a4b-43a3-4e47-6562-08dda8a8c27a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014|921020|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?aY7dNwCpzDoJ9iYeHKVHBueyqK2itUC8tucvcD6Cdw+aPx1AsAlcINgkXv2a?=
+ =?us-ascii?Q?/6n8fqNH8W+Oel8Zfvp9UPOFk15wmwGau9IC5G27Iznd5f5a/2K50KFS7nl2?=
+ =?us-ascii?Q?7ZQd30e5LSLihy2UPXHaqe0ts77SeJ4gYagOLO5jvvVYzNtLBKq+26Dxpriw?=
+ =?us-ascii?Q?mZ0/jsPcRzX1cf8DTjsU1N/3tueyiJbPGVVoPJ04gW7FcTKF/kLzJJP/V7Ca?=
+ =?us-ascii?Q?k40SG1cUlwrX22e/+48S+KuPuIJozaUghCmjwdovpTZX2O3RQbyXYNXrHBao?=
+ =?us-ascii?Q?heBIw4zfzgjPfSqhezN1Va8l+nk9yFcw3ISmknfDpeSMYVkecFWZmcN+BBnr?=
+ =?us-ascii?Q?AMFytBd12hzYahJcwz9BLfUkC1CoKYPLot6RbCqJjHLHwZ0HRvlZiWfvSnCQ?=
+ =?us-ascii?Q?kNmMxtckoPo6ARmFzIPWMoDlPTIX7HXs8D2NOYyKG+oNr8L2b1DgTEmvT8sR?=
+ =?us-ascii?Q?PVbLdsMUyMO2LlNhk+/qCt6O75Gxiji61W6py0JNXHkN4ue8GafygyH0Ruol?=
+ =?us-ascii?Q?drZ1XxmcC+AegcU94prIZgNNzczEc38i9kQ+1WBRWxlk0dezCmhMpPy7cAG0?=
+ =?us-ascii?Q?f99DjpVaUS6PYYEfPeS3p9ojY0wyQBNQi4ucvMKZjd+e1dgaxxvzrZQAs7lo?=
+ =?us-ascii?Q?xSRvKy1bXmW0VqqgVWkSjilDcTZ9BXZsVgum5Z58p72wDndmr6SWHDVuopCK?=
+ =?us-ascii?Q?pqEjtaOW8m3Ux4Qpa3wg9JP4ZUPPqOFeCvVckwoFA3jccdLq7bt9RPpOVT72?=
+ =?us-ascii?Q?PDZ9kEtbWkakUyXSNRlKgXvhPutGXuOA+TfzOTiBib7rkQDEAcEqZhNSMT5b?=
+ =?us-ascii?Q?BcC6rRQ4IohYES/ieJyCdlbzIQF9yeSX8WDuzMKpDELSLkurK+7ANTkxUW3T?=
+ =?us-ascii?Q?FPM3EBZznqX5iD4VfFaaqpTWhdkBWtEXQXUqP1OswQ90NdvgkWuLmxCGFGnk?=
+ =?us-ascii?Q?iXbY3QVBYq9LjCqnTyLmFMU7wZG5KJxXtEFLOWUdsvklfczg/B8gbnxmaXcs?=
+ =?us-ascii?Q?sR6Ufifa0zr3c2sZIhz+MABiavKDoJ/Fa5TmHHCV4FU45LGCsc53rooElqJX?=
+ =?us-ascii?Q?vwSzjSw2/insowScL8QJ3vK0chyKEau3mxxnOQp+SrmP+lOj1ykl6g+LmbTv?=
+ =?us-ascii?Q?3T7IDNK3VbPyDaUN15hYRVKXAqAGYwWiENuZjKGC5jmj19uYpQzUolkz5WIc?=
+ =?us-ascii?Q?QtQJRiD/iuGfOznqL9u21+x3u3wpYTewj+IILZIKhLY4vPkxvsTMrs5BbEHC?=
+ =?us-ascii?Q?H7HsiuIrmsB3RZKmZLphKBovtRTEWMntHx+9Fg/cLm9NgEFpHROqv+J9+ZDN?=
+ =?us-ascii?Q?pA3mYWrSzEQ7eGgEWp/okrt2OpK9KKoQvj6g2ODqB67UeRYiD6UwhiuTtpT/?=
+ =?us-ascii?Q?g/HAtrueUnO2vjcgG3WxCCLGpA165vEOht55vdwqHH3QNtOUPX6UAUi06jFL?=
+ =?us-ascii?Q?e3h7cPBAM3rLZy9j58r5bgqIE/FX7l+ugURDgTxj2bDLG8XOJmG3jEczoS9y?=
+ =?us-ascii?Q?iyD96zroMw5m839IfTM+30h9vWvURwCavsRwSu1mlY5nFZt+XNDSrMqzhA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014)(921020)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 05:28:12.6243
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f41d2a4b-43a3-4e47-6562-08dda8a8c27a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE36.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7176
 
-The perf ilist command is a textual app [1] similar to perf list. In
-the top-left pane a tree of PMUs is displayed. Selecting a PMU expands
-the events within it. Selecting an event displays the `perf list`
-style event information in the top-right pane.
+Replace open-coded folio reference count calculations with the
+folio_expected_ref_count().
 
-When an event is selected it is opened and the counters on each CPU
-the event is for are periodically read. The bottom of the screen
-contains a scrollable set of sparklines showing the events in total
-and on each CPU. Scrolling below the sparklines shows the same data as
-raw counts. The sparklines are small graphs where the height of the
-bar is in relation to maximum of the other counts in the graph.
+No functional changes intended.
 
-By default the counts are read with an interval of 0.1 seconds (10
-times per second). A -I/--interval command line option allows the
-interval to be changed. The oldest read counts are dropped when the
-counts fill the line causing the sparkline to move from right to left.
-
-[1] https://textual.textualize.io/
-
-Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Shivank Garg <shivankg@amd.com>
 ---
- tools/perf/python/ilist.py | 238 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 238 insertions(+)
- create mode 100644 tools/perf/python/ilist.py
+Changes from V1:
+- https://lore.kernel.org/linux-mm/20250609170806.447302-2-shivankg@amd.com
+- remove extra comments
+- drop RFC tag
+---
+ kernel/events/uprobes.c | 3 +--
+ mm/memfd.c              | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
-new file mode 100644
-index 000000000000..30cc70435f7e
---- /dev/null
-+++ b/tools/perf/python/ilist.py
-@@ -0,0 +1,238 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+"""Interactive perf list."""
-+
-+import argparse
-+from typing import Dict
-+import perf
-+from textual import on
-+from textual.app import App, ComposeResult
-+from textual.binding import Binding
-+from textual.containers import Horizontal, HorizontalGroup, Vertical, VerticalScroll
-+from textual.screen import ModalScreen
-+from textual.widgets import Button, Footer, Header, Label, Sparkline, Static, Tree
-+
-+class ErrorScreen(ModalScreen[bool]):
-+    """Pop up dialog for errors."""
-+
-+    CSS="""
-+    ErrorScreen {
-+        align: center middle;
-+    }
-+    """
-+    def __init__(self, error: str):
-+        self.error = error
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        yield Button(f"Error: {self.error}", variant="primary", id="error")
-+
-+    def on_button_pressed(self, event: Button.Pressed) -> None:
-+        self.dismiss(True)
-+
-+
-+class Counter(HorizontalGroup):
-+    """Two labels for a CPU and its counter value."""
-+
-+    CSS="""
-+    Label {
-+        gutter: 1;
-+    }
-+    """
-+
-+    def __init__(self, cpu: int) -> None:
-+        self.cpu = cpu
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-+        yield Label(label + " ")
-+        yield Label("0", id=f"counter_{label}")
-+
-+
-+class CounterSparkline(HorizontalGroup):
-+    """A Sparkline for a performance counter."""
-+
-+    def __init__(self, cpu: int) -> None:
-+        self.cpu = cpu
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-+        yield Label(label)
-+        yield Sparkline([], summary_function=max, id=f"sparkline_{label}")
-+
-+
-+class IListApp(App):
-+    TITLE = "Interactive Perf List"
-+
-+    BINDINGS = [
-+        Binding(key="q", action="quit", description="Quit the app")
-+    ]
-+
-+    # Make the 'total' sparkline a different color.
-+    CSS = """
-+        #sparkline_total > .sparkline--min-color {
-+            color: $accent;
-+        }
-+        #sparkline_total > .sparkline--max-color {
-+            color: $accent 30%;
-+        }
-+    """
-+
-+    def __init__(self, interval: float) -> None:
-+        self.interval = interval
-+        self.evlist = None
-+        super().__init__()
-+
-+
-+    def update_counts(self) -> None:
-+        if not self.evlist:
-+            return
-+
-+        def update_count(cpu: int, count: int):
-+            # Update the raw count display.
-+            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
-+            if not counter:
-+                return
-+            counter = counter.first(Label)
-+            counter.update(str(count))
-+
-+            # Update the sparkline.
-+            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
-+            if not line:
-+                return
-+            line = line.first(Sparkline)
-+            # If there are more events than the width, remove the front event.
-+            if len(line.data) > line.size.width:
-+                line.data.pop(0)
-+            line.data.append(count)
-+            line.mutate_reactive(Sparkline.data)
-+
-+        # Update the total and each CPU counts, assume there's just 1 evsel.
-+        total = 0
-+        self.evlist.disable()
-+        for evsel in self.evlist:
-+            for cpu in evsel.cpus():
-+                aggr = 0
-+                for thread in evsel.threads():
-+                    counts = evsel.read(cpu, thread)
-+                    aggr += counts.val
-+                update_count(cpu, aggr)
-+                total += aggr
-+        update_count(-1, total)
-+        self.evlist.enable()
-+
-+
-+    def on_mount(self) -> None:
-+        """When App starts set up periodic event updating."""
-+        self.update_counts()
-+        self.set_interval(self.interval, self.update_counts)
-+
-+
-+    def set_pmu_and_event(self, pmu: str, event: str) -> None:
-+        # Remove previous event information.
-+        if self.evlist:
-+            self.evlist.disable()
-+            self.evlist.close()
-+            lines = self.query(CounterSparkline)
-+            for line in lines:
-+                line.remove()
-+            lines = self.query(Counter)
-+            for line in lines:
-+                line.remove()
-+
-+        def pmu_event_description(pmu: str, event: str) -> str:
-+            """Find and format event description for {pmu}/{event}/."""
-+            def get_info(info: Dict[str, str], key: str):
-+                return (info[key] + "\n") if key in info else ""
-+
-+            for p in perf.pmus():
-+                if p.name() != pmu:
-+                    continue
-+                for info in p.events():
-+                    if "name" not in info or info["name"] != event:
-+                        continue
-+
-+                    desc = get_info(info, "topic")
-+                    desc += get_info(info, "event_type_desc")
-+                    desc += get_info(info, "desc")
-+                    desc += get_info(info, "long_desc")
-+                    desc += get_info(info, "encoding_desc")
-+                    return desc
-+            return "description"
-+
-+        # Parse event, update event text and description.
-+        full_name = event if event.startswith(pmu) or ':' in event else f"{pmu}/{event}/"
-+        self.query_one("#event_name", Label).update(full_name)
-+        self.query_one("#event_description", Static).update(pmu_event_description(pmu, event))
-+
-+        # Open the event.
-+        try:
-+            self.evlist = perf.parse_events(full_name)
-+            if self.evlist:
-+                self.evlist.open()
-+                self.evlist.enable()
-+        except:
-+            self.evlist = None
-+
-+        if not self.evlist:
-+            self.push_screen(ErrorScreen(f"Failed to open {full_name}"))
-+            return
-+
-+        # Add spark lines for all the CPUs. Note, must be done after
-+        # open so that the evlist CPUs have been computed by propagate
-+        # maps.
-+        lines = self.query_one("#lines")
-+        line = CounterSparkline(cpu=-1)
-+        lines.mount(line)
-+        for cpu in self.evlist.all_cpus():
-+            line = CounterSparkline(cpu)
-+            lines.mount(line)
-+        line = Counter(cpu=-1)
-+        lines.mount(line)
-+        for cpu in self.evlist.all_cpus():
-+            line = Counter(cpu)
-+            lines.mount(line)
-+
-+
-+    def compose(self) -> ComposeResult:
-+        def pmu_event_tree() -> Tree:
-+            """Create tree of PMUs with events under."""
-+            tree: Tree[str] = Tree("PMUs")
-+            tree.root.expand()
-+            for pmu in perf.pmus():
-+                pmu_name = pmu.name()
-+                pmu_node = tree.root.add(pmu_name, data=pmu_name)
-+                for event in sorted(pmu.events(), key=lambda x: x["name"]):
-+                    if "name" in event:
-+                        e = event["name"]
-+                        if "alias" in event:
-+                            pmu_node.add_leaf(f'{e} ({event["alias"]})', data=e)
-+                        else:
-+                            pmu_node.add_leaf(e, data=e)
-+            return tree
-+
-+        yield Header()
-+        yield Horizontal(Vertical(pmu_event_tree(), id="events"),
-+                         Vertical(Label("event name", id="event_name"),
-+                                  Static("description", markup=False, id="event_description")
-+                                  ))
-+        yield VerticalScroll(id="lines")
-+        yield Footer()
-+
-+
-+    @on(Tree.NodeSelected)
-+    def on_tree_node_selected(self, event: Tree.NodeSelected[None]) -> None:
-+        if event.node.parent and event.node.parent.parent:
-+            assert event.node.parent.data is not None
-+            assert event.node.data is not None
-+            self.set_pmu_and_event(event.node.parent.data, event.node.data)
-+
-+
-+if __name__ == "__main__":
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument('-I', '--interval', help="Counter update interval in seconds", default=0.1)
-+    args = ap.parse_args()
-+    app = IListApp(float(args.interval))
-+    app.run()
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4c965ba77f9f..8a601df87072 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -436,8 +436,7 @@ static int __uprobe_write_opcode(struct vm_area_struct *vma,
+ 	 * there are no unexpected folio references ...
+ 	 */
+ 	if (is_register || userfaultfd_missing(vma) ||
+-	    (folio_ref_count(folio) != folio_mapcount(folio) + 1 +
+-	     folio_test_swapcache(folio) * folio_nr_pages(folio)))
++	    (folio_ref_count(folio) != folio_expected_ref_count(folio) + 1))
+ 		goto remap;
+ 
+ 	/*
+diff --git a/mm/memfd.c b/mm/memfd.c
+index ab367e61553d..4db1fd2959aa 100644
+--- a/mm/memfd.c
++++ b/mm/memfd.c
+@@ -32,8 +32,7 @@
+ 
+ static bool memfd_folio_has_extra_refs(struct folio *folio)
+ {
+-	return folio_ref_count(folio) - folio_mapcount(folio) !=
+-	       folio_nr_pages(folio);
++	return folio_ref_count(folio) != folio_expected_ref_count(folio);
+ }
+ 
+ static void memfd_tag_pins(struct xa_state *xas)
 -- 
-2.50.0.rc0.642.g800a2b2222-goog
+2.43.0
 
