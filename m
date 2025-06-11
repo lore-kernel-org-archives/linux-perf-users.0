@@ -1,193 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2CC18D;
-	Wed, 11 Jun 2025 19:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453E3224AE1
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 19:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668463; cv=none; b=fTUAs+IFkdo7Emkg26j7lFJVdw7mx2+LOyoyUNaL5jd3hjB4qNuWQqSsxVkjzTl4LeJv5RTHmLXxR4ktss1jfkz3kIwH9XH7rQetopS7fKTgc43QTucHWHN0gGBxDGsVXkqKZ6Yv0kHAh08PP5tdvCgMhgt2uqOsETskcUPvl2c=
+	t=1749670127; cv=none; b=ch0WgWzzTIq9iVYWnc0AbGksfLfKQfexGKAnkoEY1H4slsktJFTOle1p15Bp75DSZdtWuHgsFoUXiFdBLtkvZ7Fw0bpsSr/WYOz7iOAD7yNcT2P9fYAr/Z111D8OPogWGJYm4877v3C31kknL3rHF0vx1eOW6wv8Rm5W8QajTvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668463; c=relaxed/simple;
-	bh=T20AKzyH88cJPUCj3BOJPy4j8u7rLv+QAbQ9fGnyO8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOCbWV4iNbbmv4qVPI0WlQ0tER1ywGQ1dyB7j8lB/+jDfmH4fZ79bzTEcu2depbaRfd0WxwQ7E7V8ZH8xaF9tSoKPmgWfsVP+XtMBuK3xxiPgkgc/fS44ZHgXXvBVBcVyQb7oPDdfBrvrsxNmvVwr2Evv1nmV1xkpbWj6p7b3ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoTMitiv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749670127; c=relaxed/simple;
+	bh=FHSJKbaVsXnpai4AZoxw4CdJRiJHGiUPSXPDotRSaxQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NssB26LIVZvqP+yH5qN1MfFKQTKd2szurTCToZtazz7f0T0hO1v4EiCxpDIr9L7cOvZ6hhqRCofwhfyZKSG+OtRTEyTqgkMXmGTEw1c9xZu1uDUJRYSRkypLYUerorofBFAwMUXtDn8pMTLyMNtPwk49FSRSYpNboStsy4JWmNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=c4e69sE0; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoTMitiv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28E8C4CEE3;
-	Wed, 11 Jun 2025 19:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749668463;
-	bh=T20AKzyH88cJPUCj3BOJPy4j8u7rLv+QAbQ9fGnyO8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZoTMitivzFVvX1/SHbSqdBzz+PEQ3WhzD04HO6rbmaeqHm5g8nuhi/xmNzLNh+u/m
-	 G+qSfYcmMvrblKJnRmsnRhI4XagFnmf3QqllUq6FeGnzVaoAw+2cD89NkeoYBmy5U8
-	 uiLebT0uXk8OQgBzd39S1OYwowo1X/HwJDxhNXaBfDiUc1EosplND6jo90Ly99Mrim
-	 W2nhNSevb87PoHM+2AZwva8gpLsldrTQuNI6ytC8A/fUCpc5TD1wq1TE+K3EMY97SK
-	 EAnrYnc2VNqeaPPzjCrVUS+dYfu2vjoQVlYwXBZKJQ/qPo+Y1d3yw3AqTxrvLNPE9g
-	 ybibgaHAR387w==
-Date: Wed, 11 Jun 2025 16:01:00 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <aEnSbBaFYgd4Gr9u@x1>
-References: <aEh6xO14wDSCFUDr@google.com>
- <20250611092542.F4ooE2FL@linutronix.de>
- <aEmBOO0bSJYSvX2i@x1>
- <aEmY259Mx92D60KG@x1>
- <20250611150615.FcVIIhgA@linutronix.de>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="c4e69sE0"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6face1d58dcso3411616d6.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 12:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1749670123; x=1750274923; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=InneJdZRcVVlaPFNnewjOZhPI90vEkv+Lpgu7MYMxe8=;
+        b=c4e69sE0tvBZOoQG57WwWclkuLyMwSKKw/mmKSqRD1ih56VgmqGmtxgdTDFOhL1qZB
+         f6VhE2JEkSY8fMVUgUFfolngH7qOHrrHYfmozG0TdZPJA1J2KrYCPiVM04lJPVreJuTu
+         vNdUpcwBbXsmcioHEETZhcs3lcxMl6ZwbB5ZM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749670123; x=1750274923;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=InneJdZRcVVlaPFNnewjOZhPI90vEkv+Lpgu7MYMxe8=;
+        b=xVjqASdbW80G6a3/bm+/EeUqZZqiJLBGt7PALBRUaaYC7RveVV3s1oLT1a1F1gBckp
+         KsU7xgAB+A6e9GrIfEJLYgVr2kQ3rLFsStnHUovBP8g0f3NAXJi3R9dWp9naSf0NkCfE
+         4m7YQzG6A0/b4XUoRAFB+Op8vW4a+rzasi5jqC2aTWtMBS5Sc1VTbR7y074MyIJ7Pl2l
+         UdI5EcWqJn1ZO+sC/0inViIsP3q1YSsuWxczttC3hGBxpcSoSM03vStPaOUdIRxxR68p
+         Sdw9l6CQRVoVpmQKnAF6Yxl+qUMjDRHgx8s5m3abnNcDa2VzHJEkROgh3cS5bx+rNif1
+         RLfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6jZkQrm2nxgseYc05KydbrCLn9butV0I3LJMmvznnRYrYPDwjL6h7bgnuJEPeIa+Ugtu/6GDBMJOlIptKNs4I@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIeXqw/jhIvuuon2o4rrHrkfkTiPAMYGne8djZ3AFOzCYc85C+
+	nyAUg8bQAL0mguMmlK9nzhaPecaj+0e/nGp46yTJRF3beZZ+27KtQRj2dytH93p1dQ4/Yy+up/D
+	GayE=
+X-Gm-Gg: ASbGncsKrZEX2G7UZnrWVS99KmDRBzQABJuyFMckUOCe/D1t+jguNXqG7sRdRsjDUoN
+	yc3j28xiPrnpavma4uTKilT3zRUJRI16Y/lT/nn6RCxUjpe+2oZBD2k4aWz5FFFITtPm2LvmkCm
+	2efmDMg+z9bZD+DGt/s4mvdS2MNML+xwARSoIz6ubgghmtCHGyszmPEKRheqvEDyRSMyX+T8IbG
+	inUK9xwbrmJU56LklutAd4DAQ5Kh4a3LT0Xemhh+RY27JyLv4yW7Bn3Z9LUc6RQMtI6mZ2kdocc
+	O7AAH0One+/3aZ1Lz29ukAnDyrbbyvF2hiIl3yGx9jlzo0lx255tujSyc/scyOzVuqrELRzHS4V
+	ggEXMrw==
+X-Google-Smtp-Source: AGHT+IE6SoauonDa6W5DSM24sCvdDwQpN7IJnm81GX21ZWGOaPczOVEPXw9rzsmF/TsIAaiVA3vGjA==
+X-Received: by 2002:a05:622a:1f91:b0:476:964a:e335 with SMTP id d75a77b69052e-4a7229ef9ffmr12316091cf.24.1749670112144;
+        Wed, 11 Jun 2025 12:28:32 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a6f5c7a22esm64211531cf.54.2025.06.11.12.28.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 12:28:31 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Wed, 11 Jun 2025 15:28:30 -0400 (EDT)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] crashing bug in icl_update_topdown_event
+In-Reply-To: <d8c64a21-ed4e-4d37-8d4b-9d3a9857b7fd@linux.intel.com>
+Message-ID: <704f6604-547b-f7ca-ad45-2afd2dd70456@maine.edu>
+References: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu> <080706b6-ed21-540d-dfae-ae27d130d796@maine.edu> <d8c64a21-ed4e-4d37-8d4b-9d3a9857b7fd@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250611150615.FcVIIhgA@linutronix.de>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jun 11, 2025 at 05:06:15PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-11 11:55:23 [-0300], Arnaldo Carvalho de Melo wrote:
-> > commit 8386dc356158fc50c55831c96b1248e01d112ebc
-> > Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Date:   Wed Jun 11 11:25:42 2025 +0200
-> > 
-> >     perf bench futex: Fix prctl include in musl libc
-> >     
-> >     Namhyung Kim reported:
-> >     
-> >       I've updated the perf-tools-next to v6.16-rc1 and found a build error
-> >       like below on alpine linux 3.18.
-> >     
-> >         In file included from bench/futex.c:6:
-> >         /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
-> >            88 | struct prctl_mm_map {
-> >               |        ^~~~~~~~~~~~
-> >         In file included from bench/futex.c:5:
-> >         /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
-> >           134 | struct prctl_mm_map {
-> >               |        ^~~~~~~~~~~~
-> >         make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
-> >     
-> >       git bisect says it's the first commit introduced the failure.
-> >     
-> >     So your /usr/include/sys/prctl.h and
-> >     /linux/tools/include/uapi/linux/prctl.h both provide struct prctl_mm_map
-> >     but their include guard must be different.
-> >     
-> >     My /usr/include/sys/prctl.h is provided by glibc and contains the
-> >     prctl() declaration. It includes also linux/prctl.h.  The
-> >     tools/include/uapi/linux/prctl.h is the same as
-> >     /usr/include/linux/prctl.h.
-> >     
-> >     The /usr/include/sys/prctl.h on alpine linux is different. This is
-> >     probably coming from musl. It contains the PR_* definition and the
-> >     prctl() declaration.  So it clashes here because now the one struct is
-> >     available twice.
-> >     
-> >     The man page for prctl(2) says:
-> >     
-> >     |       #include <linux/prctl.h>  /* Definition of PR_* constants */
-> >     |       #include <sys/prctl.h>
-> >     
-> >     so musl doesn't follow this.
-> >     
-> >     So align with the other builds.
-> >     
-> >     Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> >     Reported-by: Namhyung Kim <namhyung@kernel.org>
-> >     Link: https://lore.kernel.org/r/20250611092542.F4ooE2FL@linutronix.de
- 
-> s/Link/Closes/
+On Wed, 11 Jun 2025, Liang, Kan wrote:
 
-ok
- 
-> >     [ Remove one more in tools/perf/bench/futex-hash.c and conditionally define PR_FUTEX_HASH and friends ]
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> > index fdf133c9520f73a4..d2d6d7f3ea331c84 100644
-> > --- a/tools/perf/bench/futex-hash.c
-> > +++ b/tools/perf/bench/futex-hash.c
-> > @@ -18,7 +18,6 @@
-> >  #include <stdlib.h>
-> >  #include <linux/compiler.h>
-> >  #include <linux/kernel.h>
-> > -#include <linux/prctl.h>
-> >  #include <linux/zalloc.h>
-> >  #include <sys/time.h>
-> >  #include <sys/mman.h>
-> > diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-> > index 26382e4d8d4ce2ff..4c4fee107e5912d5 100644
-> > --- a/tools/perf/bench/futex.c
-> > +++ b/tools/perf/bench/futex.c
-> > @@ -2,11 +2,18 @@
-> >  #include <err.h>
-> >  #include <stdio.h>
-> >  #include <stdlib.h>
-> > -#include <linux/prctl.h>
-> >  #include <sys/prctl.h>
-> >  
-> This is what I had locally and was waiting for confirmation.
 > 
-> >  #include "futex.h"
-> >  
-> > +#ifndef PR_FUTEX_HASH
-> > +#define PR_FUTEX_HASH                   78
-> > +# define PR_FUTEX_HASH_SET_SLOTS        1
-> > +# define FH_FLAG_IMMUTABLE              (1ULL << 0)
-> > +# define PR_FUTEX_HASH_GET_SLOTS        2
-> > +# define PR_FUTEX_HASH_GET_IMMUTABLE    3
-> > +#endif // PR_FUTEX_HASH
 > 
-> Is this needed? Aren't these defines coming from that local copy?
-
-So, these are, as you say, in the copied linux/prctl.h, but in musl libc
-we have:
-
-/tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h 
-struct prctl_mm_map {
-/tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h 
-struct prctl_mm_map {
-/tmp/perf-6.16.0-rc1 $
-
-And sys/prctl.h doesn't include linux/prctl.h, if we do it, we get
-multiple definitions for 'struct prctl_mm_map'.
-
-While in fedora (probably in all the others, haven't checked, but no
-failure on them from my last container set build tests):
-
-⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h
-struct prctl_mm_map {
-⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h
-⬢ [acme@toolbx perf-tools]$
-
-furthermore fedora's sys/prctl.h includes linux/prctl.h, while musl libc
-doesn't.
-
-I thought this would be something fixed in newer alpine versions, but
-no:
-
-toolsbuilder@five:~$ grep FAIL dm.log.old/summary 
-   5    19.53 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
-   6    20.83 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
-   7    13.94 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10) 
-   8    16.60 alpine:3.19                   : FAIL gcc version 13.2.1 20231014 (Alpine 13.2.1_git20231014) 
-   9    15.72 alpine:3.20                   : FAIL gcc version 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
-  10    16.38 alpine:3.22                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
-  11    15.09 alpine:edge                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
-toolsbuilder@five:~$
-
-So the easiest way out of this seems to be not to explicitely include
-linux/prctl.h and define the new stuff conditionally, as I did, right?
-
-- Arnaldo
- 
-> >  void futex_set_nbuckets_param(struct bench_futex_parameters *params)
-> >  {
-> >  	unsigned long flags;
+> It seems an regression from the f9bdf1f95339 ("perf/x86/intel: Avoid
+> disable PMU if !cpuc->enabled in sample read").
+> The commit merged the intel_pmu_auto_reload_read() and
+> intel_pmu_read_topdown_event(). It's possible that a PEBS event 0x0400
+> runs on a ATOM CPU. So the PERF_X86_EVENT_AUTO_RELOAD is set for the
+> event. The is_topdown_event() also returns true.
 > 
-> Sebastian
+> Does the below patch help?
+> It checks the PERF_X86_EVENT_TOPDOWN flag as well before invoking the
+> topdown functions.
+
+With this patch applied my test case no longer crashes.
+
+Thanks,
+
+Vince Weaver
+vincent.weaver@maine.edu
