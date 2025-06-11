@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE53221273
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 16:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869B0221D8F
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 16:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657757; cv=none; b=jiANNZt3oIMqMLiVsJwDoWG9wn9Zg0dg06uKJ+LSOXmX3ksKzf0MgpX+WeFTCIQT2W0kM4BP2AjbgFJYUQNJbdpSzyb6SZv5NTFXO3gLQyrYgPU1a2s9G2vQyZDdb+zL3BhKrYvscjZg8XIHNOegbCilThRsnkJPP3heFGBndoA=
+	t=1749657760; cv=none; b=gDvAlIlqNpSkKDhnk6NSy++J2oqBF/NYHgRnWqTPxHhqd8Zw9bIsdogfh6cSS+2ZMlkUUJIx573N3eI5lCVfbrf02t5MrMcCW9YxfCZC8coYtf1T+d/WtSlChgK5e6cIrm4bGP5HoFF0CMdQfxqQ3V8CXF4MRlRAU5VjmN1adgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657757; c=relaxed/simple;
-	bh=bQeLV1BsJ2tvnezVsFH5HQWOoFaIkdLvkn0rDP/V1Ec=;
+	s=arc-20240116; t=1749657760; c=relaxed/simple;
+	bh=6rTeHdvFj+TzP4fuOKw6JIv1YSRvOk1CUi7LJMnkhg4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=P6sfTtjtTVTNK/fpRI6SHXD5fpbvSZQF4A4PA4O7XZamKWGyeVFuvOWjZZzf905nd5qEFFgx17wh3vmwlCCuPtlQNIVsT7qUtDByCcqBez/a4u8CdJtsWcy1/lJFW/nBDtECangaZRCAyEt0auoYVvw+OFDZ/j2wlNUAFOs3GH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ODcKAxfV; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=LQUXezdF2YDd/ubwpJ06GkIS1sL4R6A9fyBJmooPnDisWHX9kDmBlFSsKZa4MLIg5++DvQmGc3n9TJK58NVPGIcGodEhfk2zR7b6Fvbpv/JE2f1iN/IROhk6JKX9SICUyA5tLnu25UhHQoLDYwqWTuGNt9BDH1gx1wUuf6lW6Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vwM0Mxtm; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ODcKAxfV"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-73bfc657aefso25540b3a.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:02:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vwM0Mxtm"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e8f1365181so4344016fac.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749657754; x=1750262554; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749657756; x=1750262556; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UxJrtp3uxGwwn+DeihPrvlrgDTT79b0N8a6G0RBrVtA=;
-        b=ODcKAxfVojTntDCgq8HO6rIKhcJ+yQbTFI2dXryoylMNhhfVZvgI/gCL7I365tu7+t
-         qjWodaszCCvcl+PMmHWMdelfRms506u5QUWI/Z0TVAUAmBfa/6QHYgkCsOvtiYlJR2VC
-         iuX8tOKNX+g5Rn1djpcc1TC6P1tR0CDaVXhRXB/lKEIRRxKmVtHJqL9tAPkGAR++1LA1
-         tuexgrAFpFRbJQBng4tfbYUZFSocKFnhPluQtWKUQ3343CwgyfGQIn0UImVi2frs4z4z
-         hQT9+D4UZ1D5KjkMeD1DxuBbLVRzbhiqLllRAU2PnEklV4EKSyEA+8McNGftdBGtAxps
-         v+kQ==
+        bh=liUhjcinB77Eb6jHKv87c9fMKbjh9O7i5zgWSFhgTn8=;
+        b=vwM0Mxtm+/cXijz5XOzpP4D8Wx/+ZPgMymAVmJsg+mwKhfOGx2CL+rAago6iA/wN0T
+         QnuQHiO7cNzLZw8RSO9K+/RIEBj2TMI7VREfZsXzpLDM5S7MfvJcD2f2FBIZ4AM82W9V
+         UnK88jKYooHxosqP5fsmQUF2IKUM5riuLcZx19OVB4Abp3rtjFCk83KFNtDHLewL5Io4
+         fHV4bFwKrkd/mdMR6IiNKuftsbkXB3OJt3jA7GRIkaoS1tThFAL/TdvbEEt7MqGy2qUP
+         w34X+NWQ1JWcnm2nlKitfhCNKDG4UwrzaSbtSPh1O/ATGPzkIF9smSicc1yVoYxC7C4J
+         GKgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749657754; x=1750262554;
+        d=1e100.net; s=20230601; t=1749657756; x=1750262556;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UxJrtp3uxGwwn+DeihPrvlrgDTT79b0N8a6G0RBrVtA=;
-        b=CmXfITYzuUqrtJrmZThN3E8K4akAUB6+25x360zDYUfFRYpT4X2RjUxpqTdKzUAQH1
-         mwKwgHYXJPbGxA22mU4WIaQowbg5NTKvqpBlLLxiYWOBhHhmuUQeqOVnbXBwAX1duTVJ
-         feahLJsDVzlCFdy246JS8aTg/0ebkrhClUI+G6D01GF2ky2PZb0F4xx+XiXqGi9vJ8mo
-         Kd5/PUCTtaaySg4EVRujqg1VRLIkYAYrbsTDdtaO10vA3BsmtJ0LuEIMCsbYV+8TJ8wV
-         4XE/THh0ZS26vOEHlvJBA4hpi9ONGpnOyRmXz8sEM9ZwBHKwNXJUOqzNiLnmZVe5eJ07
-         JpWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgIxd23mrIu7ICvTyc5SS8X9g0N4c0bS2+vfbBQI6mq9ckBqZCBZZMOtJhv5o9ju5QhI/i6Hm+R1fxQ6Ea3gnb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJmQBlEBYQWgvI6zTf9QzkyiRRf18h79pyrTUIav2iswKgrmD6
-	7Cg4hQ9PhnhK9T3udtHHyYBcsXP7uBFIXRfwgl4c9mWE6a6SJi7BKT9eDqasiwjLScHhDWyFA5A
-	DhgTll6ldgQ==
-X-Google-Smtp-Source: AGHT+IEVOyWL5lErXvTsU+x1O0b7GJrN1WG4ogAJh6rxs9wG0KFn5YcjwBDkKn09LP5xheIAeQUikL+kEw6U
-X-Received: from pfbfa5.prod.google.com ([2002:a05:6a00:2d05:b0:746:24d7:a6aa])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1ace:b0:747:ee09:1fdf
- with SMTP id d2e1a72fcca58-7486cb9c05emr5223659b3a.4.1749657754349; Wed, 11
- Jun 2025 09:02:34 -0700 (PDT)
-Date: Wed, 11 Jun 2025 09:02:03 -0700
+        bh=liUhjcinB77Eb6jHKv87c9fMKbjh9O7i5zgWSFhgTn8=;
+        b=IBI+m51drwmugz/kOwi9713eDxL2CH0IZ4HaIB+rD/8PzKfjwyjgI+OFqW/BLskH8m
+         5bxsqFbHn5MHLSlf7nbGny4jj1aL9qhnlfZkLr21QbNa+55HEiFRCPnaTArvcnRKHpFL
+         Tbi0le3ACf6VzxHjQjujArgZiSbiMdhuOlYlYRInmsy5PqT/Y/JW4eyKCXfW/j1cVYNE
+         zGGTPjqyMvd6Ps1SUq3Ae8F4RFu/tYAsE8R+kCpxIPSUQSkHDef7IqQgDmjuE9X4EUSy
+         tGdrHLdvBQDJrjCzdLKPefGmDzsPVwkXk6E+awAH4WyWXd9f30aJfWVwihxD6JF1H9H5
+         cKew==
+X-Forwarded-Encrypted: i=1; AJvYcCW+lDSbXsuVCaer63bZAek44L20sFjkx8P/QNoZxh3LvFKsdCtxK6DC+rLJdISaX4288eee7kAXkWR4pb3aFKaj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTIahqb5U6v/W7+cDAcenC1JQGbMWXC94v0OtPe9yfp/mYNECF
+	MCBxmDjVKre2o8iPGCcMzHTIJNHO/Oih3CJ6j7zeHbpC1IqmTt5ZSqY+dplyL87UyADiXqsFvs4
+	Ci5AwehgQmQ==
+X-Google-Smtp-Source: AGHT+IFf8zlSd0QMLB/u14p9zB/1c51Ng9p6/WgRWB+5l33Y+9FhY6Dexfl75URKWo8iuuswdZuVS7NRttjy
+X-Received: from oabgu16.prod.google.com ([2002:a05:6870:ab10:b0:2b8:45b4:8afc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:d204:b0:2d4:ce45:698d
+ with SMTP id 586e51a60fabf-2ea96c04e1amr2270089fac.4.1749657756561; Wed, 11
+ Jun 2025 09:02:36 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:02:04 -0700
 In-Reply-To: <20250611160206.552030-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611160206.552030-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611160206.552030-13-irogers@google.com>
-Subject: [PATCH v2 12/15] perf tp_pmu: Factor existing tracepoint logic to new file
+Message-ID: <20250611160206.552030-14-irogers@google.com>
+Subject: [PATCH v2 13/15] perf tp_pmu: Add event APIs
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,403 +76,207 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Start the creation of a tracepoint PMU abstraction. Tracepoint events
-don't follow the regular sysfs perf conventions. Eventually the new
-PMU abstraction will bridge the gap so tracepoint events look more
-like regular perf ones.
+Add event APIs for the tracepoint PMU allowing things like perf list
+to function using it. For perf list add the tracepoint format in the
+long description (shown with -v).
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/Build          |   1 +
- tools/perf/util/evsel.c        |  21 +----
- tools/perf/util/parse-events.c | 147 ++++++++++++++-------------------
- tools/perf/util/tp_pmu.c       |  95 +++++++++++++++++++++
- tools/perf/util/tp_pmu.h       |  12 +++
- 5 files changed, 170 insertions(+), 106 deletions(-)
- create mode 100644 tools/perf/util/tp_pmu.c
- create mode 100644 tools/perf/util/tp_pmu.h
+ tools/perf/util/pmu.c    |   7 +++
+ tools/perf/util/tp_pmu.c | 114 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/tp_pmu.h |   7 +++
+ 3 files changed, 128 insertions(+)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 7910d908c814..a06ff82f9dd7 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -86,6 +86,7 @@ perf-util-y += pmu-flex.o
- perf-util-y += pmu-bison.o
- perf-util-y += hwmon_pmu.o
- perf-util-y += tool_pmu.o
-+perf-util-y += tp_pmu.o
- perf-util-y += svghelper.o
- perf-util-y += trace-event-info.o
- perf-util-y += trace-event-scripting.o
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d55482f094bf..beab9710fbf5 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -58,6 +58,7 @@
- #include "pmus.h"
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index c0c12880146a..2b7671d5bbb4 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -23,6 +23,7 @@
  #include "hwmon_pmu.h"
+ #include "pmus.h"
  #include "tool_pmu.h"
 +#include "tp_pmu.h"
- #include "rlimit.h"
- #include "../perf-sys.h"
- #include "util/parse-branch-options.h"
-@@ -570,24 +571,6 @@ struct evsel *evsel__clone(struct evsel *dest, struct evsel *orig)
- 	return NULL;
- }
- 
--static int trace_event__id(const char *sys, const char *name)
--{
--	char *tp_dir = get_events_file(sys);
--	char path[PATH_MAX];
--	int id, err;
--
--	if (!tp_dir)
--		return -1;
--
--	scnprintf(path, PATH_MAX, "%s/%s/id", tp_dir, name);
--	put_events_file(tp_dir);
--	err = filename__read_int(path, &id);
--	if (err)
--		return err;
--
--	return id;
--}
--
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
-@@ -621,7 +604,7 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool
- 	event_attr_init(&attr);
- 
- 	if (format) {
--		id = trace_event__id(sys, name);
-+		id = tp_pmu__id(sys, name);
- 		if (id < 0) {
- 			err = id;
- 			goto out_free;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 4dbae59dccb3..b3f56236fd60 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -17,13 +17,12 @@
- #include "string2.h"
- #include "strbuf.h"
- #include "debug.h"
--#include <api/fs/tracing_path.h>
--#include <api/io_dir.h>
- #include <perf/cpumap.h>
- #include <util/parse-events-bison.h>
- #include <util/parse-events-flex.h>
- #include "pmu.h"
- #include "pmus.h"
-+#include "tp_pmu.h"
- #include "asm/bug.h"
- #include "ui/ui.h"
- #include "util/parse-branch-options.h"
-@@ -33,6 +32,7 @@
- #include "util/stat.h"
- #include "util/util.h"
- #include "tracepoint.h"
-+#include <api/fs/tracing_path.h>
- 
- #define MAX_NAME_LEN 100
- 
-@@ -558,105 +558,82 @@ static int add_tracepoint(struct parse_events_state *parse_state,
- 	return 0;
- }
- 
--static int add_tracepoint_multi_event(struct parse_events_state *parse_state,
--				      struct list_head *list,
--				      const char *sys_name, const char *evt_name,
--				      struct parse_events_error *err,
--				      struct parse_events_terms *head_config, YYLTYPE *loc)
--{
--	char *evt_path;
--	struct io_dirent64 *evt_ent;
--	struct io_dir evt_dir;
--	int ret = 0, found = 0;
--
--	evt_path = get_events_file(sys_name);
--	if (!evt_path) {
--		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
--		return -1;
--	}
--	io_dir__init(&evt_dir, open(evt_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
--	if (evt_dir.dirfd < 0) {
--		put_events_file(evt_path);
--		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
--		return -1;
--	}
-+struct add_tracepoint_multi_args {
-+	struct parse_events_state *parse_state;
-+	struct list_head *list;
-+	const char *sys_glob;
-+	const char *evt_glob;
-+	struct parse_events_error *err;
-+	struct parse_events_terms *head_config;
-+	YYLTYPE *loc;
-+	int found;
-+};
- 
--	while (!ret && (evt_ent = io_dir__readdir(&evt_dir))) {
--		if (!strcmp(evt_ent->d_name, ".")
--		    || !strcmp(evt_ent->d_name, "..")
--		    || !strcmp(evt_ent->d_name, "enable")
--		    || !strcmp(evt_ent->d_name, "filter"))
--			continue;
-+static int add_tracepoint_multi_event_cb(void *state, const char *sys_name, const char *evt_name)
-+{
-+	struct add_tracepoint_multi_args *args = state;
-+	int ret;
- 
--		if (!strglobmatch(evt_ent->d_name, evt_name))
--			continue;
-+	if (!strglobmatch(evt_name, args->evt_glob))
-+		return 0;
- 
--		found++;
-+	args->found++;
-+	ret = add_tracepoint(args->parse_state, args->list, sys_name, evt_name,
-+			     args->err, args->head_config, args->loc);
- 
--		ret = add_tracepoint(parse_state, list, sys_name, evt_ent->d_name,
--				     err, head_config, loc);
--	}
-+	return ret;
-+}
- 
--	if (!found) {
--		tracepoint_error(err, ENOENT, sys_name, evt_name, loc->first_column);
--		ret = -1;
-+static int add_tracepoint_multi_event(struct add_tracepoint_multi_args *args, const char *sys_name)
-+{
-+	if (strpbrk(args->evt_glob, "*?") == NULL) {
-+		/* Not a glob. */
-+		args->found++;
-+		return add_tracepoint(args->parse_state, args->list, sys_name, args->evt_glob,
-+				      args->err, args->head_config, args->loc);
- 	}
- 
--	put_events_file(evt_path);
--	close(evt_dir.dirfd);
--	return ret;
-+	return tp_pmu__for_each_tp_event(sys_name, args, add_tracepoint_multi_event_cb);
- }
- 
--static int add_tracepoint_event(struct parse_events_state *parse_state,
--				struct list_head *list,
--				const char *sys_name, const char *evt_name,
--				struct parse_events_error *err,
--				struct parse_events_terms *head_config, YYLTYPE *loc)
-+static int add_tracepoint_multi_sys_cb(void *state, const char *sys_name)
+ #include <util/pmu-bison.h>
+ #include <util/pmu-flex.h>
+ #include "parse-events.h"
+@@ -1976,6 +1977,8 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
+ 		return false;
+ 	if (perf_pmu__is_tool(pmu) && tool_pmu__skip_event(name))
+ 		return false;
++	if (perf_pmu__is_tracepoint(pmu))
++		return tp_pmu__have_event(pmu, name);
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__have_event(pmu, name);
+ 	if (perf_pmu__find_alias(pmu, name, /*load=*/ true) != NULL)
+@@ -1989,6 +1992,8 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
  {
--	return strpbrk(evt_name, "*?") ?
--		add_tracepoint_multi_event(parse_state, list, sys_name, evt_name,
--					   err, head_config, loc) :
--		add_tracepoint(parse_state, list, sys_name, evt_name,
--			       err, head_config, loc);
-+	struct add_tracepoint_multi_args *args = state;
-+
-+	if (!strglobmatch(sys_name, args->sys_glob))
-+		return 0;
-+
-+	return add_tracepoint_multi_event(args, sys_name);
- }
+ 	size_t nr;
  
- static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
- 				    struct list_head *list,
--				    const char *sys_name, const char *evt_name,
-+				    const char *sys_glob, const char *evt_glob,
- 				    struct parse_events_error *err,
- 				    struct parse_events_terms *head_config, YYLTYPE *loc)
- {
--	struct io_dirent64 *events_ent;
--	struct io_dir events_dir;
--	int ret = 0;
--	char *events_dir_path = get_tracing_file("events");
-+	struct add_tracepoint_multi_args args = {
-+		.parse_state = parse_state,
-+		.list = list,
-+		.sys_glob = sys_glob,
-+		.evt_glob = evt_glob,
-+		.err = err,
-+		.head_config = head_config,
-+		.loc = loc,
-+		.found = 0,
-+	};
-+	int ret;
++	if (perf_pmu__is_tracepoint(pmu))
++		return tp_pmu__num_events(pmu);
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__num_events(pmu);
  
--	if (!events_dir_path) {
--		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
--		return -1;
-+	if (strpbrk(sys_glob, "*?") == NULL) {
-+		/* Not a glob. */
-+		ret = add_tracepoint_multi_event(&args, sys_glob);
-+	} else {
-+		ret = tp_pmu__for_each_tp_sys(&args, add_tracepoint_multi_sys_cb);
- 	}
--	io_dir__init(&events_dir, open(events_dir_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
--	put_events_file(events_dir_path);
--	if (events_dir.dirfd < 0) {
--		tracepoint_error(err, errno, sys_name, evt_name, loc->first_column);
--		return -1;
-+	if (args.found == 0) {
-+		tracepoint_error(err, ENOENT, sys_glob, evt_glob, loc->first_column);
-+		return -ENOENT;
- 	}
--
--	while (!ret && (events_ent = io_dir__readdir(&events_dir))) {
--		if (!strcmp(events_ent->d_name, ".")
--		    || !strcmp(events_ent->d_name, "..")
--		    || !strcmp(events_ent->d_name, "enable")
--		    || !strcmp(events_ent->d_name, "header_event")
--		    || !strcmp(events_ent->d_name, "header_page"))
--			continue;
--
--		if (!strglobmatch(events_ent->d_name, sys_name))
--			continue;
--
--		ret = add_tracepoint_event(parse_state, list, events_ent->d_name,
--					   evt_name, err, head_config, loc);
--	}
--	close(events_dir.dirfd);
+@@ -2057,6 +2062,8 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 	struct hashmap_entry *entry;
+ 	size_t bkt;
+ 
++	if (perf_pmu__is_tracepoint(pmu))
++		return tp_pmu__for_each_event(pmu, state, cb);
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__for_each_event(pmu, state, cb);
+ 
+diff --git a/tools/perf/util/tp_pmu.c b/tools/perf/util/tp_pmu.c
+index fd83164f8763..9d68a1da17f6 100644
+--- a/tools/perf/util/tp_pmu.c
++++ b/tools/perf/util/tp_pmu.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+ #include "tp_pmu.h"
++#include "pmus.h"
+ #include <api/fs/fs.h>
+ #include <api/fs/tracing_path.h>
+ #include <api/io_dir.h>
+@@ -93,3 +94,116 @@ int tp_pmu__for_each_tp_sys(void *state, tp_sys_callback cb)
+ 	close(events_dir.dirfd);
  	return ret;
  }
- 
-@@ -1348,12 +1325,8 @@ int parse_events_add_tracepoint(struct parse_events_state *parse_state,
- 			return -EINVAL;
- 	}
- 
--	if (strpbrk(sys, "*?"))
--		return add_tracepoint_multi_sys(parse_state, list, sys, event,
--						err, head_config, loc);
--	else
--		return add_tracepoint_event(parse_state, list, sys, event,
--					    err, head_config, loc);
-+	return add_tracepoint_multi_sys(parse_state, list, sys, event,
-+					err, head_config, loc);
- }
- 
- static int __parse_events_add_numeric(struct parse_events_state *parse_state,
-diff --git a/tools/perf/util/tp_pmu.c b/tools/perf/util/tp_pmu.c
-new file mode 100644
-index 000000000000..fd83164f8763
---- /dev/null
-+++ b/tools/perf/util/tp_pmu.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+#include "tp_pmu.h"
-+#include <api/fs/fs.h>
-+#include <api/fs/tracing_path.h>
-+#include <api/io_dir.h>
-+#include <linux/kernel.h>
-+#include <errno.h>
-+#include <string.h>
 +
-+int tp_pmu__id(const char *sys, const char *name)
++bool perf_pmu__is_tracepoint(const struct perf_pmu *pmu)
 +{
-+	char *tp_dir = get_events_file(sys);
++	return pmu->type == PERF_TYPE_TRACEPOINT;
++}
++
++struct for_each_event_args {
++	void *state;
++	pmu_event_callback cb;
++	const struct perf_pmu *pmu;
++};
++
++static int for_each_event_cb(void *state, const char *sys_name, const char *evt_name)
++{
++	struct for_each_event_args *args = state;
++	char name[2 * FILENAME_MAX + 2];
++	/* 16 possible hex digits and 22 other characters and \0. */
++	char encoding[16 + 22];
++	char *format = NULL;
++	size_t format_size;
++	struct pmu_event_info info = {
++		.pmu = args->pmu,
++		.pmu_name = args->pmu->name,
++		.event_type_desc = "Tracepoint event",
++	};
++	char *tp_dir = get_events_file(sys_name);
 +	char path[PATH_MAX];
 +	int id, err;
 +
 +	if (!tp_dir)
 +		return -1;
 +
-+	scnprintf(path, PATH_MAX, "%s/%s/id", tp_dir, name);
-+	put_events_file(tp_dir);
++	scnprintf(path, sizeof(path), "%s/%s/id", tp_dir, evt_name);
 +	err = filename__read_int(path, &id);
-+	if (err)
-+		return err;
++	if (err == 0) {
++		snprintf(encoding, sizeof(encoding), "tracepoint/config=0x%x/", id);
++		info.encoding_desc = encoding;
++	}
 +
-+	return id;
++	scnprintf(path, sizeof(path), "%s/%s/format", tp_dir, evt_name);
++	put_events_file(tp_dir);
++	err = filename__read_str(path, &format, &format_size);
++	if (err == 0) {
++		info.long_desc = format;
++		for (size_t i = 0 ; i < format_size; i++) {
++			/* Swap tabs to spaces due to some rendering issues. */
++			if (format[i] == '\t')
++				format[i] = ' ';
++		}
++	}
++	snprintf(name, sizeof(name), "%s:%s", sys_name, evt_name);
++	info.name = name;
++	err = args->cb(args->state, &info);
++	free(format);
++	return err;
 +}
 +
-+
-+int tp_pmu__for_each_tp_event(const char *sys, void *state, tp_event_callback cb)
++static int for_each_event_sys_cb(void *state, const char *sys_name)
 +{
-+	char *evt_path;
-+	struct io_dirent64 *evt_ent;
-+	struct io_dir evt_dir;
-+	int ret = 0;
-+
-+	evt_path = get_events_file(sys);
-+	if (!evt_path)
-+		return -errno;
-+
-+	io_dir__init(&evt_dir, open(evt_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+	if (evt_dir.dirfd < 0) {
-+		ret = -errno;
-+		put_events_file(evt_path);
-+		return ret;
-+	}
-+	put_events_file(evt_path);
-+
-+	while (!ret && (evt_ent = io_dir__readdir(&evt_dir))) {
-+		if (!strcmp(evt_ent->d_name, ".")
-+		    || !strcmp(evt_ent->d_name, "..")
-+		    || !strcmp(evt_ent->d_name, "enable")
-+		    || !strcmp(evt_ent->d_name, "filter"))
-+			continue;
-+
-+		ret = cb(state, sys, evt_ent->d_name);
-+		if (ret)
-+			break;
-+	}
-+	close(evt_dir.dirfd);
-+	return ret;
++	return tp_pmu__for_each_tp_event(sys_name, state, for_each_event_cb);
 +}
 +
-+int tp_pmu__for_each_tp_sys(void *state, tp_sys_callback cb)
++int tp_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb)
 +{
-+	struct io_dirent64 *events_ent;
-+	struct io_dir events_dir;
-+	int ret = 0;
-+	char *events_dir_path = get_tracing_file("events");
++	struct for_each_event_args args = {
++		.state = state,
++		.cb = cb,
++		.pmu = pmu,
++	};
 +
-+	if (!events_dir_path)
-+		return -errno;
++	return tp_pmu__for_each_tp_sys(&args, for_each_event_sys_cb);
++}
 +
-+	io_dir__init(&events_dir, open(events_dir_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+	if (events_dir.dirfd < 0) {
-+		ret = -errno;
-+		put_events_file(events_dir_path);
-+		return ret;
-+	}
-+	put_events_file(events_dir_path);
++static int num_events_cb(void *state, const char *sys_name __maybe_unused,
++			 const char *evt_name __maybe_unused)
++{
++	size_t *count = state;
 +
-+	while (!ret && (events_ent = io_dir__readdir(&events_dir))) {
-+		if (!strcmp(events_ent->d_name, ".")
-+		    || !strcmp(events_ent->d_name, "..")
-+		    || !strcmp(events_ent->d_name, "enable")
-+		    || !strcmp(events_ent->d_name, "header_event")
-+		    || !strcmp(events_ent->d_name, "header_page"))
-+			continue;
++	(*count)++;
++	return 0;
++}
 +
-+		ret = cb(state, events_ent->d_name);
-+		if (ret)
-+			break;
-+	}
-+	close(events_dir.dirfd);
-+	return ret;
++static int num_events_sys_cb(void *state, const char *sys_name)
++{
++	return tp_pmu__for_each_tp_event(sys_name, state, num_events_cb);
++}
++
++size_t tp_pmu__num_events(struct perf_pmu *pmu __maybe_unused)
++{
++	size_t count = 0;
++
++	tp_pmu__for_each_tp_sys(&count, num_events_sys_cb);
++	return count;
++}
++
++bool tp_pmu__have_event(struct perf_pmu *pmu __maybe_unused, const char *name)
++{
++	char *dup_name, *colon;
++	int id;
++
++	if (strchr(name, ':') == NULL)
++		return false;
++
++	dup_name = strdup(name);
++	if (!dup_name)
++		return false;
++
++	colon = strchr(dup_name, ':');
++	*colon = '\0';
++	id = tp_pmu__id(dup_name, colon + 1);
++	free(dup_name);
++	return id >= 0;
 +}
 diff --git a/tools/perf/util/tp_pmu.h b/tools/perf/util/tp_pmu.h
-new file mode 100644
-index 000000000000..49537303bd73
---- /dev/null
+index 49537303bd73..30456bd6943d 100644
+--- a/tools/perf/util/tp_pmu.h
 +++ b/tools/perf/util/tp_pmu.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-+#ifndef __TP_PMU_H
-+#define __TP_PMU_H
+@@ -2,6 +2,8 @@
+ #ifndef __TP_PMU_H
+ #define __TP_PMU_H
+ 
++#include "pmu.h"
 +
-+typedef int (*tp_sys_callback)(void *state, const char *sys_name);
-+typedef int (*tp_event_callback)(void *state, const char *sys_name, const char *evt_name);
+ typedef int (*tp_sys_callback)(void *state, const char *sys_name);
+ typedef int (*tp_event_callback)(void *state, const char *sys_name, const char *evt_name);
+ 
+@@ -9,4 +11,9 @@ int tp_pmu__id(const char *sys, const char *name);
+ int tp_pmu__for_each_tp_event(const char *sys, void *state, tp_event_callback cb);
+ int tp_pmu__for_each_tp_sys(void *state, tp_sys_callback cb);
+ 
++bool perf_pmu__is_tracepoint(const struct perf_pmu *pmu);
++int tp_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb);
++size_t tp_pmu__num_events(struct perf_pmu *pmu);
++bool tp_pmu__have_event(struct perf_pmu *pmu, const char *name);
 +
-+int tp_pmu__id(const char *sys, const char *name);
-+int tp_pmu__for_each_tp_event(const char *sys, void *state, tp_event_callback cb);
-+int tp_pmu__for_each_tp_sys(void *state, tp_sys_callback cb);
-+
-+#endif /* __TP_PMU_H */
+ #endif /* __TP_PMU_H */
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
