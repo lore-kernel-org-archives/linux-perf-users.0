@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73AE8828
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 16:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED541DD0C7
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 16:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657732; cv=none; b=POZERfC9Lc75zUcl2OCaDqPtcvf1SwiTzOL03q9onCOZrnhMaxUc9FrjiK1EdZTC3x0DoN4NUTJtVP7h795LTuLwnTq3sNeJHHQgkbwO65DB+99o8jVSOO31sSDw8BlYdvFhUMB/ip3J9uyNiVTzYmhyJsB49kB6ScAQgI46jYs=
+	t=1749657734; cv=none; b=iXgm4Zz0bP8jPmnCE0nnSShBz7D1D1TS1aL/J6iURTNcAN+h2cdlzzXKDGcSWrsv6zklCaV5rdEjJGgXHCSAf4aofggeaB4hGTWoopUpF9e7DUlrjfe5Jtn01yudfy3MkVL+XUkM5WN9O5JHm50BliM5WtzQI8EFXnGQcDSJrqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657732; c=relaxed/simple;
-	bh=znvhDvTA1BJf0cBqZdVezqV2z5dtsbF5RwqcL3qLCRU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=qjejaJ9fY7/QpYxJfRNQ60yoOWejeg6Kja12C1ZYyPJvHOQgiD28J7xmngDnPC6Ch7AxzRreieGRcIytWc9fw0IYDnwKTyTGb0dj7saog+EWlYMyA3ac6TYWusIVMx6ZjuVApwVA4yCp9SHwFC3y6q+MYklY4fTLHF7/AqSfbac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rj/IJOiL; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1749657734; c=relaxed/simple;
+	bh=BjW6AZGk7CZomAEyWECRkQDZi3WC4X5fktZTMbvlAbA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=uimMiBPKoJBmKcn4tZo9RPe5fW0dP2z73wvBnwuuaQBWKrQs1f8QVK9goVKdr9xHDhZ1JrQkdK+RM8IVrzfV6YcfEsVqMgpg1qFyNFXWvleODN5hcZPzGAbRhbTd3KckJeSOTd2qnxEZP/yQYrD5M/bOChO49iY97fXFnOsNV2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S8d6RpuP; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rj/IJOiL"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d143117eso25893b3a.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:02:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S8d6RpuP"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742c03c0272so42294b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749657730; x=1750262530; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VvBM1i8NXfL7mOxsWT454fX7megUt2b8d725v+ousD4=;
-        b=rj/IJOiLwMMthvWacVGRt/p4eeAfX9GadnmiZj7tYPUI2NF2uVI4s3zOEJLnrFdvh9
-         ww6cqYXaU8k/LQJDuIDEGuXSVChmlXg2RYG/GgiF3XrlnuKJuRoiWgRylH6jbbf0g3/+
-         tg0TdBMVNYwK5B279KnC+H/Xtjnb7I3DR/QnHoq/KtHvlSMNoP5oBb0BD7q7hFt9Da0u
-         zYhMjumXTJXJAvntg0GPJceiYW/nags0+f9+TudijyAXgs1sAH0ph+w/sQ2tplzInHBB
-         7fF1RMFkVWNaHLAtDH+yUdb0x8oXSCMh3gnX7oRI4L54FLy0aRxKHsvycKEz4KZpzy8+
-         NQmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749657730; x=1750262530;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1749657732; x=1750262532; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VvBM1i8NXfL7mOxsWT454fX7megUt2b8d725v+ousD4=;
-        b=fFHH5q4Q+8dIOCsCnuxSWiv02xiIrdVY1toaowuAXU/4JIXIXqtEaNzDgU+yJamGux
-         MZXr+zozWyNKHT2Khv28GX2GnUNVb3DQmE3JriH2DBrxShNrlfApx+UiupzhYvBwghmq
-         syyZA81djP56V1jidpbwsaA0s+v/Tm17p8u6LOBU5bbLruAJRsjLOpyLwRtV7K+47YUt
-         sRAsiqs4cZLP5kktPHv4xbYTU0FRxEwKslyb7zdNkvnR7goXTS9BBAVIRW2VSe/vX26L
-         FVet+espWQWDkyYgc9wk3/j9NV6i1q6AjkC1lh3GyzkCcK8IWwp3kENo9OsfrZWqwiNm
-         xHCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlws9ejv0Yuf2pELd2IM6FHqD1Ig+hyx45DDG79ANMn3FbYoDgSdsHYSijevJMzumDFOA4x++eIlN+mFXa7kJj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSAOHOKyYWDtBZFOCkqeXffmJ5Zk0DItNT4EYzXCwipyt7DLjQ
-	nML8xsB9ED3tNw9Ur9z2GakUlXySVUPxNdo7csCSvn9IqRDBH+tG1qzYh9EASYmHab7SDO8YNT9
-	lSLw3APzIIQ==
-X-Google-Smtp-Source: AGHT+IHBzEuO3GTJ/9QMTDMXpNjitW0SZZV+SmnXhzalRJjSSa163nbGGWjt9fXIDYI2lK9vIDh8Phda1/C0
-X-Received: from pfkq19.prod.google.com ([2002:a05:6a00:853:b0:746:2b90:bbe5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:854:b0:748:2d1d:f7b3
- with SMTP id d2e1a72fcca58-7486ce17f89mr4746167b3a.22.1749657729939; Wed, 11
- Jun 2025 09:02:09 -0700 (PDT)
-Date: Wed, 11 Jun 2025 09:01:51 -0700
+        bh=EK8se2wo8pULW/UeVmGZwrfi1Azdb8cvXZbahmZy3Ao=;
+        b=S8d6RpuP/t4EkF3ofxTjrjYMA1rfwGEF1OPziTKt1n/bKXx1UhGG07yxBgAPUOgplt
+         wGW6FOxHRXwuWqIes6/THhU0+TnCbzWz0Bt669z6VkXyl1d3Wnfi/0OhL0xicdkUYOeZ
+         BZ+Rv7K9NPPJF2bWi5icY2VJZwKzWceGO07u/NW9KRZ8zjzImDqAECfdmLHY+MZtqoxu
+         u225NBDqtqqm/sVNUIYSzTy/rKvG3DF5S5PE3ZmB8prIl4KPSRTcr1wXVBRtfnyIZgbT
+         HfJQAFX2SQaNW97MulGohIloacFbBtsPLc1fkxkQtbDoSq83VeC8vkpukwtGVO78mJtO
+         PItw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749657732; x=1750262532;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EK8se2wo8pULW/UeVmGZwrfi1Azdb8cvXZbahmZy3Ao=;
+        b=N/kE5Av1bpL+WAbee61Mgf9wXa7Yc+TJBZveg7Lv1pxm22RDxqLSLMYfWcPw0L7ooc
+         PAafpfT9REUzp+V6CVG95DTpILp5CffFsvC4LolAkUdbZGul55/+q0LCg59oXoM4fZiC
+         qP3i0T23b3P3HfQLPWKFq+XjtgeT9Qp5MSR+NMYrCOeXlyYmmFwXpC4EBWBE5Wz+r3iu
+         zqQRO/NDqs9GkgHGsMYuCmqyx/GssLZtACdfmxSw6A5fLvrEIFA3JxpaK/66SSN6f6zZ
+         xr7aXD4lCKmiD8jvP95WsPU1RMzR+EDWVToGuXJWe57mW5F6eGyYCCkgufvRC+68JutS
+         gCmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqnOB2FXfgrTc+co8fO0Q65w6vvreHzVqv30tTd+lZ8nhura2ynQ5b6RzT2O2GTt9TVgmez4cHtZmp50k8DRT6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/UATzJCei2QzFOMEJtGjtttz2MAcltZ+goXzsG76FsZ4Bmgti
+	npIFh/v1L8Rn6fcJfEt6nn1SrI7r5hpoMq7XludL1z44rKPACcICKL9yO8zieMiKH0nJUKQH8gb
+	H+ZIjYDMjoA==
+X-Google-Smtp-Source: AGHT+IFRsv9gZ6KybjWGxsIgbP56ZktGajyQTN9FBoe6EdAqxdXrc/PpNdCE6rAY28U/h1LpaHPiw2J+TSpK
+X-Received: from pfbil9.prod.google.com ([2002:a05:6a00:8d49:b0:746:301b:10ca])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:22cf:b0:736:6d4d:ffa6
+ with SMTP id d2e1a72fcca58-7486cdf4d82mr4897830b3a.15.1749657731710; Wed, 11
+ Jun 2025 09:02:11 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:01:52 -0700
+In-Reply-To: <20250611160206.552030-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250611160206.552030-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611160206.552030-1-irogers@google.com>
-Subject: [PATCH v2 00/15] New perf ilist app
+Message-ID: <20250611160206.552030-2-irogers@google.com>
+Subject: [PATCH v2 01/15] perf hwmon_pmu: Avoid shortening hwmon PMU name
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,115 +76,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series builds up to the addition of a new ilist app written
-in python using textual [1] for the UI. The app presents perf PMUs and
-events, displays the event information as in `perf list` while at the
-bottom of the console showing recent activity of the event in total
-and across all CPUs.
+Long names like ucsi_source_psy_USBC000:001 when prefixed with hwmon_
+exceed the buffer size and the last digit is lost. This causes
+confusion with similar names like ucsi_source_psy_USBC000:002. Extend
+the buffer size to avoid this.
 
-The first part of the patches are a few perf and perf python C API
-fixes, most importantly the counter reading in python supports tool
-PMUs.
+Fixes: 53cc0b351ec9 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/hwmon_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The second part of the patches adds event json for the software PMU
-and makes the tracepoint PMU support iteration of events and the
-like. Without these improvements the tracepoint and software PMUs will
-appear to have no events in the ilist app. As the software PMU moves
-parsing to json, the legacy hard coded parsing is removed. This has
-proven controversial for hardware events and so that cleanup isn't
-done here.
-
-The final patch adds the ilist command. To run it you need the updated
-perf.cpython.so in your PYTHONPATH and then execute the
-script. Expanding PMUs and then selecting events will cause event
-informatin to be displayed in the top-right and the counters values to
-be displayed as sparklines and counts in the bottom half of the
-screen.
-
-Some thoughts on the series:
-
- - The PMU changes will conflict with the addition of the DRM PMU:
-   https://lore.kernel.org/lkml/20250403202439.57791-1-irogers@google.com/
-   when these two are merged together ilist will show yet more
-   counters. It'd be nice if the DRM stuff could land and then I can
-   rebase these patches.
-
- - The parse-events clean up of the software and tracepoint PMU. The
-   software PMU hard coding to be legacy first has similar issues and
-   will conflict with the clean up in:
-   https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
-   Moving the software work to json means we don't need special parse
-   events terms for software events, etc. We can just treat things
-   like regular PMUs with json, etc. I'd much rather we had less
-   special case logic so that series is best rebased on top of this
-   work and it should drop the changes for software terms, etc. which
-   this series removes. Maybe one day the whole event parsing can be
-   much more regular in how PMUs are treated but there's always
-   "cycles".
-
- - Should python libraries have feature tests? How does this get
-   packaged outside the kernel tree? I think these are open
-   questions. Clearly textual is kind of a big dependency and we've
-   largely been moving in the direction of fewer dependencies
-   recently. Hopefully the app makes it clear why I think this one is
-   worth carrying. We carry libslang as a dependency and I think
-   textual clearly far surpasses it.
-
- - How to launch? Currently I run tools/perf/python/ilist.py but it
-   would be much nicer if we could do `perf ilist` much as we do for
-   perf-archive.sh. There are probably other scripts that should be
-   perf commands like flamegraph and gecko. It'd be nice to follow up
-   the series with something to make using these commands easy.
-
-[1] https://textual.textualize.io/
-
-v2: In the jevents event description duplication, some minor changes
-    accidentally missed from v1 meaning that in v1 the descriptions
-    were still duplicated. Expand the cover letter with some thoughts
-    on the series.
-
-Ian Rogers (15):
-  perf hwmon_pmu: Avoid shortening hwmon PMU name
-  perf parse-events: Minor tidy up of event_type helper
-  perf python: In str(evsel) use the evsel__pmu_name helper
-  perf python: Fix thread check in pyrf_evsel__read
-  perf python: Correct pyrf_evsel__read for tool PMUs
-  perf python: Add basic PMU abstraction and pmus sequence
-  perf python: Add function returning dictionary of all events on a PMU
-  perf jevents: If the long_desc and desc are identical then drop the
-    long_desc
-  perf jevents: Add common software event json
-  perf pmu: Tolerate failure to read the type for wellknown PMUs
-  perf parse-events: Remove non-json software events
-  perf tp_pmu: Factor existing tracepoint logic to new file
-  perf tp_pmu: Add event APIs
-  perf list: Remove tracepoint printing code
-  perf ilist: Add new python ilist command
-
- tools/perf/builtin-list.c                     |  47 ++--
- .../arch/common/common/software.json          |  92 ++++++
- tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++++++++-------
- tools/perf/pmu-events/jevents.py              |  18 +-
- tools/perf/python/ilist.py                    | 238 ++++++++++++++++
- tools/perf/util/Build                         |   1 +
- tools/perf/util/evsel.c                       |  21 +-
- tools/perf/util/hwmon_pmu.c                   |   2 +-
- tools/perf/util/parse-events.c                | 225 +++++----------
- tools/perf/util/parse-events.h                |   3 +-
- tools/perf/util/parse-events.l                |  38 +--
- tools/perf/util/parse-events.y                |  29 +-
- tools/perf/util/pmu.c                         |  44 ++-
- tools/perf/util/print-events.c                |  95 -------
- tools/perf/util/print-events.h                |   1 -
- tools/perf/util/python.c                      | 248 +++++++++++++++-
- tools/perf/util/tp_pmu.c                      | 209 ++++++++++++++
- tools/perf/util/tp_pmu.h                      |  19 ++
- 18 files changed, 1144 insertions(+), 452 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/common/common/software.json
- create mode 100755 tools/perf/python/ilist.py
- create mode 100644 tools/perf/util/tp_pmu.c
- create mode 100644 tools/perf/util/tp_pmu.h
-
+diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+index c25e7296f1c1..75683c543994 100644
+--- a/tools/perf/util/hwmon_pmu.c
++++ b/tools/perf/util/hwmon_pmu.c
+@@ -344,7 +344,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
+ 
+ struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, int hwmon_dir, const char *sysfs_name, const char *name)
+ {
+-	char buf[32];
++	char buf[64];
+ 	struct hwmon_pmu *hwm;
+ 	__u32 type = PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name + 5, NULL, 10);
+ 
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
