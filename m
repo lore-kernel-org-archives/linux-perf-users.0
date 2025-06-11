@@ -1,180 +1,187 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012008.outbound.protection.outlook.com [52.101.71.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033BD1A08AB;
-	Wed, 11 Jun 2025 15:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655562; cv=fail; b=c6lT1nNZ9iNoP2kEC3DH4eFqqvRd19sDVW2DT0pJSpbkUdw77GNfZ4+n26GBhBaV9Uj6AGRbWLug8ZEdAgCv2nWDvYdDjDJ5Tqwb9a03lbNU9ho/i2E0DyxQ1fHJ6F2yGnxoGIdQDML6FEeBSuqtw5tIerVdNeJYRhBtYdsk8DM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655562; c=relaxed/simple;
-	bh=0Ya3+qvRk39tWTH61BV0mXGOq4yxsfeo+npcCzWr6nU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=iSiCOZuOsMhjXAz6c+YbRZllBbFHDMWrO688O0O89adzeKrwE7qcaJMcoCDPQ9vLijC0zPx7yl3xvX3jYt6LF7F/o69bWR6efB6QyI5sIzdQCdqddf12g/vKHzUISv1xls7dKGyx2J7wk8VKHSvgla648hQ5fAxddPGH8LBmp4s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XjRDOHvV; arc=fail smtp.client-ip=52.101.71.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73AE8828
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 16:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749657732; cv=none; b=POZERfC9Lc75zUcl2OCaDqPtcvf1SwiTzOL03q9onCOZrnhMaxUc9FrjiK1EdZTC3x0DoN4NUTJtVP7h795LTuLwnTq3sNeJHHQgkbwO65DB+99o8jVSOO31sSDw8BlYdvFhUMB/ip3J9uyNiVTzYmhyJsB49kB6ScAQgI46jYs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749657732; c=relaxed/simple;
+	bh=znvhDvTA1BJf0cBqZdVezqV2z5dtsbF5RwqcL3qLCRU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=qjejaJ9fY7/QpYxJfRNQ60yoOWejeg6Kja12C1ZYyPJvHOQgiD28J7xmngDnPC6Ch7AxzRreieGRcIytWc9fw0IYDnwKTyTGb0dj7saog+EWlYMyA3ac6TYWusIVMx6ZjuVApwVA4yCp9SHwFC3y6q+MYklY4fTLHF7/AqSfbac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rj/IJOiL; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XjRDOHvV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lhBWp1OR1uXZwil3Sac7uhDc7GWKmu1tg9to7/fx2Q4knnvo4Qp8aYtyINR5SGFMZJH/xGZJpK/z/9IIRR3i+EnfX8RvL5tfBLSV5bqBQeJbzoqwj1I6ar4Rns1OF7mE9kkV/YbgLxGQUFcMeD7FQv6POHxWkyQEN+3B1S2xPY4BKE48TZUU9TFQRUdzycugpGmPlhWyikxoUwdhWpAtQeqt/vmj5oLZqx8Gq9GGvPKbzrNx0R8w3HCCQQZQBoA8tSeyJ9RXt4IzoobNGC63vF+TH3zd6LQTMjqvBk2ya/dbaviyPg40P+FwtxT5BWGdp3F6FBES3g8TMgXfGGTBiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IBIK3cvKqAaeYjL3YEA18ixtcLPLAr+Zd6M+Klrlk4M=;
- b=t4fv6nYCfC99omm+RR3GVlnC8ypI54udr8faif1WDTkl5xpgbAN72jqHjjqoVLt/ey6GMbtPLrAoowdHIen0ykRDPuUFJeHJwPL3gyiLGm+Hm/NJqbDX4tfO4Vu0AwlcS+SmQa4X09bBFUhk/bzBCSvSl3KF7AOGSjEU3C0nstsUF3CQDBl+Y3gfYVUEdjAE65QpCk23yyX4mcgpESCBzQnmrc9Qy7SnHa6hiAP6h13oitI97huaiGXPiGFqItkSDn1vBPREZJXF96TERs14AALKAY14gIQee0lvkPli2sXKac14baRJqltD6dLKIlLFyDeA4/MGxpjGAXaE8w0OQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IBIK3cvKqAaeYjL3YEA18ixtcLPLAr+Zd6M+Klrlk4M=;
- b=XjRDOHvVVWLBT1dz4MmwO4EM8fpN0G0TSUpGjRSCm7yJ2Gy2GJsIbgGfyQyEi0LR4e0+vYLKJfKTqPR2B3PIBTm+zAk6s//UyI7ZQmGlMELUqQSVTceuIOcxz1y4gV0h0F6ov0xHZm2PlaI+eWYZ/c1RGqKwOvLRI2tafO/3U4OQWDF5RzNw/cJ29fz3yPYOc+IAX09H040YgzWzSlALTT4PG5uK5V1Cyzfh67wp82BeU93CrC3K79v6M/THnIH0Q4znOpbY2zcblPVK2K9berd6qGWck5IPqSd333ikK3Ktc3TQvR8w0I+xOSGtDOz0BNPhwxqa9a8cvpypAQK+sg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA1PR04MB10676.eurprd04.prod.outlook.com (2603:10a6:102:48b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Wed, 11 Jun
- 2025 15:25:56 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
- 15:25:56 +0000
-Date: Wed, 11 Jun 2025 11:25:45 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, imx@lists.linux.dev,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] perf: imx9_perf: make the read-only array mask
- static const
-Message-ID: <aEmf+RMzb1rZbeLn@lizhi-Precision-Tower-5810>
-References: <20250611133917.170888-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611133917.170888-1-colin.i.king@gmail.com>
-X-ClientProxiedBy: BY5PR04CA0025.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rj/IJOiL"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d143117eso25893b3a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 09:02:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749657730; x=1750262530; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VvBM1i8NXfL7mOxsWT454fX7megUt2b8d725v+ousD4=;
+        b=rj/IJOiLwMMthvWacVGRt/p4eeAfX9GadnmiZj7tYPUI2NF2uVI4s3zOEJLnrFdvh9
+         ww6cqYXaU8k/LQJDuIDEGuXSVChmlXg2RYG/GgiF3XrlnuKJuRoiWgRylH6jbbf0g3/+
+         tg0TdBMVNYwK5B279KnC+H/Xtjnb7I3DR/QnHoq/KtHvlSMNoP5oBb0BD7q7hFt9Da0u
+         zYhMjumXTJXJAvntg0GPJceiYW/nags0+f9+TudijyAXgs1sAH0ph+w/sQ2tplzInHBB
+         7fF1RMFkVWNaHLAtDH+yUdb0x8oXSCMh3gnX7oRI4L54FLy0aRxKHsvycKEz4KZpzy8+
+         NQmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749657730; x=1750262530;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VvBM1i8NXfL7mOxsWT454fX7megUt2b8d725v+ousD4=;
+        b=fFHH5q4Q+8dIOCsCnuxSWiv02xiIrdVY1toaowuAXU/4JIXIXqtEaNzDgU+yJamGux
+         MZXr+zozWyNKHT2Khv28GX2GnUNVb3DQmE3JriH2DBrxShNrlfApx+UiupzhYvBwghmq
+         syyZA81djP56V1jidpbwsaA0s+v/Tm17p8u6LOBU5bbLruAJRsjLOpyLwRtV7K+47YUt
+         sRAsiqs4cZLP5kktPHv4xbYTU0FRxEwKslyb7zdNkvnR7goXTS9BBAVIRW2VSe/vX26L
+         FVet+espWQWDkyYgc9wk3/j9NV6i1q6AjkC1lh3GyzkCcK8IWwp3kENo9OsfrZWqwiNm
+         xHCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlws9ejv0Yuf2pELd2IM6FHqD1Ig+hyx45DDG79ANMn3FbYoDgSdsHYSijevJMzumDFOA4x++eIlN+mFXa7kJj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSAOHOKyYWDtBZFOCkqeXffmJ5Zk0DItNT4EYzXCwipyt7DLjQ
+	nML8xsB9ED3tNw9Ur9z2GakUlXySVUPxNdo7csCSvn9IqRDBH+tG1qzYh9EASYmHab7SDO8YNT9
+	lSLw3APzIIQ==
+X-Google-Smtp-Source: AGHT+IHBzEuO3GTJ/9QMTDMXpNjitW0SZZV+SmnXhzalRJjSSa163nbGGWjt9fXIDYI2lK9vIDh8Phda1/C0
+X-Received: from pfkq19.prod.google.com ([2002:a05:6a00:853:b0:746:2b90:bbe5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:854:b0:748:2d1d:f7b3
+ with SMTP id d2e1a72fcca58-7486ce17f89mr4746167b3a.22.1749657729939; Wed, 11
+ Jun 2025 09:02:09 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:01:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10676:EE_
-X-MS-Office365-Filtering-Correlation-Id: 685559aa-a55c-49a5-d350-08dda8fc42cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|52116014|7416014|1800799024|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KP90sTrguHiGm7Gu0ea1YDnpRixBS/VscCVVa1shCPTDTEwbqnLT077qrbtW?=
- =?us-ascii?Q?mMbjaCyY9ZX/2UZxVYvDuqTh4RzWqAAGK0fETl/YSXF6uY0UG5/xQhjSYmUA?=
- =?us-ascii?Q?80T9ilf2TmaIj5HBBt0PiUpGu264jxjvAyC5d8lzoygzu1kAd7yA9kTivOBe?=
- =?us-ascii?Q?rBAyKEbRMioGp9MoSqntHza3ApPd/dXdTDZAudEQQIXuJ7EqDsPquOjrKNQV?=
- =?us-ascii?Q?4rZ/U5NJZN8pJxdF0iGnn+TDAvOnkPpBdVJNdmzRBNIzdea808OgHyYU5l9Q?=
- =?us-ascii?Q?Cs1BqkexqBANBPy/HPoizorfT+iuYQUCpcP8PJsgpaCwqiCtE1A9co+CBVAx?=
- =?us-ascii?Q?tNaOd9jT9nEAGsqpdf2WerCKuH939dWKti7uM/EW1ZiIdoGKU8UF8Jv4ZWij?=
- =?us-ascii?Q?b/KMc1SQLX4VHmlw8TNW/ULDj0rk/Q9rrjW+V/yDJJM7OM15JBtlCnn/dEuU?=
- =?us-ascii?Q?+vIubBAhgrqTgkVE3G3WbSj3OxRE7wFFDkfUw8JMrkTEUMLN56owJHJEql2N?=
- =?us-ascii?Q?R10i9HOkkJMW8DbEIRYsw7dcZrorI5xP/vaTq6QiP0MAbtuNNVXLgWuhfvmm?=
- =?us-ascii?Q?EOBNfb/QoE/YBz9fyquH7O/NXA2QQFXKP4dxMrKMPC7GXDtgXxI9lAi9Axdi?=
- =?us-ascii?Q?Zx2L+lR48Gns4VHxZ8F1W48Bq3pZYH/9Mv4kZF88JhNwA3Pzoz359l1c2HOt?=
- =?us-ascii?Q?Z5vaHnMjAtZjdZX5RuCjFa3S9/0Vm3qzzd5hjTpR7HRqiLkYez/udx3U6kd+?=
- =?us-ascii?Q?mxdI3+g34CX0nyrqBkH5ekVn+TINF/QAArXYxQrfwNs790wgzkRfmzerfKp+?=
- =?us-ascii?Q?5a55rboKkyD1QV8u6ArNOFiksv4CfT2GSt+cQCBOLL7yAHMKmy7ipl+UqrjZ?=
- =?us-ascii?Q?uNqoEifz7lwasAj7VRzaAM6jxbv8BAf6T1QdNBFm4PeG+VqZnXIdMu2zfCrC?=
- =?us-ascii?Q?sXDyrPIqkgtof0OAlbzcVTQcsdHjakWoBk1UxpjwE2YVv9rKCrAtSv7xaqax?=
- =?us-ascii?Q?wEy/W7ar7HoIzkTteIca4JkmmwSLNjal/qnkfUd0zat/tRIAgGdGEZK5t6HH?=
- =?us-ascii?Q?HhNQ58wI5dN0KWsl1hUHaHJMBFrW9Vf0BJUqRPIuJjVGkchfhlkt/wI98IPa?=
- =?us-ascii?Q?Uct8BImK5cv/fwbaxldDMwxH4t33p5neyNHEUyg65sF14NEG5KTUEy3q7OZY?=
- =?us-ascii?Q?/M3ru37Mf2lXIIuvodHuyXbkC6njg0dDTIMorVUOLbrYZNes0/4aSOmeBKPB?=
- =?us-ascii?Q?GyuxX1Hhdp0t24Y/fTIRQ9nV/szMa1+s+OJPxKTAYdLCiy8VNpsaeLqB1YOE?=
- =?us-ascii?Q?IL7/Kht09oD1eQ1yJSzlIScXYykE73j9ja5fy0t5t1H92i/P07f8yIj+5Eob?=
- =?us-ascii?Q?1hY01m2Uq00NOmJQo57n6Qo+UH5TCgLa069MuTQ/dWouYHzNK5aX4JoFmfhw?=
- =?us-ascii?Q?/mZmDuj02LDhDpQaWPz/6Gytru9o7C2HIIcNuTHy+Y5PqrvzSP7ZbQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(52116014)(7416014)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?iHjNJEOCk2c4d1XDqDmq2v577xtJUDfiwJtrWMil636qI3Ek6InDDlHOQFiM?=
- =?us-ascii?Q?xLwB4qSrKcXqatQi7NiAFbFJZW5LQQr7iQkvsn76UWwpiRhasa1GzJaKOUev?=
- =?us-ascii?Q?FAzyFpM5pJmLx+M+qQNwrIi34N4XXaiBcC1jlK1A9xyzBrftReIpJqaJoJHU?=
- =?us-ascii?Q?VtCGvzwknbs+zesruAGJI1JslBbFPO5AZwzQ07/NKapIZHX6Wx5qylEt4SHP?=
- =?us-ascii?Q?xL1FJb6qTb9qIqtKCO9No6IDvl8xI8xdorIV/SSer1Ckz1giyuF8a3S2Y6+R?=
- =?us-ascii?Q?m+xkjH2gg6LIhF6dymt6ixbHAZ0TPJu/kUoW84w/RxK9JaH5628xknV9WjUc?=
- =?us-ascii?Q?j9nD9Jkw0wL2j+89QIZmTi+QZfXSuF3a9mprZYJw/DnZZEETD4N9YPKerQac?=
- =?us-ascii?Q?msOzJCH2ak7HTT/9J7Bx1lPO5RXNbyMhHjiXiDRdab2V7BTbN3GSJCu3tFrV?=
- =?us-ascii?Q?NauP2ht/hN1XYcUVrLpMo0KJoLQBi2+MrIdiVp1O13gy6F7WBU4Se4MXzB+G?=
- =?us-ascii?Q?unUDvHNSeD+PdFak2QeZhNH2L5aLKX6yastpugWdf14z0q7SF4bMSOP5qzgG?=
- =?us-ascii?Q?5HClVzWF/VauEkzK0bDhuKTByzwnrzMV7myAHMZu1rUJ24O3u1ZGXi6AcDHE?=
- =?us-ascii?Q?E/nztKDgFswtbjg4fjMBhizd3QO3h76WWxq8xodgt39ono+ukj1Bcd5p3mQo?=
- =?us-ascii?Q?e9FpJuk2JpHRAviKeCW/F6eMPND/ySfMb0bn/EvwTyo4ScBKFEGyNYwGWUqH?=
- =?us-ascii?Q?fXu0KjiC+cIPPijH9wPFz0rUArK4pdXgYg6z1njd5VVLSw2z94tB+lSYOZZX?=
- =?us-ascii?Q?cXobk0zLofarED0UeJK3vJO1HXcs6aMU1FnzLIjbvRUJ/fODGsO/FPsV5+po?=
- =?us-ascii?Q?/tO0xuDsCwT0dKGv6rIhlVu4U8ENuU1UCR9PZxza3133ostWGOez3ayyfHJY?=
- =?us-ascii?Q?Ic4ZqWpN9S/GRQDCXtIQT5BSyzu7mSIVjlSyL2BkVS4Sp7aXan24cYTj24v9?=
- =?us-ascii?Q?dQVGIEkO49u9Vx7lGVGqFwpnGYNFkFmGRivW8Qy4NcQjwePhyUpRLePPCc79?=
- =?us-ascii?Q?zpCMuUa4JE5P7goqyfYzIGKbi6QJx6wMBiYtdhyKDewvXx3ObReUpJJKpdmx?=
- =?us-ascii?Q?CVorzmQ/QY1xXMpYbVZ6yHkrfvT4fnpr4lBPQnxDL+RxeXRAvrlm78lOmqJL?=
- =?us-ascii?Q?QfKFAQ9pADeC/hpxdw1FvJ1ZRq7LdnlpE+b2H+xPo7IUjLPQDMHgVBVnRL2g?=
- =?us-ascii?Q?DMrCvkzvtrYV2PTODl/WBJ5LxVspWbtvnzuRUdWE9zZ1AKu3o+EJ4/zedrrr?=
- =?us-ascii?Q?kgDvWPS/+7wglMdv1kLOVhBqDU2Cd7pKeUOlZT6QYBVPjIAjSzLk3Zdc7A8P?=
- =?us-ascii?Q?4SwkUtOQ3khhzQ65bAZcaUs99kXCoSfb4s3TmoVR2FM7TJ3Gdc8ENBXJKSbF?=
- =?us-ascii?Q?Ouf2lXcb2hR1SQ80VXLCDJoB/JTMrMP37bMDhNxyilNRfVmfmvSALMQC7SNX?=
- =?us-ascii?Q?zxLoDFWfrHENLSc8VrzSyHCReB5Slu8JpUF7zGkld86zv+iDtoTYsyes/6X2?=
- =?us-ascii?Q?/TjlhE13EAs9Q7pmmr1HOjIvpfLs0dalYx+s80oG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 685559aa-a55c-49a5-d350-08dda8fc42cb
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 15:25:56.6825
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3c1MlryUbw0rb5PI3uMiJW6dKCOnAp2ADS7NYpu0ASchZ7eODo8l4ppFbkKGIg/lsVzASB0ScZnbdtbQtt/4Tw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10676
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
+Message-ID: <20250611160206.552030-1-irogers@google.com>
+Subject: [PATCH v2 00/15] New perf ilist app
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 02:39:17PM +0100, Colin Ian King wrote:
-> Don't populate the read-only array mask on the stack at run time,
-> instead make it static const.
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+This patch series builds up to the addition of a new ilist app written
+in python using textual [1] for the UI. The app presents perf PMUs and
+events, displays the event information as in `perf list` while at the
+bottom of the console showing recent activity of the event in total
+and across all CPUs.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+The first part of the patches are a few perf and perf python C API
+fixes, most importantly the counter reading in python supports tool
+PMUs.
 
-> ---
->  drivers/perf/fsl_imx9_ddr_perf.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
-> index 843f163e6c33..267754fdf581 100644
-> --- a/drivers/perf/fsl_imx9_ddr_perf.c
-> +++ b/drivers/perf/fsl_imx9_ddr_perf.c
-> @@ -461,9 +461,11 @@ static void imx93_ddr_perf_monitor_config(struct ddr_pmu *pmu, int event,
->  					  int counter, int axi_id, int axi_mask)
->  {
->  	u32 pmcfg1, pmcfg2;
-> -	u32 mask[] = {  MX93_PMCFG1_RD_TRANS_FILT_EN,
-> -			MX93_PMCFG1_WR_TRANS_FILT_EN,
-> -			MX93_PMCFG1_RD_BT_FILT_EN };
-> +	static const u32 mask[] = {
-> +		MX93_PMCFG1_RD_TRANS_FILT_EN,
-> +		MX93_PMCFG1_WR_TRANS_FILT_EN,
-> +		MX93_PMCFG1_RD_BT_FILT_EN
-> +	};
->
->  	pmcfg1 = readl_relaxed(pmu->base + PMCFG1);
->
-> --
-> 2.49.0
->
+The second part of the patches adds event json for the software PMU
+and makes the tracepoint PMU support iteration of events and the
+like. Without these improvements the tracepoint and software PMUs will
+appear to have no events in the ilist app. As the software PMU moves
+parsing to json, the legacy hard coded parsing is removed. This has
+proven controversial for hardware events and so that cleanup isn't
+done here.
+
+The final patch adds the ilist command. To run it you need the updated
+perf.cpython.so in your PYTHONPATH and then execute the
+script. Expanding PMUs and then selecting events will cause event
+informatin to be displayed in the top-right and the counters values to
+be displayed as sparklines and counts in the bottom half of the
+screen.
+
+Some thoughts on the series:
+
+ - The PMU changes will conflict with the addition of the DRM PMU:
+   https://lore.kernel.org/lkml/20250403202439.57791-1-irogers@google.com/
+   when these two are merged together ilist will show yet more
+   counters. It'd be nice if the DRM stuff could land and then I can
+   rebase these patches.
+
+ - The parse-events clean up of the software and tracepoint PMU. The
+   software PMU hard coding to be legacy first has similar issues and
+   will conflict with the clean up in:
+   https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
+   Moving the software work to json means we don't need special parse
+   events terms for software events, etc. We can just treat things
+   like regular PMUs with json, etc. I'd much rather we had less
+   special case logic so that series is best rebased on top of this
+   work and it should drop the changes for software terms, etc. which
+   this series removes. Maybe one day the whole event parsing can be
+   much more regular in how PMUs are treated but there's always
+   "cycles".
+
+ - Should python libraries have feature tests? How does this get
+   packaged outside the kernel tree? I think these are open
+   questions. Clearly textual is kind of a big dependency and we've
+   largely been moving in the direction of fewer dependencies
+   recently. Hopefully the app makes it clear why I think this one is
+   worth carrying. We carry libslang as a dependency and I think
+   textual clearly far surpasses it.
+
+ - How to launch? Currently I run tools/perf/python/ilist.py but it
+   would be much nicer if we could do `perf ilist` much as we do for
+   perf-archive.sh. There are probably other scripts that should be
+   perf commands like flamegraph and gecko. It'd be nice to follow up
+   the series with something to make using these commands easy.
+
+[1] https://textual.textualize.io/
+
+v2: In the jevents event description duplication, some minor changes
+    accidentally missed from v1 meaning that in v1 the descriptions
+    were still duplicated. Expand the cover letter with some thoughts
+    on the series.
+
+Ian Rogers (15):
+  perf hwmon_pmu: Avoid shortening hwmon PMU name
+  perf parse-events: Minor tidy up of event_type helper
+  perf python: In str(evsel) use the evsel__pmu_name helper
+  perf python: Fix thread check in pyrf_evsel__read
+  perf python: Correct pyrf_evsel__read for tool PMUs
+  perf python: Add basic PMU abstraction and pmus sequence
+  perf python: Add function returning dictionary of all events on a PMU
+  perf jevents: If the long_desc and desc are identical then drop the
+    long_desc
+  perf jevents: Add common software event json
+  perf pmu: Tolerate failure to read the type for wellknown PMUs
+  perf parse-events: Remove non-json software events
+  perf tp_pmu: Factor existing tracepoint logic to new file
+  perf tp_pmu: Add event APIs
+  perf list: Remove tracepoint printing code
+  perf ilist: Add new python ilist command
+
+ tools/perf/builtin-list.c                     |  47 ++--
+ .../arch/common/common/software.json          |  92 ++++++
+ tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++++++++-------
+ tools/perf/pmu-events/jevents.py              |  18 +-
+ tools/perf/python/ilist.py                    | 238 ++++++++++++++++
+ tools/perf/util/Build                         |   1 +
+ tools/perf/util/evsel.c                       |  21 +-
+ tools/perf/util/hwmon_pmu.c                   |   2 +-
+ tools/perf/util/parse-events.c                | 225 +++++----------
+ tools/perf/util/parse-events.h                |   3 +-
+ tools/perf/util/parse-events.l                |  38 +--
+ tools/perf/util/parse-events.y                |  29 +-
+ tools/perf/util/pmu.c                         |  44 ++-
+ tools/perf/util/print-events.c                |  95 -------
+ tools/perf/util/print-events.h                |   1 -
+ tools/perf/util/python.c                      | 248 +++++++++++++++-
+ tools/perf/util/tp_pmu.c                      | 209 ++++++++++++++
+ tools/perf/util/tp_pmu.h                      |  19 ++
+ 18 files changed, 1144 insertions(+), 452 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/common/common/software.json
+ create mode 100755 tools/perf/python/ilist.py
+ create mode 100644 tools/perf/util/tp_pmu.c
+ create mode 100644 tools/perf/util/tp_pmu.h
+
+-- 
+2.50.0.rc0.642.g800a2b2222-goog
+
