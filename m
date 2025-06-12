@@ -1,57 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803B74207A
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C2578F26
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686561; cv=none; b=l6t+vwBNUQu/V3nC3r5saUat83vzf8FthsxEpui9mhSLyl6Z8lpTyp8RKHmxhp0oF4biNV6o55AMmxsrpYoKpVBWAcTi4SuXXsTdqVeUYcnUxSv4W1gOIcoxk811SPg/gY//PDY8nQtSTBjZpXqUki6EGh22qYQN6W88iWQ4pgo=
+	t=1749686563; cv=none; b=T9txJIOVJbG4LqMhQOYJh0O181ZQhmrwktXp1FAH+Q5kc3PZDgele+OzCHvHlRZcOHM+okt4kMylH9G6dGEXTmoqImXwCyx4ifIF4SSjgQowqW5y7hgM0hLsC9/rEL0JRguEqMbagubmV/lBExtp2v7w/bve827d+3rVLxzu0LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686561; c=relaxed/simple;
-	bh=Lc2JtIfXZmV3USXNIWX8ioxXhWowqkdZiB4vXpyFRg4=;
+	s=arc-20240116; t=1749686563; c=relaxed/simple;
+	bh=JNfZ5ZOPkJA95VjdqtZ+z7n2un0cp93I5argkTdE+uk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ltjO70EcTBig7rIcAHjQb/qiIvTqUGWnRAjBGF051fI/kkdlpqUb+MUmyCcGXEoTRJiYaiYzRFW8tjFtQfTrMk+aHD+EKPZiYYXHWfpEXHECQXHF1L4S+XPl9lmgFTdUvr6sW2YTrH0KRIAkN9ZtItkbJNR2pzUMNDfek3eQJFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uLRefGJE; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=B+4BfpZpciJp1DDNVviZQtDkUzB9k0SeMRrIF4EztCJlkIYHYhAvr3TXQ15J13LIIjSZgAi54d5i/YhIz0ZSCjoTQATtz07prpaNqxg/1iVRos9ZSjOmUw3SAx96LwiSS8vkBBlbSDhuEajcLIVqYE4mM9GnijBDu8cq9gDW+Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dfUXJphz; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uLRefGJE"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74299055c3dso557318b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dfUXJphz"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b26e33ae9d5so280706a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749686559; x=1750291359; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/kbUi/cjzpRxNlnb7nAF6rA+ZYZSCoeqQsAo52QIjAo=;
-        b=uLRefGJEBAxoNvjSYlItUBrOnUx86izauuvWg9AVqx5cUPGy6NrkBNeInyCQ/FdjGT
-         rcSImbENEJTh5fjkmyvk9m6bSU5umdWHrrY2xODLAfJvc5Z2Bl1fKvJQF6KM+aEacOpu
-         P8GfptwQtYtpJFIohq1+LV4jeGRNu4j1PwIsxVENK/5bIoHV/xoMzUpRAeKEU5MtP/ry
-         6zVCsnuM7s1ZTNpM2EihoIHV+rZ+d1kEcG2J4Y0zwI+vqAsdNiVZ4QEDGL3eEPbyxwi1
-         6SC/pzwQY2GA9FBBRHGrq68Mt1mh9Tpolr4NDW/GDI5koiqpdng2jdFxpn7B5dBPmPEc
-         o6EQ==
+        d=google.com; s=20230601; t=1749686561; x=1750291361; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mmacm3DpVTP/Y25dRDeIpCe5e0sTBmcdAZpnlDXoTNs=;
+        b=dfUXJphzQW/gnmqajneNlOhEVJlEd1mJk7WvcOJj6oZPTbINNTy7POMmpe77kDQ6le
+         yYGH+oKsy95CLRVKMhKkdtfB7LsZzjE6yirJP3TCA5GvUKok7lvwkkfCDsz7sewW+m1l
+         AuHehw2lnAtQqVuGxtABl4XM/Ze0BcYrw46Rx7dw4mtEdzquMMymYL9FyycCkk9TMTxS
+         8BJ4pWe3L/+5+Ey0B2+b8GEqQWsXllAyo+4heBNLXERQfOFecbfLDdqV7OplsKYBC+jJ
+         H08Yz0N0qYcUWNlIWqhXCQoy1vx3QsS/CRvI4RbETcfLI+jSWFX//LH+4VxRYXkRF6n9
+         jHyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749686559; x=1750291359;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/kbUi/cjzpRxNlnb7nAF6rA+ZYZSCoeqQsAo52QIjAo=;
-        b=bhbmnFLqOyhyc9Yj1gEmxPziucv2dY0kNYSUQgBF14ZezS4Ek83QGyR0BUxQ8l3kNJ
-         AI2y4HiADyKcq6rixqoqsWFgePMh4BAppcvaTPa3rHTzklhOoN4+HJ713uepkAg9GR+G
-         oSWWkiWAPSb8YKq7IvM7J8I8GW9CPnj/S3uXAdSKWRN4Q7/cmbcfjAsnf87FHkV//kBQ
-         UUjGnXsBUv9ChT8KnS6TYYJkGv6jLP6ihihCtOvymPLHmoTw65xBGh2ZMHcytra2FVV5
-         CK6kO0txs7CE58Ze+e/kq2agbXxjqFwZzMenu27/uqF2frRrMKdXwo6yS4myNxRgiVUK
-         QYYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVETVpiAsBN2Jf5eTCZDlBi/DdlRDJ9DUXRHL2Gy9L6jkmhiLeLnEaGsFYVuGO8UIubddw79O2pBJ6UaqDjMhcE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlHR686FPRPDkGHGnW9uPJMpCMoZ6Ip0YfCwSLzLiIz9k3RAd9
-	n0i1cIu6M8g1NUTbjgvqUVVuaTlPjR6/l6b7YIyq/r9JaPDsVu2PK3DJ7yOj6qp+8XJxKWeSqPk
-	uDfZKAhqhzg==
-X-Google-Smtp-Source: AGHT+IEZii1Q+P5Yn5awiIs8jS8CnZRYbs2S3R/ET1MZ6cTwUMgbwb9kf33+3inn8JjSQuZ693FU7KQcdTLT
-X-Received: from pga13.prod.google.com ([2002:a05:6a02:4f8d:b0:b2f:c26a:8705])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6e91:b0:1ee:e33d:f477
- with SMTP id adf61e73a8af0-21f86645fb9mr7942605637.15.1749686558839; Wed, 11
- Jun 2025 17:02:38 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:02:14 -0700
+        d=1e100.net; s=20230601; t=1749686561; x=1750291361;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mmacm3DpVTP/Y25dRDeIpCe5e0sTBmcdAZpnlDXoTNs=;
+        b=R40PR/1sjqomcDqV7Ulr0axls/M24yIXyVlGqnX64kTCSMNcxGe+WqaNOC6bhH1LWM
+         q256blnef4yJZrfNbnnwupMqgUa8DzwCNJc6VhuSFcaJdjI9W8d5SR+o1FE43Lcm3j91
+         hAdnN2exVNdlcL5hD1AZrzmyy5FIBsiKwUMYyz2le0ThLugK9y/7h8KEc33T1NxFnKug
+         BrG3mQ72UuOwnXpZnkEUv/jOlXtzD18MdNpgPRxD59wf3psfLMbiR7zpxKnEIMoj3QQq
+         RE+lUhdy/wDNKoODAsVSGnaJxayJUO0nCSFHytMu5LVxrONMEfdbgG3zebAOmjmle0HY
+         EgPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSwFhdaEtqfkXlBzvHwBOOUd5vNAMCNnIcuZ/oIvhscD8Jefs/b7N+6W2Z9loAuOgD3W98fUQonCZ1eCCIgA4H@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE3/sqD2ih40PV5/kmm7OgEOVF9zHuZ7UyKXjT3DGw5JOQlCcF
+	oybbOBnr2an8sqVSWg28pJcJfPRup2ipr56CLDb2gBno3xCGQurJ1qVkJf4Ai0SD+tUW970X4ZQ
+	yCkoFY3uRig==
+X-Google-Smtp-Source: AGHT+IF9nL1X26bf2QtGTXx9JCvtuolY55vgJHj3Ao4Y1Gr8Gh8w+48muBezSJ4fFqPtvSpVEINitdC/C+Lt
+X-Received: from pjuw4.prod.google.com ([2002:a17:90a:d604:b0:2ef:d136:17fc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:274a:b0:30e:3718:e9d
+ with SMTP id 98e67ed59e1d1-313bfc2ae6bmr1910402a91.35.1749686560734; Wed, 11
+ Jun 2025 17:02:40 -0700 (PDT)
+Date: Wed, 11 Jun 2025 17:02:15 -0700
 In-Reply-To: <20250612000224.780337-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250612000224.780337-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612000224.780337-6-irogers@google.com>
-Subject: [PATCH v1 05/15] perf vendor events: Update EmeraldRapids events
+Message-ID: <20250612000224.780337-7-irogers@google.com>
+Subject: [PATCH v1 06/15] perf vendor events: Update GrandRidge events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,135 +72,125 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.11 to v1.14.
+Update events from v1.07 to v1.09.
 
-Bring in the event updates v1.14:
-https://github.com/intel/perfmon/commit/6f6e4c8c906992b450cb2014d0501a9ec1c=
-da0d0
-https://github.com/intel/perfmon/commit/e363f82276c129aec60402a1d64efbbd41a=
-f844e
+Bring in the event updates v1.09:
+https://github.com/intel/perfmon/commit/8c74d09c8544421256a79f4f21e548ad756f5b7f
+https://github.com/intel/perfmon/commit/18c7d2a75e45eacf5553f900ae2097a1290f5bed
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/emeraldrapids/pipeline.json      |  2 +-
- .../arch/x86/emeraldrapids/uncore-io.json     | 12 +++++++++++
- .../arch/x86/emeraldrapids/uncore-memory.json | 20 +++++++++++++++++++
+ .../arch/x86/grandridge/grr-metrics.json      | 30 +++++++++++++++----
+ .../x86/grandridge/uncore-interconnect.json   | 10 +++++++
+ .../arch/x86/grandridge/uncore-io.json        | 12 ++++++++
  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 4 files changed, 34 insertions(+), 2 deletions(-)
+ 4 files changed, 47 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json b/t=
-ools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json
-index 00b05a77c289..48bec483b49a 100644
---- a/tools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json
-@@ -684,7 +684,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x4c",
-         "EventName": "LOAD_HIT_PREFETCH.SWPF",
--        "PublicDescription": "Counts all not software-prefetch load dispat=
-ches that hit the fill buffer (FB) allocated for the software prefetch. It =
-can also be incremented by some lock instructions. So it should only be use=
-d with profiling so that the locks can be excluded by ASM (Assembly File) i=
-nspection of the nearby instructions. Available PDIST counters: 0",
-+        "PublicDescription": "Counts all software-prefetch load dispatches=
- that hit the fill buffer (FB) allocated for the software prefetch. It can =
-also be incremented by some lock instructions. So it should only be used wi=
-th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
-ction of the nearby instructions. Available PDIST counters: 0",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json b/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
+index 1c6dba7b2822..878b1caf12de 100644
+--- a/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
+@@ -106,6 +106,30 @@
+         "MetricName": "io_bandwidth_write",
+         "ScaleUnit": "1MB/s"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json b/=
-tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json
-index 94340dee1c9c..d4cf2199d46b 100644
---- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json
-+++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json
-@@ -1821,6 +1821,18 @@
++    {
++        "BriefDescription": "The percent of inbound full cache line writes initiated by IO that miss the L3 cache",
++        "MetricExpr": "UNC_CHA_TOR_INSERTS.IO_MISS_ITOM / UNC_CHA_TOR_INSERTS.IO_ITOM",
++        "MetricName": "io_full_write_l3_miss",
++        "ScaleUnit": "100%"
++    },
++    {
++        "BriefDescription": "Message Signaled Interrupts (MSI) per second sent by the integrated I/O traffic controller (IIO) to System Configuration Controller (Ubox)",
++        "MetricExpr": "UNC_IIO_NUM_REQ_OF_CPU_BY_TGT.UBOX_POSTED / duration_time",
++        "MetricName": "io_msi",
++        "ScaleUnit": "1per_sec"
++    },
++    {
++        "BriefDescription": "The percent of inbound partial writes initiated by IO that miss the L3 cache",
++        "MetricExpr": "(UNC_CHA_TOR_INSERTS.IO_MISS_ITOMCACHENEAR + UNC_CHA_TOR_INSERTS.IO_MISS_RFO) / (UNC_CHA_TOR_INSERTS.IO_ITOMCACHENEAR + UNC_CHA_TOR_INSERTS.IO_RFO)",
++        "MetricName": "io_partial_write_l3_miss",
++        "ScaleUnit": "100%"
++    },
++    {
++        "BriefDescription": "The percent of inbound reads initiated by IO that miss the L3 cache",
++        "MetricExpr": "UNC_CHA_TOR_INSERTS.IO_MISS_PCIRDCUR / UNC_CHA_TOR_INSERTS.IO_PCIRDCUR",
++        "MetricName": "io_read_l3_miss",
++        "ScaleUnit": "100%"
++    },
+     {
+         "BriefDescription": "Ratio of number of completed page walks (for 2 megabyte and 4 megabyte page sizes) caused by a code fetch to the total number of completed instructions",
+         "MetricExpr": "ITLB_MISSES.WALK_COMPLETED_2M_4M / INST_RETIRED.ANY",
+@@ -162,12 +186,6 @@
+         "MetricName": "llc_data_read_mpi_demand_plus_prefetch",
+         "ScaleUnit": "1per_instr"
+     },
+-    {
+-        "BriefDescription": "Average latency of a last level cache (LLC) demand data read miss (read memory access) in nano seconds",
+-        "MetricExpr": "1e9 * (UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_OPT / UNC_CHA_TOR_INSERTS.IA_MISS_DRD_OPT) / (UNC_CHA_CLOCKTICKS / (source_count(UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_OPT) * #num_packages)) * duration_time",
+-        "MetricName": "llc_demand_data_read_miss_latency",
+-        "ScaleUnit": "1ns"
+-    },
+     {
+         "BriefDescription": "Load operations retired per instruction",
+         "MetricExpr": "MEM_UOPS_RETIRED.ALL_LOADS / INST_RETIRED.ANY",
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json
+index 2c18767511f3..c7250332d8aa 100644
+--- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json
+@@ -261,5 +261,15 @@
+         "PerPkg": "1",
+         "UMask": "0x8",
+         "Unit": "IRP"
++    },
++    {
++        "BriefDescription": "Message Received : MSI",
++        "Counter": "0,1",
++        "EventCode": "0x42",
++        "EventName": "UNC_U_EVENT_MSG.MSI_RCVD",
++        "PerPkg": "1",
++        "PublicDescription": "Message Received : MSI : Message Signaled Interrupts - interrupts sent by devices (including PCIe via IOxAPIC) (Socket Mode only)",
++        "UMask": "0x2",
++        "Unit": "UBOX"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json b/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json
+index c5b05c71c56d..764cf2f0b4a8 100644
+--- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json
++++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json
+@@ -907,6 +907,18 @@
          "UMask": "0x4",
          "Unit": "IIO"
      },
 +    {
-+        "BriefDescription": "Posted requests sent by the integrated IO (II=
-O) controller to the Ubox, useful for counting message signaled interrupts =
-(MSI).",
++        "BriefDescription": "Posted requests sent by the integrated IO (IIO) controller to the Ubox, useful for counting message signaled interrupts (MSI).",
 +        "Counter": "0,1,2,3",
 +        "EventCode": "0x8e",
 +        "EventName": "UNC_IIO_NUM_REQ_OF_CPU_BY_TGT.UBOX_POSTED",
-+        "Experimental": "1",
 +        "FCMask": "0x01",
 +        "PerPkg": "1",
-+        "PortMask": "0x00FF",
++        "PortMask": "0x0FF",
++        "PublicDescription": "-",
 +        "UMask": "0x4",
 +        "Unit": "IIO"
 +    },
      {
-         "BriefDescription": "ITC address map 1",
+         "BriefDescription": "All 9 bits of Page Walk Tracker Occupancy",
          "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.jso=
-n b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
-index aa06088dd26f..68be01dad7c9 100644
---- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
-@@ -2145,6 +2145,16 @@
-         "UMask": "0x1",
-         "Unit": "MCHBM"
-     },
-+    {
-+        "BriefDescription": "ECC Correctable Errors",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x09",
-+        "EventName": "UNC_MCHBM_ECC_CORRECTABLE_ERRORS",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "ECC Correctable Errors.  Counts the number o=
-f ECC errors detected and corrected by the iMC on this channel.  This count=
-er is only useful with ECC devices.  This count will increment one time for=
- each correction regardless of the number of bits corrected.  The iMC can c=
-orrect up to 4 bit errors in independent channel mode and 8 bit errors in l=
-ockstep mode.",
-+        "Unit": "MCHBM"
-+    },
-     {
-         "BriefDescription": "HBM Precharge All Commands",
-         "Counter": "0,1,2,3",
-@@ -2759,6 +2769,16 @@
-         "UMask": "0x3",
-         "Unit": "iMC"
-     },
-+    {
-+        "BriefDescription": "ECC Correctable Errors",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x09",
-+        "EventName": "UNC_M_ECC_CORRECTABLE_ERRORS",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "ECC Correctable Errors : Counts the number o=
-f ECC errors detected and corrected by the iMC on this channel.  This count=
-er is only useful with ECC DRAM devices.  This count will increment one tim=
-e for each correction regardless of the number of bits corrected.  The iMC =
-can correct up to 4 bit errors in independent channel mode and 8 bit errors=
- in lockstep mode.",
-+        "Unit": "iMC"
-+    },
-     {
-         "BriefDescription": "IMC Clockticks at HCLK frequency",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 9a60e95a2e15..e139a099374a 100644
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index e139a099374a..f3fe686b6630 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -9,7 +9,7 @@ GenuineIntel-6-4F,v23,broadwellx,core
- GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
- GenuineIntel-6-DD,v1.00,clearwaterforest,core
- GenuineIntel-6-9[6C],v1.05,elkhartlake,core
--GenuineIntel-6-CF,v1.11,emeraldrapids,core
-+GenuineIntel-6-CF,v1.14,emeraldrapids,core
+@@ -12,7 +12,7 @@ GenuineIntel-6-9[6C],v1.05,elkhartlake,core
+ GenuineIntel-6-CF,v1.14,emeraldrapids,core
  GenuineIntel-6-5[CF],v13,goldmont,core
  GenuineIntel-6-7A,v1.01,goldmontplus,core
- GenuineIntel-6-B6,v1.07,grandridge,core
---=20
+-GenuineIntel-6-B6,v1.07,grandridge,core
++GenuineIntel-6-B6,v1.09,grandridge,core
+ GenuineIntel-6-A[DE],v1.08,graniterapids,core
+ GenuineIntel-6-(3C|45|46),v36,haswell,core
+ GenuineIntel-6-3F,v29,haswellx,core
+-- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
