@@ -1,143 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEC24C85;
-	Thu, 12 Jun 2025 17:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB02D1E5B7A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 19:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749750021; cv=none; b=WB9f0n/chlV0tlEUwmycnOE0KY1eWZP6QLkijhP63yiEdpK4clfHOktiSWqqLBUJG8xYP/+RVsJQe2yUPHdHl750MlEC9yYmTiFPJcylZJh++ZkCVbD3DFarPZokG5E3QP+3xbMQc7fsVizPlpaVlCSw/JAskhe35HLLQvT7rxs=
+	t=1749757542; cv=none; b=X2k+hwTm+41j9FyFhLepqr5YNveQugb6yUbJDAS30qnRAR5flg/fz75aC1jfDtKFTzjjCUfW9w7BciMUOJCGeQBoKZjqVjNTB2ayC76AKhXY9reMDxKVOWVU67vzUeweP+mJvW1BOWLHjh+hcldm5WOlvXAn7h9hmEV/hbZcbRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749750021; c=relaxed/simple;
-	bh=SRloaVNpXDaXqvapsg1naBXxSdFMRrgAS0Tqj+PXaAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dAcNOVbDtqUsOketdb/GA2t2SH5+gLGcuWBoZ9mOs2D6xTI9+7KQHKTUYoqWNWyquM68fjmcHKiEv3wmaUU5H8Q78zBQLg16CsHAOnPNEPIXJaoevJhiO3qul/ekpM20w1f6PXW7Bgkr+YbBNFmEmW7Lfx5YTovWWjWCAdP9+rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bibCV43N; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749757542; c=relaxed/simple;
+	bh=wAHT/AcGoo7CgSVNGycSSTiAzwBxGuFr8k/W7cFpxZg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G5tOMiDC/fSmGvvuJh0mql6WC1Qgw2RYUnsqBo1G5Y46zXmY6GErcNxwcbcr+uuRAASDsxEWKW9k/RLGyTM5HMOa0fctvOjcRUpuotUjdqZnBK3ETx5eTQs3Ua/bmg2rkubuV8y+rknpp88JJvM9p41ClJfOhz3KgQlYvPFjy84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0pf5wsos; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bibCV43N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749750020; x=1781286020;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SRloaVNpXDaXqvapsg1naBXxSdFMRrgAS0Tqj+PXaAM=;
-  b=bibCV43Nzu3FIXBJJto9IcNv1/QV8nDt2rVeq2ZtA4sMThoWjNl6BVMm
-   YvuoBjOWaomLqXa5oa8PRItrjfr4DB/HbjQFvejMtLcSvi1jDHCSx9GY3
-   hBMsqY0v/7es+i1bwCkDPtMaYm3XpEi4Xw9WvLe2+jw7Z5qx69UVR6u+b
-   GbuZrmAz6v05PVHoce8VmebLBR9uQK0Ek8mu73EvDnLUiVGeymfeuOpmz
-   vGjYqej1cHRyK9UO6hIHRKEhdlo8D4CHn7u7J14eFarn0r4L255GwVP85
-   9fjcsG858mU8+2I42vYHb/oj2BEQjLk4S7bPqhJylYGFT0RHZn7GrEDhG
-   A==;
-X-CSE-ConnectionGUID: uzE7jQk4RH2t6OgX4Cjrlw==
-X-CSE-MsgGUID: yT3CHNYYS/2bJy56FOlEPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="39557135"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="39557135"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 10:40:19 -0700
-X-CSE-ConnectionGUID: WKrX3G0HQpeZzEORQPlC5g==
-X-CSE-MsgGUID: OasHHfLsQOaZ2CDx7ZAp7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="148081340"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 10:40:19 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E140B20B5736;
-	Thu, 12 Jun 2025 10:40:17 -0700 (PDT)
-Message-ID: <7961f1f7-d4ef-439c-aead-2b39080f089d@linux.intel.com>
-Date: Thu, 12 Jun 2025 13:40:16 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0pf5wsos"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4e7b397cc2aso361046137.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 12:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749757540; x=1750362340; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wAHT/AcGoo7CgSVNGycSSTiAzwBxGuFr8k/W7cFpxZg=;
+        b=0pf5wsosyBPl2BBljKQ8kpYHzFCpD1oRZTYKZm5VYl223v6wcYYolhN4VWv9lM5feT
+         nbspVy39p0SZB7/yk+M2QLNK+1YaXXprrxo2bobOY/GVd9utaPv9D4RaEt6k72VwpzJi
+         3atJzkf8XnD0pG9A+g/sHT84ZKMIS9qWxDIQ4AAo8kctBmuzmBQqK18GrwsV6EUUSk1J
+         hjedVcvHmZtVEI8a9O6cV/aH2rcQYQ82CFL8w0ExEDYUHjgWL1I36ARy50Rs2PDJoKVs
+         xiAsOi5IcRDmZTM5vgrNIBCbks+s6bEGJC+26kA6VZihxRR7GI9flQR7jMcsFnw11+4c
+         sI3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749757540; x=1750362340;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wAHT/AcGoo7CgSVNGycSSTiAzwBxGuFr8k/W7cFpxZg=;
+        b=VmtQ6I+y+/S5Oi3UjzwyLXqN79yVtQ2D/QDNhddB6trLBAMpcAD6YnekOYGTsySTCg
+         SAmCdXw8LWynMQWslK4yNGEy3spQ5QaiczQK52+ncFtU63q5xGFvS2kw9QkIWt+V39WE
+         JRXDj7KQ5wPm60htlRgm9i5u1kSyV5bNaRBfJxKyOZiyc0poq/XOUQU6nwrRtSEayKYG
+         v6zGjy5FsFXlRoZb3McRyHdObygdR87MFJBC+3M8Cso5p4ekV6si9fuw4jVyVkyCa2nD
+         YtZUHpb+8/sQXbDWUQGVHJq7pNp+vC3nV/rZnaH0bbAf42GYOvW43dOP/i4cIjsjDw6y
+         rmqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXagtMoE0BXkDfr5DRFgSGTNvf7qv721C2d2Js4gTbuDGCz3TAFaGEbfQBNBlcU7MR0x18XObNaWU+RTO0kvSjZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWKMoxv5H+bMt8L0RncBBegd5SWIQxdPe3aZzInmAOggYIncjs
+	efVbwndfDnoXT0NpyAAhLrQ40CA+9e7B5PeVMBilb7EDshd8Pi4hoLS+5H5Veg09VqVymhMoik1
+	XKOQP7BCrhscAs4aBqRAjHrabrr228J8KmR0S808H
+X-Gm-Gg: ASbGncvKNVk2WRv/utoej0WwkQGMpB+tFBThRb5HvtEVKgGcY0ulXkU9kn/qaOL+sVm
+	2if6Hvd6xLBPWcPnDX+bSEfOg4M/YAfG8Gs2weJQnAMFNXzOeKTBOcLirHMzKMfwC2jjGbUtR/s
+	Mns2mB3f+tsFHm4xorOesH9RKxj08F9Ihmf4QpALUkwe3SuwI8MTYq0j7Uyq/+IqRPN+Tr01QVi
+	g==
+X-Google-Smtp-Source: AGHT+IEHRxuSJmDekfPevaGg0P88Kg+HTSpjX9dFsg+2vHWBTNzZj+7ncBqz8KjOFQMFJc5ImCgn4Jea+W2cpnvby9I=
+X-Received: by 2002:a05:6102:2d03:b0:4e2:bacd:9f02 with SMTP id
+ ada2fe7eead31-4e7e39d7d05mr164846137.16.1749757539524; Thu, 12 Jun 2025
+ 12:45:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Fix crashing bug in
- icl_update_topdown_event
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, linux-perf-users@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-References: <20250612143818.2889040-1-kan.liang@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250612143818.2889040-1-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250606215246.2419387-1-blakejones@google.com>
+ <aEnLBgCTuuZjeakP@google.com> <CAP_z_Ci2HtnSX8h51Lg=XcW_-5OryGb3PAH7MJjWg60Bjpdpng@mail.gmail.com>
+ <CAP-5=fW1FhaDcG54OS=_65gxmehjDTR+1XqCPWMX-aw9reJHdA@mail.gmail.com>
+In-Reply-To: <CAP-5=fW1FhaDcG54OS=_65gxmehjDTR+1XqCPWMX-aw9reJHdA@mail.gmail.com>
+From: Blake Jones <blakejones@google.com>
+Date: Thu, 12 Jun 2025 12:45:28 -0700
+X-Gm-Features: AX0GCFuJaWBm0sxoTLHcXuh_yk_mpToTV13cQIpxmu5iRZXykkCsMy-NMMDTMLg
+Message-ID: <CAP_z_Ch+d1FA5Yp65aegn7-vcLhZY8rspSXbDsxCA7yTLufNew@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] perf: generate events for BPF metadata
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Peter and Ingo,
+On Wed, Jun 11, 2025 at 10:19=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> Fwiw, binutils is GPLv3 and license incompatible with perf which is
+> largely GPLv2. This patch series deletes the code in perf using it and
+> migrates the BPF disassembly to using capstone or libLLVM:
+> https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
+> The series isn't merged into upstream Linux but is in:
+> https://github.com/googleprodkernel/linux-perf
 
-On 2025-06-12 10:38 a.m., kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The perf_fuzzer found a hard-lock crash on a RaptorLake
-> machine.
-> 
-> Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
-> CPU: 23 UID: 0 PID: 0 Comm: swapper/23
-> Tainted: [W]=WARN
-> Hardware name: Dell Inc. Precision 9660/0VJ762
-> RIP: 0010:native_read_pmc+0x7/0x40
-> Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
-> RSP: 000:fffb03100273de8 EFLAGS: 00010046
-> ....
-> Call Trace:
->   <TASK>
->   icl_update_topdown_event+0x165/0x190
->   ? ktime_get+0x38/0xd0
->   intel_pmu_read_event+0xf9/0x210
->   __perf_event_read+0xf9/0x210
-> 
-> The CPUs 16-23 are e-core CPUs that don't support perf metrics feature.
-> The icl_update_topdown_event() should not be invoked.
-> 
-> It's an regression of the commit f9bdf1f95339 ("perf/x86/intel: Avoid
-> disable PMU if !cpuc->enabled in sample read"). The is_topdown_event()
-> is mistakenly used to replace the is_topdown_count() to check if the
-> topdown functions for the perf metrics feature should be invoked.
-> The is_topdown_event() only checks the event encoding. It's possible
-> that the same encoding 0x0400 is created on an e-core CPU (although
-> there is no valid event with such encoding on e-core).
-> The is_topdown_count() checks the PERF_X86_EVENT_TOPDOWN flag. Only
-> when the topdown events require the perf metrics magic, the flag is set.
-> 
-> It should be a typo when merging the intel_pmu_auto_reload_read() and
-> intel_pmu_read_topdown_event() in the commit.
-> 
-> Fixes: f9bdf1f95339 ("perf/x86/intel: Avoid disable PMU if !cpuc->enabled in sample read")
-> Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-> Closes: https://lore.kernel.org/lkml/352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu/
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Good to know. I'd be a bit concerned about the validity of testing my
+changes with a 19-patch unmerged changeset, so I don't think I'm going
+to try that for now.
 
-Please help to add the tested-by tag from Vince if the patch looks good
-to you.
+Perhaps I'll just send along v4 of my changes, which has the fixes and
+testing mentioned upthread.
 
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-
-https://lore.kernel.org/lkml/da4d8a9a-66a4-32b4-0283-ef4687357349@maine.edu/
-
-Thanks,
-Kan> ---
->  arch/x86/events/intel/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index c60b6f199f51..38886cd7aa65 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2826,7 +2826,7 @@ static void intel_pmu_read_event(struct perf_event *event)
->  		 * If the PEBS counters snapshotting is enabled,
->  		 * the topdown event is available in PEBS records.
->  		 */
-> -		if (is_topdown_event(event) && !is_pebs_counter_event_group(event))
-> +		if (is_topdown_count(event) && !is_pebs_counter_event_group(event))
->  			static_call(intel_pmu_update_topdown_event)(event, NULL);
->  		else
->  			intel_pmu_drain_pebs_buffer();
-
+Blake
