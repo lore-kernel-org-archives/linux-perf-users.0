@@ -1,57 +1,57 @@
-Received: from mail-oi1-f201.google.com (mail-oi1-f201.google.com [209.85.167.201])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909B71CAB3
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803B74207A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686559; cv=none; b=C9qz1CBztpRrzyKfp2bcV9ol1/HWCJR/pAWIWUMBTAkxezqCqgS07EOuMWyETelZGKql/Uk1pFGrLHlgFrKjR+2MW0cOgBSGn+tMQZAmSBq+nUlq2y2VnP5RM1NgKJ3YEMe6+F9h6beLGJ+IrGAo+zSjJehDh/PYfZgttJnZXFI=
+	t=1749686561; cv=none; b=l6t+vwBNUQu/V3nC3r5saUat83vzf8FthsxEpui9mhSLyl6Z8lpTyp8RKHmxhp0oF4biNV6o55AMmxsrpYoKpVBWAcTi4SuXXsTdqVeUYcnUxSv4W1gOIcoxk811SPg/gY//PDY8nQtSTBjZpXqUki6EGh22qYQN6W88iWQ4pgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686559; c=relaxed/simple;
-	bh=iUk18DC8Dj4iIJuFuI5ee/WnJ53SmQtPzEUuaSmQYYI=;
+	s=arc-20240116; t=1749686561; c=relaxed/simple;
+	bh=Lc2JtIfXZmV3USXNIWX8ioxXhWowqkdZiB4vXpyFRg4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=mNooe/BgU6T/N5PM+NTg+5JGnxNdjvUCiEzmBXbWzyG92gZk9SKibmB08Tjl9L+0CmY8ZSJFb3sTdwXds70euMVErGK6zFlhgNhVdI9y7YetzJ6rEMbqnQQDrPhvo+kOGsXDWXPqRyvIgF/ymMUpQOEpiC7nC1whhH9W8bsn5NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SSSetGeh; arc=none smtp.client-ip=209.85.167.201
+	 To:Content-Type; b=ltjO70EcTBig7rIcAHjQb/qiIvTqUGWnRAjBGF051fI/kkdlpqUb+MUmyCcGXEoTRJiYaiYzRFW8tjFtQfTrMk+aHD+EKPZiYYXHWfpEXHECQXHF1L4S+XPl9lmgFTdUvr6sW2YTrH0KRIAkN9ZtItkbJNR2pzUMNDfek3eQJFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uLRefGJE; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SSSetGeh"
-Received: by mail-oi1-f201.google.com with SMTP id 5614622812f47-4066a4d2d31so115310b6e.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uLRefGJE"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74299055c3dso557318b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749686556; x=1750291356; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749686559; x=1750291359; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bBzXt7aOCAP70nk+7o4IIKdMqZfqaJRnyIRRHXlcFAc=;
-        b=SSSetGehHbBo0AgCCkjMo7ok7VpQ4kswxD/TVvnnoByUul6NCumegZEe68A/vFsj8h
-         zUgGFwBLHIv78S0ZIPccLpo1Q15IwqY2phdcStxYMqDCOiIihUP2WLcl+Bc+vcDe9IjU
-         Spb658emECxiEZ1oGrhq6d32hw4f9/IS6vBqujiDBH6AukQWNICWKbvyIC2X22oM/tC9
-         4yx6JhRVczIQ8C6/0LUacKmnKAOOf8xWCUDm6FYIS40mrauFcD+wDMxOFACHf1tI45yi
-         /vnhuTgOlXQUej6jOVyHSWxveLD0CGRZVaDqHgTuBzQA/ZUxRsQMbI9DSmHMzafelBVC
-         FiHQ==
+        bh=/kbUi/cjzpRxNlnb7nAF6rA+ZYZSCoeqQsAo52QIjAo=;
+        b=uLRefGJEBAxoNvjSYlItUBrOnUx86izauuvWg9AVqx5cUPGy6NrkBNeInyCQ/FdjGT
+         rcSImbENEJTh5fjkmyvk9m6bSU5umdWHrrY2xODLAfJvc5Z2Bl1fKvJQF6KM+aEacOpu
+         P8GfptwQtYtpJFIohq1+LV4jeGRNu4j1PwIsxVENK/5bIoHV/xoMzUpRAeKEU5MtP/ry
+         6zVCsnuM7s1ZTNpM2EihoIHV+rZ+d1kEcG2J4Y0zwI+vqAsdNiVZ4QEDGL3eEPbyxwi1
+         6SC/pzwQY2GA9FBBRHGrq68Mt1mh9Tpolr4NDW/GDI5koiqpdng2jdFxpn7B5dBPmPEc
+         o6EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749686556; x=1750291356;
+        d=1e100.net; s=20230601; t=1749686559; x=1750291359;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=bBzXt7aOCAP70nk+7o4IIKdMqZfqaJRnyIRRHXlcFAc=;
-        b=BWjZfXXZ5o4ZY4qrcpsPr5uBIxq7eOWkjInAHbIatlnTpnWtYivFLLBwOMG3eXpwdz
-         XTnAzmwF6vbG2rvckksZ2wxvGmXaa75gGYh9jMczpYGcHl7IbSRoar4+B0/BSJMXKh4l
-         fasKzRQyitwFT/ncishn5WwohnLGJn46x0q7LXKAW+f4lLM5hA8YWWOKAsWmDSVEK2im
-         RleSiLR4BgCmtkty6sl9hKmKxJeDxhmHu7d1MdHTdL1ElKvCyDp0VUp8OqVKHe3l+T8M
-         OKK536QiGaqqdM9n/v+qpLCEtBvhrtGF30mtMTwUO/eWiG2YVo8McOy8bZygmKeZXV+p
-         fbMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcA1LAG6EE7xZyzgeIbyYNRqwqLB0mOmxyrCqMhtBq7aD1oe3KHDvnPvLREg/Etb4s3yDtB5i4MSLybVC7Gn0D@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAl5O7vB4nHGFTpvGICUrf6At5+tLnp6BOxrKEqdJWTSieAKov
-	CZN+MDUHHeanYfdUBIzBVOWAARQDxPTBseIAqDSdd4FeHfsrGX6j89Sq8wHgb/n5voKu2QLhk0O
-	NEWyTO8y57A==
-X-Google-Smtp-Source: AGHT+IHZ1LLzkCEwF559t3LCCUZtKVtU3ObfDbP7nBkfmc0pcDLh3AMazVb14C6j0Prw425sg83X7vLAv9b4
-X-Received: from oabut18.prod.google.com ([2002:a05:6870:ad92:b0:2b8:ecea:83a6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:b69d:b0:2c1:650b:fc86
- with SMTP id 586e51a60fabf-2eab4029b77mr787435fac.1.1749686556666; Wed, 11
- Jun 2025 17:02:36 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:02:13 -0700
+        bh=/kbUi/cjzpRxNlnb7nAF6rA+ZYZSCoeqQsAo52QIjAo=;
+        b=bhbmnFLqOyhyc9Yj1gEmxPziucv2dY0kNYSUQgBF14ZezS4Ek83QGyR0BUxQ8l3kNJ
+         AI2y4HiADyKcq6rixqoqsWFgePMh4BAppcvaTPa3rHTzklhOoN4+HJ713uepkAg9GR+G
+         oSWWkiWAPSb8YKq7IvM7J8I8GW9CPnj/S3uXAdSKWRN4Q7/cmbcfjAsnf87FHkV//kBQ
+         UUjGnXsBUv9ChT8KnS6TYYJkGv6jLP6ihihCtOvymPLHmoTw65xBGh2ZMHcytra2FVV5
+         CK6kO0txs7CE58Ze+e/kq2agbXxjqFwZzMenu27/uqF2frRrMKdXwo6yS4myNxRgiVUK
+         QYYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVETVpiAsBN2Jf5eTCZDlBi/DdlRDJ9DUXRHL2Gy9L6jkmhiLeLnEaGsFYVuGO8UIubddw79O2pBJ6UaqDjMhcE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlHR686FPRPDkGHGnW9uPJMpCMoZ6Ip0YfCwSLzLiIz9k3RAd9
+	n0i1cIu6M8g1NUTbjgvqUVVuaTlPjR6/l6b7YIyq/r9JaPDsVu2PK3DJ7yOj6qp+8XJxKWeSqPk
+	uDfZKAhqhzg==
+X-Google-Smtp-Source: AGHT+IEZii1Q+P5Yn5awiIs8jS8CnZRYbs2S3R/ET1MZ6cTwUMgbwb9kf33+3inn8JjSQuZ693FU7KQcdTLT
+X-Received: from pga13.prod.google.com ([2002:a05:6a02:4f8d:b0:b2f:c26a:8705])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6e91:b0:1ee:e33d:f477
+ with SMTP id adf61e73a8af0-21f86645fb9mr7942605637.15.1749686558839; Wed, 11
+ Jun 2025 17:02:38 -0700 (PDT)
+Date: Wed, 11 Jun 2025 17:02:14 -0700
 In-Reply-To: <20250612000224.780337-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250612000224.780337-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612000224.780337-5-irogers@google.com>
-Subject: [PATCH v1 04/15] perf vendor events: Update CascadelakeX events
+Message-ID: <20250612000224.780337-6-irogers@google.com>
+Subject: [PATCH v1 05/15] perf vendor events: Update EmeraldRapids events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,113 +76,133 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.23 to v1.25.
+Update events from v1.11 to v1.14.
 
-Bring in the event updates v1.25:
-https://github.com/intel/perfmon/commit/86f146e15626b0fd3b032cab4538cafaaf2=
-d0635
-https://github.com/intel/perfmon/commit/fef03ffc333ae44d1e9d695b4e67e5bbb44=
-29729
+Bring in the event updates v1.14:
+https://github.com/intel/perfmon/commit/6f6e4c8c906992b450cb2014d0501a9ec1c=
+da0d0
+https://github.com/intel/perfmon/commit/e363f82276c129aec60402a1d64efbbd41a=
+f844e
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/cascadelakex/floating-point.json    | 6 +++---
- tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json   | 2 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv                  | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ .../arch/x86/emeraldrapids/pipeline.json      |  2 +-
+ .../arch/x86/emeraldrapids/uncore-io.json     | 12 +++++++++++
+ .../arch/x86/emeraldrapids/uncore-memory.json | 20 +++++++++++++++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ 4 files changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.jso=
-n b/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
-index 1c709983b65f..3ef6f00f1135 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
-@@ -111,7 +111,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json b/t=
+ools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json
+index 00b05a77c289..48bec483b49a 100644
+--- a/tools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/pipeline.json
+@@ -684,7 +684,7 @@
          "Counter": "0,1,2,3",
-         "EventCode": "0xCF",
-         "EventName": "FP_ARITH_INST_RETIRED2.128BIT_PACKED_BF16",
--        "PublicDescription": "Counts once for each Intel AVX-512 computati=
-onal 512-bit packed BFloat16 floating-point instruction retired. Applies to=
- the ZMM based VDPBF16PS instruction.  Each count represents 64 computation=
- operations. This event is only supported on products formerly named Cooper=
- Lake and is not supported on products formerly named Cascade Lake.",
-+        "PublicDescription": "Counts once for each Intel AVX-512 computati=
-onal 128-bit packed BFloat16 floating-point instruction retired. Applies to=
- the XMM based VDPBF16PS instruction. Each count represents 16 computation =
-operations. This event is only supported on products formerly named Cooper =
-Lake and is not supported on products formerly named Cascade Lake.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x20"
-     },
-@@ -120,7 +120,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xCF",
-         "EventName": "FP_ARITH_INST_RETIRED2.256BIT_PACKED_BF16",
--        "PublicDescription": "Counts once for each Intel AVX-512 computati=
-onal 128-bit packed BFloat16 floating-point instruction retired. Applies to=
- the XMM based VDPBF16PS instruction. Each count represents 16 computation =
-operations. This event is only supported on products formerly named Cooper =
-Lake and is not supported on products formerly named Cascade Lake.",
-+        "PublicDescription": "Counts once for each Intel AVX-512 computati=
-onal 256-bit packed BFloat16 floating-point instruction retired. Applies to=
- the YMM based VDPBF16PS instruction.  Each count represents 32 computation=
- operations. This event is only supported on products formerly named Cooper=
- Lake and is not supported on products formerly named Cascade Lake.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x40"
-     },
-@@ -129,7 +129,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xCF",
-         "EventName": "FP_ARITH_INST_RETIRED2.512BIT_PACKED_BF16",
--        "PublicDescription": "Counts once for each Intel AVX-512 computati=
-onal 256-bit packed BFloat16 floating-point instruction retired. Applies to=
- the YMM based VDPBF16PS instruction.  Each count represents 32 computation=
- operations. This event is only supported on products formerly named Cooper=
- Lake and is not supported on products formerly named Cascade Lake.",
-+        "PublicDescription": "Counts once for each Intel AVX-512 computati=
-onal 512-bit packed BFloat16 floating-point instruction retired. Applies to=
- the ZMM based VDPBF16PS instruction.  Each count represents 64 computation=
- operations. This event is only supported on products formerly named Cooper=
- Lake and is not supported on products formerly named Cascade Lake.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x80"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json b/to=
-ols/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
-index 3dd296ab4d78..9a1349527b66 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
-@@ -542,7 +542,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x4C",
-         "EventName": "LOAD_HIT_PRE.SW_PF",
+         "EventCode": "0x4c",
+         "EventName": "LOAD_HIT_PREFETCH.SWPF",
 -        "PublicDescription": "Counts all not software-prefetch load dispat=
 ches that hit the fill buffer (FB) allocated for the software prefetch. It =
 can also be incremented by some lock instructions. So it should only be use=
 d with profiling so that the locks can be excluded by ASM (Assembly File) i=
-nspection of the nearby instructions.",
+nspection of the nearby instructions. Available PDIST counters: 0",
 +        "PublicDescription": "Counts all software-prefetch load dispatches=
  that hit the fill buffer (FB) allocated for the software prefetch. It can =
 also be incremented by some lock instructions. So it should only be used wi=
 th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
-ction of the nearby instructions.",
+ction of the nearby instructions. Available PDIST counters: 0",
          "SampleAfterValue": "100003",
          "UMask": "0x1"
      },
+diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json b/=
+tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json
+index 94340dee1c9c..d4cf2199d46b 100644
+--- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json
++++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-io.json
+@@ -1821,6 +1821,18 @@
+         "UMask": "0x4",
+         "Unit": "IIO"
+     },
++    {
++        "BriefDescription": "Posted requests sent by the integrated IO (II=
+O) controller to the Ubox, useful for counting message signaled interrupts =
+(MSI).",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x8e",
++        "EventName": "UNC_IIO_NUM_REQ_OF_CPU_BY_TGT.UBOX_POSTED",
++        "Experimental": "1",
++        "FCMask": "0x01",
++        "PerPkg": "1",
++        "PortMask": "0x00FF",
++        "UMask": "0x4",
++        "Unit": "IIO"
++    },
+     {
+         "BriefDescription": "ITC address map 1",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.jso=
+n b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
+index aa06088dd26f..68be01dad7c9 100644
+--- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
+@@ -2145,6 +2145,16 @@
+         "UMask": "0x1",
+         "Unit": "MCHBM"
+     },
++    {
++        "BriefDescription": "ECC Correctable Errors",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x09",
++        "EventName": "UNC_MCHBM_ECC_CORRECTABLE_ERRORS",
++        "Experimental": "1",
++        "PerPkg": "1",
++        "PublicDescription": "ECC Correctable Errors.  Counts the number o=
+f ECC errors detected and corrected by the iMC on this channel.  This count=
+er is only useful with ECC devices.  This count will increment one time for=
+ each correction regardless of the number of bits corrected.  The iMC can c=
+orrect up to 4 bit errors in independent channel mode and 8 bit errors in l=
+ockstep mode.",
++        "Unit": "MCHBM"
++    },
+     {
+         "BriefDescription": "HBM Precharge All Commands",
+         "Counter": "0,1,2,3",
+@@ -2759,6 +2769,16 @@
+         "UMask": "0x3",
+         "Unit": "iMC"
+     },
++    {
++        "BriefDescription": "ECC Correctable Errors",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x09",
++        "EventName": "UNC_M_ECC_CORRECTABLE_ERRORS",
++        "Experimental": "1",
++        "PerPkg": "1",
++        "PublicDescription": "ECC Correctable Errors : Counts the number o=
+f ECC errors detected and corrected by the iMC on this channel.  This count=
+er is only useful with ECC DRAM devices.  This count will increment one tim=
+e for each correction regardless of the number of bits corrected.  The iMC =
+can correct up to 4 bit errors in independent channel mode and 8 bit errors=
+ in lockstep mode.",
++        "Unit": "iMC"
++    },
+     {
+         "BriefDescription": "IMC Clockticks at HCLK frequency",
+         "Counter": "0,1,2,3",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index b2db2bb658ce..9a60e95a2e15 100644
+index 9a60e95a2e15..e139a099374a 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -6,7 +6,7 @@ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
- GenuineIntel-6-(3D|47),v30,broadwell,core
- GenuineIntel-6-56,v12,broadwellde,core
- GenuineIntel-6-4F,v23,broadwellx,core
--GenuineIntel-6-55-[56789ABCDEF],v1.23,cascadelakex,core
-+GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
+@@ -9,7 +9,7 @@ GenuineIntel-6-4F,v23,broadwellx,core
+ GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
  GenuineIntel-6-DD,v1.00,clearwaterforest,core
  GenuineIntel-6-9[6C],v1.05,elkhartlake,core
- GenuineIntel-6-CF,v1.11,emeraldrapids,core
+-GenuineIntel-6-CF,v1.11,emeraldrapids,core
++GenuineIntel-6-CF,v1.14,emeraldrapids,core
+ GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1.01,goldmontplus,core
+ GenuineIntel-6-B6,v1.07,grandridge,core
 --=20
 2.50.0.rc1.591.g9c95f17f64-goog
 
