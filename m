@@ -1,118 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD782C1794;
-	Wed, 11 Jun 2025 23:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA354A01
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749685386; cv=none; b=FZjCwiuh8rHF2oWF2ejdLM6sFj4PdDrv28riYOCW3suAdDN2JoLXynAr1H81HyKgk5uF5oSJ3eI7TwwK5GFkeu7m4Irz8bYk+NiLiRRYhAu9XpA/iHLaxM4s7waV/U6Nu7CTdEpdrRN3soIhpb2GlYlJDx+FAVnDQYYMfo02tsQ=
+	t=1749686550; cv=none; b=VUalbW5z0iFpNIB6F7XYkZsZxPy6wywF+nwUJ1aZcyO6LuUunG0L7IxznhFDI3HnqFejNb6BMB9C1TuVegNcxBbVQwQrDlqm/RQVa0Db8yHr+E7xUqk4VCJkOr0DCPFr69zo1VCOY8LuPDNYAQPdhEPA44NTNuxP+jkRhsw67jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749685386; c=relaxed/simple;
-	bh=rzlIdkQY8WNYV6UEoBGGsvl7jgrSdBvD5LIZYne+4pQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KkyunUTl27R8p1JB8XgpNBOlxqhPtiD7cJo5dmkPRr3eLN+CIsqtpKaDe9rdxmQFTopc/OHgPjOSTtl76Ue4/NedWNNr5jtBaG1RzQhlGPjSnmUJy7BOwVRl26f8ejHeM+iKwtNaz+zkcskPY9oTtKTT5BenYemTUIi6RSre/+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgPUj2DX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749686550; c=relaxed/simple;
+	bh=21HJy6pHJV5WagLgzMaxTlQegWvphBrRtG5zAue3yk0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=enpwVpB+iSg1AJPBqqRxJ2nXzJNNHBi5GKOei2ulLVZfFzVW5u+OKmZ2ik5AEOd0gEGDNkBr6b9HNHCdGOFjGxSGPF/j1hYkF37CwsCtvEL2rkgFy5Mdy6wfRJ7MWT7wLdMKpHaPbOJoIFaGQpI81i+/jTd2kmtv4dvBh9d2KJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nrmYrPNn; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgPUj2DX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AE8C4CEE3;
-	Wed, 11 Jun 2025 23:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749685386;
-	bh=rzlIdkQY8WNYV6UEoBGGsvl7jgrSdBvD5LIZYne+4pQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BgPUj2DXnznuD/EoWPtVFvIGaxdQ74zP4IYKtqcAdJ0T3QBCGBQuNu2rkSLcaMayD
-	 FYimIhe2wpW2u+TbbDolNLiLncepxYOMZ52JA6eMqdSlYfXDkPbMsRAP6VKeBdiqc/
-	 WO3tXK7hI4pHt3vOByKPGeDx+9vZGLdIxzDmDGev0jPnOYO2wYCVQb+7LreEXeV82T
-	 lpchtpe1heatkw4WJqbPXPkxPDnV1NSw+8RBKjhD/8gUPBrR0eCrtTkOLU5kFwKmHm
-	 5LeJKCYbW3nUwEc0WmZ+nvn1+pT2/JvoW7TfHXjsW8lWHtcCDpzyAx2D9SZCXebXBp
-	 Dtoif7kCZ3iFA==
-Date: Wed, 11 Jun 2025 16:43:04 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-Message-ID: <aEoUiCz0neodnQmu@google.com>
-References: <20250611233239.3098064-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nrmYrPNn"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235e1d70d67so2797515ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749686549; x=1750291349; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=meyCUNHBNmQLCBOG8a8LQaW0WDvhFY6hoN25mEHFE6Q=;
+        b=nrmYrPNnCYoIbkk9FmvvowDXpirupYvKbWgBbvORMHF2cJiCwiyW5zJzWys3XYmtSg
+         i9+e1xwF1LVEM8RhFjrR1Q3Vl0RXyH7ESkk9wKrcrR7Ot2PfDPifhdVXFweVV/IgF/jL
+         MCbOI9UWI2hoex8xq9sgxLsIfNNLbres07lpQ84fYuEGB6752t44gYuRcmAnRhABxOyh
+         dLJwMnGJ6NQ4TFBpXUsRjVmaXbq8E2LLBegsifaMbqBkTiijfPp3qqnfruhWmBFX4vNZ
+         kmiblyV8jIqdiEaXGyK9FfXvAc+tJ66VO9r30cfSPaqXAwmuSgSIo18YxdxXBNmPn7FT
+         +gWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749686549; x=1750291349;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=meyCUNHBNmQLCBOG8a8LQaW0WDvhFY6hoN25mEHFE6Q=;
+        b=d0Yp18strK6pdKOhT8TzySWvqeqoKdvIVTIK2a+U6umjpP7zF7QAP7aizvU4K34Mei
+         5wkhjJwQEpsG3Lz9JKDNso3Sa480zz/WUn+O32QF0xSTpdgkUuyI3yo9tYOwS6v8e4om
+         hGBefTeg6h5ECV71STuLpvIbm8BGYXBcHirX06Hx21tZFRV1BT5IRxmmOvIJokKjgI5q
+         ZUvKYicgp4U/cXONWN6INBCClBfhhLqzkPob7P74mUVkdRjvQkAefKvFXkKqs1gvDYlv
+         /fFqpCvxNNgxkKqimDAqp9dPSBztBeaiSSrBFl7kZEO2Ip1YRFjRFiZ8wE4ZmizSupXo
+         a4Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGzftBSu+UPxXYfwOPYkFDxiFd9y8eyy4XfuoBOPts9W+KPFe9byqS0RF/8HinfpxfneT3e3Yx/L2pXUkWCN52@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwYGJnPO+fptGAKQIhKbn5Y1K6aNn50bqsdAwCjj4MlMKzb4is
+	xBtTBtKbWzbFG10P4kVEXGMo0IBN0DBTjnYaJnt4Q8gH7Ls055qULLlqMv3u+RxkPfprByTnzs0
+	IZU+fJYUAPQ==
+X-Google-Smtp-Source: AGHT+IGPoBUQwD6J5W0XDcBFFbPQSGnASywD4GkuYq0S0OYbNX3vrh3RstSBYk1Hel6pM51oqTSPEZP3v5to
+X-Received: from plps10.prod.google.com ([2002:a17:902:988a:b0:234:8ec2:bf02])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce02:b0:234:eadc:c0b4
+ with SMTP id d9443c01a7336-2364d8f6c5emr15593115ad.44.1749686548715; Wed, 11
+ Jun 2025 17:02:28 -0700 (PDT)
+Date: Wed, 11 Jun 2025 17:02:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250611233239.3098064-1-ctshao@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250612000224.780337-1-irogers@google.com>
+Subject: [PATCH v1 00/15] perf vendor events: Update Intel events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Update:
+ - ADL/ADLN v1.29 -> 1.31
+ - ARL 1.08 -> 1.09
+ - CLX 1.23 -> 1.25
+ - EMR 1.11 -> 1.14
+ - GRR 1.07 -> 1.09
+ - GNR 1.08 -> 1.10
+ - ICX 1.27 -> 1.28
+ - LNL 1.11 -> 1.14
+ - MTL 1.13 -> 1.14
+ - PTL new v1.00
+ - SPR 1.25 -> 1.28
+ - SRF 1.09 -> 1.11
+ - SKX 1.36 -> 1.37
+ - TGL 1.17 -> 1.18
 
-On Wed, Jun 11, 2025 at 04:32:16PM -0700, Chun-Tse Shao wrote:
-> Follow up:
-> lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
-> 
-> The patch adds unit aggregation during evsel merge the aggregated uncore
-> counters.
-> 
-> Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> cpumask="0,120"
-> Before:
->   perf stat -e clockticks -I 1000 --per-socket
->   #           time socket cpus             counts unit events
->        1.001085024 S0        1         9615386315      clockticks
->        1.001085024 S1        1         9614287448      clockticks
->   perf stat -e clockticks -I 1000 --per-node
->   #           time node   cpus             counts unit events
->        1.001029867 N0        1         3205726984      clockticks
->        1.001029867 N1        1         3205444421      clockticks
->        1.001029867 N2        1         3205234018      clockticks
->        1.001029867 N3        1         3205224660      clockticks
->        1.001029867 N4        1         3205207213      clockticks
->        1.001029867 N5        1         3205528246      clockticks
-> After:
->   perf stat -e clockticks -I 1000 --per-socket
->   #           time socket cpus             counts unit events
->        1.001022937 S0       12         9621463177      clockticks
->        1.001022937 S1       12         9619804949      clockticks
->   perf stat -e clockticks -I 1000 --per-node
->   #           time node   cpus             counts unit events
->        1.001029867 N0        4         3206782080      clockticks
->        1.001029867 N1        4         3207025354      clockticks
->        1.001029867 N2        4         3207067946      clockticks
->        1.001029867 N3        4         3206871733      clockticks
->        1.001029867 N4        4         3206199005      clockticks
->        1.001029867 N5        4         3205525058      clockticks
-> 
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Updates from:
+https://github.com/intel/perfmon
+with:
+https://github.com/intel/perfmon/pull/312
+Running the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Ian Rogers (15):
+  perf vendor events: Update Alderlake events
+  perf vendor events: Update AlderlakeN events
+  perf vendor events: Update Arrowlake events
+  perf vendor events: Update CascadelakeX events
+  perf vendor events: Update EmeraldRapids events
+  perf vendor events: Update GrandRidge events
+  perf vendor events: Update GraniteRapids events
+  perf vendor events: Update IcelakeX events
+  perf vendor events: Update LunarLake events
+  perf vendor events: Update MeteorLake events
+  perf vendor events: Add PantherLake events
+  perf vendor events: Update SapphireRapids events
+  perf vendor events: Update SierraForest events
+  perf vendor events: Update SkylakeX events
+  perf vendor events: Update TigerLake events
 
-> ---
->  tools/perf/util/stat.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 355a7d5c8ab8..52266d773353 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
->  		struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
->  
->  		/* NB: don't increase aggr.nr for aliases */
+ .../pmu-events/arch/x86/alderlake/cache.json  |  56 ++-
+ .../arch/x86/alderlake/floating-point.json    |   1 -
+ .../pmu-events/arch/x86/alderlake/other.json  |   1 -
+ .../arch/x86/alderlake/pipeline.json          |  44 +--
+ .../arch/x86/alderlake/virtual-memory.json    |   3 -
+ .../pmu-events/arch/x86/alderlaken/cache.json |  52 +--
+ .../arch/x86/alderlaken/floating-point.json   |   1 -
+ .../pmu-events/arch/x86/alderlaken/other.json |   1 -
+ .../arch/x86/alderlaken/pipeline.json         |  42 +--
+ .../arch/x86/alderlaken/virtual-memory.json   |   3 -
+ .../pmu-events/arch/x86/arrowlake/cache.json  |  13 +-
+ .../arch/x86/arrowlake/frontend.json          | 135 ++++++++
+ .../arch/x86/cascadelakex/floating-point.json |   6 +-
+ .../arch/x86/cascadelakex/pipeline.json       |   2 +-
+ .../arch/x86/emeraldrapids/pipeline.json      |   2 +-
+ .../arch/x86/emeraldrapids/uncore-io.json     |  12 +
+ .../arch/x86/emeraldrapids/uncore-memory.json |  20 ++
+ .../arch/x86/grandridge/grr-metrics.json      |  30 +-
+ .../x86/grandridge/uncore-interconnect.json   |  10 +
+ .../arch/x86/grandridge/uncore-io.json        |  12 +
+ .../arch/x86/graniterapids/cache.json         |   9 +
+ .../arch/x86/graniterapids/counter.json       |  10 +-
+ .../arch/x86/graniterapids/gnr-metrics.json   |  36 ++
+ .../arch/x86/graniterapids/pipeline.json      |   2 +-
+ .../graniterapids/uncore-interconnect.json    |  19 -
+ .../arch/x86/graniterapids/uncore-io.json     |  27 +-
+ .../arch/x86/icelakex/pipeline.json           |   2 +-
+ .../arch/x86/icelakex/uncore-cache.json       |   2 -
+ .../pmu-events/arch/x86/lunarlake/cache.json  |  11 +
+ .../arch/x86/lunarlake/pipeline.json          |  18 +-
+ .../arch/x86/lunarlake/virtual-memory.json    |  18 -
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  29 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |   2 +-
+ .../arch/x86/meteorlake/frontend.json         |  72 ++++
+ .../arch/x86/meteorlake/pipeline.json         |   2 +-
+ .../arch/x86/pantherlake/cache.json           | 278 +++++++++++++++
+ .../arch/x86/pantherlake/counter.json         |  12 +
+ .../arch/x86/pantherlake/frontend.json        |  30 ++
+ .../arch/x86/pantherlake/memory.json          | 215 ++++++++++++
+ .../arch/x86/pantherlake/pipeline.json        | 325 ++++++++++++++++++
+ .../arch/x86/pantherlake/virtual-memory.json  |  62 ++++
+ .../arch/x86/sapphirerapids/pipeline.json     |   2 +-
+ .../arch/x86/sapphirerapids/uncore-io.json    |  12 +
+ .../x86/sapphirerapids/uncore-memory.json     |  20 ++
+ .../arch/x86/sierraforest/frontend.json       |  64 ++++
+ .../arch/x86/sierraforest/pipeline.json       |   8 +
+ .../arch/x86/sierraforest/srf-metrics.json    |  48 +++
+ .../arch/x86/sierraforest/uncore-cache.json   |   6 +-
+ .../x86/sierraforest/uncore-interconnect.json |  53 ++-
+ .../arch/x86/sierraforest/uncore-io.json      |  27 +-
+ .../arch/x86/skylakex/pipeline.json           |   2 +-
+ .../arch/x86/tigerlake/pipeline.json          |   2 +-
+ 52 files changed, 1623 insertions(+), 248 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/virtual-memory.json
 
-Probably we need to delete this comment.
+-- 
+2.50.0.rc1.591.g9c95f17f64-goog
 
-Thanks,
-namhyung
-
-
-> +		ps_a->aggr[i].nr += ps_b->aggr[i].nr;
->  
->  		aggr_counts_a->val += aggr_counts_b->val;
->  		aggr_counts_a->ena += aggr_counts_b->ena;
-> -- 
-> 2.50.0.rc1.591.g9c95f17f64-goog
-> 
