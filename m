@@ -1,179 +1,184 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB8E2222AF
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 08:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5508F5C
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 08:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749717765; cv=none; b=HOEQlZlyiG1A242oCdMLvKeYYaKTtvUluTYivkvOIyyPJBo3LJgMeivLJDKFqsiyw1ZVSLlLONm1k4FM5VVVnHKo+lPsfn8lTjoaBQ1MjVJ0e5sB7mT1nmsIXNqTNdXV3ev9sxgdKpe9ts5ESHfinkcItsCBcQQoWOU99ubDeNw=
+	t=1749718781; cv=none; b=KFss8pPVp5197RtaUBE/uZqASptcDXoY4mIHdIsreb+m5sA3A31XCLdsbVl7l4+m9Biv4RRcft4qtFcZ2aLn2Cxtb9F+cYHFxVFWynvRPlMd7FG0vUrIoeQ7OtwajHr0Z9XDvKYA9uEvyT9Tgdh5Ez5LlyL02S6GBhsHbdIZx3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749717765; c=relaxed/simple;
-	bh=w6yjx7Dori93CG6sK3ncvH9uiqhy4vTnBe+XPdGSOr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YjgRzsgpH6IoZEj+QNxKJofK2mnZFTopdkdytIIAThNclJ+YAI+D1UQ200v0C+m7DBsj/IMTlDpK2Axl/4yoJNSlg1SLfIU2+uGskwQwD/zn0OZUTjKpSmjFhsDCtp6RZRo8HB4GJS1olg8OWqo9oPDdd15MFdtM77/Wyknszrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cpN4mtGF; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749718781; c=relaxed/simple;
+	bh=SVFr0O7+JSQq8Rhw2veWzfr6mSzV45zs9CjCdOJuoFg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=m9mvb8elJvtBDDFvudXTEoywc66wLohG075IqUr+cyL9Vp2c/5cnLiJEXinsO3Jtnnfrk4GOGqEmf5zXv6fON7lUVSiQOFy/cfHcE/T6+2A9iDJ6h99ACwVvW+enraXGvZXVcvkfo5ZAz5DOvZfgD60HjsD6eVuq0qcvh1gAt+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name; spf=pass smtp.mailfrom=michel-slm.name; dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b=xYX/cqBx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UVoAs1wU; arc=none smtp.client-ip=103.168.172.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=michel-slm.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=michel-slm.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cpN4mtGF"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so626343f8f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 01:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749717761; x=1750322561; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MXXMkVVqt6xR4uvFmH/ZMvt5aZcIpXe/yS2Xx6mdmS8=;
-        b=cpN4mtGFRx1ek/qTNgd3FCmxK0uh+GArTjwAW4G2LSbdj5+J2QTAzBMLPasQ9TiqKV
-         lmlIGcFroefYleU+a70Q+0DCisih3OS0cMYnaofZw+wOIm0DXZhQrZqaNWReaS3jqDoX
-         7qN2sXWDUw5ZrpF3B7qKAHXtpTgAvWd7/Szr/TRYrVKlOe/C+HEyTrG1MlGq02cIcSQ7
-         9d3QEM2YdlMrHsJOtFKpN1/gxABsH6Qkwz4BYRndeRbDQ5zNrdm85Us4dpw+ysOk8esi
-         VkHMCVS9EnCjbWYlBp6X87hK0n/nPAZ/revSBp3WPePz/FYvS1mDV3XHp95MmFC0FjOE
-         uhwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749717761; x=1750322561;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MXXMkVVqt6xR4uvFmH/ZMvt5aZcIpXe/yS2Xx6mdmS8=;
-        b=UnuRDieQhc7oESPab5JFAPI69vud0ZcYb7Xs3WxuSTQ0rIX/S9sHL8CLl9rYaqKwUC
-         7hlP5/SzWIpGteoUA5ZF4bkBOEcXNA+l+Xl+nm/+95M9o+DsvdZRqKerFvyh2R3Dodvu
-         l3hoZCV2d8rvfQ0R/i450eZBd1jWns90gCc3F6Wq75nrokc+PoGZSIVmjkLVYvyeibQ0
-         LH+AlcKsBRnfNVkdK1oH1PP9i2nKdam6zZ51TLdKbP915uoD34dsT6h5wA/2UHdcXfKD
-         I/foRq7Wd9Dl2Ft2RpO9O2rxcvYg8KyNcmfXi6FusVfmeZAULEYcBAFpmGjLPXWJKnRK
-         UZwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxzbbPMCVXGHA0LWH8DEpRi0JItOBEe2XBMlZnlFoIzps7KTlFyQhpLiTj+EOlsRixDlHPETWkv+mw9rMfR99h@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywznl3rk+nUivZ2mxvicdB4D09qRob2qXy+9yGpiPPclOgDy1AH
-	uRm/bs2CGMZ8UXbcfoXzJ75FcPJG31NfHux/jdgZIgh+1zXBNYUcEKCcux2/rT5tTMk=
-X-Gm-Gg: ASbGncvEdciHpUhqdP5hSlOrLxa4E0HgUXxcxcUezX58SuKC87yi44uX0ScpqxYmPcb
-	STEhU11DIrGrdH2oCmsBNgyPdFoczltyG/BBL4n7i4ANwqU1K4EpLJ7hEf3+YInXTw/3nOzbm5m
-	eM+YyziDO/A8Ba+aejskvyD5bdn4AuctKztfrHiv8+exZ3V7hYya8eD9uKwLCjJFuNa23rqOMJr
-	+tA5jl6EC7Ob61B/P9YYpKXPyHx+7aaEmFCqcqfWXlV41Z9wPfGitbal4rXm4ACq3w8Z71GLKEN
-	pq/gCifdDk0NQQJW5LUNFXg59gOBTTvj/SZyhIz1uLRs6KuZogcfzKWXN1z5EPTrm2Q=
-X-Google-Smtp-Source: AGHT+IHRFPEqNYv7rElVTsM+/O2Bep9AczSNG7lUyxK1KtND+mFBsYtU9egUwJboJsW4Mk1sSOYf4w==
-X-Received: by 2002:a05:6000:2411:b0:3a5:2fb2:35ac with SMTP id ffacd0b85a97d-3a5612946a2mr1683069f8f.24.1749717761081;
-        Thu, 12 Jun 2025 01:42:41 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5619ab86dsm1296971f8f.44.2025.06.12.01.42.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 01:42:40 -0700 (PDT)
-Message-ID: <7b080e97-375d-4521-b167-d0c4256dc464@linaro.org>
-Date: Thu, 12 Jun 2025 09:42:39 +0100
+	dkim=pass (2048-bit key) header.d=michel-slm.name header.i=@michel-slm.name header.b="xYX/cqBx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UVoAs1wU"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailflow.phl.internal (Postfix) with ESMTP id D611A200816;
+	Thu, 12 Jun 2025 04:59:37 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 04:59:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=michel-slm.name;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1749718777; x=1749725977; bh=Fl+UeH0U597ABFyW17NEIldFurw5BJwD
+	qK7+SjPucyE=; b=xYX/cqBx28qeBbOAUeT3TSULGFltY+Mwz9MIvEVt8CLhxcFa
+	JOReqsHYGtrmdN1BDmEzoJxrckiU5ra2/gg+YfXQsMfP+ug6ueagAs/UF0LmnLSC
+	SbQ+Ryh5XH1RayH/sslG8gSEHsJHx+K1iYMulth2mkupX/+nAxkrEomHw0bo5bTP
+	cnHs4e3JPYEsL8oQNxtu92L4cQinUQ5gfBBRu0hVemCJ3I8ouRoruNVRWWdgmw8P
+	h2fUwBICuRfErLSzpWlIMurk4wRH+6tGq31HebwSF2uLT0Iw09kFKF6sOmU5z0hg
+	MAvdgYpWISNh/kvrwHTYSs7fBHo85NZmoPq3iw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749718777; x=
+	1749725977; bh=Fl+UeH0U597ABFyW17NEIldFurw5BJwDqK7+SjPucyE=; b=U
+	VoAs1wUoki2rGr+Ltkdpm7P31EL562+qeokOLIqnCgKXlnDRc85KT2V4CE7rs9NK
+	nRQ6MvjiTxK1J+Bwmzx2tVISvo3bPEiwIo6iYw0ZzrI/I4rE1azlcnEPeVF94id8
+	IJe4dLNo8FnX4f2kE6vEK/lZRJWxjfKY8bBR/8/2wrKshXl8di7ou4x/W5eX5S1z
+	Emam2Ap7nQfOJgpmK25vWo1LGl7NVYXZSkGX4bJqtvjxL3vURWJrJiF4SsCZXIr0
+	swlBx8LEG/C6iG4u/AL4jlZNp4rMRU+pDAAYz7qKs8xj26UGUCtODW8Iru1JbJzk
+	6mZ6klKTKVgDaOrb87Wug==
+X-ME-Sender: <xms:-ZZKaLWncn6d7lbbWmxvaK1HAg0Jdnh9VY1L4s57piDHMBHuvvd5wg>
+    <xme:-ZZKaDkiULIahu1YEf0Bfomd1gFIchE5Bpgw1TBxqJdXr44pJnDFMgsUCVyaEf-Ez
+    NyQwt2LuUx8EY4CnrI>
+X-ME-Received: <xmr:-ZZKaHYgytyNTCx-CeBi6p3AubRAsBWgtpnqZPAEK1V5rxIxto7ixW2rSilQgDZjurFRT80HQcCtkyxOmA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddugeeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkuffhvfevffgjfhgtfggggfesthekredttder
+    jeenucfhrhhomhepofhitghhvghlucfnihhnugcuoehmihgthhgvlhesmhhitghhvghlqd
+    hslhhmrdhnrghmvgeqnecuggftrfgrthhtvghrnhepffefleeitdehueffudeguddtgedt
+    kedtjeeggeetfefhleeuteejjeetffduledvnecuffhomhgrihhnpehkvghrnhgvlhdroh
+    hrghdptggvnhhtohhsrdhorhhgpdhkvgihohigihguvgdrohhrghdpfhgvughorhgrphhr
+    ohhjvggtthdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehmihgthhgvlhesmhhitghhvghlqdhslhhmrdhnrghmvgdpnhgspghrtghp
+    thhtohepfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprggtmhgvsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpvghrfhdquhhsvghrshesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghmvghsrdgtlhgrrhhksehlihhnrg
+    hrohdrohhrgh
+X-ME-Proxy: <xmx:-ZZKaGVC5SBcIkRUappbgDPeF_DKEWzb2ruqWTdLVs6_wiWA8bNAJg>
+    <xmx:-ZZKaFnHowK9sjV6H2AkVC0ebhaNE39Uko4thCvgcssimsS3ENvOTA>
+    <xmx:-ZZKaDdzyLkScbi73YKlm0xKZCorEegSh33vD6DoAPypR0tLXIg_6A>
+    <xmx:-ZZKaPEJLo3MD5Wb-qPr6wdqxMnSEuC_OwQCyzC4qlAeBSiRDf-wQg>
+    <xmx:-ZZKaJ5APP3XYMSXCcEw3L5UmSW1RE3iT4QWYfu3-t_kOq7ChoSISG4j>
+Feedback-ID: i71264891:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Jun 2025 04:59:36 -0400 (EDT)
+Message-ID: <ec84befa833b18f7382054d2c1bc0ecd5456d8cb.camel@michel-slm.name>
+Subject: Re: perf-tools v6.15 tarball not uploaded?
+From: Michel Lind <michel@michel-slm.name>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
+Date: Thu, 12 Jun 2025 10:59:34 +0200
+In-Reply-To: <aENMPp9SZdABPkic@x1>
+References: <c5ac84be0a119d3dd432edf36196d07ad562b34c.camel@michel-slm.name>
+	 <aEHylyR4hGaqZ6C8@x1>
+	 <a4ac0d06699b0d69262953ce49c740d66590e05b.camel@michel-slm.name>
+	 <aENMPp9SZdABPkic@x1>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-11.el9) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/10] perf: arm_spe: Support FEAT_SPEv1p4 filters
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com
-References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
- <20250605-james-perf-feat_spe_eft-v3-2-71b0c9f98093@linaro.org>
- <10f63976-afa7-4e1c-bec1-d9f2447d9c13@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <10f63976-afa7-4e1c-bec1-d9f2447d9c13@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Arnaldo, James,
 
-
-On 12/06/2025 8:35 am, Anshuman Khandual wrote:
-> On 05/06/25 4:19 PM, James Clark wrote:
->> FEAT_SPEv1p4 (optional from Armv8.8) adds some new filter bits, so
->> remove them from the previous version's RES0 bits using
->> PMSEVFR_EL1_RES0_V1P4_EXCL. It also makes some previously available bits
->> unavailable again, so add those back using PMSEVFR_EL1_RES0_V1P4_INCL.
+On Fri, 2025-06-06 at 17:14 -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Jun 06, 2025 at 02:59:27PM -0500, Michel Lind wrote:
+> > On Thu, 2025-06-05 at 16:40 -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Thu, Jun 05, 2025 at 11:24:50AM -0500, Michel Lind wrote:
+> > > > I noticed the kernel.org mirrors don't have perf tarballs newer
+> > > > than
+> > > > 6.14.0 -
+> > > > https://mirrors.edge.kernel.org/pub/linux/kernel/tools/perf/
 > 
-> Just wondering - why cannot all the new applicable filter bits be added
-> explicitly for PMSEVFR_EL1_RES0_V1P4 without using exclude and include
-> intermediaries.
+> > > > Will they be uploaded soon? Presumably I can just generate the
+> > > > tarball
+> > > > myself for now from the Git tag.
 > 
-
-They could but there would be a lot of duplication. Each version tended 
-to add only a few bits to the previous version. Also for consistency, 
-they were already defined in this way. I didn't think there was much to 
-gain by redefining the whole bitset just for this one, it's probably 
-going to look just as messy.
-
->> E.g:
->>
->>    E[30], bit [30]
->>    When FEAT_SPEv1p4 is _not_ implemented ...
->>
->> FEAT_SPE_V1P3 has the same filters as V1P2 so explicitly add it to the
->> switch.
-> A small nit - should FEAT_SPE_V1P3 addition be done in a previous patch
-> as it is an already existing thing ?
+> > > Its there now:
 > 
-
-It's related to this patch because I change the default case. Before 
-V1P3 hits 'default:' and returns PMSEVFR_EL1_RES0_V1P2. But now the 
-highest supported is PMSEVFR_EL1_RES0_V1P4 for the default case so I 
-need to add a case for V1P3 to keep it returning PMSEVFR_EL1_RES0_V1P2 
-filters. There's no bug.
-
->>
->> Reviewed-by: Leo Yan <leo.yan@arm.com>
->> Tested-by: Leo Yan <leo.yan@arm.com>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   arch/arm64/include/asm/sysreg.h | 7 +++++++
->>   drivers/perf/arm_spe_pmu.c      | 5 ++++-
->>   2 files changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index f1bb0d10c39a..880090df3efc 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -358,6 +358,13 @@
->>   	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
->>   #define PMSEVFR_EL1_RES0_V1P2	\
->>   	(PMSEVFR_EL1_RES0_V1P1 & ~BIT_ULL(6))
->> +#define PMSEVFR_EL1_RES0_V1P4_EXCL \
->> +	(BIT_ULL(2) | BIT_ULL(4) | GENMASK_ULL(10, 8) | GENMASK_ULL(23, 19))
->> +#define PMSEVFR_EL1_RES0_V1P4_INCL \
->> +	(GENMASK_ULL(31, 26))> +#define PMSEVFR_EL1_RES0_V1P4	\
->> +	(PMSEVFR_EL1_RES0_V1P4_INCL | \
->> +	(PMSEVFR_EL1_RES0_V1P2 & ~PMSEVFR_EL1_RES0_V1P4_EXCL))
->>   
->>   /* Buffer error reporting */
->>   #define PMBSR_EL1_FAULT_FSC_SHIFT	PMBSR_EL1_MSS_SHIFT
->> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
->> index 3efed8839a4e..d9f6d229dce8 100644
->> --- a/drivers/perf/arm_spe_pmu.c
->> +++ b/drivers/perf/arm_spe_pmu.c
->> @@ -701,9 +701,12 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
->>   	case ID_AA64DFR0_EL1_PMSVer_V1P1:
->>   		return PMSEVFR_EL1_RES0_V1P1;
->>   	case ID_AA64DFR0_EL1_PMSVer_V1P2:
->> +	case ID_AA64DFR0_EL1_PMSVer_V1P3:
->> +		return PMSEVFR_EL1_RES0_V1P2;
->> +	case ID_AA64DFR0_EL1_PMSVer_V1P4:
->>   	/* Return the highest version we support in default */
->>   	default:
->> -		return PMSEVFR_EL1_RES0_V1P2;
->> +		return PMSEVFR_EL1_RES0_V1P4;
->>   	}
->>   }
->>   
->>
+> > > https://www.kernel.org/pub/linux/kernel/tools/perf/v6.15.0/perf-6.15.0.tar.xz
+> 
+> > Thanks! This works great on x86_64, on arm64 it's failing because
+> > some
+> > files that are needed to generate unistd_64.h per James' commits
+> > starting Apr 29 are not there.
+>  
+> > (I tried copying the files that show up in the error log, but
+> > eventually hit a wall - for the Hyperscale build I'm going to get
+> > around it for now by just generating the file on CentOS Stream 9 and
+> > Stream 10 VMs, but I'll try soldiering on a bit to get this fixed
+> > properly next week)
+> 
+> Yeah, reproduced:
+> 
+>   CC      /tmp/build/perf-6.15.0/libapi/fd/array.o
+>   MKDIR   /tmp/build/perf-6.15.0/libapi/fs/
+>   CC      /tmp/build/perf-6.15.0/libapi/fs/fs.o
+> make[4]: /tmp/perf-6.15.0/scripts/Makefile.asm-headers: No such file or
+> directory
+> make[4]: *** No rule to make target '/tmp/perf-
+> 6.15.0/scripts/Makefile.asm-headers'.  Stop.
+> make[3]: *** [Makefile:108: uapi-asm-generic] Error 2
+> make[2]: *** [Makefile.perf:973: /tmp/build/perf-
+> 6.15.0/libperf/libperf.a] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+>   INSTALL /tmp/build/perf-6.15.0/libapi/include/api/cpu.h
 > 
 > 
+> We shouldn't be ever using anything outside tools, but over time we
+> ended up doing that :-(
 > 
+> And its just arm64 that is getting things from outside tools/
 > 
+> ⬢ [acme@toolbx perf-tools]$ head tools/perf/MANIFEST 
+> COPYING
+> LICENSES/preferred/GPL-2.0
+> arch/arm64/tools/gen-sysreg.awk
+> arch/arm64/tools/syscall_64.tbl
+> arch/arm64/tools/sysreg
+> arch/*/include/uapi/asm/bpf_perf_event.h
+> include/uapi/asm-generic/Kbuild
+> tools/perf
+> tools/arch
+> tools/scripts
+> ⬢ [acme@toolbx perf-tools]$
+> 
+> James, has this appeared on your radar before?
+> 
+Any idea if this can get addressed soon, and otherwise, what's the best
+workaround? e.g. would copying the file generated from a checkout work?
+
+I'm temporarily building 6.15.0 for x86_64 only for CentOS Hyperscale
+(limiting it to the "facebook" variant only, until this is resolved)
+
+https://cbs.centos.org/koji/buildinfo?buildID=61023
+
+since some users are reporting a regression in 6.14.0 and want to test
+if this is fixed:
+
+"When trying to get a flamegraph using DCPERF_RECORD_PERF=1, the
+flamegraph cannot be correctly generated."
+
+Thanks,
+
+-- 
+ _o) Michel Lind
+_( ) identities:
+https://keyoxide.org/5dce2e7e9c3b1cffd335c1d78b229d2f7ccc04f2
+     README:     https://fedoraproject.org/wiki/User:Salimma#README
+
 
