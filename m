@@ -1,57 +1,57 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8FD189BB0
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FF11EB3D
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686566; cv=none; b=JGq8kDWg5gMdIV5Z15ynODrNxgby4NMAlXq7e6S1ncczOjxtmm37DfrkX7kL+tszckfO9zjDAqF59+grNYLC8A+YW9h26NxOLQgnP7rh/GG37reQ5gph5dhcA6ZUJDtEZsL0G6w2wRnE2YZCSS7KN8uQaN05XZtqBkEnB2KZkQk=
+	t=1749686568; cv=none; b=kLj1HZc1VjUQM8F/un64JEkhYzkxLS9x/Ol9cdv0jVZfhJ5KqVOsr52mp+dBpq87a2TwFrVYZ/5znb+08WfoHThbajOwZcP+CQB51igGdbTMbkgGK0/99gNpiTFIk5YIGrUP1X0gWFhCffIeDQ+d4C3q/fef5YXMs3v2G8X3krY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686566; c=relaxed/simple;
-	bh=hkeiTY0ICit0AyGfTjKyAMDc5M/ce+3k+W9hyAWbq4g=;
+	s=arc-20240116; t=1749686568; c=relaxed/simple;
+	bh=UtPCiTSWLbpz3XdVFO7sK+jsQ6jIVqsxVRQ1Gq3WAPg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ZTOnozoCIuCQkqyWV2pkIdgPFJLdd3dyBrQlyH/PDs8yrBAVdK/amGdAMRGkIQl3Kz6B1mGUDY2JBWn5IlDom3HOvMvZj+WvKjI0WCiaRAh3vqKzoIzuMXMEBgpTmk9ub7t0GO/qaaMob1JWweChtB5ZoRx1Ls1dd2uqIFQN8ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQj4mK7g; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=YwBAQ4LMNQwO2a/AKz+mCIvrL8nbdmI6tANL9ydy9GYc/Xcy5yylAZgqOmyxSZfSHRe57IIwCqgu04FjbugKhKn4V3IWHsbGwvUGUIijkrO7UnVraqxICOWb1T7NOQWpSpHKh7MlxZ9WMwoZSCSzFaMqWKh/vunDR9NKivRnCig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zjm5ySpS; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQj4mK7g"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so282029a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zjm5ySpS"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747d29e90b4so317741b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749686564; x=1750291364; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749686566; x=1750291366; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sOsRkprJL03zu9ig7fckI2iHwzkKxj9dCopS2Vaq8YI=;
-        b=bQj4mK7gyEinBXYJ+M0XS/U+hRBczO9ef2d/hd8z8HS10cait3I76BHv4Z+jqXFiib
-         FrB41fZo/RGhRjmXgbDwPFGVNUXVfJUH2x3qk1zfwx1WDGlRd5GOPFFbNXlvW8Gb0GDf
-         rl9dFnH6hiM02VHDb4wuRTkJYIBn8TAUeqcmKRjWi4un4JVvxBTyu0T/e4KJJaBiHbej
-         JfHirTlGCy22Rs5C11TBRmX9gaFy4W6pgMNGVGBj8+vhYPUHyF17JSuRAgizUeEyijdB
-         Ju53yQ8d+5as8yiQeIShzHQpHYCSiLltt6ga8/EpDR7nh92IQJu80qkMA4e//7OkTy8b
-         QT0g==
+        bh=BWSYgmdUR5fuOjGXovF71LaefH09HdMVkUZ5+LY/N74=;
+        b=zjm5ySpSFWVYhWYBEI01Lg8yX84OE1Ou8g/jjEwW3/MbFym4j5gkqtHrXOS5P8lUGy
+         omVJU64m20ROwgkNyXA3ZwROEDFfcyo44rGCwDY0u5+bFK7y+OkX2Uyr0zZBINlTXSMf
+         dERwTOJ2clYdSCdF23C9GOfKDksDbMUTDZPKt0CChuWEwUEjrhWqdpcsczyHlCzvIW71
+         YivrsegYnQWGos0WyyAUKy5lCHXGU71N1C9kfZw7Ua/tJWv4jCbtmMoOwxhs/Gn50Won
+         AtOVkuxO7UQqQBK1SePOCMViQ8bWLIF+JCLKf3hKajtXHO7mBVwCFGVWXyTz7641irPt
+         5iZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749686564; x=1750291364;
+        d=1e100.net; s=20230601; t=1749686566; x=1750291366;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=sOsRkprJL03zu9ig7fckI2iHwzkKxj9dCopS2Vaq8YI=;
-        b=Mz5kdRjr3kYpElKK9kEY6DOPL+UOENsog/PO9nuyCehlaDLdih9ROefcm/NZo4XvUl
-         lbFGV/S+gPDmSrk+SJhAUoKFaQtGkAPjBEIlWwlLc1ySql/RZyi4T17qtyAQj7DSk2B7
-         cLc3Ltwb3NW3SaWq+aEQ9ZWk7cGWgV5QApsqOAiWFdqzw5geeBbW0lAQmhbDC+jRKhGc
-         +xKWhmIQRwdvBoZAxJOPSweiG+mb54qfI8H4qdWYEzzhDyueBx04UH6ftzNc6noLUNfy
-         r8jGXsnHQjTZRCUhOg4lphN3yAj+4rO900f8WRuHFV4NypRCDsLKrtwSYSVxYRhLnEsF
-         5tsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnTDL4979m02n00bXM+pqwj9itCf8jhJ+pqFNNFqCub+TD0qeS0BRKyHpPiT/TzTl/uwv0H/D0FOY/uCoMdwgp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZLe5y50b99f6Ih32Kw62Dx1s65KIVx9UduhRtmZuyjP5+qfCf
-	mW2053Bv1/VonXDPavG9qcJTKxFgmBk9WR1hboQKVRlUG5FiYwf/3R0MwhPysBJzyCi1lCnTedz
-	Cg0Q4ZHMNgA==
-X-Google-Smtp-Source: AGHT+IEXEB1VxBlgadyiDbTddOcshvTp9BkillUG2rNdPvHHwhKasf1oXPkEXLFmuDv4Qr8uBmyO4HCoMi4M
-X-Received: from pjbeu7.prod.google.com ([2002:a17:90a:f947:b0:311:f309:e314])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3502:b0:312:51a9:5d44
- with SMTP id 98e67ed59e1d1-313af0fd2cemr7774631a91.5.1749686564461; Wed, 11
- Jun 2025 17:02:44 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:02:17 -0700
+        bh=BWSYgmdUR5fuOjGXovF71LaefH09HdMVkUZ5+LY/N74=;
+        b=u3GEB94/7uAl5L0S0IDX+uslnQEepvZLWzx9X1Uuc8bYyR97XNacWOM8zkqyP5oXUV
+         JfSfIum6Y1mccTzfwVzXBsKbP2WT3MO9OkG+F6GLEo1Q08uD1NP2yVsD1JKwVu9jggyg
+         fMXiSh9DLb5CERpFe+BqGllnZwPoCt2Cc6pLvJI/Z6y8+N9bjCtO38lgBb6OY2q4gCtY
+         vxAaRa5Hm7pHge7n0c1+POWzvr3LWCnMBQV0f8DUZITG6tfhrtR78e+S6B5imszVcN0W
+         5aLTOy1k+vJ/bN/qEI2Gjk5dJS4E310d6+n4exy4jF1mqMsKd6HKo1z8sTfi0X+wEZpF
+         Gg2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVbb2jha8VYT1vDYccjGrenpkpMMCe0JJGe0c4tBM4SEVh4lH1Q2wHiV1V0vchjomnN+7UGeIwUGjN7WHzvelNn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX0/bNJoOHZP4TCkDfkO9nraIOLYkgfeFMjr209ZNuDuvnR69f
+	bASDs7qlJ02XiurA27PyezUXEb8NPlIfw1uDSsyGGzwxLms/O2EvVQAr5y91Rh6D0PmgXhAkfVQ
+	mDGGh2Uop7A==
+X-Google-Smtp-Source: AGHT+IFC+dOqy4ZJoJeAffwE8Q788oIwfbnuUWr3CFRwdP7jbplHCccYJcTKShVNiWCG85Q3fZMo79/hUDcg
+X-Received: from pgbdp10.prod.google.com ([2002:a05:6a02:f0a:b0:af9:8f44:d7ec])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d8b:b0:21f:556a:ca08
+ with SMTP id adf61e73a8af0-21f978bdfdbmr2398802637.37.1749686566036; Wed, 11
+ Jun 2025 17:02:46 -0700 (PDT)
+Date: Wed, 11 Jun 2025 17:02:18 -0700
 In-Reply-To: <20250612000224.780337-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250612000224.780337-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612000224.780337-9-irogers@google.com>
-Subject: [PATCH v1 08/15] perf vendor events: Update IcelakeX events
+Message-ID: <20250612000224.780337-10-irogers@google.com>
+Subject: [PATCH v1 09/15] perf vendor events: Update LunarLake events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,82 +76,169 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.27 to v1.28.
+Update events from v1.11 to v1.14.
 
-Bring in the event updates v1.28:
-https://github.com/intel/perfmon/commit/c52728a46cf37ba271c09b1eb7093cfc82d=
-fbf29
+Bring in the event updates v1.14:
+https://github.com/intel/perfmon/commit/95634fec10542c0c466eb2c6d9a81e0c24f=
+b1123
+https://github.com/intel/perfmon/commit/84a49938387ac592af0a622273e4e8e4997=
+e987d
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/icelakex/pipeline.json     | 2 +-
- tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json | 2 --
- tools/perf/pmu-events/arch/x86/mapfile.csv                | 2 +-
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ .../pmu-events/arch/x86/lunarlake/cache.json   | 11 +++++++++++
+ .../arch/x86/lunarlake/pipeline.json           | 18 ++++++++++++++----
+ .../arch/x86/lunarlake/virtual-memory.json     | 18 ------------------
+ tools/perf/pmu-events/arch/x86/mapfile.csv     |  2 +-
+ 4 files changed, 26 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/icelakex/pipeline.json
-index f1446f1b67c6..f3a0d7f49af4 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
-@@ -477,7 +477,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x4c",
-         "EventName": "LOAD_HIT_PREFETCH.SWPF",
--        "PublicDescription": "Counts all not software-prefetch load dispat=
-ches that hit the fill buffer (FB) allocated for the software prefetch. It =
-can also be incremented by some lock instructions. So it should only be use=
-d with profiling so that the locks can be excluded by ASM (Assembly File) i=
-nspection of the nearby instructions.",
-+        "PublicDescription": "Counts all software-prefetch load dispatches=
- that hit the fill buffer (FB) allocated for the software prefetch. It can =
-also be incremented by some lock instructions. So it should only be used wi=
-th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
-ction of the nearby instructions.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/cache.json b/tools/pe=
+rf/pmu-events/arch/x86/lunarlake/cache.json
+index b1a6bb867a1e..ff37d49611c3 100644
+--- a/tools/perf/pmu-events/arch/x86/lunarlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/cache.json
+@@ -790,6 +790,17 @@
+         "EventName": "MEM_LOAD_RETIRED.L1_HIT",
+         "PublicDescription": "Counts retired load instructions with at lea=
+st one uop that hit in the L1 data cache. This event includes all SW prefet=
+ches and lock instructions regardless of the data source. Available PDIST c=
+ounters: 0",
+         "SampleAfterValue": "1000003",
++        "UMask": "0x101",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "Counts retired load instructions with at leas=
+t one uop that hit in the Level 0 of the L1 data cache. This event includes=
+ all SW prefetches and lock instructions regardless of the data source.",
++        "Counter": "0,1,2,3",
++        "Data_LA": "1",
++        "EventCode": "0xd1",
++        "EventName": "MEM_LOAD_RETIRED.L1_HIT_L0",
++        "PublicDescription": "Counts retired load instructions with at lea=
+st one uop that hit in the Level 0 of the L1 data cache. This event include=
+s all SW prefetches and lock instructions regardless of the data source. Av=
+ailable PDIST counters: 0",
++        "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_core"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json b/to=
-ols/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
-index 8c73708befef..6f84ad47276d 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
-@@ -8193,7 +8193,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x35",
-         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_RFO",
--        "Experimental": "1",
-         "PerPkg": "1",
-         "PublicDescription": "TOR Inserts : RFOs issued by IO Devices that=
- missed the LLC : Counts the number of entries successfully inserted into t=
-he TOR that match qualifications specified by the subevent.   Does not incl=
-ude addressless requests such as locks and interrupts.",
-         "UMask": "0xc803fe04",
-@@ -8234,7 +8233,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x35",
-         "EventName": "UNC_CHA_TOR_INSERTS.IO_RFO",
--        "Experimental": "1",
-         "PerPkg": "1",
-         "PublicDescription": "TOR Inserts : RFOs issued by IO Devices : Co=
-unts the number of entries successfully inserted into the TOR that match qu=
-alifications specified by the subevent.   Does not include addressless requ=
-ests such as locks and interrupts.",
-         "UMask": "0xc803ff04",
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+index 4875047fb65c..6ac410510628 100644
+--- a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+@@ -1247,9 +1247,19 @@
+         "Unit": "cpu_core"
+     },
+     {
+-        "BriefDescription": "Counts the number of demand loads that match =
+on a wcb (request buffer) allocated by an L1 hardware prefetch",
++        "BriefDescription": "Counts the number of demand loads that match =
+on a wcb (request buffer) allocated by an L1 hardware prefetch [This event =
+is alias to LOAD_HIT_PREFETCH.HW_PF]",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x4c",
++        "EventName": "LOAD_HIT_PREFETCH.HWPF",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "This event is deprecated. [This event is alia=
+s to LOAD_HIT_PREFETCH.HWPF]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "Deprecated": "1",
++        "EventCode": "0x4c",
+         "EventName": "LOAD_HIT_PREFETCH.HW_PF",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2",
+@@ -1664,7 +1674,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of issue slo=
+ts not consumed by the backend because allocation is stalled due to a mispr=
+edicted jump or a machine clear.",
+-        "Counter": "36",
++        "Counter": "Fixed counter 4",
+         "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
+         "PublicDescription": "Fixed Counter: Counts the number of issue sl=
+ots that were not consumed by the backend because allocation is stalled due=
+ to a mispredicted jump or a machine clear.  Counts all issue slots blocked=
+ during this recovery window including relevant microcode flows and while u=
+ops are not yet available in the IQ. Also, includes the issue slots that we=
+re consumed by the backend but were thrown away because they were younger t=
+han the mispredict or machine clear.",
+         "SampleAfterValue": "1000003",
+@@ -1797,7 +1807,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of retiremen=
+t slots not consumed due to front end stalls.",
+-        "Counter": "37",
++        "Counter": "Fixed counter 5",
+         "EventName": "TOPDOWN_FE_BOUND.ALL",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x6",
+@@ -1903,7 +1913,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of consumed =
+retirement slots.",
+-        "Counter": "38",
++        "Counter": "Fixed counter 6",
+         "EventName": "TOPDOWN_RETIRING.ALL",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x7",
+diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json b=
+/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json
+index defa3a967754..e60a5e904da2 100644
+--- a/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/lunarlake/virtual-memory.json
+@@ -36,24 +36,6 @@
+         "UMask": "0x320",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to a demand load that did not start a page walk. A=
+ccount for 4k page size only. Will result in a DTLB write from STLB.",
+-        "Counter": "0,1,2,3,4,5,6,7",
+-        "EventCode": "0x08",
+-        "EventName": "DTLB_LOAD_MISSES.STLB_HIT_4K",
+-        "SampleAfterValue": "200003",
+-        "UMask": "0x20",
+-        "Unit": "cpu_atom"
+-    },
+-    {
+-        "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to a demand load that did not start a page walk. A=
+ccount for large page sizes only. Will result in a DTLB write from STLB.",
+-        "Counter": "0,1,2,3,4,5,6,7",
+-        "EventCode": "0x08",
+-        "EventName": "DTLB_LOAD_MISSES.STLB_HIT_LGPG",
+-        "SampleAfterValue": "200003",
+-        "UMask": "0x40",
+-        "Unit": "cpu_atom"
+-    },
+     {
+         "BriefDescription": "Cycles when at least one PMH is busy with a p=
+age walk for a demand load.",
+         "Counter": "0,1,2,3,4,5,6,7,8,9",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 960076e3f66f..53c0d19c51d4 100644
+index 53c0d19c51d4..5f27b3700c3c 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -17,7 +17,7 @@ GenuineIntel-6-A[DE],v1.10,graniterapids,core
- GenuineIntel-6-(3C|45|46),v36,haswell,core
- GenuineIntel-6-3F,v29,haswellx,core
- GenuineIntel-6-7[DE],v1.24,icelake,core
--GenuineIntel-6-6[AC],v1.27,icelakex,core
-+GenuineIntel-6-6[AC],v1.28,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
+@@ -22,7 +22,7 @@ GenuineIntel-6-3A,v24,ivybridge,core
  GenuineIntel-6-3E,v24,ivytown,core
  GenuineIntel-6-2D,v24,jaketown,core
+ GenuineIntel-6-(57|85),v16,knightslanding,core
+-GenuineIntel-6-BD,v1.11,lunarlake,core
++GenuineIntel-6-BD,v1.14,lunarlake,core
+ GenuineIntel-6-(AA|AC|B5),v1.13,meteorlake,core
+ GenuineIntel-6-1[AEF],v4,nehalemep,core
+ GenuineIntel-6-2E,v4,nehalemex,core
 --=20
 2.50.0.rc1.591.g9c95f17f64-goog
 
