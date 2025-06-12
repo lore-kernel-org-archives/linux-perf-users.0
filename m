@@ -1,100 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1726F211F;
-	Thu, 12 Jun 2025 06:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87181F4C84;
+	Thu, 12 Jun 2025 06:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749709519; cv=none; b=cgeXdnxuqP2KcIOdxgF3s502SlJh2iT/zdXF0WCz07qNoa8hgylWW9VTn9tk7ZmSriWfsek8dBu3f6aweAt+HjWI7BBTC+kb8TyPr9E4vh78tj1m8pEi7WWaufigxGKiXUcGo/s1HM7IntYYMuwUTVQNwVR8QNEYmGXWxsYHKOI=
+	t=1749710703; cv=none; b=u9fU7mwxOlFt6/HA3+WvXFXlgynZERolMLuMWjFmE2fMVTWGhjY2lbo/GmHtcwDagcCRcaJQke7E+qY2hJPHUHfWPZLHOHMig2RWk/OO9F4pkGSrY3ccibXf9q5cXxZf7jfCuRQ60rkNXH76qw1MGwGlsvt8xVdP2nf4ydYm9z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749709519; c=relaxed/simple;
-	bh=WbKlRgT6f7BkyMv2x9S6bRsCtZQ2+P+hdMNKp/TwS0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J97RJycPQQWFw+GT9sBRyhx1JGmYDLL/sMGh8NZExM1VNwWeudYtloHITyBhhL6W+r5DQvYOO49WTipDFjlVadKOAB47e5XXS4n28mx32otbXQfchc/8srgx/QZmzjQ6Ag7U+da3RaRIR7UWC5cLkPKk5K4QqiPIUQ3ATJosFN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KZ+J5YWL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4S1BLYr0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KZ+J5YWL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4S1BLYr0"
-Date: Thu, 12 Jun 2025 08:25:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749709516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4Ia2CoUtifdcfPDTm3n0fPYredAvQzKsRuLKfT/bPA=;
-	b=KZ+J5YWLgu5kKVteRk79rAVUYOXvqgSK7g6OSuiTul7gdxgMu3bMc7LuO1BXumBVsr1pC+
-	eG9FL8Z7pw3VqA+DHUXQMrdmQMNsqVwptCp+v+vHZVHFNx3CHBg6xAK2N4aRPCjgLBn6qQ
-	YwxuBgg/xZkh35cuYZ09+P4Gle9c2uTKVlrhloddEcwFBLgnCcaAz0JsUSZRpyj+ilxhTE
-	ExBRNe9BbaN6BIFsVmu524sNXLIneYEP6K9Nwt+bvhxotHSzyU8Ss/9pzfXf3/Wei5kTaS
-	r8QQ5CX/rAf6+nZ/Ffq9CnHx66CCN+pq3dvOygXitVVZdVb0tsfG9+5iKKn/mQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749709516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4Ia2CoUtifdcfPDTm3n0fPYredAvQzKsRuLKfT/bPA=;
-	b=4S1BLYr0T06auupOZKo0dZLI/0PnJcP+JnH3IuBB2BOllyQ1pnA6AuyfpWjZ4eJmMii8uc
-	Zip7LyqZ4oPP7wDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <20250612062514.EZS2cVlO@linutronix.de>
-References: <aEh6xO14wDSCFUDr@google.com>
- <20250611092542.F4ooE2FL@linutronix.de>
- <aEmBOO0bSJYSvX2i@x1>
- <aEmY259Mx92D60KG@x1>
- <20250611150615.FcVIIhgA@linutronix.de>
- <aEnSbBaFYgd4Gr9u@x1>
+	s=arc-20240116; t=1749710703; c=relaxed/simple;
+	bh=rxKO1BKV4hODD1SbaLCwVicmOFDO4mKDfQbwr7D0Nvo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W06ZC6BzD8AKUH1m+DXAKV+lzM4yWJKFrxVT1NM6MWuNX7I4crsEDlDx4kwkEBumm/gtoa1j1A/tBeTLYyeVtr+5pb/SuZa9OzUIOTvaeu6dNwsbED9LGOGY0kY3KN2lkbqArzSLFaaJIc2R5ixA6c0Pz4S9tFoTeYwO9izAkZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11DE014BF;
+	Wed, 11 Jun 2025 23:44:40 -0700 (PDT)
+Received: from [10.163.33.129] (unknown [10.163.33.129])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 711AB3F59E;
+	Wed, 11 Jun 2025 23:44:52 -0700 (PDT)
+Message-ID: <f89faeb2-1091-41af-ae06-f49bd2d4866a@arm.com>
+Date: Thu, 12 Jun 2025 12:14:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aEnSbBaFYgd4Gr9u@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] arm64: sysreg: Add new PMSFCR_EL1 fields and
+ PMSDSFR_EL1 register
+To: James Clark <james.clark@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
+ <20250605-james-perf-feat_spe_eft-v3-1-71b0c9f98093@linaro.org>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-1-71b0c9f98093@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-11 16:01:00 [-0300], Arnaldo Carvalho de Melo wrote:
-> > Is this needed? Aren't these defines coming from that local copy?
->=20
-> So, these are, as you say, in the copied linux/prctl.h, but in musl libc
-> we have:
-right, I briefly forgot about musl.
-All good.
-=E2=80=A6
-> I thought this would be something fixed in newer alpine versions, but
-> no:
->=20
-> toolsbuilder@five:~$ grep FAIL dm.log.old/summary=20
->    5    19.53 alpine:3.16                   : FAIL gcc version 11.2.1 202=
-20219 (Alpine 11.2.1_git20220219)=20
->    6    20.83 alpine:3.17                   : FAIL gcc version 12.2.1 202=
-20924 (Alpine 12.2.1_git20220924-r4)=20
->    7    13.94 alpine:3.18                   : FAIL gcc version 12.2.1 202=
-20924 (Alpine 12.2.1_git20220924-r10)=20
->    8    16.60 alpine:3.19                   : FAIL gcc version 13.2.1 202=
-31014 (Alpine 13.2.1_git20231014)=20
->    9    15.72 alpine:3.20                   : FAIL gcc version 13.2.1 202=
-40309 (Alpine 13.2.1_git20240309)=20
->   10    16.38 alpine:3.22                   : FAIL gcc version 14.2.0 (Al=
-pine 14.2.0)=20
->   11    15.09 alpine:edge                   : FAIL gcc version 14.2.0 (Al=
-pine 14.2.0)=20
-> toolsbuilder@five:~$
->=20
-> So the easiest way out of this seems to be not to explicitely include
-> linux/prctl.h and define the new stuff conditionally, as I did, right?
+On 05/06/25 4:18 PM, James Clark wrote:
+> Add new fields and register that are introduced for the features
+> FEAT_SPE_EFT (extended filtering) and FEAT_SPE_FDS (data source
+> filtering).
+> 
+> Tested-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  arch/arm64/tools/sysreg | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+> index 8a8cf6874298..2e897d8a4040 100644
+> --- a/arch/arm64/tools/sysreg
+> +++ b/arch/arm64/tools/sysreg
+> @@ -2859,11 +2859,20 @@ Field	0	RND
+>  EndSysreg
+>  
+>  Sysreg	PMSFCR_EL1	3	0	9	9	4
+> -Res0	63:19
+> +Res0	63:53
+> +Field	52	SIMDm
+> +Field	51	FPm
+> +Field	50	STm
+> +Field	49	LDm
+> +Field	48	Bm
+> +Res0	47:21
+> +Field	20	SIMD
+> +Field	19	FP
+>  Field	18	ST
+>  Field	17	LD
+>  Field	16	B
+> -Res0	15:4
+> +Res0	15:5
+> +Field	4	FDS
+>  Field	3	FnE
+>  Field	2	FL
+>  Field	1	FT
+> 
 
-Let me drop an email to alpine and check with them.
+These register fields checks out against ARM ARM DDI 0487 (L.b)
 
-> - Arnaldo
-
-Sebastian
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
