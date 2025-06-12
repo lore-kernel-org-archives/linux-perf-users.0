@@ -1,148 +1,131 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EBA8BE8
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633285258
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749687406; cv=none; b=Afo9TQK5gcuX6sER1hUg+ErOJOT01iW7PUbp2mj2ASqYvOzM11dyGATla9b8qtANrZSxh9D377YhdPFPU330X4kLGZ1p7rLthK5HPdzFdNX4V6glMBg+a1dpFzLierCbN1/oZj2a/2/T9E0NWePmE4+EyNt9J51V6fkr8Pl/fLY=
+	t=1749688763; cv=none; b=MqMFv8TL1dfX5ZTN+DnMAJFhZ9ujGHsFeKYzGFspDVgj9GMiNLNQaQqrUv/7x/dtR2YWeGVyo2H2fv1tfYbxEhDrsI5VVuJyIJpjiNtvOcYvzUSv33NPYRxbY97IPzCHmB6T3SMljn6APeUFxafYu59HgTqOyJvfj+hDrss5jUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749687406; c=relaxed/simple;
-	bh=qj5QS2sbbirxTbrQqn6si2l3oHZHSHeaoydlOC8MmRg=;
+	s=arc-20240116; t=1749688763; c=relaxed/simple;
+	bh=1/YtnVp2w5cLp0fXiP/AkynA4GjML3bPzu3yfR14Y34=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JAK+FOye8nZ+4M/G1vIg5waE29L55++Nx0NdG2lKKvsM2Ttq/xiGs9iP0WwEDiTXIKRqc529ZGFquFTgs/N2Z/jJ2UojVi04XPBvt5HDHQo0egPhEdhjYQ58eV97OJLFuFd1uknxQpy0UKK2LXIZvBPjZrk3Md/dib09WXeKnUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xiZRkSpH; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=d8auiEHtwx0R3fN24F0kuy15Rp4uwLtSoYCmpW4FvvnBsDvAx7KaQbtMlWU4xauw5tlSvDmGgrp5flIKCIXAitXUln2l2VAx8+Iu7Ny3nQfb77RYBx2lblZp2GyE5kSwOA8JodMZTxlApFckBa5JSDahtSJFD2C6Dn+hmRE1wFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AnG9Eito; arc=none smtp.client-ip=209.85.217.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xiZRkSpH"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so32875ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:16:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AnG9Eito"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e7949d9753so119598137.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749687403; x=1750292203; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749688760; x=1750293560; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ylgnLawNJtAmWY8kEGaV0f6rcg3R6c6dxmduNdDWPkU=;
-        b=xiZRkSpHQgCR+sCWBnC600hQR8R3Dk4lDmWaaEbz0RaoSaDhYNuT2lTQFkxLg0lSp3
-         SbrlQ6FkkXC4uuwx4j2KSkbE6lCsRrbmrfZRPgvcjn56GYk/yXdiuZlVH+kpoW+Mw0Mm
-         PljmKmn2aMk6pEvbxGa8jpxMddCW1cy3HD2BXbgsPq6BcUe4skOOT/eUbRMjY6yRhb41
-         n18X6nTizv9AVITIiCCzdcw7M3SBGme/5mh3I7qKr2pdGSRaMEI6GTZ4/j7GmBWI5Jlw
-         kd6TCXp/qOZ0MdJqEFRDObX/nHCtlr0HeIW4055j1U0l6MFMlJCabapOkF5bDgsZPZRB
-         5qWA==
+        bh=MijS6fKI8avgozeUh7V7g+wjXCdFSSFspwam+Jh7L04=;
+        b=AnG9EitoIjCACvlxjPoy7H/3x22cSvo+/Tu4hMhTJCOPYGAhirEnle10JkT/BHEXJc
+         9ZL4vufBbE4zVP5ThJIyg8pjEbVa9roiLzwael+phWD3wMQIgctGYLnUX04kdwxZB6rh
+         8KtpXjqtN/hw1YSaz0tVIZh5EzGAuRd59bBTw8HGsRUxwNcqLEygtA076T988oiUfMvj
+         8JI6U15UazpbG9/kjDpIQbf8zdh56Zo4i9i0XbWZOpU/rF5ZFyPPyAjOYai6Wgi09U/H
+         rG8w7ejZ24qM+pi3gw8OmYttKZiM+DUpNfJyWdw/lfKA9wW0gyAttKPqi91bEZY1lfO4
+         WQ0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749687403; x=1750292203;
+        d=1e100.net; s=20230601; t=1749688760; x=1750293560;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ylgnLawNJtAmWY8kEGaV0f6rcg3R6c6dxmduNdDWPkU=;
-        b=WXBTvxoyynYTpHudnFR1OS3Liq5ENpyMLxZhngCNapz10IaFwWwNjruO1unOA5YE3L
-         YhaZHqftiV7NZe00glD6Q+/2jLVkz1+xs0aE9rcnJJw8+5NcEgAjaqju+I1aqa7k9fyC
-         uOED3oEMZlm54v9anQQ40CIwB9Tf61PxOK5Mh/Q3+vgQy49sWjAi58D4WzVD5UsOcjz6
-         2G8IuSz3pELUjS9nyKVxsmkT+zK7tXuO4FggOm0ZmTGQ/TnNOddPS/Niz2yipZaK62z5
-         QKo+rEAZ5/szDS56XslyQRpfjp3+iDkeUSfDk9ERK3doXL6Y3shNrheYojeJ5N2WueZa
-         dMFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOc0rSFIEPssg7WSRHBmD5poA9OpV8W+4mX/RFmgKQTeGbL/eYPOtsJU8pvrYCm9coPFQA8gMiaunJOQ6WFY07@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1w6u/KibkYZaPPG7RaMAGZIPrgTTkiL5W+Vvui1mXhPDQtqHQ
-	m0fRRrfGa3/vcLho5CHHjsGZnYKKt0JsN2jdJY+YjyzEMB3jLmzZrPz4Fk81AOmRqU8402dAoEc
-	mRki+Nqfiwl89XYg+gYM1ULzE9dbiE4DaARMweqGF
-X-Gm-Gg: ASbGncuaFsn3yQxx5OPD2Z/ayg9Vq+gZauVxgMdH7WxiPRyzgKWBoYeT3PjkuODqY4z
-	qKrAycr3vzeos5QiO6Q9IJzGymvcsa/5kDfvmFIvBzdh5+w5Y1ZGtMnMWTqPBjM6iuU5H+hCNyM
-	Qbjmgi80Il2eIvBTj8k0/cWQf9vbjw/zm0c9SXihzrBoaULtKGB+vIwlAD8wmdE2AGMQbRfUVH
-X-Google-Smtp-Source: AGHT+IFFcHIvBuqmgSE8wSBCUm8XGGpkfpTJdDVqXFDwoXNq/Q70MgEkXqSf4ahaHQUelFlcvAvQ6A0sy2wBSPYE17A=
-X-Received: by 2002:a05:6e02:2181:b0:3dd:f68c:87ac with SMTP id
- e9e14a558f8ab-3ddfbefacf6mr458965ab.7.1749687403304; Wed, 11 Jun 2025
- 17:16:43 -0700 (PDT)
+        bh=MijS6fKI8avgozeUh7V7g+wjXCdFSSFspwam+Jh7L04=;
+        b=cjpPbpOeE/7dBOMyVu0OmhVRJtdFDrqTCXBZMtAun+YEkPB4ZfxR8F17/gImTJyyVL
+         Ya4Hljyvaf5S4dMG8/5tTLDmUHzy8O6grfupPyjlY8Kc84VNLHEt5zwx0ASD4i2rbIr+
+         6csdLvkzumi8d/ClZPokzclYd42bzQtPe03d6RBFZqIbItAiYQviEMYeuv/2FXN7btFP
+         jZxPjKSChga4cuAFtch7HqM9nedmtUVwaDfsd8B2nYgt2ZUop3V3ecajTlmm6KWWKHZ2
+         zBs/mJlOtM88XBXTEtn5aW7K9khjIxz2lDxyLtgDEzZvZ83YAxhGvaa1NyGci16B3mFd
+         WuMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpi6VFFPNkIE0yCsiVt7CNkdITrSuONYjKx7TtVVGuf4ReTTvSYF+Bm1Ff2w53F59akvUZh1T4RxHjjjtnx/xR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0/UKxduqBahhNBMDESNc2lIIjEbWrhpCXu1FAjoZ2Ul67gNAx
+	Dplw7gmWEVv/OKvZB4Yg1TXDkdjFG9WE2lHTFN9cXK9MSfZYU3kNRiIBD5l0sC1CqjlbH+Zmujy
+	xgXLrsCLKGuXY3rv+1J8/omQ8dIWBSRmNluAwp0cq
+X-Gm-Gg: ASbGncv9hE9TIs8bNAaIDkmaZ95+lB+yqu6PWuOna5wM8AfJ3uO1MH9+DoIQxtYLk4f
+	UUpKvibD6EyMyeav2QtavLc1WHKrXt7V9pb9OHCu/NagpA6HlSTZB6KDeOl7mtupkwHI59UZwkw
+	vFO0ISZUA4vbmIqjDs4/eBCMykMSxVzrvin5OOZj9ZWic=
+X-Google-Smtp-Source: AGHT+IGJyR0TkHrxu2ca510smf27CLRnlR33XS+KipMFozqKN/NJ2jtkGZyOWX8gVxAfHrBxFp4dlDR5VA1QBQu8htA=
+X-Received: by 2002:a05:6102:510e:b0:4e5:acea:2dec with SMTP id
+ ada2fe7eead31-4e7ccb90176mr2182302137.7.1749688760064; Wed, 11 Jun 2025
+ 17:39:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611233239.3098064-1-ctshao@google.com>
-In-Reply-To: <20250611233239.3098064-1-ctshao@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Jun 2025 17:16:31 -0700
-X-Gm-Features: AX0GCFsp_xt0KJi2mHuIfKsQiSrIqRQayI46uKJ3vfOt5OcTrM91v8bQ6KI35rI
-Message-ID: <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+References: <20250606215246.2419387-1-blakejones@google.com> <aEnLBgCTuuZjeakP@google.com>
+In-Reply-To: <aEnLBgCTuuZjeakP@google.com>
+From: Blake Jones <blakejones@google.com>
+Date: Wed, 11 Jun 2025 17:39:09 -0700
+X-Gm-Features: AX0GCFtvh8DDYNH81d0g8swylgEtR-w4SutaqGqiWCk_py3r2whgK08XDdIBGYk
+Message-ID: <CAP_z_Ci2HtnSX8h51Lg=XcW_-5OryGb3PAH7MJjWg60Bjpdpng@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] perf: generate events for BPF metadata
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025 at 4:36=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
-rote:
->
-> Follow up:
-> lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsnOOJgX4Kg@m=
-ail.gmail.com/
->
-> The patch adds unit aggregation during evsel merge the aggregated uncore
-> counters.
->
-> Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> cpumask=3D"0,120"
-> Before:
->   perf stat -e clockticks -I 1000 --per-socket
->   #           time socket cpus             counts unit events
->        1.001085024 S0        1         9615386315      clockticks
->        1.001085024 S1        1         9614287448      clockticks
->   perf stat -e clockticks -I 1000 --per-node
->   #           time node   cpus             counts unit events
->        1.001029867 N0        1         3205726984      clockticks
->        1.001029867 N1        1         3205444421      clockticks
->        1.001029867 N2        1         3205234018      clockticks
->        1.001029867 N3        1         3205224660      clockticks
->        1.001029867 N4        1         3205207213      clockticks
->        1.001029867 N5        1         3205528246      clockticks
-> After:
->   perf stat -e clockticks -I 1000 --per-socket
->   #           time socket cpus             counts unit events
+Hi Namhyung,
 
-I wonder if there is a better column heading than "cpus" given that
-these are imc PMUs.
+On Wed, Jun 11, 2025 at 11:29=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> I tried to process your patches but it failed to build like below:
+> [...]
+> Please run 'make build-test' and send v4.
 
->        1.001022937 S0       12         9621463177      clockticks
->        1.001022937 S1       12         9619804949      clockticks
->   perf stat -e clockticks -I 1000 --per-node
->   #           time node   cpus             counts unit events
->        1.001029867 N0        4         3206782080      clockticks
->        1.001029867 N1        4         3207025354      clockticks
->        1.001029867 N2        4         3207067946      clockticks
->        1.001029867 N3        4         3206871733      clockticks
->        1.001029867 N4        4         3206199005      clockticks
->        1.001029867 N5        4         3205525058      clockticks
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Very sorry about that. I've fixed the two issues you noticed, as well as
+one additional one where I was using the wrong include path to check for
+the presence of the libbpf-strings feature.
 
-Tested-by: Ian Rogers <irogers@google.com>
+I'm trying to test my fixes using "make build-test", but it's proving a bit
+of a challenge. I installed libgtk-4-dev, binutils-dev, and libopencsd-dev
+to fix build problems as they came up; I also installed libtraceevent-dev,
+but somehow it still wasn't detected by the build process and so I had to
+use NO_LIBTRACEEVENT=3D1.
 
-Thanks,
-Ian
+Even after installing these libraries, I'm still hitting errors when doing
+"make build-test" on a copy of the perf source *without* my changes:
 
-> ---
->  tools/perf/util/stat.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 355a7d5c8ab8..52266d773353 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *e=
-vsel, struct evsel *alias)
->                 struct perf_counts_values *aggr_counts_b =3D &ps_b->aggr[=
-i].counts;
->
->                 /* NB: don't increase aggr.nr for aliases */
-> +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
->
->                 aggr_counts_a->val +=3D aggr_counts_b->val;
->                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
-> --
-> 2.50.0.rc1.591.g9c95f17f64-goog
->
+    In file included from util/disasm_bpf.c:18:
+    .../tools/include/tools/dis-asm-compat.h:10:6:
+        error: redeclaration of 'enum disassembler_style'
+       10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
+          |      ^~~~~~~~~~~~~~~~~~
+    In file included from util/disasm_bpf.c:15:
+    /usr/include/dis-asm.h:53:6: note: originally defined here
+       53 | enum disassembler_style
+          |      ^~~~~~~~~~~~~~~~~~
+
+I noticed that tools/perf/BUILD_TEST_FEATURE_DUMP has
+"feature-disassembler-four-args=3D0" and "feature-disassembler-init-styled=
+=3D0"
+as of when this failed, which seems to be upstream of the observed failure
+(the version of binutils-dev that I installed seems to have newer-style
+versions of these interfaces).
+
+Is there anything written up about how to set up a machine so that
+"make build-test" works reliably?
+
+Thanks.
+
+Blake
