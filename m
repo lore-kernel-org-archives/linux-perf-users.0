@@ -1,57 +1,57 @@
-Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C793C101DE
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B251BC2A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Jun 2025 00:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686554; cv=none; b=KHEC7wi/qnpXvIekVDtym9EJyzWGHtwvOb6GW3hxG5cflwuzVqB9XVU2z/uygJS6fLNRxmolIiApV6HrnrSRlWBHOC4zJHdfWp9QgNWa1oOLK6Z+7R9VVqxOTfNV1ZzcvXXBvNTMvj9McgqQtsNQJ7dzffPp25CBCYIwyGY1aV4=
+	t=1749686555; cv=none; b=qHS29MZiI9nhUu+0Cs1bMyefrtlAK372y1n71HKYOgCYPNXmW8vxH2owBssy5tnwVmCVb1ozBufppPnFNZc0rwPqm3wQ0g3ON3Hfp3N5HsCYgNLpWdBcYtZSp+AIyVpw8a/Ygn2zUAUTksDnvO66INej2DxAYRVgHXlpXzTu6bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686554; c=relaxed/simple;
-	bh=73/VClvfm+vnu8mK8PL5YscNhRxhLzL5oFZj9kU/jW0=;
+	s=arc-20240116; t=1749686555; c=relaxed/simple;
+	bh=Dz18LZrUYGkpijAB590N0dgyU9iK6Cr+luU6vaCe6ic=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=oYab4SnjDGyVSEFx3PdaCOCU4vx7nWlNSGv6rBUMvghOvM4wU6k5IsS7oIhZGUjpHyUzYXXNGLku1mfK6cZMn8Tq7lulqEznd71BE9uW2k0faC7h5RVbFmhT9LtG7i8iPu54TylH6ByRoPYd5zv3YuegjoX11PmpMZqmlnd4T8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NJaWzOgY; arc=none smtp.client-ip=209.85.210.73
+	 To:Content-Type; b=Z8zXmkQ8cY/ft9qq8qwyPb0Ac1G+w249QPcK9DdHN4lX5ZYOadsbmn7zoFZ6KPjRMC6X1KG2Y2NS74Cq05Qxqaoz94wlXmS8LBcPaDzXilvO3HFkW1DZM2+Age6JhmWyontqeGHDSXtqaKDR8yQGRlZ1C139nHPW9/mYhQVd6DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=prcqzHKK; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NJaWzOgY"
-Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-73a17986d6bso118419a34.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="prcqzHKK"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742c03c0272so459869b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jun 2025 17:02:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749686551; x=1750291351; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749686553; x=1750291353; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0F7siqHw6wGoddpwArkho8QHHimv4PXa5X1RDHbpiuc=;
-        b=NJaWzOgYn6zXErnYDICllM6RC4is7BqTXImShY3ZdL6AE9ezPAmkQWRYRIqelgnoEi
-         tV7OumbFYOn+QReW5CEaVQm2JhHEe+z2aq5AxVxG2/chV5T9+Fhmge3a9V0imVGwrVMz
-         Cu5AXvXe8y4/jWws4aUxUYmizB4dRSqMAZ4Y1M7KcBYkZhiMiQj2M9tTu50JhIuBp9D9
-         zLBytrZmfMjSHQhfUYp4eJ9eD6+ciYKU6SM89cW7i52+Nj1NVDx/wBKnQZAAxmtIOcbM
-         zyo1C/sF6UAJQl/8s7ogDRrsN1tkdirhdFqin7lKew/oe89EC0vRfr06+z3tAIQ2Wkf8
-         om6g==
+        bh=2C+17o8Ln8hoOEaVq9fP1NovPjwt4rLVbaU8TXQZizQ=;
+        b=prcqzHKKaXZ8rFk+CdZIUFWE6j854/IOdp4hu9+8N9IMvGNXQNGsEHqSFvbQ62BrXw
+         cpK+lnJpHKxFmHYA+PIKVPYdGbXISBojqNo7OUOywZzG/GHNWTD+Gax7OI82VdbgAJBC
+         x5lKSTx+kYMWyZUOeWoUz0GDzSzoXAELVqG9s4NWDenqmAyROaayR29Uapdq+QBmoLAd
+         Y1bFK5eeDPKpWkFltMFr2MdkVarU+xo6Sp65XlHIJiQWeMKIai/V6mZpmtWg3rw4xqdX
+         vrM3D2qlJtgGAoSGsh7czOE421a5lLtXzxlTZesUAqaRWtAKGuFGWKfFrJwsjRy0+Izk
+         5qmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749686551; x=1750291351;
+        d=1e100.net; s=20230601; t=1749686553; x=1750291353;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=0F7siqHw6wGoddpwArkho8QHHimv4PXa5X1RDHbpiuc=;
-        b=KDVtii5CoQXrtu6mbt4Ksa4uztS0fmSiBNRuXeAdkinjyrxm1tChRCqfouww+HL2fU
-         +8Pve60KJQI8s9X33yOBQgtbdwX8k/hOf3oJMKKHKkicP8AD/tGf2oraXYc0wWbCtUkt
-         CEaeobuRkLj2qIdSMqCPKHLFcq7oa1lXbUnNVDFie5kgruDrSxnHQjmB0B2IwFLMUnFE
-         wFn1EoRfS3Ma3nvyN1yx9nEWl5+70JQRMXqz3BaOFumX8G9N7PPIO2tyTMsp9JHurmrm
-         O8QojtN3aISEIpTKmxFTD64HHEMq65PhNARdmlKuNijdKB7pcxXVbA2tIlFacSC+5/3x
-         Rc8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWYKKNUel2U5iEM+Ytih9R5z3j2jv7IDdpjQMiYCFTgsF4uzHaNo3rrSf7+RjvVnzAEliXmCdENFBa3leFq2ecE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpRZJ5QswlJ30lzv27k/noCY+2SkvGBnEzgMo48aiTSeczQYz5
-	R4G6GlZTLBQnRsDHUWepvrwtSX/w/vltIEw+Rkff8WICUs6iwO0TdfiF+07nr/NOw06y6qn+MHU
-	zxC24opEZuA==
-X-Google-Smtp-Source: AGHT+IFLAWr7KjJ1kPrDAwN+Sdk0+ro6J0dKUWn58sp2zc9Qqnha2PKYtxEwg0CG6WkoQSylUR39ZFlvsgsM
-X-Received: from oacny15.prod.google.com ([2002:a05:6871:750f:b0:2ba:487b:683e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:351:b0:2b8:e6f2:ba7e
- with SMTP id 586e51a60fabf-2eab72d8497mr457455fac.12.1749686550719; Wed, 11
- Jun 2025 17:02:30 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:02:10 -0700
+        bh=2C+17o8Ln8hoOEaVq9fP1NovPjwt4rLVbaU8TXQZizQ=;
+        b=wJDS6a9ZH5mm6zAOm7PwyY503CsblxEXAwuPGSG5vU9Gk3LsEq0nG14yO7zecVQFAp
+         VLj0bUR033DLhBcY26u1DWCZkcqQ0Lw347cnOyzM5zke9LoSRwazoxsFtZDQAm+QBtGD
+         7hFQAlcP4lLgZ0zfi6knKv9Ghol1Kc29xkqNfNIpUUdsqWi7pNfp/GiUpFomvhjyJTke
+         icL0MXUxi5AWI4Y9E/9/HU2OKWjbHHojs2cJJGr60FZpMAYLWfEWlefIl/TKI8UE31qn
+         iazMe+pUfId7/Omv7oWjYDwclrkaTiENpIiPrHkNPHeuJG3bBVukPLsuPEI7T99+ek/j
+         xdUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbd6ZqdRhwUHk7HivcMWlZm+gTCZB3vwo8gWl3N/hP3vmL9jSxg9vs9Jc6ovXknbO1NzJl5gAeA7K6vpCL7+e6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfNWzN0/jbajvqGHp4tyKf6L+53iXynTJ4j3brnhCMg4QjPnAw
+	JKWHsH7kXMObuARNgR4boyeQPLPzQFrf5TLLo6RtA1BjahYCG7sSTO1sa7O6O8c9CKOPVWp8dtP
+	pPe7PmRmtGw==
+X-Google-Smtp-Source: AGHT+IFPlm6+vJonc7NLaYhY5EwLsTLIAFD6k8RBRN9umBviUZ3RYOXkjDgyLDWrHs0MDP1+cD4gcgWM+NDx
+X-Received: from pgjp8.prod.google.com ([2002:a63:e648:0:b0:b2c:3a2e:ac7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a10c:b0:21f:4631:811c
+ with SMTP id adf61e73a8af0-21f86725da6mr7323532637.19.1749686552684; Wed, 11
+ Jun 2025 17:02:32 -0700 (PDT)
+Date: Wed, 11 Jun 2025 17:02:11 -0700
 In-Reply-To: <20250612000224.780337-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250612000224.780337-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250612000224.780337-2-irogers@google.com>
-Subject: [PATCH v1 01/15] perf vendor events: Update Alderlake events
+Message-ID: <20250612000224.780337-3-irogers@google.com>
+Subject: [PATCH v1 02/15] perf vendor events: Update AlderlakeN events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -86,29 +86,29 @@ https://github.com/intel/perfmon/commit/76c6d2c348c067e9ae1b616b35ee982da6d=
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/alderlake/cache.json  | 56 +++++++------------
- .../arch/x86/alderlake/floating-point.json    |  1 -
- .../pmu-events/arch/x86/alderlake/other.json  |  1 -
- .../arch/x86/alderlake/pipeline.json          | 44 ++-------------
- .../arch/x86/alderlake/virtual-memory.json    |  3 -
+ .../pmu-events/arch/x86/alderlaken/cache.json | 52 +++++++------------
+ .../arch/x86/alderlaken/floating-point.json   |  1 -
+ .../pmu-events/arch/x86/alderlaken/other.json |  1 -
+ .../arch/x86/alderlaken/pipeline.json         | 42 ++-------------
+ .../arch/x86/alderlaken/virtual-memory.json   |  3 --
  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 6 files changed, 28 insertions(+), 79 deletions(-)
+ 6 files changed, 25 insertions(+), 76 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/cache.json b/tools/pe=
-rf/pmu-events/arch/x86/alderlake/cache.json
-index c2802fbb853b..5461576dafc7 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
-@@ -728,7 +728,6 @@
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/p=
+erf/pmu-events/arch/x86/alderlaken/cache.json
+index bf691aee1ef4..669f4979b651 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
+@@ -118,7 +118,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.DRAM_HIT",
 -        "PublicDescription": "Counts the number of load uops retired that =
 hit in DRAM. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x80",
-         "Unit": "cpu_atom"
-@@ -739,7 +738,6 @@
+         "UMask": "0x80"
+     },
+@@ -128,7 +127,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.HITM",
@@ -116,54 +116,54 @@ hit in DRAM. Available PDIST counters: 0",
 hit in the L3 cache, in which a snoop was required and modified data was fo=
 rwarded from another core or module. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x20",
-         "Unit": "cpu_atom"
-@@ -750,7 +748,6 @@
+         "UMask": "0x20"
+     },
+@@ -138,7 +136,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
 -        "PublicDescription": "Counts the number of load uops retired that =
 hit in the L1 data cache. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x1",
-         "Unit": "cpu_atom"
-@@ -761,7 +758,6 @@
+         "UMask": "0x1"
+     },
+@@ -148,7 +145,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
 -        "PublicDescription": "Counts the number of load uops retired that =
 miss in the L1 data cache. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x8",
-         "Unit": "cpu_atom"
-@@ -772,7 +768,6 @@
+         "UMask": "0x8"
+     },
+@@ -158,7 +154,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
 -        "PublicDescription": "Counts the number of load uops retired that =
 hit in the L2 cache. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x2",
-         "Unit": "cpu_atom"
-@@ -783,7 +778,6 @@
+         "UMask": "0x2"
+     },
+@@ -168,7 +163,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
 -        "PublicDescription": "Counts the number of load uops retired that =
 miss in the L2 cache. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x10",
-         "Unit": "cpu_atom"
-@@ -794,7 +788,6 @@
+         "UMask": "0x10"
+     },
+@@ -178,7 +172,6 @@
          "Data_LA": "1",
          "EventCode": "0xd1",
          "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
 -        "PublicDescription": "Counts the number of load uops retired that =
 hit in the L3 cache. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x4",
-         "Unit": "cpu_atom"
-@@ -805,7 +798,6 @@
+         "UMask": "0x4"
+     },
+@@ -188,7 +181,6 @@
          "Data_LA": "1",
          "EventCode": "0xd2",
          "EventName": "MEM_LOAD_UOPS_RETIRED_MISC.HIT_E_F",
@@ -171,18 +171,18 @@ hit in the L3 cache. Available PDIST counters: 0",
 hit in the L3 cache, in which a snoop was required, and non-modified data w=
 as forwarded. Available PDIST counters: 0",
          "SampleAfterValue": "1000003",
-         "UMask": "0x40",
-         "Unit": "cpu_atom"
-@@ -816,7 +808,6 @@
+         "UMask": "0x40"
+     },
+@@ -198,7 +190,6 @@
          "Data_LA": "1",
          "EventCode": "0xd2",
          "EventName": "MEM_LOAD_UOPS_RETIRED_MISC.L3_MISS",
 -        "PublicDescription": "Counts the number of load uops retired that =
 miss in the L3 cache. Available PDIST counters: 0",
          "SampleAfterValue": "1000003",
-         "UMask": "0x20",
-         "Unit": "cpu_atom"
-@@ -873,7 +864,7 @@
+         "UMask": "0x20"
+     },
+@@ -240,7 +231,7 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
@@ -191,9 +191,9 @@ miss in the L3 cache. Available PDIST counters: 0",
 +        "PublicDescription": "Counts the total number of load uops retired=
 .",
          "SampleAfterValue": "200003",
-         "UMask": "0x81",
-         "Unit": "cpu_atom"
-@@ -884,111 +875,111 @@
+         "UMask": "0x81"
+     },
+@@ -250,103 +241,103 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
@@ -202,8 +202,7 @@ d. Available PDIST counters: 0",
 +        "PublicDescription": "Counts the total number of store uops retire=
 d.",
          "SampleAfterValue": "200003",
-         "UMask": "0x82",
-         "Unit": "cpu_atom"
+         "UMask": "0x82"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -228,8 +227,7 @@ ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
  If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
 a Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -253,8 +251,7 @@ ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
 If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
  Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -279,8 +276,7 @@ ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
  If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
 a Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -304,8 +300,7 @@ ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
 If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
  Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -329,8 +324,7 @@ ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
 f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
 Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -355,8 +349,7 @@ ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
  If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
 a Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -380,8 +373,7 @@ ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
 If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
  Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
+         "UMask": "0x5"
      },
      {
          "BriefDescription": "Counts the number of tagged loads with an ins=
@@ -405,27 +397,27 @@ ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
 f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
 Source fields accordingly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x5",
-         "Unit": "cpu_atom"
-@@ -999,7 +990,6 @@
+         "UMask": "0x5"
+     },
+@@ -356,7 +347,6 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.LOCK_LOADS",
 -        "PublicDescription": "Counts the number of load uops retired that =
 performed one or more locks. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x21",
-         "Unit": "cpu_atom"
-@@ -1010,7 +1000,6 @@
+         "UMask": "0x21"
+     },
+@@ -366,7 +356,6 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
 -        "PublicDescription": "Counts the number of retired split load uops=
 . Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x41",
-         "Unit": "cpu_atom"
-@@ -1021,7 +1010,6 @@
+         "UMask": "0x41"
+     },
+@@ -376,7 +365,6 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.STLB_MISS",
@@ -433,27 +425,27 @@ performed one or more locks. Available PDIST counters: 0",
 ps retired that missed in the second level TLB. Available PDIST counters: 0=
 ",
          "SampleAfterValue": "200003",
-         "UMask": "0x13",
-         "Unit": "cpu_atom"
-@@ -1032,7 +1020,6 @@
+         "UMask": "0x13"
+     },
+@@ -386,7 +374,6 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.STLB_MISS_LOADS",
 -        "PublicDescription": "Counts the number of load ops retired that m=
 iss in the second Level TLB. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x11",
-         "Unit": "cpu_atom"
-@@ -1043,7 +1030,6 @@
+         "UMask": "0x11"
+     },
+@@ -396,7 +383,6 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.STLB_MISS_STORES",
 -        "PublicDescription": "Counts the number of store ops retired that =
 miss in the second level TLB. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x12",
-         "Unit": "cpu_atom"
-@@ -1054,7 +1040,7 @@
+         "UMask": "0x12"
+     },
+@@ -406,7 +392,7 @@
          "Data_LA": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
@@ -466,37 +458,14 @@ unts with or without PEBS enabled. If PEBS is enabled and a PEBS record is =
 generated, will populate PEBS Latency and PEBS Data Source fields according=
 ly.",
          "SampleAfterValue": "1000003",
-         "UMask": "0x6",
-         "Unit": "cpu_atom"
-@@ -1478,12 +1464,12 @@
-         "Unit": "cpu_core"
+         "UMask": "0x6"
      },
-     {
--        "BriefDescription": "For every cycle where the core is waiting on =
-at least 1 outstanding Demand RFO request, increments by 1.",
-+        "BriefDescription": "Cycles with offcore outstanding demand rfo re=
-ads transactions in SuperQueue (SQ), queue to uncore.",
-         "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0x20",
-         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO"=
-,
--        "PublicDescription": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEM=
-AND_RFO Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of offcore outstanding dem=
-and rfo Reads transactions in the super queue every cycle. The 'Offcore out=
-standing' state of the transaction lasts from the L2 miss until the sending=
- transaction completion to requestor (SQ deallocation). See the correspondi=
-ng Umask under OFFCORE_REQUESTS. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x4",
-         "Unit": "cpu_core"
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/floating-point.json b=
-/tools/perf/pmu-events/arch/x86/alderlake/floating-point.json
-index ce570b96360a..d01f1b163ed8 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/floating-point.json
-@@ -213,7 +213,6 @@
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json =
+b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
+index f44da31ff1f1..ed963fcb6485 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
+@@ -29,7 +29,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc2",
          "EventName": "UOPS_RETIRED.FPDIV",
@@ -504,28 +473,28 @@ index ce570b96360a..d01f1b163ed8 100644
 ops retired (x87 and SSE, including x87 sqrt). Available PDIST counters: 0"=
 ,
          "SampleAfterValue": "2000003",
-         "UMask": "0x8",
-         "Unit": "cpu_atom"
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/other.json b/tools/pe=
-rf/pmu-events/arch/x86/alderlake/other.json
-index e4e75b088ccc..5f64138edfe4 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/other.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/other.json
-@@ -55,7 +55,6 @@
+         "UMask": "0x8"
+     }
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/other.json b/tools/p=
+erf/pmu-events/arch/x86/alderlaken/other.json
+index 8c2b5a284f2a..144d7b06f240 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/other.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/other.json
+@@ -5,7 +5,6 @@
          "Deprecated": "1",
          "EventCode": "0xe4",
          "EventName": "LBR_INSERTS.ANY",
 -        "PublicDescription": "This event is deprecated. [This event is ali=
 as to MISC_RETIRED.LBR_INSERTS] Available PDIST counters: 0",
          "SampleAfterValue": "1000003",
-         "UMask": "0x1",
-         "Unit": "cpu_atom"
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/alderlake/pipeline.json
-index 7e0e33792c45..48ef2a8cc49a 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
-@@ -128,7 +128,7 @@
+         "UMask": "0x1"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+index 9616bf0e9f1f..1dd61baec1a9 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
+@@ -54,7 +54,7 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
@@ -537,19 +506,19 @@ ch type instructions are accounted for. Available PDIST counters: 0",
 hich the instruction pointer (IP) of the processor is resteered due to a br=
 anch instruction and the branch instruction successfully retires.  All bran=
 ch type instructions are accounted for.",
-         "SampleAfterValue": "200003",
-         "Unit": "cpu_atom"
+         "SampleAfterValue": "200003"
      },
-@@ -147,7 +147,6 @@
+     {
+@@ -63,7 +63,6 @@
          "Deprecated": "1",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.CALL",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_INST_RETIRED.NEAR_CALL Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xf9",
-         "Unit": "cpu_atom"
-@@ -157,7 +156,6 @@
+         "UMask": "0xf9"
+     },
+@@ -72,7 +71,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.COND",
@@ -557,18 +526,18 @@ ch type instructions are accounted for.",
 nditional Code) branch instructions retired, includes both taken and not ta=
 ken branches. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x7e",
-         "Unit": "cpu_atom"
-@@ -187,7 +185,6 @@
+         "UMask": "0x7e"
+     },
+@@ -81,7 +79,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.COND_TAKEN",
 -        "PublicDescription": "Counts the number of taken JCC (Jump on Cond=
 itional Code) branch instructions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfe",
-         "Unit": "cpu_atom"
-@@ -207,7 +204,6 @@
+         "UMask": "0xfe"
+     },
+@@ -90,7 +87,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.FAR_BRANCH",
@@ -576,9 +545,9 @@ itional Code) branch instructions retired. Available PDIST counters: 0",
  retired, includes far jump, far call and return, and interrupt call and re=
 turn. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xbf",
-         "Unit": "cpu_atom"
-@@ -227,7 +223,6 @@
+         "UMask": "0xbf"
+     },
+@@ -99,7 +95,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.INDIRECT",
@@ -586,99 +555,99 @@ turn. Available PDIST counters: 0",
 ear indirect CALL branch instructions retired. Available PDIST counters: 0"=
 ,
          "SampleAfterValue": "200003",
-         "UMask": "0xeb",
-         "Unit": "cpu_atom"
-@@ -247,7 +242,6 @@
+         "UMask": "0xeb"
+     },
+@@ -108,7 +103,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.INDIRECT_CALL",
 -        "PublicDescription": "Counts the number of near indirect CALL bran=
 ch instructions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfb",
-         "Unit": "cpu_atom"
-@@ -258,7 +252,6 @@
+         "UMask": "0xfb"
+     },
+@@ -118,7 +112,6 @@
          "Deprecated": "1",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.IND_CALL",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_INST_RETIRED.INDIRECT_CALL Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfb",
-         "Unit": "cpu_atom"
-@@ -269,7 +262,6 @@
+         "UMask": "0xfb"
+     },
+@@ -128,7 +121,6 @@
          "Deprecated": "1",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.JCC",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_INST_RETIRED.COND Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x7e",
-         "Unit": "cpu_atom"
-@@ -279,7 +271,6 @@
+         "UMask": "0x7e"
+     },
+@@ -137,7 +129,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.NEAR_CALL",
 -        "PublicDescription": "Counts the number of near CALL branch instru=
 ctions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xf9",
-         "Unit": "cpu_atom"
-@@ -299,7 +290,6 @@
+         "UMask": "0xf9"
+     },
+@@ -146,7 +137,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.NEAR_RETURN",
 -        "PublicDescription": "Counts the number of near RET branch instruc=
 tions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xf7",
-         "Unit": "cpu_atom"
-@@ -319,7 +309,6 @@
+         "UMask": "0xf7"
+     },
+@@ -155,7 +145,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.NEAR_TAKEN",
 -        "PublicDescription": "Counts the number of near taken branch instr=
 uctions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xc0",
-         "Unit": "cpu_atom"
-@@ -340,7 +329,6 @@
+         "UMask": "0xc0"
+     },
+@@ -165,7 +154,6 @@
          "Deprecated": "1",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.NON_RETURN_IND",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_INST_RETIRED.INDIRECT Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xeb",
-         "Unit": "cpu_atom"
-@@ -350,7 +338,6 @@
+         "UMask": "0xeb"
+     },
+@@ -174,7 +162,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.REL_CALL",
 -        "PublicDescription": "Counts the number of near relative CALL bran=
 ch instructions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfd",
-         "Unit": "cpu_atom"
-@@ -361,7 +348,6 @@
+         "UMask": "0xfd"
+     },
+@@ -184,7 +171,6 @@
          "Deprecated": "1",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.RETURN",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_INST_RETIRED.NEAR_RETURN Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xf7",
-         "Unit": "cpu_atom"
-@@ -372,7 +358,6 @@
+         "UMask": "0xf7"
+     },
+@@ -194,7 +180,6 @@
          "Deprecated": "1",
          "EventCode": "0xc4",
          "EventName": "BR_INST_RETIRED.TAKEN_JCC",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_INST_RETIRED.COND_TAKEN Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfe",
-         "Unit": "cpu_atom"
-@@ -382,7 +367,7 @@
+         "UMask": "0xfe"
+     },
+@@ -203,7 +188,7 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
@@ -701,10 +670,10 @@ uction pointer (IP) of the branch and on the execution path through which e=
 xecution reached this IP.    A branch misprediction occurs when the predict=
 ion is wrong, and results in discarding all instructions executed in the sp=
 eculative path and re-fetching from the correct path.",
-         "SampleAfterValue": "200003",
-         "Unit": "cpu_atom"
+         "SampleAfterValue": "200003"
      },
-@@ -400,7 +385,6 @@
+     {
+@@ -211,7 +196,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.COND",
@@ -712,9 +681,9 @@ eculative path and re-fetching from the correct path.",
 on Conditional Code) branch instructions retired. Available PDIST counters:=
  0",
          "SampleAfterValue": "200003",
-         "UMask": "0x7e",
-         "Unit": "cpu_atom"
-@@ -430,7 +414,6 @@
+         "UMask": "0x7e"
+     },
+@@ -220,7 +204,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.COND_TAKEN",
@@ -722,9 +691,9 @@ on Conditional Code) branch instructions retired. Available PDIST counters:=
 (Jump on Conditional Code) branch instructions retired. Available PDIST cou=
 nters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfe",
-         "Unit": "cpu_atom"
-@@ -450,7 +433,6 @@
+         "UMask": "0xfe"
+     },
+@@ -229,7 +212,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.INDIRECT",
@@ -732,72 +701,72 @@ nters: 0",
 ect JMP and near indirect CALL branch instructions retired. Available PDIST=
  counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xeb",
-         "Unit": "cpu_atom"
-@@ -470,7 +452,6 @@
+         "UMask": "0xeb"
+     },
+@@ -238,7 +220,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.INDIRECT_CALL",
 -        "PublicDescription": "Counts the number of mispredicted near indir=
 ect CALL branch instructions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfb",
-         "Unit": "cpu_atom"
-@@ -491,7 +472,6 @@
+         "UMask": "0xfb"
+     },
+@@ -248,7 +229,6 @@
          "Deprecated": "1",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.IND_CALL",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_MISP_RETIRED.INDIRECT_CALL Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfb",
-         "Unit": "cpu_atom"
-@@ -502,7 +482,6 @@
+         "UMask": "0xfb"
+     },
+@@ -258,7 +238,6 @@
          "Deprecated": "1",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.JCC",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_MISP_RETIRED.COND Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x7e",
-         "Unit": "cpu_atom"
-@@ -512,7 +491,6 @@
+         "UMask": "0x7e"
+     },
+@@ -267,7 +246,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
 -        "PublicDescription": "Counts the number of mispredicted near taken=
  branch instructions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x80",
-         "Unit": "cpu_atom"
-@@ -533,7 +511,6 @@
+         "UMask": "0x80"
+     },
+@@ -277,7 +255,6 @@
          "Deprecated": "1",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.NON_RETURN_IND",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_MISP_RETIRED.INDIRECT Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xeb",
-         "Unit": "cpu_atom"
-@@ -553,7 +530,6 @@
+         "UMask": "0xeb"
+     },
+@@ -286,7 +263,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.RETURN",
 -        "PublicDescription": "Counts the number of mispredicted near RET b=
 ranch instructions retired. Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xf7",
-         "Unit": "cpu_atom"
-@@ -564,7 +540,6 @@
+         "UMask": "0xf7"
+     },
+@@ -296,7 +272,6 @@
          "Deprecated": "1",
          "EventCode": "0xc5",
          "EventName": "BR_MISP_RETIRED.TAKEN_JCC",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  BR_MISP_RETIRED.COND_TAKEN Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0xfe",
-         "Unit": "cpu_atom"
-@@ -934,7 +909,7 @@
+         "UMask": "0xfe"
+     },
+@@ -371,7 +346,7 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc0",
          "EventName": "INST_RETIRED.ANY_P",
@@ -812,19 +781,19 @@ is event uses a programmable general purpose performance counter. Available=
  the retirement of the last uop of the instruction. This event continues co=
 unting during hardware interrupts, traps, and inside interrupt handlers. Th=
 is event uses a programmable general purpose performance counter.",
-         "SampleAfterValue": "2000003",
-         "Unit": "cpu_atom"
+         "SampleAfterValue": "2000003"
      },
-@@ -1126,7 +1101,6 @@
+     {
+@@ -380,7 +355,6 @@
          "Deprecated": "1",
          "EventCode": "0x03",
          "EventName": "LD_BLOCKS.4K_ALIAS",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  LD_BLOCKS.ADDRESS_ALIAS Available PDIST counters: 0",
          "SampleAfterValue": "1000003",
-         "UMask": "0x4",
-         "Unit": "cpu_atom"
-@@ -1136,7 +1110,6 @@
+         "UMask": "0x4"
+     },
+@@ -389,7 +363,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0x03",
          "EventName": "LD_BLOCKS.ADDRESS_ALIAS",
@@ -833,9 +802,9 @@ blocked because it initially appears to be store forward blocked, but subse=
 quently is shown not to be blocked based on 4K alias check. Available PDIST=
  counters: 0",
          "SampleAfterValue": "1000003",
-         "UMask": "0x4",
-         "Unit": "cpu_atom"
-@@ -1156,7 +1129,6 @@
+         "UMask": "0x4"
+     },
+@@ -398,7 +371,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0x03",
          "EventName": "LD_BLOCKS.DATA_UNKNOWN",
@@ -843,26 +812,9 @@ quently is shown not to be blocked based on 4K alias check. Available PDIST=
 blocked because its address exactly matches an older store whose data is no=
 t ready. Available PDIST counters: 0",
          "SampleAfterValue": "1000003",
-         "UMask": "0x1",
-         "Unit": "cpu_atom"
-@@ -1186,7 +1158,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x4c",
-         "EventName": "LOAD_HIT_PREFETCH.SWPF",
--        "PublicDescription": "Counts all not software-prefetch load dispat=
-ches that hit the fill buffer (FB) allocated for the software prefetch. It =
-can also be incremented by some lock instructions. So it should only be use=
-d with profiling so that the locks can be excluded by ASM (Assembly File) i=
-nspection of the nearby instructions. Available PDIST counters: 0",
-+        "PublicDescription": "Counts all software-prefetch load dispatches=
- that hit the fill buffer (FB) allocated for the software prefetch. It can =
-also be incremented by some lock instructions. So it should only be used wi=
-th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
-ction of the nearby instructions. Available PDIST counters: 0",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1",
-         "Unit": "cpu_core"
-@@ -1306,7 +1278,7 @@
+         "UMask": "0x1"
+     },
+@@ -448,7 +420,7 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xe4",
          "EventName": "MISC_RETIRED.LBR_INSERTS",
@@ -874,36 +826,36 @@ IST counters: 0",
 equires LBRs to be enabled in IA32_LBR_CTL. This event is PDIR on GP0 and N=
 PEBS on all other GPs [This event is alias to LBR_INSERTS.ANY]",
          "SampleAfterValue": "1000003",
-         "UMask": "0x1",
-         "Unit": "cpu_atom"
-@@ -1681,7 +1653,6 @@
+         "UMask": "0x1"
+     },
+@@ -651,7 +623,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc2",
          "EventName": "TOPDOWN_RETIRING.ALL",
 -        "PublicDescription": "Counts the total number of consumed retireme=
 nt slots. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
-         "Unit": "cpu_atom"
+         "SampleAfterValue": "1000003"
      },
-@@ -1933,7 +1904,6 @@
+     {
+@@ -667,7 +638,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc2",
          "EventName": "UOPS_RETIRED.ALL",
 -        "PublicDescription": "Counts the total number of uops retired. Ava=
 ilable PDIST counters: 0",
-         "SampleAfterValue": "2000003",
-         "Unit": "cpu_atom"
+         "SampleAfterValue": "2000003"
      },
-@@ -1963,7 +1933,6 @@
+     {
+@@ -675,7 +645,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc2",
          "EventName": "UOPS_RETIRED.IDIV",
 -        "PublicDescription": "Counts the number of integer divide uops ret=
 ired. Available PDIST counters: 0",
          "SampleAfterValue": "2000003",
-         "UMask": "0x10",
-         "Unit": "cpu_atom"
-@@ -1973,7 +1942,7 @@
+         "UMask": "0x10"
+     },
+@@ -684,7 +653,7 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc2",
          "EventName": "UOPS_RETIRED.MS",
@@ -915,61 +867,62 @@ lable PDIST counters: 0",
 lex flows issued by the Microcode Sequencer (MS). This includes uops from f=
 lows due to complex instructions, faults, assists, and inserted flows.",
          "SampleAfterValue": "2000003",
-         "UMask": "0x1",
-         "Unit": "cpu_atom"
-@@ -2030,7 +1999,6 @@
+         "UMask": "0x1"
+     },
+@@ -693,7 +662,6 @@
          "Counter": "0,1,2,3,4,5",
          "EventCode": "0xc2",
          "EventName": "UOPS_RETIRED.X87",
 -        "PublicDescription": "Counts the number of x87 uops retired, inclu=
 des those in MS flows. Available PDIST counters: 0",
          "SampleAfterValue": "2000003",
-         "UMask": "0x2",
-         "Unit": "cpu_atom"
-diff --git a/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json b=
-/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json
-index 3d15275eca61..ffbbd08acc68 100644
---- a/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlake/virtual-memory.json
-@@ -266,7 +266,6 @@
+         "UMask": "0x2"
+     }
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json =
+b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
+index c348046696bf..d9c737a17df0 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
+@@ -57,7 +57,6 @@
          "Deprecated": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.DTLB_MISS",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  MEM_UOPS_RETIRED.STLB_MISS Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x13",
-         "Unit": "cpu_atom"
-@@ -278,7 +277,6 @@
+         "UMask": "0x13"
+     },
+@@ -68,7 +67,6 @@
          "Deprecated": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_LOADS",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  MEM_UOPS_RETIRED.STLB_MISS_LOADS Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x11",
-         "Unit": "cpu_atom"
-@@ -290,7 +288,6 @@
+         "UMask": "0x11"
+     },
+@@ -79,7 +77,6 @@
          "Deprecated": "1",
          "EventCode": "0xd0",
          "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_STORES",
 -        "PublicDescription": "This event is deprecated. Refer to new event=
  MEM_UOPS_RETIRED.STLB_MISS_STORES Available PDIST counters: 0",
          "SampleAfterValue": "200003",
-         "UMask": "0x12",
-         "Unit": "cpu_atom"
+         "UMask": "0x12"
+     }
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index bde2f32423a1..35c5a4088356 100644
+index 35c5a4088356..8a2ee64cad7e 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,5 +1,5 @@
+@@ -1,6 +1,6 @@
  Family-model,Version,Filename,EventType
--GenuineIntel-6-(97|9A|B7|BA|BF),v1.29,alderlake,core
-+GenuineIntel-6-(97|9A|B7|BA|BF),v1.31,alderlake,core
- GenuineIntel-6-BE,v1.29,alderlaken,core
+ GenuineIntel-6-(97|9A|B7|BA|BF),v1.31,alderlake,core
+-GenuineIntel-6-BE,v1.29,alderlaken,core
++GenuineIntel-6-BE,v1.31,alderlaken,core
  GenuineIntel-6-C[56],v1.08,arrowlake,core
  GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+ GenuineIntel-6-(3D|47),v30,broadwell,core
 --=20
 2.50.0.rc1.591.g9c95f17f64-goog
 
