@@ -1,189 +1,178 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78C52135DE
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Jun 2025 15:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCDC3BB48;
+	Fri, 13 Jun 2025 16:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830082; cv=none; b=CRRYRdRoxTgZnNJRKwJCTuSsc+duobkLHGFTk/LGR7yo6mN+78VS4LHMPRz7Gd5V7mkt4QdbbmP1grNwcno/wOUcqswB2YcHR3PNckptYTBzm0ypVq+BTb6D3IBN+WkHgvQEWr5Nn7WxoZ2o5FyUofW4L77eVUBtX5PMaJ1PRbs=
+	t=1749831388; cv=none; b=fsXzsz5o2skxq7Mppkd/YGuLqsK/NKZ6xMPTaai7mx+oCiGvwb2ghlZN9zDtzZqmfFXPidnms7hSa1sqYZTjWMQX+9dSUcDG+KDnHwb1wqrQwI0EIskrx6uy982/GZXd29fR88pCad/TP6Puv/yTKM1dCEO7uC4ReCkGUEvhd4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830082; c=relaxed/simple;
-	bh=UX5EF4zeJjllOssAvdNBH4/sTghaOWwikwxcas08Nfc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EpTNylZtea1KDN/b0R5G7VmwIbi6dAdXPnuKeVQqoDQAEwFwmlRUnx95aOq8/So55/G6aiJVnONZhmqANzr9L9AMycZMxRwRmIpdgUkvti7jsbx/EWCuzl+8NMBBtwlusTCjk420RTbxRWpf7FhqYh08xmO9h1D5tOlBPFdtgWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E41122FA;
-	Fri, 13 Jun 2025 08:54:19 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C2323F59E;
-	Fri, 13 Jun 2025 08:54:37 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 13 Jun 2025 16:53:45 +0100
-Subject: [PATCH 12/12] perf arm_spe: Allow parsing both data source and
- events
+	s=arc-20240116; t=1749831388; c=relaxed/simple;
+	bh=ZNNpiRmkgQK4oR4F1G7PDW15jDWHn/ulM0hbB5/DJ+A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gc4gCKfrk7XpTmYwrBI2cayWrCXo9xfU/IseV9dYk1CdsMqlZRGZYZgEXwL15UnPICJJi4eoCNjMExdcBt1bCYbF2zLMWpoDriegw6Tzeb0VDVJ62Hwfcjgm9Xqnjup8nXls9awP0qnE4x9j7TjWm6AzA8d4JAP8NUSB4zpPoBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0ZkkaNc; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0ZkkaNc"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70e3980757bso19002187b3.1;
+        Fri, 13 Jun 2025 09:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749831385; x=1750436185; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=shtQ31qt06IwsR1ZMo31fL+HFRJcJB0fu4GgqVpmkPo=;
+        b=b0ZkkaNcJKgChfomYQ93DTrc7JOa313A4YR+I9M1V6K0bxEATXLXIai7nU2w/480Hi
+         FKyiMctOXDODnHbQsPdqzEpXOviG1di9OnFmoJTfcm37t6qe1nYbc5Eao/FXMRu/3M65
+         izwTIT+8mzKqR1o2lAuEi2NcLmUVb4vVeHUHEN0cwLyCXswdFpJdmY0oNWv03Tu0Z6Ww
+         75LB3ANz2Wp3kQhRaRutnmBjF7lldvCeGHhTmcZkc1Gf/kwSuijuT0jPUX0tdpi8r78n
+         6SJWiDYgKmFtQtRm4VWaGFfJCTKFQeGVuQmsA532JXujB99wUd4H+It6BPV8nNJ3/6jU
+         oLYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749831385; x=1750436185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=shtQ31qt06IwsR1ZMo31fL+HFRJcJB0fu4GgqVpmkPo=;
+        b=o9DT5nLiCVT4LLaGc9TG/HpnfdXFoOJuZJsDwLObnLy5l7mwX+rHi/och4oGA8+j42
+         H7tvh6q5haw9sbZZRqqU26BlfExDjauHFISI8GPM0XwriiaMwhsh8KnoH+t4CCnCjUP/
+         s+ZDomPUoVdpBzYZz+WGMKbqt4g10uZDFnayfFmgjPWf68obB01H8W22x7BZDoK80rHT
+         kNvuvQBS9UDeKoOzDMwoYW2J3pFJtT5ZngCTcldYt0y1AKfRGUpOUYtoaEx+MRrJcFzo
+         49d8LjKLtLKfJyhvYXIpT2SoNVZMpR1AMJHoHwD2mgMR/qePgQydl4ynOo6E+2JhhKgi
+         BSPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVC7g2CVy6o64+iaL60WNa0t8o2ZmFs7KkQ09Iw3zOfUavirW6AABkWL/JilircMFADcYytHI7eAzoTmBNM/QtYIw==@vger.kernel.org, AJvYcCXvrpmMOIPOz9pnc61RjhCwdXL84X50xrM7f0pNbFlS4NJKnmzzuTyzYAagzmMpEFmtkHHSpLnZFHHQArI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSMM5mm2j1pcj/fq3sgW0Fe2uZ5xW9d9vBsJAs16LVIkU6ADyU
+	lxeBdNnmRLBicoOvUY45pT7xSWFA1T5M1sqltvNjq/SXxW05Z40UfVBr11QRS035u1dJWiT6nKR
+	VxaIClB0lt4jDXqSDGVrg4Uu8P07CYYY=
+X-Gm-Gg: ASbGncufbKm0TJmJyoAUk2x7jgaq7r02bAZNuZMHNHHx3bs767l2cFybjFZ7O27Si1g
+	nA1DYDW1Oyg7V/27O1mgxMVoXVYWeOd5eMeL//CIVhs44JNvlqViHr7P7bRvU537IuVjbQUfesK
+	Nk2VzghB3ySwidqenIFcpXJfffGHDkGPPYJ4II7txBpw==
+X-Google-Smtp-Source: AGHT+IH8KRO5NAvpOV0B710syFcRppWyEcfkkGyYilcXfnkd40EY4k0WKyLJ84ku9Df2F0oMV65SDnroAE30ZbfmsK0=
+X-Received: by 2002:a05:690c:7105:b0:710:e81e:1364 with SMTP id
+ 00721157ae682-71174831507mr5115987b3.6.1749831385405; Fri, 13 Jun 2025
+ 09:16:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-12-6faecf0a8775@arm.com>
-References: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-0-6faecf0a8775@arm.com>
-In-Reply-To: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-0-6faecf0a8775@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- James Clark <james.clark@linaro.org>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749830053; l=4562;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=UX5EF4zeJjllOssAvdNBH4/sTghaOWwikwxcas08Nfc=;
- b=E1IU9UBRaUpgtQNokE27DHRgUNsFtC/rxSWPcE/LX7GZGYldWopdDSl0EQvZvofSYhpH68x8B
- m4bWCMErR+FCW3t8cnhPO+GuSLrOq/97uNAZ8pT1W3qF7+ch2F91Pz0
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+References: <20250528191148.89118-6-howardchu95@gmail.com> <202506131634.ef8ef10b-lkp@intel.com>
+In-Reply-To: <202506131634.ef8ef10b-lkp@intel.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 13 Jun 2025 09:16:12 -0700
+X-Gm-Features: AX0GCFuPd9g_8EyYpHzUKWhhwGkbelEd9StxOrKONofjY15gj3p97SeL907_bds
+Message-ID: <CAH0uvoiF0OYWd9fB7_XxwK_pScYASnTNGssv2ABp1xcdz=+1nA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] perf test trace BTF: Use --sort-events in BTF
+ general tests
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	peterz@infradead.org, kan.liang@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Current code skips to parse events after generating data source. The
-reason is the data source packets have cache and snooping related info,
-the afterwards event packets might contain duplicate info.
+On Fri, Jun 13, 2025 at 2:41=E2=80=AFAM kernel test robot <oliver.sang@inte=
+l.com> wrote:
+>
+>
+> Hello,
+>
+> besides below formal report, we observed below difference comparing to pa=
+rent.
+>
+> 1d2859b4fa79a8e2 609a86901e6fd886f1139aed8f8
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :6          100%           6:6     kmsg.sanitizer.direct_leak/=
+__interceptor_malloc/alloc_event/ordered_events__new_event/ordered_events__=
+queue/trace__deliver_event/trace__run
+>            :6          100%           6:6     kmsg.sanitizer.direct_leak/=
+__interceptor_malloc/thread__get/trace__sys_enter/trace__handle_event/__tra=
+ce__deliver_event/ordered_events__deliver_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/nsinfo__alloc/nsinfo__copy/map__new/machine__process=
+_mmap2_event/machine__process_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/comm__new/thread__new/threads__findnew/__mach=
+ine__findnew_thread
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/dso__new_id/__dsos__addnew_id/__dsos__findnew=
+_id/dsos__findnew_id
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/dso__new_id/dso__new/__machine__addnew_vdso/m=
+achine__findnew_vdso
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/map__new/machine__process_mmap2_event/machine=
+__process_event/trace__process_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/maps__new/thread__init_maps/__machine__findne=
+w_thread/machine__findnew_thread
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/thread__new/threads__findnew/__machine__findn=
+ew_thread/machine__findnew_thread
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_calloc/zalloc/thread_trace__new/thread__trace/trace__sys_en=
+ter/trace__handle_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/comm_str__get/comm_strs__findnew/comm__override/____=
+thread__set_comm/__thread__set_comm
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/dso__get/map__init/map__new/machine__process_mmap2_e=
+vent/machine__process_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/map__get/__maps__insert_sorted/__maps__fixup_overlap=
+_and_insert/maps__fixup_overlap_and_insert/thread__insert_map
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/maps__new/thread__init_maps/__machine__findnew_threa=
+d/machine__findnew_thread/machine__process_comm_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/nsinfo__alloc/nsinfo__copy/map__new/machine__process=
+_mmap2_event/machine__process_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/nsinfo__alloc/nsinfo__new/thread__new/threads__findn=
+ew/__machine__findnew_thread
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/nsinfo__get/map__new/machine__process_mmap2_event/ma=
+chine__process_event/trace__process_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_malloc/trace__sys_enter/trace__handle_event/__trace__delive=
+r_event/ordered_events__deliver_event/do_flush
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_realloc/__maps__insert_sorted/__maps__fixup_overlap_and_ins=
+ert/maps__fixup_overlap_and_insert/thread__insert_map/machine__process_mmap=
+2_event
+>            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
+k/__interceptor_strdup/dso__set_basename/__dsos__addnew_id/__dsos__findnew_=
+id/dsos__findnew_id/machine__findnew_dso_id
+>
+>
+> we don't have enough knowledge whether the appearance of these leak messa=
+ge is
+> actually a fix from 609a86901e6fd886f1139aed8f8 which allows to show issu=
+e
+> clearly. so just report out FYI.
+>
+> below is formal report.
+>
+>
+> kernel test robot noticed "kmsg.sanitizer.indirect_leak/__interceptor_mal=
+loc/trace__sys_enter/trace__handle_event/__trace__deliver_event/ordered_eve=
+nts__deliver_event/do_flush" on:
+>
+> commit: 609a86901e6fd886f1139aed8f8c66d982f2afed ("[PATCH v3 5/6] perf te=
+st trace BTF: Use --sort-events in BTF general tests")
+> url: https://github.com/intel-lab-lkp/linux/commits/Howard-Chu/perf-test-=
+trace-Use-shell-s-f-flag-to-check-if-vmlinux-exists/20250529-031444
+> patch link: https://lore.kernel.org/all/20250528191148.89118-6-howardchu9=
+5@gmail.com/
+> patch subject: [PATCH v3 5/6] perf test trace BTF: Use --sort-events in B=
+TF general tests
 
-This commit changes to continue parsing the events after data source
-analysis. If data source does not give out memory level and snooping
-types, then the event info is used to synthesize the related fields.
-
-As a result, both the peer snoop option ('-d peer') and hitm options
-('-d tot/lcl/rmt') are supported by Arm SPE in the perf c2c.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/arm-spe.c | 69 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 41 insertions(+), 28 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 8a889f727f9cd5351b4ca027935112eddd16ea6c..8fde6f6cbce92aabf20d25b01ee2ade4aae7ea61 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -909,40 +909,54 @@ static void arm_spe__synth_memory_level(struct arm_spe_queue *speq,
- {
- 	struct arm_spe *spe = speq->spe;
- 
--	if (data_src->mem_op == PERF_MEM_OP_LOAD)
--		arm_spe__synth_ld_memory_level(record, data_src);
--	if (data_src->mem_op == PERF_MEM_OP_STORE)
--		arm_spe__synth_st_memory_level(record, data_src);
-+	/*
-+	 * The data source packet contains more info for cache levels for
-+	 * peer snooping. So respect the memory level if has been set by
-+	 * data source parsing.
-+	 */
-+	if (!data_src->mem_lvl) {
-+		if (data_src->mem_op == PERF_MEM_OP_LOAD)
-+			arm_spe__synth_ld_memory_level(record, data_src);
-+		if (data_src->mem_op == PERF_MEM_OP_STORE)
-+			arm_spe__synth_st_memory_level(record, data_src);
-+	}
- 
- 	if (!data_src->mem_lvl) {
- 		data_src->mem_lvl = PERF_MEM_LVL_NA;
- 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_NA;
- 	}
- 
--	if (record->type & ARM_SPE_DATA_SNOOPED) {
--		if (record->type & ARM_SPE_HITM)
--			data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
--		else
--			data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
--	} else {
--		u64 *metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
--
--		/*
--		 * Set NA ("Not available") mode if no meta data or the
--		 * SNOOPED event is not supported.
--		 */
--		if (!metadata ||
--		    !(metadata[ARM_SPE_CAP_EVENTS] & ARM_SPE_DATA_SNOOPED))
--			data_src->mem_snoop = PERF_MEM_SNOOP_NA;
--		else
--			data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-+	/*
-+	 * If 'mem_snoop' has been set by data source packet, skip to set
-+	 * it at here.
-+	 */
-+	if (!data_src->mem_snoop) {
-+		if (record->type & ARM_SPE_DATA_SNOOPED) {
-+			if (record->type & ARM_SPE_HITM)
-+				data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-+			else
-+				data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
-+		} else {
-+			u64 *metadata =
-+				arm_spe__get_metadata_by_cpu(spe, speq->cpu);
-+
-+			/*
-+			 * Set NA ("Not available") mode if no meta data or the
-+			 * SNOOPED event is not supported.
-+			 */
-+			if (!metadata ||
-+			    !(metadata[ARM_SPE_CAP_EVENTS] & ARM_SPE_DATA_SNOOPED))
-+				data_src->mem_snoop = PERF_MEM_SNOOP_NA;
-+			else
-+				data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-+		}
- 	}
- 
- 	if (record->type & ARM_SPE_REMOTE_ACCESS)
- 		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
- }
- 
--static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
-+static void arm_spe__synth_ds(struct arm_spe_queue *speq,
- 			      const struct arm_spe_record *record,
- 			      union perf_mem_data_src *data_src)
- {
-@@ -961,19 +975,18 @@ static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
- 	} else {
- 		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
- 		if (!metadata)
--			return false;
-+			return;
- 
- 		midr = metadata[ARM_SPE_CPU_MIDR];
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
- 		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
--			data_source_handles[i].ds_synth(record, data_src);
--			return true;
-+			return data_source_handles[i].ds_synth(record, data_src);
- 		}
- 	}
- 
--	return false;
-+	return;
- }
- 
- static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
-@@ -992,8 +1005,8 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
- 	else
- 		return 0;
- 
--	if (!arm_spe__synth_ds(speq, record, &data_src))
--		arm_spe__synth_memory_level(speq, record, &data_src);
-+	arm_spe__synth_ds(speq, record, &data_src);
-+	arm_spe__synth_memory_level(speq, record, &data_src);
- 
- 	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
- 		data_src.mem_dtlb = PERF_MEM_TLB_WK;
-
--- 
-2.34.1
-
+Definitely because of --sort-event, option coverage is important. Will
+fix it, thanks bot.
