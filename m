@@ -1,178 +1,95 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCDC3BB48;
-	Fri, 13 Jun 2025 16:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313D6BA49
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Jun 2025 00:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749831388; cv=none; b=fsXzsz5o2skxq7Mppkd/YGuLqsK/NKZ6xMPTaai7mx+oCiGvwb2ghlZN9zDtzZqmfFXPidnms7hSa1sqYZTjWMQX+9dSUcDG+KDnHwb1wqrQwI0EIskrx6uy982/GZXd29fR88pCad/TP6Puv/yTKM1dCEO7uC4ReCkGUEvhd4o=
+	t=1749861673; cv=none; b=mnhJrf0hzE6xy8Vo6xVVbFOFrS6Zl0p0u2nw8EpaJclos/GeFjrjL7A9+uzMsT6gUnxCtY3f7zjZNY3u79Pe7LI1hudK9FgBep0VEyNRXWtRz0NLRUREFdMrfaJqCZrlIBej4l4hnljcgaB6t8MXwcurdYZYGMKxoZq1BvX4bvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749831388; c=relaxed/simple;
-	bh=ZNNpiRmkgQK4oR4F1G7PDW15jDWHn/ulM0hbB5/DJ+A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gc4gCKfrk7XpTmYwrBI2cayWrCXo9xfU/IseV9dYk1CdsMqlZRGZYZgEXwL15UnPICJJi4eoCNjMExdcBt1bCYbF2zLMWpoDriegw6Tzeb0VDVJ62Hwfcjgm9Xqnjup8nXls9awP0qnE4x9j7TjWm6AzA8d4JAP8NUSB4zpPoBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0ZkkaNc; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749861673; c=relaxed/simple;
+	bh=hH5vIPdTCQff8gwOm6etCU6s/IbLP6xIsPkR6QvOXa4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=LhYBcCzpn+Z4Etjz34l+9YsUh+JlJUcErrJCohgo+MBDrhcYjk9I1+BJuRFkOfcpjjJOm0YcuffmjBePfav8zPrruNvUyVtI+eX/bxSJVbmZSHo8HOrT4age1XL3xUQWM0r1YBbifVxwlCkHphxDe9zmBzVoeXdBxQaVJDFEX+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MIXnpKci; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0ZkkaNc"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70e3980757bso19002187b3.1;
-        Fri, 13 Jun 2025 09:16:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MIXnpKci"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-740270e168aso2253706b3a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Jun 2025 17:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749831385; x=1750436185; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=shtQ31qt06IwsR1ZMo31fL+HFRJcJB0fu4GgqVpmkPo=;
-        b=b0ZkkaNcJKgChfomYQ93DTrc7JOa313A4YR+I9M1V6K0bxEATXLXIai7nU2w/480Hi
-         FKyiMctOXDODnHbQsPdqzEpXOviG1di9OnFmoJTfcm37t6qe1nYbc5Eao/FXMRu/3M65
-         izwTIT+8mzKqR1o2lAuEi2NcLmUVb4vVeHUHEN0cwLyCXswdFpJdmY0oNWv03Tu0Z6Ww
-         75LB3ANz2Wp3kQhRaRutnmBjF7lldvCeGHhTmcZkc1Gf/kwSuijuT0jPUX0tdpi8r78n
-         6SJWiDYgKmFtQtRm4VWaGFfJCTKFQeGVuQmsA532JXujB99wUd4H+It6BPV8nNJ3/6jU
-         oLYg==
+        d=google.com; s=20230601; t=1749861671; x=1750466471; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gIpeoLgx1K21dRmhAOymx8G2jElFSvxUENOQocYBfZ0=;
+        b=MIXnpKciWfQvwDzJ4FRhGgZ0P+wkbarV0BbGJBjozrysu/jlXCb423kMNuYTLk+RG1
+         te1t3KtzCAOZXQv+tWeuFo4avAEBgu85ISXPGo7Bzs6fXklKF0PZpgownx1sxi2aBmiU
+         0pshQ4jiqZYy73zT8wgeJfj8VXtcgfaavB920ISOTe7QQ3/OXsslmTaLp1uvShrlr6jd
+         U9NUWUNJXllbMESPJQk6chuAoZiubgwR7DNEnDkg9Q5Yrr4fArkpYMqcGgHkDWVVWjGs
+         0LaxcEYLgyxkGFE0ucGurzyh5rwzNejA8+4TiHzKYoMGBG+SeqUxndLFUjwCHEmk/GsN
+         QYhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749831385; x=1750436185;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=shtQ31qt06IwsR1ZMo31fL+HFRJcJB0fu4GgqVpmkPo=;
-        b=o9DT5nLiCVT4LLaGc9TG/HpnfdXFoOJuZJsDwLObnLy5l7mwX+rHi/och4oGA8+j42
-         H7tvh6q5haw9sbZZRqqU26BlfExDjauHFISI8GPM0XwriiaMwhsh8KnoH+t4CCnCjUP/
-         s+ZDomPUoVdpBzYZz+WGMKbqt4g10uZDFnayfFmgjPWf68obB01H8W22x7BZDoK80rHT
-         kNvuvQBS9UDeKoOzDMwoYW2J3pFJtT5ZngCTcldYt0y1AKfRGUpOUYtoaEx+MRrJcFzo
-         49d8LjKLtLKfJyhvYXIpT2SoNVZMpR1AMJHoHwD2mgMR/qePgQydl4ynOo6E+2JhhKgi
-         BSPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVC7g2CVy6o64+iaL60WNa0t8o2ZmFs7KkQ09Iw3zOfUavirW6AABkWL/JilircMFADcYytHI7eAzoTmBNM/QtYIw==@vger.kernel.org, AJvYcCXvrpmMOIPOz9pnc61RjhCwdXL84X50xrM7f0pNbFlS4NJKnmzzuTyzYAagzmMpEFmtkHHSpLnZFHHQArI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSMM5mm2j1pcj/fq3sgW0Fe2uZ5xW9d9vBsJAs16LVIkU6ADyU
-	lxeBdNnmRLBicoOvUY45pT7xSWFA1T5M1sqltvNjq/SXxW05Z40UfVBr11QRS035u1dJWiT6nKR
-	VxaIClB0lt4jDXqSDGVrg4Uu8P07CYYY=
-X-Gm-Gg: ASbGncufbKm0TJmJyoAUk2x7jgaq7r02bAZNuZMHNHHx3bs767l2cFybjFZ7O27Si1g
-	nA1DYDW1Oyg7V/27O1mgxMVoXVYWeOd5eMeL//CIVhs44JNvlqViHr7P7bRvU537IuVjbQUfesK
-	Nk2VzghB3ySwidqenIFcpXJfffGHDkGPPYJ4II7txBpw==
-X-Google-Smtp-Source: AGHT+IH8KRO5NAvpOV0B710syFcRppWyEcfkkGyYilcXfnkd40EY4k0WKyLJ84ku9Df2F0oMV65SDnroAE30ZbfmsK0=
-X-Received: by 2002:a05:690c:7105:b0:710:e81e:1364 with SMTP id
- 00721157ae682-71174831507mr5115987b3.6.1749831385405; Fri, 13 Jun 2025
- 09:16:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749861671; x=1750466471;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gIpeoLgx1K21dRmhAOymx8G2jElFSvxUENOQocYBfZ0=;
+        b=Xwr+klMZcMclAa+OtmfF1CruU8LUKaP0Fv/AuySAocV21Dwx3wXpIJAj3fGCqZzitq
+         P8GQcEGMXTJMxFUHTdfj03C7qj9IcmtLGMaltzNLm4FoJVSu8zOvhm0uHvUdJpQzfbbI
+         Mt8grU0EkOddr1AZKSylPNCPpcUsVVjnRtHWbZNhdXtVtsO5i++z1ODLgf5GGcf9Qq/y
+         C4ATOq5zxw60juq0mOR3N64/IunfTGc/hG+1/sYGMC+FZwtYW71ZVfqEaf9eXDuLQSd7
+         uoVtI2OvlW67oaNkfPhDx+8gvRvapRNsB1C0LCshd86Bfu9LJbQ9KPKSt/Z+Z35IZb+v
+         LACQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8A03c/o4Fe8lNlnas2lWTjl/AXO8sgITR+ueZTqXjxUo1rAxt/vwIdvVMH0XRM5wTw8rawVs3Bv6pCXMNGmTS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGvcujUt9QHtm8zHMqd+MZ7ArDBzTHL0G8Ml+CLqe3h4FPTH1O
+	hzM00/fWSn6IRZ7S3w9eH1LBdFeDg/PqVBiE3U30GVFfwZUCjOhJ7im7mlxiZ7EMJhgKaKRAssE
+	5Octc/DXSyg==
+X-Google-Smtp-Source: AGHT+IGmKPJfsPCnvNpuOKHgItgWUFCp+xTyjx33g6KS/Q9Z5ioZMSCkxxEO5LmKd1BvAO1c4Fp3J/S/dn0R
+X-Received: from pgbfy9.prod.google.com ([2002:a05:6a02:2a89:b0:b2c:374b:9e48])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:158b:b0:21f:994e:7355
+ with SMTP id adf61e73a8af0-21fbd668cf5mr2044481637.36.1749861671333; Fri, 13
+ Jun 2025 17:41:11 -0700 (PDT)
+Date: Fri, 13 Jun 2025 17:41:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250528191148.89118-6-howardchu95@gmail.com> <202506131634.ef8ef10b-lkp@intel.com>
-In-Reply-To: <202506131634.ef8ef10b-lkp@intel.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 13 Jun 2025 09:16:12 -0700
-X-Gm-Features: AX0GCFuPd9g_8EyYpHzUKWhhwGkbelEd9StxOrKONofjY15gj3p97SeL907_bds
-Message-ID: <CAH0uvoiF0OYWd9fB7_XxwK_pScYASnTNGssv2ABp1xcdz=+1nA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] perf test trace BTF: Use --sort-events in BTF
- general tests
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	peterz@infradead.org, kan.liang@linux.intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250614004108.1650988-1-irogers@google.com>
+Subject: [PATCH v1 1/4] perf test: Directory file descriptor leak
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Andi Kleen <ak@linux.intel.com>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 2:41=E2=80=AFAM kernel test robot <oliver.sang@inte=
-l.com> wrote:
->
->
-> Hello,
->
-> besides below formal report, we observed below difference comparing to pa=
-rent.
->
-> 1d2859b4fa79a8e2 609a86901e6fd886f1139aed8f8
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :6          100%           6:6     kmsg.sanitizer.direct_leak/=
-__interceptor_malloc/alloc_event/ordered_events__new_event/ordered_events__=
-queue/trace__deliver_event/trace__run
->            :6          100%           6:6     kmsg.sanitizer.direct_leak/=
-__interceptor_malloc/thread__get/trace__sys_enter/trace__handle_event/__tra=
-ce__deliver_event/ordered_events__deliver_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/nsinfo__alloc/nsinfo__copy/map__new/machine__process=
-_mmap2_event/machine__process_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/comm__new/thread__new/threads__findnew/__mach=
-ine__findnew_thread
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/dso__new_id/__dsos__addnew_id/__dsos__findnew=
-_id/dsos__findnew_id
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/dso__new_id/dso__new/__machine__addnew_vdso/m=
-achine__findnew_vdso
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/map__new/machine__process_mmap2_event/machine=
-__process_event/trace__process_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/maps__new/thread__init_maps/__machine__findne=
-w_thread/machine__findnew_thread
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/thread__new/threads__findnew/__machine__findn=
-ew_thread/machine__findnew_thread
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_calloc/zalloc/thread_trace__new/thread__trace/trace__sys_en=
-ter/trace__handle_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/comm_str__get/comm_strs__findnew/comm__override/____=
-thread__set_comm/__thread__set_comm
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/dso__get/map__init/map__new/machine__process_mmap2_e=
-vent/machine__process_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/map__get/__maps__insert_sorted/__maps__fixup_overlap=
-_and_insert/maps__fixup_overlap_and_insert/thread__insert_map
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/maps__new/thread__init_maps/__machine__findnew_threa=
-d/machine__findnew_thread/machine__process_comm_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/nsinfo__alloc/nsinfo__copy/map__new/machine__process=
-_mmap2_event/machine__process_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/nsinfo__alloc/nsinfo__new/thread__new/threads__findn=
-ew/__machine__findnew_thread
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/nsinfo__get/map__new/machine__process_mmap2_event/ma=
-chine__process_event/trace__process_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_malloc/trace__sys_enter/trace__handle_event/__trace__delive=
-r_event/ordered_events__deliver_event/do_flush
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_realloc/__maps__insert_sorted/__maps__fixup_overlap_and_ins=
-ert/maps__fixup_overlap_and_insert/thread__insert_map/machine__process_mmap=
-2_event
->            :6          100%           6:6     kmsg.sanitizer.indirect_lea=
-k/__interceptor_strdup/dso__set_basename/__dsos__addnew_id/__dsos__findnew_=
-id/dsos__findnew_id/machine__findnew_dso_id
->
->
-> we don't have enough knowledge whether the appearance of these leak messa=
-ge is
-> actually a fix from 609a86901e6fd886f1139aed8f8 which allows to show issu=
-e
-> clearly. so just report out FYI.
->
-> below is formal report.
->
->
-> kernel test robot noticed "kmsg.sanitizer.indirect_leak/__interceptor_mal=
-loc/trace__sys_enter/trace__handle_event/__trace__deliver_event/ordered_eve=
-nts__deliver_event/do_flush" on:
->
-> commit: 609a86901e6fd886f1139aed8f8c66d982f2afed ("[PATCH v3 5/6] perf te=
-st trace BTF: Use --sort-events in BTF general tests")
-> url: https://github.com/intel-lab-lkp/linux/commits/Howard-Chu/perf-test-=
-trace-Use-shell-s-f-flag-to-check-if-vmlinux-exists/20250529-031444
-> patch link: https://lore.kernel.org/all/20250528191148.89118-6-howardchu9=
-5@gmail.com/
-> patch subject: [PATCH v3 5/6] perf test trace BTF: Use --sort-events in B=
-TF general tests
+Add missed close when iterating over the script directories.
 
-Definitely because of --sort-event, option coverage is important. Will
-fix it, thanks bot.
+Fixes: f3295f5b067d ("perf tests: Use scandirat for shell script finding")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/tests-scripts.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index 1d5759d08141..3a2a8438f9af 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -260,6 +260,7 @@ static void append_scripts_in_dir(int dir_fd,
+ 			continue; /* Skip scripts that have a separate driver. */
+ 		fd = openat(dir_fd, ent->d_name, O_PATH);
+ 		append_scripts_in_dir(fd, result, result_sz);
++		close(fd);
+ 	}
+ 	for (i = 0; i < n_dirs; i++) /* Clean up */
+ 		zfree(&entlist[i]);
+-- 
+2.50.0.rc1.591.g9c95f17f64-goog
+
