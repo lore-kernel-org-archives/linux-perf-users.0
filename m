@@ -1,328 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD02D1DED5D;
-	Sat, 14 Jun 2025 04:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6069202C44
+	for <linux-perf-users@vger.kernel.org>; Sun, 15 Jun 2025 23:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749876223; cv=none; b=FbO8m4IFmS1IO/7/HDEs5a90bjZF4SQLPrJ6cVNUO73psxB1wIo2GjaTLanR2kFuTklF8vA3yFayFa4GIXmZTnGx58k49xRd1t8pmsrfbhY5ZTNt9wyNi/wAFrV+mlulGo9P0tL++cxa94d3VM0vJvoTT0aYZPSvyxixO35ixr8=
+	t=1750029848; cv=none; b=AZKV9mOpcJTKZGrAd/CA7s4TYaCHZlCZVIBa907D4nt7wbT6ibg9ulnmpqFMmWJt8EvAskGpB/0b9SNNhkNrOqA/NNywll324dFhDru7srRXKV2rv+rEMWAuILqBogEoLL8ust6xhDL/W8VU3evtwwXVWc2UJ1fn6pMXiivliAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749876223; c=relaxed/simple;
-	bh=DFaxT6+s/Nle/3us53Y5IO+wxfnupBIhNM8NsGHK2Ek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=szbycR2Ft8uhJMbuhr9rF1annLnaA0/rp3SIIvRjzLGM6tUUuM+vVA3vaX892FtWehDin69NOcgxNQpXzdjMgQLPoqLUHZg1b6Uyxw8S6q6u18V7/I2wMghi8PvYv3PSmktVfQ4W4cyT4nLb7JNIiZrRQ3p8nsBIYwSBiVvumdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZ2/ELd0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750029848; c=relaxed/simple;
+	bh=vwMIuAyKRi8rXG370bSUkcKGMyY5VS4y4IUamLISfv8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=im9mp2uYmX3FKLQvXkz49/HBWBdu0vDq5VBIMc532of4pjvEst0DSVcbtnJa+V6emG4oNFClZsqUKc27/bNWeL71COropt9tJ6dOjTEgz0UhlV+5IHnm50Sm+HpP5LSVD/4xEpYc/V2rpX3oxBSQlJrGbBZLNHiSbXC6JgSU1Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kKrUHP30; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZ2/ELd0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3C3C4CEF1;
-	Sat, 14 Jun 2025 04:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749876223;
-	bh=DFaxT6+s/Nle/3us53Y5IO+wxfnupBIhNM8NsGHK2Ek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lZ2/ELd0OWqTLEr7PsuRVrKG/e/JQKH3vZvMUYOWUzCZfAFX7LluuePQbm/4Bq8N9
-	 jyn4IwN31i066uWSd86e+naJ782oLKITHZJyIKfHwXgCHeiJXldVPAlVbpMjEZxMVv
-	 e24mvwW/GECimx52BgLhH2p/UXsOKq6wx7yVHKarn2VT1sLcygSTYUw8dAlbBCK0HF
-	 RRNcl6tlrbV0YRjynMPBCDgSyO7pTGDtBa+3yn1K1dwZEyRPZDLDcnx6vaOQFBDkuP
-	 AeOi9Ig6w9P4af0LEGUmu+r4clLTUSTuaFgCXJgSrMR1SgW1g9Zxktg6b4bgL5rghO
-	 g06jIgsxYYXrQ==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Yuzhuo Jing <yuzhuo@google.com>
-Subject: [PATCH v2 4/4] tools: Remove libcrypto dependency
-Date: Fri, 13 Jun 2025 21:41:33 -0700
-Message-ID: <20250614044133.660848-5-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250614044133.660848-1-ebiggers@kernel.org>
-References: <20250614044133.660848-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kKrUHP30"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo222335ab.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jun 2025 16:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750029846; x=1750634646; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vwMIuAyKRi8rXG370bSUkcKGMyY5VS4y4IUamLISfv8=;
+        b=kKrUHP30Y27YwUqqSYSYgnzG9HJfJSl06Lg6zvcTSpmWmyO0qUBZJnzy04MzxORr0b
+         XAoBPf4U+yEK9lrd1+31xPjOcnl7QLadePdf3Yv7/Vh/wxA0y+B83c31+HhMUWluw2FJ
+         T/D0Vms75xFuC8T5ZS8YdGH0DAluYWgyAIc9Ndr/UDDfUamgyz+NyAHagE6LKTvsYkT5
+         rnKC9WP8XyuoTz7zK2znIBaHBslBwLFH60ktZJzjRNrN8IDq/kru06ZX2jpNdDdySbTW
+         reAgMxufHkVFq5S91OVmGDfbyppDolpg0YX0rXVJ8nrY4/nKw+zYaZwuTceZJhZpR4sT
+         LZWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750029846; x=1750634646;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vwMIuAyKRi8rXG370bSUkcKGMyY5VS4y4IUamLISfv8=;
+        b=KUgbtxiz1dUBjNCJ+LUCKP9Z7y9szTIZH4zv7UX6ZN9y6LtCAJfbUav+VpkcmM9aQ/
+         T9fsxKtpFiODP/JHU3XEh1KUryMgXxmVzKadvwpYNeldXoK4D6m+ATHwzI+ftXFpD/il
+         oguatEClRe9EWeiZ8xYMWZ+USnDauC9Z3h7FsghL1VC/APzEissEC70ObyOCn+ijbsaV
+         DLgdycFa/tZrIqaQbnN0FVVfEfTBNuSxz6RH1L8R6ptOfkDsq5IIAmVZ4GqzV6GrNdMs
+         9TNuvcOYEeOGA36bcMN89SrRyyWAK0qSDwt9emkpiJckjbZXcgue8ZCij/L33qayc3bz
+         gx8w==
+X-Gm-Message-State: AOJu0Yw9iFK5EHvf4Bg+uuPdP9geJtOLLPHBku5dA8eR3gs+gOAtcqXw
+	iOdOHqc/q2BrPtBFlECrMXiaAMSZql/cP1yf0KjR5QoqxLFLDMUrXkG/0FQ79w7wpWoh9CwegI4
+	rNECe5SBJD0eysM/agT8tNap6HKqreo0yL8jR+dp/
+X-Gm-Gg: ASbGncvVzEzIm1NNpi+dvCo+b1IpqAvcojvRjZ71zfxalf3m8iQt2xi5xXL649gEKLA
+	9IwZHpUHQY4+y3MXDZgJ4IobyUOmBcuMPlKKcW9nMLGkukSmIHT4aToxqiw/IZX+kzk/e/XxX45
+	WMyBz2q52mJeHBhj2LKmjskRHnIQIVItYkUab08zEjBEoO
+X-Google-Smtp-Source: AGHT+IHu8qLD9HEoOj18ibGhNWjSZBHX9s4GQO6x40yzsPKDfCevdhx+NkMo0Wyi6FCsrSuva8xYXMP7pqXkBOO8AIs=
+X-Received: by 2002:a05:6e02:380a:b0:3db:854b:9f52 with SMTP id
+ e9e14a558f8ab-3de09fa69e3mr3029475ab.7.1750029845412; Sun, 15 Jun 2025
+ 16:24:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu> <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 15 Jun 2025 16:23:54 -0700
+X-Gm-Features: AX0GCFs89st61cBzkl-ZMUZMQghK5-hsj_Ja7ha9KZv9FAVR4jDiUgtCHueqE9E
+Message-ID: <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
+Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on hybrid
+To: Vince Weaver <vincent.weaver@maine.edu>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yuzhuo Jing <yuzhuo@google.com>
+On Wed, Dec 4, 2024 at 4:57=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Wed, Dec 4, 2024 at 2:06=E2=80=AFPM Vince Weaver <vincent.weaver@maine=
+.edu> wrote:
+> >
+> > Hello
+> >
+> > so the PAPI team is working on trying to get Intel top-down event suppo=
+rt
+> > working.
+> >
+> > We ran into a problem where on hybrid machines (Alder/Raptor Lake) topd=
+own
+> > events are only supported on P-cores but not E-cores.
+> >
+> > So you have code that is happily using rdpmc to read the data on P-core=
+s
+> > but if you have bad luck and get rescheduled to an E-core then the rdpm=
+c
+> > instruction will segfault/gpf the whole program.
+> >
+> > Is there any way, short of setting up a complex segfault signal handler=
+,
+> > to avoid this happening?
+> >
+> > In theory you could try to check what core type you are on before doing
+> > the rdpmc but there's a race there if you get rescheduled after the che=
+ck
+> > but before the actual rdpmc instruction.
+>
+> Perhaps this is a use-case for restartable sequences? The current
+> logic in libperf doesn't handle this, nor hybrid:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/lib/perf/tests/test-evsel.c?h=3Dperf-tools-next#n127
+> which is a shame.
 
-Remove all occurrence of libcrypto in the build system.
+So I spoke to Kan and posted a revised perf test that works on hybrid:
+https://lore.kernel.org/lkml/20250614004528.1652860-1-irogers@google.com/
+Basically on hybrid before doing the rdpmc instruction the test now
+ensures the affinity matches that of the CPUs the perf event can be
+scheduled upon.
 
-Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- tools/build/Makefile.feature            |  2 --
- tools/build/feature/Makefile            |  4 ----
- tools/build/feature/test-all.c          |  5 -----
- tools/build/feature/test-libcrypto.c    | 25 -------------------------
- tools/perf/Documentation/perf-check.txt |  1 -
- tools/perf/Makefile.config              | 13 -------------
- tools/perf/Makefile.perf                |  3 ---
- tools/perf/builtin-check.c              |  1 -
- tools/perf/tests/make                   |  4 +---
- 9 files changed, 1 insertion(+), 57 deletions(-)
- delete mode 100644 tools/build/feature/test-libcrypto.c
+I do think that there is still a race and the race is there even
+without hybrid. One thought is that an event may get scheduled on
+fixed or generic counters depending on what was previously scheduled
+during sched_in. The mmap has an "index" value described as the
+"hardware event identifier":
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/include/uapi/linux/perf_event.h#n632
+and this value minus 1 gets passed to rdpmc in the rdpmc loop (as in
+libperf and shown in perf_event.h). If a pinned event were using a
+fixed counter on certain CPUs and the same event were being used by
+rdpmc on all/any CPUs, then the particular counter used for the event
+may vary causing the index to perhaps show the fixed counter but on
+the CPU the rdpmc is executed the generic counter was scheduled with
+the event and should be read instead. I think something similar could
+happen if an event were deleted on a CPU between the read of "index"
+and the user by rdpmc. Perhaps I'm ignorant of the inner workings of
+the user page and scheduling, but it seems a restartable sequence is
+needed to make this somewhat atomic. Even if it were in a restartable
+sequence I think a remote delete of an event could cause the
+counter/"index" to change while the reader stays on the same CPU (ie
+the restartable sequence needn't restart but the counters changed).
+Perhaps there needs to be more "buyer beware" language around the
+rdpmc instruction in perf_event.h and associated man pages, while the
+perf tool should avoid rdpmc due to the need for at least thread
+affinity calls.
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 57bd995ce6afa..bbadfb5568ebe 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -84,11 +84,10 @@ FEATURE_TESTS_BASIC :=                  \
-         libpython                       \
-         libslang                        \
-         libtraceevent                   \
-         libtracefs                      \
-         libcpupower                     \
--        libcrypto                       \
-         pthread-attr-setaffinity-np     \
-         pthread-barrier     		\
-         reallocarray                    \
-         stackprotector-all              \
-         timerfd                         \
-@@ -150,11 +149,10 @@ FEATURE_DISPLAY ?=              \
-          libelf                 \
-          libnuma                \
-          numa_num_possible_cpus \
-          libperl                \
-          libpython              \
--         libcrypto              \
-          libcapstone            \
-          llvm-perf              \
-          zlib                   \
-          lzma                   \
-          get_cpuid              \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index b8b5fb183dd40..04a4aa0341aae 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -36,11 +36,10 @@ FILES=                                          \
-          test-libslang.bin                      \
-          test-libslang-include-subdir.bin       \
-          test-libtraceevent.bin                 \
-          test-libcpupower.bin                   \
-          test-libtracefs.bin                    \
--         test-libcrypto.bin                     \
-          test-libunwind.bin                     \
-          test-libunwind-debug-frame.bin         \
-          test-libunwind-x86.bin                 \
-          test-libunwind-x86_64.bin              \
-          test-libunwind-arm.bin                 \
-@@ -244,13 +243,10 @@ $(OUTPUT)test-libcpupower.bin:
- 	$(BUILD) -lcpupower
- 
- $(OUTPUT)test-libtracefs.bin:
- 	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtracefs 2>/dev/null) -ltracefs
- 
--$(OUTPUT)test-libcrypto.bin:
--	$(BUILD) -lcrypto
--
- $(OUTPUT)test-gtk2.bin:
- 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) -Wno-deprecated-declarations
- 
- $(OUTPUT)test-gtk2-infobar.bin:
- 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null)
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 03ddaac6f4c4d..ce72e2061ac0a 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -136,14 +136,10 @@
- 
- #define main main_test_bpf
- # include "test-bpf.c"
- #undef main
- 
--#define main main_test_libcrypto
--# include "test-libcrypto.c"
--#undef main
--
- #define main main_test_sdt
- # include "test-sdt.c"
- #undef main
- 
- #define main main_test_setns
-@@ -204,11 +200,10 @@ int main(int argc, char *argv[])
- 	main_test_pthread_attr_setaffinity_np();
- 	main_test_pthread_barrier();
- 	main_test_lzma();
- 	main_test_get_cpuid();
- 	main_test_bpf();
--	main_test_libcrypto();
- 	main_test_scandirat();
- 	main_test_sched_getcpu();
- 	main_test_sdt();
- 	main_test_setns();
- 	main_test_libaio();
-diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
-deleted file mode 100644
-index bc34a5bbb5049..0000000000000
---- a/tools/build/feature/test-libcrypto.c
-+++ /dev/null
-@@ -1,25 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <openssl/evp.h>
--#include <openssl/sha.h>
--#include <openssl/md5.h>
--
--int main(void)
--{
--	EVP_MD_CTX *mdctx;
--	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
--	unsigned char dat[] = "12345";
--	unsigned int digest_len;
--
--	mdctx = EVP_MD_CTX_new();
--	if (!mdctx)
--		return 0;
--
--	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
--	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
--	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
--	EVP_MD_CTX_free(mdctx);
--
--	SHA1(&dat[0], sizeof(dat), &md[0]);
--
--	return 0;
--}
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-index a764a46292206..2b96cb5786581 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -51,11 +51,10 @@ feature::
-                 dwarf_getlocations      /  HAVE_LIBDW_SUPPORT
-                 dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
-                 auxtrace                /  HAVE_AUXTRACE_SUPPORT
-                 libbfd                  /  HAVE_LIBBFD_SUPPORT
-                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
--                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-                 libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-                 libelf                  /  HAVE_LIBELF_SUPPORT
-                 libnuma                 /  HAVE_LIBNUMA_SUPPORT
-                 libopencsd              /  HAVE_CSTRACE_SUPPORT
-                 libperl                 /  HAVE_LIBPERL_SUPPORT
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 1691b47c4694c..376929c15b989 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -132,12 +132,10 @@ ifndef NO_LIBUNWIND
-   FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
-   FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
-   FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
- endif
- 
--FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
--
- ifdef CSINCLUDES
-   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
- endif
- OPENCSDLIBS := -lopencsd_c_api -lopencsd
- ifeq ($(findstring -static,${LDFLAGS}),-static)
-@@ -774,21 +772,10 @@ endif
- 
- ifneq ($(NO_LIBTRACEEVENT),1)
-   $(call detected,CONFIG_TRACE)
- endif
- 
--ifndef NO_LIBCRYPTO
--  ifneq ($(feature-libcrypto), 1)
--    $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev)
--    NO_LIBCRYPTO := 1
--  else
--    CFLAGS += -DHAVE_LIBCRYPTO_SUPPORT
--    EXTLIBS += -lcrypto
--    $(call detected,CONFIG_CRYPTO)
--  endif
--endif
--
- ifndef NO_SLANG
-   ifneq ($(feature-libslang), 1)
-     ifneq ($(feature-libslang-include-subdir), 1)
-       $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev)
-       NO_SLANG := 1
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d4c7031b01a77..9246c94656e03 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -59,13 +59,10 @@ include ../scripts/utilities.mak
- #
- # Define NO_LIBNUMA if you do not want numa perf benchmark
- #
- # Define NO_LIBBIONIC if you do not want bionic support
- #
--# Define NO_LIBCRYPTO if you do not want libcrypto (openssl) support
--# used for generating build-ids for ELFs generated by jitdump.
--#
- # Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
- # for dwarf backtrace post unwind.
- #
- # Define NO_LIBTRACEEVENT=1 if you don't want libtraceevent to be linked,
- # this will remove multiple features and tools, such as 'perf trace',
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 9a509cb3bb9a0..ad49f2564aae2 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -42,11 +42,10 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("dwarf_getlocations", HAVE_LIBDW_SUPPORT),
- 	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
- 	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
- 	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
- 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
--	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
- 	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
- 	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
- 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
- 	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
- 	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 0ee94caf9ec19..e3651e5b195a4 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -89,11 +89,10 @@ make_no_libnuma     := NO_LIBNUMA=1
- make_no_libbionic   := NO_LIBBIONIC=1
- make_no_auxtrace    := NO_AUXTRACE=1
- make_no_libbpf	    := NO_LIBBPF=1
- make_libbpf_dynamic := LIBBPF_DYNAMIC=1
- make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
--make_no_libcrypto   := NO_LIBCRYPTO=1
- make_no_libllvm     := NO_LIBLLVM=1
- make_with_babeltrace:= LIBBABELTRACE=1
- make_with_coresight := CORESIGHT=1
- make_no_sdt	    := NO_SDT=1
- make_no_libpfm4     := NO_LIBPFM4=1
-@@ -120,11 +119,11 @@ make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX3
- # all the NO_* variable combined
- make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
- make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
- make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1
- make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
--make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
-+make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
- make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
- 
- # $(run) contains all available tests
- run := make_pure
- # Targets 'clean all' can be run together only through top level
-@@ -158,11 +157,10 @@ run += make_no_libcapstone
- run += make_no_libnuma
- run += make_no_libbionic
- run += make_no_auxtrace
- run += make_no_libbpf
- run += make_no_libbpf_DEBUG
--run += make_no_libcrypto
- run += make_no_libllvm
- run += make_no_sdt
- run += make_no_syscall_tbl
- run += make_with_babeltrace
- run += make_with_coresight
--- 
-2.49.0
-
+Thanks,
+Ian
