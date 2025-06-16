@@ -1,55 +1,55 @@
 Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826D11DF725
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 05:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4151DFE09
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 05:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750050937; cv=none; b=rjyywm+4FZ4odK3N9FKB9INE4/Ira7h7AkGap8n81tDtlq1RbD/oZt8qmPIYiH57vEFpd08CV83gOQ9DGKS76m0qUmlKPQzWkqb+m7sX8ca049mhdWckFXcv9dgp/8fZ3ob9yosTETw0z4OgmR/sFxXOyxoR5GeU9HA98xcr4rc=
+	t=1750050938; cv=none; b=Xqzi63gZLvoWCRAwEAeni9A1PxCo8Exh7eKtMwJdE2gf7a1YDfWv9HAo8u/DYMS0qoCb7HcNXumUa+N+CUiR+t65ppHCQV1XsI4mrwHLa/W510NAVNHOgpbHoSjodHzrcc5S7hOqsoBx2hjKyaDsKr1a7YyZCFw5Ux/GyWG5VY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750050937; c=relaxed/simple;
-	bh=7wfzPfloqPFtdu8appty5yDqvoo3d+FnbjSk3uLpwNw=;
+	s=arc-20240116; t=1750050938; c=relaxed/simple;
+	bh=yKpHM+BCHbeFrpnY+3JEnhGTh0ytgZYNLTTi4rBzWCk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=kSp68vZdDLMbRWQPtoPOB+PwzQ6KL7tGQasDYbDBkffSAZlFpBfDKdyUfwnraGXsbnaceaR0+2OlK4YqnTpP+eVwZgjOHyuavqi7sxlfgkV10cA5A7HmG2ZAFYRDg2Yafl+ekPxRgaqd6trJaHk7ZGxnUQ3PAACEB++jQAK8EeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yXrcD+b6; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=pVmMPhkRZumTO/78UAFLAzW+B3y60Je9T28EylDKanEAry322FaeEI85djB2sKY274TrJmM3wi4CH9roeNzIFVEGdauzlcZPkOBtOW2BzdcfgOpFhyTVHR2mqkldzW7AqDH1aKEW+q0OukqEyOXMFpf0blC6fr+9PPll1PkGkiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y9OgqlqL; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yXrcD+b6"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7489d1f5e9fso2416071b3a.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jun 2025 22:15:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y9OgqlqL"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742c03c0272so4988687b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jun 2025 22:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750050935; x=1750655735; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750050936; x=1750655736; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZhNmVeczvFZi2XQh4klX/GK/kqpwRZijs1pAh8xoIM0=;
-        b=yXrcD+b6r+L/oNpAqMIQ5KTbzAaWu8D4vsqRpRQf1NmTbbl5K+LdP9SRKJwxNysa+E
-         E3F41oyf1r+3UqY964XxX+9FYHR2bZQVtjnQjJMDnX2GBpwDwk9VteI+DvmzpA6QIGT3
-         qfBvVaevcJ/aWOYffKYFMwdhCeHQcupV57GLcM8L8QqWEhqBK6p2hh6GnGqGUdb/KVqR
-         YEOs4sD8C2Q+a0YmDqnJYmIoE0Yh9PFcP/62gcIrgOief2tthWt0PHHkWRq35qIAhdki
-         JOBRwLq7nwzfTLM9Zhx6nnHk7/zkgY25T2M7rjflXrwsG4XLkkCDiyFhJaqY5qbhxojc
-         lBgA==
+        bh=aJlPf9F5g9Wk9gssd6aqu3WR8vZd4WrO7zxv/Qci614=;
+        b=y9OgqlqLJx15qy2BQk7a/RMjyK3cL6qeZN1RUdITvCEGEpFViARjLXh37RdZOetHpH
+         yvoDp1joMvo1WGi1muYCmUzZXmkO//rYmUbDrg1ygPr/sQlUBhymegl0tZPkn7qnxKjS
+         Q1sqEJFbXFtukOpY1PvRQltEoiGGBtzDbvcm4tkHRhIw5zOjxWtlFwU6/n1HTGp84akF
+         VZFOnaQfC3n2qg33js6/zEKhWH1ojKtyyC7qAys8JU+oVxGDGCoh2O87VP0M7tXTbd6A
+         Ixzt+4Cs+i4DJqLtaYvM66JPExsQPEF3ttpWt5LF9MZqTqQ6tCMtxqLOiCZfWd1LF6bt
+         qKVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750050935; x=1750655735;
+        d=1e100.net; s=20230601; t=1750050936; x=1750655736;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZhNmVeczvFZi2XQh4klX/GK/kqpwRZijs1pAh8xoIM0=;
-        b=iANFc9yY3gC+386L2vGzORvaKiMJpvwwoA+djGOCcO9VS4PyFs6VSu1ixzk6mhD8q6
-         vj/2E2LQgcGTfXPaQUNta+N8TE+EDuKjioROxchry3MWknWKQJMtON5ZjxyCF9uBRRmH
-         FaE5/IzHxYgqf6IPsIlOAVPsg4+gCXbl9MKCRcD0DsJonu1gIAM7HtKorediez1syuZr
-         ssqQ6907Ugj6KLKgAKG7N80gCwPdsSrAqnd6RnHJIR5kCbYQw3cAG6FcTglI/REqJYNN
-         TYinWU6gA6LhXAQVwogxJWuy+0qAuGGx0xuqWElz9sCAeTCkT6RnB89mkatm81DKYqM6
-         +bpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGq1swZfNUgkwss8XpmgU7k+jKbKem9iCcAkp9TDWMUAERsahUfH9QKMVBDbvUqFz91YnyfJ/KJQ2hvTqgsUDB@vger.kernel.org
-X-Gm-Message-State: AOJu0YypSvmZBBJ4W5/NyfHltT0Xw99uKY2aXSdyEzlodKBYYgV2iLZd
-	b3vjBdp1HCG9orOZq1JP7l0cmbTQXO/VBbLwvuyD+rsEZeFj12PwJSn3gr3Kcrs26Aoz0iXAi80
-	mS53QkHdlDw==
-X-Google-Smtp-Source: AGHT+IH9k5VTNRbgPa2VljKzH6sK8cPg3DFKfBqECGQifwLWqC6iC7aOAmiRVZnwKongPp6lSNxKHZzhIvmP
-X-Received: from pfbho10.prod.google.com ([2002:a05:6a00:880a:b0:746:2897:67e3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e10:b0:72d:9cbc:730d
- with SMTP id d2e1a72fcca58-7489cffbf39mr10049316b3a.11.1750050934692; Sun, 15
- Jun 2025 22:15:34 -0700 (PDT)
-Date: Sun, 15 Jun 2025 22:14:49 -0700
+        bh=aJlPf9F5g9Wk9gssd6aqu3WR8vZd4WrO7zxv/Qci614=;
+        b=wnz13IE+quo6vcBhbQR+Up3oH5gG08Hmi4uprXDJ3lSoAtb0WN78KORfsMyGgVLT3g
+         BC7WZ9sS5sE9O7okmmLiPNTRXViIL2YqrkED0VSkHNDKO9JZeJZ4b7bsLCcE56maV7IX
+         k/QPl9/oXg/zOIfG1XtBg/BMwkETA5km6Ibut7COtPw+h4elfSaDYcKSUpqhEspX45W5
+         l2FcQuhkhOX1I+GKkb1dMI/2Sa6ZQO+qApcLsoD2pchMeGo+XM5ys0NQdq0yDx+otq+i
+         l3pLWgJ9mnTlmS6Ats+71tmtMTdjP7zOCiKf7ZpisfkhMR4Tb+96P8eB831AU9rxJkda
+         3Edw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGJyYe0WjDkLIOaNnGk0/G2nEq/HfxzHCkZxeCGCO+yvnEqMeYHdPoeE/BAryQ8dXS/7XfJE6A8PG3ge+hwaJ+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys8aqelwObPXGk3nEWz7G7CfKpczwEYxKSfb4qQCTh9UkIr4hB
+	xZuPAmwzVskrJf5BxxQ+B3GJOXovkJvZH3rKh+xsXn17iEmq3gDe+X2+YocNoirjqG1bRGW1sQX
+	efsSPzpSJww==
+X-Google-Smtp-Source: AGHT+IG8/lpjRrXKSMUNfgQtOdF3/fPjhcRdKaaH7jugd3IevsUPJkeZLGKMaZeT5E8zo0HJDv/ht6QFjnmf
+X-Received: from pgbdi9.prod.google.com ([2002:a05:6a02:c09:b0:b2c:3afe:6ece])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:1443:b0:21d:939:18c
+ with SMTP id adf61e73a8af0-21fbd4741e0mr11715398637.4.1750050936503; Sun, 15
+ Jun 2025 22:15:36 -0700 (PDT)
+Date: Sun, 15 Jun 2025 22:14:50 -0700
 In-Reply-To: <20250616051500.1047173-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250616051500.1047173-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250616051500.1047173-5-irogers@google.com>
-Subject: [PATCH v3 04/15] perf python: Fix thread check in pyrf_evsel__read
+Message-ID: <20250616051500.1047173-6-irogers@google.com>
+Subject: [PATCH v3 05/15] perf python: Correct pyrf_evsel__read for tool PMUs
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,27 +76,80 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The CPU index is incorrectly checked rather than the thread index.
+Tool PMUs assume that stat's process_counter_values is being used to
+read the counters. Specifically they hold onto old values in
+evsel->prev_raw_counts and give the cumulative count based off of this
+value. Update pyrf_evsel__read to allocate counts and prev_raw_counts,
+use evsel__read_counter rather than perf_evsel__read so tool PMUs are
+read from not just perf_event_open events, make the returned
+pyrf_counts_values contain the delta value rather than the cumulative
+value.
 
 Fixes: 739621f65702 ("perf python: Add evsel read method")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/python.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 49e1db3feb87..b724478fe34a 100644
+index b724478fe34a..201fe04fb6dd 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -909,7 +909,7 @@ static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
- 		return NULL;
- 	}
- 	thread_idx = perf_thread_map__idx(evsel->core.threads, thread);
--	if (cpu_idx < 0) {
-+	if (thread_idx < 0) {
- 		PyErr_Format(PyExc_TypeError, "Thread %d is not part of evsel's threads",
+@@ -10,6 +10,7 @@
+ #endif
+ #include <perf/mmap.h>
+ #include "callchain.h"
++#include "counts.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "event.h"
+@@ -893,7 +894,7 @@ static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
+ {
+ 	struct evsel *evsel = &pevsel->evsel;
+ 	int cpu = 0, cpu_idx, thread = 0, thread_idx;
+-	struct perf_counts_values counts;
++	struct perf_counts_values *old_count, *new_count;
+ 	struct pyrf_counts_values *count_values = PyObject_New(struct pyrf_counts_values,
+ 							       &pyrf_counts_values__type);
+ 
+@@ -914,8 +915,35 @@ static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
  			     thread);
  		return NULL;
+ 	}
+-	perf_evsel__read(&(evsel->core), cpu_idx, thread_idx, &counts);
+-	count_values->values = counts;
++
++	/*
++	 * Ensure evsel's counts and prev_raw_counts are allocated, the latter
++	 * used by tool PMUs to compute the cumulative count as expected by
++	 * stat's process_counter_values.
++	 */
++	if (evsel->counts == NULL) {
++		int nthreads = perf_thread_map__nr(evsel->core.threads);
++		int ncpus = perf_cpu_map__nr(evsel->core.cpus);
++
++		evsel->counts = perf_counts__new(ncpus, nthreads);
++		if (evsel->counts == NULL)
++			return NULL;
++		evsel->prev_raw_counts = perf_counts__new(ncpus, nthreads);
++		if (evsel->prev_raw_counts == NULL)
++			return NULL;
++	}
++	/* Set up pointers to the old and newly read counter values. */
++	old_count = perf_counts(evsel->prev_raw_counts, cpu_idx, thread_idx);
++	new_count = perf_counts(evsel->counts, cpu_idx, thread_idx);
++	/* Update the value in evsel->counts. */
++	evsel__read_counter(evsel, cpu_idx, thread_idx);
++	/* Copy the value and turn it into the delta from old_count. */
++	count_values->values = *new_count;
++	count_values->values.val -= old_count->val;
++	count_values->values.ena -= old_count->ena;
++	count_values->values.run -= old_count->run;
++	/* Save the new count over the old_count for the next read. */
++	*old_count = *new_count;
+ 	return (PyObject *)count_values;
+ }
+ 
 -- 
 2.50.0.rc2.696.g1fc2a0284f-goog
 
