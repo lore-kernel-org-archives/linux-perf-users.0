@@ -1,140 +1,95 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2DD2882DB
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 16:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B26D288C10
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 19:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091467; cv=none; b=ZHug8XHmCEflG5ea2fPonC2AkLCMChCwza5OO/CdZZjEUwL7tBxCIFF/hBryoQGR0X5HdtaUXf401JHyA2Bru/LvQ0uum6/RFjnu2I2JnrZ7HgiU0/Mu0n6jDQPIea9AXrpup4Q4EmtKexmluB7LMFfLODBylWHQNWacLWirKgw=
+	t=1750102473; cv=none; b=ViKltD9ueXhTKuFPaBmvF3oFcswUYjgFnfWGM5u1V1EO7Xy5Ik9DVQ3Bg4D8EZLf8nxjjQwYXefDZXycxstckk2l21uRvAV5zmS2odfdgR3Ot34gcLfwkZVVdbZliIyYfPk9rPLJI9AwQjMNiKpv71pM7VnA29gs+ZVOoJ8z5y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091467; c=relaxed/simple;
-	bh=Cm5virMos3DWSgEmZWrzNg6yYqKXWG/OooADfpRNMoc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ePt5LpCU3UrtuTY+PVaBdlfnbQexHPDvHtVClMRfftGahAnPgYv30ct5IrE2FxKpuillm5vYg8xDr94P+QV2xgHXVU2gYc4mUn1HlOKG2w1XHcwBShEn5hXmm3uqQsSmqmjVHNteBVhC6EMy/Rsh/MZfCWVsVrqhQFEM3f7aPQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aXVGMXHF; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750102473; c=relaxed/simple;
+	bh=sQ6jbt/GbrfDGqLDdw+RMIi2JlAuzBIb99bLbVIEkZo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LMsD7GmtQqK99r9Z5nXb+E+fbkz7vca3l4mBEno1nr9kAGRqJxh64cNIpOujk7IBbuBX3itOiExXzZb5bxnPVa26qu8JUbvJcONrdejBwZn6BhFjWsx8m7L0op6cavLkAoUxgUfk7humUZtB4794H8tr9cQdf6VG/Fs3bLSOxn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=Op0tjBIf; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aXVGMXHF"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3de210e6076so19455ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 09:31:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="Op0tjBIf"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d3939ecb7dso512785685a.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 12:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750091465; x=1750696265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kq/FoSaNMIyl/e8Lf2VrD4cN1FNaINRo1rslH1GJtZk=;
-        b=aXVGMXHFDNIdamTBXGyFDooUOkgIcehe1c9zCRDwcG3iO7dd9vX1VhSDFn0ZTd+1Yc
-         P4OO54ifsgBmc/IScj+QI7NfH9gaOKvFrB7KtOwrRwCmBSE0bU86ORvNgQcGZg2SZagD
-         viBf293ZGafydCCPkzlqeEcWcBgACvWuWxE2dU5zjvwNioBG14Y6RU16NM3iToPzCUQq
-         3KBW20KjXzmsluI7dL2swVibsz6i3Bty6tHXd4jw1LuEZsrK5x/SOLixR9iICV2i2NdS
-         ZtVvV6m0Cgv1b1nqP5kk1s6+hFPjIJDv5hfZb3Im2tGvDAuGmk6K9gT5QZJj4Cbf7NnI
-         eIhw==
+        d=maine.edu; s=google; t=1750102470; x=1750707270; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jp8QwjnvhiN7BWIar/OR5LHou2I/BD+QY/JAWgn5h1U=;
+        b=Op0tjBIfKgiNjk7ESk2V8BHn8Y8G5Hg2EXbN/IiPaUmiAeyLluv1tpK5yfVkaP5Ia/
+         EJ/1ppqK8XyXJqoY8hv4u8J2YsJiUS1si+NRC1XRO3d+QBAKIbPdUsEv3Yctd/i8sgjl
+         vQpsjLRgUxq58ZOuYNcrfJr5FvxSqCZbxEC7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750091465; x=1750696265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kq/FoSaNMIyl/e8Lf2VrD4cN1FNaINRo1rslH1GJtZk=;
-        b=K3UCnenxdYRZrW9tgIx3JBmoTLDHldG08ySe6z3deq+Ixq/O8w2slMYhiiepBGAeLX
-         nONpCf7kRKc57embEED0z7uWB6FJhCnfsQLkIftN9gPeK4oKAw7RzpuNIhlCQmxkY3OU
-         v1Asyj6mWFU7zj/6g1R+Rie/cfixt+aDURB8H+QaoRHu2EdtztpDVDWifd6m62ZR1DxH
-         /3Hw8ohVtFrFjX3ihOh6U5OJ/P7EAENSh9nNFpn0hlNwTVi9ecAAJXOJ5jY8FZQk3x6l
-         cZ9KoZwlOSaOjCLTaKET4SqST2o5FtxDTeYUyLG/FhChIKicv+5imgRc2Q05CtBqtkfy
-         e3rA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+b9Pyj4VOGMDcXEOm2mlhJ58S5DzbO0zto4z/+DnxrzK+o3DNeQEvyfQn2gkqtW65YRN2hfCcUsaYBuzTo4R9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJoWBQ0SCy4ID0QNciWhxu/ATKR+Jub3Yjpb2z8Qfs23kqY0JW
-	mU/wNLjnHCAbQwmQ/6rRvSOYKFh/SjUloPJZlHKo+ww+FS25ExCkYnUrsAMUSVCjMvmCuyLnrZf
-	eUM/XxbnAQAcgjh6Y1fYQD0zb1AXH3iXhXjw8KwXw
-X-Gm-Gg: ASbGncvIRrcQjqy2sstqCKiWmrjeq+sPVFUeyu6ZFRLr5kYYrqinisAftUpLU5a5abY
-	+GRUejby7z1+lYE/IjiM+6JgQgbM8VPagnoQJ56RXtDTvquu+vWgF0l/PUUp9sfyCAXKyJ9fAfx
-	hTVk8MCyuCW3yzj3jVT/ENQ8yqakktvwLDwNibF8B3tvQNLRKgq9HJmVKsYa7XRJq+8tX82n7Jq
-	3YcW3FU
-X-Google-Smtp-Source: AGHT+IGHSwvj2lv1V7O9rVJ1zs/I6lV6OAxCiaPZhFpbO2SixxEQ+9O1rvzKl6msJvPcZ2is64kPuSZ5+2UJLLns3iM=
-X-Received: by 2002:a05:6e02:219d:b0:3dd:c9e4:d475 with SMTP id
- e9e14a558f8ab-3de08e32e89mr6183305ab.22.1750091465130; Mon, 16 Jun 2025
- 09:31:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750102470; x=1750707270;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jp8QwjnvhiN7BWIar/OR5LHou2I/BD+QY/JAWgn5h1U=;
+        b=N/DWeLtJOSP4k1dthpPEJKVvlUVZYT30Rsfu1uTWIKpth3+UOqpLGNRqqozeq8oDMJ
+         4w/PI5cu2cUSzPG3vLxiEzg8yxO0WokxH0NLKlIq0870Kxh/XDBXpevg4Oi1AVJ7+F7Z
+         apl/5U0ztpyN4ioELdWFNijVJC4RCMNmxH8WZ9NTWiK8Ka3Pl2akBCHGnSPN0fkrYCnw
+         1G/mCjwC4rfGmrdb5KY0KdPrjMac+UE4CSpbURFYwmtmAwEzlPhi+nScyTOQQEIz3zHu
+         yIvfr+BGwk+F0fTt0VqBTAvtxWuTJU9r3f7apE2ootg5d2QdEVWyhqG/OF6Yw3wAygbE
+         0PPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVsUuSJpLc7iBuduqEwfTNVBSnO3D1crA7sZLSOSIHs/3zOt+CbAXZ9gqSp4RyjjewYpT8wVQJuGvrDaS5WwcJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2MCKd/7CNkNkCFTEe7G931omcMhB1slRYljBKD1tahb+g9boU
+	AFB7CTxy+w0F77fJtokfLdnEGxVAk+ozgu0EUgjaKH0xRn58a9yOuHpinvdpHEQDag==
+X-Gm-Gg: ASbGncuoa0XqVu8YSf+NqAkj3j77J2bA3HsQbT7IlOb5G0XXwGV22CWa5oG9YdRetze
+	5e60nnf/ezb5kyaHGZXuTfESVTDY86HPcWHccnhFPOdbdhig76+01p8mK3UMZkqWvpyxn9i/6V3
+	iINDmfGY8Q530cuUBwcmyU8b/iTc1wPZqPujl0StKO3otzbeHZKZEWHq1YUxUuhJaboj4bhhX7r
+	JDTw6FuXGDCFsqN79xWE6+SmUr2jHQGJ7a84QwpVtM65QJWieoP3N5mvC0ZDNhg84b6yK0ZZCLy
+	GB8Fjcj32VYgGXYkPHvDfwbZsM430E8f0mTLYGLgbDJq0ix97b0In2rZOq75bZ5zY5zwiH5G/Xv
+	lSGRqVg==
+X-Google-Smtp-Source: AGHT+IF6RYX1/HZCkAkYpKsqznvQyujC0QPUG+yPjtu9HtONE0H4NlQx12T0p3R4cy0C/X6u7Qe6Bg==
+X-Received: by 2002:a05:620a:44d0:b0:7c5:60c7:339 with SMTP id af79cd13be357-7d3c6c0f7d5mr1604737985a.9.1750102470147;
+        Mon, 16 Jun 2025 12:34:30 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dffafdsm561499185a.43.2025.06.16.12.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 12:34:29 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Mon, 16 Jun 2025 15:34:28 -0400 (EDT)
+To: Ian Rogers <irogers@google.com>
+cc: Vince Weaver <vincent.weaver@maine.edu>, 
+    "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org
+Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on
+ hybrid
+In-Reply-To: <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
+Message-ID: <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu>
+References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu> <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com> <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614004108.1650988-1-irogers@google.com> <20250614004108.1650988-2-irogers@google.com>
- <CAP-5=fUz6ViPHDdS9GCAEYUN39L4MpAnRR4CzJWggg0S8vn39A@mail.gmail.com> <aFBFOBUhHnF87R9q@x1>
-In-Reply-To: <aFBFOBUhHnF87R9q@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 16 Jun 2025 09:30:53 -0700
-X-Gm-Features: AX0GCFvE9nrOqBE66rQ8Ea547F5mV_NdM-Lcl5er8Z_7hgpu_f6HZqD3TrsPnK4
-Message-ID: <CAP-5=fWcKkdoP=i9zZMWtHWZ=XWWR_DLKVWEZ8vfxr11j9YADA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf evsel: Missed close when probing hybrid core PMUs
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Jun 16, 2025 at 9:24=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Jun 16, 2025 at 09:04:41AM -0700, Ian Rogers wrote:
-> > On Fri, Jun 13, 2025 at 5:41=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > > Add missing close to avoid leaking perf events. In past perfs this
-> > > mattered little as the function was just used by perf list. As the
-> > > function is now used to detect hybrid PMUs leaking the perf event is
-> > > somewhat more painful.
->
-> > Given this leads to leaking perf events on hybrid systems it would be
-> > nice to land this 1 liner in the next v6.15 rc pull request fixes if
-> > possible.
->
-> Sure.
->
-> Just one nit: while looking at:
->
-> void evsel__close(struct evsel *evsel)
-> {
->         if (evsel__is_retire_lat(evsel))
->                 evsel__tpebs_close(evsel);
->         perf_evsel__close(&evsel->core);
->         perf_evsel__free_id(&evsel->core);
-> }
->
-> And then:
->
-> void evsel__delete(struct evsel *evsel)
-> {
->         if (!evsel)
->                 return;
->
->         evsel__exit(evsel);
->         free(evsel);
-> }
->
-> and:
->
-> void evsel__exit(struct evsel *evsel)
-> {
->         assert(list_empty(&evsel->core.node));
->         assert(evsel->evlist =3D=3D NULL);
->         if (evsel__is_retire_lat(evsel))
->                 evsel__tpebs_close(evsel);
-> <SNIP>
->
-> I think that tpebs_close could be done just at evsel__close(), no?
->
-> The way it works I think there is no problem with calling it now twice,
-> but it fits better in evsel__close().
+On Sun, 15 Jun 2025, Ian Rogers wrote:
 
-Agreed. It'd be nice if we could assert that it was closed given this
-has been a problem. Retirement latency events are pretty unusual so
-I'm not overly worried about needing this :-)
+> So I spoke to Kan and posted a revised perf test that works on hybrid:
+> https://lore.kernel.org/lkml/20250614004528.1652860-1-irogers@google.com/
+> Basically on hybrid before doing the rdpmc instruction the test now
+> ensures the affinity matches that of the CPUs the perf event can be
+> scheduled upon.
 
-Thanks,
-Ian
+for PAPI we ended up using restartable sequences which more or less work 
+for our case (though we had to get some fixes merged with the upstream 
+rseq developers)
+
+I don't always track the libperf code as its license makes it 
+incompatible with PAPI (which is BSD licensed).  Does it handle the 
+rdpmc case where by default on x86 you're supposed to sign-extend from 48 
+bits (or whatever is in the mmap page) but some of the top-down event 
+rdpmc registers use all 64-bits so the sign-extension corrupts the value?
+
+Vince Weaver
+vincent.weaver@maine.edu
