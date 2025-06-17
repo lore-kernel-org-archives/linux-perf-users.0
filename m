@@ -1,109 +1,100 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EA22EFD89
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 20:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2B62571BE
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 20:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750192614; cv=none; b=hgowLlNO21iRjf8V8GPfiBNWEmBo5+h9q5K+0svQlWM6IAE+zo16I2r7MKfggp0G4+MA0ptjbseGbG6987BIcGKntJBpy2YSMAiAAKz1ILVRwndnimSVa09G3OV+khlDmipl08nZ3uKFEguZ58AmBFVWEO40KwfNfZrItHunAyM=
+	t=1750193686; cv=none; b=dVqmP3wqYERl3GG0QR0g3dA/NtRkTSBxa9UKeScVqlET8h8yiT1zZwD/q0khKYEPQkcwXy7giRLoeKGZnBjbNmldlokchSpW/1laRtMqoIl8F7cxRWkufdQuTlCDe15gVEoj1FsH+ce/aFOvbF+RysL2OBzXOR7vIRl7W2oeI5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750192614; c=relaxed/simple;
-	bh=G7hqmBHb1iXZBcJkyo90cSmswhsGrPLntg46L09h6f0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F74Q1vku0sAqLjnmhEuK8ihmgJ2Xm74QJLNkxLWii4RR4+vpF2Fk+LOBEgfuFSbmnOft217QKjgLUHw7Zt+GWRIjCKUCWQ5Gl8vE4yzk+/FQWXczL7PBsy7l1r0vJdnXd9eeUafCrnVOTb2iy4R3qwS7CDnC4v4M4dULu9S57VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h3qa6Ql/; arc=none smtp.client-ip=209.85.166.173
+	s=arc-20240116; t=1750193686; c=relaxed/simple;
+	bh=PGJeLmL5BC+Rw9tIs3WLl6u3yQElE12oXIBDOcON/04=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UbY69DeEBMlAjPsRMpoNJwzdednAIvAp6D+FpFntij7NylQouEknFDWJZ1WCsP4u3o9WAeFjuQFPTgh14pQ5SELx+VnypPOuZLsIpTvrwodEWlroL7vjq4v4pPUW7Zi2xmpqxSPazqMrBqiDKVAZesvchoksHptRlEPAMQAVSiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xmnDUaVu; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3qa6Ql/"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo31235ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 13:36:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xmnDUaVu"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b31c8104e84so92596a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 13:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750192612; x=1750797412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G7hqmBHb1iXZBcJkyo90cSmswhsGrPLntg46L09h6f0=;
-        b=h3qa6Ql/amLjFJ569DLsFWEi+M3igcsfWN30mECE4oOZFt/vWf/AhHhqrKgKrZn6ZJ
-         EKkIO/uqRKpOq//zSlD4ECnM8QWCxn6As0RVGiPi/TPVcPpY5PQJI7xV7ZLQrc7nDRZ4
-         295l9mK2fE+Jgk/ZfuFOAN3S+WhuVaA3PlH4I44AwML/h2zzDZjOHb2f8s8W3mYGX+3H
-         0rfyQSOrWmbTo1bbaNthw/gotUGUlLSgrA41OEXZkZZd+iGyfv5qeQ+akccHowGR0iSe
-         yMA1drsqdmZ1C1CJ1loF7zsrs8u2AaN/oPzp3qHPPAF/eMFB52yDlbpmzXnCh+Kzr0Ka
-         cU8w==
+        d=google.com; s=20230601; t=1750193684; x=1750798484; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HWKecspuo+ev9wne99H5wLjQXDHgVDwuCJhq27N1fCg=;
+        b=xmnDUaVuuQUcuxy0B+i7tj6N6mnPjsL5CIyA+8RbTAc+VS6y2tBOlaSHCf5mVCRoe3
+         hO4RQNOob9KivvsVAQ6fPWurj7i66/ZnxoEhOU+w51Yov99L6T8yrElPD6s61UHPlxzj
+         o/r+FthNdj4j0DViLh/wNH+TUDLGspTqlqnrIZVhn64/yKdTStgdyFJLJKypFOTCkn6Q
+         G1loSlYcNJD4+Su0PUMYgWzgTbHF0rD3aQdOQY+n8IeIKyja0CGPo9u9po6Gq1OQ3ZBN
+         5pRzsy59opRsv5R3048ztrIu6DPa9Dad6GLa1rfrjZwr4Mrg1/ngUKDDNhi80uEbaQ2m
+         RWbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750192612; x=1750797412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G7hqmBHb1iXZBcJkyo90cSmswhsGrPLntg46L09h6f0=;
-        b=UrdhMur0RHiJK+1F4rFShiMe7ZUTvnlxL4EQM2R5OlmHy0McH5k2N72KFRWXt9a1Q5
-         iQvbLJsmQe9iO4dfKG+Njfa+Hxu6tHRq9Kjgb53hVnRZ3EIz6hYl5mNF09opZhcNumkW
-         Rumi7MeEP1OT36j5bMSJx8RETaCuLpJ3rgjhLTJZtFjbJrkQ4MY8U34K47axW8oqnQzR
-         8zvULdjTeUOYYR/28DbOHIzM36dtGZd402kf2D8QvMOcuqfy44nPgS0ljpHGgf1S+Hx8
-         oNlJto/+oZYyFxKVnp98ERrc40oiJxCeUyCa43g5lvFaChDVDd3tsAv2QFsP3DtpK7v1
-         g7Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSRM549NmHH1fuw+z2RebjaeK2dWArFqSNieZ1wSSmp2aTeVatvk6LlMtfFXRjs/3ObVfzbzk+0KzPCdScXTwT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzESqK9yMmLfi9J4rkbuLuIn+vd4lqU2P89LPpj2+9Sd4jwcA0i
-	M87vUBeAdirSTGdln560ZY9FIYhjUzJff3/0/8ck3l3z/fa2tBJXjQh+Y7xQhJpNY6sbne+4GRr
-	nW/6zhncgqyM9c0Ssl0mKWhSPCgFtZl6SD6XaOXH3e6bDWLmZhXxl/AO4F/A=
-X-Gm-Gg: ASbGncvw2TCbju1Iu+nMHiIMxCbZR4hXc7+YFLGczgtLkID4S24f+Q1NhQ6IRYMZVfP
-	pUFCI/avjKajTwybtIogy4rjyDNvYA4Vlxz+tOt2MyucpwWDCNdmbxS8gYj8SNlalagS67+kvv7
-	mK2YqVAZqslB00UpRv/FfdQP7EM5i5myVWcKdDJ4iDfNTXVlSj4Yp7XUDpsq476h6ELsE2CRE0
-X-Google-Smtp-Source: AGHT+IH6E1jG9JLDjBZZmhdc/45MmKqz18EwdEKd4VF9DZBuSWr0GaHH49x8aUlXQq3w7/7+sKVGuJ1iLIXPtLMrJbE=
-X-Received: by 2002:a05:6e02:219d:b0:3dc:7edc:5f42 with SMTP id
- e9e14a558f8ab-3de08d956c0mr11656235ab.12.1750192611439; Tue, 17 Jun 2025
- 13:36:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750193684; x=1750798484;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HWKecspuo+ev9wne99H5wLjQXDHgVDwuCJhq27N1fCg=;
+        b=NUrVLZlE97cQgjdhaDbLY0OPA1YjzSrO4fxHZ1vUdg7MYTsYv0meQeVosQE/VpO3X4
+         kAPIvA4N3+cAnGPw1s1CLyj1aemPViTv8EkJM9GXx7JQGt2ElsY4KXRiUx8wCETziV++
+         Z9LPY2ldKOw1UY3nZlvSFtRHzYO3tzXO/nlAEeNyznqgnFO2ZE07JjcIyXGKRt4QjIuK
+         Cy8LmIWFl8ixqSFKf5fFSk/+Ct9Ebh2fc8s2StARuvzVesJZ7tpIAHJgOJRvwmi8pmJy
+         0m3OulpSYbDIrszw2sH6LLAVuW7ohjdwJluCXq9/FB66BXRTqRbVAS5LHoIP7xptnTMe
+         nFxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWY4Pk8Xfh/O5FUSaTDCbao2Bc7V2fiv1v22e+MtPY5dtOgb5Nb6ei6PcMndGaUOZUO3Y7suXYa6mQx23Fr+1WX@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEU2YEd4p73Hl8UAvi/dPg2AeO/DLDpOwXMwjkXacGH4Yj1NYR
+	OyYZLP6O43S3J1Nsim9UKqQQrcwAfw8rj9XWp3aKr2ZmeMPX1O/KzrSKZgQ4a1opnBCsKm+Pos8
+	XtakmRI8tMA==
+X-Google-Smtp-Source: AGHT+IFb0EMD8vA4bwuyPz+bGCf8RNhlX8C4tNzsgg+unC3a6Y10WZDs3ITYohLj7Z5W5d4VV8ICM8xHrJ9m
+X-Received: from pfxa17.prod.google.com ([2002:a05:6a00:1d11:b0:73e:665:360])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a0b:b0:215:df90:b298
+ with SMTP id adf61e73a8af0-21fbd559f50mr21504036637.26.1750193684494; Tue, 17
+ Jun 2025 13:54:44 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:53:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu>
- <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com>
- <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
- <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu> <CAP-5=fXHgzhp6=xrVi1GK6gO_dtVAAStK__eKKoaAvvge4oNow@mail.gmail.com>
- <CAP-5=fWYfMe8y-xcZkkEnppA11+H0r33Xnn0Mn2d4_y3dortmQ@mail.gmail.com> <20250617181738.GD1613376@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250617181738.GD1613376@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250617205320.1580946-1-irogers@google.com>
+Subject: [PATCH v2 0/3] Switch get/put unaligned to use memcpy
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 17 Jun 2025 13:36:40 -0700
-X-Gm-Features: AX0GCFvDO7wxJeKZsHvlltwan5R8wdpQerx8KgVJiHs7QquUXd56RTifnncwJlw
-Message-ID: <CAP-5=fUbEuwHKOAJhvgHbbfg_f=KcED=9a94ra++cPbNLJP5BQ@mail.gmail.com>
-Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on hybrid
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Vince Weaver <vincent.weaver@maine.edu>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 11:17=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Tue, Jun 17, 2025 at 09:37:39AM -0700, Ian Rogers wrote:
->
-> > To answer my own question, the sequence number will vary after the
-> > counter is read and so the read loop will be retried with a different
-> > index value loaded on the next loop. Perhaps this is the right fix for
-> > hybrid, if you have a hybrid system a per-thread event with
-> > cap_user_rdpmc and the thread is rescheduled (say p-core to e-core),
-> > then the sequence number needs changing in the user page mmap. This
-> > will trigger a second loop where when the index is loaded it will be 0
-> > for disabled.
->
-> It does; migrating the counter will change the sequence number. But this
-> is not sufficient, because meanwhile you will have executed the RDPMC --
-> which comes before double-checking the sequence number.
->
-> Issuing the RDPMC on a wrong index will cause fail.
->
-> RSEQ is more strict, it will abort and redirect the instruction stream
-> on preemption/migration and ensure the RDPMC instruction will not be
-> issued.
+The existing type punning approach with packed structs requires
+ -fno-strict-aliasing to be passed to the compiler for
+correctness. This is true in the kernel tree but not in the tools
+directory resulting in this suggested patch from Eric Biggers
+ <ebiggers@google.com>:
+https://lore.kernel.org/lkml/20250614044133.660848-2-ebiggers@kernel.org/
 
-Thanks Peter, out of curiosity, how does the RDPMC fail? If an event
-were rescheduled (even with RSEQ assuming the CPU the thread is
-running on doesn't change) could the RDPMC with the incorrect index
-also fail?
+Requiring -fno-strict-aliasing seems unfortunate and so this patch
+makes the unaligned code work via memcpy for type punning rather than
+the packed attribute.
 
-Thanks,
-Ian
+v2: switch memcpy to __builtin_memcpy to avoid potential/disallowed
+    memcpy calls in vdso caused by -fno-builtin. Reported by
+    Christophe Leroy <christophe.leroy@csgroup.eu>:
+    https://lore.kernel.org/lkml/c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu/
+
+Ian Rogers (3):
+  vdso: Switch get/put unaligned from packed struct to memcpy
+  tools headers: Update the linux/unaligned.h copy with the kernel
+    sources
+  tools headers: Remove unneeded ignoring of warnings in unaligned.h
+
+ include/vdso/unaligned.h        | 48 ++++++++++++++++++++++++++++-----
+ tools/include/linux/unaligned.h |  4 ---
+ tools/include/vdso/unaligned.h  | 48 ++++++++++++++++++++++++++++-----
+ 3 files changed, 84 insertions(+), 16 deletions(-)
+
+-- 
+2.50.0.rc2.701.gf1e915cc24-goog
+
