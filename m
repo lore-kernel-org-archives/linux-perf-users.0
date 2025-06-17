@@ -1,155 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504C0136A;
-	Tue, 17 Jun 2025 19:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF12EFDB5;
+	Tue, 17 Jun 2025 20:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750189629; cv=none; b=MSEYebBorZuC+VHG+Aw7xhH6Iqf1+yyfNXPYBtBmssP7YohKt5lfNguKH/wrjsn6KY3wMwKpIAsIAo2ubpzaIcKjvEgOAQVV9JsWF72nh1ZRox8zFi7Aolu8+34ufB4NGLlWk9jQjlFUNokV4KXhTtNvAM6qcZEWChxbVbqL5/0=
+	t=1750191990; cv=none; b=TQ8OKf/z/1jtb8auWLwo7fav/hX9fUFSs+e59/5TyCbF87rVLcNpqjbBZ14dvvYm/JApkpZ7xlsQ6M9JPoQnVanHn+PDavZ7MXGdC408tPl8VTH2aZJinOvyDn74zE3ZamgTZAH88fABtyd4VmLXw2kgC7rwl2Radvwj1xu5KkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750189629; c=relaxed/simple;
-	bh=6isCiZoF+g7lLxHT5Sbj99Y+eoDDrTIFdT8d+wyJydc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AilmPoq7F3APxdzXSRiA5HuB6E7YCeSOXN1E6HfZCYPbr6BfP9GhH8/Jf1dlEyaA4u9zV+mi12gMuTzJLb5KN5elrV83b5jQk/CzoLl0kZxV3075X085/HyTMcUWxSUwVUZulxauTPKFBMuRffBEt9sIZ2zvC43GMjIeA+U/8F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DWZlU6pq; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWZlU6pq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750189627; x=1781725627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6isCiZoF+g7lLxHT5Sbj99Y+eoDDrTIFdT8d+wyJydc=;
-  b=DWZlU6pqJOCn+WdBKl8LldTJxIumaWEUQo/weevnY4miNNEy9m7b6XyP
-   GKgl7JfRacR2hD5rBmmWu7zBGu6MahMoPN6Eu8W6t9oMCuSfibB5HTT4z
-   YNTUKjx4H4EFZd320cy+x4/E/y77BiFZZOdDFWm0ZKxMt4lJJrnqaJ/NQ
-   Y0isaWIozJJV3sKE3z5aMKPSXraGd9jJyQKWVZpxHqVdJNLyDsz4ercZS
-   BRYVdjHaJGkZ1kFn8dbXx4NBHKPFRZFGnqgI10YAxDMx50B+hcAvvzaMF
-   3Ba7OLL59OZhnbIBqYWpGFfsn8UlL544emi3JX/jzrMX5FlaxMqtUJJwL
-   A==;
-X-CSE-ConnectionGUID: OR+gRxrmRbu6ZwIh2rS5lg==
-X-CSE-MsgGUID: D5I1tYekRyKtW55wmM2phg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63421116"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="63421116"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 12:47:06 -0700
-X-CSE-ConnectionGUID: mGOyGjynQ4y19Ly0PQNJqQ==
-X-CSE-MsgGUID: cxo73W0QQiqcTvXkmGkTng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="172161665"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 12:47:05 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7360120B5736;
-	Tue, 17 Jun 2025 12:47:04 -0700 (PDT)
-Message-ID: <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com>
-Date: Tue, 17 Jun 2025 15:47:03 -0400
+	s=arc-20240116; t=1750191990; c=relaxed/simple;
+	bh=cqTl9Etvsf352tMZUXRY8foMIfzXbvY0PzDroxDp5co=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hp9bTY5URufTG0Sa9sbGy6RfLydYxvq5e0MjewNKFrjdcmyIe/+ZjraFeTZsm+CR4fz1ixCk4dyReM92v1c6clTDlE84sXJiN0S1O0qhoDuBbUCP4VwlKREH2nyX6zMfqc0dZ/QOZSXUxinjbZCaqWZN1qba6rG/iJAotyzNzm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id AA5181D6A5B;
+	Tue, 17 Jun 2025 20:26:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 3319F60010;
+	Tue, 17 Jun 2025 20:26:20 +0000 (UTC)
+Date: Tue, 17 Jun 2025 16:26:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
+ <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Namhyung Kim <namhyung@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro
+ <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+ <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
+ Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
+ <irogers@google.com>
+Subject: [RFC][PATCH v2] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250617162625.1d44862b@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
-To: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3319F60010
+X-Stat-Signature: b7rn7txh4sm3734rzip95rghbr8gxj3g
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19VqbkcwJiB/aMINIF944FtS/w2WfpSG/8=
+X-HE-Tag: 1750191980-497717
+X-HE-Meta: U2FsdGVkX192M0RQ/UyFwqpdmFwlfSoe3kdAM/l1EYJsXgfMrcRu/YaY7RqGN8+ydHnrzXxfoL46pQg833zXkT8htVH3KMfXmeMYFaGZr2Zrvbk1FN7n09yDpjB+TK5UoRYjCc+B+BsLDA8uiPTe1+rc9iVnS28dqcXVxWwzJpAkyOH47uEieCQgUgs+laz6zG/8I7eLHZpNPFbQNlfCjmJq2DXDE84l9OsnZ6+Qv9EFBPE1y/mmlxFP2B1fnlSwepCmJVtetULl59sT3WPebrRwPqRbr8AteVWYrqdeQhisZ0ftQWgXYGlaFP6U978rxKC7eg1yhPl3RK1RvFUE25jUNWIW1wXXqxoP9hhDDM+Wl2P2KIio66m1j0mORIjfyzRBF1rkiXFmy35+AU7JNA==
 
 
+In January 2015, tracefs was created to allow access to the tracing
+infrastructure without needing to compile in debugfs. When tracefs is
+configured, the directory /sys/kernel/tracing will exist and tooling is
+expected to use that path to access the tracing infrastructure.
 
-On 2025-06-17 11:39 a.m., Vince Weaver wrote:
-> Hello
-> 
-> When running the perf_fuzzzer on a raptor-lake machine I get a
-> 	unchecked MSR access error: WRMSR to 0x3f1
-> error (see below).
-> 
-> A similar message happened before back in 2021 and was fixed in
-> commit 2dc0572f2cef87425147658698dce2600b799bd3 so not sure if this is the 
-> same problem or something new.
+To allow backward compatibility, when debugfs is mounted, it would
+automount tracefs in its "tracing" directory so that tooling that had hard
+coded /sys/kernel/debug/tracing would still work.
 
-The commit 2dc0572f2cef was triggered by the fake event VLBR_EVENT.
-But this error should be triggered by the Topdown perf metrics event,
-INTEL_TD_METRIC_RETIRING, which uses the idx 48 internally.
+It has been over 10 years since the new interface was introduced, and all
+tooling should now be using it. Start the process of deprecating the old
+path so that it doesn't need to be maintained anymore.
 
-We never support perf metrics events in sampling mode. The PEBS cannot
-be enabled in counting mode. So it's weird the cpuc->pebs_enabled has
-the idx 48 set.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250617133614.24e2ba7f@gandalf.local.home/
 
-The recent change I did for the PEBS is commit e02e9b0374c3
-"perf/x86/intel: Support PEBS counters snapshotting". But it should not
-impact the above.
+- Fixed pr_warn() print, and move it to when debugfs accesses the tracing dir
+  and not when tracefs automount is registered
 
-Could you please help on the below questions?
-- It only happens on the p-core, right?
-- Which kernel base do you use? Is it 6.16-rc2?
-- Can this be easily reproduced?
-  Is it possible to bisect the error commit? (Maybe start from the
-commit e02e9b0374c3?)
 
-Thanks,
-Kan>
-> Vince Weaver
-> vincent.weaver@maine.edu
-> 
-> [12646.001692] unchecked MSR access error: WRMSR to 0x3f1 (tried to write 0x0001000000000001) at rIP: 0xffffffffa98932af (native_write_msr+0xf/0x20)
-> [12646.001698] Call Trace:
-> [12646.001700]  <TASK>
-> [12646.001700]  intel_pmu_pebs_enable_all+0x2c/0x40
-> [12646.001703]  intel_pmu_enable_all+0xe/0x20
-> [12646.001705]  ctx_resched+0x227/0x280
-> [12646.001708]  event_function+0x8f/0xd0
-> [12646.001710]  ? __pfx___perf_event_enable+0x10/0x10
-> [12646.001711]  remote_function+0x42/0x50
-> [12646.001713]  ? __pfx_remote_function+0x10/0x10
-> [12646.001714]  generic_exec_single+0x6d/0x130
-> [12646.001715]  smp_call_function_single+0xee/0x140
-> [12646.001716]  ? __pfx_remote_function+0x10/0x10
-> [12646.001717]  event_function_call+0x9f/0x1c0
-> [12646.001718]  ? __pfx___perf_event_enable+0x10/0x10
-> [12646.001720]  ? __pfx_event_function+0x10/0x10
-> [12646.001721]  perf_event_task_enable+0x7b/0x100
-> [12646.001723]  __do_sys_prctl+0x56f/0xca0
-> [12646.001725]  do_syscall_64+0x84/0x2f0
-> [12646.001727]  ? exit_to_user_mode_loop+0xcd/0x120
-> [12646.001729]  ? do_syscall_64+0x1ef/0x2f0
-> [12646.001730]  ? try_to_wake_up+0x7e/0x640
-> [12646.001732]  ? complete_signal+0x2e8/0x350
-> [12646.001734]  ? __send_signal_locked+0x2e3/0x450
-> [12646.001735]  ? send_signal_locked+0xb6/0x120
-> [12646.001736]  ? do_send_sig_info+0x6e/0xc0
-> [12646.001737]  ? kill_pid_info_type+0xa6/0xc0
-> [12646.001738]  ? kill_something_info+0x167/0x1a0
-> [12646.001739]  ? syscall_exit_work+0x132/0x140
-> [12646.001740]  ? do_syscall_64+0xbc/0x2f0
-> [12646.001741]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [12646.001743] RIP: 0033:0x7efe86afd40d
-> [12646.001744] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 18 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 9d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 1b 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
-> [12646.001745] RSP: 002b:00007ffcd6444cf0 EFLAGS: 00000246 ORIG_RAX: 000000000000009d
-> [12646.001746] RAX: ffffffffffffffda RBX: 000000000000000e RCX: 00007efe86afd40d
-> [12646.001747] RDX: 0000000000000001 RSI: 00007ffcd6444d24 RDI: 0000000000000020
-> [12646.001747] RBP: 00007ffcd6444d60 R08: 00007efe86bc625c R09: 00007efe86bc6260
-> [12646.001748] R10: 00007efe86bc6250 R11: 0000000000000246 R12: 0000000000000000
-> [12646.001748] R13: 00007ffcd64471b8 R14: 0000559eb2a2edd8 R15: 00007efe86c30020
-> [12646.001749]  </TASK>
-> 
+ .../ABI/obsolete/automount-tracefs-debugfs    | 20 +++++++++++++++++++
+ kernel/trace/Kconfig                          | 13 ++++++++++++
+ kernel/trace/trace.c                          | 14 +++++++++----
+ 3 files changed, 43 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/automount-tracefs-debugfs
+
+diff --git a/Documentation/ABI/obsolete/automount-tracefs-debugfs b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+new file mode 100644
+index 000000000000..8d03cf9e579f
+--- /dev/null
++++ b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+@@ -0,0 +1,20 @@
++What:		/sys/kernel/debug/tracing
++Date:		May 2008
++KernelVersion:	2.6.27
++Contact:	linux-trace-kernel@vger.kernel.org
++Description:
++
++	The ftrace was first added to the kernel, its interface was placed
++	into the debugfs file system under the "tracing" directory. Access
++	to the files were in /sys/kernel/debug/tracing. As systems wanted
++	access to the tracing interface without having to enable debugfs, a
++	new interface was created called "tracefs". This was a stand alone
++	file system and was usually mounted in /sys/kernel/tracing.
++
++	To allow older tooling to continue to operate, when mounting
++	debugfs, the tracefs file system would automatically get mounted in
++	the "tracing" directory of debugfs. The tracefs interface was added
++	in January 2015 in the v4.1 kernel.
++
++	All tooling should now be using tracefs directly and the "tracing"
++	directory in debugfs should be removed by January 2027.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a3f35c7d83b6..93e8e7fc11c0 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -199,6 +199,19 @@ menuconfig FTRACE
+ 
+ if FTRACE
+ 
++config TRACEFS_AUTOMOUNT_DEPRECATED
++	bool "Automount tracefs on debugfs [DEPRECATED]"
++	depends on TRACING
++	default y
++	help
++	  The tracing interface was moved from /sys/kernel/debug/tracing
++	  to /sys/kernel/tracing in 2015, but the tracing file system
++	  was still automounted in /sys/kernel/debug for backward
++	  compatibility with tooling.
++
++	  The new interface has been around for more than 10 years and
++	  the old debug mount will soon be removed.
++
+ config BOOTTIME_TRACING
+ 	bool "Boot-time Tracing support"
+ 	depends on TRACING
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 95ae7c4e5835..2dafe2748b16 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6303,7 +6303,7 @@ static bool tracer_options_updated;
+ static void add_tracer_options(struct trace_array *tr, struct tracer *t)
+ {
+ 	/* Only enable if the directory has been created already. */
+-	if (!tr->dir)
++	if (!tr->dir && !(tr->flags & TRACE_ARRAY_FL_GLOBAL))
+ 		return;
+ 
+ 	/* Only create trace option files after update_tracer_options finish */
+@@ -8984,13 +8984,13 @@ static inline __init int register_snapshot_cmd(void) { return 0; }
+ 
+ static struct dentry *tracing_get_dentry(struct trace_array *tr)
+ {
+-	if (WARN_ON(!tr->dir))
+-		return ERR_PTR(-ENODEV);
+-
+ 	/* Top directory uses NULL as the parent */
+ 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
+ 		return NULL;
+ 
++	if (WARN_ON(!tr->dir))
++		return ERR_PTR(-ENODEV);
++
+ 	/* All sub buffers have a descriptor */
+ 	return tr->dir;
+ }
+@@ -10256,6 +10256,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	ftrace_init_tracefs(tr, d_tracer);
+ }
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ {
+ 	struct vfsmount *mnt;
+@@ -10277,6 +10278,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	if (IS_ERR(fc))
+ 		return ERR_CAST(fc);
+ 
++	pr_warn("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
++
+ 	ret = vfs_parse_fs_string(fc, "source",
+ 				  "tracefs", strlen("tracefs"));
+ 	if (!ret)
+@@ -10287,6 +10290,7 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	put_fs_context(fc);
+ 	return mnt;
+ }
++#endif
+ 
+ /**
+  * tracing_init_dentry - initialize top level trace array
+@@ -10311,6 +10315,7 @@ int tracing_init_dentry(void)
+ 	if (WARN_ON(!tracefs_initialized()))
+ 		return -ENODEV;
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ 	/*
+ 	 * As there may still be users that expect the tracing
+ 	 * files to exist in debugfs/tracing, we must automount
+@@ -10319,6 +10324,7 @@ int tracing_init_dentry(void)
+ 	 */
+ 	tr->dir = debugfs_create_automount("tracing", NULL,
+ 					   trace_automount, NULL);
++#endif
+ 
+ 	return 0;
+ }
+-- 
+2.47.2
 
