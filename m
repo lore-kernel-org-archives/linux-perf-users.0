@@ -1,63 +1,66 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A03728C029
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 22:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBCB295519
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 22:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199658; cv=none; b=mJ0Vf58mhqNDrdaE+rUNdsKBa6ydN7uXjOWYVaZw9ZBTq6jnSM2KG4DV/WfDJQ9sT/+/nFR8jiSQROv4vaUuZD8nhZ1dpniUdPd+R53bAkcm5FF8RbZUzlO23wnJbRszQRtmNNNgyKjebVP3GsrdxvdZgn+dGePTvcIXpp49XX4=
+	t=1750199660; cv=none; b=kPynWH/BMWabxvN1vidEcyz18M8gDkG/NJHTaeVFrKwIjvHXo+Doi3ya7GENcCx6/EAdMwfrVbCEDLvnjYnMc2DCPF31J5M3tWGwkAJ8V5hRsmLCtFk6pcw/d3oup2XuxhQfEGW6g5+sEZP4npqyYpqPMzCaTNwjflHemV6MD6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199658; c=relaxed/simple;
-	bh=iPhLrwxUZHv2wX6yaulHFVcQvRgI68U4Jl3CtCmOLTk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=L/2TuElf0sQErZct4LObwLg7LMmd2gRqu9F+QHg/m5GtknT3Hdcm3WpLgHjhFkSpoAfgp9ffriYGTBrVhZkCFoFVn8KDprpiNEyVQo6fFKpygpM2c+bAPTKRw8uj0C0QiXLbFYg5XQOxYZbeXd/GSwInm8jYq/5brm9/IXUz4nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=25poyvlc; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1750199660; c=relaxed/simple;
+	bh=dalspGRA76cLpNpJIHwlYn+RuacSXTlqxaj+Pd5Q3fE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=oNXAucPacDRl/MdSvZ8ZaRA3SYV29lLI286BF55lvaHMjwOBGmlnwp3wlPJwKTnfeIUUAvhLUyrE/kDD5LoE9aPLn1oWjy9/xhPxa4fH87gRf7RBBbBG6ByyFjpn15MoV2rhHMlvCLoB7FAIgyBmlcYnGdlfn8Ygvy8xhfjtAsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0UU4174E; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="25poyvlc"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2349fe994a9so44186855ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 15:34:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0UU4174E"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235f6b829cfso49422815ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 15:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750199654; x=1750804454; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=M8ZbK17Dj2geGvK5GO30EzDPP51WioqEngR1yRrimxo=;
-        b=25poyvlceR9oed0K2aF9CtzLxWYxwdcDUnsm8BGfB0hz/gYIPFss5sUPUGlxKczsYs
-         071OePMFAlTKdSvuxNg6R+PcaPzAMGQL98mpiW9KxwgUwdUFovQ+QOvzzeEZ2WStYjQ1
-         gWvJ4ELXrtUKSekYPbYIj0DJg7rebpVs+F0gHSCt3okfZQRszT423X9wwO+Z1wFAMFCJ
-         QdT3ejiaZA4OxjFX58JNXKA9wElVonKvEsbCgaZAje08eL2aze86AeSUDOh6cdYPxWn2
-         v6my9CU9nXqRfV9uDF72bCcR10cL7w95TvXIzxPqoytcjdGCyP5Lrk5JmTcrI6R4CLnx
-         mQMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750199654; x=1750804454;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1750199658; x=1750804458; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=M8ZbK17Dj2geGvK5GO30EzDPP51WioqEngR1yRrimxo=;
-        b=brg1HPF45p4fDbDM0ZP9HF7vuYxqHMFMvp94w7VaBDyIHJYHHt/20mzK3DUezu/hVc
-         6hNovk7q0UI/zbEfIQp2GObeCsIPFS3qYzRSyDUjL82e7cPVWdyOKWuS+oLi9oKUvVnp
-         OTswECZZnTwiro+CK5g9v7fHGkQ04NW4quaQ8KW+hI2+iWe+6+nY/w19tE3k/ExJPR3w
-         XwBkYjpzFjNxU/zfFGEBvxISNxvqB3AQpPL4HEug/b/okxzN2neCbhfrcC78rntaEUrF
-         cYnaHXaJvM0BAgy3HkrdUyuooofV9f0sd6pxmxD93C3zfwuZ7VM878YkPpUQtlwh4gwX
-         QwDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0rZkU0q/Aii53R1ZEJJ5iM4B53L7HM75y1rGNQS5GaeW8hBTMbvitmbAzXsondNknNTCbWlELDA3WSrnChi0Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVToxsxXfO8g6Ui1n3cXN/AFGYel1fHd5j96e/2yfZGmS801r1
-	no/HsC6aau0OuG6x6xKVexIcsggzj/SKKMlhWET935IdgY7al5Mk2JePKFwH5crds7HdRi7seai
-	LW00EvEe3nw==
-X-Google-Smtp-Source: AGHT+IHn5vHmNdo/1OE/54rCEFOwlR9N/3j9Z7E5HOyKK03PBDryeertL6DY4l2/hbLegD+O1+eWlsl+i8Wp
-X-Received: from plkj9.prod.google.com ([2002:a17:902:6909:b0:234:908f:4e22])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:186:b0:234:f182:a759
- with SMTP id d9443c01a7336-2366b13c87bmr258940175ad.28.1750199654477; Tue, 17
- Jun 2025 15:34:14 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:33:53 -0700
+        bh=HFhLWcdTJt2ijNT47QXB108NB/kEexFKHObEFV2lCEI=;
+        b=0UU4174EUzi3q/igAfcJurugU3G/KefqMKxOyLsLeDZ15pviOP3yA+nve91Z6W8tO0
+         Qqp3kIB+LxkhwAPz6xU8/V4htyj2rAb2zSUgXQgrrCkWIInX5Eu+eoxo5WMqAWYSwDcW
+         IB7LPO3fZ2U+R3i2rmIhhbf8WzgWVWQ9saebGT3ZTUxNJXZhNZ795VnAIfP4anLE+R1m
+         8/7na7Rli7AJ/WYg+GtO4glPqW4giYnoYJBlbBtNLSrDdQPBzXkLaUph40SuuSWpNtZY
+         FxHOfRFil6NuSw1BR3Zk4xeJAYyQoJzU5QosFQX0PUfqQVCdMHIiZyvk6tH0VJqbNd9F
+         W9pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750199658; x=1750804458;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HFhLWcdTJt2ijNT47QXB108NB/kEexFKHObEFV2lCEI=;
+        b=HQd3qc/hLfl3vtJKndapCFn7+XJKcvIpplyP6MSJiiQdRPSZwzdYTd4j43OfR/zwQt
+         l5jv1dtFrNiwZMEcn6sN4juQnmWJx1qKBkvBfuDS/W5l18ewIKeeKz5itSW1l1MwtBey
+         ymTiIKOVMGZ6tyVTFGg/FmYs8xTx4eZbhc6r6wG97zrkVpHisDOynBTi3RJTDI9IV+ln
+         Hysd93U98OB1w71113IeRvSgK9IWwr3DrRu8K/KduzecQxvBvNDE5ZKHKE5QcrQsUrOG
+         g66t3JPJr040AlWZ2vhl6dMzig1JhMf2drGK6aV+/edw13RAvzQXjYLRG8Xe1mPpjboJ
+         LUjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwIW88IOZcjEwt6AmPxDx2PCQExl0xDg/MBVRD2msoVHdx4vImPTb7uDEe0bruN8HWJVLpmw5AnWfAN4ZoOtKG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMkLPZ9j9JUHqUfjakE3E3o+yN2SM0fmNQfVERmScizzTa2PF/
+	Kx15PzMrjnkPpQa5XygLG78w68PzrCOcP4T5J5BeqMwJID5q1LZ1cEPsNAG13fQ42hO5Oc41AI0
+	+/m3n4j56UA==
+X-Google-Smtp-Source: AGHT+IF3ZUP/gylhM01v4MpGpD6GjYIOE+HkE30yc0BFr/pZf6faRRoLmNdlG/vCiutnqjqKb2xP4v6iZaQI
+X-Received: from pjbdy14.prod.google.com ([2002:a17:90b:6ce:b0:313:274d:3007])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:dacc:b0:234:c8f6:1b05
+ with SMTP id d9443c01a7336-2366b3fe725mr218715885ad.52.1750199658437; Tue, 17
+ Jun 2025 15:34:18 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:33:55 -0700
+In-Reply-To: <20250617223356.2752099-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250617223356.2752099-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250617223356.2752099-1-irogers@google.com>
-Subject: [PATCH v2 1/4] perf test: Directory file descriptor leak
+Message-ID: <20250617223356.2752099-3-irogers@google.com>
+Subject: [PATCH v2 3/4] perf trace: Add missed freeing of ordered events and thread
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,26 +73,60 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add missed close when iterating over the script directories.
+Caught by leak sanitizer running "perf trace BTF general tests". Make
+the ordered_events initialization unconditional and early so that
+trace__exit cleanup is simple - ordered_events__init doesn't allocate
+and just sets up 4 values and inits 3 list heads.
 
-Fixes: f3295f5b067d ("perf tests: Use scandirat for shell script finding")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/tests-scripts.c | 1 +
- 1 file changed, 1 insertion(+)
+v2: Move the init code to avoid segv found by Arnaldo.
+---
+ tools/perf/builtin-trace.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index 1d5759d08141..3a2a8438f9af 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -260,6 +260,7 @@ static void append_scripts_in_dir(int dir_fd,
- 			continue; /* Skip scripts that have a separate driver. */
- 		fd = openat(dir_fd, ent->d_name, O_PATH);
- 		append_scripts_in_dir(fd, result, result_sz);
-+		close(fd);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index bf9b5d0630d3..d50e86fccf60 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -5359,6 +5359,7 @@ static int trace__config(const char *var, const char *value, void *arg)
+ 
+ static void trace__exit(struct trace *trace)
+ {
++	thread__zput(trace->current);
+ 	strlist__delete(trace->ev_qualifier);
+ 	zfree(&trace->ev_qualifier_ids.entries);
+ 	if (trace->syscalls.table) {
+@@ -5369,6 +5370,7 @@ static void trace__exit(struct trace *trace)
+ 	zfree(&trace->perfconfig_events);
+ 	evlist__delete(trace->evlist);
+ 	trace->evlist = NULL;
++	ordered_events__free(&trace->oe.data);
+ #ifdef HAVE_LIBBPF_SUPPORT
+ 	btf__free(trace->btf);
+ 	trace->btf = NULL;
+@@ -5518,6 +5520,9 @@ int cmd_trace(int argc, const char **argv)
+ 	sigchld_act.sa_sigaction = sighandler_chld;
+ 	sigaction(SIGCHLD, &sigchld_act, NULL);
+ 
++	ordered_events__init(&trace.oe.data, ordered_events__deliver_event, &trace);
++	ordered_events__set_copy_on_queue(&trace.oe.data, true);
++
+ 	trace.evlist = evlist__new();
+ 
+ 	if (trace.evlist == NULL) {
+@@ -5676,11 +5681,6 @@ int cmd_trace(int argc, const char **argv)
+ 			trace__load_vmlinux_btf(&trace);
  	}
- 	for (i = 0; i < n_dirs; i++) /* Clean up */
- 		zfree(&entlist[i]);
+ 
+-	if (trace.sort_events) {
+-		ordered_events__init(&trace.oe.data, ordered_events__deliver_event, &trace);
+-		ordered_events__set_copy_on_queue(&trace.oe.data, true);
+-	}
+-
+ 	/*
+ 	 * If we are augmenting syscalls, then combine what we put in the
+ 	 * __augmented_syscalls__ BPF map with what is in the
 -- 
 2.50.0.rc2.761.g2dc52ea45b-goog
 
