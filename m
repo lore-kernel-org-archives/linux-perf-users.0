@@ -1,121 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8582EF640;
-	Tue, 17 Jun 2025 14:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADE72E8890
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 15:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169817; cv=none; b=PzeepYFn1P6Gt4mk7Wsy3sEjOpzPkrIqjTvdartCKdb7rUr355j9XxBBtOnZM7uvV2IsIXtsDZuDBlbvQKBXzik//IdNPItOH5qIT+yctTwUzSK27uVEeYoX+orSfStP2AAB6tBkJQUjlVPO40mH+PDJn2QDDVPFCo/h/QFT9C4=
+	t=1750173063; cv=none; b=IMaDPEqbFD1lII12gpGxY426JmNdmGmfj3gD5V+SmL1nXm674OOKh68BcJdwOJjdx7Ze76XlHyFEfKzq/SwURwvcfZDdp7VBEM93Hmz6wL1spIwAQmD28sTu0cVQ5nWSiwAh0vzd6bPAFdEKEQYCLVwdZy7tYDWlZ2Q9sITQtGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169817; c=relaxed/simple;
-	bh=iEyW4AnJa17J41ytX30hyC0XYY5ykVW3PixyY/HYRVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4xQi+kBvfCL3oroVwUthcU5vkYyZcF3uZQGTQp5NNCoAVl3XxzgXPvhaaqwuSvaupBhdy1TdqOuYOHfr+vCPlXP1WC+rfs+QhMoPi/ioBnMQx4nvOuxkKKTZj9+K3qw04eFfAwXpnJre1M2Jh2mM82ecF/vRd8TE2/hJ/hoLvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldedivNm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750173063; c=relaxed/simple;
+	bh=el7jWHCHyOxFyj/I6oX+2Oq1fPUjydQ+xyeadO3qhUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fzMu8+jJxZh4bFXfQ5QMwcI4/OxKBAse1hlkl5sLus0O2kYxOhgAFtdQzlzyjDK91kFaaDkIbkFWNIiDxI2Oj68wd0ThanB4nWVsi3F0xyKKEliedLbb+vJcPIq/Nn82rloCgiEwUrY5VP7F/OyYXWnbHvYrwyKEt1TGiayaPPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DNUSpRDf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldedivNm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6580C4CEE3;
-	Tue, 17 Jun 2025 14:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750169816;
-	bh=iEyW4AnJa17J41ytX30hyC0XYY5ykVW3PixyY/HYRVg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ldedivNmC+Dx33QQGeX6YYlF02DbQyggnZlZuRrMnhpKdB7m1bLbV0x91X65tgwac
-	 DhEuntanyRA4hfLIfYdnBEIzAH2dIfyCAa4IsHU3H0GHhXU7KF/zboBQuB0soGRKoi
-	 YbvERIK3fGE6vQpsnVY9xhf7xFyliq1GygKDbTJ4tVuHWKhu1IqjAaQCw4B7q8Pmi9
-	 brbxZGzZK6k9/QuJKjZ5+0OWGqw9sNBjNWwKHWW+kiTLupotsRNj8UaXOHGMFufYCw
-	 Pqz29c87Ai6cQKfIWaQeHkfEWAa8AQQIwCAxPZPqdy9hUFq5vy27uDcWxvzMYVJTsl
-	 MRQ3Pg408arhg==
-Date: Tue, 17 Jun 2025 15:16:50 +0100
-From: Will Deacon <will@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Nick Chan <towinchenmi@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple
- A7-A11, T2 SoC support
-Message-ID: <20250617141649.GA19021@willie-the-truck>
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
- <CAP-5=fXSwgxMc+uh=PBAFh4Zm96tL5RDyKPOJ8Q40O4s=EaArA@mail.gmail.com>
- <20250616102945.GA17431@willie-the-truck>
- <CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DNUSpRDf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750173060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gSNk1TQNrBeEJ36zJz2oG9wOktdMivBbzFygyWWDptI=;
+	b=DNUSpRDfSIsXl1S0caZ1WYfVIqEwa/CbLAmzqp9EDALwjB2Y1OKPTCLMGN546o6cQwFC8m
+	JdQve17fzb51gov5bKF2JQyuBjCzovqFnhOH/dfCIzf+sNBJPA72w4FKYEMT+rM4qEwZ51
+	EjPnUf+GJ8mLbhq7c4lc/6e/hJIx/zU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-576-4WYHD4_pOcKK2RRX9MkmIA-1; Tue,
+ 17 Jun 2025 11:10:55 -0400
+X-MC-Unique: 4WYHD4_pOcKK2RRX9MkmIA-1
+X-Mimecast-MFC-AGG-ID: 4WYHD4_pOcKK2RRX9MkmIA_1750173053
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F22719560AE;
+	Tue, 17 Jun 2025 15:10:52 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.82.51])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6CA62195E346;
+	Tue, 17 Jun 2025 15:10:49 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org,
+	Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH] perf header: exempt x86_64 from core id test
+Date: Tue, 17 Jun 2025 11:08:48 -0400
+Message-ID: <20250617150847.4029177-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Mon, Jun 16, 2025 at 03:44:49AM -0700, Ian Rogers wrote:
-> On Mon, Jun 16, 2025 at 3:29 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Mon, Jun 16, 2025 at 02:36:18AM -0700, Ian Rogers wrote:
-> > > On Sun, Jun 15, 2025 at 6:32 PM Nick Chan <towinchenmi@gmail.com> wrote:
-> > > >
-> > > > This series adds support for the CPU PMU in the older Apple A7-A11, T2
-> > > > SoCs. These PMUs may have a different event layout, less counters, or
-> > > > deliver their interrupts via IRQ instead of a FIQ. Since some of those
-> > > > older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
-> > > > be enabled by the driver where applicable.
-> > > >
-> > > > Patch 1 adds the DT bindings.
-> > > > Patch 2-7 prepares the driver to allow adding support for those
-> > > > older SoCs.
-> > > > Patch 8-12 adds support for the older SoCs.
-> > > > Patch 13-21 are the DT changes.
-> > > >
-> > > > Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> > >
-> > > Hi Nick,
-> > >
-> > > This is substantial work and it looks good to me. Do you know why
-> > > there's been little progress on landing these patches? Buggy Apple ARM
-> > > PMU support in the kernel has led to reworking the perf tool. It seems
-> > > best that we can have the best drivers possible.
-> >
-> > You reworked the perf tool to support these things? Why? These changes
-> > are targetting chips in old iPhones afaict (as opposed to "Apple Silicon").
-> > I think that (a) most people don't particularly care about them and (b)
-> > they're not fully supported _anyway_ because of crazy stuff like [1].
-> 
-> I was meaning that we reworked the perf tool to work around the Apple
-> ARM PMU driver expecting to work as if it were an uncore rather than a
-> core PMU driver. More context here:
-> "[REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5"
-> https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st/
-> But in general it would be nice Apple ARM PMU support were well loved.
-> I think we went 2 or 3 minor releases with the perf tool not working,
-> threats of substantial reverts to avoid the PMU driver bug being
-> exposed, etc.
+On a VM running on an x86_64 architecture, it is possible for the socket
+id to be greater than the processor number. So exclude x86_64 arch from
+the core id test.
 
-It's unfortunate that you've had a torrid time with the Apple PMU driver,
-but I think it's important to realise that it's both unmaintained (it
-ends up with me via the catch-all for drivers/perf/) and was written
-based off whatever reverse-engineering people could be bothered to do in
-their spare time. It's frankly remarkable that it works as well as it
-does.
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+ tools/perf/util/header.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Despite all of that, I still don't think that your concerns apply to the
-patches in _this_ series, which is about adding support for older Apple
-chips.
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index e3cdc3b7b4ab..c1b4651d0c6a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2618,9 +2618,12 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	 * The socket_id number might be higher than the numbers of cpus.
+ 	 * This depends on the configuration.
+ 	 * AArch64 is the same.
++	 * It is also possible for a VM running x86_64 to have a larger
++	 * socket_id number than the number of cpus.
+ 	 */
+ 	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
+-			  || !strncmp(ph->env.arch, "aarch64", 7)))
++			  || !strncmp(ph->env.arch, "aarch64", 7)
++			  || !strncmp(ph->env.arch, "x86_64", 6)))
+ 		do_core_id_test = false;
+ 
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+-- 
+2.49.0
 
-> As for which Apple ARM devices should have perf support, it seems the
-> more the merrier.
-
-Easy to say when you don't have to maintain the driver!
-
-Will
