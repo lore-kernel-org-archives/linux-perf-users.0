@@ -1,125 +1,203 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D0A1EF39F
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 04:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD00288A2;
+	Tue, 17 Jun 2025 05:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750134989; cv=none; b=I4Kti0lMS+SkuFiCPT+AVFS0FYN76ILf5w1nPpaC/4lRpqj65oISyjD3MSK+UJ8BU5oNv/4IHimflneBkSkd0MwwAA8MvI6j8Br3fd/TFrQlKJtcnfxB3S0araY6P+4tksy+Yz7P7ZIoRcBoP3ZqdBYcsL4Eb5SmtHh5eOwH63E=
+	t=1750139437; cv=none; b=S7QTQaip2F/+TVKEruTWT+5+ioT0tZMY0R1+B5JzNjjZc+H5zbacFzn+j0WXaJlE70arB6H8V0IbiUcrSZkIt0NTs18dR9cfuf4xhWKEr4V+cIQZsqM/6MUQfhFxmvCxMvbU7pTFeVVd4EzgPpojyoZu84kns5nXqrzqJTmJbdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750134989; c=relaxed/simple;
-	bh=peJGVOouWDDOE4go7WfuBFhVBMsA8bJZwHHfnK8sPrU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qWL2AYYq93rMLB8bykuKfaJXEcqtJeXO5NhUA9TUTOpBgvQNu3UK3OF3U6Uhch2wxlYxjGw7o5cy6CadvnKt9+sq4IamqCxDDZi9Q0BtmGPhQ/AG4trYHrj19yfzTRDFOqmJIKevKVaGYZH4a/qXlNMC21qZ3MdHi14mYIV+5p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f/0yirsk; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/0yirsk"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so63095ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 21:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750134987; x=1750739787; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FXqEuGWyhC1IDbKEyxK+WsF40e66qLVAXVMUF9UX+Pw=;
-        b=f/0yirskxiH+ScOs61Do35t6vVGrRMSw/2jKeRoGuqmIguER+qYKni7cmbW6m3L+k6
-         mqYYZy3aGOh8917BaOLn9QIMQ0BP8GKG8qRq0FU3bM/6atJUc6BvY51DE2KpWtqyRgmh
-         L0Snb7F+zedY8dkEjvfrQ7O74OZfiGsRUMIvtj4kbkKmw+1u6qjSLDBLzACS6DaZDU2H
-         aNngbPVFrGpz8ATYS3YNCfuI7lKLAnxG4bR17edEcyG0vC3xeo5SyPlE5YSoHx5n50gh
-         tRbMARinzUFVf4tysn/hC4w38tXnf42JFT42bJHe+as1uyP8Q2Hd/QwjFBEc+He0zI2Z
-         XRNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750134987; x=1750739787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FXqEuGWyhC1IDbKEyxK+WsF40e66qLVAXVMUF9UX+Pw=;
-        b=aPYIcbxbOGnWU6pQJbEDs5hCIlVQPM4fjCkUHS8txbU1JM9y4Re9qyy9u+QlQZsO59
-         mI3O7IwL3vR1nknwnf/QQAa6EzdKH4+lTJvczhuo9iT/YVSepi0Rj5O2/rGTABPKdRMa
-         RpZ0XA5KjOxyvAkjQrZu8T2GjQCTVNCPlGpsaSj0VBcTDciGcciQ9dMh/KI/HDa2szJb
-         Hg5Er6CLvxWZhS3LSr3L4LKsXhtZv0hSEIFOWPBI1owdP+ESgVYf9Hdxdrt4vJDcq9kj
-         +dwhuDtzzSOTcybyYj4CHwF11VuPyjxLb4j2XyzIUXfkVp9hrOsfvRGxENhu+5WZJKjz
-         c7bA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTGbc/DXXSDsra34QgiVEyvW3l42mCAoAVpBXiOUlgR0pxN8D1BGlZvUPVNfeKin/699xBzMrZRHxGIdZ8cxBZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUL1yTJ2BGEo0oDmBYrssuhT++NyVUXwkX8Z791XPtoMlG+ZAh
-	bRYqoMApFM6uXSjz66Oc+pedmNA6o2zAErH2dMB7ruF8XR6F4BvmRiCsT/poQ26bJ6yh3qFu4j+
-	YGEdl9WoLNNaF2ueqgDTjyWj8dKUp4fNSPsgMrdjWvi/wQiO2mMtJkTWVuVc=
-X-Gm-Gg: ASbGncszl8fLWzH/6ksi5Uw/rgG9IrY5jApTsfNdN0Ji0BWMKm1OdDBMRGtuuzJFPyt
-	pf4m6gX7jtqHz0YuMzv8z+s8s7VhRVIPUAQx4t6TAILaY3jM4hZ6DWUHKZaJ9ebXkXMKPhESnwb
-	ocHHCdYrvK4hlWhOy4WwbNcmqW5AJ/KPOzHZXaFFKa1m5B1IHh+iT56p0=
-X-Google-Smtp-Source: AGHT+IEnZ8imIW9ADcA+qizsXQQoSv/oB/fkmol7lE7kCqeFiMI3tg/eYqcCBTWzUietI1f8YfK/UM+rn525PVoGRIA=
-X-Received: by 2002:a05:6e02:1aa5:b0:3dd:a7a1:9f14 with SMTP id
- e9e14a558f8ab-3de08d982b8mr9375795ab.4.1750134986695; Mon, 16 Jun 2025
- 21:36:26 -0700 (PDT)
+	s=arc-20240116; t=1750139437; c=relaxed/simple;
+	bh=uEe084MYLD20Ye47aOBf58ZkEPn9RS3l/N2vjxKMqN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fe7F9NzHMjj6PwKpc8V/j1HRl5T4CoPy5nCyAuOPAizwf4ypqvWxs4WZYJiz/v3srGa4+2Qo1kFsHfhFk7obnxhvr+r9qXWlT05pZ26aC6m/HzjaNqoObHKhoICMm4bgPyV3Y/w1dj/i8Eim5UpeZ1eWTfPhDKAftllQq27tLDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bLwHm1mlvz9sd1;
+	Tue, 17 Jun 2025 07:23:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id X2m2YD6YqrAt; Tue, 17 Jun 2025 07:23:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bLwHm0g9qz9s9J;
+	Tue, 17 Jun 2025 07:23:00 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 024578B779;
+	Tue, 17 Jun 2025 07:23:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id CP7EjGprw806; Tue, 17 Jun 2025 07:22:59 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 193128B776;
+	Tue, 17 Jun 2025 07:22:59 +0200 (CEST)
+Message-ID: <c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu>
+Date: Tue, 17 Jun 2025 07:22:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu>
- <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com>
- <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com> <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu>
-In-Reply-To: <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 16 Jun 2025 21:36:15 -0700
-X-Gm-Features: AX0GCFtcHc6tsVg38oq18iBbH2UQp04rpc-tc3PgxL4lz7W_gUDosOE7QbvVTiM
-Message-ID: <CAP-5=fXHgzhp6=xrVi1GK6gO_dtVAAStK__eKKoaAvvge4oNow@mail.gmail.com>
-Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on hybrid
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
+ to memcpy
+To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
+ Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250617005800.1410112-1-irogers@google.com>
+ <20250617005800.1410112-2-irogers@google.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250617005800.1410112-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 12:34=E2=80=AFPM Vince Weaver <vincent.weaver@maine=
-.edu> wrote:
->
-> On Sun, 15 Jun 2025, Ian Rogers wrote:
->
-> > So I spoke to Kan and posted a revised perf test that works on hybrid:
-> > https://lore.kernel.org/lkml/20250614004528.1652860-1-irogers@google.co=
-m/
-> > Basically on hybrid before doing the rdpmc instruction the test now
-> > ensures the affinity matches that of the CPUs the perf event can be
-> > scheduled upon.
->
-> for PAPI we ended up using restartable sequences which more or less work
-> for our case (though we had to get some fixes merged with the upstream
-> rseq developers)
->
-> I don't always track the libperf code as its license makes it
-> incompatible with PAPI (which is BSD licensed).  Does it handle the
-> rdpmc case where by default on x86 you're supposed to sign-extend from 48
-> bits (or whatever is in the mmap page) but some of the top-down event
-> rdpmc registers use all 64-bits so the sign-extension corrupts the value?
 
-Yep:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/lib/perf/mmap.c?h=3Dperf-tools-next#n514
-The same code is in UAPI perf_event.h which has the Linux-syscall-note:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n651
 
-Fwiw, I don't think restartable sequences would solve the problem of:
- - 2 events programmed 1 gets the fixed counter and 1 on a generic,
- - the thread gets ready to do rdpmc for the generic counter,
- - another CPU/thread requests deleting the fixed counter event,
- - the event is deleted and the generic event is now scheduled onto
-the fixed counter,
- - the rdpmc executes but the "index" is still set for the generic
-counter but the kernel scheduled the counter onto the fixed counter
-which I believe would have a different index.
+Le 17/06/2025 à 02:57, Ian Rogers a écrit :
+> Type punning is necessary for get/put unaligned but the use of a
+> packed struct violates strict aliasing rules, requiring
+> -fno-strict-aliasing to be passed to the C compiler. Switch to using
+> memcpy so that -fno-strict-aliasing isn't necessary.
 
-but to be honest I don't understand how the mmap page works for say
-only opening the event on a subset of the PMU's CPUs. Or if the
-"index" is loaded and then thread preempted onto a different CPU with
-events scheduled differently (as with the delete case above).
+VDSO build fails with this patch:
 
-Thanks,
-Ian
+   VDSO32L arch/powerpc/kernel/vdso/vdso32.so.dbg
+arch/powerpc/kernel/vdso/vdso32.so.dbg: dynamic relocations are not 
+supported
+make[2]: *** [arch/powerpc/kernel/vdso/Makefile:79: 
+arch/powerpc/kernel/vdso/vdso32.so.dbg] Error 1
 
-> Vince Weaver
-> vincent.weaver@maine.edu
+Behind the relocation issue, calling memcpy() for a single 4-bytes word 
+kills performance.
+
+  170:   7f e4 fb 78     mr      r4,r31
+  174:   38 a0 00 04     li      r5,4
+  178:   38 61 00 10     addi    r3,r1,16
+  17c:   93 81 00 10     stw     r28,16(r1)
+  180:   48 00 00 01     bl      180 <__c_kernel_getrandom+0x180>
+                         180: R_PPC_REL24        memcpy
+  184:   38 81 00 10     addi    r4,r1,16
+  188:   7f a3 eb 78     mr      r3,r29
+  18c:   38 a0 00 04     li      r5,4
+  190:   48 00 00 01     bl      190 <__c_kernel_getrandom+0x190>
+                         190: R_PPC_REL24        memcpy
+  194:   38 81 00 10     addi    r4,r1,16
+  198:   7f e3 fb 78     mr      r3,r31
+  19c:   38 a0 00 04     li      r5,4
+  1a0:   93 81 00 10     stw     r28,16(r1)
+  1a4:   48 00 00 01     bl      1a4 <__c_kernel_getrandom+0x1a4>
+                         1a4: R_PPC_REL24        memcpy
+  1a8:   37 de ff ff     addic.  r30,r30,-1
+  1ac:   3b bd 00 04     addi    r29,r29,4
+  1b0:   3b ff 00 04     addi    r31,r31,4
+  1b4:   40 82 ff bc     bne     170 <__c_kernel_getrandom+0x170>
+  1b8:   73 09 00 02     andi.   r9,r24,2
+  1bc:   56 b5 00 3a     clrrwi  r21,r21,2
+  1c0:   3b 7b 00 04     addi    r27,r27,4
+  1c4:   3b f7 00 04     addi    r31,r23,4
+  1c8:   7f 7b aa 14     add     r27,r27,r21
+  1cc:   7f ff aa 14     add     r31,r31,r21
+  1d0:   57 1e 07 be     clrlwi  r30,r24,30
+  1d4:   41 82 00 48     beq     21c <__c_kernel_getrandom+0x21c>
+  1d8:   7f 64 db 78     mr      r4,r27
+  1dc:   38 a0 00 02     li      r5,2
+  1e0:   7e c3 b3 78     mr      r3,r22
+  1e4:   b1 c1 00 10     sth     r14,16(r1)
+  1e8:   48 00 00 01     bl      1e8 <__c_kernel_getrandom+0x1e8>
+                         1e8: R_PPC_REL24        memcpy
+  1ec:   7e c4 b3 78     mr      r4,r22
+  1f0:   7f e3 fb 78     mr      r3,r31
+  1f4:   38 a0 00 02     li      r5,2
+  1f8:   48 00 00 01     bl      1f8 <__c_kernel_getrandom+0x1f8>
+                         1f8: R_PPC_REL24        memcpy
+  1fc:   7f 63 db 78     mr      r3,r27
+  200:   7e c4 b3 78     mr      r4,r22
+  204:   38 a0 00 02     li      r5,2
+  208:   b1 c1 00 10     sth     r14,16(r1)
+  20c:   57 de 07 fe     clrlwi  r30,r30,31
+  210:   48 00 00 01     bl      210 <__c_kernel_getrandom+0x210>
+                         210: R_PPC_REL24        memcpy
+  214:   3b 7b 00 02     addi    r27,r27,2
+  218:   3b ff 00 02     addi    r31,r31,2
+  21c:   2c 1e 00 00     cmpwi   r30,0
+  220:   41 82 00 3c     beq     25c <__c_kernel_getrandom+0x25c>
+
+
+Christophe
+
+
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   include/vdso/unaligned.h | 48 +++++++++++++++++++++++++++++++++++-----
+>   1 file changed, 42 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/vdso/unaligned.h b/include/vdso/unaligned.h
+> index ff0c06b6513e..81f632e3c5eb 100644
+> --- a/include/vdso/unaligned.h
+> +++ b/include/vdso/unaligned.h
+> @@ -2,14 +2,50 @@
+>   #ifndef __VDSO_UNALIGNED_H
+>   #define __VDSO_UNALIGNED_H
+>   
+> -#define __get_unaligned_t(type, ptr) ({							\
+> -	const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr);	\
+> -	__get_pptr->x;									\
+> +#include <linux/string.h> // For memcpy.
+> +
+> +#define ____get_unaligned_type(type) type: (type)0
+> +/**
+> + * __get_unaligned_t - read an unaligned value from memory.
+> + * @ptr:	the pointer to load from.
+> + * @type:	the type to load from the pointer.
+> + *
+> + * Use memcpy to affect an unaligned type sized load avoiding undefined behavior
+> + * from approaches like type punning that require -fno-strict-aliasing in order
+> + * to be correct. As type may be const, use _Generic to map to a non-const type
+> + * - you can't memcpy into a const type. The void* cast silences ubsan warnings.
+> + */
+> +#define __get_unaligned_t(type, ptr) ({					\
+> +	type __get_unaligned_map_ctrl = 0;				\
+> +	typeof(_Generic(__get_unaligned_map_ctrl,			\
+> +		____get_unaligned_type(short int),			\
+> +		____get_unaligned_type(unsigned short int),		\
+> +		____get_unaligned_type(int),				\
+> +		____get_unaligned_type(unsigned int),			\
+> +		____get_unaligned_type(long),				\
+> +		____get_unaligned_type(unsigned long),			\
+> +		____get_unaligned_type(long long),			\
+> +		____get_unaligned_type(unsigned long long),		\
+> +		default: (type)0					\
+> +		)) __get_unaligned_val;					\
+> +	(void)__get_unaligned_map_ctrl;					\
+> +	memcpy(&__get_unaligned_val, (void *)(ptr), sizeof(__get_unaligned_val)); \
+> +	__get_unaligned_val;						\
+>   })
+>   
+> -#define __put_unaligned_t(type, val, ptr) do {						\
+> -	struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr);		\
+> -	__put_pptr->x = (val);								\
+> +/**
+> + * __put_unaligned_t - write an unaligned value to memory.
+> + * @type:	the type of the value to store.
+> + * @val:	the value to store.
+> + * @ptr:	the pointer to store to.
+> + *
+> + * Use memcpy to affect an unaligned type sized store avoiding undefined
+> + * behavior from approaches like type punning that require -fno-strict-aliasing
+> + * in order to be correct. The void* cast silences ubsan warnings.
+> + */
+> +#define __put_unaligned_t(type, val, ptr) do {				\
+> +	type __put_unaligned_val = (val);				\
+> +	memcpy((void *)(ptr), &__put_unaligned_val, sizeof(__put_unaligned_val)); \
+>   } while (0)
+>   
+>   #endif /* __VDSO_UNALIGNED_H */
+
