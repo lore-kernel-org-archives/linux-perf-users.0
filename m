@@ -1,104 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2D82F5302;
-	Tue, 17 Jun 2025 21:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203141EDA1E
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 22:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750196958; cv=none; b=JscFfYxo3ccKg+7iQD+EsDnfyq01e8CyGYx3pQqL5nVnpqspdGZz55gwKbuDX5ySahccF1jb208asxF6H0XAEpbr5PU1afwvu5kUga6K0M/RJNhxAzcUUXKBK1sZkxtO14Dcagv/M5HcXfpOvEnotFGGWe1XUvvWgp217jc+mDg=
+	t=1750199658; cv=none; b=bw4sXS0azxg8yYy6mjCEs0KVXJcQJcoa3S0praNpLLFw7UwzFhkowHHDlrEjXolvD0kFveWD2fwgbJu4hvoTHlCQv5rW484G93SExhQDzlHFkFR6k213BO79HBbunmgWRqQph5w0rw8rkba1IurYq9Y7wMonVnk1Mrq5Y68aoX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750196958; c=relaxed/simple;
-	bh=7XpKNyduYd7HZ4lR7XtY36sozGh6y07qukvqZEHKC1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ok6Ue94nhCZ/8f+OkaKEX6ACd6saHgMGfZFsBS1gPfDR/eCUmp9rxa5fHB5R2en1QKiJ2eupoJpv2JBDBZRGzkcAicG1KG5M+QRrjHComdjOWE+OBxZq3G3nr2rv1siiqaBTT7WaGVMCTdTWakGmAgMvkZmG9/3JcANVgNqY3jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhavmyD+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750199658; c=relaxed/simple;
+	bh=eCuGjp6hG/MXH23RM/BMJyOq9nbIlhN/iGtH2KuanSk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=scCUVfS+dpTfblhIfuDjjt95e2ZPMppObWE4zuWnUw1r4Vwx5jElNmnrpTNoQTPbOsLQc9/WcHNPOwp05AovfJjTMefl75yto8LI5mGjw0AOx5VGWvnPAhJW6Op5f1w3ptThWXodwadWtyPV1DgJ5hAs1K7Q+WMXqkaQRtofRRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=li9dyRK3; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhavmyD+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B548C4CEE3;
-	Tue, 17 Jun 2025 21:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750196955;
-	bh=7XpKNyduYd7HZ4lR7XtY36sozGh6y07qukvqZEHKC1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uhavmyD+hHibOpPUmDwZrtIx1P4Nolb+XiaK7K5mZRgmWLRTYkW/KRBxHkUZriGy6
-	 hP6HFq6dhvEuXEZqEiPG0LUsDJzPFbDGek9dr+9ohjCiJfhTclR5ye8mnV4Js2Ip+6
-	 kZAiyr1aHvR1d7V7CrZMK0PWB6Magkh9zMpk30Fh68aSPpIgMRcgvtSDMhmQXrWNvy
-	 hFTx+m3AFsPyoDuiLlMz5OHPIuLfFLX2wsL2v8ae3ziOvQFHLVpnnEBK6N0VizqWB0
-	 78j2IE2o4oyGzQQZNqTfQwVTCwMwtqnrX9Fi7lTRxecLXIE0GErR1p74Kxkqi7w3mN
-	 2CgSuGrryxrDA==
-Date: Tue, 17 Jun 2025 18:49:12 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events
- and thread
-Message-ID: <aFHi2FUDZy_cEA5A@x1>
-References: <20250614004108.1650988-1-irogers@google.com>
- <20250614004108.1650988-3-irogers@google.com>
- <CAH0uvojjfOcoZmxPL+bG5NEid8xcAVth7UxOUc=aYjgF5nqs2A@mail.gmail.com>
- <aFBF1ejZQBBvX7F4@x1>
- <aFHeY_-hVNKtXPAD@x1>
- <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="li9dyRK3"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b31831b0335so4487865a12.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 15:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750199656; x=1750804456; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ole7/QKvdk2YX82faNIgxPbHeQ2syHOfB0nwCHGLyac=;
+        b=li9dyRK3VgVWyVRWS/UMsyI7UwoyCj8jyvY2OjEmNP8w85A1+NTaoSM9YARLeNiuv+
+         6Lqu9s4CUMlQJ8lOf+ZozPtl5YXid951dT4KnsK6+FBek2uPAkhjQL77tILfWjT+MZ1j
+         8jBtJpQgBEtduXkceonaZsfSUogG+nq69D2XaZ3DVtrwIPWiALuDwfnvT6J/vOW7XoyM
+         MXoB6idVTnCdkfalgEwWvuCh04hPE/GthpOnioblbe3Beg+Q72UQRSGrbX9axc9ikyXi
+         +ujQl2I7g+DOal4HaGMBvjU35kmoYzB+2SvVhddnwJ0os4G71F/cMO7+qBLzmi9AdM51
+         SjuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750199656; x=1750804456;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ole7/QKvdk2YX82faNIgxPbHeQ2syHOfB0nwCHGLyac=;
+        b=Yt0rYX2QzGQQPhjJa2B3WCZt3Aa6hoNmyAzC790f60X3uzrnpaK/Ucqmmg4UxLXYVb
+         nMnhTMIkQNwYKvfx0tSkVxCVQtlIHITEuM6+0WlkMCclydkyEWOmc1huuI6mR46bHHyj
+         qP2CPcf39uRgjW+Vf7EWQVWcCyU0Yp3Sm0OD8T+YXrIY311tvASEVSlz8v4/loiMHjRS
+         lUtiZTBHUJCxl14hgJEJlFco7BNJQTa+ojzIZfHCCtmUJquRsxXL7EkyBFQJmBZj/g7y
+         zyaSo323uXActGNuHavX03Q7vSsKeYVFRwzjmatgMsJt2uA80lYz5O5rcyTOXjI+0N92
+         sOlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWL7C/x7cuay26ryvHcHdjZa1KQfKsOrM7mO0vwFy9DRssoSXiDmoXGw33FfneJJ/6221klqNYEhtZQlDyRrPj8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoE5RoTKQXYd39mlo+kTbBPTtINoPwVsSQwQO3mqQHwpg1e3hH
+	mdcPIW0eHouxrrZTNJ4q0yPbIh211HZD1hC/+TQhpO9TJgSif1iiEJGMh/XLXwD1aHZ0Fw2FV0p
+	oliXb+4mVtQ==
+X-Google-Smtp-Source: AGHT+IFqo/2say/u+Lf3kECAVOASzRCWN1tWiNcZXQsgMOYI5Al6Fu55dP/lwgpwm2CkUARyqbdTct5OAd3H
+X-Received: from pgct18.prod.google.com ([2002:a05:6a02:5292:b0:b2f:6348:f715])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4983:b0:21f:bdd5:d71b
+ with SMTP id adf61e73a8af0-21fbdd5d743mr22982667637.2.1750199656506; Tue, 17
+ Jun 2025 15:34:16 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:33:54 -0700
+In-Reply-To: <20250617223356.2752099-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
+Mime-Version: 1.0
+References: <20250617223356.2752099-1-irogers@google.com>
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250617223356.2752099-2-irogers@google.com>
+Subject: [PATCH v2 2/4] perf evsel: Missed close when probing hybrid core PMUs
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Andi Kleen <ak@linux.intel.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 02:32:37PM -0700, Ian Rogers wrote:
-> On Tue, Jun 17, 2025 at 2:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Mon, Jun 16, 2025 at 01:27:04PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Fri, Jun 13, 2025 at 5:41 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > Caught by leak sanitizer running "perf trace BTF general tests".
+Add missing close to avoid leaking perf events. In past perfs this
+mattered little as the function was just used by perf list. As the
+function is now used to detect hybrid PMUs leaking the perf event is
+somewhat more painful.
 
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: b41f1cec91c3 ("perf list: Skip unsupported events")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/print-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > > > Acked-by: Howard Chu <howardchu95@gmail.com>
-
-> > > Small enough, applied to perf-tools.
-
-> > root@number:~# perf trace -e *sleep ls
-> > anaconda-ks.cfg  bin  bla  commands  dtel  firefly  logind.conf  perf-install.txt  python
-> > perf: Segmentation fault
-> > Obtained 11 stack frames.
-> > perf() [0x5c595e]
-> > perf() [0x5c59f9]
-> > /lib64/libc.so.6(+0x19c30) [0x7fd43ce27c30]
-> > perf() [0x5dc497]
-> > perf() [0x492d54]
-> > perf() [0x49860e]
-> > perf() [0x49890e]
-> > perf() [0x413413]
-> > /lib64/libc.so.6(+0x35f5) [0x7fd43ce115f5]
-> > /lib64/libc.so.6(__libc_start_main+0x88) [0x7fd43ce116a8]
-> > perf() [0x413a45]
-> > Segmentation fault (core dumped)
-> > root@number:~#
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index a786cbfb0ff5..83aaf7cda635 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -268,6 +268,7 @@ bool is_event_supported(u8 type, u64 config)
+ 			ret = evsel__open(evsel, NULL, tmap) >= 0;
+ 		}
  
-> Thanks, I'll take a look to see if I can spot what's broken. Seeing
-> this stack trace makes me remember we haven't landed:
-> https://lore.kernel.org/lkml/20250611221521.722045-1-irogers@google.com/
++		evsel__close(evsel);
+ 		evsel__delete(evsel);
+ 	}
+ 
+-- 
+2.50.0.rc2.761.g2dc52ea45b-goog
 
-Yeah, I just pushed perf-tools to soak in linux-next/pending-fixes for a
-few days and will switch to processing patches for perf-tools-next, will
-try and pick that one, I also noticed that the backtrace wasn't
-symbolized, thus your patch wasn't there :-\
-
-- Arnaldo
