@@ -1,95 +1,95 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B26D288C10
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 19:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9946113A26D
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 00:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750102473; cv=none; b=ViKltD9ueXhTKuFPaBmvF3oFcswUYjgFnfWGM5u1V1EO7Xy5Ik9DVQ3Bg4D8EZLf8nxjjQwYXefDZXycxstckk2l21uRvAV5zmS2odfdgR3Ot34gcLfwkZVVdbZliIyYfPk9rPLJI9AwQjMNiKpv71pM7VnA29gs+ZVOoJ8z5y4=
+	t=1750121886; cv=none; b=bKuSTkr5qd55NiSMyfco7yxDqhQlP+9QAnpKZrHZYKJYeGXkh/3MCEsiDibKLm7KUvAMz+WPMV0L60LNnOO/gJ/GCQzC1cRG6P6frORnzlULXWxGpZKgvbRGazDrdDJWSLdVyTa7JUom/ix8tpE/zVjexd/E20Vsre40eaNK4Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750102473; c=relaxed/simple;
-	bh=sQ6jbt/GbrfDGqLDdw+RMIi2JlAuzBIb99bLbVIEkZo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LMsD7GmtQqK99r9Z5nXb+E+fbkz7vca3l4mBEno1nr9kAGRqJxh64cNIpOujk7IBbuBX3itOiExXzZb5bxnPVa26qu8JUbvJcONrdejBwZn6BhFjWsx8m7L0op6cavLkAoUxgUfk7humUZtB4794H8tr9cQdf6VG/Fs3bLSOxn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=Op0tjBIf; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1750121886; c=relaxed/simple;
+	bh=wj6A9LHFyVjwvPVEoRIGxcDa5CHiIAoWCIVo8VGY3yQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=F4bsGci86WnxEzLyi0tOUHNsbrUSwz1o09wCAI7KgM64XGF2DDDMuWN/AQYNPEkWYxcEDou4icUPD4BgoLJWwzeACE46HNu4GmWOMPLfxcKvTihwzC+jMwyvU8EsuH3m5hpsWKhyG2SV31uuozKNFVod5q4cBZ8xErPyEgtvUIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jKaKiKG1; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="Op0tjBIf"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d3939ecb7dso512785685a.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 12:34:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jKaKiKG1"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2eeff19115so6514254a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 17:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750102470; x=1750707270; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jp8QwjnvhiN7BWIar/OR5LHou2I/BD+QY/JAWgn5h1U=;
-        b=Op0tjBIfKgiNjk7ESk2V8BHn8Y8G5Hg2EXbN/IiPaUmiAeyLluv1tpK5yfVkaP5Ia/
-         EJ/1ppqK8XyXJqoY8hv4u8J2YsJiUS1si+NRC1XRO3d+QBAKIbPdUsEv3Yctd/i8sgjl
-         vQpsjLRgUxq58ZOuYNcrfJr5FvxSqCZbxEC7o=
+        d=google.com; s=20230601; t=1750121884; x=1750726684; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PUxUSOYgZf1bwPg50BKLldc1HPLAvephNepZ3aUtt/E=;
+        b=jKaKiKG1GLpr3AqiAJm1KU27ceToez5tnX3Mlhgc9ETCIBSoQypXuafWLJcwf5gOS+
+         63pHA4fgx38hpFv+gYTVhLCKyjfFFwFZRI7GL05WKrVA+6IS3AOtXQGCh6hZ33oSPUXL
+         WL6MlG7Ekj3ypmljyYwgr5wNEqPfxGpTyTSH6oaYHoxM2vTtGFyldYkJOurN+Laxzbfd
+         P9iXOk5dJYEfeUUSLwcbXCFgbVfRNj3ncpPsbiJrSoMa5GwuR1VHNQ8kdRE2sYcUUqaQ
+         W8Q2GssP/4+++QT5LRxhWIJn+Xzz76fK/vYzzkpz5D9PhDiwNafm5r+l3xz2BhTOkzkQ
+         zLxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750102470; x=1750707270;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jp8QwjnvhiN7BWIar/OR5LHou2I/BD+QY/JAWgn5h1U=;
-        b=N/DWeLtJOSP4k1dthpPEJKVvlUVZYT30Rsfu1uTWIKpth3+UOqpLGNRqqozeq8oDMJ
-         4w/PI5cu2cUSzPG3vLxiEzg8yxO0WokxH0NLKlIq0870Kxh/XDBXpevg4Oi1AVJ7+F7Z
-         apl/5U0ztpyN4ioELdWFNijVJC4RCMNmxH8WZ9NTWiK8Ka3Pl2akBCHGnSPN0fkrYCnw
-         1G/mCjwC4rfGmrdb5KY0KdPrjMac+UE4CSpbURFYwmtmAwEzlPhi+nScyTOQQEIz3zHu
-         yIvfr+BGwk+F0fTt0VqBTAvtxWuTJU9r3f7apE2ootg5d2QdEVWyhqG/OF6Yw3wAygbE
-         0PPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVsUuSJpLc7iBuduqEwfTNVBSnO3D1crA7sZLSOSIHs/3zOt+CbAXZ9gqSp4RyjjewYpT8wVQJuGvrDaS5WwcJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2MCKd/7CNkNkCFTEe7G931omcMhB1slRYljBKD1tahb+g9boU
-	AFB7CTxy+w0F77fJtokfLdnEGxVAk+ozgu0EUgjaKH0xRn58a9yOuHpinvdpHEQDag==
-X-Gm-Gg: ASbGncuoa0XqVu8YSf+NqAkj3j77J2bA3HsQbT7IlOb5G0XXwGV22CWa5oG9YdRetze
-	5e60nnf/ezb5kyaHGZXuTfESVTDY86HPcWHccnhFPOdbdhig76+01p8mK3UMZkqWvpyxn9i/6V3
-	iINDmfGY8Q530cuUBwcmyU8b/iTc1wPZqPujl0StKO3otzbeHZKZEWHq1YUxUuhJaboj4bhhX7r
-	JDTw6FuXGDCFsqN79xWE6+SmUr2jHQGJ7a84QwpVtM65QJWieoP3N5mvC0ZDNhg84b6yK0ZZCLy
-	GB8Fjcj32VYgGXYkPHvDfwbZsM430E8f0mTLYGLgbDJq0ix97b0In2rZOq75bZ5zY5zwiH5G/Xv
-	lSGRqVg==
-X-Google-Smtp-Source: AGHT+IF6RYX1/HZCkAkYpKsqznvQyujC0QPUG+yPjtu9HtONE0H4NlQx12T0p3R4cy0C/X6u7Qe6Bg==
-X-Received: by 2002:a05:620a:44d0:b0:7c5:60c7:339 with SMTP id af79cd13be357-7d3c6c0f7d5mr1604737985a.9.1750102470147;
-        Mon, 16 Jun 2025 12:34:30 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dffafdsm561499185a.43.2025.06.16.12.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 12:34:29 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Mon, 16 Jun 2025 15:34:28 -0400 (EDT)
-To: Ian Rogers <irogers@google.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, 
-    "Liang, Kan" <kan.liang@linux.intel.com>, 
-    Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org
-Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on
- hybrid
-In-Reply-To: <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
-Message-ID: <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu>
-References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu> <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com> <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1750121884; x=1750726684;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PUxUSOYgZf1bwPg50BKLldc1HPLAvephNepZ3aUtt/E=;
+        b=o/6P0LA29GeFcYqvAxU17MUxmrCvoYcbemod+kVLIJQ+HNB4BM+rrBr/4nq6+m8Q/z
+         GVSW+K3CIzMGIRglQx5hZj0jDx31KSdwsqe5MEK2h8AjEHMbjDfxqQL4lAPKqisbIkDH
+         iYbKFnziSvHwdny6wdnhyybUXyHVDfV6hEOZowAUoqxucNQHDBHINm3OYeNaxOTrq0pb
+         k7KVnX52fUgD2yXP0B8GsocKewhdbtoGm0YMFC86EVJDTZersKDUvqj4fSuPQnHFcmV1
+         PZeKWKqoAszo4KkAD4lYW5ef9idvyMkVRTd3iokIjQFMXEQY/99h4sg7h9s1zEW3/ncp
+         niQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWuWAl20WmBq78Po2E7Gh/aooTdQDxA6i73s5l6Ovj7sTIdx0893321RQoLqlUDxVm2BQExcCTg281tpnh9lh9V@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr8ut+qEbSNDT67xHeneh1ejejnMdP48LSPVIEBstwtWvFyman
+	jdo4nYXvwMVScCkjliyxadcCnLPpCJzFkpcg0ra2G+HxSJZr6XS7dxO+DDT4rhM5fypXYEis+i8
+	CXtUPOR1Pjg==
+X-Google-Smtp-Source: AGHT+IE0qcZmbns6zBGFQJhOWX1LORcuNmCNbLkI+P2wzasgkJVPKeyIMLL4buG+nUEjKbNjEeyoJWrGNeFL
+X-Received: from pgbbe5.prod.google.com ([2002:a65:6e45:0:b0:b2e:c392:14f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7a90:b0:1f5:70d8:6a98
+ with SMTP id adf61e73a8af0-21fbd295a7fmr16716677637.0.1750121883851; Mon, 16
+ Jun 2025 17:58:03 -0700 (PDT)
+Date: Mon, 16 Jun 2025 17:57:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
+Message-ID: <20250617005800.1410112-1-irogers@google.com>
+Subject: [PATCH v1 0/3] Switch get/put unaligned to use memcpy
+From: Ian Rogers <irogers@google.com>
+To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 15 Jun 2025, Ian Rogers wrote:
+The existing type punning approach with packed structs requires
+ -fno-strict-aliasing to be passed to the compiler for
+correctness. This is true in the kernel tree but not in the tools
+directory resulting in this suggested patch from Eric Biggers
+ <ebiggers@google.com>:
+https://lore.kernel.org/lkml/20250614044133.660848-2-ebiggers@kernel.org/
 
-> So I spoke to Kan and posted a revised perf test that works on hybrid:
-> https://lore.kernel.org/lkml/20250614004528.1652860-1-irogers@google.com/
-> Basically on hybrid before doing the rdpmc instruction the test now
-> ensures the affinity matches that of the CPUs the perf event can be
-> scheduled upon.
+Requiring -fno-strict-aliasing seems unfortunate and so this patch
+makes the unaligned code work via memcpy for type punning rather than
+the packed attribute.
 
-for PAPI we ended up using restartable sequences which more or less work 
-for our case (though we had to get some fixes merged with the upstream 
-rseq developers)
+Ian Rogers (3):
+  vdso: Switch get/put unaligned from packed struct to memcpy
+  tools headers: Update the linux/unaligned.h copy with the kernel
+    sources
+  tools headers: Remove unneeded ignoring of warnings in unaligned.h
 
-I don't always track the libperf code as its license makes it 
-incompatible with PAPI (which is BSD licensed).  Does it handle the 
-rdpmc case where by default on x86 you're supposed to sign-extend from 48 
-bits (or whatever is in the mmap page) but some of the top-down event 
-rdpmc registers use all 64-bits so the sign-extension corrupts the value?
+ include/vdso/unaligned.h        | 48 ++++++++++++++++++++++++++++-----
+ tools/include/linux/unaligned.h |  4 ---
+ tools/include/vdso/unaligned.h  | 48 ++++++++++++++++++++++++++++-----
+ 3 files changed, 84 insertions(+), 16 deletions(-)
 
-Vince Weaver
-vincent.weaver@maine.edu
+-- 
+2.50.0.rc2.692.g299adb8693-goog
+
