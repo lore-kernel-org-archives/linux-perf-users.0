@@ -1,117 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13524238151;
-	Tue, 17 Jun 2025 17:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBAE2FA64A;
+	Tue, 17 Jun 2025 17:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750180930; cv=none; b=YN6GqTUaUksgc8nrJi8dJrvFXGps30w8CHur7UV1JQR4a8oOQDUS9OJoab8rmrjYEDNzL9ujNqQvKem/DiP+OUj+NUa7wcGWc/3mqd2RIFviIfhsGgnpKBLaXQPuCtWN1TwXky/q2N/+dU7lr/W1LzJarBW0yPCe3ooD0EG1gP8=
+	t=1750181784; cv=none; b=ppSFmbKcepjf/neKEw7fOpvdlj6m9Ec0LK24sGIZXvpTenpPL42usukybQFbqbzn5twS/APOmhNloVYn+ZrykAwIeH+sCvGYuwzswZlI78TSS7nO59NQ1IP5k0TFNaaGoMaseAWcpxu2A1uYUAsM2sHUnyZx5DdY1jSoUFIkfts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750180930; c=relaxed/simple;
-	bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ow2afREmkFGG936P1BwAchzFE1NEInLLwtS0fyyNa7nhUcrwiA6h7FnjplKxU/JEAPaIZHJK1eKN1O+Nzw/ZOt8h9RlNNIhhVYH6Au5W7kk0beZxL4HO3rYDvnyCCJchnWWCxMRhI80Jyqmt5PVmIW7h9nbRxzfv/dblnYCjhAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NnnzJ31n; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NnnzJ31n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750180929; x=1781716929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
-  b=NnnzJ31nAnUx3xZ/pAtNnSj5McRix6llfA7cudsgHml8J/MwKARuBNBl
-   KI+eIQ9jIOFNO9HoBeLfkP7LWapISvs4OF6Tp6svS/FweLjgrnh2JPLN8
-   3IM+eWkK39cpcD39q0WOvnVOKOGsK7ldxsV/tyDahhEDKAVlcf66T5iiE
-   2L8/i1xH25dKfgG0xIwWAp4ICN3whV7HFwy8ACRsyCl99kuykc1OpQ2PM
-   YWSzjaEmYycHLwwdGhJAfOyFWI1Yxo+c6PcbqBOgVHfgojY2YB+hsy4Bq
-   5fJv9jVhqHwcX2ias/lCRpoIye8Q2A8eY5vyq24+Skct4VeFmAdp/ngBS
-   Q==;
-X-CSE-ConnectionGUID: UQqZij3VS4WEKhSYyvboRA==
-X-CSE-MsgGUID: 0UHJ5ySySj2Ueq4eyQlX5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52465815"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="52465815"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 10:22:09 -0700
-X-CSE-ConnectionGUID: wcOuWQMEQViVlxOgO6aEkQ==
-X-CSE-MsgGUID: yEpwHbqtQ8aabCl6DtGpBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="153750923"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 10:22:06 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRa0Z-000Hws-2R;
-	Tue, 17 Jun 2025 17:22:03 +0000
-Date: Wed, 18 Jun 2025 01:21:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
- to memcpy
-Message-ID: <202506180158.O3zMMHjh-lkp@intel.com>
-References: <20250617005800.1410112-2-irogers@google.com>
+	s=arc-20240116; t=1750181784; c=relaxed/simple;
+	bh=aDtTwD/1evND5VhE6Q8dawqpAXAcy4IC/CQHUul3Khs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=J8QqiLJZuBgC4WV7Yie4sT9NMF3j7mKAxZwSeDScClmSMrnETr3JZtSGwRFI/0Gnxyi+QU8vnpLGHFEyKgiZTetwArG41JNSyGwk/o+zOosdoBd1ANIcVoQWXasTtbd/eTIDFJWtN7kknK2cIpolpAHBiY4RA0fkOQErRjs6Zeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 6DB8AB9A89;
+	Tue, 17 Jun 2025 17:36:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id EE94120013;
+	Tue, 17 Jun 2025 17:36:08 +0000 (UTC)
+Date: Tue, 17 Jun 2025 13:36:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
+ <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Namhyung Kim <namhyung@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro
+ <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+ <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
+ Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
+ <irogers@google.com>
+Subject: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250617133614.24e2ba7f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617005800.1410112-2-irogers@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: nnxyxe7tyknqmm8jrdxbstextmrrj81j
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: EE94120013
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18OxZ+CG0kwkfwg95MiZKD5Hk6FVZuwQYQ=
+X-HE-Tag: 1750181768-318576
+X-HE-Meta: U2FsdGVkX19CCSom9anBKbrOJocLZlNYFJzMVAFoWisTTGlYDYXj1G2FTF6KvQmRDgETUp4yv8OOJYmTK8+ctqMi0ij2QqMNtMGdaC0ENcd9R5JoEBpOZN5SfSnOx6dkQz1Csy2X3qbB5F8bI6fU4P8823F9uMPyFmtkHbRC9Wr2/R1blrNU798UgYHt+rwHsZZ6XnYzMGrbUHP8iBfLKTWmGt+SKywm+tjmUDDS6BIF6ZOE8oPbklDNHE31SOJ4FhjOpsW+jMeHcBC6VX4X4jhQ+BbCodrRwGz0irum4/msSLvUcRKgrntPMnj7fgnIM1j6sgJcaHdqgyOTtmMWjjdhLe57nFOy3GR4JJ+Zi/DKeHaXH0d4C/mpsMwgXeAOAYkAR2JtH+3cDf4JLhjr9w==
 
-Hi Ian,
+From: Steven Rostedt <rostedt@goodmis.org>
 
-kernel test robot noticed the following build warnings:
+In January 2015, tracefs was created to allow access to the tracing
+infrastructure without needing to compile in debugfs. When tracefs is
+configured, the directory /sys/kernel/tracing will exist and tooling is
+expected to use that path to access the tracing infrastructure.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc2 next-20250617]
-[cannot apply to tip/timers/vdso acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To allow backward compatibility, when debugfs is mounted, it would
+automount tracefs in its "tracing" directory so that tooling that had hard
+coded /sys/kernel/debug/tracing would still work.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/vdso-Switch-get-put-unaligned-from-packed-struct-to-memcpy/20250617-085916
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250617005800.1410112-2-irogers%40google.com
-patch subject: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
-config: arm64-randconfig-r133-20250617 (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce: (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/reproduce)
+It has been over 10 years since the new interface was introduced, and all
+tooling should now be using it. Start the process of deprecating the old
+path so that it doesn't need to be maintained anymore.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506180158.O3zMMHjh-lkp@intel.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../ABI/obsolete/automount-tracefs-debugfs    | 20 +++++++++++++++++++
+ kernel/trace/Kconfig                          | 13 ++++++++++++
+ kernel/trace/trace.c                          | 13 ++++++++----
+ 3 files changed, 42 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/automount-tracefs-debugfs
 
-All warnings (new ones prefixed by >>):
-
->> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': invalid PT_DYNAMIC size (0x118)
->> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': PT_DYNAMIC dynamic table is invalid: SHT_DYNAMIC will be used
-   arch/arm64/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
-   make[3]: *** [arch/arm64/kernel/vdso/Makefile:64: arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
-   make[3]: Target 'include/generated/vdso-offsets.h' not remade because of errors.
-   make[3]: Target 'arch/arm64/kernel/vdso/vdso.so' not remade because of errors.
-   make[2]: *** [arch/arm64/Makefile:207: vdso_prepare] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
+diff --git a/Documentation/ABI/obsolete/automount-tracefs-debugfs b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+new file mode 100644
+index 000000000000..8d03cf9e579f
+--- /dev/null
++++ b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+@@ -0,0 +1,20 @@
++What:		/sys/kernel/debug/tracing
++Date:		May 2008
++KernelVersion:	2.6.27
++Contact:	linux-trace-kernel@vger.kernel.org
++Description:
++
++	The ftrace was first added to the kernel, its interface was placed
++	into the debugfs file system under the "tracing" directory. Access
++	to the files were in /sys/kernel/debug/tracing. As systems wanted
++	access to the tracing interface without having to enable debugfs, a
++	new interface was created called "tracefs". This was a stand alone
++	file system and was usually mounted in /sys/kernel/tracing.
++
++	To allow older tooling to continue to operate, when mounting
++	debugfs, the tracefs file system would automatically get mounted in
++	the "tracing" directory of debugfs. The tracefs interface was added
++	in January 2015 in the v4.1 kernel.
++
++	All tooling should now be using tracefs directly and the "tracing"
++	directory in debugfs should be removed by January 2027.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a3f35c7d83b6..93e8e7fc11c0 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -199,6 +199,19 @@ menuconfig FTRACE
+ 
+ if FTRACE
+ 
++config TRACEFS_AUTOMOUNT_DEPRECATED
++	bool "Automount tracefs on debugfs [DEPRECATED]"
++	depends on TRACING
++	default y
++	help
++	  The tracing interface was moved from /sys/kernel/debug/tracing
++	  to /sys/kernel/tracing in 2015, but the tracing file system
++	  was still automounted in /sys/kernel/debug for backward
++	  compatibility with tooling.
++
++	  The new interface has been around for more than 10 years and
++	  the old debug mount will soon be removed.
++
+ config BOOTTIME_TRACING
+ 	bool "Boot-time Tracing support"
+ 	depends on TRACING
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 95ae7c4e5835..71bd1f001e79 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6303,7 +6303,7 @@ static bool tracer_options_updated;
+ static void add_tracer_options(struct trace_array *tr, struct tracer *t)
+ {
+ 	/* Only enable if the directory has been created already. */
+-	if (!tr->dir)
++	if (!tr->dir && !(tr->flags & TRACE_ARRAY_FL_GLOBAL))
+ 		return;
+ 
+ 	/* Only create trace option files after update_tracer_options finish */
+@@ -8984,13 +8984,13 @@ static inline __init int register_snapshot_cmd(void) { return 0; }
+ 
+ static struct dentry *tracing_get_dentry(struct trace_array *tr)
+ {
+-	if (WARN_ON(!tr->dir))
+-		return ERR_PTR(-ENODEV);
+-
+ 	/* Top directory uses NULL as the parent */
+ 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
+ 		return NULL;
+ 
++	if (WARN_ON(!tr->dir))
++		return ERR_PTR(-ENODEV);
++
+ 	/* All sub buffers have a descriptor */
+ 	return tr->dir;
+ }
+@@ -10256,6 +10256,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	ftrace_init_tracefs(tr, d_tracer);
+ }
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ {
+ 	struct vfsmount *mnt;
+@@ -10287,6 +10288,7 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	put_fs_context(fc);
+ 	return mnt;
+ }
++#endif
+ 
+ /**
+  * tracing_init_dentry - initialize top level trace array
+@@ -10311,6 +10313,8 @@ int tracing_init_dentry(void)
+ 	if (WARN_ON(!tracefs_initialized()))
+ 		return -ENODEV;
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
++	pr_warning("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
+ 	/*
+ 	 * As there may still be users that expect the tracing
+ 	 * files to exist in debugfs/tracing, we must automount
+@@ -10319,6 +10323,7 @@ int tracing_init_dentry(void)
+ 	 */
+ 	tr->dir = debugfs_create_automount("tracing", NULL,
+ 					   trace_automount, NULL);
++#endif
+ 
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.2
+
