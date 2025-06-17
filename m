@@ -1,180 +1,117 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF54CA4B
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 16:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13524238151;
+	Tue, 17 Jun 2025 17:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750179238; cv=none; b=Y+zv2CzrHmyZX+CnmtxikdTmYQdyxaXGLji2vZzJrLlT1cMCXHCHXDxMde4lHemLDm64Z7WaskinuqjLwPgsrWRnpuY6hocQ+9b/M56ezXOrisPun1shUMya6+AquheUkLfnCE/KZhNMubOReVOOa2pMM6u7W9dkEFkUvNpvfP4=
+	t=1750180930; cv=none; b=YN6GqTUaUksgc8nrJi8dJrvFXGps30w8CHur7UV1JQR4a8oOQDUS9OJoab8rmrjYEDNzL9ujNqQvKem/DiP+OUj+NUa7wcGWc/3mqd2RIFviIfhsGgnpKBLaXQPuCtWN1TwXky/q2N/+dU7lr/W1LzJarBW0yPCe3ooD0EG1gP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750179238; c=relaxed/simple;
-	bh=sBlsNW8rrToWOrhajHMtR7bPZcZNRFXKCV4kuxSCtGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R20FKNcrzu8Qd4IOdA50ldzLNTZAHKGQGUtI/Y5vSgLdRUZpKt0HHW2wqGDTtd7/585y9Yk/zscijFy9vryjWjVHrhXlBlL+lhcEqLg8K7JfwB+GgYzRDga6oy8tpBG/HAHDja9KlN1ztK9LNG3abtm3tWg2NXQ6ZtE54cX0MOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JsjqHIS6; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750180930; c=relaxed/simple;
+	bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ow2afREmkFGG936P1BwAchzFE1NEInLLwtS0fyyNa7nhUcrwiA6h7FnjplKxU/JEAPaIZHJK1eKN1O+Nzw/ZOt8h9RlNNIhhVYH6Au5W7kk0beZxL4HO3rYDvnyCCJchnWWCxMRhI80Jyqmt5PVmIW7h9nbRxzfv/dblnYCjhAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NnnzJ31n; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JsjqHIS6"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so10795ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 09:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750179236; x=1750784036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VYJnE0bLpXfGXAhOdoPj9sjJfon5avZzMzwtb4GEZQ8=;
-        b=JsjqHIS6SrWvTtPqEamX+rE8oY28eN10IhMp96WR+Tk6jtltlVBUQjtWjeUwbofjp/
-         wvwQxo/ENAGIKRzmacn3b794E36sHE7jvFc6uSq2qatRzCa+3HMSWXYLtGU94hLfQTHd
-         4snu3DkcsFAPwEpaPkJe0uDWD5aPJqEJUUE5Tk3kDteSFvP/BNeLAGPnKaRL8IyjeExb
-         l7Q5DlioBpMPt7uL0PvotRD09ijzSuyRVZkfKrLB6LxUk5kcO8zcuK41S5Tp5Nb1wFW9
-         3Sin0djqSVY7FSeKtRkMOHz4vpupA0H/XYBqQmZRFrDVwjraHkfFUTWA8T79H8oPsJHt
-         MhTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750179236; x=1750784036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VYJnE0bLpXfGXAhOdoPj9sjJfon5avZzMzwtb4GEZQ8=;
-        b=oK9JPUvl5NZZMLH0WghXs+zh38EDS/VplLXlPMRTnhElTDaUvUSq+2WfyF42kGFr7u
-         B8xNVnTNQG4Kjstm6MPByvea7wRiOTM+lJlauyh1KxmI2mKrKpYxzSnJW4tZlhqMJxFE
-         lvnk/jY8gBaMWuqcFIua0g12g4fc/PlENMaZ9WLmL8UcgAp2F6r323WQ2OJPL4iSaR0T
-         ww8GCqepRfX28qeQSHOlfULjFxhpX0BCxJEBaLT0XDlXJhvL2fw5qSCk7W1TOPwdoovP
-         QhRE579jfN33OYXHRq0LpiZ7uaA1rz4dnTLCmsIptF2OHpC1R2TvS0igMcrHLEGBVCzP
-         fuuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDgVgeOOt3/8dOfuPNuyxCRE+bPvUI1y+w2IyHP+4ySXVka57vNO9Ia4VvaeXgVX6QgqG3Zwg0crDUrKPQmznK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGsC2TFllhTaKELcAsf89hrJ6pcWqogf6j2YLhTToIILVJQTm+
-	SqiO0Qwimw4EocHH4t/azG1AT8QLAadr7tzqMGGLHQ6llXrQFmSXoh6dHPic4psjuwutehSd1JO
-	sE7QqZrBBsO4Td5ehYQZUIrJVGyghfopz4dujrwQO
-X-Gm-Gg: ASbGncvVfZtrefZApPOXBgNSz3urF5EKSppiXcqc92YF/TzxdQkz5AUKank9CgvZATM
-	F02pcfbSwlgkYwu0HsUWittkjW1ti23Svj0WJBAcr20Vd0QJd2AV5GcYWpeGgTtNwhkUjMIgGBP
-	TDkLVM178HkrSSGJFyoYqSgHs6W9hEst6zfjSQ8wVymLKZ1MVOQbIvGOP98LwLNz1tmfuhqAra
-X-Google-Smtp-Source: AGHT+IFxzIYnRwPkTPGsw15J0FvFqBPucLmLVdUh15Kwq1Q2Op1ssWJY8RG0XKYKAwujDL/N2ht0/4WAcdskUuxdyGc=
-X-Received: by 2002:a05:6e02:4819:b0:3de:20ec:5c71 with SMTP id
- e9e14a558f8ab-3de20ec5f19mr5234075ab.6.1750179235473; Tue, 17 Jun 2025
- 09:53:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NnnzJ31n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750180929; x=1781716929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
+  b=NnnzJ31nAnUx3xZ/pAtNnSj5McRix6llfA7cudsgHml8J/MwKARuBNBl
+   KI+eIQ9jIOFNO9HoBeLfkP7LWapISvs4OF6Tp6svS/FweLjgrnh2JPLN8
+   3IM+eWkK39cpcD39q0WOvnVOKOGsK7ldxsV/tyDahhEDKAVlcf66T5iiE
+   2L8/i1xH25dKfgG0xIwWAp4ICN3whV7HFwy8ACRsyCl99kuykc1OpQ2PM
+   YWSzjaEmYycHLwwdGhJAfOyFWI1Yxo+c6PcbqBOgVHfgojY2YB+hsy4Bq
+   5fJv9jVhqHwcX2ias/lCRpoIye8Q2A8eY5vyq24+Skct4VeFmAdp/ngBS
+   Q==;
+X-CSE-ConnectionGUID: UQqZij3VS4WEKhSYyvboRA==
+X-CSE-MsgGUID: 0UHJ5ySySj2Ueq4eyQlX5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52465815"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52465815"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 10:22:09 -0700
+X-CSE-ConnectionGUID: wcOuWQMEQViVlxOgO6aEkQ==
+X-CSE-MsgGUID: yEpwHbqtQ8aabCl6DtGpBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="153750923"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 10:22:06 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRa0Z-000Hws-2R;
+	Tue, 17 Jun 2025 17:22:03 +0000
+Date: Wed, 18 Jun 2025 01:21:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
+	Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
+ to memcpy
+Message-ID: <202506180158.O3zMMHjh-lkp@intel.com>
+References: <20250617005800.1410112-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
- <CAP-5=fXSwgxMc+uh=PBAFh4Zm96tL5RDyKPOJ8Q40O4s=EaArA@mail.gmail.com>
- <20250616102945.GA17431@willie-the-truck> <CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
- <20250617141649.GA19021@willie-the-truck> <86msa6co21.wl-maz@kernel.org>
-In-Reply-To: <86msa6co21.wl-maz@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 17 Jun 2025 09:53:44 -0700
-X-Gm-Features: AX0GCFugvPzuB-Difn5EDUPVkKbvplUqcVBXc7z721G-mrMOHZ8e5lOvCFsdSTo
-Message-ID: <CAP-5=fW51G0Wc227K1o0T==wF_3DN-UhBrU1VzncwmfPcWP3fw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple A7-A11,
- T2 SoC support
-To: Marc Zyngier <maz@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Nick Chan <towinchenmi@gmail.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	devicetree@vger.kernel.org, asahi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617005800.1410112-2-irogers@google.com>
 
-On Tue, Jun 17, 2025 at 9:47=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrote=
-:
->
-> On Tue, 17 Jun 2025 15:16:50 +0100,
-> Will Deacon <will@kernel.org> wrote:
-> >
-> > On Mon, Jun 16, 2025 at 03:44:49AM -0700, Ian Rogers wrote:
-> > > On Mon, Jun 16, 2025 at 3:29=E2=80=AFAM Will Deacon <will@kernel.org>=
- wrote:
-> > > >
-> > > > On Mon, Jun 16, 2025 at 02:36:18AM -0700, Ian Rogers wrote:
-> > > > > On Sun, Jun 15, 2025 at 6:32=E2=80=AFPM Nick Chan <towinchenmi@gm=
-ail.com> wrote:
-> > > > > >
-> > > > > > This series adds support for the CPU PMU in the older Apple A7-=
-A11, T2
-> > > > > > SoCs. These PMUs may have a different event layout, less counte=
-rs, or
-> > > > > > deliver their interrupts via IRQ instead of a FIQ. Since some o=
-f those
-> > > > > > older SoCs support 32-bit EL0, counting for 32-bit EL0 also nee=
-d to
-> > > > > > be enabled by the driver where applicable.
-> > > > > >
-> > > > > > Patch 1 adds the DT bindings.
-> > > > > > Patch 2-7 prepares the driver to allow adding support for those
-> > > > > > older SoCs.
-> > > > > > Patch 8-12 adds support for the older SoCs.
-> > > > > > Patch 13-21 are the DT changes.
-> > > > > >
-> > > > > > Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> > > > >
-> > > > > Hi Nick,
-> > > > >
-> > > > > This is substantial work and it looks good to me. Do you know why
-> > > > > there's been little progress on landing these patches? Buggy Appl=
-e ARM
-> > > > > PMU support in the kernel has led to reworking the perf tool. It =
-seems
-> > > > > best that we can have the best drivers possible.
-> > > >
-> > > > You reworked the perf tool to support these things? Why? These chan=
-ges
-> > > > are targetting chips in old iPhones afaict (as opposed to "Apple Si=
-licon").
-> > > > I think that (a) most people don't particularly care about them and=
- (b)
-> > > > they're not fully supported _anyway_ because of crazy stuff like [1=
-].
-> > >
-> > > I was meaning that we reworked the perf tool to work around the Apple
-> > > ARM PMU driver expecting to work as if it were an uncore rather than =
-a
-> > > core PMU driver. More context here:
-> > > "[REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.=
-5"
-> > > https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@mar=
-can.st/
-> > > But in general it would be nice Apple ARM PMU support were well loved=
-.
-> > > I think we went 2 or 3 minor releases with the perf tool not working,
-> > > threats of substantial reverts to avoid the PMU driver bug being
-> > > exposed, etc.
-> >
-> > It's unfortunate that you've had a torrid time with the Apple PMU drive=
-r,
-> > but I think it's important to realise that it's both unmaintained (it
-> > ends up with me via the catch-all for drivers/perf/) and was written
-> > based off whatever reverse-engineering people could be bothered to do i=
-n
-> > their spare time. It's frankly remarkable that it works as well as it
-> > does.
->
-> Also, the "broken" driver actually works as expected. Ian blames the
-> userspace breakage on that driver, but that's only because the way we
-> deal with PMUs on ARM doesn't match his mental model. Oh well.
+Hi Ian,
 
-I'm not sure what this is in reference to or what you mean by my
-mental model. The linked patch was that legacy events didn't support
-the extended type bits added by Intel for hybrid. Prior to this legacy
-events were broken on ARM BIG.little PMUs and would select an
-arbitrary PMU - not good by anybody's mental model.
+kernel test robot noticed the following build warnings:
 
-I'm happy to chat with whatever issues you think I'm creating. I think
-you are making reference to situations where I've cleaned up a mess
-with Intel hybrid and then cleaned up a mess on ARM. I continue to try
-to clean up a mess for RISC-V. Sorry this makes you think I'm a bad
-guy.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc2 next-20250617]
+[cannot apply to tip/timers/vdso acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Ian
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/vdso-Switch-get-put-unaligned-from-packed-struct-to-memcpy/20250617-085916
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250617005800.1410112-2-irogers%40google.com
+patch subject: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
+config: arm64-randconfig-r133-20250617 (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce: (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/reproduce)
 
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506180158.O3zMMHjh-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': invalid PT_DYNAMIC size (0x118)
+>> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': PT_DYNAMIC dynamic table is invalid: SHT_DYNAMIC will be used
+   arch/arm64/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
+   make[3]: *** [arch/arm64/kernel/vdso/Makefile:64: arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
+   make[3]: Target 'include/generated/vdso-offsets.h' not remade because of errors.
+   make[3]: Target 'arch/arm64/kernel/vdso/vdso.so' not remade because of errors.
+   make[2]: *** [arch/arm64/Makefile:207: vdso_prepare] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
