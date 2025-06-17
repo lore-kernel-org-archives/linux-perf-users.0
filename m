@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FED19AD90
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 00:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A581A83ED
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 00:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750121890; cv=none; b=hd6LXXnwVHlODR3uXdmyd1kF9bdIgIn21AuLWZVZNtdYLcxfDlCakSAGDad6zG56BV0jE9IE3bNfLQu7gHC94CC3CdPfxObs1l6/CMxdaMMn8Toz0cXTovi68/o6gzzWAB5H8LpD80V1s/qLwQEIHFMPnLiFK+WDmHmBcGcgzFw=
+	t=1750121892; cv=none; b=VFwDdzc/Onymoo/LNZQvgSJfCi+dpzRLlqf8oyGR2GvWOufQ+Yeg5OYXLIvCklP6QaXRfh93D+5xHzY18GYSURdbIrmzTFB6GezXivrhC0/kZof4ZAhlI7EiypYaLXHpVMWlhMcQXMCZnYcotQrpIZ+eMMH9S9TykYGRE51BKEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750121890; c=relaxed/simple;
-	bh=prYvWPkVZ0F18QrAw5Mvvac8Wh0ObRtIg/e1ntvsTZ0=;
+	s=arc-20240116; t=1750121892; c=relaxed/simple;
+	bh=hFvm7LI6PbpFUkR/u0/iY3CWrgpQgOP9/VNv+k+uv0Y=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=n2TUMtaeTWDUiktKyDNvJvkBsK2ZZq5f+Tab6aSLQbKkwR1WvsoApeynmhN8I8o5nj4FHm4isVS6KVExTDJOzteZ/6ltdKYwPBZhOGoiWFBcxVLbOGlDQeBYYD4J4B2bv11XHgqIWfxS2fldDSaaKVItfkFdf1ZqxSsoqzmFhQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r/2UZ3VS; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=Evmdc8fWnJl/WJISU4IkYvObiKWhGTqR0BC6siEQ9nL6eVZkKjsghreedA0ZOSm9Ny0BedkfFqbixXmTciFDzfw68sXzssszFThyqtxByHfLJAN8uyF8fYVNRiRLsa0U4NhggXH+hxbbhnKNGpbbYytjEcFZA8gx/LBkZoxL+bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Og7cOdlB; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r/2UZ3VS"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23536f7c2d7so83414725ad.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 17:58:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Og7cOdlB"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394772635dso3661825b3a.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jun 2025 17:58:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750121888; x=1750726688; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750121890; x=1750726690; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dv+B5j2PyRBGCwIWMxMjAYLpyWcTKK1hPzxqpQMNSuE=;
-        b=r/2UZ3VSMK66wo20h+W6fRLZ+s6CZwRhgtbpKxhAQLIjk8vPQQRp5abHnbzLRbXbON
-         uIvOnVxUjlaaK4ZzkrqgANbCyZRkx1cTxup9EB5keRbURVd4ZL26lj+YGrILaUCPinlq
-         wjBWPOugJAHt5WdH+5+krjpLD2cwGgqb/BCyaEUCGGvfqrZ82I4uGPXEwxtH4e0Y26by
-         u8OmZ6OA9JJ855SERqyxHX1cGlPM6Qyn7qZ2ykqdubciINLghGxvQYUvgcn/mQdZrqck
-         AGTGdO/WU/G/sASD9zBYEPBfEm33xaKiWoy6T9wwTkm6q1zF++OL8VD0md2nbNyXYFIv
-         qHCw==
+        bh=ZRrQH/oLhXhGguBdkv3bDQfEEQvWp/xbahMxIf7pRV4=;
+        b=Og7cOdlBjPPf38nVgup4Q9uc65twa+f1OeLFsmOx1JALarCF5a2M4BN+CnJO+Wm89J
+         tUYgw4zcl5HGMgZB3+zkicC0X45kT1HaV5SSidJ9veYLnV9mFEv9jwZIdeuEGyFzcJrr
+         0qR2IN4sgL4y3jofu2Vheq+bKs5WxXguOWgy1kS0c5Ymgl8jwewqqYmLcN725VaWMRmF
+         kFE8n0yFtWstmFXqd/sKHIgSrFVQMmPW/NVz7s0KPaswz1oqg/cJt1zrZ7zyCpwwQWm0
+         btTYbIfTafnBQ9MbntrsiOIKI89mLYjMH3N8bW65KO++uPY4rjgkZYtsTnLwFdFpHRpW
+         H4vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750121888; x=1750726688;
+        d=1e100.net; s=20230601; t=1750121890; x=1750726690;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dv+B5j2PyRBGCwIWMxMjAYLpyWcTKK1hPzxqpQMNSuE=;
-        b=CNYobVTsEVaTH8fzNfMr4M44v/6EYiu9FYE6GIAidbVwFgSDn2jnMqdgFKqxySzScX
-         hz/doGBiPWnziAnj/VHYX2nPVwLQyo/1PwQE9BIgO6YOMfmE7HU/R+FZ/rjHa182M1WS
-         TmehyHY9BD7oh6njrJSUTeE0XHWZIqRdnQO+rCqYn+Ti8v+iMSRl3NMSH8lSFzQcd/IY
-         wzmpIRWMvOHXmdzit2ogxoPohicesuMQDN96N2E4HIXEsYCJwQpm+eZLWvGbTgOpJ/Nj
-         oQY4mgQyhzE6a5PaHmNB47D0hbJBfMr3mo8UflBMyOFy2HtrYjGaC8UaYYqfJe8D2Mu9
-         7y+w==
-X-Forwarded-Encrypted: i=1; AJvYcCU2ruTeBV26qlGta8SZ/WDoitESmDq2y2dUh/BdeWeu04Vs1/jqp4bWJ0KPTlj7wIhYFT2ylfOgC35CIkoIrDn+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQeFx0ogcLUJmgSjHXfF6n8lyVro6ZsIrXcmPdqv5GJW3Hu3pe
-	f8EZO1K8l/sJuUwlY7nRchAME2bOiHcPtM3P8i+RuSa4vTwdLt0dq3wI/vVEeUY1Z3eaYsIt1VG
-	ki3OCeD9S3Q==
-X-Google-Smtp-Source: AGHT+IEAHw+4Qig3KGDlBgefnOGevCeuzUorxDrebXu5cgCekapQYh/SKUk3CKW1mqPftFrNTzTwFX/Yu9Kn
-X-Received: from plbkm11.prod.google.com ([2002:a17:903:27cb:b0:234:a77d:48e8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cec4:b0:235:e942:cb9d
- with SMTP id d9443c01a7336-2366b32a038mr154169005ad.17.1750121888063; Mon, 16
- Jun 2025 17:58:08 -0700 (PDT)
-Date: Mon, 16 Jun 2025 17:57:59 -0700
+        bh=ZRrQH/oLhXhGguBdkv3bDQfEEQvWp/xbahMxIf7pRV4=;
+        b=Ea4BvjjI9mBpSsOk+cqafq0mvQlKkMZvYOg0aJLiqiz9uuS0WP0PCSoxCTRAMsaAs7
+         aE0UBX5k399QQYUecCNvZdTMpYApMfFohO71zEW4SeqRlB58a28f5ouww6GR/dNDV7pJ
+         e0Q9PAozQqRcpArQQoLIQiIPsNVZPaH2OFVg14iEmV48KZOnJQ/k+rW5uwVHIgbG9LcS
+         fc8i77zT0DQwjcYWvhISDaH2Mgnv0boD5/Mm+0o8Fjmq5bwxIlbcylztT2bnSjh85tSJ
+         +d9kEHH540pAcZ7u8Rvtyc33IF6y9WYwoFGMddPPrgfpC63fL+9Ds87ezfEq6zNjMIwO
+         EsNA==
+X-Forwarded-Encrypted: i=1; AJvYcCU37om9UGa/8o98juo9XieOrPWyNkJsq37ICuUcmTsjTLwPLR1aAd5+po3hRq53Z5MM7I6TZfQ5z/qtBH2ia+rM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzBPSdhheyWhXOE/FE6qoB78Bt69uawwN1LFbyJZWlLZILSeba
+	e2GFb0+/VrI5D5xsqoPKxxdLthleA03FQ6vY88ZGIhxg3uC/uqN8f5aQ9W1+weKYr+2WNBCfg+B
+	rmt6k0BcBwQ==
+X-Google-Smtp-Source: AGHT+IETOmo4fVWB5m5SEWPzK5wxJhHC7NXMe/1m1ErpsLuKJkJ6bkL1VUGAVZErkvJZioRlnu5NOyLhYGD8
+X-Received: from pfst42.prod.google.com ([2002:aa7:8faa:0:b0:746:1b3a:db4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b90:b0:740:6f86:a0e6
+ with SMTP id d2e1a72fcca58-7489cf72902mr13982031b3a.6.1750121890031; Mon, 16
+ Jun 2025 17:58:10 -0700 (PDT)
+Date: Mon, 16 Jun 2025 17:58:00 -0700
 In-Reply-To: <20250617005800.1410112-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250617005800.1410112-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250617005800.1410112-3-irogers@google.com>
-Subject: [PATCH v1 2/3] tools headers: Update the linux/unaligned.h copy with
- the kernel sources
+Message-ID: <20250617005800.1410112-4-irogers@google.com>
+Subject: [PATCH v1 3/3] tools headers: Remove unneeded ignoring of warnings in unaligned.h
 From: Ian Rogers <irogers@google.com>
 To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
 	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -72,76 +71,35 @@ To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-To pick up the changes in:
-
-  fe9b2b7b3583 vdso: Switch get/put unaligned from packed struct to memcpy
+Now the get/put unaligned use memcpy the -Wpacked and -Wattributes
+warnings don't need disabling.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/include/vdso/unaligned.h | 48 +++++++++++++++++++++++++++++-----
- 1 file changed, 42 insertions(+), 6 deletions(-)
+ tools/include/linux/unaligned.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
-index ff0c06b6513e..81f632e3c5eb 100644
---- a/tools/include/vdso/unaligned.h
-+++ b/tools/include/vdso/unaligned.h
-@@ -2,14 +2,50 @@
- #ifndef __VDSO_UNALIGNED_H
- #define __VDSO_UNALIGNED_H
+diff --git a/tools/include/linux/unaligned.h b/tools/include/linux/unaligned.h
+index 395a4464fe73..d51ddafed138 100644
+--- a/tools/include/linux/unaligned.h
++++ b/tools/include/linux/unaligned.h
+@@ -6,9 +6,6 @@
+  * This is the most generic implementation of unaligned accesses
+  * and should work almost anywhere.
+  */
+-#pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wpacked"
+-#pragma GCC diagnostic ignored "-Wattributes"
+ #include <vdso/unaligned.h>
  
--#define __get_unaligned_t(type, ptr) ({							\
--	const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr);	\
--	__get_pptr->x;									\
-+#include <linux/string.h> // For memcpy.
-+
-+#define ____get_unaligned_type(type) type: (type)0
-+/**
-+ * __get_unaligned_t - read an unaligned value from memory.
-+ * @ptr:	the pointer to load from.
-+ * @type:	the type to load from the pointer.
-+ *
-+ * Use memcpy to affect an unaligned type sized load avoiding undefined behavior
-+ * from approaches like type punning that require -fno-strict-aliasing in order
-+ * to be correct. As type may be const, use _Generic to map to a non-const type
-+ * - you can't memcpy into a const type. The void* cast silences ubsan warnings.
-+ */
-+#define __get_unaligned_t(type, ptr) ({					\
-+	type __get_unaligned_map_ctrl = 0;				\
-+	typeof(_Generic(__get_unaligned_map_ctrl,			\
-+		____get_unaligned_type(short int),			\
-+		____get_unaligned_type(unsigned short int),		\
-+		____get_unaligned_type(int),				\
-+		____get_unaligned_type(unsigned int),			\
-+		____get_unaligned_type(long),				\
-+		____get_unaligned_type(unsigned long),			\
-+		____get_unaligned_type(long long),			\
-+		____get_unaligned_type(unsigned long long),		\
-+		default: (type)0					\
-+		)) __get_unaligned_val;					\
-+	(void)__get_unaligned_map_ctrl;					\
-+	memcpy(&__get_unaligned_val, (void *)(ptr), sizeof(__get_unaligned_val)); \
-+	__get_unaligned_val;						\
- })
+ #define get_unaligned(ptr)	__get_unaligned_t(typeof(*(ptr)), (ptr))
+@@ -143,6 +140,5 @@ static inline u64 get_unaligned_be48(const void *p)
+ {
+ 	return __get_unaligned_be48(p);
+ }
+-#pragma GCC diagnostic pop
  
--#define __put_unaligned_t(type, val, ptr) do {						\
--	struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr);		\
--	__put_pptr->x = (val);								\
-+/**
-+ * __put_unaligned_t - write an unaligned value to memory.
-+ * @type:	the type of the value to store.
-+ * @val:	the value to store.
-+ * @ptr:	the pointer to store to.
-+ *
-+ * Use memcpy to affect an unaligned type sized store avoiding undefined
-+ * behavior from approaches like type punning that require -fno-strict-aliasing
-+ * in order to be correct. The void* cast silences ubsan warnings.
-+ */
-+#define __put_unaligned_t(type, val, ptr) do {				\
-+	type __put_unaligned_val = (val);				\
-+	memcpy((void *)(ptr), &__put_unaligned_val, sizeof(__put_unaligned_val)); \
- } while (0)
- 
- #endif /* __VDSO_UNALIGNED_H */
+ #endif /* __LINUX_UNALIGNED_H */
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
