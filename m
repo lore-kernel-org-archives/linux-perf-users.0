@@ -1,55 +1,55 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63E8285CA4
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 20:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956532E7172
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 20:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750193693; cv=none; b=a+EMBtlCfOedi+hiENu65STzO6ntbq9GkH/6aIf2j7WhcQmvkatypN9O78eTIWraIWkbwy9IN+wrK+C/IuhvCNxrkoCE993YpDfAi01p/6GKY0Vrvzo3ojLuCWZj6fhoRMJWCB34rs0xcZb8NY+Fx/+XWfrAg6jXMyUhCJE607U=
+	t=1750193694; cv=none; b=MO/usR5EZ6Rc68d72YF6J7v1R8bPZuaA9Ri+4kmxQFv0F3hToggtOhAAZGvBueEze3l/kOc5ADrnhoEsOI2wxCxJy/H+MboVLsxIRz+4HadzpihcGdyqYYwsTgZE96iMAltIN1LZiZRCkkuEgvy2piW95bwId0lhn7KLirDHt+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750193693; c=relaxed/simple;
-	bh=ji2cHswmwo/z5ubhmd2npU+1NBNQjIr4s2B7VUnbXOQ=;
+	s=arc-20240116; t=1750193694; c=relaxed/simple;
+	bh=9SzXJ15j3U8LLY/VYfOxt4So2V01/XoyuGBXz/ltQbU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=acowwPtjF6kDlAR2xh1XXBOWUNkAbxSABNYnRy0v2bXw4Axyhdaf7G9eGklU6sGCRc9IpMFKr0ZTAPwse5LBLutfQQqoqs/DhYl5sw8R8tMj0vcdroLPFkjZjDZrPTk/3BkC/aTfrvuwdHXrkj2rBIfM/T2yzNphRctfnzShs5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rEfWD4fE; arc=none smtp.client-ip=209.85.160.73
+	 To:Cc:Content-Type; b=FCAsyfnxTCfNB5hAgmOTvONaCsaWUS9e9WHKROuvCykF6SV9+oeiJ1j5PjHVAUaeIuaEtQerQk+IjEvnMJYaZJREp+3hjIba4vzhTB+xvxPI9gek9YEV/SVbcj86UmKybY115cOh0zxmtLoQjgCo1QMEiutMBD7CeZmLzsOcjcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mg8q6N+f; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEfWD4fE"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e94cfbbbc1so1284549fac.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 13:54:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mg8q6N+f"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313d6d671ffso4843208a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 13:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750193690; x=1750798490; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750193692; x=1750798492; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dbyQnd6426Fx1NsnFOkmoHrxj7lid9QiAbcIefxO5Cg=;
-        b=rEfWD4fEQ3BotdNbBgz37YunHHKjAVVSrSHJtTeR/tWsS2C4Z+9/fUUac6HgiltT49
-         h0JxLv8NAdN90xSYnheBFw73BISBwUm+C4vH2JyZ1Ij0PO5TT1UdgCfJHu7lMCbqUhEq
-         h36uyoLe0OW8ERs6D+P5C3JhNJznJUQ22JlfueIi97l9g1isYo4K/RXhyziN2bPT8qv4
-         Pzz0tBBIFRP5CIx1GJQT8pb731Fs/yu/BK+YL992S/yz01AGQ+5c+C4618e28jbQ37Ac
-         mYHzqgCcNEhYYlFEL/oouok9DDwIgCNqleVk7cdzOiR1OyoYlgfOOVbpZLxKAdipgmgC
-         w7ZQ==
+        bh=0Z930P5mm/rRASOyUPDd8zyUujiTaQQWWaxXoM7MXu0=;
+        b=mg8q6N+ffA75S5IVM0EC2MopHQuObSNb3Ix/ejaNQ+7XRoT12UqrZnULNe1K8a/78Y
+         qpvOuHN0J/T4gY5ZrOS2O0er3j/xkpg+bJb9jqU4vQddQNCnGF8wygN8KFwPR7BTwCFO
+         Bl3gkl5m9eOxoFlr8pjtWZvxAfC1sPd2xHSWe6FkD7S3A1fsLESlRkackXqp7CjqeYT7
+         yxJ0eaMafQPGwVDMR82gZEpOiWBIKam/P4SYfL7BBe47RR5JmGBIVO7UG0+vJq8DUh/9
+         mOOpnus5XdzfLey2vtHZBtSu5cZVSMwtu4IMOIMbwgmGUtt647o1r462b8EZVkOUJ/Oa
+         B1RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750193690; x=1750798490;
+        d=1e100.net; s=20230601; t=1750193692; x=1750798492;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dbyQnd6426Fx1NsnFOkmoHrxj7lid9QiAbcIefxO5Cg=;
-        b=NA3w9FSNNsznu2S0WKtnkxmkgVPA60Nal44Ki3JC7I5JjK9VYNHNJhENPAu+RsolJZ
-         FunAYKvWHbP0RLfUnd2bEvTn+PoD7zXbJQwIP6vryFjcBbkIew7Bksk3VBXYduuASEyx
-         4T5+x11dbJGftgrvGOXwmOx9/ME/sx18Wt0t+jVeOTEX+ls3DKhDTENB7xHk7Ex4zKkF
-         jsAgVRuJ9SFzrO91Hj7xLTGJMP+OQTv/n2jsSzq03AcDKItAjbY8B8MTgZX+wyksrWN9
-         ztqQN6Y4p/wkraT51Wvxd3zUs6Ow97S5BFja8c9AwVoe6vgMHHvjCw6e+aQXVMXP7vy/
-         uVIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpjULRWR4SjjlQwfIet/gBt8NTe1tTdLMzM1ZLAtGVVrrgZM8m4S9Qc1SgcfT3wyHoz3uHs/7YBiLCag3ce9pm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc0Wj+fVvW2Lp1S8jQ7CXr7iWx6LLo9JQuygm+FL4hQsU4/23f
-	NsuqBGvRqUa+Lqs3sawHTsSmWn6T+zwUSwFdSSlSZgTWZGF3pJJRIm9uSN7gGedbdKhlEX0fVBk
-	iClm1PLQ1Iw==
-X-Google-Smtp-Source: AGHT+IGO+lDFmIYK2w4ANnsn3rKPN7NvFKzlodTqOzVDtZl/njo/FT5AchdaGQP4Vk87djIL0Wjh2P0D9VgF
-X-Received: from oacml3.prod.google.com ([2002:a05:6871:7243:b0:2c1:5f7a:eba8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:709c:b0:2d6:103e:e43d
- with SMTP id 586e51a60fabf-2eaf0b0bc51mr7182984fac.20.1750193689948; Tue, 17
- Jun 2025 13:54:49 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:53:18 -0700
+        bh=0Z930P5mm/rRASOyUPDd8zyUujiTaQQWWaxXoM7MXu0=;
+        b=CNiELk9p9tF3DwQoMC8TCnyACohOf+Uc4Fkc8ceA/RHMOKnQsCe9TtidOxDf4ygfl0
+         Juu9ipxSqSTp4xuE5prLx88NjBjLj0wQTBxQ7Pf2iwafX9wAKdguTNkrF8hla9juSpv8
+         762E8bL5I5Hu3R3dVT2SqXgXA/PivnDWg40T2yb+NV2v1xTcEyVAqhoj+rU/hr/W77DO
+         OJ2EMm2hKB5318NBV9dn84kApqVF9O+HsinJH+jxRjxgsk8+P1jnxW5O0gyIvE4TV2sS
+         melCQiU5ec7NVGuHZ01pjvzJrCdAAGFdHVAHoycxTx/XlIxiEnMoOVitgkx7axotnrt4
+         YmJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGNc66Ftjy5rTXGsX5+8J6bCkhlMWWQyKnh3K/wqwhWGdUTEa8Bqa5Pk3woGtfudoD0ypSnz3NRVEwFuRLRagO@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt8ArZmD+UwS8QUEQgbqmJr501cFKZNtimSlnl+VMbr2q9i+O7
+	Kg5B96kh8LtD19OQ5/TzSFoCWAHeo8B6cRFxDFieNBvoEhS/LKRWWs25U/X7c0/fhZ3stBhecih
+	Jo9DJVfSCxw==
+X-Google-Smtp-Source: AGHT+IE0mdxRTfSCI/6oC+ccX8uVa0JxO7+mrJX+nZv1nNqdPCaIvUnYOQzT/HdQKuql5X7plbjVqBsZMCKh
+X-Received: from pjbdy14.prod.google.com ([2002:a17:90b:6ce:b0:313:274d:3007])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4d8c:b0:313:1c7b:fc62
+ with SMTP id 98e67ed59e1d1-313f1d589b3mr17608382a91.22.1750193691931; Tue, 17
+ Jun 2025 13:54:51 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:53:19 -0700
 In-Reply-To: <20250617205320.1580946-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250617205320.1580946-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250617205320.1580946-2-irogers@google.com>
-Subject: [PATCH v2 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
+Message-ID: <20250617205320.1580946-3-irogers@google.com>
+Subject: [PATCH v2 2/3] tools headers: Update the linux/unaligned.h copy with
+ the kernel sources
 From: Ian Rogers <irogers@google.com>
 To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
 	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -71,20 +72,19 @@ To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Type punning is necessary for get/put unaligned but the use of a
-packed struct violates strict aliasing rules, requiring
--fno-strict-aliasing to be passed to the C compiler. Switch to using
-memcpy so that -fno-strict-aliasing isn't necessary.
+To pick up the changes in:
+
+  fe9b2b7b3583 vdso: Switch get/put unaligned from packed struct to memcpy
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- include/vdso/unaligned.h | 48 +++++++++++++++++++++++++++++++++++-----
+ tools/include/vdso/unaligned.h | 48 +++++++++++++++++++++++++++++-----
  1 file changed, 42 insertions(+), 6 deletions(-)
 
-diff --git a/include/vdso/unaligned.h b/include/vdso/unaligned.h
+diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
 index ff0c06b6513e..f33c1eefbf68 100644
---- a/include/vdso/unaligned.h
-+++ b/include/vdso/unaligned.h
+--- a/tools/include/vdso/unaligned.h
++++ b/tools/include/vdso/unaligned.h
 @@ -2,14 +2,50 @@
  #ifndef __VDSO_UNALIGNED_H
  #define __VDSO_UNALIGNED_H
