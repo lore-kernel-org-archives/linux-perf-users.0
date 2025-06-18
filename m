@@ -1,140 +1,123 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1C91DE4E5
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 13:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044952EBDE1
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 14:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750255057; cv=none; b=dI1gLTOyx0RSUaIQNhqhK6viqqlqIfhBFaqZIahH0DmOyUCB1bTEKaMOqpZTth7Nd2TZyxEKeRLH4O/i/YfFg+A4edg4o59Vq+rT177mvmPjHJ7oMs+kF+xgpeO+HMEoh41MwVwLTVW3RWTBssnaKhVq3fMXoM0U7H6s1Xq6VuM=
+	t=1750257238; cv=none; b=rMmjsuHMkSwe+qbLPHuexA+ZinTeqVfYVQnOr6gSGisuotJYyyj+0C8Tx4HI38g/l13YdtikmJXQgIRds4Oc9LVlgHRGKc0IAI5R1i9eIMvatwfoZ6PW5b0Y5vb2sBGXuLZFsY/CBdszV4CSn0HB90E/bRvv1h//mU4mUy3SHYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750255057; c=relaxed/simple;
-	bh=QGh1i4h15zwlk2taL2uiC7CWkt/02ZbZvdMzCMIMD34=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bFq9dL1fnZm1SI/Z1zBz9RfHxFz/qao2c0xt9w+Y0sDJ0BPYY0SYvmILkKlEcATmoJFQXePtfNI1uh3+8dYMSiXNievhMsStS93F7FEPhulslSYwie2U8BjZ78EihtzBMcAaRunQRV3VzQBcdpZVj6sot/ThtJ362df9Tqg8tZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=R7X1D8yE; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1750257238; c=relaxed/simple;
+	bh=IuclGL3p30oIbP2AKB4NxZtY4r0crOI62MBuyy+OHB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C5D8cQmVWxreMPz+6/ErQfzjvj/Jq4ihbKoqW7MUXloerLTpZkaNeoT8BT3uIFLqn2Tt/Ypzp+VGNK5d3IXJ7edMaIJEt1F3sC/zae6DTHocyzeskGWmSBp5vRmh/aGXaBrJRssmZwN7YkX6RJ6szSWExEUOIgX+40NW5wn3+I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HhLhgqRu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="R7X1D8yE"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a44b0ed780so99661961cf.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 06:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750255054; x=1750859854; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F87LNXi6Dt50NZ4Y2jNbajk2JH8YdJkfMPqkmOfc8Q4=;
-        b=R7X1D8yE1rX52ki2ztvbBtWFO4Ks4LN3K6AtedVjl+nKR5OZoLXCZnvEPfNP+PPX9Y
-         L5ViLk5oaLwFX3ZQ2ytj74cuAgGHKQXrtEJl+JNFsrt0cObr7KqYcKgPPMAYLge19GJa
-         7/QYR2XjOH2vRBuMHUCbnirqVRwKbyLXCKA7c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750255054; x=1750859854;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F87LNXi6Dt50NZ4Y2jNbajk2JH8YdJkfMPqkmOfc8Q4=;
-        b=saCrvJcLq6FiX+gNasMQ0SnyRiWOMX4w1JGatfqdc8R+7aUWyuPZCkBL4hHZP4G/J/
-         uv2zLqmrfap6XD8vqXOv9zJ6SJJcZdwVdABRMDk2+XURH7xHNQaJP8ZEvk0LdXwkzcYL
-         Wlqyz5BPdrB+Gdq8Z8k6K5YNjpSNzukHtY/lokc44fpba9/klHvtZX3PkuVh8HwxINW6
-         PjdlC/jkkgABfhr9w69yD+CdwzDLU1A+6AryU2Msj6TKEkF0QV9Ef3Nc7ZRJBKo4Ikzm
-         ezJn3cSaD/qYoZB2WZ04mEpVrCzIWUf6fsb+SWwiqQUMnky0pGeK3kvsfHlbL+0wjzOH
-         fzTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU82Kx62jkhg6/H51Gwr0/4LjqTTvH1qVrF3owq8+Bj1DS9mFiVQW2JIbRFWjMP1gWQfKml5bFNXYRdD5eQL1e1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVMEUFRAqFva656pF4rLblmldLCxwVXRjHsRdl3YbSQ1RK2uzb
-	EnYFkiYHah200sys3JooWSlVTF2viqu9+3fgu4PW1kmYTGHZjOq76jFO19NLQEyPX5253/+YdhX
-	USTU=
-X-Gm-Gg: ASbGncv/EOqMFhwyS+BUSm4h5UVf/mVcs1bxu3sDFMytRG3LV4waMvGAwDMTYjKMVx1
-	y/yVaF5Shk5dYk7isRyZoF4z231Ga6ZgRQbQa/z7WjtUrf0cGuvcNPonShYnz7DYstvp/4YhKMx
-	D1sEqqHCv0AIZIysU0ZYGhFVWiMY7k8k4aDDjSSLFluPq9FB1g5DlckzLBoKncWn+m67nwSjKS6
-	wHU2EbxDH5mx3aTn2tPS0Epo8+cHEX9GWlBfAxZGYbgiiNP+jULgk36wAWtIXC3zuegMIiOZsQs
-	vfbRW9tlflnQJQhNFNiOGvLpLfSmEosRxstJVhc4lMYkLkBAR0x8wEqSyK7rRFOnAkGikLcGBz9
-	i5Nj08g==
-X-Google-Smtp-Source: AGHT+IG9M+osh9AK7OslD/YcYztP1XDHnI2UfG2lQvM+zCZFfFLfIL73aoDY1mU5Ai8BGPzUAK42rw==
-X-Received: by 2002:a05:622a:2d5:b0:4a2:719b:122e with SMTP id d75a77b69052e-4a73c53b18dmr283449821cf.18.1750255053755;
-        Wed, 18 Jun 2025 06:57:33 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a3103a5sm71656251cf.30.2025.06.18.06.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 06:57:33 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Wed, 18 Jun 2025 09:57:32 -0400 (EDT)
-To: Peter Zijlstra <peterz@infradead.org>
-cc: Ian Rogers <irogers@google.com>, x86@kernel.org, 
-    Vince Weaver <vincent.weaver@maine.edu>, 
-    "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org
-Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on
- hybrid
-In-Reply-To: <20250618084522.GE1613376@noisy.programming.kicks-ass.net>
-Message-ID: <95b7b6aa-4019-d13a-8809-df21e449536b@maine.edu>
-References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu> <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com> <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com> <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu>
- <CAP-5=fXHgzhp6=xrVi1GK6gO_dtVAAStK__eKKoaAvvge4oNow@mail.gmail.com> <CAP-5=fWYfMe8y-xcZkkEnppA11+H0r33Xnn0Mn2d4_y3dortmQ@mail.gmail.com> <20250617181738.GD1613376@noisy.programming.kicks-ass.net> <CAP-5=fUbEuwHKOAJhvgHbbfg_f=KcED=9a94ra++cPbNLJP5BQ@mail.gmail.com>
- <20250618084522.GE1613376@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhLhgqRu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750257234;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3buU+XoaO5NA67HTQ3GyaQ6Tb90oSBtpsv3wtaow9eI=;
+	b=HhLhgqRuSLD6y5hcqBD90l8Hlcdceb7ZdXeGJChgar1DtGxcMveDH9JZ/6EBQ5F+1EnHpH
+	rteZ6BDXZbpJBUY8MM2TTLmOaZoLa90FEkLVl0y/5n088KuuYilEvs4sxFI/YBlou4u/le
+	+JRRHVQUzVTgyq8litoX6bKykfsOnGA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-LscT4CICM-egzQvatlxhhg-1; Wed,
+ 18 Jun 2025 10:33:52 -0400
+X-MC-Unique: LscT4CICM-egzQvatlxhhg-1
+X-Mimecast-MFC-AGG-ID: LscT4CICM-egzQvatlxhhg_1750257231
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02AE819560B3;
+	Wed, 18 Jun 2025 14:33:50 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.89.123])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3CB4619560AF;
+	Wed, 18 Jun 2025 14:33:43 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org,
+	Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH] perf header: remove unecessary core id test
+Date: Wed, 18 Jun 2025 10:29:22 -0400
+Message-ID: <20250618142921.4053400-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, 18 Jun 2025, Peter Zijlstra wrote:
+It is possible for systems to have a greater socket id number than the
+number of cpus present on a machine, so this test is obselete and should
+be removed.
 
-> On Tue, Jun 17, 2025 at 01:36:40PM -0700, Ian Rogers wrote:
-> 
-> > Thanks Peter, out of curiosity, how does the RDPMC fail? If an event
-> > were rescheduled (even with RSEQ assuming the CPU the thread is
-> > running on doesn't change) could the RDPMC with the incorrect index
-> > also fail?
-> 
-> So the problem with RDPMC is that it will #GP when used with an invalid
-> index.
-> 
-> Normally, when counting using fixed or general purpose events, this is
-> not a problem, because every CPU in the machine has those. So while the
-> index might not be the event you were after, the instruction doesn't
-> trap, we observe the sequence changed and retry the loop. No harm done.
-> 
-> But for the top-down thingies, the P-cores will have a RDPMC idx that
-> the E-cores do not support. Using this index on an E-core will #GP.
-> 
-> So the following situation:
-> 
-> 	CPU-P				CPU-E
-> 
-> 	do {
-> 	  seq = pc->lock;
-> 	  barrier();
-> 
-> 	  index = pc->index;
-> 	  count = pc->count;
-> 	  if (index) {
-> 	    width = pm->pmc_width;
-> 	
-> 			<migrate task to CPU-E>
-> 
-> 					    rdpmc(index - 1); <-- #GP
-> 					  }
-> 
-> 					  barrier();
-> 					} while (pc->lock != seq);
-> 
-> Where the task is migrated from a P to an E core after reading the
-> index but before doing RDPMC, turns fatal.
-> 
-> When we use RSEQ, the migration will abort the sequence and the RDPMC
-> will not be executed.
-> 
-> 
-> Aand... while writing this I wondered why we don't simply fix up the
-> fault in kernel space. Something like so...
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+ tools/perf/util/header.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-hah, we went through a lot of trouble in PAPI to implement the rseq 
-solution because we were told it wasn't possible to fix this in the 
-kernel.  I knew that couldn't really be true.
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index e3cdc3b7b4ab..d7f6ff6974aa 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2559,7 +2559,6 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	int cpu_nr = ff->ph->env.nr_cpus_avail;
+ 	u64 size = 0;
+ 	struct perf_header *ph = ff->ph;
+-	bool do_core_id_test = true;
+ 
+ 	ph->env.cpu = calloc(cpu_nr, sizeof(*ph->env.cpu));
+ 	if (!ph->env.cpu)
+@@ -2614,15 +2613,6 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		return 0;
+ 	}
+ 
+-	/* On s390 the socket_id number is not related to the numbers of cpus.
+-	 * The socket_id number might be higher than the numbers of cpus.
+-	 * This depends on the configuration.
+-	 * AArch64 is the same.
+-	 */
+-	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
+-			  || !strncmp(ph->env.arch, "aarch64", 7)))
+-		do_core_id_test = false;
+-
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+@@ -2633,12 +2623,6 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+ 
+-		if (do_core_id_test && nr != (u32)-1 && nr > (u32)cpu_nr) {
+-			pr_debug("socket_id number is too big."
+-				 "You may need to upgrade the perf tool.\n");
+-			goto free_cpu;
+-		}
+-
+ 		ph->env.cpu[i].socket_id = nr;
+ 		size += sizeof(u32);
+ 	}
+-- 
+2.49.0
 
-One thing to note about the sample mmap RDPMC code above, it doesn't work 
-with topdown counters because you need to read all 64-bits with rdpmc and the 
-default code sign-extends from 47 bits corrupting the top bits.  Though 
-maybe it's been fixed since then to set pmc->width properly if it's a 
-topdown event.
-
-Vince
