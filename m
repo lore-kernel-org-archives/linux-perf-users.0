@@ -1,113 +1,210 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3941F4C85
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 18:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750271170; cv=none; b=o3uy8e5ntbTG7iyuA9D5OS8JRIa1j9241UlxoGDR9VkQ0IDiqruinMpHwvSCM0Kd1LBPzd9crRDLg/6kUARzzw9cYgQPAMRkmV5fDZCpvZwSv5L3JwdCNTCAYoSlAwaKpMouZwBSbtnU51NFDx5/0aFL31/SBPpSWW0PLh7TwCs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750271170; c=relaxed/simple;
-	bh=IXK+S4uXxPqEnY9h1bAL/eP3qq5ugrshNaDE7HOMvwU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gZzWkSgcUJEHogfbcb8Zgp9IWR4v83ztJQwZn0gFjhzQ3fGPSUXKT8J+3arg6hUaKwwb49bbexVidMpIeaYuq5XeHbmIx7Ib+OqhHL8QBWJPpsr5j/417A0sTbN5Vx0jTWUaIs+Q+sytYNwstFl/nqhLwgCShXHQz09qgCOx/AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=MXbFu3+d; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1478E20409A;
+	Wed, 18 Jun 2025 19:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750273748; cv=pass; b=TVHmXiABDKtPldFIlOTezEwvUW0aGN/uClJJzkdVZ4kG8aygPpKXn1uQq8MStH9sR3l1IoPDUm5GUNC1uLQgRnWSgNX9gFhqqx6pu6DJV5TMq5PLXMnTQF8fWtLnKWZYd5Qt1pS08hrjYMAjaf2fG3+ro3wKdDEZRD0LIXZWrDI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750273748; c=relaxed/simple;
+	bh=4Z3AXktjTBKSymA4SqIUqydcN+VFCyRWZKF5DyykVwU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CDHTFN40TuxghYWZed3nx28XEe+FNXl3hob35oAe7fMS+WwNwNEY/wfw0xFjXb1CW2ZUUfNWNVYrjVCHKSpb3gmSRJFPXNAUSkBv293NKl9RJrekndcA1zXPE+kKBK+xYUpB4lTrKm8m/9zMHPXg6Gkx/GhWLXsXURcymQWgo2I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=XsW+M7t2; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="MXbFu3+d"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a5903bceffso84577301cf.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 11:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750271166; x=1750875966; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQyolkiMyjAckIG3knda/ZNUyqwRYUv8nQKXIT9FUXc=;
-        b=MXbFu3+dVazDfmtXOEyOG5eg8CClDAsJObR7p1ywAUtjLOf4XN6+Gbg5FgdhU8RbDh
-         0bEWLLQzhEcxR0NkZmEaY7OBpoLBEUpmqxb1ygqJpgbC71AbIXx4/kuw/ZwOwVOQuzZ+
-         JItUquAV9jGnAsnCWNiRLlTgYbtUDC9R3bg70=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750271166; x=1750875966;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQyolkiMyjAckIG3knda/ZNUyqwRYUv8nQKXIT9FUXc=;
-        b=D51uHEuIRJzZhDz+nrvYIBlwHhL8HU6q01uuLPtpzt82wWq3iRzzayxqgKhXZSE6Ke
-         +BX3p5YnhTcA443uAmsmcWrT8f24vFt+RkKB5I/CBzv37kwMlhHMv4uD8+RqLD9RBFiD
-         wD/J7NagR5+6l9XCql9Ug0DNbDmTcMWvAMegpWWClDMWInWYywDd5XrP30xEixNseMpp
-         yOgi4NjwfLKT9OPecgSQ+5U2egj3hG9W1nsSwQG7B9kFbDnS0h5RT8xOimyPoprtEIRP
-         5cekYjmIH7jmGN5hVkcffNQ+6xgRLtZaUXqnoJsP3+17jcBGHoqxEue876Jm5Z6lAnHP
-         029Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUw7LnSkioVxjpQM2+Skyjdnro1d1N5f8UWO9+aJtX1yua+Mxcp/XcUIQIvrQtzMU9wwz6zhRdMQQZ7q3bWeRGg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yziyicr1b0c92fq3uKxvpfrftpGLcodWwZZhbrUeS8f2kQMMVel
-	FWxJ4BHJWF9ijtwjuH4EKSKzlRdgenmXqUvAJ8pNhWtX0ydRtetC0cmiSvhRuVT5hA==
-X-Gm-Gg: ASbGnctWrFK3rHdzPojblklVHIeN1ZO7wz/ByoqNdxh9QapxuOw6gnJs7Z9mfVS9mYM
-	OsayWOH1w2DllrSxGZNVHuPwqT29A7Mbloj/0uUvH8PY4l/UTDdcc3/NlgeCE0N4kwIYhnmrQU7
-	OIxBSh/roqBQzjRnzZR+MghyLqFVOsgbYaTZHKMyxHnVYqQdf6ikysnxCfqthFSIQS+ryZ8pATA
-	thCKZgy5e+78hhmKazrt8tpOKgmsaVO50R/XGzRAd473wAd4vt1nqpopC5JIG/el1a97JBb0+q/
-	UrGuejHgJJrkualyIrBiTcmGQ6DsCNoRkInsCtCrhFPmoUCYJzx3b+wDg+9/KfLqsCSg1e1SaQR
-	FRCi5+w==
-X-Google-Smtp-Source: AGHT+IEOSRhUOkMxVT34ymUQgwCslbypVaUotjLJ3GfRwJWwd0EJHpVqBJVQyle3azFTQ1TTYRMmbQ==
-X-Received: by 2002:ac8:5813:0:b0:4a6:f5a8:3832 with SMTP id d75a77b69052e-4a73c617171mr254000481cf.42.1750271166573;
-        Wed, 18 Jun 2025 11:26:06 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a52a1ddsm74868321cf.81.2025.06.18.11.26.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 11:26:05 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Wed, 18 Jun 2025 14:26:04 -0400 (EDT)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
-In-Reply-To: <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
-Message-ID: <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
-References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="XsW+M7t2"
+ARC-Seal: i=1; a=rsa-sha256; t=1750273722; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QJPnh45OETapjN4qF3xo8Lme5+vlpwWQSeXqDM9GDw0qwvNpHfKsv5siT+1nIxdMu3y3guASFweEovPANRautPbVdV+qIG9WxrX+K/e6Z7r0gtOgrTDCwA8EtaESOEvbrJxnVy/z9zjOmJHlmBfLAGe9+TpbTemM/i9Ks8/u0wQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750273722; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=LgnFWrFFRwO1u4DsMfUjudDNydgl3mR9TjdmxuLGWNk=; 
+	b=NChDot1uIg8fj/Wch7R9W9GZOZQV4qA/rcGlP5MOItU7UKcGdEWfR0MhOVNSFJe7R38mtCMlGPowDngMTcMrrOCx6dcD70xn+fpFbJ0KbDUR78z+Hfu8S2oOo5IPy56qppnOlH/34RTmQdhNQxdnY7ZWh9+ElRHHuvWxwu1G7Mg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750273722;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=LgnFWrFFRwO1u4DsMfUjudDNydgl3mR9TjdmxuLGWNk=;
+	b=XsW+M7t2tDN2fz13xr0OMW8iXLyTCmFYRAmlfw+/LpMF184rGKtooK9E6SLgBfiZ
+	OnqaE1IIhQaJ+Q8yuxRPukSaEy6765Cch4H/GJrEyVB5jM+vdmfA3ITbZ+4DNsryoH5
+	9J8tF3DHTq8rIs3VTjSxMClEaT/+JQwrA8KnM6N4=
+Received: by mx.zohomail.com with SMTPS id 1750273720909890.1724588959887;
+	Wed, 18 Jun 2025 12:08:40 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Wed, 18 Jun 2025 21:08:34 +0200
+Subject: [PATCH] perf/headers: Document PERF_PMU_CAP capability flags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com>
+X-B4-Tracking: v=1; b=H4sIALEOU2gC/zXMywrCMBCF4VcJs3agaVVsX0W6GNOpziIXM6kUS
+ t/dYHH5HzjfBspZWGEwG2T+iEoMNezJgHtReDLKVBvapr00V3vDxHnG5Bd0lHCKTpFsx2fivuv
+ JQf2lzLOsP/M+Hp35vVS6HCM8SBld9F7KYAKvBf88jPv+BeYMMl6UAAAA
+X-Change-ID: 20250618-perf-pmu-cap-docs-a13e4ae939ac
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: kernel@collabora.com, Jonathan Corbet <corbet@lwn.net>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Wed, 18 Jun 2025, Liang, Kan wrote:
+Over the years, capability flags for perf PMUs were introduced in a
+piecemeal fashion whenever a new driver needed to signal to the perf
+core some limitation or special feature.
 
-> No, the error message doesn't say it. Just want to check if you have
-> extra information. Because the Topdown perf metrics is only supported on
-> p-core. I want to understand whether the code messes up with e-core.
+Since one more undocumented flag that can have its meaning inferred from
+the commit message and implementation never seems that bad, it's
+understandable that this resulted in a total of 11 undocumented
+capability flags, which authors of new perf PMU drivers are expected to
+set correctly for their particular device.
 
-I can't easily tell from the fuzzer as it intentionally switches cores 
-often.  I guess I could patch the kernel to report CPU when the WRMSR 
-error triggers.
+Since I am in the process of becoming such an author of a new perf
+driver, it feels proper to pay it forward by documenting all
+PERF_PMU_CAP_ constants, so that no future person has to go through an
+hour or two of git blame + reading perf core code to figure out which
+capability flags are right for them.
 
-> > I was running just before -rc1.  I've updated to current git but didn't 
-> > realize the throttle fix hadn't made it upstream yet so managed to lock up 
-> > the machine and not sure when I'll be able to get over to reboot it.
-> >
-> 
-> They are not in rc2 as well. I guess it should be included in rc3.
+Add comments in kernel-doc format that describes each flag. This follows
+the somewhat verbose "Object-like macro documentation" format, and can
+be verified with
 
-OK I am running rc2 now (Well, whatever current git is) with the throttle 
-fix applied.  The throttle crash is something else, it crashes my test 
-machine so hard that even the power button doesn't work, I have to 
-physically unplug the machine to reboot it.
+	./scripts/kernel-doc -v -none include/linux/perf_event.h
 
+The current in-tree kernel documentation does not include a page on the
+perf subsystem, but once it does, these comments should render as proper
+documentation annotation. Until then, they'll also be quite useful for
+anyone looking at the header file.
 
-> >> - Can this be easily reproduced?
-> > 
-> > probably.  It's another thing that's a pain to check because it's a 
-> > WARN_ONCE I think so I have to reboot in order to see.  Even if it's not 
-> > reproducible the fuzzer usually hits it within a few hours.
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+There may be more perf documentation patches in the future, but right
+now I'm focused on getting a minimally viable driver for the hardware
+I'm working on going. Documenting these seemed to have a fairly good
+effort-to-future-payoff ratio though.
 
-I am able to reproduce the error on -rc2 using a specific fuzzer random 
-seed.  I can possibly try to create a simpler test case but that would be 
-a bit of effort.
+I Cc'd Corbet in case he has any input on the verbosity of the
+kernel-doc syntax here, maybe I'm missing something and all of these
+could be in a single /* comment */, but as it is in this patch doesn't
+seem too awful to me either.
+---
+ include/linux/perf_event.h | 74 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-Vince Weaver
-vincent.weaver@maine.edu
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ec9d96025683958e909bb2463439dc69634f4ceb..7d749fd5225be12543df6e475277563bf16c05b1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -294,16 +294,90 @@ struct perf_event_pmu_context;
+ /**
+  * pmu::capabilities flags
+  */
++
++/**
++ * define PERF_PMU_CAP_NO_INTERRUPT - \
++ *    PMU is incapable of generating hardware interrupts
++ */
+ #define PERF_PMU_CAP_NO_INTERRUPT	0x0001
++/**
++ * define PERF_PMU_CAP_NO_NMI - \
++ *    PMU is guaranteed to not generate non-maskable interrupts
++ */
+ #define PERF_PMU_CAP_NO_NMI		0x0002
++/**
++ * define PERF_PMU_CAP_AUX_NO_SG - \
++ *    PMU does not support using scatter-gather as the output
++ *
++ * The PERF_PMU_CAP_AUX_NO_SG flag indicates that the PMU does not support
++ * scatter-gather for its output buffer, and needs a larger contiguous buffer
++ * to output to.
++ */
+ #define PERF_PMU_CAP_AUX_NO_SG		0x0004
++/**
++ * define PERF_PMU_CAP_EXTENDED_REGS - \
++ *    PMU is capable of sampling extended registers
++ *
++ * Some architectures have a concept of extended registers, e.g. XMM0 on x86
++ * or VG on arm64. If the PMU is capable of sampling these registers, then the
++ * flag PERF_PMU_CAP_EXTENDED_REGS should be set.
++ */
+ #define PERF_PMU_CAP_EXTENDED_REGS	0x0008
++/**
++ * define PERF_PMU_CAP_EXCLUSIVE - \
++ *    PMU can only have one scheduled event at a time
++ *
++ * Certain PMU hardware cannot track several events at the same time. Such
++ * hardware must set PERF_PMU_CAP_EXCLUSIVE in order to avoid conflicts.
++ */
+ #define PERF_PMU_CAP_EXCLUSIVE		0x0010
++/**
++ * define PERF_PMU_CAP_ITRACE - PMU traces instructions
++ *
++ * Some PMU hardware does instruction tracing, in that it traces execution of
++ * each instruction. Setting this capability flag makes the perf core generate
++ * a %PERF_RECORD_ITRACE_START event, recording the profiled task's PID and TID,
++ * to allow tools to properly decode such traces.
++ */
+ #define PERF_PMU_CAP_ITRACE		0x0020
++/**
++ * define PERF_PMU_CAP_NO_EXCLUDE - \
++ *    PMU is incapable of excluding events based on context
++ *
++ * Some PMU hardware will count events regardless of context, including e.g.
++ * idle, kernel and guest. Drivers for such hardware should set the
++ * PERF_PMU_CAP_NO_EXCLUDE flag to explicitly advertise that they're unable to
++ * help themselves, so that the perf core can reject requests to exclude events
++ * based on context.
++ */
+ #define PERF_PMU_CAP_NO_EXCLUDE		0x0040
++/**
++ * define PERF_PMU_CAP_AUX_OUTPUT - PMU non-AUX events generate AUX data
++ *
++ * Drivers for PMU hardware that supports non-AUX events which generate data for
++ * AUX events should set PERF_PMU_CAP_AUX_OUTPUT. This flag tells the perf core
++ * to schedule non-AUX events together with AUX events, so that this data isn't
++ * lost.
++ */
+ #define PERF_PMU_CAP_AUX_OUTPUT		0x0080
++/**
++ * define PERF_PMU_CAP_EXTENDED_HW_TYPE - \
++ *    PMU supports PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
++ */
+ #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
++/**
++ * define PERF_PMU_CAP_AUX_PAUSE - \
++ *    PMU can pause and resume AUX area traces based on events
++ */
+ #define PERF_PMU_CAP_AUX_PAUSE		0x0200
++/**
++ * define PERF_PMU_CAP_AUX_PREFER_LARGE - PMU prefers contiguous output buffers
++ *
++ * The PERF_PMU_CAP_AUX_PREFER_LARGE capability flag is a less strict variant of
++ * %PERF_PMU_CAP_AUX_NO_SG. PMU drivers for hardware that doesn't strictly
++ * require contiguous output buffers, but find the benefits outweigh the
++ * downside of increased memory fragmentation, may set this capability flag.
++ */
+ #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
+ 
+ /**
+
+---
+base-commit: 31d56636e10e92ced06ead14b7541867f955e41d
+change-id: 20250618-perf-pmu-cap-docs-a13e4ae939ac
+
+Best regards,
+-- 
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
