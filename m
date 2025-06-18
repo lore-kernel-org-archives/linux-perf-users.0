@@ -1,96 +1,128 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A802C3258;
-	Wed, 18 Jun 2025 11:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B8827EFE3
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 11:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247443; cv=none; b=UaIDVaDr4XiVtpsmzOh0kmberU+qo6oXdxODhNixOpi5JET6z/eHbDdfoDa3ObRS6u+VXQUmmh+cLyZOpc+ZTAglJt+mhWAKog48dOgyMv3obKbHsO2Eiw1Krrv1HHjc4GDPc1Ob4Gjr3PlIXZszATQ0LbbXPKcfZ3v7g7mn2J4=
+	t=1750247712; cv=none; b=NveEU88mpDaZN3ZALThZuQTGOEv3CrmKRY0SwUo+tXFXa6wAiDE7E2yOTQP1rmkW4ls1CesKwPnG4du7cD98IIPQ/s2WTDDrYsiOSUS6zjOw5kE68UFE/q424wPcpCkX6dvn00n/aCAqUjV4NbvQfMRfsL1l4K+RImaotCJZEkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247443; c=relaxed/simple;
-	bh=58scXsAkA4t48fEoJuCh83iHGTHverEVaA23zpz119U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PLNELBpfJw5FOwfMgK0862TgKkr0IqhNJCvVrohKeWCQz+oDtaBZs567BZG5Rz43ODKMOoSwHEHIBXSEcqdA4kv1Ecl0uMGx9n729e+xFJUncgylkLqUicD6Vb8v9JhNDHTGrjfFczQVYgIeOvXFJ7rlcNwsiUdO9Fg8Ae0d8vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bMhgf51jhz9scZ;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id fmCp2zo6kAVw; Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bMhgf4Fcxz9scH;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B7228B780;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id KNGxpyBZzbGS; Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 18F7F8B776;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Message-ID: <51bc73ca-3b1f-4f1a-b75b-7bdeffd7a395@csgroup.eu>
-Date: Wed, 18 Jun 2025 13:42:53 +0200
+	s=arc-20240116; t=1750247712; c=relaxed/simple;
+	bh=di7j2sI9VeQP7grby92NuI1bvE2BELjeKeHluSrZrD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nx4hJUhICrhAsZ0Y380iF64eHb134JQw7c805ELwBiERU4aAWhywdvoIQHSNrR1PFY0DBAmVXjvvdrxMY6RUN0A//hGhWCI1LAMzN/oMgdfnR2a+zskFUOnMA9Csdww2mstL5gM0sTQFX1hOcmtwtNBiEuu7i3thnm59dlEXi7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TOOKe5m7; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TOOKe5m7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DQ7OFDstlMo9HKGbh5TACJOXAw56Emu9AhkInMOjIkE=; b=TOOKe5m75erFMeTzhrFlw9uyh+
+	VtrO/X+E/AojJI7nxD+BEIMWcKLHSvsq+5OeLq3Jwk3FYkIBBevWsOEunIPTPoD+B4akLqhdj2itH
+	yLhfhKbWO/ATYNEJ3fqKCp9aBZa5w9f7i9vxOVXbDHvL0xjmNrH1VcE+nDKCGlost1Dw1HWdQgweW
+	Xqwc4ybR4uV7s5h9dxY+G8xV7i6NmWxP6ieoOb/g75Y2UM+rvcPgPPvib7I/DiUXIG3qqUVWa4JgO
+	kgJoMWIQScbNT0e8ynf4QLBHnaugN/J859aBLk0WbLs6rkLGWRrcT72miaUGHApfwzmx0WSHJ/L54
+	QNFqPyWw==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRrNh-000000041EQ-3fff;
+	Wed, 18 Jun 2025 11:55:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D6F31307FB7; Wed, 18 Jun 2025 13:55:03 +0200 (CEST)
+Date: Wed, 18 Jun 2025 13:55:03 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ian Rogers <irogers@google.com>, x86@kernel.org
+Cc: Vince Weaver <vincent.weaver@maine.edu>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: perf_event: avoiding gpf on rdpmc for top-down-events on hybrid
+Message-ID: <20250618115503.GF1613633@noisy.programming.kicks-ass.net>
+References: <b0b0ae91-785e-64f6-348a-ca6edd448b74@maine.edu>
+ <CAP-5=fVivxz-TPVap6-+6U=ueU9W9fdZSH3w5F7e-h=uN--8kA@mail.gmail.com>
+ <CAP-5=fVa14Y+0a=nrxo85uEOHfiEJRbQXt6fOV7E3dQJDf4fdQ@mail.gmail.com>
+ <2c759cfb-41b2-6f50-e893-1545a965d106@maine.edu>
+ <CAP-5=fXHgzhp6=xrVi1GK6gO_dtVAAStK__eKKoaAvvge4oNow@mail.gmail.com>
+ <CAP-5=fWYfMe8y-xcZkkEnppA11+H0r33Xnn0Mn2d4_y3dortmQ@mail.gmail.com>
+ <20250617181738.GD1613376@noisy.programming.kicks-ass.net>
+ <CAP-5=fUbEuwHKOAJhvgHbbfg_f=KcED=9a94ra++cPbNLJP5BQ@mail.gmail.com>
+ <20250618084522.GE1613376@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Switch get/put unaligned to use memcpy
-To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
- Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Al Viro
- <viro@zeniv.linux.org.uk>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250617205320.1580946-1-irogers@google.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250617205320.1580946-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618084522.GE1613376@noisy.programming.kicks-ass.net>
 
+On Wed, Jun 18, 2025 at 10:45:22AM +0200, Peter Zijlstra wrote:
 
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index 9f88b8a78e50..90391526acf7 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -677,6 +677,43 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
+>  
+>  #define GPFSTR "general protection fault"
+>  
+> +static bool fixup_rdpmc_exception(struct pt_regs *regs)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +	u8 buf[MAX_INSN_SIZE];
+> +	struct insn insn;
+> +	int len;
+> +
+> +	len = insn_fetch_from_user(regs, buf);
+> +	if (len <= 0)
+> +		return false;
+> +
+> +	if (!insn_decode_from_regs(&insn, regs, buf, len))
+> +		return false;
+> +
+> +	/* RDPMC */
+> +	if (insn.opcode.bytes[0] != 0x0f || insn.opcode.bytes[1] != 0x33)
+> +		return false;
+> +
+> +	if (!atomic_read(&mm->context.perf_rdpmc_allowed))
+> +		return false;
+> +
+> +	/*
+> +	 * So userspace RDPMC is allowed and took #GP.
+> +	 *
+> +	 * This means they got the index wrong. But per the ABI described in
+> +	 * struct perf_event_mmap_page; this means they'll also fail the
+> +	 * sequence lock and will retry the operation after re-reading the
+> +	 * index.
+> +	 *
+> +	 * Fake out the RDPMC by returning all zeros and continue.
+> +	 */
+> +	regs->ax = 0;
+> +	regs->dx = 0;
 
-Le 17/06/2025 à 22:53, Ian Rogers a écrit :
-> The existing type punning approach with packed structs requires
->   -fno-strict-aliasing to be passed to the compiler for
-> correctness. This is true in the kernel tree but not in the tools
-> directory resulting in this suggested patch from Eric Biggers
->   <ebiggers@google.com>:
-> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20250614044133.660848-2-ebiggers%40kernel.org%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf08ddade1316a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894967529%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=29QUBLnUowncZiTH4z74Ec1olUlX0OTYnUNGDvWxX1o%3D&reserved=0
-> 
-> Requiring -fno-strict-aliasing seems unfortunate and so this patch
-> makes the unaligned code work via memcpy for type punning rather than
-> the packed attribute.
-> 
-> v2: switch memcpy to __builtin_memcpy to avoid potential/disallowed
->      memcpy calls in vdso caused by -fno-builtin. Reported by
->      Christophe Leroy <christophe.leroy@csgroup.eu>:
->      https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2Fc57de5bf-d55c-48c5-9dfa-e2fb844dafe9%40csgroup.eu%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf08ddade1316a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894985987%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=l1LJP3XPKVuhDpiHxxkfWBiNPMYaBT9YXGBFzs6wLpY%3D&reserved=0
-> 
+And alternative might be to return ~0UL in both registers. All 32bit
+chips have limited counter width and this will set the high bits. All
+64bit chips do no expect the high words of the registers to be set.
 
-Does this new version also fixes the failures reported by the robots:
-- arm64-randconfig with clang 21
-- i386-randconfig with gcc 12
+That way one could recognise the fail case; if that was so desired.
 
-Christophe
-
-> Ian Rogers (3):
->    vdso: Switch get/put unaligned from packed struct to memcpy
->    tools headers: Update the linux/unaligned.h copy with the kernel
->      sources
->    tools headers: Remove unneeded ignoring of warnings in unaligned.h
-> 
->   include/vdso/unaligned.h        | 48 ++++++++++++++++++++++++++++-----
->   tools/include/linux/unaligned.h |  4 ---
->   tools/include/vdso/unaligned.h  | 48 ++++++++++++++++++++++++++++-----
->   3 files changed, 84 insertions(+), 16 deletions(-)
-> 
-
+> +	regs->ip += insn.length;
+> +	return true;
+> +}
+> +
+>  static bool fixup_iopl_exception(struct pt_regs *regs)
+>  {
+>  	struct thread_struct *t = &current->thread;
+> @@ -812,6 +849,9 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+>  	}
+>  
+>  	if (user_mode(regs)) {
+> +		if (fixup_rdpmc_exception(regs))
+> +			goto exit;
+> +
+>  		if (fixup_iopl_exception(regs))
+>  			goto exit;
+>  
