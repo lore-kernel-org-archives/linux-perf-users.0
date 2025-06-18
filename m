@@ -1,106 +1,120 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D684B296176
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 22:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13691714B7
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 03:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199662; cv=none; b=evLpmHXt9KlUb8wmCuWTu5bc2HJ3kz6PFWGmttp0aEXPZlIrG+PNFS2XnSUWtXH/7I/JN4kBj8kg6ur9/2+ADqTU1B1iIjTUq+FIRwFEqcZ7jFsjrZ2gCvY24AuQlLrboogbwL4CevEPGa2xRI+q9fM/4WlpnG3pntgL3PKrnLE=
+	t=1750218563; cv=none; b=kRmf406SE3pQiXOMWeT0jho1yUMe6LAV4orNL+BzfZcnPKJClu/Hr978MgjAX21QRJ8/jq406bz/GQkU7U4T7cKnVDYusPJpfZ1MSEfGVcIdkYXCb1HKPoPNDHReN+8uLbCjpLOXdeVH54N/agivGNIuBSm1HJQeyKEh7VdB0/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199662; c=relaxed/simple;
-	bh=DKWqAmVnI3GhwlYZzhOitEiQvCeNAsT71ZBhSUmrLho=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ss5Axxh4BSSjqLkbE4025dsVIf7F/cq5HOBtVK4FVVo2VVFy8D6eVXcwt/eJNsvsvhI44913rFS9sHe5uzaJR8MA7Ep6IOxlNX5d5Ain9el86ExZSGfLErqcQn3jysrjO+Wahrh/LfVET8WtsOeKaC2tEz6or/+3gDFPeHCjeOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gscKJxkT; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1750218563; c=relaxed/simple;
+	bh=6QvAOcMCRBBI7LWPY+Hl/n4adlLtJlaCD6nOUF4kXhM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KAoHqpwZZMSUdOtxfI7do6KETyCZOkrukW/cfpsiTjtdGeBVtS5mwxcRoPuOrO+FSZQwfAM7SQpyTnO5r5n9fY9X0Jm+4/gSUR13nXidiVBtsaRdDZ4czAJ+6/OqqX+IlE3w2f4Fru42LZLKbzu+ckWac2s+cImZv3CUkc62tLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=UiinTcVE; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gscKJxkT"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2355651d204so51921175ad.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 15:34:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="UiinTcVE"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fafaa60889so43303786d6.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jun 2025 20:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750199660; x=1750804460; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7NVdRomOVcTP2K2Aa3QZ6be5ElrMwK+HxvBHDmuw/Uo=;
-        b=gscKJxkTOqo+J9APwZV2yDVLnYOlJoZgGIXVAKFRdrZkKittyA+KS7Kav+iSTPYDoy
-         WNYCekVW9nFNvkN5fmAWnSSy3YBgSw1cA0FbYAjr5Ol2t1akeTaaDuHL/m4g1N8SyIF+
-         qkkVUTS60LlEixihFvwNDMyAn1gALMC47lDrfVvA6V3cTq1OvrAu6ZSyiThysqBiaHv1
-         Gg41RChBX4A38k4ll18HbaYMsuZK1yfJlcTkBpbPAiCCrXnLNSh74spiGP4yVj/vP5EZ
-         0gpxW+IBAsv/8Ja0wZyw4fyFn3F7tzOlh/V5EMpXTT50/HumzoQ9wAJtjMUxTFokTgzD
-         W0FA==
+        d=maine.edu; s=google; t=1750218561; x=1750823361; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ef70Joe5j45SYlyg8314bmCwyOurjXSY3YWnIl6LCFY=;
+        b=UiinTcVEYntYDIqfytCTuuEgeqD6iPAmpQkGfx61V787MZ8ZTCAEaIG05dkra80aEO
+         oLELEmzuhxLYVd+2/wD9JSL1r7y/2vJIKeSnG2ugSdO+dh+CYf8xjmaFkpITCV2S4mnp
+         jtTdQ6xK6LF+f8/7m0wGgdcdjR0wNFkAx+noQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750199660; x=1750804460;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7NVdRomOVcTP2K2Aa3QZ6be5ElrMwK+HxvBHDmuw/Uo=;
-        b=syBq7c5DyyMSa2rhf28RVPFb9Mb/moSArz0co6zqwxLOaNjprfn+WoIrhlKcRKlT6D
-         672GdlqnOvMA0I4Zl1RmQY8i2wflme2Mx2QWjNMr35yS0Kzr8QQ4OHKBC2JZhBEg86ub
-         UCXE3tHLKI+9VBCkgZaI4bBSFnGj2e6xL4JxLnfZ2PMH+Q/LH5WGox+BYtshQqVvzj/X
-         V4eH8EDQm4cqnDHoeKiZopW6AbcChn2ByfwqjTZ5Kkl+onujJRGjgVPgiKc4/KV03i2t
-         pe2LKl0eaa6HItuoJGZvSjyoABjgnuDzWbRYJ3Eak6CkwBqhsJwXHzMh1rUTiBrimgKq
-         Eh3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXk4aitAUgDHn3wFil5S3TQnKywAoWZ7sFnWq8dLxHsj6G2LJgNOdQD9j/kHLtsWk3L3gBWL183PFtaRVovMvxH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNbE+rO+TYIZdfpNFVGgwO6DYhq+3KPB4IHvZ0mL8YOQHXddt4
-	UC5H7+ORHsjUHSz5J+3GzwbsDIOyw2QhfGIW5EZ1aMP2p2iAnktAeJj0Xg72zJ5c2fmzAGkZSWB
-	j84w1fRjA3w==
-X-Google-Smtp-Source: AGHT+IE8zs/nB6Hv+1AZHqCM7YWmAHfa0nQQJL++2TtoGouKHvd/x1WiGB2F9Nz1dWP5IiUzlZNkHFCgj5im
-X-Received: from plxd13.prod.google.com ([2002:a17:902:ef0d:b0:234:b2bd:b68f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ebc1:b0:235:f45f:ed49
- with SMTP id d9443c01a7336-2366b12216fmr215565525ad.33.1750199660075; Tue, 17
- Jun 2025 15:34:20 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:33:56 -0700
-In-Reply-To: <20250617223356.2752099-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1750218561; x=1750823361;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ef70Joe5j45SYlyg8314bmCwyOurjXSY3YWnIl6LCFY=;
+        b=U+MlPfKQrgrVkJ9KnstSCJIE7TE5l7ywUZtTl6nwvF/poRT8ZrRtYYD5lDQ0VsZBCs
+         cfxccM+Ul91Y1/E1REmt6sxj/V3Ib1xeZousBxCXgsOpO0QUNpXj4FgYxRP8lsFtSMc+
+         Q4on2ZRqzhadjz3BYuG2chr0yOiuJwUvgu2xLbPVdCY1G987pivwkaxkZ3lVn+FzndlB
+         CW73JvDYWe5Wsh3m8yKQVUyMKFra5kTtclppxANhM4xOZkEKyPskeTfHDr1t9PB/Jpt3
+         UTBiMqhTFJ1mVTpzoREdBNMA96MXfjA8szt+GOED/H1iC1Ve/P4E55gSxiWTyWM5HI9e
+         B/5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVahmV9CDo6MPWP0VwJG76+2zjlB53bw3WKZUwMnrpPoUE7z5lnbDgRHQ7xaT0gWuelxXnrccO+OFazfEWaGGEX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxORgs4GLEF245xmZQmWCmRLa88ZVUSZK+/OqaWW+sxdHEiLlns
+	yncFfUVLDpOmI8799yn40qRl4v2hdkf+RU9Bs53+a/OepOxGlpziSC3i3uOpyJYn8g==
+X-Gm-Gg: ASbGncsfO42EQCRvOikrUlcAaHMHE/fS9mTZ4jjyessS5iM30SWKGPrztqA9rFOOk47
+	Xma79O9VtlCrnwYB8bRlhKxQWkWrDMZBLwbTA9dmSVcFYW90tzGEkbLzsxJE4sZv9b4rj9gn6dH
+	fL4XEwEnLmwabsEyDL21XZdfitY1JcGV1sunphVaL9NxDgYi+BrFg/m9zM9T6mFSCblREBBUd5J
+	KEQbxAlYeLllG+QELq7/5RCpSm+EAucjQRGYVwzS/xUnQuVQZ4CoBcNaThQfZRG5bxFRQJqZRZL
+	qZ79aPsd5EIcEpXqGBQFZvBwMxGU6N2DRocHUi2spgjZcIu7pCY/OwVVL0EQeR58TsghMSFYmmw
+	dPeZlGw==
+X-Google-Smtp-Source: AGHT+IEY/vDw8X+9rNcjO23dhLmtLnxL+I96K0Os1qP1BsJ1YOT+8ViRoRosC+UlntlMpWyEfSlSWA==
+X-Received: by 2002:a05:6214:2427:b0:6fa:cd35:3d98 with SMTP id 6a1803df08f44-6fb47797c6cmr239671506d6.38.1750218560769;
+        Tue, 17 Jun 2025 20:49:20 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb5a9dbf8csm18549736d6.106.2025.06.17.20.49.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 20:49:19 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Tue, 17 Jun 2025 23:49:18 -0400 (EDT)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
+In-Reply-To: <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com>
+Message-ID: <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu>
+References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250617223356.2752099-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250617223356.2752099-4-irogers@google.com>
-Subject: [PATCH v2 4/4] libperf evsel: In exit add missed puts and assert
- close, etc. were called
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Andi Kleen <ak@linux.intel.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-A missed evsel__close before evsel__delete was the source of leaking
-perf events due to a hybrid test. Add asserts in debug builds so that
-this shouldn't happen in the future. Add puts missing on the cpu map
-and thread maps.
+On Tue, 17 Jun 2025, Liang, Kan wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/perf/evsel.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> The commit 2dc0572f2cef was triggered by the fake event VLBR_EVENT.
+> But this error should be triggered by the Topdown perf metrics event,
+> INTEL_TD_METRIC_RETIRING, which uses the idx 48 internally.
+> 
+> We never support perf metrics events in sampling mode. The PEBS cannot
+> be enabled in counting mode. So it's weird the cpuc->pebs_enabled has
+> the idx 48 set.
+> 
+> The recent change I did for the PEBS is commit e02e9b0374c3
+> "perf/x86/intel: Support PEBS counters snapshotting". But it should not
+> impact the above.
+> 
+> Could you please help on the below questions?
+> - It only happens on the p-core, right?
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c475319e2e41..2a85e0bfee1e 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -42,6 +42,12 @@ struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
- 
- void perf_evsel__delete(struct perf_evsel *evsel)
- {
-+	assert(evsel->fd == NULL);  /* If not fds were not closed. */
-+	assert(evsel->mmap == NULL); /* If not munmap wasn't called. */
-+	assert(evsel->sample_id == NULL); /* If not free_id wasn't called. */
-+	perf_cpu_map__put(evsel->cpus);
-+	perf_cpu_map__put(evsel->own_cpus);
-+	perf_thread_map__put(evsel->threads);
- 	free(evsel);
- }
- 
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
+how would I tell?  I don't think the error message says what CPU it 
+happens on?
 
+> - Which kernel base do you use? Is it 6.16-rc2?
+
+I was running just before -rc1.  I've updated to current git but didn't 
+realize the throttle fix hadn't made it upstream yet so managed to lock up 
+the machine and not sure when I'll be able to get over to reboot it.
+
+> - Can this be easily reproduced?
+
+probably.  It's another thing that's a pain to check because it's a 
+WARN_ONCE I think so I have to reboot in order to see.  Even if it's not 
+reproducible the fuzzer usually hits it within a few hours.
+
+>   Is it possible to bisect the error commit? (Maybe start from the
+> commit e02e9b0374c3?)
+
+Maybe but I'd only like to do that as a last resort as it's a pain to 
+build and reboot kernels on this machine (for secureboot and other 
+reasons).  Also I suppose I'd have to manually apply the throttle patch 
+while bisecting.
+
+Vince Weaver
+vincent.weaver@maine.edu
