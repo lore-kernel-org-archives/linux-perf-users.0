@@ -1,66 +1,49 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7C735963
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 08:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D66827E7D8
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 08:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235834; cv=none; b=cxJlm6TwQaGFeBnsSJeyhZ6unRVDS6k6xQdtZDrpd7vVoxCTPM0LbU6uHND1X38OHydgidKdne9oDxOLQ8UoXDqhcVbnzcgsk3J3tx+UEqKmK1V4H23WEhdTxJuw/Nt51njKZADFGNLFvqS55Ih/1F4LieE5rn5DokqprPIcq78=
+	t=1750236280; cv=none; b=knBAfw4QPZ2e5YRMTByDQmkBO3VRIIre+LEvL7e/kNhgGga0W5yiqIKhuPmZtK79gj0i2qGN8AoI6c27TDVocHd/tekx/UGs9oUfsEzVO55uDP4vN6OlIkcRV+zhw8fZBQf+0G1WgCXtN0OuMS66DwCE6J2AfSJLOiuNdauNvHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235834; c=relaxed/simple;
-	bh=77f3tE7BBtWSoFKeDPpCOaeGBy8mqGu0Z6DzWoYjpeo=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=twjCkiAbEOZ6n+gBwJcq+GPcDvPQM/3rgx1RJB2O12ijXTkTl5flzn1ieunfVfiJOs3NEqkG+0EuQ6YPIaIlsTBFpE7jq4M8QHr+9q8V/UQ1VAOpqseNJ9UNC308NFHKGjVI7f8QpgJi+hM6YLB3z+EX14ZAy8gWAa7p3S3Jvkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bMcZD2Ml7z2QVMR;
-	Wed, 18 Jun 2025 16:37:56 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 77C1D18001B;
-	Wed, 18 Jun 2025 16:37:02 +0800 (CST)
-Received: from kwepemq200018.china.huawei.com (7.202.195.108) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 16:37:02 +0800
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemq200018.china.huawei.com (7.202.195.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 16:37:01 +0800
-CC: <acme@kernel.org>, <james.clark@linaro.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<will@kernel.org>, <catalin.marinas@arm.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>
+	s=arc-20240116; t=1750236280; c=relaxed/simple;
+	bh=GgsOSjDucAOFL8g36UkI+SHwwPvztM8ecCt2Z2kD378=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glrFjXkHTT0WRAAR0jxq2tQsnufKOcQUqSlsdh9HGDofT3ewakTsn+9HUujcZo0MyksZdxoU9YITT+/iWWuLspAfefS5iBprQyCSTn04PjFc87p3JFFBXrpT30rIPT9kEwMpZh4PUWZcntugMciva069IWucORXTbKV7nieRSS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A10A113E;
+	Wed, 18 Jun 2025 01:44:17 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9B873F66E;
+	Wed, 18 Jun 2025 01:44:34 -0700 (PDT)
+Date: Wed, 18 Jun 2025 09:44:29 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: acme@kernel.org, leo.yan@linaro.org, james.clark@linaro.org,
+	namhyung@kernel.org, shameerali.kolothum.thodi@huawei.com,
+	will@kernel.org, catalin.marinas@arm.com, jolsa@kernel.org,
+	irogers@google.com, peterz@infradead.org, mingo@redhat.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, jonathan.cameron@huawei.com,
+	linuxarm@huawei.com, prime.zeng@hisilicon.com,
+	yangyicong@hisilicon.com
 Subject: Re: [PATCH] tools/headers: Workaround the copy coherency issue of
  arm64's cputype.h
-To: Leo Yan <leo.yan@arm.com>, Leo Yan <leo.yan@linux.dev>
+Message-ID: <aFJ8bQh_30JMzF_-@J2N7QTR9R3>
 References: <20250618083017.62879-1-yangyicong@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com>
-Date: Wed, 18 Jun 2025 16:37:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20250618083017.62879-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemq200018.china.huawei.com (7.202.195.108)
 
-+ Leo
-
-sorry for sending to your old mail.
-
-On 2025/6/18 16:30, Yicong Yang wrote:
+On Wed, Jun 18, 2025 at 04:30:17PM +0800, Yicong Yang wrote:
 > From: Yicong Yang <yangyicong@hisilicon.com>
 > 
 > arch/arm64/include/asm/cputype.h is copied from arch/arm64 and used
@@ -69,13 +52,28 @@ On 2025/6/18 16:30, Yicong Yang wrote:
 > migration merged [1] so a direct copy will lead to the build failure
 > of perf [2]: is_midr_in_range_list() is used but the implementation
 > has been changed and moved out of the kernel header.
-> 
+
+The build failure described above manifests *IF AND WHEN* we update the
+userspace header with a copy of the kernel header, and there's no need
+to do so.
+
 > Workaround this issue by maintaining is_perf_midr_in_range_list()
 > in the userspace. Temporarily include the kernel headers for the
 > MIDR definitions, a later refactor will generate the MIDR header
 > dynamically similar to how we handle the sysreg-defs.h in userspace.
 > Remove cputype.h from check-headers.sh.
-> 
+
+Sorry, but NAK to this. As-is, this means that any change to the
+kernel-internal asm/cputype.h is liable to break the userspace tool, and
+placing a burden on whoever modifies the kernel-internal headers.
+
+The simple solution for now is to *NOT* update the userspace header, and
+to stop warning that this has diverged from the kernel header. If we
+want to improve matters, we should split things appropriately for
+sharing.
+
+Mark.
+
 > [1] https://lore.kernel.org/all/20250221140229.12588-1-shameerali.kolothum.thodi@huawei.com/
 > [2] https://lore.kernel.org/lkml/aEyGg98z-MkcClXY@x1/#t
 > Suggested-by: Leo Yan <leo.yan@arm.com>
@@ -459,4 +457,6 @@ On 2025/6/18 16:30, Yicong Yang wrote:
 >  			data_source_handles[i].ds_synth(record, data_src);
 >  			return true;
 >  		}
+> -- 
+> 2.24.0
 > 
