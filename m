@@ -1,169 +1,310 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1B22BB15;
-	Thu, 19 Jun 2025 01:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAC32A1BA;
+	Thu, 19 Jun 2025 01:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750295515; cv=none; b=CVlSmvHL7FK+PHOF07fXt0Wv0dz7opzweLmTLdoyArS5uOjsTNznDepSz0fkehdqef980lXC+a2IEAGLRPt3v76GyOPdMhoZ1yVHmRpZv95Ac4OnTaaH5m8O3BY/DBATaUOHQrUVIiTyEhKVdCJwTo4dZgQ9HQAyhYUECScEaHM=
+	t=1750297650; cv=none; b=Vlvd2VcwpP2PY4rMDI82L1oxXiRdPtQr19yZByyUzmGRaZ+ACJFVqXGP5SIYp7LIU4wiX23/LoG6icCWXORgHFhCEyVmIedvRU4ql09f1S9ZFm/LQio8F8qEShN+fjxuT8ETPKEFUZcBwFY9f0avyEQYh0hBZlnEfu6lJZ1kMh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750295515; c=relaxed/simple;
-	bh=ubnpEBMCEnSo3S0tKIY2YGchBjUwf5oaTCDKDOK2A10=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MRSCfrgSDp8bSKqi0JU84Ukgm4YJ6ahvCjwrSJOV3kt1gvj5wsXXZER6z5Gt5ANiSddOHoPPFl4K4Xj21XOoNFq6zFwfZ+JkFkx5LIjqqop9jPn4kc3a6l6pv5+KXaTNCvnr8I7Dyv0KCyeNW6r816G1/7x7bOKgfI0YxaNatbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UjuuijAt; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UjuuijAt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750295514; x=1781831514;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=ubnpEBMCEnSo3S0tKIY2YGchBjUwf5oaTCDKDOK2A10=;
-  b=UjuuijAt0UncZDPCfuIumL7oH5+yAGnns3pKPtqu2x1ZzUf6AplZtN0M
-   d8qkanb5XJvnJ9BqzN99FA4kOe4oDSMF6k24n6D57U+eB0B7VJDpwj7HK
-   FmrmYr5m8ORUqD9z/jwaEFZePIkyM2MCLnlsxY/uy+G3+9o8S1rFQ/gDz
-   iANcTgHQqdfq6Bupg89hPCEA8ekXTzS3a4vvAtmi1gidQmlsjaEygYknD
-   UZm7X+NeBY3dDu4XYskyL0pEv4lTNcMrsKEGUwp6YzAdAXHcpEfbqeqce
-   K1l6upu8mOPU5QjmOOrDY263QEgWTw0MfZhvaNs7MNb3sDJwW8BegBmVM
-   A==;
-X-CSE-ConnectionGUID: Jb1faiqRRyquTLXjLh61VQ==
-X-CSE-MsgGUID: jUKCpox5TRuFfOqIF6A+UQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="40148036"
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="40148036"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 18:11:53 -0700
-X-CSE-ConnectionGUID: R9dE/fHARn2lPPpTm1n1vQ==
-X-CSE-MsgGUID: 8qX4bTzsRVeoHPFF6oQ/1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="154269801"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 18:11:49 -0700
-Message-ID: <fa4abc9b-3f8b-4084-86e0-05dd8aa6ad67@linux.intel.com>
-Date: Thu, 19 Jun 2025 09:11:47 +0800
+	s=arc-20240116; t=1750297650; c=relaxed/simple;
+	bh=mgfm5mlVtu0RF55CfmQFJ9zrB5wUsUHfhsfoMVk+H74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p+aCIPP1qczCvwKZ+mXiiwafrVprJPb4FnZnHgFobf0Drvpax2AbQzZZCCM8Xud9MFnooJDhwKo1ZYrJdcVyB7GLA9uPO2v5c8MXvoHuiUg13yNnDjk1X47HySU2YgGxAeqTFxqgGMGZ43pjklPuJ650tEaGx70GO2cyAO6Y1fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBXXrYmbFNojvp1Aw--.393S2;
+	Thu, 19 Jun 2025 09:47:18 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwD3jCYVbFNohbBXAA--.8864S2;
+	Thu, 19 Jun 2025 09:47:02 +0800 (CST)
+Date: Thu, 19 Jun 2025 09:47:00 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxarm@huawei.com, tongtiangen@huawei.com,
+	Yicong Yang <yangyicong@huawei.com>,
+	Niyas Sait <niyas.sait@huawei.com>, ajayjoshi@micron.com,
+	Vandana Salve <vsalve@micron.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Gregory Price <gourry@gourry.net>,
+	Huang Ying <ying.huang@intel.com>
+Subject: Re: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness Monitoring
+ Units (CHMU)
+Message-ID: <aFNsFI5OKrD0CWR3@phytium.com.cn>
+References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+ <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf/x86/intel: Fix IA32_PMC_x_CFG_B MSRs access
- error
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250529080236.2552247-1-dapeng1.mi@linux.intel.com>
- <aDq3S9lwO1YadCKT@gmail.com>
- <15e4f7a6-7c68-4d89-8813-cd142eb4c416@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <15e4f7a6-7c68-4d89-8813-cd142eb4c416@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+X-CM-TRANSID:AQAAfwD3jCYVbFNohbBXAA--.8864S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAFAWhRxgsBrAAjs-
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxKrWkCFW5KF4kXw47CrWUCFg_yoWxKF4DpF
+	W8CFWrGr48JF9F9ry3Xay5ZFn8W3Z29FyUuryIq34avFnxAFyDJF4UJayUAryrC3ykGw47
+	WF15Kr10kayYgr7anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Kindly ping...    Thanks.
+On Thu, Nov 21, 2024 at 10:18:42AM +0000, Jonathan Cameron wrote:
+> Basic registration using similar approach to how the CPMUs
+> are registered.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/core/Makefile |  1 +
+>  drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/regs.c   | 14 +++++++++
+>  drivers/cxl/cxl.h         |  4 +++
+>  drivers/cxl/cxlpci.h      |  1 +
+>  drivers/cxl/hmu.h         | 23 ++++++++++++++
+>  drivers/cxl/pci.c         | 26 +++++++++++++++-
+>  7 files changed, 132 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 9259bcc6773c..d060abb773ae 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -12,6 +12,7 @@ cxl_core-y += memdev.o
+>  cxl_core-y += mbox.o
+>  cxl_core-y += pci.o
+>  cxl_core-y += hdm.o
+> +cxl_core-y += hmu.o
+>  cxl_core-y += pmu.o
+>  cxl_core-y += cdat.o
+>  cxl_core-$(CONFIG_TRACING) += trace.o
+> diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
+> new file mode 100644
+> index 000000000000..3ee938bb6c05
+> --- /dev/null
+> +++ b/drivers/cxl/core/hmu.c
+> @@ -0,0 +1,64 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2024 Huawei. All rights reserved. */
+> +
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +#include <linux/idr.h>
+> +#include <cxlmem.h>
+> +#include <hmu.h>
+> +#include <cxl.h>
+> +#include "core.h"
+> +
+> +static void cxl_hmu_release(struct device *dev)
+> +{
+> +	struct cxl_hmu *hmu = to_cxl_hmu(dev);
+> +
+> +	kfree(hmu);
+> +}
+> +
+> +const struct device_type cxl_hmu_type = {
+> +	.name = "cxl_hmu",
+> +	.release = cxl_hmu_release,
+> +};
+> +
+> +static void remove_dev(void *dev)
+> +{
+> +	device_unregister(dev);
+> +}
+> +
+> +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
+> +		     int assoc_id, int index)
+> +{
+> +	struct cxl_hmu *hmu;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	hmu = kzalloc(sizeof(*hmu), GFP_KERNEL);
+> +	if (!hmu)
+> +		return -ENOMEM;
+> +
+> +	hmu->assoc_id = assoc_id;
+> +	hmu->index = index;
+> +	hmu->base = regs->hmu;
+> +	dev = &hmu->dev;
+> +	device_initialize(dev);
+> +	device_set_pm_not_required(dev);
+> +	dev->parent = parent;
+> +	dev->bus = &cxl_bus_type;
+> +	dev->type = &cxl_hmu_type;
+> +	rc = dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	return devm_add_action_or_reset(parent, remove_dev, dev);
+> +
+> +err:
+> +	put_device(&hmu->dev);
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
+> +
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index e1082e749c69..c12afaa6ef98 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
+>  
+> +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs)
+> +{
+> +	struct device *dev = map->host;
+> +	resource_size_t phys_addr;
+> +
+> +	phys_addr = map->resource;
+> +	regs->hmu = devm_cxl_iomap_block(dev, phys_addr, map->max_size);
+I applied CHMU patch on 6.15.0 kernel and I tried to boot the virt with
+one cxl root port and one device (jic23/cxl-2025-06-10), then the dmesg shows
+"Failed to request region 0x10210000-0x1023ffff". I guess it is caused by the
+'map->max_size'(0x30000) is large and the resource has been allocated by CPMU regs.
+I tried to change it to 0x10000, the hmu_mem0.0 could be created as normal.
+> +	if (!regs->hmu)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
+> +
+>  static int cxl_map_regblock(struct cxl_register_map *map)
+>  {
+>  	struct device *host = map->host;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 5406e3ab3d4a..8172bc1f7a8d 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -227,6 +227,9 @@ struct cxl_regs {
+>  	struct_group_tagged(cxl_pmu_regs, pmu_regs,
+>  		void __iomem *pmu;
+>  	);
+> +	struct_group_tagged(cxl_hmu_regs, hmu_regs,
+> +		void __iomem *hmu;
+> +	);
+>  
+>  	/*
+>  	 * RCH downstream port specific RAS register
+> @@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  			   unsigned long map_mask);
+>  int cxl_map_device_regs(const struct cxl_register_map *map,
+>  			struct cxl_device_regs *regs);
+> +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs);
+>  int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
+>  
+>  enum cxl_regloc_type;
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 4da07727ab9c..71f5e9620137 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -67,6 +67,7 @@ enum cxl_regloc_type {
+>  	CXL_REGLOC_RBI_VIRT,
+>  	CXL_REGLOC_RBI_MEMDEV,
+>  	CXL_REGLOC_RBI_PMU,
+> +	CXL_REGLOC_RBI_HMU,
+>  	CXL_REGLOC_RBI_TYPES
+>  };
+>  
+> diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
+> new file mode 100644
+> index 000000000000..c4798ed9764b
+> --- /dev/null
+> +++ b/drivers/cxl/hmu.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright(c) 2024 Huawei
+> + * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
+> + */
+> +#ifndef CXL_HMU_H
+> +#define CXL_HMU_H
+> +#include <linux/device.h>
+> +
+> +#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
+> +struct cxl_hmu {
+> +	struct device dev;
+> +	void __iomem *base;
+> +	int assoc_id;
+> +	int index;
+> +};
+> +
+> +#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
+> +struct cxl_hmu_regs;
+> +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
+> +		     int assoc_id, int idx);
+> +
+> +#endif
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 188412d45e0d..e89ea9d3f007 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -15,6 +15,7 @@
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+>  #include "cxl.h"
+> +#include "hmu.h"
+>  #include "pmu.h"
+>  
+>  /**
+> @@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct cxl_dev_state *cxlds;
+>  	struct cxl_register_map map;
+>  	struct cxl_memdev *cxlmd;
+> -	int i, rc, pmu_count;
+> +	int i, rc, hmu_count, pmu_count;
+>  	bool irq_avail;
+>  
+>  	/*
+> @@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  		}
+>  	}
+>  
+> +	hmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
+> +	for (i = 0; i < hmu_count; i++) {
+> +		struct cxl_hmu_regs hmu_regs;
+> +
+> +		rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
+> +		if (rc) {
+> +			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
+> +			break;
+> +		}
+> +
+> +		rc = cxl_map_hmu_regs(&map, &hmu_regs);
+> +		if (rc) {
+> +			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
+> +			break;
+> +		}
+> +
+> +		rc = devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
+> +		if (rc) {
+> +			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
+> +			break;
+> +		}
+> +	}
+> +
+>  	rc = cxl_event_config(host_bridge, mds, irq_avail);
+>  	if (rc)
+>  		return rc;
+> -- 
+> 2.43.0
+> 
 
-On 6/3/2025 10:14 AM, Mi, Dapeng wrote:
-> On 5/31/2025 4:01 PM, Ingo Molnar wrote:
->> * Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->>
->>> When running perf_fuzzer on PTL, sometimes the below "unchecked MSR
->>>  access error" is seen when accessing IA32_PMC_x_CFG_B MSRs.
->>>
->>> [   55.611268] unchecked MSR access error: WRMSR to 0x1986 (tried to write 0x0000000200000001) at rIP: 0xffffffffac564b28 (native_write_msr+0x8/0x30)
->>> [   55.611280] Call Trace:
->>> [   55.611282]  <TASK>
->>> [   55.611284]  ? intel_pmu_config_acr+0x87/0x160
->>> [   55.611289]  intel_pmu_enable_acr+0x6d/0x80
->>> [   55.611291]  intel_pmu_enable_event+0xce/0x460
->>> [   55.611293]  x86_pmu_start+0x78/0xb0
->>> [   55.611297]  x86_pmu_enable+0x218/0x3a0
->>> [   55.611300]  ? x86_pmu_enable+0x121/0x3a0
->>> [   55.611302]  perf_pmu_enable+0x40/0x50
->>> [   55.611307]  ctx_resched+0x19d/0x220
->>> [   55.611309]  __perf_install_in_context+0x284/0x2f0
->>> [   55.611311]  ? __pfx_remote_function+0x10/0x10
->>> [   55.611314]  remote_function+0x52/0x70
->>> [   55.611317]  ? __pfx_remote_function+0x10/0x10
->>> [   55.611319]  generic_exec_single+0x84/0x150
->>> [   55.611323]  smp_call_function_single+0xc5/0x1a0
->>> [   55.611326]  ? __pfx_remote_function+0x10/0x10
->>> [   55.611329]  perf_install_in_context+0xd1/0x1e0
->>> [   55.611331]  ? __pfx___perf_install_in_context+0x10/0x10
->>> [   55.611333]  __do_sys_perf_event_open+0xa76/0x1040
->>> [   55.611336]  __x64_sys_perf_event_open+0x26/0x30
->>> [   55.611337]  x64_sys_call+0x1d8e/0x20c0
->>> [   55.611339]  do_syscall_64+0x4f/0x120
->>> [   55.611343]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>>
->>> On PTL, GP counter 0 and 1 doesn't support auto counter reload feature,
->>> thus it would trigger a #GP when trying to write 1 on bit 0 of CFG_B MSR
->>> which requires to enable auto counter reload on GP counter 0.
->>>
->>> The root cause of causing this issue is the check for auto counter
->>> reload (ACR) counter mask from user space is incorrect in
->>> intel_pmu_acr_late_setup() helper. It leads to an invalid ACR counter
->>> mask from user space could be set into hw.config1 and then written into
->>> CFG_B MSRs and trigger the MSR access warning.
->>>
->>> e.g., User may create a perf event with ACR counter mask (config2=0xcb),
->>> and there is only 1 event created, so "cpuc->n_events" is 1.
->>>
->>> The correct check condition should be "i + idx >= cpuc->n_events"
->>> instead of "i + idx > cpuc->n_events" (it looks a typo). Otherwise,
->>> the counter mask would traverse twice and an invalid "cpuc->assign[1]"
->>> bit (bit 0) is set into hw.config1 and cause MSR accessing error.
->>>
->>> Besides, also check if the ACR counter mask corresponding events are
->>> ACR events. If not, filter out these counter mask. If a event is not a
->>> ACR event, it could be scheduled to an HW counter which doesn't support
->>> ACR. It's invalid to add their counter index in ACR counter mask.
->>>
->>> Furthermore, remove the WARN_ON_ONCE() since it's easily triggered as
->>> user could set any invalid ACR counter mask and the warning message
->>> could mislead users.
->>>
->>> Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
->>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>> ---
->>>  arch/x86/events/intel/core.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index 3a319cf6d364..8d046b1a237e 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -2994,7 +2994,8 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
->>>  			if (event->group_leader != leader->group_leader)
->>>  				break;
->>>  			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
->>> -				if (WARN_ON_ONCE(i + idx > cpuc->n_events))
->>> +				if (i + idx >= cpuc->n_events ||
->>> +				    !is_acr_event_group(cpuc->event_list[i + idx]))
->>>  					return;
->> Is this a normal condition?
->>
->>  - If it's normal then the 'return' is destructive, isn't it? Shouldn't 
->>    it be a 'break', if this condition is legitimate?
->>
->>  - If it's not normal, then the WARN_ON_ONCE() was justified, right?
-> It's not normal.Strictly speaking, it's an invalid user configuration. It
-> looks not reasonable to trigger a kernel space warning for an invalid user
-> space configuration. It would mislead users and let users think there is
-> something wrong in kernel. That's why to remove the WARN_ON_ONCE(). Thanks.
->
->
->> Thanks,
->>
->> 	Ingo
