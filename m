@@ -1,310 +1,103 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDAC32A1BA;
-	Thu, 19 Jun 2025 01:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308B01CBEB9;
+	Thu, 19 Jun 2025 03:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750297650; cv=none; b=Vlvd2VcwpP2PY4rMDI82L1oxXiRdPtQr19yZByyUzmGRaZ+ACJFVqXGP5SIYp7LIU4wiX23/LoG6icCWXORgHFhCEyVmIedvRU4ql09f1S9ZFm/LQio8F8qEShN+fjxuT8ETPKEFUZcBwFY9f0avyEQYh0hBZlnEfu6lJZ1kMh0=
+	t=1750303207; cv=none; b=N8w1r5acdnJ3cl6qqA7KediS1+umHgGgBEz1L8hlDWYtjxbGDfCYTdlkeWgetUhqsW4O8gr8PYYaGviDZaqpVcuI1EOXRha6XkA8tl+uJrG1gNJ+aTk35Pb/Bcac8UkpZCMH28Oo1otpYd0hliisoSOLs7xtQtnhzNwXka41R08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750297650; c=relaxed/simple;
-	bh=mgfm5mlVtu0RF55CfmQFJ9zrB5wUsUHfhsfoMVk+H74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+aCIPP1qczCvwKZ+mXiiwafrVprJPb4FnZnHgFobf0Drvpax2AbQzZZCCM8Xud9MFnooJDhwKo1ZYrJdcVyB7GLA9uPO2v5c8MXvoHuiUg13yNnDjk1X47HySU2YgGxAeqTFxqgGMGZ43pjklPuJ650tEaGx70GO2cyAO6Y1fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBXXrYmbFNojvp1Aw--.393S2;
-	Thu, 19 Jun 2025 09:47:18 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwD3jCYVbFNohbBXAA--.8864S2;
-	Thu, 19 Jun 2025 09:47:02 +0800 (CST)
-Date: Thu, 19 Jun 2025 09:47:00 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com, tongtiangen@huawei.com,
-	Yicong Yang <yangyicong@huawei.com>,
-	Niyas Sait <niyas.sait@huawei.com>, ajayjoshi@micron.com,
-	Vandana Salve <vsalve@micron.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Gregory Price <gourry@gourry.net>,
-	Huang Ying <ying.huang@intel.com>
-Subject: Re: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness Monitoring
- Units (CHMU)
-Message-ID: <aFNsFI5OKrD0CWR3@phytium.com.cn>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
- <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1750303207; c=relaxed/simple;
+	bh=JJl4egwEehwUZ9lH0qcCNVO5URPGIQgATOlSnKgy/dM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iBOno5iyNLBOtG+W+dzDRUTyOonNa+dV4rCj8RqWlo4DNraxEVeUotgLcEm23jiY86pfS82IrsFupqkcng8Oxn9INqt4sWnUQ6DG5gntAbtOWfTX0NfYtr61OJXDsEZMxWtkFR4z9OZWmSq+8kACMUa7pwU0qZuSgOdjAoxc48Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4580d29e4cbc11f0b29709d653e92f7d-20250619
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:784bea5c-baf2-46ce-a734-c7636d820195,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:770a56878cedc0abef4c5af809c10e2d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 4580d29e4cbc11f0b29709d653e92f7d-20250619
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <tanze@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1002011062; Thu, 19 Jun 2025 11:19:55 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 0B32D16001A01;
+	Thu, 19 Jun 2025 11:19:55 +0800 (CST)
+X-ns-mid: postfix-685381D9-2974341226
+Received: from localhost.localdomain (unknown [10.42.12.96])
+	by node4.com.cn (NSMail) with ESMTPA id 8787616001CC7;
+	Thu, 19 Jun 2025 03:19:51 +0000 (UTC)
+From: tanze <tanze@kylinos.cn>
+To: peterz@infradead.org,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	tanze <tanze@kylinos.cn>
+Subject: [PATCH] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
+Date: Thu, 19 Jun 2025 11:19:47 +0800
+Message-Id: <20250619031947.1111196-1-tanze@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
-X-CM-TRANSID:AQAAfwD3jCYVbFNohbBXAA--.8864S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAFAWhRxgsBrAAjs-
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKrWkCFW5KF4kXw47CrWUCFg_yoWxKF4DpF
-	W8CFWrGr48JF9F9ry3Xay5ZFn8W3Z29FyUuryIq34avFnxAFyDJF4UJayUAryrC3ykGw47
-	WF15Kr10kayYgr7anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 21, 2024 at 10:18:42AM +0000, Jonathan Cameron wrote:
-> Basic registration using similar approach to how the CPMUs
-> are registered.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/Makefile |  1 +
->  drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/regs.c   | 14 +++++++++
->  drivers/cxl/cxl.h         |  4 +++
->  drivers/cxl/cxlpci.h      |  1 +
->  drivers/cxl/hmu.h         | 23 ++++++++++++++
->  drivers/cxl/pci.c         | 26 +++++++++++++++-
->  7 files changed, 132 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 9259bcc6773c..d060abb773ae 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -12,6 +12,7 @@ cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
->  cxl_core-y += hdm.o
-> +cxl_core-y += hmu.o
->  cxl_core-y += pmu.o
->  cxl_core-y += cdat.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
-> diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
-> new file mode 100644
-> index 000000000000..3ee938bb6c05
-> --- /dev/null
-> +++ b/drivers/cxl/core/hmu.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2024 Huawei. All rights reserved. */
-> +
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +#include <linux/idr.h>
-> +#include <cxlmem.h>
-> +#include <hmu.h>
-> +#include <cxl.h>
-> +#include "core.h"
-> +
-> +static void cxl_hmu_release(struct device *dev)
-> +{
-> +	struct cxl_hmu *hmu = to_cxl_hmu(dev);
-> +
-> +	kfree(hmu);
-> +}
-> +
-> +const struct device_type cxl_hmu_type = {
-> +	.name = "cxl_hmu",
-> +	.release = cxl_hmu_release,
-> +};
-> +
-> +static void remove_dev(void *dev)
-> +{
-> +	device_unregister(dev);
-> +}
-> +
-> +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
-> +		     int assoc_id, int index)
-> +{
-> +	struct cxl_hmu *hmu;
-> +	struct device *dev;
-> +	int rc;
-> +
-> +	hmu = kzalloc(sizeof(*hmu), GFP_KERNEL);
-> +	if (!hmu)
-> +		return -ENOMEM;
-> +
-> +	hmu->assoc_id = assoc_id;
-> +	hmu->index = index;
-> +	hmu->base = regs->hmu;
-> +	dev = &hmu->dev;
-> +	device_initialize(dev);
-> +	device_set_pm_not_required(dev);
-> +	dev->parent = parent;
-> +	dev->bus = &cxl_bus_type;
-> +	dev->type = &cxl_hmu_type;
-> +	rc = dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
-> +
-> +	return devm_add_action_or_reset(parent, remove_dev, dev);
-> +
-> +err:
-> +	put_device(&hmu->dev);
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
-> +
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index e1082e749c69..c12afaa6ef98 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
->  
-> +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs)
-> +{
-> +	struct device *dev = map->host;
-> +	resource_size_t phys_addr;
-> +
-> +	phys_addr = map->resource;
-> +	regs->hmu = devm_cxl_iomap_block(dev, phys_addr, map->max_size);
-I applied CHMU patch on 6.15.0 kernel and I tried to boot the virt with
-one cxl root port and one device (jic23/cxl-2025-06-10), then the dmesg shows
-"Failed to request region 0x10210000-0x1023ffff". I guess it is caused by the
-'map->max_size'(0x30000) is large and the resource has been allocated by CPMU regs.
-I tried to change it to 0x10000, the hmu_mem0.0 could be created as normal.
-> +	if (!regs->hmu)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
-> +
->  static int cxl_map_regblock(struct cxl_register_map *map)
->  {
->  	struct device *host = map->host;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 5406e3ab3d4a..8172bc1f7a8d 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -227,6 +227,9 @@ struct cxl_regs {
->  	struct_group_tagged(cxl_pmu_regs, pmu_regs,
->  		void __iomem *pmu;
->  	);
-> +	struct_group_tagged(cxl_hmu_regs, hmu_regs,
-> +		void __iomem *hmu;
-> +	);
->  
->  	/*
->  	 * RCH downstream port specific RAS register
-> @@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   unsigned long map_mask);
->  int cxl_map_device_regs(const struct cxl_register_map *map,
->  			struct cxl_device_regs *regs);
-> +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs);
->  int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
->  
->  enum cxl_regloc_type;
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 4da07727ab9c..71f5e9620137 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -67,6 +67,7 @@ enum cxl_regloc_type {
->  	CXL_REGLOC_RBI_VIRT,
->  	CXL_REGLOC_RBI_MEMDEV,
->  	CXL_REGLOC_RBI_PMU,
-> +	CXL_REGLOC_RBI_HMU,
->  	CXL_REGLOC_RBI_TYPES
->  };
->  
-> diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
-> new file mode 100644
-> index 000000000000..c4798ed9764b
-> --- /dev/null
-> +++ b/drivers/cxl/hmu.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright(c) 2024 Huawei
-> + * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
-> + */
-> +#ifndef CXL_HMU_H
-> +#define CXL_HMU_H
-> +#include <linux/device.h>
-> +
-> +#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
-> +struct cxl_hmu {
-> +	struct device dev;
-> +	void __iomem *base;
-> +	int assoc_id;
-> +	int index;
-> +};
-> +
-> +#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
-> +struct cxl_hmu_regs;
-> +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
-> +		     int assoc_id, int idx);
-> +
-> +#endif
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 188412d45e0d..e89ea9d3f007 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -15,6 +15,7 @@
->  #include "cxlmem.h"
->  #include "cxlpci.h"
->  #include "cxl.h"
-> +#include "hmu.h"
->  #include "pmu.h"
->  
->  /**
-> @@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct cxl_dev_state *cxlds;
->  	struct cxl_register_map map;
->  	struct cxl_memdev *cxlmd;
-> -	int i, rc, pmu_count;
-> +	int i, rc, hmu_count, pmu_count;
->  	bool irq_avail;
->  
->  	/*
-> @@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		}
->  	}
->  
-> +	hmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
-> +	for (i = 0; i < hmu_count; i++) {
-> +		struct cxl_hmu_regs hmu_regs;
-> +
-> +		rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
-> +		if (rc) {
-> +			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
-> +			break;
-> +		}
-> +
-> +		rc = cxl_map_hmu_regs(&map, &hmu_regs);
-> +		if (rc) {
-> +			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
-> +			break;
-> +		}
-> +
-> +		rc = devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
-> +		if (rc) {
-> +			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
-> +			break;
-> +		}
-> +	}
-> +
->  	rc = cxl_event_config(host_bridge, mds, irq_avail);
->  	if (rc)
->  		return rc;
-> -- 
-> 2.43.0
-> 
+Perf's instructions event tests on Zhaoxin CPUs may exhibit:
+
+  $perf stat -e instructions,cycles ls -l
+
+  ......
+  Performance counter stats for 'ls -l':
+
+                 0      instructions                     #    0.00  insn =
+per cycle
+         9,488,278      cycles
+
+       0.004365407 seconds time elapsed
+
+       0.003303000 seconds user
+       0.001099000 seconds sys
+
+The absence of the fixedctr member leads to an incorrect hwc->event_base
+value on Zhaoxin CPUs, causing a discrepancy in the instruction count
+reported by perf stat. This commit resolves the instruction count issue
+by properly initializing the fixedctr member.
+
+Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
+
+Signed-off-by: tanze <tanze@kylinos.cn>
+---
+ arch/x86/events/zhaoxin/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/cor=
+e.c
+index 4bdfcf091200..3fc3f9abece9 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -467,6 +467,7 @@ static const struct x86_pmu zhaoxin_pmu __initconst =3D=
+ {
+ 	.schedule_events	=3D x86_schedule_events,
+ 	.eventsel		=3D MSR_ARCH_PERFMON_EVENTSEL0,
+ 	.perfctr		=3D MSR_ARCH_PERFMON_PERFCTR0,
++	.fixedctr		=3D MSR_ARCH_PERFMON_FIXED_CTR0,
+ 	.event_map		=3D zhaoxin_pmu_event_map,
+ 	.max_events		=3D ARRAY_SIZE(zx_pmon_event_map),
+ 	.apic			=3D 1,
+--=20
+2.25.1
 
