@@ -1,126 +1,415 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093342494FF
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 08:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9697202F8F;
+	Thu, 19 Jun 2025 10:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750321449; cv=none; b=tKlfGF5MnZmfEJ4rk+X/v+50ELfoFyJaI2IjbVhB1I1yXagN4zZBKXacjMMzEttjcEzEg7aoQcrCPp5XYg5BP4KQPUcUHnLVgXmr8KMNQcVDUsnEkDS70aKC4UzLLHW09fzSh+fuiQkqgqB0SFK72mTz2ZGhD6ffHwxEQUXNW0I=
+	t=1750327883; cv=none; b=iOeAa0wofpc/ncB4NLmOdUEgd3jxOOuCBodVxmBeD9I0H+vpOR20L6tz2NTXcfIRuGi3+SfO1QY3R/gVydI565/psdv7LDTEyiGtdO2gsSQtMhQUowIs6lldpyu17OQMfsOY2tXUkBr7LLyULOlXzOQ8FcsO/e78OaTBuNKHMlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750321449; c=relaxed/simple;
-	bh=fjuJFMaIgczpX1qC8kqBKhEOVuSRrClkmArcMFGn2Kk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=CF6FbnIsBhTgvRahhAOm078bXPyFOBH75VAZNHbsZch4LJzvs+81viMlwtfejsQFBuYNVgTIhLyeFT2TdbKYnVUmQdFn4I3wKHR5SRmUoOdIM08pfbUcAbp1soKS52yPJpK6+XoJxR1QCxxaMd4pmcIPfuvxtpawKtdME6tqAyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ttOXseDz; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttOXseDz"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso300931f8f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 01:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750321446; x=1750926246; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Q22zQ9ihJ48zZasqPlIeu40rg877vsTtc5J9Nn4uWg0=;
-        b=ttOXseDzvDx+0HSFdHpjUDGIisAWbsLyzZVw4uQrhg/UualYbcCcoYebzOXDTGu064
-         vFaqY5iDYt3DZGojtIcJsyWGrNBauWnuIXaOGewcwpfr1JfybuWRHkgFlR5QnqVBVUSh
-         9V6V9T0wk3nvJ0z35Yes8Wi1EIhKkgE6DjYbI6xZXEX45zb/TvcGDimYEXwJl/dG9PQc
-         /7lYPZoti7ymBEeZZO6N6U84gLZkhNh1zFR3neQPhURiu2OJ4jaCGw2W7d4NU4btcOOM
-         qOQvsTZEh4XQn+HgyqinidPaYv3n062nhihZfRohBVoe04SaVOzvD2TGvrsv2EkjuNyh
-         +87g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750321446; x=1750926246;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q22zQ9ihJ48zZasqPlIeu40rg877vsTtc5J9Nn4uWg0=;
-        b=Kwqochgrno2OmEGy2IpTwgOTWEjSpuh7AAu3lXHFOTD1J30PlHIv7Gz/ldvNv2U68u
-         V+/JPuDhAfba/rx3q3DqyOcb/uMeNhoCpbaPz2n5d4nwMZ66E6tFSTCf+kzUIWpWb7us
-         zxOGbwkrT1S/z54bA6L22pKA0SRIDb8pf4ERglyFH0Z+maKR9eXkkhjs//1gZpiTIB5y
-         R3pcnb6sqA3IZlFY0vZmnbsa9507VnZfqOpNNV0ncvBlBASuxKhXjt81oZgoO7roJ0Cw
-         qP3poc/hgAZlG6UttkLYtRTAep2tI3JdT8W49WHZQv2VtB5T4q/+MRyIKVdqc0JwJ+gE
-         tRCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTKGnaYm4lsRpmuXWxD5+cWZ1DJ3IdfAftjKgUIEbSIWwIxvujRiL8PbaLHN07SRo77H0ZnmqCdsmbkDTKrZYL@vger.kernel.org
-X-Gm-Message-State: AOJu0YygV46STuJWjAFYE9Wsaevky932LGdBBkGO5mDDbSC8j5+65jv8
-	c/AcYlAbBWUM/vgzaiuGPKtFzUzYdCThAcH22v5s5rfjrKJ5Bsif/MEnkfNuEPAnjlk=
-X-Gm-Gg: ASbGncsREPEO/cfpCqM2QOf0aP9IVsgzBEoRniIVUUkkT1p0uUdjqiSNw/FgvhpwWsX
-	EWW4joVwNgWj8qcszY8T/aYct0PrUsWJtH+jFHUF+X/cGlEDxcubvAK0OTmxE/F+M+KFmAtk+GW
-	PnB3eCUszpJCNJtzKAIoLZK9nmg7g54FqQj6JGugC49pKM7yr8/WBJEMSHeUEFaVb/lzSaM1VEY
-	ZXBSoLdFA6S7yMG/mDRks9UNuw4cHr5AMjp/vcLcoJzrFJJwY9MkqGofWSgDJieNKwITiO3V4wT
-	q2M1vq1SgdJtR/c3eMAHot44ozMUSRrlVscbbz2ZoTXsl5VcDD2DOGgqbzMrnUehuDk=
-X-Google-Smtp-Source: AGHT+IG3prb0JZdG8yBrJXbPEyJddXNVxU6+WbkUTfokRjiQKzSLM7C0hI5dwVQ+QosuYnaTi5pF6w==
-X-Received: by 2002:a05:6000:26c4:b0:3a3:652d:1638 with SMTP id ffacd0b85a97d-3a572e585a1mr16943912f8f.48.1750321446278;
-        Thu, 19 Jun 2025 01:24:06 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b3c0d3sm18939648f8f.79.2025.06.19.01.24.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 01:24:05 -0700 (PDT)
-Message-ID: <393e7584-7ca1-407e-bd42-4079e5d8d4e2@linaro.org>
-Date: Thu, 19 Jun 2025 09:24:04 +0100
+	s=arc-20240116; t=1750327883; c=relaxed/simple;
+	bh=2x1BpjAPOWfj+38xntqzlIqkh3L6BLUM6DnXKQ2e0kw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QmYG17tkDIqJ2Qh9oQIBRPKlBLRp4cBEZQvTfmBDvWVWqe/v2jFTtd7hbWTt/UcfaLDLAY9e/LYpDUcFIfXU4c9tnOCBqw2GEgs1F68dcfN64Lxz+s/jmPES7egv3do8UOQ//z8H2buFR+o8Q0gp7I0M2DVuo7biyLS+ysR2JdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bNGTw5Ys8z6L5R7;
+	Thu, 19 Jun 2025 18:06:28 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B7F281404C6;
+	Thu, 19 Jun 2025 18:11:11 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 19 Jun
+ 2025 12:11:10 +0200
+Date: Thu, 19 Jun 2025 11:11:09 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <tongtiangen@huawei.com>, Yicong Yang
+	<yangyicong@huawei.com>, Niyas Sait <niyas.sait@huawei.com>,
+	<ajayjoshi@micron.com>, Vandana Salve <vsalve@micron.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Gregory Price <gourry@gourry.net>, Huang
+ Ying <ying.huang@intel.com>
+Subject: Re: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness
+ Monitoring Units (CHMU)
+Message-ID: <20250619111109.0000640e@huawei.com>
+In-Reply-To: <aFNsFI5OKrD0CWR3@phytium.com.cn>
+References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+	<20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+	<aFNsFI5OKrD0CWR3@phytium.com.cn>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf test: Add basic callgraph test to record testing
-To: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>
-References: <20250619002443.100301-1-irogers@google.com>
-Content-Language: en-US
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Chun-Tse Shao
- <ctshao@google.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250619002443.100301-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Thu, 19 Jun 2025 09:47:00 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+
+> On Thu, Nov 21, 2024 at 10:18:42AM +0000, Jonathan Cameron wrote:
+> > Basic registration using similar approach to how the CPMUs
+> > are registered.
+> >=20
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  drivers/cxl/core/Makefile |  1 +
+> >  drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/regs.c   | 14 +++++++++
+> >  drivers/cxl/cxl.h         |  4 +++
+> >  drivers/cxl/cxlpci.h      |  1 +
+> >  drivers/cxl/hmu.h         | 23 ++++++++++++++
+> >  drivers/cxl/pci.c         | 26 +++++++++++++++-
+> >  7 files changed, 132 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> > index 9259bcc6773c..d060abb773ae 100644
+> > --- a/drivers/cxl/core/Makefile
+> > +++ b/drivers/cxl/core/Makefile
+> > @@ -12,6 +12,7 @@ cxl_core-y +=3D memdev.o
+> >  cxl_core-y +=3D mbox.o
+> >  cxl_core-y +=3D pci.o
+> >  cxl_core-y +=3D hdm.o
+> > +cxl_core-y +=3D hmu.o
+> >  cxl_core-y +=3D pmu.o
+> >  cxl_core-y +=3D cdat.o
+> >  cxl_core-$(CONFIG_TRACING) +=3D trace.o
+> > diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
+> > new file mode 100644
+> > index 000000000000..3ee938bb6c05
+> > --- /dev/null
+> > +++ b/drivers/cxl/core/hmu.c
+> > @@ -0,0 +1,64 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright(c) 2024 Huawei. All rights reserved. */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/idr.h>
+> > +#include <cxlmem.h>
+> > +#include <hmu.h>
+> > +#include <cxl.h>
+> > +#include "core.h"
+> > +
+> > +static void cxl_hmu_release(struct device *dev)
+> > +{
+> > +	struct cxl_hmu *hmu =3D to_cxl_hmu(dev);
+> > +
+> > +	kfree(hmu);
+> > +}
+> > +
+> > +const struct device_type cxl_hmu_type =3D {
+> > +	.name =3D "cxl_hmu",
+> > +	.release =3D cxl_hmu_release,
+> > +};
+> > +
+> > +static void remove_dev(void *dev)
+> > +{
+> > +	device_unregister(dev);
+> > +}
+> > +
+> > +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
+> > +		     int assoc_id, int index)
+> > +{
+> > +	struct cxl_hmu *hmu;
+> > +	struct device *dev;
+> > +	int rc;
+> > +
+> > +	hmu =3D kzalloc(sizeof(*hmu), GFP_KERNEL);
+> > +	if (!hmu)
+> > +		return -ENOMEM;
+> > +
+> > +	hmu->assoc_id =3D assoc_id;
+> > +	hmu->index =3D index;
+> > +	hmu->base =3D regs->hmu;
+> > +	dev =3D &hmu->dev;
+> > +	device_initialize(dev);
+> > +	device_set_pm_not_required(dev);
+> > +	dev->parent =3D parent;
+> > +	dev->bus =3D &cxl_bus_type;
+> > +	dev->type =3D &cxl_hmu_type;
+> > +	rc =3D dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
+> > +	if (rc)
+> > +		goto err;
+> > +
+> > +	rc =3D device_add(dev);
+> > +	if (rc)
+> > +		goto err;
+> > +
+> > +	return devm_add_action_or_reset(parent, remove_dev, dev);
+> > +
+> > +err:
+> > +	put_device(&hmu->dev);
+> > +	return rc;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
+> > +
+> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > index e1082e749c69..c12afaa6ef98 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map,=
+ struct cxl_pmu_regs *regs)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
+> > =20
+> > +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs=
+ *regs)
+> > +{
+> > +	struct device *dev =3D map->host;
+> > +	resource_size_t phys_addr;
+> > +
+> > +	phys_addr =3D map->resource;
+> > +	regs->hmu =3D devm_cxl_iomap_block(dev, phys_addr, map->max_size); =20
+> I applied CHMU patch on 6.15.0 kernel and I tried to boot the virt with
+> one cxl root port and one device (jic23/cxl-2025-06-10), then the dmesg s=
+hows
+> "Failed to request region 0x10210000-0x1023ffff". I guess it is caused by=
+ the
+> 'map->max_size'(0x30000) is large and the resource has been allocated by =
+CPMU regs.
+> I tried to change it to 0x10000, the hmu_mem0.0 could be created as norma=
+l.
+
+Ah. I was meaning to post an updated version of this series just to fix the
+bug you've hit here but forgot to do so! Sorry about that.
+
+I need to figure out if there is a more elegant way to do this but in meant=
+ime
+here is what I'm carrying on top of these posted series. It's a fairly horr=
+ible
+bit of layering as we need the generic code to know to poke around inside a=
+ temporary
+mapping just to get the size that it should iomap.
+
+=46rom fadffb32ed302dfb6dec4497214e1d3b39450f8b Mon Sep 17 00:00:00 2001
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Thu, 17 Apr 2025 11:02:07 +0100
+Subject: [PATCH] Fix up sizing of CHMU issue
+
+---
+ drivers/cxl/core/regs.c | 16 ++++++++++++++--
+ drivers/cxl/cxlpci.h    |  7 +++++++
+ drivers/cxl/hmu.c       |  6 ------
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 925870c4e494..5ae31696bf8b 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -416,10 +416,22 @@ EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, "CXL");
+ int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *re=
+gs)
+ {
+ 	struct device *dev =3D map->host;
+-	resource_size_t phys_addr;
++	u64 __iomem *poke;
++	u64 common_cap[2];
++	resource_size_t phys_addr, phys_size;
+=20
+ 	phys_addr =3D map->resource;
+-	regs->hmu =3D devm_cxl_iomap_block(dev, phys_addr, map->max_size);
++	/* Finding out the size of a CHMU means poking around inside */
++	poke =3D ioremap(phys_addr, sizeof(common_cap));
++	if (!poke) {
++		return -ENOMEM;
++	}
++	common_cap[0] =3D le64_to_cpu(readq(poke));
++	common_cap[1] =3D le64_to_cpu(readq(poke + 1));
++	iounmap(poke);
++	phys_size =3D FIELD_GET(CHMU_COMMON_CAP0_NUMINST_MSK, common_cap[0]) *
++		FIELD_GET(CHMU_COMMON_CAP1_INSTLEN_MSK, common_cap[1]) + 0x10;
++	regs->hmu =3D devm_cxl_iomap_block(dev, phys_addr, phys_size);
+ 	if (!regs->hmu)
+ 		return -ENOMEM;
+=20
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index f7b902eab288..a91407292aea 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -77,6 +77,13 @@ enum cxl_regloc_type {
+ 	CXL_REGLOC_RBI_TYPES
+ };
+=20
++/* A few CHMU registers are needed to establish size */
++#define CHMU_COMMON_CAP0_REG				0x00
++#define   CHMU_COMMON_CAP0_VER_MSK			GENMASK(3, 0)
++#define   CHMU_COMMON_CAP0_NUMINST_MSK			GENMASK(15, 8)
++#define CHMU_COMMON_CAP1_REG				0x08
++#define   CHMU_COMMON_CAP1_INSTLEN_MSK			GENMASK(15, 0)
++
+ /*
+  * Table Access DOE, CDAT Read Entry Response
+  *
+diff --git a/drivers/cxl/hmu.c b/drivers/cxl/hmu.c
+index 1a7a0f60a6ad..a1953e8750c8 100644
+--- a/drivers/cxl/hmu.c
++++ b/drivers/cxl/hmu.c
+@@ -27,12 +27,6 @@
+ #include "cxl.h"
+ #include "hmu.h"
+=20
+-#define CHMU_COMMON_CAP0_REG				0x00
+-#define   CHMU_COMMON_CAP0_VER_MSK			GENMASK(3, 0)
+-#define   CHMU_COMMON_CAP0_NUMINST_MSK			GENMASK(15, 8)
+-#define CHMU_COMMON_CAP1_REG				0x08
+-#define   CHMU_COMMON_CAP1_INSTLEN_MSK			GENMASK(15, 0)
+-
+ /* Register offsets within instance */
+ #define CHMU_INST0_CAP0_REG				0x00
+ #define   CHMU_INST0_CAP0_MSI_N_MSK			GENMASK(3, 0)
+--=20
+2.48.1
 
 
 
-On 19/06/2025 1:24 am, Ian Rogers wrote:
-> Give some basic perf record callgraph coverage.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/tests/shell/record.sh | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 2022a4f739be..603fa6b79b5d 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
->   . "${shelldir}"/lib/perf_has_symbol.sh
->   
->   testsym="test_loop"
-> +testsym2="brstack"
->   
->   skip_test_missing_symbol ${testsym}
-> +skip_test_missing_symbol ${testsym2}
->   
->   err=0
->   perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> @@ -359,6 +361,23 @@ test_precise_max() {
->     fi
->   }
->   
-> +test_callgraph() {
-> +  echo "Callgraph test"
-> +  if ! perf record -o "${perfdata}" -g perf test -w brstack
-
-Looking at 2dac1f089 ("perf test: Fix 'perf script' tests on s390"), it 
-looks like this won't work there. Although I'm not sure why the fix 
-wasn't to change the default -g mode to dwarf on s390 if fp doesn't work 
-at all. That wouldn't fix -e cpu-clock being required though.
-
-Thanks
-James
+> > +	if (!regs->hmu)
+> > +		return -ENOMEM;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
+> > +
+> >  static int cxl_map_regblock(struct cxl_register_map *map)
+> >  {
+> >  	struct device *host =3D map->host;
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 5406e3ab3d4a..8172bc1f7a8d 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -227,6 +227,9 @@ struct cxl_regs {
+> >  	struct_group_tagged(cxl_pmu_regs, pmu_regs,
+> >  		void __iomem *pmu;
+> >  	);
+> > +	struct_group_tagged(cxl_hmu_regs, hmu_regs,
+> > +		void __iomem *hmu;
+> > +	);
+> > =20
+> >  	/*
+> >  	 * RCH downstream port specific RAS register
+> > @@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_registe=
+r_map *map,
+> >  			   unsigned long map_mask);
+> >  int cxl_map_device_regs(const struct cxl_register_map *map,
+> >  			struct cxl_device_regs *regs);
+> > +int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs=
+ *regs);
+> >  int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs=
+ *regs);
+> > =20
+> >  enum cxl_regloc_type;
+> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> > index 4da07727ab9c..71f5e9620137 100644
+> > --- a/drivers/cxl/cxlpci.h
+> > +++ b/drivers/cxl/cxlpci.h
+> > @@ -67,6 +67,7 @@ enum cxl_regloc_type {
+> >  	CXL_REGLOC_RBI_VIRT,
+> >  	CXL_REGLOC_RBI_MEMDEV,
+> >  	CXL_REGLOC_RBI_PMU,
+> > +	CXL_REGLOC_RBI_HMU,
+> >  	CXL_REGLOC_RBI_TYPES
+> >  };
+> > =20
+> > diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
+> > new file mode 100644
+> > index 000000000000..c4798ed9764b
+> > --- /dev/null
+> > +++ b/drivers/cxl/hmu.h
+> > @@ -0,0 +1,23 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright(c) 2024 Huawei
+> > + * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
+> > + */
+> > +#ifndef CXL_HMU_H
+> > +#define CXL_HMU_H
+> > +#include <linux/device.h>
+> > +
+> > +#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification =
+*/
+> > +struct cxl_hmu {
+> > +	struct device dev;
+> > +	void __iomem *base;
+> > +	int assoc_id;
+> > +	int index;
+> > +};
+> > +
+> > +#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
+> > +struct cxl_hmu_regs;
+> > +int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
+> > +		     int assoc_id, int idx);
+> > +
+> > +#endif
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 188412d45e0d..e89ea9d3f007 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -15,6 +15,7 @@
+> >  #include "cxlmem.h"
+> >  #include "cxlpci.h"
+> >  #include "cxl.h"
+> > +#include "hmu.h"
+> >  #include "pmu.h"
+> > =20
+> >  /**
+> > @@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, cons=
+t struct pci_device_id *id)
+> >  	struct cxl_dev_state *cxlds;
+> >  	struct cxl_register_map map;
+> >  	struct cxl_memdev *cxlmd;
+> > -	int i, rc, pmu_count;
+> > +	int i, rc, hmu_count, pmu_count;
+> >  	bool irq_avail;
+> > =20
+> >  	/*
+> > @@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, con=
+st struct pci_device_id *id)
+> >  		}
+> >  	}
+> > =20
+> > +	hmu_count =3D cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
+> > +	for (i =3D 0; i < hmu_count; i++) {
+> > +		struct cxl_hmu_regs hmu_regs;
+> > +
+> > +		rc =3D cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
+> > +		if (rc) {
+> > +			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
+> > +			break;
+> > +		}
+> > +
+> > +		rc =3D cxl_map_hmu_regs(&map, &hmu_regs);
+> > +		if (rc) {
+> > +			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
+> > +			break;
+> > +		}
+> > +
+> > +		rc =3D devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
+> > +		if (rc) {
+> > +			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> >  	rc =3D cxl_event_config(host_bridge, mds, irq_avail);
+> >  	if (rc)
+> >  		return rc;
+> > --=20
+> > 2.43.0
+> >  =20
+>=20
+>=20
 
