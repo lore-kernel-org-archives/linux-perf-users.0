@@ -1,64 +1,65 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792D22756A
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 11:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E1B28C000
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 13:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750332741; cv=none; b=Nh64WkWNLckoRgwAudgLDBUu2ea3fSGDwHdASwldJvCGy3WJO2rndkEDePbWVFyJexxIbgkpjgdOgrctjCplO1QM3E9GHLPjVVDcf5joSaIt+wqNQhImiss2ve15q/oT8795WVDqf1J3mqzxHfBe8bQh5XbiHjwei8IPiXmudeo=
+	t=1750341222; cv=none; b=vDyyAISiw1zmP5X37vDnw4A+F0c9MwAMUzQsSFNfdrKTJtFosDLPQr6wCwR3vQRclTECBBuB+aBLSPssHBlmaufIm3ihFbEjZGa1Ba9nXxvj76BKS2Obq7l8Coe/cX18eDdBm0VYwD3N99mBLsvg2uDsXVP/UhVtLAUoSHgMqf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750332741; c=relaxed/simple;
-	bh=ril/UTkihH4nxaEpjl5cJ8aM3mZePTAsuV8jcrJvwAQ=;
+	s=arc-20240116; t=1750341222; c=relaxed/simple;
+	bh=lGEQr7xIozKcToOWBqdVePeA2gA+PYgmVqciFyjHdss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dKIR9HjiUTxxoK1iT1emuD2zq9XXZYU0TGK0ANf1HTmVw0LjbXOsxVVkUTTdmAU98WnW3DyglGUMTB1/W8qINlQjb8RLfU8X61ud8WX+nnhIZxybqW0SNgWqw3CA/NUzF6MrsfQvELfqBnh2WNvCP5FTr9APVQzr1F3jtw91zKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XtwWT9FW; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:Content-Type; b=fnunGGR5YL7G0J3kCkKYMYw8RHYQsGn0SN79Gkj/x983r2C6JnN9BwMXgtMAEYtVGPwOkczCQU/tYxU2a0BjGFrburbiWcbQTOpBGKNlq9apba4aQ7Fv4yeNe1AVKPBZFHSyQIq/NkMKZPiQVTxVbUgKGTbHrd5308rOGRV/i88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pmkYfziV; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XtwWT9FW"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so600424f8f.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 04:32:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pmkYfziV"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso7342455e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 06:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750332737; x=1750937537; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750341219; x=1750946019; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4X0rJxof+2GJrC9KukcEIGboMkLQCIpBwzQ5S+QwNnU=;
-        b=XtwWT9FWCVLuCDb6U/teFTRJc3shc/6oJO8QRKcXI/0isdIwol25PRM2J8r+uSuykf
-         daAI234qNdeK47C5KIGcANjFizmrMBzyQjqAr8DIRC0yno6g+fjXmTovD0o+YIvzR+zj
-         fomeJEd+luXQxqBTHRJk5vTiuQLTQ4ZfuldVE4ZJmlgkKOJOvsxxWcIJx7ut5A2Osx6y
-         3usbwlyTO5qJfSgUfFOafHMGGh97CKZam5OoCoaojMOyJbAEooYnzqhZQ8drhEIPTeYH
-         XBHnWdhN3MkPst4QkB5LqEjpIxTb2yma56/7XOQKv3DfY8Xydy4xJAU8OJLrQEGLIQTs
-         lFGQ==
+        bh=ZUU8zhHO6oGWwG9C0mvXT4R6zlzfuKEc2yTbt3ShlNw=;
+        b=pmkYfziVoF5DKKfxTyOKCif088Wri8/+xqsOFv3je4vzQIVVoHrq9jCkoTaIVFfU3j
+         pgHSUv+82o7Q9ki4klBalghSkdY6/MnaZdkhC8PA0i5j0KfY85hzcr7DR4ccLeVuric2
+         Be1SAX+HPUAGEXWwKC7louRH2OvqgYHUz18jmtCKqKfEB/XmU/66BfRDHSNI5Af/fQCj
+         /QINDv+he1E8Jzy6jWc1ySNmYz99pYG9qN4BiZ+oaP9ILr3HyV7rx25zdMU0ifJ/SO/0
+         iN5VrmRsjhJ1DIBIE1lUE0EgsOKckGrTXvUaPiOwI3/TRIZq5vm8pDqsqGodQnB6xlco
+         YXhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750332737; x=1750937537;
+        d=1e100.net; s=20230601; t=1750341219; x=1750946019;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4X0rJxof+2GJrC9KukcEIGboMkLQCIpBwzQ5S+QwNnU=;
-        b=sJTa/KFUReLG/3sVYGOyXCZYGCVdvDcAjRKZjYpXJ9Nrx923/L02Oc2bC9TdmnRTiH
-         wZiwho4zIZPL3vB2eDslpQ4ejJ3I+era0ocXZILy2xc+KYuH8bmKkP9CDPp/To0b8Vsd
-         HdJ4/YsWK2NsD/PYJWKRbKGxnHYCP26N6yzTxm2KE4Gi2EcOv9jh461SpVnFa6TrhI9s
-         vy6ociTw6Vzq5JtTR2/EI7CIcnaPkKdQ5LP3FsKr695gXiKwFPU2BTHQkpUWM8QSOgT6
-         Qu2hx+AGJfX6O1l7vemNFcPLGzG1nmdoybXc5Cicx+cAlw+vKeC1ONOy4n0fDy0Xgxpf
-         nfhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHZSKP45tlbeZdcWwmAHIu3DpU37w7f6GzKu4YXK+hEPBun3+iNQ3zMGAjWWJbD0SRK+epVUQno6rLWsrm/+RE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBcG9+W0Jaf26IvZWY/wHypOtCnPXPQOLSK+wt7bkypqm9REZk
-	BZEZkuCm9eLN2rn1Cewbf26uwyDY9fk5KPVx+Y62/nLs+TjSjqq+2yJ/Nez8RFccXHI=
-X-Gm-Gg: ASbGncsYkwSM55fW0AMoWdHRZR7Jz5QdPYnBPhBQhc9VazujPgzBuNQQ5LLuPAep4dl
-	qX1htsp5M7HGKODX/ck3KijlYjtN9cyAEOXzh78Tsgt0tAufY9FYtvQQ397hzcmcgVnj8MK8BlY
-	FlZ7aV9MOYQ2qZ+Muji77pTZ7Aj/LVu7qKwAjLIziFOUZNKgdyEgiOCJB9Ro1xWiYm4jgczUdXY
-	+/mGLIpZJojnxk8C+xxdgzcriFNxQLNC/mxULTKeV3tP09o44JueKDRGz+Lo4YkvKdDnw22s/09
-	hKb5HZ/PoWUf+5RKGuz5DgF4mKVIrBGjz/f/L9px/rp6Cn7I4PBwU3fpPLy3kmgF3mU=
-X-Google-Smtp-Source: AGHT+IGJVrLHFBFugL14B4WFHZ1t59fWsvRGspwqUSmcgvP8GTGmEKak9VjxtxP8UxFP+FgS9dzCOg==
-X-Received: by 2002:a05:6000:18a4:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a572398df5mr17250936f8f.10.1750332737273;
-        Thu, 19 Jun 2025 04:32:17 -0700 (PDT)
+        bh=ZUU8zhHO6oGWwG9C0mvXT4R6zlzfuKEc2yTbt3ShlNw=;
+        b=IiaiIIzTswkYMRz7GDb3lA2/oIFO2cQN4WCVtgFCKcVrxlTWcwosigA00qa1gBRD5w
+         KoVAKiWjEk3AEhfD2b4fq9M3C9JAkh8Pg64DdUGn8JmR2PzqreViNH2/qs/RWKh+HwL+
+         okIXODwHdMvRRRz7KUA+A7CnMSrGxqx8Y9JvT4o3fBAjFkjGLAd1xPtuRj4nDnsK6YXi
+         R7ZZtaxcTbvZg2bb1F3rrlIBG/mrNJnnlian7QZQ9tIIZnBK8Q24qT2U5nuStiWaDdGq
+         xuAjaM+Jw27wcd8ZWU/o6RRYELdbKMatYKpvmqMR5rkA4fumSF7sogbQG+h9sQdzd1NB
+         651g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJzECKJhgWPZUIZXT1b//fIVWE3coF/SjJGIMnIvxLJJHgM3mshaB1Sq6dRZinCunMYYZwZxJhMiu+KpKEDskk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpoQrInqfK36MmNZIc7FbjU1GZoAq1awGdjZeib5RhLXOJV0v2
+	CcjH48AFm7jx5Ws5Ac5Cpobqlp4+OcxSrJ0TXGgU6FWOONDOj1mkT6Jv95nJPga065CcJWAVq5g
+	YA/KQ
+X-Gm-Gg: ASbGncsoqOBml/dhiNV3ctrWLsXCtasV0zNOB1fVoZHoRWXmX7dl3WZx0zQpyp4vo9u
+	rg1y3V0HnK36WLxB21J+U9SPelcT2DuIc2erdynyPWgIkrMbpJLqxGcMnXSLXhtZlW6xCAzvftI
+	KfMOuwFxJH90jodHgJOucBRrktsNjG3vBb/CyVakQdzxv34moSrXnERVw2vE2BCoVn3ZKKQq5T1
+	vvZAXsnzA4l63TLJBD+HUUvQb7uZORHmLmreN8D/XeAV7cK5w1F61nMmt2mMMqwSRgtJa1ZeJnw
+	muH4rCw28odu+0wsDdWSN80vN7enuq3GhEXon28Xd4KrAudx5IPKyHQNKUcBDXMcxBU=
+X-Google-Smtp-Source: AGHT+IFj4dr7v4Qv8yB+4oBl+szjM3NykRFIgMprDf2uBBkMpXfTY0Dvs/jR/zXiKyHXRq0RFbdEsQ==
+X-Received: by 2002:a05:600c:8b25:b0:44a:b7a3:b95f with SMTP id 5b1f17b1804b1-4533cac9674mr184653545e9.25.1750341218748;
+        Thu, 19 Jun 2025 06:53:38 -0700 (PDT)
 Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089b5sm19043643f8f.48.2025.06.19.04.32.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08a2bsm19906526f8f.62.2025.06.19.06.53.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jun 2025 04:32:16 -0700 (PDT)
-Message-ID: <3431e6e3-a80b-4ce0-94c4-56739a5ed2d9@linaro.org>
-Date: Thu, 19 Jun 2025 12:32:16 +0100
+        Thu, 19 Jun 2025 06:53:38 -0700 (PDT)
+Message-ID: <5c88ba9f-2627-486c-84d1-2a721ff9ffcc@linaro.org>
+Date: Thu, 19 Jun 2025 14:53:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,7 +67,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/12] drivers/perf: arm_spe: Expose events capability
+Subject: Re: [PATCH 03/12] perf arm_spe: Correct setting remote access
 To: Leo Yan <leo.yan@arm.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
@@ -77,74 +78,45 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
  Adrian Hunter <adrian.hunter@intel.com>
 References: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-0-6faecf0a8775@arm.com>
- <20250613-arm_spe_support_hitm_overhead_v1_public-v1-2-6faecf0a8775@arm.com>
+ <20250613-arm_spe_support_hitm_overhead_v1_public-v1-3-6faecf0a8775@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-2-6faecf0a8775@arm.com>
+In-Reply-To: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-3-6faecf0a8775@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 13/06/2025 4:53 pm, Leo Yan wrote:
-> Expose an events entry in the caps folder to inform user space which
-> events are valid.
+> Set the mem_remote field for a remote access to appropriately represent
+> the event.
 > 
+> Fixes: a89dbc9b988f ("perf arm-spe: Set sample's data source field")
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->   drivers/perf/arm_spe_pmu.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
+>   tools/perf/util/arm-spe.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index be2ed326bb794d7e5dd1d6cfa89330753ced3ca5..b59c394b715bc49af0ae30c521f97813a046755d 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -116,6 +116,7 @@ enum arm_spe_pmu_capabilities {
->   	SPE_PMU_CAP_FEAT_MAX,
->   	SPE_PMU_CAP_CNT_SZ = SPE_PMU_CAP_FEAT_MAX,
->   	SPE_PMU_CAP_MIN_IVAL,
-> +	SPE_PMU_CAP_EVENTS,
->   };
->   
->   static int arm_spe_pmu_feat_caps[SPE_PMU_CAP_FEAT_MAX] = {
-> @@ -123,7 +124,7 @@ static int arm_spe_pmu_feat_caps[SPE_PMU_CAP_FEAT_MAX] = {
->   	[SPE_PMU_CAP_ERND]	= SPE_PMU_FEAT_ERND,
->   };
->   
-> -static u32 arm_spe_pmu_cap_get(struct arm_spe_pmu *spe_pmu, int cap)
-> +static u64 arm_spe_pmu_cap_get(struct arm_spe_pmu *spe_pmu, int cap)
->   {
->   	if (cap < SPE_PMU_CAP_FEAT_MAX)
->   		return !!(spe_pmu->features & arm_spe_pmu_feat_caps[cap]);
-> @@ -133,6 +134,8 @@ static u32 arm_spe_pmu_cap_get(struct arm_spe_pmu *spe_pmu, int cap)
->   		return spe_pmu->counter_sz;
->   	case SPE_PMU_CAP_MIN_IVAL:
->   		return spe_pmu->min_period;
-> +	case SPE_PMU_CAP_EVENTS:
-> +		return ~spe_pmu->pmsevfr_res0;
->   	default:
->   		WARN(1, "unknown cap %d\n", cap);
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index d46e0cccac99a36148b4daa37f2bf2342e6b47ef..fdef6f743cf3c76b1dcdd57f5a2c297642fdd21a 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -839,7 +839,7 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
 >   	}
-> @@ -149,7 +152,7 @@ static ssize_t arm_spe_pmu_cap_show(struct device *dev,
->   		container_of(attr, struct dev_ext_attribute, attr);
->   	int cap = (long)ea->var;
 >   
-> -	return sysfs_emit(buf, "%u\n", arm_spe_pmu_cap_get(spe_pmu, cap));
-> +	return sysfs_emit(buf, "%llu\n", arm_spe_pmu_cap_get(spe_pmu, cap));
+>   	if (record->type & ARM_SPE_REMOTE_ACCESS)
+> -		data_src->mem_lvl |= PERF_MEM_LVL_REM_CCE1;
+> +		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+
+Should this not avoid overwriting mem_remote if it's already set by 
+arm_spe__synth_ds()? We do that for mem_lvl above.
+
+We also still set mem_lvl = PERF_MEM_LVL_REM_CCE1 in 
+arm_spe__synth_data_source_common(), if it's not right it should 
+probably be changed there too.
+
 >   }
 >   
->   #define SPE_EXT_ATTR_ENTRY(_name, _func, _var)				\
-> @@ -165,6 +168,7 @@ static struct attribute *arm_spe_pmu_cap_attr[] = {
->   	SPE_CAP_EXT_ATTR_ENTRY(ernd, SPE_PMU_CAP_ERND),
->   	SPE_CAP_EXT_ATTR_ENTRY(count_size, SPE_PMU_CAP_CNT_SZ),
->   	SPE_CAP_EXT_ATTR_ENTRY(min_interval, SPE_PMU_CAP_MIN_IVAL),
-> +	SPE_CAP_EXT_ATTR_ENTRY(events, SPE_PMU_CAP_EVENTS),
-
-Would "event_filters" be a better name? Technically an SPE version can 
-support a filter but the event itself might not be implemented.
-
->   	NULL,
->   };
->   
+>   static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
 > 
 
