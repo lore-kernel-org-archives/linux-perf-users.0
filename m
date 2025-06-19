@@ -1,115 +1,102 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE1B21CC48;
-	Wed, 18 Jun 2025 21:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B21229A0
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Jun 2025 00:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750283934; cv=none; b=nf5kcdXG5vR9Otr01CPAmjqg58IpFcs9VSGNMWNCEMmw/dBAJmJD+3E1+7wZrREjSzUNVk4o/c3hOCE8qyUaWov5brqG+Ehd7jt51sP2j93a7qKVvKs7IkKnKqurjltlVSMJBmqPFdbFOsnjUICVfq7p/kMnzDxgQxZ0xhwDEKA=
+	t=1750292439; cv=none; b=Bvl0r+TJ+unYr8JOYHjT1ZXhbWzCTgHzySBSxvnJ1BzhN0AroEyADDPeDg5T4R5kxwhMrUyyMXAfPKj0+T5qlA6vW1tZiqsX4u/V//M4szRRqpU7cC36beNfN+Gq22EuEWbjZtrZf5M1ufRtkSYLMk8G7wsjtY2DdJJsgntSlEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750283934; c=relaxed/simple;
-	bh=emxcW+J3k7PRwUe3FJjTkLwIkxieiTo6Is+dsiB/uDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ey6CXxYS5d+HDNUjQ6Yi/XOtvPXoQ7U5ahEs0T8bTe6cng2hO0cieyvJkhUFrHr7ecRHMTMBZOGSw3qxOs5JnqKQcpz1d3ejZ3PRTRMZd12iBTNM/EJzHePD+1VXwjA5zPTCbsQhNGZb++m55kLrrmufV9Rf4vpTN6tdZO8r6p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K2El75+2; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750292439; c=relaxed/simple;
+	bh=AGPmAlAQR0g0Mmcs/uRlA5H54exkEzkBJEzy8rKw04U=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=udq7S842gejREavCL6v8K9X/cW2HFu+VeJqSseEoSTvCNf8LKjf7xWC7bCvkNE9P9cIADDD+2UWjjIL0Bd6PEVeuRlSdiVKhjoqIuIhYiDFlrcew/AB7MWwBIzf/HDSVVO1mUeE5SQNvtMxbGf7N3Hmt2BbqxQrQ9HRbCqXfo/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vM16Erip; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2El75+2"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4f379662cso143459f8f.0;
-        Wed, 18 Jun 2025 14:58:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vM16Erip"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235e7550f7bso2258525ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jun 2025 17:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750283931; x=1750888731; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fzsYxTqs35Shcp//MxplQjWLBOX/EFlETm5Fov2W324=;
-        b=K2El75+2MGcwdRHk9Be7BBgcHiDBioV9+PllLpttx0JE+UruA/Z49Ph7NK7gqWJJmy
-         bOfDvsLI3eB1VSziCMyB5AMgnBjiRHsle2uy2LN4mmsd8lX7SwRZHeqDONv3hUZpNkZY
-         X6U4wLWumKge+9qO+BPdW15KDmaqzOFgnsNtrQnMNLxRdDDw7QmhvERh/Zc1cINE6Ako
-         oYMtaIfSdwQQVFLlzoK6HpHtFeKU5fSKt2YK3aEhTWSCnDcs4+JVNKv0O3axImG6Twem
-         NcuaaWseWsY6q2Oddba0MNfrBhSQvEfB3iYF7+opJfBXleFPEVuM0cg377q2M4XSjahn
-         LM9A==
+        d=google.com; s=20230601; t=1750292437; x=1750897237; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kugD/a6Oq01nl8GXZYoQNqMpzVqYE6IP/zMN/oH7VXg=;
+        b=vM16EriprfbO3pBPzC8gV/wMN6AzEKV5zyUtoUmlgTFdQUNOJsvtIQd8fznCBVPRsP
+         SxQy9fRvMdlQelaLr/KQz1JlSMqU7D4zfBcm/yuAaWdqdQGq0NnkoAj0dg4CChW+YAg9
+         IMquENmphD/cEpDtKbFt0NU8bUlsH5UKdgBEFUl3RsCu4iun1hli3RNllypFrp2Uvwxi
+         kPYP4ywPfpJK9Q/nCGNIjJy+cE4k30FxtFmw5Y30+vMJFsHGca5Z56iYxDINen7n4hEZ
+         uX4RKPKfRpNFoBpX7cy8r6aa2WNYT4VyVpn7cKnheus31AMR2SVYdT8dFW1hGhJJZauR
+         pPTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750283931; x=1750888731;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fzsYxTqs35Shcp//MxplQjWLBOX/EFlETm5Fov2W324=;
-        b=KJVs0hDUg8ElVw9WArSpeBxDn8T/2eDTTjYMjot80odxoUPskgwyPF2XlIlXygQu/9
-         nRG5DQtmbvrS4NKTfhNs6aCUdexYO/jfiQqCa1Q++z8tQc4kyBaCgOFOdYDj0sFxd4dM
-         ZmzLryTr5+RPRqKbQhsTTu4CMU5wqxnGHI1iYa+5QYqu0LPIl0rc3zyiKT++VSDhSRXf
-         oR09xUIiVRjzSUnLPZ9EwKYfnp5bXgQYI6pAn5UXfNPdqSObcDnqhsdJIQfKBT4Ypx9i
-         TwiGArzEk/dH2e53hIM3gWyMfmeUbSPKnaEak84oT1HtM1BRgFuJFY0V1Qlm6a9a/zU2
-         TqyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVn8M0bgx4fJI35KGBG4Zkz+mC0IYfyu1BkdjGj2f2hDVTyaqwXiTcy73Z/U+jH4n4FmugEXC4VSZ+E8/LmkjZTYQ==@vger.kernel.org, AJvYcCW4Fg1Qb4ok9Gzb0ikVevY3f6mIPE9E+XRTeIiSVD6BEwThhImlxw8N2D+Q6xZFkT4fQ3eGZtu8DOrMhDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwoQ4cmtfl9zjm5hXuwx4Vw0I/zHi4WbNzKgzLy+Pay+bw0X9c
-	iRHZnQGekPe16TTJsD6TeL4b8X+e8OX9waxmwGbcsdNCw80RHzmBLgL4
-X-Gm-Gg: ASbGncsHcQ/9nT2QVXcNCBOGYaeiqhKWqhDJKw1NA8TZDwDWiWfszitPsstDU87vqEK
-	yBQTmJRzuBbAKS9bjSka/34GcgiOCGKPMpdZg7ytKJsfh5lT0XEJNq355B5le0pYl+XaFIsOQoQ
-	EfwVvAMcFSe6iym4oGLCFh4hv5EhZ7LscbOF/KxioWuWwUtmAGSF8h7wr268VFmdB1Z1HeoX6TS
-	2SGi3efn2XKQraz0YYTSjWmubo2YkvAU96eQbl6YAXLKnkliaCsPLMOitFrmOkWw8ZiFPrOppkG
-	7YPbR8uaAnwQi8Pv+8p+43xlweEB8ufg0TfF0GMD+Q3H616AQ1oYGsBCrxX8e4wOrDA=
-X-Google-Smtp-Source: AGHT+IFh630CQwG00UQgU8iORz2lPAw4P3TWRdrp+AbuHSeVvsA9KtSNfKQv2p2Fpkzdqnc/nk0CvQ==
-X-Received: by 2002:a05:6000:310d:b0:3a4:e7b7:3851 with SMTP id ffacd0b85a97d-3a572e69d13mr16541947f8f.58.1750283930755;
-        Wed, 18 Jun 2025 14:58:50 -0700 (PDT)
-Received: from archlinux ([102.89.69.234])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97a8f2sm8817765e9.5.2025.06.18.14.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 14:58:50 -0700 (PDT)
-From: Usman Akinyemi <usmanakinyemi202@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
-Date: Thu, 19 Jun 2025 03:28:43 +0530
-Message-ID: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
-X-Mailer: git-send-email 2.50.0
+        d=1e100.net; s=20230601; t=1750292437; x=1750897237;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kugD/a6Oq01nl8GXZYoQNqMpzVqYE6IP/zMN/oH7VXg=;
+        b=IDkUj5sX6XGK8H7T47JG7eIdoDBq22mM4/3UF+8bzBFtlbJqAQvHLCFe5l/vSXG0rE
+         OnROXz/TyW+PpHtfAispXdICVyqhZvqNUKlon8BTn2UEJFaDAfYIZRh8INTcGY4HL9Rm
+         4SiWdpCYa2AFH/X1tARX2sQL5pMvsKQ+FaAZASFlX28ZboVOKa3I0QOH1bSVx0Yifz7G
+         6xbrE1IvgDFTBJj/9uWJYZuKxu+OWc0IcbijPEV/DxDn8wShT7xbr0TQN9xOXtjmxKxy
+         4sKheuyMdsrhQGMuD91lxF6INxlcq2/C+gNrMTO9QGva9ek2htxiY9uGHw/ODlCVfTd3
+         iHng==
+X-Forwarded-Encrypted: i=1; AJvYcCXK7ay8PyzAd2DZnf7AZID3lViNf1Z2f5tOQqTRxeZiMjq6m7wGrJVAw7QzFsf7Oz8APKShHXoy2+gjJMvN3Sbj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzoic/Yt84ffGlCK1HuEOm59aAK/fDjgheRYxhZwCue7NfxUWfp
+	0+LZJ4O4Jt06SxrVQysEGwlWI2Gynbmv2RJyksyaLNV+hVMAUVB07mqN8cECDIbtuJ1ZpMru55G
+	2KUh4ylzJzA==
+X-Google-Smtp-Source: AGHT+IGERy6tarH249uCeb/yKQ58f6Hm5kjiwLHJ6bqYeRwQfXtktE4uHhAvK8QAJd7lH/Rs6AjDBVnHwIhp
+X-Received: from plfn14.prod.google.com ([2002:a17:902:e54e:b0:234:a0aa:5b34])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce90:b0:234:bc4e:4eb8
+ with SMTP id d9443c01a7336-2366b19d9a3mr286204475ad.46.1750292437568; Wed, 18
+ Jun 2025 17:20:37 -0700 (PDT)
+Date: Wed, 18 Jun 2025 17:20:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250619002034.97007-1-irogers@google.com>
+Subject: [PATCH v2 1/2] perf test workload noploop: Name the noploop process
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-strncpy() is unsafe for fixed-size binary data as
-it may not NUL-terminate and is deprecated for such
-usage. Since we're copying raw CPUID register values,
-memcpy() is the correct and safe choice.
+Name the noploop process "perf-noploop" so that tests can easily check
+for its existence.
 
-Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/header.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/workloads/noploop.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-index 412977f8aa83..43ba55627817 100644
---- a/tools/perf/arch/x86/util/header.c
-+++ b/tools/perf/arch/x86/util/header.c
-@@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
- 	unsigned int b, c, d;
+diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
+index 940ea5910a84..8b954d466083 100644
+--- a/tools/perf/tests/workloads/noploop.c
++++ b/tools/perf/tests/workloads/noploop.c
+@@ -2,6 +2,8 @@
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <unistd.h>
++#include <linux/prctl.h>
++#include <sys/prctl.h>
+ #include <linux/compiler.h>
+ #include "../tests.h"
  
- 	cpuid(0, 0, lvl, &b, &c, &d);
--	strncpy(&vendor[0], (char *)(&b), 4);
--	strncpy(&vendor[4], (char *)(&d), 4);
--	strncpy(&vendor[8], (char *)(&c), 4);
-+	memcpy(&vendor[0], (char *)(&b), 4);
-+	memcpy(&vendor[4], (char *)(&d), 4);
-+	memcpy(&vendor[8], (char *)(&c), 4);
- 	vendor[12] = '\0';
- }
+@@ -16,6 +18,7 @@ static int noploop(int argc, const char **argv)
+ {
+ 	int sec = 1;
+ 
++	prctl(PR_SET_NAME, "perf-noploop");
+ 	if (argc > 0)
+ 		sec = atoi(argv[0]);
  
 -- 
-2.49.0
+2.50.0.rc2.701.gf1e915cc24-goog
 
