@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5418122154F;
-	Fri, 20 Jun 2025 21:24:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECBB23BD1B;
+	Fri, 20 Jun 2025 21:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750454686; cv=none; b=tksS0gyn1Op6d4QlkPIgIdh1vbxrL+Db04XFZRDS/HG2di+so9r7F3hpQiNfgiIoPVcrBWz0s4MRgQQ820UVFvgnNH4i9kJVhfVntxfJ/mZjN16teZ3w2vZ1nGxkJPz8VZRXOXPnpyGNWoaLAn2o7uiSiY7FiXEOFdDFK1GgXMw=
+	t=1750454689; cv=none; b=FqbSXjVpccuyzmOPRvf97g4gbkc6bbxduE1jWUQ+VP8wWaCTBA+TGrZrZl765lqlBfxq4mCu+lyKsZWzNhVulbHWvl83DquzY624Vt5mjlXGKtwvk1LWKbdae0eBYR+/A09EWXL+56NzmuluegBIPcJI+Vuf4sjo+BDk3PuLvec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750454686; c=relaxed/simple;
-	bh=/hSkjtEDlXrR0ho4M/i5ZK6Ma3bmlxF8RIl+NX9kMEM=;
+	s=arc-20240116; t=1750454689; c=relaxed/simple;
+	bh=hRaUvXX98gJVxK5Cw0IxQPYU+W+hBJ6gZf5zsYiD/KM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=es7zvFGbUAoSPQ7FPW8i7q5ob1JdDhxlszPmbATm1d8C0e3IEupyNLHWPabGnxsgfw/2JIks6IbaVsnQsQklcXprjfAfF/E3VJsGYs5a5kZJU8sOWTNXvO6rxygGKBaKQdI+D3KbfEvcnfiKLJQZVX3p8lAusuA2YKk0DrE+GkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7pOcoC5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eD4Zhc4qascquKflidrqq3rV+uOOZPl86wYrLy3aDfFwFB91K2+mJzQcSEmET1JMvUIEY2dIK4OyvgzKZ/x7uhCcCAzeVXNFak+urscahzum7Uy68hZ6pfRxmrSw4MBAudhPPTd+5vBxGpWk83ja9RFwElmoCZFCmVVcy9QTKdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+cTfwkl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7pOcoC5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CE1FC4CEEE;
-	Fri, 20 Jun 2025 21:24:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+cTfwkl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29A9FC4CEF1;
+	Fri, 20 Jun 2025 21:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750454685;
-	bh=/hSkjtEDlXrR0ho4M/i5ZK6Ma3bmlxF8RIl+NX9kMEM=;
+	s=k20201202; t=1750454688;
+	bh=hRaUvXX98gJVxK5Cw0IxQPYU+W+hBJ6gZf5zsYiD/KM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q7pOcoC5m7YwdeLSvb5VH4YdhDYucn7Ld42fUY49n9wsuMjg+CqV+e179FvQO7UYT
-	 URZ3Nr0Ix0M5BBqQ2a+SVimiQyHvwvjVen0ZJcqbSTME1Ayp7lOVTKWokCfC/t43tA
-	 phEm+qxrmAqpVYxxad7SRppGjI+XKOiESyT8mSswVKxA/WAxDQpEaQYEWTzj/aSxPa
-	 QvwKfTz7WSADCzZGZjGx6GxpxGiz0haX4j/S9Ud5U4bch7dXsYlfUjCP7k4U6Ef+VD
-	 pCAW0DvN5Vz0zu08rok8kBZqf/WwRR6XGnSANGw0nkt1m6i1AlX+px/CM2R/CqncDu
-	 2+ivwWMtM/BzQ==
+	b=C+cTfwklBoCJOhNi0SzOAbQrhy/J8NtetMEMUhR4dYjiAASVHQU3ar3u8w0lPplXT
+	 dncPu+hZ9jbB5NJ9WfS8qbzBjgH4rhth8hSKpilHlWprlZtBjnKtKkJ3GA3BhXgw+e
+	 2DH63GE5laq43gqGJmT+BV7rswHbAa65g2XjcKVp4+xC2Y1+Y6ph26uTzxm4WYHXq1
+	 4er+V6P7AQx1p5elt+JGPdrTBym/pxHvZw9EHEJpPzs7PT07VCLRVJy8WRMKWJ1XCg
+	 ww7j3QymFxd8Zopr7WVed98nIXkLaCA25uMP3p43OUHGNo9RkZCzK2ELkvBWAJTp23
+	 XSYDF8ztigmTw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/3] perf build: Suggest java-latest-openjdk-devel instead of old 1.8.0 one
-Date: Fri, 20 Jun 2025 18:24:33 -0300
-Message-ID: <20250620212435.93846-2-acme@kernel.org>
+Subject: [PATCH 2/3] perf build: Add the libpfm devel fedora package name to the hint
+Date: Fri, 20 Jun 2025 18:24:34 -0300
+Message-ID: <20250620212435.93846-3-acme@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250620212435.93846-1-acme@kernel.org>
 References: <20250620212435.93846-1-acme@kernel.org>
@@ -55,8 +55,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Just tidying up the suggestion to pick the latest and not some specific
-version.
+Just to follow the pattern with other devel packages.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
@@ -71,18 +70,18 @@ Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index d1ea7bf449647eb2..afebd3b1e6cb9f58 100644
+index afebd3b1e6cb9f58..fd03ba83a48ee08b 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -1144,7 +1144,7 @@ ifndef NO_JVMTI
-       endif
-     endif # NO_JVMTI_CMLR
+@@ -1157,7 +1157,7 @@ ifndef NO_LIBPFM4
+     ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
+     $(call detected,CONFIG_LIBPFM4)
    else
--    $(warning No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel)
-+    $(warning No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-latest-openjdk-devel)
-     NO_JVMTI := 1
+-    $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev)
++    $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm-devel or libpfm4-dev)
    endif
  endif
+ 
 -- 
 2.49.0
 
