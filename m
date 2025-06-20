@@ -1,289 +1,100 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB127259CAF
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 22:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0BA210FB;
+	Fri, 20 Jun 2025 22:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750457947; cv=none; b=aXjWKT7rXERdFU3LwAbw9CpOu9jL+VjBn9LnTQ0ueQVYglU9sq8+i73yHmaMZgjjRpphMWBoC2x1K3BWXTh6/tJVWNmRYjuo0ZX6NA2HoDhTmwVGACXylde2sz+ZxNvpc4d67uADYfPdG8Vx0ksG/g0zIdYgC0re4P3NQJlcT+M=
+	t=1750459999; cv=none; b=UDrAgdmgxieV/GphvxLZn48rxJE13NiJzbUGqT8hyJEgbiq4YlWh0QBDdL8msKY2B/jQNOkeXqaPxb3Xb7pDbColoIUlyhxTD09jyX9oSv87CWSGLWHAFXdwQHT1VtTxCm9bbYbD5iFYROcLZswxt4ILWSiDYi59aIlSiMnOMHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750457947; c=relaxed/simple;
-	bh=DzV1iQPyhQYH/07BErYJfalFEt85HaMiwlc8OwgiWrI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NaEqVPZKUXrPd/I98cPBcOB/4HmeRROxD0oZAnxb+Z7K9W6MZAMhL/kcwh4FrAgXw/cqJ4oimNClqmRrTDwO3bN+MFxyEpAVgdjxnHiRddk6FQkvLqrGFLCp0RqvyRKL/dvm3iq0EaBoCASgq0QtxAintsx8JU0qGsF/yEGhxsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qx7ITm54; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1750459999; c=relaxed/simple;
+	bh=qfpCzB4wclc404l7tLJPX7+oneYlSYtlNEt/tGrUK3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q6D1RFgrdMe7OEwYk/C0CPgtr7y6khJ5gT4GhYh/ZkYVI4qnM5gwo47Mw7H23JHSYAPFcftyVhLuqFHVPSrteJxvaW70xTWhquYCS+gevbfKkuuqpbLTe+bhH10E50FZkDeyxra0Zd0Q3BLaVLISPy9v+9n5hhj5+N7xq+MKzy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QYAqO6y6; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qx7ITm54"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso56720205ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 15:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750457943; x=1751062743; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NzRy/DCIVlwO1UeSIhiO63SgndmbkqKBMoPqbIF1wck=;
-        b=Qx7ITm540uwjexD6neLrYrKihQOUxvcZmmJUb2h81mZSu9Jqwq67hE0F1XqiFvl95e
-         yOB4jMstYFSvydfMUfZ7Oxhz/V7C8x121nri++RcnISmmVEZiBKDEb/PLW9s2lr6oi+p
-         ePRzK7d6dj/3GdqD4+4poDtaF9+ebcvKkuqrXNZfXkCBK4TRYEpNdnUpIM3lKWxSyAU5
-         ObQeQ8GoGbcTywhaCnR+U2lLQRoxJz01ZQFIVw9wcAHRyDL2+Lybs+M3iBWJBVkPMn3k
-         ng66S098dcPL3M+G1GINgYLi/n/1cjrf4RK3OB612skTTW7U0NltUcgjqfCDwMN9hiXd
-         nkOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750457943; x=1751062743;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NzRy/DCIVlwO1UeSIhiO63SgndmbkqKBMoPqbIF1wck=;
-        b=DcRLIJQCSuSxAXP1snVdbrsRv4PEIQ64r3NO+dJSiD6qR/bAHHKxW7vRYhFf1jFY1R
-         ca0HVj8/5ll6tr90mSvT5aFSHQQV8pU1r700Ss7aiXdupmG5YqOHFdCOv7EPTndwTv5v
-         0uwdBAanivXWnGqM2dJt8TA/j/Ioqy1z6xZaGW0JeuCNHuoSjRQziphDNYn/NFMli2yV
-         cUDGOpBGTGBhauj1c8GiH6H9zE0uKxvHYm4qgj/twex2kc3PvPRhd2Rr63aYc7d9et8H
-         ZbWwindrFRwQL5ABTNnwwLjML+OzTSay/a8ihTN66ksxoOAcsn5GA87nAB9oOpw3pveC
-         l+JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+VuyrfXediIXvz8lfziK5Ufj6UhMoCSPW0SnbXmPHTPnabvoh7oqEznUs+PpZLSy4RMSAP05UDZ4XBuCXXbSD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd+oVBebuwriK9yTD0t+dCKnYhCz+zlDSUTmngugUGUi8WJRF9
-	b0U5vwLny406Kn6sD1uAawL9sHsx097Yg5/A+nBej/cSYue94XAoGBcwp7FKJoRWSYXIFIAvuyx
-	f+0X4NHqcmpHIVy5MOTOKtA9NTw==
-X-Google-Smtp-Source: AGHT+IGL0FZSPU1ilcGsH+T8e2Jo4op9tS5C/DjCI1eSwz135bo73pLwqVefVkcFUgBxqY2EeJDtp/6Z5o5Ovw5jOw==
-X-Received: from ilbdi5.prod.google.com ([2002:a05:6e02:1f85:b0:3dd:754f:1dc4])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1c2f:b0:3dd:89b0:8e1b with SMTP id e9e14a558f8ab-3de38cbfed7mr58377885ab.15.1750457943154;
- Fri, 20 Jun 2025 15:19:03 -0700 (PDT)
-Date: Fri, 20 Jun 2025 22:13:25 +0000
-In-Reply-To: <20250620221326.1261128-1-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QYAqO6y6"
+Received: from [IPV6:2601:646:8081:9482:8e69:eb66:369f:ca04] ([IPv6:2601:646:8081:9482:8e69:eb66:369f:ca04])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55KMpi3J2670267
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 20 Jun 2025 15:51:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55KMpi3J2670267
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750459906;
+	bh=dHs5e5KPRTLFRZrGk/aD2kqq/TN2P0Xy+dRkjImcTFE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QYAqO6y6FGlEpC2XyzCDh3BoPOBHGwVPtkK5zpOUU7N+eppGdBi7v/I5Lxhdu8C4v
+	 RC+FM7W/vF/DaeY4RJvr4SW2D84Gj2X7BgiVqP5PLU3rk4mBFEMmMVOfWUL1NAE4nk
+	 8HAd7qiejrsoP/0Gd73iRKMD9aZyVVNmvMlzztWl4wBD5JyCp5TBvAJNvigy65wghe
+	 Kf3pA4Ua2Mh+PStAxCtK2AEUfCT1j9cvB9sWLL7F341iJhl2iyTT9UPpyYFP/6dNvW
+	 rbBjZCMjhdqiBOTUQYRpupwqGFVBJtHQzLYPHQ9DpvzpGND4grxSQ8LwPsstBoxyr+
+	 iBY+X4ocXC0BA==
+Message-ID: <7acedeba-9c90-403c-8985-0247981bf2b5@zytor.com>
+Date: Fri, 20 Jun 2025 15:51:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250620221326.1261128-1-coltonlewis@google.com>
-X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250620221326.1261128-26-coltonlewis@google.com>
-Subject: [PATCH v2 23/23] KVM: arm64: selftests: Add test case for partitioned PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Colton Lewis <coltonlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 02/10] x86/fred: Pass event data to the NMI entry point
+ from KVM
+To: Sohil Mehta <sohil.mehta@intel.com>, Xin Li <xin@zytor.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250612214849.3950094-1-sohil.mehta@intel.com>
+ <20250612214849.3950094-3-sohil.mehta@intel.com>
+ <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com>
+ <3281866f-2593-464d-a77e-5893b5e7014f@intel.com>
+ <36374100-0587-47f1-9319-6333f6dfe4db@zytor.com>
+ <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Run separate a test case for a partitioned PMU in vpmu_counter_access.
+On 2025-06-19 15:57, Sohil Mehta wrote:
+> On 6/19/2025 3:45 PM, Xin Li wrote:
+>> On 6/19/2025 3:15 PM, Sohil Mehta wrote:
+>>>
+>>> I want to say that the event data for IRQ has to be zero until the
+>>> architecture changes — Similar to the /* Reserved, must be 0 */ comment
+>>> in asm_fred_entry_from_kvm().
+>>>
+>>
+>> FRED spec says:
+>>
+>> For any other event, the event data are not currently defined and will
+>> be zero until they are.
+>>
+>> So "Event data not defined for IRQ thus 0."
+> 
+> I am fine with this. Not *defined* removes the ambiguity.
+> 
 
-An enum is created specifying whether we are testing the emulated or
-partitioned PMU and all the test functions are modified to take the
-implementation as an argument and make the difference in setup
-appropriately.
+So I was thinking about this, and wonder: how expensive is it to get the 
+event data exit information out of VMX? If it is not very expensive, it 
+would arguably be a good thing to future-proof by fetching that 
+information, even if it is currently always zero.
 
-Because the test should still succeed even if we are on a machine
-where we have the capability but the ioctl fails because the driver
-was never configured properly, use __vcpu_ioctl to avoid checking the
-return code.
-
-Signed-off-by: Colton Lewis <coltonlewis@google.com>
----
- tools/include/uapi/linux/kvm.h                |  2 +
- .../selftests/kvm/arm64/vpmu_counter_access.c | 63 +++++++++++++------
- 2 files changed, 47 insertions(+), 18 deletions(-)
-
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index b6ae8ad8934b..cb72b57b9b6c 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -930,6 +930,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-+#define KVM_CAP_ARM_PARTITION_PMU 242
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1356,6 +1357,7 @@ struct kvm_vfio_spapr_tce {
- #define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
- /* Memory Encryption Commands */
- #define KVM_MEMORY_ENCRYPT_OP      _IOWR(KVMIO, 0xba, unsigned long)
-+#define KVM_ARM_PARTITION_PMU	_IOWR(KVMIO, 0xce, u8)
- 
- struct kvm_enc_region {
- 	__u64 addr;
-diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-index f16b3b27e32e..93259b73de7c 100644
---- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-@@ -25,6 +25,16 @@
- /* The cycle counter bit position that's common among the PMU registers */
- #define ARMV8_PMU_CYCLE_IDX		31
- 
-+enum pmu_impl {
-+	EMULATED,
-+	PARTITIONED
-+};
-+
-+const char *pmu_impl_str[] = {
-+	"Emulated",
-+	"Partitioned"
-+};
-+
- struct vpmu_vm {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-@@ -405,7 +415,7 @@ static void guest_code(uint64_t expected_pmcr_n)
- }
- 
- /* Create a VM that has one vCPU with PMUv3 configured. */
--static void create_vpmu_vm(void *guest_code)
-+static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
- {
- 	struct kvm_vcpu_init init;
- 	uint8_t pmuver, ec;
-@@ -419,6 +429,7 @@ static void create_vpmu_vm(void *guest_code)
- 		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
- 		.attr = KVM_ARM_VCPU_PMU_V3_INIT,
- 	};
-+	bool partition = impl;
- 
- 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
- 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-@@ -449,6 +460,9 @@ static void create_vpmu_vm(void *guest_code)
- 	/* Initialize vPMU */
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		__vcpu_ioctl(vpmu_vm.vcpu, KVM_ARM_PARTITION_PMU, &partition);
- }
- 
- static void destroy_vpmu_vm(void)
-@@ -475,12 +489,12 @@ static void run_vcpu(struct kvm_vcpu *vcpu, uint64_t pmcr_n)
- 	}
- }
- 
--static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-+static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, enum pmu_impl impl, bool expect_fail)
- {
- 	struct kvm_vcpu *vcpu;
- 	uint64_t pmcr, pmcr_orig;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	pmcr_orig = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
-@@ -508,7 +522,7 @@ static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
-  * and run the test.
-  */
--static void run_access_test(uint64_t pmcr_n)
-+static void run_access_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	uint64_t sp;
- 	struct kvm_vcpu *vcpu;
-@@ -516,7 +530,7 @@ static void run_access_test(uint64_t pmcr_n)
- 
- 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	/* Save the initial sp to restore them later to run the guest again */
-@@ -529,6 +543,7 @@ static void run_access_test(uint64_t pmcr_n)
- 	 * check if PMCR_EL0.N is preserved.
- 	 */
- 	vm_ioctl(vpmu_vm.vm, KVM_ARM_PREFERRED_TARGET, &init);
-+
- 	init.features[0] |= (1 << KVM_ARM_VCPU_PMU_V3);
- 	aarch64_vcpu_setup(vcpu, &init);
- 	vcpu_init_descriptor_tables(vcpu);
-@@ -550,14 +565,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
-  * Create a VM, and check if KVM handles the userspace accesses of
-  * the PMU register sets in @validity_check_reg_sets[] correctly.
-  */
--static void run_pmregs_validity_test(uint64_t pmcr_n)
-+static void run_pmregs_validity_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	int i;
- 	struct kvm_vcpu *vcpu;
- 	uint64_t set_reg_id, clr_reg_id, reg_val;
- 	uint64_t valid_counters_mask, max_counters_mask;
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	valid_counters_mask = get_counters_mask(pmcr_n);
-@@ -607,11 +622,11 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
-  * the vCPU to @pmcr_n, which is larger than the host value.
-  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
-  */
--static void run_error_test(uint64_t pmcr_n)
-+static void run_error_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
--	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
-+	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, true);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, true);
- 	destroy_vpmu_vm();
- }
- 
-@@ -619,30 +634,42 @@ static void run_error_test(uint64_t pmcr_n)
-  * Return the default number of implemented PMU event counters excluding
-  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
-  */
--static uint64_t get_pmcr_n_limit(void)
-+static uint64_t get_pmcr_n_limit(enum pmu_impl impl)
- {
- 	uint64_t pmcr;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
- 	destroy_vpmu_vm();
- 	return get_pmcr_n(pmcr);
- }
- 
--int main(void)
-+void test_pmu(enum pmu_impl impl)
- {
- 	uint64_t i, pmcr_n;
- 
--	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
-+
-+	pmcr_n = get_pmcr_n_limit(impl);
-+	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
- 
--	pmcr_n = get_pmcr_n_limit();
- 	for (i = 0; i <= pmcr_n; i++) {
--		run_access_test(i);
--		run_pmregs_validity_test(i);
-+		run_access_test(i, impl);
-+		run_pmregs_validity_test(i, impl);
- 	}
- 
- 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
--		run_error_test(i);
-+		run_error_test(i, impl);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+
-+	test_pmu(EMULATED);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		test_pmu(PARTITIONED);
- 
- 	return 0;
- }
--- 
-2.50.0.714.g196bf9f422-goog
+	-hpa
 
