@@ -1,115 +1,109 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA6D2E172A;
-	Fri, 20 Jun 2025 17:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F002EA16A
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 17:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750441220; cv=none; b=lUFuEZc6P4ANlL46VGOwL5GON6m7YlW4sYCDMD9x07ObWFpnQuTFzbCIxktD65KtyJNoxsSyNbRrVsuXY1ukuC+F3xN4z8+DQh2CbIB8DB2IOAUleJIDWRUAwtnJeGogcFT/vt22/4zPcUgh/o1XccHNbPtAWJnCgJy2wScEkeY=
+	t=1750441246; cv=none; b=GFtxK15mdgIYmbTIQdP7uZ5/qxYgMhPw+tFjn7qKJNYXNQJ5OIWvjshA99/ql1q/s/rfbG2i2TxWnIf33EuvPVy4knBzGCK1xcaR/jAtFnP+aiAX+XGd5G/kx3ELG78OMhKP24KSQWyLSD49ajYpQ+iLN1TToMDSaApLDTUvws4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750441220; c=relaxed/simple;
-	bh=OFWh618G+nN07dN1ddt6LCLr4FaHIYMhHdZ5Tjd6XVs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oCtECwBKwWzAY74ZHGOJCLU70n0U1yx52BELXE1/yKvxV/jcVU4KvUeD59wFV17jVwDYuUBLmzo7DOoV34l2gckng0WmdEI0CaHbCh/KJinwYu6B5rbsfpolsFIrc3TWuY9MpE63hURM6fQeZg5I6T1pRGGCj1oltHUf+UczDek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fic3Qe6F; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750441246; c=relaxed/simple;
+	bh=t8gN8BSzphkAW0QD/TlbFY2nTXHFMLr/Gq3m0QI9RqE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eS5rjfqjA+/GEs8P9OU8or1xkVeDQqxeRty0aDiaMwNRsVPS4IeTtU+PkFZJSjOzM4XsuUBFFXlOyI/pzsjZRGK+/APgynEbbCJfExaLHZH1FIGWfks6IDbzV/ymhLmz1yh0R1UGG0tWjajV85kNmvnF3Bb/1qaFjnOz2uxApyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NLi2R1s7; arc=none smtp.client-ip=209.85.161.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fic3Qe6F"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so1658709a12.3;
-        Fri, 20 Jun 2025 10:40:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NLi2R1s7"
+Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-6114701c4d2so1855540eaf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 10:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750441218; x=1751046018; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lrfa6f95rsQz82Z0z+vddrx+mjnxXRUvG8Wd94yuAao=;
-        b=fic3Qe6Fq67WdkVw3WQ752xp1hoPPjkCPv8TBrjl83Oak4Wf6eaY+wO0tcNPsOnRq8
-         RGCvdl+r7oTxGh+vBC/kSBpT9OK9wja5nvbSo+by63M6GAz/GB8ny8OdHaztUcoc8dtW
-         ktrpKr6emB852kLrZqRrp6eOXNofFVosURznpfQFUQUO4HktNJGeLe59gj4m9fyf61bk
-         IAyLryTdSuqDw05XVCf/MDsgvSAd7dGSUrUubv5tlCd+5t0dx6siHpMusB86ra6d/uXs
-         tWXzxxXwgX0zSNPXNB52LPYD/tX5l51PNffU2o0ZzuiQzmztdfeEE55h7cv50DpMveuZ
-         EC9Q==
+        d=google.com; s=20230601; t=1750441244; x=1751046044; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Z5IAXZsKuFDuoJG1qfWh85k6atVC8+rtB/SA3HapoHs=;
+        b=NLi2R1s7s4YZUFha+BC3uVwByA1vg392Roak6KPoEBw8ciU7lYkfT+Cozp4BZHYVq1
+         OlIa0YaiZ2oEIiruWUbkbs+/21xm5v0uVAJ3GV3QvYMmWSqnprQU0D3zm9sM7/uA6ZPC
+         nw8pb7q3lQ04pqykA7I+62Dxb/AMm7KCiSBxdRe2qf+4lzj2h7ZlkKj8vcqBWY8/ZBvD
+         iC1/V6ocnFoxgICmHPvkHO1BYsyi0ppmspWyDlSYVChRdMc+nmr5ULdazJDLGoGLRCVx
+         MvRURMlJEPsBxpnIB74BgMWGA+UHw2Pxro7eXlDfxIijrmZ7SR5+1ZU8MXtOASSzt5OA
+         i6Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750441218; x=1751046018;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lrfa6f95rsQz82Z0z+vddrx+mjnxXRUvG8Wd94yuAao=;
-        b=naJErinFWvmQxViXKoLQJ+5L8ctsrOtA+khaJAcOm+5aHvsXz9omxVRiQTfCOdadVR
-         jJMfD46wAjVIhOJ9kKdV7qyLrTfcx/YD9QlIYdMYuyhNM6+my2CGQTF3LaFqhKFuZgIE
-         Mpgm6OVbGHkqu8bqAAJE7pBiSbMLgKnGB+L0kvjrPhhuxpfgvbnvXkTS56vl+9PnDdhu
-         8D01sVVpdBoFoE9PorwCGEgAxoC/qatUUsjNC33r/5Ig0cGwqhtukJE7HwtCvAD6MTXM
-         BpEF1/f/19DBuACTv5BweZmAZVgslj5X5tSwVi0IDmuidXyjXyoLE8QPzp4PyXZhULrx
-         Wwsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9oY/rsdxBBEKv+2Ze8XS4Jf4eGniU7xZfeF+jkBGxJLKikeD2NqkI7XYI46VYT6UJj02yOgWNEKKHfaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoBie9A+uXlFZ7SqO4pI7PIkf5DgZnHDQS9llTZRS7anr1qcKF
-	u/5UIFfrydKptDMgeiOi6G1n3X/Qbgx/dVeTH6nwhcULGPez3fYldGIn
-X-Gm-Gg: ASbGncu0cgqdH6Iw7pnm/cIV/rwKBLEAi8ov1ypkEBeIkBFwm1xCkts6780gB3bi60l
-	aoyALFL0PKo4RzOFG4Zd/XkZSs8FKLRVpS2dE/MAVMBkfD9wE5FKQygc1GEXEMwSLeO7QbtUAXi
-	67hwSdbf9AuSVzE0PRWs1Ol/7a5zvxiaNqa3tLOk2Yuu/hJjCyOz+ivx9obc9pb43fIpY1WwsKu
-	AVXsYutRE5GbEh6m3xlXwNgz8is2PYfigxjOzlEf75EkJJNFAr3r8TMGwVzKeHWLvxdZ7Nf4j/l
-	Q7ES0pH2YaHT00iXVjlQArUYZS64VNR1LdBdkRPhpp9ys2LT9f45BQ==
-X-Google-Smtp-Source: AGHT+IE4pfEDuK4NvUg+ry5Rf4DYRoJ1U08Eu4uDQ0aEWXtK0+oZFw8hbBiESznwSJ4Y+sDyrsFZJg==
-X-Received: by 2002:a17:90b:5690:b0:312:f0d0:bc4 with SMTP id 98e67ed59e1d1-3159d626112mr5266787a91.5.1750441217907;
-        Fri, 20 Jun 2025 10:40:17 -0700 (PDT)
-Received: from fedora ([2601:646:8081:3770::15bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ce860sm22864805ad.65.2025.06.20.10.40.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 10:40:17 -0700 (PDT)
-From: Collin Funk <collin.funk1@gmail.com>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org,  Peter
- Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Arnaldo
- Carvalho de Melo <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,
-  Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>,  Ian Rogers <irogers@google.com>,  Adrian Hunter
- <adrian.hunter@intel.com>,  "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash
- dialect.
-In-Reply-To: <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
-References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
-	<20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
-Date: Fri, 20 Jun 2025 10:40:15 -0700
-Message-ID: <874iwa71mo.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        d=1e100.net; s=20230601; t=1750441244; x=1751046044;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z5IAXZsKuFDuoJG1qfWh85k6atVC8+rtB/SA3HapoHs=;
+        b=hYqaSo6sxFu8M5txxk8/UPmbAD4QBSuH3Bzuy6dEwREhGFU4g6KvKi4Z52gGEQ4DIH
+         FUtyka4Vreg0p9fHou6/o09eetnUuoEI1TT/uzWZYVDJnMEaT8XKWa57JjG2k1a28RwA
+         dQr79YzMJpGeDIEZ5rdCyuUIAicpargNdcMc8yD48R6NeRb5uLQF8SoVtg8zytoLni7U
+         fpSNddJVNpal0f8fvGoqRHQ/OmrMkh2B1KQxbJL2tNfXVP2Q94KOlN2O8fx0+V9vsL+2
+         pNRIEGkWsmpmDjZD5GzBMHAUriA3lBAHZoW+UrigyzYUmvcG0cPtSwDvM2hug/YVSVLT
+         pN9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUltODOPQEo0hJFMohMJP5EBbo/6JtGLIPaPdXfcExpHd5aOd/MrCuL0GfRxOC/wAgi21X7O8fhw2aUT7BxBTch@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdG1LGl2+3vu2Nx+n8EzG2ZnAfBkWBK7v1InI//SnMPjWrvXsZ
+	tOi2F2rWAt9ERCryUhu1NDmU3Ry6nXQUrYCWdVmcQNkQS67VaJP2v+ymwvSH+Vpo4SL4R4A7uXQ
+	R7VAlsg==
+X-Google-Smtp-Source: AGHT+IF5ieJyxM2jpeX8ReeQCqqYbc2omjzhKC3iAdcOfEZPgq49LzyPKkUyU/UM5XjMtO8PvFh2R0DiQE0=
+X-Received: from oabuw9.prod.google.com ([2002:a05:6870:ae89:b0:2b8:ed65:d4c7])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:6387:b0:2d6:241:aed5
+ with SMTP id 586e51a60fabf-2eeee89c171mr2521624fac.26.1750441243845; Fri, 20
+ Jun 2025 10:40:43 -0700 (PDT)
+Date: Fri, 20 Jun 2025 10:40:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250620174034.819894-1-ctshao@google.com>
+Subject: [PATCH v1] perf test: Replace grep perl regexp with awk
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: wy.shih90@gmail.com, Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
+	tmricht@linux.ibm.com, leo.yan@arm.com, atrajeev@linux.vnet.ibm.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi James,
+perl is not universal on all machines and should be replaced with awk,
+which is much more common.
 
-James Clark <james.clark@linaro.org> writes:
+Before:
+  $ perf test "probe libc's inet_pton & backtrace it with ping" -v
+  --- start ---
+  test child forked, pid 145431
+  grep: Perl matching not supported in a --disable-perl-regexp build
 
-> If we're enforcing bash style with static analysis shouldn't we also
-> change all the hashbangs to bash? Recently there have been changes to
-> change sh to bash in some of the tests so presumably the hard rule for
-> sh is no more?
->
-> In the past I've had to replace bashisms that didn't work in sh but it
-> would be nice to have only one language to write tests in. I doubt
-> anyone running the tests today is running somewhere without bash, or
-> that changing it will break anything. If anything it will fix more
-> bashisms that have already been written.
->
-> Just for reference there are 34 #!/bin/bash and 42 #!/bin/sh in
-> tools/perf/tests
+  FAIL: could not add event
+  ---- end(-1) ----
+  121: probe libc's inet_pton & backtrace it with ping                 : FAILED!
+After:
+  $ perf test "probe libc's inet_pton & backtrace it with ping" -v
+  121: probe libc's inet_pton & backtrace it with ping                 : Ok
 
-That sounds reasonable to me. Writing portable shell is a hassle and if
-we already assume a working /bin/bash in some places, I don't see a
-reason not to use it for the others.
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Regarding this patch, shellcheck will use the file extension or shebang
-only if it does not find a 'shell' directive in a .shellcheckrc. So that
-change will still require this patch.
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index c4bab5b5cc59..aaa5ee06ae18 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -23,7 +23,8 @@ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
+ add_libc_inet_pton_event() {
 
-I saw it was used in other places, so I assumed this patch was fine:
+ 	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
+-			grep -P -o "$event_pattern(?=[[:space:]]\(on inet_pton in $libc\))")
++			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
++			("\\(on inet_pton in " l "\\)") {print $1}')
 
-$ find tools/perf -name Build | xargs grep bash
-tools/perf/Build:	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-tools/perf/trace/beauty/Build:	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+ 	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
+ 		printf "FAIL: could not add event\n"
+--
+2.50.0.rc2.701.gf1e915cc24-goog
 
-Collin
