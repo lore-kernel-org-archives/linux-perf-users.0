@@ -1,109 +1,134 @@
-Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F002EA16A
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 17:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68962F2733;
+	Fri, 20 Jun 2025 17:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750441246; cv=none; b=GFtxK15mdgIYmbTIQdP7uZ5/qxYgMhPw+tFjn7qKJNYXNQJ5OIWvjshA99/ql1q/s/rfbG2i2TxWnIf33EuvPVy4knBzGCK1xcaR/jAtFnP+aiAX+XGd5G/kx3ELG78OMhKP24KSQWyLSD49ajYpQ+iLN1TToMDSaApLDTUvws4=
+	t=1750441554; cv=none; b=Pa8brITB+G8nA/WI17RDWJf/FcfTGZDg41OH9oRpB86v7dAQo22242fECVt2AdkVqgblGTTUfBRtsYMPpoS3og577957NkpD7Kpmv0sVuaXMiwu6CRpssilSoC+ubGEvEd9AYbH5rZG1GZihW//y3O+nOrBZ2le+yAYd8FyFgzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750441246; c=relaxed/simple;
-	bh=t8gN8BSzphkAW0QD/TlbFY2nTXHFMLr/Gq3m0QI9RqE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=eS5rjfqjA+/GEs8P9OU8or1xkVeDQqxeRty0aDiaMwNRsVPS4IeTtU+PkFZJSjOzM4XsuUBFFXlOyI/pzsjZRGK+/APgynEbbCJfExaLHZH1FIGWfks6IDbzV/ymhLmz1yh0R1UGG0tWjajV85kNmvnF3Bb/1qaFjnOz2uxApyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NLi2R1s7; arc=none smtp.client-ip=209.85.161.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1750441554; c=relaxed/simple;
+	bh=Q5xcuc5LpUVIJp7rJ+mvTGK/9L6VUKk8iNuSXuyBZpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gvnFjkdJZHWT+kI5vxLSN9hVHR6mhwnEvN5xvP8GIhsVRgKXKsId/KSl0+J67f5m6cn9B9U9aweEVPblqQ4saKzzzq0/GM7HUevtvvdOX3PBjYrBqBs/aK570ofKkpKRzV+cZSezVohP4tML2vyPUVovrKp1rl/0PIwMvnAZGq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hRnmX8U4; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NLi2R1s7"
-Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-6114701c4d2so1855540eaf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 10:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750441244; x=1751046044; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z5IAXZsKuFDuoJG1qfWh85k6atVC8+rtB/SA3HapoHs=;
-        b=NLi2R1s7s4YZUFha+BC3uVwByA1vg392Roak6KPoEBw8ciU7lYkfT+Cozp4BZHYVq1
-         OlIa0YaiZ2oEIiruWUbkbs+/21xm5v0uVAJ3GV3QvYMmWSqnprQU0D3zm9sM7/uA6ZPC
-         nw8pb7q3lQ04pqykA7I+62Dxb/AMm7KCiSBxdRe2qf+4lzj2h7ZlkKj8vcqBWY8/ZBvD
-         iC1/V6ocnFoxgICmHPvkHO1BYsyi0ppmspWyDlSYVChRdMc+nmr5ULdazJDLGoGLRCVx
-         MvRURMlJEPsBxpnIB74BgMWGA+UHw2Pxro7eXlDfxIijrmZ7SR5+1ZU8MXtOASSzt5OA
-         i6Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750441244; x=1751046044;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5IAXZsKuFDuoJG1qfWh85k6atVC8+rtB/SA3HapoHs=;
-        b=hYqaSo6sxFu8M5txxk8/UPmbAD4QBSuH3Bzuy6dEwREhGFU4g6KvKi4Z52gGEQ4DIH
-         FUtyka4Vreg0p9fHou6/o09eetnUuoEI1TT/uzWZYVDJnMEaT8XKWa57JjG2k1a28RwA
-         dQr79YzMJpGeDIEZ5rdCyuUIAicpargNdcMc8yD48R6NeRb5uLQF8SoVtg8zytoLni7U
-         fpSNddJVNpal0f8fvGoqRHQ/OmrMkh2B1KQxbJL2tNfXVP2Q94KOlN2O8fx0+V9vsL+2
-         pNRIEGkWsmpmDjZD5GzBMHAUriA3lBAHZoW+UrigyzYUmvcG0cPtSwDvM2hug/YVSVLT
-         pN9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUltODOPQEo0hJFMohMJP5EBbo/6JtGLIPaPdXfcExpHd5aOd/MrCuL0GfRxOC/wAgi21X7O8fhw2aUT7BxBTch@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdG1LGl2+3vu2Nx+n8EzG2ZnAfBkWBK7v1InI//SnMPjWrvXsZ
-	tOi2F2rWAt9ERCryUhu1NDmU3Ry6nXQUrYCWdVmcQNkQS67VaJP2v+ymwvSH+Vpo4SL4R4A7uXQ
-	R7VAlsg==
-X-Google-Smtp-Source: AGHT+IF5ieJyxM2jpeX8ReeQCqqYbc2omjzhKC3iAdcOfEZPgq49LzyPKkUyU/UM5XjMtO8PvFh2R0DiQE0=
-X-Received: from oabuw9.prod.google.com ([2002:a05:6870:ae89:b0:2b8:ed65:d4c7])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:6387:b0:2d6:241:aed5
- with SMTP id 586e51a60fabf-2eeee89c171mr2521624fac.26.1750441243845; Fri, 20
- Jun 2025 10:40:43 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:40:09 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hRnmX8U4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750441553; x=1781977553;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Q5xcuc5LpUVIJp7rJ+mvTGK/9L6VUKk8iNuSXuyBZpQ=;
+  b=hRnmX8U4EZ8LOdNWF58qAP8rkCJ/6IflhS6aajYO1CYyPxoxo/LO4fi4
+   OTFpwb40fn42bnZW0ZdsvdJDZxMpEjeYYuYFIUlztF+gLPGrziDxA/LKv
+   lJK/mrvXt/RCFETgaEoGttYAyF+5MnlMbxjfg0HQ+3zCke/a0QHEDRXND
+   gbdHRhkpjnxOnF5hVADE1T3cW5QxpGATl7tRpUXCqPAq6B1YCWg8KEvfJ
+   Pqv5B4WNuXU8j1/eZXo2Bjh+dFoD2WDvawlbfC6GflKfh8LmVnmivtTKs
+   IFER70x1TwlCZhjJvLy4NN/cXRkWfyUWFmVKpTGY5m1/6a+pOY9LywwkI
+   A==;
+X-CSE-ConnectionGUID: HQvVh0i7T6uxDqmZvAC6+w==
+X-CSE-MsgGUID: 23iN9X3vTyePkb5ft0OtTQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51829067"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="51829067"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:45:52 -0700
+X-CSE-ConnectionGUID: ih5UK2r6Tu68RTd+c9HBSw==
+X-CSE-MsgGUID: uZhv6h3ZQsOyY1fiai1NUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="151272219"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 10:45:52 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id A10EB20B5736;
+	Fri, 20 Jun 2025 10:45:50 -0700 (PDT)
+Message-ID: <bbdb6e1a-546a-4ed9-9d91-8d334fd5cc7b@linux.intel.com>
+Date: Fri, 20 Jun 2025 13:45:49 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250620174034.819894-1-ctshao@google.com>
-Subject: [PATCH v1] perf test: Replace grep perl regexp with awk
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: wy.shih90@gmail.com, Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
-	tmricht@linux.ibm.com, leo.yan@arm.com, atrajeev@linux.vnet.ibm.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix unchecked PEBS_ENABLE MSR access
+ error
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Vince Weaver <vincent.weaver@maine.edu>, stable@vger.kernel.org
+References: <20250620110406.3782402-1-kan.liang@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250620110406.3782402-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-perl is not universal on all machines and should be replaced with awk,
-which is much more common.
+Hi Peter and Ingo,
 
-Before:
-  $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-  --- start ---
-  test child forked, pid 145431
-  grep: Perl matching not supported in a --disable-perl-regexp build
+On 2025-06-20 7:04 a.m., kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> perf_fuzzzer reported an unchecked MSR access error.
+> 
+> [12646.001692] unchecked MSR access error: WRMSR to 0x3f1
+> (tried to write 0x0001000000000001) at
+> rIP: 0xffffffffa98932af (native_write_msr+0xf/0x20)
+> [12646.001698] Call Trace:
+> [12646.001700]  <TASK>
+> [12646.001700]  intel_pmu_pebs_enable_all+0x2c/0x40
+> [12646.001703]  intel_pmu_enable_all+0xe/0x20
+> [12646.001705]  ctx_resched+0x227/0x280
+> [12646.001708]  event_function+0x8f/0xd0
+> 
+> Thank Vince very much for providing a small reproducible test case.
+> https://lore.kernel.org/lkml/d12d4300-9926-5e58-6515-a53cb5c7bee0@maine.edu/
+> 
+> The error is because perf mistakenly creates a precise Topdown perf
+> metrics event, INTEL_TD_METRIC_RETIRING, which uses the idx 48
+> internally.
+> The Topdown perf metrics events never be a precise event (PEBS). Any
+> illegal creation should be filtered out by the intel_pmu_hw_config.
+> However, the is_available_metric_event() failed to detect the Topdown
+> perf metrics event. The filter is not applied.
+> 
+> To detect an event, the pure event encoding should be used, rather than
+> the whole event->attr.config. Only check the pure event encoding in
+> is_available_metric_event.
+> 
+> Fixes: 1ab5f235c176 ("perf/x86/intel: Filter unsupported Topdown metrics event")
+> Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+> Closes: https://lore.kernel.org/lkml/14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: stable@vger.kernel.org
 
-  FAIL: could not add event
-  ---- end(-1) ----
-  121: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-After:
-  $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-  121: probe libc's inet_pton & backtrace it with ping                 : Ok
+Please also apply the tested-by from Vince if the patch looks good to you.
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+https://lore.kernel.org/lkml/5a53490f-d4ec-85f7-4175-e148e02c3e67@maine.edu/
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index c4bab5b5cc59..aaa5ee06ae18 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -23,7 +23,8 @@ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
- add_libc_inet_pton_event() {
-
- 	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
--			grep -P -o "$event_pattern(?=[[:space:]]\(on inet_pton in $libc\))")
-+			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
-+			("\\(on inet_pton in " l "\\)") {print $1}')
-
- 	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
- 		printf "FAIL: could not add event\n"
---
-2.50.0.rc2.701.gf1e915cc24-goog
+Thanks,
+Kan> ---
+>  arch/x86/events/intel/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 8f2e36ad89db..bf5ca4cb232b 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4082,7 +4082,7 @@ static int core_pmu_hw_config(struct perf_event *event)
+>  static bool is_available_metric_event(struct perf_event *event)
+>  {
+>  	return is_metric_event(event) &&
+> -		event->attr.config <= INTEL_TD_METRIC_AVAILABLE_MAX;
+> +	       (event->attr.config & INTEL_ARCH_EVENT_MASK) <= INTEL_TD_METRIC_AVAILABLE_MAX;
+>  }
+>  
+>  static inline bool is_mem_loads_event(struct perf_event *event)
 
