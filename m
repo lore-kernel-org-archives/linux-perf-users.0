@@ -1,66 +1,64 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69C27FD5D
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 10:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E6020F091
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 10:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750415225; cv=none; b=lbOQlPIcnEU5uBVc+maB05pPpCbAt38qVwzQ/Bo6zSll8udIaHQFbJpgnhho6X73S0kbgrgDL9ZkumQHHkcGvzYZQ8WoDC3DS+IXiNJI63CNsxiGszzF07OeD7YEvhVrD4Um+wQQBZmmaEMQDNDaeaf45bX1gZwe/QJR5Yzg5BY=
+	t=1750415424; cv=none; b=PEh2VKZ6d2+K+Jja2PMykGsE4uuvC1AwET18RSx8+Zk/FlN67W/qPuAuS/WBy7sZkbGf/+Z8r3D/H205CPCM3KKFzWOUujERwms8q5JdxYOc1kfxUmqDINVVgxo9sYTbBFe+7n3Y5faI1qSUVUqoCcHcYmD7an/uKrG8V4MyO3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750415225; c=relaxed/simple;
-	bh=ieRzSVDs9M8jOoIoKfVPa4CmmscQ0oJ9ejkM+pC3ols=;
+	s=arc-20240116; t=1750415424; c=relaxed/simple;
+	bh=v9XkdxlZiQ3qLaKdypdipmAgfKC66yCBgSHHWmVnZU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bQcBFt/j8eIosJZjChyHeTyodNXAeJMl88E6p52eJWlFN1yZwq2uQad6MZOV4CB4ybpGswZbYkxgUc0DrT5hRkhs6uWg5wfeTos9XgqZ/bvaRQUY9NVT6IMrkuhzpjmE6bfV3CKbERab5Sh2InHwwHVtdWlBRLi7w5tMOA0lkwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PbRS2Mq4; arc=none smtp.client-ip=209.85.221.51
+	 In-Reply-To:Content-Type; b=GljCL1FmjDuUq0ar76ucEunFPeyn1CQZzdD4GGEma1GzHqrwJKuyQU/zdC6WggoHZhDm6MdfmSOB2xqtXGPFcgyBAb8+CakxnVFIkJtnsz2wrzhqfaorGNyXkcKXHYVcRu7l60F1vTVKiRxmKx7ntaOjMMCHnSLhCu348AVAqfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B2UeHbZ8; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbRS2Mq4"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4f379662cso1499362f8f.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 03:27:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2UeHbZ8"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so18268445e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 03:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750415222; x=1751020022; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750415420; x=1751020220; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9ffg0iXEA2G0pgrfFnPLVJ/IivgD9mYBR14NIBm41Bw=;
-        b=PbRS2Mq44Gc90zyFMpofrkllQ5snQ3vjYgqLLgmV2QubdaICt+QsnnCD+0MkqI9g7J
-         Cl6th8p+3J6+CUs5z3912IJ1zBtYJ2HTfFvR+962r/yunJwE/F09qrlFyMZaqk6GXPs4
-         SGIdidC3TSfGQ7jYEpyGZRjcP6YReBkvA3m04mvolyhg6gSIArIneK8Iazr1XDzUMglS
-         9nPvuUcO6leZ7tn3XEEpWjkkl1VzCdfQYk86xS07nN4MA8WuiRcrFevWxublf+vFX7ty
-         ss6KYs75Gleb/3KJxljzW0FdH290Tz4mOcDxbIN0KoesK062SjurtPEgxt07IdnZv1RQ
-         jM6g==
+        bh=fR2JiKduz29SihBHyUhqzOKWWeUFFTMa8sDNsxCND9o=;
+        b=B2UeHbZ81Yyt1ghI7vlmNzg+yEq0kld48GaPjOzIvFMvdpOq7Pu+hJq0qXck3H57vt
+         X6Vk7vplioL+LyiCCSNcdJcwlBBVWTkZmWID/Asp4YBBQyp6N49xrcW5+f0bAp1Xwaqa
+         gJQFUtfBcGYjQoFJuLeqPc1go8FTXovDM+4N7BWYYAqVrJB3Ti44UrwaZWR6v2AzHmg6
+         eRbEF8SoYF4WGxD8h4Rf/P2q3vzlRbJg+Ut+X9ZyWjxw3V47xocm/NqQf5PKJ59mNLuh
+         G0vEVqhw0nAdqHLGXyPGbnKHXuDncc+hyG/UpiKTGkVALFNxoe8cBmzqDnG+FwrOgCVy
+         gRQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750415222; x=1751020022;
+        d=1e100.net; s=20230601; t=1750415420; x=1751020220;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ffg0iXEA2G0pgrfFnPLVJ/IivgD9mYBR14NIBm41Bw=;
-        b=wL1McYefmB9xsYOq1dOJCbKv3Ag0Ri+Ir3phtPlrV0nAeLbGBqQNiVmJJOqCBx2pic
-         PUM/FmCbV2/wMP+q/E4lJ4a/uehU4ubY0bF6xNKJwnpJzN2cekGkVygZq0PRh49OwVSS
-         Wx0RHCwnXF+gVD/iSPkD6O4JmQ+atwuOdQ0Gg8QnmtitBMqr/kSjfD32mhQp9cII4CDq
-         +LeRX5TqnbWi6J0aSPf+LB77YJhjhOVnFfND9ejrUZOvE/yybCJIihpUV4HHChfDMG1H
-         GP3NZYTIJUWBtDZTHjTwLSgWfGLRVpEuBZgYd774cJ0ufqN7I4CElqXADEPMn6VoUJMu
-         xUiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPbkJP4cq4mSv1u3hKTf7OS6mcgrfRYaSpsa9G++GLgIT77fELd7d++n0mA9W4/Tz+mLlrJGXBL3YEpz4EiM7I@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5lqiaq4o5NtyDjBBVSZJcM3Oy2NSZ5g/CBS33HkG1oaR/v5oA
-	MS8OvDwj/SjSCPUpc7Au1KzPZmBBG3gDVUxFCs3qcAjvBpx1nARJiysMGRoz842qOrpOkkrwoWZ
-	KmRlA
-X-Gm-Gg: ASbGncuj7EIwGennlAvYW4E3vZUcx8Na71Pv1rB8UKB+tVREXlTnz91vb6avOYbvDiy
-	T33F+cBAE1htpxmDXfImvd1kqaVQwtaLiIvsfEMFcgbTjrc4TQpkylbXj7Z4yKuj8gdwoQjXgzE
-	6SrrRfkNtCdsoSPHNTaB5ac2ossGrpap7mBcjy5VpUY3gSS7t3Dyft/YvxXdco2xeXAw/+mJiO4
-	nA+wp7jsRDldfqAOYjtA6ykv69TbbTcPvho5s8/Z6L1nYCVahmjyo4dC34eBqAbSMejRiRT62q0
-	GQzxRlZAFXXv9RC8+mUiaauQU9271+zLRzj5A5E5GCirvLpWlwijyNXIS2a8Zszm4FQU2lKkJaF
-	gIw==
-X-Google-Smtp-Source: AGHT+IHE8BSpoZxO7KuVCVXUe3qb6bi6sj1JXY7eEQFY8+4LrfXFVw++FIBjk+kGTF27zg9cp2n8Jg==
-X-Received: by 2002:a05:6000:4906:b0:3a4:f661:c3e0 with SMTP id ffacd0b85a97d-3a6d12e6a3emr1737494f8f.45.1750415222121;
-        Fri, 20 Jun 2025 03:27:02 -0700 (PDT)
+        bh=fR2JiKduz29SihBHyUhqzOKWWeUFFTMa8sDNsxCND9o=;
+        b=gDbCwjgd/mwaF0n5gCe8YeGxUEvj8rGhh2HcLWdN5iWP2TcemHNdEhhlWk1cWc2L1I
+         zZG5ijz0iB5W/73+PLRk7Ogg6RGGh5PAaPolQnZWL1OmJZU1aRlT58TZMy4tLTCsMNoW
+         WUrVK4ndXOCSZAnI8bLgfqFoVmv4CvJeXyafl9Dfvkjjmcc/36cPVRsNePj8JvIZ/Ty3
+         Oo+aOmyq4LlpPIguJjL1dCMtNuNg4Cn3vcFCwoCgXM/gIa9baVXvmjXEheC8wB+gtWEh
+         dtM/rYlYINGT9pmWOgjcG6fdiOykXctl3WkDNxq2zpemkrwvt5/nj5g2dTft8WLKYbnt
+         G1zA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOOl1tWwVQ5wHYK9GtX4dFcTLL8yJcLY1Pby+xaR4Pv8pZmVmMmZg4bRJQohMorv70tN9V7H2DrH1dxEC5Tbd2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLcAGzBMaFv4C6ayX4DU9EN/hSWPIqXxo+ffhy4fROETyWrxrI
+	pAy7/AI6W/NLw0wLEu4z2SJuIQNUgzQ7YT1pG9Pm26NX1vkAY7Xi18wNv2PgYXI/YoU=
+X-Gm-Gg: ASbGnctXmzQUEhDjQYQOYtP3OMJqALGJluZTbKEmDGR1Wldw98FoqREJg4A5fbxmm7d
+	SsqcvQz6Yiv8NpsUCNwZVTRxZFjKBRho41/z7kPhfYge3jCaifsXrX6BdFaKE4AQ8QCtlO21KFB
+	dfGllJJV2CcxSTbuVzEyTOF9aYP9v0iGTOL199FMRGiIW1iXHesfyVU+HQ7dVL2hJCEiQ0+ZM2v
+	S3DJK58IFyMs+c9DSK412rDeQ/ZGT88ppPH95YTErSu4fBlPB8PYHQUCulpcSzkhPQMZFLkSR6I
+	Hze6ol4cd8fO30MI8ZASThhGkFjU5FKSGEqQ8Cdh3oTV1kLM4VR7bu1QPvpB6SSGQrg=
+X-Google-Smtp-Source: AGHT+IGrcCthqm0ioH86WkDuKawZp+7l51060VVgntKbeJZgzMtH2dkN5uKRibR7xMjW8qMY6Mo5bg==
+X-Received: by 2002:a05:600c:871b:b0:453:ec2:c7b2 with SMTP id 5b1f17b1804b1-45365e3dfc0mr17238275e9.7.1750415420300;
+        Fri, 20 Jun 2025 03:30:20 -0700 (PDT)
 Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364705748sm20361355e9.28.2025.06.20.03.27.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470415csm20680135e9.31.2025.06.20.03.30.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 03:27:01 -0700 (PDT)
-Message-ID: <4d96e0a9-23af-4fdc-b5a2-945b258c45cf@linaro.org>
-Date: Fri, 20 Jun 2025 11:27:00 +0100
+        Fri, 20 Jun 2025 03:30:19 -0700 (PDT)
+Message-ID: <3ede12b2-7d70-4e8d-8d6c-694c53d19098@linaro.org>
+Date: Fri, 20 Jun 2025 11:30:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,7 +66,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/12] perf arm_spe: Refine memory level filling
+Subject: Re: [PATCH 08/12] perf arm_spe: Separate setting of memory levels for
+ loads and stores
 To: Leo Yan <leo.yan@arm.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
@@ -79,82 +78,104 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
  Adrian Hunter <adrian.hunter@intel.com>
 References: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-0-6faecf0a8775@arm.com>
- <20250613-arm_spe_support_hitm_overhead_v1_public-v1-7-6faecf0a8775@arm.com>
+ <20250613-arm_spe_support_hitm_overhead_v1_public-v1-8-6faecf0a8775@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-7-6faecf0a8775@arm.com>
+In-Reply-To: <20250613-arm_spe_support_hitm_overhead_v1_public-v1-8-6faecf0a8775@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 13/06/2025 4:53 pm, Leo Yan wrote:
-> This commit introduces macros for detecting cache level and cache miss.
+> For a load hit, the lowest-level cache reflects the latency of fetching
+> a data. Otherwise, the highest-level cache involved in refilling
+> indicates the overhead caused by a load.
 > 
-> Populates the 'mem_lvl_num' field which is a later added attribute for
-> representing memory level. Set NA ("not available") to memory levels if
-> memory hierarchy info is absent.
+> Store operations remain unchanged to keep the descending order when
+> iterating through cache levels.
+> 
+> Split into two functions: one is for setting memory levels for loads and
+> another for stores.
 > 
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 
 > ---
->   tools/perf/util/arm-spe.c | 32 +++++++++++++++++++++-----------
->   1 file changed, 21 insertions(+), 11 deletions(-)
+>   tools/perf/util/arm-spe.c | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 43 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 55b8391990467c8b7818bb63de3545d94d021bb7..b2296cd025382ea36820641164ec71b13a4e7a0e 100644
+> index b2296cd025382ea36820641164ec71b13a4e7a0e..8f18af7336db53b00b450eb4299feee350d0ecb9 100644
 > --- a/tools/perf/util/arm-spe.c
 > +++ b/tools/perf/util/arm-spe.c
-> @@ -39,6 +39,15 @@
+> @@ -45,6 +45,9 @@
+>   #define arm_spe_is_cache_level(type, lvl) \
+>   	((type) & ARM_SPE_CACHE_EVENT(lvl))
 >   
->   #define is_ldst_op(op)		(!!((op) & ARM_SPE_OP_LDST))
+> +#define arm_spe_is_cache_hit(type, lvl) \
+> +	(((type) & ARM_SPE_CACHE_EVENT(lvl)) == ARM_SPE_##lvl##_ACCESS)
+> +
+>   #define arm_spe_is_cache_miss(type, lvl) \
+>   	((type) & ARM_SPE_##lvl##_MISS)
 >   
-> +#define ARM_SPE_CACHE_EVENT(lvl) \
-> +	(ARM_SPE_##lvl##_ACCESS | ARM_SPE_##lvl##_MISS)
-> +
-> +#define arm_spe_is_cache_level(type, lvl) \
-> +	((type) & ARM_SPE_CACHE_EVENT(lvl))
-> +
-> +#define arm_spe_is_cache_miss(type, lvl) \
-> +	((type) & ARM_SPE_##lvl##_MISS)
-> +
->   struct arm_spe {
->   	struct auxtrace			auxtrace;
->   	struct auxtrace_queues		queues;
-> @@ -822,20 +831,21 @@ static const struct data_source_handle data_source_handles[] = {
->   static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
->   					union perf_mem_data_src *data_src)
->   {
-> -	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
-> +	if (arm_spe_is_cache_level(record->type, LLC)) {
->   		data_src->mem_lvl = PERF_MEM_LVL_L3;
-> -
-> -		if (record->type & ARM_SPE_LLC_MISS)
-> -			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
-> -		else
-> -			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
-> -	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
-> +		data_src->mem_lvl |= arm_spe_is_cache_miss(record->type, LLC) ?
-> +				     PERF_MEM_LVL_MISS : PERF_MEM_LVL_HIT;
+> @@ -828,9 +831,38 @@ static const struct data_source_handle data_source_handles[] = {
+>   	DS(hisi_hip_ds_encoding_cpus, data_source_hisi_hip),
+>   };
+>   
+> -static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+> -					union perf_mem_data_src *data_src)
+> +static void arm_spe__synth_ld_memory_level(const struct arm_spe_record *record,
+> +					   union perf_mem_data_src *data_src)
+> +{
+> +	/*
+> +	 * To find a cache hit, search in ascending order from the lower level
+> +	 * caches to the higher level caches. This reflects the best scenario
+> +	 * for a cache hit.
+> +	 */
+> +	if (arm_spe_is_cache_hit(record->type, L1D)) {
+> +		data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
+> +	} else if (arm_spe_is_cache_hit(record->type, LLC)) {
+> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
 > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
-> +	} else if (arm_spe_is_cache_level(record->type, L1D)) {
->   		data_src->mem_lvl = PERF_MEM_LVL_L1;
-> +		data_src->mem_lvl |= arm_spe_is_cache_miss(record->type, L1D) ?
-> +				     PERF_MEM_LVL_MISS : PERF_MEM_LVL_HIT;
+> +	/*
+> +	 * To find a cache miss, search in descending order from the higher
+> +	 * level cache to the lower level cache. This represents the worst
+> +	 * scenario for a cache miss.
+> +	 */
+> +	} else if (arm_spe_is_cache_miss(record->type, LLC)) {
+> +		data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_MISS;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
+> +	} else if (arm_spe_is_cache_miss(record->type, L1D)) {
+> +		data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_MISS;
 > +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
 > +	}
->   
-> -		if (record->type & ARM_SPE_L1D_MISS)
-> -			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
-> -		else
-> -			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
-> +	if (!data_src->mem_lvl) {
-> +		data_src->mem_lvl = PERF_MEM_LVL_NA;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_NA;
+> +}
+> +
+> +static void arm_spe__synth_st_memory_level(const struct arm_spe_record *record,
+> +					   union perf_mem_data_src *data_src)
+>   {
+> +	/* Record the greatest level info for a store operation. */
+>   	if (arm_spe_is_cache_level(record->type, LLC)) {
+>   		data_src->mem_lvl = PERF_MEM_LVL_L3;
+>   		data_src->mem_lvl |= arm_spe_is_cache_miss(record->type, LLC) ?
+> @@ -842,6 +874,15 @@ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+>   				     PERF_MEM_LVL_MISS : PERF_MEM_LVL_HIT;
+>   		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
 >   	}
+> +}
+> +
+> +static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+> +					union perf_mem_data_src *data_src)
+> +{
+> +	if (data_src->mem_op == PERF_MEM_OP_LOAD)
+> +		arm_spe__synth_ld_memory_level(record, data_src);
+> +	if (data_src->mem_op == PERF_MEM_OP_STORE)
+> +		arm_spe__synth_st_memory_level(record, data_src);
 >   
->   	if (record->type & ARM_SPE_REMOTE_ACCESS)
+>   	if (!data_src->mem_lvl) {
+>   		data_src->mem_lvl = PERF_MEM_LVL_NA;
 > 
 
