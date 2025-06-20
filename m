@@ -1,55 +1,55 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5C023AB94
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 22:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EE523C8C9
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 22:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750457921; cv=none; b=ZS5YVBnVmGjnmeCg8lu1xLlxpZbVkJ+HvVJMxmajUyVRJAEsOc3HeNjqnQQV+2N7DsOW3FOJmzjYF+Dp9Z2TX+m65kRhUJeiNUsqvNo0Be8rpU7YMtnphmwc+vQtbZwtpHVHVC1aSnLYNqz76gOkJwNMcMvnpdbcZ6Cm6vfdirA=
+	t=1750457922; cv=none; b=pbebpS+nj8OIEAI0OGMNGBOt8sjWcOyCNE9tCiOJCo4ZaKK0op+jjs2auKID35JT4ApTpT58rViTKanYuIs5eNzA3EOC+iwGYh7rOeOfMWUCHbXlw0j+SO7P8D9ZiXJA84TpvPfmMTArGtNPXOlrS7puWWL5oJZxHCrwfqGLbQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750457921; c=relaxed/simple;
-	bh=YIYZtYXjjIDG79viwi+LeCOmjCYAMmr9a5RXDPHvUQE=;
+	s=arc-20240116; t=1750457922; c=relaxed/simple;
+	bh=hEI+Ws5Ed4T0XYMyDeyGmT0ZhHqtHUDKeUxZmkH++E0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DYThnqHNDxT74+vbj7t6eBNafBm5yfgFyUpsMFIgbQc9MuhsXvRD4VqVP87Qlj+2pG6mFCj60XmWJqpJ9J1YQMK4N8um+kllQJZ++qSbnCSqjvtAKG5jZOTZuttyhZd2rp9mruMQQNiBNLjQw6QvUEA9bRG7NgsN3ULe3e+ZE1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aHCn46JH; arc=none smtp.client-ip=209.85.166.202
+	 To:Cc:Content-Type; b=AY/YFlDzIqOBhd+l/DYG9wVLJ/ANCL3IOLCbIvZxOmPyuz07UQxrYeOfljvjhWNRHSfJzpXta5P99UfvGA+4y+feT8MpE3CifPAKOZggeUwiyOVOF057cLHIVgE2rd71p1+Xmwe2eh2glbUXcoFgmnum15+BhS0fWdK8N4iEdEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BJpAyO/B; arc=none smtp.client-ip=209.85.166.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aHCn46JH"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so23345265ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 15:18:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BJpAyO/B"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3ddd97c04f4so31195695ab.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 15:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20230601; t=1750457919; x=1751062719; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fp13SX1Zh+VZLmNtKrEzp/HCcjo4sCQKHBsJF62MnBU=;
-        b=aHCn46JHfXsAqDl847ItrCxJPstp8TmNfe8t9PridE3GUcukpZ5flqpGgdAC46nTRQ
-         81OVXEi6Q+WzaujLcYAhuK+5tB/1gTb38YGfUp/9UwCTQ7v48VxjRqO7kD6yxUt86gXR
-         4ojD7u5Xr6AxLl2zf1TrCgPuXi+yE5jRPS5/lugjK42hCSPKG8qgcZVzmw/jTGEn7jf5
-         1SWhN8cMLnbcLUL5zhKRu+jY7X0UNqmYospW6nrxqcY1Q98P1u0R142QTszPuzRORBsG
-         IRGEBiMw/aRsW1y3dNuV4+hYpf9/MBOo/b8lHVTV1W+FzUdZBV9152/GT+oOH3E2/6la
-         Uvhg==
+        bh=tzpL3Ld7f3Wg7N4Mr5qllGNQ06XKr05fHXYYgZEl88s=;
+        b=BJpAyO/BtidrS4k3gtcxF0or8fzizr8Vz9hZeEeiJYHA55yAh419X4bhab/XKH/5mB
+         nUB83IBqajn29noD1PY/k3oLa2fORyHziD2wlBBQjAM8ob9lrGdGjIYoSUQlI23gDJj1
+         wDY16PKaPpH7PQYTUikCzVi8Wl6JcqON+9frJ6AOtNZMkDbg4Ll30xG1kelIWdOWwXiK
+         +dNDtVVuWJaf3vPQkPKv7bwLEmB+TxlPew538h06TuxYXDZo8BdFI8YFOenanmnGbZJB
+         1NGElBTA2caOAkGifvt/qQQFeR5NIL+pa6FlXBLLTwKuz1iOXN2PNGRufnKY8SuB88jy
+         pFHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750457919; x=1751062719;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fp13SX1Zh+VZLmNtKrEzp/HCcjo4sCQKHBsJF62MnBU=;
-        b=Hn2tXHGw3w4wRDVW5VJmT/iqCODtbametDzBHngxaPtOzI4FfmGZBRJQ7I6jbU8mk1
-         2nXo5Zm5lc/x6U6g0Gc7y7d0o6ORWggc9AbOZ+BrcK2KQrdTpfp6YhHEzs2g8+k0ZLHS
-         4lL5nrTzpWbYBLH+Hr2oK0/1v4O0xBDIXr/0/jKM62bYmuitu1M+UcM/bW8Qq900qabI
-         qjVQAMFRfd28FUHGHUMQJ6zQg1VoyAk+MuwZFGentqqGGQU7F6quiCGVaV4YZD6Ur7IE
-         D/ikgu1WXbc+BLDv6qzp8uO9V4Xv5eGnm8BKdaaRVf+RZoowWQBCHEoSwOMoIGcLTRzM
-         tTAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUk1EuaOhwJ4SbTyfqcE8+tufYdsGSVrQ9PM6LKP/LgOUd0vbRyDqKF8tnnr4FTuuaLf8861n1gMCyS5BoaawZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwebosGgTpMcS8JFUvtNt4Vem0jaU00p+Q04QdHHpFIKHAeR7+W
-	aXa7oX+o+Cj4S/zoAp3yRsEBCusA4/tOCehLDM25AKUppA+B3S7yx4HY6HCGoQIT7CGDkVFORUP
-	77Fyv3qpZAMumX34lrR7lxNyCCw==
-X-Google-Smtp-Source: AGHT+IFEidHFMEbKk2OynEjRQvMLrVqFymZV1Kh1vRLY6IT0l2lygB4TWhQMZfNIZL6xIAJ9fHhQZ3Bjc4iSkEbXjw==
-X-Received: from ilbcp10.prod.google.com ([2002:a05:6e02:398a:b0:3dc:756a:e520])
+        bh=tzpL3Ld7f3Wg7N4Mr5qllGNQ06XKr05fHXYYgZEl88s=;
+        b=m5KI4ku2t+Pve3raW+FfFwiTCNN67la6uJ0gchGMKu5S7N+tUuOuCoy4NHB/Lx5izh
+         N/ckq9T+0EpyX09L63fdJJoY1i9uOcD/2707EvT20giBomYfNdjLJWpIFDrZuCmE+y39
+         EAhAO+UfF2tVUcgOTkHb3wS69wtngKpsCZObU9x3Kx/868yrojD0BWuJlp/mLhBp/VMX
+         dDRD53gW2+e1B1bQOewQqkEfoGc22/Zm9Xqtu6jj8Mdh5pDbvzTUM14exOPbwE0yQrSj
+         jYni0tQ9gRZ++tXaMQRgW+VM4Q9eGhzj57dswy25ipeBC7cF01kHUarZyhxVFLjEzg5c
+         o7rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEOGvM/7XGgxmEW1D3L4rDCeexefuv2fNVgOrVgUFeRsUQLWRJDxo2KEjmWcqw4rxInIUxeFLnCoyGo6pT6Dkr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKXNm7AFUeglQbZoJwbuG8VC5h/YbsW3j9gxVguQADiKfsHhvc
+	zs1MyEYBON3IzYEf/U8pDmbsICkMf9x8Po7uJkoe9mzp3+cY9bF5x+3aTBWV8U3AhYK20lY4Y5p
+	qNHFLfWVt36DdMblDB+31o8S81Q==
+X-Google-Smtp-Source: AGHT+IGe+i459NmOZi236cX8Bur8HwnWegO6n5YG8V2oQ3pdTXQJfj8y4MrKY8v3FuSI+vF/XixyV2nwOspzfQufmQ==
+X-Received: from ilbea3.prod.google.com ([2002:a05:6e02:4503:b0:3dd:d24f:26bc])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:3782:b0:3dc:7fa4:834 with SMTP id e9e14a558f8ab-3de38cb06a0mr47968995ab.15.1750457918713;
- Fri, 20 Jun 2025 15:18:38 -0700 (PDT)
-Date: Fri, 20 Jun 2025 22:13:03 +0000
+ 2002:a92:cd83:0:b0:3dd:cdea:8f85 with SMTP id e9e14a558f8ab-3de38cc7adbmr52345645ab.20.1750457919574;
+ Fri, 20 Jun 2025 15:18:39 -0700 (PDT)
+Date: Fri, 20 Jun 2025 22:13:04 +0000
 In-Reply-To: <20250620221326.1261128-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250620221326.1261128-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250620221326.1261128-4-coltonlewis@google.com>
-Subject: [PATCH v2 03/23] arm64: cpufeature: Add cpucap for PMICNTR
+Message-ID: <20250620221326.1261128-5-coltonlewis@google.com>
+Subject: [PATCH v2 04/23] arm64: Define PMI{CNTR,FILTR}_EL0 as undef_access
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -74,45 +74,28 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a cpucap for FEAT_PMUv3_PMICNTR, meaning there is a dedicated
-instruction counter as well as the cycle counter.
+Because KVM isn't fully prepared to support these yet even though the
+host PMUv3 driver does, define them as undef_access for now.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- arch/arm64/kernel/cpufeature.c | 7 +++++++
- arch/arm64/tools/cpucaps       | 1 +
- 2 files changed, 8 insertions(+)
+ arch/arm64/kvm/sys_regs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 278294fdc97d..85dea9714928 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2904,6 +2904,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_cpuid_feature,
- 		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
- 	},
-+	{
-+		.desc = "PMU Dedicated Instruction Counter",
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.capability = ARM64_HAS_PMICNTR,
-+		.matches = has_cpuid_feature,
-+		ARM64_CPUID_FIELDS(ID_AA64DFR1_EL1, PMICNTR, IMP)
-+	},
- #ifdef CONFIG_ARM64_SME
- 	{
- 		.desc = "Scalable Matrix Extension",
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index 5b196ba21629..6dd72fcdd612 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -47,6 +47,7 @@ HAS_LSE_ATOMICS
- HAS_MOPS
- HAS_NESTED_VIRT
- HAS_PAN
-+HAS_PMICNTR
- HAS_PMUV3
- HAS_S1PIE
- HAS_S1POE
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 76c2f0da821f..99fdbe174202 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -3092,6 +3092,9 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 	{ SYS_DESC(SYS_SVCR), undef_access, reset_val, SVCR, 0, .visibility = sme_visibility  },
+ 	{ SYS_DESC(SYS_FPMR), undef_access, reset_val, FPMR, 0, .visibility = fp8_visibility },
+ 
++	{ SYS_DESC(SYS_PMICNTR_EL0), undef_access },
++	{ SYS_DESC(SYS_PMICFILTR_EL0), undef_access },
++
+ 	{ PMU_SYS_REG(PMCR_EL0), .access = access_pmcr, .reset = reset_pmcr,
+ 	  .reg = PMCR_EL0, .get_user = get_pmcr, .set_user = set_pmcr },
+ 	{ PMU_SYS_REG(PMCNTENSET_EL0),
 -- 
 2.50.0.714.g196bf9f422-goog
 
