@@ -1,106 +1,165 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10501AD3E0;
-	Fri, 20 Jun 2025 02:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3260530E85C;
+	Fri, 20 Jun 2025 07:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750387091; cv=none; b=OyjtMCSvR4ElAauypvkktf5UVI20IWQ73VPQTpwcxfsOfDmAu3BGiGohdmuStd0EhKRC8Kh3fm9DK3mwCUszGtI+t9Vuctf2nK2rtLPCDfMcjJbBH/gAmO1tA3Nh/KgtnpqufrFFUfhW+jH3h1TnV5NT2S8T99FG//OToIHmfkQ=
+	t=1750404549; cv=none; b=Di2e53BeTtoXsNlFAH1EWTwmI9i+P35LXBF8nc5nE+nr3fiSrfEvBRgxJXzc4PX6hqJcWpY96pd7GjA5lJPhUQCF/p8F/zm9kg66EnMpGik/4QrMY8CbsZvKMR36O7Tg0w5ofe4Mk+LkRYa7YdLj2rZZrEdqPWvxwsWlvd5UqDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750387091; c=relaxed/simple;
-	bh=fsZnJU1w1z46E3qLipe6bpoW4jfwsbT+X4NrfdnBgoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I54oSRk4egL4y2PkcUQIGmHQE+EycoSjZeF1pm4CBgC3IcNj/Pbhz9J8LbtIJZnCVPpog+5gpZVFd6A46vMd7YmzCe5vA6CqCc1xiD+DxJexYeHh/uUZJAFGk/lErMSyfduqIH+s+sZUpT3UBvj8ixNNzKeErbjD2VNUaCxwDvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 956289424d7f11f0b29709d653e92f7d-20250620
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:e97684ff-5996-4b3d-8a3b-bee2b959daa4,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:6493067,CLOUDID:8fd8625ecb253af8884fa45b9a63201d,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
-	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 956289424d7f11f0b29709d653e92f7d-20250620
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <tanze@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1170090808; Fri, 20 Jun 2025 10:38:01 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id D8AE016001A02;
-	Fri, 20 Jun 2025 10:38:00 +0800 (CST)
-X-ns-mid: postfix-6854C988-691806657
-Received: from localhost.localdomain (unknown [10.42.12.96])
-	by node4.com.cn (NSMail) with ESMTPA id 2FBC416001CC7;
-	Fri, 20 Jun 2025 02:38:00 +0000 (UTC)
-From: tanze <tanze@kylinos.cn>
-To: peterz@infradead.org,
-	kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	tanze <tanze@kylinos.cn>
-Subject: [PATCH v3] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
-Date: Fri, 20 Jun 2025 10:37:57 +0800
-Message-Id: <20250620023757.1429898-1-tanze@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
-References: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
+	s=arc-20240116; t=1750404549; c=relaxed/simple;
+	bh=rX4dGrsbLq3FgPw/2yOAdvSoS8IhBEmeFaDDof+YduA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N4ZEWLUEYzYQ8+uBEMJ8wAVjhKeM/druIZRM4PbZ7bnP1uBTnDWtdGgkHBUCTbklCG1LnofwZXzNZETXujxUdcZIk9/wwsKBpSFuX3LyNnl283zTPWbLHK/6UFU5fABc+WocAL8PL8gdUEh062GjxUgBeq7rK4K6z3hJkaWDDpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVAxzzDY; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVAxzzDY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750404548; x=1781940548;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rX4dGrsbLq3FgPw/2yOAdvSoS8IhBEmeFaDDof+YduA=;
+  b=HVAxzzDYoM/rLwc0fHAdfB5j8Zc5SC8k4YqfQGAiDyP/qbEO8Z2xX67J
+   JdTQSSN1rJW5njH27GY1gNA74GIfwicAFQxGwj+zRu9uyMgWYmQT1zXOj
+   16b5FFnHvVNIF74gZPWEC64IgubzHGPVb/HhGfjXj+dFekjWJeYXSdSbH
+   Di9C9uQ333CtjlNEtyQRrtROd9eyWx1VS/SzLAYSGvoDRRNX1dSdtkkVn
+   lcVKw6sUkY6z0LGLZhNi5bqsf54kmZ1HcAZfrI9HLkMYX4jMTAcSv9nzu
+   Jg40dwGyty747Smud8SiMCNXQV7Xsc7Bsl5b770MTmG11kWRPMH2Efcb3
+   Q==;
+X-CSE-ConnectionGUID: iw4t9+UAT1KmLjG+YSXr6g==
+X-CSE-MsgGUID: Z4q5KXSXQOmh9Rs/oCsbew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="51887701"
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="51887701"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 00:29:07 -0700
+X-CSE-ConnectionGUID: t3hEvRYBQwazCwA07Niiig==
+X-CSE-MsgGUID: mdbPH5DQR8KHW1sr60JdEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,250,1744095600"; 
+   d="scan'208";a="156650933"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by orviesa005.jf.intel.com with ESMTP; 20 Jun 2025 00:29:04 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v4 00/13] arch-PEBS enabling for Intel platforms 
+Date: Fri, 20 Jun 2025 10:38:56 +0000
+Message-ID: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Perf's instructions event tests on Zhaoxin CPUs may exhibit:
+This patchset introduces architectural PEBS support for Intel platforms
+like Clearwater Forest (CWF) and Panther Lake (PTL). The detailed
+information about arch-PEBS can be found in chapter 11
+"architectural PEBS" of "Intel Architecture Instruction Set Extensions
+and Future Features".
 
-  $perf stat -e instructions,cycles ls -l
+Comparing with v3 patchset, the most significant change is to remove the
+sampling support for new SIMD regs (OPMASK/YMM/ZMM). Considering the
+complication of supporting SIMD regs sampling, the SIMD regs sampling
+support is extracted as an independent patchset[1] and this patchset only
+focus on the arch-PEBS enabling itself. Once the basic SIMD regs sampling
+is supported, the arch-PEBS based SIMD regs (OPMASK/YMM/ZMM) sampling
+would be added on top of the basic SIMD regs sampling.
 
-  ......
-  Performance counter stats for 'ls -l':
+Changes:
+  v3 -> v4:
+  * Rebase code to 6.16-rc2
+  * Extract the new SIMD regs sampling to an independent patchset
+  * Fix the PEBS buffer allocation issue (Peter)
+  * Fix the arch-PEBS dynamic constraints issue (Kan)
 
-                 0      instructions                     #    0.00  insn =
-per cycle
-         9,488,278      cycles
+Tests:
+  Run below tests on Clearwater Forest and Pantherlake, no issue is
+  found.
 
-       0.004365407 seconds time elapsed
+  1. Basic perf counting case.
+    perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
 
-       0.003303000 seconds user
-       0.001099000 seconds sys
+  2. Basic PMI based perf sampling case.
+    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
 
-The absence of the fixedctr member leads to an incorrect hwc->event_base
-value on Zhaoxin CPUs, causing a discrepancy in the instruction count
-reported by perf stat. This commit resolves the instruction count issue
-by properly initializing the fixedctr member.
+  3. Basic PEBS based perf sampling case.
+    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}:p' sleep 1
 
-Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
-Signed-off-by: tanze <tanze@kylinos.cn>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/zhaoxin/core.c | 1 +
- 1 file changed, 1 insertion(+)
+  4. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+    perf record -e branches:p -Iax,bx,ip,ssp,xmm0 -b -c 10000 sleep 1
 
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/cor=
-e.c
-index 4bdfcf091200..3fc3f9abece9 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -467,6 +467,7 @@ static const struct x86_pmu zhaoxin_pmu __initconst =3D=
- {
- 	.schedule_events	=3D x86_schedule_events,
- 	.eventsel		=3D MSR_ARCH_PERFMON_EVENTSEL0,
- 	.perfctr		=3D MSR_ARCH_PERFMON_PERFCTR0,
-+	.fixedctr		=3D MSR_ARCH_PERFMON_FIXED_CTR0,
- 	.event_map		=3D zhaoxin_pmu_event_map,
- 	.max_events		=3D ARRAY_SIZE(zx_pmon_event_map),
- 	.apic			=3D 1,
---=20
-2.25.1
+  5. User space PEBS sampling case with basic GPRs and LBR groups
+    perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 sleep 1
+
+  6 PEBS sampling case with auxiliary (memory info) group
+    perf mem record sleep 1
+
+  7. PEBS sampling case with counter group
+    perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
+
+  8. Perf stat and record test
+    perf test 96; perf test 125
+
+
+History:
+  v3: https://lore.kernel.org/all/20250415114428.341182-1-dapeng1.mi@linux.intel.com/
+  v2: https://lore.kernel.org/all/20250218152818.158614-1-dapeng1.mi@linux.intel.com/
+  v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
+
+Ref:
+  [1]: https://lore.kernel.org/all/20250613134943.3186517-1-kan.liang@linux.intel.com/
+
+
+Dapeng Mi (13):
+  perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
+  perf/x86/intel: Correct large PEBS flag check
+  perf/x86/intel: Initialize architectural PEBS
+  perf/x86/intel/ds: Factor out PEBS record processing code to functions
+  perf/x86/intel/ds: Factor out PEBS group processing code to functions
+  perf/x86/intel: Process arch-PEBS records or record fragments
+  perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
+  perf/x86/intel: Update dyn_constranit base on PEBS event precise level
+  perf/x86/intel: Setup PEBS data configuration and enable legacy groups
+  perf/x86/intel: Add counter group support for arch-PEBS
+  perf/x86: Support to sample SSP register
+  perf/x86/intel: Support to sample SSP register for arch-PEBS
+  perf tools: x86: Support to show SSP register
+
+ arch/x86/events/core.c                        |  37 +-
+ arch/x86/events/intel/core.c                  | 256 +++++++-
+ arch/x86/events/intel/ds.c                    | 595 ++++++++++++++----
+ arch/x86/events/perf_event.h                  |  46 +-
+ arch/x86/include/asm/intel_ds.h               |  10 +-
+ arch/x86/include/asm/msr-index.h              |  20 +
+ arch/x86/include/asm/perf_event.h             | 117 +++-
+ arch/x86/include/uapi/asm/perf_regs.h         |   4 +-
+ arch/x86/kernel/perf_regs.c                   |   7 +
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |   7 +-
+ tools/perf/arch/x86/util/perf_regs.c          |   2 +
+ tools/perf/util/intel-pt.c                    |   2 +-
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |   2 +
+ 13 files changed, 959 insertions(+), 146 deletions(-)
+
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+-- 
+2.43.0
 
