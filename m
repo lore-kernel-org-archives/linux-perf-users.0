@@ -1,65 +1,64 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7E08632B
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 09:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13FC21ADA2
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 10:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750410861; cv=none; b=W6DZ21sIY71UGmaw5Spf1G/FvJkBkUJYtNrnO7KtZp8F4odeECK53olCfDPygVtfsMd1jX55CMZSTELxdVSXOqIT2ST1lKw2Y7jAfyIoK0SfQaKlElL6gwJJgf3ye5XjgePPE/2MQnvi0qwKl020TlfOcZDyb5fcNCmcNAKgZGQ=
+	t=1750413688; cv=none; b=k9j4i59y7TSh0M+PGoJ78e9dh9/4oZtxGcVDaqb2wY1EISeSLtAo85R7A+ttxKLvxglldjtGIVGLuTP9LgnTzkILmfnx57W6u3T/wInU8P6zsNVn3CbRBt+xZ9Ky+VBxzw2SzyppwXux5oZ3Gz3nV7DEwVWvguumtOExXQAJ9PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750410861; c=relaxed/simple;
-	bh=6JQhvJalxPVuJ0BnHyAK8SD62QRtStxgHN38B931quw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qxCtmao4iu80Q5QsJgzlq95LcO2JbwYRIb03KkYdIz672A5l7RN2Bt64547eFqBbuUN089bm4ksseYvHBxgrRwYsDIcpahyzt+bRNGKcGNL2lKiLR15n7BX4bbWeY/ZPNnJCjzmkepqTigXi7elVf0d5Qm+14AV/m0jalZ7Xcik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v3iCoryz; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1750413688; c=relaxed/simple;
+	bh=XX3jpB7mpBpXk+bdtyKB6OPlgo/vZPvUa9NFJ93m3uk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=CF6N61MJBt5AAdkMTajDOPanYsbD2E2afw98qBoweTVmaPt65a2TvwSv63PAfCI3peCfh67f1s5+kM5M7XHmHxrVqnFG1FDXIhdQ4MTn3+Zcly9sEjVqlH2i101tExYWy+CQcXRu442FeEYA+48Oqgi/X5B8g5/my33WqB2Jx7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BdfBSmxs; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3iCoryz"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a54700a463so908319f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 02:14:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BdfBSmxs"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-441ab63a415so18114545e9.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 03:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750410858; x=1751015658; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NkG74FvNfOLpNfRvSKYgtkPO/d1EcdAB8iHKOo6KSN0=;
-        b=v3iCoryzgjVFUD3DaRa/b6Cl2lbJvvhPt2pIrc35Y1vJE4QsquZFC0oCqz4OEBQYZu
-         Mjemo/Lf5zhMJh+Vzm1k78xRVmY05QOY1dKxIQrGKKW/Fe9iOHNFrx8fWQNRDUbZjc2/
-         ng/w49S3NRe6Ay/OsGCHiRnOUnhKmGYQgaYejXlXlBf/+ZeDAY7XUTLx/1Pb9reg0+lW
-         WGaa43o+8oz+NM8X+JRFotyENAqmGP/BRTw1AmP5xi8UIiPE936pC1VauO0zT0rClI+S
-         2I8rjNqANuBoSaC6xQKERTiOvLTbYIN7IupLnEDv+RA6dEfOXbTAK3XMUgj1lUZpix/+
-         /6WQ==
+        d=linaro.org; s=google; t=1750413685; x=1751018485; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mMrWYnnZWM4Y5pjy/CFIMa2zim/OPrqscxMGLqeMAX8=;
+        b=BdfBSmxs9mApCLTrbBtCJJtsq8iTQ1AzPs1UZ58y/PLugPP978hL84d+VrewTiNydF
+         PExq99JMK2Q01O68L5tAXO7mcZVIAvNdvn4n/6RG37A56yTE4+TTW2VvoaXcr5rQlC6Z
+         7tl6HbrpiMX5pJqrX5Y6Up1K/dkFsPbT3rKPShM4lpH6wKE/7yEQ0IT540DYF1aErbG5
+         p9L1rFrugAZaGVLwh3Wc80DieWX4zQGA6If8rcJKj7GioRjZ+vbEriHISOhWtgMHZELU
+         Ppduam5W9UeUpoD0ow+K+TH4pWLbXtA/bkv+6PZH0VecilwaVmt7webr9aArFuMRBnAC
+         PyNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750410858; x=1751015658;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1750413685; x=1751018485;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NkG74FvNfOLpNfRvSKYgtkPO/d1EcdAB8iHKOo6KSN0=;
-        b=gxvDY/5n0av5vvdffA5ggD6b1rrJKlMxMgid7oH8Q6OAxT857AAjSjZaGdk2zei2rH
-         /0GzJZEVW9ZpIlfg9i0s3OIJJFDQj7G2OENCJWdQ8a8tMLIGORviiom/LoK3+hMExt4D
-         GOO8PxBs6Y0R59/dprgJhywhYoblQYMqLa5CwRl6/vu1UaWCE4iTk7eYZ9ITYS7xaQg/
-         EG0GDroA0rHqzBQLS9WCYMV1Gui+WDlLmWln7Hms81adPmX4H2Ebfby4HOlSA/Wm+xUY
-         E+zlHmorv4LFX5R7Mf6G0TlggTiB6fnTT9uSBIiy06zxGgdGLNzmN2OdFsxQxDKcMjQT
-         Hx5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVEKgAyzAm6DtRIv5amEJrkr6EfRCv+jcIo+WoK/Gx8Z4FLLZ8JSItlCFOolvQSMykGcM/WoL7tzPQnWy2LbUnl@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLlgSpuIyACbT0AIp1wgRAJjLn4FptH9xabU2bf03rHkkgJ8xX
-	Gmsx8gpysQdrUfVqhIRPF5dCcLk9n0vRN5wJ0mwjHHb0ClTkWW4U7v8z3hLtygU5f/RRrWl2lP7
-	7ZKii
-X-Gm-Gg: ASbGnctuSoWEKYMWhdU/+qnkjQnkiI1z6MABNpbXbCUNnZJmSj2z3+1g46NIIGzs4C+
-	nJHhkCB+p964PTCbyJEUB/ua9fG6z6vype33dZtSpXCiv6c7R574Hdo8r+6VL5PMitL3vDAOsaW
-	tGCWt049VDKeIZtcrJbAqPCjq3MfMuVAEVfrACEon4TqEi5b2u4TRQOBqUdSAULY8Iyh/pAZNyu
-	nzCAIF/3LAbrwFXejKNLyCDNeugJRahytp9WuwcEgzKxJRZLE79JDF2Smxviec7GsuDJo69s23D
-	sohISB1NrcTyVv0ilmnJ6dXeVbzOSECMq3XNA3kLPbupLWWOUNI+77tfvXFOafnAei4=
-X-Google-Smtp-Source: AGHT+IFKL0Lwu/AoRawLPYKXiHmyoNk4t+vpv6fI8ZcV2OBtE6y1UF0PxzrsPMtN5VlkolXwQudCag==
-X-Received: by 2002:a05:6000:385:b0:3a4:eee4:f73a with SMTP id ffacd0b85a97d-3a6d27e1f37mr1340801f8f.22.1750410857643;
-        Fri, 20 Jun 2025 02:14:17 -0700 (PDT)
+        bh=mMrWYnnZWM4Y5pjy/CFIMa2zim/OPrqscxMGLqeMAX8=;
+        b=tRxkB7XogaUpfdh37aLvonIb8Uclt+0Hd9fZGMUOJ4kq/VfK7ImLvakL1yBfLeiRi2
+         bUJ75Diha2L3ThS/M5teD1UMAtrdaZL9+GCfse4hVTbmW+JWu0jjCsVhQXB47VeULvDU
+         YQ+86+dnZfRAiZpqNRfrwlOUg6NfPBlWU3/B18zAunhfGHwv72kBFhG1Sw4ISl2PZ6EG
+         fROsicEFimuwAl0s1PxMRVBH+1AN0cBBmJxFk+M17IF1/QS1EO3SnfaSmHvSM6jsyzXg
+         x6F6jWTX/X3nuIrSjFfBxPLsq0pftQ1DfTIf2rj1QLOJpjjY4rq4YkChdPBXzmBDPB6e
+         FZcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwyS5YNIosVFSvXvdtxzMZVR5MtgsoRcyn1PDvSYaioGWP9stoc87M0AMHZMif9YfOrMcxda0sVMVawatzZGTr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2dAoHbg1XxrHqDrml+zLW5aaCdIyt5oAaS6G25g/hEYedzwyl
+	GPc78dUshvrvRTc1SiLLrRxqMRLUp7XOBKlJoZrzvt25cC+pZoPl7Ko45CK6hBd+SK4=
+X-Gm-Gg: ASbGncu99nneP0usAUpzK87hXRRbLM9b6tSeMIVenk/pDb38XFKJNEMiAsa5NLyT/oZ
+	YEGp/kQ/Xaio/6j2h7xYxuWtPu4q/kivxZN9+7lYvAjFfqWe1VKzc/F3zGfecr2BJUuSqQFctsP
+	19hByEBZbyJwgKdIKWYtb6QRnjNhB7Mv6Xqu8HrU1YVHQJsqeuxn9meg6VO/jSUWojDPkN2ouVT
+	nGB6+I92s8m8wIEhHTKZjhYnqE74b0NXuemOmhun7b+bQ7tJ3TX1rCAtshTCVB56OPBPirBSzkr
+	K5lwRBYj50SuDkO8gISrgcv8qyZ20CSNEES5zp7iTtZl0PF/tWWf6nPyaCYkXB8FQ7A=
+X-Google-Smtp-Source: AGHT+IHe618MZafhnAT+zQw765nD0vsugMDIuLNgSEIgsjw+wJ9N00rnaNZABT0XgCzi2ieKxGyKvw==
+X-Received: by 2002:a05:600c:8b07:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-453653cc952mr18036295e9.6.1750413684863;
+        Fri, 20 Jun 2025 03:01:24 -0700 (PDT)
 Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1ac5asm1566405f8f.33.2025.06.20.02.14.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ebd02basm53176285e9.39.2025.06.20.03.01.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jun 2025 02:14:17 -0700 (PDT)
-Message-ID: <5d44e8b6-ad48-415a-aed6-4c59fcc228b8@linaro.org>
-Date: Fri, 20 Jun 2025 10:14:16 +0100
+        Fri, 20 Jun 2025 03:01:24 -0700 (PDT)
+Message-ID: <4a8dbb2f-9058-416b-8055-46a3afcae0d1@linaro.org>
+Date: Fri, 20 Jun 2025 11:01:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,170 +66,153 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/headers: Document PERF_PMU_CAP capability flags
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: kernel@collabora.com, Jonathan Corbet <corbet@lwn.net>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH v2 2/2] perf test: Add sched latency and script shell
+ tests
+To: Ian Rogers <irogers@google.com>
+References: <20250619002034.97007-1-irogers@google.com>
+ <20250619002034.97007-2-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com>
-Content-Language: en-US
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com>
+In-Reply-To: <20250619002034.97007-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 18/06/2025 8:08 pm, Nicolas Frattaroli wrote:
-> Over the years, capability flags for perf PMUs were introduced in a
-> piecemeal fashion whenever a new driver needed to signal to the perf
-> core some limitation or special feature.
+On 19/06/2025 1:20 am, Ian Rogers wrote:
+> Add shell tests covering the `perf sched latency` and `perf sched
+> script` commands. The test creates 2 noploop processes on the same
+> forced CPU, it then checks that the process appears in the `perf
+> sched` output.
 > 
-> Since one more undocumented flag that can have its meaning inferred from
-> the commit message and implementation never seems that bad, it's
-> understandable that this resulted in a total of 11 undocumented
-> capability flags, which authors of new perf PMU drivers are expected to
-> set correctly for their particular device.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2: Skip the test if not root due to permissions.
+> ---
+>   tools/perf/tests/shell/sched.sh | 91 +++++++++++++++++++++++++++++++++
+>   1 file changed, 91 insertions(+)
+>   create mode 100755 tools/perf/tests/shell/sched.sh
 > 
-> Since I am in the process of becoming such an author of a new perf
-> driver, it feels proper to pay it forward by documenting all
-> PERF_PMU_CAP_ constants, so that no future person has to go through an
-> hour or two of git blame + reading perf core code to figure out which
-> capability flags are right for them.
-> 
-> Add comments in kernel-doc format that describes each flag. This follows
-> the somewhat verbose "Object-like macro documentation" format, and can
-> be verified with
-> 
-> 	./scripts/kernel-doc -v -none include/linux/perf_event.h
-> 
-> The current in-tree kernel documentation does not include a page on the
-> perf subsystem, but once it does, these comments should render as proper
-> documentation annotation. Until then, they'll also be quite useful for
-> anyone looking at the header file.
-> 
+> diff --git a/tools/perf/tests/shell/sched.sh b/tools/perf/tests/shell/sched.sh
+> new file mode 100755
+> index 000000000000..0a4fe3f414e1
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/sched.sh
+> @@ -0,0 +1,91 @@
+> +#!/bin/bash
+> +# perf sched tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +if [ "$(id -u)" != 0 ]; then
+> +  echo "[Skip] No root permission"
+> +  exit 2
+> +fi
+> +
+> +err=0
+> +perfdata=$(mktemp /tmp/__perf_test_sched.perf.data.XXXXX)
+> +PID1=0
+> +PID2=0
+> +
+> +cleanup() {
+> +  rm -f "${perfdata}"
+> +  rm -f "${perfdata}".old
+> +
+> +  trap - EXIT TERM INT
+> +}
+> +
+> +trap_cleanup() {
+> +  echo "Unexpected signal in ${FUNCNAME[1]}"
+> +  cleanup
+> +  exit 1
+> +}
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +start_noploops() {
+> +  # Start two noploop workloads on CPU0 to trigger scheduling.
+> +  taskset -c 0 perf test -w noploop 10 &
+> +  PID1=$!
+> +  taskset -c 0 perf test -w noploop 10 &
+> +  PID2=$!
+> +
+> +  if ! grep -q 'Cpus_allowed_list:\s*0$' "/proc/$PID1/status"
+
+Hi Ian,
+
+Because taskset is also run in the background it's possible to grep the 
+proc file before it's managed to re-pin itself. I saw some intermittent 
+failures of the test because of this.
+
+I think you'd need to run noploop in the background but taskset in the 
+foreground and give it the pid of noploop to make sure it finishes 
+before grepping.
+
+Other than that the test seems ok:
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
-> There may be more perf documentation patches in the future, but right
-> now I'm focused on getting a minimally viable driver for the hardware
-> I'm working on going. Documenting these seemed to have a fairly good
-> effort-to-future-payoff ratio though.
-> 
-> I Cc'd Corbet in case he has any input on the verbosity of the
-> kernel-doc syntax here, maybe I'm missing something and all of these
-> could be in a single /* comment */, but as it is in this patch doesn't
-> seem too awful to me either.
-> ---
->   include/linux/perf_event.h | 74 ++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 74 insertions(+)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index ec9d96025683958e909bb2463439dc69634f4ceb..7d749fd5225be12543df6e475277563bf16c05b1 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -294,16 +294,90 @@ struct perf_event_pmu_context;
->   /**
->    * pmu::capabilities flags
->    */
+Thanks
+James
+
+> +  then
+> +    echo "Sched [Error taskset did not work for the 1st noploop ($PID1)]"
+> +    grep Cpus_allowed /proc/$PID1/status
+> +    err=1
+> +  fi
 > +
-> +/**
-> + * define PERF_PMU_CAP_NO_INTERRUPT - \
-> + *    PMU is incapable of generating hardware interrupts
-> + */
->   #define PERF_PMU_CAP_NO_INTERRUPT	0x0001
-> +/**
-> + * define PERF_PMU_CAP_NO_NMI - \
-> + *    PMU is guaranteed to not generate non-maskable interrupts
-> + */
->   #define PERF_PMU_CAP_NO_NMI		0x0002
-> +/**
-> + * define PERF_PMU_CAP_AUX_NO_SG - \
-> + *    PMU does not support using scatter-gather as the output
-> + *
-> + * The PERF_PMU_CAP_AUX_NO_SG flag indicates that the PMU does not support
-> + * scatter-gather for its output buffer, and needs a larger contiguous buffer
-> + * to output to.
-> + */
->   #define PERF_PMU_CAP_AUX_NO_SG		0x0004
-> +/**
-> + * define PERF_PMU_CAP_EXTENDED_REGS - \
-> + *    PMU is capable of sampling extended registers
-> + *
-> + * Some architectures have a concept of extended registers, e.g. XMM0 on x86
-> + * or VG on arm64. If the PMU is capable of sampling these registers, then the
-> + * flag PERF_PMU_CAP_EXTENDED_REGS should be set.
-> + */
->   #define PERF_PMU_CAP_EXTENDED_REGS	0x0008
-> +/**
-> + * define PERF_PMU_CAP_EXCLUSIVE - \
-> + *    PMU can only have one scheduled event at a time
-> + *
-> + * Certain PMU hardware cannot track several events at the same time. Such
-> + * hardware must set PERF_PMU_CAP_EXCLUSIVE in order to avoid conflicts.
-> + */
->   #define PERF_PMU_CAP_EXCLUSIVE		0x0010
-> +/**
-> + * define PERF_PMU_CAP_ITRACE - PMU traces instructions
-> + *
-> + * Some PMU hardware does instruction tracing, in that it traces execution of
-> + * each instruction. Setting this capability flag makes the perf core generate
-> + * a %PERF_RECORD_ITRACE_START event, recording the profiled task's PID and TID,
-> + * to allow tools to properly decode such traces.
-> + */
->   #define PERF_PMU_CAP_ITRACE		0x0020
-> +/**
-> + * define PERF_PMU_CAP_NO_EXCLUDE - \
-> + *    PMU is incapable of excluding events based on context
-> + *
-> + * Some PMU hardware will count events regardless of context, including e.g.
-> + * idle, kernel and guest. Drivers for such hardware should set the
-> + * PERF_PMU_CAP_NO_EXCLUDE flag to explicitly advertise that they're unable to
-> + * help themselves, so that the perf core can reject requests to exclude events
-> + * based on context.
-> + */
->   #define PERF_PMU_CAP_NO_EXCLUDE		0x0040
-> +/**
-> + * define PERF_PMU_CAP_AUX_OUTPUT - PMU non-AUX events generate AUX data
-> + *
-> + * Drivers for PMU hardware that supports non-AUX events which generate data for
-> + * AUX events should set PERF_PMU_CAP_AUX_OUTPUT. This flag tells the perf core
-> + * to schedule non-AUX events together with AUX events, so that this data isn't
-> + * lost.
-> + */
->   #define PERF_PMU_CAP_AUX_OUTPUT		0x0080
-> +/**
-> + * define PERF_PMU_CAP_EXTENDED_HW_TYPE - \
-> + *    PMU supports PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
-> + */
->   #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
-> +/**
-> + * define PERF_PMU_CAP_AUX_PAUSE - \
-> + *    PMU can pause and resume AUX area traces based on events
-> + */
->   #define PERF_PMU_CAP_AUX_PAUSE		0x0200
-> +/**
-> + * define PERF_PMU_CAP_AUX_PREFER_LARGE - PMU prefers contiguous output buffers
-> + *
-> + * The PERF_PMU_CAP_AUX_PREFER_LARGE capability flag is a less strict variant of
-> + * %PERF_PMU_CAP_AUX_NO_SG. PMU drivers for hardware that doesn't strictly
-> + * require contiguous output buffers, but find the benefits outweigh the
-> + * downside of increased memory fragmentation, may set this capability flag.
-> + */
->   #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
->   
->   /**
-> 
-> ---
-> base-commit: 31d56636e10e92ced06ead14b7541867f955e41d
-> change-id: 20250618-perf-pmu-cap-docs-a13e4ae939ac
-> 
-> Best regards,
+> +  if ! grep -q 'Cpus_allowed_list:\s*0$' "/proc/$PID2/status"
+> +  then
+> +    echo "Sched [Error taskset did not work for the 2nd noploop ($PID2)]"
+> +    grep Cpus_allowed /proc/$PID2/status
+> +    err=1
+> +  fi
+> +}
+> +
+> +cleanup_noploops() {
+> +  kill "$PID1" "$PID2"
+> +}
+> +
+> +test_sched_latency() {
+> +  echo "Sched latency"
+> +
+> +  start_noploops
+> +
+> +  perf sched record --no-inherit -o "${perfdata}" sleep 1
+> +  if ! perf sched latency -i "${perfdata}" | grep -q perf-noploop
+> +  then
+> +    echo "Sched latency [Failed missing output]"
+> +    err=1
+> +  fi
+> +
+> +  cleanup_noploops
+> +}
+> +
+> +test_sched_script() {
+> +  echo "Sched script"
+> +
+> +  start_noploops
+> +
+> +  perf sched record --no-inherit -o "${perfdata}" sleep 1
+> +  if ! perf sched script -i "${perfdata}" | grep -q perf-noploop
+> +  then
+> +    echo "Sched script [Failed missing output]"
+> +    err=1
+> +  fi
+> +
+> +  cleanup_noploops
+> +}
+> +
+> +test_sched_latency
+> +test_sched_script
+> +
+> +cleanup
+> +exit $err
 
