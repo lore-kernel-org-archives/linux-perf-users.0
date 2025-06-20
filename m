@@ -1,93 +1,115 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9852E6105
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 16:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA6D2E172A;
+	Fri, 20 Jun 2025 17:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750435980; cv=none; b=CoID/KTKuQh922hNikzCe7gE3YdAAMigVh20tZNfOR7g7sCP7yjlBKSGu3cEwFeF5Dfw0Cf177jmfXmfV+dm+2+fh/k9FFi+S1kxCStWf04LRMDudDLwJmItB5WaWD95VLQf+JET8GMGWZs5n3JD1Up/PBJNPsGE1sMizHIXpjQ=
+	t=1750441220; cv=none; b=lUFuEZc6P4ANlL46VGOwL5GON6m7YlW4sYCDMD9x07ObWFpnQuTFzbCIxktD65KtyJNoxsSyNbRrVsuXY1ukuC+F3xN4z8+DQh2CbIB8DB2IOAUleJIDWRUAwtnJeGogcFT/vt22/4zPcUgh/o1XccHNbPtAWJnCgJy2wScEkeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750435980; c=relaxed/simple;
-	bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bgbSjIwqr5Y/gXEWJBGPJqYuPW8SYSCyJx0+W1Rjf3qEh7NdMQRyGfjN9oLiKfOSNOLI+UeLm1COR3VjjNzbdn9ipkcMLQxJP/X1z8QpLH+7YOg7Ml7dt4EwaKQsGktVL5LCj18VaEr6oXw+D97/Xi0d51r3EBDMy6ZEpbyH4l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=IR5IsCJi; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1750441220; c=relaxed/simple;
+	bh=OFWh618G+nN07dN1ddt6LCLr4FaHIYMhHdZ5Tjd6XVs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oCtECwBKwWzAY74ZHGOJCLU70n0U1yx52BELXE1/yKvxV/jcVU4KvUeD59wFV17jVwDYuUBLmzo7DOoV34l2gckng0WmdEI0CaHbCh/KJinwYu6B5rbsfpolsFIrc3TWuY9MpE63hURM6fQeZg5I6T1pRGGCj1oltHUf+UczDek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fic3Qe6F; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="IR5IsCJi"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fb1be9ba89so16069286d6.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 09:12:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fic3Qe6F"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so1658709a12.3;
+        Fri, 20 Jun 2025 10:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750435978; x=1751040778; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
-        b=IR5IsCJiXK6NqolsSkyec3JLjvgKNbL2IgKEwOrH31h0lFYQ/dI5dU3B9+grzUbi7G
-         DvYh41YNnkcBFq/YAZWB+fpG6hwPYG5nai0DnE9T5oCxBSgBP8ITgaHh2bMEHrRcBb9H
-         QbIG4L7WxAgIC04aL/++f/zgjLigIKoce0HgI=
+        d=gmail.com; s=20230601; t=1750441218; x=1751046018; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lrfa6f95rsQz82Z0z+vddrx+mjnxXRUvG8Wd94yuAao=;
+        b=fic3Qe6Fq67WdkVw3WQ752xp1hoPPjkCPv8TBrjl83Oak4Wf6eaY+wO0tcNPsOnRq8
+         RGCvdl+r7oTxGh+vBC/kSBpT9OK9wja5nvbSo+by63M6GAz/GB8ny8OdHaztUcoc8dtW
+         ktrpKr6emB852kLrZqRrp6eOXNofFVosURznpfQFUQUO4HktNJGeLe59gj4m9fyf61bk
+         IAyLryTdSuqDw05XVCf/MDsgvSAd7dGSUrUubv5tlCd+5t0dx6siHpMusB86ra6d/uXs
+         tWXzxxXwgX0zSNPXNB52LPYD/tX5l51PNffU2o0ZzuiQzmztdfeEE55h7cv50DpMveuZ
+         EC9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750435978; x=1751040778;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
-        b=L+FkytxXxHGqnUo6pnEvilHnxD0/zH+PovVOsoVSJzIm92vuDNufgm2Liyq6wYwegC
-         4pUuW6Cvm1QTcD/wVhxsrTC7k2Jy+kW9XkdGbcPVBhNVGUsoy/t2Pnd+iyoTBWtcszFf
-         Z7Vfk1akqGo6LomqIqgtG5cBPdi6dgULoB0pDa/W7m8iG3U7aFdLEorY5V81Ul3Tmtlw
-         6QzHw5SFa1TwgIfDSb5sGPD80RHdLIXcAY8eH0OCbEc2gzIMexaNTBhAZI5MZ169Niu1
-         5et24nR1XTI0UdVYQ5xa9HjjMsYTCA38199v3lz66ZWbzzenVz0no/LOk6GoyEWGlI5+
-         bFeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb1wQmJi12FSDd17ou/LfQTxhgv+jBfMljkpkCPXNBcQtTdvwEZbUSIgJDZyAZ+RZoETR3u0KWFavhhuBbF1Pn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ8CLV7SgiyikkPz3RyHpOgEZGonD+SWQwahk4NKdbct70kBrv
-	3mueLp1R8FOsPaYKdx7IieJW+g9kZj79+bcVXIh/ZKhrv6scOdC4mYaR9VFyGLx78ZdpuE6sRIh
-	+B7o=
-X-Gm-Gg: ASbGncvLHTvnTMCAZ0/c1AYLBXGds1FmIXXZYsZ1aZhMxbyhKovOBATb6M/KCmXIzTx
-	85cxx/MjzMzZYE544RB7sbtlPRD9VUvU/8hnrdHR0ARFpkzd2vQpze0qnmQTZAYbnAc0+xuSTbX
-	a/16KrSQJpMpAoBnizQz0A+7eQnd9emIBzNaQ/tGovcZcoDd0sxFyWwTn9rk0wKB83IVKnvYBtA
-	sfh3PDNMMUV78JgXP3mfOCykUX9+9Kdi125RbnBzjZRpVbGMa6PcFAv9d79HD1mO4OC0I2Kh3v+
-	Izr0AUiMTMONLQHK5mx6KywzQ7RIjHH0j0ELQninpr7tKLmIGO6Qca69lkOItFgjDzFIyh44y4J
-	KNrxw0Q==
-X-Google-Smtp-Source: AGHT+IGoovvsl19mY0vCtYhvu9E/Pp3ZVzXJ4Ykxp/GDEUA/7TwOQGC7TYT+H9Qq8AVH2lCTzNqJTQ==
-X-Received: by 2002:a05:6214:2627:b0:6fa:c0ca:c75c with SMTP id 6a1803df08f44-6fd0a5fff0fmr62574406d6.42.1750435976837;
-        Fri, 20 Jun 2025 09:12:56 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd093decfbsm13710906d6.11.2025.06.20.09.12.55
+        d=1e100.net; s=20230601; t=1750441218; x=1751046018;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lrfa6f95rsQz82Z0z+vddrx+mjnxXRUvG8Wd94yuAao=;
+        b=naJErinFWvmQxViXKoLQJ+5L8ctsrOtA+khaJAcOm+5aHvsXz9omxVRiQTfCOdadVR
+         jJMfD46wAjVIhOJ9kKdV7qyLrTfcx/YD9QlIYdMYuyhNM6+my2CGQTF3LaFqhKFuZgIE
+         Mpgm6OVbGHkqu8bqAAJE7pBiSbMLgKnGB+L0kvjrPhhuxpfgvbnvXkTS56vl+9PnDdhu
+         8D01sVVpdBoFoE9PorwCGEgAxoC/qatUUsjNC33r/5Ig0cGwqhtukJE7HwtCvAD6MTXM
+         BpEF1/f/19DBuACTv5BweZmAZVgslj5X5tSwVi0IDmuidXyjXyoLE8QPzp4PyXZhULrx
+         Wwsg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9oY/rsdxBBEKv+2Ze8XS4Jf4eGniU7xZfeF+jkBGxJLKikeD2NqkI7XYI46VYT6UJj02yOgWNEKKHfaA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoBie9A+uXlFZ7SqO4pI7PIkf5DgZnHDQS9llTZRS7anr1qcKF
+	u/5UIFfrydKptDMgeiOi6G1n3X/Qbgx/dVeTH6nwhcULGPez3fYldGIn
+X-Gm-Gg: ASbGncu0cgqdH6Iw7pnm/cIV/rwKBLEAi8ov1ypkEBeIkBFwm1xCkts6780gB3bi60l
+	aoyALFL0PKo4RzOFG4Zd/XkZSs8FKLRVpS2dE/MAVMBkfD9wE5FKQygc1GEXEMwSLeO7QbtUAXi
+	67hwSdbf9AuSVzE0PRWs1Ol/7a5zvxiaNqa3tLOk2Yuu/hJjCyOz+ivx9obc9pb43fIpY1WwsKu
+	AVXsYutRE5GbEh6m3xlXwNgz8is2PYfigxjOzlEf75EkJJNFAr3r8TMGwVzKeHWLvxdZ7Nf4j/l
+	Q7ES0pH2YaHT00iXVjlQArUYZS64VNR1LdBdkRPhpp9ys2LT9f45BQ==
+X-Google-Smtp-Source: AGHT+IE4pfEDuK4NvUg+ry5Rf4DYRoJ1U08Eu4uDQ0aEWXtK0+oZFw8hbBiESznwSJ4Y+sDyrsFZJg==
+X-Received: by 2002:a17:90b:5690:b0:312:f0d0:bc4 with SMTP id 98e67ed59e1d1-3159d626112mr5266787a91.5.1750441217907;
+        Fri, 20 Jun 2025 10:40:17 -0700 (PDT)
+Received: from fedora ([2601:646:8081:3770::15bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ce860sm22864805ad.65.2025.06.20.10.40.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 09:12:56 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Fri, 20 Jun 2025 12:12:55 -0400 (EDT)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
-In-Reply-To: <ef72c8cd-5bed-44ce-b950-d64dc1c22baa@linux.intel.com>
-Message-ID: <5a53490f-d4ec-85f7-4175-e148e02c3e67@maine.edu>
-References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com> <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
- <52656281-ab73-baf7-0a80-ebcbe79dfca2@maine.edu> <9aee2b65-e43a-4fcd-a929-a98269621315@linux.intel.com> <d12d4300-9926-5e58-6515-a53cb5c7bee0@maine.edu> <ef72c8cd-5bed-44ce-b950-d64dc1c22baa@linux.intel.com>
+        Fri, 20 Jun 2025 10:40:17 -0700 (PDT)
+From: Collin Funk <collin.funk1@gmail.com>
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org,  Peter
+ Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Arnaldo
+ Carvalho de Melo <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,
+  Alexander Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
+ <jolsa@kernel.org>,  Ian Rogers <irogers@google.com>,  Adrian Hunter
+ <adrian.hunter@intel.com>,  "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash
+ dialect.
+In-Reply-To: <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
+References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
+	<20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
+Date: Fri, 20 Jun 2025 10:40:15 -0700
+Message-ID: <874iwa71mo.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 
-On Fri, 20 Jun 2025, Liang, Kan wrote:
+Hi James,
 
-> Thanks very much for the reproducer! The issue has been root-caused.
-> I've sent a patch to fix it. Please give it a try.
-> https://lore.kernel.org/lkml/20250620110406.3782402-1-kan.liang@linux.intel.com/
+James Clark <james.clark@linaro.org> writes:
 
-I've applied the patch and can no longer generat the issue with my tests.
+> If we're enforcing bash style with static analysis shouldn't we also
+> change all the hashbangs to bash? Recently there have been changes to
+> change sh to bash in some of the tests so presumably the hard rule for
+> sh is no more?
+>
+> In the past I've had to replace bashisms that didn't work in sh but it
+> would be nice to have only one language to write tests in. I doubt
+> anyone running the tests today is running somewhere without bash, or
+> that changing it will break anything. If anything it will fix more
+> bashisms that have already been written.
+>
+> Just for reference there are 34 #!/bin/bash and 42 #!/bin/sh in
+> tools/perf/tests
 
-Thanks!
+That sounds reasonable to me. Writing portable shell is a hassle and if
+we already assume a working /bin/bash in some places, I don't see a
+reason not to use it for the others.
 
-Vince
+Regarding this patch, shellcheck will use the file extension or shebang
+only if it does not find a 'shell' directive in a .shellcheckrc. So that
+change will still require this patch.
 
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+I saw it was used in other places, so I assumed this patch was fine:
+
+$ find tools/perf -name Build | xargs grep bash
+tools/perf/Build:	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+tools/perf/trace/beauty/Build:	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
+
+Collin
