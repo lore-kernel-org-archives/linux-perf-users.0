@@ -1,152 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA4C2C374E;
-	Fri, 20 Jun 2025 15:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9852E6105
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 16:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750434862; cv=none; b=aNYAuIpmHMe/oHOy7FO1D2sZVmatSlt3QVL+s5O5dp4xMPoSSb8RXuezXunnwC2kOQUaOJhedRWM06Ez7Ki9YZ1tmr5/RKwWz6/3+2GVqbG7HKSzDVoyAUXC0AEYwEKUGn3XSGf8/MlVzcuDhCLBFxZIQNfUYQAhWk+kRpGxL9w=
+	t=1750435980; cv=none; b=CoID/KTKuQh922hNikzCe7gE3YdAAMigVh20tZNfOR7g7sCP7yjlBKSGu3cEwFeF5Dfw0Cf177jmfXmfV+dm+2+fh/k9FFi+S1kxCStWf04LRMDudDLwJmItB5WaWD95VLQf+JET8GMGWZs5n3JD1Up/PBJNPsGE1sMizHIXpjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750434862; c=relaxed/simple;
-	bh=L+5n/q1joZENJYF/r0KuVXPChvTNGh+qOVoAXlFy97U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hXHn0Lzvez9AbATfqWOqW66Fbv826dt7/w8R17hTJX2UhXWG5G5RL6zzshINYaPALl0Ey3exl7sJBkMfo/rLqpAAFEvVsMZhyGVHSgjXLKlj5tcgWI3krWK8DAeNNSeCb29SKlTHZaN05UYT2uLhUnuKx6H9m3zkMfZKzgWpyHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPck3FAA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750435980; c=relaxed/simple;
+	bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bgbSjIwqr5Y/gXEWJBGPJqYuPW8SYSCyJx0+W1Rjf3qEh7NdMQRyGfjN9oLiKfOSNOLI+UeLm1COR3VjjNzbdn9ipkcMLQxJP/X1z8QpLH+7YOg7Ml7dt4EwaKQsGktVL5LCj18VaEr6oXw+D97/Xi0d51r3EBDMy6ZEpbyH4l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=IR5IsCJi; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPck3FAA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155F8C4CEE3;
-	Fri, 20 Jun 2025 15:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750434862;
-	bh=L+5n/q1joZENJYF/r0KuVXPChvTNGh+qOVoAXlFy97U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NPck3FAAqqQbowswZ4Bs9WQSeDFdlLzALda6dw2sOGvdu2GPaaXPwVC+Ue0I3mT2D
-	 xCodo5MJbVikwhdWdkZ9KQX17P32/qNs+DkOOWOcm7J8AHB24n3Z6oSANV67PtdbD1
-	 cKyM41Ve2cxXpIHJOWj0sLrNZZq3wqJRJnn8X99zANQiM+N0E8ickQhCSUhTTdwUe1
-	 fT/NQ237d0qLc/QQqXQKOJNTKwdEMqnQ8ymBcatzxVPZFH8eTFWD+ll03OPolwsIpy
-	 nselsg0dC2PWXafRdiiu+p+BgUjWN3daNGM9iaZx3bgWbSwVgyKckmzPHfn9jl9JcH
-	 d7R7tM/JcfOyA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.16
-Date: Fri, 20 Jun 2025 12:54:15 -0300
-Message-ID: <20250620155415.88215-1-acme@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="IR5IsCJi"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fb1be9ba89so16069286d6.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 09:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1750435978; x=1751040778; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
+        b=IR5IsCJiXK6NqolsSkyec3JLjvgKNbL2IgKEwOrH31h0lFYQ/dI5dU3B9+grzUbi7G
+         DvYh41YNnkcBFq/YAZWB+fpG6hwPYG5nai0DnE9T5oCxBSgBP8ITgaHh2bMEHrRcBb9H
+         QbIG4L7WxAgIC04aL/++f/zgjLigIKoce0HgI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750435978; x=1751040778;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/PDhYBLFV0Jd9O/4xdvr//PP/eZn5Jae6HmO5vzAHg=;
+        b=L+FkytxXxHGqnUo6pnEvilHnxD0/zH+PovVOsoVSJzIm92vuDNufgm2Liyq6wYwegC
+         4pUuW6Cvm1QTcD/wVhxsrTC7k2Jy+kW9XkdGbcPVBhNVGUsoy/t2Pnd+iyoTBWtcszFf
+         Z7Vfk1akqGo6LomqIqgtG5cBPdi6dgULoB0pDa/W7m8iG3U7aFdLEorY5V81Ul3Tmtlw
+         6QzHw5SFa1TwgIfDSb5sGPD80RHdLIXcAY8eH0OCbEc2gzIMexaNTBhAZI5MZ169Niu1
+         5et24nR1XTI0UdVYQ5xa9HjjMsYTCA38199v3lz66ZWbzzenVz0no/LOk6GoyEWGlI5+
+         bFeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb1wQmJi12FSDd17ou/LfQTxhgv+jBfMljkpkCPXNBcQtTdvwEZbUSIgJDZyAZ+RZoETR3u0KWFavhhuBbF1Pn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ8CLV7SgiyikkPz3RyHpOgEZGonD+SWQwahk4NKdbct70kBrv
+	3mueLp1R8FOsPaYKdx7IieJW+g9kZj79+bcVXIh/ZKhrv6scOdC4mYaR9VFyGLx78ZdpuE6sRIh
+	+B7o=
+X-Gm-Gg: ASbGncvLHTvnTMCAZ0/c1AYLBXGds1FmIXXZYsZ1aZhMxbyhKovOBATb6M/KCmXIzTx
+	85cxx/MjzMzZYE544RB7sbtlPRD9VUvU/8hnrdHR0ARFpkzd2vQpze0qnmQTZAYbnAc0+xuSTbX
+	a/16KrSQJpMpAoBnizQz0A+7eQnd9emIBzNaQ/tGovcZcoDd0sxFyWwTn9rk0wKB83IVKnvYBtA
+	sfh3PDNMMUV78JgXP3mfOCykUX9+9Kdi125RbnBzjZRpVbGMa6PcFAv9d79HD1mO4OC0I2Kh3v+
+	Izr0AUiMTMONLQHK5mx6KywzQ7RIjHH0j0ELQninpr7tKLmIGO6Qca69lkOItFgjDzFIyh44y4J
+	KNrxw0Q==
+X-Google-Smtp-Source: AGHT+IGoovvsl19mY0vCtYhvu9E/Pp3ZVzXJ4Ykxp/GDEUA/7TwOQGC7TYT+H9Qq8AVH2lCTzNqJTQ==
+X-Received: by 2002:a05:6214:2627:b0:6fa:c0ca:c75c with SMTP id 6a1803df08f44-6fd0a5fff0fmr62574406d6.42.1750435976837;
+        Fri, 20 Jun 2025 09:12:56 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd093decfbsm13710906d6.11.2025.06.20.09.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 09:12:56 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Fri, 20 Jun 2025 12:12:55 -0400 (EDT)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
+In-Reply-To: <ef72c8cd-5bed-44ce-b950-d64dc1c22baa@linux.intel.com>
+Message-ID: <5a53490f-d4ec-85f7-4175-e148e02c3e67@maine.edu>
+References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com> <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
+ <52656281-ab73-baf7-0a80-ebcbe79dfca2@maine.edu> <9aee2b65-e43a-4fcd-a929-a98269621315@linux.intel.com> <d12d4300-9926-5e58-6515-a53cb5c7bee0@maine.edu> <ef72c8cd-5bed-44ce-b950-d64dc1c22baa@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Linus,
+On Fri, 20 Jun 2025, Liang, Kan wrote:
 
-	Please consider pulling,
+> Thanks very much for the reproducer! The issue has been root-caused.
+> I've sent a patch to fix it. Please give it a try.
+> https://lore.kernel.org/lkml/20250620110406.3782402-1-kan.liang@linux.intel.com/
 
-Best regards,
+I've applied the patch and can no longer generat the issue with my tests.
 
-- Arnaldo
+Thanks!
 
-The following changes since commit 44a5ab7a7958fbf190ae384b8ef252f23b840c1b:
+Vince
 
-  Merge tag 'powerpc-6.16-3' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2025-06-16 08:49:58 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.16-1-2025-06-20
-
-for you to fetch changes up to d222b6e6fb31e320eca506e665694d8ddf459157:
-
-  tools headers x86 cpufeatures: Sync with the kernel sources (2025-06-17 18:29:42 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.16, 1st batch:
-
-- Fix some file descriptor leaks that stand out with recent changes to
-  'perf list'.
-
-- Fix prctl include to fix building 'perf bench futex' hash with musl libc.
-
-- Restrict 'perf test' uniquifying entry to machines with 'uncore_imc' PMUs.
-
-- Document new output fields (op, cache, mem, dtlb, snoop) used with
-  'perf mem'.
-
-- Synchronize kernel header copies.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (16):
-      tools headers: Update the fs headers with the kernel sources
-      tools headers UAPI: Sync linux/prctl.h with the kernel sources to pick FUTEX knob
-      tools kvm headers arm64: Update KVM header from the kernel sources
-      tools headers UAPI: Sync KVM's vmx.h header with the kernel sources
-      tools headers x86 svm: Sync svm headers with the kernel sources
-      tools headers UAPI: Sync kvm header with the kernel sources
-      perf beauty: Update copy of linux/socket.h with the kernel sources
-      tools headers UAPI: Sync the drm/drm.h with the kernel sources
-      tools headers UAPI: Sync linux/kvm.h with the kernel sources
-      tools headers: Update the copy of x86's mem{cpy,set}_64.S used in 'perf bench'
-      tools headers: Syncronize linux/build_bug.h with the kernel sources
-      tools arch x86: Sync the msr-index.h copy with the kernel sources
-      tools arch amd ibs: Sync ibs.h with the kernel sources
-      tools headers: Synchronize linux/bits.h with the kernel sources
-      perf bench futex: Fix prctl include in musl libc
-      tools headers x86 cpufeatures: Sync with the kernel sources
-
-Chun-Tse Shao (1):
-      perf test: Restrict uniquifying test to machines with 'uncore_imc'
-
-Ian Rogers (2):
-      perf evsel: Missed close() when probing hybrid core PMUs
-      perf test: Directory file descriptor leak
-
-Namhyung Kim (1):
-      perf mem: Document new output fields (op, cache, mem, dtlb, snoop)
-
- include/uapi/linux/bits.h                          |  4 +-
- tools/arch/arm64/include/uapi/asm/kvm.h            |  9 +--
- tools/arch/x86/include/asm/amd/ibs.h               |  5 ++
- tools/arch/x86/include/asm/cpufeatures.h           | 14 +++--
- tools/arch/x86/include/asm/msr-index.h             | 16 +++--
- tools/arch/x86/include/uapi/asm/kvm.h              | 71 ++++++++++++++++++++++
- tools/arch/x86/include/uapi/asm/svm.h              |  2 +
- tools/arch/x86/include/uapi/asm/vmx.h              |  5 +-
- tools/arch/x86/lib/memcpy_64.S                     |  1 +
- tools/arch/x86/lib/memset_64.S                     |  1 +
- tools/include/linux/bits.h                         | 57 ++++++++++++++++-
- tools/include/linux/build_bug.h                    | 10 +--
- tools/include/linux/compiler.h                     |  8 +++
- tools/include/uapi/drm/drm.h                       |  4 ++
- tools/include/uapi/linux/fscrypt.h                 |  6 +-
- tools/include/uapi/linux/kvm.h                     |  4 ++
- tools/include/uapi/linux/stat.h                    |  8 ++-
- tools/perf/Documentation/perf-amd-ibs.txt          | 59 ++++++++++++------
- tools/perf/Documentation/perf-mem.txt              | 50 +++++++++++++++
- tools/perf/bench/futex-hash.c                      |  1 -
- tools/perf/bench/futex.c                           |  9 ++-
- tools/perf/check-headers.sh                        |  2 +-
- tools/perf/tests/shell/stat+event_uniquifying.sh   | 12 +++-
- tools/perf/tests/tests-scripts.c                   |  1 +
- tools/perf/trace/beauty/include/linux/socket.h     |  2 +-
- tools/perf/trace/beauty/include/uapi/linux/fs.h    |  1 +
- tools/perf/trace/beauty/include/uapi/linux/prctl.h |  7 +++
- tools/perf/trace/beauty/include/uapi/linux/stat.h  |  8 ++-
- tools/perf/util/include/linux/linkage.h            |  4 ++
- tools/perf/util/print-events.c                     |  1 +
- 30 files changed, 329 insertions(+), 53 deletions(-)
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
