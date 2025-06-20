@@ -1,119 +1,152 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7087A225777;
-	Fri, 20 Jun 2025 13:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA4C2C374E;
+	Fri, 20 Jun 2025 15:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750426475; cv=none; b=FipC3Vry0HJixadxCZvJ1Keg7RoZF2ah1pK/yXv33DcCmNeut6hKMb5h6iCeeKxT7Qt4hG3wdtZ20QIjFof/TTfMpAWziRQKgIFHVi7r239GtkGpmheUxB7em10100m1B45ekUhl/NXqncckl19CYusvmF6tKEPpAWz5G5llmUM=
+	t=1750434862; cv=none; b=aNYAuIpmHMe/oHOy7FO1D2sZVmatSlt3QVL+s5O5dp4xMPoSSb8RXuezXunnwC2kOQUaOJhedRWM06Ez7Ki9YZ1tmr5/RKwWz6/3+2GVqbG7HKSzDVoyAUXC0AEYwEKUGn3XSGf8/MlVzcuDhCLBFxZIQNfUYQAhWk+kRpGxL9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750426475; c=relaxed/simple;
-	bh=KdYvDLV3w025s18KRQwH11gAXy1yiUiz9j2G1EjCbbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M9LN0W3eYoJATsZ1uNTSVQ5BI+akGTOx2uits+TLDPWi8LLbxP5uu6rJCYGj0+AxbKwphdg9NWd0IOE7PwU2X1oJ/gyey+CgaCJLBfH05mJ3Doe6z9blVsT4Mn36/A8G7WxArHXaRAVQeqvMyCwvw3RE7uySh2QIDQpBEFauIwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaMXWg1p; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750434862; c=relaxed/simple;
+	bh=L+5n/q1joZENJYF/r0KuVXPChvTNGh+qOVoAXlFy97U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hXHn0Lzvez9AbATfqWOqW66Fbv826dt7/w8R17hTJX2UhXWG5G5RL6zzshINYaPALl0Ey3exl7sJBkMfo/rLqpAAFEvVsMZhyGVHSgjXLKlj5tcgWI3krWK8DAeNNSeCb29SKlTHZaN05UYT2uLhUnuKx6H9m3zkMfZKzgWpyHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPck3FAA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaMXWg1p"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so15333715e9.3;
-        Fri, 20 Jun 2025 06:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750426472; x=1751031272; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mtx9NszNi9lugOX4De6l4R92z6p4vsxHe6L4kOW45Uk=;
-        b=FaMXWg1p2uAhfER2TzK72Ff+8UMvlqn2scLII0iDmi4nVAsLVhQtUDZ2zisklH78ad
-         zvhf+DkIukJaiuWeFZ3rfR9q9OJ+qyFE68s+kXOcJv4I8cjebMuC3ezMpm31Q2T4JKSc
-         3lqPP9Z2ZdGLMW42jWzGNT1hMkregpdoyHaUcIYpr1mUJrCFZdznd0Y+JGXVwXBJOEZy
-         wgZDfQ0CXlcsEgARcmc/O5whQhWve3K+OeiNMH1xHF2oSFde4GQ7fDVgvc7lee38I4iI
-         DH1dceFebsMNppY9x1B3oWhopMW0r+ZU3RwXhf6ZY8UyEEs3tdbBOALhyJaqYSszfClr
-         pzAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750426472; x=1751031272;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mtx9NszNi9lugOX4De6l4R92z6p4vsxHe6L4kOW45Uk=;
-        b=FFuht9ugDlCvYXnaIfoEteVrUfaZals2Kl99fCuBKIbet3qWTE/D+Zzz9gPzOlOANO
-         if0Loe0aj0L8s6aQtY/ObnxxjX/IRkH6WiLEpnPjxcHuD8yXdKdNXWEXEZxjIyedUA5B
-         0ze2iptwu6q43sbhKCxR10IdkHzcKONOZ+LD94+3u007gM5vQDWKGeavn3NjY1/9QoQ4
-         803OwofwZMJk8kVtEF7BbZw3SGSvM/eOYmVWq6RmmeC90t2QaOFkxeNGCOqmQmdwFZVz
-         teRcyF4sdvDAVtLTaK1t6/EY2QI1CynBjOUvyGmuRJDiRT7RGY7ZzXFpN8TkRjPOHVNv
-         RDLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLUVrSP+qRoL/7m/r24mw7JEU02wZ5+YqJGgvifMRdAwFkD1oJKWG0kRorTiavFvAGdl8qFselOcqEIFk=@vger.kernel.org, AJvYcCXedUssavJk+D4nFhngWFZtZ+YdH9I6hhH+vsGGqJm6Sz7egOztwAJvbOEW+YycQSJmXmeiv6TMwIU4shdFjyndtQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzpw5mLv8wpEkdTaRDd36MWlNvPLwcOwcxUxrFFM1TYNZJAdSW7
-	psjLTiCyKAdctD/4ESOV8P0IlGB+NMGGQLz5heUtJ9qTJhnUwnnXGige
-X-Gm-Gg: ASbGncuA48MKSI+Pt19pcgkIBItcQeaKMxYf7Lx9PjyAIaH/+t6T3Dfa98vzw9i0Ir/
-	5ZxSD9vpCO+P7IHllFzsqqMVOOWKmAwrWb+pNwQEpQK5n+IUs9/dEStR4ZhNYEePPDaXB+Vj0Df
-	BaLmApCZxr+7KGhk52ha5BIjJDXZ2x2NBFvW2yoLO/wmtZwr05+Y7vhhVDkfrfW4Ed/poP8Vd9x
-	TFDFgax4Z/FaaBTiaWPXkQ3pJ960YrOwdq3rI+hGcGOtTz4/u+1p4JsshE/LknKCBK9B+rFHnaF
-	b8at/6bAKRW43DiCH1wZu6yupMgqTB3ocW/QpXycrs/G7/5YZ4L/dE83FGcUMCKh4ffB/JYM1zW
-	1fgYgeNeNEV+VdsCfkLeJUGGpYxUoSM+Jk+A=
-X-Google-Smtp-Source: AGHT+IFtQyBDnW4T1Jvb5QOCjB4fHJiRrbtGNhV9cNoRrVe7TyYWvDyU13igPiP9nmo26VamWyuM4g==
-X-Received: by 2002:a05:6000:2906:b0:3a5:2cb5:6429 with SMTP id ffacd0b85a97d-3a6d12e2203mr2441994f8f.43.1750426471502;
-        Fri, 20 Jun 2025 06:34:31 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f1d902sm2062730f8f.43.2025.06.20.06.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 06:34:29 -0700 (PDT)
-Date: Fri, 20 Jun 2025 14:34:25 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo
- <acme@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] vdso: Switch get/put unaligned from packed
- struct to memcpy
-Message-ID: <20250620143425.6d654bf6@pumpkin>
-In-Reply-To: <20250617205320.1580946-2-irogers@google.com>
-References: <20250617205320.1580946-1-irogers@google.com>
-	<20250617205320.1580946-2-irogers@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPck3FAA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155F8C4CEE3;
+	Fri, 20 Jun 2025 15:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750434862;
+	bh=L+5n/q1joZENJYF/r0KuVXPChvTNGh+qOVoAXlFy97U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NPck3FAAqqQbowswZ4Bs9WQSeDFdlLzALda6dw2sOGvdu2GPaaXPwVC+Ue0I3mT2D
+	 xCodo5MJbVikwhdWdkZ9KQX17P32/qNs+DkOOWOcm7J8AHB24n3Z6oSANV67PtdbD1
+	 cKyM41Ve2cxXpIHJOWj0sLrNZZq3wqJRJnn8X99zANQiM+N0E8ickQhCSUhTTdwUe1
+	 fT/NQ237d0qLc/QQqXQKOJNTKwdEMqnQ8ymBcatzxVPZFH8eTFWD+ll03OPolwsIpy
+	 nselsg0dC2PWXafRdiiu+p+BgUjWN3daNGM9iaZx3bgWbSwVgyKckmzPHfn9jl9JcH
+	 d7R7tM/JcfOyA==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.16
+Date: Fri, 20 Jun 2025 12:54:15 -0300
+Message-ID: <20250620155415.88215-1-acme@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Jun 2025 13:53:18 -0700
-Ian Rogers <irogers@google.com> wrote:
+Hi Linus,
 
-> Type punning is necessary for get/put unaligned but the use of a
-> packed struct violates strict aliasing rules, requiring
-> -fno-strict-aliasing to be passed to the C compiler. Switch to using
-> memcpy so that -fno-strict-aliasing isn't necessary.
->....							\
-> +/**
-> + * __put_unaligned_t - write an unaligned value to memory.
-> + * @type:	the type of the value to store.
-> + * @val:	the value to store.
-> + * @ptr:	the pointer to store to.
-> + *
-> + * Use memcpy to affect an unaligned type sized store avoiding undefined
-> + * behavior from approaches like type punning that require -fno-strict-aliasing
-> + * in order to be correct. The void* cast silences ubsan warnings.
-> + */
-> +#define __put_unaligned_t(type, val, ptr) do {				\
-> +	type __put_unaligned_val = (val);				\
-> +	__builtin_memcpy((void *)(ptr), &__put_unaligned_val,		\
-> +			 sizeof(__put_unaligned_val));			\
->  } while (0)
+	Please consider pulling,
 
-Does that actually work?
-If 'ptr' has type 'long *' gcc will (validly according to C) assume
-it is aligned and will generate a misaligned memory write.
-The (void *) cast make no difference.
+Best regards,
 
-Using (void *)(long)(ptr) might lose the alignment.
-Otherwise you may need to use OPTIMISER_HIDE_VAR() and live
-with the extra register-register move it tends to generate.
+- Arnaldo
 
-	David
+The following changes since commit 44a5ab7a7958fbf190ae384b8ef252f23b840c1b:
+
+  Merge tag 'powerpc-6.16-3' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2025-06-16 08:49:58 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.16-1-2025-06-20
+
+for you to fetch changes up to d222b6e6fb31e320eca506e665694d8ddf459157:
+
+  tools headers x86 cpufeatures: Sync with the kernel sources (2025-06-17 18:29:42 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.16, 1st batch:
+
+- Fix some file descriptor leaks that stand out with recent changes to
+  'perf list'.
+
+- Fix prctl include to fix building 'perf bench futex' hash with musl libc.
+
+- Restrict 'perf test' uniquifying entry to machines with 'uncore_imc' PMUs.
+
+- Document new output fields (op, cache, mem, dtlb, snoop) used with
+  'perf mem'.
+
+- Synchronize kernel header copies.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (16):
+      tools headers: Update the fs headers with the kernel sources
+      tools headers UAPI: Sync linux/prctl.h with the kernel sources to pick FUTEX knob
+      tools kvm headers arm64: Update KVM header from the kernel sources
+      tools headers UAPI: Sync KVM's vmx.h header with the kernel sources
+      tools headers x86 svm: Sync svm headers with the kernel sources
+      tools headers UAPI: Sync kvm header with the kernel sources
+      perf beauty: Update copy of linux/socket.h with the kernel sources
+      tools headers UAPI: Sync the drm/drm.h with the kernel sources
+      tools headers UAPI: Sync linux/kvm.h with the kernel sources
+      tools headers: Update the copy of x86's mem{cpy,set}_64.S used in 'perf bench'
+      tools headers: Syncronize linux/build_bug.h with the kernel sources
+      tools arch x86: Sync the msr-index.h copy with the kernel sources
+      tools arch amd ibs: Sync ibs.h with the kernel sources
+      tools headers: Synchronize linux/bits.h with the kernel sources
+      perf bench futex: Fix prctl include in musl libc
+      tools headers x86 cpufeatures: Sync with the kernel sources
+
+Chun-Tse Shao (1):
+      perf test: Restrict uniquifying test to machines with 'uncore_imc'
+
+Ian Rogers (2):
+      perf evsel: Missed close() when probing hybrid core PMUs
+      perf test: Directory file descriptor leak
+
+Namhyung Kim (1):
+      perf mem: Document new output fields (op, cache, mem, dtlb, snoop)
+
+ include/uapi/linux/bits.h                          |  4 +-
+ tools/arch/arm64/include/uapi/asm/kvm.h            |  9 +--
+ tools/arch/x86/include/asm/amd/ibs.h               |  5 ++
+ tools/arch/x86/include/asm/cpufeatures.h           | 14 +++--
+ tools/arch/x86/include/asm/msr-index.h             | 16 +++--
+ tools/arch/x86/include/uapi/asm/kvm.h              | 71 ++++++++++++++++++++++
+ tools/arch/x86/include/uapi/asm/svm.h              |  2 +
+ tools/arch/x86/include/uapi/asm/vmx.h              |  5 +-
+ tools/arch/x86/lib/memcpy_64.S                     |  1 +
+ tools/arch/x86/lib/memset_64.S                     |  1 +
+ tools/include/linux/bits.h                         | 57 ++++++++++++++++-
+ tools/include/linux/build_bug.h                    | 10 +--
+ tools/include/linux/compiler.h                     |  8 +++
+ tools/include/uapi/drm/drm.h                       |  4 ++
+ tools/include/uapi/linux/fscrypt.h                 |  6 +-
+ tools/include/uapi/linux/kvm.h                     |  4 ++
+ tools/include/uapi/linux/stat.h                    |  8 ++-
+ tools/perf/Documentation/perf-amd-ibs.txt          | 59 ++++++++++++------
+ tools/perf/Documentation/perf-mem.txt              | 50 +++++++++++++++
+ tools/perf/bench/futex-hash.c                      |  1 -
+ tools/perf/bench/futex.c                           |  9 ++-
+ tools/perf/check-headers.sh                        |  2 +-
+ tools/perf/tests/shell/stat+event_uniquifying.sh   | 12 +++-
+ tools/perf/tests/tests-scripts.c                   |  1 +
+ tools/perf/trace/beauty/include/linux/socket.h     |  2 +-
+ tools/perf/trace/beauty/include/uapi/linux/fs.h    |  1 +
+ tools/perf/trace/beauty/include/uapi/linux/prctl.h |  7 +++
+ tools/perf/trace/beauty/include/uapi/linux/stat.h  |  8 ++-
+ tools/perf/util/include/linux/linkage.h            |  4 ++
+ tools/perf/util/print-events.c                     |  1 +
+ 30 files changed, 329 insertions(+), 53 deletions(-)
