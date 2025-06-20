@@ -1,55 +1,55 @@
-Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E20239E91
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 22:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5C023AB94
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 22:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750457920; cv=none; b=b0Y4js/UDxcsEmupTBSNZdKeuB2/BxkquXQeAgbotlJZX2rdmOmg9PpXyq3xZk66z/E/0PDm/H9IxANhjTkBkr0yyl+THGxmbxfOC8aCWhcmiJCEisQ8qGewaorvPFowOR+d+S7fMNQyjB7UUjYsuy1GHtkY8fU14XOSU/AI+vM=
+	t=1750457921; cv=none; b=ZS5YVBnVmGjnmeCg8lu1xLlxpZbVkJ+HvVJMxmajUyVRJAEsOc3HeNjqnQQV+2N7DsOW3FOJmzjYF+Dp9Z2TX+m65kRhUJeiNUsqvNo0Be8rpU7YMtnphmwc+vQtbZwtpHVHVC1aSnLYNqz76gOkJwNMcMvnpdbcZ6Cm6vfdirA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750457920; c=relaxed/simple;
-	bh=ZTAgaNMzI4qiekOqkv3pNeLxj5wOqxlFzSL0ObZQoaI=;
+	s=arc-20240116; t=1750457921; c=relaxed/simple;
+	bh=YIYZtYXjjIDG79viwi+LeCOmjCYAMmr9a5RXDPHvUQE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tkfGBU4vELfnsKbObI8CguOlDqm349Jir2Wc1c5of96vmzlVVT1DT/FuO/X9YhK33SH+MYM2TS7zyqTZyWtB0B6ZH5aAdcrZuF7vAoAM22kYtJC3+Tn3j0B/Gweo9un2qJbVIjGkii6UVtjunifsgeszUs7XAbKHfAw/IrqsNWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1fTMjpl; arc=none smtp.client-ip=209.85.166.201
+	 To:Cc:Content-Type; b=DYThnqHNDxT74+vbj7t6eBNafBm5yfgFyUpsMFIgbQc9MuhsXvRD4VqVP87Qlj+2pG6mFCj60XmWJqpJ9J1YQMK4N8um+kllQJZ++qSbnCSqjvtAKG5jZOTZuttyhZd2rp9mruMQQNiBNLjQw6QvUEA9bRG7NgsN3ULe3e+ZE1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aHCn46JH; arc=none smtp.client-ip=209.85.166.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1fTMjpl"
-Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3ddd045bb28so21157875ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 15:18:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aHCn46JH"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so23345265ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jun 2025 15:18:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750457917; x=1751062717; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750457919; x=1751062719; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tgz/COFsBAperIPw3jbaNsXNDBcCpCZIFlLHMRVJgqY=;
-        b=B1fTMjplXpGS1iTbK6dYeZ95fWN25oPNuUEbaLnxmiqKHrvP8hGzncZCU33rzqojcg
-         uYmnJ1g+kLVwiCdMxgEeuptR2jPqu8cAKAtFlqFVlTXogG+MpLeRWABIeaE5neV8BxAo
-         NQz8QLdEVf59XiyH13SvbeOAq3n9oK0rRM6eBZamwYZ8RgoQ5qSsaPNIGfSQBG3Xgcs3
-         zX4qOxT6Hm4ET9WfOW6KlTX/PAa9qArUfOz0ZPcMHSet9ckoLHrh9K9DhpE8mXUywYhr
-         NSmfD1+kGK0XIpfVQCWvk/RtW/ZEeOO/ALT4Nf4uKW+eHq9VZjkYtdyLnyotyzMQj2ZU
-         Kmvg==
+        bh=Fp13SX1Zh+VZLmNtKrEzp/HCcjo4sCQKHBsJF62MnBU=;
+        b=aHCn46JHfXsAqDl847ItrCxJPstp8TmNfe8t9PridE3GUcukpZ5flqpGgdAC46nTRQ
+         81OVXEi6Q+WzaujLcYAhuK+5tB/1gTb38YGfUp/9UwCTQ7v48VxjRqO7kD6yxUt86gXR
+         4ojD7u5Xr6AxLl2zf1TrCgPuXi+yE5jRPS5/lugjK42hCSPKG8qgcZVzmw/jTGEn7jf5
+         1SWhN8cMLnbcLUL5zhKRu+jY7X0UNqmYospW6nrxqcY1Q98P1u0R142QTszPuzRORBsG
+         IRGEBiMw/aRsW1y3dNuV4+hYpf9/MBOo/b8lHVTV1W+FzUdZBV9152/GT+oOH3E2/6la
+         Uvhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750457917; x=1751062717;
+        d=1e100.net; s=20230601; t=1750457919; x=1751062719;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tgz/COFsBAperIPw3jbaNsXNDBcCpCZIFlLHMRVJgqY=;
-        b=mVr/yAEi+I5PdLQGHs+jv5Smehb5RJY4UNUCzKRt9biqPOBVs/SNWwb1dfgZ83qrZb
-         3A6tgXnz7iXUEnQ19m+NhSOcpfxlp9CNeBPw6ZbVllGllu5lDLdXEGexEwzdtpSFREmF
-         /gULV0UdXFlFcpEnESdGRjLAFW6zkjem5cbLVgW0mN81MtbsURKlvhDWSumyCZ2959/Y
-         aykmHco1v1GFotziMrw3pssmS+mFDO1il9Y9K4hvig+NAfjF2akut2bAkLe616HGkI1v
-         Yn5Y3smNzVSEkTM6zu9LY6pq6FMxRUL3qJXCAHGtARYKYbq+H7cjmx69SVp+gY4P1qxE
-         +R9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXxDYq2KVd1aCuxCcPCWvhnO6Ejp97Cvft7/awuUBx4dzs6BPuqWqIq+OqQzVN0nBoa5JzOgxMSJPmGs2SjP88/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJkedlvBRjqbldbBpr9ZmafM7hMdOd6twMElLbRWxKlNgbkBEZ
-	NLYfn1DtGdgzPb/A6lIBqRGuqUnQJWTdsf0QBZqzhU3P2QsfDH1xHB5HHDvJcccFYMXhoyzR71Z
-	T+feDEQdqDGj0xNHfZ8m4FVpkNw==
-X-Google-Smtp-Source: AGHT+IGjEFFNY2ukf5QiVzn6d0Iwii2o/2bYlxITJ69QjxdmPFLoVLBssIQF8Rhp8gGY8wow9/U+VX25kMai0q6pUg==
-X-Received: from ilbee13.prod.google.com ([2002:a05:6e02:490d:b0:3dd:bec6:9d56])
+        bh=Fp13SX1Zh+VZLmNtKrEzp/HCcjo4sCQKHBsJF62MnBU=;
+        b=Hn2tXHGw3w4wRDVW5VJmT/iqCODtbametDzBHngxaPtOzI4FfmGZBRJQ7I6jbU8mk1
+         2nXo5Zm5lc/x6U6g0Gc7y7d0o6ORWggc9AbOZ+BrcK2KQrdTpfp6YhHEzs2g8+k0ZLHS
+         4lL5nrTzpWbYBLH+Hr2oK0/1v4O0xBDIXr/0/jKM62bYmuitu1M+UcM/bW8Qq900qabI
+         qjVQAMFRfd28FUHGHUMQJ6zQg1VoyAk+MuwZFGentqqGGQU7F6quiCGVaV4YZD6Ur7IE
+         D/ikgu1WXbc+BLDv6qzp8uO9V4Xv5eGnm8BKdaaRVf+RZoowWQBCHEoSwOMoIGcLTRzM
+         tTAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUk1EuaOhwJ4SbTyfqcE8+tufYdsGSVrQ9PM6LKP/LgOUd0vbRyDqKF8tnnr4FTuuaLf8861n1gMCyS5BoaawZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwebosGgTpMcS8JFUvtNt4Vem0jaU00p+Q04QdHHpFIKHAeR7+W
+	aXa7oX+o+Cj4S/zoAp3yRsEBCusA4/tOCehLDM25AKUppA+B3S7yx4HY6HCGoQIT7CGDkVFORUP
+	77Fyv3qpZAMumX34lrR7lxNyCCw==
+X-Google-Smtp-Source: AGHT+IFEidHFMEbKk2OynEjRQvMLrVqFymZV1Kh1vRLY6IT0l2lygB4TWhQMZfNIZL6xIAJ9fHhQZ3Bjc4iSkEbXjw==
+X-Received: from ilbcp10.prod.google.com ([2002:a05:6e02:398a:b0:3dc:756a:e520])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1646:b0:3db:86fc:d328 with SMTP id e9e14a558f8ab-3de38c2e1c2mr57720245ab.5.1750457917550;
- Fri, 20 Jun 2025 15:18:37 -0700 (PDT)
-Date: Fri, 20 Jun 2025 22:13:02 +0000
+ 2002:a05:6e02:3782:b0:3dc:7fa4:834 with SMTP id e9e14a558f8ab-3de38cb06a0mr47968995ab.15.1750457918713;
+ Fri, 20 Jun 2025 15:18:38 -0700 (PDT)
+Date: Fri, 20 Jun 2025 22:13:03 +0000
 In-Reply-To: <20250620221326.1261128-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250620221326.1261128-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250620221326.1261128-3-coltonlewis@google.com>
-Subject: [PATCH v2 02/23] arm64: Generate sign macro for sysreg Enums
+Message-ID: <20250620221326.1261128-4-coltonlewis@google.com>
+Subject: [PATCH v2 03/23] arm64: cpufeature: Add cpucap for PMICNTR
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -74,27 +74,45 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-There's no reason Enums shouldn't be equivalent to UnsignedEnums and
-explicitly specify they are unsigned. This will avoid the annoyance I
-had with HPMN0.
+Add a cpucap for FEAT_PMUv3_PMICNTR, meaning there is a dedicated
+instruction counter as well as the cycle counter.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- arch/arm64/tools/gen-sysreg.awk | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/cpufeature.c | 7 +++++++
+ arch/arm64/tools/cpucaps       | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/arch/arm64/tools/gen-sysreg.awk b/arch/arm64/tools/gen-sysreg.awk
-index f2a1732cb1f6..fa21a632d9b7 100755
---- a/arch/arm64/tools/gen-sysreg.awk
-+++ b/arch/arm64/tools/gen-sysreg.awk
-@@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" || block_current() == "SysregFields
- 	parse_bitdef(reg, field, $2)
- 
- 	define_field(reg, field, msb, lsb)
-+	define_field_sign(reg, field, "false")
- 
- 	next
- }
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 278294fdc97d..85dea9714928 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -2904,6 +2904,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
+ 	},
++	{
++		.desc = "PMU Dedicated Instruction Counter",
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.capability = ARM64_HAS_PMICNTR,
++		.matches = has_cpuid_feature,
++		ARM64_CPUID_FIELDS(ID_AA64DFR1_EL1, PMICNTR, IMP)
++	},
+ #ifdef CONFIG_ARM64_SME
+ 	{
+ 		.desc = "Scalable Matrix Extension",
+diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+index 5b196ba21629..6dd72fcdd612 100644
+--- a/arch/arm64/tools/cpucaps
++++ b/arch/arm64/tools/cpucaps
+@@ -47,6 +47,7 @@ HAS_LSE_ATOMICS
+ HAS_MOPS
+ HAS_NESTED_VIRT
+ HAS_PAN
++HAS_PMICNTR
+ HAS_PMUV3
+ HAS_S1PIE
+ HAS_S1POE
 -- 
 2.50.0.714.g196bf9f422-goog
 
