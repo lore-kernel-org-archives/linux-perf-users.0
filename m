@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D8D26A1C4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A3926F46E;
 	Sat, 21 Jun 2025 18:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750528883; cv=none; b=ccznRkMNXXZyc7UF/7wji0XBauiEnHooTdzQEX3mZsluovMiXoEZbDRBQEdgCrlTVBlQ9r0YP2+5qyvBFIjORDux4RSsoBuhkl7P+haHvxp+21cyN3wDS/ehX7fZeT81ey+EjXRR0FtOKaTsCO0Q7+kHru22hmfATN2/7KUVDvw=
+	t=1750528884; cv=none; b=Nk2Zv9CSpU5539TE6XQVfEzboJevK1RO2kfyVKcThVUvvjywo+MjWMUSSWEhrnYVRYSHqjWp3BJu5+woBYQGx/enh7VTt48ug/nzMl/N3n5ayJ578okqsW88yehpjO5ObJjs8f6hAvQqnox0zvjM1woe6CFVT0sIg5Re2k/QAQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750528883; c=relaxed/simple;
-	bh=6zQZ72m49x1BcZdTxFSIRG80BSi2SlJFEib2qVHPMgQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=LZjAf5L3rkWmJMnnoPb2ffO0AzIl002aAmbcthdyZev8ZjcHpFkgmAh1x6FTAdO/zIdYEC2azL4NgM1xO8FTJpqv++Zv0QT59t5miYNgPGgcCRM9rIUSUpo8VtNVoBsr0XaDG7Lm4FbxSVvt1jxMsQeX6yb3FwFhCCKKwxwd+VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gikyGOKa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750528884; c=relaxed/simple;
+	bh=QIQ1W9n/2wTSUm8GTP6ksbZ+avPTfI+yWmDqMPp6dm4=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=d5x4lgXvvxWZyikXa7TwmJIKMBFx9rgZmulJvNcotUV9rgxRTe4/v3CxQnjYgzoydlNYtuKWNngyIvAuw58tdg1UL5Tu/fWPg27eNKJW4ZtmP5eMwGUw3RKeB0xRVsD3k/gUhbaQaQaVY5JjPlr8jWF2Mrkech+uGmuSHa5ne3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOIsqXM6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gikyGOKa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E866C4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOIsqXM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770B3C4AF0C;
 	Sat, 21 Jun 2025 18:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750528883;
-	bh=6zQZ72m49x1BcZdTxFSIRG80BSi2SlJFEib2qVHPMgQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gikyGOKaNN3UWupxtcGbbZfOpKRECL2eeOR5oHsfStRzZPfecUebV3urg8z+XkNZX
-	 jZFp58ACbiTQgABw3bGKQkH4c7INXx26gWAmaroQYNbRxA/eDcLCJ2egg8Wa11aMxT
-	 zarUGtMXJ5cp6WcAg1k0GenOBqruflt4RgbjdiefnMQz7o3+bikLf+xeoQY7Qeqso3
-	 5FPbKJGjr5yKkI4xqw9GKQd79ZvTto8c3bkg31XTVQAG0kizHQ8ucSDGC/TuTP1KBt
-	 p25WprZ7qnphA7mvM+yIAgIsf3RRtXpdkCp4PLFF9+LsnIOwNBkdeQkdB0uo+87rRY
-	 3zJ5Kv6O72Rrg==
+	bh=QIQ1W9n/2wTSUm8GTP6ksbZ+avPTfI+yWmDqMPp6dm4=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=cOIsqXM6uCcYGX+UhP30iUqDkTZA39y1Ye6iHl/+loTZJEcNKtIwOd3PlK2rb0fya
+	 8d9OFm1whqfKwyud/U2FeyvmwCrlEMwTjM7IYfTsiJUpqOMJH092hG2OXnapNEUF+V
+	 OmviAkXZlHbsUQzzD6K4K5NrGQdtfrNnGgFi5RC3aq38HGqGjaXaXtADzFSbU8GRvG
+	 3HOl/yAnryLKR7tk9js7EUZolgR1rufkN9Dr795ZTRSm1yBfKYasJwZoX8BxbOS6xE
+	 HOjRjJOrm+t3yexHaxhkk07AQ6u2kWPG7mxTcpN6peGIaiF3YGhdREn9YjrYcYE5pm
+	 /Vus5xcytzSxQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20250606225431.2109754-1-namhyung@kernel.org>
-References: <20250606225431.2109754-1-namhyung@kernel.org>
-Subject: Re: [PATCH] perf parse-events: Set default GH modifier properly
-Message-Id: <175052888301.2250071.13103878674887305698.b4-ty@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250619002555.100896-1-irogers@google.com>
+References: <20250619002555.100896-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf test: Add header shell test
+Message-Id: <175052888344.2250071.11324057542557447908.b4-ty@kernel.org>
 Date: Sat, 21 Jun 2025 11:01:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -48,18 +49,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 06 Jun 2025 15:54:31 -0700, Namhyung Kim wrote:
-> Commit 7b100989b4f6bce7 ("perf evlist: Remove __evlist__add_default")
-> changed to use "cycles:P" as a default event.  But the problem is it
-> cannot set other default modifiers correctly.
+On Wed, 18 Jun 2025 17:25:55 -0700, Ian Rogers wrote:
+> Add a shell test that sanity checks perf data and pipe mode produce
+> expected header fields.
 > 
-> perf kvm needs to set attr.exclude_host by default but it didn't work
-> because of the logic in the parse_events__modifier_list().  Also the
-> exclude_GH_default was applied only if ":u" modifier was specified -
-> which is strange.  Move it out after handling the ":GH" and check
-> perf_host and perf_guest properly.
 > 
-> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
