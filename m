@@ -1,51 +1,54 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298FB1B808
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Jun 2025 01:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5CE1A5B99;
+	Sat, 21 Jun 2025 09:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750468033; cv=none; b=fT0sBXIg+3TzpFhXDrNIJjpGDmlBO79FNQbk7IFWmVnu9rfffLAiZHhV0Yf5CrQyj6HGIGuyuB+0uRaxyMMqomI+rr9k+qkrzAjlZ5I5pxDnBymbKe37OQnwJWUdfq4EME8+fFpSAn16v3W0u9fIJKA6umcAYEIizdkPmR5PewA=
+	t=1750497618; cv=none; b=ChtxjIyeZ5BEgmD9qMCO7zDpLi8Q1hqJnUmtLzIkOZL3HSJsMWCrAKUQJjvi5AEGxRGEK9KTZnQs8AAAaR/vUaceODwMXui58Xgv8eTBXD732GWNwKhq25BSiIqH3H7a1DKkznVUB13unpzZ36b+7jymC4z7qwsPQKRj4ZB2+cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750468033; c=relaxed/simple;
-	bh=pzLOXtwqX+R5ZkDJnNjc7FQ6HyDYUogvPcm4PoBIA2Y=;
+	s=arc-20240116; t=1750497618; c=relaxed/simple;
+	bh=toupD9+AQbYUeU5Tc+TD0Yk8NrBjlSM4Q+eiJFhhiEM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MVFer1sILjLus58raqElskBPBP/7ZhhlpdqknTJW8zA6fY+fTtHJ4k+HHfL/OpIiM6AAK9GKPxlyfl5Sq7EyTGDokR33/m0Rw16i8E6AXOPA/eaCXaekYvGMLU5DhUXa8P+k5rIyverfdzoA+XxdtVEgIXAq39WFbNW2mC/mIJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lcs+3a2Z; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2OKXBsqbSLeHxUSw5LMuZx0zsKlcjos2Dd0k5Q7iCuCyISipqBeuE2r6M4C0G6KVpO51UjknnfHkP9++3WrqpgVdKUWMdqPCpQevHlzFN80CGI3VKo/tINsSW2hZiesTMWBw8MV9WR6wb7QxDPKKUt9IxR87rmkp0MhC5eU48g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uLIfli8Z; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lcs+3a2Z"
-Date: Fri, 20 Jun 2025 18:06:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750468018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x9bGMpSO4WqiAydjTYI1BvmIFHA6ViKMaNDWLEKT1C0=;
-	b=lcs+3a2ZLhflGQHKJ+gTgO7tBN917ZPbJW/VqGm5qDtkba9vGMlVsl2g4UsIib1GPpDr4G
-	Qz0ka4yuqWFfIVF8ZG1dVxusdCKjloC/kN1XPEVs7C6tPFt7GQ6bMeuvijVPunIWZecPoH
-	tkaZ/VVRFsn3eo+FUkZ0KJuGDM0AJ7I=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 07/23] perf: arm_pmuv3: Introduce method to partition
- the PMU
-Message-ID: <aFYFqrYRsmCi6oii@linux.dev>
-References: <20250620221326.1261128-1-coltonlewis@google.com>
- <20250620221326.1261128-8-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uLIfli8Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FyfL9prHLKhHbqgEe+wwi0u4/Cr2AD00/3GDODY/t8M=; b=uLIfli8Z/LRRwFGc5OR0bOhwOO
+	qqca39KikuN6TmQ1SA5qATe7tuqA5OIxHg6u7Mpsyd2GU2TSm2oPic/sjVphVnm7tYI9nxRRU4RdK
+	sD/2X5vn7heLHAMk2MnQqhgvm3KswvxaUhrykKV0IDMmAApxqnOw7EaFtnkIecj+eL1OSuBDrfvD1
+	jFLlJNAK0gAAeIe6oxnH6B+e5vZqQeMI1LHPmT8tK9wN8tfSmcLWhvKyfe4xsVvea/5mBnT+yzkQl
+	tZV4RKreYONiWZiaopf/uhjVR8PTKrcRDW8nt0jtGP3XKnUzQCYi9b5SZMaIA5lr9WxJqy6TuU2T9
+	I5Yl+CsA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uSuOI-0000000EujU-0zr0;
+	Sat, 21 Jun 2025 09:20:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2C4C03087E7; Sat, 21 Jun 2025 11:20:01 +0200 (CEST)
+Date: Sat, 21 Jun 2025 11:20:01 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v4 07/13] perf/x86/intel: Allocate arch-PEBS buffer and
+ initialize PEBS_BASE MSR
+Message-ID: <20250621092001.GT1613376@noisy.programming.kicks-ass.net>
+References: <20250620103909.1586595-1-dapeng1.mi@linux.intel.com>
+ <20250620103909.1586595-8-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,139 +57,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250620221326.1261128-8-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250620103909.1586595-8-dapeng1.mi@linux.intel.com>
 
-On Fri, Jun 20, 2025 at 10:13:07PM +0000, Colton Lewis wrote:
-> For PMUv3, the register field MDCR_EL2.HPMN partitiones the PMU
-> counters into two ranges where counters 0..HPMN-1 are accessible by
-> EL1 and, if allowed, EL0 while counters HPMN..N are only accessible by
-> EL2.
-> 
-> Create module parameters partition_pmu and reserved_guest_counters to
-> reserve a number of counters for the guest. These numbers are set at
-> boot because the perf subsystem assumes the number of counters will
-> not change after the PMU is probed.
-> 
-> Introduce the function armv8pmu_partition() to modify the PMU driver's
-> cntr_mask of available counters to exclude the counters being reserved
-> for the guest and record reserved_guest_counters as the maximum
-> allowable value for HPMN.
-> 
-> Due to the difficulty this feature would create for the driver running
-> at EL1 on the host, partitioning is only allowed in VHE mode. Working
-> on nVHE mode would require a hypercall for every counter access in the
-> driver because the counters reserved for the host by HPMN are only
-> accessible to EL2.
-> 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->  arch/arm/include/asm/arm_pmuv3.h   | 10 ++++
->  arch/arm64/include/asm/arm_pmuv3.h |  5 ++
->  drivers/perf/arm_pmuv3.c           | 95 +++++++++++++++++++++++++++++-
->  include/linux/perf/arm_pmu.h       |  1 +
->  4 files changed, 109 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-> index 2ec0e5e83fc9..9dc43242538c 100644
-> --- a/arch/arm/include/asm/arm_pmuv3.h
-> +++ b/arch/arm/include/asm/arm_pmuv3.h
-> @@ -228,6 +228,11 @@ static inline bool kvm_set_pmuserenr(u64 val)
+On Fri, Jun 20, 2025 at 10:39:03AM +0000, Dapeng Mi wrote:
+
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index b6eface4dccd..72b925b8c482 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -625,13 +625,22 @@ static int alloc_pebs_buffer(int cpu)
+>  	int max, node = cpu_to_node(cpu);
+>  	void *buffer, *insn_buff, *cea;
 >  
->  static inline void kvm_vcpu_pmu_resync_el0(void) {}
+> -	if (!x86_pmu.ds_pebs)
+> +	if (!intel_pmu_has_pebs())
+>  		return 0;
 >  
-> +static inline bool has_vhe(void)
-> +{
-> +	return false;
-> +}
-> +
+> -	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
+> +	/*
+> +	 * alloc_pebs_buffer() could be called by init_arch_pebs_buf_on_cpu()
+> +	 * which is in atomic context.
+> +	 */
+> +	buffer = dsalloc_pages(bsiz, preemptible() ? GFP_KERNEL : GFP_ATOMIC, cpu);
+>  	if (unlikely(!buffer))
+>  		return -ENOMEM;
 
-This has nothing to do with PMUv3, I'm a bit surprised to see you're
-touching 32-bit ARM. Can you just gate the whole partitioning thing on
-arm64?
-
-> +static bool partition_pmu __read_mostly;
-> +static u8 reserved_guest_counters __read_mostly;
-> +
-> +module_param(partition_pmu, bool, 0);
-> +MODULE_PARM_DESC(partition_pmu,
-> +		 "Partition the PMU into host and guest VM counters [y/n]");
-> +
-> +module_param(reserved_guest_counters, byte, 0);
-> +MODULE_PARM_DESC(reserved_guest_counters,
-> +		 "How many counters to reserve for guest VMs [0-$NR_COUNTERS]");
-> +
-
-This is confusing and not what we discussed offline.
-
-Please use a single parameter that describes the number of counters used
-by the *host*. This affects the *host* PMU driver, KVM can discover (and
-use) the leftovers.
-
-If the single module parameter goes unspecified the user did not ask for
-PMU partitioning.
-
-> +/**
-> + * armv8pmu_reservation_is_valid() - Determine if reservation is allowed
-> + * @guest_counters: Number of host counters to reserve
-> + *
-> + * Determine if the number of host counters in the argument is
-> + * allowed. It is allowed if it will produce a valid value for
-> + * register field MDCR_EL2.HPMN.
-> + *
-> + * Return: True if reservation allowed, false otherwise
-> + */
-> +static bool armv8pmu_reservation_is_valid(u8 guest_counters)
-> +{
-> +	return guest_counters <= armv8pmu_pmcr_n_read();
-> +}
-> +
-> +/**
-> + * armv8pmu_partition_supported() - Determine if partitioning is possible
-> + *
-> + * Partitioning is only supported in VHE mode (with PMUv3, assumed
-> + * since we are in the PMUv3 driver)
-> + *
-> + * Return: True if partitioning is possible, false otherwise
-> + */
-> +static bool armv8pmu_partition_supported(void)
-> +{
-> +	return has_vhe();
-> +}
-> +
-> +/**
-> + * armv8pmu_partition() - Partition the PMU
-> + * @pmu: Pointer to pmu being partitioned
-> + * @guest_counters: Number of host counters to reserve
-> + *
-> + * Partition the given PMU by taking a number of host counters to
-> + * reserve and, if it is a valid reservation, recording the
-> + * corresponding HPMN value in the hpmn field of the PMU and clearing
-> + * the guest-reserved counters from the counter mask.
-> + *
-> + * Passing 0 for @guest_counters has the effect of disabling partitioning.
-> + *
-> + * Return: 0 on success, -ERROR otherwise
-> + */
-> +static int armv8pmu_partition(struct arm_pmu *pmu, u8 guest_counters)
-> +{
-> +	u8 nr_counters;
-> +	u8 hpmn;
-> +
-> +	if (!armv8pmu_reservation_is_valid(guest_counters))
-> +		return -EINVAL;
-> +
-> +	nr_counters = armv8pmu_pmcr_n_read();
-> +	hpmn = guest_counters;
-> +
-> +	pmu->hpmn_max = hpmn;
-
-I'm not sure the host driver needs this for anything, KVM just needs to
-know what's potentially in use by the host.
-
-> +	/* Inform host driver of available counters */
-
-... said the driver to itself :)
-
-Thanks,
-Oliver
+Here we go again.. that is CPU_STARTING context, that has IRQs disabled
+and as such no allocation is allowed. Not even GFP_ATOMIC -- this will
+break PREEMPT_RT.
