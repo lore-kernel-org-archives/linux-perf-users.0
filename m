@@ -1,165 +1,110 @@
 Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8F429CB2A
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 17:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71591A42C4
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 18:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750701229; cv=none; b=JiB1ubF+12G/mFgUKyU9qAGmdscFP3SICscAxXgyCy81EMd4jRYxUCpwm/YRaJKh1lAw711nPfZ4jpJA7bUIraaMNl2qT7qrGVEUNYBa3pJNuqngSpPDlkbytlFbe5upM3OsRmZHzDXYLdGFUkXqUFCLCx1R1kbG3daGNi7Nm4w=
+	t=1750701955; cv=none; b=Xr4uCH8YS3wyUETOSqK68vGC73vOTWlw1jHEglHZu4hJO+WE61kf0nQlV8Ml3JD4BI8HUv18U/NOi8kQ2KeuvnVeyV24jf6EQtlz7VreKHd7wD3Ef81pkuvHuVlewrl5ldnvrTRiSuUiVwhTe3CEaIXKsc6DChvKagWe+VuaEPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750701229; c=relaxed/simple;
-	bh=3QhJtzFP7oTRzX4HiLlB5ZhYEtFGRUp8DPuyNCN6c9E=;
+	s=arc-20240116; t=1750701955; c=relaxed/simple;
+	bh=uB9Xm6eaRNihSSkT6yK/cq6q91QMQcRLKlFVMK316kU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pbk79XTxkrDK6rFvG3zYie1jiulzqEf2O7YFrVsf84cL0EMTNFv79akSvkIo9mZEVD8zTU+D2G8ny4LQR+jXXVPR3Rgdkvdao0gOQ8Z4l6TksgWVdpTbvlrPAgYE7VqLF6Le0j69j7OhLyIr84f30Szcn1p7j0t0RBoObYJNFA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UnA1bkWZ; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=FZmvp2/aaxTSyxeFAs5HKGzXjcX16zA2I1xrKGuyxesvdOhbDqXXzs+PGGYeHDjKN26HF8vzljjNUiS+Bcq7hHpSLjZndWfoVNWMBWR0Tz001nt8f2W1u/x6Vhxw3l2ZCmAGxgHGdKYM5mRxXGwYc2tW6wL9nNMaD+h1Go7Kh7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EHCNH1qI; arc=none smtp.client-ip=209.85.166.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UnA1bkWZ"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so22025ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 10:53:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EHCNH1qI"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so16295ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 11:05:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750701227; x=1751306027; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750701953; x=1751306753; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FfbdOGI6POgkEzM2U+zncQi7e79zC2DbeGl/tT1At+s=;
-        b=UnA1bkWZs7ux1gGFGMGKyrDN4QC4IGpP5cM/D7FamcDRRbfJ8U5QgtzUH0OUQ83LvL
-         3fUL5bbF/J6+RWocPnDf+yVQqy74SjHhC6YUte/j6BJ0uw8Y3tfom4cYEBWCPyCj9V5L
-         hSdiasAxgRdVIbfXZ3yoXYMnO8UV4++wbyuWC7Aycy7KHi1OlKiHos6MvjDGT4L4jtew
-         1StTDWqLpmsEsfA8ADSl6msqsySADOXdoWVWQ7J7I/yEyDeYXbMiSl99+xtb3I+Xl7ug
-         wJVjGMF0pl+AnMgrK48KSpzKozulna0fVxcCMJGYnR8wCmol5ZsQAD6aQAiVms/et9I7
-         gTmQ==
+        bh=CLS7bcTJVBZve2BcOYUtDe8oViGu/YRD7NKWZ/1+BTI=;
+        b=EHCNH1qId3qG1LkmOt9avDJzIwlowSoPTb6+kryDgaB56DlZypxlMf1WmmCG94YAld
+         GxcyKR4gmDU7NIt/uXT1joPzMLdx8t9j2Z1pD5Q86UTLlPpUFELBhQR8orW0ZpahS01b
+         BaeUX99arYVGUH65Eb8jLCa4RkNKkDymsE6Wl16ibrhdbUxLBYsbCQyXyiCAnPkyJB90
+         3gIJt7Z7MeF8p3N/xL74pkQfHPWAliO/k3MJqtvOujYBVc/+yoIzXuZ3samLOJFrKxbe
+         X/nfBZWz2xOTdZWFCc8ci70i24NyucYLsAMR0UqRjAtOv5lBIarD04WyVbvpBccVoIh8
+         UomA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750701227; x=1751306027;
+        d=1e100.net; s=20230601; t=1750701953; x=1751306753;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FfbdOGI6POgkEzM2U+zncQi7e79zC2DbeGl/tT1At+s=;
-        b=vXJ9yyOW4yB9JvmM/yhW7NZUgUlcInMMFjVk7xPZDcSAVTpBHVziCfYEKDIeX/o6p8
-         6VfQhtCLWvbHFn51BGpO4f0LoK2NyXZAZWvsU0yg8xd/lHkpLEWqtvyRmdj2jrvbJtjs
-         3RzaMMgTUq1QhXuz0JIMCpFgORf3sIYBsqZD5Kte4S8+b/fYMHAHE/W2/ynweclgrsgW
-         mNJ0n5jvojudGsXloGL+Ng2s+hPh8raMADGy/p0hhI3qWvXvHGHtlthd1a0q080n4bUr
-         QprLIazptLEVoLDozJ3C93pXu+BOKUkWslTHH7zCdnX51c7nUH7CRcnLKh/LJqUl2ULR
-         Ghaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfaW40MHayuV/pWAUsNaEuyYui5+2ph/lrmUHhElmkPhq8/k2AmbORcto//YVbac5q68t0vYYJEuc42nzW9/LZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKc1PgXNey+Gph1Pi/j2XbRy4WoOrBnWUurFJT/YEQuJ82xJsR
-	xyiWKo23tyNxPjotsPV/LODKyFVoMJu3ZP4zlQ+g4CUybOn1X5d8zUHHQjEiJL7eprbnVf7DCxw
-	Cv5OcjD7WnK6E3Or+PhtzqPJdvFZMkryS7S9+jS7P
-X-Gm-Gg: ASbGncu1VQxYCaKPO5ZwGp1In0dyfXQrISHce3/zhKxU1dO/RHWTEFeBdXDhE87Du1E
-	Hs1WnwEPz9R5hLeT+qMkuPX3UmzmnSKTQvDeA+bl+hOnagQ39MVX6iicq20K/nAPEDu6U6hWY6L
-	ovh62kll9pmQ+Eylg2DiD6NXSMeVaxdclpTyf4dck2I6pz97HsixRXg1yz3+aM6vWl2TjOJtST
-X-Google-Smtp-Source: AGHT+IG9Kq5uHE16PKPlpcy4O1JeDUSo9YlkwbbeoAcnIyRyfQbVBGQVhbRkTfyQSGrCunqluTUKIJxkTfad+mvP74E=
-X-Received: by 2002:a05:6e02:3a04:b0:3dd:d664:7e0d with SMTP id
- e9e14a558f8ab-3df0da3ce15mr5927995ab.25.1750701226425; Mon, 23 Jun 2025
- 10:53:46 -0700 (PDT)
+        bh=CLS7bcTJVBZve2BcOYUtDe8oViGu/YRD7NKWZ/1+BTI=;
+        b=Dqxf19pO7nWLrMGtskkWZxjLjXcpjeXZE6pU2kSPwEZEiDPdFLxTCGa7vJ11PV59Z0
+         xlQ/abKqsqXyKxjH1HFzkxX4h+ZyKRC8uTFbExXV+ZhREwh6M9FeM1q0bAPx5yIYO7UT
+         GLo6ER85EunBHyQJIeaJrPYoFnkZkj7Xx903FWCTejaqia1f/peQXb0aLpGIB5Q2ioJr
+         1qbZXuGjlNn5uncrH4i/PBYp+ohZcep9Hz7DUPmdLXj6YHXA/IH+5o8Lu4Ss+82OzFMJ
+         hHbn6ie7Qc1YNFFtBIHrccFE5vXrN79V27KQ2n9liwK/fLkLDXgnejP0U9OhziOQwmLj
+         Y5Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCWs9Nc/IchFOG0KIvQwE56kYc8ZjvFRSp2V2q2/mI2+v3gT7gG1HpkNEMp48O07qEjPVJu3ZyNAjsA/ynSWe3L5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJFJQ0RnkLwc5GsxvbcpJQxjp/fZ6vpxxKVarL4moH7SaAwcfd
+	LJwZZEd/IiTNtCipgnpq1sj+jNDI5rhcnCYmZYLM32EibBPW3iZwBJ6hUBVpH8xkucZox1yjqE3
+	jSMLDkCo177zXVdT1RRbmPDRGknJ5/lmSpGBdOBJz
+X-Gm-Gg: ASbGncvZ0uI9GVUtsHd/LL2OVvZwjW1SPrVpD7n8HVzrM+tfkE7aU0j6xXG1AKfcJUy
+	3i00EtcimwdU5oDbTb9VZ32dzLq+5nHioVGyXrFxHVFgF1ZospNq7XTLT/GqvK03UM1WtoUdr1K
+	EbTvM203LtNV8bUD+RBnGOD1F0c+LeJxi30h35wxd3920b/JzWS4kcthASzdCQEe6DfB+tGvbP
+X-Google-Smtp-Source: AGHT+IFoPkNVe4Q2bVoIHmMNhdShHH6deoeW7JgoeZ5gaNh6f1dgwmJRG0/F7F+VMSx2Mmh2gTW3sdf91IuPyKpMs74=
+X-Received: by 2002:a05:6e02:1b0e:b0:3dd:ed9e:a53f with SMTP id
+ e9e14a558f8ab-3df070326dcmr6234545ab.10.1750701952276; Mon, 23 Jun 2025
+ 11:05:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623132731.899525-1-tmricht@linux.ibm.com>
-In-Reply-To: <20250623132731.899525-1-tmricht@linux.ibm.com>
+References: <20250619002034.97007-1-irogers@google.com> <aFW4VJtk96JD865U@google.com>
+ <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com> <aFmSuSyZ1ZNT94Tq@x1>
+In-Reply-To: <aFmSuSyZ1ZNT94Tq@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 10:53:34 -0700
-X-Gm-Features: AX0GCFsCdOV-pfO9KZoCtwTrRPoKjKDvuzlbIOliBOG07bc30kwRiDQ7Fy8yOHc
-Message-ID: <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
-Subject: Re: [PATCH] perf list: Add IBM z17 event descriptions
-To: Thomas Richter <tmricht@linux.ibm.com>, sumanthk@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
-	japo@linux.ibm.com
+Date: Mon, 23 Jun 2025 11:05:41 -0700
+X-Gm-Features: AX0GCFuWZKcC5pRfc9BZ8I6NY9sP1wGLxCTxil3Ood7reBNkagEFXiDzqyyZ-wc
+Message-ID: <CAP-5=fXms87LVH-Y5V3OpVbwUjY=hWAe0NTX4uKQf1q3Ax-WSA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf test workload noploop: Name the noploop process
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 6:35=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Mon, Jun 23, 2025 at 10:45=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Update IBM z17 counter description using document SA23-2260-08:
-> "The Load-Program-Parameter and the CPU-Measurement Facilities"
-> released in May 2025 to include counter definitions for IBM z17
-> counter sets:
-> * Basic counter set
-> * Problem/user counter set
-> * Crypto counter set.
+> On Mon, Jun 23, 2025 at 08:12:47AM -0700, Ian Rogers wrote:
+> > On Fri, Jun 20, 2025 at 12:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > > I'm afraid it'd introduce a build failure on musl.  Please see
 >
-> Use document SA23-2261-09:
-> "The CPU-Measurement Facility Extended Counters Definition
->  for z10, z196/z114, zEC12/zBC12, z13/z13s, z14, z15, z16 and z17"
-> released on April 2025 to include counter definitions for IBM z17
-> * Extended counter set
-> * MT-Diagnostic counter set.
+> > > https://lore.kernel.org/linux-perf-users/20250611092542.F4ooE2FL@linu=
+tronix.de/
 >
-> Use document SA22-7832-14:
-> "z/Architecture Principles of Operation."
-> released in April 2025 to include counter definitions for IBM z17
-> * PAI-Crypto counter set
-> * PAI-Extention counter set.
+> > > I think <sys/prctl.h> would be enough.
 >
-> Use document
-> "CPU MF Formulas and Updates April 2025"
-> released in April 2025 to include metric calculations.
+> > we could do that but in the glibc man page it says:
+> > https://man7.org/linux/man-pages/man2/prctl.2.html
+> > ```
+> > #include <linux/prctl.h>  /* Definition of PR_* constants */
+> > #include <sys/prctl.h>
+> > ```
 >
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> > It'd be nice to think musl was slowly getting fixed. I notice we're
+>
+> Sebastian reported on the musl libc, its maintainer replied:
+>
+> https://www.openwall.com/lists/musl/2025/06/12/11
 
-[snip]
-
-> +       {
-> +               "Unit": "CPU-M-CF",
-> +               "EventCode": "143",
-> +               "EventName": "L1C_TLB2_MISSES",
-> +               "BriefDescription": "L1C TLB2 Misses",
-> +               "PublicDescription": "Increments by one for any cycle whe=
-re a Level-1 cache or Level-2 TLB miss is in progress."
-> +       },
-
-[snip]
-
-> +  {
-> +    "BriefDescription": "Cycles per Instructions from Finite cache/memor=
-y",
-> +    "MetricName": "finite_cpi",
-> +    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS if has_event(L1C_TLB2_=
-MISSES) else 0"
-> +  },
-> +  {
-> +    "BriefDescription": "Estimated Instruction Complexity CPI infinite L=
-evel 1",
-> +    "MetricName": "est_cpi",
-> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INST=
-RUCTIONS) if has_event(INSTRUCTIONS) else 0"
-> +  },
-> +  {
-> +    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-> +    "MetricName": "scpl1m",
-> +    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES) i=
-f has_event(L1C_TLB2_MISSES) else 0"
-> +  },
-
-Just a quick check. If the PMU CPU-M-CF is always present then the
-"has_event(L1C_TLB2_MISSES)" check will always be true as the event is
-in json and not in sysfs. I'm guessing this is being done for the
-benefit of hypervisors.
-
-> +  {
-> +    "BriefDescription": "Estimated TLB CPU percentage of Total CPU",
-> +    "MetricName": "tlb_percent",
-> +    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / CPU_CYCLES) * (L1C_T=
-LB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100 if has_event(=
-CPU_CYCLES) else 0"
-> +  },
-> +  {
-> +    "BriefDescription": "Estimated Cycles per TLB Miss",
-> +    "MetricName": "tlb_miss",
-> +    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB=
-2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) =
-if has_event(DTLB2_MISSES) else 0"
-> +  }
-
-Similar here but with different events.
+Ugh. I'm not sure how we're expected to resolve this and have glibc
+and musl be happy without basically not trusting libc.
 
 Thanks,
 Ian
