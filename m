@@ -1,313 +1,119 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4147E1
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 16:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317F72DCC03;
+	Mon, 23 Jun 2025 16:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750694551; cv=none; b=VFbTD4XQrBQ3M6wWazp09MtudSXE9f7x4pia/DukmafZVv3Xiez5SVyRXcgPIeSpzGyQpMxThS9iYtlt8pFk1pJH1nHTONidqgmA83klraR1NdIKijZ6aECtGgBbjqsYT+/qwqxOlkPPb1IoprAH8dZ19l0fIgy2MKrIj/VAQ3A=
+	t=1750695049; cv=none; b=ZxZrmRGBTNKRlMrcD3yooNoVP7v3KY9d2WXx04jRH+nKQjxlN2CrkOFCuUKzwBsA7wKpeefIrmvjDlLvuZOPB+DtJ2oTFKbVDCXz62DfB0CQ4sI61+UVRKJ9BUnReT3LHjwWGvMblJ+vYAe8gbb2VD95C7+J7T8L+Q93R9/NSNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750694551; c=relaxed/simple;
-	bh=4yD9VdVYlBXa4Y7vXGfU+vsVeV+Nw2r5nAOJjHy5VZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DAn6GI8r/27d35w9qKY1g8wFac6ITo0s9vLGYXFuNbuMvnCR2MouOWnQOnxYSWcsJdE0LZZ/ZS3+ZXNLG9dvy2r/0o0MIMNR7LnNwfTR8u1cvQ2QQ7qCSBYkdKSLzWwZpmvq4dZrpWoX6JN21UtbjWrdIhn2X0aTu479LR2x2ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zQgm7oGo; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750695049; c=relaxed/simple;
+	bh=dS7QgYeAznkgEhzk7h32qFFNi0yjzq3+ztoyxkZ//XI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=KkmOfsxEnX+zFY7ozqQrENFPOunPNJqiRc8LWmzk/ciN22YZcPLKSoqwKX1L6c8aROL8bnf8lcSC6FO/OKgWtTnIyqdqEyRpk/k6pLcFukzIMdywTm4sTIE55X0nqlxUFlGmWXIv5nF2Xra5rIig7KV0xBQgkUGZX868LZDEMe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=SZ1GzJXM; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zQgm7oGo"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo364695ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 09:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750694548; x=1751299348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kVtiu9oRVGs+XWGoKltiSe+GSzP8GWJTx8DY++AI2Gc=;
-        b=zQgm7oGoTLyOkauyVbsIDsEU62G1rjyMZ1ZM3fzi99iDVDscWWuA2L7gwsGnPTCZGH
-         4fUBEJLXBZ8oXwSCVPAlampz/PkJjNrRxmEyLEk7Mg2XpSn5E23zHYmJNcB/GqMXpRYF
-         eZKYVj95tQkjvJdyva0Et9s05zsLDSRHZ0Il17TBWbr16zYEhRJqiVQFF8HVVDnAp0Nq
-         PCTzp+eDU0JftQL98eAnCCdyZrexP6r7CIT4zSWXY4YuF4OhOtIkiqxAeIKioxjkIAiv
-         YeImn3gJh6b+fC59Sk9C38DiVpFw3qV4HFMi9xa1onOWW0n8IigE/btuKvcBPzRVqDwE
-         8FgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750694548; x=1751299348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kVtiu9oRVGs+XWGoKltiSe+GSzP8GWJTx8DY++AI2Gc=;
-        b=h5oPiKsrqXNdd4i3mlWbObe6u08mM4D51XlYYN3q3Oow3x3feJSi7biVohqi43hb4R
-         nKE4XEQVwhO1IQ6J8hgenNZ0VT5GwXCQaH3ZPoHZf+WJohuRnGNqdb9zLLnKEAiWZHHu
-         YB43ML+7QrcmcBYw2uCgF7vz2uEkzf4K9QvZPtrc4sde0fwX5vsVPhUdr1HmpoH1VOnX
-         pJDYlXNG98EBI4U3lxaJzgs6I1E5qcARrsIane/Cix7O/uIPRIQ8kvaulvB5c/c1EHfx
-         VOLIqefHVn47W470HYO+70+VMScDHm03PjxN1WCM98xL41lzJMLb7MA0nxlGbrEeF5hD
-         VxYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUP66V2ECgGEo3svoSFR4KVSN7q3HtynUp/3f5J9V4HEvYxItbQcDVn5FuOf0lV0EwkOFlMhwNMBiq1kliI2B1W@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZr7cABkCXsxeGPNDzQBcBXM6XFiXmRnhMpa5cHz5i8rDXOYJQ
-	F1ZG5QDoXeEWg1fR+AVU/oW6WjFlfRUrYY8e3dMPLURAm+SnyYfMPHibHSD+jV12gGGf+2eGi8k
-	CRd1L6kF7mXZj2Q1F2C+QeA7BpoxroYze7B2t7K/P
-X-Gm-Gg: ASbGncuG0347LNhrux3ttIahMuDpSBeRjujbiAX790hx2x9T9beC0w5X7qdEXY1A+NO
-	unldySbCMxy24YqjynBM3rQbKRkvPuHIx7umCGMhBdS48LEsMUVIEP72B1TwON7R8kgfgJg5Ayb
-	rY0IYfRhBis+UhNuTdjONvrsmhjkw4wgxPfdtlXYrEHUIDDPxDYwyPJerh34dmrEnVRZE0msIF
-X-Google-Smtp-Source: AGHT+IHmv9sTO0+wCilv/AU78OeEEroqqxp35JLCnjdEjX4riSnVC3BeOL2eD5tCQnJ5u68qVBRILmNy2iTWNDcRs4c=
-X-Received: by 2002:a05:6e02:158b:b0:3dc:77c4:2cef with SMTP id
- e9e14a558f8ab-3df0ceff314mr6735715ab.22.1750694548203; Mon, 23 Jun 2025
- 09:02:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SZ1GzJXM"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55NGA7TK995696
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 23 Jun 2025 09:10:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55NGA7TK995696
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750695009;
+	bh=5OyKvEljcKH+TeDJlGA4fkMB6CCrF6QEZCXe4uNmwAs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=SZ1GzJXMbd0V6nYkSdQZSdPQcNAKb5MOvCof6U/mOuVB+0QaDBj59VWf5L9cRdgqT
+	 itNQlfH2W269PbEwmkNbvulkUpxD/UUYAf21tFgjmxP08jvyuS59WLfrXO0m+c+x4l
+	 WGgqQOEmbV8yWjnJbwQmrkLJWBOUzH7/BPGJMQ4Y68rNvdHRoftSH09vAnFWX9ThT1
+	 b2fq5G5sXTvRlAM00Jmft2M0hQci085Nr0JAd9nUZ6EHm2uxF9g9YYRyZy+Y40PHfc
+	 dnNB/soxXQbG5F09Aq5J3cTLdmikLWRCSI3dwlJg8OoNQMHVTDWjdoHBDNBYN8PW30
+	 mT6yD9MhrJm5w==
+Date: Mon, 23 Jun 2025 09:10:07 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Sohil Mehta <sohil.mehta@intel.com>, Xin Li <xin@zytor.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v7_02/10=5D_x86/fred=3A_Pass_eve?=
+ =?US-ASCII?Q?nt_data_to_the_NMI_entry_point_from_KVM?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aFl1PcnVuYuELvRQ@google.com>
+References: <20250612214849.3950094-1-sohil.mehta@intel.com> <20250612214849.3950094-3-sohil.mehta@intel.com> <7525af7f-a817-47d5-91f7-d7702380c85f@zytor.com> <3281866f-2593-464d-a77e-5893b5e7014f@intel.com> <36374100-0587-47f1-9319-6333f6dfe4db@zytor.com> <39987c98-1f63-4a47-b15e-8c78f632da4e@intel.com> <7acedeba-9c90-403c-8985-0247981bf2b5@zytor.com> <aFXsPVIKi6wFUB6x@google.com> <1713a225-44e0-4018-bf5f-64ffd7746167@zytor.com> <aFl1PcnVuYuELvRQ@google.com>
+Message-ID: <D00BE3D4-C710-4304-85D3-B2A091E08035@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611221521.722045-1-irogers@google.com> <aFXDKO-aLWzA3M2H@google.com>
-In-Reply-To: <aFXDKO-aLWzA3M2H@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 09:02:16 -0700
-X-Gm-Features: AX0GCFsZLPxofaWNBTzRpJaGYCEAbnf6hDQkvQK1xvAU44AYzmny7F2Olvdscvk
-Message-ID: <CAP-5=fWyFDR87ojYLwwsn9+6zNzBgGXu-hHqsjSHmah8-HM-Fw@mail.gmail.com>
-Subject: Re: [PATCH v3] perf debug: Add function symbols to dump_stack
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 1:23=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On June 23, 2025 8:39:41 AM PDT, Sean Christopherson <seanjc@google=2Ecom> =
 wrote:
+>On Fri, Jun 20, 2025, H=2E Peter Anvin wrote:
+>> On 2025-06-20 16:18, Sean Christopherson wrote:
+>> > >=20
+>> > > So I was thinking about this, and wonder: how expensive is it to ge=
+t the
+>> > > event data exit information out of VMX? If it is not very expensive=
+, it
+>> > > would arguably be a good thing to future-proof by fetching that inf=
+ormation,
+>> > > even if it is currently always zero=2E
+>> >=20
+>> > It's trivially easy to do in KVM, and the cost of the VMREAD should b=
+e less than
+>> > 20 cycles=2E  So quite cheap in the grand scheme=2E  If VMREAD is mor=
+e costly than
+>> > that, then we have bigger problems :-)
+>> >=20
+>>=20
+>> LOL=2E Since it is up to you, Paulo, etc=2E to decide how to do the tra=
+deoffs
+>> formaintainability, debuggability and performance in KVM I am guessing =
+this
+>> is a vote in favor? (You can always take it out if it is a performance
+>> problem, until such time that the kernel itself starts consuming this
+>> information for reasons currently unknown=2E)
 >
-> On Wed, Jun 11, 2025 at 03:15:21PM -0700, Ian Rogers wrote:
-> > Symbolize stack traces by creating a live machine. Add this
-> > functionality to dump_stack and switch dump_stack users to use
-> > it. Switch TUI to use it. Add stack traces to the child test function
-> > which can be useful to diagnose blocked code.
-> >
-> > Example output:
-> > ```
-> >   8: PERF_RECORD_* events & perf_sample fields                       : =
-Running (1 active)
-> > ^C
-> > Signal (2) while running tests.
-> > Terminating tests with the same signal
-> > Internal test harness failure. Completing any started tests:
-> > :  8: PERF_RECORD_* events & perf_sample fields:
-> >
-> > ---- unexpected signal (2) ----
-> >     #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
-> >     #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
-> >     #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:=
-71
-> >     #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
-> >     #4 0x7f4a91f01f68 in __sleep sleep.c:55
-> >     #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
-> >     #6 0x5590fb620b43 in run_test_child builtin-test.c:269
-> >     #7 0x5590fb5b83ab in start_command run-command.c:127
-> >     #8 0x5590fb621572 in start_test builtin-test.c:467
-> >     #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
-> >     #10 0x5590fb6225ea in cmd_test builtin-test.c:775
-> >     #11 0x5590fb5a9099 in run_builtin perf.c:351
-> >     #12 0x5590fb5a9340 in handle_internal_command perf.c:404
-> >     #13 0x5590fb5a9499 in run_argv perf.c:451
-> >     #14 0x5590fb5a97e2 in main perf.c:558
-> >     #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h=
-:74
-> >     #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:12=
-8
-> >     #17 0x5590fb4fd6d1 in _start perf[436d1]
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/builtin-test.c | 15 +++++++-
-> >  tools/perf/ui/tui/setup.c       |  2 +-
-> >  tools/perf/util/debug.c         | 64 +++++++++++++++++++++++++++------
-> >  tools/perf/util/debug.h         |  1 +
-> >  4 files changed, 69 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
--test.c
-> > index 45d3d8b3317a..80375ca39a37 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -6,6 +6,9 @@
-> >   */
-> >  #include <fcntl.h>
-> >  #include <errno.h>
-> > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > +#include <execinfo.h>
-> > +#endif
-> >  #include <poll.h>
-> >  #include <unistd.h>
-> >  #include <setjmp.h>
-> > @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
-> >
-> >  static void child_test_sig_handler(int sig)
-> >  {
-> > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > +     void *stackdump[32];
-> > +     size_t stackdump_size;
-> > +#endif
-> > +
-> > +     fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-> > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > +     stackdump_size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > +     __dump_stack(stderr, stackdump, stackdump_size);
-> > +#endif
-> >       siglongjmp(run_test_jmp_buf, sig);
-> >  }
-> >
-> > @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *pro=
-cess)
-> >
-> >       err =3D sigsetjmp(run_test_jmp_buf, 1);
-> >       if (err) {
-> > -             fprintf(stderr, "\n---- unexpected signal (%d) ----\n", e=
-rr);
-> > +             /* Received signal. */
-> >               err =3D err > 0 ? -err : -1;
-> >               goto err_out;
-> >       }
-> > diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> > index 16c6eff4d241..022534eed68c 100644
-> > --- a/tools/perf/ui/tui/setup.c
-> > +++ b/tools/perf/ui/tui/setup.c
-> > @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
-> >
-> >       printf("-------- backtrace --------\n");
-> >       size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > -     backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-> > +     __dump_stack(stdout, stackdump, size);
-> >
-> >       exit(0);
-> >  }
-> > diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-> > index f9ef7d045c92..8987ac250079 100644
-> > --- a/tools/perf/util/debug.c
-> > +++ b/tools/perf/util/debug.c
-> > @@ -14,11 +14,18 @@
-> >  #ifdef HAVE_BACKTRACE_SUPPORT
-> >  #include <execinfo.h>
-> >  #endif
-> > +#include "addr_location.h"
-> >  #include "color.h"
-> > -#include "event.h"
-> >  #include "debug.h"
-> > +#include "event.h"
-> > +#include "machine.h"
-> > +#include "map.h"
-> >  #include "print_binary.h"
-> > +#include "srcline.h"
-> > +#include "symbol.h"
-> > +#include "synthetic-events.h"
-> >  #include "target.h"
-> > +#include "thread.h"
-> >  #include "trace-event.h"
-> >  #include "ui/helpline.h"
-> >  #include "ui/ui.h"
-> > @@ -298,21 +305,56 @@ void perf_debug_setup(void)
-> >       libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug=
-_wrapper);
-> >  }
-> >
-> > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-> > +{
-> > +     /* TODO: async safety. printf, malloc, etc. aren't safe inside a =
-signal handler. */
-> > +     pid_t pid =3D getpid();
-> > +     struct machine *machine =3D machine__new_live(/*kernel_maps=3D*/f=
-alse, pid);
-> > +     struct thread *thread =3D NULL;
-> > +
-> > +     if (machine)
-> > +             thread =3D machine__find_thread(machine, pid, pid);
-> > +
-> > +     if (!machine || !thread) {
-> > +             /*
-> > +              * Backtrace functions are async signal safe. Fall back o=
-n them
-> > +              * if machine/thread creation fails.
-> > +              */
-> > +             backtrace_symbols_fd(stackdump, stackdump_size, fileno(fi=
-le));
-> > +             machine__delete(machine);
-> > +             return;
-> > +     }
-> > +
-> > +     for (size_t i =3D 0; i < stackdump_size; i++) {
-> > +             struct addr_location al;
-> > +             u64 addr =3D (u64)stackdump[i];
-> > +
-> > +             addr_location__init(&al);
-> > +             if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr=
-, &al))
+>Unless you can pinky swear that vmcs=2EEXIT_QUALIFICATION will provide ev=
+ent data
+>for IRQ exits, then I'd prefer to pass '0' unconditionally=2E  '0' will a=
+lways be
+>safe, if potentially suboptimal=2E  But passing what could in theory be s=
+omething
+>other than FRED-formatted event data could lead to buggy behavior=2E  Per=
+ the FRED
+>spec, Revision 7=2E0, exit-qualification doesn't hold event data for IRQ =
+exits=2E
 >
-> It seems addr_location__exit(&al) is needed here.
+>  For some events for which event data is defined (see Section 5=2E2=2E1)=
+, the event
+>  data is saved in the exit-qualification field=2E (This is done for #DB,=
+ #PF, and NMI=2E)
 
-Good catch. I don't think it changes the behavior of the code but is
-cleaner. I'll fix in v4.
+I agree, let's stick to that for now, since this is a kernel internal inte=
+rface and nothing consumes it=2E After all, it will save a handful of cycle=
+s=2E
 
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
->
-> > +                     continue;
-> > +
-> > +             al.sym =3D map__find_symbol(al.map, al.addr);
-> > +             if (al.sym)
-> > +                     fprintf(file, "    #%zd %p in %s ", i, stackdump[=
-i], al.sym->name);
-> > +             else
-> > +                     fprintf(file, "    #%zd %p ", i, stackdump[i]);
-> > +
-> > +             map__fprintf_srcline(al.map, al.addr, "", file);
-> > +             fprintf(file, "\n");
-> > +             addr_location__exit(&al);
-> > +     }
-> > +     thread__put(thread);
-> > +     machine__delete(machine);
-> > +}
-> > +
-> >  /* Obtain a backtrace and print it to stdout. */
-> >  #ifdef HAVE_BACKTRACE_SUPPORT
-> >  void dump_stack(void)
-> >  {
-> > -     void *array[16];
-> > -     size_t size =3D backtrace(array, ARRAY_SIZE(array));
-> > -     char **strings =3D backtrace_symbols(array, size);
-> > -     size_t i;
-> > -
-> > -     printf("Obtained %zd stack frames.\n", size);
-> > -
-> > -     for (i =3D 0; i < size; i++)
-> > -             printf("%s\n", strings[i]);
-> > +     void *stackdump[32];
-> > +     size_t size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> >
-> > -     free(strings);
-> > +     __dump_stack(stdout, stackdump, size);
-> >  }
-> >  #else
-> >  void dump_stack(void) {}
-> > diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-> > index a4026d1fd6a3..6b737e195ce1 100644
-> > --- a/tools/perf/util/debug.h
-> > +++ b/tools/perf/util/debug.h
-> > @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
-> >  void perf_debug_setup(void);
-> >  int perf_quiet_option(void);
-> >
-> > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)=
-;
-> >  void dump_stack(void);
-> >  void sighandler_dump_stack(int sig);
-> >
-> > --
-> > 2.50.0.rc1.591.g9c95f17f64-goog
-> >
+I will still check into the "pinky swear", though=2E
