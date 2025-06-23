@@ -1,63 +1,52 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E091FECAF
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 09:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707417996;
+	Mon, 23 Jun 2025 09:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750669236; cv=none; b=Kr1q5P8mh0BUut0UFVg6buxNrTydcL4QYvy0laCTvHzRKKt8lwTJLy9QHWUAZe1oiOV8/Qr27HEAhSnG6vPrSM1TCw+jUj1OnfBn25Pr956ZvxnJPU/YeamJAgc0UfegoeILimYtlsC//Bn2CdO/SlqvA3fGKpLyt2yYy93BdMs=
+	t=1750671000; cv=none; b=WzQDZ/0Wpqg1LXot84+Zs8TP/SOzL9iGSf8htvfZq7PU/GfAVWiYUxiIVe2lE7XsQHoTnd3BQBaeL/y8WynWdcfczvc71Yp+e00eZASjPWk5rmEUlHd1Qdoyp1Wh2aLyPTv4emboUYnF3VXZjTHCP4NwgDqI0xfYYIxZLa7glMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750669236; c=relaxed/simple;
-	bh=sKEyaUZmUkObwo5iwjKAMuOhw4ilxlNF2nGwyekACr0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q1jvfW7aHWzdp48XYjMIxPrSpBiLJO0807QBT61JLRtt/S6Gh1VzX5fGW0U9fwv63ySgy7z3Sk09aMYr19Lh9bGsXubrv4mWp5UwZVh0YP+zls0aMSpQe3wRnaJvTa067kBF6AwjRCiSnskpXu3WpeX2Cvu83guQhTf0UW5+aIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HT0fo/NU; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750671000; c=relaxed/simple;
+	bh=Z/JyWLR3XY6i6uwbS0ebYewrhlB9XFQj4QMmwqeNAz4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=g4D+981y1Uqv+lRV89hwYa3Xin/aNxYdCoweAi9NQjX3fVEibGS7sfnuNL9AIV1ycIFB39f/d7J4bj58saYHX00TGLUcLKlteqbO+SPx3YWT7QAxisNR8PTvSlYRIs/1LIwXTgMh+LgOkLOlp0WaF29FjrgIdcWjdn6jcw9YYSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=xKjNtqKI; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HT0fo/NU"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so2906220f8f.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 02:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750669232; x=1751274032; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=siFLzwIAOMTOqClC7suVWWbB5nxNFCIXsyRndF3ikEw=;
-        b=HT0fo/NUa/AeU5BYVJseXGqlmwT+SqH+G9mc7fygCnu2lY4JEeN+B48DelE/maltbU
-         fLMHMlcF7aB+noJkcSH+uSviCUbAvIRmAtRaJEDYRhna8kvUZdV8Z9hQrZQtxtn+piX/
-         9Bfl+gpG33jqIk19EPqSyewsT+8T5hx2WPTW63Fjixg3MuubZwfyhz96/P6xYXHGUHZQ
-         JDFO5O7r2SIGv219NH5E0rTBM5tRZUFQjHFqPT6XrtLa+S3zjcq+q32Rlh2HY45k1gmj
-         j9K7qawSK+cF2IXuY1puzB50zhP4uBG5YoJi96QAI8qK/LZ3rYP4FPgd43/sg179sP8n
-         UJ/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750669232; x=1751274032;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=siFLzwIAOMTOqClC7suVWWbB5nxNFCIXsyRndF3ikEw=;
-        b=pfQs2e8V4YOSNdJSiH9WTA0o8fuAE5xAWgu5c9PeqG/jzpPDCVQjYuaYehk4/ZWSWt
-         rFFCghYDB9uHx1Tn6iS4x2UizJeFEDymy+hitjnCZRWL1PEkhMAoRlG61yDYHPXDm764
-         1+b9v8bylbKQTIsRnu3fG37V5Qo9c7eUfoC9Id2sPufR5ES87Jnb+Hp+B8KaGbKmXBVB
-         RZkmnpOEQ1AXJBA50H8Wpn7dv6CYAj+QwimUPOt6N1A7tgFrHFDatuJbHCqP4hiB0V75
-         qEs7Je5eC5aNXujVTuudHreurnZ+VcixdKKWQhp3dA3fxmcyXJoMkqWPrVoQ1Hz+I/v3
-         LNmw==
-X-Gm-Message-State: AOJu0YwPRahY5dlEe9ETs/mObiemp04+iv1i0/Q/T7gqpDlqwXTUJDpO
-	VKQGSe6PxTZh6LYbKYn6undqvZItKtXlmouUhpOB985sxkh+gwNbsgeRjrCGFpEuJ6eCr2K4uMw
-	rzuVu
-X-Gm-Gg: ASbGncuI/gVCAbjUB77VsKvPowDHn1mMyHU7/Hd4L3QIrhPQjVVQgXpYB+05CZ9t/DV
-	F5rxTIeToSMDDYfyJa1nj5hDBUhC9zZ1QwOs55E1DEKqwvZM9naSN55piY+THn6kdh3qRjXndPM
-	h3bqf9Vrife56RY4qZ0lC1DTXn91b+ZLvpJnbxPUIAK2sdoms6we++8SN9x2n10vzEpERxzmKH7
-	DQPxu17DBmM8YNk7q0VSz42PlfoLs4tD7X6ANQQdV7OdTN3G493SXonMWriM3PM7wHE5kLpoBUY
-	ue0hf/dcu/IhObJL0l80s3rJ2XVnkxAvgaJqzKMt6+tl3zOSqpr10ZjHefjxUVCXvOqnbHA=
-X-Google-Smtp-Source: AGHT+IGkyqpAd4PKjweiZIrNYoNuQtSQVAILSe9BTXOL6u/AcWrW0AzZFAdpnr/1NYC99Pz/ubfMDw==
-X-Received: by 2002:a05:6000:26c8:b0:3a5:8977:e0f8 with SMTP id ffacd0b85a97d-3a6d27e16f5mr9070564f8f.19.1750669231601;
-        Mon, 23 Jun 2025 02:00:31 -0700 (PDT)
-Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d0f104d4sm9040043f8f.11.2025.06.23.02.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 02:00:31 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Mon, 23 Jun 2025 10:00:12 +0100
-Subject: [PATCH] perf test: Change all remaining #!/bin/sh to #!/bin/bash
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="xKjNtqKI"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N5ppEk002482;
+	Mon, 23 Jun 2025 11:29:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ZOsuluXNSLkxvHwd4tbbEr6WHEQwIqQwF7TiT8kGSEY=; b=xKjNtqKI9/+dDLG9
+	oFTGydhHzjiJWbKuNHqPXZyh2TRLdnYlIx9Wm85jf7VTjSZEvYT25ojtBP+kPV7z
+	9OlpKZApBw9+xxKb4ywsAoojQBi5XX62vGKvxYhUB7DwqOyVytNjHH5NX0eDuUUg
+	oANtco0jJceMp29Z9UDP5B+jVmhEDXG6ForKdRVtZe5gU3FLGUzWqCN2I0P71Enu
+	9vHisFwQQ02suimEnYZI5Yjgj8CWp4ShkUCe6bsyJq5DnP6BEdUehg84U2WlKDsU
+	/ps1szoDjLVxduRU1fyVtDGIWj3fexp2bRoywhcM1xQEbY6OsvEoMrzKchqre+8I
+	lAXVnQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dj5nfca1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Jun 2025 11:29:39 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2629E40051;
+	Mon, 23 Jun 2025 11:28:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5B2E5C37FE;
+	Mon, 23 Jun 2025 11:27:22 +0200 (CEST)
+Received: from localhost (10.252.18.29) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:27:22 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Date: Mon, 23 Jun 2025 11:27:07 +0200
+Subject: [PATCH 02/13] dt-bindings: stm32: stm32mp25: add
+ `access-controller-cell` property
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,533 +54,73 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-james-perf-bash-tests-v1-1-f572f54d4559@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAJsXWWgC/x3M3QpAQBBA4VfRXJtiWDavIheLwSg/7WxS8u42l
- 9/FOQ8oe2GFJnnA8yUqxx6RpwkMi9tnRhmjgTIyWUUFrm5jxZP9hL3TBQNrULSWqtzZsjaGILa
- n50nu/9t27/sBbwDWF2cAAAA=
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, Nick Terrell <terrelln@fb.com>, 
- David Sterba <dsterba@suse.com>, Collin Funk <collin.funk1@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- bpf@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250623-ddrperfm-upstream-v1-2-7dffff168090@foss.st.com>
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+In-Reply-To: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
 
-There are 43 instances of posix shell tests and 35 instances of bash. To
-give us a single consistent language for testing in, replace
-all #!/bin/sh to #!/bin/bash. Common sources that are included in both
-different shells will now work as expected. And we no longer have to fix
-up bashisms that appear to work when someone's system has sh symlinked
-to bash, but don't work on other systems that have both shells
-installed.
+RCC is able to check the availability of a clock.
+Allow to query the RCC with a firewall ID.
 
-Although we could have chosen sh, it's not backwards compatible so it
-wouldn't be possible to bulk convert without re-writing the existing
-bash tests.
-
-Choosing bash also gives us some nicer features including 'local'
-variable definitions and regexes in if statements that are already
-widely used in the tests.
-
-It's not expected that there are any users with only sh available due to
-the large number of bash tests that exist.
-
-Discussed in relation to running shellcheck here:
-https://lore.kernel.org/linux-perf-users/e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com/
-
-Signed-off-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- tools/perf/tests/perf-targz-src-pkg                          | 2 +-
- tools/perf/tests/shell/amd-ibs-swfilt.sh                     | 2 +-
- tools/perf/tests/shell/buildid.sh                            | 2 +-
- tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 2 +-
- tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 2 +-
- tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 2 +-
- tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 2 +-
- tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 2 +-
- tools/perf/tests/shell/diff.sh                               | 2 +-
- tools/perf/tests/shell/ftrace.sh                             | 2 +-
- tools/perf/tests/shell/lib/perf_has_symbol.sh                | 2 +-
- tools/perf/tests/shell/lib/probe_vfs_getname.sh              | 2 +-
- tools/perf/tests/shell/lib/setup_python.sh                   | 2 +-
- tools/perf/tests/shell/lib/waiting.sh                        | 2 +-
- tools/perf/tests/shell/list.sh                               | 2 +-
- tools/perf/tests/shell/lock_contention.sh                    | 2 +-
- tools/perf/tests/shell/perf-report-hierarchy.sh              | 2 +-
- tools/perf/tests/shell/probe_vfs_getname.sh                  | 2 +-
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh        | 2 +-
- tools/perf/tests/shell/record+script_probe_vfs_getname.sh    | 2 +-
- tools/perf/tests/shell/record+zstd_comp_decomp.sh            | 2 +-
- tools/perf/tests/shell/record_bpf_filter.sh                  | 2 +-
- tools/perf/tests/shell/record_offcpu.sh                      | 2 +-
- tools/perf/tests/shell/record_sideband.sh                    | 2 +-
- tools/perf/tests/shell/script.sh                             | 2 +-
- tools/perf/tests/shell/stat+csv_summary.sh                   | 2 +-
- tools/perf/tests/shell/stat+shadow_stat.sh                   | 2 +-
- tools/perf/tests/shell/stat_all_pfm.sh                       | 2 +-
- tools/perf/tests/shell/stat_bpf_counters.sh                  | 2 +-
- tools/perf/tests/shell/stat_bpf_counters_cgrp.sh             | 2 +-
- tools/perf/tests/shell/test_arm_callgraph_fp.sh              | 2 +-
- tools/perf/tests/shell/test_arm_coresight.sh                 | 2 +-
- tools/perf/tests/shell/test_arm_coresight_disasm.sh          | 2 +-
- tools/perf/tests/shell/test_arm_spe.sh                       | 2 +-
- tools/perf/tests/shell/test_arm_spe_fork.sh                  | 2 +-
- tools/perf/tests/shell/test_bpf_metadata.sh                  | 2 +-
- tools/perf/tests/shell/test_intel_pt.sh                      | 2 +-
- tools/perf/tests/shell/trace+probe_vfs_getname.sh            | 2 +-
- tools/perf/tests/shell/trace_btf_enum.sh                     | 2 +-
- tools/perf/tests/shell/trace_exit_race.sh                    | 2 +-
- tools/perf/tests/shell/trace_record_replay.sh                | 2 +-
- tools/perf/tests/shell/trace_summary.sh                      | 2 +-
- tools/perf/tests/tests-scripts.c                             | 2 +-
- 43 files changed, 43 insertions(+), 43 deletions(-)
+ Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/tests/perf-targz-src-pkg b/tools/perf/tests/perf-targz-src-pkg
-index b3075c168cb2..52a90e6bd8af 100755
---- a/tools/perf/tests/perf-targz-src-pkg
-+++ b/tools/perf/tests/perf-targz-src-pkg
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- # Test one of the main kernel Makefile targets to generate a perf sources tarball
- # suitable for build outside the full kernel sources.
-diff --git a/tools/perf/tests/shell/amd-ibs-swfilt.sh b/tools/perf/tests/shell/amd-ibs-swfilt.sh
-index 83937aa687cc..7045ec72ba4c 100755
---- a/tools/perf/tests/shell/amd-ibs-swfilt.sh
-+++ b/tools/perf/tests/shell/amd-ibs-swfilt.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # AMD IBS software filtering
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+index 88e52f10d1ec..83974b7fb82f 100644
+--- a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
++++ b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+@@ -31,6 +31,11 @@ properties:
+   '#reset-cells':
+     const: 1
  
- echo "check availability of IBS swfilt"
-diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
-index 3383ca3399d4..d2eb213da01d 100755
---- a/tools/perf/tests/shell/buildid.sh
-+++ b/tools/perf/tests/shell/buildid.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # build id cache operations
- # SPDX-License-Identifier: GPL-2.0
++  '#access-controller-cells':
++    const: 1
++    description:
++      Contains the firewall ID associated to the peripheral.
++
+   clocks:
+     items:
+       - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
+@@ -123,6 +128,7 @@ required:
+   - reg
+   - '#clock-cells'
+   - '#reset-cells'
++  - '#access-controller-cells'
+   - clocks
  
-diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop.sh b/tools/perf/tests/shell/coresight/asm_pure_loop.sh
-index c63bc8c73e26..0301904b9637 100755
---- a/tools/perf/tests/shell/coresight/asm_pure_loop.sh
-+++ b/tools/perf/tests/shell/coresight/asm_pure_loop.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh -e
-+#!/bin/bash -e
- # CoreSight / ASM Pure Loop (exclusive)
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-index 8e29630957c8..1f765d69acc3 100755
---- a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-+++ b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh -e
-+#!/bin/bash -e
- # CoreSight / Memcpy 16k 10 Threads (exclusive)
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-index 0c4c82a1c8e1..7f43a93a2ac2 100755
---- a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-+++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh -e
-+#!/bin/bash -e
- # CoreSight / Thread Loop 10 Threads - Check TID (exclusive)
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-index d3aea9fc6ced..a94d2079ed06 100755
---- a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-+++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh -e
-+#!/bin/bash -e
- # CoreSight / Thread Loop 2 Threads - Check TID (exclusive)
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-index 7429d3a2ae43..cb3e97a0a89f 100755
---- a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh -e
-+#!/bin/bash -e
- # CoreSight / Unroll Loop Thread 10 (exclusive)
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
-index e05a5dc49479..fe05fdebcab5 100755
---- a/tools/perf/tests/shell/diff.sh
-+++ b/tools/perf/tests/shell/diff.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf diff tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-index c243731d2fbf..7f8aafcbb761 100755
---- a/tools/perf/tests/shell/ftrace.sh
-+++ b/tools/perf/tests/shell/ftrace.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf ftrace tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/lib/perf_has_symbol.sh b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-index 561c93b75d77..0b35cce0b13d 100644
---- a/tools/perf/tests/shell/lib/perf_has_symbol.sh
-+++ b/tools/perf/tests/shell/lib/perf_has_symbol.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
- perf_has_symbol()
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 58debce9ab42..88cd0e26d5f6 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
- 
- perf probe -l 2>&1 | grep -q probe:vfs_getname
-diff --git a/tools/perf/tests/shell/lib/setup_python.sh b/tools/perf/tests/shell/lib/setup_python.sh
-index c2fce1793538..a58e5536f2ed 100644
---- a/tools/perf/tests/shell/lib/setup_python.sh
-+++ b/tools/perf/tests/shell/lib/setup_python.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
- if [ "x$PYTHON" = "x" ]
-diff --git a/tools/perf/tests/shell/lib/waiting.sh b/tools/perf/tests/shell/lib/waiting.sh
-index bdd5a7c71591..3a152892e077 100644
---- a/tools/perf/tests/shell/lib/waiting.sh
-+++ b/tools/perf/tests/shell/lib/waiting.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
- tenths=date\ +%s%1N
-diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
-index 76a9846cff22..0c04b3159cef 100755
---- a/tools/perf/tests/shell/list.sh
-+++ b/tools/perf/tests/shell/list.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf list tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index 30d195d4c62f..dde5bc737eb2 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # kernel lock contention analysis test
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/perf-report-hierarchy.sh b/tools/perf/tests/shell/perf-report-hierarchy.sh
-index 02e3b6aee4ed..e3c6f9a24f33 100755
---- a/tools/perf/tests/shell/perf-report-hierarchy.sh
-+++ b/tools/perf/tests/shell/perf-report-hierarchy.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf report --hierarchy
- # SPDX-License-Identifier: GPL-2.0
- # Arnaldo Carvalho de Melo <acme@redhat.com> 
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index 0f52654c914a..5fe5682c28ce 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Add vfs_getname probe to get syscall args filenames (exclusive)
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index c4bab5b5cc59..cfad1bd7b780 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # probe libc's inet_pton & backtrace it with ping (exclusive)
- 
- # Installs a probe on libc's inet_pton function, that will use uprobes,
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 1ad252f0d36e..002f7037f182 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Use vfs_getname probe to get syscall args filenames (exclusive)
- 
- # Uses the 'perf test shell' library to add probe:vfs_getname to the system
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-index 8929046e9057..f6b82223834e 100755
---- a/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Zstd perf.data compression/decompression
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
-index 4d6c3c1b7fb9..383574cb3bd3 100755
---- a/tools/perf/tests/shell/record_bpf_filter.sh
-+++ b/tools/perf/tests/shell/record_bpf_filter.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf record sample filtering (by BPF) tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
-index 21a22efe08f5..860a2d6f4b75 100755
---- a/tools/perf/tests/shell/record_offcpu.sh
-+++ b/tools/perf/tests/shell/record_offcpu.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf record offcpu profiling tests (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
-index ac70ac27d590..2182551873be 100755
---- a/tools/perf/tests/shell/record_sideband.sh
-+++ b/tools/perf/tests/shell/record_sideband.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf record sideband tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
-index d3e2958d2242..7007f1cdf761 100755
---- a/tools/perf/tests/shell/script.sh
-+++ b/tools/perf/tests/shell/script.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf script tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/stat+csv_summary.sh b/tools/perf/tests/shell/stat+csv_summary.sh
-index 323123ff4d19..9a4353db3825 100755
---- a/tools/perf/tests/shell/stat+csv_summary.sh
-+++ b/tools/perf/tests/shell/stat+csv_summary.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf stat csv summary test
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/stat+shadow_stat.sh b/tools/perf/tests/shell/stat+shadow_stat.sh
-index 0c7d79a230ea..8824f445d343 100755
---- a/tools/perf/tests/shell/stat+shadow_stat.sh
-+++ b/tools/perf/tests/shell/stat+shadow_stat.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf stat metrics (shadow stat) test
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/stat_all_pfm.sh b/tools/perf/tests/shell/stat_all_pfm.sh
-index 4d004f777a6e..c08c186af2c4 100755
---- a/tools/perf/tests/shell/stat_all_pfm.sh
-+++ b/tools/perf/tests/shell/stat_all_pfm.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf all libpfm4 events test
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index 95d2ad5d17c6..f43e28a136d3 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf stat --bpf-counters test (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-index 2ec69060c42f..ff2e06c408bc 100755
---- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf stat --bpf-counters --for-each-cgroup test
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-index 9caa36130175..9172dd68a81d 100755
---- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-+++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Check Arm64 callgraphs are complete in fp mode
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 573af9235b72..1c750b67d141 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Check Arm CoreSight trace data recording and synthesized samples (exclusive)
- 
- # Uses the 'perf record' to record trace data with Arm CoreSight sinks;
-diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-index be2d26303f94..0dfb4fadf531 100755
---- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Check Arm CoreSight disassembly script completes without errors (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
-index a69aab70dd8a..bb76ea88aa14 100755
---- a/tools/perf/tests/shell/test_arm_spe.sh
-+++ b/tools/perf/tests/shell/test_arm_spe.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Check Arm SPE trace data recording and synthesized samples (exclusive)
- 
- # Uses the 'perf record' to record trace data of Arm SPE events;
-diff --git a/tools/perf/tests/shell/test_arm_spe_fork.sh b/tools/perf/tests/shell/test_arm_spe_fork.sh
-index 8efeef9fb956..5bcca51c03ac 100755
---- a/tools/perf/tests/shell/test_arm_spe_fork.sh
-+++ b/tools/perf/tests/shell/test_arm_spe_fork.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Check Arm SPE doesn't hang when there are forks
- 
- # SPDX-License-Identifier: GPL-2.0
-diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
-index 11df592fb661..bc9aef161664 100755
---- a/tools/perf/tests/shell/test_bpf_metadata.sh
-+++ b/tools/perf/tests/shell/test_bpf_metadata.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- #
- # BPF metadata collection test.
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 32a9b8dcb200..8ee761f03c38 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Miscellaneous Intel PT testing (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 5d5019988d61..7a0b1145d0cd 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # Check open filename arg using perf trace + vfs_getname (exclusive)
- 
- # Uses the 'perf test shell' library to add probe:vfs_getname to the system
-diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-index c37017bfeb5e..572001d75d78 100755
---- a/tools/perf/tests/shell/trace_btf_enum.sh
-+++ b/tools/perf/tests/shell/trace_btf_enum.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf trace enum augmentation tests
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests/shell/trace_exit_race.sh
-index 1e247693e756..db300cde94fb 100755
---- a/tools/perf/tests/shell/trace_exit_race.sh
-+++ b/tools/perf/tests/shell/trace_exit_race.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf trace exit race
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/trace_record_replay.sh b/tools/perf/tests/shell/trace_record_replay.sh
-index 6b4ed863c1ef..88d30a03dcec 100755
---- a/tools/perf/tests/shell/trace_record_replay.sh
-+++ b/tools/perf/tests/shell/trace_record_replay.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf trace record and replay
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index f9bb7f9388be..22e2651d5919 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf trace summary (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index 1d5759d08141..684feed58254 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -85,7 +85,7 @@ static char *shell_test__description(int dir_fd, const char *name)
- 	if (io.fd < 0)
- 		return NULL;
- 
--	/* Skip first line - should be #!/bin/sh Shebang */
-+	/* Skip first line - should be #!/bin/bash Shebang */
- 	if (io__get_char(&io) != '#')
- 		goto err_out;
- 	if (io__get_char(&io) != '!')
+ additionalProperties: false
 
----
-base-commit: edf2cadf01e8f2620af25b337d15ebc584911b46
-change-id: 20250623-james-perf-bash-tests-88261a847552
-
-Best regards,
 -- 
-James Clark <james.clark@linaro.org>
+2.43.0
 
