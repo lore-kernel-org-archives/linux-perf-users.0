@@ -1,52 +1,52 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5115A235065;
-	Mon, 23 Jun 2025 09:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD9F233722;
+	Mon, 23 Jun 2025 09:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671007; cv=none; b=CxDc7yRSfE0bOZ2f9eSzObiLGZHYWD9Crbl5XCDKNi4UX/xUMyWDpKfC5jKZVzYzWQUb9YhFqmSBGmSxbShRilOWy7l9OS/dAUGIWCRF2UKiQjzKZLnKuWOulpJcvicGaBB65WBKFtyw7UQc+p2g+IlRV/vSYUDZd1xrp0nyXYw=
+	t=1750671007; cv=none; b=aC2Zax5hq/AqYTaFMwLh23i7XjMH4iry9anJua36UBIOVFrAo+9/MKX3nYEPTyc8AohegFTbcZnlZcpC3/zPSSVZHp92LX+vwn/9LQQVv1dFnrHOJUMp8b38fuB1HTwU278NFkXPM4/D8cY9t7SB1vi0Z9e+7dMpte5x5uySy9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750671007; c=relaxed/simple;
-	bh=Dq2ykfq63wn8VObJtf2Dtv3Y1KpLFKfxnczqmYre38w=;
+	bh=3LnNlWutqRhBSK3TgebE+cPIHrDJlwHzxQajjnqK+bA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=sb5IpP/2GWI/+EkUzV3nWu+fG3aRMM9iKIbjeYh9R+AzwbpmF1gcHiVnZDI+vLjY9STxp8JuLB+/Knf08NWga15KgCeUr0qsvllgtaGijh2GvtRDk+GZDr/o9lGL2CCK0lftPSXK8/78uHAfFa0KKpYbLo9Oz2mjPlllzwx24Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RIm1V+03; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=KHfx8WejLOOqXX/LJM1ltvo3TbSlqb0/7OnivbzHfND064UA86Llc26dt49g2d4emQCuwZNPyuxe2tZuGNSdkD3Xm1aCXsaKHRCoPY+frlNBc7RYOZ14YdqsSBqJvNLIvZ1/jOxooqB7L/bXAATGtdynNf3K0d+Tqw4CKYGo098=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Zh/vzDdM; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RIm1V+03"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Zh/vzDdM"
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N98GPx025818;
-	Mon, 23 Jun 2025 11:29:40 +0200
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N91VaZ013223;
+	Mon, 23 Jun 2025 11:29:52 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	1S+/fxjBGM9OThOsnlJiBdnI+RCOnybmlz6yPJOrPUQ=; b=RIm1V+03JsaWqIcT
-	wKZqPovnP+21RzLk6lgr7YSf0yw3hif8p4ORA3ltYKtso6AvFqxaa425ruMXwZON
-	/kTvkK0K6V7zEiUPPgIFo4j0Wj6Ik0TksgkB5kUu60B3lUSXekHjoAufTx7H2M2T
-	lGtlwPBymjYDUUsK/2NtNe6EG47cJeyFlrm+zjT6iS9wXWOmi9WehG1Q9cr3yw6H
-	ifkSRyHs0L+41zQ2Wt64nEEhvrIZ+sJdqZEg0Jo9N2GPHwlhpswntFn6/oFGjf+P
-	3oS5ZXHoCAkZdqJQzTC9Sh6teeejXB4gHTgwN1g93FI2LvL71PofA4I5TIvX4OUH
-	RyGobw==
+	HxYJdm+vIW2mkVXU2bP4ej7pG694JeHb3sv9IaD0GlM=; b=Zh/vzDdMFPiarDuj
+	9VlLwmbUlKhvIXvJ+C5gC/Dqxg/moeDlyqc/tuzr4YUIT//o4Ad+SobW7iSqREDH
+	GbBVMfwHtlMNNdqSj7tV4EH7fMsuuuhX7IroRoSA7RDhUqjO2gmNYNTPqRM+IaXx
+	wknXBfoH7zwvb16Vamxfhboi5FzsCucqUlthwNWvAhD+n9gJAVMrXlcU+vlDVpIF
+	4Sn7n8BfDx9nTF5lZ/rJn+1BgE4d/dt5jpbiJoqkYhaYbNbb7PjSMG+85LHb43kW
+	Quq7hf1z9QR/cYjtOQ94g4949HSx0+oWLiDX8pkR85yxD+qt/B30ycXrqZPi4s5T
+	ygTzIw==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbevay-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dhvbevd6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 11:29:40 +0200 (MEST)
+	Mon, 23 Jun 2025 11:29:52 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 32C8540052;
-	Mon, 23 Jun 2025 11:28:30 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4420940047;
+	Mon, 23 Jun 2025 11:28:34 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B5DF95C2DFB;
-	Mon, 23 Jun 2025 11:27:21 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7D3AA5C3DD9;
+	Mon, 23 Jun 2025 11:27:25 +0200 (CEST)
 Received: from localhost (10.252.18.29) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:27:21 +0200
+ 2025 11:27:25 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Mon, 23 Jun 2025 11:27:06 +0200
-Subject: [PATCH 01/13] bus: firewall: move stm32_firewall header file in
- include folder
+Date: Mon, 23 Jun 2025 11:27:10 +0200
+Subject: [PATCH 05/13] dt-bindings: perf: stm32: introduce DDRPERFM
+ dt-bindings
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250623-ddrperfm-upstream-v1-1-7dffff168090@foss.st.com>
+Message-ID: <20250623-ddrperfm-upstream-v1-5-7dffff168090@foss.st.com>
 References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
 In-Reply-To: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
@@ -88,86 +88,114 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
 
-Other driver than rifsc and etzpc can implement firewall ops, such as
-rcc.
-In order for them to have access to the ops and type of this framework,
-we need to get the `stm32_firewall.h` file in the include/ folder.
+DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
+It allows to monitor DDR events that come from the DDR Controller
+such as read or write events.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- drivers/bus/stm32_etzpc.c                       | 3 +--
- drivers/bus/stm32_firewall.c                    | 3 +--
- drivers/bus/stm32_rifsc.c                       | 3 +--
- {drivers => include/linux}/bus/stm32_firewall.h | 0
- 4 files changed, 3 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 93 ++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/drivers/bus/stm32_etzpc.c b/drivers/bus/stm32_etzpc.c
-index 7fc0f16960be..4918a14e507e 100644
---- a/drivers/bus/stm32_etzpc.c
-+++ b/drivers/bus/stm32_etzpc.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -16,8 +17,6 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
--#include "stm32_firewall.h"
--
- /*
-  * ETZPC registers
-  */
-diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/stm32_firewall.c
-index 2fc9761dadec..ef4988054b44 100644
---- a/drivers/bus/stm32_firewall.c
-+++ b/drivers/bus/stm32_firewall.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/bus/stm32_firewall_device.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -18,8 +19,6 @@
- #include <linux/types.h>
- #include <linux/slab.h>
- 
--#include "stm32_firewall.h"
--
- /* Corresponds to STM32_FIREWALL_MAX_EXTRA_ARGS + firewall ID */
- #define STM32_FIREWALL_MAX_ARGS		(STM32_FIREWALL_MAX_EXTRA_ARGS + 1)
- 
-diff --git a/drivers/bus/stm32_rifsc.c b/drivers/bus/stm32_rifsc.c
-index 4cf1b60014b7..643ddd0a5f54 100644
---- a/drivers/bus/stm32_rifsc.c
-+++ b/drivers/bus/stm32_rifsc.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -16,8 +17,6 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
--#include "stm32_firewall.h"
--
- /*
-  * RIFSC offset register
-  */
-diff --git a/drivers/bus/stm32_firewall.h b/include/linux/bus/stm32_firewall.h
-similarity index 100%
-rename from drivers/bus/stm32_firewall.h
-rename to include/linux/bus/stm32_firewall.h
+diff --git a/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
+new file mode 100644
+index 000000000000..35d34782865b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/st,stm32-ddr-pmu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++maintainers:
++  - Clément Le Goffic <clement.legoffic@foss.st.com>
++
++title: STMicroelectronics STM32 DDR Performance Monitor (DDRPERFM)
++
++properties:
++  compatible:
++    enum:
++      - st,stm32mp131-ddr-pmu
++      - st,stm32mp151-ddr-pmu
++      - st,stm32mp251-ddr-pmu
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: Reference clock for the DDR Performance Monitor
++    maxItems: 1
++
++  resets:
++    description: Reset control for the DDR Performance Monitor
++    maxItems: 1
++
++  access-controllers:
++    minItems: 1
++    maxItems: 2
++
++  st,dram-type:
++    description: |
++      This property is used to specify the type of DRAM memory connected to the
++      associated memory controller. It is required for the DDR Performance Monitor
++      to correctly interpret the performance data.
++      0 = LPDDR4,
++      1 = LPDDR3,
++      2 = DDR4,
++      3 = DDR3
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2, 3]
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - st,stm32mp131-ddr-pmu
++              - st,stm32mp151-ddr-pmu
++    then:
++      required:
++        - clocks
++        - resets
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32mp251-ddr-pmu
++    then:
++      required:
++        - access-controllers
++        - st,dram-type
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++
++    perf@5a007000 {
++        compatible = "st,stm32mp151-ddr-pmu";
++        reg = <0x5a007000 0x400>;
++        clocks = <&rcc DDRPERFM>;
++        resets = <&rcc DDRPERFM_R>;
++    };
++
++  - |
++    perf@48041000 {
++      compatible = "st,stm32mp251-ddr-pmu";
++      reg = <0x48041000 0x400>;
++      access-controllers = <&rcc 104>;
++      st,dram-type = <2>;
++    };
 
 -- 
 2.43.0
