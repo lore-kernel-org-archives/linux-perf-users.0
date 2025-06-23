@@ -1,53 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590BB1ADFFE;
-	Mon, 23 Jun 2025 23:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890151B393C;
+	Mon, 23 Jun 2025 23:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750720953; cv=none; b=EgBVBPpbX0Zg8SvIfz6wI4BU+aoGMyD4crnf1pkt2iBvOeWMH0YOc0gf6FZMG2q+aWpuw4oeOXTYxrUOcwJ89XBS8drGB1AKxFfYElehm+3aNZ44jV8YAp3SL6BjYQ1FrXcopS2ph/UdkOjyoNgNrvOprIv2UY/vzywNLxjn2JI=
+	t=1750721503; cv=none; b=VO+0ItPApNfxsfenfyNufj7M7APiD+Vi07/0LP2n/3srmchrj7FleLGmYXhZjWTi1U8CAaP6cTKsHW0DYXDeB0WMiE0cU2wyX8PH/1kPygqIGcbFNPPcwo9aWXoh2KQJlBb03botz5ug4fLjF8ygxor6eFz/WBFIfyMD/6oHLiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750720953; c=relaxed/simple;
-	bh=3JCIdm/lY3A3oO6QC7tcIajIJHdvKIoWTTw2glf7/54=;
+	s=arc-20240116; t=1750721503; c=relaxed/simple;
+	bh=Zuh/gcIk+FkXHDdGTg0VBN2dgCXLH7vihqYFVQI5HoM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GdkCTVnsPcIxqxhtMEa0NzVg/nxGudqXx3hIvMRMRKcnXPKZvArNyV+p3FNCEoffpponaReR30Ng5/r9KVj4ouerC76qQiQPXrFPvJxN/fPu/bXN6aJBjRsj2qbLYSUnF+s4oCrZRKWLf/jYc3VUU4z1w5NeY6egOfXVaecnrdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pu4TbMB9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=a+xlnYrpX5T+88Um4cKkJHTe3AWdErSsVqvYgqs4VgxJTNF9S9aws5sj/nxv/gEng+Sw+uhaGxfdP+Asu3aflwQJqoaMinO/bXqrUEHg1tKphcuDGJLRx6Ka76EFmbYSu1osHSWaCdAevtCWTRVgZ5wIwnWRqn0V0Z3+5jyi8zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbFlZyoS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pu4TbMB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89782C4CEEA;
-	Mon, 23 Jun 2025 23:22:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbFlZyoS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D29BCC4CEEA;
+	Mon, 23 Jun 2025 23:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750720953;
-	bh=3JCIdm/lY3A3oO6QC7tcIajIJHdvKIoWTTw2glf7/54=;
+	s=k20201202; t=1750721501;
+	bh=Zuh/gcIk+FkXHDdGTg0VBN2dgCXLH7vihqYFVQI5HoM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pu4TbMB91T2GhcMXvI3d4Jkr2w1CX0pAEOIMT6qewGZTn7f+uRoSQa/DzEpfI4Ybb
-	 ulgy+H4D2PsgRB8PcdmK3qNPcu/+lNXPKjR/rVQP1y7bWvYFisKgqBkZOJFJZf5xR8
-	 RVk3ltO0dZ60H4OqnXZS8KsAo1ukVoqUbGp8AC8zj3zDqRpnUskQygPWuNMet3XIJA
-	 +IG1TibO5eP7vtfSx8lSJVQDk9QPNXdqxBbnmPSaB2q9s5n/dwGc4ZvcVTzXppIf3B
-	 s2kni0Kr+xArbYqCv3MgUjvI2se7AXkvZbWiJeQGH+vhfZI19IcwVwm6bT88KqNMW4
-	 64nv6BgDcmfSg==
-Date: Mon, 23 Jun 2025 16:22:31 -0700
+	b=hbFlZyoSJXRwYwrGw5rfEldiW1a5/SwDOSKBL67cAV2SJioimtZBmMUXJGpUcvWvL
+	 ZD5xDQlGK1Lv945xTJOpYqvL+kbqTCPkmbmyczfukQi1RJbEH2xBu745qQjuAbyNtG
+	 t5ypkEdt8avjs/AxNk9LNAB7NOMju7mBQdkk4C2R1TX/ONiAAvX4TQ7XxCnMuku9WW
+	 guPfSEQMSsfmOnYZZLJjWMEI619veCbPvMdfjC4KLf2uMVkBMqqqdAPzrIJkAVZyh+
+	 BU8MQHFniD6Lmm5b/ib9oSWfmNVU93duZxAT/LnN6t8Ch3eH1DREFWUTawHAVsncnY
+	 bJKj2TtCHYj/A==
+Date: Mon, 23 Jun 2025 16:31:39 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 0/4] Add support for a DRM tool like PMU
-Message-ID: <aFnht37mLV6ZFost@google.com>
-References: <20250403202439.57791-1-irogers@google.com>
+Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
+Message-ID: <aFnj29spuj3mKZLc@google.com>
+References: <20250611233239.3098064-1-ctshao@google.com>
+ <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
+ <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com>
+ <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
+ <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com>
+ <aFXctF683XlLmiRy@google.com>
+ <CAP-5=fW39O4=fu4CkcZSJWMA-5gkPaixGhWZecqMnrQt_vYsCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,53 +51,141 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250403202439.57791-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW39O4=fu4CkcZSJWMA-5gkPaixGhWZecqMnrQt_vYsCg@mail.gmail.com>
 
-Hi Ian,
+On Mon, Jun 23, 2025 at 11:17:20AM -0700, Ian Rogers wrote:
+> On Fri, Jun 20, 2025 at 3:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi CT,
+> >
+> > On Thu, Jun 12, 2025 at 03:55:59PM -0700, Chun-Tse Shao wrote:
+> > > Hi Ian, I actually renamed it to `aggr_nr` in v2 patch so it should be
+> > > better aligned to json mode, which is using `aggregate-nunber`. But
+> > > anyway I think any name other than `cpus` is better.
+> > > v2 patch: lore.kernel.org/20250612225324.3315450-1-ctshao@google.com
+> >
+> > I think "aggregation-count" is a better name, maybe abbreviated to
+> > "ag_cnt".  Can we rename the JSON as well?  I'm not sure if it's
+> > documented somewhere.
+> 
+> Fwiw, I still think "counters" is a clearer, more intention revealing
+> definition than "aggregation count" or "aggregation number". The term
+> counter appears in the perf-stat and perf_event_open man page. In the
+> perf-stat man page we have a pattern of:
+> 
+>        --per-XXX
+>            Aggregate counts per XXX for system-wide mode measurements. This is a
+>            useful mode to .... To enable this mode, use --per-XXX
+>            in addition to -a. (system-wide). The output includes the ...
+>           This is useful to gauge the amount of aggregation.
+> 
+> It seems that the aggregated value of the counters could be confused
+> for being an "aggregation count" or "aggregation number" given the man
+> page definition. I think "counters" to some extent avoids this, we
+> giving the number of counters aggregated. The perf-stat man page could
+> certainly be clearer :-)
 
-On Thu, Apr 03, 2025 at 01:24:35PM -0700, Ian Rogers wrote:
-> DRM clients expose information through usage stats as documented in
-> Documentation/gpu/drm-usage-stats.rst (available online at
-> https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
-> PMU, similar to the hwmon PMU, that exposes DRM information.
-> 
-> v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
->     trap cleanup.
-> 
-> v2: Add support to only scan hwmon and drm PMUs if the event or PMU
-> wildcard can match. Add a test as requested by Namhyung. Add file
-> comments.
-> 
-> v1:
-> https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.com/
-> 
-> Ian Rogers (4):
->   perf parse-events: Avoid scanning PMUs that can't contain events
->   perf parse-events: Avoid scanning PMUs that can't match a wildcard
->   perf drm_pmu: Add a tool like PMU to expose DRM information
->   perf tests: Add a DRM PMU test
-
-Can you please refresh this series?  It doesn't apply cleanly anymore.
+I'm fine with "counters" (and "ctrs").
 
 Thanks,
 Namhyung
 
-> 
->  tools/perf/tests/shell/drm_pmu.sh |  78 ++++
->  tools/perf/util/Build             |   1 +
->  tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++++
->  tools/perf/util/drm_pmu.h         |  39 ++
->  tools/perf/util/evsel.c           |   9 +
->  tools/perf/util/parse-events.c    |  30 +-
->  tools/perf/util/pmu.c             |  15 +
->  tools/perf/util/pmu.h             |   4 +-
->  tools/perf/util/pmus.c            | 101 ++++-
->  tools/perf/util/pmus.h            |   2 +
->  10 files changed, 952 insertions(+), 16 deletions(-)
->  create mode 100755 tools/perf/tests/shell/drm_pmu.sh
->  create mode 100644 tools/perf/util/drm_pmu.c
->  create mode 100644 tools/perf/util/drm_pmu.h
-> 
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
-> 
+> > >
+> > > On Wed, Jun 11, 2025 at 10:12 PM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > On Wed, Jun 11, 2025 at 8:18 PM Chun-Tse Shao <ctshao@google.com> wrote:
+> > > > >
+> > > > > Thanks for your test, Ian!
+> > > > >
+> > > > > I wonder if `nr_pmus` makes sense, since the column would be shared
+> > > > > with multiple different pmus. WDYT?
+> > > >
+> > > > So each PMU in sysfs has a cpumask that specifies which CPUs perf
+> > > > should pass to perf_event_open. For example, on a two socket machine
+> > > > the cpumask will typically have the first CPU of each socket. If the
+> > > > cpumask (or cpus) file isn't present then the cpumask is implicitly
+> > > > all online CPUs. Given that the aggregation number is the number of
+> > > > CPUs in the cpumask multiplied by the number of PMUs, I think the most
+> > > > neutral name is probably "counters" possibly shortened down to "ctrs".
+> > > > I suspect others have better suggestions :-)
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > > -CT
+> > > > >
+> > > > > On Wed, Jun 11, 2025 at 5:16 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > >
+> > > > > > On Wed, Jun 11, 2025 at 4:36 PM Chun-Tse Shao <ctshao@google.com> wrote:
+> > > > > > >
+> > > > > > > Follow up:
+> > > > > > > lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
+> > > > > > >
+> > > > > > > The patch adds unit aggregation during evsel merge the aggregated uncore
+> > > > > > > counters.
+> > > > > > >
+> > > > > > > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
+> > > > > > > cpumask="0,120"
+> > > > > > > Before:
+> > > > > > >   perf stat -e clockticks -I 1000 --per-socket
+> > > > > > >   #           time socket cpus             counts unit events
+> > > > > > >        1.001085024 S0        1         9615386315      clockticks
+> > > > > > >        1.001085024 S1        1         9614287448      clockticks
+> > > > > > >   perf stat -e clockticks -I 1000 --per-node
+> > > > > > >   #           time node   cpus             counts unit events
+> > > > > > >        1.001029867 N0        1         3205726984      clockticks
+> > > > > > >        1.001029867 N1        1         3205444421      clockticks
+> > > > > > >        1.001029867 N2        1         3205234018      clockticks
+> > > > > > >        1.001029867 N3        1         3205224660      clockticks
+> > > > > > >        1.001029867 N4        1         3205207213      clockticks
+> > > > > > >        1.001029867 N5        1         3205528246      clockticks
+> > > > > > > After:
+> > > > > > >   perf stat -e clockticks -I 1000 --per-socket
+> > > > > > >   #           time socket cpus             counts unit events
+> > > > > >
+> > > > > > I wonder if there is a better column heading than "cpus" given that
+> > > > > > these are imc PMUs.
+> > > > > >
+> > > > > > >        1.001022937 S0       12         9621463177      clockticks
+> > > > > > >        1.001022937 S1       12         9619804949      clockticks
+> > > > > > >   perf stat -e clockticks -I 1000 --per-node
+> > > > > > >   #           time node   cpus             counts unit events
+> > > > > > >        1.001029867 N0        4         3206782080      clockticks
+> > > > > > >        1.001029867 N1        4         3207025354      clockticks
+> > > > > > >        1.001029867 N2        4         3207067946      clockticks
+> > > > > > >        1.001029867 N3        4         3206871733      clockticks
+> > > > > > >        1.001029867 N4        4         3206199005      clockticks
+> > > > > > >        1.001029867 N5        4         3205525058      clockticks
+> > > > > > >
+> > > > > > > Suggested-by: Ian Rogers <irogers@google.com>
+> > > > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > > > >
+> > > > > Added Namhyung's ack from the previous email.
+> > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > > >
+> > > > > >
+> > > > > > Tested-by: Ian Rogers <irogers@google.com>
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Ian
+> > > > > >
+> > > > > > > ---
+> > > > > > >  tools/perf/util/stat.c | 1 +
+> > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > >
+> > > > > > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> > > > > > > index 355a7d5c8ab8..52266d773353 100644
+> > > > > > > --- a/tools/perf/util/stat.c
+> > > > > > > +++ b/tools/perf/util/stat.c
+> > > > > > > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
+> > > > > > >                 struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
+> > > > > > >
+> > > > > > >                 /* NB: don't increase aggr.nr for aliases */
+> > > > > > > +               ps_a->aggr[i].nr += ps_b->aggr[i].nr;
+> > > > > > >
+> > > > > > >                 aggr_counts_a->val += aggr_counts_b->val;
+> > > > > > >                 aggr_counts_a->ena += aggr_counts_b->ena;
+> > > > > > > --
+> > > > > > > 2.50.0.rc1.591.g9c95f17f64-goog
+> > > > > > >
