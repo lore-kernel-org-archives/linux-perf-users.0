@@ -1,244 +1,130 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12D1223328
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 18:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17EB1DD543
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 18:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702654; cv=none; b=rpVgtINVz44pDGVybZfzRwIs8+YkGTXS/qs/eMhG+q+BtKx16exZoCVrQiMxnNZBwaXXcH+ZQgaI1O3OPEc/nKCJicJBkkC+H9nxBw01Rozo07mvNKnK8lb8QQc7XvtSunOuVgog3jeNPe/UyYEjUXoAz9JlD0z4ZZ9Kvu/IeH8=
+	t=1750703120; cv=none; b=UR7TpQAu2gnhyeOfVH4QyZ4y+KCI4l7o/wZP9SuitJ74JcBCfHjgfEUV9JylhloBqvnOxNH4NlvKBODR3qOistVOysB74gzpoE4zr9fk1//rtNaIsW8halY27TcF1Wsj1yf8NX/GMX16Vbgd9W2tpbDTXNnOHWnAn+PfBYY8Eoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702654; c=relaxed/simple;
-	bh=KjX9hbfC+EcV6h2iM+G+DkOUcQy4YEsEoFB6KGPRJiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kk1O7SO/AllfE5ppbDx44/RuEwtx7UHA/BTTPeCodatmr+6WGOXIrwu7iSmi9wsWtTYEgdvgl6sSJqxRctl4gnNpO079ygZWyxAdxsDwyayFVHaG8LPVPnH3RcSy8e7I72zlE5JAPMI4iwJa1ZHvJs9qLGNjA24tg5C1BNNm24Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KR9WVSwQ; arc=none smtp.client-ip=209.85.166.169
+	s=arc-20240116; t=1750703120; c=relaxed/simple;
+	bh=Ig5ipTdJADEoDAWoOphXIpyhS5e+nFJQDKH78u7uCTg=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=ZGQzEdn3+dhBxIogqwA8JAUT/9On2hvx/13tYMYuNjcuTgHQp4Yp75PwNRhpQSLCA2W+revkcqyt18HwrGMd7XCA2n+nU5LDOPfGewLGBNRdVeXqz1gYg0qIzFUNDOMp0UgYPhCwpvCdsbsgE0qJ/H/Z2PucDzHrdgyvxIGy+7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ruqqH37R; arc=none smtp.client-ip=209.85.166.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KR9WVSwQ"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so18355ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 11:17:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ruqqH37R"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3ddd5cd020dso98443115ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 11:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750702652; x=1751307452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dX5nmmgwY0hBVlf7aMoDZKsFfUCvDBd1UsXXJPvN9mg=;
-        b=KR9WVSwQQBt7sfzF/1XMLux+WlKnj74YGki1pLl3EzIV/uBdw+4SZYi/0xmUYKXvJW
-         k6LKIDdzx2PgvdvR4cy8aiSH3FH7qJRZgIBmGPzDOXwRRaMVD0pdWRWPZDvhfXCAnbfo
-         07PrTT5ArA0qUe3QC0tEtGWVNTUvPxS2RbOACRlr5QjadoxlWjOZyvmwhKIhMQwzEdur
-         6wLx1/JJtR2u9fZHTW8dRsbdlFr90qxjlUCos92L4uCD5JOTThKnpQsQ3oV4VPLVoRm/
-         wEYRjWRUCQ04dfBEcdJUON4ZkM1B/z5YvA7Y2jIIRshYZF59/M/N36/jCNmV8ePD2aLW
-         cZcg==
+        d=google.com; s=20230601; t=1750703118; x=1751307918; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fkKX/+jmAY5EI28pxMDSbALm6PmjD/WT98j0aaxzD8Y=;
+        b=ruqqH37RFF7eaGFYweG4zc0KShUaBLkbO2jPfyZFXYkdv1y+P4JAp9eD3XzaPNtKxX
+         QjqblPL9cAYN5HnjHxTgCW6LQqTusUBrX90eWdxnrQlVWMK8rIA42KM+e7tu2ZP2LRoH
+         tuAWRg2xttBPbcZSzTi9rJh76jrSW70dD8ldrMcScdlGJcWQ3fWUPnBGEw2b+RR+xkRa
+         NKM3/Kx+9iHyYeh8HAUIjgOARiPiVs8buCICiCYcg1TKf9dnW0MQVU5QDXXS3HK0GDDM
+         kP2hlo6PHDStaBxYMFXFp8MIyWXoOKjp6MlNeVWc1C+v1mRFUwXLQV4SS85ngSMR6xoS
+         Akng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750702652; x=1751307452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dX5nmmgwY0hBVlf7aMoDZKsFfUCvDBd1UsXXJPvN9mg=;
-        b=hVst6fN7cq/iKYS0tBQkz5oZmPchPDzhuw6XzYpjKuVjecyn8+01Uu9RcZkaWMaP/g
-         X98aj50gbWg87dwJK1SLoevvtD8Q39NomE4HMN0uM68Y320byoiGS/4qIdWlN3Te9G0E
-         ifXntwDobDnRibhaKOnatawujojQvH3zfDxQTQ6WqUiARNucuZGbwlCvh01pk99qBP35
-         9szNjVmex9HNrCw7WnwxeJ9jgXY9jAx4P54MIdbKdHEHShBD2Jd4KgkOcPwKDK8CzT3H
-         prqNlVNRnvGlJR+dGZgiaeoUzJzZ62IIgxczFKu/+pFVieKyc8mn67o3haX9Gpji2y3P
-         0RMw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8qTEL38cIZtzYR85sia/whyq/2V3V5apd15xB9YgL23POQ8Ayt4E0RiKmGjcJUjmPOtNE2ElGCvZ9XK+johUy@vger.kernel.org
-X-Gm-Message-State: AOJu0YziQe88yd/BDQZ/+y6Ov3n8edv64S9I+0m3KFV5gFdfVJ1iI1KU
-	79Xif5WDsTGN3PqZD7f2BFsukc3WAtB6DgvKR9dlTVrLFEprTFISlPnTzwdFpxhRdvIcVOUXJ1h
-	gjX3J11H18U3zhiqVPA8f4AA9aSyOFtqvdDYG2bNR
-X-Gm-Gg: ASbGncs4uGymX7pTplN+6FLQyNkxAlsQ8F7zyHLeulhQbOckazSLXMGwWP5Y19Lx8s/
-	jdBoP5baRDh09PwG3Y1qvUEP03dVQWf1XvNMAhFn5OKKCJan6tO4M3wJbvKGpv8SpHSI2y8l41t
-	1/xiD22xDyyM0Lzn5C/X2OrWFBfbNwQTBT9s1BSpMerlF/Ltump9Derk3BsieiAOHhkw3ABwY4
-X-Google-Smtp-Source: AGHT+IHEDu+O4BUFjCcxZ1MyvRO2QKXmrDxBbVyqySqQfqkGQ/ogiMm9DV5FMVW18S7/nFksxFh4G8srlNjVUvQL3BA=
-X-Received: by 2002:a05:6e02:156e:b0:3dd:b826:deca with SMTP id
- e9e14a558f8ab-3df0cefdc17mr6671585ab.26.1750702651524; Mon, 23 Jun 2025
- 11:17:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750703118; x=1751307918;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fkKX/+jmAY5EI28pxMDSbALm6PmjD/WT98j0aaxzD8Y=;
+        b=MO3fzw9BoHBTUskIqnDwFCRGnf6S55tRZlrti9jd2EPFq6N5zlm+wHOzO+d7Kkp3Rj
+         aRkH+Ksi9b6jDbIMDn/sprCWF7dG+SZUA8mIFtjGloVWlz3iHqGMJfJhwpuc+NwibP6i
+         xQEJlUbMeXTUibWS2IJUOtGbOW9LFnXeTetgL+2LjGRA/4vI9dTjYgYjwz5bx5DgrEZt
+         7ROO6EmzTfsNWaBajjrolLSHrHypkXHoclcJ+bgg94KTVVjyQZX2z/U7hUOEaaS7b3MU
+         /12elxC9qfPRXGhY7m2edE+fmq7jRjAtgCEcD5SE1nqTRYKeabl4ZLikEdB4e7pyHJcq
+         cuYw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9f2ymbcsqnpsdCUsxYd8iEDE87DWC9rBn7R5dc0X8tHsgYAg7dTkPzFPVFPGsMqgDnnOSNYWFlZi50Uk4D2/Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgiXE0MXU3r5yDuwwBzWEWiQjB1HUxa6y1Qr9vB9XRxj/aced4
+	sPm/3yIvxoVsHknlUVgyYnZKhytEEe/xbGxPCEhQc4QaTYK0YlOAU6Liy+rbjl+I0Fg50RoM+6O
+	HyYTYINg+26HSH/kB6rOAWjLjzQ==
+X-Google-Smtp-Source: AGHT+IGzBE7m3jRf0szvIWMcwTlET+uxa4mEBdZ8JNu6pA3Bo/Yc8zZA87zzxM+0+5qc5CYD+m3kIHDI/60f4MKLBA==
+X-Received: from jay12.prod.google.com ([2002:a05:6638:c2dc:b0:4f0:9e8b:e246])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:1806:b0:3de:1200:219f with SMTP id e9e14a558f8ab-3de38cda633mr149171615ab.22.1750703118062;
+ Mon, 23 Jun 2025 11:25:18 -0700 (PDT)
+Date: Mon, 23 Jun 2025 18:25:16 +0000
+In-Reply-To: <aFYAq7GcSx4pTK9Y@linux.dev> (message from Oliver Upton on Fri,
+ 20 Jun 2025 17:45:31 -0700)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250611233239.3098064-1-ctshao@google.com> <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
- <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com>
- <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
- <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com> <aFXctF683XlLmiRy@google.com>
-In-Reply-To: <aFXctF683XlLmiRy@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 11:17:20 -0700
-X-Gm-Features: AX0GCFuF0EDqZmQkD-2YOLJszX4GEWfGRbqDf0jEzTi5oWlapQSru5F_wWVYkXk
-Message-ID: <CAP-5=fW39O4=fu4CkcZSJWMA-5gkPaixGhWZecqMnrQt_vYsCg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <gsntsejq9uyb.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v2 03/23] arm64: cpufeature: Add cpucap for PMICNTR
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Fri, Jun 20, 2025 at 3:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi CT,
->
-> On Thu, Jun 12, 2025 at 03:55:59PM -0700, Chun-Tse Shao wrote:
-> > Hi Ian, I actually renamed it to `aggr_nr` in v2 patch so it should be
-> > better aligned to json mode, which is using `aggregate-nunber`. But
-> > anyway I think any name other than `cpus` is better.
-> > v2 patch: lore.kernel.org/20250612225324.3315450-1-ctshao@google.com
->
-> I think "aggregation-count" is a better name, maybe abbreviated to
-> "ag_cnt".  Can we rename the JSON as well?  I'm not sure if it's
-> documented somewhere.
+Hi Oliver. Thanks for review.
 
-Fwiw, I still think "counters" is a clearer, more intention revealing
-definition than "aggregation count" or "aggregation number". The term
-counter appears in the perf-stat and perf_event_open man page. In the
-perf-stat man page we have a pattern of:
+Oliver Upton <oliver.upton@linux.dev> writes:
 
-       --per-XXX
-           Aggregate counts per XXX for system-wide mode measurements. This=
- is a
-           useful mode to .... To enable this mode, use --per-XXX
-           in addition to -a. (system-wide). The output includes the ...
-          This is useful to gauge the amount of aggregation.
+> On Fri, Jun 20, 2025 at 10:13:03PM +0000, Colton Lewis wrote:
+>> Add a cpucap for FEAT_PMUv3_PMICNTR, meaning there is a dedicated
+>> instruction counter as well as the cycle counter.
 
-It seems that the aggregated value of the counters could be confused
-for being an "aggregation count" or "aggregation number" given the man
-page definition. I think "counters" to some extent avoids this, we
-giving the number of counters aggregated. The perf-stat man page could
-certainly be clearer :-)
+>> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
-Thanks,
-Ian
+> I don't see this capability being used in this series.
 
 > Thanks,
-> Namhyung
->
-> >
-> >
-> > On Wed, Jun 11, 2025 at 10:12=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > On Wed, Jun 11, 2025 at 8:18=E2=80=AFPM Chun-Tse Shao <ctshao@google.=
-com> wrote:
-> > > >
-> > > > Thanks for your test, Ian!
-> > > >
-> > > > I wonder if `nr_pmus` makes sense, since the column would be shared
-> > > > with multiple different pmus. WDYT?
-> > >
-> > > So each PMU in sysfs has a cpumask that specifies which CPUs perf
-> > > should pass to perf_event_open. For example, on a two socket machine
-> > > the cpumask will typically have the first CPU of each socket. If the
-> > > cpumask (or cpus) file isn't present then the cpumask is implicitly
-> > > all online CPUs. Given that the aggregation number is the number of
-> > > CPUs in the cpumask multiplied by the number of PMUs, I think the mos=
-t
-> > > neutral name is probably "counters" possibly shortened down to "ctrs"=
-.
-> > > I suspect others have better suggestions :-)
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > -CT
-> > > >
-> > > > On Wed, Jun 11, 2025 at 5:16=E2=80=AFPM Ian Rogers <irogers@google.=
-com> wrote:
-> > > > >
-> > > > > On Wed, Jun 11, 2025 at 4:36=E2=80=AFPM Chun-Tse Shao <ctshao@goo=
-gle.com> wrote:
-> > > > > >
-> > > > > > Follow up:
-> > > > > > lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsn=
-OOJgX4Kg@mail.gmail.com/
-> > > > > >
-> > > > > > The patch adds unit aggregation during evsel merge the aggregat=
-ed uncore
-> > > > > > counters.
-> > > > > >
-> > > > > > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> > > > > > cpumask=3D"0,120"
-> > > > > > Before:
-> > > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > > >   #           time socket cpus             counts unit events
-> > > > > >        1.001085024 S0        1         9615386315      clocktic=
-ks
-> > > > > >        1.001085024 S1        1         9614287448      clocktic=
-ks
-> > > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > > >   #           time node   cpus             counts unit events
-> > > > > >        1.001029867 N0        1         3205726984      clocktic=
-ks
-> > > > > >        1.001029867 N1        1         3205444421      clocktic=
-ks
-> > > > > >        1.001029867 N2        1         3205234018      clocktic=
-ks
-> > > > > >        1.001029867 N3        1         3205224660      clocktic=
-ks
-> > > > > >        1.001029867 N4        1         3205207213      clocktic=
-ks
-> > > > > >        1.001029867 N5        1         3205528246      clocktic=
-ks
-> > > > > > After:
-> > > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > > >   #           time socket cpus             counts unit events
-> > > > >
-> > > > > I wonder if there is a better column heading than "cpus" given th=
-at
-> > > > > these are imc PMUs.
-> > > > >
-> > > > > >        1.001022937 S0       12         9621463177      clocktic=
-ks
-> > > > > >        1.001022937 S1       12         9619804949      clocktic=
-ks
-> > > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > > >   #           time node   cpus             counts unit events
-> > > > > >        1.001029867 N0        4         3206782080      clocktic=
-ks
-> > > > > >        1.001029867 N1        4         3207025354      clocktic=
-ks
-> > > > > >        1.001029867 N2        4         3207067946      clocktic=
-ks
-> > > > > >        1.001029867 N3        4         3206871733      clocktic=
-ks
-> > > > > >        1.001029867 N4        4         3206199005      clocktic=
-ks
-> > > > > >        1.001029867 N5        4         3205525058      clocktic=
-ks
-> > > > > >
-> > > > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > >
-> > > > Added Namhyung's ack from the previous email.
-> > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > >
-> > > > >
-> > > > > Tested-by: Ian Rogers <irogers@google.com>
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > > ---
-> > > > > >  tools/perf/util/stat.c | 1 +
-> > > > > >  1 file changed, 1 insertion(+)
-> > > > > >
-> > > > > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > > > > > index 355a7d5c8ab8..52266d773353 100644
-> > > > > > --- a/tools/perf/util/stat.c
-> > > > > > +++ b/tools/perf/util/stat.c
-> > > > > > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struc=
-t evsel *evsel, struct evsel *alias)
-> > > > > >                 struct perf_counts_values *aggr_counts_b =3D &p=
-s_b->aggr[i].counts;
-> > > > > >
-> > > > > >                 /* NB: don't increase aggr.nr for aliases */
-> > > > > > +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
-> > > > > >
-> > > > > >                 aggr_counts_a->val +=3D aggr_counts_b->val;
-> > > > > >                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
-> > > > > > --
-> > > > > > 2.50.0.rc1.591.g9c95f17f64-goog
-> > > > > >
+> Oliver
+
+You are correct it isn't now. I'll take it out.
+
+>> ---
+>>   arch/arm64/kernel/cpufeature.c | 7 +++++++
+>>   arch/arm64/tools/cpucaps       | 1 +
+>>   2 files changed, 8 insertions(+)
+
+>> diff --git a/arch/arm64/kernel/cpufeature.c  
+>> b/arch/arm64/kernel/cpufeature.c
+>> index 278294fdc97d..85dea9714928 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -2904,6 +2904,13 @@ static const struct arm64_cpu_capabilities  
+>> arm64_features[] = {
+>>   		.matches = has_cpuid_feature,
+>>   		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
+>>   	},
+>> +	{
+>> +		.desc = "PMU Dedicated Instruction Counter",
+>> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+>> +		.capability = ARM64_HAS_PMICNTR,
+>> +		.matches = has_cpuid_feature,
+>> +		ARM64_CPUID_FIELDS(ID_AA64DFR1_EL1, PMICNTR, IMP)
+>> +	},
+>>   #ifdef CONFIG_ARM64_SME
+>>   	{
+>>   		.desc = "Scalable Matrix Extension",
+>> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+>> index 5b196ba21629..6dd72fcdd612 100644
+>> --- a/arch/arm64/tools/cpucaps
+>> +++ b/arch/arm64/tools/cpucaps
+>> @@ -47,6 +47,7 @@ HAS_LSE_ATOMICS
+>>   HAS_MOPS
+>>   HAS_NESTED_VIRT
+>>   HAS_PAN
+>> +HAS_PMICNTR
+>>   HAS_PMUV3
+>>   HAS_S1PIE
+>>   HAS_S1POE
+>> --
+>> 2.50.0.714.g196bf9f422-goog
+
