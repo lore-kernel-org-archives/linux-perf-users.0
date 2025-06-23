@@ -1,50 +1,50 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6DF17A318;
-	Mon, 23 Jun 2025 15:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3C072624;
+	Mon, 23 Jun 2025 15:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691009; cv=none; b=bafG76Bmx6/xnH1e9COQDbwCsiIK1shlklTX0hLMCn49AiUJfQreRVS9wYraEqdeG0iC/mrhdao/C81RC2BOIsHorocZRx5BjYZTIY9w9neXvly+brF07Mj3wBfves5fCKHBfrW5JDBX7k7eNQGKFShn0wICWufA0k4tw+2aQL0=
+	t=1750691125; cv=none; b=nekQ2cfKj/SamdhfofCRl5iJiiIm8FpyR8e4DYIh9eLOMeHw8itE04cWnrJggAxRhvAtIOmZhClf9P4lBsUcUpPC+BP6y+IepDFQccdLqNYzF6gpEqpYVYsj69QbUK0ELQwlTpjYv5KL7K7MmbN3Dk6983O6UCTPy+YcbUQhqY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691009; c=relaxed/simple;
-	bh=QeiW61XUZ8wPwSSHrFB2CHPW35aGsUNu+KPSB46J24M=;
+	s=arc-20240116; t=1750691125; c=relaxed/simple;
+	bh=xGs+xuT9ZbXSNcZb6r49Mqj6bJ/rNc5SZFKZhnRHrMI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OCUZbqW0O5zt+1UBFe9iDhAfudjyu1AkFZOf5hlc6ODLBxKyXDbXpUFOeI0NrvOuDZQY2YWJyQnq4UwyM4wPjpkZ8I7b6f7HknNsivULLv8PR6DkNcIoB0cbNOSFIYUxIhW3KwM+fl89LNXUDs/JTyavyzJJXbYjhj+JJj4/eVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Nu6QCp8y; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:Content-Type; b=jGSyEk68e4JebI6fO8yx014JAKcmC900fRYR8h2/x1H3cm571/nPZL9n+ST0GPLGh6kw4TVGxQe7fBfUqhDCm+p2su7Ko3+sLkgOKG5cMRnKSUOXKoCx6G3tMEt3hFYr8OgQXKYOtANeeho7siSAMBkEKSZ93B9aEin0JqIyMLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bF9yI8JI; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Nu6QCp8y"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NAXGFF012023;
-	Mon, 23 Jun 2025 17:03:07 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bF9yI8JI"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NDdLVH024335;
+	Mon, 23 Jun 2025 17:05:06 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	+4Z6/tJa/UFNSN1pd77M3FYDzdgkVF+SixPAfedgsPY=; b=Nu6QCp8ytKHhSXKA
-	QL5YZ8y8711G6aSBEZyto43QPpTPyx+hWUCox4qJzIbducnaI0nxBMq3KpnvYlKT
-	WrmOYkT3BDOx/68i8YhPBfX97yfqlnOgBnXrbgo/tDClwz0hMj6YBKxnkfNbN6X3
-	Dx61mJ+Uj0AT2Wh+QCz23oaHxPEHb7lmpdNGxbdFfQyCnRcGAy17DlsgVN+SqLH9
-	OydUyEnwZTSc+doNJAd+xQzPeMk4YnO4xfzOr8f6ut8gkiuyFo4KwQg5Vo7tFBYc
-	Oc0zfIxreugZ/MBmOEet/60dUCbp+m8Hf6vMJhqN0D4pKwQiND5vMgqTpuLAdLlk
-	14lVdQ==
+	6sv5OcOQ4mLQLuHevh2cUvXQ88huIlXGlWQaz3Py6wY=; b=bF9yI8JIFqs7ioUx
+	YDyxrekrSZ47ndzO65fgYVA9fiqdJhb4A1AjRQpK8A6JPvobiX40RBvpbQICsGZy
+	KBEKyV8Nutp2vooUtufi6oc0aFIm3JnPIyEC0r4FpzFHsn9wPHB3mdk4CC3i0ySp
+	dVG+isuNuslqinodqBJo57SAui7QgB1Bu7WUx+AAYYE7Ei9Zr3IYwwyivPnOgD0g
+	NLyaqsS2+nIOxbGUoSJWY3H5t9f/gQnx84a3CpWq1xyJoKFdEOdehH2E7z2ID5QJ
+	ZCF7Imh3wriuEBkharNBQkUpD7+qm/hJwoArih2kgBsZskd63sl/XG1gzuA/EUtb
+	fL7yXQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjg0su-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e6a6e021-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 17:03:07 +0200 (MEST)
+	Mon, 23 Jun 2025 17:05:05 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5E55540046;
-	Mon, 23 Jun 2025 17:01:50 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 37F7440044;
+	Mon, 23 Jun 2025 17:03:38 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6C67EB4D1DE;
-	Mon, 23 Jun 2025 17:00:04 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BAD61B52149;
+	Mon, 23 Jun 2025 17:02:26 +0200 (CEST)
 Received: from [10.252.18.29] (10.252.18.29) by SHFDAG1NODE2.st.com
  (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
- 2025 17:00:03 +0200
-Message-ID: <cd7cac7f-e78f-4457-9e42-6290632d9c1c@foss.st.com>
-Date: Mon, 23 Jun 2025 17:00:00 +0200
+ 2025 17:02:25 +0200
+Message-ID: <1ff31bd6-08e0-46da-a1b0-c60dbb1e3cb8@foss.st.com>
+Date: Mon, 23 Jun 2025 17:02:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/13] dt-bindings: perf: stm32: introduce DDRPERFM
- dt-bindings
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
 To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
         Mark
  Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
@@ -78,11 +77,11 @@ CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-clk@vger.kernel.org>
 References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
- <20250623-ddrperfm-upstream-v1-5-7dffff168090@foss.st.com>
- <868b20f0-c1ff-4cd7-91bc-e73069aafa95@kernel.org>
+ <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
 Content-Language: en-US
 From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <868b20f0-c1ff-4cd7-91bc-e73069aafa95@kernel.org>
+In-Reply-To: <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
@@ -91,131 +90,213 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-23_04,2025-06-23_06,2025-03-28_01
 
-On 6/23/25 11:48, Krzysztof Kozlowski wrote:
+On 6/23/25 11:45, Krzysztof Kozlowski wrote:
 > On 23/06/2025 11:27, Clément Le Goffic wrote:
->> DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
->> It allows to monitor DDR events that come from the DDR Controller
->> such as read or write events.
->>
+>> +	if (of_property_present(pmu->dev->of_node, "access-controllers")) {
+>> +		ret = stm32_firewall_get_firewall(pmu->dev->of_node, &firewall, 1);
+>> +		if (ret) {
+>> +			dev_err(pmu->dev, "Failed to get firewall\n");
+>> +			return ret;
+>> +		}
+>> +		ret = stm32_firewall_grant_access_by_id(&firewall, firewall.firewall_id);
+>> +		if (ret) {
+>> +			dev_err(pmu->dev, "Failed to grant access\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	if (of_property_present(pmu->dev->of_node, "clocks")) {
 > 
-> A nit, subject: drop second/last, redundant "bindings". The
-> "dt-bindings" prefix is already stating that these are bindings.
-> See also:
-> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-Oops, you're right thank you
-
->> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->> ---
->>   .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 93 ++++++++++++++++++++++
->>   1 file changed, 93 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
->> new file mode 100644
->> index 000000000000..35d34782865b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
->> @@ -0,0 +1,93 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/perf/st,stm32-ddr-pmu.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +maintainers:
->> +  - Clément Le Goffic <clement.legoffic@foss.st.com>
->> +
->> +title: STMicroelectronics STM32 DDR Performance Monitor (DDRPERFM)
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - st,stm32mp131-ddr-pmu
->> +      - st,stm32mp151-ddr-pmu
-> 
-> These are compatible, aren't they?
-
-Yes they are
-
->> +      - st,stm32mp251-ddr-pmu
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description: Reference clock for the DDR Performance Monitor
-> 
-> Drop description, obvious.
+> No, don't open-code get clk optional.
 
 Ok
 
 > 
->> +    maxItems: 1
+>> +		pmu->clk = devm_clk_get_prepared(pmu->dev, NULL);
+>> +		if (IS_ERR(pmu->clk)) {
+>> +			dev_err(pmu->dev, "Failed to get clock\n");
+>> +			return PTR_ERR(pmu->clk);
+>> +		}
+>> +	}
 >> +
->> +  resets:
->> +    description: Reset control for the DDR Performance Monitor
+>> +	clk_enable(pmu->clk);
+>> +
+>> +	if (of_property_present(pdev->dev.of_node, "resets")) {
+>> +		rst = devm_reset_control_get(&pdev->dev, NULL);
+>> +		if (IS_ERR(rst)) {
+>> +			dev_err(&pdev->dev, "Failed to get reset\n");
+>> +			ret = PTR_ERR(rst);
+>> +			goto err_clk;
+>> +		}
+>> +		reset_control_assert(rst);
+>> +		reset_control_deassert(rst);
+>> +	}
+>> +
+>> +	pmu->poll_period = ms_to_ktime(POLL_MS);
+>> +	hrtimer_setup(&pmu->hrtimer, stm32_ddr_pmu_poll, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+>> +
+>> +	for (int i = 0; i < MP2_CNT_NB; i++)
+>> +		INIT_LIST_HEAD(&pmu->counters[i]);
+>> +
+>> +	pmu->selected_set = -1;
+>> +
+>> +	pmu->pmu = (struct pmu) {
+>> +		.task_ctx_nr = perf_invalid_context,
+>> +		.start = stm32_ddr_pmu_event_start,
+>> +		.stop = stm32_ddr_pmu_event_stop,
+>> +		.add = stm32_ddr_pmu_event_add,
+>> +		.del = stm32_ddr_pmu_event_del,
+>> +		.read = stm32_ddr_pmu_event_read,
+>> +		.event_init = stm32_ddr_pmu_event_init,
+>> +		.attr_groups = pmu->cfg->attribute,
+>> +		.module = THIS_MODULE,
+>> +	};
+>> +
+>> +	ret = perf_pmu_register(&pmu->pmu, DRIVER_NAME, -1);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Couldn't register DDRPERFM driver as a PMU\n");
+>> +		goto err_clk;
+>> +	}
+>> +
+>> +	if (pmu->cfg->regs->dram_inf.reg) {
+>> +		ret = of_property_read_u32(pdev->dev.of_node, "st,dram-type", &pmu->dram_type);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "Missing device-tree property 'st,dram-type'\n");
+>> +			perf_pmu_unregister(&pmu->pmu);
+>> +
+>> +			return ret;
+>> +		}
+>> +
+>> +		writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
+>> +	}
+>> +
+>> +	clk_disable(pmu->clk);
 > 
-> Drop description, obvious.
+> Why do you keep clock prepared? This device does not know what sort of
+> clock it gets, so you end up with clock always active for example and
+> this being no-op.
 
-Ok
+Ok will disable_unprepare
 
+>> +
+>> +	return 0;
+>> +
+>> +err_clk:
+>> +	clk_disable_unprepare(pmu->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void stm32_ddr_pmu_device_remove(struct platform_device *pdev)
+>> +{
+>> +	struct stm32_ddr_pmu *stm32_ddr_pmu = platform_get_drvdata(pdev);
+>> +
+>> +	perf_pmu_unregister(&stm32_ddr_pmu->pmu);
+>> +}
+>> +
+>> +static int __maybe_unused stm32_ddr_pmu_device_resume(struct device *dev)
+>> +{
+>> +	struct stm32_ddr_pmu *pmu = dev_get_drvdata(dev);
+>> +
+>> +	clk_enable(pmu->clk);
+>> +	writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
+>> +	clk_disable(pmu->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp1 = {
+>> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
+>> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
+>> +	.enable =	{ DDRPERFM_CFG },
+>> +	.cfg =		{ DDRPERFM_CFG },
+>> +	.status =	{ DDRPERFM_STATUS, MP1_STATUS_BUSY },
+>> +	.clear_cnt =	{ DDRPERFM_CLR, MP1_CLR_CNT},
+>> +	.clear_time =	{ DDRPERFM_CLR, MP1_CLR_TIME},
+>> +	.counter_time =	{ DDRPERFM_TCNT },
+>> +	.counter_evt =	{
+>> +				{ DDRPERFM_EVCNT(0) },
+>> +				{ DDRPERFM_EVCNT(1) },
+>> +				{ DDRPERFM_EVCNT(2) },
+>> +				{ DDRPERFM_EVCNT(3) },
+>> +	},
+>> +};
+>> +
+>> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp2 = {
+>> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
+>> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
+>> +	.status =	{ DDRPERFM_MP2_STATUS, MP2_STATUS_BUSY },
+>> +	.clear_cnt =	{ DDRPERFM_CLR, MP2_CLR_CNT},
+>> +	.clear_time =	{ DDRPERFM_CLR, MP2_CLR_TIME},
+>> +	.cfg0 =		{ DDRPERFM_MP2_CFG0 },
+>> +	.cfg1 =		{ DDRPERFM_MP2_CFG1 },
+>> +	.enable =	{ DDRPERFM_MP2_CFG5 },
+>> +	.dram_inf =	{ DDRPERFM_MP2_DRAMINF },
+>> +	.counter_time =	{ DDRPERFM_MP2_TCNT },
+>> +	.counter_evt =	{
+>> +				{ DDRPERFM_MP2_EVCNT(0) },
+>> +				{ DDRPERFM_MP2_EVCNT(1) },
+>> +				{ DDRPERFM_MP2_EVCNT(2) },
+>> +				{ DDRPERFM_MP2_EVCNT(3) },
+>> +				{ DDRPERFM_MP2_EVCNT(4) },
+>> +				{ DDRPERFM_MP2_EVCNT(5) },
+>> +				{ DDRPERFM_MP2_EVCNT(6) },
+>> +				{ DDRPERFM_MP2_EVCNT(7) },
+>> +	},
+>> +};
+>> +
+>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
+>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
+>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
+>> +	.counters_nb = MP1_CNT_NB,
+>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
+>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
+>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
+>> +};
+>> +
+>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
+>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
+>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
+>> +	.counters_nb = MP2_CNT_NB,
+>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
+>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
+>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
+>> +};
+>> +
+>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
+>> +};
+>> +
+>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+>> +	{
+>> +		.compatible = "st,stm32mp131-ddr-pmu",
+>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>> +	},
+>> +	{
+>> +		.compatible = "st,stm32mp151-ddr-pmu",
+>> +		.data = &stm32_ddr_pmu_cfg_mp1
+> 
+> So devices are compatible, thus express it correctly and drop this.
+> 
+>> +	},
+>> +	{
+>> +		.compatible = "st,stm32mp251-ddr-pmu",
+>> +		.data = &stm32_ddr_pmu_cfg_mp2
+>> +	},
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, stm32_ddr_pmu_of_match);
+>> +
+>> +static struct platform_driver stm32_ddr_pmu_driver = {
+>> +	.driver = {
+>> +		.name = DRIVER_NAME,
+>> +		.pm = &stm32_ddr_pmu_pm_ops,
+>> +		.of_match_table = of_match_ptr(stm32_ddr_pmu_of_match),
+> 
+> Drop of_match_ptr, you have here warnings.
 > 
 > 
->> +    maxItems: 1
->> +
->> +  access-controllers:
->> +    minItems: 1
->> +    maxItems: 2
->> +
->> +  st,dram-type:
->> +    description: |
->> +      This property is used to specify the type of DRAM memory connected to the
->> +      associated memory controller. It is required for the DDR Performance Monitor
->> +      to correctly interpret the performance data.
->> +      0 = LPDDR4,
->> +      1 = LPDDR3,
->> +      2 = DDR4,
->> +      3 = DDR3
->> +    $ref: /schemas/types.yaml#/definitions/uint32
 > 
-> No, use standard JEDEC memory bindings (memory controllers) if you need
-> to describe the memory, otherwise you duplicate that binding and
-> duplicate the memory information.
-
-Ok didn't know about it, I'll take a look
-
-Best regard,
-Clément
-
->> +    enum: [0, 1, 2, 3]
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - st,stm32mp131-ddr-pmu
->> +              - st,stm32mp151-ddr-pmu
->> +    then:
->> +      required:
->> +        - clocks
->> +        - resets
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: st,stm32mp251-ddr-pmu
->> +    then:
->> +      required:
->> +        - access-controllers
->> +        - st,dram-type
->> +
->> +additionalProperties: false
 > Best regards,
 > Krzysztof
 
