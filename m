@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F6429C335
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 16:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B152BE7DD
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 16:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750695592; cv=none; b=LO/iRVzhdwbggEUunGAziNyhdhI6HQ1K6ytmyTtQ+LnMzEmq9c0N+zkLVf3sUV/L1DOLd6ZcD1tLSmwPxlMdhf0YSb1+PeM3gLSkxjwPiKyeQbgIfCwqPTRyZlq69bJlBomgS/8+hCV1FX76mNTJpomk/0n4or97xsfIXvFTWR0=
+	t=1750695594; cv=none; b=X1kT5zGYuHGQlR9BoN7C7E19KBPqblMzurG8vSItj7SkgIArt6uo671fuQ9CQcKj7K11xVWEoz5js2BBRWgFnW2UkEvR/aLjrRnHPlaB0dWisuIeT/ybKqp4YtLLE8BIuHyVxtVftVr0QHzI5QnChu2/SKhCOcTwz60wBZhdhww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750695592; c=relaxed/simple;
-	bh=PfwlW/jOgob5NqNxkjKR1RjlaciTJ4sjq2GU2b9U6RM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=DUtXKyMRlrDJcYEM5O5Mk7W2ZUoOaO2lABO8R43lxNhxtIRBq7QM/KiqQeXdNAUVSkJ7o6cS8JY6O/pSKnS6p0Y/EEZUcPJnbgYbO83+a5Z5Zk1l4ZLxDv1dPnKTViIM6ZBtfu0ydOZM7ydlyOSVGIvxs80iZ1rmAMGQWrBnqfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bdMAQPVO; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1750695594; c=relaxed/simple;
+	bh=E7B9Inl4HmoHc+FGyIR08o/IahvU3OEIJ8rKhq2/Rgk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=exofLbJdWjPAL2Wi+zYF1sHsa2CZgX30XJ5aBDayevU+/rIOIlP+ylI5RYsXw/7IBi1UvAVhXPbLFUL4CrYA52KLiNPto7EltPWElMVCyb8e/F4JNNDwIr9uR4mODd9yn3vlkPbHPaV4/xlwZFVohIFOAtY3zR2Ibz1Qf1T2Sp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FTPmvnz+; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bdMAQPVO"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74858256d38so3517745b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 09:19:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FTPmvnz+"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2358de17665so37241355ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 09:19:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750695590; x=1751300390; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/VHoFZJBt9mLW5xhSPpLIBgzLkwb7/Ik662r2IIQBgg=;
-        b=bdMAQPVOai2cH8Lz69XWbu9aDcRoaQXIIGLjL5wMk+Mx3eTFXAP+k2O65ZF6+OaRJJ
-         qIMnLmG4wit0WHyddt/Xge35MrJOUYJknGsWMOHZqvMWDjCJGectmVPN1sjq35ZowQDi
-         w2BX1LGdFOmL6gIqzjH6zs0lj5RmW68CI7TvZFt+lhq0NctAwfCqXR4Nn9DWFbdPFIHv
-         mxA0yj68NNoYr/+0o2edCQDQJNZXXoGhpwbvwt4ItarYGTU3gU5NeU6WFkGFIo7lMpYX
-         +3KpYZ3s2LxEig4LqDlStLw42WWrc0ID7tdT7IUO4V2f2/REnmPN/CodG2rwK6PgeSKE
-         zQ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750695590; x=1751300390;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1750695592; x=1751300392; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/VHoFZJBt9mLW5xhSPpLIBgzLkwb7/Ik662r2IIQBgg=;
-        b=EkxM2BtzYWzGnpsmWvCJXOkv9RmK6P+Q8j81t2odNwYDOEElkjkR2dm5TYFqtKHoMP
-         +z28rlNCrk8FQCUtKt+8k/uslItt4grWksAxSqGQCbobKHm9N4hqn+Uk1gkH+Vvylzvb
-         l78oUa+ZnuEfVXi+1stWQW2Fm2+by5SkwJCSODc5leThdD/2XHeaA4vIVY5bXcchJhj3
-         b8OyD2M+jpHk308m67lXj7EOIDvuMm+yuxSM9t6/iHFB5AjxyiFk22FBANnv9RTh0oDP
-         OZi5JP/MyRFOwf/cV3gQyL1GhijVxqdjQY8Y5maEZDDWrfyUtgIzf+gQV+vdv26VW9hB
-         3Aiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEQtswn+1rawo7oisKf9/p6RgERqtLY8/fs7nTHG4svMEYY4b94lHD2u+md3pDcnmh/bA5XEHXrzQx2w7pwGiG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOFgRue2/8gnF38L34OsvPnybJ/h+jMwm5fUY0/srypGNCQYW+
-	08LN4QbdGI+lS9U18HcYA/9YLpxOuEBkJwdv7ZTfC6OnS6SAws1l0r1ju8umMqwBeaf3TZ9bZjP
-	BCBEETncrQQ==
-X-Google-Smtp-Source: AGHT+IEchm4hD2aPIKKUQK7cRbeJHTcWSwWi6KRdm9P1Bnkm1z1d7Bi76ClsM8zMNT2jnTm52g/7jCB0nVYF
-X-Received: from pgbcq2.prod.google.com ([2002:a05:6a02:4082:b0:b2d:aac5:e874])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7485:b0:21f:563e:b7e8
- with SMTP id adf61e73a8af0-22026e65dd7mr21255650637.4.1750695589873; Mon, 23
- Jun 2025 09:19:49 -0700 (PDT)
-Date: Mon, 23 Jun 2025 09:19:28 -0700
+        bh=3gPYRA7DgSeHibArew+2c4iZf1bh70D+3mjPGfPwBAk=;
+        b=FTPmvnz+XigJoE2P5gCFTdI/bq7k2AVcyNdXfqW6LTjYpr8HlxFYbQn/AmuBXIcPXn
+         SzDA6Y7mdJFhp3DW4U7UN0OmzU/EhcQlExhu4w2x+CUA6KW+gcFZU09qohHOaDiOu+/+
+         b0v/Cyp1uA1usITwh4anNRYIuLSJajns5dCUBclDJDzp51hhbKjFK3OzHiCXTSAxjtuA
+         gwDwpoQmTSSELGhsW+2uYi3O7M9Bwr5pKR/HVHvw1sSDCkkASahv0+9DJtftF+akOXZw
+         +BVGYUOjot0uzc1o/pc4Rty7w3au/mrRoevqJpxXNZhh7IWKiy58VAGjtfKUb3Vz/UDV
+         e8Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750695592; x=1751300392;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gPYRA7DgSeHibArew+2c4iZf1bh70D+3mjPGfPwBAk=;
+        b=Em0Z9iYbPJtaZiwRuGEdAm3aaw1KsDHDkyFkusSpCH/XEFzuFWQG1Z/L8cC/CFYI4Q
+         cvb8Y58yBeCIO9VBMH1zB32cLMwc79RULURSA7EH3heG0z3nZaJoZUkFgaLIjaj94KtG
+         6V61JzzPyle6sn4iHlJHQvmnnJaYCEQoOqvxhc6YnnYonUsjjTaJltbTkgmCVoY0u+Yg
+         RwUzb59IiUebFp9JiJVlOy8nChh7i0R1XNMpIGLnx9HSMuy2iW/bwl2arD8KTRYl3Dt7
+         LxKYoPBVOgV78v48unJ0kJl5gLGnwC2GeeQldhX+WGoSUvIm1zxMQ+WNxqVoKYLe9rrp
+         4rnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzjOu00Q5B8FiP8UT4Hqw33n5Hf8b6a7FBnbDHnV88YZX4J5GjFnVkfFj+jqPtWoCQzh2aIFA1wPUgqF1AYTyn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLYerglkElXO+MQRrWUfis1u/vs90NAXlQPmtttBrSf51+ykhp
+	TP+QkIJu1rMzqZs4GrMpuPKECMEdIBCGBHA1WU+OzLB7C9skzH4EOcaPajp5suU3nAEOGOJM4aP
+	4J7L8RmV4kg==
+X-Google-Smtp-Source: AGHT+IE8wJAtcCLfGEr3MPHoptFsiV13Q3gnuYSO8mJqsxSyGq4eUFYf5ODIbkzt/hsrEqq19XIPqppchKse
+X-Received: from plgk10.prod.google.com ([2002:a17:902:ce0a:b0:234:8c63:ac2b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:230b:b0:234:cb4a:bc1b
+ with SMTP id d9443c01a7336-237d9b8cbc4mr205740785ad.49.1750695591820; Mon, 23
+ Jun 2025 09:19:51 -0700 (PDT)
+Date: Mon, 23 Jun 2025 09:19:29 -0700
+In-Reply-To: <20250623161930.1421216-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250623161930.1421216-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250623161930.1421216-1-irogers@google.com>
-Subject: [PATCH v4 1/2] perf debug: Add function symbols to dump_stack
+Message-ID: <20250623161930.1421216-2-irogers@google.com>
+Subject: [PATCH v4 2/2] perf srcline: Lower verbosity on addr2line debug messages
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,238 +72,59 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Symbolize stack traces by creating a live machine. Add this
-functionality to dump_stack and switch dump_stack users to use
-it. Switch TUI to use it. Add stack traces to the child test function
-which can be useful to diagnose blocked code.
-
-Example output:
-```
-$ perf test -vv PERF_RECORD_
-...
-  7: PERF_RECORD_* events & perf_sample fields:
-  7: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-^C
-Signal (2) while running tests.
-Terminating tests with the same signal
-Internal test harness failure. Completing any started tests:
-:  7: PERF_RECORD_* events & perf_sample fields:
-
----- unexpected signal (2) ----
-    #0 0x5628ad5570a3 in child_test_sig_handler builtin-test.c:0
-    #1 0x7f561de49df0 in __restore_rt libc_sigaction.c:0
-    #2 0x7f561de99687 in __internal_syscall_cancel cancellation.c:64
-    #3 0x7f561dee5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
-    #4 0x7f561def1393 in __nanosleep nanosleep.c:26
-    #5 0x7f561df02d68 in __sleep sleep.c:55
-    #6 0x5628ad5679ab in test__PERF_RECORD perf-record.c:0
-    #7 0x5628ad556fb0 in run_test_child builtin-test.c:0
-    #8 0x5628ad4f318d in start_command run-command.c:127
-    #9 0x5628ad557ef3 in __cmd_test builtin-test.c:0
-    #10 0x5628ad5585bf in cmd_test ??:0
-    #11 0x5628ad4e5bb0 in run_builtin perf.c:0
-    #12 0x5628ad4e5ecb in handle_internal_command perf.c:0
-    #13 0x5628ad461383 in main ??:0
-    #14 0x7f561de33ca8 in __libc_start_call_main libc_start_call_main.h:74
-    #15 0x7f561de33d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-    #16 0x5628ad4619d1 in _start ??:0
-
----- unexpected signal (2) ----
-    #0 0x5628ad5570a3 in child_test_sig_handler builtin-test.c:0
-    #1 0x7f561de49df0 in __restore_rt libc_sigaction.c:0
-    #2 0x7f561dea3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c:45
-    #3 0x7f561de49fd9 in __GI___sigprocmask sigprocmask.c:26
-    #4 0x7f561df2601b in __longjmp_chk longjmp.c:36
-    #5 0x5628ad5570c0 in print_test_result.isra.0 builtin-test.c:0
-    #6 0x7f561de49df0 in __restore_rt libc_sigaction.c:0
-    #7 0x7f561de99687 in __internal_syscall_cancel cancellation.c:64
-    #8 0x7f561dee5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
-    #9 0x7f561def1393 in __nanosleep nanosleep.c:26
-    #10 0x7f561df02d68 in __sleep sleep.c:55
-    #11 0x5628ad5679ab in test__PERF_RECORD perf-record.c:0
-    #12 0x5628ad556fb0 in run_test_child builtin-test.c:0
-    #13 0x5628ad4f318d in start_command run-command.c:127
-    #14 0x5628ad557ef3 in __cmd_test builtin-test.c:0
-    #15 0x5628ad5585bf in cmd_test ??:0
-    #16 0x5628ad4e5bb0 in run_builtin perf.c:0
-    #17 0x5628ad4e5ecb in handle_internal_command perf.c:0
-    #18 0x5628ad461383 in main ??:0
-    #19 0x7f561de33ca8 in __libc_start_call_main libc_start_call_main.h:74
-    #20 0x7f561de33d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-    #21 0x5628ad4619d1 in _start ??:0
-  7: PERF_RECORD_* events & perf_sample fields                       : Skip (permissions)
-```
+Lower non-error debug messages to verbose 3 or larger.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v4: Additional addr_location__exit (Namhyung)
-v3: Rebase
-v2: Fix NO_BACKTRACE=1 build (Arnaldo)
----
- tools/perf/tests/builtin-test.c | 15 +++++++-
- tools/perf/ui/tui/setup.c       |  2 +-
- tools/perf/util/debug.c         | 66 +++++++++++++++++++++++++++------
- tools/perf/util/debug.h         |  1 +
- 4 files changed, 71 insertions(+), 13 deletions(-)
+ tools/perf/util/srcline.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 45d3d8b3317a..80375ca39a37 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,9 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+#include <execinfo.h>
-+#endif
- #include <poll.h>
- #include <unistd.h>
- #include <setjmp.h>
-@@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index f32d0d4f4bc9..3e3449e35dd4 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -524,12 +524,12 @@ static enum a2l_style addr2line_configure(struct child_process *a2l, const char
+ 			style = LLVM;
+ 			cached = true;
+ 			lines = 1;
+-			pr_debug("Detected LLVM addr2line style\n");
++			pr_debug3("Detected LLVM addr2line style\n");
+ 		} else if (ch == '0') {
+ 			style = GNU_BINUTILS;
+ 			cached = true;
+ 			lines = 3;
+-			pr_debug("Detected binutils addr2line style\n");
++			pr_debug3("Detected binutils addr2line style\n");
+ 		} else {
+ 			if (!symbol_conf.disable_add2line_warn) {
+ 				char *output = NULL;
+@@ -595,7 +595,7 @@ static int read_addr2line_record(struct io *io,
+ 	if (io__getline(io, &line, &line_len) < 0 || !line_len)
+ 		goto error;
  
- static void child_test_sig_handler(int sig)
- {
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	void *stackdump[32];
-+	size_t stackdump_size;
-+#endif
-+
-+	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-+	__dump_stack(stderr, stackdump, stackdump_size);
-+#endif
- 	siglongjmp(run_test_jmp_buf, sig);
- }
+-	pr_debug("%s %s: addr2line read address for sentinel: %s", __func__, dso_name, line);
++	pr_debug3("%s %s: addr2line read address for sentinel: %s", __func__, dso_name, line);
+ 	if (style == LLVM && line_len == 2 && line[0] == ',') {
+ 		/* Found the llvm-addr2line sentinel character. */
+ 		zfree(&line);
+@@ -641,7 +641,7 @@ static int read_addr2line_record(struct io *io,
+ 	if (first && (io__getline(io, &line, &line_len) < 0 || !line_len))
+ 		goto error;
  
-@@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
+-	pr_debug("%s %s: addr2line read line: %s", __func__, dso_name, line);
++	pr_debug3("%s %s: addr2line read line: %s", __func__, dso_name, line);
+ 	if (function != NULL)
+ 		*function = strdup(strim(line));
  
- 	err = sigsetjmp(run_test_jmp_buf, 1);
- 	if (err) {
--		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
-+		/* Received signal. */
- 		err = err > 0 ? -err : -1;
- 		goto err_out;
- 	}
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index 16c6eff4d241..022534eed68c 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
+@@ -652,7 +652,7 @@ static int read_addr2line_record(struct io *io,
+ 	if (io__getline(io, &line, &line_len) < 0 || !line_len)
+ 		goto error;
  
- 	printf("-------- backtrace --------\n");
- 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
--	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-+	__dump_stack(stdout, stackdump, size);
- 
- 	exit(0);
- }
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index f9ef7d045c92..efc9d2c6448d 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -14,11 +14,18 @@
- #ifdef HAVE_BACKTRACE_SUPPORT
- #include <execinfo.h>
- #endif
-+#include "addr_location.h"
- #include "color.h"
--#include "event.h"
- #include "debug.h"
-+#include "event.h"
-+#include "machine.h"
-+#include "map.h"
- #include "print_binary.h"
-+#include "srcline.h"
-+#include "symbol.h"
-+#include "synthetic-events.h"
- #include "target.h"
-+#include "thread.h"
- #include "trace-event.h"
- #include "ui/helpline.h"
- #include "ui/ui.h"
-@@ -298,21 +305,58 @@ void perf_debug_setup(void)
- 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
- }
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-+{
-+	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
-+	pid_t pid = getpid();
-+	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
-+	struct thread *thread = NULL;
-+
-+	if (machine)
-+		thread = machine__find_thread(machine, pid, pid);
-+
-+	if (!machine || !thread) {
-+		/*
-+		 * Backtrace functions are async signal safe. Fall back on them
-+		 * if machine/thread creation fails.
-+		 */
-+		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
-+		machine__delete(machine);
-+		return;
-+	}
-+
-+	for (size_t i = 0; i < stackdump_size; i++) {
-+		struct addr_location al;
-+		u64 addr = (u64)stackdump[i];
-+
-+		addr_location__init(&al);
-+		if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al)) {
-+			addr_location__exit(&al);
-+			continue;
-+		}
-+
-+		al.sym = map__find_symbol(al.map, al.addr);
-+		if (al.sym)
-+			fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
-+		else
-+			fprintf(file, "    #%zd %p ", i, stackdump[i]);
-+
-+		map__fprintf_srcline(al.map, al.addr, "", file);
-+		fprintf(file, "\n");
-+		addr_location__exit(&al);
-+	}
-+	thread__put(thread);
-+	machine__delete(machine);
-+}
-+
- /* Obtain a backtrace and print it to stdout. */
- #ifdef HAVE_BACKTRACE_SUPPORT
- void dump_stack(void)
- {
--	void *array[16];
--	size_t size = backtrace(array, ARRAY_SIZE(array));
--	char **strings = backtrace_symbols(array, size);
--	size_t i;
--
--	printf("Obtained %zd stack frames.\n", size);
--
--	for (i = 0; i < size; i++)
--		printf("%s\n", strings[i]);
-+	void *stackdump[32];
-+	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
- 
--	free(strings);
-+	__dump_stack(stdout, stackdump, size);
- }
- #else
- void dump_stack(void) {}
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index a4026d1fd6a3..6b737e195ce1 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
- void perf_debug_setup(void);
- int perf_quiet_option(void);
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
- void dump_stack(void);
- void sighandler_dump_stack(int sig);
- 
+-	pr_debug("%s %s: addr2line filename:number : %s", __func__, dso_name, line);
++	pr_debug3("%s %s: addr2line filename:number : %s", __func__, dso_name, line);
+ 	if (filename_split(line, line_nr == NULL ? &dummy_line_nr : line_nr) == 0 &&
+ 	    style == GNU_BINUTILS) {
+ 		ret = 0;
 -- 
 2.50.0.rc2.761.g2dc52ea45b-goog
 
