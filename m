@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07E117A318;
-	Mon, 23 Jun 2025 09:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E181DEFE6;
+	Mon, 23 Jun 2025 09:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671962; cv=none; b=mcpBXWnTiicNwkzx1en/gZd/DU05jCoulOEicwjSzsZAg4SSTFTMKpqKnpHd9tXVql89qFbjX7zZlJyC8YPfoNWxBTPU2rBuXViZn2xmTCm+MoDImPQP5P19WDcV+Ty3l3+9/wI9I5QgvODBYQOYn4PdFVa4pB8CGqc8XsCX6SM=
+	t=1750672143; cv=none; b=S0Ev0KWryRxTSqc+OCtuZxml2Tedlyix5vJWPxrfpb2EaVWk4Yy+DwuLT5bpOPIhj7pLcHy5AMdgv1oBNZhCUdhaulKP+UbByiZUrEVb/0j22CdWKWIGjs6lFWHXq5oJDcw1YQ3dgz+hNrU4Oz9EtcROQaTjmGUpAOuyXL2P+ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671962; c=relaxed/simple;
-	bh=IXHCJoWMn6t0vuB+CqKs2zgjVDxkVwBIUruHUkwEJL4=;
+	s=arc-20240116; t=1750672143; c=relaxed/simple;
+	bh=TaaWKthcwIdx73b+/7reL8X3rcJ++G0ki23K3IGwN+A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z1vSSS4CcnrllaHkeNP7OcXGhjscHUBIgqeeuvnXDfRnPT9gLvwJxkhioQchlfVY9wsCzGtmMEoIkHg6yx42jiCUbKwrE0wx9wYu9lNQNuMOLGnmWrSfc5wFlTtqRrhEIXCglWBWsjWM59l1yllIJ7xhc44emS/t8zd2xUiJRP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQK6XKaZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=L0G9c0Y4xUTdCAGRZJZZWrenk+xriJ19yZ1KYRZca7Un82SnkNGZjh7h0mVWDd5jYM+OZn5mlKRX3Fw6Zb/fu9Z4CDWHExPTCSoe/nPG0H39D+ZPMny1mWsuIpgekFjZ3gkFmcnGdbT2sxjRSIsy5TgkV/hZ/+00/taR39EW8O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBmt5pcU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQK6XKaZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FD6BC4CEEA;
-	Mon, 23 Jun 2025 09:45:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBmt5pcU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 224FAC4CEF0;
+	Mon, 23 Jun 2025 09:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750671962;
-	bh=IXHCJoWMn6t0vuB+CqKs2zgjVDxkVwBIUruHUkwEJL4=;
+	s=k20201202; t=1750672143;
+	bh=TaaWKthcwIdx73b+/7reL8X3rcJ++G0ki23K3IGwN+A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OQK6XKaZ3SgxAoBcvh46QDZ/jPhUumeA/Ka7NMNlcrqTKHve8WKl/71rkimvULhX/
-	 dFdTle+i4DeJguB+bdIFSen1dXz30rzfshPHdwfB4cmkxcp4iWn4+fwx3TSkZWVg9N
-	 tTuejgKBPxqs11/yKnHm3cuC+KXej4TgBLq0NESolo/dfSElBO+JnN6lyp6voJ31tm
-	 pQCdNIB03yRoTRK+ek0tIiKGqBIudJkDQzJPufqGlaLxV+CmOrZ+v4127U4W6eeZfy
-	 ClklJmh+F+JYjZk9/bB5ChtkM+x28DCId/RTol+B4yrnbp6UgtZfms1E40u3FJa/vD
-	 zr286BKeHQ+EA==
-Message-ID: <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
-Date: Mon, 23 Jun 2025 11:45:55 +0200
+	b=TBmt5pcUR3SlIILLQ8euRewOvfxBFCn0vS31cjfsa7/rsXDcsjq9IfnqGi4oymE/W
+	 YX6OmMU9reh8MQ38oZdEZcw1HGHyg+YohYZnigDtPxoRVca/KGGyoxdA6rgyQxXHxR
+	 Z0Eagwb+VrQ/kPw7S22oL4oOjVTbI8Z+g/8ek24uysiK596I6T9KDWx6QUEJVxAodt
+	 0J62+7i+XRVJ061xMEjpeE0/iou4ndK+34WNGBmcdmKzZMN6bpMhic9eWsV2WMtwhk
+	 V+29R1SbjQk0lUi2LlNZjCCoLQ+LU7g8JCMr9vWeNA4nyrxVGALMPl2dxJ0XXF7T4O
+	 yRjpOWH0fOYOw==
+Message-ID: <868b20f0-c1ff-4cd7-91bc-e73069aafa95@kernel.org>
+Date: Mon, 23 Jun 2025 11:48:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+Subject: Re: [PATCH 05/13] dt-bindings: perf: stm32: introduce DDRPERFM
+ dt-bindings
 To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -51,7 +52,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-clk@vger.kernel.org
 References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
- <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-5-7dffff168090@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,210 +98,119 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+In-Reply-To: <20250623-ddrperfm-upstream-v1-5-7dffff168090@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 23/06/2025 11:27, Clément Le Goffic wrote:
-> +	if (of_property_present(pmu->dev->of_node, "access-controllers")) {
-> +		ret = stm32_firewall_get_firewall(pmu->dev->of_node, &firewall, 1);
-> +		if (ret) {
-> +			dev_err(pmu->dev, "Failed to get firewall\n");
-> +			return ret;
-> +		}
-> +		ret = stm32_firewall_grant_access_by_id(&firewall, firewall.firewall_id);
-> +		if (ret) {
-> +			dev_err(pmu->dev, "Failed to grant access\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (of_property_present(pmu->dev->of_node, "clocks")) {
+> DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
+> It allows to monitor DDR events that come from the DDR Controller
+> such as read or write events.
+> 
 
-No, don't open-code get clk optional.
+A nit, subject: drop second/last, redundant "bindings". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-> +		pmu->clk = devm_clk_get_prepared(pmu->dev, NULL);
-> +		if (IS_ERR(pmu->clk)) {
-> +			dev_err(pmu->dev, "Failed to get clock\n");
-> +			return PTR_ERR(pmu->clk);
-> +		}
-> +	}
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 93 ++++++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
+> new file mode 100644
+> index 000000000000..35d34782865b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
+> @@ -0,0 +1,93 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/perf/st,stm32-ddr-pmu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	clk_enable(pmu->clk);
+> +maintainers:
+> +  - Clément Le Goffic <clement.legoffic@foss.st.com>
 > +
-> +	if (of_property_present(pdev->dev.of_node, "resets")) {
-> +		rst = devm_reset_control_get(&pdev->dev, NULL);
-> +		if (IS_ERR(rst)) {
-> +			dev_err(&pdev->dev, "Failed to get reset\n");
-> +			ret = PTR_ERR(rst);
-> +			goto err_clk;
-> +		}
-> +		reset_control_assert(rst);
-> +		reset_control_deassert(rst);
-> +	}
+> +title: STMicroelectronics STM32 DDR Performance Monitor (DDRPERFM)
 > +
-> +	pmu->poll_period = ms_to_ktime(POLL_MS);
-> +	hrtimer_setup(&pmu->hrtimer, stm32_ddr_pmu_poll, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> +
-> +	for (int i = 0; i < MP2_CNT_NB; i++)
-> +		INIT_LIST_HEAD(&pmu->counters[i]);
-> +
-> +	pmu->selected_set = -1;
-> +
-> +	pmu->pmu = (struct pmu) {
-> +		.task_ctx_nr = perf_invalid_context,
-> +		.start = stm32_ddr_pmu_event_start,
-> +		.stop = stm32_ddr_pmu_event_stop,
-> +		.add = stm32_ddr_pmu_event_add,
-> +		.del = stm32_ddr_pmu_event_del,
-> +		.read = stm32_ddr_pmu_event_read,
-> +		.event_init = stm32_ddr_pmu_event_init,
-> +		.attr_groups = pmu->cfg->attribute,
-> +		.module = THIS_MODULE,
-> +	};
-> +
-> +	ret = perf_pmu_register(&pmu->pmu, DRIVER_NAME, -1);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Couldn't register DDRPERFM driver as a PMU\n");
-> +		goto err_clk;
-> +	}
-> +
-> +	if (pmu->cfg->regs->dram_inf.reg) {
-> +		ret = of_property_read_u32(pdev->dev.of_node, "st,dram-type", &pmu->dram_type);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Missing device-tree property 'st,dram-type'\n");
-> +			perf_pmu_unregister(&pmu->pmu);
-> +
-> +			return ret;
-> +		}
-> +
-> +		writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
-> +	}
-> +
-> +	clk_disable(pmu->clk);
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,stm32mp131-ddr-pmu
+> +      - st,stm32mp151-ddr-pmu
 
-Why do you keep clock prepared? This device does not know what sort of
-clock it gets, so you end up with clock always active for example and
-this being no-op.
+These are compatible, aren't they?
 
+> +      - st,stm32mp251-ddr-pmu
 > +
-> +	return 0;
+> +  reg:
+> +    maxItems: 1
 > +
-> +err_clk:
-> +	clk_disable_unprepare(pmu->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static void stm32_ddr_pmu_device_remove(struct platform_device *pdev)
-> +{
-> +	struct stm32_ddr_pmu *stm32_ddr_pmu = platform_get_drvdata(pdev);
-> +
-> +	perf_pmu_unregister(&stm32_ddr_pmu->pmu);
-> +}
-> +
-> +static int __maybe_unused stm32_ddr_pmu_device_resume(struct device *dev)
-> +{
-> +	struct stm32_ddr_pmu *pmu = dev_get_drvdata(dev);
-> +
-> +	clk_enable(pmu->clk);
-> +	writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
-> +	clk_disable(pmu->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp1 = {
-> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
-> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
-> +	.enable =	{ DDRPERFM_CFG },
-> +	.cfg =		{ DDRPERFM_CFG },
-> +	.status =	{ DDRPERFM_STATUS, MP1_STATUS_BUSY },
-> +	.clear_cnt =	{ DDRPERFM_CLR, MP1_CLR_CNT},
-> +	.clear_time =	{ DDRPERFM_CLR, MP1_CLR_TIME},
-> +	.counter_time =	{ DDRPERFM_TCNT },
-> +	.counter_evt =	{
-> +				{ DDRPERFM_EVCNT(0) },
-> +				{ DDRPERFM_EVCNT(1) },
-> +				{ DDRPERFM_EVCNT(2) },
-> +				{ DDRPERFM_EVCNT(3) },
-> +	},
-> +};
-> +
-> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp2 = {
-> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
-> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
-> +	.status =	{ DDRPERFM_MP2_STATUS, MP2_STATUS_BUSY },
-> +	.clear_cnt =	{ DDRPERFM_CLR, MP2_CLR_CNT},
-> +	.clear_time =	{ DDRPERFM_CLR, MP2_CLR_TIME},
-> +	.cfg0 =		{ DDRPERFM_MP2_CFG0 },
-> +	.cfg1 =		{ DDRPERFM_MP2_CFG1 },
-> +	.enable =	{ DDRPERFM_MP2_CFG5 },
-> +	.dram_inf =	{ DDRPERFM_MP2_DRAMINF },
-> +	.counter_time =	{ DDRPERFM_MP2_TCNT },
-> +	.counter_evt =	{
-> +				{ DDRPERFM_MP2_EVCNT(0) },
-> +				{ DDRPERFM_MP2_EVCNT(1) },
-> +				{ DDRPERFM_MP2_EVCNT(2) },
-> +				{ DDRPERFM_MP2_EVCNT(3) },
-> +				{ DDRPERFM_MP2_EVCNT(4) },
-> +				{ DDRPERFM_MP2_EVCNT(5) },
-> +				{ DDRPERFM_MP2_EVCNT(6) },
-> +				{ DDRPERFM_MP2_EVCNT(7) },
-> +	},
-> +};
-> +
-> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
-> +	.regs = &stm32_ddr_pmu_regspec_mp1,
-> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
-> +	.counters_nb = MP1_CNT_NB,
-> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
-> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
-> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
-> +};
-> +
-> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
-> +	.regs = &stm32_ddr_pmu_regspec_mp2,
-> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
-> +	.counters_nb = MP2_CNT_NB,
-> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
-> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
-> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
-> +};
-> +
-> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
-> +};
-> +
-> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
-> +	{
-> +		.compatible = "st,stm32mp131-ddr-pmu",
-> +		.data = &stm32_ddr_pmu_cfg_mp1
-> +	},
-> +	{
-> +		.compatible = "st,stm32mp151-ddr-pmu",
-> +		.data = &stm32_ddr_pmu_cfg_mp1
+> +  clocks:
+> +    description: Reference clock for the DDR Performance Monitor
 
-So devices are compatible, thus express it correctly and drop this.
+Drop description, obvious.
 
-> +	},
-> +	{
-> +		.compatible = "st,stm32mp251-ddr-pmu",
-> +		.data = &stm32_ddr_pmu_cfg_mp2
-> +	},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_ddr_pmu_of_match);
+> +    maxItems: 1
 > +
-> +static struct platform_driver stm32_ddr_pmu_driver = {
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +		.pm = &stm32_ddr_pmu_pm_ops,
-> +		.of_match_table = of_match_ptr(stm32_ddr_pmu_of_match),
+> +  resets:
+> +    description: Reset control for the DDR Performance Monitor
 
-Drop of_match_ptr, you have here warnings.
+Drop description, obvious.
 
 
+> +    maxItems: 1
+> +
+> +  access-controllers:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  st,dram-type:
+> +    description: |
+> +      This property is used to specify the type of DRAM memory connected to the
+> +      associated memory controller. It is required for the DDR Performance Monitor
+> +      to correctly interpret the performance data.
+> +      0 = LPDDR4,
+> +      1 = LPDDR3,
+> +      2 = DDR4,
+> +      3 = DDR3
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
+No, use standard JEDEC memory bindings (memory controllers) if you need
+to describe the memory, otherwise you duplicate that binding and
+duplicate the memory information.
+
+> +    enum: [0, 1, 2, 3]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - st,stm32mp131-ddr-pmu
+> +              - st,stm32mp151-ddr-pmu
+> +    then:
+> +      required:
+> +        - clocks
+> +        - resets
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: st,stm32mp251-ddr-pmu
+> +    then:
+> +      required:
+> +        - access-controllers
+> +        - st,dram-type
+> +
+> +additionalProperties: false
 Best regards,
 Krzysztof
