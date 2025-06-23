@@ -1,302 +1,182 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3C072624;
-	Mon, 23 Jun 2025 15:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9033823ED6A
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 15:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750691125; cv=none; b=nekQ2cfKj/SamdhfofCRl5iJiiIm8FpyR8e4DYIh9eLOMeHw8itE04cWnrJggAxRhvAtIOmZhClf9P4lBsUcUpPC+BP6y+IepDFQccdLqNYzF6gpEqpYVYsj69QbUK0ELQwlTpjYv5KL7K7MmbN3Dk6983O6UCTPy+YcbUQhqY4=
+	t=1750691582; cv=none; b=ktK1ECQrXTsV2ntxqkAx5ejp5UO9sRs1oOgEP8jMNUN4cuceCCfTJrYORrfFfXO6+eTPLOMNq9lfd7H7KoJKaS6JNtRMOGuzxNoIW2DZD3FhSPeDV0Gnpvail/vLUo+0b9A9Qe1Plrhl0YAAkRVYkwSC+EPsBQSU86Ch7XALjk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750691125; c=relaxed/simple;
-	bh=xGs+xuT9ZbXSNcZb6r49Mqj6bJ/rNc5SZFKZhnRHrMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jGSyEk68e4JebI6fO8yx014JAKcmC900fRYR8h2/x1H3cm571/nPZL9n+ST0GPLGh6kw4TVGxQe7fBfUqhDCm+p2su7Ko3+sLkgOKG5cMRnKSUOXKoCx6G3tMEt3hFYr8OgQXKYOtANeeho7siSAMBkEKSZ93B9aEin0JqIyMLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bF9yI8JI; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750691582; c=relaxed/simple;
+	bh=pTTZcRj9DId2ZvPOeWmaUNyph2whs2Bb+Fr/O9WRfwo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mYBcfXoE9no77E6mu9CJWQxFd7l7AQzAYNIKC0xuJBE0Ji9KaQJBqKGfVbFZgHBh4NfIxtC9osUaw3x4EKxbIOP+Zly/zgFv+N4lKR47rW1sLDhOhlvmBTYmWRM4mKQ8C8mufrBgOSSIxS2sxfl6xLWM1wYx4JAxFGrm3g9Tw5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c98wl3cD; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bF9yI8JI"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NDdLVH024335;
-	Mon, 23 Jun 2025 17:05:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	6sv5OcOQ4mLQLuHevh2cUvXQ88huIlXGlWQaz3Py6wY=; b=bF9yI8JIFqs7ioUx
-	YDyxrekrSZ47ndzO65fgYVA9fiqdJhb4A1AjRQpK8A6JPvobiX40RBvpbQICsGZy
-	KBEKyV8Nutp2vooUtufi6oc0aFIm3JnPIyEC0r4FpzFHsn9wPHB3mdk4CC3i0ySp
-	dVG+isuNuslqinodqBJo57SAui7QgB1Bu7WUx+AAYYE7Ei9Zr3IYwwyivPnOgD0g
-	NLyaqsS2+nIOxbGUoSJWY3H5t9f/gQnx84a3CpWq1xyJoKFdEOdehH2E7z2ID5QJ
-	ZCF7Imh3wriuEBkharNBQkUpD7+qm/hJwoArih2kgBsZskd63sl/XG1gzuA/EUtb
-	fL7yXQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e6a6e021-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Jun 2025 17:05:05 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 37F7440044;
-	Mon, 23 Jun 2025 17:03:38 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BAD61B52149;
-	Mon, 23 Jun 2025 17:02:26 +0200 (CEST)
-Received: from [10.252.18.29] (10.252.18.29) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
- 2025 17:02:25 +0200
-Message-ID: <1ff31bd6-08e0-46da-a1b0-c60dbb1e3cb8@foss.st.com>
-Date: Mon, 23 Jun 2025 17:02:22 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c98wl3cD"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so361195ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 08:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750691580; x=1751296380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mnxjz5dmIOfE5ct74X590DWV56+gnOXa9jI3Dx4SADY=;
+        b=c98wl3cDiEDeL3WhB1ccK/aRJE+/otiU78yYuaqtfR1ET9c2XqGqGuk2RTac7Ym0DJ
+         CC67kV5wwhZQLosI3znUoxeAXkbS3w6DCla/T+eRajTyWTViyCXo81ExzMvluUbZHoLd
+         q9cUoXe601vnJF1tPFsR5SPsPUhZu56BluT/CMBykEpZC7hfdcrZMIDtW/3Gn3kettRV
+         Ti8wr0KsgrjdSwupGWtM8y3Vg3LpUh1Esug56QrANn1L3LYTXVQ8rcerk39BYYliUD+d
+         DW09fhZF/DZ2LqmUbBJLAq+U8l33axVNTs77mNWfZ+CY15d6Q0Jjacelk7pUAJWbzKSh
+         0dhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750691580; x=1751296380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mnxjz5dmIOfE5ct74X590DWV56+gnOXa9jI3Dx4SADY=;
+        b=fHmB/op0Vp3NWp09qLfhRz7Jl+V1urEdnrbbnjDdp0/6Ifss7Sz1zukMGqiWrkpA3Z
+         S2QF8rnygyLxScV05jM2bU/WcC31pn7/oV5tE/kCFMK253krykpLkyE3zQS1Mc+W5uzQ
+         OfDo7EKCTqV9DdABEvIEUlIiagUr0f9jfmOIv4ZUJ/jPW1dpf+1Hl8FhWpELAe3CNUlQ
+         AMoIvm3fZC1GPJaQ1zB2THwOlhu8BReQ/eVSnS9uZ44K3+b6lGLgJKhFXXd6JgrULMPw
+         lssnlKNzuko7fyZi71KQwPK5SFW++3+prt6SAKCvzIko52FdXEG8ZyUZ9m5//spDQB6v
+         oPsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVziakfzXHg4jvYG2D1N5wR4EjUfjQoApyNNnFvBSCxCSHg2xSk2GMUqJfi6ioXIgBDTEfnBxVCQksD4mYHSkv+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjEU0rvc+jpYcr3miN6OJu418Xd/ZEhgZ0q2lzZI6/Bmb8PZnN
+	cNmXSr+j6V6JHTGQHwpv9qPjwpSQAwRUDQUp8OEig8xxA0JfgXE9JZOw5C09N2KxKTea720X8/k
+	jevua+DmFS/uBN/hJR3lkn8EEkceYIgEbev2SHxvS
+X-Gm-Gg: ASbGncuyl0YHZickxfE+19cJRc/KEpF3bKKtlHKNUeYawu756B+l0s30r+xJXYa2MbZ
+	0RbWITFMeaZLld20Vf4JGOWxWGTAWi8uldOinNholmeE4aVTd5Q1DHaCsUZegLB1pKUMWwInnIb
+	jHtavCSClF1uFRZA++IKf/7cNuQyuPz5BSwvxRCWaTFWYMBkeA1AtMagUEWJRxs0qGDzsm5NT9
+X-Google-Smtp-Source: AGHT+IE8gIT7WMGF5c34LGPl6UQebM0f8gjV+JTGABGoMmYQ/5qwTt7OO7vZdNuzPwnYzz+ZM+IfaqM7KM/36j/PkHU=
+X-Received: by 2002:a05:6e02:184f:b0:3dc:5cb1:8f24 with SMTP id
+ e9e14a558f8ab-3df0da148f5mr5687465ab.9.1750691579267; Mon, 23 Jun 2025
+ 08:12:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
-        Mark
- Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
- <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
- <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_04,2025-06-23_06,2025-03-28_01
+References: <20250619002034.97007-1-irogers@google.com> <aFW4VJtk96JD865U@google.com>
+In-Reply-To: <aFW4VJtk96JD865U@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 23 Jun 2025 08:12:47 -0700
+X-Gm-Features: AX0GCFuBMGlka0OTxLTpe-4n1RG-F3_OoLNQ1mo06Bc_W8WiH7hXnMEGIn4fhxc
+Message-ID: <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf test workload noploop: Name the noploop process
+To: Namhyung Kim <namhyung@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/23/25 11:45, Krzysztof Kozlowski wrote:
-> On 23/06/2025 11:27, Clément Le Goffic wrote:
->> +	if (of_property_present(pmu->dev->of_node, "access-controllers")) {
->> +		ret = stm32_firewall_get_firewall(pmu->dev->of_node, &firewall, 1);
->> +		if (ret) {
->> +			dev_err(pmu->dev, "Failed to get firewall\n");
->> +			return ret;
->> +		}
->> +		ret = stm32_firewall_grant_access_by_id(&firewall, firewall.firewall_id);
->> +		if (ret) {
->> +			dev_err(pmu->dev, "Failed to grant access\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	if (of_property_present(pmu->dev->of_node, "clocks")) {
-> 
-> No, don't open-code get clk optional.
+On Fri, Jun 20, 2025 at 12:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hi Ian,
+>
+> On Wed, Jun 18, 2025 at 05:20:33PM -0700, Ian Rogers wrote:
+> > Name the noploop process "perf-noploop" so that tests can easily check
+> > for its existence.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/workloads/noploop.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/wo=
+rkloads/noploop.c
+> > index 940ea5910a84..8b954d466083 100644
+> > --- a/tools/perf/tests/workloads/noploop.c
+> > +++ b/tools/perf/tests/workloads/noploop.c
+> > @@ -2,6 +2,8 @@
+> >  #include <stdlib.h>
+> >  #include <signal.h>
+> >  #include <unistd.h>
+> > +#include <linux/prctl.h>
+> > +#include <sys/prctl.h>
+>
+> I'm afraid it'd introduce a build failure on musl.  Please see
+>
+> https://lore.kernel.org/linux-perf-users/20250611092542.F4ooE2FL@linutron=
+ix.de/
+>
+> I think <sys/prctl.h> would be enough.
 
-Ok
+Hi Namhyung,
 
-> 
->> +		pmu->clk = devm_clk_get_prepared(pmu->dev, NULL);
->> +		if (IS_ERR(pmu->clk)) {
->> +			dev_err(pmu->dev, "Failed to get clock\n");
->> +			return PTR_ERR(pmu->clk);
->> +		}
->> +	}
->> +
->> +	clk_enable(pmu->clk);
->> +
->> +	if (of_property_present(pdev->dev.of_node, "resets")) {
->> +		rst = devm_reset_control_get(&pdev->dev, NULL);
->> +		if (IS_ERR(rst)) {
->> +			dev_err(&pdev->dev, "Failed to get reset\n");
->> +			ret = PTR_ERR(rst);
->> +			goto err_clk;
->> +		}
->> +		reset_control_assert(rst);
->> +		reset_control_deassert(rst);
->> +	}
->> +
->> +	pmu->poll_period = ms_to_ktime(POLL_MS);
->> +	hrtimer_setup(&pmu->hrtimer, stm32_ddr_pmu_poll, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->> +
->> +	for (int i = 0; i < MP2_CNT_NB; i++)
->> +		INIT_LIST_HEAD(&pmu->counters[i]);
->> +
->> +	pmu->selected_set = -1;
->> +
->> +	pmu->pmu = (struct pmu) {
->> +		.task_ctx_nr = perf_invalid_context,
->> +		.start = stm32_ddr_pmu_event_start,
->> +		.stop = stm32_ddr_pmu_event_stop,
->> +		.add = stm32_ddr_pmu_event_add,
->> +		.del = stm32_ddr_pmu_event_del,
->> +		.read = stm32_ddr_pmu_event_read,
->> +		.event_init = stm32_ddr_pmu_event_init,
->> +		.attr_groups = pmu->cfg->attribute,
->> +		.module = THIS_MODULE,
->> +	};
->> +
->> +	ret = perf_pmu_register(&pmu->pmu, DRIVER_NAME, -1);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Couldn't register DDRPERFM driver as a PMU\n");
->> +		goto err_clk;
->> +	}
->> +
->> +	if (pmu->cfg->regs->dram_inf.reg) {
->> +		ret = of_property_read_u32(pdev->dev.of_node, "st,dram-type", &pmu->dram_type);
->> +		if (ret) {
->> +			dev_err(&pdev->dev, "Missing device-tree property 'st,dram-type'\n");
->> +			perf_pmu_unregister(&pmu->pmu);
->> +
->> +			return ret;
->> +		}
->> +
->> +		writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
->> +	}
->> +
->> +	clk_disable(pmu->clk);
-> 
-> Why do you keep clock prepared? This device does not know what sort of
-> clock it gets, so you end up with clock always active for example and
-> this being no-op.
+we could do that but in the glibc man page it says:
+https://man7.org/linux/man-pages/man2/prctl.2.html
+```
+#include <linux/prctl.h>  /* Definition of PR_* constants */
+#include <sys/prctl.h>
+```
+So wouldn't the PR_SET_NAME definition potentially be missing then? We
+could fill in the missing definition with `#ifndef PR_SET_NAME` it
+seems sub-optimal - I see this is what was done in the linked to
+changes. Perhaps we need something like a tools/perf/util/prctl.h, and
+a feature test, then in that we have something like:
+```
+/* A header file to work around musl libc breakages caused conflicting
+definitions in linux/prctl.h . */
+#ifndef HAVE_SENSIBLE_PRCTL
+#  include <linux/prctl.h>
+#  include <sys/prctl.h>
+#else // !HAVE_SENSIBLE_PRCTL
+#  include <sys/prctl.h>
+#  ifndef PR_SET_NAME
+#    define PR_SET_NAME 15
+#  endif // PR_SET_NAME
+#  ifndef PR_FUTEX_HASH
+#    define PR_FUTEX_HASH                   78
+#    define PR_FUTEX_HASH_SET_SLOTS        1
+#    define FH_FLAG_IMMUTABLE              (1ULL << 0)
+#    define PR_FUTEX_HASH_GET_SLOTS        2
+#    define PR_FUTEX_HASH_GET_IMMUTABLE    3
+#  endif // PR_FUTEX_HASH
+#endif // HAVE_SENSIBLE_PRCTL
+```
+The feature test would just be to include the two headers and see if
+the build breaks.
 
-Ok will disable_unprepare
+It'd be nice to think musl was slowly getting fixed. I notice we're
+carrying two comments in the code about working around musl, but I
+suspect we do this kind of thing in a lot of places (just knowing the
+issues that come up from yourself and Arnaldo when trying to integrate
+patches). It'd be nice if perf's code could keep close to what the man
+page, or whatever, is saying the standard should be, rather than doing
+some kind of adhoc linux/prctl.h rewrite (or if we are doing that,
+make the code more explicit that it's what we're doing).
 
->> +
->> +	return 0;
->> +
->> +err_clk:
->> +	clk_disable_unprepare(pmu->clk);
->> +
->> +	return ret;
->> +}
->> +
->> +static void stm32_ddr_pmu_device_remove(struct platform_device *pdev)
->> +{
->> +	struct stm32_ddr_pmu *stm32_ddr_pmu = platform_get_drvdata(pdev);
->> +
->> +	perf_pmu_unregister(&stm32_ddr_pmu->pmu);
->> +}
->> +
->> +static int __maybe_unused stm32_ddr_pmu_device_resume(struct device *dev)
->> +{
->> +	struct stm32_ddr_pmu *pmu = dev_get_drvdata(dev);
->> +
->> +	clk_enable(pmu->clk);
->> +	writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
->> +	clk_disable(pmu->clk);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp1 = {
->> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
->> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
->> +	.enable =	{ DDRPERFM_CFG },
->> +	.cfg =		{ DDRPERFM_CFG },
->> +	.status =	{ DDRPERFM_STATUS, MP1_STATUS_BUSY },
->> +	.clear_cnt =	{ DDRPERFM_CLR, MP1_CLR_CNT},
->> +	.clear_time =	{ DDRPERFM_CLR, MP1_CLR_TIME},
->> +	.counter_time =	{ DDRPERFM_TCNT },
->> +	.counter_evt =	{
->> +				{ DDRPERFM_EVCNT(0) },
->> +				{ DDRPERFM_EVCNT(1) },
->> +				{ DDRPERFM_EVCNT(2) },
->> +				{ DDRPERFM_EVCNT(3) },
->> +	},
->> +};
->> +
->> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp2 = {
->> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
->> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
->> +	.status =	{ DDRPERFM_MP2_STATUS, MP2_STATUS_BUSY },
->> +	.clear_cnt =	{ DDRPERFM_CLR, MP2_CLR_CNT},
->> +	.clear_time =	{ DDRPERFM_CLR, MP2_CLR_TIME},
->> +	.cfg0 =		{ DDRPERFM_MP2_CFG0 },
->> +	.cfg1 =		{ DDRPERFM_MP2_CFG1 },
->> +	.enable =	{ DDRPERFM_MP2_CFG5 },
->> +	.dram_inf =	{ DDRPERFM_MP2_DRAMINF },
->> +	.counter_time =	{ DDRPERFM_MP2_TCNT },
->> +	.counter_evt =	{
->> +				{ DDRPERFM_MP2_EVCNT(0) },
->> +				{ DDRPERFM_MP2_EVCNT(1) },
->> +				{ DDRPERFM_MP2_EVCNT(2) },
->> +				{ DDRPERFM_MP2_EVCNT(3) },
->> +				{ DDRPERFM_MP2_EVCNT(4) },
->> +				{ DDRPERFM_MP2_EVCNT(5) },
->> +				{ DDRPERFM_MP2_EVCNT(6) },
->> +				{ DDRPERFM_MP2_EVCNT(7) },
->> +	},
->> +};
->> +
->> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
->> +	.regs = &stm32_ddr_pmu_regspec_mp1,
->> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
->> +	.counters_nb = MP1_CNT_NB,
->> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
->> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
->> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
->> +};
->> +
->> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
->> +	.regs = &stm32_ddr_pmu_regspec_mp2,
->> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
->> +	.counters_nb = MP2_CNT_NB,
->> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
->> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
->> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
->> +};
->> +
->> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
->> +};
->> +
->> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
->> +	{
->> +		.compatible = "st,stm32mp131-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp1
->> +	},
->> +	{
->> +		.compatible = "st,stm32mp151-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp1
-> 
-> So devices are compatible, thus express it correctly and drop this.
-> 
->> +	},
->> +	{
->> +		.compatible = "st,stm32mp251-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp2
->> +	},
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, stm32_ddr_pmu_of_match);
->> +
->> +static struct platform_driver stm32_ddr_pmu_driver = {
->> +	.driver = {
->> +		.name = DRIVER_NAME,
->> +		.pm = &stm32_ddr_pmu_pm_ops,
->> +		.of_match_table = of_match_ptr(stm32_ddr_pmu_of_match),
-> 
-> Drop of_match_ptr, you have here warnings.
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
+It'd be nice to think that the perf code could be clean wrt analyses
+like "include what you use" [1], but strategically removing #includes
+to try to work around musl issues seems like the opposite of this.
 
+Thanks,
+Ian
+
+[1] https://github.com/include-what-you-use/include-what-you-use
+
+> Thanks,
+> Namhyung
+>
+>
+> >  #include <linux/compiler.h>
+> >  #include "../tests.h"
+> >
+> > @@ -16,6 +18,7 @@ static int noploop(int argc, const char **argv)
+> >  {
+> >       int sec =3D 1;
+> >
+> > +     prctl(PR_SET_NAME, "perf-noploop");
+> >       if (argc > 0)
+> >               sec =3D atoi(argv[0]);
+> >
+> > --
+> > 2.50.0.rc2.701.gf1e915cc24-goog
+> >
