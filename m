@@ -1,52 +1,50 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707417996;
-	Mon, 23 Jun 2025 09:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB77233722;
+	Mon, 23 Jun 2025 09:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750671000; cv=none; b=WzQDZ/0Wpqg1LXot84+Zs8TP/SOzL9iGSf8htvfZq7PU/GfAVWiYUxiIVe2lE7XsQHoTnd3BQBaeL/y8WynWdcfczvc71Yp+e00eZASjPWk5rmEUlHd1Qdoyp1Wh2aLyPTv4emboUYnF3VXZjTHCP4NwgDqI0xfYYIxZLa7glMw=
+	t=1750671001; cv=none; b=DBzdGqASlas4401QN7fEGHul/lEm47gOqxFtw2JHAns29uOWJrs1julwzomEEF8Z5/UeLVHllMP6FDXgw8vXtE/+jZIluWf9hAFyCe/n8nGs+ZsIoHUV0pUqa4Cnnl92v7DX6QBBnviq0R1bvbnrg4QUoy4va6ueOElNHx6+kA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750671000; c=relaxed/simple;
-	bh=Z/JyWLR3XY6i6uwbS0ebYewrhlB9XFQj4QMmwqeNAz4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=g4D+981y1Uqv+lRV89hwYa3Xin/aNxYdCoweAi9NQjX3fVEibGS7sfnuNL9AIV1ycIFB39f/d7J4bj58saYHX00TGLUcLKlteqbO+SPx3YWT7QAxisNR8PTvSlYRIs/1LIwXTgMh+LgOkLOlp0WaF29FjrgIdcWjdn6jcw9YYSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=xKjNtqKI; arc=none smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1750671001; c=relaxed/simple;
+	bh=WR2nn99oRtkTnSZ2SlyuWLFzELsSDiZdzTX63mcOHA8=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=YkzSGv9kxO+V6y4lBSQYPMXdO3PWFSjl+7Iqq7EqYTjHCc1jPehrPetxxlwE6bECNSfcs26l8/rHQCcLXPN7lGdFZNXGqtaH+L1+7fpyEYMmb/kPqLpkDo2SmyKCfd9gpWpc2UkbOabEneh4NRbna8t9vblIbOC+lhIVNSFanso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bNwUveSW; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="xKjNtqKI"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N5ppEk002482;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bNwUveSW"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55N8swqj011088;
 	Mon, 23 Jun 2025 11:29:39 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	ZOsuluXNSLkxvHwd4tbbEr6WHEQwIqQwF7TiT8kGSEY=; b=xKjNtqKI9/+dDLG9
-	oFTGydhHzjiJWbKuNHqPXZyh2TRLdnYlIx9Wm85jf7VTjSZEvYT25ojtBP+kPV7z
-	9OlpKZApBw9+xxKb4ywsAoojQBi5XX62vGKvxYhUB7DwqOyVytNjHH5NX0eDuUUg
-	oANtco0jJceMp29Z9UDP5B+jVmhEDXG6ForKdRVtZe5gU3FLGUzWqCN2I0P71Enu
-	9vHisFwQQ02suimEnYZI5Yjgj8CWp4ShkUCe6bsyJq5DnP6BEdUehg84U2WlKDsU
-	/ps1szoDjLVxduRU1fyVtDGIWj3fexp2bRoywhcM1xQEbY6OsvEoMrzKchqre+8I
-	lAXVnQ==
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=pfOir4ecl8ee1I6IoTA4SW
+	3MSW1FhLPJ2AAoMv1lBVo=; b=bNwUveSWYjtHQBMM1/hOzqx9Bp3NwBCqXHAS17
+	u2MrUumsYbWgSla4q2Tr4pGCMTEgkVYf0RGA7w5gRYirFmSJPVDAA2+BhN+LnIB7
+	A/8hxo/dpj0CWns3PcmKSI+nmua27t8nSThbmPScY/mSgmUA60s/uocEu0XAnM30
+	aQdmyQs5HQnxzvKEJD2RTdHmfpgbLf2uzC4nmXHamdn+Eh8BKuPVXZEnm+x9r0GN
+	Co6WwTrVngV20SkVlI3WqjpYhQkBNhods3Sv6G7BngPq0RfMsa5xVK2+J37dLDmQ
+	3gXRBC4rndYYEM2vbEd33SCdg9PizR/HG/NzPuW+jw9rJ88w==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dj5nfca1-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e6a6cjpb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 23 Jun 2025 11:29:39 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2629E40051;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 25F6640049;
 	Mon, 23 Jun 2025 11:28:30 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5B2E5C37FE;
-	Mon, 23 Jun 2025 11:27:22 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C65DE562948;
+	Mon, 23 Jun 2025 11:27:20 +0200 (CEST)
 Received: from localhost (10.252.18.29) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:27:22 +0200
+ 2025 11:27:20 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Mon, 23 Jun 2025 11:27:07 +0200
-Subject: [PATCH 02/13] dt-bindings: stm32: stm32mp25: add
- `access-controller-cell` property
+Subject: [PATCH 00/13] Introduce STM32 DDR PMU for STM32MP platforms
+Date: Mon, 23 Jun 2025 11:27:05 +0200
+Message-ID: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,9 +53,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250623-ddrperfm-upstream-v1-2-7dffff168090@foss.st.com>
-References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
-In-Reply-To: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+X-B4-Tracking: v=1; b=H4sIAOkdWWgC/x3MQQqAIBBA0avErBNMMKGrRAvLsWahyVgRiHdPW
+ r7F/wUyMmGGqSvA+FCmMzYMfQfbYeOOglwzKKm01GoUznFC9kHcKV+MNojVS+O1MUY7C61LjJ7
+ e/zkvtX6z1g3LYwAAAA==
+X-Change-ID: 20250526-ddrperfm-upstream-bf07f57775da
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Rob
  Herring <robh@kernel.org>,
@@ -88,39 +87,59 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-23_03,2025-06-23_02,2025-03-28_01
 
-RCC is able to check the availability of a clock.
-Allow to query the RCC with a firewall ID.
+This patch series introduces the DDR Performance Monitor (DDRPERFM) support for
+STM32MP platforms.
+
+The series firstly improves the STM32MP25 RCC driver to make it usable
+as an access controller, needed for driver probe.
+
+It also includes the addition of device tree bindings, the HDP driver,
+documentation and updates to the device tree files for
+STM32MP13, STM32MP15 and STM32MP25 SoCs.
+The series also updates the MAINTAINERS file to include myself as the
+maintainer for the STM32 DDR PMU driver.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Clément Le Goffic (13):
+      bus: firewall: move stm32_firewall header file in include folder
+      dt-bindings: stm32: stm32mp25: add `access-controller-cell` property
+      clk: stm32mp25: add firewall grant_access ops
+      arm64: dts: st: set rcc as an access-controller
+      dt-bindings: perf: stm32: introduce DDRPERFM dt-bindings
+      perf: stm32: introduce DDRPERFM driver
+      Documentation: perf: stm32: add ddrperfm support
+      MAINTAINERS: add myself as STM32 DDR PMU maintainer
+      ARM: dts: stm32: add ddrperfm on stm32mp131
+      ARM: dts: stm32: add ddrperfm on stm32mp151
+      arm64: dts: st: add ddrperfm on stm32mp251
+      arm64: dts: st: support ddrperfm on stm32mp257f-dk
+      arm64: dts: st: support ddrperfm on stm32mp257f-ev1
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
-index 88e52f10d1ec..83974b7fb82f 100644
---- a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
-@@ -31,6 +31,11 @@ properties:
-   '#reset-cells':
-     const: 1
- 
-+  '#access-controller-cells':
-+    const: 1
-+    description:
-+      Contains the firewall ID associated to the peripheral.
-+
-   clocks:
-     items:
-       - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
-@@ -123,6 +128,7 @@ required:
-   - reg
-   - '#clock-cells'
-   - '#reset-cells'
-+  - '#access-controller-cells'
-   - clocks
- 
- additionalProperties: false
+ Documentation/admin-guide/perf/index.rst           |   1 +
+ Documentation/admin-guide/perf/stm32-ddr-pmu.rst   |  86 ++
+ .../bindings/clock/st,stm32mp25-rcc.yaml           |   6 +
+ .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml |  93 +++
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/st/stm32mp131.dtsi               |   7 +
+ arch/arm/boot/dts/st/stm32mp151.dtsi               |   7 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi             |   8 +
+ arch/arm64/boot/dts/st/stm32mp257f-dk.dts          |   5 +
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts         |   5 +
+ drivers/bus/stm32_etzpc.c                          |   3 +-
+ drivers/bus/stm32_firewall.c                       |   3 +-
+ drivers/bus/stm32_rifsc.c                          |   3 +-
+ drivers/clk/stm32/clk-stm32mp25.c                  |  40 +-
+ drivers/perf/Kconfig                               |  11 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/stm32_ddr_pmu.c                       | 893 +++++++++++++++++++++
+ {drivers => include/linux}/bus/stm32_firewall.h    |   0
+ 18 files changed, 1172 insertions(+), 7 deletions(-)
+---
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+change-id: 20250526-ddrperfm-upstream-bf07f57775da
 
+Best regards,
 -- 
-2.43.0
+Clément Le Goffic <clement.legoffic@foss.st.com>
 
