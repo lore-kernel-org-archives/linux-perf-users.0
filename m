@@ -1,172 +1,141 @@
-Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574F9226CF1
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 22:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CB4222581
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 22:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750716679; cv=none; b=OaAzYE2TGvxGC0MzoKhtF7Y4vawF7+mCqdQRB6cS3SBjJUGZmLnDQweHggty3f++oXRJfciC530uW9QF9I85cL4/gOaOKdPKkAhmWe2nQrnoGi+IlWyAdsASOW39WykX9tsYQdqdP2uC7Ra9PHc1UxzdvNRRc9xq0E+lBupifTs=
+	t=1750717596; cv=none; b=q3P9nDogBnEHdwaeuoxTVX19ik7ADQBubELpC89b0AkQAYzwR4uY+CDcj9lbaKlJqeVQD3gOGm7qo483KTDBvGE7zIazpUL16Bhtx9pMn0Y66uZT0gelofG7aKfsz9V8uQor0U8RnDe2H5vZPIZA+d5SdRnIcedtQ0faiCcHqg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750716679; c=relaxed/simple;
-	bh=D7atcKrsikBtKn+dkIVbHfHd96Aa/xzh+Jcn54xGazo=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=UowGf5pWagyVLaGDeq4qUimL66oCjpAj6lJt/cg7t2qfTZ+ui48EaS+ihXqXom1UIKZEJpdUZy70zC8Z2XDemH6jPVAgRuVS6jMSiqyyA0vHLZnuG4CrH7tS63sia7yl11XdCx7QYa+QCQWBxIT8Q96v9uNn47Nfj1bl4xxLlxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bGB61CYI; arc=none smtp.client-ip=209.85.166.201
+	s=arc-20240116; t=1750717596; c=relaxed/simple;
+	bh=xNeLTC3/vFEjHgWEO3ptTwVEQ+fv9CQyFaewi0CuOv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=begAsy9fzoEQao/ZfyrAfxntGodlE8eREGBvUA4qO+K4cg5a4bcf//Z+IOphSnGGsXKHWpWB5ERU9qN2mIo/ZQ/Wzv6TjiMFExArJiMnA24+f+J8ihnSIcnB/1lfOpm0hFRyZ6EDzWYsJsIaIgtq0IT5cJynthyfjCZOZQ4TKro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J2S5YI6K; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bGB61CYI"
-Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3df290232d8so2919075ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 15:11:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J2S5YI6K"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo45775ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 15:26:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750716676; x=1751321476; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tGQz+pPj9rguv78Mk1DG88zZ+C5YYmZS8y1NwOe8IHE=;
-        b=bGB61CYIjxiMMk7ExweFZl8ed1XFA+qc2eVHDL3x5ZRWn1R1Un/K0VgUbQBLoJdVIp
-         n6Avm+KftNSah/p6+BgsIU2/B0gqwcJ6QUvKoAVWaOKSaLJEiyQmvW+hRlMjdjk45n2z
-         mnQUCqmNQweTCMH7v2qKRig7xCPJLbZoYQUrlE/V7bDXIgCo36WTTkymnWE6qvlRpftg
-         6g+LdfgYQ5idNPutdjrTEsVMclwjWNJ+PnXpllN+/wUzUItACTtd1Q7p4NAYm2tdl/ru
-         j/vpp+TsWHfWohs2h/FviZz6AC2kmRP4KhV3KCmNFlmTH9UIfxcN7b9n6SApFthdiD4C
-         8tCQ==
+        d=google.com; s=20230601; t=1750717594; x=1751322394; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2g63pirFbFSmTBdwgMEBjEZptK95ioxrwcei+ssJCFY=;
+        b=J2S5YI6Ku49LaWsxkysHefY3Gn0fxQjoQ1HNbK0kRKOsZfE2ptQ3v+Cx8iFRGJeehe
+         qlx9jfHPXkKv5xkio7xuMjCfzyqS4cI3Ug1LonB/RLOmgANGs3HehDqTEgNz8jG2pzkH
+         FRZ5Mff+MEx0TucRksmgPFhXvi8Y0WbQRKtfQYYJ8EDJzUqUpVD4Jm9rL219SmJWRjxQ
+         0dhm0xRmo2ICvUjzcOAXK42ly0vHRHgmYPGhChQtP1TVzh1wzXnsYiYbCHn3UULIgfIk
+         xIzp1QMmn0b0C9cVnvGqO7sOT6yGwJvSkEE4+AMiuV8CYyjFi7s8lZemAhbYiggWjy57
+         rlsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750716676; x=1751321476;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tGQz+pPj9rguv78Mk1DG88zZ+C5YYmZS8y1NwOe8IHE=;
-        b=j7txCx5py+/zEnbJEiSNiYbzpcRvNduQ3meHtZx3n37WXJJ4gVC3k3CptTdPn9yrM4
-         auOZmKd1hMGZ1t76HQeZmE97+o1o1vUiNnuj7fOsI1vIyi13inIoSf44e0dNfYT5mY7Z
-         LyYijN9dgNqUj8TMkoAPFrpMvT+Ig8BIZGl7KsEjy1UfTk1Pb6AD1UoXOrCOM9iNoAT1
-         ZXcblOe1Ji6Y50Lcjj4oslV99G3L/mQpkdFbU57qalB+nnk80SQ3c2skrDrI9vHpiem9
-         SeSp+62eTw9NpqABB/2X3IRRF6L11UTf7uLpUKuGMZRtzfa/V/8KlJGBMOXOakketnUX
-         QTuw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8iuSnFftbfiYi2TpyjoqkVoFJc6pME7qvlbxnyIrImYy4PsFV8QNtNLXfEGEZSf4WB5d63jlczSi2gsU1p5+j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7x7z4YM3yrbFY6btNej++nsoOQspjy5hd//Wb+XIICUIAg4mF
-	K8/b1j+H4JDymJEwsqULkh2r+r0ZKazma7ZKzastAZdTs0MPE/mtrokgBJkH46a0wyMFe54cr0k
-	MBNkjDvjjf2RdZH2a6JtumTtOWQ==
-X-Google-Smtp-Source: AGHT+IFROh/q8Un43k3KAN6/Y7TN0oBqMJ1o65GnORb3dUVRyme5Qfos+kVCSSkafOZNJv6Ve5iTj9GtWD2hqiOqYQ==
-X-Received: from ilbdr12.prod.google.com ([2002:a05:6e02:3f0c:b0:3dd:b580:4100])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:3499:b0:3de:119f:5261 with SMTP id e9e14a558f8ab-3de38c1c019mr212245545ab.3.1750716676655;
- Mon, 23 Jun 2025 15:11:16 -0700 (PDT)
-Date: Mon, 23 Jun 2025 22:11:15 +0000
-In-Reply-To: <202506221711.tFNGpzj4-lkp@intel.com> (message from kernel test
- robot on Sun, 22 Jun 2025 17:32:31 +0800)
+        d=1e100.net; s=20230601; t=1750717594; x=1751322394;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2g63pirFbFSmTBdwgMEBjEZptK95ioxrwcei+ssJCFY=;
+        b=RKAeIAK2SVMod13b2O3SzB8n1MBMSPDhCB23oKR6i3WOq7pvFJPq/vqLU1XYDIUN+d
+         QZOgsH69ACoQXluSKkCJtOicGLblxmrpT3p8Q9HLbgEdaXrJV6JI14zp5yjjejiGuI35
+         CgtaRVkHMB9wsDkL+NsHODYXcAQLNIXpywHReSCPICf6kyViRa3I+g/qjntCG9bOx0bp
+         zFVTKB1HSiWGBqbZH9mRQBMW6fT44ucdXTkIv/ldceBiIQWhIIG7hupwh6VhS+4PWzDm
+         CIfVQFLClFzfkgx/cBT/Cz4Q/OZowrtPUf8G1Anj3b20NixeROPC+PJutttiUOeAF4mU
+         NmSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVg1/qf7rl0ioXQ+TiGADHdB0oHj5rzZJEKhrsNDb2arHT35IuYnxM2YV2FYshNsih1uwQCM2HGPUXbfXIrKj4p@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX2J7/LtTNa/KNyJVYiXSDqhh0lRx+p2jDQmMHDDdoTy6Ws3IQ
+	8sh8MfEvi7bUJWOPCNC8+4bGt7FUJy+LVRfEsHSLTBEirGqH0VP+R0Sh65H5k+howwqhEuWJhoR
+	lzuRO1oCJiS4Dxm3xpCTrbasfGyViSsauq2lxVlex
+X-Gm-Gg: ASbGncsyl/vWf/M6Lzd+pOpy8Y7jUkeobts3HPC5YEuBNG2em3++L8HrLPs+dVigFma
+	Fh3n+Yah20Rk9lAqgD8IBfLcpvgsVS/g7ezWYz806wYBsEBSMe0sihbetB3ubLRX+YkVwrWWo2T
+	zfLUR5houZTyi5Yuo/cyLhrUoF0ve+/91z+HlgRCXyEJ+uSnl39HRB0I4u+KVQn0DTkfdcyyYw
+X-Google-Smtp-Source: AGHT+IGMcaEmAHBaUWIflmFryit/RZswlMNpVQKzvPg8TKCyZkCgrIutE6ln2v3QEQqxlYfYLr2nOks4w3TCO9MrVZk=
+X-Received: by 2002:a05:6e02:1544:b0:3dd:a562:ce54 with SMTP id
+ e9e14a558f8ab-3df2a569ff8mr209175ab.15.1750717594065; Mon, 23 Jun 2025
+ 15:26:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntikkm9kho.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v2 17/23] KVM: arm64: Account for partitioning in PMCR_EL0 access
-From: Colton Lewis <coltonlewis@google.com>
-To: kernel test robot <lkp@intel.com>
-Cc: kvm@vger.kernel.org, oe-kbuild-all@lists.linux.dev, pbonzini@redhat.com, 
-	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, 
-	skhan@linuxfoundation.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+References: <20250614004108.1650988-1-irogers@google.com> <20250614004108.1650988-3-irogers@google.com>
+ <CAH0uvojjfOcoZmxPL+bG5NEid8xcAVth7UxOUc=aYjgF5nqs2A@mail.gmail.com>
+ <aFBF1ejZQBBvX7F4@x1> <aFHeY_-hVNKtXPAD@x1> <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
+ <aFHi2FUDZy_cEA5A@x1>
+In-Reply-To: <aFHi2FUDZy_cEA5A@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 23 Jun 2025 15:26:22 -0700
+X-Gm-Features: AX0GCFsJl1V6SmtpGR-Xq9huuZQRBov8XhEK5Pczr6a2e8qDUAx9ANIj0zleZD8
+Message-ID: <CAP-5=fXXOEH1Hf=je9EgmKgSKEiSSs+9abUo0vUoS3_7dp0Uow@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events
+ and thread
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot <lkp@intel.com> writes:
+On Tue, Jun 17, 2025 at 2:49=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, Jun 17, 2025 at 02:32:37PM -0700, Ian Rogers wrote:
+> > On Tue, Jun 17, 2025 at 2:30=E2=80=AFPM Arnaldo Carvalho de Melo <acme@=
+kernel.org> wrote:
+> > > On Mon, Jun 16, 2025 at 01:27:04PM -0300, Arnaldo Carvalho de Melo wr=
+ote:
+> > > > > On Fri, Jun 13, 2025 at 5:41=E2=80=AFPM Ian Rogers <irogers@googl=
+e.com> wrote:
+> > > > > > Caught by leak sanitizer running "perf trace BTF general tests"=
+.
+>
+> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> > > > > Acked-by: Howard Chu <howardchu95@gmail.com>
+>
+> > > > Small enough, applied to perf-tools.
+>
+> > > root@number:~# perf trace -e *sleep ls
+> > > anaconda-ks.cfg  bin  bla  commands  dtel  firefly  logind.conf  perf=
+-install.txt  python
+> > > perf: Segmentation fault
+> > > Obtained 11 stack frames.
+> > > perf() [0x5c595e]
+> > > perf() [0x5c59f9]
+> > > /lib64/libc.so.6(+0x19c30) [0x7fd43ce27c30]
+> > > perf() [0x5dc497]
+> > > perf() [0x492d54]
+> > > perf() [0x49860e]
+> > > perf() [0x49890e]
+> > > perf() [0x413413]
+> > > /lib64/libc.so.6(+0x35f5) [0x7fd43ce115f5]
+> > > /lib64/libc.so.6(__libc_start_main+0x88) [0x7fd43ce116a8]
+> > > perf() [0x413a45]
+> > > Segmentation fault (core dumped)
+> > > root@number:~#
+>
+> > Thanks, I'll take a look to see if I can spot what's broken. Seeing
+> > this stack trace makes me remember we haven't landed:
+> > https://lore.kernel.org/lkml/20250611221521.722045-1-irogers@google.com=
+/
+>
+> Yeah, I just pushed perf-tools to soak in linux-next/pending-fixes for a
+> few days and will switch to processing patches for perf-tools-next, will
+> try and pick that one, I also noticed that the backtrace wasn't
+> symbolized, thus your patch wasn't there :-\
 
->     In file included from arch/arm64/include/asm/kvm_host.h:32,
->                      from include/linux/kvm_host.h:45,
->                      from arch/arm64/kvm/sys_regs.c:16:
->     arch/arm64/include/asm/kvm_pmu.h:236:50: warning: 'struct arm_pmu'  
-> declared inside parameter list will not be visible outside of this  
-> definition or declaration
->      static inline bool kvm_pmu_is_partitioned(struct arm_pmu *pmu)
->                                                       ^~~~~~~
->     arch/arm64/include/asm/kvm_pmu.h:241:52: warning: 'struct arm_pmu'  
-> declared inside parameter list will not be visible outside of this  
-> definition or declaration
->      static inline u64 kvm_pmu_host_counter_mask(struct arm_pmu *pmu)
->                                                         ^~~~~~~
->     arch/arm64/include/asm/kvm_pmu.h:246:53: warning: 'struct arm_pmu'  
-> declared inside parameter list will not be visible outside of this  
-> definition or declaration
->      static inline u64 kvm_pmu_guest_counter_mask(struct arm_pmu *pmu)
->                                                          ^~~~~~~
->     arch/arm64/kvm/sys_regs.c:856:6: warning: no previous prototype  
-> for 'pmu_access_el0_disabled' [-Wmissing-prototypes]
->      bool pmu_access_el0_disabled(struct kvm_vcpu *vcpu)
->           ^~~~~~~~~~~~~~~~~~~~~~~
->     arch/arm64/kvm/sys_regs.c: In function 'access_pmu_evtyper':
->     arch/arm64/kvm/sys_regs.c:1076:7: error: implicit declaration of  
-> function 'kvm_vcpu_pmu_is_partitioned'; did you  
-> mean 'kvm_pmu_is_partitioned'? [-Werror=implicit-function-declaration]
->        if (kvm_vcpu_pmu_is_partitioned(vcpu))
->            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->            kvm_pmu_is_partitioned
->     arch/arm64/kvm/sys_regs.c: In function 'set_pmcr':
->>> arch/arm64/kvm/sys_regs.c:1271:33: error: dereferencing pointer to  
->>> incomplete type 'struct arm_pmu'
->            new_n <= kvm->arch.arm_pmu->hpmn_max))
->                                      ^~
->     cc1: some warnings being treated as errors
+I sent out a fix for this issue in v2:
+https://lore.kernel.org/lkml/20250617223356.2752099-3-irogers@google.com/
+Patches 1 and 2 I see are in the v6.16 fixes PR:
+https://lore.kernel.org/lkml/20250620155415.88215-1-acme@kernel.org/
 
-Looks like the main problem here is struct arm_pmu is not defined if we
-don't have CONFIG_ARM_PMU. I'll provide a dummy definition for that case
-and swap out the field reference for a function call.
+Thanks,
+Ian
 
-Secondary problem is making sure there is a prototype for
-pmu_access_el0_disabled in that instance.
-
-> vim +1271 arch/arm64/kvm/sys_regs.c
-
->    1253
->    1254	static int set_pmcr(struct kvm_vcpu *vcpu, const struct  
-> sys_reg_desc *r,
->    1255			    u64 val)
->    1256	{
->    1257		u8 new_n = FIELD_GET(ARMV8_PMU_PMCR_N, val);
->    1258		struct kvm *kvm = vcpu->kvm;
->    1259
->    1260		mutex_lock(&kvm->arch.config_lock);
->    1261
->    1262		/*
->    1263		 * The vCPU can't have more counters than the PMU hardware
->    1264		 * implements. Ignore this error to maintain compatibility
->    1265		 * with the existing KVM behavior.
->    1266		 */
->    1267		if (!kvm_vm_has_ran_once(kvm) &&
->    1268		    !vcpu_has_nv(vcpu)	      &&
->    1269		    new_n <= kvm_arm_pmu_get_max_counters(kvm) &&
->    1270		    (!kvm_vcpu_pmu_is_partitioned(vcpu) ||
->> 1271		     new_n <= kvm->arch.arm_pmu->hpmn_max))
->    1272			kvm->arch.nr_pmu_counters = new_n;
->    1273
->    1274		mutex_unlock(&kvm->arch.config_lock);
->    1275
->    1276		/*
->    1277		 * Ignore writes to RES0 bits, read only bits that are cleared on
->    1278		 * vCPU reset, and writable bits that KVM doesn't support yet.
->    1279		 * (i.e. only PMCR.N and bits [7:0] are mutable from userspace)
->    1280		 * The LP bit is RES0 when FEAT_PMUv3p5 is not supported on the  
-> vCPU.
->    1281		 * But, we leave the bit as it is here, as the vCPU's PMUver might
->    1282		 * be changed later (NOTE: the bit will be cleared on first vCPU  
-> run
->    1283		 * if necessary).
->    1284		 */
->    1285		val &= ARMV8_PMU_PMCR_MASK;
->    1286
->    1287		/* The LC bit is RES1 when AArch32 is not supported */
->    1288		if (!kvm_supports_32bit_el0())
->    1289			val |= ARMV8_PMU_PMCR_LC;
->    1290
->    1291		__vcpu_assign_sys_reg(vcpu, r->reg, val);
->    1292		kvm_make_request(KVM_REQ_RELOAD_PMU, vcpu);
->    1293
->    1294		return 0;
->    1295	}
->    1296
-
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+> - Arnaldo
