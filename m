@@ -1,54 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3978229B16;
-	Mon, 23 Jun 2025 23:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590BB1ADFFE;
+	Mon, 23 Jun 2025 23:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750720493; cv=none; b=Ershm5Gcu7xCMasEEgi5NNVSoxtfCqC0Y9eCb+CvCtnLcnXE8zbAIISeV9z47NnSBywifNWHNqaMERh5+ufGVNM08Zc5HWgOvydJE5SL81rdhc1G7lWRVOw4PbCEb6sFlYI/HA9D4EpVcVppJNBtG71ctjiLB5lxQGRfXobVILU=
+	t=1750720953; cv=none; b=EgBVBPpbX0Zg8SvIfz6wI4BU+aoGMyD4crnf1pkt2iBvOeWMH0YOc0gf6FZMG2q+aWpuw4oeOXTYxrUOcwJ89XBS8drGB1AKxFfYElehm+3aNZ44jV8YAp3SL6BjYQ1FrXcopS2ph/UdkOjyoNgNrvOprIv2UY/vzywNLxjn2JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750720493; c=relaxed/simple;
-	bh=Kt2V+qTuGXKKjBuq+DdUZkjI2zHCDhZcpWDC4ujWhRk=;
+	s=arc-20240116; t=1750720953; c=relaxed/simple;
+	bh=3JCIdm/lY3A3oO6QC7tcIajIJHdvKIoWTTw2glf7/54=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tz9zCf7YNKwB3QaIWMNLon43agFunINgK2H3gwvKLQXBqpie4m613kLtOiQQL4F0TFEUZeEzn1Ty+Gqzn0pL2UxpXS44jeXxiXwQ6+izfyOIhF1uvZLFUsx3ozHeTfwtVJofEZtB7eCVsvhrZ+/Vtte3oUIkIl5srTXDUoIF/I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BK9+eemP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GdkCTVnsPcIxqxhtMEa0NzVg/nxGudqXx3hIvMRMRKcnXPKZvArNyV+p3FNCEoffpponaReR30Ng5/r9KVj4ouerC76qQiQPXrFPvJxN/fPu/bXN6aJBjRsj2qbLYSUnF+s4oCrZRKWLf/jYc3VUU4z1w5NeY6egOfXVaecnrdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pu4TbMB9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BK9+eemP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBFCC4CEEA;
-	Mon, 23 Jun 2025 23:14:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pu4TbMB9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89782C4CEEA;
+	Mon, 23 Jun 2025 23:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750720493;
-	bh=Kt2V+qTuGXKKjBuq+DdUZkjI2zHCDhZcpWDC4ujWhRk=;
+	s=k20201202; t=1750720953;
+	bh=3JCIdm/lY3A3oO6QC7tcIajIJHdvKIoWTTw2glf7/54=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BK9+eemPQp5Fg83e0UXtHwXHJ3UD8k3U2TcDB0EKCjXNqRyc7GrpOfXvk8JPii1WG
-	 8c1yNmo3LBJaBLCzjeAMs3SrQtM4zlIEcWMZVeESBUJyArOxtqNO06MEx535S5L7/i
-	 SqFhsNayXyHXElCNEiTyMm3biyn0zaopvmKbhJ4r56V0Gm8wl5P7jp4lLTbAmIgQnZ
-	 kcMOJ9EKpBkM1cCw3Q2ZS7aFrv81Move1siHh+S1AVLrRKf+ZISIiEU/MYlKw5R3Dl
-	 cozdIaL/8mb5HQHGNIBQNPrJCzaRbUajIyOstiNkkkc/1ayyKXLQmX+L+oVvKT6Usa
-	 XZ2/f8cnsNRkA==
-Date: Mon, 23 Jun 2025 16:14:51 -0700
+	b=Pu4TbMB91T2GhcMXvI3d4Jkr2w1CX0pAEOIMT6qewGZTn7f+uRoSQa/DzEpfI4Ybb
+	 ulgy+H4D2PsgRB8PcdmK3qNPcu/+lNXPKjR/rVQP1y7bWvYFisKgqBkZOJFJZf5xR8
+	 RVk3ltO0dZ60H4OqnXZS8KsAo1ukVoqUbGp8AC8zj3zDqRpnUskQygPWuNMet3XIJA
+	 +IG1TibO5eP7vtfSx8lSJVQDk9QPNXdqxBbnmPSaB2q9s5n/dwGc4ZvcVTzXppIf3B
+	 s2kni0Kr+xArbYqCv3MgUjvI2se7AXkvZbWiJeQGH+vhfZI19IcwVwm6bT88KqNMW4
+	 64nv6BgDcmfSg==
+Date: Mon, 23 Jun 2025 16:22:31 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf test workload noploop: Name the noploop
- process
-Message-ID: <aFnf69Q4V95K3rpS@google.com>
-References: <20250619002034.97007-1-irogers@google.com>
- <aFW4VJtk96JD865U@google.com>
- <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com>
- <aFmSuSyZ1ZNT94Tq@x1>
- <CAP-5=fXms87LVH-Y5V3OpVbwUjY=hWAe0NTX4uKQf1q3Ax-WSA@mail.gmail.com>
- <aFmZl-SUT85Im8BJ@google.com>
- <aFmooVYz-6p1DTSv@x1>
- <CAP-5=fVGPKOVc7WA=VygSE3BKN90tSpLPhkaupX_fUboBcyHPg@mail.gmail.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 0/4] Add support for a DRM tool like PMU
+Message-ID: <aFnht37mLV6ZFost@google.com>
+References: <20250403202439.57791-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,115 +56,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVGPKOVc7WA=VygSE3BKN90tSpLPhkaupX_fUboBcyHPg@mail.gmail.com>
+In-Reply-To: <20250403202439.57791-1-irogers@google.com>
 
-On Mon, Jun 23, 2025 at 12:41:09PM -0700, Ian Rogers wrote:
-> On Mon, Jun 23, 2025 at 12:19 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Mon, Jun 23, 2025 at 11:14:47AM -0700, Namhyung Kim wrote:
-> > > On Mon, Jun 23, 2025 at 11:05:41AM -0700, Ian Rogers wrote:
-> > > > On Mon, Jun 23, 2025 at 10:45 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > > On Mon, Jun 23, 2025 at 08:12:47AM -0700, Ian Rogers wrote:
-> > > > > > On Fri, Jun 20, 2025 at 12:36 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > I'm afraid it'd introduce a build failure on musl.  Please see
-> >
-> > > > > > > https://lore.kernel.org/linux-perf-users/20250611092542.F4ooE2FL@linutronix.de/
-> >
-> > > > > > > I think <sys/prctl.h> would be enough.
-> >
-> > > > > > we could do that but in the glibc man page it says:
-> > > > > > https://man7.org/linux/man-pages/man2/prctl.2.html
-> > > > > > ```
-> > > > > > #include <linux/prctl.h>  /* Definition of PR_* constants */
-> > > > > > #include <sys/prctl.h>
-> > > > > > ```
-> >
-> > > > > > It'd be nice to think musl was slowly getting fixed. I notice we're
-> >
-> > > > > Sebastian reported on the musl libc, its maintainer replied:
-> >
-> > > > > https://www.openwall.com/lists/musl/2025/06/12/11
-> >
-> > > > Ugh. I'm not sure how we're expected to resolve this and have glibc
-> > > > and musl be happy without basically not trusting libc.
-> >
-> > > Maybe pthread_setname_np()?  It seems musl also implemented it.
-> >
-> > ⬢ [acme@toolbx perf-tools-next]$ git diff
-> > diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
-> > index 8b954d4660833a2f..656e472e618822a3 100644
-> > --- a/tools/perf/tests/workloads/noploop.c
-> > +++ b/tools/perf/tests/workloads/noploop.c
-> > @@ -1,9 +1,8 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> > +#include <pthread.h>
-> >  #include <stdlib.h>
-> >  #include <signal.h>
-> >  #include <unistd.h>
-> > -#include <linux/prctl.h>
-> > -#include <sys/prctl.h>
-> >  #include <linux/compiler.h>
-> >  #include "../tests.h"
-> >
-> > @@ -18,7 +17,7 @@ static int noploop(int argc, const char **argv)
-> >  {
-> >         int sec = 1;
-> >
-> > -       prctl(PR_SET_NAME, "perf-noploop");
-> > +       pthread_setname_np(pthread_self(), "perf-noploop");
-> >         if (argc > 0)
-> >                 sec = atoi(argv[0]);
-> >
-> > ⬢ [acme@toolbx perf-tools-next]$
-> >
-> > ⬢ [acme@toolbx perf-tools-next]$ perf test -w noploop &
-> > [1] 1179763
-> > ⬢ [acme@toolbx perf-tools-next]$ ps
-> >     PID TTY          TIME CMD
-> >    3935 pts/1    00:00:00 bash
-> >    4053 pts/1    00:00:00 toolbox
-> >    4222 pts/1    00:00:28 podman
-> >  971900 pts/1    00:00:00 bash
-> > 1100453 pts/1    00:00:00 tail
-> > 1160346 pts/1    00:00:00 bash
-> > 1179763 pts/1    00:00:00 perf-noploop
-> > 1179765 pts/1    00:00:00 ps
-> > ⬢ [acme@toolbx perf-tools-next]$
-> >
-> > And then on one of the Alpine Linux containers:
-> >
-> > make: Leaving directory '/tmp/perf-6.16.0-rc3/tools/perf'
-> > /tmp/perf-6.16.0-rc3 $ cat /etc/os-release
-> > NAME="Alpine Linux"
-> > ID=alpine
-> > VERSION_ID=3.18.12
-> > PRETTY_NAME="Alpine Linux v3.18"
-> > HOME_URL="https://alpinelinux.org/"
-> > BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
-> > /tmp/perf-6.16.0-rc3 $ tools/perf/perf test -w noploop &
-> > /tmp/perf-6.16.0-rc3 $ ps
-> > PID   USER     TIME  COMMAND
-> >     1 toolsbui  0:00 /bin/sh
-> >  5693 toolsbui  0:00 {perf-noploop} tools/perf/perf test -w noploop
-> >  5694 toolsbui  0:00 ps
-> > /tmp/perf-6.16.0-rc3 $
-> > [1]+  Done                       tools/perf/perf test -w noploop
-> > /tmp/perf-6.16.0-rc3
-> >
-> > There are more direct use of prctl() to set the name in tools/perf/,
-> > using pthread_setname_np() seems cleaner :-)
+Hi Ian,
+
+On Thu, Apr 03, 2025 at 01:24:35PM -0700, Ian Rogers wrote:
+> DRM clients expose information through usage stats as documented in
+> Documentation/gpu/drm-usage-stats.rst (available online at
+> https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
+> PMU, similar to the hwmon PMU, that exposes DRM information.
 > 
-> Yeah, I wanted to set the program name rather than a thread name for
-> the sake of seeing the process name in ps - hence reaching for prctl.
-> PR_SET_NAME is documented as setting the thread name and so no
-> difference to pthread_setname_np. It's still frustrating to get bogged
-> down in working around musl when typing the literal code from the
-> prctl man page. Do you need me to re-send the patch?
+> v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
+>     trap cleanup.
+> 
+> v2: Add support to only scan hwmon and drm PMUs if the event or PMU
+> wildcard can match. Add a test as requested by Namhyung. Add file
+> comments.
+> 
+> v1:
+> https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.com/
+> 
+> Ian Rogers (4):
+>   perf parse-events: Avoid scanning PMUs that can't contain events
+>   perf parse-events: Avoid scanning PMUs that can't match a wildcard
+>   perf drm_pmu: Add a tool like PMU to expose DRM information
+>   perf tests: Add a DRM PMU test
 
-Yes please.  And address comments in the patch 2 as well.
+Can you please refresh this series?  It doesn't apply cleanly anymore.
 
 Thanks,
 Namhyung
 
+> 
+>  tools/perf/tests/shell/drm_pmu.sh |  78 ++++
+>  tools/perf/util/Build             |   1 +
+>  tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++++
+>  tools/perf/util/drm_pmu.h         |  39 ++
+>  tools/perf/util/evsel.c           |   9 +
+>  tools/perf/util/parse-events.c    |  30 +-
+>  tools/perf/util/pmu.c             |  15 +
+>  tools/perf/util/pmu.h             |   4 +-
+>  tools/perf/util/pmus.c            | 101 ++++-
+>  tools/perf/util/pmus.h            |   2 +
+>  10 files changed, 952 insertions(+), 16 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/drm_pmu.sh
+>  create mode 100644 tools/perf/util/drm_pmu.c
+>  create mode 100644 tools/perf/util/drm_pmu.h
+> 
+> -- 
+> 2.49.0.504.g3bcea36a83-goog
+> 
