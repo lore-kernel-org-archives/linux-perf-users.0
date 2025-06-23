@@ -1,139 +1,79 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED81828EBF1
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 16:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768242C1592;
+	Mon, 23 Jun 2025 17:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750696679; cv=none; b=py9wjm3Y2Erw7REshFPohlndT+b20Cl7utESyomcAzTCOBIl7gs1CjlycTfXpcownvzaKs9JA4Rp7/roztJ3ik/kYew5Sq3honEb4wnyevsojCCglBhDMDbn2n2EPXVJ6QHGpFxLa9K8SL9xgXH/mrjDLZJzcmAeLdpCtaQZjBQ=
+	t=1750700732; cv=none; b=tRO9/xVDbxEhHXC7kJx99PmMyW2Csvtac0p0EnoeKNw/6bF9M5F0W3SPgnvT5om0YDVOuwT3/9i4jjevuhKtoBMgdBOFBgdfhg8p+be9A/TqZ2uyBbaTrEcgFL3pRvp4O34+Cf4uJr6m/f1HNUXfD6xAGZGwwMkyS2zTLMh4Fcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750696679; c=relaxed/simple;
-	bh=JS1FG2qENkQ353/qm/Vo5hQuv0HIVwdvuruB5QR/gzY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVyjDJc5y3CQYBVoNHOzIzm0GX0HdtBvKvRH08BWDzTfxW7b0DZOn4kBdLBcHmXTmt2iyr91M0RZVsMcrogboISEQvacwnlncOc3KK2gkIkYf7RS3ogQ8W9pGLYLOcIINK3ZfkVuowdjtVqnSrziAOr6uAam9HHpqC09ES2lEt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B6D3KXE7; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750700732; c=relaxed/simple;
+	bh=hYv4xKHzWZDN1ntMAQvYZjMbKiXIkvOEWDoc+shcdVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZIQ4aIsEHd3ozTVNzeL76ECIygz4IGolEyudUZo9x1Srsjv+AT7VEy1iO2Kfb4nrGau30cESsoMaUlZ3AOTFrjFS3URjBOtVSWugcPgkSO5JC2JB6SbpXOWAMOifrFBGBRLQsIHNjgC6E/TsRqwu/OKhs2nLjl/PfxkwI27CaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s69Azbip; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B6D3KXE7"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so2975ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 09:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750696677; x=1751301477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ri3+Ap4cqoeDbRAUlcrZd437nBvU+XraT/8Lh4iGeK0=;
-        b=B6D3KXE76BIQVNqRZxqzThbRtp42uPjlR5m8BSm5LHuALEPl9XbKFwNYU8vsCVLhb0
-         2tmz7/W59rjp5YJublF2o/0rXjl5PNDa2+iIDhvVpM4ZgfET0eGLASPLtrgUpP6XQCtk
-         T5AWPvPQqM4bKiiZVcSqIRc4jjJvRECd4W4l7Mo5/V0jZy8jAMdAfLGp8BjADQWXFF8L
-         1jIudAeHFR/LIBLuzw+Q7HvJZAvZp9Yk8ekG8A7h7fs8td7/ev5Wleu+iSvTISxokzju
-         vVhLM/JFaAgTzNt5pTy+Ts6HuaAS92Z/09SLc9pYWEofCWMhKRywlQhGPAHSc9VX+H5M
-         BeMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750696677; x=1751301477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ri3+Ap4cqoeDbRAUlcrZd437nBvU+XraT/8Lh4iGeK0=;
-        b=ebU06Zblh6hgcA4Mh5HMheZnMhypFejvRHkc4L8oBOo9WdtC6LSBP3wDPW54MdLzAJ
-         gBvjwkPb9EPORjGYiBxU7wczn70+uy5K4Y2VDkC4m/orbSSSH/sAH3Obwa+1QezT3i3T
-         mgjXcXa8w37M/yU+MFPjIaqpNAWOxPQcsh41PE2Q7Xkp2Mv5Lukov3S5t8MWl5wzXJg5
-         lP2O1lHUOBFhDthLkOBF+pFVDdmIfTppb/J1bVFW4H48BRDumvQKuTQS3Zf5CABACEJd
-         EC6xhxxzL5w7NaWmpBPr2GlWIiWG7dUjtEsnkK6wlkMtDwy1pGhxg6czULkNX+BJzM8X
-         2qtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ZO34iWzgykg7fk7SDuQ9mQnvs7wHb3AEaeFivpxyfQi0nOM57yZwpNB0RshwEmDUHgEWiU4KPhlZgjl292NA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhmDyF3sCGgQB3uk4/8msr5aLlNCoUPUcSvPxhWGB6aQ3JC45m
-	3JHWSDsQXXvmvp3JKDDUUOzrfHsQiVpBs/3uoFNH50m9ObN91jgQHX98UHEac93XppDAJylYBW7
-	Ebx1YJCoTQygRUyjCZzQ/RGAAdCxCKwtL43wnTYeR4IoDXQFPtWP6z6aVG+g=
-X-Gm-Gg: ASbGncukPbV7tBvAIMfJfBpeNtnBbc9UgFuCxCKgHxt7mhTTjGPFPWDyuUj9+9yGRpM
-	HHttxWXUCixJ5L6vklvpI9ZW6Toi2H/eraKduxema6JWiLX27+7Eun38zJw87tFdvs4Cgv7z2b3
-	M/OTUENrI+vwjZNCXwQuEyOJBOBrGJU5h4DS9S7pM/fVDqsEl97eWZY1y/DLdSvCElhH2+u/o4
-X-Google-Smtp-Source: AGHT+IGdxgr8P+XalPte1GIMEXQlB83/Ff2yJxb0FI5ykWekoHN3CN4Qry4jy0ooIKs9GE80H/Wjo6lwAjGkNsxfkb4=
-X-Received: by 2002:a05:6e02:3c06:b0:3dd:a7f3:a229 with SMTP id
- e9e14a558f8ab-3df0703957amr6032785ab.4.1750696676770; Mon, 23 Jun 2025
- 09:37:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s69Azbip"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF87C4CEEA;
+	Mon, 23 Jun 2025 17:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750700732;
+	bh=hYv4xKHzWZDN1ntMAQvYZjMbKiXIkvOEWDoc+shcdVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s69AzbipW2fqfvaiyCWr0xfg/6uYVtksIIIQZVOQmEKUT3KhpPEAWFk98qeOqKb4O
+	 xF4hveD5INWbdMRmkrIQdP7aNYUxkLX8S7LWhmw9fDkR2cli+jRR/yv5IhvJo59LPV
+	 smnHAZNwLiIcmIGP5z/uSZtK2Li2WepUjjCmp61aJtN7aZI7XuJvZlh7ZsKRnCv3WT
+	 Tj4VVEHaWvgUR1dB6v4uUabO8KkE13Cw6DMWHmU6AVfMUP0VM4onwNIDVNa6vXgCOU
+	 k9hS1nqetrbRL8m+SUwB3M4TfYkulPIuI6Mwx7qHJTy23F2wfEjy+5Y6g/R/r7wqjC
+	 4/IZDye+anksg==
+Date: Mon, 23 Jun 2025 14:45:29 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf test workload noploop: Name the noploop
+ process
+Message-ID: <aFmSuSyZ1ZNT94Tq@x1>
+References: <20250619002034.97007-1-irogers@google.com>
+ <aFW4VJtk96JD865U@google.com>
+ <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
- <20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org> <874iwa71mo.fsf@gmail.com> <6f524405-a9a7-45c4-bf4d-9ae33e52bfbc@linaro.org>
-In-Reply-To: <6f524405-a9a7-45c4-bf4d-9ae33e52bfbc@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 23 Jun 2025 09:37:44 -0700
-X-Gm-Features: AX0GCFvasLURCKicqFzCPNy0SCLEOxEQZz8PHex8H2GTWGdkfSVmQ_yM79QpXxY
-Message-ID: <CAP-5=fVoya-X+BBBuVwZQ527WKyGwC8tirk=gj37t2H_BBmwVg@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash dialect.
-To: James Clark <james.clark@linaro.org>
-Cc: Collin Funk <collin.funk1@gmail.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUpnW1DE68pMW0q3vMT+n6d5SeNkwXd45XLaf01-eP47A@mail.gmail.com>
 
-On Mon, Jun 23, 2025 at 1:10=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 20/06/2025 6:40 pm, Collin Funk wrote:
-> > Hi James,
-> >
-> > James Clark <james.clark@linaro.org> writes:
-> >
-> >> If we're enforcing bash style with static analysis shouldn't we also
-> >> change all the hashbangs to bash? Recently there have been changes to
-> >> change sh to bash in some of the tests so presumably the hard rule for
-> >> sh is no more?
-> >>
-> >> In the past I've had to replace bashisms that didn't work in sh but it
-> >> would be nice to have only one language to write tests in. I doubt
-> >> anyone running the tests today is running somewhere without bash, or
-> >> that changing it will break anything. If anything it will fix more
-> >> bashisms that have already been written.
-> >>
-> >> Just for reference there are 34 #!/bin/bash and 42 #!/bin/sh in
-> >> tools/perf/tests
-> >
-> > That sounds reasonable to me. Writing portable shell is a hassle and if
-> > we already assume a working /bin/bash in some places, I don't see a
-> > reason not to use it for the others.
-> >
-> > Regarding this patch, shellcheck will use the file extension or shebang
-> > only if it does not find a 'shell' directive in a .shellcheckrc. So tha=
-t
-> > change will still require this patch.
-> >
-> > I saw it was used in other places, so I assumed this patch was fine:
-> >
-> > $ find tools/perf -name Build | xargs grep bash
-> > tools/perf/Build:     $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S=
- warning "$<" > $@ || (cat $@ && rm $@ && false)
-> > tools/perf/trace/beauty/Build:        $(Q)$(call echo-cmd,test)shellche=
-ck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-> >
-> > Collin
->
-> In that case:
->
-> Reviewed-by: James Clark <james.clark@linaro.org>
->
-> And I'll send the bulk hashbang change separately.
+On Mon, Jun 23, 2025 at 08:12:47AM -0700, Ian Rogers wrote:
+> On Fri, Jun 20, 2025 at 12:36 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > I'm afraid it'd introduce a build failure on musl.  Please see
 
-I've no objection to switching to using bash globally. It seems
-sub-optimal that we've copy-pasted the shellcheck command across many
-different Build files and that this patch will cause the
-tools/perf/tests/Build one to differ. My preference would be to have a
-global definition probably in Makefile.perf, then use it consistently.
-Alternative all shellcheck invocations can pass "-s bash" for the sake
-of consistency.  Fwiw, I think the 'tools/arch/x86/tools/gen-insn-*'
-which is to some extent taken from the kernel's 'arch/x86/tools' is
-okay with the change too.
+> > https://lore.kernel.org/linux-perf-users/20250611092542.F4ooE2FL@linutronix.de/
 
-Thanks,
-Ian
+> > I think <sys/prctl.h> would be enough.
+ 
+> we could do that but in the glibc man page it says:
+> https://man7.org/linux/man-pages/man2/prctl.2.html
+> ```
+> #include <linux/prctl.h>  /* Definition of PR_* constants */
+> #include <sys/prctl.h>
+> ```
+
+> It'd be nice to think musl was slowly getting fixed. I notice we're
+
+Sebastian reported on the musl libc, its maintainer replied:
+
+https://www.openwall.com/lists/musl/2025/06/12/11
+
+- ARnaldo
