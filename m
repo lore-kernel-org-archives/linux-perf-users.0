@@ -1,191 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890151B393C;
-	Mon, 23 Jun 2025 23:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE45A219ED;
+	Tue, 24 Jun 2025 01:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750721503; cv=none; b=VO+0ItPApNfxsfenfyNufj7M7APiD+Vi07/0LP2n/3srmchrj7FleLGmYXhZjWTi1U8CAaP6cTKsHW0DYXDeB0WMiE0cU2wyX8PH/1kPygqIGcbFNPPcwo9aWXoh2KQJlBb03botz5ug4fLjF8ygxor6eFz/WBFIfyMD/6oHLiQ=
+	t=1750728559; cv=none; b=upK82s3wf0JkHgTSx1Uw34WKloVS/zmAGNB55QP+89crtBWmce20YkacCf0TOhwSdXgspXKVra6TOPbDWxuH7uRlzdzPT2FXZEE3xtDZFC5mGDNHSlo9OIEQejcKSX7e3MUFRsOO6LVB14caOdr1FYSjKljXeWCz3WQ0o8ZTRWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750721503; c=relaxed/simple;
-	bh=Zuh/gcIk+FkXHDdGTg0VBN2dgCXLH7vihqYFVQI5HoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+xlnYrpX5T+88Um4cKkJHTe3AWdErSsVqvYgqs4VgxJTNF9S9aws5sj/nxv/gEng+Sw+uhaGxfdP+Asu3aflwQJqoaMinO/bXqrUEHg1tKphcuDGJLRx6Ka76EFmbYSu1osHSWaCdAevtCWTRVgZ5wIwnWRqn0V0Z3+5jyi8zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbFlZyoS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750728559; c=relaxed/simple;
+	bh=MWT+bjWZFa+bK7pyT9vbeDp9pFi/nWjEtOUDhEemeuc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ibay0Ma0u4v77owamSVWEO7pYBTHMZhQTh8ONlfya1tr0o5xaTsdzE8cQLXEzCKnJ7sDUX0OwrE8JKKO9UvHP0ssQX2qYSGKo2W7+j7yNz86FCbYvL11Jj6QcyJOS0ZvH900aF2+ja/igM9kHJeazJI1SsEofxCXb6r0W1PvnA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VMH0lzwJ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbFlZyoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D29BCC4CEEA;
-	Mon, 23 Jun 2025 23:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750721501;
-	bh=Zuh/gcIk+FkXHDdGTg0VBN2dgCXLH7vihqYFVQI5HoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hbFlZyoSJXRwYwrGw5rfEldiW1a5/SwDOSKBL67cAV2SJioimtZBmMUXJGpUcvWvL
-	 ZD5xDQlGK1Lv945xTJOpYqvL+kbqTCPkmbmyczfukQi1RJbEH2xBu745qQjuAbyNtG
-	 t5ypkEdt8avjs/AxNk9LNAB7NOMju7mBQdkk4C2R1TX/ONiAAvX4TQ7XxCnMuku9WW
-	 guPfSEQMSsfmOnYZZLJjWMEI619veCbPvMdfjC4KLf2uMVkBMqqqdAPzrIJkAVZyh+
-	 BU8MQHFniD6Lmm5b/ib9oSWfmNVU93duZxAT/LnN6t8Ch3eH1DREFWUTawHAVsncnY
-	 bJKj2TtCHYj/A==
-Date: Mon, 23 Jun 2025 16:31:39 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
-Message-ID: <aFnj29spuj3mKZLc@google.com>
-References: <20250611233239.3098064-1-ctshao@google.com>
- <CAP-5=fXyB3H-msiSUGH_XqOntJNv-A2X7DtjvZO=nLzJgdTY+A@mail.gmail.com>
- <CAJpZYjVxs3yAS1-Uj_aQjkHGo+hRkHnwCbWxNsS4pT50-rvRPg@mail.gmail.com>
- <CAP-5=fWvnALUJiHrb_xzHXjseD88HF7LExs4N_Okg+UguuXsXg@mail.gmail.com>
- <CAJpZYjWUUbnNyBYXNSu_mmUrYLhNHHmdro8r08Xe0tN7nAanxg@mail.gmail.com>
- <aFXctF683XlLmiRy@google.com>
- <CAP-5=fW39O4=fu4CkcZSJWMA-5gkPaixGhWZecqMnrQt_vYsCg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMH0lzwJ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2363616a1a6so38840985ad.3;
+        Mon, 23 Jun 2025 18:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750728557; x=1751333357; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7C/AvsVjKXGOCeuen0fY1kmunTzFwWn29v3UAYJXPVg=;
+        b=VMH0lzwJGx2icdcgqd/dztsPCob8xXVL8MJX1uEO5fdKfLDrobXLjU5wrHu/F+/m7g
+         RySsBcqx2c8z+Z6TP9bjvY1jAIZ/DsZbPKshfho1qYgFotnJmbyHKI1A7TvM6qmRRSTY
+         NHOkN1Gwp4h6BEy+uRCxNbdOWBqC0S0hvlUjYfgbDm02BO8LPsG8UKTcowz/fUHPNwtq
+         5BYr+sNEd17CvUrPgNs8rkfP9RM9oBoxcSieYBTFrp/1mRgbJJG0h1x5mSEXYydR5Y6Y
+         SdRXsvpOKi8389TV8K/4jUTBLGQW92EPP0DJV1ffsXvMBZDAOoVORsDafkGwiLXAgH3w
+         HXhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750728557; x=1751333357;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7C/AvsVjKXGOCeuen0fY1kmunTzFwWn29v3UAYJXPVg=;
+        b=JRf4R8J5ekWJ6m/hw7B98vg+axgehwAeCZSNDqaZN/opolBBnuaAfumvWpFm1twI4s
+         xbBPQvBFG2VvA61+ziJTZHznxCmxtX0KwvTPkaD1ipk6J372imJelJqDRwzhnzn8Ob1j
+         jrpSAbT9mNWlU+MJ1AVMC20mSlXGZqvqNkYs80RS4G3o3VUmEZ++1AEr6oB0phsc87YM
+         QQXjeknPYhNQ8KfzBOXW4ot+cr+gfApLobXh/NOhIY7pVwxKPaCUaBFb/rg/vLBTuniz
+         eDytuG7tcUKYqLB8E/1vEXXagjK9vnyQiBF4iLXcdDoAeK1higrf66bhx3EqX+8d6QuB
+         bSkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQEH4Q2SZFRg89oi51wMKz+IDtNeSCYZG+Qg08p5DoTgqqYYn/NwbtR5/3JUDXEwMZzYrADaXU5TRK0ka6HNbY8Q==@vger.kernel.org, AJvYcCWzQUCUTQXr/Bh2F/SZxHBOLjTJ1EMtMx3tq6gB9QpIM14/6T4dZz+m+5N/1jslFJeMnf+26vT+xar4tlO4@vger.kernel.org, AJvYcCXei90yst6lqtpbMhoR2ZmLaEvhujGN5ksk1vurSnNVu4+wXUcMZy7aG4IUxW5N1cPvU3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1ldnSxd4ye596ixCV5yjsQkktugZNhBMGrmdf0VEdSEp7wybu
+	K+SohhuWDMGc4EOYSRg8e8AEAFl7sIyr2hEeVzptHVl1Q20Wbj3tgHC6bWBJTYs7
+X-Gm-Gg: ASbGncvC557GulG55Pq4LGQjafx3Uo6yn5vZbzdFC4Z9XiAEinMYtLXspADCH7RASXq
+	hVb6IvEbgOlkcwYaNJbgSKbArrXE0vCpRpyvq3ZKxHe64s5XRvhWgAUbE4GshN/PQqS37hZSFzx
+	yTgRT8yXza4bvq9b1HV0WAiRtI/HxhZ0dFWHTHQc7vgFxloyesl3G8VihC9nk4AUGjKEiWPDAj7
+	PcB+XrEI399n76un+jRAfM3R/K9tteKmFXHOzfu6kOLo2CaSMHsWCFbpL5Oyx/mRqyypDvA6D4s
+	uWpr0uwZHpKXQhdorZIdw/qvzZRy53wjDMaDEUrYfsU=
+X-Google-Smtp-Source: AGHT+IEzZpfM7q9rR57opZGg9qPwYrln15z6WF3j6cMTSbVGYFJSxloyEh1jwTmoWiABsuY9/u+/cg==
+X-Received: by 2002:a17:903:2f4b:b0:235:f70:fd44 with SMTP id d9443c01a7336-237d9870d24mr210941125ad.21.1750728556942;
+        Mon, 23 Jun 2025 18:29:16 -0700 (PDT)
+Received: from fedora ([2601:646:8081:3770::1707])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83937bcsm93228865ad.43.2025.06.23.18.29.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 18:29:16 -0700 (PDT)
+From: Collin Funk <collin.funk1@gmail.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,
+  Arnaldo Carvalho de Melo <acme@kernel.org>,  Namhyung Kim
+ <namhyung@kernel.org>,  Mark Rutland <mark.rutland@arm.com>,  Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
+ <jolsa@kernel.org>,  Ian Rogers <irogers@google.com>,  Adrian Hunter
+ <adrian.hunter@intel.com>,  Suzuki K Poulose <suzuki.poulose@arm.com>,
+  Mike Leach <mike.leach@linaro.org>,  Nick Terrell <terrelln@fb.com>,
+  David Sterba <dsterba@suse.com>,  linux-perf-users@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  coresight@lists.linaro.org,
+  linux-arm-kernel@lists.infradead.org,  bpf@vger.kernel.org
+Subject: Re: [PATCH] perf test: Change all remaining #!/bin/sh to #!/bin/bash
+In-Reply-To: <20250623-james-perf-bash-tests-v1-1-f572f54d4559@linaro.org>
+References: <20250623-james-perf-bash-tests-v1-1-f572f54d4559@linaro.org>
+Date: Mon, 23 Jun 2025 18:29:15 -0700
+Message-ID: <87bjqehqqc.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW39O4=fu4CkcZSJWMA-5gkPaixGhWZecqMnrQt_vYsCg@mail.gmail.com>
+Content-Type: text/plain
 
-On Mon, Jun 23, 2025 at 11:17:20AM -0700, Ian Rogers wrote:
-> On Fri, Jun 20, 2025 at 3:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi CT,
-> >
-> > On Thu, Jun 12, 2025 at 03:55:59PM -0700, Chun-Tse Shao wrote:
-> > > Hi Ian, I actually renamed it to `aggr_nr` in v2 patch so it should be
-> > > better aligned to json mode, which is using `aggregate-nunber`. But
-> > > anyway I think any name other than `cpus` is better.
-> > > v2 patch: lore.kernel.org/20250612225324.3315450-1-ctshao@google.com
-> >
-> > I think "aggregation-count" is a better name, maybe abbreviated to
-> > "ag_cnt".  Can we rename the JSON as well?  I'm not sure if it's
-> > documented somewhere.
-> 
-> Fwiw, I still think "counters" is a clearer, more intention revealing
-> definition than "aggregation count" or "aggregation number". The term
-> counter appears in the perf-stat and perf_event_open man page. In the
-> perf-stat man page we have a pattern of:
-> 
->        --per-XXX
->            Aggregate counts per XXX for system-wide mode measurements. This is a
->            useful mode to .... To enable this mode, use --per-XXX
->            in addition to -a. (system-wide). The output includes the ...
->           This is useful to gauge the amount of aggregation.
-> 
-> It seems that the aggregated value of the counters could be confused
-> for being an "aggregation count" or "aggregation number" given the man
-> page definition. I think "counters" to some extent avoids this, we
-> giving the number of counters aggregated. The perf-stat man page could
-> certainly be clearer :-)
+James Clark <james.clark@linaro.org> writes:
 
-I'm fine with "counters" (and "ctrs").
+> There are 43 instances of posix shell tests and 35 instances of bash. To
+> give us a single consistent language for testing in, replace
+> all #!/bin/sh to #!/bin/bash. Common sources that are included in both
+> different shells will now work as expected. And we no longer have to fix
+> up bashisms that appear to work when someone's system has sh symlinked
+> to bash, but don't work on other systems that have both shells
+> installed.
+>
+> Although we could have chosen sh, it's not backwards compatible so it
+> wouldn't be possible to bulk convert without re-writing the existing
+> bash tests.
+>
+> Choosing bash also gives us some nicer features including 'local'
+> variable definitions and regexes in if statements that are already
+> widely used in the tests.
+>
+> It's not expected that there are any users with only sh available due to
+> the large number of bash tests that exist.
+>
+> Discussed in relation to running shellcheck here:
+> https://lore.kernel.org/linux-perf-users/e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com/
+>
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/tests/perf-targz-src-pkg                          | 2 +-
+>  tools/perf/tests/shell/amd-ibs-swfilt.sh                     | 2 +-
+>  tools/perf/tests/shell/buildid.sh                            | 2 +-
+>  tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 2 +-
+>  tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 2 +-
+>  tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 2 +-
+>  tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 2 +-
+>  tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 2 +-
+>  tools/perf/tests/shell/diff.sh                               | 2 +-
+>  tools/perf/tests/shell/ftrace.sh                             | 2 +-
+>  tools/perf/tests/shell/lib/perf_has_symbol.sh                | 2 +-
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh              | 2 +-
+>  tools/perf/tests/shell/lib/setup_python.sh                   | 2 +-
+>  tools/perf/tests/shell/lib/waiting.sh                        | 2 +-
+>  tools/perf/tests/shell/list.sh                               | 2 +-
+>  tools/perf/tests/shell/lock_contention.sh                    | 2 +-
+>  tools/perf/tests/shell/perf-report-hierarchy.sh              | 2 +-
+>  tools/perf/tests/shell/probe_vfs_getname.sh                  | 2 +-
+>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh        | 2 +-
+>  tools/perf/tests/shell/record+script_probe_vfs_getname.sh    | 2 +-
+>  tools/perf/tests/shell/record+zstd_comp_decomp.sh            | 2 +-
+>  tools/perf/tests/shell/record_bpf_filter.sh                  | 2 +-
+>  tools/perf/tests/shell/record_offcpu.sh                      | 2 +-
+>  tools/perf/tests/shell/record_sideband.sh                    | 2 +-
+>  tools/perf/tests/shell/script.sh                             | 2 +-
+>  tools/perf/tests/shell/stat+csv_summary.sh                   | 2 +-
+>  tools/perf/tests/shell/stat+shadow_stat.sh                   | 2 +-
+>  tools/perf/tests/shell/stat_all_pfm.sh                       | 2 +-
+>  tools/perf/tests/shell/stat_bpf_counters.sh                  | 2 +-
+>  tools/perf/tests/shell/stat_bpf_counters_cgrp.sh             | 2 +-
+>  tools/perf/tests/shell/test_arm_callgraph_fp.sh              | 2 +-
+>  tools/perf/tests/shell/test_arm_coresight.sh                 | 2 +-
+>  tools/perf/tests/shell/test_arm_coresight_disasm.sh          | 2 +-
+>  tools/perf/tests/shell/test_arm_spe.sh                       | 2 +-
+>  tools/perf/tests/shell/test_arm_spe_fork.sh                  | 2 +-
+>  tools/perf/tests/shell/test_bpf_metadata.sh                  | 2 +-
+>  tools/perf/tests/shell/test_intel_pt.sh                      | 2 +-
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh            | 2 +-
+>  tools/perf/tests/shell/trace_btf_enum.sh                     | 2 +-
+>  tools/perf/tests/shell/trace_exit_race.sh                    | 2 +-
+>  tools/perf/tests/shell/trace_record_replay.sh                | 2 +-
+>  tools/perf/tests/shell/trace_summary.sh                      | 2 +-
+>  tools/perf/tests/tests-scripts.c                             | 2 +-
+>  43 files changed, 43 insertions(+), 43 deletions(-)
 
-Thanks,
-Namhyung
+Patch looks good to me.
 
-> > >
-> > > On Wed, Jun 11, 2025 at 10:12 PM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Wed, Jun 11, 2025 at 8:18 PM Chun-Tse Shao <ctshao@google.com> wrote:
-> > > > >
-> > > > > Thanks for your test, Ian!
-> > > > >
-> > > > > I wonder if `nr_pmus` makes sense, since the column would be shared
-> > > > > with multiple different pmus. WDYT?
-> > > >
-> > > > So each PMU in sysfs has a cpumask that specifies which CPUs perf
-> > > > should pass to perf_event_open. For example, on a two socket machine
-> > > > the cpumask will typically have the first CPU of each socket. If the
-> > > > cpumask (or cpus) file isn't present then the cpumask is implicitly
-> > > > all online CPUs. Given that the aggregation number is the number of
-> > > > CPUs in the cpumask multiplied by the number of PMUs, I think the most
-> > > > neutral name is probably "counters" possibly shortened down to "ctrs".
-> > > > I suspect others have better suggestions :-)
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > > -CT
-> > > > >
-> > > > > On Wed, Jun 11, 2025 at 5:16 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > >
-> > > > > > On Wed, Jun 11, 2025 at 4:36 PM Chun-Tse Shao <ctshao@google.com> wrote:
-> > > > > > >
-> > > > > > > Follow up:
-> > > > > > > lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
-> > > > > > >
-> > > > > > > The patch adds unit aggregation during evsel merge the aggregated uncore
-> > > > > > > counters.
-> > > > > > >
-> > > > > > > Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> > > > > > > cpumask="0,120"
-> > > > > > > Before:
-> > > > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > > > >   #           time socket cpus             counts unit events
-> > > > > > >        1.001085024 S0        1         9615386315      clockticks
-> > > > > > >        1.001085024 S1        1         9614287448      clockticks
-> > > > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > > > >   #           time node   cpus             counts unit events
-> > > > > > >        1.001029867 N0        1         3205726984      clockticks
-> > > > > > >        1.001029867 N1        1         3205444421      clockticks
-> > > > > > >        1.001029867 N2        1         3205234018      clockticks
-> > > > > > >        1.001029867 N3        1         3205224660      clockticks
-> > > > > > >        1.001029867 N4        1         3205207213      clockticks
-> > > > > > >        1.001029867 N5        1         3205528246      clockticks
-> > > > > > > After:
-> > > > > > >   perf stat -e clockticks -I 1000 --per-socket
-> > > > > > >   #           time socket cpus             counts unit events
-> > > > > >
-> > > > > > I wonder if there is a better column heading than "cpus" given that
-> > > > > > these are imc PMUs.
-> > > > > >
-> > > > > > >        1.001022937 S0       12         9621463177      clockticks
-> > > > > > >        1.001022937 S1       12         9619804949      clockticks
-> > > > > > >   perf stat -e clockticks -I 1000 --per-node
-> > > > > > >   #           time node   cpus             counts unit events
-> > > > > > >        1.001029867 N0        4         3206782080      clockticks
-> > > > > > >        1.001029867 N1        4         3207025354      clockticks
-> > > > > > >        1.001029867 N2        4         3207067946      clockticks
-> > > > > > >        1.001029867 N3        4         3206871733      clockticks
-> > > > > > >        1.001029867 N4        4         3206199005      clockticks
-> > > > > > >        1.001029867 N5        4         3205525058      clockticks
-> > > > > > >
-> > > > > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > > >
-> > > > > Added Namhyung's ack from the previous email.
-> > > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > > > >
-> > > > > >
-> > > > > > Tested-by: Ian Rogers <irogers@google.com>
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Ian
-> > > > > >
-> > > > > > > ---
-> > > > > > >  tools/perf/util/stat.c | 1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > >
-> > > > > > > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > > > > > > index 355a7d5c8ab8..52266d773353 100644
-> > > > > > > --- a/tools/perf/util/stat.c
-> > > > > > > +++ b/tools/perf/util/stat.c
-> > > > > > > @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
-> > > > > > >                 struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
-> > > > > > >
-> > > > > > >                 /* NB: don't increase aggr.nr for aliases */
-> > > > > > > +               ps_a->aggr[i].nr += ps_b->aggr[i].nr;
-> > > > > > >
-> > > > > > >                 aggr_counts_a->val += aggr_counts_b->val;
-> > > > > > >                 aggr_counts_a->ena += aggr_counts_b->ena;
-> > > > > > > --
-> > > > > > > 2.50.0.rc1.591.g9c95f17f64-goog
-> > > > > > >
+Reviewed-by: Collin Funk <collin.funk1@gmail.com>
+
+Collin
