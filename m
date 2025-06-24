@@ -1,206 +1,162 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9B813B284;
-	Tue, 24 Jun 2025 06:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF29251793
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Jun 2025 07:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750746931; cv=none; b=UYN+xGMGiWlKc2XLBYiFktdY9E/3cigpCqnpfKPOrG/dD1ecznAyGvjAf8+GU6E3NgYHZpJEnHbdTdiL4JMQZP1eSQZ7u+hiTNH9rLGRbCIw3vGHKaKSlnoBntXUO2pYZXgyvs+dYXMnyOBQEKSkNJrnpmCRLqxWVm5P0v0S95w=
+	t=1750748734; cv=none; b=dY8/svPYDpIcO8eeFO+h1C7Ossfr4qeac1secq+V+e6jXWxPxC944V255HaEIdztQRQQvTsqxm0nUfkjFp/gfEMsMJ4Lnb1Q9txUWgBkBJhIiAPTPDT2c3/Fs5j4w7n1NdqnLasG6be05FB4a4HVWiIUCS0IV5id9sH22TymcLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750746931; c=relaxed/simple;
-	bh=JqHIVqC0ywsMBOqVkOcMY7gYmKbvXVQXDpqzSThGHlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cMd4OVCIN/hRFkY/sQLdsHz+CxxYnBSF+tdki8HWAKelbwP9m31qXPxEycb9mPYJnLHI9oxgHDjiJa0puFhB+naA8wVDDL/HffMnh+d0nnRIJQqR9YVE8UnI/iT+8BR2VsA/U7jffsJUd0GkmqLtSUyjYp0BdRE0xJXTbB4T8QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HbU6agOt; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750748734; c=relaxed/simple;
+	bh=uCj01wXJRSXVsrZB3o811ZhTorLLjK4lSt9J6v1K598=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSRTx/sMhyOc6y+iHOWC/VKq2px22j5u0GOoTNjqVTqE/pG/u4XMMtvXvU7xym9Ar+U3FLScpkp2fiuKgZxc22jl/XEeyKiuRtrz2QyVlKMhMquSpECAJuiT44QkbaTrCMehKzHEZ1RY84+jR/8vrAmtMmUbIuu4GnC+jqDnkBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YdCNEjXQ; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HbU6agOt"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O5pqHZ026632;
-	Tue, 24 Jun 2025 06:35:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=EU8lPQ
-	cM4c4rLi13rmWV1+8Jm1PcKek1/5wjDEiebyI=; b=HbU6agOtrC+H6vCutsomUd
-	b1+UDthAbGvbU3w3jiPW+vDbpYOR81BVVsu37dWrfg0iwiF4it7M5jQfLgirXn99
-	PBfmvmg4GNgEJwfTAzt8ui939O0d+yKUI6TAfBBmAF/vTM0pAMN4ZfLjz6777fC2
-	TljAqRxXMXwQnrWmLQNP08p+hfH9TeVAjj99UTPQ2POF8IO5ZxWoKQoxpL6XLVOE
-	pPUKwuDDBQrD3DFV0neaDn8Ye07PmiEiCc2vZDTzdXSv6YlkPyil8EIGLXkp968s
-	5Cg1MqU0bUPxQrH8i1ug17S1duBWH1icQczsW1w53OoxGL/wtcQbJ4+9+Z3uwpmw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dme16pyv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 06:35:27 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55O6UcQB024730;
-	Tue, 24 Jun 2025 06:35:26 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dme16pys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 06:35:26 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55O5UJY5030487;
-	Tue, 24 Jun 2025 06:35:25 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7eytr03-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 06:35:25 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55O6ZLUx45810056
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Jun 2025 06:35:21 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 758462004B;
-	Tue, 24 Jun 2025 06:35:21 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2630720043;
-	Tue, 24 Jun 2025 06:35:21 +0000 (GMT)
-Received: from [9.152.212.130] (unknown [9.152.212.130])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Jun 2025 06:35:21 +0000 (GMT)
-Message-ID: <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
-Date: Tue, 24 Jun 2025 08:35:20 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YdCNEjXQ"
+Date: Tue, 24 Jun 2025 00:05:07 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750748720;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rvl+LfkUxz42F+u2AhuU0DC7MpN+KcVkghfyXMKrAJU=;
+	b=YdCNEjXQf9Nhf5KzU5i8ggHBOyIXgK50+X3MqptwbGqKbrP84GlAPmVg79d0ScGVzHNWqI
+	9KAlGO56nfnuIB3W0BcRK3X5GneOcZB9c6cWMPJsMsmV7O7M5uCWupxxC81piynZV/OZ4M
+	jVC45rQOrDmJbnTY2tgEni5IU6Cvt4M=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 07/23] perf: arm_pmuv3: Introduce method to partition
+ the PMU
+Message-ID: <aFpOI7cWTOAIjNjV@linux.dev>
+References: <aFYFqrYRsmCi6oii@linux.dev>
+ <gsntpleu9uvx.fsf@coltonlewis-kvm.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf list: Add IBM z17 event descriptions
-To: Ian Rogers <irogers@google.com>, sumanthk@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-        japo@linux.ibm.com
-References: <20250623132731.899525-1-tmricht@linux.ibm.com>
- <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Tc6WtQQh c=1 sm=1 tr=0 ts=685a472f cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=Ijd6lzqJG2aW12Tu_CUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: O_PDUk_VDM-TxWmpuruxgOrmND4Gbd3q
-X-Proofpoint-ORIG-GUID: tn4b4MwragX7YbONVuR0l9BqJMnIX0YZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA1MiBTYWx0ZWRfX0DY1VwK2+kBT BgQ5kxel7HtuGuy9qNOhiN5Cp9fw762HcJOoU4HQgqfQaeAsrT8E8CnGO5EkLj2G80zKGQDmDr1 rURO2lL2GqRD+ngbvS/9i8ajz2ivCjzbTvxF6AxKHPedqi67oujQtMobKmQR37lgWXp0LzfQlD1
- ULWvoAdz5z/Z8cJB5U9Qe7Mtn5v4EZNLvZmKDVcaOkzTbvSODslWnXWIRaKK5Rj9ul6kaqceM3A CcTbV7eqBr/DqSV7e/aKkz6c5giqFOCDIpzPWlzQI51iDcXj+FHJO5lIVIS7RkQarqUuhX+yWxr 7C3oPjzSZKFKSv4Cnf3hAVUF98IxHu5CL4/2nxYnBpbx86m1Y+su1nWVi/3coJoLHgJj1l95whh
- IDNctXSpE3IQjrhp47L1F8/RMw1cZ66/y4bmhnhQ8M/lNv2QVDTNfjl7v5mAB/BNBeKJBSfM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 impostorscore=0 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240052
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <gsntpleu9uvx.fsf@coltonlewis-kvm.c.googlers.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 6/23/25 19:53, Ian Rogers wrote:
-> On Mon, Jun 23, 2025 at 6:35 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>
->> Update IBM z17 counter description using document SA23-2260-08:
->> "The Load-Program-Parameter and the CPU-Measurement Facilities"
->> released in May 2025 to include counter definitions for IBM z17
->> counter sets:
->> * Basic counter set
->> * Problem/user counter set
->> * Crypto counter set.
->>
->> Use document SA23-2261-09:
->> "The CPU-Measurement Facility Extended Counters Definition
->>  for z10, z196/z114, zEC12/zBC12, z13/z13s, z14, z15, z16 and z17"
->> released on April 2025 to include counter definitions for IBM z17
->> * Extended counter set
->> * MT-Diagnostic counter set.
->>
->> Use document SA22-7832-14:
->> "z/Architecture Principles of Operation."
->> released in April 2025 to include counter definitions for IBM z17
->> * PAI-Crypto counter set
->> * PAI-Extention counter set.
->>
->> Use document
->> "CPU MF Formulas and Updates April 2025"
->> released in April 2025 to include metric calculations.
->>
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+On Mon, Jun 23, 2025 at 06:26:42PM +0000, Colton Lewis wrote:
+> Oliver Upton <oliver.upton@linux.dev> writes:
 > 
-> [snip]
+> > On Fri, Jun 20, 2025 at 10:13:07PM +0000, Colton Lewis wrote:
+> > > For PMUv3, the register field MDCR_EL2.HPMN partitiones the PMU
+> > > counters into two ranges where counters 0..HPMN-1 are accessible by
+> > > EL1 and, if allowed, EL0 while counters HPMN..N are only accessible by
+> > > EL2.
 > 
->> +       {
->> +               "Unit": "CPU-M-CF",
->> +               "EventCode": "143",
->> +               "EventName": "L1C_TLB2_MISSES",
->> +               "BriefDescription": "L1C TLB2 Misses",
->> +               "PublicDescription": "Increments by one for any cycle where a Level-1 cache or Level-2 TLB miss is in progress."
->> +       },
+> > > Create module parameters partition_pmu and reserved_guest_counters to
+> > > reserve a number of counters for the guest. These numbers are set at
+> > > boot because the perf subsystem assumes the number of counters will
+> > > not change after the PMU is probed.
 > 
-> [snip]
+> > > Introduce the function armv8pmu_partition() to modify the PMU driver's
+> > > cntr_mask of available counters to exclude the counters being reserved
+> > > for the guest and record reserved_guest_counters as the maximum
+> > > allowable value for HPMN.
 > 
->> +  {
->> +    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
->> +    "MetricName": "finite_cpi",
->> +    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS if has_event(L1C_TLB2_MISSES) else 0"
->> +  },
->> +  {
->> +    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
->> +    "MetricName": "est_cpi",
->> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(INSTRUCTIONS) else 0"
->> +  },
->> +  {
->> +    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
->> +    "MetricName": "scpl1m",
->> +    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES) if has_event(L1C_TLB2_MISSES) else 0"
->> +  },
+> > > Due to the difficulty this feature would create for the driver running
+> > > at EL1 on the host, partitioning is only allowed in VHE mode. Working
+> > > on nVHE mode would require a hypercall for every counter access in the
+> > > driver because the counters reserved for the host by HPMN are only
+> > > accessible to EL2.
 > 
-> Just a quick check. If the PMU CPU-M-CF is always present then the
-> "has_event(L1C_TLB2_MISSES)" check will always be true as the event is
-> in json and not in sysfs. I'm guessing this is being done for the
-> benefit of hypervisors.
+> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> > > ---
+> > >   arch/arm/include/asm/arm_pmuv3.h   | 10 ++++
+> > >   arch/arm64/include/asm/arm_pmuv3.h |  5 ++
+> > >   drivers/perf/arm_pmuv3.c           | 95 +++++++++++++++++++++++++++++-
+> > >   include/linux/perf/arm_pmu.h       |  1 +
+> > >   4 files changed, 109 insertions(+), 2 deletions(-)
 > 
+> > > diff --git a/arch/arm/include/asm/arm_pmuv3.h
+> > > b/arch/arm/include/asm/arm_pmuv3.h
+> > > index 2ec0e5e83fc9..9dc43242538c 100644
+> > > --- a/arch/arm/include/asm/arm_pmuv3.h
+> > > +++ b/arch/arm/include/asm/arm_pmuv3.h
+> > > @@ -228,6 +228,11 @@ static inline bool kvm_set_pmuserenr(u64 val)
+> 
+> > >   static inline void kvm_vcpu_pmu_resync_el0(void) {}
+> 
+> > > +static inline bool has_vhe(void)
+> > > +{
+> > > +	return false;
+> > > +}
+> > > +
+> 
+> > This has nothing to do with PMUv3, I'm a bit surprised to see you're
+> > touching 32-bit ARM. Can you just gate the whole partitioning thing on
+> > arm64?
+> 
+> The PMUv3 driver also has to compile on 32-bit ARM.
 
-The issue is indeed with z/VM, where the CPU Measurement facility is not exported to
-any guest OS including linux.
-If you run Linux on top of z/VM then these events do not exist.
+Quite aware.
 
-# uname -a
-Linux a8345022.lnxne.boe 6.16.0-rc1m-perf #14 SMP Tue Jun 10 07:39:06 CEST 2025 s390x GNU/Linux
-# grep VM /proc/sysinfo 
-VM00 Name:            A8345022
-VM00 Control Program: z/VM    7.4.0   
-VM00 Adjustment:      50
-VM00 CPUs Total:      4
-VM00 CPUs Configured: 4
-VM00 CPUs Standby:    0
-VM00 CPUs Reserved:   0
-# lscpumf 
-lscpumf: No CPU-measurement facilities detected
-# 
+> My first series had the partitioning code in arch/arm64 but you asked me
+> to move it to the PMUv3 driver.
+> 
+> How are you suggesting I square those two requirements?
 
-Without this if..else the perf stat -e metric fail when Linux is installed on top of z/VM systems.
-See commit c2f3d7dfc7373 ("perf stat: Do not fail on metrics on s390 z/VM systems")
+You should try to structure your predicates in such a way that the
+partitioning stuff all resolves to false for 32 bit arm, generally. That
+way we can avoid stubbing out silly things like has_vhe() which doesn't
+make sense in the context of 32 bit.
 
-which fixed it for z16 machine generation.
+> > > +static bool partition_pmu __read_mostly;
+> > > +static u8 reserved_guest_counters __read_mostly;
+> > > +
+> > > +module_param(partition_pmu, bool, 0);
+> > > +MODULE_PARM_DESC(partition_pmu,
+> > > +		 "Partition the PMU into host and guest VM counters [y/n]");
+> > > +
+> > > +module_param(reserved_guest_counters, byte, 0);
+> > > +MODULE_PARM_DESC(reserved_guest_counters,
+> > > +		 "How many counters to reserve for guest VMs [0-$NR_COUNTERS]");
+> > > +
+> 
+> > This is confusing and not what we discussed offline.
+> 
+> > Please use a single parameter that describes the number of counters used
+> > by the *host*. This affects the *host* PMU driver, KVM can discover (and
+> > use) the leftovers.
+> 
+> > If the single module parameter goes unspecified the user did not ask for
+> > PMU partitioning.
+> 
+> I understand what we discussed offline, but I had a dilemma.
+> 
+> If we do a single module parameter for number of counters used by the
+> host, then it defaults to 0 if unset and there is no way to distinguish
+> between no partitioning and a request for partitioning reserving 0
+> counters to the host which I also thought you requested. Would you be
+> happy leaving no way to specify that?
 
-Hope this helps.
+You can make the command line use a signed integer for storage and a
+reset value of -1.
 
-> Thanks,
-> Ian
+-1 would imply default behavior (no partitioning) and a non-negative
+value would imply partitioning.
 
+> In any case, I think the usage is more self explainatory if
+> partitition=[y/n] is a separate bit.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+What would be the user's intent of "partition_pmu=n reserved_guest_counters=$X"?
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks,
+Oliver
