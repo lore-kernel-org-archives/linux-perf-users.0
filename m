@@ -1,66 +1,65 @@
-Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BF22E92A7
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Jun 2025 20:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEEB2EACF4
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Jun 2025 20:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750795506; cv=none; b=ZmLDCeNcTjIoLz0Xj/vP077p7yjJV18h222koS/u++d+P62Kt99bpoOCd8RLlweySnzNG3QqXisDHYrKiUGqPIwg3g7q4yJhj7tkrh6srL5HC7CfV8AO4k3kkl5/jyTB3e3u/G9Dyl3Rk409qd9gx+COoq6vNzNqlJe2U37DTXQ=
+	t=1750795509; cv=none; b=JzNymOIsZKGaDhq8jBTb81HTauYfp8UaHABQz3MMw8de8MGwKue9MQoLRIxgFMdCvFHbSPxzqa08jCmz3NKuJcuIYUVFayAzaOE83EtWE8lxJ33l71bkuFWjpUvE5cDx2ARouOuaYNkaq+FWMbEdfTTkaq58AosawdzTo+XN1aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750795506; c=relaxed/simple;
-	bh=f/D0i2v6lCewKUJtGBKR3xLCM9Mzx3OhGJfQ80nZptI=;
+	s=arc-20240116; t=1750795509; c=relaxed/simple;
+	bh=RPF3bPV+itVK+0pJ7f0TUuUy5/dRgnn4yOTV9q1YTkM=;
 	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=rkUNJjTDDHiBb+TKo7jB0GBsx7sAL/8+mTGwXOIf66AT3oihm2oNcOC5TkeNBJYOQ9jqts8fUlRNOTFmADKJwEZPI8TL6J3VJS97G/y1m2E0ejC9pJtl/Q2Q3mWCW5+/6irFJWt7SDuAEcW9KJAaQvvmhM/lR0Kga6O30NB4yX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qwBwZPnV; arc=none smtp.client-ip=209.85.166.201
+	 Content-Type; b=HMW/jFDj6p1ILBGlTs6Fq/rQ+pkkFZH+zyNVl25pRIpqyV8G5X3Y4gQAYTFWbtJRHik01eWQGanV37+9qq05b6t/CPpW98qZZ6fa437C31f/mxuD3vkhLGFLzmIqDyPez/0jin52vc5/BcAqHMTEdT1WIRUzweKYY4vc23/pIq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NLSoZDyw; arc=none smtp.client-ip=209.85.166.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qwBwZPnV"
-Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3ddbd339f3dso9876315ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jun 2025 13:05:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NLSoZDyw"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-86f4f032308so160384639f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jun 2025 13:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750795502; x=1751400302; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750795507; x=1751400307; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=pP2HWMoMCKbdHfq9EmswNyKqb25oMjrzzlNWwJCxpig=;
-        b=qwBwZPnV/pVt9RrFYHyxpn1NA5Lw0+/+gG8g3YsPVrITY9Mt58BmBToDDhe1pe74Dg
-         f4yGPyQRSQZTj0YTilOY31xw/lvtj8aSmXNMcCdDmHKgDpWVGZqE9e7taoJoJJXtVxoT
-         yEKU+siVkzvkhbtGjow6SNtFckThEaV6qMRvZ/Fpj1WeQEpiLSL7NgZbiZrXwCbGpOA3
-         qMd077lZ9wNaC5xnqkme9/ntTjlIHvrkGjC2gl5u73H8v4EGeYb8mOQrBMN0VWBQHGKE
-         Vl4UFdCuLkTwDPp3W9keDU2yXI/aqrg1RrMaj/lAevmBcs0tS9bwpEmD31HPbbHQ9V/Y
-         3m8w==
+        bh=O0o3enCtFoZv08yCvYAb3ahMkA4aWNe6wCokY+DYhpY=;
+        b=NLSoZDyw7DU09ROp+724llRroynWGN8DNiA1bqDRaLUpNI+YTdBZulAUpZEVKWfwrv
+         7FCKv/6bJTDl/Wjpo9vhKLtO5sNX5GbZvmmnYv08TbFACjidJS95F72RJQa+fkVBiqLD
+         SD+WuPeMhz39AF/sy2Sf35XbaCNjdUrYAq98jWOI8lzw98mvx1LaXRGlGv1x/tpgfI0a
+         /WbtdMP8KbVrQxlf6hF/THcEMHBlmbrEBEVUdF0u2CxJhWx8HvQf3kfC9e/rHhSCS8kA
+         obsvMICygLXLcknOC0aBEgzWGNHLTM1gfpdAoyKS6W0Wr0QQmaAESbzX5qCK3J6wAaRg
+         ZwWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750795502; x=1751400302;
+        d=1e100.net; s=20230601; t=1750795507; x=1751400307;
         h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pP2HWMoMCKbdHfq9EmswNyKqb25oMjrzzlNWwJCxpig=;
-        b=qg86Qy8YTbxLVIm3r9OwdWeQmI4qoNAyTQjPg6N004ZBnLY4mlo2xiLIJi2IOULojE
-         DC4wEbtw8olvzasZar8wOLMWDhjLszjtJOM+uNRw6MYtCzgU/O6DSg9spf4iwS1M2TOA
-         brRa5jAK9FVP0vcM8X7TWiUtEUgKCocmS76WSA+HN61RrrePvEVjknm/gvkR1WfUgMqF
-         /Comy92bFns7TXumiHs6plxTzwvndwYmo4lU4yJ7Soyet1oPMBBZ1phcUcutt8WwE+CY
-         9rt6TQasIVSXovKyUzKUYqu7IMiMQ1AMM0X4gVyaIcNPM5fnHNwbCtj9zMU1GKYtZSLT
-         REDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdjfFkiv+cEr4ZJdi+LZ/rd5BOS8MqT91dKvZ0suCLdEPpJKyQkUVHejnMzgfhlxggsWF6zfEyHLFyUMfvdcnm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd+C8vQDaiP4iRvf4DnaK32dwzIvvGgr9qARCSRwgbCdeeGZJJ
-	2rXrtByR3fSq/gCvZu99gbtUFBzHTuYK2wLoN9UiOfO/XZBJfkG4N//2rjPFeP+Bc4lCjQfPHyJ
-	B5y+7qJUgmHriKn/JI5Mhe9UlNQ==
-X-Google-Smtp-Source: AGHT+IEpwXEjWcAkbmXUn25NbkOypFqMgOZS4LSaytEWOm4lY0osguKw8gnkLrqXfYVp9g/tkoRSIDkKJowW6gl+SA==
-X-Received: from ilff3.prod.google.com ([2002:a05:6e02:5e03:b0:3dd:a3df:9d57])
+        bh=O0o3enCtFoZv08yCvYAb3ahMkA4aWNe6wCokY+DYhpY=;
+        b=G65/fH9yLRFmXeNcHxw+7e/1gx1DIOuBUYzdjglrAL2K5mcoNHrodhCs66IuObLd/c
+         Glky5MpLsUCcFLVW11ie3XXjZB5uwBdDjyn6Dhfv4uY+BKtIZBItYUKW4rrdkTe205lk
+         veDqs2xDNAJiZJ3HSeFGHqW8fzxu+CUWX6h4T9A7TxXwhhUpI9gTtFAIAuuOoGUNBTWU
+         QMLx0K5GB/JZ2crRhNPDb3pOh2gHLPuBVfOf0iyQlZ0K7jgqR8zqYhedABZOKFcFpQTB
+         a/DH7a90iH1+Wl3QDEKw+c8bhSdmzAX2YmBAzWlQcEVFmcX79n5yl8a+5FO0YIQWi9us
+         pR3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEdXAEzhiL/FT+rQz65XuMxR3h2ZXv3x22RistF3u310CMF6kbMByRZnQ9rvUZzIFTmJhsCx+m/shGTFNrVak5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6gbPpLObBhR7CyTazyB4ADKcLqiCtRLeVVVKXztA1lXyP6kfx
+	baufWU2tjr/pJB3dZQygnOXp/wc0/LnjK2qU24v8rmbC5hanFppjICJjENCsgmjzD8A8VMx0pHC
+	qDAarOgEcghgKA3FSgUtY9R+Reg==
+X-Google-Smtp-Source: AGHT+IFRBaniVPLdqgtBiY+RRt9A60KwZhLUhr0WNUCFuq3s9GR9zjSj1vgrB9faZftbsD7qku7K0VwW+GoO4k+cFw==
+X-Received: from ilbbr10.prod.google.com ([2002:a05:6e02:23ca:b0:3dd:7629:ec3a])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:190a:b0:3dd:d90a:af30 with SMTP id e9e14a558f8ab-3df329364f2mr5932045ab.10.1750795501770;
- Tue, 24 Jun 2025 13:05:01 -0700 (PDT)
-Date: Tue, 24 Jun 2025 20:05:00 +0000
-In-Reply-To: <aFpOI7cWTOAIjNjV@linux.dev> (message from Oliver Upton on Tue,
- 24 Jun 2025 00:05:07 -0700)
+ 2002:a05:6e02:2163:b0:3dd:c04e:49af with SMTP id e9e14a558f8ab-3df327eeacfmr6647305ab.3.1750795506770;
+ Tue, 24 Jun 2025 13:05:06 -0700 (PDT)
+Date: Tue, 24 Jun 2025 20:05:05 +0000
+In-Reply-To: <aFpThZIE2PxjVAVw@linux.dev> (message from Oliver Upton on Tue,
+ 24 Jun 2025 00:28:05 -0700)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Message-ID: <gsntecv8aosz.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v2 07/23] perf: arm_pmuv3: Introduce method to partition
- the PMU
+Message-ID: <gsntcyasaosu.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v2 01/23] arm64: cpufeature: Add cpucap for HPMN0
 From: Colton Lewis <coltonlewis@google.com>
 To: Oliver Upton <oliver.upton@linux.dev>
 Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
@@ -74,128 +73,64 @@ Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
 Oliver Upton <oliver.upton@linux.dev> writes:
 
-> On Mon, Jun 23, 2025 at 06:26:42PM +0000, Colton Lewis wrote:
+> On Mon, Jun 23, 2025 at 06:25:38PM +0000, Colton Lewis wrote:
 >> Oliver Upton <oliver.upton@linux.dev> writes:
 
->> > On Fri, Jun 20, 2025 at 10:13:07PM +0000, Colton Lewis wrote:
->> > > For PMUv3, the register field MDCR_EL2.HPMN partitiones the PMU
->> > > counters into two ranges where counters 0..HPMN-1 are accessible by
->> > > EL1 and, if allowed, EL0 while counters HPMN..N are only accessible  
->> by
->> > > EL2.
+>> > On Fri, Jun 20, 2025 at 10:13:01PM +0000, Colton Lewis wrote:
+>> > > Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+>> > > counters reserved for the guest.
 
->> > > Create module parameters partition_pmu and reserved_guest_counters to
->> > > reserve a number of counters for the guest. These numbers are set at
->> > > boot because the perf subsystem assumes the number of counters will
->> > > not change after the PMU is probed.
-
->> > > Introduce the function armv8pmu_partition() to modify the PMU  
->> driver's
->> > > cntr_mask of available counters to exclude the counters being  
->> reserved
->> > > for the guest and record reserved_guest_counters as the maximum
->> > > allowable value for HPMN.
-
->> > > Due to the difficulty this feature would create for the driver  
->> running
->> > > at EL1 on the host, partitioning is only allowed in VHE mode. Working
->> > > on nVHE mode would require a hypercall for every counter access in  
->> the
->> > > driver because the counters reserved for the host by HPMN are only
->> > > accessible to EL2.
+>> > > This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+>> > > because otherwise not all the appropriate macros are generated to add
+>> > > it to arm64_cpu_capabilities_arm64_features.
 
 >> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
 >> > > ---
->> > >   arch/arm/include/asm/arm_pmuv3.h   | 10 ++++
->> > >   arch/arm64/include/asm/arm_pmuv3.h |  5 ++
->> > >   drivers/perf/arm_pmuv3.c           | 95  
->> +++++++++++++++++++++++++++++-
->> > >   include/linux/perf/arm_pmu.h       |  1 +
->> > >   4 files changed, 109 insertions(+), 2 deletions(-)
+>> > >   arch/arm64/kernel/cpufeature.c | 8 ++++++++
+>> > >   arch/arm64/tools/cpucaps       | 1 +
+>> > >   arch/arm64/tools/sysreg        | 6 +++---
+>> > >   3 files changed, 12 insertions(+), 3 deletions(-)
 
->> > > diff --git a/arch/arm/include/asm/arm_pmuv3.h
->> > > b/arch/arm/include/asm/arm_pmuv3.h
->> > > index 2ec0e5e83fc9..9dc43242538c 100644
->> > > --- a/arch/arm/include/asm/arm_pmuv3.h
->> > > +++ b/arch/arm/include/asm/arm_pmuv3.h
->> > > @@ -228,6 +228,11 @@ static inline bool kvm_set_pmuserenr(u64 val)
+>> > > diff --git a/arch/arm64/kernel/cpufeature.c
+>> > > b/arch/arm64/kernel/cpufeature.c
+>> > > index b34044e20128..278294fdc97d 100644
+>> > > --- a/arch/arm64/kernel/cpufeature.c
+>> > > +++ b/arch/arm64/kernel/cpufeature.c
+>> > > @@ -548,6 +548,7 @@ static const struct arm64_ftr_bits  
+>> ftr_id_mmfr0[] = {
+>> > >   };
 
->> > >   static inline void kvm_vcpu_pmu_resync_el0(void) {}
+>> > >   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+>> > > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+>> > > ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
+>> > >   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+>> > > ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+>> > >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
+>> > > ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+>> > >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+>> > > ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+>> > > @@ -2896,6 +2897,13 @@ static const struct arm64_cpu_capabilities
+>> > > arm64_features[] = {
+>> > >   		.matches = has_cpuid_feature,
+>> > >   		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
+>> > >   	},
+>> > > +	{
+>> > > +		.desc = "Allow MDCR_EL2.HPMN = 0",
 
->> > > +static inline bool has_vhe(void)
->> > > +{
->> > > +	return false;
->> > > +}
->> > > +
+>> > This feedback still stands...
 
->> > This has nothing to do with PMUv3, I'm a bit surprised to see you're
->> > touching 32-bit ARM. Can you just gate the whole partitioning thing on
->> > arm64?
+>> > 		.desc = "HPMN0",
 
->> The PMUv3 driver also has to compile on 32-bit ARM.
+>> > [*] https://lore.kernel.org/kvm/aD4ijUaSGm9b2g5H@linux.dev/
 
-> Quite aware.
+>> Sorry for ignoring your previous feedback. I looked at the other .desc
+>> fields and they had more descriptive English, so I think this one should
+>> be more than "FEAT_HPMN0" for consistency.
 
->> My first series had the partitioning code in arch/arm64 but you asked me
->> to move it to the PMUv3 driver.
+>> If you insist I'll change it.
 
->> How are you suggesting I square those two requirements?
+> I'm not exactly sold on the merits of using descriptive names for the
+> capabilities, as the architecture extension names are exact terms that
+> can be related back to documentation.
 
-> You should try to structure your predicates in such a way that the
-> partitioning stuff all resolves to false for 32 bit arm, generally. That
-> way we can avoid stubbing out silly things like has_vhe() which doesn't
-> make sense in the context of 32 bit.
-
-Okay. I will do that. When I was reworking it I thought it looked weird
-to have the predicates live in a different location than the main
-partitioning function.
-
->> > > +static bool partition_pmu __read_mostly;
->> > > +static u8 reserved_guest_counters __read_mostly;
->> > > +
->> > > +module_param(partition_pmu, bool, 0);
->> > > +MODULE_PARM_DESC(partition_pmu,
->> > > +		 "Partition the PMU into host and guest VM counters [y/n]");
->> > > +
->> > > +module_param(reserved_guest_counters, byte, 0);
->> > > +MODULE_PARM_DESC(reserved_guest_counters,
->> > > +		 "How many counters to reserve for guest VMs [0-$NR_COUNTERS]");
->> > > +
-
->> > This is confusing and not what we discussed offline.
-
->> > Please use a single parameter that describes the number of counters  
->> used
->> > by the *host*. This affects the *host* PMU driver, KVM can discover  
->> (and
->> > use) the leftovers.
-
->> > If the single module parameter goes unspecified the user did not ask  
->> for
->> > PMU partitioning.
-
->> I understand what we discussed offline, but I had a dilemma.
-
->> If we do a single module parameter for number of counters used by the
->> host, then it defaults to 0 if unset and there is no way to distinguish
->> between no partitioning and a request for partitioning reserving 0
->> counters to the host which I also thought you requested. Would you be
->> happy leaving no way to specify that?
-
-> You can make the command line use a signed integer for storage and a
-> reset value of -1.
-
-> -1 would imply default behavior (no partitioning) and a non-negative
-> value would imply partitioning.
-
-Good idea. I thought of that solution myself for the first time after I
-logged off yesterday. Slightly embarrassed I didn't see it sooner :(
-
->> In any case, I think the usage is more self explainatory if
->> partitition=[y/n] is a separate bit.
-
-> What would be the user's intent of "partition_pmu=n  
-> reserved_guest_counters=$X"?
-
-That doesn't make sense, which is a decent argument for using just one
-parameter. I'm now fine with going back to just reserved_host_counters.
+I'll change it.
