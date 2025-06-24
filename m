@@ -1,83 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 884B427FB31;
-	Tue, 24 Jun 2025 13:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844362D4B55;
+	Tue, 24 Jun 2025 14:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771942; cv=none; b=VX1EZv6YwE+Zh9nZEFxr4EfivVk2HV7zi+4IBuAK8oQjmK1cHhpjfo346sq7T6bGZbqzykMtukf2elR6xx1gJRNncdcCbwv/CvOKYaG46rWTb9GrgtCNA+k0tdeEMGJyO32qTuRRTdTGP8pnTSqfAJTH0JFWSHReXtn0Z6jIoNE=
+	t=1750775810; cv=none; b=WuKcWsl0/45TsHvfj1b8j0dJGHUG3vBCz2nYdAfetPcyz3U2GKhK/+tA3+8qOqqPN66QufBR4XbajBoi7hXBumaHp7LeRHoXTlKCFzJsoq59pUK7Il/hxQL+oNF/HuiYy5J0P3CA/xp6qW6EusenJXCaDlNTCUEBG9XNBNSUZOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771942; c=relaxed/simple;
-	bh=VozcF0CvKTIfYr3POoFfypeicY3DQ7mgNp7G004Or0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hANXHUHCoirWOrOww+g2VhkU7i3GQZUFsbKiuTvc3ewrEarQc32j3C5qyJ0s2p5uTgBafd2Jnrw1TkyzQTXQAE3JsHmA7cZS4kyZMjdcNAvPHdq4g3aHs2moQvIv1VIgpvxbq2HvjYY6t7eOFAcIdZn1PTUGPPMxVWsJCnmLE+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10041113E;
-	Tue, 24 Jun 2025 06:32:02 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 91A9D3F58B;
-	Tue, 24 Jun 2025 06:32:19 -0700 (PDT)
-Date: Tue, 24 Jun 2025 14:32:17 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/aux: Properly launch pending disable flow
-Message-ID: <20250624133217.GO794930@e132581.arm.com>
-References: <20250522150510.2942814-1-leo.yan@arm.com>
- <d87ddbbb-862d-4cf7-b2c4-a5eb0d072a33@linaro.org>
+	s=arc-20240116; t=1750775810; c=relaxed/simple;
+	bh=F1HaTKznDSbNVS9L0eecuOL+TvQ5pAd0p7rkrKv3EeA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OXJ/iMWg2sEJqCCBTeJvkPkXFMi/Ie3flqOIjCUZwz9i6YtSfQnWxoV3CgCREvbDVOiVVXHURluAfyRTOYYenkT7OQhbq7bMkvuzkyKe1yWvQZPoOXFgCkguSOJN2IFFgQazUDWFM/oYwPuVgguk1e0KFDXwSiv6kF2YGhRcAMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRSDd5wsJz6GFCQ;
+	Tue, 24 Jun 2025 22:36:01 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 227691400CA;
+	Tue, 24 Jun 2025 22:36:46 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 24 Jun
+ 2025 16:36:45 +0200
+Date: Tue, 24 Jun 2025 15:36:44 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+CC: <will@kernel.org>, <mark.rutland@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf/cxlpmu: Fix allocation argument order and minor
+ formatting issues
+Message-ID: <20250624153644.0000084f@huawei.com>
+In-Reply-To: <20250623184415.42751-1-alok.a.tiwari@oracle.com>
+References: <20250623184415.42751-1-alok.a.tiwari@oracle.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d87ddbbb-862d-4cf7-b2c4-a5eb0d072a33@linaro.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Jun 24, 2025 at 02:11:38PM +0100, James Clark wrote:
+On Mon, 23 Jun 2025 11:44:11 -0700
+Alok Tiwari <alok.a.tiwari@oracle.com> wrote:
 
-[...]
-
-> > @@ -441,7 +441,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
-> >   		 * store that will be enabled on successful return
-> >   		 */
-> >   		if (!handle->size) { /* A, matches D */
-> > -			event->pending_disable = smp_processor_id();
-> > +			perf_event_disable_inatomic(handle->event);
-> >   			perf_output_wakeup(handle);
-> >   			WRITE_ONCE(rb->aux_nest, 0);
-> >   			goto err_put;
-> > @@ -526,7 +526,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
-> >   	if (wakeup) {
-> >   		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
-> > -			handle->event->pending_disable = smp_processor_id();
-> > +			perf_event_disable_inatomic(handle->event);
-> >   		perf_output_wakeup(handle);
-> >   	}
+> Correct the argument order in devm_kcalloc() to follow the conventional
+> count, size form to avoid any confusion or bugs.
+> Also fix a formatting issue in the devm_kasprintf() call by removing a
+> stray newline and fix a duplicated word in a comment.
 > 
-> The types are now a bit misleading and pending_wakeup and pending_disable
-> could be bool types. The other pending_*s do use their types properly
-> though.
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+Hi Alok,
+
+This is a bit of an 'and' patch which usually means it should
+be split up.  The devm_kcalloc() is a fix (sort of anyway)
+which the others changes aren't.
+
+All the actual changes are good, I'd just prefer this as a little series
+of patches that do one thing each.  The first being the devm_kcalloc()
+parameter ordering.
+
+Thanks,
+
+Jonathan
+
+
+
+> ---
+>  drivers/perf/cxl_pmu.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> __perf_pending_disable() also still contains a big comment that describes
-> use of CPU ID and -1 values.
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index d6693519eaee2..fb0b29f149807 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -113,7 +113,7 @@ struct cxl_pmu_info {
+>  
+>  /*
+>   * All CPMU counters are discoverable via the Event Capabilities Registers.
+> - * Each Event Capability register contains a a VID / GroupID.
+> + * Each Event Capability register contains a VID / GroupID.
+>   * A counter may then count any combination (by summing) of events in
+>   * that group which are in the Supported Events Bitmask.
+>   * However, there are some complexities to the scheme.
+> @@ -834,8 +834,8 @@ static int cxl_pmu_probe(struct device *dev)
+>  	if (rc)
+>  		return rc;
+>  
+> -	info->hw_events = devm_kcalloc(dev, sizeof(*info->hw_events),
+> -				       info->num_counters, GFP_KERNEL);
+> +	info->hw_events = devm_kcalloc(dev, info->num_counters,
+> +				       sizeof(*info->hw_events), GFP_KERNEL);
+>  	if (!info->hw_events)
+>  		return -ENOMEM;
+>  
+> @@ -873,7 +873,7 @@ static int cxl_pmu_probe(struct device *dev)
+>  		return rc;
+>  	irq = rc;
+>  
+> -	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow\n", dev_name);
+> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow", dev_name);
+>  	if (!irq_name)
+>  		return -ENOMEM;
+>  
 
-I might use an extra patch to address type and comment issue.
-
-> Other than that it makes sense.
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
-
-Thanks for review!
