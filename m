@@ -1,143 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BAF170826;
-	Tue, 24 Jun 2025 19:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE242E8899;
+	Tue, 24 Jun 2025 19:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750792282; cv=none; b=Mlo87QXCzlcAcFNzNQueml5x/5xbKqvlaHexulvS+UQuZ8BQR8Wl1sFCLYkLbmoIBgbSVif01RPz96FGo7lr/OIcADGe5kulKnBk2A2U5ensepqJDzPgGYJQxpR9XyLm6vjz7Sap13Zsb//4OyrMVBrXmEy8a/A4kbNcRie/uhw=
+	t=1750794274; cv=none; b=GM0lvIgvnfeWxBuhyEJPtqXbRVTSaCUCi7AkI0SgDUkqHjwNAQOT07rlTEhGBJ8cw5VRGyoZsqDvgBJppbvY8VQ1fi4TTepAGXewS0awwz2Q2fhkbHLWFkHi4QLEUyMZgW/Ne+0ypGWxXfX7Ta3TCoICSBr4XnM0CbmtbUqDrvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750792282; c=relaxed/simple;
-	bh=A8rgEKagyWeVEdJAVjJt38k9kxuz0+r57uXv1TcLXWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h0lzO+8kdLWNMDrUwtAi0F6xhT5Ij4br17tJal1/n8+2sKkt2D8+Joo9FEgHlOZ+HYkefM+2mfTO9AciV+lR5QIV71Zeca/WJP9BLa+a++9Er5YiK7ZnvliC7z5kt6zaVd4ESVcFrLyGvc8WIjKC2jGC0TmjHT4Og1kfl1nMtqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/xxu/YP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750794274; c=relaxed/simple;
+	bh=69eh9VLJi1J6J2mUImxaQHgQHo4o3bZRjXR+EqdYxsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BVwHeroamABXLRMQj1Cq9jOkQtAdevoxdrouprD3r6DciVXa0XyNb/sIE6DMKmwobv68WZDs07ZTan3kYaLxms59xPsXfIPoiMnBb+dr2ekzf2j21iYQYcE6dwZhIxWHl5q5GLQF4R7pJG1jEKbhJ4mr2gcwmnSKiqg/q7QFnDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Qpw+IoBo; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/xxu/YP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F708C4CEE3;
-	Tue, 24 Jun 2025 19:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750792281;
-	bh=A8rgEKagyWeVEdJAVjJt38k9kxuz0+r57uXv1TcLXWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R/xxu/YPxiwkFDZriQZ5k4RD0x45p5MsMvYsjkvk8RQVIA8BQ86X5v1ztx0vPArnk
-	 /fBwg/hHGDbwRE2sRhwbCqPXBgoaa0D94kkyY/B6c5KI/21szKWq0S/CHAC8un9aOz
-	 JeBDQMtRBDgEFvti8V/SvGUpL0wnoj0ksbv1Xrsu32l4qrbULXalJPdW4G7u2abBcn
-	 IFjRxXoIYFveMptlfNzYFh7s/xqVtQ4Iye/QmdM9e09ToAXTpYiIu1F90fyAUhwFY5
-	 CZjshnsZJpjUl5BwbpOi3GSfWRofEKR4nU0VdBtdsA8VhZkLn5AIjTtHRrI8g7VXtx
-	 r/qQhyCkQ7wcQ==
-Date: Tue, 24 Jun 2025 12:11:19 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v1 0/4] Pipe mode header dumping and minor space saving
-Message-ID: <aFr4VwxaAi5u5U2F@google.com>
-References: <20250607061238.161756-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qpw+IoBo"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OHBhtO025867;
+	Tue, 24 Jun 2025 19:44:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=rxdCh/ih79IROOaGKB4RrxcA27cqV
+	7R+FSaE62x0ps0=; b=Qpw+IoBoWdQvVVlSl9j2omEn6te6tNpzOBc6ConFkxyYP
+	QNq8TkDCDFyY4UGmVs+vFPaVodUiYGcsAU4JgImivSqtN5G7TSyI3n4jdDbAvRhj
+	GGRVb/zF+dNmYFmyd8G783qGV+Q7lYwz6yYRlmLIcO2BBIoC4vDoBeUNPFjXgzFu
+	FxmZyqdS2C0ajhqaGuTt9WT5K4Je+QMyFP5oV+nGWF6CyLLtT0o/+3ldFKhU1Uks
+	O5QdkzSxKX3dxWrP8vSs9ylYwcsRzw6NlCkFmWsz4MjIynVl/WAKuVqt5y7U8MTp
+	8avfCQE7fQSuYz2qqwOKS3mqaA/OsRdETQKSS3dDw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egt1ct11-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Jun 2025 19:44:22 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55OItoiA024312;
+	Tue, 24 Jun 2025 19:44:22 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ehkr3hu0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Jun 2025 19:44:22 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55OJiLcL031379;
+	Tue, 24 Jun 2025 19:44:21 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47ehkr3hsx-1;
+	Tue, 24 Jun 2025 19:44:21 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: jonathan.cameron@huawei.com, will@kernel.org, mark.rutland@arm.com,
+        linux-cxl@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] perf/cxlpmu: Fix allocation argument order and minor formatting
+Date: Tue, 24 Jun 2025 12:43:37 -0700
+Message-ID: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250607061238.161756-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 adultscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506240161
+X-Proofpoint-GUID: PqjC_nlaZtw1Y-qFVvHsLh536bqsCE2d
+X-Proofpoint-ORIG-GUID: PqjC_nlaZtw1Y-qFVvHsLh536bqsCE2d
+X-Authority-Analysis: v=2.4 cv=cpebk04i c=1 sm=1 tr=0 ts=685b0016 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=6IFa9wvqVegA:10 a=RRer6SffVtzthgszA2kA:9 a=zZCYzV9kfG8A:10 cc=ntf awl=host:13207
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDE2MSBTYWx0ZWRfX8rJ7CwuGrXij 4i6E0tQnxA+HdxRSvz4sodFGTspmbBQCXqmRd63J7VcIuXO7E9Un6n/QYnvxZcBonC1F3UivLjg G+6U+lIxPV5CsSXQ1DKmoORzklNH5xFGFU+hgm0jSDBWib70pvlQ8Ja62HiJ0h/jRhTc/7WgmCo
+ Y6gg9xBKFxGkEsKK5gm6L7+S8QRfdH2OJ+9Drc5r/PyCk91kn9H+9ZrdQ5NDymntKWMbctXIETI Q1EZntUxr9447WlR5InW+jqEbZHYOd16pVdDTVKtgAE7j1CjKgluQlXBHB738bTr4y1U5G+c2JR WoRYll03vkTOazU8gAR0zNFRAc7pPb4w2mz5ZjkRyWxNiLYvW0WX9VLvPCJs9AUrKbP5TMj3bzG
+ wmLe9fT5YDSlKkREs7o+pgvnoSuCj3Xfj4Lk+kjAaMsGaH9bHsgRcBhz/xx73YgRNrdsCbUD
 
-On Fri, Jun 06, 2025 at 11:12:34PM -0700, Ian Rogers wrote:
-> Pipe mode has no header and emits the data as if it were events. The
-> dumping of features was controlled by the --header/-I options which
-> makes little sense when they are events, normally traced when
-> dump_trace is true. Switch to making pipe feature events also be
-> traced with detail when other events are.
+This patch series includes a few minor cleanups and correctness
+improvements in drivers/perf/cxl_pmu.c
 
-I'm not sure I'm following.  Are you saying the pipe mode doesn't
-support features with --header/-I option?
+Correct the argument order in devm_kcalloc() to follow the
+conventional count, size form to avoid any confusion or bugs.
 
-It seems to work for me.
+Remove an unintended newline in the IRQ name string passed to
+devm_kasprintf() and  fix a formatting issue in the devm_kasprintf()
 
-  $ git show
-  commit be59dba332e1e8edd3e88d991ba0e4795ae2bcb2 (HEAD -> perf-testing)
-  Author: Ian Rogers <irogers@google.com>
-  Date:   Tue Jun 17 15:33:56 2025 -0700
-  
-      libperf evsel: Add missed puts and asserts
-      
-      A missed evsel__close before evsel__delete was the source of leaking
-      perf events due to a hybrid test. Add asserts in debug builds so that
-      this shouldn't happen in the future. Add puts missing on the cpu map
-      and thread maps.
-      
-      Signed-off-by: Ian Rogers <irogers@google.com>
-      Link: https://lore.kernel.org/r/20250617223356.2752099-4-irogers@google.com
-      Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-  
-  $ ./perf version
-  perf version 6.16.rc3.gbe59dba332e1
-  
-  $ ./perf record -o- true | ./perf report -i- --header-only
-  # ========
-  # captured on    : Tue Jun 24 12:06:38 2025
-  # header version : 1
-  # data offset    : 0
-  # data size      : 0
-  # feat offset    : 0
-  # ========
-  #
-  # hostname : bangji
-  # os release : 6.12.20-1rodete1-amd64
-  # perf version : 6.16.rc3.gbe59dba332e1
-  # arch : x86_64
-  # nrcpus online : 4
-  # nrcpus avail : 8
-  # cpudesc : 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz
-  # cpuid : GenuineIntel,6,140,1
-  # total memory : 32566540 kB
-  # cmdline : /home/namhyung/project/linux/tools/perf/perf record -o- true 
-  # event : name = cycles:P, , id = { 369, 370, 371, 372 }, type = 0 (PERF_TYPE_HARDWARE), ...
-  # CPU_TOPOLOGY info available, use -I to display
-  # NUMA_TOPOLOGY info available, use -I to display
-  # pmu mappings: cpu = 4, breakpoint = 5, cstate_core = 22, cstate_pkg = 23, hwmon_acpitz = 4294901760, ...
-  # time of first sample : 0.000000
-  # time of last sample : 0.000000
-  # sample duration :      0.000 ms
-  # MEM_TOPOLOGY info available, use -I to display
-  # cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
-  # intel_pt pmu capabilities: topa_multiple_entries=1, psb_cyc=1, single_range_output=1, ...
-  
-> 
-> The attr event in pipe mode had no dumping, wire this up and use the
-> existing perf_event_attr fprintf support.
-> 
-> The header's bpf_prog_info or bpf_btf may be empty when written. If
-> they are empty just skip writing them to save space.
+Fix several typos in comments and documentation strings, improving code
+readability and alignment with the CXL specification.
 
-These look good to me.
+v1 -> v2
+created individual patches into a series as suggested Jonathan.
 
-Thanks,
-Namhyung
+Alok Tiwari (3):
+  perf/cxlpmu: Fix devm_kcalloc() argument order in cxl_pmu_probe()
+  perf/cxlpmu: Remove unintended newline from IRQ name format string
+  perf/cxlpmu: Fix typos in cxl_pmu.c comments and documentation
 
-> 
-> Ian Rogers (4):
->   perf header: In pipe mode dump features without --header/-I
->   perf header: Allow tracing of attr events
->   perf header: Display message if BPF/BTF info is empty
->   perf header: Don't write empty BPF/BTF info
-> 
->  tools/perf/util/header.c | 46 ++++++++++++++++++++++++++--------------
->  tools/perf/util/header.h |  1 +
->  2 files changed, 31 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 2.50.0.rc0.604.gd4ff7b7c86-goog
-> 
+ drivers/perf/cxl_pmu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+2.46.0
+
