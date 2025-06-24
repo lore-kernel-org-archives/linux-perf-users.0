@@ -1,121 +1,228 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A177F70823;
-	Tue, 24 Jun 2025 02:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE5B4C74
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Jun 2025 05:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750730930; cv=none; b=uesaaDCcmsbNpqkwETFlulBfMpZ1PQMM/6K0HNzTT7FOO8pRyCSym9lLTySil+hkQLFTz+N2GytpAG1OQSMI4PIlQ2DuAgc5orh2mhzUPBD8y60c+XMLFtmQvNTfc8bN2yn6fea47CjkXygYCmwpzhE3AzKOix524AM0gTNA12A=
+	t=1750742528; cv=none; b=JthdUOppcaHf/epKKdlBcnce6Ab9h8e4TF3qz7EcRBYfQdYd9rgCHBspIlrx/1F+i5JJnwbGicH/nxmT+PyJSq6F9eZm1Nq4Z8HXnyq553I55Lkcl3DprRP0Kde6QajNNeOdOhPFjMM/x80AzeVH763BwcDdfWDuMiGmX2+gHWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750730930; c=relaxed/simple;
-	bh=anYKDvR8DwDeM3aQ4PCChlVBnQFelZ2vGi13KfiM9E8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QMF63Vcyrx2o+V4q6xIld8f/gY2cjf6SV/YH537Gzb6dmYISrjC68rdkh0NpR7Dnm/xRHcKEmo9+BChWSl95eLIKsSSO4K0nY1ru1ZZmAOdScBcL4DtGMH0hILuY9IKuc1gPq/W1rKLXYC3rOMgjlW/F+V0ZAMsTUUQr9+UwZ6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvI9+7VV; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750742528; c=relaxed/simple;
+	bh=KtEsaRn2ETJkbhbCSbWLAa5+wM11aEHcRIUaqZZDS2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NQOzDmtOBaNERS7CniT3EvJgVftzjzeWwbgf1q9ZrlofUuZUOyDsObCyopfLyFru3vyOA+kGA66uoHB9nW+9Nhj3b/f3Ojqx/nvZIaMW+uZe7MAUurOVgpPqKebNlKC4JUAuwI7/AVZL9dLAWOKTCbVILvvEUtqGVamrvKzuZIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4efpwxoB; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvI9+7VV"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-748fe69a7baso4496725b3a.3;
-        Mon, 23 Jun 2025 19:08:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4efpwxoB"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo94245ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jun 2025 22:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750730928; x=1751335728; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V2oc+mgjMQNNWposKF3yskLOrCAbudsug2tB2/9g9MI=;
-        b=YvI9+7VVW6M6HgLn3M651TizHWhC7E48s4barsv+yV4uw3MuyD9fMdqu3b5C4rPUlv
-         3n1j8kN0KOjJxrjLhuh0vRHizTm6Tjfz0LsSq8GmTuVVC4b3tb8IAYyq/zuHRPnHjjQk
-         w18mPP9iVDeVxmJd4Vkk+o5n/XX64bBPNwyg39u07iTbBem+gXA2IQ4oZin6JztdQBpg
-         tXANKVNsJgZny4S3AOBmVI6dnn76/RSrO49q0wojYKaY0yH9RZkN/h/BHh3L9od3GLd5
-         Nsp7ylNbH/u1kyoKKN7Qv0rFm4vhOgVXuaAHGvEQWwqQGgdFiWVnymgb+tMBQ2gwm/nM
-         jVqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750730928; x=1751335728;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1750742526; x=1751347326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V2oc+mgjMQNNWposKF3yskLOrCAbudsug2tB2/9g9MI=;
-        b=APxVSLHXyJ+N5rCY/J3dMBdU/CGgn9v00b8Wfk4l6zotKaIDpkXLoqC51jUycu/7r1
-         3IhHJ/myYQJWX8vAcBEZMzM0OWjSzCPfrFkU2bruVkqC5Awv7YLzOz9KtZEdD97G8liT
-         PJtJrxPnzAlaTW+z2AWmQdg6IaI7V8h/zuAiu9GqeHhxY7SxNx4Vap66eD0Eh6CaNgs1
-         uWsCQ0a09AMBtVnuMZn9IgaeGt+J+8u6t6lYu7QBAHrRaFTcMXHV+y5Pg2QqDm88vHan
-         6O0/bXccVOZXtNlHmUrrsTqBCBgw2U8IKNV2AxJDBoPmlYqdCtySg673ZPO2smC9Y6xZ
-         cNcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVwJovm0jaEH6d2Tr3llTgTIOSOfXNFsoK5XPbtWQi3DFmxPL4JJIn7v0Y22pbnuShpzGAK7SsB0++QVivKGfhqw==@vger.kernel.org, AJvYcCWYuN6DNKyvtP1FD7P6sIBOf4viK9SiWCiwf4efLlqlLd2u+MQOAeCTWCGyjq8WWzYFMV2mxxhd5wqHO6Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSGNEoRp9LXotEU42ShimPv+pmAFzvY2SWOSumLP0wIH34jNnU
-	wHpyt8C8pbAL5wsF/QK8IFNG8h3W7G0yJ/HU9h+dfELyLburQttVOdZM
-X-Gm-Gg: ASbGnct/vtdlfx0qnkcT1sPcChL2O9d5DE9KN+qKrhqlMwf6qjWLx3igQd3Tr5UPBoU
-	YCMSPZWbeXNQ52IXBeeLkX6Q0ACWHXiqdCXnAlqPzeirELVOMmh6AtNQuvJBNFU7FRte7pxnK+r
-	/jangnUYG9J2SInVFLGYvurm6eZAXDmaS8eJPX07Zov5GIQWr1+SO0UH5nj+lQqSw8mMQ8h6/zk
-	G3ntXz/BpUMSHEMwBl2RMxE8oPCW03TTuAhdYJUV9WdL9pbYIclxM1UaqPfn4Nkc88L0CMcI37f
-	91IbKyUguuCUqy1SmCJ0v6D06DIKsar1bWECLAm4mnB0eAfr4wbMmA==
-X-Google-Smtp-Source: AGHT+IFGIbUi2Qy/t4xYSIJgfyKkG4kE3SiKWwQkArqWcKBMn2Mq2xL6jkLM1ee/rlXdhBn05A7iMg==
-X-Received: by 2002:a05:6a21:3949:b0:215:eafc:abda with SMTP id adf61e73a8af0-22026dd5607mr25340535637.18.1750730927811;
-        Mon, 23 Jun 2025 19:08:47 -0700 (PDT)
-Received: from fedora ([2601:646:8081:3770::1707])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c887261esm440237b3a.156.2025.06.23.19.08.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 19:08:47 -0700 (PDT)
-From: Collin Funk <collin.funk1@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>,  linux-perf-users@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Peter Zijlstra <peterz@infradead.org>,
-  Ingo Molnar <mingo@redhat.com>,  Arnaldo Carvalho de Melo
- <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,  Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
- <jolsa@kernel.org>,  Adrian Hunter <adrian.hunter@intel.com>,  "Liang,
- Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] perf build: Specify that spellcheck should use the bash
- dialect.
-In-Reply-To: <CAP-5=fVoya-X+BBBuVwZQ527WKyGwC8tirk=gj37t2H_BBmwVg@mail.gmail.com>
-References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
-	<20cce2b1-eaad-4565-817b-b094aecee0a5@linaro.org>
-	<874iwa71mo.fsf@gmail.com>
-	<6f524405-a9a7-45c4-bf4d-9ae33e52bfbc@linaro.org>
-	<CAP-5=fVoya-X+BBBuVwZQ527WKyGwC8tirk=gj37t2H_BBmwVg@mail.gmail.com>
-Date: Mon, 23 Jun 2025 19:08:46 -0700
-Message-ID: <875xglj3gx.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        bh=4hOJz+vcYO1Ne6k1cj2BIklVK/EVgqHSD2CylG69hPc=;
+        b=4efpwxoBV5ccqzyp97UEer8P3rmvOECMxQOueJ/oxGdbdD+JIopzVAy7sbSjMcQauC
+         HemGvB+wUw1o9Bxt20AdTFjrqK+YcGYng0TvHLyYUjxbKzftQAbC5KkBrJ6B7T0sIV7R
+         jwGvY4jXq7BsKDJmT1+4P4Qe1mdN0oc4+LP+aU/g5qe2C3X6WArcYO85hCfaF7aJmXMf
+         IjdMZTfXqctyyjhumBtUMVq250EPGL5u/QhibbhQ6Eo+v2NMpEZx+MlRG7Fni7Ph/n3C
+         w3JLBFYCISfbPmBm5lhA7O1nmuX8iozFclImQlRUSA1EXPNJpg3cBFJuFQU5zJlw9wMA
+         d+qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750742526; x=1751347326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4hOJz+vcYO1Ne6k1cj2BIklVK/EVgqHSD2CylG69hPc=;
+        b=Lut0AE/QG8CJTUcNgrFG934Ro5ysGlKyH/ar31tTt1B6KU4TPvyk8N/WY3IftPyZWq
+         EkieqSOEEoa5G7qcaALTMvntYc0Vi8h4Zy4VW+4tDNAmHbKJ6Rb1q/++dq/E11+sWoL/
+         wAMquXXgTAidQT053EC7eLBnHKZ19sZmcOv9j+/nIty49QhiC+QixmhcODbwRuynh1yH
+         /nDnab0uc2+vqo9Bds7EnA11pKjI9S8dr4Ks+XZPWZkkloYfuR0HcDlpMJ1EGFwoVXi/
+         GLbjQW81ldhq4Ym9yiru4QSP61vUbJjGquba7KPBddd8xiHN16OBY035/Kc3u055ERka
+         YCDw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/LPmAXbrgtUUw+wd/CuabUSSFakpY4DxkQ5b1KIBCChXlRPpP/Br2ZF35H+MGAA+aMRX+pRvhK2gkQYDABSfR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwncaoITjD6DesdTsjV79KAKC9MiWzUbJubiq4xOPEn0OM1exex
+	IY8PeGgGURNV69vPeot/NAwWhH1zBHLYQVg7crzlXiFy9bpg10WarKoU+D87xSoDO/26TIz25Bd
+	YbAYguFAl5Cw4J2z4ckibqUQUo+xoO6vDhNp6+sF0
+X-Gm-Gg: ASbGncv9d8nU0Mb/LAQVdfYXtXBAaorJX8T/8hZ+VzNbg6SKKH2DrEoxmyXrSQwvrEU
+	pD9VeBlKPGX0cmberA6VaW14soUx0vExPyTB3fgzmN2+MMy6Tx70Ce8D+ksF1AM83/c20xDChTs
+	dyod+YSLB9R4FUVkNmDSISc1So/sMWbYC+zahavOv1yoDH
+X-Google-Smtp-Source: AGHT+IFVqH7OvylcO+Y1qV4xlPImLec6uOKV0F01y1TW8TSTcJ3ASrVe91IKe2Xd1R9DM6S+4E80byID6TwQBCtI4/4=
+X-Received: by 2002:a05:6e02:3809:b0:3db:854b:9f52 with SMTP id
+ e9e14a558f8ab-3df2a55432dmr1280505ab.7.1750742525777; Mon, 23 Jun 2025
+ 22:22:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
+ <f7ea3a430dc2bd77656c50f93283547d1245e2fe.1750730589.git.collin.funk1@gmail.com>
+In-Reply-To: <f7ea3a430dc2bd77656c50f93283547d1245e2fe.1750730589.git.collin.funk1@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 23 Jun 2025 22:21:53 -0700
+X-Gm-Features: AX0GCFveVTpPnPVsvCk22_5Lnue0d5YCoQm35akDg8ARSVTlDG7uuJgVAjr95I0
+Message-ID: <CAP-5=fW6oMGcGcBgxVWOrkxcPRo1EDVAHe4m0F-ratRkpKjL0w@mail.gmail.com>
+Subject: Re: [PATCH v2] [PATCH] perf build: Specify that shellcheck should use
+ the bash dialect.
+To: Collin Funk <collin.funk1@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
-
-Ian Rogers <irogers@google.com> writes:
-
->> > $ find tools/perf -name Build | xargs grep bash
->> > tools/perf/Build:     $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
->> > tools/perf/trace/beauty/Build:        $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
->> >
->> > Collin
->>
->> In that case:
->>
->> Reviewed-by: James Clark <james.clark@linaro.org>
->>
->> And I'll send the bulk hashbang change separately.
+On Mon, Jun 23, 2025 at 7:06=E2=80=AFPM Collin Funk <collin.funk1@gmail.com=
+> wrote:
 >
-> I've no objection to switching to using bash globally. It seems
-> sub-optimal that we've copy-pasted the shellcheck command across many
-> different Build files and that this patch will cause the
-> tools/perf/tests/Build one to differ. My preference would be to have a
-> global definition probably in Makefile.perf, then use it consistently.
-> Alternative all shellcheck invocations can pass "-s bash" for the sake
-> of consistency.  Fwiw, I think the 'tools/arch/x86/tools/gen-insn-*'
-> which is to some extent taken from the kernel's 'arch/x86/tools' is
-> okay with the change too.
+> When someone has a global shellcheckrc file, for example at
+> ~/.config/shellcheckrc, with the directive 'shell=3Dsh', building perf
+> will fail with many shellcheck errors like:
+>
+>     In tests/shell/base_probe/test_adding_kernel.sh line 294:
+>     (( TEST_RESULT +=3D $? ))
+>     ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((.=
+.)) is undefined.
+>
+>     For more information:
+>       https://www.shellcheck.net/wiki/SC3006 -- In POSIX sh, standalone (=
+(..)) is...
+>     make[5]: *** [tests/Build:91: tests/shell/base_probe/test_adding_kern=
+el.sh.shellcheck_log] Error 1
+>
+> Passing the '-s bash' option ensures that it runs correctly regardless
+> of a developers global configuration.
+>
+> This patch adds '-s bash' to the SHELLCHECK variable in Makefile.perf
+> and makes use of the variable consistently.
+>
+> Signed-off-by: Collin Funk <collin.funk1@gmail.com>
+> ---
+>  tools/perf/Build                | 2 +-
+>  tools/perf/Makefile.perf        | 2 +-
+>  tools/perf/arch/x86/Build       | 2 +-
+>  tools/perf/arch/x86/tests/Build | 2 +-
+>  tools/perf/tests/Build          | 2 +-
+>  tools/perf/trace/beauty/Build   | 2 +-
+>  tools/perf/util/Build           | 2 +-
+>  7 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/Build b/tools/perf/Build
+> index 06107f1e1d42..e69665bf9dce 100644
+> --- a/tools/perf/Build
+> +++ b/tools/perf/Build
+> @@ -73,7 +73,7 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > =
+$@ || (cat $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-y +=3D $(SHELL_TEST_LOGS)
+>
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index d4c7031b01a7..6810d321ff73 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -252,7 +252,7 @@ endif
+>  ifeq ($(NO_SHELLCHECK),1)
+>    SHELLCHECK :=3D
+>  else
+> -  SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
+> +  SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null) -s bash
 
-Good point. It turns out there was a SHELLCHECK variable in
-Makefile.perf, but it was not used consistently.
+Could we also place the "-a -S warning" warning here too?
 
-I have submitted V2 that adds the '-s bash' option to the definition and
-actually uses the variable [1]
+Thanks,
+Ian
 
-Collin
-
-[1] https://lore.kernel.org/all/f7ea3a430dc2bd77656c50f93283547d1245e2fe.1750730589.git.collin.funk1@gmail.com/
+>  endif
+>
+>  # shellcheck is using in tools/perf/tests/Build with option -a/--check-s=
+ourced (
+> diff --git a/tools/perf/arch/x86/Build b/tools/perf/arch/x86/Build
+> index afae7b8f6bd6..71e2553e5af1 100644
+> --- a/tools/perf/arch/x86/Build
+> +++ b/tools/perf/arch/x86/Build
+> @@ -10,6 +10,6 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-test-y +=3D $(SHELL_TEST_LOGS)
+> diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/=
+Build
+> index 5e00cbfd2d56..fd3af16f63bb 100644
+> --- a/tools/perf/arch/x86/tests/Build
+> +++ b/tools/perf/arch/x86/tests/Build
+> @@ -22,6 +22,6 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-test-y +=3D $(SHELL_TEST_LOGS)
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 2181f5a92148..4a27fde30eb6 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -89,7 +89,7 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-test-y +=3D $(SHELL_TEST_LOGS)
+>
+> diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Buil=
+d
+> index f50ebdc445b8..727ce0a5c30a 100644
+> --- a/tools/perf/trace/beauty/Build
+> +++ b/tools/perf/trace/beauty/Build
+> @@ -31,6 +31,6 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > =
+$@ || (cat $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-y +=3D $(SHELL_TEST_LOGS)
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 7910d908c814..626a359fee1e 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -421,7 +421,7 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-util-y +=3D $(SHELL_TEST_LOGS)
+>
+> --
+> 2.49.0
+>
