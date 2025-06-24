@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775C2126C05;
-	Tue, 24 Jun 2025 17:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEB2298CBC;
+	Tue, 24 Jun 2025 18:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750787767; cv=none; b=i1Quum4CWS3/NwuKbSMg86Aue/G0dHy/yAb/QkeeLHle7yvsnQMjUmtBs37hU981KBZJp5KJoLE84Dsmqa9AbXQ0aE6i+FhLya6u2MYA0f1n9aWTgSnW3+YfNVu1yEFCIXSnvn7PkR7re++4R0L+afQ4tPivWDVUICCRMGjmtkE=
+	t=1750788182; cv=none; b=VN0xrSoF2w9RsAknDnC9rbWZ6FUhR9EZiaLFEo9qRetmTqWFUT+3tL9RVvCW4CskVSypuvIy0PhQ0BhdmyNxc5hXJc+1PI/+RglmCpWObawI0dSsa3iVi5mI0m/6Ot+m9IiwV5Nh3a86DZvICXGZXFH6TwmE05HF66k0siatGrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750787767; c=relaxed/simple;
-	bh=guF7Vvhho0jqz/1Z71mXNiQ+L7CCP+rSBGsLZ9Yc3Nc=;
+	s=arc-20240116; t=1750788182; c=relaxed/simple;
+	bh=IxpQVFavBDkJlM/cSKrOfKpzF66IllwAzWZ9Ke2ip98=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7ni6nasyscxxAzUuKet1NyUFI4J/aT2qsckQ7W2Ve1NyvU2T0G9H6OxQpNaPRs+H/d4VvI6fxDFMaME/Pk/s5y08NjZlXg299pgAkpLCP5HMUVAX4PoJHvKfoK83OOR9Q3IV3kqexOQI5r57KMlY4qaQ9loaiQpTyY8qt3uT4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTuIU7wS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qju1rz7ApY/l0PlnvEfRnKgrFIWvQwUstJWHAcm9kr788Yw4L5YOTQ0Afq3FWpnuKM2IF02NPXtrbtMEaFZGA90KW897/f1Flx9EHmvE3xsx5Zkqsotwr0uodYElD8l+H037mOa0SWtFfVED6DLHJiTcJwMmCCqT2yDipVCIVN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JE/n0Tfv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTuIU7wS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CFDEC4CEE3;
-	Tue, 24 Jun 2025 17:56:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JE/n0Tfv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A93C4CEE3;
+	Tue, 24 Jun 2025 18:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750787767;
-	bh=guF7Vvhho0jqz/1Z71mXNiQ+L7CCP+rSBGsLZ9Yc3Nc=;
+	s=k20201202; t=1750788182;
+	bh=IxpQVFavBDkJlM/cSKrOfKpzF66IllwAzWZ9Ke2ip98=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iTuIU7wSrz9WyrTzTPcvHw4r8ekW15ezCVFdTeMkTz1agG4aIAYYhmmYn9A/rLlWa
-	 Ma9qGHuHFU9MyIXbAhN1nhUnzH9OQflEvD10agU1R6SMlIkvLJoJIOhvoRMVUe3T7S
-	 uUbr70yQFkv0MXePnqAe0ofU5kLQx2U55M/1iB1nlqb2V6Z58MFxYI+Vnhf3uWul3q
-	 rqSuLii29MtTxuNkb8wYHfDI1S1TYf5JVT6cxV1uvMAZkmx2+2izrBHsuYA1HHasP6
-	 VYwxQDjtP3onzGnM9e/1AXDwLVQpSH0INz+SWO+brX9+Gcn0Q8lH+ifsjjMGWUmpc6
-	 K+soGrofb6s4A==
-Date: Tue, 24 Jun 2025 10:56:04 -0700
+	b=JE/n0TfvHU8zacWqv6InS01qBOIZpgy4w7J9T1cbBz8iac7ObWTqnKgCqhy+zNBPM
+	 pmOIqClfq9fjvQfYOsg2gX0Nzl8DyaJxtG1rTFUtLyev/hSVZC7wDXfsacDNr/3Ji6
+	 lPO7flPUrdXnbCiRXorKuztMGP/Wo5Ku8wDUnIRzit9nuELUByrGozhtff/j+3NIwP
+	 FYYPLAhN2RUZrJ0dH1mzHUccm3LJNXOujAnMemMRNZF8YYw47rw7nPo4flNNZWfX6a
+	 HIUkKBf8XkcaCJtVLdKeo9LffobDQ04OffvwuLYRA0qYhRP5225OnFml+fE0YOmf0y
+	 1XQVLVGHAVzMw==
+Date: Tue, 24 Jun 2025 11:03:00 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, wy.shih90@gmail.com,
-	Ian Rogers <irogers@google.com>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	tmricht@linux.ibm.com, leo.yan@arm.com, atrajeev@linux.vnet.ibm.com,
-	linux-perf-users@vger.kernel.org,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf test: Replace grep perl regexp with awk
-Message-ID: <aFrmtGhq2Di0OrD_@google.com>
-References: <20250620174034.819894-1-ctshao@google.com>
- <e8c28a7e-bc08-4c50-96ca-afe62cfcf9fd@linaro.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Yuzhuo Jing <yuzhuo@google.com>
+Subject: Re: [PATCH v2 0/4] perf: Remove libcrypto dependency
+Message-ID: <aFroVMHTBOB7wfjI@google.com>
+References: <20250614044133.660848-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,78 +50,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e8c28a7e-bc08-4c50-96ca-afe62cfcf9fd@linaro.org>
+In-Reply-To: <20250614044133.660848-1-ebiggers@kernel.org>
 
 Hello,
 
-On Mon, Jun 23, 2025 at 03:12:00PM +0100, James Clark wrote:
+On Fri, Jun 13, 2025 at 09:41:29PM -0700, Eric Biggers wrote:
+> This is a reworked version of
+> https://lore.kernel.org/all/20250521225307.743726-1-yuzhuo@google.com/.
+> I've changed it to add a new minimal SHA-1 implementation, instead of
+> trying to pull in the kernel's SHA-1 implementation which is not really
+> designed to be extracted into userspace programs.  I also added a test.
 > 
+> Eric Biggers (2):
+>   perf build: enable -fno-strict-aliasing
+>   perf util: add a basic SHA-1 implementation
 > 
-> On 20/06/2025 6:40 pm, Chun-Tse Shao wrote:
-> > perl is not universal on all machines and should be replaced with awk,
-> > which is much more common.
-> > 
-> > Before:
-> >    $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-> >    --- start ---
-> >    test child forked, pid 145431
-> >    grep: Perl matching not supported in a --disable-perl-regexp build
-> > 
-> >    FAIL: could not add event
-> >    ---- end(-1) ----
-> >    121: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> > After:
-> >    $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-> >    121: probe libc's inet_pton & backtrace it with ping                 : Ok
-> > 
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > ---
-> >   tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > index c4bab5b5cc59..aaa5ee06ae18 100755
-> > --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > @@ -23,7 +23,8 @@ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
-> >   add_libc_inet_pton_event() {
-> > 
-> >   	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
-> > -			grep -P -o "$event_pattern(?=[[:space:]]\(on inet_pton in $libc\))")
-> > +			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
-> > +			("\\(on inet_pton in " l "\\)") {print $1}')
-> > 
-> >   	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
-> >   		printf "FAIL: could not add event\n"
-> > --
-> > 2.50.0.rc2.701.gf1e915cc24-goog
-> > 
-> 
-> Minor nit: the underscore in event_pattern (not shown in the diff) never
-> needed to be escaped.
-> 
-> But now we're using awk it gives a warning so we should remove it in case
-> anyone is searching through the output:
-> 
->   awk: warning: escape sequence `\_' treated as plain `_'
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
- 
-Thanks for your review.  I'll fold the below change.
+> Yuzhuo Jing (2):
+>   perf genelf: Remove libcrypto dependency and use built-in sha1()
+>   tools: Remove libcrypto dependency
 
----8<---
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index aaa5ee06ae1833de..9bdf47aabe9d738b 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -18,7 +18,7 @@
- libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
- nm -Dg $libc 2>/dev/null | grep -F -q inet_pton || exit 254
- 
--event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
-+event_pattern='probe_libc:inet_pton(_[[:digit:]]+)?'
- 
- add_libc_inet_pton_event() {
- 
+Thanks for working on this.  But can you please rebase it on to the
+latest perf-tools-next tree/branch?  It doesn't apply cleanly.
 
+Thanks,
+Namhyung
+
+> 
+>  tools/build/Makefile.feature            |  2 -
+>  tools/build/feature/Makefile            |  4 -
+>  tools/build/feature/test-all.c          |  5 --
+>  tools/build/feature/test-libcrypto.c    | 25 -------
+>  tools/perf/Documentation/perf-check.txt |  1 -
+>  tools/perf/Makefile.config              | 17 +----
+>  tools/perf/Makefile.perf                |  3 -
+>  tools/perf/builtin-check.c              |  1 -
+>  tools/perf/tests/make                   |  4 +-
+>  tools/perf/tests/util.c                 | 45 +++++++++++-
+>  tools/perf/util/Build                   |  1 +
+>  tools/perf/util/genelf.c                | 85 +---------------------
+>  tools/perf/util/sha1.c                  | 97 +++++++++++++++++++++++++
+>  tools/perf/util/sha1.h                  |  6 ++
+>  14 files changed, 156 insertions(+), 140 deletions(-)
+>  delete mode 100644 tools/build/feature/test-libcrypto.c
+>  create mode 100644 tools/perf/util/sha1.c
+>  create mode 100644 tools/perf/util/sha1.h
+> 
+> 
+> base-commit: 18531f4d1c8c47c4796289dbbc1ab657ffa063d2
+> -- 
+> 2.49.0
+> 
