@@ -1,179 +1,174 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE71429A9FE;
-	Wed, 25 Jun 2025 09:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B65A17BEBF
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Jun 2025 14:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842746; cv=none; b=HDvqEOWjsItnd1mqZ40jpQIh9JAaMf5mau18klSZLGEO+YwaQ3KEMOOz7JkJZBTpigGTvb67i0JINVDJG97w6MBfjHT25ZxIK0Ckj8mNrvR2A4MV8r5gwUHD8V75nBzQZlhP6Xqi5qWfYLtDkPTTPdSQyxbsJ/3fEYAAtiio1Cs=
+	t=1750863570; cv=none; b=Zgb8ml/+wkVhCpRV0WWdNWJCFVDpx9IImgduOOttckZ9NdNeEmSbw6QkfUuP8zZmQjOSSMfUyG2Vx/91h8jRw40yEu68Zym6RuZuq4OdENJpLPdy+RfQd/nzw/vXcFOiXTLB3cthT5klUPzccMvIMLYZd8dfru0DWq6uCihQ02Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842746; c=relaxed/simple;
-	bh=Ku1JP3VucsE7gqGwrbjDhzOU4k9tMt5YcgLvazIy0lg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bKaT/+Xr347j8c8MVxeUt9pq58o/WTKO8m7wBPhfvJZo3a/okHnWrMMUgSAJx/D1znPW+ZGXVJyYwKIN+wsVA3kLAB7aX4cubxCdjegN4mNNsz8NJrTCLvAK8jM8ywhXaZEZ5/KtJVoDLY0YMc43X/VV0qQY+iX2wxgEYGMfCy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Vwf8UUn5; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750863570; c=relaxed/simple;
+	bh=CoHQ+3pE0BaR40sPkkySRTRvOejlJ0PIfGy/gZW5z0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GbPjKIjaUC7u7oI/f2zn0t3tOYpHAiIrT0Us/Slh3TGJ2eJuVhbdAJwGMH2zEiTkuK2na25DLwJromgdR0W4GY1VLdPoJBi469MbF+6KdBl2h6qvZHjEWyy0v3C+3M54uAGx3FQg4O0VOoyubrQO8rAa8fBhsC6hTlm8ZRSHzzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0BUVolM0; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Vwf8UUn5"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P510l9032381;
-	Wed, 25 Jun 2025 11:12:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	7ONVBi6t27yoHOLom4q+9fNttcSqpjkl1fBEaeAnNkw=; b=Vwf8UUn5XqH75K2i
-	fscZ6KsiCvCjx7WJPqQv23IzCGzpmhbdb1xkGE7uHQA9PyER1EFSCXUkQPBiHlW+
-	4uwmJYQWpOhdd6Xqb43cGBt89mdGyI4ppGLqD0yH1sy3yZx/kSdVbeJbpm7/B+03
-	Z9f1dnJinZdTX1NVip71mTOSvnuabKIaG0/CX1WLLaIsmVKwNQzNqUc9OI0pJPJR
-	+iV48oYu9RNwLmIxPb3rBTaniPK+oj3phiUfDazp0779JUqdQ6+GrWs/PsBHyMyh
-	9Jjsu1AigmntTDkS0pGejX+t7nZFk2GI47Nkl0M9/6Pv5QZ3GQ6LWYth0Mh1SWTm
-	kubHIA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e6a6pxh5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 11:12:05 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B9BB140045;
-	Wed, 25 Jun 2025 11:10:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4176DB29C43;
-	Wed, 25 Jun 2025 11:09:07 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
- 2025 11:09:06 +0200
-Message-ID: <dabecbc6-967e-4912-8297-4d53fd2d9cc1@foss.st.com>
-Date: Wed, 25 Jun 2025 11:09:05 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0BUVolM0"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so221605ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jun 2025 07:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750863568; x=1751468368; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CsCMZQqmkVUqqMH5tInvaFnJAvvkUkKU0tRaWra23tY=;
+        b=0BUVolM0Gxm4K5kB+Ouu95gLbkux2b2PociHVjr4v6/5j/oGh6qRreV75H3eYBfTxa
+         cYgdbKQowANahswT85kcpb0k4fPjkoDZKXAYwYvEzKF7iOtqAeLni/PTlTbHaoLMn+I2
+         rnH8BKzkgXm3IBQTtPNKoO2LlBCHEKzsNIvFoA72Lfd/LknFMG1MGmb2Oi135jt+D9z3
+         HgBZdIOOzG90ib985M7EmyCoCVe6yGX58xKBe7QDxtzbHoo+EZd4uZ0ZA2GSKgyOnN2W
+         dTftuAew8MayZHlUE0wcYN4D13sse6BH3Jwz1Ca5KXOf31bNyMgOXEqTmdwNCdXGJdpl
+         4RIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750863568; x=1751468368;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CsCMZQqmkVUqqMH5tInvaFnJAvvkUkKU0tRaWra23tY=;
+        b=XLRMZPkKn/bAYpfNPx2qnuyL94+qYx5udTYeOqIXqZgIQ04jcSy4/grY5/oZv8RnXL
+         CrIxbv1J3Cn+gCUnUpe9eCQTPmbmdJ/05G40cYHfTbtKu5RWF29H+nAQFmCk41YDCCUX
+         rVrLQRexNR1pG5ytb5FABQ+mkQW+rX6g9qAZ8ksc7tZ8KW4HIkQUtkUcEvr0yktM3oXI
+         icpiDrrmyrlTeiDZtNkS5GclA/3bAn7Zml9cyI8qXt+GGn+E+k+PHTTv/pL6rE+gy2FT
+         nI39DYqgagEmozSjM39IVIUlA7SYTvyGDS2eqgi17hsH573vjSOjDOif3EzWuT/2wNSW
+         V3yg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1EqVEfqiahSGp06zj3QVbrOPfoAUzMcwquqNb2aP9tbOHcgVPbc7TRCLRc1Z/IJsfBScQPYaOh1UwzUPFsi+M@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGTtL9JcU6Zv2oeTGbH6/KcrBX6U0uaoxt1K/MIbnNXih1Ga21
+	wEYIb6p8Oc0aFxCYjP/SlWCxMMK1RaUFGZHvM7/bqHE6r5hMhloaSMVILhLYE4cj0v6HSpi465l
+	vX+wMbmVFXVY8MrrqHKpP95HH4E850qek25GKEd91
+X-Gm-Gg: ASbGncu3C6FI/UhA4dZZNMydI4tt4q0d+v3toTvDSC9KBFJoztfyXrWbvp+gh+NXshR
+	u/12NvYD8au4GRdjrBz/UJ/wkPNHB9EiWb+WCNqIX0ueH/cPwTaiW+QglvJ9lM8igzGyfh2yjii
+	32FmnHKBwsedSTJzXLDn4lIDEwK9jFNIhDcJM8tRv/SPiKlcAPVNQmIE/fhqJuFaruFlwJiP7X
+X-Google-Smtp-Source: AGHT+IFI1YA2zH+zwvyR1rJy+aBfBTCdNd7dhjmmd4EIqlXPDQxc4ZqqXXA6xdosT56rixSXJZOqOwhRJkl+rdl/sss=
+X-Received: by 2002:a05:6e02:1c2d:b0:3de:20ec:5c71 with SMTP id
+ e9e14a558f8ab-3df3433f362mr2634565ab.6.1750863568011; Wed, 25 Jun 2025
+ 07:59:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
-        Mark
- Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
- <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
- <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
- <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
- <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
- <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
- <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
+References: <202506251422.589f230a-lkp@intel.com>
+In-Reply-To: <202506251422.589f230a-lkp@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 25 Jun 2025 07:59:16 -0700
+X-Gm-Features: Ac12FXwVkD2jR7gdqWgouTrWU3Qi_fnDI_mR6AWnf5ozIzz7mqmYgU8s5q6WaJs
+Message-ID: <CAP-5=fU6hxJp7NhnQ4zDv6xdSfue9xyRhznp62=OxKLjok8UAA@mail.gmail.com>
+Subject: Re: [linux-next:master] [perf target] 5ddf4c3a17: perf-sanity-tests.perf_record_tests.fail
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, Namhyung Kim <namhyung@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/25/25 10:48, Krzysztof Kozlowski wrote:
-> On 25/06/2025 10:33, Clement LE GOFFIC wrote:
->> On 6/25/25 08:35, Krzysztof Kozlowski wrote:
->>> On 24/06/2025 12:43, Clement LE GOFFIC wrote:
->>>> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
->>>> [...]
->>>>
->>>> Hi Krzysztof,
->>>>
->>>> Sorry I forgot to address comments below.
->>>>
->>>>>> +
->>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
->>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
->>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
->>>>>> +	.counters_nb = MP1_CNT_NB,
->>>>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
->>>>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
->>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
->>>>>> +};
->>>>>> +
->>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
->>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
->>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
->>>>>> +	.counters_nb = MP2_CNT_NB,
->>>>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
->>>>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
->>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
->>>>>> +};
->>>>>> +
->>>>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
->>>>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
->>>>>> +};
->>>>>> +
->>>>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
->>>>>> +	{
->>>>>> +		.compatible = "st,stm32mp131-ddr-pmu",
->>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
->>>>>> +	},
->>>>>> +	{
->>>>>> +		.compatible = "st,stm32mp151-ddr-pmu",
->>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
->>>>>
->>>>> So devices are compatible, thus express it correctly and drop this.
->>>>
->>>> Ok so I assume this comes with your comment in the bindings and
->>>> basically don't get you point here.
->>>> Can you please be more precise ?
->>>
->>> Express compatibility in the bindings, like 90% of SoCs are doing, so
->>> with proper fallback and drop this entry in the table. My comment was
->>> pretty precise, because this is completely standard pattern, also used
->>> already in stm32.
->>>
->>
->> Ok I remember your discussion with Alex in my V1 of pinctrl-hdp :
->> https://lore.kernel.org/all/1de58672-5355-4b75-99f4-c48687017d2f@kernel.org/
->>
->> Does it suits you :
->> In the SoC DT:
->> MP13: compatible = "st,stm32mp131-ddr-pmu", "st,stm32mp1-ddr-pmu";
->> MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp1-ddr-pmu";
-> 
-> No, because I did not say to change other entry in the table. Please
-> read again what I asked: drop this. "This" means ONLY this entry. "Drop
-> this" does not mean "change something else". Do not change other entries
-> by introducing some generic compatible. That's not the pattern ever
-> endorsed by DT maintainers. Add front compatible and you are done,
-> smallest amount of changes, most obvious code.
+On Wed, Jun 25, 2025 at 12:10=E2=80=AFAM kernel test robot
+<oliver.sang@intel.com> wrote:
 >
+>
+>
+> Hello,
+>
+> kernel test robot noticed "perf-sanity-tests.perf_record_tests.fail" on:
+>
+> commit: 5ddf4c3a17dc499fcbaf35692bc894340062dee8 ("perf target: Separate =
+parse_uid into its own function")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>
+> [test failed on linux-next/master f817b6dd2b62d921a6cdc0a3ac599cd1851f343=
+c]
+>
+> in testcase: perf-sanity-tests
+> version:
+> with following parameters:
+>
+>         perf_compiler: clang
+>         group: group-02
+>
+>
+> config: x86_64-rhel-9.4-bpf
+> compiler: gcc-12
+> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz=
+ (Kaby Lake) with 32G memory
+>
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202506251422.589f230a-lkp@intel.=
+com
+>
+>
+> 2025-06-22 14:23:54 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-5ddf4c3a=
+17dc499fcbaf35692bc894340062dee8/tools/perf/perf test 126 -v
+> 126: perf record tests                                               : Ru=
+nning (1 active)
+> --- start ---
+> test child forked, pid 8698
+>  13bca6c-13bcaa5 g test_loop
+> perf does have symbol 'test_loop'
+> Basic --per-thread mode test
+> Per-thread record [Skipped event not supported]
+> Register capture test
+> Register capture test [Failed missing output]
 
-Ok so in the SoC DT I'll keep:
-MP13: compatible = "st,stm32mp131-ddr-pmu";
-MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp131-ddr-pmu";
+Register capturing is different functionality to UID filtering.
 
-Thanks for clarifying.
+> Basic --system-wide mode test
+> System-wide record [Skipped not supported]
+> Basic target workload test
+> Workload record [Failed record]
 
-Best regards,
-Clément
+Something seems off, possibly something to do with permissions here.
 
-> Best regards,
-> Krzysztof
+> Branch counter test
+> branch counter feature not supported on all core PMUs (/sys/bus/event_sou=
+rce/devices/cpu) [Skipped]
+> Cgroup sampling test
+> Cgroup sampling [Skipped not supported]
+> Basic leader sampling test
+> Leader sampling [Failed record]
 
+And here.
+
+I suspect this was a test machine issue although later patches do add
+UID filtering tests to this test. I don't see anything actionable
+here.
+
+Thanks,
+Ian
+
+> Topdown leader sampling test
+> Topdown leader sampling [Skipped event parsing failed]
+> precise_max attribute test
+> precise_max attribute [Skipped no cycles:P event]
+> precise_max attribute [Skipped no instructions:P event]
+> precise_max attribute [Skipped no hardware events]
+> ---- end(-1) ----
+> 126: perf record tests                                               : FA=
+ILED!
+>
+>
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20250625/202506251422.589f230a-lk=
+p@intel.com
+>
+>
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
