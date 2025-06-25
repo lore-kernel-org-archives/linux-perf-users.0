@@ -1,174 +1,144 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B65A17BEBF
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Jun 2025 14:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40CC286412;
+	Wed, 25 Jun 2025 15:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863570; cv=none; b=Zgb8ml/+wkVhCpRV0WWdNWJCFVDpx9IImgduOOttckZ9NdNeEmSbw6QkfUuP8zZmQjOSSMfUyG2Vx/91h8jRw40yEu68Zym6RuZuq4OdENJpLPdy+RfQd/nzw/vXcFOiXTLB3cthT5klUPzccMvIMLYZd8dfru0DWq6uCihQ02Q=
+	t=1750864938; cv=none; b=PaXmC1uHoTbfe2C/MK85OQngEA1axuaxwP9dzT4fnpS6VrPZbMAUPGqB4rKJ9eEDdu8+Ma4sZW3WBb2VCniwpoO8bDzaVjiY5x9tkMq6U4jtoWnRYFa9QCv8ZWOhZMAg2lv8xNY1eA/QhP1sDDiy/6nsD62P07TYQbP/Dm4ZPR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863570; c=relaxed/simple;
-	bh=CoHQ+3pE0BaR40sPkkySRTRvOejlJ0PIfGy/gZW5z0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GbPjKIjaUC7u7oI/f2zn0t3tOYpHAiIrT0Us/Slh3TGJ2eJuVhbdAJwGMH2zEiTkuK2na25DLwJromgdR0W4GY1VLdPoJBi469MbF+6KdBl2h6qvZHjEWyy0v3C+3M54uAGx3FQg4O0VOoyubrQO8rAa8fBhsC6hTlm8ZRSHzzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0BUVolM0; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750864938; c=relaxed/simple;
+	bh=udi9Dj+TB3DzEDfD+VOVtv+BMkNrVkihkKNjVOl4DgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e/+onam0kIeoEi79Ba3HyPuTrigAuobE+4lWtUi+Ggxu1ngRtOQxKb/LG+P0uTZFWdb8tKRYfd2h98dCDS2FxySx3eM7C+a/Zy3fJrSZkmcWkUqU4UgTswygKnRxOiH4z8/Qf5bPOq9WLC8sFTbkk0GAx/mM9jhIyq1gMYx5zFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=flaElob/; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0BUVolM0"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so221605ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jun 2025 07:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750863568; x=1751468368; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CsCMZQqmkVUqqMH5tInvaFnJAvvkUkKU0tRaWra23tY=;
-        b=0BUVolM0Gxm4K5kB+Ouu95gLbkux2b2PociHVjr4v6/5j/oGh6qRreV75H3eYBfTxa
-         cYgdbKQowANahswT85kcpb0k4fPjkoDZKXAYwYvEzKF7iOtqAeLni/PTlTbHaoLMn+I2
-         rnH8BKzkgXm3IBQTtPNKoO2LlBCHEKzsNIvFoA72Lfd/LknFMG1MGmb2Oi135jt+D9z3
-         HgBZdIOOzG90ib985M7EmyCoCVe6yGX58xKBe7QDxtzbHoo+EZd4uZ0ZA2GSKgyOnN2W
-         dTftuAew8MayZHlUE0wcYN4D13sse6BH3Jwz1Ca5KXOf31bNyMgOXEqTmdwNCdXGJdpl
-         4RIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750863568; x=1751468368;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CsCMZQqmkVUqqMH5tInvaFnJAvvkUkKU0tRaWra23tY=;
-        b=XLRMZPkKn/bAYpfNPx2qnuyL94+qYx5udTYeOqIXqZgIQ04jcSy4/grY5/oZv8RnXL
-         CrIxbv1J3Cn+gCUnUpe9eCQTPmbmdJ/05G40cYHfTbtKu5RWF29H+nAQFmCk41YDCCUX
-         rVrLQRexNR1pG5ytb5FABQ+mkQW+rX6g9qAZ8ksc7tZ8KW4HIkQUtkUcEvr0yktM3oXI
-         icpiDrrmyrlTeiDZtNkS5GclA/3bAn7Zml9cyI8qXt+GGn+E+k+PHTTv/pL6rE+gy2FT
-         nI39DYqgagEmozSjM39IVIUlA7SYTvyGDS2eqgi17hsH573vjSOjDOif3EzWuT/2wNSW
-         V3yg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1EqVEfqiahSGp06zj3QVbrOPfoAUzMcwquqNb2aP9tbOHcgVPbc7TRCLRc1Z/IJsfBScQPYaOh1UwzUPFsi+M@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGTtL9JcU6Zv2oeTGbH6/KcrBX6U0uaoxt1K/MIbnNXih1Ga21
-	wEYIb6p8Oc0aFxCYjP/SlWCxMMK1RaUFGZHvM7/bqHE6r5hMhloaSMVILhLYE4cj0v6HSpi465l
-	vX+wMbmVFXVY8MrrqHKpP95HH4E850qek25GKEd91
-X-Gm-Gg: ASbGncu3C6FI/UhA4dZZNMydI4tt4q0d+v3toTvDSC9KBFJoztfyXrWbvp+gh+NXshR
-	u/12NvYD8au4GRdjrBz/UJ/wkPNHB9EiWb+WCNqIX0ueH/cPwTaiW+QglvJ9lM8igzGyfh2yjii
-	32FmnHKBwsedSTJzXLDn4lIDEwK9jFNIhDcJM8tRv/SPiKlcAPVNQmIE/fhqJuFaruFlwJiP7X
-X-Google-Smtp-Source: AGHT+IFI1YA2zH+zwvyR1rJy+aBfBTCdNd7dhjmmd4EIqlXPDQxc4ZqqXXA6xdosT56rixSXJZOqOwhRJkl+rdl/sss=
-X-Received: by 2002:a05:6e02:1c2d:b0:3de:20ec:5c71 with SMTP id
- e9e14a558f8ab-3df3433f362mr2634565ab.6.1750863568011; Wed, 25 Jun 2025
- 07:59:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="flaElob/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750864937; x=1782400937;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=udi9Dj+TB3DzEDfD+VOVtv+BMkNrVkihkKNjVOl4DgA=;
+  b=flaElob/J2R/Jgu0XLlOe7ij9fkaaXt38hWSbjZpkUBmWUWTfz9VDpZC
+   pczwJ0To2lFTxveY/kTKFlHWJBBOfm/qsQWU/LfclgAJuvXSkq/uMT2og
+   evzfAxzPS5p9c+WlVJh+BfH/WpSz4hZf7M7zy1h4vcOI/m0Uqd1LCBgZX
+   pmGlutNk5VvbJM9f34/n3X+DqLvvq5XRnwC6tA/ikgv1R5YSvRgkuhb/y
+   pSrXz5KoI1vRsG8iDHvR6DO7mqz8JVtm2BZNXlLhJJHDiFQzVJr2Yp1w/
+   o7FfdO+9+dr3VZabIZc0lXGp3ZKaRXS0oHKaUuCpD55iVusIaIIbLUP3h
+   g==;
+X-CSE-ConnectionGUID: jyJbm1bXSWWUQKd0pOdAIg==
+X-CSE-MsgGUID: ZJjdFP+nSdGfuv7UzO0i4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70573260"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="70573260"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:22:16 -0700
+X-CSE-ConnectionGUID: WPMLVT8JSx+gj9sU/NfDJQ==
+X-CSE-MsgGUID: snl4U3dqQUyLma4P7zG57g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152018305"
+Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
+  by orviesa009.jf.intel.com with ESMTP; 25 Jun 2025 08:22:13 -0700
+From: Tianyou Li <tianyou.li@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2] tools/perf: Add --exclude-buildids option to perf archive command
+Date: Thu, 26 Jun 2025 00:14:01 +0800
+Message-ID: <20250625161509.2599646-1-tianyou.li@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aFrzSpvzzWeHdyJ5 () google ! com>
+References: <aFrzSpvzzWeHdyJ5 () google ! com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202506251422.589f230a-lkp@intel.com>
-In-Reply-To: <202506251422.589f230a-lkp@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 25 Jun 2025 07:59:16 -0700
-X-Gm-Features: Ac12FXwVkD2jR7gdqWgouTrWU3Qi_fnDI_mR6AWnf5ozIzz7mqmYgU8s5q6WaJs
-Message-ID: <CAP-5=fU6hxJp7NhnQ4zDv6xdSfue9xyRhznp62=OxKLjok8UAA@mail.gmail.com>
-Subject: Re: [linux-next:master] [perf target] 5ddf4c3a17: perf-sanity-tests.perf_record_tests.fail
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, Namhyung Kim <namhyung@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 12:10=E2=80=AFAM kernel test robot
-<oliver.sang@intel.com> wrote:
->
->
->
-> Hello,
->
-> kernel test robot noticed "perf-sanity-tests.perf_record_tests.fail" on:
->
-> commit: 5ddf4c3a17dc499fcbaf35692bc894340062dee8 ("perf target: Separate =
-parse_uid into its own function")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->
-> [test failed on linux-next/master f817b6dd2b62d921a6cdc0a3ac599cd1851f343=
-c]
->
-> in testcase: perf-sanity-tests
-> version:
-> with following parameters:
->
->         perf_compiler: clang
->         group: group-02
->
->
-> config: x86_64-rhel-9.4-bpf
-> compiler: gcc-12
-> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz=
- (Kaby Lake) with 32G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202506251422.589f230a-lkp@intel.=
-com
->
->
-> 2025-06-22 14:23:54 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-5ddf4c3a=
-17dc499fcbaf35692bc894340062dee8/tools/perf/perf test 126 -v
-> 126: perf record tests                                               : Ru=
-nning (1 active)
-> --- start ---
-> test child forked, pid 8698
->  13bca6c-13bcaa5 g test_loop
-> perf does have symbol 'test_loop'
-> Basic --per-thread mode test
-> Per-thread record [Skipped event not supported]
-> Register capture test
-> Register capture test [Failed missing output]
+When make a perf archive, it may contains the binaries that user did not want to ship with,
+add --exclude-buildids option to specify a file which contains the buildids need to be
+excluded. The file can be generated from command:
 
-Register capturing is different functionality to UID filtering.
+    perf buildid-list -i perf.data --with-hits | grep -v "^ " > exclude-buildids.txt
 
-> Basic --system-wide mode test
-> System-wide record [Skipped not supported]
-> Basic target workload test
-> Workload record [Failed record]
+Then remove the lines from the exclude-buildids.txt for buildids should be included.
 
-Something seems off, possibly something to do with permissions here.
+Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+---
+ tools/perf/perf-archive.sh | 35 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-> Branch counter test
-> branch counter feature not supported on all core PMUs (/sys/bus/event_sou=
-rce/devices/cpu) [Skipped]
-> Cgroup sampling test
-> Cgroup sampling [Skipped not supported]
-> Basic leader sampling test
-> Leader sampling [Failed record]
+diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
+index 6ed7e52ab881..7977e9b0a5ea 100755
+--- a/tools/perf/perf-archive.sh
++++ b/tools/perf/perf-archive.sh
+@@ -16,6 +16,13 @@ while [ $# -gt 0 ] ; do
+ 	elif [ $1 == "--unpack" ]; then
+ 		UNPACK=1
+ 		shift
++	elif [ $1 == "--exclude-buildids" ]; then
++		EXCLUDE_BUILDIDS="$2"
++		if [ ! -e "$EXCLUDE_BUILDIDS" ]; then
++			echo "Provided exclude-buildids file $EXCLUDE_BUILDIDS does not exist"
++			exit 1
++		fi
++		shift 2
+ 	else
+ 		PERF_DATA=$1
+ 		UNPACK_TAR=$1
+@@ -86,11 +93,29 @@ fi
+ 
+ BUILDIDS=$(mktemp /tmp/perf-archive-buildids.XXXXXX)
+ 
+-perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " > $BUILDIDS
+-if [ ! -s $BUILDIDS ] ; then
+-	echo "perf archive: no build-ids found"
+-	rm $BUILDIDS || true
+-	exit 1
++#
++# EXCLUDE_BUILDIDS is an optional file that contains build-ids to be excluded from the
++# archive. It is a list of build-ids, one per line, without any leading or trailing spaces.
++# If the file is empty, all build-ids will be included in the archive. To create a exclude-
++# buildids file, you can use the following command:
++# 	perf buildid-list -i perf.data --with-hits | grep -v "^ " > exclude_buildids.txt
++# You can edit the file to remove the lines that you want to keep in the archive, then:
++# 	perf archive --exclude-buildids exclude_buildids.txt
++#
++if [ -s "$EXCLUDE_BUILDIDS" ]; then
++	perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " | grep -Fv -f $EXCLUDE_BUILDIDS > $BUILDIDS
++	if [ ! -s "$BUILDIDS" ] ; then
++		echo "perf archive: no build-ids found after applying exclude-buildids file"
++		rm $BUILDIDS || true
++		exit 1
++	fi
++else
++	perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " > $BUILDIDS
++	if [ ! -s "$BUILDIDS" ] ; then
++		echo "perf archive: no build-ids found"
++		rm $BUILDIDS || true
++		exit 1
++	fi
+ fi
+ 
+ MANIFEST=$(mktemp /tmp/perf-archive-manifest.XXXXXX)
+-- 
+2.47.1
 
-And here.
-
-I suspect this was a test machine issue although later patches do add
-UID filtering tests to this test. I don't see anything actionable
-here.
-
-Thanks,
-Ian
-
-> Topdown leader sampling test
-> Topdown leader sampling [Skipped event parsing failed]
-> precise_max attribute test
-> precise_max attribute [Skipped no cycles:P event]
-> precise_max attribute [Skipped no instructions:P event]
-> precise_max attribute [Skipped no hardware events]
-> ---- end(-1) ----
-> 126: perf record tests                                               : FA=
-ILED!
->
->
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250625/202506251422.589f230a-lk=
-p@intel.com
->
->
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
