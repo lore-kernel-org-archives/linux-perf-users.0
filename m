@@ -1,100 +1,179 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC86286422;
-	Wed, 25 Jun 2025 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE71429A9FE;
+	Wed, 25 Jun 2025 09:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842316; cv=none; b=rNml1ngkDfOQsXDhCEqsubY0Ks7XAOeA6GT+EO4ScMUdmxUf9UQp9Rk2xLvICwxmY5lFmMd6Izh4vk9XwTC6mV7/LbRVculkd/Xcgw8OKBDJ+17DO8C3UamRS1Xy+4HG8sSml/f6fApifGXd+enlA4q7vxwGO7+zgy4Ld9J5xOk=
+	t=1750842746; cv=none; b=HDvqEOWjsItnd1mqZ40jpQIh9JAaMf5mau18klSZLGEO+YwaQ3KEMOOz7JkJZBTpigGTvb67i0JINVDJG97w6MBfjHT25ZxIK0Ckj8mNrvR2A4MV8r5gwUHD8V75nBzQZlhP6Xqi5qWfYLtDkPTTPdSQyxbsJ/3fEYAAtiio1Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842316; c=relaxed/simple;
-	bh=ENbIt35blLVVdonVJShKKuqn0xG/16BBjS5D+QLQFOw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oMo7SfArmpNgvrfovamLMAt12LgdU4m6xhhZ7S5Wic0ZhiOxirLlK9R1svze+oM7O+r5LYV+AHNSYL73JqP+SkeengNnNxfIVYgzPekxdXZiAuXIBtc/4aZ/75Zgfq+tixMM8VDmJT+Oi9axGTZbKZB8HBcYGxLHSSyH/m/5BA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRwnX4gr3z6GDDB;
-	Wed, 25 Jun 2025 17:02:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E8A6914027A;
-	Wed, 25 Jun 2025 17:05:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 25 Jun
- 2025 11:05:12 +0200
-Date: Wed, 25 Jun 2025 10:05:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-CC: <will@kernel.org>, <mark.rutland@arm.com>, <linux-cxl@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] perf/cxlpmu: Fix typos in cxl_pmu.c comments and
- documentation
-Message-ID: <20250625100510.00005f0b@huawei.com>
-In-Reply-To: <20250624194350.109790-4-alok.a.tiwari@oracle.com>
-References: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
-	<20250624194350.109790-4-alok.a.tiwari@oracle.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750842746; c=relaxed/simple;
+	bh=Ku1JP3VucsE7gqGwrbjDhzOU4k9tMt5YcgLvazIy0lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bKaT/+Xr347j8c8MVxeUt9pq58o/WTKO8m7wBPhfvJZo3a/okHnWrMMUgSAJx/D1znPW+ZGXVJyYwKIN+wsVA3kLAB7aX4cubxCdjegN4mNNsz8NJrTCLvAK8jM8ywhXaZEZ5/KtJVoDLY0YMc43X/VV0qQY+iX2wxgEYGMfCy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Vwf8UUn5; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Vwf8UUn5"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P510l9032381;
+	Wed, 25 Jun 2025 11:12:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	7ONVBi6t27yoHOLom4q+9fNttcSqpjkl1fBEaeAnNkw=; b=Vwf8UUn5XqH75K2i
+	fscZ6KsiCvCjx7WJPqQv23IzCGzpmhbdb1xkGE7uHQA9PyER1EFSCXUkQPBiHlW+
+	4uwmJYQWpOhdd6Xqb43cGBt89mdGyI4ppGLqD0yH1sy3yZx/kSdVbeJbpm7/B+03
+	Z9f1dnJinZdTX1NVip71mTOSvnuabKIaG0/CX1WLLaIsmVKwNQzNqUc9OI0pJPJR
+	+iV48oYu9RNwLmIxPb3rBTaniPK+oj3phiUfDazp0779JUqdQ6+GrWs/PsBHyMyh
+	9Jjsu1AigmntTDkS0pGejX+t7nZFk2GI47Nkl0M9/6Pv5QZ3GQ6LWYth0Mh1SWTm
+	kubHIA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e6a6pxh5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 11:12:05 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B9BB140045;
+	Wed, 25 Jun 2025 11:10:18 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4176DB29C43;
+	Wed, 25 Jun 2025 11:09:07 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 11:09:06 +0200
+Message-ID: <dabecbc6-967e-4912-8297-4d53fd2d9cc1@foss.st.com>
+Date: Wed, 25 Jun 2025 11:09:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
+        Mark
+ Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
+ <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
+ <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
+ <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
+ <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
 
-On Tue, 24 Jun 2025 12:43:40 -0700
-Alok Tiwari <alok.a.tiwari@oracle.com> wrote:
-
-> Fix several minor typo errors in comments:
-> - Remove duplicated word "a" in "a a VID / GroupID".
-> - Correct "Opcopdes" to "Opcodes" in CXL spec reference.
-> - Fix spelling of "implemnted" to "implemented".
+On 6/25/25 10:48, Krzysztof Kozlowski wrote:
+> On 25/06/2025 10:33, Clement LE GOFFIC wrote:
+>> On 6/25/25 08:35, Krzysztof Kozlowski wrote:
+>>> On 24/06/2025 12:43, Clement LE GOFFIC wrote:
+>>>> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
+>>>> [...]
+>>>>
+>>>> Hi Krzysztof,
+>>>>
+>>>> Sorry I forgot to address comments below.
+>>>>
+>>>>>> +
+>>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
+>>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
+>>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
+>>>>>> +	.counters_nb = MP1_CNT_NB,
+>>>>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
+>>>>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
+>>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
+>>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
+>>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
+>>>>>> +	.counters_nb = MP2_CNT_NB,
+>>>>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
+>>>>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
+>>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
+>>>>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+>>>>>> +	{
+>>>>>> +		.compatible = "st,stm32mp131-ddr-pmu",
+>>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>>>> +	},
+>>>>>> +	{
+>>>>>> +		.compatible = "st,stm32mp151-ddr-pmu",
+>>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>>>
+>>>>> So devices are compatible, thus express it correctly and drop this.
+>>>>
+>>>> Ok so I assume this comes with your comment in the bindings and
+>>>> basically don't get you point here.
+>>>> Can you please be more precise ?
+>>>
+>>> Express compatibility in the bindings, like 90% of SoCs are doing, so
+>>> with proper fallback and drop this entry in the table. My comment was
+>>> pretty precise, because this is completely standard pattern, also used
+>>> already in stm32.
+>>>
+>>
+>> Ok I remember your discussion with Alex in my V1 of pinctrl-hdp :
+>> https://lore.kernel.org/all/1de58672-5355-4b75-99f4-c48687017d2f@kernel.org/
+>>
+>> Does it suits you :
+>> In the SoC DT:
+>> MP13: compatible = "st,stm32mp131-ddr-pmu", "st,stm32mp1-ddr-pmu";
+>> MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp1-ddr-pmu";
 > 
-> Improves code readability and documentation consistency.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-One day I'll remember to run a spell checker :(
+> No, because I did not say to change other entry in the table. Please
+> read again what I asked: drop this. "This" means ONLY this entry. "Drop
+> this" does not mean "change something else". Do not change other entries
+> by introducing some generic compatible. That's not the pattern ever
+> endorsed by DT maintainers. Add front compatible and you are done,
+> smallest amount of changes, most obvious code.
+>
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Ok so in the SoC DT I'll keep:
+MP13: compatible = "st,stm32mp131-ddr-pmu";
+MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp131-ddr-pmu";
 
-> ---
->  drivers/perf/cxl_pmu.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 5a475a5a1f095..d094030220bf2 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -113,7 +113,7 @@ struct cxl_pmu_info {
->  
->  /*
->   * All CPMU counters are discoverable via the Event Capabilities Registers.
-> - * Each Event Capability register contains a a VID / GroupID.
-> + * Each Event Capability register contains a VID / GroupID.
->   * A counter may then count any combination (by summing) of events in
->   * that group which are in the Supported Events Bitmask.
->   * However, there are some complexities to the scheme.
-> @@ -406,7 +406,7 @@ static struct attribute *cxl_pmu_event_attrs[] = {
->  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
->  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
->  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
-> -	/* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
-> +	/* CXL rev 3.1 Table 3-50 S2M NDR Opcodes */
->  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
->  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
->  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
-> @@ -627,7 +627,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
->  	hwc->state = 0;
->  
->  	/*
-> -	 * Currently only hdm filter control is implemnted, this code will
-> +	 * Currently only hdm filter control is implemented, this code will
->  	 * want generalizing when more filters are added.
->  	 */
->  	if (info->filter_hdm) {
+Thanks for clarifying.
+
+Best regards,
+Clément
+
+> Best regards,
+> Krzysztof
 
