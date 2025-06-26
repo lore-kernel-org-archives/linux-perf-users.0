@@ -1,281 +1,101 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3851F2FE36B
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Jun 2025 20:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9D119D06A;
+	Thu, 26 Jun 2025 21:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750968379; cv=none; b=XosHSYF88S8QRsvEN5f9CMjeZnHPhW1e7j6lW4G1Iwas6JEcQ8niCp82uwPvvH+7DXNcj3X5I1M7LDYzohypU+6KyLyTho0ob46sWkv70U8w88F5gO2ujYoafhpOcAszRPHpuBH0+oycbC1puyp92b2ORghcVbzcZcQHeYaAzME=
+	t=1750972758; cv=none; b=q6/RqvBao/iB0lpv14h1LDVCAKF1qLbVxFmceEbNzxshFyHWG46RWzzQEziS6qicjQnXNv02BEJCBGUjTrsBRkA5NpLfx4+wNGVDaZlNAKeh+Wfv3nTQi6SY4CYfs9MvtgtD7I0XQzch/4wjJwYQisyej6P/ajxWL9QP1L6vFIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750968379; c=relaxed/simple;
-	bh=9eSwVawIpIf46LRehZWFLyWPO8/7v6TDvCTZI7UPgOU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=m7rm2sEjOTJn//2yKJ78bqK9SFFMSToLcTUb+i4wLweSEWUecl/in8TRva3LqrjiwOjHb2ymB2hXB76wRt+79j6UNJS16+blyZFYUxVpsLhwWwBabN4uIFUQjlhXLh8Nk2hiU6MMuI/kh7fbOmXtLZ2rvI2tsel8EubQ3oj157k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SaK5HvjV; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1750972758; c=relaxed/simple;
+	bh=28uNc/vEFpqvghgBWV99ylJqmaORBokqPOIAZlT5Edg=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=tuT8ZMo4cy5YDUXyk92dx/FxWZZys3v6PcuTU/2uawxkhQtMs0d3Lzi1CZtPbdKVdB+/7sEUpSjEVWKsNtz3shd+chsdAw+16yKdj8xJ2+O9tT5l+OWDX6K3TGvccBLTN/ugweROncpo7w6P3jMG3b5vB/mU648BpXycXamdMOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbF9XJlu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SaK5HvjV"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3df2e9e6146so8783115ab.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Jun 2025 13:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750968374; x=1751573174; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdZdMkXachOTBLhsNs+TRwK+/iArlUH+VMAh4h7bRTc=;
-        b=SaK5HvjVeUvC5HS6nMm9H5aUeUHasza9Rtv0idWuVRX2BqRDJSKrAXN8mqGPsU3RNd
-         m9lKKk/bV2OtnM7N7VTaFh+kQDBIADLJX6PfltT0hHB8lIWJlFMQ7a59rEcC56DNUjM+
-         40Z3W/THkWV9W4GzhHoku0u8OJVy8CNp9lJ0NAwPEo4wzrF1a2VHtEG+sfwXwSikk9ac
-         bWcOo02i09V+CN2mNSIUFpF23QEhooDlQKTG03TvlDnDWqoWokPetpmUm2HgN4msx9TH
-         64RGy9jPQnN0/KvAOc/O1+23mU0tS/lL56WyGunjeWxUxuZJbl4SJPXlvbLNDQVRCuKI
-         78zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750968374; x=1751573174;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdZdMkXachOTBLhsNs+TRwK+/iArlUH+VMAh4h7bRTc=;
-        b=by4oUj6/uTZrRWpg6cSecHusYyHLuwACgtPYho9xDs2zfCqr/C63VpiRwYAViI54i0
-         zsggJxepOmeXPOLp/q6OwfFnYnlmX7wz4C8H7tcFtKfbTB63mpLtWYUGOD19ebwz4+6A
-         HjHkxEp0bHYTeyf5N73AWbdoOg6Lvjd17KOmLz3sf7J68LmhuAY9pQQ0VHcadei6uXIA
-         pqEJe0yhDaCz08V/OMhS30Oy/q9wVqhvaNbGANHyVqf1l8NG3dNKXdWmXWEtssGI9ViT
-         U4jrMcWcZqGva4XCUojtBV0v4P9/czIZMAmQqSM/lnWAuCE3hcOvcEEMg1BnDpQT2gHm
-         Un6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuUx3cqIDwcosQNFzqCx0N2CQjYs66XEOtXeiG9B6f9TTHEyCtxxa8tAP6SE/J2ds7Q2Hb5KiuGtcRde4zAuu+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOuZ4adrUTNIthEfn6wrBNsd/Wni9Qek3JYZzyoM9yfGP6PkNO
-	0vo9X2M1yFbXQtBlZfxcXABCWM/h+sGN9Yc7drE6wzUby3dpYyGx4KqVtz+IE9jl0ZrnIn1HjnT
-	C3H/erBR1NwKiu78zqW9j14YYug==
-X-Google-Smtp-Source: AGHT+IGarWfmYd/DUQimhQezHE2YXV7tgZKjgPA1cETPrxi7OiBglxyD0Fcw3dSMp14kty4kT+yi3FezNyuiQsd4uQ==
-X-Received: from ilbbs16.prod.google.com ([2002:a05:6e02:2410:b0:3df:30df:d2c4])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1c23:b0:3dd:dd39:324c with SMTP id e9e14a558f8ab-3df4ab6d058mr11318515ab.9.1750968374502;
- Thu, 26 Jun 2025 13:06:14 -0700 (PDT)
-Date: Thu, 26 Jun 2025 20:04:58 +0000
-In-Reply-To: <20250626200459.1153955-1-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbF9XJlu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B9E8C4CEEB;
+	Thu, 26 Jun 2025 21:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750972756;
+	bh=28uNc/vEFpqvghgBWV99ylJqmaORBokqPOIAZlT5Edg=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=bbF9XJlul92CmEGz3T4uQ+yndC/DlJOuuo42kGpnawZlzPRbvVNUAo6S1NnSvvvqJ
+	 mGLgTWTcyPGSpu74VJjKbv8HrO3lcGcLqj1eTACiGW7PwR8fKbklDtULObkihl1Ue7
+	 PPi/EI5Dw3ZMUccOKbL5/fISnsfHPTQxB5cUEivQV8vItuLr6JxecvCBNO1YEENwqQ
+	 qcc0e6LguLIwq34dOxDixADb2i9t8PlGSiIgwYXD8AGhrgiVvX1JWn+6kQnV80QWcf
+	 9L6Yh0PXMyH5ilHF58rjqvrbzb3ZepOM25v3iGmIcC2smqNXGYYbswVPhcDu5IrXtG
+	 6c47qfe4l0hgQ==
+Date: Thu, 26 Jun 2025 16:19:15 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250626200459.1153955-1-coltonlewis@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626200459.1153955-23-coltonlewis@google.com>
-Subject: [PATCH v3 22/22] KVM: arm64: selftests: Add test case for partitioned PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ Will Deacon <will@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
+To: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+In-Reply-To: <20250626-ddr-bindings-v1-2-cae30933c54c@foss.st.com>
+References: <20250626-ddr-bindings-v1-0-cae30933c54c@foss.st.com>
+ <20250626-ddr-bindings-v1-2-cae30933c54c@foss.st.com>
+Message-Id: <175097275573.957711.15313846796838099778.robh@kernel.org>
+Subject: Re: [PATCH RFC 2/2] dt-bindings: perf: stm32: introduce DDRPERFM
+ dt-bindings
 
-Run separate a test case for a partitioned PMU in vpmu_counter_access.
 
-An enum is created specifying whether we are testing the emulated or
-partitioned PMU and all the test functions are modified to take the
-implementation as an argument and make the difference in setup
-appropriately.
+On Thu, 26 Jun 2025 21:48:35 +0200, Clément Le Goffic wrote:
+> DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
+> It allows to monitor DDR events that come from the DDR Controller
+> such as read or write events.
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 90 ++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+> 
 
-Because the test should still succeed even if we are on a machine
-where we have the capability but the ioctl fails because the driver
-was never configured properly, use __vcpu_ioctl to avoid checking the
-return code.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Colton Lewis <coltonlewis@google.com>
----
- tools/include/uapi/linux/kvm.h                |  2 +
- .../selftests/kvm/arm64/vpmu_counter_access.c | 62 +++++++++++++------
- 2 files changed, 46 insertions(+), 18 deletions(-)
+yamllint warnings/errors:
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index b6ae8ad8934b..21a2c37528c8 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -930,6 +930,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-+#define KVM_CAP_ARM_PARTITION_PMU 244
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1356,6 +1357,7 @@ struct kvm_vfio_spapr_tce {
- #define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
- /* Memory Encryption Commands */
- #define KVM_MEMORY_ENCRYPT_OP      _IOWR(KVMIO, 0xba, unsigned long)
-+#define KVM_ARM_PARTITION_PMU	_IOWR(KVMIO, 0xce, bool)
- 
- struct kvm_enc_region {
- 	__u64 addr;
-diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-index f16b3b27e32e..92e665516bc8 100644
---- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-@@ -25,6 +25,16 @@
- /* The cycle counter bit position that's common among the PMU registers */
- #define ARMV8_PMU_CYCLE_IDX		31
- 
-+enum pmu_impl {
-+	EMULATED,
-+	PARTITIONED
-+};
-+
-+const char *pmu_impl_str[] = {
-+	"Emulated",
-+	"Partitioned"
-+};
-+
- struct vpmu_vm {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-@@ -405,7 +415,7 @@ static void guest_code(uint64_t expected_pmcr_n)
- }
- 
- /* Create a VM that has one vCPU with PMUv3 configured. */
--static void create_vpmu_vm(void *guest_code)
-+static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
- {
- 	struct kvm_vcpu_init init;
- 	uint8_t pmuver, ec;
-@@ -419,6 +429,7 @@ static void create_vpmu_vm(void *guest_code)
- 		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
- 		.attr = KVM_ARM_VCPU_PMU_V3_INIT,
- 	};
-+	bool partition = (impl == PARTITIONED);
- 
- 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
- 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-@@ -449,6 +460,9 @@ static void create_vpmu_vm(void *guest_code)
- 	/* Initialize vPMU */
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		__vcpu_ioctl(vpmu_vm.vcpu, KVM_ARM_PARTITION_PMU, &partition);
- }
- 
- static void destroy_vpmu_vm(void)
-@@ -475,12 +489,12 @@ static void run_vcpu(struct kvm_vcpu *vcpu, uint64_t pmcr_n)
- 	}
- }
- 
--static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-+static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, enum pmu_impl impl, bool expect_fail)
- {
- 	struct kvm_vcpu *vcpu;
- 	uint64_t pmcr, pmcr_orig;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	pmcr_orig = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
-@@ -508,7 +522,7 @@ static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
-  * and run the test.
-  */
--static void run_access_test(uint64_t pmcr_n)
-+static void run_access_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	uint64_t sp;
- 	struct kvm_vcpu *vcpu;
-@@ -516,7 +530,7 @@ static void run_access_test(uint64_t pmcr_n)
- 
- 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	/* Save the initial sp to restore them later to run the guest again */
-@@ -550,14 +564,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
-  * Create a VM, and check if KVM handles the userspace accesses of
-  * the PMU register sets in @validity_check_reg_sets[] correctly.
-  */
--static void run_pmregs_validity_test(uint64_t pmcr_n)
-+static void run_pmregs_validity_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	int i;
- 	struct kvm_vcpu *vcpu;
- 	uint64_t set_reg_id, clr_reg_id, reg_val;
- 	uint64_t valid_counters_mask, max_counters_mask;
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	valid_counters_mask = get_counters_mask(pmcr_n);
-@@ -607,11 +621,11 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
-  * the vCPU to @pmcr_n, which is larger than the host value.
-  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
-  */
--static void run_error_test(uint64_t pmcr_n)
-+static void run_error_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
--	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
-+	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, true);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, true);
- 	destroy_vpmu_vm();
- }
- 
-@@ -619,30 +633,42 @@ static void run_error_test(uint64_t pmcr_n)
-  * Return the default number of implemented PMU event counters excluding
-  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
-  */
--static uint64_t get_pmcr_n_limit(void)
-+static uint64_t get_pmcr_n_limit(enum pmu_impl impl)
- {
- 	uint64_t pmcr;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
- 	destroy_vpmu_vm();
- 	return get_pmcr_n(pmcr);
- }
- 
--int main(void)
-+void test_pmu(enum pmu_impl impl)
- {
- 	uint64_t i, pmcr_n;
- 
--	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
-+
-+	pmcr_n = get_pmcr_n_limit(impl);
-+	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
- 
--	pmcr_n = get_pmcr_n_limit();
- 	for (i = 0; i <= pmcr_n; i++) {
--		run_access_test(i);
--		run_pmregs_validity_test(i);
-+		run_access_test(i, impl);
-+		run_pmregs_validity_test(i, impl);
- 	}
- 
- 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
--		run_error_test(i);
-+		run_error_test(i, impl);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+
-+	test_pmu(EMULATED);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		test_pmu(PARTITIONED);
- 
- 	return 0;
- }
--- 
-2.50.0.727.gbf7dc18ff4-goog
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: ignoring, error in schema: properties: compatible: oneOf
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: properties:compatible:oneOf: {'enum': ['st,stm32mp131-ddr-pmu', 'st,stm32mp151-ddr-pmu'], 'const': 'st,stm32mp251-ddr-pmu'} is not of type 'array'
+	from schema $id: http://json-schema.org/draft-07/schema#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: properties:compatible:oneOf: {'enum': ['st,stm32mp131-ddr-pmu', 'st,stm32mp151-ddr-pmu'], 'const': 'st,stm32mp251-ddr-pmu'} should not be valid under {'items': {'propertyNames': {'const': 'const'}, 'required': ['const']}}
+	hint: Use 'enum' rather than 'oneOf' + 'const' entries
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml: properties:compatible:oneOf: {'enum': ['st,stm32mp131-ddr-pmu', 'st,stm32mp151-ddr-pmu'], 'const': 'st,stm32mp251-ddr-pmu'} is not of type 'array'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.example.dts:44.37-47.11: Warning (unit_address_vs_reg): /example-1/ddr4-channel@0: node has a unit name, but no reg or ranges property
+Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.example.dtb: /example-0/perf@5a007000: failed to match any schema with compatible: ['st,stm32mp151-ddr-pmu']
+Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.example.dtb: /example-1/perf@48041000: failed to match any schema with compatible: ['st,stm32mp251-ddr-pmu']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250626-ddr-bindings-v1-2-cae30933c54c@foss.st.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
