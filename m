@@ -1,151 +1,155 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B90215F5C;
-	Thu, 26 Jun 2025 19:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A24F2F0047
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Jun 2025 20:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750967454; cv=none; b=SoNojpYkupKzwxgLFbUFj03ljZcUdSSZCjGfYSgYEiFE3vtBBvGzFffsYlL/CciKekocjE3CZOLvbRVuMlyyihqMaO3xJxovOp3LDhIzPZkKe1QAHbjTHkwmRpHeancAHAWIKx1t1JonD5Wg8cirF0K0WpfUYMYmwE4WMUlFwkE=
+	t=1750968353; cv=none; b=LjrJpkyZuxplGS6oku1mF0AKYnVpnyjtD5N54FXNEqEpSvzkPmFOTF2u5BbuRuhWwTUsKC3C9+yAKwmnb3PT22155QPzq9sfYm5fJ6wrfqMwzzLheRF+psCBactR5Y/0t7xSPQLqh5idB3a8sOUG2qbLggDgoOib6yEo1N7wzLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750967454; c=relaxed/simple;
-	bh=gVzWTXNd6NPxpJJE+oFcGZWlup1AntES9uY+KcHycwg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=JTyhmJLCMR350UUqqoteRC6J9L+sHYxN3Qs6dAngDSqg0307pyFBsxR5/gxGYNAcXUVevuzmIvfgdQD05jgT21jMl1s5VAubFOqgxL+zLX+nnIgqfziqDmXn2y6O0sdJURJahsGZMPZ9PbPkZXOUyef6oEJKcb88XFMwg822gc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=boAc6D7s; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750968353; c=relaxed/simple;
+	bh=Eks9aCTcXYvbdNVmdIGtwvOLNkf6fFcYgMML3qNUFtA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sT9jwJ/x9NdoiFJykIPn6ETIiZPqCGcFn8uJLykF4BJzTxgjBE/FkJMJIjDRcxQaFyI6A2h4AEJzBQN+uEZIRklfNkju9fGMQT8qum1y9TTrm/5sBsqgZRZOD9KrhBtHkINb7J3nr/YyE/gJNrGv0rx950DqnCO+BKyHaK3wm3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S8cucvsS; arc=none smtp.client-ip=209.85.166.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="boAc6D7s"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QGfQPr018806;
-	Thu, 26 Jun 2025 21:50:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	NMik+GHj52uoVxxBe7t1QLzP2UFZJzC3gMfHq5L927E=; b=boAc6D7sDxuZgQo2
-	kqHvwl2FEnBRRtz8JuPWC0AgNCXs3zC0y/wI2WgkfZcG01K/h6PxX6PuyEu8CwT4
-	7E67jltvksEdz2EANewZAZMfXoCN0rYMRfoM5codEvzd9l70QnyIkJpn3URJGvjq
-	o12ZPUunLE4AkE4L7B3aOCai5KV2qLLPIke9/v03XdDERJ3YvQKXO0WHKunsV/yu
-	PSP2ZGeO/qe6QB+uM+PjTfg3ZoGRIqO4dSWH7jqX1/34PBJN2D0M7MhwsUjrLcMN
-	A17UERgLzQTQTJnfr2J3GZiFSvjVEXrLEzFCztps9/2a1IsjUGgAjHjEg8Zvzz4R
-	/fBSSw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dj5p16jk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 21:50:30 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8A66840046;
-	Thu, 26 Jun 2025 21:49:32 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A7119BD23A3;
-	Thu, 26 Jun 2025 21:48:44 +0200 (CEST)
-Received: from localhost (10.252.1.90) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 26 Jun
- 2025 21:48:43 +0200
-From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Thu, 26 Jun 2025 21:48:34 +0200
-Subject: [PATCH RFC 1/2] dt-bindings: memory: add jedec,ddr[3-4]-channel
- binding
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S8cucvsS"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3ddd03db21cso19202365ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Jun 2025 13:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750968351; x=1751573151; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bfd4g4oyzgO9BbMd8TfR5LoagbwDLdjqmGt8yskowpw=;
+        b=S8cucvsS3+f+hdarDt4e8iTKmvhG8uwqWxETV75PJOzvNl4fziOLhk+wbXKyxcu7Nm
+         chz1bOmO8W3m3/yIsCpH/WFftVfeKA3PNXuvnF/sz17RCN7w6uaYShCodcfSw51GP1j2
+         RChTfVQ+XQ3QdPGlIDtYyadUMIZuFmt3bjMN2ZelGuhJIDq59oC6jwVfk4nTGPvhahpD
+         aYV+iuLCKGcZm+dDVqzNNLPThvwbt6BffyRjnlDrefNexHopXrYhZxH9mB9fh8EEeMmw
+         UDpywvj+oh+7rbIo2rldRv7cEYI8OQNwDH/61JLuuY6j8TUlJoPcTo25p34/gXzq0jtG
+         Efmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750968351; x=1751573151;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bfd4g4oyzgO9BbMd8TfR5LoagbwDLdjqmGt8yskowpw=;
+        b=iIL0Z7UhPzysTm1ok/ylZnjQ5kz0Mm4S4B//9VfMzla1/g2uBdMVTOl9KXjO2bdHtU
+         8+GdFBEaVKnk68EcA9SLsEsBwS+UmjR1+hxI2X711921shiYu+F4gtsPPzkzJT59bWEn
+         Abk2+Sh6mEh9eI/NEsrA9v07x9pdoqZAH+zbHbFap2YrQXv6wJWK+CENpcNLpq9w1C5C
+         8W/srkF0YVrfkP4DtAp/2sDBh7Xi23rwP4Ottjuur04cPhl67OcseVxH6BKJFJuRC2VY
+         VeOPsTfjOkz7JPg4vmR1G4fSLu0q8T8scbq+2oqEnAiWS43cL6AySu4ZGi6WgMKAMyUN
+         VPdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFBU+d0kBgJqD7ob3zWpPNfRc4U5GKx4WF04Oh44YYAUgL9LG+lGYsxABou3K3G1z7UCWRTYhC7IXGzOKlmrLB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO9MgdXz9gs5ZVxrHBWFiBfU6sPqjmgJ/sUPltRHbYw6ANRzDX
+	CqvA8rIzoRhFWFdcC19XALidZZ47BTmDWkQUdeIlx4GzAWD6ERWNj3T99zsM+btz+0LM7YujIr7
+	tu54t5hHWNUrYNJdTkILqbkC17w==
+X-Google-Smtp-Source: AGHT+IG6G2rFRPWkpOW41Pi9fBc/Fkgk+vgjVkKLSP9f2QAlLB5ktW9y9VyZ03BDZAOiaFnbG271ZNfhQM9Y4i+b9Q==
+X-Received: from ilbed13.prod.google.com ([2002:a05:6e02:480d:b0:3dd:a3df:9d57])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:174f:b0:3dd:c04e:49af with SMTP id e9e14a558f8ab-3df4ab4eec8mr12720745ab.3.1750968351198;
+ Thu, 26 Jun 2025 13:05:51 -0700 (PDT)
+Date: Thu, 26 Jun 2025 20:04:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250626-ddr-bindings-v1-1-cae30933c54c@foss.st.com>
-References: <20250626-ddr-bindings-v1-0-cae30933c54c@foss.st.com>
-In-Reply-To: <20250626-ddr-bindings-v1-0-cae30933c54c@foss.st.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-        Mark
- Rutland <mark.rutland@arm.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_05,2025-03-28_01
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250626200459.1153955-1-coltonlewis@google.com>
+Subject: [PATCH v3 00/22] ARM64 PMU Partitioning
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Introduce as per jdec,lpddrX-channel binding, jdec,ddr[3-4]-channel
-binding.
+This series creates a new PMU scheme on ARM, a partitioned PMU that
+allows reserving a subset of counters for more direct guest access,
+significantly reducing overhead. More details, including performance
+benchmarks, can be read in the v1 cover letter linked below.
 
-Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
----
- .../memory-controllers/ddr/jedec,ddr-channel.yaml  | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+v3:
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr-channel.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr-channel.yaml
-new file mode 100644
-index 000000000000..5271b41279e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr-channel.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,ddr-channel.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DDR channel with chip/rank topology description
-+
-+description:
-+  A DDR channel is a logical grouping of memory chips that are connected
-+  to a host system. The main purpose of this node is to describe the
-+  overall DDR topology of the system, including the amount of individual
-+  DDR chips.
-+
-+maintainers:
-+  - Clément Le Goffic <clement.legoffic@foss.st.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - jedec,ddr3-channel
-+      - jedec,ddr4-channel
-+
-+  io-width:
-+    description:
-+      The number of DQ pins in the channel. If this number is different
-+      from (a multiple of) the io-width of the DDR chip, that means that
-+      multiple instances of that type of chip are wired in parallel on this
-+      channel (with the channel's DQ pins split up between the different
-+      chips, and the CA, CS, etc. pins of the different chips all shorted
-+      together).  This means that the total physical memory controlled by a
-+      channel is equal to the sum of the densities of each rank on the
-+      connected DDR chip, times the io-width of the channel divided by
-+      the io-width of the DDR chip.
-+    enum:
-+      - 8
-+      - 16
-+      - 32
-+      - 64
-+      - 128
-+
-+required:
-+      - compatible
-+      - io-width
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ddr_channel: ddr3-channel@0 {
-+        compatible = "jedec,ddr3-channel";
-+        io-width = <16>;
-+    };
+* Return to using one kernel command line parameter for reserved host
+  counters, but set the default value meaning no partitioning to -1 so
+  0 isn't ambiguous. Adjust checks for partitioning accordingly.
 
--- 
-2.43.0
+* Move the function kvm_pmu_partition_supported() back out of the
+  driver to avoid subbing has_vhe in 32-bit ARM code.
 
+* Fix the kernel test robot build failures, one with KVM and no PMU,
+  and one with PMU and no KVM.
+
+* Scan entire series to remove vestigial changes and update comments.
+
+v2:
+https://lore.kernel.org/kvm/20250620221326.1261128-1-coltonlewis@google.com/
+
+v1:
+https://lore.kernel.org/kvm/20250602192702.2125115-1-coltonlewis@google.com/
+
+Colton Lewis (21):
+  arm64: cpufeature: Add cpucap for HPMN0
+  arm64: Generate sign macro for sysreg Enums
+  KVM: arm64: Define PMI{CNTR,FILTR}_EL0 as undef_access
+  KVM: arm64: Reorganize PMU functions
+  perf: arm_pmuv3: Introduce method to partition the PMU
+  perf: arm_pmuv3: Generalize counter bitmasks
+  perf: arm_pmuv3: Keep out of guest counter partition
+  KVM: arm64: Correct kvm_arm_pmu_get_max_counters()
+  KVM: arm64: Set up FGT for Partitioned PMU
+  KVM: arm64: Writethrough trapped PMEVTYPER register
+  KVM: arm64: Use physical PMSELR for PMXEVTYPER if partitioned
+  KVM: arm64: Writethrough trapped PMOVS register
+  KVM: arm64: Write fast path PMU register handlers
+  KVM: arm64: Setup MDCR_EL2 to handle a partitioned PMU
+  KVM: arm64: Account for partitioning in PMCR_EL0 access
+  KVM: arm64: Context swap Partitioned PMU guest registers
+  KVM: arm64: Enforce PMU event filter at vcpu_load()
+  perf: arm_pmuv3: Handle IRQs for Partitioned PMU guest counters
+  KVM: arm64: Inject recorded guest interrupts
+  KVM: arm64: Add ioctl to partition the PMU when supported
+  KVM: arm64: selftests: Add test case for partitioned PMU
+
+Marc Zyngier (1):
+  KVM: arm64: Cleanup PMU includes
+
+ Documentation/virt/kvm/api.rst                |  21 +
+ arch/arm/include/asm/arm_pmuv3.h              |  38 +
+ arch/arm64/include/asm/arm_pmuv3.h            |  61 +-
+ arch/arm64/include/asm/kvm_host.h             |  18 +-
+ arch/arm64/include/asm/kvm_pmu.h              | 100 +++
+ arch/arm64/kernel/cpufeature.c                |   8 +
+ arch/arm64/kvm/Makefile                       |   2 +-
+ arch/arm64/kvm/arm.c                          |  22 +
+ arch/arm64/kvm/debug.c                        |  24 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h       | 233 ++++++
+ arch/arm64/kvm/pmu-emul.c                     | 674 +----------------
+ arch/arm64/kvm/pmu-part.c                     | 378 ++++++++++
+ arch/arm64/kvm/pmu.c                          | 702 ++++++++++++++++++
+ arch/arm64/kvm/sys_regs.c                     |  79 +-
+ arch/arm64/tools/cpucaps                      |   1 +
+ arch/arm64/tools/gen-sysreg.awk               |   1 +
+ arch/arm64/tools/sysreg                       |   6 +-
+ drivers/perf/arm_pmuv3.c                      | 123 ++-
+ include/linux/perf/arm_pmu.h                  |   6 +
+ include/linux/perf/arm_pmuv3.h                |  14 +-
+ include/uapi/linux/kvm.h                      |   4 +
+ tools/include/uapi/linux/kvm.h                |   2 +
+ .../selftests/kvm/arm64/vpmu_counter_access.c |  62 +-
+ virt/kvm/kvm_main.c                           |   1 +
+ 24 files changed, 1828 insertions(+), 752 deletions(-)
+ create mode 100644 arch/arm64/kvm/pmu-part.c
+
+
+base-commit: 79150772457f4d45e38b842d786240c36bb1f97f
+--
+2.50.0.727.gbf7dc18ff4-goog
