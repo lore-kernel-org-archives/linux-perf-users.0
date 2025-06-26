@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5284F218858
-	for <linux-perf-users@vger.kernel.org>; Thu, 26 Jun 2025 05:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11081221D92
+	for <linux-perf-users@vger.kernel.org>; Thu, 26 Jun 2025 05:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750916915; cv=none; b=BltFHkjzL2r2hSNkCxc4EFXt6d8WYy1nUuVpotg2DvbwU8fzsZDEC9p82x7gYs2uL7il1/EzCgwTDPnpMjlQ/Otaj7P3opLMRp5iWhIjzNMvz3a1K4siUobTVFVzJSzYMzZk3LO3QUCZ0eihABcNLUHU0+rx2B5sE7yeurbUZjA=
+	t=1750916917; cv=none; b=hlOc1R8g6eeIyS4R1sDE+Nh6j1TzQ8T9SEdkqA4xK4FqM8ePn78eGelmjd5ue0MsSadFqap+e7H6hSDSw5AA9bmfAhOZF6bYTKbn8qh05LnZYUh/cjIsH71Jqw/KbruCL+YtqXCge1cnuIg2JnqiGhOKk+d1tnPatoHAQDrXIQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750916915; c=relaxed/simple;
-	bh=NUQiHaB/oRFvduMBrU+FyUVv6t6Xgm9DuO0q9cjaySQ=;
+	s=arc-20240116; t=1750916917; c=relaxed/simple;
+	bh=I2DV6rRx2Cjv+IUAW0F5JSmoyWJANossHcJsAVjMTU8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MCUYEI91t2ucCZA2LCHCz5EG7D73X+2f9Gar5omPW6HJNQCYzNMZjq123SPcQR6jTS25Wk23+7zMOs5/zqWLoTV03fWSLAm+stn9mF1f4oPzjJb2ltp+eH5er0t1+Ud3+wdfl8z2kUtz3xxsYs+S9WL7dOMUyLTD2Y30sZCd3IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sD7pKzYr; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=LunYG2MdjqDPwVuezscmHyzltHPfjUXbmDkE13LOnvVZwasQRe1vhxjiArQRghIYxs6ioIVCvD6zWBag2hU3MZIAN+ZR6J1NmP1zMYLUtXlhxIzgeI49nBxbYaR8vg7T9QUqgHXhuOI2LhFehMfJrVqU3+V0UpWy5k/g3ONsns4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WVb5VnCv; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sD7pKzYr"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311a6b43ed7so457995a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jun 2025 22:48:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WVb5VnCv"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-234b133b428so4593795ad.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jun 2025 22:48:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750916914; x=1751521714; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750916915; x=1751521715; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R1vSzONkvWVxKMWdZPze+udgL8T24sLZ921TIUfWjXQ=;
-        b=sD7pKzYr4gCmmQyqLYn4JkEluNyEz5B0TZTFFjysiO/UZaeRR9UrsR0NiF+xUAkSKM
-         jY9CAKRCOBQ5k7ysSvEmcbO8LYHZPDEnIlS4GjdZA8xonlb3ryOg2EoD3ib6sF5Ff0I6
-         oPKG0UXIKUSyOI9Aqz1vvaP4Rtz5SbXeouzC3SJpP2yE9tMOLtynHK77R8/RgZCJW3/Z
-         4rFerA7y7gwr/IMzNgouQxUFgVxKJXNf2DtW0JcLPW6vZI01DOQ9vYpfL4oA6S/8VtVV
-         OUAKSqkuCBSfXoCEA54RcWVid4UEu3cuWi+MItb3Ejzi7OmQ2AuzU/psO3Be985iTUS3
-         +HoA==
+        bh=No7VYJnrsaMBClQyRTA21U4NQdkCFvGbDpgoUA5SP00=;
+        b=WVb5VnCvREVkiQCpG7w21OmHZdDFpF5K2Goe006se2Kfad2K7x2IrqEFTMvhpa6+Cu
+         SjUafPDIO+K/GAJDqN7E9W5E+M8JEBd30ufj4XTGeezubNjLyaG8k9BxSkWapXbVCzy6
+         jy50rzu4qsrzs+o/sIAZyWqvmszrN0uxyPYgxe1m8CLaOFtdTsEz1nsiq9/MMKzw+DIB
+         MTTEIV8HB5LQmh0Lbo3GEE85iiSuT9XNnJqdWDhh9sj7I9E05dwdVP/Z0jXiss4/rBw8
+         CDs1/r/ZMD8gLCjEl/c6rdXBBne9HJHOfjDlhFBfvZW10aqdB1polgEsIGcrEAVTRkmu
+         U/8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750916914; x=1751521714;
+        d=1e100.net; s=20230601; t=1750916915; x=1751521715;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R1vSzONkvWVxKMWdZPze+udgL8T24sLZ921TIUfWjXQ=;
-        b=nSAk09slLLyF9pz+1L0KH5Yi8XMzfSrSZwsflu39saTIJtwzMSQTt1N2QV+sjZjxnw
-         sGWQJj3wjEa5ZfcSXuBMvYwtnjfSVqQjHerKt43bNxc8C+wE9CaeiMYjxO0NUtqa+W6p
-         YaJ0hX2fGppBOdQSnFw7HClU7Gqa8nuVIpkOLQgrNunMDxTt6D4TwlKJlq+XDvMV5fmR
-         AwyirpPX93Qkbat0s1KOY6V7dq7aJseJr9u5PpBuL9/w3TIbh2zcOxCkHCmceeRQRvax
-         kAnogQeFJPymcr11MbtJs1Euvp6NFQRngXqFqI+oxLNgQwEjB6cBbwa/HD9iSfe5jTeA
-         /CXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiJiO0S101XGa+iy0B7pLg+o0PLctLhZWGvowKs45QFeMtLjioW0L6YmywXbBMbFbtfap91mzTe/0Hl4W5oSzi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFJ/rOXF3yuk8arsDT0hyYt/DjnAoFifvZ3Etz7onVE9BjdfZN
-	AYwjQaogDq4ogIKgwx1pVdfJOfMYHjpoXtEX/0yatoblQLwHgQZLQXbxGmd5/1MXI0B3jf577kc
-	uIJmUuxP2dg==
-X-Google-Smtp-Source: AGHT+IEs8IO1q36YQk0nSSiSi5GU+GN5WZXfosdQGqxbw2barm/yUUYBYTVH1YWmhz9R0wChcSGLtxRfAZXS
-X-Received: from pjbsv14.prod.google.com ([2002:a17:90b:538e:b0:312:fb53:41c0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f0c:b0:312:26d9:d5b4
- with SMTP id 98e67ed59e1d1-315f2674a05mr9030490a91.17.1750916913698; Wed, 25
- Jun 2025 22:48:33 -0700 (PDT)
-Date: Wed, 25 Jun 2025 22:48:24 -0700
+        bh=No7VYJnrsaMBClQyRTA21U4NQdkCFvGbDpgoUA5SP00=;
+        b=JR4/7yoKvQEqgjRwXkyFRf/V9rmd1ydsJzflVPqY5F2HOdjO5trpDEiG2+8TG4VhFl
+         s7wm4DFu9iAffRQcjtVzQaSAP5058CQa/vBppRKYYSWlKNuM49o7Ip2AzKwEN8WRSsAt
+         Dx0tYgOiD9fxquEqaBLRrlwTCckwU0JZheo9USBloLNnjKfIRPyn45Qkg7WKooAgsQJC
+         8ZI3wiyJijsVNIeOf8cgDBEONaGAkx7EHGMmnT4qqb1qvCCYNAYmqPH7KDkfCtCxhLo1
+         kR37XYQJ94jBbMVEDFkDop9+5FFrHHyHMxZ3+Juu2eR4BRcLjg5OJA33sFQU8qbLc1WW
+         t3TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzCHvKWtmysS0lIl6gpQ+lBRPkGsZPvnI6y0YGR6DRiRy3QMxQYcIu0a8x1/sIxn2IN9tNmnni8S7id4zkyJfB@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywgv7uQ0zgMZS/BNq3qiHcTjdxXsxjHOFlsXxd8sGdZPXPf8EAC
+	LewGHERt2asqCY1igZoSm91ry0fEqz94Yxr4wmnxwjw9pq7rc80VUqhx+Hyjah91DjoOfdLuSNG
+	gThtk9OASzw==
+X-Google-Smtp-Source: AGHT+IEsY38vIXEEuF4IRkd5xvRhTuGPG8ULpVkQr9FeQ29MCI+w1O99arFqY6BeYv2pTQt//M6Fxu4UQHw5
+X-Received: from plof2.prod.google.com ([2002:a17:902:8602:b0:234:d477:3b7a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2f92:b0:234:88f5:c0d1
+ with SMTP id d9443c01a7336-238c86ee242mr41530295ad.10.1750916915313; Wed, 25
+ Jun 2025 22:48:35 -0700 (PDT)
+Date: Wed, 25 Jun 2025 22:48:25 -0700
 In-Reply-To: <20250626054826.433453-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250626054826.433453-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250626054826.433453-2-irogers@google.com>
-Subject: [PATCH v3 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
+Message-ID: <20250626054826.433453-3-irogers@google.com>
+Subject: [PATCH v3 2/3] tools headers: Update the linux/unaligned.h copy with
+ the kernel sources
 From: Ian Rogers <irogers@google.com>
 To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
 	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -71,20 +72,54 @@ To: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Type punning is necessary for get/put unaligned but the use of a
-packed struct violates strict aliasing rules, requiring
--fno-strict-aliasing to be passed to the C compiler. Switch to using
-memcpy so that -fno-strict-aliasing isn't necessary.
+To pick up the changes in:
+
+  fe9b2b7b3583 vdso: Switch get/put unaligned from packed struct to memcpy
+
+As the code is dependent on __unqual_scalar_typeof, update the tools
+version of compiler_types.h to include this.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- include/vdso/unaligned.h | 39 +++++++++++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 6 deletions(-)
+ tools/include/linux/compiler_types.h | 22 ++++++++++++++++
+ tools/include/vdso/unaligned.h       | 39 +++++++++++++++++++++++-----
+ 2 files changed, 55 insertions(+), 6 deletions(-)
 
-diff --git a/include/vdso/unaligned.h b/include/vdso/unaligned.h
+diff --git a/tools/include/linux/compiler_types.h b/tools/include/linux/compiler_types.h
+index d09f9dc172a4..890982283a5e 100644
+--- a/tools/include/linux/compiler_types.h
++++ b/tools/include/linux/compiler_types.h
+@@ -40,4 +40,26 @@
+ #define asm_goto_output(x...) asm goto(x)
+ #endif
+ 
++/*
++ * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
++ *			       non-scalar types unchanged.
++ */
++/*
++ * Prefer C11 _Generic for better compile-times and simpler code. Note: 'char'
++ * is not type-compatible with 'signed char', and we define a separate case.
++ */
++#define __scalar_type_to_expr_cases(type)				\
++		unsigned type:	(unsigned type)0,			\
++		signed type:	(signed type)0
++
++#define __unqual_scalar_typeof(x) typeof(				\
++		_Generic((x),						\
++			 char:	(char)0,				\
++			 __scalar_type_to_expr_cases(char),		\
++			 __scalar_type_to_expr_cases(short),		\
++			 __scalar_type_to_expr_cases(int),		\
++			 __scalar_type_to_expr_cases(long),		\
++			 __scalar_type_to_expr_cases(long long),	\
++			 default: (x)))
++
+ #endif /* __LINUX_COMPILER_TYPES_H */
+diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
 index ff0c06b6513e..0ccbcc9aa493 100644
---- a/include/vdso/unaligned.h
-+++ b/include/vdso/unaligned.h
+--- a/tools/include/vdso/unaligned.h
++++ b/tools/include/vdso/unaligned.h
 @@ -2,14 +2,41 @@
  #ifndef __VDSO_UNALIGNED_H
  #define __VDSO_UNALIGNED_H
