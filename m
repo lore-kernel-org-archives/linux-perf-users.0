@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77762ECE8C
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 19:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90862ED16A
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 19:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751052280; cv=none; b=HSc7DdF8YN9wyvsLwCZoNq5cjP4J6WpXh/q+AT/NaQH+ltZvwJEhRPI2EWVi50d26v0G8PKlzprQjk4Fadlu1AIrJ4WjpXeqP1EKz71Bnm7Fq778gWh3pdAbOeuQqv0xeLsm9pShoeRFif53IJIp6E0jNalf0ElRyhHtuMhy0wQ=
+	t=1751052281; cv=none; b=cUnZMem8prGi9bk1/54htrgU2bsmDvF/V510TEfkygSAR3Etpvo49kdnb+CJtSZuSJxYYhEtELK3HQP5aVnaDIWxoCStWegYbaNz2nXx2/mV2x2Akj7O3fJSWjxl8gwzaNvCglG/aBxmIvGixq94HFwZqGiHdTLKZHSrablJkd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751052280; c=relaxed/simple;
-	bh=W/Bgi88P7ofhS46Nff6nKg74LxXfuxahRJerKgQn9dE=;
+	s=arc-20240116; t=1751052281; c=relaxed/simple;
+	bh=aNMN2DWhRyU+2RMpyUjUFGngTzlUnjuyhGY6JPjW1Eo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=emukxQWVQE/P5TUADBWswBaEnr2eI3u/j3h/NT3UIjWZOZd6t9MZK3j6IQTo9QOgW7HFI7CikCePq7KGGBW7Yd3WV78GDWWbLbEeShtIqIrrXp1ORxdYwI41+7TDq62nfoSWXpdVBP+eO5fpy2cjbwogZod0klZgGFiDnXSxOcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1KbZQtfn; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=IstC5vOOoHB1S8b71rrv3WXHMhtQ7AdOfLZxG9AwwCKhv4FV22d5AOIBhk/SPXh9ZMmYE25hdR3r4CPAjnkLvrrdE0uQ1NeEO4dvYJNT+MI3yQLfnbKlwT536Bndb3wrMqM4sWIYR8ma/pTlHlPCsIFsj9tngrop4CVGkr5YpbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2WpF7uTs; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1KbZQtfn"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b321087b1cdso414327a12.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 12:24:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2WpF7uTs"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e90e7f170eso2768942fac.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 12:24:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751052277; x=1751657077; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751052279; x=1751657079; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8wGh4hX39HaAnm9ZkRFU2LxfzpD4g1EXGGa3gXUj2fU=;
-        b=1KbZQtfn53TgxgwD7EYZ/Tq2rUHaR8SHVWvdInGNQXD4ycOwUkjLI5cERb8uRzSe+U
-         JQ8/baFUqQPbhIy69TEcrbC3AXfaIWcZ3qcQSiP1ZJ/RVG3Ts/2TydBCZ5dKQFenzqkn
-         TBQ4NCGxrjzrexYehYBn57Ps5unlNFXB9aMu7DIut0koz2LRjcM7PkM8qdiTUqL8bDPd
-         Pyt/qtNfrc47Juw7f1jfiq7afmRsWV0lsEueVqX5VHzWndxnkmDpnNvNp7S+weWXArtS
-         7hwyGBN0+wEn9U5sfvRM2ZkGaCyXXbrd0Lov6o5/xbrhu4iiqQtCHPtiJGL/aVebFYMr
-         nrnw==
+        bh=Y648qPWPFyBd60sW81F/WAt0bQS91tJJCKmWVX/1yDk=;
+        b=2WpF7uTsZWSOWHDNmMCdPl3WuQT/JGiF0vETmMnX0TnfxEpajkmrINYeK3q87yu+3q
+         LrebpuUOLdiUrei9UtDv3A9ajnyu8voNNzFbxo6Cm+JoM44whOxbiokJYjkoEO4GRdHz
+         em/H2UOhNcuDF8I7xQKCSmbZYhct8A+XV9RY+5uEck27p24LrKBTY0EYPlzV4EfLmCyb
+         Afyl8v6g0E5yMIXwdsVMpa82Z5F914lNj2RWDO9CEdWy4+aJBIJPVqTCXpV7xk0OoCdq
+         hzH4lxLJNYrbBupdcsaPSiEU+vqKuFuvR6TKi8qhtrla9yXcOR44tGQuQz7A/eDHJ+Lr
+         JTvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751052277; x=1751657077;
+        d=1e100.net; s=20230601; t=1751052279; x=1751657079;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8wGh4hX39HaAnm9ZkRFU2LxfzpD4g1EXGGa3gXUj2fU=;
-        b=tI3iPYCwC4+txwqButD4nDEwX7uJBeLPRO4AuqX3x5iSCzSbDJSK/LQXxeM/DhrbSh
-         LyjrruvpmEG09bMihLN0imQpMp5r0oZzU3UI2BxVKWu+YjEAkSnnLqAER1RD6/qe7SGq
-         bwBSrI8cFBOAZzs3QmFgdeP9CzmiLrhsKVR54YltOyJyIItwoCXK8y9/cUG6B+qAIc9V
-         QbQ+vKKp+JZIY7mkngAoguoKw7HfbHLfWLvv1BVN0pmsSRavAcP1KppU/OJVOvz4o+rg
-         WSXxN4XNywKGXBUDzrRus++bad7zLpTrEkXOyTsvDgtpPMOMVGHfcE3uC8EfcJqSzg2k
-         PF1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPNvW4Srmso1uaSBSXaQ5eatzdbpmsrSVH92MV8llj/c2BjSD7TCLaLA1BDMET2Pq/GAE/Skl0wFoFXPafkqzO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3YdXZtcmJjlgqrIfyvnd/mY5YsrDhJhTqB4XF3ZXFqsVEep1C
-	afA2GtNCIzpZ2bEcKOu87Qb5pG9EaDstxwJWQ6MnwuvQFu5ieup4sV23rGe1zBLeTEPiSTGGIZe
-	aU5sZo4oDdg==
-X-Google-Smtp-Source: AGHT+IEZpbwsDnk4xblx0rI3Vgl53NcXt0AkOZrWxv3lkOu/3ULvVG1OsFbztyxBw/CpwMw10ECrUDqJtF6b
-X-Received: from pjbsg10.prod.google.com ([2002:a17:90b:520a:b0:30a:31eb:ec8e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d0d:b0:311:df4b:4b94
- with SMTP id 98e67ed59e1d1-318c8eccfd1mr5463074a91.4.1751052277148; Fri, 27
- Jun 2025 12:24:37 -0700 (PDT)
-Date: Fri, 27 Jun 2025 12:24:13 -0700
+        bh=Y648qPWPFyBd60sW81F/WAt0bQS91tJJCKmWVX/1yDk=;
+        b=IcbKAPcPzQ45LBXIMOvHPfdrr0NoXFxWAnxthZYzDnmOUbfq3kf0Y0XElpUnj7bEW1
+         +UmNvMozSVpTpgF0eGTqT+yaQIJydYyFr7wCvVkUmucwWmUDWuuChAhhNm8wNNIiDY6+
+         t9De61Chx6+x6dWz9Tq0ynvwgH1w/8TikKDhkSS/jpNA5WgX7pBCQS8T3vbHXkhycFXp
+         o9F9tKn+qQsKrwBC3ykXUsNMcKy/j7t0hyCTHQ2sGEidZfjbvIIVJqNWuSSpdCvacNFu
+         Aw2FT2jfi/xZhdn+i3TNqIwEBg9qVy6dVRl2d2co+REfi1MPDARRW6sQLP6gBKRyfEtO
+         qJsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlVUBbXEKmDhGK8Ufqd5HleWahfRR3A32vJpULCXL+2ixurpGsndhmuN3wwHI7IC1zmm7mjJ/PF+pUT3ZeWkdm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0LTXoG2NQ3Tq8YpkFBovGGYI/C6f/meFZumTRwLxWxCvBpyeu
+	iOjHXUbs7KWyYLa6HqbMU9KyMO/mV0ns4eyFrwri3ulLzqQK3NCvMfJJQWtUUZgKF+52r005dFu
+	ozU3VQ4kAfw==
+X-Google-Smtp-Source: AGHT+IEl0ZSGGe1ulHNJcLJqY9IP+npGVG5iV/pYKzVba8MHXlliSCOPcJXopnVaaMUpJL7mwG+wscVnaTwb
+X-Received: from oabvp16.prod.google.com ([2002:a05:6871:a010:b0:2d5:7c74:78d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:f60f:b0:2e9:95cc:b855
+ with SMTP id 586e51a60fabf-2efed7553a2mr3126222fac.34.1751052279003; Fri, 27
+ Jun 2025 12:24:39 -0700 (PDT)
+Date: Fri, 27 Jun 2025 12:24:14 -0700
 In-Reply-To: <20250627192417.1157736-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250627192417.1157736-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250627192417.1157736-9-irogers@google.com>
-Subject: [PATCH v1 08/12] perf evsel: Use libperf perf_evsel__exit
+Message-ID: <20250627192417.1157736-10-irogers@google.com>
+Subject: [PATCH v1 09/12] perf pmus: Factor perf_pmus__find_by_attr out of evsel__find_pmu
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,28 +77,88 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid the duplicated code and better enable perf_evsel to change.
+Allow a PMU to be found by a perf_event_attr, useful when creating
+evsels.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/perf/util/pmus.c | 29 +++++++++++++++++------------
+ tools/perf/util/pmus.h |  2 ++
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8caee925bd4c..1169aa60c5fc 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1669,9 +1669,7 @@ void evsel__exit(struct evsel *evsel)
- 	perf_evsel__free_id(&evsel->core);
- 	evsel__free_config_terms(evsel);
- 	cgroup__put(evsel->cgrp);
--	perf_cpu_map__put(evsel->core.cpus);
--	perf_cpu_map__put(evsel->core.pmu_cpus);
--	perf_thread_map__put(evsel->core.threads);
-+	perf_evsel__exit(&evsel->core);
- 	zfree(&evsel->group_name);
- 	zfree(&evsel->name);
- #ifdef HAVE_LIBTRACEEVENT
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 3bbd26fec78a..8bf698badaa7 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -715,24 +715,18 @@ bool perf_pmus__supports_extended_type(void)
+ 	return perf_pmus__do_support_extended_type;
+ }
+ 
+-struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
++struct perf_pmu *perf_pmus__find_by_attr(const struct perf_event_attr *attr)
+ {
+-	struct perf_pmu *pmu = evsel->pmu;
+-	bool legacy_core_type;
+-
+-	if (pmu)
+-		return pmu;
++	struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
++	u32 type = attr->type;
++	bool legacy_core_type = type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE;
+ 
+-	pmu = perf_pmus__find_by_type(evsel->core.attr.type);
+-	legacy_core_type =
+-		evsel->core.attr.type == PERF_TYPE_HARDWARE ||
+-		evsel->core.attr.type == PERF_TYPE_HW_CACHE;
+ 	if (!pmu && legacy_core_type && perf_pmus__supports_extended_type()) {
+-		u32 type = evsel->core.attr.config >> PERF_PMU_TYPE_SHIFT;
++		type = attr->config >> PERF_PMU_TYPE_SHIFT;
+ 
+ 		pmu = perf_pmus__find_by_type(type);
+ 	}
+-	if (!pmu && (legacy_core_type || evsel->core.attr.type == PERF_TYPE_RAW)) {
++	if (!pmu && (legacy_core_type || type == PERF_TYPE_RAW)) {
+ 		/*
+ 		 * For legacy events, if there was no extended type info then
+ 		 * assume the PMU is the first core PMU.
+@@ -743,6 +737,17 @@ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+ 		 */
+ 		pmu = perf_pmus__find_core_pmu();
+ 	}
++	return pmu;
++}
++
++struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
++{
++	struct perf_pmu *pmu = evsel->pmu;
++
++	if (pmu)
++		return pmu;
++
++	pmu = perf_pmus__find_by_attr(&evsel->core.attr);
+ 	((struct evsel *)evsel)->pmu = pmu;
+ 	return pmu;
+ }
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index 8def20e615ad..09590b1057ef 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -5,6 +5,7 @@
+ #include <stdbool.h>
+ #include <stddef.h>
+ 
++struct perf_event_attr;
+ struct perf_pmu;
+ struct print_callbacks;
+ 
+@@ -16,6 +17,7 @@ void perf_pmus__destroy(void);
+ 
+ struct perf_pmu *perf_pmus__find(const char *name);
+ struct perf_pmu *perf_pmus__find_by_type(unsigned int type);
++struct perf_pmu *perf_pmus__find_by_attr(const struct perf_event_attr *attr);
+ 
+ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
+ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
