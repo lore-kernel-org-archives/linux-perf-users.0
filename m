@@ -1,178 +1,321 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38FA28DB48
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 23:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2E31F4CBC
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 23:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751065876; cv=none; b=suwO2NUX2waFttYqUjhsXBIeclp+0KPLWd2kk5pTut9TaxB3o6PW+QpYIhL+jU1GuKvUx0mDrn7r+lqNYLP+wINAh1HNUDXxm8bykoTwT0KVLRcrvussbOZ3316em3APuRSo8AAAi4M+vuix6wSCUQkr0j7I6kgbIXRnX2ok0Zk=
+	t=1751065937; cv=none; b=PTFcSp1Ra1QygTrHzgtXDX9iioF91U3DZzzm+x7sVoWYn2ZfkEC6woMZyoPrE7f3d7gjlbEyGE8Q7XCbYcSoa5YxWDMwqWQELRc4/dPYnon6cwVU3uStpi+NarNl1ZCOPD8T0/eIFXhfcFOxdIz+DHhcMLRiY2pKZxG9j5VWVmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751065876; c=relaxed/simple;
-	bh=BAMzKo8cv7ru+aWsN4XS2dPIapPyqPMn5l1eLT4nrvc=;
+	s=arc-20240116; t=1751065937; c=relaxed/simple;
+	bh=YuqwH8cbCH5F3qAu2+0Ut4+LEcu+ucY0mniwxqXcIow=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qgpMZeeAfrO3ub0tOi5m5wYzUXpSSZ/F5Q3LBbkjLZNG1S9y0fj6pnIuJHXSkaVkXXUpUUZU/+JxcaJJD2oEzlkrPOS+if/19ClX/dMMSC+dTRLmVazUtTjsvM1YVPUgRFY55Fm7OLf0fUWH5jHJ3nknjgYghWSUKmvs7D2kZbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dsk3g/3Q; arc=none smtp.client-ip=209.85.166.181
+	 To:Cc:Content-Type; b=KhOmL4C2sdUj6rYNg+wJf1tvnRcIYfLnfk4BkvslNwPutcX3yMmATHRsnJY6j109U/jAKpSE4zdwb/Ks/GKrY1HxYRIiZrSK/TgItxGnI80VdAE+MvKctou6c0hlJ/Vm0HXdSxJtRL+4KnDmZAZhufE1gNE+638bgFdGyL49DNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wbmmN9MH; arc=none smtp.client-ip=209.85.166.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsk3g/3Q"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so55365ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 16:11:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wbmmN9MH"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3de210e6076so34025ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 16:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751065874; x=1751670674; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751065935; x=1751670735; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+r1k/4QEtOdvaCXklZVZbc3BxCMGTSAo6KfvEM+1WJU=;
-        b=dsk3g/3Qk9BZULFQya3YSOtM+XYDZ+g/BeXxFnHZNpgUl5QthxMy6cQj9g6Jtcs8SS
-         iiOG07mvRp3eVpxupK0VjOq46flaV/wBbdZiL7+XK+IOhMkdyCyDR3S3mVOtRan6IzlK
-         BOcwZ75VzZyJVAh0ekozeV7opO7XFDUGwr1E6gOB8odw/kqzfAjt7rQuLB2Dhc5HgzTL
-         8bPwc32nZZvXo/Jyrfakoq5KpDMGnycW6QnjDCLRTrwlrqd9caLSQadG1un7BuRFZxou
-         0zrsSe82XkAUok7g12MXaLDDJnAsa7H4ZHu8KhIspyeUWmxYDY2EMkqNB4fxaDWljNqD
-         PPFg==
+        bh=E1zvsSb8Lx5PZaedN0uK/WI1ZEPyBwoWV3MPpqK56ns=;
+        b=wbmmN9MHTiG8zjqeab7MBDUKYhRqU/6Aoe6ii2lMAukk5PCzl3xnIz3V0jn9r4ZPzS
+         JtMFCIetiS3/8AO4tIg5cP9JMx1JbIQIbLNtrIFw076/DSkI3ltblMBB4zyFxyabeLgg
+         ehLYSDGdVmpbujaCBQiGvgX9YRy9uRAQH3c4U0069PDdpS9TgKmZHJIMSePaG5SA5Kh8
+         xLBzl/+hOqWQH+Fngz8eCCSaraSPQqxJx7NnlLZ/KM/CilINXBzoXxGm8Hqgq7DODc1K
+         /9qcY8m/WcjNjgNUt0EBGFcN3qXgbzHW9g0k0XwrYHYpRlheFFgbU9aUjH2+Q12oGNdl
+         Bc8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751065874; x=1751670674;
+        d=1e100.net; s=20230601; t=1751065935; x=1751670735;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+r1k/4QEtOdvaCXklZVZbc3BxCMGTSAo6KfvEM+1WJU=;
-        b=kwCq67U69E7WkDWgYcf8wmTuXUVIszCbDKGLFBdVrQy33oGJB0nA9391Ei0qwNBs8c
-         d7/Ui8Tgza2IwkwvXvIIad9hmcmns5yetE0/tcoS4ir1xayyfjobQHhALQQ8EHjstOnJ
-         X+HjZexarfstncja9qn4FldQktn+gfB/lILIqUSfho2rnydJ4K1875Iu/O4w96t2iVOn
-         dXqL0OAz5k4URfdW+VShbvv0vEL2JhHmQ9iudfGWnrGuH+O32Jzpst9Nf/qBbTD6Xugy
-         ovTV1z0ee/PGc2oIRYdgmPeEaUEoZdZ+gc+uOQjjVDhVD0qVN+wN9HxzPEdnE83BrOKH
-         lMgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBz1SUxCVRpi08AsPWPPwuVpM7dqkQtW2iuBxsFAaS+zivuWwbHzGHSfBtRsX81byKM3x5taz7mDMHrFMW6rxf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkhggtEVJVDCnf6lS8C4QYSLjwmrmi+bEFH1DD+H1dM0qbbCQl
-	PlAjBHdI0aLiPnNDC2yjsqhp6cfb+7jXbMrp/cFDgP73ebceEGLe9SAAKOUq6aT2Jdba+eWgthF
-	YtXT91q3ATx5TBsTk8w5nhVX8ftSJHSB0dn5kyl4o
-X-Gm-Gg: ASbGncuhXJ0stXw/pOw/x+zT37fsHK6/zNe2P7EAmu11bHkx+pwst0tp9KLa0I35Srw
-	+vYXvGQOGFhylk+Omz4JeWdwT5PdftTk6cSm2ZoCeQVyhTIOB/JJEra/2/NBa8ExvSi9HNr9mBA
-	fPjhsE8hiy2FJ7PMzlDBgjYwOYK8yxaaqS9KvVdG/T0U+I
-X-Google-Smtp-Source: AGHT+IHOrtjjnavLeFmnxRzUKctDiOqRlZqpa3B6VBvWXIZQMbA5CqO1kSxXEHqdcMJotrOKU1tEB580gSfXEF5bIO4=
-X-Received: by 2002:a05:6e02:11:b0:3dd:b59b:8da5 with SMTP id
- e9e14a558f8ab-3df55381c7amr1542175ab.0.1751065873440; Fri, 27 Jun 2025
- 16:11:13 -0700 (PDT)
+        bh=E1zvsSb8Lx5PZaedN0uK/WI1ZEPyBwoWV3MPpqK56ns=;
+        b=nlKyAIVjWOLm40Y2MUtAroHJuxksif2uAkh00EmrY17UVYsJmbgWLSHcc/+f+a32za
+         xS2SiUxxmIYwOejJl7SxEDQ3QLm7KuvixCgKMYCk05imuB38h7pTLfbT/7FnIiFVVhe2
+         QQRLWYRoVokXqN+uAQ4Pvpun30VYjb+fW9VzIStPYReXBeuPIYDn9PLQ1cRy5rEw8Hfh
+         MD0H2aevJU4X2wg5oAGztutYrIF8Uu0Mr7EbL/46RTy6S/ZgQ9o29dFSbbRV37w8uHFW
+         Xaxh7NcrrzT0vLxXu+6c9lb8yVWOQ97pTqWRdQZmF7EMlhUGcMtfHfxW+sfketzDEDrT
+         IbMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPmC6fn3jEMkdPUgIS0IpkufiMa/oiw8va0l0Zw2f+8vPyQpUbfijyho4VHwaL7ufELe78TDBRrhXbFqoD3cAZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlA6gemIquCpf5qiVZNAOBb9cRvODWG7Pxwk/m6fRyTrQus/pc
+	NfzUo2UBqxSJxgNuZbr2/8yNBOmOi7acNPx/YmUeKu7vR5cBtcpbz9iGyaERDkhtEyElX0YCGu/
+	3roxkzYtirGqeKctLJElUAAV/XHlpWsk7xM/a7AJM
+X-Gm-Gg: ASbGncu8/dR2XLeFVlHWFUMAgNLS1ZYhkVlOmCHGAOFspfz2h14+GgbtTHGIo6xPlzq
+	g1x9g95jvpJoym4Yc6oz7bcbV5mRqWS1QRWo4FBqskDLUKKgN4x5qDVj7bNrVltMwfgpO6lq7rG
+	bY2MiJUyNunqsavu0Peq2kuMETaplluIgZkmts0nrvt6ST
+X-Google-Smtp-Source: AGHT+IFiP9mgaAJu7hY8feMZdxPoDLsyOz0/rHLfCq881q0Uf/Jvvpxq3KdhXMNp2+26ZOi5jwxVzVPx3mDloKwQEJ8=
+X-Received: by 2002:a05:6e02:1a6d:b0:3dd:a7f3:a229 with SMTP id
+ e9e14a558f8ab-3df55712664mr1324585ab.4.1751065934740; Fri, 27 Jun 2025
+ 16:12:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417230740.86048-1-irogers@google.com> <20250417230740.86048-7-irogers@google.com>
- <aF3Vd0C-7jqZwz91@google.com> <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
- <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com> <aF7wesWHTv_Wp-8y@google.com>
-In-Reply-To: <aF7wesWHTv_Wp-8y@google.com>
+References: <20250627201818.479421-1-ctshao@google.com>
+In-Reply-To: <20250627201818.479421-1-ctshao@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Jun 2025 16:11:02 -0700
-X-Gm-Features: Ac12FXyr3ntBENxGcNDQ5WuQEl_ZSKMbc68-z87tHPtttLtfqAEggfiOqd6-r3s
-Message-ID: <CAP-5=fU+t=pB1TmE5DBGphaunZLCdGnRtHdxy3suCQMhxFjOiQ@mail.gmail.com>
-Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing libcapstone.so
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Date: Fri, 27 Jun 2025 16:12:03 -0700
+X-Gm-Features: Ac12FXwXycCiyMHk4wB7XkLW-Sdugex5_McwQgLKn577VRsOKCxxln4khGONKAg
+Message-ID: <CAP-5=fWJD4gT+CxBLDdjbdrJF0xyPTobPu20LSZFf-RSJAXMpg@mail.gmail.com>
+Subject: Re: [PATCH v4] perf stat: Fix uncore aggregation number
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, weilin.wang@intel.com, james.clark@linaro.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 12:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Fri, Jun 27, 2025 at 1:18=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
 >
-> On Fri, Jun 27, 2025 at 09:44:02AM -0700, Ian Rogers wrote:
-> > On Thu, Jun 26, 2025 at 9:53=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Thu, Jun 26, 2025 at 4:19=E2=80=AFPM Namhyung Kim <namhyung@kernel=
-.org> wrote:
-> > > >
-> > > > On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
-> > > > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUP=
-PORT,
-> > > > > support dlopen-ing libcapstone.so and then calling the necessary
-> > > > > functions by looking them up using dlsym. Reverse engineer the ty=
-pes
-> > > > > in the API using pahole, adding only what's used in the perf code=
- or
-> > > > > necessary for the sake of struct size and alignment.
-> > > >
-> > > > I still think it's simpler to require capstone headers at build tim=
-e and
-> > > > add LIBCAPSTONE_DYNAMIC=3D1 or something to support dlopen.
-> > >
-> > > I agree, having a header file avoids the need to declare the header
-> > > file values. This is simpler. Can we make the build require
-> > > libcapstone and libLLVM in the same way that libtraceevent is
-> > > required? That is you have to explicitly build with NO_LIBTRACEEVENT=
-=3D1
-> > > to get a no libtraceevent build to succeed. If we don't do this then
-> > > having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
-> > > not worth carrying in the code base, I think that's sad. If we requir=
-e
-> > > the libraries I don't like the idea of people arguing, "why do I need
-> > > to install libcapstone and libLLVM just to get the kernel/perf to
-> > > build now?" The non-simple, but still not very complex, approach take=
-n
-> > > here was taken as a compromise to get the best result (a perf that
-> > > gets faster, BPF support, .. when libraries are available without
-> > > explicitly depending on them) while trying not to offend kernel
-> > > developers who are often trying to build on minimal systems.
-> >
-> > Fwiw, a situation that I think is analogous (and was playing on my
-> > mind while writing the code) is that we don't require python to build
-> > perf and carry around empty-pmu-events.c:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/pmu-events/empty-pmu-events.c?h=3Dperf-tools-next
-> > It would be simpler (in the code base and in general) to require
-> > everyone building perf to have python.
-> > Having python on a system seems less of a stretch than requiring
-> > libcapstone and libLLVM.
-> >
-> > If we keep the existing build approach, optional capstone and libLLVM
-> > by detecting it as a feature, then just linking against the libraries
-> > is natural. Someone would need to know they care about optionality and
-> > enable LIBCAPSTONE_DYNAMIC=3D1. An average build where the libraries
-> > weren't present would lose the libcapstone and libLLVM support. We
-> > could warn about this situation but some people are upset about build
-> > warnings, and if we do warn we could be pushing people into just
-> > linking against libcapstone and libLLVM which seems like we'll fall
-> > foul of the, "perf has too many library dependencies," complaint. We
-> > could warn about linking against libraries when there is a _DYNAMIC
-> > alternative like this available, but again people don't like build
-> > warnings and they could legitimately want to link against libcapstone
-> > or libLLVM.
-> >
-> > Anyway, that's why I ended up with the code in this state, to best try
-> > to play off all the different compromises and complaints that have
-> > been dealt with in the past.
+> Follow up:
+> lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsnOOJgX4Kg@m=
+ail.gmail.com/
 >
-> I can see your point.  Adding new build flags is likely to be unused and
-> forgotten.
+> The patch adds unit aggregation during evsel merge the aggregated uncore
+> counters. Change the name of the column to `ctrs` and `counters` for
+> json mode.
+>
+> Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
+> cpumask=3D"0,120"
+> Before:
+>   perf stat -e clockticks -I 1000 --per-socket
+>   #           time socket cpus             counts unit events
+>        1.001085024 S0        1         9615386315      clockticks
+>        1.001085024 S1        1         9614287448      clockticks
+>   perf stat -e clockticks -I 1000 --per-node
+>   #           time node   cpus             counts unit events
+>        1.001029867 N0        1         3205726984      clockticks
+>        1.001029867 N1        1         3205444421      clockticks
+>        1.001029867 N2        1         3205234018      clockticks
+>        1.001029867 N3        1         3205224660      clockticks
+>        1.001029867 N4        1         3205207213      clockticks
+>        1.001029867 N5        1         3205528246      clockticks
+> After:
+>   perf stat -e clockticks -I 1000 --per-socket
+>   #           time socket ctrs             counts unit events
+>        1.001026071 S0       12         9619677996      clockticks
+>        1.001026071 S1       12         9618612614      clockticks
+>   perf stat -e clockticks -I 1000 --per-node
+>   #           time node   ctrs             counts unit events
+>        1.001027449 N0        4         3207251859      clockticks
+>        1.001027449 N1        4         3207315930      clockticks
+>        1.001027449 N2        4         3206981828      clockticks
+>        1.001027449 N3        4         3206566126      clockticks
+>        1.001027449 N4        4         3206032609      clockticks
+>        1.001027449 N5        4         3205651355      clockticks
+>
+> Tested with JSON output linter:
+>   perf test "perf stat JSON output linter"
+>    94: perf stat JSON output linter                                    : =
+Ok
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
-There's also more code to support the neither linked or nor dlopened approa=
-ch.
-
-> But I also think is that this dlopen support is mostly useful to distro
-> package managers who want to support more flexible environment and
-> regular dynamic linking is preferred to local builds over dlopen.  Then
-> adding a note to a pull request and contacting them directly (if needed)
-> might work?
-
-If you want to run with this then I don't mind.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Thanks,
-> Namhyung
+> ---
+> v4:
+>   Modify perf-stat.txt and json output lint test
+>
+> v3: https://lore.kernel.org/20250624221545.1711008-1-ctshao@google.com/
+>   Rename the column to `ctrs` and `counters` in json mode.
+>
+> v2: https://lore.kernel.org/20250612225324.3315450-1-ctshao@google.com/
+>   Rename the column to `aggr_nr`.
+>   Remove unnecessary comment.
+>
+> v1: https://lore.kernel.org/20250611233239.3098064-1-ctshao@google.com/
+>
+>
+>  tools/perf/Documentation/perf-stat.txt        |  6 ++--
+>  .../tests/shell/lib/perf_json_output_lint.py  |  4 +--
+>  tools/perf/util/stat-display.c                | 34 +++++++++----------
+>  tools/perf/util/stat.c                        |  2 +-
+>  4 files changed, 24 insertions(+), 22 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Document=
+ation/perf-stat.txt
+> index 61d091670dee..1a766d4a2233 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -640,18 +640,20 @@ JSON FORMAT
+>  With -j, perf stat is able to print out a JSON format output
+>  that can be used for parsing.
+>
+> -- timestamp : optional usec time stamp in fractions of second (with -I)
+> +- interval : optional timestamp in fractions of second (with -I)
+>  - optional aggregate options:
+>                 - core : core identifier (with --per-core)
+>                 - die : die identifier (with --per-die)
+>                 - socket : socket identifier (with --per-socket)
+>                 - node : node identifier (with --per-node)
+>                 - thread : thread identifier (with --per-thread)
+> +- counters : number of aggregated PMU counters
+>  - counter-value : counter value
+>  - unit : unit of the counter value or empty
+>  - event : event name
+>  - variance : optional variance if multiple values are collected (with -r=
+)
+> -- runtime : run time of counter
+> +- event-runtime : run time of the event
+> +- pcnt-running : percentage of time the event was running
+>  - metric-value : optional metric value
+>  - metric-unit : optional unit of metric
+>
+> diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/=
+perf/tests/shell/lib/perf_json_output_lint.py
+> index 9e772a89ce38..c6750ef06c0f 100644
+> --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> @@ -45,7 +45,7 @@ def is_counter_value(num):
+>
+>  def check_json_output(expected_items):
+>    checks =3D {
+> -      'aggregate-number': lambda x: isfloat(x),
+> +      'counters': lambda x: isfloat(x),
+>        'core': lambda x: True,
+>        'counter-value': lambda x: is_counter_value(x),
+>        'cgroup': lambda x: True,
+> @@ -75,7 +75,7 @@ def check_json_output(expected_items):
+>        if count not in expected_items and count >=3D 1 and count <=3D 7 a=
+nd 'metric-value' in item:
+>          # Events that generate >1 metric may have isolated metric
+>          # values and possibly other prefixes like interval, core,
+> -        # aggregate-number, or event-runtime/pcnt-running from multiplex=
+ing.
+> +        # counters, or event-runtime/pcnt-running from multiplexing.
+>          pass
+>        elif count not in expected_items and count >=3D 1 and count <=3D 5=
+ and 'metricgroup' in item:
+>          pass
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index 729ad5cd52cb..9cb5245a92aa 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -50,15 +50,15 @@ static int aggr_header_lens[] =3D {
+>  };
+>
+>  static const char *aggr_header_csv[] =3D {
+> -       [AGGR_CORE]     =3D       "core,cpus,",
+> -       [AGGR_CACHE]    =3D       "cache,cpus,",
+> -       [AGGR_CLUSTER]  =3D       "cluster,cpus,",
+> -       [AGGR_DIE]      =3D       "die,cpus,",
+> -       [AGGR_SOCKET]   =3D       "socket,cpus,",
+> -       [AGGR_NONE]     =3D       "cpu,",
+> -       [AGGR_THREAD]   =3D       "comm-pid,",
+> -       [AGGR_NODE]     =3D       "node,",
+> -       [AGGR_GLOBAL]   =3D       ""
+> +       [AGGR_CORE]     =3D       "core,ctrs,",
+> +       [AGGR_CACHE]    =3D       "cache,ctrs,",
+> +       [AGGR_CLUSTER]  =3D       "cluster,ctrs,",
+> +       [AGGR_DIE]      =3D       "die,ctrs,",
+> +       [AGGR_SOCKET]   =3D       "socket,ctrs,",
+> +       [AGGR_NONE]     =3D       "cpu,",
+> +       [AGGR_THREAD]   =3D       "comm-pid,",
+> +       [AGGR_NODE]     =3D       "node,",
+> +       [AGGR_GLOBAL]   =3D       ""
+>  };
+>
+>  static const char *aggr_header_std[] =3D {
+> @@ -304,7 +304,7 @@ static void print_aggr_id_std(struct perf_stat_config=
+ *config,
+>                 return;
+>         }
+>
+> -       fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, 4, aggr_=
+nr);
+> +       fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, /*strlen=
+("ctrs")*/ 4, aggr_nr);
+>  }
+>
+>  static void print_aggr_id_csv(struct perf_stat_config *config,
+> @@ -366,27 +366,27 @@ static void print_aggr_id_json(struct perf_stat_con=
+fig *config, struct outstate
+>  {
+>         switch (config->aggr_mode) {
+>         case AGGR_CORE:
+> -               json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-num=
+ber\" : %d",
+> +               json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : =
+%d",
+>                         id.socket, id.die, id.core, aggr_nr);
+>                 break;
+>         case AGGR_CACHE:
+> -               json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"aggrega=
+te-number\" : %d",
+> +               json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"counter=
+s\" : %d",
+>                         id.socket, id.die, id.cache_lvl, id.cache, aggr_n=
+r);
+>                 break;
+>         case AGGR_CLUSTER:
+> -               json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregat=
+e-number\" : %d",
+> +               json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"counters=
+\" : %d",
+>                         id.socket, id.die, id.cluster, aggr_nr);
+>                 break;
+>         case AGGR_DIE:
+> -               json_out(os, "\"die\" : \"S%d-D%d\", \"aggregate-number\"=
+ : %d",
+> +               json_out(os, "\"die\" : \"S%d-D%d\", \"counters\" : %d",
+>                         id.socket, id.die, aggr_nr);
+>                 break;
+>         case AGGR_SOCKET:
+> -               json_out(os, "\"socket\" : \"S%d\", \"aggregate-number\" =
+: %d",
+> +               json_out(os, "\"socket\" : \"S%d\", \"counters\" : %d",
+>                         id.socket, aggr_nr);
+>                 break;
+>         case AGGR_NODE:
+> -               json_out(os, "\"node\" : \"N%d\", \"aggregate-number\" : =
+%d",
+> +               json_out(os, "\"node\" : \"N%d\", \"counters\" : %d",
+>                         id.node, aggr_nr);
+>                 break;
+>         case AGGR_NONE:
+> @@ -1317,7 +1317,7 @@ static void print_header_interval_std(struct perf_s=
+tat_config *config,
+>         case AGGR_CLUSTER:
+>         case AGGR_CACHE:
+>         case AGGR_CORE:
+> -               fprintf(output, "#%*s %-*s cpus",
+> +               fprintf(output, "#%*s %-*s ctrs",
+>                         INTERVAL_LEN - 1, "time",
+>                         aggr_header_lens[config->aggr_mode],
+>                         aggr_header_std[config->aggr_mode]);
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 355a7d5c8ab8..b0205e99a4c9 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -526,7 +526,7 @@ static int evsel__merge_aggr_counters(struct evsel *e=
+vsel, struct evsel *alias)
+>                 struct perf_counts_values *aggr_counts_a =3D &ps_a->aggr[=
+i].counts;
+>                 struct perf_counts_values *aggr_counts_b =3D &ps_b->aggr[=
+i].counts;
+>
+> -               /* NB: don't increase aggr.nr for aliases */
+> +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
+>
+>                 aggr_counts_a->val +=3D aggr_counts_b->val;
+>                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
+> --
+> 2.50.0.727.gbf7dc18ff4-goog
 >
