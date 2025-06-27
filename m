@@ -1,94 +1,85 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E586293C48;
-	Fri, 27 Jun 2025 09:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 413D1295DAF
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 09:17:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015069; cv=none; b=bkbJb3V4wbvE7lpLAz+TaxvOH9tiUC7LDEA4zZ9tJRpJumqF2w7agpXoW8FkRPv28zNDMtIpHKEdpKMReF43Ccr00lJaT4v6nXN9msCTLgTH0LWUVEZOmnhCNTsyE4m2hJHi34Vi4R0lX2GDIudq1hFRXNcsIqweNkVUS8QTPqc=
+	t=1751015846; cv=none; b=M94iauiHGixz2Lrhf0Dga38nUzl/mmbQf2IBsn+WNQAXZyai+EdzvcTFMLX6lamXWtvJtrZTZr19X407s8eae3Weex7chPqm9OwKb1Gixux2dU/JkJ+ARH/a5Qls9D3SxT+R8oT6qkWrRcWUVJQAiIqMyVQ8883OOtdVuKqk7cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015069; c=relaxed/simple;
-	bh=WK6qQPO9YtNDQ0NAVtBK294K4n0DYb70ujFjHoVezxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UbR/J9kUcr9s9gRLw2+N7Q21tyey5mdZur2MevJDKQvvDBCTAvt3pNQeshLmAbfNU7g3sz85RbE3t7xvmAzcNk8XGelFjXC77651N8GHG0+O8kWgeiJCo6aKDLl6Cei55cV6tTxxyGN+FToDQ7KPMZBQeIIpYRxJAQiQM//ZIsQ=
+	s=arc-20240116; t=1751015846; c=relaxed/simple;
+	bh=RDmJuLWeW47f6aQBpbm1QaQUDsZOY8dKY+H/vpWgUho=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZqqaFJXsTDz/y7idkG3+70bwvnIKA66XQ11G2vkCrWtHgjrJtcMPa6ppJPl8DWw7daEO68O10UyEvs1OSxIJjIeJJKQZhIH2SAVIL4qCRoW6RPJzDYaoq+qCCb8/cLFooqF74NuuXXKxn+rgg03YovGrQqYpTgIlcfxL3YvLAjk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FDAA1A00;
-	Fri, 27 Jun 2025 02:04:09 -0700 (PDT)
-Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F7633F762;
-	Fri, 27 Jun 2025 02:04:23 -0700 (PDT)
-Message-ID: <603eb4c7-5570-438c-b747-cdcc67b09ea6@arm.com>
-Date: Fri, 27 Jun 2025 10:04:21 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 418641A00;
+	Fri, 27 Jun 2025 02:17:07 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 717913F762;
+	Fri, 27 Jun 2025 02:17:23 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>,
+	James Clark <james.clark@linaro.org>
+Subject: [PATCH v2 RESEND] perf: arm_spe: Relax period restriction
+Date: Fri, 27 Jun 2025 10:16:59 +0100
+Message-Id: <20250627091659.3316899-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/22] arm64: Generate sign macro for sysreg Enums
-To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
- Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250626200459.1153955-1-coltonlewis@google.com>
- <20250626200459.1153955-3-coltonlewis@google.com>
-Content-Language: en-US
-From: Ben Horgan <ben.horgan@arm.com>
-In-Reply-To: <20250626200459.1153955-3-coltonlewis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Colton,
+The minimum interval specified the PMSIDR_EL1.Interval field is a
+hardware recommendation. However, this value is set by hardware designer
+before the production. It may not accurately reflects actual hardware
+limitations, and tools currently have no way to test shorter periods.
 
-On 6/26/25 21:04, Colton Lewis wrote:
-> There's no reason Enums shouldn't be equivalent to UnsignedEnums and
-> explicitly specify they are unsigned. This will avoid the annoyance I
-> had with HPMN0.
-An Enum can be annotated with the field's sign by updating it to 
-UnsignedEnum or SignedEnum. This is explained in [1].
+This change relaxes the limitation by allowing any non-zero periods.
+This gives chance for experimenting smaller periods.
 
-With this change ID_AA64PFR1_EL1.MTE_frac would be marked as unsigned 
-when it should really be considered signed.
+The downside is that small periods may increase the risk of AUX ring
+buffer overruns. When an overrun occurs, the perf core layer will
+trigger an irq work to disable the event and wake up the tool in user
+space to read the trace data. After the tool finishes reading, it will
+re-enable the AUX event.
 
-Enum	43:40	MTE_frac
-	0b0000	ASYNC
-	0b1111	NI
-EndEnum
+Reviewed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ drivers/perf/arm_spe_pmu.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-
-> 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->   arch/arm64/tools/gen-sysreg.awk | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/tools/gen-sysreg.awk b/arch/arm64/tools/gen-sysreg.awk
-> index f2a1732cb1f6..fa21a632d9b7 100755
-> --- a/arch/arm64/tools/gen-sysreg.awk
-> +++ b/arch/arm64/tools/gen-sysreg.awk
-> @@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" || block_current() == "SysregFields
->   	parse_bitdef(reg, field, $2)
->   
->   	define_field(reg, field, msb, lsb)
-> +	define_field_sign(reg, field, "false")
->   
->   	next
->   }
-
-Thanks,
-
-Ben
-
-[1] 
-https://lore.kernel.org/all/20221207-arm64-sysreg-helpers-v4-1-25b6b3fb9d18@kernel.org/
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 3efed8839a4e..e40e5daa838d 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -308,12 +308,16 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
+ 
+ static void arm_spe_event_sanitise_period(struct perf_event *event)
+ {
+-	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
+ 	u64 period = event->hw.sample_period;
+ 	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
+ 
+-	if (period < spe_pmu->min_period)
+-		period = spe_pmu->min_period;
++	/*
++	 * As per the Arm ARM (DDI 0487 L.a), section D24.7.12 PMSIRR_EL1,
++	 * Sampling Interval Reload Register, the INTERVAL field (bits [31:8])
++	 * states: "Software must set this to a nonzero value."
++	 */
++	if (period < FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1))
++		period = FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1);
+ 	else if (period > max_period)
+ 		period = max_period;
+ 	else
+-- 
+2.34.1
 
