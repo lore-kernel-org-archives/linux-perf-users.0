@@ -1,134 +1,65 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0881D1DE2A7;
-	Fri, 27 Jun 2025 18:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73174502A;
+	Fri, 27 Jun 2025 18:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751049497; cv=none; b=TaUSxS/bktzEU5Vto1p7a/iHet2DoOp1Ls3djG2llFGR70JMQQ877XYlCEvhrRJ/qU8ZXOAOd0EkmndLyDa7umhcwLsql3gpSlAq0FZr20Bci2c5HNwSwMc6Mro6eMCyqgyUt6SEfx3dgINvbl23yJjLrnd2IoiiMJVUTb2yQ1o=
+	t=1751050386; cv=none; b=MQHp5v+MZR2g5rWxmtL8O5EPn0EEtOpvx/90HA+3rrNnobqRQuIzNpmA8/gKqraaL1Isj4Xhtvgmewf+2W+dhzW0R5i8O38hIkSVwHMUhPAOAnTqI+Iw8V8Wp/EBsa1ZB04RnAvZ/1SSoT6GD0iqs3lmcwN/4z67QgUkKBIurvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751049497; c=relaxed/simple;
-	bh=b/arh6v5GkSC0H6OoWL24mZLuTJjYuwjpj8erXAvGDY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=nX9xzFO07j1mUbDk/FnGljRohUv6LNgjY6r7FPMhVi+IFNO8JHqufTvBhEgzw1HXKJTXjhWJEWE4XTQR3FqdkFACkLdKKLS+600Uyp6CFcCsuNDds6EF6Wwvg/F+HKlGPLN0ECYFSL+vnXp3fiScbkw0LCybxEuYw3r4s05X7Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=a6KsZrUC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NSLsWnPd; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1751050386; c=relaxed/simple;
+	bh=Azf1ieY1t+Wv+7lxoZj0LGZMHSX7KgNTQ2MC12HaTBo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=oEL4BbQ4GB8tRh83wODlgFKRXpk2r14na+Rp8dzuZmirMCQDFqiNbqbbJybcIRG33VmsdNJK2/o+J0l4vUFWRtqhowZoK/y3CtmTR2OnSYtvFzzDca9+RxMaC7By1rAfMrmcS1apMidy4vdngvYZ7Otyh5/sRO2ReDnY9kxEycs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMq/wrST; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="a6KsZrUC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NSLsWnPd"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 25E7FEC009A;
-	Fri, 27 Jun 2025 14:38:15 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 27 Jun 2025 14:38:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751049495;
-	 x=1751135895; bh=EppjiZBFLpymW3k0IoAM4ktKeyibh2YCqj0MSCFFTf8=; b=
-	a6KsZrUCgZnWxbdrELTCArv/39jaYVF74eSy5JiWDgkgJ8XlHte8XLkaQdkWvcCx
-	A6htij8o7fjjygnvKP6J2Fjz3Y4oKXpVh9Q2mShKvNLPSyGiFDXYyNLI7EceD86k
-	aUXA0Yxzb5z3PqceDYoHtGj6oors5HcXGEuiGJJSoKZQEuf5j45gJq2w+lgXqRFx
-	MnTvTQqTiRKno5KkfGPrIZbQBxIKXPcoFcjYsRdhrAxXJN3tsZXWDj4dj13/NqxV
-	g/8Jzk4bhiqDG2KAhB4LkKD+3sOcVLsgIE1iUPp8nWB8dYIV6S+Sz85EPz8zHCCq
-	QGFpMX69nI5BnOSADAcd5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751049495; x=
-	1751135895; bh=EppjiZBFLpymW3k0IoAM4ktKeyibh2YCqj0MSCFFTf8=; b=N
-	SLsWnPddwalUg1e39Uu1dNo5RbqMj1u1SAbieq8Umd5MQBzITI2RHHoaN/I4VE3J
-	1QZ62SAmJ2aeNSx8Rl9nFXapnuxhUWG5lS6jTo+/FlTFyDNFqXUgM/424kvSi9dD
-	7iMWw+5UYOiJCdz/C+HYtUe2SiWc8s7TQgQ9sY6h0GrFIZrl6XgeShcDeWlK9Wza
-	br9JgtCuERvS3ScT8uc6WVT3KVED+8BDpLUp6X62aEjC6U8lCoz/afYqFEI4tZYL
-	pIbgXKJDLYgkwG/jXHO5el0NrjlSsn4gX/eGOcI/RA/MWmHYdfHjpFG3UID8V0HG
-	ULVYajeAUBvvVzLc0gyWQ==
-X-ME-Sender: <xms:FuVeaJRvr5wbXtftmiEUBvm9h1hLau66XG1G-qpqs_GGtF3VogjSnw>
-    <xme:FuVeaCyWV9HbocBPKxWTct1J3P7Qoyj_-aQk4RHHkBNipYWXFTEdK5CzhINfeY1t4
-    hRPrRFj72X2eLWYqmA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    epfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefhnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphht
-    thhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhkrdhruhhtlh
-    grnhgusegrrhhmrdgtohhmpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhm
-    rdgtohhmpdhrtghpthhtohepnhhitghkrdguvghsrghulhhnihgvrhhsodhlkhhmlhesgh
-    hmrghilhdrtghomhdprhgtphhtthhopehjuhhsthhinhhsthhithhtsehgohhoghhlvgdr
-    tghomhdprhgtphhtthhopehmohhrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhope
-    grrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdho
-    rhhg
-X-ME-Proxy: <xmx:FuVeaO3QJmNs3FqhuuDJfVl0DxYb2aACaSXSRcboFClgl2urwEv4Yg>
-    <xmx:FuVeaBBPm3zvX6bceLK_mdpepxsRuOuzfV7bnQ73pMKqq92rj-ekRA>
-    <xmx:FuVeaCjOLJYbynMg_7YPN24VgvWp4V5sEyPjLw2zQhpeLrNVjzcZXQ>
-    <xmx:FuVeaFpTEnCzndnktMCO0IIFJJGmoODmHyxWZvO9XA7HHjOqptExFA>
-    <xmx:F-VeaIpKXgEsEPXQWHynHa3_noFGIfugOmUKAnaDjXyZUK6PyqF5_haU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5527D700063; Fri, 27 Jun 2025 14:38:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMq/wrST"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567DDC4CEE3;
+	Fri, 27 Jun 2025 18:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751050386;
+	bh=Azf1ieY1t+Wv+7lxoZj0LGZMHSX7KgNTQ2MC12HaTBo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=hMq/wrSTE2lpQD/C4bACLE0iBL70iv/dtpyjDnp3OcutmFWYQFyg2RM4oZrSBjS9z
+	 8nn9BVx7h35MbTSRb0qDCnzhxP1R+vO3EfW3ge1VFi2Y9p/Rx5WluPGS9mSuOtCPea
+	 9CWYJgRyfWStAHTglwe/KUzH3AWDACuJ4QVGee4QTF0E9sjuEHIWAHzvxSfwhCEcTE
+	 YbqiqS0FXbdrK66qMLVhmnUuLMb11G+sHZzE5YTdrkaf+m5aG4SVOhZf/2DKlSad8h
+	 cs5nGdlhj2VRgdCNGGEOsSNPA4AYNrlg6LroKmuWvWLdJPbu8hK12wgzkHASkuKpl5
+	 R9cSVuFeAjl4A==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, 
+ Thomas Falcon <thomas.falcon@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20250612163659.1357950-1-thomas.falcon@intel.com>
+References: <20250612163659.1357950-1-thomas.falcon@intel.com>
+Subject: Re: [PATCH v4 1/2] perf: move perf_pmus__find_core_pmu() prototype
+ to pmus.h
+Message-Id: <175105038629.2492671.13622908077409812464.b4-ty@kernel.org>
+Date: Fri, 27 Jun 2025 11:53:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T5c964ff673f056b0
-Date: Fri, 27 Jun 2025 20:37:53 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Robin Murphy" <robin.murphy@arm.com>, "Arnd Bergmann" <arnd@kernel.org>,
- "Will Deacon" <will@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Nathan Chancellor" <nathan@kernel.org>
-Cc: "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
- "Ilkka Koskinen" <ilkka@os.amperecomputing.com>,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Message-Id: <0952a73f-3f3d-4531-a3ca-d68478a86e11@app.fastmail.com>
-In-Reply-To: <39117e6a-ebb6-4c92-a19c-2033c4e590cd@arm.com>
-References: <20250620115149.132845-1-arnd@kernel.org>
- <39117e6a-ebb6-4c92-a19c-2033c4e590cd@arm.com>
-Subject: Re: [PATCH] perf/arm-cmn: reduce stack usage in arm_cmn_probe()
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, Jun 27, 2025, at 19:57, Robin Murphy wrote:
-> On 20/06/2025 12:51 pm, Arnd Bergmann wrote:
->
-> At that point, though, it seems like we may as well just disable the 
-> warning :/
+On Thu, 12 Jun 2025 11:36:58 -0500, Thomas Falcon wrote:
+> perf_pmus__find_core_pmu() is implemented in util/pmus.c but its
+> prototpye is in util/pmu.h. Move it to util/pmus.h.
+> 
+> 
+Applied to perf-tools-next, thanks!
 
-I had a couple of cases like this, where the same large stack
-happens on both gcc and clang, and adding noinline makes clang
-behave the same way as gcc, so neither of them warns. Leaving
-the warning enabled at this point at least ensures that we catch
-it if it ever increases further.
+Best regards,
+Namhyung
 
-There is a different type of problem (mostly on powerpc and mips,
-but sometimes on arm64) where the 'noinline' helps clang to not
-produce some really bad object code with unnecessary temporaries
-on the stack.
 
-> Fortunately it's not actually that hard to improve matters here, so I've 
-> just sent that patch:
->
-> https://lore.kernel.org/r/e7dd41bf0f1b098e2e4b01ef91318a4b272abff8.1751046159.git.robin.murphy@arm.com/T/#u
-
-Nice, your version reduces the stack size from 1360 to 784 bytes
-for my test randconfig, so that's clearly better than my version.
-
-While attempting to reproduce this now, I also found that another
-patch I had avoided the warning: I added -finline-max-stacksize=128
-to the KASAN cflags, to work around some overeager inlining on
-powerpc, and this had the same effect as my patch, but without
-actually having to modify the sources.
-
-     Arnd
