@@ -1,123 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E148B1CEACB;
-	Fri, 27 Jun 2025 16:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A642EA72F
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 16:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042319; cv=none; b=jmLj0Ry+eL0m5R/kYk3eB00e3ptc1SoNwlQmonR1seCo78tagUsNHX49U9sD+5xBReCSzEjLLrPcs6FRjeJG883ySv6zwHD80VMBOn6tXfM0SWYXeC5CDZEQOzd9Qkro9HRC0eL/H55QdoGsQkVRt9hYcCkW1HELVeizvinuo/k=
+	t=1751042659; cv=none; b=YQS0ec9tqAi0+rW7gS15HxuXnsL+Lpi+RHVEqkGTN3kZBPQItcM6osN/dOpCjnTrHJvT50JGfHL3m9KCGXaB3PUDrSxFs4EuSZfhf0JvF8+AMLtwY4So7+TF+q7TZQVbNXvqS42zgcxsTp9o0czSpxiTBvbbDcnPy7O8o9d4F8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042319; c=relaxed/simple;
-	bh=coqZ9AH1Xr1um42/coQFhzI7vkhc87lz2XE5hH6j06E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hlR2KvWTMwERv0aq9O301H/vNeziAM8XaPkvdPAnJ614y37XZ8UFjqdZDPMWIGMrFiG56FRwBYU4LlSPlVHzjcbtD23uiRVZJg3xWTM3Y5jDr6RW9Stz7oNAy282lxnjIM0GhfxzRuSXbe/8yV0BoQR3078t7jQNj8+oHKinNjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhPfEbY2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751042659; c=relaxed/simple;
+	bh=9s1eA5KwrVKwd9rWss4PkqOIrDE9CSV2z3UbUlBIJKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aHZuna9DqYSP33GYU6UVq0RxXAMRJsXsSTNWVzKfsuS8oNVhjdAdjJ5rXq1zjbnsyZKrTk2fI+IfVnsLl1YgG/+TvQj5ktSxcNdQuxX1W5kUV3IqrO5SHEBq1/gcorq7zhWsel+dYl01m7TpxSD1Obp+4ALIGEFtEdtTm1NJG28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jq6rD8SK; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhPfEbY2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0634AC4CEE3;
-	Fri, 27 Jun 2025 16:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751042318;
-	bh=coqZ9AH1Xr1um42/coQFhzI7vkhc87lz2XE5hH6j06E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IhPfEbY2+HwqyBANIIHVqgsNnv3Dt3vs/UmkZ1zL9GaWbeB1CsBKmLf1el5oVs8XB
-	 /s0+EHW0upWhq00JieL0lJZ09vHA0Kp4kESHLHYFuONBarUpO8G1SHAznlII33rJeG
-	 hTkeb3BlwMgl1hmti3OSVywYrN3bCqE/RxfOA/8WscD2ABXA3Gx6pv7EFFyOEes66b
-	 bAOA7PDZMaghkgDifyjEklqQbeNE5tnWvwTFZe6YPIvZM0q5CY6I5q8xICnnCCl8pT
-	 eNG3n9m49HR5cS8I/63Vlh48zn+IDq5IHfM7azUItXVQOrTlKQ9Q2hSuR99Z6PBqqr
-	 GrC5lwV/jFLpA==
-Date: Fri, 27 Jun 2025 09:38:35 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Yuzhuo Jing <yuzhuo@google.com>
-Subject: Re: [PATCH v3 1/4] perf build: enable -fno-strict-aliasing
-Message-ID: <aF7JC8zkG5-_-nY_@google.com>
-References: <20250625202311.23244-1-ebiggers@kernel.org>
- <20250625202311.23244-2-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jq6rD8SK"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3de210e6076so2175ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 09:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751042654; x=1751647454; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9s1eA5KwrVKwd9rWss4PkqOIrDE9CSV2z3UbUlBIJKE=;
+        b=jq6rD8SKGMCuNrME36sTI/KFxTM6BEo9gz10KGTulZJX15CnBpQeqPwEfLgn7UvNM5
+         z5eYtyWDfBRa+paGJaoZrIC0+xhm/fixddafEGda+guF9nWAEK3SqurXBqHh99Fx5XnW
+         h3OuI80idTCaK0tp9DnCEktDZWr8eRJPpa1S+8RX9gtYeXOw7lk9ofRil0r2suRga7Fo
+         JuGNUv5p8OtosmXC/4z0UQ3YZkS3Mmk0ea+XSJnvu20K+8BRtR3hlFxW6QGsTlHzHOUZ
+         qgGlHEVwanPmkQBqpnqpH6vRV3S9M6B3ZfqQGQd+fHUu2qROuwUtF5NpJbpI2/ssibdS
+         y+fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751042654; x=1751647454;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9s1eA5KwrVKwd9rWss4PkqOIrDE9CSV2z3UbUlBIJKE=;
+        b=o8db7CBMk5E8BnZR+Ul9gWFFpi3aMDegWz/UxRfOKnF7HZOap05G5j7dhmG7Q5cWnk
+         6Wsf/FeDCNhlH7gra+AlitoX4Mmdug7Ik3w77bkRFGGybBOvvD7DwD8+eH/GHnixVp9B
+         omkXAPguRajISNDImvonk68OL+4hEYn3YehblLpB4aZPLGSxn7RkYXEfTmw9QbuRCVKK
+         bm8cC/we5LyL0g/ZzYlm7tmdHYk2KLHt0ChFhZdeYr7Il4W0pclCPwf+P9DcYx6fWftp
+         8DmZVHFqsigPk3VLHBDEBC5HaYQj/Fy67mJz1AGigN44sT/9rk263hQaVJmqAhPVxtfn
+         KjgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWk7MoctHb84IlCVtr3QE9ieNIAPog3UAHvkQX6phtqidBi4QjEyjKPjMZjbsJUjROAEC0Txq+NEPWeynsYLT1j@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh0Up2XEKHUSIl6QzmZf4r89IrswVq28YndfYK9BXsjqgYGTJW
+	MEL6rSjxz799Ny1VxS8hEBDtbOshDC1WuhJI4XB52iAXwYniw+EMsRoeAkugKEQH70hhcRtvMOp
+	19B0xjirhIDWVA9yWMSlVxA21sTkNVB7TVeb2ItLY
+X-Gm-Gg: ASbGnctmTlcjIz8pYr2e8iwTVA0uhOCy86pDVxy3IG7Jz9TI/K5QjOjlkyPonTtEuJd
+	2u7HEYm3YyIfyrPeHMQA8yXvraeIKP8Sr+LL1n7rPI20WVGv52em6CR1ACfD95+C2tL5w+XlaeH
+	3EbrFO9n2rThLI2PlQYWdTRNdD7Q/6WTVjruXjLuKOmNQP
+X-Google-Smtp-Source: AGHT+IHvztp7L1kXPm4qHzp2aVdvq9iPLHibmjsOFDZjxgx47/40qOE255pl9PfqbsmBA2gt1yngKEvvPvtuRKfJNak=
+X-Received: by 2002:a05:6e02:1a68:b0:3dc:88ca:5eb5 with SMTP id
+ e9e14a558f8ab-3df53bb8ab1mr524965ab.1.1751042654180; Fri, 27 Jun 2025
+ 09:44:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625202311.23244-2-ebiggers@kernel.org>
+References: <20250417230740.86048-1-irogers@google.com> <20250417230740.86048-7-irogers@google.com>
+ <aF3Vd0C-7jqZwz91@google.com> <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
+In-Reply-To: <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 27 Jun 2025 09:44:02 -0700
+X-Gm-Features: Ac12FXxK697QImT-ty4XbntVKcoV6r674s1RbV5RKCu1qYoOEhu-OUGYgs394-o
+Message-ID: <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com>
+Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing libcapstone.so
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 01:23:08PM -0700, Eric Biggers wrote:
-> perf pulls in code from kernel headers that assumes it is being built
-> with -fno-strict-aliasing, namely put_unaligned_*() from
-> <linux/unaligned.h> which write the data using packed structs that lack
-> the may_alias attribute.  Enable -fno-strict-aliasing to prevent
-> miscompilations in sha1.c which would otherwise occur due to this issue.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> ---
->  tools/perf/Makefile.config | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 24736b0bbb302..70a3e771c7c08 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -17,10 +17,14 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
->  detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
->  
->  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->  HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
->  
-> +# This is required because the kernel is built with this and some of the code
-> +# borrowed from kernel headers depends on it, e.g. put_unaligned_*().
-> +CFLAGS += -fno-strict-aliasing
+On Thu, Jun 26, 2025 at 9:53=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, Jun 26, 2025 at 4:19=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
+> > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUPPORT=
+,
+> > > support dlopen-ing libcapstone.so and then calling the necessary
+> > > functions by looking them up using dlsym. Reverse engineer the types
+> > > in the API using pahole, adding only what's used in the perf code or
+> > > necessary for the sake of struct size and alignment.
+> >
+> > I still think it's simpler to require capstone headers at build time an=
+d
+> > add LIBCAPSTONE_DYNAMIC=3D1 or something to support dlopen.
+>
+> I agree, having a header file avoids the need to declare the header
+> file values. This is simpler. Can we make the build require
+> libcapstone and libLLVM in the same way that libtraceevent is
+> required? That is you have to explicitly build with NO_LIBTRACEEVENT=3D1
+> to get a no libtraceevent build to succeed. If we don't do this then
+> having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
+> not worth carrying in the code base, I think that's sad. If we require
+> the libraries I don't like the idea of people arguing, "why do I need
+> to install libcapstone and libLLVM just to get the kernel/perf to
+> build now?" The non-simple, but still not very complex, approach taken
+> here was taken as a compromise to get the best result (a perf that
+> gets faster, BPF support, .. when libraries are available without
+> explicitly depending on them) while trying not to offend kernel
+> developers who are often trying to build on minimal systems.
 
-This makes a build error with REFCNT_CHECKING=1.
+Fwiw, a situation that I think is analogous (and was playing on my
+mind while writing the code) is that we don't require python to build
+perf and carry around empty-pmu-events.c:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/empty-pmu-events.c?h=3Dperf-tools-next
+It would be simpler (in the code base and in general) to require
+everyone building perf to have python.
+Having python on a system seems less of a stretch than requiring
+libcapstone and libLLVM.
 
-  In file included from util/symbol.c:27:
-  In function ‘dso__set_symbol_names_len’,
-      inlined from ‘dso__sort_by_name’ at util/symbol.c:638:4:
-  util/dso.h:654:46: error: ‘len’ may be used uninitialized [-Werror=maybe-uninitialized]
-    654 |         RC_CHK_ACCESS(dso)->symbol_names_len = len;
-        |                                              ^
-  util/symbol.c: In function ‘dso__sort_by_name’:
-  util/symbol.c:634:24: note: ‘len’ was declared here
-    634 |                 size_t len;
-        |                        ^~~
+If we keep the existing build approach, optional capstone and libLLVM
+by detecting it as a feature, then just linking against the libraries
+is natural. Someone would need to know they care about optionality and
+enable LIBCAPSTONE_DYNAMIC=3D1. An average build where the libraries
+weren't present would lose the libcapstone and libLLVM support. We
+could warn about this situation but some people are upset about build
+warnings, and if we do warn we could be pushing people into just
+linking against libcapstone and libLLVM which seems like we'll fall
+foul of the, "perf has too many library dependencies," complaint. We
+could warn about linking against libraries when there is a _DYNAMIC
+alternative like this available, but again people don't like build
+warnings and they could legitimately want to link against libcapstone
+or libLLVM.
 
-I'll simply add this to work around it:
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8b30c6f16a9eeac1..73dab94fab74e829 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -631,7 +631,7 @@ void dso__sort_by_name(struct dso *dso)
- {
-        mutex_lock(dso__lock(dso));
-        if (!dso__sorted_by_name(dso)) {
--               size_t len;
-+               size_t len = 0;
- 
-                dso__set_symbol_names(dso, symbols__sort_by_name(dso__symbols(dso), &len));
-                if (dso__symbol_names(dso)) {
+Anyway, that's why I ended up with the code in this state, to best try
+to play off all the different compromises and complaints that have
+been dealt with in the past.
 
 Thanks,
-Namhyung
-
-> +
->  # Enabled Wthread-safety analysis for clang builds.
->  ifeq ($(CC_NO_CLANG), 0)
->    CFLAGS += -Wthread-safety
->  endif
->  
-> -- 
-> 2.50.0
-> 
+Ian
