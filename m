@@ -1,130 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF9F2F1FDF;
-	Fri, 27 Jun 2025 13:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCAC026A0D0
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 13:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751031373; cv=none; b=Ux+pjzNsvCCG6qobpvgUcpfd8/AKksmUCw8p9z8N9bz3q0zZ4a0xHnZ39h+/I6q1LdVhYOq5Y1rlqHKhqX3dhpHuc+cRyXDsNL5RD3Kh9a1JJ/P7i+M/sWqvB2pKE7/N7hJ4Hf8bW6mUCJ8p/j8xbXjp6bztH0g2iRn7mjkpH3w=
+	t=1751032244; cv=none; b=L3bJUnrtx4xPKOOOgfz0/qcY9MkXaBPbOVjUSy3stpYuCiyEsOwy9i3vu94taZmOSCphoE7e+FMcRd3FCxy/K3u0vVa2NMhB1uSlDVXdXNVYbr9Dk52qTMFibIjVWcgiw/ECvZyYapGmxK28TLI+QGJxEzUUQfTyylssXz+m3zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751031373; c=relaxed/simple;
-	bh=b+AqKL/t2Y57F7SFIeF2uOilMxYgh+4DSlllHo4mbfo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mV83OEHy2NTsaAwbWwOtNlk3bwZkl6iyEL1aMCa5ugbbyOKAKDH8hUUv2ZjS/TBaRH9Bi2Hxt0kvVNs477lnNcW7GYXYP38ZhiyCVMfKKi9E8F6hCD4PWhG6PlfIub7ce0C0QKTNjLCcipahkA0YzUa2GCWI0TTvMIXuRHHrTHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJDDw55M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJDDw55M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2F3C4CEE3;
-	Fri, 27 Jun 2025 13:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751031373;
-	bh=b+AqKL/t2Y57F7SFIeF2uOilMxYgh+4DSlllHo4mbfo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AJDDw55MJlOCVvTFjNTI1frKXCVh8blcEuVXrNyCokvJAG1kOtlsiSCic2uxm/G58
-	 BrO+Bxxc3pu2lbtt/kDFxhoI3I/Jayc9I8UXOt/zVMasJmI7ZSMEvccLpRS3W2ftKz
-	 vMjX5+nOFC+dlKksOVew1jaDQGTANoYxW54i4uqYAtJAOpT/QPU8bkfmFRKyvO5Z82
-	 OBVExL/AQvGJPwrZmOfv/uLSLHjfEP9SnTogY6JSz7a6Mof3pQ1ypdnBiFhJl5xYqZ
-	 K5yUAUals6BoMVo6oBjiZj6o8Fd79QHkP4M1Nsw6w8w00SrbjZM77B1tghvy3iPl3S
-	 QddlGxg2/VoWg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uV9FS-00AZpT-Nm;
-	Fri, 27 Jun 2025 14:36:11 +0100
-Date: Fri, 27 Jun 2025 14:36:10 +0100
-Message-ID: <86qzz5b92t.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mingwei Zhang <mizhang@google.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1751032244; c=relaxed/simple;
+	bh=48UOnyvhTmbV8Trpua0BmgJ29gPVoXU+h4a6qjsGv6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ioz8NTQnRBVCIvrc3P7Wyad9YEC1PllS0SyXjwc4ZeT220WVCL0PfpzGv/nlEPE19GA+JaUUpnbsOqaRNEnV93Y6wGthcH/Ut705140f+fb+gViFmIjolB4iwSHlXpzsqYLgS7gGv4PRwX+QmOLjyyoUdcvRs4Rxc8CM1Lacplo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC9221007;
+	Fri, 27 Jun 2025 06:50:24 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C21123F66E;
+	Fri, 27 Jun 2025 06:50:41 -0700 (PDT)
+Date: Fri, 27 Jun 2025 14:50:39 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
 	linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 09/22] KVM: arm64: Correct kvm_arm_pmu_get_max_counters()
-In-Reply-To: <20250626200459.1153955-10-coltonlewis@google.com>
-References: <20250626200459.1153955-1-coltonlewis@google.com>
-	<20250626200459.1153955-10-coltonlewis@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v2 RESEND] perf: arm_spe: Relax period restriction
+Message-ID: <20250627135039.GQ794930@e132581.arm.com>
+References: <20250627091659.3316899-1-leo.yan@arm.com>
+ <2996edbb-1223-4795-921b-fd86a4dc3f88@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: coltonlewis@google.com, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2996edbb-1223-4795-921b-fd86a4dc3f88@arm.com>
 
-On Thu, 26 Jun 2025 21:04:45 +0100,
-Colton Lewis <coltonlewis@google.com> wrote:
+On Fri, Jun 27, 2025 at 05:10:47PM +0530, Anshuman Khandual wrote:
+> On 27/06/25 2:46 PM, Leo Yan wrote:
+> > The minimum interval specified the PMSIDR_EL1.Interval field is a
+> > hardware recommendation. However, this value is set by hardware designer
+> > before the production. It may not accurately reflects actual hardware
+> > limitations, and tools currently have no way to test shorter periods.
+> > 
+> > This change relaxes the limitation by allowing any non-zero periods.
+> > This gives chance for experimenting smaller periods.
 > 
-> Since cntr_mask is modified when the PMU is partitioned to remove some
-> bits, make sure the missing counters are added back to get the right
-> total.
+> Is this going to be safe on all SPE implementations ?
 
-Please fix the subject of the patch to be more descriptive. It is
-worded like a bug fix, while it really is only a step in the patch
-series.
+AFAIK, this change applies on all Arm SPE versions.
 
-Something like "Take partitioning into account for max number of
-counters" would go a long way.
+> > The downside is that small periods may increase the risk of AUX ring
+> > buffer overruns. When an overrun occurs, the perf core layer will
+> > trigger an irq work to disable the event and wake up the tool in user
+> > space to read the trace data. After the tool finishes reading, it will
+> > re-enable the AUX event.
+> > 
+> > Reviewed-by: James Clark <james.clark@linaro.org>
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > ---
+> >  drivers/perf/arm_spe_pmu.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> > index 3efed8839a4e..e40e5daa838d 100644
+> > --- a/drivers/perf/arm_spe_pmu.c
+> > +++ b/drivers/perf/arm_spe_pmu.c
+> > @@ -308,12 +308,16 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
+> >  
+> >  static void arm_spe_event_sanitise_period(struct perf_event *event)
+> >  {
+> > -	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
+> >  	u64 period = event->hw.sample_period;
+> >  	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
+> >  
+> > -	if (period < spe_pmu->min_period)
+> > -		period = spe_pmu->min_period;
+> > +	/*
+> > +	 * As per the Arm ARM (DDI 0487 L.a), section D24.7.12 PMSIRR_EL1,
+> > +	 * Sampling Interval Reload Register, the INTERVAL field (bits [31:8])
+> > +	 * states: "Software must set this to a nonzero value."
+> > +	 */The motivation (as explained in the commit message) for using arch permitted
+> minimum value instead of the recommended (PMSIDR_EL1.Interval) value, should
+> be explained in the comment here as well.
 
-> 
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> ---
->  arch/arm64/kvm/pmu.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-> index 79b7ea037153..67216451b8ce 100644
-> --- a/arch/arm64/kvm/pmu.c
-> +++ b/arch/arm64/kvm/pmu.c
-> @@ -533,6 +533,8 @@ static bool pmu_irq_is_valid(struct kvm *kvm, int irq)
->  u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->  {
->  	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
-> +	u8 counters;
-> +
+Will update the comment to make it clear.
 
-nit: superfluous blank line.
->  
->  	/*
->  	 * PMUv3 requires that all event counters are capable of counting any
-> @@ -545,7 +547,12 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->  	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
->  	 * Ignore those and return only the general-purpose counters.
->  	 */
-> -	return bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
-> +	counters = bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
-> +
-> +	if (kvm_pmu_is_partitioned(arm_pmu))
-> +		counters += arm_pmu->hpmn_max;
+> > +	if (period < FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1))
+> > +		period = FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1);
+> Given that FIELD_PREP(PMSIRR_EL1_INTERVAL_MASK, 1) is a constant - should
+> not it be defined as a macro e.g PMSIRR_EL1_MINIMUM_INTERVAL or something
+> similar instead of deriving it twice.
 
-Why the check? Why can't we rely on hpmn_max to always give us the
-correct value?
+I assume the compiler will evaluate the macro, so defining a new macro
+should make no difference.
+
+For more readable, I will try to add the macro in next spin.
 
 Thanks,
+Leo
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> >  	else if (period > max_period)
+> >  		period = max_period;
+> >  	else
+> 
