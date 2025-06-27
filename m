@@ -1,118 +1,178 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5D72ECD36
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 20:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38FA28DB48
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 23:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751057749; cv=none; b=mgGOn1T0/TKEu1eNtkKHf2yLfOstwJ0OKX0XmCiq0v046IcmUcrt7Yi9RfL48y39CPG2x/EGVSKPVw/3GAi+YKL5Zz6LWongZdGFGzJcKOBzACGMHM+D0NzwOlYD2Ze7QiM/nsMOIby9qCxv1pJ5uYblTmF+dll6wly6nXVFTg4=
+	t=1751065876; cv=none; b=suwO2NUX2waFttYqUjhsXBIeclp+0KPLWd2kk5pTut9TaxB3o6PW+QpYIhL+jU1GuKvUx0mDrn7r+lqNYLP+wINAh1HNUDXxm8bykoTwT0KVLRcrvussbOZ3316em3APuRSo8AAAi4M+vuix6wSCUQkr0j7I6kgbIXRnX2ok0Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751057749; c=relaxed/simple;
-	bh=38GaMaW/B7zHBvh1tFU9ANgBBdPtUjqbBkbeYoWb7Go=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L1Q1QOXBNXXizaT5RqsdhThTMVpnLFL8JzYMKgwxFVlrEh7MSCir7HYEQpnVinIVDpk06+r+DGqmOuTKDQ6jb5JAKazgZMciDoB3bS1sfYKSZfCegd/pppcNOmapQU3jq37BlkmigRB6GY8+CKSBZLn1GS6hys33O3sPzNCxNDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ryxq9xyO; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751065876; c=relaxed/simple;
+	bh=BAMzKo8cv7ru+aWsN4XS2dPIapPyqPMn5l1eLT4nrvc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qgpMZeeAfrO3ub0tOi5m5wYzUXpSSZ/F5Q3LBbkjLZNG1S9y0fj6pnIuJHXSkaVkXXUpUUZU/+JxcaJJD2oEzlkrPOS+if/19ClX/dMMSC+dTRLmVazUtTjsvM1YVPUgRFY55Fm7OLf0fUWH5jHJ3nknjgYghWSUKmvs7D2kZbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dsk3g/3Q; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ryxq9xyO"
-Date: Fri, 27 Jun 2025 13:55:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751057734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1AMsankqQ7fXut//cwhaRHpcwwLLJJgqr0ZblnCJIz0=;
-	b=ryxq9xyOHz5HcEmHKXHWirB5Xpi7L1zTlBdjMXx/7++C8tCcdl/h+rYXtM3iVSXvEC7B7P
-	11j/UAoaFs0ZNl9IKeMbblgKhnCbvPA0ZkwN1k+IBnrMoa6O9wiT7rXXgf42CoURxWxwZk
-	pXvRVVgsa3Hiney2sAnFfkyylePCAqU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: Ben Horgan <ben.horgan@arm.com>, kvm@vger.kernel.org,
-	pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk,
-	catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-	mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] arm64: Generate sign macro for sysreg Enums
-Message-ID: <aF8FPTupC_VnAldN@linux.dev>
-References: <603eb4c7-5570-438c-b747-cdcc67b09ea6@arm.com>
- <gsntecv49aml.fsf@coltonlewis-kvm.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsk3g/3Q"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so55365ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 16:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751065874; x=1751670674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+r1k/4QEtOdvaCXklZVZbc3BxCMGTSAo6KfvEM+1WJU=;
+        b=dsk3g/3Qk9BZULFQya3YSOtM+XYDZ+g/BeXxFnHZNpgUl5QthxMy6cQj9g6Jtcs8SS
+         iiOG07mvRp3eVpxupK0VjOq46flaV/wBbdZiL7+XK+IOhMkdyCyDR3S3mVOtRan6IzlK
+         BOcwZ75VzZyJVAh0ekozeV7opO7XFDUGwr1E6gOB8odw/kqzfAjt7rQuLB2Dhc5HgzTL
+         8bPwc32nZZvXo/Jyrfakoq5KpDMGnycW6QnjDCLRTrwlrqd9caLSQadG1un7BuRFZxou
+         0zrsSe82XkAUok7g12MXaLDDJnAsa7H4ZHu8KhIspyeUWmxYDY2EMkqNB4fxaDWljNqD
+         PPFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751065874; x=1751670674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+r1k/4QEtOdvaCXklZVZbc3BxCMGTSAo6KfvEM+1WJU=;
+        b=kwCq67U69E7WkDWgYcf8wmTuXUVIszCbDKGLFBdVrQy33oGJB0nA9391Ei0qwNBs8c
+         d7/Ui8Tgza2IwkwvXvIIad9hmcmns5yetE0/tcoS4ir1xayyfjobQHhALQQ8EHjstOnJ
+         X+HjZexarfstncja9qn4FldQktn+gfB/lILIqUSfho2rnydJ4K1875Iu/O4w96t2iVOn
+         dXqL0OAz5k4URfdW+VShbvv0vEL2JhHmQ9iudfGWnrGuH+O32Jzpst9Nf/qBbTD6Xugy
+         ovTV1z0ee/PGc2oIRYdgmPeEaUEoZdZ+gc+uOQjjVDhVD0qVN+wN9HxzPEdnE83BrOKH
+         lMgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBz1SUxCVRpi08AsPWPPwuVpM7dqkQtW2iuBxsFAaS+zivuWwbHzGHSfBtRsX81byKM3x5taz7mDMHrFMW6rxf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkhggtEVJVDCnf6lS8C4QYSLjwmrmi+bEFH1DD+H1dM0qbbCQl
+	PlAjBHdI0aLiPnNDC2yjsqhp6cfb+7jXbMrp/cFDgP73ebceEGLe9SAAKOUq6aT2Jdba+eWgthF
+	YtXT91q3ATx5TBsTk8w5nhVX8ftSJHSB0dn5kyl4o
+X-Gm-Gg: ASbGncuhXJ0stXw/pOw/x+zT37fsHK6/zNe2P7EAmu11bHkx+pwst0tp9KLa0I35Srw
+	+vYXvGQOGFhylk+Omz4JeWdwT5PdftTk6cSm2ZoCeQVyhTIOB/JJEra/2/NBa8ExvSi9HNr9mBA
+	fPjhsE8hiy2FJ7PMzlDBgjYwOYK8yxaaqS9KvVdG/T0U+I
+X-Google-Smtp-Source: AGHT+IHOrtjjnavLeFmnxRzUKctDiOqRlZqpa3B6VBvWXIZQMbA5CqO1kSxXEHqdcMJotrOKU1tEB580gSfXEF5bIO4=
+X-Received: by 2002:a05:6e02:11:b0:3dd:b59b:8da5 with SMTP id
+ e9e14a558f8ab-3df55381c7amr1542175ab.0.1751065873440; Fri, 27 Jun 2025
+ 16:11:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <gsntecv49aml.fsf@coltonlewis-kvm.c.googlers.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250417230740.86048-1-irogers@google.com> <20250417230740.86048-7-irogers@google.com>
+ <aF3Vd0C-7jqZwz91@google.com> <CAP-5=fV4x0q7YdeYJd6GAHXd48Qochpa-+jq5jsRJWK36v7rSA@mail.gmail.com>
+ <CAP-5=fXLUO3yvSmM4nSnNV_qQGGLP_XTcfPgOhgOkuaNnr3Hvw@mail.gmail.com> <aF7wesWHTv_Wp-8y@google.com>
+In-Reply-To: <aF7wesWHTv_Wp-8y@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 27 Jun 2025 16:11:02 -0700
+X-Gm-Features: Ac12FXyr3ntBENxGcNDQ5WuQEl_ZSKMbc68-z87tHPtttLtfqAEggfiOqd6-r3s
+Message-ID: <CAP-5=fU+t=pB1TmE5DBGphaunZLCdGnRtHdxy3suCQMhxFjOiQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/19] perf capstone: Support for dlopen-ing libcapstone.so
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 08:45:38PM +0000, Colton Lewis wrote:
-> Hi Ben. Thanks for the review.
-> 
-> Ben Horgan <ben.horgan@arm.com> writes:
-> 
-> > Hi Colton,
-> 
-> > On 6/26/25 21:04, Colton Lewis wrote:
-> > > There's no reason Enums shouldn't be equivalent to UnsignedEnums and
-> > > explicitly specify they are unsigned. This will avoid the annoyance I
-> > > had with HPMN0.
-> > An Enum can be annotated with the field's sign by updating it to
-> > UnsignedEnum or SignedEnum. This is explained in [1].
-> 
-> > With this change ID_AA64PFR1_EL1.MTE_frac would be marked as unsigned
-> > when it should really be considered signed.
-> 
-> > Enum	43:40	MTE_frac
-> > 	0b0000	ASYNC
-> > 	0b1111	NI
-> > EndEnum
-> 
-> Thanks for the explanation. I made this a separate commit because I
-> considered people might object and HPMN0 is already an UnsignedEnum in
-> my previous commit.
-> 
-> Do you think it would be a good idea to make plain Enums signed by
-> default or should I just remove this commit from the series?
+On Fri, Jun 27, 2025 at 12:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Fri, Jun 27, 2025 at 09:44:02AM -0700, Ian Rogers wrote:
+> > On Thu, Jun 26, 2025 at 9:53=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Thu, Jun 26, 2025 at 4:19=E2=80=AFPM Namhyung Kim <namhyung@kernel=
+.org> wrote:
+> > > >
+> > > > On Thu, Apr 17, 2025 at 04:07:27PM -0700, Ian Rogers wrote:
+> > > > > If perf wasn't built against libcapstone, no HAVE_LIBCAPSTONE_SUP=
+PORT,
+> > > > > support dlopen-ing libcapstone.so and then calling the necessary
+> > > > > functions by looking them up using dlsym. Reverse engineer the ty=
+pes
+> > > > > in the API using pahole, adding only what's used in the perf code=
+ or
+> > > > > necessary for the sake of struct size and alignment.
+> > > >
+> > > > I still think it's simpler to require capstone headers at build tim=
+e and
+> > > > add LIBCAPSTONE_DYNAMIC=3D1 or something to support dlopen.
+> > >
+> > > I agree, having a header file avoids the need to declare the header
+> > > file values. This is simpler. Can we make the build require
+> > > libcapstone and libLLVM in the same way that libtraceevent is
+> > > required? That is you have to explicitly build with NO_LIBTRACEEVENT=
+=3D1
+> > > to get a no libtraceevent build to succeed. If we don't do this then
+> > > having LIBCAPSTONE_DYNAMIC will most likely be an unused option and
+> > > not worth carrying in the code base, I think that's sad. If we requir=
+e
+> > > the libraries I don't like the idea of people arguing, "why do I need
+> > > to install libcapstone and libLLVM just to get the kernel/perf to
+> > > build now?" The non-simple, but still not very complex, approach take=
+n
+> > > here was taken as a compromise to get the best result (a perf that
+> > > gets faster, BPF support, .. when libraries are available without
+> > > explicitly depending on them) while trying not to offend kernel
+> > > developers who are often trying to build on minimal systems.
+> >
+> > Fwiw, a situation that I think is analogous (and was playing on my
+> > mind while writing the code) is that we don't require python to build
+> > perf and carry around empty-pmu-events.c:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/pmu-events/empty-pmu-events.c?h=3Dperf-tools-next
+> > It would be simpler (in the code base and in general) to require
+> > everyone building perf to have python.
+> > Having python on a system seems less of a stretch than requiring
+> > libcapstone and libLLVM.
+> >
+> > If we keep the existing build approach, optional capstone and libLLVM
+> > by detecting it as a feature, then just linking against the libraries
+> > is natural. Someone would need to know they care about optionality and
+> > enable LIBCAPSTONE_DYNAMIC=3D1. An average build where the libraries
+> > weren't present would lose the libcapstone and libLLVM support. We
+> > could warn about this situation but some people are upset about build
+> > warnings, and if we do warn we could be pushing people into just
+> > linking against libcapstone and libLLVM which seems like we'll fall
+> > foul of the, "perf has too many library dependencies," complaint. We
+> > could warn about linking against libraries when there is a _DYNAMIC
+> > alternative like this available, but again people don't like build
+> > warnings and they could legitimately want to link against libcapstone
+> > or libLLVM.
+> >
+> > Anyway, that's why I ended up with the code in this state, to best try
+> > to play off all the different compromises and complaints that have
+> > been dealt with in the past.
+>
+> I can see your point.  Adding new build flags is likely to be unused and
+> forgotten.
 
-It is presumptive to associate a sign with an enumeration. Generally
-speaking, the only fields that can do signed / unsigned comparisons are
-the Feature ID register fields.
+There's also more code to support the neither linked or nor dlopened approa=
+ch.
 
-So please drop this and only keep the change for HPMN0.
+> But I also think is that this dlopen support is mostly useful to distro
+> package managers who want to support more flexible environment and
+> regular dynamic linking is preferred to local builds over dlopen.  Then
+> adding a note to a pull request and contacting them directly (if needed)
+> might work?
+
+If you want to run with this then I don't mind.
 
 Thanks,
-Oliver
+Ian
 
-> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> > > ---
-> > >    arch/arm64/tools/gen-sysreg.awk | 1 +
-> > >    1 file changed, 1 insertion(+)
-> 
-> > > diff --git a/arch/arm64/tools/gen-sysreg.awk
-> > > b/arch/arm64/tools/gen-sysreg.awk
-> > > index f2a1732cb1f6..fa21a632d9b7 100755
-> > > --- a/arch/arm64/tools/gen-sysreg.awk
-> > > +++ b/arch/arm64/tools/gen-sysreg.awk
-> > > @@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" ||
-> > > block_current() == "SysregFields
-> > >    	parse_bitdef(reg, field, $2)
-> 
-> > >    	define_field(reg, field, msb, lsb)
-> > > +	define_field_sign(reg, field, "false")
-> 
-> > >    	next
-> > >    }
-> 
-> > Thanks,
-> 
-> > Ben
-> 
-> > [1]
-> > https://lore.kernel.org/all/20221207-arm64-sysreg-helpers-v4-1-25b6b3fb9d18@kernel.org/
+> Thanks,
+> Namhyung
+>
