@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E411494CC
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Jun 2025 00:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57D817A301
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Jun 2025 00:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751069389; cv=none; b=McVeSKrpPhFRFCLVYeDubgdfyz+XoWMB9ZSBVoxSswxw1+SJRLPd3KVy6Y0ZXin3d5kuNOP3Ros7doKCHIAuvNbMXRFrqf2Tf5HDEOEnS/G9sl4nL0Q52q0IxUOSR4ncWbmZEpvzRz/F1gorws5nWwy6xmb40h2tquVE1gEkVTE=
+	t=1751069391; cv=none; b=LB+iZBuT3J5M/fZoPe7Isx/kdOqINFloeCSrPY6d2WfoQZwCUEkAo1dyb7/6JkG7idCMHtA2eOwChoOP46aonqsVt8fEPHwVm3WNRgeV313tCXtD2lmsUpCIV9Ff40tkKihkPLe3jv/n6Y6Ybu9M86pXJ+dL9c+mtX3I4d1Zn2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751069389; c=relaxed/simple;
-	bh=sW3k+IH/Kk6bAydSuZ/20LAWRGVVpRx5+p/hr7sjLVU=;
+	s=arc-20240116; t=1751069391; c=relaxed/simple;
+	bh=EHllJCh3FBBjFZEiqeZh0D/LqLJSXYnbMRpNl3cGfvQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=DtGvtT0Ftu5wIFHcgXnwIyivv6Px51f8ukgQXZNH/AcrJmeGtM2/LFrK+ufbf5tUCbBaRn6xY5clnu4/JPU0t6S7zfs6MerGLo0gfLhux5h0gTbbQWyP1kev2qWvuZHqAWr89poHWjmoF/uFdp55eRRZGxacGO7FidY2YV6wc+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vrk84Cwy; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=rVubwZiL5dajhtpoDclA2Xd44SmbnI/ovJmv15pz1OpJYu8u8vzpbhLH2rRdEH1QrOz8LU6ew9fBood2QBiZRSoonexBY91rnr+FPvScyY7BV6mP77lggAylWk1z8JIawP8t/DmpjEuKgAD9YjN/us7Z89fxtqcmGLlUFojzMak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V+keBXxc; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vrk84Cwy"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2358de17665so968055ad.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 17:09:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V+keBXxc"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3132c1942a1so206326a91.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 17:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751069387; x=1751674187; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751069389; x=1751674189; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4o/lre0OnbyRd/wtDw4wBY+CP15p0TI5/ASZaCCL+Tg=;
-        b=Vrk84CwyrOzYYXynIq1zr0bE9ISA7eOVZR7685jvdEGTWzgOGWYTV93YQQbU7ISSgE
-         0QYfGdZ/YV9PTeFARMl11ubBwhraTCk7PFxD2e976OrplmiQQuNwoQSZkG/uj0fQJsDQ
-         BdQcz+nPHG8hLDGt100qd0bvtlZpXCAHYrHN3lAKOF6n8J17jeT3M1t0aGxXcrIuXgCb
-         t8a698ieI0mnSAjoba/zL44OVlsLHhN07EwKNet4rwxwv19Qhr3t/g10WNxbgxadHTSa
-         gZJtYcIgTt679AeqYbppuwENkOCLAsDXXn05Q+pR0biH0Lbx2g1ZaqgSaq3b4eCxqUg7
-         xpsw==
+        bh=tL5Y631MOdTPqAWECGEy7VLE1a+4bW8n2hhp8ck1U1s=;
+        b=V+keBXxcsipNTx7QFCNZZGayE2VfoYw46G3lAsAIG/2Ph5Kbyb0xTyGsDI4RwnRQHT
+         QQtjNnfhgVVSRtzWlY7Uc4jUU/60wHjKVut4RKr2GYkcI+bKVHf5HKLogciq/aNlLdnQ
+         6jYVhUO+bZVANj/Y0Fam4dk1NK/kbqqyent1rseHlP0CK5vYZXw/KvSeRiXWz7ZnhJrd
+         qwqBdMmlPUmwpIRr1ipZrRde+Y9vImMBo18ml2+KVXQU/XQyhCaCKre1LvPuxPlxuqz9
+         /L3T1RBYVuxC5yjlcmqf9p1ea1f/sA3DRHMn4wJJB1SMrJWGNPq8oFiqivayPQquoTiG
+         Ii/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751069387; x=1751674187;
+        d=1e100.net; s=20230601; t=1751069389; x=1751674189;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4o/lre0OnbyRd/wtDw4wBY+CP15p0TI5/ASZaCCL+Tg=;
-        b=pdYoMNthgsbstg+fJyeFrCoA9shv8bKwmvfYAvDrBInQJNq1BqpIfaVnIT32U0fSWp
-         tnwKIVzu0D9c6U852yLUVVuN5rWf/nSYNYNfI7BdzzOJwfNILXP9mWs/abSgmifGPyp5
-         Pv5+B6bKvaSNXQvLG0hX5FNh7dfLTVS6tlyIiWs1sMK5zBHlZoURREi/cgDNgiDLa0uv
-         I/cp740UG4tYRqHUgFgbpE43czwOwFsakqfqMYzwJYucw3S1qcCf8tmqPG5jMmJ1E/AO
-         7UAZVVg15qHRlzO/sqJUpk75MA4n77EiaHIEKIMaTyZjATsyxApSe4k2q92/FhhGhtoz
-         XJzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUR6FfPoRdxtEwkaH51FFSNOG13i/4RMyJsAmY0L/5xRJO0mQsAilQ8vaz7ocHTtmaK7gkgbLEEovnGcEaNaxe6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ5GdV6IN95KZf0zZsBAXuxZ/NAmxpsDyur64fgyYNjbXkPuMP
-	RgCSoqtBX6k5x6L+qD/EzhGAquC5dbFuK5GnZQyRiighToZIBDDJXMNMtyYVH22eJli4eoHjTib
-	rvyJP0cHkNw==
-X-Google-Smtp-Source: AGHT+IFSQq5dE70xsAE3IdVHYZJOQpV/EEOWUA1Q79g29OtOjsCKyNIlXC8CGiqatiKhCe7qYm5osskDpnpF
-X-Received: from plbju20.prod.google.com ([2002:a17:903:4294:b0:236:369f:dfc9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:f8c:b0:235:eb71:a386
- with SMTP id d9443c01a7336-23ac4891f49mr63903935ad.50.1751069387091; Fri, 27
- Jun 2025 17:09:47 -0700 (PDT)
-Date: Fri, 27 Jun 2025 17:09:20 -0700
+        bh=tL5Y631MOdTPqAWECGEy7VLE1a+4bW8n2hhp8ck1U1s=;
+        b=n69FKeLPUROWFX+5QXKY1+kwdMWmeKiLmockntcfNQ051ynYrDx/Wc4s8zvaRx06P9
+         ypm1aEVpFpP8TeUujISQxoCtrPO0VGedW3DH/3i6mYQyzbDhQCCjs79F6uJpldnKu5p8
+         XY6RvCk49MJYPD+DcQ4Izf5TeP11nYIV/j04IAnMDmvC4JZ+JhKz0jtacJZ0pzb0eGRa
+         XfTUWpgDMo5mSfEuB2X9H/6HkzP+avHT3O11i0TxM3KVRHmjeswn3JOb+6eOcopLS/Wa
+         92rDAJEEltAF2zc7xlLK44Y1KlqCsOXaIdVJO1tFA4gBgScN7hZAc0KaD7ouKQqzP0Oo
+         9JAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKjpb7rhsDUpyyFCZA+Lr9K6mytL7IHgfm/uGQL1ZZNXTKnDkSpKdV8TMv4AM5UJQKzIm1EAD9KeyXmoyUhQGs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIeulvQ3Q9HguNu4uTkJQtjZJGcJBWC8XmXKyM+gVkTGwQx2ka
+	0RTkxjnKsYIeAvDFapTnyOBqVV8/BLxrjkcpMFN/kRrt1udkB78uY5OVbEDAI9IQkrmkN/qkGFm
+	jLFZtwyDkgQ==
+X-Google-Smtp-Source: AGHT+IFZk1yuKbKwtaqMAJQzeJc3Q7lwZyApGvaGBinyjka+yHZt+6eYIOiRdHb3F8h5NAt0RO3Yv98gMaUP
+X-Received: from pjbpl1.prod.google.com ([2002:a17:90b:2681:b0:309:f831:28e0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c4f:b0:314:2a2e:9da9
+ with SMTP id 98e67ed59e1d1-318c92e1a98mr7274791a91.25.1751069389082; Fri, 27
+ Jun 2025 17:09:49 -0700 (PDT)
+Date: Fri, 27 Jun 2025 17:09:21 -0700
 In-Reply-To: <20250628000929.230406-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250628000929.230406-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250628000929.230406-7-irogers@google.com>
-Subject: [PATCH v4 06/15] perf python: Add basic PMU abstraction and pmus sequence
+Message-ID: <20250628000929.230406-8-irogers@google.com>
+Subject: [PATCH v4 07/15] perf python: Add function returning dictionary of
+ all events on a PMU
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,198 +77,110 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add an ability to iterate over PMUs and a basic PMU type then can just
-show the PMU's name.
+Allow all events on a PMU to be gathered, similar to how perf list
+gathers event information.
 
 An example usage:
 ```
 $ python
 Python 3.12.9 (main, Feb  5 2025, 01:31:18) [GCC 14.2.0] on linux
 >>> import perf
->>> list(perf.pmus())
-[pmu(cpu), pmu(breakpoint), pmu(cstate_core), pmu(cstate_pkg),
-pmu(hwmon_acpitz), pmu(hwmon_ac), pmu(hwmon_bat0),
-pmu(hwmon_coretemp), pmu(hwmon_iwlwifi_1), pmu(hwmon_nvme),
-pmu(hwmon_thinkpad), pmu(hwmon_ucsi_source_psy_usbc000_0),
-pmu(hwmon_ucsi_source_psy_usbc000_0), pmu(i915), pmu(intel_bts),
-pmu(intel_pt), pmu(kprobe), pmu(msr), pmu(power), pmu(software),
-pmu(tool), pmu(tracepoint), pmu(uncore_arb), pmu(uncore_cbox_0),
-pmu(uncore_cbox_1), pmu(uncore_cbox_2), pmu(uncore_cbox_3),
-pmu(uncore_cbox_4), pmu(uncore_cbox_5), pmu(uncore_cbox_6),
-pmu(uncore_cbox_7), pmu(uncore_clock), pmu(uncore_imc_free_running_0),
-pmu(uncore_imc_free_running_1), pmu(uprobe)]
+>>> for pmu in perf.pmus():
+...   print(pmu.events())
+...
+[{'name': 'mem_load_retired.l3_hit', 'desc': 'Retired load instructions...
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 140 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 140 insertions(+)
+ tools/perf/util/python.c | 67 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 201fe04fb6dd..33b23d56dfb1 100644
+index 33b23d56dfb1..f86a82548636 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -627,6 +627,138 @@ static int pyrf_thread_map__setup_types(void)
- 	return PyType_Ready(&pyrf_thread_map__type);
+@@ -648,6 +648,67 @@ static PyObject *pyrf_pmu__name(PyObject *self)
+ 	return PyUnicode_FromString(ppmu->pmu->name);
  }
  
-+/**
-+ * A python wrapper for perf_pmus that are globally owned by the pmus.c code.
-+ */
-+struct pyrf_pmu {
-+	PyObject_HEAD
-+
-+	struct perf_pmu *pmu;
-+};
-+
-+static void pyrf_pmu__delete(struct pyrf_pmu *ppmu)
++static bool add_to_dict(PyObject *dict, const char *key, const char *value)
 +{
-+	Py_TYPE(ppmu)->tp_free((PyObject *)ppmu);
++	PyObject *pkey, *pvalue;
++	bool ret;
++
++	if (value == NULL)
++		return true;
++
++	pkey = PyUnicode_FromString(key);
++	pvalue = PyUnicode_FromString(value);
++
++	ret = pkey && pvalue && PyDict_SetItem(dict, pkey, pvalue) == 0;
++	Py_XDECREF(pkey);
++	Py_XDECREF(pvalue);
++	return ret;
 +}
 +
-+static PyObject *pyrf_pmu__name(PyObject *self)
++static int pyrf_pmu__events_cb(void *state, struct pmu_event_info *info)
++{
++	PyObject *py_list = state;
++	PyObject *dict = PyDict_New();
++
++	if (!dict)
++		return -ENOMEM;
++
++	if (!add_to_dict(dict, "name", info->name) ||
++	    !add_to_dict(dict, "alias", info->alias) ||
++	    !add_to_dict(dict, "scale_unit", info->scale_unit) ||
++	    !add_to_dict(dict, "desc", info->desc) ||
++	    !add_to_dict(dict, "long_desc", info->long_desc) ||
++	    !add_to_dict(dict, "encoding_desc", info->encoding_desc) ||
++	    !add_to_dict(dict, "topic", info->topic) ||
++	    !add_to_dict(dict, "event_type_desc", info->event_type_desc) ||
++	    !add_to_dict(dict, "str", info->str) ||
++	    !add_to_dict(dict, "deprecated", info->deprecated ? "deprecated" : NULL) ||
++	    PyList_Append(py_list, dict) != 0) {
++		Py_DECREF(dict);
++		return -ENOMEM;
++	}
++	Py_DECREF(dict);
++	return 0;
++}
++
++static PyObject *pyrf_pmu__events(PyObject *self)
 +{
 +	struct pyrf_pmu *ppmu = (void *)self;
++	PyObject *py_list = PyList_New(0);
 +
-+	return PyUnicode_FromString(ppmu->pmu->name);
++	if (!py_list)
++		return NULL;
++
++	if (perf_pmu__for_each_event(ppmu->pmu,
++				     /*skip_duplicate_pmus=*/false,
++				     py_list,
++				     pyrf_pmu__events_cb) != 0) {
++		Py_DECREF(py_list);
++		return NULL;
++	}
++	return py_list;
 +}
 +
-+static PyObject *pyrf_pmu__repr(PyObject *self)
-+{
-+	struct pyrf_pmu *ppmu = (void *)self;
-+
-+	return PyUnicode_FromFormat("pmu(%s)", ppmu->pmu->name);
-+}
-+
-+static const char pyrf_pmu__doc[] = PyDoc_STR("perf Performance Monitoring Unit (PMU) object.");
-+
-+static PyMethodDef pyrf_pmu__methods[] = {
+ static PyObject *pyrf_pmu__repr(PyObject *self)
+ {
+ 	struct pyrf_pmu *ppmu = (void *)self;
+@@ -658,6 +719,12 @@ static PyObject *pyrf_pmu__repr(PyObject *self)
+ static const char pyrf_pmu__doc[] = PyDoc_STR("perf Performance Monitoring Unit (PMU) object.");
+ 
+ static PyMethodDef pyrf_pmu__methods[] = {
 +	{
-+		.ml_name  = "name",
-+		.ml_meth  = (PyCFunction)pyrf_pmu__name,
++		.ml_name  = "events",
++		.ml_meth  = (PyCFunction)pyrf_pmu__events,
 +		.ml_flags = METH_NOARGS,
 +		.ml_doc	  = PyDoc_STR("Name of the PMU including suffixes.")
 +	},
-+	{ .ml_name = NULL, }
-+};
-+
-+/** The python type for a perf.pmu. */
-+static PyTypeObject pyrf_pmu__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.pmu",
-+	.tp_basicsize	= sizeof(struct pyrf_pmu),
-+	.tp_dealloc	= (destructor)pyrf_pmu__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= pyrf_pmu__doc,
-+	.tp_methods	= pyrf_pmu__methods,
-+	.tp_str         = pyrf_pmu__name,
-+	.tp_repr        = pyrf_pmu__repr,
-+};
-+
-+static int pyrf_pmu__setup_types(void)
-+{
-+	pyrf_pmu__type.tp_new = PyType_GenericNew;
-+	return PyType_Ready(&pyrf_pmu__type);
-+}
-+
-+
-+/** A python iterator for pmus that has no equivalent in the C code. */
-+struct pyrf_pmu_iterator {
-+	PyObject_HEAD
-+	struct perf_pmu *pmu;
-+};
-+
-+static void pyrf_pmu_iterator__dealloc(struct pyrf_pmu_iterator *self)
-+{
-+	Py_TYPE(self)->tp_free((PyObject *) self);
-+}
-+
-+static PyObject *pyrf_pmu_iterator__new(PyTypeObject *type, PyObject *args __maybe_unused,
-+					PyObject *kwds __maybe_unused)
-+{
-+	struct pyrf_pmu_iterator *itr = (void *)type->tp_alloc(type, 0);
-+
-+	if (itr != NULL)
-+		itr->pmu = perf_pmus__scan(/*pmu=*/NULL);
-+
-+	return (PyObject *) itr;
-+}
-+
-+static PyObject *pyrf_pmu_iterator__iter(PyObject *self)
-+{
-+	Py_INCREF(self);
-+	return self;
-+}
-+
-+static PyObject *pyrf_pmu_iterator__iternext(PyObject *self)
-+{
-+	struct pyrf_pmu_iterator *itr = (void *)self;
-+	struct pyrf_pmu *ppmu;
-+
-+	if (itr->pmu == NULL) {
-+		PyErr_SetNone(PyExc_StopIteration);
-+		return NULL;
-+	}
-+	// Create object to return.
-+	ppmu = PyObject_New(struct pyrf_pmu, &pyrf_pmu__type);
-+	if (ppmu) {
-+		ppmu->pmu = itr->pmu;
-+		// Advance iterator.
-+		itr->pmu = perf_pmus__scan(itr->pmu);
-+	}
-+	return (PyObject *)ppmu;
-+}
-+
-+/** The python type for the PMU iterator. */
-+static PyTypeObject pyrf_pmu_iterator__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name = "pmus.iterator",
-+	.tp_doc = "Iterator for the pmus string sequence.",
-+	.tp_basicsize = sizeof(struct pyrf_pmu_iterator),
-+	.tp_itemsize = 0,
-+	.tp_flags = Py_TPFLAGS_DEFAULT,
-+	.tp_new = pyrf_pmu_iterator__new,
-+	.tp_dealloc = (destructor) pyrf_pmu_iterator__dealloc,
-+	.tp_iter = pyrf_pmu_iterator__iter,
-+	.tp_iternext = pyrf_pmu_iterator__iternext,
-+};
-+
-+static int pyrf_pmu_iterator__setup_types(void)
-+{
-+	return PyType_Ready(&pyrf_pmu_iterator__type);
-+}
-+
-+static PyObject *pyrf__pmus(PyObject *self, PyObject *args)
-+{
-+	// Calling the class creates an instance of the iterator.
-+	return PyObject_CallObject((PyObject *) &pyrf_pmu_iterator__type, /*args=*/NULL);
-+}
-+
- struct pyrf_counts_values {
- 	PyObject_HEAD
- 
-@@ -1613,6 +1745,12 @@ static PyMethodDef perf__methods[] = {
- 		.ml_flags = METH_VARARGS,
- 		.ml_doc	  = PyDoc_STR("Parse a string of events and return an evlist.")
- 	},
-+	{
-+		.ml_name  = "pmus",
-+		.ml_meth  = (PyCFunction) pyrf__pmus,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("Returns a sequence of pmus.")
-+	},
- 	{ .ml_name = NULL, }
- };
- 
-@@ -1640,6 +1778,8 @@ PyMODINIT_FUNC PyInit_perf(void)
- 	    pyrf_evsel__setup_types() < 0 ||
- 	    pyrf_thread_map__setup_types() < 0 ||
- 	    pyrf_cpu_map__setup_types() < 0 ||
-+	    pyrf_pmu_iterator__setup_types() < 0 ||
-+	    pyrf_pmu__setup_types() < 0 ||
- 	    pyrf_counts_values__setup_types() < 0)
- 		return module;
- 
+ 	{
+ 		.ml_name  = "name",
+ 		.ml_meth  = (PyCFunction)pyrf_pmu__name,
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
