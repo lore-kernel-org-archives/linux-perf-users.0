@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C93E230D2B
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Jun 2025 04:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C98E235050
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Jun 2025 04:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751086287; cv=none; b=pUcPnSM7xyPWjctyfFvJqGDvV0fw/o6DvmqRg0qOGhThjJ+4vQRRwlr1LYxhDOLaujspnXdOQHTG5PDNLofkefXwLXJFe1Az6l4ze61Bl2h0nbC/8QKGkm8z9AwO5knMCu3EFp9uudlve9iBzAbqe1Ig7Adkx4qSbtflf3EPkjs=
+	t=1751086289; cv=none; b=uezXMnUsFaP+HC/Jr1hyEdkTLHJsTlyw674CR4ZcaX3S2P8JNymdTGZgSvk+9AjkplobadohPRfYdEiufzxty5VCA/MoRnHshZSqusVurc8M/jOI8CFn85eezupGyyxsaMYpppVbN/afZR/7xFi2vz17OzHGPaR9ZCehLiutSeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751086287; c=relaxed/simple;
-	bh=5FsDw48buAecwtMy/hBT70kgQGSy0inCH2lcTBltcL0=;
+	s=arc-20240116; t=1751086289; c=relaxed/simple;
+	bh=Ojj+JeDJfwzZseKji2aeqMV1uVdeV/pKtZURhSrHk1Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=lJIWjOE/yryFq1osTOVOl1O1weqd6+7wKbhRGO00uVqrK9ZjoEGwiTDd4MYQ46zVc2mhxJuG3tAyQxqd7u/MzKQ81oPFS9C4f35Nx1+4hRTA/fo9cjfrimqh6vAYni30oP0MErCs9U1ZBo7gdZnadgPhDZSvm1AoQPKmoIOyQpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KvV975Fd; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=P5/yBBlBnOVTLtVdeY4a7r2NVwfB6QuSQW2pYjwvY2cDUt34fof3geBgubucIaKDhOiUbQM/eGYbG+UyKRFb70TVFXZIokf7xBGGqvg2tsHuLyE2LQwxwKvpc3jeoVTbyoXbbidb2QHpIYaqNvVkxe2ppP1wIZbfMYGxiH2CIMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lYbq2ojQ; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KvV975Fd"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748cf01de06so1350591b3a.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 21:51:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lYbq2ojQ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313f702d37fso223337a91.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 21:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751086285; x=1751691085; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751086287; x=1751691087; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e+GqeQQJ4Z8sy69KHsPcUjo7exe6nixy2bC0Qa24k6A=;
-        b=KvV975Fd27/rQGczOJoM7jWtLFpS4AJDOERgrMe1dSKEaJLMjPQVYhBcMq/kDRXhKX
-         p3queUxdfldpDOenvsxG1XR+DP/95PqxMnTxpKfe5WGVaguHOIVcQgwXkAtNkFSOUw/7
-         SpV95LSQEUaCRoOfW8z4cWqU4EKun8QfpVBaopFea8gkPfFD2atON2vpQr9nG7NvliGP
-         4nHCdpQ4Jk6K8rLPmujuPx/nyQgS9ierjqyG+Rtj1J1Dmz4q9g3IqXpwAiJvu1mg7I/8
-         1H+LT+Jba6rm1lX32SirdxBnW9x4s8LaToxH40ZgQSjUlHasw+ZYyes19uJhc+rK+eAJ
-         Lseg==
+        bh=ROM1YcXEcmLfJ30peSeSKXHVkl0I7AqofeuRCtlKQMM=;
+        b=lYbq2ojQolVV3jOAaAfhFNroryte1f6jgJThXYQAx7Buk3wPrK80oHRXuPa60vh0iq
+         ZN6T24GnMvAO6q0YT3Ajonalcg2+zpPs7Un+PEABOwyTSCbJHWxolEv6bxnzoUSdd5hQ
+         AkvTHsBYsSBt5sXkP1+0Yuv2Hon00Ay7r1HL4NRoQ+mrH1Xav0IdXyFoWY7S21c9l2Gb
+         IsAsEtLoUp74LtFgVQUHChTZiYDvTOIHlbyk01Uzfc+lOXNQMrjFOThp4fznPCKFJD4q
+         QJP9g1JwIFDX7+hFpy0pZEUmn5iX2eeIK3DHr+JxkujU1VSkzfrXEMYQ4mzGJ829Np/Q
+         14cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751086285; x=1751691085;
+        d=1e100.net; s=20230601; t=1751086287; x=1751691087;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e+GqeQQJ4Z8sy69KHsPcUjo7exe6nixy2bC0Qa24k6A=;
-        b=IwUpMhWxmgJxUm47Ci8qsXhJ6GtzFUgL4aOq9UDshJjVcObIiHqNmJRr5eoqBqTEBh
-         to/BLNBUC54fIGBcsDBxRiJ+H35GgbLpsO9SH0TvCIWAQbbyAsy3JG+N/oA4qdhakFRD
-         OfcEXnUm5XgNyI2OGtSW7zy2EjYGYDA10y2QMhfjjPv9xmK4OTH/XmtXCYL45xVxaYMV
-         Y/Xv7aSWXlO99cGLcN4XxDhOs1RlMgWln94OeskTluF7Z2NHXzkF1OHTEUvVMejE4RLP
-         HGa5vQV1WTfj2Kuhc1cTTV1QoC+vkORkeDS9BRsm8cvIaxrcsPywxIkXMYFqBEwE0B1V
-         FeNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU64Pv5j0jWnv709gZw6wu6rrFp4O+cAkf7avL0k5H/cC2dssK9nTKwtBIkcJt/0H6SOgqfaH5f7Orl9YBhq18o@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlvFR+/y8AJKoucnlbfq2gPPKZGud52KAl2jm3vPOAgjtKJeZx
-	CGPUqOPLrmQP2Em/mxefkX1135zkOyVDTzud/N0CKW8oX0C1syXawd32Y1ei7Lr1iM15ShZnm4A
-	1u3s+gC6gLw==
-X-Google-Smtp-Source: AGHT+IEDncTZQEra4dxJ5Mwi0TWitflYwn8HytTMEuDCmfO08N/8SUgMvb47GyTXjI3vLtSRlZrFJH0DFLZD
-X-Received: from pgam16.prod.google.com ([2002:a05:6a02:2b50:b0:b2f:6348:f715])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9154:b0:21f:77e2:13a0
- with SMTP id adf61e73a8af0-220a113c18emr8586255637.5.1751086285071; Fri, 27
- Jun 2025 21:51:25 -0700 (PDT)
-Date: Fri, 27 Jun 2025 21:50:15 -0700
+        bh=ROM1YcXEcmLfJ30peSeSKXHVkl0I7AqofeuRCtlKQMM=;
+        b=BAHZozk50vadEM3rxdAc1Xx8/LAcwzYzisK52Nx2MQSlPGf/3OYdUhmy1NInlKBt80
+         22sY6vsf4SSGEnE3g7AC6S9lK1XtCf5yCHonvUbqAlN5rKR5csLMtnFUx0f/szKA07ie
+         8jbIz/2r18LHU4bQyF1fIgpTyQsvnqz+Bll3eSaNCkiff7XMG2zS6T5+o7S9T2mggT4b
+         9W2fIAYyXa29CYv4H/Cl+icCL6QxU+/wCVh6uIdSfgoQDnkAM4r8ENY7REirpQzx3Orl
+         c4fR/TES3qI5zZl6f5FU0iuApbVMZSxbO7rTk9E9K7gGFugEPU+uBnVRz5/ghmKOHwJc
+         e0hA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfKum/YzOEjsOX1zXjCPKQwWOg+K18EBsZUN1npKyLm5bNtrMf/QrE62wiZnHnvUMN+4Mc07mCvWjfWJ394Ppx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB/VpJLgMMojonmMEj+UJHOCDxVE6XWMe2zCsMx/+xS8omHRDn
+	TLZZiGibyMNu4QNrCeo9NnLDmm1g6ZWHPQYLres+ho7OG14KH39STdjITDLWAH5ZGM+bjo3PpVC
+	xybrbFGFqkg==
+X-Google-Smtp-Source: AGHT+IFvctXnxx3txIwj7PpKY62G5ZrIpjXNEopJtJPgFp0AVAYKnq+YWesK+m4rJNZniziaUtpeWohm9wH9
+X-Received: from pjbpv11.prod.google.com ([2002:a17:90b:3c8b:b0:2fb:fa85:1678])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2ccf:b0:311:e8cc:424e
+ with SMTP id 98e67ed59e1d1-318c925ad06mr8775709a91.24.1751086286961; Fri, 27
+ Jun 2025 21:51:26 -0700 (PDT)
+Date: Fri, 27 Jun 2025 21:50:16 -0700
 In-Reply-To: <20250628045017.1361563-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250628045017.1361563-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250628045017.1361563-22-irogers@google.com>
-Subject: [PATCH v5 21/23] perf sample: Remove arch notion of sample parsing
+Message-ID: <20250628045017.1361563-23-irogers@google.com>
+Subject: [PATCH v5 22/23] perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to
+ common test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -89,352 +90,235 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-By definition arch sample parsing and synthesis will inhibit certain
-kinds of cross-platform record then analysis (report, script,
-etc.). Remove arch_perf_parse_sample_weight and
-arch_perf_synthesize_sample_weight replacing with a common
-implementation. Combine perf_sample p_stage_cyc and retire_lat as
-weight3 to capture the differing uses regardless of compiled for
-architecture.
+test__x86_sample_parsing is identical to test__sample_parsing except
+it explicitly tested PERF_SAMPLE_WEIGHT_STRUCT. Now the parsing code
+is common move the PERF_SAMPLE_WEIGHT_STRUCT to the common sample
+parsing test and remove the x86 version.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/powerpc/util/event.c       | 26 ---------------------
- tools/perf/arch/x86/tests/sample-parsing.c |  4 ++--
- tools/perf/arch/x86/util/event.c           | 27 ----------------------
- tools/perf/builtin-script.c                |  2 +-
- tools/perf/util/dlfilter.c                 |  2 +-
- tools/perf/util/event.h                    |  2 --
- tools/perf/util/evsel.c                    | 17 ++++++++++----
- tools/perf/util/hist.c                     |  4 ++--
- tools/perf/util/hist.h                     |  3 ++-
- tools/perf/util/intel-tpebs.c              |  4 ++--
- tools/perf/util/sample.h                   |  6 ++---
- tools/perf/util/session.c                  |  2 +-
- tools/perf/util/sort.c                     |  7 +++---
- tools/perf/util/synthetic-events.c         | 10 ++++++--
- 14 files changed, 36 insertions(+), 80 deletions(-)
+ tools/perf/arch/x86/include/arch-tests.h   |   1 -
+ tools/perf/arch/x86/tests/Build            |   1 -
+ tools/perf/arch/x86/tests/arch-tests.c     |   2 -
+ tools/perf/arch/x86/tests/sample-parsing.c | 125 ---------------------
+ tools/perf/tests/sample-parsing.c          |  14 +++
+ 5 files changed, 14 insertions(+), 129 deletions(-)
+ delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
 
-diff --git a/tools/perf/arch/powerpc/util/event.c b/tools/perf/arch/powerpc/util/event.c
-index 77d8cc2b5691..024ac8b54c33 100644
---- a/tools/perf/arch/powerpc/util/event.c
-+++ b/tools/perf/arch/powerpc/util/event.c
-@@ -11,32 +11,6 @@
- #include "../../../util/debug.h"
- #include "../../../util/sample.h"
+diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
+index 4fd425157d7d..957934417b26 100644
+--- a/tools/perf/arch/x86/include/arch-tests.h
++++ b/tools/perf/arch/x86/include/arch-tests.h
+@@ -12,7 +12,6 @@ int test__insn_x86(struct test_suite *test, int subtest);
+ int test__intel_pt_pkt_decoder(struct test_suite *test, int subtest);
+ int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest);
+ int test__bp_modify(struct test_suite *test, int subtest);
+-int test__x86_sample_parsing(struct test_suite *test, int subtest);
+ int test__amd_ibs_via_core_pmu(struct test_suite *test, int subtest);
+ int test__amd_ibs_period(struct test_suite *test, int subtest);
+ int test__hybrid(struct test_suite *test, int subtest);
+diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
+index 5e00cbfd2d56..4c27b85b960a 100644
+--- a/tools/perf/arch/x86/tests/Build
++++ b/tools/perf/arch/x86/tests/Build
+@@ -2,7 +2,6 @@ perf-test-$(CONFIG_DWARF_UNWIND) += regs_load.o
+ perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
  
--void arch_perf_parse_sample_weight(struct perf_sample *data,
--				   const __u64 *array, u64 type)
--{
--	union perf_sample_weight weight;
--
--	weight.full = *array;
--	if (type & PERF_SAMPLE_WEIGHT)
--		data->weight = weight.full;
--	else {
--		data->weight = weight.var1_dw;
--		data->ins_lat = weight.var2_w;
--		data->p_stage_cyc = weight.var3_w;
--	}
--}
--
--void arch_perf_synthesize_sample_weight(const struct perf_sample *data,
--					__u64 *array, u64 type)
--{
--	*array = data->weight;
--
--	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
--		*array &= 0xffffffff;
--		*array |= ((u64)data->ins_lat << 32);
--	}
--}
--
- const char *arch_perf_header_entry(const char *se_header)
- {
- 	if (!strcmp(se_header, "Local INSTR Latency"))
-diff --git a/tools/perf/arch/x86/tests/sample-parsing.c b/tools/perf/arch/x86/tests/sample-parsing.c
-index a061e8619267..22feec23e53d 100644
---- a/tools/perf/arch/x86/tests/sample-parsing.c
-+++ b/tools/perf/arch/x86/tests/sample-parsing.c
-@@ -29,7 +29,7 @@ static bool samples_same(const struct perf_sample *s1,
- {
- 	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
- 		COMP(ins_lat);
--		COMP(retire_lat);
-+		COMP(weight3);
- 	}
- 
- 	return true;
-@@ -50,7 +50,7 @@ static int do_test(u64 sample_type)
- 	struct perf_sample sample = {
- 		.weight		= 101,
- 		.ins_lat        = 102,
--		.retire_lat     = 103,
-+		.weight3	= 103,
- 	};
- 	struct perf_sample sample_out;
- 	size_t i, sz, bufsz;
-diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
-index a0400707180c..576c1c36046c 100644
---- a/tools/perf/arch/x86/util/event.c
-+++ b/tools/perf/arch/x86/util/event.c
-@@ -92,33 +92,6 @@ int perf_event__synthesize_extra_kmaps(const struct perf_tool *tool,
- 
+ perf-test-y += arch-tests.o
+-perf-test-y += sample-parsing.o
+ perf-test-y += hybrid.o
+ perf-test-$(CONFIG_AUXTRACE) += intel-pt-test.o
+ ifeq ($(CONFIG_EXTRA_TESTS),y)
+diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
+index bfee2432515b..1023c83684ce 100644
+--- a/tools/perf/arch/x86/tests/arch-tests.c
++++ b/tools/perf/arch/x86/tests/arch-tests.c
+@@ -23,7 +23,6 @@ struct test_suite suite__intel_pt = {
+ #if defined(__x86_64__)
+ DEFINE_SUITE("x86 bp modify", bp_modify);
  #endif
- 
--void arch_perf_parse_sample_weight(struct perf_sample *data,
--				   const __u64 *array, u64 type)
+-DEFINE_SUITE("x86 Sample parsing", x86_sample_parsing);
+ DEFINE_SUITE("AMD IBS via core pmu", amd_ibs_via_core_pmu);
+ DEFINE_SUITE_EXCLUSIVE("AMD IBS sample period", amd_ibs_period);
+ static struct test_case hybrid_tests[] = {
+@@ -49,7 +48,6 @@ struct test_suite *arch_tests[] = {
+ #if defined(__x86_64__)
+ 	&suite__bp_modify,
+ #endif
+-	&suite__x86_sample_parsing,
+ 	&suite__amd_ibs_via_core_pmu,
+ 	&suite__amd_ibs_period,
+ 	&suite__hybrid,
+diff --git a/tools/perf/arch/x86/tests/sample-parsing.c b/tools/perf/arch/x86/tests/sample-parsing.c
+deleted file mode 100644
+index 22feec23e53d..000000000000
+--- a/tools/perf/arch/x86/tests/sample-parsing.c
++++ /dev/null
+@@ -1,125 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-#include <stdbool.h>
+-#include <inttypes.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <linux/bitops.h>
+-#include <linux/kernel.h>
+-#include <linux/types.h>
+-
+-#include "event.h"
+-#include "evsel.h"
+-#include "debug.h"
+-#include "util/sample.h"
+-#include "util/synthetic-events.h"
+-
+-#include "tests/tests.h"
+-#include "arch-tests.h"
+-
+-#define COMP(m) do {					\
+-	if (s1->m != s2->m) {				\
+-		pr_debug("Samples differ at '"#m"'\n");	\
+-		return false;				\
+-	}						\
+-} while (0)
+-
+-static bool samples_same(const struct perf_sample *s1,
+-			 const struct perf_sample *s2,
+-			 u64 type)
 -{
--	union perf_sample_weight weight;
--
--	weight.full = *array;
--	if (type & PERF_SAMPLE_WEIGHT)
--		data->weight = weight.full;
--	else {
--		data->weight = weight.var1_dw;
--		data->ins_lat = weight.var2_w;
--		data->retire_lat = weight.var3_w;
--	}
--}
--
--void arch_perf_synthesize_sample_weight(const struct perf_sample *data,
--					__u64 *array, u64 type)
--{
--	*array = data->weight;
--
 -	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
--		*array &= 0xffffffff;
--		*array |= ((u64)data->ins_lat << 32);
--		*array |= ((u64)data->retire_lat << 48);
+-		COMP(ins_lat);
+-		COMP(weight3);
 -	}
+-
+-	return true;
 -}
 -
- const char *arch_perf_header_entry(const char *se_header)
- {
- 	if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2c25eda4be26..f7bdf9a00d00 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2253,7 +2253,7 @@ static void process_event(struct perf_script *script,
- 		fprintf(fp, "%16" PRIu16, sample->ins_lat);
- 
- 	if (PRINT_FIELD(RETIRE_LAT))
--		fprintf(fp, "%16" PRIu16, sample->retire_lat);
-+		fprintf(fp, "%16" PRIu16, sample->weight3);
- 
- 	if (PRINT_FIELD(CGROUP)) {
- 		const char *cgrp_name;
-diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
-index ddacef881af2..c0afcbd954f8 100644
---- a/tools/perf/util/dlfilter.c
-+++ b/tools/perf/util/dlfilter.c
-@@ -513,6 +513,7 @@ int dlfilter__do_filter_event(struct dlfilter *d,
- 	d->d_addr_al   = &d_addr_al;
- 
- 	d_sample.size  = sizeof(d_sample);
-+	d_sample.p_stage_cyc = sample->weight3;
- 	d_ip_al.size   = 0; /* To indicate d_ip_al is not initialized */
- 	d_addr_al.size = 0; /* To indicate d_addr_al is not initialized */
- 
-@@ -526,7 +527,6 @@ int dlfilter__do_filter_event(struct dlfilter *d,
- 	ASSIGN(period);
- 	ASSIGN(weight);
- 	ASSIGN(ins_lat);
--	ASSIGN(p_stage_cyc);
- 	ASSIGN(transaction);
- 	ASSIGN(insn_cnt);
- 	ASSIGN(cyc_cnt);
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 67ad4a2014bc..b13385a6068b 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -391,8 +391,6 @@ extern unsigned int proc_map_timeout;
- #define PAGE_SIZE_NAME_LEN	32
- char *get_page_size_name(u64 size, char *str);
- 
--void arch_perf_parse_sample_weight(struct perf_sample *data, const __u64 *array, u64 type);
--void arch_perf_synthesize_sample_weight(const struct perf_sample *data, __u64 *array, u64 type);
- const char *arch_perf_header_entry(const char *se_header);
- int arch_support_sort_key(const char *sort_key);
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 988fe5c4137a..9f1d7ec0386f 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2847,11 +2847,18 @@ perf_event__check_size(union perf_event *event, unsigned int sample_size)
- 	return 0;
- }
- 
--void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
--					  const __u64 *array,
--					  u64 type __maybe_unused)
-+static void perf_parse_sample_weight(struct perf_sample *data, const __u64 *array, u64 type)
- {
--	data->weight = *array;
-+	union perf_sample_weight weight;
-+
-+	weight.full = *array;
-+	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
-+		data->weight = weight.var1_dw;
-+		data->ins_lat = weight.var2_w;
-+		data->weight3 = weight.var3_w;
-+	} else {
-+		data->weight = weight.full;
-+	}
- }
- 
- u64 evsel__bitfield_swap_branch_flags(u64 value)
-@@ -3237,7 +3244,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 	if (type & PERF_SAMPLE_WEIGHT_TYPE) {
- 		OVERFLOW_CHECK_u64(array);
--		arch_perf_parse_sample_weight(data, array, type);
-+		perf_parse_sample_weight(data, array, type);
- 		array++;
- 	}
- 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index afc6855327ab..64ff427040c3 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -829,7 +829,7 @@ __hists__add_entry(struct hists *hists,
- 			.period	= sample->period,
- 			.weight1 = sample->weight,
- 			.weight2 = sample->ins_lat,
--			.weight3 = sample->p_stage_cyc,
-+			.weight3 = sample->weight3,
- 			.latency = al->latency,
- 		},
- 		.parent = sym_parent,
-@@ -846,7 +846,7 @@ __hists__add_entry(struct hists *hists,
- 		.time = hist_time(sample->time),
- 		.weight = sample->weight,
- 		.ins_lat = sample->ins_lat,
--		.p_stage_cyc = sample->p_stage_cyc,
-+		.weight3 = sample->weight3,
- 		.simd_flags = sample->simd_flags,
- 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
- 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index c64254088fc7..70438d03ca9c 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -255,7 +255,8 @@ struct hist_entry {
- 	u64			code_page_size;
- 	u64			weight;
- 	u64			ins_lat;
--	u64			p_stage_cyc;
-+	/** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_cyc. */
-+	u64			weight3;
- 	s32			socket;
- 	s32			cpu;
- 	int			parallelism;
-diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index 3b92ebf5c112..8c9aee157ec4 100644
---- a/tools/perf/util/intel-tpebs.c
-+++ b/tools/perf/util/intel-tpebs.c
-@@ -210,8 +210,8 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 	 * latency value will be used. Save the number of samples and the sum of
- 	 * retire latency value for each event.
- 	 */
--	t->last = sample->retire_lat;
--	update_stats(&t->stats, sample->retire_lat);
-+	t->last = sample->weight3;
-+	update_stats(&t->stats, sample->weight3);
- 	mutex_unlock(tpebs_mtx_get());
- 	return 0;
- }
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 0e96240052e9..fae834144ef4 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -104,10 +104,8 @@ struct perf_sample {
- 	u8  cpumode;
- 	u16 misc;
- 	u16 ins_lat;
--	union {
--		u16 p_stage_cyc;
--		u16 retire_lat;
+-static int do_test(u64 sample_type)
+-{
+-	struct evsel evsel = {
+-		.needs_swap = false,
+-		.core = {
+-			. attr = {
+-				.sample_type = sample_type,
+-				.read_format = 0,
+-			},
+-		},
 -	};
-+	/** @weight3: On x86 holds retire_lat, on powerpc holds p_stage_cyc. */
-+	u16 weight3;
- 	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
- 	char insn[MAX_INSN];
- 	void *raw_data;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index df03743ac2bf..daf72362d26a 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1100,7 +1100,7 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
- 		printf("... weight: %" PRIu64 "", sample->weight);
- 			if (sample_type & PERF_SAMPLE_WEIGHT_STRUCT) {
- 				printf(",0x%"PRIx16"", sample->ins_lat);
--				printf(",0x%"PRIx16"", sample->p_stage_cyc);
-+				printf(",0x%"PRIx16"", sample->weight3);
- 			}
- 		printf("\n");
- 	}
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 7969d64a47bf..0ba2ce1b1c07 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1884,21 +1884,20 @@ struct sort_entry sort_global_ins_lat = {
- static int64_t
- sort__p_stage_cyc_cmp(struct hist_entry *left, struct hist_entry *right)
- {
--	return left->p_stage_cyc - right->p_stage_cyc;
-+	return left->weight3 - right->weight3;
- }
+-	union perf_event *event;
+-	struct perf_sample sample = {
+-		.weight		= 101,
+-		.ins_lat        = 102,
+-		.weight3	= 103,
+-	};
+-	struct perf_sample sample_out;
+-	size_t i, sz, bufsz;
+-	int err, ret = -1;
+-
+-	sz = perf_event__sample_event_size(&sample, sample_type, 0);
+-	bufsz = sz + 4096; /* Add a bit for overrun checking */
+-	event = malloc(bufsz);
+-	if (!event) {
+-		pr_debug("malloc failed\n");
+-		return -1;
+-	}
+-
+-	memset(event, 0xff, bufsz);
+-	event->header.type = PERF_RECORD_SAMPLE;
+-	event->header.misc = 0;
+-	event->header.size = sz;
+-
+-	err = perf_event__synthesize_sample(event, sample_type, 0, &sample);
+-	if (err) {
+-		pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
+-			 "perf_event__synthesize_sample", sample_type, err);
+-		goto out_free;
+-	}
+-
+-	/* The data does not contain 0xff so we use that to check the size */
+-	for (i = bufsz; i > 0; i--) {
+-		if (*(i - 1 + (u8 *)event) != 0xff)
+-			break;
+-	}
+-	if (i != sz) {
+-		pr_debug("Event size mismatch: actual %zu vs expected %zu\n",
+-			 i, sz);
+-		goto out_free;
+-	}
+-
+-	evsel.sample_size = __evsel__sample_size(sample_type);
+-
+-	err = evsel__parse_sample(&evsel, event, &sample_out);
+-	if (err) {
+-		pr_debug("%s failed for sample_type %#"PRIx64", error %d\n",
+-			 "evsel__parse_sample", sample_type, err);
+-		goto out_free;
+-	}
+-
+-	if (!samples_same(&sample, &sample_out, sample_type)) {
+-		pr_debug("parsing failed for sample_type %#"PRIx64"\n",
+-			 sample_type);
+-		goto out_free;
+-	}
+-
+-	ret = 0;
+-out_free:
+-	free(event);
+-
+-	return ret;
+-}
+-
+-/**
+- * test__x86_sample_parsing - test X86 specific sample parsing
+- *
+- * This function implements a test that synthesizes a sample event, parses it
+- * and then checks that the parsed sample matches the original sample. If the
+- * test passes %0 is returned, otherwise %-1 is returned.
+- *
+- * For now, the PERF_SAMPLE_WEIGHT_STRUCT is the only X86 specific sample type.
+- * The test only checks the PERF_SAMPLE_WEIGHT_STRUCT type.
+- */
+-int test__x86_sample_parsing(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+-{
+-	return do_test(PERF_SAMPLE_WEIGHT_STRUCT);
+-}
+diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+index 72411580f869..a7327c942ca2 100644
+--- a/tools/perf/tests/sample-parsing.c
++++ b/tools/perf/tests/sample-parsing.c
+@@ -152,6 +152,12 @@ static bool samples_same(struct perf_sample *s1,
+ 	if (type & PERF_SAMPLE_WEIGHT)
+ 		COMP(weight);
  
- static int hist_entry__global_p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
- 					size_t size, unsigned int width)
- {
--	return repsep_snprintf(bf, size, "%-*u", width,
--			he->p_stage_cyc * he->stat.nr_events);
-+	return repsep_snprintf(bf, size, "%-*u", width, he->weight3 * he->stat.nr_events);
- }
- 
- 
- static int hist_entry__p_stage_cyc_snprintf(struct hist_entry *he, char *bf,
- 					size_t size, unsigned int width)
- {
--	return repsep_snprintf(bf, size, "%-*u", width, he->p_stage_cyc);
-+	return repsep_snprintf(bf, size, "%-*u", width, he->weight3);
- }
- 
- struct sort_entry sort_local_p_stage_cyc = {
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 638d7dd7fa4b..6afdcfd14224 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1573,10 +1573,16 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	return result;
- }
- 
--void __weak arch_perf_synthesize_sample_weight(const struct perf_sample *data,
-+static void perf_synthesize_sample_weight(const struct perf_sample *data,
- 					       __u64 *array, u64 type __maybe_unused)
- {
- 	*array = data->weight;
-+
 +	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
-+		*array &= 0xffffffff;
-+		*array |= ((u64)data->ins_lat << 32);
-+		*array |= ((u64)data->weight3 << 48);
++		COMP(weight);
++		COMP(ins_lat);
++		COMP(weight3);
 +	}
++
+ 	if (type & PERF_SAMPLE_DATA_SRC)
+ 		COMP(data_src);
+ 
+@@ -269,6 +275,8 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 		.cgroup		= 114,
+ 		.data_page_size = 115,
+ 		.code_page_size = 116,
++		.ins_lat	= 117,
++		.weight3	= 118,
+ 		.aux_sample	= {
+ 			.size	= sizeof(aux_data),
+ 			.data	= (void *)aux_data,
+@@ -439,6 +447,12 @@ static int test__sample_parsing(struct test_suite *test __maybe_unused, int subt
+ 		if (err)
+ 			return err;
+ 	}
++	sample_type = (PERF_SAMPLE_MAX - 1) & ~PERF_SAMPLE_WEIGHT_STRUCT;
++	for (i = 0; i < ARRAY_SIZE(rf); i++) {
++		err = do_test(sample_type, sample_regs, rf[i]);
++		if (err)
++			return err;
++	}
+ 
+ 	return 0;
  }
- 
- static __u64 *copy_read_group_values(__u64 *array, __u64 read_format,
-@@ -1736,7 +1742,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 	}
- 
- 	if (type & PERF_SAMPLE_WEIGHT_TYPE) {
--		arch_perf_synthesize_sample_weight(sample, array, type);
-+		perf_synthesize_sample_weight(sample, array, type);
- 		array++;
- 	}
- 
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
