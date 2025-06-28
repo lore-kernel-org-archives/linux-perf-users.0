@@ -1,90 +1,142 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A738125D6
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Jun 2025 01:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A60130A54
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Jun 2025 01:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751073926; cv=none; b=MSb5UnKXctPwGEKfXuoRGaCvA87853dqXIQayv10s9ICPZMS4RJNdEMTCu1nbHhBLvi/b8owSGrMs2NAx81gvoUbDC0ZAP2Zvw78TXROjTPIXcqIKufCS+xaa/N/qI4yu/nsrkD0bYn5MOZp5IsoYjvvccpy5p5GkNwPYkUjpI8=
+	t=1751074549; cv=none; b=SzD+Meq8geuTyEtqRIMaFvW4O+ONwmC0SsdDxjXy15knRWMx7PHnT+EKOzVN52TySUH75acZN72dLYTnYI2Ncyf9GBkC6fOF5AOjXn0t+5ja0aHpaZmgiYyAuFsNkrPPaj8OR4JRG0uqK4VgSE5klIeBiM75M7AMrazj0k+vxOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751073926; c=relaxed/simple;
-	bh=jBsRv1t+MbjjXt+t5j4i2adx0dnBzatWyL4WvWleFvc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gg+99NaC2Sqfiq0mAUt4/WnyEA4LU5ErvqaFYk5TOjl+k0WVYThk6QHHKq9Pis9chuL0VSlYLtP08vMkoTkD4LHMHQs5uGFDGvsR1rPsQfXsyh21+fzeKDWeqR8o8KVn7SiJ32CAq2pEZfc8M9GFaiTwyESwYodth2TMJDluHYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w6hWUAVj; arc=none smtp.client-ip=209.85.166.169
+	s=arc-20240116; t=1751074549; c=relaxed/simple;
+	bh=xp6QooYSKJIO1Ri906XmGIWsfQAQKsjdb0xfOXssMf0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Q9HuIBrAbWwnF6BJL99se78NUJ1I5B6EmAph0gspOdoJnl+c3h0AHoJLM8uFzazsupQvn2MNSK1mel+y7Ec/Fb5cFIzRRPn1SVhSZswqEDj2QqOfsgt5H1p+zV6+YqTRtQh2kU0FhUYtaQZ+4Dfx5r0sF7jqFAIy8+q2acfACFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xdVMkFzd; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w6hWUAVj"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so132725ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 18:25:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xdVMkFzd"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235e3f93687so2656215ad.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jun 2025 18:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751073924; x=1751678724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jBsRv1t+MbjjXt+t5j4i2adx0dnBzatWyL4WvWleFvc=;
-        b=w6hWUAVjIjFBcJGlqhXkNDVAd6QR3x0pjKzZQYahhycetjcL/r3p+bl45Oa1Z9Qrm6
-         PZoHbZe0irlKK/DEmeWEoXF7eTZKgVwZKpaSECv34TkfxViuJPTHBkpkIV9ta1bL3UcJ
-         Ncw2rCejyFqx9VuEzPtADdAf02Q08DsQk05b8WxLSNhkKvSeCCMGCy2mPKvnPg6WHJkQ
-         kt3HXPUmrOl5Bcr/p5HWHVuQyyUEXwptILL5lfjUV55e42ym0lM8rCdtwFaSo/+CI39P
-         M2aeYc3EemF9iLldHcr70QR0WOh0O9IVS9nvRje2oEAvUA9AAQ2VyhVQGuRnNID8NLO5
-         etqg==
+        d=google.com; s=20230601; t=1751074547; x=1751679347; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=R9h8FoTQNuVI8eMmwBP37Z8kyCmEZSw8NGWBhTujA80=;
+        b=xdVMkFzdpFqOfJQjtFVgzLGhPxgaCy+UyVNi0kyxvmPLB6ZJjsGkerDbgcN+xryGX1
+         UmNbttmKdqNcW1kkzTAqESqhvO9Y7wVe+PzLlJdUftgGsjSd0Fz4KRlPz6PX+YOgLZSY
+         ZOhsLhq4Uhioa7mogaBsEjomYfYZjvHVkWUvSUs7cSTyq5ShZzToO3Ctn37bYNpaTTVN
+         1eClON703uXnFuyTms2z8oeYeayV9lul6vc/ok1egSGin8RiR72Mt6yMyvp+HQE9plZZ
+         EB9g/8xg7lXllhuQw2YIKBrjrK37rVF2L7LR/75SaJAcbpdeCWQttBMwDJTDzoyBmSKz
+         WVVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751073924; x=1751678724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jBsRv1t+MbjjXt+t5j4i2adx0dnBzatWyL4WvWleFvc=;
-        b=lGJBubUFrc0tBM4O0TlIPCOhx2MoBHER9k+83MmfHI0VBIDJkyUCekzYeUkzoLo9/Y
-         0LrBOaF949RhL13as4/kawkXbInoWFcu5RouH7maZ7Irbn4b39unUASFvCuYYVvOrycE
-         2oGJq4pSU6YsAm1gqKgh5t0ZU9S6UcH7IfJpDL5LnK5kC/Jk5wS4ut0rd4zbyWLKMbqm
-         OlbokQGVfuVRZA+dCkrD+zmQtoebLZnLXopQOzEXTbobhxNMlpa/bDNxkBd3/8jLHBix
-         3RVZPqUUrCVgXnaByVYDOlxyQaV6KKRTuOjDx7TbGUnDBTYiPjKj8a+nv9FVeEyBZB9d
-         MT0w==
-X-Forwarded-Encrypted: i=1; AJvYcCX3m8t15x14GSuB3oFbI9mbO9m6bQxGM8yBoIl9QCaENHAkMYOtZkEK7CNyJeEVxQxNTW3GF228D4ccwkHsvfK6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP9wR09jlJoHkkQRh1+87OlVwnshchoXcaiEYWGXSGZYKCawc2
-	m6EEViIWMoJlkRyQZkv9uaxZWC0d7AC5i5FjJyWO54JxNNoDvpqn4KtUtEYCi/rayTHxVz/FeSs
-	h3f6PrJcNk8FzRnYfQmtICdAvAO205+63yQ3orNQ5
-X-Gm-Gg: ASbGncsPLq0w7zqM2R3BDNyy9BJ2Bp0gZUSCtBDHPnLRL+pnCp9bfb541fz65wGSGJo
-	UGF3YzW7uzAyjBZty8eHlK2p9VgelPjGc4i/WTqXtPFy7YqvxaN5Lv5H56H0Vvntrq2XHcuBuMK
-	fwODrZAbS63CjA+i5D1HKoFDgQuI/chTyDYjOE9CQCCr8k
-X-Google-Smtp-Source: AGHT+IGSRQuU3jkfhVSsR7FQ8+3yWy141hegDQ6tZdzLnOk8SKukC27fW4TWxHyP/8wMaDTCmusA+LYzQdfWzyTg8YU=
-X-Received: by 2002:a05:6e02:1685:b0:3dd:c526:434f with SMTP id
- e9e14a558f8ab-3df56ce74b3mr774675ab.9.1751073924053; Fri, 27 Jun 2025
- 18:25:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751074547; x=1751679347;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R9h8FoTQNuVI8eMmwBP37Z8kyCmEZSw8NGWBhTujA80=;
+        b=CfOc1pYCnIJozRCo2Yo3pOuIL+lZZo8YVuA0ByDetBSWh+su4kzZ4jtlO1w3xpSAsf
+         NJhrwZ/SsqeJDk6jXrpUhaAxT4l3Ka+N9S+jrtzoQLxn84VrDr6V4aqIAkMfLE/4lWtr
+         IN63hmXr2KwOYT3W8ljWnDOfxUCSHMex7ul3HT7FP4C9CCaD4lTNwpD6027Y43qsscWR
+         uMhZxQ1mc7w0NSCBU4W81ib8AR1ZT+THqXLcAqOmr/HjEg3KTNrjBf/QzcwLckHeKQ4p
+         OSdvaRjMp/puOetgPHp5mtJk620NOmhnejXWdM8Dl88OL6A31soddwApu/YAHOZjm4Q0
+         mQZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWf8cK0ZDZmX8KChIF+24YDWDqN44D+hHFgCtDDEUetEQqGU5xZT7C1K4uuL/gXwa95tWuLHKLfm7tO8MZsDNEM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZoITpan/aA/H3lFHKtgrvxj7FnkJK3Bm10ksVsBaz6bDTiRKd
+	T/Ejc6k8YA66Y1j5fpGZUWkxXcrNKgyxnEUNzGzripkojmpTNNXTE89hbmbJo27ux1lfL/fu/H0
+	YflF70bBh5Q==
+X-Google-Smtp-Source: AGHT+IFd92Gn7WZNkqbN9k4RxtUPFZQe9Qxn220MNduLvj81BEx2Pr2j7bq1bV6C1FyTLi1nNpfqzVoS6gQU
+X-Received: from plle5.prod.google.com ([2002:a17:903:1665:b0:237:d76c:a11a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce86:b0:235:15f3:ef16
+ with SMTP id d9443c01a7336-23ac3deb433mr84311265ad.13.1751074547429; Fri, 27
+ Jun 2025 18:35:47 -0700 (PDT)
+Date: Fri, 27 Jun 2025 18:35:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250619002034.97007-1-irogers@google.com> <20250619002034.97007-2-irogers@google.com>
- <aFW5aknT69UR3CTV@google.com>
-In-Reply-To: <aFW5aknT69UR3CTV@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250628013543.1250435-1-irogers@google.com>
+Subject: [PATCH v1] perf test: Add basic callgraph test to record testing
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Jun 2025 18:25:12 -0700
-X-Gm-Features: Ac12FXzub2qOEvfir724mQtAGRDikXM7527nrJ2YpeWhE0_sq64ArX2SxUeR28k
-Message-ID: <CAP-5=fV2x1EuOuArhLx4QdzYJ3B5S0NTWM3xvVfRNdVni3fTJw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf test: Add sched latency and script shell tests
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 12:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> You can use 'thloop' workload which runs 2 threads at the same time.
-> Then you don't need to handle the background processes and run it
-> directly with perf test.
+Give some basic perf record callgraph coverage.
 
-v3 sent. I held off changing noploop to thloop as I think 2 separate
-processes is a little clearer:
-https://lore.kernel.org/lkml/20250628012302.1242532-1-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2: Pick up s390's needed "--call-graph dwarf" as spotted by James
+    Clark <james.clark@linaro.org>.
+---
+ tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Thanks,
-Ian
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 2022a4f739be..b1ad24fb3b33 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
+ . "${shelldir}"/lib/perf_has_symbol.sh
+ 
+ testsym="test_loop"
++testsym2="brstack"
+ 
+ skip_test_missing_symbol ${testsym}
++skip_test_missing_symbol ${testsym2}
+ 
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+@@ -359,6 +361,33 @@ test_precise_max() {
+   fi
+ }
+ 
++test_callgraph() {
++  echo "Callgraph test"
++
++  case $(uname -m)
++  in s390x)
++       cmd_flags="--call-graph dwarf -e cpu-clock";;
++     *)
++       cmd_flags="-g";;
++  esac
++
++  if ! perf record -o "${perfdata}" $cmd_flags perf test -w brstack
++  then
++    echo "Callgraph test [Failed missing output]"
++    err=1
++    return
++  fi
++
++  if ! perf report -i "${perfdata}" 2>&1 | grep "${testsym2}"
++  then
++    echo "Callgraph test [Failed missing symbol]"
++    err=1
++    return
++  fi
++
++  echo "Callgraph test [Success]"
++}
++
+ # raise the limit of file descriptors to minimum
+ if [[ $default_fd_limit -lt $min_fd_limit ]]; then
+        ulimit -Sn $min_fd_limit
+@@ -374,6 +403,7 @@ test_uid
+ test_leader_sampling
+ test_topdown_leader_sampling
+ test_precise_max
++test_callgraph
+ 
+ # restore the default value
+ ulimit -Sn $default_fd_limit
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
