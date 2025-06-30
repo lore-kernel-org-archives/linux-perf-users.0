@@ -1,93 +1,98 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DC628D85E
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 15:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC0442AA4
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 15:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297412; cv=none; b=NmuJMUm0SoeUiQOudVUsSakm423j+UOAOWWjdYGOVBHjadU6a3RMis9ewkGfA8/gSGm5se/4pJdkzfasvqIqtgoyxd+eMqJyIxdghPOKQW6Bpntam9OXDmBV2xZnPM720UcSKmhMYx5nHldG97nT5bsCzfDSNLZfwxMjlb6pOyU=
+	t=1751297735; cv=none; b=N6gwOpDTOzPNTZjXXJxz+4hFpZV+KzsWhjxN8NyXnK5Hf/WU5k2eRY9GrabgzY7a+vqlETcNbRWum1Hnt7/bLC6dTz6Ohdd2TiSn5yFuhGkMHM82EU4j/EjCfz3T3S0jgInSOJHFGhO0THrsSvdnvM1lNTsi3ryNolVeyX+ITeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297412; c=relaxed/simple;
-	bh=BllDOR4O1NYlxxDEccGjhAe0ikj+1xUpBu6bzDAPMFI=;
+	s=arc-20240116; t=1751297735; c=relaxed/simple;
+	bh=WzUsL62s99aMQbncJlzVXJNCLYFnik+CIGI7EJNTcOU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fvQ1Wc2Q93iHxZZXREkuGP7PW7gf1AhRm7uY5zCCsmOC5H2l1E2T1YTgedVKAI1NRH2z80xapzvCK3e4gpkHiSJrWvrl2+G81A/hdkw9lqOyC2Ww/vD+VpeFuwnDoxDBjSPI/hTmtaFn4udePK3vBiTs77WW0Ms1URoliN1vrCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qhW26vG/; arc=none smtp.client-ip=209.85.166.169
+	 To:Cc:Content-Type; b=SyOVc+atXVjMMDDqOi7uX5WmAD9D4WEUtO9LUqi8AklTmU/qZfZT9j3WFiXzBck9wXZCf30cnheBSoViGka8f2O1O50K8YhI1CyvwiYOPXi3N4Qyl8QI8pEINYuZzd+6AnqALUmTSh53iQhTRtiwJ6OVoaWqnFAvhIghQLAcz44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ByZZzgEO; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhW26vG/"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so528905ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 08:30:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ByZZzgEO"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so488665ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 08:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751297410; x=1751902210; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751297733; x=1751902533; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6opsNc2co1b9mTJ74/l+IUJLN4M52h5MNn2ClhbIZEs=;
-        b=qhW26vG/Mr7tzUf/NC4FY+VqQ4ywMFyFt0L9pd3tpIz+Wyvw8wh7MyBxFsFVFXslZ5
-         Qv8rrnrBMC1B6dwdOnhmJ9Pc9FcuZcCBqzj3mdWwtvSFy6WD5E/v9j0/xLQMT3FFIPMh
-         kA6G51xet84pjsUU13J/+Vi1kgHgevaiKpj7WB/+7T6vFYnmSxbywV+nNMOFrM81K+7O
-         P/EycJVficsau8uHoDc/dXUXaF02wDdElZS8aUP0/hdg9K4mAL1qe0iu3Lkiwzf68xQM
-         67EctCmIE0NBobjSr0kP02GZNe6sxMUGubDygdAL9YKgL4uXo3Umm7Hf0CGSlfpxsydE
-         ig/A==
+        bh=VbO9psxgk55oppNmRGWDGVoNc1FLKxrpCgi5quujmE0=;
+        b=ByZZzgEOrsnKfKVfx0kLc6+wQRCMi30ELjB5ZTTNVkJ+gY7CSb9cYvkof+UsdCR96w
+         ULMiQSG1+HV/Zv72bzEmiXP9e/lFQ/q9fpqD2OdZaZgafwKkn6fLLELouDwGCf8OjAGN
+         FbxxmF/WpKY22R0gceT9HfVP8WUTM9DndZ5OAtzDExAAtY0b4We7Jl+DDSVyYsdiatyz
+         z51RYlMMsCznCrJ+EdsCcnqcbNJBTN6WX0Mr+2+Os0bloILRu9wy4GxlZw6I/UOW5K4D
+         x7nEtlFloWPa3fl2SfpVrChHgT2FdyDXEe7rjKeBi2Vxp2jtt5MB1kWBjCGMmh9bFuxZ
+         /M+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297410; x=1751902210;
+        d=1e100.net; s=20230601; t=1751297733; x=1751902533;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6opsNc2co1b9mTJ74/l+IUJLN4M52h5MNn2ClhbIZEs=;
-        b=w31jeXgEJeM1egcT7QFUedQzXLmBIgANq4LgEhTqo+j29GxHzMQ2ov3fOXm78ROKxv
-         1yf2l3n4HxoAkrLO+ZqfBBrWpOreJ1T+/BmgsJhOfz1/CJiZJrzGh61BnqWla0RQt+f3
-         6wioF1byCbNv7AL1oQwfNumOIFfSO4Sx9nMtBqOkn2LuHLYkrJHjoMrG5PGPvC3EkFS9
-         NRCAR35jM/fuwhlqVk1AVU5z7WvyQcXn9rFMkw10boFRe06qpnXwNsuNcUbkyhPQa0PY
-         gIRtE1hMv+qko3ysF19nONBiQ663gCHzx3SOjhRQQz43j99gu3iO1AKMOoRm/yS6pal/
-         dBQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaSlbnchN1tHHeeCwzLOAuQH/Duw4As3MqpPQG1qcMlI14353y72S1wi62DIiXLpag38JsUWLcZFJkmtYH/qIP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnz82PEygfsMyQtCe+f1FX9/XuXnGE9YlJCd5Rp4VjHQ+gNdQS
-	EV3e/YzfwyfClJCtZB2OGxvfCyXPD7PWb0lCYNF7lOhmwTcBdjK+VmTqzaclt+3uoD7aFGrlLMx
-	Zvxg8gbj6Wzogp4RQDvCljcT+MNc5WZe3CElH5ifB
-X-Gm-Gg: ASbGnctP6ccQ+jEqyBelY8kOP2nbjTQ4yeu9nxOPy5DqMpol6ctBnIgmFk67zQQdhnD
-	FE9P+gYg30dGCQCtXxKeZ7QYT8VrbYXYWcjHDVw0E8TQCx9xLxKldnYEMiByu4GfHxsSTN7HI+U
-	LdR7h6FuHp8yCcK8H5H6QGdMXisfpMcX1GG6dsXwZGTHFVHLH4y7NqgxyDQuj7mdj5zQvPcAc=
-X-Google-Smtp-Source: AGHT+IGQGjMzPYqvHrrPwqf1QhnlH7tNKERMIu8sSHe9FrHU+qXbliarAAJ+DGV9IkdSguiOBWpYvS4klFTzpBc++hg=
-X-Received: by 2002:a05:6e02:11:b0:3dd:b59b:8da5 with SMTP id
- e9e14a558f8ab-3df55381c7amr8194555ab.0.1751297410001; Mon, 30 Jun 2025
- 08:30:10 -0700 (PDT)
+        bh=VbO9psxgk55oppNmRGWDGVoNc1FLKxrpCgi5quujmE0=;
+        b=VrImQwWM52eaBimV5wqHQ3E6CRGR+T+RkadOiSBgxCFvvFSgyQ7MPCAeRxXZCuoLOc
+         V43BJSMAkpteD4nHqWA1kt+jr3vgiUDNBxpxEG/jm97WI1r7zLzPugAydUushIuVF2qQ
+         2L1aDNqrDe8FvzsMjNL1T4CeTbmQ+4NHAOdCcL7xZJIciH/t+/e8VsRSe3H91+Ly+yby
+         jUMcYgnYI2uVhE88RN6TwWzyAko0AMhX8sTmm0uPg5PL9MbcUM2zdPF3PT5gWbvm/iYD
+         bd9SaIzxL888XpthBPM6R4NV3aNCJI6daLG8fl09T6Jy/Mt3gNvLrz2YkcxuRES9Qfqf
+         weNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFOmzLtf619BoRvxY46MQ7jYjioOGaLwIcIYAbtMPzCzco0tI370EecnYXnSfr6utnjB7GB+IqB94kog8GcOZC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJMbJa4+RwHv3xu1Nfpl+ZI3MX6vn7sXkXxyjOBUz1YIpBnbK1
+	USQ6gqeeAYMtCJaB/EXCw1pSohJ0iUduSlhW1W7NuQaPsGeOu4iG+QAikoMA0Rqb6BdlCwjnUyd
+	OxNUHqGeISnBCY9CNpHY8zX9N6e4VCzlyUy05aW87
+X-Gm-Gg: ASbGncuLGvYOeVOvrsOmJhaKDJMGVoKaH1RA/cJYBOcD0vwUZjGGw94cE/9VR3wFeKd
+	z99U7632+iCtivwsphPxO4pkoks8HfYIYflZzdJsfL51AqzbmtImHCEMJaRWEMEBcVek+40tIah
+	nbxlwfPeCKifrNLJwD/LRF1unE6dG4/sz0jhi016IP0yHrvvxYtVLpFWUZ+QUF6MHwx3AXhFGJL
+	JxoqwqivQ==
+X-Google-Smtp-Source: AGHT+IHOX7kF7dn11PIYsXqc5Lvgd9CFgVl0JgQOIRErwaVxAn3VrCW+V5ML7ah9kVF847kUzTGbYaJQz6lAmBOdyCw=
+X-Received: by 2002:a05:6e02:1a6c:b0:3dd:d664:7e0d with SMTP id
+ e9e14a558f8ab-3df56d1d4famr6330985ab.25.1751297732904; Mon, 30 Jun 2025
+ 08:35:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630125128.562895-1-colin.i.king@gmail.com>
-In-Reply-To: <20250630125128.562895-1-colin.i.king@gmail.com>
+References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org> <20250605-james-perf-feat_spe_eft-v3-6-71b0c9f98093@linaro.org>
+In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-6-71b0c9f98093@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 30 Jun 2025 08:29:57 -0700
-X-Gm-Features: Ac12FXwzUlNEDX7sNWl994RL2RjvyOQSm7Gp0RQD_NgRL6DsWH9nOxgzUZLtCTU
-Message-ID: <CAP-5=fXUjBE318VhCkS8qrTTuho33T6kLP_SGXNt13QQZLzuiw@mail.gmail.com>
-Subject: Re: [PATCH][next] perf drm_pmu: Fix spelling mistake "bufers" -> "buffers"
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Mon, 30 Jun 2025 08:35:20 -0700
+X-Gm-Features: Ac12FXyUBSBjSl_fXOEDXQ0KnLnvxPP2kraYhFsM6cPyGu_cMbUCD4cbUl7FD2s
+Message-ID: <CAP-5=fVZjqapNHhZ_Gro39JmJ-57nEun-SQhM_rd=MkQbx3GLA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/10] perf: Add perf_event_attr::config4
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 5:51=E2=80=AFAM Colin Ian King <colin.i.king@gmail.=
-com> wrote:
+On Thu, Jun 5, 2025 at 3:50=E2=80=AFAM James Clark <james.clark@linaro.org>=
+ wrote:
 >
-> There are spelling mistakes in some literal strings. Fix these.
+> Arm FEAT_SPE_FDS adds the ability to filter on the data source of a
+> packet using another 64-bits of event filtering control. As the existing
+> perf_event_attr::configN fields are all used up for SPE PMU, an
+> additional field is needed. Add a new 'config4' field.
 >
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-
-Thanks Colin!
-
-Fixes: 28917cb17f9d ("perf drm_pmu: Add a tool like PMU to expose DRM
-information")
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> Tested-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
@@ -95,40 +100,35 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/drm_pmu.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  include/uapi/linux/perf_event.h | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
-> index 17385a10005b..988890f37ba7 100644
-> --- a/tools/perf/util/drm_pmu.c
-> +++ b/tools/perf/util/drm_pmu.c
-> @@ -210,17 +210,17 @@ static int read_drm_pmus_cb(void *args, int fdinfo_=
-dir_fd, const char *fd_name)
->                 }
->                 if (starts_with(line, "drm-purgeable-")) {
->                         add_event(&events, &num_events, line, DRM_PMU_UNI=
-T_BYTES,
-> -                                 "Size of resident and purgeable memory =
-bufers");
-> +                                 "Size of resident and purgeable memory =
-buffers");
->                         continue;
->                 }
->                 if (starts_with(line, "drm-resident-")) {
->                         add_event(&events, &num_events, line, DRM_PMU_UNI=
-T_BYTES,
-> -                                 "Size of resident memory bufers");
-> +                                 "Size of resident memory buffers");
->                         continue;
->                 }
->                 if (starts_with(line, "drm-shared-")) {
->                         add_event(&events, &num_events, line, DRM_PMU_UNI=
-T_BYTES,
-> -                                 "Size of shared memory bufers");
-> +                                 "Size of shared memory buffers");
->                         continue;
->                 }
->                 if (starts_with(line, "drm-total-cycles-")) {
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_ev=
+ent.h
+> index 78a362b80027..0d0ed85ad8cb 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -382,6 +382,7 @@ enum perf_event_read_format {
+>  #define PERF_ATTR_SIZE_VER6                    120     /* Add: aux_sampl=
+e_size */
+>  #define PERF_ATTR_SIZE_VER7                    128     /* Add: sig_data =
+*/
+>  #define PERF_ATTR_SIZE_VER8                    136     /* Add: config3 *=
+/
+> +#define PERF_ATTR_SIZE_VER9                    144     /* add: config4 *=
+/
+>
+>  /*
+>   * 'struct perf_event_attr' contains various attributes that define
+> @@ -543,6 +544,7 @@ struct perf_event_attr {
+>         __u64   sig_data;
+>
+>         __u64   config3; /* extension of config2 */
+> +       __u64   config4; /* extension of config3 */
+>  };
+>
+>  /*
+>
 > --
-> 2.50.0
+> 2.34.1
 >
