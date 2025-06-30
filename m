@@ -1,129 +1,169 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F9D2D4B6C
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 16:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2527228A1D4
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 16:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301094; cv=none; b=W646WKrG3T474MAEmx2fJiHAYFrLg1TUi0DejhHlU2LiMF+EU910J5uKw53J62NemaOpGlvcov0JrvyLTqP6h8rE4JAq5alXT2fjn7iyXwgqcwJ54UcP7t/LHmwi57AQc4KRP856TIzYk+joz0O4eV8TKX6a8Xvgk6ihnzJBo20=
+	t=1751301500; cv=none; b=QIChJmZQ436slZzS56Vh+d54PlIFmZno1Ar6rF6BWEp3BiUBh+newB/UG28nB752986FMuTVZRitqbGFzc3SqJKEixduKsvgTgBB9XpORdOF8WAYDYvxSNKg7Aoi7erSwu8hE8M1muxBtc/0+GWRv0Qe4948IgSxCxqDTP+BQa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301094; c=relaxed/simple;
-	bh=EAr6RrtFQl3yGnUqGwOlrUzkpXUWc+2Qk+FF83cNPFA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=nWYH/cOMvorblZDOWXzWO49z20hZCYndFkrP7f3Fi0isdPJdiRhODkf24PyD65Qtv5vjeUHoItJYfT6jJdmQH46zgWwghXtjmqaevBFlSlZhJqXEvVXex1Mv5u9uvCklCULW/cMsV29JH3v1k722GV7A8juVlncAeZWuD/TQnsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mI5EFfBX; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1751301500; c=relaxed/simple;
+	bh=3SSJe22EI0/zwdN3+ptsJEa9SF2HCC8v9PBFh6uZZj8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F7erqAS+tTb3uTr2ShKcjSWgvxOjKvqdGPoCqKycsB4xbwJcBxfA+GOsAof4md7aVjmLH0g6zUup9KJ/WZqvLAf1QmAVE5NDI/2A2Ue5UALeX5tW38britoHgHrvx1sLCfGICsOQ9h9Pv7tIIOaC25+d5PqF+RC9rCCxOgLoUc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4QqvQG6o; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mI5EFfBX"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3141a9a6888so4402226a91.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 09:31:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4QqvQG6o"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so545895ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 09:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751301093; x=1751905893; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O93yuuBrN5j1m23sGtIa8teySV5SU0bQ4t+orEdV4gk=;
-        b=mI5EFfBXnVxSlgT1/GQxICjkHc4wvCxXPj7thZod4IMZlaBBjcSSOu8PD2LQpA2rNn
-         9kgzWK59G5KdsKZ3Fk/IhZNuIeK7/b0/NNaPQ2yQt3aKMkxV4rIXXzSvpfAcWSFJBh0G
-         Dd+b9IXAO+mybnb2gLVdBDFLBqC9MivmbuuQUeLr3a24WPuvh5ujD8YLupv2Wkt88kV9
-         SEv3jdPzzry4AH3CdDnC3nyQq1xLg4T8ssmGlISxWk/rQtaymvEDQ6TfsG8P1IwCwuNC
-         NpN5MIv5uk4JT6TsDyimy/Yyi5k8dBzNFHSDMwuGMY+3JTmDY/ZPgOgxfFxAWg4LMxZt
-         KpkQ==
+        d=google.com; s=20230601; t=1751301498; x=1751906298; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OqFV3vdLcpqk0WIu5m/78ZKQUMwnbH0yFrWHYwtacwc=;
+        b=4QqvQG6oz6GmA806y9A8338eG8GtOIJRkEteF5+t/tfJOYz+qamcglr1r70pD62q5i
+         f0ZR8hGPB1BzP1gj0ofaBSpR5DCrEcG3xXgIVwrUZXN6OfzJEh8pM64pWsrH9kfqzckD
+         CKbKgq/EmCBeUVWX05WCDnlSDGCWNbKHjLOA68IhvKf2VfleqsCcDuAUJ6taEEg+JQ3u
+         NgHd4GxQslbAIRULD3nrrUv3YUsDizBgbSb/weTlKzy4iHtYReBzVAckBQWqOeaO0ZWu
+         fMdeJQy47oxqXTf9yRZ3AcUH1nnzvxK+LMtF9k0gpTbk0F7btSRoYhuupn3EPWE3ZkML
+         gxwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301093; x=1751905893;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O93yuuBrN5j1m23sGtIa8teySV5SU0bQ4t+orEdV4gk=;
-        b=tJNilIdaO7yjy2uwHHBLhVuGYpodrosIz1AkVNRURVjBKvAO26LvF6t+EvosVOAlXq
-         6hfQ/KA2/azh0L22V4vaZzsRjB/oFG/Sh7jTQp26XFW6HMFV5wyECbpdD7C8UuFLLGBW
-         vwZx7RaUZcL3QRu7rjghc0EsQMoK/04UEQl23N650rxfDuZGW7SFAoNXKm5BVvcZkXDD
-         FdiUgg3vaSu569KjCddCqshTt0F3DNNrdbuFwrbGEIs39Itcsy+5GxKMXr0cjmFnH0Gq
-         G8fUpWKou7d/jz2WNUET+bDWLp2A4N6pY9Y3T1KYI8iR1OyqOHb0UabELwfOIhltjq8R
-         u0mA==
-X-Forwarded-Encrypted: i=1; AJvYcCULyCqDt1yqOOsYim3XfNlLhgioEOaA/jZq43VPniuGBLJhE4BX8KMpAmlqN3gegS4PmQXWlzjf1obJtRb/jN8F@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4c7IlqrgY6veDVL1dwjIueipNCS0ogRud0QO74JzyC1hc6A0x
-	O7YIS6Na4Bgn/HKacdkl3+LOsqqdrxuxe457tOj/yx+bd5F2conDOCU3JOPw2GL2+ayxDYyofNf
-	K+aqs3o0SXg==
-X-Google-Smtp-Source: AGHT+IGlhAXRVd62WJs68wzgkQHNAHMb/DvZ6Hqv2uFVhQEXhs2r5yuuU5AxSx87NvrIdcBsgwrIq9qoSKnZ
-X-Received: from pjj14.prod.google.com ([2002:a17:90b:554e:b0:312:eaf7:aa0d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2247:b0:311:c93b:3ca2
- with SMTP id 98e67ed59e1d1-318c8eb9988mr19643825a91.6.1751301092806; Mon, 30
- Jun 2025 09:31:32 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:31:00 -0700
-In-Reply-To: <20250630163101.1920170-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1751301498; x=1751906298;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OqFV3vdLcpqk0WIu5m/78ZKQUMwnbH0yFrWHYwtacwc=;
+        b=R/zg/VGJuOXAUNQAa3iQRIi6KKnKaPczaSHcMZs+iifktomQuq8y9gTIxm+55QVtle
+         rde4NA1XjfYI4GWJTx8jF4IuTrICY2OCjQG2XpbbTcnfgL85sUU1b0/CKZIb7S979whf
+         V8Nd/yGgYdHE5ynhXgNk2M/j2MR5qJY3TWWDCg5PfH8TO0UYKJPIQb9cYxgcpPJB9D6w
+         BBIUm7MuR6+nkeYO/HyIb8VpYy+UuHfZdUZ3R/ESpABLuMTlT7KwPcSL7Yc2lbKuW4QL
+         k9wiz7pMQ6Spa6HddUiEInfTRPapID+AQclXWWwicSboVOc8z4vQDNxpgXTO5ihRNyg3
+         wHbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ5Vh5+j/RYX7Q5DQVACteEZ/8Gotg59PqzlhY8G5w4S/6JPOUSYD0+0IK/1FK71ngQYX4EKW69rcnFr+SlsNF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKkqeXh1yJ9PWwHSgLV1Msb0grWUbFdJEh/0kOMD7Qv5Iph6y7
+	InpRhTKb3KCmm3QOTPgNY33TypYWk0L1G3d1lo0QRJAbkMltQIhmQPccoj/3QxW9txxC23Sxhxo
+	fb87BUB0MHZjfybgX+HzhQROW4GdaMC3Bk3dqZIBG
+X-Gm-Gg: ASbGncuahhwbK15Ol8bnw5gGTqkbtugJmSCxcRIUvWLlusRaWS5n6RtFwHn68vUnYdJ
+	t79tZIBwyreRZdCosD6tr7x8WQK4BOxuC38uaUlCVYyizVZeBeuLwcpKNc3VJJqkOcvr0Qj8ZU3
+	JjePMQJatkxCSEtbVB4wvHw6U5UNCIIDuz+jHdHDsSwhehDIRYDY5MlW7iAIshYpr/n5p7thw=
+X-Google-Smtp-Source: AGHT+IEV4ws06I3PBKCP3xfx6fJYQY/7epzwWRJpF5/I1Oop+DfcLvxUlkyWMCvWvFPEidAUpvsHHwmLeU2IN8EN8pY=
+X-Received: by 2002:a05:6e02:2281:b0:3df:16a1:6874 with SMTP id
+ e9e14a558f8ab-3df56d202d8mr6648955ab.29.1751301497806; Mon, 30 Jun 2025
+ 09:38:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250630163101.1920170-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250630163101.1920170-16-irogers@google.com>
-Subject: [PATCH v2 15/15] perf vendor events: Update TigerLake events
+MIME-Version: 1.0
+References: <20250630091613.3061664-1-tmricht@linux.ibm.com>
+ <CAP-5=fWGiitgromQRTxEsU3cY99gFAU6WPLnmiS7-Q8vQNGbYw@mail.gmail.com> <aGK2xQNQOd1WoDVk@google.com>
+In-Reply-To: <aGK2xQNQOd1WoDVk@google.com>
 From: Ian Rogers <irogers@google.com>
-To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Mon, 30 Jun 2025 09:38:06 -0700
+X-Gm-Features: Ac12FXyb9pIGay8KgAhrAvwHn4i8z7MPif2V10yaHDvHwigTzIW6u1Pg_N--RW0
+Message-ID: <CAP-5=fWb=7qnAcE8i5Kv8yTnmdFOzX2jPvR88bmzqRtGhSbDzQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: perf header test fails on s390
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, 
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+	hca@linux.ibm.com, japo@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.17 to v1.18.
+On Mon, Jun 30, 2025 at 9:09=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Mon, Jun 30, 2025 at 08:42:01AM -0700, Ian Rogers wrote:
+> > On Mon, Jun 30, 2025 at 2:16=E2=80=AFAM Thomas Richter <tmricht@linux.i=
+bm.com> wrote:
+> > >
+> > > commit 2d584688643fa ("perf test: Add header shell test")
+> > > introduced a new test case for perf header. It fails on s390
+> > > because call graph option -g is not supported on s390.
+> > > Also the option --call-graph dwarf is only supported for
+> > > the event cpu-clock.
+> > >
+> > > Remove this option and the test succeeds.
+> > >
+> > > Output after:
+> > >  # ./perf test 76
+> > >  76: perf header tests                           : Ok
+> > >
+> > > Fixes: 2d584688643fa ("perf test: Add header shell test")
+> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> > > Cc: Ian Rogers <irogers@google.com>
+> >
+> > Thanks Thomas! Given the s390 restriction to require dwarf, should we
+> > switch the default "-g" meaning on s390 to mean use dwarf? James Clark
+> > proposed this previously. It doesn't affect the change here so:
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Unrelated but I found this test is failing on my machine.
+>
+>   $ ./perf test -v header
+>   --- start ---
+>   test child forked, pid 42799
+>   Test perf header file
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.182 MB /tmp/__perf_test_header.perf=
+.data.vvFUf (4114 samples) ]
+>   Test perf header file [Done]
+>   Test perf header pipe
+>   Failed to find expect hostname in output
+>   Failed to find expect os release in output
+>   Failed to find expect arch in output
+>   Failed to find expect cpuid in output
+>   Failed to find expect nrcpus in output
+>   Failed to find expect event in output
+>   Failed to find expect cmdline in output
+>   Failed to find expect perf version in output
+>   Failed to find expect sibling (cores|dies|threads) in output
+>   Failed to find expect sibling threads in output
+>   Failed to find expect total memory in output
+>   Test perf header pipe [Done]
+>   ---- end(-1) ----
+>    83: perf header tests                                               : =
+FAILED!
+>
+> The pipe mode doesn't have the headers.
+>
+>   $ ./perf record -o- -g -- ./perf test -w noploop | ./perf report -i- -I=
+ --header-only
+>   # =3D=3D=3D=3D=3D=3D=3D=3D
+>   # captured on    : Mon Jun 30 09:02:09 2025
+>   # header version : 1
+>   # data offset    : 0
+>   # data size      : 0
+>   # feat offset    : 0
+>   # =3D=3D=3D=3D=3D=3D=3D=3D
+>   #
 
-Bring in the event updates v1.18:
-https://github.com/intel/perfmon/commit/943fea37d0d54232605f12abf72a812ac31=
-4cd1d
+Strange, permissions? I see:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv             | 2 +-
- tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+```
+$ /tmp/perf/perf record -o- -g -- /tmp/perf/perf test -w noploop |
+/tmp/perf/perf report -i- -I --header-only
+# =3D=3D=3D=3D=3D=3D=3D=3D
+# captured on    : Mon Jun 30 09:35:21 2025
+# header version : 1
+# data offset    : 0
+# data size      : 0
+# feat offset    : 0
+# =3D=3D=3D=3D=3D=3D=3D=3D
+#
+# hostname : ...
+# os release : ...
+# perf version : 6.16.rc3.g8f2bc25ec32d
+# arch : x86_64
+etc.
+```
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 2d9699efff58..354ce241500b 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -35,7 +35,7 @@ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
- GenuineIntel-6-55-[01234],v1.37,skylakex,core
- GenuineIntel-6-86,v1.23,snowridgex,core
--GenuineIntel-6-8[CD],v1.17,tigerlake,core
-+GenuineIntel-6-8[CD],v1.18,tigerlake,core
- GenuineIntel-6-2C,v5,westmereep-dp,core
- GenuineIntel-6-25,v4,westmereep-sp,core
- GenuineIntel-6-2F,v4,westmereex,core
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-index 7ef1bac08463..b417e1db9e07 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
-@@ -497,7 +497,7 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x4c",
-         "EventName": "LOAD_HIT_PREFETCH.SWPF",
--        "PublicDescription": "Counts all not software-prefetch load dispat=
-ches that hit the fill buffer (FB) allocated for the software prefetch. It =
-can also be incremented by some lock instructions. So it should only be use=
-d with profiling so that the locks can be excluded by ASM (Assembly File) i=
-nspection of the nearby instructions.",
-+        "PublicDescription": "Counts all software-prefetch load dispatches=
- that hit the fill buffer (FB) allocated for the software prefetch. It can =
-also be incremented by some lock instructions. So it should only be used wi=
-th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
-ction of the nearby instructions.",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
---=20
-2.50.0.727.gbf7dc18ff4-goog
-
+Thanks,
+Ian
