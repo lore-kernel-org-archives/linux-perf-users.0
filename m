@@ -1,72 +1,72 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC0442AA4
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 15:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE25728C03D
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 15:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297735; cv=none; b=N6gwOpDTOzPNTZjXXJxz+4hFpZV+KzsWhjxN8NyXnK5Hf/WU5k2eRY9GrabgzY7a+vqlETcNbRWum1Hnt7/bLC6dTz6Ohdd2TiSn5yFuhGkMHM82EU4j/EjCfz3T3S0jgInSOJHFGhO0THrsSvdnvM1lNTsi3ryNolVeyX+ITeE=
+	t=1751297806; cv=none; b=e2zbVfsbmU/eqUC/j2O0J46q9KbYYUIbYlNh3SxcYOV6CLMXxM0FN/DCDDVS9U2WPnfTHWoZpQaE06XzH/d++PqdezrCtkOJw+q+0wwTMJgxjQ0EvYK7hmuStdHMPQKzsTSwFTDrTEUqqGmPHHghkpphsa7Sz7MfSo/ZeDHvZpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297735; c=relaxed/simple;
-	bh=WzUsL62s99aMQbncJlzVXJNCLYFnik+CIGI7EJNTcOU=;
+	s=arc-20240116; t=1751297806; c=relaxed/simple;
+	bh=ltzjsZ3Y13JqtrnFJO+zsCen5wBONE4sgDpdbeqPl3o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SyOVc+atXVjMMDDqOi7uX5WmAD9D4WEUtO9LUqi8AklTmU/qZfZT9j3WFiXzBck9wXZCf30cnheBSoViGka8f2O1O50K8YhI1CyvwiYOPXi3N4Qyl8QI8pEINYuZzd+6AnqALUmTSh53iQhTRtiwJ6OVoaWqnFAvhIghQLAcz44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ByZZzgEO; arc=none smtp.client-ip=209.85.166.182
+	 To:Cc:Content-Type; b=HceR8qFy7s2JuuP1m/D7/IrEKAKtKkkGxBXEefecW3t57/I20sGEaUM8G44Hqw45ELI1vI66HZvT/e+xw4wr6o6FfTgrQI5QObBgoltFqyV08H4/5WgK7z1+2HBwIldJ4rx6HNC+gW13/1bShCouRsS1gPz/XPRHb3AFO7FOPrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CSgBgtvv; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ByZZzgEO"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so488665ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 08:35:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CSgBgtvv"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so530735ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 08:36:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751297733; x=1751902533; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751297804; x=1751902604; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VbO9psxgk55oppNmRGWDGVoNc1FLKxrpCgi5quujmE0=;
-        b=ByZZzgEOrsnKfKVfx0kLc6+wQRCMi30ELjB5ZTTNVkJ+gY7CSb9cYvkof+UsdCR96w
-         ULMiQSG1+HV/Zv72bzEmiXP9e/lFQ/q9fpqD2OdZaZgafwKkn6fLLELouDwGCf8OjAGN
-         FbxxmF/WpKY22R0gceT9HfVP8WUTM9DndZ5OAtzDExAAtY0b4We7Jl+DDSVyYsdiatyz
-         z51RYlMMsCznCrJ+EdsCcnqcbNJBTN6WX0Mr+2+Os0bloILRu9wy4GxlZw6I/UOW5K4D
-         x7nEtlFloWPa3fl2SfpVrChHgT2FdyDXEe7rjKeBi2Vxp2jtt5MB1kWBjCGMmh9bFuxZ
-         /M+w==
+        bh=o3GKh4o61b7jyIv0Cvm8DV094/Zex2HvCho/VCSf17U=;
+        b=CSgBgtvv5G7sGqntkhJ9oOUS0AnPDmno3TFJMDNfDAAb1Iyv/sHk8Z0fDcUkwwh2/b
+         6EiTkjt1Ef/SCyM8sY6swH6AaMdOjz/JmTYjmawTKNAcObWMKishY3JA5ojEJqnfvcZw
+         Pva7RJdNZj87JvJMzfYzo/B6BN3hjwl+t4VzuI7Sa2KEsib4lCJUdHZXTBKwx5u8vFcA
+         HYz1FWuVPOWTAAbxVla5xDVIABfmhfOABd/2Bx1/ibtbovp8ji5givztVJ8Qoy5i9gwO
+         SgWPCLfZzHeD5ieMj064hhlhS5OmG38X1I8Gp5ZMe2Qz4eenLdYNxITXeIHsGKEmIAHT
+         fTyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297733; x=1751902533;
+        d=1e100.net; s=20230601; t=1751297804; x=1751902604;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VbO9psxgk55oppNmRGWDGVoNc1FLKxrpCgi5quujmE0=;
-        b=VrImQwWM52eaBimV5wqHQ3E6CRGR+T+RkadOiSBgxCFvvFSgyQ7MPCAeRxXZCuoLOc
-         V43BJSMAkpteD4nHqWA1kt+jr3vgiUDNBxpxEG/jm97WI1r7zLzPugAydUushIuVF2qQ
-         2L1aDNqrDe8FvzsMjNL1T4CeTbmQ+4NHAOdCcL7xZJIciH/t+/e8VsRSe3H91+Ly+yby
-         jUMcYgnYI2uVhE88RN6TwWzyAko0AMhX8sTmm0uPg5PL9MbcUM2zdPF3PT5gWbvm/iYD
-         bd9SaIzxL888XpthBPM6R4NV3aNCJI6daLG8fl09T6Jy/Mt3gNvLrz2YkcxuRES9Qfqf
-         weNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFOmzLtf619BoRvxY46MQ7jYjioOGaLwIcIYAbtMPzCzco0tI370EecnYXnSfr6utnjB7GB+IqB94kog8GcOZC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJMbJa4+RwHv3xu1Nfpl+ZI3MX6vn7sXkXxyjOBUz1YIpBnbK1
-	USQ6gqeeAYMtCJaB/EXCw1pSohJ0iUduSlhW1W7NuQaPsGeOu4iG+QAikoMA0Rqb6BdlCwjnUyd
-	OxNUHqGeISnBCY9CNpHY8zX9N6e4VCzlyUy05aW87
-X-Gm-Gg: ASbGncuLGvYOeVOvrsOmJhaKDJMGVoKaH1RA/cJYBOcD0vwUZjGGw94cE/9VR3wFeKd
-	z99U7632+iCtivwsphPxO4pkoks8HfYIYflZzdJsfL51AqzbmtImHCEMJaRWEMEBcVek+40tIah
-	nbxlwfPeCKifrNLJwD/LRF1unE6dG4/sz0jhi016IP0yHrvvxYtVLpFWUZ+QUF6MHwx3AXhFGJL
-	JxoqwqivQ==
-X-Google-Smtp-Source: AGHT+IHOX7kF7dn11PIYsXqc5Lvgd9CFgVl0JgQOIRErwaVxAn3VrCW+V5ML7ah9kVF847kUzTGbYaJQz6lAmBOdyCw=
-X-Received: by 2002:a05:6e02:1a6c:b0:3dd:d664:7e0d with SMTP id
- e9e14a558f8ab-3df56d1d4famr6330985ab.25.1751297732904; Mon, 30 Jun 2025
- 08:35:32 -0700 (PDT)
+        bh=o3GKh4o61b7jyIv0Cvm8DV094/Zex2HvCho/VCSf17U=;
+        b=YMZG2zULf2LPh+kANsREl9QvkATw1utjdcxkuYBvfQTTh2Vd9Xp94Thv+WGMS9K3fh
+         Ze/GNB2EczGYPrhysVQXsqw1rv4CuRb2zn/vXMEhzJzMIENasQ5Z78o+uKJ9VEzwcsA5
+         5Cp0x8KkHNb/TLjI3WAVPSLouAdhupvbaSiX53rNClQaB7ag1Jh/98irNBPPjzMJmMtZ
+         UvcXxS5DIUxG6tiVBMIRHS5m0FcTVWPIv9a+m2Q5/mJGO0RkZogGgH/yJk8BEp8cdYBg
+         BMfP4lHHsg8OqdKvsRF80r46fFj2s7kRovFIQgCTUu7fd/x5DuQyntP3fUifITAjC64E
+         xzBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkCn/qcP3JmZaW6oyB1M2i8APvOx5q0DIcCcmgGsOh+gJ9NSZ5f+p0xUph39bQ00kylUtTXvTow2EbINrrQOqv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTWq2F43iG6Un1oSlkQTWv5qdONjMIOfT3PvtgWIFM9gYTPfxj
+	N2dmxZJM01gFdOI+Z1+c8NmcPU2N5YLNg/xK7lM6trsWUdgbopGpZrsjhZpFPY9H579OmPROjBx
+	5aEj+R6QdffYkZm7alSPUwM94XXeBCKZ5zmPbaguZ
+X-Gm-Gg: ASbGncswG9TgYjjkvxonKBmp9zRuVD8NfhSZTVdBxevUkXz2X8ZLGNOW/IeRGtDFhgg
+	UhxQBt8Ip+eM/yrz+gTqvi6x0j/tLh7IVskLt5Kfai3RtURr5yHTKnLGpV50hhFhmkBE57nBUJB
+	MFshgCSYn7+roBT7ye5kIY6Cabz0I1mD1VRKoSNrCb/k+IYxobK952EpiyHZ3KXOsummGyVgo=
+X-Google-Smtp-Source: AGHT+IHCeL7uDDU5JOMczoHemzrfltO8zFE7mNOcumLGxZUSHGclDw+KN2fxow6X8OtdYvZ/ZfmsVer2qBLOgVRnCKc=
+X-Received: by 2002:a05:6e02:11:b0:3dd:b59b:8da5 with SMTP id
+ e9e14a558f8ab-3df55381c7amr8226995ab.0.1751297803769; Mon, 30 Jun 2025
+ 08:36:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org> <20250605-james-perf-feat_spe_eft-v3-6-71b0c9f98093@linaro.org>
-In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-6-71b0c9f98093@linaro.org>
+References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org> <20250605-james-perf-feat_spe_eft-v3-8-71b0c9f98093@linaro.org>
+In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-8-71b0c9f98093@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 30 Jun 2025 08:35:20 -0700
-X-Gm-Features: Ac12FXyUBSBjSl_fXOEDXQ0KnLnvxPP2kraYhFsM6cPyGu_cMbUCD4cbUl7FD2s
-Message-ID: <CAP-5=fVZjqapNHhZ_Gro39JmJ-57nEun-SQhM_rd=MkQbx3GLA@mail.gmail.com>
-Subject: Re: [PATCH v3 06/10] perf: Add perf_event_attr::config4
+Date: Mon, 30 Jun 2025 08:36:31 -0700
+X-Gm-Features: Ac12FXzGjtf9e7aPdAU9e9fczw6vLUTz8vKdx9vV288aJS8GZ_7quQwpeJqa1_Q
+Message-ID: <CAP-5=fWuKrtRy5NdPFivjSKx-fbw6P49QFepg1-1qUB=0guu_Q@mail.gmail.com>
+Subject: Re: [PATCH v3 08/10] tools headers UAPI: Sync linux/perf_event.h with
+ the kernel sources
 To: James Clark <james.clark@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
@@ -85,12 +85,8 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Jun 5, 2025 at 3:50=E2=80=AFAM James Clark <james.clark@linaro.org>=
  wrote:
 >
-> Arm FEAT_SPE_FDS adds the ability to filter on the data source of a
-> packet using another 64-bits of event filtering control. As the existing
-> perf_event_attr::configN fields are all used up for SPE PMU, an
-> additional field is needed. Add a new 'config4' field.
+> To pickup config4 changes.
 >
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
 > Tested-by: Leo Yan <leo.yan@arm.com>
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
@@ -100,14 +96,14 @@ Thanks,
 Ian
 
 > ---
->  include/uapi/linux/perf_event.h | 2 ++
+>  tools/include/uapi/linux/perf_event.h | 2 ++
 >  1 file changed, 2 insertions(+)
 >
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_ev=
-ent.h
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/l=
+inux/perf_event.h
 > index 78a362b80027..0d0ed85ad8cb 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
 > @@ -382,6 +382,7 @@ enum perf_event_read_format {
 >  #define PERF_ATTR_SIZE_VER6                    120     /* Add: aux_sampl=
 e_size */
