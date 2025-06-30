@@ -1,140 +1,119 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262EDFC1D;
-	Mon, 30 Jun 2025 09:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE812701DF;
+	Mon, 30 Jun 2025 12:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274995; cv=none; b=UB0Y4iTKN0nFI0+lnqJHTXD+8ML2ED0EpBFf1S265fbopwc9JADzR5hFM7v1SXJ/JtSK+aLSKUqk4sSKdzGHkyrD7UTcEmOv2TN9YLTAxL77w4OTvBGivaZm55DS+MVecTeCdvMds32Cui2w3iwhgglKW9SYh+F2UM7vG8k4ifE=
+	t=1751287916; cv=none; b=BkJueE9LG/XQLeWicpJtczXUNUPzcesKAV2s183ngxstmmU4GQVWgIcmdpi917ir9d3Sc8u6q5WHl43Mg837uRBUy02XJvlcGKiVN7fafWAQIfLxRvkY7wv9C28TAHD0B78DUucHcibALx80g3dcE+oYmwPg3JAYqKu05y+V0Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274995; c=relaxed/simple;
-	bh=Iwck2mG1lJ5lx8e17hXJ+xo4ZCdQXb8iwMS3mtR5Btc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKvzavNQGxtF1wA6jOxdLWs6goE6jr92mvjKZsgprTdbXpRbBbJvjyfYPcD13Y6iu1U7+QNRDGmo6U8JOpF3mql8dL8+VUdaY8kdtbJtHAeX36+rIDLsPkux33FNODJHSh9SWK017jgeT6w2PZnil77lUOiY3gQVI6jPVXGJm4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kdzla65V; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751287916; c=relaxed/simple;
+	bh=1GZnzJ9gT2t7alHrMVtRMKxx2nwrgqs6HEQbRg1qdF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfDQYFznC5jvBmzw+2XmSXfT1Dr1pHjj/uJucxmonuqXMaav0nTwNbeeC4wmHtM3Lkk3VIGaRWMzW5TfJkCH4hANtZh2d9ZYnZAZ13wyB3z7C/pCXC7kAL3I3YOUuldnb+c6NV5XC/t3yr7BADT8xp2DdZ0usnYsDghXJvYGB44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0AxlP8t; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kdzla65V"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6IQud014585;
-	Mon, 30 Jun 2025 09:16:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=rh2Tduwrlnki1FQ5vsOskOQbINxd9zCyPRvM5+9Ga
-	PE=; b=kdzla65V3Ror2Ys2/xxk9JDa81wgLJZ5N8ZS2i1mCTpNC4glAL3OnUOkW
-	EU3pn63r8qwu760lzOqCgz6OyM1eRD5rO9tCKWPhem1MJj4sbvhDz4u2ptL/13/d
-	HGw58qh+2ZgKlQ8WajtbxCj+Cs/+weZp44EvogwCRCNDFb4n88uqY1+lfR072XQW
-	RppiZv6/RcHrlRXVMI51dmfKCK5XnFW03SvPWVcjVRVJJwbuHdTt2NN5XKVVigvT
-	Z0DgtODpgsSmX5KwzEnKaO+Em5aPi9UnnRVQs1Lg0ZFBOPPNk/OnK7JDwQiZwHsk
-	vZEz+FjYxHx2sT4IupApyruD2MwbA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830gak2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 09:16:31 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55U9BS0Q016831;
-	Mon, 30 Jun 2025 09:16:31 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830gajn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 09:16:31 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8mfie021117;
-	Mon, 30 Jun 2025 09:16:25 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqu5bdx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 09:16:25 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55U9GL7R20447600
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 09:16:21 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 66BD62004B;
-	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2EF9C20043;
-	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: perf header test fails on s390
-Date: Mon, 30 Jun 2025 11:16:13 +0200
-Message-ID: <20250630091613.3061664-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0AxlP8t"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d7b50815so14538385e9.2;
+        Mon, 30 Jun 2025 05:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751287913; x=1751892713; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bGmFeyDMoBpTbQ19lKlxDLGZE93GOj2clGGn+vOYYyQ=;
+        b=f0AxlP8t7yn8JXZ7OZn3dsnq+CjcjBqSS1PENuXtaQXnElQRV25Zog2TAfqguqsVYl
+         0CV62KpRciG/Fkq4JNFnPz3uFqjwXmnIJ2w+qffRUkbp4ICGYbmWoAgT7HjDaimyySXh
+         0WBftJ5leow+rap06kBvPQ7kn8Vss+jPYYZxnNgXtCfCFze9Q0xaqpJcRlbAKA2o77h9
+         c5u0qX6mhl5BBWBw+2TUs/a2InEUhbpA8Vrg51wLoZ1OjEvkkT8c+wZXdw9etbSSJof5
+         Gljmtiou6L3YBGUmZUO66pbE9Y2yyDP2svonKMD31hlW0VpNWBmHyz5ISu/WVcCvjso3
+         Z1iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751287913; x=1751892713;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bGmFeyDMoBpTbQ19lKlxDLGZE93GOj2clGGn+vOYYyQ=;
+        b=LDy/w+B4QLH9eGk80wzOH8Vk2N8NHp610brRdz5mPq2GK/lI+66mWwPBMAgKEm5IB+
+         H0qrWwI81RzMnuP/EAHGX2+zWsJGo88SHdO7NKsmvKOlcKyaYpCHBpzVOI9W5IHvu6iz
+         Pi/wtt/I3UGigG4D4nC/2BFv8CJLN++w9z3vSADI6ZTy+wjDqco8njLRpESKv3uoac5r
+         F4LObysBAotHq6HXJpqQq6sknX7PpjtiExe5elNhwq7lKhbNpg1m/VqbYgSfyBQymfzV
+         acOyeit1JrkB6G95A7/jtz4OdqjQaU/P+wp9OoF0ttq+luVZdqRfe84QlONJr1DmWqrP
+         xlIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUc8kUc7++jPGIL/jv1FVhN2+hFof2p2zkHxPHRqxmQqv3jkaaNPFYWZF/TL0/KVJWo81aMO/eYqkUV0vZiXaA/kw==@vger.kernel.org, AJvYcCXpqwgk0WyS3Gd5eJkMEqD6AN7quaXCC7zTJSLfuKoDAKmKDPVV7G+UDy3H2zmRG5wlDth3+8bn0wgPCos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMIbsLrMtBXAPWwyjMywzIosI9acLaqRXbEUWs8DPINgxOjquU
+	xDItGFz0B8EdCg6q/PSedj3xUNhJFSBim8e6AIuUDGBZYKpIG1LkRUF8
+X-Gm-Gg: ASbGnctFwgqxl2S+GtggX8GCEdhw4SRcxO1Tu5fNlbedHJi4CjpDYGljJpIFjjzrqI+
+	GzQSEl3RAUzbWESQWguPBKxlcPcdKXQUnAENilqoPrWGRWoQBQ0kWd0ZwXj4XEL9o/ZhLNZ39+G
+	Lqb2m66eOHphSqJBk/pvwObWnKt3YmrUDZ4jbUO9nMKZvbkRHzYBbt15lfrnKStSvbxUMAtYvsw
+	srkAvNHlQVotFDz/fCPHk9cIXsW9hyxVcdNKDvzGkAP4TFAqmgtSjt5tXF7qz9EvPyZhIvGqxYu
+	3sJQCmaGjWaMgq6jDl/j7q/MWcQkFEX1lS8Rt5ekhyDdVppaHOaSPlZ8W6+Y
+X-Google-Smtp-Source: AGHT+IEyE7HdVRfyChdQyAIYEvU7j+qS4oD7GW9tgHyuCTGXIQ3vI+csy6l0qNSfKih8u1T4PBULbg==
+X-Received: by 2002:a05:600c:1e12:b0:43b:ce36:7574 with SMTP id 5b1f17b1804b1-4538ee39aabmr119794565e9.11.1751287913250;
+        Mon, 30 Jun 2025 05:51:53 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a3a5599sm137326365e9.13.2025.06.30.05.51.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 05:51:52 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf drm_pmu: Fix spelling mistake "bufers" -> "buffers"
+Date: Mon, 30 Jun 2025 13:51:28 +0100
+Message-ID: <20250630125128.562895-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 8qTbJrlhJ3epZwh0_kVLqi8Mdh4JvVIH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA3NiBTYWx0ZWRfX1Xe1QzeuC8Rk vU6GsvC8m9uymHpX3GIej5UhAmcWRDSAh54+TCN8Tx3472uvPXsyERwB8SsS31l4IA9J5k7cUcR rvYjgoGBn9uWbgdU0g1n6G0mGfaJydV8/cKVqafhZ1OwBHmvI6N6FTRZ0/Uud73yLBbF3ZqRqoM
- GF5wma/WRSNthzkyk+JFfchdr3FWCZkdXtgrSS9aAfdKIhPL9IhX42bFBoFPLxVB8rE6itg7DVU spVcgeX7b+mQInVny97QmBBTs0jnlufvt0lGlCG1HqBbI3J9rsLwR53xl2JM4qWwJtphytf1GT9 FbdnWVsVasbV0Qw/ESIlEulAUG+5lrrVOWixIJ5naD6MFZlm4RLG76kk8UoMJhIv5sDqcSr6Lq2
- n3XHuZMXmcbBlWoHrUBUbLUx/641f/Bt9EiA2fXCTiLUkdScqTw/gm3GfT7HnFJnxSxSsUo3
-X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=686255ef cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=5pymjkY0oZ0wbNViOC4A:9
-X-Proofpoint-GUID: a_82e_qKMD0E4uUXRU0oWzRasEgyyaR4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300076
 
-commit 2d584688643fa ("perf test: Add header shell test")
-introduced a new test case for perf header. It fails on s390
-because call graph option -g is not supported on s390.
-Also the option --call-graph dwarf is only supported for
-the event cpu-clock.
+There are spelling mistakes in some literal strings. Fix these.
 
-Remove this option and the test succeeds.
-
-Output after:
- # ./perf test 76
- 76: perf header tests                           : Ok
-
-Fixes: 2d584688643fa ("perf test: Add header shell test")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- tools/perf/tests/shell/header.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/drm_pmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/header.sh
-index 813831cff0bd..412263de6ed7 100755
---- a/tools/perf/tests/shell/header.sh
-+++ b/tools/perf/tests/shell/header.sh
-@@ -51,7 +51,7 @@ check_header_output() {
- test_file() {
-   echo "Test perf header file"
- 
--  perf record -o "${perfdata}" -g -- perf test -w noploop
-+  perf record -o "${perfdata}" -- perf test -w noploop
-   perf report --header-only -I -i "${perfdata}" > "${script_output}"
-   check_header_output
- 
-@@ -61,7 +61,7 @@ test_file() {
- test_pipe() {
-   echo "Test perf header pipe"
- 
--  perf record -o - -g -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
-+  perf record -o - -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
-   check_header_output
- 
-   echo "Test perf header pipe [Done]"
+diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
+index 17385a10005b..988890f37ba7 100644
+--- a/tools/perf/util/drm_pmu.c
++++ b/tools/perf/util/drm_pmu.c
+@@ -210,17 +210,17 @@ static int read_drm_pmus_cb(void *args, int fdinfo_dir_fd, const char *fd_name)
+ 		}
+ 		if (starts_with(line, "drm-purgeable-")) {
+ 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
+-				  "Size of resident and purgeable memory bufers");
++				  "Size of resident and purgeable memory buffers");
+ 			continue;
+ 		}
+ 		if (starts_with(line, "drm-resident-")) {
+ 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
+-				  "Size of resident memory bufers");
++				  "Size of resident memory buffers");
+ 			continue;
+ 		}
+ 		if (starts_with(line, "drm-shared-")) {
+ 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
+-				  "Size of shared memory bufers");
++				  "Size of shared memory buffers");
+ 			continue;
+ 		}
+ 		if (starts_with(line, "drm-total-cycles-")) {
 -- 
 2.50.0
 
