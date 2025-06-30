@@ -1,119 +1,158 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE812701DF;
-	Mon, 30 Jun 2025 12:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2ED82749DF
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 13:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287916; cv=none; b=BkJueE9LG/XQLeWicpJtczXUNUPzcesKAV2s183ngxstmmU4GQVWgIcmdpi917ir9d3Sc8u6q5WHl43Mg837uRBUy02XJvlcGKiVN7fafWAQIfLxRvkY7wv9C28TAHD0B78DUucHcibALx80g3dcE+oYmwPg3JAYqKu05y+V0Do=
+	t=1751289981; cv=none; b=VjikOkTTYg74yWWsXSjOZVE1/OWT7vQ3FPVLPZJGM+mT8sRix+1oZwqEwKDEF3/7pufJsL+3y6oc85zLU/+Guz0AhLxwiT4PssHsxVNOJLdXFFBaclilYbQvzOlV39ikx+P7PdwXTp5q6JtJHgz41aU4jLSnJfuJ7YGUjCftRRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287916; c=relaxed/simple;
-	bh=1GZnzJ9gT2t7alHrMVtRMKxx2nwrgqs6HEQbRg1qdF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfDQYFznC5jvBmzw+2XmSXfT1Dr1pHjj/uJucxmonuqXMaav0nTwNbeeC4wmHtM3Lkk3VIGaRWMzW5TfJkCH4hANtZh2d9ZYnZAZ13wyB3z7C/pCXC7kAL3I3YOUuldnb+c6NV5XC/t3yr7BADT8xp2DdZ0usnYsDghXJvYGB44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0AxlP8t; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751289981; c=relaxed/simple;
+	bh=zAp7B/cd+BfVWsSs8Ec9IsdTrIVawQH9FTL4oc9BjqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MuSKrHY1s752GxbzMn35ZNn8g1yxgntrEO5luDCPMWbASV3+qw4Z8QPuGO6cKp6FE4XyOjWkmihmDFJ6Qts8vDhTKh61rh0HLJFEExiEijUZJAcxwwGfGVLCryYViHi6wfMjBh1y7PQjRHtXVcS2Hze8/px9/SQDPLUHs4z0/RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IWvLn2gD; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0AxlP8t"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d7b50815so14538385e9.2;
-        Mon, 30 Jun 2025 05:51:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IWvLn2gD"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so15504455e9.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 06:26:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751287913; x=1751892713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bGmFeyDMoBpTbQ19lKlxDLGZE93GOj2clGGn+vOYYyQ=;
-        b=f0AxlP8t7yn8JXZ7OZn3dsnq+CjcjBqSS1PENuXtaQXnElQRV25Zog2TAfqguqsVYl
-         0CV62KpRciG/Fkq4JNFnPz3uFqjwXmnIJ2w+qffRUkbp4ICGYbmWoAgT7HjDaimyySXh
-         0WBftJ5leow+rap06kBvPQ7kn8Vss+jPYYZxnNgXtCfCFze9Q0xaqpJcRlbAKA2o77h9
-         c5u0qX6mhl5BBWBw+2TUs/a2InEUhbpA8Vrg51wLoZ1OjEvkkT8c+wZXdw9etbSSJof5
-         Gljmtiou6L3YBGUmZUO66pbE9Y2yyDP2svonKMD31hlW0VpNWBmHyz5ISu/WVcCvjso3
-         Z1iw==
+        d=linaro.org; s=google; t=1751289977; x=1751894777; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1LR7G+ibD4rgaTIYMC1yKY14KOB6Bt7LBBCN91SJpVU=;
+        b=IWvLn2gDWyHkE3D/ROgoxvFRtww1jVHsPHUNJC3XVXBxCwVoQGLUodgWwd4harRMhC
+         ab9jaEGxyq0DiI1YChgZxOji1rsn9EgRw0/96LC6SfzicPRMY8i16S0Jfm9c/To+n2vF
+         dTe68YvR1m63LMWNgNcLl6qyI6KtUE8mFPBEcFa1VAhiMzlqOJpC0y9lDrllYWfp9FWK
+         JzPjVLd/Xnk5ADMntmkyrGTC71oEvPz4aINjXLKcEQj9sGNbtUnnBfu7ZYAQr8HbQtQQ
+         BNIdh9R32m4fInETJa6ZUdXkJh+uE726VH3PH+tc1qX2v0hjJT+Ql7HWG6CR6r0oGcCK
+         Qb9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751287913; x=1751892713;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bGmFeyDMoBpTbQ19lKlxDLGZE93GOj2clGGn+vOYYyQ=;
-        b=LDy/w+B4QLH9eGk80wzOH8Vk2N8NHp610brRdz5mPq2GK/lI+66mWwPBMAgKEm5IB+
-         H0qrWwI81RzMnuP/EAHGX2+zWsJGo88SHdO7NKsmvKOlcKyaYpCHBpzVOI9W5IHvu6iz
-         Pi/wtt/I3UGigG4D4nC/2BFv8CJLN++w9z3vSADI6ZTy+wjDqco8njLRpESKv3uoac5r
-         F4LObysBAotHq6HXJpqQq6sknX7PpjtiExe5elNhwq7lKhbNpg1m/VqbYgSfyBQymfzV
-         acOyeit1JrkB6G95A7/jtz4OdqjQaU/P+wp9OoF0ttq+luVZdqRfe84QlONJr1DmWqrP
-         xlIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUc8kUc7++jPGIL/jv1FVhN2+hFof2p2zkHxPHRqxmQqv3jkaaNPFYWZF/TL0/KVJWo81aMO/eYqkUV0vZiXaA/kw==@vger.kernel.org, AJvYcCXpqwgk0WyS3Gd5eJkMEqD6AN7quaXCC7zTJSLfuKoDAKmKDPVV7G+UDy3H2zmRG5wlDth3+8bn0wgPCos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMIbsLrMtBXAPWwyjMywzIosI9acLaqRXbEUWs8DPINgxOjquU
-	xDItGFz0B8EdCg6q/PSedj3xUNhJFSBim8e6AIuUDGBZYKpIG1LkRUF8
-X-Gm-Gg: ASbGnctFwgqxl2S+GtggX8GCEdhw4SRcxO1Tu5fNlbedHJi4CjpDYGljJpIFjjzrqI+
-	GzQSEl3RAUzbWESQWguPBKxlcPcdKXQUnAENilqoPrWGRWoQBQ0kWd0ZwXj4XEL9o/ZhLNZ39+G
-	Lqb2m66eOHphSqJBk/pvwObWnKt3YmrUDZ4jbUO9nMKZvbkRHzYBbt15lfrnKStSvbxUMAtYvsw
-	srkAvNHlQVotFDz/fCPHk9cIXsW9hyxVcdNKDvzGkAP4TFAqmgtSjt5tXF7qz9EvPyZhIvGqxYu
-	3sJQCmaGjWaMgq6jDl/j7q/MWcQkFEX1lS8Rt5ekhyDdVppaHOaSPlZ8W6+Y
-X-Google-Smtp-Source: AGHT+IEyE7HdVRfyChdQyAIYEvU7j+qS4oD7GW9tgHyuCTGXIQ3vI+csy6l0qNSfKih8u1T4PBULbg==
-X-Received: by 2002:a05:600c:1e12:b0:43b:ce36:7574 with SMTP id 5b1f17b1804b1-4538ee39aabmr119794565e9.11.1751287913250;
-        Mon, 30 Jun 2025 05:51:53 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a3a5599sm137326365e9.13.2025.06.30.05.51.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 05:51:52 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] perf drm_pmu: Fix spelling mistake "bufers" -> "buffers"
-Date: Mon, 30 Jun 2025 13:51:28 +0100
-Message-ID: <20250630125128.562895-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.50.0
+        d=1e100.net; s=20230601; t=1751289977; x=1751894777;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1LR7G+ibD4rgaTIYMC1yKY14KOB6Bt7LBBCN91SJpVU=;
+        b=R9nyLYG4IVZLmNLK2BzGb+mae6Kg/B97eMBdfgL6Jdl0N1Kt7GE/Ul1LgUjRe4oDro
+         7D/HUSb1qMyrIkGkEuWKAHO7CR5YC5EY/tC0ZUklf0g1Ys88gnvV0gTX778v7E0TzMoE
+         ZrRHAI/YERE+Yw0g772Ud1o84PZyYcnl0u5N2xDQEKW4f7aLngUaDux2uQZn9ekg+C1t
+         H7Dg3i6qvWk0ieGyDgnPnXJ64yh1vCGnQGd+tLJ8Se6aQmsB20A4A9cl5T+MtE3HjsyD
+         SWE/XpZeN7M5b9IXp7BSGzErg3a9FvSUL+iny6c7TexfFixQfnylbPXP5aeiSXGp+a4c
+         RHRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFHsVnWouPuiG12GixN7TA/8a3LG3S7G59U2WmLeM/h22lwytwYIiCOED/x6GjsFAilM0KpakuAqHgokqIqs57@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfScaeSexnB9jUIKO6qrBrH5yTD1dVvwAQSPhKPH/W1uZZrcra
+	5n6gX8wtZfeHaM4rsrbUA2u4pocw/8zPLPEjblj0GwJek6LmDdjFCedMA8kBc1xjzH8=
+X-Gm-Gg: ASbGncvDMj+p743I1XeWOGhrd1Bv19gHnuLgUrzkFArTVrx+v985+0t1Bh9LZAfr59r
+	tdnBPPJqtKtJwlAd1jCyUiNfjWy+tEUZCO3Fl8FzSO9VL8bs2758gnGYE/BD6OPtOD/BXRaiv2d
+	BZwqn+xmUkfFPkgKeHLONbAQ8N1pvWvTU9OJEjFE8gmmdkrf85eMvfxMgkiB+fQMpohU4//62cF
+	VUqhZm9WzcyHh3DlXqQVWrC/KjIOELmGM995V/Vgqm49jNtBjEF3DfjCV93pwmkwsOZvESlOZFq
+	SCG1UPHR22gunUSr4GrqR6oDMSbAK5ob9CWelmjhnbOGUisbVX3qNbvEd2jQU+qNYBQ=
+X-Google-Smtp-Source: AGHT+IHXyDPllAQfiCnHOhBWNnf3nw0YYqRMT7LLRAVDyR5oQC0yCAsnt4bSuJQio4g5UH+jS57AqA==
+X-Received: by 2002:a05:600c:3ba1:b0:450:d04e:22d6 with SMTP id 5b1f17b1804b1-4538ee565damr129693165e9.7.1751289976911;
+        Mon, 30 Jun 2025 06:26:16 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe592sm132598425e9.21.2025.06.30.06.26.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 06:26:16 -0700 (PDT)
+Message-ID: <5ecf74f6-08a0-474c-b0ff-32075af7ae03@linaro.org>
+Date: Mon, 30 Jun 2025 14:26:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/10] perf: arm_spe: Armv8.8 SPE features
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Marc Zyngier <maz@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com,
+ Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>
+References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There are spelling mistakes in some literal strings. Fix these.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/perf/util/drm_pmu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
-index 17385a10005b..988890f37ba7 100644
---- a/tools/perf/util/drm_pmu.c
-+++ b/tools/perf/util/drm_pmu.c
-@@ -210,17 +210,17 @@ static int read_drm_pmus_cb(void *args, int fdinfo_dir_fd, const char *fd_name)
- 		}
- 		if (starts_with(line, "drm-purgeable-")) {
- 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
--				  "Size of resident and purgeable memory bufers");
-+				  "Size of resident and purgeable memory buffers");
- 			continue;
- 		}
- 		if (starts_with(line, "drm-resident-")) {
- 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
--				  "Size of resident memory bufers");
-+				  "Size of resident memory buffers");
- 			continue;
- 		}
- 		if (starts_with(line, "drm-shared-")) {
- 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
--				  "Size of shared memory bufers");
-+				  "Size of shared memory buffers");
- 			continue;
- 		}
- 		if (starts_with(line, "drm-total-cycles-")) {
--- 
-2.50.0
+On 05/06/2025 11:48 am, James Clark wrote:
+> Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+> filtering, and SPE_FEAT_FDS data source filtering. The features are
+> independent can be applied separately:
+> 
+>    * Prerequisite sysreg changes - patches 1 - 2
+>    * FEAT_SPEv1p4 - patch 3
+>    * FEAT_SPE_EFT - patch 4
+>    * FEAT_SPE_FDS - patches 5 - 8
+>    * FEAT_SPE_FDS Perf tool changes - patches 9 - 11
+> 
+> The first two features will work with old Perfs but a Perf change to
+> parse the new config4 is required for the last feature.
+> 
+> To:
+> 
+> ---
+> Changes in v3:
+> - Use PMSIDR_EL1_FDS instead of 1 << PMSIDR_EL1_FDS_SHIFT
+> - Add VNCR offsets
+> - Link to v2: https://lore.kernel.org/r/20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org
+> 
+> Changes in v2:
+> - Fix detection of FEAT_SPE_FDS in el2_setup.h
+> - Pickup Marc Z's sysreg change instead which matches the json
+> - Restructure and expand docs changes
+> - Link to v1: https://lore.kernel.org/r/20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org
+> 
+> ---
+> James Clark (10):
+>        arm64: sysreg: Add new PMSFCR_EL1 fields and PMSDSFR_EL1 register
+>        perf: arm_spe: Support FEAT_SPEv1p4 filters
+>        perf: arm_spe: Add support for FEAT_SPE_EFT extended filtering
+>        arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+>        KVM: arm64: Add trap configs for PMSDSFR_EL1
+>        perf: Add perf_event_attr::config4
+>        perf: arm_spe: Add support for filtering on data source
+>        tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+>        perf tools: Add support for perf_event_attr::config4
+>        perf docs: arm-spe: Document new SPE filtering features
+> 
+>   Documentation/arch/arm64/booting.rst      |  11 ++++
+>   arch/arm64/include/asm/el2_setup.h        |  14 +++++
+>   arch/arm64/include/asm/sysreg.h           |   7 +++
+>   arch/arm64/include/asm/vncr_mapping.h     |   2 +
+>   arch/arm64/kvm/emulate-nested.c           |   1 +
+>   arch/arm64/kvm/sys_regs.c                 |   1 +
+>   arch/arm64/tools/sysreg                   |  13 +++-
+>   drivers/perf/arm_spe_pmu.c                | 100 +++++++++++++++++++++++++++++-
+>   include/uapi/linux/perf_event.h           |   2 +
+>   tools/include/uapi/linux/perf_event.h     |   2 +
+>   tools/perf/Documentation/perf-arm-spe.txt |  97 ++++++++++++++++++++++++++---
+>   tools/perf/tests/parse-events.c           |  14 ++++-
+>   tools/perf/util/parse-events.c            |  11 ++++
+>   tools/perf/util/parse-events.h            |   1 +
+>   tools/perf/util/parse-events.l            |   1 +
+>   tools/perf/util/pmu.c                     |   8 +++
+>   tools/perf/util/pmu.h                     |   1 +
+>   17 files changed, 273 insertions(+), 13 deletions(-)
+> ---
+> base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+> change-id: 20250312-james-perf-feat_spe_eft-66cdf4d8fe99
+> 
+> Best regards,
+
+Gentle ping, thanks
 
