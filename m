@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57D9291C15
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 16:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FDE292B4F
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301073; cv=none; b=kfRhaLFGdx8Mvk86d71wHufLCSe5mU62G4+mbXjQM7xj1TU/80K8HR5fUn4XZQFnBAJOSuXRmbTCNdhC3cVVcbgCJwzxQ89WwxhHe+1BCRf+80a2V/cNdixw8su/vBrHY3lZpNIQMO1SmodQAIFGBmvwF8XKj7jPD+P6YQMZAdg=
+	t=1751301075; cv=none; b=Fx8TshmAy6/q+6hjuBV1RsdekrrG0a2fDsj3068slqUBpEzFlMn2aEn1oltDSOPP9ZPWa0xfB3NsGUAAMXh2WwXop5rLfCj8go7Ox/rfN962U3+Z5XPsUIxvSOsEaqealpOsfu2GlqoYc/YfP6r+dEOJGIlsSjlxPMlOY4cJ2oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301073; c=relaxed/simple;
-	bh=G+PntLmkQeL6YlQVAXU0gLCrD1b+YmgkSyAvig5f7ag=;
+	s=arc-20240116; t=1751301075; c=relaxed/simple;
+	bh=Doa9cB8eDyI5Z1xrxS2AczpQfc902XifIn+r2jsrcp4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=sQwqkZkYtgoQSseHs0dBH9u8Womu1aJzjwslmC4ko2d21HnnGhQrR76HETCchCUUO/RnoZxOYK6wY/h0SzPY+qcaVdnJChl4w8nKDm4QJbK/FtE2/bAJkt1cOpGgIXpKjcZswzTJH9+a7k6nbRd85puxTFzW+F6Xqnzxi2oSHm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZAsstETp; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=tsyzvqxOwHpnFx3ZSO5NvCa6LL9kn8SlPJeJMNtYXN4J8UdRCFsd9kh6pDcnlcirVjT0v9xc7Q4RhmUWlZgPY/cyqhqj7sLuEq4LFdtrGJWn5gInG/W5oDlMpTpMlIoNuX7Rz+JtSrDCSGsuaRwib/bBgRor+wVn2acHCChJPEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CH13z90B; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZAsstETp"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74b29ee4f8bso1099654b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 09:31:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CH13z90B"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748e6457567so4485959b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 09:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751301069; x=1751905869; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751301072; x=1751905872; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UmmtF0gt2Y4G/5e/9/w73NlHK8AqgrSjA5q8XtXsB+k=;
-        b=ZAsstETp+FyE7a4RS4y82YBsVwlVaJ/QlF5uWkI3/MxAZJs9G7jcDwOMkhKkti2toP
-         xzlYkv71ljFdy/ytT4x0Hcw75WgtOWbFAEBa0UsvPWUCjgylxINy2p2C1VntVgSf0U4A
-         Sbfc8xQNzWqAgI0YcF2TaSKYCAQUjlQBhitScu7CGvTRc4CKN9WFxbO3rdsHw32j9dAb
-         lcx81bPIASWtTO618uQPONG/If4ZPITDwWvHqb6r+UidGc1yElJK6Rcpf7yfvt4olW0Q
-         sHK3PhvM7zp2bB0CCEv28ykHOSpkKX3v3mGyLmzOgjdxh3MgrtrVAkBnTxWDKPkxkpGF
-         qVAQ==
+        bh=snyXUejcURnc08xpT6+/Ar5yIZrrqidtJh57u5G4u0E=;
+        b=CH13z90BMNYUr+EoJzdwGphzvtXnZ1NBuAZscNfALxE1Mmq+WwkdT0odUpaOI6arEJ
+         pgQENJP7ocjSBzgoxOHbUfarpxpyakIrfmQ//nXcNOfivaCuClrONhrH+TLgzeHmMxQW
+         Yd0sNqdwwHWa30W6wMKJI1Q7uARXEuYKBwQaMQf+bdORCkv1FCLnJxVnQC8QzEw45GA5
+         VIHsY8xjgIVBSzqOboqY3LakgU2IERzLRlsEBw/zO1zJX2+AtvGwYi2qvum5+xZ3IGas
+         c6ku5xpCxDFtBQ7Qa+4SjY2Rt8KJwCfh4zM3fV4VrpubvrNBhM6lEHMfn4oaduI5axJX
+         fcZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301069; x=1751905869;
+        d=1e100.net; s=20230601; t=1751301072; x=1751905872;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=UmmtF0gt2Y4G/5e/9/w73NlHK8AqgrSjA5q8XtXsB+k=;
-        b=sn0JeCCEd0QYcJBMYnDJ9t/KBw+i71+YKxX4/zT/eBccDSwwicFp8zf8B3nSkceKoK
-         3YzVPoWrlaJbbcw0jGq9BasmL6z6mjQl0U2OG2Zyosa2e81gOJtOjRo8dzTR6rSwDIS+
-         6WFb8zfMjP5euYFehKV2NVfnGJ8eryamgjjeakJaHPnzpHVUS7NihpI0zJsyl0V3nD4+
-         qw3EaMC4A7ootruNCUGCpmgWWoH+YvONcYVS8wJY0EiGc5GYsUo1VHeDFKoEgOF1r8/r
-         CmydSVp2cx7PchG1SyisjjPK7E9o2bFw0PyOfgNDKIQGi6npjx2DhIJxSegPQRsBlImc
-         2n6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVp1vRc5tFicana/oaK12vycS4m4DBlwoX4t1fRRPJg5ZG573sGCC0aIkhKXPKRKaM4ozZ9j7X09pc5xwb2nGr7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV0dqKeNLUr2jsUodzMIMt/YQngF4HfYujV915clmPQ0cEN2RI
-	XJLKMUUmT1c1cw0K0Z6v8aANjTXcW4cKAT1yqdmi8l7XER6CqmcSq25MobXG1IJ6OpKqbpWojNh
-	DgoLzJpPJmw==
-X-Google-Smtp-Source: AGHT+IGfjri1mfwH2KP3rbOk1AIrBOwcybiUBcaWCG9lwdlutRE7gAZJS+IWwo8CQP1SXVm4ySCcV0nzqnJq
-X-Received: from pgbcq8.prod.google.com ([2002:a05:6a02:4088:b0:b2e:b47d:8dc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d8d:b0:220:1ca5:957c
- with SMTP id adf61e73a8af0-220a16c4113mr25456370637.31.1751301068991; Mon, 30
- Jun 2025 09:31:08 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:30:47 -0700
+        bh=snyXUejcURnc08xpT6+/Ar5yIZrrqidtJh57u5G4u0E=;
+        b=gK8S8d9cn9r6FqF8EJB7Kddfc7GGv9VvPbzvUSYSoWX6I13YjijSDpAvajVX/BFD0Y
+         Ga5Kbd2sa3FVgGRKUALPMzJF4EMcr+oEZh0CxaspRCRPY/9oyKK4xRwOHQrnLosx9mPv
+         HTEA53427bw552wfZQRp1Eig9INbXE3pc/Au5O+HEWvlOQWibH0Mt/fzY/0V3xSnOYUA
+         fM9D/vH5muHAlOART9qlOBQVgJ9SCpF4ezmL8J8neP/Emr4ZZZYBdP6SBaMwhqbRmmoi
+         +jyeom8eYNvF380l/jjAIRHio40A2qm+JthLHc+6ywzTuoY/xdOn7PwGMcQX08Ig64Bg
+         Thug==
+X-Forwarded-Encrypted: i=1; AJvYcCVNgR6U7yCthJrkk2BXY4B1Zi4YKzQMPH4hv92bnQGrSMItZGGLD2xVtzAAMuEO0G1VHUIw+Lx04uKxLULV5U5Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJL/feYErrbzfrQUsViMImklwp/4MxG/BhM9+5vKnOnIG1kVOO
+	wJSNSInw+9wUBGj9qOTJzO+YAia6O2loh9CzA2ngyFHUlm7x2dfsigZC9hBsO6fPsjGTsXGVpcx
+	uV9WTGQoVLQ==
+X-Google-Smtp-Source: AGHT+IFQNxKXrJQzVCW9oR3JUAP0kidJ+nKwqeIrS71VvovYT9ZZT1i5Bsg2RSFE1Ay121YKDuKZgXb6fpRo
+X-Received: from pgww9-n2.prod.google.com ([2002:a05:6a02:2c89:20b0:b31:c7e5:6665])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3942:b0:21f:4027:b9ed
+ with SMTP id adf61e73a8af0-222c9916bfcmr324459637.1.1751301072535; Mon, 30
+ Jun 2025 09:31:12 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:30:49 -0700
 In-Reply-To: <20250630163101.1920170-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250630163101.1920170-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250630163101.1920170-3-irogers@google.com>
-Subject: [PATCH v2 02/15] perf vendor events: Update AlderlakeN events
+Message-ID: <20250630163101.1920170-5-irogers@google.com>
+Subject: [PATCH v2 04/15] perf vendor events: Update CascadelakeX events
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,853 +76,113 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.29 to v1.31.
+Update events from v1.23 to v1.25.
 
-Bring in the event updates v1.31:
-https://github.com/intel/perfmon/commit/5a1269c8af70e32a548e74e1fda736189c3=
-98ddc
-https://github.com/intel/perfmon/commit/76c6d2c348c067e9ae1b616b35ee982da6d=
-873b4
+Bring in the event updates v1.25:
+https://github.com/intel/perfmon/commit/86f146e15626b0fd3b032cab4538cafaaf2=
+d0635
+https://github.com/intel/perfmon/commit/fef03ffc333ae44d1e9d695b4e67e5bbb44=
+29729
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/alderlaken/cache.json | 52 +++++++------------
- .../arch/x86/alderlaken/floating-point.json   |  1 -
- .../pmu-events/arch/x86/alderlaken/other.json |  1 -
- .../arch/x86/alderlaken/pipeline.json         | 42 ++-------------
- .../arch/x86/alderlaken/virtual-memory.json   |  3 --
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 6 files changed, 25 insertions(+), 76 deletions(-)
+ .../pmu-events/arch/x86/cascadelakex/floating-point.json    | 6 +++---
+ tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json   | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv                  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/p=
-erf/pmu-events/arch/x86/alderlaken/cache.json
-index bf691aee1ef4..669f4979b651 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-@@ -118,7 +118,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.DRAM_HIT",
--        "PublicDescription": "Counts the number of load uops retired that =
-hit in DRAM. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x80"
-     },
-@@ -128,7 +127,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.HITM",
--        "PublicDescription": "Counts the number of load uops retired that =
-hit in the L3 cache, in which a snoop was required and modified data was fo=
-rwarded from another core or module. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.jso=
+n b/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
+index 1c709983b65f..3ef6f00f1135 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
+@@ -111,7 +111,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xCF",
+         "EventName": "FP_ARITH_INST_RETIRED2.128BIT_PACKED_BF16",
+-        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 512-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the ZMM based VDPBF16PS instruction.  Each count represents 64 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
++        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 128-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the XMM based VDPBF16PS instruction. Each count represents 16 computation =
+operations. This event is only supported on products formerly named Cooper =
+Lake and is not supported on products formerly named Cascade Lake.",
+         "SampleAfterValue": "2000003",
          "UMask": "0x20"
      },
-@@ -138,7 +136,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
--        "PublicDescription": "Counts the number of load uops retired that =
-hit in the L1 data cache. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x1"
-     },
-@@ -148,7 +145,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
--        "PublicDescription": "Counts the number of load uops retired that =
-miss in the L1 data cache. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x8"
-     },
-@@ -158,7 +154,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
--        "PublicDescription": "Counts the number of load uops retired that =
-hit in the L2 cache. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x2"
-     },
-@@ -168,7 +163,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
--        "PublicDescription": "Counts the number of load uops retired that =
-miss in the L2 cache. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x10"
-     },
-@@ -178,7 +172,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
--        "PublicDescription": "Counts the number of load uops retired that =
-hit in the L3 cache. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
-     },
-@@ -188,7 +181,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd2",
-         "EventName": "MEM_LOAD_UOPS_RETIRED_MISC.HIT_E_F",
--        "PublicDescription": "Counts the number of load uops retired that =
-hit in the L3 cache, in which a snoop was required, and non-modified data w=
-as forwarded. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
+@@ -120,7 +120,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xCF",
+         "EventName": "FP_ARITH_INST_RETIRED2.256BIT_PACKED_BF16",
+-        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 128-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the XMM based VDPBF16PS instruction. Each count represents 16 computation =
+operations. This event is only supported on products formerly named Cooper =
+Lake and is not supported on products formerly named Cascade Lake.",
++        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 256-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the YMM based VDPBF16PS instruction.  Each count represents 32 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
+         "SampleAfterValue": "2000003",
          "UMask": "0x40"
      },
-@@ -198,7 +190,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd2",
-         "EventName": "MEM_LOAD_UOPS_RETIRED_MISC.L3_MISS",
--        "PublicDescription": "Counts the number of load uops retired that =
-miss in the L3 cache. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x20"
-     },
-@@ -240,7 +231,7 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
--        "PublicDescription": "Counts the total number of load uops retired=
-. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the total number of load uops retired=
-.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x81"
-     },
-@@ -250,103 +241,103 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
--        "PublicDescription": "Counts the total number of store uops retire=
-d. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the total number of store uops retire=
-d.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x82"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 128 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled."=
-,
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x80",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 128 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 128 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 16 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x10",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 16 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 16 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 256 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled."=
-,
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x100",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 256 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 256 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 32 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x20",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 32 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 32 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 4 cycles as define=
-d in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x4",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 4 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
-f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
-Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 4 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
-f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
-Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 512 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled."=
-,
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x200",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 512 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 512 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 64 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x40",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 64 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 64 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-     {
-         "BriefDescription": "Counts the number of tagged loads with an ins=
-truction latency that exceeds or equals the threshold of 8 cycles as define=
-d in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.",
--        "Counter": "0,1",
-+        "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x8",
--        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 8 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
-f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
-Source fields accordingly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 8 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
-f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
-Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-     },
-@@ -356,7 +347,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOCK_LOADS",
--        "PublicDescription": "Counts the number of load uops retired that =
-performed one or more locks. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x21"
-     },
-@@ -366,7 +356,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
--        "PublicDescription": "Counts the number of retired split load uops=
-. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x41"
-     },
-@@ -376,7 +365,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.STLB_MISS",
--        "PublicDescription": "Counts the total number of load and store uo=
-ps retired that missed in the second level TLB. Available PDIST counters: 0=
-",
-         "SampleAfterValue": "200003",
-         "UMask": "0x13"
-     },
-@@ -386,7 +374,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.STLB_MISS_LOADS",
--        "PublicDescription": "Counts the number of load ops retired that m=
-iss in the second Level TLB. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x11"
-     },
-@@ -396,7 +383,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.STLB_MISS_STORES",
--        "PublicDescription": "Counts the number of store ops retired that =
-miss in the second level TLB. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x12"
-     },
-@@ -406,7 +392,7 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
--        "PublicDescription": "Counts the number of stores uops retired. Co=
-unts with or without PEBS enabled. If PEBS is enabled and a PEBS record is =
-generated, will populate PEBS Latency and PEBS Data Source fields according=
-ly. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the number of stores uops retired. Co=
-unts with or without PEBS enabled. If PEBS is enabled and a PEBS record is =
-generated, will populate PEBS Latency and PEBS Data Source fields according=
-ly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x6"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json =
-b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-index f44da31ff1f1..ed963fcb6485 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-@@ -29,7 +29,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.FPDIV",
--        "PublicDescription": "Counts the number of floating point divide u=
-ops retired (x87 and SSE, including x87 sqrt). Available PDIST counters: 0"=
-,
+@@ -129,7 +129,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xCF",
+         "EventName": "FP_ARITH_INST_RETIRED2.512BIT_PACKED_BF16",
+-        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 256-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the YMM based VDPBF16PS instruction.  Each count represents 32 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
++        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 512-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the ZMM based VDPBF16PS instruction.  Each count represents 64 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
          "SampleAfterValue": "2000003",
-         "UMask": "0x8"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/other.json b/tools/p=
-erf/pmu-events/arch/x86/alderlaken/other.json
-index 8c2b5a284f2a..144d7b06f240 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-@@ -5,7 +5,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xe4",
-         "EventName": "LBR_INSERTS.ANY",
--        "PublicDescription": "This event is deprecated. [This event is ali=
-as to MISC_RETIRED.LBR_INSERTS] Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-index 9616bf0e9f1f..1dd61baec1a9 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-@@ -54,7 +54,7 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
--        "PublicDescription": "Counts the total number of instructions in w=
-hich the instruction pointer (IP) of the processor is resteered due to a br=
-anch instruction and the branch instruction successfully retires.  All bran=
-ch type instructions are accounted for. Available PDIST counters: 0",
-+        "PublicDescription": "Counts the total number of instructions in w=
-hich the instruction pointer (IP) of the processor is resteered due to a br=
-anch instruction and the branch instruction successfully retires.  All bran=
-ch type instructions are accounted for.",
-         "SampleAfterValue": "200003"
-     },
-     {
-@@ -63,7 +63,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.CALL",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_INST_RETIRED.NEAR_CALL Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf9"
-     },
-@@ -72,7 +71,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.COND",
--        "PublicDescription": "Counts the number of retired JCC (Jump on Co=
-nditional Code) branch instructions retired, includes both taken and not ta=
-ken branches. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -81,7 +79,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.COND_TAKEN",
--        "PublicDescription": "Counts the number of taken JCC (Jump on Cond=
-itional Code) branch instructions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -90,7 +87,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.FAR_BRANCH",
--        "PublicDescription": "Counts the number of far branch instructions=
- retired, includes far jump, far call and return, and interrupt call and re=
-turn. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xbf"
-     },
-@@ -99,7 +95,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.INDIRECT",
--        "PublicDescription": "Counts the number of near indirect JMP and n=
-ear indirect CALL branch instructions retired. Available PDIST counters: 0"=
-,
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -108,7 +103,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.INDIRECT_CALL",
--        "PublicDescription": "Counts the number of near indirect CALL bran=
-ch instructions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -118,7 +112,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.IND_CALL",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_INST_RETIRED.INDIRECT_CALL Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -128,7 +121,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.JCC",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_INST_RETIRED.COND Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -137,7 +129,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NEAR_CALL",
--        "PublicDescription": "Counts the number of near CALL branch instru=
-ctions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf9"
-     },
-@@ -146,7 +137,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NEAR_RETURN",
--        "PublicDescription": "Counts the number of near RET branch instruc=
-tions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf7"
-     },
-@@ -155,7 +145,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NEAR_TAKEN",
--        "PublicDescription": "Counts the number of near taken branch instr=
-uctions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xc0"
-     },
-@@ -165,7 +154,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NON_RETURN_IND",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_INST_RETIRED.INDIRECT Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -174,7 +162,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.REL_CALL",
--        "PublicDescription": "Counts the number of near relative CALL bran=
-ch instructions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfd"
-     },
-@@ -184,7 +171,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.RETURN",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_INST_RETIRED.NEAR_RETURN Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf7"
-     },
-@@ -194,7 +180,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.TAKEN_JCC",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_INST_RETIRED.COND_TAKEN Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -203,7 +188,7 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
--        "PublicDescription": "Counts the total number of mispredicted bran=
-ch instructions retired.  All branch type instructions are accounted for.  =
-Prediction of the branch target address enables the processor to begin exec=
-uting instructions before the non-speculative execution path is known. The =
-branch prediction unit (BPU) predicts the target address based on the instr=
-uction pointer (IP) of the branch and on the execution path through which e=
-xecution reached this IP.    A branch misprediction occurs when the predict=
-ion is wrong, and results in discarding all instructions executed in the sp=
-eculative path and re-fetching from the correct path. Available PDIST count=
-ers: 0",
-+        "PublicDescription": "Counts the total number of mispredicted bran=
-ch instructions retired.  All branch type instructions are accounted for.  =
-Prediction of the branch target address enables the processor to begin exec=
-uting instructions before the non-speculative execution path is known. The =
-branch prediction unit (BPU) predicts the target address based on the instr=
-uction pointer (IP) of the branch and on the execution path through which e=
-xecution reached this IP.    A branch misprediction occurs when the predict=
-ion is wrong, and results in discarding all instructions executed in the sp=
-eculative path and re-fetching from the correct path.",
-         "SampleAfterValue": "200003"
-     },
-     {
-@@ -211,7 +196,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.COND",
--        "PublicDescription": "Counts the number of mispredicted JCC (Jump =
-on Conditional Code) branch instructions retired. Available PDIST counters:=
- 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -220,7 +204,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.COND_TAKEN",
--        "PublicDescription": "Counts the number of mispredicted taken JCC =
-(Jump on Conditional Code) branch instructions retired. Available PDIST cou=
-nters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -229,7 +212,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.INDIRECT",
--        "PublicDescription": "Counts the number of mispredicted near indir=
-ect JMP and near indirect CALL branch instructions retired. Available PDIST=
- counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -238,7 +220,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.INDIRECT_CALL",
--        "PublicDescription": "Counts the number of mispredicted near indir=
-ect CALL branch instructions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -248,7 +229,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.IND_CALL",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_MISP_RETIRED.INDIRECT_CALL Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -258,7 +238,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.JCC",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_MISP_RETIRED.COND Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -267,7 +246,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
--        "PublicDescription": "Counts the number of mispredicted near taken=
- branch instructions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
          "UMask": "0x80"
      },
-@@ -277,7 +255,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.NON_RETURN_IND",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_MISP_RETIRED.INDIRECT Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -286,7 +263,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.RETURN",
--        "PublicDescription": "Counts the number of mispredicted near RET b=
-ranch instructions retired. Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf7"
-     },
-@@ -296,7 +272,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.TAKEN_JCC",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- BR_MISP_RETIRED.COND_TAKEN Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -371,7 +346,7 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc0",
-         "EventName": "INST_RETIRED.ANY_P",
--        "PublicDescription": "Counts the total number of instructions that=
- retired. For instructions that consist of multiple uops, this event counts=
- the retirement of the last uop of the instruction. This event continues co=
-unting during hardware interrupts, traps, and inside interrupt handlers. Th=
-is event uses a programmable general purpose performance counter. Available=
- PDIST counters: 0",
-+        "PublicDescription": "Counts the total number of instructions that=
- retired. For instructions that consist of multiple uops, this event counts=
- the retirement of the last uop of the instruction. This event continues co=
-unting during hardware interrupts, traps, and inside interrupt handlers. Th=
-is event uses a programmable general purpose performance counter.",
-         "SampleAfterValue": "2000003"
-     },
-     {
-@@ -380,7 +355,6 @@
-         "Deprecated": "1",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.4K_ALIAS",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- LD_BLOCKS.ADDRESS_ALIAS Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x4"
-     },
-@@ -389,7 +363,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.ADDRESS_ALIAS",
--        "PublicDescription": "Counts the number of retired loads that are =
-blocked because it initially appears to be store forward blocked, but subse=
-quently is shown not to be blocked based on 4K alias check. Available PDIST=
- counters: 0",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x4"
-     },
-@@ -398,7 +371,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.DATA_UNKNOWN",
--        "PublicDescription": "Counts the number of retired loads that are =
-blocked because its address exactly matches an older store whose data is no=
-t ready. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json b/to=
+ols/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
+index 3dd296ab4d78..9a1349527b66 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
+@@ -542,7 +542,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x4C",
+         "EventName": "LOAD_HIT_PRE.SW_PF",
+-        "PublicDescription": "Counts all not software-prefetch load dispat=
+ches that hit the fill buffer (FB) allocated for the software prefetch. It =
+can also be incremented by some lock instructions. So it should only be use=
+d with profiling so that the locks can be excluded by ASM (Assembly File) i=
+nspection of the nearby instructions.",
++        "PublicDescription": "Counts all software-prefetch load dispatches=
+ that hit the fill buffer (FB) allocated for the software prefetch. It can =
+also be incremented by some lock instructions. So it should only be used wi=
+th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
+ction of the nearby instructions.",
+         "SampleAfterValue": "100003",
          "UMask": "0x1"
      },
-@@ -448,7 +420,7 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xe4",
-         "EventName": "MISC_RETIRED.LBR_INSERTS",
--        "PublicDescription": "Counts the number of LBR entries recorded. R=
-equires LBRs to be enabled in IA32_LBR_CTL. This event is PDIR on GP0 and N=
-PEBS on all other GPs [This event is alias to LBR_INSERTS.ANY] Available PD=
-IST counters: 0",
-+        "PublicDescription": "Counts the number of LBR entries recorded. R=
-equires LBRs to be enabled in IA32_LBR_CTL. This event is PDIR on GP0 and N=
-PEBS on all other GPs [This event is alias to LBR_INSERTS.ANY]",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-@@ -651,7 +623,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "TOPDOWN_RETIRING.ALL",
--        "PublicDescription": "Counts the total number of consumed retireme=
-nt slots. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003"
-     },
-     {
-@@ -667,7 +638,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.ALL",
--        "PublicDescription": "Counts the total number of uops retired. Ava=
-ilable PDIST counters: 0",
-         "SampleAfterValue": "2000003"
-     },
-     {
-@@ -675,7 +645,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.IDIV",
--        "PublicDescription": "Counts the number of integer divide uops ret=
-ired. Available PDIST counters: 0",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x10"
-     },
-@@ -684,7 +653,7 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.MS",
--        "PublicDescription": "Counts the number of uops that are from comp=
-lex flows issued by the Microcode Sequencer (MS). This includes uops from f=
-lows due to complex instructions, faults, assists, and inserted flows. Avai=
-lable PDIST counters: 0",
-+        "PublicDescription": "Counts the number of uops that are from comp=
-lex flows issued by the Microcode Sequencer (MS). This includes uops from f=
-lows due to complex instructions, faults, assists, and inserted flows.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-@@ -693,7 +662,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.X87",
--        "PublicDescription": "Counts the number of x87 uops retired, inclu=
-des those in MS flows. Available PDIST counters: 0",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json =
-b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-index c348046696bf..d9c737a17df0 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-@@ -57,7 +57,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.DTLB_MISS",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- MEM_UOPS_RETIRED.STLB_MISS Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x13"
-     },
-@@ -68,7 +67,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_LOADS",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- MEM_UOPS_RETIRED.STLB_MISS_LOADS Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x11"
-     },
-@@ -79,7 +77,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_STORES",
--        "PublicDescription": "This event is deprecated. Refer to new event=
- MEM_UOPS_RETIRED.STLB_MISS_STORES Available PDIST counters: 0",
-         "SampleAfterValue": "200003",
-         "UMask": "0x12"
-     }
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 35c5a4088356..8a2ee64cad7e 100644
+index b2db2bb658ce..9a60e95a2e15 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,6 +1,6 @@
- Family-model,Version,Filename,EventType
- GenuineIntel-6-(97|9A|B7|BA|BF),v1.31,alderlake,core
--GenuineIntel-6-BE,v1.29,alderlaken,core
-+GenuineIntel-6-BE,v1.31,alderlaken,core
- GenuineIntel-6-C[56],v1.08,arrowlake,core
- GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+@@ -6,7 +6,7 @@ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
  GenuineIntel-6-(3D|47),v30,broadwell,core
+ GenuineIntel-6-56,v12,broadwellde,core
+ GenuineIntel-6-4F,v23,broadwellx,core
+-GenuineIntel-6-55-[56789ABCDEF],v1.23,cascadelakex,core
++GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
+ GenuineIntel-6-DD,v1.00,clearwaterforest,core
+ GenuineIntel-6-9[6C],v1.05,elkhartlake,core
+ GenuineIntel-6-CF,v1.11,emeraldrapids,core
 --=20
 2.50.0.727.gbf7dc18ff4-goog
 
