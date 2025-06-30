@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDC524679A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5CD25C83E;
 	Mon, 30 Jun 2025 23:32:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751326368; cv=none; b=hse6MfQ8lI0JA0UHLK9wsbPTTx9pxzH6weqKqp906a3yjOwpJgeA2nrHKQHaUdhtdBE5MMlwKpVkJZ26XNcne1XDhIbra38wG0TRz/ZF06SmHfxEX7Jn12Nfp2bmdl+E1xjD8AC1SmtRCU13nxVhHEpNmltCawgAluNF0Zlm6Gg=
+	t=1751326369; cv=none; b=cu+gGitjf17N0g1RzfeuUnhfH/pjwzuXSddzzrLHxQUotx+gE2IfJmN5MJ4h0iIb48W57yK0MeWBdZktJrq63fYuQr072MByzxIYR1zjqh70eXkimWiaGy0TSxBk4qx3MNLMUz8XUdNQ56gYcMg9Wvl3IovbArd1tE02MxkerN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751326368; c=relaxed/simple;
-	bh=lgOTBc1LxhNRMQxAdr/9SkXdeqrLxAdshXpFVX/J6M8=;
+	s=arc-20240116; t=1751326369; c=relaxed/simple;
+	bh=RGK7vE2Fxbx0dulRvAkC8eL5IDq9hmzIlTICBDJ1CkI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rlifeIT0f8QkR1LzhM4GoFePWVWwXGviR32Xfd5wMzaFk3aYcNVujUY9u2sP+vOqsUYO7dYMXMog8uQ8WT8zLxN8lNqZdF2F20m9Hk9HjKd0PmsQ7WKaB2bMxc5eGR6acJLm3v9nlGM+A8MGJvmgzolND+hMybmuDA/mr6iYmSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sY0SmJ0W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=A7evmjNFelXUNKCcPU6AD2wK196qWqhC/Wyf+40fr8L2QAf5GvZbfIVgvC0Z3/vcBomgd2SmOk08e3KKAeBp0/Py1tJPTXkHwG+rHe+Db4pWaTXumnk6sGLbPLlqkXIun2YR/xiRtIDy0v4CSnn/Ery30GdJOC6Nd/68dmX4pP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ow6KYz0m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sY0SmJ0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D99C4C4CEEF;
-	Mon, 30 Jun 2025 23:32:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ow6KYz0m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AAEAC4CEF3;
+	Mon, 30 Jun 2025 23:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751326368;
-	bh=lgOTBc1LxhNRMQxAdr/9SkXdeqrLxAdshXpFVX/J6M8=;
+	bh=RGK7vE2Fxbx0dulRvAkC8eL5IDq9hmzIlTICBDJ1CkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sY0SmJ0WFkV6pu2A3g4YoOfq7mqtwkXLCz7FSTFINDfxh0ow/Ow4PIvSrwZ0/jteX
-	 F3gSAKbQYyFvZcxqs8PJrprFy01XjoCeg9KCZhv2XqrtJ4+LyhgOku91QwruP5G6i/
-	 IIvsFMv5hi+z0kbx97EuPhKDlCPquuPpv1rg7uE5ulUjUzj5vYeatXhgDyDNLItF1f
-	 SXSILP9HFRV0RGFfAPGVGQrbm5ILfnOZZQ0Xn1SO2KgQ4AgPDfRf3CslMGcgs4V2jP
-	 DXcqLgCUu/gXpKANgkfc47nkHmlr7PNC5yJeM0csXfff0VWpJJGCKVBOwMKkqYKhEP
-	 HEyCg42sbF+DA==
+	b=ow6KYz0m/OBD+xr6mLLbuIz0WV8TGGhogWQ1wWy9vY+W4gkuA6zbGS1rcf8QBUscg
+	 6zs//rzPflDKJy8vnQAcA8juXg4knmqD/gWBr5tk3l01YJHpYkc49ZUzj0VDzqJ7WE
+	 Dt0ZriYDnT3j3ycbvUHgs6Tb7gvFe6QbYYYMJm3yvFXmMNmT4HqJ1IDafCUWZyl9yV
+	 tr08JY5nL0S4taxZ/OAEcAI16sQbaC2GAMKKWZT1zDSomdmZDW7jrPYUrLxFuZJO2j
+	 nx4FSa0xMV0wHEKLjwMyC7rkg7iYyft452t8/rVJwC4kHscgfRK3xm87q+IHqZXKYJ
+	 5KAhb4yYI5vRg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/3] perf test: Add libsubcmd help tests
-Date: Mon, 30 Jun 2025 16:32:45 -0700
-Message-ID: <20250630233246.1063977-2-namhyung@kernel.org>
+Subject: [PATCH 3/3] perf tools: Fix use-after-free in help_unknown_cmd()
+Date: Mon, 30 Jun 2025 16:32:46 -0700
+Message-ID: <20250630233246.1063977-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To: <20250630233246.1063977-1-namhyung@kernel.org>
 References: <20250630233246.1063977-1-namhyung@kernel.org>
@@ -50,175 +50,90 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a set of tests for subcmd routines.  Currently it fails the last one
-since there's a bug.  It'll be fixed by the next commit.
+Currently perf aborts when it finds an invalid command.  I guess it
+depends on the environment as I have some custom commands in the path.
+
+  $ perf bad-command
+  perf: 'bad-command' is not a perf-command. See 'perf --help'.
+  Aborted (core dumped)
+
+It's because the exclude_cmds() in libsubcmd has a use-after-free when
+it removes some entries.  After copying one to another entry, it keeps
+the pointer in the both position.  And the next copy operation will free
+the later one but it's the same entry in the previous one.
+
+For example, let's say cmds = { A, B, C, D, E } and excludes = { B, E }.
+
+  ci  cj  ei   cmds-name  excludes
+  -----------+--------------------
+   0   0   0 |     A         B       :    cmp < 0, ci == cj
+   1   1   0 |     B         B       :    cmp == 0
+   2   1   1 |     C         E       :    cmp < 0, ci != cj
+
+At this point, it frees cmds->names[1] and cmds->names[1] is assigned to
+cmds->names[2].
+
+   3   2   1 |     D         E       :    cmp < 0, ci != cj
+
+Now it frees cmds->names[2] but it's the same as cmds->names[1].  So
+accessing cmds->names[1] will be invalid.
+
+This makes the subcmd tests succeed.
 
   $ perf test subcmd
    69: libsubcmd help tests                                            :
    69.1: Load subcmd names                                             : Ok
    69.2: Uniquify subcmd names                                         : Ok
-   69.3: Exclude duplicate subcmd names                                : FAILED!
+   69.3: Exclude duplicate subcmd names                                : Ok
 
+Fixes: 657a3efee43a ("libsubcmd: Avoid SEGV/use-after-free when commands aren't excluded")
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/builtin-test.c |   1 +
- tools/perf/tests/subcmd-help.c  | 109 ++++++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |   1 +
- 4 files changed, 112 insertions(+)
- create mode 100644 tools/perf/tests/subcmd-help.c
+ tools/lib/subcmd/help.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 2181f5a92148b0b9..13a81154ec1e4cd2 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -69,6 +69,7 @@ perf-test-y += symbols.o
- perf-test-y += util.o
- perf-test-y += hwmon_pmu.o
- perf-test-y += tool_pmu.o
-+perf-test-y += subcmd-help.o
+diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
+index 8561b0f01a247690..9ef569492560efd7 100644
+--- a/tools/lib/subcmd/help.c
++++ b/tools/lib/subcmd/help.c
+@@ -9,6 +9,7 @@
+ #include <sys/stat.h>
+ #include <unistd.h>
+ #include <dirent.h>
++#include <assert.h>
+ #include "subcmd-util.h"
+ #include "help.h"
+ #include "exec-cmd.h"
+@@ -82,10 +83,11 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
+ 				ci++;
+ 				cj++;
+ 			} else {
+-				zfree(&cmds->names[cj]);
+-				cmds->names[cj++] = cmds->names[ci++];
++				cmds->names[cj++] = cmds->names[ci];
++				cmds->names[ci++] = NULL;
+ 			}
+ 		} else if (cmp == 0) {
++			zfree(&cmds->names[ci]);
+ 			ci++;
+ 			ei++;
+ 		} else if (cmp > 0) {
+@@ -94,12 +96,12 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
+ 	}
+ 	if (ci != cj) {
+ 		while (ci < cmds->cnt) {
+-			zfree(&cmds->names[cj]);
+-			cmds->names[cj++] = cmds->names[ci++];
++			cmds->names[cj++] = cmds->names[ci];
++			cmds->names[ci++] = NULL;
+ 		}
+ 	}
+ 	for (ci = cj; ci < cmds->cnt; ci++)
+-		zfree(&cmds->names[ci]);
++		assert(cmds->names[ci] == NULL);
+ 	cmds->cnt = cj;
+ }
  
- ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
- perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index dfaff4185eb05a1a..2da9b69864da53c2 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -139,6 +139,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__event_groups,
- 	&suite__symbols,
- 	&suite__util,
-+	&suite__subcmd_help,
- 	NULL,
- };
- 
-diff --git a/tools/perf/tests/subcmd-help.c b/tools/perf/tests/subcmd-help.c
-new file mode 100644
-index 0000000000000000..d31259340ae302af
---- /dev/null
-+++ b/tools/perf/tests/subcmd-help.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "tests.h"
-+#include <stdio.h>
-+#include <subcmd/help.h>
-+#include "debug.h"
-+
-+static int test__load_cmdnames(struct test_suite *test __maybe_unused,
-+			       int subtest __maybe_unused)
-+{
-+	struct cmdnames cmds = {};
-+
-+	add_cmdname(&cmds, "aaa", 3);
-+	add_cmdname(&cmds, "foo", 3);
-+	add_cmdname(&cmds, "xyz", 3);
-+
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds, "aaa") == 1);
-+	TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds, "bar") == 0);
-+	TEST_ASSERT_VAL("case sensitive", is_in_cmdlist(&cmds, "XYZ") == 0);
-+
-+	clean_cmdnames(&cmds);
-+	return TEST_OK;
-+}
-+
-+static int test__uniq_cmdnames(struct test_suite *test __maybe_unused,
-+			       int subtest __maybe_unused)
-+{
-+	struct cmdnames cmds = {};
-+
-+	/* uniq() assumes it's sorted */
-+	add_cmdname(&cmds, "aaa", 3);
-+	add_cmdname(&cmds, "aaa", 3);
-+	add_cmdname(&cmds, "bbb", 3);
-+
-+	TEST_ASSERT_VAL("invalid original size", cmds.cnt == 3);
-+	/* uniquify command names (to remove second 'aaa') */
-+	uniq(&cmds);
-+	TEST_ASSERT_VAL("invalid final size", cmds.cnt == 2);
-+
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds, "aaa") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds, "bbb") == 1);
-+	TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds, "ccc") == 0);
-+
-+	clean_cmdnames(&cmds);
-+	return TEST_OK;
-+}
-+
-+static int test__exclude_cmdnames(struct test_suite *test __maybe_unused,
-+				  int subtest __maybe_unused)
-+{
-+	struct cmdnames cmds1 = {};
-+	struct cmdnames cmds2 = {};
-+
-+	add_cmdname(&cmds1, "aaa", 3);
-+	add_cmdname(&cmds1, "bbb", 3);
-+	add_cmdname(&cmds1, "ccc", 3);
-+	add_cmdname(&cmds1, "ddd", 3);
-+	add_cmdname(&cmds1, "eee", 3);
-+	add_cmdname(&cmds1, "fff", 3);
-+	add_cmdname(&cmds1, "ggg", 3);
-+	add_cmdname(&cmds1, "hhh", 3);
-+	add_cmdname(&cmds1, "iii", 3);
-+	add_cmdname(&cmds1, "jjj", 3);
-+
-+	add_cmdname(&cmds2, "bbb", 3);
-+	add_cmdname(&cmds2, "eee", 3);
-+	add_cmdname(&cmds2, "jjj", 3);
-+
-+	TEST_ASSERT_VAL("invalid original size", cmds1.cnt == 10);
-+	TEST_ASSERT_VAL("invalid original size", cmds2.cnt == 3);
-+
-+	/* remove duplicate command names in cmds1 */
-+	exclude_cmds(&cmds1, &cmds2);
-+
-+	TEST_ASSERT_VAL("invalid excluded size", cmds1.cnt == 7);
-+	TEST_ASSERT_VAL("invalid excluded size", cmds2.cnt == 3);
-+
-+	/* excluded commands should not belong to cmds1 */
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "aaa") == 1);
-+	TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "bbb") == 0);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "ccc") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "ddd") == 1);
-+	TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "eee") == 0);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "fff") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "ggg") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "hhh") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "iii") == 1);
-+	TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "jjj") == 0);
-+
-+	/* they should be only in cmds2 */
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds2, "bbb") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds2, "eee") == 1);
-+	TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds2, "jjj") == 1);
-+
-+	clean_cmdnames(&cmds1);
-+	clean_cmdnames(&cmds2);
-+	return TEST_OK;
-+}
-+
-+static struct test_case tests__subcmd_help[] = {
-+	TEST_CASE("Load subcmd names", load_cmdnames),
-+	TEST_CASE("Uniquify subcmd names", uniq_cmdnames),
-+	TEST_CASE("Exclude duplicate subcmd names", exclude_cmdnames),
-+	{	.name = NULL, }
-+};
-+
-+struct test_suite suite__subcmd_help = {
-+	.desc = "libsubcmd help tests",
-+	.test_cases = tests__subcmd_help,
-+};
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 4c128a9594413b32..13cabf85185ed2d3 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -177,6 +177,7 @@ DECLARE_SUITE(sigtrap);
- DECLARE_SUITE(event_groups);
- DECLARE_SUITE(symbols);
- DECLARE_SUITE(util);
-+DECLARE_SUITE(subcmd_help);
- 
- /*
-  * PowerPC and S390 do not support creation of instruction breakpoints using the
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
