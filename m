@@ -1,164 +1,140 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DC6EEC0
-	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 09:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262EDFC1D;
+	Mon, 30 Jun 2025 09:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274847; cv=none; b=vDfpSqLzSg4OxpeoBhsZGu7h+T3kmWiwseisHIDtku/ktzUhgP2qHhLr5UpDyNUyxXqa88yCuSszGFANVwuh+SzmmLemHiCJCWikwDTt5wQr6Bci3wkD8BKXQ8rbooKpj/+KeoC9gNQLnUDQxrMisRymElyt+QDyANKgKELFIe0=
+	t=1751274995; cv=none; b=UB0Y4iTKN0nFI0+lnqJHTXD+8ML2ED0EpBFf1S265fbopwc9JADzR5hFM7v1SXJ/JtSK+aLSKUqk4sSKdzGHkyrD7UTcEmOv2TN9YLTAxL77w4OTvBGivaZm55DS+MVecTeCdvMds32Cui2w3iwhgglKW9SYh+F2UM7vG8k4ifE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274847; c=relaxed/simple;
-	bh=pG69dsn1qT1G2CK2vAd+AMlEBsBzpdXBa3/6S8PX44c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=gwa1r4kzGGprIpMJx1UUvkKXVC5ELXBsxhah0DAXrFhdYRQ1xxg3IClLevO2qQpnsmG1dpvkd3M5VeoSgGUVyXN883Dyylmcz6Dbp0nah7jP97+e2uGd+JZDhvLv+d35dKzcxo0BDJvlpOiZwMjeTrwlP29kiC5MDYtzKhBrZZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oEhRNyBM; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751274995; c=relaxed/simple;
+	bh=Iwck2mG1lJ5lx8e17hXJ+xo4ZCdQXb8iwMS3mtR5Btc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKvzavNQGxtF1wA6jOxdLWs6goE6jr92mvjKZsgprTdbXpRbBbJvjyfYPcD13Y6iu1U7+QNRDGmo6U8JOpF3mql8dL8+VUdaY8kdtbJtHAeX36+rIDLsPkux33FNODJHSh9SWK017jgeT6w2PZnil77lUOiY3gQVI6jPVXGJm4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kdzla65V; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oEhRNyBM"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so10362375e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 02:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751274844; x=1751879644; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=k725XEyUWw1sdx9utxFrAUAXo1FfhnAIN7734FL4f6E=;
-        b=oEhRNyBMdHJi1h2azFeIJNeoSwT88PP/nR0Q3d3iWSZcqw43j+riUZAsoCts8TVxJS
-         WsCeI7FhZkQ6Uosd2LYq3P0C3U/8aL326+4cT8uoXwbLcakfQTsWCmV63U0mJQDWvlsw
-         7C9CcTUaQ4ZBzcT4UIOZawbUHj4rtQ5AAuQPk4yI5gBVVvuyhGb6JkK6kf/WyWigz0Zo
-         WA8ImFsGds7O2XUvzPZe71jWgwC8ALwD1vZ9Ut6mdYHf7TW7RgBWVCLS9Py2w4AAWHVl
-         yrNFtdhYDHkGD3b1nvdfkoqTpg0MU6HS9J+FxDfvRz4b6aCGo09n46i9Ce3mKcxhjbmE
-         RQ9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751274844; x=1751879644;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k725XEyUWw1sdx9utxFrAUAXo1FfhnAIN7734FL4f6E=;
-        b=qVbDHA8n0JURRqNAztZ3c0NA1KGVgNUnhvMJd54DJV0yhfe3PpaBHcpDtKa11jBYgy
-         59vjUUXXWdBeKt1zc7cuOxOMbFpBwK2OJU8zWIvhFpCynWoK0nKF/gR0whHFD+OaysW3
-         c7kClJA0fmKcUZmvR8pVeV8nAWR5yTQeBiCP0sXKJSsAtlHLUD8lyZe/PhqyKM06Xn/h
-         5tVTX5DUgf3F+W+jhwJdmgBEENZpDQnCCULQDr+BV1QEMdY4ud4P3QGYv91loR+WHz9E
-         EMGjGrS5BPUjpKWPmSwRx17qEBwsO3u8YQdvvRusQndwuAvrIMyglab9xalZI0C7fQN8
-         76zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6E5lMCrMlKDe1G/Yp/FzlNqDFSG0sPoU0oPmH3z72BToYpBB0J2gIvVhEn6CXBgoDrhfyWLh9WeA1j/Ld7Sik@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnaZxYAlQa7qHWl4M0EXZWFw1ar/ZzuOoVbvJHtDwtV+1qdYH/
-	LHvHbO9tSl2Lkm3tO0VBV4o+N9tUXGBo9NOiqawSKXSD5Yi2adTJmf0Aounejlwhd3g=
-X-Gm-Gg: ASbGncsGWxrEkoZaXNvwNW8e56f8jH2KBxcmuAk5Dw4eLXuShbioCV9EdopOZ7T3mjT
-	+4OjceOpgChpN9tM7s+Dl+ArUk5kfma1OLw9V9jjhLd0/53U/jXtGW+XC/eyxBsLlC0rvPwCEoD
-	kNRvsv2+t2k533GPDRpswJCAY2/m1jw8s/0ipFT9IW2EP9VM2BBvIml3OQuNpGzSKUrFlgoPGoF
-	HgpPWyJ74wL0L2wXrWm74mlD+x0nG20ytOTKlymlKiVjdIUT6UsuZLabq4evuYHeL6UFMxWjKM7
-	JHuXfiz48Np/jF71PNfflQrMilQrvvtLLpEb+n0o0uM7wNv4fuUtp4220qROBa9/ko0=
-X-Google-Smtp-Source: AGHT+IFYoFBPKKngs821UJ8n0tFqXZPviDTIJ6NnZlA9GTMUmKwKlnhVaLOZ3Yl40O1NkZSxJ8b8eg==
-X-Received: by 2002:a05:600c:6295:b0:442:d9fb:d9f1 with SMTP id 5b1f17b1804b1-453a1708a45mr23146695e9.4.1751274844110;
-        Mon, 30 Jun 2025 02:14:04 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52a35sm9986321f8f.57.2025.06.30.02.14.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 02:14:03 -0700 (PDT)
-Message-ID: <f3524574-03a4-491b-98d1-8a384132ec5b@linaro.org>
-Date: Mon, 30 Jun 2025 10:14:02 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kdzla65V"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6IQud014585;
+	Mon, 30 Jun 2025 09:16:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=rh2Tduwrlnki1FQ5vsOskOQbINxd9zCyPRvM5+9Ga
+	PE=; b=kdzla65V3Ror2Ys2/xxk9JDa81wgLJZ5N8ZS2i1mCTpNC4glAL3OnUOkW
+	EU3pn63r8qwu760lzOqCgz6OyM1eRD5rO9tCKWPhem1MJj4sbvhDz4u2ptL/13/d
+	HGw58qh+2ZgKlQ8WajtbxCj+Cs/+weZp44EvogwCRCNDFb4n88uqY1+lfR072XQW
+	RppiZv6/RcHrlRXVMI51dmfKCK5XnFW03SvPWVcjVRVJJwbuHdTt2NN5XKVVigvT
+	Z0DgtODpgsSmX5KwzEnKaO+Em5aPi9UnnRVQs1Lg0ZFBOPPNk/OnK7JDwQiZwHsk
+	vZEz+FjYxHx2sT4IupApyruD2MwbA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830gak2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:16:31 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55U9BS0Q016831;
+	Mon, 30 Jun 2025 09:16:31 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830gajn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:16:31 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8mfie021117;
+	Mon, 30 Jun 2025 09:16:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqu5bdx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:16:25 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55U9GL7R20447600
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 09:16:21 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 66BD62004B;
+	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2EF9C20043;
+	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: perf header test fails on s390
+Date: Mon, 30 Jun 2025 11:16:13 +0200
+Message-ID: <20250630091613.3061664-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf test: Add basic callgraph test to record testing
-To: Thomas Richter <tmricht@linux.ibm.com>, Ian Rogers <irogers@google.com>
-References: <20250628015553.1270748-1-irogers@google.com>
- <898927c3-e85f-4a9a-9374-6fdb49236410@linux.ibm.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Dapeng Mi
- <dapeng1.mi@linux.intel.com>, Chun-Tse Shao <ctshao@google.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <898927c3-e85f-4a9a-9374-6fdb49236410@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8qTbJrlhJ3epZwh0_kVLqi8Mdh4JvVIH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA3NiBTYWx0ZWRfX1Xe1QzeuC8Rk vU6GsvC8m9uymHpX3GIej5UhAmcWRDSAh54+TCN8Tx3472uvPXsyERwB8SsS31l4IA9J5k7cUcR rvYjgoGBn9uWbgdU0g1n6G0mGfaJydV8/cKVqafhZ1OwBHmvI6N6FTRZ0/Uud73yLBbF3ZqRqoM
+ GF5wma/WRSNthzkyk+JFfchdr3FWCZkdXtgrSS9aAfdKIhPL9IhX42bFBoFPLxVB8rE6itg7DVU spVcgeX7b+mQInVny97QmBBTs0jnlufvt0lGlCG1HqBbI3J9rsLwR53xl2JM4qWwJtphytf1GT9 FbdnWVsVasbV0Qw/ESIlEulAUG+5lrrVOWixIJ5naD6MFZlm4RLG76kk8UoMJhIv5sDqcSr6Lq2
+ n3XHuZMXmcbBlWoHrUBUbLUx/641f/Bt9EiA2fXCTiLUkdScqTw/gm3GfT7HnFJnxSxSsUo3
+X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=686255ef cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=5pymjkY0oZ0wbNViOC4A:9
+X-Proofpoint-GUID: a_82e_qKMD0E4uUXRU0oWzRasEgyyaR4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300076
 
+commit 2d584688643fa ("perf test: Add header shell test")
+introduced a new test case for perf header. It fails on s390
+because call graph option -g is not supported on s390.
+Also the option --call-graph dwarf is only supported for
+the event cpu-clock.
 
+Remove this option and the test succeeds.
 
-On 30/06/2025 9:01 am, Thomas Richter wrote:
-> On 6/28/25 03:55, Ian Rogers wrote:
->> Give some basic perf record callgraph coverage.
->>
->> Signed-off-by: Ian Rogers <irogers@google.com>
->> ---
->> v2: Pick up s390's needed "--call-graph dwarf" as spotted by James
->>      Clark <james.clark@linaro.org>.
->> ---
->>   tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 2022a4f739be..b1ad24fb3b33 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
->>   . "${shelldir}"/lib/perf_has_symbol.sh
->>   
->>   testsym="test_loop"
->> +testsym2="brstack"
->>   
->>   skip_test_missing_symbol ${testsym}
->> +skip_test_missing_symbol ${testsym2}
->>   
->>   err=0
->>   perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->> @@ -359,6 +361,33 @@ test_precise_max() {
->>     fi
->>   }
->>   
->> +test_callgraph() {
->> +  echo "Callgraph test"
->> +
->> +  case $(uname -m)
->> +  in s390x)
->> +       cmd_flags="--call-graph dwarf -e cpu-clock";;
->> +     *)
->> +       cmd_flags="-g";;
->> +  esac
->> +
->> +  if ! perf record -o "${perfdata}" $cmd_flags perf test -w brstack
->> +  then
->> +    echo "Callgraph test [Failed missing output]"
->> +    err=1
->> +    return
->> +  fi
->> +
->> +  if ! perf report -i "${perfdata}" 2>&1 | grep "${testsym2}"
->> +  then
->> +    echo "Callgraph test [Failed missing symbol]"
->> +    err=1
->> +    return
->> +  fi
->> +
->> +  echo "Callgraph test [Success]"
->> +}
->> +
->>   # raise the limit of file descriptors to minimum
->>   if [[ $default_fd_limit -lt $min_fd_limit ]]; then
->>          ulimit -Sn $min_fd_limit
->> @@ -374,6 +403,7 @@ test_uid
->>   test_leader_sampling
->>   test_topdown_leader_sampling
->>   test_precise_max
->> +test_callgraph
->>   
->>   # restore the default value
->>   ulimit -Sn $default_fd_limit
-> 
-> Works ok for s390
-> 
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Output after:
+ # ./perf test 76
+ 76: perf header tests                           : Ok
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Fixes: 2d584688643fa ("perf test: Add header shell test")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/header.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/header.sh
+index 813831cff0bd..412263de6ed7 100755
+--- a/tools/perf/tests/shell/header.sh
++++ b/tools/perf/tests/shell/header.sh
+@@ -51,7 +51,7 @@ check_header_output() {
+ test_file() {
+   echo "Test perf header file"
+ 
+-  perf record -o "${perfdata}" -g -- perf test -w noploop
++  perf record -o "${perfdata}" -- perf test -w noploop
+   perf report --header-only -I -i "${perfdata}" > "${script_output}"
+   check_header_output
+ 
+@@ -61,7 +61,7 @@ test_file() {
+ test_pipe() {
+   echo "Test perf header pipe"
+ 
+-  perf record -o - -g -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
++  perf record -o - -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
+   check_header_output
+ 
+   echo "Test perf header pipe [Done]"
+-- 
+2.50.0
 
