@@ -1,116 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C98929117A;
-	Mon, 30 Jun 2025 16:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D01228B7FE
+	for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 16:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751299786; cv=none; b=p+vbk4H0es7VFKAbRslYotkpYCiIzTXBjBnWQC2EFNKOGg+3TKsWoTbF70uCUaoTa7vwA0Vq/UvcsryzNC9X6zHl32D4IQxTMpUdvaHPGWKdytoG2XuLDRCHO2L2r18zIHDisngTC5qsuOx5RnO7gR/DV1kI26oaxVbfWa9HGls=
+	t=1751301067; cv=none; b=TvouHT20WjnvqEfzfQGjF5UM/dbICUNE+n/MXEqNiaaaHjdSOdQw4B0KyYbAr787qDNiGnr4depG0nGcZP53AkSXksg4dQiQOWDCs9M6lutRvh54JfsfxgqR/Mhj2KgESmBL6OfSD3Me4MfIFrg/6PI1hcpZZDBnGVq61nbeBKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751299786; c=relaxed/simple;
-	bh=s43vrdBkB//7/xBOt9UWghrfxrjsGXZHPE7NijbiwcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oe9tTozTUs3os4OjgfA1dScwUWDeGYuoShv/fvG/5DBhqNagML3p0p8GzKDW2tRG4ukr8i8tUuarxVlBhAEp3OxFVpNwvBUWWuRwew+13KBT7UwRXf3GOvNxoOCeIXrI5DCy4zq1qYwa3AWPDczi0Ed+TYkJugLjNmk1fOSshC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/+OnS8d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751301067; c=relaxed/simple;
+	bh=Hq1Dv1HriCptfHOHAaNT6VtDRHYYXLwcgxWifCR+7A8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=oXVGSPVGJnpjqzG0IFO6xAFibQ2JwukSs7a2pLrUc8trVe1SgQNGtJ8npPKhrpcEUO+TyMC4B+9wwsm/3/6zVk1htboCRxNHlzk7rj43Uf2QLaXdr88N/r5txhDUdS9VsPOrSamV/6Q/+cqYIdXGQSp9na4BaYMLRztZOZSXgFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aI2ztRa6; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/+OnS8d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1124FC4CEE3;
-	Mon, 30 Jun 2025 16:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751299786;
-	bh=s43vrdBkB//7/xBOt9UWghrfxrjsGXZHPE7NijbiwcQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B/+OnS8dtPRKXQrplTbUDQmYHFCFp06TE+Zaq5dWdEQeCdRzIyvlBTYzBY44kfy9X
-	 Gt0pWgS4K2fYJpZ5T8aQuxdqafsrINv4/HTxaZ/Try75t8K5cWi4f8cXCOvyZgHhkt
-	 EQAOwb7OJ28rc6utillI3Vs5dopoI/wL8R/9oNkTqGh0HYlYpBzmc50dLevdIHTVaO
-	 D/meXKCWm1GcLxH6HHRyt6QQnTunsatY2WbQ3+ZB2EDq08OK/u3C3lVuPARAmbTF+R
-	 uTEfK9Ciaq5nx7qnxOO5SP8RHovBcKuD/W1F3g5daHj0YF5y1kQJFX84ykNGOb/XKt
-	 E1zt48XIX8kDg==
-Date: Mon, 30 Jun 2025 09:09:41 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	acme@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
-Subject: Re: [PATCH] perf test: perf header test fails on s390
-Message-ID: <aGK2xQNQOd1WoDVk@google.com>
-References: <20250630091613.3061664-1-tmricht@linux.ibm.com>
- <CAP-5=fWGiitgromQRTxEsU3cY99gFAU6WPLnmiS7-Q8vQNGbYw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aI2ztRa6"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748b4d5c045so2053823b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jun 2025 09:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751301065; x=1751905865; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=17awNFfnXITyyfjVcSQBaJULwqYYxdzG2WXdRxCdX24=;
+        b=aI2ztRa6kxzNzFuawaks6B3yJlGrTo4Kds6TFrBQjYgyJKahBrwKal21QgjhfmxJ2Z
+         7sy2fanDf6pJTLCIuMZKL7cqWDOdRHLcxudA750A4vjRfQmt2qqERwfjkCQjp/GU5cdV
+         AgQkybAoURSKxFS1OqouiSrIGdLWq+acBn1O7DZ5hYO4dWp3b/BvmFy3XULuoB7YegkV
+         TXzDwsC9C3v0hLBrx+HOGdUo1gZ29h04dHaq3kJbi7T/FNfIRJKBuYBrxMJwnWtLft48
+         aoNvfJracnhNRqHXirZ/DZWxyoyhm3bxlanbNgxJSZm5++y+LosA3mKe7mmJwew+44k2
+         q4xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751301065; x=1751905865;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=17awNFfnXITyyfjVcSQBaJULwqYYxdzG2WXdRxCdX24=;
+        b=eu/aSIkwVLicEoGTNsloR2X7JQJYH49A6ZvF7dJJXRP6m3VN20O8I4SYslrcFglXxR
+         xMzdRliOK9VdjCkjHz5CwHEvvn8dHXg9vdRkE8BYXN7kpx2eLIVcRO4/e2J51IwNm2Vx
+         WytPLsHQOYFy0zj52JgdA81t09jfpGLuRU8/xMx9RN8a+9YRJh6KYhsfa/W5+d5oRviV
+         ImQsc8iu59EbjUgWmtOudBUKcdDEgCfGUPFdd2VIjqWkkI4DQeDiEIn6MH0IniVidAdg
+         vES3BYbqhwvxO18xygVcsINwbDM/csk58LAf0974t32zaClO0jrNvNe2bFh+Aet+Dm+h
+         XrHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVyEKRp8iVARN1NEoQjiQ4JG8oz2fsdQMUc+i0UMd45pO2CKdPyYQG5yLpQ07bB2ylGqCu+Affl2lfM5+tOu/u@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsMH9qsiIHHeALAlNr/yLSa/trMF5YBD2zjS4jPotreDNK+tiG
+	oJy1zLppRzwXyRtg9zYB/c1lZlal4WPG6XlwdeLLYHRZ/GidN73242aRjhzw2SFJKAX37baA8M1
+	RQHdeM652XA==
+X-Google-Smtp-Source: AGHT+IHjzWnxD2XD3L1Jf342C7O1SzUgh0rDb6JTrBpiRFpWlpQLSDGIIpqqDYnrMqq6egnjPFnAhADSn+UL
+X-Received: from pfbgi3.prod.google.com ([2002:a05:6a00:63c3:b0:746:2897:67e3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9283:b0:736:3979:369e
+ with SMTP id d2e1a72fcca58-74af6ee09d2mr18468951b3a.9.1751301065373; Mon, 30
+ Jun 2025 09:31:05 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:30:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWGiitgromQRTxEsU3cY99gFAU6WPLnmiS7-Q8vQNGbYw@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250630163101.1920170-1-irogers@google.com>
+Subject: [PATCH v2 00/15] perf vendor events: Update Intel events
+From: Ian Rogers <irogers@google.com>
+To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 30, 2025 at 08:42:01AM -0700, Ian Rogers wrote:
-> On Mon, Jun 30, 2025 at 2:16 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> >
-> > commit 2d584688643fa ("perf test: Add header shell test")
-> > introduced a new test case for perf header. It fails on s390
-> > because call graph option -g is not supported on s390.
-> > Also the option --call-graph dwarf is only supported for
-> > the event cpu-clock.
-> >
-> > Remove this option and the test succeeds.
-> >
-> > Output after:
-> >  # ./perf test 76
-> >  76: perf header tests                           : Ok
-> >
-> > Fixes: 2d584688643fa ("perf test: Add header shell test")
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> 
-> Thanks Thomas! Given the s390 restriction to require dwarf, should we
-> switch the default "-g" meaning on s390 to mean use dwarf? James Clark
-> proposed this previously. It doesn't affect the change here so:
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Update:
+ - ADL/ADLN v1.29 -> 1.31
+ - ARL 1.08 -> 1.09
+ - CLX 1.23 -> 1.25
+ - EMR 1.11 -> 1.14
+ - GRR 1.07 -> 1.09
+ - GNR 1.08 -> 1.10
+ - ICX 1.27 -> 1.28
+ - LNL 1.11 -> 1.14
+ - MTL 1.13 -> 1.14
+ - PTL new v1.00
+ - SPR 1.25 -> 1.28
+ - SRF 1.09 -> 1.11
+ - SKX 1.36 -> 1.37
+ - TGL 1.17 -> 1.18
 
-Unrelated but I found this test is failing on my machine.
+Updates from:
+https://github.com/intel/perfmon
+with:
+https://github.com/intel/perfmon/pull/312
+Running the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-  $ ./perf test -v header
-  --- start ---
-  test child forked, pid 42799
-  Test perf header file
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.182 MB /tmp/__perf_test_header.perf.data.vvFUf (4114 samples) ]
-  Test perf header file [Done]
-  Test perf header pipe
-  Failed to find expect hostname in output
-  Failed to find expect os release in output
-  Failed to find expect arch in output
-  Failed to find expect cpuid in output
-  Failed to find expect nrcpus in output
-  Failed to find expect event in output
-  Failed to find expect cmdline in output
-  Failed to find expect perf version in output
-  Failed to find expect sibling (cores|dies|threads) in output
-  Failed to find expect sibling threads in output
-  Failed to find expect total memory in output
-  Test perf header pipe [Done]
-  ---- end(-1) ----
-   83: perf header tests                                               : FAILED!
-  
-The pipe mode doesn't have the headers.
+v2: Rebase, no conflicts.
 
-  $ ./perf record -o- -g -- ./perf test -w noploop | ./perf report -i- -I --header-only
-  # ========
-  # captured on    : Mon Jun 30 09:02:09 2025
-  # header version : 1
-  # data offset    : 0
-  # data size      : 0
-  # feat offset    : 0
-  # ========
-  #
+Ian Rogers (15):
+  perf vendor events: Update Alderlake events
+  perf vendor events: Update AlderlakeN events
+  perf vendor events: Update Arrowlake events
+  perf vendor events: Update CascadelakeX events
+  perf vendor events: Update EmeraldRapids events
+  perf vendor events: Update GrandRidge events
+  perf vendor events: Update GraniteRapids events
+  perf vendor events: Update IcelakeX events
+  perf vendor events: Update LunarLake events
+  perf vendor events: Update MeteorLake events
+  perf vendor events: Add PantherLake events
+  perf vendor events: Update SapphireRapids events
+  perf vendor events: Update SierraForest events
+  perf vendor events: Update SkylakeX events
+  perf vendor events: Update TigerLake events
 
-Thanks,
-Namhyung
+ .../pmu-events/arch/x86/alderlake/cache.json  |  56 ++-
+ .../arch/x86/alderlake/floating-point.json    |   1 -
+ .../pmu-events/arch/x86/alderlake/other.json  |   1 -
+ .../arch/x86/alderlake/pipeline.json          |  44 +--
+ .../arch/x86/alderlake/virtual-memory.json    |   3 -
+ .../pmu-events/arch/x86/alderlaken/cache.json |  52 +--
+ .../arch/x86/alderlaken/floating-point.json   |   1 -
+ .../pmu-events/arch/x86/alderlaken/other.json |   1 -
+ .../arch/x86/alderlaken/pipeline.json         |  42 +--
+ .../arch/x86/alderlaken/virtual-memory.json   |   3 -
+ .../pmu-events/arch/x86/arrowlake/cache.json  |  13 +-
+ .../arch/x86/arrowlake/frontend.json          | 135 ++++++++
+ .../arch/x86/cascadelakex/floating-point.json |   6 +-
+ .../arch/x86/cascadelakex/pipeline.json       |   2 +-
+ .../arch/x86/emeraldrapids/pipeline.json      |   2 +-
+ .../arch/x86/emeraldrapids/uncore-io.json     |  12 +
+ .../arch/x86/emeraldrapids/uncore-memory.json |  20 ++
+ .../arch/x86/grandridge/grr-metrics.json      |  30 +-
+ .../x86/grandridge/uncore-interconnect.json   |  10 +
+ .../arch/x86/grandridge/uncore-io.json        |  12 +
+ .../arch/x86/graniterapids/cache.json         |   9 +
+ .../arch/x86/graniterapids/counter.json       |  10 +-
+ .../arch/x86/graniterapids/gnr-metrics.json   |  36 ++
+ .../arch/x86/graniterapids/pipeline.json      |   2 +-
+ .../graniterapids/uncore-interconnect.json    |  19 -
+ .../arch/x86/graniterapids/uncore-io.json     |  27 +-
+ .../arch/x86/icelakex/pipeline.json           |   2 +-
+ .../arch/x86/icelakex/uncore-cache.json       |   2 -
+ .../pmu-events/arch/x86/lunarlake/cache.json  |  11 +
+ .../arch/x86/lunarlake/pipeline.json          |  18 +-
+ .../arch/x86/lunarlake/virtual-memory.json    |  18 -
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  29 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |   2 +-
+ .../arch/x86/meteorlake/frontend.json         |  72 ++++
+ .../arch/x86/meteorlake/pipeline.json         |   2 +-
+ .../arch/x86/pantherlake/cache.json           | 278 +++++++++++++++
+ .../arch/x86/pantherlake/counter.json         |  12 +
+ .../arch/x86/pantherlake/frontend.json        |  30 ++
+ .../arch/x86/pantherlake/memory.json          | 215 ++++++++++++
+ .../arch/x86/pantherlake/pipeline.json        | 325 ++++++++++++++++++
+ .../arch/x86/pantherlake/virtual-memory.json  |  62 ++++
+ .../arch/x86/sapphirerapids/pipeline.json     |   2 +-
+ .../arch/x86/sapphirerapids/uncore-io.json    |  12 +
+ .../x86/sapphirerapids/uncore-memory.json     |  20 ++
+ .../arch/x86/sierraforest/frontend.json       |  64 ++++
+ .../arch/x86/sierraforest/pipeline.json       |   8 +
+ .../arch/x86/sierraforest/srf-metrics.json    |  48 +++
+ .../arch/x86/sierraforest/uncore-cache.json   |   6 +-
+ .../x86/sierraforest/uncore-interconnect.json |  53 ++-
+ .../arch/x86/sierraforest/uncore-io.json      |  27 +-
+ .../arch/x86/skylakex/pipeline.json           |   2 +-
+ .../arch/x86/tigerlake/pipeline.json          |   2 +-
+ 52 files changed, 1623 insertions(+), 248 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/counter.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/virtual-memory.json
+
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
