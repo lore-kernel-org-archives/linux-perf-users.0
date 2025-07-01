@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59061FC0A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9A927FD49;
 	Tue,  1 Jul 2025 17:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751392514; cv=none; b=OQSuPNpisEuop47Xte6+P22njzFWOOvWjj/ZJ6pd9e0vbsPXSTrHHbNbUbVB5jLuq2q50IYBK0pGfXEwLAfDF2SdMaakW4asBRSTumFvwpBRDLnNsxabPFMNMPxh2K/8vptOV5QX7g8mQrTn0SbJtNBSCKtMsdZtxyurEY2KpQI=
+	t=1751392514; cv=none; b=uXWvm/2gWnNQnAdaEoN6zxJ9ThDiPArwVMUT/VaxIHF6yO+du61XJ1WLP8QaLk3iGWtrU1jfUrGu9wgSSjLYkwKFZH9pukQkTyuBOTO9zPyZkv8ygYJUg66mMeOdkQaCWkmyHwi0vLf7DMZR39uZ+F/X6p80KxcTOlQoDUcRqQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751392514; c=relaxed/simple;
-	bh=mmJjoTZnRRpWNZphf6pjaNzOYayd41EX93Q6Qq8RYqU=;
+	bh=TCbCy9L3A07ZCr9iKwHm92TG1ST+qQiZGm1XbthtBss=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GcYGCpibV8L+q+XlFVh6dts1EZbCDhaUyGumVcL9PlfEXrXnkk4CeGyb48zrly8C21x/uBrRgsgE7LmupjzGUXcdaWMb27UaAqJXvTAA/2giLYXmsIb3VXzKYIdqFQ2kghIe3MPS56y/2eqNlkX3IPtEPSNKWBvxYikX8+td4Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5tfX3sA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PsM6j35oIYCse3JZoOBDouEBrzKJks8Oz6qOWxxxomGW/aapJ1xNjmV6Wqs27iJu61wUBLJwzFCYmezWNymG5ggESu6ovolM4zhIRwdNtHN3VmfUOGLVSss1rCNvXKOzh5OBWU3hQx3Ow4ay23zOBju/PRraFGwFtluAD2poQgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qalaK46T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5tfX3sA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB85C4CEEB;
-	Tue,  1 Jul 2025 17:55:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qalaK46T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B70BC4CEF1;
+	Tue,  1 Jul 2025 17:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751392513;
-	bh=mmJjoTZnRRpWNZphf6pjaNzOYayd41EX93Q6Qq8RYqU=;
+	s=k20201202; t=1751392514;
+	bh=TCbCy9L3A07ZCr9iKwHm92TG1ST+qQiZGm1XbthtBss=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=j5tfX3sA3w9FTZlxot+ZE9FyfwB/J2/OlscAYwBtf8gXmysP3IjrUwHibMmOApwJs
-	 PBuOayHEeGXFbORxbbZQ8tlpzH09RynMef9jf0ess32IbjE7BwWLewweZNeUFgRngC
-	 nE6MsMTKbeHJc06Arl7noRxzog9dAIcqHMIzwUZIVP8yMdS282L/TJXbnQ0LeLBp5i
-	 9eescFs2hjOzsR/bnobYEM/400Z/6uEA/OU6vxS49WL+ORy2+qzhkIrn19Rz//E9/1
-	 3NyuoC0kxTDXFnmfDOZlwJMB8dO8gaXlJ5TidVLbgoFeOILfGKUuCYl1LFEyTC3n8Z
-	 vEK8onslal8MA==
+	b=qalaK46TA70WN0i8heveEXSMsEulSmDFGZ6VMOtwadJBQb/arGIrp48kazmyBvTDW
+	 m4YRe5j6Yv76y9UyhahsqkTv7AKgO3EOREh4J0/62bb+TYpgch49xgAAcqt3I0jsWe
+	 qM+ZQEzvQVflL5SxgSO3AlKIqioh0RVtj+PdNetkXEcjul1PrI3rhe7QEDylRYkLM0
+	 2+dfvR2Hs9EZkrFiWJ6R0VK+RRVjpvLwx2k0mMZ//A8ny/1w5EnAWZPwsMfXRxpl9n
+	 J7YTOKHNWWKJvxryjx7iddyR7tlQOz2KeQtKJJZ7IsrEHHJK/h+sBEO3NFV7J/VhFK
+	 jQ6KQFmF7RHSg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, acme@kernel.org, irogers@google.com, 
- Thomas Richter <tmricht@linux.ibm.com>
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
- hca@linux.ibm.com, japo@linux.ibm.com
-In-Reply-To: <20250630091613.3061664-1-tmricht@linux.ibm.com>
-References: <20250630091613.3061664-1-tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf test: perf header test fails on s390
-Message-Id: <175139251355.738306.5236113669917576265.b4-ty@kernel.org>
-Date: Tue, 01 Jul 2025 10:55:13 -0700
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com, 
+ linux-perf-users@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250630125128.562895-1-colin.i.king@gmail.com>
+References: <20250630125128.562895-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][next] perf drm_pmu: Fix spelling mistake "bufers" ->
+ "buffers"
+Message-Id: <175139251407.738306.16912833047654066565.b4-ty@kernel.org>
+Date: Tue, 01 Jul 2025 10:55:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,16 +51,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 30 Jun 2025 11:16:13 +0200, Thomas Richter wrote:
-> commit 2d584688643fa ("perf test: Add header shell test")
-> introduced a new test case for perf header. It fails on s390
-> because call graph option -g is not supported on s390.
-> Also the option --call-graph dwarf is only supported for
-> the event cpu-clock.
+On Mon, 30 Jun 2025 13:51:28 +0100, Colin Ian King wrote:
+> There are spelling mistakes in some literal strings. Fix these.
 > 
-> Remove this option and the test succeeds.
 > 
-> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
