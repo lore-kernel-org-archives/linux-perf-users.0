@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378D11442F4;
-	Tue,  1 Jul 2025 05:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1766B199385;
+	Tue,  1 Jul 2025 06:05:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751348620; cv=none; b=ui5xKZqOS7wLZ5GnNOSMjLptGpBsxsv4UjOh98uL3qsSHYh6c7EHKuiKeWDm3XpG+ZHuyZDqOEQBvFn8m4qMiNaNZbKaotBcc5OqSRRlrUbLdpEAVVg62jCfKhCxiqcBwdb5cDcMC7/SdbfqQk8yvo7wiTj7xBI6nMcKQIF9ngo=
+	t=1751349944; cv=none; b=HFOOzuZNLdfdZtGURE01gaLs0gORqoVWxZ0YOpbD7LXZveUUH674oxZkPXAvEDireaPA3o2jetMqAHR95ycpoCBmykGNR33t2nqQWneWcUQplOhC55cufabQSXVKCWijpCZmEEqyn1gO6szzV9e0fF6fU6gc/f4jlIsX/V7AqJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751348620; c=relaxed/simple;
-	bh=giPZsywmdagr4kvRiGurSj79VhU8gLdO64p2gc9hhy4=;
+	s=arc-20240116; t=1751349944; c=relaxed/simple;
+	bh=5wxaXCZgzcsOdU2YdEfVEPx37l7c81hL3jRM5rarvbM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KBAv6RlWy4lyNco8Zh8FjJfIDzvOXtwWDGP4137IpgYDpHuQiiqAI5qc61mg/5EppXCErFXs3acFkoZ/vCbJB0ul15WdkMLlltPIfvyCFRcSJfAWjC9Z+VGjrud+JIV01gMAtZ5bKb2fWqRTZHokgK4A3IgpCq9AT/1PoEuMxeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAgkZKYu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OP2nAKL7WfhT2tULmy0Pw9wfUOqXUiJt/sqmy2uE8jfXKYNByYLP72/iyRVWHSsTOEainMNw2vsl0ZPdGi6jfGByZiIYjWFDynQnNVLDOd9JMgn+d2Whi9FO21JVu4z6sMH2Sdh0Vu+tQU+mpyKx8AdfMGVfyrbCh+UtA3gXQUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Icn2+5KX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAgkZKYu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E993C4CEEB;
-	Tue,  1 Jul 2025 05:43:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Icn2+5KX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE12CC4CEEB;
+	Tue,  1 Jul 2025 06:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751348619;
-	bh=giPZsywmdagr4kvRiGurSj79VhU8gLdO64p2gc9hhy4=;
+	s=k20201202; t=1751349943;
+	bh=5wxaXCZgzcsOdU2YdEfVEPx37l7c81hL3jRM5rarvbM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cAgkZKYuhlaJG6ZtRFebXYb6EHheh0EI3KYS1XzHjO+dkCenj1OPBgKbWrP9s9HPU
-	 dIhWWLcNHfP+nGetrGFv3cM3DfZwX5TxYArN+H0iR9eWnUz6Bo/d5uiQl2U4aZxS/E
-	 mkYr52AFTmpyn5EmOyjS4yptkdQ4qfjWwPU1bPsN8QJwyJ/cESBaurRzzV6tQLWVuG
-	 InMMZHiDjOc5ydQMRIBwPS+uPd9rEEsdvpF1chLW+Q2l3ByFYxpL6D3uDK11SD8v9+
-	 XabJjl0PcEn+gsAyKhnH42x1hF190rkvcCQcS+EtlW5bvfXNLh8tpk6fV3TFUiQMOb
-	 OMTSmKGQC5jNg==
-Date: Mon, 30 Jun 2025 22:43:36 -0700
+	b=Icn2+5KX57HRZwT5+1VGTOQCeQNj7UvRQ1GCzOQXSWdK6KsMrm2Fja5AZMUgspLAS
+	 JmTY4hIHuEUR+Ay7H39x6XFH1ZxTMKvEkZ3Xb7uB4Cd7xoF96Iy0uizi6ENT6gyQpU
+	 IZ8ACk5hRfSAZ2PHpWdm7NUTuz1oND+KF8ZndKkiZhtnTDVsg6DcZKtdpYCJ6+zcyI
+	 +hVc1FNKtGtv2gh4eHfU7IHY1CHQJvkEy8OB+KWu5Gr3ZvmqMLcqd/na8D+x9rhORE
+	 Q/EHI+Wfz70CGui1wd2uWR5lFuKVFAjBTtU7JqAwukkwxQDhzgc+YiBzIPsxYjYfsJ
+	 or68BrKQcPnkA==
+Date: Mon, 30 Jun 2025 23:05:40 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -69,10 +69,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 08/23] perf record: Make --buildid-mmap the default
-Message-ID: <aGN1iPzoeNVxW5fQ@google.com>
+Subject: Re: [PATCH v5 16/23] perf bench synthesize: Avoid use of global
+ perf_env
+Message-ID: <aGN6tPDP50RrNTnq@google.com>
 References: <20250628045017.1361563-1-irogers@google.com>
- <20250628045017.1361563-9-irogers@google.com>
+ <20250628045017.1361563-17-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,201 +82,104 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250628045017.1361563-9-irogers@google.com>
+In-Reply-To: <20250628045017.1361563-17-irogers@google.com>
 
-On Fri, Jun 27, 2025 at 09:50:02PM -0700, Ian Rogers wrote:
-> Support for build IDs in mmap2 perf events has been present since
-> Linux v5.12:
-> https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
-> Build ID mmap events don't avoid the need to inject build IDs for DSO
-> touched by samples as the build ID cache is populated by perf
-> record. They can avoid some cases of symbol mis-resolution caused by
-> the file system changing from when a sample occurred and when the DSO
-> is sought. To disable build ID scanning
-> 
-> Unlike the --buildid-mmap option, this doesn't disable the build ID
-> cache but it does disable the processing of samples looking for DSOs
-> to inject build IDs for. To disable the build ID cache the -B
-> (--no-buildid) option should be used.
-
-I think we need to add a config option to control this behavior later.
-Let me think about this more.
-
-> 
-> Making this option the default was raised on the list in:
-> https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
+On Fri, Jun 27, 2025 at 09:50:10PM -0700, Ian Rogers wrote:
+> The benchmark doesn't use a data file and so the header perf_env isn't
+> used. Stack allocate a host perf_env for use to avoid the use of the
+> global perf_env.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-record.c        | 33 +++++++++++++++++++-----------
->  tools/perf/util/symbol_conf.h      |  2 +-
->  tools/perf/util/synthetic-events.c | 16 +++++++--------
->  3 files changed, 30 insertions(+), 21 deletions(-)
+>  tools/perf/bench/synthesize.c | 30 +++++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 11 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 53971b9de3ba..29428fb8ac67 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -171,6 +171,7 @@ struct record {
->  	bool			no_buildid_cache_set;
->  	bool			buildid_all;
->  	bool			buildid_mmap;
-> +	bool			buildid_mmap_set;
->  	bool			timestamp_filename;
->  	bool			timestamp_boundary;
->  	bool			off_cpu;
-> @@ -1811,6 +1812,7 @@ record__finish_output(struct record *rec)
->  			data->dir.files[i].size = lseek(data->dir.files[i].fd, 0, SEEK_CUR);
->  	}
->  
-> +	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
->  	if (!rec->no_buildid) {
->  		process_buildids(rec);
->  
-> @@ -3005,6 +3007,8 @@ static int perf_record_config(const char *var, const char *value, void *cb)
->  			rec->no_buildid = true;
->  		else if (!strcmp(value, "mmap"))
->  			rec->buildid_mmap = true;
-> +		else if (!strcmp(value, "no-mmap"))
-> +			rec->buildid_mmap = false;
->  		else
->  			return -1;
->  		return 0;
-> @@ -3411,6 +3415,7 @@ static struct record record = {
->  		.synth               = PERF_SYNTH_ALL,
->  		.off_cpu_thresh_ns   = OFFCPU_THRESH,
->  	},
-> +	.buildid_mmap = true,
->  };
->  
->  const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
-> @@ -3577,8 +3582,8 @@ static struct option __record_options[] = {
->  		   "file", "vmlinux pathname"),
->  	OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
->  		    "Record build-id of all DSOs regardless of hits"),
-> -	OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
-> -		    "Record build-id in map events"),
-> +	OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
-> +			"Legacy record build-id in map events option which is now the default. Behaves indentically to --no-buildid. Disable with --no-buildid-mmap"),
-
-Looks too long.  Maybe just like below:
-  "Record build-id in mmap events and skip build-id processing."
-
-The detailed explanation can go to the documentation.
-
-
->  	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
->  		    "append timestamp to output filename"),
->  	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
-> @@ -4108,19 +4113,23 @@ int cmd_record(int argc, const char **argv)
->  		record.opts.record_switch_events = true;
->  	}
->  
-> +	if (!rec->buildid_mmap) {
-> +		pr_debug("Disabling build id in synthesized mmap2 events.\n");
-> +		symbol_conf.no_buildid_mmap2 = true;
-> +	} else if (rec->buildid_mmap_set) {
-> +		/*
-> +		 * Explicitly passing --buildid-mmap disables buildid processing
-> +		 * and cache generation.
-> +		 */
-> +		rec->no_buildid = true;
-> +	}
-> +	if (rec->buildid_mmap && !perf_can_record_build_id()) {
-> +		pr_warning("Missing support for build id in kernel mmap events. Disable this warning with --no-buildid-mmap\n");
-
-This can be in two lines.  I can make the changes if you're ok.
-
-Thanks,
-Namhyung
-
-
-> +		rec->buildid_mmap = false;
-> +	}
->  	if (rec->buildid_mmap) {
-> -		if (!perf_can_record_build_id()) {
-> -			pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
-> -			err = -EINVAL;
-> -			goto out_opts;
-> -		}
-> -		pr_debug("Enabling build id in mmap2 events.\n");
-> -		/* Enable mmap build id synthesizing. */
-> -		symbol_conf.buildid_mmap2 = true;
->  		/* Enable perf_event_attr::build_id bit. */
->  		rec->opts.build_id = true;
-> -		/* Disable build id cache. */
-> -		rec->no_buildid = true;
->  	}
->  
->  	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index cd9aa82c7d5a..7a80d2c14d9b 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -43,7 +43,7 @@ struct symbol_conf {
->  			report_individual_block,
->  			inline_name,
->  			disable_add2line_warn,
-> -			buildid_mmap2,
-> +			no_buildid_mmap2,
->  			guest_code,
->  			lazy_load_kernel_maps,
->  			keep_exited_threads,
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index 69b98023ce74..638d7dd7fa4b 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
->  		event->mmap2.pid = tgid;
->  		event->mmap2.tid = pid;
->  
-> -		if (symbol_conf.buildid_mmap2)
-> +		if (!symbol_conf.no_buildid_mmap2)
->  			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
->  
->  		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
-> @@ -690,7 +690,7 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
->  		return 0;
->  
->  	dso = map__dso(map);
-> -	if (symbol_conf.buildid_mmap2) {
-> +	if (!symbol_conf.no_buildid_mmap2) {
->  		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
->  		event->mmap2.header.type = PERF_RECORD_MMAP2;
->  		event->mmap2.header.size = (sizeof(event->mmap2) -
-> @@ -734,9 +734,9 @@ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__han
->  		.process = process,
->  		.machine = machine,
+> diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+> index 9b333276cbdb..79d99ba50284 100644
+> --- a/tools/perf/bench/synthesize.c
+> +++ b/tools/perf/bench/synthesize.c
+> @@ -114,10 +114,13 @@ static int run_single_threaded(void)
+>  		.pid = "self",
 >  	};
-> -	size_t size = symbol_conf.buildid_mmap2
-> -		? sizeof(args.event->mmap2)
-> -		: sizeof(args.event->mmap);
-> +	size_t size = symbol_conf.no_buildid_mmap2
-> +		? sizeof(args.event->mmap)
-> +		: sizeof(args.event->mmap2);
->  
->  	args.event = zalloc(size + machine->id_hdr_size);
->  	if (args.event == NULL) {
-> @@ -1124,8 +1124,8 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
->  						struct machine *machine)
->  {
->  	union perf_event *event;
-> -	size_t size = symbol_conf.buildid_mmap2 ?
-> -			sizeof(event->mmap2) : sizeof(event->mmap);
-> +	size_t size = symbol_conf.no_buildid_mmap2 ?
-> +			sizeof(event->mmap) : sizeof(event->mmap2);
->  	struct map *map = machine__kernel_map(machine);
->  	struct kmap *kmap;
+>  	struct perf_thread_map *threads;
+> +	struct perf_env host_env;
 >  	int err;
-> @@ -1159,7 +1159,7 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
->  		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
->  	}
 >  
-> -	if (symbol_conf.buildid_mmap2) {
-> +	if (!symbol_conf.no_buildid_mmap2) {
->  		size = snprintf(event->mmap2.filename, sizeof(event->mmap2.filename),
->  				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
->  		size = PERF_ALIGN(size, sizeof(u64));
+>  	perf_set_singlethreaded();
+> -	session = perf_session__new(NULL, NULL);
+> +	perf_env__init(&host_env);
+> +	session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
+> +				      /*trace_event_repipe=*/false, &host_env);
+>  	if (IS_ERR(session)) {
+>  		pr_err("Session creation failed.\n");
+>  		return PTR_ERR(session);
+
+Missing perf_env__exit() ?
+
+
+> @@ -144,6 +147,7 @@ static int run_single_threaded(void)
+>  		perf_thread_map__put(threads);
+>  
+>  	perf_session__delete(session);
+> +	perf_env__exit(&host_env);
+>  	return err;
+>  }
+>  
+> @@ -154,17 +158,21 @@ static int do_run_multi_threaded(struct target *target,
+>  	u64 runtime_us;
+>  	unsigned int i;
+>  	double time_average, time_stddev, event_average, event_stddev;
+> -	int err;
+> +	int err = 0;
+>  	struct stats time_stats, event_stats;
+>  	struct perf_session *session;
+> +	struct perf_env host_env;
+>  
+> +	perf_env__init(&host_env);
+>  	init_stats(&time_stats);
+>  	init_stats(&event_stats);
+>  	for (i = 0; i < multi_iterations; i++) {
+> -		session = perf_session__new(NULL, NULL);
+> -		if (IS_ERR(session))
+> -			return PTR_ERR(session);
+> -
+> +		session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
+> +					      /*trace_event_repipe=*/false, &host_env);
+> +		if (IS_ERR(session)) {
+> +			err = PTR_ERR(session);
+> +			goto err_out;
+> +		}
+>  		atomic_set(&event_count, 0);
+>  		gettimeofday(&start, NULL);
+>  		err = __machine__synthesize_threads(&session->machines.host,
+> @@ -173,10 +181,8 @@ static int do_run_multi_threaded(struct target *target,
+>  						process_synthesized_event,
+>  						true, false,
+>  						nr_threads_synthesize);
+> -		if (err) {
+> -			perf_session__delete(session);
+> -			return err;
+> -		}
+> +		if (err)
+> +			goto err_out;
+
+Missing perf_session__delete() ?
+
+
+>  
+>  		gettimeofday(&end, NULL);
+>  		timersub(&end, &start, &diff);
+> @@ -198,7 +204,9 @@ static int do_run_multi_threaded(struct target *target,
+>  
+>  	printf("    Average time per event %.3f usec\n",
+>  		time_average / event_average);
+> -	return 0;
+> +err_out:
+> +	perf_env__exit(&host_env);
+> +	return err;
+>  }
+>  
+>  static int run_multi_threaded(void)
 > -- 
 > 2.50.0.727.gbf7dc18ff4-goog
 > 
