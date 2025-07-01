@@ -1,74 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997E82820AB;
-	Tue,  1 Jul 2025 17:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC1E214A6E;
+	Tue,  1 Jul 2025 19:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751392516; cv=none; b=Jlob/Lvs6+XTO92YY6GOO/BZ5LIo9TL/ORNnTcj6kIwaKZgV5QGY+dxlMWlzMYBVsZ9LPMWVIz4wayfUTgtgmW04VtredFE9dmrhlHSkzMfJXHUbH7pJf13v/AG5MxUmYdc0ImQwfOFn0PR3b7Z6MHfD+4iREV0gw7CEUENC3lg=
+	t=1751399370; cv=none; b=DuPHdZ3ZVN65h0MptV+u3yR7t45r6tz4WdVqCjZDpEsfDAWrxMwpv2N7ywFL5Um5jGTxenPR5rvaXwuUCyicP24UbvKplGAZ5cX92evvKfqcNuaMkyPs9cx6NS5Wb6U9ortcy/XvoGITU77c5DSeOnS2EZnoC0umMBuiF0X6Dcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751392516; c=relaxed/simple;
-	bh=fQxoPSYs73iTSyX9yn+4UWbbrTgtSljBNrWOhhOVBpI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PN0KdNF30wq7gWwsQbNx2W/uYsDj7opsGTv3OGsxUni81Uc9budaIYaBuNwFenfyuHCdlGgtAxIGfkpzucdcwqLqzfMBTmAAeSJWMiUyJoaAgPKJo9FFVRVHf/zibHFc2+8sdnqxzFSCYKxgo4NjzWPgHpwgxRR9hPmpKfIo/jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbQyUlnI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751399370; c=relaxed/simple;
+	bh=VNU1Y8NlHa1PiNPq/Nl5PG8fWwd13+kBJud2u+SgLWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RqVsZ0m12laKr7k2EvkjTVaFVQLiUcDvqOmkzIlUmMlDoElea9eulSemiqQ92Ae3ibnA48iHQ38fe28ZI7/t/Z1oQmUL5cjufVhQLwJocmHAuMAkkAI/aCru3MqRLRkywiFZWh9AoCgr1s67DvsxN8BfixMTr6ptx/XOopDACMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNgTldHx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbQyUlnI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BF0C4CEF6;
-	Tue,  1 Jul 2025 17:55:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNgTldHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11678C4CEEB;
+	Tue,  1 Jul 2025 19:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751392516;
-	bh=fQxoPSYs73iTSyX9yn+4UWbbrTgtSljBNrWOhhOVBpI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=QbQyUlnIrs4TspQWenfX0eXPB8e6JE9LImDio0/4of/4JLlQPCniWYrrFYex3vFmo
-	 axfL7l71oA0Ios6qhW8WsQZDUZ8r8ApM5/q67PK3TUnCCw/mXOeilXVqN1xTWVYsRu
-	 0jGWH4sud2fVRxbGpgNDlkLP+SMXA5O0p19J3ruZe9CMVnSIGWaHN640X9aqZ6VAHr
-	 HaEqWMyxLehzTP6e6zVSXX5DlgcObGAxxByMo4iuRRLqlm2rIcqCRvkBLy6lsbOJ+F
-	 2xlh4F7dkoVO/z2l2aatJmw9r+lGMnC2I+F6SqZezyuI3V5rRDvLyu0mVJPMfuE4C9
-	 y4ldlPlckGWRA==
+	s=k20201202; t=1751399369;
+	bh=VNU1Y8NlHa1PiNPq/Nl5PG8fWwd13+kBJud2u+SgLWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uNgTldHxcPk+PmyiifrYVs/2lZzxBGhsN8jC7jtMI7MO45qwCxGwfwelZ48kwUn93
+	 80ZuVSQfDvAWvnfYydCvrXwQI0eus4oOyveSE+PzWBD80ZQ6XEJizuyD0oM4QTc8Y3
+	 zKO60nYVfhgdOm6OwANbxT2idUKKmGcULcTZbo6cSr/FOjE78HyRBRh4N8iaEQcDPv
+	 FlyHPPUl9ffiua6eenrhvigqbAsp2zq34JUF9/3K7FC+RPPqQo9mCCtWVENoJb2jJ1
+	 YBesSZSN7ZHVnVGMvMg6uOGNxGlsv02GDNauoLafUamIGJex/GNarS//PRWuUXk8gw
+	 1DXUWEh4iS3Zw==
+Date: Tue, 1 Jul 2025 12:49:27 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- James Clark <james.clark@linaro.org>, 
- Charlie Jenkins <charlie@rivosinc.com>, 
- Ravi Bangoria <ravi.bangoria@amd.com>, 
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
- Collin Funk <collin.funk1@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
-References: <f8415e57c938482668717d918ab566ff5082f281.1750743784.git.collin.funk1@gmail.com>
- <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
-Subject: Re: [PATCH v4] perf build: Specify that shellcheck should use the
- bash dialect.
-Message-Id: <175139251571.738306.7065497308002625311.b4-ty@kernel.org>
-Date: Tue, 01 Jul 2025 10:55:15 -0700
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf test: Check test suite description only
+Message-ID: <aGQ7xzAQpRUghD35@google.com>
+References: <20250630233246.1063977-1-namhyung@kernel.org>
+ <CAP-5=fXFESx7_+CY-QMnaZSkPSxTGFqwr1eKhHmTbEJoYeMTvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXFESx7_+CY-QMnaZSkPSxTGFqwr1eKhHmTbEJoYeMTvQ@mail.gmail.com>
 
-On Fri, 27 Jun 2025 20:41:25 -0700, Collin Funk wrote:
-> When someone has a global shellcheckrc file, for example at
-> ~/.config/shellcheckrc, with the directive 'shell=sh', building perf
-> will fail with many shellcheck errors like:
+On Tue, Jul 01, 2025 at 08:51:53AM -0700, Ian Rogers wrote:
+> On Mon, Jun 30, 2025 at 4:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Currently perf test checks the given string with descriptions for both
+> > test suites and cases (subtests).  But sometimes it's confusing since
+> > the subtests don't contain the important keyword.
+> >
+> > I think it's better to check the suite level and run the whole suite
+> > together.
+> >
+> > Before:
+> >   $ perf test hwmon
+> >   (no output)
+> >
+> > After:
+> >   $ perf test hwmon
+> >    10: Hwmon PMU                                                       :
+> >    10.1: Basic parsing test                                            : Ok
+> >    10.2: Parsing without PMU name                                      : Ok
+> >    10.3: Parsing with PMU name                                         : Ok
 > 
->     In tests/shell/base_probe/test_adding_kernel.sh line 294:
->     (( TEST_RESULT += $? ))
->     ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
+> This is better, thanks!
 > 
-> [...]
-Applied to perf-tools-next, thanks!
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/builtin-test.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > index 80375ca39a37a256..dfaff4185eb05a1a 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -567,10 +567,6 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+> >
+> >                         for (unsigned int run = 0; run < runs_per_test; run++) {
+> >                                 test_suite__for_each_test_case(*t, curr_test_case) {
+> > -                                       if (!perf_test__matches(test_description(*t, curr_test_case),
+> > -                                                               curr_suite, argc, argv))
+> > -                                               continue;
+> > -
+> 
+> This will change the behavior so that if a sub-test matches but the
+> test suite as a whole doesn't the whole test suite will now be run.
+> For example:
+> 
+> ```
+> $ perf test list
+> ...
+>  39: CPU map
+> 39.1: Synthesize cpu map
+> 39.2: Print cpu map
+> 39.3: Merge cpu map
+> 39.4: Intersect cpu map
+> 39.5: Equal cpu map
+> ...
+> $ perf test -v "Equal cpu map"
+> 39.5: Equal cpu map                                                 : Ok
+> ```
+> 
+> whereas with this change the whole of the "CPU map" test suite will be
+> run. I think the condition:
+> 
+> ```
+> if (!perf_test__matches(test_description(*t, curr_test_case),
+> curr_suite, argc, argv))
+> ```
+> 
+> should  be:
+> 
+> ```
+> if (!perf_test__matches(test_description(*t, curr_test_case),
+> curr_suite, argc, argv) &&
+>     !perf_test__matches(test_description(*t, -1), curr_suite, argc, argv))
+> ```
+> 
+> But you could avoid computing the extra perf_test__matches with a
+> boolean as that test is done immediately before.
 
-Best regards,
+Oh, I overlooked the condition in the loop.  Will check the both can
+skip if it only matched to some subtests.
+
+Thanks,
 Namhyung
-
 
