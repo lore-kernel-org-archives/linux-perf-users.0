@@ -1,106 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A71200112;
-	Tue,  1 Jul 2025 19:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC3B1B95B;
+	Tue,  1 Jul 2025 20:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751399867; cv=none; b=oz1pTlwehpBF5r8qSmlPZNsNkqIRzdC0NE/E0/6xH2yTwKXVI0Z14A9qK8BsQXPSx9NwMqNZrONJpUXcFQrzZy4gVUFmnWuEeHpN5FgNq6014GkBNxE4pftiGy7RakVK7N1kkjUfdfYuecehLn3JMtRvr4KPRh0dkbj+Wj0A8KM=
+	t=1751400628; cv=none; b=Ui3alGi9nweXdCzVC2Kib9D2dWe9L8f9x83qNzT0aBt3OYVG+bAxYXnFqJ7+TwnsYND2VCm2fx21cMIGFzLZTx5xYmmrza8470SgKUMp++dlkEZKvbCVpAhl1j/nUQSCvKDxnQHUZMDtOLzVVOEGEsqc8WO68wQYDRXdathnz8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751399867; c=relaxed/simple;
-	bh=0igIbsYRDJ4ikXElfzH2ZGmh65imsO7g2KECAnovxGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hk04HhpiOQf0mKXNJgCplG+rhb3wkqSu/9+9x6tIzdxGEc/4P3/13BS9LGgGtol9/nE4b/PxtNP+cz33qXF6LLFwvDNj8ST2cv7dOR7tpXm37r+boLEOn4mlBuDyB5LaY/xuq7kfajWQB5sCSmtRVOkxJml5/J+8JcwFbKwDD0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfcmXu46; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751400628; c=relaxed/simple;
+	bh=Ru9NzqECvOrZzfG15wF+9Ezl9X8/F8uVISxt9U2kt1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NQje6ywIeW9Fb5i+IKG/cjCK5q8+7sJPimxLqTSflw+PoBNR7nu2xLz7qY2WYwHrGBW9e0ORPhHUXF6GWQiWa8B6HtIoT8CwwXm7UB1Ryl0U6iJYKxwiuRZ02m0Szd2VVvSTO4fBKBbiElSNYmYbKdZV8q8yoEC2GOeckzMaR/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M16RZzbs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfcmXu46"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE6C5C4CEEB;
-	Tue,  1 Jul 2025 19:57:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M16RZzbs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08ABC4CEEB;
+	Tue,  1 Jul 2025 20:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751399867;
-	bh=0igIbsYRDJ4ikXElfzH2ZGmh65imsO7g2KECAnovxGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nfcmXu463TES9eJP4H5eQX9Ze+uyBsQq7D2+m2DR5tFBHmjBL08ZU/U7XOIET3Sgp
-	 Q5edD3HhmiITpQC05R0n0ORVsfWDLN7p3Hn1N91U6IuqiYndAQ/bc0eoGTLjYWkNqM
-	 6lQWRGm8qkpK8AO1lR23FGK6nx1nCWzS/Dxl1Djcoux7nB9vx7XcITwuV0FWpaVKc/
-	 yprVHimCou8kuszd3EnCzWhqcdO24MxEv/QqTnI7ORmuRRScaZoi0MXIOroUmMgit7
-	 NJbZPa67YgJibuxpV/caWp0tNziEpckuFiPB/G9iD7f4vtU8w6B+W9oWSW6jwngMlz
-	 xO6hw/D9vrzHA==
-Date: Tue, 1 Jul 2025 12:57:45 -0700
+	s=k20201202; t=1751400628;
+	bh=Ru9NzqECvOrZzfG15wF+9Ezl9X8/F8uVISxt9U2kt1U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=M16RZzbsGyjSwPtzjLH9rU75MPs4/EJusU6ODoFZWIFHqdP147MZQaPITi+R9P84r
+	 Dxmgpkw0wrd3i3mypV1RCEgLbBM4fBhY2LygFJ9X6tam9pspT/0EGf9vI10qYpRD/H
+	 mvAWjOBmMXqAkjG46fZEjlWfwlYIWh6SKG0i0Uy1KsBxACxoAa++3XHX8vRwYJ8mV4
+	 M1zI8DIVfLgdH35L7iQPvVLk6sS/JUZedkZVLU/0SOkGPCQnmEUTX4p15jntOzP7Xb
+	 c0EJe39dEzLAs5GGOYurr+K29swBGqeL9rTZxua0MPOWqAxNcrLVH+nNGzUytMs+BR
+	 2Ri7JHSnaZAEw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf tools: Fix use-after-free in help_unknown_cmd()
-Message-ID: <aGQ9ucA3BH1OXzlf@google.com>
-References: <20250630233246.1063977-1-namhyung@kernel.org>
- <20250630233246.1063977-3-namhyung@kernel.org>
- <CAP-5=fXdzL1ZQQCFFU0crNpT7wiW4gtfbN1=p89BnmzWBU4mHw@mail.gmail.com>
+Subject: [PATCH v2 1/3] perf test: Check test suite description properly
+Date: Tue,  1 Jul 2025 13:10:25 -0700
+Message-ID: <20250701201027.1171561-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXdzL1ZQQCFFU0crNpT7wiW4gtfbN1=p89BnmzWBU4mHw@mail.gmail.com>
 
-On Tue, Jul 01, 2025 at 09:03:46AM -0700, Ian Rogers wrote:
-> On Mon, Jun 30, 2025 at 4:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Currently perf aborts when it finds an invalid command.  I guess it
-> > depends on the environment as I have some custom commands in the path.
-> >
-> >   $ perf bad-command
-> >   perf: 'bad-command' is not a perf-command. See 'perf --help'.
-> >   Aborted (core dumped)
-> >
-> > It's because the exclude_cmds() in libsubcmd has a use-after-free when
-> > it removes some entries.  After copying one to another entry, it keeps
-> > the pointer in the both position.  And the next copy operation will free
-> > the later one but it's the same entry in the previous one.
-> >
-> > For example, let's say cmds = { A, B, C, D, E } and excludes = { B, E }.
-> >
-> >   ci  cj  ei   cmds-name  excludes
-> >   -----------+--------------------
-> >    0   0   0 |     A         B       :    cmp < 0, ci == cj
-> >    1   1   0 |     B         B       :    cmp == 0
-> >    2   1   1 |     C         E       :    cmp < 0, ci != cj
-> >
-> > At this point, it frees cmds->names[1] and cmds->names[1] is assigned to
-> > cmds->names[2].
-> >
-> >    3   2   1 |     D         E       :    cmp < 0, ci != cj
-> >
-> > Now it frees cmds->names[2] but it's the same as cmds->names[1].  So
-> > accessing cmds->names[1] will be invalid.
-> >
-> > This makes the subcmd tests succeed.
-> >
-> >   $ perf test subcmd
-> >    69: libsubcmd help tests                                            :
-> >    69.1: Load subcmd names                                             : Ok
-> >    69.2: Uniquify subcmd names                                         : Ok
-> >    69.3: Exclude duplicate subcmd names                                : Ok
-> >
-> > Fixes: 657a3efee43a ("libsubcmd: Avoid SEGV/use-after-free when commands aren't excluded")
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Fwiw, it seems a shame we're doing this and the code in git is drifting apart:
-> 
-> https://github.com/git/git/blob/83014dc05f6fc9275c0a02886cb428805abaf9e5/help.c#L204
+Currently perf test checks the given string with descriptions for both
+test suites and cases (subtests).  But sometimes it's confusing since
+the subtests don't contain the important keyword.
 
-Maybe we can send a fix for them too.
+I think it's better to check the suite level and run the whole suite
+together if it matches description in the suite.
 
-Thanks,
-Namhyung
+Before:
+  $ perf test hwmon
+  (no output)
+
+After:
+  $ perf test hwmon
+   10: Hwmon PMU                                                       :
+   10.1: Basic parsing test                                            : Ok
+   10.2: Parsing without PMU name                                      : Ok
+   10.3: Parsing with PMU name                                         : Ok
+
+And keep the existing behavior when it only matches test description only.
+
+  $ perf test "Equal cpu map"
+   39.5: Equal cpu map                                                 : Ok
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/builtin-test.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 80375ca39a37a256..846c9b3a732c9b3a 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -539,6 +539,7 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 
+ 		for (struct test_suite **t = suites; *t; t++, curr_suite++) {
+ 			int curr_test_case;
++			bool suite_matched = false;
+ 
+ 			if (!perf_test__matches(test_description(*t, -1), curr_suite, argc, argv)) {
+ 				/*
+@@ -556,6 +557,8 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 				}
+ 				if (skip)
+ 					continue;
++			} else {
++				suite_matched = true;
+ 			}
+ 
+ 			if (intlist__find(skiplist, curr_suite + 1)) {
+@@ -567,10 +570,10 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 
+ 			for (unsigned int run = 0; run < runs_per_test; run++) {
+ 				test_suite__for_each_test_case(*t, curr_test_case) {
+-					if (!perf_test__matches(test_description(*t, curr_test_case),
++					if (!suite_matched &&
++					    !perf_test__matches(test_description(*t, curr_test_case),
+ 								curr_suite, argc, argv))
+ 						continue;
+-
+ 					err = start_test(*t, curr_suite, curr_test_case,
+ 							 &child_tests[child_test_num++],
+ 							 width, pass);
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
