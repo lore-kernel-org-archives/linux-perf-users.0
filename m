@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F66280CC1;
-	Tue,  1 Jul 2025 17:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997E82820AB;
+	Tue,  1 Jul 2025 17:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751392516; cv=none; b=WyWRzgMdQ6Xt3FL1T4bVnlpBold8KE0o/cc/ZSSRDXiG0bnxdB3q7useIcvpB5Q5OjTFEsGdWzLT/gZXckeTVIJQHwCap3TQmwEoAeBz7Nr9ijxMFHzxl9XtmrvuynovXsU0ybHMmw1EUDIQoDoDve1sLdXrrlGBr+zjl+eJlpg=
+	t=1751392516; cv=none; b=Jlob/Lvs6+XTO92YY6GOO/BZ5LIo9TL/ORNnTcj6kIwaKZgV5QGY+dxlMWlzMYBVsZ9LPMWVIz4wayfUTgtgmW04VtredFE9dmrhlHSkzMfJXHUbH7pJf13v/AG5MxUmYdc0ImQwfOFn0PR3b7Z6MHfD+4iREV0gw7CEUENC3lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751392516; c=relaxed/simple;
-	bh=DnPVouCLiwfGHggG02cDxfN2bxIrdB/EVyqkVKPRB+M=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pR8JQJql14KGGN2I/Ct60XNBffG6h0Z6xKw7N98KhpDEJf78AIJxCxn0U4RMltv5ZiTRjqVjCrcMtvDjWSMECT4S9gTfD2aV4WjO8rXqMZsnO57d8c+qNLK2+dbItyv4m286VMGJgavJa3fiAfBlOGpM5hh+d1N38HpUK3a0n1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVJ5FbyK; arc=none smtp.client-ip=10.30.226.201
+	bh=fQxoPSYs73iTSyX9yn+4UWbbrTgtSljBNrWOhhOVBpI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PN0KdNF30wq7gWwsQbNx2W/uYsDj7opsGTv3OGsxUni81Uc9budaIYaBuNwFenfyuHCdlGgtAxIGfkpzucdcwqLqzfMBTmAAeSJWMiUyJoaAgPKJo9FFVRVHf/zibHFc2+8sdnqxzFSCYKxgo4NjzWPgHpwgxRR9hPmpKfIo/jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbQyUlnI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVJ5FbyK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346F7C4CEF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbQyUlnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BF0C4CEF6;
 	Tue,  1 Jul 2025 17:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751392515;
-	bh=DnPVouCLiwfGHggG02cDxfN2bxIrdB/EVyqkVKPRB+M=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=YVJ5FbyKZE000KuscpadMEKa962HfDQLUlNdhng1qEiVo3jmwUTJCuxXT3olryiuI
-	 wltKayxh9YCtGa6CsD1dytqXGYlmfPTZpCEGr5ZrUtdMIAOYExNZxCLFWKhqFblBr2
-	 tQrkunFkj6IHx74ULaf0w++kaa9vtkFK6/ZAZ19bcukKTYQ7D1QFpD65ADk8qz/pxb
-	 lk1T6IHhCAJ1cX+oJ3AOCIWHuutU6Ku6lrXcfJjJmCzBlNHJO5dL0q1KqNP+fGFdDS
-	 p9MxsgH5qdJiG9ddpGzknIWmSgqKsTtjxGXfCKjQwldjonH8P/efgoFV/jAY9laJWU
-	 kZ3VnyTZ9n/Yw==
+	s=k20201202; t=1751392516;
+	bh=fQxoPSYs73iTSyX9yn+4UWbbrTgtSljBNrWOhhOVBpI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=QbQyUlnIrs4TspQWenfX0eXPB8e6JE9LImDio0/4of/4JLlQPCniWYrrFYex3vFmo
+	 axfL7l71oA0Ios6qhW8WsQZDUZ8r8ApM5/q67PK3TUnCCw/mXOeilXVqN1xTWVYsRu
+	 0jGWH4sud2fVRxbGpgNDlkLP+SMXA5O0p19J3ruZe9CMVnSIGWaHN640X9aqZ6VAHr
+	 HaEqWMyxLehzTP6e6zVSXX5DlgcObGAxxByMo4iuRRLqlm2rIcqCRvkBLy6lsbOJ+F
+	 2xlh4F7dkoVO/z2l2aatJmw9r+lGMnC2I+F6SqZezyuI3V5rRDvLyu0mVJPMfuE4C9
+	 y4ldlPlckGWRA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
- Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-In-Reply-To: <20250628015832.1271229-1-irogers@google.com>
-References: <20250628015832.1271229-1-irogers@google.com>
-Subject: Re: [PATCH v1] perf test annotate: Use --percent-limit rather than
- head to reduce output
-Message-Id: <175139251517.738306.4966360457421812263.b4-ty@kernel.org>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Charlie Jenkins <charlie@rivosinc.com>, 
+ Ravi Bangoria <ravi.bangoria@amd.com>, 
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+ Collin Funk <collin.funk1@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
+References: <f8415e57c938482668717d918ab566ff5082f281.1750743784.git.collin.funk1@gmail.com>
+ <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
+Subject: Re: [PATCH v4] perf build: Specify that shellcheck should use the
+ bash dialect.
+Message-Id: <175139251571.738306.7065497308002625311.b4-ty@kernel.org>
 Date: Tue, 01 Jul 2025 10:55:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -51,16 +56,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 27 Jun 2025 18:58:32 -0700, Ian Rogers wrote:
-> The annotate test was sped up by Thomas Richter
-> <tmricht@linux.ibm.com> in commit
-> 658a8805cb60 ("perf test: Speed up test case 70 annotate basic tests")
-> by reducing the annotate output using head. This causes flakes on
-> hybrid machines where the first event dumped may not have the samples
-> for the test within it. Rather than reduce the output using `head`
-> switch to `--percent-limit 10` which will stop annotate dumping
-> functions that have an overhead of less than 10%, the noploop program
-> should be using more.
+On Fri, 27 Jun 2025 20:41:25 -0700, Collin Funk wrote:
+> When someone has a global shellcheckrc file, for example at
+> ~/.config/shellcheckrc, with the directive 'shell=sh', building perf
+> will fail with many shellcheck errors like:
+> 
+>     In tests/shell/base_probe/test_adding_kernel.sh line 294:
+>     (( TEST_RESULT += $? ))
+>     ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
