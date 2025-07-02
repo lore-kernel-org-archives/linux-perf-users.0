@@ -1,93 +1,74 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D912367D3;
-	Wed,  2 Jul 2025 11:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5528D2857C5
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Jul 2025 14:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457508; cv=none; b=FgzBhtDSKSmaHLi5Tnuo3MHBZQpiWVkOpWpyP/urSY7hR7xcLLAQjToxtmAKjsh4aXXJD8k3CjO0tf2fWTd5EJcFFrgKPmxQvYG3xhLj5yoMVWoaFKUaYuOaQjGdLVFDQUo+RhSpVclQ/FG7R7jlVCJ1j4PSWhNHzQ2Q8MmOwvo=
+	t=1751465301; cv=none; b=kzJ1KdV3QZ6hCuiE6O+9tnQ3hWsAg5hKUAQS8aJS+Hd2wzN+/2L0j29gw3AbZYbMdcT99z3+i94P8kVXuF4ysHxU1llzBDK64k7WifMExf+BsjBKD9WReC6vm7KTzY0b6BmRfe29m6AwHF3hANm+fRYnOmeHiCOSuJJFxjI3J1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457508; c=relaxed/simple;
-	bh=G7IUTZKcG/MhosKsCw8NlJmZNc3guHub21cjMNrrQOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FjkNmJCdhIsACGD3Z/j8Xrn+dwJ2gB4YLZuBP9+EV0ZY4zIBRsq+KbR28GS93foew3dJfEFHi529xX9GRDX7M4ULx3XYf/ivF7ffKBoGzG1InF3BwrlWthvSInwZuSn041Gl0NkkIGjS5Jnap/Ze2uNnuRWfjODYLatJdqGNOWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rL/G1vx2; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rL/G1vx2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=a2F3v23nGGvWezK05/iV6yxFAQUOzEJwGb9ANejg6zA=; b=rL/G1vx2Eqz7cRfP7lsxF2+MOi
-	5QhTYbv9rLZhVkGtfooao56tbrof8LE3xjCz05wo82q3Tw5ziNC8plOcYegwUqXUt8+/C7ANTpKzr
-	NaI01UMZQRWF697cuk8D72m06Nwjowa524R+C9LR9VktC+Tf6aY2kgFQj0UkWhRlEWahtDUwRT+JF
-	Zh6wkjvvmAVswOQBp3EQ9nFC6avYA26mw4Acef3SB+YkeSheQaaHqMpJ0x4fEO8NF9RTHuL7ZNzVh
-	ASyKjsiowVRhACZrQxCyhfLL6lSbEdaw41MqLdkT4rkcGV//Vt1CRI+huHALrhUpYMMd9vOPEuDan
-	hAkQfZRg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWw6Q-00000007Lhc-3HFE;
-	Wed, 02 Jul 2025 11:58:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 52A29300125; Wed, 02 Jul 2025 13:58:14 +0200 (CEST)
-Date: Wed, 2 Jul 2025 13:58:14 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jann Horn <jannh@google.com>
-Cc: Serge Hallyn <serge@hallyn.com>,
-	linux-security-module <linux-security-module@vger.kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
+	s=arc-20240116; t=1751465301; c=relaxed/simple;
+	bh=khv7WaFQRcLbGmBB6hsyWdmOfNl/vkw99sHyTruVIo0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eMCemkGzFKMnR+RMLQajewd07jKlEbjcBQ8HhJIlagXR6RO3IS0Gc5Yz8+Tak7k2NfN7Qv1XU6XKTXYX9rEvefKjGz+UL8xohdTGejI3cSmHI9CaOjR5K3uBlRvxnjNx+YM3vD97eTc3PJxazCaSXuyoJDMl8HpIM9YzSsy3Il4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C96C22D9;
+	Wed,  2 Jul 2025 07:08:03 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C82003F6A8;
+	Wed,  2 Jul 2025 07:08:17 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
 	linux-perf-users@vger.kernel.org,
-	Kernel Hardening <kernel-hardening@lists.openwall.com>,
-	linux-hardening@vger.kernel.org,
-	kernel list <linux-kernel@vger.kernel.org>,
-	Alexey Budankov <alexey.budankov@linux.intel.com>,
-	James Morris <jamorris@linux.microsoft.com>
-Subject: Re: uprobes are destructive but exposed by perf under CAP_PERFMON
-Message-ID: <20250702115814.GA1099709@noisy.programming.kicks-ass.net>
-References: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] perf/arm: Add missing .suppress_bind_attrs
+Date: Wed,  2 Jul 2025 15:08:13 +0100
+Message-Id: <acd48c341b33b96804a3969ee00b355d40c546e2.1751465293.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 06:14:51PM +0200, Jann Horn wrote:
-> Since commit c9e0924e5c2b ("perf/core: open access to probes for
-> CAP_PERFMON privileged process"), it is possible to create uprobes
-> through perf_event_open() when the caller has CAP_PERFMON. uprobes can
-> have destructive effects, while my understanding is that CAP_PERFMON
-> is supposed to only let you _read_ stuff (like registers and stack
-> memory) from other processes, but not modify their execution.
-> 
-> uprobes (at least on x86) can be destructive because they have no
-> protection against poking in the middle of an instruction; basically
-> as long as the kernel manages to decode the instruction bytes at the
-> caller-specified offset as a relocatable instruction, a breakpoint
-> instruction can be installed at that offset.
-> 
-> This means uprobes can be used to alter what happens in another
-> process. It would probably be a good idea to go back to requiring
-> CAP_SYS_ADMIN for installing uprobes, unless we can get to a point
-> where the kernel can prove that the software breakpoint poke cannot
-> break the target process. (Which seems harder than doing it for
-> kprobe, since kprobe can at least rely on symbols to figure out where
-> a function starts...)
-> 
-> As a small example, in one terminal:
+PMU drivers should set .suppress_bind_attrs so that userspace is denied
+the opportunity to pull the driver out from underneath an in-use PMU
+(with predictably unpleasant consequences). Somehow both the CMN and NI
+drivers have managed to miss this; put that right.
 
-Urrggh... x86 instruction encoding wins again. Awesome find.
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-cmn.c | 1 +
+ drivers/perf/arm-ni.c  | 1 +
+ 2 files changed, 2 insertions(+)
 
-Yeah, I suppose I should go queue a revert of that commit.
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 031d45d0fe3d..d1df2f3adbc5 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2655,6 +2655,7 @@ static struct platform_driver arm_cmn_driver = {
+ 		.name = "arm-cmn",
+ 		.of_match_table = of_match_ptr(arm_cmn_of_match),
+ 		.acpi_match_table = ACPI_PTR(arm_cmn_acpi_match),
++		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = arm_cmn_probe,
+ 	.remove = arm_cmn_remove,
+diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
+index de7b6cce4d68..5f20baf59024 100644
+--- a/drivers/perf/arm-ni.c
++++ b/drivers/perf/arm-ni.c
+@@ -707,6 +707,7 @@ static struct platform_driver arm_ni_driver = {
+ 		.name = "arm-ni",
+ 		.of_match_table = of_match_ptr(arm_ni_of_match),
+ 		.acpi_match_table = ACPI_PTR(arm_ni_acpi_match),
++		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = arm_ni_probe,
+ 	.remove = arm_ni_remove,
+-- 
+2.39.2.101.g768bb238c484.dirty
+
