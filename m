@@ -1,71 +1,71 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F0620E005
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Jul 2025 03:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2839520E005
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Jul 2025 03:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751511914; cv=none; b=WoBz+UzrmK7K1AfAF0hN2wG0C16e2b0NXX0qEH1VYAPdHwZDQxxuAJQac49GaoJaU2puDzbSvFH2rphWUexGsTnmxvXqCArqIheFuU9xT1EQnpXu6n/ETDQjX+fb5Qt4iBjzVODZiES0xcYZtii5sIB/eZcqBQKC9qk1hOw4HUE=
+	t=1751511969; cv=none; b=fxK0aiuFqYTbzCbZXZXld3ePeCpbjIpRwnUJ6KCXP99JQiT9RU3iKoJciCIjIdHzEUkv5afpvYwWd9XFI6Wlp3vRt/9TrfdW7lUqRW/tgXPrMEzyKFUOP2t2I6L8y0vFS0ANbuoqRS5psqACRqnL0xxqgs6Z5L/u83U3kGD2ygg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751511914; c=relaxed/simple;
-	bh=P1dXl3+KFthDLcrbARX1twwpsVdlUey0a3I0xrRqvOM=;
+	s=arc-20240116; t=1751511969; c=relaxed/simple;
+	bh=Gz7QyMMOiN9IEeaAXi9wBI+uc/+zDRfW2GVvk1QUS98=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YTll+9H2zQ8Xt008xO1ILJApwRXIVAxngLiOIWJ2QT69wtAlawJ6SaXZP44BIq/csK2YWN41Cq8tn1qbAyquqeZZRTxoNHTjpcgSKE2QVBVqCmOOLND695BdncWthQN+2Zb049eyrY6nDDgGjgJcKiyukOz/cSTUlNABY3TOdko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y9YlaXeT; arc=none smtp.client-ip=209.85.166.181
+	 To:Cc:Content-Type; b=hZHo3qJ7qFL9gArZ+jT3n6zdKNrL1aL/9Gbra8fSHVDG7TG/CoYUFJKYioJl1pTqX/cqrRJ2WQTZG/Q/WE0hCs/eQIZt4d4RUxO8AaY14hsVn17LeTaANadekvqbnkuAwzTYeMdi5iytB3osZt86FNTQEif68xxUOYfPBP0B8dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Jc94u+g; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y9YlaXeT"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3de210e6076so47505ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jul 2025 20:05:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Jc94u+g"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so118915ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jul 2025 20:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751511912; x=1752116712; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751511967; x=1752116767; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fw1zdsvGiW5SffxoZuj66sxIkq2Ei3cUMJ7QdpRM25Q=;
-        b=y9YlaXeTYLe/6Vbw63m/m/Gi7kULzKm7/lCbfEKZeN5lNVqtqTfkXoJ1ZKEhiv+Kho
-         bktwuv0LEr9ZfdChW4AbNuzuA9HMZEVur+qUhzTWF0IDlo8tLIsLPxFTSyMisyNhDzDi
-         CdO80FYX4vzvKpwCvZH5T5+FF/XrAfWR8e9mSOp87PA8ypEoBK7R8ceBS7lzS6eqeDcO
-         nRUhYIJFECrlYJop1FgLXJKc83f3119XxTiLseE0BBwN6OFZY2p/jw4Yh0QcVdz2blhh
-         E/nRRqX6H+PKs7iomJrCITQGBO7Pl+WOy89dFLhMDjK6eq13WHwgkQASQK8GzeT6/v5M
-         KKFg==
+        bh=QxdfTlo0silPVEDxOFE/e+T3VT60Hv2C4y6UmPeu/b8=;
+        b=1Jc94u+gxNfXjBo1pyFrITNUbYa7XnlOn9CkwOYgfe1I2vjv/4WompUm/P89I2663T
+         WlTAywAsICKtSYg2YQWkzPPrs6BarwgdFEGarOrASWqTXpNC21v6GQvWNgFidIUNp9u0
+         noX4U5fi7iM3g26motAukpUfTfVLT77IIqvLhVePj+UPhnpwlw6/XKfrFv/pQ7WW4Ypw
+         EQH0AOZfdBQmH/xsi2GHvdShSox27QTDUZt4SMldZ0VK1LFY4FBFd3XUIxTbwKEhiFSN
+         ALgQOo1pQ9JCYWYJ+8ooDjs0NO3p+YbLwDBeQszyX+T7UMHE6MKikVkDt0NBnMAcm4h2
+         O7Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751511912; x=1752116712;
+        d=1e100.net; s=20230601; t=1751511967; x=1752116767;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fw1zdsvGiW5SffxoZuj66sxIkq2Ei3cUMJ7QdpRM25Q=;
-        b=IgjVNQVjhEpfPkG0aqtr4r7lx2mlpUZXT00IVGzhBOtaKJ4n/qYRKvj+nDkRG6RuvT
-         26RCs3+5Lauf93fljW4J0TKwODUPOfpa1woANl1skUlKZRCR2bHrAJdSBSYxzmAmMDZr
-         kIFl5/3umnwPTVDEgwIIHDPhzgUquHx8v4Rupw0e8TxuvrdShJUlDWGMtLYJje3cdxlM
-         raIsg4CnVfYfCqzt85JJq1gPZr220Mfj7jLGQkPsoAXM9g0lmrHYdv9PoI9l1qiczRDV
-         irz5Ns3QJ4Kzo6jyRRp/31LMZFaHVbhsEHAw4fkvTevZnhe5FLQb90Glid4xVEat4NZb
-         GWZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/pEwczWpLXwRaXyi0StZhr9sV3ZLBAURyNXVkhQ9mfYLY6DRc3Tqeq+igmz1E13WAB1IPmrv1T9BKzwarzhm5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7cq0nsrK5MWynV5zxBVVB8bsaam7WZL/AFNL30vMXi+lXfbqN
-	A+gXALkftiwwzAycX/5oNXTBLOfOOD0HL3obkPhb4FN/he83Ts7xNpM+q9VDd8rTw6tyZZvOX5f
-	ZdtGwn+FaWUzZx52emGbe/RRWFVcdTfz7gtS+eu3N
-X-Gm-Gg: ASbGncur0D/ZaE1x1wwPUlHxfJSRd5WiW5gUtIkDHwm02THOpXOMAO7pojO7B5VSvM0
-	GOoy2mb6ShQbYhTrSe/FOYFQenK8KK0TjGP/kTaQt2cD7T0BaXwWgHoOchqqYpCaKK5S6dkjpGw
-	ZhO4iQS85UXLKOZNe7bsHRPsa9rR4CUKsqxn3Oqvp0Wnbm
-X-Google-Smtp-Source: AGHT+IGfE6wi/daruKC40vA1BmYOdC74l7qeFPgqJ2p2hNRKolsW75TbqGOh+ULq4u3Bid5mAIRGQrMyCNRMRUPJCcQ=
-X-Received: by 2002:a92:ca06:0:b0:3df:2f9a:1889 with SMTP id
- e9e14a558f8ab-3e05c7ce845mr1945085ab.16.1751511911711; Wed, 02 Jul 2025
- 20:05:11 -0700 (PDT)
+        bh=QxdfTlo0silPVEDxOFE/e+T3VT60Hv2C4y6UmPeu/b8=;
+        b=ZczU6kxCxfd0bERfufBkc/lA/p6DIx2Ttq387i1c9+pQFqIZc5l6oVOeJozlOCs1d/
+         T19pgBSBNZQhrT5fwH/+IJJuMxKAamkJXOX+sD69HsTHLrj+N0WcNhvrWCP7XxuG/7I3
+         l5ETv+cHsRFYBglW/iTCwHmzIWvI3bhiX4YCUsW0k/yaAkyu6HK4YrBpYcA5R7o2K24T
+         TbVnYxctNhK9bEAnB47rmfHYRiaiIELNcdPcsiM7WK1cc9RfH8NhCy/5lTNTzPWPxskv
+         nbQkfVFI271zs8GSM3GfWG10XUxv6/wPBoL3RP6I1S1lsO7uJcOfSkc1OiZHgo2fojeW
+         0+ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUjcEpWMwcE0ppyfyXcQ0OkT/9t8jIqWZ2C2yBAdqu9umdKz7NO/khGYRF7KkWM129tLsLYLkYMDBEEzUWZfg8B@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsqC7j+zphd3FV10s3LnMlb7tAf00EMxmCKdqEOkWwKCrDmZew
+	vBAhsD5aS1PI8OTOL24pmlttwWiLmgN+MubjymjDW9NNB4851V5SDZBiLxOQZXa+2OHa+2y0a0E
+	/8rh6mLawGlGkSWj6FdwHEfEw5HMmxDwKF0eqN86O
+X-Gm-Gg: ASbGncvZlZ/SqCFcWSEnchQPvZbmh3UA0uFVgVX9ebC74OdiGl+jfXm4cfelm9js5/L
+	TlgS/Z2vjDqt3uRQoXkuI1bZAP/mOwOiWoWiZTywZUP672aYOENBpUzgyJuOeQLmieYhLDE1WJw
+	4wDTuXeBmOuF6SEO3wila8A1c5EqoxU604m/EzEo1uEG+a
+X-Google-Smtp-Source: AGHT+IFltPa9ZfitakgGrPfxMm177FOio7h844aIIw+t6+x6VinRXhlR4cWwxS8sSOM3F5zAxRXT83GItPpdQs/dtXU=
+X-Received: by 2002:a05:6e02:258e:b0:3e0:5a78:1dc with SMTP id
+ e9e14a558f8ab-3e05c7ce7dfmr1823205ab.14.1751511966931; Wed, 02 Jul 2025
+ 20:06:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703014942.1369397-1-namhyung@kernel.org> <20250703014942.1369397-2-namhyung@kernel.org>
-In-Reply-To: <20250703014942.1369397-2-namhyung@kernel.org>
+References: <20250703014942.1369397-1-namhyung@kernel.org> <20250703014942.1369397-3-namhyung@kernel.org>
+In-Reply-To: <20250703014942.1369397-3-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 2 Jul 2025 20:04:59 -0700
-X-Gm-Features: Ac12FXxJIObrai-0G87tNuUOwBg8FBTgzsFTA3xiLHBFQ0sfTwsD81BS50-I0QI
-Message-ID: <CAP-5=fVXgSTGF_NALm2TfLK9+CSL2-H1QvKh5=ozveU1orBJwg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] perf sched: Make sure it frees the usage string
+Date: Wed, 2 Jul 2025 20:05:55 -0700
+X-Gm-Features: Ac12FXxWkHdkSMWNZ7YLK35QXYkZuhgk5-pc7dUVwAS2Kojpr9yIcqhAi08p6A0
+Message-ID: <CAP-5=fVysPz0QMhVY=HniYxL3cqPnXakDR_c9a_WN_77Pu8HgA@mail.gmail.com>
+Subject: Re: [PATCH 2/8] perf sched: Free thread->priv using priv_destructor
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -77,9 +77,10 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jul 2, 2025 at 6:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
-> The parse_options_subcommand() allocates the usage string based on the
-> given subcommands.  So it should reach the end of the function to free
-> the string to prevent memory leaks.
+> In many perf sched subcommand saves priv data structure in the thread
+> but it forgot to free them.  As it's an opaque type with 'void *', it
+> needs to register that knows how to free the data.  In this case, just
+> regular 'free()' is fine.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -89,95 +90,22 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/builtin-sched.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
+>  tools/perf/builtin-sched.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
 > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 26ece6e9bfd167b3..b7bbfad0ed600eee 100644
+> index b7bbfad0ed600eee..fa4052e040201105 100644
 > --- a/tools/perf/builtin-sched.c
 > +++ b/tools/perf/builtin-sched.c
-> @@ -3902,9 +3902,9 @@ int cmd_sched(int argc, const char **argv)
+> @@ -3898,6 +3898,8 @@ int cmd_sched(int argc, const char **argv)
+>         if (!argc)
+>                 usage_with_options(sched_usage, sched_options);
+>
+> +       thread__set_priv_destructor(free);
+> +
+>         /*
 >          * Aliased to 'perf script' for now:
 >          */
->         if (!strcmp(argv[0], "script")) {
-> -               return cmd_script(argc, argv);
-> +               ret =3D cmd_script(argc, argv);
->         } else if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
-> -               return __cmd_record(argc, argv);
-> +               ret =3D __cmd_record(argc, argv);
->         } else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) =
-{
->                 sched.tp_handler =3D &lat_ops;
->                 if (argc > 1) {
-> @@ -3913,7 +3913,7 @@ int cmd_sched(int argc, const char **argv)
->                                 usage_with_options(latency_usage, latency=
-_options);
->                 }
->                 setup_sorting(&sched, latency_options, latency_usage);
-> -               return perf_sched__lat(&sched);
-> +               ret =3D perf_sched__lat(&sched);
->         } else if (!strcmp(argv[0], "map")) {
->                 if (argc) {
->                         argc =3D parse_options(argc, argv, map_options, m=
-ap_usage, 0);
-> @@ -3924,13 +3924,14 @@ int cmd_sched(int argc, const char **argv)
->                                 sched.map.task_names =3D strlist__new(sch=
-ed.map.task_name, NULL);
->                                 if (sched.map.task_names =3D=3D NULL) {
->                                         fprintf(stderr, "Failed to parse =
-task names\n");
-> -                                       return -1;
-> +                                       ret =3D -1;
-> +                                       goto out;
->                                 }
->                         }
->                 }
->                 sched.tp_handler =3D &map_ops;
->                 setup_sorting(&sched, latency_options, latency_usage);
-> -               return perf_sched__map(&sched);
-> +               ret =3D perf_sched__map(&sched);
->         } else if (strlen(argv[0]) > 2 && strstarts("replay", argv[0])) {
->                 sched.tp_handler =3D &replay_ops;
->                 if (argc) {
-> @@ -3938,7 +3939,7 @@ int cmd_sched(int argc, const char **argv)
->                         if (argc)
->                                 usage_with_options(replay_usage, replay_o=
-ptions);
->                 }
-> -               return perf_sched__replay(&sched);
-> +               ret =3D perf_sched__replay(&sched);
->         } else if (!strcmp(argv[0], "timehist")) {
->                 if (argc) {
->                         argc =3D parse_options(argc, argv, timehist_optio=
-ns,
-> @@ -3954,19 +3955,19 @@ int cmd_sched(int argc, const char **argv)
->                                 parse_options_usage(NULL, timehist_option=
-s, "w", true);
->                         if (sched.show_next)
->                                 parse_options_usage(NULL, timehist_option=
-s, "n", true);
-> -                       return -EINVAL;
-> +                       ret =3D -EINVAL;
-> +                       goto out;
->                 }
->                 ret =3D symbol__validate_sym_arguments();
-> -               if (ret)
-> -                       return ret;
-> -
-> -               return perf_sched__timehist(&sched);
-> +               if (!ret)
-> +                       ret =3D perf_sched__timehist(&sched);
->         } else {
->                 usage_with_options(sched_usage, sched_options);
->         }
->
-> +out:
->         /* free usage string allocated by parse_options_subcommand */
->         free((void *)sched_usage[0]);
->
-> -       return 0;
-> +       return ret;
->  }
 > --
 > 2.50.0.727.gbf7dc18ff4-goog
 >
