@@ -1,76 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769DD214A7B;
-	Thu,  3 Jul 2025 01:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734912DE710;
+	Thu,  3 Jul 2025 02:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507387; cv=none; b=apFMHeTJyaCwfl6reQMkUmMe0VMaw8wR1ydoRWg8X5+iFSYYyQ4Em7OyvVEu/QhAa58Ut4/lPP25JNimvryX/5a/1GO6wDkZ1JLeEdpnosLI5sznRTPGuo2x7oKL9VSwCTku/eEfGvhGz05W64FLbUQe9+huqhADJuYEpbbkeDo=
+	t=1751509232; cv=none; b=lHO9rh4Q+9tWqmOXsB6VNhHyMKvRVc7g7ujw8Tjv6u43OgkKlquescBj51Y0IJn8S6kJJxl8lt19kYS77r0yiZfK9iHIPTMzRnq9rPk84nxY346pii3YKtZ1aCjlcm0bGZm66+ef2fV0CDC58P4nPY4oL7FZULwoC6NPef+GQ1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751507387; c=relaxed/simple;
-	bh=qV50sNpmeQ+z4VHzK7ckgYbxgB6pDIXg/c1TlYYcuLw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Au6Pdr2aH8vHy/Ac/puVWGITVqXQoAgHyZz3mNL8iax7HVAkELuvb0d4Sw6KomxQJ9V3BlWsGSVNzdzwl0mXMyz3PgYA8X6n0YT0j8LdFWCwz2rTVerUz5Zxve2QUbaQRAdWUEvdNlKU1AoQpgz5+sEyzWyx5Qt8knFe1mVuldM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcQv0sHT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751509232; c=relaxed/simple;
+	bh=3QGlA5N58P9kqAdo20UwxugIXkueW9CJqBSUBqsZqSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fkw8nTXi0NSU89a/tQuOOLZt2dDiBnYvYf/EwrgW/F3Fb8mQJCN7QBPVZL9iFndlbpdst3WeWDfjmJxyK68uMfmfjzV01NDgkzlc2YEApME9L5T0dt8d52XYHBmdcTtlLLjWz2RQ+W7hvhI8+WmvnyzTDJSz53P21ckyrcQc5vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMXxgBMf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcQv0sHT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3EBC4CEF0;
-	Thu,  3 Jul 2025 01:49:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMXxgBMf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515EBC4CEE7;
+	Thu,  3 Jul 2025 02:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751507386;
-	bh=qV50sNpmeQ+z4VHzK7ckgYbxgB6pDIXg/c1TlYYcuLw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jcQv0sHTsdAz3whlyscoDezIa+gypvgDAxztngAUEdKWHhdk6kzq/Hqs2UNWlJC95
-	 eGlEPBU6imwAhOW8/cs6KyK6Yd1EpM0BiU2FYfxD8/psRSLtun+cR9DG4sLzIzaaoO
-	 tiEnbds8Nmz2qU/Afp8p6vmFyghKhYYUjLLdUXWDJhfLjkT08/T7VPVIXaZ87KAMqI
-	 KhXEGS6khkAWSFbABw0PcQPR+tpRIrtsNYDFPU4MB67tbnBx1C6sZPuTgULR6pzjPQ
-	 f0On84tKwFe7accZ64iluR9JTli3RwnbZmfzjYepge7aW/Sos4bju6Zz7ZgoWvnA24
-	 DFSNuLZ1SznDw==
+	s=k20201202; t=1751509231;
+	bh=3QGlA5N58P9kqAdo20UwxugIXkueW9CJqBSUBqsZqSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JMXxgBMfIZt0C+oTsNCz0ROeqA9iCjcxzTCuFjgVvfu9NuUDnIDuWTpVKCRikVCUl
+	 JWojCndGFXjKOUcGTnW8WGV1fJuZm0ufRfGxx8h/IDBvSCE3G89xpry2gn1BOttvJa
+	 l/XLBw8mJ3wS6aAA9tWXy/eKLudME3MgTfpNUDaAIdxHzC95c3AvwkAUPPgGqoPaED
+	 xt/JHGTnAyUkGDABObDm+2EyB6pzd8q+eFAcHUpXdkVsQxbLhzS+BKBzrKxM1PJHz+
+	 KeeDsnE9ceV2lRG5npsnNGcgvCLMl2reb8PRlVLFHcc/V8l1qs5akcYxq1aLQdEl5f
+	 rId+bByT4Qs8Q==
+Date: Wed, 2 Jul 2025 19:20:28 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 6/8] perf sched: Use RC_CHK_EQUAL() to compare pointers
-Date: Wed,  2 Jul 2025 18:49:40 -0700
-Message-ID: <20250703014942.1369397-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
-References: <20250703014942.1369397-1-namhyung@kernel.org>
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/5] perf test: Sanity check file descriptors are
+ cleaned up
+Message-ID: <aGXo7Hp31qZOTx9S@google.com>
+References: <20250624190326.2038704-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250624190326.2038704-1-irogers@google.com>
 
-So that it can check two pointers to the same object properly when
-REFCNT_CHECKING is on.
+On Tue, Jun 24, 2025 at 12:03:20PM -0700, Ian Rogers wrote:
+> Some recent patches showed we were leaking file descriptors:
+> https://lore.kernel.org/lkml/20250617223356.2752099-2-irogers@google.com/
+> 
+> When a test is forked the file descriptors >3 can be closed and then
+> any file descriptors >3 left after the test are leaks. Add this
+> checking to the forked test code. Prior to that clean up some file
+> descriptor usage so we can assert that only file descriptors are
+> cleaned up. Sometimes the file descriptor being held open is the
+> result of a memory leak, so fix those.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Interesting, I can see a few more tests are failing with this.  But we
+can figure it out later.
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index a6eb0462dd5be20f..087d4eaba5f7160d 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -994,7 +994,7 @@ thread_atoms_search(struct rb_root_cached *root, struct thread *thread,
- 		else if (cmp < 0)
- 			node = node->rb_right;
- 		else {
--			BUG_ON(thread != atoms->thread);
-+			BUG_ON(!RC_CHK_EQUAL(thread, atoms->thread));
- 			return atoms;
- 		}
- 	}
--- 
-2.50.0.727.gbf7dc18ff4-goog
+Thanks,
+Namhyung
 
+> 
+> Ian Rogers (5):
+>   perf dso: Add missed dso__put to dso__load_kcore
+>   perf test code-reading: Avoid a leak of cpus and threads
+>   perf hwmon_pmu: Hold path rather than fd
+>   perf dso: With ref count checking, avoid dso_data holding dso live
+>   perf test: In forked mode add check that fds aren't leaked
+> 
+>  tools/perf/tests/builtin-test.c | 69 +++++++++++++++++++++++++++++++++
+>  tools/perf/tests/code-reading.c |  7 ----
+>  tools/perf/tests/hwmon_pmu.c    | 11 +++---
+>  tools/perf/util/dso.c           |  4 ++
+>  tools/perf/util/hwmon_pmu.c     | 38 +++++++++++++-----
+>  tools/perf/util/hwmon_pmu.h     |  4 +-
+>  tools/perf/util/pmus.c          |  2 +-
+>  tools/perf/util/pmus.h          |  2 +-
+>  tools/perf/util/symbol.c        |  1 +
+>  9 files changed, 112 insertions(+), 26 deletions(-)
+> 
+> -- 
+> 2.50.0.714.g196bf9f422-goog
+> 
