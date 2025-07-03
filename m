@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DA72E62D8;
-	Thu,  3 Jul 2025 18:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE402FA627;
+	Thu,  3 Jul 2025 18:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751566731; cv=none; b=h3I/diZ+MktzwrlBTUjBIXPXHN+QbfxW/H2+QL5aoPPbLk2toDfnXdA2pvcM6+tJEokTr57njhgnTYIXt2lCSd5G0JLQcoXz8PBZ3dh5K+0dIx0CPGzvtsO6ObwsBz7OIwOEpIna7GXHEgvLG9eiAn4mMXdshVtDwLmOn+wziSQ=
+	t=1751566897; cv=none; b=s/Fj1OtMTBun+V/mT0yxdxtcF4jDORVFTh9QrMOjcmEh2hq/caBi31L3VHJfrNmTdI8aUGFt/4NXrnXzuV0BgwTAVYEdMmF7u3q1f5EaWJVE6qScq1EIkWz0WZE3MG7TyFwv8kYGCIilsYO5P0C7w0nXM/+HUZeofe5H/Ha1ep8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751566731; c=relaxed/simple;
-	bh=YtFOwhZrPGivqU0Tqz0yuzRP+19G1n+XMW2/iidYBCE=;
+	s=arc-20240116; t=1751566897; c=relaxed/simple;
+	bh=comsglRO8MoeAgt/YG6y2jZ5FywI+W3zZGLs2qsqv44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ba3SQNXTjG5jEp6OKBsDv4K1Ogi0ZLNhCsA9iV1q+GazOSqel1Igp7jBp3lNzWURUp/gJDXE6p8DD6GbtmJ01WVRJ5gzIu9fOf2g+OtBJsLZk/iEKnbSugD2V8Wc4RFggXd8jxiEfPq+ZtN6BgXjw4mRlVM91EPBSC4p0goQRPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDe9ywVH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfDOl7WkHdHgId0Qd6iaMXVFAi0Z8wXm/I9k8KNGC4Buix8CzjvjZqZmr0k2YRaya4ZG6N9UeyEd98xhjkSuEzaUaYAzrcLV0TEf1eToO8pay17kcIV8/nipP4h9+9J0SF+It1irjE6GYftaG4x7Uua9ULZvsXy/aUh5t7HPBoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwlBNp+d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDe9ywVH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EF6C4CEE3;
-	Thu,  3 Jul 2025 18:18:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwlBNp+d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06BCC4CEE3;
+	Thu,  3 Jul 2025 18:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751566730;
-	bh=YtFOwhZrPGivqU0Tqz0yuzRP+19G1n+XMW2/iidYBCE=;
+	s=k20201202; t=1751566897;
+	bh=comsglRO8MoeAgt/YG6y2jZ5FywI+W3zZGLs2qsqv44=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vDe9ywVHnoUjJJqBxeRTTtA2aWotCcgZN3vFh6rF/45Th9Boi+H6d5XYiYtcqO4kW
-	 9VbCVKp0m1/nQE0RrhPNLRgD/0K6bt1+w6ifxFEY2lMD/SMlLK0pI23q+GZbDyBXYw
-	 Z+6WRrRtdrAFFWXVR/TxYSF0GAXTrgZi9E0DyePG8dHuU2wIIvDe3MWvclLAvN1yGr
-	 olLn/awScAMeH0JhVS5XR254u+KtSK0ADBazXOW3CnobESY8AJ3iJUg6qtiSvRl2TM
-	 90ztEgw9ebUSGdvnd7vdtEH1wJB0Ktn+ykc+IrWc7QnQR18J26YXCk4djJ1jrKgExE
-	 c4yqn4ZiGnmDA==
-Date: Thu, 3 Jul 2025 11:18:47 -0700
+	b=GwlBNp+dX0hCAI2HTyVDK3m5Od/dtveV7FsJ+ijhFLEUt9x/JdKV/HA8g9ZDkdn6w
+	 z+qd4xdd9dj+8V/Gld5AqYA13L+rZrW4826MXAEiLa+Sml5NqsdJ5IuN70s1eE9tC8
+	 05p5y8Fl5Siemdh2OFRfGRMfZH85Vcme0FEsD4WLaC5PCDdvHJxBZ0U6+ZnsgXRQ8d
+	 2V/b1hE1wHu41sbrchSa0Fy9JAh2ot4mElNkwZTB/os1UreFjchoajviXctzIIhNRz
+	 thPG3M2RDsnZDlEbaoKWU2fsRJrWlVcVHg/HOwBb55/gsc5wRWND3uKzaB407LWK+u
+	 +4LWsZi92a5zA==
+Date: Thu, 3 Jul 2025 11:21:34 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -36,23 +36,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Dmitry Vyukov <dvyukov@google.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] perf test: Sanity check file descriptors are
- cleaned up
-Message-ID: <aGbJh-hGwzV6OJwO@google.com>
-References: <20250624190326.2038704-1-irogers@google.com>
- <aGXo7Hp31qZOTx9S@google.com>
- <CAP-5=fV4mSjxJBSScYu1XFqFMMT0vO+jJDwq57kUB+cEkxQqMQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf header: Fix pipe mode header dumping
+Message-ID: <aGbKLj6ZQxlVrXAA@google.com>
+References: <20250703042000.2740640-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,33 +48,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV4mSjxJBSScYu1XFqFMMT0vO+jJDwq57kUB+cEkxQqMQ@mail.gmail.com>
+In-Reply-To: <20250703042000.2740640-1-irogers@google.com>
 
-On Wed, Jul 02, 2025 at 08:03:08PM -0700, Ian Rogers wrote:
-> On Wed, Jul 2, 2025 at 7:20 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Tue, Jun 24, 2025 at 12:03:20PM -0700, Ian Rogers wrote:
-> > > Some recent patches showed we were leaking file descriptors:
-> > > https://lore.kernel.org/lkml/20250617223356.2752099-2-irogers@google.com/
-> > >
-> > > When a test is forked the file descriptors >3 can be closed and then
-> > > any file descriptors >3 left after the test are leaks. Add this
-> > > checking to the forked test code. Prior to that clean up some file
-> > > descriptor usage so we can assert that only file descriptors are
-> > > cleaned up. Sometimes the file descriptor being held open is the
-> > > result of a memory leak, so fix those.
-> >
-> > Interesting, I can see a few more tests are failing with this.  But we
-> > can figure it out later.
+On Wed, Jul 02, 2025 at 09:20:00PM -0700, Ian Rogers wrote:
+> The pipe mode header dumping was accidentally removed when tracing of
+> header feature events in pipe mode was added.
 > 
-> That's cool. I was a little disappointed that just the dso kcore leak
-> was found by this. I was also surprised that the dso kcore memory leak
-> hadn't shown up with leak sanitizer and reference count checking. Let
-> me know if there is anything more I need to do to the patch series.
+> Minor spelling tweak to header test failure message.
+> 
+> Fixes: 61051f9a8452 ("perf header: In pipe mode dump features without --header/-I")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Applied to perf-tools-next, thanks!
+Yep, this makes the header test succeed.
 
-Best Regards,
+Tested-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
 Namhyung
 
+> ---
+>  tools/perf/tests/shell/header.sh |  2 +-
+>  tools/perf/util/header.c         | 15 ++++++++++++++-
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/header.sh
+> index 412263de6ed7..e1628ac0a614 100755
+> --- a/tools/perf/tests/shell/header.sh
+> +++ b/tools/perf/tests/shell/header.sh
+> @@ -42,7 +42,7 @@ check_header_output() {
+>    do
+>      if ! grep -q -E "$i" "${script_output}"
+>      then
+> -      echo "Failed to find expect $i in output"
+> +      echo "Failed to find expected $i in output"
+>        err=1
+>      fi
+>    done
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 487f663ed2de..53d54fbda10d 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -4343,6 +4343,7 @@ int perf_event__process_feature(struct perf_session *session,
+>  	int type = fe->header.type;
+>  	u64 feat = fe->feat_id;
+>  	int ret = 0;
+> +	bool print = dump_trace;
+>  
+>  	if (type < 0 || type >= PERF_RECORD_HEADER_MAX) {
+>  		pr_warning("invalid record type %d in pipe-mode\n", type);
+> @@ -4362,8 +4363,20 @@ int perf_event__process_feature(struct perf_session *session,
+>  		goto out;
+>  	}
+>  
+> -	if (dump_trace) {
+> +	if (session->tool->show_feat_hdr) {
+> +		if (!feat_ops[feat].full_only ||
+> +		    session->tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
+> +			print = true;
+> +		} else {
+> +			fprintf(stdout, "# %s info available, use -I to display\n",
+> +				feat_ops[feat].name);
+> +		}
+> +	}
+> +
+> +	if (dump_trace)
+>  		printf(", ");
+> +
+> +	if (print) {
+>  		if (feat_ops[feat].print)
+>  			feat_ops[feat].print(&ff, stdout);
+>  		else
+> -- 
+> 2.50.0.727.gbf7dc18ff4-goog
+> 
