@@ -1,93 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362C12F7CE7;
-	Wed,  2 Jul 2025 19:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B4D372;
+	Thu,  3 Jul 2025 01:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751483860; cv=none; b=FJf2hu4IfN+DposEZMi2HcvK+soQkB2HbFgW6/MtuZtpaPb7/7A01iMNkWxsWGgroFuKljFQTIgcHQICpTOtXKixXFpD7//m1QTED2ZgzA5mQBfTcPE25QhpMieMCNb/pjXEd0Sug4yct61zE90n9PQNn70zY6mwjz1NkmIWXrM=
+	t=1751507383; cv=none; b=fZe+1hGsOMhZGbbETr7uB5jdUpN9mK/ItFu4JN+hcGEkT2qaD04hoI06OW/4eZ1ulr0ZUnSk482Mtk7VugARiiBRavc/deyWTmUEksUKshtKLMplBj4AKmoSOpVs4O65nkioOuwkobGAqA8d927CTPIZHuBYEP7JDtLM/1xSEjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751483860; c=relaxed/simple;
-	bh=ae0YSSTMJY0yFeF41XCO6ZMo0RwLJkVnxIpyijNUtO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sa+y2Qig4alNb4zVmtOApSP96dmoIRbITPOsuPTAB2OMTqkpohyd70PLMXVHLz1xLfxRFA7I1lGhUe+JEwvXVtnpk1RIsgT3rpTemZVPwcZ1KfdbTnzpUH5e7TPjULoDX3LEIrjcYT3kednxc94MrviDqYduJrIMrZTnm1QsTrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQK3o/rm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751507383; c=relaxed/simple;
+	bh=cxMgjOrSVmz0Kezmos+F09bpBrgtNx3UL8/GPad7cbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N1fJvh6fdb3Qh8fgNsrhJC8q7HPFF4M9cS/7fvsifEt3EsUl4xmYDVtBRHlZCSxnlWV2XhzP6mLiMZ2AYRSr27dpcUZkyajmlQvT5+XJ8zTpntl/0XEUuU2IFh0eIFkxoO5ykC1bs8F0Eg6wuvYoNq3+eb9/gNoV4nMEmfEyMko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvLFguuw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQK3o/rm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFB7C4CEE7;
-	Wed,  2 Jul 2025 19:17:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvLFguuw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B01C4CEE7;
+	Thu,  3 Jul 2025 01:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751483859;
-	bh=ae0YSSTMJY0yFeF41XCO6ZMo0RwLJkVnxIpyijNUtO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EQK3o/rm1pQred0z44XroT0vRwuPmpANmof0x/4kjSmShZtsh4DWVCsXgfNB2UIwZ
-	 TCeGyR01Da5ihnX6EnJ8XDefR6yKEK4Yd4Kq6PI9ht1hewaWP/tp0gfopmqBQoaY6J
-	 rwwLTis3tvS8Rz3wFLftQuKIYeabpMHV9SvqmN+zDdj1vtGOkL7poODG1XifT0OvJl
-	 1h4elV3AjXpC6BtXvnqE010t23WfTrNMTGBPodiZghReuoeCTf0H+aKO+pgREqUJnq
-	 hjy2/WqdfxQHBVnorcpZCYtWprPEHa3wOhXJrrF+1KLNHP/8rzEbg8dF5gm6+p56+8
-	 NfDkrGIB3isfw==
-Date: Wed, 2 Jul 2025 12:17:36 -0700
+	s=k20201202; t=1751507383;
+	bh=cxMgjOrSVmz0Kezmos+F09bpBrgtNx3UL8/GPad7cbw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gvLFguuwBY9ywUUqoxdKyHeR0LQdSC/oiFLvxV7IisWNbjW83TyEwATcKKxJ1T7Pu
+	 YiUwiyHgqwx5RsR+J38A15j4Yo02PGRuF6C7BpiwvrGj3vGFAXW1lmszh8cAiJQTSt
+	 H5wj25gfZbNvYdtQgCum9bFtAvn4fmc0QwUMU7UUvKVyg8VAGdcz02q+93PiFY9OXb
+	 RomvRE5t2bSZd0CSqQBTLPsHzCheRKUjV9sCetlC7KrC+Ak/1gyaDUPEIsnKImB1MB
+	 rBvHS7Sm6G0Aj+Xl19rhAcIsC02+oIUibs0jRXte4Ig2f5dKSQRG+FpF6nVZXw2mXc
+	 JvcUkhF7/EBiA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf genelf: Fix NO_LIBDW=1 build
-Message-ID: <aGWF0Czs_7moo8uO@google.com>
-References: <20250702175402.761818-1-irogers@google.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCHSET 0/8] perf sched: Fix various memory leaks
+Date: Wed,  2 Jul 2025 18:49:34 -0700
+Message-ID: <20250703014942.1369397-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702175402.761818-1-irogers@google.com>
 
-On Wed, Jul 02, 2025 at 10:54:02AM -0700, Ian Rogers wrote:
-> With NO_LIBDW=1 a new unused-parameter warning/error has appeared:
-> ```
-> util/genelf.c: In function ‘jit_write_elf’:
-> util/genelf.c:163:32: error: unused parameter ‘load_addr’ [-Werror=unused-parameter]
->   163 | jit_write_elf(int fd, uint64_t load_addr, const char *sym,
-> ```
+Hello,
 
-Thanks for the fix.
+While running the new perf sched test with ASAN, it fails due to
+memory leaks.  They comes mostly from missing thread__put() but
+sometimes it needs to release other data structures.
 
-And I found there's no entry for NO_LIBDW=1 in the build-test.
-Can you please add one?
+Fix those leaks and add more subcommands to the test.
 
 Thanks,
 Namhyung
 
-> 
-> Fixes: e3f612c1d8f3 ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/genelf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-> index fcf86a27f69e..591548b10e34 100644
-> --- a/tools/perf/util/genelf.c
-> +++ b/tools/perf/util/genelf.c
-> @@ -160,7 +160,7 @@ jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
->   * csize: the code size in bytes
->   */
->  int
-> -jit_write_elf(int fd, uint64_t load_addr, const char *sym,
-> +jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
->  	      const void *code, int csize,
->  	      void *debug __maybe_unused, int nr_debug_entries __maybe_unused,
->  	      void *unwinding, uint64_t unwinding_header_size, uint64_t unwinding_size)
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
-> 
+
+Namhyung Kim (8):
+  perf sched: Make sure it frees the usage string
+  perf sched: Free thread->priv using priv_destructor
+  perf sched: Fix memory leaks in 'perf sched map'
+  perf sched: Fix thread leaks in 'perf sched timehist'
+  perf sched: Fix memory leaks for evsel->priv in timehist
+  perf sched: Use RC_CHK_EQUAL() to compare pointers
+  perf sched: Fix memory leaks in 'perf sched latency'
+  perf test: Add more test cases to sched test
+
+ tools/perf/builtin-sched.c      | 147 +++++++++++++++++++++++---------
+ tools/perf/tests/shell/sched.sh |  39 +++++++--
+ tools/perf/util/evsel.c         |  11 +++
+ tools/perf/util/evsel.h         |   2 +
+ 4 files changed, 153 insertions(+), 46 deletions(-)
+
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
