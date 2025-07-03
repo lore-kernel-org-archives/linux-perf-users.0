@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041BE1DB346;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041691DB148;
 	Thu,  3 Jul 2025 01:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507386; cv=none; b=E8SraMek8z9lMiF7GmNYJzRCAKhcOcZO12HSI1JGRqfHbkUFbtZYKz57AVARO4EsoAbVrqAZpOW+9xwTXURspzFmnA41nmuv6H3mg7S9Xi0wRcnlkVdpau5+Am/DYETiNFm3EdcU/5GPNO090xq8h9m4Dk6z2brOf/PW2mAp0N4=
+	t=1751507386; cv=none; b=DebzXCrtq8oZ35pQGv69R5xI83a6vN9Rte+3ft1YCVoINdYYP9XWDWPKys7npSxDAw2tTB/+gvwryRz3QxCDjxbNgJSwPZtarwdfeOzlHxvCo+oHerprAQ/f9LiDYRsWx7rQk3p0gzcsWIihQTCCnjdt8j07S4aPlMROq2vl7R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751507386; c=relaxed/simple;
-	bh=X4NV6G18FdzyzBwiRrfRrm4NvowTBnkgrW9f4n3GILw=;
+	bh=brjZ66S2Sv5ZaBEezsenPWufMzSYuey2BvMpjs1HNps=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lUVnljDoxWsRcTd6hQd6ZfbqPWyKKqX3DH0Gnwq+mCxZTFH1YD8SL6kRfU4+wBBVjIUV0bCQOeXUhodtyYmKXhFFtIL6v/0wZbCpaylSBeBevlsXOPHjszXnPd/bx4Ke2VMjGTZtPB9ZJe5G8gfATGvFMNe530slq6MxYktE3fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg5/IrHz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=omJea0FF5wdtNsqJ6jsKJyVFyh+JC1aS6TnBh24CFVpXpmVt9+ob3iGHrybExllwKFem7tulbQg6XX/h2BF3Q9gRh81moCZsGQ2qhFvy7+BqWrTYgXxvKvJvn7h4WDMx5MDdDH0nmpGwyHn7Ad0XFkdlDnUVnuFHZfRw+kivkmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDxvh7WA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg5/IrHz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2964C4CEE7;
-	Thu,  3 Jul 2025 01:49:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDxvh7WA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BC2C4CEED;
+	Thu,  3 Jul 2025 01:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751507385;
-	bh=X4NV6G18FdzyzBwiRrfRrm4NvowTBnkgrW9f4n3GILw=;
+	bh=brjZ66S2Sv5ZaBEezsenPWufMzSYuey2BvMpjs1HNps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fg5/IrHzbk+tlq4J5jHHqQkvqiaHNVFXD4UJP10jArnzloZASWD8Vej0H2UNLq0JC
-	 OtK1qxzKhtCFNeg1wIJMyzc7mbqUgiTEZAIOKrad+an7T1+2EwcNpnIWDwOzQu/caj
-	 GRuZe0xtxutTPs0RUB5fLlQI5Y2GfzkXYlVABfkZ+HKx2b8D7UYGU54NSGDb1e+I6a
-	 tfLGS5ZN3y2WdOz53ZmO5DKPkq9RQVBdQZfJ8pmCa6hKQEk+G1v2sWZN//U1MgPYC4
-	 f/szS9zB5McZA7OzjyVnfR4P8JbfU1JSDk+Qecyw8gx37eAOJQt8DCzKMlKFZKbfBJ
-	 Bkz/yqhA22MUg==
+	b=pDxvh7WAxh2dVh/HvhUQuAui4ShsIpFsKiHoo8GgHGUYl1zSNZKGTvuhSTEclunXi
+	 rfwTe91yr0e9OryeGlMUtYFU2kbxGvzbOHnRKaOYbntW6mNgUHwNIipzi+T5QEhZEt
+	 Qrod+OmJ9SYMq7fV8S0BxiSaYcSvPYgsQRAqnZ+Rw3Eo3X6mcdeTRL656eeqOqw2+5
+	 Vsb+Trrpa1xSqAlDjT4kr64FY0yxU0l8lhguMXyfZvtD6Xb4W9TYnezdIthmnMZW6c
+	 e+u1SBQnBqUxsNIH1s7M8W8Yg3sxjQB7vhpICHXsWjXzvH1m4u0dhJdFpURy4ToBYu
+	 owLslqbvF0FgQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/8] perf sched: Fix thread leaks in 'perf sched timehist'
-Date: Wed,  2 Jul 2025 18:49:38 -0700
-Message-ID: <20250703014942.1369397-5-namhyung@kernel.org>
+Subject: [PATCH 5/8] perf sched: Fix memory leaks for evsel->priv in timehist
+Date: Wed,  2 Jul 2025 18:49:39 -0700
+Message-ID: <20250703014942.1369397-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
 References: <20250703014942.1369397-1-namhyung@kernel.org>
@@ -50,187 +50,90 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add missing thread__put() after machine__findnew_thread() or
-timehist_get_thread().  Also idle threads' last_thread should be
-refcounted properly.
+It uses evsel->priv to save per-cpu timing information.  It should be
+freed when the evsel is released.
+
+Add the priv destructor for evsel same as thread to handle that.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-sched.c | 48 +++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 11 deletions(-)
+ tools/perf/builtin-sched.c | 12 ++++++++++++
+ tools/perf/util/evsel.c    | 11 +++++++++++
+ tools/perf/util/evsel.h    |  2 ++
+ 3 files changed, 25 insertions(+)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index b73989fb6acef8d6..83b5a85a91b7ffbd 100644
+index 83b5a85a91b7ffbd..a6eb0462dd5be20f 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -2313,8 +2313,10 @@ static void save_task_callchain(struct perf_sched *sched,
- 		return;
- 	}
+@@ -2020,6 +2020,16 @@ static u64 evsel__get_time(struct evsel *evsel, u32 cpu)
+ 	return r->last_time[cpu];
+ }
  
--	if (!sched->show_callchain || sample->callchain == NULL)
-+	if (!sched->show_callchain || sample->callchain == NULL) {
-+		thread__put(thread);
- 		return;
++static void timehist__evsel_priv_destructor(void *priv)
++{
++	struct evsel_runtime *r = priv;
++
++	if (r) {
++		free(r->last_time);
++		free(r);
 +	}
- 
- 	cursor = get_tls_callchain_cursor();
- 
-@@ -2323,10 +2325,12 @@ static void save_task_callchain(struct perf_sched *sched,
- 		if (verbose > 0)
- 			pr_err("Failed to resolve callchain. Skipping\n");
- 
-+		thread__put(thread);
- 		return;
- 	}
- 
- 	callchain_cursor_commit(cursor);
-+	thread__put(thread);
- 
- 	while (true) {
- 		struct callchain_cursor_node *node;
-@@ -2403,8 +2407,17 @@ static void free_idle_threads(void)
- 		return;
- 
- 	for (i = 0; i < idle_max_cpu; ++i) {
--		if ((idle_threads[i]))
--			thread__delete(idle_threads[i]);
-+		struct thread *idle = idle_threads[i];
++}
 +
-+		if (idle) {
-+			struct idle_thread_runtime *itr;
+ static int comm_width = 30;
+ 
+ static char *timehist_get_commstr(struct thread *thread)
+@@ -3314,6 +3324,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 
+ 	setup_pager();
+ 
++	evsel__set_priv_destructor(timehist__evsel_priv_destructor);
 +
-+			itr = thread__priv(idle);
-+			if (itr)
-+				thread__put(itr->last_thread);
+ 	/* prefer sched_waking if it is captured */
+ 	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+ 		handlers[1].handler = timehist_sched_wakeup_ignore;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 9c50c3960487feee..3896a04d90af71f3 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1657,6 +1657,15 @@ static void evsel__free_config_terms(struct evsel *evsel)
+ 	free_config_terms(&evsel->config_terms);
+ }
+ 
++static void (*evsel__priv_destructor)(void *priv);
 +
-+			thread__delete(idle);
-+		}
- 	}
- 
- 	free(idle_threads);
-@@ -2441,7 +2454,7 @@ static struct thread *get_idle_thread(int cpu)
- 		}
- 	}
- 
--	return idle_threads[cpu];
-+	return thread__get(idle_threads[cpu]);
- }
- 
- static void save_idle_callchain(struct perf_sched *sched,
-@@ -2496,7 +2509,8 @@ static struct thread *timehist_get_thread(struct perf_sched *sched,
- 			if (itr == NULL)
- 				return NULL;
- 
--			itr->last_thread = thread;
-+			thread__put(itr->last_thread);
-+			itr->last_thread = thread__get(thread);
- 
- 			/* copy task callchain when entering to idle */
- 			if (evsel__intval(evsel, sample, "next_pid") == 0)
-@@ -2567,6 +2581,7 @@ static void timehist_print_wakeup_event(struct perf_sched *sched,
- 	/* show wakeup unless both awakee and awaker are filtered */
- 	if (timehist_skip_sample(sched, thread, evsel, sample) &&
- 	    timehist_skip_sample(sched, awakened, evsel, sample)) {
-+		thread__put(thread);
- 		return;
- 	}
- 
-@@ -2583,6 +2598,8 @@ static void timehist_print_wakeup_event(struct perf_sched *sched,
- 	printf("awakened: %s", timehist_get_commstr(awakened));
- 
- 	printf("\n");
++void evsel__set_priv_destructor(void (*destructor)(void *priv))
++{
++	assert(evsel__priv_destructor == NULL);
 +
-+	thread__put(thread);
- }
++	evsel__priv_destructor = destructor;
++}
++
+ void evsel__exit(struct evsel *evsel)
+ {
+ 	assert(list_empty(&evsel->core.node));
+@@ -1687,6 +1696,8 @@ void evsel__exit(struct evsel *evsel)
+ 	hashmap__free(evsel->per_pkg_mask);
+ 	evsel->per_pkg_mask = NULL;
+ 	zfree(&evsel->metric_events);
++	if (evsel__priv_destructor)
++		evsel__priv_destructor(evsel->priv);
+ 	perf_evsel__object.fini(evsel);
+ 	if (evsel__tool_event(evsel) == TOOL_PMU__EVENT_SYSTEM_TIME ||
+ 	    evsel__tool_event(evsel) == TOOL_PMU__EVENT_USER_TIME)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6dbc9690e0c9258c..b84ee274602d7d2b 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -280,6 +280,8 @@ void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+ void evsel__exit(struct evsel *evsel);
+ void evsel__delete(struct evsel *evsel);
  
- static int timehist_sched_wakeup_ignore(const struct perf_tool *tool __maybe_unused,
-@@ -2611,8 +2628,10 @@ static int timehist_sched_wakeup_event(const struct perf_tool *tool,
- 		return -1;
++void evsel__set_priv_destructor(void (*destructor)(void *priv));
++
+ struct callchain_param;
  
- 	tr = thread__get_runtime(thread);
--	if (tr == NULL)
-+	if (tr == NULL) {
-+		thread__put(thread);
- 		return -1;
-+	}
- 
- 	if (tr->ready_to_run == 0)
- 		tr->ready_to_run = sample->time;
-@@ -2622,6 +2641,7 @@ static int timehist_sched_wakeup_event(const struct perf_tool *tool,
- 	    !perf_time__skip_sample(&sched->ptime, sample->time))
- 		timehist_print_wakeup_event(sched, evsel, sample, machine, thread);
- 
-+	thread__put(thread);
- 	return 0;
- }
- 
-@@ -2649,6 +2669,7 @@ static void timehist_print_migration_event(struct perf_sched *sched,
- 
- 	if (timehist_skip_sample(sched, thread, evsel, sample) &&
- 	    timehist_skip_sample(sched, migrated, evsel, sample)) {
-+		thread__put(thread);
- 		return;
- 	}
- 
-@@ -2676,6 +2697,7 @@ static void timehist_print_migration_event(struct perf_sched *sched,
- 	printf(" cpu %d => %d", ocpu, dcpu);
- 
- 	printf("\n");
-+	thread__put(thread);
- }
- 
- static int timehist_migrate_task_event(const struct perf_tool *tool,
-@@ -2695,8 +2717,10 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
- 		return -1;
- 
- 	tr = thread__get_runtime(thread);
--	if (tr == NULL)
-+	if (tr == NULL) {
-+		thread__put(thread);
- 		return -1;
-+	}
- 
- 	tr->migrations++;
- 	tr->migrated = sample->time;
-@@ -2706,6 +2730,7 @@ static int timehist_migrate_task_event(const struct perf_tool *tool,
- 		timehist_print_migration_event(sched, evsel, sample,
- 							machine, thread);
- 	}
-+	thread__put(thread);
- 
- 	return 0;
- }
-@@ -2728,10 +2753,10 @@ static void timehist_update_task_prio(struct evsel *evsel,
- 		return;
- 
- 	tr = thread__get_runtime(thread);
--	if (tr == NULL)
--		return;
-+	if (tr != NULL)
-+		tr->prio = next_prio;
- 
--	tr->prio = next_prio;
-+	thread__put(thread);
- }
- 
- static int timehist_sched_change_event(const struct perf_tool *tool,
-@@ -2743,7 +2768,7 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 	struct perf_sched *sched = container_of(tool, struct perf_sched, tool);
- 	struct perf_time_interval *ptime = &sched->ptime;
- 	struct addr_location al;
--	struct thread *thread;
-+	struct thread *thread = NULL;
- 	struct thread_runtime *tr = NULL;
- 	u64 tprev, t = sample->time;
- 	int rc = 0;
-@@ -2867,6 +2892,7 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 
- 	evsel__save_time(evsel, sample->time, sample->cpu);
- 
-+	thread__put(thread);
- 	addr_location__exit(&al);
- 	return rc;
- }
+ void evsel__config(struct evsel *evsel, struct record_opts *opts,
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
