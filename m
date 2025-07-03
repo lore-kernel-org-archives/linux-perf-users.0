@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E611F3FF4;
-	Thu,  3 Jul 2025 01:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314B01FFC45;
+	Thu,  3 Jul 2025 01:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751507386; cv=none; b=Gjm762/iRXP4EPf519YQNeU7sbHTysq2S/qJTSRXzcZGBOqH18qi2Ms4gRFstTXKPw9PrH2fNTTFND/l+oFvR+dAyUKhmUlgLZX0d7wjLzD0SuGOIztWLsxFUJx7zMKYWhaKNQNXxqOltNeVp955yIcaTcDq1qp8j9fpo05LbAY=
+	t=1751507387; cv=none; b=RjT/8hDV6xPbksmxstfcprWG9OKWRB2bv0RlA97M3ENH2RxCXtUnGxi08b8Gv874puE3iKk9GyEimyud6u0YzHfTchvnpSpJV6sg8+rC6n3UHwo+kg2D8270Rd8HWh7FL/MsVrY52cg//emu5nDpCsotM+DxsrCf9O256IMjgZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751507386; c=relaxed/simple;
-	bh=QCu94DjYUjiUtTZcW4yZqzI5SrvSiYnBT9kSKjn/EJ8=;
+	s=arc-20240116; t=1751507387; c=relaxed/simple;
+	bh=QKC9dVoT8uAMP6ybmq2ZbGaAcXGjdbm+RC6KFdw5CG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qLdwBJ8wv/R7ggl1LjbtiolUD2CePsO8kZlcUpSN+49xniJ71sXsp2KKb15DF1Tj8tPgWMcsaziz7d9XQ/p75i8YEBILaA5QucsjVoWwC+VUSNmz4Vf2WOQICDwd2EuMm9sU/8UPGoVDcH2GoIv3oqKfXn8sWcUMlu7WOZ/KQBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCSI/dhW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ny2MNE9aWovWImZCn2r1Abp6OZ7TyTTtk4DAqsEiWodkN4G2/5zpYJwFI+3k0Y+rxyWOTWNBbqES7x7Gc3XiyfSbhVGY20TJHOarw+r90BX1uc/BDMnIfhkkFy+e62fUDZ3gBor2I2IGZuPV1E11vTnvH31IWHQ7ib4P0P2UvFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPtIEDsC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCSI/dhW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 390D2C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPtIEDsC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65EAC4CEF2;
 	Thu,  3 Jul 2025 01:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751507386;
-	bh=QCu94DjYUjiUtTZcW4yZqzI5SrvSiYnBT9kSKjn/EJ8=;
+	s=k20201202; t=1751507387;
+	bh=QKC9dVoT8uAMP6ybmq2ZbGaAcXGjdbm+RC6KFdw5CG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mCSI/dhWVYf1M4Sve90pJAh6H2QgS+iMkDg8UvgTOK/zfdlRH85y57AGJNqOoOATw
-	 LYPXRIETYoWk7Gd4p6l9LGtLkDqmJk9HtEG7kIKP8vrWMrN1IzqbnODa6W3tfCwlCW
-	 NS5/6CZ26/kfImH7NpAz/WFxaIm7GwEmTArQngEZ2BT3vuEU4MgcVLGz2P52JRwFwA
-	 92kMVPmbjErMcERsdAWq6/lbKQa5naT2x03vby6LZ0LUdXaYiEd5J+mgtYXjnL2J6m
-	 MizK0RxR2hLbavFToP9zRkgJFWDEzztffbPhUwpmHNZ1WDrnNSjKJZUd7973oDUMJd
-	 Ir6B8NEljN3xA==
+	b=FPtIEDsCST3nRSV5dMnSmkrcEJpctsGxDwiiK3odAchbvjzJUbWJvaOTSw6iosOn2
+	 j25ZwKCX9XYW2VG61Sn7ciPGCk8+Qhfgzoxz/fAem2IVRX3LGMh21psFFjpelVPIGr
+	 ItN584ldrRyKo5mw66PxtFDScUkYLMnVtvNtFwgTH3+tB9xnhMRArEF3Vb3IDInEkj
+	 AyHT0Dgp/bh+BQnsSXlnZLY8BJwahVMLXjgQ7I2y1sAt463OidsdSWbrzNkr9qQbsr
+	 l/4YU8HojLqCE0cAUlMDWJxkbxQ6m82f1GHa8gOR4TyD9PTUwFkpPtBXneHI1HLcKs
+	 xFYs3JpM2JhjA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 7/8] perf sched: Fix memory leaks in 'perf sched latency'
-Date: Wed,  2 Jul 2025 18:49:41 -0700
-Message-ID: <20250703014942.1369397-8-namhyung@kernel.org>
+Subject: [PATCH 8/8] perf test: Add more test cases to sched test
+Date: Wed,  2 Jul 2025 18:49:42 -0700
+Message-ID: <20250703014942.1369397-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To: <20250703014942.1369397-1-namhyung@kernel.org>
 References: <20250703014942.1369397-1-namhyung@kernel.org>
@@ -50,79 +50,104 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The work_atoms should be freed after use.  Add free_work_atoms() to
-make sure to release all.  It should use list_splice_init() when merging
-atoms to prevent accessing invalid pointers.
+  $ sudo ./perf test -vv 92
+   92: perf sched tests:
+  --- start ---
+  test child forked, pid 1360101
+  Sched record
+  pid 1360105's current affinity list: 0-3
+  pid 1360105's new affinity list: 0
+  pid 1360107's current affinity list: 0-3
+  pid 1360107's new affinity list: 0
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 4.330 MB /tmp/__perf_test_sched.perf.data.b3319 (12246 samples) ]
+  Sched latency
+  Sched script
+  Sched map
+  Sched timehist
+  Samples of sched_switch event do not have callchains.
+  ---- end(0) ----
+   92: perf sched tests                                                : Ok
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-sched.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/sched.sh | 39 ++++++++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 087d4eaba5f7160d..4bbebd6ef2e4a791 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1111,6 +1111,21 @@ add_sched_in_event(struct work_atoms *atoms, u64 timestamp)
- 	atoms->nb_atoms++;
+diff --git a/tools/perf/tests/shell/sched.sh b/tools/perf/tests/shell/sched.sh
+index c030126d1a0c918d..b9b81eaf856e6555 100755
+--- a/tools/perf/tests/shell/sched.sh
++++ b/tools/perf/tests/shell/sched.sh
+@@ -56,38 +56,61 @@ cleanup_noploops() {
+   kill "$PID1" "$PID2"
  }
  
-+static void free_work_atoms(struct work_atoms *atoms)
-+{
-+	struct work_atom *atom, *tmp;
+-test_sched_latency() {
+-  echo "Sched latency"
++test_sched_record() {
++  echo "Sched record"
+ 
+   start_noploops
+ 
+   perf sched record --no-inherit -o "${perfdata}" sleep 1
 +
-+	if (atoms == NULL)
-+		return;
-+
-+	list_for_each_entry_safe(atom, tmp, &atoms->work_list, list) {
-+		list_del(&atom->list);
-+		free(atom);
-+	}
-+	thread__zput(atoms->thread);
-+	free(atoms);
++  cleanup_noploops
 +}
 +
- static int latency_switch_event(struct perf_sched *sched,
- 				struct evsel *evsel,
- 				struct perf_sample *sample,
-@@ -3426,13 +3441,13 @@ static void __merge_work_atoms(struct rb_root_cached *root, struct work_atoms *d
- 			this->total_runtime += data->total_runtime;
- 			this->nb_atoms += data->nb_atoms;
- 			this->total_lat += data->total_lat;
--			list_splice(&data->work_list, &this->work_list);
-+			list_splice_init(&data->work_list, &this->work_list);
- 			if (this->max_lat < data->max_lat) {
- 				this->max_lat = data->max_lat;
- 				this->max_lat_start = data->max_lat_start;
- 				this->max_lat_end = data->max_lat_end;
- 			}
--			zfree(&data);
-+			free_work_atoms(data);
- 			return;
- 		}
- 	}
-@@ -3511,7 +3526,6 @@ static int perf_sched__lat(struct perf_sched *sched)
- 		work_list = rb_entry(next, struct work_atoms, node);
- 		output_lat_thread(sched, work_list);
- 		next = rb_next(next);
--		thread__zput(work_list->thread);
- 	}
- 
- 	printf(" -----------------------------------------------------------------------------------------------------------------\n");
-@@ -3525,6 +3539,13 @@ static int perf_sched__lat(struct perf_sched *sched)
- 
- 	rc = 0;
- 
-+	while ((next = rb_first_cached(&sched->sorted_atom_root))) {
-+		struct work_atoms *data;
++test_sched_latency() {
++  echo "Sched latency"
 +
-+		data = rb_entry(next, struct work_atoms, node);
-+		rb_erase_cached(next, &sched->sorted_atom_root);
-+		free_work_atoms(data);
-+	}
- out_free_cpus_switch_event:
- 	free_cpus_switch_event(sched);
- 	return rc;
+   if ! perf sched latency -i "${perfdata}" | grep -q perf-noploop
+   then
+     echo "Sched latency [Failed missing output]"
+     err=1
+   fi
+-
+-  cleanup_noploops
+ }
+ 
+ test_sched_script() {
+   echo "Sched script"
+ 
+-  start_noploops
+-
+-  perf sched record --no-inherit -o "${perfdata}" sleep 1
+   if ! perf sched script -i "${perfdata}" | grep -q perf-noploop
+   then
+     echo "Sched script [Failed missing output]"
+     err=1
+   fi
++}
+ 
+-  cleanup_noploops
++test_sched_map() {
++  echo "Sched map"
++
++  if ! perf sched map -i "${perfdata}" | grep -q perf-noploop
++  then
++    echo "Sched map [Failed missing output]"
++    err=1
++  fi
++}
++
++test_sched_timehist() {
++  echo "Sched timehist"
++
++  if ! perf sched timehist -i "${perfdata}" | grep -q perf-noploop
++  then
++    echo "Sched timehist [Failed missing output]"
++    err=1
++  fi
+ }
+ 
++test_sched_record
+ test_sched_latency
+ test_sched_script
++test_sched_map
++test_sched_timehist
+ 
+ cleanup
+ exit $err
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
