@@ -1,127 +1,140 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A2F2F2C6E;
-	Fri,  4 Jul 2025 10:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1212C08CD
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Jul 2025 11:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751625094; cv=none; b=FbgHS0NCbR4oI37Yo8p7on2qB/X2VQdjKafdB053UgCOV8F2y9nPy6mEVOnkxYbMJfCtJAl0a2d7jX0oB48WUecsi/ZBxLd7TvYP8NEr9HaDYaMNVHvMKK08dWVkw1F8lrnP3927s+SL12L/z/GRFE/bDtfjACBPa8cdaOdTcQM=
+	t=1751627459; cv=none; b=VTTre5XDJG7VEmE6ygahQXL+wjV8xB4p405nAV2qQkXUleMTD1FjFgopCZP9JuS2qLDH8NYheWaIQbaSFQPV4xRxNFxUVQvLEaIl0aGUPcFx99SePx7XbZFnhKxkITHTS05eJrcF317gfldCpxwh0phQBit0GByqc5oGENNmLjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751625094; c=relaxed/simple;
-	bh=wP9Qj0PzhkA69kKg43kptmGrDAjSerq7qh9RYRvlzyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZYURvIo6yR0fHXEt0d/an5Sq4Ef1TSow6Y8T0ZGEDtfGycq/SJnmj94i/zbiNQ4oo32rEif0uY66NMfmcVMNGls83ONmpgcYIM9ZGaA2vYpcyq51h9Dpq4uP9PQse7U06/ExYOJqSWowwAu2Yj5HG7wv599F5ptv5Dut9wpcBL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ly+ohCCE; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751627459; c=relaxed/simple;
+	bh=SF8CYPTrOdy+j7O2eI2p8/yS2Z2CtPaSi47s5TwJido=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G1RyGhc6oibMorZK6jMTdUIr09O+RpG/lLi8umpyJbIrliKJq7fShC2I7J4ldgQkwajJzgLjz/WvaOiKI0afvpC0PyzEJZDhR8bNyMXyeYuAYFXx3/JYbAbwwdcfPmW9Zl1YmbUk8+9xIuOvHhMgIoBHwIYOyl/9iZ6RJnOzl3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YxwURsWn; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ly+ohCCE"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e8110ac0f5so209143137.0;
-        Fri, 04 Jul 2025 03:31:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxwURsWn"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso426697f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Jul 2025 04:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751625092; x=1752229892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a/xQKlBOT6P4mp+UtjZoqvRrQDEQeBJnUbiMyYywOQc=;
-        b=Ly+ohCCEMt6WRK0vbiURp2L8HkSRqdzC8hu6spKqsxhu0M63lnPA1e8A06p4q65V2n
-         zPF6KPVj3z5Qet1iI0RS1gLGBTADh+oyZ1qoU8u7UXF+d1XP0kMzmH6khUyY7yDl6sJj
-         Q+swlpjEdKz8bjL9U8Tg47ZAOi74IoN+BDFmTeWazGb+1d1L4/dUWz/i45BoIDMeRV+V
-         j3oPjqME4+pFm5AzKMZQGFhyYTlQRxWSLFScbxtIk/kfskFCDAjgN1Xhhu/iFcBWSwjt
-         1SIBGuEsK3pHOglKp7+ez82VFP0HsqR8y924AetYEgZxUm/ApZ3ki1y6TiSuIq5oYJho
-         X70w==
+        d=linaro.org; s=google; t=1751627456; x=1752232256; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dCPtwnOfQ6keZPy4LpTxW8EywDH7gbIh/lGbQNpkD4Y=;
+        b=YxwURsWnXvzS80Tvw6J8p4Uq6DszfCS6+xdZA89QQ1/TyYml1nIsJREUoC+6SUOfGg
+         xqZ6DRB3xWd2NlLfqE8QkVgySf2IAA5Z2h8RTaD2FKmM2TYmgjimTv8H8R9lvGt3uInP
+         CbQIZNY3PMZsepzJtTU4HAIKnLcNSyqu8WwgYqE3yfNmc053ZUOT7+EbG/Pcf9wuMr4R
+         75hqNGEHlv2VK6QvPSt+KfCacSWYSHYiyTqKF+UO319gdZL6ZRhuwZFoiigCa7VE1y78
+         TnCJCL5Ys6DWICz3cPMaVWQ0TcgpvBYSv04rkGGXV5bYmE9CcWVkplEIPea8JNJyzUNm
+         kjEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751625092; x=1752229892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a/xQKlBOT6P4mp+UtjZoqvRrQDEQeBJnUbiMyYywOQc=;
-        b=e2GDVTlN7CHO5pWnCAPlHsdLUTLIhOtzmUbzFTh21/9SYOIrb+7XawFUV7nvBCXCXf
-         BDlS/jrFSxmhMdk0rlBhM70lU/BAPTzztOYKml4neWNCi8YPvc6cpRUowLVImjc1ZMHr
-         r6QG3xy4E8DqNfxe9MvuuujL+dt48L8r+QEhTAKveazjrqs0oLxVouV/SjbBKIxUotyz
-         9qSrbPaYUzcaCHSQt+P40dwulSp+x9rHGJFL3GRNxklFpI6DX9aRKfcbgCCytSv4qEzJ
-         wrbwAOksZaGG/lTNqv3rIE4bnDEKa2YgXQI7NBzUk7Z8HF+VnW3Y2c2+miQQ8LH06M49
-         H1UA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ33TrBpgOC4PM17l1Ipwzj1SLa6HaTvzebkTW0QkL4votJuix7Uvhj+A6HFpY0liGFfHQQExWVQvOBg0=@vger.kernel.org, AJvYcCXlddk5SJcnhpRjTxLgPQgAnbpLs+UX9rZ3mVtWk1h6K+sjH+KAoQ7q8Rf9iNE/rKSbCkx9V/cgT3A64eDn6OuDjQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/IjP4+3BsWDe6DdnH+J2SjPcK9IL+vMbztO6jPU98Wq/gwpsq
-	VEVNEWnXFuhpKdDazrcmtgloHpYJkN/oS/oivuv5w3BnkT/ZULKsFZUSEYAZ1mhsZiJqPeDl+QL
-	EKJteWxeCK/YHTqB7ZapysqYLbm42AHw=
-X-Gm-Gg: ASbGnctZd5ecsQHVcAsOdcBIbV2nMvTKMIAs+NUO2Mfd/HgmWGGP/Mqzxf0dTKhaNV9
-	k5WVd0V7RKJhFBJBnmf087Rcg3+hdXLhc8lt4nb10OH8uggy5rUdncUXxTeM3JRhTScq+sSvDg9
-	4zCX1yX54qoj6nVE8ZsiWncVY1tZUHUa7R6GvaxAZjgjQ=
-X-Google-Smtp-Source: AGHT+IHlGXvGOQ2VphguWOiSSKOQc0Bs6jXMtNMB761owKR/vtv710GFY0N2XIuOKvtR5oMroxYEWMNrPRtQek1SGN8=
-X-Received: by 2002:a05:6102:5a8b:b0:4e7:e5b2:f651 with SMTP id
- ada2fe7eead31-4f2f15acda9mr725020137.0.1751625092019; Fri, 04 Jul 2025
- 03:31:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751627456; x=1752232256;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dCPtwnOfQ6keZPy4LpTxW8EywDH7gbIh/lGbQNpkD4Y=;
+        b=fmicsIlkc8ELijY6LRw/PUa/Q0R3zU3nToOxUWqeevZfJZuWNiUksQ63oaJ9NPN4Hj
+         MKKSJH1QAAIbLy8dr6znRzp+E1MO9kuuhNPRiaJ/pn473ReGyPu8+IbUUrNHCcaHNjI7
+         LXt8a0vG105yjqbSw1w99kTYOcDMr1wv/ezyPyXQSass7sxHu4u9ISEvch1iG7IXcArh
+         bX+uIdZg3UTtO0ds8HFyoNBcchD/7r95nkq/WZ+JdRvqrEOIWVkx4KsFHx5AwcUCBybW
+         dwI8T7eoUmM3QeEv5dkNdWE/EaZWiQNdF0AMCbfNV0g2OgWoUrL/032vpPKPnNAZN4al
+         gxCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWooSCB3wx2EUwTyZVYUPkT5yVht9xDdzF7imA6LFh66abpgqfGTBhoqV+MbdmLl0HrWSpakzhOdHJljm05l/GN@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT2h6m4jGVROp/DOZBU5DTyNg/Ie1A75WF4k8CZTnMxgxxsIEp
+	I8Ia6V3h2cWZTOgzTnPS/0pmwBE9SFGlfSS8gPXB9oOcJJHJopAkfiUDhwb+lOPz0UU=
+X-Gm-Gg: ASbGnctb/cBtm++cIhrkvY0aJ4N0TdCqfry9D3DqvOoVVbh5tSEekX4/gxICa4r7gSO
+	iUEP6xyE5zzyQ4BFDJwnf1QIiBNkQkKY8yPfXMvNeK7Y4SbaRI2OL1FrhWMdhTlCPhe/sHpbOoD
+	hewHZQrZUdBHoEU2O2dMi0X9hNi71h0oviVoKCBB3E0rrmzwgHnDs+wpWZBH+lZ7ZWBEJFjoAQI
+	ngUMGxNwB2s//9fsQYlbGMJN0FL14cniIDFlrA/a40DF9mKfMQ5fTkjWKxP48iztKruwC/IIuox
+	JJHiVoT4gvNzn4OqKKp/p7oOtP80sMZPR8VqRp3a6QTO4MgpTKo5/FZK9qJuAt5c2dw=
+X-Google-Smtp-Source: AGHT+IFUrRT4OwH5hTE+/EwaS0JQstvht/Nvd/yC+ncXVq5jOgWUtrHO2HEpZmkTrSJj963GBPh1Hw==
+X-Received: by 2002:a05:6000:26ca:b0:3a5:1410:71c0 with SMTP id ffacd0b85a97d-3b4965fa43dmr1629767f8f.38.1751627455547;
+        Fri, 04 Jul 2025 04:10:55 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b97732sm2265248f8f.59.2025.07.04.04.10.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jul 2025 04:10:55 -0700 (PDT)
+Message-ID: <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
+Date: Fri, 4 Jul 2025 12:10:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618215843.109941-1-usmanakinyemi202@gmail.com> <20250704102007.6354ce9f@pumpkin>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor
+ string
+To: David Laight <david.laight.linux@gmail.com>,
+ Usman Akinyemi <usmanakinyemi202@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
+ <20250704102007.6354ce9f@pumpkin>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
 In-Reply-To: <20250704102007.6354ce9f@pumpkin>
-From: Usman Akinyemi <usmanakinyemi202@gmail.com>
-Date: Fri, 4 Jul 2025 16:01:21 +0530
-X-Gm-Features: Ac12FXw73ZOhyBKhSbbf_4Qj4dulDh8DBNftU6kNO6qEo_c_P5vHGtCLcAhkE8k
-Message-ID: <CAPSxiM_X8Ykz-kbBuFmT1vt_V3G4AkA3tE4wwbUniE-edoyJyw@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
-To: David Laight <david.laight.linux@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 4, 2025 at 2:50=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
+
+
+On 04/07/2025 10:20 am, David Laight wrote:
 > On Thu, 19 Jun 2025 03:28:43 +0530
 > Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
->
-> > strncpy() is unsafe for fixed-size binary data as
-> > it may not NUL-terminate and is deprecated for such
-> > usage. Since we're copying raw CPUID register values,
-> > memcpy() is the correct and safe choice.
-> >
-> > Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
-> > ---
-> >  tools/perf/arch/x86/util/header.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/ut=
-il/header.c
-> > index 412977f8aa83..43ba55627817 100644
-> > --- a/tools/perf/arch/x86/util/header.c
-> > +++ b/tools/perf/arch/x86/util/header.c
-> > @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
-> >       unsigned int b, c, d;
-> >
-> >       cpuid(0, 0, lvl, &b, &c, &d);
-> > -     strncpy(&vendor[0], (char *)(&b), 4);
-> > -     strncpy(&vendor[4], (char *)(&d), 4);
-> > -     strncpy(&vendor[8], (char *)(&c), 4);
-> > +     memcpy(&vendor[0], (char *)(&b), 4);
-> > +     memcpy(&vendor[4], (char *)(&d), 4);
-> > +     memcpy(&vendor[8], (char *)(&c), 4);
->
+> 
+>> strncpy() is unsafe for fixed-size binary data as
+>> it may not NUL-terminate and is deprecated for such
+
+But memcpy doesn't null terminate after the 4 chars either so I don't 
+think that's a good justification. Surely you don't want null 
+termination, because char *vendor is supposed to be a single string 
+without extra nulls in the middle. It specifically adds a null at the 
+end of the function.
+
+>> usage. Since we're copying raw CPUID register values,
+>> memcpy() is the correct and safe choice.
+>>
+
+There should be a fixes: tag here if it actually fixes something. But in 
+this use case strncpy seems to behave identically to memcpy so I don't 
+think we should change it. Except maybe if b,c,d have NULLs in them then 
+strncpy will give you uninitialized parts where memcpy won't. But that's 
+not mentioned in the commit message and presumably it doesn't happen?
+
+>> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
+>> ---
+>>   tools/perf/arch/x86/util/header.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
+>> index 412977f8aa83..43ba55627817 100644
+>> --- a/tools/perf/arch/x86/util/header.c
+>> +++ b/tools/perf/arch/x86/util/header.c
+>> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
+>>   	unsigned int b, c, d;
+>>   
+>>   	cpuid(0, 0, lvl, &b, &c, &d);
+>> -	strncpy(&vendor[0], (char *)(&b), 4);
+>> -	strncpy(&vendor[4], (char *)(&d), 4);
+>> -	strncpy(&vendor[8], (char *)(&c), 4);
+>> +	memcpy(&vendor[0], (char *)(&b), 4);
+>> +	memcpy(&vendor[4], (char *)(&d), 4);
+>> +	memcpy(&vendor[8], (char *)(&c), 4);
+> 
 > Why not:
->         cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(v=
-endor + 4));
-Hello David,
+> 	cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(vendor + 4));
+> 
+> 
+>>   	vendor[12] = '\0';
+>>   }
+>>   
+> 
 
-This also works well. But, I think the "memcpy" is more clean and
-explanatory . I can change it to this if it is prefered.
-
-What do you think ?
-
-Thank you.
->
->
-> >       vendor[12] =3D '\0';
-> >  }
-> >
->
