@@ -1,81 +1,187 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4000D28A719;
-	Mon,  7 Jul 2025 15:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE0D11D5AB7;
+	Mon,  7 Jul 2025 15:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751900822; cv=none; b=mH3c/5Je2+qa8/UlXejvo4R+Wlqj9/Q746Kc1AW6p2zm81unai24okeVRbZ8hQ6zF+UgO51cjVu7fezeaBmim177t3Mtil/+Za0FvugYHvxwwDjyUTxqf5Y0nTcYr5bkZKdWxGQoptScBtnulzVX2sSLIchLw5MffvkRALWNfAo=
+	t=1751902641; cv=none; b=T9BooskVuFnfx29N114pmGnls+b1oOth0mONx5wDjG+Rm5JKI21ZEfxKvK2GScckIsb4oKAQXaYBpwJtAzyHLu/afc2iTYVV9mVVIVeTlYLHs2IoBGB0xH8QoPZsKI1lE9Gkrr3z0wHCmVmPOtqVNYM+y8XoFAsEgKfBVdaSfKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751900822; c=relaxed/simple;
-	bh=a3tFfaUC5nwZzL3kNsozkXk8L0sG9BajuGncdWLpSW0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VOpkWYsthrXMbLv88iNrJP3772U7xYTXKHbAM2uBePBpVjv7C3/ysD39IRt1P4PMUKgD4YvK0g4uxVP8tG+NwlSmPMbh5Vw1drjY0inbfy2+gItjfE08j9FgrwvCbPjwAg3lzX7P1W+T3rbrb6MUUheojx8+WTrhw430a7Jbvbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bbSHX6MYYz6G93x;
-	Mon,  7 Jul 2025 23:06:16 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id 57F551402EE;
-	Mon,  7 Jul 2025 23:06:59 +0800 (CST)
-Received: from a2303103017.china.huawei.com (10.45.147.207) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 7 Jul 2025 17:06:57 +0200
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: <mark.rutland@arm.com>, <robh@kernel.org>
-CC: <coresight@lists.linaro.org>, <devicetree@vger.kernel.org>,
-	<dianders@chromium.org>, <james.clark@linaro.org>,
-	<jonathan.cameron@huawei.com>, <krzk@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linuxarm@huawei.com>,
-	<mike.leach@linaro.org>, <ruanjinjie@huawei.com>, <saravanak@google.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <suzuki.poulose@arm.com>
-Subject: [PATCH 5/5] perf/arm-dsu: refactor cpu id retrieval via new API of_cpu_phandle_to_id
-Date: Mon, 7 Jul 2025 16:04:14 +0100
-Message-ID: <20250707150414.620-6-alireza.sanaee@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250707150414.620-1-alireza.sanaee@huawei.com>
-References: <20250707150414.620-1-alireza.sanaee@huawei.com>
+	s=arc-20240116; t=1751902641; c=relaxed/simple;
+	bh=GEvLhH+HdHGBlGq1TRR0in6YZ+bDbe9WfJqwHXAUymM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bzE9O3UMOVmSVd61C7cuM0CuFmAFgRqKddLOxuG/6HcSJgX0nm709KDLyy+ufsPw/RaBwWm61X5D3bukoLhyqhJqOuW0hM4v48nhzXaLAyLGbk4nkqe9flnMShKu3eEgShYDic883Bb6Xl3SB0i6Xjjr4cDFsspHX7l8TK5z0ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA592168F;
+	Mon,  7 Jul 2025 08:36:59 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1F443F77D;
+	Mon,  7 Jul 2025 08:37:11 -0700 (PDT)
+Date: Mon, 7 Jul 2025 16:37:10 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Alexandru Elisei <Alexandru.Elisei@arm.com>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	Robin Murphy <Robin.Murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
+ PMBPTR_EL1 or PMBSR_EL1
+Message-ID: <20250707153710.GB2182465@e132581.arm.com>
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
+ <20250704155016.GI1039028@e132581.arm.com>
+ <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
 
-Update arm-dsu to use the new API, where both "cpus" and "cpu"
-properties are supported.
+On Mon, Jul 07, 2025 at 12:39:57PM +0100, James Clark wrote:
 
-Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
----
- drivers/perf/arm_dsu_pmu.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+[...]
 
-diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index cb4fb59fe04b..7ef204d39173 100644
---- a/drivers/perf/arm_dsu_pmu.c
-+++ b/drivers/perf/arm_dsu_pmu.c
-@@ -596,11 +596,9 @@ static int dsu_pmu_dt_get_cpus(struct device *dev, cpumask_t *mask)
- 	n = of_count_phandle_with_args(dev->of_node, "cpus", NULL);
- 	if (n <= 0)
- 		return -ENODEV;
-+
- 	for (; i < n; i++) {
--		cpu_node = of_parse_phandle(dev->of_node, "cpus", i);
--		if (!cpu_node)
--			break;
--		cpu = of_cpu_node_to_id(cpu_node);
-+		cpu = of_cpu_phandle_to_id(dev->of_node, &cpu_node, i);
- 		of_node_put(cpu_node);
- 		/*
- 		 * We have to ignore the failures here and continue scanning
--- 
-2.43.0
+> > > @@ -661,16 +666,24 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+> > >   	 */
+> > >   	irq_work_run();
+> > > +	/*
+> > > +	 * arm_spe_pmu_buf_get_fault_act() already drained, and PMBSR_EL1.S == 1
+> > > +	 * means that StatisticalProfilingEnabled() == false. So now we can
+> > > +	 * safely disable the buffer.
+> > > +	 */
+> > > +	write_sysreg_s(0, SYS_PMBLIMITR_EL1);
+> > > +	isb();
+> > > +
+> > > +	/* Status can be cleared now that PMBLIMITR_EL1.E == 0 */
+> > > +	write_sysreg_s(0, SYS_PMBSR_EL1);
+> > > +
+> > 
+> > An important thing is about sequence:
+> > As described in arm_spe_pmu_disable_and_drain_local(), should we always
+> > clear ELs bits in PMSCR_EL1 before clear PMBLIMITR_EL1.E bit? As a
+> > reference, we could see TRBE always clear ELx bits before disable trace
+> > buffer.
+> > 
+> > And a trivial flaw:
+> > 
+> > If the TRUNCATED flag has been set, the irq_work_run() above runs the
+> > IRQ work to invoke the arm_spe_pmu_stop() to disable trace buffer, which
+> > clear SYS_PMBLIMITR_EL1.E bit. This is why the current code does not
+> > explictly clear SYS_PMBLIMITR_EL1.E bit.
+> > 
+> > With this patch, the interrupt handler will clear SYS_PMBLIMITR_EL1.E
+> > bit twice for a trunacated case.
+> 
+> I suppose that's a rarer case that we don't necessarily have to optimize
+> for. I don't think it will do any harm, but is it even possible to avoid?
+> 
+> There are already some other duplications in the driver, for example in
+> arm_spe_pmu_stop() we call arm_spe_pmu_disable_and_drain_local() which
+> drains, and then arm_spe_pmu_buf_get_fault_act() which also drains again.
 
+If we don't need to worry about duplicated operations in the truncated
+case, then for easier maintenance and better readability, I'm wondering
+if we could simplify the interrupt handler as follows:
+
+    arm_spe_pmu_irq_handler()
+    {
+        ...
+
+        act = arm_spe_pmu_buf_get_fault_act(handle);
+        if (act == SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
+                return IRQ_NONE;
+
+        arm_spe_pmu_disable_and_drain_local();
+
+        /* Status can be cleared now that PMBLIMITR_EL1.E == 0 */
+        write_sysreg_s(0, SYS_PMBSR_EL1);
+        isb();
+
+        switch (act) {
+            ...
+        }
+    }
+
+This approach complies with DEN0154 - we must clear PMBLIMITR_EL1.E
+before writing to other SPE system registers (e.g., PMBSR).
+
+The reason for using arm_spe_pmu_disable_and_drain_local() is that we
+first need to disable profiling instructions by clearing PMSCR_EL1/EL2,
+and then is it safe to disable the profiling buffer.
+
+[...]
+
+> > >   	case SPE_PMU_BUF_FAULT_ACT_OK:
+> > >   		/*
+> > > @@ -679,18 +692,14 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+> > >   		 * PMBPTR might be misaligned, but we'll burn that bridge
+> > >   		 * when we get to it.
+> > >   		 */
+> > > -		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
+> > > +		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
+> > >   			arm_spe_perf_aux_output_begin(handle, event);
+> > > -			isb();
+> > 
+> > I am a bit suspecious we can remove this isb().
+> > 
+> > As a reference to the software usage PKLXF in Arm ARM (DDI 0487 L.a),
+> > after enable TRBE trace unit, an ISB is mandatory. Maybe check a bit
+> > for this?
+>
+> Wasn't this isb() to separate the programming of the registers with the
+> status register clear at the end of this function to enable profiling?
+
+Enabling profiling buffer followed an isb() is not only for separating
+other register programming.
+
+As described in section D17.9, Synchronization and Statistical Profiling
+in Arm ARM:
+
+  "A Context Synchronization event guarantees that a direct write to a
+  System register made by the PE in program order before the Context
+  synchronization event are observable by indirect reads and indirect
+  writes of the same System register made by a profiling operation
+  relating to a sampled operation in program order after the Context
+  synchronization event."
+
+My understanding is: after the ARM SPE profiling is enabled, the
+followed ISB is a Synchronization to make sure the system register
+values are observed by SPE. And we cannot rely on ERET, especially if
+we are tracing the kernel mode.
+
+Thanks,
+Leo
+
+> But now we enable profiling with the write to PMBLIMITR_EL1 in
+> arm_spe_perf_aux_output_begin() and the last thing here is the ERET. That's
+> specifically mentioned as enough synchronization in PKLXF:
+> 
+>   In the common case, this is an ERET instruction that returns to a
+>   different Exception level where tracing is allowed.
+> 
+> > > -		}
+> > >   		break;
+> > >   	case SPE_PMU_BUF_FAULT_ACT_SPURIOUS:
+> > >   		/* We've seen you before, but GCC has the memory of a sieve. */
+> > >   		break;
+> > >   	}
+> > > -	/* The buffer pointers are now sane, so resume profiling. */
+> > > -	write_sysreg_s(0, SYS_PMBSR_EL1);
+> > >   	return IRQ_HANDLED;
+> > >   }
+> > > 
+> > > -- 
+> > > 2.34.1
+> > > 
+> > > 
+> 
