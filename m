@@ -1,70 +1,70 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.82])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BE229A331;
-	Mon,  7 Jul 2025 12:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE431E22FC;
+	Mon,  7 Jul 2025 12:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751891474; cv=pass; b=mwh0eXtOVh4WhLRZlHGXMPVHRNknaMTiWG5srv9yEfRGJmQlY0Y0Hu5uDQyl0i71juK/1ZMwULLP6vusWhV/CWYxmwTfdB9iOYpOi0wt63nDKQl26tqyfXDgWxcU0OifYEZxdY9j3x6EhUQcU9rx1pTVroGvumpir3xjQs9PU2U=
+	t=1751891835; cv=pass; b=J46aoot1O8vy8LOOOAJwDP9Egz6ibNqEsdQ+x7pyXHYOvTn1mdOufnhrjs87vx+8El3KvIS/z7USzXkX5tYUhY/IrdMs+DOqfwiP9yCNa2WbowE6qHt6WN3oGqSZWb8rphORlRLMviDI/KToiB//Z6enxpZbqR0nu3c9LFcvLmM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751891474; c=relaxed/simple;
-	bh=RFNsgxe2C6r+SN1MHnmdrNC2twMDtlwKmmZEi0IeFfQ=;
+	s=arc-20240116; t=1751891835; c=relaxed/simple;
+	bh=zfPixgraChrKlrOtDN03mFy1u9SB7MFeA7PL4QVarWU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CN3cSqP3TjCtk23/hO+whH+XxK5B4NNjefETNoABiUVdeGoc/rWhGd2CAmUXO3AU70hx8rXvvK0PwiB7/2mjOOPnnmuFkShz8aEDUsbmjP/ajUT6VggFrYF+NtStm1ASyjOOSC1Gc2wFDsn2ZoLLM2rQbAlkkIn7O6gQJe5sYYw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=Gu2llJiI; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=cDJeZ0cq; arc=pass smtp.client-ip=85.215.255.82
+	 MIME-Version:Content-Type; b=b6dfHD6QxBpUzuUUTuuO+oaQ3Asv1jJSKs172SMHDtGqPHlPVpAVFIdP3tZeC9EO1HMgFrMUIn4eIkVe2mGetoParFCPXDQl1d5YOWYh7Er4sYeqctUZ6mtLYVirpiuLZGx43q+RmXJE1CuFnyrgLoH3kGIHcKt2+KMpnlKnV4A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=evVnL+mX; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=N0P372Jm; arc=pass smtp.client-ip=85.215.255.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="Gu2llJiI";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="cDJeZ0cq"
-ARC-Seal: i=1; a=rsa-sha256; t=1751891117; cv=none;
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="evVnL+mX";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="N0P372Jm"
+ARC-Seal: i=1; a=rsa-sha256; t=1751891116; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=d1CqLAMQXRbwKaP24cKZDEfvDxAgCurI/UxqM3rEbgnZc3BxUpUUiWJzYzNT/KiRQs
-    7c0L8wBcLENGJn2A+i7a+iKmaOBzQ0JOOYv2j3MUCIdje/I/yyQcA2MFXWlgpf1Ivx9h
-    DYIkPBIuaYfUh33Rwht7UUrYTtXt5mmXBuj34tgqyug29uBeV2k0YzNK9UbI8LbfN4Y+
-    R3hfzoePpeDHBP+BNyg5NBIEv4sJW4eOtfcoAz7jRGA178jrFH5AFsur128kThxwmoYa
-    8GME7GYKzyvi2hr0//9sYZdiAjVCDT5/T04zn5p7tPTrj6PegaCUjTI8l4D8g85YHn6+
-    IWsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1751891117;
+    b=kl3PZe0NybvuaA5ZM+B6CtV0aojTZ6ao89Ksjw6r2CjrtmrePS/BA2PNWDj2a3dbDJ
+    ILAgvUZ2um+EbD/hIagF9ge5bUsdUNcj7h7HF3iJHicZjZZJEmoSXzLugy71fAKNSCHT
+    YDFJhtgLVKyM2z0K5Z0NLllNJSOSQi+8zbyr3lC2EIhZ8ZY6vx8Q7IiPjUb2vJ+y7o4B
+    nUMwjq6ZlRd+aVp22lhcdY/8ybV3KJ6C4KfMgB2FJRj9vmapnI9OrzEEv8eU/IkK6FLb
+    LeTfKjYcSykmFouMqng6T6ixUjDYZdSo04t8U39eK6fZ2mvVG8I2psFJJsx5a3Xr9uAK
+    rZvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1751891116;
     s=strato-dkim-0002; d=strato.com;
     h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=ZFRrdSFaCSnM9EDX8a/HbF+5M4Jjf0Gf8M15CKb/DB0=;
-    b=gI26z75+IWV7j7tuWTMlvkC4irToRlDbqbD9OZ/oEieso71muKA93U54ZIx2DGr7jC
-    XeYk58DSz5Wiv/B5txkqHsMOGgbKKJndKn4EUCXEnnQpTwz/nNdLgQk7gM1DLpIr1j9r
-    bmhprbfk13mQNn4ijyKxi372yJpq0v8dp/pczuv4YZALxYHeHjh9dJVEwBqQN8BWJnK+
-    8ObclZwfiKK/tRGxtXDMREvRxhQ+YThZuvucPVtbFENruDgj/8n/q/zipgD7LarFZmSR
-    rkT1+LtzSoxhfEuejUkdcZPS2v1u7WzmTAcvdFrbqHUGlHCZvGAcCn1LNn9wIFA+MdUu
-    Sexw==
+    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
+    b=iOzdbGNhPYfRZoJvyJNEocVbfZ1pnITVdH+ObT0IP/v4jIpyKJTelOjuqDq1q83cmt
+    ASHkG9oScWFVPpY4WZHqGuskdvL6aLRpC5PFKSVBqywD3Fv+1LzUMvrplJkCHtLgsIeY
+    5yT56qoZv4Jvdpr1Z3XgS9mvMmjcYj0sW5z4cCCPHXea1Ey2qE20eeZHhBuGifuofNJ9
+    A5Z8OPIEBek/cuWgeUZAe5AETYJIvXuO792VYNj94l04IOKskmuGEV+QGE5qa+xF/KWU
+    h5Iy05CjIl683yE3si8CaNwQKLwVU+nWnv+haHebQrYrDHJ8k9hQhwYR/hCELEMEgtAN
+    1tiw==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
 X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751891117;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751891116;
     s=strato-dkim-0002; d=outer-limits.org;
     h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=ZFRrdSFaCSnM9EDX8a/HbF+5M4Jjf0Gf8M15CKb/DB0=;
-    b=Gu2llJiINjP2mOITX2ej9EYgt1CJ+R9HH7p0xQS9Wxtkz7ORjB+yw4RYaQlSycc/np
-    m2LVNzcKwW+NvSMerCqJSA5ALKh84YXeb/VLUBUA1LdIAT+s8ywLhqijwykcCFmIBlF8
-    eLPolgX+o0XsmSzKvJsFzqeA1blYZcIXceF9zrm++kxJ12A2Zz4UbUg1jQ27QALqoqQ2
-    HC1rjyEr98V0pYcs9SR/B9HCjlEuHB5qRsrQwPHfRKhy6wiX4TXIyU+6hXQ3yxFq30yj
-    DkIG5yt2kTeE9JJy51891ovH+N1vOA3FBhyAq+Xqxcgj5kc/WnDHEiI2njcf7oiHyew9
-    UtIg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751891117;
+    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
+    b=evVnL+mXxc9FNpdYj/IQXur8cUPgwbH9AOqHm6SF+O/m3IgpdAMPjm9xtHhsF6YGx0
+    kZ8R4P6h7ZsdgEqqclMN7e/56w3RYt3HLk2Rufg9oMmDk4RVbAxO2c9bbSYcCuf2nueF
+    Xq/JqgVyXiSvsPlkDV7NxrodFsxW99rBVc3LKqyNNoTAB0KP9ilWr0SrPpbmA11R6CdO
+    xF/pYDmxbNebZKAuUv+2LKp7aWPHAd3tM0TxnP5XclavFX7QWjpq4YAbdy9zlaoVf97y
+    fcUZWuKfecXuxOns0/OdrxTE/LZIs7b+ZfbjartqTgqCwpulLF3j+Xrtu8o8tGe3rUGB
+    TAWg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751891116;
     s=strato-dkim-0003; d=outer-limits.org;
     h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=ZFRrdSFaCSnM9EDX8a/HbF+5M4Jjf0Gf8M15CKb/DB0=;
-    b=cDJeZ0cq4FBuy6ED+iNZNY3muKMkwsgTQ+qQlhOIYW24esaS+GWJ8+5tdW9ZysYjCS
-    6pyvZUOHHHS4hT/YU0DA==
+    bh=mCZv9h5y7Ee5tNYV9yYrClTj5aivwr6YfqNK0mRGc2E=;
+    b=N0P372JmlCK4QhKEqhLfOy3Hvjm/5kYPAPMR0HbT53U8CV0aZVnEBmj75r9AFfUl+v
+    yshwLMQvugAX36M88zBg==
 X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
 Received: from ws2104.lan.kalrayinc.com
     by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J1bd32167CPH717
+    with ESMTPSA id J1bd32167CPF713
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Mon, 7 Jul 2025 14:25:17 +0200 (CEST)
+    Mon, 7 Jul 2025 14:25:15 +0200 (CEST)
 From: Julian Vetter <julian@outer-limits.org>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -82,9 +82,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH RESEND 4/5] tools: Remove unaligned/packed_struct.h header
-Date: Mon,  7 Jul 2025 14:24:59 +0200
-Message-Id: <20250707122500.724699-5-julian@outer-limits.org>
+Subject: [PATCH RESEND 2/5] Remove unaligned/packed_struct.h header
+Date: Mon,  7 Jul 2025 14:24:57 +0200
+Message-Id: <20250707122500.724699-3-julian@outer-limits.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250707122500.724699-1-julian@outer-limits.org>
 References: <20250707122500.724699-1-julian@outer-limits.org>
@@ -102,21 +102,33 @@ So, remove the header entirely.
 
 Signed-off-by: Julian Vetter <julian@outer-limits.org>
 ---
- tools/include/linux/unaligned/packed_struct.h | 47 -------------------
- 1 file changed, 47 deletions(-)
- delete mode 100644 tools/include/linux/unaligned/packed_struct.h
+ include/linux/unaligned.h               |  1 -
+ include/linux/unaligned/packed_struct.h | 46 -------------------------
+ 2 files changed, 47 deletions(-)
+ delete mode 100644 include/linux/unaligned/packed_struct.h
 
-diff --git a/tools/include/linux/unaligned/packed_struct.h b/tools/include/linux/unaligned/packed_struct.h
+diff --git a/include/linux/unaligned.h b/include/linux/unaligned.h
+index 4a9651017e3c..18c4b0c00e2a 100644
+--- a/include/linux/unaligned.h
++++ b/include/linux/unaligned.h
+@@ -6,7 +6,6 @@
+  * This is the most generic implementation of unaligned accesses
+  * and should work almost anywhere.
+  */
+-#include <linux/unaligned/packed_struct.h>
+ #include <asm/byteorder.h>
+ #include <vdso/unaligned.h>
+ 
+diff --git a/include/linux/unaligned/packed_struct.h b/include/linux/unaligned/packed_struct.h
 deleted file mode 100644
-index dbd93c7df2e1..000000000000
---- a/tools/include/linux/unaligned/packed_struct.h
+index f4c8eaf4d012..000000000000
+--- a/include/linux/unaligned/packed_struct.h
 +++ /dev/null
-@@ -1,47 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
+@@ -1,46 +0,0 @@
 -#ifndef _LINUX_UNALIGNED_PACKED_STRUCT_H
 -#define _LINUX_UNALIGNED_PACKED_STRUCT_H
 -
--#include <linux/kernel.h>
+-#include <linux/types.h>
 -
 -struct __una_u16 { u16 x; } __packed;
 -struct __una_u32 { u32 x; } __packed;
