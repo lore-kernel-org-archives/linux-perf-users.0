@@ -1,106 +1,103 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160872D9EDC
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 10:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B602E0915;
+	Tue,  8 Jul 2025 14:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751971273; cv=none; b=QzRfW2ZfxcycOhT1gIOOVNZnnLHfZUrg1glkuKFC+wq7YKJjXezROIYvsGZouyEgvlhWi3CimeSbeZa+OyFa+oZvhatZxGsTj5hUvnrHqPmPvGRSro2n7X+tuFKWm6vklinhnfp7/ruJXuMwlTAkpe6FrMJKnxvlWvso4Xl/DgM=
+	t=1751985620; cv=none; b=Bx+TPYOzShFcFIrIBdxjwnwiE+OJuWTBIRQbeke+OAmC22CIf9S6psLPuTIAAK7MY1+WJr/TQ6DtUfRm7AOhPVU/yZ0HtyJYWFkzNC/m4plkSPkPOgMUo9ddzkdnQGJUmNtcZOSbguOIg4ZBcKq/mmXFW/quvmVDsaAebJU+/Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751971273; c=relaxed/simple;
-	bh=h8WzAtP1deJY97IsehBiHpJJmky6zH0Upj7s8EmaukQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=iDDuFJuBrSCs4zUyFHEr9u4YNfV4qfZ5kZnP4AEWAnEV3lziA6c3oCYZe4mvdJoF9KWQ5dYPR1mrmC/mQoJFr/RV6f0xHmVST0g7Nir79cLrI2BeaAP2TJuyxXlN6PP55vYbgfJlOUscClzqHICMcdgFbtB8c+gokgwdZoOxoAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nQI0UJp/; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nQI0UJp/"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250708104110epoutp0153d73c3ac73cf485418e32d3e3a5a218~QQJaKAOqL2906229062epoutp01P
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 10:41:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250708104110epoutp0153d73c3ac73cf485418e32d3e3a5a218~QQJaKAOqL2906229062epoutp01P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751971270;
-	bh=wKNM/MVkW5+UIAF/DDkf6NK4GoimrDLpjI5p5ZBJ8t8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nQI0UJp/aEZHp3uJivzKfYJIBb1cTXi1bbF656pyNNMPJFAI01ZCufSdUCSzORIGm
-	 xqLuOsMxWqtNfW5kUp6D1b4OnPNijKNgbTDNi67vS9OxTX5LFdAyFwzOgkWGkRsv6y
-	 I7RAHtnOJaB9jOmYh6jdnkKw01XE+7Zbze3bWtto=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250708104109epcas5p2c53a6a032b6f49f6e749fceb3bf3b87d~QQJZeMmWX3102631026epcas5p2O;
-	Tue,  8 Jul 2025 10:41:09 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bbyM82djqz2SSKs; Tue,  8 Jul
-	2025 10:41:08 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250708103246epcas5p47b446ec342f9d49361c0a9a3929bcdd2~QQCFFnJsk0186101861epcas5p4N;
-	Tue,  8 Jul 2025 10:32:46 +0000 (GMT)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250708103243epsmtip152f34feb66a77e0fa50f13329b23b7ca~QQCCbn-4T1977519775epsmtip1_;
-	Tue,  8 Jul 2025 10:32:43 +0000 (GMT)
-From: Vivek Yadav <vivek.2311@samsung.com>
-To: pankaj.dubey@samsung.com, ravi.patel@samsung.com, shradha.t@samsung.com,
-	mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, krzk@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, will@kernel.org,
-	mark.rutland@arm.com, s.nawrocki@samsung.com, cw00.choi@samsung.com,
-	alim.akhtar@samsung.com, linux-fsd@tesla.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Vivek
-	Yadav <vivek.2311@samsung.com>
-Subject: [PATCH 6/6] MAINTAINERS: Add maintainers for Samsung PPMU driver
-Date: Tue,  8 Jul 2025 16:02:08 +0530
-Message-ID: <20250708103208.79444-7-vivek.2311@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250708103208.79444-1-vivek.2311@samsung.com>
+	s=arc-20240116; t=1751985620; c=relaxed/simple;
+	bh=8Igoh3V3PfPDr1kU9omdjXEh0HyBrDWV6yhaeXoqTfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kEUKmkDeF5Na71zWjqjN8NAwJOGoqabQqL0Z+NJA1DjWBcNURWr6RclmxNLpy9s3ANGcbENGKCXa8dzCDMNNQmnJIy7Zt14bBfZHf0RPup8/ZdR8+ZjxhBnfCt2knvUUv7lYuywUxmofp9j08197IyE9jBKTg9FH6T1kd+pf3Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85F2B153B;
+	Tue,  8 Jul 2025 07:40:04 -0700 (PDT)
+Received: from raptor (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D20E23F694;
+	Tue,  8 Jul 2025 07:40:14 -0700 (PDT)
+Date: Tue, 8 Jul 2025 15:40:04 +0100
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	Robin Murphy <Robin.Murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf: arm_spe: Add barrier before enabling profiling
+ buffer
+Message-ID: <aG0tsz1EPbrDFTia@raptor>
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250708103246epcas5p47b446ec342f9d49361c0a9a3929bcdd2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250708103246epcas5p47b446ec342f9d49361c0a9a3929bcdd2
-References: <20250708103208.79444-1-vivek.2311@samsung.com>
-	<CGME20250708103246epcas5p47b446ec342f9d49361c0a9a3929bcdd2@epcas5p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
 
-Add maintainers entry for Samsung PPMU driver
+Hi James,
 
-Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
-Signed-off-by: Vivek Yadav <vivek.2311@samsung.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Tue, Jul 01, 2025 at 04:31:57PM +0100, James Clark wrote:
+> DEN0154 states that PMBPTR_EL1 must not be modified while the profiling
+> buffer is enabled. Ensure that enabling the buffer comes after setting
+> PMBPTR_EL1 by inserting an isb().
+> 
+> This only applies to guests for now, but in future versions of the
+> architecture the PE will be allowed to behave in the same way.
+> 
+> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ca11a553d412..5895b4e70c9e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21023,6 +21023,13 @@ F:	drivers/regulator/s5m*.c
- F:	drivers/rtc/rtc-s5m.c
- F:	include/linux/mfd/samsung/
- 
-+SAMSUNG PPMU DRIVER
-+M:	Vivek Yadav <vivek.2311@samsung.com>
-+M:	Ravi Patel <ravi.patel@samsung.com>
-+S:	Supported
-+F:	Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml
-+F:	drivers/perf/samsung/
-+
- SAMSUNG S3C24XX/S3C64XX SOC SERIES CAMIF DRIVER
- M:	Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
- L:	linux-media@vger.kernel.org
--- 
-2.49.0
+A note on why I think this is a fix.
 
+The write to PMBLIMITR_EL1 serves two purposes: to enable the buffer and to set
+the limit for the new buffer. The statistical profiling unit (I'm calling it
+SPU) performs indirect reads of the registers. Without the ISB between the
+buffer pointer write and the write that enables + sets limit for the buffer, I
+think it's possible for the SPU to observe the PMBLIMITR_EL1 write before the
+PMBPTR_EL1 write. During this time, from the point of view of the SPU, the
+buffer is incorrectly programmed, and potentially the old PMBPTR_EL1.PTR > new
+PMBLIMITR_EL1.Limit.
+
+arm_spe_perf_aux_output_begin() can be called after sampling has been enabled
+(PMSCR_EL1.E1SPE = 1).
+
+Putting it all together, this means that we have all the conditions to break the
+restrictions on the current write pointer and the behaviour is UNPREDICTABLE, as
+per section D17.7.1, ARM DDI 0487L. I think it's worth pointing out that the SPU
+can do any of the folling in this situation: writing to any writable virtual
+address in the current owning translation regime (!), generate a profiling
+management event, discard all data or don't enable profiling.
+
+Thanks,
+Alex
+
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  drivers/perf/arm_spe_pmu.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index 3efed8839a4e..6235ca7ecd48 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -537,6 +537,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+>  	limit += (u64)buf->base;
+>  	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
+>  	write_sysreg_s(base, SYS_PMBPTR_EL1);
+> +	isb();
+>  
+>  out_write_limit:
+>  	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+> 
+> -- 
+> 2.34.1
+> 
