@@ -1,219 +1,176 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0F418A6AE
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 18:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23CE25A2AA
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 22:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751999853; cv=none; b=fD7au/KxSCPrsfjX+qZ6QDNPyrZCORI7B3/uvmVW8emNJXfUxKg8kUVPSsyLMT25Ld/0fZgEcCNA1Xoq5ySQSNPEHIJ3yThQNogkIv2FM6nszuDqkgzvp+2S67LsvA5ZitJAXbaLKoQXvCw+juXI4BOmTtSsWhY+pMT0Gf7OfgQ=
+	t=1752014080; cv=none; b=nZNay2ygdP6/HOItyGyCGWLbnWo2mv4xPCCJbJKnHEZdhmAU27jrdaahYDmKNSO/U2qx+cBxcE0vmli8Effp9nmeL1DeU1E+CygafIw1fP1r2JXPlE0143D09oVl58jr/KaRvNdnQpc93UQG98jwHiyEKwlx3SNyx+IyQ1swXek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751999853; c=relaxed/simple;
-	bh=vg+uQCJ+lSN99jIomcmUQZbwXNmXTfe07jNsopO6k20=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DkFLK8KESSoLL6EhIZHqDURYityECZIGgir1QPSHCn27aJrnKIggpEIDr9QfLH9Eqoy69ZVEtt4+U683SnqIVQUJum2fpjoKDnRkGATuZ444AXtIahWGe6gowIU3SItE/mA0tqBAIPSADY+krgBIY27O64vdmiwUGOT0N7724Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JzJzAK+h; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1752014080; c=relaxed/simple;
+	bh=02xDzJQPlhBq0RU8lcHj/2RG+qyIWz4nKYd1naozQns=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=JS/iXSOVbV8Wo3Gf/CEY10ekIe/OUEojRMeMKv0qXOmYqEjk+wjj+6TgtzUrtk1roN9dnnC2Fdd2sjjWYYEU1e8ENEvjaqixO+hjZSxQrYxev2xeHdUIA6iFSZAqWtx31HbGC/oH/wRdvBkAeSC1WcvDHJ713EqHoZHgJtGc8qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q61I2oqU; arc=none smtp.client-ip=209.85.166.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzJzAK+h"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748f3d4c7e7so3450157b3a.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Jul 2025 11:37:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q61I2oqU"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so60843475ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Jul 2025 15:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751999850; x=1752604650; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuihDo1m5FyoRrxBA7eIdTW1eQsHNBGooJAzPvs8+c8=;
-        b=JzJzAK+hOjajiXZF2foPPNeEcg8NgJEqFaw4SXnoVwtt0Ow0MQ0Yym5Si4xM5OxKJ7
-         uJAn0hwGne/geNeEqPkBj8iyu7wdQddTjdOiqm79OrNacRCk8suq3s5gig9hTqmcqMOc
-         JEjtcThza8JjMKihIp/QgskQYRuRS+266BXwFjU0u7FTHV67aDkBD85TrQVM2t+I5sZl
-         sVifKdzVCNtabPIkbY01vab2YCX0NXVp0XiaFs4CYylp4LJPzl0TryWQ9VI/bLeGw2ul
-         Yv/M/3kpBi2Wlc6bwQ7Alo+wFYYNO0FloWHprl5ARmoob82Jhhr9xUfuA6/rSGG58VhF
-         qCkQ==
+        d=google.com; s=20230601; t=1752014077; x=1752618877; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j/9FFTs3Hz/7yNjDy98C2EAojjbwb0TEz5q962JZJd0=;
+        b=q61I2oqU6t7TlFUuejfBAlRXMpmAZ7Y88nYyFUVvwWgUfS3spZQ2M3X/95is9uC3+z
+         LMVKgQMD+NWwSknrYWq3Rb4UkPk/AVRK7pobaKLfJTAd6nsi0fsG/u5BNhNmAbKPv8+V
+         z4zz+OjLynPwAnrqvFrbctC2wLfX0R1HhIr8reyxMY6Xouf15IZbHSrGQAIVZGHnyBwh
+         VyOnDUis/7wVtVVBA03qPFwrv9jK8ie/ji/brym+HWEu1LcZqz/ZJ1J4CtdPqujSRKO1
+         s/CzBthoM+bGlLDFUxJMKHqNfGH11HITo55nDTazdXlhPkJxBAn+iWWriAd/rvl/dSsz
+         ZQ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751999850; x=1752604650;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuihDo1m5FyoRrxBA7eIdTW1eQsHNBGooJAzPvs8+c8=;
-        b=l4wwAMvKXfz7fXrc9GFqsmKdiu0jjkirl8hDZtE4CoI74Hp9Cb54JGLQWi3LB2ZVMC
-         43whttakbD7KD/xkgK7OER1Ex17/CWhnr0cCb4buPMnjFBkaAKB6djkpLqJDzGEAOO//
-         7uZfz/vNf4QAFpQtgKSQscTqaKm6NrZtvgOxiD/nASWZdp4g+ZfhIJZzUWyXoLcoQJHb
-         Ij8Mwcr9F0C7yn37hhpvfo2KC7N1dZJ3UHdThWyYP/v5NCUc/pRSu7QWKKEQNn73JGkF
-         EZvbMChQocfhDsCvpIFlBqF05+Qid75q9rEh20jmHzX+Zq89QZnDK9NWHpsMTWuRle1Y
-         XTXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYUL3Hk/5LQ1gBXN9DjScPWmYI2xRScN/1b8BsSMLeUbyGOOuG1iYhAdY9w9Wp1JzrlN6t8BMJETIJlLBHOMBI@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpczb5G5xXZu9PY44ZoEm+cRQvKLRtT+vzKFOtPiFb1fQ891x1
-	06CATQqH25Ene4SMbdgB7aHwfFQ3GLgroLVGXSuNekZaQUb6wWZQwK3futmDcwiPAMC6EiIhOWJ
-	hwIUCLQ==
-X-Google-Smtp-Source: AGHT+IE0jOeDJGjqyFwQLwFs8IMKVlBUzhMwAfpeufc6A4eZa0THyR4cN5PjdVCjvg8e5KCGp+se29EjQ+4=
-X-Received: from pfbjw38.prod.google.com ([2002:a05:6a00:92a6:b0:74c:ee73:4859])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:856:b0:748:e1e4:71e7
- with SMTP id d2e1a72fcca58-74ea498dc91mr157508b3a.23.1751999850363; Tue, 08
- Jul 2025 11:37:30 -0700 (PDT)
-Date: Tue, 8 Jul 2025 11:37:28 -0700
-In-Reply-To: <20250612214849.3950094-9-sohil.mehta@intel.com>
+        d=1e100.net; s=20230601; t=1752014077; x=1752618877;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j/9FFTs3Hz/7yNjDy98C2EAojjbwb0TEz5q962JZJd0=;
+        b=gJmYw5Mbu5KvQxlinVDipXZl4j6bCSRXuTuR+sh5JpuPxBEoxOrSXYDMbvpEkIvoVV
+         i0GQV3ab0pcKp/BPZtygaFz2t9Lcd6xkHkbI8VkI/XyyYYt88ESSXNj/un+4+eIpQ4iE
+         NP3XIPvtaSCQpCv4NNcoDI9u8uR6YNlezUwIiIIQ9fYWA8VCIrH0NTdXlEz9AM2ckgAA
+         rf7CSuqZUfrnCCrj8z/cmKihMK7x5kx4AC7L6CE7SSQeL49LXMfharozbMEam/d23hlY
+         6mhHBWwTsOCXStV1u9bqcDQFoJutrCwB/OXxas4S3DY9TqW7gwpgt9f+kUOnDSavp6jj
+         DEEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUzyg/0GOeGGooFXE1BEpXff0p1SiJ/fan+Jzp9kN/9PmKJRLz9wyJDuAMIOmLvOHkdfTH25wmF7yDvmCem1vb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvmP0hhtvq9TaKOdQBO1lfS7IE8qmzaQg+C7MrXB7nMI6JHxoS
+	M8fyyV/d/3Bok17EUlyXJgAWOqcfT/pg2QjHne2RCDM6zSFR+zShDXX753dE6gUNR4kTRzS+onH
+	uTjXZLgWGpFG9Spit7LWzTES63A==
+X-Google-Smtp-Source: AGHT+IHW+RfduRT7VliGk050iQEqjU318xPGArkYZW5dZzAyyRBuwQAaT6oV8zuk0wkHYQ4WnuckwA/hmtfDS9hyaw==
+X-Received: from ilfg10.prod.google.com ([2002:a05:6e02:198a:b0:3df:30df:d2c4])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:339f:b0:3e0:4564:4ef9 with SMTP id e9e14a558f8ab-3e166ffbeb5mr5390855ab.4.1752014077049;
+ Tue, 08 Jul 2025 15:34:37 -0700 (PDT)
+Date: Tue, 08 Jul 2025 22:34:35 +0000
+In-Reply-To: <aGvwLIAN8rhxtA_V@J2N7QTR9R3> (message from Mark Rutland on Mon,
+ 7 Jul 2025 17:05:00 +0100)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250612214849.3950094-1-sohil.mehta@intel.com> <20250612214849.3950094-9-sohil.mehta@intel.com>
-Message-ID: <aG1laKXYu7Uc4Tsb@google.com>
-Subject: Re: [PATCH v7 08/10] x86/nmi: Enable NMI-source for IPIs delivered as NMIs
-From: Sean Christopherson <seanjc@google.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+Message-ID: <gsnt34b61fd0.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v3 01/22] arm64: cpufeature: Add cpucap for HPMN0
+From: Colton Lewis <coltonlewis@google.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
+	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
+	shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Thu, Jun 12, 2025, Sohil Mehta wrote:
-> With the IPI handling APIs ready to support the new NMI encoding, encode
-> the NMI delivery mode directly with the NMI-source vectors to trigger
-> NMIs.
-> 
-> Move most of the existing NMI-based IPIs to use the new NMI-source
-> vectors, except for the microcode rendezvous NMI and the crash reboot
-> NMI. NMI handling for them is special-cased in exc_nmi() and does not
-> need NMI-source reporting.
-> 
-> However, in the future, it might be useful to assign a source vector to
-> all NMI sources to improve isolation and debuggability.
-> 
-> Originally-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Xin Li (Intel) <xin@zytor.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-> ---
-> v7: No change.
-> 
-> v6: Include asm/nmi.h to avoid compile errors. (LKP)
-> 
-> v5: Encode APIC_DM_NMI directly with the NMI-source vector.
-> ---
->  arch/x86/include/asm/apic.h      | 8 ++++++++
->  arch/x86/kernel/apic/hw_nmi.c    | 2 +-
->  arch/x86/kernel/cpu/mce/inject.c | 2 +-
->  arch/x86/kernel/kgdb.c           | 2 +-
->  arch/x86/kernel/nmi_selftest.c   | 2 +-
->  arch/x86/kernel/smp.c            | 2 +-
->  6 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> index 32cdd81e5e45..5789df1708bd 100644
-> --- a/arch/x86/include/asm/apic.h
-> +++ b/arch/x86/include/asm/apic.h
-> @@ -14,6 +14,7 @@
->  #include <asm/msr.h>
->  #include <asm/hardirq.h>
->  #include <asm/io.h>
-> +#include <asm/nmi.h>
->  #include <asm/posted_intr.h>
->  
->  #define ARCH_APICTIMER_STOPS_ON_C3	1
-> @@ -23,6 +24,13 @@
->  #define APIC_EXTNMI_ALL		1
->  #define APIC_EXTNMI_NONE	2
->  
-> +/* Trigger NMIs with source information */
-> +#define TEST_NMI		(APIC_DM_NMI | NMIS_VECTOR_TEST)
-> +#define SMP_STOP_NMI		(APIC_DM_NMI | NMIS_VECTOR_SMP_STOP)
-> +#define BT_NMI			(APIC_DM_NMI | NMIS_VECTOR_BT)
+Mark Rutland <mark.rutland@arm.com> writes:
 
-s/BT/BACKTRACE?
+> On Thu, Jun 26, 2025 at 08:04:37PM +0000, Colton Lewis wrote:
+>> Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+>> counters reserved for the guest.
 
-> +#define KGDB_NMI		(APIC_DM_NMI | NMIS_VECTOR_KGDB)
-> +#define MCE_NMI			(APIC_DM_NMI | NMIS_VECTOR_MCE)
+>> This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+>> because otherwise not all the appropriate macros are generated to add
+>> it to arm64_cpu_capabilities_arm64_features.
 
-IMO, NMI_xxx reads better, e.g. it's easier to see that code is sending an NMI
-at the call sites.
+> I agree it's appropriate to mark ID_AA64DFR0_EL1.HPMN0 as an
+> UnsignedEnum. It follows the usual ID scheme per ARM DDI 0487 L.a
+> section D24.1.3, and zero means not present, so it must be unsigned.
 
-> +
->  /*
->   * Debugging macros
->   */
-> diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
-> index 4e04f13d2de9..586f4b25feae 100644
-> --- a/arch/x86/kernel/apic/hw_nmi.c
-> +++ b/arch/x86/kernel/apic/hw_nmi.c
-> @@ -33,7 +33,7 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh)
->  #ifdef arch_trigger_cpumask_backtrace
->  static void nmi_raise_cpu_backtrace(cpumask_t *mask)
->  {
-> -	__apic_send_IPI_mask(mask, NMI_VECTOR);
-> +	__apic_send_IPI_mask(mask, BT_NMI);
+> Likewise, the value renames (UNPREDICTABLE => NI and DEF => IMP) look
+> fine to me.
 
-This patch is buggy.  There are at least two implementations of ->send_IPI_mask()
-that this breaks:
+>> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
-  uv_send_IPI_mask() = > uv_send_IPI_one():
+> I have one minor nit below, but either way:
 
-	if (vector == NMI_VECTOR)
-		dmode = APIC_DELIVERY_MODE_NMI;
-	else
-		dmode = APIC_DELIVERY_MODE_FIXED;
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
+Thank you Mark
 
-and xen_send_IPI_mask() => xen_map_vector():
+>> ---
+>>   arch/arm64/kernel/cpufeature.c | 8 ++++++++
+>>   arch/arm64/tools/cpucaps       | 1 +
+>>   arch/arm64/tools/sysreg        | 6 +++---
+>>   3 files changed, 12 insertions(+), 3 deletions(-)
 
-	switch (vector) {
-	case RESCHEDULE_VECTOR:
-		xen_vector = XEN_RESCHEDULE_VECTOR;
-		break;
-	case CALL_FUNCTION_VECTOR:
-		xen_vector = XEN_CALL_FUNCTION_VECTOR;
-		break;
-	case CALL_FUNCTION_SINGLE_VECTOR:
-		xen_vector = XEN_CALL_FUNCTION_SINGLE_VECTOR;
-		break;
-	case IRQ_WORK_VECTOR:
-		xen_vector = XEN_IRQ_WORK_VECTOR;
-		break;
-#ifdef CONFIG_X86_64
-	case NMI_VECTOR:
-	case APIC_DM_NMI: /* Some use that instead of NMI_VECTOR */
-		xen_vector = XEN_NMI_VECTOR;
-		break;
-#endif
-	default:
-		xen_vector = -1;
-		printk(KERN_ERR "xen: vector 0x%x is not implemented\n",
-			vector);
-	}
+>> diff --git a/arch/arm64/kernel/cpufeature.c  
+>> b/arch/arm64/kernel/cpufeature.c
+>> index b34044e20128..73a7dac4b6f6 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -548,6 +548,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>>   };
 
-	return xen_vector;
+>>   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+>> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,  
+>> ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
+>>   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,  
+>> ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+>>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,  
+>> ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+>>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,  
+>> ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+>> @@ -2896,6 +2897,13 @@ static const struct arm64_cpu_capabilities  
+>> arm64_features[] = {
+>>   		.matches = has_cpuid_feature,
+>>   		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
+>>   	},
+>> +	{
+>> +		.desc = "FEAT_HPMN0",
 
-Looking at all of this again, shoving the NMI source information into the @vector
-is quite brittle.  Nothing forces implementations to handle embedded delivery
-mode information.
+> Minor nit, but we can drop the "FEAT_" prefix here, for consistency with
+> other features (e.g. E0PD, FPMR).
 
-One thought would be to pass a small struct (by value), and then provide macros
-to generate the structure for a specific vector.  That provides some amount of
-type safety and should make it a bit harder to pass in garbage, without making
-the callers any less readable.
+> Mark.
 
-struct apic_ipi {
-	u8 vector;
-	u8 type;
-};
+Will do.
 
-#define APIC_IPI(v, t) ({ struct apic_ipi i = { .vector = v, .type = t }; i; })
-#define APIC_IPI_IRQ(vector) APIC_IPI(vector, APIC_DELIVERY_MODE_FIXED)
-#define APIC_IPI_NMI(vector) APIC_IPI(vector, APIC_DELIVERY_MODE_NMI)
+>> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+>> +		.capability = ARM64_HAS_HPMN0,
+>> +		.matches = has_cpuid_feature,
+>> +		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
+>> +	},
+>>   #ifdef CONFIG_ARM64_SME
+>>   	{
+>>   		.desc = "Scalable Matrix Extension",
+>> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+>> index 10effd4cff6b..5b196ba21629 100644
+>> --- a/arch/arm64/tools/cpucaps
+>> +++ b/arch/arm64/tools/cpucaps
+>> @@ -39,6 +39,7 @@ HAS_GIC_CPUIF_SYSREGS
+>>   HAS_GIC_PRIO_MASKING
+>>   HAS_GIC_PRIO_RELAXED_SYNC
+>>   HAS_HCR_NV1
+>> +HAS_HPMN0
+>>   HAS_HCX
+>>   HAS_LDAPR
+>>   HAS_LPA2
+>> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+>> index 8a8cf6874298..d29742481754 100644
+>> --- a/arch/arm64/tools/sysreg
+>> +++ b/arch/arm64/tools/sysreg
+>> @@ -1531,9 +1531,9 @@ EndEnum
+>>   EndSysreg
 
-#define IPI_IRQ_WORK		APIC_IPI_IRQ(IRQ_WORK_VECTOR)
-#define IPI_POSTED_INTR_WAKEUP	APIC_IPI_IRQ(POSTED_INTR_WAKEUP_VECTOR)
+>>   Sysreg	ID_AA64DFR0_EL1	3	0	0	5	0
+>> -Enum	63:60	HPMN0
+>> -	0b0000	UNPREDICTABLE
+>> -	0b0001	DEF
+>> +UnsignedEnum	63:60	HPMN0
+>> +	0b0000	NI
+>> +	0b0001	IMP
+>>   EndEnum
+>>   UnsignedEnum	59:56	ExtTrcBuff
+>>   	0b0000	NI
+>> --
+>> 2.50.0.727.gbf7dc18ff4-goog
 
-#define IPI_NMI_BACKTRACE	APIC_IPI_NMI(NMI_BACKTRACE_VECTOR)
-
-static __always_inline void __apic_send_IPI_self(struct apic_ipi ipi)
