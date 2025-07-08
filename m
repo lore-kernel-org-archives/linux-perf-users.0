@@ -1,103 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B602E0915;
-	Tue,  8 Jul 2025 14:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2F2E03ED
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 14:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751985620; cv=none; b=Bx+TPYOzShFcFIrIBdxjwnwiE+OJuWTBIRQbeke+OAmC22CIf9S6psLPuTIAAK7MY1+WJr/TQ6DtUfRm7AOhPVU/yZ0HtyJYWFkzNC/m4plkSPkPOgMUo9ddzkdnQGJUmNtcZOSbguOIg4ZBcKq/mmXFW/quvmVDsaAebJU+/Fo=
+	t=1751985897; cv=none; b=dDBo6zuHFVf+Ra9zGv4wxmOisR2jqBj99L0IJtoJrRSmv+c6mHkAmjddHzPImHcpDWbmHmcCQYu4dKHF7SGbzAjMX2+qotuBB7AufRzpKckQa7NAH+bqsZwXLXUsPHfljqCxOytPvLxnPSGXPqBXgp3n7MBSCH3p1Xs4+HTsuWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751985620; c=relaxed/simple;
-	bh=8Igoh3V3PfPDr1kU9omdjXEh0HyBrDWV6yhaeXoqTfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kEUKmkDeF5Na71zWjqjN8NAwJOGoqabQqL0Z+NJA1DjWBcNURWr6RclmxNLpy9s3ANGcbENGKCXa8dzCDMNNQmnJIy7Zt14bBfZHf0RPup8/ZdR8+ZjxhBnfCt2knvUUv7lYuywUxmofp9j08197IyE9jBKTg9FH6T1kd+pf3Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85F2B153B;
-	Tue,  8 Jul 2025 07:40:04 -0700 (PDT)
-Received: from raptor (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D20E23F694;
-	Tue,  8 Jul 2025 07:40:14 -0700 (PDT)
-Date: Tue, 8 Jul 2025 15:40:04 +0100
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Anshuman Khandual <Anshuman.Khandual@arm.com>,
-	Rob Herring <Rob.Herring@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	Robin Murphy <Robin.Murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf: arm_spe: Add barrier before enabling profiling
- buffer
-Message-ID: <aG0tsz1EPbrDFTia@raptor>
-References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
- <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
+	s=arc-20240116; t=1751985897; c=relaxed/simple;
+	bh=fN4tOIQJAoq+AKMfht5dCRp3iRRsCe06SubkHAC/Bdw=;
+	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=VeObq9eTjeSaQtDZTSTKuwDp6ZTtYh2IpGo9rI8g/2G53VxzzUn8hfHJ9mVzzOhPW/4PDP3D8zE75PbPAmtRx6SpCaT0b+WUZiDIfXrZ2dCqojtcPgNclg7GN7J6YYiJFp8HZcSvOMZauXOiAh/LQzLgQdt3yJBQIRtOo2SPL0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=OnZ6/4kz; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="OnZ6/4kz"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a5851764e1so99885591cf.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Jul 2025 07:44:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1751985895; x=1752590695; darn=vger.kernel.org;
+        h=mime-version:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NzXFZEk6yErY6D/LjQRstWxZLYYVjR6/95xhHqGbv20=;
+        b=OnZ6/4kzGFD7k0pSK2stL7IDrMFKy2Q1fNgKN113CuLiP5xMXzNqm1RK0mpP77IVXh
+         pdR5CVi4JPBnTjx/x9iui7FExv9ufpbgBJ+P66qiG9oeECAckMQgXWxvadwkF/yU5d9q
+         jfRcItcFSLCW2GUjgXa2sAyhcUGu1RYspODgI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751985895; x=1752590695;
+        h=mime-version:message-id:subject:cc:to:date:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NzXFZEk6yErY6D/LjQRstWxZLYYVjR6/95xhHqGbv20=;
+        b=CeUu7h2vP2njwAn4HHObpTgogvPiqHnOswZNfM2Oc5DRfRro9spKatC5PIfS84oq0i
+         GYLBF39nvPA8iRC3uxNOtgUtXqyUqWkDyRwh2ID/aY6Dtul6zmMOjQQEOGqb+yDJG4cf
+         dQJHSR83dK3CYLJvw4zAB5gkT8reEiV+uxklw/R08/0dJb0ypQohcxi/zFAnuSpBxU+j
+         wstt/lsCGaBL0UQ7pUrqqvD5IsiEMEIwVsABftH4E7s25rWaFsRMC+IDsgAaBhmUPL1y
+         CObSA2cZOUWa6WIhMxnuEm2HTvI0iV9SWakVpivPWgy8bwpJKSRdscyfxqHVNci+Vj4W
+         CtIg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8nbP9MFrnjE9zpIuY6+MymE8ku9lH1yChdTDVoXT+ZiPFBkqh10zhBN/rLMUMtbiUnnLwfejIheekNyXQH/oZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTYoyVm2zbCYu5Ru6rkcOxKeLJpYBBy0yQnlbQjhlNaZhthO7M
+	tTklWow8rV1YHeHK6pnXIcgHh8Wv9fZ97e7TFOIpZeKiV+o8Ukyn4uMdvQhg4AEQig==
+X-Gm-Gg: ASbGncsmSJex3z/DGLFwn5ElcSJQswEtUtCExJuBMjLuMmBylNZYykFGEDaF8B3xi+/
+	W//6roeah9U8CnW80vpO1tOzvrKSrd3dgnf2/N2TO+JFOypU2VndskDG6rubB+i7rS/0vtUsr/G
+	6/OE0KoGCoi4oKet9q+8aOi94Fpu1qnjtolA8CSdW+LCiiPoF4ZxD3sy8BWTDcVUE7g4AOJf8Me
+	E/ZgUlY1lyAH5gYc3t5ESznTXPLdbXP+1ghNzwdL/wnEQXZ+UU20W6aTN4X10wnMybj/Yuc8mtp
+	tn7g+7zwTi3LmbaG+Rx1BOFPCmo8AvxhMWuZUpKRZG7vh8I5vhEwAP0PJzxZ/w6iyFHQzevyIY2
+	m4tyQDQ==
+X-Google-Smtp-Source: AGHT+IHsUOny0OkJ2EB15KMJQvEZrTOer5pzJrOyVcvXVEprUMWypU/1HP1gAhVYH0BuTrhYNhwDPQ==
+X-Received: by 2002:a05:622a:191e:b0:4a9:5220:7fc3 with SMTP id d75a77b69052e-4a9cc6ca287mr59779551cf.18.1751985894660;
+        Tue, 08 Jul 2025 07:44:54 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a994a79106sm83843961cf.45.2025.07.08.07.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Jul 2025 07:44:54 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Tue, 8 Jul 2025 10:44:49 -0400 (EDT)
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+cc: "Liang, Kan" <kan.liang@linux.intel.com>, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: [perf] fuzzer triggers "BUG: kernel NULL pointer dereference"
+Message-ID: <5baea1f7-6edd-d6fa-27ce-04eddb7e5199@maine.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi James,
+Hello
 
-On Tue, Jul 01, 2025 at 04:31:57PM +0100, James Clark wrote:
-> DEN0154 states that PMBPTR_EL1 must not be modified while the profiling
-> buffer is enabled. Ensure that enabling the buffer comes after setting
-> PMBPTR_EL1 by inserting an isb().
-> 
-> This only applies to guests for now, but in future versions of the
-> architecture the PE will be allowed to behave in the same way.
-> 
-> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
+the perf_fuzzer can reliably trigger this on a 6.16-rc2 kernel.  It 
+doesn't look obviously perf related but since the perf_fuzzer triggered it 
+I thought I'd report it as a perf issue first.  I can work on a smaller 
+test case but that might take a bit especially as the machine locks up 
+super hard and requires being unplugged after it's triggered.
 
-A note on why I think this is a fix.
+let me know if there's any other info I can provide.  The dump below is 
+transcribed from a screenshot as I still haven't figured out a way to get 
+a serial console on this Raptorlake system.
 
-The write to PMBLIMITR_EL1 serves two purposes: to enable the buffer and to set
-the limit for the new buffer. The statistical profiling unit (I'm calling it
-SPU) performs indirect reads of the registers. Without the ISB between the
-buffer pointer write and the write that enables + sets limit for the buffer, I
-think it's possible for the SPU to observe the PMBLIMITR_EL1 write before the
-PMBPTR_EL1 write. During this time, from the point of view of the SPU, the
-buffer is incorrectly programmed, and potentially the old PMBPTR_EL1.PTR > new
-PMBLIMITR_EL1.Limit.
+BUG: kernel NULL pointer dereference, address: 0000000000000008
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] SMP NOPTI
+CPU: 5 UID: 0 PID: 0 Comm: swapper/5 Not tainted 6.16.0-rc2+ #8 PREEMPT (voluntary)
+Hardware name: Dell Inc. Precision 3660/0VJ7G2
+RIP: 0010:rb_insert_color+0x18/0x130
+Code: 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 07
+RSP: 0018:ffffb5e5c01e3df8 EFLAGS: 00010046
+RAX: ffff93f1927f8168 .....
+...
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000000008 CR3: 00000000596824001 CR4: 000000000000f72ef0
+DR0: 00000000a000001 ....
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ timerqueue_add+0x66/0xb0
+ hrtimer_start_range_ns+0x102/0x420
+ ? next_zone+0x42/0x70
+ tick_nohz_stop_tick+0xce/0x230
+ tick_nohz_idle_stop_tick+0x70/0xd0
+ do_idle+0x1d3/240
+ cpu_startup_entry+0x29/0x30
+ start_secondary+0x119/0x140
+ common_startup_64+0x13e/0x141
+ </TASK>
 
-arm_spe_perf_aux_output_begin() can be called after sampling has been enabled
-(PMSCR_EL1.E1SPE = 1).
 
-Putting it all together, this means that we have all the conditions to break the
-restrictions on the current write pointer and the behaviour is UNPREDICTABLE, as
-per section D17.7.1, ARM DDI 0487L. I think it's worth pointing out that the SPU
-can do any of the folling in this situation: writing to any writable virtual
-address in the current owning translation regime (!), generate a profiling
-management event, discard all data or don't enable profiling.
 
-Thanks,
-Alex
-
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  drivers/perf/arm_spe_pmu.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 3efed8839a4e..6235ca7ecd48 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -537,6 +537,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  	limit += (u64)buf->base;
->  	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
->  	write_sysreg_s(base, SYS_PMBPTR_EL1);
-> +	isb();
->  
->  out_write_limit:
->  	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-> 
-> -- 
-> 2.34.1
-> 
