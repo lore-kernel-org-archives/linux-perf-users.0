@@ -1,47 +1,47 @@
 Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A50E2D838B
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 10:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4770A2D8386
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 10:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751971254; cv=none; b=mWDqGvbsFMip/tALKuQQ+31shrkVX5fKFo8ei3Y/XQGFdz77UCUoCj8hqYR+jIsHWpehqSUZ0I0QGUOGCSEIfEzsrd10FElV1z7GmBqhbR2uH5rkFVKXcnS903n7+Y+zFYsRZcYGMaJXl+ywZUtOq7omfneZYJ8f7unGYWAKzfU=
+	t=1751971257; cv=none; b=iJR0BF2XM1GJbZTW7sB3TZbmqFigvROaUp6lpBvQ9Yp43ox/D3WSvXINVQzP9H8lpvvhAVFmeRWHpZizj+MGEFmI5Sa+SNc1FkoJgt+WlbS0+xp7h1fGoT2frjKUcf10toBQCm4058Oh7wLLmO/Lum+h0kPsM9+MQjUql16xXEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751971254; c=relaxed/simple;
-	bh=h9ffOMpprHtUlA4KIyfZI6VRD+DRW1c4F7q6RurLTgo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=YLr36TcJ3JuyBSMcEm3ELhQp27De1Obi6zjvS9AK01uMLrF5tgtPmIoYmvD7gWfDw0MqfiXhHYL6W86VUn3t3kyGtZqAHbjQgtal0rU+O7P93mWPsuG37H/6FIuYwfUar3Npr4AjGjK+cgVpzxuSeBwVX26+OH5Tq7J8Kxf7rA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=m+tJ9zxj; arc=none smtp.client-ip=203.254.224.33
+	s=arc-20240116; t=1751971257; c=relaxed/simple;
+	bh=MDIEaPr8HDVKtLmDaM9Mbp62hb9gBqko7nOef0uAuIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=Ixa0iE68S7EJC3O20Di7bLXa8AC/m87ZCfkMaXwwiXZN8T7ALQ5swCCf/D48Dx2kIFRzvsp8kq82cbKI4FmuRprvoICeZKl+HP6b0K2y5LrJ+qa63iKdAk+MZ1WkTlhqW8N2gGihMofLU9XrgA738Gz0ktYIBe/OXaDXbUboqMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AFZE5An8; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m+tJ9zxj"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250708104043epoutp0320ceee7d04c367b8776deabf1fa82a7f~QQJAs5LC42777027770epoutp03T
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 10:40:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250708104043epoutp0320ceee7d04c367b8776deabf1fa82a7f~QQJAs5LC42777027770epoutp03T
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AFZE5An8"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250708104049epoutp038fefbf4a9de870e5bf1e4f1a1caf4341~QQJGxIVb22789027890epoutp03Q
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Jul 2025 10:40:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250708104049epoutp038fefbf4a9de870e5bf1e4f1a1caf4341~QQJGxIVb22789027890epoutp03Q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751971243;
-	bh=RZMbreJckeTZ7d9E/bDbGIS9B9tPEE2bV8tHwU4GBm0=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=m+tJ9zxjg3e2Ppo0qDrAkOwfLyyRAVGPWb266MqgxZTHik1/opyBbw9mz6NK7+8iu
-	 AKsyb3KfUa6VsdOxZKOC/AT7hdg9XqDDUJANHhl22lbjDZql12zf53nbUGqvfXZdYB
-	 /f49nqAah0LckRS7tF2oAk1A1lQNyh+hLQtyeP4A=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250708104042epcas5p33bd592360cafe5d32801a3b6f3a0732c~QQJAFd4LA0190201902epcas5p3s;
-	Tue,  8 Jul 2025 10:40:42 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bbyLd0vbqz6B9m7; Tue,  8 Jul
-	2025 10:40:41 +0000 (GMT)
+	s=mail20170921; t=1751971249;
+	bh=jH87uithjfzP9Ykpoxmhz9d98lNSkdIORLDu4bcOrWg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AFZE5An8I4UPKDhyNrWZ1uIaoLRQWo68NYtgqYhHHThIXR2SZeyqwIsyrT8stp3x4
+	 qMFLlUMv/KA1I8CeO2caI76ypjuswT4VrNDXGK2nZzwmia71I4VHIh7hefVBeGk7cw
+	 FK2q2XSKZWntlFs8qjTO0zkbmTi3qWAlLI5BX7IQ=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250708104048epcas5p45aedc6a241e37ee683d7b1880dc8903e~QQJGIyyTk1622616226epcas5p4l;
+	Tue,  8 Jul 2025 10:40:48 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bbyLl00Mhz2SSKZ; Tue,  8 Jul
+	2025 10:40:47 +0000 (GMT)
 Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250708103228epcas5p27886821d1ff225f2e5cdd4d948d03a66~QQBzzm5CC0702607026epcas5p29;
-	Tue,  8 Jul 2025 10:32:28 +0000 (GMT)
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250708103231epcas5p1b9fe52dd6ea3cdd65a5df163ba05e139~QQB2zDMtv0987209872epcas5p11;
+	Tue,  8 Jul 2025 10:32:31 +0000 (GMT)
 Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
 	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250708103225epsmtip179cdbb1505bb6b730e052501f82e992d~QQBxLrGTX2131221312epsmtip1V;
-	Tue,  8 Jul 2025 10:32:25 +0000 (GMT)
+	20250708103228epsmtip11c2127deecf9c06a4da8aa251fc8feba~QQB0CXqJN2120421204epsmtip1W;
+	Tue,  8 Jul 2025 10:32:28 +0000 (GMT)
 From: Vivek Yadav <vivek.2311@samsung.com>
 To: pankaj.dubey@samsung.com, ravi.patel@samsung.com, shradha.t@samsung.com,
 	mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, krzk@kernel.org,
@@ -52,10 +52,12 @@ Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Vivek
 	Yadav <vivek.2311@samsung.com>
-Subject: [PATCH 0/6] Add PPMU support for Tesla FSD 
-Date: Tue,  8 Jul 2025 16:02:02 +0530
-Message-ID: <20250708103208.79444-1-vivek.2311@samsung.com>
+Subject: [PATCH 1/6] dt-bindings: clock: Add PPMU clock definitions for FSD
+ platform
+Date: Tue,  8 Jul 2025 16:02:03 +0530
+Message-ID: <20250708103208.79444-2-vivek.2311@samsung.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250708103208.79444-1-vivek.2311@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,56 +65,41 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250708103228epcas5p27886821d1ff225f2e5cdd4d948d03a66
+X-CMS-MailID: 20250708103231epcas5p1b9fe52dd6ea3cdd65a5df163ba05e139
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-541,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250708103228epcas5p27886821d1ff225f2e5cdd4d948d03a66
-References: <CGME20250708103228epcas5p27886821d1ff225f2e5cdd4d948d03a66@epcas5p2.samsung.com>
+X-CMS-RootMailID: 20250708103231epcas5p1b9fe52dd6ea3cdd65a5df163ba05e139
+References: <20250708103208.79444-1-vivek.2311@samsung.com>
+	<CGME20250708103231epcas5p1b9fe52dd6ea3cdd65a5df163ba05e139@epcas5p1.samsung.com>
 
-The Platform Performance Measuring Unit (PPMU) is an AMBA-compliant
-performance measurement tool designed to provide observability into
-system-level operations. It provides performance statistics such as
-as bandwidth, read and write request, transactions count for AXI masters.
+Add clock IDs for PPMU (Platform Performance Monitoring Unit)
+associated with the MFC block.
 
-FSD platform has two instances of PPMU IP in MFC. This patch series
-contains PPMU clock binding definitions, device tree binding
-documentation, PPMU24 driver support which configures the
-PPMU24 hardware and the PPMU device tree node support
-for Tesla FSD platform.
+Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+Signed-off-by: Vivek Yadav <vivek.2311@samsung.com>
+---
+ include/dt-bindings/clock/fsd-clk.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Vivek Yadav (6):
-  dt-bindings: clock: Add PPMU clock definitions for FSD platform
-  clk: samsung: fsd: Use clock IDs for PPMU MFC block
-  dt-bindings: perf: Add devicetree binding for custom PPMU
-  drivers: perf: samsung: Add PPMU driver support
-  arm64: dts: fsd: Add PPMU support for MFC block of FSD SoC
-  MAINTAINERS: Add maintainers for Samsung PPMU driver
-
- .../bindings/perf/samsung,ppmu-v2.yaml        |  62 +++
- MAINTAINERS                                   |   7 +
- arch/arm64/boot/dts/tesla/fsd-evb.dts         |   8 +
- arch/arm64/boot/dts/tesla/fsd.dtsi            |  20 +
- drivers/clk/samsung/clk-fsd.c                 |  10 +-
- drivers/perf/Kconfig                          |   2 +
- drivers/perf/Makefile                         |   1 +
- drivers/perf/samsung/Kconfig                  |  13 +
- drivers/perf/samsung/Makefile                 |   2 +
- drivers/perf/samsung/ppmu.c                   | 494 ++++++++++++++++++
- drivers/perf/samsung/ppmu_platform.c          | 338 ++++++++++++
- drivers/perf/samsung/samsung_ppmu.h           | 128 +++++
- include/dt-bindings/clock/fsd-clk.h           |   4 +
- 13 files changed, 1084 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml
- create mode 100644 drivers/perf/samsung/Kconfig
- create mode 100644 drivers/perf/samsung/Makefile
- create mode 100644 drivers/perf/samsung/ppmu.c
- create mode 100644 drivers/perf/samsung/ppmu_platform.c
- create mode 100644 drivers/perf/samsung/samsung_ppmu.h
-
+diff --git a/include/dt-bindings/clock/fsd-clk.h b/include/dt-bindings/clock/fsd-clk.h
+index 3f7b64d93558..552e8bad98e0 100644
+--- a/include/dt-bindings/clock/fsd-clk.h
++++ b/include/dt-bindings/clock/fsd-clk.h
+@@ -125,6 +125,10 @@
+ 
+ /* MFC */
+ #define MFC_MFC_IPCLKPORT_ACLK			1
++#define MFC_PPMU_MFCD0_IPCLKPORT_ACLK		2
++#define MFC_PPMU_MFCD0_IPCLKPORT_PCLK		3
++#define MFC_PPMU_MFCD1_IPCLKPORT_ACLK		4
++#define MFC_PPMU_MFCD1_IPCLKPORT_PCLK		5
+ 
+ /* CAM_CSI */
+ #define CAM_CSI0_0_IPCLKPORT_I_ACLK		1
 -- 
 2.49.0
 
