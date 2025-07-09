@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F196272E7C;
-	Wed,  9 Jul 2025 14:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E88C2E54DF;
+	Wed,  9 Jul 2025 14:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752069703; cv=none; b=gKKvwp2q9tLD97v4YoeFhdjG3y7LF3FfLeDgaUze62+4TJtxTLElTmRdclZZSgIPprBZcQx7a7j1XVx+539tWoQEUJUAmw+NajUJdBxRyqIFMgvacK++jZ0llvtQpIWjEoQpQJ0Y8OgHOyBSsMsnuF+qFMR0mZuM31NjJHBCX5Q=
+	t=1752069764; cv=none; b=FHIFCRENpT0vXGJhmeoAbYzPbVj8N4YV1q5BuihGQ/CILDLrsqCjwQ9SL+FGyTHtuIK7ggvpTBS6LQrDFI9DFBqIhjKKlB2+pdCcNRS6sYGv/C+V/c9sCS2/85/4ouK7VmyP2bz766btbejRw/A/O8c7G31KqelCS2DRwH/8hiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752069703; c=relaxed/simple;
-	bh=NjF/I4wdgHCjk0VazPx1Rna6CqDY2c1+JUJEJS/Be9s=;
+	s=arc-20240116; t=1752069764; c=relaxed/simple;
+	bh=U/gcQ/CvuoL0xOLo5eXp7QDf3EbxUpAN+lVuDP3y2QY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZxngoGpzhA4jDedDtoyDq/qXZnq/vVJv4czhNJIPYpy9HOpYYsTtEf5tT3MaTxzzzDMKUbx21z8GtQwJXjwSFNxhUTOXYRbq61v2ufxaPB13tWZoH/Cw76b6PdWStN3RrB6L24R+zIEorZVbq1Xa8O1tqANzyaFCWsp9IjSr8YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=doBggYFf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ncxKqSOq+PsfMeA5j+d2Zm1g1ZL7Ku3OqBNay1hUp/1lBP7X9oNZVF4iIPrmptgmpMJmTh5Culprx/VzyQVIZBFLm2XGkT4Bo/r5cy4gapx+mxcvR3JvTf58qmL/uyoFGLFv14Qzl2+OGcP8ZnQe3TYv+feRQB/b7LZnmzRFwls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRgJFL2I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="doBggYFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6ECC4CEEF;
-	Wed,  9 Jul 2025 14:01:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRgJFL2I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA0AC4CEEF;
+	Wed,  9 Jul 2025 14:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752069703;
-	bh=NjF/I4wdgHCjk0VazPx1Rna6CqDY2c1+JUJEJS/Be9s=;
+	s=k20201202; t=1752069762;
+	bh=U/gcQ/CvuoL0xOLo5eXp7QDf3EbxUpAN+lVuDP3y2QY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=doBggYFf/++Nkqdxc3Q7xFjFV/QwdwU5eJOfW6//7LAFYowWhufJiQsrusCUOyfqy
-	 sf/+bBeGsQz2X2HYHB+wnWN6K2WV0kJQBRRm1je0Tz8WREAla21dWrkTYJ7RPOIGMZ
-	 tlFreFS9fovTT2HK6ynl5R3Aq3Jq47nvUanuW3vig06E3AzEfCB9+0PLtpoUyhbdk3
-	 NCE72IgKc5Vp+8BrPaZ8gzuYZdjxFp2LzQKTQQhUSI+S7+bVrgKSn+Pn/Mz0dpQPf4
-	 q4g67EqiFz5lsSLjAUiruqjsj5A5RE60dVQuW0T+/Y6bjoARpkJAmlzhWmc6wenCSw
-	 XCdfzawtJU22w==
-Message-ID: <1a47145a-5f6b-4610-b1db-9df18adb77fa@kernel.org>
-Date: Wed, 9 Jul 2025 16:01:36 +0200
+	b=mRgJFL2I7DWBzHrYhmyUJ9/LXY5h4yPo7+N0ckgNjGyM0K7nh/9ROWmAapo/ZI/g+
+	 rr55rw5QdXTWftLIUGNrXRSsUDj2O5SExwhVeIzh3D8FdoMsvcEm8aY7rCHPTWVbNr
+	 JVA6jUo4asQDg3936mYKAFXee5OvCNVHT1CuSKi50coktYH3DbR4YZ6xQcLh1Gguy2
+	 YSSLy8LGcJmcMjQ/HA7k3nPcTjbUNzeE3TP5CJ+n6F/92bVr6kXus/WSHoduk0+IWZ
+	 c3L3zIlaXtV+7QSKt6z2myrCQR3nGZO+Gld7WHwcIEgSL722NuYhNlUdFrsgWyz/P0
+	 lCy3g/EyG/aWg==
+Message-ID: <ae058bda-c51a-4df0-b93c-5926030918a4@kernel.org>
+Date: Wed, 9 Jul 2025 16:02:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] dt-bindings: perf: Add devicetree binding for custom
- PPMU
+Subject: Re: [PATCH 5/6] arm64: dts: fsd: Add PPMU support for MFC block of
+ FSD SoC
 To: Vivek Yadav <vivek.2311@samsung.com>, pankaj.dubey@samsung.com,
  ravi.patel@samsung.com, shradha.t@samsung.com, mturquette@baylibre.com,
  sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
@@ -46,10 +46,10 @@ Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-perf-users@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 References: <20250708103208.79444-1-vivek.2311@samsung.com>
- <CGME20250708103237epcas5p1c4c5d7a5f43c0c88317e74d2f2458a1b@epcas5p1.samsung.com>
- <20250708103208.79444-4-vivek.2311@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <CGME20250708103243epcas5p2d8fd5bf02e64e104eca3def802813230@epcas5p2.samsung.com>
+ <20250708103208.79444-6-vivek.2311@samsung.com>
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -93,105 +93,59 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250708103208.79444-4-vivek.2311@samsung.com>
+In-Reply-To: <20250708103208.79444-6-vivek.2311@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/07/2025 12:32, Vivek Yadav wrote:
-> Add the dt-binding documentation for the Samsung specific
-> Platform Performance Monitoring Unit (PPMU) driver which provides
-> performance statistics for AXI bus masters such as MFC.
-
-A nit, subject: drop second/last, redundant "devicetree bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
+> Add device tree node for PPMU instances in MFC block and
+> enable the same for Tesla FSD platform.
 > 
 > Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
 > Signed-off-by: Vivek Yadav <vivek.2311@samsung.com>
 > ---
->  .../bindings/perf/samsung,ppmu-v2.yaml        | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml
+>  arch/arm64/boot/dts/tesla/fsd-evb.dts |  8 ++++++++
+>  arch/arm64/boot/dts/tesla/fsd.dtsi    | 20 ++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml b/Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml
-> new file mode 100644
-> index 000000000000..d137d06b7034
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/perf/samsung,ppmu-v2.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm64/boot/dts/tesla/fsd-evb.dts b/arch/arm64/boot/dts/tesla/fsd-evb.dts
+> index 8d7794642900..f543c7dad7cc 100644
+> --- a/arch/arm64/boot/dts/tesla/fsd-evb.dts
+> +++ b/arch/arm64/boot/dts/tesla/fsd-evb.dts
+> @@ -110,3 +110,11 @@ &serial_0 {
+>  &ufs {
+>  	status = "okay";
+>  };
 > +
-> +title: Samsung PPMU (Platform Performance Monitoring Unit)
-> +
-> +maintainers:
-> +  - Vivek Yadav <vivek.2311@samsung.com>
-> +  - Ravi Patel <ravi.patel@samsung.com>
-> +
-> +description:
-> +  PPMU (Platform Performance Monitoring Unit) provides performance statistics
-> +  such as bandwidth, read and write request, transactions count for AXI masters
-> +  like MFC.
-> +
-> +properties:
-> +  compatible:
-> +    const: samsung,ppmu-v2
+> +&ppmu0_mfc {
 
-What is wrong with existing bindings? Anyway, this must be SoC specific.
+Follow DTS coding style.
 
+> +	status = "okay";
+> +};
 > +
-> +  reg:
-> +    maxItems: 1
-> +    description: Memory-mapped register address
-> +
-> +  clocks:
-> +    items:
-> +      - description: AXI bus clock
-> +      - description: Peripheral clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aclk
-> +      - const: pclk
-> +
-> +  interrupts:
-> +    items:
-> +      - description: Overflow interrupt for Counters
-> +      - description: Conditional Interrupt Generation (CIG)
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/fsd-clk.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    ppmu@12840000 {
+> +&ppmu1_mfc {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi b/arch/arm64/boot/dts/tesla/fsd.dtsi
+> index 690b4ed9c29b..7b6e7d81be10 100644
+> --- a/arch/arm64/boot/dts/tesla/fsd.dtsi
+> +++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
+> @@ -970,6 +970,26 @@ timer@10040000 {
+>  			clock-names = "fin_pll", "mct";
+>  		};
+>  
+> +		ppmu0_mfc: ppmu@12840000 {
 
 Node names should be generic. See also an explanation and list of
 examples (not exhaustive) in DT specification:
 https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
 
-> +        compatible = "samsung,ppmu-v2";
-> +        reg = <0x12840000 0x1000>;
-> +        interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clock_mfc MFC_PPMU_MFCD0_IPCLKPORT_ACLK>,
-> +                 <&clock_mfc MFC_PPMU_MFCD0_IPCLKPORT_PCLK>;
-> +        clock-names = "aclk", "pclk";
-> +     };
+> +			compatible = "samsung,ppmu-v2";
+
+See writing bindings, DTS coding style and all other documents there
+explaining why this is wrong.
 
 
 Best regards,
