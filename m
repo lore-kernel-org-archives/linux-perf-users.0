@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6F023F40A
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 21:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ADF2586CE
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 21:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752097246; cv=none; b=aVi8Z/h3OsoRNwDwfvd8CJ0bZzyLlPmnoNeig/7QhjHYBNIRPOwQutet3za2gm01nFgPh1bIh32fJ66Xhtm5oigdMhk/NO5a/QLqXeN8pp06lpTMuh8++MH7fyQ0h+DPPLLRGeEuzOTPX05KplWcsS87m25X2+lw8y8nVeU0rXM=
+	t=1752097249; cv=none; b=qIz19RR50PgYbIlaLvtfg1qoxREgf1r7SlkI5oEgGRrK/1D6yxEH5a3djD5JWgIu9Wa6q9ZVdR3A63n134BYod/qizvaObgFNTidaHZqo16MB9viMIluF34lQqfbjNoa5KVq7ff4Le5CBChg2XdXttVnTwTkH7UJm/oXfLvHEYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752097246; c=relaxed/simple;
-	bh=w5eNqcWn2O0y6EMKp9jCIupHTttD6lDBxXRkCF1rGCU=;
+	s=arc-20240116; t=1752097249; c=relaxed/simple;
+	bh=GzuZ8LUXET7BGYQ2eRqRzJYQa6EtqNPAew8uEpnPOvk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Mc/QVByY8d8YWu3ZLdCh2XVABQeEglV+tgElkI858pPKXpTpXw3vvKRT80Zot8eJZANQI8DGqygQ9VokMbnDlFF4oA9MzQ+VNpN858sSdT745nm/ahdFPAlNkwHgkZp3Fg1AgRD1NeP6+aSI8mCPYsZ9FjZNhfc52jqa+laGGAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=taEcZ6KU; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=PSIrLemF86vt2U3eFubgZP7BdBt62XI2CiV4Vrvi8bSCEaZNQASACrx5RRhqa6Eo0bxkmBNV+ml1tvVpYPHAU3sRz5iWnxj2/xWpn/aNJCz/alNWw3iQ2B+m57C2jS0rtmdTQ9dpODo4/HfM5rEO/khXMA7wtSsS4kkyWCQRm/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F/cMxvvz; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="taEcZ6KU"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748f13ef248so212617b3a.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 14:40:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F/cMxvvz"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-312df02acf5so1115967a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 14:40:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752097244; x=1752702044; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752097246; x=1752702046; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NoNwchClBb7Gcfk0e4XraPQtQcpY/XFOcoy596WayHU=;
-        b=taEcZ6KUZWJ9OKaeovOI+2PRWrN1EjFzKt9M3Q5+HgwASQTWSUVl5V0IO36MV7YYHV
-         SBo+nNW6oTX1u7LfmhL7DX+sHmAmNbtg2ABQD0rvClXe1pqdZWqIzL4bi5OhGA2CeDwz
-         U/9wWt2yAaWPB0nhrTFoSIR9Ga0lkrrVluT9KCrcGHNesVmCQ9HFQtOhl8/FSPcQYnfW
-         DB5nPb9Nx5b62M9PHiNot5eb2Yw546PK/QK/k9cZ8KIdhFP9BUKV3XpJh7HghJtXEhbQ
-         DaiU/PYHIr277KiEiE/R+T5fAbDCnhBx+34kVs1fV0zPUC/5qBZvd+n7DNg7Hg/O5JuC
-         pOBQ==
+        bh=W2539RPpMNpcfZ5HJ4hJiH976Tmx+CPKS+Y0VYmUbAY=;
+        b=F/cMxvvz692befqQ+BGveSMmUHc5+cOIDM1cDAC24lZEFX/G924IQA3JVtjfCHTtvD
+         PdcRIo3nuejeHNgHY2xjQPYSDRukVApWX1jWAwiW/t1HkH1fsToqS4s3nUb3iCyX0n1C
+         OdHS0FHmp4eNJmy3DnmI/tggbn1XuhmFB9aRpmmI5ZpCCirr2rdBXYx5Q/GmBPSrFdIa
+         LqxGyAbG7rVmN/YrQgjRsR3T+nJFM6kPh3oB/ChoX/9fuGxTs7W1SW7A2hF+qv82vtoc
+         MZWLl4ALViuj4wF3l7Jbtlrrv8/PagJ0d16XwV25cORwyGL0pU24bh5W9CqgBv1Wq+96
+         EJ6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752097244; x=1752702044;
+        d=1e100.net; s=20230601; t=1752097246; x=1752702046;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NoNwchClBb7Gcfk0e4XraPQtQcpY/XFOcoy596WayHU=;
-        b=b7cuCWurtrop2yz+kBwazHCsHsQDrWJMFPvfwUdPCB+MzvhmNyRsM8lFei3NKhNJol
-         vyKQF9ascE3DSK0G8cN1TEXy99vRuiPbwPS5DaneioQpC+/n20IAeq8DHgDmAtFFDyRn
-         MjmO7pctbEH0mrVoT5IxCjOoNuPaxJkVAtcED9lEu0II8JkljCb728hwELKKcFwspds1
-         K/+FbDha5Auoa8uRd1u6ccfgqrIov4XZpUWz9HIdFvObkK2eGe0x/gO7Pf5twX9XB45H
-         baoOU+K4VHQJ4d+KiRJdEPNHqlOxGnX64kORwsRjd+X8497ZlcLrp2zfiYqXKxSqh4oS
-         7few==
-X-Forwarded-Encrypted: i=1; AJvYcCUfPC4O61YCk8l962c1/ONvgPbzHaRyQxTkhUKzYLUpiOvZCKNuC7w/rIUEYygEgTpJG3TqXYNNhSRr1DBHALQS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO2xVQqaiRpMTf9hQI3y4PR9id1NDxoVNB8Uidn38r79CKaVpE
-	583eo4pCkvsGzW7ZqJHdgad7MnNTvm72RhXUXXHZm3Nzz7D7KlPMd6c1QroSIUWN1JMWhfY1Ztu
-	zHgF50tm4ZQ==
-X-Google-Smtp-Source: AGHT+IHbQDBQev54wBPYAaHigKEDot5pz607jOo3YDSKBnzEYxbdvLW+Vqi8za47wrF7vtQtUAhBb2vfXcB1
-X-Received: from pgjh9.prod.google.com ([2002:a63:df49:0:b0:b32:1431:4415])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:614e:b0:21f:5aa1:3124
- with SMTP id adf61e73a8af0-230040daa2fmr342549637.13.1752097243758; Wed, 09
- Jul 2025 14:40:43 -0700 (PDT)
-Date: Wed,  9 Jul 2025 14:40:22 -0700
+        bh=W2539RPpMNpcfZ5HJ4hJiH976Tmx+CPKS+Y0VYmUbAY=;
+        b=im0Oz1cn+RRGSwLewLG5g+vC+iDY6ENDvy8rg1owfIjYMX0XHzig5wTpmxQH1Dht6E
+         mmOGbY5ux4gJdLHfzyDnrAGehSmTgnLmLe01uYrzyLInDjz2saww2L1s+7Ni/m5MGxZJ
+         nxEjJViH4E7OdLtdcQ/O80EVgCVV/9zy/FoSGttfxrOYXC/EPjhOFQbPFYZk6H7FgWX2
+         /Qitdx3q+awcIgeZ4sGXPmZRp/FMqLqiFwkhoZlCk2uiS8VYyHkKGExIx1fRDDWzatR8
+         9+DNnKyvZXFIMsgSoTqw1BiKvJLoyrs08Z7sFq4bK3pSx9mzCNaJ3r7NY5vg3louPen5
+         jh5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVOpKaAUKnsXwbVOjZtM7Tmj6Tek4nfPybbTvyQgf6Nq00WIeNN5WgJ+uvO+9uYyM6W1FDE1hnNC7f5bGRWWIgK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6NdrMOCYfXZdWdB/z5aEM5XUdbR4gu/n3RQ6App2xnDtrUybI
+	vXdNburdibr3DhBL9Z56VpWydnEK83RtB7a0UOcqg4qkI5AHeEgfK8s5FFnrY535hltsi9x67yA
+	v6Nqwf8m3aw==
+X-Google-Smtp-Source: AGHT+IFQfemZ2ppOa9hMxLSulWEGp1wnzmPO2ByLfr+dgrEONL6khFd2h8EArFH493ZkLKiWN9jYq9zwASUq
+X-Received: from pjcc3.prod.google.com ([2002:a17:90b:5743:b0:31c:160d:e3be])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f43:b0:311:a5ab:3d47
+ with SMTP id 98e67ed59e1d1-31c3cf3a81dmr1612801a91.1.1752097246030; Wed, 09
+ Jul 2025 14:40:46 -0700 (PDT)
+Date: Wed,  9 Jul 2025 14:40:23 -0700
 In-Reply-To: <20250709214029.1769089-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250709214029.1769089-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250709214029.1769089-6-irogers@google.com>
-Subject: [PATCH v1 05/12] perf metricgroup: Factor out for-each function and
- move out printing
+Message-ID: <20250709214029.1769089-7-irogers@google.com>
+Subject: [PATCH v1 06/12] perf stat: Move metric list from config to evlist
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,471 +75,739 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Factor metricgroup__for_each_metric into its own function handling
-regular and sys metrics. Make the metric adding and printing code use
-it, move the printing code into print-events files.
+The rblist of metric_event that then have a list of associated
+metric_expr is moved out of the stat_config and into the evlist. This
+is done as part of refactoring things for python, having the state
+split in two places complicates that implementation. The evlist is
+doing the harder work of enabling and disabling events, the metrics
+are needed to compute a value and it doesn't seem unreasonable to hang
+them from the evlist.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c  | 241 ++++-----------------------------
- tools/perf/util/metricgroup.h  |   3 +-
- tools/perf/util/print-events.c | 133 ++++++++++++++++++
- tools/perf/util/print-events.h |   2 +
- 4 files changed, 165 insertions(+), 214 deletions(-)
+ tools/perf/builtin-script.c      |  3 +--
+ tools/perf/builtin-stat.c        | 25 ++++++++++++-------------
+ tools/perf/tests/expand-cgroup.c | 24 +++++++-----------------
+ tools/perf/tests/parse-metric.c  | 16 +++++-----------
+ tools/perf/tests/pmu-events.c    |  8 ++------
+ tools/perf/util/cgroup.c         | 23 ++++++++---------------
+ tools/perf/util/cgroup.h         |  3 +--
+ tools/perf/util/evlist.c         |  3 +++
+ tools/perf/util/evlist.h         |  6 ++++++
+ tools/perf/util/metricgroup.c    | 20 ++++++++------------
+ tools/perf/util/metricgroup.h    |  7 +++----
+ tools/perf/util/python.c         |  4 ++++
+ tools/perf/util/stat-display.c   | 16 ++++++----------
+ tools/perf/util/stat-shadow.c    | 13 ++++++-------
+ tools/perf/util/stat.h           | 12 +++---------
+ 15 files changed, 75 insertions(+), 108 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 43d35f956a33..ddd5c362d183 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -384,107 +384,6 @@ static bool match_pm_metric_or_groups(const struct pmu_metric *pm, const char *p
- 	       match_metric_or_groups(pm->metric_name, metric_or_groups);
- }
- 
--/** struct mep - RB-tree node for building printing information. */
--struct mep {
--	/** nd - RB-tree element. */
--	struct rb_node nd;
--	/** @metric_group: Owned metric group name, separated others with ';'. */
--	char *metric_group;
--	const char *metric_name;
--	const char *metric_desc;
--	const char *metric_long_desc;
--	const char *metric_expr;
--	const char *metric_threshold;
--	const char *metric_unit;
--	const char *pmu_name;
--};
--
--static int mep_cmp(struct rb_node *rb_node, const void *entry)
--{
--	struct mep *a = container_of(rb_node, struct mep, nd);
--	struct mep *b = (struct mep *)entry;
--	int ret;
--
--	ret = strcmp(a->metric_group, b->metric_group);
--	if (ret)
--		return ret;
--
--	return strcmp(a->metric_name, b->metric_name);
--}
--
--static struct rb_node *mep_new(struct rblist *rl __maybe_unused, const void *entry)
--{
--	struct mep *me = malloc(sizeof(struct mep));
--
--	if (!me)
--		return NULL;
--
--	memcpy(me, entry, sizeof(struct mep));
--	return &me->nd;
--}
--
--static void mep_delete(struct rblist *rl __maybe_unused,
--		       struct rb_node *nd)
--{
--	struct mep *me = container_of(nd, struct mep, nd);
--
--	zfree(&me->metric_group);
--	free(me);
--}
--
--static struct mep *mep_lookup(struct rblist *groups, const char *metric_group,
--			      const char *metric_name)
--{
--	struct rb_node *nd;
--	struct mep me = {
--		.metric_group = strdup(metric_group),
--		.metric_name = metric_name,
--	};
--	nd = rblist__find(groups, &me);
--	if (nd) {
--		free(me.metric_group);
--		return container_of(nd, struct mep, nd);
--	}
--	rblist__add_node(groups, &me);
--	nd = rblist__find(groups, &me);
--	if (nd)
--		return container_of(nd, struct mep, nd);
--	return NULL;
--}
--
--static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
--					struct rblist *groups)
--{
--	const char *g;
--	char *omg, *mg;
--
--	mg = strdup(pm->metric_group ?: pm->metric_name);
--	if (!mg)
--		return -ENOMEM;
--	omg = mg;
--	while ((g = strsep(&mg, ";")) != NULL) {
--		struct mep *me;
--
--		g = skip_spaces(g);
--		if (strlen(g))
--			me = mep_lookup(groups, g, pm->metric_name);
--		else
--			me = mep_lookup(groups, pm->metric_name, pm->metric_name);
--
--		if (me) {
--			me->metric_desc = pm->desc;
--			me->metric_long_desc = pm->long_desc;
--			me->metric_expr = pm->metric_expr;
--			me->metric_threshold = pm->metric_threshold;
--			me->metric_unit = pm->unit;
--			me->pmu_name = pm->pmu;
--		}
--	}
--	free(omg);
--
--	return 0;
--}
--
- struct metricgroup_iter_data {
- 	pmu_metric_iter_fn fn;
- 	void *data;
-@@ -510,54 +409,22 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
- 	return 0;
- }
- 
--static int metricgroup__add_to_mep_groups_callback(const struct pmu_metric *pm,
--					const struct pmu_metrics_table *table __maybe_unused,
--					void *vdata)
-+int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
-+				 void *data)
- {
--	struct rblist *groups = vdata;
--
--	return metricgroup__add_to_mep_groups(pm, groups);
--}
--
--void metricgroup__print(const struct print_callbacks *print_cb, void *print_state)
--{
--	struct rblist groups;
--	const struct pmu_metrics_table *table;
--	struct rb_node *node, *next;
-+	struct metricgroup_iter_data sys_data = {
-+		.fn = fn,
-+		.data = data,
-+	};
- 
--	rblist__init(&groups);
--	groups.node_new = mep_new;
--	groups.node_cmp = mep_cmp;
--	groups.node_delete = mep_delete;
--	table = pmu_metrics_table__find();
- 	if (table) {
--		pmu_metrics_table__for_each_metric(table,
--						 metricgroup__add_to_mep_groups_callback,
--						 &groups);
--	}
--	{
--		struct metricgroup_iter_data data = {
--			.fn = metricgroup__add_to_mep_groups_callback,
--			.data = &groups,
--		};
--		pmu_for_each_sys_metric(metricgroup__sys_event_iter, &data);
--	}
-+		int ret = pmu_metrics_table__for_each_metric(table, fn, data);
- 
--	for (node = rb_first_cached(&groups.entries); node; node = next) {
--		struct mep *me = container_of(node, struct mep, nd);
--
--		print_cb->print_metric(print_state,
--				me->metric_group,
--				me->metric_name,
--				me->metric_desc,
--				me->metric_long_desc,
--				me->metric_expr,
--				me->metric_threshold,
--				me->metric_unit,
--				me->pmu_name);
--		next = rb_next(node);
--		rblist__remove_node(&groups, node);
-+		if (ret)
-+			return ret;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 4001e621b6cb..271f22962e32 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2136,8 +2136,7 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 			perf_stat__print_shadow_stats(&stat_config, ev2,
+ 						      evsel_script(ev2)->val,
+ 						      sample->cpu,
+-						      &ctx,
+-						      NULL);
++						      &ctx);
+ 		}
+ 		evsel_script(leader)->gnum = 0;
  	}
-+
-+	return pmu_for_each_sys_metric(metricgroup__sys_event_iter, &sys_data);
- }
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 50fc53adb7e4..77e2248fa7fc 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1863,8 +1863,7 @@ static int add_default_events(void)
+ 						stat_config.metric_no_threshold,
+ 						stat_config.user_requested_cpu_list,
+ 						stat_config.system_wide,
+-						stat_config.hardware_aware_grouping,
+-						&stat_config.metric_events);
++						stat_config.hardware_aware_grouping);
+ 		goto out;
+ 	}
  
- static const char *code_characters = ",-=@";
-@@ -1090,29 +957,6 @@ static int add_metric(struct list_head *metric_list,
+@@ -1901,8 +1900,7 @@ static int add_default_events(void)
+ 						stat_config.metric_no_threshold,
+ 						stat_config.user_requested_cpu_list,
+ 						stat_config.system_wide,
+-						stat_config.hardware_aware_grouping,
+-						&stat_config.metric_events);
++						stat_config.hardware_aware_grouping);
+ 		goto out;
+ 	}
+ 
+@@ -1939,8 +1937,7 @@ static int add_default_events(void)
+ 						/*metric_no_threshold=*/true,
+ 						stat_config.user_requested_cpu_list,
+ 						stat_config.system_wide,
+-						stat_config.hardware_aware_grouping,
+-						&stat_config.metric_events) < 0) {
++						stat_config.hardware_aware_grouping) < 0) {
+ 			ret = -1;
+ 			goto out;
+ 		}
+@@ -1989,8 +1986,7 @@ static int add_default_events(void)
+ 							/*metric_no_threshold=*/true,
+ 							stat_config.user_requested_cpu_list,
+ 							stat_config.system_wide,
+-							stat_config.hardware_aware_grouping,
+-							&stat_config.metric_events) < 0) {
++							stat_config.hardware_aware_grouping) < 0) {
+ 				ret = -1;
+ 				goto out;
+ 			}
+@@ -1999,6 +1995,9 @@ static int add_default_events(void)
+ 				evsel->default_metricgroup = true;
+ 
+ 			evlist__splice_list_tail(evlist, &metric_evlist->core.entries);
++			metricgroup__copy_metric_events(evlist, /*cgrp=*/NULL,
++							&evlist->metric_events,
++							&metric_evlist->metric_events);
+ 			evlist__delete(metric_evlist);
+ 		}
+ 	}
+@@ -2053,6 +2052,9 @@ static int add_default_events(void)
+ 	}
+ 	parse_events_error__exit(&err);
+ 	evlist__splice_list_tail(evsel_list, &evlist->core.entries);
++	metricgroup__copy_metric_events(evsel_list, /*cgrp=*/NULL,
++					&evsel_list->metric_events,
++					&evlist->metric_events);
+ 	evlist__delete(evlist);
  	return ret;
  }
+@@ -2739,8 +2741,7 @@ int cmd_stat(int argc, const char **argv)
+ 						stat_config.metric_no_threshold,
+ 						stat_config.user_requested_cpu_list,
+ 						stat_config.system_wide,
+-						stat_config.hardware_aware_grouping,
+-						&stat_config.metric_events);
++						stat_config.hardware_aware_grouping);
  
--static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
--					const struct pmu_metrics_table *table __maybe_unused,
--					void *data)
--{
--	struct metricgroup_add_iter_data *d = data;
--	int ret;
--
--	if (!match_pm_metric_or_groups(pm, d->pmu, d->metric_name))
--		return 0;
--
--	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
--			 d->metric_no_threshold, d->user_requested_cpu_list,
--			 d->system_wide, d->root_metric, d->visited, d->table);
--	if (ret)
--		goto out;
--
--	*(d->has_match) = true;
--
--out:
--	*(d->ret) = ret;
--	return ret;
--}
--
- /**
-  * metric_list_cmp - list_sort comparator that sorts metrics with more events to
-  *                   the front. tool events are excluded from the count.
-@@ -1216,55 +1060,26 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
+ 		zfree(&metrics);
+ 		if (ret) {
+@@ -2760,8 +2761,7 @@ int cmd_stat(int argc, const char **argv)
+ 			goto out;
+ 		}
+ 
+-		if (evlist__expand_cgroup(evsel_list, stat_config.cgroup_list,
+-					  &stat_config.metric_events, true) < 0) {
++		if (evlist__expand_cgroup(evsel_list, stat_config.cgroup_list, true) < 0) {
+ 			parse_options_usage(stat_usage, stat_options,
+ 					    "for-each-cgroup", 0);
+ 			goto out;
+@@ -2936,7 +2936,6 @@ int cmd_stat(int argc, const char **argv)
+ 
+ 	evlist__delete(evsel_list);
+ 
+-	metricgroup__rblist_exit(&stat_config.metric_events);
+ 	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
+ 
+ 	return status;
+diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+index 31966ff856f8..c7b32a220ca1 100644
+--- a/tools/perf/tests/expand-cgroup.c
++++ b/tools/perf/tests/expand-cgroup.c
+@@ -13,8 +13,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-static int test_expand_events(struct evlist *evlist,
+-			      struct rblist *metric_events)
++static int test_expand_events(struct evlist *evlist)
  {
- 	LIST_HEAD(list);
+ 	int i, ret = TEST_FAIL;
+ 	int nr_events;
+@@ -47,7 +46,7 @@ static int test_expand_events(struct evlist *evlist,
+ 	was_group_event = evsel__is_group_event(evlist__first(evlist));
+ 	nr_members = evlist__first(evlist)->core.nr_members;
+ 
+-	ret = evlist__expand_cgroup(evlist, cgrp_str, metric_events, false);
++	ret = evlist__expand_cgroup(evlist, cgrp_str, false);
+ 	if (ret < 0) {
+ 		pr_debug("failed to expand events for cgroups\n");
+ 		goto out;
+@@ -100,13 +99,11 @@ out:	for (i = 0; i < nr_events; i++)
+ static int expand_default_events(void)
+ {
  	int ret;
--	bool has_match = false;
--
--	{
--		struct metricgroup__add_metric_data data = {
--			.list = &list,
--			.pmu = pmu,
--			.metric_name = metric_name,
--			.modifier = modifier,
--			.metric_no_group = metric_no_group,
--			.metric_no_threshold = metric_no_threshold,
--			.user_requested_cpu_list = user_requested_cpu_list,
--			.system_wide = system_wide,
--			.has_match = false,
--		};
--		/*
--		 * Iterate over all metrics seeing if metric matches either the
--		 * name or group. When it does add the metric to the list.
--		 */
--		ret = pmu_metrics_table__for_each_metric(table, metricgroup__add_metric_callback,
--						       &data);
--		if (ret)
--			goto out;
-+	struct metricgroup__add_metric_data data = {
-+		.list = &list,
-+		.pmu = pmu,
-+		.metric_name = metric_name,
-+		.modifier = modifier,
-+		.metric_no_group = metric_no_group,
-+		.metric_no_threshold = metric_no_threshold,
-+		.user_requested_cpu_list = user_requested_cpu_list,
-+		.system_wide = system_wide,
-+		.has_match = false,
-+	};
+-	struct rblist metric_events;
+ 	struct evlist *evlist = evlist__new_default();
  
--		has_match = data.has_match;
+ 	TEST_ASSERT_VAL("failed to get evlist", evlist);
+ 
+-	rblist__init(&metric_events);
+-	ret = test_expand_events(evlist, &metric_events);
++	ret = test_expand_events(evlist);
+ 	evlist__delete(evlist);
+ 	return ret;
+ }
+@@ -115,7 +112,6 @@ static int expand_group_events(void)
+ {
+ 	int ret;
+ 	struct evlist *evlist;
+-	struct rblist metric_events;
+ 	struct parse_events_error err;
+ 	const char event_str[] = "{cycles,instructions}";
+ 
+@@ -132,8 +128,7 @@ static int expand_group_events(void)
+ 		goto out;
+ 	}
+ 
+-	rblist__init(&metric_events);
+-	ret = test_expand_events(evlist, &metric_events);
++	ret = test_expand_events(evlist);
+ out:
+ 	parse_events_error__exit(&err);
+ 	evlist__delete(evlist);
+@@ -144,7 +139,6 @@ static int expand_libpfm_events(void)
+ {
+ 	int ret;
+ 	struct evlist *evlist;
+-	struct rblist metric_events;
+ 	const char event_str[] = "CYCLES";
+ 	struct option opt = {
+ 		.value = &evlist,
+@@ -166,8 +160,7 @@ static int expand_libpfm_events(void)
+ 		goto out;
+ 	}
+ 
+-	rblist__init(&metric_events);
+-	ret = test_expand_events(evlist, &metric_events);
++	ret = test_expand_events(evlist);
+ out:
+ 	evlist__delete(evlist);
+ 	return ret;
+@@ -177,25 +170,22 @@ static int expand_metric_events(void)
+ {
+ 	int ret;
+ 	struct evlist *evlist;
+-	struct rblist metric_events;
+ 	const char metric_str[] = "CPI";
+ 	const struct pmu_metrics_table *pme_test;
+ 
+ 	evlist = evlist__new();
+ 	TEST_ASSERT_VAL("failed to get evlist", evlist);
+ 
+-	rblist__init(&metric_events);
+ 	pme_test = find_core_metrics_table("testarch", "testcpu");
+-	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str, &metric_events);
++	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str);
+ 	if (ret < 0) {
+ 		pr_debug("failed to parse '%s' metric\n", metric_str);
+ 		goto out;
+ 	}
+ 
+-	ret = test_expand_events(evlist, &metric_events);
++	ret = test_expand_events(evlist);
+ 
+ out:
+-	metricgroup__rblist_exit(&metric_events);
+ 	evlist__delete(evlist);
+ 	return ret;
+ }
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+index 2c28fb50dc24..66a5275917e2 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -45,15 +45,14 @@ static void load_runtime_stat(struct evlist *evlist, struct value *vals)
+ 	}
+ }
+ 
+-static double compute_single(struct rblist *metric_events, struct evlist *evlist,
+-			     const char *name)
++static double compute_single(struct evlist *evlist, const char *name)
+ {
+ 	struct metric_expr *mexp;
+ 	struct metric_event *me;
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		me = metricgroup__lookup(metric_events, evsel, false);
++		me = metricgroup__lookup(&evlist->metric_events, evsel, false);
+ 		if (me != NULL) {
+ 			list_for_each_entry (mexp, &me->head, nd) {
+ 				if (strcmp(mexp->metric_name, name))
+@@ -69,9 +68,6 @@ static int __compute_metric(const char *name, struct value *vals,
+ 			    const char *name1, double *ratio1,
+ 			    const char *name2, double *ratio2)
+ {
+-	struct rblist metric_events = {
+-		.nr_entries = 0,
+-	};
+ 	const struct pmu_metrics_table *pme_test;
+ 	struct perf_cpu_map *cpus;
+ 	struct evlist *evlist;
+@@ -95,8 +91,7 @@ static int __compute_metric(const char *name, struct value *vals,
+ 
+ 	/* Parse the metric into metric_events list. */
+ 	pme_test = find_core_metrics_table("testarch", "testcpu");
+-	err = metricgroup__parse_groups_test(evlist, pme_test, name,
+-					     &metric_events);
++	err = metricgroup__parse_groups_test(evlist, pme_test, name);
+ 	if (err)
+ 		goto out;
+ 
+@@ -109,13 +104,12 @@ static int __compute_metric(const char *name, struct value *vals,
+ 
+ 	/* And execute the metric */
+ 	if (name1 && ratio1)
+-		*ratio1 = compute_single(&metric_events, evlist, name1);
++		*ratio1 = compute_single(evlist, name1);
+ 	if (name2 && ratio2)
+-		*ratio2 = compute_single(&metric_events, evlist, name2);
++		*ratio2 = compute_single(evlist, name2);
+ 
+ out:
+ 	/* ... cleanup. */
+-	metricgroup__rblist_exit(&metric_events);
+ 	evlist__free_stats(evlist);
+ 	perf_cpu_map__put(cpus);
+ 	evlist__delete(evlist);
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 815b40097428..8bbe0516ecc0 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -868,9 +868,6 @@ static int test__parsing_callback(const struct pmu_metric *pm,
+ 	struct evlist *evlist;
+ 	struct perf_cpu_map *cpus;
+ 	struct evsel *evsel;
+-	struct rblist metric_events = {
+-		.nr_entries = 0,
+-	};
+ 	int err = 0;
+ 
+ 	if (!pm->metric_expr)
+@@ -895,7 +892,7 @@ static int test__parsing_callback(const struct pmu_metric *pm,
+ 
+ 	perf_evlist__set_maps(&evlist->core, cpus, NULL);
+ 
+-	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name, &metric_events);
++	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name);
+ 	if (err) {
+ 		if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
+ 		    !strcmp(pm->metric_name, "M3")) {
+@@ -922,7 +919,7 @@ static int test__parsing_callback(const struct pmu_metric *pm,
+ 		k++;
+ 	}
+ 	evlist__for_each_entry(evlist, evsel) {
+-		struct metric_event *me = metricgroup__lookup(&metric_events, evsel, false);
++		struct metric_event *me = metricgroup__lookup(&evlist->metric_events, evsel, false);
+ 
+ 		if (me != NULL) {
+ 			struct metric_expr *mexp;
+@@ -944,7 +941,6 @@ static int test__parsing_callback(const struct pmu_metric *pm,
+ 		pr_debug("Broken metric %s\n", pm->metric_name);
+ 
+ 	/* ... cleanup. */
+-	metricgroup__rblist_exit(&metric_events);
+ 	evlist__free_stats(evlist);
+ 	perf_cpu_map__put(cpus);
+ 	evlist__delete(evlist);
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index fbcc0626f9ce..25e2769b5e74 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -413,8 +413,7 @@ static bool has_pattern_string(const char *str)
+ 	return !!strpbrk(str, "{}[]()|*+?^$");
+ }
+ 
+-int evlist__expand_cgroup(struct evlist *evlist, const char *str,
+-			  struct rblist *metric_events, bool open_cgroup)
++int evlist__expand_cgroup(struct evlist *evlist, const char *str, bool open_cgroup)
+ {
+ 	struct evlist *orig_list, *tmp_list;
+ 	struct evsel *pos, *evsel, *leader;
+@@ -440,12 +439,8 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
+ 	evlist__splice_list_tail(orig_list, &evlist->core.entries);
+ 	evlist->core.nr_entries = 0;
+ 
+-	if (metric_events) {
+-		orig_metric_events = *metric_events;
+-		rblist__init(metric_events);
+-	} else {
+-		rblist__init(&orig_metric_events);
 -	}
--	{
--		struct metricgroup_iter_data data = {
--			.fn = metricgroup__add_metric_sys_event_iter,
--			.data = (void *) &(struct metricgroup_add_iter_data) {
--				.metric_list = &list,
--				.pmu = pmu,
--				.metric_name = metric_name,
--				.modifier = modifier,
--				.metric_no_group = metric_no_group,
--				.user_requested_cpu_list = user_requested_cpu_list,
--				.system_wide = system_wide,
--				.has_match = &has_match,
--				.ret = &ret,
--				.table = table,
--			},
--		};
--
--		pmu_for_each_sys_metric(metricgroup__sys_event_iter, &data);
--	}
--	/* End of pmu events. */
--	if (!has_match)
-+	/*
-+	 * Iterate over all metrics seeing if metric matches either the
-+	 * name or group. When it does add the metric to the list.
++	orig_metric_events = evlist->metric_events;
++	metricgroup__rblist_init(&evlist->metric_events);
+ 
+ 	if (has_pattern_string(str))
+ 		prefix_len = match_cgroups(str);
+@@ -490,12 +485,10 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
+ 		cgroup__put(cgrp);
+ 		nr_cgroups++;
+ 
+-		if (metric_events) {
+-			if (metricgroup__copy_metric_events(tmp_list, cgrp,
+-							    metric_events,
+-							    &orig_metric_events) < 0)
+-				goto out_err;
+-		}
++		if (metricgroup__copy_metric_events(tmp_list, cgrp,
++						    &evlist->metric_events,
++						    &orig_metric_events) < 0)
++			goto out_err;
+ 
+ 		evlist__splice_list_tail(evlist, &tmp_list->core.entries);
+ 		tmp_list->core.nr_entries = 0;
+@@ -512,7 +505,7 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
+ out_err:
+ 	evlist__delete(orig_list);
+ 	evlist__delete(tmp_list);
+-	rblist__exit(&orig_metric_events);
++	metricgroup__rblist_exit(&orig_metric_events);
+ 	release_cgroup_list();
+ 
+ 	return ret;
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index de8882d6e8d3..7b1bda22878c 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -28,8 +28,7 @@ struct rblist;
+ 
+ struct cgroup *cgroup__new(const char *name, bool do_open);
+ struct cgroup *evlist__findnew_cgroup(struct evlist *evlist, const char *name);
+-int evlist__expand_cgroup(struct evlist *evlist, const char *cgroups,
+-			  struct rblist *metric_events, bool open_cgroup);
++int evlist__expand_cgroup(struct evlist *evlist, const char *cgroups, bool open_cgroup);
+ 
+ void evlist__set_default_cgroup(struct evlist *evlist, struct cgroup *cgroup);
+ 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 5664ebf6bbc6..995ad5f654d0 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -35,6 +35,7 @@
+ #include "util/util.h"
+ #include "util/env.h"
+ #include "util/intel-tpebs.h"
++#include "util/metricgroup.h"
+ #include "util/strbuf.h"
+ #include <signal.h>
+ #include <unistd.h>
+@@ -83,6 +84,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ 	evlist->ctl_fd.ack = -1;
+ 	evlist->ctl_fd.pos = -1;
+ 	evlist->nr_br_cntr = -1;
++	metricgroup__rblist_init(&evlist->metric_events);
+ }
+ 
+ struct evlist *evlist__new(void)
+@@ -173,6 +175,7 @@ static void evlist__purge(struct evlist *evlist)
+ 
+ void evlist__exit(struct evlist *evlist)
+ {
++	metricgroup__rblist_exit(&evlist->metric_events);
+ 	event_enable_timer__exit(&evlist->eet);
+ 	zfree(&evlist->mmap);
+ 	zfree(&evlist->overwrite_mmap);
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 85859708393e..fac1a01ba13f 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -12,6 +12,7 @@
+ #include <perf/evlist.h>
+ #include "events_stats.h"
+ #include "evsel.h"
++#include "rblist.h"
+ #include <pthread.h>
+ #include <signal.h>
+ #include <unistd.h>
+@@ -86,6 +87,11 @@ struct evlist {
+ 		int	pos;	/* index at evlist core object to check signals */
+ 	} ctl_fd;
+ 	struct event_enable_timer *eet;
++	/**
++	 * @metric_events: A list of struct metric_event which each have a list
++	 * of struct metric_expr.
 +	 */
-+	ret = metricgroup__for_each_metric(table, metricgroup__add_metric_callback, &data);
-+	if (!ret && !data.has_match)
- 		ret = -EINVAL;
++	struct rblist	metric_events;
+ };
  
--out:
- 	/*
- 	 * add to metric_list so that they can be released
- 	 * even if it's failed
+ struct evsel_str_handler {
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index ddd5c362d183..3cc6c47402bd 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -103,7 +103,7 @@ static void metric_event_delete(struct rblist *rblist __maybe_unused,
+ 	free(me);
+ }
+ 
+-static void metricgroup__rblist_init(struct rblist *metric_events)
++void metricgroup__rblist_init(struct rblist *metric_events)
+ {
+ 	rblist__init(metric_events);
+ 	metric_events->node_cmp = metric_event_cmp;
+@@ -1323,7 +1323,6 @@ static int parse_groups(struct evlist *perf_evlist,
+ 			const char *user_requested_cpu_list,
+ 			bool system_wide,
+ 			bool fake_pmu,
+-			struct rblist *metric_events_list,
+ 			const struct pmu_metrics_table *table)
+ {
+ 	struct evlist *combined_evlist = NULL;
+@@ -1333,8 +1332,6 @@ static int parse_groups(struct evlist *perf_evlist,
+ 	bool is_default = !strcmp(str, "Default");
+ 	int ret;
+ 
+-	if (metric_events_list->nr_entries == 0)
+-		metricgroup__rblist_init(metric_events_list);
+ 	ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
+ 					   user_requested_cpu_list,
+ 					   system_wide, &metric_list, table);
+@@ -1425,7 +1422,8 @@ static int parse_groups(struct evlist *perf_evlist,
+ 			goto out;
+ 		}
+ 
+-		me = metricgroup__lookup(metric_events_list, metric_events[0], true);
++		me = metricgroup__lookup(&perf_evlist->metric_events, metric_events[0],
++					 /*create=*/true);
+ 
+ 		expr = malloc(sizeof(struct metric_expr));
+ 		if (!expr) {
+@@ -1485,8 +1483,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      bool metric_no_threshold,
+ 			      const char *user_requested_cpu_list,
+ 			      bool system_wide,
+-			      bool hardware_aware_grouping,
+-			      struct rblist *metric_events)
++			      bool hardware_aware_grouping)
+ {
+ 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
+ 
+@@ -1497,13 +1494,12 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 
+ 	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
+ 			    metric_no_threshold, user_requested_cpu_list, system_wide,
+-			    /*fake_pmu=*/false, metric_events, table);
++			    /*fake_pmu=*/false, table);
+ }
+ 
+ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 				   const struct pmu_metrics_table *table,
+-				   const char *str,
+-				   struct rblist *metric_events)
++				   const char *str)
+ {
+ 	return parse_groups(evlist, "all", str,
+ 			    /*metric_no_group=*/false,
+@@ -1511,7 +1507,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 			    /*metric_no_threshold=*/false,
+ 			    /*user_requested_cpu_list=*/NULL,
+ 			    /*system_wide=*/false,
+-			    /*fake_pmu=*/true, metric_events, table);
++			    /*fake_pmu=*/true, table);
+ }
+ 
+ struct metricgroup__has_metric_data {
+@@ -1596,7 +1592,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 		evsel = evlist__find_evsel(evlist, old_me->evsel->core.idx);
+ 		if (!evsel)
+ 			return -EINVAL;
+-		new_me = metricgroup__lookup(new_metric_events, evsel, true);
++		new_me = metricgroup__lookup(new_metric_events, evsel, /*create=*/true);
+ 		if (!new_me)
+ 			return -ENOMEM;
+ 
 diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index a04ac1afa6cc..1c07295931c1 100644
+index 1c07295931c1..324880b2ed8f 100644
 --- a/tools/perf/util/metricgroup.h
 +++ b/tools/perf/util/metricgroup.h
-@@ -84,7 +84,8 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   const char *str,
- 				   struct rblist *metric_events);
+@@ -77,18 +77,17 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      bool metric_no_threshold,
+ 			      const char *user_requested_cpu_list,
+ 			      bool system_wide,
+-			      bool hardware_aware_grouping,
+-			      struct rblist *metric_events);
++			      bool hardware_aware_grouping);
+ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 				   const struct pmu_metrics_table *table,
+-				   const char *str,
+-				   struct rblist *metric_events);
++				   const char *str);
  
--void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
-+int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
-+				 void *data);
+ int metricgroup__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
+ 				 void *data);
  bool metricgroup__has_metric_or_groups(const char *pmu, const char *metric_or_groups);
  unsigned int metricgroups__topdown_max_level(void);
  int arch_get_runtimeparam(const struct pmu_metric *pm);
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 83aaf7cda635..e233bacaa641 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -381,6 +381,139 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
- 	strlist__delete(evt_name_list);
++void metricgroup__rblist_init(struct rblist *metric_events);
+ void metricgroup__rblist_exit(struct rblist *metric_events);
+ 
+ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 82666bcd2eda..b5ee9f7a4662 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -18,6 +18,7 @@
+ #include "strbuf.h"
+ #include "thread_map.h"
+ #include "trace-event.h"
++#include "metricgroup.h"
+ #include "mmap.h"
+ #include "util/sample.h"
+ #include <internal/lib.h>
+@@ -1544,6 +1545,9 @@ static PyObject *pyrf_evlist__from_evlist(struct evlist *evlist)
+ 
+ 		evlist__add(&pevlist->evlist, &pevsel->evsel);
+ 	}
++	metricgroup__copy_metric_events(&pevlist->evlist, /*cgrp=*/NULL,
++					&pevlist->evlist.metric_events,
++					&evlist->metric_events);
+ 	return (PyObject *)pevlist;
  }
  
-+/** struct mep - RB-tree node for building printing information. */
-+struct mep {
-+	/** nd - RB-tree element. */
-+	struct rb_node nd;
-+	/** @metric_group: Owned metric group name, separated others with ';'. */
-+	char *metric_group;
-+	const char *metric_name;
-+	const char *metric_desc;
-+	const char *metric_long_desc;
-+	const char *metric_expr;
-+	const char *metric_threshold;
-+	const char *metric_unit;
-+	const char *pmu_name;
-+};
-+
-+static int mep_cmp(struct rb_node *rb_node, const void *entry)
-+{
-+	struct mep *a = container_of(rb_node, struct mep, nd);
-+	struct mep *b = (struct mep *)entry;
-+	int ret;
-+
-+	ret = strcmp(a->metric_group, b->metric_group);
-+	if (ret)
-+		return ret;
-+
-+	return strcmp(a->metric_name, b->metric_name);
-+}
-+
-+static struct rb_node *mep_new(struct rblist *rl __maybe_unused, const void *entry)
-+{
-+	struct mep *me = malloc(sizeof(struct mep));
-+
-+	if (!me)
-+		return NULL;
-+
-+	memcpy(me, entry, sizeof(struct mep));
-+	return &me->nd;
-+}
-+
-+static void mep_delete(struct rblist *rl __maybe_unused,
-+		       struct rb_node *nd)
-+{
-+	struct mep *me = container_of(nd, struct mep, nd);
-+
-+	zfree(&me->metric_group);
-+	free(me);
-+}
-+
-+static struct mep *mep_lookup(struct rblist *groups, const char *metric_group,
-+			      const char *metric_name)
-+{
-+	struct rb_node *nd;
-+	struct mep me = {
-+		.metric_group = strdup(metric_group),
-+		.metric_name = metric_name,
-+	};
-+	nd = rblist__find(groups, &me);
-+	if (nd) {
-+		free(me.metric_group);
-+		return container_of(nd, struct mep, nd);
-+	}
-+	rblist__add_node(groups, &me);
-+	nd = rblist__find(groups, &me);
-+	if (nd)
-+		return container_of(nd, struct mep, nd);
-+	return NULL;
-+}
-+
-+static int metricgroup__add_to_mep_groups_callback(const struct pmu_metric *pm,
-+					const struct pmu_metrics_table *table __maybe_unused,
-+					void *vdata)
-+{
-+	struct rblist *groups = vdata;
-+	const char *g;
-+	char *omg, *mg;
-+
-+	mg = strdup(pm->metric_group ?: pm->metric_name);
-+	if (!mg)
-+		return -ENOMEM;
-+	omg = mg;
-+	while ((g = strsep(&mg, ";")) != NULL) {
-+		struct mep *me;
-+
-+		g = skip_spaces(g);
-+		if (strlen(g))
-+			me = mep_lookup(groups, g, pm->metric_name);
-+		else
-+			me = mep_lookup(groups, pm->metric_name, pm->metric_name);
-+
-+		if (me) {
-+			me->metric_desc = pm->desc;
-+			me->metric_long_desc = pm->long_desc;
-+			me->metric_expr = pm->metric_expr;
-+			me->metric_threshold = pm->metric_threshold;
-+			me->metric_unit = pm->unit;
-+			me->pmu_name = pm->pmu;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 9cb5245a92aa..a67b991f4e81 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -899,12 +899,11 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 				print_noise(config, os, counter, noise, /*before_metric=*/true);
+ 				print_running(config, os, run, ena, /*before_metric=*/true);
+ 				from = perf_stat__print_shadow_stats_metricgroup(config, counter, aggr_idx,
+-										 &num, from, &out,
+-										 &config->metric_events);
++										 &num, from, &out);
+ 			} while (from != NULL);
+-		} else
+-			perf_stat__print_shadow_stats(config, counter, uval, aggr_idx,
+-						      &out, &config->metric_events);
++		} else {
++			perf_stat__print_shadow_stats(config, counter, uval, aggr_idx, &out);
 +		}
-+	}
-+	free(omg);
-+
-+	return 0;
-+}
-+
-+void metricgroup__print(const struct print_callbacks *print_cb, void *print_state)
-+{
-+	struct rblist groups;
-+	struct rb_node *node, *next;
-+	const struct pmu_metrics_table *table = pmu_metrics_table__find();
-+
-+	rblist__init(&groups);
-+	groups.node_new = mep_new;
-+	groups.node_cmp = mep_cmp;
-+	groups.node_delete = mep_delete;
-+
-+	metricgroup__for_each_metric(table, metricgroup__add_to_mep_groups_callback, &groups);
-+
-+	for (node = rb_first_cached(&groups.entries); node; node = next) {
-+		struct mep *me = container_of(node, struct mep, nd);
-+
-+		print_cb->print_metric(print_state,
-+				me->metric_group,
-+				me->metric_name,
-+				me->metric_desc,
-+				me->metric_long_desc,
-+				me->metric_expr,
-+				me->metric_threshold,
-+				me->metric_unit,
-+				me->pmu_name);
-+		next = rb_next(node);
-+		rblist__remove_node(&groups, node);
-+	}
-+}
-+
- /*
-  * Print the help text for the event symbols:
-  */
-diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index 8f19c2bea64a..48682e2d166d 100644
---- a/tools/perf/util/print-events.h
-+++ b/tools/perf/util/print-events.h
-@@ -37,7 +37,9 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- void print_symbol_events(const struct print_callbacks *print_cb, void *print_state,
- 			 unsigned int type, const struct event_symbol *syms,
- 			 unsigned int max);
-+
- void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state);
-+void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
- bool is_event_supported(u8 type, u64 config);
+ 	} else {
+ 		pm(config, os, METRIC_THRESHOLD_UNKNOWN, /*format=*/NULL, /*unit=*/NULL, /*val=*/0);
+ 	}
+@@ -1016,7 +1015,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	ena = aggr->counts.ena;
+ 	run = aggr->counts.run;
  
- #endif /* __PERF_PRINT_EVENTS_H */
+-	if (perf_stat__skip_metric_event(counter, &config->metric_events, ena, run))
++	if (perf_stat__skip_metric_event(counter, ena, run))
+ 		return;
+ 
+ 	if (val == 0 && should_skip_zero_counter(config, counter, &id))
+@@ -1275,10 +1274,7 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 
+ 		os.evsel = counter;
+ 
+-		perf_stat__print_shadow_stats(config, counter, 0,
+-					      0,
+-					      &out,
+-					      &config->metric_events);
++		perf_stat__print_shadow_stats(config, counter, 0, 0, &out);
+ 	}
+ 
+ 	if (!config->json_output)
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index d83bda5824d2..2b4950f56fae 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -15,6 +15,7 @@
+ #include <linux/zalloc.h>
+ #include "iostat.h"
+ #include "util/hashmap.h"
++#include "rblist.h"
+ #include "tool_pmu.h"
+ 
+ struct stats walltime_nsecs_stats;
+@@ -635,14 +636,14 @@ void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
+ 						int aggr_idx,
+ 						int *num,
+ 						void *from,
+-						struct perf_stat_output_ctx *out,
+-						struct rblist *metric_events)
++						struct perf_stat_output_ctx *out)
+ {
+ 	struct metric_event *me;
+ 	struct metric_expr *mexp = from;
+ 	void *ctxp = out->ctx;
+ 	bool header_printed = false;
+ 	const char *name = NULL;
++	struct rblist *metric_events = &evsel->evlist->metric_events;
+ 
+ 	me = metricgroup__lookup(metric_events, evsel, false);
+ 	if (me == NULL)
+@@ -683,8 +684,7 @@ void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct evsel *evsel,
+ 				   double avg, int aggr_idx,
+-				   struct perf_stat_output_ctx *out,
+-				   struct rblist *metric_events)
++				   struct perf_stat_output_ctx *out)
+ {
+ 	typedef void (*stat_print_function_t)(struct perf_stat_config *config,
+ 					const struct evsel *evsel,
+@@ -735,7 +735,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 	}
+ 
+ 	perf_stat__print_shadow_stats_metricgroup(config, evsel, aggr_idx,
+-						  &num, NULL, out, metric_events);
++						  &num, NULL, out);
+ 
+ 	if (num == 0) {
+ 		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN,
+@@ -748,7 +748,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+  *				  if it's not running or not the metric event.
+  */
+ bool perf_stat__skip_metric_event(struct evsel *evsel,
+-				  struct rblist *metric_events,
+ 				  u64 ena, u64 run)
+ {
+ 	if (!evsel->default_metricgroup)
+@@ -757,5 +756,5 @@ bool perf_stat__skip_metric_event(struct evsel *evsel,
+ 	if (!ena || !run)
+ 		return true;
+ 
+-	return !metricgroup__lookup(metric_events, evsel, false);
++	return !metricgroup__lookup(&evsel->evlist->metric_events, evsel, false);
+ }
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 1bcd7634bf47..4b0f14ae4e5f 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -7,7 +7,6 @@
+ #include <sys/types.h>
+ #include <sys/resource.h>
+ #include "cpumap.h"
+-#include "rblist.h"
+ #include "counts.h"
+ 
+ struct perf_cpu_map;
+@@ -108,7 +107,6 @@ struct perf_stat_config {
+ 	aggr_get_id_t		 aggr_get_id;
+ 	struct cpu_aggr_map	*cpus_aggr_map;
+ 	u64			*walltime_run;
+-	struct rblist		 metric_events;
+ 	int			 ctl_fd;
+ 	int			 ctl_fd_ack;
+ 	bool			 ctl_fd_close;
+@@ -187,18 +185,14 @@ struct perf_stat_output_ctx {
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct evsel *evsel,
+ 				   double avg, int aggr_idx,
+-				   struct perf_stat_output_ctx *out,
+-				   struct rblist *metric_events);
+-bool perf_stat__skip_metric_event(struct evsel *evsel,
+-				  struct rblist *metric_events,
+-				  u64 ena, u64 run);
++				   struct perf_stat_output_ctx *out);
++bool perf_stat__skip_metric_event(struct evsel *evsel, u64 ena, u64 run);
+ void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
+ 						struct evsel *evsel,
+ 						int aggr_idx,
+ 						int *num,
+ 						void *from,
+-						struct perf_stat_output_ctx *out,
+-						struct rblist *metric_events);
++						struct perf_stat_output_ctx *out);
+ 
+ int evlist__alloc_stats(struct perf_stat_config *config,
+ 			struct evlist *evlist, bool alloc_raw);
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
